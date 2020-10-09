@@ -288,13 +288,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="@(_IpaPackageFile)" />
 	</Target>
 
-	<PropertyGroup>
-		<_CollectBundleResourcesDependsOn>
-			$(_CollectBundleResourcesDependsOn);
-			_CompileCoreMLModels;
-		</_CollectBundleResourcesDependsOn>
-	</PropertyGroup>
-
 	<Target Name="_CreateAssetPackManifest" DependsOnTargets="_CopyResourcesToBundle">
 		<CreateAssetPackManifest
 			SessionId="$(BuildSessionId)"
@@ -304,58 +297,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			PrefetchOrder="$(OnDemandResourcesPrefetchOrder)"
 			OutputPath="$(DeviceSpecificOutputPath)"
 		/>
-	</Target>
-
-	<Target Name="_SmeltMetal" Condition="'$(_CanOutputAppBundle)' == 'true' And '@(Metal)' != ''" DependsOnTargets="_DetectSdkLocations;_ComputeTargetFrameworkMoniker;_GetMinimumOSVersion">
-		<Metal
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' and '%(Metal.Identity)' != ''"
-			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
-			MinimumOSVersion="$(_MinimumOSVersion)"
-			ProjectDir="$(MSBuildProjectDirectory)"
-			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
-			ResourcePrefix="$(_ResourcePrefix)"
-			SdkDevPath="$(_SdkDevPath)"
-			SdkIsSimulator="$(_SdkIsSimulator)"
-			SdkRoot="$(_SdkRoot)"
-			SdkVersion="$(_SdkVersion)"
-			SourceFile="@(Metal)">
-			<Output TaskParameter="OutputFile" ItemName="_SmeltedMetal" />
-		</Metal>
-	</Target>
-
-	<Target Name="_ForgeMetal" Condition="'$(_CanOutputAppBundle)' == 'true' And '@(_SmeltedMetal)' != ''" DependsOnTargets="_SmeltMetal"
-		Inputs="@(_SmeltedMetal)" Outputs="$(DeviceSpeficicIntermediateOutputPath)metal\default.metal-ar">
-		<ArTool
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' and '$(_IsXcode8)' == 'false'"
-			Items="@(_SmeltedMetal)"
-			Archive="$(DeviceSpecificIntermediateOutputPath)metal\default.metal-ar">
-		</ArTool>
-
-		<!-- If !Xcode8 -->
-		<CreateItem Include="$(DeviceSpecificIntermediateOutputPath)metal\default.metal-ar"
-					Condition="'$(_IsXcode8)' == 'false'">
-			<Output TaskParameter="Include" ItemName="_ForgedMetal" />
-		</CreateItem>
-
-		<!-- Else -->
-		<CreateItem Include="@(_SmeltedMetal)"
-					Condition="'$(_IsXcode8)' == 'true'">
-			<Output TaskParameter="Include" ItemName="_ForgedMetal" />
-		</CreateItem>
-	</Target>
-
-	<Target Name="_TemperMetal" Condition="'$(_CanOutputAppBundle)' == 'true' And '@(_ForgedMetal)' != ''" DependsOnTargets="_ForgeMetal"
-		Inputs="@(_ForgedMetal)" Outputs="$(_AppBundlePath)default.metallib">
-		<MetalLib
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			Items="@(_ForgedMetal)"
-			SdkDevPath="$(_SdkDevPath)"
-			SdkRoot="$(_SdkRoot)"
-			OutputLibrary="$(_AppBundlePath)default.metallib">
-		</MetalLib>
 	</Target>
 
 	<Target Name="_GenerateBundleName" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_ComputeTargetArchitectures;_GenerateAppBundleName;_GenerateAppExBundleName">
@@ -1001,61 +942,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</ItemGroup>
 	</Target>
 
-	<Target Name="_CompileCoreMLModels" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_ComputeTargetArchitectures;_BeforeCompileCoreMLModels;_ReadCompileCoreMLModels;_CoreCompileCoreMLModels" />
-
-	<Target Name="_BeforeCompileCoreMLModels"
-		Inputs="@(CoreMLModel);$(_AppManifest)"
-		Outputs="$(_CoreMLModel_PartialAppManifestCache);$(_CoreMLModel_BundleResourceCache)">
-		<!-- If any CoreMLModel or AppManifest is newer than the generated items list, we delete them so that the _CoreCompileCoreMLModels
-		     target runs again and updates those lists for the next run
-		-->
-		<Delete Files="$(_CoreMLModel_PartialAppManifestCache);$(_CoreMLModel_BundleResourceCache)" />
-		<RemoveDir Directories="$(DeviceSpecificIntermediateOutputPath)coremlc" />
-	</Target>
-
-	<Target Name="_ReadCompileCoreMLModels"	DependsOnTargets="_BeforeCompileCoreMLModels">
-		<!-- If _BeforeCompileCoreMLModels did not delete the generated items lists from _CoreCompileCoreMLModels, then we read them
-		     since that target won't run and we need the output items that are cached in those files, which includes full metadata -->
-		<ReadItemsFromFile File="$(_CoreMLModel_PartialAppManifestCache)" Condition="Exists('$(_CoreMLModel_PartialAppManifestCache)')">
-			<Output TaskParameter="Items" ItemName="_PartialAppManifest" />
-		</ReadItemsFromFile>
-		<ReadItemsFromFile File="$(_CoreMLModel_BundleResourceCache)" Condition="Exists('$(_CoreMLModel_BundleResourceCache)')">
-			<Output TaskParameter="Items" ItemName="_BundleResourceWithLogicalName" />
-		</ReadItemsFromFile>
-	</Target>
-
-	<Target Name="_CoreCompileCoreMLModels" 
-		Inputs="@(CoreMLModel);$(_AppManifest)"
-		Outputs="$(_CoreMLModel_PartialAppManifestCache);$(_CoreMLModel_BundleResourceCache)"
-		DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_BeforeCompileCoreMLModels">
-
-		<CoreMLCompiler
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			ToolExe="$(CoreMLCompilerExe)"
-			ToolPath="$(CoreMLCompilerPath)"
-			Models="@(CoreMLModel)"
-			EnableOnDemandResources="$(EnableOnDemandResources)"
-			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
-			ProjectDir="$(MSBuildProjectDirectory)"
-			ResourcePrefix="$(_ResourcePrefix)"
-			SdkDevPath="$(_SdkDevPath)">
-			<Output TaskParameter="BundleResources" ItemName="_BundleResourceWithLogicalName" />
-			<Output TaskParameter="PartialAppManifests" ItemName="_PartialAppManifest" />
-
-			<!-- Local items to be persisted to items files -->
-			<Output TaskParameter="PartialAppManifests" ItemName="_CoreMLModel_PartialAppManifest" />
-			<Output TaskParameter="BundleResources" ItemName="_CoreMLModel_BundleResources" />
-		</CoreMLCompiler>
-
-		<!-- Cache the generated outputs items for incremental build support -->
-		<WriteItemsToFile Items="@(_CoreMLModel_PartialAppManifest)" ItemName="_PartialAppManifest" File="$(_CoreMLModel_PartialAppManifestCache)" Overwrite="true" IncludeMetadata="true" />
-		<WriteItemsToFile Items="@(_CoreMLModel_BundleResources)" ItemName="_BundleResourceWithLogicalName" File="$(_CoreMLModel_BundleResourceCache)" Overwrite="true" IncludeMetadata="true" />
-		<ItemGroup>
-			<FileWrites Include="$(_CoreMLModel_PartialAppManifestCache);$(_CoreMLModel_BundleResourceCache)" />
-		</ItemGroup>
-	</Target>
-
 	<Target Name="_EmbedMobileProvision" Condition="'$(_RequireCodeSigning)' == 'true'" DependsOnTargets="_GenerateBundleName;_DetectSigningIdentity"
 		Outputs="$(_AppBundlePath)embedded.mobileprovision">
 		<EmbedMobileProvision
@@ -1292,47 +1178,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			>
 			<Output TaskParameter="Frameworks" ItemName="_Frameworks"/>
 		</CollectFrameworks>
-	</Target>
-
-	<PropertyGroup>
-		<_CodesignNativeLibrariesDependsOn>
-			$(_CodesignNativeLibrariesDependsOn);
-			_DetectSigningIdentity;
-			_CompileToNative;
-		</_CodesignNativeLibrariesDependsOn>
-	</PropertyGroup>
-
-	<!-- Note: Always codesign *.dylibs even for Simulator builds. We use $(_CanOutputAppBundle) because dylibs can exist in app extensions as well. -->
-	<Target Name="_CodesignNativeLibraries" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="$(_CodesignNativeLibrariesDependsOn)">
-
-		<PropertyGroup>
-			<_CodesignDisableTimestamp>False</_CodesignDisableTimestamp>
-			<_CodesignDisableTimestamp Condition="'$(_SdkIsSimulator)' == 'true' Or '$(_BundlerDebug)' == 'true'">True</_CodesignDisableTimestamp>
-			<_LibraryCodeSigningKey>$(_CodeSigningKey)</_LibraryCodeSigningKey>
-			<_LibraryCodeSigningKey Condition="'$(_LibraryCodeSigningKey)' == ''">-</_LibraryCodeSigningKey>
-		</PropertyGroup>
-
-		<ItemGroup>
-			<_CodesignNativeLibrary
-				Include="$(_AppBundlePath)\**\*.dylib;$(_AppBundlePath)\**\*.metallib"
-				Exclude="$(_AppBundlePath)\Watch\**;$(_AppBundlePath)\PlugIns\**"
-				/>
-		</ItemGroup>
-
-		<Codesign
-			Condition="'$(IsMacEnabled)' == 'true'"
-			SessionId="$(BuildSessionId)"
-			ToolExe="$(CodesignExe)"
-			ToolPath="$(CodesignPath)"
-			CodesignAllocate="$(_CodesignAllocate)"
-			DisableTimestamp="$(_CodesignDisableTimestamp)"
-			Keychain="$(CodesignKeychain)"
-			Resources="@(_CodesignNativeLibrary)"
-			SigningKey="$(_LibraryCodeSigningKey)"
-			StampPath="$(DeviceSpecificIntermediateOutputPath)codesign"
-			ExtraArgs="$(CodesignExtraArgs)"
-			>
-		</Codesign>
 	</Target>
 
 	<Target Name="_CodesignFrameworks" Condition="'$(_CanOutputAppBundle)' == 'true' And '@(_Frameworks)' != ''" DependsOnTargets="_DetectSigningIdentity;_CollectFrameworks"

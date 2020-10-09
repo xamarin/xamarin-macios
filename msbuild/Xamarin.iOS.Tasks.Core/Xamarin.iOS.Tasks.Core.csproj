@@ -25,10 +25,10 @@
     <None Include="*.targets">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="../Xamarin.Shared/Xamarin.Shared.targets">
+    <None Include="../Xamarin.Shared/*.targets">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="../Xamarin.Shared/Xamarin.Shared.props">
+    <None Include="../Xamarin.Shared/*.props">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

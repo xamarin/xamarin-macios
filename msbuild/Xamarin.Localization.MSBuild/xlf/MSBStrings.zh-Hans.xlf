@@ -1,283 +1,283 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
-  <file datatype="xml" source-language="en" target-language="zh-Hans" original="../MSBStrings.resx">
+  <file datatype="xml" source-language="en" target-language="zh-CN" original="../MSBStrings.resx">
     <body>
       <trans-unit id="E0003">
         <source>Error executing tool '{0}': {1}
         </source>
-        <target state="new">Error executing tool '{0}': {1}
-        </target>
+        <target state="translated">执行工具“{0}”时出错: {1}
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0004">
         <source>Failed to codesign '{0}': {1}
         </source>
-        <target state="new">Failed to codesign '{0}': {1}
-        </target>
+        <target state="translated">未能 codesign“{0}”: {1}
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0005">
         <source>Failed to codesign '{0}'
         </source>
-        <target state="new">Failed to codesign '{0}'
-        </target>
+        <target state="translated">未能对 “{0}” 进行代码签名
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0006">
         <source>  '{0}' not found.
         </source>
-        <target state="new">  '{0}' not found.
-        </target>
+        <target state="translated">  找不到“{0}”。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0007">
         <source>Error loading '{0}': Unknown image format.
         </source>
-        <target state="new">Error loading '{0}': Unknown image format.
-        </target>
+        <target state="translated">加载“{0}”时出错: 未知图像格式。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0008">
         <source>Invalid iTunesArtwork dimensions ({0}x{1}) for '{2}'.
         </source>
-        <target state="new">Invalid iTunesArtwork dimensions ({0}x{1}) for '{2}'.
-        </target>
+        <target state="translated">“{2}”的 iTunesArtwork 维度({0}x{1})无效。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0009">
         <source>Multiple iTunesArtwork files with the same dimensions detected ({0}x{1}) for '{2}'.
         </source>
-        <target state="new">Multiple iTunesArtwork files with the same dimensions detected ({0}x{1}) for '{2}'.
+        <target state="translated">针对“{2}”检测到多个具有相同的维数的 iTunesArtwork 文件({0}x{1})。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0010">
         <source>Error loading '{0}': {1}
         </source>
-        <target state="new">Error loading '{0}': {1}
-        </target>
+        <target state="translated">加载“{0}”时出错: {1}
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0011">
         <source>Could not parse MinimumOSVersion value '{0}'
         </source>
-        <target state="new">Could not parse MinimumOSVersion value '{0}'
-        </target>
+        <target state="translated">无法分析 MinimumOSVersion 值“{0}”
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0012">
         <source>Could not parse TargetArchitectures '{0}'
         </source>
-        <target state="new">Could not parse TargetArchitectures '{0}'
+        <target state="translated">无法分析 TargetArchitectures“{0}”
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0013">
         <source>The {0} SDK for '{1}' is not installed.
         </source>
-        <target state="new">The {0} SDK for '{1}' is not installed.
-        </target>
+        <target state="translated">未安装“{1}”的 {0} SDK。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0014">
         <source>The executable (CFBundleExecutable) name ({0}) cannot end with '.app', because iOS may fail to launch the app.
         </source>
-        <target state="new">The executable (CFBundleExecutable) name ({0}) cannot end with '.app', because iOS may fail to launch the app.
-        </target>
+        <target state="translated">可执行文件(CFBundleExecutable)名称({0})不能以 ".app" 结尾，因为 iOS 可能无法启动应用。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0023">
         <source>Cannot have more than 1 iTunesMetadata.plist.
         </source>
-        <target state="new">Cannot have more than 1 iTunesMetadata.plist.
+        <target state="translated">iTunesMetadata.plist 数量不能超过 1 个。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0024">
         <source>Error loading Settings plist file '{0}/Settings.bundle/Root.plist': {1}.
         </source>
-        <target state="new">Error loading Settings plist file '{0}/Settings.bundle/Root.plist': {1}.
-        </target>
+        <target state="translated">加载设置 plist 文件“{0}/Settings.bundle/Root.plist”时出错: {1}。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0025">
         <source>Could not parse the SDK version '{0}'
         </source>
-        <target state="new">Could not parse the SDK version '{0}'
-        </target>
+        <target state="translated">无法分析 SDK 版本“{0}”
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0032">
         <source>Could not locate SDK bin directory
         </source>
-        <target state="new">Could not locate SDK bin directory
-        </target>
+        <target state="translated">无法找到 SDK bin 目录
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0044">
         <source>Could not find a valid Xcode app bundle at '{0}'. Please update your Apple SDK location in Visual Studio's preferences {1}.
         </source>
-        <target state="new">Could not find a valid Xcode app bundle at '{0}'. Please update your Apple SDK location in Visual Studio's preferences {1}.
-        </target>
+        <target state="translated">在“{0}”中找不到有效的 Xcode 应用捆绑包。请在 Visual Studio 的首选项 {1} 中更新 Apple SDK 位置。
+</target>
         <note>The following are literal names and should not be translated: Xcode, Apple SDK, Visual Studio
 {0} - The selected Xcode / Apple SDK directory.</note>
       </trans-unit>
       <trans-unit id="E0045">
         <source>Could not find valid a usable Xcode developer path
         </source>
-        <target state="new">Could not find valid a usable Xcode developer path
-        </target>
+        <target state="translated">找不到有效的可用 Xcode 开发人员路径
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0046">
         <source>Could not find '{0}'
         </source>
-        <target state="new">Could not find '{0}'
+        <target state="translated">找不到“{0}”
         </target>
         <note />
       </trans-unit>
       <trans-unit id="E0048">
         <source>Unknown SDK platform: {0}
         </source>
-        <target state="new">Unknown SDK platform: {0}
-        </target>
+        <target state="translated">未知的 SQL 平台: {0}
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0049">
         <source>Could not locate the provisioning profile with a Name or UUID of {0}.
         </source>
-        <target state="new">Could not locate the provisioning profile with a Name or UUID of {0}.
-        </target>
+        <target state="translated">找不到具有名称或 UUID {0} 的预配配置文件。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0050">
         <source>Unknown search option: {0}
         </source>
-        <target state="new">Unknown search option: {0}
-        </target>
+        <target state="translated">未知的搜索选项: {0}
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0053">
         <source>Target architecture ARMv6 is no longer supported in Xamarin.iOS. Please select a supported architecture.
         </source>
-        <target state="new">Target architecture ARMv6 is no longer supported in Xamarin.iOS. Please select a supported architecture.
-        </target>
+        <target state="translated">Xamarin.iOS 不再支持目标体系结构 ARMv6。请选择受支持的体系结构。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0055">
         <source>Could not load Info.plist: {0}
         </source>
-        <target state="new">Could not load Info.plist: {0}
-        </target>
+        <target state="translated">无法加载 Info.plist: {0}
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0057">
         <source>Invalid architectures: '{0}'.
         </source>
-        <target state="new">Invalid architectures: '{0}'.
-        </target>
+        <target state="translated">无效的体系结构:“{0}”。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0058">
         <source>Failed to parse the target device information.
         </source>
-        <target state="new">Failed to parse the target device information.
-        </target>
+        <target state="translated">无法分析目标设备信息。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0059">
         <source>No target device found.
         </source>
-        <target state="new">No target device found.
-        </target>
+        <target state="translated">找不到目标设备。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0060">
         <source>No device architecture information found.
         </source>
-        <target state="new">No device architecture information found.
-        </target>
+        <target state="translated">找不到设备体系结构信息。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0061">
         <source>Invalid target architecture: '{0}'
         </source>
-        <target state="new">Invalid target architecture: '{0}'
-        </target>
+        <target state="translated">无效的目标体系结构:“{0}”
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0062">
         <source>No device operating system information found.
         </source>
-        <target state="new">No device operating system information found.
-        </target>
+        <target state="translated">找不到设备操作系统信息。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0063">
         <source>No device model information found.
         </source>
-        <target state="new">No device model information found.
-        </target>
+        <target state="translated">找不到设备模型信息。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0064">
         <source>No iOS version information found.
         </source>
-        <target state="new">No iOS version information found.
-        </target>
+        <target state="translated">找不到 iOS 版本信息。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0065">
         <source>Resources rules file '{0}' not found.
         </source>
-        <target state="new">Resources rules file '{0}' not found.
-        </target>
+        <target state="translated">找不到资源规则文件“{0}”。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0066">
         <source>Failed to parse SdkVersion '{0}'.
         </source>
-        <target state="new">Failed to parse SdkVersion '{0}'.
-        </target>
+        <target state="translated">未能分析 SdkVersion“{0}”。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0067">
         <source>Xcode 10 does not support watchOS 1 apps. Either upgrade to watchOS 2 apps, or use an older version of Xcode.</source>
-        <target state="new">Xcode 10 does not support watchOS 1 apps. Either upgrade to watchOS 2 apps, or use an older version of Xcode.</target>
+        <target state="translated">Xcode 10 不支持 watchOS 1 应用。请升级到 watchOS 2 应用，或使用较旧版本的 Xcode。</target>
         <note />
       </trans-unit>
       <trans-unit id="E0068">
         <source>An installation of Xcode &gt;= 6.2 is required to build WatchKit applications.
         </source>
-        <target state="new">An installation of Xcode &gt;= 6.2 is required to build WatchKit applications.
-        </target>
+        <target state="translated">需要安装 Xcode &gt;= 6.2 才能生成 WatchKit 应用程序。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0069">
         <source>iOS {0} does not support WatchKit.
         </source>
-        <target state="new">iOS {0} does not support WatchKit.
-        </target>
+        <target state="translated">iOS {0} 不支持 WatchKit。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0070">
         <source>Failed to locate the WatchKit launcher in the Xcode app bundle.
         </source>
-        <target state="new">Failed to locate the WatchKit launcher in the Xcode app bundle.
-        </target>
+        <target state="translated">在 Xcode 应用捆绑包中找不到 WatchKit 启动程序。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0084">
         <source>Could not locate the {0} '{1}' SDK at path '{}'
         </source>
-        <target state="new">Could not locate the {0} '{1}' SDK at path '{}'
+        <target state="translated">在路径“{}”中找不到 {0}“{1}”SDK
         </target>
         <note />
       </trans-unit>
       <trans-unit id="E0085">
         <source>Could not locate the {0} '{1}' SDK usr path at '{2}'
         </source>
-        <target state="new">Could not locate the {0} '{1}' SDK usr path at '{2}'
+        <target state="translated">在“{2}”中找不到 {0}“{1}”SDK usr 路径
         </target>
         <note>The provided SDK path is missing a 'usr' directory. The following are literal names and should not be translated: SDK, usr
 {0} - The platform name, such as 'iOS'.
@@ -287,42 +287,42 @@
       <trans-unit id="E0086">
         <source>Could not find a valid Xcode developer path
         </source>
-        <target state="new">Could not find a valid Xcode developer path
-        </target>
+        <target state="translated">找不到有效的 Xcode 开发人员路径
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0089">
         <source>Unrecognized platform: {0}
         </source>
-        <target state="new">Unrecognized platform: {0}
-        </target>
+        <target state="translated">无法识别的平台: {0}
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0091">
         <source>File not found: {0}
         </source>
-        <target state="new">File not found: {0}
-        </target>
+        <target state="translated">找不到文件: {0}
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0092">
         <source>Invalid json: {0}
         </source>
-        <target state="new">Invalid json: {0}
-        </target>
+        <target state="translated">无效的 JSON: {0}
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0093">
         <source>Partial Info.plist file was not generated: {0}
         </source>
-        <target state="new">Partial Info.plist file was not generated: {0}
-        </target>
+        <target state="translated">未生成部分 Info.plist 文件: {0}
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0094">
         <source>Failed to load {0} log file `{1}`: {2}
         </source>
-        <target state="new">Failed to load {0} log file `{1}`: {2}
+        <target state="translated">未能加载 {0} 日志文件“{1}”: {2}
         </target>
         <note>A general failure message if a log file wasn't able to be loaded.
 {0} - The command-line tool that generated the log.
@@ -332,14 +332,14 @@
       <trans-unit id="E0097">
         <source>No API definition file specified.
         </source>
-        <target state="new">No API definition file specified.
-        </target>
+        <target state="translated">未指定 API 定义文件。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0098">
         <source>{0} failed.
         </source>
-        <target state="new">{0} failed.
+        <target state="translated">{0} 已失败。
         </target>
         <note>A general error message that a command-line tool failed.
 {0} - The file path to the command-line tool.</note>
@@ -347,98 +347,98 @@
       <trans-unit id="E0099">
         <source>  Bundle Resource '{0}' not found on disk (should be at '{1}')
         </source>
-        <target state="new">  Bundle Resource '{0}' not found on disk (should be at '{1}')
-        </target>
+        <target state="translated">  在磁盘上找不到捆绑资源“{0}”(应位于“{1}”中)
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0100">
         <source>The path '{0}' would result in a file outside of the app bundle and cannot be used.
         </source>
-        <target state="new">The path '{0}' would result in a file outside of the app bundle and cannot be used.
-        </target>
+        <target state="translated">路径“{0}”将导致应用捆绑包外的文件无法使用。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0101">
         <source>Info.plist files should have a Build Action of 'None'.
         </source>
-        <target state="new">Info.plist files should have a Build Action of 'None'.
-        </target>
+        <target state="translated">Info.plist 文件应具有生成操作 "None"。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0102">
         <source>The name '{0}' is reserved and cannot be used.
         </source>
-        <target state="new">The name '{0}' is reserved and cannot be used.
-        </target>
+        <target state="translated">名称“{0}”是预留名称，不能使用。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0107">
         <source>Error loading partial Info.plist template file '{0}': {1}
         </source>
-        <target state="new">Error loading partial Info.plist template file '{0}': {1}
-        </target>
+        <target state="translated">加载部分 Info.plist 模板文件“{0}”时出错: {1}
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0112">
         <source>Entitlements.plist template '{0}' not found.
         </source>
-        <target state="new">Entitlements.plist template '{0}' not found.
-        </target>
+        <target state="translated">未找到 Entitlements.plist 模板“{0}”。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0113">
         <source>Error loading Entitlements.plist template '{0}': {1}
         </source>
-        <target state="new">Error loading Entitlements.plist template '{0}': {1}
-        </target>
+        <target state="translated">加载 Entitlements.plist 模板“{0}”时出错: {1}
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0114">
         <source>Error writing xcent file '{0}': {1}
         </source>
-        <target state="new">Error writing xcent file '{0}': {1}
-        </target>
+        <target state="translated">写入 xcent 文件“{0}”时出错: {1}
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0115">
         <source>Error writing archived-expanded-entitlements.xcent file: {0}
         </source>
-        <target state="new">Error writing archived-expanded-entitlements.xcent file: {0}
-        </target>
+        <target state="translated">写入 archived-expanded-entitlements.xcent 文件时出错: {0}
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0117">
         <source>{0} exited with code {1}
         </source>
-        <target state="new">{0} exited with code {1}
-        </target>
+        <target state="translated">{0} 已退出，代码为 {1}
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0120">
         <source>Error saving `{0}': {1}
         </source>
-        <target state="new">Error saving `{0}': {1}
-        </target>
+        <target state="translated">保存“{0}”时出错: {1}
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0122">
         <source>Error loading '{0}'
         </source>
-        <target state="new">Error loading '{0}'
-        </target>
+        <target state="translated">加载“{0}”时出错
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0123">
         <source>Package creation failed. Could not parse extra arguments.
         </source>
-        <target state="new">Package creation failed. Could not parse extra arguments.
-        </target>
+        <target state="translated">创建包失败。无法分析其他参数。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0124">
         <source>The identity '{0}' doesn't match any valid certificate/private key pair in the default keychain.
         </source>
-        <target state="new">The identity '{0}' doesn't match any valid certificate/private key pair in the default keychain.
+        <target state="translated">标识“{0}”与默认密钥链中的任何有效证书/私钥对都不匹配。
         </target>
         <note>A failure to sign the iOS application, due to a missing certificate/private key. Xcode has an identical error message, see: https://developer.apple.com/library/archive/technotes/tn2250/_index.html#//apple_ref/doc/uid/DTS40009933-CH1-TNTAG40-WHAT_DOES__VALID_SIGNING_IDENTITY_NOT_FOUND__MEAN_AND_HOW_DO_I_RESOLVE_IT_
 {0} - The name of the identity, such as 'iPhone Developer'.</note>
@@ -446,16 +446,16 @@
       <trans-unit id="E0128">
         <source>No valid {0} code signing keys found in keychain. You need to request a codesigning certificate from https://developer.apple.com.
         </source>
-        <target state="new">No valid {0} code signing keys found in keychain. You need to request a codesigning certificate from https://developer.apple.com.
-        </target>
+        <target state="translated">在密钥链中找不到有效的 {0} 代码签名密钥。需要从 https://developer.apple.com 请求代码签名证书。
+</target>
         <note>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
 {0} - The platform name, such as 'iOS'.</note>
       </trans-unit>
       <trans-unit id="E0130">
         <source>{0} code signing key '{1}' not found in keychain.
         </source>
-        <target state="new">{0} code signing key '{1}' not found in keychain.
-        </target>
+        <target state="translated">密钥链中找不到 {0} 代码签名密钥“{1}”。
+</target>
         <note>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
 {0} - The platform name, such as 'iOS'.
 {1} - The name of the code signing key, such as 'Apple Development'.</note>
@@ -463,8 +463,8 @@
       <trans-unit id="E0131">
         <source>Could not find any available provisioning profiles for {0} on {1}.
         </source>
-        <target state="new">Could not find any available provisioning profiles for {0} on {1}.
-        </target>
+        <target state="translated">在 {1} 上找不到 {0} 的任何可用预配配置文件。
+</target>
         <note>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
 {0} - The app bundle name, such as 'YouriOSApp.app'
 {1} - The platform name, such as 'iOS'.</note>
@@ -472,8 +472,8 @@
       <trans-unit id="E0133">
         <source>No installed provisioning profiles match the installed {0} {1} signing identities.
         </source>
-        <target state="new">No installed provisioning profiles match the installed {0} {1} signing identities.
-        </target>
+        <target state="translated">已安装的预配配置文件均与已安装 {0} {1} 签名标识不匹配。
+</target>
         <note>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
 {0} - The platform name, such as 'iOS'.
 {1} - The app bundle name, such as 'YouriOSApp.app'</note>
@@ -481,15 +481,15 @@
       <trans-unit id="E0139">
         <source>{0} does not define CFBundleIdentifier
         </source>
-        <target state="new">{0} does not define CFBundleIdentifier
-        </target>
+        <target state="translated">{0} 未定义 CFBundleIdentifier
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0140">
         <source>The specified {0} provisioning profile '{1}' could not be found
         </source>
-        <target state="new">The specified {0} provisioning profile '{1}' could not be found
-        </target>
+        <target state="translated">找不到指定的 {0} 预配配置文件“{1}”
+</target>
         <note>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
 {0} - The platform name, such as 'iOS'.
 {1} - The provisioning profile ID. A string such as: 'f35b0040-2be5-4b1c-a1d6-59ae85047fad'</note>
@@ -497,647 +497,647 @@
       <trans-unit id="E0141">
         <source>Project bundle identifier '{0}' does not match specified provisioning profile '{1}'
         </source>
-        <target state="new">Project bundle identifier '{0}' does not match specified provisioning profile '{1}'
-        </target>
+        <target state="translated">项目捆绑包标识符“{0}”与指定的预配配置文件“{1}”不匹配
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0144">
         <source>The specified {0} provisioning profile '{1}' could not be found
         </source>
-        <target state="new">The specified {0} provisioning profile '{1}' could not be found
-        </target>
+        <target state="translated">找不到指定的 {0} 预配配置文件“{1}”
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0145">
         <source>No {0} signing identities match the specified provisioning profile '{1}'.
         </source>
-        <target state="new">No {0} signing identities match the specified provisioning profile '{1}'.
-        </target>
+        <target state="translated">没有与指定的预配配置文件“{1}”匹配的 {0} 签名标识。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0146">
         <source>Bundle identifier '{0}' does not match any installed provisioning profile for selected signing identity '{0}'.
         </source>
-        <target state="new">Bundle identifier '{0}' does not match any installed provisioning profile for selected signing identity '{0}'.
-        </target>
+        <target state="translated">捆绑包标识符“{0}”与所选签名标识“{0}”的任何已安装的预配配置文件都不匹配。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0147">
         <source>Bundle identifier '{0}' does not match any installed provisioning profile for selected signing identity '{0}'.
         </source>
-        <target state="new">Bundle identifier '{0}' does not match any installed provisioning profile for selected signing identity '{0}'.
-        </target>
+        <target state="translated">捆绑包标识符“{0}”与所选签名标识“{0}”的任何已安装的预配配置文件都不匹配。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0148">
         <source>Bundle identifier '{0}' does not match any installed provisioning profile.
         </source>
-        <target state="new">Bundle identifier '{0}' does not match any installed provisioning profile.
-        </target>
+        <target state="translated">捆绑包标识符“{0}”与任何已安装的预配配置文件都不匹配。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0150">
         <source>  AssemblyPath cannot be null or empty
         </source>
-        <target state="new">  AssemblyPath cannot be null or empty
-        </target>
+        <target state="translated">  AssemblyPath 不能为 null 或空
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0152">
         <source>No property specified.
         </source>
-        <target state="new">No property specified.
-        </target>
+        <target state="translated">未指定任何属性。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0153">
         <source>The dictionary at '{0}' did not contain the key: {1}
         </source>
-        <target state="new">The dictionary at '{0}' did not contain the key: {1}
-        </target>
+        <target state="translated">“{0}”中的字典不包含该密钥: {1}
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0154">
         <source>Could not parse array index: {0}
         </source>
-        <target state="new">Could not parse array index: {0}
-        </target>
+        <target state="translated">无法分析数组索引: {0}
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0155">
         <source>Array index out of range for item '{0}'
         </source>
-        <target state="new">Array index out of range for item '{0}'
-        </target>
+        <target state="translated">数组索引超出项“{0}”的范围
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0156">
         <source>{0} values do not support child properties.
         </source>
-        <target state="new">{0} values do not support child properties.
-        </target>
+        <target state="translated">{0} 值不支持子属性。
+</target>
         <note>The type of value in a '.plist' file (see: https://en.wikipedia.org/wiki/Property_list), such as a number or string cannot contain child values.
 {0} - The value type, such as 'NSString'.</note>
       </trans-unit>
       <trans-unit id="E0157">
         <source>Getting {0} values is not supported.
         </source>
-        <target state="new">Getting {0} values is not supported.
-        </target>
+        <target state="translated">不支持获取 {0} 值。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0158">
         <source>The file '{0}' does not exist.
         </source>
-        <target state="new">The file '{0}' does not exist.
-        </target>
+        <target state="translated">文件“{0}”不存在。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0159">
         <source>The file '{0}' conflicts with '{1}'.
         </source>
-        <target state="new">The file '{0}' conflicts with '{1}'.
-        </target>
+        <target state="translated">文件“{0}”与“{1}”冲突。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0160">
         <source>Watch apps/extensions require Xcode 6.2 or later. The current Xcode version is {0}
         </source>
-        <target state="new">Watch apps/extensions require Xcode 6.2 or later. The current Xcode version is {0}
-        </target>
+        <target state="translated">Watch 应用/扩展需要 Xcode 6.2 或更高版本。当前的 Xcode 版本为 {0}
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0161">
         <source>Items must have logical names computed.
         </source>
-        <target state="new">Items must have logical names computed.
-        </target>
+        <target state="translated">项必须具有计算出的逻辑名称。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0166">
         <source>You must specify a DestinationFolder or the DestinationFiles, but not both.
         </source>
-        <target state="new">You must specify a DestinationFolder or the DestinationFiles, but not both.
-        </target>
+        <target state="translated">必须指定 DestinationFolder 或 DestinationFiles，但不能同时指定这两者。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0167">
         <source>The number of DestinationFiles must match the number of SourceFiles.
         </source>
-        <target state="new">The number of DestinationFiles must match the number of SourceFiles.
-        </target>
+        <target state="translated">DestinationFiles 数目必须与 SourceFiles 数目匹配。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0169">
         <source>Unknown target framework identifier: {0}.
         </source>
-        <target state="new">Unknown target framework identifier: {0}.
+        <target state="translated">未知的目标框架标识符: {0}。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="E0170">
         <source>Could not find {0} in {1}.
         </source>
-        <target state="new">Could not find {0} in {1}.
+        <target state="translated">在 {1} 中找不到 {0}。
         </target>
         <note />
       </trans-unit>
       <trans-unit id="E0171">
         <source>The {0} SDK is not installed.
         </source>
-        <target state="new">The {0} SDK is not installed.
+        <target state="translated">未安装 {0} SDK。
         </target>
         <note />
       </trans-unit>
       <trans-unit id="E0172">
         <source>The {0} SDK version '{1}' is not installed, and no newer version was found.
         </source>
-        <target state="new">The {0} SDK version '{1}' is not installed, and no newer version was found.
+        <target state="translated">未安装 {0} SDK 版本“{1}”，找不到更新的版本。
         </target>
         <note />
       </trans-unit>
       <trans-unit id="E0173">
         <source>The {0} SDK version '{1}' is not installed. Using newer version '{2}' instead'.
         </source>
-        <target state="new">The {0} SDK version '{1}' is not installed. Using newer version '{2}' instead'.
+        <target state="translated">未安装 {0} SDK 版本“{1}”。请改用更新的版本“{2}”。
         </target>
         <note />
       </trans-unit>
       <trans-unit id="E7001">
         <source>Could not resolve host IPs for WiFi debugger settings.
         </source>
-        <target state="new">Could not resolve host IPs for WiFi debugger settings.
-        </target>
+        <target state="translated">无法解析 WiFi 调试程序设置的主机 IP。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7002">
         <source>This machine does not have any network adapters. This is required when debugging or profiling on device over WiFi.
         </source>
-        <target state="new">This machine does not have any network adapters. This is required when debugging or profiling on device over WiFi.
-        </target>
+        <target state="translated">此计算机没有任何网络适配器。在通过 WiFi 对设备进行调试或分析时需要此适配器。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7003">
         <source>The App Extension '{0}' does not contain an Info.plist.
         </source>
-        <target state="new">The App Extension '{0}' does not contain an Info.plist.
-        </target>
+        <target state="translated">应用扩展“{0}”不包含 Info.plist。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7004">
         <source>The App Extension '{0}' does not specify a CFBundleIdentifier.
         </source>
-        <target state="new">The App Extension '{0}' does not specify a CFBundleIdentifier.
-        </target>
+        <target state="translated">应用扩展“{0}”未指定 CFBundleIdentifier。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7005">
         <source>The App Extension '{0}' does not specify a CFBundleExecutable.
         </source>
-        <target state="new">The App Extension '{0}' does not specify a CFBundleExecutable.
-        </target>
+        <target state="translated">应用扩展“{0}”未指定 CFBundleExecutable。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7006">
         <source>The App Extension '{0}' has an invalid CFBundleIdentifier ({1}), it does not begin with the main app bundle's CFBundleIdentifier ({2}).
         </source>
-        <target state="new">The App Extension '{0}' has an invalid CFBundleIdentifier ({1}), it does not begin with the main app bundle's CFBundleIdentifier ({2}).
-        </target>
+        <target state="translated">应用扩展“{0}”的 CFBundleIdentifier ({1})无效，它不以主应用捆绑包的 CFBundleIdentifier ({2})开头。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7007">
         <source>The App Extension '{0}' has a CFBundleIdentifier ({1}) that ends with the illegal suffix ".key".
         </source>
-        <target state="new">The App Extension '{0}' has a CFBundleIdentifier ({1}) that ends with the illegal suffix ".key".
-        </target>
+        <target state="translated">应用扩展“{0}”有一个以非法后缀 ".key" 结尾的 CFBundleIdentifier ({1})。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7008">
         <source>The App Extension '{0}' does not specify a CFBundleShortVersionString.
         </source>
-        <target state="new">The App Extension '{0}' does not specify a CFBundleShortVersionString.
-        </target>
+        <target state="translated">应用扩展“{0}”未指定 CFBundleShortVersionString。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7009">
         <source>The App Extension '{0}' has an invalid Info.plist: it does not contain an NSExtension dictionary.
         </source>
-        <target state="new">The App Extension '{0}' has an invalid Info.plist: it does not contain an NSExtension dictionary.
-        </target>
+        <target state="translated">应用扩展“{0}”包含无效的 Info.plist: 它不包含 NSExtension 字典。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7010">
         <source>The App Extension '{0}' has an invalid Info.plist: the NSExtension dictionary does not contain an NSExtensionPointIdentifier value.
         </source>
-        <target state="new">The App Extension '{0}' has an invalid Info.plist: the NSExtension dictionary does not contain an NSExtensionPointIdentifier value.
-        </target>
+        <target state="translated">应用扩展“{0}”包含无效的 Info.plist: NSExtension 字典不包含 NSExtensionPointIdentifier 值。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7014">
         <source>The Watch App '{0}' does not contain an Info.plist.
         </source>
-        <target state="new">The Watch App '{0}' does not contain an Info.plist.
-        </target>
+        <target state="translated">Watch 应用“{0}”不包含 Info.plist。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7015">
         <source>The Watch App '{0}' does not specify a CFBundleIdentifier.
         </source>
-        <target state="new">The Watch App '{0}' does not specify a CFBundleIdentifier.
-        </target>
+        <target state="translated">Watch 应用“{0}”未指定 CFBundleIdentifier。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7016">
         <source>The Watch App '{0}' has an invalid CFBundleIdentifier ({1}), it does not begin with the main app bundle's CFBundleIdentifier ({2}).
         </source>
-        <target state="new">The Watch App '{0}' has an invalid CFBundleIdentifier ({1}), it does not begin with the main app bundle's CFBundleIdentifier ({2}).
-        </target>
+        <target state="translated">Watch 应用“{0}”具有无效的 CFBundleIdentifier ({1})，它不以主应用捆绑包的 CFBundleIdentifier ({2})开头。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7017">
         <source>The Watch App '{0}' does not have a valid UIDeviceFamily value. Expected 'Watch (4)' but found '{1} ({2})'.
         </source>
-        <target state="new">The Watch App '{0}' does not have a valid UIDeviceFamily value. Expected 'Watch (4)' but found '{1} ({2})'.
-        </target>
+        <target state="translated">Watch 应用“{0}”没有有效的 UIDeviceFamily 值。期望查找 "Watch (4)"，但找到“{1} ({2})”。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7018">
         <source>The Watch App '{name}' does not specify a CFBundleExecutable
         </source>
-        <target state="new">The Watch App '{name}' does not specify a CFBundleExecutable
-        </target>
+        <target state="translated">Watch 应用 "{name}" 未指定 CFBundleExecutable
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7019">
         <source>The Watch App '{0}' has an invalid WKCompanionAppBundleIdentifier value ('{1}'), it does not match the main app bundle's CFBundleIdentifier ('{2}').
         </source>
-        <target state="new">The Watch App '{0}' has an invalid WKCompanionAppBundleIdentifier value ('{1}'), it does not match the main app bundle's CFBundleIdentifier ('{2}').
-        </target>
+        <target state="translated">Watch 应用“{0}”具有无效的 WKCompanionAppBundleIdentifier 值 ("{1}")，它与主应用捆绑包的 CFBundleIdentifier  ("{2}") 不匹配。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7020">
         <source>The Watch App '{0}' has an invalid Info.plist: the WKWatchKitApp key must be present and have a value of 'true'.
         </source>
-        <target state="new">The Watch App '{0}' has an invalid Info.plist: the WKWatchKitApp key must be present and have a value of 'true'.
-        </target>
+        <target state="translated">Watch 应用“{0}”具有无效的 Info.plist: WKWatchKitApp 密钥必须存在，并且值为 "true"。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7021">
         <source>The Watch App '{0}' has an invalid Info.plist: the LSRequiresIPhoneOS key must not be present.
         </source>
-        <target state="new">The Watch App '{0}' has an invalid Info.plist: the LSRequiresIPhoneOS key must not be present.
-        </target>
+        <target state="translated">Watch 应用“{0}”具有无效的 Info.plist: 不得包含 LSRequiresIPhoneOS 密钥。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7022">
         <source>The Watch App '{0}' does not contain any Watch Extensions.
         </source>
-        <target state="new">The Watch App '{0}' does not contain any Watch Extensions.
-        </target>
+        <target state="translated">Watch 应用“{0}”不包含任何 Watch 扩展。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7022_A">
         <source>The Watch App '{0}' does not contain a Watch Extension.
         </source>
-        <target state="new">The Watch App '{0}' does not contain a Watch Extension.
-        </target>
+        <target state="translated">Watch 应用“{0}”不包含 Watch 扩展。
+</target>
         <note>The watchOS Application does not contain a watchOS extension, see: https://developer.apple.com/documentation/watchkit
 {0} - The app bundle name, such as 'YourWatchOSApp.app'</note>
       </trans-unit>
       <trans-unit id="E7023">
         <source>The Watch Extension '{0}' does not contain an Info.plist.
         </source>
-        <target state="new">The Watch Extension '{0}' does not contain an Info.plist.
-        </target>
+        <target state="translated">Watch 应用“{0}”不包含 Info.plist。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7024">
         <source>The Watch Extension '{0}' does not specify a CFBundleIdentifier.
         </source>
-        <target state="new">The Watch Extension '{0}' does not specify a CFBundleIdentifier.
-        </target>
+        <target state="translated">Watch 应用“{0}”未指定任何 CFBundleIdentifier。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7025">
         <source>The Watch Extension '{0}' does not specify a CFBundleExecutable.
         </source>
-        <target state="new">The Watch Extension '{0}' does not specify a CFBundleExecutable.
-        </target>
+        <target state="translated">Watch 应用“{0}”未指定任何 CFBundleExecutable。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7026">
         <source>The Watch Extension '{0}' has an invalid CFBundleIdentifier ({1}), it does not begin with the main app bundle's CFBundleIdentifier ({2}).
         </source>
-        <target state="new">The Watch Extension '{0}' has an invalid CFBundleIdentifier ({1}), it does not begin with the main app bundle's CFBundleIdentifier ({2}).
-        </target>
+        <target state="translated">Watch 应用“{0}”具有无效的 CFBundleIdentifier ({1})，它不以主应用捆绑包的 CFBundleIdentifier ({2})开头。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7027">
         <source>The Watch Extension '{0}' has a CFBundleIdentifier ({1}) that ends with the illegal suffix ".key".
         </source>
-        <target state="new">The Watch Extension '{0}' has a CFBundleIdentifier ({1}) that ends with the illegal suffix ".key".
-        </target>
+        <target state="translated">Watch 应用“{0}”具有以非法后缀 "key" 结尾的 CFBundleIdentifier ({1})。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7028">
         <source>The Watch Extension '{0}' has an invalid Info.plist: it does not contain an NSExtension dictionary.
         </source>
-        <target state="new">The Watch Extension '{0}' has an invalid Info.plist: it does not contain an NSExtension dictionary.
-        </target>
+        <target state="translated">Watch 应用“{0}”具有无效的 Info.plist: 它不包含 NSExtension 字典。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7029">
         <source>The Watch Extension '{0}' has an invalid Info.plist: the NSExtensionPointIdentifier must be "com.apple.watchkit".
         </source>
-        <target state="new">The Watch Extension '{0}' has an invalid Info.plist: the NSExtensionPointIdentifier must be "com.apple.watchkit".
-        </target>
+        <target state="translated">Watch 应用“{0}”具有无效的 Info.plist: NSExtensionPointIdentifier 必须为 "com.apple.watchkit"。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7029_A">
         <source>The Watch Extension '{0}' has an invalid Info.plist: the NSExtension dictionary must contain an NSExtensionPointIdentifier.
         </source>
-        <target state="new">The Watch Extension '{0}' has an invalid Info.plist: the NSExtension dictionary must contain an NSExtensionPointIdentifier.
-        </target>
+        <target state="translated">Watch 应用“{0}”具有无效的 Info.plist: NSExtension 字典必须包含 NSExtensionPointIdentifier。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7030">
         <source>The Watch Extension '{0}' has an invalid Info.plist: the NSExtension dictionary must contain NSExtensionAttributes.
         </source>
-        <target state="new">The Watch Extension '{0}' has an invalid Info.plist: the NSExtension dictionary must contain NSExtensionAttributes.
-        </target>
+        <target state="translated">Watch 应用“{0}”具有无效的 Info.plist: NSExtension 字典必须包含 NSExtensionAttributes。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7031">
         <source>The Watch Extension '{0}' has an invalid WKAppBundleIdentifier value ('{1}'), it does not match the parent Watch App bundle's CFBundleIdentifier ('{2}').
         </source>
-        <target state="new">The Watch Extension '{0}' has an invalid WKAppBundleIdentifier value ('{1}'), it does not match the parent Watch App bundle's CFBundleIdentifier ('{2}').
-        </target>
+        <target state="translated">Watch 应用“{0}”具有无效的 WKAppBundleIdentifier 值(“{1}”)，它与父 Watch 应用捆绑包的 CFBundleIdentifier  (“{2}”)不匹配。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7031_A">
         <source>The Watch Extension '{0}' has an invalid Info.plist: the NSExtensionAttributes dictionary must contain a WKAppBundleIdentifier.
         </source>
-        <target state="new">The Watch Extension '{0}' has an invalid Info.plist: the NSExtensionAttributes dictionary must contain a WKAppBundleIdentifier.
-        </target>
+        <target state="translated">Watch 应用“{0}”具有无效的 Info.plist: NSExtensionAttributes 字典必须包含 WKAppBundleIdentifier。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7032">
         <source>The WatchKit Extension '{0}' has an invalid Info.plist: the UIRequiredDeviceCapabilities dictionary should not contain the 'watch-companion' capability.
         </source>
-        <target state="new">The WatchKit Extension '{0}' has an invalid Info.plist: the UIRequiredDeviceCapabilities dictionary should not contain the 'watch-companion' capability.
-        </target>
+        <target state="translated">WatchKit 扩展“{0}”具有无效的 Info.plist: UIRequiredDeviceCapabilities 字典不应包含 "watch-companion" 功能。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7032_A">
         <source>The WatchKit Extension '{0}' has an invalid Info.plist: the UIRequiredDeviceCapabilities array should not contain the 'watch-companion' capability.
         </source>
-        <target state="new">The WatchKit Extension '{0}' has an invalid Info.plist: the UIRequiredDeviceCapabilities array should not contain the 'watch-companion' capability.
-        </target>
+        <target state="translated">WatchKit 扩展“{0}”具有无效的 Info.plist: UIRequiredDeviceCapabilities 数组不应包含 "watch-companion" 功能。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7033">
         <source>The Watch App '{0}' does not contain an Info.plist.
         </source>
-        <target state="new">The Watch App '{0}' does not contain an Info.plist.
-        </target>
+        <target state="translated">Watch 应用“{0}”不包含 Info.plist。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7034">
         <source>The Watch App '{0}' does not specify a CFBundleIdentifier.
         </source>
-        <target state="new">The Watch App '{0}' does not specify a CFBundleIdentifier.
-        </target>
+        <target state="translated">Watch 应用“{0}”未指定 CFBundleIdentifier。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7035">
         <source>The Watch App '{0}' does not have a valid UIDeviceFamily value. Expected '{1}' but found '{2} ({3})'.
         </source>
-        <target state="new">The Watch App '{0}' does not have a valid UIDeviceFamily value. Expected '{1}' but found '{2} ({3})'.
-        </target>
+        <target state="translated">Watch 应用“{0}”没有有效的 UIDeviceFamily 值。期望查找“{1}”，但找到“{2} ({3})”。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7036">
         <source>The Watch App '{0}' does not specify a CFBundleExecutable.
         </source>
-        <target state="new">The Watch App '{0}' does not specify a CFBundleExecutable.
-        </target>
+        <target state="translated">Watch 应用“{0}”未指定任何 CFBundleExecutable。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7037">
         <source>The WatchKit Extension '{0}' has an invalid WKAppBundleIdentifier value ('{1}'), it does not match the Watch App's CFBundleIdentifier ('{2}').
         </source>
-        <target state="new">The WatchKit Extension '{0}' has an invalid WKAppBundleIdentifier value ('{1}'), it does not match the Watch App's CFBundleIdentifier ('{2}').
-        </target>
+        <target state="translated">WatchKit 扩展“{0}”具有无效的 WKAppBundleIdentifier 值(“{1}”)，它与 Watch 应用的 CFBundleIdentifier (“{2}”)不匹配。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7038">
         <source>The Watch App '{0}' has an invalid WKCompanionAppBundleIdentifier value ('{1}'), it does not match the main app bundle's CFBundleIdentifier ('{2}').
         </source>
-        <target state="new">The Watch App '{0}' has an invalid WKCompanionAppBundleIdentifier value ('{1}'), it does not match the main app bundle's CFBundleIdentifier ('{2}').
-        </target>
+        <target state="translated">Watch 应用“{0}”具有无效的 WKCompanionAppBundleIdentifier 值 ("{1}")，它与主应用捆绑包的 CFBundleIdentifier  ("{2}") 不匹配。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7038_A">
         <source>The Watch App '{0}' has an invalid Info.plist: the WKCompanionAppBundleIdentifier must exist and must match the main app bundle's CFBundleIdentifier.
         </source>
-        <target state="new">The Watch App '{0}' has an invalid Info.plist: the WKCompanionAppBundleIdentifier must exist and must match the main app bundle's CFBundleIdentifier.
-        </target>
+        <target state="translated">Watch 应用“{0}”具有无效的 Info.plist: WKCompanionAppBundleIdentifier 必须存在，并且必须与主应用捆绑包的 CFBundleIdentifier 匹配。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7039">
         <source>The Watch App '{0}' has an invalid Info.plist: the LSRequiresIPhoneOS key must not be present.
         </source>
-        <target state="new">The Watch App '{0}' has an invalid Info.plist: the LSRequiresIPhoneOS key must not be present.
-        </target>
+        <target state="translated">Watch 应用“{0}”具有无效的 Info.plist: 不得包含 LSRequiresIPhoneOS 密钥。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7040">
         <source>The app bundle {0} does not contain an Info.plist.
         </source>
-        <target state="new">The app bundle {0} does not contain an Info.plist.
-        </target>
+        <target state="translated">应用捆绑包 {0} 不包含 Info.plist。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7041">
         <source>{0} does not specify a CFBundleIdentifier.
         </source>
-        <target state="new">{0} does not specify a CFBundleIdentifier.
-        </target>
+        <target state="translated">{0} 未指定任何 CFBundleIdentifier。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7042">
         <source>{0} does not specify a CFBundleExecutable.
         </source>
-        <target state="new">{0} does not specify a CFBundleExecutable.
-        </target>
+        <target state="translated">{0} 未指定任何 CFBundleExecutable。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7043">
         <source>{0} does not specify a CFBundleSupportedPlatforms.
         </source>
-        <target state="new">{0} does not specify a CFBundleSupportedPlatforms.
-        </target>
+        <target state="translated">{0} 未指定任何 CFBundleSupportedPlatforms。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7044">
         <source>{0} does not specify a UIDeviceFamily.
         </source>
-        <target state="new">{0} does not specify a UIDeviceFamily.
-        </target>
+        <target state="translated">{0} 未指定任何 UIDeviceFamily。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7044_A">
         <source>{0} is invalid: the UIDeviceFamily key must contain a value for '{1}'.
         </source>
-        <target state="new">{0} is invalid: the UIDeviceFamily key must contain a value for '{1}'.
-        </target>
+        <target state="translated">{0} 无效: UIDeviceFamily 密钥必须包含“{1}”的值。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7045">
         <source>Unrecognized Type: {Type}
         </source>
-        <target state="new">Unrecognized Type: {Type}
-        </target>
+        <target state="translated">无法识别的类型: {Type}
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7046">
         <source>Add: Entry, "{0}", Incorrectly Specified
         </source>
-        <target state="new">Add: Entry, "{0}", Incorrectly Specified
-        </target>
+        <target state="translated">添加: 未正确指定的条目“{0}”
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7047">
         <source>Add: Entry, "{0}", Contains Invalid Array Index
         </source>
-        <target state="new">Add: Entry, "{0}", Contains Invalid Array Index
-        </target>
+        <target state="translated">添加: 包含无效数组索引的条目“{0}”
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7048">
         <source>Add: "{0}" Entry Already Exists
         </source>
-        <target state="new">Add: "{0}" Entry Already Exists
-        </target>
+        <target state="translated">添加: 已存在的条目“{0}”
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7049">
         <source>Add: Can't Add Entry, "{0}", to Parent
         </source>
-        <target state="new">Add: Can't Add Entry, "{0}", to Parent
-        </target>
+        <target state="translated">添加: 无法向父项添加条目“{0}”
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7050">
         <source>Delete: Can't Delete Entry, "{0}", from Parent
         </source>
-        <target state="new">Delete: Can't Delete Entry, "{0}", from Parent
-        </target>
+        <target state="translated">删除: 无法从父项中删除条目“{0}”
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7051">
         <source>Delete: Entry, "{0}", Contains Invalid Array Index
         </source>
-        <target state="new">Delete: Entry, "{0}", Contains Invalid Array Index
-        </target>
+        <target state="translated">删除: 包含无效数组索引的条目“{0}”
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7052">
         <source>Delete: Entry, "{0}", Does Not Exist
         </source>
-        <target state="new">Delete: Entry, "{0}", Does Not Exist
-        </target>
+        <target state="translated">删除: 不存在条目“{0}”
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7053">
         <source>Import: Entry, "{0}", Incorrectly Specified
         </source>
-        <target state="new">Import: Entry, "{0}", Incorrectly Specified
-        </target>
+        <target state="translated">导入: 未正确指定的条目“{0}”
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7054">
         <source>Import: Entry, "{0}", Contains Invalid Array Index
         </source>
-        <target state="new">Import: Entry, "{0}", Contains Invalid Array Index
-        </target>
+        <target state="translated">导入: 包含无效数组索引的条目“{0}”
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7055">
         <source>Import: Error Reading File: {0}
         </source>
-        <target state="new">Import: Error Reading File: {0}
-        </target>
+        <target state="translated">导入: 读取文件时出错: {0}
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7056">
         <source>Import: Can't Add Entry, "{0}", to Parent
         </source>
-        <target state="new">Import: Can't Add Entry, "{0}", to Parent
-        </target>
+        <target state="translated">导入: 无法向父项添加条目“{0}”
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7057">
         <source>Merge: Can't Add array Entries to dict
         </source>
-        <target state="new">Merge: Can't Add array Entries to dict
-        </target>
+        <target state="translated">合并: 无法将数组条目添加到字典
+</target>
         <note>Array entries in a '.plist' file (see: https://en.wikipedia.org/wiki/Property_list), cannot be added to a dictionary.</note>
       </trans-unit>
       <trans-unit id="E7058">
         <source>Merge: Specified Entry Must Be a Container
         </source>
-        <target state="new">Merge: Specified Entry Must Be a Container
-        </target>
+        <target state="translated">合并: 指定的条目必须是容器
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7059">
         <source>Merge: Entry, "{0}", Contains Invalid Array Index
         </source>
-        <target state="new">Merge: Entry, "{0}", Contains Invalid Array Index
-        </target>
+        <target state="translated">合并: 包含无效数组索引的条目“{0}”
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7060">
         <source>Merge: Entry, "{0}", Does Not Exist
         </source>
-        <target state="new">Merge: Entry, "{0}", Does Not Exist
-        </target>
+        <target state="translated">合并: 不存在条目“{0}”
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7061">
         <source>Merge: Error Reading File: {0}
         </source>
-        <target state="new">Merge: Error Reading File: {0}
-        </target>
+        <target state="translated">合并: 读取文件时出错: {0}
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7062">
         <source>Set: Entry, "{0}", Incorrectly Specified
         </source>
-        <target state="new">Set: Entry, "{0}", Incorrectly Specified
-        </target>
+        <target state="translated">设置: 未正确指定的条目“{0}”
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7063">
         <source>Set: Entry, "{0}", Contains Invalid Array Index
         </source>
-        <target state="new">Set: Entry, "{0}", Contains Invalid Array Index
-        </target>
+        <target state="translated">设置: 包含无效数组索引的条目“{0}”
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7064">
         <source>Set: Entry, "{0}", Does Not Exist
         </source>
-        <target state="new">Set: Entry, "{0}", Does Not Exist
-        </target>
+        <target state="translated">设置: 不存在条目“{0}”
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7068">
         <source>Can't create a binding resource package unless there are native references in the binding project.
         </source>
-        <target state="new">Can't create a binding resource package unless there are native references in the binding project.
-        </target>
+        <target state="translated">除非绑定项目中存在本机引用，否则无法创建绑定资源包。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="E7069">
@@ -1148,57 +1148,57 @@
       <trans-unit id="M0001">
         <source>Tool {0} execution started with arguments: {1}
         </source>
-        <target state="new">Tool {0} execution started with arguments: {1}
-        </target>
+        <target state="translated">从以下参数开始执行工具 {0}: {1}
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0002">
         <source>Tool {0} execution finished (exit code = {1}).
         </source>
-        <target state="new">Tool {0} execution finished (exit code = {1}).
-        </target>
+        <target state="translated">工具 {0} 执行已完成(退出代码 = {1})。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0017">
         <source>All http loads are already allowed.
         </source>
-        <target state="new">All http loads are already allowed.
-        </target>
+        <target state="translated">已允许所有 http 加载。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0018">
         <source>Allowed arbitrary HTTP loads to support debugging.
         </source>
-        <target state="new">Allowed arbitrary HTTP loads to support debugging.
-        </target>
+        <target state="translated">已允许任意 HTTP 加载以支持调试。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0047">
         <source>Searching for '{0}' in '{1}'
         </source>
-        <target state="new">Searching for '{0}' in '{1}'
-        </target>
+        <target state="translated">正在“{1}”中搜索“{0}”
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0105">
         <source>No Frameworks directory found.
         </source>
-        <target state="new">No Frameworks directory found.
-        </target>
+        <target state="translated">未找到 Frameworks 目录。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0116">
         <source>Tool {0} execution finished.
         </source>
-        <target state="new">Tool {0} execution finished.
-        </target>
+        <target state="translated">工具 {0} 执行已完成。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0119">
         <source>Skipping `{0}' as the output file, `{1}', is newer.
         </source>
-        <target state="new">Skipping `{0}' as the output file, `{1}', is newer.
-        </target>
+        <target state="translated">即将跳过“{0}”，因为输出文件“{1}”较新。
+</target>
         <note>Skipping a build operation, since the destination file is newer than the source file.
 {0} - The destination file.
 {1} - The source file.</note>
@@ -1206,92 +1206,92 @@
       <trans-unit id="M0121">
         <source>Creating binding resource package: {0}
         </source>
-        <target state="new">Creating binding resource package: {0}
-        </target>
+        <target state="translated">正在创建绑定资源包: {0}
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0125">
         <source>Detected signing identity:
         </source>
-        <target state="new">Detected signing identity:
-        </target>
+        <target state="translated">检测到的签名标识:
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0126">
         <source>The certificate '{0}' does not match any of the prefixes '{1}'.
         </source>
-        <target state="new">The certificate '{0}' does not match any of the prefixes '{1}'.
-        </target>
+        <target state="translated">证书“{0}”与所有前缀“{1}”都不匹配。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0127">
         <source>The certificate '{0}' has expired ({1})
         </source>
-        <target state="new">The certificate '{0}' has expired ({1})
-        </target>
+        <target state="translated">证书“{0}”已过期 ({1})
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0129">
         <source>The certificate '{0}' does not match '{1}'.
         </source>
-        <target state="new">The certificate '{0}' does not match '{1}'.
+        <target state="translated">证书“{0}”与“{1}”不匹配。
         </target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0132">
         <source>'{0}' doesn't match '{1}'.
         </source>
-        <target state="new">'{0}' doesn't match '{1}'.
-        </target>
+        <target state="translated">“{0}”与“{1}”不匹配。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0134">
         <source>Finding matching provisioning profiles with compatible AppID, keeping only those with the longest matching (wildcard) IDs.
         </source>
-        <target state="new">Finding matching provisioning profiles with compatible AppID, keeping only those with the longest matching (wildcard) IDs.
-        </target>
+        <target state="translated">查找具有兼容 AppID 的匹配预配配置文件，仅保留那些具有最长的匹配(通配符) ID 的配置文件。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0135">
         <source>AppID: {0} was ruled out because we found a better match: {1}.
         </source>
-        <target state="new">AppID: {0} was ruled out because we found a better match: {1}.
-        </target>
+        <target state="translated">AppID: 已排除 {0}，因为我们找到了更好的匹配项: {1}。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0136">
         <source>AppID: {0} was ruled out because we already found better matches: {1}.
         </source>
-        <target state="new">AppID: {0} was ruled out because we already found better matches: {1}.
-        </target>
+        <target state="translated">AppID: 已排除 {0}，因为我们找到了更好的匹配项: {1}。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0138">
         <source>Multiple provisioning profiles match the bundle identifier; using the first match.
         </source>
-        <target state="new">Multiple provisioning profiles match the bundle identifier; using the first match.
-        </target>
+        <target state="translated">多个预配配置文件与捆绑包标识符匹配。请使用第一个匹配项。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0142">
         <source>Multiple signing identities match '{0}'; using the first match.
         </source>
-        <target state="new">Multiple signing identities match '{0}'; using the first match.
-        </target>
+        <target state="translated">多个签名标识与“{0}”匹配。请使用第一个匹配项。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0143">
         <source>Multiple signing identities found; using the first identity.
         </source>
-        <target state="new">Multiple signing identities found; using the first identity.
-        </target>
+        <target state="translated">找到了多个签名标识。请使用第一个标识。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0149">
         <source>  {0} found at: {1}
         </source>
-        <target state="new">  {0} found at: {1}
-        </target>
+        <target state="translated">  在 {1} 中找到 {0}
+</target>
         <note>A file was found at a location.
 {0} - The '%(LogicalName)' of the file, or a relative path.
 {1} - The location the file was found.</note>
@@ -1299,241 +1299,241 @@
       <trans-unit id="M0151">
         <source>Generated bundle name: {0}
         </source>
-        <target state="new">Generated bundle name: {0}
-        </target>
+        <target state="translated">生成的捆绑包名称: {0}
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0162">
         <source>Duplicate Entry Was Skipped: {0}
         </source>
-        <target state="new">Duplicate Entry Was Skipped: {0}
-        </target>
+        <target state="translated">已跳过重复条目: {0}
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0163">
         <source>File Doesn't Exist, Will Create: {0}
         </source>
-        <target state="new">File Doesn't Exist, Will Create: {0}
-        </target>
+        <target state="translated">文件不存在，将创建: {0}
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0164">
         <source>Creating directory '{0}'
         </source>
-        <target state="new">Creating directory '{0}'
-        </target>
+        <target state="translated">正在创建目录“{0}”
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0165">
         <source>Copying file from '{0}' to '{1}'
         </source>
-        <target state="new">Copying file from '{0}' to '{1}'
-        </target>
+        <target state="translated">正在将文件从“{0}”复制到“{1}”
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="M0168">
         <source>  Skipping framework assembly: {0}
         </source>
-        <target state="new">  Skipping framework assembly: {0}
-        </target>
+        <target state="translated">  正在跳过框架程序集: {0}
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0016">
         <source>Can only fake the watchOS 4.3 SDK when building for watchOS.
         </source>
-        <target state="new">Can only fake the watchOS 4.3 SDK when building for watchOS.
-        </target>
+        <target state="translated">针对 watchOS 进行生成时，只能虚设 watchOS 4.3 SDK。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0019">
         <source>Supported iPhone orientations have not been set
         </source>
-        <target state="new">Supported iPhone orientations have not been set
-        </target>
+        <target state="translated">尚未设置受支持的 iPhone 方向
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0020">
         <source>Supported iPhone orientations are not matched pairs
         </source>
-        <target state="new">Supported iPhone orientations are not matched pairs
-        </target>
+        <target state="translated">受支持的 iPhone 方向不匹配
+</target>
         <note>The iPhone orientation settings do not match iPad, see: https://xamarin.github.io/bugzilla-archives/85/850/bug.html</note>
       </trans-unit>
       <trans-unit id="W0021">
         <source>Supported iPad orientations have not been set
         </source>
-        <target state="new">Supported iPad orientations have not been set
-        </target>
+        <target state="translated">尚未设置受支持的 iPad 方向
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0022">
         <source>Supported iPad orientations are not matched pairs
         </source>
-        <target state="new">Supported iPad orientations are not matched pairs
-        </target>
+        <target state="translated">受支持的 iPad 方向不匹配
+</target>
         <note>The iPad orientation settings do not match iPhone, see: https://xamarin.github.io/bugzilla-archives/85/850/bug.html</note>
       </trans-unit>
       <trans-unit id="W0051">
         <source>Unknown native reference type for '{0}'.
         </source>
-        <target state="new">Unknown native reference type for '{0}'.
-        </target>
+        <target state="translated">“{0}”的本机引用类型未知。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0052">
         <source>Dynamic native references are not supported: '{0}'
         </source>
-        <target state="new">Dynamic native references are not supported: '{0}'
-        </target>
+        <target state="translated">不支持动态本机引用:“{0}”
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0054">
         <source>Failed to create response file '{0}': {1}
         </source>
-        <target state="new">Failed to create response file '{0}': {1}
-        </target>
+        <target state="translated">无法创建响应文件“{0}”: {1}
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0071">
         <source>The App Extension '{0}' has a CFBundleShortVersionString ({1}) that does not match the main app bundle's CFBundleShortVersionString ({2})
         </source>
-        <target state="new">The App Extension '{0}' has a CFBundleShortVersionString ({1}) that does not match the main app bundle's CFBundleShortVersionString ({2})
-        </target>
+        <target state="translated">应用扩展“{0}”的 CFBundleShortVersionString ({1})与主应用捆绑包的 CFBundleShortVersionString ({2})不匹配
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0072">
         <source>The App Extension '{0}' does not specify a CFBundleVersion
         </source>
-        <target state="new">The App Extension '{0}' does not specify a CFBundleVersion
-        </target>
+        <target state="translated">应用扩展“{0}”未指定任何 CFBundleVersion
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0073">
         <source>The App Extension '{0}' has a CFBundleVersion ({1}) that does not match the main app bundle's CFBundleVersion ({2})
         </source>
-        <target state="new">The App Extension '{0}' has a CFBundleVersion ({1}) that does not match the main app bundle's CFBundleVersion ({2})
-        </target>
+        <target state="translated">应用扩展“{0}”的 CFBundleVersion ({1})与主应用捆绑包的 CFBundleVersion ({2})不匹配
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0074">
         <source>The App Extension '{0}' has an unrecognized NSExtensionPointIdentifier value ('{1}').
         </source>
-        <target state="new">The App Extension '{0}' has an unrecognized NSExtensionPointIdentifier value ('{1}').
-        </target>
+        <target state="translated">应用扩展“{0}”的 NSExtensionPointIdentifier 值(“{1}”)无法识别。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0075">
         <source>The Watch App '{0}' does not specify a CFBundleShortVersionString
         </source>
-        <target state="new">The Watch App '{0}' does not specify a CFBundleShortVersionString
-        </target>
+        <target state="translated">Watch 应用“{0}”未指定任何 CFBundleShortVersionString
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0076">
         <source>The Watch App '{0}' has a CFBundleShortVersionString ({1}) that does not match the main app bundle's CFBundleShortVersionString ({2})
         </source>
-        <target state="new">The Watch App '{0}' has a CFBundleShortVersionString ({1}) that does not match the main app bundle's CFBundleShortVersionString ({2})
-        </target>
+        <target state="translated">Watch 应用“{0}”的 CFBundleShortVersionString ({1})与主应用捆绑包的 CFBundleShortVersionString ({2})不匹配
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0077">
         <source>The Watch App '{0}' does not specify a CFBundleVersion
         </source>
-        <target state="new">The Watch App '{0}' does not specify a CFBundleVersion
-        </target>
+        <target state="translated">Watch 应用“{0}”未指定任何 CFBundleVersion
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0078">
         <source>The Watch App '{0}' has a CFBundleVersion ({1}) that does not match the main app bundle's CFBundleVersion ({2})
         </source>
-        <target state="new">The Watch App '{0}' has a CFBundleVersion ({1}) that does not match the main app bundle's CFBundleVersion ({2})
-        </target>
+        <target state="translated">Watch 应用“{0}”的 CFBundleVersion ({1})与主应用捆绑包的 CFBundleVersion ({2})不匹配
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0079">
         <source>The Watch Extension '{0}' does not specify a CFBundleShortVersionString)
         </source>
-        <target state="new">The Watch Extension '{0}' does not specify a CFBundleShortVersionString)
-        </target>
+        <target state="translated">Watch 扩展 “{0}”未指定任何 CFBundleShortVersionString)
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0080">
         <source>The Watch Extension '{0}' has a CFBundleShortVersionString ({1}) that does not match the main app bundle's CFBundleShortVersionString ({2})
         </source>
-        <target state="new">The Watch Extension '{0}' has a CFBundleShortVersionString ({1}) that does not match the main app bundle's CFBundleShortVersionString ({2})
-        </target>
+        <target state="translated">Watch 扩展 “{0}”的 CFBundleShortVersionString ({1})与主应用捆绑包的 CFBundleShortVersionString ({2})不匹配
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0081">
         <source>The Watch Extension '{0}' does not specify a CFBundleVersion
         </source>
-        <target state="new">The Watch Extension '{0}' does not specify a CFBundleVersion
-        </target>
+        <target state="translated">Watch 扩展 “{0}”未指定任何 CFBundleVersion
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0082">
         <source>The Watch Extension '{0}' has a CFBundleVersion ({1}) that does not match the main app bundle's CFBundleVersion ({2})
         </source>
-        <target state="new">The Watch Extension '{0}' has a CFBundleVersion ({1}) that does not match the main app bundle's CFBundleVersion ({2})
-        </target>
+        <target state="translated">Watch 扩展 “{0}”的 CFBundleVersion ({1})与主应用捆绑包的 CFBundleVersion ({2})不匹配
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0090">
         <source>Asset not part of an asset catalog: {0}
         </source>
-        <target state="new">Asset not part of an asset catalog: {0}
-        </target>
+        <target state="translated">资产不属于资产目录: {0}
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0095">
         <source>Failed to parse altool output: {0}.
             Output: {1}
         </source>
-        <target state="new">Failed to parse altool output: {0}.
-            Output: {1}
+        <target state="translated">无法分析 altool 输出: {0}。
+            输出: {1}
         </target>
         <note />
       </trans-unit>
       <trans-unit id="W0103">
         <source>Found a directory within the Frameworks directory which is not a framework: {0}
         </source>
-        <target state="new">Found a directory within the Frameworks directory which is not a framework: {0}
-        </target>
+        <target state="translated">在“框架”目录中找到了一个非框架目录: {0}
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0104">
         <source>The framework {0} does not contain a binary named {1}
         </source>
-        <target state="new">The framework {0} does not contain a binary named {1}
-        </target>
+        <target state="translated">框架 {0} 不包含名为 {1} 的二进制文件
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0106">
         <source>Could not determine value for manifest key '{0}'
         </source>
-        <target state="new">Could not determine value for manifest key '{0}'
-        </target>
+        <target state="translated">无法确定清单密钥“{0}”的值
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0108">
         <source>Cannot expand $(TeamIdentifierPrefix) in Entitlements.plist without a provisioning profile.
         </source>
-        <target state="new">Cannot expand $(TeamIdentifierPrefix) in Entitlements.plist without a provisioning profile.
-        </target>
+        <target state="translated">无法在不具有预配配置文件的 Entitlements.plist 中扩展 $(TeamIdentifierPrefix)。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0109">
         <source>Cannot expand $(AppIdentifierPrefix) in Entitlements.plist without a provisioning profile.
         </source>
-        <target state="new">Cannot expand $(AppIdentifierPrefix) in Entitlements.plist without a provisioning profile.
-        </target>
+        <target state="translated">无法在不具有预配配置文件的 Entitlements.plist 中扩展 $(AppIdentifierPrefix)。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0110">
         <source>iCloud entitlements such as '{0}' require a Provisioning Profile.
         </source>
-        <target state="new">iCloud entitlements such as '{0}' require a Provisioning Profile.
-        </target>
+        <target state="translated">iCloud 权利(如“{0}”)需要预配配置文件。
+</target>
         <note></note>
       </trans-unit>
       <trans-unit id="W0111">
@@ -1546,8 +1546,8 @@
       <trans-unit id="W0137">
         <source>No installed provisioning profiles match the bundle identifier.
         </source>
-        <target state="new">No installed provisioning profiles match the bundle identifier.
-        </target>
+        <target state="translated">没有与捆绑包标识符匹配的已安装的预配配置文件。
+</target>
         <note></note>
       </trans-unit>
     </body>
