@@ -118,8 +118,6 @@ namespace Introspection {
 			case "CKSubscription":
 			case "MPSCnnConvolutionState":
 				return true;
-			case "QTMovie":
-				return TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 14, 4); // Broke in macOS 10.14.4.
 			}
 
 			switch (type.Namespace) {
