@@ -118,16 +118,18 @@ namespace Introspection {
 			case "CKSubscription":
 			case "MPSCnnConvolutionState":
 				return true;
-			case "QTMovie":
-				return TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 14, 4); // Broke in macOS 10.14.4.
 			}
 
-#if __IOS__
 			switch (type.Namespace) {
+#if __IOS__
 			case "WatchKit":
 				return true; // WatchKit has been removed from iOS.
-			}
+#elif MONOMAC
+			case "QTKit":
+				return true; // QTKit has been removed from macos.
 #endif
+			}
+
 			// skip types that we renamed / rewrite since they won't behave correctly (by design)
 			if (SkipDueToRejectedTypes (type))
 				return true;
