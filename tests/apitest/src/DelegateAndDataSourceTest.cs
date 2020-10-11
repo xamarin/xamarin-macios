@@ -132,7 +132,7 @@ namespace Xamarin.Mac.Tests
 
 			switch (t.Namespace) {
 			case "QTKit":
-				return TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 15); // QTKit is gone in 10.15.
+				return true; // QTKit has been removed from macos.
 			}
 
 			return false;
