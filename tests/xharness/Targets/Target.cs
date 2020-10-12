@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -74,6 +74,7 @@ namespace Xharness.Targets
 		public abstract string DotNetSdk { get; }
 		public abstract string RuntimeIdentifier { get; }
 		public abstract DevicePlatform ApplePlatform { get; }
+		public abstract string TargetFramework { get; }
 		public abstract string TargetFrameworkForNuGet { get; }
 
 		public static string ProjectsDir { get { return "generated-projects"; } }
@@ -128,6 +129,7 @@ namespace Xharness.Targets
 			inputProject.SetSdk (DotNetSdk);
 			inputProject.SetRuntimeIdentifier (RuntimeIdentifier);
 			inputProject.FixProjectReferences (Path.Combine (ProjectsDir, GetTargetSpecificDir ()), Suffix, FixProjectReference);
+			inputProject.SetNode ("TargetFramework", TargetFramework);
 			var fixedAssetTargetFallback = inputProject.GetAssetTargetFallback ()?.Replace ("xamarinios10", TargetFrameworkForNuGet);
 			if (fixedAssetTargetFallback != null)
 				inputProject.SetAssetTargetFallback (fixedAssetTargetFallback);
