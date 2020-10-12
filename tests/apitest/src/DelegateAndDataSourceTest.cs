@@ -126,6 +126,10 @@ namespace Xamarin.Mac.Tests
 			case "AVCaptureView":
 				// Deallocating a AVCaptureView makes it trigger a permission dialog, which we don't want, so just skip this type.
 				return true;
+			case "GKGameCenterViewController": // the native 'init' method returned nil.
+				if (PlatformHelper.CheckSystemVersion (11, 0))
+					return true;
+				break;
 			}
 
 			switch (t.Namespace) {

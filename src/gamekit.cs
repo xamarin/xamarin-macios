@@ -2125,6 +2125,9 @@ namespace GameKit {
 		GKAchievement Achievement { get; }
 	}
 
+#if XAMCORE_4_0
+	[DisableDefaultCtor] // the native 'init' method returned nil.
+#endif
 	[NoWatch]
 	[Mac (10,9)]
 	[BaseType (
