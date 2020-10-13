@@ -12,9 +12,6 @@ namespace Security {
 
 	public static partial class SecSharedCredential {
 
-		[iOS (8,0)]
-		[Mac (11,0)]
-		[Introduced (PlatformName.MacCatalyst, 14,0)]
 		[DllImport (Constants.SecurityLibrary)]
 		extern static void SecAddSharedWebCredential (IntPtr /* CFStringRef */ fqdn, IntPtr /* CFStringRef */ account, IntPtr /* CFStringRef */ password,
 			IntPtr /* void (^completionHandler)( CFErrorRef error) ) */ completionHandler);
@@ -36,7 +33,6 @@ namespace Security {
 			} 
 		} 
 
-		[iOS (8,0)]
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static void AddSharedWebCredential (string domainName, string account, string password, Action<NSError> handler)
 		{
@@ -67,8 +63,6 @@ namespace Security {
 			}
 		}
 
-		[iOS (8,0)]
-		[Mac (11,0)]
 		[Deprecated (PlatformName.iOS, 14,0)]
 		[Deprecated (PlatformName.MacOSX, 11,0)]
 		[DllImport (Constants.SecurityLibrary)]
@@ -102,8 +96,6 @@ namespace Security {
 		}
 #endif
 
-		[iOS (8,0)]
-		[Mac (11,0)]
 		[Deprecated (PlatformName.iOS, 14,0, message: "Use 'ASAuthorizationPasswordRequest' instead.")]
 		[Deprecated (PlatformName.MacOSX, 11,0, message: "Use 'ASAuthorizationPasswordRequest' instead.")]
 		[BindingImpl (BindingImplOptions.Optimizable)]
@@ -143,14 +135,9 @@ namespace Security {
 			}
 		}
 
-		[iOS (8,0)]
-		[Mac (11,0)]
 		[DllImport (Constants.SecurityLibrary)]
 		extern static IntPtr /* CFStringRef */ SecCreateSharedWebCredentialPassword ();
 
-		[iOS (8,0)]
-		[Mac (11,0)]
-		[Introduced (PlatformName.MacCatalyst, 14,0)]
 		public static string CreateSharedWebCredentialPassword ()
 		{
 			var handle = SecCreateSharedWebCredentialPassword ();

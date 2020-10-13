@@ -231,7 +231,7 @@ namespace iAd {
 		[Export ("sharedClient")]
 		ADClient SharedClient { get; }
 
-		[Availability (Introduced = Platform.iOS_7_1, Deprecated = Platform.iOS_9_0, Message = "Replaced by 'RequestAttributionDetails'.")]
+		[Availability (Deprecated = Platform.iOS_9_0, Message = "Replaced by 'RequestAttributionDetails'.")]
 		[Export ("determineAppInstallationAttributionWithCompletionHandler:")]
 		void DetermineAppInstallationAttribution (AttributedToiAdCompletionHandler completionHandler);
 

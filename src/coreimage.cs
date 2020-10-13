@@ -2245,7 +2245,7 @@ namespace CoreImage {
 		[Export ("setROISelector:")]
 		void SetRegionOfInterestSelector (Selector aMethod);
 #endif
-		[iOS (8,0), Mac (10,11)]
+		[Mac (10,11)]
 		[Export ("applyWithExtent:roiCallback:arguments:")]
 		CIImage ApplyWithExtent (CGRect extent, CIKernelRoiCallback callback, [NullAllowed] NSObject [] args);
 	}
@@ -2301,7 +2301,6 @@ namespace CoreImage {
 		CIImageAccumulator FromRectangle (CGRect rect, int ciImageFormat);
 #endif
 
-		[iOS (9,0)]
 		[Static]
 		[Export ("imageAccumulatorWithExtent:format:colorSpace:")]
 		CIImageAccumulator FromRectangle (CGRect extent, CIFormat format, CGColorSpace colorSpace);

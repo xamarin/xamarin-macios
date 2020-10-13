@@ -1612,7 +1612,6 @@ namespace ARKit {
 	[DisableDefaultCtor]
 	interface AREnvironmentProbeAnchor {
 		// Inlined from 'ARAnchorCopying' protocol (we can't have constructors in interfaces)
-		[iOS (12,0)]
 		[Export ("initWithAnchor:")]
 		IntPtr Constructor (ARAnchor anchor);
 
@@ -1686,7 +1685,6 @@ namespace ARKit {
 		[return: NullAllowed]
 		ARReferenceObject Merge (ARReferenceObject @object, [NullAllowed] out NSError error);
 
-		[iOS (12,0)]
 		[Field ("ARReferenceObjectArchiveExtension")]
 		NSString ArchiveExtension { get; }
 	}
@@ -1697,7 +1695,6 @@ namespace ARKit {
 	[DisableDefaultCtor]
 	interface ARObjectAnchor {
 		// Inlined from 'ARAnchorCopying' protocol (we can't have constructors in interfaces)
-		[iOS (12,0)]
 		[Export ("initWithAnchor:")]
 		IntPtr Constructor (ARAnchor anchor);
 
@@ -2240,7 +2237,6 @@ namespace ARKit {
 	[BaseType (typeof (ARAnchor))]
 	interface ARGeoAnchor : ARTrackable {
 		// Inlined from 'ARAnchorCopying' protocol (we can't have constructors in interfaces)
-		[iOS (14,0)]
 		[Export ("initWithAnchor:")]
 		IntPtr Constructor (ARAnchor anchor);
 

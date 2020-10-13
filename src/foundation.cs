@@ -11971,37 +11971,37 @@ namespace Foundation
 		[Export ("old")]
 		bool Old { [Bind ("isOld")] get; }
 #endif
-		[iOS (7,0), Field ("NSProgressKindFile")]
+		[Field ("NSProgressKindFile")]
 		NSString KindFile { get; }
 	
-		[iOS (7,0), Field ("NSProgressEstimatedTimeRemainingKey")]
+		[Field ("NSProgressEstimatedTimeRemainingKey")]
 		NSString EstimatedTimeRemainingKey { get; }
 	
-		[iOS (7,0), Field ("NSProgressThroughputKey")]
+		[Field ("NSProgressThroughputKey")]
 		NSString ThroughputKey { get; }
 	
-		[iOS (7,0), Field ("NSProgressFileOperationKindKey")]
+		[Field ("NSProgressFileOperationKindKey")]
 		NSString FileOperationKindKey { get; }
 	
-		[iOS (7,0), Field ("NSProgressFileOperationKindDownloading")]
+		[Field ("NSProgressFileOperationKindDownloading")]
 		NSString FileOperationKindDownloading { get; }
 	
-		[iOS (7,0), Field ("NSProgressFileOperationKindDecompressingAfterDownloading")]
+		[Field ("NSProgressFileOperationKindDecompressingAfterDownloading")]
 		NSString FileOperationKindDecompressingAfterDownloading { get; }
 	
-		[iOS (7,0), Field ("NSProgressFileOperationKindReceiving")]
+		[Field ("NSProgressFileOperationKindReceiving")]
 		NSString FileOperationKindReceiving { get; }
 	
-		[iOS (7,0), Field ("NSProgressFileOperationKindCopying")]
+		[Field ("NSProgressFileOperationKindCopying")]
 		NSString FileOperationKindCopying { get; }
 	
-		[iOS (7,0), Field ("NSProgressFileURLKey")]
+		[Field ("NSProgressFileURLKey")]
 		NSString FileURLKey { get; }
 	
-		[iOS (7,0), Field ("NSProgressFileTotalCountKey")]
+		[Field ("NSProgressFileTotalCountKey")]
 		NSString FileTotalCountKey { get; }
 	
-		[iOS (7,0), Field ("NSProgressFileCompletedCountKey")]
+		[Field ("NSProgressFileCompletedCountKey")]
 		NSString FileCompletedCountKey { get; }
 
 #if MONOMAC
