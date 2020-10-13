@@ -5,7 +5,6 @@ using NUnit.Framework;
 using System.Globalization;
 using System.Threading;
 using System.Collections.Generic;
-using System;
 
 namespace Xamarin.iOS.Tasks {
 	[TestFixture]

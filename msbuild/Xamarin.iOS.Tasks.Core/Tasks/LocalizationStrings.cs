@@ -13,12 +13,12 @@ using System.Reflection;
 
 namespace Xamarin.iOS.Tasks
 {
-    public abstract class LocalizationStrings : XamarinTask
-    {
+	public abstract class LocalizationStrings : XamarinTask
+	{
 		public string MSBErrorCode { get; set; }
 
-        public override bool Execute ()
-        {
+		public override bool Execute ()
+		{
 			if (MSBErrorCode == null){
 				Log.LogError (MSBStrings.E0007);
 			}
@@ -33,7 +33,6 @@ namespace Xamarin.iOS.Tasks
 					Log.LogError (errorMessage);
 			}
 			return false;
-			
-        }
-    }
+		}
+	}
 }

@@ -1,7 +1,7 @@
 
 namespace Xamarin.iOS.Tasks
 {
-    public class LocalizationString : LocalizationStrings
-    {
-    }
+	public class LocalizationString : LocalizationStrings
+	{
+	}
 }
