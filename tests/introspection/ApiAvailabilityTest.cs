@@ -149,7 +149,7 @@ namespace Introspection {
 						switch (t.FullName) {
 						case "CoreBluetooth.CBPeer":
 							switch (m.ToString ()) {
-							// type added later and existing propert was moved
+							// type added later and existing property was moved
 							case "Foundation.NSUuid get_Identifier()":
 							case "Foundation.NSUuid Identifier":
 								continue;
