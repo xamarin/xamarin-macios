@@ -54,6 +54,7 @@ namespace Xamarin.iOS.Tasks
 				MinimumOSVersion = PDictionary.FromFile (Path.Combine (projectDir, "Info.plist")).GetMinimumOSVersion (),
 				ResourcePrefix = "Resources",
 				ProjectDir = projectDir,
+				SdkDevPath = Configuration.xcode_root,
 				SdkPlatform = platform,
 				SdkVersion = version.ToString (),
 				SdkUsrPath = usr,
