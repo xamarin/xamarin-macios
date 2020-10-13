@@ -27,7 +27,7 @@ namespace Xamarin.iOS.Tasks {
 			var task = CreateTask<LocalizationString> ();
 
 			// You can change this value to the Error you want to test
-			task.MSBErrorCode = "E7069";
+			task.MSBErrorCode = "E0009";
 
 			CultureInfo originalCulture = Thread.CurrentThread.CurrentUICulture;
 			CultureInfo englishUSCulture;
