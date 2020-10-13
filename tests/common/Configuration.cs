@@ -799,6 +799,49 @@ namespace Xamarin.Tests
 				throw new NotImplementedException (platform.ToString ());
 			}
 		}
+
+		// Calls Assert.Ignore if the given platform isn't included in the current build.
+		public static void IgnoreIfIgnoredPlatform (ApplePlatform platform)
+		{
+			switch (platform) {
+			case ApplePlatform.iOS:
+				if (!include_ios)
+					Assert.Ignore ("iOS is not included in this build");
+				break;
+			case ApplePlatform.TVOS:
+				if (!include_tvos)
+					Assert.Ignore ("tvOS is not included in this build");
+				break;
+			case ApplePlatform.WatchOS:
+				if (!include_watchos)
+					Assert.Ignore ("watchOS is not included in this build");
+				break;
+			case ApplePlatform.MacOSX:
+				if (!include_mac)
+					Assert.Ignore ("macOS is not included in this build");
+				break;
+			default:
+				throw new ArgumentOutOfRangeException ($"Unknown platform: {platform}");
+			}
+		}
+
+		// Calls Assert.Ignore if the given platform isn't included in the current build.
+		public static void IgnoreIfIgnoredPlatform (string platform)
+		{
+			switch (platform.ToLower ()) {
+			case "ios":
+			case "tvos":
+			case "watchos":
+			case "macosx":
+				IgnoreIfIgnoredPlatform ((ApplePlatform) Enum.Parse (typeof (ApplePlatform), platform, true));
+				break;
+			case "macos":
+				IgnoreIfIgnoredPlatform (ApplePlatform.MacOSX);
+				break;
+			default:
+				throw new ArgumentOutOfRangeException ($"Unknown platform: {platform}");
+			}
+		}
 	}
 }
 
