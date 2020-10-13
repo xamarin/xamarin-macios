@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Xamarin.Localization.MSBuild;
+using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks
 {
@@ -51,6 +52,7 @@ namespace Xamarin.MacDev.Tasks
 
 		protected override void AppendCommandLineArguments (IDictionary<string, string> environment, CommandLineArgumentBuilder args, ITaskItem[] items)
 		{
+			environment.Add ("DEVELOPER_DIR", SdkDevPath);
 			environment.Add ("IBSC_MINIMUM_COMPATIBILITY_VERSION", MinimumOSVersion);
 			environment.Add ("IBC_MINIMUM_COMPATIBILITY_VERSION", MinimumOSVersion);
 

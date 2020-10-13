@@ -39,7 +39,7 @@ namespace Xamarin.iOS.Tasks
 			public static string ResolveReferences = "ResolveReferences";
 		}
 
-		protected static string GetTestDirectory (string mode = null)
+		protected static string GetTestDirectory (string mode = null, ExecutionMode? executionMode = null)
 		{
 			var assembly_path = Assembly.GetExecutingAssembly ().Location;
 			if (string.IsNullOrEmpty (mode)) {
@@ -51,10 +51,9 @@ namespace Xamarin.iOS.Tasks
 					mode = "unknown";
 			}
 
-			var testSourceDirectory = Path.Combine (Configuration.RootPath, "msbuild", "tests");
-			var rv = Configuration.CloneTestDirectory (testSourceDirectory, mode);
+			var rv = Configuration.CloneTestDirectory (Configuration.TestProjectsDirectory, mode);
 
-			if (mode == "dotnet")
+			if (executionMode == ExecutionMode.DotNet)
 				Configuration.CopyDotNetSupportingFiles (rv);
 
 			return rv;
@@ -141,7 +140,9 @@ namespace Xamarin.iOS.Tasks
 				if (Path.IsPathRooted (baseDir)) {
 					projectPath = Path.Combine (baseDir, projectName);
 				} else {
-					projectPath = Path.Combine (testsBase, "Xamarin.iOS.Tasks.Tests", baseDir, projectName);
+					if (baseDir.StartsWith ("../", StringComparison.Ordinal))
+						baseDir = baseDir.Substring (3); // Tests have been relocated, which means the given relative base dir is not correct anymore, so fix it.
+					projectPath = Path.Combine (testsBase, baseDir, projectName);
 				}
 			}
 

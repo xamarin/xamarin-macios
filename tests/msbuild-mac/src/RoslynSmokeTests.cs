@@ -3,12 +3,14 @@ using System.IO;
 using System.Text;
 using NUnit.Framework;
 
+using Xamarin.Tests;
+
 namespace Xamarin.MMP.Tests
 {
 	[TestFixture]
 	public partial class MMPTests
 	{
-		public string RoslynTestProjectRoot => Path.Combine (TI.FindSourceDirectory (), "TestProjects/RoslynTestApp/");
+		public string RoslynTestProjectRoot => Path.Combine (Configuration.TestProjectsDirectory, "RoslynTestApp");
 
 		[Test]
 		public void XMModernRoslynProject_ShouldBuildAndRunWithMSBuild ()

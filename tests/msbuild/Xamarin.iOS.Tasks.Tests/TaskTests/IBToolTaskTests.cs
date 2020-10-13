@@ -54,6 +54,7 @@ namespace Xamarin.iOS.Tasks
 				MinimumOSVersion = PDictionary.FromFile (Path.Combine (projectDir, "Info.plist")).GetMinimumOSVersion (),
 				ResourcePrefix = "Resources",
 				ProjectDir = projectDir,
+				SdkDevPath = Configuration.xcode_root,
 				SdkPlatform = platform,
 				SdkVersion = version.ToString (),
 				SdkUsrPath = usr,
@@ -70,7 +71,7 @@ namespace Xamarin.iOS.Tasks
 			Directory.CreateDirectory (tmp);
 
 			try {
-				var srcdir = Path.Combine (Configuration.SourceRoot, "msbuild", "tests", "MyIBToolLinkTest");
+				var srcdir = Path.Combine (Configuration.TestProjectsDirectory, "MyIBToolLinkTest");
 				var ibtool = CreateIBToolTask (ApplePlatform.iOS, srcdir, tmp);
 				var bundleResources = new HashSet<string> ();
 
@@ -122,7 +123,7 @@ namespace Xamarin.iOS.Tasks
 			Directory.CreateDirectory (tmp);
 
 			try {
-				var srcdir = Path.Combine (Configuration.SourceRoot, "msbuild", "tests", "IBToolTaskTests", "LinkedAndTranslated");
+				var srcdir = Path.Combine (Configuration.TestProjectsDirectory, "IBToolTaskTests", "LinkedAndTranslated");
 				ibtool = CreateIBToolTask (ApplePlatform.iOS, srcdir, tmp);
 				var bundleResources = new HashSet<string> ();
 
@@ -203,7 +204,7 @@ namespace Xamarin.iOS.Tasks
 			Directory.CreateDirectory (tmp);
 
 			try {
-				var srcdir = Path.Combine (Configuration.SourceRoot, "msbuild", "tests", "IBToolTaskTests", "GenericAndDeviceSpecific");
+				var srcdir = Path.Combine (Configuration.TestProjectsDirectory, "IBToolTaskTests", "GenericAndDeviceSpecific");
 				ibtool = CreateIBToolTask (ApplePlatform.iOS, srcdir, tmp, fileNames);
 				var bundleResources = new HashSet<string> ();
 

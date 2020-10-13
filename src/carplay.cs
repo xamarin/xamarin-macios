@@ -1133,8 +1133,11 @@ namespace CarPlay {
 		[Export ("carWindow", ArgumentSemantic.Strong)]
 		CPWindow CarWindow { get; }
 
+#if !XAMCORE_4_0
 		[Field ("CPTemplateApplicationSceneSessionRoleApplication")]
+		[Advice ("Use 'UIWindowSceneSessionRole.CarTemplateApplication' instead.")]
 		NSString SessionRoleApplication { get; }
+#endif
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (12,0)]

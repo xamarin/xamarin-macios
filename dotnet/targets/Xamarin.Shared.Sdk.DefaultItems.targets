@@ -25,6 +25,21 @@
     </None>
   </ItemGroup>
 
+  <!-- Default SceneKit assets inclusion -->
+  <ItemGroup Condition="'$(_EnableDefaultXamarinItems)' == 'true' ">
+    <SceneKitAsset Include="**\*.scnassets\*">
+      <IsDefaultItem>true</IsDefaultItem>
+    </SceneKitAsset>
+  </ItemGroup>
+
+  <!-- Default Storyboard file inclusion -->
+  <ItemGroup Condition=" '$(_EnableDefaultXamarinItems)' == 'true' ">
+    <InterfaceDefinition Include="**\*.storyboard;**\*.xib">
+      <Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
+      <IsDefaultItem>true</IsDefaultItem>
+    </InterfaceDefinition>
+  </ItemGroup>
+
   <!-- Architecture -->
   <!-- If the old-style variables are set, use those -->
   <PropertyGroup Condition=" '$(TargetArchitectures)' == '' ">

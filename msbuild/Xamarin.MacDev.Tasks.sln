@@ -5,7 +5,7 @@ VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.iOS.Tasks.Core", "Xamarin.iOS.Tasks.Core\Xamarin.iOS.Tasks.Core.csproj", "{93E12FA0-089C-4BC8-840F-43CFBC7927C7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.iOS.Tasks.Tests", "tests\Xamarin.iOS.Tasks.Tests\Xamarin.iOS.Tasks.Tests.csproj", "{EDB0E879-5AE6-4E2B-925D-F59023A6AA8D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.iOS.Tasks.Tests", "..\tests\msbuild\Xamarin.iOS.Tasks.Tests\Xamarin.iOS.Tasks.Tests.csproj", "{EDB0E879-5AE6-4E2B-925D-F59023A6AA8D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.MacDev", "..\external\Xamarin.MacDev\Xamarin.MacDev\Xamarin.MacDev.csproj", "{CC3D9353-20C4-467A-8522-A9DED6F0C753}"
 EndProject

@@ -733,48 +733,6 @@
         </target>
         <note></note>
       </trans-unit>
-      <trans-unit id="E7011">
-        <source>The WatchKit Extension '{0}' has an invalid Info.plist: the NSExtension dictionary does not contain an NSExtensionAttributes dictionary.
-        </source>
-        <target state="translated">L'estensione WatchKit '{0}' contiene un file Info.plist non valido: il dizionario NSExtension non include alcun dizionario NSExtensionAttributes.
-        </target>
-        <note></note>
-      </trans-unit>
-      <trans-unit id="E7012">
-        <source>The WatchKit Extension '{0}' does not contain any watch apps.
-        </source>
-        <target state="translated">L'estensione WatchKit '{0}' non contiene alcuna app Watch.
-        </target>
-        <note></note>
-      </trans-unit>
-      <trans-unit id="E7012_A">
-        <source>The WatchKit Extension '{0}' contain more than one watch apps.
-        </source>
-        <target state="translated">L'estensione WatchKit '{0}' contiene più di un'app Watch.
-        </target>
-        <note></note>
-      </trans-unit>
-      <trans-unit id="E7013">
-        <source>The WatchKit Extension '{0}' has an invalid Info.plist: the UIRequiredDeviceCapabilities dictionary must contain the 'watch-companion' capability with a value of 'true'.
-        </source>
-        <target state="translated">L'estensione WatchKit '{0}' contiene un file Info.plist non valido: il dizionario UIRequiredDeviceCapabilities deve includere la funzionalità 'watch-companion' con valore 'true'.
-        </target>
-        <note></note>
-      </trans-unit>
-      <trans-unit id="E7013_A">
-        <source>The WatchKit Extension '{0}' has an invalid Info.plist: the UIRequiredDeviceCapabilities array must contain the 'watch-companion' capability.
-        </source>
-        <target state="translated">L'estensione WatchKit '{0}' contiene un file Info.plist non valido: la matrice UIRequiredDeviceCapabilities deve includere la funzionalità 'watch-companion'.
-        </target>
-        <note></note>
-      </trans-unit>
-      <trans-unit id="E7013_B">
-        <source>The WatchKit Extension '{0}' has an invalid Info.plist: the UIRequiredDeviceCapabilities key must be present and contain the 'watch-companion' capability.
-        </source>
-        <target state="translated">L'estensione WatchKit '{0}' contiene un file Info.plist non valido: la chiave UIRequiredDeviceCapabilities deve essere presente e deve includere la funzionalità 'watch-companion'.
-        </target>
-        <note></note>
-      </trans-unit>
       <trans-unit id="E7014">
         <source>The Watch App '{0}' does not contain an Info.plist.
         </source>
@@ -1181,6 +1139,11 @@
         <target state="translated">Non è possibile creare un pacchetto di risorse di binding a meno che nel progetto di binding non siano presenti riferimenti nativi.
         </target>
         <note></note>
+      </trans-unit>
+      <trans-unit id="E7069">
+        <source>Xamarin.iOS 14+ does not support watchOS 1 apps. Please migrate your project to watchOS 2+.</source>
+        <target state="new">Xamarin.iOS 14+ does not support watchOS 1 apps. Please migrate your project to watchOS 2+.</target>
+        <note />
       </trans-unit>
       <trans-unit id="M0001">
         <source>Tool {0} execution started with arguments: {1}

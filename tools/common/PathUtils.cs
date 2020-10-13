@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Runtime.InteropServices;
 
-namespace Xamarin.MacDev
+namespace Xamarin.Utils
 {
 	public static class PathUtils
 	{
@@ -116,3 +116,4 @@ namespace Xamarin.MacDev
 		}
 	}
 }
+

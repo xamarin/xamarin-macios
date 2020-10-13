@@ -296,7 +296,7 @@
 			<_LibMonoExtension Condition="'$(_LibMonoLinkMode)' == 'dylib'">dylib</_LibMonoExtension>
 			<_LibMonoExtension Condition="'$(_LibMonoLinkMode)' == 'static'">a</_LibMonoExtension>
 
-			<_LibXamarinLinkMode Condition="'$(_LibXamarinLinkMode)' == '' And '$(ComputedPlatform)' != 'iPhone'">dylib</_LibXamarinLinkMode>
+			<_LibXamarinLinkMode Condition="'$(_LibXamarinLinkMode)' == '' And '$(ComputedPlatform)' != 'iPhone' And '$(_PlatformName)' != 'macOS'">dylib</_LibXamarinLinkMode>
 			<_LibXamarinLinkMode Condition="'$(_LibXamarinLinkMode)' == ''">static</_LibXamarinLinkMode>
 			<_LibXamarinExtension Condition="'$(_LibXamarinLinkMode)' == 'dylib'">dylib</_LibXamarinExtension>
 			<_LibXamarinExtension Condition="'$(_LibXamarinLinkMode)' == 'static'">a</_LibXamarinExtension>
@@ -380,7 +380,7 @@
 
 	This doesn't work after linking with these libraries, so this must be fixed to be @executable_path/. Eventually mono will ship dylibs we don't have to fix (https://github.com/dotnet/runtime/issues/34637).
 	-->
-	<Target Name="_UpdateDynamicLibraryId" DependsOnTargets="_ComputeVariables;_ParseBundlerArguments" Inputs="@(_MonoLibrary)" Outputs="@(_MonoLibrary -> '$(_IntermediateNativeLibraryDir)%(Filename)%(Extension)')">
+	<Target Name="_UpdateDynamicLibraryId" DependsOnTargets="_ComputeVariables;_ParseBundlerArguments" Inputs="@(_MonoLibrary)" Outputs="@(_MonoLibrary -> '$(_IntermediateNativeLibraryDir)%(Filename)%(Extension)')" Condition=" '$(_PlatformName)' != 'macOS' ">
 		<PropertyGroup>
 			<_ExecutablePathPrefix Condition="'$(_PlatformName)' != 'macOS'">@executable_path/</_ExecutablePathPrefix>
 			<_ExecutablePathPrefix Condition="'$(_PlatformName)' == 'macOS'">@executable_path/../$(_CustomBundleName)/</_ExecutablePathPrefix>
@@ -409,6 +409,8 @@
 		<PropertyGroup>
 			<_NativeExecutablePublishDir Condition="'$(_PlatformName)' != 'macOS'">$(MSBuildProjectDirectory)$(_AppBundlePath)\</_NativeExecutablePublishDir>
 			<_NativeExecutablePublishDir Condition="'$(_PlatformName)' == 'macOS'">$(MSBuildProjectDirectory)$(_AppBundlePath)\Contents\MacOS\</_NativeExecutablePublishDir>
+			<_DylibRPath Condition="'$(_PlatformName)' != 'macOS'">@executable_path</_DylibRPath>
+			<_DylibRPath Condition="'$(_PlatformName)' == 'macOS'">@executable_path/../$(_CustomBundleName)/</_DylibRPath>
 		</PropertyGroup>
 
 		<ItemGroup>
@@ -421,6 +423,7 @@
 
 		<LinkNativeCode
 			SessionId="$(BuildSessionId)"
+			DylibRPath="$(_DylibRPath)"
 			EntitlementsInExecutable="$(_CompiledEntitlements)"
 			Frameworks="@(_NativeExecutableFrameworks);@(_BindingLibraryFrameworks)"
 			LinkerFlags="@(_BindingLibraryLinkerFlags)"
@@ -480,6 +483,67 @@
 				Condition="'%(Extension)' == '.dylib'" />
 		</ItemGroup>
 	</Target>
+
+	<!-- Install & Run -->
+
+	<PropertyGroup>
+		<_MlaunchPath Condition="'$(_MlaunchPath)' == ''">$(_XamarinSdkRootDirectory)tools\bin\mlaunch</_MlaunchPath>
+	</PropertyGroup>
+
+	<Target Name="_InstallMobile" DependsOnTargets="_DetectSdkLocations;_GenerateBundleName" Condition="'$(_SdkIsSimulator)' == 'false'">
+		<GetMlaunchArguments
+			SessionId="$(BuildSessionId)"
+			AppBundlePath="$(_AppBundlePath)"
+			AppManifestPath="$(_AppBundlePath)$(_AppBundleManifestRelativePath)Info.plist"
+			DeviceName="$(_DeviceName)"
+			InstallApp="$(_AppBundlePath)"
+			MlaunchPath="$(_MlaunchPath)"
+			SdkDevPath="$(_SdkDevPath)"
+			SdkIsSimulator="$(_SdkIsSimulator)"
+			SdkVersion="$(_SdkVersion)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+		>
+			<Output TaskParameter="MlaunchArguments" PropertyName="_MlaunchInstallArguments" />
+		</GetMlaunchArguments>
+
+		<Exec Command="$(_MlaunchPath) $(_MlaunchInstallArguments)" />
+	</Target>
+
+	<Target Name="_PrepareRunMobile" DependsOnTargets="_DetectSdkLocations;_GenerateBundleName;_InstallMobile" >
+		<PropertyGroup>
+			<!-- capture output by default -->
+			<_MlaunchCaptureOutput Condition="'$(_MlaunchCaptureOutput)' == ''">true</_MlaunchCaptureOutput>
+			<!-- wait for exit by default -->
+			<_MlaunchWaitForExit Condition="'$(_MlaunchWaitForExit)' == ''">true</_MlaunchWaitForExit>
+			<!-- don't set standard output/error path, mlaunch will by default write to stdout/stderr -->
+		</PropertyGroup>
+		<GetMlaunchArguments
+			SessionId="$(BuildSessionId)"
+			AppBundlePath="$(_AppBundlePath)"
+			AppManifestPath="$(_AppBundlePath)$(_AppBundleManifestRelativePath)Info.plist"
+			CaptureOutput="$(_MlaunchCaptureOutput)"
+			DeviceName="$(_DeviceName)"
+			LaunchApp="$(_AppBundlePath)"
+			MlaunchPath="$(_MlaunchPath)"
+			SdkIsSimulator="$(_SdkIsSimulator)"
+			SdkDevPath="$(_SdkDevPath)"
+			SdkVersion="$(_SdkVersion)"
+			StandardErrorPath="$(_MlaunchStandardErrorPath)"
+			StandardOutputPath="$(_MlaunchStandardOutputPath)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+			WaitForExit="$(_MlaunchWaitForExit)"
+		>
+			<Output TaskParameter="MlaunchArguments" PropertyName="_MlaunchRunArguments" />
+		</GetMlaunchArguments>
+
+		<PropertyGroup>
+			<RunCommand>$(_MlaunchPath)</RunCommand>
+			<RunArguments>$(_MlaunchRunArguments)</RunArguments>
+		</PropertyGroup>
+	</Target>
+
+	<!-- This is only needed for mobile platforms, RunCommand and RunArguments are defined for macOS in Microsoft.macOS.Sdk.targets. -->
+	<Target Name="_PrepareRun" DependsOnTargets="_PrepareRunMobile" BeforeTargets="Run" Condition="'$(_PlatformName)' != 'macOS'" />
 
 	<!-- Import existing targets -->
 
