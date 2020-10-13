@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 // the linker will remove the attributes
 using System.Diagnostics.CodeAnalysis;
 
@@ -6,6 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace ObjCRuntime {
 
+	[EditorBrowsable (EditorBrowsableState.Never)]
 	public static class ThrowHelper {
 
 		[DoesNotReturn]
