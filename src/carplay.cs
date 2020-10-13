@@ -1134,7 +1134,6 @@ namespace CarPlay {
 		[Export ("carWindow", ArgumentSemantic.Strong)]
 		CPWindow CarWindow { get; }
 
-		[iOS (13, 0)]
 		[Field ("CPTemplateApplicationSceneSessionRoleApplication")]
 		NSString SessionRoleApplication { get; }
 	}
