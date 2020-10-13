@@ -14,7 +14,7 @@ using ObjCRuntime;
 namespace AVFoundation {
 #if IOS
 	public partial class AVCaptureDeviceDiscoverySession {
-		[iOS (10,0)]
+
 		public static AVCaptureDeviceDiscoverySession Create (AVCaptureDeviceType [] deviceTypes, string mediaType, AVCaptureDevicePosition position)
 		{
 			var arr = new NSMutableArray ();
