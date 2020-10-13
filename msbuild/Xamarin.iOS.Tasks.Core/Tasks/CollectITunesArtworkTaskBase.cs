@@ -44,6 +44,8 @@ namespace Xamarin.iOS.Tasks
 			// PNG file format specification can be found at: http://www.w3.org/TR/PNG
 			BinaryReader reader = null;
 
+			width = height = -1;
+
 			try {
 				reader = new BinaryReader (File.OpenRead (path));
 				var pngHeader = reader.ReadBytes (8);
@@ -51,19 +53,18 @@ namespace Xamarin.iOS.Tasks
 				if (pngHeader[0] != 137 ||
 					pngHeader[1] != 80 || pngHeader[2] != 78 || pngHeader [3] != 71 ||
 					pngHeader [4] != 13 || pngHeader [5] != 10 || pngHeader [6] != 26 || pngHeader [7] != 10)
-					throw new IOException ("File has no valid PNG header.");
+					return false;
 
 				// First chunk is always the IHDR header chunk
 				reader.ReadBytes (4); // skip chunk size
 				var ihdrID = reader.ReadBytes (4);
 				if (ihdrID[0] != 73 || ihdrID[1] != 72 || ihdrID[2] != 68 || ihdrID[3] != 82)
-					throw new IOException ("IHDR missing or corrupt.");
+					return false;
 
 				width = ReadInt (reader);
 				height = ReadInt (reader);
 				return true;
 			} catch {
-				width = height = -1;
 				return false;
 			} finally {
 				if (reader != null)
