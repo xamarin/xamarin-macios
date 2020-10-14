@@ -514,6 +514,9 @@ public class BindingTouch {
 			AttributeManager = new AttributeManager (this);
 			Frameworks = new Frameworks (CurrentPlatform);
 
+			// Explicitly load our attribute library so that IKVM doesn't try (and fail) to find it.
+			universe.LoadFromAssemblyPath (GetAttributeLibraryPath ());
+
 			TypeManager.Initialize (this, api, universe.CoreAssembly, baselib);
 
 			foreach (var linkWith in AttributeManager.GetCustomAttributes<LinkWithAttribute> (api)) {
