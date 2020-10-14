@@ -6,16 +6,35 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 
 namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 	public interface ITestTask {
-		bool HasCustomTestName { get; }
+
+		#region Status properties
+
+		bool NotStarted { get; }
+		bool Building { get; }
 		bool BuildSucceeded { get; }
+		bool BuildFailure { get; }
+		bool Waiting { get; }
+		bool InProgress { get; }
+		bool Running { get; }
+		bool Finished { get; }
+		bool HarnessException { get; }
+		bool Built { get; }
+
 		bool Succeeded { get; }
 		bool Failed { get; }
-		bool Ignored { get; set; }
 		bool TimedOut { get; }
-		bool Finished { get; }
-		bool BuildOnly { get; set; }
+		bool Crashed { get; }
+		bool DeviceNotFound { get; }
 
-		string KnownFailure { get; set; }
+		public TimeSpan WaitingDuration { get; }
+
+		#endregion
+
+		bool HasCustomTestName { get; }
+		bool BuildOnly { get; set; }
+		bool Ignored { get; set; }
+
+		(string HumanMessage, string IssueLink)? KnownFailure { get; set; }
 		string ProjectConfiguration { get; set; }
 		string ProjectPlatform { get; set; }
 		string ProjectFile { get; }
@@ -24,6 +43,8 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 		string TestName { get; }
 		string FailureMessage { get; set; }
 		string LogDirectory { get; }
+
+		public int ID { get; }
 
 
 		string GuessFailureReason (ILog log);
@@ -34,6 +55,9 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 		IEnumerable<ILog> AggregatedLogs { get; }
 		ILogs Logs { get; }
 		Stopwatch DurationStopWatch { get; }
+		IEnumerable<string> ReferencedNunitAndXunitTestAssemblies { get; }
+		string ProgressMessage { get; }
+		string RootDirectory { get; }
 
 
 		Task RunAsync ();

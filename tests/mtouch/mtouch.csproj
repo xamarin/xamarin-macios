@@ -89,7 +89,7 @@
     <Compile Include="..\..\src\ObjCRuntime\ErrorHelper.cs">
       <Link>ErrorHelper.cs</Link>
     </Compile>
-    <Compile Include="..\..\tools\mtouch\SdkVersions.cs">
+    <Compile Include="..\..\tools\common\SdkVersions.cs">
       <Link>SdkVersions.cs</Link>
     </Compile>
     <Compile Include="..\..\tools\mtouch\Errors.Designer.cs">

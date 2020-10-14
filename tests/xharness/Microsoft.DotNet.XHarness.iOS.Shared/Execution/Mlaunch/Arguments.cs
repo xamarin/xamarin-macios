@@ -181,10 +181,11 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Execution.Mlaunch {
 		public SetEnvVariableArgument (string variableName, object variableValue)
 		{
 			this.variableName = variableName ?? throw new ArgumentNullException (nameof (variableName));
-			this.variableValue = variableValue?.ToString () ?? throw new ArgumentNullException (nameof (variableValue));
 
-			if (variableValue is bool)
-				this.variableValue = this.variableValue.ToLower ();
+			if (variableValue is bool b)
+				this.variableValue = b.ToString ().ToLowerInvariant ();
+			else
+				this.variableValue = variableValue?.ToString ();
 		}
 
 		public override string AsCommandLineArgument () => Escape ($"-setenv={variableName}={variableValue}");

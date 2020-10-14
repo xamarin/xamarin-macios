@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using System.Text;
+using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 using Xharness.Targets;
 
@@ -10,7 +11,7 @@ namespace Xharness
 {
 	public static class SolutionGenerator
 	{
-		static void AddProjectToSolution (Harness harness, string sln_path, TextWriter solution, string project_path, out string configurations)
+		static void AddProjectToSolution (IHarness harness, string sln_path, TextWriter solution, string project_path, out string configurations)
 		{
 			var project = new XmlDocument ();
 			project.LoadWithoutNetworkAccess (project_path);
@@ -48,17 +49,17 @@ namespace Xharness
 			return project_path;
 		}
 
-		public static void CreateSolution (Harness harness, IEnumerable<Target> targets, string infix)
+		public static void CreateSolution (IHarness harness, IEnumerable<Target> targets, string infix, DevicePlatform testPlatform)
 		{
-			CreateSolution (harness, targets, null, infix);
+			CreateSolution (harness, targets, null, infix, testPlatform);
 		}
 
-		public static void CreateSolution (Harness harness, IEnumerable<Target> targets, Target exeTarget, string infix)
+		public static void CreateSolution (IHarness harness, IEnumerable<Target> targets, Target exeTarget, string infix, DevicePlatform testPlatform)
 		{
 			var folders = new StringBuilder ();
 
-			var srcDirectory = Path.Combine (Harness.RootDirectory, "..", "src");
-			var sln_path = exeTarget == null ? Path.Combine (Harness.RootDirectory, "tests-" + infix + ".sln") : Path.Combine (Path.GetDirectoryName (exeTarget.ProjectPath), Path.GetFileNameWithoutExtension (exeTarget.ProjectPath) + ".sln");
+			var srcDirectory = Path.Combine (HarnessConfiguration.RootDirectory, "..", "src");
+			var sln_path = exeTarget == null ? Path.Combine (HarnessConfiguration.RootDirectory, "tests-" + infix + ".sln") : Path.Combine (Path.GetDirectoryName (exeTarget.ProjectPath), Path.GetFileNameWithoutExtension (exeTarget.ProjectPath) + ".sln");
 
 			using (var writer = new StringWriter ()) {
 				writer.WriteLine ();
@@ -72,7 +73,7 @@ namespace Xharness
 
 					if (hasRelatedProjects && target.IsExe) {
 						if (exeTarget == null) {
-							CreateSolution (harness, targets, target, infix); // create a solution for just this test project as well
+							CreateSolution (harness, targets, target, infix, testPlatform); // create a solution for just this test project as well
 						} else if (exeTarget != target) {
 							continue;
 						}
@@ -101,11 +102,9 @@ namespace Xharness
 					}
 				}
 
-				// Add reference to MonoTouch.NUnitLite project
+				// Add reference to the Touch.Client project
 				string configuration;
-				var proj_path = Path.GetFullPath (Path.Combine (srcDirectory, "MonoTouch.NUnitLite." + infix + ".csproj"));
-				if (!File.Exists (proj_path))
-					proj_path = Path.GetFullPath (Path.Combine (srcDirectory, "MonoTouch.NUnitLite.csproj"));
+				var proj_path = Path.GetFullPath (Path.Combine (srcDirectory, "..", "external", "Touch.Unit", "Touch.Client", testPlatform.AsString (), "Touch.Client-" + testPlatform.AsString () + ".csproj"));
 				AddProjectToSolution (harness, sln_path, writer, proj_path, out configuration);
 
 				writer.WriteLine ("Global");

@@ -4,8 +4,17 @@ using System.Threading.Tasks;
 
 namespace Microsoft.DotNet.XHarness.iOS.Shared.TestImporter.Templates {
 
+	public class GeneratedProject {
+		public string Name;
+		public string Path;
+		public bool XUnit;
+		public string ExtraArgs;
+		public string Failure;
+		public double TimeoutMultiplier;
+		public Task GenerationCompleted;
+	}
 	// less typing
-	public class GeneratedProjects : List<(string Name, string Path, bool XUnit, string ExtraArgs, string Failure, double TimeoutMultiplier)> {
+	public class GeneratedProjects : List<GeneratedProject> {
 	}
 
 	// interface that represent a project that is created from a template.
@@ -28,6 +37,6 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.TestImporter.Templates {
 		/// has its own details.</param>
 		/// <param name="generatedDir">The dir where the projects will be saved.</param>
 		/// <returns></returns>
-		Task<GeneratedProjects> GenerateTestProjectsAsync (IEnumerable<(string Name, string [] Assemblies, string ExtraArgs, double TimeoutMultiplier)> projects, Platform platform);
+		GeneratedProjects GenerateTestProjects (IEnumerable<(string Name, string [] Assemblies, string ExtraArgs, double TimeoutMultiplier)> projects, Platform platform);
 	}
 }

@@ -1,15 +1,19 @@
-﻿using System.IO;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 using System.Xml;
+using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
+using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 
 namespace Microsoft.DotNet.XHarness.iOS.Shared {
 
 	public interface IAppBundleInformationParser {
-		AppBundleInformation ParseFromProject (string projectFilePath, TestTarget target, string buildConfiguration);
+		Task<AppBundleInformation> ParseFromProjectAsync (ILog log, IProcessManager processManager, string projectFilePath, TestTarget target, string buildConfiguration);
 	}
 
 	public class AppBundleInformationParser : IAppBundleInformationParser {
-		public AppBundleInformation ParseFromProject (string projectFilePath, TestTarget target, string buildConfiguration)
+		public async Task<AppBundleInformation> ParseFromProjectAsync (ILog log, IProcessManager processManager, string projectFilePath, TestTarget target, string buildConfiguration)
 		{
 			var csproj = new XmlDocument ();
 			csproj.LoadWithoutNetworkAccess (projectFilePath);
@@ -30,9 +34,17 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 
 			var platform = target.IsSimulator () ? "iPhoneSimulator" : "iPhone";
 
-			string appPath = Path.Combine (Path.GetDirectoryName (projectFilePath),
-				csproj.GetOutputPath (platform, buildConfiguration).Replace ('\\', Path.DirectorySeparatorChar),
-				appName + (extension != null ? ".appex" : ".app"));
+			string appBundlePath;
+			if (csproj.IsDotNetProject ()) {
+				var properties = new Dictionary<string, string> {
+					{ "Configuration", buildConfiguration },
+					{ "Platform", platform },
+				};
+				appBundlePath = await csproj.GetPropertyByMSBuildEvaluationAsync (log, processManager, projectFilePath, "OutputPath", "_GenerateAppBundleName;_GenerateAppExBundleName", properties);
+			} else {
+				appBundlePath = csproj.GetOutputPath (platform, buildConfiguration).Replace ('\\', Path.DirectorySeparatorChar);
+			}
+			var appPath = Path.Combine (Path.GetDirectoryName (projectFilePath), appBundlePath, appName + (extension != null ? ".appex" : ".app"));
 
 			if (!Directory.Exists (appPath))
 				throw new DirectoryNotFoundException ($"The app bundle directory `{appPath}` does not exist");

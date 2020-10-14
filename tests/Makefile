@@ -191,14 +191,14 @@ Makefile-mac.inc: xharness/xharness.exe
 
 -include Makefile-mac.inc
 
-$(TOP)/tools/mtouch/SdkVersions.cs: $(TOP)/tools/common/SdkVersions.cs.in
-	@$(MAKE) -C $(TOP)/tools/mtouch SdkVersions.cs
+$(TOP)/tools/common/SdkVersions.cs: $(TOP)/tools/common/SdkVersions.cs.in
+	@$(MAKE) -C $(TOP)/tools/mtouch ../common/SdkVersions.cs
 
 .stamp-src-project-files:
 	@$(MAKE) -C $(TOP)/src project-files
 	@touch $@
 
-xharness/xharness.exe: $(wildcard xharness/*.cs) $(wildcard $(TOP)/tools/bcl-test-importer/BCLTestImporter/*.cs) xharness/xharness.csproj $(TOP)/tools/mtouch/SdkVersions.cs test.config test-system.config .stamp-src-project-files
+xharness/xharness.exe: $(xharness_dependencies) test.config test-system.config .stamp-src-project-files $(TOP)/tools/common/SdkVersions.cs
 	$(Q_GEN) $(SYSTEM_MSBUILD) /restore $(MSBUILD_VERBOSITY_QUIET) xharness/xharness.csproj
 
 killall:
@@ -207,11 +207,10 @@ killall:
 	@killall Touch.Server >/dev/null 2>&1 || true
 
 NUNIT_MSBUILD_DIR=$(TOP)/packages/NUnit.Runners.2.6.4/tools/lib
-test-ios-tasks: test-ios-tasks-net461 test-ios-tasks-netstandard2.0
-test-ios-tasks-%: verify-system-vsmac-xcode-match
-	$(SYSTEM_MSBUILD) $(TOP)/msbuild/tests/Xamarin.iOS.Tasks.Tests/Xamarin.iOS.Tasks.Tests.csproj /p:Configuration=Debug-$*
-	cd $(TOP)/msbuild/tests/Xamarin.iOS.Tasks.Tests && $(SYSTEM_XIBUILD) -t -- $(abspath $(TOP)/tools/nunit3-console-3.10.0) $(abspath $(TOP)/msbuild/tests/Xamarin.iOS.Tasks.Tests/bin/Debug-$*/net461/Xamarin.iOS.Tasks.Tests.dll) "--result=$(abspath $(CURDIR)/TestResults_$*_Xamarin.iOS.Tasks.Tests.xml);format=nunit2" -labels=All $(TEST_FIXTURE) || touch .failed-stamp
-	@[[ -z "$$BUILD_REPOSITORY" ]] || ( xsltproc $(TOP)/tests/HtmlTransform.xslt $(CURDIR)/TestResults_$*_Xamarin.iOS.Tasks.Tests.xml > $(TOP)/tests/index-$*.html && echo "@MonkeyWrench: AddFile: $$PWD/index-$*.html" )
+test-ios-tasks: verify-system-vsmac-xcode-match
+	$(SYSTEM_MSBUILD) $(TOP)/msbuild/tests/Xamarin.iOS.Tasks.Tests/Xamarin.iOS.Tasks.Tests.csproj /p:Configuration=Debug
+	cd $(TOP)/msbuild/tests/Xamarin.iOS.Tasks.Tests && $(SYSTEM_XIBUILD) -t -- $(abspath $(TOP)/tools/nunit3-console-3.11.1) $(abspath $(TOP)/msbuild/tests/Xamarin.iOS.Tasks.Tests/bin/Debug/net461/Xamarin.iOS.Tasks.Tests.dll) "--result=$(abspath $(CURDIR)/TestResults_Xamarin.iOS.Tasks.Tests.xml);format=nunit2" -labels=Before $(TEST_FIXTURE) || touch $(CURDIR)/.$@-failed-stamp
+	@[[ -z "$$BUILD_REPOSITORY" ]] || ( xsltproc $(TOP)/tests/HtmlTransform.xslt $(CURDIR)/TestResults_Xamarin.iOS.Tasks.Tests.xml > $(TOP)/tests/index.html && echo "@MonkeyWrench: AddFile: $$PWD/index.html" )
 	@if test -e $(CURDIR)/.$@-failed-stamp; then rm $(CURDIR)/.$@-failed-stamp; exit 1; fi
 
 test-install-sources:
@@ -391,6 +390,10 @@ wrench-launch-external wrench-report-external:
 # This will schedule a manual device test run for the current commit. The current commit must already have packages.
 launch-manual-device-tests:
 	./launch-manual-device-tests.sh
+
+# This will schedule a manual sample test run for the current commit. The current commit must already have packages.
+launch-manual-sample-tests:
+	./launch-manual-sample-tests.sh
 
 else
 wrench-launch-external wrench-report-external:

@@ -15,6 +15,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 		NUnitV2,
 		NUnitV3,
 		xUnit,
+		Trx,
 		Missing,
 	}
 
@@ -27,39 +28,145 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 			if (!File.Exists (path))
 				return false;
 
-			using (var stream = File.OpenText (path)) {
-				string line;
-				while ((line = stream.ReadLine ()) != null) { // special case when get got the tcp connection
-					if (line.Contains ("ping"))
-						continue;
-					if (line.Contains ("test-run")) { // first element of the NUnitV3 test collection
-						type = XmlResultJargon.NUnitV3;
-						return true;
-					}
-					if (line.Contains ("TouchUnitTestRun")) {
-						type = XmlResultJargon.TouchUnit;
-						return true;
-					}
-					if (line.Contains ("test-results")) { // first element of the NUnitV3 test collection
-						type = XmlResultJargon.NUnitV2;
-						return true;
-					}
-					if (line.Contains ("<assemblies>")) { // first element of the xUnit test collection
-						type = XmlResultJargon.xUnit;
-						return true;
-					}
+			using (var stream = File.OpenText (path))
+				return IsValidXml (stream, out type);
+		}
+
+		// test if the file is valid xml, or at least, that can be read it.
+		public bool IsValidXml (TextReader stream, out XmlResultJargon type)
+		{
+			type = XmlResultJargon.Missing;
+
+			string line;
+			while ((line = stream.ReadLine ()) != null) { // special case when get got the tcp connection
+				if (line.Contains ("ping"))
+					continue;
+				if (line.Contains ("test-run")) { // first element of the NUnitV3 test collection
+					type = XmlResultJargon.NUnitV3;
+					return true;
+				}
+				if (line.Contains ("TouchUnitTestRun")) {
+					type = XmlResultJargon.TouchUnit;
+					return true;
+				}
+				if (line.Contains ("test-results")) { // first element of the NUnitV3 test collection
+					type = XmlResultJargon.NUnitV2;
+					return true;
+				}
+				if (line.Contains ("<assemblies>")) { // first element of the xUnit test collection
+					type = XmlResultJargon.xUnit;
+					return true;
+				}
+				if (line.Contains ("<TestRun")) {
+					type = XmlResultJargon.Trx;
+					return true;
 				}
 			}
+
 			return false;
 		}
 
-		static (string resultLine, bool failed) ParseNUnitV3Xml (StreamReader stream, StreamWriter writer)
+		static void ParseNUnitV3XmlTestCase (TextWriter writer, XmlReader reader)
+		{
+			if (reader.NodeType != XmlNodeType.Element)
+				throw new InvalidOperationException ();
+			if (reader.Name != "test-case")
+				throw new InvalidOperationException ();
+
+			// read the test cases in the current node
+			var status = reader ["result"];
+			switch (status) {
+			case "Passed":
+				writer.Write ("\t[PASS] ");
+				break;
+			case "Skipped":
+				writer.Write ("\t[IGNORED] ");
+				break;
+			case "Error":
+			case "Failed":
+				writer.Write ("\t[FAIL] ");
+				break;
+			case "Inconclusive":
+				writer.Write ("\t[INCONCLUSIVE] ");
+				break;
+			default:
+				writer.Write ("\t[INFO] ");
+				break;
+			}
+			var name = reader ["name"];
+			writer.Write (name);
+			if (status == "Failed") { //  we need to print the message
+				reader.ReadToDescendant ("failure");
+				reader.ReadToDescendant ("message");
+				writer.Write ($" : {reader.ReadElementContentAsString ()}");
+				if (reader.Name != "stack-trace")
+					reader.ReadToNextSibling ("stack-trace");
+				writer.Write ($" : {reader.ReadElementContentAsString ()}");
+			}
+			if (status == "Skipped") { // nice to have the skip reason
+				reader.ReadToDescendant ("reason");
+				reader.ReadToDescendant ("message");
+				writer.Write ($" : {reader.ReadElementContentAsString ()}");
+			}
+			// add a new line
+			writer.WriteLine ();
+		}
+
+		static void ParseNUnitV3XmlTestSuite (TextWriter writer, XmlReader reader, bool nested, int nesting = 0)
+		{
+			if (reader.NodeType != XmlNodeType.Element)
+				throw new InvalidOperationException ();
+			if (reader.Name != "test-suite")
+				throw new InvalidOperationException ();
+
+			var type = reader ["type"];
+			var isFixture = type == "TestFixture" || type == "ParameterizedFixture";
+			var testCaseName = reader ["fullname"];
+			var time = reader.GetAttribute ("time") ?? "0"; // some nodes might not have the time :/
+
+			if (isFixture)
+				writer.WriteLine (testCaseName);
+
+			if (reader.IsEmptyElement) {
+				if (isFixture)
+					writer.WriteLine ($"{testCaseName} {time} ms");
+				return;
+			}
+
+			while (reader.Read ()) {
+				switch (reader.NodeType ) {
+				case XmlNodeType.Element:
+					if (reader.Name == "test-case") {
+						ParseNUnitV3XmlTestCase (writer, reader);
+					} else if (reader.Name == "test-suite") {
+						ParseNUnitV3XmlTestSuite (writer, reader, nested || isFixture);
+					}
+					break;
+				case XmlNodeType.EndElement:
+					if (reader.Name == "test-suite") {
+						if (isFixture)
+							writer.WriteLine ($"{testCaseName} {time} ms");
+						return;
+					}
+					break;
+				}
+			}
+
+			throw new InvalidOperationException ("Invalid XML: no test-suite end element");
+		}
+
+		static (string resultLine, bool failed) ParseNUnitV3Xml (TextReader stream, TextWriter writer)
 		{
 			long testcasecount, passed, failed, inconclusive, skipped;
 			bool failedTestRun = false; // result = "Failed"
 			testcasecount = passed = failed = inconclusive = skipped = 0L;
 
-			using (var reader = XmlReader.Create (stream)) {
+			var settings = new XmlReaderSettings ();
+			settings.IgnoreWhitespace = true;
+			settings.IgnoreComments = true;
+			settings.IgnoreProcessingInstructions = true;
+
+			using (var reader = XmlReader.Create (stream, settings)) {
 				while (reader.Read ()) {
 					if (reader.NodeType == XmlNodeType.Element && reader.Name == "test-run") {
 						long.TryParse (reader ["testcasecount"], out testcasecount);
@@ -69,52 +176,8 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 						long.TryParse (reader ["skipped"], out skipped);
 						failedTestRun = failed != 0;
 					}
-					if (reader.NodeType == XmlNodeType.Element && reader.Name == "test-suite" && (reader ["type"] == "TestFixture" || reader ["type"] == "ParameterizedFixture")) {
-						var testCaseName = reader ["fullname"];
-						writer.WriteLine (testCaseName);
-						var time = reader.GetAttribute ("time") ?? "0"; // some nodes might not have the time :/
-																		// get the first node and then move in the siblings of the same type
-						reader.ReadToDescendant ("test-case");
-						do {
-							if (reader.Name != "test-case")
-								break;
-							// read the test cases in the current node
-							var status = reader ["result"];
-							switch (status) {
-							case "Passed":
-								writer.Write ("\t[PASS] ");
-								break;
-							case "Skipped":
-								writer.Write ("\t[IGNORED] ");
-								break;
-							case "Error":
-							case "Failed":
-								writer.Write ("\t[FAIL] ");
-								break;
-							case "Inconclusive":
-								writer.Write ("\t[INCONCLUSIVE] ");
-								break;
-							default:
-								writer.Write ("\t[INFO] ");
-								break;
-							}
-							writer.Write (reader ["name"]);
-							if (status == "Failed") { //  we need to print the message
-								reader.ReadToDescendant ("failure");
-								reader.ReadToDescendant ("message");
-								writer.Write ($" : {reader.ReadElementContentAsString ()}");
-								reader.ReadToNextSibling ("stack-trace");
-								writer.Write ($" : {reader.ReadElementContentAsString ()}");
-							}
-							if (status == "Skipped") { // nice to have the skip reason
-								reader.ReadToDescendant ("reason");
-								reader.ReadToDescendant ("message");
-								writer.Write ($" : {reader.ReadElementContentAsString ()}");
-							}
-							// add a new line
-							writer.WriteLine ();
-						} while (reader.ReadToNextSibling ("test-case"));
-						writer.WriteLine ($"{testCaseName} {time} ms");
+					if (reader.NodeType == XmlNodeType.Element && reader.Name == "test-suite") {
+						ParseNUnitV3XmlTestSuite (writer, reader, false);
 					}
 				}
 			}
@@ -123,7 +186,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 			return (resultLine, failedTestRun);
 		}
 
-		static (string resultLine, bool failed) ParseTouchUnitXml (StreamReader stream, StreamWriter writer)
+		static (string resultLine, bool failed) ParseTouchUnitXml (TextReader stream, TextWriter writer)
 		{
 			long total, errors, failed, notRun, inconclusive, ignored, skipped, invalid;
 			total = errors = failed = notRun = inconclusive = ignored = skipped = invalid = 0L;
@@ -152,7 +215,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 			return (resultLine, total == 0 || errors != 0 || failed != 0);
 		}
 
-		static (string resultLine, bool failed) ParseNUnitXml (StreamReader stream, StreamWriter writer)
+		static (string resultLine, bool failed) ParseNUnitXml (TextReader stream, TextWriter writer)
 		{
 			long total, errors, failed, notRun, inconclusive, ignored, skipped, invalid;
 			total = errors = failed = notRun = inconclusive = ignored = skipped = invalid = 0L;
@@ -220,7 +283,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 			return (resultLine, total == 0 | errors != 0 || failed != 0);
 		}
 
-		static (string resultLine, bool failed) ParsexUnitXml (StreamReader stream, StreamWriter writer)
+		static (string resultLine, bool failed) ParsexUnitXml (TextReader stream, TextWriter writer)
 		{
 			long total, errors, failed, notRun, inconclusive, ignored, skipped, invalid;
 			total = errors = failed = notRun = inconclusive = ignored = skipped = invalid = 0L;
@@ -282,6 +345,118 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 			return (resultLine, total == 0 | errors != 0 || failed != 0);
 		}
 
+		static (string resultLine, bool failed) ParseTrxXml (TextReader stream, TextWriter writer)
+		{
+			using (var reader = XmlReader.Create (stream)) {
+				var tests = ParseTrxXml (reader);
+
+				foreach (var groupedByClass in tests.GroupBy (v => v.ClassName).OrderBy (v => v.Key)) {
+					var className = groupedByClass.Key;
+					var totalDuration = TimeSpan.FromTicks (groupedByClass.Select (v => v.Duration?.Ticks ?? 0).Sum ());
+					writer.WriteLine (className);
+					foreach (var test in groupedByClass) {
+						writer.Write ('\t');
+						switch (test.Outcome) {
+						case "Passed":
+							writer.Write ("[PASS]");
+							break;
+						default:
+							writer.Write ($"[UNKNOWN ({test.Outcome})]");
+							break;
+						}
+						writer.Write (' ');
+						writer.Write (test.TestName);
+						writer.Write (": ");
+						writer.Write (test.Duration?.ToString ());
+						writer.WriteLine ();
+
+					}
+					writer.WriteLine ($"{className} {totalDuration}");
+				}
+				string resultLine = $"Tests run: {tests.Total} Passed: {tests.Passed} Inconclusive: {tests.Inconclusive} Failed: {tests.Failed + tests.Error} Ignored: {tests.NotRunnable}";
+				writer.WriteLine (resultLine);
+
+				return (resultLine, !(tests.Error == 0 && tests.Aborted == 0 && tests.Timeout == 0 && tests.Failed == 0));
+			}
+		}
+
+		class TrxTests : List<TrxTest> {
+			public long Total;
+			public long Executed;
+			public long Passed;
+			public long Failed;
+			public long Error;
+			public long Timeout;
+			public long Aborted;
+			public long Inconclusive;
+			public long NotRunnable;
+			public long NotExecuted;
+
+		}
+
+		class TrxTest {
+			public string? Outcome;
+			public string? ClassName;
+			public string? TestName;
+			public TimeSpan? Duration;
+			public string? Message;
+		}
+
+		static TrxTests ParseTrxXml (XmlReader reader)
+		{
+			var rv = new TrxTests ();
+			var tests = new Dictionary<string, TrxTest> ();
+			TrxTest? lastTest = null;
+			while (reader.Read ()) {
+				if (reader.NodeType != XmlNodeType.Element)
+					continue;
+
+				switch (reader.Name) {
+				case "Counters":
+					long.TryParse (reader ["total"], out rv.Total);
+					long.TryParse (reader ["executed"], out rv.Executed);
+					long.TryParse (reader ["passed"], out rv.Passed);
+					long.TryParse (reader ["failed"], out rv.Failed);
+					long.TryParse (reader ["error"], out rv.Error);
+					long.TryParse (reader ["timeout"], out rv.Timeout);
+					long.TryParse (reader ["aborted"], out rv.Aborted);
+					long.TryParse (reader ["inconclusive"], out rv.Inconclusive);
+					long.TryParse (reader ["notRunnable"], out rv.NotRunnable);
+					long.TryParse (reader ["notExecuted"], out rv.NotExecuted);
+					break;
+				case "UnitTestResult": {
+					var testId = reader ["testId"];
+					var outcome = reader ["outcome"];
+					var test = new TrxTest { Outcome = outcome };
+					if (TimeSpan.TryParse (reader ["duration"], out var duration))
+						test.Duration = duration;
+					tests [testId] = test;
+					rv.Add (test);
+					lastTest = test;
+					break;
+				}
+				case "Message":
+					if (lastTest != null) {
+						reader.Read ();
+						lastTest.Message = reader.Value;
+					}
+					break;
+				case "UnitTest": {
+					var id = reader ["id"];
+					var test = tests [id];
+					while (reader.Read () && !(reader.NodeType == XmlNodeType.Element && reader.Name == "TestMethod"))
+						;
+					test.ClassName = reader ["className"];
+					test.TestName = reader ["name"];
+					break;
+				}
+				default:
+					break;
+				}
+			}
+			return rv;
+		}
+
 		public string GetXmlFilePath (string path, XmlResultJargon xmlType)
 		{
 			var fileName = Path.GetFileName (path);
@@ -315,31 +490,30 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 
 		public (string resultLine, bool failed) GenerateHumanReadableResults (string source, string destination, XmlResultJargon xmlType)
 		{
-			(string resultLine, bool failed) parseData;
 			using (var reader = new StreamReader (source))
-			using (var writer = new StreamWriter (destination, true)) {
-				switch (xmlType) {
-				case XmlResultJargon.TouchUnit:
-					parseData = ParseTouchUnitXml (reader, writer);
-					break;
-				case XmlResultJargon.NUnitV2:
-					parseData = ParseNUnitXml (reader, writer);
-					break;
-				case XmlResultJargon.NUnitV3:
-					parseData = ParseNUnitV3Xml (reader, writer);
-					break;
-				case XmlResultJargon.xUnit:
-					parseData = ParsexUnitXml (reader, writer);
-					break;
-				default:
-					parseData = ("", true);
-					break;
-				}
-			}
-			return parseData;
+			using (var writer = new StreamWriter (destination, true))
+				return GenerateHumanReadableResults (reader, writer, xmlType);
 		}
 
-		static void GenerateNUnitV2TestReport (StreamWriter writer, XmlReader reader)
+		public (string resultLine, bool failed) GenerateHumanReadableResults (TextReader reader, TextWriter writer, XmlResultJargon xmlType)
+		{
+			switch (xmlType) {
+			case XmlResultJargon.TouchUnit:
+				return ParseTouchUnitXml (reader, writer);
+			case XmlResultJargon.NUnitV2:
+				return ParseNUnitXml (reader, writer);
+			case XmlResultJargon.NUnitV3:
+				return ParseNUnitV3Xml (reader, writer);
+			case XmlResultJargon.xUnit:
+				return ParsexUnitXml (reader, writer);
+			case XmlResultJargon.Trx:
+				return ParseTrxXml (reader, writer);
+			default:
+				return ("", true);
+			}
+		}
+
+		static void GenerateTouchUnitTestReport (TextWriter writer, XmlReader reader)
 		{
 			while (reader.Read ()) {
 
@@ -382,7 +556,74 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 			}
 		}
 
-		static void GenerateNUnitV3TestReport (StreamWriter writer, XmlReader reader)
+		static void GenerateNUnitV2TestReport (TextWriter writer, XmlReader reader)
+		{
+			if (!reader.ReadToFollowing ("test-results"))
+				return;
+
+			long.TryParse (reader ["errors"], out var errors);
+			long.TryParse (reader ["failures"], out var failures);
+			if (errors == 0 && failures == 0)
+				return;
+
+			writer.WriteLine ("<div style='padding-left: 15px;'>");
+			writer.WriteLine ("<ul>");
+
+			void write_failure ()
+			{
+				var name = reader ["name"];
+				string? message = null;
+				var depth = reader.Depth;
+				if (reader.ReadToDescendant ("message")) {
+					message = reader.ReadElementContentAsString ();
+					// ReadToParent
+					while (depth > reader.Depth && reader.Read ()) {
+					}
+				}
+				var message_block = message?.IndexOf ('\n') >= 0;
+				writer.WriteLine ("<li>");
+				writer.Write (name.AsHtml ());
+				if (!string.IsNullOrEmpty (message)) {
+					writer.Write (": ");
+					if (message_block)
+						writer.WriteLine ("<div style='padding-left: 15px;'>");
+					writer.Write (message.AsHtml ());
+					if (message_block)
+						writer.WriteLine ("</div>");
+				}
+				writer.WriteLine ("</li>");
+			}
+
+			while (reader.ReadToFollowing ("test-suite")) {
+				if (reader ["type"] == "Assembly")
+					continue;
+
+				var result = reader ["result"];
+				if (result != "Error" && result != "Failure")
+					continue;
+
+				if (result == "Error")
+					write_failure ();
+
+				var depth = reader.Depth;
+
+				while (reader.Read ()) {
+					if (reader.NodeType != XmlNodeType.Element || reader.Name != "test-case")
+							continue;
+
+					result = reader ["result"];
+					if (result == "Error" || result == "Failure")
+						write_failure ();
+					if (reader.Depth < depth)
+						break;
+				}
+			}
+
+			writer.WriteLine ("</ul>");
+			writer.WriteLine ("</div>");
+		}
+
+		static void GenerateNUnitV3TestReport (TextWriter writer, XmlReader reader)
 		{
 			List<(string name, string message)> failedTests = new List<(string name, string message)> ();
 			while (reader.Read ()) {
@@ -431,7 +672,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 			}
 		}
 
-		static void GeneratexUnitTestReport (StreamWriter writer, XmlReader reader)
+		static void GeneratexUnitTestReport (TextWriter writer, XmlReader reader)
 		{
 			var failedTests = new List<(string name, string message)> ();
 			// xUnit is not as nice and does not provide the final result in a top node,
@@ -473,14 +714,44 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 			}
 		}
 
-		public void GenerateTestReport (StreamWriter writer, string resultsPath, XmlResultJargon xmlType)
+		static void GenerateTrxTestReport (TextWriter writer, XmlReader reader)
+		{
+			var tests = ParseTrxXml (reader);
+			var failedTests = tests.Where (v => v.Outcome != "Passed");
+			
+			if (failedTests.Any ()) {
+				writer.WriteLine ("<div style='padding-left: 15px;'>");
+				writer.WriteLine ("<ul>");
+				foreach (var test in failedTests) {
+					writer.WriteLine ("<li>");
+					writer.Write ($"{test.ClassName.AsHtml ()}.{test.TestName.AsHtml()}");
+					if (!string.IsNullOrEmpty (test.Message)) {
+						writer.Write (": ");
+						writer.Write (test.Message.AsHtml ());
+					}
+					writer.WriteLine ("<br />");
+					writer.WriteLine ("</li>");
+				}
+				writer.WriteLine ("</ul>");
+				writer.WriteLine ("</div>");
+			}
+		}
+
+		public void GenerateTestReport (TextWriter writer, string resultsPath, XmlResultJargon xmlType)
 		{
 			using (var stream = new StreamReader (resultsPath))
+				GenerateTestReport (writer, stream, xmlType);
+		}
+
+		public void GenerateTestReport (TextWriter writer, TextReader stream, XmlResultJargon xmlType)
+		{
 			using (var reader = XmlReader.Create (stream)) {
 				switch (xmlType) {
 				case XmlResultJargon.NUnitV2:
-				case XmlResultJargon.TouchUnit:
 					GenerateNUnitV2TestReport (writer, reader);
+					break;
+				case XmlResultJargon.TouchUnit:
+					GenerateTouchUnitTestReport (writer, reader);
 					break;
 				case XmlResultJargon.xUnit:
 					GeneratexUnitTestReport (writer, reader);
@@ -488,8 +759,11 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 				case XmlResultJargon.NUnitV3:
 					GenerateNUnitV3TestReport (writer, reader);
 					break;
+				case XmlResultJargon.Trx:
+					GenerateTrxTestReport (writer, reader);
+					break;
 				default:
-					writer.WriteLine ($"<span style='padding-left: 15px;'>Could not parse {resultsPath}: Not supported format.</span><br />");
+					writer.WriteLine ($"<span style='padding-left: 15px;'>Could not parse {xmlType}: Not supported format.</span><br />");
 					break;
 				}
 			}
@@ -545,7 +819,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 			("time", "0"),
 			("asserts", "1"));
 
-		static void WriteNUnitV2TestCase (XmlWriter writer, string title, string message, StreamReader stderr)
+		static void WriteNUnitV2TestCase (XmlWriter writer, string title, string message, TextReader stderr)
 		{
 			writer.WriteStartElement ("test-case");
 			WriteAttributes (writer,
@@ -567,7 +841,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 			writer.WriteEndElement (); // test-case
 		}
 
-		static void GenerateNUnitV2Failure (XmlWriter writer, string title, string message, StreamReader stderr)
+		static void GenerateNUnitV2Failure (XmlWriter writer, string title, string message, TextReader stderr)
 		{
 			writer.WriteStartElement ("test-results");
 			WriteAttributes (writer,
@@ -612,7 +886,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 			("skipped", "0"),
 			("asserts", "0"));
 
-		static void WriteFailure (XmlWriter writer, string message, StreamReader? stderr = null)
+		static void WriteFailure (XmlWriter writer, string message, TextReader? stderr = null)
 		{
 			writer.WriteStartElement ("failure");
 			writer.WriteStartElement ("message");
@@ -626,7 +900,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 			writer.WriteEndElement (); // failure
 		}
 
-		static void GenerateNUnitV3Failure (XmlWriter writer, string title, string message, StreamReader stderr)
+		static void GenerateNUnitV3Failure (XmlWriter writer, string title, string message, TextReader stderr)
 		{
 			var date = DateTime.Now;
 			writer.WriteStartElement ("test-run");
@@ -678,7 +952,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 			writer.WriteEndElement (); // test-run
 		}
 
-		static void GeneratexUnitFailure (XmlWriter writer, string title, string message, StreamReader stderr)
+		static void GeneratexUnitFailure (XmlWriter writer, string title, string message, TextReader stderr)
 		{
 			writer.WriteStartElement ("assemblies");
 			writer.WriteStartElement ("assembly");
@@ -715,7 +989,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 			writer.WriteEndElement (); // assemblies
 		}
 
-		static void GenerateFailureXml (string destination, string title, string message, StreamReader stderrReader, XmlResultJargon jargon)
+		static void GenerateFailureXml (string destination, string title, string message, TextReader stderrReader, XmlResultJargon jargon)
 		{
 			XmlWriterSettings settings = new XmlWriterSettings { Indent = true };
 			using (var stream = File.CreateText (destination))
@@ -737,7 +1011,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 		}
 
 		public void GenerateFailure (ILogs logs, string source, string appName, string variation, string title,
-			string message, StreamReader stderr, XmlResultJargon jargon)
+			string message, TextReader stderr, XmlResultJargon jargon)
 		{
 			// VSTS does not provide a nice way to report build errors, create a fake
 			// test result with a failure in the case the build did not work

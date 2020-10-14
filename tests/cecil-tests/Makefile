@@ -5,11 +5,10 @@ include $(TOP)/Make.config
 all-local::
 
 build:
-	nuget restore
-	$(SYSTEM_MSBUILD)
+	$(SYSTEM_MSBUILD) /r
 
 run-tests: build
-	$(SYSTEM_MONO) --debug $(TOP)/packages/NUnit.ConsoleRunner.3.9.0/tools/nunit3-console.exe $(abspath $(TOP)/tests/cecil-tests/bin/Debug/cecil-tests.dll)
+	$(TOP)/tools/nunit3-console-3.11.1 $(abspath $(TOP)/tests/cecil-tests/bin/Debug/net472/cecil-tests.dll)
 
 clean:
 	rm -rf bin/ obj/ TestResult.xml

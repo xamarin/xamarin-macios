@@ -15,10 +15,14 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Execution {
 		public bool Succeeded => !TimedOut && ExitCode == 0;
 	}
 
+	public delegate string GetDotNetExecutableDelegate (string project_directory);
+
 	// interface that helps to manage the different processes in the app.
 	public interface IProcessManager {
 		string XcodeRoot { get; }
 		string MlaunchPath { get; }
+		GetDotNetExecutableDelegate GetDotNetExecutable { get; }
+		string MSBuildPath { get; }
 		Version XcodeVersion { get; }
 
 		Task<ProcessExecutionResult> ExecuteCommandAsync (string filename, IList<string> args, ILog log, TimeSpan timeout, Dictionary<string, string> environment_variables = null, CancellationToken? cancellation_token = null);

@@ -49,7 +49,6 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 				available_devices.Reset ();
 				available_device_pairs.Reset ();
 			}
-			loaded = true;
 
 			await Task.Run (async () => {
 				var tmpfile = Path.GetTempFileName ();
@@ -115,6 +114,8 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Hardware {
 							});
 						}
 					}
+
+					loaded = true;
 				} finally {
 					supported_runtimes.SetCompleted ();
 					supported_device_types.SetCompleted ();

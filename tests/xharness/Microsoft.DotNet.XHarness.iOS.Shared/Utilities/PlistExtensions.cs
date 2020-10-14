@@ -1,8 +1,17 @@
 ﻿using System.IO;
+using System.Runtime.CompilerServices;
 using System.Xml;
 
 namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 	public static class PListExtensions {
+		static ConditionalWeakTable<XmlDocument, string> doc_to_filename = new ConditionalWeakTable<XmlDocument, string> ();
+
+		public static string GetFilename (this XmlDocument doc)
+		{
+			doc_to_filename.TryGetValue (doc, out var rv);
+			return rv;
+		}
+
 		public static void LoadWithoutNetworkAccess (this XmlDocument doc, string filename)
 		{
 			using (var fs = new FileStream (filename, FileMode.Open, FileAccess.Read)) {
@@ -14,6 +23,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 					doc.Load (reader);
 				}
 			}
+			doc_to_filename.Add (doc, filename);
 		}
 
 		public static void LoadXmlWithoutNetworkAccess (this XmlDocument doc, string xml)
