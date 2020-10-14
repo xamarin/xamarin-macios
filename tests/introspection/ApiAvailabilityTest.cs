@@ -27,40 +27,36 @@ using ObjCRuntime;
 namespace Introspection {
 
 	public class ApiAvailabilityTest : ApiBaseTest {
-	
+
 		protected Version Minimum { get; set; }
 		protected Version Maximum { get; set; }
-		protected Func<AvailabilityBaseAttribute,bool> Filter { get; set; }
+		protected Func<AvailabilityBaseAttribute, bool> Filter { get; set; }
+		protected PlatformName Platform { get; set; }
 
 		public ApiAvailabilityTest ()
 		{
 			Maximum = Version.Parse (Constants.SdkVersion);
 #if __IOS__
+			Platform = PlatformName.iOS;
 			Minimum = new Version (6,0);
-			Filter = (AvailabilityBaseAttribute arg) => {
-				return (arg.AvailabilityKind != AvailabilityKind.Introduced) || (arg.Platform != PlatformName.iOS);
-			};
 #elif __TVOS__
+			Platform = PlatformName.TvOS;
 			Minimum = new Version (9,0);
-			Filter = (AvailabilityBaseAttribute arg) => {
-				return (arg.AvailabilityKind != AvailabilityKind.Introduced) || (arg.Platform != PlatformName.TvOS);
-			};
 #elif __WATCHOS__
+			Platform = PlatformName.WatchOS;
 			Minimum = new Version (2,0);
 			// Need to special case watchOS 'Maximum' version for OS minor subversions (can't change Constants.SdkVersion)
 			//Maximum = new Version (6,2,5);
-			Filter = (AvailabilityBaseAttribute arg) => {
-				return (arg.AvailabilityKind != AvailabilityKind.Introduced) || (arg.Platform != PlatformName.WatchOS);
-			};
 #else
+			Platform = PlatformName.MacOSX;
 			Minimum = new Version (10,9);
 			// Need to special case macOS 'Maximum' version for OS minor subversions (can't change Constants.SdkVersion)
 			// Please comment the code below if needed
 			Maximum = new Version (10,15,5);
-			Filter = (AvailabilityBaseAttribute arg) => {
-				return (arg.AvailabilityKind != AvailabilityKind.Introduced) || (arg.Platform != PlatformName.MacOSX);
-			};
 #endif
+			Filter = (AvailabilityBaseAttribute arg) => {
+				return (arg.AvailabilityKind != AvailabilityKind.Introduced) || (arg.Platform != Platform);
+			};
 		}
 
 		bool FoundInProtocols (MemberInfo m, Type t)
@@ -204,6 +200,57 @@ namespace Introspection {
 				}
 			}
 			return null;
+		}
+
+		bool IsUnavailable (ICustomAttributeProvider cap)
+		{
+			foreach (var ca in cap.GetCustomAttributes (false)) {
+				if (ca is UnavailableAttribute ua) {
+					if (ua.Platform == Platform)
+						return true;
+				}
+			}
+			return false;
+		}
+
+		AvailabilityBaseAttribute GetAvailable (ICustomAttributeProvider cap)
+		{
+			foreach (var ca in cap.GetCustomAttributes (false)) {
+				if (ca is AvailabilityBaseAttribute aa) {
+					if ((aa.AvailabilityKind != AvailabilityKind.Unavailable) && (aa.Platform == Platform))
+						return aa;
+				}
+			}
+			return null;
+		}
+
+		[Test]
+		public void Unavailable ()
+		{
+			//LogProgress = true;
+			Errors = 0;
+			foreach (Type t in Assembly.GetTypes ()) {
+				if (LogProgress)
+					Console.WriteLine ($"T: {t}");
+				var tu = IsUnavailable (t);
+				var ta = GetAvailable (t);
+				if (tu && (ta != null))
+					AddErrorLine ($"[FAIL] {t.FullName} is marked both [Unavailable ({Platform})] and {ta}.");
+
+				foreach (var m in t.GetMembers (BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public)) {
+					if (LogProgress)
+						Console.WriteLine ($"M: {m}");
+
+					var ma = GetAvailable (t);
+					if (tu && (ma != null))
+						AddErrorLine ($"[FAIL] {m} is marked with {ma} but the type {t.FullName} is [Unavailable ({Platform})].");
+
+					var mu = IsUnavailable (t);
+					if (mu && (ma != null))
+						AddErrorLine ($"[FAIL] {m} is marked both [Unavailable ({Platform})] and {ma}.");
+				}
+			}
+			AssertIfErrors ("{0} API with mixed [Unavailable] and availability attributes", Errors);
 		}
 	}
 }
