@@ -157,6 +157,8 @@ namespace Xamarin.MacDev.Tasks
 			int exitCode;
 
 			try {
+				foreach (var kvp in startInfo.Environment)
+					Log.LogMessage (MessageImportance.Normal, "{0}={1}", kvp.Key, kvp.Value);
 				Log.LogMessage (MessageImportance.Normal, MSBStrings.M0001, startInfo.FileName, startInfo.Arguments);
 
 				using (var stdout = File.CreateText (manifest.ItemSpec)) {
@@ -194,7 +196,7 @@ namespace Xamarin.MacDev.Tasks
 					} catch (Exception ex) {
 						Log.LogError (MSBStrings.E0094, ToolName, manifest.ItemSpec, ex.Message);
 					}
-
+					Log.LogError (ToolName, null, null, manifest.ItemSpec, 0, 0, 0, 0, "Error output: {0}", File.ReadAllText (manifest.ItemSpec));
 					File.Delete (manifest.ItemSpec);
 				}
 			}
