@@ -184,7 +184,7 @@
     <CustomMetalSmeltingInput Include="..\..\Resources\fragmentShader.metal" />
   </ItemGroup>
 
-  <Target Name="CustomMetalSmelting" Inputs="@(CustomMetalSmeltingInput)" Outputs="$(_AppBundlePath)\fragmentShader.metallib" Condition="'$(_SdkIsSimulator)' != 'true'" DependsOnTargets="_GenerateBundleName">
+  <Target Name="CustomMetalSmelting" Inputs="@(CustomMetalSmeltingInput)" Outputs="$(_AppBundlePath)\fragmentShader.metallib" Condition="'$(_SdkIsSimulator)' != 'true'" DependsOnTargets="_GenerateBundleName;_DetectSdkLocations">
     <PropertyGroup>
         <_SmeltingSdk Condition="'$(_PlatformName)' == 'iOS'">iphoneos</_SmeltingSdk>
         <_SmeltingSdk Condition="'$(_PlatformName)' == 'tvOS'">appletvos</_SmeltingSdk>
@@ -192,8 +192,8 @@
         <_SmeltingMinOS Condition="'$(_PlatformName)' == 'tvOS'">-mtvos-version-min=11.0</_SmeltingMinOS>
     </PropertyGroup>
     <MakeDir Directories="$(IntermediateOutputPath);$(AppBundleDir)" />
-    <Exec Command="xcrun -sdk $(_SmeltingSdk) metal -c @(CustomMetalSmeltingInput) -o $(IntermediateOutputPath)\fragmentShader.air $(_SmeltingMinOS)" />
-    <Exec Command="xcrun -sdk $(_SmeltingSdk) metallib $(IntermediateOutputPath)\fragmentShader.air -o $(AppBundleDir)\fragmentShader.metallib" />
+    <Exec Command="xcrun -sdk $(_SmeltingSdk) metal -c @(CustomMetalSmeltingInput) -o $(IntermediateOutputPath)\fragmentShader.air $(_SmeltingMinOS)" EnvironmentVariables="DEVELOPER_DIR=$(_SdkDevPath)" />
+    <Exec Command="xcrun -sdk $(_SmeltingSdk) metallib $(IntermediateOutputPath)\fragmentShader.air -o $(AppBundleDir)\fragmentShader.metallib" EnvironmentVariables="DEVELOPER_DIR=$(_SdkDevPath)" />
   </Target>
 
   <Target Name="BeforeBuild" Inputs="@(GeneratedTestInput)" Outputs="@(GeneratedTestOutput)" DependsOnTargets="CustomMetalSmelting" >
