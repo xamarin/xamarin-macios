@@ -1,0 +1,3 @@
+!missing-field! kVTCompressionPropertyKey_PreserveDynamicHDRMetadata not bound
+!missing-field! kVTDecompressionPropertyKey_PropagatePerFrameHDRDisplayMetadata not bound
+!missing-field! kVTVideoEncoderList_SupportsFrameReordering not bound

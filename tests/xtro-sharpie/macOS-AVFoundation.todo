@@ -1,0 +1,4 @@
+!missing-enum-value! AVCaptureColorSpace native value AVCaptureColorSpace_HLG_BT2020 = 2 not bound
+!missing-field! AVSemanticSegmentationMatteTypeGlasses not bound
+!missing-selector! AVPlayerItem::appliesPerFrameHDRDisplayMetadata not bound
+!missing-selector! AVPlayerItem::setAppliesPerFrameHDRDisplayMetadata: not bound

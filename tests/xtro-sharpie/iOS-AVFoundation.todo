@@ -1,0 +1,10 @@
+!missing-enum-value! AVCaptureColorSpace native value AVCaptureColorSpace_HLG_BT2020 = 2 not bound
+!missing-field! AVSemanticSegmentationMatteTypeGlasses not bound
+!missing-selector! AVCapturePhotoOutput::isContentAwareDistortionCorrectionEnabled not bound
+!missing-selector! AVCapturePhotoOutput::isContentAwareDistortionCorrectionSupported not bound
+!missing-selector! AVCapturePhotoOutput::setContentAwareDistortionCorrectionEnabled: not bound
+!missing-selector! AVCapturePhotoSettings::isAutoContentAwareDistortionCorrectionEnabled not bound
+!missing-selector! AVCapturePhotoSettings::setAutoContentAwareDistortionCorrectionEnabled: not bound
+!missing-selector! AVCaptureResolvedPhotoSettings::isContentAwareDistortionCorrectionEnabled not bound
+!missing-selector! AVPlayerItem::appliesPerFrameHDRDisplayMetadata not bound
+!missing-selector! AVPlayerItem::setAppliesPerFrameHDRDisplayMetadata: not bound

@@ -33,7 +33,7 @@ namespace Introspection {
 		{
 			Class.ThrowOnInitFailure = false;
 			ContinueOnFailure = true;
-			//LogProgress = true;
+			LogProgress = true;
 		}
 
 		protected override bool Skip (Type type)
@@ -229,6 +229,8 @@ namespace Introspection {
 				// MPSPredicate.mm:102: failed assertion `[MPSPredicate initWithBuffer:offset:] device: Apple A8 GPU does not support predication.'
 				return ((Runtime.Arch == Arch.DEVICE) && (UIScreen.MainScreen.NativeBounds.Width <= 1920));
 #endif
+			case "AVSpeechSynthesisVoice": // Calling description
+				return TestRuntime.CheckExactXcodeVersion (12, 2, beta: 3);
 			default:
 				return base.Skip (type);
 			}

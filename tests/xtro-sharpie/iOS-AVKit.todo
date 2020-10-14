@@ -1,0 +1,4 @@
+!missing-selector! AVPictureInPictureController::canStartPictureInPictureAutomaticallyFromInline not bound
+!missing-selector! AVPictureInPictureController::setCanStartPictureInPictureAutomaticallyFromInline: not bound
+!missing-selector! AVPlayerViewController::canStartPictureInPictureAutomaticallyFromInline not bound
+!missing-selector! AVPlayerViewController::setCanStartPictureInPictureAutomaticallyFromInline: not bound
