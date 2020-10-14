@@ -45,10 +45,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using IKVM.Reflection;
-using Type = IKVM.Reflection.Type;
 using System.Text;
 using System.ComponentModel;
+using System.Reflection;
 
 using ObjCRuntime;
 using Foundation;

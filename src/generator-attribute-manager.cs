@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using IKVM.Reflection;
-using Type = IKVM.Reflection.Type;
+using System.Reflection;
 using PlatformName = ObjCRuntime.PlatformName;
 
 public class AttributeManager
@@ -205,16 +204,19 @@ public class AttributeManager
 	}
 
 	// This method gets the System.Type for a IKVM.Reflection.Type to a System.Type.
-	System.Type ConvertType (Type type, ICustomAttributeProvider provider)
+	System.Type ConvertTypeFromMeta (Type type, ICustomAttributeProvider provider)
 	{
 		var rv = LookupReflectionType (type.FullName, provider);
 		if (rv == null)
+		{
+			Console.WriteLine (Environment.StackTrace);
 			throw ErrorHelper.CreateError (1055, type.AssemblyQualifiedName);
+		}
 		return rv;
 	}
 
 	// This method gets the IKVM.Reflection.Type for a System.Type.
-	Type ConvertType (System.Type type, ICustomAttributeProvider provider)
+	Type ConvertTypeToMeta (System.Type type, ICustomAttributeProvider provider)
 	{
 		var ikvm_type_lookup = BindingTouch.IKVMTypeLookup;
 
@@ -225,7 +227,7 @@ public class AttributeManager
 			// Report a warning if we find the same type in multiple assemblies though.
 			var assemblies = BindingTouch.universe.GetAssemblies ();
 			foreach (var asm in assemblies) {
-				var lookup = asm.FindType (new TypeName (type.Namespace, type.Name));
+				var lookup = asm.GetType (type.Namespace + "." + type.Name);// .FindType (new TypeName (type.Namespace, type.Name));
 				if (lookup == null)
 					continue;
 				if (lookup.Assembly != asm) {
@@ -354,11 +356,11 @@ public class AttributeManager
 		if (convertedAttributes.Any ())
 			return convertedAttributes.OfType<T> ();
 
-		var expectedType = ConvertType (typeof (T), provider);
+		var expectedType = ConvertTypeToMeta (typeof (T), provider);
 		if (attribute.AttributeType != expectedType && !IsSubclassOf (expectedType, attribute.AttributeType))
 			return Enumerable.Empty<T> ();
 
-		System.Type attribType = ConvertType (attribute.AttributeType, provider);
+		System.Type attribType = ConvertTypeFromMeta (attribute.AttributeType, provider);
 
 		var constructorArguments = new object [attribute.ConstructorArguments.Count];
 
@@ -395,7 +397,7 @@ public class AttributeManager
 				}
 				break;
 			default:
-				ctorTypes [i] = ConvertType (paramType, provider);
+				ctorTypes [i] = ConvertTypeFromMeta (paramType, provider);
 				break;
 			}
 			if (ctorTypes [i] == null)
@@ -410,13 +412,13 @@ public class AttributeManager
 			var arg = attribute.NamedArguments [i];
 			var value = arg.TypedValue.Value;
 			if (arg.TypedValue.ArgumentType == TypeManager.System_String_Array) {
-				var typed_values = (CustomAttributeTypedArgument []) arg.TypedValue.Value;
+				var typed_values = ((IEnumerable<CustomAttributeTypedArgument>) arg.TypedValue.Value).ToArray ();
 				var arr = new string [typed_values.Length];
 				for (int a = 0; a < arr.Length; a++)
 					arr [a] = (string) typed_values [a].Value;
 				value = arr;
 			} else if (arg.TypedValue.ArgumentType.FullName == "System.Type[]") {
-				var typed_values = (CustomAttributeTypedArgument []) arg.TypedValue.Value;
+				var typed_values = ((IEnumerable<CustomAttributeTypedArgument>) arg.TypedValue.Value).ToArray ();
 				var arr = new Type [typed_values.Length];
 				for (int a = 0; a < arr.Length; a++)
 					arr [a] = (Type) typed_values [a].Value;
@@ -473,16 +475,16 @@ public class AttributeManager
 			return null;
 		var member = provider as MemberInfo;
 		if (member != null)
-			return CustomAttributeData.GetCustomAttributes (member);
+			return member.GetCustomAttributesData ();
 		var assembly = provider as Assembly;
 		if (assembly != null)
-			return CustomAttributeData.GetCustomAttributes (assembly);
+			return assembly.GetCustomAttributesData ();
 		var pinfo = provider as ParameterInfo;
 		if (pinfo != null)
-			return CustomAttributeData.GetCustomAttributes (pinfo);
+			return pinfo.GetCustomAttributesData ();
 		var module = provider as Module;
 		if (module != null)
-			return CustomAttributeData.GetCustomAttributes (module);
+			return module.GetCustomAttributesData ();
 		throw new BindingException (1051, true, provider.GetType ().FullName);
 	}
 
@@ -497,7 +499,7 @@ public class AttributeManager
 
 	public bool HasAttribute<T> (ICustomAttributeProvider provider) where T : Attribute
 	{
-		var attribute_type = ConvertType (typeof (T), provider);
+		var attribute_type = ConvertTypeToMeta (typeof (T), provider);
 		var attribs = GetIKVMAttributes (provider);
 		if (attribs == null || attribs.Count == 0)
 			return false;

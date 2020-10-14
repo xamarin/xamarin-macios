@@ -27,11 +27,10 @@
 using System;
 using System.IO;
 using System.Linq;
-using IKVM.Reflection;
-using Type = IKVM.Reflection.Type;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using System.Reflection;
 using Mono.Options;
 
 using ObjCRuntime;
@@ -53,7 +52,7 @@ public class BindingTouch {
 	List<string> libs = new List<string> ();
 	List<string> references = new List<string> ();
 
-	public Universe universe;
+	public MetadataLoadContext universe;
 	public TypeManager TypeManager = new TypeManager ();
 	public Frameworks Frameworks;
 	public AttributeManager AttributeManager;
@@ -474,46 +473,22 @@ public class BindingTouch {
 
 			if (Driver.RunCommand (compiler, cargs, null, out var compile_output, true, Driver.Verbosity) != 0)
 				throw ErrorHelper.CreateError (2, $"{compiler} {StringUtils.FormatArguments (cargs)}\n{compile_output}".Replace ("\n", "\n\t"));
-				
 
-			universe = new Universe (UniverseOptions.EnableFunctionPointers | UniverseOptions.ResolveMissingMembers | UniverseOptions.MetadataOnly);
-			if (IsDotNet) {
-				// IKVM tries uses reflection to locate assemblies on disk, but .NET doesn't include reflection so that fails.
-				// Instead intercept assembly resolution and look for assemblies where we know they are.
-				var resolved_assemblies = new Dictionary<string, Assembly> ();
-				universe.AssemblyResolve += (object sender, IKVM.Reflection.ResolveEventArgs rea) => {
-					var an = new AssemblyName (rea.Name);
+			// TODO: Replace with lazy resolver
+			var assemblyPaths = new List<string> ();
+			foreach (var path in GetLibraryDirectories ())
+				assemblyPaths.AddRange (Directory.GetFiles (path, "*.dll"));
+			assemblyPaths.Add (baselibdll);
+			assemblyPaths.Add (GetAttributeLibraryPath ());
 
-					// Check if we've already found this assembly
-					if (resolved_assemblies.TryGetValue (an.Name, out var rv))
-						return rv;
-
-					// Check if the assembly has already been loaded into IKVM
-					var assemblies = universe.GetAssemblies ();
-					foreach (var asm in assemblies) {
-						if (asm.GetName ().Name == an.Name) {
-							resolved_assemblies [an.Name] = asm;
-							return asm;
-						}
-					}
-
-					// Look in the references to find a matching one and get the path from there.
-					foreach (var r in references) {
-						var fn = Path.GetFileNameWithoutExtension (r);
-						if (fn == an.Name) {
-							rv = universe.LoadFile (r);
-							resolved_assemblies [an.Name] = rv;
-							return rv;
-						}
-					}
-
-					throw ErrorHelper.CreateError (1081, rea.Name);
-				};
-			}
+			universe = new MetadataLoadContext (
+				new PathAssemblyResolver (assemblyPaths),
+				"mscorlib"
+			);
 
 			Assembly api;
 			try {
-				api = universe.LoadFile (tmpass);
+				api = universe.LoadFromAssemblyPath (tmpass);
 			} catch (Exception e) {
 				if (Driver.Verbosity > 0)
 					Console.WriteLine (e);
@@ -524,7 +499,7 @@ public class BindingTouch {
 
 			Assembly baselib;
 			try {
-				baselib = universe.LoadFile (baselibdll);
+				baselib = universe.LoadFromAssemblyPath (baselibdll);
 			} catch (Exception e){
 				if (Driver.Verbosity > 0)
 					Console.WriteLine (e);
@@ -536,11 +511,10 @@ public class BindingTouch {
 			AttributeManager = new AttributeManager (this);
 			Frameworks = new Frameworks (CurrentPlatform);
 
-			Assembly corlib_assembly = universe.LoadFile (LocateAssembly ("mscorlib"));
 			// Explicitly load our attribute library so that IKVM doesn't try (and fail) to find it.
-			universe.LoadFile (GetAttributeLibraryPath ());
+			universe.LoadFromAssemblyPath (GetAttributeLibraryPath ());
 
-			TypeManager.Initialize (this, api, corlib_assembly, baselib);
+			TypeManager.Initialize (this, api, universe.CoreAssembly, baselib);
 
 			foreach (var linkWith in AttributeManager.GetCustomAttributes<LinkWithAttribute> (api)) {
 				if (!linkwith.Contains (linkWith.LibraryName)) {
@@ -564,7 +538,7 @@ public class BindingTouch {
 
 				if (File.Exists (r)) {
 					try {
-						universe.LoadFile (r);
+						universe.LoadFromAssemblyPath (r);
 					} catch (Exception ex) {
 						ErrorHelper.Warning (1104, r, ex.Message);
 					}
