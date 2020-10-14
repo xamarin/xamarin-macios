@@ -116,11 +116,11 @@ namespace Network {
 
 		public string? BonjourServiceDomain => Marshal.PtrToStringAnsi (nw_endpoint_get_bonjour_service_domain (GetCheckedHandle ()));
 
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[TV (13,0), Mac (10,15), iOS (13,0)]
 		[DllImport (Constants.NetworkLibrary, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
 		static extern OS_nw_endpoint nw_endpoint_create_url (string url);
 
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[TV (13,0), Mac (10,15), iOS (13,0)]
 		public static NWEndpoint? Create (string url)
 		{
 			if (url == null)
@@ -131,11 +131,11 @@ namespace Network {
 			return new NWEndpoint (handle, owns: true);
 		}
 
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[TV (13,0), Mac (10,15), iOS (13,0)]
 		[DllImport (Constants.NetworkLibrary, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
 		static extern IntPtr nw_endpoint_get_url (OS_nw_endpoint endpoint);
 
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[TV (13,0), Mac (10,15), iOS (13,0)]
 		public string? Url => Marshal.PtrToStringAnsi (nw_endpoint_get_url (GetCheckedHandle ()));
 	}
 }

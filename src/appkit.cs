@@ -7160,7 +7160,7 @@ namespace AppKit {
 		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'FromCGContext' instead.")]
 		NSGraphicsContext FromGraphicsPort (IntPtr graphicsPort, bool initialFlippedState);
 	
-		[Static, Export ("currentContext")]
+		[Static, Export ("currentContext"), NullAllowed]
 		NSGraphicsContext CurrentContext { get; set; }
 	
 		[Static, Export ("currentContextDrawingToScreen")]

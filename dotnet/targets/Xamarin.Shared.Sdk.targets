@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-	<!-- Automatically supply project capabilities for IDE use -->
-	<ItemGroup>
-		<ProjectCapability Include="Apple" />
-		<ProjectCapability Include="Mobile" />
-
-		<!-- See https://work.azdo.io/1112733 -->
-		<!-- Conflicts with our targets generator in VS+CPS -->
-		<ProjectCapability Remove="LaunchProfiles" />
-	</ItemGroup>
-
 	<PropertyGroup>
 		<_XamarinTaskAssembly Condition="'$(_PlatformName)' != 'macOS'">$(_XamarinSdkRootDirectory)\tools\msbuild\iOS\Xamarin.iOS.Tasks.dll</_XamarinTaskAssembly>
 		<_XamarinTaskAssembly Condition="'$(_PlatformName)' == 'macOS'">$(_XamarinSdkRootDirectory)\tools\msbuild\macOS\Xamarin.Mac.Tasks.dll</_XamarinTaskAssembly>
@@ -67,6 +57,33 @@
 		<_ProjectType Condition="'$(_ProjectType)' == '' And '$(_PlatformName)' == 'macOS' And '$(OutputType)' == 'Library'">macOSClassLibrary</_ProjectType>
 	</PropertyGroup>
 
+	<!-- Automatically supply project capabilities for IDE use -->
+	<ItemGroup>
+		<ProjectCapability Include="Apple" />
+		<ProjectCapability Include="Mobile" />
+		
+		<ProjectCapability Include="IOSApplication" Condition="'$(_ProjectType)' == 'iOSExecutableProject'" />
+		<ProjectCapability Include="IOSAppExtension" Condition="'$(_ProjectType)' == 'iOSAppExtensionProject'" />
+		<ProjectCapability Include="IOSBinding" Condition="'$(_ProjectType)' == 'iOSBindingProject'" />
+		<ProjectCapability Include="IOSClassLibrary" Condition="'$(_ProjectType)' == 'iOSClassLibrary'" />
+		<ProjectCapability Include="TvOSApplication" Condition="'$(_ProjectType)' == 'tvOSExecutableProject'" />
+		<ProjectCapability Include="TvOSAppExtension" Condition="'$(_ProjectType)' == 'tvOSAppExtensionProject'" />
+		<ProjectCapability Include="TvOSBinding" Condition="'$(_ProjectType)' == 'tvOSBindingProject'" />
+		<ProjectCapability Include="TvOSClassLibrary" Condition="'$(_ProjectType)' == 'tvOSClassLibrary'" />
+		<ProjectCapability Include="WatchOSApplication" Condition="'$(_ProjectType)' == 'watchOSAppProject'" />
+		<ProjectCapability Include="WatchOSAppExtension" Condition="'$(_ProjectType)' == 'watchOSAppExtensionProject'" />
+		<ProjectCapability Include="WatchOSBinding" Condition="'$(_ProjectType)' == 'watchOSBindingProject'" />
+		<ProjectCapability Include="WatchOSClassLibrary" Condition="'$(_ProjectType)' == 'watchOSClassLibrary'" />
+		<ProjectCapability Include="MacOSApplication" Condition="'$(_ProjectType)' == 'macOSExecutableProject'" />
+		<ProjectCapability Include="MacOSAppExtension" Condition="'$(_ProjectType)' == 'macOSAppExtensionProject'" />
+		<ProjectCapability Include="MacOSBinding" Condition="'$(_ProjectType)' == 'macOSBindingProject'" />
+		<ProjectCapability Include="MacOSClassLibrary" Condition="'$(_ProjectType)' == 'macOSClassLibrary'" />
+
+		<!-- See https://work.azdo.io/1112733 -->
+		<!-- Conflicts with our targets generator in VS+CPS -->
+		<ProjectCapability Remove="LaunchProfiles" />
+	</ItemGroup>
+	
 	<PropertyGroup>
 		<!-- We must run the linker for executable projects and app extension projects. We must set PublishTrimmed before importing Microsoft.NET.Sdk, because it'll be evaluated there. -->
 		<PublishTrimmed Condition="'$(PublishTrimmed)' == '' And ($(_ProjectType.EndsWith ('ExecutableProject')) Or $(_ProjectType.EndsWith ('AppExtensionProject')))">true</PublishTrimmed>
@@ -380,7 +397,7 @@
 
 	This doesn't work after linking with these libraries, so this must be fixed to be @executable_path/. Eventually mono will ship dylibs we don't have to fix (https://github.com/dotnet/runtime/issues/34637).
 	-->
-	<Target Name="_UpdateDynamicLibraryId" DependsOnTargets="_ComputeVariables;_ParseBundlerArguments" Inputs="@(_MonoLibrary)" Outputs="@(_MonoLibrary -> '$(_IntermediateNativeLibraryDir)%(Filename)%(Extension)')">
+	<Target Name="_UpdateDynamicLibraryId" DependsOnTargets="_ComputeVariables;_ParseBundlerArguments" Inputs="@(_MonoLibrary)" Outputs="@(_MonoLibrary -> '$(_IntermediateNativeLibraryDir)%(Filename)%(Extension)')" Condition=" '$(_PlatformName)' != 'macOS' ">
 		<PropertyGroup>
 			<_ExecutablePathPrefix Condition="'$(_PlatformName)' != 'macOS'">@executable_path/</_ExecutablePathPrefix>
 			<_ExecutablePathPrefix Condition="'$(_PlatformName)' == 'macOS'">@executable_path/../$(_CustomBundleName)/</_ExecutablePathPrefix>
@@ -409,6 +426,8 @@
 		<PropertyGroup>
 			<_NativeExecutablePublishDir Condition="'$(_PlatformName)' != 'macOS'">$(MSBuildProjectDirectory)$(_AppBundlePath)\</_NativeExecutablePublishDir>
 			<_NativeExecutablePublishDir Condition="'$(_PlatformName)' == 'macOS'">$(MSBuildProjectDirectory)$(_AppBundlePath)\Contents\MacOS\</_NativeExecutablePublishDir>
+			<_DylibRPath Condition="'$(_PlatformName)' != 'macOS'">@executable_path</_DylibRPath>
+			<_DylibRPath Condition="'$(_PlatformName)' == 'macOS'">@executable_path/../$(_CustomBundleName)/</_DylibRPath>
 		</PropertyGroup>
 
 		<ItemGroup>
@@ -421,6 +440,7 @@
 
 		<LinkNativeCode
 			SessionId="$(BuildSessionId)"
+			DylibRPath="$(_DylibRPath)"
 			EntitlementsInExecutable="$(_CompiledEntitlements)"
 			Frameworks="@(_NativeExecutableFrameworks);@(_BindingLibraryFrameworks)"
 			LinkerFlags="@(_BindingLibraryLinkerFlags)"

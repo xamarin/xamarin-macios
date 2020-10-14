@@ -104,7 +104,7 @@ namespace CloudKit
 		Query = 1,
 		RecordZone = 2,
 		ReadNotification = 3,
-		[iOS (10,0), TV (10,0), Mac (10,12), Watch (3,0)] Database = 4,
+		[iOS (10,0), TV (10,0), Mac (10,12)] Database = 4,
 	}
 
 	// NSInteger -> CKNotification.h
@@ -127,7 +127,7 @@ namespace CloudKit
 	public enum CKRecordZoneCapabilities : ulong {
 		FetchChanges = 1 << 0,
 		Atomic = 1 << 1,
-		[iOS (10,0), Watch (3,0), TV (10,0), Mac (10,12)] Sharing = 1 << 2,
+		[iOS (10,0), TV (10,0), Mac (10,12)] Sharing = 1 << 2,
 	}
 
 	// NSUInteger -> CKReference.h

@@ -574,7 +574,7 @@ namespace HomeKit {
 		[Field ("HMCharacteristicTypeHumidifierThreshold")]
 		HumidifierThreshold,
 
-		[iOS (9,0), Watch (2,0), TV (10,0)]
+		[iOS (9,0)]
 		[Field ("HMCharacteristicTypeSecuritySystemAlarmType")]
 		SecuritySystemAlarmType,
 

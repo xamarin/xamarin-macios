@@ -65,15 +65,15 @@ namespace Network {
 			get => nw_advertise_descriptor_get_no_auto_rename (GetCheckedHandle ());
 		}
 
-		[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+		[TV (13,0), Mac (10,15), iOS (13,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_txt_record nw_advertise_descriptor_copy_txt_record_object (OS_nw_advertise_descriptor advertise_descriptor);
 
-		[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+		[TV (13,0), Mac (10,15), iOS (13,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_advertise_descriptor_set_txt_record_object (OS_nw_advertise_descriptor advertise_descriptor, OS_nw_txt_record txt_record);
 
-		[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+		[TV (13,0), Mac (10,15), iOS (13,0)]
 		public NWTxtRecord TxtRecord {
 			get => new NWTxtRecord (nw_advertise_descriptor_copy_txt_record_object (GetCheckedHandle ()), owns: true); 
 			set => nw_advertise_descriptor_set_txt_record_object (GetCheckedHandle (), value.GetHandle ()); 

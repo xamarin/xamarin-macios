@@ -1929,7 +1929,6 @@
 !missing-null-allowed! 'System.Void AppKit.NSFormCell::set_PlaceholderAttributedString(Foundation.NSAttributedString)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSFormCell::set_PlaceholderString(System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSGestureRecognizer::set_Action(ObjCRuntime.Selector)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void AppKit.NSGraphicsContext::set_CurrentContext(AppKit.NSGraphicsContext)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSGroupTouchBarItem::set_CustomizationLabel(System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSHelpManager::FindString(System.String,System.String)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Void AppKit.NSHelpManager::OpenHelpAnchor(System.String,System.String)' is missing an [NullAllowed] on parameter #1
