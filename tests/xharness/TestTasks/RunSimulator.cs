@@ -105,6 +105,7 @@ namespace Xharness.TestTasks {
 				variation: testTask.Variation,
 				buildTask: testTask.BuildTask,
 				simulators: Simulators);
+			await testTask.Runner.InitializeAsync ();
 		}
 
 		public async Task RunTestAsync ()

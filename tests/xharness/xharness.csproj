@@ -76,11 +76,14 @@
     <Compile Include="AppRunner.cs" />
     <Compile Include="BCLTestImportTargetFactory.cs" />
     <Compile Include="CrashSnapshotReporterFactory.cs" />
+    <Compile Include="DeviceLoaderFactory.cs" />
     <Compile Include="DeviceLogCapturerFactory.cs" />
     <Compile Include="GitHub.cs" />
     <Compile Include="Harness.cs" />
-    <Compile Include="TestReporterFactory.cs" />
+    <Compile Include="IHarness.cs" />
+    <Compile Include="Jenkins\ErrorKnowledgeBase.cs" />
     <Compile Include="Jenkins\Jenkins.cs" />
+    <Compile Include="Jenkins\TestSelector.cs" />
     <Compile Include="Jenkins\TestTasks\AggregatedRunSimulatorTask.cs" />
     <Compile Include="Jenkins\TestTasks\BuildProjectTask.cs" />
     <Compile Include="Jenkins\TestTasks\BuildToolTask.cs" />
@@ -100,6 +103,7 @@
     <Compile Include="MakefileGenerator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SimulatorLoaderFactory.cs" />
     <Compile Include="SolutionGenerator.cs" />
     <Compile Include="Targets\iOSTarget.cs" />
     <Compile Include="Targets\MacTarget.cs" />
@@ -122,9 +126,27 @@
     <Compile Include="TestTasks\IRunSimulatorTask.cs" />
     <Compile Include="TestTasks\RunDevice.cs" />
     <Compile Include="TestProjectExtensions.cs" />
+    <Compile Include="Jenkins\ITestTaskExtensions.cs" />
+    <Compile Include="Jenkins\TestVariationsFactory.cs" />
+    <Compile Include="Jenkins\TestData.cs" />
+    <Compile Include="TestTargetExtensions.cs" />
+    <Compile Include="TestPlatformExtensions.cs" />
+    <Compile Include="Jenkins\MacTestTasksEnumerable.cs" />
+    <Compile Include="MacFlavorsExtensions.cs" />
+    <Compile Include="Jenkins\NUnitTestTasksEnumerable.cs" />
+    <Compile Include="Jenkins\MakeTestTaskEnumerable.cs" />
+    <Compile Include="Jenkins\JenkinsDeviceLoader.cs" />
+    <Compile Include="Jenkins\ResourceManager.cs" />
+    <Compile Include="Jenkins\PeriodicCommand.cs" />
+    <Compile Include="Jenkins\Reports\IReportWriter.cs" />
+    <Compile Include="Jenkins\Reports\MarkdownReportWriter.cs" />
+    <Compile Include="Jenkins\Reports\HtmlReportWriter.cs" />
+    <Compile Include="Jenkins\RunDeviceTasksFactory.cs" />
+    <Compile Include="Jenkins\RunSimulatorTasksFactory.cs" />
+    <Compile Include="Jenkins\TestServer.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\tools\mtouch\SdkVersions.cs">
+    <Compile Include="..\..\tools\common\SdkVersions.cs">
       <Link>SdkVersions.cs</Link>
     </Compile>
   </ItemGroup>
@@ -143,5 +165,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Jenkins\Reports\" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

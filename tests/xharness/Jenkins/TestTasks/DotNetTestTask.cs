@@ -27,7 +27,9 @@ namespace Xharness.Jenkins.TestTasks {
 					"--logger:html;LogFileName=" + Path.GetFileName (html.FullPath)
 				};
 
-				await ExecuteProcessAsync (Jenkins.Harness.DOTNET, args);
+				WorkingDirectory = Path.GetDirectoryName (ProjectFile);
+
+				await ExecuteProcessAsync (Jenkins.Harness.GetDotNetExecutable (Path.GetDirectoryName (ProjectFile)), args);
 			}
 		}
 	}

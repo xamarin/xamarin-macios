@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
+using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 
@@ -10,9 +11,10 @@ namespace Xharness.Targets
 {
 	public abstract class Target
 	{
-		public Harness Harness;
+		public IHarness Harness;
 
 		protected XmlDocument inputProject;
+		protected string OriginalInfoPListInclude { get; private set; }
 		string outputType;
 		string bundleIdentifier;
 		string targetDirectory;
@@ -26,6 +28,8 @@ namespace Xharness.Targets
 
 		public string TemplateProjectPath { get; set; }
 
+		bool? is_dotnet_project;
+		public bool IsDotNetProject { get { return is_dotnet_project ?? (is_dotnet_project = inputProject.IsDotNetProject ()).Value; } }
 		public string OutputType { get { return outputType; } }
 		public string TargetDirectory { get { return targetDirectory; } }
 		public bool IsLibrary { get { return outputType == "Library"; } }
@@ -67,10 +71,69 @@ namespace Xharness.Targets
 
 		public string LanguageGuid { get { return IsFSharp ? FSharpGuid : CSharpGuid; } }
 
-		protected virtual bool FixProjectReference (string name, out string fixed_name)
+		public abstract string DotNetSdk { get; }
+		public abstract string RuntimeIdentifier { get; }
+		public abstract DevicePlatform ApplePlatform { get; }
+		public abstract string TargetFramework { get; }
+		public abstract string TargetFrameworkForNuGet { get; }
+
+		public static string ProjectsDir { get { return "generated-projects"; } }
+		protected string GetTargetSpecificDir (string customSuffix = null)
 		{
-			fixed_name = null;
+			string rv;
+			if (string.IsNullOrEmpty (customSuffix)) {
+				rv = Suffix;
+			} else {
+				rv = Suffix + "-" + customSuffix;
+			}
+			if (IsDotNetProject)
+				rv += "-dotnet";
+			return rv.TrimStart ('-');
+		}
+
+		public string PlatformString {
+			get {
+				return ApplePlatform.AsString ();
+			}
+		}
+
+		protected virtual bool FixProjectReference (string include, string subdir, string suffix, out string fixed_include)
+		{
+			var fn = Path.GetFileName (include);
+
+			switch (fn) {
+			case "Touch.Client-iOS.dotnet.csproj":
+			case "Touch.Client-iOS.csproj":
+				var dir = Path.GetDirectoryName (include);
+				var parentDir = Path.GetFileName (dir);
+				if (parentDir == "iOS")
+					dir = Path.Combine (Path.GetDirectoryName (dir), PlatformString);
+				fixed_include = Path.Combine (dir, fn.Replace ("-iOS", "-" + PlatformString));
+				break;
+			default:
+				include = include.Replace (".csproj", suffix + ".csproj");
+				include = include.Replace (".fsproj", suffix + ".fsproj");
+
+				if (!string.IsNullOrEmpty (subdir))
+					include = Path.Combine (Path.GetDirectoryName (include), subdir, Path.GetFileName (include));
+
+				fixed_include = include;
+				break;
+			}
+
 			return true;
+		}
+
+		protected virtual void ProcessDotNetProject ()
+		{
+			inputProject.SetSdk (DotNetSdk);
+			inputProject.SetRuntimeIdentifier (RuntimeIdentifier);
+			inputProject.FixProjectReferences (Path.Combine (ProjectsDir, GetTargetSpecificDir ()), Suffix, FixProjectReference);
+			inputProject.SetNode ("TargetFramework", TargetFramework);
+			var fixedAssetTargetFallback = inputProject.GetAssetTargetFallback ()?.Replace ("xamarinios10", TargetFrameworkForNuGet);
+			if (fixedAssetTargetFallback != null)
+				inputProject.SetAssetTargetFallback (fixedAssetTargetFallback);
+			inputProject.ResolveAllPaths (TemplateProjectPath);
 		}
 
 		protected virtual void ProcessProject ()
@@ -107,7 +170,7 @@ namespace Xharness.Targets
 					inputProject.RemoveNode (p, false);
 			}
 
-			inputProject.FixProjectReferences (Suffix, FixProjectReference);
+			inputProject.FixProjectReferences (Path.Combine (ProjectsDir, GetTargetSpecificDir ()), Suffix, FixProjectReference);
 			inputProject.SetAssemblyReference ("OpenTK", "OpenTK-1.0");
 			inputProject.SetProjectTypeGuids (IsBindingProject ? BindingsProjectTypeGuids : ProjectTypeGuids);
 			inputProject.SetImport ("$(MSBuildExtensionsPath)\\Xamarin\\" + (IsBindingProject ? BindingsImports : Imports));
@@ -138,13 +201,25 @@ namespace Xharness.Targets
 		protected void CreateLibraryProject ()
 		{
 			ProcessProject ();
+			inputProject.ResolveAllPaths (TemplateProjectPath);
 			inputProject.Save (ProjectPath, (l, m) => Harness.Log (l,m));
 
 			ProjectGuid = inputProject.GetProjectGuid ();
 		}
 
+		protected virtual void CreateDotNetProject ()
+		{
+			ProcessDotNetProject ();
+			inputProject.Save (ProjectPath, (l, m) => Harness.Log (l, m));
+			UpdateInfoPList ();
+		}
+
 		protected virtual void ExecuteInternal ()
 		{
+			if (IsDotNetProject) {
+				CreateDotNetProject ();
+				return;
+			}
 			switch (OutputType) {
 			case "Exe":
 				CreateExecutableProject ();
@@ -177,33 +252,39 @@ namespace Xharness.Targets
 			if (templateName.Equals ("mono-native-mac"))
 				templateName = "mono-native";
 
-			ProjectPath = Path.Combine (targetDirectory, templateName + ProjectFileSuffix + "." + ProjectFileExtension);
-
-			if (!ShouldSkipProjectGeneration)
-			{
+			if (!ShouldSkipProjectGeneration) {
 				inputProject = new XmlDocument ();
 				inputProject.LoadWithoutNetworkAccess (TemplateProjectPath);
-	
+				OriginalInfoPListInclude = inputProject.GetInfoPListInclude ()?.Replace ('\\', '/');
+
+				ProjectPath = Path.Combine (targetDirectory, ProjectsDir, GetTargetSpecificDir (), templateName + ProjectFileSuffix + "." + ProjectFileExtension);
+
 				outputType = inputProject.GetOutputType ();
-	
-				switch (inputProject.GetImport ()) {
-				case "$(MSBuildExtensionsPath)\\Xamarin\\iOS\\Xamarin.iOS.CSharp.targets":
-				case "$(MSBuildExtensionsPath)\\Xamarin\\iOS\\Xamarin.iOS.FSharp.targets":
-				case "$(MSBuildExtensionsPath)\\Xamarin\\Mac\\Xamarin.Mac.CSharp.targets":
-				case "$(MSBuildExtensionsPath":
-				case "$(MSBuildBinPath)\\Microsoft.CSharp.targets":
-					IsBindingProject = false;
-					break;
-				case "$(MSBuildExtensionsPath)\\Xamarin\\iOS\\Xamarin.iOS.ObjCBinding.CSharp.targets":
-				case "$(MSBuildExtensionsPath)\\Xamarin\\iOS\\Xamarin.iOS.ObjCBinding.FSharp.targets":
-				case "$(MSBuildExtensionsPath)\\Xamarin\\Mac\\Xamarin.Mac.ObjcBinding.CSharp":	
-					IsBindingProject = true;
-					break;
-				default:
-					throw new Exception (string.Format ("Unknown Imports: {0} in {1}", inputProject.GetImport (), TemplateProjectPath));
+
+				if (inputProject.IsDotNetProject ()) {
+					IsBindingProject = string.Equals (inputProject.GetIsBindingProject (), "true", StringComparison.OrdinalIgnoreCase);
+				} else {
+					switch (inputProject.GetImport ()) {
+					case "$(MSBuildExtensionsPath)\\Xamarin\\iOS\\Xamarin.iOS.CSharp.targets":
+					case "$(MSBuildExtensionsPath)\\Xamarin\\iOS\\Xamarin.iOS.FSharp.targets":
+					case "$(MSBuildExtensionsPath)\\Xamarin\\Mac\\Xamarin.Mac.CSharp.targets":
+					case "$(MSBuildExtensionsPath":
+					case "$(MSBuildBinPath)\\Microsoft.CSharp.targets":
+						IsBindingProject = false;
+						break;
+					case "$(MSBuildExtensionsPath)\\Xamarin\\iOS\\Xamarin.iOS.ObjCBinding.CSharp.targets":
+					case "$(MSBuildExtensionsPath)\\Xamarin\\iOS\\Xamarin.iOS.ObjCBinding.FSharp.targets":
+					case "$(MSBuildExtensionsPath)\\Xamarin\\Mac\\Xamarin.Mac.ObjcBinding.CSharp":
+						IsBindingProject = true;
+						break;
+					default:
+						throw new Exception (string.Format ("Unknown Imports: {0} in {1}", inputProject.GetImport (), TemplateProjectPath));
+					}
 				}
 
 				ExecuteInternal ();
+			} else {
+				ProjectPath = TemplateProjectPath;
 			}
 		}
 

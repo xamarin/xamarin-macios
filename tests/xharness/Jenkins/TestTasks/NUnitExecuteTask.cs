@@ -22,29 +22,25 @@ namespace Xharness.Jenkins.TestTasks
 		{
 		}
 
-		public void FindNUnitConsoleExecutable (ILog log)
+		public static bool TryGetNUnitVersion (ILog log, string csproj, out string version, out bool isPackageRef)
 		{
-			if (!string.IsNullOrEmpty (TestExecutable)) {
-				log.WriteLine ("Using existing executable: {0}", TestExecutable);
-				return;
-			}
-
-			var packages_conf = Path.Combine (Path.GetDirectoryName (TestProject.Path), "packages.config");
-			var nunit_version = string.Empty;
-			var is_packageref = false;
 			const string default_nunit_version = "3.9.0";
 
+			isPackageRef = false;
+			version = string.Empty;
+
+			var packages_conf = Path.Combine (Path.GetDirectoryName (csproj), "packages.config");
 			if (!File.Exists (packages_conf)) {
 				var xml = new XmlDocument ();
-				xml.LoadWithoutNetworkAccess (TestProject.Path);
+				xml.LoadWithoutNetworkAccess (csproj);
 				var packageref = xml.SelectSingleNode ("//*[local-name()='PackageReference' and @Include = 'NUnit.ConsoleRunner']");
 				if (packageref != null) {
-					is_packageref = true;
-					nunit_version = packageref.Attributes ["Version"].InnerText;
-					log.WriteLine ("Found PackageReference in {0} for NUnit.ConsoleRunner {1}", TestProject, nunit_version);
+					isPackageRef = true;
+					version = packageref.Attributes ["Version"].InnerText;
+					log.WriteLine ("Found PackageReference in {0} for NUnit.ConsoleRunner {1}", csproj, version);
 				} else {
-					nunit_version = default_nunit_version;
-					log.WriteLine ("No packages.config found for {0}: assuming nunit version is {1}", TestProject, nunit_version);
+					version = default_nunit_version;
+					log.WriteLine ("No packages.config found for {0}: assuming nunit version is {1}", csproj, version);
 				}
 			} else {
 				using (var str = new StreamReader (packages_conf)) {
@@ -57,35 +53,60 @@ namespace Xharness.Jenkins.TestTasks
 							var id = reader.GetAttribute ("id");
 							if (id != "NUnit.ConsoleRunner" && id != "NUnit.Runners")
 								continue;
-							nunit_version = reader.GetAttribute ("version");
+							version = reader.GetAttribute ("version");
 							break;
 						}
 					}
 				}
-				if (nunit_version == string.Empty) {
-					nunit_version = default_nunit_version;
-					log.WriteLine ("Could not find the NUnit.ConsoleRunner element in {0}, using the default version ({1})", packages_conf, nunit_version);
+				if (version == string.Empty) {
+					version = default_nunit_version;
+					log.WriteLine ("Could not find the NUnit.ConsoleRunner element in {0}, using the default version ({1})", packages_conf, version);
 				} else {
-					log.WriteLine ("Found the NUnit.ConsoleRunner/NUnit.Runners element in {0} for {2}, version is: {1}", packages_conf, nunit_version, TestProject.Path);
+					log.WriteLine ("Found the NUnit.ConsoleRunner/NUnit.Runners element in {0} for {2}, version is: {1}", packages_conf, version, csproj);
 				}
 			}
 
-			if (is_packageref) {
-				TestExecutable = Path.Combine (RootDirectory, "..", "tools", $"nunit3-console-{nunit_version}");
-				if (!File.Exists (TestExecutable))
-					throw new FileNotFoundException ($"The helper script to execute the unit tests does not exist: {TestExecutable}");
-				WorkingDirectory = Path.GetDirectoryName (TestProject.Path);
-			} else if (nunit_version [0] == '2') {
-				TestExecutable = Path.Combine (RootDirectory, "..", "packages", "NUnit.Runners." + nunit_version, "tools", "nunit-console.exe");
-				WorkingDirectory = Path.Combine (Path.GetDirectoryName (TestExecutable), "lib");
-			} else {
-				TestExecutable = Path.Combine (RootDirectory, "..", "packages", "NUnit.ConsoleRunner." + nunit_version, "tools", "nunit3-console.exe");
-				WorkingDirectory = Path.GetDirectoryName (TestLibrary);
+			return true;
+		}
+
+		public static bool TryGetNUnitExecutionSettings (ILog log, string csproj, string testLibrary, out string testExecutable, out string workingDirectory)
+		{
+			if (!TryGetNUnitVersion (log, csproj, out var nunit_version, out var is_packageref)) {
+				log.WriteLine ($"Failed to find NUnit version for {csproj}");
+				throw new Exception ($"Failed to find NUnit version for {csproj}");
 			}
-			TestExecutable = Path.GetFullPath (TestExecutable);
-			WorkingDirectory = Path.GetFullPath (WorkingDirectory);
-			if (!File.Exists (TestExecutable))
-				throw new FileNotFoundException ($"The nunit executable '{TestExecutable}' doesn't exist.");
+
+			if (is_packageref) {
+				testExecutable = Path.Combine (HarnessConfiguration.RootDirectory, "..", "tools", $"nunit3-console-{nunit_version}");
+				if (!File.Exists (testExecutable))
+					throw new FileNotFoundException ($"The helper script to execute the unit tests does not exist: {testExecutable}");
+				workingDirectory = Path.GetDirectoryName (csproj);
+			} else if (nunit_version [0] == '2') {
+				testExecutable = Path.Combine (HarnessConfiguration.RootDirectory, "..", "packages", "NUnit.Runners." + nunit_version, "tools", "nunit-console.exe");
+				workingDirectory = Path.Combine (Path.GetDirectoryName (testExecutable), "lib");
+			} else {
+				testExecutable = Path.Combine (HarnessConfiguration.RootDirectory, "..", "packages", "NUnit.ConsoleRunner." + nunit_version, "tools", "nunit3-console.exe");
+				workingDirectory = Path.GetDirectoryName (testLibrary);
+			}
+			testExecutable = Path.GetFullPath (testExecutable);
+			workingDirectory = Path.GetFullPath (workingDirectory);
+			if (!File.Exists (testExecutable))
+				throw new FileNotFoundException ($"The nunit executable '{testExecutable}' doesn't exist.");
+
+			return true;
+		}
+
+		public void FindNUnitConsoleExecutable (ILog log)
+		{
+			if (!string.IsNullOrEmpty (TestExecutable)) {
+				log.WriteLine ("Using existing executable: {0}", TestExecutable);
+				return;
+			}
+
+			if (!TryGetNUnitExecutionSettings (log, TestProject.Path, TestLibrary, out var testExecutable, out var workingDirectory))
+				throw new Exception ($"Unable to get NUnit execution settings for {TestProject.Path}");
+			TestExecutable = testExecutable;
+			WorkingDirectory = workingDirectory;
 		}
 
 		public bool IsNUnit3 {

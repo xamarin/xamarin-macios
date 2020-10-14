@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
@@ -65,9 +66,9 @@ namespace Xharness.TestTasks {
 					testTask.ExecutionResult = TestExecutingResult.BuildFailure;
 				}
 				testTask.FailureMessage = BuildTask.FailureMessage;
-				if (!string.IsNullOrEmpty (BuildTask.KnownFailure))
+				if (BuildTask.KnownFailure.HasValue)
 					testTask.KnownFailure = BuildTask.KnownFailure;
-				if (generateXmlFailures) {
+				if (generateXmlFailures && BuildTask.BuildLog != null && File.Exists (BuildTask.BuildLog.FullPath)) {
 					var logReader = BuildTask.BuildLog.GetReader ();
 					ResultParser.GenerateFailure (
 						logs: testTask.Logs,

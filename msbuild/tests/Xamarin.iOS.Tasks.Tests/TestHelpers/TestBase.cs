@@ -148,19 +148,47 @@ namespace Xamarin.iOS.Tasks
 			get; set;
 		}
 
-		public ProjectPaths SetupProjectPaths (string projectName, string csprojName, string baseDir = "../", bool includePlatform = true, string platform = "iPhoneSimulator", string config = "Debug")
+		public ProjectPaths SetupProjectPaths (string projectName, string csprojName, string baseDir = "../", bool includePlatform = true, string platform = "iPhoneSimulator", string config = "Debug", string projectPath = null, bool is_dotnet = false)
 		{
 			var testsBase = GetTestDirectory ();
-			string projectPath;
-			if (Path.IsPathRooted (baseDir)) {
-				projectPath = Path.Combine (baseDir, projectName);
-			} else {
-				projectPath = Path.Combine (testsBase, "Xamarin.iOS.Tasks.Tests", baseDir, projectName);
+			if (projectPath == null) {
+				if (Path.IsPathRooted (baseDir)) {
+					projectPath = Path.Combine (baseDir, projectName);
+				} else {
+					projectPath = Path.Combine (testsBase, "Xamarin.iOS.Tasks.Tests", baseDir, projectName);
+				}
 			}
 
-			var binPath = includePlatform ? Path.Combine (projectPath, "bin", platform, config) : Path.Combine (projectPath, "bin", config);
-			var objPath = includePlatform ? Path.Combine (projectPath, "obj", platform, config) : Path.Combine (projectPath, "obj", config);
-
+			string binPath;
+			string objPath;
+			if (is_dotnet) {
+				var targetPlatform = "net5.0";
+				var subdir = string.Empty;
+				var targetPlatformSuffix = string.Empty;
+				switch (TargetFrameworkIdentifier) {
+				case "Xamarin.iOS":
+					subdir = platform == "iPhone" ? "ios-arm64" : "ios-x64";
+					targetPlatformSuffix = "ios";
+					break;
+				case "Xamarin.TVOS":
+					subdir = platform == "iPhone" ? "tvos-arm64" : "tvos-x64";
+					targetPlatformSuffix = "tvos";
+					break;
+				case "Xamarin.WatchOS":
+					subdir = platform == "iPhone" ? "watchos-arm" : "watchos-x86";
+					targetPlatformSuffix = "watchos";
+					break;
+				default:
+					throw new NotImplementedException ($"Unknown TargetFrameworkIdentifier: {TargetFrameworkIdentifier}");
+				}
+				targetPlatform += "-" + targetPlatformSuffix;
+				binPath = Path.Combine (projectPath, "bin", platform, config, targetPlatform, subdir);
+				objPath = Path.Combine (projectPath, "obj", platform, config, targetPlatform, subdir);
+			} else {
+				binPath = includePlatform ? Path.Combine (projectPath, "bin", platform, config) : Path.Combine (projectPath, "bin", config);
+				objPath = includePlatform ? Path.Combine (projectPath, "obj", platform, config) : Path.Combine (projectPath, "obj", config);
+			}			
+			
 			return new ProjectPaths {
 				ProjectPath = projectPath,
 				ProjectBinPath = binPath,
@@ -170,9 +198,9 @@ namespace Xamarin.iOS.Tasks
 			};
 		}
 
-		public ProjectPaths SetupProjectPaths (string projectName, string baseDir = "../", bool includePlatform = true, string platform = "iPhoneSimulator", string config = "Debug")
+		public ProjectPaths SetupProjectPaths (string projectName, string baseDir = "../", bool includePlatform = true, string platform = "iPhoneSimulator", string config = "Debug", string projectPath = null)
 		{
-			return SetupProjectPaths (projectName, projectName, baseDir, includePlatform, platform, config);
+			return SetupProjectPaths (projectName, projectName, baseDir, includePlatform, platform, config, projectPath);
 		}
 
 		[SetUp]

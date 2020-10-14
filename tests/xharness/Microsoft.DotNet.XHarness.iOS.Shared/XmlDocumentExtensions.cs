@@ -8,6 +8,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared {
 		public static void Save (this XmlDocument doc, string path, Action<int, string> log)
 		{
 			if (!File.Exists (path)) {
+				Directory.CreateDirectory (Path.GetDirectoryName (path));
 				doc.Save (path);
 				log?.Invoke (1, $"Created {path}");
 			} else {

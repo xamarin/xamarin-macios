@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.DotNet.XHarness.iOS.Shared;
@@ -23,6 +23,7 @@ namespace Xharness.TestTasks {
 		readonly bool useTcpTunnel;
 		readonly string defaultLogDirectory;
 		readonly XmlResultJargon xmlResultJargon;
+		readonly IErrorKnowledgeBase errorKnowledgeBase;
 
 		public AppInstallMonitorLog InstallLog { get; private set; }
 
@@ -31,6 +32,7 @@ namespace Xharness.TestTasks {
 						  IResourceManager resourceManager,
 						  ILog mainLog,
 						  ILog deviceLoadLog,
+						  IErrorKnowledgeBase errorKnowledgeBase,
 						  string defaultLogDirectory,
 						  bool uninstallTestApp,
 						  bool cleanSuccessfulTestRuns,
@@ -44,6 +46,7 @@ namespace Xharness.TestTasks {
 			this.resourceManager = resourceManager ?? throw new ArgumentNullException (nameof (resourceManager));
 			this.mainLog = mainLog ?? throw new ArgumentNullException (nameof (mainLog));
 			this.deviceLoadLog = deviceLoadLog ?? throw new ArgumentNullException (nameof (deviceLoadLog));
+			this.errorKnowledgeBase = errorKnowledgeBase ?? throw new ArgumentNullException (nameof (errorKnowledgeBase));
 			this.uninstallTestApp = uninstallTestApp;
 			this.cleanSuccessfulTestRuns = cleanSuccessfulTestRuns;
 			this.generateXmlFailures = generateXmlFailures;
@@ -115,6 +118,7 @@ namespace Xharness.TestTasks {
 						timeoutMultiplier: testTask.TimeoutMultiplier,
 						variation: testTask.Variation,
 						buildTask: testTask.BuildTask);
+					await testTask.Runner.InitializeAsync ();
 
 					// Sometimes devices can't upgrade (depending on what has changed), so make sure to uninstall any existing apps first.
 					if (uninstallTestApp) {
@@ -130,7 +134,6 @@ namespace Xharness.TestTasks {
 						// Install the app
 						InstallLog = new AppInstallMonitorLog (testTask.Logs.Create ($"install-{Helpers.Timestamp}.log", "Install log"));
 						try {
-							using var logReader = InstallLog.GetReader ();
 							testTask.Runner.MainLog = this.InstallLog;
 							var install_result = await testTask.Runner.InstallAsync (InstallLog.CancellationToken);
 							if (!install_result.Succeeded) {
@@ -144,7 +147,7 @@ namespace Xharness.TestTasks {
 										testTask.Variation,
 										$"AppInstallation on {testTask.Device.Name}",
 										$"Install failed on {testTask.Device.Name}, exit code: {install_result.ExitCode}",
-										logReader,
+										InstallLog.FullPath,
 										xmlResultJargon);
 							}
 						} finally {
@@ -162,6 +165,11 @@ namespace Xharness.TestTasks {
 							testTask.FailureMessage = testTask.Runner.FailureMessage;
 						else if (testTask.Runner.Result != TestExecutingResult.Succeeded)
 							testTask.FailureMessage = testTask.GuessFailureReason (testTask.Runner.MainLog);
+
+						if (string.IsNullOrEmpty(testTask.FailureMessage) && errorKnowledgeBase.IsKnownTestIssue (testTask.Runner.MainLog, out var failure)) {
+							testTask.KnownFailure = failure;
+							mainLog.WriteLine ($"Test run has a known failure: '{testTask.KnownFailure}'");
+						}
 
 						if (testTask.Runner.Result == TestExecutingResult.Succeeded && testTask.Platform == TestPlatform.iOS_TodayExtension64) {
 							// For the today extension, the main app is just a single test.
@@ -189,6 +197,7 @@ namespace Xharness.TestTasks {
 								timeoutMultiplier: testTask.TimeoutMultiplier,
 								variation: testTask.Variation,
 								buildTask: testTask.BuildTask);
+							await todayRunner.InitializeAsync ();
 
 							testTask.AdditionalRunner = todayRunner;
 							await todayRunner.RunAsync ();

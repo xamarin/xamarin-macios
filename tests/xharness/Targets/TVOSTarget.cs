@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
@@ -10,7 +10,7 @@ namespace Xharness.Targets {
 	{
 		public override string Suffix {
 			get {
-				return MonoNativeInfo != null ? MonoNativeInfo.FlavorSuffix + "-tvos" : "-tvos";
+				return "-tvos";
 			}
 		}
 
@@ -62,13 +62,6 @@ namespace Xharness.Targets {
 			}
 		}
 
-		protected override void CalculateName ()
-		{
-			base.CalculateName ();
-			if (MonoNativeInfo != null)
-				Name = Name + MonoNativeInfo.FlavorSuffix;
-		}
-
 		protected override string GetMinimumOSVersion (string templateMinimumOSVersion)
 		{
 			if (MonoNativeInfo == null)
@@ -100,32 +93,23 @@ namespace Xharness.Targets {
 			}
 		}
 
+		public override string DotNetSdk => "Microsoft.tvOS.Sdk";
+		public override string RuntimeIdentifier => "tvos-x64";
+		public override DevicePlatform ApplePlatform => DevicePlatform.tvOS;
+		public override string TargetFramework => "net5.0-tvos";
+		public override string TargetFrameworkForNuGet => "xamarintvos10";
+
 		static Dictionary<string, string> project_guids = new Dictionary<string, string> ();
 
 		protected override void ProcessProject ()
 		{
 			base.ProcessProject ();
 
-			if (MonoNativeInfo != null) {
-				inputProject.AddAdditionalDefines ("MONO_NATIVE_TV");
-				MonoNativeHelper.AddProjectDefines (inputProject, MonoNativeInfo.Flavor);
-				MonoNativeHelper.RemoveSymlinkMode (inputProject);
-			}
-
-			var srcDirectory = Path.Combine (Harness.RootDirectory, "..", "src");
-
-			string project_guid;
-			var mt_nunitlite_project_path = Path.GetFullPath (Path.Combine (srcDirectory, "MonoTouch.NUnitLite.tvos.csproj"));
-			if (!project_guids.TryGetValue (mt_nunitlite_project_path, out project_guid)) {
-				XmlDocument mt_nunitlite_project = new XmlDocument ();
-				mt_nunitlite_project.LoadWithoutNetworkAccess (mt_nunitlite_project_path);
-				project_guid = mt_nunitlite_project.GetProjectGuid ();
-				project_guids [mt_nunitlite_project_path] = project_guid;
-			}
-			inputProject.CreateProjectReferenceValue ("MonoTouch.NUnitLite", mt_nunitlite_project_path, project_guid, "MonoTouch.NUnitLite");
+			var srcDirectory = Path.Combine (HarnessConfiguration.RootDirectory, "..", "src");
 
 			inputProject.AddExtraMtouchArgs ("--bitcode:asmonly", "iPhone", "Release");
 			inputProject.SetMtouchUseLlvm (true, "iPhone", "Release");
+			inputProject.ResolveAllPaths (TemplateProjectPath);
 
 			// Remove bitcode from executables, since we don't need it for testing, and it makes test apps bigger (and the Apple TV might refuse to install them).
 			var configurations = new string [] { "Debug", "Debug64", "Release", "Release64" };

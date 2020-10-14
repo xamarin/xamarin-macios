@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Xml;
 using Microsoft.DotNet.XHarness.iOS.Shared;
@@ -12,7 +12,7 @@ namespace Xharness.Targets {
 		
 		public override string Suffix {
 			get {
-				return MonoNativeInfo != null ? MonoNativeInfo.FlavorSuffix : "-ios";
+				return "-ios";
 			}
 		}
 
@@ -79,8 +79,6 @@ namespace Xharness.Targets {
 				}
 			}  else
 				base.CalculateName ();
-			if (MonoNativeInfo != null)
-				Name = Name + MonoNativeInfo.FlavorSuffix;
 		}
 
 		protected override string GetMinimumOSVersion (string templateMinimumOSVersion)
@@ -116,8 +114,6 @@ namespace Xharness.Targets {
 
 		public override string ProjectFileSuffix {
 			get {
-				if (MonoNativeInfo != null)
-					return MonoNativeInfo.FlavorSuffix;
 				return string.Empty;
 			}
 		}
@@ -128,24 +124,10 @@ namespace Xharness.Targets {
 			}
 		}
 
-		protected override void ExecuteInternal ()
-		{
-			if (MonoNativeInfo == null)
-				return;
-
-			MonoNativeInfo.AddProjectDefines (inputProject);
-			inputProject.AddAdditionalDefines ("MONO_NATIVE_IOS");
-
-			inputProject.FixInfoPListInclude (Suffix);
-			inputProject.SetExtraLinkerDefs ("extra-linker-defs" + ExtraLinkerDefsSuffix + ".xml");
-
-			inputProject.Save (ProjectPath, (l,m) => Harness.Log (l,m));
-
-			XmlDocument info_plist = new XmlDocument ();
-			var target_info_plist = Path.Combine (TargetDirectory, "Info" + Suffix + ".plist");
-			info_plist.LoadWithoutNetworkAccess (Path.Combine (TargetDirectory, "Info.plist"));
-			info_plist.SetMinimumOSVersion (GetMinimumOSVersion (info_plist.GetMinimumOSVersion ()));
-			info_plist.Save (target_info_plist, (l,m) => Harness.Log (l,m));
-		}
+		public override string DotNetSdk => "Microsoft.iOS.Sdk";
+		public override string RuntimeIdentifier => "ios-x64";
+		public override DevicePlatform ApplePlatform => DevicePlatform.iOS;
+		public override string TargetFramework => "net5.0-ios";
+		public override string TargetFrameworkForNuGet => "xamarinios10";
 	}
 }
