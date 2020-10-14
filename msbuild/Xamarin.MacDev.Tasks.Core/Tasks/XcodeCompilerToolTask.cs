@@ -135,6 +135,9 @@ namespace Xamarin.MacDev.Tasks
 			if (!string.IsNullOrEmpty (SdkUsrPath))
 				environment.Add ("XCODE_DEVELOPER_USR_PATH", SdkUsrPath);
 
+			if (!string.IsNullOrEmpty (SdkDevPath))
+				environment.Add ("DEVELOPER_DIR", SdkDevPath);
+
 			args.Add ("--errors", "--warnings", "--notices");
 			args.Add ("--output-format", "xml1");
 
