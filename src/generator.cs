@@ -3204,8 +3204,80 @@ public partial class Generator : IMemberGatherer {
 		if (mi == null)
 			return;
 
-		foreach (var availability in AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (mi))
+		List<AvailabilityBaseAttribute> type_ca = null;
+
+		foreach (var availability in AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (mi)) {
+			if (type_ca == null) {
+				type_ca = new List<AvailabilityBaseAttribute> ();
+				if (mi.DeclaringType != null)
+					type_ca.AddRange (AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (mi.DeclaringType));
+			}
+			// type has nothing, anything on member should be generated
+			if (type_ca.Count == 0) {
+				print (availability.ToString ());
+				continue;
+			}
+			switch (availability.AvailabilityKind) {
+			case AvailabilityKind.Unavailable:
+				// a unavailable member can override type-level attribute
+				print (availability.ToString ());
+				break;
+			default:
+				// can't introduce or deprecate/obsolete a member on a type that is not available
+				if (IsUnavailable (type_ca, availability.Platform))
+					continue;
+				print (availability.ToString ());
+				break;
+			}
+		}
+	}
+
+	static bool IsUnavailable (IEnumerable<AvailabilityBaseAttribute> customAttributes, PlatformName platform)
+	{
+		if (customAttributes == null)
+			return false;
+		foreach (var ca in customAttributes) {
+			if ((platform == ca.Platform) && (ca.AvailabilityKind == AvailabilityKind.Unavailable))
+				return true;
+		}
+		return false;
+	}
+
+	static bool HasAvailability (IEnumerable<AvailabilityBaseAttribute> customAttributes, PlatformName platform)
+	{
+		if (customAttributes == null)
+			return false;
+		foreach (var ca in customAttributes) {
+			if (platform == ca.Platform)
+				return true;
+		}
+		return false;
+	}
+
+	public void PrintPlatformAttributesNoDuplicates (MemberInfo additional, MemberInfo original)
+	{
+		if ((additional == null) || (original == null))
+			return;
+
+		List<AvailabilityBaseAttribute> original_ca = null;
+
+		foreach (var availability in AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (additional)) {
+			// don't get original custom attributes unless additional has custom attributes
+			if (original_ca == null) {
+				original_ca = new List<AvailabilityBaseAttribute> ();
+				original_ca.AddRange (AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (original));
+				if (original.DeclaringType != null)
+					original_ca.AddRange (AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (original.DeclaringType));
+			}
+
+			// already decorated, skip
+			if (HasAvailability (original_ca, availability.Platform))
+				continue;
+			// not available, skip
+			if (IsUnavailable (original_ca, availability.Platform))
+				continue;
 			print (availability.ToString ());
+		}
 	}
 
 	public void PrintPlatformAttributesIfInlined (MemberInformation minfo)
@@ -5212,11 +5284,13 @@ public partial class Generator : IMemberGatherer {
 		if (minfo.is_return_release)
 			print ("[return: ReleaseAttribute ()]");
 
-		PrintPlatformAttributes (minfo.method);
 		// when we inline methods (e.g. from a protocol) 
 		if (minfo.type != minfo.method.DeclaringType) {
 			// we must look if the type has an [Availability] attribute
-			PrintPlatformAttributes (minfo.method.DeclaringType);
+			// but we must not duplicate existing attributes for a platform, see https://github.com/xamarin/xamarin-macios/issues/7194
+			PrintPlatformAttributesNoDuplicates (minfo.method.DeclaringType, minfo.method);
+		} else {
+			PrintPlatformAttributes (minfo.method);
 		}
 
 		// in theory we could check for `minfo.is_ctor` but some manual bindings are using methods for `init*`
