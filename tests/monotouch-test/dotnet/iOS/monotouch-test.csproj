@@ -106,8 +106,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\EmbeddedResources\dotnet\iOS\EmbeddedResources.csproj" />
     <ProjectReference Include="..\..\..\..\tests\bindings-test\dotnet\iOS\bindings-test.csproj" />
-    <!-- https://github.com/mono/linker/issues/1435 -->
-    <!-- <ProjectReference Include="..\..\..\fsharplibrary\dotnet\iOS\fsharplibrary.fsproj" /> -->
+    <ProjectReference Include="..\..\..\fsharplibrary\dotnet\iOS\fsharplibrary.fsproj" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="..\..\CoreImage\Xam.png">
