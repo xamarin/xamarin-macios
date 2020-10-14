@@ -3057,7 +3057,6 @@ namespace AppKit {
 		FullWidth,
 		Inset,
 		SourceList,
-		[Mac (11,0)]
 		Plain,
 	}
 

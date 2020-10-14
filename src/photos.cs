@@ -1290,7 +1290,7 @@ namespace Photos
 		void PrepareLivePhotoForPlayback (CGSize targetSize, [NullAllowed] NSDictionary<NSString, NSObject> options, Action<PHLivePhoto, NSError> handler);
 
 		// the API existed earlier but the key needed to create the strong dictionary did not work
-		[iOS (11,0)][TV (11,0)][Mac (10,12)]
+		[iOS (11,0)][TV (11,0)]
 		[Async]
 		[Wrap ("_PrepareLivePhotoForPlayback (targetSize, options.GetDictionary (), handler)")]
 		void PrepareLivePhotoForPlayback (CGSize targetSize, [NullAllowed] PHLivePhotoEditingOption options, Action<PHLivePhoto, NSError> handler);
@@ -1308,7 +1308,7 @@ namespace Photos
 		void SaveLivePhoto (PHContentEditingOutput output, [NullAllowed] NSDictionary<NSString, NSObject> options, Action<bool, NSError> handler);
 
 		// the API existed earlier but the key needed to create the strong dictionary did not work
-		[iOS (11,0)][TV (11,0)][Mac (10,12)]
+		[iOS (11,0)][TV (11,0)]
 		[Async]
 		[Wrap ("_SaveLivePhoto (output, options.GetDictionary (), handler)")]
 		void SaveLivePhoto (PHContentEditingOutput output, [NullAllowed] PHLivePhotoEditingOption options, Action<bool, NSError> handler);

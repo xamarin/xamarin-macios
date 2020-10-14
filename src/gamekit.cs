@@ -831,7 +831,6 @@ namespace GameKit {
 		[NullAllowed] // by default this property is null
 		[Export ("authenticateHandler", ArgumentSemantic.Copy)]
 #if WATCH
-		[Watch (3,0)]
 		Action<NSError> AuthenticateHandler { get; set; }
 #elif !MONOMAC
 		Action<UIViewController, NSError> AuthenticateHandler { get; set; }
@@ -2330,7 +2329,7 @@ namespace GameKit {
 		[Export ("data")]
 		NSData Data { get; }
 
-		[iOS (8,0)][Mac (10,10)]
+		[iOS (8,0)]
 		[Export ("replyDate")]
 		NSDate ReplyDate { get; }
 	}

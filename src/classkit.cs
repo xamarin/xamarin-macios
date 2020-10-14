@@ -273,37 +273,37 @@ namespace ClassKit {
 		void ResignActive ();
 
 		[Introduced (PlatformName.MacCatalyst, 14, 0)]
-		[NoWatch, NoTV, Mac (11,0), iOS (14, 0)]
+		[iOS (14, 0)]
 		[Export ("assignable")]
 		bool Assignable { [Bind ("isAssignable")] get; set; }
 
 		[Introduced (PlatformName.MacCatalyst, 14, 0)]
-		[NoWatch, NoTV, Mac (11,0), iOS (14, 0)]
+		[iOS (14, 0)]
 		[Export ("suggestedAge", ArgumentSemantic.Assign)]
 		NSRange SuggestedAge { get; set; }
 
 		[Introduced (PlatformName.MacCatalyst, 14, 0)]
-		[NoWatch, NoTV, Mac (11,0), iOS (14, 0)]
+		[iOS (14, 0)]
 		[Export ("suggestedCompletionTime", ArgumentSemantic.Assign)]
 		NSRange SuggestedCompletionTime { get; set; }
 
 		[Introduced (PlatformName.MacCatalyst, 14, 0)]
-		[NoWatch, NoTV, Mac (11,0), iOS (14, 0)]
+		[iOS (14, 0)]
 		[Export ("progressReportingCapabilities", ArgumentSemantic.Copy)]
 		NSSet<CLSProgressReportingCapability> ProgressReportingCapabilities { get; }
 
 		[Introduced (PlatformName.MacCatalyst, 14, 0)]
-		[NoWatch, NoTV, Mac (11,0), iOS (14, 0)]
+		[iOS (14, 0)]
 		[Export ("setType:")]
 		void SetType (CLSContextType type);
 
 		[Introduced (PlatformName.MacCatalyst, 14, 0)]
-		[NoWatch, NoTV, Mac (11,0), iOS (14, 0)]
+		[iOS (14, 0)]
 		[Export ("addProgressReportingCapabilities:")]
 		void AddProgressReportingCapabilities (NSSet<CLSProgressReportingCapability> capabilities);
 
 		[Introduced (PlatformName.MacCatalyst, 14, 0)]
-		[NoWatch, NoTV, Mac (11,0), iOS (14, 0)]
+		[iOS (14, 0)]
 		[Export ("resetProgressReportingCapabilities")]
 		void ResetProgressReportingCapabilities ();
 

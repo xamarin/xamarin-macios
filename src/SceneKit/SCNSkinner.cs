@@ -51,13 +51,11 @@ namespace SceneKit {
 		}
 
 		[Mac (10, 10)]
-		[iOS (8, 0)]
 		public SCNMatrix4 [] BoneInverseBindTransforms {
 			get { return FromNSArray (_BoneInverseBindTransforms); }
 		}
 
 		[Mac (10, 10)]
-		[iOS (8, 0)]
 		public static SCNSkinner Create (SCNGeometry baseGeometry,
 			SCNNode [] bones, SCNMatrix4 [] boneInverseBindTransforms,
 			SCNGeometrySource boneWeights, SCNGeometrySource boneIndices)

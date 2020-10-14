@@ -367,7 +367,6 @@ namespace AppKit {
 		[Export ("initWithAppearanceNamed:bundle:")]
 		IntPtr Constructor (string name, [NullAllowed] NSBundle bundle);
 
-		[Mac (10,9)]
 		[Export ("name")]
 		string Name { get; }
 
@@ -392,7 +391,6 @@ namespace AppKit {
 		[Static, Export ("appearanceNamed:")]
 		NSAppearance GetAppearance (NSString name);
 
-		[Mac (10,9)]
 		[Field ("NSAppearanceNameAqua")]
 		NSString NameAqua { get; }
 
@@ -400,7 +398,7 @@ namespace AppKit {
 		[Field ("NSAppearanceNameDarkAqua")]
 		NSString NameDarkAqua { get; }
 
-		[Availability (Introduced = Platform.Mac_10_9, Deprecated = Platform.Mac_10_10)]
+		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Field ("NSAppearanceNameLightContent")]
 		NSString NameLightContent { get; }
 
@@ -7322,7 +7320,6 @@ namespace AppKit {
 		[Export ("mergeCellsInHorizontalRange:verticalRange:")]
 		void MergeCells (NSRange hRange, NSRange vRange);
 
-		[Mac (10, 12)]
 		[Field ("NSGridViewSizeForContent")]
 		nfloat SizeForContent { get; }
 	}
@@ -14782,7 +14779,7 @@ namespace AppKit {
 		[Export ("spacing")]
 		nfloat Spacing { get; set; }
 
-		[Availability (Introduced = Platform.Mac_10_9, Deprecated = Platform.Mac_10_11, Message = "Set Distribution to NSStackViewDistribution.EqualSpacing instead.")]
+		[Availability (Deprecated = Platform.Mac_10_11, Message = "Set Distribution to NSStackViewDistribution.EqualSpacing instead.")]
 		[Export ("hasEqualSpacing")]
 		bool HasEqualSpacing { get; set; }
 
@@ -23625,7 +23622,7 @@ namespace AppKit {
 	interface INSAccessibility {};
 	interface INSAccessibilityElement {};
 
-	[Mac (10,10)]
+	[Mac (10,9)] // protocol added in 10.10 but the field/notifications are in 10.9
 	[Protocol]
 	interface NSAccessibility
 	{
@@ -24440,7 +24437,6 @@ namespace AppKit {
 		[Field ("NSAccessibilityCreatedNotification")]
 		NSString CreatedNotification { get; }
 
-		[Mac (10, 9)]
 		[Notification]
 		[Field ("NSAccessibilityLayoutChangedNotification")]
 		NSString LayoutChangedNotification { get; }
