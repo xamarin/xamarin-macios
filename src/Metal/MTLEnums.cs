@@ -410,7 +410,7 @@ namespace Metal {
 		[iOS (9,0)]
 		Depth32Float_Stencil8 = 260,
 	
-		[NoWatch, iOS (9,0), TV (9,0), Mac (10,11)]
+		[NoWatch, iOS (9,0), TV (9,0)]
 		X32_Stencil8 = 261,
 
 		[Mac (10,12)][NoiOS][NoTV]

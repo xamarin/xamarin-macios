@@ -24437,7 +24437,6 @@ namespace AppKit {
 		[Field ("NSAccessibilityCreatedNotification")]
 		NSString CreatedNotification { get; }
 
-		[Mac (10, 9)]
 		[Notification]
 		[Field ("NSAccessibilityLayoutChangedNotification")]
 		NSString LayoutChangedNotification { get; }

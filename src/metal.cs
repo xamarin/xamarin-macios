@@ -2107,7 +2107,7 @@ namespace Metal {
 		[Export ("maxVertexAmplificationCount")]
 		nuint MaxVertexAmplificationCount { get; set; }
 
-		[iOS (14, 0), TV (14,0)]
+		[Mac (11, 0), iOS (14, 0), TV (14,0)]
 		[NullAllowed, Export ("binaryArchives", ArgumentSemantic.Copy)]
 		IMTLBinaryArchive[] BinaryArchives { get; set; }
 
@@ -4107,7 +4107,7 @@ namespace Metal {
 		[Export ("reset")]
 		void Reset ();
 
-		[Mac (11, 0), iOS (14,0)]
+		[iOS (14,0)]
 		[NullAllowed, Export ("binaryArchives", ArgumentSemantic.Copy)]
 		IMTLBinaryArchive[] BinaryArchives { get; set; }
 	}
@@ -4178,7 +4178,7 @@ namespace Metal {
 #if XAMCORE_4_0 
 		[Abstract]
 #endif
-		[iOS (13,0), TV (13,0), Mac (10,14)]
+		[iOS (13,0), TV (13,0)]
 		[Export ("setRenderPipelineState:")]
 		void SetRenderPipelineState (IMTLRenderPipelineState pipelineState);
 
