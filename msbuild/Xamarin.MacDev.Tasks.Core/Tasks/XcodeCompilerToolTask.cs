@@ -160,7 +160,7 @@ namespace Xamarin.MacDev.Tasks
 			int exitCode;
 
 			try {
-				foreach (var kvp in startInfo.Environment)
+				foreach (var kvp in startInfo.Environment.OrderBy (v => v.Key))
 					Log.LogMessage (MessageImportance.Normal, "{0}={1}", kvp.Key, kvp.Value);
 				Log.LogMessage (MessageImportance.Normal, MSBStrings.M0001, startInfo.FileName, startInfo.Arguments);
 
