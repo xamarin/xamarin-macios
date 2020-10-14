@@ -208,10 +208,7 @@ public class AttributeManager
 	{
 		var rv = LookupReflectionType (type.FullName, provider);
 		if (rv == null)
-		{
-			Console.WriteLine (Environment.StackTrace);
 			throw ErrorHelper.CreateError (1055, type.AssemblyQualifiedName);
-		}
 		return rv;
 	}
 
