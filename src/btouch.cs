@@ -476,8 +476,11 @@ public class BindingTouch {
 
 			// TODO: Replace with lazy resolver
 			var assemblyPaths = new List<string> ();
-			foreach (var path in GetLibraryDirectories ())
-				assemblyPaths.AddRange (Directory.GetFiles (path, "*.dll"));
+			foreach (var path in GetLibraryDirectories ()) {
+				if (Directory.Exists (path)) {
+					assemblyPaths.AddRange (Directory.GetFiles (path, "*.dll"));
+				}
+			}
 			assemblyPaths.Add (baselibdll);
 			assemblyPaths.Add (GetAttributeLibraryPath ());
 
