@@ -47,11 +47,11 @@ namespace Metal {
 		}
 
 #if MONOMAC
-		[Mac (10,11), NoiOS, NoWatch, NoTV]
+		[NoiOS, NoWatch, NoTV]
 		[DllImport (Constants.MetalLibrary)]
 		unsafe static extern IntPtr MTLCopyAllDevices ();
 
-		[Mac (10,11), NoiOS, NoWatch, NoTV]
+		[NoiOS, NoWatch, NoTV]
 		public static IMTLDevice [] GetAllDevices ()
 		{
 			var rv = MTLCopyAllDevices ();

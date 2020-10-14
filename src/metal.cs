@@ -2054,7 +2054,7 @@ namespace Metal {
 		MTLPixelFormat StencilAttachmentPixelFormat { get; set; }
 		
 		[iOS (12,0)]
-		[NoTV, NoWatch, Mac (10,11)]
+		[NoTV, NoWatch]
 		[Export ("inputPrimitiveTopology", ArgumentSemantic.Assign)]
 		MTLPrimitiveTopologyClass InputPrimitiveTopology { get; set; }
 		
@@ -2107,7 +2107,7 @@ namespace Metal {
 		[Export ("maxVertexAmplificationCount")]
 		nuint MaxVertexAmplificationCount { get; set; }
 
-		[Mac (11, 0), iOS (14, 0), TV (14,0)]
+		[iOS (14, 0), TV (14,0)]
 		[NullAllowed, Export ("binaryArchives", ArgumentSemantic.Copy)]
 		IMTLBinaryArchive[] BinaryArchives { get; set; }
 
@@ -2525,7 +2525,7 @@ namespace Metal {
 		[Export ("fastMathEnabled")]
 		bool FastMathEnabled { get; set; }
 
-		[iOS (9,0)][Mac (10,11)]
+		[iOS (9,0)]
 		[Export ("languageVersion", ArgumentSemantic.Assign)]
 		MTLLanguageVersion LanguageVersion { get; set; }
 
@@ -3358,7 +3358,6 @@ namespace Metal {
 		MTLRenderPassDescriptor CreateRenderPassDescriptor ();
 		
 		[iOS (12,0)]
-		[Mac (10,11)]
 		[NoTV]
 		[Export ("renderTargetArrayLength")]
 		nuint RenderTargetArrayLength { get; set; }
@@ -4575,20 +4574,16 @@ namespace Metal {
 	[BaseType (typeof (NSObject))]
 	interface MTLCounterSampleBufferDescriptor : NSCopying
 	{
-		[Mac (10, 15)]
 		[NullAllowed]
 		[Export ("counterSet", ArgumentSemantic.Retain)]
 		IMTLCounterSet CounterSet { get; set; }
 
-		[Mac (10, 15)]
 		[Export ("label")]
 		string Label { get; set; }
 
-		[Mac (10, 15)]
 		[Export ("storageMode", ArgumentSemantic.Assign)]
 		MTLStorageMode StorageMode { get; set; }
 
-		[Mac (10, 15)]
 		[Export ("sampleCount")]
 		nuint SampleCount { get; set; }
 	}

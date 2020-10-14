@@ -1011,36 +1011,36 @@ namespace CoreSpotlight {
 
 		// CSSearchableItemAttributeSet_CSGeneral
 
-		[iOS (11,0), NoTV, Mac (10, 11)]
+		[iOS (11,0), NoTV]
 		[NullAllowed, Export ("userCreated", ArgumentSemantic.Strong)]
 		[Internal] // We would like to use [BindAs (typeof (bool?))]
 		NSNumber _IsUserCreated { [Bind ("isUserCreated")] get; set; }
 
-		[iOS (11, 0), NoTV, Mac (10, 11)]
+		[iOS (11, 0), NoTV]
 		[NullAllowed, Export ("userOwned", ArgumentSemantic.Strong)]
 		[Internal] // We would like to use[BindAs (typeof (bool?))]
 		NSNumber _IsUserOwned { [Bind ("isUserOwned")] get; set; }
 
-		[iOS (11, 0), NoTV, Mac (10, 11)]
+		[iOS (11, 0), NoTV]
 		[NullAllowed, Export ("userCurated", ArgumentSemantic.Strong)]
 		[Internal] // We would like to use [BindAs (typeof (bool?))]
 		NSNumber _IsUserCurated { [Bind ("isUserCurated")] get; set; }
 
-		[iOS (11, 0), NoTV, Mac (10, 11)]
+		[iOS (11, 0), NoTV]
 		[NullAllowed, Export ("rankingHint", ArgumentSemantic.Strong)]
 		NSNumber RankingHint { get; set; }
 
 		// CSSearchableItemAttributeSet_CSItemProvider
 
-		[iOS (11, 0), NoTV, Mac (10, 11)]
+		[iOS (11, 0), NoTV]
 		[NullAllowed, Export ("providerDataTypeIdentifiers", ArgumentSemantic.Copy)]
 		string[] ProviderDataTypeIdentifiers { get; set; }
 
-		[iOS (11, 0), NoTV, Mac (10, 11)]
+		[iOS (11, 0), NoTV]
 		[NullAllowed, Export ("providerFileTypeIdentifiers", ArgumentSemantic.Copy)]
 		string[] ProviderFileTypeIdentifiers { get; set; }
 
-		[iOS (11, 0), NoTV, Mac (10, 11)]
+		[iOS (11, 0), NoTV]
 		[NullAllowed, Export ("providerInPlaceFileTypeIdentifiers", ArgumentSemantic.Copy)]
 		string[] ProviderInPlaceFileTypeIdentifiers { get; set; }
 	}

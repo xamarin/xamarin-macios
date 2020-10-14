@@ -115,7 +115,7 @@ namespace MetalPerformanceShaders {
 	[DisableDefaultCtor]
 	interface MPSImageSobel {
 		// inlining .ctor from base class
-		[TV (11,0), Mac (10, 13), iOS (11,0)]
+		[TV (11,0), iOS (11,0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
@@ -489,7 +489,7 @@ namespace MetalPerformanceShaders {
 		// inlining ctor from base class -> done in manual bindings (wrt float* argument)
 
 		// inlining ctor from base class
-		[TV (11,0), Mac (10, 13), iOS (11,0)]
+		[TV (11,0), iOS (11,0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
@@ -508,7 +508,7 @@ namespace MetalPerformanceShaders {
 		IntPtr Constructor (IMTLDevice device);
 
 		// inlining ctor from base class
-		[TV (11,0), Mac (10, 13), iOS (11,0)]
+		[TV (11,0), iOS (11,0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
@@ -537,7 +537,7 @@ namespace MetalPerformanceShaders {
 		IntPtr _Transform { get; }
 
 		// inlining ctor from base class
-		[TV (11,0), Mac (10, 13), iOS (11,0)]
+		[TV (11,0), iOS (11,0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
@@ -564,7 +564,7 @@ namespace MetalPerformanceShaders {
 		IntPtr _Transform { get; }
 
 		// inlining ctor from base class
-		[TV (11,0), Mac (10, 13), iOS (11,0)]
+		[TV (11,0), iOS (11,0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
@@ -588,7 +588,7 @@ namespace MetalPerformanceShaders {
 		IntPtr _Transform { get; }
 
 		// inlining ctor from base class
-		[TV (11,0), Mac (10, 13), iOS (11,0)]
+		[TV (11,0), iOS (11,0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
@@ -612,7 +612,7 @@ namespace MetalPerformanceShaders {
 		IntPtr _Transform { get; }
 
 		// inlining ctor from base class
-		[TV (11,0), Mac (10, 13), iOS (11,0)]
+		[TV (11,0), iOS (11,0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
@@ -636,7 +636,7 @@ namespace MetalPerformanceShaders {
 		IntPtr _Transform { get; }
 
 		// inlining ctor from base class
-		[TV (11,0), Mac (10, 13), iOS (11,0)]
+		[TV (11,0), iOS (11,0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
@@ -684,7 +684,7 @@ namespace MetalPerformanceShaders {
 		IntPtr Constructor (IMTLDevice device);
 
 		// inlining ctor from base class
-		[TV (11,0), Mac (10, 13), iOS (11,0)]
+		[TV (11,0), iOS (11,0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
@@ -807,7 +807,7 @@ namespace MetalPerformanceShaders {
 		[Export ("appendBatchBarrier")]
 		bool AppendBatchBarrier { get; }
 
-		[TV (11,0), Mac (10,13), iOS (11,0)]
+		[TV (11,0), iOS (11,0)]
 		[Export ("destinationImageDescriptorForSourceImages:sourceStates:")]
 		MPSImageDescriptor GetDestinationImageDescriptor (NSArray<MPSImage> sourceImages, [NullAllowed] NSArray<MPSState> sourceStates);
 
@@ -847,7 +847,7 @@ namespace MetalPerformanceShaders {
 		IntPtr Constructor (IMTLDevice device);
 
 		// inlining ctor from base class
-		[TV (11,0), Mac (10, 13), iOS (11,0)]
+		[TV (11,0), iOS (11,0)]
 		[DesignatedInitializer]
 		[Export ("initWithCoder:device:")]
 		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
@@ -868,7 +868,7 @@ namespace MetalPerformanceShaders {
 		[Export ("c")]
 		float C { get; }
 
-		[TV (11,0), Mac (10, 13), iOS (11,0)]
+		[TV (11,0), iOS (11,0)]
 		[NullAllowed, Export ("data", ArgumentSemantic.Retain)]
 		NSData Data { get; }
 
@@ -1245,12 +1245,12 @@ namespace MetalPerformanceShaders {
 		// [Export ("initWithDevice:")] marked as NS_UNAVAILABLE - Use initWithDevice:convolutionDescriptor:kernelWeights:biasTerms instead
 
 		// inlining ctor from base class
-		[TV (11,0), Mac (10, 13), iOS (11,0)]
+		[TV (11,0), iOS (11,0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);
 
-		[TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[TV (11, 0), iOS (11, 0)]
 		[Export ("initWithDevice:weights:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (IMTLDevice device, IMPSCnnConvolutionDataSource weights);
@@ -1286,7 +1286,7 @@ namespace MetalPerformanceShaders {
 
 		// [Export ("initWithDevice:")] marked as NS_UNAVAILABLE - Use initWithDevice:kernelWidth:kernelHeight:strideInPixelsX:strideInPixelsY: instead
 
-		[TV (11, 0), Mac (10, 13), iOS (11, 0)]
+		[TV (11, 0), iOS (11, 0)]
 		[Export ("initWithCoder:device:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (NSCoder aDecoder, IMTLDevice device);

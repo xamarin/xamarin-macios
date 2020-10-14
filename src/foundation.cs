@@ -10071,15 +10071,12 @@ namespace Foundation
 		NSString ErrorDomain { get; }
 
 #if MONOMAC
-		[Mac (10,10)]
 		[Export ("sourceFrame")]
 		CGRect SourceFrame { get; }
 
-		[Mac (10,10)]
 		[Export ("containerFrame")]
 		CGRect ContainerFrame { get; }
 
-		[Mac (10,10)]
 		[Export ("preferredPresentationSize")]
 		CGSize PreferredPresentationSize { get; }
 
