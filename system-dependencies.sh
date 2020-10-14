@@ -1024,20 +1024,26 @@ function check_dotnet ()
 
 	if test -n "$DOTNET_TARBALL"; then
 		INSTALL_LOCALLY=1
-	fi
-
-	if test -d "$DOTNET_INSTALL_DIR"; then
-		ok "Found dotnet $DOTNET_VERSION in $DOTNET_INSTALL_DIR (exactly $DOTNET_VERSION is required)."
-		return
-	elif test -d "$DOTNET_LOCAL_INSTALL_DIR"; then
-		ok "Found dotnet $DOTNET_VERSION in $DOTNET_LOCAL_INSTALL_DIR (exactly $DOTNET_VERSION is required)."
-		return
-	fi
-
-	if test -z "$PROVISION_DOTNET"; then
-		fail "You must install dotnet $DOTNET_VERSION. You can download it from ${COLOR_BLUE}$DOTNET_URL${COLOR_RESET}."
-		fail "Alternatively you can ${COLOR_MAGENTA}export IGNORE_DOTNET=1${COLOR_RED} to skip this check."
-		return
+		if test -d "$DOTNET_LOCAL_INSTALL_DIR"; then
+			ok "Found dotnet $DOTNET_VERSION in $DOTNET_LOCAL_INSTALL_DIR (exactly $DOTNET_VERSION is required)."
+			return
+		fi
+		if test -z "$PROVISION_DOTNET"; then
+			fail "You must install dotnet $DOTNET_VERSION into the working directory."
+			fail "You can install it by executing ${COLOR_MAGENTA}./system-dependencies.sh --provision-dotnet${COLOR_RESET} (which will download it from ${COLOR_BLUE}$DOTNET_TARBALL${COLOR_RESET} and extract it into ${COLOR_BLUE}${DOTNET_LOCAL_INSTALL_DIR}${COLOR_RESET})."
+			fail "Alternatively you can ${COLOR_MAGENTA}export IGNORE_DOTNET=1${COLOR_RED} to skip this check."
+			return
+		fi
+	else
+		if test -d "$DOTNET_INSTALL_DIR"; then
+			ok "Found dotnet $DOTNET_VERSION in $DOTNET_INSTALL_DIR (exactly $DOTNET_VERSION is required)."
+			return
+		fi
+		if test -z "$PROVISION_DOTNET"; then
+			fail "You must install dotnet $DOTNET_VERSION. You can download it from ${COLOR_BLUE}$DOTNET_URL${COLOR_RESET}."
+			fail "Alternatively you can ${COLOR_MAGENTA}export IGNORE_DOTNET=1${COLOR_RED} to skip this check."
+			return
+		fi
 	fi
 
 	if test -n "$INSTALL_LOCALLY"; then
