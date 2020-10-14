@@ -798,6 +798,7 @@ public static class EnumerableExtensions
 
 public static class CustomAttributeDataExtensions
 {
+#if !NET
 	static Type roCustomAttributeDataType;
 	static PropertyInfo attributeTypeProperty;
 
@@ -814,4 +815,7 @@ public static class CustomAttributeDataExtensions
 			return (Type) attributeTypeProperty.GetValue (data);
 		return data.AttributeType;
 	}
+#else
+	public static Type GetAttributeType (this CustomAttributeData data) => data.AttributeType;
+#endif
 }
