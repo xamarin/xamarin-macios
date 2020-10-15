@@ -6,7 +6,6 @@ using Foundation;
 using ObjCRuntime;
 
 namespace WatchKit {
-	[Introduced (PlatformName.iOS, 8,2, PlatformArchitecture.All)]
 	[Unavailable (PlatformName.iOS, PlatformArchitecture.All)]
 	[Obsolete (Constants.WatchKitRemoved)]
 	[EditorBrowsable (EditorBrowsableState.Never)]
