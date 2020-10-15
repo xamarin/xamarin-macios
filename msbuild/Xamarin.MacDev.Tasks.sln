@@ -5,8 +5,6 @@ VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.iOS.Tasks.Core", "Xamarin.iOS.Tasks.Core\Xamarin.iOS.Tasks.Core.csproj", "{93E12FA0-089C-4BC8-840F-43CFBC7927C7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.iOS.Tasks.Tests", "..\tests\msbuild\Xamarin.iOS.Tasks.Tests\Xamarin.iOS.Tasks.Tests.csproj", "{EDB0E879-5AE6-4E2B-925D-F59023A6AA8D}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.MacDev", "..\external\Xamarin.MacDev\Xamarin.MacDev\Xamarin.MacDev.csproj", "{CC3D9353-20C4-467A-8522-A9DED6F0C753}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.MacDev.Tasks", "Xamarin.MacDev.Tasks\Xamarin.MacDev.Tasks.csproj", "{534D7C5A-0E1C-4C58-9E48-21B1A98919EB}"
@@ -20,6 +18,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.Mac.Tasks.Core", "Xamarin.Mac.Tasks.Core\Xamarin.Mac.Tasks.Core.csproj", "{AF1AC7C3-F6DD-4E46-B897-9DBB90B158EC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.Localization.MSBuild", "Xamarin.Localization.MSBuild\Xamarin.Localization.MSBuild.csproj", "{947E3C4C-8891-49D7-B665-23F785489D3F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{D669990B-EE95-4282-AAC4-17CA05AE0575}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.MacDev.Tests", "..\tests\msbuild\Xamarin.MacDev.Tests\Xamarin.MacDev.Tests.csproj", "{14A12D59-A630-42F1-BC19-A63A9D87DB3B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.MacDev.Tasks.Tests", "..\tests\msbuild\Xamarin.MacDev.Tasks.Tests\Xamarin.MacDev.Tasks.Tests.csproj", "{17E54157-C5DA-414C-8C28-7F642E6E4FB0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,14 +41,6 @@ Global
 		{93E12FA0-089C-4BC8-840F-43CFBC7927C7}.Debug-net461|Any CPU.Build.0 = Debug|Any CPU
 		{93E12FA0-089C-4BC8-840F-43CFBC7927C7}.Debug-netstandard2.0|Any CPU.ActiveCfg = Debug|Any CPU
 		{93E12FA0-089C-4BC8-840F-43CFBC7927C7}.Debug-netstandard2.0|Any CPU.Build.0 = Debug|Any CPU
-		{EDB0E879-5AE6-4E2B-925D-F59023A6AA8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EDB0E879-5AE6-4E2B-925D-F59023A6AA8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EDB0E879-5AE6-4E2B-925D-F59023A6AA8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EDB0E879-5AE6-4E2B-925D-F59023A6AA8D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EDB0E879-5AE6-4E2B-925D-F59023A6AA8D}.Debug-net461|Any CPU.ActiveCfg = Debug-netstandard2.0|Any CPU
-		{EDB0E879-5AE6-4E2B-925D-F59023A6AA8D}.Debug-net461|Any CPU.Build.0 = Debug-netstandard2.0|Any CPU
-		{EDB0E879-5AE6-4E2B-925D-F59023A6AA8D}.Debug-netstandard2.0|Any CPU.ActiveCfg = Debug-netstandard2.0|Any CPU
-		{EDB0E879-5AE6-4E2B-925D-F59023A6AA8D}.Debug-netstandard2.0|Any CPU.Build.0 = Debug-netstandard2.0|Any CPU
 		{CC3D9353-20C4-467A-8522-A9DED6F0C753}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CC3D9353-20C4-467A-8522-A9DED6F0C753}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CC3D9353-20C4-467A-8522-A9DED6F0C753}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -101,6 +97,22 @@ Global
 		{947E3C4C-8891-49D7-B665-23F785489D3F}.Debug-net461|Any CPU.Build.0 = Debug|Any CPU
 		{947E3C4C-8891-49D7-B665-23F785489D3F}.Debug-netstandard2.0|Any CPU.ActiveCfg = Debug|Any CPU
 		{947E3C4C-8891-49D7-B665-23F785489D3F}.Debug-netstandard2.0|Any CPU.Build.0 = Debug|Any CPU
+		{14A12D59-A630-42F1-BC19-A63A9D87DB3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14A12D59-A630-42F1-BC19-A63A9D87DB3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14A12D59-A630-42F1-BC19-A63A9D87DB3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14A12D59-A630-42F1-BC19-A63A9D87DB3B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14A12D59-A630-42F1-BC19-A63A9D87DB3B}.Debug-net461|Any CPU.ActiveCfg = Debug|Any CPU
+		{14A12D59-A630-42F1-BC19-A63A9D87DB3B}.Debug-net461|Any CPU.Build.0 = Debug|Any CPU
+		{14A12D59-A630-42F1-BC19-A63A9D87DB3B}.Debug-netstandard2.0|Any CPU.ActiveCfg = Debug|Any CPU
+		{14A12D59-A630-42F1-BC19-A63A9D87DB3B}.Debug-netstandard2.0|Any CPU.Build.0 = Debug|Any CPU
+		{17E54157-C5DA-414C-8C28-7F642E6E4FB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17E54157-C5DA-414C-8C28-7F642E6E4FB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17E54157-C5DA-414C-8C28-7F642E6E4FB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17E54157-C5DA-414C-8C28-7F642E6E4FB0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17E54157-C5DA-414C-8C28-7F642E6E4FB0}.Debug-net461|Any CPU.ActiveCfg = Debug-netstandard2.0|Any CPU
+		{17E54157-C5DA-414C-8C28-7F642E6E4FB0}.Debug-net461|Any CPU.Build.0 = Debug-netstandard2.0|Any CPU
+		{17E54157-C5DA-414C-8C28-7F642E6E4FB0}.Debug-netstandard2.0|Any CPU.ActiveCfg = Debug-netstandard2.0|Any CPU
+		{17E54157-C5DA-414C-8C28-7F642E6E4FB0}.Debug-netstandard2.0|Any CPU.Build.0 = Debug-netstandard2.0|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -133,5 +145,9 @@ Global
 		$2.SpaceBeforeOpenSquareBracket = True
 		$2.scope = text/x-csharp
 		$2.NewLinesForBracesInTypes = False
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{14A12D59-A630-42F1-BC19-A63A9D87DB3B} = {D669990B-EE95-4282-AAC4-17CA05AE0575}
+		{17E54157-C5DA-414C-8C28-7F642E6E4FB0} = {D669990B-EE95-4282-AAC4-17CA05AE0575}
 	EndGlobalSection
 EndGlobal
