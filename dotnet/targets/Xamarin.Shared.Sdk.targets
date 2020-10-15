@@ -12,7 +12,7 @@
 	</PropertyGroup>
 
 	<!-- Version information -->
-	<Import Project="Xamarin.Shared.Sdk.Versions.props" />
+	<Import Project="Xamarin.Shared.Sdk.Versions.targets" />
 
 	<!-- Default item includes (globs and implicit references) -->
 	<Import Project="Microsoft.$(_PlatformName).Sdk.DefaultItems.props" />
