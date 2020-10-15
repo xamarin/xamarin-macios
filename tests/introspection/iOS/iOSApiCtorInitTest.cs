@@ -229,6 +229,12 @@ namespace Introspection {
 				// MPSPredicate.mm:102: failed assertion `[MPSPredicate initWithBuffer:offset:] device: Apple A8 GPU does not support predication.'
 				return ((Runtime.Arch == Arch.DEVICE) && (UIScreen.MainScreen.NativeBounds.Width <= 1920));
 #endif
+			case "AVSpeechSynthesisVoice": // Calling description crashes the test
+#if __WATCHOS__
+				return TestRuntime.CheckXcodeVersion (12, 2); // CheckExactXcodeVersion is not implemented in watchOS yet but will be covered by iOS parrot below
+#else
+				return TestRuntime.CheckExactXcodeVersion (12, 2, beta: 3);
+#endif
 			default:
 				return base.Skip (type);
 			}
