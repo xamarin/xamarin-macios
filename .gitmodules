@@ -17,3 +17,7 @@
     path = external/Xamarin.MacDev
     url = ../../xamarin/Xamarin.MacDev
     branch = xcode12
+[submodule "external/ikvm-fork"]
+    path = external/ikvm-fork
+    url = ../../mono/ikvm-fork
+    branch = master
