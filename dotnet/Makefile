@@ -5,6 +5,7 @@ include $(TOP)/mk/rules.mk
 
 DOTNET_MANIFESTS_PATH=$(DOTNET5_DIR)/sdk-manifests/$(DOTNET5_VERSION_BAND)
 DOTNET_PACKS_PATH=$(DOTNET5_DIR)/packs
+TMP_PKG_DIR=_pkg
 
 # Create variables prefixed with the correctly cased platform name from the upper-cased platform name. This makes some of the next sections somewhat simpler.
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(platform)_NUGET_VERSION_NO_METADATA:=$($(shell echo $(platform) | tr a-z A-Z)_NUGET_VERSION_NO_METADATA)))
@@ -30,6 +31,7 @@ $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call DefineTargets,$(platform)))
 
 DIRECTORIES += \
 	$(DOTNET_NUPKG_DIR) \
+	$(DOTNET_PKG_DIR) \
 	$(DOTNET_FEED_DIR) \
 	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/Sdk) \
 	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/targets) \
@@ -37,6 +39,7 @@ DIRECTORIES += \
 	$(DOTNET_PACKS_PATH) \
 	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_PACKS_PATH)/Microsoft.$(platform).Sdk) \
 	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_PACKS_PATH)/Microsoft.$(platform).Ref) \
+	$(TMP_PKG_DIR) \
 
 $(DIRECTORIES):
 	$(Q) mkdir -p $@
@@ -170,8 +173,54 @@ WORKLOAD_TARGETS += \
 	$(DOTNET_PACKS_PATH)/Microsoft.$1.Sdk/$2 \
 	$(DOTNET_PACKS_PATH)/Microsoft.$1.Ref/$2
 endef
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call InstallWorkload,$(platform),$($(platform)_NUGET_VERSION_NO_METADATA))))
+
+# We create three packages: one for the workload, one for the sdk package, and one for the ref package,
+# and then bundle them into a single pkg for distribution (named Microsoft.<platform>.Bundle.<version>.pkg).
+# This way we can create and publish separate updated for each workload/sdk/ref package later if we want to.
+define CreatePackage
+# The workload package
+$(TMP_PKG_DIR)/Microsoft.$1.Workload.$2.pkg: $($(1)_NUGET_TARGETS) $(WORKLOAD_TARGETS) Makefile | $(TMP_PKG_DIR)
+	$$(Q) rm -f $$@
+	$$(Q_GEN) pkgbuild --quiet --version '$2' --root Microsoft.NET.Workload.$1 --component-plist PackageInfo.plist  --install-location /usr/local/share/dotnet/sdk-manifests/$(DOTNET5_VERSION_BAND)/Microsoft.NET.Workload.$1 --identifier com.microsoft.net.$3.workload.pkg $$@.tmp
+	$$(Q) mv $$@.tmp $$@
+
+# The sdk package
+$(TMP_PKG_DIR)/Microsoft.$1.Sdk.$2.pkg: $(REF_PACK_$(4)) | $(TMP_PKG_DIR)
+	$$(Q) rm -f $$@
+	$$(Q_GEN) pkgbuild --quiet --version '$2' --root $(DOTNET_DESTDIR)/Microsoft.$1.Sdk --component-plist PackageInfo.plist --install-location /usr/local/share/dotnet/packs/Microsoft.$1.Sdk/$2 --identifier com.microsoft.net.$3.sdk.pkg $$@.tmp
+	$$(Q) mv $$@.tmp $$@
+
+# The ref package
+$(TMP_PKG_DIR)/Microsoft.$1.Ref.$2.pkg: $(SDK_PACK_$(4)) | $(TMP_PKG_DIR)
+	$$(Q) rm -f $$@
+	$$(Q_GEN) pkgbuild --quiet --version '$2' --root $(DOTNET_DESTDIR)/Microsoft.$1.Ref --component-plist PackageInfo.plist --install-location /usr/local/share/dotnet/packs/Microsoft.$1.Ref/$2 --identifier com.microsoft.net.$3.ref.pkg $$@.tmp
+	$$(Q) mv $$@.tmp $$@
+
+# The final bundle package for distribution
+$(TMP_PKG_DIR)/Microsoft.$1.Bundle.$2.pkg: $(TMP_PKG_DIR)/Microsoft.$1.Workload.$2.pkg $(TMP_PKG_DIR)/Microsoft.$1.Sdk.$2.pkg $(TMP_PKG_DIR)/Microsoft.$1.Ref.$2.pkg
+	$$(Q) rm -f $$@
+	$$(Q_GEN) productbuild \
+		--quiet \
+		--identifier com.microsoft.net.$3.pkg \
+		--version '$2' \
+		--package $(TMP_PKG_DIR)/Microsoft.$1.Workload.$2.pkg \
+		--package $(TMP_PKG_DIR)/Microsoft.$1.Sdk.$2.pkg \
+		--package $(TMP_PKG_DIR)/Microsoft.$1.Ref.$2.pkg \
+		$$@.tmp
+	$$(Q) mv $$@.tmp $$@
+
+# Copy the bundle package from our temporary directory to the target directory
+$(DOTNET_PKG_DIR)/Microsoft.$1.Bundle.$2.pkg: $(TMP_PKG_DIR)/Microsoft.$1.Bundle.$2.pkg | $(DOTNET_PKG_DIR)
+	$$(Q) $(CP) $$< $$@
+
+PACKAGE_TARGETS += $(DOTNET_PKG_DIR)/Microsoft.$1.Bundle.$2.pkg
+endef
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call CreatePackage,$(platform),$($(platform)_NUGET_VERSION_NO_METADATA),$(shell echo $(platform) | tr A-Z a-z),$(shell echo $(platform) | tr a-z A-Z))))
 
 TARGETS += $(WORKLOAD_TARGETS)
+
+package: $(PACKAGE_TARGETS)
 
 ifdef ENABLE_DOTNET
 all-local:: $(TARGETS) targets/Xamarin.Shared.Sdk.Versions.props
