@@ -4,6 +4,7 @@ include $(TOP)/Make.config
 include $(TOP)/mk/rules.mk
 
 DOTNET_MANIFESTS_PATH=$(DOTNET5_DIR)/sdk-manifests/$(DOTNET5_VERSION_BAND)
+DOTNET_PACKS_PATH=$(DOTNET5_DIR)/packs
 
 # Create variables prefixed with the correctly cased platform name from the upper-cased platform name. This makes some of the next sections somewhat simpler.
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(platform)_NUGET_VERSION_NO_METADATA:=$($(shell echo $(platform) | tr a-z A-Z)_NUGET_VERSION_NO_METADATA)))
@@ -33,6 +34,9 @@ DIRECTORIES += \
 	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/Sdk) \
 	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/targets) \
 	$(DOTNET_MANIFESTS_PATH) \
+	$(DOTNET_PACKS_PATH) \
+	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_PACKS_PATH)/Microsoft.$(platform).Sdk) \
+	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_PACKS_PATH)/Microsoft.$(platform).Ref) \
 
 $(DIRECTORIES):
 	$(Q) mkdir -p $@
@@ -155,8 +159,16 @@ define InstallWorkload
 $(DOTNET_MANIFESTS_PATH)/Microsoft.NET.Workload.$1: | $(DOTNET_MANIFESTS_PATH)
 	$$(Q_LN) ln -Fhs $$(abspath Microsoft.NET.Workload.$1) $$(abspath $$@)
 
+$(DOTNET_PACKS_PATH)/Microsoft.$1.Sdk/$2: | $(DOTNET_PACKS_PATH)/Microsoft.$1.Sdk
+	$$(Q_LN) ln -Fhs $$(abspath $(DOTNET_DESTDIR)/Microsoft.$1.Sdk) $$(abspath $$@)
+
+$(DOTNET_PACKS_PATH)/Microsoft.$1.Ref/$2: | $(DOTNET_PACKS_PATH)/Microsoft.$1.Ref
+	$$(Q_LN) ln -Fhs $$(abspath $(DOTNET_DESTDIR)/Microsoft.$1.Ref) $$(abspath $$@)
+
 WORKLOAD_TARGETS += \
 	$(DOTNET_MANIFESTS_PATH)/Microsoft.NET.Workload.$1 \
+	$(DOTNET_PACKS_PATH)/Microsoft.$1.Sdk/$2 \
+	$(DOTNET_PACKS_PATH)/Microsoft.$1.Ref/$2
 endef
 
 TARGETS += $(WORKLOAD_TARGETS)
