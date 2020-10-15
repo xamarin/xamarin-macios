@@ -710,7 +710,9 @@ namespace AVFoundation {
 	public enum AVCaptureColorSpace : long
 	{
 		Srgb = 0,
-		P3D65 = 1
+		P3D65 = 1,
+		[iOS (14,1)][NoMac]
+		HlgBT2020 = 2,
 	}
 
 	[iOS (8,0)]
