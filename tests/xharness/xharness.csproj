@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -61,6 +61,12 @@
     <StartArguments>--configure --autoconf --rootdir .. --mac </StartArguments>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.DotNet.XHarness.Common">
+      <HintPath>..\..\..\xharness\artifacts\bin\Microsoft.DotNet.XHarness.iOS.Shared\Debug\netstandard2.0\Microsoft.DotNet.XHarness.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.DotNet.XHarness.iOS.Shared">
+      <HintPath>..\..\..\xharness\artifacts\bin\Microsoft.DotNet.XHarness.iOS.Shared\Debug\netstandard2.0\Microsoft.DotNet.XHarness.iOS.Shared.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Web" />
@@ -158,15 +164,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="Microsoft.DotNet.XHarness.iOS.Shared\Microsoft.DotNet.XHarness.iOS.Shared.csproj">
-      <Project>{5be5cabf-8d6c-4f35-9e5b-505b4c40b2ac}</Project>
-      <Name>Microsoft.DotNet.XHarness.iOS.Shared</Name>
-    </ProjectReference>
-  </ItemGroup>
   <ItemGroup />
-  <ItemGroup>
-    <Folder Include="Jenkins\Reports\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
