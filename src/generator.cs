@@ -3259,23 +3259,22 @@ public partial class Generator : IMemberGatherer {
 		if ((additional == null) || (original == null))
 			return;
 
-		List<AvailabilityBaseAttribute> original_ca = null;
+		List<AvailabilityBaseAttribute> original_ca = new List<AvailabilityBaseAttribute> ();
+		original_ca.AddRange (AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (original));
+		if (original.DeclaringType != null)
+			original_ca.AddRange (AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (original.DeclaringType));
 
 		foreach (var availability in AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (additional)) {
-			// don't get original custom attributes unless additional has custom attributes
-			if (original_ca == null) {
-				original_ca = new List<AvailabilityBaseAttribute> ();
-				original_ca.AddRange (AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (original));
-				if (original.DeclaringType != null)
-					original_ca.AddRange (AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (original.DeclaringType));
-			}
-
 			// already decorated, skip
 			if (HasAvailability (original_ca, availability.Platform))
 				continue;
 			// not available, skip
 			if (IsUnavailable (original_ca, availability.Platform))
 				continue;
+			print (availability.ToString ());
+		}
+
+		foreach (var availability in original_ca) {
 			print (availability.ToString ());
 		}
 	}
