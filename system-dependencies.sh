@@ -1002,57 +1002,27 @@ function check_dotnet ()
 {
 	if test -n "$IGNORE_DOTNET"; then return; fi
 
-	local SUFFIX=$1
 	local DOTNET_VERSION
-	local DOTNET_INSTALL_DIR
-	local DOTNET_URL
-	local DOTNET_TARBALL
 	local DOTNET_FILENAME
 	local URL
-	local INSTALL_LOCALLY
 	local INSTALL_DIR
 	local CACHED_FILE
 	local DOWNLOADED_FILE
 
-	# If there's a TARBALL url, use that and install into builds/download, otherwise install the pkg.
+	DOTNET_VERSION=$(grep "^DOTNET_VERSION=" Make.config | sed 's/.*=//')
+	URL=$(grep "^DOTNET_URL"= Make.config | sed 's/.*=//')
+	INSTALL_DIR=/usr/local/share/dotnet/sdk/"$DOTNET_VERSION"
 
-	DOTNET_VERSION=$(grep "^DOTNET${SUFFIX}_VERSION=" Make.config | sed 's/.*=//')
-	DOTNET_URL=$(grep "^DOTNET${SUFFIX}_URL"= Make.config | sed 's/.*=//')
-	DOTNET_TARBALL=$(grep "^DOTNET${SUFFIX}_TARBALL"= Make.config | sed 's/.*=//' || true) # this variable might not exist
-	DOTNET_INSTALL_DIR=/usr/local/share/dotnet/sdk/"$DOTNET_VERSION"
-	DOTNET_LOCAL_INSTALL_DIR="builds/downloads/dotnet/$DOTNET_VERSION"
-
-	if test -n "$DOTNET_TARBALL"; then
-		INSTALL_LOCALLY=1
-		if test -d "$DOTNET_LOCAL_INSTALL_DIR"; then
-			ok "Found dotnet $DOTNET_VERSION in $DOTNET_LOCAL_INSTALL_DIR (exactly $DOTNET_VERSION is required)."
-			return
-		fi
-		if test -z "$PROVISION_DOTNET"; then
-			fail "You must install dotnet $DOTNET_VERSION into the working directory."
-			fail "You can install it by executing ${COLOR_MAGENTA}./system-dependencies.sh --provision-dotnet${COLOR_RESET} (which will download it from ${COLOR_BLUE}$DOTNET_TARBALL${COLOR_RESET} and extract it into ${COLOR_BLUE}${DOTNET_LOCAL_INSTALL_DIR}${COLOR_RESET})."
-			fail "Alternatively you can ${COLOR_MAGENTA}export IGNORE_DOTNET=1${COLOR_RED} to skip this check."
-			return
-		fi
-	else
-		if test -d "$DOTNET_INSTALL_DIR"; then
-			ok "Found dotnet $DOTNET_VERSION in $DOTNET_INSTALL_DIR (exactly $DOTNET_VERSION is required)."
-			return
-		fi
-		if test -z "$PROVISION_DOTNET"; then
-			fail "You must install dotnet $DOTNET_VERSION. You can download it from ${COLOR_BLUE}$DOTNET_URL${COLOR_RESET}."
-			fail "Alternatively you can ${COLOR_MAGENTA}export IGNORE_DOTNET=1${COLOR_RED} to skip this check."
-			return
-		fi
+	if test -d "$INSTALL_DIR"; then
+		ok "Found dotnet $DOTNET_VERSION in $INSTALL_DIR (exactly $DOTNET_VERSION is required)."
+		return
+	fi
+	if test -z "$PROVISION_DOTNET"; then
+		fail "You must install dotnet $DOTNET_VERSION. You can download it from ${COLOR_BLUE}$URL${COLOR_RESET}."
+		fail "Alternatively you can ${COLOR_MAGENTA}export IGNORE_DOTNET=1${COLOR_RED} to skip this check."
+		return
 	fi
 
-	if test -n "$INSTALL_LOCALLY"; then
-		URL=$DOTNET_TARBALL
-		INSTALL_DIR=$DOTNET_LOCAL_INSTALL_DIR
-	else
-		URL=$DOTNET_URL
-		INSTALL_DIR=$DOTNET_INSTALL_DIR
-	fi
 	DOTNET_FILENAME=$(basename "$URL")
 
 	CACHED_FILE=$HOME/Library/Caches/xamarin-macios/$DOTNET_FILENAME
@@ -1067,21 +1037,7 @@ function check_dotnet ()
 	fi
 
 	log "Installing dotnet $DOTNET_VERSION into $INSTALL_DIR..."
-	if test -n "$INSTALL_LOCALLY"; then
-		rm -Rf "$INSTALL_DIR-tmp"
-		mkdir -p "$INSTALL_DIR-tmp"
-		local TAR_ARGS
-		if test -n "$VERBOSE"; then
-			TAR_ARGS=xvf
-		else
-			TAR_ARGS=xf
-		fi
-		tar $TAR_ARGS "$DOWNLOADED_FILE" -C "$INSTALL_DIR-tmp"
-		xattr -s -d -r com.apple.quarantine "$INSTALL_DIR-tmp"
-		mv "$INSTALL_DIR-tmp" "$INSTALL_DIR"
-	else
-		$SUDO installer -pkg "$DOWNLOADED_FILE" -target /
-	fi
+	$SUDO installer -pkg "$DOWNLOADED_FILE" -target /
 
 	ok "Installed dotnet $DOTNET_VERSION into $INSTALL_DIR."
 }
@@ -1100,7 +1056,6 @@ check_7z
 check_objective_sharpie
 check_simulators
 check_dotnet ""
-check_dotnet "5"
 if test -z "$IGNORE_DOTNET"; then
 	ok "Installed .NET SDKs:"
 	(IFS=$'\n'; for i in $(/usr/local/share/dotnet/dotnet --list-sdks); do log "$i"; done)
