@@ -1,5 +1,5 @@
 WorkloadManifest.json
 nupkgs
-Microsoft.*.Sdk/targets/Microsoft.*.Sdk.SupportedTargetPlatforms.props
+Microsoft.*.Sdk/targets/Microsoft.*.Sdk.SupportedTargetPlatforms.targets
 _pkg
 

@@ -18,7 +18,7 @@
 	<Import Project="Microsoft.$(_PlatformName).Sdk.DefaultItems.props" />
 
 	<!-- This contains the OS versions we support for target platform -->
-	<Import Project="Microsoft.$(_PlatformName).Sdk.SupportedTargetPlatforms.props" />
+	<Import Project="Microsoft.$(_PlatformName).Sdk.SupportedTargetPlatforms.targets" />
 
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CompileNativeCode" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.LinkNativeCode" AssemblyFile="$(_XamarinTaskAssembly)" />
