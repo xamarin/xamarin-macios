@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using Mono.Cecil;
 
 using Xamarin.Bundler;
-using Xamarin.Utils;
 using Registrar;
 #endif
 

@@ -169,6 +169,11 @@ namespace Xamarin.MacDev
 			return TryParse (commandline, out argv, out ex);
 		}
 
+		public IList<string> ToList ()
+		{
+			return Parse (ToString ());
+		}
+
 		public static string[] Parse (string commandline)
 		{
 			string[] argv;

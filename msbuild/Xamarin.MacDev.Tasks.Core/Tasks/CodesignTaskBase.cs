@@ -1,8 +1,6 @@
 using System;
 using System.IO;
-using System.Text;
 using System.Linq;
-using System.Diagnostics;
 
 using Parallel = System.Threading.Tasks.Parallel;
 using ParallelOptions = System.Threading.Tasks.ParallelOptions;
@@ -76,18 +74,6 @@ namespace Xamarin.MacDev.Tasks
 			return File.Exists (path) ? path : ToolExe;
 		}
 
-		ProcessStartInfo GetProcessStartInfo (string tool, string args)
-		{
-			var startInfo = new ProcessStartInfo (tool, args);
-
-			startInfo.WorkingDirectory = Environment.CurrentDirectory;
-			startInfo.EnvironmentVariables["CODESIGN_ALLOCATE"] = CodesignAllocate;
-
-			startInfo.CreateNoWindow = true;
-
-			return startInfo;
-		}
-
 		string GetOutputPath (ITaskItem item)
 		{
 			return Path.Combine (StampPath, item.ItemSpec);
@@ -109,9 +95,9 @@ namespace Xamarin.MacDev.Tasks
 			return false;
 		}
 
-		string GenerateCommandLineArguments (ITaskItem item)
+		IList<string> GenerateCommandLineArguments (ITaskItem item)
 		{
-			var args = new CommandLineArgumentBuilder ();
+			var args = new List<string> ();
 
 			args.Add ("-v");
 			args.Add ("--force");
@@ -128,21 +114,21 @@ namespace Xamarin.MacDev.Tasks
 				args.Add ("--timestamp=none");
 
 			args.Add ("--sign");
-			args.AddQuoted (SigningKey);
+			args.Add (SigningKey);
 
 			if (!string.IsNullOrEmpty (Keychain)) {
 				args.Add ("--keychain");
-				args.AddQuoted (Path.GetFullPath (Keychain));
+				args.Add (Path.GetFullPath (Keychain));
 			}
 
 			if (!string.IsNullOrEmpty (ResourceRules)) {
 				args.Add ("--resource-rules");
-				args.AddQuoted (Path.GetFullPath (ResourceRules));
+				args.Add (Path.GetFullPath (ResourceRules));
 			}
 
 			if (!string.IsNullOrEmpty (Entitlements)) {
 				args.Add ("--entitlements");
-				args.AddQuoted (Path.GetFullPath (Entitlements));
+				args.Add (Path.GetFullPath (Entitlements));
 			}
 
 			if (DisableTimestamp)
@@ -151,41 +137,27 @@ namespace Xamarin.MacDev.Tasks
 			if (!string.IsNullOrEmpty (ExtraArgs))
 				args.Add (ExtraArgs);
 
-			args.AddQuoted (Path.GetFullPath (item.ItemSpec));
+			args.Add (Path.GetFullPath (item.ItemSpec));
 
-			return args.ToString ();
+			return args;
 		}
 
 		void Codesign (ITaskItem item)
 		{
-			var startInfo = GetProcessStartInfo (GetFullPathToTool (), GenerateCommandLineArguments (item));
-			var messages = new StringBuilder ();
-			var errors = new StringBuilder ();
-			int exitCode;
-
-			try {
-				Log.LogMessage (MessageImportance.Normal, MSBStrings.M0001, startInfo.FileName, startInfo.Arguments);
-
-				using (var stdout = new StringWriter (messages)) {
-					using (var stderr = new StringWriter (errors)) {
-						using (var process = ProcessUtils.StartProcess (startInfo, stdout, stderr)) {
-							process.Wait ();
-
-							exitCode = process.Result;
-						}
-					}
-
-					Log.LogMessage (MessageImportance.Low, MSBStrings.M0002, startInfo.FileName, exitCode);
-				}
-			} catch (Exception ex) {
-				Log.LogError (MSBStrings.E0003, startInfo.FileName, ex.Message);
-				return;
-			}
-
+			var fileName = GetFullPathToTool ();
+			var arguments = GenerateCommandLineArguments (item);
+			var environment = new Dictionary<string, string> () {
+				{ "CODESIGN_ALLOCATE", CodesignAllocate },
+			};
+			var rv = ExecuteAsync (fileName, arguments, null, environment, mergeOutput: false).Result;
+			var exitCode = rv.ExitCode;
+			var messages = rv.StandardOutput.ToString ();
+			
 			if (messages.Length > 0)
 				Log.LogMessage (MessageImportance.Normal, "{0}", messages.ToString ());
 
 			if (exitCode != 0) {
+				var errors = rv.StandardError.ToString ();
 				if (errors.Length > 0)
 					Log.LogError (MSBStrings.E0004, item.ItemSpec, errors);
 				else

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Diagnostics;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
@@ -110,20 +112,6 @@ namespace Xamarin.MacDev.Tasks
 			return File.Exists (path) ? path : ToolExe;
 		}
 
-		static ProcessStartInfo GetProcessStartInfo (IDictionary<string, string> environment, string tool, string args)
-		{
-			var startInfo = new ProcessStartInfo (tool, args);
-
-			startInfo.WorkingDirectory = Environment.CurrentDirectory;
-
-			foreach (var variable in environment)
-				startInfo.EnvironmentVariables[variable.Key] = variable.Value;
-
-			startInfo.CreateNoWindow = true;
-
-			return startInfo;
-		}
-
 		protected int Compile (ITaskItem[] items, string output, ITaskItem manifest)
 		{
 			var environment = new Dictionary<string, string> ();
@@ -152,34 +140,18 @@ namespace Xamarin.MacDev.Tasks
 			foreach (var item in items)
 				args.AddQuoted (item.GetMetadata ("FullPath"));
 
-			var startInfo = GetProcessStartInfo (environment, GetFullPathToTool (), args.ToString ());
-			var errors = new StringBuilder ();
-			int exitCode;
-
-			try {
-				Log.LogMessage (MessageImportance.Normal, MSBStrings.M0001, startInfo.FileName, startInfo.Arguments);
-
-				using (var stdout = File.CreateText (manifest.ItemSpec)) {
-					using (var stderr = new StringWriter (errors)) {
-						using (var process = ProcessUtils.StartProcess (startInfo, stdout, stderr)) {
-							process.Wait ();
-
-							exitCode = process.Result;
-						}
-					}
-
-					Log.LogMessage (MessageImportance.Low, MSBStrings.M0002, startInfo.FileName, exitCode);
-				}
-			} catch (Exception ex) {
-				Log.LogError (MSBStrings.E0003, startInfo.FileName, ex.Message);
-				File.Delete (manifest.ItemSpec);
-				return -1;
-			}
+			var fileName = GetFullPathToTool ();
+			var arguments = args.ToList ();
+			var rv = ExecuteAsync (fileName, arguments, sdkDevPath, environment: environment, mergeOutput: false).Result;
+			var exitCode = rv.ExitCode;
+			var messages = rv.StandardOutput.ToString ();
+			File.WriteAllText (manifest.ItemSpec, messages);
 
 			if (exitCode != 0) {
 				// Note: ibtool or actool exited with an error. Dump everything we can to help the user
 				// diagnose the issue and then delete the manifest log file so that rebuilding tries
 				// again (in case of ibtool's infamous spurious errors).
+				var errors = rv.StandardError.ToString ();
 				if (errors.Length > 0)
 					Log.LogError (null, null, null, items[0].ItemSpec, 0, 0, 0, 0, "{0}", errors);
 
