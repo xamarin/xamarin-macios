@@ -112,8 +112,6 @@
 		<DebuggerSupport Condition="'$(DebuggerSupport)' == ''">$(_BundlerDebug)</DebuggerSupport>
 	</PropertyGroup>
 
-	<Import Sdk="Microsoft.NET.Sdk" Project="Sdk.targets" />
-
 	<PropertyGroup>
 		<TargetPlatformSupported Condition=" '$(TargetPlatformIdentifier)' == '$(_PlatformName)' ">true</TargetPlatformSupported>
 	</PropertyGroup>
