@@ -9586,6 +9586,11 @@ namespace AVFoundation {
 		[NoWatch, NoTV, NoMac, iOS (13, 0)]
 		[Export ("autoVirtualDeviceFusionEnabled")]
 		bool AutoVirtualDeviceFusionEnabled { [Bind ("isAutoVirtualDeviceFusionEnabled")] get; set; }
+
+		[iOS (14,1)]
+		[NoMac]
+		[Export ("autoContentAwareDistortionCorrectionEnabled")]
+		bool AutoContentAwareDistortionCorrectionEnabled { [Bind ("isAutoContentAwareDistortionCorrectionEnabled")] get; set; }
 	}
 	
 #if !MONOMAC
@@ -9677,6 +9682,11 @@ namespace AVFoundation {
 		[NoWatch, NoTV, NoMac, iOS (13,0)]
 		[Export ("virtualDeviceFusionEnabled")]
 		bool VirtualDeviceFusionEnabled { [Bind ("isVirtualDeviceFusionEnabled")] get; }
+
+		[iOS (14,1)]
+		[NoMac]
+		[Export ("contentAwareDistortionCorrectionEnabled")]
+		bool ContentAwareDistortionCorrectionEnabled { [Bind ("isContentAwareDistortionCorrectionEnabled")] get; }
 	}
 
 
@@ -9922,6 +9932,16 @@ namespace AVFoundation {
 		[NoWatch, NoTV, NoMac, iOS (13, 0)]
 		[Export ("virtualDeviceConstituentPhotoDeliveryEnabled")]
 		bool VirtualDeviceConstituentPhotoDeliveryEnabled { [Bind ("isVirtualDeviceConstituentPhotoDeliveryEnabled")] get; set; }
+
+		[iOS (14,1)]
+		[NoMac]
+		[Export ("contentAwareDistortionCorrectionSupported")]
+		bool ContentAwareDistortionCorrectionSupported { [Bind ("isContentAwareDistortionCorrectionSupported")] get; }
+
+		[iOS (14,1)]
+		[NoMac]
+		[Export ("contentAwareDistortionCorrectionEnabled")]
+		bool ContentAwareDistortionCorrectionEnabled { [Bind ("isContentAwareDistortionCorrectionEnabled")] get; set; }
 	}
 	
 	[BaseType (typeof (AVCaptureFileOutput))]
@@ -11513,6 +11533,11 @@ namespace AVFoundation {
 		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
 		[Export ("startsOnFirstEligibleVariant")]
 		bool StartsOnFirstEligibleVariant { get; set; }
+
+		[iOS (14,1)]
+		[NoWatch][NoTV][NoMac]
+		[Export ("appliesPerFrameHDRDisplayMetadata")]
+		bool AppliesPerFrameHdrDisplayMetadata { get; set; }
 	}
 
 	[NoiOS][NoTV][NoWatch]
@@ -13707,6 +13732,10 @@ namespace AVFoundation {
 		Hair,
 		[Field ("AVSemanticSegmentationMatteTypeTeeth")]
 		Teeth,
+		[iOS (14,1)]
+		[NoWatch][NoTV][NoMac]
+		[Field ("AVSemanticSegmentationMatteTypeGlasses")]
+		Glasses,
 	} 
 
 	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
