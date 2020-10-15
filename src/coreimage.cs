@@ -506,6 +506,12 @@ namespace CoreImage {
 		[Export ("depthBlurEffectFilterForImage:disparityImage:portraitEffectsMatte:hairSemanticSegmentation:orientation:options:")]
 		[return: NullAllowed]
 		CIFilter GetDepthBlurEffectFilter (CIImage image, CIImage disparityImage, [NullAllowed] CIImage portraitEffectsMatte, [NullAllowed] CIImage hairSemanticSegmentation, CGImagePropertyOrientation orientation, [NullAllowed] NSDictionary options);
+
+		[iOS (14,1)]
+		[NoTV][NoMac]
+		[Export ("depthBlurEffectFilterForImage:disparityImage:portraitEffectsMatte:hairSemanticSegmentation:glassesMatte:gainMap:orientation:options:")]
+		[return: NullAllowed]
+		CIFilter GetDepthBlurEffectFilter (CIImage image, CIImage disparityImage, [NullAllowed] CIImage portraitEffectsMatte, [NullAllowed] CIImage hairSemanticSegmentation, [NullAllowed] CIImage glassesMatte, [NullAllowed] CIImage gainMap, CGImagePropertyOrientation orientation, [NullAllowed] NSDictionary options);
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -1327,6 +1333,14 @@ namespace CoreImage {
 
 		[iOS (13,0)][TV (13,0)][Mac (10,15)]
 		bool AuxiliarySemanticSegmentationTeethMatte { get; set; }
+
+		[iOS (14,1)]
+		[NoTV][NoMac]
+		bool AuxiliarySemanticSegmentationGlassesMatte { get; set; }
+
+		[iOS (14,1)]
+		[NoTV][NoMac]
+		bool ToneMapHdrToSdr { get; set; }
 	}
 
 	[Internal]
@@ -1369,6 +1383,17 @@ namespace CoreImage {
 		[iOS (13,0)][TV (13,0)][Mac (10,15)]
 		[Field ("kCIImageAuxiliarySemanticSegmentationTeethMatte")]
 		NSString AuxiliarySemanticSegmentationTeethMatteKey { get; }
+
+		[iOS (14, 1)]
+		[NoTV][NoMac]
+		[Field ("kCIImageAuxiliarySemanticSegmentationGlassesMatte")]
+		NSString AuxiliarySemanticSegmentationGlassesMatteKey { get; }
+
+		[iOS (14,1)]
+		[NoTV][NoMac]
+		[Field ("kCIImageToneMapHDRtoSDR")]
+		NSString ToneMapHdrToSdrKey { get; }
+
 	}
 	
 	[BaseType (typeof (NSObject))]
@@ -5728,6 +5753,11 @@ namespace CoreImage {
 		[iOS (13,0)][TV (13,0)][Mac (10,15)]
 		[Field ("kCIImageRepresentationSemanticSegmentationTeethMatteImage")]
 		NSString SemanticSegmentationTeethMatteImageKey { get; }
+
+		[iOS (14,1)]
+		[NoTV][NoMac]
+		[Field ("kCIImageRepresentationSemanticSegmentationGlassesMatteImage")]
+		NSString SemanticSegmentationGlassesMatteImage { get; }
 	}
 
 	[iOS (11,0)]
