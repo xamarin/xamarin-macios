@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.DotNet.XHarness.Common.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
+using Xharness.Tasks;
 
 namespace Xharness.TestTasks {
 	public class DotNetBuild : MSBuild {

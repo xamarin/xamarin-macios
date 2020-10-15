@@ -1,7 +1,8 @@
 ﻿using System;
 using Mono.Options;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
-using Microsoft.DotNet.XHarness.iOS.Shared;
+using Microsoft.DotNet.XHarness.iOS.Shared.XmlResults;
+using Microsoft.DotNet.XHarness.Common;
 
 namespace Xharness {
 	class MainClass {

@@ -86,6 +86,7 @@
     <Compile Include="DeviceLogCapturerFactory.cs" />
     <Compile Include="GitHub.cs" />
     <Compile Include="Harness.cs" />
+    <Compile Include="IEnvManager.cs" />
     <Compile Include="IHarness.cs" />
     <Compile Include="iOSTestProject.cs" />
     <Compile Include="Jenkins\ErrorKnowledgeBase.cs" />
@@ -124,6 +125,14 @@
     <Compile Include="Targets\TVOSTarget.cs" />
     <Compile Include="Targets\UnifiedTarget.cs" />
     <Compile Include="Targets\WatchOSTarget.cs" />
+    <Compile Include="Tasks\BuildProject.cs" />
+    <Compile Include="Tasks\BuildTool.cs" />
+    <Compile Include="Tasks\IAcquiredResource.cs" />
+    <Compile Include="Tasks\IResourceManager.cs" />
+    <Compile Include="Tasks\MSBuild.cs" />
+    <Compile Include="Tasks\Resource.cs" />
+    <Compile Include="Tasks\Resources.cs" />
+    <Compile Include="Tasks\TestTask.cs" />
     <Compile Include="TestImporter\Xamarin\AssemblyLocator.cs" />
     <Compile Include="TestImporter\Xamarin\ProjectFilter.cs" />
     <Compile Include="TestImporter\Xamarin\AssemblyDefinitionFactory.cs" />

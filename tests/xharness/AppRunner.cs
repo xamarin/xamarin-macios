@@ -16,6 +16,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 using Xharness.TestTasks;
 using Microsoft.DotNet.XHarness.Common.Execution;
 using Microsoft.DotNet.XHarness.Common.Logging;
+using Microsoft.DotNet.XHarness.iOS.Shared.XmlResults;
 
 namespace Xharness {
 
@@ -178,7 +179,7 @@ namespace Xharness {
 			var totalSize = Directory.GetFiles (AppInformation.AppPath, "*", SearchOption.AllDirectories).Select ((v) => new FileInfo (v).Length).Sum ();
 			MainLog.WriteLine ($"Installing '{AppInformation.AppPath}' to '{companionDeviceName ?? deviceName}'. Size: {totalSize} bytes = {totalSize / 1024.0 / 1024.0:N2} MB");
 
-			return await processManager.ExecuteCommandAsync (args, MainLog, TimeSpan.FromHours (1), cancellation_token: cancellation_token);
+			return await processManager.ExecuteCommandAsync (args, MainLog, TimeSpan.FromHours (1), cancellationToken: cancellation_token);
 		}
 
 		public async Task<ProcessExecutionResult> UninstallAsync ()
@@ -268,7 +269,7 @@ namespace Xharness {
 			args.Add (new SetAppArgumentArgument ($"-hostport:{listener.Port}", true));
 			args.Add (new SetEnvVariableArgument ("NUNIT_HOSTPORT", listener.Port));
 
-			if (listenerFactory.UseTcpTunnel)
+			if (listenerFactory.UseTunnel)
 				args.Add (new SetEnvVariableArgument ("USE_TCP_TUNNEL", true));
 
 			listener.StartAsync ();
@@ -365,7 +366,7 @@ namespace Xharness {
 				MainLog.WriteLine ("Starting test run");
 
 				await testReporter.CollectSimulatorResult (
-					processManager.ExecuteCommandAsync (args, runLog, testReporterTimeout, cancellation_token: testReporter.CancellationToken));
+					processManager.ExecuteCommandAsync (args, runLog, testReporterTimeout, cancellationToken: testReporter.CancellationToken));
 
 				// cleanup after us
 				if (EnsureCleanSimulatorState)
@@ -394,7 +395,7 @@ namespace Xharness {
 
 					MainLog.WriteLine ("Starting test run");
 
-					if (transport == ListenerTransport.Tcp && listenerFactory.UseTcpTunnel && listener is SimpleTcpListener tcpListener) {
+					if (transport == ListenerTransport.Tcp && listenerFactory.UseTunnel && listener is SimpleTcpListener tcpListener) {
 						// create a new tunnel using the listener
 						var tunnel = listenerFactory.TunnelBore.Create (deviceName, MainLog);
 						tunnel.Open (deviceName, tcpListener, testReporterTimeout, MainLog);
@@ -408,7 +409,7 @@ namespace Xharness {
 						args,
 						aggregatedLog,
 						testReporterTimeout,
-						cancellation_token: testReporter.CancellationToken);
+						cancellationToken: testReporter.CancellationToken);
 
 					await testReporter.CollectDeviceResult (runTestTask);
 				} finally {
@@ -427,7 +428,7 @@ namespace Xharness {
 			listener.Dispose ();
 
 			// close a tunnel if it was created
-			if (!isSimulator && listenerFactory.UseTcpTunnel)
+			if (!isSimulator && listenerFactory.UseTunnel)
 				await listenerFactory.TunnelBore.Close (deviceName);
 
 			// check the final status, copy all the required data

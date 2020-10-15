@@ -5,7 +5,6 @@ using Microsoft.DotNet.XHarness.iOS.Shared;
 using Moq;
 using NUnit.Framework;
 
-using Xharness.Jenkins;
 using Xharness.Jenkins.TestTasks;
 using Xharness.Tasks;
 

@@ -24,7 +24,7 @@ namespace Xharness.Jenkins {
 
 			this.simulators = simulators ?? throw new ArgumentNullException (nameof (simulators));
 			this.devices = devices ?? throw new ArgumentNullException (nameof (devices));
-			SimulatorLoadLog = logs.Create ($"simulator-list-{Harness.Harness.Helpers.Timestamp}.log", $"Simulator Listing");
+			SimulatorLoadLog = logs.Create ($"simulator-list-{Harness.Helpers.Timestamp}.log", $"Simulator Listing");
 			DeviceLoadLog = logs.Create ($"device-list-{Harness.Helpers.Timestamp}.log", $"Device Listing");
 		}
 
