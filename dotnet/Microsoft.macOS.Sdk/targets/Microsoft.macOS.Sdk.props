@@ -3,6 +3,4 @@
   <PropertyGroup>
     <_PlatformName>macOS</_PlatformName>
   </PropertyGroup>
-
-  <Import Project="Xamarin.Shared.Sdk.props" />
 </Project>

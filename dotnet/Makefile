@@ -21,7 +21,6 @@ $(1)_NUGET_TARGETS = \
 	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Microsoft.$(1).TargetFrameworkInference.targets \
 	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Xamarin.Shared.Sdk.DefaultItems.props \
 	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Xamarin.Shared.Sdk.DefaultItems.targets \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Xamarin.Shared.Sdk.props \
 	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Xamarin.Shared.Sdk.TargetFrameworkInference.targets \
 	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Xamarin.Shared.Sdk.targets \
 	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Xamarin.Shared.Sdk.Versions.props \

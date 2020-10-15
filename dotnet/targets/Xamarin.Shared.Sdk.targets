@@ -2,9 +2,23 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
 	<PropertyGroup>
+		<!-- Set to true when using the Microsoft.<platform>.Sdk NuGet. This is used by pre-existing/shared targets to tweak behavior depending on build system -->
+		<_UsingXamarinSdk>true</_UsingXamarinSdk>
+		<!-- This is the location of the Microsoft.<platform>.Sdk NuGet (/usr/local/share/dotnet/sdk/<version>/Sdks/Microsoft.[iOS/tvOS/watchOS/macOS].Sdk) -->
+		<_XamarinSdkRootDirectory>$([MSBuild]::NormalizePath('$(MSBuildThisFileDirectory)', '..'))\</_XamarinSdkRootDirectory>
+
 		<_XamarinTaskAssembly Condition="'$(_PlatformName)' != 'macOS'">$(_XamarinSdkRootDirectory)\tools\msbuild\iOS\Xamarin.iOS.Tasks.dll</_XamarinTaskAssembly>
 		<_XamarinTaskAssembly Condition="'$(_PlatformName)' == 'macOS'">$(_XamarinSdkRootDirectory)\tools\msbuild\macOS\Xamarin.Mac.Tasks.dll</_XamarinTaskAssembly>
 	</PropertyGroup>
+
+	<!-- Version information -->
+	<Import Project="Xamarin.Shared.Sdk.Versions.props" />
+
+	<!-- Default item includes (globs and implicit references) -->
+	<Import Project="Microsoft.$(_PlatformName).Sdk.DefaultItems.props" />
+
+	<!-- This contains the OS versions we support for target platform -->
+	<Import Project="Microsoft.$(_PlatformName).Sdk.SupportedTargetPlatforms.props" />
 
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CompileNativeCode" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.LinkNativeCode" AssemblyFile="$(_XamarinTaskAssembly)" />
