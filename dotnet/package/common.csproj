@@ -44,12 +44,12 @@
   <Target Name="_GenerateFrameworkListFile" Condition=" '$(_CreateFrameworkList)' == 'true' Or '$(_CreateRuntimeList)' == 'true' ">
     <!-- https://github.com/dotnet/runtime/blob/0647ec314948904319da5eb15e9931f7c85ed1e2/src/installer/pkg/projects/Directory.Build.targets#L281 -->
     <PropertyGroup Condition="'$(_CreateFrameworkList)' == 'true'">
-      <_FrameworkListFile>$(IntermediateOutputPath)FrameworkList.xml</_FrameworkListFile>
+      <_FrameworkListFile>$(_packagePath)data/FrameworkList.xml</_FrameworkListFile>
       <_PackTargetPath>ref/net5.0</_PackTargetPath>
       <_PackNativePath>runtimes/$(_RuntimeIdentifier)/native</_PackNativePath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(_CreateRuntimeList)' == 'true'">
-      <_FrameworkListFile>$(IntermediateOutputPath)RuntimeList.xml</_FrameworkListFile>
+      <_FrameworkListFile>$(_packagePath)data/RuntimeList.xml</_FrameworkListFile>
       <_PackTargetPath>runtimes/$(_RuntimeIdentifier)/lib/net5.0</_PackTargetPath>
       <_PackNativePath>runtimes/$(_RuntimeIdentifier)/native</_PackNativePath>
     </PropertyGroup>
