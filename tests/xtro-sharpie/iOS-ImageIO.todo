@@ -1,0 +1,6 @@
+!missing-enum! CGImagePropertyTGACompression not bound
+!missing-field! kCGImageAuxiliaryDataTypeHDRGainMap not bound
+!missing-field! kCGImageAuxiliaryDataTypeSemanticSegmentationGlassesMatte not bound
+!missing-field! kCGImageDestinationPreserveGainMap not bound
+!missing-field! kCGImagePropertyTGACompression not bound
+!missing-field! kCGImagePropertyTGADictionary not bound
