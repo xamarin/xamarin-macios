@@ -4,8 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks
-{
+namespace Xharness.Tasks {
 	public class Resources : IEnumerable<Resource> {
 		readonly Resource [] resources;
 
@@ -37,7 +36,8 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks
 			return tcs.Task;
 		}
 
-		public IEnumerator<Resource> GetEnumerator () {
+		public IEnumerator<Resource> GetEnumerator ()
+		{
 			foreach (var r in resources)
 				yield return r;
 		}

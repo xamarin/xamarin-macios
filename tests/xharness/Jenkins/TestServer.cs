@@ -6,10 +6,10 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.DotNet.XHarness.iOS.Shared;
-using Microsoft.DotNet.XHarness.iOS.Shared.Tasks;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 using Xharness.Jenkins.Reports;
 using Xharness.Jenkins.TestTasks;
+using Xharness.Tasks;
 
 namespace Xharness.Jenkins {
 

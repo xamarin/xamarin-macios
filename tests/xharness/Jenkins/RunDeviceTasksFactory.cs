@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
-using Microsoft.DotNet.XHarness.iOS.Shared.Tasks;
 using Xharness.Jenkins.TestTasks;
+using Xharness.Tasks;
 
 namespace Xharness.Jenkins {
 	class RunDeviceTasksFactory {

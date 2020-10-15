@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
-using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
+using Microsoft.DotNet.XHarness.Common.Execution;
+using Microsoft.DotNet.XHarness.Common.Logging;
 
-namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
+namespace Xharness.Tasks {
 
-	public class BuildTool
-	{
+	public class BuildTool {
 		public string TestName { get; set; }
 		public IProcessManager ProcessManager { get; }
 		public TestPlatform Platform { get; set; }
@@ -17,7 +16,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 		public bool SpecifyConfiguration { get; set; } = true;
 
 		public BuildTool (IProcessManager processManager)
-		{ 
+		{
 			ProcessManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 		}
 

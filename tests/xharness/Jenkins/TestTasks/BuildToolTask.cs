@@ -4,11 +4,10 @@ using Microsoft.DotNet.XHarness.Common.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
-using Microsoft.DotNet.XHarness.iOS.Shared.Tasks;
+using Xharness.Tasks;
 using Xharness.TestTasks;
 
-namespace Xharness.Jenkins.TestTasks
-{
+namespace Xharness.Jenkins.TestTasks {
 	abstract class BuildToolTask : AppleTestTask, IBuildToolTask 
 	{
 		protected BuildTool buildToolTask;

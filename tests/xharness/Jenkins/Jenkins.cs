@@ -10,10 +10,10 @@ using Xharness.Jenkins.TestTasks;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
-using Microsoft.DotNet.XHarness.iOS.Shared.Tasks;
 using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
 using Xharness.Jenkins.Reports;
 using Microsoft.DotNet.XHarness.Common.Logging;
+using Xharness.Tasks;
 
 namespace Xharness.Jenkins {
 	class Jenkins {

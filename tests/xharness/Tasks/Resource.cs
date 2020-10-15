@@ -2,8 +2,7 @@
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 
-namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks
-{
+namespace Xharness.Tasks {
 	// This is a very simple class to manage the general concept of 'resource'.
 	// Performance isn't important, so this is very simple.
 	// Currently it's only used to make sure everything that happens on the desktop
@@ -11,8 +10,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks
 	// make each connected device a separate resource, which will make it possible
 	// to run tests in parallel across devices (and at the same time use the desktop
 	// to build the next test project).
-	public class Resource
-	{
+	public class Resource {
 		public string Name;
 		public string Description;
 		ConcurrentQueue<TaskCompletionSource<IAcquiredResource>> queue = new ConcurrentQueue<TaskCompletionSource<IAcquiredResource>> ();
@@ -25,9 +23,9 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks
 
 		public Resource (string name, int max_concurrent_users = 1, string description = null)
 		{
-			this.Name = name;
-			this.MaxConcurrentUsers = max_concurrent_users;
-			this.Description = description ?? name;
+			Name = name;
+			MaxConcurrentUsers = max_concurrent_users;
+			Description = description ?? name;
 		}
 
 		public Task<IAcquiredResource> AcquireConcurrentAsync ()
@@ -75,11 +73,10 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks
 			}
 		}
 
-		class AcquiredResource : IAcquiredResource
-		{
+		class AcquiredResource : IAcquiredResource {
 			public AcquiredResource (Resource resource)
 			{
-				this.Resource = resource;
+				Resource = resource;
 			}
 
 			void IDisposable.Dispose ()

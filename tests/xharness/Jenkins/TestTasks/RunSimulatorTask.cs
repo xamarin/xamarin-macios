@@ -4,7 +4,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
 using Xharness.TestTasks;
-using Microsoft.DotNet.XHarness.iOS.Shared.Tasks;
+using Xharness.Tasks;
 
 namespace Xharness.Jenkins.TestTasks {
 	class RunSimulatorTask : RunXITask<ISimulatorDevice>, IRunSimulatorTask

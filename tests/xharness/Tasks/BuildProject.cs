@@ -4,11 +4,14 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using System.Xml;
-using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
+using Microsoft.DotNet.XHarness.Common.Execution;
+using Microsoft.DotNet.XHarness.Common.Logging;
+using Microsoft.DotNet.XHarness.Common.Utilities;
+using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 
-namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
+namespace Xharness.Tasks {
 	public class BuildProject : BuildTool {
 		public IResourceManager ResourceManager { get; set; }
 		public IEnvManager EnvironmentManager { get; set; }
@@ -110,9 +113,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 				var references = GetNestedReferenceProjects (TestProject.Path);
 				foreach (var referenceProject in references) {
 					var execResult = await RestoreNugetsAsync (referenceProject, log); // do the replace in case we use win paths
-					if (execResult == TestExecutingResult.TimedOut) {
-						return execResult;
-					}
+					if (execResult == TestExecutingResult.TimedOut) return execResult;
 				}
 			}
 

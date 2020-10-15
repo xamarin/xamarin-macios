@@ -6,13 +6,14 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
-using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
+using Microsoft.DotNet.XHarness.Common.Execution;
+using Microsoft.DotNet.XHarness.Common.Logging;
+using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 
-namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
-	public abstract class TestTasks : IEnvManager, IEventLogger, ITestTask 
-	{
+namespace Xharness.Tasks {
+	public abstract class TestTasks : IEnvManager, IEventLogger, ITestTask {
 		static int counter;
 		static DriveInfo RootDrive;
 
@@ -65,7 +66,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 		public bool BuildFailure => (ExecutionResult & TestExecutingResult.BuildFailure) == TestExecutingResult.BuildFailure;
 		public bool HarnessException => (ExecutionResult & TestExecutingResult.HarnessException) == TestExecutingResult.HarnessException;
 
-		public Stopwatch DurationStopWatch { get;  } = new Stopwatch ();
+		public Stopwatch DurationStopWatch { get; } = new Stopwatch ();
 		public TimeSpan Duration {
 			get {
 				return DurationStopWatch.Elapsed;
@@ -179,9 +180,8 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 				case TestPlatform.Mac_System:
 					return rv.Substring (0, rv.Length - "-system".Length);
 				default:
-					if (rv.EndsWith ("-watchos", StringComparison.Ordinal)) {
-						return rv.Substring (0, rv.Length - 8);
-					} else if (rv.EndsWith ("-tvos", StringComparison.Ordinal)) {
+					if (rv.EndsWith ("-watchos", StringComparison.Ordinal)) return rv.Substring (0, rv.Length - 8);
+					else if (rv.EndsWith ("-tvos", StringComparison.Ordinal)) {
 						return rv.Substring (0, rv.Length - 5);
 					} else if (rv.EndsWith ("-unified", StringComparison.Ordinal)) {
 						return rv.Substring (0, rv.Length - 8);
@@ -381,8 +381,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 			return rv;
 		}
 
-		class BlockingWait : IAcquiredResource, IDisposable
-		{
+		class BlockingWait : IAcquiredResource, IDisposable {
 			public IAcquiredResource Wrapped;
 			public Action OnDispose;
 
