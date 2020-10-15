@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.DotNet.XHarness.Common.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Collections;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
@@ -96,7 +97,7 @@ namespace Xharness.TestTasks {
 				new TestReporterFactory (testTask.ProcessManager),
 				testTask.AppRunnerTarget,
 				testTask.Harness,
-				mainLog: testTask.Logs.Create ($"run-{testTask.Device.UDID}-{Helpers.Timestamp}.log", "Run log"),
+				mainLog: testTask.Logs.Create ($"run-{testTask.Device.UDID}-{Harness.Helpers.Timestamp}.log", "Run log"),
 				logs: testTask.Logs,
 				projectFilePath: testTask.ProjectFile,
 				ensureCleanSimulatorState: clean_state,

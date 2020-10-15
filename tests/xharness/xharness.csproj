@@ -87,6 +87,7 @@
     <Compile Include="GitHub.cs" />
     <Compile Include="Harness.cs" />
     <Compile Include="IHarness.cs" />
+    <Compile Include="iOSTestProject.cs" />
     <Compile Include="Jenkins\ErrorKnowledgeBase.cs" />
     <Compile Include="Jenkins\Jenkins.cs" />
     <Compile Include="Jenkins\TestSelector.cs" />
@@ -95,6 +96,8 @@
     <Compile Include="Jenkins\TestTasks\BuildToolTask.cs" />
     <Compile Include="Jenkins\TestTasks\DotNetBuildTask.cs" />
     <Compile Include="Jenkins\TestTasks\DotNetTestTask.cs" />
+    <Compile Include="Jenkins\TestTasks\ITestTask.cs" />
+    <Compile Include="Jenkins\TestTasks\ITestTaskExtensions.cs" />
     <Compile Include="Jenkins\TestTasks\MacExecuteTask.cs" />
     <Compile Include="Jenkins\TestTasks\MacTask.cs" />
     <Compile Include="Jenkins\TestTasks\MakeTask.cs" />
@@ -106,7 +109,10 @@
     <Compile Include="Jenkins\TestTasks\RunXITask.cs" />
     <Compile Include="Jenkins\TestTasks\RunXtroTask.cs" />
     <Compile Include="Jenkins\TestTasks\AppleTestTask.cs" />
+    <Compile Include="MacTestProject.cs" />
     <Compile Include="MakefileGenerator.cs" />
+    <Compile Include="MonoNativeInfo.cs" />
+    <Compile Include="Nullable.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SimulatorLoaderFactory.cs" />
@@ -122,6 +128,8 @@
     <Compile Include="TestImporter\Xamarin\ProjectFilter.cs" />
     <Compile Include="TestImporter\Xamarin\AssemblyDefinitionFactory.cs" />
     <Compile Include="TestImporter\Xamarin\TestAssemblyDefinition.cs" />
+    <Compile Include="TestPlatform.cs" />
+    <Compile Include="TestProject.cs" />
     <Compile Include="TestTasks\DotNetBuild.cs" />
     <Compile Include="TestTasks\IBuildToolTask.cs" />
     <Compile Include="TestTasks\IRunDeviceTask.cs" />
@@ -132,7 +140,6 @@
     <Compile Include="TestTasks\IRunSimulatorTask.cs" />
     <Compile Include="TestTasks\RunDevice.cs" />
     <Compile Include="TestProjectExtensions.cs" />
-    <Compile Include="Jenkins\ITestTaskExtensions.cs" />
     <Compile Include="Jenkins\TestVariationsFactory.cs" />
     <Compile Include="Jenkins\TestData.cs" />
     <Compile Include="TestTargetExtensions.cs" />
@@ -150,6 +157,7 @@
     <Compile Include="Jenkins\RunDeviceTasksFactory.cs" />
     <Compile Include="Jenkins\RunSimulatorTasksFactory.cs" />
     <Compile Include="Jenkins\TestServer.cs" />
+    <Compile Include="XmlDocumentExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\tools\common\SdkVersions.cs">

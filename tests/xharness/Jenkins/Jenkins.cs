@@ -13,6 +13,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 using Microsoft.DotNet.XHarness.iOS.Shared.Tasks;
 using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
 using Xharness.Jenkins.Reports;
+using Microsoft.DotNet.XHarness.Common.Logging;
 
 namespace Xharness.Jenkins {
 	class Jenkins {
@@ -74,7 +75,7 @@ namespace Xharness.Jenkins {
 				if (string.IsNullOrEmpty (log_directory)) {
 					log_directory = Path.Combine (Harness.JENKINS_RESULTS_DIRECTORY, "tests");
 					if (IsServerMode)
-						log_directory = Path.Combine (log_directory, Helpers.Timestamp);
+						log_directory = Path.Combine (log_directory, Harness.Helpers.Timestamp);
 				}
 				return log_directory;
 			}
@@ -240,7 +241,7 @@ namespace Xharness.Jenkins {
 		{
 			try {
 				Directory.CreateDirectory (LogDirectory);
-				ILog log = Logs.Create ($"Harness-{Helpers.Timestamp}.log", "Harness log");
+				ILog log = Logs.Create ($"Harness-{Harness.Helpers.Timestamp}.log", "Harness log");
 				if (Harness.InCI)
 					log = Log.CreateAggregatedLog (log, new ConsoleLog ());
 				Harness.HarnessLog = MainLog = log;
@@ -323,9 +324,9 @@ namespace Xharness.Jenkins {
 				lock (report_lock) {
 					var report = Path.Combine (LogDirectory, "index.html");
 					var vsdropsReport = Path.Combine (LogDirectory, "vsdrops_index.html");
-					var tmpreport = Path.Combine (LogDirectory, $"index-{Helpers.Timestamp}.tmp.html");
-					var tmpVsdropsReport = Path.Combine (LogDirectory, $"vsdrops_index-{Helpers.Timestamp}.tmp.html");
-					var tmpmarkdown = string.IsNullOrEmpty (Harness.MarkdownSummaryPath) ? string.Empty : (Harness.MarkdownSummaryPath + $".{Helpers.Timestamp}.tmp");
+					var tmpreport = Path.Combine (LogDirectory, $"index-{Harness.Helpers.Timestamp}.tmp.html");
+					var tmpVsdropsReport = Path.Combine (LogDirectory, $"vsdrops_index-{Harness.Helpers.Timestamp}.tmp.html");
+					var tmpmarkdown = string.IsNullOrEmpty (Harness.MarkdownSummaryPath) ? string.Empty : (Harness.MarkdownSummaryPath + $".{Harness.Helpers.Timestamp}.tmp");
 
 					var allSimulatorTasks = new List<RunSimulatorTask> ();
 					var allExecuteTasks = new List<MacExecuteTask> ();

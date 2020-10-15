@@ -1,6 +1,7 @@
 ﻿using System;
+using Microsoft.DotNet.XHarness.Common.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared;
-using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
+using Microsoft.DotNet.XHarness.iOS.Shared.Execution.Mlaunch;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 
 namespace Xharness {
@@ -9,9 +10,9 @@ namespace Xharness {
 	}
 
 	public class CrashSnapshotReporterFactory : ICrashSnapshotReporterFactory {
-		readonly IProcessManager processManager;
+		readonly IMLaunchProcessManager processManager;
 
-		public CrashSnapshotReporterFactory (IProcessManager processManager)
+		public CrashSnapshotReporterFactory (IMLaunchProcessManager processManager)
 		{
 			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 		}

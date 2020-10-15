@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using Microsoft.DotNet.XHarness.iOS.Shared.Tasks;
+using Xharness.Jenkins.TestTasks;
 
 namespace Xharness.Jenkins.Reports {
 

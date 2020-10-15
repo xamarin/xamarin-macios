@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.DotNet.XHarness.Common.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
@@ -23,8 +24,8 @@ namespace Xharness.Jenkins {
 
 			this.simulators = simulators ?? throw new ArgumentNullException (nameof (simulators));
 			this.devices = devices ?? throw new ArgumentNullException (nameof (devices));
-			SimulatorLoadLog = logs.Create ($"simulator-list-{Helpers.Timestamp}.log", $"Simulator Listing");
-			DeviceLoadLog = logs.Create ($"device-list-{Helpers.Timestamp}.log", $"Device Listing");
+			SimulatorLoadLog = logs.Create ($"simulator-list-{Harness.Harness.Helpers.Timestamp}.log", $"Simulator Listing");
+			DeviceLoadLog = logs.Create ($"device-list-{Harness.Helpers.Timestamp}.log", $"Device Listing");
 		}
 
 		static string BuildDevicesDescription (IHardwareDeviceLoader deviceLoader, string name)

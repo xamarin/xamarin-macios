@@ -4,8 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Json;
 using System.Xml;
+using Microsoft.DotNet.XHarness.Common;
+using Microsoft.DotNet.XHarness.Common.Execution;
+using Microsoft.DotNet.XHarness.Common.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared;
-using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
@@ -80,6 +82,8 @@ namespace Xharness {
 		readonly string buildConfiguration = "Debug";
 
 		IProcessManager processManager;
+
+		public static readonly IHelpers Helpers = new Helpers ();
 
 		public HarnessAction Action { get; }
 		public int Verbosity { get; }

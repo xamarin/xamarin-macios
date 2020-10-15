@@ -8,6 +8,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Collections;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
+using Microsoft.DotNet.XHarness.Common.Logging;
 
 namespace Xharness.Jenkins.TestTasks {
 	abstract class RunXITask<TDevice> : RunTestTask where TDevice : class, IDevice

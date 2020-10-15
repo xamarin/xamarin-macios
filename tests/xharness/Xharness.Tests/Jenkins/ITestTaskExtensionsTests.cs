@@ -7,6 +7,7 @@ using Moq;
 using NUnit.Framework;
 
 using Xharness.Jenkins;
+using Xharness.Jenkins.TestTasks;
 
 namespace Xharness.Tests.Jenkins {
 

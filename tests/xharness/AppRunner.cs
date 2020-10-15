@@ -14,6 +14,8 @@ using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 using Xharness.TestTasks;
+using Microsoft.DotNet.XHarness.Common.Execution;
+using Microsoft.DotNet.XHarness.Common.Logging;
 
 namespace Xharness {
 
@@ -123,7 +125,7 @@ namespace Xharness {
 				return true;
 
 			var sims = simulatorsLoaderFactory.CreateLoader ();
-			await sims.LoadDevices (Logs.Create ($"simulator-list-{Helpers.Timestamp}.log", "Simulator list"), false, false);
+			await sims.LoadDevices (Logs.Create ($"simulator-list-{Harness.Helpers.Timestamp}.log", "Simulator list"), false, false);
 			simulators = await sims.FindSimulators (target, MainLog);
 
 			return simulators != null;
@@ -252,7 +254,7 @@ namespace Xharness {
 				args.Add (new SetEnvVariableArgument ("NUNIT_HOSTNAME", ipArg));
 			}
 
-			var listener_log = Logs.Create ($"test-{runMode.ToString ().ToLowerInvariant ()}-{Helpers.Timestamp}.log", LogType.TestLog.ToString (), timestamp: !useXmlOutput);
+			var listener_log = Logs.Create ($"test-{runMode.ToString ().ToLowerInvariant ()}-{Harness.Helpers.Timestamp}.log", LogType.TestLog.ToString (), timestamp: !useXmlOutput);
 			var (transport, listener, listenerTmpFile) = listenerFactory.Create (deviceName, runMode, MainLog, listener_log, isSimulator, true, useXmlOutput);
 
 			listener.Initialize ();
@@ -321,8 +323,8 @@ namespace Xharness {
 					return 1;
 
 				if (runMode != RunMode.WatchOS) {
-					var stdout_log = Logs.CreateFile ($"stdout-{Helpers.Timestamp}.log", "Standard output");
-					var stderr_log = Logs.CreateFile ($"stderr-{Helpers.Timestamp}.log", "Standard error");
+					var stdout_log = Logs.CreateFile ($"stdout-{Harness.Helpers.Timestamp}.log", "Standard output");
+					var stderr_log = Logs.CreateFile ($"stderr-{Harness.Helpers.Timestamp}.log", "Standard error");
 					args.Add (new SetStdoutArgument (stdout_log));
 					args.Add (new SetStderrArgument (stderr_log));
 				}
@@ -350,7 +352,7 @@ namespace Xharness {
 
 				if (EnsureCleanSimulatorState) {
 					foreach (var sim in simulators) {
-						using var tcclog = Logs.Create ($"prepare-simulator-{Helpers.Timestamp}.log", "Simulator preparation");
+						using var tcclog = Logs.Create ($"prepare-simulator-{Harness.Helpers.Timestamp}.log", "Simulator preparation");
 						var rv = await sim.PrepareSimulator (tcclog, AppInformation.BundleIdentifier);
 						tcclog.Description += rv ? " ✅ " : " (failed) ⚠️";
 					}
@@ -383,7 +385,7 @@ namespace Xharness {
 
 				args.Add (new DeviceNameArgument (deviceName));
 
-				var deviceSystemLog = Logs.Create ($"device-{deviceName}-{Helpers.Timestamp}.log", "Device log");
+				var deviceSystemLog = Logs.Create ($"device-{deviceName}-{Harness.Helpers.Timestamp}.log", "Device log");
 				var deviceLogCapturer = deviceLogCapturerFactory.Create (harness.HarnessLog, deviceSystemLog, deviceName);
 				deviceLogCapturer.StartCapture ();
 

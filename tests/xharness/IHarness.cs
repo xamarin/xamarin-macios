@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Microsoft.DotNet.XHarness.Common;
+using Microsoft.DotNet.XHarness.Common.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
-using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 
 namespace Xharness {
-	
+
 	/// <summary>
 	/// Interface that represents the harness class that contains all the needed info to execute the tests.
 	/// </summary>

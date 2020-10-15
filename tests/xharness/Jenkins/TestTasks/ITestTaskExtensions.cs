@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Microsoft.DotNet.XHarness.iOS.Shared.Tasks;
-using Xharness.Jenkins.TestTasks;
 
-namespace Xharness.Jenkins {
+namespace Xharness.Jenkins.TestTasks {
 	public static class ITestTaskExtensions {
 
 		public static string GetTestColor (this IEnumerable<ITestTask> tests)
@@ -13,7 +11,7 @@ namespace Xharness.Jenkins {
 
 			var first = tests.First ();
 			if (tests.All ((v) => v.ExecutionResult == first.ExecutionResult))
-				return GetTestColor (first);
+				return first.GetTestColor ();
 			if (tests.Any ((v) => v.Crashed))
 				return "maroon";
 			else if (tests.Any ((v) => v.TimedOut))
@@ -38,20 +36,17 @@ namespace Xharness.Jenkins {
 
 		public static string GetTestColor (this ITestTask test)
 		{
-			if (test.NotStarted) {
-				return "black";
-			} else if (test.InProgress) {
-				if (test.Building) {
-					return "darkblue";
-				} else if (test.Running) {
+			if (test.NotStarted) return "black";
+			else if (test.InProgress) {
+				if (test.Building) return "darkblue";
+				else if (test.Running) {
 					return "lightblue";
 				} else {
 					return "blue";
 				}
 			} else {
-				if (test.Crashed) {
-					return "maroon";
-				} else if (test.HarnessException) {
+				if (test.Crashed) return "maroon";
+				else if (test.HarnessException) {
 					return "orange";
 				} else if (test.TimedOut) {
 					return "purple";

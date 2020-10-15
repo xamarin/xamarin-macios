@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.DotNet.XHarness.Common.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
@@ -80,7 +81,7 @@ namespace Xharness.TestTasks {
 		{
 			mainLog.WriteLine ("Running '{0}' on device (candidates: '{1}')", testTask.ProjectFile, string.Join ("', '", testTask.Candidates.Select ((v) => v.Name).ToArray ()));
 
-			var uninstall_log = testTask.Logs.Create ($"uninstall-{Helpers.Timestamp}.log", "Uninstall log");
+			var uninstall_log = testTask.Logs.Create ($"uninstall-{Harness.Helpers.Timestamp}.log", "Uninstall log");
 			using (var device_resource = await testTask.NotifyBlockingWaitAsync (resourceManager.GetDeviceResources (testTask.Candidates).AcquireAnyConcurrentAsync ())) {
 				try {
 					// Set the device we acquired.
@@ -132,7 +133,7 @@ namespace Xharness.TestTasks {
 
 					if (!testTask.Failed) {
 						// Install the app
-						InstallLog = new AppInstallMonitorLog (testTask.Logs.Create ($"install-{Helpers.Timestamp}.log", "Install log"));
+						InstallLog = new AppInstallMonitorLog (testTask.Logs.Create ($"install-{Harness.Helpers.Timestamp}.log", "Install log"));
 						try {
 							testTask.Runner.MainLog = this.InstallLog;
 							var install_result = await testTask.Runner.InstallAsync (InstallLog.CancellationToken);
@@ -158,7 +159,7 @@ namespace Xharness.TestTasks {
 
 					if (!testTask.Failed) {
 						// Run the app
-						testTask.Runner.MainLog = testTask.Logs.Create ($"run-{testTask.Device.UDID}-{Helpers.Timestamp}.log", "Run log");
+						testTask.Runner.MainLog = testTask.Logs.Create ($"run-{testTask.Device.UDID}-{Harness.Helpers.Timestamp}.log", "Run log");
 						await testTask.Runner.RunAsync ();
 
 						if (!string.IsNullOrEmpty (testTask.Runner.FailureMessage))
@@ -189,7 +190,7 @@ namespace Xharness.TestTasks {
 								testTask.AppRunnerTarget,
 								testTask.Harness,
 								projectFilePath: testTask.ProjectFile,
-								mainLog: testTask.Logs.Create ($"extension-run-{testTask.Device.UDID}-{Helpers.Timestamp}.log", "Extension run log"),
+								mainLog: testTask.Logs.Create ($"extension-run-{testTask.Device.UDID}-{Harness.Helpers.Timestamp}.log", "Extension run log"),
 								logs: new Logs (testTask.LogDirectory ?? defaultLogDirectory),
 								buildConfiguration: testTask.ProjectConfiguration,
 								deviceName: testTask.Device.Name,
