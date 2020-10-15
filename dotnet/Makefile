@@ -3,6 +3,8 @@ TOP = ..
 include $(TOP)/Make.config
 include $(TOP)/mk/rules.mk
 
+DOTNET_MANIFESTS_PATH=$(DOTNET5_DIR)/sdk-manifests/$(DOTNET5_VERSION_BAND)
+
 # Create variables prefixed with the correctly cased platform name from the upper-cased platform name. This makes some of the next sections somewhat simpler.
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(platform)_NUGET_VERSION_NO_METADATA:=$($(shell echo $(platform) | tr a-z A-Z)_NUGET_VERSION_NO_METADATA)))
 
@@ -30,6 +32,7 @@ DIRECTORIES += \
 	$(DOTNET_FEED_DIR) \
 	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/Sdk) \
 	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/targets) \
+	$(DOTNET_MANIFESTS_PATH) \
 
 $(DIRECTORIES):
 	$(Q) mkdir -p $@
@@ -147,6 +150,16 @@ pack-watchos: $(RUNTIME_PACKS_WATCHOS) $(REF_PACK_WATCHOS) $(SDK_PACK_WATCHOS)
 pack-macos: $(RUNTIME_PACKS_MACOS) $(REF_PACK_MACOS) $(SDK_PACK_MACOS)
 
 TARGETS += $(RUNTIME_PACKS) $(REF_PACKS) $(SDK_PACKS)
+
+define InstallWorkload
+$(DOTNET_MANIFESTS_PATH)/Microsoft.NET.Workload.$1: | $(DOTNET_MANIFESTS_PATH)
+	$$(Q_LN) ln -Fhs $$(abspath Microsoft.NET.Workload.$1) $$(abspath $$@)
+
+WORKLOAD_TARGETS += \
+	$(DOTNET_MANIFESTS_PATH)/Microsoft.NET.Workload.$1 \
+endef
+
+TARGETS += $(WORKLOAD_TARGETS)
 
 ifdef ENABLE_DOTNET
 all-local:: $(TARGETS) targets/Xamarin.Shared.Sdk.Versions.props
