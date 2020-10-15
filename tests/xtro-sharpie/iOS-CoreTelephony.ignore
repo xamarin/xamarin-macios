@@ -10,6 +10,8 @@
 !unknown-field! CTRadioAccessTechnologyHSUPA bound
 !unknown-field! CTRadioAccessTechnologyLTE bound
 !unknown-field! CTRadioAccessTechnologyWCDMA bound
+!unknown-field! CTRadioAccessTechnologyNR bound
+!unknown-field! CTRadioAccessTechnologyNRNSA bound
 !unknown-field! CTServiceRadioAccessTechnologyDidChangeNotification bound
 !unknown-native-enum! CTCellularDataRestrictedState bound
 !unknown-native-enum! CTCellularPlanProvisioningAddPlanResult bound
