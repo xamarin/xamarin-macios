@@ -7,13 +7,12 @@ using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 using Xharness.Jenkins.TestTasks;
-using Xharness.Tasks;
 
 namespace Xharness.Jenkins {
 	// lets try and keep this class stateless, will make our lifes better
 	class RunSimulatorTasksFactory {
 
-		public async Task<IEnumerable<ITestTask>> CreateAsync (Jenkins jenkins, IProcessManager processManager, TestVariationsFactory testVariationsFactory)
+		public async Task<IEnumerable<ITestTask>> CreateAsync (Jenkins jenkins, IMlaunchProcessManager processManager, TestVariationsFactory testVariationsFactory)
 		{
 			var runSimulatorTasks = new List<RunSimulatorTask> ();
 
@@ -93,7 +92,6 @@ namespace Xharness.Jenkins {
 					simulators: jenkins.Simulators,
 					buildTask: buildTask,
 					processManager: processManager,
-					tunnelBore: jenkins.TunnelBore,
 					candidates: candidates?.Cast<SimulatorDevice> () ?? test.Candidates)).ToList ();
 
 			if (jenkins.IsServerMode)
@@ -113,7 +111,7 @@ namespace Xharness.Jenkins {
 			return rv;
 		}
 
-		IEnumerable<RunSimulatorTask> CreateAsync (Jenkins jenkins, IProcessManager processManager, MSBuildTask buildTask)
+		IEnumerable<RunSimulatorTask> CreateAsync (Jenkins jenkins, IMlaunchProcessManager processManager, MSBuildTask buildTask)
 		{
 			var runtasks = new List<RunSimulatorTask> ();
 
@@ -163,7 +161,6 @@ namespace Xharness.Jenkins {
 					simulators: jenkins.Simulators,
 					buildTask: buildTask,
 					processManager: processManager,
-					tunnelBore: jenkins.TunnelBore,
 					candidates: sims) {
 					Platform = platforms [i],
 					Ignored = ignored [i] || buildTask.Ignored

@@ -15,7 +15,7 @@ namespace Xharness.Tests.Jenkins {
 		Mock<IMlaunchProcessManager> processManager;
 		Mock<IResultParser> resultParser;
 		Mock<ITunnelBore> tunnel;
-		Mock<ILog> log;
+		Mock<IFileBackedLog> log;
 
 		Harness harness;
 		HarnessConfiguration configuration;
@@ -28,7 +28,7 @@ namespace Xharness.Tests.Jenkins {
 			processManager = new Mock<IMlaunchProcessManager> ();
 			resultParser = new Mock<IResultParser> ();
 			tunnel = new Mock<ITunnelBore> ();
-			log = new Mock<ILog> ();
+			log = new Mock<IFileBackedLog> ();
 			configuration = new HarnessConfiguration ();
 			harness = new Harness (resultParser.Object, HarnessAction.Jenkins, configuration);
 			jenkins = new Xharness.Jenkins.Jenkins (harness, processManager.Object, resultParser.Object, tunnel.Object);

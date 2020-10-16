@@ -75,7 +75,7 @@ namespace Xharness.TestTasks {
 
 			var clean_state = false;//Platform == TestPlatform.watchOS;
 			testTask.Runner = new AppRunner (testTask.ProcessManager,
-				new AppBundleInformationParser (),
+				new AppBundleInformationParser (testTask.ProcessManager, TODO: locator),
 				new SimulatorLoaderFactory (testTask.ProcessManager),
 				new SimpleListenerFactory (null), // sims cannot use tunnels
 				new DeviceLoaderFactory (testTask.ProcessManager),

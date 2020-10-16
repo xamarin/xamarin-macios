@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.DotNet.XHarness.Common.Execution;
 using Microsoft.DotNet.XHarness.Common.Logging;
+using Microsoft.DotNet.XHarness.Common.Utilities;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
@@ -275,12 +276,11 @@ namespace Xharness {
 			listener.StartAsync ();
 
 			// object that will take care of capturing and parsing the results
-			ILog runLog = MainLog;
 			ICrashSnapshotReporter crashReporter = snapshotReporterFactory.Create (MainLog, Logs, isDevice: !isSimulator, deviceName);
 
 			var testReporterTimeout = TimeSpan.FromMinutes (harness.Timeout * timeoutMultiplier);
 			var testReporter = testReporterFactory.Create (MainLog,
-				runLog,
+				MainLog,
 				Logs,
 				crashReporter,
 				listener,
@@ -367,7 +367,7 @@ namespace Xharness {
 				MainLog.WriteLine ("Starting test run");
 
 				await testReporter.CollectSimulatorResult (
-					processManager.ExecuteCommandAsync (args, runLog, testReporterTimeout, cancellationToken: testReporter.CancellationToken));
+					processManager.ExecuteCommandAsync (args, MainLog, testReporterTimeout, cancellationToken: testReporter.CancellationToken));
 
 				// cleanup after us
 				if (EnsureCleanSimulatorState)

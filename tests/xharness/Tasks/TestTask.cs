@@ -345,7 +345,7 @@ namespace Xharness.Tasks {
 			}
 		}
 
-		public string GuessFailureReason (ILog log)
+		public string GuessFailureReason (IReadableLog log)
 		{
 			try {
 				using (var reader = log.GetReader ()) {

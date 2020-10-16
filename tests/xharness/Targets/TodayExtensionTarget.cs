@@ -52,7 +52,7 @@ namespace Xharness.Targets {
 			ProjectGuid = TodayContainerGuid;
 			csproj.SetProjectGuid (TodayContainerGuid);
 			csproj.ResolveAllPaths (Harness.TodayContainerTemplate);
-			csproj.Save(TodayContainerProjectPath, (l, m) => Harness.Log (l,m));
+			csproj.Save(TodayContainerProjectPath, Harness);
 
 			XmlDocument info_plist = new XmlDocument ();
 			var target_info_plist = Path.Combine (TargetDirectory, $"Info{suffix}.plist");
@@ -60,7 +60,7 @@ namespace Xharness.Targets {
 			info_plist.SetCFBundleIdentifier (BundleIdentifier);
 			info_plist.SetCFBundleName (Name);
 			info_plist.SetMinimumOSVersion (GetMinimumOSVersion ("8.0"));
-			info_plist.Save (target_info_plist, (l,m) => Harness.Log (l,m));
+			info_plist.Save (target_info_plist, Harness);
 		}
 
 		void CreateTodayExtensionProject ()
@@ -81,7 +81,7 @@ namespace Xharness.Targets {
 			csproj.SetExtraLinkerDefs ("extra-linker-defs" + ExtraLinkerDefsSuffix + ".xml");
 			csproj.FixProjectReferences (Path.Combine (ProjectsDir, GetTargetSpecificDir ()), "-today", FixProjectReference);
 			csproj.ResolveAllPaths (TemplateProjectPath);
-			csproj.Save (TodayExtensionProjectPath, (l,m) => Harness.Log (l,m));
+			csproj.Save (TodayExtensionProjectPath, Harness);
 
 			TodayExtensionGuid = csproj.GetProjectGuid ();
 
@@ -100,7 +100,7 @@ namespace Xharness.Targets {
         <key>NSExtensionPointIdentifier</key>
         <string>com.apple.widget-extension</string>
     ");
-			info_plist.Save (target_info_plist, (l,m) => Harness.Log (l,m));
+			info_plist.Save (target_info_plist, Harness);
 		}
 
 		protected override void ExecuteInternal ()

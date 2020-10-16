@@ -66,7 +66,7 @@ namespace Xharness.Jenkins {
 		public bool CleanSuccessfulTestRuns = true;
 		public bool UninstallTestApp = true;
 
-		public ILog MainLog;
+		public IFileBackedLog MainLog;
 		public ILog SimulatorLoadLog => DeviceLoader.SimulatorLoadLog;
 		public ILog DeviceLoadLog => DeviceLoader.DeviceLoadLog;
 

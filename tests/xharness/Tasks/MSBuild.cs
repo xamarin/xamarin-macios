@@ -17,7 +17,7 @@ namespace Xharness.Tasks {
 		readonly IErrorKnowledgeBase errorKnowledgeBase;
 		readonly Func<string> msbuildPath;
 
-		public virtual List<string> GetToolArguments (string projectPlatform, string projectConfiguration, string projectFile, ILog buildLog)
+		public virtual List<string> GetToolArguments (string projectPlatform, string projectConfiguration, string projectFile, IFileBackedLog buildLog)
 		{
 			var binlogPath = buildLog.FullPath.Replace (".txt", ".binlog");
 
@@ -49,7 +49,7 @@ namespace Xharness.Tasks {
 																									string projectFile,
 																									IAcquiredResource resource,
 																									bool dryRun,
-																									ILog buildLog,
+																									IFileBackedLog buildLog,
 																									ILog mainLog)
 		{
 			BuildLog = buildLog;

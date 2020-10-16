@@ -1,13 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using System.Collections.Generic;
-using Xharness.TestImporter.Xamarin;
-using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 using Microsoft.DotNet.XHarness.iOS.Shared.TestImporter;
 using Microsoft.DotNet.XHarness.iOS.Shared.TestImporter.Templates;
 using Microsoft.DotNet.XHarness.iOS.Shared.TestImporter.Templates.Managed;
-using Microsoft.DotNet.XHarness.iOS.Shared;
+using Xharness.TestImporter.Xamarin;
 
 namespace Xharness {
 	/// <summary>
@@ -287,8 +285,8 @@ namespace Xharness {
 		/// has its own details.</param>
 		/// <param name="generatedDir">The dir where the projects will be saved.</param>
 		/// <returns></returns>
-		public GeneratedProjects GenerateTestProjects (IEnumerable<(string Name, string [] Assemblies, string ExtraArgs, double TimeoutMultiplier)> projects, Platform platform)
-			=> TemplatedProject.GenerateTestProjects (projects, platform);
+		public Task<GeneratedProjects> GenerateTestProjects (IEnumerable<(string Name, string [] Assemblies, string ExtraArgs, double TimeoutMultiplier)> projects, Platform platform)
+			=> TemplatedProject.GenerateTestProjectsAsync (projects, platform);
 		
 		List<(string Name, string [] Assemblies, string ExtraArgs, double TimeoutMultiplier)> GetProjectDefinitions (ProjectsDefinitions definitions, Platform platform)
 		{
@@ -318,28 +316,28 @@ namespace Xharness {
 			return testProjects;
 		}
 
-
-		Tuple<GeneratedProjects, TestPlatform>[] GenerateAlliOSTestProjects ()
+		async Task<Tuple<GeneratedProjects, TestPlatform> []> GenerateAlliOSTestProjects ()
 		{
 			var platforms = new [] { Platform.iOS, Platform.TvOS, Platform.WatchOS };
 			var testPlatforms = new [] { TestPlatform.iOS_Unified, TestPlatform.tvOS, TestPlatform.watchOS };
 			var rv = new Tuple<GeneratedProjects, TestPlatform> [platforms.Length];
 			for (var i = 0; i < platforms.Length; i++) {
 				var platform = platforms [i];
-				var projects = GenerateTestProjects (GetProjectDefinitions (commoniOSTestProjects, platform), platform);
+				var projects = await GenerateTestProjects (GetProjectDefinitions (commoniOSTestProjects, platform), platform);
 				rv [i] = new Tuple<GeneratedProjects, TestPlatform> (projects, testPlatforms [i]);
 			}
 			return rv;
 		}
 
-		public GeneratedProjects GenerateAllMacTestProjects (Platform platform) => GenerateTestProjects (GetProjectDefinitions (macTestProjects, platform), platform);
+		public Task<GeneratedProjects> GenerateAllMacTestProjects (Platform platform) =>
+			GenerateTestProjects (GetProjectDefinitions (macTestProjects, platform), platform);
 
 		// Map from the projects understood from the test importer to those that AppRunner and friends understand:
-		public List<iOSTestProject> GetiOSBclTargets ()
+		public async Task<List<iOSTestProject>> GetiOSBclTargets ()
 		{
 			var result = new List<iOSTestProject> ();
 			// generate all projects, then create a new iOSTarget per project
-			foreach (var tuple in GenerateAlliOSTestProjects ()) {
+			foreach (var tuple in await GenerateAlliOSTestProjects ()) {
 				var platform = tuple.Item2;
 				var projects = tuple.Item1;
 				foreach (var tp in projects) {
@@ -354,9 +352,9 @@ namespace Xharness {
 						GenerateVariations = false,
 						TestPlatform = platform,
 					};
-					proj.Dependency = async () => {
-						await tp.GenerationCompleted;
+					proj.Dependency = () => {
 						proj.FailureMessage = tp.Failure;
+						return Task.CompletedTask;
 					};
 					result.Add (proj);
 				}
@@ -364,7 +362,7 @@ namespace Xharness {
 			return result;
 		}
 
-		public List<MacTestProject> GetMacBclTargets (MacFlavors flavor)
+		public async Task<List<MacTestProject>> GetMacBclTargets (MacFlavors flavor)
 		{
 			Platform platform;
 			if (flavor == MacFlavors.Full)
@@ -372,7 +370,7 @@ namespace Xharness {
 			else
 				platform = Platform.MacOSModern;
 			var result = new List<MacTestProject> ();
-			foreach (var tp in GenerateAllMacTestProjects (platform)) {
+			foreach (var tp in await GenerateAllMacTestProjects (platform)) {
 				var prefix = tp.XUnit ? "xUnit" : "NUnit";
 				var finalName = tp.Name.StartsWith ("mscorlib", StringComparison.Ordinal) ? tp.Name : $"[{prefix}] Mono {tp.Name}"; // mscorlib is our special test
 				var proj = new MacTestProject (tp.Path, targetFrameworkFlavor: flavor) {
@@ -384,23 +382,22 @@ namespace Xharness {
 					MTouchExtraArgs = tp.ExtraArgs,
 					TestPlatform = TestPlatform.Mac,
 				};
-				proj.Dependency = async () => {
-					await tp.GenerationCompleted;
+				proj.Dependency = () => {
 					proj.FailureMessage = tp.Failure;
+					return Task.CompletedTask;
 				};
 				result.Add (proj);
 			}
 			return result;
 		}
 
-		public List<MacTestProject> GetMacBclTargets ()
+		public async Task<List<MacTestProject>> GetMacBclTargets ()
 		{
 			var result = new List<MacTestProject> ();
 			foreach (var flavor in new [] { MacFlavors.Full, MacFlavors.Modern }) {
-				result.AddRange (GetMacBclTargets (flavor));
+				result.AddRange (await GetMacBclTargets (flavor));
 			}
 			return result;
 		}
-
 	}
 }

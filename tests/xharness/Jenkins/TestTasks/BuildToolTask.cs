@@ -12,7 +12,7 @@ namespace Xharness.Jenkins.TestTasks {
 
 		public IProcessManager ProcessManager { get; }
 
-		public ILog BuildLog {
+		public IFileBackedLog BuildLog {
 			get => buildToolTask.BuildLog;
 			set => buildToolTask.BuildLog = value;
 		}

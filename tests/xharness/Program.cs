@@ -3,10 +3,11 @@ using Mono.Options;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 using Microsoft.DotNet.XHarness.iOS.Shared.XmlResults;
 using Microsoft.DotNet.XHarness.Common;
+using System.Threading.Tasks;
 
 namespace Xharness {
 	class MainClass {
-		public static int Main (string [] args)
+		public static async Task<int> Main (string [] args)
 		{
 			Microsoft.DotNet.XHarness.iOS.Shared.SdkVersions.OverrideVersions (
 				xcode: Xamarin.SdkVersions.Xcode,
@@ -129,7 +130,7 @@ namespace Xharness {
 
 			var harness = new Harness (new XmlResultParser (), action, configuration);
 
-			return harness.Execute ();
+			return await harness.Execute ();
 		}
 
 		internal static bool TryParseBool (string value, out bool result)

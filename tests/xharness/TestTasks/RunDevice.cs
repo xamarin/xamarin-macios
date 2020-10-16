@@ -101,7 +101,7 @@ namespace Xharness.TestTasks {
 						mainLog.WriteLine ("Using tunnel to communicate with device.");
 					}
 					testTask.Runner = new AppRunner (testTask.ProcessManager,
-						new AppBundleInformationParser (),
+						new AppBundleInformationParser (testTask.ProcessManager, TODO: locator),
 						new SimulatorLoaderFactory (testTask.ProcessManager),
 						new SimpleListenerFactory (tunnelBore),
 						new DeviceLoaderFactory (testTask.ProcessManager),
@@ -180,7 +180,7 @@ namespace Xharness.TestTasks {
 							// will do both of these things, preparing the device for launching the today extension).
 
 							AppRunner todayRunner = new AppRunner (testTask.ProcessManager,
-								new AppBundleInformationParser (),
+								new AppBundleInformationParser (testTask.ProcessManager, TODO: locator),
 								new SimulatorLoaderFactory (testTask.ProcessManager),
 								new SimpleListenerFactory (tunnelBore),
 								new DeviceLoaderFactory (testTask.ProcessManager),

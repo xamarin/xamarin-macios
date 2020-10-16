@@ -10,7 +10,7 @@ namespace Xharness.Tasks {
 		public IProcessManager ProcessManager { get; }
 		public TestPlatform Platform { get; set; }
 		public TestProject TestProject { get; set; }
-		public ILog BuildLog { get; set; }
+		public IFileBackedLog BuildLog { get; set; }
 
 		public bool SpecifyPlatform { get; set; } = true;
 		public bool SpecifyConfiguration { get; set; } = true;

@@ -62,6 +62,7 @@ namespace Xharness.Jenkins.TestTasks {
 		string RootDirectory { get; }
 
 
+		string GuessFailureReason (IReadableLog log);
 		Task RunAsync ();
 		Task VerifyRunAsync ();
 		void Reset ();
