@@ -30,8 +30,9 @@ namespace Xamarin.iOS.Tasks {
 			CultureInfo originalCulture = Thread.CurrentThread.CurrentUICulture;
 
 			try {
-				string englishError = TranslateError("en-US", errorCode);
-				string newCultureError = TranslateError(culture, errorCode);
+				Assert.IsFalse (string.IsNullOrEmpty(errorCode), "Error code is null or empty");
+				string englishError = TranslateError ("en-US", errorCode);
+				string newCultureError = TranslateError (culture, errorCode);
 
 				Assert.AreNotEqual (englishError, newCultureError, $"\"{errorCode}\" is not translated in {culture}.");
 			} finally {
@@ -43,8 +44,8 @@ namespace Xamarin.iOS.Tasks {
 		{
 			CultureInfo cultureInfo = new CultureInfo (culture);
 			Thread.CurrentThread.CurrentUICulture = cultureInfo;
-			PropertyInfo propertyInfo = typeof(MSBStrings).GetProperty(errorCode);
-			return (string) propertyInfo.GetValue(null, null);
+			PropertyInfo propertyInfo = typeof (MSBStrings).GetProperty (errorCode);
+			return (string) propertyInfo.GetValue (null, null);
 		}
 	}
 }
