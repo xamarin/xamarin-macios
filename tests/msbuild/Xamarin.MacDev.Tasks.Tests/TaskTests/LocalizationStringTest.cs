@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Reflection;
 using Microsoft.Build.Utilities;
@@ -35,6 +36,8 @@ namespace Xamarin.iOS.Tasks {
 				string newCultureError = TranslateError (culture, errorCode);
 
 				Assert.AreNotEqual (englishError, newCultureError, $"\"{errorCode}\" is not translated in {culture}.");
+			} catch (NullReferenceException){
+				Assert.IsFalse (true, $"Error code \"{errorCode}\" was not found");
 			} finally {
 				Thread.CurrentThread.CurrentUICulture = originalCulture;
 			}
