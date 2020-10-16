@@ -560,32 +560,32 @@ namespace CoreGraphics {
 			}
 		}
 
-		[iOS (14,2), TV (14,2), Watch (7,1), Mac (11,0)]
+		[iOS (14,1), TV (14,2), Watch (7,1), Mac (11,0)]
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern bool CGColorSpaceUsesITUR_2100TF (/* CGColorSpaceRef */ IntPtr space);
 
-		[iOS (14,2), TV (14,2), Watch (7,1), Mac (11,0)]
+		[iOS (14,1), TV (14,2), Watch (7,1), Mac (11,0)]
 		public bool UsesItur2100TF => CGColorSpaceUsesITUR_2100TF (handle);
 
-		[iOS (14,2), TV (14,2), Watch (7,1), Mac (11,0)]
+		[iOS (14,1), TV (14,2), Watch (7,1), Mac (11,0)]
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern IntPtr CGColorSpaceCreateLinearized (/* CGColorSpaceRef */ IntPtr space);
 
-		[iOS (14,2), TV (14,2), Watch (7,1), Mac (11,0)]
+		[iOS (14,1), TV (14,2), Watch (7,1), Mac (11,0)]
 		public CGColorSpace CreateLinearized () => Runtime.GetINativeObject<CGColorSpace> (CGColorSpaceCreateLinearized (handle), owns: true);
 
-		[iOS (14,2), TV (14,2), Watch (7,1), Mac (11,0)]
+		[iOS (14,1), TV (14,2), Watch (7,1), Mac (11,0)]
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern IntPtr CGColorSpaceCreateExtended (/* CGColorSpaceRef */ IntPtr space);
 
-		[iOS (14,2), TV (14,2), Watch (7,1), Mac (11,0)]
+		[iOS (14,1), TV (14,2), Watch (7,1), Mac (11,0)]
 		public CGColorSpace CreateExtended () => Runtime.GetINativeObject<CGColorSpace> (CGColorSpaceCreateExtended (handle), owns: true);
 
-		[iOS (14,2), TV (14,2), Watch (7,1), Mac (11,0)]
+		[iOS (14,1), TV (14,2), Watch (7,1), Mac (11,0)]
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern IntPtr CGColorSpaceCreateExtendedLinearized (/* CGColorSpaceRef */ IntPtr space);
 
-		[iOS (14,2), TV (14,2), Watch (7,1), Mac (11,0)]
+		[iOS (14,1), TV (14,2), Watch (7,1), Mac (11,0)]
 		public CGColorSpace CreateExtendedLinearized () => Runtime.GetINativeObject<CGColorSpace> (CGColorSpaceCreateExtendedLinearized (handle), owns: true);
 
 #endif // !COREBUILD
