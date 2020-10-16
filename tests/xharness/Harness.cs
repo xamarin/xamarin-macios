@@ -87,7 +87,7 @@ namespace Xharness {
 
 		public HarnessAction Action { get; }
 		public int Verbosity { get; }
-		public ILog HarnessLog { get; set; }
+		public IFileBackedLog HarnessLog { get; set; }
 		public HashSet<string> Labels { get; }
 		public XmlResultJargon XmlJargon { get; }
 		public IResultParser ResultParser { get; }
@@ -719,10 +719,10 @@ namespace Xharness {
 			}
 		}
 
-		private AppRunner CreateAppRunner (TestProject project)
+		AppRunner CreateAppRunner (TestProject project)
 		{
 			var rv = new AppRunner (processManager,
-				new AppBundleInformationParser (),
+				new AppBundleInformationParser (processManager, TODO: locator),
 				new SimulatorLoaderFactory (processManager),
 				new SimpleListenerFactory (UseTcpTunnel ? TunnelBore : null),
 				new DeviceLoaderFactory (processManager),

@@ -60,7 +60,7 @@ namespace Xharness.Tests {
 		Mock<ISimpleListener> simpleListener;
 		Mock<ICrashSnapshotReporter> snapshotReporter;
 		Mock<ILogs> logs;
-		Mock<ILog> mainLog;
+		Mock<IFileBackedLog> mainLog;
 
 		ISimulatorLoaderFactory simulatorsFactory;
 		IDeviceLoaderFactory devicesFactory;
@@ -106,7 +106,7 @@ namespace Xharness.Tests {
 
 			appBundleInformationParser = mock5.Object;
 
-			mainLog = new Mock<ILog> ();
+			mainLog = new Mock<IFileBackedLog> ();
 
 			Directory.CreateDirectory (appPath);
 		}
@@ -419,7 +419,7 @@ namespace Xharness.Tests {
 				.ReturnsAsync ((simulator.Object, null));
 
 			var testResultFilePath = Path.GetTempFileName ();
-			var listenerLogFile = Mock.Of<ILog> (x => x.FullPath == testResultFilePath);
+			var listenerLogFile = Mock.Of<IFileBackedLog> (x => x.FullPath == testResultFilePath);
 			File.WriteAllLines (testResultFilePath, new [] { "Some result here", "Tests run: 124", "Some result there" });
 
 			logs
@@ -520,7 +520,7 @@ namespace Xharness.Tests {
 				.Setup (x => x.Create (mainLog.Object, It.IsAny<ILogs> (), false, null))
 				.Returns (snapshotReporter.Object);
 
-			var listenerLogFile = new Mock<ILog> ();
+			var listenerLogFile = new Mock<IFileBackedLog> ();
 			var testReporterFactory = new Mock<ITestReporterFactory> ();
 			var testReporter = new Mock<ITestReporter> ();
 			testReporterFactory.SetReturnsDefault (testReporter.Object);
@@ -572,11 +572,11 @@ namespace Xharness.Tests {
 				.Setup (x => x.Create (mainLog.Object, It.IsAny<ILogs> (), true, "Test iPad"))
 				.Returns (snapshotReporter.Object);
 
-			var deviceSystemLog = new Mock<ILog> ();
+			var deviceSystemLog = new Mock<IFileBackedLog> ();
 			deviceSystemLog.SetupGet (x => x.FullPath).Returns (Path.GetTempFileName ());
 
 			var testResultFilePath = Path.GetTempFileName ();
-			var listenerLogFile = Mock.Of<ILog> (x => x.FullPath == testResultFilePath);
+			var listenerLogFile = Mock.Of<IFileBackedLog> (x => x.FullPath == testResultFilePath);
 			File.WriteAllLines (testResultFilePath, new [] { "Some result here", "Some result there", "Tests run: 3" });
 
 			logs
@@ -680,11 +680,11 @@ namespace Xharness.Tests {
 				.Setup (x => x.Create (mainLog.Object, It.IsAny<ILogs> (), true, "Test iPad"))
 				.Returns (snapshotReporter.Object);
 
-			var deviceSystemLog = new Mock<ILog> ();
+			var deviceSystemLog = new Mock<IFileBackedLog> ();
 			deviceSystemLog.SetupGet (x => x.FullPath).Returns (Path.GetTempFileName ());
 
 			var testResultFilePath = Path.GetTempFileName ();
-			var listenerLogFile = Mock.Of<ILog> (x => x.FullPath == testResultFilePath);
+			var listenerLogFile = Mock.Of<IFileBackedLog> (x => x.FullPath == testResultFilePath);
 			File.WriteAllLines (testResultFilePath, new [] { "Some result here", "[FAIL] This test failed", "Some result there", "Tests run: 3" });
 
 			logs

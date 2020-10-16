@@ -15,7 +15,7 @@ namespace Xharness {
 		
 		#region Properties
 		HarnessAction Action { get; }
-		ILog HarnessLog { get; set; }
+		IFileBackedLog HarnessLog { get; set; }
 		int Verbosity { get; }
 		HashSet<string> Labels { get; }
 		XmlResultJargon XmlJargon { get; }

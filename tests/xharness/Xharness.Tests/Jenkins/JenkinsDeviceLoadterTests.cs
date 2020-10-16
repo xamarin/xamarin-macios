@@ -81,13 +81,13 @@ namespace Xharness.Tests.Jenkins {
 		}
 
 		Mock<ILogs> logs;
-		Mock<ILog> log;
+		Mock<IFileBackedLog> log;
 
 		[SetUp]
 		public void SetUp ()
 		{
 			logs = new Mock<ILogs> ();
-			log = new Mock<ILog> ();
+			log = new Mock<IFileBackedLog> ();
 
 			logs.Setup (l => l.Create (
 				It.IsAny<string> (),

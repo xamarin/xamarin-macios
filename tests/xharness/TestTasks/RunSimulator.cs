@@ -19,18 +19,6 @@ namespace Xharness.TestTasks {
 		readonly IRunSimulatorTask testTask;
 		readonly IErrorKnowledgeBase errorKnowledgeBase;
 
-		public ISimulatorDevice [] Simulators {
-			get {
-				if (testTask.Device == null) {
-					return new ISimulatorDevice [] { };
-				} else if (testTask.CompanionDevice == null) {
-					return new ISimulatorDevice [] { testTask.Device };
-				} else {
-					return new ISimulatorDevice [] { testTask.Device, testTask.CompanionDevice };
-				}
-			}
-		}
-
 		public RunSimulator (IRunSimulatorTask testTask,
 							 ISimulatorLoader simulators,
 							 IErrorKnowledgeBase errorKnowledgeBase,
@@ -105,7 +93,8 @@ namespace Xharness.TestTasks {
 				timeoutMultiplier: testTask.TimeoutMultiplier,
 				variation: testTask.Variation,
 				buildTask: testTask.BuildTask,
-				simulators: Simulators);
+				simulator: testTask.Device,
+				companionSimulator: testTask.CompanionDevice);
 			await testTask.Runner.InitializeAsync ();
 		}
 

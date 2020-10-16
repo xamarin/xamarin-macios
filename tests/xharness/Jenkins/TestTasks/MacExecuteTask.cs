@@ -85,7 +85,7 @@ namespace Xharness.Jenkins.TestTasks {
 				using (var proc = new Process ()) {
 					proc.StartInfo.FileName = Path;
 					var arguments = new List<string> ();
-					ILog xmlLog = null;
+					IFileBackedLog xmlLog = null;
 					var useXmlOutput = Harness.InCI || true;
 					if (IsUnitTest) {
 						var extension = useXmlOutput ? "xml" : "log";
@@ -137,7 +137,7 @@ namespace Xharness.Jenkins.TestTasks {
 					if (IsUnitTest) {
 						var reporterFactory = new TestReporterFactory (ProcessManager);
 						var listener = new Microsoft.DotNet.XHarness.iOS.Shared.Listeners.SimpleFileListener (xmlLog.FullPath, log, xmlLog, useXmlOutput);
-						var reporter = reporterFactory.Create (Harness.HarnessLog, log, Logs, snapshot, listener, Harness.ResultParser, new AppBundleInformation ("N/A", "N/A", "N/A", "N/A", null), RunMode.MacOS, Harness.XmlJargon, "no device here", TimeSpan.Zero);
+						var reporter = reporterFactory.Create (Harness.HarnessLog, log, Logs, snapshot, listener, Harness.ResultParser, new AppBundleInformation ("N/A", "N/A", "N/A", "N/A", true, null), RunMode.MacOS, Harness.XmlJargon, "no device here", TimeSpan.Zero);
 						var rv = await reporter.ParseResult ();
 						ExecutionResult = rv.ExecutingResult;
 						FailureMessage = rv.FailureMessage;

@@ -5,18 +5,16 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
-using Microsoft.DotNet.XHarness.iOS.Shared.Execution.Mlaunch;
-using Xharness.Jenkins.TestTasks;
-using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
-using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
-using Microsoft.DotNet.XHarness.iOS.Shared;
-using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
-using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
-using Xharness.TestTasks;
 using Microsoft.DotNet.XHarness.Common.Execution;
 using Microsoft.DotNet.XHarness.Common.Logging;
+using Microsoft.DotNet.XHarness.iOS.Shared;
+using Microsoft.DotNet.XHarness.iOS.Shared.Execution.Mlaunch;
+using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
+using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
+using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
+using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 using Microsoft.DotNet.XHarness.iOS.Shared.XmlResults;
+using Xharness.TestTasks;
 
 namespace Xharness {
 
@@ -43,8 +41,8 @@ namespace Xharness {
 
 		string deviceName;
 		string companionDeviceName;
-		ISimulatorDevice [] simulators;
-		ISimulatorDevice simulator => simulators [0];
+		ISimulatorDevice simulator;
+		ISimulatorDevice companionSimulator;
 
 		bool ensureCleanSimulatorState = true;
 		bool EnsureCleanSimulatorState {
@@ -60,7 +58,7 @@ namespace Xharness {
 
 		public string FailureMessage { get; private set; }
 
-		public ILog MainLog { get; set; }
+		public IFileBackedLog MainLog { get; set; }
 
 		public ILogs Logs { get; }
 
@@ -75,11 +73,12 @@ namespace Xharness {
 						  ITestReporterFactory reporterFactory,
 						  TestTarget target,
 						  IHarness harness,
-						  ILog mainLog,
+						  IFileBackedLog mainLog,
 						  ILogs logs,
 						  string projectFilePath,
 						  string buildConfiguration,
-						  ISimulatorDevice [] simulators = null,
+						  ISimulatorDevice simulator = null,
+						  ISimulatorDevice companionSimulator = null,
 						  string deviceName = null,
 						  string companionDeviceName = null,
 						  bool ensureCleanSimulatorState = false,
@@ -103,7 +102,8 @@ namespace Xharness {
 			this.deviceName = deviceName;
 			this.companionDeviceName = companionDeviceName;
 			this.ensureCleanSimulatorState = ensureCleanSimulatorState;
-			this.simulators = simulators;
+			this.simulator = simulator;
+			this.companionSimulator = companionSimulator;
 			this.buildTask = buildTask;
 			this.target = target;
 			this.variation = variation;
@@ -122,14 +122,14 @@ namespace Xharness {
 
 		async Task<bool> FindSimulatorAsync ()
 		{
-			if (simulators != null)
+			if (simulator != null)
 				return true;
 
 			var sims = simulatorsLoaderFactory.CreateLoader ();
 			await sims.LoadDevices (Logs.Create ($"simulator-list-{Harness.Helpers.Timestamp}.log", "Simulator list"), false, false);
-			simulators = await sims.FindSimulators (target, MainLog);
+			(simulator, companionSimulator) = await sims.FindSimulators (target, MainLog);
 
-			return simulators != null;
+			return simulator != null;
 		}
 
 		async Task FindDevice ()
@@ -256,7 +256,7 @@ namespace Xharness {
 			}
 
 			var listener_log = Logs.Create ($"test-{runMode.ToString ().ToLowerInvariant ()}-{Harness.Helpers.Timestamp}.log", LogType.TestLog.ToString (), timestamp: !useXmlOutput);
-			var (transport, listener, listenerTmpFile) = listenerFactory.Create (deviceName, runMode, MainLog, listener_log, isSimulator, true, useXmlOutput);
+			var (transport, listener, listenerTmpFile) = listenerFactory.Create (runMode, MainLog, listener_log, isSimulator, true, useXmlOutput);
 
 			var listenerPort = listener.InitializeAndGetPort ();
 
@@ -330,6 +330,7 @@ namespace Xharness {
 					args.Add (new SetStderrArgument (stderr_log));
 				}
 
+				var simulators = new [] { simulator, companionSimulator }.Where (s => s != null);
 				var systemLogs = new List<ICaptureLog> ();
 				foreach (var sim in simulators) {
 					// Upload the system log
