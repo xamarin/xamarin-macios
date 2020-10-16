@@ -31,13 +31,16 @@ namespace VideoToolbox {
 			var ret = new VTVideoEncoder [dicts.Length];
 			int i = 0;
 			foreach (var dict in dicts){
-				ret [i] = new VTVideoEncoder (
-					dict [VTVideoEncoderList.CodecType] as NSNumber,
-					dict [VTVideoEncoderList.CodecName] as NSString,
-					dict [VTVideoEncoderList.DisplayName] as NSString,
-					dict [VTVideoEncoderList.EncoderID] as NSString,
-					dict [VTVideoEncoderList.EncoderName] as NSString);
-				i++;
+				var e = new VTVideoEncoder ();
+				e.CodecType = (dict [VTVideoEncoderList.CodecType] as NSNumber).Int32Value;
+				e.CodecName = dict [VTVideoEncoderList.CodecName] as NSString;
+				e.DisplayName = dict [VTVideoEncoderList.DisplayName] as NSString;
+				e.EncoderId = dict [VTVideoEncoderList.EncoderID] as NSString;
+				e.EncoderName = dict [VTVideoEncoderList.EncoderName] as NSString;
+				// here should be missing constants - https://github.com/xamarin/xamarin-macios/issues/9904
+				var sfr = dict [VTVideoEncoderList.SupportsFrameReordering] as NSNumber;
+				e.SupportsFrameReordering = sfr == null ? true : sfr.BoolValue; // optional, default true
+				ret [i++] = e;
 			}
 			CFObject.CFRelease (array);
 			return ret;
@@ -48,14 +51,12 @@ namespace VideoToolbox {
 		public string DisplayName { get; private set; }
 		public string EncoderId { get; private set; }
 		public string EncoderName { get; private set; }
+
+		[iOS (14,2)][TV (14,2)][Mac (11,0)]
+		public bool SupportsFrameReordering { get; private set; }
 				
-		internal VTVideoEncoder (NSNumber codecType, NSString codecName, NSString displayName, NSString encoderId, NSString encoderName)
+		internal VTVideoEncoder ()
 		{
-			CodecType = codecType.Int32Value;
-			CodecName = codecName;
-			DisplayName = displayName;
-			EncoderId = encoderId;
-			EncoderName = encoderName;
 		}
 
 		[Mac (10,13), iOS (11,0), TV (11,0)]
