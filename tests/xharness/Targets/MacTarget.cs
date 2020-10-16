@@ -184,7 +184,7 @@ namespace Xharness.Targets {
 		{
 			base.PostProcessExecutableProject ();
 
-			ProjectGuid = "{" + Harness.Helpers.GenerateStableGuid ().ToString ().ToUpper () + "}";
+			ProjectGuid = "{" + Xharness.Harness.Helpers.GenerateStableGuid ().ToString ().ToUpper () + "}";
 			inputProject.SetProjectGuid (ProjectGuid);
 			inputProject.ResolveAllPaths (TemplateProjectPath);
 		}

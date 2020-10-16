@@ -10,12 +10,10 @@ using Microsoft.DotNet.XHarness.Common.Execution;
 using Microsoft.DotNet.XHarness.Common.Logging;
 using Microsoft.DotNet.XHarness.Common.Utilities;
 using Microsoft.DotNet.XHarness.iOS.Shared;
-using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution.Mlaunch;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
-using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 using Moq;
 using NUnit.Framework;
 
@@ -26,6 +24,7 @@ namespace Xharness.Tests {
 		const string appName = "com.xamarin.bcltests.SystemXunit";
 		const string xcodePath = "/path/to/xcode";
 		const string mlaunchPath = "/path/to/mlaunch";
+		const int listenerPort = 1020;
 
 		static readonly string outputPath = Path.GetDirectoryName (Assembly.GetAssembly (typeof (AppRunnerTests)).Location);
 		static readonly string sampleProjectPath = Path.Combine (outputPath, "Samples", "TestProject");
@@ -94,7 +93,7 @@ namespace Xharness.Tests {
 				.Setup (m => m.Create (It.IsAny<string> (), It.IsAny<RunMode> (), It.IsAny<ILog> (), It.IsAny<ILog> (), It.IsAny<bool> (), It.IsAny<bool> (), It.IsAny<bool> ()))
 				.Returns ((ListenerTransport.Tcp, simpleListener.Object, "listener-temp-file"));
 			listenerFactory = mock3.Object;
-			simpleListener.SetupGet (x => x.Port).Returns (1020);
+			simpleListener.Setup (x => x.InitializeAndGetPort()).Returns (listenerPort);
 
 			var mock4 = new Mock<ICrashSnapshotReporterFactory> ();
 			mock4.Setup (m => m.Create (It.IsAny<ILog> (), It.IsAny<ILogs> (), It.IsAny<bool> (), It.IsAny<string> ())).Returns (snapshotReporter.Object);
@@ -322,7 +321,7 @@ namespace Xharness.Tests {
 			// Mock finding simulators
 			simulators
 				.Setup (x => x.LoadDevices (It.IsAny<ILog> (), false, false, false))
-				.Returns (Task.CompletedTask);
+				.Returns (Task.FromResult(true));
 
 			string simulatorLogPath = Path.Combine (Path.GetTempPath (), "simulator-logs");
 
@@ -336,7 +335,7 @@ namespace Xharness.Tests {
 				.Setup (x => x.Create (It.IsAny<string> (), "TestLog", It.IsAny<bool> ()))
 				.Returns (listenerLogFile.Object);
 
-			simpleListener.SetupGet (x => x.ConnectedTask).Returns (Task.CompletedTask);
+			simpleListener.SetupGet (x => x.ConnectedTask).Returns (Task.FromResult(true));
 
 			var captureLog = new Mock<ICaptureLog> ();
 			captureLog.SetupGet (x => x.FullPath).Returns (simulatorLogPath);
@@ -383,7 +382,7 @@ namespace Xharness.Tests {
 
 			mainLog.Verify (x => x.WriteLine ("Test run completed"), Times.Never);
 
-			simpleListener.Verify (x => x.Initialize (), Times.AtLeastOnce);
+			simpleListener.Verify (x => x.InitializeAndGetPort (), Times.AtLeastOnce);
 			simpleListener.Verify (x => x.StartAsync (), Times.AtLeastOnce);
 
 			simulators.VerifyAll ();
@@ -405,7 +404,7 @@ namespace Xharness.Tests {
 			// Mock finding simulators
 			simulators
 				.Setup (x => x.LoadDevices (It.IsAny<ILog> (), false, false, false))
-				.Returns (Task.CompletedTask);
+				.Returns (Task.FromResult(true));
 
 			string simulatorLogPath = Path.Combine (Path.GetTempPath (), "simulator-logs");
 
@@ -427,7 +426,7 @@ namespace Xharness.Tests {
 				.Setup (x => x.Create (It.Is<string> (s => s.StartsWith ("test-sim64-")), "TestLog", It.IsAny<bool?> ()))
 				.Returns (listenerLogFile);
 
-			simpleListener.SetupGet (x => x.ConnectedTask).Returns (Task.CompletedTask);
+			simpleListener.SetupGet (x => x.ConnectedTask).Returns (Task.FromResult(true));
 
 			var captureLog = new Mock<ICaptureLog> ();
 			captureLog.SetupGet (x => x.FullPath).Returns (simulatorLogPath);
@@ -447,7 +446,7 @@ namespace Xharness.Tests {
 				$"-argument=-app-arg:-enablenetwork -setenv=NUNIT_ENABLE_NETWORK=true " +
 				$"-setenv=DISABLE_SYSTEM_PERMISSION_TESTS=1 -argument=-app-arg:-hostname:127.0.0.1 " +
 				$"-setenv=NUNIT_HOSTNAME=127.0.0.1 -argument=-app-arg:-transport:Tcp -setenv=NUNIT_TRANSPORT=TCP " +
-				$"-argument=-app-arg:-hostport:{simpleListener.Object.Port} -setenv=NUNIT_HOSTPORT={simpleListener.Object.Port} " +
+				$"-argument=-app-arg:-hostport:{listenerPort} -setenv=NUNIT_HOSTPORT={listenerPort} " +
 				$"-setenv=env1=value1 -setenv=env2=value2 --launchsim {StringUtils.FormatArguments (appPath)} " +
 				$"--stdout=tty1 --stderr=tty1 --device=:v2:udid={simulator.Object.UDID}";
 
@@ -534,7 +533,7 @@ namespace Xharness.Tests {
 				.Setup (x => x.Create (It.IsAny<string> (), "TestLog", It.IsAny<bool> ()))
 				.Returns (listenerLogFile.Object);
 
-			simpleListener.SetupGet (x => x.ConnectedTask).Returns (Task.CompletedTask);
+			simpleListener.SetupGet (x => x.ConnectedTask).Returns (Task.FromResult(true));
 
 			// Act
 			var appRunner = new AppRunner (processManager.Object,
@@ -588,7 +587,7 @@ namespace Xharness.Tests {
 				.Setup (x => x.Create (It.Is<string> (s => s.StartsWith ("device-Test iPad-")), "Device log", It.IsAny<bool?> ()))
 				.Returns (deviceSystemLog.Object);
 
-			simpleListener.SetupGet (x => x.ConnectedTask).Returns (Task.CompletedTask);
+			simpleListener.SetupGet (x => x.ConnectedTask).Returns (Task.FromResult(true));
 
 			var deviceLogCapturer = new Mock<IDeviceLogCapturer> ();
 
@@ -609,8 +608,8 @@ namespace Xharness.Tests {
 				$"-argument=-app-arg:-autostart -setenv=NUNIT_AUTOSTART=true -argument=-app-arg:-autoexit " +
 				$"-setenv=NUNIT_AUTOEXIT=true -argument=-app-arg:-enablenetwork -setenv=NUNIT_ENABLE_NETWORK=true " +
 				$"-setenv=DISABLE_SYSTEM_PERMISSION_TESTS=1 -argument=-app-arg:-hostname:{ips} -setenv=NUNIT_HOSTNAME={ips} " +
-				$"-argument=-app-arg:-transport:Tcp -setenv=NUNIT_TRANSPORT=TCP -argument=-app-arg:-hostport:{simpleListener.Object.Port} " +
-				$"-setenv=NUNIT_HOSTPORT={simpleListener.Object.Port} -setenv=env1=value1 -setenv=env2=value2 " +
+				$"-argument=-app-arg:-transport:Tcp -setenv=NUNIT_TRANSPORT=TCP -argument=-app-arg:-hostport:{listenerPort} " +
+				$"-setenv=NUNIT_HOSTPORT={listenerPort} -setenv=env1=value1 -setenv=env2=value2 " +
 				$"--launchdev {StringUtils.FormatArguments (appPath)} --disable-memory-limits --wait-for-exit --devname \"Test iPad\"";
 
 			processManager
@@ -657,7 +656,7 @@ namespace Xharness.Tests {
 
 			processManager.VerifyAll ();
 
-			simpleListener.Verify (x => x.Initialize (), Times.AtLeastOnce);
+			simpleListener.Verify (x => x.InitializeAndGetPort (), Times.AtLeastOnce);
 			simpleListener.Verify (x => x.StartAsync (), Times.AtLeastOnce);
 			simpleListener.Verify (x => x.Cancel (), Times.AtLeastOnce);
 			simpleListener.Verify (x => x.Dispose (), Times.AtLeastOnce);
@@ -696,7 +695,7 @@ namespace Xharness.Tests {
 				.Setup (x => x.Create (It.Is<string> (s => s.StartsWith ("device-Test iPad-")), "Device log", It.IsAny<bool?> ()))
 				.Returns (deviceSystemLog.Object);
 
-			simpleListener.SetupGet (x => x.ConnectedTask).Returns (Task.CompletedTask);
+			simpleListener.SetupGet (x => x.ConnectedTask).Returns (Task.FromResult(true));
 
 			var deviceLogCapturer = new Mock<IDeviceLogCapturer> ();
 
@@ -717,8 +716,8 @@ namespace Xharness.Tests {
 				$"-argument=-app-arg:-autostart -setenv=NUNIT_AUTOSTART=true -argument=-app-arg:-autoexit " +
 				$"-setenv=NUNIT_AUTOEXIT=true -argument=-app-arg:-enablenetwork -setenv=NUNIT_ENABLE_NETWORK=true " +
 				$"-setenv=DISABLE_SYSTEM_PERMISSION_TESTS=1 -argument=-app-arg:-hostname:{ips} -setenv=NUNIT_HOSTNAME={ips} " +
-				$"-argument=-app-arg:-transport:Tcp -setenv=NUNIT_TRANSPORT=TCP -argument=-app-arg:-hostport:{simpleListener.Object.Port} " +
-				$"-setenv=NUNIT_HOSTPORT={simpleListener.Object.Port} -setenv=env1=value1 -setenv=env2=value2 " +
+				$"-argument=-app-arg:-transport:Tcp -setenv=NUNIT_TRANSPORT=TCP -argument=-app-arg:-hostport:{listenerPort} " +
+				$"-setenv=NUNIT_HOSTPORT={listenerPort} -setenv=env1=value1 -setenv=env2=value2 " +
 				$"--launchdev {StringUtils.FormatArguments (appPath)} --disable-memory-limits --wait-for-exit --devname \"Test iPad\"";
 
 			processManager
@@ -765,7 +764,7 @@ namespace Xharness.Tests {
 
 			processManager.VerifyAll ();
 
-			simpleListener.Verify (x => x.Initialize (), Times.AtLeastOnce);
+			simpleListener.Verify (x => x.InitializeAndGetPort (), Times.AtLeastOnce);
 			simpleListener.Verify (x => x.StartAsync (), Times.AtLeastOnce);
 			simpleListener.Verify (x => x.Cancel (), Times.AtLeastOnce);
 			simpleListener.Verify (x => x.Dispose (), Times.AtLeastOnce);

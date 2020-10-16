@@ -36,7 +36,7 @@ namespace Xharness.Tasks {
 		public string ProjectConfiguration { get; set; }
 		public string ProjectPlatform { get; set; }
 
-		protected static string Timestamp => Helpers.Timestamp;
+		protected static string Timestamp => Harness.Helpers.Timestamp;
 		public string ProjectFile => TestProject?.Path;
 		public bool HasCustomTestName => test_name != null;
 

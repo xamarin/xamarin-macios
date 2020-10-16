@@ -73,7 +73,7 @@ namespace Xharness.Jenkins.TestTasks {
 				Jenkins.MainLog.WriteLine ("Selected simulator: {0}", devices.Length > 0 ? devices [0].Name : "none");
 
 				foreach (var dev in devices) {
-					using var tcclog = Logs.Create ($"prepare-simulator-{Harness.Helpers.Timestamp}.log", "Simulator preparation");
+					using var tcclog = Logs.Create ($"prepare-simulator-{Xharness.Harness.Helpers.Timestamp}.log", "Simulator preparation");
 					var rv = await dev.PrepareSimulator (tcclog, executingTasks.Select ((v) => v.BundleIdentifier).ToArray ());
 					tcclog.Description += rv ? " ✅ " : " (failed) ⚠️";
 					foreach (var task in executingTasks.Where ((v) => v.Simulators.Contains (dev)))

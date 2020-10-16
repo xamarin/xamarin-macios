@@ -43,7 +43,7 @@ namespace Xharness.Targets {
 			csproj.FindAndReplace ("%WATCHEXTENSION_CSPROJ%", WatchOSExtensionProjectPath);
 			csproj.SetProjectReferenceValue (WatchOSExtensionProjectPath, "Project", WatchOSExtensionGuid);
 			csproj.SetProjectReferenceValue (WatchOSExtensionProjectPath, "Name", Path.GetFileNameWithoutExtension (WatchOSExtensionProjectPath));
-			WatchOSAppGuid = "{" + Harness.Helpers.GenerateStableGuid ().ToString ().ToUpper () + "}";
+			WatchOSAppGuid = "{" + Xharness.Harness.Helpers.GenerateStableGuid ().ToString ().ToUpper () + "}";
 			csproj.SetProjectGuid (WatchOSAppGuid);
 			csproj.FixInfoPListInclude (suffix, Path.GetDirectoryName (TemplateProjectPath));
 			csproj.ResolveAllPaths (TemplateProjectPath);
@@ -67,7 +67,7 @@ namespace Xharness.Targets {
 			csproj.FindAndReplace ("%CONTAINER_PATH%", Path.GetFullPath (Harness.WatchOSContainerTemplate).Replace ('/', '\\') + "\\");
 			csproj.FindAndReplace ("%WATCHAPP_CSPROJ%", WatchOSAppProjectPath);
 			csproj.SetProjectReferenceValue (WatchOSAppProjectPath, "Name", Path.GetFileNameWithoutExtension (WatchOSAppProjectPath));
-			WatchOSGuid = "{" + Harness.Helpers.GenerateStableGuid ().ToString ().ToUpper () + "}";
+			WatchOSGuid = "{" + Xharness.Harness.Helpers.GenerateStableGuid ().ToString ().ToUpper () + "}";
 			csproj.SetProjectGuid (WatchOSGuid);
 			csproj.FixInfoPListInclude (Suffix, Path.GetDirectoryName (TemplateProjectPath));
 			csproj.ResolveAllPaths (TemplateProjectPath);

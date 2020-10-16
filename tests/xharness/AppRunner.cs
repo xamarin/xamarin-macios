@@ -258,7 +258,7 @@ namespace Xharness {
 			var listener_log = Logs.Create ($"test-{runMode.ToString ().ToLowerInvariant ()}-{Harness.Helpers.Timestamp}.log", LogType.TestLog.ToString (), timestamp: !useXmlOutput);
 			var (transport, listener, listenerTmpFile) = listenerFactory.Create (deviceName, runMode, MainLog, listener_log, isSimulator, true, useXmlOutput);
 
-			listener.Initialize ();
+			var listenerPort = listener.InitializeAndGetPort ();
 
 			args.Add (new SetAppArgumentArgument ($"-transport:{transport}", true));
 			args.Add (new SetEnvVariableArgument ("NUNIT_TRANSPORT", transport.ToString ().ToUpper ()));
@@ -266,8 +266,8 @@ namespace Xharness {
 			if (transport == ListenerTransport.File)
 				args.Add (new SetEnvVariableArgument ("NUNIT_LOG_FILE", listenerTmpFile));
 
-			args.Add (new SetAppArgumentArgument ($"-hostport:{listener.Port}", true));
-			args.Add (new SetEnvVariableArgument ("NUNIT_HOSTPORT", listener.Port));
+			args.Add (new SetAppArgumentArgument ($"-hostport:{listenerPort}", true));
+			args.Add (new SetEnvVariableArgument ("NUNIT_HOSTPORT", listenerPort));
 
 			if (listenerFactory.UseTunnel)
 				args.Add (new SetEnvVariableArgument ("USE_TCP_TUNNEL", true));
