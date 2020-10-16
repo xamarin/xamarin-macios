@@ -724,7 +724,7 @@ namespace VideoToolbox {
 		NSString PixelTransferProperties { get; }
 
 		[iOS (14,1)]
-		[NoTV][NoMac]
+		[TV (14,2)][Mac (11,0)]
 		[Field ("kVTDecompressionPropertyKey_PropagatePerFrameHDRDisplayMetadata")]
 		NSString PropagatePerFrameHdrDisplayMetadata { get; }
 	}
@@ -810,7 +810,7 @@ namespace VideoToolbox {
 		uint UsingGpuRegistryId { get; }
 
 		[iOS (14,1)]
-		[NoTV][NoMac]
+		[TV (14,2)][Mac (11,0)]
 		[Export ("PropagatePerFrameHdrDisplayMetadata")]
 		bool PropagatePerFrameHhrDisplayMetadata { get; set; }
 	}
