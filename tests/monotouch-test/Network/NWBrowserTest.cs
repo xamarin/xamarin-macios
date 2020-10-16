@@ -83,7 +83,7 @@ namespace MonoTouchFixtures.Network {
 			// 5. The browser is not yet canceled, so it picks up that the service/listener is not longer then and returns it.
 			// 
 			// The test will block until the different events are set by the callbacks that are executed in a diff thread.
-			bool didRan = false;
+			bool didRun = false;
 			bool eventsDone = false;
 			bool listeningDone = false;
 			Exception ex = null;
