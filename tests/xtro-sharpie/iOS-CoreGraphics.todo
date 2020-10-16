@@ -1,6 +1,0 @@
-!missing-field! kCGColorSpaceExtendedDisplayP3 not bound
-!missing-field! kCGColorSpaceExtendedITUR_2020 not bound
-!missing-pinvoke! CGColorSpaceCreateExtended is not bound
-!missing-pinvoke! CGColorSpaceCreateExtendedLinearized is not bound
-!missing-pinvoke! CGColorSpaceCreateLinearized is not bound
-!missing-pinvoke! CGColorSpaceUsesITUR_2100TF is not bound
