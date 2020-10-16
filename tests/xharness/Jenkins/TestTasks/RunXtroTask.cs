@@ -16,7 +16,6 @@ namespace Xharness.Jenkins.TestTasks {
 		public override async Task RunTestAsync ()
 		{
 			var projectDir = System.IO.Path.GetDirectoryName (ProjectFile);
-			var name = System.IO.Path.GetFileName (projectDir);
 
 			using (var resource = await NotifyAndAcquireDesktopResourceAsync ()) {
 				using (var proc = new Process ()) {

@@ -1,6 +1,6 @@
 using System;
 using Microsoft.DotNet.XHarness.Common.Execution;
-using Xharness.Tasks;
+using Xharness.TestTasks;
 
 namespace Xharness.Jenkins.TestTasks {
 	abstract class BuildProjectTask : BuildToolTask

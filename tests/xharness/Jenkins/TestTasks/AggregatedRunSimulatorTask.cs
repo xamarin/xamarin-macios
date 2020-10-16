@@ -4,8 +4,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.DotNet.XHarness.iOS.Shared;
-using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
-using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 
 namespace Xharness.Jenkins.TestTasks {
 	// This class groups simulator run tasks according to the
@@ -65,7 +63,7 @@ namespace Xharness.Jenkins.TestTasks {
 					await task.SelectSimulatorAsync ();
 				}
 
-				var devices = executingTasks.FirstOrDefault ()?.Simulators; 
+				var devices = executingTasks.FirstOrDefault ()?.; 
 				if (devices == null) { 
 					ExecutionResult = TestExecutingResult.DeviceNotFound;
 					return;

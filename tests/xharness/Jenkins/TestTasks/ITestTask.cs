@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.DotNet.XHarness.Common.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
-using Xharness.Tasks;
+using Xharness.TestTasks;
 
 namespace Xharness.Jenkins.TestTasks {
 	public interface ITestTask {

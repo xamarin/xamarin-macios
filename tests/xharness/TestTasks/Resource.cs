@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 
-namespace Xharness.Tasks {
+namespace Xharness.TestTasks {
 	// This is a very simple class to manage the general concept of 'resource'.
 	// Performance isn't important, so this is very simple.
 	// Currently it's only used to make sure everything that happens on the desktop

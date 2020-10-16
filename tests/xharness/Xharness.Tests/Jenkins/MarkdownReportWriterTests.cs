@@ -5,7 +5,6 @@ using Moq;
 using NUnit.Framework;
 using Xharness.Jenkins.Reports;
 using Xharness.Jenkins.TestTasks;
-using Xharness.Tasks;
 
 namespace Xharness.Tests.Jenkins {
 	[TestFixture]

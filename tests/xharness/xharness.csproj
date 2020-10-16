@@ -128,14 +128,14 @@
     <Compile Include="Targets\TVOSTarget.cs" />
     <Compile Include="Targets\UnifiedTarget.cs" />
     <Compile Include="Targets\WatchOSTarget.cs" />
-    <Compile Include="Tasks\BuildProject.cs" />
-    <Compile Include="Tasks\BuildTool.cs" />
-    <Compile Include="Tasks\IAcquiredResource.cs" />
-    <Compile Include="Tasks\IResourceManager.cs" />
-    <Compile Include="Tasks\MSBuild.cs" />
-    <Compile Include="Tasks\Resource.cs" />
-    <Compile Include="Tasks\Resources.cs" />
-    <Compile Include="Tasks\TestTask.cs" />
+    <Compile Include="TestTasks\BuildProject.cs" />
+    <Compile Include="TestTasks\BuildTool.cs" />
+    <Compile Include="TestTasks\IAcquiredResource.cs" />
+    <Compile Include="TestTasks\IResourceManager.cs" />
+    <Compile Include="TestTasks\MSBuild.cs" />
+    <Compile Include="TestTasks\Resource.cs" />
+    <Compile Include="TestTasks\Resources.cs" />
+    <Compile Include="TestTasks\TestTask.cs" />
     <Compile Include="TestImporter\Xamarin\AssemblyLocator.cs" />
     <Compile Include="TestImporter\Xamarin\ProjectFilter.cs" />
     <Compile Include="TestImporter\Xamarin\AssemblyDefinitionFactory.cs" />
@@ -184,7 +184,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Tasks\" />
+  </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

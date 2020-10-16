@@ -475,7 +475,7 @@ namespace Xharness {
 
 		async Task<int> Configure ()
 		{
-			return mac ? await AutoConfigureMac (true) : ConfigureIOS ();
+			return mac ? await AutoConfigureMac (true) : await ConfigureIOS ();
 		}
 
 		// At startup we:
@@ -490,7 +490,7 @@ namespace Xharness {
 		// * For the BCL tests, we use a BCL test project generator. The BCL test generator generates projects for
 		//   all platforms we're interested in, so we set GenerateVariations to false to avoid generate the platform variations again.
 
-		int ConfigureIOS ()
+		async Task<int> ConfigureIOS ()
 		{
 			var rv = 0;
 			var unified_targets = new List<UnifiedTarget> ();
@@ -499,7 +499,7 @@ namespace Xharness {
 			var today_targets = new List<TodayExtensionTarget> ();
 
 			if (autoConf)
-				AutoConfigureIOS ();
+				await AutoConfigureIOS ();
 
 			foreach (var monoNativeInfo in IOSTestProjects.Where (x => x.MonoNativeInfo != null).Select (x => x.MonoNativeInfo))
 				monoNativeInfo.Convert ();

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Xharness.Tasks {
+namespace Xharness.TestTasks {
 	public interface IAcquiredResource : IDisposable {
 		Resource Resource { get; }
 	}
