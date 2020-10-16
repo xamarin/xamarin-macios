@@ -101,8 +101,8 @@ namespace Xharness.Tests {
 
 			var mock5 = new Mock<IAppBundleInformationParser> ();
 			mock5
-				.Setup (x => x.ParseFromProjectAsync (It.IsAny<ILog> (), It.IsAny<IProcessManager> (), It.IsAny<string> (), It.IsAny<TestTarget> (), It.IsAny<string> ()))
-				.ReturnsAsync (new AppBundleInformation (appName, appName, appPath, appPath, null));
+				.Setup (x => x.ParseFromProject (It.IsAny<string> (), It.IsAny<TestTarget> (), It.IsAny<string> ()))
+				.ReturnsAsync (new AppBundleInformation (appName, appName, appPath, appPath, true, null));
 
 			appBundleInformationParser = mock5.Object;
 
@@ -329,7 +329,7 @@ namespace Xharness.Tests {
 				.Setup (x => x.FindSimulators (TestTarget.Simulator_tvOS, mainLog.Object, true, false))
 				.ReturnsAsync ((ISimulatorDevice []) null);
 
-			var listenerLogFile = new Mock<ILog> ();
+			var listenerLogFile = new Mock<IFileBackedLog> ();
 
 			logs
 				.Setup (x => x.Create (It.IsAny<string> (), "TestLog", It.IsAny<bool> ()))
@@ -416,7 +416,7 @@ namespace Xharness.Tests {
 
 			simulators
 				.Setup (x => x.FindSimulators (TestTarget.Simulator_iOS64, mainLog.Object, true, false))
-				.ReturnsAsync (new ISimulatorDevice [] { simulator.Object });
+				.ReturnsAsync ((simulator.Object, null));
 
 			var testResultFilePath = Path.GetTempFileName ();
 			var listenerLogFile = Mock.Of<ILog> (x => x.FullPath == testResultFilePath);
@@ -493,7 +493,7 @@ namespace Xharness.Tests {
 			// Verify
 			Assert.AreEqual (0, result);
 
-			simpleListener.Verify (x => x.Initialize (), Times.AtLeastOnce);
+			simpleListener.Verify (x => x.InitializeAndGetPort (), Times.AtLeastOnce);
 			simpleListener.Verify (x => x.StartAsync (), Times.AtLeastOnce);
 			simpleListener.Verify (x => x.Cancel (), Times.AtLeastOnce);
 			simpleListener.Verify (x => x.Dispose (), Times.AtLeastOnce);
