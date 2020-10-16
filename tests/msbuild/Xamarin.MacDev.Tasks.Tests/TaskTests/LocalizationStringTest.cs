@@ -30,7 +30,7 @@ namespace Xamarin.iOS.Tasks {
 			CultureInfo originalCulture = Thread.CurrentThread.CurrentUICulture;
 
 			try {
-				Assert.IsFalse (string.IsNullOrEmpty(errorCode), "Error code is null or empty");
+				Assert.IsFalse (string.IsNullOrEmpty (errorCode), "Error code is null or empty");
 				string englishError = TranslateError ("en-US", errorCode);
 				string newCultureError = TranslateError (culture, errorCode);
 
