@@ -62,13 +62,13 @@ namespace MetalPerformanceShaders {
 		Int8 = SignedBit | 8,
 		Int16 = SignedBit | 16,
 		Int32 = SignedBit | 32,
-		[iOS (14,2)][TV (14,2)][Mac (11,0)]
+		[iOS (14,1)][TV (14,2)][Mac (11,0)]
 		Int64 = SignedBit | 64,
 
 		UInt8 = 8,
 		UInt16 = 16,
 		UInt32 = 32,
-		[iOS (14,2)][TV (14,2)][Mac (11,0)]
+		[iOS (14,1)][TV (14,2)][Mac (11,0)]
 		UInt64 = 64,
 
 		[iOS (11,0), TV (11,0)]
