@@ -129,6 +129,10 @@ namespace Xamarin.iOS.Tasks
 		public string MonoTouchProjectCSProjPath;
 		public string AppBundlePath;
 
+		public string TempDir {
+			get; set;
+		}
+
 		public ProjectPaths SetupProjectPaths (string projectName, string csprojName, string baseDir = "../", bool includePlatform = true, string platform = "iPhoneSimulator", string config = "Debug", string projectPath = null, bool is_dotnet = false)
 		{
 			var testsBase = GetTestDirectory ();
@@ -244,6 +248,10 @@ namespace Xamarin.iOS.Tasks
 			var paths = SetupProjectPaths ("MySingleView");
 			MonoTouchProjectPath = paths.ProjectPath;
 
+			TempDir = Path.Combine (Path.GetDirectoryName (Assembly.GetExecutingAssembly ().Location), "ScratchDir");
+			SafeDelete (TempDir);
+			Directory.CreateDirectory (TempDir);
+
 			// Ensure the bin and obj directories are cleared
 			SafeDelete (Path.Combine (MonoTouchProjectPath, "bin"));
 			SafeDelete (Path.Combine (MonoTouchProjectPath, "obj"));
@@ -315,6 +323,7 @@ namespace Xamarin.iOS.Tasks
 		[TearDown]
 		public virtual void Teardown ()
 		{
+			SafeDelete (TempDir);
 		}
 
 		public T CreateTask<T> () where T : Task, new()
@@ -344,7 +353,8 @@ namespace Xamarin.iOS.Tasks
 
 		protected string CreateTempFile (string path)
 		{
-			path = Path.Combine (Cache.CreateTemporaryDirectory (), path);
+			path = Path.Combine (TempDir, path);
+			Directory.CreateDirectory (Path.GetDirectoryName (path));
 			using (new FileStream (path, FileMode.CreateNew)) {}
 			return path;
 		}
@@ -376,7 +386,7 @@ namespace Xamarin.iOS.Tasks
 			else
 				plist [key] = value;
 
-			var modifiedPListPath = CreateTempFile ("modified.plist");
+			var modifiedPListPath = Path.Combine (TempDir, "modified.plist");
 			plist.Save (modifiedPListPath);
 			return modifiedPListPath;
 		}

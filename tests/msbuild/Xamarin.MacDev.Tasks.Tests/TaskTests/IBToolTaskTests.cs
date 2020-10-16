@@ -66,23 +66,26 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void TestBasicIBToolFunctionality ()
 		{
-			var tmp = Cache.CreateTemporaryDirectory ("basic-ibtool");
+			var tmp = Path.Combine (Path.GetTempPath (), "basic-ibtool");
 
-			var srcdir = Path.Combine (Configuration.TestProjectsDirectory, "MyIBToolLinkTest");
-			var ibtool = CreateIBToolTask (ApplePlatform.iOS, srcdir, tmp);
-			var bundleResources = new HashSet<string> ();
+			Directory.CreateDirectory (tmp);
 
-			Assert.IsTrue (ibtool.Execute (), "Execution of IBTool task failed.");
+			try {
+				var srcdir = Path.Combine (Configuration.TestProjectsDirectory, "MyIBToolLinkTest");
+				var ibtool = CreateIBToolTask (ApplePlatform.iOS, srcdir, tmp);
+				var bundleResources = new HashSet<string> ();
 
-			foreach (var bundleResource in ibtool.BundleResources) {
-				Assert.IsTrue (File.Exists (bundleResource.ItemSpec), "File does not exist: {0}", bundleResource.ItemSpec);
-				Assert.That (bundleResource.GetMetadata ("LogicalName"), Is.Not.Null.Or.Empty, "The 'LogicalName' metadata must be set.");
-				Assert.That (bundleResource.GetMetadata ("Optimize"), Is.Not.Null.Or.Empty, "The 'Optimize' metadata must be set.");
+				Assert.IsTrue (ibtool.Execute (), "Execution of IBTool task failed.");
 
-				bundleResources.Add (bundleResource.GetMetadata ("LogicalName"));
-			}
+				foreach (var bundleResource in ibtool.BundleResources) {
+					Assert.IsTrue (File.Exists (bundleResource.ItemSpec), "File does not exist: {0}", bundleResource.ItemSpec);
+					Assert.That (bundleResource.GetMetadata ("LogicalName"), Is.Not.Null.Or.Empty, "The 'LogicalName' metadata must be set.");
+					Assert.That (bundleResource.GetMetadata ("Optimize"), Is.Not.Null.Or.Empty, "The 'Optimize' metadata must be set.");
 
-			string [] expected = {
+					bundleResources.Add (bundleResource.GetMetadata ("LogicalName"));
+				}
+
+				string[] expected = {
 					"LaunchScreen~ipad.nib/runtime.nib",
 					"LaunchScreen~ipad.nib/objects-8.0+.nib",
 					"Main~ipad.storyboardc/Info-8.0+.plist",
@@ -101,50 +104,56 @@ namespace Xamarin.iOS.Tasks
 					"Main~iphone.storyboardc/Info.plist",
 				};
 
-			var inexistentResource = bundleResources.Except (expected).ToArray ();
-			var unexpectedResource = expected.Except (bundleResources).ToArray ();
+				var inexistentResource = bundleResources.Except (expected).ToArray ();
+				var unexpectedResource = expected.Except (bundleResources).ToArray ();
 
-			Assert.That (inexistentResource, Is.Empty, "No missing resources");
-			Assert.That (unexpectedResource, Is.Empty, "No extra resources");
+				Assert.That (inexistentResource, Is.Empty, "No missing resources");
+				Assert.That (unexpectedResource, Is.Empty, "No extra resources");
+			} finally {
+				Directory.Delete (tmp, true);
+			}
 		}
 
 		[Test]
 		public void TestAdvancedIBToolFunctionality ()
 		{
-			var tmp = Cache.CreateTemporaryDirectory ("advanced-ibtool");
+			var tmp = Path.Combine (Path.GetTempPath (), "advanced-ibtool");
 			IBTool ibtool;
 
-			var srcdir = Path.Combine (Configuration.TestProjectsDirectory, "IBToolTaskTests", "LinkedAndTranslated");
-			ibtool = CreateIBToolTask (ApplePlatform.iOS, srcdir, tmp);
-			var bundleResources = new HashSet<string> ();
+			Directory.CreateDirectory (tmp);
 
-			// Add some ResourceTags...
-			foreach (var storyboard in ibtool.InterfaceDefinitions) {
-				var tag = Path.GetFileNameWithoutExtension (storyboard.ItemSpec);
-				storyboard.SetMetadata ("ResourceTags", tag);
-			}
+			try {
+				var srcdir = Path.Combine (Configuration.TestProjectsDirectory, "IBToolTaskTests", "LinkedAndTranslated");
+				ibtool = CreateIBToolTask (ApplePlatform.iOS, srcdir, tmp);
+				var bundleResources = new HashSet<string> ();
 
-			ibtool.EnableOnDemandResources = true;
+				// Add some ResourceTags...
+				foreach (var storyboard in ibtool.InterfaceDefinitions) {
+					var tag = Path.GetFileNameWithoutExtension (storyboard.ItemSpec);
+					storyboard.SetMetadata ("ResourceTags", tag);
+				}
 
-			Assert.IsTrue (ibtool.Execute (), "Execution of IBTool task failed.");
+				ibtool.EnableOnDemandResources = true;
 
-			foreach (var bundleResource in ibtool.BundleResources) {
-				var bundleName = bundleResource.GetMetadata ("LogicalName");
-				var tag = bundleResource.GetMetadata ("ResourceTags");
+				Assert.IsTrue (ibtool.Execute (), "Execution of IBTool task failed.");
 
-				Assert.IsTrue (File.Exists (bundleResource.ItemSpec), "File does not exist: {0}", bundleResource.ItemSpec);
-				Assert.That (bundleResource.GetMetadata ("LogicalName"), Is.Not.Null.Or.Empty, "The 'LogicalName' metadata must be set.");
-				Assert.That (bundleResource.GetMetadata ("Optimize"), Is.Not.Null.Or.Empty, "The 'Optimize' metadata must be set.");
+				foreach (var bundleResource in ibtool.BundleResources) {
+					var bundleName = bundleResource.GetMetadata ("LogicalName");
+					var tag = bundleResource.GetMetadata ("ResourceTags");
 
-				Assert.That (tag, Is.Not.Null.Or.Empty, "The 'ResourceTags' metadata should be set.");
-				Assert.IsTrue (bundleName.Contains (".lproj/" + tag + ".storyboardc/"), "BundleResource does not have the proper ResourceTags set: {0}", bundleName);
+					Assert.IsTrue (File.Exists (bundleResource.ItemSpec), "File does not exist: {0}", bundleResource.ItemSpec);
+					Assert.That (bundleResource.GetMetadata ("LogicalName"), Is.Not.Null.Or.Empty, "The 'LogicalName' metadata must be set.");
+					Assert.That (bundleResource.GetMetadata ("Optimize"), Is.Not.Null.Or.Empty, "The 'Optimize' metadata must be set.");
 
-				bundleResources.Add (bundleName);
-			}
+					Assert.That (tag, Is.Not.Null.Or.Empty, "The 'ResourceTags' metadata should be set.");
+					Assert.IsTrue (bundleName.Contains (".lproj/" + tag + ".storyboardc/"), "BundleResource does not have the proper ResourceTags set: {0}", bundleName);
 
-			ibtool.EnableOnDemandResources = true;
+					bundleResources.Add (bundleName);
+				}
 
-			string [] expected = {
+				ibtool.EnableOnDemandResources = true;
+
+				string[] expected = {
 					"en.lproj/Main.storyboardc/UIViewController-BYZ-38-t0r.nib",
 					"en.lproj/Main.storyboardc/BYZ-38-t0r-view-8bC-Xf-vdC.nib",
 					"en.lproj/Main.storyboardc/Info.plist",
@@ -164,11 +173,14 @@ namespace Xamarin.iOS.Tasks
 					"Base.lproj/LaunchScreen.storyboardc/Info.plist",
 				};
 
-			var inexistentResource = bundleResources.Except (expected).ToArray ();
-			var unexpectedResource = expected.Except (bundleResources).ToArray ();
+				var inexistentResource = bundleResources.Except (expected).ToArray ();
+				var unexpectedResource = expected.Except (bundleResources).ToArray ();
 
-			Assert.That (inexistentResource, Is.Empty, "No missing resources");
-			Assert.That (unexpectedResource, Is.Empty, "No extra resources");
+				Assert.That (inexistentResource, Is.Empty, "No missing resources");
+				Assert.That (unexpectedResource, Is.Empty, "No extra resources");
+			} finally {
+				Directory.Delete (tmp, true);
+			}
 		}
 
 		static IBTool CreateIBToolTask (ApplePlatform framework, string projectDir, string intermediateOutputPath, params string[] fileNames)
@@ -184,49 +196,55 @@ namespace Xamarin.iOS.Tasks
 			return ibtool;
 		}
 
-		static void TestGenericAndDeviceSpecificXibsGeneric (params string [] fileNames)
+		static void TestGenericAndDeviceSpecificXibsGeneric (params string[] fileNames)
 		{
-			var tmp = Cache.CreateTemporaryDirectory ("advanced-ibtool");
+			var tmp = Path.Combine (Path.GetTempPath (), "advanced-ibtool");
 			IBTool ibtool;
 
-			var srcdir = Path.Combine (Configuration.TestProjectsDirectory, "IBToolTaskTests", "GenericAndDeviceSpecific");
-			ibtool = CreateIBToolTask (ApplePlatform.iOS, srcdir, tmp, fileNames);
-			var bundleResources = new HashSet<string> ();
+			Directory.CreateDirectory (tmp);
 
-			// Add some ResourceTags...
-			foreach (var storyboard in ibtool.InterfaceDefinitions) {
-				var tag = Path.GetFileNameWithoutExtension (storyboard.ItemSpec);
-				storyboard.SetMetadata ("ResourceTags", tag);
-			}
+			try {
+				var srcdir = Path.Combine (Configuration.TestProjectsDirectory, "IBToolTaskTests", "GenericAndDeviceSpecific");
+				ibtool = CreateIBToolTask (ApplePlatform.iOS, srcdir, tmp, fileNames);
+				var bundleResources = new HashSet<string> ();
 
-			ibtool.EnableOnDemandResources = true;
+				// Add some ResourceTags...
+				foreach (var storyboard in ibtool.InterfaceDefinitions) {
+					var tag = Path.GetFileNameWithoutExtension (storyboard.ItemSpec);
+					storyboard.SetMetadata ("ResourceTags", tag);
+				}
 
-			Assert.IsTrue (ibtool.Execute (), "Execution of IBTool task failed.");
+				ibtool.EnableOnDemandResources = true;
 
-			foreach (var bundleResource in ibtool.BundleResources) {
-				var bundleName = bundleResource.GetMetadata ("LogicalName");
-				var tag = bundleResource.GetMetadata ("ResourceTags");
+				Assert.IsTrue (ibtool.Execute (), "Execution of IBTool task failed.");
 
-				Assert.IsTrue (File.Exists (bundleResource.ItemSpec), "File does not exist: {0}", bundleResource.ItemSpec);
-				Assert.That (bundleResource.GetMetadata ("LogicalName"), Is.Not.Null.Or.Empty, "The 'LogicalName' metadata must be set.");
-				Assert.That (bundleResource.GetMetadata ("Optimize"), Is.Not.Null.Or.Empty, "The 'Optimize' metadata must be set.");
+				foreach (var bundleResource in ibtool.BundleResources) {
+					var bundleName = bundleResource.GetMetadata ("LogicalName");
+					var tag = bundleResource.GetMetadata ("ResourceTags");
 
-				Assert.That (tag, Is.Not.Null.Or.Empty, "The 'ResourceTags' metadata should be set.");
-				Assert.AreEqual (Path.Combine (tmp, "ibtool", tag + ".nib"), bundleResource.ItemSpec, $"BundleResource {bundleName} is not at the expected location.");
+					Assert.IsTrue (File.Exists (bundleResource.ItemSpec), "File does not exist: {0}", bundleResource.ItemSpec);
+					Assert.That (bundleResource.GetMetadata ("LogicalName"), Is.Not.Null.Or.Empty, "The 'LogicalName' metadata must be set.");
+					Assert.That (bundleResource.GetMetadata ("Optimize"), Is.Not.Null.Or.Empty, "The 'Optimize' metadata must be set.");
 
-				bundleResources.Add (bundleName);
-			}
+					Assert.That (tag, Is.Not.Null.Or.Empty, "The 'ResourceTags' metadata should be set.");
+					Assert.AreEqual (Path.Combine (tmp, "ibtool", tag + ".nib"), bundleResource.ItemSpec, $"BundleResource {bundleName} is not at the expected location.");
 
-			string [] expected = {
+					bundleResources.Add (bundleName);
+				}
+
+				string[] expected = {
 					"View.nib",
 					"View~ipad.nib",
 				};
 
-			var inexistentResource = bundleResources.Except (expected).ToArray ();
-			var unexpectedResource = expected.Except (bundleResources).ToArray ();
+				var inexistentResource = bundleResources.Except (expected).ToArray ();
+				var unexpectedResource = expected.Except (bundleResources).ToArray ();
 
-			Assert.That (inexistentResource, Is.Empty, "No missing resources");
-			Assert.That (unexpectedResource, Is.Empty, "No extra resources");
+				Assert.That (inexistentResource, Is.Empty, "No missing resources");
+				Assert.That (unexpectedResource, Is.Empty, "No extra resources");
+			} finally {
+				Directory.Delete (tmp, true);
+			}
 		}
 
 		[Test]

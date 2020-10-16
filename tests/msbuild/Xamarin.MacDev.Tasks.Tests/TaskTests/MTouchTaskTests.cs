@@ -54,8 +54,6 @@ namespace Xamarin.iOS.Tasks
 		{
 			base.Setup ();
 
-			var tmpdir = Cache.CreateTemporaryDirectory ();
-
 			Task = CreateTask<CustomMTouchTask> ();
 			Task.ToolExe = "/path/to/mtouch";
 
@@ -65,10 +63,10 @@ namespace Xamarin.iOS.Tasks
 			Task.IntermediateOutputPath = Path.Combine ("obj", "mtouch-cache");
 			Task.MainAssembly = new TaskItem ("Main.exe");
 			Task.References = new [] { new TaskItem ("a.dll"), new TaskItem ("b with spaces.dll"), new TaskItem ("c\"quoted\".dll") };
-			Task.ResponseFilePath = Path.Combine (tmpdir, "response-file.rsp");
+			Task.ResponseFilePath = Path.Combine (Path.GetTempPath (), "response-file.rsp");
 			Task.SdkRoot = "/path/to/sdkroot";
 			Task.SdkVersion = "6.1";
-			Task.SymbolsList = Path.Combine (tmpdir, "mtouch-symbol-list");
+			Task.SymbolsList = Path.Combine (Path.GetTempPath (), "mtouch-symbol-list");
 			Task.TargetFrameworkMoniker = "Xamarin.iOS,v1.0";
 		}
 
@@ -213,7 +211,7 @@ namespace Xamarin.iOS.Tasks
 			using (var sdk = new TempSdk()) {
 				Task.TargetFrameworkMoniker = "MonoTouch,v1.0";
 
-				var expectedPath = Path.Combine (Cache.CreateTemporaryDirectory (), "tmpfile");
+				var expectedPath = Path.GetTempFileName ();
 
 				Task.References = new[] { new TaskItem (expectedPath, new Dictionary<string, string> { { "FrameworkFile", "true" } }) };
 
@@ -304,7 +302,8 @@ namespace Xamarin.iOS.Tasks
 
 			public TempSdk ()
 			{
-				SdkDir = Cache.CreateTemporaryDirectory ();
+				SdkDir = Path.Combine (Path.GetTempPath (), Guid.NewGuid ().ToString ());
+				Directory.CreateDirectory (SdkDir);
 				Directory.CreateDirectory (Path.Combine (SdkDir, "bin"));
 				File.WriteAllText (Path.Combine (SdkDir, "Version"), "1.0.0.0"); // Fake Version file so that MonoTouchSdk detects this as a real Sdk location.
 				File.WriteAllText (Path.Combine (SdkDir, "bin", "mtouch"), "echo \"fake mtouch\""); // Fake mtouch binary so that MonoTouchSdk detects this as a real Sdk location.
@@ -319,6 +318,7 @@ namespace Xamarin.iOS.Tasks
 			public void Dispose ()
 			{
 				IPhoneSdks.MonoTouch = sdk;
+				Directory.Delete (SdkDir, true);
 			}
 		}
 	}

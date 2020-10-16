@@ -33,7 +33,7 @@ namespace Xamarin.iOS.Tasks
 			Task = CreateTask<CompileAppManifest> ();
 
 			Task.AppBundleName = appBundleName;
-			Task.AppManifestBundleDirectory = Path.Combine (Cache.CreateTemporaryDirectory (), "AppBundlePath");
+			Task.AppManifestBundleDirectory = "AppBundlePath";
 			Task.AssemblyName = assemblyName;
 			Task.AppManifest = CreateTempFile ("foo.plist");
 			Task.BundleIdentifier = bundleIdentifier;
@@ -59,6 +59,9 @@ namespace Xamarin.iOS.Tasks
 		public override void Teardown ()
 		{
 			base.Teardown ();
+
+			if (Directory.Exists ("AppBundlePath"))
+				Directory.Delete ("AppBundlePath", true);
 		}
 
 		#region General tests
