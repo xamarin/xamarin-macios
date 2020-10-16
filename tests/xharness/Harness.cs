@@ -5,9 +5,9 @@ using System.Linq;
 using System.Runtime.Serialization.Json;
 using System.Xml;
 using Microsoft.DotNet.XHarness.Common;
-using Microsoft.DotNet.XHarness.Common.Execution;
 using Microsoft.DotNet.XHarness.Common.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared;
+using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
@@ -81,7 +81,7 @@ namespace Xharness {
 		readonly TestTarget target;
 		readonly string buildConfiguration = "Debug";
 
-		IProcessManager processManager;
+		IMlaunchProcessManager processManager;
 
 		public static readonly IHelpers Helpers = new Helpers ();
 
@@ -211,7 +211,7 @@ namespace Xharness {
 			if (string.IsNullOrEmpty (SdkRoot))
 				SdkRoot = config ["XCODE_DEVELOPER_ROOT"] ?? configuration.SdkRoot;
 
-			processManager = new ProcessManager (XcodeRoot, MlaunchPath, GetDotNetExecutable, XIBuildPath);
+			processManager = new MlaunchProcessManager (XcodeRoot, MlaunchPath);
 			TunnelBore = new TunnelBore (processManager);
 		}
 

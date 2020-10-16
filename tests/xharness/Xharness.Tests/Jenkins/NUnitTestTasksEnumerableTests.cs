@@ -3,7 +3,6 @@ using Microsoft.DotNet.XHarness.Common.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
-using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 using Moq;
 using NUnit.Framework;
 using Xharness.Jenkins;
@@ -13,7 +12,7 @@ namespace Xharness.Tests.Jenkins {
 	[TestFixture]
 	public class NUnitTestTaskEnumerableTests {
 
-		Mock<IProcessManager> processManager;
+		Mock<IMlaunchProcessManager> processManager;
 		Mock<IResultParser> resultParser;
 		Mock<ITunnelBore> tunnel;
 		Mock<ILog> log;
@@ -26,7 +25,7 @@ namespace Xharness.Tests.Jenkins {
 		[SetUp]
 		public void SetUp ()
 		{
-			processManager = new Mock<IProcessManager> ();
+			processManager = new Mock<IMlaunchProcessManager> ();
 			resultParser = new Mock<IResultParser> ();
 			tunnel = new Mock<ITunnelBore> ();
 			log = new Mock<ILog> ();

@@ -8,7 +8,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 namespace Xharness.Jenkins.TestTasks {
 	class RunXtroTask : MacExecuteTask
 	{
-		public RunXtroTask (Jenkins jenkins, BuildToolTask build_task, IProcessManager processManager, ICrashSnapshotReporterFactory crashReportSnapshotFactory)
+		public RunXtroTask (Jenkins jenkins, BuildToolTask build_task, IMlaunchProcessManager processManager, ICrashSnapshotReporterFactory crashReportSnapshotFactory)
 			: base (jenkins, build_task, processManager, crashReportSnapshotFactory)
 		{
 		}

@@ -10,7 +10,7 @@ using Microsoft.DotNet.XHarness.Common.Execution;
 using Microsoft.DotNet.XHarness.Common.Logging;
 using Microsoft.DotNet.XHarness.Common.Utilities;
 using Microsoft.DotNet.XHarness.iOS.Shared;
-using Microsoft.DotNet.XHarness.iOS.Shared.Execution.Mlaunch;
+using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
@@ -54,7 +54,7 @@ namespace Xharness.Tests {
 			)
 		};
 
-		Mock<IProcessManager> processManager;
+		Mock<IMlaunchProcessManager> processManager;
 		Mock<ISimulatorLoader> simulators;
 		Mock<IHardwareDeviceLoader> devices;
 		Mock<ISimpleListener> simpleListener;
@@ -74,7 +74,7 @@ namespace Xharness.Tests {
 			logs = new Mock<ILogs> ();
 			logs.SetupGet (x => x.Directory).Returns (Path.Combine (outputPath, "logs"));
 
-			processManager = new Mock<IProcessManager> ();
+			processManager = new Mock<IMlaunchProcessManager> ();
 			simulators = new Mock<ISimulatorLoader> ();
 			devices = new Mock<IHardwareDeviceLoader> ();
 			simpleListener = new Mock<ISimpleListener> ();
@@ -90,7 +90,7 @@ namespace Xharness.Tests {
 
 			var mock3 = new Mock<ISimpleListenerFactory> ();
 			mock3
-				.Setup (m => m.Create (It.IsAny<string> (), It.IsAny<RunMode> (), It.IsAny<ILog> (), It.IsAny<ILog> (), It.IsAny<bool> (), It.IsAny<bool> (), It.IsAny<bool> ()))
+				.Setup (m => m.Create (It.IsAny<RunMode> (), It.IsAny<ILog> (), It.IsAny<IFileBackedLog> (), It.IsAny<bool> (), It.IsAny<bool> (), It.IsAny<bool> ()))
 				.Returns ((ListenerTransport.Tcp, simpleListener.Object, "listener-temp-file"));
 			listenerFactory = mock3.Object;
 			simpleListener.Setup (x => x.InitializeAndGetPort()).Returns (listenerPort);
@@ -327,7 +327,7 @@ namespace Xharness.Tests {
 
 			simulators
 				.Setup (x => x.FindSimulators (TestTarget.Simulator_tvOS, mainLog.Object, true, false))
-				.ReturnsAsync ((ISimulatorDevice []) null);
+				.ReturnsAsync ((null, null));
 
 			var listenerLogFile = new Mock<IFileBackedLog> ();
 
@@ -512,7 +512,9 @@ namespace Xharness.Tests {
 		public void RunOnDeviceWithNoAvailableSimulatorTest ()
 		{
 			devices.Setup (d => d.FindDevice (It.IsAny<RunMode> (), It.IsAny<ILog> (), false, false)).ReturnsAsync ((IHardwareDevice)null);
-			simulators.Setup (s => s.FindSimulators (It.IsAny<TestTarget> (), It.IsAny<ILog> (), true, false)).ReturnsAsync ((ISimulatorDevice []) null);
+			simulators
+				.Setup (s => s.FindSimulators (It.IsAny<TestTarget> (), It.IsAny<ILog> (), true, false))
+				.ReturnsAsync ((null, null));
 
 			// Crash reporter
 			var crashReporterFactory = new Mock<ICrashSnapshotReporterFactory> ();

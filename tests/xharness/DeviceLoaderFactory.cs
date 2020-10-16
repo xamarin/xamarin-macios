@@ -1,5 +1,5 @@
 ﻿using System;
-using Microsoft.DotNet.XHarness.iOS.Shared.Execution.Mlaunch;
+using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 
 namespace Xharness {
@@ -9,9 +9,9 @@ namespace Xharness {
 	}
 
 	public class DeviceLoaderFactory : IDeviceLoaderFactory {
-		readonly IMLaunchProcessManager processManager;
+		readonly IMlaunchProcessManager processManager;
 
-		public DeviceLoaderFactory (IMLaunchProcessManager processManager)
+		public DeviceLoaderFactory (IMlaunchProcessManager processManager)
 		{
 			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 		}

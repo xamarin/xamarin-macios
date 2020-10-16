@@ -38,7 +38,7 @@ namespace Xharness.Jenkins.TestTasks {
 			}
 		}
 
-		public RunDeviceTask (Jenkins jenkins, IHardwareDeviceLoader devices, MSBuildTask buildTask, IProcessManager processManager, ITunnelBore tunnelBore, IErrorKnowledgeBase errorKnowledgeBase, bool useTcpTunnel, IEnumerable<IHardwareDevice> candidates)
+		public RunDeviceTask (Jenkins jenkins, IHardwareDeviceLoader devices, MSBuildTask buildTask, IMlaunchProcessManager processManager, ITunnelBore tunnelBore, IErrorKnowledgeBase errorKnowledgeBase, bool useTcpTunnel, IEnumerable<IHardwareDevice> candidates)
 			: base (jenkins, buildTask, processManager, candidates.OrderBy ((v) => v.DebugSpeed))
 		{
 			TunnelBore = tunnelBore;

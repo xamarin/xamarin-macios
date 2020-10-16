@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
-using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
+using Microsoft.DotNet.XHarness.Common.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Collections;
+using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
-using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
-using Microsoft.DotNet.XHarness.Common.Logging;
 
 namespace Xharness.Jenkins.TestTasks {
 	abstract class RunXITask<TDevice> : RunTestTask where TDevice : class, IDevice
@@ -26,7 +24,7 @@ namespace Xharness.Jenkins.TestTasks {
 
 		public string BundleIdentifier => Runner.AppInformation.BundleIdentifier;
 
-		public RunXITask (Jenkins jenkins, BuildToolTask build_task, IProcessManager processManager, IEnumerable<TDevice> candidates)
+		public RunXITask (Jenkins jenkins, BuildToolTask build_task, IMlaunchProcessManager processManager, IEnumerable<TDevice> candidates)
 			: base (jenkins, build_task, processManager)
 		{
 			this.Candidates = candidates;

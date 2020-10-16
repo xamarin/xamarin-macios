@@ -2,23 +2,25 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Text;
-using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
-using Xharness.Jenkins.TestTasks;
-using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
+using System.Threading.Tasks;
+using Microsoft.DotNet.XHarness.Common.Execution;
+using Microsoft.DotNet.XHarness.Common.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared;
+using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
+using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
+using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 using Xharness.Jenkins.Reports;
-using Microsoft.DotNet.XHarness.Common.Logging;
+using Xharness.Jenkins.TestTasks;
 using Xharness.Tasks;
 
 namespace Xharness.Jenkins {
 	class Jenkins {
 		public readonly ISimulatorLoader Simulators;
 		public readonly IHardwareDeviceLoader Devices;
-		readonly IProcessManager processManager;
+		readonly IMlaunchProcessManager processManager;
 		public ITunnelBore TunnelBore { get; private set; }
 		readonly TestSelector testSelector;
 		readonly TestVariationsFactory testVariationsFactory;
@@ -93,7 +95,7 @@ namespace Xharness.Jenkins {
 		public IErrorKnowledgeBase ErrorKnowledgeBase => new ErrorKnowledgeBase ();
 		public IResourceManager ResourceManager => resourceManager;
 
-		public Jenkins (IHarness harness, IProcessManager processManager, IResultParser resultParser, ITunnelBore tunnelBore)
+		public Jenkins (IHarness harness, IMlaunchProcessManager processManager, IResultParser resultParser, ITunnelBore tunnelBore)
 		{
 			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 			this.TunnelBore = tunnelBore ?? throw new ArgumentNullException (nameof (tunnelBore));
@@ -240,9 +242,9 @@ namespace Xharness.Jenkins {
 		{
 			try {
 				Directory.CreateDirectory (LogDirectory);
-				ILog log = Logs.Create ($"Harness-{Xharness.Harness.Helpers.Timestamp}.log", "Harness log");
+				IFileBackedLog log = Logs.Create ($"Harness-{Xharness.Harness.Helpers.Timestamp}.log", "Harness log");
 				if (Harness.InCI)
-					log = Log.CreateAggregatedLog (log, new ConsoleLog ());
+					log = Log.CreateReadableAggregatedLog (log, new ConsoleLog ());
 				Harness.HarnessLog = MainLog = log;
 
 				var tasks = new List<Task> ();

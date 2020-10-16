@@ -21,7 +21,7 @@ namespace Xharness.Jenkins.TestTasks {
 		public bool BCLTest;
 		public bool IsUnitTest;
 
-		public MacExecuteTask (Jenkins jenkins, BuildToolTask build_task, IProcessManager processManager, ICrashSnapshotReporterFactory crashReportSnapshotFactory)
+		public MacExecuteTask (Jenkins jenkins, BuildToolTask build_task, IMlaunchProcessManager processManager, ICrashSnapshotReporterFactory crashReportSnapshotFactory)
 			: base (jenkins, build_task, processManager)
 		{
 			this.CrashReportSnapshotFactory = crashReportSnapshotFactory ?? throw new ArgumentNullException (nameof (crashReportSnapshotFactory));

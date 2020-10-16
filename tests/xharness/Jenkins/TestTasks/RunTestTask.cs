@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.DotNet.XHarness.Common.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared;
+using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 using Xharness.TestTasks;
 
@@ -11,7 +12,7 @@ namespace Xharness.Jenkins.TestTasks {
 	internal abstract class RunTestTask : AppleTestTask, IRunTestTask
 	{
 		protected RunTest runTest;
-		public IProcessManager ProcessManager => runTest.ProcessManager;
+		public IMlaunchProcessManager ProcessManager => runTest.ProcessManager;
 		public IBuildToolTask BuildTask => runTest.BuildTask;
 
 		public double TimeoutMultiplier {
@@ -29,7 +30,7 @@ namespace Xharness.Jenkins.TestTasks {
 			set => runTest.Timeout = value;
 		}
 
-		public RunTestTask (Jenkins jenkins, IBuildToolTask build_task, IProcessManager processManager) : base (jenkins)
+		public RunTestTask (Jenkins jenkins, IBuildToolTask build_task, IMlaunchProcessManager processManager) : base (jenkins)
 		{
 			runTest = new RunTest (
 				testTask: this,

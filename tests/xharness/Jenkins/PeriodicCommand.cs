@@ -41,7 +41,7 @@ namespace Xharness.Jenkins {
 					process.StartInfo.FileName = command;
 					process.StartInfo.Arguments = arguments;
 					ProcessExecutionResult? rv = cancellationToken.HasValue 
-						? await processManager.RunAsync (process, log, timeout: interval, cancellation_token: cancellationToken)
+						? await processManager.RunAsync (process, log, timeout: interval, cancellationToken: cancellationToken)
 						: await processManager.RunAsync (process, log, timeout: interval);
 					if (rv != null && !rv.Succeeded)
 						log.WriteLine ($"Periodic command failed with exit code {rv.ExitCode} (Timed out: {rv.TimedOut})");

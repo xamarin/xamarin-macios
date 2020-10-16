@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Xharness.Jenkins.TestTasks;
 
@@ -10,9 +9,9 @@ namespace Xharness.Jenkins {
 	class NUnitTestTasksEnumerable : IEnumerable<NUnitExecuteTask> {
 
 		readonly Jenkins jenkins;
-		readonly IProcessManager processManager;
+		readonly IMlaunchProcessManager processManager;
 
-		public NUnitTestTasksEnumerable (Jenkins jenkins, IProcessManager processManager)
+		public NUnitTestTasksEnumerable (Jenkins jenkins, IMlaunchProcessManager processManager)
 		{
 			this.jenkins = jenkins ?? throw new ArgumentNullException (nameof (jenkins));
 			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));

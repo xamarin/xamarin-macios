@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.DotNet.XHarness.Common.Execution;
 using Microsoft.DotNet.XHarness.Common.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared;
-using Microsoft.DotNet.XHarness.iOS.Shared.Execution.Mlaunch;
+using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
@@ -19,7 +19,7 @@ using Xharness.TestTasks;
 namespace Xharness {
 
 	public class AppRunner {
-		readonly IProcessManager processManager;
+		readonly IMlaunchProcessManager processManager;
 		readonly ISimulatorLoaderFactory simulatorsLoaderFactory;
 		readonly ISimpleListenerFactory listenerFactory;
 		readonly IDeviceLoaderFactory devicesLoaderFactory;
@@ -62,7 +62,7 @@ namespace Xharness {
 
 		public ILogs Logs { get; }
 
-		public AppRunner (IProcessManager processManager,
+		public AppRunner (IMlaunchProcessManager processManager,
 						  IAppBundleInformationParser appBundleInformationParser,
 						  ISimulatorLoaderFactory simulatorsFactory,
 						  ISimpleListenerFactory simpleListenerFactory,
