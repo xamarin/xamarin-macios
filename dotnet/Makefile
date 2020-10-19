@@ -181,7 +181,7 @@ $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call InstallWorkload,$(platform)
 
 # We create three packages: one for the workload, one for the sdk package, and one for the ref package,
 # and then bundle them into a single pkg for distribution (named Microsoft.<platform>.Bundle.<version>.pkg).
-# This way we can create and publish separate updated for each workload/sdk/ref package later if we want to.
+# This way we can create and publish separate updates for each workload/sdk/ref package later if we want to.
 define CreatePackage
 # The workload package
 $(TMP_PKG_DIR)/Microsoft.$1.Workload.$2.pkg: $($(1)_NUGET_TARGETS) $(WORKLOAD_TARGETS) Makefile | $(TMP_PKG_DIR)

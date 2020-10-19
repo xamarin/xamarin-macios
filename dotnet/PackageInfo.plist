@@ -3,8 +3,8 @@
 <plist version="1.0">
 <!--
 
-	This file is contains a list of app bundles contained with the package
-	we're creating.
+	This file contains a list of app bundles contained with the package we're
+	creating.
 
 	Here we define an empty array of app bundles, because we don't have any
 	app bundles in the package, nor do we want pkgbuild to guess. The Sdk
