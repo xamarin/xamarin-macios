@@ -1354,5 +1354,11 @@ namespace Xamarin.Localization.MSBuild {
                 return ResourceManager.GetString("E7069", resourceCulture);
             }
         }
+        
+        public static string E7070 {
+            get {
+                return ResourceManager.GetString("E7070", resourceCulture);
+            }
+        }
     }
 }
