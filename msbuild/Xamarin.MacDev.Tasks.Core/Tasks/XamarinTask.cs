@@ -111,8 +111,10 @@ namespace Xamarin.MacDev.Tasks {
 				output += rv.StandardError.ToString ();
 			}
 			if (output.Length > 0)
-			if (rv.ExitCode != 0)
 				Log.LogMessage (rv.ExitCode == 0 ? MessageImportance.Low : MessageImportance.Normal, output);
+
+			if (rv.ExitCode != 0)
+				Log.LogError (MSBStrings.E0117, /* {0} exited with code {1} */ fileName == "xcrun" ? arguments [0] : fileName, rv.ExitCode);
 
 			return rv;
 		}
