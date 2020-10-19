@@ -86,7 +86,7 @@
 	
 	<PropertyGroup>
 		<!-- We must run the linker for executable projects and app extension projects. We must set PublishTrimmed before importing Microsoft.NET.Sdk, because it'll be evaluated there. -->
-		<PublishTrimmed Condition="'$(PublishTrimmed)' == '' And ($(_ProjectType.EndsWith ('ExecutableProject')) Or $(_ProjectType.EndsWith ('AppExtensionProject')))">true</PublishTrimmed>
+		<PublishTrimmed Condition="'$(PublishTrimmed)' == '' And ($(_ProjectType.EndsWith ('ExecutableProject')) Or $(_ProjectType.EndsWith ('AppExtensionProject'))) And '$(IsMacEnabled)' == 'true'">true</PublishTrimmed>
 
 		<!-- App extensions are self-contained, even though their OutputType=Library -->
 		<SelfContained Condition="'$(SelfContained)' == '' And $(_ProjectType.EndsWith ('AppExtensionProject'))">true</SelfContained>
@@ -404,8 +404,16 @@
 		</PropertyGroup>
 
 		<!-- install_name_tool modifies the file in-place, so copy it first to a temporary directory before we fix it -->
-		<Copy SourceFiles="%(_MonoLibrary.FullPath)" DestinationFolder="$(_IntermediateNativeLibraryDir)" />
-		<Exec Command="xcrun install_name_tool -id $(_ExecutablePathPrefix)%(_MonoLibrary.Filename)%(_MonoLibrary.Extension) $(_IntermediateNativeLibraryDir)%(_MonoLibrary.Filename)%(_MonoLibrary.Extension)" EnvironmentVariables="DEVELOPER_DIR=$(_SdkDevPath)" />
+		<Copy
+			Condition="'$(IsMacEnabled)' == 'true'"
+			SourceFiles="%(_MonoLibrary.FullPath)"
+			DestinationFolder="$(_IntermediateNativeLibraryDir)"
+		/>
+		<Exec
+			Condition="'$(IsMacEnabled)' == 'true'"
+			Command="xcrun install_name_tool -id $(_ExecutablePathPrefix)%(_MonoLibrary.Filename)%(_MonoLibrary.Extension) $(_IntermediateNativeLibraryDir)%(_MonoLibrary.Filename)%(_MonoLibrary.Extension)"
+			EnvironmentVariables="DEVELOPER_DIR=$(_SdkDevPath)"
+		/>
 
 		<!-- Update our item groups -->
 		<ItemGroup>
