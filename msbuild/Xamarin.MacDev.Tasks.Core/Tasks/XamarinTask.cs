@@ -92,7 +92,7 @@ namespace Xamarin.MacDev.Tasks {
 			}
 		}
 
-		protected async System.Threading.Tasks.Task<Execution> ExecuteAsync (string fileName, IList<string> arguments, string sdkDevPath, Dictionary<string, string> environment = null, bool mergeOutput = true)
+		protected async System.Threading.Tasks.Task<Execution> ExecuteAsync (string fileName, IList<string> arguments, string sdkDevPath, Dictionary<string, string> environment = null, bool mergeOutput = true, bool showErrorIfFailure = true)
 		{
 			// Create a new dictionary if we're given one, to make sure we don't change the caller's dictionary.
 			var launchEnvironment = environment == null ? new Dictionary<string, string> () : new Dictionary<string, string> (environment);
@@ -113,7 +113,7 @@ namespace Xamarin.MacDev.Tasks {
 			if (output.Length > 0)
 				Log.LogMessage (rv.ExitCode == 0 ? MessageImportance.Low : MessageImportance.Normal, output);
 
-			if (rv.ExitCode != 0)
+			if (showErrorIfFailure && rv.ExitCode != 0)
 				Log.LogError (MSBStrings.E0117, /* {0} exited with code {1} */ fileName == "xcrun" ? arguments [0] : fileName, rv.ExitCode);
 
 			return rv;
