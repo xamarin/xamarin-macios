@@ -105,6 +105,11 @@ namespace AVKit {
 		[NoWatch, NoMac, NoiOS]
 		[Export ("canStopPictureInPicture")]
 		bool CanStopPictureInPicture { get; }
+
+		[iOS (14,2)]
+		[NoWatch, NoTV, NoMac]
+		[Export ("canStartPictureInPictureAutomaticallyFromInline")]
+		bool CanStartPictureInPictureAutomaticallyFromInline { get; set; }
 	}
 	
 	interface IAVPictureInPictureControllerDelegate {}
@@ -260,6 +265,11 @@ namespace AVKit {
 		[iOS (14, 0), NoTV]
 		[Export ("showsTimecodes")]
 		bool ShowsTimecodes { get; set; }
+
+		[iOS (14,2)]
+		[NoWatch, NoTV]
+		[Export ("canStartPictureInPictureAutomaticallyFromInline")]
+		bool CanStartPictureInPictureAutomaticallyFromInline { get; set; }
 	}
 
 	[NoMac]
