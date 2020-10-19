@@ -84,6 +84,7 @@ namespace MonoTouchFixtures.Network {
 			// 
 			// The test will block until the different events are set by the callbacks that are executed in a diff thread.
 			bool didRun = false;
+			bool receivedNotNullChange = false;
 			bool eventsDone = false;
 			bool listeningDone = false;
 			Exception ex = null;
@@ -99,9 +100,9 @@ namespace MonoTouchFixtures.Network {
 						browserReady.Set ();
 				});
 				browser.SetChangesHandler ((oldResult, newResult) => {
-					didRan = true;
+					didRun = true;
 					try {
-						Assert.IsTrue (oldResult != null || newResult != null);
+						receivedNotNullChange = oldResult != null || newResult != null;
 					} catch (Exception e) {
 						ex = e;
 					} finally {
@@ -143,7 +144,8 @@ namespace MonoTouchFixtures.Network {
 			Assert.IsTrue (eventsDone, "eventDone");
 			Assert.IsTrue (listeningDone, "listeningDone");
 			Assert.IsNull (ex, "Exception");
-			Assert.IsTrue (didRan, "didRan");
+			Assert.IsTrue (didRun, "didRan");
+			Assert.IsTrue (receivedNotNullChange, "receivedNotNullChange");
 			browser.Cancel ();
 		}
 	}
