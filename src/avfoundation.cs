@@ -11532,7 +11532,8 @@ namespace AVFoundation {
 		bool StartsOnFirstEligibleVariant { get; set; }
 
 		[iOS (14,1)]
-		[NoWatch][NoTV][NoMac]
+		[TV (14,2)][Mac (11,0)]
+		[NoWatch]
 		[Export ("appliesPerFrameHDRDisplayMetadata")]
 		bool AppliesPerFrameHdrDisplayMetadata { get; set; }
 	}
@@ -13722,7 +13723,8 @@ namespace AVFoundation {
 		[Field ("AVSemanticSegmentationMatteTypeTeeth")]
 		Teeth,
 		[iOS (14,1)]
-		[NoWatch][NoTV][NoMac]
+		[Mac (11,0)]
+		[NoWatch][NoTV]
 		[Field ("AVSemanticSegmentationMatteTypeGlasses")]
 		Glasses,
 	} 
