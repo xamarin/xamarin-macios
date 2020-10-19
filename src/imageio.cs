@@ -71,7 +71,7 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyWebPDictionary")]
 		NSString WebPDictionary { get; }
 
-		[Mac (11,0), iOS (14,2), TV (14,2), Watch (7,1)]
+		[Mac (11,0), iOS (14,1), TV (14,2), Watch (7,1)]
 		[Field ("kCGImagePropertyTGADictionary")]
 		NSString TgaDictionary { get; }
 
@@ -2035,7 +2035,7 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyWebPCanvasPixelHeight")]
 		NSString WebPCanvasPixelHeight { get; }
 
-		[Mac (11,0), iOS (14,2), TV (14,2), Watch (7,1)]
+		[Mac (11,0), iOS (14,1), TV (14,2), Watch (7,1)]
 		[Field ("kCGImagePropertyTGACompression")]
 		NSString TgaCompression { get; }
 	}
@@ -2213,9 +2213,13 @@ namespace ImageIO {
 		[Export ("WebPDictionary")]
 		NSDictionary WebPDictionary { get; set; }
 
-		[Mac (11,0), iOS (14,2), TV (14,2),  Watch (7,1)]
+		[Mac (11,0), iOS (14,1), TV (14,2),  Watch (7,1)]
 		[Export ("TgaDictionary")]
 		NSDictionary TgaDictionary { get; set; }
+
+		[iOS (14,1)]
+		[TV (14,2)][Watch (7,1)][Mac (11,0)]
+		bool PreserveGainMap { get; set; }
 	}
 
 	[Static]
@@ -2293,9 +2297,14 @@ namespace ImageIO {
 		[Static][Wrap ("CGImageProperties.WebPDictionary")]
 		NSString WebPDictionary { get; }
 
-		[Mac (11,0), iOS (14,2), TV (14,2), Watch (7,1)]
+		[Mac (11,0), iOS (14,1), TV (14,2), Watch (7,1)]
 		[Static][Wrap ("CGImageProperties.TgaDictionary")]
 		NSString TgaDictionary { get; }
+
+		[iOS (14,1)]
+		[TV (14,2)][Watch (7,1)][Mac (11,0)]
+		[Field ("kCGImageDestinationPreserveGainMap")]
+		NSString PreserveGainMapKey { get; }
 	}
 
 	[Partial]
@@ -2349,6 +2358,16 @@ namespace ImageIO {
 		[iOS (13,0)][TV (13,0)][Watch (6,0)][Mac (10,15)]
 		[Field ("kCGImageAuxiliaryDataTypeSemanticSegmentationTeethMatte")]
 		SemanticSegmentationTeethMatte,
+
+		[iOS (14,1)]
+		[TV (14,2)][Watch (7,1)][Mac (11,0)]
+		[Field ("kCGImageAuxiliaryDataTypeSemanticSegmentationGlassesMatte")]
+		SemanticSegmentationGlassesMatte,
+
+		[iOS (14,1)]
+		[TV (14,2)][Watch (7,1)][Mac (11,0)]
+		[Field ("kCGImageAuxiliaryDataTypeHDRGainMap")]
+		TypeHdrGainMap,
 	}
 
 	[Mac (10,13), iOS (11,0), TV (11,0), Watch (4,0)]
