@@ -85,9 +85,6 @@
 	</ItemGroup>
 	
 	<PropertyGroup>
-		<!-- We must run the linker for executable projects and app extension projects. We must set PublishTrimmed before importing Microsoft.NET.Sdk, because it'll be evaluated there. -->
-		<PublishTrimmed Condition="'$(PublishTrimmed)' == '' And ($(_ProjectType.EndsWith ('ExecutableProject')) Or $(_ProjectType.EndsWith ('AppExtensionProject'))) And '$(IsMacEnabled)' == 'true'">true</PublishTrimmed>
-
 		<!-- App extensions are self-contained, even though their OutputType=Library -->
 		<SelfContained Condition="'$(SelfContained)' == '' And $(_ProjectType.EndsWith ('AppExtensionProject'))">true</SelfContained>
 
@@ -596,4 +593,9 @@
 	<Import Project="$(_TargetsDirectory)Xamarin.Mac.$(_ProjectLanguage).targets"                  Condition="'$(_ProjectType)' == 'macOSExecutableProject' Or '$(_ProjectType)' == 'macOSClassLibrary' " />
 	<Import Project="$(_TargetsDirectory)Xamarin.Mac.AppExtension.$(_ProjectLanguage).targets"     Condition="'$(_ProjectType)' == 'macOSAppExtensionProject' " />
 	<Import Project="$(_TargetsDirectory)Xamarin.Mac.ObjCBinding.$(_ProjectLanguage).targets"      Condition="'$(_ProjectType)' == 'macOSBindingProject' " />
+
+	<PropertyGroup>
+		<!-- PublishTrimmed depends on IsMacEnabled, which is defined in the Xamarin.iOS/Xamarin.Mac targets files we import just above here -->
+		<PublishTrimmed Condition="'$(PublishTrimmed)' == '' And ($(_ProjectType.EndsWith ('ExecutableProject')) Or $(_ProjectType.EndsWith ('AppExtensionProject'))) And '$(IsMacEnabled)' == 'true'">true</PublishTrimmed>
+	</PropertyGroup>
 </Project>
