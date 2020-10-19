@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project Sdk="Microsoft.watchOS.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net5.0-watchos</TargetFramework>
     <NativeLibName>watchos-fat</NativeLibName>
@@ -9,6 +9,6 @@
   <Import Project="..\shared.targets" />
   <ItemGroup>
     <PackageReference Include="NUnitLite" Version="3.12.0" />
-    <ProjectReference Include="$(RootTestsDirectory)\bindings-test\dotnet\iOS\bindings-test.csproj" />
+    <ProjectReference Include="$(RootTestsDirectory)\bindings-test\dotnet\watchOS\bindings-test.csproj" />
   </ItemGroup>
 </Project>

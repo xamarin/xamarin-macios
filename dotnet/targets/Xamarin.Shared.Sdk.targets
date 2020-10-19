@@ -2,9 +2,20 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
 	<PropertyGroup>
+		<!-- Set to true when using the Microsoft.<platform>.Sdk NuGet. This is used by pre-existing/shared targets to tweak behavior depending on build system -->
+		<_UsingXamarinSdk>true</_UsingXamarinSdk>
+		<!-- This is the location of the Microsoft.<platform>.Sdk NuGet (/usr/local/share/dotnet/sdk/<version>/Sdks/Microsoft.[iOS/tvOS/watchOS/macOS].Sdk) -->
+		<_XamarinSdkRootDirectory>$([MSBuild]::NormalizePath('$(MSBuildThisFileDirectory)', '..'))\</_XamarinSdkRootDirectory>
+
 		<_XamarinTaskAssembly Condition="'$(_PlatformName)' != 'macOS'">$(_XamarinSdkRootDirectory)\tools\msbuild\iOS\Xamarin.iOS.Tasks.dll</_XamarinTaskAssembly>
 		<_XamarinTaskAssembly Condition="'$(_PlatformName)' == 'macOS'">$(_XamarinSdkRootDirectory)\tools\msbuild\macOS\Xamarin.Mac.Tasks.dll</_XamarinTaskAssembly>
 	</PropertyGroup>
+
+	<!-- Version information -->
+	<Import Project="Xamarin.Shared.Sdk.Versions.targets" />
+
+	<!-- This contains the OS versions we support for target platform -->
+	<Import Project="Microsoft.$(_PlatformName).Sdk.SupportedTargetPlatforms.targets" />
 
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CompileNativeCode" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.LinkNativeCode" AssemblyFile="$(_XamarinTaskAssembly)" />
@@ -111,8 +122,6 @@
 		<!-- On the other hand, we want the linker to link away debug support in the actual code unless we're building for Debug -->
 		<DebuggerSupport Condition="'$(DebuggerSupport)' == ''">$(_BundlerDebug)</DebuggerSupport>
 	</PropertyGroup>
-
-	<Import Sdk="Microsoft.NET.Sdk" Project="Sdk.targets" />
 
 	<PropertyGroup>
 		<TargetPlatformSupported Condition=" '$(TargetPlatformIdentifier)' == '$(_PlatformName)' ">true</TargetPlatformSupported>

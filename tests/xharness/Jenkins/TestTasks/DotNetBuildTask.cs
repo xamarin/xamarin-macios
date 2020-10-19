@@ -44,6 +44,10 @@ namespace Xharness.Jenkins.TestTasks {
 			environment ["MSBuildSDKsPath"] = null;
 			environment ["TargetFrameworkFallbackSearchPaths"] = null;
 			environment ["MSBuildExtensionsPathFallbackPathsOverride"] = null;
+
+			// This is a temporary variable to enable the .NET workload resolver, because it's opt-in for now.
+			// Ref: https://github.com/dotnet/sdk/issues/13849
+			environment ["MSBuildEnableWorkloadResolver"] = "true";
 		}
 	}
 }

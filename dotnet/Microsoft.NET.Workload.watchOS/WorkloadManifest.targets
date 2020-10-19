@@ -1,0 +1,3 @@
+<Project>
+	<Import Project="Sdk.targets" Sdk="Microsoft.watchOS.Sdk" Condition="'$(TargetPlatformIdentifier)' == 'watchOS'" />
+</Project>
