@@ -5186,11 +5186,11 @@ namespace CoreImage {
 		[CoreImageFilterProperty ("inputAuxDataMetadata")]
 		CGImageMetadata AuxDataMetadata { get; set; }
 
-		[iOS (14,1)][TV (14,2)][NoMac]
+		[iOS (14,1)][TV (14,2)][Mac (11,0)]
 		[CoreImageFilterProperty ("inputGainMap")]
 		CIImage GainMap { get; set; }
 
-		[iOS (14,1)][TV (14,2)][NoMac]
+		[iOS (14,1)][TV (14,2)][Mac (11,0)]
 		[CoreImageFilterProperty ("inputGlassesImage")]
 		CIImage GlassesImage { get; set; }
 	}
