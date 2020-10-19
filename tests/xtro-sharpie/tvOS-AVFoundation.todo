@@ -1,2 +1,0 @@
-!missing-selector! AVPlayerItem::appliesPerFrameHDRDisplayMetadata not bound
-!missing-selector! AVPlayerItem::setAppliesPerFrameHDRDisplayMetadata: not bound
