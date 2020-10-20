@@ -867,8 +867,13 @@ timestamps {
                                         failedStages.add (currentStage)
                                     } else {
                                         def packaged_xm_tests = findFiles (glob: "tests/*.7z")
-                                        if (packaged_xm_tests.size () > 0)
+                                        if (packaged_xm_tests.size () > 0) {
                                             uploadFiles ("tests/*.7z", "wrench", virtualPath)
+                                        } else {
+                                            // This may happen if the Xamarin.Mac build has been disabled
+                                            manager.addWarningBadge("Could not find any packaged Xamarin.Mac tests to upload")
+                                            hasXamarinMacTests = false
+                                        }
                                     }
                                 }
                             }
