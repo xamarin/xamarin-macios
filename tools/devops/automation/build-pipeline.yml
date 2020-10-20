@@ -1,0 +1,47 @@
+# YAML pipeline build definition
+# 
+# YAML build pipeline based on the Jenkins multi-stage (main branch) build workflow
+# https://jenkins.internalx.com/view/Xamarin.MaciOS/job/macios/job/main/
+# https://jenkins.internalx.com/view/Xamarin.MaciOS/job/macios/configure
+#
+resources:
+  repositories:
+  - repository: self
+    checkoutOptions:
+      submodules: true
+
+  - repository: templates
+    type: github
+    name: xamarin/yaml-templates
+    ref: refs/heads/main
+    endpoint: xamarin
+
+trigger:
+- main
+- d16-*
+
+pr:
+  autoCancel: true
+  branches:
+    include:
+    - main
+    - d16-*
+
+variables:
+- name: system.debug
+  value: false
+
+jobs:
+- job: Build
+  pool:
+    vmImage: macOS-10.15
+
+  steps:
+  - checkout: self          # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
+    clean: true             # Executes: git clean -ffdx && git reset --hard HEAD
+    submodules: recursive
+
+  - powershell: |
+      gci env: | format-table -autosize -wrap
+    displayName: 'Dump Environment'
+
