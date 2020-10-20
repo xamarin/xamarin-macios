@@ -30,18 +30,8 @@ namespace VideoToolbox {
 			var dicts = NSArray.ArrayFromHandle<NSDictionary> (array);
 			var ret = new VTVideoEncoder [dicts.Length];
 			int i = 0;
-			foreach (var dict in dicts){
-				var e = new VTVideoEncoder ();
-				e.CodecType = (dict [VTVideoEncoderList.CodecType] as NSNumber).Int32Value;
-				e.CodecName = dict [VTVideoEncoderList.CodecName] as NSString;
-				e.DisplayName = dict [VTVideoEncoderList.DisplayName] as NSString;
-				e.EncoderId = dict [VTVideoEncoderList.EncoderID] as NSString;
-				e.EncoderName = dict [VTVideoEncoderList.EncoderName] as NSString;
-				// here should be missing constants - https://github.com/xamarin/xamarin-macios/issues/9904
-				var sfr = dict [VTVideoEncoderList.SupportsFrameReordering] as NSNumber;
-				e.SupportsFrameReordering = sfr == null ? true : sfr.BoolValue; // optional, default true
-				ret [i++] = e;
-			}
+			foreach (var dict in dicts)
+				ret [i++] = new VTVideoEncoder (dict);
 			CFObject.CFRelease (array);
 			return ret;
 		}
@@ -52,11 +42,78 @@ namespace VideoToolbox {
 		public string EncoderId { get; private set; }
 		public string EncoderName { get; private set; }
 
+		[Mac (10,14,6), iOS (13,0), TV (13,0)]
+		public ulong? GpuRegistryId { get; private set; } // optional, same type as `[MTLDevice registryID]`
+
+		[Mac (10,14,6), iOS (13,0), TV (13,0)]
+		public NSDictionary SupportedSelectionProperties {get; private set; }
+
+		[Mac (10,14,6), iOS (13,0), TV (13,0)]
+		public NSNumber PerformanceRating { get; private set; }
+
+		[Mac (10,14,6), iOS (13,0), TV (13,0)]
+		public NSNumber QualityRating { get; private set; }
+
+		[Mac (10,14,6), iOS (13,0), TV (13,0)]
+		public bool? InstanceLimit { get; private set; }
+
+		[Mac (10,14,6), iOS (13,0), TV (13,0)]
+		public bool? IsHardwareAccelerated { get; private set; }
+
 		[iOS (14,2)][TV (14,2)][Mac (11,0)]
 		public bool SupportsFrameReordering { get; private set; }
-				
-		internal VTVideoEncoder ()
+
+		internal VTVideoEncoder (NSDictionary dict)
 		{
+			CodecType = (dict [VTVideoEncoderList.CodecType] as NSNumber).Int32Value;
+			CodecName = dict [VTVideoEncoderList.CodecName] as NSString;
+			DisplayName = dict [VTVideoEncoderList.DisplayName] as NSString;
+			EncoderId = dict [VTVideoEncoderList.EncoderID] as NSString;
+			EncoderName = dict [VTVideoEncoderList.EncoderName] as NSString;
+
+			// added in Xcode 11 so the constants won't exists in earlier SDK, making all values optional
+
+			var constant = VTVideoEncoderList.GpuRegistryId;
+			if (constant != null) {
+				var gri = dict [constant] as NSNumber;
+				GpuRegistryId = gri?.UInt64Value; // optional
+			}
+
+			constant = VTVideoEncoderList.SupportedSelectionProperties;
+			if (constant != null) {
+				if (dict.TryGetValue (constant, out NSDictionary d)) // optional
+					SupportedSelectionProperties = d;
+			}
+
+			constant = VTVideoEncoderList.PerformanceRating;
+			if (constant != null) {
+				PerformanceRating = dict [constant] as NSNumber; // optional
+			}
+
+			constant = VTVideoEncoderList.QualityRating;
+			if (constant != null) {
+				QualityRating = dict [constant] as NSNumber; // optional
+			}
+
+			constant = VTVideoEncoderList.InstanceLimit;
+			if (constant != null) {
+				var il = dict [constant] as NSNumber;
+				InstanceLimit = il?.BoolValue; // optional
+			}
+
+			constant = VTVideoEncoderList.IsHardwareAccelerated;
+			if (constant != null) {
+				var ha = dict [constant] as NSNumber;
+				IsHardwareAccelerated = ha?.BoolValue; // optional
+			}
+
+			// added in xcode 12.2 so the constant won't exists in earlier SDK
+
+			constant = VTVideoEncoderList.SupportsFrameReordering;
+			if (constant != null) {
+				var sfr = dict [constant] as NSNumber;
+				SupportsFrameReordering = sfr == null ? true : sfr.BoolValue; // optional, default true
+			}
 		}
 
 		[Mac (10,13), iOS (11,0), TV (11,0)]
