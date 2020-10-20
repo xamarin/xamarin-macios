@@ -124,6 +124,27 @@ namespace Samples {
 				if (!string.IsNullOrEmpty (data.KnownFailure))
 					Assert.Ignore (data.KnownFailure);
 
+				switch (data.Project.Platform) {
+				case TestPlatform.iOS:
+					if (!Configuration.include_ios)
+						Assert.Ignore ("iOS support has been disabled.");
+					break;
+				case TestPlatform.tvOS:
+					if (!Configuration.include_tvos)
+						Assert.Ignore ("tvOS support has been disabled");
+					break;
+				case TestPlatform.watchOS:
+					if (!Configuration.include_watchos)
+						Assert.Ignore ("watchOS support has been disabled");
+					break;
+				case TestPlatform.macOS:
+					if (!Configuration.include_mac)
+						Assert.Ignore ("macOS support has been disabled");
+					break;
+				default:
+					throw new NotImplementedException (sampleTestData.Platform.ToString ());
+				}
+
 				var environment_variables = new Dictionary<string, string> ();
 				environment_variables ["MD_APPLE_SDK_ROOT"] = Path.GetDirectoryName (Path.GetDirectoryName (Configuration.XcodeLocation));
 				switch (data.Project.Platform) {
