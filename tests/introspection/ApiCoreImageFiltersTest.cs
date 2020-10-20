@@ -75,6 +75,7 @@ namespace Introspection {
 		// this test checks that all native filters have a managed peer, i.e. against missing filters
 		public void CheckNativeFilters ()
 		{
+			Errors = 0;
 			List<string> filters = new List<string> ();
 			int n = 0;
 			string qname = CIFilterType.AssemblyQualifiedName;
@@ -97,6 +98,7 @@ namespace Introspection {
 		// this test checks that all managed filters have a native peer, i.e. against extra filters
 		public void CheckManagedFilters ()
 		{
+			Errors = 0;
 			ContinueOnFailure = true;
 			List<string> filters = new List<string> (CIFilter.FilterNamesInCategories (null));
 			var superFilters = new List<string> ();
@@ -210,6 +212,7 @@ namespace Introspection {
 		[Test]
 		public void Protocols ()
 		{
+			Errors = 0;
 			var to_confirm_manually = new StringBuilder ();
 			ContinueOnFailure = true;
 			var nspace = CIFilterType.Namespace;
@@ -363,6 +366,7 @@ namespace Introspection {
 		[Test]
 		public void Keys ()
 		{
+			Errors = 0;
 			ContinueOnFailure = true;
 			var nspace = CIFilterType.Namespace;
 			var types = CIFilterType.Assembly.GetTypes ();
