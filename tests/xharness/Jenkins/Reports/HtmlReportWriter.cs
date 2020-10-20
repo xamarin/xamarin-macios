@@ -96,6 +96,7 @@ namespace Xharness.Jenkins.Reports {
 			if (jenkins.IsServerMode && jenkins.Populating)
 				writer.WriteLine ("<meta http-equiv=\"refresh\" content=\"1\">");
 			writer.WriteLine ("<head>");
+			writer.WriteLine ("<meta charset=\"utf-8\"/>");
 			IncludeCss (writer);
 			writer.WriteLine ("<title>Test results</title>");
 			IncludeJavascript (writer);
