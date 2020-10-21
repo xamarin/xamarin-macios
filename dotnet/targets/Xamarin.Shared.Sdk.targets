@@ -422,7 +422,7 @@
 		/>
 
 		<!-- Update our item groups -->
-		<ItemGroup>
+		<ItemGroup Condition="'$(IsMacEnabled)' == 'true'">
 			<_MonoLibraryFixed Include="@(_MonoLibrary -> '$(_IntermediateNativeLibraryDir)%(Filename)%(Extension)')" />
 			<ResolvedFileToPublish Remove="@(_MonoLibrary)" />
 			<ResolvedFileToPublish Include="@(_MonoLibraryFixed)" />
