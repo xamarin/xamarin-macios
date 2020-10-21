@@ -68,11 +68,9 @@ steps:
 
 # Use the cmdlet to post a new summary comment. The cmdlet checks if we have the TestSummary.md file or not. It will also add the appropriate links to the commnet. 
 # this step uses variables that have been set by the tests job dependency via output variables, those variables contain if the xamarin-storage could be used and its path
-- powershell: |
-    $env:VSDROPS_INDEX="$Env:VSDROPSPREFIX/$Env:BUILD_BUILDNUMBER/$Env:BUILD_BUILDID;/tests/vsdrops_index.html"
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\device-tests\scripts\GitHub.psm1 
-    $response = New-GitHubSummaryComment -Context "$Env:CONTEXT" -XamarinStoragePath "$Env:XAMARIN_STORAGE_PATH" -TestSummaryPath "$Env:TESTS_SUMMARY"
-    Write-Host $response
+- pwsh: |
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\tools\devops\device-tests\scripts\GitHub.psm1 
+    New-GitHubSummaryComment -Context "$Env:CONTEXT" -XamarinStoragePath "$Env:XAMARIN_STORAGE_PATH" -TestSummaryPath "$Env:TESTS_SUMMARY"
   env:
     BUILD_REVISION: $(BUILD_REVISION)
     CONTEXT: ${{ parameters.statusContext }}
@@ -80,8 +78,8 @@ steps:
     XAMARIN_STORAGE_PATH: $(XAMARIN_STORAGE_PATH) # could be null if the step was not executed if we use vsdrops, the cmdlet will know how to handle that case
     XAMARIN_STORAGE_FAILED: $(XAMARIN_STORAGE_FAILED) # could not reach xamarin-storage, either the bot is not in the vpn or it finally failed
     TESTS_JOBSTATUS: $(TESTS_JOBSTATUS) # set by the runTests step
-    TESTS_SUMMARY: $(TEST_SUMMARY_PATH)
-    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+    VSDROPS_INDEX: '${{ parameters.vsdropsPrefix }}/$(Build.BuildNumber)/$(Build.BuildId);/tests/vsdrops_index.html' # url to the vsdrops generated index file
+    TESTS_SUMMARY: $(System.DefaultWorkingDirectory)\Reports\TestSummary\TestSummary.md
   displayName: 'Add summaries'
   condition: always()
   timeoutInMinutes: 1

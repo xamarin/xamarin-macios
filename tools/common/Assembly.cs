@@ -55,31 +55,25 @@ namespace Xamarin.Bundler {
 
 		public AssemblyDefinition AssemblyDefinition;
 		public Target Target;
-		public bool? IsFrameworkAssembly { get { return is_framework_assembly; } }
+		public bool IsFrameworkAssembly { get { return is_framework_assembly.Value; } }
 		public string FullPath {
 			get {
 				return full_path;
 			}
 			set {
 				full_path = value;
-				if (!is_framework_assembly.HasValue && !string.IsNullOrEmpty (full_path)) {
+				if (!is_framework_assembly.HasValue) {
 					var real_full_path = Target.GetRealPath (full_path);
-#if NET
-					// TODO: Figure out how to determine whether an assembly is a framework assembly or not (but it's not urgent to implement, it's just a performance improvement)
-#else
 					is_framework_assembly = real_full_path.StartsWith (Path.GetDirectoryName (Path.GetDirectoryName (Target.Resolver.FrameworkDirectory)), StringComparison.Ordinal);
-#endif
 				}
 			}
 		}
 		public string FileName { get { return Path.GetFileName (FullPath); } }
-		public string Identity { get { return GetIdentity (AssemblyDefinition); } }
+		public string Identity { get { return GetIdentity (FullPath); } }
 
 		public static string GetIdentity (AssemblyDefinition ad)
 		{
-			if (!string.IsNullOrEmpty (ad.MainModule.FileName))
-				return Path.GetFileNameWithoutExtension (ad.MainModule.FileName);
-			return ad.Name.Name;
+			return Path.GetFileNameWithoutExtension (ad.MainModule.FileName);
 		}
 
 		public static string GetIdentity (string path)
@@ -114,12 +108,6 @@ namespace Xamarin.Bundler {
 			this.FullPath = definition.MainModule.FileName;
 		}
 
-		public bool HasValidSymbols {
-			get {
-				return AssemblyDefinition.MainModule.HasSymbols;
-			}
-		}
-
 		public void LoadSymbols ()
 		{	
 			if (symbols_loaded.HasValue)
@@ -149,7 +137,7 @@ namespace Xamarin.Bundler {
 		public void ExtractNativeLinkInfo ()
 		{
 			// ignore framework assemblies, they won't have any LinkWith attributes
-			if (IsFrameworkAssembly == true)
+			if (IsFrameworkAssembly)
 				return;
 
 			var assembly = AssemblyDefinition;

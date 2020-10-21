@@ -139,7 +139,7 @@ namespace Xamarin.Bundler {
 			return Task.Run (() => RunCommand (path, args, env, output, output, suppressPrintOnErrors, verbosity ?? Verbosity));
 		}
 
-#if !MTOUCH && !MMP && !BUNDLER
+#if !MTOUCH && !MMP
 		internal static int Verbosity;
 #endif
 	}

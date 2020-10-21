@@ -23,4 +23,6 @@ Copyright (c) 2017 Microsoft Corp. (www.microsoft.com)
 	</PropertyGroup>
 
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.TargetFrameworkFix.targets"/>
+
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.Common.ImplicitFacade.msbuild.targets" Condition="'$(TargetFrameworkName)' == 'Modern' Or '$(TargetFrameworkName)' == 'Full'"/>
 </Project>

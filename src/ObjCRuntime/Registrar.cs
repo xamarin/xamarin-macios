@@ -25,7 +25,7 @@ using ObjCRuntime;
 using Xamarin.Utils;
 using Xamarin.Bundler;
 
-#if MTOUCH || MMP || BUNDLER
+#if MTOUCH || MMP
 using TAssembly=Mono.Cecil.AssemblyDefinition;
 using TType=Mono.Cecil.TypeReference;
 using TMethod=Mono.Cecil.MethodDefinition;
@@ -41,11 +41,11 @@ using TField=System.Reflection.FieldInfo;
 using R=ObjCRuntime.Runtime;
 #endif
 
-#if !(MTOUCH || MMP || BUNDLER)
+#if !(MTOUCH || MMP)
 using ProductException=ObjCRuntime.RuntimeException;
 #endif
 
-#if !MTOUCH && !MMP && !BUNDLER
+#if !MTOUCH && !MMP
 // static registrar needs them but they might not be marked (e.g. if System.Console is not used)
 [assembly: Preserve (typeof (System.Action))]
 [assembly: Preserve (typeof (System.Action<string>))]
@@ -84,7 +84,7 @@ namespace Registrar {
 	}
 
 	abstract partial class Registrar {
-#if MTOUCH || MMP || BUNDLER
+#if MTOUCH || MMP
 		public Application App { get; protected set; }
 #endif
 
@@ -124,7 +124,7 @@ namespace Registrar {
 			public bool IsInformalProtocol;
 			public bool IsWrapper;
 			public bool IsGeneric;
-#if !MTOUCH && !MMP && !BUNDLER
+#if !MTOUCH && !MMP
 			public IntPtr Handle;
 #else
 			public TType ProtocolWrapperType;
@@ -140,7 +140,7 @@ namespace Registrar {
 
 			public bool IsCategory { get { return CategoryAttribute != null; } }
 
-#if MTOUCH || MMP || BUNDLER
+#if MTOUCH || MMP
 			HashSet<ObjCType> all_protocols;
 			// This contains all protocols in the type hierarchy.
 			// Given a type T that implements a protocol with super protocols:
@@ -585,7 +585,7 @@ namespace Registrar {
 				}
 			}
 
-#if !MMP && !MTOUCH && !BUNDLER
+#if !MMP && !MTOUCH
 			// The ArgumentSemantic enum is public, and
 			// I don't want to add another enum value there which
 			// is just an internal implementation detail, so just
@@ -832,7 +832,7 @@ namespace Registrar {
 					if (trampoline != Trampoline.None)
 						return trampoline;
 
-#if MTOUCH || MMP || BUNDLER
+#if MTOUCH || MMP
 					throw ErrorHelper.CreateError (8018, Errors.MT8018);
 #else
 					var mi = (System.Reflection.MethodInfo) Method;
@@ -1001,7 +1001,7 @@ namespace Registrar {
 		}
 
 		internal class ObjCField : ObjCMember {
-#if !MTOUCH && !MMP && !BUNDLER
+#if !MTOUCH && !MMP
 			public int Size;
 			public byte Alignment;
 #else
@@ -1259,7 +1259,7 @@ namespace Registrar {
 #if MONOMAC
 		internal const string AssemblyName = "Xamarin.Mac";
 #else
-#if MTOUCH || BUNDLER
+#if MTOUCH
 		internal string AssemblyName
 		{
 			get {
@@ -1305,7 +1305,7 @@ namespace Registrar {
 			}
 		}
 
-#if MTOUCH || MMP || BUNDLER
+#if MTOUCH || MMP
 		// "#if MTOUCH" code does not need locking when accessing 'types', because mtouch is single-threaded.
 		public Dictionary<TType, ObjCType> Types {
 			get { return types; }
@@ -1884,7 +1884,7 @@ namespace Registrar {
 			
 		protected bool SupportsModernObjectiveC {
 			get {
-#if MTOUCH || MONOTOUCH || BUNDLER
+#if MTOUCH || MONOTOUCH
 				return true;
 #elif MMP
 				return App.Is64Build;
@@ -1935,7 +1935,7 @@ namespace Registrar {
 				isInformalProtocol = pAttr.IsInformal;
 				isProtocol = true;
 
-#if MMP || MTOUCH || BUNDLER
+#if MMP || MTOUCH
 				if (pAttr.FormalSinceVersion != null && pAttr.FormalSinceVersion > App.SdkVersion)
 					isInformalProtocol = !isInformalProtocol;
 #endif
@@ -1969,7 +1969,7 @@ namespace Registrar {
 			objcType.VerifyAdoptedProtocolsNames (ref exceptions);
 			objcType.BaseType = isProtocol ? null : (baseObjCType ?? objcType);
 			objcType.Protocols = GetProtocols (objcType, ref exceptions);
-#if MMP || MTOUCH || BUNDLER
+#if MMP || MTOUCH
 			objcType.ProtocolWrapperType = (isProtocol && !isInformalProtocol) ? GetProtocolAttributeWrapperType (objcType.Type) : null;
 #endif
 			objcType.IsWrapper = (isProtocol && !isInformalProtocol) ? (GetProtocolAttributeWrapperType (objcType.Type) != null) : (objcType.RegisterAttribute != null && objcType.RegisterAttribute.IsWrapper);
@@ -2064,7 +2064,7 @@ namespace Registrar {
 					}
 				}
 
-#if MMP || MTOUCH || BUNDLER
+#if MMP || MTOUCH
 				// Special fields
 				if (is_first_nonWrapper) {
 					// static registrar
@@ -2131,7 +2131,7 @@ namespace Registrar {
 						}
 					} else {
 						TMethod method = null;
-#if MTOUCH || MMP || BUNDLER
+#if MTOUCH || MMP
 						method = attrib.Method;
 #endif
 						var objcMethod = new ObjCMethod (this, objcType, method) {
@@ -2180,7 +2180,7 @@ namespace Registrar {
 						objcType.Add (new ObjCField () {
 							DeclaringType = objcType,
 							Name = ca.Name ?? GetPropertyName (property),
-#if !MTOUCH && !MMP && !BUNDLER
+#if !MTOUCH && !MMP
 							Size = Is64Bits ? 8 : 4,
 							Alignment = (byte) (Is64Bits ? 3 : 2),
 #endif
@@ -2460,7 +2460,7 @@ namespace Registrar {
 
 			if (exceptions.Count > 0) {
 				Exception ae = exceptions.Count == 1 ? exceptions [0] : new AggregateException (exceptions);
-#if !MTOUCH && !MMP && !BUNDLER
+#if !MTOUCH && !MMP
 				Runtime.NSLog (ae.ToString ());
 #endif
 				throw ae;
@@ -2689,7 +2689,7 @@ namespace Registrar {
 			System.Threading.Monitor.Exit (types);
 		}
 
-#if MTOUCH || MMP || BUNDLER
+#if MTOUCH || MMP
 		internal static void NSLog (string format, params object [] args)
 		{
 			Console.WriteLine (format, args);

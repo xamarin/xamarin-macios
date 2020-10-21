@@ -73,10 +73,6 @@
 
 	<Import Sdk="Microsoft.NET.Sdk" Project="Sdk.targets" />
 
-	<PropertyGroup>
-		<TargetPlatformSupported Condition=" '$(TargetPlatformIdentifier)' == '$(_PlatformName)' ">true</TargetPlatformSupported>
-	</PropertyGroup>
-
 	<!-- Default item includes (globs and implicit references) -->
 	<Import Project="Xamarin.Shared.Sdk.DefaultItems.targets" />
 	<Import Project="Xamarin.Shared.Sdk.TargetFrameworkInference.targets" />
@@ -108,10 +104,7 @@
 		<_AdditionalTaskAssemblyDirectory>$(_XamarinSdkRootDirectory)tools/dotnet-linker/</_AdditionalTaskAssemblyDirectory>
 		<_AdditionalTaskAssembly>$(_AdditionalTaskAssemblyDirectory)dotnet-linker.dll</_AdditionalTaskAssembly>
 	</PropertyGroup>
-	<Target Name="_ComputeLinkerArguments" DependsOnTargets="_ComputeLinkMode;_ComputeFrameworkVariables;_ComputeFrameworkAssemblies;ComputeResolvedFilesToPublishList;_ParseBundlerArguments;">
-		<!-- Validate the linker mode -->
-		<Error Text="Invalid link mode: '$(_LinkMode)'. Valid link modes are: 'None', 'SdkOnly' and 'Full'" Condition="'$(_LinkMode)' != 'None' And '$(_LinkMode)' != 'SdkOnly' And '$(_LinkMode)' != 'Full'" />
-
+	<Target Name="_ComputeLinkerArguments">
 		<PropertyGroup>
 			<!-- Pass the custom options to our custom steps -->
 			<_CustomLinkerOptionsFile>$([System.IO.Path]::GetFullPath('$(IntermediateOutputPath)custom-linker-options.txt'))</_CustomLinkerOptionsFile>
@@ -126,17 +119,9 @@
 				AssemblyName=$(AssemblyName).dll
 				CacheDirectory=$(_LinkerCacheDirectory)
 				ItemsDirectory=$(_LinkerItemsDirectory)
-				IsSimulatorBuild=$(_SdkIsSimulator)
-				LinkMode=$(_LinkMode)
-				MarshalManagedExceptionMode=$(_MarshalManagedExceptionMode)
-				MarshalObjectiveCExceptionMode=$(_MarshalObjectiveCExceptionMode)
-				Optimize=$(_BundlerOptimize)
-				PartialStaticRegistrarLibrary=$(_LibPartialStaticRegistrar)
 				Platform=$(_PlatformName)
 				PlatformAssembly=$(_PlatformAssemblyName).dll
 				TargetArchitectures=$(TargetArchitectures)
-				TargetFramework=$(_ComputedTargetFrameworkMoniker)
-				Verbosity=$(_BundlerVerbosity)
 			</_CustomLinkerOptions>
 			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) --custom-data "LinkerOptionsFile=$(_CustomLinkerOptionsFile)"</_ExtraTrimmerArgs>
 
@@ -144,10 +129,14 @@
 			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) --verbose</_ExtraTrimmerArgs>
 		</PropertyGroup>
 		<ItemGroup>
-			<!-- add a custom step which inserts any other steps we need -->
+			<!-- add our custom steps -->
 			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)">
 				<BeforeStep>LoadReferencesStep</BeforeStep>
 				<Type>Xamarin.SetupStep</Type>
+			</_TrimmerCustomSteps>
+			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)">
+				<!-- At the end of the pipeline -->
+				<Type>Xamarin.GenerateMainStep</Type>
 			</_TrimmerCustomSteps>
 		</ItemGroup>
 
@@ -159,22 +148,6 @@
 		<!-- Load _MainFile -->
 		<ReadItemsFromFile File="$(_LinkerItemsDirectory)/_MainFile.items" Condition="Exists('$(_LinkerItemsDirectory)/_MainFile.items')">
 			<Output TaskParameter="Items" ItemName="_MainFile" />
-		</ReadItemsFromFile>
-		<!-- Load _LinkerFrameworks -->
-		<ReadItemsFromFile File="$(_LinkerItemsDirectory)/_LinkerFrameworks.items" Condition="Exists('$(_LinkerItemsDirectory)/_LinkerFrameworks.items')">
-			<Output TaskParameter="Items" ItemName="_LinkerFrameworks" />
-		</ReadItemsFromFile>
-		<!-- Load _BindingLibraryLinkWith -->
-		<ReadItemsFromFile File="$(_LinkerItemsDirectory)/_BindingLibraryLinkWith.items" Condition="Exists('$(_LinkerItemsDirectory)/_BindingLibraryLinkWith.items')">
-			<Output TaskParameter="Items" ItemName="_BindingLibraryLinkWith" />
-		</ReadItemsFromFile>
-		<!-- Load _BindingLibraryLinkerFlags -->
-		<ReadItemsFromFile File="$(_LinkerItemsDirectory)/_BindingLibraryLinkerFlags.items" Condition="Exists('$(_LinkerItemsDirectory)/_BindingLibraryLinkerFlags.items')">
-			<Output TaskParameter="Items" ItemName="_BindingLibraryLinkerFlags" />
-		</ReadItemsFromFile>
-		<!-- Load _BindingLibraryFrameworks -->
-		<ReadItemsFromFile File="$(_LinkerItemsDirectory)/_BindingLibraryFrameworks.items" Condition="Exists('$(_LinkerItemsDirectory)/_BindingLibraryFrameworks.items')">
-			<Output TaskParameter="Items" ItemName="_BindingLibraryFrameworks" />
 		</ReadItemsFromFile>
 	</Target>
 
@@ -288,9 +261,8 @@
 
 		<LinkNativeCode
 			SessionId="$(BuildSessionId)"
-			Frameworks="@(_NativeExecutableFrameworks);@(_BindingLibraryFrameworks)"
-			LinkerFlags="@(_BindingLibraryLinkerFlags)"
-			LinkWithLibraries="@(_XamarinMainLibraries);@(_BindingLibraryLinkWith)"
+			Frameworks="@(_NativeExecutableFrameworks)"
+			LinkWithLibraries="@(_XamarinMainLibraries)"
 			MinimumOSVersion="$(_MinimumOSVersion)"
 			ObjectFiles="@(_NativeExecutableObjectFiles)"
 			OutputFile="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName)"

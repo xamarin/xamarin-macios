@@ -9,10 +9,6 @@ using Registrar;
 using Mono.Tuner;
 using Xamarin.Bundler;
 
-#if NET
-using LinkContext = Xamarin.Bundler.DotNetLinkContext;
-#endif
-
 namespace Xamarin.Tuner
 {
 	public class DerivedLinkContext : LinkContext

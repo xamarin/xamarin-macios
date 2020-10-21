@@ -52,10 +52,6 @@ Xamarin.Mac.registrar.mobile.x86_64.m: $(TOP)/src/build/mac/mobile-64/Xamarin.Ma
 	$(GENERATE_PART_REGISTRAR) --target-framework Xamarin.Mac,Version=v2.0,Profile=Mobile -a:$(MOBILE_BCL_DIR)/mscorlib.dll
 	$(Q) touch Xamarin.Mac.registrar.mobile.x86_64.m Xamarin.Mac.registrar.mobile.x86_64.h
 
-Microsoft.macOS.registrar.x86_64.m: $(TOP)/src/build/dotnet/macos/64/Xamarin.Mac.dll $(LOCAL_MMP)
-	$(GENERATE_PART_REGISTRAR) --target-framework .NETCoreApp,Version=5.0,Profile=macos -a:$(DOTNET5_BCL_DIR)/System.Runtime.dll
-	$(Q) touch $@ $(basename $@).h
-
 Xamarin.Mac.registrar.full.x86_64.m:   $(TOP)/src/build/mac/full-64/Xamarin.Mac.dll $(LOCAL_MMP)
 	$(GENERATE_PART_REGISTRAR) --target-framework Xamarin.Mac,Version=v4.5,Profile=Full -a:$(FULL_BCL_DIR)/mscorlib.dll
 	$(Q) touch Xamarin.Mac.registrar.full.x86_64.m Xamarin.Mac.registrar.full.x86_64.h
@@ -79,6 +75,9 @@ clean-local::
 
 include $(TOP)/mk/rules.mk
 include ../common/Make.common
+
+run::
+	$(Q) make -C $(TOP)/tests/mmp-aot-tests
 
 # make will automatically consider files created in chained implicit rules as temporary files, and delete them afterwards
 # marking those files as .SECONDARY will prevent that deletion.

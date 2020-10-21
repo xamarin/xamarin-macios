@@ -7,7 +7,6 @@ define DefineTargets
 $(1)_NUGET_TARGETS = \
 	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/Sdk/Sdk.targets \
 	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/Sdk/Sdk.props \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Microsoft.$(1).Sdk.SupportedTargetPlatforms.props \
 	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Microsoft.$(1).Sdk.DefaultItems.props \
 	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Microsoft.$(1).Sdk.props \
 	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Microsoft.$(1).Sdk.targets \
@@ -62,17 +61,8 @@ targets/%.props: targets/%.template.props Makefile $(TOP)/Make.config.inc $(TOP)
 		-e "s/@CURRENT_HASH_LONG@/$(CURRENT_HASH_LONG)/g" \
 	$< > $@
 
-define SupportedTargetPlatforms
-Microsoft.$(1).Sdk/targets/Microsoft.$(1).Sdk.SupportedTargetPlatforms.props: $(TOP)/Versions-ios.plist.in $(TOP)/Versions-mac.plist.in Makefile ./generate-target-platforms.csharp Makefile
-	$(Q) rm -f $$@.tmp
-	$(Q) ./generate-target-platforms.csharp $(1) $$@.tmp
-	$(Q) mv $$@.tmp $$@
-endef
-$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call SupportedTargetPlatforms,$(platform))))
-
 TEMPLATED_FILES = \
 	targets/Xamarin.Shared.Sdk.Versions.props \
-	$(foreach platform,$(DOTNET_PLATFORMS),Microsoft.$(platform).Sdk/targets/Microsoft.$(platform).Sdk.SupportedTargetPlatforms.props) \
 
 nupkgs/$(IOS_NUGET).%.nupkg: CURRENT_VERSION_NO_METADATA=$(IOS_NUGET_VERSION_NO_METADATA)
 nupkgs/$(TVOS_NUGET).%.nupkg: CURRENT_VERSION_NO_METADATA=$(TVOS_NUGET_VERSION_NO_METADATA)
@@ -138,10 +128,6 @@ TARGETS += $(RUNTIME_PACKS) $(REF_PACKS) $(SDK_PACKS)
 ifdef ENABLE_DOTNET
 all-local:: $(TARGETS) targets/Xamarin.Shared.Sdk.Versions.props
 endif
-
-# This tells NuGet to use the exact same dotnet version we've configured in Make.config
-global.json: $(TOP)/global5.json
-	$(CP) $< $@
 
 clean-local::
 	$(Q) rm -Rf $(DOTNET_NUPKG_DIR) $(DOTNET_FEED_DIR)

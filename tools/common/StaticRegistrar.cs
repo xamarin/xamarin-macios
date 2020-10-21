@@ -20,7 +20,6 @@ using Registrar;
 using Foundation;
 using ObjCRuntime;
 using Mono.Cecil;
-using Mono.Linker;
 using Mono.Tuner;
 
 namespace Registrar {

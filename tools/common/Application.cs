@@ -15,12 +15,8 @@ using ObjCRuntime;
 
 #if MONOTOUCH
 using PlatformResolver = MonoTouch.Tuner.MonoTouchResolver;
-#elif MMP
-using PlatformResolver = Xamarin.Bundler.MonoMacResolver;
-#elif NET
-using PlatformResolver = Xamarin.Linker.DotNetResolver;
 #else
-#error Invalid defines
+using PlatformResolver = Xamarin.Bundler.MonoMacResolver;
 #endif
 
 namespace Xamarin.Bundler {
@@ -595,7 +591,6 @@ namespace Xamarin.Bundler {
 
 		public IEnumerable<Abi> Abis {
 			get { return abis; }
-			set { abis = new List<Abi> (value); }
 		}
 
 		public bool IsArchEnabled (Abi arch)

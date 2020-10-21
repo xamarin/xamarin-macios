@@ -123,6 +123,23 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 		<AppBundleExtension Condition="'$(AppBundleExtension)' == ''">.app</AppBundleExtension>
 	</PropertyGroup>
+	
+	<PropertyGroup>
+		<ImplicitlyExpandDesignTimeFacades>true</ImplicitlyExpandDesignTimeFacades>
+		<CheckForSystemRuntimeDependency>true</CheckForSystemRuntimeDependency>
+
+		<ResolveReferencesDependsOn>
+			_SeparateAppExtensionReferences;
+			_SeparateWatchAppReferences;
+			$(ResolveReferencesDependsOn);
+			ImplicitlyExpandDesignTimeFacades
+		</ResolveReferencesDependsOn>
+
+		<ImplicitlyExpandDesignTimeFacadesDependsOn>
+			$(ImplicitlyExpandDesignTimeFacadesDependsOn);
+			GetReferenceAssemblyPaths
+		</ImplicitlyExpandDesignTimeFacadesDependsOn>
+	</PropertyGroup>
 
 	<ItemDefinitionGroup>
 		<!-- MSBuild will honor this default metadata, but xbuild will not, so we still need to use CreateItem -->
@@ -130,6 +147,61 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			<Optimize />
 		</_BundleResourceWithLogicalName>
 	</ItemDefinitionGroup>
+
+	<UsingTask
+		TaskName="GetDependsOnNETStandard"
+		AssemblyFile="$(MicrosoftNETBuildExtensionsTasksAssembly)" />
+
+	<Target Name="ImplicitlyExpandDesignTimeFacades" Condition="'$(ImplicitlyExpandDesignTimeFacades)' == 'true'" DependsOnTargets="$(ImplicitlyExpandDesignTimeFacadesDependsOn)">
+		<ItemGroup>
+			<XI_CandidateNETStandardReferences Include="@(Reference);@(_ResolvedProjectReferencePaths)" />
+			<XI_InboxNETStandardFolders Include="$(TargetFrameworkDirectory)" />
+		</ItemGroup>
+
+		<PropertyGroup>
+			<_HasReferenceToSystemRuntime Condition="'$(DependsOnSystemRuntime)' == 'true' or '%(_ResolvedProjectReferencePaths.TargetPlatformIdentifier)' == 'Portable' 
+								or '%(ReferenceDependencyPaths.Filename)' == 'System.Runtime'">true</_HasReferenceToSystemRuntime>
+
+			<XI_NETStandardInbox Condition="'$(XI_NETStandardInbox)' == '' and Exists('%(XI_InboxNETStandardFolders.Identity)\netstandard.dll')">true</XI_NETStandardInbox>
+
+			<!--
+				This is `true` if any of the references depends on `netstandard`.
+
+				In cases where `ResolveAssemblyReference` task does get run, it populates `$(_DependsOnNETStandard)` property, so we don't
+				need to check this again.
+			-->
+			<XI_DependsOnNETStandard Condition="'$(XI_DependsOnNETStandard)' == ''">$(_DependsOnNETStandard)</XI_DependsOnNETStandard>
+		</PropertyGroup>
+
+		<!--
+		     Facades are expanded if we have a reference that depends on System.Runtime .
+
+		     XI projects have `$(TargetFrameworkIdentifier) != .NETFramework`, so Microsoft.NET.Build.Extensions (which provides support for ns 2.0 projects) doesn't get
+		     imported. And netstandard.dll reference, even if required, doesn't get added.
+
+		     So, we need to check if any references depend on `netstandard`. And if so, expand the facades, which include netstandard.dll .
+
+		     If $(_HasReferenceToSystemRuntime) is true, then the facades are going to be expanded anyway, so don't run this.
+		-->
+		<GetDependsOnNETStandard
+			Condition="'$(_HasReferenceToSystemRuntime)' != 'true' and '$(XI_DependsOnNETStandard)' == '' and '@(XI_CandidateNETStandardReferences)' != ''"
+			References="@(XI_CandidateNETStandardReferences)">
+			<Output TaskParameter="DependsOnNETStandard" PropertyName="XI_DependsOnNETStandard" />
+		</GetDependsOnNETStandard>
+
+		<ItemGroup Condition="'$(_HasReferenceToSystemRuntime)' == 'true' or ('$(XI_NETStandardInbox)' == 'true' and '$(XI_DependsOnNETStandard)' == 'true')">
+			<_DesignTimeFacadeAssemblies Include="%(DesignTimeFacadeDirectories.Identity)*.dll"/>
+			<ReferencePath Remove="@(_DesignTimeFacadeAssemblies)"/>
+			<ReferencePath Include="%(_DesignTimeFacadeAssemblies.Identity)">
+				<WinMDFile>false</WinMDFile>
+				<CopyLocal>false</CopyLocal>
+				<ResolvedFrom>ImplicitlyExpandDesignTimeFacades</ResolvedFrom>
+			</ReferencePath>
+			<ReferenceDependencyPath Include="@(ReferencePath)" Condition="'%(ReferencePath.ResolvedFrom)' == 'ImplicitlyExpandDesignTimeFacades'" />
+		</ItemGroup>
+
+		<Message Importance="Low" Text="Including @(ReferencePath)" Condition="'%(ReferencePath.ResolvedFrom)' == 'ImplicitlyExpandDesignTimeFacades'" />
+	</Target>
 
 	<!-- Insert our app bundle generation step -->
 	<PropertyGroup Condition="'$(_UsingXamarinSdk)' != 'true'">

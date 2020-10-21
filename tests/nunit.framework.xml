@@ -1,7 +1,0 @@
-<linker>
-        <assembly fullname="nunit.framework">
-                <type fullname="NUnit.Framework.Internal.TestExecutionContext/AdhocContext">
-                        <method name="AdhocTestMethod" />
-                </type>
-        </assembly>
-</linker>

@@ -571,11 +571,6 @@
 		</value>
 	</data>
 	
-    <data name="MX0178" xml:space="preserve">
-        <value>Debugging symbol file for '{0}' is not valid and was ignored.
-        </value>
-    </data>
-
 	<data name="MT0150" xml:space="preserve">
 		<value>Internal error: The interpreter is currently only available for 64 bits.
 		</value>

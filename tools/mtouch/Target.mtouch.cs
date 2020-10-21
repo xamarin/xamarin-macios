@@ -356,8 +356,9 @@ namespace Xamarin.Bundler
 					// Load all the assemblies in the cached list of assemblies
 					foreach (var assembly in assemblies) {
 						var ad = ManifestResolver.Load (assembly);
-						var asm = AddAssembly (ad);
+						var asm = new Assembly (this, ad);
 						asm.ComputeSatellites ();
+						this.Assemblies.Add (asm);
 					}
 					return;
 				}
@@ -400,8 +401,9 @@ namespace Xamarin.Bundler
 			PrintAssemblyReferences (assembly);
 			assemblies.Add (fqname);
 
-			var asm = AddAssembly (assembly);
+			var asm = new Assembly (this, assembly);
 			asm.ComputeSatellites ();
+			this.Assemblies.Add (asm);
 
 			var main = assembly.MainModule;
 			foreach (AssemblyNameReference reference in main.AssemblyReferences) {

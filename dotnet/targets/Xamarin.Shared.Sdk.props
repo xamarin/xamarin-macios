@@ -12,7 +12,4 @@
 
   <!-- Default item includes (globs and implicit references) -->
   <Import Project="Microsoft.$(_PlatformName).Sdk.DefaultItems.props" />
-
-  <!-- This contains the OS versions we support for target platform -->
-  <Import Project="Microsoft.$(_PlatformName).Sdk.SupportedTargetPlatforms.props" />
 </Project>
