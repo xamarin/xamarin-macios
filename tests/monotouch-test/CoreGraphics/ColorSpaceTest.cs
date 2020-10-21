@@ -398,5 +398,50 @@ namespace MonoTouchFixtures.CoreGraphics {
 			using (var cs = CGColorSpace.CreateWithName (CGColorSpaceNames.DisplayP3_Hlg))
 				Assert.True (cs.IsHdr, "DisplayP3_Hlg");
 		}
+
+#if __IOS__
+		[Test]
+		public void CGColorSpaceUsesITUR_2100TFTest ()
+		{
+			TestRuntime.AssertXcodeVersion (12, 1);
+			using (var cs = CGColorSpace.CreateWithName (CGColorSpaceNames.DisplayP3_Hlg))
+				Assert.True (cs.UsesItur2100TF, "DisplayP3_Hlg");
+			using (var cs = CGColorSpace.CreateWithName (CGColorSpaceNames.GenericRgb))
+				Assert.False (cs.UsesItur2100TF, "GenericRgb");
+		}
+
+		[Test]
+		public void CreateLinearizedTest ()
+		{
+			TestRuntime.AssertXcodeVersion (12, 1);
+			using (var cs = CGColorSpace.CreateWithName (CGColorSpaceNames.GenericRgb)) {
+				var csl = cs.CreateLinearized ();
+				Assert.NotNull (csl, "not null");
+				Assert.That ((nint) TestRuntime.CFGetRetainCount (csl.Handle), Is.EqualTo ((nint) 1));
+			}
+		}
+
+		[Test]
+		public void CreateExtendedTest ()
+		{
+			TestRuntime.AssertXcodeVersion (12, 1);
+			using (var cs = CGColorSpace.CreateWithName (CGColorSpaceNames.GenericRgb)) {
+				var csl = cs.CreateExtended ();
+				Assert.NotNull (csl, "not null");
+				Assert.That ((nint) TestRuntime.CFGetRetainCount (csl.Handle), Is.EqualTo ((nint) 1));
+			}
+		}
+
+		[Test]
+		public void CreateExtendedLinearizedTest ()
+		{
+			TestRuntime.AssertXcodeVersion (12, 1);
+			using (var cs = CGColorSpace.CreateWithName (CGColorSpaceNames.GenericRgb)) {
+				var csl = cs.CreateExtendedLinearized ();
+				Assert.NotNull (csl, "not null");
+				Assert.That ((nint) TestRuntime.CFGetRetainCount (csl.Handle), Is.EqualTo ((nint) 1));
+			}
+		}
+#endif
 	}
 }
