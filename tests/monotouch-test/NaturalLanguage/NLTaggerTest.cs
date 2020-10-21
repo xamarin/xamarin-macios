@@ -66,11 +66,7 @@ namespace MonoTouchFixtures.NaturalLanguage {
 		[Test]
 		public void GetTagHypotheses ()
 		{
-#if __MACOS__
-			TestRuntime.AssertXcodeVersion (12, 2);
-#else
-			TestRuntime.AssertXcodeVersion (12, 0);
-#endif
+			TestRuntime.AssertXcodeVersion (12, TestRuntime.MinorXcode12APIMismatch);
 			using (var tagger = new NLTagger (NLTagScheme.LexicalClass) { String = Text }) {
 				var dict = tagger.GetTagHypotheses (0, NLTokenUnit.Sentence, NLTagScheme.LexicalClass, nuint.MaxValue);
 				Assert.That (dict.Count, Is.EqualTo (1), "Count");
@@ -82,11 +78,7 @@ namespace MonoTouchFixtures.NaturalLanguage {
 		[Test]
 		public void GetTagHypotheses_Range ()
 		{
-#if __MACOS__
-			TestRuntime.AssertXcodeVersion (12, 2);
-#else
-			TestRuntime.AssertXcodeVersion (12, 0);
-#endif
+			TestRuntime.AssertXcodeVersion (12, TestRuntime.MinorXcode12APIMismatch);
 			using (var tagger = new NLTagger (NLTagScheme.LexicalClass) { String = Text }) {
 				var dict = tagger.GetTagHypotheses (0, NLTokenUnit.Sentence, NLTagScheme.LexicalClass, nuint.MaxValue, out NSRange range);
 				Assert.That (dict.Count, Is.EqualTo (1), "Count");

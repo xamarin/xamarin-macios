@@ -13,14 +13,7 @@ namespace MonoTouchFixtures.Metal {
 	public class MTLIntersectionFunctionTableDescriptorTest {
 
 		[SetUp]
-		public void SetUp ()
-		{
-#if __MACOS__
-			TestRuntime.AssertXcodeVersion (12, 2);
-#else
-			TestRuntime.AssertXcodeVersion (12, 0);
-#endif
-		}
+		public void Setup () => TestRuntime.AssertXcodeVersion (12, TestRuntime.MinorXcode12APIMismatch);
 
 		[Test]
 		public void FunctionCountTest ()

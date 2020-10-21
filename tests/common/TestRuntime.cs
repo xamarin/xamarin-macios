@@ -43,6 +43,15 @@ partial class TestRuntime
 
 	public const string BuildVersion_iOS9_GM = "13A340";
 
+	// Xcode 12.0 removed macOS 11.0 SDK and moved it up to Xcode 12.2
+	// we use this constant to make up for that difference when using
+	// AssertXcodeVersion and CheckXcodeVersion
+#if __MACOS__
+	public const int MinorXcode12APIMismatch = 2;
+#else
+	public const int MinorXcode12APIMismatch = 0;
+#endif
+
 	public static string GetiOSBuildVersion ()
 	{
 #if __WATCHOS__

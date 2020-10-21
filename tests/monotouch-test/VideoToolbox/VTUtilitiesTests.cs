@@ -120,11 +120,7 @@ namespace MonoTouchFixtures.VideoToolbox {
 		[TestCase (CMVideoCodecType.Hevc)]
 		public void TestRegisterSupplementalVideoDecoder (CMVideoCodecType codec)
 		{
-#if __MACOS__
-			TestRuntime.AssertXcodeVersion (12, 2);
-#else
-			TestRuntime.AssertXcodeVersion (12, 0);
-#endif
+			TestRuntime.AssertXcodeVersion (12, TestRuntime.MinorXcode12APIMismatch);
 			// ensure that the call does not crash, we do not have anyother thing to test since there is 
 			// no way to know if it was a success
 			VTUtilities.RegisterSupplementalVideoDecoder (codec);

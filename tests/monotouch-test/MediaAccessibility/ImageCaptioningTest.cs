@@ -104,11 +104,7 @@ namespace MonoTouchFixtures.MediaAccessibility {
 					Assert.Null (e, "ro / set / no error"); // weird, it can't be saved back to the file metadata
 
 					var s = MAImageCaptioning.GetCaption (url, out e);
-#if __MACOS__
-					if (TestRuntime.CheckXcodeVersion (12, 2)) {
-#else
-					if (TestRuntime.CheckXcodeVersion (12, 0)) {
-#endif
+					if (TestRuntime.CheckXcodeVersion (12, TestRuntime.MinorXcode12APIMismatch)) {
 						Assert.AreEqual ("xamarin", s, "ro / roundtrip");
 					} else {
 						Assert.Null (s, "ro / roundtrip"); // not very surprising since Set can't save it
@@ -117,11 +113,7 @@ namespace MonoTouchFixtures.MediaAccessibility {
 
 					Assert.True (MAImageCaptioning.SetCaption (url, "xamarin", out e), "Set 2");
 					s = MAImageCaptioning.GetCaption (url, out e);
-#if __MACOS__
-					if (TestRuntime.CheckXcodeVersion (12, 2)) {
-#else
-					if (TestRuntime.CheckXcodeVersion (12, 0)) {
-#endif
+					if (TestRuntime.CheckXcodeVersion (12, TestRuntime.MinorXcode12APIMismatch)) {
 						Assert.AreEqual ("xamarin", s, "ro / back to original");
 					} else {
 						Assert.Null (s, "ro / back to original");
@@ -138,11 +130,7 @@ namespace MonoTouchFixtures.MediaAccessibility {
 				Assert.Null (e, "rw / set / no error"); // weird, it can't be saved back to the file metadata
 
 				var s = MAImageCaptioning.GetCaption (rw_url, out e);
-#if __MACOS__
-					if (TestRuntime.CheckXcodeVersion (12, 2)) {
-#else
-					if (TestRuntime.CheckXcodeVersion (12, 0)) {
-#endif
+					if (TestRuntime.CheckXcodeVersion (12, TestRuntime.MinorXcode12APIMismatch)) {
 					Assert.AreEqual ("xamarin", s, "rw / roundtrip"); // :)
 				} else {
 					Assert.Null (s, "rw / roundtrip"); // :(
@@ -151,11 +139,7 @@ namespace MonoTouchFixtures.MediaAccessibility {
 
 				Assert.True (MAImageCaptioning.SetCaption (rw_url, "xamarin", out e), "Set 2");
 				s = MAImageCaptioning.GetCaption (rw_url, out e);
-#if __MACOS__
-					if (TestRuntime.CheckXcodeVersion (12, 2)) {
-#else
-					if (TestRuntime.CheckXcodeVersion (12, 0)) {
-#endif
+				if (TestRuntime.CheckXcodeVersion (12, TestRuntime.MinorXcode12APIMismatch)) {
 					Assert.AreEqual ("xamarin", s, "rw / back to original");
 				} else {
 					Assert.Null (s, "rw / back to original");
