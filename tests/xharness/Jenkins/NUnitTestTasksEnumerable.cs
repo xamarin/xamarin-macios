@@ -58,7 +58,7 @@ namespace Xharness.Jenkins {
 				Platform = TestPlatform.iOS,
 				TestName = "MSBuild tests",
 				Mode = "iOS (integration)",
-				Timeout = TimeSpan.FromMinutes (60),
+				Timeout = TimeSpan.FromMinutes (90),
 				Ignored = !jenkins.IncludeiOSMSBuild,
 				SupportsParallelExecution = false,
 			};
