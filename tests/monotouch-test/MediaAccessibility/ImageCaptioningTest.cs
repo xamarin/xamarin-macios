@@ -130,7 +130,7 @@ namespace MonoTouchFixtures.MediaAccessibility {
 				Assert.Null (e, "rw / set / no error"); // weird, it can't be saved back to the file metadata
 
 				var s = MAImageCaptioning.GetCaption (rw_url, out e);
-					if (TestRuntime.CheckXcodeVersion (12, TestRuntime.MinorXcode12APIMismatch)) {
+				if (TestRuntime.CheckXcodeVersion (12, TestRuntime.MinorXcode12APIMismatch)) {
 					Assert.AreEqual ("xamarin", s, "rw / roundtrip"); // :)
 				} else {
 					Assert.Null (s, "rw / roundtrip"); // :(

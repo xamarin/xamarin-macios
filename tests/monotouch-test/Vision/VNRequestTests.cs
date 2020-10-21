@@ -136,11 +136,7 @@ namespace MonoTouchFixtures.Vision {
 				Assert.That (faceObservation.BoundingBox, Is.EqualTo (rect));
 
 				var recognizedObjectObservation = VNRecognizedObjectObservation.FromBoundingBox (VNRecognizedObjectObservationRequestRevision.Unspecified, rect);
-#if __MACOS__
-				if (TestRuntime.CheckXcodeVersion (11, 0) && !TestRuntime.CheckXcodeVersion (12, 2)) {
-#else
-				if (TestRuntime.CheckXcodeVersion (11, 0) && !TestRuntime.CheckXcodeVersion (12, 0)) {
-#endif
+				if (TestRuntime.CheckXcodeVersion (11, 0) && !TestRuntime.CheckXcodeVersion (12, TestRuntime.MinorXcode12APIMismatch)) {
 					Assert.IsNull (recognizedObjectObservation, "recognizedObjectObservation is not null");
 				} else {
 					Assert.NotNull (recognizedObjectObservation, "recognizedObjectObservation is null");
@@ -171,11 +167,7 @@ namespace MonoTouchFixtures.Vision {
 				Assert.That (faceObservation.BoundingBox, Is.EqualTo (rect));
 
 				var recognizedObjectObservation = VNRecognizedObjectObservation.FromBoundingBox ((VNRecognizedObjectObservationRequestRevision) 5000, rect);
-#if __MACOS__
-				if (TestRuntime.CheckXcodeVersion (11, 0) && !TestRuntime.CheckXcodeVersion (12, 2)) {
-#else
-				if (TestRuntime.CheckXcodeVersion (11, 0) && !TestRuntime.CheckXcodeVersion (12, 0)) {
-#endif
+				if (TestRuntime.CheckXcodeVersion (11, 0) && !TestRuntime.CheckXcodeVersion (12, TestRuntime.MinorXcode12APIMismatch)) {
 					Assert.IsNull (recognizedObjectObservation, "randomRevision recognizedObjectObservation is null");
 				} else {
 					Assert.NotNull (recognizedObjectObservation, "randomRevision recognizedObjectObservation is null");
@@ -211,11 +203,7 @@ namespace MonoTouchFixtures.Vision {
 				Assert.That (faceObservation.BoundingBox, Is.EqualTo (rect));
 
 				var recognizedObjectObservation = VNRecognizedObjectObservation.FromBoundingBox (VNRecognizedObjectObservationRequestRevision.Two, rect);
-#if __MACOS__
-				if (TestRuntime.CheckXcodeVersion (11, 0) && !TestRuntime.CheckXcodeVersion (12, 2)) {
-#else
-				if (TestRuntime.CheckXcodeVersion (11, 0) && !TestRuntime.CheckXcodeVersion (12, 0)) {
-#endif
+				if (TestRuntime.CheckXcodeVersion (11, 0) && !TestRuntime.CheckXcodeVersion (12, TestRuntime.MinorXcode12APIMismatch)) {
 					Assert.Null (recognizedObjectObservation, "recognizedObjectObservation is null");
 				} else {
 					Assert.NotNull (recognizedObjectObservation, "recognizedObjectObservation is null");

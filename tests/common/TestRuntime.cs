@@ -236,7 +236,7 @@ partial class TestRuntime
 			/*
 			 * I could be parsing the string but docs says it is not suitable for parsing and this is ugly enough so
 			 * an apology in advance (I'm very sorry =]) to my future self or whoever is dealing with this if it broke
-			 * but there are no better at this time. That said this is good enough for the current use case.
+			 * but there are no better solutions at this time. That said this is good enough for the current use case.
 			 * Example: Version 10.16 (Build 20A5395g)
 			 *
 			 * The above statement also applies to 'CheckExactmacOSSystemVersion' =S

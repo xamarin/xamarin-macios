@@ -33,7 +33,7 @@ namespace MonoTouchFixtures.GameKit {
 		{
 #if MONOMAC
 			// For some reason the init method is not allowed on Xcode 12.2 Beta 3 anymore
-			// but was a llowed before that said this class got deprecated in 10.10 so it may now be
+			// but was allowed before that said this class got deprecated in 10.10 so it may now be
 			// a permanent change.
 			if (TestRuntime.CheckExactXcodeVersion (12, 2, beta: 3))
 				Assert.Inconclusive ("'LeaderboardViewControllerTest' the native 'init' method returned nil.");
