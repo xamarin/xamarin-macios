@@ -53,7 +53,11 @@ namespace MonoTouchFixtures.AudioUnit
 		[Test]
 		public void CopyIconTest ()
 		{ 
+#if __MACOS__
+			TestRuntime.AssertXcodeVersion (12, 2);
+#else
 			TestRuntime.AssertXcodeVersion (12, 0);
+#endif
 			AudioComponentDescription cd = new AudioComponentDescription () {
 				ComponentType = AudioComponentType.Output,
 #if MONOMAC

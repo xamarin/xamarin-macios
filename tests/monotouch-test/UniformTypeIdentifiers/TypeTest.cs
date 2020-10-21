@@ -13,7 +13,11 @@ namespace MonoTouchFixtures.UniformTypeIdentifiers {
 		[SetUp]
 		public void Setup ()
 		{
+#if __MACOS__
+			TestRuntime.AssertXcodeVersion (12, 2);
+#else
 			TestRuntime.AssertXcodeVersion (12, 0);
+#endif
 		}
 
 		[Test]

@@ -26,7 +26,14 @@ namespace MonoTouchFixtures.Vision {
 	public class VNGeometryUtilsTests {
 
 		[SetUp]
-		public void Setup () => TestRuntime.AssertXcodeVersion (12, 0);
+		public void Setup ()
+		{
+#if __MACOS__
+			TestRuntime.AssertXcodeVersion (12, 2);
+#else
+			TestRuntime.AssertXcodeVersion (12, 0);
+#endif
+		}
 
 		[Test]
 		public void CreateBoundingCircleTest ()
