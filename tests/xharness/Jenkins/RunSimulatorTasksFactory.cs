@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -62,7 +62,6 @@ namespace Xharness.Jenkins {
 						}
 
 						MSBuildTask derived;
-						var configIgnored = pair.Item3;
 						if (project.IsDotNetProject) {
 							derived = new DotNetBuildTask (jenkins: jenkins, testProject: project, processManager: processManager);
 							configIgnored |= !jenkins.IncludeDotNet;
@@ -71,7 +70,7 @@ namespace Xharness.Jenkins {
 						}
 						derived.ProjectConfiguration = config;
 						derived.ProjectPlatform = "iPhoneSimulator";
-						derived.Platform = pair.Item2;
+						derived.Platform = testPlatform;
 						derived.Ignored = configIgnored;
 						derived.TestName = project.Name;
 						derived.Dependency = project.Dependency;

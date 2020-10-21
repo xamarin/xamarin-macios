@@ -15,14 +15,14 @@ download-mono: downloads/$(basename $(MONO_IOS_FILENAME)) downloads/$(basename $
 
 downloads/$(basename $(MONO_IOS_FILENAME)): MONO_URL=$(MONO_IOS_URL)
 downloads/$(basename $(MONO_MAC_FILENAME)): MONO_URL=$(MONO_MAC_URL)
-downloads/$(DOTNET5_BCL_REF_NAME): MONO_URL=$(DOTNET5_BCL_REF_URL)
+downloads/$(DOTNET_BCL_REF_NAME): MONO_URL=$(DOTNET_BCL_REF_URL)
 
 include $(TOP)/mk/colors.mk
 
 DOWNLOADS = \
 	downloads/$(MONO_IOS_FILENAME) \
 	downloads/$(MONO_MAC_FILENAME) \
-	downloads/$(DOTNET5_BCL_REF_NAME) \
+	downloads/$(DOTNET_BCL_REF_NAME) \
 
 # This target downloads the mono archives, there's one for Xamarin.iOS and one for Xamarin.Mac.
 # If doing many clean builds, it's possible to copy the downloaded zip file to ~/Library/Caches/xamarin-macios
@@ -68,7 +68,7 @@ downloads/%: downloads/%.nupkg
 	$(Q) touch $@
 
 DOTNET_DOWNLOADS = \
-	downloads/$(basename $(DOTNET5_BCL_REF_NAME)) \
+	downloads/$(basename $(DOTNET_BCL_REF_NAME)) \
 
 dotnet: $(DOTNET_DOWNLOADS)
 ifdef ENABLE_DOTNET
