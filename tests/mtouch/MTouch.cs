@@ -1971,20 +1971,42 @@ public class TestApp {
 			}
 		}
 
-		static string BindingsLibrary {
-			get {
-				return Path.Combine (Configuration.SourceRoot, "tests/bindings-test/bin/Debug/bindings-test.dll");
+		static void LoadWithoutNetworkAccess (XmlDocument doc, string filename)
+		{
+			using (var fs = new FileStream (filename, FileMode.Open, FileAccess.Read)) {
+				var settings = new XmlReaderSettings () {
+					XmlResolver = null,
+					DtdProcessing = DtdProcessing.Parse,
+				};
+				using (var reader = XmlReader.Create (fs, settings)) {
+					doc.Load (reader);
+				}
 			}
 		}
 
+
 		static string GetBindingsLibrary (Profile profile)
 		{
-			var fn = Path.Combine (Configuration.SourceRoot, "tests", "bindings-test", "bin", "Any CPU", GetConfiguration (profile), "bindings-test.dll");
-
-			if (!File.Exists (fn)) {
-				var csproj = Path.Combine (Configuration.SourceRoot, "tests", "bindings-test", "bindings-test" + GetProjectSuffix (profile) + ".csproj");
-				XBuild.BuildXI (csproj, platform: "AnyCPU");
+			var project_dir = Path.Combine (Configuration.SourceRoot, "tests", "bindings-test", "iOS");
+			switch (profile) {
+			case Profile.iOS:
+				break;
+			case Profile.tvOS:
+			case Profile.watchOS:
+				project_dir = Path.Combine (project_dir, "generated-projects", profile.ToString ());
+				break;
+			default:
+				throw new NotImplementedException (profile.ToString ());
 			}
+			var csproj = Path.Combine (project_dir, $"bindings-test{GetProjectSuffix (profile)}.csproj");
+
+			var fn = Path.Combine (project_dir, "bin", "Any CPU", GetConfiguration (profile), "bindings-test.dll");
+
+			if (!File.Exists (fn))
+				XBuild.BuildXI (csproj, platform: "AnyCPU");
+
+			if (!File.Exists (fn))
+				throw new Exception ($"Could not find the bindings-test library for {profile}");
 
 			return fn;
 		}
@@ -2592,38 +2614,21 @@ public class TestApp {
 		}
 
 		[Test]
-		[TestCase (Target.Dev, Profile.iOS, "dont link", "Release64")]
-		[TestCase (Target.Dev, Profile.iOS, "link all", "Release64")]
-		[TestCase (Target.Dev, Profile.iOS, "link sdk", "Release64")]
-		[TestCase (Target.Dev, Profile.iOS, "monotouch-test", "Release64")]
-		[TestCase (Target.Dev, Profile.iOS, "mscorlib Part 1", "Release64")]
-		[TestCase (Target.Dev, Profile.iOS, "mscorlib Part 2", "Release64")]
-		[TestCase (Target.Dev, Profile.iOS, "BCL tests group 1", "Release64")]
-		public void BuildTestProject (Target target, Profile profile, string testname, string configuration)
+		[TestCase (Target.Dev, Profile.iOS, "linker/ios", "dont link", "Release64")]
+		[TestCase (Target.Dev, Profile.iOS, "linker/ios", "link all", "Release64")]
+		[TestCase (Target.Dev, Profile.iOS, "linker/ios", "link sdk", "Release64")]
+		[TestCase (Target.Dev, Profile.iOS, "", "monotouch-test", "Release64")]
+		[TestCase (Target.Dev, Profile.iOS, "bcl-test/generated/iOS", "mscorlib Part 1", "Release64")]
+		[TestCase (Target.Dev, Profile.iOS, "bcl-test/generated/iOS", "mscorlib Part 2", "Release64")]
+		[TestCase (Target.Dev, Profile.iOS, "bcl-test/generated/iOS", "BCL tests group 1", "Release64")]
+		public void BuildTestProject (Target target, Profile profile, string subdir, string testname, string configuration)
 		{
 			if (target == Target.Dev)
 				AssertDeviceAvailable ();
 			
-			var subdir = string.Empty;
-			switch (testname) {
-			case "dont link":
-			case "link sdk":
-			case "link all":
-				subdir = "/linker/ios";
-				break;
-			case "monotouch-test":
-				break;
-			default:
-				subdir = "/bcl-test";
-				break;
-			}
+			var testDir = Path.Combine (Configuration.SourceRoot, "tests", subdir, testname);
 			var platform = target == Target.Dev ? "iPhone" : "iPhoneSimulator";
-			string csproj = null;
-			if (subdir == "/bcl-test") { // bcl tests are generated and are not in their own dir
-				csproj = Path.Combine (Configuration.SourceRoot, "tests" + subdir, testname + GetProjectSuffix (profile) + ".csproj");
-			} else {
-				csproj = Path.Combine (Configuration.SourceRoot, "tests" + subdir, testname, testname + GetProjectSuffix (profile) + ".csproj");
-			}
+			var csproj = Path.Combine (testDir, testname + GetProjectSuffix (profile) + ".csproj");
 			XBuild.BuildXI (csproj, configuration, platform, timeout: TimeSpan.FromMinutes (15));
 		}
 
