@@ -77,19 +77,16 @@ jobs:
   - powershell: |
       if ([IO.Directory]::Exists('/Developer/MonoTouch')) {
         Write-Host "Deleting /Developer/MonoTouch"
-        # [IO.Directory]::Delete('/Developer/MonoTouch', $True)
         bash -c "sudo rm -Rf /Developer/MonoTouch"
       }
 
       if ([IO.Directory]::Exists('/Library/Frameworks/Xamarin.iOS.framework')) {
         Write-Host "Deleting /Library/Frameworks/Xamarin.iOS.framework"
-        # [IO.Directory]::Delete('/Library/Frameworks/Xamarin.iOS.framework', $True)
         bash -c "sudo rm -Rf /Library/Frameworks/Xamarin.iOS.framework"
       }
 
       if ([IO.Directory]::Exists('/Library/Frameworks/Xamarin.Mac.framework')) {
         Write-Host "Deleting /Library/Frameworks/Xamarin.Mac.framework"
-        # [IO.Directory]::Delete('/Library/Frameworks/Xamarin.Mac.framework', $True)
         bash -c "sudo rm -Rf /Library/Frameworks/Xamarin.Mac.framework"
       }
     displayName: 'Delete library folders'
