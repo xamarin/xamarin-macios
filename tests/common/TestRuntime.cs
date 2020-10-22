@@ -43,6 +43,15 @@ partial class TestRuntime
 
 	public const string BuildVersion_iOS9_GM = "13A340";
 
+	// Xcode 12.0 removed macOS 11.0 SDK and moved it up to Xcode 12.2
+	// we use this constant to make up for that difference when using
+	// AssertXcodeVersion and CheckXcodeVersion
+#if __MACOS__
+	public const int MinorXcode12APIMismatch = 2;
+#else
+	public const int MinorXcode12APIMismatch = 0;
+#endif
+
 	public static string GetiOSBuildVersion ()
 	{
 #if __WATCHOS__
@@ -177,6 +186,14 @@ partial class TestRuntime
 			watchOS = new { Major = 7, Minor = 1, Build = "18R5561" },
 		};
 
+		var twelvedot2b3 = new {
+			Xcode = new { Major = 12, Minor = 2, Beta = 3 },
+			iOS = new { Major = 14, Minor = 2, Build = "18B5072" },
+			tvOS = new { Major = 14, Minor = 2, Build = "18K5047" },
+			macOS = new { Major = 11, Minor = 0, Build = "20A5395" },
+			watchOS = new { Major = 7, Minor = 1, Build = "18R5572" },
+		};
+
 		var versions = new [] {
 			nineb1,
 			nineb2,
@@ -184,6 +201,7 @@ partial class TestRuntime
 			elevenb5,
 			elevenb6,
 			twelvedot2b2,
+			twelvedot2b3,
 		};
 
 		foreach (var v in versions) {
@@ -210,6 +228,20 @@ partial class TestRuntime
 			var actual = GetiOSBuildVersion ();
 			Console.WriteLine (actual);
 			return actual.StartsWith (v.tvOS.Build, StringComparison.Ordinal);
+#elif __MACOS__
+			if (!CheckExactmacOSSystemVersion (v.macOS.Major, v.macOS.Minor))
+				return false;
+			if (v.macOS.Build == "?")
+				throw new NotImplementedException ($"Build number for macOS {v.macOS.Major}.{v.macOS.Minor} beta {beta}.");
+			/*
+			 * I could be parsing the string but docs says it is not suitable for parsing and this is ugly enough so
+			 * an apology in advance (I'm very sorry =]) to my future self or whoever is dealing with this if it broke
+			 * but there are no better solutions at this time. That said this is good enough for the current use case.
+			 * Example: Version 10.16 (Build 20A5395g)
+			 *
+			 * The above statement also applies to 'CheckExactmacOSSystemVersion' =S
+			 */
+			return NSProcessInfo.ProcessInfo.OperatingSystemVersionString.Contains (v.macOS.Build, StringComparison.Ordinal);
 #else
 			throw new NotImplementedException ();
 #endif
@@ -230,6 +262,18 @@ partial class TestRuntime
 				return ChecktvOSSystemVersion (14, 0);
 #elif __IOS__
 				return CheckiOSSystemVersion (14, 0);
+#elif MONOMAC
+				return CheckMacSystemVersion (10, 15, 6);
+#else
+				throw new NotImplementedException ();
+#endif
+			case 1:
+#if __WATCHOS__
+				return CheckWatchOSSystemVersion (7, 0);
+#elif __TVOS__
+				return ChecktvOSSystemVersion (14, 0);
+#elif __IOS__
+				return CheckiOSSystemVersion (14, 1);
 #elif MONOMAC
 				return CheckMacSystemVersion (10, 15, 6);
 #else
@@ -691,6 +735,19 @@ partial class TestRuntime
 		return version.Major == major && version.Minor == minor;
 #else
 		throw new Exception ("Can't get tvOS System version on other platforms.");
+#endif
+	}
+
+	static bool CheckExactmacOSSystemVersion (int major, int minor, int build = 0)
+	{
+#if __MACOS__
+		var v = NSProcessInfo.ProcessInfo.OperatingSystemVersion;
+		var currentVersion = new Version ((int) v.Major, (int) v.Minor, (int) v.PatchVersion);
+		if (currentVersion == new Version (10, 16, 0))
+			currentVersion = new Version (11, 0, 0);
+		return currentVersion == new Version (major, minor, build);
+#else
+		throw new Exception ("Can't get macOS System version on other platforms.");
 #endif
 	}
 

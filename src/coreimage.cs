@@ -506,6 +506,11 @@ namespace CoreImage {
 		[Export ("depthBlurEffectFilterForImage:disparityImage:portraitEffectsMatte:hairSemanticSegmentation:orientation:options:")]
 		[return: NullAllowed]
 		CIFilter GetDepthBlurEffectFilter (CIImage image, CIImage disparityImage, [NullAllowed] CIImage portraitEffectsMatte, [NullAllowed] CIImage hairSemanticSegmentation, CGImagePropertyOrientation orientation, [NullAllowed] NSDictionary options);
+
+		[iOS (14,1)][TV (14,2)][Mac (11,0)]
+		[Export ("depthBlurEffectFilterForImage:disparityImage:portraitEffectsMatte:hairSemanticSegmentation:glassesMatte:gainMap:orientation:options:")]
+		[return: NullAllowed]
+		CIFilter GetDepthBlurEffectFilter (CIImage image, CIImage disparityImage, [NullAllowed] CIImage portraitEffectsMatte, [NullAllowed] CIImage hairSemanticSegmentation, [NullAllowed] CIImage glassesMatte, [NullAllowed] CIImage gainMap, CGImagePropertyOrientation orientation, [NullAllowed] NSDictionary options);
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -1328,7 +1333,10 @@ namespace CoreImage {
 		[iOS (13,0)][TV (13,0)][Mac (10,15)]
 		bool AuxiliarySemanticSegmentationTeethMatte { get; set; }
 
-		[iOS (14,2)][TV (14,2)][Mac (11,0)]
+		[iOS (14,1)][TV (14,2)][Mac (11,0)]
+		bool AuxiliarySemanticSegmentationGlassesMatte { get; set; }
+
+		[iOS (14,1)][TV (14,2)][Mac (11,0)]
 		bool ToneMapHdrToSdr { get; set; }
 	}
 
@@ -1337,10 +1345,6 @@ namespace CoreImage {
 	interface CIImageInitializationOptionsKeys {
 		[Field ("kCIImageColorSpace")]
 		NSString ColorSpaceKey { get; }
-
-		[iOS (14,2)][TV (14,2)][Mac (11,0)]
-		[Field ("kCIImageToneMapHDRtoSDR")]
-		NSString ToneMapHdrToSdrKey { get; }
 
 		[Field ("kCIImageProperties")]
 		NSString PropertiesKey { get; }
@@ -1376,6 +1380,15 @@ namespace CoreImage {
 		[iOS (13,0)][TV (13,0)][Mac (10,15)]
 		[Field ("kCIImageAuxiliarySemanticSegmentationTeethMatte")]
 		NSString AuxiliarySemanticSegmentationTeethMatteKey { get; }
+
+		[iOS (14,1)][TV (14,2)][Mac (11,0)]
+		[Field ("kCIImageAuxiliarySemanticSegmentationGlassesMatte")]
+		NSString AuxiliarySemanticSegmentationGlassesMatteKey { get; }
+
+		[iOS (14,1)][TV (14,2)][Mac (11,0)]
+		[Field ("kCIImageToneMapHDRtoSDR")]
+		NSString ToneMapHdrToSdrKey { get; }
+
 	}
 	
 	[BaseType (typeof (NSObject))]
@@ -5172,6 +5185,14 @@ namespace CoreImage {
 
 		[CoreImageFilterProperty ("inputAuxDataMetadata")]
 		CGImageMetadata AuxDataMetadata { get; set; }
+
+		[iOS (14,1)][TV (14,2)][Mac (11,0)]
+		[CoreImageFilterProperty ("inputGainMap")]
+		CIImage GainMap { get; set; }
+
+		[iOS (14,1)][TV (14,2)][Mac (11,0)]
+		[CoreImageFilterProperty ("inputGlassesImage")]
+		CIImage GlassesImage { get; set; }
 	}
 
 	[CoreImageFilter]
@@ -5724,6 +5745,10 @@ namespace CoreImage {
 		[iOS (13,0)][TV (13,0)][Mac (10,15)]
 		[Field ("kCIImageRepresentationSemanticSegmentationTeethMatteImage")]
 		NSString SemanticSegmentationTeethMatteImageKey { get; }
+
+		[iOS (14,1)][TV (14,2)][Mac (11,0)]
+		[Field ("kCIImageRepresentationSemanticSegmentationGlassesMatteImage")]
+		NSString SemanticSegmentationGlassesMatteImage { get; }
 	}
 
 	[iOS (11,0)]

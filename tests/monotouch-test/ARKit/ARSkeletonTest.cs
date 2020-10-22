@@ -12,6 +12,13 @@ namespace monotouchtest.ARKit {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class ARSkeletonTest {
+
+		[SetUp]
+		public void Setup ()
+		{
+			TestRuntime.AssertXcodeVersion (12, 0);
+		}
+
 		[Test]
 		public void UnknownPointTest ()
 		{

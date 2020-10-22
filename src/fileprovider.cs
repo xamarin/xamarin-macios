@@ -522,10 +522,6 @@ namespace FileProvider {
 		NSDictionary GetUserInfo ();
 
 		[NoiOS]
-		[Export ("excludedFromSync")]
-		bool ExcludedFromSync { [Bind ("isExcludedFromSync")] get; }
-
-		[NoiOS]
 		[Export ("fileSystemFlags")]
 		NSFileProviderFileSystemFlags FileSystemFlags { get; }
 

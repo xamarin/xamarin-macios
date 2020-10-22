@@ -208,7 +208,7 @@ namespace CoreGraphics {
 		[Field ("kCGColorSpaceExtendedLinearITUR_2020")]
 		NSString ExtendedLinearItur_2020 { get; }
 
-		[iOS (14,2), Mac (11,0), TV (14,2), Watch (7,1)]
+		[iOS (14,1), Mac (11,0), TV (14,2), Watch (7,1)]
 		[Field ("kCGColorSpaceExtendedITUR_2020")]
 		NSString ExtendedItur_2020 { get; }
 
@@ -217,7 +217,7 @@ namespace CoreGraphics {
 		[Field ("kCGColorSpaceExtendedLinearDisplayP3")]
 		NSString ExtendedLinearDisplayP3 { get; }
 
-		[iOS (14,2), Mac (11,0), TV (14,2), Watch (7,1)]
+		[iOS (14,1), Mac (11,0), TV (14,2), Watch (7,1)]
 		[Field ("kCGColorSpaceExtendedDisplayP3")]
 		NSString ExtendedDisplayP3 { get; }
 

@@ -118,6 +118,12 @@ namespace Introspection {
 			case "CKSubscription":
 			case "MPSCnnConvolutionState":
 				return true;
+			case "AVSpeechSynthesisVoice": // Calling description crashes the test
+#if __WATCHOS__
+				return TestRuntime.CheckXcodeVersion (12, 2); // CheckExactXcodeVersion is not implemented in watchOS yet but will be covered by iOS parrot below
+#else
+				return TestRuntime.CheckExactXcodeVersion (12, 2, beta: 3);
+#endif
 			}
 
 			switch (type.Namespace) {

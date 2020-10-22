@@ -2132,13 +2132,10 @@ namespace HealthKit {
 		[Watch (7, 0), iOS (14, 0)]
 		[Field ("HKCategoryTypeIdentifierHandwashingEvent")]
 		HandwashingEvent,
-<<<<<<< HEAD
 
 		[Watch (7, 1), iOS (14, 2)]
 		[Field ("HKCategoryTypeIdentifierHeadphoneAudioExposureEvent")]
 		HeadphoneAudioExposureEvent,
-=======
->>>>>>> xcode12-xharness
 	}
 
 	[Watch (2,0)]

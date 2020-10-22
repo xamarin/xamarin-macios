@@ -26,7 +26,7 @@ namespace MonoTouchFixtures.Network {
 		[SetUp]
 		public void SetUp ()
 		{ 
-			TestRuntime.AssertXcodeVersion (12, 0);
+			TestRuntime.AssertXcodeVersion (12, TestRuntime.MinorXcode12APIMismatch);
 			endpoint = NWEndpoint.Create ("224.0.0.251", "5353");
 			parameters = NWParameters.CreateUdp ();
 			descriptor = new NWMulticastGroup (endpoint);
