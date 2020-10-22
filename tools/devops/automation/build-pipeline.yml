@@ -22,6 +22,8 @@ variables:
 - group: Xamarin Release
 - name: GitHub.Token                                          # Override the GitHub.Token setting defined in the Xamarin Release group
   value: $(github--pat--vs-mobiletools-engineering-service2)  # Use a token dedicated to critical production workflows and help avoid GitHub throttling
+- name: system.debug
+  value: true
 
 trigger:
 - main
@@ -33,10 +35,6 @@ pr:
     include:
     - main
     - d16-*
-
-variables:
-- name: system.debug
-  value: false
 
 jobs:
 - job: Build
