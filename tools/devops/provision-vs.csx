@@ -21,7 +21,7 @@ if (Directory.Exists(vs_install_path))
 
     var vs_version_current = string.Empty;
 
-    var lines = Exec("/usr/libexec/PlistBuddy", "-c", "'Print :CFBundleShortVersionString'", $"\"{vs_install_path}/Contents/Info.plist\"");
+    var lines = Exec("/usr/libexec/PlistBuddy", $"-c 'Print :CFBundleShortVersionString' \"{vs_install_path}/Contents/Info.plist\"");
     if (lines != null && lines.Count > 0)
     {
         vs_version_current = lines[0];
