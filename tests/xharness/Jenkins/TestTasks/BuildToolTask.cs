@@ -45,9 +45,11 @@ namespace Xharness.Jenkins.TestTasks
 			}
 		}
 
-		protected BuildToolTask (Jenkins jenkins, IProcessManager processManager) : base (jenkins) {
+		protected BuildToolTask (Jenkins jenkins, TestProject testProject, IProcessManager processManager) : base (jenkins) {
+			base.TestProject = testProject;
 			ProcessManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 			InitializeTool ();
+			buildToolTask.TestProject = testProject;
 		}
 
 		public override TestPlatform Platform { 
