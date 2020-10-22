@@ -90,7 +90,7 @@ jobs:
       if ([IO.Directory]::Exists('/Library/Frameworks/Xamarin.Mac.framework')) {
         Write-Host "Deleting /Library/Frameworks/Xamarin.Mac.framework"
         # [IO.Directory]::Delete('/Library/Frameworks/Xamarin.Mac.framework', $True)
-        bash -c "sudo rm -Rf /Library/Frameworks/Xamarin.Mac.framework
+        bash -c "sudo rm -Rf /Library/Frameworks/Xamarin.Mac.framework"
       }
     displayName: 'Delete library folders'
     timeoutInMinutes: 5
