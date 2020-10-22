@@ -99,8 +99,8 @@ string FindVariable (string variable)
 Console.WriteLine ($"Provisioning mono from {provision_from_commit}...");
 
 var mono_version_file = "/Library/Frameworks/Mono.framework/Versions/Current/VERSION";
-var min_mono_version = FindVariable(MIN_MONO_VERSION);
-var max_mono_version = FindVariable(MAX_MONO_VERSION);
+var min_mono_version = FindVariable("MIN_MONO_VERSION");
+var max_mono_version = FindVariable("MAX_MONO_VERSION");
 Console.WriteLine($"min_mono_version: {min_mono_version}");
 Console.WriteLine($"max_mono_version: {max_mono_version}");
 
