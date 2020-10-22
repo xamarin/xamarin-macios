@@ -38,7 +38,7 @@ bool IsAtLeastVersion(string actualVer, string minVer)
         {
             return true;
         }
-        else if  (minVerChars[i] > actualVerChars[i])
+        else if (minVerChars[i] > actualVerChars[i])
         {
             return false;
         }
@@ -106,3 +106,10 @@ Console.WriteLine($"max_mono_version: {max_mono_version}");
 
 var current_mono_version = Exec("cat", mono_version_file)[0];
 Console.WriteLine($"current_mono_version: {current_mono_version}");
+
+// is_at_least_version $ACTUAL_MONO_VERSION $MIN_MONO_VERSION
+var currentWithMin = IsAtLeastVersion(current_mono_version, min_mono_version);
+var currentWithMax = IsAtLeastVersion(current_mono_version, max_mono_version);
+
+Console.WriteLine($"IsAtLeastVersion: Current version '{current_mono_version}' compared with minimum version '{min_mono_version}': {currentWithMin}");
+Console.WriteLine($"IsAtLeastVersion: Current version '{current_mono_version}' compared with maximum version '{max_mono_version}': {currentWithMax}");
