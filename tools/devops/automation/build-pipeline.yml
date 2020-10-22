@@ -20,6 +20,7 @@ resources:
 variables:
 - group: Xamarin-Secrets
 - group: Xamarin Release
+- group: XamarinCompatLib                                     # provisionator-uri setting
 - name: GitHub.Token                                          # Override the GitHub.Token setting defined in the Xamarin Release group
   value: $(github--pat--vs-mobiletools-engineering-service2)  # Use a token dedicated to critical production workflows and help avoid GitHub throttling
 - name: system.debug
@@ -55,6 +56,7 @@ jobs:
     inputs:
       provisioning_script: $(Build.SourcesDirectory)/tools/devops/provision-xcode.csx
       provisioning_extra_args: '-vvvv'
+      github-pat: $(GitHub.Token)
     timeoutInMinutes: 250
 
 
