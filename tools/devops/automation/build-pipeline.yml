@@ -26,9 +26,7 @@ variables:
 - name: system.debug
   value: true
 
-trigger:
-- main
-- d16-*
+trigger: none
 
 pr:
   autoCancel: true
