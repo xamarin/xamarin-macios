@@ -52,3 +52,45 @@ void ExecVerbose (string filename, params string[] args)
 	Console.WriteLine ($"{filename} {string.Join (" ", args)}");
 	Exec (filename, args);
 }
+
+bool IsAtLeastVersion(string actualVer, string minVer)
+{
+    if (actualVer.Equals(minVer, StringComparison.OrdinalIgnoreCase))
+    {
+        return true;
+    }
+
+    var actualVerChars = actualVer.ToCharArray();
+    var minVerChars = minVer.ToCharArray();
+
+    var length = actualVerChars.Length > minVerChars.Length ? minVerChars.Length : actualVerChars.Length;
+
+    var i = 0;
+    while (i < length)
+    {
+        if (actualVerChars[i] > minVerChars[i])
+        {
+            return true;
+        }
+        else if (minVerChars[i] > actualVerChars[i])
+        {
+            return false;
+        }
+        i++;
+    }
+
+    if (actualVerChars.Length == minVerChars.Length)
+    {
+        return true;
+    }
+
+    if (actualVerChars.Length > minVerChars.Length )
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
