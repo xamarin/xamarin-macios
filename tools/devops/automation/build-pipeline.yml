@@ -73,7 +73,7 @@ jobs:
       github-pat: $(GitHub.Token)
     timeoutInMinutes: 30
 
-    - powershell: |
+  - powershell: |
       if ([IO.Directory]::Exists('/Developer/MonoTouch')) {
         Write-Host "Deleting /Developer/MonoTouch"
         [IO.Directory]::Delete('/Developer/MonoTouch', $True)
