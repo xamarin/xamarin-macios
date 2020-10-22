@@ -1,0 +1,1 @@
+BrewPackages ("cmake", "autoconf", "automake", "libtool", "python3", "p7zip");
