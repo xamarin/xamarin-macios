@@ -455,6 +455,12 @@
     <Compile Include="..\mtouch\Stripper.cs">
       <Link>external\tools\mtouch\Stripper.cs</Link>
     </Compile>
+    <Compile Include="..\common\AssemblyBuildTarget.cs">
+      <Link>tools\common\AssemblyBuildTarget.cs</Link>
+    </Compile>
+    <Compile Include="..\common\BitCodeMode.cs">
+      <Link>tools\common\BitCodeMode.cs</Link>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

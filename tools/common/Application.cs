@@ -79,6 +79,8 @@ namespace Xamarin.Bundler {
 		public bool IsExtension;
 		public ApplePlatform Platform { get { return Driver.TargetFramework.Platform; } }
 
+		public List<string> InterpretedAssemblies = new List<string> ();
+
 		// Linker config
 		public LinkMode LinkMode = LinkMode.Full;
 		public List<string> LinkSkipped = new List<string> ();
@@ -111,6 +113,80 @@ namespace Xamarin.Bundler {
 		public bool? DisableLldbAttach = null; // Only applicable to Xamarin.Mac
 		public bool? DisableOmitFramePointer = null; // Only applicable to Xamarin.Mac
 		public string CustomBundleName = "MonoBundle"; // Only applicable to Xamarin.Mac
+
+		public bool? UseMonoFramework;
+
+		public BitCodeMode BitCodeMode { get; set; }
+
+		public bool EnableAsmOnlyBitCode { get { return BitCodeMode == BitCodeMode.ASMOnly; } }
+		public bool EnableLLVMOnlyBitCode { get { return BitCodeMode == BitCodeMode.LLVMOnly; } }
+		public bool EnableMarkerOnlyBitCode { get { return BitCodeMode == BitCodeMode.MarkerOnly; } }
+		public bool EnableBitCode { get { return BitCodeMode != BitCodeMode.None; } }
+
+		Dictionary<string, Tuple<AssemblyBuildTarget, string>> assembly_build_targets = new Dictionary<string, Tuple<AssemblyBuildTarget, string>> ();
+
+		public AssemblyBuildTarget LibMonoLinkMode {
+			get {
+				if (Embeddinator) {
+					return AssemblyBuildTarget.StaticObject;
+				} else if (HasFrameworks || UseMonoFramework.Value) {
+					return AssemblyBuildTarget.Framework;
+				} else if (HasDynamicLibraries) {
+					return AssemblyBuildTarget.DynamicLibrary;
+				} else {
+					return AssemblyBuildTarget.StaticObject;
+				}
+			}
+		}
+		public AssemblyBuildTarget LibXamarinLinkMode {
+			get {
+				if (Embeddinator) {
+					return AssemblyBuildTarget.StaticObject;
+				} else if (HasFrameworks) {
+					return AssemblyBuildTarget.Framework;
+				} else if (HasDynamicLibraries) {
+					return AssemblyBuildTarget.DynamicLibrary;
+				} else {
+					return AssemblyBuildTarget.StaticObject;
+				}
+			}
+		}
+		public AssemblyBuildTarget LibPInvokesLinkMode => LibXamarinLinkMode;
+		public AssemblyBuildTarget LibProfilerLinkMode => OnlyStaticLibraries ? AssemblyBuildTarget.StaticObject : AssemblyBuildTarget.DynamicLibrary;
+		public AssemblyBuildTarget LibMonoNativeLinkMode => HasDynamicLibraries ? AssemblyBuildTarget.DynamicLibrary : AssemblyBuildTarget.StaticObject;
+
+		public bool OnlyStaticLibraries {
+			get {
+				return assembly_build_targets.All ((abt) => abt.Value.Item1 == AssemblyBuildTarget.StaticObject);
+			}
+		}
+
+		public bool HasDynamicLibraries {
+			get {
+				return assembly_build_targets.Any ((abt) => abt.Value.Item1 == AssemblyBuildTarget.DynamicLibrary);
+			}
+		}
+
+		public bool HasFrameworks {
+			get {
+				return assembly_build_targets.Any ((abt) => abt.Value.Item1 == AssemblyBuildTarget.Framework);
+			}
+		}
+
+		public bool HasFrameworksDirectory {
+			get {
+				if (Platform == ApplePlatform.MacOSX)
+					return false;
+
+				if (!IsExtension)
+					return true;
+
+				if (IsWatchExtension && Platform == ApplePlatform.WatchOS)
+					return true;
+
+				return false;
+			}
+		}
 
 		bool RequiresXcodeHeaders {
 			get {
@@ -1106,6 +1182,50 @@ namespace Xamarin.Bundler {
 				if (EnableCoopGC.Value)
 					throw ErrorHelper.CreateError (89, Errors.MT0089, "--marshal-objectivec-exceptions", MarshalObjectiveCExceptions.ToString ().ToLowerInvariant ());
 				break;
+			}
+		}
+
+		public bool IsInterpreted (string assembly)
+		{
+			// IsAOTCompiled and IsInterpreted are not opposites: mscorlib.dll can be both.
+			if (!UseInterpreter)
+				return false;
+
+			// Go through the list of assemblies to interpret in reverse order,
+			// so that the last option passed to mtouch takes precedence.
+			for (int i = InterpretedAssemblies.Count - 1; i >= 0; i--) {
+				var opt = InterpretedAssemblies [i];
+				if (opt == "all")
+					return true;
+				else if (opt == "-all")
+					return false;
+				else if (opt == assembly)
+					return true;
+				else if (opt [0] == '-' && opt.Substring (1) == assembly)
+					return false;
+			}
+
+			// There's an implicit 'all' at the start of the list.
+			return true;
+		}
+
+		public bool IsAOTCompiled (string assembly)
+		{
+			if (!UseInterpreter)
+				return true;
+
+			// IsAOTCompiled and IsInterpreted are not opposites: mscorlib.dll can be both:
+			// - mscorlib will always be processed by the AOT compiler to generate required wrapper functions for the interpreter to work
+			// - mscorlib might also be fully AOT-compiled (both when the interpreter is enabled and when it's not)
+			if (assembly == "mscorlib")
+				return true;
+
+			return !IsInterpreted (assembly);
+		}
+
+		public string AssemblyName {
+			get {
+				return Path.GetFileName (RootAssemblies [0]);
 			}
 		}
 	}

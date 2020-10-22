@@ -23,9 +23,6 @@ namespace Xamarin.Bundler {
 
 	public partial class Assembly
 	{
-		public AssemblyBuildTarget BuildTarget;
-		public string BuildTargetName;
-		public bool IsCodeShared;
 		public bool BundleInContainerApp;
 
 		public Dictionary<Abi, AotInfo> AotInfos = new Dictionary<Abi, AotInfo> ();
@@ -42,12 +39,6 @@ namespace Xamarin.Bundler {
 		public HashSet<string> DependencyMap {
 			get {
 				return dependency_map;
-			}
-		}
-
-		public bool IsAOTCompiled {
-			get {
-				return App.IsAOTCompiled (Identity);
 			}
 		}
 

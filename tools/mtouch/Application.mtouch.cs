@@ -17,13 +17,6 @@ using Xamarin.Utils;
 
 namespace Xamarin.Bundler {
 
-	public enum BitCodeMode {
-		None = 0,
-		ASMOnly = 1,
-		LLVMOnly = 2,
-		MarkerOnly = 3,
-	}
-
 	public enum DlsymOptions
 	{
 		Default,
@@ -57,7 +50,6 @@ namespace Xamarin.Bundler {
 
 		public DlsymOptions DlsymOptions;
 		public List<Tuple<string, bool>> DlsymAssemblies;
-		public bool? UseMonoFramework;
 		public bool? PackageMonoFramework;
 
 		public bool NoFastSim;
@@ -69,7 +61,6 @@ namespace Xamarin.Bundler {
 		public List<string> AotOtherArguments = null;
 		public bool? LLVMAsmWriter;
 		public Dictionary<string, string> LLVMOptimizations = new Dictionary<string, string> ();
-		public List<string> InterpretedAssemblies = new List<string> ();
 
 		//
 		// Linker config
@@ -79,44 +70,6 @@ namespace Xamarin.Bundler {
 		public bool LinkerDumpDependencies { get; set; }
 		
 		public bool? BuildDSym;
-
-		public bool IsInterpreted (string assembly)
-		{
-			// IsAOTCompiled and IsInterpreted are not opposites: mscorlib.dll can be both.
-			if (!UseInterpreter)
-				return false;
-
-			// Go through the list of assemblies to interpret in reverse order,
-			// so that the last option passed to mtouch takes precedence.
-			for (int i = InterpretedAssemblies.Count - 1; i >= 0; i--) {
-				var opt = InterpretedAssemblies [i];
-				if (opt == "all")
-					return true;
-				else if (opt == "-all")
-					return false;
-				else if (opt == assembly)
-					return true;
-				else if (opt [0] == '-' && opt.Substring (1) == assembly)
-					return false;
-			}
-
-			// There's an implicit 'all' at the start of the list.
-			return true;
-		}
-
-		public bool IsAOTCompiled (string assembly)
-		{
-			if (!UseInterpreter)
-				return true;
-
-			// IsAOTCompiled and IsInterpreted are not opposites: mscorlib.dll can be both:
-			// - mscorlib will always be processed by the AOT compiler to generate required wrapper functions for the interpreter to work
-			// - mscorlib might also be fully AOT-compiled (both when the interpreter is enabled and when it's not)
-			if (assembly == "mscorlib")
-				return true;
-
-			return !IsInterpreted (assembly);
-		}
 
 		public List<string> UserGccFlags;
 
@@ -136,51 +89,7 @@ namespace Xamarin.Bundler {
 		BuildTasks build_tasks;
 		BuildTask final_build_task; // either lipo or file copy (to final destination)
 
-		Dictionary<string, Tuple<AssemblyBuildTarget, string>> assembly_build_targets = new Dictionary<string, Tuple<AssemblyBuildTarget, string>> ();
-
-		public AssemblyBuildTarget LibMonoLinkMode {
-			get {
-				if (Embeddinator) {
-					return AssemblyBuildTarget.StaticObject;
-				} else if (HasFrameworks || UseMonoFramework.Value) {
-					return AssemblyBuildTarget.Framework;
-				} else if (HasDynamicLibraries) {
-					return AssemblyBuildTarget.DynamicLibrary;
-				} else {
-					return AssemblyBuildTarget.StaticObject;
-				}
-			}
-		}
-		public AssemblyBuildTarget LibXamarinLinkMode {
-			get {
-				if (Embeddinator) {
-					return AssemblyBuildTarget.StaticObject;
-				} else if (HasFrameworks) {
-					return AssemblyBuildTarget.Framework;
-				} else if (HasDynamicLibraries) {
-					return AssemblyBuildTarget.DynamicLibrary;
-				} else {
-					return AssemblyBuildTarget.StaticObject;
-				}
-			}
-		}
-		public AssemblyBuildTarget LibPInvokesLinkMode => LibXamarinLinkMode;
-		public AssemblyBuildTarget LibProfilerLinkMode => OnlyStaticLibraries ? AssemblyBuildTarget.StaticObject : AssemblyBuildTarget.DynamicLibrary;
-		public AssemblyBuildTarget LibMonoNativeLinkMode => HasDynamicLibraries ? AssemblyBuildTarget.DynamicLibrary : AssemblyBuildTarget.StaticObject;
-
 		Dictionary<string, BundleFileInfo> bundle_files = new Dictionary<string, BundleFileInfo> ();
-
-		public bool OnlyStaticLibraries {
-			get {
-				return assembly_build_targets.All ((abt) => abt.Value.Item1 == AssemblyBuildTarget.StaticObject);
-			}
-		}
-
-		public bool HasDynamicLibraries {
-			get {
-				return assembly_build_targets.Any ((abt) => abt.Value.Item1 == AssemblyBuildTarget.DynamicLibrary);
-			}
-		}
 
 		public bool HasAnyDynamicLibraries {
 			get {
@@ -195,12 +104,6 @@ namespace Xamarin.Bundler {
 				if (LibMonoNativeLinkMode == AssemblyBuildTarget.DynamicLibrary)
 					return true;
 				return HasDynamicLibraries;
-			}
-		}
-
-		public bool HasFrameworks {
-			get {
-				return assembly_build_targets.Any ((abt) => abt.Value.Item1 == AssemblyBuildTarget.Framework);
 			}
 		}
 
@@ -455,13 +358,6 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		public BitCodeMode BitCodeMode { get; set; }
-
-		public bool EnableAsmOnlyBitCode { get { return BitCodeMode == BitCodeMode.ASMOnly; } }
-		public bool EnableLLVMOnlyBitCode { get { return BitCodeMode == BitCodeMode.LLVMOnly; } }
-		public bool EnableMarkerOnlyBitCode { get { return BitCodeMode == BitCodeMode.MarkerOnly; } }
-		public bool EnableBitCode { get { return BitCodeMode != BitCodeMode.None; } }
-
 		public ICollection<Abi> AllArchitectures {
 			get {
 				if (all_architectures == null) {
@@ -476,19 +372,6 @@ namespace Xamarin.Bundler {
 				return all_architectures;
 			}
 		}
-
-		public bool HasFrameworksDirectory {
-			get {
-				if (!IsExtension)
-					return true;
-
-				if (IsWatchExtension && Platform == ApplePlatform.WatchOS)
-					return true;
-				
-				return false;
-			}
-		}
-
 
 		public string BundleId {
 			get {
@@ -1123,12 +1006,6 @@ namespace Xamarin.Bundler {
 					rv.Add (abi);
 			}
 			return rv;
-		}
-
-		public string AssemblyName {
-			get {
-				return Path.GetFileName (RootAssemblies [0]);
-			}
 		}
 
 		public string Executable {
