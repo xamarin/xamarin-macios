@@ -36,7 +36,8 @@ pr:
     - d16-*
 
 jobs:
-- job: Build iOS
+- job: Build_iOS
+  displayName: "Build iOS"
   pool:
     vmImage: macOS-10.15
 
@@ -93,3 +94,5 @@ jobs:
       }
     displayName: 'Delete library folders'
     timeoutInMinutes: 5
+
+
