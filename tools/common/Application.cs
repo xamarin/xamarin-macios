@@ -108,6 +108,10 @@ namespace Xamarin.Bundler {
 
 		public BuildTarget BuildTarget;
 
+		public bool? DisableLldbAttach = null; // Only applicable to Xamarin.Mac
+		public bool? DisableOmitFramePointer = null; // Only applicable to Xamarin.Mac
+		public string CustomBundleName = "MonoBundle"; // Only applicable to Xamarin.Mac
+
 		bool RequiresXcodeHeaders {
 			get {
 				switch (Platform) {

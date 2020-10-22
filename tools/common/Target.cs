@@ -501,5 +501,63 @@ namespace Xamarin.Bundler {
 				a.LoadSymbols ();
 		}
 
+		public string GenerateMacMain ()
+		{
+			var sb = new StringBuilder ();
+			using (var sw = new StringWriter (sb)) {
+				sw.WriteLine ("#define MONOMAC 1");
+				sw.WriteLine ("#include <xamarin/xamarin.h>");
+				if (App.Registrar == RegistrarMode.PartialStatic)
+					sw.WriteLine ("extern \"C\" void xamarin_create_classes_Xamarin_Mac ();");
+				sw.WriteLine ();
+				sw.WriteLine ();
+				sw.WriteLine ();
+				sw.WriteLine ("extern \"C\" int xammac_setup ()");
+
+				sw.WriteLine ("{");
+				if (App.CustomBundleName != null) {
+					sw.WriteLine ("\textern NSString* xamarin_custom_bundle_name;");
+					sw.WriteLine ("\txamarin_custom_bundle_name = @\"" + App.CustomBundleName + "\";");
+				}
+				if (!App.IsDefaultMarshalManagedExceptionMode)
+					sw.WriteLine ("\txamarin_marshal_managed_exception_mode = MarshalManagedExceptionMode{0};", App.MarshalManagedExceptions);
+				sw.WriteLine ("\txamarin_marshal_objectivec_exception_mode = MarshalObjectiveCExceptionMode{0};", App.MarshalObjectiveCExceptions);
+				if (App.DisableLldbAttach.HasValue ? App.DisableLldbAttach.Value : !App.EnableDebug)
+					sw.WriteLine ("\txamarin_disable_lldb_attach = true;");
+				if (App.DisableOmitFramePointer ?? App.EnableDebug)
+					sw.WriteLine ("\txamarin_disable_omit_fp = true;");
+				sw.WriteLine ();
+
+
+				if (App.Registrar == RegistrarMode.Static)
+					sw.WriteLine ("\txamarin_create_classes ();");
+				else if (App.Registrar == RegistrarMode.PartialStatic)
+					sw.WriteLine ("\txamarin_create_classes_Xamarin_Mac ();");
+
+				if (App.EnableDebug)
+					sw.WriteLine ("\txamarin_debug_mode = TRUE;");
+
+				sw.WriteLine ($"\tsetenv (\"MONO_GC_PARAMS\", \"{App.MonoGCParams}\", 1);");
+
+				sw.WriteLine ("\txamarin_supports_dynamic_registration = {0};", App.DynamicRegistrationSupported ? "TRUE" : "FALSE");
+
+#if MMP
+				// AOT for .NET/macOS needs some design to verify it's staying the same way as current Xamarin.Mac
+				// for instance: we might decide to select which assemblies to AOT in a different way.
+				if (App.AOTOptions != null && App.AOTOptions.IsHybridAOT)
+					sw.WriteLine ("\txamarin_mac_hybrid_aot = TRUE;");
+#endif
+
+				if (Driver.IsUnifiedMobile)
+					sw.WriteLine ("\txamarin_mac_modern = TRUE;");
+
+				sw.WriteLine ("\treturn 0;");
+				sw.WriteLine ("}");
+				sw.WriteLine ();
+			}
+
+			return sb.ToString ();
+		}
+
 	}
 }
