@@ -82,6 +82,14 @@ jobs:
       github-pat: $(GitHub.Token)
     timeoutInMinutes: 60
 
+  - task: xamops.azdevex.provisionator-task.provisionator@1
+    displayName: 'Provision .NET Core'
+    inputs:
+      provisioning_script: $(Build.SourcesDirectory)/tools/devops/provision-dotnetcore.csx
+      provisioning_extra_args: '-vvvv'
+      github-pat: $(GitHub.Token)
+    timeoutInMinutes: 60
+
   - powershell: |
       if ([IO.Directory]::Exists('/Developer/MonoTouch')) {
         Write-Host "Deleting /Developer/MonoTouch"
