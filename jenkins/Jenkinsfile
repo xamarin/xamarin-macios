@@ -454,9 +454,18 @@ timestamps {
                             currentStage = "${STAGE_NAME}"
                             echo ("Building on ${env.NODE_NAME}")
                             sh ("env | sort") // Print out environment for debug purposes
+
+                            branchName = env.BRANCH_NAME
+                            echo ("Branch name: ${branchName}")
+
+                            if (branchName == 'yaml-pipeline') {
+                                echo ("Build skipped for the ${branchName} branch as a separate Azure DevOps build provides coverage for these changes")
+                                return
+                            }
+
                             scmVars = checkout scm
                             isPr = (env.CHANGE_ID && !env.CHANGE_ID.empty ? true : false)
-                            branchName = env.BRANCH_NAME
+
                             if (isPr) {
                                 gitHash = sh (script: "git log -1 --pretty=%H refs/remotes/origin/${env.BRANCH_NAME}", returnStdout: true).trim ()
                             } else {
