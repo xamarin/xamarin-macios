@@ -53,17 +53,17 @@ namespace Xamarin.Linker.Steps {
 			return ctor_string_ref;
 		}
 
-		public override void ProcessAssembly (AssemblyDefinition assembly)
+		protected override void TryProcessAssembly (AssemblyDefinition assembly)
 		{
 			// Clear out the method reference we have, so that we import the method definition again
 			ctor_string_ref = null;
 
-			base.ProcessAssembly (assembly);
+			base.TryProcessAssembly (assembly);
 		}
 
-		public override void ProcessField (FieldDefinition field)
+		protected override void TryProcessField (FieldDefinition field)
 		{
-			base.ProcessField (field);
+			base.TryProcessField (field);
 
 			PreserveBlockField (field);
 		}

@@ -16,7 +16,7 @@ namespace Xamarin.Linker {
 			}
 		}
 
-		public override void ProcessType (TypeDefinition type)
+		protected override void TryProcessType (TypeDefinition type)
 		{
 			if (!Annotations.IsMarked (type))
 				LinkContext.AddLinkedAwayType (type);

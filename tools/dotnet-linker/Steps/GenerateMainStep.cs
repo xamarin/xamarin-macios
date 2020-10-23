@@ -6,9 +6,9 @@ using Xamarin.Linker;
 namespace Xamarin {
 
 	public class GenerateMainStep : ConfigurationAwareStep {
-		protected override void EndProcess ()
+		protected override void TryEndProcess ()
 		{
-			base.EndProcess ();
+			base.TryEndProcess ();
 
 			var registration_methods = Configuration.RegistrationMethods;
 			var items = new List<MSBuildItem> ();

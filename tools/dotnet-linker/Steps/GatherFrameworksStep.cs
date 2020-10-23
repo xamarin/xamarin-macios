@@ -11,9 +11,9 @@ namespace Xamarin {
 		HashSet<string> Frameworks = new HashSet<string> ();
 		HashSet<string> WeakFrameworks = new HashSet<string> ();
 
-		protected override void ProcessAssembly (AssemblyDefinition assembly)
+		protected override void TryProcessAssembly (AssemblyDefinition assembly)
 		{
-			base.ProcessAssembly (assembly);
+			base.TryProcessAssembly (assembly);
 
 			if (Configuration.PlatformAssembly != assembly.Name.Name)
 				return;
@@ -21,10 +21,8 @@ namespace Xamarin {
 			global::Frameworks.Gather (Configuration.Application, assembly, Frameworks, WeakFrameworks);
 		}
 
-		protected override void EndProcess ()
+		protected override void TryEndProcess ()
 		{
-			base.EndProcess ();
-
 			// Remove duplicates. WeakFrameworks takes precedence
 			Frameworks.ExceptWith (WeakFrameworks);
 

@@ -4,10 +4,8 @@ using System.Collections.Generic;
 namespace Xamarin.Linker {
 
 	public class ExtractBindingLibrariesStep : ConfigurationAwareStep {
-		protected override void EndProcess ()
+		protected override void TryEndProcess ()
 		{
-			base.EndProcess ();
-
 			// No attributes are currently linked away, which means we don't need to worry about linked away LinkWith attributes.
 			// Ref: https://github.com/mono/linker/issues/952 (still open as of this writing).
 			var exceptions = new List<Exception> ();

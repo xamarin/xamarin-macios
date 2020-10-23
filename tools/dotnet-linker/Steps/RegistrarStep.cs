@@ -6,10 +6,8 @@ using Xamarin.Utils;
 
 namespace Xamarin.Linker {
 	public class RegistrarStep : ConfigurationAwareStep {
-		protected override void EndProcess ()
+		protected override void TryEndProcess ()
 		{
-			base.EndProcess ();
-
 			var app = Configuration.Application;
 
 			app.SelectRegistrar ();
