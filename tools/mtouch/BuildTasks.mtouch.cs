@@ -83,7 +83,7 @@ namespace Xamarin.Bundler
 
 		protected override void Execute ()
 		{
-			Target.GenerateIOSMain (Abi, MainM, RegistrationMethods);
+			Target.GenerateMain (Target.App.Platform, Abi, MainM, RegistrationMethods);
 		}
 	}
 

@@ -792,7 +792,7 @@ namespace Xamarin.Bundler {
 			string [] cflags = Array.Empty<string> ();
 
 			var main = Path.Combine (App.Cache.Location, "main.m");
-			BuildTarget.GenerateMacMain (main);
+			BuildTarget.GenerateMain (ApplePlatform.MacOSX, Abi.x86_64, main, null);
 			string registrarPath = null;
 
 			CheckSystemMonoVersion ();
