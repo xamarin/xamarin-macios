@@ -506,11 +506,33 @@ namespace Xamarin.Bundler {
 			try {
 				var sb = new StringBuilder ();
 				using (var sw = new StringWriter (sb)) {
+
+					if (registration_methods != null) {
+						foreach (var method in registration_methods) {
+							sw.Write ("extern \"C\" void ");
+							sw.Write (method);
+							sw.WriteLine ("();");
+						}
+						sw.WriteLine ();
+					}
+
+					sw.WriteLine ("static void xamarin_invoke_registration_methods ()");
+					sw.WriteLine ("{");
+					if (registration_methods != null) {
+						for (int i = 0; i < registration_methods.Count; i++) {
+							sw.Write ("\t");
+							sw.Write (registration_methods [i]);
+							sw.WriteLine ("();");
+						}
+					}
+					sw.WriteLine ("}");
+					sw.WriteLine ();
+
 					switch (platform) {
 					case ApplePlatform.iOS:
 					case ApplePlatform.TVOS:
 					case ApplePlatform.WatchOS:
-						GenerateIOSMain (sw, abi, registration_methods);
+						GenerateIOSMain (sw, abi);
 						break;
 					case ApplePlatform.MacOSX:
 						GenerateMacMain (sw);
@@ -575,13 +597,15 @@ namespace Xamarin.Bundler {
 			if (Driver.IsUnifiedMobile)
 				sw.WriteLine ("\txamarin_mac_modern = TRUE;");
 
+			sw.WriteLine ("\txamarin_invoke_registration_methods ();");
+
 			sw.WriteLine ("\treturn 0;");
 			sw.WriteLine ("}");
 			sw.WriteLine ();
 		}
 
 		// note: this is executed under Parallel.ForEach
-		void GenerateIOSMain (StringWriter sw, Abi abi, IList<string> registration_methods)
+		void GenerateIOSMain (StringWriter sw, Abi abi)
 		{
 			var app = App;
 			var assemblies = Assemblies;
@@ -655,14 +679,6 @@ namespace Xamarin.Bundler {
 			sw.WriteLine ("}");
 			sw.WriteLine ();
 
-			if (registration_methods != null) {
-				foreach (var method in registration_methods) {
-					sw.Write ("extern \"C\" void ");
-					sw.Write (method);
-					sw.WriteLine ("();");
-				}
-			}
-
 			// Burn in a reference to the profiling symbol so that the native linker doesn't remove it
 			// On iOS we can pass -u to the native linker, but that doesn't work on tvOS, where
 			// we're building with bitcode (even when bitcode is disabled, we still build with the
@@ -703,13 +719,7 @@ namespace Xamarin.Bundler {
 			if (assembly_location.Length > 0)
 				sw.WriteLine ("\txamarin_set_assembly_directories (&assembly_locations);");
 
-			if (registration_methods != null) {
-				for (int i = 0; i < registration_methods.Count; i++) {
-					sw.Write ("\t");
-					sw.Write (registration_methods [i]);
-					sw.WriteLine ("();");
-				}
-			}
+			sw.WriteLine ("\txamarin_invoke_registration_methods ();");
 
 			if (app.MonoNativeMode != MonoNativeMode.None) {
 				string mono_native_lib;
