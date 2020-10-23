@@ -33,12 +33,15 @@ namespace Xamarin {
 
 				Configuration.Target.GenerateMain (contents, app.Platform, abi, file, registration_methods);
 
-				items.Add (new MSBuildItem {
+				var item = new MSBuildItem {
 					Include = file,
 					Metadata = {
 						{ "Arch", abi.AsArchString () },
 					},
-				});
+				};
+				if (app.EnableDebug)
+					item.Metadata.Add ("Arguments", "-DDEBUG");
+				items.Add (item);
 			}
 
 			Configuration.WriteOutputForMSBuild ("_MainFile", items);
