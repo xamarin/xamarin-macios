@@ -457,7 +457,6 @@ timestamps {
 
                             branchName = env.BRANCH_NAME
                             echo ("Branch name: ${branchName}")
-
                             if (branchName == 'yaml-pipeline') {
                                 echo ("Build skipped for the ${branchName} branch as a separate Azure DevOps build provides coverage for these changes")
                                 return
@@ -465,7 +464,6 @@ timestamps {
 
                             scmVars = checkout scm
                             isPr = (env.CHANGE_ID && !env.CHANGE_ID.empty ? true : false)
-
                             if (isPr) {
                                 gitHash = sh (script: "git log -1 --pretty=%H refs/remotes/origin/${env.BRANCH_NAME}", returnStdout: true).trim ()
                             } else {
