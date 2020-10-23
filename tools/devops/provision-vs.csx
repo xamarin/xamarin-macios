@@ -22,6 +22,8 @@ if (Directory.Exists(vs_install_path))
     var vs_version_current = string.Empty;
 
     var sourceDirectory = Env("BUILD_SOURCESDIRECTORY");
+    Console.WriteLine($"BUILD_SOURCESDIRECTORY: {sourceDirectory}");
+
     var vsMacVersionScript = Path.Combine(sourceDirectory, "tools", "devops", "automation", "VSMacVersion.ps1");
     var lines = Exec("pwsh", vsMacVersionScript);
     if (lines != null && lines.Count > 0)
