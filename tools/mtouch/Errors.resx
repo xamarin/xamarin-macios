@@ -1298,6 +1298,23 @@
 	<!-- 223x: CollectUnmarkedMembersSubStep -->
 	<!-- 224x: PreserveBlockCodeSubStep -->
 	
+	<!-- 2300 -> 2399 is used by/reserved for ConfigurationAwareStep subclasses in the linker -->
+
+	<data name="MX_ConfigurationAwareStep" xml:space="preserve">
+		<value>The linker step '{0}' failed during processing.</value>
+		<comment>This is a message when processing fails in the linker.
+			{0} - The name of the step that fails.
+		</comment>
+	</data>
+
+	<!-- 230x: SetupStep -->
+	<!-- 231x: GatherFrameworksStep -->
+	<!-- 232x: GenerateMainStep -->
+	<!-- 233x: CollectAssembliesStep -->
+	<!-- 234x: ExtractBindingLibrariesStep -->
+	<!-- 235x: LoadNonSkippedAssembliesStep -->
+	<!-- 236x: RegistrarStep -->
+
 	<data name="MX3001" xml:space="preserve">
 		<value>Could not {0} the assembly '{1}'
 		</value>

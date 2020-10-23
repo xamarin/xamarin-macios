@@ -8,6 +8,9 @@ using Xamarin.Linker;
 namespace Xamarin {
 
 	public class GatherFrameworksStep : ConfigurationAwareStep {
+		protected override string Name { get; } = "Gather Frameworks";
+		protected override int ErrorCode { get; } = 2310;
+
 		HashSet<string> Frameworks = new HashSet<string> ();
 		HashSet<string> WeakFrameworks = new HashSet<string> ();
 

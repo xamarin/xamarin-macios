@@ -4,6 +4,9 @@ using System.Collections.Generic;
 namespace Xamarin.Linker {
 
 	public class ExtractBindingLibrariesStep : ConfigurationAwareStep {
+		protected override string Name { get; } = "Extract Binding Libraries";
+		protected override int ErrorCode { get; } = 2340;
+
 		protected override void TryEndProcess ()
 		{
 			// No attributes are currently linked away, which means we don't need to worry about linked away LinkWith attributes.

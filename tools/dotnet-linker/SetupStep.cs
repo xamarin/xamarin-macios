@@ -13,6 +13,8 @@ using Xamarin.Linker.Steps;
 namespace Xamarin {
 
 	public class SetupStep : ConfigurationAwareStep {
+		protected override string Name { get; } = "Setup";
+		protected override int ErrorCode { get; } = 2300;
 
 		List<IStep> _steps;
 		public List<IStep> Steps {

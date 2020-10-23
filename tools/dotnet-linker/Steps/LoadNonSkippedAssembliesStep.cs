@@ -6,6 +6,8 @@ using Mono.Linker;
 namespace Xamarin.Linker {
 	// List all the assemblies we care about (i.e. the ones that have not been linked away)
 	public class LoadNonSkippedAssembliesStep : ConfigurationAwareStep {
+		protected override string Name { get; } = "Load Non Skipped Assemblies";
+		protected override int ErrorCode { get; } = 2350;
 
 		protected override void TryProcessAssembly (AssemblyDefinition assembly)
 		{

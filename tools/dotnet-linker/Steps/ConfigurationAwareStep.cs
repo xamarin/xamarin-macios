@@ -24,24 +24,13 @@ namespace Xamarin.Linker {
 			ErrorHelper.Show (exceptions);
 		}
 
-		protected virtual void TryProcess ()
-		{
-			base.Process ();
-		}
-
 		protected sealed override void Process ()
 		{
 			try {
 				TryProcess ();
 			} catch (Exception e) {
-				Report (e);
-				throw;
+				Report (Fail (e));
 			}
-		}
-
-		protected virtual void TryProcessAssembly (AssemblyDefinition assembly)
-		{
-			base.ProcessAssembly (assembly);
 		}
 
 		protected sealed override void ProcessAssembly (AssemblyDefinition assembly)
@@ -49,14 +38,8 @@ namespace Xamarin.Linker {
 			try {
 				TryProcessAssembly (assembly);
 			} catch (Exception e) {
-				Report (e);
-				throw;
+				Report (Fail (assembly, e));
 			}
-		}
-
-		protected virtual void TryEndProcess ()
-		{
-			base.EndProcess ();
 		}
 
 		protected sealed override void EndProcess ()
@@ -64,9 +47,45 @@ namespace Xamarin.Linker {
 			try {
 				TryEndProcess ();
 			} catch (Exception e) {
-				Report (e);
-				throw;
+				Report (FailEnd (e));
 			}
 		}
+
+		// state-aware versions to be subclassed
+		protected virtual void TryProcess ()
+		{
+		}
+
+		protected virtual void TryProcessAssembly (AssemblyDefinition assembly)
+		{
+		}
+
+		protected virtual void TryEndProcess ()
+		{
+		}
+
+		// failure overrides, with defaults
+
+		protected virtual Exception Fail (AssemblyDefinition assembly, Exception e)
+		{
+			/* Re-use MX_ExceptionalSubSteps here, it works just fine */
+			return ErrorHelper.CreateError (ErrorCode, e, Errors.MX_ExceptionalSubSteps, Name, assembly?.FullName);
+		}
+
+		protected virtual Exception Fail (Exception e)
+		{
+			return ErrorHelper.CreateError (ErrorCode | 1, e, Errors.MX_ConfigurationAwareStep, Name);
+		}
+
+		protected virtual Exception FailEnd (Exception e)
+		{
+			return ErrorHelper.CreateError (ErrorCode | 2, e, Errors.MX_ConfigurationAwareStep, Name);
+		}
+
+		// abstracts
+
+		protected abstract string Name { get; }
+
+		protected abstract int ErrorCode { get; }
 	}
 }
