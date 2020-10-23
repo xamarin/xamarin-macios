@@ -1178,6 +1178,15 @@
 	</data>
 
 	<!-- 2020 -> 2099 is used by ExceptionalSubStep subclasses in the linker -->
+
+	<data name="MX_ExceptionalSubSteps" xml:space="preserve">
+		<value>The linker step '{0}' failed processing `{1}`.</value>
+		<comment>This is a message when processing an assembly/type/field/method/property/event fails in the linker.
+			{0} - The name of the step that fails.
+			{1} - The name of the assembly/type/field/method/property/event that failed processing.
+		</comment>
+	</data>
+
 	<!-- 202x: OptimizeGeneratedCodeSubStep -->
 	<!-- 203x: RemoveUserResourcesSubStep -->
 	<!-- 204x: CoreHttpMessageHandler -->
