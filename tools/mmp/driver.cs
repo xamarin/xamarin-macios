@@ -791,7 +791,8 @@ namespace Xamarin.Bundler {
 		{
 			string [] cflags = Array.Empty<string> ();
 
-			string mainSource = BuildTarget.GenerateMacMain ();
+			var main = Path.Combine (App.Cache.Location, "main.m");
+			BuildTarget.GenerateMacMain (main);
 			string registrarPath = null;
 
 			CheckSystemMonoVersion ();
@@ -1005,8 +1006,6 @@ namespace Xamarin.Bundler {
 					args.Add (state.SourcePath);
 				}
 
-				var main = Path.Combine (App.Cache.Location, "main.m");
-				File.WriteAllText (main, mainSource);
 				sourceFiles.Add (main);
 				args.AddRange (sourceFiles);
 

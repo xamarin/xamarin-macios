@@ -501,7 +501,7 @@ namespace Xamarin.Bundler {
 				a.LoadSymbols ();
 		}
 
-		public string GenerateMacMain ()
+		public void GenerateMacMain (string main_source)
 		{
 			var sb = new StringBuilder ();
 			using (var sw = new StringWriter (sb)) {
@@ -556,11 +556,11 @@ namespace Xamarin.Bundler {
 				sw.WriteLine ();
 			}
 
-			return sb.ToString ();
+			Driver.WriteIfDifferent (main_source, sb.ToString (), true);
 		}
 
 		// note: this is executed under Parallel.ForEach
-		public string GenerateIOSMain (Abi abi, string main_source, IList<string> registration_methods)
+		public void GenerateIOSMain (Abi abi, string main_source, IList<string> registration_methods)
 		{
 			var app = App;
 			var assemblies = Assemblies;
@@ -789,8 +789,6 @@ namespace Xamarin.Bundler {
 			} catch (Exception e) {
 				throw new ProductException (4001, true, e, Errors.MT4001, main_source);
 			}
-
-			return main_source;
 		}
 
 		static string EncodeAotSymbol (string symbol)
