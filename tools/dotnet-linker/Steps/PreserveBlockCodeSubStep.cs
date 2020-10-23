@@ -13,6 +13,9 @@ namespace Xamarin.Linker.Steps {
 		MethodDefinition ctor_string_def;
 		MethodReference ctor_string_ref;
 
+		protected override string Name { get; } = "Preserve Block Code";
+		protected override int ErrorCode { get; } = 2240;
+
 		public override SubStepTargets Targets {
 			get {
 				return SubStepTargets.Assembly |
@@ -53,18 +56,14 @@ namespace Xamarin.Linker.Steps {
 			return ctor_string_ref;
 		}
 
-		protected override void TryProcessAssembly (AssemblyDefinition assembly)
+		protected override void Process (AssemblyDefinition assembly)
 		{
 			// Clear out the method reference we have, so that we import the method definition again
 			ctor_string_ref = null;
-
-			base.TryProcessAssembly (assembly);
 		}
 
-		protected override void TryProcessField (FieldDefinition field)
+		protected override void Process (FieldDefinition field)
 		{
-			base.TryProcessField (field);
-
 			PreserveBlockField (field);
 		}
 

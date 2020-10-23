@@ -1295,6 +1295,8 @@
 	<!-- 220x: PreserveSmartEnumConversionsSubStep -->
 	<!-- 221x: RemoveBitcodeIncompatibleCodeStep -->
 	<!-- 222x: RemoveRejectedTypesStep -->
+	<!-- 223x: CollectUnmarkedMembersSubStep -->
+	<!-- 224x: PreserveBlockCodeSubStep -->
 	
 	<data name="MX3001" xml:space="preserve">
 		<value>Could not {0} the assembly '{1}'
