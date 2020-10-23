@@ -215,16 +215,55 @@ $(TMP_PKG_DIR)/Microsoft.$1.Bundle.$2.pkg: $(TMP_PKG_DIR)/Microsoft.$1.Workload.
 	$$(Q) mv $$@.tmp $$@
 
 # Copy the bundle package from our temporary directory to the target directory
-$(DOTNET_PKG_DIR)/Microsoft.$1.Bundle.$2.pkg: $(TMP_PKG_DIR)/Microsoft.$1.Bundle.$2.pkg | $(DOTNET_PKG_DIR)
+$(DOTNET_PKG_DIR)/%: $(TMP_PKG_DIR)/% | $(DOTNET_PKG_DIR)
 	$$(Q) $(CP) $$< $$@
 
 PACKAGE_TARGETS += $(DOTNET_PKG_DIR)/Microsoft.$1.Bundle.$2.pkg
+
+$(TMP_PKG_DIR)/Microsoft.$1.Bundle.$2.zip: $($(1)_NUGET_TARGETS) $(WORKLOAD_TARGETS) Makefile $(REF_PACK_$(4)) $(SDK_PACK_$(4)) | $(TMP_PKG_DIR)
+	$$(Q) rm -rf $$@ $$@.tmpdir $$@.tmp
+	$$(Q) mkdir -p $$@.tmpdir/dotnet/sdk-manifests/$(DOTNET5_VERSION_BAND)/
+	$$(Q) mkdir -p $$@.tmpdir/dotnet/packs/Microsoft.$1.Sdk
+	$$(Q) mkdir -p $$@.tmpdir/dotnet/packs/Microsoft.$1.Ref
+	$$(Q) $(CP) -r Microsoft.NET.Workload.$1 $$@.tmpdir/dotnet/sdk-manifests/$(DOTNET5_VERSION_BAND)/
+	$$(Q) $(CP) -r $(DOTNET_DESTDIR)/Microsoft.$1.Sdk $$@.tmpdir/dotnet/packs/Microsoft.$1.Sdk/$2
+	$$(Q) $(CP) -r $(DOTNET_DESTDIR)/Microsoft.$1.Ref $$@.tmpdir/dotnet/packs/Microsoft.$1.Ref/$2
+	$$(Q_GEN) cd $$@.tmpdir && zip -9rq $$(abspath $$@.tmp) .
+	$$(Q) mv $$@.tmp $$@
+	$$(Q) echo Created $$@
+
+PACKAGE_TARGETS += $(DOTNET_PKG_DIR)/Microsoft.$1.Bundle.$2.zip
 endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call CreatePackage,$(platform),$($(platform)_NUGET_VERSION_NO_METADATA),$(shell echo $(platform) | tr A-Z a-z),$(shell echo $(platform) | tr a-z A-Z))))
 
+define CreateMsi
+$(TMP_PKG_DIR)/Microsoft.NET.Workload.$1.$2.wsx: ./generate-wix.csharp Makefile $(TMP_PKG_DIR)/Microsoft.$1.Bundle.$2.zip
+	$$(Q_GEN) ./generate-wix.csharp "$1" "$$@" "$(TMP_PKG_DIR)/Microsoft.$1.Bundle.$2.zip.tmpdir/dotnet" "$2"
+
+$(TMP_PKG_DIR)/Microsoft.NET.Workload.$1.$2.msi: $(TMP_PKG_DIR)/Microsoft.NET.Workload.$1.$2.wsx .stamp-check-wixl
+	$$(Q_GEN) wixl -o "$$@" "$$<" -a x64
+
+MSI_TARGETS += $(DOTNET_PKG_DIR)/Microsoft.NET.Workload.$1.$2.msi
+endef
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call CreateMsi,$(platform),$($(platform)_NUGET_VERSION_NO_METADATA))))
+
+.stamp-check-wixl:
+	$(Q) if ! type wixl; then \
+		echo "Installing msitools to get wixl..."; \
+		if ! brew install msitools; then \
+			if ! type wixl; then \
+				echo "Failed to install wixl"; \
+				exit 1; \
+			fi; \
+		fi; \
+		echo "Installed msitools"; \
+	fi
+	$(Q) touch $@
+
 TARGETS += $(WORKLOAD_TARGETS)
 
-package: $(PACKAGE_TARGETS)
+msi: $(MSI_TARGETS)
+package: $(PACKAGE_TARGETS) $(MSI_TARGETS)
 
 ifdef ENABLE_DOTNET
 all-local:: $(TARGETS) targets/Xamarin.Shared.Sdk.Versions.targets
