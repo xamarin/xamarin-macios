@@ -74,6 +74,17 @@ jobs:
       github-pat: $(GitHub.Token)
     timeoutInMinutes: 60
 
+  - powershell: |
+      $vsInstallPath = "/Applications/Visual Studio.app"
+      $version = /usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "${vsInstallPath}/Contents/Info.plist"
+      Write-Host "Visual Studio for Mac version: ${version}"
+
+      Write-Host "Setting the following variable:"
+      Write-Host "  VSMac.Version: ${version}"
+      echo "##vso[task.setvariable variable=VSMac.Version]$version"
+    displayName: 'VS for Mac version'
+    timeoutInMinutes: 5
+
   - task: xamops.azdevex.provisionator-task.provisionator@1
     displayName: 'Provision VS'
     inputs:
