@@ -503,8 +503,13 @@ namespace Xamarin.Bundler {
 
 		public void GenerateMain (ApplePlatform platform, Abi abi, string main_source, IList<string> registration_methods)
 		{
+			var sb = new StringBuilder ();
+			GenerateMain (sb, platform, abi, main_source, registration_methods);
+		}
+
+		public void GenerateMain (StringBuilder sb, ApplePlatform platform, Abi abi, string main_source, IList<string> registration_methods)
+		{
 			try {
-				var sb = new StringBuilder ();
 				using (var sw = new StringWriter (sb)) {
 
 					if (registration_methods != null) {
