@@ -340,6 +340,11 @@
 							'%(ResolvedFileToPublish.NuGetPackageId)' == '$(_MonoNugetPackageId)'
 							"
 			/>
+
+			<!-- These are mono libraries whose id needs to be fixed -->
+			<_MonoLibraryFix Include="@(_MonoLibrary)" Condition="'%(_MonoLibrary.Extension)' == '.dylib'">
+				<TargetPath>$(_IntermediateNativeLibraryDir)%(Filename)%(Extension)</TargetPath>
+			</_MonoLibraryFix>
 		</ItemGroup>
 	</Target>
 
@@ -403,7 +408,13 @@
 
 	This doesn't work after linking with these libraries, so this must be fixed to be @executable_path/. Eventually mono will ship dylibs we don't have to fix (https://github.com/dotnet/runtime/issues/34637).
 	-->
-	<Target Name="_UpdateDynamicLibraryId" DependsOnTargets="_ComputeVariables;_ParseBundlerArguments" Inputs="@(_MonoLibrary)" Outputs="@(_MonoLibrary -> '$(_IntermediateNativeLibraryDir)%(Filename)%(Extension)')" Condition=" '$(_PlatformName)' != 'macOS' ">
+	<Target
+		Name="_UpdateDynamicLibraryId"
+		DependsOnTargets="_ComputeVariables;_ParseBundlerArguments"
+		Inputs="@(_MonoLibraryFix)"
+		Outputs="@(_MonoLibraryFix.TargetPath)"
+		Condition=" '$(_PlatformName)' != 'macOS'">
+
 		<PropertyGroup>
 			<_ExecutablePathPrefix Condition="'$(_PlatformName)' != 'macOS'">@executable_path/</_ExecutablePathPrefix>
 			<_ExecutablePathPrefix Condition="'$(_PlatformName)' == 'macOS'">@executable_path/../$(_CustomBundleName)/</_ExecutablePathPrefix>
@@ -412,21 +423,21 @@
 		<!-- install_name_tool modifies the file in-place, so copy it first to a temporary directory before we fix it -->
 		<Copy
 			Condition="'$(IsMacEnabled)' == 'true'"
-			SourceFiles="%(_MonoLibrary.FullPath)"
+			SourceFiles="%(_MonoLibraryFix.FullPath)"
 			DestinationFolder="$(_IntermediateNativeLibraryDir)"
 		/>
 		<Exec
 			Condition="'$(IsMacEnabled)' == 'true'"
-			Command="xcrun install_name_tool -id $(_ExecutablePathPrefix)%(_MonoLibrary.Filename)%(_MonoLibrary.Extension) $(_IntermediateNativeLibraryDir)%(_MonoLibrary.Filename)%(_MonoLibrary.Extension)"
+			Command="xcrun install_name_tool -id $(_ExecutablePathPrefix)%(_MonoLibraryFix.Filename)%(_MonoLibraryFix.Extension) %(_MonoLibraryFix.TargetPath)"
 			EnvironmentVariables="DEVELOPER_DIR=$(_SdkDevPath)"
 		/>
 
 		<!-- Update our item groups -->
 		<ItemGroup Condition="'$(IsMacEnabled)' == 'true'">
-			<_MonoLibraryFixed Include="@(_MonoLibrary -> '$(_IntermediateNativeLibraryDir)%(Filename)%(Extension)')" />
-			<ResolvedFileToPublish Remove="@(_MonoLibrary)" />
+			<_MonoLibraryFixed Include="@(_MonoLibraryFix -> '%(TargetPath)')" />
+			<ResolvedFileToPublish Remove="@(_MonoLibraryFix)" />
 			<ResolvedFileToPublish Include="@(_MonoLibraryFixed)" />
-			<_MonoLibrary Remove="@(_MonoLibrary)" />
+			<_MonoLibrary Remove="@(_MonoLibraryFix)" />
 			<_MonoLibrary Include="@(_MonoLibraryFixed)" />
 		</ItemGroup>
 	</Target>
