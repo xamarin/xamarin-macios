@@ -4,29 +4,19 @@ on:
     types: [opened, reopened, labeled, unlabeled, synchronize]
 
 jobs:
-  monojenkins-pr:
+  labels-check:
     runs-on: ubuntu-latest
     name: Mono Jenkins
 
-    if: github.actor == 'monojenkins'
-
     steps:
     - run: exit 0
+      # always happy if monojenkins
+      if: github.actor == 'monojenkins'
 
-  empty_pr_labels:
-    runs-on: ubuntu-latest
-    name: Labels missing 
-
-    if: github.actor != 'monojenkins' && join(github.event.pull_request.labels, ',') == ''
-
-    # only execute when the user is not our bot and we have no labels
-    steps:
     - run: exit 1
+      # failure if not monojenkins and no labels
+      if: github.actor != 'monojenkins' && join(github.event.pull_request.labels, ',') == ''
 
-  present_labels:
-    runs-on: ubuntu-latest
-    name: Labels present
-    if: github.actor != 'monojenkins' && join(github.event.pull_request.labels, ',') != ''
-    # only execute when the user is not our bot and we have no labels
-    steps:
     - run: exit 0
+      # success if not monojenkins but labels
+      if: github.actor != 'monojenkins' && join(github.event.pull_request.labels, ',') != ''
