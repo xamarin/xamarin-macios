@@ -119,16 +119,13 @@ namespace Xamarin.iOS.Tasks {
 					string newCultureError = TranslateError (culture, errorCode);
 
 					if (commonIgnoreList.Contains (errorCode)) {
-						if (englishError != newCultureError) {
+						if (englishError != newCultureError)
 							Assert.IsFalse (true, $"{errorCode} is translated. Remove {errorCode} from ~/LocalizationIgnore/common-Translations.ignore");
-						}
 					} else if (cultureIgnoreList.Contains (errorCode)) {
-						if (englishError != newCultureError) {
+						if (englishError != newCultureError)
 							Assert.IsFalse (true, $"{errorCode} is translated. Remove {errorCode} from ~/LocalizationIgnore/{culture}-Translations.ignore");
-						}
-					} else if (englishError == newCultureError) {
+					} else if (englishError == newCultureError)
 						errorList += $"{errorCode} ";
-					}
 				} finally {
 					Thread.CurrentThread.CurrentUICulture = originalCulture;
 				}
