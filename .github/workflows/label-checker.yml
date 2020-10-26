@@ -1,13 +1,22 @@
+name: Labels verification
 on:
-  pull_request_target:
-    types: [opened, labeled, unlabeled, synchronize]
+  pull_request:
+    types: [opened, reopened, labeled, unlabeled, synchronize]
 
 jobs:
-  check_pr_labels:
+  labels-check:
     runs-on: ubuntu-latest
     name: Labels verification
 
-    # only execute when the user is not our bot and we have no labels
-    if: ${{ github.event.pull_request.labels == '' }}
     steps:
-    - run: echo ::set-output name=status::failure
+    - run: exit 0
+      # always happy if monojenkins
+      if: github.actor == 'monojenkins'
+
+    - run: exit 1
+      # failure if not monojenkins and no labels
+      if: github.actor != 'monojenkins' && join(github.event.pull_request.labels, ',') == ''
+
+    - run: exit 0
+      # success if not monojenkins but labels
+      if: github.actor != 'monojenkins' && join(github.event.pull_request.labels, ',') != ''
