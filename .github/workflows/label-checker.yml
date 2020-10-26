@@ -26,7 +26,7 @@ jobs:
   present_labels:
     runs-on: ubuntu-latest
     name: Labels present
-    if: actor != 'monojenkins' && join(github.event.pull_request.labels, ',') != ''
+    if: github.actor != 'monojenkins' && join(github.event.pull_request.labels, ',') != ''
     # only execute when the user is not our bot and we have no labels
     steps:
     - run: exit 0
