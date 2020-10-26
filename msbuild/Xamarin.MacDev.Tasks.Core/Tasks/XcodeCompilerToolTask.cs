@@ -143,9 +143,10 @@ namespace Xamarin.MacDev.Tasks
 			foreach (var item in items)
 				args.AddQuoted (item.GetMetadata ("FullPath"));
 
-			var fileName = GetFullPathToTool ();
-			var arguments = args.ToList ();
-			var rv = ExecuteAsync (fileName, arguments, sdkDevPath, environment: environment, mergeOutput: false).Result;
+			var arguments = new List<string> ();
+			arguments.Add (ToolName);
+			arguments.AddRange (args.ToList ());
+			var rv = ExecuteAsync ("xcrun", arguments, sdkDevPath, environment: environment, mergeOutput: false).Result;
 			var exitCode = rv.ExitCode;
 			var messages = rv.StandardOutput.ToString ();
 			File.WriteAllText (manifest.ItemSpec, messages);
