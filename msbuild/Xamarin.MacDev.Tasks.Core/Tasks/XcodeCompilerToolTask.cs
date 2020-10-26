@@ -119,15 +119,15 @@ namespace Xamarin.MacDev.Tasks
 		static bool? translated;
 
 		[DllImport ("/usr/lib/libSystem.dylib", SetLastError = true)]
-		unsafe static extern int sysctlbyname (/* const char */ [MarshalAs (UnmanagedType.LPStr)] string property, void *oldp, void *oldlenp, void *newp, /* size_t */ long newlen);
+		static extern int sysctlbyname (/* const char */ [MarshalAs (UnmanagedType.LPStr)] string property, ref long oldp, ref long oldlenp, IntPtr newp, /* size_t */ long newlen);
 
 		// https://developer.apple.com/documentation/apple_silicon/about_the_rosetta_translation_environment
-		static unsafe bool IsTranslated ()
+		static bool IsTranslated ()
 		{
 			if (translated == null) {
 				long result = 0;
 				long size = sizeof (long);
-				translated = sysctlbyname ("sysctl.proc_translated", (void*)&result, (void*)&size, null, 0) != -1;
+				translated = sysctlbyname ("sysctl.proc_translated", ref result, ref size, IntPtr.Zero, 0) != -1;
 			}
 			return translated.Value;
 		}
