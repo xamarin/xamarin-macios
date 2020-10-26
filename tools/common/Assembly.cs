@@ -48,6 +48,9 @@ namespace Xamarin.Bundler {
 
 	public partial class Assembly
 	{
+		public AssemblyBuildTarget BuildTarget;
+		public string BuildTargetName;
+		public bool IsCodeShared;
 		public List<string> Satellites;
 		public Application App { get { return Target.App; } }
 
@@ -720,6 +723,12 @@ namespace Xamarin.Bundler {
 			if (File.Exists (config_src)) {
 				string config_target = Path.Combine (directory, FileName + ".config");
 				Application.UpdateFile (config_src, config_target, true);
+			}
+		}
+
+		public bool IsAOTCompiled {
+			get {
+				return App.IsAOTCompiled (Identity);
 			}
 		}
 	}

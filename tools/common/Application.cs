@@ -79,6 +79,8 @@ namespace Xamarin.Bundler {
 		public bool IsExtension;
 		public ApplePlatform Platform { get { return Driver.TargetFramework.Platform; } }
 
+		public List<string> InterpretedAssemblies = new List<string> ();
+
 		// Linker config
 		public LinkMode LinkMode = LinkMode.Full;
 		public List<string> LinkSkipped = new List<string> ();
@@ -107,6 +109,119 @@ namespace Xamarin.Bundler {
 		public string RegistrarOutputLibrary;
 
 		public BuildTarget BuildTarget;
+
+		public bool? DisableLldbAttach = null; // Only applicable to Xamarin.Mac
+		public bool? DisableOmitFramePointer = null; // Only applicable to Xamarin.Mac
+		public string CustomBundleName = "MonoBundle"; // Only applicable to Xamarin.Mac
+
+		public bool? UseMonoFramework;
+
+		// The bitcode mode to compile to.
+		// This variable does not apply to macOS, because there's no bitcode on macOS.
+		public BitCodeMode BitCodeMode { get; set; }
+
+		public bool EnableAsmOnlyBitCode { get { return BitCodeMode == BitCodeMode.ASMOnly; } }
+		public bool EnableLLVMOnlyBitCode { get { return BitCodeMode == BitCodeMode.LLVMOnly; } }
+		public bool EnableMarkerOnlyBitCode { get { return BitCodeMode == BitCodeMode.MarkerOnly; } }
+		public bool EnableBitCode { get { return BitCodeMode != BitCodeMode.None; } }
+
+		// assembly_build_targets describes what kind of native code each assembly should be compiled into for mobile targets (iOS, tvOS, watchOS).
+		// An assembly can be compiled into: static object (.o), dynamic library (.dylib) or a framework (.framework).
+		// In the case of a framework, each framework may contain the native code for multiple assemblies.
+		// This variable does not apply to macOS (if assemblies are AOT-compiled, the AOT compiler will output a .dylib next to the assembly and there's nothing extra for us)
+		Dictionary<string, Tuple<AssemblyBuildTarget, string>> assembly_build_targets = new Dictionary<string, Tuple<AssemblyBuildTarget, string>> ();
+
+		// How Mono should be embedded into the app.
+		public AssemblyBuildTarget LibMonoLinkMode {
+			get {
+				if (Platform == ApplePlatform.MacOSX) {
+					// This property was implemented for iOS, but might be re-used for macOS if desired after testing to verify it works as expected.
+					throw ErrorHelper.CreateError (99, Errors.MX0099, "LibMonoLinkMode isn't a valid operation for macOS apps.");
+				}
+
+				if (Embeddinator) {
+					return AssemblyBuildTarget.StaticObject;
+				} else if (HasFrameworks || UseMonoFramework.Value) {
+					return AssemblyBuildTarget.Framework;
+				} else if (HasDynamicLibraries) {
+					return AssemblyBuildTarget.DynamicLibrary;
+				} else {
+					return AssemblyBuildTarget.StaticObject;
+				}
+			}
+		}
+
+		// How libxamarin should be embedded into the app.
+		public AssemblyBuildTarget LibXamarinLinkMode {
+			get {
+				if (Platform == ApplePlatform.MacOSX) {
+					// This property was implemented for iOS, but might be re-used for macOS if desired after testing to verify it works as expected.
+					throw ErrorHelper.CreateError (99, Errors.MX0099, "LibXamarinLinkMode isn't a valid operation for macOS apps.");
+				}
+
+				if (Embeddinator) {
+					return AssemblyBuildTarget.StaticObject;
+				} else if (HasFrameworks) {
+					return AssemblyBuildTarget.Framework;
+				} else if (HasDynamicLibraries) {
+					return AssemblyBuildTarget.DynamicLibrary;
+				} else {
+					return AssemblyBuildTarget.StaticObject;
+				}
+			}
+		}
+
+		// How the generated libpinvoke library should be linked into the app.
+		public AssemblyBuildTarget LibPInvokesLinkMode => LibXamarinLinkMode;
+		// How the profiler library should be linked into the app.
+		public AssemblyBuildTarget LibProfilerLinkMode => OnlyStaticLibraries ? AssemblyBuildTarget.StaticObject : AssemblyBuildTarget.DynamicLibrary;
+		// How the libmononative library should be linked into the app.
+		public AssemblyBuildTarget LibMonoNativeLinkMode => HasDynamicLibraries ? AssemblyBuildTarget.DynamicLibrary : AssemblyBuildTarget.StaticObject;
+
+		// If all assemblies are compiled into static libraries.
+		public bool OnlyStaticLibraries {
+			get {
+				if (Platform == ApplePlatform.MacOSX)
+					throw ErrorHelper.CreateError (99, Errors.MX0099, "Using assembly_build_targets isn't a valid operation for macOS apps.");
+
+				return assembly_build_targets.All ((abt) => abt.Value.Item1 == AssemblyBuildTarget.StaticObject);
+			}
+		}
+
+		// If any assembly in the app is compiled into a dynamic library.
+		public bool HasDynamicLibraries {
+			get {
+				if (Platform == ApplePlatform.MacOSX)
+					throw ErrorHelper.CreateError (99, Errors.MX0099, "Using assembly_build_targets isn't a valid operation for macOS apps.");
+
+				return assembly_build_targets.Any ((abt) => abt.Value.Item1 == AssemblyBuildTarget.DynamicLibrary);
+			}
+		}
+
+		// If any assembly in the app is compiled into a framework.
+		public bool HasFrameworks {
+			get {
+				if (Platform == ApplePlatform.MacOSX)
+					throw ErrorHelper.CreateError (99, Errors.MX0099, "Using assembly_build_targets isn't a valid operation for macOS apps.");
+
+				return assembly_build_targets.Any ((abt) => abt.Value.Item1 == AssemblyBuildTarget.Framework);
+			}
+		}
+
+		// If this application has a Frameworks directory (or if any frameworks should be put in a containing app's Framework directory).
+		// This is used to know where to place embedded .frameworks (for app extensions they should go into the containing app's Frameworks directory).
+		// This logic works on all platforms.
+		public bool HasFrameworksDirectory {
+			get {
+				if (!IsExtension)
+					return true;
+
+				if (IsWatchExtension && Platform == ApplePlatform.WatchOS)
+					return true;
+
+				return false;
+			}
+		}
 
 		bool RequiresXcodeHeaders {
 			get {
@@ -1102,6 +1217,64 @@ namespace Xamarin.Bundler {
 				if (EnableCoopGC.Value)
 					throw ErrorHelper.CreateError (89, Errors.MT0089, "--marshal-objectivec-exceptions", MarshalObjectiveCExceptions.ToString ().ToLowerInvariant ());
 				break;
+			}
+		}
+
+		// For mobile device builds: returns whether an assembly is interpreted.
+		// For macOS: N/A
+		public bool IsInterpreted (string assembly)
+		{
+			if (Platform == ApplePlatform.MacOSX)
+				throw ErrorHelper.CreateError (99, Errors.MX0099, "IsInterpreted isn't a valid operation for macOS apps.");
+
+			if (IsSimulatorBuild)
+				return false;
+
+			// IsAOTCompiled and IsInterpreted are not opposites: mscorlib.dll can be both.
+			if (!UseInterpreter)
+				return false;
+
+			// Go through the list of assemblies to interpret in reverse order,
+			// so that the last option passed to mtouch takes precedence.
+			for (int i = InterpretedAssemblies.Count - 1; i >= 0; i--) {
+				var opt = InterpretedAssemblies [i];
+				if (opt == "all")
+					return true;
+				else if (opt == "-all")
+					return false;
+				else if (opt == assembly)
+					return true;
+				else if (opt [0] == '-' && opt.Substring (1) == assembly)
+					return false;
+			}
+
+			// There's an implicit 'all' at the start of the list.
+			return true;
+		}
+
+		// For mobile device builds: returns whether an assembly is AOT-compiled.
+		// For macOS: while AOT is supported for macOS, this particular method was not written for macOS, and would need
+		// revision/testing to be used so desired.
+		public bool IsAOTCompiled (string assembly)
+		{
+			if (Platform == ApplePlatform.MacOSX)
+				throw ErrorHelper.CreateError (99, Errors.MX0099, "IsAOTCompiled isn't a valid operation for macOS apps.");
+
+			if (!UseInterpreter)
+				return true;
+
+			// IsAOTCompiled and IsInterpreted are not opposites: mscorlib.dll can be both:
+			// - mscorlib will always be processed by the AOT compiler to generate required wrapper functions for the interpreter to work
+			// - mscorlib might also be fully AOT-compiled (both when the interpreter is enabled and when it's not)
+			if (assembly == "mscorlib")
+				return true;
+
+			return !IsInterpreted (assembly);
+		}
+
+		public string AssemblyName {
+			get {
+				return Path.GetFileName (RootAssemblies [0]);
 			}
 		}
 	}
