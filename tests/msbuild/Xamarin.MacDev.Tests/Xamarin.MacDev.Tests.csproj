@@ -44,20 +44,20 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\..\tests\common\Configuration.cs">
-      <Link>Configuration.cs</Link>
+    <Compile Include="..\..\mtouch\Cache.cs">
+      <Link>external\Cache.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\tests\common\DotNet.cs">
-      <Link>DotNet.cs</Link>
+    <Compile Include="..\..\common\Configuration.cs">
+      <Link>external\Configuration.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\tests\common\Profile.cs">
-      <Link>Profile.cs</Link>
+    <Compile Include="..\..\common\DotNet.cs">
+      <Link>external\DotNet.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\tests\common\ExecutionHelper.cs">
-      <Link>ExecutionHelper.cs</Link>
+    <Compile Include="..\..\common\ExecutionHelper.cs">
+      <Link>external\ExecutionHelper.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\tests\mtouch\Cache.cs">
-      <Link>Cache.cs</Link>
+    <Compile Include="..\..\common\Profile.cs">
+      <Link>external\Profile.cs</Link>
     </Compile>
   </ItemGroup>
 </Project>

@@ -45,6 +45,10 @@ $(DOWNLOADS):
 			if test -n "$$FAILURE_REASON_PATH"; then printf "$$MSG\n" "[$(notdir $@)]($(MONO_URL))" >> "$$FAILURE_REASON_PATH"; fi; \
 		fi; \
 		if [[ x$$EC != x0 ]]; then exit $$EC; fi; \
+		if [[ "x$$MACIOS_CACHE_DOWNLOADS" != "x" ]]; then \
+			$(CP) $@.tmp ~/Library/Caches/xamarin-macios/"$(notdir $@)"; \
+			echo "Cached the download of $(notdir $@) in ~/Library/Caches/xamarin-macios"; \
+		fi; \
 	fi
 	$(Q) mv $@.tmp $@
 	$(Q) echo "Downloaded $(MONO_URL)"

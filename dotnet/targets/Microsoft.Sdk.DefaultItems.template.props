@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	This file contains default item includes (globs and implicit references).
+
+	*** WARNING ***
+
+	This file is imported by AutoImport.props, and will be imported by all
+	projects using Microsoft.NET.Sdk.  All Item includes in this file *MUST*
+	be hidden behind a TargetPlatformIdentifier based condition.
+
+	This file can also not define any properties. However, due to the
+	order MSBuild evaluates properties, it's possible to use properties
+	defined in our .targets files in conditions in ItemGroups in this
+	file.
+
+	*** WARNING ***
+
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<!-- Default plist file inclusion -->
+	<ItemGroup Condition="'$(TargetPlatformIdentifier)' == '@PLATFORM@' And '$(_EnableDefaultXamarinItems)' == 'true'">
+		<None Include="*.plist">
+			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
+		</None>
+	</ItemGroup>
+
+	<!-- Default SceneKit assets inclusion -->
+	<ItemGroup Condition="'$(TargetPlatformIdentifier)' == '@PLATFORM@' And '$(_EnableDefaultXamarinItems)' == 'true'">
+		<SceneKitAsset Include="**\*.scnassets\*">
+			<IsDefaultItem>true</IsDefaultItem>
+		</SceneKitAsset>
+	</ItemGroup>
+
+	<!-- Default Asset Catalog file inclusion -->
+	<ItemGroup Condition="'$(TargetPlatformIdentifier)' == '@PLATFORM@' And '$(_EnableDefaultXamarinItems)' == 'true' ">
+		<ImageAsset Include="**\*.xcassets\**\*.png;**\*.xcassets\*\*.jpg;**\*.xcassets\**\*.json">
+			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
+			<Visible>false</Visible>
+			<IsDefaultItem>true</IsDefaultItem>
+		</ImageAsset>
+	</ItemGroup>
+
+	<!-- Default Storyboard file inclusion -->
+	<ItemGroup Condition="'$(TargetPlatformIdentifier)' == '@PLATFORM@' And '$(_EnableDefaultXamarinItems)' == 'true'">
+		<InterfaceDefinition Include="**\*.storyboard;**\*.xib">
+			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
+			<IsDefaultItem>true</IsDefaultItem>
+		</InterfaceDefinition>
+	</ItemGroup>
+</Project>

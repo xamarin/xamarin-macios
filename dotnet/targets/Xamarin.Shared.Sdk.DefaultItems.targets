@@ -18,6 +18,7 @@
     <EnableDefaultCompileItems Condition=" '$(IsBindingProject)' == 'true' ">false</EnableDefaultCompileItems>
   </PropertyGroup>
 
+<<<<<<< HEAD
   <!-- Default plist file inclusion -->
   <ItemGroup Condition="'$(_EnableDefaultXamarinItems)' == 'true' ">
     <None Include="*.plist">
@@ -49,6 +50,8 @@
     </InterfaceDefinition>
   </ItemGroup>
 
+=======
+>>>>>>> origin/main
   <!-- Architecture -->
   <!-- If the old-style variables are set, use those -->
   <PropertyGroup Condition=" '$(TargetArchitectures)' == '' ">

@@ -24,6 +24,7 @@
     <Reference Include="Microsoft.Build.Tasks.Core" HintPath="$(MSBuildBinPath)\Microsoft.Build.Tasks.Core.dll" />
     <Reference Include="Microsoft.Build.Utilities.Core" HintPath="$(MSBuildBinPath)\Microsoft.Build.Utilities.Core.dll" />
     <Reference Include="Xamarin.iOS.Tasks" HintPath="..\..\..\msbuild\Xamarin.iOS.Tasks\bin\$(Configuration)\netstandard2.0\Xamarin.iOS.Tasks.dll" />
+    <Reference Include="Xamarin.Localization.MSBuild" HintPath="..\..\..\msbuild\Xamarin.iOS.Tasks\bin\$(Configuration)\netstandard2.0\Xamarin.Localization.MSBuild.dll" />
     <PackageReference Include="NUnit" Version="3.12.0" />
     <PackageReference Include="NUnit.ConsoleRunner" Version="3.11.1" />
     <PackageReference Include="NUnit.Extension.NUnitV2ResultWriter" Version="3.6.0" />
@@ -44,20 +45,20 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\..\tests\common\Configuration.cs">
-      <Link>Configuration.cs</Link>
+    <Compile Include="..\..\mtouch\Cache.cs">
+      <Link>external\Cache.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\tests\common\DotNet.cs">
-      <Link>DotNet.cs</Link>
+    <Compile Include="..\..\common\Configuration.cs">
+      <Link>external\Configuration.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\tests\common\Profile.cs">
-      <Link>Profile.cs</Link>
+    <Compile Include="..\..\common\DotNet.cs">
+      <Link>external\DotNet.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\tests\common\ExecutionHelper.cs">
-      <Link>ExecutionHelper.cs</Link>
+    <Compile Include="..\..\common\ExecutionHelper.cs">
+      <Link>external\ExecutionHelper.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\tests\mtouch\Cache.cs">
-      <Link>Cache.cs</Link>
+    <Compile Include="..\..\common\Profile.cs">
+      <Link>external\Profile.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>
