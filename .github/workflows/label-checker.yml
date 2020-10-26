@@ -6,7 +6,7 @@ on:
 jobs:
   labels-check:
     runs-on: ubuntu-latest
-    name: Mono Jenkins
+    name: Labels verification
 
     steps:
     - run: exit 0
