@@ -1403,6 +1403,12 @@ namespace Xamarin.Bundler {
             }
         }
         
+        internal static string MX_ExceptionalSubSteps {
+            get {
+                return ResourceManager.GetString("MX_ExceptionalSubSteps", resourceCulture);
+            }
+        }
+        
         internal static string MT2101 {
             get {
                 return ResourceManager.GetString("MT2101", resourceCulture);
