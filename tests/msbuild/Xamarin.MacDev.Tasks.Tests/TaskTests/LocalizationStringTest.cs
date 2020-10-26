@@ -118,17 +118,15 @@ namespace Xamarin.iOS.Tasks {
 					string englishError = TranslateError ("en-US", errorCode);
 					string newCultureError = TranslateError (culture, errorCode);
 
-					if (commonIgnoreList.Contains (errorCode)){
-						if (englishError != newCultureError){
+					if (commonIgnoreList.Contains (errorCode)) {
+						if (englishError != newCultureError) {
 							Assert.IsFalse (true, $"{errorCode} is translated. Remove {errorCode} from ~/LocalizationIgnore/common-Translations.ignore");
 						}
-					}
-					else if (cultureIgnoreList.Contains (errorCode)){
-						if (englishError != newCultureError){
+					} else if (cultureIgnoreList.Contains (errorCode)) {
+						if (englishError != newCultureError) {
 							Assert.IsFalse (true, $"{errorCode} is translated. Remove {errorCode} from ~/LocalizationIgnore/{culture}-Translations.ignore");
 						}
-					}
-					else if (englishError == newCultureError){
+					} else if (englishError == newCultureError) {
 						errorList += $"{errorCode} ";
 					}
 				} finally {
@@ -139,28 +137,24 @@ namespace Xamarin.iOS.Tasks {
 			Assert.AreEqual (string.Empty, errorList, $"The following errors were not translated. Add them to ~/LocalizationIgnore/common-Translations.ignore or ~/LocaliztionIgnore/{culture}-Translations.ignore");
 		}
 
-		private List<string> ReadFile (string path){
+		private List<string> ReadFile (string path)
+		{
 			List<string> ignoreList = new List<string> ();
 			string temp;
-			try
-			{
-				using (var sr = new StreamReader (path))
-				{
+			try {
+				using (var sr = new StreamReader (path)) {
 					while (!sr.EndOfStream){
 						if (sr.Peek () == -1)
 							break;
 						temp = sr.ReadLine ();
-						if (string.IsNullOrEmpty (temp) || temp.Trim ()[0] == '#'){
+						if (string.IsNullOrEmpty (temp) || temp.Trim ()[0] == '#') {
 							continue;
-						}
-						else {
+						} else {
 							ignoreList.Add (temp.Trim ());
 						}
 					}
 				}
-			}
-			catch (IOException e)
-			{
+			} catch (IOException e) {
 				Assert.IsTrue (false, $"Could not read file at: {path}");
 			}
 			return ignoreList;
