@@ -1,0 +1,13 @@
+on:
+  pull_request_target:
+    types: [opened, labeled, unlabeled, synchronize]
+
+jobs:
+  check_pr_labels:
+    runs-on: ubuntu-latest
+    name: Labels verification
+
+    # only execute when the user is not our bot and we have no labels
+    if: ${{ github.event.pull_request.sender.login != 'monojenkins' && github.event.pull_request.labels == '' }}
+    steps:
+    - run: echo ::set-output name=status::failure
