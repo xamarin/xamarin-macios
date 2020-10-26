@@ -1177,7 +1177,24 @@
 		</value>
 	</data>
 
-	<!-- 2020 -> 2099 is used by the linker -->
+	<!-- 2020 -> 2099 is used by ExceptionalSubStep subclasses in the linker -->
+
+	<data name="MX_ExceptionalSubSteps" xml:space="preserve">
+		<value>The linker step '{0}' failed processing `{1}`.</value>
+		<comment>This is a message when processing an assembly/type/field/method/property/event fails in the linker.
+			{0} - The name of the step that fails.
+			{1} - The name of the assembly/type/field/method/property/event that failed processing.
+		</comment>
+	</data>
+
+	<!-- 202x: OptimizeGeneratedCodeSubStep -->
+	<!-- 203x: RemoveUserResourcesSubStep -->
+	<!-- 204x: CoreHttpMessageHandler -->
+	<!-- 205x: RemoveCode -->
+	<!-- 206x: SealerSubStep -->
+	<!-- 207x: MetadataReducerSubStep -->
+	<!-- 208x: MarkNSObjects -->
+	<!-- 209x: InlinerSubStep -->
 
 	<data name="MT2101" xml:space="preserve">
 		<value>Can't resolve the reference '{0}', referenced from the method '{1}' in '{2}'.
@@ -1274,6 +1291,11 @@
 		</value>
 	</data>
 
+	<!-- 2200 -> 2299 is used by/reserved for ExceptionalSubStep subclasses in the linker -->
+	<!-- 220x: PreserveSmartEnumConversionsSubStep -->
+	<!-- 221x: RemoveBitcodeIncompatibleCodeStep -->
+	<!-- 222x: RemoveRejectedTypesStep -->
+	
 	<data name="MX3001" xml:space="preserve">
 		<value>Could not {0} the assembly '{1}'
 		</value>

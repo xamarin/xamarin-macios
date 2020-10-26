@@ -17,8 +17,6 @@ using ObjCRuntime;
 namespace Xamarin.Linker {
 	public class LinkerConfiguration {
 		public List<Abi> Abis;
-		// This is the AssemblyName MSBuild property for the main project (which is also the root/entry assembly)
-		public string AssemblyName { get; private set; }
 		public string CacheDirectory { get; private set; }
 		public Version DeploymentTarget { get; private set; }
 		public HashSet<string> FrameworkAssemblies { get; private set; } = new HashSet<string> ();
@@ -95,7 +93,8 @@ namespace Xamarin.Linker {
 
 				switch (key) {
 				case "AssemblyName":
-					AssemblyName = value;
+					// This is the AssemblyName MSBuild property for the main project (which is also the root/entry assembly)
+					Application.RootAssemblies.Add (value);
 					break;
 				case "CacheDirectory":
 					CacheDirectory = value;
@@ -238,7 +237,7 @@ namespace Xamarin.Linker {
 			if (Verbosity > 0) {
 				Console.WriteLine ($"LinkerConfiguration:");
 				Console.WriteLine ($"    ABIs: {string.Join (", ", Abis.Select (v => v.AsArchString ()))}");
-				Console.WriteLine ($"    AssemblyName: {AssemblyName}");
+				Console.WriteLine ($"    AssemblyName: {Application.AssemblyName}");
 				Console.WriteLine ($"    CacheDirectory: {CacheDirectory}");
 				Console.WriteLine ($"    Debug: {Application.EnableDebug}");
 				Console.WriteLine ($"    DeploymentTarget: {DeploymentTarget}");

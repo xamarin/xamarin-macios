@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 using Xamarin.Linker;
 
@@ -10,70 +11,37 @@ namespace Xamarin {
 		{
 			base.TryEndProcess ();
 
-			var registration_methods = Configuration.RegistrationMethods;
+			var registration_methods = new List<string> (Configuration.RegistrationMethods);
 			var items = new List<MSBuildItem> ();
 
 			var app = Configuration.Application;
+
+			// We want this called before any other initialization methods.
+			registration_methods.Insert (0, "xamarin_initialize_dotnet");
+
 			foreach (var abi in Configuration.Abis) {
 
 				var file = Path.Combine (Configuration.CacheDirectory, $"main.{abi.AsArchString ()}.mm");
-				var contents = new StringWriter ();
+				var contents = new StringBuilder ();
 
-				contents.WriteLine ("#include \"xamarin/xamarin.h\"");
-				contents.WriteLine ();
-				if (registration_methods != null) {
-					foreach (var method in registration_methods) {
-						contents.Write ("extern \"C\" void ");
-						contents.Write (method);
-						contents.WriteLine (" ();");
-					}
-				}
-				contents.WriteLine ("void xamarin_setup_impl ()");
-				contents.WriteLine ("{");
-				contents.WriteLine ("\tsetenv (\"DOTNET_SYSTEM_GLOBALIZATION_INVARIANT\", \"1\", 1); // https://github.com/xamarin/xamarin-macios/issues/8906");
-				contents.WriteLine ("\txamarin_executable_name = \"{0}\";", Configuration.AssemblyName);
-				if (registration_methods != null) {
-					for (int i = 0; i < registration_methods.Count; i++) {
-						contents.Write ("\t");
-						contents.Write (registration_methods [i]);
-						contents.WriteLine ("();");
-					}
-				}
-				if (!app.IsDefaultMarshalManagedExceptionMode)
-					contents.WriteLine ("\txamarin_marshal_managed_exception_mode = MarshalManagedExceptionMode{0};", app.MarshalManagedExceptions);
-				contents.WriteLine ("\txamarin_marshal_objectivec_exception_mode = MarshalObjectiveCExceptionMode{0};", app.MarshalObjectiveCExceptions);
-				contents.WriteLine ("\txamarin_supports_dynamic_registration = {0};", app.DynamicRegistrationSupported ? "TRUE" : "FALSE");
-				contents.WriteLine ("}");
-				contents.WriteLine ();
+				contents.AppendLine ("#include <stdlib.h>");
+				contents.AppendLine ("static void xamarin_initialize_dotnet ()");
+				contents.AppendLine ("{");
+				contents.AppendLine ("\tsetenv (\"DOTNET_SYSTEM_GLOBALIZATION_INVARIANT\", \"1\", 1); // https://github.com/xamarin/xamarin-macios/issues/8906");
+				contents.AppendLine ("}");
+				contents.AppendLine ();
 
-				if (Configuration.Platform == Utils.ApplePlatform.MacOSX) {
-					contents.WriteLine ("extern \"C\" int xammac_setup ()");
-					contents.WriteLine ("{");
-					contents.WriteLine ("\txamarin_setup_impl ();");
-					contents.WriteLine ("\treturn 0;");
-					contents.WriteLine ("}");
-				} else {
-					contents.WriteLine ("void xamarin_initialize_callbacks () __attribute__ ((constructor));");
-					contents.WriteLine ("void xamarin_initialize_callbacks ()");
-					contents.WriteLine ("{");
-					contents.WriteLine ("\txamarin_setup = xamarin_setup_impl;");
-					contents.WriteLine ("}");
-					contents.WriteLine ();
-					contents.WriteLine ("int");
-					contents.WriteLine ("main (int argc, char** argv)");
-					contents.WriteLine ("{");
-					contents.WriteLine ("\t@autoreleasepool { return xamarin_main (argc, argv, XamarinLaunchModeApp); }");
-					contents.WriteLine ("}");
-				}
+				Configuration.Target.GenerateMain (contents, app.Platform, abi, file, registration_methods);
 
-				File.WriteAllText (file, contents.ToString ());
-
-				items.Add (new MSBuildItem {
+				var item = new MSBuildItem {
 					Include = file,
 					Metadata = {
 						{ "Arch", abi.AsArchString () },
 					},
-				});
+				};
+				if (app.EnableDebug)
+					item.Metadata.Add ("Arguments", "-DDEBUG");
+				items.Add (item);
 			}
 
 			Configuration.WriteOutputForMSBuild ("_MainFile", items);
