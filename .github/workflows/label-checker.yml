@@ -8,6 +8,6 @@ jobs:
     name: Labels verification
 
     # only execute when the user is not our bot and we have no labels
-    if: ${{ github.event.pull_request.sender.login != 'monojenkins' && github.event.pull_request.labels == '' }}
+    if: ${{ github.event.pull_request.labels == '' }}
     steps:
     - run: echo ::set-output name=status::failure
