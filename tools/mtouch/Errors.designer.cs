@@ -1523,6 +1523,12 @@ namespace Xamarin.Bundler {
             }
         }
         
+        internal static string MX_ConfigurationAwareStep {
+            get {
+                return ResourceManager.GetString("MX_ConfigurationAwareStep", resourceCulture);
+            }
+        }
+        
         internal static string MX3001 {
             get {
                 return ResourceManager.GetString("MX3001", resourceCulture);

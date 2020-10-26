@@ -7,9 +7,12 @@ using Xamarin.Linker;
 namespace Xamarin {
 
 	public class GenerateMainStep : ConfigurationAwareStep {
-		protected override void EndProcess ()
+		protected override string Name { get; } = "Generate Main";
+		protected override int ErrorCode { get; } = 2320;
+
+		protected override void TryEndProcess ()
 		{
-			base.EndProcess ();
+			base.TryEndProcess ();
 
 			var registration_methods = new List<string> (Configuration.RegistrationMethods);
 			var items = new List<MSBuildItem> ();

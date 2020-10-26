@@ -1,27 +1,11 @@
 using System;
 using System.Collections.Generic;
-using Mono.Linker;
-using Mono.Linker.Steps;
 
 using Xamarin.Bundler;
-using Xamarin.Tuner;
 
 namespace Xamarin.Linker {
-	public abstract class ConfigurationAwareSubStep : BaseSubStep {
-		public LinkerConfiguration Configuration { get; private set; }
-
-		public DerivedLinkContext LinkContext {
-			get { return Configuration.DerivedLinkContext; }
-		}
-
-		public override sealed void Initialize (LinkContext context)
-		{
-			base.Initialize (context);
-
-			Configuration = LinkerConfiguration.GetInstance (context);
-		}
-
-		protected void Report (Exception exception)
+	public abstract class ConfigurationAwareSubStep : ExceptionalSubStep {
+		protected override void Report (Exception exception)
 		{
 			ErrorHelper.Show (exception);
 		}
@@ -34,4 +18,3 @@ namespace Xamarin.Linker {
 		}
 	}
 }
-

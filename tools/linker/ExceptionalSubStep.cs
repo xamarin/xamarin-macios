@@ -47,7 +47,7 @@ namespace Xamarin.Linker {
 			try {
 				Process (assembly);
 			} catch (Exception e) {
-				throw Fail (assembly, e);
+				Report (Fail (assembly, e));
 			}
 		}
 
@@ -56,7 +56,7 @@ namespace Xamarin.Linker {
 			try {
 				Process (type);
 			} catch (Exception e) {
-				throw Fail (type, e);
+				Report (Fail (type, e));
 			}
 		}
 
@@ -65,7 +65,7 @@ namespace Xamarin.Linker {
 			try {
 				Process (field);
 			} catch (Exception e) {
-				throw Fail (field, e);
+				Report (Fail (field, e));
 			}
 		}
 
@@ -74,7 +74,7 @@ namespace Xamarin.Linker {
 			try {
 				Process (method);
 			} catch (Exception e) {
-				throw Fail (method, e);
+				Report (Fail (method, e));
 			}
 		}
 
@@ -83,7 +83,7 @@ namespace Xamarin.Linker {
 			try {
 				Process (property);
 			} catch (Exception e) {
-				throw Fail (property, e);
+				Report (Fail (property, e));
 			}
 		}
 
@@ -92,7 +92,7 @@ namespace Xamarin.Linker {
 			try {
 				Process (@event);
 			} catch (Exception e) {
-				throw Fail (@event, e);
+				Report (Fail (@event, e));
 			}
 		}
 
@@ -152,6 +152,11 @@ namespace Xamarin.Linker {
 		protected virtual Exception Fail (EventDefinition @event, Exception e)
 		{
 			return ErrorHelper.CreateError (ErrorCode | 5, e, Errors.MX_ExceptionalSubSteps, Name, @event?.FullName);
+		}
+
+		protected virtual void Report (Exception e)
+		{
+			throw e;
 		}
 
 		// abstracts
