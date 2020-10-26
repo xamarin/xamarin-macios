@@ -40,7 +40,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tests.Execution {
 			stdoutLog = new LogFile ("my stdout log", stdoutLogPath);
 			stderrLog = new LogFile ("my stderr log", stderrLogPath);
 			dummyProcess = Path.Combine (Path.GetDirectoryName (GetType ().Assembly.Location), "DummyTestProcess.exe");
-			manager = new ProcessManager ("/path/to/xcode", "/path/to/mlaunch");
+			manager = new ProcessManager ("/path/to/xcode", "/path/to/mlaunch", (v) => "/path/to/dotnet", "/path/to/msbuild");
 			testProcess = new Process ();
 			testProcess.StartInfo.FileName = "mono";
 		}

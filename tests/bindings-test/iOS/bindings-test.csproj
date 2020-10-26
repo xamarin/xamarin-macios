@@ -5,15 +5,15 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{F88FA3CF-B8EF-4CC7-9A2C-BC59DC7B4F22}</ProjectGuid>
+    <ProjectGuid>{D6667423-EDD8-4B50-9D98-1AC5D8A8A4EA}</ProjectGuid>
     <ProjectTypeGuids>{8FFB629D-F513-41CE-95D2-7ECE97B6EEEC};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
-    <RootNamespace>bindingstest2</RootNamespace>
+    <RootNamespace>bindingstest</RootNamespace>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
-    <AssemblyName>bindings-test2</AssemblyName>
+    <AssemblyName>bindings-test</AssemblyName>
     <TargetFrameworkIdentifier>Xamarin.iOS</TargetFrameworkIdentifier>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\..\product.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\..\..\product.snk</AssemblyOriginatorKeyFile>
     <IntermediateOutputPath>obj\$(Platform)\$(Configuration)-unified</IntermediateOutputPath>
     <DefineConstants></DefineConstants>
     <LangVersion>latest</LangVersion>
@@ -47,49 +47,71 @@
     <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
-    <ObjcBindingApiDefinition Include="ApiDefinition.cs" />
-    <ObjcBindingApiDefinition Include="ApiProtocol.cs" />
+    <ObjcBindingApiDefinition Include="..\ApiDefinition.cs" />
+    <ObjcBindingApiDefinition Include="..\..\generator\tests\ref-out-parameters.cs" />
+    <ObjcBindingApiDefinition Include="..\ApiDefinition.generated.cs" />
+    <ObjcBindingApiDefinition Include="..\ApiProtocol.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ObjcBindingCoreSource Include="StructsAndEnums.cs" />
+    <ObjcBindingCoreSource Include="..\StructsAndEnums.cs" />
+    <ObjcBindingCoreSource Include="..\StructsAndEnums.generated.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.ObjCBinding.CSharp.targets" />
   <PropertyGroup>
-    <TestLibrariesDirectory>..\..\tests\test-libraries</TestLibrariesDirectory>
+    <TestLibrariesDirectory>..\..\..\tests\test-libraries</TestLibrariesDirectory>
   </PropertyGroup>
   <ItemGroup>
-    <ObjcBindingNativeLibrary Include="..\..\tests\test-libraries\.libs\ios-fat\libtest2.a">
-      <Link>libtest2.a</Link>
+    <ObjcBindingNativeLibrary Include="..\..\..\tests\test-libraries\.libs\ios-fat\libtest.a">
+      <Link>libtest.a</Link>
     </ObjcBindingNativeLibrary>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="libtest2.linkwith.cs">
-      <DependentUpon>libtest2.a</DependentUpon>
+    <Compile Include="..\..\common\ConditionalCompilation.cs">
+      <Link>ConditionalCompilation.cs</Link>
     </Compile>
-    <Compile Include="BindingTest.cs" />
+    <Compile Include="..\libtest.linkwith.cs">
+      <DependentUpon>libtest.a</DependentUpon>
+    </Compile>
+    <Compile Include="..\ProtocolTest.cs" />
+    <Compile Include="..\..\api-shared\ObjCRuntime\Registrar.cs">
+      <Link>Registrar.cs</Link>
+    </Compile>
+    <Compile Include="..\RegistrarBindingTest.cs" />
+    <Compile Include="..\..\common\TestRuntime.cs">
+      <Link>TestRuntime.cs</Link>
+    </Compile>
+    <Compile Include="..\RuntimeTest.cs" />
+    <Compile Include="..\CodeBehind.cs" />
+    <Compile Include="..\Messaging.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\tests\test-libraries\libtest2.m">
-      <Link>libtest2.m</Link>
+    <None Include="..\..\..\tests\test-libraries\libtest.m">
+      <Link>libtest.m</Link>
     </None>
-    <None Include="..\..\tests\test-libraries\libtest2.h">
-      <Link>libtest2.h</Link>
+    <None Include="..\..\..\tests\test-libraries\libtest.h">
+      <Link>libtest.h</Link>
+    </None>
+    <None Include="..\..\..\tests\test-libraries\libtest.structs.h">
+      <Link>libtest.structs.h</Link>
+    </None>
+    <None Include="..\..\..\tests\test-libraries\libtest.properties.h">
+      <Link>libtest.properties.h</Link>
+    </None>
+    <None Include="..\..\..\tests\test-libraries\testgenerator.cs">
+      <Link>testgenerator.cs</Link>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <GeneratedTestInput Include="..\..\tests\test-libraries\*.m" />
-    <GeneratedTestInput Include="..\..\tests\test-libraries\*.h" />
-    <GeneratedTestInput Include="..\..\tests\test-libraries\*.cs" />
-    <GeneratedTestInput Include="..\..\tests\test-libraries\Makefile" />
-    <GeneratedTestOutput Include="..\..\tests\test-libraries\.libs\ios-fat\libtest2.a" />
+    <GeneratedTestInput Include="..\..\..\tests\test-libraries\*.m" />
+    <GeneratedTestInput Include="..\..\..\tests\test-libraries\*.h" />
+    <GeneratedTestInput Include="..\..\..\tests\test-libraries\*.cs" />
+    <GeneratedTestInput Include="..\..\..\tests\test-libraries\Makefile" />
+    <GeneratedTestOutput Include="..\..\..\tests\test-libraries\.libs\ios-fat\libtest.a" />
+    <GeneratedTestOutput Include="..\ApiDefinition.generated.cs" />
+    <GeneratedTestOutput Include="..\StructsAndEnums.generated.cs" />
   </ItemGroup>
   <Target Name="BeforeBuild" Inputs="@(GeneratedTestInput)" Outputs="@(GeneratedTestOutput)">
     <Exec Command="make -j8 -C $(TestLibrariesDirectory)" />
   </Target>
-  <ItemGroup>
-    <ProjectReference Include="..\bindings-test\iOS\bindings-test.csproj">
-      <Project>{48585BC2-D604-4CF2-A827-D887BEA51FD6}</Project>
-      <Name>bindings-test</Name>
-    </ProjectReference>
-  </ItemGroup>
 </Project>
+

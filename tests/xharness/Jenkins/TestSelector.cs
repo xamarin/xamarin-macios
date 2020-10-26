@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 
@@ -77,10 +78,9 @@ namespace Xharness.Jenkins {
 			"src",
 			"Make.config",
 		};
-		static readonly string [] dotnetPrefixes = {
-			"dotnet",
+		static readonly string [] dotnetFilenames = {
 			"msbuild",
-			"tests/dotnet",
+			".*dotnet.*",
 		};
 
 		#endregion
@@ -98,15 +98,33 @@ namespace Xharness.Jenkins {
 			jenkins.ForceExtensionBuildOnly = true;
 		}
 		
-		void SetEnabled (IEnumerable<string> files, string [] prefixes, string testname, ref bool value)
+		// 'filenames' is a list of filename prefixes, unless the name has a star character, in which case it's interpreted as a regex expression.
+		void SetEnabled (IEnumerable<string> files, string [] filenames, string testname, ref bool value)
 		{
 			MainLog.WriteLine ($"Checking if test {testname} should be enabled according to the modified files.");
+
+			// Compute any regexes we might need out of the loop.
+			var regexes = new Regex [filenames.Length];
+			for (var i = 0; i < filenames.Length; i++) {
+				// If the prefix contains a star, treat it is as a regex.
+				if (filenames [i].IndexOf ('*') == -1)
+					continue;
+
+				var regex = new Regex (filenames [i]);
+				regexes [i] = regex;
+			}
+
 			foreach (var file in files) {
 				MainLog.WriteLine ($"Checking for file {file}"); 
-				foreach (var prefix in prefixes) {
+				for (var i = 0; i < filenames.Length; i++) {
+					var prefix = filenames [i];
 					if (file.StartsWith (prefix, StringComparison.Ordinal)) {
 						value = true;
 						MainLog.WriteLine ("Enabled '{0}' tests because the modified file '{1}' matches prefix '{2}'", testname, file, prefix);
+						return;
+					} else if (regexes [i]?.IsMatch (file) == true) {
+						value = true;
+						MainLog.WriteLine ("Enabled '{0}' tests because the modified file '{1}' matches regex '{2}'", testname, file, prefix);
 						return;
 					}
 				}
@@ -157,7 +175,7 @@ namespace Xharness.Jenkins {
 			SetEnabled (files, macBindingProject, "mac-binding-project", ref jenkins.IncludeMacBindingProject);
 			SetEnabled (files, xtroPrefixes, "xtro", ref jenkins.IncludeXtro);
 			SetEnabled (files, cecilPrefixes, "cecil", ref jenkins.IncludeCecil);
-			SetEnabled (files, dotnetPrefixes, "dotnet", ref jenkins.IncludeDotNet);
+			SetEnabled (files, dotnetFilenames, "dotnet", ref jenkins.IncludeDotNet);
 		}
 
 		void SelectTestsByLabel (int pullRequest)
@@ -216,6 +234,7 @@ namespace Xharness.Jenkins {
 			SetEnabled (labels, "xtro", ref jenkins.IncludeXtro);
 			SetEnabled (labels, "cecil", ref jenkins.IncludeCecil);
 			SetEnabled (labels, "old-simulator", ref jenkins.IncludeOldSimulatorTests);
+			SetEnabled (labels, "dotnet", ref jenkins.IncludeDotNet);
 			SetEnabled (labels, "all", ref jenkins.IncludeAll);
 
 			// enabled by default

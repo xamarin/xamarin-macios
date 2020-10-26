@@ -117,7 +117,7 @@ namespace Xharness.Jenkins {
 			};
 			yield return runCecilTests;
 
-			var buildSampleTestsProject = new TestProject (Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "sampletester", "sampletester.sln")));
+			var buildSampleTestsProject = new TestProject (Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "sampletester", "sampletester.csproj")));
 			var buildSampleTests = new MSBuildTask (jenkins: jenkins, testProject: buildSampleTestsProject, processManager: processManager) {
 				SpecifyPlatform = false,
 				Platform = TestPlatform.All,

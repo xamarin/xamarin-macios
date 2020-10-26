@@ -29,22 +29,10 @@ namespace Xharness.Jenkins {
 		{
 			// This function returns additional test configurations (in addition to the default one) for the specific test
 
-			MonoNativeFlavor flavor;
-			switch (test.TestName) {
-			case "mono-native-compat":
-				flavor = MonoNativeFlavor.Compat;
-				break;
-			case "mono-native-unified":
-				flavor = MonoNativeFlavor.Unified;
-				break;
-			default:
-				flavor = MonoNativeFlavor.None;
-				break;
-			}
-
 			// 32-bit interpreter doesn't work yet: https://github.com/mono/mono/issues/9871
 			var supports_interpreter = test.Platform != TestPlatform.iOS_Unified32;
 			var supports_dynamic_registrar_on_device = test.Platform == TestPlatform.iOS_Unified64 || test.Platform == TestPlatform.tvOS;
+			var ignore = test.TestProject.Ignore;
 
 			switch (test.ProjectPlatform) {
 			case "iPhone":
@@ -54,33 +42,39 @@ namespace Xharness.Jenkins {
 
 				/* we don't add --assembly-build-target=@all=staticobject because that's the default in all our test projects */
 				if (supports_debug) {
-					yield return new TestData { Variation = "AssemblyBuildTarget: dylib (debug)", MTouchExtraArgs = $"--assembly-build-target=@all=dynamiclibrary {test.TestProject.MTouchExtraArgs}", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Dynamic, MonoNativeFlavor = flavor };
-					yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (debug)", MTouchExtraArgs = $"--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject {test.TestProject.MTouchExtraArgs}", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, MonoNativeFlavor = flavor };
-					yield return new TestData { Variation = "AssemblyBuildTarget: dylib (debug, profiling)", MTouchExtraArgs = $"--assembly-build-target=@all=dynamiclibrary {test.TestProject.MTouchExtraArgs}", Debug = true, Profiling = true, MonoNativeLinkMode = MonoNativeLinkMode.Dynamic, MonoNativeFlavor = flavor };
-					yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (debug, profiling)", MTouchExtraArgs = $"--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject {test.TestProject.MTouchExtraArgs}", Debug = true, Profiling = true, MonoNativeLinkMode = MonoNativeLinkMode.Static, MonoNativeFlavor = flavor };
+					yield return new TestData { Variation = "AssemblyBuildTarget: dylib (debug)", MTouchExtraArgs = $"--assembly-build-target=@all=dynamiclibrary {test.TestProject.MTouchExtraArgs}", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Dynamic, Ignored = ignore };
+					yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (debug)", MTouchExtraArgs = $"--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject {test.TestProject.MTouchExtraArgs}", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, Ignored = ignore };
+					yield return new TestData { Variation = "AssemblyBuildTarget: dylib (debug, profiling)", MTouchExtraArgs = $"--assembly-build-target=@all=dynamiclibrary {test.TestProject.MTouchExtraArgs}", Debug = true, Profiling = true, MonoNativeLinkMode = MonoNativeLinkMode.Dynamic, Ignored = ignore };
+					yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (debug, profiling)", MTouchExtraArgs = $"--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject {test.TestProject.MTouchExtraArgs}", Debug = true, Profiling = true, MonoNativeLinkMode = MonoNativeLinkMode.Static, Ignored = ignore };
 				}
 
 				if (test.ProjectConfiguration.Contains ("Debug"))
 					yield return new TestData { Variation = "Release", MTouchExtraArgs = test.TestProject.MTouchExtraArgs, Debug = false, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static };
 				if (test.Platform == TestPlatform.iOS_Unified32)
 					yield return new TestData { Variation = "Release: UseThumb", MTouchExtraArgs = test.TestProject.MTouchExtraArgs, Debug = false, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, UseThumb = true };
-				yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (release)", MTouchExtraArgs = $"--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject {test.TestProject.MTouchExtraArgs}", Debug = false, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, MonoNativeFlavor = flavor };
+
+				// Disable this by default for tvOS/Release because the app ends up being too big (https://github.com/xamarin/maccore/issues/2282)
+				var sdk_release_skip = test.Platform == TestPlatform.tvOS && test.TestName == "dont link";
+				if (!sdk_release_skip)
+					yield return new TestData { Variation = "AssemblyBuildTarget: SDK framework (release)", MTouchExtraArgs = $"--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject {test.TestProject.MTouchExtraArgs}", Debug = false, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, };
 
 				switch (test.TestName) {
 				case "monotouch-test":
+					if (test.TestProject.IsDotNetProject)
+						ignore = true;
 					if (supports_dynamic_registrar_on_device)
-						yield return new TestData { Variation = "Debug (dynamic registrar)", MTouchExtraArgs = "--registrar:dynamic", Debug = true, Profiling = false };
-					yield return new TestData { Variation = "Release (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = false, Profiling = false, Defines = "OPTIMIZEALL" };
+						yield return new TestData { Variation = "Debug (dynamic registrar)", MTouchExtraArgs = "--registrar:dynamic", Debug = true, Profiling = false, Ignored = ignore };
+					yield return new TestData { Variation = "Release (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = false, Profiling = false, Defines = "OPTIMIZEALL", Ignored = ignore };
 					if (supports_debug) {
-						yield return new TestData { Variation = "Debug (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = true, Profiling = false, Defines = "OPTIMIZEALL" };
-						yield return new TestData { Variation = "Debug: SGenConc", MTouchExtraArgs = "", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, EnableSGenConc = true};
+						yield return new TestData { Variation = "Debug (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = true, Profiling = false, Defines = "OPTIMIZEALL", Ignored = ignore };
+						yield return new TestData { Variation = "Debug: SGenConc", MTouchExtraArgs = "", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, EnableSGenConc = true, Ignored = ignore };
 					}
 					if (supports_interpreter) {
 						if (supports_debug) {
-							yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
-							yield return new TestData { Variation = "Debug (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
+							yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME", Ignored = ignore };
+							yield return new TestData { Variation = "Debug (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME", Ignored = ignore };
 						}
-						yield return new TestData { Variation = "Release (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = false, Profiling = false, Undefines = "FULL_AOT_RUNTIME" };
+						yield return new TestData { Variation = "Release (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = false, Profiling = false, Undefines = "FULL_AOT_RUNTIME", Ignored = ignore };
 					}
 					break;
 				case  string name when name.StartsWith ("mscorlib", StringComparison.Ordinal):
@@ -97,13 +91,16 @@ namespace Xharness.Jenkins {
 				}
 				break;
 			case "iPhoneSimulator":
+				if (test.Platform == TestPlatform.iOS_Unified32)
+					ignore = true;
+
 				switch (test.TestName) {
 				case "monotouch-test":
 					// The default is to run monotouch-test with the dynamic registrar (in the simulator), so that's already covered
-					yield return new TestData { Variation = "Debug (LinkSdk)", Debug = true, Profiling = false, LinkMode = "LinkSdk" };
-					yield return new TestData { Variation = "Debug (static registrar)", MTouchExtraArgs = "--registrar:static", Debug = true, Profiling = false, Undefines = "DYNAMIC_REGISTRAR" };
-					yield return new TestData { Variation = "Release (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = false, Profiling = false, LinkMode = "Full", Defines = "OPTIMIZEALL", Undefines = "DYNAMIC_REGISTRAR" };
-					yield return new TestData { Variation = "Debug (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all,-remove-uithread-checks", Debug = true, Profiling = false, LinkMode = "Full", Defines = "OPTIMIZEALL", Undefines = "DYNAMIC_REGISTRAR", Ignored = !jenkins.IncludeAll };
+					yield return new TestData { Variation = "Debug (LinkSdk)", Debug = true, Profiling = false, LinkMode = "LinkSdk", Ignored = ignore };
+					yield return new TestData { Variation = "Debug (static registrar)", MTouchExtraArgs = "--registrar:static", Debug = true, Profiling = false, Undefines = "DYNAMIC_REGISTRAR", Ignored = ignore };
+					yield return new TestData { Variation = "Release (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = false, Profiling = false, LinkMode = "Full", Defines = "OPTIMIZEALL", Undefines = "DYNAMIC_REGISTRAR", Ignored = ignore };
+					yield return new TestData { Variation = "Debug (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all,-remove-uithread-checks", Debug = true, Profiling = false, LinkMode = "Full", Defines = "OPTIMIZEALL", Undefines = "DYNAMIC_REGISTRAR", Ignored = ignore ?? !jenkins.IncludeAll };
 					break;
 				case "introspection":
 					foreach (var target in test.Platform.GetAppRunnerTargets ())
@@ -111,7 +108,7 @@ namespace Xharness.Jenkins {
 							Variation = $"Debug ({test.Platform.GetSimulatorMinVersion ()})",
 							Debug = true,
 							Candidates = jenkins.Simulators.SelectDevices (target, jenkins.SimulatorLoadLog, true),
-							Ignored = !jenkins.IncludeOldSimulatorTests, 
+							Ignored = ignore ?? !jenkins.IncludeOldSimulatorTests, 
 						};
 					break;
 				}
@@ -125,7 +122,7 @@ namespace Xharness.Jenkins {
 						yield return new TestData { Variation = "Release (all optimizations)", MonoBundlingExtraArgs = "--registrar:static --optimize:all", Debug = false, LinkMode = "Full", Defines = "OPTIMIZEALL"};
 						break;
 					case "Debug":
-						yield return new TestData { Variation = "Debug (all optimizations)", MonoBundlingExtraArgs = "--registrar:static --optimize:all,-remove-uithread-checks", Debug = true, LinkMode = "Full", Defines = "OPTIMIZEALL", Ignored = !jenkins.IncludeAll };
+						yield return new TestData { Variation = "Debug (all optimizations)", MonoBundlingExtraArgs = "--registrar:static --optimize:all,-remove-uithread-checks", Debug = true, LinkMode = "Full", Defines = "OPTIMIZEALL", Ignored = !(jenkins.IncludeAll && jenkins.IncludeMac) };
 						break;
 					}
 					break;
@@ -141,6 +138,9 @@ namespace Xharness.Jenkins {
 			foreach (var task in tests) {
 				if (string.IsNullOrEmpty (task.Variation))
 					task.Variation = task.ProjectConfiguration.Contains ("Debug") ? "Debug" : "Release";
+
+				if (task.TestProject.IsDotNetProject)
+					task.Variation += " [dotnet]";
 			}
 
 			var rv = new List<T> (tests);
@@ -159,13 +159,16 @@ namespace Xharness.Jenkins {
 					var known_failure = test_data.KnownFailure;
 					var candidates = test_data.Candidates;
 
+					if (task.TestProject.IsDotNetProject)
+						variation += " [dotnet]";
+
 					if (known_failure.HasValue)
 						ignored = true;
 
 					var clone = task.TestProject.Clone ();
 					var clone_task = Task.Run (async () => {
 						await task.BuildTask.InitialTask; // this is the project cloning above
-						await clone.CreateCopyAsync (jenkins.MainLog, processManager, task);
+						await clone.CreateCopyAsync (jenkins.MainLog, processManager, task, HarnessConfiguration.RootDirectory);
 
 						var isMac = task.Platform.IsMac ();
 						var canSymlink = task.Platform.CanSymlink();
@@ -195,11 +198,11 @@ namespace Xharness.Jenkins {
 							}
 						}
 						clone.Xml.SetNode (isMac ? "Profiling" : "MTouchProfiling", profiling ? "True" : "False", task.ProjectPlatform, configuration);
-						if (test_data.MonoNativeFlavor != MonoNativeFlavor.None) {
+						if (test_data.MonoNativeLinkMode != MonoNativeLinkMode.None) {
 							var mono_native_link = test_data.MonoNativeLinkMode;
 							if (!canSymlink && mono_native_link == MonoNativeLinkMode.Symlink)
 								mono_native_link = MonoNativeLinkMode.Static;
-							MonoNativeHelper.AddProjectDefines (clone.Xml, test_data.MonoNativeFlavor, mono_native_link, task.ProjectPlatform, configuration);
+							MonoNativeHelper.AddProjectDefines (clone.Xml, mono_native_link);
 						}
 						if (test_data.EnableSGenConc)
 							clone.Xml.SetNode ("MtouchEnableSGenConc", "true", task.ProjectPlatform, configuration);
@@ -211,13 +214,19 @@ namespace Xharness.Jenkins {
 						clone.Xml.Save (clone.Path);
 					});
 
-					var build = new MSBuildTask (jenkins: jenkins, testProject: clone, processManager: processManager) {
-						ProjectConfiguration = configuration,
-						ProjectPlatform = task.ProjectPlatform,
-						Platform = task.Platform,
-						InitialTask = clone_task,
-						TestName = clone.Name,
-					};
+					MSBuildTask build;
+					if (clone.IsDotNetProject) {
+						build = new DotNetBuildTask (jenkins: jenkins, testProject: clone, processManager: processManager);
+						ignored |= !jenkins.IncludeDotNet;
+					} else {
+						build = new MSBuildTask (jenkins: jenkins, testProject: clone, processManager: processManager);
+					}
+					build.ProjectConfiguration = configuration;
+					build.ProjectPlatform = task.ProjectPlatform;
+					build.Platform = task.Platform;
+					build.InitialTask = clone_task;
+					build.TestName = clone.Name;
+
 					T newVariation = creator (build, task, candidates);
 					newVariation.Variation = variation;
 					newVariation.Ignored = ignored ?? task.Ignored;

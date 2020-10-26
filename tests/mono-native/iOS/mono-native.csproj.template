@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -14,14 +14,18 @@
     <NoWarn>168,169,219,414,612,618,649,672</NoWarn>
     <TargetFrameworkIdentifier>Xamarin.iOS</TargetFrameworkIdentifier>
     <IntermediateOutputPath>obj\$(Platform)\$(Configuration)-unified</IntermediateOutputPath>
-    <DefineConstants></DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup>
+    <MonoNativeMode Condition="'$(TargetFrameworkIdentifier)|$(Configuration)|$(Platform)' == 'Xamarin.iOS|Debug|iPhoneSimulator'">MONO_NATIVE_SYMLINK</MonoNativeMode>
+    <MonoNativeMode Condition="'$(MonoNativeMode)' == ''">MONO_NATIVE_STATIC</MonoNativeMode>
+    <DefineConstants>$(MonoNativeMode);$(DefineConstants)</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
     <DebugSymbols>True</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>bin\iPhoneSimulator\$(Configuration)-unified</OutputPath>
-    <DefineConstants>DEBUG;MONO_NATIVE_SYMLINK;$(DefineConstants)</DefineConstants>
+    <DefineConstants>DEBUG;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <MtouchDebug>True</MtouchDebug>
@@ -36,7 +40,7 @@
     <DebugType>none</DebugType>
     <Optimize>True</Optimize>
     <OutputPath>bin\iPhoneSimulator\$(Configuration)-unified</OutputPath>
-    <DefineConstants>MONO_NATIVE_STATIC;$(DefineConstants)</DefineConstants>
+    <DefineConstants>$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <MtouchLink>None</MtouchLink>
@@ -50,7 +54,7 @@
     <DebugType>full</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
-    <DefineConstants>DEBUG;MONO_NATIVE_STATIC;$(DefineConstants)</DefineConstants>
+    <DefineConstants>DEBUG;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodesignKey>iPhone Developer</CodesignKey>
@@ -66,7 +70,7 @@
     <DebugType>full</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
-    <DefineConstants>DEBUG;MONO_NATIVE_STATIC;$(DefineConstants)</DefineConstants>
+    <DefineConstants>DEBUG;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodesignKey>iPhone Developer</CodesignKey>
@@ -82,7 +86,7 @@
     <DebugType>full</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
-    <DefineConstants>DEBUG;MONO_NATIVE_STATIC;$(DefineConstants)</DefineConstants>
+    <DefineConstants>DEBUG;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodesignKey>iPhone Developer</CodesignKey>
@@ -97,7 +101,7 @@
     <DebugType>none</DebugType>
     <Optimize>True</Optimize>
     <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
-    <DefineConstants>MONO_NATIVE_STATIC;$(DefineConstants)</DefineConstants>
+    <DefineConstants>$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodesignKey>iPhone Developer</CodesignKey>
@@ -112,7 +116,7 @@
     <DebugType>none</DebugType>
     <Optimize>True</Optimize>
     <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
-    <DefineConstants>MONO_NATIVE_STATIC;$(DefineConstants)</DefineConstants>
+    <DefineConstants>$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodesignKey>iPhone Developer</CodesignKey>
@@ -127,7 +131,7 @@
     <DebugType>none</DebugType>
     <Optimize>True</Optimize>
     <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
-    <DefineConstants>MONO_NATIVE_STATIC;$(DefineConstants)</DefineConstants>
+    <DefineConstants>$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodesignKey>iPhone Developer</CodesignKey>
@@ -142,7 +146,7 @@
     <DebugType>none</DebugType>
     <Optimize>True</Optimize>
     <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
-    <DefineConstants>MONO_NATIVE_STATIC;$(DefineConstants)</DefineConstants>
+    <DefineConstants>$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodesignKey>iPhone Developer</CodesignKey>
@@ -169,22 +173,23 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Main.cs" />
-    <Compile Include="AppDelegate.cs" />
-    <Compile Include="NativePlatformConfig.cs" />
-    <Compile Include="Introspection.cs" />
-    <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\corlib\Test\Mono\MonoNativePlatform.cs">
+    <Compile Include="..\Main.cs" />
+    <Compile Include="..\AppDelegate.cs" />
+    <Compile Include="..\NativePlatformConfig.cs" />
+    <Compile Include="..\Introspection.cs" />
+    <Compile Include="..\..\..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\corlib\Test\Mono\MonoNativePlatform.cs">
       <Link>MonoNativePlatform.cs</Link>
     </Compile>
-    <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\corlib\Test\Mono\MonoNativePlatformType.cs">
+    <Compile Include="..\..\..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\corlib\Test\Mono\MonoNativePlatformType.cs">
       <Link>MonoNativePlatformType.cs</Link>
     </Compile>
-    <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\corlib\Test\Mono\NativePlatformTest.cs">
+    <Compile Include="..\..\..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\corlib\Test\Mono\NativePlatformTest.cs">
       <Link>NativePlatformTest.cs</Link>
     </Compile>
-    <Compile Include="..\common\MonoNativeConfig.cs">
+    <Compile Include="..\..\common\MonoNativeConfig.cs">
       <Link>MonoNativeConfig.cs</Link>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>
+

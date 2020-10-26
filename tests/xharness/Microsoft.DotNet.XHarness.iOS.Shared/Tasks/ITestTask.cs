@@ -57,6 +57,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Tasks {
 		Stopwatch DurationStopWatch { get; }
 		IEnumerable<string> ReferencedNunitAndXunitTestAssemblies { get; }
 		string ProgressMessage { get; }
+		string RootDirectory { get; }
 
 
 		Task RunAsync ();

@@ -6,7 +6,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 namespace Xharness.Targets
 {
 	// iOS here means Xamarin.iOS, not iOS as opposed to tvOS/watchOS.
-	public class iOSTarget : Target
+	public abstract class iOSTarget : Target
 	{
 		public iOSTestProject TestProject;
 
@@ -27,7 +27,7 @@ namespace Xharness.Targets
 		{
 			XmlDocument info_plist = new XmlDocument ();
 			var target_info_plist = Path.Combine (TargetDirectory, "Info" + Suffix + ".plist");
-			info_plist.LoadWithoutNetworkAccess (Path.Combine (TargetDirectory, "Info.plist"));
+			info_plist.LoadWithoutNetworkAccess (Path.Combine (TargetDirectory, OriginalInfoPListInclude));
 			BundleIdentifier = info_plist.GetCFBundleIdentifier ();
 			info_plist.SetMinimumOSVersion (GetMinimumOSVersion (info_plist.GetMinimumOSVersion ()));
 			info_plist.SetUIDeviceFamily (UIDeviceFamily);

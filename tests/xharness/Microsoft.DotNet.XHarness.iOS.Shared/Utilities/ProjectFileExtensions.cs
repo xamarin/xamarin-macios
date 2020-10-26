@@ -1,8 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Xml;
+
+using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
+using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 
 namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 	public static class ProjectFileExtensions {
@@ -146,11 +151,14 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 			return GetElementValue (csproj, platform, configuration, "OutputPath");
 		}
 
-		static string GetElementValue (this XmlDocument csproj, string platform, string configuration, string elementName)
+		static string GetElementValue (this XmlDocument csproj, string platform, string configuration, string elementName, bool throwIfNotFound = true)
 		{
 			var nodes = csproj.SelectNodes ($"/*/*/*[local-name() = '{elementName}']");
-			if (nodes.Count == 0)
-				throw new Exception ($"Could not find node {elementName}");
+			if (nodes.Count == 0) {
+				if (throwIfNotFound)
+					throw new Exception ($"Could not find node {elementName}");
+				return null;
+			}
 			foreach (XmlNode n in nodes) {
 				if (IsNodeApplicable (n, platform, configuration))
 					return n.InnerText.Replace ("$(Platform)", platform).Replace ("$(Configuration)", configuration);
@@ -175,6 +183,11 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 				throw new NotImplementedException (outputType);
 			}
 			return outputPath + "\\" + assemblyName + "." + extension; // MSBuild-style paths.
+		}
+
+		public static string GetIsBindingProject (this XmlDocument csproj)
+		{
+			return GetElementValue (csproj, string.Empty, string.Empty, "IsBindingProject", throwIfNotFound: false);
 		}
 
 		public static void SetIntermediateOutputPath (this XmlDocument csproj, string value)
@@ -223,11 +236,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 
 		public static void RemoveTargetFrameworkIdentifier (this XmlDocument csproj)
 		{
-			try {
-				RemoveNode (csproj, "TargetFrameworkIdentifier");
-			} catch {
-				// ignore exceptions, if not present, we are not worried
-			}
+			RemoveNode (csproj, "TargetFrameworkIdentifier", throwOnInexistentNode: false);
 		}
 
 		public static void SetAssemblyName (this XmlDocument csproj, string value)
@@ -237,7 +246,10 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 
 		public static string GetAssemblyName (this XmlDocument csproj)
 		{
-			return csproj.SelectSingleNode ("/*/*/*[local-name() = 'AssemblyName']").InnerText;
+			var assemblyNameNode = csproj.SelectSingleNode ("/*/*/*[local-name() = 'AssemblyName']");
+			if (assemblyNameNode != null)
+				return assemblyNameNode.InnerText;
+			return Path.GetFileNameWithoutExtension (csproj.GetFilename ());
 		}
 
 		public static void SetPlatformAssembly (this XmlDocument csproj, string value)
@@ -260,12 +272,24 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 				reference.ParentNode.RemoveChild (reference);
 		}
 
+		public static void RemovePackageReference (this XmlDocument csproj, string projectName)
+		{
+			var reference = csproj.SelectSingleNode ("/*/*/*[local-name() = 'PackageReference' and @Include = '" + projectName + "']");
+			if (reference != null)
+				reference.ParentNode.RemoveChild (reference);
+		}
+
 		public static void AddCompileInclude (this XmlDocument csproj, string link, string include, bool prepend = false)
 		{
-			var compile_node = csproj.SelectSingleNode ("//*[local-name() = 'Compile']");
-			var item_group = compile_node.ParentNode;
+			AddInclude (csproj, "Compile", link, include, prepend);
+		}
 
-			var node = csproj.CreateElement ("Compile", csproj.GetNamespace ());
+		public static void AddInclude (this XmlDocument csproj, string type, string link, string include, bool prepend = false)
+		{
+			var type_node = csproj.SelectSingleNode ($"//*[local-name() = '{type}']");
+			var item_group = type_node?.ParentNode ?? csproj.SelectSingleNode ($"//*[local-name() = 'ItemGroup'][last()]");
+
+			var node = csproj.CreateElement (type, csproj.GetNamespace ());
 			var include_attribute = csproj.CreateAttribute ("Include");
 			include_attribute.Value = include;
 			node.Attributes.Append (include_attribute);
@@ -295,9 +319,12 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 
 		public static void SetImport (this XmlDocument csproj, string value)
 		{
-			var imports = csproj.SelectNodes ("/*/*[local-name() = 'Import'][not(@Condition)]");			
+			var import = GetImport (csproj);
+			if (string.IsNullOrEmpty (import))
+				throw new Exception ($"Could not find the xamarin import");
+			var imports = csproj.SelectNodes ($"/*/*[local-name() = 'Import'][@Project = '{import}']");			
 			if (imports.Count != 1)
-				throw new Exception ("More than one import");
+				throw new Exception ($"Found {imports.Count} xamarin imports?");
 			imports [0].Attributes ["Project"].Value = value;
 		}
 
@@ -324,7 +351,6 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 		public static void AddToNode (this XmlDocument csproj, string node, string value, string platform, string configuration)
 		{
 			var nodes = csproj.SelectNodes ($"//*[local-name() = '{node}']");
-			var found = false;
 			foreach (XmlNode mea in nodes) {
 				if (!IsNodeApplicable (mea, platform, configuration))
 					continue;
@@ -332,22 +358,18 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 				if (mea.InnerText.Length > 0 && mea.InnerText [mea.InnerText.Length - 1] != ' ')
 					mea.InnerText += " ";
 				mea.InnerText += value;
-				found = true;
-			}
-
-			if (found)
 				return;
+			}
 
 			// The project might not have this node, so create one of none was found.
-			var propertyGroups = csproj.SelectNodes ("//*[local-name() = 'PropertyGroup' and @Condition]");
-			foreach (XmlNode pg in propertyGroups) {
-				if (!EvaluateCondition (pg, platform, configuration))
-					continue;
+			var propertyGroups = csproj.SelectNodes ("//*[local-name() = 'PropertyGroup' and @Condition]").Cast<XmlNode> ();
+			var propertyGroup = propertyGroups.FirstOrDefault (v => EvaluateCondition (v, platform, configuration));
+			if (propertyGroup == null)
+				propertyGroup = csproj.AddPropertyGroup (platform, configuration);
 
-				var mea = csproj.CreateElement (node, csproj.GetNamespace ());
-				mea.InnerText = value;
-				pg.AppendChild (mea);
-			}
+			var newNode = csproj.CreateElement (node, csproj.GetNamespace ());
+			newNode.InnerText = value;
+			propertyGroup.AppendChild (newNode);
 		}
 
 		public static string GetMtouchLink (this XmlDocument csproj, string platform, string configuration)
@@ -414,41 +436,44 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 			return null;
 		}
 
-		public static string GetImport (this XmlDocument csproj)
+		public static List<string> GetImports (this XmlDocument csproj)
 		{
 			var imports = csproj.SelectNodes ("/*/*[local-name() = 'Import'][not(@Condition)]");
-			if (imports.Count != 1)
-				throw new Exception ("More than one import");
-			return imports [0].Attributes ["Project"].Value;
+			var rv = new List<string> ();
+			foreach (XmlNode import in imports)
+				rv.Add (import.Attributes ["Project"].Value);
+			return rv;
 		}
 
-		public delegate bool FixReferenceDelegate (string reference, out string fixed_reference);
-		public static void FixProjectReferences (this XmlDocument csproj, string suffix, FixReferenceDelegate fixCallback = null)
+		public static string GetImport (this XmlDocument csproj)
+		{
+			return GetImports (csproj).FirstOrDefault ((v) => v.Replace ('/', '\\').Contains ("$(MSBuildExtensionsPath)\\Xamarin"));
+		}
+
+		public delegate bool FixReferenceDelegate (string include, string subdir, string suffix, out string fixed_include);
+
+		public static void FixProjectReferences (this XmlDocument csproj, string suffix, FixReferenceDelegate fixCallback)
+		{
+			FixProjectReferences (csproj, null, suffix, fixCallback);
+		}
+
+		public static void FixProjectReferences (this XmlDocument csproj, string subdir, string suffix, FixReferenceDelegate fixCallback)
 		{
 			var nodes = csproj.SelectNodes ("/*/*/*[local-name() = 'ProjectReference']");
-			if (nodes.Count == 0)
-				return;
 			foreach (XmlNode n in nodes) {
-				var name = n ["Name"].InnerText;
-				string fixed_name = null;
-				if (fixCallback != null && !fixCallback (name, out fixed_name))
+				var nameNode = n ["Name"];
+				var includeAttribute = n.Attributes ["Include"];
+				var include = includeAttribute.Value;
+
+				include = include.Replace ('\\', '/');
+				if (!fixCallback (include, subdir, suffix, out var fixed_include))
 					continue;
-				var include = n.Attributes ["Include"];
-				string fixed_include;
-				if (fixed_name == null) {
-					fixed_include = include.Value;
-					fixed_include = fixed_include.Replace (".csproj", suffix + ".csproj");
-					fixed_include = fixed_include.Replace (".fsproj", suffix + ".fsproj");
-				} else {
-					var unix_path = include.Value.Replace ('\\', '/');
-					var unix_dir = System.IO.Path.GetDirectoryName (unix_path);
-					fixed_include = System.IO.Path.Combine (unix_dir, fixed_name + System.IO.Path.GetExtension (unix_path));
-					fixed_include = fixed_include.Replace ('/', '\\');
-				}
-				n.Attributes ["Include"].Value = fixed_include;
-				var nameElement = n ["Name"];
-				name = System.IO.Path.GetFileNameWithoutExtension (fixed_include.Replace ('\\', '/'));
-				nameElement.InnerText = name;
+				var name = Path.GetFileNameWithoutExtension (fixed_include);
+				fixed_include = fixed_include.Replace ('/', '\\');
+
+				includeAttribute.Value = fixed_include;
+				if (nameNode != null)
+					nameNode.InnerText = name;
 			}
 		}
 
@@ -538,17 +563,25 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 		{
 			var import = GetInfoPListNode (csproj, false);
 			if (import != null) {
-				var value = import.Attributes ["Include"].Value;
+				var attrib = import.Attributes ["Include"];
+				var value = attrib.Value;
 				var unixValue = value.Replace ('\\', '/');
-				var fname = Path.GetFileName (unixValue);
-				if (newName == null) {
-					if (string.IsNullOrEmpty (fullPath))
-						newName = value.Replace (fname, $"Info{suffix}.plist");
-					else
-						newName = value.Replace (fname, $"{fullPath}\\Info{suffix}.plist");
-				}
-				import.Attributes ["Include"].Value = (!Path.IsPathRooted (unixValue)) ? value.Replace (fname, newName) : newName;
 
+				// If newName is specified, use that as-is
+				// If not:
+				//     If the existing value has a directory, use that as the directory
+				//     Otherwise, if fullPath is passed, use that as the directory
+				//     Finally, combine the expected Info.plist name with the directory (if there is a directory; there might not be one)
+				if (newName == null) {
+					var directory = Path.GetDirectoryName (unixValue);
+					if (string.IsNullOrEmpty (directory))
+						directory = fullPath;
+
+					newName = $"Info{suffix}.plist";
+					if (!string.IsNullOrEmpty (directory))
+						newName = Path.Combine (directory, newName);
+				}
+				attrib.Value = newName.Replace ('/', '\\');
 				var logicalName = import.SelectSingleNode ("./*[local-name() = 'LogicalName']");
 				if (logicalName == null) {
 					logicalName = csproj.CreateElement ("LogicalName", csproj.GetNamespace ());
@@ -565,27 +598,29 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 
 		public static bool IsDotNetProject (this XmlDocument csproj)
 		{
-			var project = csproj.SelectSingleNode ("./*[local-name() = 'Project']");
-			var attrib = project.Attributes ["Sdk"];
+			var project = csproj?.SelectSingleNode ("./*[local-name() = 'Project']");
+			var attrib = project?.Attributes ["Sdk"];
 			return attrib != null;
 		}
 
-		static XmlNode GetInfoPListNode (this XmlDocument csproj, bool throw_if_not_found = false)
+		public static bool? GetEnableDefaultItems (this XmlDocument csproj)
 		{
-			var logicalNames = csproj.SelectNodes ("//*[local-name() = 'LogicalName']");
-			foreach (XmlNode ln in logicalNames) {
-				if (!ln.InnerText.Contains("Info.plist"))
-					continue;
-				return ln.ParentNode;
-			}
-			var nodes = csproj.SelectNodes ("//*[local-name() = 'None' and contains(@Include ,'Info.plist')]");
-			if (nodes.Count > 0) {
-				return nodes [0]; // return the value, which could be Info.plist or a full path (linked).
-			}
-			nodes = csproj.SelectNodes ("//*[local-name() = 'None' and contains(@Include ,'Info-tv.plist')]");
-			if (nodes.Count > 0) {
-				return nodes [0]; // return the value, which could be Info.plist or a full path (linked).
-			}
+			var node = csproj.SelectSingleNode ($"/*/*/*[local-name() = 'EnableDefaultItems']");
+			if (node == null)
+				return null;
+			return string.Equals (node.InnerText, "true", StringComparison.OrdinalIgnoreCase);
+		}
+
+		public static XmlNode GetInfoPListNode (this XmlDocument csproj, bool throw_if_not_found = false)
+		{
+			var noLogicalName = csproj.SelectSingleNode ("//*[(local-name() = 'None' or local-name() = 'BundleResource' or local-name() = 'Content') and @Include = 'Info.plist']");
+			if (noLogicalName != null)
+				return noLogicalName;
+
+			var logicalName = csproj.SelectSingleNode ("//*[(local-name() = 'None' or local-name() = 'Content' or local-name() = 'BundleResource')]/*[local-name()='LogicalName' and text() = 'Info.plist']");
+			if (logicalName != null)
+				return logicalName.ParentNode;
+
 			if (throw_if_not_found)
 				throw new Exception ($"Could not find Info.plist include.");
 			return null;
@@ -593,7 +628,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 
 		public static string GetInfoPListInclude (this XmlDocument csproj)
 		{
-			return GetInfoPListNode (csproj).Attributes ["Include"].Value;
+			return GetInfoPListNode (csproj)?.Attributes ["Include"]?.Value;
 		}
 
 		public static IEnumerable<string> GetProjectReferences (this XmlDocument csproj)
@@ -622,10 +657,41 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 			}
 		}
 
+		public static void SetSdk (this XmlDocument csproj, string sdk)
+		{
+			var node = csproj.SelectSingleNode ("//*[local-name() = 'Project']");
+			if (node == null)
+				throw new Exception ($"Could not find a 'Project' node");
+			var attrib = node.Attributes ["Sdk"];
+			if (attrib == null)
+				throw new Exception ($"The 'Project' node doesn't have an 'Sdk' attribute");
+			attrib.Value = sdk;
+		}
+
+		public static void SetRuntimeIdentifier (this XmlDocument csproj, string runtimeIdentifier)
+		{
+			var node = csproj.SelectSingleNode ("//*[local-name() = 'RuntimeIdentifier']");
+			if (node == null)
+				throw new Exception ($"Could not find a 'RuntimeIdentifier' node");
+			node.InnerText = runtimeIdentifier;
+		}
+
 		public static void SetProjectReferenceValue (this XmlDocument csproj, string projectInclude, string node, string value)
 		{
 			var nameNode = csproj.SelectSingleNode ("//*[local-name() = 'ProjectReference' and @Include = '" + projectInclude + "']/*[local-name() = '" + node + "']");
 			nameNode.InnerText = value;
+		}
+
+		public static string GetAssetTargetFallback (this XmlDocument csproj)
+		{
+			return csproj.SelectSingleNode ("//*[local-name() = 'AssetTargetFallback']")?.InnerText;
+		}
+
+		public static void SetAssetTargetFallback (this XmlDocument csproj, string value)
+		{
+			var node = csproj.SelectSingleNode ("//*[local-name() = 'AssetTargetFallback']");
+			if (node != null)
+				node.InnerText = value;
 		}
 
 		public static void SetProjectReferenceInclude (this XmlDocument csproj, string projectInclude, string value)
@@ -756,7 +822,49 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 				return;
 			}
 
-			throw new Exception ("Could not find where to add a new DefineConstants node");
+			var newPropertyGroup = csproj.AddPropertyGroup (platform, configuration);
+			var defineConstantsElement = csproj.CreateElement ("DefineConstants", csproj.GetNamespace ());
+			defineConstantsElement.InnerText = "$(DefineConstants);" + value;
+			newPropertyGroup.AppendChild (defineConstantsElement);
+		}
+
+		static XmlNode AddPropertyGroup (this XmlDocument csproj, string platform, string configuration)
+		{
+			// Create a new PropertyGroup with the desired condition, and add it just after the last PropertyGroup in the csproj.
+			var projectNode = csproj.SelectSingleNode ("//*[local-name() = 'Project']");
+			var lastPropertyGroup = csproj.SelectNodes ("/*[local-name() = 'Project']/*[local-name() = 'PropertyGroup']").Cast<XmlNode> ().Last ();
+			var newPropertyGroup = csproj.CreateElement ("PropertyGroup", csproj.GetNamespace ());
+			if (!string.IsNullOrEmpty (platform) || !string.IsNullOrEmpty (configuration)) {
+				// Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' "
+				var conditionAttribute = csproj.CreateAttribute ("Condition");
+				var left = string.Empty;
+				var right = string.Empty;
+				if (!string.IsNullOrEmpty (configuration)) {
+					left = "$(Configuration)";
+					right = configuration;
+				}
+				if (!string.IsNullOrEmpty (platform)) {
+					if (!string.IsNullOrEmpty (left)) {
+						left += "|";
+						right += "|";
+					}
+					left += "$(Platform)";
+					right += platform;
+				}
+				conditionAttribute.Value = $"'{left}' == '{right}'";
+				newPropertyGroup.Attributes.Append (conditionAttribute);
+			}
+			projectNode.InsertAfter (newPropertyGroup, lastPropertyGroup);
+			return newPropertyGroup;
+		}
+
+		public static void AddTopLevelProperty (this XmlDocument csproj, string property, string value)
+		{
+			var propertyGroup = csproj.SelectNodes ("//*[local-name() = 'PropertyGroup' and not(@Condition)]") [0];
+
+			var propertyNode = csproj.CreateElement (property, csproj.GetNamespace ());
+			propertyNode.InnerText = value;
+			propertyGroup.AppendChild (propertyNode);
 		}
 
 		public static void SetNode (this XmlDocument csproj, string node, string value)
@@ -814,7 +922,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 			}
 		}
 
-		public static void ResolveAllPaths (this XmlDocument csproj, string project_path)
+		public static void ResolveAllPaths (this XmlDocument csproj, string project_path, string rootDirectory = null)
 		{
 			var dir = System.IO.Path.GetDirectoryName (project_path);
 			var nodes_with_paths = new string []
@@ -823,6 +931,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 				"CodesignEntitlements",
 				"TestLibrariesDirectory",
 				"HintPath",
+				"RootTestsDirectory",
 			};
 			var attributes_with_paths = new string [] []
 			{
@@ -843,7 +952,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 				new string [] { "ObjcBindingCoreSource", "Include" },
 				new string [] { "ObjcBindingNativeLibrary", "Include" },
 				new string [] { "ObjcBindingNativeFramework", "Include" },
-				new string [] { "Import", "Project", "CustomBuildActions.targets" },
+				new string [] { "Import", "Project", "CustomBuildActions.targets", "..\\shared.targets" },
 				new string [] { "FilesToCopy", "Include" },
 				new string [] { "FilesToCopyFoo", "Include" },
 				new string [] { "FilesToCopyFooBar", "Include" },
@@ -859,15 +968,28 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 			{
 				"MtouchExtraArgs",
 			};
-			Func<string, string> convert = (input) =>
+			Func<string, string> convert = null;
+			convert = (input) =>
 			{
+				if (input.IndexOf (';') >= 0) {
+					var split = input.Split (new char [] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+					for (var i = 0; i < split.Length; i++)
+						split [i] = convert (split [i]);
+					return string.Join (";", split);
+				}
+
 				if (input [0] == '/')
 					return input; // This is already a full path.
-				if (input.StartsWith ("$(MSBuildExtensionsPath)", StringComparison.Ordinal))
-					return input; // This is already a full path.
-				if (input.StartsWith ("$(MSBuildBinPath)", StringComparison.Ordinal))
-					return input; // This is already a full path.
+
 				input = input.Replace ('\\', '/'); // make unix-style
+
+				if (rootDirectory != null)
+					input = input.Replace ("$(RootTestsDirectory)", rootDirectory);
+
+				// Don't process anything that starts with a variable, it's either a full path already, or the variable will be updated according to the new location
+				if (input.StartsWith ("$(", StringComparison.Ordinal))
+					return input;
+
 				input = System.IO.Path.GetFullPath (System.IO.Path.Combine (dir, input));
 				input = input.Replace ('/', '\\'); // make windows-style again
 				return input;
@@ -923,6 +1045,61 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 
 					a.Value = convert (a.Value);
 				}
+			}
+		}
+
+		// Retrieves a property from an MSBuild project file by executing MSBuild and getting MSBuild to print the property.
+		// We do this by creating a custom MSBuild file which:
+		// * Will import the project file we're inspecting
+		// * Has a target that will print a given property
+		// and then executing MSBuild on this custom MSBuild file.
+		public static async Task<string> GetPropertyByMSBuildEvaluationAsync (this XmlDocument csproj, ILog log, IProcessManager processManager, string projectPath, string evaluateProperty, string dependsOnTargets = "", Dictionary<string, string> properties = null)
+		{
+			var xml =
+@"<Project DefaultTargets='WriteProperty' xmlns='http://schemas.microsoft.com/developer/msbuild/2003'>
+	<!-- Import the project we want to inspect -->
+	<Import Project='$(ProjectFile)' Condition=""'$(ProjectFile)' != ''"" />
+	<!-- Target to write out the property we want -->
+	<Target Name='WriteProperty' DependsOnTargets='%DEPENDSONTARGETS%'>
+		<PropertyGroup>
+			<_Properties>$(%PROPERTY%)</_Properties>
+		</PropertyGroup>
+		<Error Text='The ProjectFile variable must be set.' Condition=""'$(ProjectFile)' == ''"" />
+		<Error Text='The OutputFile variable must be set.' Condition=""'$(OutputFile)' == ''"" />
+		<WriteLinesToFile File='$(OutputFile)' Lines='$(_Properties)' Overwrite='true' />
+	</Target>
+</Project>
+";
+
+			var dir = Path.GetDirectoryName (projectPath);
+			var inspector = Path.Combine (dir, "PropertyInspector.csproj");
+			var output = Path.Combine (dir, "PropertyInspector.txt");
+			try {
+				File.WriteAllText (inspector, xml.Replace ("%PROPERTY%", evaluateProperty).Replace ("%DEPENDSONTARGETS%", dependsOnTargets));
+				using (var proc = new Process ()) {
+					var isDotNetProject = csproj.IsDotNetProject ();
+					proc.StartInfo.FileName = isDotNetProject ? processManager.GetDotNetExecutable (projectPath) : processManager.MSBuildPath;
+					var args = new List<string> ();
+					if (isDotNetProject)
+						args.Add ("build");
+					args.Add ("/p:ProjectFile=" + projectPath);
+					args.Add ("/p:OutputFile=" + output);
+					foreach (var prop in properties)
+						args.Add ($"/p:{prop.Key}={prop.Value}");
+					args.Add (inspector);
+					var env = new Dictionary<string, string> {
+						{ "MSBUILD_EXE_PATH", null },
+					};
+					proc.StartInfo.Arguments = StringUtils.FormatArguments (args);
+					proc.StartInfo.WorkingDirectory = dir;
+					var rv = await processManager.RunAsync (proc, log, environment_variables: env, timeout: TimeSpan.FromSeconds (15));
+					if (!rv.Succeeded)
+						throw new Exception ($"Unable to evaluate the property {evaluateProperty}.");
+					return File.ReadAllText (output).Trim ();
+				}
+			} finally {
+				File.Delete (inspector);
+				File.Delete (output);
 			}
 		}
 	}

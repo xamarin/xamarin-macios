@@ -192,9 +192,11 @@ namespace Xharness.Jenkins {
 			};
 			Tasks.Add (runXtroReporter);
 
-			var buildDotNetGeneratorProject = new TestProject (Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "bgen", "bgen-tests.csproj")));
+			var buildDotNetGeneratorProject = new TestProject (Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "bgen", "bgen-tests.csproj"))) {
+				IsDotNetProject = true,
+			};
 			var buildDotNetGenerator = new DotNetBuildTask (jenkins: this, testProject: buildDotNetGeneratorProject, processManager: processManager) {
-				TestProject = new TestProject (Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "bgen", "bgen-tests.csproj"))),
+				TestProject = buildDotNetGeneratorProject,
 				SpecifyPlatform = false,
 				SpecifyConfiguration = false,
 				Platform = TestPlatform.iOS,
@@ -208,7 +210,9 @@ namespace Xharness.Jenkins {
 			};
 			Tasks.Add (runDotNetGenerator);
 
-			var buildDotNetTestsProject = new TestProject (Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "dotnet", "UnitTests", "DotNetUnitTests.csproj")));
+			var buildDotNetTestsProject = new TestProject (Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "dotnet", "UnitTests", "DotNetUnitTests.csproj"))) {
+				IsDotNetProject = true,
+			};
 			var buildDotNetTests = new DotNetBuildTask (this, testProject: buildDotNetTestsProject, processManager: processManager) {
 				SpecifyPlatform = false,
 				Platform = TestPlatform.All,
@@ -219,7 +223,7 @@ namespace Xharness.Jenkins {
 				TestProject = buildDotNetTestsProject,
 				Platform = TestPlatform.All,
 				TestName = "DotNet tests",
-				Timeout = TimeSpan.FromMinutes (5),
+				Timeout = TimeSpan.FromMinutes (15),
 				Ignored = !IncludeDotNet,
 			};
 			Tasks.Add (runDotNetTests);
@@ -358,6 +362,12 @@ namespace Xharness.Jenkins {
 						var run_device = task as RunDeviceTask;
 						if (run_device != null) {
 							allDeviceTasks.Add (run_device);
+							continue;
+						}
+
+						var simulator = task as RunSimulatorTask;
+						if (simulator != null) {
+							allSimulatorTasks.Add (simulator);
 							continue;
 						}
 
