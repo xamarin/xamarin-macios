@@ -1,13 +1,32 @@
+name: Labels verification
 on:
-  pull_request_target:
-    types: [opened, labeled, unlabeled, synchronize]
+  pull_request:
+    types: [opened, reopened, labeled, unlabeled, synchronize]
 
 jobs:
-  check_pr_labels:
+  monojenkins-pr:
     runs-on: ubuntu-latest
-    name: Labels verification
+    name: Mono Jenkins
+
+    if: github.actor == 'monojenkins'
+
+    steps:
+    - run: exit 0
+
+  empty_pr_labels:
+    runs-on: ubuntu-latest
+    name: Labels missing 
+
+    if: github.actor != 'monojenkins' && join(github.event.pull_request.labels, ',') == ''
 
     # only execute when the user is not our bot and we have no labels
-    if: ${{ github.event.pull_request.labels == '' }}
     steps:
-    - run: echo ::set-output name=status::failure
+    - run: exit 1
+
+  present_labels:
+    runs-on: ubuntu-latest
+    name: Labels present
+    if: actor != 'monojenkins' && join(github.event.pull_request.labels, ',') != ''
+    # only execute when the user is not our bot and we have no labels
+    steps:
+    - run: exit 0
