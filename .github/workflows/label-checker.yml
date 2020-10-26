@@ -1,13 +1,20 @@
+name: Labels verification
 on:
-  pull_request_target:
-    types: [opened, labeled, unlabeled, synchronize]
+  pull_request:
+    types: [opened, reopened, labeled, unlabeled, synchronize]
 
 jobs:
   check_pr_labels:
     runs-on: ubuntu-latest
     name: Labels verification
 
+    if: github.actor != 'monojenkins' && join(github.event.pull_request.labels, ',') == ''
+
     # only execute when the user is not our bot and we have no labels
-    if: ${{ github.event.pull_request.labels == '' }}
     steps:
-    - run: echo ::set-output name=status::failure
+    - name: Dump GitHub context
+      env:
+        GITHUB_CONTEXT: ${{ toJson(github) }}
+      run: echo "$GITHUB_CONTEXT"
+    - run: echo "Run"
+    - run: exit 1
