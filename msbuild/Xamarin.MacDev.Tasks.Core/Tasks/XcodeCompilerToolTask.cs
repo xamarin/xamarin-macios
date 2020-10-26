@@ -127,7 +127,7 @@ namespace Xamarin.MacDev.Tasks
 			if (translated == null) {
 				long result = 0;
 				long size = sizeof (long);
-				translated = sysctlbyname ("sysctl.proc_translated", ref result, ref size, IntPtr.Zero, 0) != -1;
+				translated = ((sysctlbyname ("sysctl.proc_translated", ref result, ref size, IntPtr.Zero, 0) != -1) && (result == 1));
 			}
 			return translated.Value;
 		}
