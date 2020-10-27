@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,6 +18,18 @@ namespace Xharness.TestTasks {
 		readonly ISimulatorLoader simulators;
 		readonly IRunSimulatorTask testTask;
 		readonly IErrorKnowledgeBase errorKnowledgeBase;
+
+		public IEnumerable<ISimulatorDevice> Simulators {
+			get {
+				if (testTask.Device == null) {
+					return Array.Empty<ISimulatorDevice> ();
+				} else if (testTask.CompanionDevice == null) {
+					return new ISimulatorDevice [] { testTask.Device };
+				} else {
+					return new ISimulatorDevice [] { testTask.Device, testTask.CompanionDevice };
+				}
+			}
+		}
 
 		public RunSimulator (IRunSimulatorTask testTask,
 							 ISimulatorLoader simulators,

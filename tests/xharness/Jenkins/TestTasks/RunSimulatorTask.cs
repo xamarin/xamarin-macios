@@ -10,6 +10,8 @@ namespace Xharness.Jenkins.TestTasks {
 		readonly RunSimulator runSimulator;
 		public IAcquiredResource AcquiredResource;
 
+		public IEnumerable<ISimulatorDevice> Simulators => runSimulator.Simulators;
+
 		public RunSimulatorTask (Jenkins jenkins, ISimulatorLoader simulators, MSBuildTask buildTask, IMlaunchProcessManager processManager, IEnumerable<ISimulatorDevice> candidates = null)
 			: base (jenkins, buildTask, processManager, candidates) =>  runSimulator = new RunSimulator (
 				testTask: this,

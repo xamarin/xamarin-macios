@@ -140,7 +140,7 @@ namespace Xharness.Jenkins.TestTasks {
 						var reporter = reporterFactory.Create (Harness.HarnessLog, log, Logs, snapshot, listener, Harness.ResultParser, new AppBundleInformation ("N/A", "N/A", "N/A", "N/A", true, null), RunMode.MacOS, Harness.XmlJargon, "no device here", TimeSpan.Zero);
 						var rv = await reporter.ParseResult ();
 						ExecutionResult = rv.ExecutingResult;
-						FailureMessage = rv.FailureMessage;
+						FailureMessage = rv.ExecutingResult == TestExecutingResult.Succeeded ? null : rv.ResultMessage;
 					}
 				}
 			}
