@@ -31,25 +31,28 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 
 namespace Xharness {
-	public enum MonoNativeFlavor {
+	public enum MonoNativeFlavor
+	{
 		None,
 		Compat,
 		Unified,
 	}
 
-	public enum MonoNativeLinkMode {
+	public enum MonoNativeLinkMode
+	{
 		None,
 		Static,
 		Dynamic,
 		Symlink,
 	}
 
-	public static class MonoNativeHelper {
+	public static class MonoNativeHelper
+	{
 		public static void AddProjectDefines (XmlDocument project, MonoNativeLinkMode link)
 		{
 			switch (link) {
 			case MonoNativeLinkMode.Static:
-				project.AddTopLevelProperty ("MonoNativeMode", "MONO_NATIVE_STATIC"); ;
+				project.AddTopLevelProperty ("MonoNativeMode", "MONO_NATIVE_STATIC");
 				break;
 			case MonoNativeLinkMode.Dynamic:
 				project.AddTopLevelProperty ("MonoNativeMode", "MONO_NATIVE_DYNAMIC");
@@ -97,7 +100,8 @@ namespace Xharness {
 		}
 	}
 
-	public class MonoNativeInfo {
+	public class MonoNativeInfo
+	{
 		Action<int, string> log;
 		public MonoNativeFlavor Flavor { get; }
 		public DevicePlatform DevicePlatform { get; set; }
@@ -106,9 +110,9 @@ namespace Xharness {
 		public MonoNativeInfo (DevicePlatform platform, MonoNativeFlavor flavor, string rootDirectory, Action<int, string> logAction = null)
 		{
 			DevicePlatform = platform;
-			log = logAction;
+			this.log = logAction;
 			this.rootDirectory = rootDirectory ?? throw new ArgumentNullException (nameof (rootDirectory));
-			Flavor = flavor;
+			this.Flavor = flavor;
 		}
 
 		public string FlavorSuffix => Flavor == MonoNativeFlavor.Compat ? "-compat" : "-unified";
@@ -147,8 +151,9 @@ namespace Xharness {
 
 		public virtual void SetInfoPListMinimumOSVersion (XmlDocument info_plist, string version)
 		{
-			if (DevicePlatform == DevicePlatform.macOS) info_plist.SetMinimummacOSVersion (version);
-			else {
+			if (DevicePlatform == DevicePlatform.macOS) {
+				info_plist.SetMinimummacOSVersion (version);
+			} else {
 				info_plist.SetMinimumOSVersion (version);
 			}
 		}

@@ -37,8 +37,8 @@ namespace Xharness.Jenkins.TestTasks {
 						XmlResultJargon xmlResultJargon, bool dryRun)
 		{
 			this.testTask = testTask ?? throw new ArgumentNullException (nameof (testTask));
-			BuildTask = buildTask ?? throw new ArgumentNullException (nameof (buildTask));
-			ProcessManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
+			this.BuildTask = buildTask ?? throw new ArgumentNullException (nameof (buildTask));
+			this.ProcessManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 			this.envManager = envManager ?? throw new ArgumentNullException (nameof (envManager));
 			this.mainLog = mainLog ?? throw new ArgumentNullException (nameof (mainLog));
 			this.generateXmlFailures = generateXmlFailures;

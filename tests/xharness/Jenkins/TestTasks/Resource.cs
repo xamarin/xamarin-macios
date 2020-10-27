@@ -23,9 +23,9 @@ namespace Xharness.Jenkins.TestTasks {
 
 		public Resource (string name, int max_concurrent_users = 1, string description = null)
 		{
-			Name = name;
-			MaxConcurrentUsers = max_concurrent_users;
-			Description = description ?? name;
+			this.Name = name;
+			this.MaxConcurrentUsers = max_concurrent_users;
+			this.Description = description ?? name;
 		}
 
 		public Task<IAcquiredResource> AcquireConcurrentAsync ()
@@ -76,7 +76,7 @@ namespace Xharness.Jenkins.TestTasks {
 		class AcquiredResource : IAcquiredResource {
 			public AcquiredResource (Resource resource)
 			{
-				Resource = resource;
+				this.Resource = resource;
 			}
 
 			void IDisposable.Dispose ()

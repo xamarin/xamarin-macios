@@ -135,7 +135,7 @@ namespace Xharness.Jenkins.TestTasks {
 						// Install the app
 						InstallLog = new AppInstallMonitorLog (testTask.Logs.Create ($"install-{Harness.Helpers.Timestamp}.log", "Install log"));
 						try {
-							testTask.Runner.MainLog = InstallLog;
+							testTask.Runner.MainLog = this.InstallLog;
 							var install_result = await testTask.Runner.InstallAsync (InstallLog.CancellationToken);
 							if (!install_result.Succeeded) {
 								testTask.FailureMessage = $"Install failed, exit code: {install_result.ExitCode}.";
