@@ -20,6 +20,7 @@ namespace Xharness {
 		HashSet<string> Labels { get; }
 		XmlResultJargon XmlJargon { get; }
 		IResultParser ResultParser { get; }
+		AppBundleLocator AppBundleLocator { get; }
 		ITunnelBore TunnelBore { get; }
 		string XIBuildPath { get; }
 		List<iOSTestProject> IOSTestProjects { get; }

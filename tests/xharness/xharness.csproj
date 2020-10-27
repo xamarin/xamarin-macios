@@ -82,6 +82,7 @@
     <PackageReference Include="Mono.Options" Version="6.6.0.161" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppBundleLocator.cs" />
     <Compile Include="AppRunner.cs" />
     <Compile Include="BCLTestImportTargetFactory.cs" />
     <Compile Include="CrashSnapshotReporterFactory.cs" />
