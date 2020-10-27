@@ -1,3 +1,4 @@
+Microsoft.NET.Workload.*/LICENSE
 WorkloadManifest.json
 nupkgs
 Microsoft.*.Sdk/targets/Microsoft.*.Sdk.SupportedTargetPlatforms.targets
