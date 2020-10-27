@@ -7,17 +7,9 @@ using Microsoft.Build.Evaluation;
 namespace Xamarin.iOS.Tasks
 {
 	public class ProjectTest : TestBase {
-		public string BundlePath;
-
 		public ProjectTest (string platform)
 			: base (platform)
 		{
-		}
-
-		public ProjectTest (string bundlePath, string platform)
-			: base (platform)
-		{
-			BundlePath = bundlePath;
 		}
 
 
