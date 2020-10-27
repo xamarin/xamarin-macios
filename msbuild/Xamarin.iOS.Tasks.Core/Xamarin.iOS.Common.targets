@@ -1062,7 +1062,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			$(_AppBundlePath)..\%(_ResolvedAppExtensionReferences.FileName)%(_ResolvedAppExtensionReferences.Extension).dSYM" />
 	</Target>
 
-	<Target Name="_ValidateAppBundle" Condition="'$(IsAppExtension)' == 'false' And '$(IsWatchApp)' == 'false'" DependsOnTargets="_DetectSdkLocations;_ComputeTargetFrameworkMoniker">
+	<Target Name="_ValidateAppBundle" Condition="'$(IsAppExtension)' == 'false' And '$(IsWatchApp)' == 'false'" DependsOnTargets="_DetectSdkLocations;_ComputeTargetFrameworkMoniker;_GenerateBundleName">
 		<ValidateAppBundleTask
 			Condition="'$(IsMacEnabled)' == 'true'"
 			SessionId="$(BuildSessionId)"
