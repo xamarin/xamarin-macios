@@ -423,8 +423,12 @@ namespace Xharness.Tests {
 			File.WriteAllLines (testResultFilePath, new [] { "Some result here", "Tests run: 124", "Some result there" });
 
 			logs
-				.Setup (x => x.Create (It.Is<string> (s => s.StartsWith ("test-sim64-")), "TestLog", It.IsAny<bool?> ()))
+				.Setup (x => x.Create (It.IsAny<string> (), It.IsAny<string>(), It.IsAny<bool?> ()))
 				.Returns (listenerLogFile);
+
+			logs
+				.Setup (x => x.CreateFile (It.IsAny<string> (), It.IsAny<string> ()))
+				.Returns ($"/path/to/log-{Guid.NewGuid ()}.log");
 
 			simpleListener.SetupGet (x => x.ConnectedTask).Returns (Task.FromResult(true));
 
@@ -504,7 +508,7 @@ namespace Xharness.Tests {
 			captureLog.Verify (x => x.StopCapture (), Times.AtLeastOnce);
 
 			// When ensureCleanSimulatorState == true
-			simulator.Verify (x => x.PrepareSimulator (mainLog.Object, appName));
+			simulator.Verify (x => x.PrepareSimulator (It.IsAny<ILog> (), appName));
 			simulator.Verify (x => x.KillEverything (mainLog.Object));
 		}
 
