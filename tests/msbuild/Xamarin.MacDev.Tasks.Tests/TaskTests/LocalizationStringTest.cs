@@ -116,7 +116,7 @@ namespace Xamarin.iOS.Tasks {
 			bool isCommonFileExistant = File.Exists (fullCommonPath);
 			bool isCultureFileExistant = File.Exists (fullCulturePath);
 			bool isFirstRun = false;
-			CultureInfo originalCulture = Thread.CurrentThread.CurrentUICulture;q
+			CultureInfo originalCulture = Thread.CurrentThread.CurrentUICulture;
 
 			if (commonIgnoreList == null && isCommonFileExistant){
 				commonIgnoreList = new List<string> (ReadFile (fullCommonPath));
