@@ -87,7 +87,6 @@ namespace Xamarin.iOS.Tasks {
 		}
 
 		private List<string> commonIgnoreList { get; set; } = null;
-		private List<string> commonValidEntries { get; set; } = null;
 
 		[TestCase ("cs-CZ")]
 		[TestCase ("de-DE")]
@@ -106,7 +105,9 @@ namespace Xamarin.iOS.Tasks {
 		{
 			string errorCode = string.Empty;
 			string errorList = string.Empty;
+			bool isFirstRun = false;
 			List<string> cultureIgnoreList = null;
+			List<string> commonValidEntries = new List<string> ();
 			List<string> cultureValidEntries = new List<string> ();
 
 			string fullCommonPath = $"{Directory.GetCurrentDirectory ()}/TaskTests/LocalizationIgnore/common-Translations.ignore";
@@ -115,12 +116,10 @@ namespace Xamarin.iOS.Tasks {
 			string shortCulturePath = $"xamarin-macios/tests/msbuild/Xamarin.MacDev.Tasks.Tests/Tasktests/LocalizationIgnore/{culture}-Translations.ignore";
 			bool isCommonFileExistant = File.Exists (fullCommonPath);
 			bool isCultureFileExistant = File.Exists (fullCulturePath);
-			bool isFirstRun = false;
 			CultureInfo originalCulture = Thread.CurrentThread.CurrentUICulture;
 
 			if (commonIgnoreList == null && isCommonFileExistant){
 				commonIgnoreList = new List<string> (ReadFile (fullCommonPath));
-				commonValidEntries = new List<string> ();
 				isFirstRun = true;
 			}
 
@@ -137,8 +136,7 @@ namespace Xamarin.iOS.Tasks {
 
 					if (isCommonFileExistant && commonIgnoreList.Contains (errorCode)) {
 						Assert.AreEqual (englishError, newCultureError, $"{errorCode} is translated. Remove {errorCode} from {shortCommonPath}");
-						if (isFirstRun)
-							commonValidEntries.Add (errorCode);
+						commonValidEntries.Add (errorCode);
 					} else if (isCultureFileExistant && cultureIgnoreList.Contains (errorCode)) {
 						Assert.AreEqual (englishError, newCultureError, $"{errorCode} is translated. Remove {errorCode} from {shortCulturePath}");
 						cultureValidEntries.Add (errorCode);
