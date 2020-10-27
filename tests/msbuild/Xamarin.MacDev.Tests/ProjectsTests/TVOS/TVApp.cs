@@ -17,7 +17,7 @@ namespace Xamarin.iOS.Tasks
 		{
 			if (Platform == "iPhoneSimulator" && Environment.OSVersion.Version.Major < 19) // Environment.OSVersion = 19.* in macOS Catalina.
 				Assert.Ignore ("Metal support is not available in the simulator until macOS 10.15.");
-			BuildExtension ("MyTVApp", "MyTVServicesExtension", Platform, "Debug");
+			BuildExtension ("MyTVApp", "MyTVServicesExtension");
 		}
 
 		public override string TargetFrameworkIdentifier {

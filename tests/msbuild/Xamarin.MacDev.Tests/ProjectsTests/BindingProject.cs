@@ -8,10 +8,9 @@ namespace Xamarin.iOS.Tasks
 	[TestFixture ("iPhoneSimulator")]
 	public class BindingProject : TestBase
 	{
-		string Platform;
 		public BindingProject (string platform)
+			: base (platform)
 		{
-			Platform = platform;
 		}
 
 		[Test]

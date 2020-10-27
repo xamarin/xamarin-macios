@@ -12,7 +12,7 @@ namespace Xamarin.iOS.Tasks {
 		[Test]
 		public void BasicTest ()
 		{
-			this.BuildExtension ("MyMasterDetailApp", "MyShareExtension", Platform, "Debug");
+			this.BuildExtension ("MyMasterDetailApp", "MyShareExtension");
 		}
 	}
 }

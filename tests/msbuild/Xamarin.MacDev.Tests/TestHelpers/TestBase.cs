@@ -25,6 +25,24 @@ namespace Xamarin.iOS.Tasks
 
 	public abstract class TestBase
 	{
+		public string Platform;
+		public string Config = "Debug";
+
+		public TestBase ()
+		{
+		}
+
+		public TestBase (string platform)
+		{
+			Platform = platform;
+		}
+
+		public TestBase (string platform, string config)
+		{
+			Platform = platform;
+			Config = config;
+		}
+
 		protected static class TargetName
 		{
 			public static string Build = "Build";
@@ -62,30 +80,30 @@ namespace Xamarin.iOS.Tasks
 		public string [] ExpectedAppFiles = { };
 		public string [] UnexpectedAppFiles = { "monotouch.dll" };
 
-		public string[] GetCoreAppFiles (string platform, string config, string managedExe, string nativeExe)
+		public string[] GetCoreAppFiles (string managedExe, string nativeExe)
 		{
 			var coreFiles = new List<string> ();
 
 			if (TargetFrameworkIdentifier == "Xamarin.WatchOS") {
 				coreFiles.Add ("Xamarin.WatchOS.dll");
-				if (config == "Debug")
+				if (Config == "Debug")
 					coreFiles.Add ("Xamarin.WatchOS.pdb");
 			} else if (TargetFrameworkIdentifier == "Xamarin.TVOS") {
 				coreFiles.Add ("Xamarin.TVOS.dll");
-				if (config == "Debug")
+				if (Config == "Debug")
 					coreFiles.Add ("Xamarin.TVOS.pdb");
 			} else {
 				coreFiles.Add ("Xamarin.iOS.dll");
-				if (config == "Debug")
+				if (Config == "Debug")
 					coreFiles.Add ("Xamarin.iOS.pdb");
 			}
 
 			coreFiles.Add ("mscorlib.dll");
-			if (config == "Debug")
+			if (Config == "Debug")
 				coreFiles.Add ("mscorlib.pdb");
 
 			coreFiles.Add (managedExe);
-			if (config == "Debug")
+			if (Config == "Debug")
 				coreFiles.Add (Path.ChangeExtension (managedExe, ".pdb"));
 
 			coreFiles.Add (nativeExe);

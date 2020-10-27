@@ -8,13 +8,11 @@ using Microsoft.Build.Evaluation;
 namespace Xamarin.iOS.Tasks
 {
 	public class ExtensionTestBase : TestBase {
-		public string Platform;
-
 		public ExtensionTestBase () { }
 
 		public ExtensionTestBase (string platform)
+			: base (platform)
 		{
-			Platform = platform;
 		}
 
 		public Project BuildExtension (string hostAppName, string extensionName, string platform, string config, int expectedErrorCount = 0, System.Action<ProjectPaths> additionalAsserts = null)
@@ -53,15 +51,15 @@ namespace Xamarin.iOS.Tasks
 			var basedirs = new List<string> ();
 			if (IsWatchOS) {
 				basedirs.Add (extensionPath);
-				coreFiles = GetCoreAppFiles (platform, config, extensionName + ".dll", Path.GetFileNameWithoutExtension (extensionPath));
+				coreFiles = GetCoreAppFiles (extensionName + ".dll", Path.GetFileNameWithoutExtension (extensionPath));
 			} else {
 				basedirs.Add (AppBundlePath);
-				if (platform == "iPhone") {
+				if (Platform == "iPhone") {
 					basedirs.Add (Path.Combine (AppBundlePath, ".monotouch-32"));
 					basedirs.Add (Path.Combine (AppBundlePath, "Frameworks", "Xamarin.Sdk.framework", "MonoBundle"));
 					basedirs.Add (Path.Combine (AppBundlePath, "Frameworks", "Xamarin.Sdk.framework", "MonoBundle", ".monotouch-32"));
 				}
-				coreFiles = GetCoreAppFiles (platform, config, hostAppName + ".exe", hostAppName);
+				coreFiles = GetCoreAppFiles (hostAppName + ".exe", hostAppName);
 			}
 			TestFilesExists (basedirs.ToArray (), coreFiles);
 

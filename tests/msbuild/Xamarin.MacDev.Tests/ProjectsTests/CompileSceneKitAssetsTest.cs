@@ -34,14 +34,13 @@ namespace Xamarin.iOS.Tasks
 		public void LibraryCompilation ()
 		{
 			var appName = "MySceneKitLibrary";
-			var platform = "AnyCPU";
-			var config = "Debug";
 
 			var mtouchPaths = SetupProjectPaths (appName, "../", true, platform, config);
 			var proj = SetupProject (Engine, mtouchPaths.ProjectCSProjPath);
+			Platform = "AnyCPU";
 
-			Engine.ProjectCollection.SetGlobalProperty ("Platform", platform);
-			Engine.ProjectCollection.SetGlobalProperty ("Configuration", config);
+			Engine.ProjectCollection.SetGlobalProperty ("Platform", Platform);
+			Engine.ProjectCollection.SetGlobalProperty ("Configuration", Config);
 
 			RunTarget (proj, "Build", 0);
 		}

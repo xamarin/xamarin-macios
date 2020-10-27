@@ -18,7 +18,7 @@ namespace Xamarin.iOS.Tasks {
 			if (!Xamarin.Tests.Configuration.include_watchos)
 				Assert.Ignore ("WatchOS is not enabled");
 
-			BuildExtension ("MyWatchApp2", "MyWatchKit2Extension", Platform, "Debug");
+			BuildExtension ("MyWatchApp2", "MyWatchKit2Extension");
 
 			if (Platform == "iPhone") {
 				// make sure the dSYMs exist

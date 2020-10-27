@@ -13,6 +13,11 @@ namespace Xamarin.iOS.Tasks
 	[TestFixture]
 	public class TargetTests : TestBase
 	{
+		public TargetTests ()
+			: base ("iPhoneSimulator")
+		{
+		}
+
 		string[] ExpectedExecutableBundleResources {
 			get {
 				var files = new [] {

@@ -8,17 +8,16 @@ namespace Xamarin.iOS.Tasks
 {
 	public class ProjectTest : TestBase {
 		public string BundlePath;
-		public string Platform;
 
 		public ProjectTest (string platform)
+			: base (platform)
 		{
-			Platform = platform;
 		}
 
 		public ProjectTest (string bundlePath, string platform)
+			: base (platform)
 		{
 			BundlePath = bundlePath;
-			Platform = platform;
 		}
 
 
@@ -52,8 +51,8 @@ namespace Xamarin.iOS.Tasks
 				Assert.IsFalse (Directory.Exists (AppBundlePath + ".mSYM"), "App bundle .mSYM exists after cleanup: {0} ", AppBundlePath + ".mSYM");
 
 				var baseDir = Path.GetDirectoryName (csproj);
-				var objDir = Path.Combine (baseDir, "obj", platform, config);
-				var binDir = Path.Combine (baseDir, "bin", platform, config);
+				var objDir = Path.Combine (baseDir, "obj", Platform, Config);
+				var binDir = Path.Combine (baseDir, "bin", Platform, Config);
 
 				if (Directory.Exists (objDir)) {
 					var paths = Directory.EnumerateFiles (objDir, "*.*", SearchOption.AllDirectories)
@@ -82,7 +81,7 @@ namespace Xamarin.iOS.Tasks
 			TestFilesDoNotExist (AppBundlePath, UnexpectedAppFiles);
 
 			if (executionMode != ExecutionMode.DotNet) {
-				var coreFiles = GetCoreAppFiles (platform, config, appName.Replace (" ", "") + ".exe", appName.Replace (" ", ""));
+				var coreFiles = GetCoreAppFiles (appName.Replace (" ", "") + ".exe", appName.Replace (" ", ""));
 				var baseDirs = new string [] {
 				Path.Combine (AppBundlePath, ".monotouch-32"),
 				Path.Combine (AppBundlePath, ".monotouch-64"),
@@ -94,7 +93,7 @@ namespace Xamarin.iOS.Tasks
 				TestFilesExists (baseDirs, coreFiles);
 			}
 
-			if (platform == "iPhone") {
+			if (Platform == "iPhone") {
 				var dSYMInfoPlist = Path.Combine (AppBundlePath + ".dSYM", "Contents", "Info.plist");
 				var nativeExecutable = Path.Combine (AppBundlePath, appName);
 

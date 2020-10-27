@@ -12,15 +12,14 @@ namespace Xamarin.iOS.Tasks
 	[TestFixture]
 	public class Bug60536 : ProjectTest
 	{
-		public Bug60536 () : base ("iPhoneSimulator")
+		public Bug60536 ()
+			: base ("iPhoneSimulator", "Debug")
 		{
 		}
 
 		[Test]
 		public void TestACToolTaskCatchesJsonException ()
 		{
-			var platform = "iPhoneSimulator";
-			var config = "Debug";
 			var target = "Build";
 
 			var mtouchPaths = SetupProjectPaths ("Bug60536", "../", true, platform, config);
@@ -29,8 +28,8 @@ namespace Xamarin.iOS.Tasks
 			var project = SetupProject (Engine, csproj);
 
 			AppBundlePath = mtouchPaths.AppBundlePath;
-			Engine.ProjectCollection.SetGlobalProperty("Platform", platform);
-			Engine.ProjectCollection.SetGlobalProperty("Configuration", config);
+			Engine.ProjectCollection.SetGlobalProperty ("Platform", Platform);
+			Engine.ProjectCollection.SetGlobalProperty ("Configuration", Config);
 
 			RunTarget (project, "Clean");
 			Assert.IsFalse (Directory.Exists (AppBundlePath), "App bundle exists after cleanup: {0} ", AppBundlePath);
@@ -38,8 +37,8 @@ namespace Xamarin.iOS.Tasks
 			Assert.IsFalse (Directory.Exists (AppBundlePath + ".mSYM"), "App bundle .mSYM exists after cleanup: {0} ", AppBundlePath + ".mSYM");
 
 			var baseDir = Path.GetDirectoryName (csproj);
-			var objDir = Path.Combine (baseDir, "obj", platform, config);
-			var binDir = Path.Combine (baseDir, "bin", platform, config);
+			var objDir = Path.Combine (baseDir, "obj", Platform, Config);
+			var binDir = Path.Combine (baseDir, "bin", Platform, Config);
 
 			if (Directory.Exists (objDir)) {
 				var path = Directory.EnumerateFiles (objDir, "*.*", SearchOption.AllDirectories).FirstOrDefault ();
@@ -62,7 +61,7 @@ namespace Xamarin.iOS.Tasks
 				Assert.AreEqual (1, Engine.Logger.ErrorEvents.Count, "#RunTarget-ErrorCount" + messages);
 			}
 
-			var expectedFile = Path.Combine ("obj", platform, config, "actool", "cloned-assets", "Assets.xcassets", "AppIcon.appiconset", "Contents.json");
+			var expectedFile = Path.Combine ("obj", Platform, Config, "actool", "cloned-assets", "Assets.xcassets", "AppIcon.appiconset", "Contents.json");
 			Assert.AreEqual (expectedFile, Engine.Logger.ErrorEvents[0].File, "File");
 			Assert.AreEqual (197, Engine.Logger.ErrorEvents[0].LineNumber, "LineNumber");
 			Assert.AreEqual (4, Engine.Logger.ErrorEvents[0].ColumnNumber, "ColumnNumber");

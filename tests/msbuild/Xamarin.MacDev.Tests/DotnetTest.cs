@@ -15,12 +15,9 @@ namespace Xamarin.iOS.Tasks {
 	[TestFixture ("iPhoneSimulator", "Debug")]
 	[TestFixture ("iPhoneSimulator", "Release")]
 	public class DotNetTest : ProjectTest {
-		public string ProjectConfiguration;
-
 		public DotNetTest (string platform, string configuration)
-			: base (platform)
+			: base (platform, configuration)
 		{
-			ProjectConfiguration = configuration;
 		}
 
 		string tfi;
