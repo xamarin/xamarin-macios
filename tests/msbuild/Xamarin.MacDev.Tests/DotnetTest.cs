@@ -51,20 +51,8 @@ namespace Xamarin.iOS.Tasks {
 		[TestCase ("MyXamarinFormsApp")]
 		public void CompareBuilds (string project, int expectedErrorCount = 0)
 		{
-			var net461 = GetTestDirectory ("net461-" + ProjectConfiguration, ExecutionMode.MSBuild);
-			var dotnet = GetTestDirectory ("dotnet-" + ProjectConfiguration, ExecutionMode.DotNet);
-
-			Configuration.FixupTestFiles (dotnet, "dotnet");
-			Configuration.CopyDotNetSupportingFiles (dotnet);
-
 			tfi = "Xamarin.iOS";
 			switch (project) {
-			case "MyXamarinFormsApp":
-				NugetRestore (Path.Combine (net461, project, "MyXamarinFormsAppNS", "MyXamarinFormsAppNS.csproj"));
-				break;
-			case "MyAppWithPackageReference":
-				NugetRestore (Path.Combine (net461, "MyExtensionWithPackageReference", "MyExtensionWithPackageReference.csproj"));
-				break;
 			case "MyMetalGame":
 				if (Platform == "iPhoneSimulator")
 					Assert.Ignore ("The iOS Simulator does not support metal. Build for a device instead.");
@@ -75,13 +63,26 @@ namespace Xamarin.iOS.Tasks {
 				break;
 			}
 
+			ClearTestDirectory ();
+
 			Console.WriteLine ("Building dotnet");
-			BuildProject (project, Platform, ProjectConfiguration, projectBaseDir: dotnet, executionMode: ExecutionMode.DotNet, clean: false, expectedErrorCount: expectedErrorCount);
+			Mode = ExecutionMode.DotNet;
+			BuildProject (project, clean: false, expectedErrorCount: expectedErrorCount);
 			Console.WriteLine ("Done building dotnet");
 			var dotnet_bundle = AppBundlePath;
 
 			Console.WriteLine ("Building net461");
-			BuildProject (project, Platform, ProjectConfiguration, projectBaseDir: net461, executionMode: ExecutionMode.MSBuild, nuget_restore: true, expectedErrorCount: expectedErrorCount);
+			Mode = ExecutionMode.MSBuild;
+			var net461 = GetTestDirectory (forceClone: true);
+			switch (project) {
+			case "MyXamarinFormsApp":
+				NugetRestore (Path.Combine (net461, project, "MyXamarinFormsAppNS", "MyXamarinFormsAppNS.csproj"));
+				break;
+			case "MyAppWithPackageReference":
+				NugetRestore (Path.Combine (net461, "MyExtensionWithPackageReference", "MyExtensionWithPackageReference.csproj"));
+				break;
+			}
+			BuildProject (project, nuget_restore: true, expectedErrorCount: expectedErrorCount);
 			Console.WriteLine ("Done building net461");
 			var net461_bundle = AppBundlePath;
 

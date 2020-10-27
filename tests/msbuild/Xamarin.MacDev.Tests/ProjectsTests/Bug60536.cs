@@ -20,14 +20,10 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void TestACToolTaskCatchesJsonException ()
 		{
-			var target = "Build";
+			var project = SetupProjectPaths ("Bug60536");
+			var csproj = project.ProjectCSProjPath;
 
-			var mtouchPaths = SetupProjectPaths ("Bug60536", "../", true, platform, config);
-			var csproj = mtouchPaths.ProjectCSProjPath;
-
-			var project = SetupProject (Engine, csproj);
-
-			AppBundlePath = mtouchPaths.AppBundlePath;
+			MonoTouchProject = project;
 			Engine.ProjectCollection.SetGlobalProperty ("Platform", Platform);
 			Engine.ProjectCollection.SetGlobalProperty ("Configuration", Config);
 
@@ -50,16 +46,7 @@ namespace Xamarin.iOS.Tasks
 				Assert.IsNull (path, "File not cleaned: {0}", path);
 			}
 
-			project = SetupProject (Engine, mtouchPaths.ProjectCSProjPath);
-			var projectInstance = project.CreateProjectInstance ();
-
-			Engine.BuildProject (projectInstance, new [] { target }, new Hashtable { {"Platform", "iPhone"} });
-			if (Engine.Logger.ErrorEvents.Count != 1) {
-				string messages = string.Empty;
-				if (Engine.Logger.ErrorEvents.Count > 0)
-					messages = "\n\t" + string.Join ("\n\t", Engine.Logger.ErrorEvents.Select ((v) => v.Message).ToArray ());
-				Assert.AreEqual (1, Engine.Logger.ErrorEvents.Count, "#RunTarget-ErrorCount" + messages);
-			}
+			RunTarget (MonoTouchProject, "Build", expectedErrorCount: 1);
 
 			var expectedFile = Path.Combine ("obj", Platform, Config, "actool", "cloned-assets", "Assets.xcassets", "AppIcon.appiconset", "Contents.json");
 			Assert.AreEqual (expectedFile, Engine.Logger.ErrorEvents[0].File, "File");

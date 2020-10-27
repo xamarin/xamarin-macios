@@ -22,8 +22,8 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void Compilation ()
 		{
-			var csproj = BuildProject ("MySceneKitApp", Platform, "Debug", clean: true);
-			var appPath = Path.Combine (Path.GetDirectoryName (csproj), "bin", Platform, "Debug", "MySceneKitApp.app");
+			var proj = BuildProject ("MySceneKitApp");
+			var appPath = proj.AppBundlePath;
 			var scenePath = Path.GetFullPath (Path.Combine (appPath, "art.scnassets", "scene.scn"));
 
 			var xml = Configuration.ReadPListAsXml (scenePath);
@@ -35,9 +35,8 @@ namespace Xamarin.iOS.Tasks
 		{
 			var appName = "MySceneKitLibrary";
 
-			var mtouchPaths = SetupProjectPaths (appName, "../", true, platform, config);
-			var proj = SetupProject (Engine, mtouchPaths.ProjectCSProjPath);
 			Platform = "AnyCPU";
+			var proj = SetupProjectPaths (appName);
 
 			Engine.ProjectCollection.SetGlobalProperty ("Platform", Platform);
 			Engine.ProjectCollection.SetGlobalProperty ("Configuration", Config);

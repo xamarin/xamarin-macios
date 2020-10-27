@@ -1,30 +1,19 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 using System.Threading;
-using Microsoft.Build.Evaluation;
-using Microsoft.Build.Execution;
-using Microsoft.Build.Utilities;
+
 using NUnit.Framework;
 using Xamarin.MacDev;
 
-using Xamarin.Tests;
 using Xamarin.Utils;
 
-namespace Xamarin.iOS.Tasks
+namespace Xamarin.Tests
 {
-	public enum ExecutionMode {
-		InProcess,
-		MSBuild,
-		DotNet,
-	}
-
 	public abstract class TestBase
 	{
+		public ExecutionMode Mode = ExecutionMode.MSBuild;
 		public string Platform;
 		public string Config = "Debug";
 
@@ -57,22 +46,28 @@ namespace Xamarin.iOS.Tasks
 			public static string ResolveReferences = "ResolveReferences";
 		}
 
-		protected static string GetTestDirectory (string mode = null, ExecutionMode? executionMode = null)
+		string testDirectory;
+
+		protected void ClearTestDirectory ()
 		{
-			var assembly_path = Assembly.GetExecutingAssembly ().Location;
-			if (string.IsNullOrEmpty (mode)) {
-				if (assembly_path.Contains ("netstandard2.0"))
-					mode = "netstandard2.0";
-				else if (assembly_path.Contains ("net461"))
-					mode = "net461";
-				else
-					mode = "unknown";
-			}
+			testDirectory = null;
+		}
 
-			var rv = Configuration.CloneTestDirectory (Configuration.TestProjectsDirectory, mode);
+		protected string GetTestDirectory (bool forceClone = false)
+		{
+			if (testDirectory == null || forceClone)
+				testDirectory = CloneTestDirectory (Mode);
+			return testDirectory;
+		}
 
-			if (executionMode == ExecutionMode.DotNet)
+		static string CloneTestDirectory (ExecutionMode mode)
+		{
+			var rv = Configuration.CloneTestDirectory (Configuration.TestProjectsDirectory);
+
+			if (mode == ExecutionMode.DotNet) {
 				Configuration.CopyDotNetSupportingFiles (rv);
+				Configuration.FixupTestFiles (rv, "dotnet");
+			}
 
 			return rv;
 		}
@@ -111,136 +106,123 @@ namespace Xamarin.iOS.Tasks
 			return coreFiles.ToArray ();
 		}
 
-		public Logger Logger {
-			get; set;
-		}
-
-		public TestEngine Engine {
+		public BuildEngine Engine {
 			get; private set;
 		}
 
-
-		public Project LibraryProject {
+		public ProjectPaths LibraryProject {
 			get; private set;
 		}
 
-		public ProjectInstance LibraryProjectInstance {
-			get; set;
+		public ProjectPaths MonoTouchProject {
+			get; protected set;
 		}
 
-		public Project MonoTouchProject {
+		public MSBuildProject MonoTouchProjectInstance {
 			get; private set;
 		}
 
-		public ProjectInstance MonoTouchProjectInstance {
-			get; set;
+		public MSBuildProject LibraryProjectInstance {
+			get; private set;
 		}
 
-		public string LibraryProjectBinPath;
-		public string LibraryProjectObjPath;
-		public string LibraryProjectPath;
-		public string LibraryProjectCSProjPath;
+		public string LibraryProjectBinPath => LibraryProject.ProjectBinPath;
+		public string LibraryProjectObjPath => LibraryProject.ProjectObjPath;
+		public string LibraryProjectPath => LibraryProject.ProjectPath;
 
-		public string MonoTouchProjectBinPath;
-		public string MonoTouchProjectObjPath;
-		public string MonoTouchProjectPath;
-		public string MonoTouchProjectCSProjPath;
-		public string AppBundlePath;
+		public string MonoTouchProjectBinPath => MonoTouchProject.ProjectBinPath;
+		public string MonoTouchProjectObjPath => MonoTouchProject.ProjectObjPath;
+		public string MonoTouchProjectPath => MonoTouchProject.ProjectPath;
+		public string AppBundlePath => MonoTouchProject.AppBundlePath;
 
-		public ProjectPaths SetupProjectPaths (string projectName, string csprojName, string baseDir = "../", bool includePlatform = true, string platform = "iPhoneSimulator", string config = "Debug", string projectPath = null, bool is_dotnet = false)
+		// project can be:
+		// * an absolute path to a project
+		// * a relative path to a project directory inside the tests/common/TestProjects directory.
+		//   in this case the project's name is assumed from the name of the project directory
+		public ProjectPaths SetupProjectPaths (string project, bool? includePlatform = null)
 		{
-			var testsBase = GetTestDirectory ();
-			if (projectPath == null) {
-				if (Path.IsPathRooted (baseDir)) {
-					projectPath = Path.Combine (baseDir, projectName);
-				} else {
-					if (baseDir.StartsWith ("../", StringComparison.Ordinal))
-						baseDir = baseDir.Substring (3); // Tests have been relocated, which means the given relative base dir is not correct anymore, so fix it.
-					projectPath = Path.Combine (testsBase, baseDir, projectName);
-				}
+			if (project == null)
+				throw new ArgumentNullException (nameof (project));
+
+			string projectPath;
+			string projectName;
+			string csprojPath;
+			if (Path.IsPathRooted (project)) {
+				projectPath = Path.GetDirectoryName (project);
+				projectName = Path.GetFileNameWithoutExtension (project);
+				csprojPath = project;
+			} else {
+				projectPath = Path.Combine (GetTestDirectory (), project);
+				projectName = Path.GetFileNameWithoutExtension (project);
+				csprojPath = Path.Combine (projectPath, projectName + ".csproj");
 			}
+
+			if (!File.Exists (csprojPath))
+				throw new InvalidOperationException ($"Can't resolve the project {project}");
 
 			string binPath;
 			string objPath;
-			if (is_dotnet) {
+
+			if (includePlatform == false || (includePlatform == null && string.IsNullOrEmpty (Platform))) {
+				binPath = Path.Combine (projectPath, "bin", Config);
+				objPath = Path.Combine (projectPath, "obj", Config);
+			} else {
+				binPath = Path.Combine (projectPath, "bin", Platform, Config);
+				objPath = Path.Combine (projectPath, "obj", Platform, Config);
+			}
+
+			if (Mode == ExecutionMode.DotNet) {
 				var targetPlatform = "net5.0";
 				var subdir = string.Empty;
 				var targetPlatformSuffix = string.Empty;
+				var isDevice = Platform == "iPhone";
 				switch (TargetFrameworkIdentifier) {
 				case "Xamarin.iOS":
-					subdir = platform == "iPhone" ? "ios-arm64" : "ios-x64";
+					subdir = isDevice ? "ios-arm64" : "ios-x64";
 					targetPlatformSuffix = "ios";
 					break;
 				case "Xamarin.TVOS":
-					subdir = platform == "iPhone" ? "tvos-arm64" : "tvos-x64";
+					subdir = isDevice ? "tvos-arm64" : "tvos-x64";
 					targetPlatformSuffix = "tvos";
 					break;
 				case "Xamarin.WatchOS":
-					subdir = platform == "iPhone" ? "watchos-arm" : "watchos-x86";
+					subdir = isDevice ? "watchos-arm" : "watchos-x86";
 					targetPlatformSuffix = "watchos";
 					break;
 				default:
 					throw new NotImplementedException ($"Unknown TargetFrameworkIdentifier: {TargetFrameworkIdentifier}");
 				}
 				targetPlatform += "-" + targetPlatformSuffix;
-				binPath = Path.Combine (projectPath, "bin", platform, config, targetPlatform, subdir);
-				objPath = Path.Combine (projectPath, "obj", platform, config, targetPlatform, subdir);
-			} else {
-				binPath = includePlatform ? Path.Combine (projectPath, "bin", platform, config) : Path.Combine (projectPath, "bin", config);
-				objPath = includePlatform ? Path.Combine (projectPath, "obj", platform, config) : Path.Combine (projectPath, "obj", config);
-			}			
-			
+				binPath = Path.Combine (binPath, targetPlatform, subdir);
+				objPath = Path.Combine (objPath, targetPlatform, subdir);
+			}
+
 			return new ProjectPaths {
 				ProjectPath = projectPath,
 				ProjectBinPath = binPath,
 				ProjectObjPath = objPath,
-				ProjectCSProjPath = Path.Combine (projectPath, csprojName + ".csproj"),
+				ProjectCSProjPath = csprojPath,
 				AppBundlePath = Path.Combine (binPath, projectName.Replace (" ", "") + ".app"),
 			};
-		}
-
-		public ProjectPaths SetupProjectPaths (string projectName, string baseDir = "../", bool includePlatform = true, string platform = "iPhoneSimulator", string config = "Debug", string projectPath = null)
-		{
-			return SetupProjectPaths (projectName, projectName, baseDir, includePlatform, platform, config, projectPath);
 		}
 
 		[SetUp]
 		public virtual void Setup ()
 		{
-			var mtouchPaths = SetupProjectPaths ("MySingleView");
+			testDirectory = GetTestDirectory (forceClone: true);
+			AssertValidDeviceBuild ();
+			MonoTouchProject = SetupProjectPaths ("MySingleView");
+			LibraryProject = SetupProjectPaths ("MySingleView/MyLibrary", false);
+			MonoTouchProjectInstance = new MSBuildProject (MonoTouchProject, this);
+			LibraryProjectInstance = new MSBuildProject (LibraryProject, this);
 
-			MonoTouchProjectBinPath = mtouchPaths.ProjectBinPath;
-			MonoTouchProjectObjPath = mtouchPaths.ProjectObjPath;
-			MonoTouchProjectCSProjPath = mtouchPaths.ProjectCSProjPath;
-			MonoTouchProjectPath = mtouchPaths.ProjectPath;
-
-			AppBundlePath = mtouchPaths.AppBundlePath;
-
-			var libraryPaths = SetupProjectPaths ("MyLibrary", "../MySingleView/", false);
-
-			LibraryProjectBinPath = libraryPaths.ProjectBinPath;
-			LibraryProjectObjPath = libraryPaths.ProjectObjPath;
-			LibraryProjectPath = libraryPaths.ProjectPath;
-			LibraryProjectCSProjPath = libraryPaths.ProjectCSProjPath;
-
-			SetupEngine ();
-
-			MonoTouchProject = SetupProject (Engine, MonoTouchProjectCSProjPath);
-			MonoTouchProjectInstance = MonoTouchProject.CreateProjectInstance ();
-			LibraryProject = SetupProject (Engine, LibraryProjectCSProjPath);
-			LibraryProjectInstance = LibraryProject.CreateProjectInstance ();
-
-			CleanUp ();
+			Engine = new BuildEngine ();
 		}
 
-		public void SetupEngine () 
-		{
-			Engine = new TestEngine ();
-		}
-
-		public Project SetupProject (TestEngine engine, string projectPath)
-		{
-			return engine.ProjectCollection.LoadProject (projectPath);
+		public ApplePlatform ApplePlatform {
+			get {
+				return new TargetFramework (TargetFrameworkIdentifier, null).Platform;
+			}
 		}
 
 		public virtual string TargetFrameworkIdentifier {
@@ -257,40 +239,6 @@ namespace Xamarin.iOS.Tasks
 			get { return TargetFrameworkIdentifier == "Xamarin.TVOS"; }
 		}
 
-		public void CleanUp () {
-
-			var paths = SetupProjectPaths ("MySingleView");
-			MonoTouchProjectPath = paths.ProjectPath;
-
-			// Ensure the bin and obj directories are cleared
-			SafeDelete (Path.Combine (MonoTouchProjectPath, "bin"));
-			SafeDelete (Path.Combine (MonoTouchProjectPath, "obj"));
-
-			SafeDelete (Path.Combine (LibraryProjectPath, "bin"));
-			SafeDelete (Path.Combine (LibraryProjectPath, "obj"));
-
-			// Reset all the write times as we deliberately set some in the future for our tests
-			foreach (var file in Directory.GetFiles (MonoTouchProjectPath, "*.*", SearchOption.AllDirectories))
-				File.SetLastWriteTimeUtc (file, DateTime.UtcNow);
-			foreach (var file in Directory.GetFiles (LibraryProjectPath, "*.*", SearchOption.AllDirectories))
-				File.SetLastWriteTimeUtc (file, DateTime.UtcNow);
-
-			Engine.UnloadAllProjects ();
-			Engine = new TestEngine ();
-		}
-
-		protected void SafeDelete (string path)
-		{
-			try {
-				if (Directory.Exists (path))
-					Directory.Delete (path, true);
-				else if (File.Exists (path))
-					File.Delete (path);
-			} catch {
-
-			}
-		}
-
 		public void TestFilesDoNotExist(string baseDir, IEnumerable<string> files)
 		{
 			foreach (var v in files.Select (s => Path.Combine (baseDir, s)))
@@ -305,7 +253,6 @@ namespace Xamarin.iOS.Tasks
 
 		public void TestFilesExists (string [] baseDirs, string [] files)
 		{
-
 			if (baseDirs.Length == 1) {
 				TestFilesExists (baseDirs [0], files);
 			} else {
@@ -330,32 +277,10 @@ namespace Xamarin.iOS.Tasks
 			}
 		}
 
-		[TearDown]
-		public virtual void Teardown ()
-		{
-		}
-
-		/// <summary>
-		/// Executes the task and log its error messages.</summary>
-		/// <remarks>
-		/// This is the prefered way to run tasks as we want error messages to show up in the test results.</remarks>
-		/// <param name="task">An msbuild task.</param>
-		/// <param name="expectedErrorCount">Expected error count. 0 by default.</param>
-		public void ExecuteTask (Task task, int expectedErrorCount = 0)
-		{
-			task.Execute ();
-			if (expectedErrorCount != Engine.Logger.ErrorEvents.Count) {
-				string messages = string.Empty;
-				if (Engine.Logger.ErrorEvents.Count > 0) {
-					messages = "\n\t" + string.Join ("\n\t", Engine.Logger.ErrorEvents.Select ((v) => v.Message).ToArray ());
-				}
-				Assert.AreEqual (expectedErrorCount, Engine.Logger.ErrorEvents.Count, "#RunTask-ErrorCount" + messages);
-			}
-		}
-
 		protected string CreateTempFile (string path)
 		{
-			path = Path.Combine (Cache.CreateTemporaryDirectory (), path);
+			var dir = Cache.CreateTemporaryDirectory ();
+			path = Path.Combine (dir, path);
 			using (new FileStream (path, FileMode.CreateNew)) {}
 			return path;
 		}
@@ -369,27 +294,6 @@ namespace Xamarin.iOS.Tasks
 				Assert.Fail ("Expected file '{0}' did not exist", file);
 
 			return File.GetLastWriteTimeUtc (file);
-		}
-
-		protected void RemoveItemsByName (Project project, string itemName)
-		{
-			project.RemoveItems (project.GetItems (itemName));
-		}
-
-		protected string SetPListKey (string key, PObject value)
-		{
-
-			var paths = SetupProjectPaths ("MySingleView");
-
-			var plist = PDictionary.FromFile (Path.Combine (paths.ProjectPath, "Info.plist"));
-			if (value == null)
-				plist.Remove (key);
-			else
-				plist [key] = value;
-
-			var modifiedPListPath = CreateTempFile ("modified.plist");
-			plist.Save (modifiedPListPath);
-			return modifiedPListPath;
 		}
 
 		protected void Touch (string file)
@@ -419,104 +323,29 @@ namespace Xamarin.iOS.Tasks
 			Thread.Sleep (1000);
 		}
 
-		public void RunTarget (Project project, string target, int expectedErrorCount = 0)
+		public void RunTarget (ProjectPaths paths, string target, int expectedErrorCount)
 		{
-			RunTarget (project, null, target, ExecutionMode.InProcess, expectedErrorCount);
+			RunTarget (paths, target, null, expectedErrorCount);
 		}
 
-		public void RunTarget (Project project, string project_path, string target, ExecutionMode executionMode = ExecutionMode.InProcess, int expectedErrorCount = 0)
+		public void RunTarget (ProjectPaths paths, string target, ExecutionMode? executionMode = null, int expectedErrorCount = 0, Dictionary<string, string> properties = null)
 		{
-			if (executionMode == ExecutionMode.InProcess) {
-				RunTargetOnInstance (project.CreateProjectInstance (), target, expectedErrorCount);
-				return;
+			var rv = Engine.RunTarget (ApplePlatform, executionMode ?? Mode, paths.ProjectCSProjPath, target, properties);
+			if (expectedErrorCount != Engine.ErrorEvents.Count) {
+				foreach (var e in Engine.ErrorEvents)
+					Console.WriteLine (e.Message);
+				Assert.AreEqual (expectedErrorCount, Engine.ErrorEvents.Count, "ExitCode/ExpectedErrorCount");
 			}
-
-			var platform = Engine.ProjectCollection.GetGlobalProperty ("Platform")?.EvaluatedValue;
-			var configuration = Engine.ProjectCollection.GetGlobalProperty ("Configuration")?.EvaluatedValue;
-			var dict = new Dictionary<string, string> ();
-			if (!string.IsNullOrEmpty (platform))
-				dict ["Platform"] = platform;
-			if (!string.IsNullOrEmpty (configuration))
-				dict ["Configuration"] = configuration;
-
-			ExecutionResult rv;
-			switch (executionMode) {
-			case ExecutionMode.DotNet:
-				rv = Dotnet (target, project_path, dict, assert_success: expectedErrorCount == 0);
-				break;
-			case ExecutionMode.MSBuild:
-				rv = MSBuild (project_path, target, dict, assert_success: expectedErrorCount == 0);
-				break;
-			default:
-				throw new NotImplementedException ($"Unknown excecution mode: {executionMode}");
-			}
-
-			Assert.AreEqual (expectedErrorCount, rv.ExitCode, "ExitCode/ExpectedErrorCount");
-		}
-
-		public ExecutionResult Dotnet (string command, string project, Dictionary<string, string> properties, bool assert_success = true)
-		{
-			return DotNet.Execute (command, project, properties, assert_success: assert_success);
-		}
-
-		public ExecutionResult MSBuild (string project, string target, Dictionary<string, string> properties, string verbosity = "diagnostic", bool assert_success = true)
-		{
-			if (!File.Exists (project))
-				throw new FileNotFoundException ($"The project file '{project}' does not exist.");
-
-			var args = new List<string> ();
-			args.Add ("--");
-			args.Add ($"/t:{target}");
-			args.Add (project);
-			if (properties != null) {
-				foreach (var prop in properties)
-					args.Add ($"/p:{prop.Key}={prop.Value}");
-			}
-			if (!string.IsNullOrEmpty (verbosity))
-				args.Add ($"/verbosity:{verbosity}");
-			args.Add ($"/bl:{Path.Combine (Path.GetDirectoryName (project), "log.binlog")}");
-
-			var output = new StringBuilder ();
-			var executable = Configuration.XIBuildPath;
-			var rv = ExecutionHelper.Execute (executable, args, null, output, output, workingDirectory: Path.GetDirectoryName (project), timeout: TimeSpan.FromMinutes (10));
-			if (assert_success && rv != 0) {
-				Console.WriteLine ($"'{executable} {StringUtils.FormatArguments (args)}' failed with exit code {rv}.");
-				Console.WriteLine (output);
-				Assert.AreEqual (0, rv, $"Exit code: {executable} {StringUtils.FormatArguments (args)}");
-			}
-			return new ExecutionResult {
-				StandardOutput = output,
-				StandardError = output,
-				ExitCode = rv,
-			};
-		}
-
-		public void RunTargetOnInstance (ProjectInstance instance, string target, int expectedErrorCount = 0)
-		{
-			Engine.BuildProject (instance, new [] { target }, new Hashtable { {"Platform", "iPhone"} });
-			if (expectedErrorCount != Engine.Logger.ErrorEvents.Count) {
-				string messages = string.Empty;
-				if (Engine.Logger.ErrorEvents.Count > 0) {
-					messages = "\n\t" + string.Join ("\n\t", Engine.Logger.ErrorEvents.Select ((v) => v.Message).ToArray ());
-				}
-				Assert.AreEqual (expectedErrorCount, Engine.Logger.ErrorEvents.Count, "#RunTarget-ErrorCount" + messages);
+			if (expectedErrorCount > 0) {
+				Assert.AreEqual (1, rv.ExitCode, "ExitCode (failure)");
+			} else {
+				Assert.AreEqual (0, rv.ExitCode, "ExitCode (success)");
 			}
 		}
 
-		public void RunTarget_WithErrors (Project project, string target)
+		void AssertValidDeviceBuild ()
 		{
-			RunTarget_WithErrors (project.CreateProjectInstance (), target);
-		}
-
-		public void RunTarget_WithErrors (ProjectInstance instance, string target)
-		{
-			Engine.BuildProject (instance, new [] { target }, new Hashtable ());
-			Assert.IsTrue (Engine.Logger.ErrorEvents.Count > 0, "#RunTarget-HasExpectedErrors");
-		}
-
-		protected void AssertValidDeviceBuild (string platform)
-		{
-			if (!Xamarin.Tests.Configuration.include_device && platform == "iPhone")
+			if (!Configuration.include_device && Platform == "iPhone")
 				Assert.Ignore ("This build does not include device support.");
 		}
 

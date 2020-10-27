@@ -2,7 +2,8 @@
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
-using Microsoft.Build.Evaluation;
+
+using Xamarin.Tests;
 
 namespace Xamarin.iOS.Tasks
 {
@@ -12,32 +13,25 @@ namespace Xamarin.iOS.Tasks
 		{
 		}
 
-
-		[SetUp]
-		public override void Setup () 
+		public ProjectTest (string platform, string config)
+			: base (platform, config)
 		{
-			AssertValidDeviceBuild (Platform);
-			SetupEngine ();
 		}
 
-		public string BuildProject (string appName, string platform, string config, int expectedErrorCount = 0, bool clean = true, string projectBaseDir = "../", ExecutionMode executionMode = ExecutionMode.InProcess, bool nuget_restore = false)
+		public ProjectPaths BuildProject (string appName, int expectedErrorCount = 0, bool clean = true, bool nuget_restore = false)
 		{
-			var mtouchPaths = SetupProjectPaths (appName, appName, projectBaseDir, includePlatform: true, platform: platform, config: config, is_dotnet: executionMode == ExecutionMode.DotNet);
+			var mtouchPaths = SetupProjectPaths (appName);
 			var csproj = mtouchPaths.ProjectCSProjPath;
 
-			Project proj = null;
-			if (executionMode != ExecutionMode.DotNet)
-				proj = SetupProject (Engine, csproj);
-
-			AppBundlePath = mtouchPaths.AppBundlePath;
-			Engine.ProjectCollection.SetGlobalProperty("Platform", platform);
-			Engine.ProjectCollection.SetGlobalProperty("Configuration", config);
+			MonoTouchProject = mtouchPaths;
+			Engine.ProjectCollection.SetGlobalProperty ("Platform", Platform);
+			Engine.ProjectCollection.SetGlobalProperty ("Configuration", Config);
 
 			if (nuget_restore)
 				NugetRestore (csproj);
 
 			if (clean) {
-				RunTarget (proj, csproj, "Clean", executionMode);
+				RunTarget (mtouchPaths, "Clean", Mode);
 				Assert.IsFalse (Directory.Exists (AppBundlePath), "App bundle exists after cleanup: {0} ", AppBundlePath);
 				Assert.IsFalse (Directory.Exists (AppBundlePath + ".dSYM"), "App bundle .dSYM exists after cleanup: {0} ", AppBundlePath + ".dSYM");
 				Assert.IsFalse (Directory.Exists (AppBundlePath + ".mSYM"), "App bundle .mSYM exists after cleanup: {0} ", AppBundlePath + ".mSYM");
@@ -59,20 +53,17 @@ namespace Xamarin.iOS.Tasks
 				}
 			}
 
-			if (executionMode != ExecutionMode.DotNet)
-				proj = SetupProject (Engine, mtouchPaths.ProjectCSProjPath);
-
-			RunTarget (proj, csproj, "Build", executionMode, expectedErrorCount);
+			RunTarget (mtouchPaths, "Build", Mode, expectedErrorCount);
 
 			if (expectedErrorCount > 0)
-				return csproj;
+				return mtouchPaths;
 
 			Assert.IsTrue (Directory.Exists (AppBundlePath), "App Bundle does not exist: {0} ", AppBundlePath);
 
 			TestFilesExists (AppBundlePath, ExpectedAppFiles);
 			TestFilesDoNotExist (AppBundlePath, UnexpectedAppFiles);
 
-			if (executionMode != ExecutionMode.DotNet) {
+			if (Mode != ExecutionMode.DotNet) {
 				var coreFiles = GetCoreAppFiles (appName.Replace (" ", "") + ".exe", appName.Replace (" ", ""));
 				var baseDirs = new string [] {
 				Path.Combine (AppBundlePath, ".monotouch-32"),
@@ -93,8 +84,7 @@ namespace Xamarin.iOS.Tasks
 				Assert.IsTrue (File.GetLastWriteTimeUtc (dSYMInfoPlist) >= File.GetLastWriteTimeUtc (nativeExecutable), "dSYM Info.plist should be newer than the native executable");
 			}
 
-			return csproj;
+			return mtouchPaths;
 		}
 	}
 }
-

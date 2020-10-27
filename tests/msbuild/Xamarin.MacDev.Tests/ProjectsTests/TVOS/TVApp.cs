@@ -2,6 +2,8 @@ using System;
 
 using NUnit.Framework;
 
+using Xamarin.Tests;
+
 namespace Xamarin.iOS.Tasks
 {
 	[TestFixture ("iPhone")]

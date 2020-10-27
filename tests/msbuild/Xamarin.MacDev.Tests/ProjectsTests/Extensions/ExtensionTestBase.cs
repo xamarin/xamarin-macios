@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 
-using Microsoft.Build.Evaluation;
+using Xamarin.Tests;
 
 namespace Xamarin.iOS.Tasks
 {
@@ -15,28 +15,28 @@ namespace Xamarin.iOS.Tasks
 		{
 		}
 
-		public Project BuildExtension (string hostAppName, string extensionName, string platform, string config, int expectedErrorCount = 0, System.Action<ProjectPaths> additionalAsserts = null)
+		public ProjectPaths BuildExtension (string hostAppName, string extensionName, int expectedErrorCount = 0)
 		{
-			var bundlePath = platform;
-			var mtouchPaths = SetupProjectPaths (hostAppName, "../", true, bundlePath, config);
+			var mtouchPaths = SetupProjectPaths (hostAppName);
+			MonoTouchProject = mtouchPaths;
 
-			var proj = SetupProject (Engine, mtouchPaths.ProjectCSProjPath);
+			string extensionPath = Path.Combine (AppBundlePath, "PlugIns", extensionName + ".appex");
+			var proj = new ProjectPaths {
+				AppBundlePath = extensionPath,
+			};
 
-			AppBundlePath = mtouchPaths.AppBundlePath;
-			string extensionPath = Path.Combine(AppBundlePath, "PlugIns", extensionName + ".appex");
-			Engine.ProjectCollection.SetGlobalProperty ("Platform", platform);
-			Engine.ProjectCollection.SetGlobalProperty ("Configuration", config);
+			Engine.ProjectCollection.SetGlobalProperty ("Platform", Platform);
+			Engine.ProjectCollection.SetGlobalProperty ("Configuration", Config);
 
-			RunTarget (proj, "Clean");
-			Assert.IsFalse (Directory.Exists (AppBundlePath), "{1}: App bundle exists after cleanup: {0} ", AppBundlePath, bundlePath);
+			RunTarget (mtouchPaths, "Clean");
+			Assert.IsFalse (Directory.Exists (AppBundlePath), "App bundle exists after cleanup: {0} ", AppBundlePath);
 		
-			proj = SetupProject (Engine, mtouchPaths.ProjectCSProjPath);
-			RunTarget (proj, "Build", expectedErrorCount);
+			RunTarget (mtouchPaths, "Build", expectedErrorCount: expectedErrorCount);
 
 			if (expectedErrorCount > 0)
 				return proj;
 
-			Assert.IsTrue (Directory.Exists (AppBundlePath), "{1} App Bundle does not exist: {0} ", AppBundlePath, bundlePath);
+			Assert.IsTrue (Directory.Exists (AppBundlePath), "App Bundle does not exist: {0} ", AppBundlePath);
 
 			TestPList (AppBundlePath, new string[] {"CFBundleExecutable", "CFBundleVersion"});
 
@@ -63,25 +63,7 @@ namespace Xamarin.iOS.Tasks
 			}
 			TestFilesExists (basedirs.ToArray (), coreFiles);
 
-			if (additionalAsserts != null)
-				additionalAsserts (mtouchPaths);
-
 			return proj;
-		}
-
-		public void SetupPaths (string appName, string platform) 
-		{
-			var paths = this.SetupProjectPaths (appName, "../", true, platform);
-			MonoTouchProjectPath = paths.ProjectPath;
-			AppBundlePath = paths.AppBundlePath;
-		}
-			
-		[SetUp]
-		public override void Setup () 
-		{
-			AssertValidDeviceBuild (Platform);
-			SetupEngine ();
 		}
 	}
 }
-

@@ -10,16 +10,36 @@
     <PackageReference Include="NUnit" Version="3.12.0" />
     <PackageReference Include="NUnit.ConsoleRunner" Version="3.11.1" />
     <PackageReference Include="NUnit.Extension.NUnitV2ResultWriter" Version="3.6.0" />
+    <PackageReference Include="Mono.Cecil" Version="0.11.1" />
+    <PackageReference Include="MSBuild.StructuredLogger" Version="2.1.176" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\mtouch\Cache.cs">
       <Link>external\Cache.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\msbuild\Xamarin.MacDev.Tasks.Core\CommandLineArgumentBuilder.cs">
+      <Link>external\CommandLineArgumentBuilder.cs</Link>
+    </Compile>
     <Compile Include="..\..\common\Configuration.cs">
       <Link>external\Configuration.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\tools\common\ApplePlatform.cs">
+      <Link>external\ApplePlatform.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\tools\common\TargetFramework.cs">
+      <Link>external\TargetFramework.cs</Link>
+    </Compile>
     <Compile Include="..\..\common\DotNet.cs">
       <Link>external\DotNet.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\tools\common\StringUtils.cs">
+      <Link>external\StringUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\tools\common\PathUtils.cs">
+      <Link>external\PathUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\tools\common\Execution.cs">
+      <Link>external\Execution.cs</Link>
     </Compile>
     <Compile Include="..\..\common\ExecutionHelper.cs">
       <Link>external\ExecutionHelper.cs</Link>

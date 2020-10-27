@@ -16,24 +16,17 @@ namespace Xamarin.iOS.Tasks
 		{
 		}
 
-		void SetNoBindingEmbedding ()
-		{
-			// TODO - This is a hack. We should be setting it only on the binding project, but
-			// the iOS msbuild test system doesn't have an easy way to access since it's just a project reference
-			// and not loaded up here...
-			Engine.ProjectCollection.SetGlobalProperty ("NoBindingEmbedding", "true");
-		}
-
 		void BuildProjectNoEmbedding (ProjectPaths project, bool clean = true)
 		{
 			Engine.ProjectCollection.SetGlobalProperty ("Platform", Platform);
-			var proj = SetupProject (Engine, project.ProjectCSProjPath);
 
-			SetNoBindingEmbedding ();
+			var properties = new Dictionary<string, string> {
+				{ "NoBindingEmbedding", "true" },
+			};
 
 			if (clean)
-				RunTarget (proj, "Clean", 0);
-			RunTarget (proj, "Build", 0);
+				RunTarget (project, "Clean", properties: properties);
+			RunTarget (project, "Build", properties: properties);
 		}
 
 		string GetMessages () => string.Join ("\n", Engine.Logger.MessageEvents.Select (x => x.Message));
@@ -54,7 +47,7 @@ namespace Xamarin.iOS.Tasks
 			// TODO - Checked in projects are project reference only...
 			Assert.True (useProjectReference);
 
-			var bindingApp = SetupProjectPaths ("MyiOSAppWithBinding", "../", true, Platform);
+			var bindingApp = SetupProjectPaths ("MyiOSAppWithBinding");
 
 			BuildProjectNoEmbedding (bindingApp);
 
@@ -81,7 +74,7 @@ namespace Xamarin.iOS.Tasks
 		{
 			Assert.True (framework);
 
-			var bindingLib = SetupProjectPaths ("MyiOSFrameworkBinding", "../", true, "");
+			var bindingLib = SetupProjectPaths ("MyiOSFrameworkBinding");
 
 			const string CreatePackageString = "Creating binding resource package";
 
@@ -124,7 +117,7 @@ namespace Xamarin.iOS.Tasks
 		{
 			Assert.True (useProjectReference);
 
-			var appProject = SetupProjectPaths ("MyiOSAppWithBinding", "../", true, "");
+			var appProject = SetupProjectPaths ("MyiOSAppWithBinding");
 
 			// Look for partial match of the '/path/to/mtouch @responsefile' command
 			string BuildString = "mtouch @";
@@ -142,7 +135,7 @@ namespace Xamarin.iOS.Tasks
 			if (!useProjectReference) {
 				Assert.Fail (); // TODO - Checked in projects are project reference only...
 			} else {
-				var libProject = SetupProjectPaths ("MyiOSFrameworkBinding", "../", true, "");
+				var libProject = SetupProjectPaths ("MyiOSFrameworkBinding");
 
 				Touch (libProject.ProjectCSProjPath);
 				BuildProjectNoEmbedding (appProject, clean: false);
