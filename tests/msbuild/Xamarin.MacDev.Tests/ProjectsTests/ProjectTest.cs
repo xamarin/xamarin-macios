@@ -21,12 +21,6 @@ namespace Xamarin.iOS.Tasks
 			Platform = platform;
 		}
 
-		//public void SetupPaths (string appName, string platform) 
-		//{
-		//	var paths = SetupProjectPaths (appName, "../", true, platform);
-		//	MonoTouchProjectPath = paths ["project_path"];
-		//	AppBundlePath = paths ["app_bundlepath"];
-		//}
 
 		[SetUp]
 		public override void Setup () 
