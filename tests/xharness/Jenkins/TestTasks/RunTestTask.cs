@@ -6,7 +6,6 @@ using Microsoft.DotNet.XHarness.Common.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
-using Xharness.TestTasks;
 
 namespace Xharness.Jenkins.TestTasks {
 	internal abstract class RunTestTask : AppleTestTask, IRunTestTask

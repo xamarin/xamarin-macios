@@ -4,7 +4,6 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.DotNet.XHarness.Common.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
-using Xharness.TestTasks;
 
 namespace Xharness.Jenkins.TestTasks {
 	class MSBuildTask : BuildProjectTask

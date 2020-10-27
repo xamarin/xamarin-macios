@@ -10,7 +10,6 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 using Xharness.Jenkins.TestTasks;
-using Xharness.TestTasks;
 
 #nullable enable
 namespace Xharness.Jenkins.Reports {

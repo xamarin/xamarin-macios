@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.DotNet.XHarness.Common.Execution;
 using Microsoft.DotNet.XHarness.Common.Logging;
 
-namespace Xharness.TestTasks {
+namespace Xharness.Jenkins.TestTasks {
 
 	public class BuildTool {
 		public string TestName { get; set; }

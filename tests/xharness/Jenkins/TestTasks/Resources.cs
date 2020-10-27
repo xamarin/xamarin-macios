@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Xharness.TestTasks {
+namespace Xharness.Jenkins.TestTasks {
 	public class Resources : IEnumerable<Resource> {
 		readonly Resource [] resources;
 

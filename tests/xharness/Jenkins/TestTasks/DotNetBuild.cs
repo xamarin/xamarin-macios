@@ -5,7 +5,7 @@ using Microsoft.DotNet.XHarness.Common.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 
-namespace Xharness.TestTasks {
+namespace Xharness.Jenkins.TestTasks {
 	public class DotNetBuild : MSBuild {
 
 		public DotNetBuild (Func<string> msbuildPath,

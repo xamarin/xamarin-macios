@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Microsoft.DotNet.XHarness.Common.Execution;
 using Microsoft.DotNet.XHarness.Common.Logging;
-using Xharness.TestTasks;
 
 namespace Xharness.Jenkins.TestTasks {
 	abstract class BuildToolTask : AppleTestTask, IBuildToolTask 

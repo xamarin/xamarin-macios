@@ -1,8 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
-using Xharness.Jenkins.TestTasks;
 
-namespace Xharness.TestTasks {
+namespace Xharness.Jenkins.TestTasks {
 	public interface IRunTestTask : ITestTask {
 		IHarness Harness { get; }
 		double TimeoutMultiplier { get; }

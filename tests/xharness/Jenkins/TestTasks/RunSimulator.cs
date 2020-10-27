@@ -10,7 +10,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 
-namespace Xharness.TestTasks {
+namespace Xharness.Jenkins.TestTasks {
 	public class RunSimulator {
 
 		readonly ILog mainLog;
@@ -21,9 +21,8 @@ namespace Xharness.TestTasks {
 
 		public IEnumerable<ISimulatorDevice> Simulators {
 			get {
-				if (testTask.Device == null) {
-					return Array.Empty<ISimulatorDevice> ();
-				} else if (testTask.CompanionDevice == null) {
+				if (testTask.Device == null) return Array.Empty<ISimulatorDevice> ();
+				else if (testTask.CompanionDevice == null) {
 					return new ISimulatorDevice [] { testTask.Device };
 				} else {
 					return new ISimulatorDevice [] { testTask.Device, testTask.CompanionDevice };
@@ -44,9 +43,8 @@ namespace Xharness.TestTasks {
 			this.simulatorLoadLog = simulatorLoadLog ?? throw new ArgumentNullException (nameof (simulatorLoadLog));
 
 			var project = Path.GetFileNameWithoutExtension (testTask.ProjectFile);
-			if (project.EndsWith ("-tvos", StringComparison.Ordinal)) {
-				testTask.AppRunnerTarget = TestTarget.Simulator_tvOS;
-			} else if (project.EndsWith ("-watchos", StringComparison.Ordinal)) {
+			if (project.EndsWith ("-tvos", StringComparison.Ordinal)) testTask.AppRunnerTarget = TestTarget.Simulator_tvOS;
+			else if (project.EndsWith ("-watchos", StringComparison.Ordinal)) {
 				testTask.AppRunnerTarget = TestTarget.Simulator_watchOS;
 			} else {
 				testTask.AppRunnerTarget = TestTarget.Simulator_iOS;

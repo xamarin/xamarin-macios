@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 
-namespace Xharness.TestTasks {
+namespace Xharness.Jenkins.TestTasks {
 
 	/// <summary>
 	/// Managed the resorces that can be used by the different tests tasks so that when ran async they do not step

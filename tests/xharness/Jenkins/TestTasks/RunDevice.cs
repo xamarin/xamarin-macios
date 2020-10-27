@@ -9,7 +9,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared.XmlResults;
 
-namespace Xharness.TestTasks {
+namespace Xharness.Jenkins.TestTasks {
 	public class RunDevice {
 		readonly IRunDeviceTask testTask;
 		readonly IHardwareDeviceLoader devices;
@@ -29,7 +29,7 @@ namespace Xharness.TestTasks {
 		public AppInstallMonitorLog InstallLog { get; private set; }
 
 		public RunDevice (IRunDeviceTask testTask,
-					  	  IHardwareDeviceLoader devices,
+							IHardwareDeviceLoader devices,
 						  IResourceManager resourceManager,
 						  ILog mainLog,
 						  ILog deviceLoadLog,
@@ -92,10 +92,10 @@ namespace Xharness.TestTasks {
 
 					ITunnelBore tunnelBore = null;
 					if (useTcpTunnel && testTask.Device.DevicePlatform != DevicePlatform.iOS &&
-					    testTask.Device.DevicePlatform != DevicePlatform.tvOS) {
+						testTask.Device.DevicePlatform != DevicePlatform.tvOS) {
 						mainLog.WriteLine ("Ignoring request to use a tunnel because it is not supported by the specified platform");
 					} else if (useTcpTunnel && (testTask.Device.DevicePlatform == DevicePlatform.iOS ||
-					                            testTask.Device.DevicePlatform == DevicePlatform.tvOS)) {
+												testTask.Device.DevicePlatform == DevicePlatform.tvOS)) {
 						tunnelBore = testTask.TunnelBore;
 						mainLog.WriteLine ("Using tunnel to communicate with device.");
 					}
@@ -135,7 +135,7 @@ namespace Xharness.TestTasks {
 						// Install the app
 						InstallLog = new AppInstallMonitorLog (testTask.Logs.Create ($"install-{Harness.Helpers.Timestamp}.log", "Install log"));
 						try {
-							testTask.Runner.MainLog = this.InstallLog;
+							testTask.Runner.MainLog = InstallLog;
 							var install_result = await testTask.Runner.InstallAsync (InstallLog.CancellationToken);
 							if (!install_result.Succeeded) {
 								testTask.FailureMessage = $"Install failed, exit code: {install_result.ExitCode}.";
@@ -167,7 +167,7 @@ namespace Xharness.TestTasks {
 						else if (testTask.Runner.Result != TestExecutingResult.Succeeded)
 							testTask.FailureMessage = testTask.GuessFailureReason (testTask.Runner.MainLog);
 
-						if (string.IsNullOrEmpty(testTask.FailureMessage) && errorKnowledgeBase.IsKnownTestIssue (testTask.Runner.MainLog, out var failure)) {
+						if (string.IsNullOrEmpty (testTask.FailureMessage) && errorKnowledgeBase.IsKnownTestIssue (testTask.Runner.MainLog, out var failure)) {
 							testTask.KnownFailure = failure;
 							mainLog.WriteLine ($"Test run has a known failure: '{testTask.KnownFailure}'");
 						}

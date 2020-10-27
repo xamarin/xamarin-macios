@@ -11,9 +11,8 @@ using Microsoft.DotNet.XHarness.Common.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
-using Xharness.Jenkins.TestTasks;
 
-namespace Xharness.TestTasks {
+namespace Xharness.Jenkins.TestTasks {
 	public abstract class TestTasks : IEnvManager, IEventLogger, ITestTask {
 		static int counter;
 		static DriveInfo RootDrive;

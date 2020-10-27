@@ -2,7 +2,7 @@
 using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 
-namespace Xharness.TestTasks {
+namespace Xharness.Jenkins.TestTasks {
 	public interface IRunXITask<TDevice> : IRunTestTask where TDevice : class, IDevice {
 
 		AppRunner Runner { get; set; }

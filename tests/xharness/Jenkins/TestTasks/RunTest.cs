@@ -11,7 +11,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.XmlResults;
 
-namespace Xharness.TestTasks {
+namespace Xharness.Jenkins.TestTasks {
 	public class RunTest {
 		public IMlaunchProcessManager ProcessManager { get; private set; }
 		public IBuildToolTask BuildTask { get; private set; }
@@ -28,7 +28,7 @@ namespace Xharness.TestTasks {
 		public double TimeoutMultiplier { get; set; } = 1;
 		public string WorkingDirectory;
 
-		public RunTest (IRunTestTask testTask, 
+		public RunTest (IRunTestTask testTask,
 						IBuildToolTask buildTask,
 						IMlaunchProcessManager processManager,
 						IEnvManager envManager,
@@ -37,8 +37,8 @@ namespace Xharness.TestTasks {
 						XmlResultJargon xmlResultJargon, bool dryRun)
 		{
 			this.testTask = testTask ?? throw new ArgumentNullException (nameof (testTask));
-			this.BuildTask = buildTask ?? throw new ArgumentNullException (nameof (buildTask));
-			this.ProcessManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
+			BuildTask = buildTask ?? throw new ArgumentNullException (nameof (buildTask));
+			ProcessManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 			this.envManager = envManager ?? throw new ArgumentNullException (nameof (envManager));
 			this.mainLog = mainLog ?? throw new ArgumentNullException (nameof (mainLog));
 			this.generateXmlFailures = generateXmlFailures;
@@ -61,9 +61,8 @@ namespace Xharness.TestTasks {
 			testTask.ExecutionResult = TestExecutingResult.Building;
 			await BuildTask.RunAsync ();
 			if (!BuildTask.Succeeded) {
-				if (BuildTask.TimedOut) {
-					testTask.ExecutionResult = TestExecutingResult.TimedOut;
-				} else {
+				if (BuildTask.TimedOut) testTask.ExecutionResult = TestExecutingResult.TimedOut;
+				else {
 					testTask.ExecutionResult = TestExecutingResult.BuildFailure;
 				}
 				testTask.FailureMessage = BuildTask.FailureMessage;

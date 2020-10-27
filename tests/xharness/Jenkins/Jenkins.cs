@@ -14,7 +14,6 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 using Xharness.Jenkins.Reports;
 using Xharness.Jenkins.TestTasks;
-using Xharness.TestTasks;
 
 namespace Xharness.Jenkins {
 	class Jenkins {

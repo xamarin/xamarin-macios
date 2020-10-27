@@ -15,7 +15,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 using Microsoft.DotNet.XHarness.iOS.Shared.XmlResults;
-using Xharness.TestTasks;
+using Xharness.Jenkins.TestTasks;
 
 namespace Xharness {
 
