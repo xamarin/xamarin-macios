@@ -8,7 +8,7 @@ using Xamarin.MacDev.Tasks;
 namespace Xamarin.iOS.Tasks
 {
 	[TestFixture]
-	public class PropertyListEditorTaskTests
+	public class PropertyListEditorTaskTests : TestBase
 	{
 		static void CheckArray (PArray array, PArray expected)
 		{
@@ -62,16 +62,14 @@ namespace Xamarin.iOS.Tasks
 			}
 		}
 
-		static void TestExecuteTask (PDictionary input, PropertyListEditorAction action, string entry, string type, string value, PObject expected)
+		void TestExecuteTask (PDictionary input, PropertyListEditorAction action, string entry, string type, string value, PObject expected)
 		{
-			var task = new PropertyListEditor {
-				PropertyList = Path.Combine (Cache.CreateTemporaryDirectory (), "propertyList.plist"),
-				BuildEngine = new TestEngine (),
-				Action = action.ToString (),
-				Entry = entry,
-				Type = type,
-				Value = value
-			};
+			var task = CreateTask<PropertyListEditor> ();
+			task.PropertyList = Path.Combine (Cache.CreateTemporaryDirectory (), "propertyList.plist");
+			task.Action = action.ToString ();
+			task.Entry = entry;
+			task.Type = type;
+			task.Value = value;
 			input.Save (task.PropertyList);
 
 			if (expected == null) {

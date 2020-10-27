@@ -57,9 +57,6 @@ namespace Xamarin.iOS.Tasks {
 			var net461 = GetTestDirectory ("net461-" + ProjectConfiguration, ExecutionMode.MSBuild);
 			var dotnet = GetTestDirectory ("dotnet-" + ProjectConfiguration, ExecutionMode.DotNet);
 
-			Configuration.FixupTestFiles (dotnet, "dotnet");
-			Configuration.CopyDotNetSupportingFiles (dotnet);
-
 			tfi = "Xamarin.iOS";
 			switch (project) {
 			case "MyXamarinFormsApp":

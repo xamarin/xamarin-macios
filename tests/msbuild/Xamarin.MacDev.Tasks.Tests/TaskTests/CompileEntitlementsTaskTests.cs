@@ -60,13 +60,6 @@ namespace Xamarin.iOS.Tasks
 			Assert.AreEqual ("Z8CSQKJE7R.com.xamarin.MySingleView", compiled.GetUbiquityKeyValueStore (), "#6");
 			Assert.AreEqual ("32UV7A8CDE.com.xamarin.MySingleView", compiled.GetKeychainAccessGroups ().ToStringArray ().First (), "#7");
 		}
-
-		public override void Teardown ()
-		{
-			base.Teardown ();
-
-			CleanUp ();
-		}
 	}
 }
 
