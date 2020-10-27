@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
@@ -101,9 +100,7 @@ namespace Xamarin.MacDev.Tasks {
 				launchEnvironment ["DEVELOPER_DIR"] = sdkDevPath;
 
 			Log.LogMessage (MessageImportance.Normal, MSBStrings.M0001, fileName, StringUtils.FormatArguments (arguments));
-			var sb = new StringWriter ();
-			var rv = await Execution.RunAsync (fileName, arguments, environment: launchEnvironment, mergeOutput: mergeOutput, log: sb);
-			Log.LogMessage (MessageImportance.Normal, sb.ToString ());
+			var rv = await Execution.RunAsync (fileName, arguments, environment: launchEnvironment, mergeOutput: mergeOutput);
 			Log.LogMessage (rv.ExitCode == 0 ? MessageImportance.Low : MessageImportance.High, MSBStrings.M0002, fileName, rv.ExitCode);
 
 			// Show the output

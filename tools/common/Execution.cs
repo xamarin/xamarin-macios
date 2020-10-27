@@ -12,7 +12,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -96,9 +95,6 @@ namespace Xamarin.Utils {
 				var thread = new Thread (() => {
 					try {
 						if (Log != null) {
-							foreach (var kvp in p.StartInfo.Environment.OrderBy (v => v.Key)) {
-								Log.WriteLine ($"{kvp.Key}={kvp.Value}");
-							}
 							if (!string.IsNullOrEmpty (p.StartInfo.WorkingDirectory))
 								Log.Write ($"cd {StringUtils.Quote (p.StartInfo.WorkingDirectory)} && ");
 							Log.WriteLine ("{0} {1}", p.StartInfo.FileName, p.StartInfo.Arguments);
