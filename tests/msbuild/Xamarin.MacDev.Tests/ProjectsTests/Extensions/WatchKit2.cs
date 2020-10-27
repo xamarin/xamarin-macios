@@ -4,7 +4,7 @@ using System.IO;
 using NUnit.Framework;
 
 namespace Xamarin.iOS.Tasks {
-	[TestFixture ("iPhone")] // Not working yet (native linker error)
+	[TestFixture ("iPhone")]
 	[TestFixture ("iPhoneSimulator")]
 	public class WatchKit2 : ExtensionTestBase {
 
