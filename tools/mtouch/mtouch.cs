@@ -650,11 +650,8 @@ namespace Xamarin.Bundler
 				}
 			},
 			{ "interpreter:", "Enable the *experimental* interpreter. Optionally takes a comma-separated list of assemblies to interpret (if prefixed with a minus sign, the assembly will be AOT-compiled instead). 'all' can be used to specify all assemblies. This argument can be specified multiple times.", v =>
-				{ 
-					app.UseInterpreter = true;
-					if (!string.IsNullOrEmpty (v)) {
-						app.InterpretedAssemblies.AddRange (v.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries));
-					}
+				{
+					app.ParseInterpreter (v);
 				}
 			},
 			{ "output-format=", "Specify the output format for some commands. Possible values: Default, XML", v =>

@@ -60,7 +60,7 @@ namespace Xamarin.Bundler {
 		public bool EnableDebug;
 		// The list of assemblies that we do generate debugging info for.
 		public bool DebugAll;
-		public bool UseInterpreter;
+		public bool UseInterpreter; // Only applicable to mobile platforms.
 		public List<string> DebugAssemblies = new List<string> ();
 		internal RuntimeOptions RuntimeOptions;
 		public Optimizations Optimizations = new Optimizations ();
@@ -446,6 +446,13 @@ namespace Xamarin.Bundler {
 			get {
 				return Optimizations.RemoveDynamicRegistrar != true;
 			}
+		}
+
+		public void ParseInterpreter (string value)
+		{
+			UseInterpreter = !string.IsNullOrEmpty (value);
+			if (UseInterpreter)
+				InterpretedAssemblies.AddRange (value.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries));
 		}
 
 		public void ParseI18nAssemblies (string i18n)

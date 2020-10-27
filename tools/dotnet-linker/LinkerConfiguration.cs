@@ -112,6 +112,9 @@ namespace Xamarin.Linker {
 				case "FrameworkAssembly":
 					FrameworkAssemblies.Add (value);
 					break;
+				case "Interpreter":
+					Application.ParseInterpreter (value);
+					break;
 				case "ItemsDirectory":
 					ItemsDirectory = value;
 					break;
@@ -243,6 +246,7 @@ namespace Xamarin.Linker {
 				Console.WriteLine ($"    CacheDirectory: {CacheDirectory}");
 				Console.WriteLine ($"    Debug: {Application.EnableDebug}");
 				Console.WriteLine ($"    DeploymentTarget: {DeploymentTarget}");
+				Console.WriteLine ($"    InterpretedAssemblies: {string.Join (", ", Application.InterpretedAssemblies)}");
 				Console.WriteLine ($"    ItemsDirectory: {ItemsDirectory}");
 				Console.WriteLine ($"    {FrameworkAssemblies.Count} framework assemblies:");
 				foreach (var fw in FrameworkAssemblies.OrderBy (v => v))
@@ -257,6 +261,7 @@ namespace Xamarin.Linker {
 				Console.WriteLine ($"    PlatformAssembly: {PlatformAssembly}.dll");
 				Console.WriteLine ($"    Registrar: {Application.Registrar} (Options: {Application.RegistrarOptions})");
 				Console.WriteLine ($"    SdkVersion: {SdkVersion}");
+				Console.WriteLine ($"    UseInterpreter: {Application.UseInterpreter}");
 				Console.WriteLine ($"    Verbosity: {Verbosity}");
 			}
 		}

@@ -209,6 +209,7 @@
 				Debug=$(_BundlerDebug)
 				DeploymentTarget=$(_MinimumOSVersion)
 				@(_XamarinFrameworkAssemblies -> 'FrameworkAssembly=%(Filename)')
+				Interpreter=$(MtouchInterpreter)
 				ItemsDirectory=$(_LinkerItemsDirectory)
 				IsSimulatorBuild=$(_SdkIsSimulator)
 				LinkMode=$(_LinkMode)
