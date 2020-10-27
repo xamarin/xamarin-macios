@@ -472,6 +472,9 @@
     <Compile Include="..\common\Driver.execution.cs">
       <Link>tools\common\Driver.execution.cs</Link>
     </Compile>
+    <Compile Include="..\common\BitCodeMode.cs">
+      <Link>tools\common\BitCodeMode.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Core" />

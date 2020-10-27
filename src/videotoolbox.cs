@@ -196,6 +196,11 @@ namespace VideoToolbox {
 		[TV (14, 0), Mac (11, 0), iOS (14, 0)]
 		[Field ("kVTCompressionPropertyKey_PrioritizeEncodingSpeedOverQuality")]
 		NSString PrioritizeEncodingSpeedOverQuality { get; }
+
+		[iOS (14,1)]
+		[NoTV][NoMac]
+		[Field ("kVTCompressionPropertyKey_PreserveDynamicHDRMetadata")]
+		NSString PreserveDynamicHdrMetadata { get; }
 	}
 
 	[Mac (10,15), iOS (13,0), TV (13,0)]
@@ -325,6 +330,11 @@ namespace VideoToolbox {
 		[Mac (10,15), iOS (13,0), TV (13,0)]
 		[Export ("UsingGpuRegistryId")]
 		uint UsingGpuRegistryId { get; }
+
+		[iOS (14,1)]
+		[NoTV][NoMac]
+		[Export ("PreserveDynamicHdrMetadata")]
+		bool PreserveDynamicHdrMetadata { get; set; }
 	}
 
 	[iOS (8,0), TV (10,2)]
@@ -712,6 +722,11 @@ namespace VideoToolbox {
 
 		[Field ("kVTDecompressionPropertyKey_PixelTransferProperties")]
 		NSString PixelTransferProperties { get; }
+
+		[iOS (14,1)]
+		[NoTV][NoMac]
+		[Field ("kVTDecompressionPropertyKey_PropagatePerFrameHDRDisplayMetadata")]
+		NSString PropagatePerFrameHdrDisplayMetadata { get; }
 	}
 
 	[iOS (8,0), TV (10,2)]
@@ -793,6 +808,11 @@ namespace VideoToolbox {
 		[Mac (10,15), iOS (13,0), TV (13,0)]
 		[Export ("UsingGpuRegistryId")]
 		uint UsingGpuRegistryId { get; }
+
+		[iOS (14,1)]
+		[NoTV][NoMac]
+		[Export ("PropagatePerFrameHdrDisplayMetadata")]
+		bool PropagatePerFrameHhrDisplayMetadata { get; set; }
 	}
 
 	[Mac (10,9), iOS (8,0), TV (10,2)]

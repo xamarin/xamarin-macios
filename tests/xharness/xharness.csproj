@@ -98,7 +98,6 @@
     <Compile Include="Jenkins\TestTasks\AggregatedRunSimulatorTask.cs" />
     <Compile Include="Jenkins\TestTasks\BuildProjectTask.cs" />
     <Compile Include="Jenkins\TestTasks\BuildToolTask.cs" />
-    <Compile Include="Jenkins\TestTasks\DotNetBuildTask.cs" />
     <Compile Include="Jenkins\TestTasks\DotNetTestTask.cs" />
     <Compile Include="Jenkins\TestTasks\ITestTask.cs" />
     <Compile Include="Jenkins\TestTasks\ITestTaskExtensions.cs" />

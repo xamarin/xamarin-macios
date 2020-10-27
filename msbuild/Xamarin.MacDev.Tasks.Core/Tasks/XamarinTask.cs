@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
+using Xamarin.Localization.MSBuild;
 using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks {
@@ -91,19 +92,30 @@ namespace Xamarin.MacDev.Tasks {
 			}
 		}
 
-		protected async System.Threading.Tasks.Task<Execution> ExecuteAsync (string fileName, IList<string> arguments, string sdkDevPath)
+		protected async System.Threading.Tasks.Task<Execution> ExecuteAsync (string fileName, IList<string> arguments, string sdkDevPath, Dictionary<string, string> environment = null, bool mergeOutput = true, bool showErrorIfFailure = true)
 		{
-			var environment = new Dictionary<string, string> () {
-				{  "DEVELOPER_DIR", sdkDevPath },
-			};
-			Log.LogMessage (MessageImportance.Low, $"Executing '{fileName} {StringUtils.FormatArguments (arguments)}'");
-			var rv = await Execution.RunAsync (fileName, arguments, environment: environment, mergeOutput: true);
-			if (rv.ExitCode != 0) {
-				Log.LogMessage (MessageImportance.Normal, rv.StandardOutput.ToString ());
-				Log.LogError ($"Executing '{fileName} {StringUtils.FormatArguments (arguments)}' failed with exit code {rv.ExitCode}. Please review build log for more information.");
-			} else {
-				Log.LogMessage (MessageImportance.Low, rv.StandardOutput.ToString ());
+			// Create a new dictionary if we're given one, to make sure we don't change the caller's dictionary.
+			var launchEnvironment = environment == null ? new Dictionary<string, string> () : new Dictionary<string, string> (environment);
+			if (!string.IsNullOrEmpty (sdkDevPath))
+				launchEnvironment ["DEVELOPER_DIR"] = sdkDevPath;
+
+			Log.LogMessage (MessageImportance.Normal, MSBStrings.M0001, fileName, StringUtils.FormatArguments (arguments));
+			var rv = await Execution.RunAsync (fileName, arguments, environment: launchEnvironment, mergeOutput: mergeOutput);
+			Log.LogMessage (rv.ExitCode == 0 ? MessageImportance.Low : MessageImportance.High, MSBStrings.M0002, fileName, rv.ExitCode);
+
+			// Show the output
+			var output = rv.StandardOutput.ToString ();
+			if (!mergeOutput) {
+				if (output.Length > 0)
+					output += Environment.NewLine;
+				output += rv.StandardError.ToString ();
 			}
+			if (output.Length > 0)
+				Log.LogMessage (rv.ExitCode == 0 ? MessageImportance.Low : MessageImportance.Normal, output);
+
+			if (showErrorIfFailure && rv.ExitCode != 0)
+				Log.LogError (MSBStrings.E0117, /* {0} exited with code {1} */ fileName == "xcrun" ? arguments [0] : fileName, rv.ExitCode);
+
 			return rv;
 		}
 	}

@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.DotNet.XHarness.Common.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
@@ -7,7 +9,34 @@ using Xharness.TestTasks;
 namespace Xharness.Jenkins.TestTasks {
 	class MSBuildTask : BuildProjectTask
 	{
-		protected virtual string ToolName => Jenkins.Harness.XIBuildPath;
+		protected virtual string ToolName {
+			get {
+				if (TestProject.IsDotNetProject)
+					return Jenkins.Harness.GetDotNetExecutable (Path.GetDirectoryName (ProjectFile));
+				return Jenkins.Harness.XIBuildPath;
+			}
+		}
+
+		public override bool RestoreNugets {
+			get {
+				if (TestProject.IsDotNetProject) // 'dotnet build' will restore
+					return false;
+				return base.RestoreNugets;
+			}
+		}
+		public override void SetEnvironmentVariables (Process process)
+		{
+			base.SetEnvironmentVariables (process);
+			// modify those env vars that we do care about
+
+			if (TestProject.IsDotNetProject) {
+				process.StartInfo.EnvironmentVariables.Remove ("MSBUILD_EXE_PATH");
+				process.StartInfo.EnvironmentVariables.Remove ("MSBuildExtensionsPathFallbackPathsOverride");
+				process.StartInfo.EnvironmentVariables.Remove ("MSBuildSDKsPath");
+				process.StartInfo.EnvironmentVariables.Remove ("TargetFrameworkFallbackSearchPaths");
+				process.StartInfo.EnvironmentVariables.Remove ("MSBuildExtensionsPathFallbackPathsOverride");
+			}
+		}
 
 		protected virtual List<string> ToolArguments => 
 				MSBuild.GetToolArguments (ProjectPlatform, ProjectConfiguration, ProjectFile, BuildLog);
@@ -17,14 +46,26 @@ namespace Xharness.Jenkins.TestTasks {
 		public MSBuildTask (Jenkins jenkins, TestProject testProject, IProcessManager processManager)
 			: base (jenkins, testProject, processManager) { }
 
-		protected override void InitializeTool () => 
-			buildToolTask = new MSBuild (
-				msbuildPath: () => ToolName,
-				processManager: ProcessManager,
-				resourceManager: ResourceManager,
-				eventLogger: this,
-				envManager: this,
-				errorKnowledgeBase: Jenkins.ErrorKnowledgeBase);
+		protected override void InitializeTool ()
+		{
+			if (TestProject.IsDotNetProject) {
+				buildToolTask = new DotNetBuild (
+					msbuildPath: () => ToolName,
+					processManager: ProcessManager,
+					resourceManager: ResourceManager,
+					eventLogger: this,
+					envManager: this,
+					errorKnowledgeBase: Jenkins.ErrorKnowledgeBase);
+			} else {
+				buildToolTask = new MSBuild (
+					msbuildPath: () => ToolName,
+					processManager: ProcessManager,
+					resourceManager: ResourceManager,
+					eventLogger: this,
+					envManager: this,
+					errorKnowledgeBase: Jenkins.ErrorKnowledgeBase);
+			}
+		}
 
 		protected override async Task ExecuteAsync ()
 		{
@@ -49,5 +90,19 @@ namespace Xharness.Jenkins.TestTasks {
 				projectFile: ProjectFile,
 				cleanLog: Logs.Create ($"clean-{Platform}-{Timestamp}.txt", "Clean log"),
 				mainLog: Jenkins.MainLog);
+
+		public static void SetDotNetEnvironmentVariables (Dictionary<string, string> environment)
+		{
+			environment ["MSBUILD_EXE_PATH"] = null;
+			environment ["MSBuildExtensionsPathFallbackPathsOverride"] = null;
+			environment ["MSBuildSDKsPath"] = null;
+			environment ["TargetFrameworkFallbackSearchPaths"] = null;
+			environment ["MSBuildExtensionsPathFallbackPathsOverride"] = null;
+
+			// This is a temporary variable to enable the .NET workload resolver, because it's opt-in for now.
+			// Ref: https://github.com/dotnet/sdk/issues/13849
+			environment ["MSBuildEnableWorkloadResolver"] = "true";
+			System.Environment.SetEnvironmentVariable ("MSBuildEnableWorkloadResolver", "true");
+		}
 	}
 }

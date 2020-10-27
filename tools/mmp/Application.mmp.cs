@@ -5,10 +5,7 @@ namespace Xamarin.Bundler {
 	public partial class Application
 	{
 		public string ProductName = "Xamarin.Mac";
-		public string CustomBundleName = "MonoBundle";
 		public AOTOptions AOTOptions;
-		public bool? DisableLldbAttach = null;
-		public bool? DisableOmitFramePointer = null;
 
 		// Use this to get the single Abi we currently support for Xamarin.Mac.
 		// This makes it easy to find everywhere we need to update when Apple adds support for new Abis.

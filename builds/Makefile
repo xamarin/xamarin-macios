@@ -16,6 +16,7 @@ download-mono: downloads/$(basename $(MONO_IOS_FILENAME)) downloads/$(basename $
 downloads/$(basename $(MONO_IOS_FILENAME)): MONO_URL=$(MONO_IOS_URL)
 downloads/$(basename $(MONO_MAC_FILENAME)): MONO_URL=$(MONO_MAC_URL)
 downloads/$(DOTNET5_BCL_REF_NAME): MONO_URL=$(DOTNET5_BCL_REF_URL)
+downloads/$(DOTNET5_TARBALL_NAME): MONO_URL=$(DOTNET5_TARBALL)
 
 include $(TOP)/mk/colors.mk
 
@@ -23,6 +24,7 @@ DOWNLOADS = \
 	downloads/$(MONO_IOS_FILENAME) \
 	downloads/$(MONO_MAC_FILENAME) \
 	downloads/$(DOTNET5_BCL_REF_NAME) \
+	downloads/$(DOTNET5_TARBALL_NAME) \
 
 # This target downloads the mono archives, there's one for Xamarin.iOS and one for Xamarin.Mac.
 # If doing many clean builds, it's possible to copy the downloaded zip file to ~/Library/Caches/xamarin-macios
@@ -43,6 +45,10 @@ $(DOWNLOADS):
 			if test -n "$$FAILURE_REASON_PATH"; then printf "$$MSG\n" "[$(notdir $@)]($(MONO_URL))" >> "$$FAILURE_REASON_PATH"; fi; \
 		fi; \
 		if [[ x$$EC != x0 ]]; then exit $$EC; fi; \
+		if [[ "x$$MACIOS_CACHE_DOWNLOADS" != "x" ]]; then \
+			$(CP) $@.tmp ~/Library/Caches/xamarin-macios/"$(notdir $@)"; \
+			echo "Cached the download of $(notdir $@) in ~/Library/Caches/xamarin-macios"; \
+		fi; \
 	fi
 	$(Q) mv $@.tmp $@
 	$(Q) echo "Downloaded $(MONO_URL)"
@@ -54,6 +60,16 @@ downloads/%: downloads/%.7z
 	$(Q) find $@.tmp -exec touch {} +
 	$(Q) mv $@.tmp $@
 	$(Q) echo "Unzipped $*."
+
+downloads/%: downloads/%.tar.gz
+	$(Q) echo "Untarring $*..."
+	$(Q) rm -Rf $@.tmp
+	$(Q) mkdir -p $@.tmp
+	$(Q) tar xf $< -C $@.tmp
+	$(Q) xattr -s -d -r com.apple.quarantine $@.tmp
+	$(Q) find $@.tmp -exec touch {} +
+	$(Q) mv $@.tmp $@
+	$(Q) echo "Untarred $*."
 
 downloads/%: downloads/%.nupkg
 	$(Q) echo "Unzipping $*..."
@@ -69,6 +85,7 @@ downloads/%: downloads/%.nupkg
 
 DOTNET_DOWNLOADS = \
 	downloads/$(basename $(DOTNET5_BCL_REF_NAME)) \
+	downloads/$(basename $(basename $(DOTNET5_TARBALL_NAME))) \
 
 dotnet: $(DOTNET_DOWNLOADS)
 ifdef ENABLE_DOTNET

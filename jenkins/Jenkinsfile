@@ -728,6 +728,18 @@ timestamps {
                                 packagesMessage += "* [${nupkg_name}](${nupkgUrl})\n"
                             }
 
+                            // Publish any other *.pkg files we've created
+                            def pkgs = findFiles (glob: "package/*.pkg")
+                            for (def i = 0; i < pkgs.size (); i++) {
+                                def pkg = pkgs [i];
+                                def pkg_name = pkg.name
+                                if (pkg_name == xiPackageFilename || pkg_name == xmPackageFilename)
+                                    continue // we've already handled these files
+                                def pkgUrl = "${packagePrefix}/${pkg_name}"
+                                utils.reportGitHubStatus (gitHash, pkg_name, pkgUrl, "SUCCESS", pkg_name)
+                                packagesMessage += "* [${pkg_name}](${pkgUrl})\n"
+                            }
+
                             if (packagesMessage != "")
                                 appendFileComment ("✅ Packages built successfully\n<details><summary>View packages</summary>\n\n${packagesMessage}\n</details>\n\n")
                         }
@@ -855,8 +867,13 @@ timestamps {
                                         failedStages.add (currentStage)
                                     } else {
                                         def packaged_xm_tests = findFiles (glob: "tests/*.7z")
-                                        if (packaged_xm_tests.size () > 0)
+                                        if (packaged_xm_tests.size () > 0) {
                                             uploadFiles ("tests/*.7z", "wrench", virtualPath)
+                                        } else {
+                                            // This may happen if the Xamarin.Mac build has been disabled
+                                            manager.addWarningBadge("Could not find any packaged Xamarin.Mac tests to upload")
+                                            hasXamarinMacTests = false
+                                        }
                                     }
                                 }
                             }

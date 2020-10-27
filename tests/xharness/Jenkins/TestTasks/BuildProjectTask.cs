@@ -12,8 +12,10 @@ namespace Xharness.Jenkins.TestTasks {
 			set => BuildProject.SolutionPath = value;
 		}
 
-		protected BuildProjectTask (Jenkins jenkins, TestProject testProject, IProcessManager processManager) : base (jenkins, processManager)
-			=> TestProject = testProject ?? throw new ArgumentNullException (nameof (testProject));
+		protected BuildProjectTask (Jenkins jenkins, TestProject testProject, IProcessManager processManager)
+			: base (jenkins, testProject, processManager)
+		{
+		}
 
 		public virtual bool RestoreNugets => BuildProject.RestoreNugets;
 

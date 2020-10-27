@@ -61,13 +61,9 @@ namespace Xharness.Jenkins {
 							break;
 						}
 
-						MSBuildTask derived;
-						if (project.IsDotNetProject) {
-							derived = new DotNetBuildTask (jenkins: jenkins, testProject: project, processManager: processManager);
-							configIgnored |= !jenkins.IncludeDotNet;
-						} else {
-							derived = new MSBuildTask (jenkins: jenkins, testProject: project, processManager: processManager);
-						}
+						configIgnored |= project.IsDotNetProject && !jenkins.IncludeDotNet;
+
+						var derived = new MSBuildTask (jenkins: jenkins, testProject: project, processManager: processManager);
 						derived.ProjectConfiguration = config;
 						derived.ProjectPlatform = "iPhoneSimulator";
 						derived.Platform = testPlatform;

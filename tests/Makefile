@@ -45,6 +45,10 @@ export MSBuildExtensionsPathFallbackPathsOverride=$(IOS_DESTDIR)/Library/Framewo
 export XAMMAC_FRAMEWORK_PATH=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
 export XamarinMacFrameworkRoot=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
 
+# This is a temporary variable to enable the .NET workload resolver, because it's opt-in for now.
+# Ref: https://github.com/dotnet/sdk/issues/13849
+export MSBuildEnableWorkloadResolver=true
+
 ifneq ($(RELEASE),)
 ifneq ($(BITCODE),)
 CONFIG=Release-bitcode
@@ -214,11 +218,15 @@ killall:
 	@killall Touch.Server >/dev/null 2>&1 || true
 
 NUNIT_MSBUILD_DIR=$(TOP)/packages/NUnit.Runners.2.6.4/tools/lib
-test-ios-tasks: verify-system-vsmac-xcode-match
-	$(SYSTEM_MSBUILD) $(TOP)/tests/msbuild/Xamarin.iOS.Tasks.Tests/Xamarin.iOS.Tasks.Tests.csproj /p:Configuration=Debug
-	cd $(TOP)/tests/msbuild/Xamarin.iOS.Tasks.Tests && $(SYSTEM_XIBUILD) -t -- $(abspath $(TOP)/tools/nunit3-console-3.11.1) $(abspath $(TOP)/tests/msbuild/Xamarin.iOS.Tasks.Tests/bin/Debug/net461/Xamarin.iOS.Tasks.Tests.dll) "--result=$(abspath $(CURDIR)/TestResults_Xamarin.iOS.Tasks.Tests.xml);format=nunit2" -labels=Before $(TEST_FIXTURE) || touch $(CURDIR)/.$@-failed-stamp
-	@[[ -z "$$BUILD_REPOSITORY" ]] || ( xsltproc $(TOP)/tests/HtmlTransform.xslt $(CURDIR)/TestResults_Xamarin.iOS.Tasks.Tests.xml > $(TOP)/tests/index.html && echo "@MonkeyWrench: AddFile: $$PWD/index.html" )
-	@if test -e $(CURDIR)/.$@-failed-stamp; then rm $(CURDIR)/.$@-failed-stamp; exit 1; fi
+test-ios-tasks: test-macdev-tests test-macdev-tasks
+
+test-macdev-tests: verify-system-vsmac-xcode-match
+	$(SYSTEM_MSBUILD) $(TOP)/tests/msbuild/Xamarin.MacDev.Tests/Xamarin.MacDev.Tests.csproj /p:Configuration=Debug /r
+	cd $(TOP)/tests/msbuild/Xamarin.MacDev.Tests && $(SYSTEM_XIBUILD) -t -- $(abspath $(TOP)/tools/nunit3-console-3.11.1) $(abspath $(TOP)/tests/msbuild/Xamarin.MacDev.Tests/bin/Debug/net461/Xamarin.MacDev.Tests.dll) "--result=$(abspath $(CURDIR)/TestResults_Xamarin.MacDev.Tests.xml);format=nunit2" -labels=Before $(TEST_FIXTURE)
+
+test-macdev-tasks: verify-system-vsmac-xcode-match
+	$(SYSTEM_MSBUILD) $(TOP)/tests/msbuild/Xamarin.MacDev.Tasks.Tests/Xamarin.MacDev.Tasks.Tests.csproj /p:Configuration=Debug /r
+	cd $(TOP)/tests/msbuild/Xamarin.MacDev.Tasks.Tests && $(SYSTEM_XIBUILD) -t -- $(abspath $(TOP)/tools/nunit3-console-3.11.1) $(abspath $(TOP)/tests/msbuild/Xamarin.MacDev.Tasks.Tests/bin/Debug/net461/Xamarin.MacDev.Tasks.Tests.dll) "--result=$(abspath $(CURDIR)/TestResults_Xamarin.MacDev.Tasks.Tests.xml);format=nunit2" -labels=Before $(TEST_FIXTURE)
 
 test-install-sources:
 	$(SYSTEM_XIBUILD) -- $(TOP)/tools/install-source/InstallSourcesTests/InstallSourcesTests.csproj

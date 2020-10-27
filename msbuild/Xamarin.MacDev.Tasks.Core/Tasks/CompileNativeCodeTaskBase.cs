@@ -46,6 +46,7 @@ namespace Xamarin.MacDev.Tasks {
 				var arguments = new List<string> ();
 
 				arguments.Add ("clang");
+				arguments.Add ("-g");
 
 				arguments.Add (PlatformFrameworkHelper.GetMinimumVersionArgument (TargetFrameworkMoniker, SdkIsSimulator, MinimumOSVersion));
 

@@ -27,40 +27,92 @@ using ObjCRuntime;
 namespace Introspection {
 
 	public class ApiAvailabilityTest : ApiBaseTest {
-	
+
 		protected Version Minimum { get; set; }
 		protected Version Maximum { get; set; }
-		protected Func<AvailabilityBaseAttribute,bool> Filter { get; set; }
+		protected Func<AvailabilityBaseAttribute, bool> Filter { get; set; }
+		protected PlatformName Platform { get; set; }
 
 		public ApiAvailabilityTest ()
 		{
 			Maximum = Version.Parse (Constants.SdkVersion);
 #if __IOS__
+			Platform = PlatformName.iOS;
 			Minimum = new Version (6,0);
-			Filter = (AvailabilityBaseAttribute arg) => {
-				return (arg.AvailabilityKind != AvailabilityKind.Introduced) || (arg.Platform != PlatformName.iOS);
-			};
 #elif __TVOS__
+			Platform = PlatformName.TvOS;
 			Minimum = new Version (9,0);
-			Filter = (AvailabilityBaseAttribute arg) => {
-				return (arg.AvailabilityKind != AvailabilityKind.Introduced) || (arg.Platform != PlatformName.TvOS);
-			};
 #elif __WATCHOS__
+			Platform = PlatformName.WatchOS;
 			Minimum = new Version (2,0);
 			// Need to special case watchOS 'Maximum' version for OS minor subversions (can't change Constants.SdkVersion)
 			//Maximum = new Version (6,2,5);
-			Filter = (AvailabilityBaseAttribute arg) => {
-				return (arg.AvailabilityKind != AvailabilityKind.Introduced) || (arg.Platform != PlatformName.WatchOS);
-			};
 #else
+			Platform = PlatformName.MacOSX;
 			Minimum = new Version (10,9);
 			// Need to special case macOS 'Maximum' version for OS minor subversions (can't change Constants.SdkVersion)
 			// Please comment the code below if needed
 			Maximum = new Version (10,15,5);
-			Filter = (AvailabilityBaseAttribute arg) => {
-				return (arg.AvailabilityKind != AvailabilityKind.Introduced) || (arg.Platform != PlatformName.MacOSX);
-			};
 #endif
+			Filter = (AvailabilityBaseAttribute arg) => {
+				return (arg.AvailabilityKind != AvailabilityKind.Introduced) || (arg.Platform != Platform);
+			};
+		}
+
+		bool FoundInProtocols (MemberInfo m, Type t)
+		{
+			var method = m.ToString ();
+			foreach (var intf in t.GetInterfaces ()) {
+				var p = Assembly.GetType (intf.FullName);
+				if (p != null) {
+					// here we want inherited members so we don't have to hunt inherited interfaces recursively
+					foreach (var pm in p.GetMembers ()) {
+						if (pm.ToString () != method)
+							continue;
+						return true;
+					}
+					foreach (var ca in p.GetCustomAttributes<Foundation.ProtocolMemberAttribute> ()) {
+						// TODO check signature in [ProtocolMember]
+						if (ca.IsProperty) {
+							if (m.Name == "get_" + ca.Name)
+								return true;
+							if (m.Name == "set_" + ca.Name)
+								return true;
+						}
+						if (m.Name == ca.Name)
+							return true;
+					}
+				}
+				p = Assembly.GetType (intf.Namespace + "." + intf.Name.Substring (1));
+				if (p != null) {
+					// here we want inherited members so we don't have to hunt inherited interfaces recursively
+					foreach (var pm in p.GetMembers ()) {
+						if (pm.ToString () != method)
+							continue;
+						return true;
+					}
+				}
+				p = Assembly.GetType (intf.Namespace + "." + intf.Name.Substring (1) + "_Extensions");
+				if (p != null) {
+					// here we want inherited members so we don't have to hunt inherited interfaces recursively
+					foreach (var pm in p.GetMembers ()) {
+						// map extension method to original @optional
+						if (m.Name != pm.Name)
+							continue;
+						var parameters = (pm as MethodInfo).GetParameters ();
+						if (parameters.Length == 0)
+							continue;
+						var pattern = "(" + parameters [0].ParameterType.FullName;
+						if (parameters.Length > 1)
+							pattern += ", ";
+						var s = pm.ToString ().Replace (pattern, "(");
+						if (s != method)
+							continue;
+						return true;
+					}
+				}
+			}
+			return false;
 		}
 
 		[Test]
@@ -72,22 +124,41 @@ namespace Introspection {
 				if (LogProgress)
 					Console.WriteLine ($"T: {t}");
 				var ta = CheckAvailability (t);
-				foreach (var m in t.GetMembers ()) {
+				foreach (var m in t.GetMembers (BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public)) {
 					if (LogProgress)
 						Console.WriteLine ($"M: {m}");
 					var ma = CheckAvailability (m);
 					if (ta == null || ma == null)
 						continue;
+
+					// need to skip members that are copied to satisfy interfaces (protocol members)
+					if (FoundInProtocols (m, t))
+						continue;
+
 					// Duplicate checks, e.g. same attribute on member and type (extranous metadata)
 					if (ma.Version == ta.Version) {
-// about 4000
-//						AddErrorLine ($"[FAIL] {ma.Version} (Member) == {ta.Version} (Type) on '{m}'.");
+						AddErrorLine ($"[FAIL] {ma.Version} ({m}) == {ta.Version} ({t})");
 					}
 					// Consistency checks, e.g. member lower than type
 					// note: that's valid in some cases, like a new base type being introduced
 					if (ma.Version < ta.Version) {
-// about 8000
-//						AddErrorLine ($"[FAIL] {ma.Version} (Member) < {ta.Version} (Type) on '{m}'.");
+						switch (t.FullName) {
+						case "CoreBluetooth.CBPeer":
+							switch (m.ToString ()) {
+							// type added later and existing property was moved
+							case "Foundation.NSUuid get_Identifier()":
+							case "Foundation.NSUuid Identifier":
+								continue;
+							}
+							break;
+						case "MetricKit.MXUnitAveragePixelLuminance":
+						case "MetricKit.MXUnitSignalBars":
+							// design bug wrt generics leading to redefinition of some members in subclasses
+							if (m.ToString () == "System.String Symbol")
+								continue;
+							break;
+						}
+						AddErrorLine ($"[FAIL] {ma.Version} ({m}) < {ta.Version} ({t})");
 					}
 				}
 			}
@@ -129,6 +200,57 @@ namespace Introspection {
 				}
 			}
 			return null;
+		}
+
+		bool IsUnavailable (ICustomAttributeProvider cap)
+		{
+			foreach (var ca in cap.GetCustomAttributes (false)) {
+				if (ca is UnavailableAttribute ua) {
+					if (ua.Platform == Platform)
+						return true;
+				}
+			}
+			return false;
+		}
+
+		AvailabilityBaseAttribute GetAvailable (ICustomAttributeProvider cap)
+		{
+			foreach (var ca in cap.GetCustomAttributes (false)) {
+				if (ca is AvailabilityBaseAttribute aa) {
+					if ((aa.AvailabilityKind != AvailabilityKind.Unavailable) && (aa.Platform == Platform))
+						return aa;
+				}
+			}
+			return null;
+		}
+
+		[Test]
+		public void Unavailable ()
+		{
+			//LogProgress = true;
+			Errors = 0;
+			foreach (Type t in Assembly.GetTypes ()) {
+				if (LogProgress)
+					Console.WriteLine ($"T: {t}");
+				var tu = IsUnavailable (t);
+				var ta = GetAvailable (t);
+				if (tu && (ta != null))
+					AddErrorLine ($"[FAIL] {t.FullName} is marked both [Unavailable ({Platform})] and {ta}.");
+
+				foreach (var m in t.GetMembers (BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public)) {
+					if (LogProgress)
+						Console.WriteLine ($"M: {m}");
+
+					var ma = GetAvailable (t);
+					if (tu && (ma != null))
+						AddErrorLine ($"[FAIL] {m} is marked with {ma} but the type {t.FullName} is [Unavailable ({Platform})].");
+
+					var mu = IsUnavailable (t);
+					if (mu && (ma != null))
+						AddErrorLine ($"[FAIL] {m} is marked both [Unavailable ({Platform})] and {ma}.");
+				}
+			}
+			AssertIfErrors ("{0} API with mixed [Unavailable] and availability attributes", Errors);
 		}
 	}
 }

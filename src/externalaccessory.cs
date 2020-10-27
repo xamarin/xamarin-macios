@@ -212,7 +212,6 @@ namespace ExternalAccessory {
 
 #if !MONOMAC
 		[NoTV]
-		[iOS (8,0)]
 		[Export ("configureAccessory:withConfigurationUIOnViewController:")]
 		void ConfigureAccessory (EAWiFiUnconfiguredAccessory accessory, UIViewController viewController);
 #endif

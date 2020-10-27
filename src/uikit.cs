@@ -15314,12 +15314,10 @@ namespace UIKit {
 	[iOS (8,0)]
 	partial interface UITraitEnvironment {
 		[Abstract]
-		[iOS (8,0)]
 		[Export ("traitCollection")]
 		UITraitCollection TraitCollection { get; }
 
 		[Abstract]
-		[iOS (8,0)]
 		[Export ("traitCollectionDidChange:")]
 		void TraitCollectionDidChange ([NullAllowed] UITraitCollection previousTraitCollection);
 	}
@@ -19608,7 +19606,7 @@ namespace UIKit {
 	interface UIUserActivityRestoring
 	{
 		[Abstract]
-		[iOS (8,0), TV(12,0)]
+		[TV(12,0)]
 		[Export ("restoreUserActivityState:")]
 		void RestoreUserActivityState (NSUserActivity activity);
 	}
@@ -21089,7 +21087,6 @@ namespace UIKit {
 	[BaseType (typeof (NSObject))]
 	interface UITextFormattingCoordinatorDelegate {
 
-		[iOS (13,0)]
 		[Abstract]
 		[Export ("updateTextAttributesWithConversionHandler:")]
 		void UpdateTextAttributes (UITextAttributesConversionHandler conversionHandler);

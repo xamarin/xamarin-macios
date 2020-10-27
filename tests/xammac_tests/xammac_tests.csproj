@@ -262,10 +262,10 @@
     <GeneratedTestOutput Include="..\..\tests\test-libraries\RegistrarTest.generated.cs" />
     <CustomMetalSmeltingInput Include="..\monotouch-test\Resources\fragmentShader.metal" />
   </ItemGroup>
-  <Target Name="CustomMetalSmelting" Inputs="@(CustomMetalSmeltingInput)" Outputs="$(_AppBundlePath)\Contents\Resources\fragmentShader.metallib" DependsOnTargets="_GenerateBundleName">
+  <Target Name="CustomMetalSmelting" Inputs="@(CustomMetalSmeltingInput)" Outputs="$(_AppBundlePath)\Contents\Resources\fragmentShader.metallib" DependsOnTargets="_GenerateBundleName;_DetectSdkLocations">
     <MakeDir Directories="$(IntermediateOutputPath)\Contents\Resources;$(AppBundleDir)\Contents\Resources" />
-    <Exec Command="xcrun -sdk macosx metal -c @(CustomMetalSmeltingInput) -o $(IntermediateOutputPath)\Contents\Resources\fragmentShader.air -mmacos-version-min=10.13" />
-    <Exec Command="xcrun -sdk macosx metallib $(IntermediateOutputPath)\Contents\Resources\fragmentShader.air -o $(AppBundleDir)\Contents\Resources\fragmentShader.metallib" />
+    <Exec Command="xcrun -sdk macosx metal -c @(CustomMetalSmeltingInput) -o $(IntermediateOutputPath)\Contents\Resources\fragmentShader.air -mmacos-version-min=10.13" EnvironmentVariables="DEVELOPER_DIR=$(_SdkDevPath)"/>
+    <Exec Command="xcrun -sdk macosx metallib $(IntermediateOutputPath)\Contents\Resources\fragmentShader.air -o $(AppBundleDir)\Contents\Resources\fragmentShader.metallib" EnvironmentVariables="DEVELOPER_DIR=$(_SdkDevPath)" />
   </Target>
   <Target Name="BeforeBuild" Inputs="@(GeneratedTestInput)" Outputs="@(GeneratedTestOutput)" DependsOnTargets="CustomMetalSmelting">
     <Exec Command="make -j8 -C $(TestLibrariesDirectory)" />

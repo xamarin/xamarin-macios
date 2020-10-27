@@ -9,7 +9,6 @@ using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 using Xharness.Jenkins.Reports;
 using Xharness.Jenkins.TestTasks;
-using Xharness.Tasks;
 
 namespace Xharness.Jenkins {
 

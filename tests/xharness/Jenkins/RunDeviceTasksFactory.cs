@@ -23,6 +23,8 @@ namespace Xharness.Jenkins {
 				bool ignored = project.Ignore ?? !jenkins.IncludeDevice;
 				if (!jenkins.IsIncluded (project))
 					ignored = true;
+				if (project.IsDotNetProject)
+					ignored = true;
 
 				projectTasks.Clear ();
 

@@ -16,7 +16,7 @@ namespace CloudKit {
 
 #if !XAMCORE_4_0
 	public partial class CKQueryNotification {
-		[iOS (8, 0), Mac (10, 10)]
+
 		[Obsolete ("Empty stub (not public API). Use 'DatabaseScope' instead.")]
 		public virtual bool IsPublicDatabase { get; }
 	}
@@ -46,33 +46,27 @@ namespace CloudKit {
 
 	public partial class CKContainer {
 #if __IOS__ || MONOMAC
-		[iOS (8, 0), Mac (10, 10)]
 		[Obsolete ("Always throw a 'NotSupportedException' (not a public API). Use 'DiscoverAllIdentities' instead.")]
 		public virtual void DiscoverAllContactUserInfos (Action<CKDiscoveredUserInfo[], NSError> completionHandler) 
 			=> throw new NotSupportedException ();
 
-		[iOS (8, 0), Mac (10, 10)]
 		[Obsolete ("Always throw a 'NotSupportedException' (not a public API). Use 'DiscoverAllIdentities' instead.")]
 		public virtual Task<CKDiscoveredUserInfo[]> DiscoverAllContactUserInfosAsync ()
 			=> Task.FromException<CKDiscoveredUserInfo[]> (new NotSupportedException ());
 #endif
 
-		[iOS (8, 0), Mac (10, 10)]
 		[Obsolete ("Always throw a 'NotSupportedException' (not a public API). Use 'DiscoverUserIdentityWithEmailAddress' instead.")]
 		public virtual void DiscoverUserInfo (string email, Action<CKDiscoveredUserInfo, NSError> completionHandler)
 			=> throw new NotSupportedException ();
 
-		[iOS (8, 0), Mac (10, 10)]
 		[Obsolete ("Always throw a 'NotSupportedException' (not a public API). Use 'DiscoverUserIdentityWithEmailAddress' instead.")]
 		public virtual Task<CKDiscoveredUserInfo> DiscoverUserInfoAsync (string email)
 			=> Task.FromException<CKDiscoveredUserInfo> (new NotSupportedException ());
 
-		[iOS (8, 0), Mac (10, 10)]
 		[Obsolete ("Always throw a 'NotSupportedException' (not a public API). Use 'DiscoverUserIdentity' instead.")]
 		public virtual void DiscoverUserInfo (CKRecordID userRecordId, Action<CKDiscoveredUserInfo, NSError> completionHandler)
 			=> throw new NotSupportedException ();
 
-		[iOS (8, 0), Mac (10, 10)]
 		[Obsolete ("Always throw a 'NotSupportedException' (not a public API). Use 'DiscoverUserIdentity' instead.")]
 		public virtual Task<CKDiscoveredUserInfo> DiscoverUserInfoAsync (CKRecordID userRecordId)
 			=> Task.FromException<CKDiscoveredUserInfo> (new NotSupportedException ());

@@ -1403,6 +1403,12 @@ namespace Xamarin.Bundler {
             }
         }
         
+        internal static string MX_ExceptionalSubSteps {
+            get {
+                return ResourceManager.GetString("MX_ExceptionalSubSteps", resourceCulture);
+            }
+        }
+        
         internal static string MT2101 {
             get {
                 return ResourceManager.GetString("MT2101", resourceCulture);
@@ -1514,6 +1520,12 @@ namespace Xamarin.Bundler {
         internal static string MX2111 {
             get {
                 return ResourceManager.GetString("MX2111", resourceCulture);
+            }
+        }
+        
+        internal static string MX_ConfigurationAwareStep {
+            get {
+                return ResourceManager.GetString("MX_ConfigurationAwareStep", resourceCulture);
             }
         }
         

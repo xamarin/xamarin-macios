@@ -1225,7 +1225,7 @@ namespace MapKit {
 	interface MKLocalSearchRequest : NSCopying {
 
 		[DesignatedInitializer]
-		[TV (9,2)][NoWatch][iOS (9,3)][Mac (10,11,4)]
+		[NoWatch][iOS (9,3)][Mac (10,11,4)]
 		[Export ("initWithCompletion:")]
 		IntPtr Constructor (MKLocalSearchCompletion completion);
 
@@ -2168,7 +2168,6 @@ namespace MapKit {
 	[DisableDefaultCtor]
 	interface MKLocalPointsOfInterestRequest : NSCopying
 	{
-		[TV (14, 0), NoWatch, Mac (11, 0), iOS (14, 0)]
 		[Field ("MKPointsOfInterestRequestMaxRadius")]
 		double RequestMaxRadius { get; }
 

@@ -13,6 +13,8 @@ using Xamarin.Linker.Steps;
 namespace Xamarin {
 
 	public class SetupStep : ConfigurationAwareStep {
+		protected override string Name { get; } = "Setup";
+		protected override int ErrorCode { get; } = 2300;
 
 		List<IStep> _steps;
 		public List<IStep> Steps {
@@ -47,7 +49,7 @@ namespace Xamarin {
 			throw new InvalidOperationException ($"Could not insert {step} after {stepName} because {stepName} wasn't found.");
 		}
 
-		protected override void Process ()
+		protected override void TryProcess ()
 		{
 			// Don't use --custom-step to load each step, because this assembly
 			// is loaded into the current process once per --custom-step,
