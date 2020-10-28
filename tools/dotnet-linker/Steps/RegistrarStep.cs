@@ -6,10 +6,11 @@ using Xamarin.Utils;
 
 namespace Xamarin.Linker {
 	public class RegistrarStep : ConfigurationAwareStep {
-		protected override void EndProcess ()
-		{
-			base.EndProcess ();
+		protected override string Name { get; } = "Registrar";
+		protected override int ErrorCode { get; } = 2360;
 
+		protected override void TryEndProcess ()
+		{
 			var app = Configuration.Application;
 
 			app.SelectRegistrar ();

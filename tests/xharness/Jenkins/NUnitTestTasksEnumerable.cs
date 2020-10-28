@@ -30,7 +30,7 @@ namespace Xharness.Jenkins {
 				SupportsParallelExecution = false,
 			};
 			var nunitExecutioniOSMSBuild = new NUnitExecuteTask (jenkins, buildiOSMSBuild, processManager) {
-				TestLibrary = Path.Combine (HarnessConfiguration.RootDirectory, "msbuild", "Xamarin.MacDev.Tasks.Tests", "bin", "Debug", "net461", "Xamarin.MacDev.Tasks.Tests.dll"),
+				TestLibrary = Path.Combine (HarnessConfiguration.RootDirectory, "msbuild", "Xamarin.MacDev.Tasks.Tests", "bin", "Debug", "net472", "Xamarin.MacDev.Tasks.Tests.dll"),
 				TestProject = netstandard2Project,
 				ProjectConfiguration = "Debug",
 				Platform = TestPlatform.iOS,
@@ -52,13 +52,13 @@ namespace Xharness.Jenkins {
 				SupportsParallelExecution = false,
 			};
 			var nunitExecutioniOSMSBuildIntegration = new NUnitExecuteTask (jenkins, buildiOSMSBuildIntegration, processManager) {
-				TestLibrary = Path.Combine (HarnessConfiguration.RootDirectory, "msbuild", "Xamarin.MacDev.Tests", "bin", "Debug", "net461", "Xamarin.MacDev.Tests.dll"),
+				TestLibrary = Path.Combine (HarnessConfiguration.RootDirectory, "msbuild", "Xamarin.MacDev.Tests", "bin", "Debug", "net472", "Xamarin.MacDev.Tests.dll"),
 				TestProject = msbuildIntegrationTestsProject,
 				ProjectConfiguration = "Debug",
 				Platform = TestPlatform.iOS,
 				TestName = "MSBuild tests",
 				Mode = "iOS (integration)",
-				Timeout = TimeSpan.FromMinutes (60),
+				Timeout = TimeSpan.FromMinutes (90),
 				Ignored = !jenkins.IncludeiOSMSBuild,
 				SupportsParallelExecution = false,
 			};

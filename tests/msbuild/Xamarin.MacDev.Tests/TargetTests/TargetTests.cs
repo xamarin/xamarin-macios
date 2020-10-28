@@ -596,7 +596,7 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void DetectAppManifest_ExecutableProject_LinkedPList ()
 		{
-			string linkedPlist = CreateTempFile (Path.Combine (TempDir, "Linked.plist"));
+			string linkedPlist = CreateTempFile ("Linked.plist");
 
 			RemoveItemsByName (MonoTouchProject, "None");
 			MonoTouchProjectInstance = MonoTouchProject.CreateProjectInstance ();
@@ -611,7 +611,7 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void DetectAppManifest_ExecutableProject_LogicalNamePList ()
 		{
-			string logicalPlist = CreateTempFile (Path.Combine (TempDir, "Logical.plist"));
+			string logicalPlist = CreateTempFile ("Logical.plist");
 
 			RemoveItemsByName (MonoTouchProject, "None");
 			MonoTouchProjectInstance = MonoTouchProject.CreateProjectInstance ();
@@ -627,7 +627,7 @@ namespace Xamarin.iOS.Tasks
 		public void DetectAppManifest_LibraryProject ()
 		{
 			RunTargetOnInstance (LibraryProjectInstance, TargetName.DetectAppManifest);
-			Assert.That (LibraryProjectInstance.GetPropertyValue ("_AppManifest"), Is.Not.Null.Or.Empty, "#1");
+			Assert.That (LibraryProjectInstance.GetPropertyValue ("_AppManifest"), Is.Null.Or.Empty, "#1");
 		}
 	}
 }

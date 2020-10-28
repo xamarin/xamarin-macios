@@ -214,13 +214,9 @@ namespace Xharness.Jenkins {
 						clone.Xml.Save (clone.Path);
 					});
 
-					MSBuildTask build;
-					if (clone.IsDotNetProject) {
-						build = new DotNetBuildTask (jenkins: jenkins, testProject: clone, processManager: processManager);
-						ignored |= !jenkins.IncludeDotNet;
-					} else {
-						build = new MSBuildTask (jenkins: jenkins, testProject: clone, processManager: processManager);
-					}
+					ignored |= clone.IsDotNetProject && !jenkins.IncludeDotNet;
+
+					var build = new MSBuildTask (jenkins: jenkins, testProject: clone, processManager: processManager);
 					build.ProjectConfiguration = configuration;
 					build.ProjectPlatform = task.ProjectPlatform;
 					build.Platform = task.Platform;

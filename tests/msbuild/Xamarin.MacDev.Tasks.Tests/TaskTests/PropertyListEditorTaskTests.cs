@@ -8,7 +8,7 @@ using Xamarin.MacDev.Tasks;
 namespace Xamarin.iOS.Tasks
 {
 	[TestFixture]
-	public class PropertyListEditorTaskTests
+	public class PropertyListEditorTaskTests : TestBase
 	{
 		static void CheckArray (PArray array, PArray expected)
 		{
@@ -62,34 +62,28 @@ namespace Xamarin.iOS.Tasks
 			}
 		}
 
-		static void TestExecuteTask (PDictionary input, PropertyListEditorAction action, string entry, string type, string value, PObject expected)
+		void TestExecuteTask (PDictionary input, PropertyListEditorAction action, string entry, string type, string value, PObject expected)
 		{
-			var task = new PropertyListEditor {
-				PropertyList = Path.GetTempFileName (),
-				BuildEngine = new TestEngine (),
-				Action = action.ToString (),
-				Entry = entry,
-				Type = type,
-				Value = value
-			};
+			var task = CreateTask<PropertyListEditor> ();
+			task.PropertyList = Path.Combine (Cache.CreateTemporaryDirectory (), "propertyList.plist");
+			task.Action = action.ToString ();
+			task.Entry = entry;
+			task.Type = type;
+			task.Value = value;
 			input.Save (task.PropertyList);
 
-			try {
-				if (expected == null) {
-					Assert.IsFalse (task.Execute (), "Task was expected to fail.");
-					return;
-				}
-
-				Assert.IsTrue (task.Execute (), "Task was expected to execute successfully.");
-
-				var output = PObject.FromFile (task.PropertyList);
-
-				Assert.AreEqual (expected.Type, output.Type, "Task produced the incorrect plist output.");
-
-				CheckValue (output, expected);
-			} finally {
-				File.Delete (task.PropertyList);
+			if (expected == null) {
+				Assert.IsFalse (task.Execute (), "Task was expected to fail.");
+				return;
 			}
+
+			Assert.IsTrue (task.Execute (), "Task was expected to execute successfully.");
+
+			var output = PObject.FromFile (task.PropertyList);
+
+			Assert.AreEqual (expected.Type, output.Type, "Task produced the incorrect plist output.");
+
+			CheckValue (output, expected);
 		}
 
 		[Test]
@@ -318,15 +312,11 @@ namespace Xamarin.iOS.Tasks
 			var merge = (PDictionary) expected.Clone ();
 			merge.Remove ("CFBundleIdentifier");
 
-			var tmp = Path.GetTempFileName ();
+			var tmp = Path.Combine (Cache.CreateTemporaryDirectory (), "tmpfile");
 
 			merge.Save (tmp);
 
-			try {
-				TestExecuteTask (plist, PropertyListEditorAction.Merge, null, null, tmp, expected);
-			} finally {
-				File.Delete (tmp);
-			}
+			TestExecuteTask (plist, PropertyListEditorAction.Merge, null, null, tmp, expected);
 		}
 
 		[Test]
@@ -351,15 +341,11 @@ namespace Xamarin.iOS.Tasks
 			array0.RemoveAt (3);
 			array0.RemoveAt (2);
 
-			var tmp = Path.GetTempFileName ();
+			var tmp = Path.Combine (Cache.CreateTemporaryDirectory (), "tmpfile");
 
 			array1.Save (tmp);
 
-			try {
-				TestExecuteTask (plist, PropertyListEditorAction.Merge, ":CFArrayItems", null, tmp, expected);
-			} finally {
-				File.Delete (tmp);
-			}
+			TestExecuteTask (plist, PropertyListEditorAction.Merge, ":CFArrayItems", null, tmp, expected);
 		}
 	}
 }

@@ -1,15 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Threading;
+
 using Microsoft.Build.Framework;
 using Microsoft.Build.Evaluation;
-using Microsoft.Build.Execution;
 using Microsoft.Build.Logging;
-using NUnit.Framework;
-using Microsoft.Build.Utilities;
 
 namespace Xamarin.iOS.Tasks
 {
@@ -24,31 +19,12 @@ namespace Xamarin.iOS.Tasks
 		{
 			Logger = new Logger ();
 			ProjectCollection = new ProjectCollection ();
-
 			ProjectCollection.RegisterLogger (Logger);
-
-			var printer = new ConsoleReportPrinter ();
-			var cl = new ConsoleLogger (LoggerVerbosity.Diagnostic, printer.Print, printer.SetForeground, printer.ResetColor);
-			ProjectCollection.RegisterLogger (cl);
 		}
 
 		public bool BuildProjectFile (string projectFileName, string [] targetNames, IDictionary globalProperties, IDictionary targetOutputs)
 		{
 			throw new NotImplementedException ();
-		}
-
-		public bool BuildProject (ProjectInstance instance, string [] targetNames, IDictionary globalProperties)
-		{
-			if (globalProperties != null) {
-				foreach (DictionaryEntry de in globalProperties) {
-					//Note: trying to set this on the project causes the project to be added to the PC
-					//      again, which of course, fails
-					instance.SetProperty ((string)de.Key, (string)de.Value);
-				}
-			}
-
-			//FIXME: assumption that we are still using the same PC!
-			return instance.Build (targetNames, ProjectCollection.Loggers);
 		}
 
 		public void LogCustomEvent (CustomBuildEventArgs e)
@@ -66,11 +42,6 @@ namespace Xamarin.iOS.Tasks
 		public void LogWarningEvent (BuildWarningEventArgs e)
 		{
 			Logger.WarningsEvents.Add (e);
-		}
-
-		public void UnloadAllProjects ()
-		{
-			ProjectCollection.UnloadAllProjects ();
 		}
 
 		public int ColumnNumberOfTaskNode {
@@ -123,7 +94,5 @@ namespace Xamarin.iOS.Tasks
 		bool IBuildEngine2.BuildProjectFilesInParallel (string [] projectFileNames, string [] targetNames, IDictionary [] globalProperties, IDictionary [] targetOutputsPerProject, string [] toolsVersion, bool useResultsCache, bool unloadProjectsOnCompletion) => true;
 
 		bool IBuildEngine2.IsRunningMultipleNodes => false;
-
 	}
-
 }

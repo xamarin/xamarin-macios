@@ -27,6 +27,10 @@ namespace Xamarin.Bundler {
 
 		public static bool Force { get; set; }
 
+		public static bool IsUnifiedFullXamMacFramework { get { return TargetFramework == TargetFramework.Xamarin_Mac_4_5_Full; } }
+		public static bool IsUnifiedFullSystemFramework { get { return TargetFramework == TargetFramework.Xamarin_Mac_4_5_System; } }
+		public static bool IsUnifiedMobile { get { return TargetFramework == TargetFramework.Xamarin_Mac_2_0_Mobile; } }
+
 		static Version min_xcode_version = new Version (6, 0);
 #if !NET
 		public static int Main (string [] args)
