@@ -56,11 +56,6 @@ namespace Xamarin.iOS.Tasks
 			CompiledPlist = PDictionary.FromFile (Task.CompiledAppManifest.ItemSpec);
 		}
 
-		public override void Teardown ()
-		{
-			base.Teardown ();
-		}
-
 		#region General tests
 		[Test]
 		public void PlistMissing ()
