@@ -3254,28 +3254,44 @@ public partial class Generator : IMemberGatherer {
 		return false;
 	}
 
-	public void PrintPlatformAttributesNoDuplicates (MemberInfo additional, MemberInfo original)
+	public void PrintPlatformAttributesNoDuplicates (MemberInfo generatedType, MemberInfo inlinedMethod)
 	{
-		if ((additional == null) || (original == null))
+		if ((generatedType == null) || (inlinedMethod == null))
 			return;
+		//if ((generatedType.Name == "ARAnchor") || (inlinedMethod.DeclaringType.Name == "ARAnchor"))
+		//	Console.WriteLine ();
+		//if (inlinedMethod.Name == "CameraDidChangeTrackingState")
+		//	Console.WriteLine ();
 
-		List<AvailabilityBaseAttribute> original_ca = new List<AvailabilityBaseAttribute> ();
-		original_ca.AddRange (AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (original));
-		if (original.DeclaringType != null)
-			original_ca.AddRange (AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (original.DeclaringType));
-
-		foreach (var availability in AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (additional)) {
-			// already decorated, skip
-			if (HasAvailability (original_ca, availability.Platform))
-				continue;
-			// not available, skip
-			if (IsUnavailable (original_ca, availability.Platform))
-				continue;
-			print (availability.ToString ());
+		var inlined_ca = new List<AvailabilityBaseAttribute> ();
+		inlined_ca.AddRange (AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (inlinedMethod));
+		if (inlinedMethod.DeclaringType != null) {
+			// if not conflictual add the custom attributes from the type
+			foreach (var availability in AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (inlinedMethod.DeclaringType)) {
+				// already decorated, skip
+				if (HasAvailability (inlined_ca, availability.Platform))
+					continue;
+				// not available, skip
+				if (IsUnavailable (inlined_ca, availability.Platform))
+					continue;
+				// this type-level custom attribute has meaning and not covered by the method
+				inlined_ca.Add (availability);
+			}
 		}
 
-		foreach (var availability in original_ca) {
-			print (availability.ToString ());
+		var generated_type_ca = new HashSet<string> ();
+
+		foreach (var availability in AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (generatedType)) {
+			var s = availability.ToString ();
+			generated_type_ca.Add (s);
+		}
+
+		// the type, in which we are inlining the current method, might already have the same availability attribute
+		// which we would duplicate if generated
+		foreach (var availability in inlined_ca) {
+			var s = availability.ToString ();
+			if (!generated_type_ca.Contains (s))
+				print (s);
 		}
 	}
 
@@ -5287,7 +5303,7 @@ public partial class Generator : IMemberGatherer {
 		if (minfo.type != minfo.method.DeclaringType) {
 			// we must look if the type has an [Availability] attribute
 			// but we must not duplicate existing attributes for a platform, see https://github.com/xamarin/xamarin-macios/issues/7194
-			PrintPlatformAttributesNoDuplicates (minfo.method.DeclaringType, minfo.method);
+			PrintPlatformAttributesNoDuplicates (minfo.type, minfo.method);
 		} else {
 			PrintPlatformAttributes (minfo.method);
 		}
