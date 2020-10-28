@@ -37,7 +37,15 @@ namespace ObjCRuntime {
 			return new ProductException (code, false, innerException, message, args);
 		}
 
-		static void CollectExceptions (Exception ex, List<Exception> exceptions)
+		internal static IList<Exception> CollectExceptions (IEnumerable<Exception> exceptions)
+		{
+			var rv = new List<Exception> ();
+			foreach (var ex in exceptions)
+				CollectExceptions (ex, rv);
+			return rv;
+		}
+
+		internal static void CollectExceptions (Exception ex, List<Exception> exceptions)
 		{
 			AggregateException ae = ex as AggregateException;
 
