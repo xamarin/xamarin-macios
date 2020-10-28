@@ -4,4 +4,4 @@ nupkgs
 Microsoft.*.Sdk/targets/Microsoft.*.Sdk.SupportedTargetPlatforms.targets
 Microsoft.*.Sdk/targets/Microsoft.*.Sdk.DefaultItems.props
 _pkg
-
+.stamp-*
