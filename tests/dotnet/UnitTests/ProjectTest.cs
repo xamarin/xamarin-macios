@@ -318,11 +318,39 @@ namespace Xamarin.Tests {
 			}
 		}
 
+		[Test]
+		[TestCase ("ios-x64")]
+		[TestCase ("ios-arm64")]
+		public void IsNotMacBuild (string runtimeIdentifier)
+		{
+			var platform = ApplePlatform.iOS;
+			var project_path = GetProjectPath ("MySingleView");
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Clean (project_path);
+			var properties = new Dictionary<string, string> (verbosity);
+			properties ["RuntimeIdentifier"] = runtimeIdentifier;
+			properties ["IsMacEnabled"] = "false";
+			var result = DotNet.AssertBuild (project_path, properties);
+			AssertThatLinkerDidNotExecute (result);
+			var appPath = Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", "net5.0-ios", runtimeIdentifier, "MySingleView.app");
+			var appExecutable = Path.Combine (appPath, Path.GetFileName (project_path));
+			Assert.That (appPath, Does.Exist, "There is an .app");
+			Assert.That (appExecutable, Does.Not.Empty, "There is no executable");
+			Assert.That (Path.Combine (appPath, "Xamarin.iOS.dll"), Does.Exist, "Xamarin.iOS.dll is in the bundle");
+		}
+
 		void AssertThatLinkerExecuted (ExecutionResult result)
 		{
 			var output = result.StandardOutput.ToString ();
 			Assert.That (output, Does.Contain ("Building target \"_RunILLink\" completely."), "Linker did not executed as expected.");
 			Assert.That (output, Does.Contain ("Pipeline Steps:"), "Custom steps did not run as expected.");
+		}
+
+		void AssertThatLinkerDidNotExecute (ExecutionResult result)
+		{
+			var output = result.StandardOutput.ToString ();
+			Assert.That (output, Does.Not.Contain ("Building target \"_RunILLink\" completely."), "Linker did not executed as expected.");
+			Assert.That (output, Does.Not.Contain ("Pipeline Steps:"), "Custom steps did not run as expected.");
 		}
 
 		void AssertAppContents (ApplePlatform platform, string app_directory)
