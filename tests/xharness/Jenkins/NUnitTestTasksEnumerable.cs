@@ -30,7 +30,7 @@ namespace Xharness.Jenkins {
 				SupportsParallelExecution = false,
 			};
 			var nunitExecutioniOSMSBuild = new NUnitExecuteTask (jenkins, buildiOSMSBuild, processManager) {
-				TestLibrary = Path.Combine (HarnessConfiguration.RootDirectory, "msbuild", "Xamarin.MacDev.Tasks.Tests", "bin", "Debug", "net461", "Xamarin.MacDev.Tasks.Tests.dll"),
+				TestLibrary = Path.Combine (HarnessConfiguration.RootDirectory, "msbuild", "Xamarin.MacDev.Tasks.Tests", "bin", "Debug", "net472", "Xamarin.MacDev.Tasks.Tests.dll"),
 				TestProject = netstandard2Project,
 				ProjectConfiguration = "Debug",
 				Platform = TestPlatform.iOS,

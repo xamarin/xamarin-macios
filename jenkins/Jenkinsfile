@@ -730,6 +730,7 @@ timestamps {
 
                             // Publish any other *.pkg files we've created
                             def pkgs = findFiles (glob: "package/*.pkg")
+                            pkgs += findFiles (glob: "package/*.msi")
                             for (def i = 0; i < pkgs.size (); i++) {
                                 def pkg = pkgs [i];
                                 def pkg_name = pkg.name
