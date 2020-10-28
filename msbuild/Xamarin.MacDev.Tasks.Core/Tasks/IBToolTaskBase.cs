@@ -52,7 +52,6 @@ namespace Xamarin.MacDev.Tasks
 
 		protected override void AppendCommandLineArguments (IDictionary<string, string> environment, CommandLineArgumentBuilder args, ITaskItem[] items)
 		{
-			environment["DEVELOPER_DIR"] = SdkDevPath;
 			environment.Add ("IBSC_MINIMUM_COMPATIBILITY_VERSION", MinimumOSVersion);
 			environment.Add ("IBC_MINIMUM_COMPATIBILITY_VERSION", MinimumOSVersion);
 

@@ -57,14 +57,6 @@ namespace Xamarin.Bundler {
 			Driver.Log (1, $"Registrar mode: {Registrar}");
 		}
 
-		public AssemblyBuildTarget LibMonoLinkMode {
-			get { throw new NotImplementedException (); }
-		}
-
-		public AssemblyBuildTarget LibXamarinLinkMode {
-			get { throw new NotImplementedException (); }
-		}
-
 		public bool HasAnyDynamicLibraries {
 			get { throw new NotImplementedException (); }
 		}

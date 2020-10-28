@@ -47,7 +47,7 @@ namespace Xamarin.Linker {
 			try {
 				Process (assembly);
 			} catch (Exception e) {
-				throw Fail (assembly, e);
+				Report (Fail (assembly, e));
 			}
 		}
 
@@ -56,7 +56,7 @@ namespace Xamarin.Linker {
 			try {
 				Process (type);
 			} catch (Exception e) {
-				throw Fail (type, e);
+				Report (Fail (type, e));
 			}
 		}
 
@@ -65,7 +65,7 @@ namespace Xamarin.Linker {
 			try {
 				Process (field);
 			} catch (Exception e) {
-				throw Fail (field, e);
+				Report (Fail (field, e));
 			}
 		}
 
@@ -74,7 +74,7 @@ namespace Xamarin.Linker {
 			try {
 				Process (method);
 			} catch (Exception e) {
-				throw Fail (method, e);
+				Report (Fail (method, e));
 			}
 		}
 
@@ -83,7 +83,7 @@ namespace Xamarin.Linker {
 			try {
 				Process (property);
 			} catch (Exception e) {
-				throw Fail (property, e);
+				Report (Fail (property, e));
 			}
 		}
 
@@ -92,7 +92,7 @@ namespace Xamarin.Linker {
 			try {
 				Process (@event);
 			} catch (Exception e) {
-				throw Fail (@event, e);
+				Report (Fail (@event, e));
 			}
 		}
 
@@ -126,38 +126,37 @@ namespace Xamarin.Linker {
 
 		protected virtual Exception Fail (AssemblyDefinition assembly, Exception e)
 		{
-			var message = $"{Name} failed processing `{assembly?.FullName}`.";
-			return ErrorHelper.CreateError (ErrorCode, e, message);
+			return ErrorHelper.CreateError (ErrorCode, e, Errors.MX_ExceptionalSubSteps, Name, assembly?.FullName);
 		}
 
 		protected virtual Exception Fail (TypeDefinition type, Exception e)
 		{
-			var message = $"{Name} failed processing {type?.FullName}.";
-			return ErrorHelper.CreateError (ErrorCode | 1, e, message);
+			return ErrorHelper.CreateError (ErrorCode | 1, e, Errors.MX_ExceptionalSubSteps, Name, type?.FullName);
 		}
 
 		protected virtual Exception Fail (FieldDefinition field, Exception e)
 		{
-			var message = $"{Name} failed processing `{field?.FullName}`.";
-			return ErrorHelper.CreateError (ErrorCode | 2, e, message);
+			return ErrorHelper.CreateError (ErrorCode | 2, e, Errors.MX_ExceptionalSubSteps, Name, field?.FullName);
 		}
 
 		protected virtual Exception Fail (MethodDefinition method, Exception e)
 		{
-			var message = $"{Name} failed processing `{method?.FullName}`.";
-			return ErrorHelper.CreateError (ErrorCode | 3, e, message);
+			return ErrorHelper.CreateError (ErrorCode | 3, e, Errors.MX_ExceptionalSubSteps, Name, method?.FullName);
 		}
 
 		protected virtual Exception Fail (PropertyDefinition property, Exception e)
 		{
-			var message = $"{Name} failed processing {property?.FullName}.";
-			return ErrorHelper.CreateError (ErrorCode | 4, e, message);
+			return ErrorHelper.CreateError (ErrorCode | 4, e, Errors.MX_ExceptionalSubSteps, Name, property?.FullName);
 		}
 
 		protected virtual Exception Fail (EventDefinition @event, Exception e)
 		{
-			var message = $"{Name} failed processing {@event?.FullName}.";
-			return ErrorHelper.CreateError (ErrorCode | 5, e, message);
+			return ErrorHelper.CreateError (ErrorCode | 5, e, Errors.MX_ExceptionalSubSteps, Name, @event?.FullName);
+		}
+
+		protected virtual void Report (Exception e)
+		{
+			throw e;
 		}
 
 		// abstracts

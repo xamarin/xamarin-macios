@@ -96,7 +96,12 @@ Microsoft.NET.Workload.$(1)/WorkloadManifest.json: targets/WorkloadManifest.temp
 		-e "s/@PLATFORM@/$1/g" \
 		$$< > $$@.tmp
 	$$(Q) mv $$@.tmp $$@
+
+Microsoft.NET.Workload.$(1)/LICENSE: $(TOP)/LICENSE
+	$$(Q) $(CP) $$< $$@
+
 WORKLOAD_TARGETS += Microsoft.NET.Workload.$(1)/WorkloadManifest.json
+WORKLOAD_TARGETS += Microsoft.NET.Workload.$(1)/LICENSE
 endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call WorkloadTargets,$(platform),$(shell echo $(platform) | tr A-Z a-z),$($(platform)_NUGET_VERSION_NO_METADATA))))
 

@@ -10,13 +10,16 @@ namespace Xamarin.Linker {
 	public class CollectUnmarkedMembersSubStep : ConfigurationAwareSubStep {
 		Dictionary<TypeDefinition, List<TypeDefinition>> ProtocolImplementations => Configuration.DerivedLinkContext.ProtocolImplementations;
 
+		protected override string Name { get; } = "Collect Unmarked Members";
+		protected override int ErrorCode { get; } = 2230;
+
 		public override SubStepTargets Targets {
 			get {
 				return SubStepTargets.Type;
 			}
 		}
 
-		public override void ProcessType (TypeDefinition type)
+		protected override void Process (TypeDefinition type)
 		{
 			if (!Annotations.IsMarked (type))
 				LinkContext.AddLinkedAwayType (type);
