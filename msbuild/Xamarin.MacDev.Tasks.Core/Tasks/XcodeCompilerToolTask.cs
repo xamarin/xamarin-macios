@@ -186,7 +186,7 @@ namespace Xamarin.MacDev.Tasks
 					} catch (Exception ex) {
 						Log.LogError (MSBStrings.E0094, ToolName, manifest.ItemSpec, ex.Message);
 					}
-					Log.LogError (ToolName, null, null, manifest.ItemSpec, 0, 0, 0, 0, "Error output: {0}", File.ReadAllText (manifest.ItemSpec));
+
 					File.Delete (manifest.ItemSpec);
 				}
 			}
