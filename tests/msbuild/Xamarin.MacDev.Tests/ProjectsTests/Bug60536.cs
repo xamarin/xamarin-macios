@@ -22,7 +22,6 @@ namespace Xamarin.iOS.Tasks
 			var platform = "iPhoneSimulator";
 			var config = "Debug";
 			var target = "Build";
-			var clean = true;
 
 			var mtouchPaths = SetupProjectPaths ("Bug60536", "../", true, platform, config);
 			var csproj = mtouchPaths.ProjectCSProjPath;
@@ -33,25 +32,23 @@ namespace Xamarin.iOS.Tasks
 			Engine.ProjectCollection.SetGlobalProperty("Platform", platform);
 			Engine.ProjectCollection.SetGlobalProperty("Configuration", config);
 
-			if (clean) {
-				RunTarget (project, "Clean");
-				Assert.IsFalse (Directory.Exists (AppBundlePath), "App bundle exists after cleanup: {0} ", AppBundlePath);
-				Assert.IsFalse (Directory.Exists (AppBundlePath + ".dSYM"), "App bundle .dSYM exists after cleanup: {0} ", AppBundlePath + ".dSYM");
-				Assert.IsFalse (Directory.Exists (AppBundlePath + ".mSYM"), "App bundle .mSYM exists after cleanup: {0} ", AppBundlePath + ".mSYM");
+			RunTarget (project, "Clean");
+			Assert.IsFalse (Directory.Exists (AppBundlePath), "App bundle exists after cleanup: {0} ", AppBundlePath);
+			Assert.IsFalse (Directory.Exists (AppBundlePath + ".dSYM"), "App bundle .dSYM exists after cleanup: {0} ", AppBundlePath + ".dSYM");
+			Assert.IsFalse (Directory.Exists (AppBundlePath + ".mSYM"), "App bundle .mSYM exists after cleanup: {0} ", AppBundlePath + ".mSYM");
 
-				var baseDir = Path.GetDirectoryName (csproj);
-				var objDir = Path.Combine (baseDir, "obj", platform, config);
-				var binDir = Path.Combine (baseDir, "bin", platform, config);
+			var baseDir = Path.GetDirectoryName (csproj);
+			var objDir = Path.Combine (baseDir, "obj", platform, config);
+			var binDir = Path.Combine (baseDir, "bin", platform, config);
 
-				if (Directory.Exists (objDir)) {
-					var path = Directory.EnumerateFiles (objDir, "*.*", SearchOption.AllDirectories).FirstOrDefault ();
-					Assert.IsNull (path, "File not cleaned: {0}", path);
-				}
+			if (Directory.Exists (objDir)) {
+				var path = Directory.EnumerateFiles (objDir, "*.*", SearchOption.AllDirectories).FirstOrDefault ();
+				Assert.IsNull (path, "File not cleaned: {0}", path);
+			}
 
-				if (Directory.Exists (binDir)) {
-					var path = Directory.EnumerateFiles (binDir, "*.*", SearchOption.AllDirectories).FirstOrDefault ();
-					Assert.IsNull (path, "File not cleaned: {0}", path);
-				}
+			if (Directory.Exists (binDir)) {
+				var path = Directory.EnumerateFiles (binDir, "*.*", SearchOption.AllDirectories).FirstOrDefault ();
+				Assert.IsNull (path, "File not cleaned: {0}", path);
 			}
 
 			project = SetupProject (Engine, mtouchPaths.ProjectCSProjPath);
