@@ -70,6 +70,10 @@ namespace AppKit
 	}
 
 #if !COREBUILD
+	[Mac (10,10)] // protocol added in 10.10
+	public partial interface INSAccessibility {}
+
+	[Mac (10,9)] // but the field/notifications are in 10.9
 	public partial class NSAccessibility
 	{
 		[Mac (10,10)]
