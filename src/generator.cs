@@ -3258,10 +3258,6 @@ public partial class Generator : IMemberGatherer {
 	{
 		if ((generatedType == null) || (inlinedMethod == null))
 			return;
-		//if ((generatedType.Name == "ARAnchor") || (inlinedMethod.DeclaringType.Name == "ARAnchor"))
-		//	Console.WriteLine ();
-		//if (inlinedMethod.Name == "CameraDidChangeTrackingState")
-		//	Console.WriteLine ();
 
 		var inlined_ca = new List<AvailabilityBaseAttribute> ();
 		inlined_ca.AddRange (AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (inlinedMethod));
