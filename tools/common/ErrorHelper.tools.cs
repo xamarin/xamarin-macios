@@ -272,11 +272,8 @@ namespace Xamarin.Bundler {
 
 		public static void Show (IEnumerable<Exception> list)
 		{
-			List<Exception> exceptions = new List<Exception> ();
+			var exceptions = CollectExceptions (list);
 			bool error = false;
-
-			foreach (var e in list)
-				CollectExceptions (e, exceptions);
 
 			foreach (var ex in exceptions)
 				error |= ShowInternal (ex);
