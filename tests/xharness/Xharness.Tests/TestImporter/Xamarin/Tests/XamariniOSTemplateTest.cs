@@ -1,11 +1,10 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Text;
-using Microsoft.DotNet.XHarness.iOS.Shared.TestImporter;
-using Microsoft.DotNet.XHarness.iOS.Shared.TestImporter.Templates;
-using Microsoft.DotNet.XHarness.iOS.Shared.TestImporter.Templates.Managed;
 using Moq;
 using NUnit.Framework;
+using Xharness.TestImporter;
+using Xharness.TestImporter.Templates;
+using Xharness.TestImporter.Templates.Managed;
 
 namespace Xharness.Tests.TestImporter.Xamarin.Tests {
 

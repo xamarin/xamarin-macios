@@ -255,7 +255,7 @@ namespace Xharness {
 			} while (true);
 		}
 
-		async Task<int> AutoConfigureMac (bool generate_projects)
+		int AutoConfigureMac (bool generate_projects)
 		{
 			int rv = 0;
 
@@ -302,7 +302,7 @@ namespace Xharness {
 			}
 
 			var monoImportTestFactory = new BCLTestImportTargetFactory (this);
-			MacTestProjects.AddRange (await monoImportTestFactory.GetMacBclTargets ());
+			MacTestProjects.AddRange (monoImportTestFactory.GetMacBclTargets ());
 
 			// Generate test projects from templates (bcl/mono-native templates)
 			if (generate_projects) {
@@ -371,7 +371,7 @@ namespace Xharness {
 			return rv;
 		}
 
-		async Task AutoConfigureIOS ()
+		void AutoConfigureIOS ()
 		{
 			var test_suites = new string [] { "monotouch-test", "framework-test" };
 			var library_projects = new string [] { "BundledResources", "EmbeddedResources", "bindings-test2", "bindings-framework-test" };
@@ -414,7 +414,7 @@ namespace Xharness {
 
 			// add all the tests that are using the precompiled mono assemblies
 			var monoImportTestFactory = new BCLTestImportTargetFactory (this);
-			IOSTestProjects.AddRange (await monoImportTestFactory.GetiOSBclTargets ());
+			IOSTestProjects.AddRange (monoImportTestFactory.GetiOSBclTargets ());
 
 			WatchOSContainerTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "templates/WatchContainer"));
 			WatchOSAppTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "templates/WatchApp"));
@@ -470,9 +470,9 @@ namespace Xharness {
 			}
 		}
 
-		async Task<int> Configure ()
+		int Configure ()
 		{
-			return mac ? await AutoConfigureMac (true) : await ConfigureIOS ();
+			return mac ? AutoConfigureMac (true) : ConfigureIOS ();
 		}
 
 		// At startup we:
@@ -487,7 +487,7 @@ namespace Xharness {
 		// * For the BCL tests, we use a BCL test project generator. The BCL test generator generates projects for
 		//   all platforms we're interested in, so we set GenerateVariations to false to avoid generate the platform variations again.
 
-		async Task<int> ConfigureIOS ()
+		int ConfigureIOS ()
 		{
 			var rv = 0;
 			var unified_targets = new List<UnifiedTarget> ();
@@ -496,7 +496,7 @@ namespace Xharness {
 			var today_targets = new List<TodayExtensionTarget> ();
 
 			if (autoConf)
-				await AutoConfigureIOS ();
+				AutoConfigureIOS ();
 
 			foreach (var monoNativeInfo in IOSTestProjects.Where (x => x.MonoNativeInfo != null).Select (x => x.MonoNativeInfo))
 				monoNativeInfo.Convert ();
@@ -656,11 +656,11 @@ namespace Xharness {
 			}
 		}
 
-		public async Task<int> Execute ()
+		public int Execute ()
 		{
 			switch (Action) {
 			case HarnessAction.Configure:
-				return await Configure ();
+				return Configure ();
 			case HarnessAction.Run:
 				return Run ();
 			case HarnessAction.Install:
@@ -668,17 +668,17 @@ namespace Xharness {
 			case HarnessAction.Uninstall:
 				return Uninstall ();
 			case HarnessAction.Jenkins:
-				return await Jenkins ();
+				return Jenkins ();
 			default:
 				throw new NotImplementedException (Action.ToString ());
 			}
 		}
 
-		async Task<int> Jenkins ()
+		int Jenkins ()
 		{
 			if (autoConf) {
-				await AutoConfigureIOS ();
-				await AutoConfigureMac (false);
+				AutoConfigureIOS ();
+				AutoConfigureMac (false);
 			}
 
 			var jenkins = new Jenkins.Jenkins (this, processManager, ResultParser, TunnelBore);

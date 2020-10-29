@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -73,6 +73,9 @@
     <PackageReference Include="Microsoft.DotNet.XHarness.iOS.Shared">
       <Version>1.0.0-prerelease.20527.1</Version>
     </PackageReference>
+    <PackageReference Include="Mono.Cecil">
+      <Version>0.11.2</Version>
+    </PackageReference>
     <PackageReference Include="Mono.Options" Version="6.6.0.161" />
   </ItemGroup>
   <ItemGroup>
@@ -139,6 +142,16 @@
     <Compile Include="Targets\TVOSTarget.cs" />
     <Compile Include="Targets\UnifiedTarget.cs" />
     <Compile Include="Targets\WatchOSTarget.cs" />
+    <Compile Include="TestImporter\BCLTestAssemblyDefinition.cs" />
+    <Compile Include="TestImporter\IAssemblyLocator.cs" />
+    <Compile Include="TestImporter\ITestAssemblyDefinition.cs" />
+    <Compile Include="TestImporter\Platform.cs" />
+    <Compile Include="TestImporter\ProjectDefinition.cs" />
+    <Compile Include="TestImporter\Templates\IProjectFilter.cs" />
+    <Compile Include="TestImporter\Templates\ITemplatedProject.cs" />
+    <Compile Include="TestImporter\Templates\Managed\InfoPlistGenerator.cs" />
+    <Compile Include="TestImporter\Templates\Managed\RegisterTypeGenerator.cs" />
+    <Compile Include="TestImporter\Templates\Managed\XamariniOSTemplate.cs" />
     <Compile Include="TestImporter\Xamarin\AssemblyLocator.cs" />
     <Compile Include="TestImporter\Xamarin\ProjectFilter.cs" />
     <Compile Include="TestImporter\Xamarin\AssemblyDefinitionFactory.cs" />
@@ -177,6 +190,11 @@
     <Content Include="xharness.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Do not compile code that is packaged inside the app bundle -->
+    <Compile Remove="TestImporter\Templates\Managed\Resources\**\*.cs" />
+    <EmbeddedResource Include="TestImporter\Templates\Managed\Resources\**\*" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

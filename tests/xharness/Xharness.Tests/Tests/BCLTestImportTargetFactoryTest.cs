@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.DotNet.XHarness.iOS.Shared.TestImporter;
-using Microsoft.DotNet.XHarness.iOS.Shared.TestImporter.Templates;
 using Moq;
 using NUnit.Framework;
+using Xharness.TestImporter;
+using Xharness.TestImporter.Templates;
 using Xharness.TestImporter.Xamarin;
 
 namespace Xharness.Tests.TestImporter.Tests {
@@ -82,22 +82,22 @@ namespace Xharness.Tests.TestImporter.Tests {
 		}
 
 		[Test]
-		public async Task GenerateTestProjectsAsyncTest ()
+		public void GenerateTestProjectsAsyncTest ()
 		{
 			var projects = new GeneratedProjects () {
-				("First project", "", false, "", "", 1),
-				("Second project", "", true, "", "", 1),
+				new GeneratedProject { Name = "First project", Path = "", XUnit = false, ExtraArgs = "", Failure = "", TimeoutMultiplier = 1, GenerationCompleted = Task.CompletedTask, },
+				new GeneratedProject { Name = "Second project", Path = "", XUnit = true, ExtraArgs = "", Failure = "", TimeoutMultiplier = 1, GenerationCompleted = Task.CompletedTask, },
 			};
 			var infos = new List<(string Name, string [] Assemblies, string ExtraArgs, double TimeoutMultiplier)> {
 				( Name: "First project", Assemblies: new string [] { }, ExtraArgs: "", TimeoutMultiplier: 1),
 				( Name: "Second project", Assemblies: new string [] { }, ExtraArgs: "", TimeoutMultiplier: 1),
 			};
-			template
-				.Setup (t => t.GenerateTestProjectsAsync (It.IsAny<IEnumerable<(string Name, string [] Assemblies, string ExtraArgs, double TimeoutMultiplier)>> (), It.IsAny<Platform> ()))
-				.ReturnsAsync (projects);
-			var result = await generator.GenerateTestProjects (infos, Platform.iOS);
+			template.Setup (t => t.GenerateTestProjects (It.IsAny<IEnumerable<(string Name, string [] Assemblies, string ExtraArgs, double TimeoutMultiplier)>> (), It.IsAny<Platform> ())).Returns (() => {
+				return projects;
+			});
+			var result = generator.GenerateTestProjects (infos, Platform.iOS);
 			Assert.AreEqual (projects.Count, result.Count);
-			template.Verify (t => t.GenerateTestProjectsAsync (It.IsAny<IEnumerable<(string Name, string [] Assemblies, string ExtraArgs, double TimeoutMultiplier)>> (), It.IsAny<Platform> ()));
+			template.Verify (t => t.GenerateTestProjects (It.IsAny<IEnumerable<(string Name, string [] Assemblies, string ExtraArgs, double TimeoutMultiplier)>> (), It.IsAny<Platform> ()));
 		}
 	}
 }
