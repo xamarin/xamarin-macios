@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using Xamarin.Localization.MSBuild;
 using System.ComponentModel;
 using System.Linq;
+using System.Text;
 
 namespace Xamarin.iOS.Tasks {
 	[TestFixture]
@@ -87,6 +88,7 @@ namespace Xamarin.iOS.Tasks {
 		}
 
 		IList<string> commonIgnoreList = null;
+		static string shortCommonPath = "xamarin-macios/tests/msbuild/Xamarin.MacDev.Tasks.Tests/TaskTests/LocalizationIgnore/common-Translations.ignore";
 
 		[SetUp]
 		public void SetUp ()
@@ -109,13 +111,12 @@ namespace Xamarin.iOS.Tasks {
 		[TestCase ("zh-TW")]
 		public void AllErrorTranslation (string culture)
 		{
-			string errorList = string.Empty;
+			StringBuilder errorList = new StringBuilder (string.Empty);
 			IList<string> cultureIgnoreList = null;
 			List<string> commonValidEntries = new List<string> ();
 			List<string> cultureValidEntries = new List<string> ();
 
 			string fullCulturePath = $"{Directory.GetCurrentDirectory ()}/TaskTests/LocalizationIgnore/{culture}-Translations.ignore";
-			string shortCommonPath = "xamarin-macios/tests/msbuild/Xamarin.MacDev.Tasks.Tests/TaskTests/LocalizationIgnore/common-Translations.ignore";
 			string shortCulturePath = $"xamarin-macios/tests/msbuild/Xamarin.MacDev.Tasks.Tests/TaskTests/LocalizationIgnore/{culture}-Translations.ignore";
 			CultureInfo originalCulture = Thread.CurrentThread.CurrentUICulture;
 
@@ -136,13 +137,13 @@ namespace Xamarin.iOS.Tasks {
 						Assert.AreEqual (englishError, newCultureError, $"{errorCode} is translated. Remove {errorCode} from {shortCulturePath}");
 						cultureValidEntries.Add (errorCode);
 					} else if (englishError == newCultureError)
-						errorList += $"{errorCode} ";
+						errorList.Append ($"{errorCode} ");
 				} finally {
 					Thread.CurrentThread.CurrentUICulture = originalCulture;
 				}
 			}
 
-			Assert.AreEqual (string.Empty, errorList, $"The following errors were not translated. Add them to {shortCommonPath} or {shortCulturePath}");
+			Assert.IsEmpty (errorList.ToString (), $"The following errors were not translated. Add them to {shortCommonPath} or {shortCulturePath}");
 			Assert.IsEmpty (cultureIgnoreList.Except (cultureValidEntries), $"Not all error codes in {shortCulturePath} are valid or are repeated. Please remove.");
 			Assert.IsEmpty (commonIgnoreList.Except (commonValidEntries), $"Not all error codes in {shortCommonPath} are valid or are repeated. Please remove.");
 		}
@@ -151,7 +152,7 @@ namespace Xamarin.iOS.Tasks {
 		{
 			if (!File.Exists (path))
 				return Array.Empty<string> ();
-			return File.ReadAllLines (path).Where (line => !line.StartsWith ("#", StringComparison.Ordinal) && line != string.Empty).ToList();
+			return File.ReadAllLines (path).Where (line => !line.StartsWith ("#", StringComparison.Ordinal) && line != string.Empty).ToList ();
 		}
 	}
 }
