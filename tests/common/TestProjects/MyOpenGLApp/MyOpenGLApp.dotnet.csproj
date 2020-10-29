@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net5.0-ios</TargetFramework>
+    <RuntimeIdentifier>ios-x64</RuntimeIdentifier>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="OpenTK-1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <BundleResource Include="Shader.fsh" />
+    <BundleResource Include="Shader.vsh" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MyTodayExtension\MyTodayExtension.dotnet.csproj">
+      <Name>MyTodayExtension</Name>
+      <IsAppExtension>True</IsAppExtension>
+    </ProjectReference>
+  </ItemGroup>
+</Project>

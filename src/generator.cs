@@ -457,11 +457,12 @@ public class MemberInformation
 	public readonly Type category_extension_type;
 	internal readonly WrapPropMemberInformation wpmi;
 	public readonly bool is_abstract, is_protected, is_internal, is_unified_internal, is_override, is_new, is_sealed, is_static, is_thread_static, is_autorelease, is_wrapper, is_forced;
-	public readonly bool is_type_sealed, ignore_category_static_warnings, is_basewrapper_protocol_method;
+	public readonly bool ignore_category_static_warnings, is_basewrapper_protocol_method;
 	public readonly bool has_inner_wrap_attribute;
 	public readonly Generator.ThreadCheck threadCheck;
 	public bool is_unsafe, is_virtual_method, is_export, is_category_extension, is_variadic, is_interface_impl, is_extension_method, is_appearance, is_model, is_ctor;
 	public bool is_return_release;
+	public bool is_type_sealed;
 	public bool protocolize;
 	public string selector, wrap_method, is_forced_owns;
 	public bool is_bindAs => Generator.HasBindAsAttribute (mi);
@@ -637,7 +638,7 @@ public class MemberInformation
 			mods += "static ";
 		} else if (is_abstract) {
 			mods += "abstract ";
-		} else if (is_virtual_method) {
+		} else if (is_virtual_method && !is_type_sealed) {
 			mods += is_override ? "override " : "virtual ";
 		}
 
@@ -6562,7 +6563,10 @@ public partial class Generator : IMemberGatherer {
 					}
 					GeneratedCode (sw, 2);
 					sw.WriteLine ("\t\t[EditorBrowsable (EditorBrowsableState.Advanced)]");
-					sw.WriteLine ("\t\tprotected internal {0} (IntPtr handle) : base (handle)", TypeName);
+					sw.Write ($"\t\t");
+					if (!is_sealed)
+						sw.Write ("protected ");
+					sw.WriteLine ($"internal {TypeName} (IntPtr handle) : base (handle)");
 					sw.WriteLine ("\t\t{");
 					if (is_direct_binding_value != null)
 						sw.WriteLine ("\t\t\tIsDirectBinding = {0};", is_direct_binding_value);
@@ -6585,6 +6589,8 @@ public partial class Generator : IMemberGatherer {
 					appearance_selectors.Add (mi);
 				
 				var minfo = new MemberInformation (this, this, mi, type, is_category_class ? bta.BaseType : null, is_model: is_model);
+				// the type above is not the the we're generating, e.g. it would be `NSCopying` for `Copy(NSZone?)`
+				minfo.is_type_sealed = is_sealed;
 
 				if (type == mi.DeclaringType || type.IsSubclassOf (mi.DeclaringType)) {
 					// not an injected protocol method.

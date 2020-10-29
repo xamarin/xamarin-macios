@@ -7,7 +7,6 @@ using ObjCRuntime;
 
 namespace WatchKit {
 	[Register ("WKInterfaceButton", SkipRegistration = true)]
-	[Introduced (PlatformName.iOS, 8,2, PlatformArchitecture.All)]
 	[Unavailable (PlatformName.iOS, PlatformArchitecture.All)]
 	[Obsolete (Constants.WatchKitRemoved)]
 	[EditorBrowsable (EditorBrowsableState.Never)]

@@ -102,9 +102,6 @@ namespace Xamarin.Bundler {
 			os.WriteOptionDescriptions (Console.Out);
 		}
 
-		public static bool IsUnifiedFullXamMacFramework { get { return TargetFramework == TargetFramework.Xamarin_Mac_4_5_Full; } }
-		public static bool IsUnifiedFullSystemFramework { get { return TargetFramework == TargetFramework.Xamarin_Mac_4_5_System; } }
-		public static bool IsUnifiedMobile { get { return TargetFramework == TargetFramework.Xamarin_Mac_2_0_Mobile; } }
 		public static bool LinkProhibitedFrameworks { get; private set; }
 		public static bool UseLegacyAssemblyResolution { get; private set; }
 
@@ -740,60 +737,6 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		static string GenerateMain ()
-		{
-			var sb = new StringBuilder ();
-			using (var sw = new StringWriter (sb)) {
-				sw.WriteLine ("#define MONOMAC 1");
-				sw.WriteLine ("#include <xamarin/xamarin.h>");
-				if (App.Registrar == RegistrarMode.PartialStatic)
-					sw.WriteLine ("extern \"C\" void xamarin_create_classes_Xamarin_Mac ();");
-				sw.WriteLine ();
-				sw.WriteLine ();
-				sw.WriteLine ();
-				sw.WriteLine ("extern \"C\" int xammac_setup ()");
-
-				sw.WriteLine ("{");
-				if (App.CustomBundleName != null) {
-					sw.WriteLine ("\textern NSString* xamarin_custom_bundle_name;");
-					sw.WriteLine ("\txamarin_custom_bundle_name = @\"" + App.CustomBundleName + "\";");
-				}
-				if (!App.IsDefaultMarshalManagedExceptionMode)
-					sw.WriteLine ("\txamarin_marshal_managed_exception_mode = MarshalManagedExceptionMode{0};", App.MarshalManagedExceptions);
-				sw.WriteLine ("\txamarin_marshal_objectivec_exception_mode = MarshalObjectiveCExceptionMode{0};", App.MarshalObjectiveCExceptions);
-				if (App.DisableLldbAttach.HasValue ? App.DisableLldbAttach.Value : !App.EnableDebug)
-					sw.WriteLine ("\txamarin_disable_lldb_attach = true;");
-				if (App.DisableOmitFramePointer ?? App.EnableDebug)
-					sw.WriteLine ("\txamarin_disable_omit_fp = true;");
-				sw.WriteLine ();
-
-
-				if (App.Registrar == RegistrarMode.Static)
-					sw.WriteLine ("\txamarin_create_classes ();");
-				else if (App.Registrar == RegistrarMode.PartialStatic)
-					sw.WriteLine ("\txamarin_create_classes_Xamarin_Mac ();");
-
-				if (App.EnableDebug)
-					sw.WriteLine ("\txamarin_debug_mode = TRUE;");
-
-				sw.WriteLine ($"\tsetenv (\"MONO_GC_PARAMS\", \"{App.MonoGCParams}\", 1);");
-
-				sw.WriteLine ("\txamarin_supports_dynamic_registration = {0};", App.DynamicRegistrationSupported ? "TRUE" : "FALSE");
-
-				if (App.AOTOptions != null && App.AOTOptions.IsHybridAOT)
-					sw.WriteLine ("\txamarin_mac_hybrid_aot = TRUE;");
-
-				if (IsUnifiedMobile)
-					sw.WriteLine ("\txamarin_mac_modern = TRUE;");
-
-				sw.WriteLine ("\treturn 0;");
-				sw.WriteLine ("}");
-				sw.WriteLine ();
-			}
-
-			return sb.ToString ();
-		}
-
 		static void HandleFramework (IList<string> args, string framework, bool weak)
 		{
 			string name = Path.GetFileName (framework);
@@ -848,7 +791,8 @@ namespace Xamarin.Bundler {
 		{
 			string [] cflags = Array.Empty<string> ();
 
-			string mainSource = GenerateMain ();
+			var main = Path.Combine (App.Cache.Location, "main.m");
+			BuildTarget.GenerateMain (ApplePlatform.MacOSX, Abi.x86_64, main, null);
 			string registrarPath = null;
 
 			CheckSystemMonoVersion ();
@@ -1062,8 +1006,6 @@ namespace Xamarin.Bundler {
 					args.Add (state.SourcePath);
 				}
 
-				var main = Path.Combine (App.Cache.Location, "main.m");
-				File.WriteAllText (main, mainSource);
 				sourceFiles.Add (main);
 				args.AddRange (sourceFiles);
 

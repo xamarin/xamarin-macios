@@ -58,6 +58,9 @@ namespace Xamarin.Tests {
 				var env = new Dictionary<string, string> ();
 				env ["MSBuildSDKsPath"] = null;
 				env ["MSBUILD_EXE_PATH"] = null;
+				// This is a temporary variable to enable the .NET workload resolver, because it's opt-in for now.
+				// Ref: https://github.com/dotnet/sdk/issues/13849
+				env ["MSBuildEnableWorkloadResolver"] = "true";
 				var output = new StringBuilder ();
 				var rv = ExecutionHelper.Execute (Executable, args, env, output, output, workingDirectory: Path.GetDirectoryName (project), timeout: TimeSpan.FromMinutes (10));
 				if (assert_success && rv != 0) {
@@ -97,8 +100,6 @@ namespace Xamarin.Tests {
 						return false;
 
 					// There's a lot of TODOs here, those correspond with missing features in .NET and will be removed as those features are implemented
-
-					case ".nib": // TODO
 					case ".png": // TODO
 					case ".metallib": // TODO
 						return false;
@@ -117,9 +118,7 @@ namespace Xamarin.Tests {
 					var dir = Path.GetDirectoryName (v);
 					var dirext = Path.GetExtension (dir);
 					switch (dirext) {
-					case ".storyboardc": // TODO
 					case ".atlasc": // TODO
-					case ".scnassets": // TODO
 						return false;
 					}
 

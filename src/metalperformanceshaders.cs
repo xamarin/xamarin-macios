@@ -1908,9 +1908,7 @@ namespace MetalPerformanceShaders {
 		MPSMatrixDescriptor Create (nuint rows, nuint columns, nuint rowBytes, MPSDataType dataType);
 
 		[Static]
-		[Introduced (PlatformName.iOS, 10, 0)]
 		[Deprecated (PlatformName.iOS, 11, 0)]
-		[Introduced (PlatformName.TvOS, 10, 0)]
 		[Deprecated (PlatformName.TvOS, 11, 0)]
 		[Unavailable (PlatformName.MacCatalyst)]
 		[Export ("rowBytesFromColumns:dataType:")]
@@ -7251,7 +7249,6 @@ namespace MetalPerformanceShaders {
 		[Export ("reloadWeightsAndBiasesFromDataSource")]
 		void ReloadWeightsAndBiasesFromDataSource ();
 
-		[TV (11,3), Mac (10,13,4), iOS (11,3)]
 		[Export ("reloadWeightsAndBiasesWithCommandBuffer:state:")]
 		void ReloadWeightsAndBiases (IMTLCommandBuffer commandBuffer, MPSCnnConvolutionWeightsAndBiasesState state);
 	}
@@ -7964,7 +7961,6 @@ namespace MetalPerformanceShaders {
 		[NullAllowed, Export ("data", ArgumentSemantic.Retain)]
 		NSData Data { get; }
 
-		[TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[Export ("initWithDevice:neuronDescriptor:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (IMTLDevice device, MPSNNNeuronDescriptor neuronDescriptor);

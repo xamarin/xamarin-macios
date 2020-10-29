@@ -6,10 +6,10 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 
 namespace Xharness.Jenkins.TestTasks {
 	class DotNetTestTask : RunTestTask {
-		public DotNetTestTask (Jenkins jenkins, DotNetBuildTask build_task, IProcessManager processManager)
+		public DotNetTestTask (Jenkins jenkins, MSBuildTask build_task, IProcessManager processManager)
 			: base (jenkins, build_task, processManager)
 		{
-			DotNetBuildTask.SetDotNetEnvironmentVariables (Environment);
+			MSBuildTask.SetDotNetEnvironmentVariables (Environment);
 		}
 
 		public override async Task RunTestAsync ()

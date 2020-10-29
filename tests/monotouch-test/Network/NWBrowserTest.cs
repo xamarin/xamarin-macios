@@ -73,8 +73,6 @@ namespace MonoTouchFixtures.Network {
 		[Test]
 		public void TestStateChangesHandler ()
 		{
-			if (Runtime.Arch == Arch.DEVICE)
-				Assert.Ignore ("This test makes connection assumtions and can crash the device tests.");
 			// In the test we are doing the following:
 			//
 			// 1. Start a browser. At this point, we have no listeners (unless someone is exposing it in the lab)
@@ -85,8 +83,8 @@ namespace MonoTouchFixtures.Network {
 			// 5. The browser is not yet canceled, so it picks up that the service/listener is not longer then and returns it.
 			// 
 			// The test will block until the different events are set by the callbacks that are executed in a diff thread.
-
-			bool firstRun = true;
+			bool didRun = false;
+			bool receivedNotNullChange = false;
 			bool eventsDone = false;
 			bool listeningDone = false;
 			Exception ex = null;
@@ -102,17 +100,9 @@ namespace MonoTouchFixtures.Network {
 						browserReady.Set ();
 				});
 				browser.SetChangesHandler ((oldResult, newResult) => {
-					// first time, listener appears, so we do not have an old result, second time
-					// listener goes, so we do not have a new result
+					didRun = true;
 					try {
-						if (firstRun) {
-							Assert.IsNull (oldResult, "oldResult first run.");
-							Assert.IsNotNull (newResult, "newResult first run");
-							firstRun = false;
-						} else {
-							Assert.IsNotNull (oldResult, "oldResult first run.");
-							Assert.IsNull (newResult, "newResult first run");
-						}
+						receivedNotNullChange = oldResult != null || newResult != null;
 					} catch (Exception e) {
 						ex = e;
 					} finally {
@@ -151,9 +141,11 @@ namespace MonoTouchFixtures.Network {
 			}, () => eventsDone);
 
 			finalEvent.WaitOne (30000);
-			Assert.IsTrue (eventsDone);
-			Assert.IsTrue (listeningDone);
+			Assert.IsTrue (eventsDone, "eventDone");
+			Assert.IsTrue (listeningDone, "listeningDone");
 			Assert.IsNull (ex, "Exception");
+			Assert.IsTrue (didRun, "didRan");
+			Assert.IsTrue (receivedNotNullChange, "receivedNotNullChange");
 			browser.Cancel ();
 		}
 	}

@@ -99,7 +99,7 @@ namespace HomeKit {
 
 		[NoTV]
 		[NoWatch]
-		[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_9_0)]
+		[Availability (Deprecated = Platform.iOS_9_0)]
 		[Export ("identifier", ArgumentSemantic.Copy)]
 		NSUuid Identifier { get; }
 
@@ -123,7 +123,7 @@ namespace HomeKit {
 
 		[NoTV]
 		[NoWatch]
-		[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_9_0)]
+		[Availability (Deprecated = Platform.iOS_9_0)]
 		[Export ("identifiersForBridgedAccessories", ArgumentSemantic.Copy)]
 		NSUuid [] IdentifiersForBridgedAccessories { get; }
 
@@ -720,13 +720,13 @@ namespace HomeKit {
 
 		[NoTV]
 		[NoWatch]
-		[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_9_0)]
+		[Availability (Deprecated = Platform.iOS_9_0)]
 		[Export ("users")]
 		HMUser [] Users { get; }
 
 		[NoTV]
 		[NoWatch]
-		[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_9_0, Message = "Use 'ManageUsers' instead.")]
+		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'ManageUsers' instead.")]
 		[Async]
 		[Export ("addUserWithCompletionHandler:")]
 		void AddUser (Action<HMUser,NSError> completion);

@@ -61,7 +61,11 @@ namespace ARKit {
 		SensorUnavailable = 101,
 		SensorFailed = 102,
 		CameraUnauthorized = 103,
+		MicrophoneUnauthorized = 104,
+		LocationUnauthorized = 105,
 		WorldTrackingFailed = 200,
+		GeoTrackingNotAvailableAtLocation = 201,
+		GeoTrackingFailed = 202,
 		InvalidReferenceImage = 300,
 		InvalidReferenceObject = 301,
 		InvalidWorldMap = 302,
@@ -74,6 +78,7 @@ namespace ARKit {
 		InsufficientFeatures = 400,
 		ObjectMergeFailed = 401,
 		FileIOFailed = 500,
+		RequestFailed = 501,
 	}
 
 	[iOS (11,0)]
@@ -196,7 +201,9 @@ namespace ARKit {
 		PersonSegmentationWithDepth = (1 << 1) | (1 << 0),
 		BodyDetection = 1 << 2,
 		[iOS (14,0)]
-		SceneDepth = (1 << 4),
+		SceneDepth = (1 << 3),
+		[iOS (14,0)]
+		SmoothedSceneDepth = (1 << 4),
 	}
 
 	[iOS (13,0)]
@@ -1605,7 +1612,6 @@ namespace ARKit {
 	[DisableDefaultCtor]
 	interface AREnvironmentProbeAnchor {
 		// Inlined from 'ARAnchorCopying' protocol (we can't have constructors in interfaces)
-		[iOS (12,0)]
 		[Export ("initWithAnchor:")]
 		IntPtr Constructor (ARAnchor anchor);
 
@@ -1679,7 +1685,6 @@ namespace ARKit {
 		[return: NullAllowed]
 		ARReferenceObject Merge (ARReferenceObject @object, [NullAllowed] out NSError error);
 
-		[iOS (12,0)]
 		[Field ("ARReferenceObjectArchiveExtension")]
 		NSString ArchiveExtension { get; }
 	}
@@ -1690,7 +1695,6 @@ namespace ARKit {
 	[DisableDefaultCtor]
 	interface ARObjectAnchor {
 		// Inlined from 'ARAnchorCopying' protocol (we can't have constructors in interfaces)
-		[iOS (12,0)]
 		[Export ("initWithAnchor:")]
 		IntPtr Constructor (ARAnchor anchor);
 
@@ -2233,7 +2237,6 @@ namespace ARKit {
 	[BaseType (typeof (ARAnchor))]
 	interface ARGeoAnchor : ARTrackable {
 		// Inlined from 'ARAnchorCopying' protocol (we can't have constructors in interfaces)
-		[iOS (14,0)]
 		[Export ("initWithAnchor:")]
 		IntPtr Constructor (ARAnchor anchor);
 

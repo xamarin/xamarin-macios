@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-	<!-- Automatically supply project capabilities for IDE use -->
-	<ItemGroup>
-		<ProjectCapability Include="Apple" />
-		<ProjectCapability Include="Mobile" />
-
-		<!-- See https://work.azdo.io/1112733 -->
-		<!-- Conflicts with our targets generator in VS+CPS -->
-		<ProjectCapability Remove="LaunchProfiles" />
-	</ItemGroup>
-
 	<PropertyGroup>
+		<!-- Set to true when using the Microsoft.<platform>.Sdk NuGet. This is used by pre-existing/shared targets to tweak behavior depending on build system -->
+		<_UsingXamarinSdk>true</_UsingXamarinSdk>
+		<!-- This is the location of the Microsoft.<platform>.Sdk NuGet (/usr/local/share/dotnet/sdk/<version>/Sdks/Microsoft.[iOS/tvOS/watchOS/macOS].Sdk) -->
+		<_XamarinSdkRootDirectory>$([MSBuild]::NormalizePath('$(MSBuildThisFileDirectory)', '..'))\</_XamarinSdkRootDirectory>
+
 		<_XamarinTaskAssembly Condition="'$(_PlatformName)' != 'macOS'">$(_XamarinSdkRootDirectory)\tools\msbuild\iOS\Xamarin.iOS.Tasks.dll</_XamarinTaskAssembly>
 		<_XamarinTaskAssembly Condition="'$(_PlatformName)' == 'macOS'">$(_XamarinSdkRootDirectory)\tools\msbuild\macOS\Xamarin.Mac.Tasks.dll</_XamarinTaskAssembly>
 	</PropertyGroup>
+
+	<!-- Version information -->
+	<Import Project="Xamarin.Shared.Sdk.Versions.targets" />
+
+	<!-- This contains the OS versions we support for target platform -->
+	<Import Project="Microsoft.$(_PlatformName).Sdk.SupportedTargetPlatforms.targets" />
 
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CompileNativeCode" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.LinkNativeCode" AssemblyFile="$(_XamarinTaskAssembly)" />
@@ -67,10 +68,34 @@
 		<_ProjectType Condition="'$(_ProjectType)' == '' And '$(_PlatformName)' == 'macOS' And '$(OutputType)' == 'Library'">macOSClassLibrary</_ProjectType>
 	</PropertyGroup>
 
-	<PropertyGroup>
-		<!-- We must run the linker for executable projects and app extension projects. We must set PublishTrimmed before importing Microsoft.NET.Sdk, because it'll be evaluated there. -->
-		<PublishTrimmed Condition="'$(PublishTrimmed)' == '' And ($(_ProjectType.EndsWith ('ExecutableProject')) Or $(_ProjectType.EndsWith ('AppExtensionProject')))">true</PublishTrimmed>
+	<!-- Automatically supply project capabilities for IDE use -->
+	<ItemGroup>
+		<ProjectCapability Include="Apple" />
+		<ProjectCapability Include="Mobile" />
+		
+		<ProjectCapability Include="IOSApplication" Condition="'$(_ProjectType)' == 'iOSExecutableProject'" />
+		<ProjectCapability Include="IOSAppExtension" Condition="'$(_ProjectType)' == 'iOSAppExtensionProject'" />
+		<ProjectCapability Include="IOSBinding" Condition="'$(_ProjectType)' == 'iOSBindingProject'" />
+		<ProjectCapability Include="IOSClassLibrary" Condition="'$(_ProjectType)' == 'iOSClassLibrary'" />
+		<ProjectCapability Include="TvOSApplication" Condition="'$(_ProjectType)' == 'tvOSExecutableProject'" />
+		<ProjectCapability Include="TvOSAppExtension" Condition="'$(_ProjectType)' == 'tvOSAppExtensionProject'" />
+		<ProjectCapability Include="TvOSBinding" Condition="'$(_ProjectType)' == 'tvOSBindingProject'" />
+		<ProjectCapability Include="TvOSClassLibrary" Condition="'$(_ProjectType)' == 'tvOSClassLibrary'" />
+		<ProjectCapability Include="WatchOSApplication" Condition="'$(_ProjectType)' == 'watchOSAppProject'" />
+		<ProjectCapability Include="WatchOSAppExtension" Condition="'$(_ProjectType)' == 'watchOSAppExtensionProject'" />
+		<ProjectCapability Include="WatchOSBinding" Condition="'$(_ProjectType)' == 'watchOSBindingProject'" />
+		<ProjectCapability Include="WatchOSClassLibrary" Condition="'$(_ProjectType)' == 'watchOSClassLibrary'" />
+		<ProjectCapability Include="MacOSApplication" Condition="'$(_ProjectType)' == 'macOSExecutableProject'" />
+		<ProjectCapability Include="MacOSAppExtension" Condition="'$(_ProjectType)' == 'macOSAppExtensionProject'" />
+		<ProjectCapability Include="MacOSBinding" Condition="'$(_ProjectType)' == 'macOSBindingProject'" />
+		<ProjectCapability Include="MacOSClassLibrary" Condition="'$(_ProjectType)' == 'macOSClassLibrary'" />
 
+		<!-- See https://work.azdo.io/1112733 -->
+		<!-- Conflicts with our targets generator in VS+CPS -->
+		<ProjectCapability Remove="LaunchProfiles" />
+	</ItemGroup>
+	
+	<PropertyGroup>
 		<!-- App extensions are self-contained, even though their OutputType=Library -->
 		<SelfContained Condition="'$(SelfContained)' == '' And $(_ProjectType.EndsWith ('AppExtensionProject'))">true</SelfContained>
 
@@ -94,8 +119,6 @@
 		<!-- On the other hand, we want the linker to link away debug support in the actual code unless we're building for Debug -->
 		<DebuggerSupport Condition="'$(DebuggerSupport)' == ''">$(_BundlerDebug)</DebuggerSupport>
 	</PropertyGroup>
-
-	<Import Sdk="Microsoft.NET.Sdk" Project="Sdk.targets" />
 
 	<PropertyGroup>
 		<TargetPlatformSupported Condition=" '$(TargetPlatformIdentifier)' == '$(_PlatformName)' ">true</TargetPlatformSupported>
@@ -258,14 +281,23 @@
 		<ReadItemsFromFile File="$(_LinkerItemsDirectory)/_RegistrarFile.items" Condition="Exists('$(_LinkerItemsDirectory)/_RegistrarFile.items')">
 			<Output TaskParameter="Items" ItemName="_RegistrarFile" />
 		</ReadItemsFromFile>
+
+		<ItemGroup>
+			<_AssembliesToAOT Include="@(ResolvedFileToPublish)" Condition="'%(Extension)' == '.dll' Or '%(Extension)' == '.exe' " />
+		</ItemGroup>
 	</Target>
 
 	<!-- Native code -->
 
 	<Target Name="_ComputeFrameworkVariables" DependsOnTargets="ResolveRuntimePackAssets">
+		<PropertyGroup>
+			<_MonoNugetPackageId Condition="'$(_PlatformName)' != 'macOS'">Microsoft.NETCore.App.Runtime.$(RuntimeIdentifier)</_MonoNugetPackageId>
+			<_MonoNugetPackageId Condition="'$(_PlatformName)' == 'macOS'">Microsoft.NETCore.App.Runtime.Mono.$(RuntimeIdentifier)</_MonoNugetPackageId>
+		</PropertyGroup>
 		<ItemGroup>
 			<!-- Look in the ResolvedFrameworkReference for our Microsoft.* package. This should only find a single package. -->
 			<_XamarinFrameworkReference Include="@(ResolvedFrameworkReference)" Condition="'%(ResolvedFrameworkReference.Identity)' == 'Microsoft.$(_PlatformName)'" />
+			<_MonoFrameworkReference Include="@(ResolvedFrameworkReference)" Condition="'%(ResolvedFrameworkReference.RuntimePackName)' == '$(_MonoNugetPackageId)'" />
 		</ItemGroup>
 		<PropertyGroup>
 			<_XamarinSdkRuntimePackDirectory>%(_XamarinFrameworkReference.RuntimePackPath)</_XamarinSdkRuntimePackDirectory>
@@ -276,6 +308,8 @@
 			<_XamarinRefAssemblyPath>$(_XamarinRefAssemblyDirectory)$(_PlatformAssemblyName).dll</_XamarinRefAssemblyPath>
 
 			<_LibPartialStaticRegistrar>$(_XamarinNativeLibraryDirectory)/Microsoft.$(_PlatformName).registrar.a</_LibPartialStaticRegistrar>
+
+			<_MonoRuntimePackPath>%(_MonoFrameworkReference.RuntimePackPath)/runtimes/$(RuntimeIdentifier)/</_MonoRuntimePackPath>
 		</PropertyGroup>
 	</Target>
 
@@ -290,21 +324,25 @@
 		<PropertyGroup>
 			<_IntermediateNativeLibraryDir>$(IntermediateOutputPath)nativelibraries/</_IntermediateNativeLibraryDir>
 			<_NativeExecutableName>$(_AppBundleName)</_NativeExecutableName>
+			<_NativeExecutablePublishDir Condition="'$(_PlatformName)' != 'macOS'">$(MSBuildProjectDirectory)$(_AppBundlePath)\</_NativeExecutablePublishDir>
+			<_NativeExecutablePublishDir Condition="'$(_PlatformName)' == 'macOS'">$(MSBuildProjectDirectory)$(_AppBundlePath)\Contents\MacOS\</_NativeExecutablePublishDir>
+
+			<_AOTCompiler>$(_MonoRuntimePackPath)native/cross/mono-aot-cross</_AOTCompiler>
+			<_AOTInputDirectory>$(_IntermediateNativeLibraryDir)aot-input/</_AOTInputDirectory>
+			<_AOTOutputDirectory>$(_IntermediateNativeLibraryDir)aot-output/</_AOTOutputDirectory>
 
 			<_LibMonoLinkMode Condition="'$(_LibMonoLinkMode)' == '' And ('$(ComputedPlatform)' != 'iPhone' Or '$(_PlatformName)' == 'macOS')">dylib</_LibMonoLinkMode>
 			<_LibMonoLinkMode Condition="'$(_LibMonoLinkMode)' == ''">static</_LibMonoLinkMode>
 			<_LibMonoExtension Condition="'$(_LibMonoLinkMode)' == 'dylib'">dylib</_LibMonoExtension>
 			<_LibMonoExtension Condition="'$(_LibMonoLinkMode)' == 'static'">a</_LibMonoExtension>
 
-			<_LibXamarinLinkMode Condition="'$(_LibXamarinLinkMode)' == '' And '$(ComputedPlatform)' != 'iPhone'">dylib</_LibXamarinLinkMode>
+			<_LibXamarinLinkMode Condition="'$(_LibXamarinLinkMode)' == '' And '$(ComputedPlatform)' != 'iPhone' And '$(_PlatformName)' != 'macOS'">dylib</_LibXamarinLinkMode>
 			<_LibXamarinLinkMode Condition="'$(_LibXamarinLinkMode)' == ''">static</_LibXamarinLinkMode>
 			<_LibXamarinExtension Condition="'$(_LibXamarinLinkMode)' == 'dylib'">dylib</_LibXamarinExtension>
 			<_LibXamarinExtension Condition="'$(_LibXamarinLinkMode)' == 'static'">a</_LibXamarinExtension>
 			<_LibXamarinName Condition="'$(_LibXamarinName)' == '' And '$(_BundlerDebug)' == 'true'">libxamarin-debug.$(_LibXamarinExtension)</_LibXamarinName>
 			<_LibXamarinName Condition="'$(_LibXamarinName)' == '' And '$(_BundlerDebug)' != 'true'">libxamarin.$(_LibXamarinExtension)</_LibXamarinName>
 
-			<_MonoNugetPackageId Condition="'$(_PlatformName)' != 'macOS'">Microsoft.NETCore.App.Runtime.$(RuntimeIdentifier)</_MonoNugetPackageId>
-			<_MonoNugetPackageId Condition="'$(_PlatformName)' == 'macOS'">Microsoft.NETCore.App.Runtime.Mono.$(RuntimeIdentifier)</_MonoNugetPackageId>
 		</PropertyGroup>
 
 		<ItemGroup>
@@ -317,6 +355,58 @@
 							'%(ResolvedFileToPublish.NuGetPackageId)' == '$(_MonoNugetPackageId)'
 							"
 			/>
+
+			<!-- These are mono libraries whose id needs to be fixed -->
+			<_MonoLibraryFix Include="@(_MonoLibrary)" Condition="'%(_MonoLibrary.Extension)' == '.dylib'">
+				<TargetPath>$(_IntermediateNativeLibraryDir)%(Filename)%(Extension)</TargetPath>
+			</_MonoLibraryFix>
+		</ItemGroup>
+	</Target>
+
+	<!-- App bundle creation tasks -->
+	<Target Name="_AOTCompile"
+			Condition="'$(_SdkIsSimulator)' != 'true' And '$(_PlatformName)' != 'macOS'"
+			DependsOnTargets="_ComputeVariables"
+			Inputs="@(_AssembliesToAOT)"
+			Outputs="@(_AssembliesToAOT -> '$(_AOTOutputDirectory)%(Filename)%(Extension).o')">
+
+		<AOTCompile
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			Assemblies="@(_AssembliesToAOT)"
+			AOTCompilerPath="$(_AOTCompiler)"
+			InputDirectory="$(_AOTInputDirectory)"
+			MinimumOSVersion="$(_MinimumOSVersion)"
+			OutputDirectory="$(_AOTOutputDirectory)"
+			SdkDevPath="$(_SdkDevPath)"
+			TargetArchitectures="$(TargetArchitectures)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+		>
+			<Output TaskParameter="AssemblyFiles" ItemName="_AOTAssemblyFiles" />
+			<Output TaskParameter="AOTData" ItemName="_AOTData" />
+		</AOTCompile>
+
+		<CompileNativeCode
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			CompileInfo="@(_AOTAssemblyFiles)"
+			MinimumOSVersion="$(_MinimumOSVersion)"
+			SdkDevPath="$(_SdkDevPath)"
+			SdkIsSimulator="$(_SdkIsSimulator)"
+			SdkRoot="$(_SdkRoot)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+		>
+			<Output TaskParameter="ObjectFiles" ItemName="_AOTObjectFiles" />
+		</CompileNativeCode>
+
+		<ItemGroup>
+			<!-- Add the AOT-compiled output to the main executable -->
+			<_XamarinMainLibraries Include="@(_AOTObjectFiles)" />
+
+			<!-- copy the aotdata files to the .app -->
+			<ResolvedFileToPublish Include="$(_AOTOutputDirectory)%(_AssembliesToAOT.Filename).aotdata.arm64" >
+				<RelativePath>$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)$(PublishDir),$(_NativeExecutablePublishDir)))\%(_AssembliesToAOT.Filename).aotdata.arm64</RelativePath>
+			</ResolvedFileToPublish>
 		</ItemGroup>
 	</Target>
 
@@ -349,7 +439,7 @@
 	</Target>
 
 	<Target Name="_CompileNativeExecutable"
-		DependsOnTargets="_DetectSdkLocations;_ComputeTargetArchitectures;_GenerateBundleName;_GetMinimumOSVersion;_ComputeNativeExecutableInputs"
+		DependsOnTargets="_DetectSdkLocations;_ComputeTargetArchitectures;_GenerateBundleName;_GetMinimumOSVersion;_ComputeNativeExecutableInputs;_AOTCompile;"
 		Inputs="@(_CompileNativeExecutableFile)"
 		Outputs="@(_CompileNativeExecutableFile -> '%(OutputFile)')"
 		>
@@ -380,16 +470,36 @@
 
 	This doesn't work after linking with these libraries, so this must be fixed to be @executable_path/. Eventually mono will ship dylibs we don't have to fix (https://github.com/dotnet/runtime/issues/34637).
 	-->
-	<Target Name="_UpdateDynamicLibraryId" DependsOnTargets="_ComputeVariables" Inputs="@(_MonoLibrary)" Outputs="@(_MonoLibrary -> '$(_IntermediateNativeLibraryDir)%(Filename)%(Extension)')">
+	<Target
+		Name="_UpdateDynamicLibraryId"
+		DependsOnTargets="_ComputeVariables;_ParseBundlerArguments"
+		Inputs="@(_MonoLibraryFix)"
+		Outputs="@(_MonoLibraryFix.TargetPath)"
+		Condition=" '$(_PlatformName)' != 'macOS'">
+
+		<PropertyGroup>
+			<_ExecutablePathPrefix Condition="'$(_PlatformName)' != 'macOS'">@executable_path/</_ExecutablePathPrefix>
+			<_ExecutablePathPrefix Condition="'$(_PlatformName)' == 'macOS'">@executable_path/../$(_CustomBundleName)/</_ExecutablePathPrefix>
+		</PropertyGroup>
+
 		<!-- install_name_tool modifies the file in-place, so copy it first to a temporary directory before we fix it -->
-		<Copy SourceFiles="%(_MonoLibrary.FullPath)" DestinationFolder="$(_IntermediateNativeLibraryDir)" />
-		<Exec Command="xcrun install_name_tool -id @executable_path/%(_MonoLibrary.Filename)%(_MonoLibrary.Extension) $(_IntermediateNativeLibraryDir)%(_MonoLibrary.Filename)%(_MonoLibrary.Extension)" EnvironmentVariables="DEVELOPER_DIR=$(_SdkDevPath)" />
+		<Copy
+			Condition="'$(IsMacEnabled)' == 'true'"
+			SourceFiles="%(_MonoLibraryFix.FullPath)"
+			DestinationFolder="$(_IntermediateNativeLibraryDir)"
+		/>
+		<Exec
+			Condition="'$(IsMacEnabled)' == 'true'"
+			Command="xcrun install_name_tool -id $(_ExecutablePathPrefix)%(_MonoLibraryFix.Filename)%(_MonoLibraryFix.Extension) %(_MonoLibraryFix.TargetPath)"
+			EnvironmentVariables="DEVELOPER_DIR=$(_SdkDevPath)"
+		/>
+
 		<!-- Update our item groups -->
-		<ItemGroup>
-			<_MonoLibraryFixed Include="@(_MonoLibrary -> '$(_IntermediateNativeLibraryDir)%(Filename)%(Extension)')" />
-			<ResolvedFileToPublish Remove="@(_MonoLibrary)" />
+		<ItemGroup Condition="'$(IsMacEnabled)' == 'true'">
+			<_MonoLibraryFixed Include="@(_MonoLibraryFix -> '%(TargetPath)')" />
+			<ResolvedFileToPublish Remove="@(_MonoLibraryFix)" />
 			<ResolvedFileToPublish Include="@(_MonoLibraryFixed)" />
-			<_MonoLibrary Remove="@(_MonoLibrary)" />
+			<_MonoLibrary Remove="@(_MonoLibraryFix)" />
 			<_MonoLibrary Include="@(_MonoLibraryFixed)" />
 		</ItemGroup>
 	</Target>
@@ -400,19 +510,32 @@
 			Outputs="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName)"
 		>
 
+		<PropertyGroup>
+			<_DylibRPath Condition="'$(_PlatformName)' != 'macOS'">@executable_path</_DylibRPath>
+			<_DylibRPath Condition="'$(_PlatformName)' == 'macOS'">@executable_path/../$(_CustomBundleName)/</_DylibRPath>
+		</PropertyGroup>
+
 		<ItemGroup>
 			<_XamarinMainLibraries Include="$(_XamarinNativeLibraryDirectory)/$(_LibXamarinName)" />
 			<!-- Link with the libraries shipped with the mono runtime pack -->
 			<_XamarinMainLibraries Include="@(_MonoLibrary)" />
 			<!-- The frameworks we need to link with (both weakly and normally) -->
 			<_NativeExecutableFrameworks Include="@(_LinkerFrameworks)" />
+
+			<!-- CFNetwork is required by xamarin_start_wwan -->
+			<_NativeExecutableFrameworks Include="CFNetwork" Condition="'$(_PlatformName)' == 'iOS'" />
+
+			<!-- Mono requires zlib and iconv -->
+			<_MainLinkerFlags Include="-lz" />
+			<_MainLinkerFlags Include="-liconv" />
 		</ItemGroup>
 
 		<LinkNativeCode
 			SessionId="$(BuildSessionId)"
+			DylibRPath="$(_DylibRPath)"
 			EntitlementsInExecutable="$(_CompiledEntitlements)"
 			Frameworks="@(_NativeExecutableFrameworks);@(_BindingLibraryFrameworks)"
-			LinkerFlags="@(_BindingLibraryLinkerFlags)"
+			LinkerFlags="@(_BindingLibraryLinkerFlags);@(_MainLinkerFlags)"
 			LinkWithLibraries="@(_XamarinMainLibraries);@(_BindingLibraryLinkWith);@(_MainLinkWith)"
 			MinimumOSVersion="$(_MinimumOSVersion)"
 			ObjectFiles="@(_NativeExecutableObjectFiles)"
@@ -420,6 +543,7 @@
 			SdkDevPath="$(_SdkDevPath)"
 			SdkIsSimulator="$(_SdkIsSimulator)"
 			SdkRoot="$(_SdkRoot)"
+			TargetArchitectures="$(TargetArchitectures)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 		/>
 
@@ -427,7 +551,7 @@
 			<!-- Copy the executable from the intermediate directory to the .app -->
 			<ResolvedFileToPublish
 				Include="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName)"
-				RelativePath="$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)$(PublishDir),$(MSBuildProjectDirectory)$(_AppBundlePath)))\$(_NativeExecutableName)"/>
+				RelativePath="$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)$(PublishDir),$(_NativeExecutablePublishDir)))\$(_NativeExecutableName)"/>
 		</ItemGroup>
 	</Target>
 
@@ -445,13 +569,13 @@
 		</_ComputeLinkModeDependsOn>
 	</PropertyGroup>
 
-	<Target Name="_ComputePublishLocation" DependsOnTargets="_GenerateBundleName">
+	<Target Name="_ComputePublishLocation" DependsOnTargets="_GenerateBundleName;_ParseBundlerArguments">
 		<!-- Put .dll, .pdb, .exe and .dylib in the .app -->
 		<PropertyGroup>
 			<_AssemblyPublishDir Condition="'$(_PlatformName)' != 'macOS'">$(MSBuildProjectDirectory)$(_AppBundlePath)\</_AssemblyPublishDir>
-			<_AssemblyPublishDir Condition="'$(_PlatformName)' == 'macOS'">$(MSBuildProjectDirectory)$(_AppBundlePath)\Contents\MonoBundle\</_AssemblyPublishDir>
+			<_AssemblyPublishDir Condition="'$(_PlatformName)' == 'macOS'">$(MSBuildProjectDirectory)$(_AppBundlePath)\Contents\$(_CustomBundleName)\</_AssemblyPublishDir>
 			<_DylibPublishDir Condition="'$(_PlatformName)' != 'macOS'">$(MSBuildProjectDirectory)$(_AppBundlePath)\</_DylibPublishDir>
-			<_DylibPublishDir Condition="'$(_PlatformName)' == 'macOS'">$(MSBuildProjectDirectory)$(_AppBundlePath)\Contents\MonoBundle\</_DylibPublishDir>
+			<_DylibPublishDir Condition="'$(_PlatformName)' == 'macOS'">$(MSBuildProjectDirectory)$(_AppBundlePath)\Contents\$(_CustomBundleName)\</_DylibPublishDir>
 		</PropertyGroup>
 		<ItemGroup>
 			<ResolvedFileToPublish
@@ -469,6 +593,67 @@
 				Condition="'%(Extension)' == '.dylib'" />
 		</ItemGroup>
 	</Target>
+
+	<!-- Install & Run -->
+
+	<PropertyGroup>
+		<_MlaunchPath Condition="'$(_MlaunchPath)' == ''">$(_XamarinSdkRootDirectory)tools\bin\mlaunch</_MlaunchPath>
+	</PropertyGroup>
+
+	<Target Name="_InstallMobile" DependsOnTargets="_DetectSdkLocations;_GenerateBundleName" Condition="'$(_SdkIsSimulator)' == 'false'">
+		<GetMlaunchArguments
+			SessionId="$(BuildSessionId)"
+			AppBundlePath="$(_AppBundlePath)"
+			AppManifestPath="$(_AppBundlePath)$(_AppBundleManifestRelativePath)Info.plist"
+			DeviceName="$(_DeviceName)"
+			InstallApp="$(_AppBundlePath)"
+			MlaunchPath="$(_MlaunchPath)"
+			SdkDevPath="$(_SdkDevPath)"
+			SdkIsSimulator="$(_SdkIsSimulator)"
+			SdkVersion="$(_SdkVersion)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+		>
+			<Output TaskParameter="MlaunchArguments" PropertyName="_MlaunchInstallArguments" />
+		</GetMlaunchArguments>
+
+		<Exec Command="$(_MlaunchPath) $(_MlaunchInstallArguments)" />
+	</Target>
+
+	<Target Name="_PrepareRunMobile" DependsOnTargets="_DetectSdkLocations;_GenerateBundleName;_InstallMobile" >
+		<PropertyGroup>
+			<!-- capture output by default -->
+			<_MlaunchCaptureOutput Condition="'$(_MlaunchCaptureOutput)' == ''">true</_MlaunchCaptureOutput>
+			<!-- wait for exit by default -->
+			<_MlaunchWaitForExit Condition="'$(_MlaunchWaitForExit)' == ''">true</_MlaunchWaitForExit>
+			<!-- don't set standard output/error path, mlaunch will by default write to stdout/stderr -->
+		</PropertyGroup>
+		<GetMlaunchArguments
+			SessionId="$(BuildSessionId)"
+			AppBundlePath="$(_AppBundlePath)"
+			AppManifestPath="$(_AppBundlePath)$(_AppBundleManifestRelativePath)Info.plist"
+			CaptureOutput="$(_MlaunchCaptureOutput)"
+			DeviceName="$(_DeviceName)"
+			LaunchApp="$(_AppBundlePath)"
+			MlaunchPath="$(_MlaunchPath)"
+			SdkIsSimulator="$(_SdkIsSimulator)"
+			SdkDevPath="$(_SdkDevPath)"
+			SdkVersion="$(_SdkVersion)"
+			StandardErrorPath="$(_MlaunchStandardErrorPath)"
+			StandardOutputPath="$(_MlaunchStandardOutputPath)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+			WaitForExit="$(_MlaunchWaitForExit)"
+		>
+			<Output TaskParameter="MlaunchArguments" PropertyName="_MlaunchRunArguments" />
+		</GetMlaunchArguments>
+
+		<PropertyGroup>
+			<RunCommand>$(_MlaunchPath)</RunCommand>
+			<RunArguments>$(_MlaunchRunArguments)</RunArguments>
+		</PropertyGroup>
+	</Target>
+
+	<!-- This is only needed for mobile platforms, RunCommand and RunArguments are defined for macOS in Microsoft.macOS.Sdk.targets. -->
+	<Target Name="_PrepareRun" DependsOnTargets="_PrepareRunMobile" BeforeTargets="Run" Condition="'$(_PlatformName)' != 'macOS'" />
 
 	<!-- Import existing targets -->
 
@@ -496,4 +681,9 @@
 	<Import Project="$(_TargetsDirectory)Xamarin.Mac.$(_ProjectLanguage).targets"                  Condition="'$(_ProjectType)' == 'macOSExecutableProject' Or '$(_ProjectType)' == 'macOSClassLibrary' " />
 	<Import Project="$(_TargetsDirectory)Xamarin.Mac.AppExtension.$(_ProjectLanguage).targets"     Condition="'$(_ProjectType)' == 'macOSAppExtensionProject' " />
 	<Import Project="$(_TargetsDirectory)Xamarin.Mac.ObjCBinding.$(_ProjectLanguage).targets"      Condition="'$(_ProjectType)' == 'macOSBindingProject' " />
+
+	<PropertyGroup>
+		<!-- PublishTrimmed depends on IsMacEnabled, which is defined in the Xamarin.iOS/Xamarin.Mac targets files we import just above here -->
+		<PublishTrimmed Condition="'$(PublishTrimmed)' == '' And ($(_ProjectType.EndsWith ('ExecutableProject')) Or $(_ProjectType.EndsWith ('AppExtensionProject'))) And '$(IsMacEnabled)' == 'true'">true</PublishTrimmed>
+	</PropertyGroup>
 </Project>

@@ -116,6 +116,30 @@ namespace Samples {
 			return info;
 		}
 
+		public static Dictionary<string, string> GetEnvironmentVariables (TestPlatform platform)
+		{
+			var environment_variables = new Dictionary<string, string> ();
+			environment_variables ["MD_APPLE_SDK_ROOT"] = Path.GetDirectoryName (Path.GetDirectoryName (Configuration.XcodeLocation));
+			switch (platform) {
+			case TestPlatform.iOS:
+			case TestPlatform.tvOS:
+			case TestPlatform.watchOS:
+				environment_variables ["MD_MTOUCH_SDK_ROOT"] = Path.Combine (Configuration.IOS_DESTDIR, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current");
+				environment_variables ["TargetFrameworkFallbackSearchPaths"] = Path.Combine (Configuration.IOS_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild-frameworks");
+				environment_variables ["MSBuildExtensionsPathFallbackPathsOverride"] = Path.Combine (Configuration.IOS_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild");
+				break;
+			case TestPlatform.macOS:
+				environment_variables ["TargetFrameworkFallbackSearchPaths"] = Path.Combine (Configuration.MAC_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild-frameworks");
+				environment_variables ["MSBuildExtensionsPathFallbackPathsOverride"] = Path.Combine (Configuration.MAC_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild");
+				environment_variables ["XamarinMacFrameworkRoot"] = Path.Combine (Configuration.MAC_DESTDIR, "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current");
+				environment_variables ["XAMMAC_FRAMEWORK_PATH"] = Path.Combine (Configuration.MAC_DESTDIR, "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current");
+				break;
+			default:
+				throw new NotImplementedException (platform.ToString ());
+			}
+			return environment_variables;
+		}
+
 		[Test]
 		public void BuildSample ([ValueSource ("GetSampleData")] SampleTestData sampleTestData)
 		{
@@ -124,21 +148,22 @@ namespace Samples {
 				if (!string.IsNullOrEmpty (data.KnownFailure))
 					Assert.Ignore (data.KnownFailure);
 
-				var environment_variables = new Dictionary<string, string> ();
-				environment_variables ["MD_APPLE_SDK_ROOT"] = Path.GetDirectoryName (Path.GetDirectoryName (Configuration.XcodeLocation));
 				switch (data.Project.Platform) {
 				case TestPlatform.iOS:
+					if (!Configuration.include_ios)
+						Assert.Ignore ("iOS support has been disabled.");
+					break;
 				case TestPlatform.tvOS:
+					if (!Configuration.include_tvos)
+						Assert.Ignore ("tvOS support has been disabled");
+					break;
 				case TestPlatform.watchOS:
-					environment_variables ["MD_MTOUCH_SDK_ROOT"] = Path.Combine (Configuration.IOS_DESTDIR, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current");
-					environment_variables ["TargetFrameworkFallbackSearchPaths"] = Path.Combine (Configuration.IOS_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild-frameworks");
-					environment_variables ["MSBuildExtensionsPathFallbackPathsOverride"] = Path.Combine (Configuration.IOS_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild");
+					if (!Configuration.include_watchos)
+						Assert.Ignore ("watchOS support has been disabled");
 					break;
 				case TestPlatform.macOS:
-					environment_variables ["TargetFrameworkFallbackSearchPaths"] = Path.Combine (Configuration.MAC_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild-frameworks");
-					environment_variables ["MSBuildExtensionsPathFallbackPathsOverride"] = Path.Combine (Configuration.MAC_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild");
-					environment_variables ["XamarinMacFrameworkRoot"] = Path.Combine (Configuration.MAC_DESTDIR, "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current");
-					environment_variables ["XAMMAC_FRAMEWORK_PATH"] = Path.Combine (Configuration.MAC_DESTDIR, "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current");
+					if (!Configuration.include_mac)
+						Assert.Ignore ("macOS support has been disabled");
 					break;
 				default:
 					throw new NotImplementedException (sampleTestData.Platform.ToString ());
@@ -174,7 +199,7 @@ namespace Samples {
 					File.WriteAllLines (sln_path, filtered_sln);
 				}
 
-				ProcessHelper.BuildSolution (file_to_build, sampleTestData.Platform, sampleTestData.Configuration, environment_variables, sampleTestData.Timeout, target, data.CodesignKey);
+				ProcessHelper.BuildSolution (file_to_build, sampleTestData.Platform, sampleTestData.Configuration, GetEnvironmentVariables (data.Project.Platform), sampleTestData.Timeout, target, data.CodesignKey);
 				Console.WriteLine ("✅ {0} succeeded.", TestContext.CurrentContext.Test.FullName);
 			} catch (Exception e) {
 				Console.WriteLine ("❌ {0} failed: {1}", TestContext.CurrentContext.Test.FullName, e.Message);
@@ -287,7 +312,7 @@ namespace Samples {
 		{
 			var sln = Path.Combine (Configuration.SourceRoot, "tests", "sampletester", "BaselineTest", "BaselineTest.sln");
 			GitHub.CleanRepository (Path.GetDirectoryName (sln));
-			ProcessHelper.BuildSolution (sln, "iPhone", "Debug", new Dictionary<string, string> (), SampleTester.DefaultTimeout);
+			ProcessHelper.BuildSolution (sln, "iPhone", "Debug", SampleTester.GetEnvironmentVariables (TestPlatform.iOS), SampleTester.DefaultTimeout);
 		}
 
 	}

@@ -4,6 +4,8 @@ using System.IO;
 
 using Microsoft.Build.Framework;
 
+using Xamarin.Localization.MSBuild;
+
 namespace Xamarin.MacDev.Tasks {
 	public abstract class LinkNativeCodeTaskBase : XamarinTask {
 
@@ -34,13 +36,35 @@ namespace Xamarin.MacDev.Tasks {
 		public string MinimumOSVersion { get; set; }
 
 		public ITaskItem[] Frameworks { get; set; }
+
+		public string DylibRPath { get; set; }
+
+		[Required]
+		public string TargetArchitectures { get; set; }
+
+		TargetArchitecture architectures;
 #endregion
 
 		public override bool Execute ()
 		{
+			if (!Enum.TryParse (TargetArchitectures, out architectures)) {
+				Log.LogError (12, null, MSBStrings.E0012, TargetArchitectures);
+				return false;
+			}
+
+			var abis = architectures.ToArray ();
+			if (abis.Count != 1) {
+				Log.LogError (7070, null, MSBStrings.E7070, /* Invalid architecture ({0}): can't link more than one architecture at a time. */ TargetArchitectures);
+				return false;
+			}
+			var abi = abis [0].ToNativeArchitecture ();
+
 			var arguments = new List<string> ();
 			arguments.Add ("clang");
 
+			arguments.Add ("-arch");
+			arguments.Add (abi);
+			
 			arguments.Add (PlatformFrameworkHelper.GetMinimumVersionArgument (TargetFrameworkMoniker, SdkIsSimulator, MinimumOSVersion));
 
 			arguments.Add ("-isysroot");
@@ -53,6 +77,7 @@ namespace Xamarin.MacDev.Tasks {
 					var libExtension = Path.GetExtension (lib).ToLowerInvariant ();
 					switch (libExtension) {
 					case ".a":
+					case ".o":
 						var forceLoad = string.Equals (libSpec.GetMetadata ("ForceLoad"), "true", StringComparison.OrdinalIgnoreCase);
 						if (forceLoad)
 							arguments.Add ("-force_load");
@@ -80,7 +105,7 @@ namespace Xamarin.MacDev.Tasks {
 
 			if (hasDylibs) {
 				arguments.Add ("-rpath");
-				arguments.Add ("@executable_path");
+				arguments.Add (DylibRPath ?? "@executable_path");
 			}
 
 			if (Frameworks != null) {

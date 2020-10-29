@@ -77,11 +77,10 @@ namespace JavaScriptCore {
 		#endregion
 
 		/* C API Bridging functions */
-		[Mac (10,9), iOS (7,0)]
+
 		[Static, Export ("contextWithJSGlobalContextRef:")]
 		JSContext FromJSGlobalContextRef (IntPtr nativeJsGlobalContextRef);
 
-		[Mac (10,9), iOS (7,0)]
 		[Export ("JSGlobalContextRef")]
 		IntPtr JSGlobalContextRefPtr { get; }
 	}
@@ -295,7 +294,6 @@ namespace JavaScriptCore {
 
 		#endregion
 
-		[Mac (10,9), iOS (7,0)]
 		[Static, Export ("valueWithJSValueRef:inContext:")]
 		JSValue FromJSJSValueRef (IntPtr nativeJsValueRefvalue, JSContext context);
 

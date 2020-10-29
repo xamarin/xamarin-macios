@@ -82,6 +82,10 @@ namespace Xharness.Jenkins {
 			"msbuild",
 			".*dotnet.*",
 		};
+		static readonly string [] msbuildFilenames = {
+			"msbuild",
+			"tests/msbuild",
+		};
 
 		#endregion
 
@@ -176,6 +180,7 @@ namespace Xharness.Jenkins {
 			SetEnabled (files, xtroPrefixes, "xtro", ref jenkins.IncludeXtro);
 			SetEnabled (files, cecilPrefixes, "cecil", ref jenkins.IncludeCecil);
 			SetEnabled (files, dotnetFilenames, "dotnet", ref jenkins.IncludeDotNet);
+			SetEnabled (files, msbuildFilenames, "ios-msbuild", ref jenkins.IncludeiOSMSBuild);
 		}
 
 		void SelectTestsByLabel (int pullRequest)

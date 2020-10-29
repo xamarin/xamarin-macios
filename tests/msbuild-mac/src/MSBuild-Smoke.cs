@@ -189,7 +189,7 @@ namespace Xamarin.MMP.Tests
 		[Test]
 		public void MyCocoaSceneKitApp ()
 		{
-			var projectPath = Path.Combine (TI.FindSourceDirectory (), "TestProjects", "MyCocoaSceneKitApp", "MyCocoaSceneKitApp.csproj");
+			var projectPath = Path.Combine (Configuration.TestProjectsDirectory, "MyCocoaSceneKitApp", "MyCocoaSceneKitApp.csproj");
 			// Clone the project directory to a temporary directory
 			var testDirectory = Configuration.CloneTestDirectory (Path.GetDirectoryName (projectPath), "macOS");
 			// Update the project path to the clone project path in the temporary directory
@@ -201,5 +201,43 @@ namespace Xamarin.MMP.Tests
 			Assert.That (Path.Combine (resourceDir, "art.scnassets", "scene.scn"), Does.Exist, "scene.scn");
 			Assert.That (Path.Combine (resourceDir, "art.scnassets", "texture.png"), Does.Exist, "texture.png");
 		}
+
+		[Test]
+		public void MyCocoaCoreMLApp ()
+		{
+			var projectPath = Path.Combine (Configuration.TestProjectsDirectory, "MyCocoaCoreMLApp", "MyCocoaCoreMLApp.csproj");
+			// Clone the project directory to a temporary directory
+			var testDirectory = Configuration.CloneTestDirectory (Path.GetDirectoryName (projectPath), "macOS");
+			// Update the project path to the clone project path in the temporary directory
+			projectPath = Path.Combine (testDirectory, Path.GetFileName (projectPath));
+			// build the project
+			TI.BuildProject (projectPath);
+			// verify that the scene kit assets are present in the app
+			var resourceDir = Path.Combine (testDirectory, "bin", "Debug", "MyCocoaCoreMLApp.app", "Contents", "Resources");
+			AssertCompiledModelExists (resourceDir, "SqueezeNet");
+		}
+
+		void AssertCompiledModelExists (string appBundlePath, string modelName)
+		{
+			var expected = new string [] { "coremldata.bin", "model.espresso.net", "model.espresso.shape", "model.espresso.weights", "model/coremldata.bin", "neural_network_optionals/coremldata.bin" };
+			var mlmodelc = Path.Combine (appBundlePath, modelName + ".mlmodelc");
+
+			Assert.IsTrue (Directory.Exists (mlmodelc), "mlmodelc existence");
+
+			var files = new HashSet<string> (Directory.EnumerateFiles (mlmodelc, "*.*", SearchOption.AllDirectories));
+
+			foreach (var name in expected)
+				Assert.IsTrue (files.Contains (Path.Combine (mlmodelc, name)), "{0} not found", name);
+
+			var expected_length = expected.Length;
+			if (Configuration.XcodeVersion.Major >= 12) {
+				Assert.IsTrue (files.Contains (Path.Combine (mlmodelc, "metadata.json")), " metadata.json not found");
+				expected_length++;
+				Assert.IsTrue (files.Contains (Path.Combine (mlmodelc, "analytics", "coremldata.bin")), "analytics/coremldata.bin not found");
+				expected_length++;
+			}
+			Assert.AreEqual (expected_length, files.Count, "File count");
+		}
+
 	}
 }

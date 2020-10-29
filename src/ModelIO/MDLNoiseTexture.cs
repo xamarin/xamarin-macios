@@ -11,7 +11,7 @@ namespace ModelIO {
 	}
 
 	public partial class MDLNoiseTexture {
-		[iOS (9,0), Mac (10,11)]
+
 		public MDLNoiseTexture (float input, string name, Vector2i textureDimensions, MDLTextureChannelEncoding channelEncoding) : this (input, name, textureDimensions, channelEncoding, MDLNoiseTextureType.Vector)
 		{
 		}

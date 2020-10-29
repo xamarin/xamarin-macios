@@ -294,12 +294,13 @@ update_environment (xamarin_initialize_data *data)
 	NSString *monobundle_dir;
 
 	if (data->launch_mode == XamarinLaunchModeEmbedded) {
-		monobundle_dir = [data->app_dir stringByAppendingPathComponent: @"Versions/Current/MonoBundle"];
+		monobundle_dir = [data->app_dir stringByAppendingPathComponent: @"Versions/Current"];
 		res_dir = [data->app_dir stringByAppendingPathComponent: @"Versions/Current/Resources"];
 	} else {
-		monobundle_dir = [data->app_dir stringByAppendingPathComponent: @"Contents/MonoBundle"];
+		monobundle_dir = [data->app_dir stringByAppendingPathComponent: @"Contents"];
 		res_dir = [data->app_dir stringByAppendingPathComponent: @"Contents/Resources"];
 	}
+	monobundle_dir = [monobundle_dir stringByAppendingPathComponent: xamarin_custom_bundle_name == NULL ? @"MonoBundle" : xamarin_custom_bundle_name];
 
 #ifdef DYNAMIC_MONO_RUNTIME
 	NSString *bin_dir = [data->app_dir stringByAppendingPathComponent: @"Contents/MacOS"];
@@ -314,10 +315,11 @@ update_environment (xamarin_initialize_data *data)
 	push_env ("PKG_CONFIG_PATH", [res_dir stringByAppendingPathComponent: @"/lib/pkgconfig"]);
 	push_env ("PKG_CONFIG_PATH", [res_dir stringByAppendingPathComponent: @"/share/pkgconfig"]);
 	
-	
 	push_env ("MONO_GAC_PREFIX", res_dir);
 	push_env ("PATH", bin_dir);
-	
+
+	push_env ("MONO_PATH", monobundle_dir);
+
 	data->requires_relaunch = true;
 #else
 	// disable /dev/shm since Apple refuse applications that uses it in the Mac App Store
@@ -450,10 +452,17 @@ app_initialize (xamarin_initialize_data *data)
 	if (data->launch_mode == XamarinLaunchModeApp) {
 		NSString *exeName = NULL;
 		NSString *exePath;
-		if (plist != NULL)
-			exeName = (NSString *) [plist objectForKey:@"MonoBundleExecutable"];
-		else
-			fprintf (stderr, PRODUCT ": Could not find Info.plist in the bundle.\n");
+
+		if (xamarin_executable_name != NULL) {
+			exeName = [NSString stringWithUTF8String: xamarin_executable_name];
+		}
+
+		if (exeName == NULL) {
+			if (plist != NULL)
+				exeName = (NSString *) [plist objectForKey:@"MonoBundleExecutable"];
+			else
+				fprintf (stderr, PRODUCT ": Could not find Info.plist in the bundle.\n");
+		}
 
 		if (exeName == NULL)
 			exeName = [[NSString stringWithUTF8String: data->basename] stringByAppendingString: @".exe"];

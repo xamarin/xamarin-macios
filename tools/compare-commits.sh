@@ -243,6 +243,7 @@ find build build-new '(' \
 	-name 'Constants.cs' -or \
 	-name 'generator.csproj*' -or \
 	-name 'bgen.csproj.*' -or \
+	-name 'PublishOutputs.*.txt' -or \
 	-name '*.cache' \
 	')' -delete
 mkdir -p "$OUTPUT_DIR/generator-diff"

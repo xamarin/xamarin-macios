@@ -243,15 +243,15 @@ namespace Network {
 			nw_listener_set_advertise_descriptor (GetCheckedHandle (), descriptor.GetHandle ());
 		}
 
-		[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+		[TV (13,0), Mac (10,15), iOS (13,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern uint nw_listener_get_new_connection_limit (IntPtr listener);
 
-		[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+		[TV (13,0), Mac (10,15), iOS (13,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_listener_set_new_connection_limit (IntPtr listener, uint new_connection_limit);
 
-		[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+		[TV (13,0), Mac (10,15), iOS (13,0)]
 		public uint ConnectionLimit {
 			get => nw_listener_get_new_connection_limit (GetCheckedHandle ());
 			set => nw_listener_set_new_connection_limit (GetCheckedHandle (), value);

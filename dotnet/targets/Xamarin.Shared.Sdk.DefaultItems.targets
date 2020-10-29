@@ -18,13 +18,6 @@
     <EnableDefaultCompileItems Condition=" '$(IsBindingProject)' == 'true' ">false</EnableDefaultCompileItems>
   </PropertyGroup>
 
-  <!-- Default plist file inclusion -->
-  <ItemGroup Condition="'$(_EnableDefaultXamarinItems)' == 'true' ">
-    <None Include="*.plist">
-      <Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
-    </None>
-  </ItemGroup>
-
   <!-- Architecture -->
   <!-- If the old-style variables are set, use those -->
   <PropertyGroup Condition=" '$(TargetArchitectures)' == '' ">
