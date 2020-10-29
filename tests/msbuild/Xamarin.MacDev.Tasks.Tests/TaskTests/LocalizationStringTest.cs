@@ -86,7 +86,7 @@ namespace Xamarin.iOS.Tasks {
 			return (string) propertyInfo.GetValue (null, null);
 		}
 
-		List<string> commonIgnoreList { get; set; } = null;
+		List<string> commonIgnoreList = null;
 
 		[SetUp]
 		public void SetUp ()
@@ -144,8 +144,8 @@ namespace Xamarin.iOS.Tasks {
 			}
 
 			Assert.AreEqual (string.Empty, errorList, $"The following errors were not translated. Add them to {shortCommonPath} or {shortCulturePath}");
-			Assert.IsEmpty (cultureIgnoreList.Except (cultureValidEntries), $"Not all error codes in {shortCulturePath} are valid. Please remove invalid codes");
-			Assert.IsEmpty (commonIgnoreList.Except (commonValidEntries), $"Not all error codes in {shortCommonPath} are valid. Please remove invalid codes");
+			Assert.IsEmpty (cultureIgnoreList.Except (cultureValidEntries), $"Not all error codes in {shortCulturePath} are valid or are repeated. Please remove.");
+			Assert.IsEmpty (commonIgnoreList.Except (commonValidEntries), $"Not all error codes in {shortCommonPath} are valid or are repeated. Please remove.");
 		}
 
 		IList<string> ReadFile (string path)
