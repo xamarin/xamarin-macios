@@ -36,17 +36,20 @@ namespace Xharness.Jenkins.TestTasks {
 
 		public static string GetTestColor (this ITestTask test)
 		{
-			if (test.NotStarted) return "black";
-			else if (test.InProgress) {
-				if (test.Building) return "darkblue";
-				else if (test.Running) {
+			if (test.NotStarted) {
+				return "black";
+			} else if (test.InProgress) {
+				if (test.Building) {
+					return "darkblue";
+				} else if (test.Running) {
 					return "lightblue";
 				} else {
 					return "blue";
 				}
 			} else {
-				if (test.Crashed) return "maroon";
-				else if (test.HarnessException) {
+				if (test.Crashed) {
+					return "maroon";
+				} else if (test.HarnessException) {
 					return "orange";
 				} else if (test.TimedOut) {
 					return "purple";

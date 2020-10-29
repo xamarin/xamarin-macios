@@ -61,8 +61,9 @@ namespace Xharness.Jenkins.TestTasks {
 			testTask.ExecutionResult = TestExecutingResult.Building;
 			await BuildTask.RunAsync ();
 			if (!BuildTask.Succeeded) {
-				if (BuildTask.TimedOut) testTask.ExecutionResult = TestExecutingResult.TimedOut;
-				else {
+				if (BuildTask.TimedOut) {
+					testTask.ExecutionResult = TestExecutingResult.TimedOut;
+				} else {
 					testTask.ExecutionResult = TestExecutingResult.BuildFailure;
 				}
 				testTask.FailureMessage = BuildTask.FailureMessage;

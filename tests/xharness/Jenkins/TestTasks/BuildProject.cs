@@ -113,7 +113,9 @@ namespace Xharness.Jenkins.TestTasks {
 				var references = GetNestedReferenceProjects (TestProject.Path);
 				foreach (var referenceProject in references) {
 					var execResult = await RestoreNugetsAsync (referenceProject, log); // do the replace in case we use win paths
-					if (execResult == TestExecutingResult.TimedOut) return execResult;
+					if (execResult == TestExecutingResult.TimedOut) {
+						return execResult;
+					}
 				}
 			}
 

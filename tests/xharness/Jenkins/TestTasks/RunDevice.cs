@@ -29,7 +29,7 @@ namespace Xharness.Jenkins.TestTasks {
 		public AppInstallMonitorLog InstallLog { get; private set; }
 
 		public RunDevice (IRunDeviceTask testTask,
-							IHardwareDeviceLoader devices,
+						  IHardwareDeviceLoader devices,
 						  IResourceManager resourceManager,
 						  ILog mainLog,
 						  ILog deviceLoadLog,
