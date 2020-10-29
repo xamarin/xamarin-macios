@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 
+using Microsoft.Build.Evaluation;
+
 namespace Xamarin.iOS.Tasks
 {
 	public class ExtensionTestBase : TestBase {
@@ -15,7 +17,7 @@ namespace Xamarin.iOS.Tasks
 			Platform = platform;
 		}
 
-		public void BuildExtension (string hostAppName, string extensionName, string platform, string config, int expectedErrorCount = 0, System.Action<ProjectPaths> additionalAsserts = null)
+		public Project BuildExtension (string hostAppName, string extensionName, string platform, string config, int expectedErrorCount = 0, System.Action<ProjectPaths> additionalAsserts = null)
 		{
 			var bundlePath = platform;
 			var mtouchPaths = SetupProjectPaths (hostAppName, "../", true, bundlePath, config);
@@ -34,7 +36,7 @@ namespace Xamarin.iOS.Tasks
 			RunTarget (proj, "Build", expectedErrorCount);
 
 			if (expectedErrorCount > 0)
-				return;
+				return proj;
 
 			Assert.IsTrue (Directory.Exists (AppBundlePath), "{1} App Bundle does not exist: {0} ", AppBundlePath, bundlePath);
 
@@ -65,6 +67,8 @@ namespace Xamarin.iOS.Tasks
 
 			if (additionalAsserts != null)
 				additionalAsserts (mtouchPaths);
+
+			return proj;
 		}
 
 		public void SetupPaths (string appName, string platform) 
