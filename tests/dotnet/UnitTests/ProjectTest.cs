@@ -324,19 +324,6 @@ namespace Xamarin.Tests {
 		[TestCase ("ios-arm64")]
 		public void IsNotMacBuild (string runtimeIdentifier)
 		{
-			ExecutionHelper.Execute ("nuget", new [] { "list", "-Source", "local-dotnet-feed", "-Prerelease" }, out var output);
-			// Undo nuget's wrapping: https://github.com/NuGet/Home/issues/10198
-			var lines = output.ToString ().Split ('\n').ToList ();
-			for (var i = lines.Count - 2; i >= 0; i--) {
-				if (lines [i].Length == 79) {
-					lines [i] += lines [i + 1];
-					lines.RemoveAt (i + 1);
-				}					
-			}
-			Console.Error.WriteLine ($"'nuget list -Source local-dotnet-feed -Prerelease' output:\n{string.Join ("\n", lines)}");
-			ExecutionHelper.Execute ("ls", new [] { "-la", "../../../../../../_build/nuget-feed" }, out output);
-			Console.Error.WriteLine (output);
-
 			var platform = ApplePlatform.iOS;
 			var project_path = GetProjectPath ("MySingleView");
 			Configuration.IgnoreIfIgnoredPlatform (platform);
