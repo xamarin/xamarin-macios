@@ -320,10 +320,13 @@ namespace Xamarin.Tests {
 		}
 
 		[Test]
-		[TestCase ("ios-x64")]
-		[TestCase ("ios-arm64")]
-		public void IsNotMacBuild (string runtimeIdentifier)
+		[TestCase ("ios-x64", false)]
+		[TestCase ("ios-arm64", true)]
+		public void IsNotMacBuild (string runtimeIdentifier, bool isDeviceBuild)
 		{
+			if (isDeviceBuild)
+				Configuration.AssertDeviceAvailable ();
+
 			var platform = ApplePlatform.iOS;
 			var project_path = GetProjectPath ("MySingleView");
 			Configuration.IgnoreIfIgnoredPlatform (platform);
