@@ -214,8 +214,8 @@ namespace Xamarin.MMP.Tests
 			StringBuilder output = new StringBuilder ();
 			environment ??= new Dictionary<string, string> ();
 			environment ["MONO_PATH"] = null;
-			int compileResult = Xamarin.Bundler.Driver.RunCommand (exe, args, environment, output, suppressPrintOnErrors: shouldFail);
-			if (!shouldFail && compileResult != 0 && Xamarin.Bundler.Driver.Verbosity < 1) {
+			int compileResult = ExecutionHelper.Execute (exe, args, environmentVariables: environment, stdout: output, stderr: output);
+			if (!shouldFail && compileResult != 0) {
 				Console.WriteLine ($"Execution failed; exit code: {compileResult}");
 			}
 			Func<string> getInfo = () => getAdditionalFailInfo != null ? getAdditionalFailInfo () : "";
@@ -502,7 +502,7 @@ namespace Xamarin.MMP.Tests
 
 		public static void CopyDirectory (string src, string target)
 		{
-			Xamarin.Bundler.Driver.RunCommand ("/bin/cp", new [] { "-r", src, target });
+			Assert.AreEqual (0, ExecutionHelper.Execute ("/bin/cp", new [] { "-r", src, target }));
 		}
 
 		public static string CopyFileWithSubstitutions (string src, string target, Func<string, string > replacementAction)

@@ -130,8 +130,7 @@ namespace Xamarin.MMP.Tests
 				Assert.IsFalse (buildResults.Contains ("MM2006"), "BuildUnifiedProject_WittJustNativeRefNoLinkWith_Builds found 2006 warning: " + buildResults);
 				Assert.IsTrue (File.Exists (Path.Combine (tmpDir, "bin/Debug/UnifiedExample.app/Contents/MonoBundle/SimpleClassDylib.dylib")));
 
-				StringBuilder output = new StringBuilder ();
-				Xamarin.Bundler.Driver.RunCommand ("/usr/bin/otool", new [] { "-L", Path.Combine (tmpDir, "bin/Debug/UnifiedExample.app/Contents/MacOS/UnifiedExample") }, output);
+				Assert.AreEqual (0, ExecutionHelper.Execute ("/usr/bin/otool", new [] { "-L", Path.Combine (tmpDir, "bin/Debug/UnifiedExample.app/Contents/MacOS/UnifiedExample") }, out var output));
 				Assert.IsTrue (output.ToString ().Contains ("SimpleClassDylib.dylib"));
 			});
 		}
