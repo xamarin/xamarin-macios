@@ -242,9 +242,11 @@ namespace Xharness {
 			if (string.IsNullOrEmpty (path))
 				return path;
 
+			string originalPath = path;
+
 			do {
 				if (path == "/") {
-					throw new Exception (string.Format ("Could not find Xcode.app in {0}", path));
+					throw new Exception (string.Format ("Could not find Xcode.app in {0}", originalPath));
 				} else if (File.Exists (Path.Combine (path, "Contents", "MacOS", "Xcode"))) {
 					return path;
 				}
