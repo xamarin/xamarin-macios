@@ -9,8 +9,7 @@ using Microsoft.DotNet.XHarness.Common.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 using Xharness.Jenkins.TestTasks;
 
-namespace Xharness
-{
+namespace Xharness {
 	public class TestProject {
 		XmlDocument xml;
 		bool generate_variations = true;

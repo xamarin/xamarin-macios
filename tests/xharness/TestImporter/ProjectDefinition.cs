@@ -99,8 +99,9 @@ namespace Xharness.TestImporter {
 			string failureMessage = null;
 			foreach (var definition in TestAssemblies) {
 				var references = GetAssemblyReferences (definition.GetPath (platform));
-				if (references.FailureMessage != null) failureMessage = references.FailureMessage;
-				else {
+				if (references.FailureMessage != null) {
+					failureMessage = references.FailureMessage;
+				} else {
 					set.UnionWith (references.References);
 				}
 			}

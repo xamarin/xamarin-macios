@@ -74,8 +74,8 @@ namespace Xharness.TestImporter.Templates.Managed {
 		};
 		static readonly Dictionary<WatchAppType, string> watchOSProjectTemplateMatches = new Dictionary<WatchAppType, string>
 		{
-			{ WatchAppType.App, "Managed.watchOS.App.csproj.in"},
-			{ WatchAppType.Extension, "Managed.watchOS.Extension.csproj.in"}
+			{WatchAppType.App, "Managed.watchOS.App.csproj.in"},
+			{WatchAppType.Extension, "Managed.watchOS.Extension.csproj.in"}
 		};
 
 		static readonly Dictionary<WatchAppType, string> watchOSPlistTemplateMatches = new Dictionary<WatchAppType, string> {
@@ -334,8 +334,9 @@ namespace Xharness.TestImporter.Templates.Managed {
 		public static string GetReferenceNode (string assemblyName, string hintPath = null)
 		{
 			// lets not complicate our life with Xml, we just need to replace two things
-			if (string.IsNullOrEmpty (hintPath)) return $"<Reference Include=\"{assemblyName}\" />";
-			else {
+			if (string.IsNullOrEmpty (hintPath)) {
+				return $"<Reference Include=\"{assemblyName}\" />";
+			} else {
 				// the hint path is using unix separators, we need to use windows ones
 				hintPath = hintPath.Replace ('/', '\\');
 				var sb = new StringBuilder ();
@@ -440,8 +441,9 @@ namespace Xharness.TestImporter.Templates.Managed {
 		{
 			var rootAssembliesPath = AssemblyLocator.GetAssembliesRootLocation (Platform.WatchOS).Replace ("/", "\\");
 			var sb = new StringBuilder ();
-			if (!string.IsNullOrEmpty (info.FailureMessage)) WriteReferenceFailure (sb, info.FailureMessage);
-			else {
+			if (!string.IsNullOrEmpty (info.FailureMessage)) {
+				WriteReferenceFailure (sb, info.FailureMessage);
+			} else {
 				foreach (var assemblyInfo in info.Assemblies) {
 					if (ProjectFilter == null || !ProjectFilter.ExcludeDll (Platform.WatchOS, assemblyInfo.assembly))
 						sb.AppendLine (GetReferenceNode (assemblyInfo.assembly, assemblyInfo.hintPath));
@@ -567,8 +569,9 @@ namespace Xharness.TestImporter.Templates.Managed {
 			// fix possible issues with the paths to be included in the msbuild xml
 			infoPlistPath = infoPlistPath.Replace ('/', '\\');
 			var sb = new StringBuilder ();
-			if (!string.IsNullOrEmpty (info.FailureMessage)) WriteReferenceFailure (sb, info.FailureMessage);
-			else {
+			if (!string.IsNullOrEmpty (info.FailureMessage)) {
+				WriteReferenceFailure (sb, info.FailureMessage);
+			} else {
 				foreach (var assemblyInfo in info.Assemblies) {
 					if (ProjectFilter == null || !ProjectFilter.ExcludeDll (Platform.iOS, assemblyInfo.assembly))
 						sb.AppendLine (GetReferenceNode (assemblyInfo.assembly, assemblyInfo.hintPath));
@@ -656,8 +659,9 @@ namespace Xharness.TestImporter.Templates.Managed {
 			var downloadPath = Path.Combine (AssemblyLocator.GetAssembliesRootLocation (platform), "mac-bcl", platform == Platform.MacOSFull ? "xammac_net_4_5" : "xammac").Replace ("/", "\\");
 			infoPlistPath = infoPlistPath.Replace ('/', '\\');
 			var sb = new StringBuilder ();
-			if (!string.IsNullOrEmpty (info.FailureMessage)) WriteReferenceFailure (sb, info.FailureMessage);
-			else {
+			if (!string.IsNullOrEmpty (info.FailureMessage)) {
+				WriteReferenceFailure (sb, info.FailureMessage);
+			} else {
 				foreach (var assemblyInfo in info.Assemblies) {
 					if (ProjectFilter == null || !ProjectFilter.ExcludeDll (platform, assemblyInfo.assembly))
 						sb.AppendLine (GetReferenceNode (assemblyInfo.assembly, assemblyInfo.hintPath));
