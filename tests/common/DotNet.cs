@@ -58,6 +58,9 @@ namespace Xamarin.Tests {
 				var env = new Dictionary<string, string> ();
 				env ["MSBuildSDKsPath"] = null;
 				env ["MSBUILD_EXE_PATH"] = null;
+				// This is a temporary variable to enable the .NET workload resolver, because it's opt-in for now.
+				// Ref: https://github.com/dotnet/sdk/issues/13849
+				env ["MSBuildEnableWorkloadResolver"] = "true";
 				var output = new StringBuilder ();
 				var rv = ExecutionHelper.Execute (Executable, args, env, output, output, workingDirectory: Path.GetDirectoryName (project), timeout: TimeSpan.FromMinutes (10));
 				if (assert_success && rv != 0) {
@@ -106,7 +109,6 @@ namespace Xamarin.Tests {
 					switch (filename) {
 					case "MonoTouchDebugConfiguration.txt": // TODO
 					case "PkgInfo": // TODO
-					case "Assets.car": // TODO
 					case "runtime-options.plist": // TODO
 					case "Root.plist": // TODO
 						return false;

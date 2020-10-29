@@ -317,13 +317,6 @@ namespace Xamarin.iOS.Tasks
 		{
 		}
 
-		public T CreateTask<T> () where T : Task, new()
-		{
-			var t = new T ();
-			t.BuildEngine = Engine;
-			return t;
-		}
-
 		/// <summary>
 		/// Executes the task and log its error messages.</summary>
 		/// <remarks>

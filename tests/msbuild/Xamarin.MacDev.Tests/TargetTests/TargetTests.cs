@@ -627,7 +627,7 @@ namespace Xamarin.iOS.Tasks
 		public void DetectAppManifest_LibraryProject ()
 		{
 			RunTargetOnInstance (LibraryProjectInstance, TargetName.DetectAppManifest);
-			Assert.That (LibraryProjectInstance.GetPropertyValue ("_AppManifest"), Is.Not.Null.Or.Empty, "#1");
+			Assert.That (LibraryProjectInstance.GetPropertyValue ("_AppManifest"), Is.Null.Or.Empty, "#1");
 		}
 	}
 }

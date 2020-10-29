@@ -9,16 +9,15 @@ using Microsoft.Build.Utilities;
 using NUnit.Framework;
 
 using Xamarin.MacDev;
-using Xamarin.MacDev.Tasks;
 using Xamarin.Tests;
 using Xamarin.Utils;
 
 namespace Xamarin.iOS.Tasks
 {
 	[TestFixture]
-	public class IBToolTaskTests
+	public class IBToolTaskTests : TestBase
 	{
-		static IBTool CreateIBToolTask (ApplePlatform framework, string projectDir, string intermediateOutputPath)
+		IBTool CreateIBToolTask (ApplePlatform framework, string projectDir, string intermediateOutputPath)
 		{
 			var interfaceDefinitions = new List<ITaskItem> ();
 			var sdk = IPhoneSdks.GetSdk (framework);
@@ -46,21 +45,20 @@ namespace Xamarin.iOS.Tasks
 			foreach (var item in Directory.EnumerateFiles (projectDir, "*.xib", SearchOption.AllDirectories))
 				interfaceDefinitions.Add (new TaskItem (item));
 
-			return new IBTool {
-				AppManifest = new TaskItem (Path.Combine (projectDir, "Info.plist")),
-				InterfaceDefinitions = interfaceDefinitions.ToArray (),
-				IntermediateOutputPath = intermediateOutputPath,
-				BuildEngine = new TestEngine (),
-				MinimumOSVersion = PDictionary.FromFile (Path.Combine (projectDir, "Info.plist")).GetMinimumOSVersion (),
-				ResourcePrefix = "Resources",
-				ProjectDir = projectDir,
-				SdkDevPath = Configuration.xcode_root,
-				SdkPlatform = platform,
-				SdkVersion = version.ToString (),
-				SdkUsrPath = usr,
-				SdkBinPath = bin,
-				SdkRoot = root,
-			};
+			var task = CreateTask<IBTool> ();
+			task.AppManifest = new TaskItem (Path.Combine (projectDir, "Info.plist"));
+			task.InterfaceDefinitions = interfaceDefinitions.ToArray ();
+			task.IntermediateOutputPath = intermediateOutputPath;
+			task.MinimumOSVersion = PDictionary.FromFile (Path.Combine (projectDir, "Info.plist")).GetMinimumOSVersion ();
+			task.ResourcePrefix = "Resources";
+			task.ProjectDir = projectDir;
+			task.SdkDevPath = Configuration.xcode_root;
+			task.SdkPlatform = platform;
+			task.SdkVersion = version.ToString ();
+			task.SdkUsrPath = usr;
+			task.SdkBinPath = bin;
+			task.SdkRoot = root;
+			return task;
 		}
 
 		[Test]
@@ -171,7 +169,7 @@ namespace Xamarin.iOS.Tasks
 			Assert.That (unexpectedResource, Is.Empty, "No extra resources");
 		}
 
-		static IBTool CreateIBToolTask (ApplePlatform framework, string projectDir, string intermediateOutputPath, params string[] fileNames)
+		IBTool CreateIBToolTask (ApplePlatform framework, string projectDir, string intermediateOutputPath, params string[] fileNames)
 		{
 			var ibtool = CreateIBToolTask (framework, projectDir, intermediateOutputPath);
 			var interfaceDefinitions = new List<ITaskItem> ();
@@ -184,7 +182,7 @@ namespace Xamarin.iOS.Tasks
 			return ibtool;
 		}
 
-		static void TestGenericAndDeviceSpecificXibsGeneric (params string [] fileNames)
+		void TestGenericAndDeviceSpecificXibsGeneric (params string[] fileNames)
 		{
 			var tmp = Cache.CreateTemporaryDirectory ("advanced-ibtool");
 			IBTool ibtool;
