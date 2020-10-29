@@ -86,7 +86,13 @@ namespace Xamarin.iOS.Tasks {
 			return (string) propertyInfo.GetValue (null, null);
 		}
 
-		private List<string> commonIgnoreList { get; set; } = null;
+		List<string> commonIgnoreList { get; set; } = null;
+
+		[SetUp]
+		public void SetUp ()
+		{
+			commonIgnoreList = ReadFile ($"{Directory.GetCurrentDirectory ()}/TaskTests/LocalizationIgnore/common-Translations.ignore") as List<string>;
+		}
 
 		[TestCase ("cs-CZ")]
 		[TestCase ("de-DE")]
@@ -103,9 +109,7 @@ namespace Xamarin.iOS.Tasks {
 		[TestCase ("zh-TW")]
 		public void AllErrorTranslation (string culture)
 		{
-			string errorCode = string.Empty;
 			string errorList = string.Empty;
-			bool isFirstRun = false;
 			List<string> cultureIgnoreList = null;
 			List<string> commonValidEntries = new List<string> ();
 			List<string> cultureValidEntries = new List<string> ();
@@ -114,30 +118,22 @@ namespace Xamarin.iOS.Tasks {
 			string fullCulturePath = $"{Directory.GetCurrentDirectory ()}/TaskTests/LocalizationIgnore/{culture}-Translations.ignore";
 			string shortCommonPath = "xamarin-macios/tests/msbuild/Xamarin.MacDev.Tasks.Tests/Tasktests/LocalizationIgnore/common-Translations.ignore";
 			string shortCulturePath = $"xamarin-macios/tests/msbuild/Xamarin.MacDev.Tasks.Tests/Tasktests/LocalizationIgnore/{culture}-Translations.ignore";
-			bool isCommonFileExistant = File.Exists (fullCommonPath);
-			bool isCultureFileExistant = File.Exists (fullCulturePath);
 			CultureInfo originalCulture = Thread.CurrentThread.CurrentUICulture;
 
-			if (commonIgnoreList == null && isCommonFileExistant){
-				commonIgnoreList = new List<string> (ReadFile (fullCommonPath));
-				isFirstRun = true;
-			}
-
-			if (isCultureFileExistant)
-				cultureIgnoreList = new List<string> (ReadFile (fullCulturePath));
+			cultureIgnoreList = ReadFile (fullCulturePath) as List<string>;
 
 			foreach (var errorCodeInfo in typeof (MSBStrings).GetProperties ()) {
 				try {
-					errorCode = errorCodeInfo.Name;
+					var errorCode = errorCodeInfo.Name;
 					if (errorCode == "ResourceManager" || errorCode == "Culture")
 						continue;
 					string englishError = TranslateError ("en-US", errorCode);
 					string newCultureError = TranslateError (culture, errorCode);
 
-					if (isCommonFileExistant && commonIgnoreList.Contains (errorCode)) {
+					if (commonIgnoreList.Contains (errorCode)) {
 						Assert.AreEqual (englishError, newCultureError, $"{errorCode} is translated. Remove {errorCode} from {shortCommonPath}");
 						commonValidEntries.Add (errorCode);
-					} else if (isCultureFileExistant && cultureIgnoreList.Contains (errorCode)) {
+					} else if (cultureIgnoreList.Contains (errorCode)) {
 						Assert.AreEqual (englishError, newCultureError, $"{errorCode} is translated. Remove {errorCode} from {shortCulturePath}");
 						cultureValidEntries.Add (errorCode);
 					} else if (englishError == newCultureError)
@@ -148,13 +144,15 @@ namespace Xamarin.iOS.Tasks {
 			}
 
 			Assert.AreEqual (string.Empty, errorList, $"The following errors were not translated. Add them to {shortCommonPath} or {shortCulturePath}");
-			Assert.AreEqual (new List<string> (), cultureIgnoreList.Except (cultureValidEntries), $"Not all error codes in {shortCulturePath} are valid. Please remove invalid codes");
-			Assert.AreEqual (new List<string> (), commonIgnoreList.Except (commonValidEntries), $"Not all error codes in {shortCommonPath} are valid. Please remove invalid codes");
+			Assert.IsEmpty (cultureIgnoreList.Except (cultureValidEntries), $"Not all error codes in {shortCulturePath} are valid. Please remove invalid codes");
+			Assert.IsEmpty (commonIgnoreList.Except (commonValidEntries), $"Not all error codes in {shortCommonPath} are valid. Please remove invalid codes");
 		}
 
-		private IEnumerable<string> ReadFile (string path)
+		IList<string> ReadFile (string path)
 		{
-			return File.ReadAllLines (path).Where (line => !line.StartsWith ("#", StringComparison.Ordinal) && line != string.Empty);
+			if (!File.Exists (path))
+				return new List<string> ();
+			return File.ReadAllLines (path).Where (line => !line.StartsWith ("#", StringComparison.Ordinal) && line != string.Empty).ToList();
 		}
 	}
 }
