@@ -37,6 +37,7 @@ namespace Xamarin.Tests {
 		void Clean (string project_path)
 		{
 			var dirs = Directory.GetDirectories (Path.GetDirectoryName (project_path), "*", SearchOption.AllDirectories);
+			dirs = dirs.OrderBy (v => v.Length).Reverse ().ToArray (); // If we have nested directories, make sure to delete the nested one first
 			foreach (var dir in dirs) {
 				var name = Path.GetFileName (dir);
 				if (name != "bin" && name != "obj")
