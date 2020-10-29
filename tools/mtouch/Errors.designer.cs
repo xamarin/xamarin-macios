@@ -1529,6 +1529,12 @@ namespace Xamarin.Bundler {
             }
         }
         
+        internal static string MX_ConfigurationAwareStepWithAssembly {
+            get {
+                return ResourceManager.GetString("MX_ConfigurationAwareStepWithAssembly", resourceCulture);
+            }
+        }
+        
         internal static string MX3001 {
             get {
                 return ResourceManager.GetString("MX3001", resourceCulture);
@@ -2296,7 +2302,7 @@ namespace Xamarin.Bundler {
                 return ResourceManager.GetString("MX5222", resourceCulture);
             }
         }
-
+        
         internal static string MX5223 {
             get {
                 return ResourceManager.GetString("MX5223", resourceCulture);
