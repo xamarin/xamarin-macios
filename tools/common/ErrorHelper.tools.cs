@@ -310,8 +310,7 @@ namespace Xamarin.Bundler {
 
 				Console.Error.WriteLine (mte.ToString ());
 
-				if (Verbosity > 1)
-					ShowInner (e);
+				ShowInner (e);
 
 				if (Verbosity > 2 && !string.IsNullOrEmpty (e.StackTrace))
 					Console.Error.WriteLine (e.StackTrace);
@@ -320,8 +319,7 @@ namespace Xamarin.Bundler {
 				Console.Error.WriteLine (e.ToString ());
 			} else {
 				Console.Error.WriteLine (e.ToString ());
-				if (Verbosity > 1)
-					ShowInner (e);
+				ShowInner (e);
 				if (Verbosity > 2 && !string.IsNullOrEmpty (e.StackTrace))
 					Console.Error.WriteLine (e.StackTrace);
 			}
@@ -339,7 +337,7 @@ namespace Xamarin.Bundler {
 				Console.Error.WriteLine ("--- inner exception");
 				Console.Error.WriteLine (ie);
 				Console.Error.WriteLine ("---");
-			} else {
+			} else if (Verbosity > 0 || ie is ProductException) {
 				Console.Error.WriteLine ("\t{0}", ie.Message);
 			}
 			ShowInner (ie);
