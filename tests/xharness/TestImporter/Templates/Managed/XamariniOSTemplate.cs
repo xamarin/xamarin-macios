@@ -74,8 +74,8 @@ namespace Xharness.TestImporter.Templates.Managed {
 		};
 		static readonly Dictionary<WatchAppType, string> watchOSProjectTemplateMatches = new Dictionary<WatchAppType, string>
 		{
-			{WatchAppType.App, "Managed.watchOS.App.csproj.in"},
-			{WatchAppType.Extension, "Managed.watchOS.Extension.csproj.in"}
+			{ WatchAppType.App, "Managed.watchOS.App.csproj.in"},
+			{ WatchAppType.Extension, "Managed.watchOS.Extension.csproj.in"}
 		};
 
 		static readonly Dictionary<WatchAppType, string> watchOSPlistTemplateMatches = new Dictionary<WatchAppType, string> {

@@ -44,13 +44,14 @@ namespace Xharness.Jenkins.TestTasks {
 			this.errorKnowledgeBase = errorKnowledgeBase ?? throw new ArgumentNullException (nameof (errorKnowledgeBase));
 		}
 
-		public async Task<(TestExecutingResult ExecutionResult, (string HumanMessage, string IssueLink)? KnownFailure)> ExecuteAsync (string projectPlatform,
-																									string projectConfiguration,
-																									string projectFile,
-																									IAcquiredResource resource,
-																									bool dryRun,
-																									IFileBackedLog buildLog,
-																									ILog mainLog)
+		public async Task<(TestExecutingResult ExecutionResult, (string HumanMessage, string IssueLink)? KnownFailure)> ExecuteAsync (
+			string projectPlatform,
+			string projectConfiguration,
+			string projectFile,
+			IAcquiredResource resource,
+			bool dryRun,
+			IFileBackedLog buildLog,
+			ILog mainLog)
 		{
 			BuildLog = buildLog;
 			(TestExecutingResult ExecutionResult, (string HumanMessage, string IssueLink)? KnownFailure) result = (TestExecutingResult.NotStarted, ((string HumanMessage, string IssueLink)?) null);
