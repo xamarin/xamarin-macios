@@ -283,6 +283,29 @@ namespace Xamarin.Linker {
 
 			document.Save (Path.Combine (ItemsDirectory, itemName + ".items"));
 		}
+
+		public void Report (params Exception [] exceptions)
+		{
+			Report ((IList<Exception>) exceptions);
+		}
+
+		public void Report (IList<Exception> exceptions)
+		{
+			// We can't really use the linker's reporting facilities and keep our own error codes, because we'll
+			// end up re-using the same error codes the linker already uses for its own purposes. So instead show
+			// a generic error using the linker's Context.LogMessage API, and then print our own errors to stderr.
+			// Since we print using a standard message format, msbuild will parse those error messages and show
+			// them as msbuild errors.
+			var list = ErrorHelper.CollectExceptions (exceptions);
+			var allWarnings = list.All (v => v is ProductException pe && !pe.Error);
+			if (!allWarnings) {
+				// Revisit the error code after https://github.com/mono/linker/issues/1596 has been fixed.
+				var msg = MessageContainer.CreateErrorMessage ("Failed to execute the custom steps.", 1999, Platform.ToString ());
+				Context.LogMessage (msg);
+			}
+			// ErrorHelper.Show will print our errors and warnings to stderr.
+			ErrorHelper.Show (list);
+		}
 	}
 }
 

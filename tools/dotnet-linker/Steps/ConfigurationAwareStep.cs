@@ -14,7 +14,7 @@ namespace Xamarin.Linker {
 
 		protected void Report (Exception exception)
 		{
-			ErrorHelper.Show (exception);
+			Configuration.Report (exception);
 		}
 
 		protected void Report (List<Exception> exceptions)
@@ -68,18 +68,17 @@ namespace Xamarin.Linker {
 
 		protected virtual Exception Fail (AssemblyDefinition assembly, Exception e)
 		{
-			/* Re-use MX_ExceptionalSubSteps here, it works just fine */
-			return ErrorHelper.CreateError (ErrorCode, e, Errors.MX_ExceptionalSubSteps, Name, assembly?.FullName);
+			return ErrorHelper.CreateError (ErrorCode, e, Errors.MX_ConfigurationAwareStepWithAssembly, Name, assembly?.FullName, e.Message);
 		}
 
 		protected virtual Exception Fail (Exception e)
 		{
-			return ErrorHelper.CreateError (ErrorCode | 1, e, Errors.MX_ConfigurationAwareStep, Name);
+			return ErrorHelper.CreateError (ErrorCode | 1, e, Errors.MX_ConfigurationAwareStep, Name, e.Message);
 		}
 
 		protected virtual Exception FailEnd (Exception e)
 		{
-			return ErrorHelper.CreateError (ErrorCode | 2, e, Errors.MX_ConfigurationAwareStep, Name);
+			return ErrorHelper.CreateError (ErrorCode | 2, e, Errors.MX_ConfigurationAwareStep, Name, e.Message);
 		}
 
 		// abstracts
