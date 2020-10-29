@@ -2769,10 +2769,20 @@
         <note></note>
       </trans-unit>
       <trans-unit id="MX_ConfigurationAwareStep">
-        <source>The linker step '{0}' failed during processing.</source>
-        <target state="new">The linker step '{0}' failed during processing.</target>
+        <source>The linker step '{0}' failed during processing: {1}</source>
+        <target state="new">The linker step '{0}' failed during processing: {1}</target>
         <note>This is a message when processing fails in the linker.
 			{0} - The name of the step that fails.
+			{1} - A string describing what failed.
+		</note>
+      </trans-unit>
+      <trans-unit id="MX_ConfigurationAwareStepWithAssembly">
+        <source>The linker step '{0}' failed while processing {1}: {2}</source>
+        <target state="new">The linker step '{0}' failed while processing {1}: {2}</target>
+        <note>This is a message when processing an assembly fails in the linker.
+			{0} - The name of the step that fails.
+			{1} - The name of the assembly that failed processing.
+			{1} - A string describing what failed
 		</note>
       </trans-unit>
       <trans-unit id="MX_ExceptionalSubSteps">

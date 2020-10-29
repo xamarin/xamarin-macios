@@ -457,7 +457,7 @@ public class BindingTouch {
 				cargs.Add ("-lib:" + Path.GetDirectoryName (baselibdll));
 
 			if (Driver.RunCommand (compiler, cargs, null, out var compile_output, true, Driver.Verbosity) != 0)
-				throw ErrorHelper.CreateError (2, compile_output.ToString ().Replace ("\n", "\n\t"));
+				throw ErrorHelper.CreateError (2, $"{compiler} {StringUtils.FormatArguments (cargs)}\n{compile_output}".Replace ("\n", "\n\t"));
 				
 
 			universe = new Universe (UniverseOptions.EnableFunctionPointers | UniverseOptions.ResolveMissingMembers | UniverseOptions.MetadataOnly);
@@ -611,7 +611,7 @@ public class BindingTouch {
 				cargs.Add ("-lib:" + Path.GetDirectoryName (baselibdll));
 
 			if (Driver.RunCommand (compiler, cargs, null, out var generated_compile_output, true, Driver.Verbosity) != 0)
-				throw ErrorHelper.CreateError (1000, generated_compile_output.ToString ().Replace ("\n", "\n\t"));
+				throw ErrorHelper.CreateError (1000, $"{compiler} {StringUtils.FormatArguments (cargs)}\n{generated_compile_output}".Replace ("\n", "\n\t"));
 		} finally {
 			if (delete_temp)
 				Directory.Delete (tmpdir, true);
