@@ -86,12 +86,12 @@ namespace Xamarin.iOS.Tasks {
 			return (string) propertyInfo.GetValue (null, null);
 		}
 
-		List<string> commonIgnoreList = null;
+		IList<string> commonIgnoreList = null;
 
 		[SetUp]
 		public void SetUp ()
 		{
-			commonIgnoreList = ReadFile ($"{Directory.GetCurrentDirectory ()}/TaskTests/LocalizationIgnore/common-Translations.ignore") as List<string>;
+			commonIgnoreList = ReadFile ($"{Directory.GetCurrentDirectory ()}/TaskTests/LocalizationIgnore/common-Translations.ignore");
 		}
 
 		[TestCase ("cs-CZ")]
@@ -110,17 +110,16 @@ namespace Xamarin.iOS.Tasks {
 		public void AllErrorTranslation (string culture)
 		{
 			string errorList = string.Empty;
-			List<string> cultureIgnoreList = null;
+			IList<string> cultureIgnoreList = null;
 			List<string> commonValidEntries = new List<string> ();
 			List<string> cultureValidEntries = new List<string> ();
 
-			string fullCommonPath = $"{Directory.GetCurrentDirectory ()}/TaskTests/LocalizationIgnore/common-Translations.ignore";
 			string fullCulturePath = $"{Directory.GetCurrentDirectory ()}/TaskTests/LocalizationIgnore/{culture}-Translations.ignore";
-			string shortCommonPath = "xamarin-macios/tests/msbuild/Xamarin.MacDev.Tasks.Tests/Tasktests/LocalizationIgnore/common-Translations.ignore";
-			string shortCulturePath = $"xamarin-macios/tests/msbuild/Xamarin.MacDev.Tasks.Tests/Tasktests/LocalizationIgnore/{culture}-Translations.ignore";
+			string shortCommonPath = "xamarin-macios/tests/msbuild/Xamarin.MacDev.Tasks.Tests/TaskTests/LocalizationIgnore/common-Translations.ignore";
+			string shortCulturePath = $"xamarin-macios/tests/msbuild/Xamarin.MacDev.Tasks.Tests/TaskTests/LocalizationIgnore/{culture}-Translations.ignore";
 			CultureInfo originalCulture = Thread.CurrentThread.CurrentUICulture;
 
-			cultureIgnoreList = ReadFile (fullCulturePath) as List<string>;
+			cultureIgnoreList = ReadFile (fullCulturePath);
 
 			foreach (var errorCodeInfo in typeof (MSBStrings).GetProperties ()) {
 				try {
@@ -151,7 +150,7 @@ namespace Xamarin.iOS.Tasks {
 		IList<string> ReadFile (string path)
 		{
 			if (!File.Exists (path))
-				return new List<string> ();
+				return Array.Empty<string> ();
 			return File.ReadAllLines (path).Where (line => !line.StartsWith ("#", StringComparison.Ordinal) && line != string.Empty).ToList();
 		}
 	}
