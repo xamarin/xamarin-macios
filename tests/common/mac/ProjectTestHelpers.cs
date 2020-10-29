@@ -258,7 +258,10 @@ namespace Xamarin.MMP.Tests
 
 			// This is to force build to use our mmp and not system mmp
 			var buildArgs = new List<string> ();
-			buildArgs.Add ("/verbosity:diagnostic");
+			var binlog = Path.Combine (Path.GetDirectoryName (csprojTarget), $"log-{DateTime.Now:yyyyMMdd_HHmmss}.binlog");
+			buildArgs.Add ($"/bl:{binlog}");
+			buildArgs.Add ("/verbosity:quiet");
+			Console.WriteLine ($"Binlog: {binlog}");
 
 			// Restore any package references
 			buildArgs.Add ("/r");
@@ -281,7 +284,11 @@ namespace Xamarin.MMP.Tests
 			};
 
 			buildArgs.Insert (0, "--");
-			return RunAndAssert (Configuration.XIBuildPath, buildArgs, "Compile", shouldFail, getBuildProjectErrorInfo, environment);
+			RunAndAssert (Configuration.XIBuildPath, buildArgs, "Compile", shouldFail, getBuildProjectErrorInfo, environment);
+
+			var log = new StringBuilder ();
+			BuildEngine.PrintBinLog (binlog, log);
+			return log.ToString ();
 		}
 
 		static string ProjectTextReplacement (UnifiedTestConfig config, string text)
