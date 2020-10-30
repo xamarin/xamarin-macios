@@ -1122,6 +1122,7 @@ METALPERFORMANCESHADERS_SOURCES = \
 METRICKIT_SOURCES = \
 	MetricKit/MXMetaData.cs \
 	MetricKit/MXMetric.cs \
+	MetricKit/MXMetricManager.cs \
 	MetricKit/MXMetricPayload.cs \
 
 # MLCompute

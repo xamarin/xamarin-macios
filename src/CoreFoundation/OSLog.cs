@@ -68,7 +68,7 @@ namespace CoreFoundation {
 		[DllImport ("__Internal")]
 		extern static void xamarin_os_log (IntPtr logHandle, OSLogLevel level, string message);
 
-		OSLog (IntPtr handle, bool owns)
+		internal OSLog (IntPtr handle, bool owns)
 			: base (handle, owns)
 		{
 		}

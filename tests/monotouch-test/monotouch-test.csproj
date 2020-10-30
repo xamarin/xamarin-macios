@@ -286,6 +286,7 @@
     <Folder Include="BackgroundTasks\" />
     <Folder Include="WebKit\" />
     <Folder Include="NearbyInteraction\" />
+    <Folder Include="MetricKit\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="AudioToolbox\1.caf" />
