@@ -23917,18 +23917,22 @@ namespace AppKit {
 		[NullAllowed, Export ("accessibilityVerticalUnitDescription")]
 		string AccessibilityVerticalUnitDescription { get; set; }
 
+		[Mac (10,10)]
 		[Abstract]
 		[Export ("accessibilityLayoutPointForScreenPoint:")]
 		CGPoint GetAccessibilityLayoutForScreen (CGPoint point);
 
+		[Mac (10,10)]
 		[Abstract]
 		[Export ("accessibilityLayoutSizeForScreenSize:")]
 		CGSize GetAccessibilityLayoutForScreen (CGSize size);
 
+		[Mac (10,10)]
 		[Abstract]
 		[Export ("accessibilityScreenPointForLayoutPoint:")]
 		CGPoint GetAccessibilityScreenForLayout (CGPoint point);
 
+		[Mac (10,10)]
 		[Abstract]
 		[Export ("accessibilityScreenSizeForLayoutSize:")]
 		CGSize GetAccessibilityScreenForLayout (CGSize size);
@@ -24123,6 +24127,7 @@ namespace AppKit {
 		[NullAllowed, Export ("accessibilityColumnHeaderUIElements", ArgumentSemantic.Copy)]
 		NSObject[] AccessibilityColumnHeaderUIElements { get; set; }
 
+		[Mac (10,10)]
 		[Abstract]
 		[Export ("accessibilityCellForColumn:row:")]
 		[return: NullAllowed]
@@ -24178,41 +24183,50 @@ namespace AppKit {
 		[NullAllowed, Export ("accessibilitySelectedTextRanges", ArgumentSemantic.Copy)]
 		NSValue[] AccessibilitySelectedTextRanges { get; set; }
 
+		[Mac (10,10)]
 		[Abstract]
 		[Export ("accessibilityAttributedStringForRange:")]
 		[return: NullAllowed]
 		NSAttributedString GetAccessibilityAttributedString (NSRange range);
 
+		[Mac (10,10)]
 		[Abstract]
 		[Export ("accessibilityRangeForLine:")]
 		NSRange GetAccessibilityRangeForLine (nint line);
 
+		[Mac (10,10)]
 		[Abstract]
 		[Export ("accessibilityStringForRange:")]
 		[return: NullAllowed]
 		string GetAccessibilityString (NSRange range);
 
+		[Mac (10,10)]
 		[Abstract]
 		[Export ("accessibilityRangeForPosition:")]
 		NSRange GetAccessibilityRange (CGPoint point);
 
+		[Mac (10,10)]
 		[Abstract]
 		[Export ("accessibilityRangeForIndex:")]
 		NSRange GetAccessibilityRange (nint index);
 
+		[Mac (10,10)]
 		[Abstract]
 		[Export ("accessibilityFrameForRange:")]
 		CGRect GetAccessibilityFrame (NSRange range);
 
+		[Mac (10,10)]
 		[Abstract]
 		[Export ("accessibilityRTFForRange:")]
 		[return: NullAllowed]
 		NSData GetAccessibilityRtf (NSRange range);
 
+		[Mac (10,10)]
 		[Abstract]
 		[Export ("accessibilityStyleRangeForIndex:")]
 		NSRange GetAccessibilityStyleRange (nint index);
 
+		[Mac (10,10)]
 		[Abstract]
 		[Export ("accessibilityLineForIndex:")]
 		nint GetAccessibilityLine (nint index);
@@ -24277,50 +24291,62 @@ namespace AppKit {
 		[Export ("accessibilityMinimized")]
 		bool AccessibilityMinimized { [Bind ("isAccessibilityMinimized")] get; set; }
 
+		[Mac (10, 10)]
 		[Abstract]
 		[Export ("accessibilityPerformCancel")]
 		bool AccessibilityPerformCancel ();
 
+		[Mac (10, 10)]
 		[Abstract]
 		[Export ("accessibilityPerformConfirm")]
 		bool AccessibilityPerformConfirm ();
 
+		[Mac (10, 10)]
 		[Abstract]
 		[Export ("accessibilityPerformDecrement")]
 		bool AccessibilityPerformDecrement ();
 
+		[Mac (10, 10)]
 		[Abstract]
 		[Export ("accessibilityPerformDelete")]
 		bool AccessibilityPerformDelete ();
 
+		[Mac (10, 10)]
 		[Abstract]
 		[Export ("accessibilityPerformIncrement")]
 		bool AccessibilityPerformIncrement ();
 
+		[Mac (10, 10)]
 		[Abstract]
 		[Export ("accessibilityPerformPick")]
 		bool AccessibilityPerformPick ();
 
+		[Mac (10, 10)]
 		[Abstract]
 		[Export ("accessibilityPerformPress")]
 		bool AccessibilityPerformPress ();
 
+		[Mac (10, 10)]
 		[Abstract]
 		[Export ("accessibilityPerformRaise")]
 		bool AccessibilityPerformRaise ();
 
+		[Mac (10, 10)]
 		[Abstract]
 		[Export ("accessibilityPerformShowAlternateUI")]
 		bool AccessibilityPerformShowAlternateUI ();
 
+		[Mac (10, 10)]
 		[Abstract]
 		[Export ("accessibilityPerformShowDefaultUI")]
 		bool AccessibilityPerformShowDefaultUI ();
 
+		[Mac (10, 10)]
 		[Abstract]
 		[Export ("accessibilityPerformShowMenu")]
 		bool AccessibilityPerformShowMenu ();
 
+		[Mac (10,10)]
 		[Abstract]
 		[Export ("isAccessibilitySelectorAllowed:")]
 		bool IsAccessibilitySelectorAllowed (Selector selector);
