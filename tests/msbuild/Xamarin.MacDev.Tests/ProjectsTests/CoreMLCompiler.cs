@@ -43,14 +43,14 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void RebuildTest ()
 		{
-			BuildProject ("MyCoreMLApp", Platform, "Debug", clean: true);
+			BuildProject ("MyCoreMLApp");
 
 			AssertCompiledModelExists ("SqueezeNet");
 
 			EnsureFilestampChange ();
 
 			// Rebuild w/ no changes
-			BuildProject ("MyCoreMLApp", Platform, "Debug", clean: false);
+			BuildProject ("MyCoreMLApp", clean: false);
 
 			AssertCompiledModelExists ("SqueezeNet");
 		}

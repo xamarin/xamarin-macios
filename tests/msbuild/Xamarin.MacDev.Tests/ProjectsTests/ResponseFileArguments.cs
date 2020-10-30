@@ -14,7 +14,7 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void ProjectWithExtraArgment_CorrectlyOverridesLinkingParam ()
 		{
-			BuildProject ("AppWithExtraArgumentThatOverrides", Platform, "Debug", clean: true);
+			BuildProject ("AppWithExtraArgumentThatOverrides");
 			Assert.True (Engine.Logger.MessageEvents.Any (x => x.Message.Contains ("using mode 'SDKOnly'")));
 		}
 	}

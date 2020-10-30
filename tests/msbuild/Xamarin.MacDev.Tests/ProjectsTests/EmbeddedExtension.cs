@@ -16,11 +16,10 @@ namespace Xamarin.iOS.Tasks {
 		[Test]
 		public void BasicTest ()
 		{
-			var mtouchPaths = SetupProjectPaths ("ManagedContainer", "../NativeExtensionEmbedding/managed", true, "iPhoneSimulator");
+			var proj = SetupProjectPaths ("NativeExtensionEmbedding/managed/ManagedContainer");
+			MonoTouchProject = proj;
 
-			Engine.ProjectCollection.SetGlobalProperty ("Platform", Platform);
-
-			var xcodeProjectFolder = Path.Combine (mtouchPaths.ProjectPath , "..", "..", "native");
+			var xcodeProjectFolder = Path.Combine (proj.ProjectPath , "..", "..", "native");
 			string [] xcodeBuildArgs = new [] { "-configuration", "Debug", "-target", "NativeTodayExtension", "-sdk", "iphonesimulator" };
 			var env = new System.Collections.Generic.Dictionary<string, string> { { "DEVELOPER_DIR", Configuration.XcodeLocation } };
 			Assert.AreEqual (0, ExecutionHelper.Execute ("/usr/bin/xcodebuild", xcodeBuildArgs.Concat (new [] { "clean" }).ToList (), xcodeProjectFolder, Console.WriteLine, Console.Error.WriteLine));
@@ -28,10 +27,6 @@ namespace Xamarin.iOS.Tasks {
 			var buildOutput = new StringBuilder ();
 			var buildCode = ExecutionHelper.Execute ("/usr/bin/xcodebuild", xcodeBuildArgs.Concat (new [] { "build" }).ToList (), xcodeProjectFolder, t => buildOutput.Append (t), t => buildOutput.Append (t));
 			Assert.AreEqual (0, buildCode, $"Build Failed:{buildOutput}");
-
-			AppBundlePath = mtouchPaths.AppBundlePath;
-
-			var proj = SetupProject (Engine, mtouchPaths.ProjectCSProjPath);
 
 			RunTarget (proj, "Clean", 0);
 			RunTarget (proj, "Build", 0);

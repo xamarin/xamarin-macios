@@ -11,14 +11,15 @@ namespace Xamarin.iOS.Tasks
 	[TestFixture ("iPhone")]
 	public class ReleaseBuild : ProjectTest
 	{
-		public ReleaseBuild (string platform) : base (platform)
+		public ReleaseBuild (string platform)
+			: base (platform, "Release")
 		{
 		}
 
 		[Test]
 		public void BuildTest ()
 		{
-			BuildProject ("MyReleaseBuild", Platform, "Release");
+			BuildProject ("MyReleaseBuild");
 
 			var args = new List<string> { "-r", "UIWebView", AppBundlePath };
 			ExecutionHelper.Execute ("grep", args, out var output);
@@ -29,7 +30,7 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void RebuildTest ()
 		{
-			var csproj = BuildProject ("MyReleaseBuild", Platform, "Release", clean: true);
+			var csproj = BuildProject ("MyReleaseBuild").ProjectCSProjPath;
 			var bak = Path.Combine (Path.GetDirectoryName (csproj), "MyReleaseBuild.csproj.bak");
 			var llvm = Path.Combine (Path.GetDirectoryName (csproj), "MyReleaseBuildLlvm.csproj");
 
@@ -41,7 +42,7 @@ namespace Xamarin.iOS.Tasks
 			EnsureFilestampChange ();
 
 			// Rebuild w/ no changes
-			BuildProject ("MyReleaseBuild", Platform, "Release", clean: false);
+			BuildProject ("MyReleaseBuild", clean: false);
 
 			var newTimestamps = Directory.EnumerateFiles (AppBundlePath, "*.*", SearchOption.AllDirectories).ToDictionary (file => file, file => GetLastModified (file));
 			var newDSymTimestamps = Directory.EnumerateFiles (dsymDir, "*.*", SearchOption.AllDirectories).ToDictionary (file => file, file => GetLastModified (file));
@@ -60,7 +61,7 @@ namespace Xamarin.iOS.Tasks
 				File.Copy (llvm, csproj, true);
 				File.SetLastWriteTimeUtc (csproj, DateTime.UtcNow);
 
-				BuildProject ("MyReleaseBuild", Platform, "Release", clean: false);
+				BuildProject ("MyReleaseBuild", clean: false);
 			} finally {
 				File.Copy (bak, csproj, true);
 				File.Delete (bak);

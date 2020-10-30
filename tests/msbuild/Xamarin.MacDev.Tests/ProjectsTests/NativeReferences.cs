@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml;
 using NUnit.Framework;
 
 using Xamarin.Tests;
@@ -17,19 +19,22 @@ namespace Xamarin.iOS.Tasks {
 		[Test]
 		public void BasicTest ()
 		{
-			var mtouchPaths = SetupProjectPaths ("MyTabbedApplication", "../", true, Platform);
+			var mtouchPaths = SetupProjectPaths ("MyTabbedApplication");
 
 			Engine.ProjectCollection.SetGlobalProperty ("Platform", Platform);
 
-			var proj = SetupProject (Engine, mtouchPaths.ProjectCSProjPath);
-			var nr = proj.AddItem ("NativeReference", Path.Combine (Configuration.RootPath, "tests", "test-libraries", ".libs", "ios-fat", "XTest.framework")).First ();
-			nr.SetMetadataValue ("IsCxx", "False");
-			nr.SetMetadataValue ("Kind", "Framework");
+			var include = Path.Combine (Configuration.RootPath, "tests", "test-libraries", ".libs", "ios-fat", "XTest.framework");
+			var metadata = new Dictionary<string, string> {
+				{ "IsCxx", "False" },
+				{ "Kind", "Framework" },
+			};
+			var proj = new MSBuildProject (mtouchPaths, this);
+			proj.AddItem ("NativeReference", include, metadata);
 
-			AppBundlePath = mtouchPaths.AppBundlePath;
+			MonoTouchProject = mtouchPaths;
 
-			RunTarget (proj, "Clean", 0);
-			RunTarget (proj, "Build", 0);
+			RunTarget (mtouchPaths, "Clean", 0);
+			RunTarget (mtouchPaths, "Build", 0);
 
 			Assert.That (Directory.Exists (Path.Combine (AppBundlePath, "Frameworks", "XTest.framework")), "Frameworks/XTest.framework");
 			Assert.That (File.Exists (Path.Combine (AppBundlePath, "Frameworks", "XTest.framework", "XTest")), "Frameworks/XTest.framework/XTest");
@@ -41,21 +46,21 @@ namespace Xamarin.iOS.Tasks {
 			if (Platform.Contains ("Simulator"))
 				return; // incremental builds on the simulator doesn't make much sense.
 
-			var mtouchPaths = SetupProjectPaths ("MyiOSAppWithBinding", "../", true, Platform);
+			var mtouchPaths = SetupProjectPaths ("MyiOSAppWithBinding");
 
 			Engine.ProjectCollection.SetGlobalProperty ("Platform", Platform);
 
-			var proj = SetupProject (Engine, mtouchPaths.ProjectCSProjPath);
+			var properties = new Dictionary<string, string> {
+				{ "MtouchFastDev", "true" },
+				{ "MtouchExtraArgs", "-vvvv" },
+				{ "MtouchArch", "ARM64" }, // only use ARM64 to speed up the build.
+				{ "MtouchLink", "Full" }, // also to speed up the build.
+			};
 
-			proj.SetGlobalProperty ("MtouchFastDev", "true");
-			proj.SetGlobalProperty ("MtouchExtraArgs", "-vvvv");
-			proj.SetGlobalProperty ("MtouchArch", "ARM64"); // only use ARM64 to speed up the build.
-			proj.SetGlobalProperty ("MtouchLink", "Full"); // also to speed up the build.
+			MonoTouchProject = mtouchPaths;
 
-			AppBundlePath = mtouchPaths.AppBundlePath;
-
-			RunTarget (proj, "Clean", 0);
-			RunTarget (proj, "Build", 0);
+			RunTarget (mtouchPaths, "Clean", properties: properties);
+			RunTarget (mtouchPaths, "Build", properties: properties);
 
 			Assert.That (Directory.Exists (Path.Combine (AppBundlePath, "Frameworks", "XTest.framework")), "Frameworks/XTest.framework");
 			Assert.That (File.Exists (Path.Combine (AppBundlePath, "Frameworks", "XTest.framework", "XTest")), "Frameworks/XTest.framework/XTest");

@@ -2,23 +2,22 @@
 using System.IO;
 using NUnit.Framework;
 
+using Xamarin.Tests;
+
 namespace Xamarin.iOS.Tasks {
 	public class BindingReferences : TestBase {
 
 		[Test]
 		public void BuildTest ()
 		{
-			var mtouchPathsLibraryA = SetupProjectPaths ("LibraryA", "LibraryA", "../MyBindingsReferences/", false);
-			var mtouchPathsLibraryB = SetupProjectPaths ("LibraryB", "LibraryB", "../MyBindingsReferences/", false);
-
-			var projA = SetupProject (Engine, mtouchPathsLibraryA.ProjectCSProjPath);
-			var dllAPath = Path.Combine (mtouchPathsLibraryA.ProjectBinPath, "LibraryA.dll");
+			var projA = SetupProjectPaths ("MyBindingsReferences/LibraryA");
+			var dllAPath = Path.Combine (projA.ProjectBinPath, "LibraryA.dll");
 
 			RunTarget (projA, "Build", 0);
 			Assert.IsTrue (File.Exists (dllAPath), "LibraryA dll does not exist: {0} ", dllAPath);
 
-			var projB = SetupProject (Engine, mtouchPathsLibraryB.ProjectCSProjPath);
-			var dllBPath = Path.Combine (mtouchPathsLibraryB.ProjectBinPath, "LibraryB.dll");
+			var projB = SetupProjectPaths ("MyBindingsReferences/LibraryB");
+			var dllBPath = Path.Combine (projB.ProjectBinPath, "LibraryB.dll");
 
 			RunTarget (projB, "Build", 0);
 			Assert.IsTrue (File.Exists (dllBPath), "LibraryB binding dll does not exist: {0} ", dllBPath);
@@ -28,10 +27,8 @@ namespace Xamarin.iOS.Tasks {
 		[Test]
 		public void SatelliteAssembliesBug ()
 		{
-			var mtouchPaths = SetupProjectPaths ("iOSBinding", "iOSBinding", "../MySatelliteAssembliesBug/", false);
-
-			var proj = SetupProject (Engine, mtouchPaths.ProjectCSProjPath);
-			var dll = Path.Combine (mtouchPaths.ProjectBinPath, "iOSBinding.dll");
+			var proj = SetupProjectPaths ("MySatelliteAssembliesBug/iOSBinding");
+			var dll = Path.Combine (proj.ProjectBinPath, "iOSBinding.dll");
 
 			RunTarget (proj, "Build", 0);
 			Assert.IsTrue (File.Exists (dll), "iOSBinding dll does not exist: {0} ", dll);

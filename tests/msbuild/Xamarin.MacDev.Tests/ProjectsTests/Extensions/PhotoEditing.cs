@@ -12,7 +12,7 @@ namespace Xamarin.iOS.Tasks {
 		[Test]
 		public void BasicTest ()
 		{
-			this.BuildExtension ("MySpriteKitGame", "MyPhotoEditingExtension", Platform, "Debug");
+			this.BuildExtension ("MySpriteKitGame", "MyPhotoEditingExtension");
 		}
 	}
 }
