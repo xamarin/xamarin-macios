@@ -15,7 +15,7 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void BasicTest ()
 		{
-			this.BuildProject ("My Spaced App", Platform, "Debug", clean: false);
+			this.BuildProject ("My Spaced App", clean: false);
 
 			// Message of the form:
 			// Property reassignment: $(AssemblySearchPaths)="..." (previous value: "...") at Xamarin.iOS.Common.props (106,3)

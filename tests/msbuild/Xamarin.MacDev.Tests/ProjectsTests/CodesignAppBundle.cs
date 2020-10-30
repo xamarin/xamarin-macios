@@ -18,11 +18,9 @@ namespace Xamarin.iOS.Tasks
 	//[TestFixture ("iPhoneSimulator", "Release")]
 	public class CodesignAppBundle : ProjectTest
 	{
-		readonly string config;
-
-		public CodesignAppBundle (string platform, string configuration) : base (platform)
+		public CodesignAppBundle (string platform, string configuration)
+			: base (platform, configuration)
 		{
-			config = configuration;
 		}
 
 		static bool IsCodesigned (string path)
@@ -61,7 +59,7 @@ namespace Xamarin.iOS.Tasks
 		{
 			bool expectedCodesignResults = Platform != "iPhoneSimulator";
 
-			BuildProject ("MyTabbedApplication", Platform, config, clean: true);
+			BuildProject ("MyTabbedApplication");
 
 			AssertProperlyCodesigned (expectedCodesignResults);
 
@@ -79,7 +77,7 @@ namespace Xamarin.iOS.Tasks
 			EnsureFilestampChange ();
 
 			// Rebuild w/ no changes
-			BuildProject ("MyTabbedApplication", Platform, config, clean: false);
+			BuildProject ("MyTabbedApplication", clean: false);
 
 			AssertProperlyCodesigned (expectedCodesignResults);
 
@@ -119,7 +117,7 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void CodesignAfterModifyingAppExtensionTest ()
 		{
-			var csproj = BuildProject ("MyTabbedApplication", Platform, config, clean: true);
+			var csproj = BuildProject ("MyTabbedApplication", clean: true).ProjectCSProjPath;
 			var testsDir = Path.GetDirectoryName (Path.GetDirectoryName (csproj));
 			var appexProjectDir = Path.Combine (testsDir, "MyActionExtension");
 			var viewController = Path.Combine (appexProjectDir, "ActionViewController.cs");
@@ -137,7 +135,7 @@ namespace Xamarin.iOS.Tasks
 			File.WriteAllText (viewController, text);
 
 			try {
-				BuildProject ("MyTabbedApplication", Platform, config, clean: false);
+				BuildProject ("MyTabbedApplication", clean: false);
 				var newTimestamp = File.GetLastWriteTimeUtc (mainExecutable);
 
 				// make sure that the main app bundle was codesigned due to the changes in the appex
@@ -156,14 +154,14 @@ namespace Xamarin.iOS.Tasks
 		{
 			bool expectedCodesignResults = Platform != "iPhoneSimulator";
 
-			BuildProject ("MyWatch2Container", Platform, config, clean: true);
+			BuildProject ("MyWatch2Container");
 
 			AssertProperlyCodesigned (expectedCodesignResults);
 
 			EnsureFilestampChange ();
 
 			// Rebuild w/ no changes
-			BuildProject ("MyWatch2Container", Platform, config, clean: false);
+			BuildProject ("MyWatch2Container", clean: false);
 
 			// make sure everything is still codesigned properly
 			AssertProperlyCodesigned (expectedCodesignResults);
@@ -172,7 +170,7 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void CodesignAfterModifyingWatchApp2Test ()
 		{
-			var csproj = BuildProject ("MyWatch2Container", Platform, config, clean: true);
+			var csproj = BuildProject ("MyWatch2Container", clean: true).ProjectCSProjPath;
 			var testsDir = Path.GetDirectoryName (Path.GetDirectoryName (csproj));
 			var appexProjectDir = Path.Combine (testsDir, "MyWatchKit2Extension");
 			var viewController = Path.Combine (appexProjectDir, "InterfaceController.cs");
@@ -190,7 +188,7 @@ namespace Xamarin.iOS.Tasks
 			File.WriteAllText (viewController, text);
 
 			try {
-				BuildProject ("MyWatch2Container", Platform, config, clean: false);
+				BuildProject ("MyWatch2Container", clean: false);
 
 				AssertProperlyCodesigned (expectedCodesignResults);
 

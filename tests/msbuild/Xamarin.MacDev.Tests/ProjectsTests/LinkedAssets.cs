@@ -17,7 +17,7 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void BuildTest ()
 		{
-			BuildProject ("MyLinkedAssets", Platform, "Debug");
+			BuildProject ("MyLinkedAssets");
 
 			foreach (var name in IconNames) {
 				var path = Path.Combine (AppBundlePath, name);

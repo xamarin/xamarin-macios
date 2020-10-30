@@ -2,6 +2,8 @@ using System;
 
 using NUnit.Framework;
 
+using Xamarin.Tests;
+
 namespace Xamarin.iOS.Tasks
 {
 	[TestFixture ("iPhone")]
@@ -15,7 +17,7 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void BasicTest()
 		{
-			BuildExtension ("MyTVApp", "MyTVServicesExtension", Platform, "Debug");
+			BuildExtension ("MyTVApp", "MyTVServicesExtension");
 		}
 
 		public override string TargetFrameworkIdentifier {

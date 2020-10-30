@@ -13,7 +13,7 @@ namespace Xamarin.iOS.Tasks {
 		[Test]
 		public void BasicTest ()
 		{
-			BuildProject ("MyTVMetalGame", Platform, "Debug");
+			BuildProject ("MyTVMetalGame");
 		}
 
 		public override string TargetFrameworkIdentifier {

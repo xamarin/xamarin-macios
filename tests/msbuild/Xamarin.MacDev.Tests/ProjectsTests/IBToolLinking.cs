@@ -13,7 +13,7 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void BuildTest ()
 		{
-			BuildProject ("MyIBToolLinkTest", Platform, "Debug");
+			BuildProject ("MyIBToolLinkTest");
 		}
 	}
 }

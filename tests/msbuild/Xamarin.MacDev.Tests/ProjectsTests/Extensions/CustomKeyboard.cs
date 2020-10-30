@@ -17,7 +17,7 @@ namespace Xamarin.iOS.Tasks {
 		[Test]
 		public void BasicTest () 
 		{
-			this.BuildExtension ("MyMetalGame", "MyKeyboardExtension", Platform, "Debug");
+			this.BuildExtension ("MyMetalGame", "MyKeyboardExtension");
 			this.TestStoryboardC (AppBundlePath);
 		}
 
