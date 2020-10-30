@@ -38,10 +38,10 @@
       <HintPath>..\..\..\packages\Microsoft.Bcl.AsyncInterfaces.5.0.0-rc.1.20451.14\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.DotNet.XHarness.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Microsoft.DotNet.XHarness.Common.1.0.0-prerelease.20527.1\lib\netstandard2.0\Microsoft.DotNet.XHarness.Common.dll</HintPath>
+      <HintPath>..\..\..\packages\Microsoft.DotNet.XHarness.Common.1.0.0-prerelease.20530.4\lib\netstandard2.0\Microsoft.DotNet.XHarness.Common.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.DotNet.XHarness.iOS.Shared, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Microsoft.DotNet.XHarness.iOS.Shared.1.0.0-prerelease.20527.1\lib\netstandard2.0\Microsoft.DotNet.XHarness.iOS.Shared.dll</HintPath>
+      <HintPath>..\..\..\packages\Microsoft.DotNet.XHarness.iOS.Shared.1.0.0-prerelease.20530.4\lib\netstandard2.0\Microsoft.DotNet.XHarness.iOS.Shared.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Extensions.Configuration, Version=5.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Microsoft.Extensions.Configuration.5.0.0-rc.1.20451.14\lib\net461\Microsoft.Extensions.Configuration.dll</HintPath>
