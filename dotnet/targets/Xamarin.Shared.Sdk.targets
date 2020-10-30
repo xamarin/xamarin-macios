@@ -399,7 +399,7 @@
 			<Output TaskParameter="ObjectFiles" ItemName="_AOTObjectFiles" />
 		</CompileNativeCode>
 
-		<ItemGroup>
+		<ItemGroup Condition="'$(IsMacEnabled)' == 'true'">
 			<!-- Add the AOT-compiled output to the main executable -->
 			<_XamarinMainLibraries Include="@(_AOTObjectFiles)" />
 
