@@ -73,7 +73,6 @@ namespace Xamarin.Tests {
 		[Test]
 		public void BuildMyTVApp ()
 		{
-			KillEverything ();
 			var platform = ApplePlatform.TVOS;
 			var project_path = GetProjectPath ("MyTVApp");
 			Configuration.IgnoreIfIgnoredPlatform (platform);
@@ -362,33 +361,6 @@ namespace Xamarin.Tests {
 						return false; // Skip reference assemblies
 					return true;
 				});
-		}
-
-
-		void KillEverything ()
-		{
-			ExecutionHelper.Execute ("launchctl", new [] { "remove", "com.apple.CoreSimulator.CoreSimulatorService" }, timeout: TimeSpan.FromSeconds (10));
-
-			var to_kill = new string [] { "iPhone Simulator", "iOS Simulator", "Simulator", "Simulator (Watch)", "com.apple.CoreSimulator.CoreSimulatorService", "ibtoold" };
-
-			var args = new List<string> ();
-			args.Add ("-9");
-			args.AddRange (to_kill);
-			ExecutionHelper.Execute ("killall", args, timeout: TimeSpan.FromSeconds (10));
-
-			var dirsToBeDeleted = new [] {
-				Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.UserProfile), "Library", "Saved Application State", "com.apple.watchsimulator.savedState"),
-				Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.UserProfile), "Library", "Saved Application State", "com.apple.iphonesimulator.savedState"),
-			};
-
-			foreach (var dir in dirsToBeDeleted) {
-				try {
-					if (Directory.Exists (dir))
-						Directory.Delete (dir, true);
-				} catch (Exception e) {
-					Console.WriteLine ("Could not delete the directory '{0}': {1}", dir, e.Message);
-				}
-			}
 		}
 	}
 }
