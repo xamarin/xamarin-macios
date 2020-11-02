@@ -879,7 +879,7 @@ class MyDelegate : NSObject, IUITableViewDelegate {
 }
 ```
 
-This is work for all required protocol members, but there
+This will work for all required protocol members, but there
 is a special case with optional selectors to be aware of.
 
 Optional protocol members are treated identically when using 
@@ -907,7 +907,7 @@ required and optional selectors, returning reasonable default values.
 - Users of the interface (INSUrlSessionDownloadDelegate in example) only respond
 to the exact selectors provided.
 
-Some rare classes can beheave differently here. In almost all cases however
+Some rare classes can behave differently here. In almost all cases however
 it is safe to use either.
 
 
