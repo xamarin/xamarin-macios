@@ -141,7 +141,16 @@ namespace Introspection {
 
 					// Duplicate checks, e.g. same attribute on member and type (extranous metadata)
 					if (ma.Version == ta.Version) {
-						AddErrorLine ($"[FAIL] {ma.Version} ({m}) == {ta.Version} ({t})");
+						switch (t.FullName) {
+						case "AppKit.INSAccessibility":
+							// special case for [I]NSAccessibility type (10.9) / protocol (10.10) mix up
+							// https://github.com/xamarin/xamarin-macios/issues/10009
+							// better some dupes than being inaccurate when protocol members are inlined
+							break;
+						default:
+							AddErrorLine ($"[FAIL] {ma.Version} ({m}) == {ta.Version} ({t})");
+							break;
+						}
 					}
 					// Consistency checks, e.g. member lower than type
 					// note: that's valid in some cases, like a new base type being introduced
