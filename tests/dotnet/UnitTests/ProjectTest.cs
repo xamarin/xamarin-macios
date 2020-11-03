@@ -119,7 +119,7 @@ namespace Xamarin.Tests {
 			Clean (project_path);
 			Configuration.CopyDotNetSupportingFiles (dotnet_bindings_dir);
 			var result = DotNet.AssertBuild (project_path, verbosity);
-			var lines = result.StandardOutput.ToString ().Split ('\n');
+			var lines = BinLog.PrintToLines (result.BinLogPath);
 			// Find the resulting binding assembly from the build log
 			var assemblies = FilterToAssembly (lines, assemblyName);
 			Assert.That (assemblies, Is.Not.Empty, "Assemblies");
@@ -152,7 +152,7 @@ namespace Xamarin.Tests {
 			Clean (project_path);
 			Configuration.CopyDotNetSupportingFiles (dotnet_bindings_dir);
 			var result = DotNet.AssertBuild (project_path, verbosity);
-			var lines = result.StandardOutput.ToString ().Split ('\n');
+			var lines = BinLog.PrintToLines (result.BinLogPath);
 			// Find the resulting binding assembly from the build log
 			var assemblies = FilterToAssembly (lines, assemblyName);
 			Assert.That (assemblies, Is.Not.Empty, "Assemblies");
@@ -180,7 +180,8 @@ namespace Xamarin.Tests {
 			Clean (project_path);
 			Configuration.CopyDotNetSupportingFiles (dotnet_bindings_dir);
 			var result = DotNet.AssertBuild (project_path, verbosity);
-			var lines = result.StandardOutput.ToString ().Split ('\n');
+			var lines = BinLog.PrintToLines (result.BinLogPath).ToList ();
+			Console.WriteLine (string.Join ("\n", lines));
 			// Find the resulting binding assembly from the build log
 			var assemblies = FilterToAssembly (lines, assemblyName);
 			Assert.That (assemblies, Is.Not.Empty, "Assemblies");
@@ -210,7 +211,7 @@ namespace Xamarin.Tests {
 			Clean (project_path);
 			Configuration.CopyDotNetSupportingFiles (dotnet_bindings_dir);
 			var result = DotNet.AssertBuild (project_path, verbosity);
-			var lines = result.StandardOutput.ToString ().Split ('\n');
+			var lines = BinLog.PrintToLines (result.BinLogPath);
 			// Find the resulting binding assembly from the build log
 			var assemblies = FilterToAssembly (lines, assemblyName);
 			Assert.That (assemblies, Is.Not.Empty, "Assemblies");
@@ -240,7 +241,7 @@ namespace Xamarin.Tests {
 			Clean (project_path);
 			Configuration.CopyDotNetSupportingFiles (dotnet_bindings_dir);
 			var result = DotNet.AssertBuild (project_path, verbosity);
-			var lines = result.StandardOutput.ToString ().Split ('\n');
+			var lines = BinLog.PrintToLines (result.BinLogPath);
 			// Find the resulting binding assembly from the build log
 			var assemblies = FilterToAssembly (lines, assemblyName);
 			Assert.That (assemblies, Is.Not.Empty, "Assemblies");
@@ -277,7 +278,7 @@ namespace Xamarin.Tests {
 			var cleanupSupportFiles = Configuration.CopyDotNetSupportingFiles (Path.Combine (Configuration.SourceRoot, "external", "Touch.Unit", "Touch.Client/dotnet"));
 			try {
 				var result = DotNet.AssertBuild (project_path, verbosity);
-				var lines = result.StandardOutput.ToString ().Split ('\n');
+				var lines = BinLog.PrintToLines (result.BinLogPath);
 				// Find the resulting binding assembly from the build log
 				var assemblies = lines.
 					Select (v => v.Trim ()).
@@ -345,14 +346,14 @@ namespace Xamarin.Tests {
 
 		void AssertThatLinkerExecuted (ExecutionResult result)
 		{
-			var output = result.StandardOutput.ToString ();
+			var output = BinLog.PrintToString (result.BinLogPath);
 			Assert.That (output, Does.Contain ("Building target \"_RunILLink\" completely."), "Linker did not executed as expected.");
 			Assert.That (output, Does.Contain ("Pipeline Steps:"), "Custom steps did not run as expected.");
 		}
 
 		void AssertThatLinkerDidNotExecute (ExecutionResult result)
 		{
-			var output = result.StandardOutput.ToString ();
+			var output = BinLog.PrintToString (result.BinLogPath);
 			Assert.That (output, Does.Not.Contain ("Building target \"_RunILLink\" completely."), "Linker did not executed as expected.");
 			Assert.That (output, Does.Not.Contain ("Pipeline Steps:"), "Custom steps did not run as expected.");
 		}
