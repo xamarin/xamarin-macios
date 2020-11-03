@@ -3219,7 +3219,7 @@ public partial class Generator : IMemberGatherer {
 			}
 			switch (availability.AvailabilityKind) {
 			case AvailabilityKind.Unavailable:
-				// a unavailable member can override type-level attribute
+				// an unavailable member can override type-level attribute
 				print (availability.ToString ());
 				break;
 			default:
@@ -7992,4 +7992,3 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 }
-
