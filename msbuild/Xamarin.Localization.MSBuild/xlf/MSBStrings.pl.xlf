@@ -1544,7 +1544,7 @@
       <trans-unit id="W0111">
         <source>The iCloud entitlement '{0}' is not supported by the Provisioning Profile.
         </source>
-        <target state="translated">Uprawnienie usługi iCloud „{item.Key}” nie jest obsługiwane przez profil aprowizacji.
+        <target state="translated">Uprawnienie usługi iCloud „{0}” nie jest obsługiwane przez profil aprowizacji.
         </target>
         <note />
       </trans-unit>

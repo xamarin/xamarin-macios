@@ -1544,7 +1544,7 @@
       <trans-unit id="W0111">
         <source>The iCloud entitlement '{0}' is not supported by the Provisioning Profile.
         </source>
-        <target state="translated">iCloud 자격 '{item.Key}'는 프로비저닝 프로필에서 지원되지 않습니다.
+        <target state="translated">iCloud 자격 '{0}'는 프로비저닝 프로필에서 지원되지 않습니다.
         </target>
         <note />
       </trans-unit>
