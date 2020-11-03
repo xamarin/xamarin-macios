@@ -1626,7 +1626,7 @@ public partial class Generator : IMemberGatherer {
 		}
 		else if (IsWrappedType (mi.ReturnType)) {
 			returntype = "IntPtr";
-			returnformat = "return {0} != null ? {0}.Handle : IntPtr.Zero;";
+			returnformat = "return {0}.GetHandle ();";
 		} else if (mi.ReturnType == TypeManager.System_String) {
 			returntype = "IntPtr";
 			returnformat = "return NSString.CreateNative ({0}, true);";
@@ -1818,11 +1818,8 @@ public partial class Generator : IMemberGatherer {
 
 		var safe_name = pi.Name.GetSafeParamName ();
 
-		if (IsWrappedType (pi.ParameterType)){
-			if (null_allowed_override || AttributeManager.HasAttribute<NullAllowedAttribute> (pi))
-				return String.Format ("{0} == null ? IntPtr.Zero : {0}.Handle", safe_name);
-			return safe_name + ".Handle";
-		}
+		if (IsWrappedType (pi.ParameterType))
+			return safe_name + "__handle__";
 		
 		if (enum_mode != EnumMode.Compat && enum_mode != EnumMode.NativeBits && pi.ParameterType.IsEnum)
 			return "(" + PrimitiveType (pi.ParameterType, enum_mode: enum_mode) + ")" + safe_name;
@@ -1856,10 +1853,9 @@ public partial class Generator : IMemberGatherer {
 
 		MarshalType mt;
 		if (LookupMarshal (pi.ParameterType, out mt)){
-			string access = String.Format (mt.ParameterMarshal, safe_name);
 			if (null_allowed_override || AttributeManager.HasAttribute<NullAllowedAttribute> (pi))
-				return String.Format ("{0} == null ? IntPtr.Zero : {1}", safe_name, access);
-			return access;
+				return safe_name + "__handle__";
+			return String.Format (mt.ParameterMarshal, safe_name);
 		}
 
 		if (pi.ParameterType.IsArray){
@@ -1912,6 +1908,9 @@ public partial class Generator : IMemberGatherer {
 
 		if (IsSetter (mi)) {
 			if (AttributeManager.HasAttribute<NullAllowedAttribute> (mi)) {
+				return false;
+			}
+			if ((propInfo != null) && AttributeManager.HasAttribute<NullAllowedAttribute> (propInfo)) {
 				return false;
 			}
 		}
@@ -4173,35 +4172,37 @@ public partial class Generator : IMemberGatherer {
 			ErrorHelper.Show (new BindingException (1118, false, mi));
 
 		foreach (var pi in mi.GetParameters ()) {
+			var safe_name = pi.Name.GetSafeParamName ();
+			bool protocolize = Protocolize (pi);
 			if (!BindThirdPartyLibrary) {
-				if (!mi.IsSpecialName && IsModel (pi.ParameterType) && !Protocolize (pi)) {
+				if (!mi.IsSpecialName && IsModel (pi.ParameterType) && !protocolize) {
 					// don't warn on obsoleted API, there's likely a new version that fix this
 					// any no good reason for using the obsolete API anyway
 					if (!AttributeManager.HasAttribute <ObsoleteAttribute> (mi) && !AttributeManager.HasAttribute<ObsoleteAttribute> (mi.DeclaringType))
-						ErrorHelper.Warning (1106,
-							mi.DeclaringType, mi.Name, pi.Name, pi.ParameterType, pi.ParameterType.Namespace, pi.ParameterType.Name);
+						ErrorHelper.Warning (1106, mi.DeclaringType, mi.Name, pi.Name, pi.ParameterType, pi.ParameterType.Namespace, pi.ParameterType.Name);
 				}
 			}
 
-			if (null_allowed_override)
-				continue;
-
 			var needs_null_check = ParameterNeedsNullCheck (pi, mi, propInfo);
-			if (!needs_null_check)
-				continue;
-
-			var safe_name = pi.Name.GetSafeParamName ();
-
-			if (Protocolize (pi)) {
-				print ("if ({0} != null){{", safe_name);
+			if (protocolize) {
+				print ("if ({0} != null) {{", safe_name);
 				print ("\tif (!({0} is NSObject))\n", safe_name);
 				print ("\t\tthrow new ArgumentException (\"The object passed of type \" + {0}.GetType () + \" does not derive from NSObject\");", safe_name);
-				print ("} else {");
-				print ("\tthrow new ArgumentNullException (nameof ({0}));", safe_name);
 				print ("}");
-			} else {
+			}
+
+			var cap = propInfo?.SetMethod == mi ? (ICustomAttributeProvider) propInfo : (ICustomAttributeProvider) pi;
+			var bind_as = GetBindAsAttribute (cap);
+			var pit = bind_as == null ? pi.ParameterType : bind_as.Type;
+			if (IsWrappedType (pit) || TypeManager.INativeObject.IsAssignableFrom (pit)) {
+				if (needs_null_check && !null_allowed_override) {
+					print ($"var {safe_name}__handle__ = {safe_name}.GetNonNullHandle (nameof ({safe_name}));");
+				} else {
+					print ($"var {safe_name}__handle__ = {safe_name}.GetHandle ();");
+				}
+			} else if (needs_null_check) {
 				print ("if ({0} == null)", safe_name);
-				print ("\tthrow new ArgumentNullException (nameof ({0}));", safe_name);
+				print ("\tObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof ({0}));", safe_name);
 			}
 		}
 	}
@@ -4279,7 +4280,7 @@ public partial class Generator : IMemberGatherer {
 
 		Inject<PrologueSnippetAttribute> (mi);
 
-		GenerateArgumentChecks (mi, null_allowed_override, propInfo);
+		GenerateArgumentChecks (mi, false, propInfo);
 
 		// Collect all strings that can be fast-marshalled
 		List<string> stringParameters = CollectFastStringMarshalParameters (mi);
@@ -5376,7 +5377,7 @@ public partial class Generator : IMemberGatherer {
 					if (pinfo != null)
 						null_allowed = AttributeManager.HasAttribute<NullAllowedAttribute> (pinfo);
 				}
-				GenerateMethodBody (minfo, minfo.method, minfo.selector, null_allowed, null, BodyOption.None, null);
+				GenerateMethodBody (minfo, minfo.method, minfo.selector, null_allowed, null, BodyOption.None, pinfo);
 				if (minfo.is_autorelease) {
 					print ("}");
 					indent--;
