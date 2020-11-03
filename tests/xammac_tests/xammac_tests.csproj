@@ -108,7 +108,6 @@
     </Compile>
     <Compile Include="..\..\tests\test-libraries\TrampolineTest.generated.cs" />
     <Compile Include="..\..\tests\test-libraries\RegistrarTest.generated.cs" />
-    <Compile Include="AppKit\NSGridViewTest.cs" />
     <Compile Include="..\..\tools\common\Driver.execution.cs">
       <Link>Driver.execution.cs</Link>
     </Compile>
