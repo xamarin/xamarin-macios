@@ -1000,36 +1000,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<!--<Warning Text="_SplitAppExtensionReferencesByExistent: @(_AppExtensionReferenceWithConfigurationExistent)"/>-->
 	</Target>
 
-	<Target Name="_ResolveAppExtensionReferences" DependsOnTargets="_SplitAppExtensionReferencesByExistent">
-		<PropertyGroup>
-			<!-- When building a .sln with msbuild, the dependent projects may not be built. So, always build
-			     the referenced projects unless building from IDE. -->
-			<_BuildReferencedExtensionProjects Condition="'$(BuildingInsideVisualStudio)' != 'true'">true</_BuildReferencedExtensionProjects>
-		</PropertyGroup>
-
-		<!-- If the referenced projects have already been built, then just get the target paths -->
-		<MSBuild
-			Projects="@(_AppExtensionReferenceWithConfigurationExistent)"
-			Targets="GetBundleTargetPath"
-			Properties="%(_AppExtensionReferenceWithConfigurationExistent.SetConfiguration); %(_AppExtensionReferenceWithConfigurationExistent.SetPlatform)"
-			Condition="'@(_AppExtensionReferenceWithConfigurationExistent)' != '' and '$(_BuildReferencedExtensionProjects)' != 'true'">
-
-			<Output TaskParameter="TargetOutputs" ItemName="_ResolvedAppExtensionReferences" Condition="'%(_AppExtensionReferenceWithConfigurationExistent.ReferenceOutputAssembly)' != 'false'"/>
-		</MSBuild>
-
-		<!-- Build the referenced project if required -->
-		<MSBuild
-			Projects="@(_AppExtensionReferenceWithConfigurationExistent)"
-			Properties="%(_AppExtensionReferenceWithConfigurationExistent.SetConfiguration); %(_AppExtensionReferenceWithConfigurationExistent.SetPlatform)"
-			Condition="'@(_AppExtensionReferenceWithConfigurationExistent)' != '' and '$(_BuildReferencedExtensionProjects)' == 'true' ">
-
-			<Output TaskParameter="TargetOutputs" ItemName="_ResolvedAppExtensionReferences" Condition="'%(_AppExtensionReferenceWithConfigurationExistent.ReferenceOutputAssembly)' != 'false'"/>
-		</MSBuild>
-
-		<Warning Text="Referenced iOS App Extension Project %(_AppExtensionReferenceWithConfigurationNonExistent.Identity) not found, ignoring."
-			 Condition="'@(_AppExtensionReferenceWithConfigurationNonExistent)' != ''"/>
-	</Target>
-
 	<Target Name="_DetectDebugNetworkConfiguration">
 		<DetectDebugNetworkConfiguration
 			SessionId="$(BuildSessionId)"
