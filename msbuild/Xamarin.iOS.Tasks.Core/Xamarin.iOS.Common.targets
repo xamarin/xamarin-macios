@@ -954,18 +954,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</EmbedMobileProvision>
 	</Target>
 
-	<Target Name="_SeparateAppExtensionReferences" BeforeTargets="AssignProjectConfiguration">
-		<CreateItem Include="@(ProjectReference)" PreserveExistingMetadata="true" Condition="'%(Identity)' != '' And '%(ProjectReference.IsAppExtension)' == 'true'">
-			<Output ItemName="_AppExtensionReference" TaskParameter="Include" />
-		</CreateItem>
-
-		<ItemGroup>
-			<ProjectReference Remove="@(_AppExtensionReference)" />
-		</ItemGroup>
-
-		<!--<Warning Text="_SeparateAppExtensionReferences: @(_AppExtensionReference)"/>-->
-	</Target>
-
 	<Target Name="_DetectDebugNetworkConfiguration">
 		<DetectDebugNetworkConfiguration
 			SessionId="$(BuildSessionId)"

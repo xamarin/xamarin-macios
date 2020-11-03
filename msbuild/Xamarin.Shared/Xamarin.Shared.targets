@@ -931,6 +931,16 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</CreateItem>
 	</Target>
 
+	<Target Name="_SeparateAppExtensionReferences" BeforeTargets="AssignProjectConfiguration">
+		<CreateItem Include="@(ProjectReference)" PreserveExistingMetadata="true" Condition="'%(Identity)' != '' And '%(ProjectReference.IsAppExtension)' == 'true'">
+			<Output ItemName="_AppExtensionReference" TaskParameter="Include" />
+		</CreateItem>
+
+		<ItemGroup>
+			<ProjectReference Remove="@(_AppExtensionReference)" />
+		</ItemGroup>
+	</Target>
+
 	<!-- Split App Extension projects into 2 lists
 		_AppExtensionReferenceWithConfigurationExistent: Projects existent on disk
 		_AppExtensionReferenceWithConfigurationNonExistent: Projects non-existent on disk -->
