@@ -1,3 +1,4 @@
+#if __MACOS__
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -268,3 +269,4 @@ namespace Xamarin.Mac.Tests
 	}
 }
 
+#endif // __MACOS__

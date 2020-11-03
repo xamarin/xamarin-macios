@@ -1,4 +1,5 @@
-﻿using System;
+#if __MACOS__
+using System;
 using NUnit.Framework;
 
 using AppKit;
@@ -116,3 +117,4 @@ namespace apitest
 	}
 }
 
+#endif // __MACOS__

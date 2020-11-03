@@ -1,3 +1,4 @@
+#if __MACOS__
 
 // Copyright 2015 Xamarin, Inc.
 
@@ -88,3 +89,4 @@ namespace MonoTouchFixtures.Foundation {
 		}
 	}
 }
+#endif // __MACOS__

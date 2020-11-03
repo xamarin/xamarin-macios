@@ -1,3 +1,4 @@
+#if __MACOS__
 //
 // Unit tests for the assembly itself
 //
@@ -26,3 +27,4 @@ namespace MonoMacFixtures {
 		}
 	}
 }
+#endif // __MACOS__

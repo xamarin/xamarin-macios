@@ -1,3 +1,4 @@
+#if __MACOS__
 using System;
 using NUnit.Framework;
 
@@ -29,3 +30,4 @@ end tell";
 		}
 	}
 }
+#endif // __MACOS__

@@ -1,4 +1,5 @@
-﻿using System;
+#if __MACOS__
+using System;
 using System.Diagnostics;
 
 using Darwin;
@@ -129,3 +130,4 @@ namespace apitest
 		}
 	}
 }
+#endif // __MACOS__

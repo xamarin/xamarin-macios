@@ -1,4 +1,5 @@
-﻿using System;
+#if __MACOS__
+using System;
 using System.Runtime.InteropServices;
 
 public class Messaging
@@ -16,3 +17,4 @@ public class Messaging
 	public extern static void void_objc_msgSend (IntPtr receiver, IntPtr selector);
 }
 
+#endif // __MACOS__

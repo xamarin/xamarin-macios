@@ -1,4 +1,5 @@
-﻿using System;
+#if __MACOS__
+using System;
 using System.IO;
 using System.Runtime.InteropServices;
 
@@ -157,3 +158,4 @@ namespace apitest {
 		}
 	}
 }
+#endif // __MACOS__

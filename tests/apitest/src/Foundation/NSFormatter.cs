@@ -1,4 +1,5 @@
-﻿using System;
+#if __MACOS__
+using System;
 using NUnit.Framework;
 
 using Foundation;
@@ -56,3 +57,4 @@ namespace apitest
 	}
 }
 
+#endif // __MACOS__

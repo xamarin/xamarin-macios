@@ -1,4 +1,5 @@
-﻿using System;
+#if __MACOS__
+using System;
 using System.Runtime.InteropServices;
 
 using AppKit;
@@ -87,3 +88,4 @@ namespace MonoMacFixtures.AppKit
 	}
 }
 
+#endif // __MACOS__

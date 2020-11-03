@@ -1,3 +1,4 @@
+#if __MACOS__
 //
 // Unit tests for Class
 //
@@ -44,3 +45,4 @@ namespace MonoMacFixtures.ObjCRuntime {
 		}
 	}
 }
+#endif // __MACOS__

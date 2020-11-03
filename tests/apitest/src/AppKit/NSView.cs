@@ -1,4 +1,5 @@
-﻿using System;
+#if __MACOS__
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Framework;
@@ -129,3 +130,4 @@ namespace Xamarin.Mac.Tests
 		}
 	}
 }
+#endif // __MACOS__

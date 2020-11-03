@@ -1,3 +1,4 @@
+#if __MACOS__
 using System;
 using System.Reflection;
 
@@ -55,3 +56,4 @@ namespace Xamarin.Mac.Tests
 		}
 	}
 }
+#endif // __MACOS__

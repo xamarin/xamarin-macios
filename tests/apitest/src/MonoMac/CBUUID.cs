@@ -1,3 +1,4 @@
+#if __MACOS__
 //
 // Unit tests for CBUUID
 //
@@ -139,3 +140,4 @@ namespace MonoMacFixtures.CoreBluetooth
 		}
 	}
 }
+#endif // __MACOS__

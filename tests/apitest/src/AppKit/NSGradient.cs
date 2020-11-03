@@ -1,3 +1,4 @@
+#if __MACOS__
 using System;
 using NUnit.Framework;
 
@@ -50,3 +51,4 @@ namespace Xamarin.Mac.Tests
 	}
 }
 
+#endif // __MACOS__
