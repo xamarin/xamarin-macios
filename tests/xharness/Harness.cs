@@ -260,7 +260,6 @@ namespace Xharness {
 			int rv = 0;
 
 			var test_suites = new [] {
-				new { Directory = "apitest", ProjectFile = "apitest", Name = "apitest", Flavors = MacFlavors.Full | MacFlavors.Modern },
 				new { Directory = "linker/mac/dont link", ProjectFile = "dont link-mac", Name = "dont link", Flavors = MacFlavors.Modern | MacFlavors.Full | MacFlavors.System },
 			};
 			foreach (var p in test_suites) {
