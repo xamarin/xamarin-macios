@@ -8,8 +8,8 @@ using ObjCRuntime;
 
 namespace Xamarin.Mac.Tests
 {
-	[Register ("RegistrarTestClass")]
-	class RegistrarTestClass : NSObject 
+	[Register ("SimpleRegistrarTestClass")]
+	class SimpleRegistrarTestClass : NSObject 
 	{
 		public virtual string Value {
 			[Export ("value")]
@@ -20,7 +20,7 @@ namespace Xamarin.Mac.Tests
 	}
 
 	[Register ("RegistrarTestDerivedClass")]
-	class RegistrarTestDerivedClass : RegistrarTestClass 
+	class RegistrarTestDerivedClass : SimpleRegistrarTestClass 
 	{
 		public override string Value {
 			get {
@@ -38,7 +38,7 @@ namespace Xamarin.Mac.Tests
 		[Test]
 		public void SimpleRegistrarSmokeTest ()
 		{
-			RegistrarTestClass obj = new RegistrarTestClass ();
+			SimpleRegistrarTestClass obj = new SimpleRegistrarTestClass ();
 			IntPtr receiver = obj.Handle;
 
 			RegistrarTestDerivedClass derivedObj = new RegistrarTestDerivedClass ();
