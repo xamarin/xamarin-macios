@@ -19,35 +19,35 @@ using CoreFoundation;
 
 namespace Intents {
 	[Register("INCarDefrosterResolutionResult", true)]
-	[Obsolete ("This class is not available on watchOS")]
+	[Obsolete (Constants.UnavailableOnWatchOS)]
 	public unsafe partial class INCarDefrosterResolutionResult : INIntentResolutionResult {
-		public override IntPtr ClassHandle { get { throw new PlatformNotSupportedException ("This class is not supported on watchOS"); } }
+		public override IntPtr ClassHandle { get { throw new PlatformNotSupportedException (Constants.UnavailableOnWatchOS); } }
 
 		protected INCarDefrosterResolutionResult (NSObjectFlag t) : base (t)
 		{
-			throw new PlatformNotSupportedException ("This class is not supported on watchOS");
+			throw new PlatformNotSupportedException (Constants.UnavailableOnWatchOS);
 		}
 
 		protected internal INCarDefrosterResolutionResult (IntPtr handle) : base (handle)
 		{
-			throw new PlatformNotSupportedException ("This class is not supported on watchOS");
+			throw new PlatformNotSupportedException (Constants.UnavailableOnWatchOS);
 		}
 
 		public new static INCarDefrosterResolutionResult NeedsValue {
 			get {
-				throw new PlatformNotSupportedException ("This class is not supported on watchOS");
+				throw new PlatformNotSupportedException (Constants.UnavailableOnWatchOS);
 			}
 		}
 
 		public new static INCarDefrosterResolutionResult NotRequired {
 			get {
-				throw new PlatformNotSupportedException ("This class is not supported on watchOS");
+				throw new PlatformNotSupportedException (Constants.UnavailableOnWatchOS);
 			}
 		}
 
 		public new static INCarDefrosterResolutionResult Unsupported {
 			get {
-				throw new PlatformNotSupportedException ("This class is not supported on watchOS");
+				throw new PlatformNotSupportedException (Constants.UnavailableOnWatchOS);
 			}
 		}
 	} /* class INCarDefrosterResolutionResult */

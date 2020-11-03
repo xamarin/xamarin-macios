@@ -63,6 +63,62 @@ namespace Introspection {
 #endif
 		}
 
+		bool FoundInProtocols (MemberInfo m, Type t)
+		{
+			var method = m.ToString ();
+			foreach (var intf in t.GetInterfaces ()) {
+				var p = Assembly.GetType (intf.FullName);
+				if (p != null) {
+					// here we want inherited members so we don't have to hunt inherited interfaces recursively
+					foreach (var pm in p.GetMembers ()) {
+						if (pm.ToString () != method)
+							continue;
+						return true;
+					}
+					foreach (var ca in p.GetCustomAttributes<Foundation.ProtocolMemberAttribute> ()) {
+						// TODO check signature in [ProtocolMember]
+						if (ca.IsProperty) {
+							if (m.Name == "get_" + ca.Name)
+								return true;
+							if (m.Name == "set_" + ca.Name)
+								return true;
+						}
+						if (m.Name == ca.Name)
+							return true;
+					}
+				}
+				p = Assembly.GetType (intf.Namespace + "." + intf.Name.Substring (1));
+				if (p != null) {
+					// here we want inherited members so we don't have to hunt inherited interfaces recursively
+					foreach (var pm in p.GetMembers ()) {
+						if (pm.ToString () != method)
+							continue;
+						return true;
+					}
+				}
+				p = Assembly.GetType (intf.Namespace + "." + intf.Name.Substring (1) + "_Extensions");
+				if (p != null) {
+					// here we want inherited members so we don't have to hunt inherited interfaces recursively
+					foreach (var pm in p.GetMembers ()) {
+						// map extension method to original @optional
+						if (m.Name != pm.Name)
+							continue;
+						var parameters = (pm as MethodInfo).GetParameters ();
+						if (parameters.Length == 0)
+							continue;
+						var pattern = "(" + parameters [0].ParameterType.FullName;
+						if (parameters.Length > 1)
+							pattern += ", ";
+						var s = pm.ToString ().Replace (pattern, "(");
+						if (s != method)
+							continue;
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+
 		[Test]
 		public void Introduced ()
 		{
@@ -72,22 +128,50 @@ namespace Introspection {
 				if (LogProgress)
 					Console.WriteLine ($"T: {t}");
 				var ta = CheckAvailability (t);
-				foreach (var m in t.GetMembers ()) {
+				foreach (var m in t.GetMembers (BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public)) {
 					if (LogProgress)
 						Console.WriteLine ($"M: {m}");
 					var ma = CheckAvailability (m);
 					if (ta == null || ma == null)
 						continue;
+
+					// need to skip members that are copied to satisfy interfaces (protocol members)
+					if (FoundInProtocols (m, t))
+						continue;
+
 					// Duplicate checks, e.g. same attribute on member and type (extranous metadata)
 					if (ma.Version == ta.Version) {
-// about 4000
-//						AddErrorLine ($"[FAIL] {ma.Version} (Member) == {ta.Version} (Type) on '{m}'.");
+						switch (t.FullName) {
+						case "AppKit.INSAccessibility":
+							// special case for [I]NSAccessibility type (10.9) / protocol (10.10) mix up
+							// https://github.com/xamarin/xamarin-macios/issues/10009
+							// better some dupes than being inaccurate when protocol members are inlined
+							break;
+						default:
+							AddErrorLine ($"[FAIL] {ma.Version} ({m}) == {ta.Version} ({t})");
+							break;
+						}
 					}
 					// Consistency checks, e.g. member lower than type
 					// note: that's valid in some cases, like a new base type being introduced
 					if (ma.Version < ta.Version) {
-// about 8000
-//						AddErrorLine ($"[FAIL] {ma.Version} (Member) < {ta.Version} (Type) on '{m}'.");
+						switch (t.FullName) {
+						case "CoreBluetooth.CBPeer":
+							switch (m.ToString ()) {
+							// type added later and existing property was moved
+							case "Foundation.NSUuid get_Identifier()":
+							case "Foundation.NSUuid Identifier":
+								continue;
+							}
+							break;
+						case "MetricKit.MXUnitAveragePixelLuminance":
+						case "MetricKit.MXUnitSignalBars":
+							// design bug wrt generics leading to redefinition of some members in subclasses
+							if (m.ToString () == "System.String Symbol")
+								continue;
+							break;
+						}
+						AddErrorLine ($"[FAIL] {ma.Version} ({m}) < {ta.Version} ({t})");
 					}
 				}
 			}

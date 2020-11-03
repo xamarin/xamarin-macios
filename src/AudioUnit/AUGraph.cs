@@ -56,6 +56,8 @@ namespace AudioUnit
 		InvalidElement				= -10877,		
 	}
 
+	[Deprecated (PlatformName.iOS, 14,0, message: "Use 'AVAudioEngine' instead.")]
+	[Deprecated (PlatformName.MacOSX, 11,0, message: "Use 'AVAudioEngine' instead.")]
 	public class AUGraph : INativeObject, IDisposable
 	{
 		readonly GCHandle gcHandle;

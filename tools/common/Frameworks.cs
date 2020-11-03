@@ -202,6 +202,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "CallKit", "CallKit", 11,0 },
 					{ "ClassKit", "ClassKit", 11,0 },
 					{ "MLCompute", "MLCompute", 11,0 },
+					{ "OSLog", "OSLog", 11,0 },
 					{ "PassKit", "PassKit", 11,0 },
 					{ "ReplayKit", "ReplayKit", 11,0 },
 					{ "ScreenTime", "ScreenTime", 11,0 },

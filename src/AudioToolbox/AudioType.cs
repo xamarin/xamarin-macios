@@ -1129,19 +1129,22 @@ namespace AudioToolbox {
 
 	public enum SmpteTimeType : uint // UInt32 in AudioFileRegionList
 	{
-		None		= 0,
-		Type24		= 1,
-		Type25		= 2,
-		Type30Drop    = 3,
-		Type30        = 4,
-		Type2997      = 5,
-		Type2997Drop  = 6,
-		Type60        = 7,
-		Type5994      = 8,
-		Type60Drop    = 9,
-		Type5994Drop  = 10,
-		Type50        = 11,
-		Type2398      = 12
+#if !XAMCORE_4_0
+		[Obsolete ("Value is not to be used with any API.")]
+		None          = uint.MaxValue,
+#endif
+		Type24        = 0,
+		Type25        = 1,
+		Type30Drop    = 2,
+		Type30        = 3,
+		Type2997      = 4,
+		Type2997Drop  = 5,
+		Type60        = 6,
+		Type5994      = 7,
+		Type60Drop    = 8,
+		Type5994Drop  = 9,
+		Type50        = 10,
+		Type2398      = 11,
 	}
 	
 	[StructLayout(LayoutKind.Sequential)]

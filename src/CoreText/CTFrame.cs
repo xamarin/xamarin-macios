@@ -38,7 +38,8 @@ namespace CoreText {
 	[Flags]
 	public enum CTFrameProgression : uint {
 		TopToBottom = 0,
-		RightToLeft = 1
+		RightToLeft = 1,
+		LeftToRight = 2,
 	}
 
 	public enum CTFramePathFillRule {

@@ -83,6 +83,8 @@ namespace CoreData {
 	public enum NSPersistentStoreRequestType : ulong {
 		Fetch = 1,
 		Save,
+		[iOS (13,0)][TV (13,0)][Watch (6,0)][Mac (10,15)]
+		BatchInsert = 5,
 		BatchUpdate = 6,
 		BatchDelete = 7
 	}

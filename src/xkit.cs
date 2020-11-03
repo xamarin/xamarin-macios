@@ -900,7 +900,6 @@ namespace UIKit {
 		[Export ("typesetterBehavior")]
 		NSTypesetterBehavior TypesetterBehavior { get; set; }
 
-		[iOS (7,0)]
 		[Export ("allowsNonContiguousLayout")]
 		bool AllowsNonContiguousLayout { get; set; }
 

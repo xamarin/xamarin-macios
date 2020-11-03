@@ -109,16 +109,13 @@ namespace CoreBluetooth {
 		PeripheralDisconnected,
 		UUIDNotAllowed,
 		AlreadyAdvertising,
-		[iOS (7,1)][Mac (10,13)]
 		ConnectionFailed,
-		[iOS (9,0)][Mac (10,13)]
 		ConnectionLimitReached,
-		[iOS (11,0)][TV (11,0)][Mac (10,13)]
 		UnknownDevice,
-		[iOS (12,0)][TV (12,0)][Mac (10,14)][Watch (5,0)]
 		OperationNotSupported,
 		PeerRemovedPairingInformation,
 		EncryptionTimedOut,
+		TooManyLEPairedDevices = 16,
 	}
 
 	[Watch (4,0)]

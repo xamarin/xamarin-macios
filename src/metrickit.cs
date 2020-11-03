@@ -58,7 +58,7 @@ namespace MetricKit {
 		NSMeasurement<NSUnitDuration> CumulativeGpuTime { get; }
 	}
 
-	// NSUnit is added as a parent to ensure that the intermediate tmp dll can be comppiled
+	// NSUnit is added as a parent to ensure that the intermediate tmp dll can be compiled
 	// since at this stage the compiler does not know about the inheritance of NSDimension.
 	[NoWatch, NoTV, NoMac, iOS (13,0)]
 	[BaseType (typeof(NSDimension))]
@@ -74,7 +74,7 @@ namespace MetricKit {
 		MXUnitSignalBars Bars { get; }
 	}
 
-	// NSUnit is added as a parent to ensure that the intermediate tmp dll can be comppiled
+	// NSUnit is added as a parent to ensure that the intermediate tmp dll can be compiled
 	// since at this stage the compiler does not know about the inheritance of NSDimension.
 	[NoWatch, NoTV, NoMac, iOS (13,0)]
 	[BaseType (typeof(NSDimension))]
@@ -405,6 +405,11 @@ namespace MetricKit {
 		[iOS (14,0)]
 		[Export ("pastDiagnosticPayloads", ArgumentSemantic.Strong)]
 		MXDiagnosticPayload[] PastDiagnosticPayloads { get; }
+
+		[Static]
+		[Internal]
+		[Export ("makeLogHandleWithCategory:")]
+		IntPtr /* os_log_t */ _MakeLogHandle (NSString category);
 	}
 
 	interface IMXMetricManagerSubscriber { }

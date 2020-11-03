@@ -449,9 +449,17 @@ namespace Security {
 	public enum SecAuthenticationUI {
 		NotSet = -1,
 
+		[Deprecated (PlatformName.MacOSX, 11,0, message: "Use 'LAContext.InteractionNotAllowed' instead.")]
+		[Deprecated (PlatformName.iOS, 14,0, message: "Use 'LAContext.InteractionNotAllowed' instead.")]
+		[Deprecated (PlatformName.TvOS, 14,0, message: "Use 'LAContext.InteractionNotAllowed' instead.")]
+		[Deprecated (PlatformName.WatchOS, 7,0, message: "Use 'LAContext.InteractionNotAllowed' instead.")]
 		[Field ("kSecUseAuthenticationUIAllow")]
 		Allow,
 
+		[Deprecated (PlatformName.MacOSX, 11,0, message: "Use 'LAContext.InteractionNotAllowed' instead.")]
+		[Deprecated (PlatformName.iOS, 14,0, message: "Use 'LAContext.InteractionNotAllowed' instead.")]
+		[Deprecated (PlatformName.TvOS, 14,0, message: "Use 'LAContext.InteractionNotAllowed' instead.")]
+		[Deprecated (PlatformName.WatchOS, 7,0, message: "Use 'LAContext.InteractionNotAllowed' instead.")]
 		[Field ("kSecUseAuthenticationUIFail")]
 		Fail,
 

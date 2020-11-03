@@ -198,11 +198,11 @@ namespace VideoToolbox {
 			return null;
 		}
 
-		[Mac (10,9), iOS (8,0)]
+		[Mac (10,9)]
 		[DllImport (Constants.VideoToolboxLibrary)]
 		extern static VTStatus VTCompressionSessionPrepareToEncodeFrames (IntPtr handle);
 
-		[Mac (10,9), iOS (8,0)]
+		[Mac (10,9)]
 		public VTStatus PrepareToEncodeFrames ()
 		{
 			if (Handle == IntPtr.Zero)
@@ -300,11 +300,11 @@ namespace VideoToolbox {
 			return VTCompressionSessionCompleteFrames (Handle, completeUntilPresentationTimeStamp);
 		}
 
-		[Mac (10,10), iOS (8,0)]
+		[Mac (10,10)]
 		[DllImport (Constants.VideoToolboxLibrary)]
 		extern static VTStatus VTCompressionSessionBeginPass (IntPtr session, VTCompressionSessionOptionFlags flags, IntPtr reserved);
 
-		[Mac (10,10), iOS (8,0)]
+		[Mac (10,10)]
 		public VTStatus BeginPass (VTCompressionSessionOptionFlags flags)
 		{
 			if (Handle == IntPtr.Zero)
@@ -312,15 +312,15 @@ namespace VideoToolbox {
 			return VTCompressionSessionBeginPass (Handle, flags, IntPtr.Zero);
 		}
 
-		[Mac (10,10), iOS (8,0)]
+		[Mac (10,10)]
 		[DllImport (Constants.VideoToolboxLibrary)]
 		extern static VTStatus VTCompressionSessionEndPass (IntPtr session, out byte furtherPassesRequestedOut, IntPtr reserved);
 
-		[Mac (10,10), iOS (8,0)]
+		[Mac (10,10)]
 		[DllImport (Constants.VideoToolboxLibrary)]
 		extern static VTStatus VTCompressionSessionEndPass (IntPtr session, IntPtr ptrByte, IntPtr reserved);
 
-		[Mac (10,10), iOS (8,0)]
+		[Mac (10,10)]
 		public VTStatus EndPass (out bool furtherPassesRequested)
 		{
 			if (Handle == IntPtr.Zero)
@@ -341,14 +341,14 @@ namespace VideoToolbox {
 			return VTCompressionSessionEndPass (Handle, IntPtr.Zero, IntPtr.Zero);
 		}
 
-		[Mac (10,10), iOS (8,0)]
+		[Mac (10,10)]
 		[DllImport (Constants.VideoToolboxLibrary)]
 		extern static VTStatus VTCompressionSessionGetTimeRangesForNextPass (
 			/* VTCompressionSessionRef */ IntPtr session, 
 			/* CMItemCount* */ out int itemCount, 
 			/* const CMTimeRange** */ out IntPtr target);
 
-		[Mac (10,10), iOS (8,0)]
+		[Mac (10,10)]
 		public VTStatus GetTimeRangesForNextPass (out CMTimeRange [] timeRanges)
 		{
 			if (Handle == IntPtr.Zero)

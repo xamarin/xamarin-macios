@@ -107,12 +107,12 @@ namespace Network {
 		}
 
 
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[TV (13,0), Mac (10,15), iOS (13,0)]
 		[DllImport (Constants.NetworkLibrary)]
 		internal static extern void nw_ip_options_set_local_address_preference (IntPtr options, NWIPLocalAddressPreference preference);
 
 		[Obsolete ("Use the 'NWProtocolIPOptions' class instead.")]
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[TV (13,0), Mac (10,15), iOS (13,0)]
 		public NWIPLocalAddressPreference IPLocalAddressPreference {
 			set => nw_ip_options_set_local_address_preference (GetCheckedHandle (), value);
 		}

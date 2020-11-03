@@ -34,6 +34,11 @@ namespace MonoTouchFixtures.ModelIO {
 		[TestFixtureSetUp]
 		public void Setup ()
 		{
+#if MONOMAC
+			// ModelIO seems to be broken in Xcode 12.2 Beta 3 so disabling for now.
+			if (TestRuntime.CheckExactXcodeVersion (12, 2, beta: 3))
+				Assert.Inconclusive ("ModelIO is not working in Xcode 12.2 Beta 3");
+#endif
 			TestRuntime.AssertXcodeVersion (9, 0);
 		}
 

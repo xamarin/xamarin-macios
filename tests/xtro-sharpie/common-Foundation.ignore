@@ -1433,3 +1433,6 @@
 !missing-null-allowed! 'System.Void Foundation.NSUserDefaults::SetObjectForKey(Foundation.NSObject,System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void Foundation.NSXpcConnection::set_InterruptionHandler(System.Action)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void Foundation.NSXpcConnection::set_InvalidationHandler(System.Action)' is missing an [NullAllowed] on parameter #0
+
+## convenience value (combined flags)
+!extra-enum-value! Managed value 3 for NSKeyValueObservingOptions.OldNew not found in native headers

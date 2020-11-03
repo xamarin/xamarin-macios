@@ -65,7 +65,6 @@ namespace Messages {
 	[Protocol]
 	interface MSMessagesAppTranscriptPresentation
 	{
-		[iOS (11,0)]
 		[Abstract]
 		[Export ("contentSizeThatFits:")]
 		CGSize GetContentSizeThatFits (CGSize size);

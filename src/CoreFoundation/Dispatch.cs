@@ -530,6 +530,8 @@ namespace CoreFoundation {
 		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_after (/* dispath_time_t */ ulong time, IntPtr queue, IntPtr block);
 
+		[Deprecated (PlatformName.iOS, 6,0)]
+		[Deprecated (PlatformName.MacOSX, 10,9)]
 		[DllImport (Constants.libcLibrary)]
 		extern static IntPtr dispatch_get_current_queue ();
 

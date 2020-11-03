@@ -248,11 +248,9 @@ namespace AudioUnit {
 		[Export ("shouldChangeToFormat:forBus:")]
 		bool ShouldChangeToFormat (AVAudioFormat format, AUAudioUnitBus bus);
 
-		[Mac (10,11)][iOS (7,0)]
 		[Notification, Field ("kAudioComponentRegistrationsChangedNotification")]
 		NSString AudioComponentRegistrationsChangedNotification { get; }
 
-		[Mac (10,11)][iOS (7,0)]
 		[Notification, Field ("kAudioComponentInstanceInvalidationNotification")]
 		NSString AudioComponentInstanceInvalidationNotification { get; }
 
