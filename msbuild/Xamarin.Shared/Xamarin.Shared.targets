@@ -914,6 +914,23 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 	<!-- App extensions -->
 
+	<Target Name="_AssignAppExtensionConfiguration" Condition="'@(_AppExtensionReference)' != ''">
+		<!-- assign configs if building a solution file -->
+		<AssignProjectConfiguration
+			ProjectReferences = "@(_AppExtensionReference)"
+			SolutionConfigurationContents = "$(CurrentSolutionConfigurationContents)"
+			Condition="'$(CurrentSolutionConfigurationContents)' != ''">
+
+			<Output TaskParameter="AssignedProjects" ItemName="_AppExtensionReferenceWithConfiguration"/>
+		</AssignProjectConfiguration>
+
+		<!-- Else, just -->
+		<CreateItem Include="@(_AppExtensionReference)"
+					Condition="'$(CurrentSolutionConfigurationContents)' == ''">
+			<Output TaskParameter="Include" ItemName="_AppExtensionReferenceWithConfiguration"/>
+		</CreateItem>
+	</Target>
+
 	<!-- Split App Extension projects into 2 lists
 		_AppExtensionReferenceWithConfigurationExistent: Projects existent on disk
 		_AppExtensionReferenceWithConfigurationNonExistent: Projects non-existent on disk -->
@@ -925,8 +942,6 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<Output TaskParameter="Include" ItemName="_AppExtensionReferenceWithConfigurationNonExistent"
 				Condition="!Exists ('%(_AppExtensionReferenceWithConfiguration.Identity)')"/>
 		</CreateItem>
-
-		<!--<Warning Text="_SplitAppExtensionReferencesByExistent: @(_AppExtensionReferenceWithConfigurationExistent)"/>-->
 	</Target>
 
 	<Target Name="_ResolveAppExtensionReferences" DependsOnTargets="_SplitAppExtensionReferencesByExistent">
