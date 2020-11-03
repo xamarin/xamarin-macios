@@ -147,6 +147,8 @@
 			_CopyResourcesToBundle;
 			_CompileEntitlements;
 			_CompileAppManifest;
+			_ResolveAppExtensionReferences;
+			_ExtendAppExtensionReferences;
 			_ComputeLinkerArguments;
 			ComputeFilesToPublish;
 			_LoadLinkerOutput;
@@ -154,6 +156,7 @@
 			_LinkNativeExecutable;
 			_ComputePublishLocation;
 			CopyFilesToPublishDirectory;
+			_CopyAppExtensionsToBundle;
 		</CreateAppBundleDependsOn>
 	</PropertyGroup>
 
