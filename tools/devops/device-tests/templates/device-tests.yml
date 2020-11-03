@@ -75,6 +75,7 @@ steps:
     exit 0  
   displayName: 'Disk cleanup'
   timeoutInMinutes: 5
+  continueOnError: true
 
 # Use a cmdlet to check if the space available in the devices root system is larger than 50 gb. If there is not
 # enough space available it:
