@@ -441,20 +441,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		<!--<Warning Text="_AssignAppExtensionConfiguration: @(_AppExtensionReferenceWithConfiguration)"/>-->
 	</Target>
 
-	<!-- Split Mac App Extension projects into 2 lists
-		_AppExtensionReferenceWithConfigurationExistent: Projects existent on disk
-		_AppExtensionReferenceWithConfigurationNonExistent: Projects non-existent on disk -->
-	<Target Name="_SplitAppExtensionReferencesByExistent" DependsOnTargets="_AssignAppExtensionConfiguration">
-		<CreateItem Include="@(_AppExtensionReferenceWithConfiguration)" Condition="'@(_AppExtensionReferenceWithConfiguration)' != ''">
-			<Output TaskParameter="Include" ItemName="_AppExtensionReferenceWithConfigurationExistent"
-				Condition="Exists ('%(_AppExtensionReferenceWithConfiguration.Identity)')"/>
-
-			<Output TaskParameter="Include" ItemName="_AppExtensionReferenceWithConfigurationNonExistent"
-				Condition="!Exists ('%(_AppExtensionReferenceWithConfiguration.Identity)')"/>
-		</CreateItem>
-
-		<!--<Warning Text="_SplitAppExtensionReferencesByExistent: @(_AppExtensionReferenceWithConfigurationExistent)"/>-->
-	</Target>
 	
 	<PropertyGroup>
 		<ArchiveDependsOn>
