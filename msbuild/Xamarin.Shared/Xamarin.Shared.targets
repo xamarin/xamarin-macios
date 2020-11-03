@@ -984,6 +984,51 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			 Condition="'@(_AppExtensionReferenceWithConfigurationNonExistent)' != ''"/>
 	</Target>
 
+	<Target Name="_PlaceAppExtensions" DependsOnTargets="_ExtendAppExtensionReferences;_ResolveAppExtensionReferences">
+		<ItemGroup>
+			<!-- Add a 'ContainerName' metadata to indicate where the extension should go inside the container's app bundle -->
+			<_ResolvedAppExtensionReferences Condition="'%(_ResolvedAppExtensionReferences.Extension)' == '.appex'">
+				<ContainerName>PlugIns</ContainerName>
+			</_ResolvedAppExtensionReferences>
+			<_ResolvedAppExtensionReferences Condition="'%(_ResolvedAppExtensionReferences.Extension)' == '.xpc'">
+				<ContainerName>XPCServices</ContainerName>
+			</_ResolvedAppExtensionReferences>
+		</ItemGroup>
+
+		<PropertyGroup>
+			<_AppExtensionRoot Condition="'$(_PlatformName)' == 'macOS'">$(_AppBundlePath)Contents\</_AppExtensionRoot>
+			<_AppExtensionRoot Condition="'$(_PlatformName)' != 'macOS'">$(_AppBundlePath)</_AppExtensionRoot>
+		</PropertyGroup>
+	</Target>
+
+	<Target Name="_CopyAppExtensionsToBundle"
+			DependsOnTargets="_ExtendAppExtensionReferences;_ResolveAppExtensionReferences;_PlaceAppExtensions"
+			Inputs="@(_ResolvedAppExtensionReferences)"
+			Outputs="$(_AppExtensionRoot)%(_ResolvedAppExtensionReferences.ContainerName)\%(_ResolvedAppExtensionReferences.FileName)%(_ResolvedAppExtensionReferences.Extension)"
+			>
+		<MakeDir
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			Directories="$(_AppExtensionRoot)%(_ResolvedAppExtensionReferences.ContainerName)"
+		/>
+
+		<Ditto
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			ToolExe="$(DittoExe)"
+			ToolPath="$(DittoPath)"
+			Source="@(_ResolvedAppExtensionReferences)"
+			Destination="$(_AppExtensionRoot)%(_ResolvedAppExtensionReferences.ContainerName)\%(_ResolvedAppExtensionReferences.FileName)%(_ResolvedAppExtensionReferences.Extension)"
+		/>
+
+		<!-- Delete any code signatures and dSYM dirs since they are now invalid -->
+		<RemoveDir
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			Directories="$(_AppExtensionRoot)%(_ResolvedAppExtensionReferences.ContainerName)\%(_ResolvedAppExtensionReferences.FileName)%(_ResolvedAppExtensionReferences.Extension)\_CodeSignature;
+						$(_AppBundlePath)..\%(_ResolvedAppExtensionReferences.FileName)%(_ResolvedAppExtensionReferences.Extension).dSYM"
+		/>
+	</Target>
 
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Shared.ObjCBinding.targets" Condition="'$(IsBindingProject)' == 'true'" />
 
