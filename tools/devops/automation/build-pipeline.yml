@@ -145,9 +145,10 @@ jobs:
   - bash:
       set -x
       set -e
-      rm -Rf $(Build.SourcesDirectory)/package/
+      rm -Rvf $(Build.SourcesDirectory)/package
+      time make -C $(Build.SourcesDirectory)/xamarin-macios/ git-clean-all 
     displayName: 'Clear results directory'
-    timeoutInMinutes: 1
+    timeoutInMinutes: 5
 
 
   # the following should be using the labels in the PR, we are not yet doing so, but we will in the
@@ -239,21 +240,24 @@ jobs:
 
       IOS_PKG=$(find $(Build.SourcesDirectory)/package -type f -name "xamarin.ios-*" | xargs basename)
       if [ -z "$IOS_PKG" ]; then 
-        IOS_PKG="$(Build.SourcesDirectory)/package/$IOS_PKG"
-      else
         echo "Xamarin.iOS package not found."
+      else
+        IOS_PKG="$(Build.SourcesDirectory)/package/$IOS_PKG"
+        echo "Xamarin.iOS package found at $IOS_PKG"
       fi
 
       MAC_PKG=$(find $(Build.SourcesDirectory)/package -type f -name "xamarin.mac-*" | xargs basename)
       if [ -z "$IOS_PKG" ]; then
-        MAC_PKG="$(Build.SourcesDirectory)/package/$MAC_PKG"
-      else
         echo "Xamarin.Mac package not found."
+      else
+        MAC_PKG="$(Build.SourcesDirectory)/package/$MAC_PKG"
+        echo "Xamarin.Mac package found at $MAC_PKG"
       fi
 
       security create-keychain -p $PRODUCTSIGN_KEYCHAIN_PASSWORD login.keychain 
       security unlock-keychain -p $PRODUCTSIGN_KEYCHAIN_PASSWORD login.keychain
       PACKAGES="$IOS_PKG $MAC_PKG"
+      echo "Packages found at $PACKAGES"
 
       python $(Build.SourcesDirectory)/release-scripts/sign_and_notarize.py -a "$APP_ID" -i "$INSTALL_ID" -u "$APPLE_ACCOUNT" -p "$APPLE_PASS" -t "$TEAM_ID" -d $(Build.SourcesDirectory)/package/notarized -e "$MAC_ENTITLEMENTS" -k login.keychain "$PACKAGES"
 
