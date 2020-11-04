@@ -116,8 +116,6 @@ namespace Xamarin.Tests {
 					var components = v.Split ('/');
 					if (components.Any (v => v.EndsWith (".framework", StringComparison.Ordinal))) {
 						return false; // TODO
-					} else if (components.Any (v => v.EndsWith (".mlmodelc", StringComparison.Ordinal))) {
-						return false; // TODO
 					}
 
 					return true;
