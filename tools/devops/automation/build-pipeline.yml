@@ -31,6 +31,7 @@ resources:
 
 variables:
 - group: Xamarin-Secrets
+- group: Xamarin-Signing
 - group: Xamarin Release
 - group: Xamarin Notarization
 - group: XamarinCompatLab                                     # provisionator-uri setting
@@ -38,6 +39,8 @@ variables:
   value: $(github--pat--vs-mobiletools-engineering-service2)  # Use a token dedicated to critical production workflows and help avoid GitHub throttling
 - name: system.debug
   value: true
+- name: SigningKeychain
+  value: "builder.keychain"
 
 trigger: none
 
@@ -230,6 +233,15 @@ jobs:
     displayName: 'Signing PR Build'
     condition: and(eq(variables['configuration.SignPkgs'], 'True'), eq(variables['configuration.IsPr'], 'True'))
 
+  - template: install-certificates.yml@yaml
+    parameters:
+      DeveloperIdApplication: $(developer-id-application)
+      DeveloperIdInstaller: $(developer-id-installer)
+      IphoneDeveloper: $(iphone-developer)
+      MacDeveloper: $(mac-developer)
+      HostedMacKeychainPassword: $(AzDO-OnPrem-KeychainPass)
+    condition: and(eq(variables['configuration.SignPkgs'], 'True'), eq(variables['configuration.IsPr'], 'False'))
+
   - bash: | 
 
       VIRTUAL_ENV_PATH=$(Build.SourcesDirectory)/venv
@@ -254,26 +266,30 @@ jobs:
         echo "Xamarin.Mac package found at $MAC_PKG"
       fi
 
-      security create-keychain -p $PRODUCTSIGN_KEYCHAIN_PASSWORD login.keychain 
-      security unlock-keychain -p $PRODUCTSIGN_KEYCHAIN_PASSWORD login.keychain
+      security unlock-keychain -p $PRODUCTSIGN_KEYCHAIN_PASSWORD builder.keychain
       PACKAGES="$IOS_PKG $MAC_PKG"
       echo "Packages found at $PACKAGES"
 
-      echo "$PACKAGES" | xargs python $(Build.SourcesDirectory)/release-scripts/sign_and_notarize.py -a "$APP_ID" -i "$INSTALL_ID" -u "$APPLE_ACCOUNT" -p "$APPLE_PASS" -t "$TEAM_ID" -d $(Build.SourcesDirectory)/package/notarized -e "$MAC_ENTITLEMENTS" -k login.keychain
+      echo "$PACKAGES" | xargs python $(Build.SourcesDirectory)/release-scripts/sign_and_notarize.py -a "$APP_ID" -i "$INSTALL_ID" -u "$APPLE_ACCOUNT" -p "$APPLE_PASS" -t "$TEAM_ID" -d $(Build.SourcesDirectory)/package/notarized -e "$MAC_ENTITLEMENTS" -k "$KEYCHAIN
 
       deactivate
       rm -Rf "$VIRTUAL_ENV_PATH"
     env:
-      PRODUCTSIGN_KEYCHAIN_PASSWORD: $(xma-password)
+      PRODUCTSIGN_KEYCHAIN_PASSWORD: $(AzDO-OnPrem-KeychainPass)
       MAC_ENTITLEMENTS: $(Build.SourcesDirectory)/xamarin-macios/mac-entitlements.plist
       APP_ID: $(XamarinAppId)
       INSTALL_ID: $(XamarinIdentifier)
       APPLE_ACCOUNT: $(XamarinUserId)
       APPLE_PASS: $(XamarinPassword)
       TEAM_ID: $(TeamID)
+      KEYCHAIN: $(SigningKeychain)
     displayName: 'Signing Release Build'
     condition: and(eq(variables['configuration.SignPkgs'], 'True'), eq(variables['configuration.IsPr'], 'False'))
     timeoutInMinutes: 90
+
+  - template: uninstall-certificates/v1.yml@yaml
+    parameters:
+      HostedMacKeychainPassword: $(AzDO-OnPrem-KeychainPass)
   
   # upload each of the pkgs into the pipeline artifacts
   - task: PublishPipelineArtifact@1
