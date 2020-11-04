@@ -1544,7 +1544,7 @@
       <trans-unit id="W0111">
         <source>The iCloud entitlement '{0}' is not supported by the Provisioning Profile.
         </source>
-        <target state="new">The iCloud entitlement '{0}' is not supported by the Provisioning Profile.
+        <target state="translated">佈建設定檔不支援 iCloud 權利 '{0}'。
         </target>
         <note />
       </trans-unit>
