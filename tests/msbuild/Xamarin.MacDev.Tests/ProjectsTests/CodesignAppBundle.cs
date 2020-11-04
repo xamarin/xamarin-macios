@@ -195,8 +195,7 @@ namespace Xamarin.iOS.Tasks
 				var newTimestamp = File.GetLastWriteTimeUtc (mainExecutable);
 
 				// make sure that the main app bundle was codesigned due to the changes in the appex
-				// Note: this step requires msbuild instead of xbuild to work properly
-				//Assert.IsTrue (newTimestamp > timestamp, "The main app bundle does not seem to have been re-codesigned");
+				Assert.IsTrue (newTimestamp > timestamp, "The main app bundle does not seem to have been re-codesigned");
 			} finally {
 				// restore the original ActionViewController.cs code...
 				text = text.Replace ("{0} The Awakening...", "{0} awake with context");
