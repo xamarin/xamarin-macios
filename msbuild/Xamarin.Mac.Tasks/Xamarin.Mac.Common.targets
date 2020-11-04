@@ -69,15 +69,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<CompileColladaAssetsDependsOn>
-			_CollectColladaAssets;
-			_CoreCompileColladaAssets
-		</CompileColladaAssetsDependsOn>
-	</PropertyGroup>
-
-	<Target Name="_CompileColladaAssets" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="$(CompileColladaAssetsDependsOn)" />
-
-	<PropertyGroup>
 		<CreateAppBundleDependsOn Condition="'$(_UsingXamarinSdk)' != 'true'">
 			_DetectSigningIdentity;
 			_CopyResourcesToBundle;
@@ -281,42 +272,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			XamarinSdkRoot="$(_XamarinSdkRoot)"
 			>
 		</Mmp>
-	</Target>
-
-	<Target Name="_CollectColladaAssets">
-		<CollectBundleResources
-			Condition="'$(IsMacEnabled)' == 'true'"
-			SessionId="$(BuildSessionId)"
-			BundleResources="@(Collada)"
-			ProjectDir="$(MSBuildProjectDirectory)"
-			ResourcePrefix="$(_ResourcePrefix)">
-			<Output TaskParameter="BundleResourcesWithLogicalNames" ItemName="_ColladaAssetWithLogicalName" />
-		</CollectBundleResources>
-	</Target>
-
-	<Target Name="_CoreCompileColladaAssets"
-		DependsOnTargets="_CollectColladaAssets;_DetectSdkLocations;_ComputeTargetFrameworkMoniker"
-		Inputs="@(_ColladaAssetWithLogicalName)"
-		Outputs="$(IntermediateOutputPath)%(_ColladaAssetWithLogicalName.LogicalName)"
-		>
-
-		<ScnTool
-			Condition="'$(IsMacEnabled)' == 'true'"
-			SessionId="$(BuildSessionId)"
-			ToolExe="$(ScnToolExe)"
-			ToolPath="$(ScnToolPath)"
-			SdkRoot="$(_SdkRoot)"
-			SdkDevPath="$(_SdkDevPath)"
-			SdkVersion="$(_SdkVersion)"
-			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
-			IntermediateOutputPath="$(IntermediateOutputPath)"
-			InputScene="%(_ColladaAssetWithLogicalName.Identity)"
-			OutputScene="$(IntermediateOutputPath)%(_ColladaAssetWithLogicalName.LogicalName)">
-		</ScnTool>
-
-		<CreateItem Include="$(IntermediateOutputPath)%(_ColladaAssetWithLogicalName.LogicalName)" AdditionalMetadata="LogicalName=%(_ColladaAssetWithLogicalName.LogicalName)">
-			<Output TaskParameter="Include" ItemName="_BundleResourceWithLogicalName" />
-		</CreateItem>
 	</Target>
 
 	<Target Name="_CompileImageAssets" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_BeforeCoreCompileImageAssets;_ReadCompileImageAssets;_CoreCompileImageAssets" />

@@ -92,18 +92,9 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<CompileColladaAssetsDependsOn>
-			_CollectColladaAssets;
-			_CoreCompileColladaAssets
-		</CompileColladaAssetsDependsOn>
-	</PropertyGroup>
-
-	<PropertyGroup>
 		<_IsContainerApp>false</_IsContainerApp>
 		<_IsContainerApp Condition="$(IsAppExtension) == 'false' And '$(IsWatchApp)' == 'false'">true</_IsContainerApp>
 	</PropertyGroup>
-
-	<Target Name="_CompileColladaAssets" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="$(CompileColladaAssetsDependsOn)" />
 
 	<PropertyGroup>
 		<OptimizePngImagesDependsOn>
@@ -781,42 +772,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</ItemGroup>
 
 		<CreateItem Include="$(DeviceSpecificIntermediateOutputPath)optimized\%(_LocalizationFile.LogicalName)" AdditionalMetadata="LogicalName=%(_LocalizationFile.LogicalName);Optimize='false'">
-			<Output TaskParameter="Include" ItemName="_BundleResourceWithLogicalName" />
-		</CreateItem>
-	</Target>
-
-	<Target Name="_CollectColladaAssets">
-		<CollectBundleResources
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			BundleResources="@(Collada)"
-			ProjectDir="$(MSBuildProjectDirectory)"
-			ResourcePrefix="$(_ResourcePrefix)">
-			<Output TaskParameter="BundleResourcesWithLogicalNames" ItemName="_ColladaAssetWithLogicalName" />
-		</CollectBundleResources>
-	</Target>
-
-	<Target Name="_CoreCompileColladaAssets"
-		DependsOnTargets="_CollectColladaAssets;_DetectSdkLocations;_ComputeTargetFrameworkMoniker"
-		Inputs="@(_ColladaAssetWithLogicalName)"
-		Outputs="$(DeviceSpecificIntermediateOutputPath)%(_ColladaAssetWithLogicalName.LogicalName)"
-		>
-
-		<ScnTool
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			ToolExe="$(ScnToolExe)"
-			ToolPath="$(ScnToolPath)"
-			SdkRoot="$(_SdkRoot)"
-			SdkDevPath="$(_SdkDevPath)"
-			SdkVersion="$(_SdkVersion)"
-			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
-			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
-			InputScene="%(_ColladaAssetWithLogicalName.Identity)"
-			OutputScene="$(DeviceSpecificIntermediateOutputPath)%(_ColladaAssetWithLogicalName.LogicalName)">
-		</ScnTool>
-
-		<CreateItem Include="$(DeviceSpecificIntermediateOutputPath)%(_ColladaAssetWithLogicalName.LogicalName)" AdditionalMetadata="LogicalName=%(_ColladaAssetWithLogicalName.LogicalName);Optimize='False'">
 			<Output TaskParameter="Include" ItemName="_BundleResourceWithLogicalName" />
 		</CreateItem>
 	</Target>
