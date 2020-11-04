@@ -118,8 +118,6 @@ namespace Xamarin.Tests {
 						return false; // TODO
 					} else if (components.Any (v => v.EndsWith (".appex", StringComparison.Ordinal))) {
 						return false; // TODO
-					} else if (components.Any (v => v.EndsWith (".mlmodelc", StringComparison.Ordinal))) {
-						return false; // TODO
 					}
 
 					return true;
