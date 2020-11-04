@@ -259,7 +259,7 @@ jobs:
       PACKAGES="$IOS_PKG $MAC_PKG"
       echo "Packages found at $PACKAGES"
 
-      python $(Build.SourcesDirectory)/release-scripts/sign_and_notarize.py -a "$APP_ID" -i "$INSTALL_ID" -u "$APPLE_ACCOUNT" -p "$APPLE_PASS" -t "$TEAM_ID" -d $(Build.SourcesDirectory)/package/notarized -e "$MAC_ENTITLEMENTS" -k login.keychain "$PACKAGES"
+      echo "$PACKAGES" | xargs python $(Build.SourcesDirectory)/release-scripts/sign_and_notarize.py -a "$APP_ID" -i "$INSTALL_ID" -u "$APPLE_ACCOUNT" -p "$APPLE_PASS" -t "$TEAM_ID" -d $(Build.SourcesDirectory)/package/notarized -e "$MAC_ENTITLEMENTS" -k login.keychain
 
       deactivate
       rm -Rf "$VIRTUAL_ENV_PATH"
