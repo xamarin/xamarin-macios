@@ -240,7 +240,6 @@ jobs:
       IphoneDeveloper: $(iphone-developer)
       MacDeveloper: $(mac-developer)
       HostedMacKeychainPassword: $(AzDO-OnPrem-KeychainPass)
-    condition: and(eq(variables['configuration.SignPkgs'], 'True'), eq(variables['configuration.IsPr'], 'False'))
 
   - bash: | 
 
