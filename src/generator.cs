@@ -3204,16 +3204,17 @@ public partial class Generator : IMemberGatherer {
 		if (mi == null)
 			return;
 
-		List<AvailabilityBaseAttribute> type_ca = null;
+		AvailabilityBaseAttribute[] type_ca = null;
 
 		foreach (var availability in AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (mi)) {
 			if (type_ca == null) {
-				type_ca = new List<AvailabilityBaseAttribute> ();
 				if (mi.DeclaringType != null)
-					type_ca.AddRange (AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (mi.DeclaringType));
+					type_ca = AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (mi.DeclaringType);
+				else
+					type_ca = Array.Empty<AvailabilityBaseAttribute> ();
 			}
 			// type has nothing, anything on member should be generated
-			if (type_ca.Count == 0) {
+			if (type_ca.Length == 0) {
 				print (availability.ToString ());
 				continue;
 			}
