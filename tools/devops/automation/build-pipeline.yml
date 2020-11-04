@@ -31,7 +31,7 @@ resources:
 
 variables:
 - group: Xamarin-Secrets
-- group: Xamarin-Signing
+- group: Xamarin Signing
 - group: Xamarin Release
 - group: Xamarin Notarization
 - group: XamarinCompatLab                                     # provisionator-uri setting
