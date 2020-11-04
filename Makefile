@@ -151,13 +151,23 @@ git-clean-all:
 	@test -d external/mono && echo "Cleaning mono..." && cd external/mono && git clean -xffdq && git submodule foreach -q --recursive 'git clean -xffdq && git reset --hard -q' || true
 	@git submodule foreach -q --recursive 'git clean -xffdq && git reset --hard -q'
 	@for dir in $(DEPENDENCY_DIRECTORIES); do if test -d $(CURDIR)/$$dir; then echo "Cleaning $$dir" && cd $(CURDIR)/$$dir && git clean -xffdq && git reset --hard -q && git submodule foreach -q --recursive 'git clean -xffdq'; else echo "Skipped  $$dir (does not exist)"; fi; done
-ifdef ENABLE_XAMARIN
-	@./configure --enable-xamarin
-	$(MAKE) reset
-	@echo "Done (Xamarin-specific build has been re-enabled)"
-else
-	@echo "Done"
-endif
+
+	@if [ -n "$(ENABLE_XAMARIN)" ] || [ -n "$(ENABLE_DOTNET)"]; then \
+		CONFIGURE_FLAGS=""; \
+		if [ -n "$(ENABLE_XAMARIN)" ]; then \
+			echo "Xamarin-specific build has been re-enabled"; \
+			CONFIGURE_FLAGS="$$CONFIGURE_FLAGS --enable-xamarin"; \
+		fi; \
+		if [ -n "$(ENABLE_DOTNET)" ]; then \
+			echo "Dotnet-specific build has been re-enabled"; \
+			CONFIGURE_FLAGS="$$CONFIGURE_FLAGS --enable-dotnet"; \
+		fi; \
+		./configure "$$CONFIGURE_FLAGS"; \
+		$(MAKE) reset; \
+		echo "Done"; \
+	else \
+		echo "Done"; \
+	fi; \
 
 ifdef ENABLE_XAMARIN
 SUBDIRS += $(MACCORE_PATH)
