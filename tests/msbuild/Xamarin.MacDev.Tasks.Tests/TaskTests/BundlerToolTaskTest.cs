@@ -1,0 +1,43 @@
+﻿using System;
+
+using NUnit.Framework;
+
+namespace Xamarin.MacDev.Tasks.Tests {
+
+	[TestFixture]
+	public class BundlerToolTaskTest {
+
+		// single arch request (subset are fine)
+		[TestCase ("iOS", null, "arm64", "ios-arm64/Universal.framework")]
+		[TestCase ("iOS", "simulator", "x86_64", "ios-arm64_x86_64-simulator/Universal.framework")] // subset
+		[TestCase ("iOS", "maccatalyst", "x86_64", "ios-arm64_x86_64-maccatalyst/Universal.framework")] // subset
+		[TestCase ("tvOS", null, "arm64", "tvos-arm64/Universal.framework")]
+		[TestCase ("tvOS", "simulator", "x86_64", "tvos-arm64_x86_64-simulator/Universal.framework")] // subset
+		[TestCase ("watchOS", null, "arm64_32", "watchos-arm64_32_armv7k/Universal.framework")]
+		[TestCase ("watchOS", "simulator", "x86_64", "watchos-arm64_x86_64-simulator/Universal.framework")] // subset
+		[TestCase ("macOS", null, "x86_64", "macos-arm64_x86_64/Universal.framework")] // subset
+		// multiple arch request (all must be present)
+		[TestCase ("macOS", null, "x86_64, arm64", "macos-arm64_x86_64/Universal.framework")]
+		// failure to resolve requested architecture
+		[TestCase ("iOS", "simulator", "i386, x86_64", "")] // i386 not available
+		// failure to resolve mismatched variant
+		[TestCase ("macOS", "maccatalyst", "x86_64", "")] // maccatalyst not available on macOS (it's on iOS)
+		public void Xcode12_x (string platform, string variant, string architecture, string expected)
+		{
+			// some architecture changes recently, e.g.
+			// in Xcode 12.1+ watchOS does not have an i386 architecture anymore
+			// on Xcode 12.2+ you get arm64 for all (iOS, tvOS and watchOS) simulators
+			var plist = PDictionary.FromFile ("../../../xcf-xcode12.2.plist");
+			var result = BundlerToolTaskBase.ResolveXCFramework (plist, platform, variant, architecture);
+			Assert.That (result, Is.EqualTo (expected), expected);
+		}
+
+		[Test]
+		public void BadInfoPlist ()
+		{
+			var plist = new PDictionary ();
+			var result = BundlerToolTaskBase.ResolveXCFramework (plist, "iOS", null, "x86_64");
+			Assert.Null (result, "Invalid Info.plist");
+		}
+	}
+}

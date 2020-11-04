@@ -663,6 +663,20 @@
         </target>
         <note />
       </trans-unit>
+      <trans-unit id="E0174">
+        <source>{0} has an incorrect or unknown format and cannot be processed.
+        </source>
+        <target state="new">{0} has an incorrect or unknown format and cannot be processed.
+        </target>
+        <note />
+      </trans-unit>
+      <trans-unit id="E0175">
+        <source>No matching framework found inside '{0}'.
+        </source>
+        <target state="new">No matching framework found inside '{0}'.
+        </target>
+        <note />
+      </trans-unit>
       <trans-unit id="E7001">
         <source>Could not resolve host IPs for WiFi debugger settings.
         </source>

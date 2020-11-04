@@ -941,6 +941,18 @@ namespace Xamarin.Localization.MSBuild {
             }
         }
         
+        public static string E0174 {
+            get {
+                return ResourceManager.GetString("E0174", resourceCulture);
+            }
+        }
+        
+        public static string E0175 {
+            get {
+                return ResourceManager.GetString("E0175", resourceCulture);
+            }
+        }
+        
         public static string E7001 {
             get {
                 return ResourceManager.GetString("E7001", resourceCulture);

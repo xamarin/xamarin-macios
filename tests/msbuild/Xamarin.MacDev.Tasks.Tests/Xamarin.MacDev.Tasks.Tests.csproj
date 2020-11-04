@@ -81,4 +81,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="xcf-xcode12.2.plist" />
+  </ItemGroup>
 </Project>

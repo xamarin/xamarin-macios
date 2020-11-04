@@ -104,10 +104,10 @@ namespace Xamarin.iOS.Tasks
 			return base.ExecuteTool (pathToTool, responseFileCommands, commandLineCommands);
 		}
 
-		void BuildNativeReferenceFlags (GccOptions gcc)
+		bool BuildNativeReferenceFlags (GccOptions gcc)
 		{
 			if (NativeReferences == null)
-				return;
+				return true;
 
 			foreach (var item in NativeReferences) {
 				var value = item.GetMetadata ("Kind");
@@ -119,9 +119,14 @@ namespace Xamarin.iOS.Tasks
 					continue;
 				}
 
-				if (kind == NativeReferenceKind.Static) {
-					var libName = Path.GetFileName (item.ItemSpec);
+				var libName = Path.GetFileName (item.ItemSpec);
 
+				// existing (as of this commit) IDE versions will add a `.xcframework` directorty as a `Static` native reference
+				if ((kind == NativeReferenceKind.Static) && (Path.GetExtension (libName) == ".xcframework"))
+					kind = NativeReferenceKind.XCFramework;
+
+				switch (kind) {
+				case NativeReferenceKind.Static:
 					if (libName.EndsWith (".a", StringComparison.Ordinal))
 						libName = libName.Substring (0, libName.Length - 2);
 
@@ -144,9 +149,18 @@ namespace Xamarin.iOS.Tasks
 
 					if (!string.IsNullOrEmpty (value) && bool.TryParse (value, out boolean) && boolean)
 						gcc.Cxx = true;
-				} else if (kind == NativeReferenceKind.Framework) {
+					break;
+				case NativeReferenceKind.XCFramework:
+					// resolve the _general_ xcframework reference by the _specific_ (inner) framework that match the current build
+					var fx = ResolveXCFramework (item.ItemSpec, PlatformName, SdkIsSimulator ? "simulator" : null, Architectures);
+					if (fx == null)
+						return false;
+					gcc.Frameworks.Add (fx);
+					break;
+				case NativeReferenceKind.Framework:
 					gcc.Frameworks.Add (item.ItemSpec);
-				} else {
+					break;
+				default:
 					Log.LogWarning (MSBStrings.W0052, item.ItemSpec);
 					continue;
 				}
@@ -178,6 +192,7 @@ namespace Xamarin.iOS.Tasks
 						gcc.Arguments.AddQuoted (flag);
 				}
 			}
+			return true;
 		}
 
 		static string Unquote (string text, int startIndex)
@@ -395,7 +410,8 @@ namespace Xamarin.iOS.Tasks
 				}
 			}
 
-			BuildNativeReferenceFlags (gcc);
+			if (!BuildNativeReferenceFlags (gcc))
+				return null;
 			gcc.Arguments.AddQuoted (LinkNativeCodeTaskBase.GetEmbedEntitlementsInExecutableLinkerFlags (CompiledEntitlements));
 
 			foreach (var framework in gcc.Frameworks)
