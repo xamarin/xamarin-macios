@@ -204,6 +204,7 @@ jobs:
   - bash: |
       set -x
       set -e
+      rm -Rf $(Build.SourcesDirectory)/package/*.pkg
       time make -C $(Build.SourcesDirectory)/xamarin-macios/ package
     name: packages
     displayName: 'Build Packages'
