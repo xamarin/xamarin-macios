@@ -47,4 +47,12 @@
 			<IsDefaultItem>true</IsDefaultItem>
 		</InterfaceDefinition>
 	</ItemGroup>
+
+	<!-- Default Atlas Texture file inclusion -->
+	<ItemGroup Condition="'$(TargetPlatformIdentifier)' == '@PLATFORM@' And '$(_EnableDefaultXamarinItems)' == 'true'">
+		<AtlasTexture Include="**\*.atlas\*.png">
+			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
+			<IsDefaultItem>true</IsDefaultItem>
+		</AtlasTexture>
+	</ItemGroup>
 </Project>
