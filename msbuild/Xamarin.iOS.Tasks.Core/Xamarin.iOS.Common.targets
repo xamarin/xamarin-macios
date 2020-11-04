@@ -954,82 +954,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</EmbedMobileProvision>
 	</Target>
 
-	<Target Name="_SeparateAppExtensionReferences" BeforeTargets="AssignProjectConfiguration">
-		<CreateItem Include="@(ProjectReference)" PreserveExistingMetadata="true" Condition="'%(Identity)' != '' And '%(ProjectReference.IsAppExtension)' == 'true'">
-			<Output ItemName="_AppExtensionReference" TaskParameter="Include" />
-		</CreateItem>
-
-		<ItemGroup>
-			<ProjectReference Remove="@(_AppExtensionReference)" />
-		</ItemGroup>
-
-		<!--<Warning Text="_SeparateAppExtensionReferences: @(_AppExtensionReference)"/>-->
-	</Target>
-
-	<Target Name="_AssignAppExtensionConfiguration" Condition="'@(_AppExtensionReference)' != ''">
-		<!-- assign configs if building a solution file -->
-		<AssignProjectConfiguration
-			ProjectReferences = "@(_AppExtensionReference)"
-			SolutionConfigurationContents = "$(CurrentSolutionConfigurationContents)"
-			Condition="'$(CurrentSolutionConfigurationContents)' != ''">
-
-			<Output TaskParameter="AssignedProjects" ItemName="_AppExtensionReferenceWithConfiguration"/>
-		</AssignProjectConfiguration>
-
-		<!-- Else, just -->
-		<CreateItem Include="@(_AppExtensionReference)"
-					Condition="'$(CurrentSolutionConfigurationContents)' == ''">
-			<Output TaskParameter="Include" ItemName="_AppExtensionReferenceWithConfiguration"/>
-		</CreateItem>
-
-		<!--<Warning Text="_AssignAppExtensionConfiguration: @(_AppExtensionReferenceWithConfiguration)"/>-->
-	</Target>
-
-	<!-- Split iOS App Extension projects into 2 lists
-		_AppExtensionReferenceWithConfigurationExistent: Projects existent on disk
-		_AppExtensionReferenceWithConfigurationNonExistent: Projects non-existent on disk -->
-	<Target Name="_SplitAppExtensionReferencesByExistent" DependsOnTargets="_AssignAppExtensionConfiguration">
-		<CreateItem Include="@(_AppExtensionReferenceWithConfiguration)" Condition="'@(_AppExtensionReferenceWithConfiguration)' != ''">
-			<Output TaskParameter="Include" ItemName="_AppExtensionReferenceWithConfigurationExistent" 
-				Condition="Exists ('%(_AppExtensionReferenceWithConfiguration.Identity)')"/>
-
-			<Output TaskParameter="Include" ItemName="_AppExtensionReferenceWithConfigurationNonExistent"
-				Condition="!Exists ('%(_AppExtensionReferenceWithConfiguration.Identity)')"/>
-		</CreateItem>
-
-		<!--<Warning Text="_SplitAppExtensionReferencesByExistent: @(_AppExtensionReferenceWithConfigurationExistent)"/>-->
-	</Target>
-
-	<Target Name="_ResolveAppExtensionReferences" DependsOnTargets="_SplitAppExtensionReferencesByExistent">
-		<PropertyGroup>
-			<!-- When building a .sln with msbuild, the dependent projects may not be built. So, always build
-			     the referenced projects unless building from IDE. -->
-			<_BuildReferencedExtensionProjects Condition="'$(BuildingInsideVisualStudio)' != 'true'">true</_BuildReferencedExtensionProjects>
-		</PropertyGroup>
-
-		<!-- If the referenced projects have already been built, then just get the target paths -->
-		<MSBuild
-			Projects="@(_AppExtensionReferenceWithConfigurationExistent)"
-			Targets="GetBundleTargetPath"
-			Properties="%(_AppExtensionReferenceWithConfigurationExistent.SetConfiguration); %(_AppExtensionReferenceWithConfigurationExistent.SetPlatform)"
-			Condition="'@(_AppExtensionReferenceWithConfigurationExistent)' != '' and '$(_BuildReferencedExtensionProjects)' != 'true'">
-
-			<Output TaskParameter="TargetOutputs" ItemName="_ResolvedAppExtensionReferences" Condition="'%(_AppExtensionReferenceWithConfigurationExistent.ReferenceOutputAssembly)' != 'false'"/>
-		</MSBuild>
-
-		<!-- Build the referenced project if required -->
-		<MSBuild
-			Projects="@(_AppExtensionReferenceWithConfigurationExistent)"
-			Properties="%(_AppExtensionReferenceWithConfigurationExistent.SetConfiguration); %(_AppExtensionReferenceWithConfigurationExistent.SetPlatform)"
-			Condition="'@(_AppExtensionReferenceWithConfigurationExistent)' != '' and '$(_BuildReferencedExtensionProjects)' == 'true' ">
-
-			<Output TaskParameter="TargetOutputs" ItemName="_ResolvedAppExtensionReferences" Condition="'%(_AppExtensionReferenceWithConfigurationExistent.ReferenceOutputAssembly)' != 'false'"/>
-		</MSBuild>
-
-		<Warning Text="Referenced iOS App Extension Project %(_AppExtensionReferenceWithConfigurationNonExistent.Identity) not found, ignoring."
-			 Condition="'@(_AppExtensionReferenceWithConfigurationNonExistent)' != ''"/>
-	</Target>
-
 	<Target Name="_DetectDebugNetworkConfiguration">
 		<DetectDebugNetworkConfiguration
 			SessionId="$(BuildSessionId)"
@@ -1041,25 +965,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 			<Output TaskParameter="DebugIPAddresses" PropertyName="_DebugIPAddresses" />
 		</DetectDebugNetworkConfiguration>
-	</Target>
-
-	<Target Name="_CopyAppExtensionsToBundle" DependsOnTargets="_ResolveAppExtensionReferences" Inputs="@(_ResolvedAppExtensionReferences)" 
-		  Outputs="$(_AppBundlePath)PlugIns\%(_ResolvedAppExtensionReferences.FileName)%(_ResolvedAppExtensionReferences.Extension)">
-		
-		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '@(_ResolvedAppExtensionReferences)' != ''" Directories="$(_AppBundlePath)PlugIns" />
-
-		<Ditto
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '@(_ResolvedAppExtensionReferences)' != '' And '%(_ResolvedAppExtensionReferences.Identity)' != ''"
-			ToolExe="$(DittoExe)"
-			ToolPath="$(DittoPath)"
-			Source="@(_ResolvedAppExtensionReferences)"
-			Destination="$(_AppBundlePath)PlugIns\%(_ResolvedAppExtensionReferences.FileName)%(_ResolvedAppExtensionReferences.Extension)"
-		/>
-
-		<!-- Delete any code signatures and dSYM dirs since they are now invalid -->
-		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(_AppBundlePath)PlugIns\%(_ResolvedAppExtensionReferences.FileName)%(_ResolvedAppExtensionReferences.Extension)\_CodeSignature;
-			$(_AppBundlePath)..\%(_ResolvedAppExtensionReferences.FileName)%(_ResolvedAppExtensionReferences.Extension).dSYM" />
 	</Target>
 
 	<Target Name="_ValidateAppBundle" Condition="'$(IsAppExtension)' == 'false' And '$(IsWatchApp)' == 'false'" DependsOnTargets="_DetectSdkLocations;_ComputeTargetFrameworkMoniker;_GenerateBundleName">

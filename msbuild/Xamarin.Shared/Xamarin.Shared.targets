@@ -912,6 +912,124 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</PrepareResourceRules>
 	</Target>
 
+	<!-- App extensions -->
+
+	<Target Name="_AssignAppExtensionConfiguration" Condition="'@(_AppExtensionReference)' != ''">
+		<!-- assign configs if building a solution file -->
+		<AssignProjectConfiguration
+			ProjectReferences = "@(_AppExtensionReference)"
+			SolutionConfigurationContents = "$(CurrentSolutionConfigurationContents)"
+			Condition="'$(CurrentSolutionConfigurationContents)' != ''">
+
+			<Output TaskParameter="AssignedProjects" ItemName="_AppExtensionReferenceWithConfiguration"/>
+		</AssignProjectConfiguration>
+
+		<!-- Else, just -->
+		<CreateItem Include="@(_AppExtensionReference)"
+					Condition="'$(CurrentSolutionConfigurationContents)' == ''">
+			<Output TaskParameter="Include" ItemName="_AppExtensionReferenceWithConfiguration"/>
+		</CreateItem>
+	</Target>
+
+	<Target Name="_SeparateAppExtensionReferences" BeforeTargets="AssignProjectConfiguration">
+		<CreateItem Include="@(ProjectReference)" PreserveExistingMetadata="true" Condition="'%(Identity)' != '' And '%(ProjectReference.IsAppExtension)' == 'true'">
+			<Output ItemName="_AppExtensionReference" TaskParameter="Include" />
+		</CreateItem>
+
+		<ItemGroup>
+			<ProjectReference Remove="@(_AppExtensionReference)" />
+		</ItemGroup>
+	</Target>
+
+	<!-- Split App Extension projects into 2 lists
+		_AppExtensionReferenceWithConfigurationExistent: Projects existent on disk
+		_AppExtensionReferenceWithConfigurationNonExistent: Projects non-existent on disk -->
+	<Target Name="_SplitAppExtensionReferencesByExistent" DependsOnTargets="_AssignAppExtensionConfiguration">
+		<CreateItem Include="@(_AppExtensionReferenceWithConfiguration)" Condition="'@(_AppExtensionReferenceWithConfiguration)' != ''">
+			<Output TaskParameter="Include" ItemName="_AppExtensionReferenceWithConfigurationExistent"
+				Condition="Exists ('%(_AppExtensionReferenceWithConfiguration.Identity)')"/>
+
+			<Output TaskParameter="Include" ItemName="_AppExtensionReferenceWithConfigurationNonExistent"
+				Condition="!Exists ('%(_AppExtensionReferenceWithConfiguration.Identity)')"/>
+		</CreateItem>
+	</Target>
+
+	<Target Name="_ResolveAppExtensionReferences" DependsOnTargets="_SplitAppExtensionReferencesByExistent">
+		<PropertyGroup>
+			<!-- When building a .sln with msbuild, the dependent projects may not be built. So, always build
+			     the referenced projects unless building from IDE. -->
+			<_BuildReferencedExtensionProjects Condition="'$(BuildingInsideVisualStudio)' != 'true'">true</_BuildReferencedExtensionProjects>
+		</PropertyGroup>
+
+		<!-- If the referenced projects have already been built, then just get the target paths -->
+		<MSBuild
+			Projects="@(_AppExtensionReferenceWithConfigurationExistent)"
+			Targets="GetBundleTargetPath"
+			Properties="%(_AppExtensionReferenceWithConfigurationExistent.SetConfiguration); %(_AppExtensionReferenceWithConfigurationExistent.SetPlatform)"
+			Condition="'@(_AppExtensionReferenceWithConfigurationExistent)' != '' and '$(_BuildReferencedExtensionProjects)' != 'true'">
+
+			<Output TaskParameter="TargetOutputs" ItemName="_ResolvedAppExtensionReferences" Condition="'%(_AppExtensionReferenceWithConfigurationExistent.ReferenceOutputAssembly)' != 'false'"/>
+		</MSBuild>
+
+		<!-- Build the referenced project if required -->
+		<MSBuild
+			Projects="@(_AppExtensionReferenceWithConfigurationExistent)"
+			Properties="%(_AppExtensionReferenceWithConfigurationExistent.SetConfiguration); %(_AppExtensionReferenceWithConfigurationExistent.SetPlatform)"
+			Condition="'@(_AppExtensionReferenceWithConfigurationExistent)' != '' and '$(_BuildReferencedExtensionProjects)' == 'true' ">
+
+			<Output TaskParameter="TargetOutputs" ItemName="_ResolvedAppExtensionReferences" Condition="'%(_AppExtensionReferenceWithConfigurationExistent.ReferenceOutputAssembly)' != 'false'"/>
+		</MSBuild>
+
+		<Warning Text="Referenced $(_PlatformName) App Extension Project %(_AppExtensionReferenceWithConfigurationNonExistent.Identity) not found, ignoring."
+			 Condition="'@(_AppExtensionReferenceWithConfigurationNonExistent)' != ''"/>
+	</Target>
+
+	<Target Name="_PlaceAppExtensions" DependsOnTargets="_ExtendAppExtensionReferences;_ResolveAppExtensionReferences">
+		<ItemGroup>
+			<!-- Add a 'ContainerName' metadata to indicate where the extension should go inside the container's app bundle -->
+			<_ResolvedAppExtensionReferences Condition="'%(_ResolvedAppExtensionReferences.Extension)' == '.appex'">
+				<ContainerName>PlugIns</ContainerName>
+			</_ResolvedAppExtensionReferences>
+			<_ResolvedAppExtensionReferences Condition="'%(_ResolvedAppExtensionReferences.Extension)' == '.xpc'">
+				<ContainerName>XPCServices</ContainerName>
+			</_ResolvedAppExtensionReferences>
+		</ItemGroup>
+
+		<PropertyGroup>
+			<_AppExtensionRoot Condition="'$(_PlatformName)' == 'macOS'">$(_AppBundlePath)Contents\</_AppExtensionRoot>
+			<_AppExtensionRoot Condition="'$(_PlatformName)' != 'macOS'">$(_AppBundlePath)</_AppExtensionRoot>
+		</PropertyGroup>
+	</Target>
+
+	<Target Name="_CopyAppExtensionsToBundle"
+			DependsOnTargets="_ExtendAppExtensionReferences;_ResolveAppExtensionReferences;_PlaceAppExtensions"
+			Inputs="@(_ResolvedAppExtensionReferences)"
+			Outputs="$(_AppExtensionRoot)%(_ResolvedAppExtensionReferences.ContainerName)\%(_ResolvedAppExtensionReferences.FileName)%(_ResolvedAppExtensionReferences.Extension)"
+			>
+		<MakeDir
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			Directories="$(_AppExtensionRoot)%(_ResolvedAppExtensionReferences.ContainerName)"
+		/>
+
+		<Ditto
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			ToolExe="$(DittoExe)"
+			ToolPath="$(DittoPath)"
+			Source="@(_ResolvedAppExtensionReferences)"
+			Destination="$(_AppExtensionRoot)%(_ResolvedAppExtensionReferences.ContainerName)\%(_ResolvedAppExtensionReferences.FileName)%(_ResolvedAppExtensionReferences.Extension)"
+		/>
+
+		<!-- Delete any code signatures and dSYM dirs since they are now invalid -->
+		<RemoveDir
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			Directories="$(_AppExtensionRoot)%(_ResolvedAppExtensionReferences.ContainerName)\%(_ResolvedAppExtensionReferences.FileName)%(_ResolvedAppExtensionReferences.Extension)\_CodeSignature;
+						$(_AppBundlePath)..\%(_ResolvedAppExtensionReferences.FileName)%(_ResolvedAppExtensionReferences.Extension).dSYM"
+		/>
+	</Target>
+
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Shared.ObjCBinding.targets" Condition="'$(IsBindingProject)' == 'true'" />
 
 	<!-- Xamarin.ImplicitFacade.targets will detect if we need to add an implicit reference to netstandard.dll -->
