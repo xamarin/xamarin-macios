@@ -233,7 +233,7 @@ jobs:
     displayName: 'Signing PR Build'
     condition: and(eq(variables['configuration.SignPkgs'], 'True'), eq(variables['configuration.IsPr'], 'True'))
 
-  - template: install-certificates.yml@yaml
+  - template: install-certificates.yml@templates
     parameters:
       DeveloperIdApplication: $(developer-id-application)
       DeveloperIdInstaller: $(developer-id-installer)
@@ -286,7 +286,7 @@ jobs:
     condition: and(eq(variables['configuration.SignPkgs'], 'True'), eq(variables['configuration.IsPr'], 'False'))
     timeoutInMinutes: 90
 
-  - template: uninstall-certificates/v1.yml@yaml
+  - template: uninstall-certificates/v1.yml@templates
     parameters:
       HostedMacKeychainPassword: $(AzDO-OnPrem-KeychainPass)
   
