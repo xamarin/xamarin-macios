@@ -247,7 +247,7 @@ jobs:
       fi
 
       MAC_PKG=$(find $(Build.SourcesDirectory)/package -type f -name "xamarin.mac-*" | xargs basename)
-      if [ -z "$IOS_PKG" ]; then
+      if [ -z "$MAC_PKG" ]; then
         echo "Xamarin.Mac package not found."
       else
         MAC_PKG="$(Build.SourcesDirectory)/package/$MAC_PKG"
