@@ -1,0 +1,34 @@
+steps:
+
+- checkout: self
+  persistCredentials: true
+
+# Download the Html Report that was added by the tests job.
+- task: DownloadPipelineArtifact@2
+  displayName: Download html report
+  inputs:
+    patterns: '**'
+    allowFailedBuilds: true
+    path: $(Build.SourcesDirectory)/packages
+
+- task: AzureFileCopy@3
+  displayName: 'Publish package to Azure'
+  name: upload
+  inputs:
+    SourcePath: $(Build.SourcesDirectory)/packages
+    azureSubscription:  'Azure Releng (7b4817ae-218f-464a-bab1-a9df2d99e1e5)'
+    Destination: AzureBlob
+    storage: bosstoragemirror
+    ContainerName: wrench
+    BlobPrefix: $(UPLOAD_PREFIX)
+    outputStorageUri: PackageUrl
+    outputStorageContainerSasToken: PackageSasToken
+
+- powershell: |
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\device-tests\scripts\GitHub.psm1
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\device-tests\scripts\VSTS.psm1
+
+    Write-Host "Url uploaded is " + $Env:UPLOAD_URL
+  env:
+    UPLOAD_URL: variables['upload.PackageUrl']
+  displayName: 'Set GithubStatus'
