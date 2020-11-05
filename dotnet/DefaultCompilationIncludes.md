@@ -43,6 +43,11 @@ subdirectory are included by default (as `AtlasTexture` items).
 All \*.mlmodel files anywhere in the project directory or any subdirectory are
 included by default (as `CoreMLModel` items).
 
+## Metal
+
+All \*.metal files anywhere in the project directory or any subdirectory are
+included by default (as `Metal` items).
+
 ## Binding projects
 
 Default compilation includes is turned off for binding projects, because

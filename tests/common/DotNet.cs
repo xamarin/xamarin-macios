@@ -100,8 +100,6 @@ namespace Xamarin.Tests {
 						return false;
 
 					// There's a lot of TODOs here, those correspond with missing features in .NET and will be removed as those features are implemented
-					case ".metallib": // TODO
-						return false;
 					}
 
 					var filename = Path.GetFileName (v);
