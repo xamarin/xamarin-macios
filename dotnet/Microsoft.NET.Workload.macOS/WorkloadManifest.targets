@@ -1,3 +1,3 @@
 <Project>
-	<Import Project="Sdk.targets" Sdk="Microsoft.macOS.Sdk" Condition="'$(TargetPlatformIdentifier)' == 'macOS'" />
+	<Import Project="Sdk.props" Sdk="Microsoft.macOS.Sdk" Condition="'$(TargetPlatformIdentifier)' == 'macOS'" />
 </Project>

@@ -11,12 +11,6 @@
 		<_XamarinTaskAssembly Condition="'$(_PlatformName)' == 'macOS'">$(_XamarinSdkRootDirectory)\tools\msbuild\macOS\Xamarin.Mac.Tasks.dll</_XamarinTaskAssembly>
 	</PropertyGroup>
 
-	<!-- Version information -->
-	<Import Project="Xamarin.Shared.Sdk.Versions.targets" />
-
-	<!-- This contains the OS versions we support for target platform -->
-	<Import Project="Microsoft.$(_PlatformName).Sdk.SupportedTargetPlatforms.targets" />
-
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CompileNativeCode" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.LinkNativeCode" AssemblyFile="$(_XamarinTaskAssembly)" />
 
@@ -126,7 +120,15 @@
 
 	<!-- Default item includes (globs and implicit references) -->
 	<Import Project="Xamarin.Shared.Sdk.DefaultItems.targets" />
-	<Import Project="Xamarin.Shared.Sdk.TargetFrameworkInference.targets" />
+
+  <!-- This is a hack until we get the TFM values for real from the .NET build logic -->
+  <PropertyGroup>
+    <_TargetFrameworkPlatform Condition="'$(_PlatformName)' == 'iOS'">ios</_TargetFrameworkPlatform>
+    <_TargetFrameworkPlatform Condition="'$(_PlatformName)' == 'tvOS'">tvos</_TargetFrameworkPlatform>
+    <_TargetFrameworkPlatform Condition="'$(_PlatformName)' == 'watchOS'">watchos</_TargetFrameworkPlatform>
+    <_TargetFrameworkPlatform Condition="'$(_PlatformName)' == 'macOS'">macos</_TargetFrameworkPlatform>
+    <_ComputedTargetFrameworkMoniker Condition=" '$(_TargetFrameworkPlatform)' != '' ">$(TargetFrameworkMoniker),Profile=$(_TargetFrameworkPlatform)</_ComputedTargetFrameworkMoniker>
+  </PropertyGroup>
 
 	<!-- Inject our custom logic into *DependsOn variables -->
 	<PropertyGroup>
