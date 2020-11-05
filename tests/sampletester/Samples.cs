@@ -81,6 +81,9 @@ namespace Samples {
 		const string DEFAULT_BRANCH = "main";
 
 		static Dictionary<string, SampleTest> test_data = new Dictionary<string, SampleTest> {
+			// Known failures
+			{ "QTRecorder/QTRecorder.csproj", new SampleTest { KnownFailure = "The sample uses deprecated QTKit types (and .xib fails building)." } },
+			{ "StillMotion/StillMotion/StillMotion.csproj", new SampleTest { KnownFailure = "The sample uses deprecated QTKit types (and .xib fails building)." } },
 		};
 
 		static IEnumerable<SampleTestData> GetSampleData ()
