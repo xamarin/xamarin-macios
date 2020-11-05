@@ -21,7 +21,7 @@ namespace Xharness.Targets {
 		public string WatchOSProjectPath { get { return ProjectPath; } private set { ProjectPath = value; } }
 
 		public override string SimulatorArchitectures {
-			get { return "i386"; }
+			get { return "i386, x86_64"; }
 		}
 
 		public override string DeviceArchitectures {
