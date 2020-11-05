@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 using NUnit.Framework;
 
@@ -27,7 +28,8 @@ namespace Xamarin.MacDev.Tasks.Tests {
 			// some architecture changes recently, e.g.
 			// in Xcode 12.1+ watchOS does not have an i386 architecture anymore
 			// on Xcode 12.2+ you get arm64 for all (iOS, tvOS and watchOS) simulators
-			var plist = PDictionary.FromFile ("../../../xcf-xcode12.2.plist");
+			var path = Path.Combine (Path.GetDirectoryName (GetType ().Assembly.Location), "Resources", "xcf-xcode12.2.plist");
+			var plist = PDictionary.FromFile (path);
 			var result = BundlerToolTaskBase.ResolveXCFramework (plist, platform, variant, architecture);
 			Assert.That (result, Is.EqualTo (expected), expected);
 		}
