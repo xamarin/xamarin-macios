@@ -278,7 +278,7 @@ jobs:
       PRODUCTSIGN_KEYCHAIN_PASSWORD: $(AzDO-OnPrem-KeychainPass)
       MAC_ENTITLEMENTS: $(Build.SourcesDirectory)/xamarin-macios/mac-entitlements.plist
       APP_ID: $(XamarinAppId)
-      INSTALL_ID: $(XamarinIdentifier)
+      INSTALL_ID: $(XamarinAppId)
       APPLE_ACCOUNT: $(XamarinUserId)
       APPLE_PASS: $(XamarinPassword)
       TEAM_ID: $(TeamID)
