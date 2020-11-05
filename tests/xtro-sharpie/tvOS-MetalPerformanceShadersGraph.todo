@@ -274,3 +274,4 @@
 !missing-type! MPSGraphTensor not bound
 !missing-type! MPSGraphTensorData not bound
 !missing-type! MPSGraphVariableOp not bound
+!missing-selector! MPSGraph::constantWithScalar:dataType: not bound

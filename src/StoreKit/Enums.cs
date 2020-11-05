@@ -44,6 +44,13 @@ namespace StoreKit {
 		InvalidSignature,
 		MissingOfferParams,
 		InvalidOfferPrice,
+		OverlayCancelled = 15,
+
+		// iOS 14
+		OverlayInvalidConfiguration = 16,
+		OverlayTimeout = 17,
+		IneligibleForOffer = 18,
+		UnsupportedPlatform = 19,
 	}
 
 	// typedef NSInteger SKDownloadState;
@@ -104,7 +111,6 @@ namespace StoreKit {
 		FreeTrial,
 	}
 
-	[Unavailable (PlatformName.MacCatalyst)]
 	[NoWatch, NoTV, NoMac, iOS (14,0)]
 	[Native, Advice ("This API is not available when using UIKit on macOS.")]
 	public enum SKOverlayPosition : long {

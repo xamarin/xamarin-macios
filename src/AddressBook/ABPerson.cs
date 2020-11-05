@@ -610,7 +610,7 @@ namespace AddressBook {
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static ABPersonCompositeNameFormat ABPersonGetCompositeNameFormat ();
 
-		[Deprecated (PlatformName.iOS, 7, 0, message : "Use GetCompositeNameFormat (null) instead")]
+		[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'GetCompositeNameFormat (null)' instead.")]
 		public static ABPersonCompositeNameFormat CompositeNameFormat {
 			get {return ABPersonGetCompositeNameFormat ();}
 		}

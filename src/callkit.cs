@@ -74,7 +74,6 @@ namespace CallKit {
 		MaximumEntriesExceeded = 5,
 		ExtensionDisabled = 6,
 		CurrentlyLoading = 7,
-		[iOS (11,0)]
 		UnexpectedIncrementalRemoval = 8,
 	}
 
@@ -507,7 +506,7 @@ namespace CallKit {
 		[NullAllowed, Export ("ringtoneSound", ArgumentSemantic.Strong)]
 		string RingtoneSound { get; set; }
 
-		[Advice ("Squared image 40x40 points")]
+		[Advice ("40x40 points squared image.")]
 		[NullAllowed, Export ("iconTemplateImageData", ArgumentSemantic.Copy)]
 		NSData IconTemplateImageData { get; set; }
 

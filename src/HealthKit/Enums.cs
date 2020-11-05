@@ -269,6 +269,14 @@ namespace HealthKit
 		DiscSports,
 		[iOS (13, 0), Watch (6, 0)]
 		FitnessGaming,
+		[iOS (14,0)][Watch (7,0)]
+		CardioDance = 77,
+		[iOS (14,0)][Watch (7,0)]
+		SocialDance = 78,
+		[iOS (14,0)][Watch (7,0)]
+		Pickleball = 79,
+		[iOS (14,0)][Watch (7,0)]
+		Cooldown = 80,
 		[iOS (8,2)]
 		Other = 3000
 	}
@@ -320,7 +328,9 @@ namespace HealthKit
 		Unspecified = 1,
 		Light,
 		Medium,
-		Heavy
+		Heavy,
+		[iOS (12,0)][Watch (5,0)]
+		None,
 	}
 
 	[Watch (2,0)]

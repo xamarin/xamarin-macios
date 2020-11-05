@@ -444,7 +444,7 @@ namespace Intents {
 	[Mac (11,0), NoTV]
 	[Native]
 	public enum INPersonSuggestionType : long {
-		[iOS (12,0), Mac (10,14), Watch (5,0)]
+		[iOS (12,0), Watch (5,0)]
 		None = 0,
 		SocialProfile = 1,
 		InstantMessageAddress,
@@ -1981,6 +1981,7 @@ namespace Intents {
 	[Native]
 	public enum INAddMediaMediaDestinationUnsupportedReason : long {
 		PlaylistNameNotFound = 1,
+		PlaylistNotEditable = 2,
 	}
 
 	[Flags]
@@ -3708,7 +3709,7 @@ namespace Intents {
 		[Export ("imageNamed:")]
 		INImage FromName (string name);
 
-		[Watch (7,0), TV (14,0), NoMac, iOS (14,0)]
+		[Watch (7,0), NoMac, iOS (14,0)]
 		[Static]
 		[Export ("systemImageNamed:")]
 		INImage FromSystem (string systemImageName);
@@ -4389,13 +4390,9 @@ namespace Intents {
 		[NullAllowed, Export ("customIdentifier")]
 		string CustomIdentifier { get; }
 
-		[iOS (10, 0)]
-		[Mac (10, 12, 2, PlatformArchitecture.Arch64)]
 		[NullAllowed, Export ("relationship"), Protected]
 		NSString WeakRelationship { get; }
 
-		[iOS (10, 0)]
-		[Mac (10, 12, 2, PlatformArchitecture.Arch64)]
 		[Wrap ("INPersonRelationshipExtensions.GetValue (WeakRelationship)")]
 		INPersonRelationship Relationship { get; }
 

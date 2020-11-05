@@ -183,7 +183,11 @@ namespace NetworkExtension {
 		Superseded = 11,
 		UserLogout = 12,
 		UserSwitch = 13,
-		ConnectionFailed = 14
+		ConnectionFailed = 14,
+		[Mac (10,15)][iOS (13,0)]
+		Sleep = 15,
+		[Mac (10,15)][iOS (13,0)]
+		AppUpdate,
 	}
 
 	[iOS (9,0)]

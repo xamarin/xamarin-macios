@@ -60,7 +60,7 @@ namespace MediaPlayer {
 		[Field ("MPMediaEntityPropertyPersistentID")]
 		NSString PropertyPersistentID { get; }
 
-		[NoiOS, NoMac, Watch (5,0)]
+		[NoiOS, NoMac]
 		[Export ("persistentID")]
 		ulong PersistentID { get; }
 
@@ -1443,7 +1443,6 @@ namespace MediaPlayer {
 		[iOS (11,0)]
 		[TV (11,0)]
 		[Mac (10,13)]
-		[Watch (5,0)]
 		[Field ("MPNowPlayingInfoPropertyServiceIdentifier")]
 		NSString PropertyServiceIdentifier { get; }
 
@@ -1650,7 +1649,7 @@ namespace MediaPlayer {
 		[Export ("contentLimitsEnforced")]
 		bool ContentLimitsEnforced { get; }
 
-		[Availability (Introduced = Platform.iOS_8_4, Deprecated = Platform.iOS_9_0, Message = "Replaced by 'ContentLimitsEnforced'.")]
+		[Availability (Deprecated = Platform.iOS_9_0, Message = "Replaced by 'ContentLimitsEnforced'.")]
 		[Export ("contentLimitsEnabled")]
 		bool ContentLimitsEnabled { get; }
 
@@ -1756,7 +1755,7 @@ namespace MediaPlayer {
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MPRemoteCommandCenter {
-		[Mac (10,12,2)]
+
 		[Static]
 		[Export ("sharedCommandCenter")]
 		MPRemoteCommandCenter Shared { get; }

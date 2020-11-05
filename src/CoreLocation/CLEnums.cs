@@ -63,7 +63,10 @@ namespace CoreLocation {
 
 		// ios7
 		RangingFailure,
-		RangingUnavailable
+		RangingUnavailable,
+
+		// ios14
+		PromptDeclined = 18,
 	}
 
 	// untyped enum -> CLLocationManager.h

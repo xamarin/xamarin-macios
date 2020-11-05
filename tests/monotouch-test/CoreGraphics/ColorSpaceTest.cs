@@ -399,7 +399,6 @@ namespace MonoTouchFixtures.CoreGraphics {
 				Assert.True (cs.IsHdr, "DisplayP3_Hlg");
 		}
 
-#if __IOS__
 		[Test]
 		public void CGColorSpaceUsesITUR_2100TFTest ()
 		{
@@ -442,6 +441,5 @@ namespace MonoTouchFixtures.CoreGraphics {
 				Assert.That ((nint) TestRuntime.CFGetRetainCount (csl.Handle), Is.EqualTo ((nint) 1));
 			}
 		}
-#endif
 	}
 }

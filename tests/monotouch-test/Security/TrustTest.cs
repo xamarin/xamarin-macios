@@ -295,7 +295,7 @@ namespace MonoTouchFixtures.Security {
 			using (SecKey pkey = trust.GetPublicKey ()) {
 				Assert.That (CFGetRetainCount (pkey.Handle), Is.GreaterThanOrEqualTo ((nint) 1), "RetainCount(pkey)");
 			}
-			if (TestRuntime.CheckXcodeVersion (12,0)) {
+			if (TestRuntime.CheckXcodeVersion (12, TestRuntime.MinorXcode12APIMismatch)) {
 				using (SecKey key = trust.GetKey ()) {
 					Assert.That (key.BlockSize, Is.EqualTo (128), "BlockSize");
 					Assert.That (CFGetRetainCount (key.Handle), Is.GreaterThanOrEqualTo ((nint) 1), "RetainCount(key)");
@@ -390,7 +390,8 @@ namespace MonoTouchFixtures.Security {
 				// old certificate (built in our tests) was not quite up to spec and it eventually became important
 				Assert.False (trust.Evaluate (out var error), "Evaluate");
 				Assert.NotNull (error, "error");
-				Assert.That (error.LocalizedDescription, Is.EqualTo ("“mail.google.com” certificate is not standards compliant"), "desc");
+				// We have different error messages that all contain mail.google.com and some different text.
+				Assert.That (error.LocalizedDescription, Is.StringContaining ("mail.google.com"), "LocalizedDescription");
 			} else if (TestRuntime.CheckXcodeVersion (11, 0)) {
 				Assert.False (trust.Evaluate (out var error), "Evaluate");
 				Assert.NotNull (error, "error");

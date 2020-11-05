@@ -11,9 +11,9 @@ namespace MonoTouchFixtures.UniformTypeIdentifiers {
 	public class UTTypeTests {
 
 		[SetUp]
-		public void Setup ()
+		public void SetUp ()
 		{
-			TestRuntime.AssertXcodeVersion (12, 0);
+			TestRuntime.AssertXcodeVersion (12, TestRuntime.MinorXcode12APIMismatch);
 		}
 
 		[Test]

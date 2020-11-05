@@ -41,6 +41,7 @@ namespace HealthKit {
 		UserCanceled,
 		AnotherWorkoutSessionStarted,
 		UserExitedWorkoutSession,
+		RequiredAuthorizationDenied,
 		NoData,
 	}
 
@@ -62,6 +63,10 @@ namespace HealthKit {
 		Ended,
 		[Watch (3,0)]
 		Paused,
+		[Watch (5,0)]
+		Prepared,
+		[Watch (5,0)]
+		Stopped,
 	}
 
 	[iOS (11,0)]
@@ -78,6 +83,12 @@ namespace HealthKit {
 	public enum HKActivityMoveMode : long {
 		ActiveEnergy = 1,
 		AppleMoveTime = 2,
+	}
+
+	[Watch (7,1), iOS (14,2)]
+	[Native]
+	public enum HKCategoryValueHeadphoneAudioExposureEvent : long {
+		SevenDayLimit = 1,
 	}
 
 	delegate void HKAnchoredObjectResultHandler2 (HKAnchoredObjectQuery query, HKSample[] results, nuint newAnchor, NSError error);
@@ -97,13 +108,13 @@ namespace HealthKit {
 
 		[NoWatch]
 		[Obsolete ("Use the overload that takes HKAnchoredObjectResultHandler2 instead")]
-		[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_9_0)]
+		[Availability (Deprecated = Platform.iOS_9_0)]
 		[Export ("initWithType:predicate:anchor:limit:completionHandler:")]
 		IntPtr Constructor (HKSampleType type, [NullAllowed] NSPredicate predicate, nuint anchor, nuint limit, HKAnchoredObjectResultHandler completion);
 
 		[NoWatch]
 		[Sealed]
-		[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_9_0)]
+		[Availability (Deprecated = Platform.iOS_9_0)]
 		[Export ("initWithType:predicate:anchor:limit:completionHandler:")]
 		IntPtr Constructor (HKSampleType type, [NullAllowed] NSPredicate predicate, nuint anchor, nuint limit, HKAnchoredObjectResultHandler2 completion);
 
@@ -535,13 +546,11 @@ namespace HealthKit {
 		void AddSamples (HKSample [] samples, HKWorkout workout, HKStoreSampleAddedCallback callback);
 
 		[NoiOS]
-		[Watch (2,0)]
 		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use 'HKWorkoutSession.Start' instead.")]
 		[Export ("startWorkoutSession:")]
 		void StartWorkoutSession (HKWorkoutSession workoutSession);
 
 		[NoiOS]
-		[Watch (2,0)]
 		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use 'HKWorkoutSession.End' instead.")]
 		[Export ("endWorkoutSession:")]
 		void EndWorkoutSession (HKWorkoutSession workoutSession);
@@ -921,6 +930,10 @@ namespace HealthKit {
 		[Field ("HKMetadataKeyAudioExposureLevel")]
 		NSString AudioExposureLevel { get; }
 
+		[Watch (7, 1), iOS (14, 2)]
+		[Field ("HKMetadataKeyAudioExposureDuration")]
+		NSString AudioExposureDuration { get; }
+
 		[Watch (7, 0), iOS (14, 0)]
 		[Field ("HKMetadataKeyDevicePlacementSide")]
 		NSString DevicePlacementSide { get; }
@@ -949,7 +962,7 @@ namespace HealthKit {
 		[Export ("UUID", ArgumentSemantic.Strong)]
 		NSUuid Uuid { get; }
 
-		[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_9_0)]
+		[Availability (Deprecated = Platform.iOS_9_0)]
 		[Export ("source", ArgumentSemantic.Strong)]
 		HKSource Source { get; }
 
@@ -1221,7 +1234,6 @@ namespace HealthKit {
 
 		[Deprecated (PlatformName.WatchOS, 2,2, message: "Use 'ObjectType' property.")]
 		[Deprecated (PlatformName.iOS, 9,3, message: "Use 'ObjectType' property.")]
-		[Watch (2,0)]
 		[NullAllowed, Export ("sampleType", ArgumentSemantic.Strong)]
 		HKSampleType SampleType { get; }
 
@@ -1955,7 +1967,7 @@ namespace HealthKit {
 
 		[Watch (6, 0), iOS (13, 0)]
 		[Field ("HKCategoryTypeIdentifierToothbrushingEvent")]
-		ToothbrushingEvent,
+	 	ToothbrushingEvent,
 
 		[Watch (7, 0), iOS (13, 6)]
 		[Field ("HKCategoryTypeIdentifierAbdominalCramps")]
@@ -2120,6 +2132,10 @@ namespace HealthKit {
 		[Watch (7, 0), iOS (14, 0)]
 		[Field ("HKCategoryTypeIdentifierHandwashingEvent")]
 		HandwashingEvent,
+
+		[Watch (7, 1), iOS (14, 2)]
+		[Field ("HKCategoryTypeIdentifierHeadphoneAudioExposureEvent")]
+		HeadphoneAudioExposureEvent,
 	}
 
 	[Watch (2,0)]
@@ -2799,11 +2815,11 @@ namespace HealthKit {
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface HKWorkoutSession : NSSecureCoding {
-		[Deprecated (PlatformName.WatchOS, 3, 0, message: "Use WorkoutConfiguration")]
+		[Deprecated (PlatformName.WatchOS, 3, 0, message: "Use 'WorkoutConfiguration' instead.")]
 		[Export ("activityType")]
 		HKWorkoutActivityType ActivityType { get; }
 
-		[Deprecated (PlatformName.WatchOS, 3, 0, message: "Use WorkoutConfiguration")]
+		[Deprecated (PlatformName.WatchOS, 3, 0, message: "Use 'WorkoutConfiguration' instead.")]
 		[Export ("locationType")]
 		HKWorkoutSessionLocationType LocationType { get; }
 

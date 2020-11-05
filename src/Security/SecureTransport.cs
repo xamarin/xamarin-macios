@@ -20,6 +20,7 @@ namespace Security {
 		Dtls_1_0 = 9,
 		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
 		Tls_1_3 = 10,
+		Dtls_1_2 = 11,
 		
 		/* Obsolete on iOS */
 		Ssl_2_0 = 1,          

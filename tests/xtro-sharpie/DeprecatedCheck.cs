@@ -11,8 +11,29 @@ namespace Extrospection
 	{
 		Dictionary<string, VersionTuple> ObjCDeprecatedItems = new Dictionary<string, VersionTuple> ();
 		Dictionary<string, VersionTuple> ObjCDeprecatedSelectors = new Dictionary<string, VersionTuple> ();
+		Dictionary<string, VersionTuple> PlainCDeprecatedFunctions = new Dictionary<string, VersionTuple> ();
 
 		List<TypeDefinition> ManagedTypes = new List<TypeDefinition> ();
+		Dictionary<string, MethodDefinition> dllimports = new Dictionary<string, MethodDefinition> ();
+
+		public override void VisitManagedMethod (MethodDefinition method)
+		{
+			if (!method.IsPInvokeImpl || !method.HasPInvokeInfo)
+				return;
+
+			// we don't decorate OpenTK types with availability
+			var dt = method.DeclaringType;
+			var ns = dt.IsNested ? dt.DeclaringType.Namespace : dt.Namespace;
+			if (ns.StartsWith ("OpenTK.", StringComparison.Ordinal))
+				return;
+
+			var info = method.PInvokeInfo;
+			if (info.Module.Name == "__Internal")
+				return;
+
+			// there are duplicated declarations, only the last will be reported
+			dllimports [info.EntryPoint] = method;
+		}
 
 		public override void End ()
 		{
@@ -21,6 +42,9 @@ namespace Extrospection
 
 			foreach (var objcEntry in ObjCDeprecatedSelectors)
 				ProcessObjcSelector (objcEntry.Key, objcEntry.Value);
+
+			foreach (var cEntry in PlainCDeprecatedFunctions)
+				ProcessCFunction (cEntry.Key, cEntry.Value);
 		}
 
 		void ProcessObjcEntry (string objcClassName, VersionTuple objcVersion)
@@ -35,10 +59,10 @@ namespace Extrospection
 
 		void ProcessObjcSelector (string fullname, VersionTuple objcVersion)
 		{
-			string[] nameParts = fullname.Split (new string[] { "::" }, StringSplitOptions.None);
-
-			string objcClassName = nameParts[0];
-			string selector = nameParts[1];
+			var class_method = fullname [0] == '+';
+			var n = fullname.IndexOf ("::");
+			string objcClassName = fullname.Substring (class_method ? 1: 0, n);
+			string selector = fullname.Substring (n + 2);
 
 			TypeDefinition managedType = ManagedTypes.FirstOrDefault (x => Helpers.GetName (x) == objcClassName);
 			if (managedType != null) {
@@ -50,9 +74,25 @@ namespace Extrospection
 				if (AttributeHelpers.HasAnyDeprecationForCurrentPlatform (managedType))
 					return;
 
-				var matchingMethod = managedType.Methods.FirstOrDefault (x => x.GetSelector () == selector && x.IsPublic);
+				var matchingMethod = managedType.Methods.FirstOrDefault (x => x.GetSelector () == selector && x.IsPublic && x.IsStatic == class_method);
 				if (matchingMethod != null)
 					ProcessItem (matchingMethod, fullname, objcVersion, framework);
+			}
+		}
+
+		void ProcessCFunction (string fullname, VersionTuple objcVersion)
+		{
+			if (dllimports.TryGetValue (fullname, out var method)) {
+				var dt = method.DeclaringType;
+				var framework = Helpers.GetFramework (dt);
+				if (framework == null)
+					return;
+
+				// If the entire type is deprecated, call it good enough
+				if (AttributeHelpers.HasAnyDeprecationForCurrentPlatform (dt))
+					return;
+
+				ProcessItem (method, fullname, objcVersion, framework);
 			}
 		}
 
@@ -113,8 +153,18 @@ namespace Extrospection
 
 		public override void VisitObjCMethodDecl (ObjCMethodDecl decl, VisitKind visitKind)
 		{
-			if (visitKind == VisitKind.Enter && AttributeHelpers.FindObjcDeprecated(decl.Attrs, out VersionTuple version))
-				ObjCDeprecatedSelectors[decl.QualifiedName] = version;
+			if (visitKind == VisitKind.Enter && AttributeHelpers.FindObjcDeprecated (decl.Attrs, out VersionTuple version)) {
+				var qn = decl.QualifiedName;
+				if (decl.IsClassMethod)
+					qn = "+" + qn;
+				ObjCDeprecatedSelectors [qn] = version;
+			}
+		}
+
+		public override void VisitFunctionDecl (FunctionDecl decl, VisitKind visitKind)
+		{
+			if (visitKind == VisitKind.Enter && AttributeHelpers.FindObjcDeprecated (decl.Attrs, out VersionTuple version))
+				PlainCDeprecatedFunctions [decl.QualifiedName] = version;
 		}
 	}
 }

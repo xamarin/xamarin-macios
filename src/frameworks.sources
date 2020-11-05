@@ -301,6 +301,7 @@ CALLKIT_SOURCES = \
 # CarPlay
 
 CARPLAY_SOURCES = \
+	CarPlay/CPCompat.cs \
 	CarPlay/CPNavigationAlert.cs \
 	CarPlay/CPMessageListItem.cs \
 
@@ -1121,6 +1122,7 @@ METALPERFORMANCESHADERS_SOURCES = \
 METRICKIT_SOURCES = \
 	MetricKit/MXMetaData.cs \
 	MetricKit/MXMetric.cs \
+	MetricKit/MXMetricManager.cs \
 	MetricKit/MXMetricPayload.cs \
 
 # MLCompute
@@ -1181,6 +1183,7 @@ NETWORK_SOURCES = \
 	Network/NWBrowseResult.cs	\
 	Network/NWBrowser.cs	\
 	Network/NWConnection.cs			\
+	Network/NWConnectionGroup.cs		\
 	Network/NWContentContext.cs		\
 	Network/NWDataTransferReport.cs 	\
 	Network/NWEthernetChannel.cs 	\
@@ -1189,6 +1192,7 @@ NETWORK_SOURCES = \
 	Network/NWError.cs			\
 	Network/NWFramer.cs			\
 	Network/NWFramerMessage.cs			\
+	Network/NWMulticastGroup.cs		\
 	Network/NWInterface.cs			\
 	Network/NWIPMetadata.cs			\
 	Network/NWListener.cs			\
@@ -1351,17 +1355,8 @@ PRINTCORE_SOURCES = \
 	
 # QTKit
 
-QTKIT_CORE_SOURCES = \
-	QTKit/Defs.cs \
-	QTKit/Enums.cs \
-
 QTKIT_SOURCES = \
-	QTKit/QTCaptureConnection.cs \
-	QTKit/QTCaptureDevice.cs \
-	QTKit/QTCompressionOptions.cs \
-	QTKit/QTFormatDescription.cs \
-	QTKit/QTMedia.cs \
-	QTKit/QTMovie.cs \
+	QTKit/QTCompat.cs \
 
 # QuickLook
 
@@ -1756,6 +1751,7 @@ WKWEBKIT_SOURCES = \
 #
 
 SHARED_API_SOURCES = \
+	ObjCRuntime/ObsoleteConstants.cs \
 
 SHARED_CORE_SOURCES = \
 	MonoPInvokeCallbackAttribute.cs \
@@ -1768,6 +1764,7 @@ SHARED_CORE_SOURCES = \
 	ObjCRuntime/INativeObject.cs \
 	ObjCRuntime/LinkWithAttribute.cs \
 	ObjCRuntime/NativeAttribute.cs \
+	ObjCRuntime/ObsoleteConstants.cs \
 	ObjCRuntime/PlatformAvailability.cs \
 	ObjCRuntime/PlatformAvailability2.cs \
 	ObjCRuntime/PlatformAvailabilityShadow.cs \
@@ -1916,6 +1913,7 @@ MAC_FRAMEWORKS =            \
 	NetworkExtension        \
 	NotificationCenter 	\
 	OpenGL                  \
+	OSLog                   \
 	PassKit                 \
 	PdfKit                  \
 	PencilKit               \

@@ -887,7 +887,6 @@
 !missing-field! kSecTransformTransformName not bound
 !missing-field! kSecUseKeychain not bound
 !missing-field! kSecUseNoAuthenticationUI not bound
-!missing-field! kSecUseOperationPrompt not bound
 !missing-field! kSecZLibEncoding not bound
 !missing-field! oidAdCAIssuer not bound
 !missing-field! oidAdOCSP not bound
@@ -1462,3 +1461,9 @@
 !missing-pinvoke! SecTrustedApplicationCopyData is not bound
 !missing-pinvoke! SecTrustedApplicationCreateFromPath is not bound
 !missing-pinvoke! SecTrustedApplicationSetData is not bound
+
+## helper
+!extra-enum-value! Managed value -1 for SecAuthenticationType.Invalid not found in native headers
+
+## xcode 12.2 / we do not have bindings for XPC
+!missing-pinvoke! SecCodeCreateWithXPCMessage is not bound

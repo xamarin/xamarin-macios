@@ -2696,11 +2696,9 @@ namespace CoreData
 		NSError Error { get; }
 
 		[Notification]
-		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
 		[Field ("NSPersistentCloudKitContainerEventChangedNotification")]
 		NSString ChangedNotification { get; }
 
-		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
 		[Field ("NSPersistentCloudKitContainerEventUserInfoKey")]
 		NSString UserInfoKey { get; }
 	}

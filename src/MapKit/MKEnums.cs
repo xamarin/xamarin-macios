@@ -85,6 +85,7 @@ namespace MapKit {
 		LoadingThrottled,
 		PlacemarkNotFound,
 		DirectionsNotFound,
+		DecodingFailed,
 	}
 
 	// NSUInteger -> MKTypes.h
@@ -127,6 +128,8 @@ namespace MapKit {
 	public enum MKAnnotationViewCollisionMode : long {
 		Rectangle,
 		Circle,
+		[TV (14,0)][iOS (14,0)][Mac (11,0)]
+		None,
 	}
 
 	[TV (11,0)][NoWatch][iOS (11,0)][NoMac]

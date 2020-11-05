@@ -492,7 +492,7 @@ namespace PassKit {
 		[NullAllowed, Export ("billingContact", ArgumentSemantic.Strong)]
 		PKContact BillingContact { get; set; }
 
-		[Watch (3,0)][iOS (10,0)]
+		[iOS (10,0)]
 		[Static]
 		[Export ("availableNetworks")]
 		NSString[] AvailableNetworks { get; }
@@ -910,12 +910,10 @@ namespace PassKit {
 		NSString CartesBancaires { get; }
 
 		[iOS (9,2)]
-		[Watch (2,2)]
 		[Field ("PKPaymentNetworkChinaUnionPay")]
 		NSString ChinaUnionPay { get; }
 
 		[iOS (9,2)]
-		[Watch (2,2)]
 		[Field ("PKPaymentNetworkInterac")]
 		NSString Interac { get; }
 

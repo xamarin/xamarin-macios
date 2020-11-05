@@ -783,7 +783,7 @@ namespace UIKit {
 	// NSInteger -> UIActionSheet.h
 	[Native]
 	[NoTV][NoWatch]
-	[Deprecated (PlatformName.iOS, 13, 0, message: "'UIActionSheet' is deprecated.")]
+	[Deprecated (PlatformName.iOS, 13,0)]
 	public enum UIActionSheetStyle : long {
 		Automatic        = -1,
 		Default          = UIBarStyle.Default,
@@ -936,7 +936,7 @@ namespace UIKit {
 		TopRight    = 1 << 1,
 		BottomLeft  = 1 << 2,
 		BottomRight = 1 << 3,
-		AllCorners  = ~(uint)0
+		AllCorners  = ~(ulong)0
 	}
 
 	// NSInteger -> UIApplication.h
@@ -956,7 +956,7 @@ namespace UIKit {
 		TV,
 		CarPlay,
 		[Watch (7,0), TV (14,0), iOS (14,0)]
-		Mac,
+		Mac = 5,
 	}
 
 	// NSInteger -> UIApplication.h
@@ -2348,6 +2348,7 @@ namespace UIKit {
 	public enum UIDocumentBrowserErrorCode : long
 	{
 		Generic = 1,
+		NoLocationAvailable = 2,
 	}
 	
 	[iOS (12,0), TV (12,0), NoWatch]
@@ -2460,6 +2461,10 @@ namespace UIKit {
 
 		[Field ("UIWindowSceneSessionRoleExternalDisplay")]
 		ExternalDisplay,
+
+		[NoTV][NoWatch]
+		[Field ("CPTemplateApplicationSceneSessionRoleApplication", "CarPlay")]
+		CarTemplateApplication,
 	}
 
 	[iOS (13,0), TV (13,0), NoWatch]

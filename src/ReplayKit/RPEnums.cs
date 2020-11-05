@@ -51,6 +51,8 @@ namespace ReplayKit {
 		PhotoFailure = -5831,
 		RecordingInvalidSession = -5832,
 		FailedToStartCaptureStack = -5833,
+		InvalidParameter = -5834,
+		FilePermissions = -5835,
 	}
 
 	[NoiOS]

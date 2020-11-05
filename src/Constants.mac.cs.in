@@ -178,6 +178,7 @@ namespace ObjCRuntime {
 		public const string PassKitLibrary = "/System/Library/Frameworks/PassKit.framework/PassKit";
 		public const string MLComputeLibrary = "/System/Library/Frameworks/MLCompute.framework/MLCompute";
 		public const string NearbyInteractionLibrary = "/System/Library/Frameworks/NearbyInteraction.framework/NearbyInteraction";
+		public const string OSLogLibrary = "/System/Library/Frameworks/OSLog.framework/OSLog";
 		public const string ReplayKitLibrary = "/System/Library/Frameworks/ReplayKit.framework/ReplayKit";
 		public const string ScreenTimeLibrary = "/System/Library/Frameworks/ScreenTime.framework/ScreenTime";
 		public const string UniformTypeIdentifiersLibrary = "/System/Library/Frameworks/UniformTypeIdentifiers.framework/UniformTypeIdentifiers";

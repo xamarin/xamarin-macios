@@ -1,2 +1,14 @@
 ## this was _demoted_ to `@optional` when the property was deprecated in iOS 14 SDK
 !incorrect-protocol-member! NSFileProviderItem::typeIdentifier is OPTIONAL and should NOT be abstract
+
+## not available on iOS - but we don't put availability attributes on error codes
+!extra-enum-value! Managed value -1006 for NSFileProviderError.VersionOutOfDate not found in native headers
+!extra-enum-value! Managed value -1007 for NSFileProviderError.DirectoryNotEmpty not found in native headers
+!extra-enum-value! Managed value -2001 for NSFileProviderError.ProviderNotFound not found in native headers
+!extra-enum-value! Managed value -2002 for NSFileProviderError.ProviderTranslocated not found in native headers
+!extra-enum-value! Managed value -2003 for NSFileProviderError.OlderExtensionVersionRunning not found in native headers
+!extra-enum-value! Managed value -2004 for NSFileProviderError.NewerExtensionVersionFound not found in native headers
+!extra-enum-value! Managed value -2005 for NSFileProviderError.CannotSynchronize not found in native headers
+
+## XAMCORE_4_0 -> not constant - macOS is different (and future updates might change the current value too)
+!missing-enum-value! NSFileProviderItemCapabilities native value NSFileProviderItemCapabilitiesAllowsAll = 63 not bound
