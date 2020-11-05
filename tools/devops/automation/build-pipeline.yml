@@ -206,6 +206,25 @@ jobs:
       set -e
       rm -Rf $(Build.SourcesDirectory)/package/*.pkg
       time make -C $(Build.SourcesDirectory)/xamarin-macios/ package
+
+       # output vars for other steps to use and not need to recomputed the paths
+      IOS_PKG=$(find $(Build.SourcesDirectory)/package -type f -name "xamarin.ios-*" | xargs basename)
+      if [ -z "$IOS_PKG" ]; then 
+        echo "Xamarin.iOS package not found."
+      else
+        IOS_PKG="$(Build.SourcesDirectory)/package/$IOS_PKG"
+        echo "##vso[task.setvariable variable=iOSPkg;isOutput=true]$IOS_PKG"
+        echo "Xamarin.iOS package found at $IOS_PKG"
+      fi
+
+      MAC_PKG=$(find $(Build.SourcesDirectory)/package -type f -name "xamarin.mac-*" | xargs basename)
+      if [ -z "$MAC_PKG" ]; then
+        echo "Xamarin.Mac package not found."
+      else
+        MAC_PKG="$(Build.SourcesDirectory)/package/$MAC_PKG"
+        echo "##vso[task.setvariable variable=MacPkg;isOutput=true]$MAC_PKG"
+        echo "Xamarin.Mac package found at $MAC_PKG"
+      fi
     name: packages
     displayName: 'Build Packages'
     condition: eq(variables['configuration.BuildPkgs'], 'True')
@@ -250,22 +269,6 @@ jobs:
       source "$VIRTUAL_ENV_PATH/bin/activate"
       pip install python-magic
 
-      IOS_PKG=$(find $(Build.SourcesDirectory)/package -type f -name "xamarin.ios-*" | xargs basename)
-      if [ -z "$IOS_PKG" ]; then 
-        echo "Xamarin.iOS package not found."
-      else
-        IOS_PKG="$(Build.SourcesDirectory)/package/$IOS_PKG"
-        echo "Xamarin.iOS package found at $IOS_PKG"
-      fi
-
-      MAC_PKG=$(find $(Build.SourcesDirectory)/package -type f -name "xamarin.mac-*" | xargs basename)
-      if [ -z "$MAC_PKG" ]; then
-        echo "Xamarin.Mac package not found."
-      else
-        MAC_PKG="$(Build.SourcesDirectory)/package/$MAC_PKG"
-        echo "Xamarin.Mac package found at $MAC_PKG"
-      fi
-
       security unlock-keychain -p $PRODUCTSIGN_KEYCHAIN_PASSWORD builder.keychain
       PACKAGES="$IOS_PKG $MAC_PKG"
       echo "Packages found at $PACKAGES"
@@ -283,6 +286,8 @@ jobs:
       APPLE_PASS: $(XamarinPassword)
       TEAM_ID: $(TeamID)
       KEYCHAIN: $(SigningKeychain)
+      IOS_PKG: variables['packages.iOSPkg']
+      MAC_PKG: variables['packages.MacPkg']
     displayName: 'Signing Release Build'
     condition: and(eq(variables['configuration.SignPkgs'], 'True'), eq(variables['configuration.IsPr'], 'False'))
     timeoutInMinutes: 90
