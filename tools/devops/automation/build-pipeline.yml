@@ -75,7 +75,7 @@ stages:
     displayName: 'Upload packages to Azure'
     timeoutInMinutes: 1000
     dependsOn: build # can start as soon as the tests are done
-    condition: succeededOrFailed()
+    condition: succeeded()
     pool:
       name: VSEngDeploymentPool
       demands: agent.os -equals Windows_NT # we need to use a windows machine since vsdrops just works on them and the pool might have diff OS in the agents
