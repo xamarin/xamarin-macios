@@ -14,7 +14,7 @@ resources:
   - repository: templates
     type: github
     name: xamarin/yaml-templates
-    ref: refs/heads/main
+    ref: refs/heads/dev/bond/keychain                      # UNDONE: Change back to main once keychain diagnostics change has been merged (or not)
     endpoint: xamarin
 
   - repository: maccore
