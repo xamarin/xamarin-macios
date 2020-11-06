@@ -252,12 +252,14 @@ steps:
     set -x
     set -e
     cd $(Build.SourcesDirectory)/ 
-    wget https://dl.internalx.com/build-tools/latest/Xamarin.Build.Tasks.nupkg
+    wget wget --header="Authorization: token $GITHUB_TOKEN" https://dl.internalx.com/build-tools/latest/Xamarin.Build.Tasks.nupkg
     mkdir $(Build.SourcesDirectory)/BuildTasks
     cd $(Build.SourcesDirectory)/BuildTasks
     unzip ../Xamarin.Build.Tasks.nupkg
     mono tools/BuildTasks/build-tasks.exe workspaceinfo -p $(Build.SourcesDirectory) -o $(Build.SourcesDirectory)/package-internal/ci-checkout.json
     mono tools/BuildTasks/build-tasks.exe dependencyinfo -p $(Build.SourcesDirectory) -o $(Build.SourcesDirectory)/package-internal/dependency-info.json
+  env:
+    GITHUB_TOKEN: $(GitHub.Token)
   displayName: 'Build working dir'
   timeoutInMinutes: 15
 
