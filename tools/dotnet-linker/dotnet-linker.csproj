@@ -176,9 +176,6 @@
     <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\external\linker\src\tuner\Mono.Tuner\CecilRocks.cs">
       <Link>external\mono-archive\Mono.Tuner\CecilRocks.cs</Link>
     </Compile>
-    <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\external\linker\src\tuner\Mono.Tuner\RemoveAttributesBase.cs">
-      <Link>external\mono-archive\Mono.Tuner\RemoveAttributesBase.cs</Link>
-    </Compile>
     <Compile Include="..\..\external\Xamarin.MacDev\Xamarin.MacDev\PListObject.cs">
       <Link>external\Xamarin.MacDev\Xamarin.MacDev\PListObject.cs</Link>
     </Compile>
