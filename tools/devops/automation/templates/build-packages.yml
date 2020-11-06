@@ -19,6 +19,8 @@ steps:
 
 - bash: |
     security set-key-partition-list -S apple-tool:,apple: -s -k $OSX_KEYCHAIN_PASS login.keychain
+  env:
+    OSX_KEYCHAIN_PASS: $(OSX_KEYCHAIN_PASS)
   displayName: 'Remove security UI-prompt (http://stackoverflow.com/a/40039594/183422)'
   condition: succeededOrFailed() # we do not care about the previous process cleanup
 
