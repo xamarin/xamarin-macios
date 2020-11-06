@@ -42,6 +42,8 @@ variables:
   value: true
 - name: SigningKeychain
   value: "builder.keychain"
+- name: OSX_KEYCHAIN_PASS                                     # UNDONE: Override the OSX_KEYCHAIN_PASS to use same password as used by the iOS mac pool machines
+  value: $(ios-pool-keychain-password)
 
 trigger: none
 
