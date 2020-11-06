@@ -84,7 +84,7 @@ steps:
     set -x
     set -e
     rm -Rvf $(Build.SourcesDirectory)/package
-    time make -C $(Build.SourcesDirectory)/xamarin-macios/ git-clean-all 
+    time make -C $(Build.SourcesDirectory)/xamarin-macios/ git-clean-all
   displayName: 'Clear results directory'
   timeoutInMinutes: 5
 
@@ -144,7 +144,7 @@ steps:
 
       # output vars for other steps to use and not need to recomputed the paths
     IOS_PKG=$(find $(Build.SourcesDirectory)/package -type f -name "xamarin.ios-*" | xargs basename)
-    if [ -z "$IOS_PKG" ]; then 
+    if [ -z "$IOS_PKG" ]; then
       echo "Xamarin.iOS package not found."
     else
       IOS_PKG="$(Build.SourcesDirectory)/package/$IOS_PKG"
@@ -196,7 +196,7 @@ steps:
     MacDeveloper: $(mac-developer)
     HostedMacKeychainPassword: $(AzDO-OnPrem-KeychainPass)
 
-- bash: | 
+- bash: |
 
     VIRTUAL_ENV_PATH=$(Build.SourcesDirectory)/venv
     pip install virtualenv
@@ -214,7 +214,7 @@ steps:
     rm -Rf "$VIRTUAL_ENV_PATH"
 
     IOS_PKG=$(find $(Build.SourcesDirectory)/package -type f -name "xamarin.ios-*" | xargs basename)
-    if [ -z "$IOS_PKG" ]; then 
+    if [ -z "$IOS_PKG" ]; then
       echo "Xamarin.iOS package not found."
     else
       IOS_PKG="$(Build.SourcesDirectory)/package/notarized/$IOS_PKG"
@@ -241,7 +241,7 @@ steps:
     KEYCHAIN: $(SigningKeychain)
     IOS_PKG: variables['packages.iOSPkg']
     MAC_PKG: variables['packages.MacPkg']
-  name: notarize 
+  name: notarize
   displayName: 'Signing Release Build'
   condition: and(eq(variables['configuration.SignPkgs'], 'True'), eq(variables['configuration.IsPr'], 'False'))
   timeoutInMinutes: 90
@@ -250,6 +250,10 @@ steps:
   parameters:
     GitHubToken: $(GitHub.Token)
     ArtifactDirectory: $(Build.SourcesDirectory)/package-internal
+
+- template: uninstall-certificates/v1.yml@templates
+  parameters:
+    HostedMacKeychainPassword: $(AzDO-OnPrem-KeychainPass)
 
 # upload each of the pkgs into the pipeline artifacts
 - task: PublishPipelineArtifact@1
