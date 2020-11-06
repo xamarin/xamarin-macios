@@ -162,7 +162,7 @@ steps:
     fi
   name: packages
   displayName: 'Build Packages'
-  condition: eq(variables['configuration.BuildPkgs'], 'True')
+  condition: and(succeeded(), eq(variables['configuration.BuildPkgs'], 'True'))
   timeoutInMinutes: 180
 
 # build nugets
@@ -179,7 +179,7 @@ steps:
     make -C $(Build.SourcesDirectory)/xamarin-macios/dotnet package -j
     cp -c "$DOTNET_PKG_DIR"/*.pkg $(Build.SourcesDirectory)/package/
   displayName: 'Build Nugets'
-  condition: eq(variables['configuration.BuildNugets'], 'True')
+  condition: and(succeeded(), eq(variables['configuration.BuildNugets'], 'True'))
   timeoutInMinutes: 180
 
 - bash:  $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/productsign.sh
