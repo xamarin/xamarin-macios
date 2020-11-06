@@ -246,7 +246,7 @@ steps:
   condition: and(eq(variables['configuration.SignPkgs'], 'True'), eq(variables['configuration.IsPr'], 'False'))
   timeoutInMinutes: 90
 
-- template: download-build-tasks.yml@templates
+- template: generate-workspace-info.yml@templates
   parameters:
     GitHubToken: $(GitHub.Token)
     ArtifactDirectory: $(Build.SourcesDirectory)/package-internal
