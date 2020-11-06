@@ -7,12 +7,12 @@ namespace Xamarin.Linker {
 	public abstract class ConfigurationAwareSubStep : ExceptionalSubStep {
 		protected override void Report (Exception exception)
 		{
-			Configuration.Report (exception);
+			LinkerConfiguration.Report (Context, exception);
 		}
 
 		protected void Report (List<Exception> exceptions)
 		{
-			Configuration.Report (exceptions);
+			LinkerConfiguration.Report (Context, exceptions);
 		}
 	}
 }

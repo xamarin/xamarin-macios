@@ -46,9 +46,9 @@ namespace Xamarin.Linker {
 		
 		string user_optimize_flags;
 
-		public static LinkerConfiguration GetInstance (LinkContext context)
+		public static LinkerConfiguration GetInstance (LinkContext context, bool createIfNotFound = true)
 		{
-			if (!configurations.TryGetValue (context, out var instance)) {
+			if (!configurations.TryGetValue (context, out var instance) && createIfNotFound) {
 				if (!context.TryGetCustomData ("LinkerOptionsFile", out var linker_options_file))
 					throw new Exception ($"No custom linker options file was passed to the linker (using --custom-data LinkerOptionsFile=...");
 				instance = new LinkerConfiguration (linker_options_file) {
@@ -284,12 +284,12 @@ namespace Xamarin.Linker {
 			document.Save (Path.Combine (ItemsDirectory, itemName + ".items"));
 		}
 
-		public void Report (params Exception [] exceptions)
+		public static void Report (LinkContext Context, params Exception [] exceptions)
 		{
-			Report ((IList<Exception>) exceptions);
+			Report (Context, (IList<Exception>) exceptions);
 		}
 
-		public void Report (IList<Exception> exceptions)
+		public static void Report (LinkContext context, IList<Exception> exceptions)
 		{
 			// We can't really use the linker's reporting facilities and keep our own error codes, because we'll
 			// end up re-using the same error codes the linker already uses for its own purposes. So instead show
@@ -300,8 +300,10 @@ namespace Xamarin.Linker {
 			var allWarnings = list.All (v => v is ProductException pe && !pe.Error);
 			if (!allWarnings) {
 				// Revisit the error code after https://github.com/mono/linker/issues/1596 has been fixed.
-				var msg = MessageContainer.CreateErrorMessage ("Failed to execute the custom steps.", 1999, Platform.ToString ());
-				Context.LogMessage (msg);
+				var instance = GetInstance (context, false);
+				var platform = (instance?.Platform)?.ToString () ?? "unknown";
+				var msg = MessageContainer.CreateErrorMessage ("Failed to execute the custom steps.", 1999, platform);
+				context.LogMessage (msg);
 			}
 			// ErrorHelper.Show will print our errors and warnings to stderr.
 			ErrorHelper.Show (list);
