@@ -24,7 +24,7 @@ steps:
   displayName: 'Remove security UI-prompt (http://stackoverflow.com/a/40039594/183422)'
   condition: succeededOrFailed() # we do not care about the previous process cleanup
 
-- task: xamops.azdevex.provisionator-task.provisionator@1
+- task: xamops.azdevex.provisionator-task.provisionator@2
   displayName: 'Provision Brew components'
   inputs:
     provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/provision-brew-packages.csx
@@ -36,7 +36,7 @@ steps:
     make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops build-provisioning.csx
   displayName: 'Generate provisionator files.'
 
-- task: xamops.azdevex.provisionator-task.provisionator@1
+- task: xamops.azdevex.provisionator-task.provisionator@2
   displayName: 'Provision Xcode'
   inputs:
     provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/build-provisioning.csx
@@ -45,7 +45,7 @@ steps:
   timeoutInMinutes: 250
 
 # Disabled
-- task: xamops.azdevex.provisionator-task.provisionator@1
+- task: xamops.azdevex.provisionator-task.provisionator@2
   displayName: 'Provision Objective Sharpie'
   inputs:
     provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/provision-objective-sharpie.csx
@@ -54,7 +54,7 @@ steps:
   enabled: false
   timeoutInMinutes: 30
 
-- task: xamops.azdevex.provisionator-task.provisionator@1
+- task: xamops.azdevex.provisionator-task.provisionator@2
   displayName: 'Provision .NET Core'
   inputs:
     provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/provision-dotnetcore.csx
