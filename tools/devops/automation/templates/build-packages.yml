@@ -254,7 +254,7 @@ steps:
     set -x
     set -e
     cd $(Build.SourcesDirectory)/ 
-    wget --header="Authorization: token $GITHUB_TOKEN" https://dl.internalx.com/build-tools/latest/Xamarin.Build.Tasks.nupkg
+    wget --header="Authorization: Bearer $GITHUB_TOKEN" --content-disposition -E -c https://dl.internalx.com/build-tools/latest/Xamarin.Build.Tasks.nupkg
     mkdir $(Build.SourcesDirectory)/BuildTasks
     cd $(Build.SourcesDirectory)/BuildTasks
     unzip ../Xamarin.Build.Tasks.nupkg
