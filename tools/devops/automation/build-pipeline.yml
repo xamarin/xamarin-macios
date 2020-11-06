@@ -56,6 +56,7 @@ pr:
 
 stages:
 - stage: build_packages
+  displayName: 'Build'
   jobs:
   - job: build
     displayName: 'Build packages'
@@ -69,7 +70,7 @@ stages:
       clean: all
 
     steps:
-    - template: build-packages.yml
+    - template: templates/build-packages.yml
 
   - job: upload_azure_blob
     displayName: 'Upload packages to Azure'
@@ -85,4 +86,4 @@ stages:
       # Note the use of single quotes!
       UPLOAD_PREFIX: $[ dependencies.build.outputs['upload.VirtualPath'] ]
     steps:
-    - template: upload-azure.yml
+    - template: templates/upload-azure.yml
