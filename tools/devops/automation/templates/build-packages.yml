@@ -35,7 +35,7 @@ steps:
     make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops build-provisioning.csx
   displayName: 'Generate provisionator files.'
 
-- task: xamops.azdevex.provisionator-task.provisionator@2
+- task: xamops.azdevex.provisionator-task.provisionator@1
   displayName: 'Provision Xcode'
   inputs:
     provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/build-provisioning.csx
@@ -43,7 +43,7 @@ steps:
   timeoutInMinutes: 250
 
 # Disabled
-- task: xamops.azdevex.provisionator-task.provisionator@2
+- task: xamops.azdevex.provisionator-task.provisionator@1
   displayName: 'Provision Objective Sharpie'
   inputs:
     provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/provision-objective-sharpie.csx
@@ -51,7 +51,7 @@ steps:
   enabled: false
   timeoutInMinutes: 30
 
-- task: xamops.azdevex.provisionator-task.provisionator@2
+- task: xamops.azdevex.provisionator-task.provisionator@1
   displayName: 'Provision .NET Core'
   inputs:
     provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/provision-dotnetcore.csx
