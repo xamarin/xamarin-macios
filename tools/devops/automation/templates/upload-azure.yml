@@ -5,7 +5,7 @@ steps:
 
 # Download the Html Report that was added by the tests job.
 - task: DownloadPipelineArtifact@2
-  displayName: Download html report
+  displayName: Download packages
   inputs:
     patterns: '**'
     allowFailedBuilds: true
@@ -31,13 +31,27 @@ steps:
     GitHubToken: $(GitHub.Token)
     ArtifactDirectory: $(Build.SourcesDirectory)/package-internal
 
-- bash: |
-    set -x
-    set -e
-    "$(Build.SourcesDirectory)/Xamarin.Build.Tasks/tools/BuildTasks/build-tasks.exe" artifacts -s "$(Build.SourcesDirectory)/xamarin-macios" -a "bosstoragemirror" -c "$(auth-xamarin-bosstoragemirror-account-key)" -u "wrench/$VIRTUAL_PATH/package"
+- powershell:
+    $execPath=[System.IO.Path]::Combine(
+      "$Env:BUILD_SOURCESDIRECTORY",
+      "Xamarin.Build.Tasks",
+      "tools",
+      "BuildTasks",
+      "build-tasks.exe")
+
+    $maciosPath=[System.IO.Path]::Combine("$Env:BUILD_SOURCESDIRECTORY", "xamarin-macios")
+
+    Write-Host "Contents"
+    Dir $Env:BUILD_SOURCESDIRECTORY | Get-Childitem
+
+    Write-Host "Xamarin-macios path $maciosPath"
+    Write-Host "Exe path is $execPath"
+
+    Start-Process -FilePath "$execPath" -ArgumentList "artifacts", "-s", "$maciosPath", "-a", "bosstoragemirror", "-c", "$Env:STORAGE_PASS", "-u", "wrench/$Env:VIRTUAL_PATH/package"
   env:
     VIRTUAL_PATH: $(Build.SourceBranchName)/$(Build.SourceVersion)/$(Build.BuildId)
     GITHUB_AUTH_TOKEN: $(GitHub.Token)
+    STORAGE_PASS: $(auth-xamarin-bosstoragemirror-account-key)
   displayName: 'Generate artifacts.json'
 
 - powershell: |

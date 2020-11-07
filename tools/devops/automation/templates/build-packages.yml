@@ -148,7 +148,7 @@ steps:
       echo "Xamarin.iOS package not found."
     else
       IOS_PKG="$(Build.SourcesDirectory)/package/$IOS_PKG"
-      echo "##vso[task.setvariable variable=iOSPkg;isOutput=true]$IOS_PKG"
+      echo "##vso[task.setvariable variable=IOS_PKG;]$IOS_PKG"
       echo "Xamarin.iOS package found at $IOS_PKG"
     fi
 
@@ -157,7 +157,7 @@ steps:
       echo "Xamarin.Mac package not found."
     else
       MAC_PKG="$(Build.SourcesDirectory)/package/$MAC_PKG"
-      echo "##vso[task.setvariable variable=MacPkg;isOutput=true]$MAC_PKG"
+      echo "##vso[task.setvariable variable=MAC_PKG;]$MAC_PKG"
       echo "Xamarin.Mac package found at $MAC_PKG"
     fi
   name: packages
@@ -233,8 +233,6 @@ steps:
     APPLE_PASS: $(XamarinPassword)
     TEAM_ID: $(TeamID)
     KEYCHAIN: $(SigningKeychain)
-    IOS_PKG: variables['packages.iOSPkg']
-    MAC_PKG: variables['packages.MacPkg']
   name: notarize
   displayName: 'Signing Release Build'
   condition: and(succeeded(), eq(variables['configuration.SignPkgs'], 'True'), eq(variables['configuration.IsPr'], 'False'))
