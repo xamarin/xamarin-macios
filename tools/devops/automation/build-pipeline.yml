@@ -115,15 +115,21 @@ stages:
 
     strategy:
       matrix:
+        iOS32: # TODO: This bots should be moved to the ddfun pool
+          deviceDemands: 'xismoke-32'
+          testsLabels: '--label=run-ios-32-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests'
+          poolName: 'VSEng-Xamarin-QA'
         iOS64:
           deviceDemands: 'ios'
           testsLabels: '--label=run-ios-64-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests'
+          poolName: 'VSEng-Xamarin-Mac-Devices'
         tvOS:
           deviceDemands: 'tvos'
           testsLabels: '--label=run-tvos-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests'
+          poolName: 'VSEng-Xamarin-Mac-Devices'
 
     pool:
-      name: 'VSEng-Xamarin-Mac-Devices'
+      name: $(poolName)
       demands: $(deviceDeamnds)
       workspace:
         clean: all
@@ -139,6 +145,24 @@ stages:
     timeoutInMinutes: 1000
     workspace:
       clean: all
+
+    strategy:
+      matrix:
+        Mojave:
+          deviceDemands: '10.14' 
+          poolName: 'Hosted Mac Internal Mojave'
+        HighSierra:
+          deviceDemands: '10.13' 
+          poolName: 'Hosted Mac Internal'
+
+    pool:
+      name: $(poolName)
+      demands: 
+      - Agent.OS -equals Darwin
+      - Agent.OSVersion -equals $(deviceDeamnds)
+
+      workspace:
+        clean: all
 
     steps:
     - bash: echo "Hello world"
