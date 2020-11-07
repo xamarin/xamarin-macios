@@ -15,7 +15,6 @@ steps:
 
 - powershell: |
     gci env: | format-table -autosize -wrap
-    Invoke-RestMethod http://ipinfo.io/json | Select -exp ip
   displayName: 'Dump Environment'
 
 - bash: |
@@ -197,6 +196,13 @@ steps:
     MacDeveloper: $(mac-developer)
     HostedMacKeychainPassword: $(AzDO-OnPrem-KeychainPass)
 
+# HACK HACK: brew remove python2, but the script uses python2, this is a dirty workaround
+- bash: |
+    wget https://raw.githubusercontent.com/Homebrew/homebrew-core/86a44a0a552c673a05f11018459c9f5faae3becc/Formula/python@2.rb
+    brew install python@2.rb
+    rm python@2.rb
+  displayName: 'Install Python 2 and pip'
+  
 - bash: |
     VIRTUAL_ENV_PATH=$(Build.SourcesDirectory)/venv
     pip install virtualenv
