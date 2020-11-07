@@ -24,6 +24,22 @@ steps:
     outputStorageUri: PackageUrl
     outputStorageContainerSasToken: PackageSasToken
 
+# IMPORTANT - Artifacts have to be uploaded to azure before this step is executed
+
+- template: generate-workspace-info.yml@templates
+  parameters:
+    GitHubToken: $(GitHub.Token)
+    ArtifactDirectory: $(Build.SourcesDirectory)/package-internal
+
+- bash: |
+    set -x
+    set -e
+    "$(Build.SourcesDirectory)/Xamarin.Build.Tasks/tools/BuildTasks/build-tasks.exe" artifacts -s "$(Build.SourcesDirectory)/xamarin-macios" -a "bosstoragemirror" -c "$(auth-xamarin-bosstoragemirror-account-key)" -u "wrench/$VIRTUAL_PATH/package"
+  env:
+    VIRTUAL_PATH: $(Build.SourceBranchName)/$(Build.SourceVersion)/$(Build.BuildId)
+    GITHUB_AUTH_TOKEN: $(GitHub.Token)
+  displayName: 'Generate artifacts.json'
+
 - powershell: |
     ls $Env:SYSTEM_DEFAULTWORKINGDIRECTORY
 

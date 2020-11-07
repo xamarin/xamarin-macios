@@ -140,9 +140,10 @@ steps:
     set -x
     set -e
     rm -Rf $(Build.SourcesDirectory)/package/*.pkg
+    rm -Rf $(Build.SourcesDirectory)/package/notarized/*.pkg
     time make -C $(Build.SourcesDirectory)/xamarin-macios/ package
 
-      # output vars for other steps to use and not need to recomputed the paths
+    # output vars for other steps to use and not need to recomputed the paths
     IOS_PKG=$(find $(Build.SourcesDirectory)/package -type f -name "xamarin.ios-*" | xargs basename)
     if [ -z "$IOS_PKG" ]; then
       echo "Xamarin.iOS package not found."
@@ -186,7 +187,7 @@ steps:
   env:
     PRODUCTSIGN_KEYCHAIN_PASSWORD: $(xma-password)
   displayName: 'Signing PR Build'
-  condition: and(eq(variables['configuration.SignPkgs'], 'True'), eq(variables['configuration.IsPr'], 'True'))
+  condition: and(succeeded(), eq(variables['configuration.SignPkgs'], 'True'), eq(variables['configuration.IsPr'], 'True'))
 
 - template: install-certificates.yml@templates
   parameters:
@@ -209,24 +210,6 @@ steps:
     virtualenv "$VIRTUAL_ENV_PATH" --system-site-packages
     source "$VIRTUAL_ENV_PATH/bin/activate"
     pip install python-magic
-
-    IOS_PKG=$(find $(Build.SourcesDirectory)/package -type f -name "xamarin.ios-*" | xargs basename)
-    if [ -z "$IOS_PKG" ]; then
-      echo "Xamarin.iOS package not found."
-    else
-      IOS_PKG="$(Build.SourcesDirectory)/package/notarized/$IOS_PKG"
-      echo "##vso[task.setvariable variable=iOSPkg;isOutput=true]$IOS_PKG"
-      echo "Xamarin.iOS package found at $IOS_PKG"
-    fi
-
-    MAC_PKG=$(find $(Build.SourcesDirectory)/package -type f -name "xamarin.mac-*" | xargs basename)
-    if [ -z "$MAC_PKG" ]; then
-      echo "Xamarin.Mac package not found."
-    else
-      MAC_PKG="$(Build.SourcesDirectory)/package/notarized/$MAC_PKG"
-      echo "##vso[task.setvariable variable=MacPkg;isOutput=true]$MAC_PKG"
-      echo "Xamarin.Mac package found at $MAC_PKG"
-    fi
 
     security unlock-keychain -p $PRODUCTSIGN_KEYCHAIN_PASSWORD builder.keychain
     PACKAGES="$IOS_PKG $MAC_PKG"
@@ -264,14 +247,3 @@ steps:
     targetPath: $(Build.SourcesDirectory)/package
     artifactName: package
   continueOnError: true
-
-# IMPORTANT - Artifacts have to be uploaded to azure before this step is executed
-- bash: |
-    set -x
-    set -e
-    CLEAN_URL=$(echo "$VIRTUAL_PATH" | sed "s/'//g")
-    mono "$(Build.SourcesDirectory)/Xamarin.Build.Tasks/tools/BuildTasks/build-tasks.exe" artifacts -s "$(Build.SourcesDirectory)/xamarin-macios" -a "bosstoragemirror" -c "$(auth-xamarin-bosstoragemirror-account-key)" -u "wrench/$CLEAN_URL/package"
-  env:
-    VIRTUAL_PATH: $(Build.SourceBranchName)/$(Build.SourceVersion)/$(Build.BuildId)
-    GITHUB_AUTH_TOKEN: $(GitHub.Token)
-  displayName: 'Generate artifacts.json'
