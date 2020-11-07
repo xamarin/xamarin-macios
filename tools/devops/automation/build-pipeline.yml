@@ -84,3 +84,48 @@ stages:
         clean: all
     steps:
     - template: templates/upload-azure.yml
+
+- stage: tests
+  displayName : 'Tests'
+  dependsOn: build_packages
+  jobs:
+
+  # this are the default tests that are executed in the latests mac OS X on the simulators
+  - job: simulator_tests
+    displayName: 'Simulator Tests'
+    timeoutInMinutes: 1000
+    pool:
+      name: VSEng-Xamarin-RedmondMacCatalinaBuildPool-iOS-Untrusted
+      demands:
+      - Agent.OS -equals Darwin
+      - Agent.OSVersion -equals 10.15
+    workspace:
+      clean: all
+
+    steps:
+    - bash: echo "Hello world"
+
+  # This job is a matrix, will execute the tests in the following devices:
+  # * iOS32b
+  # * iOS64b
+  # * tvOS
+  - job: device_tests
+    displayName: 'Device tests'
+    timeoutInMinutes: 1000
+    workspace:
+      clean: all
+
+    steps:
+    - bash: echo "Hello world"
+
+  # This job is a matrix and will execute the tests on the available tests
+  # * mac OS 10.14
+  # * mac OX 10.13
+  - job: mac_tests
+    displayName: 'Mac OS X tests'
+    timeoutInMinutes: 1000
+    workspace:
+      clean: all
+
+    steps:
+    - bash: echo "Hello world"
