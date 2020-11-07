@@ -265,7 +265,8 @@ steps:
 - bash: |
     set -x
     set -e
-    mono "$(Build.SourcesDirectory)/Xamarin.Build.Tasks/tools/BuildTasks/build-tasks.exe" artifacts -s "$(Build.SourcesDirectory)/xamarin-macios" -a "$(bosstoragemirror)" -c "$(auth-xamarin-bosstoragemirror-account-key)" -u "wrench/$VIRTUAL_PATH/package"
+    CLEAN_URL=$(echo "$VIRTUAL_PATH" | sed "s/'//g")
+    mono "$(Build.SourcesDirectory)/Xamarin.Build.Tasks/tools/BuildTasks/build-tasks.exe" artifacts -s "$(Build.SourcesDirectory)/xamarin-macios" -a "bosstoragemirror" -c "$(auth-xamarin-bosstoragemirror-account-key)" -u "wrench/$CLEAN_URL/package"
   displayName: 'Generate artifacts.json'
 
 # upload each of the pkgs into the pipeline artifacts
