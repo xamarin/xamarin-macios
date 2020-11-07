@@ -188,6 +188,12 @@ steps:
   displayName: 'Signing PR Build'
   condition: and(succeeded(), eq(variables['configuration.SignPkgs'], 'True'), eq(variables['configuration.IsPr'], 'True'))
 
+# HACK HACK: We shold not need to do this, the install of the certs template should be smart enough
+- bash: |
+    security delete-keychain builder.keychain
+  displayName: 'Remove builder keychain'
+  continueOnError: true
+
 - template: install-certificates.yml@templates
   parameters:
     DeveloperIdApplication: $(developer-id-application)
