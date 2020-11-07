@@ -1,0 +1,3 @@
+steps:
+  - bash: echo "Hello World"
+    displayName: 'Test'

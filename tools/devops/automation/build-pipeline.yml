@@ -92,7 +92,7 @@ stages:
 
   # this are the default tests that are executed in the latests mac OS X on the simulators
   - job: simulator_tests
-    displayName: 'Simulator Tests'
+    displayName: 'Simulator tests'
     timeoutInMinutes: 1000
     pool:
       name: VSEng-Xamarin-RedmondMacCatalinaBuildPool-iOS-Untrusted
@@ -112,11 +112,24 @@ stages:
   - job: device_tests
     displayName: 'Device tests'
     timeoutInMinutes: 1000
-    workspace:
-      clean: all
+
+    strategy:
+      matrix:
+        iOS64:
+          deviceDemands: 'ios'
+          testsLabels: '--label=run-ios-64-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests'
+        tvOS:
+          deviceDemands: 'tvos'
+          testsLabels: '--label=run-tvos-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests'
+
+    pool:
+      name: 'VSEng-Xamarin-Mac-Devices'
+      demands: $(deviceDeamnds)
+      workspace:
+        clean: all
 
     steps:
-    - bash: echo "Hello world"
+    - template: templates/device-tests.yml
 
   # This job is a matrix and will execute the tests on the available tests
   # * mac OS 10.14
