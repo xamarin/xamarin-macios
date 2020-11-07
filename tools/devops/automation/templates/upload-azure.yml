@@ -11,6 +11,14 @@ steps:
     allowFailedBuilds: true
     path: $(Build.SourcesDirectory)/packages
 
+# this is a needed hack because the variable was always an extra '
+- powershell: |
+    Write-Host "Url uploaded is " + $Env:UPLOAD_PREFIX
+    $cleanUrl = "$Env:UPLOAD_PREFIX".Replace("''","")
+    Write-Host "##vso[task.setvariable variable=UPLOAD_PREFIX;]$cleanUrl"
+    Write-Host "Url uploaded after fix is " + $Env:UPLOAD_PREFIX
+  displayName: 'Clean Url'
+
 - task: AzureFileCopy@3
   displayName: 'Publish package to Azure'
   name: upload
@@ -28,7 +36,7 @@ steps:
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\device-tests\scripts\GitHub.psm1
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\device-tests\scripts\VSTS.psm1
 
-    Write-Host "Url uploaded is " + $Env:UPLOAD_URL
+    Write-Host "Url uploaded in AZDO is " + $Env:UPLOAD_URL
   env:
     UPLOAD_URL: variables['upload.PackageUrl']
   displayName: 'Set GithubStatus'
