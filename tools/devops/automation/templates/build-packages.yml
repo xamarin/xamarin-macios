@@ -256,6 +256,7 @@ steps:
     # create virtual path for the upload
     VIRTUAL_PATH=$(Build.SourceBranchName)/$(Build.SourceVersion)/$(Build.BuildId)
     echo "##vso[task.setvariable variable=VirtualPath;isOutput=true]$VIRTUAL_PATH"
+    echo "##vso[task.setvariable variable=VIRTUAL_PATH]$VIRTUAL_PATH"
     echo "Virtual path for upload is $VIRTUAL_PATH"
   name: upload
   displayName: 'Calculate upload paths'
@@ -264,11 +265,7 @@ steps:
 - bash: |
     set -x
     set -e
-    mono "$(Build.SourcesDirectory)/Xamarin.Build.Tasks/tools/BuildTasks/build-tasks.exe" artifacts -s "$(Build.SourcesDirectory)/xamarin-macios" -a "$STORAGE_ACCOUNT" -c "$STORAGE_PASSWORD" -u "wrench/$UPLOAD_VIRTUAL_PATH/package"
-  env:
-    STORAGE_ACCOUNT: $(bosstoragemirror)
-    STORAGE_PASSWORD: $(auth-xamarin-bosstoragemirror-account-key)
-    UPLOAD_VIRTUAL_PATH: variables['upload.VirtualPath']
+    mono "$(Build.SourcesDirectory)/Xamarin.Build.Tasks/tools/BuildTasks/build-tasks.exe" artifacts -s "$(Build.SourcesDirectory)/xamarin-macios" -a "$(bosstoragemirror)" -c "$(auth-xamarin-bosstoragemirror-account-key)" -u "wrench/$VIRTUAL_PATH/package"
   displayName: 'Generate artifacts.json'
 
 - template: uninstall-certificates/v1.yml@templates
