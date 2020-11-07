@@ -197,7 +197,6 @@ steps:
     HostedMacKeychainPassword: $(AzDO-OnPrem-KeychainPass)
 
 - bash: |
-
     VIRTUAL_ENV_PATH=$(Build.SourcesDirectory)/venv
     pip install virtualenv
     virtualenv "$VIRTUAL_ENV_PATH" --system-site-packages
@@ -243,13 +242,34 @@ steps:
     MAC_PKG: variables['packages.MacPkg']
   name: notarize
   displayName: 'Signing Release Build'
-  condition: and(eq(variables['configuration.SignPkgs'], 'True'), eq(variables['configuration.IsPr'], 'False'))
+  condition: and(succeeded(), eq(variables['configuration.SignPkgs'], 'True'), eq(variables['configuration.IsPr'], 'False'))
   timeoutInMinutes: 90
 
 - template: generate-workspace-info.yml@templates
   parameters:
     GitHubToken: $(GitHub.Token)
     ArtifactDirectory: $(Build.SourcesDirectory)/package-internal
+
+- bash: |
+    set -x
+    set -e
+    # create virtual path for the upload
+    VIRTUAL_PATH=$(Build.SourceBranchName)/$(Build.SourceVersion)/$(Build.BuildId)
+    echo "##vso[task.setvariable variable=VirtualPath;isOutput=true]$VIRTUAL_PATH"
+    echo "Virtual path for upload is $VIRTUAL_PATH"
+  name: upload
+  displayName: 'Calculate upload paths'
+  timeoutInMinutes: 1
+
+- bash: |
+    set -x
+    set -e
+    mono tools/BuildTasks/build-tasks.exe artifacts -s "$(Build.SourcesDirectory)/xamarin-macios" -a "$STORAGE_ACCOUNT" -c "$STORAGE_PASSWORD" -u "wrench/$UPLOAD_VIRTUAL_PATH/package"
+  env:
+    STORAGE_ACCOUNT: $(bosstoragemirror)
+    STORAGE_PASSWORD: $(auth-xamarin-bosstoragemirror-account-key)
+    UPLOAD_VIRTUAL_PATH: variables['upload.VirtualPath']
+  displayName: 'Generate artifacts.json'
 
 - template: uninstall-certificates/v1.yml@templates
   parameters:
@@ -262,17 +282,6 @@ steps:
     targetPath: $(Build.SourcesDirectory)/package
     artifactName: package
   continueOnError: true
-
-- bash: |
-    set -x
-    set -e
-    # create virtual path for the upload
-    VIRTUAL_PATH=$(Build.SourceBranchName)/$(Build.SourceVersion)/$(Build.BuildId)
-    echo "##vso[task.setvariable variable=VirtualPath;isOutput=true]$VIRTUAL_PATH"
-    echo "Virtual path for upload is $VIRTUAL_PATH"
-  name: upload
-  displayName: 'Calculate upload paths'
-  timeoutInMinutes: 1
 
 - bash: |
     set -x
