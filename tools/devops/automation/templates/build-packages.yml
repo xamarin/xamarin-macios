@@ -271,10 +271,6 @@ steps:
     UPLOAD_VIRTUAL_PATH: variables['upload.VirtualPath']
   displayName: 'Generate artifacts.json'
 
-- template: uninstall-certificates/v1.yml@templates
-  parameters:
-    HostedMacKeychainPassword: $(AzDO-OnPrem-KeychainPass)
-
 # upload each of the pkgs into the pipeline artifacts
 - task: PublishPipelineArtifact@1
   displayName: 'Publish Build Artifacts'
