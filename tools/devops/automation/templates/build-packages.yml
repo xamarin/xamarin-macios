@@ -197,12 +197,8 @@ steps:
     HostedMacKeychainPassword: $(AzDO-OnPrem-KeychainPass)
 
 - bash: |
-
-    curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-    python get-pip.py
-
     VIRTUAL_ENV_PATH=$(Build.SourcesDirectory)/venv
-    pip install virtualenv
+    pip3 install virtualenv
     virtualenv "$VIRTUAL_ENV_PATH" --system-site-packages
     source "$VIRTUAL_ENV_PATH/bin/activate"
     pip install python-magic
