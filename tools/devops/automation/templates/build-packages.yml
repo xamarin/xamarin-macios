@@ -268,10 +268,6 @@ steps:
     mono "$(Build.SourcesDirectory)/Xamarin.Build.Tasks/tools/BuildTasks/build-tasks.exe" artifacts -s "$(Build.SourcesDirectory)/xamarin-macios" -a "$(bosstoragemirror)" -c "$(auth-xamarin-bosstoragemirror-account-key)" -u "wrench/$VIRTUAL_PATH/package"
   displayName: 'Generate artifacts.json'
 
-- template: uninstall-certificates/v1.yml@templates
-  parameters:
-    HostedMacKeychainPassword: $(AzDO-OnPrem-KeychainPass)
-
 # upload each of the pkgs into the pipeline artifacts
 - task: PublishPipelineArtifact@1
   displayName: 'Publish Build Artifacts'
