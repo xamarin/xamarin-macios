@@ -275,9 +275,3 @@ steps:
     VIRTUAL_PATH: $(Build.SourceBranchName)/$(Build.SourceVersion)/$(Build.BuildId)
     GITHUB_AUTH_TOKEN: $(GitHub.Token)
   displayName: 'Generate artifacts.json'
-
-- bash: |
-    set -x
-    set -e
-  displayName: 'Generate artifacts.json'
-  timeoutInMinutes: 1
