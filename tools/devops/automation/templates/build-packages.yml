@@ -264,7 +264,7 @@ steps:
 - bash: |
     set -x
     set -e
-    mono tools/BuildTasks/build-tasks.exe artifacts -s "$(Build.SourcesDirectory)/xamarin-macios" -a "$STORAGE_ACCOUNT" -c "$STORAGE_PASSWORD" -u "wrench/$UPLOAD_VIRTUAL_PATH/package"
+    mono "$(Build.SourcesDirectory)/Xamarin.Build.Tasks/tools/BuildTasks/build-tasks.exe" artifacts -s "$(Build.SourcesDirectory)/xamarin-macios" -a "$STORAGE_ACCOUNT" -c "$STORAGE_PASSWORD" -u "wrench/$UPLOAD_VIRTUAL_PATH/package"
   env:
     STORAGE_ACCOUNT: $(bosstoragemirror)
     STORAGE_PASSWORD: $(auth-xamarin-bosstoragemirror-account-key)

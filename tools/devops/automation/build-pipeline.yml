@@ -84,6 +84,6 @@ stages:
         clean: all
     variables:
       # Note the use of single quotes!
-      UPLOAD_PREFIX: $[ dependencies.build.outputs["upload.VirtualPath"] ]
+      UPLOAD_PREFIX: $[ dependencies.build.outputs['upload.VirtualPath'] ]
     steps:
     - template: templates/upload-azure.yml
