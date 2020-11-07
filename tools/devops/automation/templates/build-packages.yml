@@ -202,22 +202,13 @@ steps:
     brew install python@2.rb
     rm python@2.rb
   displayName: 'Install Python 2 and pip'
-  
+
 - bash: |
     VIRTUAL_ENV_PATH=$(Build.SourcesDirectory)/venv
     pip install virtualenv
     virtualenv "$VIRTUAL_ENV_PATH" --system-site-packages
     source "$VIRTUAL_ENV_PATH/bin/activate"
     pip install python-magic
-
-    security unlock-keychain -p $PRODUCTSIGN_KEYCHAIN_PASSWORD builder.keychain
-    PACKAGES="$IOS_PKG $MAC_PKG"
-    echo "Packages found at $PACKAGES"
-
-    echo "$PACKAGES" | xargs python $(Build.SourcesDirectory)/release-scripts/sign_and_notarize.py -a "$APP_ID" -i "$INSTALL_ID" -u "$APPLE_ACCOUNT" -p "$APPLE_PASS" -t "$TEAM_ID" -d $(Build.SourcesDirectory)/package/notarized -e "$MAC_ENTITLEMENTS" -k "$KEYCHAIN"
-
-    deactivate
-    rm -Rf "$VIRTUAL_ENV_PATH"
 
     IOS_PKG=$(find $(Build.SourcesDirectory)/package -type f -name "xamarin.ios-*" | xargs basename)
     if [ -z "$IOS_PKG" ]; then
@@ -236,6 +227,15 @@ steps:
       echo "##vso[task.setvariable variable=MacPkg;isOutput=true]$MAC_PKG"
       echo "Xamarin.Mac package found at $MAC_PKG"
     fi
+
+    security unlock-keychain -p $PRODUCTSIGN_KEYCHAIN_PASSWORD builder.keychain
+    PACKAGES="$IOS_PKG $MAC_PKG"
+    echo "Packages found at $PACKAGES"
+
+    echo "$PACKAGES" | xargs python $(Build.SourcesDirectory)/release-scripts/sign_and_notarize.py -a "$APP_ID" -i "$INSTALL_ID" -u "$APPLE_ACCOUNT" -p "$APPLE_PASS" -t "$TEAM_ID" -d $(Build.SourcesDirectory)/package/notarized -e "$MAC_ENTITLEMENTS" -k "$KEYCHAIN"
+
+    deactivate
+    rm -Rf "$VIRTUAL_ENV_PATH"
   env:
     PRODUCTSIGN_KEYCHAIN_PASSWORD: $(AzDO-OnPrem-KeychainPass)
     MAC_ENTITLEMENTS: $(Build.SourcesDirectory)/xamarin-macios/mac-entitlements.plist
@@ -269,14 +269,6 @@ steps:
   displayName: 'Calculate upload paths'
   timeoutInMinutes: 1
 
-- bash: |
-    set -x
-    set -e
-    CLEAN_URL=$(echo "$VIRTUAL_PATH" | sed "s/'//g")
-    mono "$(Build.SourcesDirectory)/Xamarin.Build.Tasks/tools/BuildTasks/build-tasks.exe" artifacts -s "$(Build.SourcesDirectory)/xamarin-macios" -a "bosstoragemirror" -c "$(auth-xamarin-bosstoragemirror-account-key)" -u "wrench/$CLEAN_URL/package"
-  env:
-    GITHUB_AUTH_TOKEN: $(GitHub.Token)
-  displayName: 'Generate artifacts.json'
 
 # upload each of the pkgs into the pipeline artifacts
 - task: PublishPipelineArtifact@1
@@ -285,6 +277,16 @@ steps:
     targetPath: $(Build.SourcesDirectory)/package
     artifactName: package
   continueOnError: true
+
+# IMPORTANT - Artifacts have to be uploaded to azure before this step is executed
+- bash: |
+    set -x
+    set -e
+    CLEAN_URL=$(echo "$VIRTUAL_PATH" | sed "s/'//g")
+    mono "$(Build.SourcesDirectory)/Xamarin.Build.Tasks/tools/BuildTasks/build-tasks.exe" artifacts -s "$(Build.SourcesDirectory)/xamarin-macios" -a "bosstoragemirror" -c "$(auth-xamarin-bosstoragemirror-account-key)" -u "wrench/$CLEAN_URL/package"
+  env:
+    GITHUB_AUTH_TOKEN: $(GitHub.Token)
+  displayName: 'Generate artifacts.json'
 
 - bash: |
     set -x
