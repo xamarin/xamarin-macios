@@ -257,19 +257,6 @@ steps:
     GitHubToken: $(GitHub.Token)
     ArtifactDirectory: $(Build.SourcesDirectory)/package-internal
 
-- bash: |
-    set -x
-    set -e
-    # create virtual path for the upload
-    VIRTUAL_PATH=$(Build.SourceBranchName)/$(Build.SourceVersion)/$(Build.BuildId)
-    echo "##vso[task.setvariable variable=VirtualPath;isOutput=true]$VIRTUAL_PATH"
-    echo "##vso[task.setvariable variable=VIRTUAL_PATH]$VIRTUAL_PATH"
-    echo "Virtual path for upload is $VIRTUAL_PATH"
-  name: upload
-  displayName: 'Calculate upload paths'
-  timeoutInMinutes: 1
-
-
 # upload each of the pkgs into the pipeline artifacts
 - task: PublishPipelineArtifact@1
   displayName: 'Publish Build Artifacts'
@@ -285,6 +272,7 @@ steps:
     CLEAN_URL=$(echo "$VIRTUAL_PATH" | sed "s/'//g")
     mono "$(Build.SourcesDirectory)/Xamarin.Build.Tasks/tools/BuildTasks/build-tasks.exe" artifacts -s "$(Build.SourcesDirectory)/xamarin-macios" -a "bosstoragemirror" -c "$(auth-xamarin-bosstoragemirror-account-key)" -u "wrench/$CLEAN_URL/package"
   env:
+    VIRTUAL_PATH: $(Build.SourceBranchName)/$(Build.SourceVersion)/$(Build.BuildId)
     GITHUB_AUTH_TOKEN: $(GitHub.Token)
   displayName: 'Generate artifacts.json'
 
