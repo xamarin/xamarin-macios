@@ -250,3 +250,10 @@ steps:
     targetPath: $(Build.SourcesDirectory)/package
     artifactName: package
   continueOnError: true
+
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Build Internal Artifacts'
+  inputs:
+    targetPath: $(Build.SourcesDirectory)/package-internal 
+    artifactName: package-internal
+  continueOnError: true

@@ -134,7 +134,7 @@ stages:
 
     pool:
       name: $(poolName)
-      demands: $(deviceDeamnds)
+      #demands: $(deviceDemands)
       workspace:
         clean: all
 
@@ -163,7 +163,7 @@ stages:
       name: $(poolName)
       demands: 
       - Agent.OS -equals Darwin
-      - Agent.OSVersion -equals $(deviceDeamnds)
+      #- Agent.OSVersion -equals $(deviceDemands)
 
       workspace:
         clean: all
