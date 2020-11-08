@@ -21,7 +21,7 @@ steps:
     storage: bosstoragemirror
     ContainerName: wrench
     BlobPrefix: $(Build.SourceBranchName)/$(Build.SourceVersion)/$(Build.BuildId)  # ideally, we would use a variable for this
-    outputStorageUri: PackageUrl
+    outputStorageUri: Parameters.outputStorageUri
     outputStorageContainerSasToken: PackageSasToken
 
 # IMPORTANT - Artifacts have to be uploaded to azure before this step is executed
@@ -39,7 +39,15 @@ steps:
       "BuildTasks",
       "build-tasks.exe")
 
+    if (-not (Test-Path $execPath -PathType Leaf)) {
+        Write-Host "Build task not found at $execPath!"
+    }
+
     $maciosPath=[System.IO.Path]::Combine("$Env:BUILD_SOURCESDIRECTORY", "xamarin-macios")
+
+    if (-not (Test-Path $maciosPath -PathType Leaf)) {
+        Write-Host "Build task not found at $maciosPath!"
+    }
 
     Write-Host "Contents"
     Dir $Env:BUILD_SOURCESDIRECTORY | Get-Childitem
@@ -47,7 +55,7 @@ steps:
     Write-Host "Xamarin-macios path $maciosPath"
     Write-Host "Exe path is $execPath"
 
-    Start-Process -FilePath "$execPath" -ArgumentList "artifacts", "-s", "$maciosPath", "-a", "bosstoragemirror", "-c", "$Env:STORAGE_PASS", "-u", "wrench/$Env:VIRTUAL_PATH/package"
+    Start-Process -FilePath "$execPath" -ArgumentList "artifacts", "-s", "$maciosPath", "-a", "bosstoragemirror", "-c", "$Env:STORAGE_PASS", "-u", "wrench/$Env:VIRTUAL_PATH/package" -Wait
   env:
     VIRTUAL_PATH: $(Build.SourceBranchName)/$(Build.SourceVersion)/$(Build.BuildId)
     GITHUB_AUTH_TOKEN: $(GitHub.Token)
@@ -55,9 +63,45 @@ steps:
   displayName: 'Generate artifacts.json'
 
 - powershell: |
-    ls $Env:SYSTEM_DEFAULTWORKINGDIRECTORY
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\tools\devops\automation\scripts\GitHub.psm1
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\tools\devops\automation\scripts\VSTS.psm1
 
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\device-tests\scripts\GitHub.psm1
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\device-tests\scripts\VSTS.psm1
+    Write-Host 'URL = ' + $Env:PARAMETERS_OUTPUTSTORAGEURI
+
+    if (Test-Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\packages\xamarin.ios-*.pkg" -PathType Leaf) {
+        Set-GitHubStatus -Status "success" -Description "I need to add a url :/" -Context "PKG-Xamarin.iOS"
+    }
+
+    if (Test-Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\packages\notarized\xamarin.ios-*.pkg" -PathType Leaf) {
+       Set-GitHubStatus -Status "success" -Description "I need to add a url :/" -Context "PKG-Xamarin.iOS-notarized"
+    } 
+
+    if (Test-Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\packages\xamarin.mac-*.pkg" -PathType Leaf) {
+       Set-GitHubStatus -Status "success" -Description "I need to add a url :/" -Context "PKG-Xamarin.Mac"
+    }
+
+    if (Test-Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\packages\xamarin.mac-*.pkg" -PathType Leaf) {
+        Set-GitHubStatus -Status "success" -Description "I need to add a url :/" -Context "PKG-Xamarin.Mac-notarized"
+    }
+
+    if (Test-Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\packages\bundle.zip" -PathType Leaf) {
+        Set-GitHubStatus -Status "success" -Description "I need to add a url :/" -Context "bundle.zip"
+    }
+
+    if (Test-Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\packages\msbuild.zip" -PathType Leaf) {
+        Set-GitHubStatus -Status "success" -Description "I need to add a url :/" -Context "msbuild.zip"
+    }
+
+    $nugets =  $files = Get-ChildItem -Path .\ -Filter *.nupkg -File -Name
+
+    foreach ($n in $nugets) {
+      Set-GitHubStatus -Status "success" -Description "I need to add a url :/" -Context "$n"
+    }
+
+    $msi =  $files = Get-ChildItem -Path .\ -Filter *.msi -File -Name
+
+    foreach ($n in $msi) {
+      Set-GitHubStatus -Status "success" -Description "I need to add a url :/" -Context "$n"
+    }
 
   displayName: 'Set GithubStatus'
