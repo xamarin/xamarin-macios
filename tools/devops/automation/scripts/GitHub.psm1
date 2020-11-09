@@ -71,10 +71,12 @@ function Set-GitHubStatus {
         [String]
         $Description,
 
-
         [Parameter(Mandatory)]
         [String]
-        $Context
+        $Context,
+
+        [String]
+        $TargetUrl
     )
 
     # assert that all the env vars that are needed are present, else we do have an error
@@ -94,10 +96,15 @@ function Set-GitHubStatus {
     }
 
     # use the GitHub API to set the status for the given commit
-    $targetUrl = Get-TargetUrl
+    $detailsUrl = ""
+    if ($TargetUrl) {
+        $detailsUrl = $TargetUrl
+    } else {
+        $detailsUrl = Get-TargetUrl
+    }
     $payload= @{
         state = $Status
-        target_url = $targetUrl
+        target_url = $detailsUrl
         description = $Description
         context = $Context
     }
