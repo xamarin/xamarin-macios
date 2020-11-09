@@ -109,39 +109,80 @@ stages:
     steps:
     - bash: echo "Hello world"
 
-  # This job is a matrix, will execute the tests in the following devices:
-  # * iOS32b
-  # * iOS64b
-  # * tvOS
-  - job: device_tests
-    displayName: 'Device tests'
+  # ideally we would use a matrix here, like:
+
+  #  - job: device_tests
+  #    displayName: 'Device tests'
+  #    timeoutInMinutes: 1000
+  #
+  #    strategy:
+  #      matrix:
+  #        iOS32: # TODO: This bots should be moved to the ddfun pool
+  #          deviceDemands: 'xismoke-32'
+  #          testsLabels: '--label=run-ios-32-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests'
+  #          poolName: 'VSEng-Xamarin-QA'
+  #        iOS64:
+  #          deviceDemands: 'ios'
+  #          testsLabels: '--label=run-ios-64-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests'
+  #          poolName: 'VSEng-Xamarin-Mac-Devices'
+  #        tvOS:
+  #          deviceDemands: 'tvos'
+  #          testsLabels: '--label=run-tvos-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests'
+  #          poolName: 'VSEng-Xamarin-Mac-Devices'
+  #
+  #    pool:
+  #      name: $(poolName)
+  #      demands: $(deviceDemands)
+  #      workspace:
+  #        clean: all
+  #
+  #    steps:
+  #    - template: templates/device-tests.yml
+  #
+  # Unfortunally, variable expansion will not happen on the right time, and will result in an agent error, to fix that
+  # we use a template for the test and we set each of the jobs. Not ideal, but is only a 3 jobs matrix
+
+  - job: ios32_device_tests
+    displayName: 'iOS32b Device tests'
     timeoutInMinutes: 1000
 
-    strategy:
-      matrix:
-        iOS32: # TODO: This bots should be moved to the ddfun pool
-          deviceDemands: 'xismoke-32'
-          testsLabels: '--label=run-ios-32-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests'
-          poolName: 'VSEng-Xamarin-QA'
-        iOS64:
-          deviceDemands: 'ios'
-          testsLabels: '--label=run-ios-64-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests'
-          poolName: 'VSEng-Xamarin-Mac-Devices'
-        tvOS:
-          deviceDemands: 'tvos'
-          testsLabels: '--label=run-tvos-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests'
-          poolName: 'VSEng-Xamarin-Mac-Devices'
-
     pool:
-      name: $(poolName)
-      #demands: $(deviceDemands)
+      name: 'VSEng-Xamarin-QA'
+      demands: 'xismoke-32'
       workspace:
         clean: all
 
     steps:
     - template: templates/device-tests.yml
 
-  # This job is a matrix and will execute the tests on the available tests
+  - job: ios64_device_tests
+    displayName: 'iOS Device tests'
+    timeoutInMinutes: 1000
+
+    pool:
+      name: 'VSEng-Xamarin-Mac-Devices'
+      demands: 'ios'
+      workspace:
+        clean: all
+
+    steps:
+    - template: templates/device-tests.yml
+
+  - job: tvos_device_tests
+    displayName: 'tvOS Device tests'
+    timeoutInMinutes: 1000
+
+    pool:
+      name: 'VSEng-Xamarin-Mac-Devices'
+      demands: 'tvos'
+      workspace:
+        clean: all
+
+    steps:
+    - template: templates/device-tests.yml
+
+  # This job is a matrix and will execute the tests on the available tests, since the pools
+  # are diff, and the expansion does work with the poolname, we can use a matrix
   # * mac OS 10.14
   # * mac OX 10.13
   - job: mac_tests
@@ -163,7 +204,6 @@ stages:
       name: $(poolName)
       demands: 
       - Agent.OS -equals Darwin
-      #- Agent.OSVersion -equals $(deviceDemands)
 
       workspace:
         clean: all
