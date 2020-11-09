@@ -1,6 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
+    <NoBindingEmbedding>true</NoBindingEmbedding>
+  </PropertyGroup>
+  <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
@@ -55,22 +58,6 @@
     <TestLibrariesDirectory>..\..\tests\test-libraries</TestLibrariesDirectory>
   </PropertyGroup>
   <ItemGroup>
-    <ObjcBindingNativeFramework Include="..\..\tests\test-libraries\.libs\ios-fat\XTest.framework">
-      <Link>XTest.framework</Link>
-    </ObjcBindingNativeFramework>
-    <ObjcBindingNativeFramework Include="..\..\tests\test-libraries\.libs\ios-fat\XStaticObjectTest.framework">
-      <Link>XStaticObjectTest.framework</Link>
-    </ObjcBindingNativeFramework>
-    <ObjcBindingNativeFramework Include="..\..\tests\test-libraries\.libs\ios-fat\XStaticArTest.framework">
-      <Link>XStaticArTest.framework</Link>
-    </ObjcBindingNativeFramework>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="XTest.framework.linkwith.cs">
-      <DependentUpon>XTest.framework</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="..\..\tests\test-libraries\libframework.m">
       <Link>libframework.m</Link>
     </None>
@@ -80,9 +67,23 @@
   </ItemGroup>
   <ItemGroup>
     <TestLibrariesInput Include="..\..\tests\test-libraries\libframework.m" />
-    <TestLibrariesOutput Include="..\..\tests\test-libraries\.libs\ios-fat\XTest.framework" />
-    <TestLibrariesOutput Include="..\..\tests\test-libraries\.libs\ios-fat\XSharedObjectTest.framework" />
-    <TestLibrariesOutput Include="..\..\tests\test-libraries\.libs\ios-fat\XSharedARTest.framework" />
+  </ItemGroup>
+  <ItemGroup>
+    <NativeReference Include="..\..\tests\test-libraries\.libs\ios-fat\XStaticArTest.framework">
+      <Kind>Framework</Kind>
+      <SmartLink>False</SmartLink>
+      <Frameworks>CoreLocation ModelIO</Frameworks>
+    </NativeReference>
+    <NativeReference Include="..\..\tests\test-libraries\.libs\ios-fat\XStaticObjectTest.framework">
+      <Kind>Framework</Kind>
+      <SmartLink>False</SmartLink>
+      <Frameworks>CoreLocation ModelIO</Frameworks>
+    </NativeReference>
+    <NativeReference Include="..\..\tests\test-libraries\.libs\ios-fat\XTest.framework">
+      <Kind>Framework</Kind>
+      <SmartLink>False</SmartLink>
+      <Frameworks>CoreLocation ModelIO</Frameworks>
+    </NativeReference>
   </ItemGroup>
   <Target Name="BeforeBuild" Inputs="@(TestLibrariesInput)" Outputs="@(TestLibrariesOutput)">
     <Exec Command="make -j8 -C $(TestLibrariesDirectory)" />

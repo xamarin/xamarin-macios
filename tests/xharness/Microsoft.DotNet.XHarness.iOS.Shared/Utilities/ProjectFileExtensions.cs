@@ -479,7 +479,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 
 		public static void FixTestLibrariesReferences (this XmlDocument csproj, string platform)
 		{
-			var nodes = csproj.SelectNodes ("//*[local-name() = 'ObjcBindingNativeLibrary' or local-name() = 'ObjcBindingNativeFramework']");
+			var nodes = csproj.SelectNodes ("//*[local-name() = 'ObjcBindingNativeLibrary' or local-name() = 'ObjcBindingNativeFramework' or local-name() = 'NativeReference']");
 			var test_libraries = new string [] {
 				"libtest.a",
 				"libtest2.a",
@@ -963,6 +963,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 				new string [] { "FilesToCopyChannels", "Include" },
 				new string [] { "CustomMetalSmeltingInput", "Include" },
 				new string [] { "Metal", "Include" },
+				new string [] { "NativeReference", "Include" },
 			};
 			var nodes_with_variables = new string []
 			{
