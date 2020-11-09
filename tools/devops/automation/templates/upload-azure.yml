@@ -24,6 +24,12 @@ steps:
     VIRTUAL_PATH: $(Build.SourceBranchName)/$(Build.SourceVersion)/$(Build.BuildId)
   displayName: "Build manifest"
 
+# Important needed for the next step
+- template: generate-workspace-info.yml@templates
+  parameters:
+    GitHubToken: $(GitHub.Token)
+    ArtifactDirectory: $(Build.SourcesDirectory)/package-internal
+
 - powershell: |
     $execPath="$Env:BUILD_SOURCESDIRECTORY\Xamarin.Build.Tasks\tools\BuildTasks\build-tasks.exe"
 

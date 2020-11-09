@@ -194,10 +194,8 @@ stages:
     strategy:
       matrix:
         Mojave:
-          deviceDemands: '10.14' 
           poolName: 'Hosted Mac Internal Mojave'
         HighSierra:
-          deviceDemands: '10.13' 
           poolName: 'Hosted Mac Internal'
 
     pool:
