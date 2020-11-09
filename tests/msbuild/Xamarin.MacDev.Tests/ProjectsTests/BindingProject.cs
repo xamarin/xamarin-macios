@@ -8,21 +8,18 @@ namespace Xamarin.iOS.Tasks
 	[TestFixture ("iPhoneSimulator")]
 	public class BindingProject : TestBase
 	{
-		string Platform;
 		public BindingProject (string platform)
+			: base (platform)
 		{
-			Platform = platform;
 		}
 
 		[Test]
 		public void BuildTest ()
 		{
-			var mtouchPaths = SetupProjectPaths ("MyiOSFrameworkBinding", includePlatform: false);
+			var proj = SetupProjectPaths ("MyiOSFrameworkBinding", includePlatform: false);
 
-			var proj = SetupProject (Engine, mtouchPaths.ProjectCSProjPath);
-
-			AppBundlePath = mtouchPaths.AppBundlePath;
-			var dllPath = Path.Combine (mtouchPaths.ProjectBinPath, "MyiOSFrameworkBinding.dll");
+			MonoTouchProject = proj;
+			var dllPath = Path.Combine (proj.ProjectBinPath, "MyiOSFrameworkBinding.dll");
 
 			Engine.ProjectCollection.SetGlobalProperty ("Platform", Platform);
 

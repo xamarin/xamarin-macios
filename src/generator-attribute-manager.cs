@@ -403,6 +403,8 @@ public class AttributeManager
 
 	static IList<CustomAttributeData> GetIKVMAttributes (ICustomAttributeProvider provider)
 	{
+		if (provider == null)
+			return null;
 		var member = provider as MemberInfo;
 		if (member != null)
 			return CustomAttributeData.GetCustomAttributes (member);

@@ -33,7 +33,7 @@
 
 	<!-- Default Asset Catalog file inclusion -->
 	<ItemGroup Condition="'$(TargetPlatformIdentifier)' == '@PLATFORM@' And '$(_EnableDefaultXamarinItems)' == 'true' ">
-		<ImageAsset Include="**\*.xcassets\**\*.png;**\*.xcassets\*\*.jpg;**\*.xcassets\**\*.json">
+		<ImageAsset Include="**\*.xcassets\**\*.png;**\*.xcassets\*\*.jpg;**\*.xcassets\**\*.pdf;**\*.xcassets\**\*.json">
 			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
 			<Visible>false</Visible>
 			<IsDefaultItem>true</IsDefaultItem>
@@ -46,5 +46,36 @@
 			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
 			<IsDefaultItem>true</IsDefaultItem>
 		</InterfaceDefinition>
+	</ItemGroup>
+
+	<!-- Default Atlas Texture file inclusion -->
+	<ItemGroup Condition="'$(TargetPlatformIdentifier)' == '@PLATFORM@' And '$(_EnableDefaultXamarinItems)' == 'true'">
+		<AtlasTexture Include="**\*.atlas\*.png">
+			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
+			<IsDefaultItem>true</IsDefaultItem>
+		</AtlasTexture>
+	</ItemGroup>
+
+	<!-- Default CoreMLModel inclusion -->
+	<ItemGroup Condition="'$(TargetPlatformIdentifier)' == '@PLATFORM@' And '$(_EnableDefaultXamarinItems)' == 'true' ">
+		<CoreMLModel Include="**\*.mlmodel">
+			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
+			<IsDefaultItem>true</IsDefaultItem>
+		</CoreMLModel>
+	</ItemGroup>
+
+	<!-- Default Metal inclusion -->
+	<ItemGroup Condition="'$(TargetPlatformIdentifier)' == '@PLATFORM@' And '$(_EnableDefaultXamarinItems)' == 'true' ">
+		<Metal Include="**\*.metal">
+			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
+			<IsDefaultItem>true</IsDefaultItem>
+		</Metal>
+	</ItemGroup>
+
+	<!-- Default SceneKit assets inclusion -->
+	<ItemGroup Condition="'$(TargetPlatformIdentifier)' == '@PLATFORM@' And '$(_EnableDefaultXamarinItems)' == 'true' ">
+		<SceneKitAsset Include="**\*.scnassets\*">
+			<IsDefaultItem>true</IsDefaultItem>
+		</SceneKitAsset>
 	</ItemGroup>
 </Project>

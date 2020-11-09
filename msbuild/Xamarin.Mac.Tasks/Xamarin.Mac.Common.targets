@@ -69,15 +69,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<CompileColladaAssetsDependsOn>
-			_CollectColladaAssets;
-			_CoreCompileColladaAssets
-		</CompileColladaAssetsDependsOn>
-	</PropertyGroup>
-
-	<Target Name="_CompileColladaAssets" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="$(CompileColladaAssetsDependsOn)" />
-
-	<PropertyGroup>
 		<CreateAppBundleDependsOn Condition="'$(_UsingXamarinSdk)' != 'true'">
 			_DetectSigningIdentity;
 			_CopyResourcesToBundle;
@@ -283,42 +274,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		</Mmp>
 	</Target>
 
-	<Target Name="_CollectColladaAssets">
-		<CollectBundleResources
-			Condition="'$(IsMacEnabled)' == 'true'"
-			SessionId="$(BuildSessionId)"
-			BundleResources="@(Collada)"
-			ProjectDir="$(MSBuildProjectDirectory)"
-			ResourcePrefix="$(_ResourcePrefix)">
-			<Output TaskParameter="BundleResourcesWithLogicalNames" ItemName="_ColladaAssetWithLogicalName" />
-		</CollectBundleResources>
-	</Target>
-
-	<Target Name="_CoreCompileColladaAssets"
-		DependsOnTargets="_CollectColladaAssets;_DetectSdkLocations;_ComputeTargetFrameworkMoniker"
-		Inputs="@(_ColladaAssetWithLogicalName)"
-		Outputs="$(IntermediateOutputPath)%(_ColladaAssetWithLogicalName.LogicalName)"
-		>
-
-		<ScnTool
-			Condition="'$(IsMacEnabled)' == 'true'"
-			SessionId="$(BuildSessionId)"
-			ToolExe="$(ScnToolExe)"
-			ToolPath="$(ScnToolPath)"
-			SdkRoot="$(_SdkRoot)"
-			SdkDevPath="$(_SdkDevPath)"
-			SdkVersion="$(_SdkVersion)"
-			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
-			IntermediateOutputPath="$(IntermediateOutputPath)"
-			InputScene="%(_ColladaAssetWithLogicalName.Identity)"
-			OutputScene="$(IntermediateOutputPath)%(_ColladaAssetWithLogicalName.LogicalName)">
-		</ScnTool>
-
-		<CreateItem Include="$(IntermediateOutputPath)%(_ColladaAssetWithLogicalName.LogicalName)" AdditionalMetadata="LogicalName=%(_ColladaAssetWithLogicalName.LogicalName)">
-			<Output TaskParameter="Include" ItemName="_BundleResourceWithLogicalName" />
-		</CreateItem>
-	</Target>
-
 	<Target Name="_CompileImageAssets" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_BeforeCoreCompileImageAssets;_ReadCompileImageAssets;_CoreCompileImageAssets" />
 
 	<Target Name="_BeforeCoreCompileImageAssets"
@@ -386,106 +341,8 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		</ItemGroup>
 	</Target>
 
-	<Target Name="_CopyAppExtensionsToBundle"  Condition="'$(IsAppExtension)' != 'true'" DependsOnTargets="_ExtendAppExtensionReferences">
-		<MakeDir Directories="$(_AppBundlePath)Contents\PlugIns" Condition="'%(_ResolvedAppExtensionReferences.Extension)' == '.appex'" />
-		<MakeDir Directories="$(_AppBundlePath)Contents\XPCServices" Condition="'%(_ResolvedAppExtensionReferences.Extension)' == '.xpc'" />
-
-		<Ditto
-			SessionId="$(BuildSessionId)"
-			Condition="'@(_ResolvedAppExtensionReferences)' != '' And '%(_ResolvedAppExtensionReferences.Identity)' != '' And '%(_ResolvedAppExtensionReferences.Extension)' == '.appex' And '$(IsMacEnabled)' == 'true'"
-			ToolExe="$(DittoExe)"
-			ToolPath="$(DittoPath)"
-			Source="@(_ResolvedAppExtensionReferences)"
-			Destination="$(_AppBundlePath)Contents\PlugIns\%(_ResolvedAppExtensionReferences.FileName)%(_ResolvedAppExtensionReferences.Extension)"
-		/>
-
-		<Ditto
-			SessionId="$(BuildSessionId)"
-			Condition="'@(_ResolvedAppExtensionReferences)' != '' And '%(_ResolvedAppExtensionReferences.Identity)' != '' And '%(_ResolvedAppExtensionReferences.Extension)' == '.xpc'  And '$(IsMacEnabled)' == 'true'"
-			ToolExe="$(DittoExe)"
-			ToolPath="$(DittoPath)"
-			Source="@(_ResolvedAppExtensionReferences)"
-			Destination="$(_AppBundlePath)Contents\XPCServices\%(_ResolvedAppExtensionReferences.FileName)%(_ResolvedAppExtensionReferences.Extension)"
-		/>
-	</Target>
-
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.msbuild.targets" />
 
-	<Target Name="_SeparateAppExtensionReferences" BeforeTargets="AssignProjectConfiguration" Condition="'$(IsAppExtension)' != 'true'">
-		<CreateItem Include="@(ProjectReference)" PreserveExistingMetadata="true" Condition="'%(Identity)' != '' And '%(ProjectReference.IsAppExtension)' == 'true'">
-			<Output ItemName="_AppExtensionReference" TaskParameter="Include" />
-		</CreateItem>
-
-		<ItemGroup>
-			<ProjectReference Remove="@(_AppExtensionReference)" />
-		</ItemGroup>
-
-		<!--<Warning Text="_SeparateAppExtensionReferences: @(_AppExtensionReference)"/>-->
-	</Target>
-
-	<Target Name="_AssignAppExtensionConfiguration" Condition="'@(_AppExtensionReference)' != ''">
-		<!-- assign configs if building a solution file -->
-		<AssignProjectConfiguration
-			ProjectReferences = "@(_AppExtensionReference)"
-			SolutionConfigurationContents = "$(CurrentSolutionConfigurationContents)"
-			Condition="'$(CurrentSolutionConfigurationContents)' != ''">
-
-			<Output TaskParameter="AssignedProjects" ItemName="_AppExtensionReferenceWithConfiguration"/>
-		</AssignProjectConfiguration>
-
-		<!-- Else, just -->
-		<CreateItem Include="@(_AppExtensionReference)" Condition="'$(CurrentSolutionConfigurationContents)' == ''">
-			<Output TaskParameter="Include" ItemName="_AppExtensionReferenceWithConfiguration"/>
-		</CreateItem>
-
-		<!--<Warning Text="_AssignAppExtensionConfiguration: @(_AppExtensionReferenceWithConfiguration)"/>-->
-	</Target>
-
-	<!-- Split Mac App Extension projects into 2 lists
-		_AppExtensionReferenceWithConfigurationExistent: Projects existent on disk
-		_AppExtensionReferenceWithConfigurationNonExistent: Projects non-existent on disk -->
-	<Target Name="_SplitAppExtensionReferencesByExistent" DependsOnTargets="_AssignAppExtensionConfiguration">
-		<CreateItem Include="@(_AppExtensionReferenceWithConfiguration)" Condition="'@(_AppExtensionReferenceWithConfiguration)' != ''">
-			<Output TaskParameter="Include" ItemName="_AppExtensionReferenceWithConfigurationExistent"
-				Condition="Exists ('%(_AppExtensionReferenceWithConfiguration.Identity)')"/>
-
-			<Output TaskParameter="Include" ItemName="_AppExtensionReferenceWithConfigurationNonExistent"
-				Condition="!Exists ('%(_AppExtensionReferenceWithConfiguration.Identity)')"/>
-		</CreateItem>
-
-		<!--<Warning Text="_SplitAppExtensionReferencesByExistent: @(_AppExtensionReferenceWithConfigurationExistent)"/>-->
-	</Target>
-
-	<Target Name="_ResolveAppExtensionReferences" DependsOnTargets="_SplitAppExtensionReferencesByExistent">
-		<PropertyGroup>
-			<!-- When building a .sln with msbuild, the dependent projects may not be built. So, always build
-			     the referenced projects unless building from IDE. -->
-			<_BuildReferencedExtensionProjects Condition="'$(BuildingInsideVisualStudio)' != 'true'">true</_BuildReferencedExtensionProjects>
-		</PropertyGroup>
-
-		<!-- If the referenced projects have already been built, then just get the target paths -->
-		<MSBuild
-			Projects="@(_AppExtensionReferenceWithConfigurationExistent)"
-			Targets="GetBundleTargetPath"
-			Properties="%(_AppExtensionReferenceWithConfigurationExistent.SetConfiguration); %(_AppExtensionReferenceWithConfigurationExistent.SetPlatform)"
-			Condition="'@(_AppExtensionReferenceWithConfigurationExistent)' != '' and '$(_BuildReferencedExtensionProjects)' != 'true'">
-
-			<Output TaskParameter="TargetOutputs" ItemName="_ResolvedAppExtensionReferences" Condition="'%(_AppExtensionReferenceWithConfigurationExistent.ReferenceOutputAssembly)' != 'false'"/>
-		</MSBuild>
-
-		<!-- Building a project directly, build the referenced projects also -->
-		<MSBuild
-			Projects="@(_AppExtensionReferenceWithConfigurationExistent)"
-			Properties="%(_AppExtensionReferenceWithConfigurationExistent.SetConfiguration); %(_AppExtensionReferenceWithConfigurationExistent.SetPlatform)"
-			Condition="'@(_AppExtensionReferenceWithConfigurationExistent)' != '' and '$(_BuildReferencedExtensionProjects)' == 'true'">
-
-			<Output TaskParameter="TargetOutputs" ItemName="_ResolvedAppExtensionReferences" Condition="'%(_AppExtensionReferenceWithConfigurationExistent.ReferenceOutputAssembly)' != 'false'"/>
-		</MSBuild>
-
-		<Warning Text="Referenced Mac App Extension Project %(_AppExtensionReferenceWithConfigurationNonExistent.Identity) not found, ignoring."
-			 Condition="'@(_AppExtensionReferenceWithConfigurationNonExistent)' != ''"/>
-	</Target>
-	
 	<PropertyGroup>
 		<ArchiveDependsOn>
 			_CoreArchive

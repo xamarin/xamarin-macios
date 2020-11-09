@@ -35,6 +35,12 @@ steps:
 - checkout: maccore
   persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
 
+- bash: |
+    security set-key-partition-list -S apple-tool:,apple: -s -k $(OSX_KEYCHAIN_PASS) login.keychain
+  displayName: 'Remove security UI-prompt (http://stackoverflow.com/a/40039594/183422)'
+  condition: succeededOrFailed() # we do not care about the previous process cleanup
+  continueOnError: true
+
 - bash: cd $(System.DefaultWorkingDirectory)/xamarin-macios/ && git clean -xdf
   displayName: 'Clean workspace'
 
@@ -75,6 +81,7 @@ steps:
     exit 0  
   displayName: 'Disk cleanup'
   timeoutInMinutes: 5
+  continueOnError: true
 
 # Use a cmdlet to check if the space available in the devices root system is larger than 50 gb. If there is not
 # enough space available it:
@@ -193,11 +200,6 @@ steps:
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/device-tests/scripts/System.psm1
     Clear-XamarinProcesses 
   displayName: 'Process cleanup'
-
-- bash: |
-    security set-key-partition-list -S apple-tool:,apple: -s -k $(OSX_KEYCHAIN_PASS) login.keychain
-  displayName: 'Remove security UI-prompt (http://stackoverflow.com/a/40039594/183422)'
-  condition: succeededOrFailed() # we do not care about the previous process cleanup
 
 # Increase mlaunch verbosity. Will step on the old setting present.
 - pwsh : |

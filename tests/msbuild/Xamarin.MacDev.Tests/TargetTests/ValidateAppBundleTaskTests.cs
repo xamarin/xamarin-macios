@@ -6,6 +6,8 @@ using Microsoft.Build.Evaluation;
 
 using Xamarin.MacDev;
 
+using Xamarin.Tests;
+
 namespace Xamarin.iOS.Tasks
 {
 	[TestFixture]
@@ -15,8 +17,6 @@ namespace Xamarin.iOS.Tasks
 		string mainAppPlistPath;
 		string extensionPlistPath;
 
-		Project project;
-
 		public ValidateAppBundleTaskTests ()
 			: base ("iPhoneSimulator")
 		{
@@ -25,8 +25,8 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void MissingFiles ()
 		{
-			project = BuildExtension ("MyTabbedApplication", "MyActionExtension", Platform, "Debug");
-			extensionBundlePath = AppBundlePath;
+			var paths = BuildExtension ("MyTabbedApplication", "MyActionExtension");
+			extensionBundlePath = paths.AppBundlePath;
 			mainAppPlistPath = Path.Combine (AppBundlePath, "Info.plist");
 			extensionPlistPath = Path.Combine (extensionBundlePath, "Info.plist");
 
@@ -40,8 +40,7 @@ namespace Xamarin.iOS.Tasks
 			var contents = File.ReadAllBytes (mainAppPlistPath);
 			try {
 				File.Delete (mainAppPlistPath);
-				Engine.Logger.Clear ();
-				RunTarget (project, "_ValidateAppBundle", 1);
+				RunTarget (MonoTouchProject, "_ValidateAppBundle", 1);
 				Assert.IsTrue (Engine.Logger.ErrorEvents.Count > 0, "#2");
 			} finally {
 				// Restore the contents
@@ -54,8 +53,7 @@ namespace Xamarin.iOS.Tasks
 			var contents = File.ReadAllBytes (extensionPlistPath);
 			try { 
 				File.Delete (extensionPlistPath);
-				Engine.Logger.Clear ();
-				RunTarget (project, "_ValidateAppBundle", 1);
+				RunTarget (MonoTouchProject, "_ValidateAppBundle", 1);
 				Assert.IsTrue (Engine.Logger.ErrorEvents.Count > 0, "#2");
 			} finally {
 				// Restore the contents
@@ -78,8 +76,7 @@ namespace Xamarin.iOS.Tasks
 				sourcePlist.SetCFBundleVersion ("1");
 
 				sourcePlist.Save (mainAppPlistPath);
-				Engine.Logger.Clear ();
-				RunTarget (project, "_ValidateAppBundle", 0);
+				RunTarget (MonoTouchProject, "_ValidateAppBundle", 0);
 				Assert.AreEqual (2, Engine.Logger.WarningsEvents.Count, "#2");
 			} finally {
 				// Restore the contents

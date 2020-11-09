@@ -97,7 +97,7 @@
 	
 	<PropertyGroup>
 		<!-- App extensions are self-contained, even though their OutputType=Library -->
-		<SelfContained Condition="'$(SelfContained)' == '' And $(_ProjectType.EndsWith ('AppExtensionProject'))">true</SelfContained>
+		<SelfContained Condition="'$(SelfContained)' == '' And $(_ProjectType.EndsWith('AppExtensionProject'))">true</SelfContained>
 
 		<!-- Add a property that specifies the name of the platform assembly for each platform -->
 		<_PlatformAssemblyName Condition=" '$(_PlatformName)' == 'iOS' ">Xamarin.iOS</_PlatformAssemblyName>
@@ -145,8 +145,14 @@
 		<CreateAppBundleDependsOn>
 			_DetectAppManifest;
 			_CopyResourcesToBundle;
+			_CompileCoreMLModels;
+			_SmeltMetal;
+			_ForgeMetal;
+			_TemperMetal;
 			_CompileEntitlements;
 			_CompileAppManifest;
+			_ResolveAppExtensionReferences;
+			_ExtendAppExtensionReferences;
 			_ComputeLinkerArguments;
 			ComputeFilesToPublish;
 			_LoadLinkerOutput;
@@ -154,6 +160,7 @@
 			_LinkNativeExecutable;
 			_ComputePublishLocation;
 			CopyFilesToPublishDirectory;
+			_CopyAppExtensionsToBundle;
 		</CreateAppBundleDependsOn>
 	</PropertyGroup>
 
@@ -399,7 +406,7 @@
 			<Output TaskParameter="ObjectFiles" ItemName="_AOTObjectFiles" />
 		</CompileNativeCode>
 
-		<ItemGroup>
+		<ItemGroup Condition="'$(IsMacEnabled)' == 'true'">
 			<!-- Add the AOT-compiled output to the main executable -->
 			<_XamarinMainLibraries Include="@(_AOTObjectFiles)" />
 
@@ -684,6 +691,6 @@
 
 	<PropertyGroup>
 		<!-- PublishTrimmed depends on IsMacEnabled, which is defined in the Xamarin.iOS/Xamarin.Mac targets files we import just above here -->
-		<PublishTrimmed Condition="'$(PublishTrimmed)' == '' And ($(_ProjectType.EndsWith ('ExecutableProject')) Or $(_ProjectType.EndsWith ('AppExtensionProject'))) And '$(IsMacEnabled)' == 'true'">true</PublishTrimmed>
+		<PublishTrimmed Condition="'$(PublishTrimmed)' == '' And ($(_ProjectType.EndsWith('ExecutableProject')) Or $(_ProjectType.EndsWith('AppExtensionProject'))) And '$(IsMacEnabled)' == 'true'">true</PublishTrimmed>
 	</PropertyGroup>
 </Project>
