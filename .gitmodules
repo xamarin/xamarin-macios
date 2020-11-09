@@ -1,7 +1,3 @@
-[submodule "external/guiunit"]
-    path = external/guiunit
-    url = ../../mono/guiunit.git
-    branch = main
 [submodule "external/macios-binaries"]
     path = external/macios-binaries
     url = ../../xamarin/macios-binaries
