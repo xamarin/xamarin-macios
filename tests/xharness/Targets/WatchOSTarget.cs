@@ -201,16 +201,6 @@ namespace Xharness.Targets {
 			csproj.SetExtraLinkerDefs ("extra-linker-defs" + ExtraLinkerDefsSuffix + ".xml");
 			csproj.FixTestLibrariesReferences (Platform);
 			csproj.ResolveAllPaths (TemplateProjectPath);
-			// watchOS cannot link natively against ModelIO (not available) so we need to remove it
-			var propertyGroups = csproj.SelectNodes ("//*[local-name() = 'PropertyGroup']");
-			foreach (XmlNode node in propertyGroups) {
-				var child = node.FirstChild;
-				if ((child.Name == "NoBindingEmbedding") && (child.InnerText == "true")) {
-					var itemGroups = csproj.SelectNodes ("//*[local-name() = 'Frameworks']");
-					foreach (XmlNode fx in itemGroups)
-						fx.InnerText = fx.InnerText.Replace (" ModelIO", String.Empty);
-				}
-			}
 			csproj.Save (WatchOSProjectPath, (l,m) => Harness.Log (l,m));
 
 			WatchOSGuid = csproj.GetProjectGuid ();
