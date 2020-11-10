@@ -14,7 +14,7 @@ resources:
   - repository: templates
     type: github
     name: xamarin/yaml-templates
-    ref: refs/heads/main
+    ref: refs/heads/dev/bond/keychain                      # UNDONE: Change back to main once keychain diagnostics change has been merged (or not)
     endpoint: xamarin
 
   - repository: maccore
@@ -30,6 +30,7 @@ resources:
     endpoint: xamarin
 
 variables:
+- group: xamops-azdev-secrets
 - group: Xamarin-Secrets
 - group: Xamarin Signing
 - group: Xamarin Release
@@ -41,6 +42,8 @@ variables:
   value: true
 - name: SigningKeychain
   value: "builder.keychain"
+- name: OSX_KEYCHAIN_PASS                                     # UNDONE: Override the OSX_KEYCHAIN_PASS to use same password as used by the iOS mac pool machines
+  value: $(ios-pool-keychain-password)
 
 trigger: none
 
@@ -51,250 +54,157 @@ pr:
     - main
     - d16-*
 
-jobs:
-- job: Build_iOS
-  displayName: "Build iOS"
-  timeoutInMinutes: 1000
-  pool:
-    name: VSEng-Xamarin-QA
-    demands:
-    - Agent.OS -equals Darwin
-    - Agent.OSVersion -equals 10.15
+stages:
+- stage: build_packages
+  displayName: 'Build'
+  jobs:
+  - job: build
+    displayName: 'Build packages'
+    timeoutInMinutes: 1000
+    pool:
+      name: VSEng-Xamarin-RedmondMacCatalinaBuildPool-iOS-Untrusted
+      demands:
+      - Agent.OS -equals Darwin
+      - Agent.OSVersion -equals 10.15
     workspace:
       clean: all
 
-  steps:
-  - checkout: self          # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
-    clean: true             # Executes: git clean -ffdx && git reset --hard HEAD
-    submodules: recursive
+    steps:
+    - template: templates/build-packages.yml
 
-  - checkout: maccore
-    clean: true
-    persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
+  - job: upload_azure_blob
+    displayName: 'Upload packages to Azure'
+    timeoutInMinutes: 1000
+    dependsOn: build # can start as soon as the tests are done
+    condition: succeeded()
 
-  - checkout: templates
-    clean: true
+    variables:
+      Parameters.outputStorageUri: ''
 
-  - checkout: release-scripts
-    clean: true
+    pool:
+      name: VSEngDeploymentPool
+      demands: agent.os -equals Windows_NT # we need to use a windows machine since vsdrops just works on them and the pool might have diff OS in the agents
+      workspace:
+        clean: all
+    steps:
+    - template: templates/upload-azure.yml
 
-  - powershell: |
-      gci env: | format-table -autosize -wrap
-    displayName: 'Dump Environment'
+- stage: tests
+  displayName : 'Tests'
+  dependsOn: build_packages
+  jobs:
 
-  - bash: |
-      security set-key-partition-list -S apple-tool:,apple: -s -k $OSX_KEYCHAIN_PASS login.keychain
-    env:
-      OSX_KEYCHAIN_PASS: $(xma-password) 
-    displayName: 'Remove security UI-prompt (http://stackoverflow.com/a/40039594/183422)'
-    condition: succeededOrFailed() # we do not care about the previous process cleanup
+  # this are the default tests that are executed in the latests mac OS X on the simulators
+  - job: simulator_tests
+    displayName: 'Simulator tests'
+    timeoutInMinutes: 1000
+    pool:
+      name: VSEng-Xamarin-RedmondMacCatalinaBuildPool-iOS-Untrusted
+      demands:
+      - Agent.OS -equals Darwin
+      - Agent.OSVersion -equals 10.15
+    workspace:
+      clean: all
 
-  - task: xamops.azdevex.provisionator-task.provisionator@1
-    displayName: 'Provision Brew components'
-    inputs:
-      provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/provision-brew-packages.csx
-      provisioning_extra_args: '-vvvv'
-      github-pat: $(GitHub.Token)
-    timeoutInMinutes: 30
+    steps:
+    - bash: echo "Hello world"
 
-  - bash: |
-      make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops build-provisioning.csx
-    displayName: 'Generate provisionator files.'
+  # ideally we would use a matrix here, like:
 
-  - task: xamops.azdevex.provisionator-task.provisionator@1
-    displayName: 'Provision Xcode'
-    inputs:
-      provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/build-provisioning.csx
-      provisioning_extra_args: '-vvvv'
-      github-pat: $(GitHub.Token)
-    timeoutInMinutes: 250
+  #  - job: device_tests
+  #    displayName: 'Device tests'
+  #    timeoutInMinutes: 1000
+  #
+  #    strategy:
+  #      matrix:
+  #        iOS32: # TODO: This bots should be moved to the ddfun pool
+  #          deviceDemands: 'xismoke-32'
+  #          testsLabels: '--label=run-ios-32-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests'
+  #          poolName: 'VSEng-Xamarin-QA'
+  #        iOS64:
+  #          deviceDemands: 'ios'
+  #          testsLabels: '--label=run-ios-64-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests'
+  #          poolName: 'VSEng-Xamarin-Mac-Devices'
+  #        tvOS:
+  #          deviceDemands: 'tvos'
+  #          testsLabels: '--label=run-tvos-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests'
+  #          poolName: 'VSEng-Xamarin-Mac-Devices'
+  #
+  #    pool:
+  #      name: $(poolName)
+  #      demands: $(deviceDemands)
+  #      workspace:
+  #        clean: all
+  #
+  #    steps:
+  #    - template: templates/device-tests.yml
+  #
+  # Unfortunally, variable expansion will not happen on the right time, and will result in an agent error, to fix that
+  # we use a template for the test and we set each of the jobs. Not ideal, but is only a 3 jobs matrix
 
-  # Disabled
-  - task: xamops.azdevex.provisionator-task.provisionator@1
-    displayName: 'Provision Objective Sharpie'
-    inputs:
-      provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/provision-objective-sharpie.csx
-      provisioning_extra_args: '-vvvv'
-      github-pat: $(GitHub.Token)
-    enabled: false
-    timeoutInMinutes: 30
+  - job: ios32_device_tests
+    displayName: 'iOS32b Device tests'
+    timeoutInMinutes: 1000
 
-  - task: xamops.azdevex.provisionator-task.provisionator@1
-    displayName: 'Provision .NET Core'
-    inputs:
-      provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/provision-dotnetcore.csx
-      provisioning_extra_args: '-vvvv'
-      github-pat: $(GitHub.Token)
-    timeoutInMinutes: 30
+    pool:
+      name: 'VSEng-Xamarin-QA'
+      demands: 'xismoke-32'
+      workspace:
+        clean: all
 
-  - powershell: |
-      if ([IO.Directory]::Exists('/Developer/MonoTouch')) {
-        Write-Host "Deleting /Developer/MonoTouch"
-        bash -c "sudo rm -Rf /Developer/MonoTouch"
-      }
+    steps:
+    - template: templates/device-tests.yml
 
-      if ([IO.Directory]::Exists('/Library/Frameworks/Xamarin.iOS.framework')) {
-        Write-Host "Deleting /Library/Frameworks/Xamarin.iOS.framework"
-        bash -c "sudo rm -Rf /Library/Frameworks/Xamarin.iOS.framework"
-      }
+  - job: ios64_device_tests
+    displayName: 'iOS Device tests'
+    timeoutInMinutes: 1000
 
-      if ([IO.Directory]::Exists('/Library/Frameworks/Xamarin.Mac.framework')) {
-        Write-Host "Deleting /Library/Frameworks/Xamarin.Mac.framework"
-        bash -c "sudo rm -Rf /Library/Frameworks/Xamarin.Mac.framework"
-      }
-    displayName: 'Delete library folders'
-    timeoutInMinutes: 5
+    pool:
+      name: 'VSEng-Xamarin-Mac-Devices'
+      demands: 'ios'
+      workspace:
+        clean: all
 
-  - bash:
-      set -x
-      set -e
-      rm -Rvf $(Build.SourcesDirectory)/package
-      time make -C $(Build.SourcesDirectory)/xamarin-macios/ git-clean-all 
-    displayName: 'Clear results directory'
-    timeoutInMinutes: 5
+    steps:
+    - template: templates/device-tests.yml
 
+  - job: tvos_device_tests
+    displayName: 'tvOS Device tests'
+    timeoutInMinutes: 1000
 
-  # the following should be using the labels in the PR, we are not yet doing so, but we will in the
-  # future
-  - bash: |
-      echo '##vso[task.setvariable variable=IsPR;isOutput=true]False'
+    pool:
+      name: 'VSEng-Xamarin-Mac-Devices'
+      demands: 'tvos'
+      workspace:
+        clean: all
 
-      echo '##vso[task.setvariable variable=BuildPkgs;isOutput=true]True'
-      echo '##vso[task.setvariable variable=SignPkgs;isOutput=true]True'
+    steps:
+    - template: templates/device-tests.yml
 
-      echo '##vso[task.setvariable variable=BuildNugets;isOutput=true]True'
+  # This job is a matrix and will execute the tests on the available tests, since the pools
+  # are diff, and the expansion does work with the poolname, we can use a matrix
+  # * mac OS 10.14
+  # * mac OX 10.13
+  - job: mac_tests
+    displayName: 'Mac OS X tests'
+    timeoutInMinutes: 1000
+    workspace:
+      clean: all
 
-      echo '##vso[task.setvariable variable=HasRunInternalTests;isOutput=true]True'
-      echo '##vso[task.setvariable variable=RunDeviceTests;isOutput=true]True'
-    name: configuration
-    displayName: "Parse PR labels"
-    timeoutInMinutes: 5
+    strategy:
+      matrix:
+        Mojave:
+          poolName: 'Hosted Mac Internal Mojave'
+        HighSierra:
+          poolName: 'Hosted Mac Internal'
 
-  - bash: |
-      set -x
-      set -e
+    pool:
+      name: $(poolName)
+      demands: 
+      - Agent.OS -equals Darwin
 
-      if [[ "$IsPR" == "True" ]]; then
-        echo "Xamarin private packages NOT configured. Building a PR."
-        CONFIGURE_FLAGS=""
-      else
-        echo "Xamarin private packages configured."
-        CONFIGURE_FLAGS="--enable-xamarin"
-      fi
+      workspace:
+        clean: all
 
-      CONFIGURE_FLAGS="$CONFIGURE_FLAGS --enable-dotnet --enable-install-source"
-
-      cd $(Build.SourcesDirectory)/xamarin-macios/
-      ./configure $CONFIGURE_FLAGS
-      echo $(cat $(Build.SourcesDirectory)/xamarin-macios/configure.inc)
-    env:
-      IsPR: variables['configuration.IsPR']
-    displayName: "Configure build"
-    timeoutInMinutes: 5
-
-  # Actual build of the project
-  - bash: |
-      time make -C $(Build.SourcesDirectory)/xamarin-macios/ reset
-      time make -C $(Build.SourcesDirectory)/xamarin-macios/ all -j8
-      time make -C $(Build.SourcesDirectory)/xamarin-macios/ install -j8
-    displayName: 'Build'
-    timeoutInMinutes: 180
-
-  # build not signed .pkgs for the SDK
-  - bash: |
-      set -x
-      set -e
-      rm -Rf $(Build.SourcesDirectory)/package/*.pkg
-      time make -C $(Build.SourcesDirectory)/xamarin-macios/ package
-    name: packages
-    displayName: 'Build Packages'
-    condition: eq(variables['configuration.BuildPkgs'], 'True')
-    timeoutInMinutes: 180
-
-  # build nugets
-  - bash: |
-      set -x
-      set -e
-
-      mkdir -p $(Build.SourcesDirectory)/package/
-      DOTNET_NUPKG_DIR=$(make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops print-abspath-variable VARIABLE=DOTNET_NUPKG_DIR | grep "^DOTNET_NUPKG_DIR=" | sed -e 's/^DOTNET_NUPKG_DIR=//')
-      rm -f $(Build.SourcesDirectory)/package/*.nupkg
-      cp -c "$DOTNET_NUPKG_DIR"/*.nupkg $(Build.SourcesDirectory)/package
-
-      DOTNET_PKG_DIR=$(make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops print-abspath-variable VARIABLE=DOTNET_PKG_DIR | grep "^DOTNET_PKG_DIR=" | sed -e 's/^DOTNET_PKG_DIR=//')
-      make -C $(Build.SourcesDirectory)/xamarin-macios/dotnet package -j
-      cp -c "$DOTNET_PKG_DIR"/*.pkg $(Build.SourcesDirectory)/package/
-    displayName: 'Build Nugets'
-    condition: eq(variables['configuration.BuildNugets'], 'True')
-    timeoutInMinutes: 180
-
-  - bash:  $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/productsign.sh
-    env:
-      PRODUCTSIGN_KEYCHAIN_PASSWORD: $(xma-password)
-    displayName: 'Signing PR Build'
-    condition: and(eq(variables['configuration.SignPkgs'], 'True'), eq(variables['configuration.IsPr'], 'True'))
-
-  - template: install-certificates.yml@templates
-    parameters:
-      DeveloperIdApplication: $(developer-id-application)
-      DeveloperIdInstaller: $(developer-id-installer)
-      IphoneDeveloper: $(iphone-developer)
-      MacDeveloper: $(mac-developer)
-      HostedMacKeychainPassword: $(AzDO-OnPrem-KeychainPass)
-
-  - bash: | 
-
-      VIRTUAL_ENV_PATH=$(Build.SourcesDirectory)/venv
-      pip install virtualenv
-      virtualenv "$VIRTUAL_ENV_PATH" --system-site-packages
-      source "$VIRTUAL_ENV_PATH/bin/activate"
-      pip install python-magic
-
-      IOS_PKG=$(find $(Build.SourcesDirectory)/package -type f -name "xamarin.ios-*" | xargs basename)
-      if [ -z "$IOS_PKG" ]; then 
-        echo "Xamarin.iOS package not found."
-      else
-        IOS_PKG="$(Build.SourcesDirectory)/package/$IOS_PKG"
-        echo "Xamarin.iOS package found at $IOS_PKG"
-      fi
-
-      MAC_PKG=$(find $(Build.SourcesDirectory)/package -type f -name "xamarin.mac-*" | xargs basename)
-      if [ -z "$MAC_PKG" ]; then
-        echo "Xamarin.Mac package not found."
-      else
-        MAC_PKG="$(Build.SourcesDirectory)/package/$MAC_PKG"
-        echo "Xamarin.Mac package found at $MAC_PKG"
-      fi
-
-      security unlock-keychain -p $PRODUCTSIGN_KEYCHAIN_PASSWORD builder.keychain
-      PACKAGES="$IOS_PKG $MAC_PKG"
-      echo "Packages found at $PACKAGES"
-
-      echo "$PACKAGES" | xargs python $(Build.SourcesDirectory)/release-scripts/sign_and_notarize.py -a "$APP_ID" -i "$INSTALL_ID" -u "$APPLE_ACCOUNT" -p "$APPLE_PASS" -t "$TEAM_ID" -d $(Build.SourcesDirectory)/package/notarized -e "$MAC_ENTITLEMENTS" -k "$KEYCHAIN"
-
-      deactivate
-      rm -Rf "$VIRTUAL_ENV_PATH"
-    env:
-      PRODUCTSIGN_KEYCHAIN_PASSWORD: $(AzDO-OnPrem-KeychainPass)
-      MAC_ENTITLEMENTS: $(Build.SourcesDirectory)/xamarin-macios/mac-entitlements.plist
-      APP_ID: $(XamarinAppId)
-      INSTALL_ID: $(XamarinAppId)
-      APPLE_ACCOUNT: $(XamarinUserId)
-      APPLE_PASS: $(XamarinPassword)
-      TEAM_ID: $(TeamID)
-      KEYCHAIN: $(SigningKeychain)
-    displayName: 'Signing Release Build'
-    condition: and(eq(variables['configuration.SignPkgs'], 'True'), eq(variables['configuration.IsPr'], 'False'))
-    timeoutInMinutes: 90
-
-  - template: uninstall-certificates/v1.yml@templates
-    parameters:
-      HostedMacKeychainPassword: $(AzDO-OnPrem-KeychainPass)
-  
-  # upload each of the pkgs into the pipeline artifacts
-  - task: PublishPipelineArtifact@1
-    displayName: 'Publish Build Artifacts'
-    inputs:
-      targetPath: $(Build.SourcesDirectory)/package
-      artifactName: package
-    continueOnError: true
+    steps:
+    - bash: echo "Hello world"
