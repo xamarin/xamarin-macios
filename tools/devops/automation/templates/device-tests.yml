@@ -157,9 +157,29 @@ steps:
   condition: failed() # we could not provisiong, we stop the pipeline, there is not point in doing anything else
   timeoutInMinutes: 5
 
+# download the artifacts.json, which will use to find the URI of the built pkg to later be installed by provisionator
+- task: DownloadPipelineArtifact@2
+  displayName: Download artifacts.json
+  inputs:
+    patterns: '**/artifacts.json'
+    allowFailedBuilds: true
+    path: $(Build.SourcesDirectory)/artifacts
+
+- pwsh: |
+    $json = Get-Content '$(Build.SourcesDirectory)/artifacts/artifacts.json' | Out-String | ConvertFrom-Json
+    foreach ($i in $json) {
+      if ($i.tag -like "xamarin-ios*" -and -not ($i.url -like "*notarized*")) {
+        $url = $i.url
+        Write-Host "##vso[task.setvariable variable=XI_PACKAGE;]$url"
+        break
+      }
+    }
+  displayName: 'Set iOS pkgs url'
+  timeoutInMinutes: 5
+
 - bash: |
+    echo "Pkg uri is $XI_PACKAGE"
     make -C $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/ device-tests-provisioning.csx
-    cat $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/device-tests-provisioning.csx
   displayName: 'Generate Provisionator csx file'
 
 # Executed ONLY if we want to clear the provisionator cache.
