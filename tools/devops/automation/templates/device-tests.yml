@@ -29,6 +29,10 @@ parameters:
 - name: vsdropsPrefix
   type: string
 
+# can depend on the pool, which is annoying, but we should keep it in mind
+- name: keyringPass
+  type: string
+
 steps:
 
 - checkout: self
@@ -38,7 +42,7 @@ steps:
 - bash: |
     security set-key-partition-list -S apple-tool:,apple: -s -k $(KEYCHAIN_PASS) login.keychain
   env:
-    KEYCHAIN_PASS: $(xma-password)
+    KEYCHAIN_PASS: ${{ parameters.keyringPass }}
   displayName: 'Remove security UI-prompt (http://stackoverflow.com/a/40039594/183422)'
   condition: succeededOrFailed() # we do not care about the previous process cleanup
   continueOnError: true
@@ -131,7 +135,7 @@ steps:
     ./maccore/tools/install-qa-provisioning-profiles.sh -v 
   displayName: 'Add provisioning profiles'
   env:
-    LOGIN_KEYCHAIN_PASSWORD: $(xma-password)
+    LOGIN_KEYCHAIN_PASSWORD: ${{ parameters.keyringPass }}
 
 # Executed ONLY when the profisioning profiles step failed. At this point, we do know that 
 # we cannot run the tests, therefore:

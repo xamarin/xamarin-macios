@@ -133,6 +133,7 @@ stages:
     statusContext: 'VSTS: device tests iOS32b'
     iOSDeviceDemand: 'Agent.OSVersion -equals 10.15' # trick to reuse the device pipeline and add just the mac os x requirement, sneaky :) 
     vsdropsPrefix: ${{ variables.vsdropsPrefix }}
+    keyringPass: $(ios-pool-keychain-password)
 
 - template: templates/device-tests-stage.yml
   parameters:
@@ -144,6 +145,7 @@ stages:
     statusContext: 'VSTS: device tests iOS32b'
     iOSDeviceDemand: 'xismoke-32'
     vsdropsPrefix: ${{ variables.vsdropsPrefix }}
+    keyringPass: $(xma-password)
 
 - template: templates/device-tests-stage.yml
   parameters:
@@ -155,6 +157,7 @@ stages:
     statusContext: 'VSTS: device tests iOS'
     iOSDeviceDemand: 'ios'
     vsdropsPrefix: ${{ variables.vsdropsPrefix }}
+    keyringPass: $(xma-password)
 
 - template: templates/device-tests-stage.yml
   parameters:
@@ -166,6 +169,7 @@ stages:
     statusContext: 'VSTS: device tests tvOS'
     iOSDeviceDemand: 'tvos'
     vsdropsPrefix: ${{ variables.vsdropsPrefix }}
+    keyringPass: $(xma-password)
 
 - stage: mac_mojave_tests
   displayName : 'Mac Mojave Tests'

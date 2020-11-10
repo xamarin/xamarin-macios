@@ -44,6 +44,9 @@ parameters:
 - name: stageName 
   type: string
 
+- name: keyringPass
+  type: string
+
 stages:
 - stage:
   displayName: ${{ parameters.stageName }}
@@ -64,6 +67,7 @@ stages:
         statusContext: ${{ parameters.statusContext }}
         useXamarinStorage: ${{ parameters.useXamarinStorage }}
         vsdropsPrefix: ${{ parameters.vsdropsPrefix }} 
+        keyringPass: ${{ parameters.keyringPass }} 
 
   - job: upload_vsdrops
     displayName: 'Upload report to vsdrops'
