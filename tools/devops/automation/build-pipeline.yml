@@ -44,6 +44,8 @@ variables:
   value: "builder.keychain"
 - name: OSX_KEYCHAIN_PASS                                     # UNDONE: Override the OSX_KEYCHAIN_PASS to use same password as used by the iOS mac pool machines
   value: $(ios-pool-keychain-password)
+- name: VSDropsPrefix
+  value: 'https://vsdrop.corp.microsoft.com/file/v1/xamarin-macios/device-tests'
 
 trigger: none
 
@@ -142,69 +144,51 @@ stages:
   # Unfortunally, variable expansion will not happen on the right time, and will result in an agent error, to fix that
   # we use a template for the test and we set each of the jobs. Not ideal, but is only a 3 jobs matrix
 
-  - job: ios32_device_tests
-    displayName: 'iOS32b Device tests'
-    timeoutInMinutes: 1000
+- template: templates/device-tests-stage.yml
+  parameters:
+    stageName: 'iOS32b Device Tests'
+    iOSDevicePool: 'VSEng-Xamarin-QA'
+    WindowsDevicePool: 'VSEngDeploymentPool'
+    useXamarinStorage: False
+    testsLabels: '--label=run-ios-32-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests'
+    statusContext: 'VSTS: device tests iOS32b'
+    iOSDeviceDemand: 'xismoke-32'
+    vsdropsPrefix: ${{ variables.vsdropsPrefix }}
 
-    pool:
-      name: 'VSEng-Xamarin-QA'
-      demands: 'xismoke-32'
-      workspace:
-        clean: all
+- template: templates/device-tests-stage.yml
+  parameters:
+    stageName: 'iOS64 Device Tests'
+    iOSDevicePool: 'VSEng-Xamarin-Mac-Devices'
+    WindowsDevicePool: 'VSEngDeploymentPool'
+    useXamarinStorage: False
+    testsLabels: '--label=run-ios-64-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests'
+    statusContext: 'VSTS: device tests iOS'
+    iOSDeviceDemand: 'ios'
+    vsdropsPrefix: ${{ variables.vsdropsPrefix }}
 
-    steps:
-    - template: templates/device-tests.yml
+- template: templates/device-tests-stage.yml
+  parameters:
+    stageName: 'tvOS Device Tests'
+    iOSDevicePool: 'VSEng-Xamarin-Mac-Devices'
+    WindowsDevicePool: 'VSEngDeploymentPool'
+    useXamarinStorage: False
+    testsLabels: '--label=run-tvos-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests'
+    statusContext: 'VSTS: device tests tvOS'
+    iOSDeviceDemand: 'tvos'
+    vsdropsPrefix: ${{ variables.vsdropsPrefix }}
 
-  - job: ios64_device_tests
-    displayName: 'iOS Device tests'
-    timeoutInMinutes: 1000
+- stage: mac_mojave_tests
+  displayName : 'Mac Mojave Tests'
+  dependsOn: build_packages
+  jobs:
+  - template: templates/mac-tests.yml
+    parameters:
+      macPool: 'Hosted Mac Internal Mojave'
 
-    pool:
-      name: 'VSEng-Xamarin-Mac-Devices'
-      demands: 'ios'
-      workspace:
-        clean: all
-
-    steps:
-    - template: templates/device-tests.yml
-
-  - job: tvos_device_tests
-    displayName: 'tvOS Device tests'
-    timeoutInMinutes: 1000
-
-    pool:
-      name: 'VSEng-Xamarin-Mac-Devices'
-      demands: 'tvos'
-      workspace:
-        clean: all
-
-    steps:
-    - template: templates/device-tests.yml
-
-  # This job is a matrix and will execute the tests on the available tests, since the pools
-  # are diff, and the expansion does work with the poolname, we can use a matrix
-  # * mac OS 10.14
-  # * mac OX 10.13
-  - job: mac_tests
-    displayName: 'Mac OS X tests'
-    timeoutInMinutes: 1000
-    workspace:
-      clean: all
-
-    strategy:
-      matrix:
-        Mojave:
-          poolName: 'Hosted Mac Internal Mojave'
-        HighSierra:
-          poolName: 'Hosted Mac Internal'
-
-    pool:
-      name: $(poolName)
-      demands: 
-      - Agent.OS -equals Darwin
-
-      workspace:
-        clean: all
-
-    steps:
-    - bash: echo "Hello world"
+- stage: mac_sierra_tests
+  displayName : 'Mac High Sierra Tests'
+  dependsOn: build_packages
+  jobs:
+  - template: templates/mac-tests.yml
+    parameters:
+      macPool: 'Hosted Mac Internal'

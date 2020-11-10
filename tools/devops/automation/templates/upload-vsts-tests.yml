@@ -1,0 +1,18 @@
+# imports the xml to the vsts test results for the job
+
+steps:
+
+- checkout: self
+  persistCredentials: true
+
+- template: download-artifacts.yml 
+
+# Upload test results to vsts.
+- task: PublishTestResults@2
+  displayName: 'Publish NUnit Device Test Results'
+  inputs:
+    testResultsFormat: NUnit
+    testResultsFiles: '**/vsts-*.xml'
+    failTaskOnFailedTests: true
+  continueOnError: true
+  condition: succeededOrFailed()
