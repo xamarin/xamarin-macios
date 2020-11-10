@@ -99,9 +99,54 @@ namespace Xamarin {
 			}
 		}
 #endif
-
 	}
 
+	sealed class ProductConstants {
+		public string Version;
+		public string Revision;
+
+#if BUNDLER
+		public readonly static ProductConstants iOS = new ProductConstants {
+			Version = "@IOS_NUGET_VERSION@",
+			Revision = "@IOS_NUGET_REVISION@",
+		};
+
+		public readonly static ProductConstants tvOS = new ProductConstants {
+			Version = "@TVOS_NUGET_VERSION@",
+			Revision = "@TVOS_NUGET_REVISION@",
+		};
+
+		public readonly static ProductConstants watchOS = new ProductConstants {
+			Version = "@WATCHOS_NUGET_VERSION@",
+			Revision = "@WATCHOS_NUGET_REVISION@",
+		};
+
+		public readonly static ProductConstants macOS = new ProductConstants {
+			Version = "@MACOS_NUGET_VERSION@",
+			Revision = "@MACOS_NUGET_REVISION@",
+		};
+#else
+		public readonly static ProductConstants iOS = new ProductConstants {
+			Version = "@IOS_VERSION@",
+			Revision = "@IOS_REVISION@",
+		};
+
+		public readonly static ProductConstants tvOS = new ProductConstants {
+			Version = "@TVOS_VERSION@",
+			Revision = "@TVOS_REVISION@",
+		};
+
+		public readonly static ProductConstants watchOS = new ProductConstants {
+			Version = "@WATCHOS_VERSION@",
+			Revision = "@WATCHOS_REVISION@",
+		};
+
+		public readonly static ProductConstants macOS = new ProductConstants {
+			Version = "@MACOS_VERSION@",
+			Revision = "@MACOS_REVISION@",
+		};
+#endif
+	}
 #if MMP
 	static class MonoVersions {
 		public static string MinimumMono = "@MIN_XM_MONO_VERSION@";
