@@ -100,23 +100,16 @@ namespace Xamarin.Tests {
 						return false;
 
 					// There's a lot of TODOs here, those correspond with missing features in .NET and will be removed as those features are implemented
-					case ".metallib": // TODO
-						return false;
 					}
 
 					var filename = Path.GetFileName (v);
 					switch (filename) {
-					case "MonoTouchDebugConfiguration.txt": // TODO
-					case "PkgInfo": // TODO
 					case "runtime-options.plist": // TODO
-					case "Root.plist": // TODO
 						return false;
 					}
 
 					var components = v.Split ('/');
 					if (components.Any (v => v.EndsWith (".framework", StringComparison.Ordinal))) {
-						return false; // TODO
-					} else if (components.Any (v => v.EndsWith (".appex", StringComparison.Ordinal))) {
 						return false; // TODO
 					}
 

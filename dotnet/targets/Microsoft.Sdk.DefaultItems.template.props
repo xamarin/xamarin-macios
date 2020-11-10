@@ -63,4 +63,19 @@
 			<IsDefaultItem>true</IsDefaultItem>
 		</CoreMLModel>
 	</ItemGroup>
+
+	<!-- Default Metal inclusion -->
+	<ItemGroup Condition="'$(TargetPlatformIdentifier)' == '@PLATFORM@' And '$(_EnableDefaultXamarinItems)' == 'true' ">
+		<Metal Include="**\*.metal">
+			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
+			<IsDefaultItem>true</IsDefaultItem>
+		</Metal>
+	</ItemGroup>
+
+	<!-- Default SceneKit assets inclusion -->
+	<ItemGroup Condition="'$(TargetPlatformIdentifier)' == '@PLATFORM@' And '$(_EnableDefaultXamarinItems)' == 'true' ">
+		<SceneKitAsset Include="**\*.scnassets\*">
+			<IsDefaultItem>true</IsDefaultItem>
+		</SceneKitAsset>
+	</ItemGroup>
 </Project>

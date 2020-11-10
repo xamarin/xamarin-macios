@@ -197,4 +197,7 @@
       <LogicalName>Errors.mtouch.resources</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
+  <Target Name="BuildSdkVersions" Inputs="../common/SdkVersions.cs.in;../common/Make.common" Outputs="../common/SdkVersions.cs">
+    <Exec Command="make ../common/SdkVersions.cs" />
+  </Target>
 </Project>

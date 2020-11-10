@@ -8,6 +8,7 @@ using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Linker;
 
+using Xamarin;
 using Xamarin.Linker;
 using Xamarin.MacDev;
 using Xamarin.Utils;
@@ -655,9 +656,9 @@ namespace Xamarin.Bundler {
 
 			if (DeploymentTarget != null) {
 				if (DeploymentTarget < Xamarin.SdkVersions.GetMinVersion (this))
-					throw new ProductException (73, true, Errors.MT0073, Constants.Version, DeploymentTarget, Xamarin.SdkVersions.GetMinVersion (this), PlatformName, ProductName);
+					throw new ProductException (73, true, Errors.MT0073, ProductConstants.Version, DeploymentTarget, Xamarin.SdkVersions.GetMinVersion (this), PlatformName, ProductName);
 				if (DeploymentTarget > Xamarin.SdkVersions.GetVersion (this))
-					throw new ProductException (74, true, Errors.MX0074, Constants.Version, DeploymentTarget, Xamarin.SdkVersions.GetVersion (this), PlatformName, ProductName);
+					throw new ProductException (74, true, Errors.MX0074, ProductConstants.Version, DeploymentTarget, Xamarin.SdkVersions.GetVersion (this), PlatformName, ProductName);
 			}
 
 			if (Platform == ApplePlatform.WatchOS && EnableCoopGC.HasValue && !EnableCoopGC.Value)
@@ -1276,6 +1277,23 @@ namespace Xamarin.Bundler {
 		public string AssemblyName {
 			get {
 				return Path.GetFileName (RootAssemblies [0]);
+			}
+		}
+
+		internal ProductConstants ProductConstants {
+			get {
+				switch (Platform) {
+				case ApplePlatform.iOS:
+					return ProductConstants.iOS;
+				case ApplePlatform.TVOS:
+					return ProductConstants.tvOS;
+				case ApplePlatform.WatchOS:
+					return ProductConstants.watchOS;
+				case ApplePlatform.MacOSX:
+					return ProductConstants.macOS;
+				default:
+					throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
+				}
 			}
 		}
 	}
