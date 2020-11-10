@@ -187,7 +187,7 @@ steps:
     DeveloperIdInstaller: $(developer-id-installer)
     IphoneDeveloper: $(iphone-developer)
     MacDeveloper: $(mac-developer)
-    HostedMacKeychainPassword: $(AzDO-OnPrem-KeychainPass)
+    HostedMacKeychainPassword: $(OSX_KEYCHAIN_PASS)
 
 # HACK HACK: brew remove python2, but the script uses python2, this is a dirty workaround
 - bash: |
