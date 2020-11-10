@@ -121,14 +121,14 @@
 	<!-- Default item includes (globs and implicit references) -->
 	<Import Project="Xamarin.Shared.Sdk.DefaultItems.targets" />
 
-  <!-- This is a hack until we get the TFM values for real from the .NET build logic -->
-  <PropertyGroup>
-    <_TargetFrameworkPlatform Condition="'$(_PlatformName)' == 'iOS'">ios</_TargetFrameworkPlatform>
-    <_TargetFrameworkPlatform Condition="'$(_PlatformName)' == 'tvOS'">tvos</_TargetFrameworkPlatform>
-    <_TargetFrameworkPlatform Condition="'$(_PlatformName)' == 'watchOS'">watchos</_TargetFrameworkPlatform>
-    <_TargetFrameworkPlatform Condition="'$(_PlatformName)' == 'macOS'">macos</_TargetFrameworkPlatform>
-    <_ComputedTargetFrameworkMoniker Condition=" '$(_TargetFrameworkPlatform)' != '' ">$(TargetFrameworkMoniker),Profile=$(_TargetFrameworkPlatform)</_ComputedTargetFrameworkMoniker>
-  </PropertyGroup>
+	<!-- This is a hack until we get the TFM values for real from the .NET build logic -->
+	<PropertyGroup>
+		<_TargetFrameworkPlatform Condition="'$(_PlatformName)' == 'iOS'">ios</_TargetFrameworkPlatform>
+		<_TargetFrameworkPlatform Condition="'$(_PlatformName)' == 'tvOS'">tvos</_TargetFrameworkPlatform>
+		<_TargetFrameworkPlatform Condition="'$(_PlatformName)' == 'watchOS'">watchos</_TargetFrameworkPlatform>
+		<_TargetFrameworkPlatform Condition="'$(_PlatformName)' == 'macOS'">macos</_TargetFrameworkPlatform>
+		<_ComputedTargetFrameworkMoniker Condition=" '$(_TargetFrameworkPlatform)' != '' ">$(TargetFrameworkMoniker),Profile=$(_TargetFrameworkPlatform)</_ComputedTargetFrameworkMoniker>
+	</PropertyGroup>
 
 	<!-- Inject our custom logic into *DependsOn variables -->
 	<PropertyGroup>
