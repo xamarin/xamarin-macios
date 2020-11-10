@@ -14,7 +14,7 @@ resources:
   - repository: templates
     type: github
     name: xamarin/yaml-templates
-    ref: refs/heads/dev/bond/keychain                      # UNDONE: Change back to main once keychain diagnostics change has been merged (or not)
+    ref: refs/heads/main
     endpoint: xamarin
 
   - repository: maccore
@@ -43,7 +43,7 @@ variables:
 - name: SigningKeychain
   value: "builder.keychain"
 - name: OSX_KEYCHAIN_PASS                                     # UNDONE: Override the OSX_KEYCHAIN_PASS to use same password as used by the iOS mac pool machines
-  value: $(ios-pool-keychain-password)
+  value: $(pass--lab--mac--builder--keychain)
 
 trigger: none
 
@@ -62,8 +62,7 @@ stages:
     displayName: 'Build packages'
     timeoutInMinutes: 1000
     pool:
-      # name: VSEng-Xamarin-RedmondMacCatalinaBuildPool-iOS-Untrusted  # UNDONE: Test
-      name: VSEng-Xamarin-RedmondMacCatalinaBuildPool-VSForMac-Test
+      name: VSEng-Xamarin-RedmondMacCatalinaBuildPool-iOS-Untrusted
       demands:
       - Agent.OS -equals Darwin
       - Agent.OSVersion -equals 10.15
