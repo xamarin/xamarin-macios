@@ -107,7 +107,8 @@ steps:
 
     Dir "$(Build.SourcesDirectory)\artifacts\package"
 
-    Write-Host "Urls is $Env:STORAGE_URI"
+    $pkgsVirtualUrl = "$Env:STORAGE_URI/$(Build.SourceBranchName)/$(Build.SourceVersion)/$(Build.BuildId)/package"
+    Write-Host "Urls is $pkgsVirtualUrl"
 
     $pkgsPath = "$(Build.SourcesDirectory)\artifacts\package"
 
@@ -118,37 +119,37 @@ steps:
     Write-Host "mac PKG is $iOSPkg"
 
     if (Test-Path "$pkgsPath\$iOSPkg" -PathType Leaf) {
-        Set-GitHubStatus -Status "success" -Description $iOSPkg -TargetUrl "$Env:STORAGE_URI/packages/$iOSPkg" -Context "PKG-Xamarin.iOS"
+        Set-GitHubStatus -Status "success" -Description $iOSPkg -TargetUrl "$pkgsVirtualUrl/$iOSPkg" -Context "PKG-Xamarin.iOS"
     } else {
         Set-GitHubStatus -Status "error" -Description "xamarin.ios pkg not found" -Context "PKG-Xamarin.iOS"
     }
 
     if (Test-Path "$pkgsPath\notarized\xamarin.ios-*.pkg" -PathType Leaf) {
-       Set-GitHubStatus -Status "success" -Description "$iOSPkg (Notarized)" -TargetUrl "$Env:STORAGE_URI/packages/notarized/$iOSPkg" -Context "PKG-Xamarin.iOS-notarized"
+       Set-GitHubStatus -Status "success" -Description "$iOSPkg (Notarized)" -TargetUrl "$pkgsVirtualUrl/notarized/$iOSPkg" -Context "PKG-Xamarin.iOS-notarized"
     } else {
         Set-GitHubStatus -Status "error" -Description "Notarized xamarin.ios pkg not found" -Context "PKG-Xamarin.iOS"
     }
 
     if (Test-Path "$pkgsPath\xamarin.mac-*.pkg" -PathType Leaf) {
-       Set-GitHubStatus -Status "success" -Description "$pkgsPath" -TargetUrl "$Env:STORAGE_URI/packages/$macPkg" -Context "PKG-Xamarin.Mac"
+       Set-GitHubStatus -Status "success" -Description "$pkgsPath" -TargetUrl "$pkgsVirtualUrl/$macPkg" -Context "PKG-Xamarin.Mac"
     } else {
        Set-GitHubStatus -Status "error" -Description "xamarin.mac pkg not found." -Context "PKG-Xamarin.Mac"
     }
 
     if (Test-Path "$pkgsPath\notarized\xamarin.mac-*.pkg" -PathType Leaf) {
-        Set-GitHubStatus -Status "success" -Description "$pkgsPath (Notarized)" -TargetUrl "$Env:STORAGE_URI/packages/notarized/$macPkg" -Context "PKG-Xamarin.Mac-notarized"
+        Set-GitHubStatus -Status "success" -Description "$pkgsPath (Notarized)" -TargetUrl "$pkgsVirtualUrl/notarized/$macPkg" -Context "PKG-Xamarin.Mac-notarized"
     } else {
        Set-GitHubStatus -Status "error" -Description "Notarized xamarin.mac pkg not found." -Context "PKG-Xamarin.Mac"
     }
 
     if (Test-Path "$pkgsPath\bundle.zip" -PathType Leaf) {
-        Set-GitHubStatus -Status "success" -Description "bundle.zip" -TargetUrl "$Env:STORAGE_URI/packages/bundle.zip" -Context "bundle.zip"
+        Set-GitHubStatus -Status "success" -Description "bundle.zip" -TargetUrl "$pkgsVirtualUrl/bundle.zip" -Context "bundle.zip"
     } else {
        Set-GitHubStatus -Status "error" -Description "bundle.zip not found." -Context "PKG-Xamarin.Mac"
     }
 
     if (Test-Path "$pkgsPath\msbuild.zip" -PathType Leaf) {
-        Set-GitHubStatus -Status "success" -Description "msbuild.zip" -TargetUrl "$Env:STORAGE_URI/packages/msbuild.zip" -Context "msbuild.zip"
+        Set-GitHubStatus -Status "success" -Description "msbuild.zip" -TargetUrl "$pkgsVirtualUrl/msbuild.zip" -Context "msbuild.zip"
     } else {
        Set-GitHubStatus -Status "error" -Description "msbuild.zip not found." -Context "PKG-Xamarin.Mac"
     }
@@ -156,13 +157,13 @@ steps:
     $nugets =  $files = Get-ChildItem -Path $pkgsPath -Filter *.nupkg -File -Name
 
     foreach ($n in $nugets) {
-      Set-GitHubStatus -Status "success" -Description "$n" -TargetUrl "$Env:STORAGE_URI/packages/$n" -Context "$n"
+      Set-GitHubStatus -Status "success" -Description "$n" -TargetUrl "$pkgsVirtualUrl/$n" -Context "$n"
     }
 
     $msi =  $files = Get-ChildItem -Path $pkgsPath -Filter *.msi -File -Name
 
     foreach ($n in $msi) {
-      Set-GitHubStatus -Status "success" -Description "$n" -TargetUrl "$Env:STORAGE_URI/packages/$n" -Context "$n"
+      Set-GitHubStatus -Status "success" -Description "$n" -TargetUrl "$pkgsVirtualUrl/$n" -Context "$n"
     }
   env:
     BUILD_REVISION: $(Build.SourceVersion)
