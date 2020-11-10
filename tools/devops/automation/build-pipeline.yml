@@ -91,28 +91,7 @@ stages:
     steps:
     - template: templates/upload-azure.yml
 
-- stage: tests
-  displayName : 'Tests'
-  dependsOn: build_packages
-  jobs:
-
-  # this are the default tests that are executed in the latests mac OS X on the simulators
-  - job: simulator_tests
-    displayName: 'Simulator tests'
-    timeoutInMinutes: 1000
-    pool:
-      name: VSEng-Xamarin-RedmondMacCatalinaBuildPool-iOS-Untrusted
-      demands:
-      - Agent.OS -equals Darwin
-      - Agent.OSVersion -equals 10.15
-    workspace:
-      clean: all
-
-    steps:
-    - bash: echo "Hello world"
-
   # ideally we would use a matrix here, like:
-
   #  - job: device_tests
   #    displayName: 'Device tests'
   #    timeoutInMinutes: 1000
@@ -143,6 +122,17 @@ stages:
   #
   # Unfortunally, variable expansion will not happen on the right time, and will result in an agent error, to fix that
   # we use a template for the test and we set each of the jobs. Not ideal, but is only a 3 jobs matrix
+
+- template: templates/device-tests-stage.yml
+  parameters:
+    stageName: 'Simulator Tests'
+    iOSDevicePool: 'VSEng-Xamarin-RedmondMacCatalinaBuildPool-iOS-Untrusted'
+    WindowsDevicePool: 'VSEngDeploymentPool'
+    useXamarinStorage: False
+    testsLabels: '--label=run-all-tests,skip-device-tests'
+    statusContext: 'VSTS: device tests iOS32b'
+    iOSDeviceDemand: 'Agent.OSVersion -equals 10.15' # trick to reuse the device pipeline and add just the mac os x requirement, sneaky :) 
+    vsdropsPrefix: ${{ variables.vsdropsPrefix }}
 
 - template: templates/device-tests-stage.yml
   parameters:
