@@ -62,7 +62,8 @@ stages:
     displayName: 'Build packages'
     timeoutInMinutes: 1000
     pool:
-      name: VSEng-Xamarin-RedmondMacCatalinaBuildPool-iOS-Untrusted
+      # name: VSEng-Xamarin-RedmondMacCatalinaBuildPool-iOS-Untrusted  # UNDONE: Test
+      name: VSEng-Xamarin-RedmondMacCatalinaBuildPool-VSForMac-Test
       demands:
       - Agent.OS -equals Darwin
       - Agent.OSVersion -equals 10.15
