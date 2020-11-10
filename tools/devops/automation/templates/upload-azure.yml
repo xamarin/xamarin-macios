@@ -127,7 +127,7 @@ steps:
     if (Test-Path "$pkgsPath\notarized\xamarin.ios-*.pkg" -PathType Leaf) {
        Set-GitHubStatus -Status "success" -Description "$iOSPkg (Notarized)" -TargetUrl "$pkgsVirtualUrl/notarized/$iOSPkg" -Context "PKG-Xamarin.iOS-notarized"
     } else {
-        Set-GitHubStatus -Status "error" -Description "Notarized xamarin.ios pkg not found" -Context "PKG-Xamarin.iOS"
+        Set-GitHubStatus -Status "error" -Description "Notarized xamarin.ios pkg not found" -Context "PKG-Xamarin.iOS-notarized"
     }
 
     if (Test-Path "$pkgsPath\xamarin.mac-*.pkg" -PathType Leaf) {
@@ -139,19 +139,19 @@ steps:
     if (Test-Path "$pkgsPath\notarized\xamarin.mac-*.pkg" -PathType Leaf) {
         Set-GitHubStatus -Status "success" -Description "$pkgsPath (Notarized)" -TargetUrl "$pkgsVirtualUrl/notarized/$macPkg" -Context "PKG-Xamarin.Mac-notarized"
     } else {
-       Set-GitHubStatus -Status "error" -Description "Notarized xamarin.mac pkg not found." -Context "PKG-Xamarin.Mac"
+       Set-GitHubStatus -Status "error" -Description "Notarized xamarin.mac pkg not found." -Context "PKG-Xamarin.Mac-notarized"
     }
 
     if (Test-Path "$pkgsPath\bundle.zip" -PathType Leaf) {
         Set-GitHubStatus -Status "success" -Description "bundle.zip" -TargetUrl "$pkgsVirtualUrl/bundle.zip" -Context "bundle.zip"
     } else {
-       Set-GitHubStatus -Status "error" -Description "bundle.zip not found." -Context "PKG-Xamarin.Mac"
+       Set-GitHubStatus -Status "error" -Description "bundle.zip not found." -Context "bundle.zip"
     }
 
     if (Test-Path "$pkgsPath\msbuild.zip" -PathType Leaf) {
         Set-GitHubStatus -Status "success" -Description "msbuild.zip" -TargetUrl "$pkgsVirtualUrl/msbuild.zip" -Context "msbuild.zip"
     } else {
-       Set-GitHubStatus -Status "error" -Description "msbuild.zip not found." -Context "PKG-Xamarin.Mac"
+       Set-GitHubStatus -Status "error" -Description "msbuild.zip not found." -Context "msbuild.zip"
     }
 
     $nugets =  $files = Get-ChildItem -Path $pkgsPath -Filter *.nupkg -File -Name
