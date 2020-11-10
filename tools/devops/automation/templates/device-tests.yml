@@ -66,14 +66,9 @@ steps:
   displayName: 'Notify failed script tests'
   condition: failed() # we failed running the tests, therefore stop the pipeline
 
-# Uses the powershell cmdlet to print useful information about the system. Will always be executed.
-- pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/device-tests/scripts/System.psm1
-    Get-SystemInfo | Format-Table -Wrap -HideTableHeaders
-    Write-Host "Env variables are:"
-    Get-ChildItem env:
+- pwsh : |
+    gci env: | format-table -autosize -wrap
   displayName: 'Dump Environment'
-  timeoutInMinutes: 1
 
 # Uses the powershell cmdlet to remove known directories that are not needed and use space.
 # we might hit issue https://github.com/PowerShell/PowerShell/issues/9246, so we always do exit 0
@@ -136,7 +131,7 @@ steps:
     ./maccore/tools/install-qa-provisioning-profiles.sh -v 
   displayName: 'Add provisioning profiles'
   env:
-    LOGIN_KEYCHAIN_PASSWORD: $(OSX_KEYCHAIN_PASS)
+    LOGIN_KEYCHAIN_PASSWORD: $(xma-password)
 
 # Executed ONLY when the profisioning profiles step failed. At this point, we do know that 
 # we cannot run the tests, therefore:
