@@ -39,7 +39,7 @@ steps:
     Destination: AzureBlob
     storage: bosstoragemirror
     ContainerName: wrench
-    BlobPrefix: $(Build.SourceBranchName)/$(Build.SourceVersion)/$(Build.BuildId)  # ideally, we would use a variable for this
+    BlobPrefix: $(Build.SourceBranchName)/$(Build.SourceVersion)/$(Build.BuildId)/package  # ideally, we would use a variable for this
     outputStorageUri: Parameters.outputStorageUri
     outputStorageContainerSasToken: PackageSasToken
 

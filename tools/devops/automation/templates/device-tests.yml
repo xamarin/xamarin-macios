@@ -36,7 +36,9 @@ steps:
   persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
 
 - bash: |
-    security set-key-partition-list -S apple-tool:,apple: -s -k $(OSX_KEYCHAIN_PASS) login.keychain
+    security set-key-partition-list -S apple-tool:,apple: -s -k $(KEYCHAIN_PASS) login.keychain
+  env:
+    KEYCHAIN_PASS: $(xma-password)
   displayName: 'Remove security UI-prompt (http://stackoverflow.com/a/40039594/183422)'
   condition: succeededOrFailed() # we do not care about the previous process cleanup
   continueOnError: true
