@@ -40,7 +40,7 @@ steps:
       Set-PipelineResult -Status partiallySucceeded
     }
   env:
-    BUILD_REVISION: $(BUILD_REVISION)
+    BUILD_REVISION: $(Build.SourceVersion)
     CONTEXT: ${{ parameters.statusContext }}
     GITHUB_TOKEN: $(GitHub.Token)
     XAMARIN_STORAGE_PATH: $(XAMARIN_STORAGE_PATH) # could be null if the step was not executed if we use vsdrops, the cmdlet will know how to handle that case

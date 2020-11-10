@@ -57,7 +57,7 @@ steps:
     New-GitHubComment -Header "Pipeline scripts tests failed on $Env:CONTEXT" -Emoji ":fire:" -Description "The tests of the scripts used in the pipeline failed. The build was cancelled."
     Stop-Pipeline
   env:
-    BUILD_REVISION: $(BUILD_REVISION)
+    BUILD_REVISION: $(Build.SourceVersion)
     CONTEXT: ${{ parameters.statusContext }}
     GITHUB_TOKEN: $(GitHub.Token)
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
@@ -101,7 +101,7 @@ steps:
       Set-GitHubStatus -Status "pending" -Description "Device tests on VSTS have been started." -Context "$Env:CONTEXT"
     }
   env:
-    BUILD_REVISION: $(BUILD_REVISION)
+    BUILD_REVISION: $(Build.SourceVersion)
     CONTEXT: ${{ parameters.statusContext }}
     GITHUB_TOKEN: $(GitHub.Token)
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
@@ -149,7 +149,7 @@ steps:
     New-GitHubComment -Header "Tests failed catastrophically on $Env:CONTEXT" -Emoji ":fire:" -Description "Failed provisioning profiles."
     Stop-Pipeline
   env:
-    BUILD_REVISION: $(BUILD_REVISION)
+    BUILD_REVISION: $(Build.SourceVersion)
     CONTEXT: ${{ parameters.statusContext }}
     GITHUB_TOKEN: $(GitHub.Token)
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
@@ -209,7 +209,7 @@ steps:
     New-GitHubComment -Header "Tests failed catastrophically on $Env:CONTEXT" -Emoji ":fire:" -Description "Failed installing dependencies."
     Stop-Pipeline
   env:
-    BUILD_REVISION: $(BUILD_REVISION)
+    BUILD_REVISION: $(Build.SourceVersion)
     CONTEXT: ${{ parameters.statusContext }}
     GITHUB_TOKEN: $(GitHub.Token)
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
@@ -243,7 +243,7 @@ steps:
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/device-tests/scripts/GitHub.psm1 
     Set-GitHubStatus -Status "pending" -Context "$Env:CONTEXT" -Description "Running device tests on $Env:CONTEXT"
   env:
-    BUILD_REVISION: $(BUILD_REVISION)
+    BUILD_REVISION: $(Build.SourceVersion)
     CONTEXT: ${{ parameters.statusContext }}
     GITHUB_TOKEN: $(GitHub.Token)
   displayName: Set pending GitHub status
