@@ -116,7 +116,8 @@ steps:
 
     Dir "$(Build.SourcesDirectory)\artifacts\package"
 
-    $pkgsVirtualUrl = "$Env:STORAGE_URI/$(Build.SourceBranchName)/$(Build.SourceVersion)/$(Build.BuildId)/package"
+    # $Env:STORAGE_URI/ ends with a /, annoying
+    $pkgsVirtualUrl = "$Env:STORAGE_URI" +"$(Build.SourceBranchName)/$(Build.SourceVersion)/$(Build.BuildId)/package"
     Write-Host "Urls is $pkgsVirtualUrl"
 
     $pkgsPath = "$(Build.SourcesDirectory)\artifacts\package"
