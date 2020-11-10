@@ -224,6 +224,7 @@ steps:
   name: notarize
   displayName: 'Signing Release Build'
   condition: and(succeeded(), eq(variables['configuration.SignPkgs'], 'True'), eq(variables['configuration.IsPr'], 'False'))
+  enabled: false                # UNDONE: TEST: Disabled -- avoid cost of signing, which should not impact key chains
   timeoutInMinutes: 90
 
 - template: generate-workspace-info.yml@templates
