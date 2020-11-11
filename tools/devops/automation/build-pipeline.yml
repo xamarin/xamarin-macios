@@ -83,14 +83,15 @@ stages:
         name: labels
 
 - stage: governance_checks
-  display: 'Governance Checks'
+  displayName: 'Governance Checks'
+  dependsOn: []
   jobs:
     - job: governance
-    displayName: 'Governance Checks'
-    pool:
-      vmImage: windows-latest
-    steps:
-    - template: templates/governance-checks.yml
+      displayName: 'Governance Checks'
+      pool:
+        vmImage: windows-latest
+      steps:
+      - template: templates/governance-checks.yml
 
 - stage: build_packages
   displayName: 'Build'
