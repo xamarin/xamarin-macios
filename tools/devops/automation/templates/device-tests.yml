@@ -131,7 +131,7 @@ steps:
 
 - pwsh: |
     Dir $(Build.SourcesDirectory)/artifacts
-    $json = Get-Content '$(Build.SourcesDirectory)/artifacts/artifacts.json' | Out-String | ConvertFrom-Json
+    $json = Get-Content '$(Build.SourcesDirectory)/artifacts/pkg-info/artifacts.json' | Out-String | ConvertFrom-Json
     foreach ($i in $json) {
       if ($i.tag -like "xamarin-ios*" -and -not ($i.url -like "*notarized*")) {
         $url = $i.url
