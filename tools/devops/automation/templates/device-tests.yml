@@ -125,11 +125,12 @@ steps:
 - task: DownloadPipelineArtifact@2
   displayName: Download artifacts.json
   inputs:
-    patterns: '**/artifacts.json'
+    patterns: '**/*.json'
     allowFailedBuilds: true
     path: $(Build.SourcesDirectory)/artifacts
 
 - pwsh: |
+    Dir $(Build.SourcesDirectory)/artifacts
     $json = Get-Content '$(Build.SourcesDirectory)/artifacts/artifacts.json' | Out-String | ConvertFrom-Json
     foreach ($i in $json) {
       if ($i.tag -like "xamarin-ios*" -and -not ($i.url -like "*notarized*")) {
