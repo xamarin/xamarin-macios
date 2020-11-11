@@ -54,22 +54,6 @@ steps:
 - bash: make -C $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/device-tests/scripts run-tests
   displayName: 'Run pipeline script tests'
 
-# Executed ONLY when the scripts tests fail. We do not longer trust the pipeline, therefore stop it
-- pwsh: |
-    cd $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/device-tests/scripts/
-    Import-Module ./VSTS.psm1
-    Import-Module ./GitHub.psm1
-    Set-GitHubStatus -Status "error" -Description "Pipeline scripts tests failed." -Context "$Env:CONTEXT"
-    New-GitHubComment -Header "Pipeline scripts tests failed on $Env:CONTEXT" -Emoji ":fire:" -Description "The tests of the scripts used in the pipeline failed. The build was cancelled."
-    Stop-Pipeline
-  env:
-    BUILD_REVISION: $(Build.SourceVersion)
-    CONTEXT: ${{ parameters.statusContext }}
-    GITHUB_TOKEN: $(GitHub.Token)
-    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
-  displayName: 'Notify failed script tests'
-  condition: failed() # we failed running the tests, therefore stop the pipeline
-
 - pwsh : |
     gci env: | format-table -autosize -wrap
   displayName: 'Dump Environment'
@@ -137,27 +121,6 @@ steps:
   env:
     LOGIN_KEYCHAIN_PASSWORD: ${{ parameters.keyringPass }}
 
-# Executed ONLY when the profisioning profiles step failed. At this point, we do know that 
-# we cannot run the tests, therefore:
-# 1. Set the status to error.
-# 2. Add a comment letting the monitoring person know that there was an issue with the profiles.
-# 3. Cancel the pipeline, we cannot run the tests.
-- pwsh: |
-    cd $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/device-tests/scripts/
-    Import-Module ./VSTS.psm1
-    Import-Module ./GitHub.psm1
-    Set-GitHubStatus -Status "error" -Description "Failed provisioning profiles." -Context "$Env:CONTEXT"
-    New-GitHubComment -Header "Tests failed catastrophically on $Env:CONTEXT" -Emoji ":fire:" -Description "Failed provisioning profiles."
-    Stop-Pipeline
-  env:
-    BUILD_REVISION: $(Build.SourceVersion)
-    CONTEXT: ${{ parameters.statusContext }}
-    GITHUB_TOKEN: $(GitHub.Token)
-    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
-  displayName: 'Notify failed provisioning'
-  condition: failed() # we could not provisiong, we stop the pipeline, there is not point in doing anything else
-  timeoutInMinutes: 5
-
 # download the artifacts.json, which will use to find the URI of the built pkg to later be installed by provisionator
 - task: DownloadPipelineArtifact@2
   displayName: Download artifacts.json
@@ -197,26 +160,6 @@ steps:
     provisioning_script: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/device-tests-provisioning.csx
     provisioning_extra_args: '-vvvv'
   timeoutInMinutes: 250
-
-# Executed ONLY when the provisioning of the bot failed, that means that we could not install one of our dependencies. If that is the case:
-# 1. Set the build to error.
-# 2. Add a comment letting the monitoring person know that we could not install the dependencies.
-# 3. Cancel the pipelines, we cannot run the tests.
-- pwsh: |
-    cd $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/device-tests/scripts/
-    Import-Module ./VSTS.psm1
-    Import-Module ./GitHub.psm1
-    Set-GitHubStatus -Status "error" -Description "Failed installing dependencies." -Context "$Env:CONTEXT"
-    New-GitHubComment -Header "Tests failed catastrophically on $Env:CONTEXT" -Emoji ":fire:" -Description "Failed installing dependencies."
-    Stop-Pipeline
-  env:
-    BUILD_REVISION: $(Build.SourceVersion)
-    CONTEXT: ${{ parameters.statusContext }}
-    GITHUB_TOKEN: $(GitHub.Token)
-    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
-  displayName: 'Notify failed installing dependecies'
-  condition: failed() # we could not install the deps, set comments and leave
-  timeoutInMinutes: 5
 
 # remove any old processes that might have been left behind.
 - pwsh : |
