@@ -1609,7 +1609,9 @@ public partial class Generator : IMemberGatherer {
 	{
 		if (trampolines.ContainsKey (t)){
 			return trampolines [t];
-		} 
+		}
+		if (t.GetMethod("Invoke").ReturnType.ToString().Contains("`1"))
+			Console.WriteLine ();
 
 		var mi = t.GetMethod ("Invoke");
 		var pars = new StringBuilder ();
@@ -1779,7 +1781,14 @@ public partial class Generator : IMemberGatherer {
 		}
 
 		var rt = mi.ReturnType;
+		//invoke.AppendFormat (" Runtime.GetNSObject<{1}> ({0})", safe_name, RenderType (pi.ParameterType));
+
 		var rts = IsNativeEnum (rt) ? "var" : rt.ToString ();
+		///// Debugging code
+		if (rts.Contains ("`1"))
+			//Console.WriteLine ();
+			rts = RenderType(rt);
+		///// End debugging code
 		var trampoline_name = MakeTrampolineName (t);
 		var ti = new TrampolineInfo (userDelegate: FormatType (null, t),
 					     delegateName: "D" + trampoline_name,
@@ -2609,6 +2618,10 @@ public partial class Generator : IMemberGatherer {
 			} else {
 				if (ti.Convert.Length > 0)
 					print (ti.Convert);
+				///////// Debugging code
+				if (ti.DelegateReturnType.Contains ("`1"))
+					Console.WriteLine ();
+				///////// End debugging code
 				print ("{0} retval = del ({1});", ti.DelegateReturnType, ti.Invoke);
 				if (ti.PostConvert.Length > 0)
 					print (ti.PostConvert);

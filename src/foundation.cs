@@ -16032,6 +16032,93 @@ namespace Foundation
 		InferMoves = (1uL << 2),
 	}
 
+	// audit-objc-generics: @interface NSOrderedCollectionDifference<ObjectType> : NSObject <NSFastEnumeration>
+[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+[BaseType (typeof(NSObject))]
+interface NSOrderedCollectionDifference<ObjectType> : INSFastEnumeration
+where ObjectType : INativeObject
+{
+	// -(instancetype _Nonnull)initWithChanges:(NSArray<NSOrderedCollectionChange<ObjectType> *> * _Nonnull)changes;
+	[Export ("initWithChanges:")]
+	IntPtr Constructor (NSOrderedCollectionChange<ObjectType>[] changes);
+
+	// -(instancetype _Nonnull)initWithInsertIndexes:(NSIndexSet * _Nonnull)inserts insertedObjects:(NSArray<ObjectType> * _Nullable)insertedObjects removeIndexes:(NSIndexSet * _Nonnull)removes removedObjects:(NSArray<ObjectType> * _Nullable)removedObjects additionalChanges:(NSArray<NSOrderedCollectionChange<ObjectType> *> * _Nonnull)changes __attribute__((objc_designated_initializer));
+	[Export ("initWithInsertIndexes:insertedObjects:removeIndexes:removedObjects:additionalChanges:")]
+	[DesignatedInitializer]
+	IntPtr Constructor (NSIndexSet inserts, [NullAllowed] NSObject[] insertedObjects, NSIndexSet removes, [NullAllowed] NSObject[] removedObjects, NSOrderedCollectionChange<ObjectType>[] changes);
+
+	// -(instancetype _Nonnull)initWithInsertIndexes:(NSIndexSet * _Nonnull)inserts insertedObjects:(NSArray<ObjectType> * _Nullable)insertedObjects removeIndexes:(NSIndexSet * _Nonnull)removes removedObjects:(NSArray<ObjectType> * _Nullable)removedObjects;
+	[Export ("initWithInsertIndexes:insertedObjects:removeIndexes:removedObjects:")]
+	IntPtr Constructor (NSIndexSet inserts, [NullAllowed] NSObject[] insertedObjects, NSIndexSet removes, [NullAllowed] NSObject[] removedObjects);
+
+	// @property (readonly, strong) NSArray<NSOrderedCollectionChange<ObjectType> *> * _Nonnull insertions __attribute__((availability(macos, introduced=10.15))) __attribute__((availability(ios, introduced=13.0))) __attribute__((availability(watchos, introduced=6.0))) __attribute__((availability(tvos, introduced=13.0)));
+	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+	[Export ("insertions", ArgumentSemantic.Strong)]
+	NSOrderedCollectionChange<ObjectType>[] Insertions { get; }
+
+	// @property (readonly, strong) NSArray<NSOrderedCollectionChange<ObjectType> *> * _Nonnull removals __attribute__((availability(macos, introduced=10.15))) __attribute__((availability(ios, introduced=13.0))) __attribute__((availability(watchos, introduced=6.0))) __attribute__((availability(tvos, introduced=13.0)));
+	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+	[Export ("removals", ArgumentSemantic.Strong)]
+	NSOrderedCollectionChange<ObjectType>[] Removals { get; }
+
+	// @property (readonly, assign) BOOL hasChanges;
+	[Export ("hasChanges")]
+	bool HasChanges { get; }
+
+	// -(NSOrderedCollectionDifference<id> * _Nonnull)differenceByTransformingChangesWithBlock:(NSOrderedCollectionChange<id> * _Nonnull (^ _Nonnull)(NSOrderedCollectionChange<ObjectType> * _Nonnull))block;
+	[Export ("differenceByTransformingChangesWithBlock:")]
+	NSOrderedCollectionDifference<ObjectType> DifferenceByTransformingChangesWithBlock (Func<NSOrderedCollectionChange<ObjectType>, NSOrderedCollectionChange<ObjectType>> block);
+
+	// -(instancetype _Nonnull)inverseDifference __attribute__((availability(macos, introduced=10.15))) __attribute__((availability(ios, introduced=13.0))) __attribute__((availability(watchos, introduced=6.0))) __attribute__((availability(tvos, introduced=13.0)));
+	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+	[Export ("inverseDifference")]
+	NSOrderedCollectionDifference<ObjectType> InverseDifference ();
+}
+
+// audit-objc-generics: @interface NSOrderedCollectionChange<ObjectType> : NSObject
+[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+[BaseType (typeof(NSObject))]
+[DisableDefaultCtor]
+interface NSOrderedCollectionChange<ObjectType>
+where ObjectType : INativeObject
+{
+	// +(NSOrderedCollectionChange<ObjectType> * _Nonnull)changeWithObject:(ObjectType _Nullable)anObject type:(NSCollectionChangeType)type index:(NSUInteger)index;
+	[Static]
+	[Export ("changeWithObject:type:index:")]
+	NSOrderedCollectionChange<ObjectType> ChangeWithObject ([NullAllowed] NSObject anObject, NSCollectionChangeType type, nuint index);
+
+	// +(NSOrderedCollectionChange<ObjectType> * _Nonnull)changeWithObject:(ObjectType _Nullable)anObject type:(NSCollectionChangeType)type index:(NSUInteger)index associatedIndex:(NSUInteger)associatedIndex;
+	[Static]
+	[Export ("changeWithObject:type:index:associatedIndex:")]
+	NSOrderedCollectionChange<ObjectType> ChangeWithObject ([NullAllowed] NSObject anObject, NSCollectionChangeType type, nuint index, nuint associatedIndex);
+
+	// @property (readonly, strong) ObjectType _Nullable object;
+	[NullAllowed, Export ("object", ArgumentSemantic.Strong)]
+	NSObject Object { get; }
+
+	// @property (readonly) NSCollectionChangeType changeType;
+	[Export ("changeType")]
+	NSCollectionChangeType ChangeType { get; }
+
+	// @property (readonly) NSUInteger index;
+	[Export ("index")]
+	nuint Index { get; }
+
+	// @property (readonly) NSUInteger associatedIndex;
+	[Export ("associatedIndex")]
+	nuint AssociatedIndex { get; }
+
+	// -(instancetype _Nonnull)initWithObject:(ObjectType _Nullable)anObject type:(NSCollectionChangeType)type index:(NSUInteger)index;
+	[Export ("initWithObject:type:index:")]
+	IntPtr Constructor ([NullAllowed] NSObject anObject, NSCollectionChangeType type, nuint index);
+
+	// -(instancetype _Nonnull)initWithObject:(ObjectType _Nullable)anObject type:(NSCollectionChangeType)type index:(NSUInteger)index associatedIndex:(NSUInteger)associatedIndex __attribute__((objc_designated_initializer));
+	[Export ("initWithObject:type:index:associatedIndex:")]
+	[DesignatedInitializer]
+	IntPtr Constructor ([NullAllowed] NSObject anObject, NSCollectionChangeType type, nuint index, nuint associatedIndex);
+}
+
+
 	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 	[BaseType (typeof (NSDimension))]
 	[DisableDefaultCtor] // NSGenericException Reason: -init should never be called on NSUnit!

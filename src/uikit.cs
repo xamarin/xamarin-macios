@@ -22280,8 +22280,8 @@ namespace UIKit {
 		NSDiffableDataSourceSectionSnapshot<ItemIdentifierType> FinalSnapshot { get; }
 
 		// TODO: Enable when Foundation return type is bound
-		// [Export ("difference")]
-		// NSOrderedCollectionDifference<ItemIdentifierType> Difference { get; }
+		[Export ("difference")]
+		NSOrderedCollectionDifference<ItemIdentifierType> Difference { get; }
 	}
 
 	[NoWatch, TV (14,0), iOS (14,0)]
@@ -22297,8 +22297,8 @@ namespace UIKit {
 		NSDiffableDataSourceSnapshot <SectionIdentifierType, ItemIdentifierType> FinalSnapshot { get; }
 
 		// TODO: Enable when Foundation return type is bound
-		// [Export ("difference")]
-		// NSOrderedCollectionDifference <ItemIdentifierType> Difference { get; }
+		[Export ("difference")]
+		NSOrderedCollectionDifference <ItemIdentifierType> Difference { get; }
 
 		[Export ("sectionTransactions")]
 		NSDiffableDataSourceSectionTransaction<SectionIdentifierType, ItemIdentifierType> [] SectionTransactions { get; }
