@@ -15,7 +15,7 @@ steps:
     targetType: 'F'
     targetArgument: '$(Build.DefaultWorkingDirectory)/xamarin-macios'
     result: 'PoliCheck.xml'
-    optionsUEPATH: '$(System.SourcesDirectory)/maccore/tools/devops/PoliCheckExclusions.xml'
+    optionsUEPATH: '$(System.DefaultWorkingDirectory)/maccore/tools/devops/PoliCheckExclusions.xml'
 
 - task: securedevelopmentteam.vss-secure-development-tools.build-task-postanalysis.PostAnalysis@1
   displayName: 'Post Analysis'
