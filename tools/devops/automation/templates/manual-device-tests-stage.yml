@@ -56,12 +56,24 @@ stages:
   dependsOn:
   - configure
   - build_packages
-  - manual_approval
   condition: ne(dependencies.configure.outputs['labels.${{ parameters.execute }}'], 'false') # use ne in case is '' and default to true
   jobs:
+  - job: manual_approval
+    pool: server
+    timeoutInMinutes: 60
+    steps:
+      - task: ManualIntervention@8
+        timeoutInMinutes: 60
+        displayName: "Manual approval"
+        inputs:
+          instructions: "Baby shark, doo doo doo doo doo doo"
+          emailRecipients: "my@email.com"
+          onTimeout: reject
+
   - job: tests
     displayName: 'Run iOS Device Tests'
     timeoutInMinutes: 1000
+    dependsOn: manual_approval
     pool:
       name: ${{ parameters.iOSDevicePool }}
       demands: ${{ parameters.iOSDeviceDemand }}
