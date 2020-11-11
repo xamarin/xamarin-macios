@@ -106,7 +106,7 @@ steps:
   displayName: 'Publish Build Artifacts'
   inputs:
     targetPath: $(Build.SourcesDirectory)/artifacts/package/artifacts.json
-    artifactName: package
+    artifactName: pkg-info
   continueOnError: true
 
 - powershell: |
