@@ -2,8 +2,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net5.0-ios</TargetFramework>
+    <RuntimeIdentifier>ios-x64</RuntimeIdentifier>
     <IsBindingProject>true</IsBindingProject>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <NoBindingEmbedding>true</NoBindingEmbedding>
   </PropertyGroup>
 
   <Import Project="../Common.props" />
@@ -24,11 +26,6 @@
       <Link>XStaticArTest.framework</Link>
       <Frameworks>CoreLocation Foundation ModelIO</Frameworks>
     </NativeReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="$(RepositoryPath)\tests\bindings-framework-test\XTest.framework.linkwith.cs">
-      <DependentUpon>XTest.framework</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="$(RepositoryPath)\tests\test-libraries\libframework.m">
