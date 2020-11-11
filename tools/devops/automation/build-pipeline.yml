@@ -175,19 +175,6 @@ stages:
 
 - template: templates/device-tests-stage.yml
   parameters:
-    execute: 'runDevice32b'
-    stageName: 'iOS32b Device Tests'
-    iOSDevicePool: 'VSEng-Xamarin-QA'
-    WindowsDevicePool: 'VSEngDeploymentPool'
-    useXamarinStorage: False
-    testsLabels: '--label=run-ios-32-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests'
-    statusContext: 'VSTS: device tests iOS32b'
-    iOSDeviceDemand: 'xismoke-32'
-    vsdropsPrefix: ${{ variables.vsdropsPrefix }}
-    keyringPass: $(xma-password)
-
-- template: templates/device-tests-stage.yml
-  parameters:
     execute: 'runDevice64b'
     stageName: 'iOS64 Device Tests'
     iOSDevicePool: 'VSEng-Xamarin-Mac-Devices'
@@ -227,3 +214,50 @@ stages:
   - template: templates/mac-tests.yml
     parameters:
       macPool: 'Hosted Mac Internal'
+
+# special stages that required a trigger form a human
+- stage: manual_approval
+  displayName: "Manual approval"
+  dependsOn: build_packages
+  jobs:
+  - job: manual_approval
+    pool: server
+    timeoutInMinutes: 60
+    steps:
+      - task: ManualIntervention@8
+        timeoutInMinutes: 60
+        displayName: "Manual approval"
+        inputs:
+          instructions: "Baby shark, doo doo doo doo doo doo"
+          emailRecipients: "my@email.com"
+          onTimeout: reject
+
+- template: templates/manual-device-tests-stage.yml
+  parameters:
+    execute: 'runDevice32b'
+    stageName: 'iOS32b Device Tests'
+    iOSDevicePool: 'VSEng-Xamarin-QA'
+    WindowsDevicePool: 'VSEngDeploymentPool'
+    useXamarinStorage: False
+    testsLabels: '--label=run-ios-32-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests'
+    statusContext: 'VSTS: device tests iOS32b'
+    iOSDeviceDemand: 'xismoke-32'
+    vsdropsPrefix: ${{ variables.vsdropsPrefix }}
+    keyringPass: $(xma-password)
+
+# TODO: Not the real step
+- stage: sample_testing
+  displayName: 'Sample testing'
+  dependsOn:
+  - configure
+  - build_packages
+  - manual_approval
+  jobs:
+  - job: pipeline_configuration
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+      # TODO: do parse labels 
+      - bash: |
+          echo "Samples!"
+        displayName: 'Sample testing'

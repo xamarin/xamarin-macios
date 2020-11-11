@@ -4,21 +4,16 @@ steps:
 - checkout: maccore
   persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
 
-- powershell: |
-    Dir $(System.DefaultWorkingDirectory)
-    Dir $(System.SourcesDirectory)
-  displayName: "Debug"
-
 - task: CredScan@3
   displayName: "Run CredScan"
   inputs:
-    suppressionsFile: '$(System.SourcesDirectory)/maccore/tools/devops/CredScanSuppressions.json'
+    suppressionsFile: '$(System.DefaultWorkingDirectory)/maccore/tools/devops/CredScanSuppressions.json'
 
 - task: PoliCheck@1
   inputs:
     inputType: 'Basic'
     targetType: 'F'
-    targetArgument: '$(Build.SourcesDirectory)'
+    targetArgument: '$(Build.DefaultWorkingDirectory)/xamarin-macios'
     result: 'PoliCheck.xml'
     optionsUEPATH: '$(System.SourcesDirectory)/maccore/tools/devops/PoliCheckExclusions.xml'
 
