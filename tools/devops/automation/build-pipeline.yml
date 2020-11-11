@@ -48,6 +48,11 @@ variables:
   value: 'https://vsdrop.corp.microsoft.com/file/v1/xamarin-macios/device-tests'
 - name: USE_TCP_TUNNEL                                        # Needed to ensure that devices uses the usb cable to communicate with the devices to run the tests.
   value: true
+- name: runDevice32b
+
+- name: runDevice64b
+
+- name: runDeviceTv
 
 trigger: none
 
@@ -59,8 +64,27 @@ pr:
     - d16-*
 
 stages:
+
+- stage: configure
+  displayName: 'Configure'
+  jobs:
+  - job: pipeline_configuration
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+      # TODO: do parse labels 
+      - bash: |
+          echo '##vso[task.setvariable variable=runSimulator;isOutput=true]true'
+          echo '##vso[task.setvariable variable=runDevice32b;isOutput=true]false'
+          echo '##vso[task.setvariable variable=runDevice64b;isOutput=true]true'
+          echo '##vso[task.setvariable variable=runDeviceTv;isOutput=true]true'
+          echo '##vso[task.setvariable variable=runSamples;isOutput=true]false'
+        displayName: 'Parse labels'
+        name: labels
+
 - stage: build_packages
   displayName: 'Build'
+  dependsOn: configure
   jobs:
   - job: build
     displayName: 'Build packages'
@@ -127,6 +151,7 @@ stages:
 
 - template: templates/device-tests-stage.yml
   parameters:
+    execute: 'runSimulator'
     stageName: 'Simulator Tests'
     iOSDevicePool: 'VSEng-Xamarin-RedmondMacCatalinaBuildPool-iOS-Untrusted'
     WindowsDevicePool: 'VSEngDeploymentPool'
@@ -139,6 +164,7 @@ stages:
 
 - template: templates/device-tests-stage.yml
   parameters:
+    execute: 'runDevice32b'
     stageName: 'iOS32b Device Tests'
     iOSDevicePool: 'VSEng-Xamarin-QA'
     WindowsDevicePool: 'VSEngDeploymentPool'
@@ -151,6 +177,7 @@ stages:
 
 - template: templates/device-tests-stage.yml
   parameters:
+    execute: 'runDevice64b'
     stageName: 'iOS64 Device Tests'
     iOSDevicePool: 'VSEng-Xamarin-Mac-Devices'
     WindowsDevicePool: 'VSEngDeploymentPool'
@@ -163,6 +190,7 @@ stages:
 
 - template: templates/device-tests-stage.yml
   parameters:
+    execute: 'runDeviceTv'
     stageName: 'tvOS Device Tests'
     iOSDevicePool: 'VSEng-Xamarin-Mac-Devices'
     WindowsDevicePool: 'VSEngDeploymentPool'

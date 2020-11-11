@@ -47,10 +47,16 @@ parameters:
 - name: keyringPass
   type: string
 
+- name: execute
+  type: string
+
 stages:
 - stage:
   displayName: ${{ parameters.stageName }}
-  dependsOn: build_packages
+  dependsOn:
+  - configure
+  - build_packages
+  condition: ne(dependencies.configure.outputs['labels.${{ parameters.execute }}'], 'false') # use ne in case is '' and default to true
   jobs:
   - job: tests
     displayName: 'Run iOS Device Tests'
