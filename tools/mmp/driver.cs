@@ -332,7 +332,7 @@ namespace Xamarin.Bundler {
 					}
 				} else {
 					// Write the cache data as the last step, so there is no half-done/incomplete (but yet detected as valid) cache.
-					App.Cache.ValidateCache ();
+					App.Cache.ValidateCache (App);
 				}
 			}
 
