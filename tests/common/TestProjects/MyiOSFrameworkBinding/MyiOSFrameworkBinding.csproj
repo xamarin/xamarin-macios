@@ -2,6 +2,9 @@
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="../Common.props" />
   <PropertyGroup>
+    <NoBindingEmbedding>true</NoBindingEmbedding>
+  </PropertyGroup>
+  <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectTypeGuids>{8FFB629D-F513-41CE-95D2-7ECE97B6EEEC};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -53,11 +56,6 @@
       <Link>XStaticArTest.framework</Link>
       <Frameworks>CoreLocation Foundation ModelIO</Frameworks>
     </NativeReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="$(RepositoryPath)\tests\bindings-framework-test\XTest.framework.linkwith.cs">
-      <DependentUpon>XTest.framework</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="$(RepositoryPath)\tests\test-libraries\libframework.m">
