@@ -28,7 +28,7 @@ namespace Xharness.TestImporter.Templates.Managed {
 		internal static readonly string TemplatesPathKey = "%TEMPLATESPATH%";
 
 		// resource related static vars used to copy the embedded src to the hd
-		static string srcResourcePrefix = "Microsoft.DotNet.XHarness.iOS.Shared.TestImporter.Templates.Managed.Resources.src.";
+		static string srcResourcePrefix = "Xharness.TestImporter.Templates.Managed.Resources.src.";
 		static string registerTemplateResourceName = "RegisterType.cs";
 		static string [] [] srcDirectories = new [] {
 			new [] { "common", },
