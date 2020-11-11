@@ -10,6 +10,7 @@ using Mono.Tuner;
 using MonoTouch.Tuner;
 using ObjCRuntime;
 using Xamarin;
+using Xamarin.MacDev;
 using Xamarin.Utils;
 
 namespace Xamarin.Bundler {
@@ -167,18 +168,34 @@ namespace Xamarin.Bundler {
 					LogNativeReference (metadata);
 					ProcessNativeReferenceOptions (metadata);
 
-					if (metadata.LibraryName.EndsWith (".framework", StringComparison.OrdinalIgnoreCase)) {
+					switch (Path.GetExtension (metadata.LibraryName).ToLowerInvariant ()) {
+					case ".framework":
 						AssertiOSVersionSupportsUserFrameworks (metadata.LibraryName);
 						Frameworks.Add (metadata.LibraryName);
 #if MMP // HACK - MMP currently doesn't respect Frameworks on non-App - https://github.com/xamarin/xamarin-macios/issues/5203
 						App.Frameworks.Add (metadata.LibraryName);
 #endif
-
-					} else {
+						break;
+					case ".xcframework":
+						AssertiOSVersionSupportsUserFrameworks (metadata.LibraryName);
+						var plist = PDictionary.FromFile (Path.Combine (metadata.LibraryName, "Info.plist"));
+						string variant = null;
+						if (App.IsSimulatorBuild)
+							variant = "simulator";
+						// variant = "maccatalyst"
+						var fx = ResolveXCFramework (plist, App.Platform.ToString (), variant, "");
+						var resolved_path = Path.Combine (metadata.LibraryName, fx);
+						Frameworks.Add (resolved_path);
+#if MMP // HACK - MMP currently doesn't respect Frameworks on non-App - https://github.com/xamarin/xamarin-macios/issues/5203
+						App.Frameworks.Add (resolved_path);
+#endif
+						break;
+					default:
 #if MMP // HACK - MMP currently doesn't respect LinkWith - https://github.com/xamarin/xamarin-macios/issues/5203
 						Driver.native_references.Add (metadata.LibraryName);
 #endif
 						LinkWith.Add (metadata.LibraryName);
+						break;
 					}
 				}
 			}
@@ -267,15 +284,60 @@ namespace Xamarin.Bundler {
 				ProcessNativeReferenceOptions (metadata);
 
 				if (!string.IsNullOrEmpty (linkWith.LibraryName)) {
-					if (linkWith.LibraryName.EndsWith (".framework", StringComparison.OrdinalIgnoreCase)) {
+					switch (Path.GetExtension (linkWith.LibraryName).ToLowerInvariant ()) {
+					case ".framework":
 						AssertiOSVersionSupportsUserFrameworks (linkWith.LibraryName);
-
 						Frameworks.Add (ExtractFramework (assembly, metadata));
-					} else {
+						break;
+					case ".xcframework":
+						// TODO: error ? it would very bad, performance wise, to embed and unzip an XCFramework
+						break;
+					default:
 						LinkWith.Add (ExtractNativeLibrary (assembly, metadata));
+						break;
 					}
 				}
 			}
+		}
+
+		internal static string ResolveXCFramework (PDictionary plist, string platformName, string variant, string architectures)
+		{
+			// plist structure https://github.com/spouliot/xcframework#infoplist
+			var bundle_package_type = (PString) plist ["CFBundlePackageType"];
+			if (bundle_package_type?.Value != "XFWK")
+				return null;
+			var available_libraries = plist.GetArray ("AvailableLibraries");
+			if ((available_libraries == null) || (available_libraries.Count == 0))
+				return null;
+
+			var platform = platformName.ToLowerInvariant ();
+			var archs = architectures.Split (new char [] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+			foreach (PDictionary item in available_libraries) {
+				var supported_platform = (PString) item ["SupportedPlatform"];
+				if (supported_platform.Value != platform)
+					continue;
+				// optional key
+				var supported_platform_variant = (PString) item ["SupportedPlatformVariant"];
+				if (supported_platform_variant?.Value != variant)
+					continue;
+				var supported_architectures = (PArray) item ["SupportedArchitectures"];
+				// each architecture we request must be present in the xcframework
+				// but extra architectures in the xcframework are perfectly fine
+				foreach (var arch in archs) {
+					bool found = false;
+					foreach (PString xarch in supported_architectures) {
+						found = String.Compare (arch, xarch.Value, StringComparison.OrdinalIgnoreCase) == 0;
+						if (found)
+							break;
+					}
+					if (!found)
+						return String.Empty;
+				}
+				var library_path = (PString) item ["LibraryPath"];
+				var library_identifier = (PString) item ["LibraryIdentifier"];
+				return Path.Combine (library_identifier, library_path);
+			}
+			return String.Empty;
 		}
 
 		void AssertiOSVersionSupportsUserFrameworks (string path)
