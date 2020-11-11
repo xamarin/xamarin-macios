@@ -215,7 +215,7 @@ stages:
     parameters:
       macPool: 'Hosted Mac Internal'
 
-- template: templates/manual-device-tests-stage.yml
+- template: templates/device-tests-stage.yml
   parameters:
     execute: 'runDevice32b'
     stageName: 'iOS32b Device Tests'
@@ -235,20 +235,7 @@ stages:
   - configure
   - build_packages
   jobs:
-  - job: manual_approval
-    pool: server
-    timeoutInMinutes: 60
-    steps:
-      - task: ManualIntervention@8
-        timeoutInMinutes: 60
-        displayName: "Manual approval"
-        inputs:
-          instructions: "Baby shark, doo doo doo doo doo doo"
-          emailRecipients: "my@email.com"
-          onTimeout: reject
-
   - job: sample_testing
-    dependsOn: manual_approval
     pool:
       vmImage: ubuntu-latest
     steps:
