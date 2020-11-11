@@ -621,6 +621,10 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 			if (logicalName != null)
 				return logicalName.ParentNode;
 
+			var linkName = csproj.SelectSingleNode ("//*[(local-name() = 'None' or local-name() = 'Content' or local-name() = 'BundleResource')]/*[local-name()='Link' and text() = 'Info.plist']");
+			if (linkName != null)
+				return linkName.ParentNode;
+
 			if (throw_if_not_found)
 				throw new Exception ($"Could not find Info.plist include.");
 			return null;

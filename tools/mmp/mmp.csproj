@@ -453,7 +453,7 @@
       <Link>tools\common\Driver.execution.cs</Link>
     </Compile>
     <Compile Include="..\mtouch\Stripper.cs">
-      <Link>external\tools\mtouch\Stripper.cs</Link>
+      <Link>tools\mtouch\Stripper.cs</Link>
     </Compile>
     <Compile Include="..\common\AssemblyBuildTarget.cs">
       <Link>tools\common\AssemblyBuildTarget.cs</Link>

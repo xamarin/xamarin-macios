@@ -161,9 +161,6 @@
     <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\external\linker\src\tuner\Mono.Tuner\Extensions.cs">
       <Link>external\mono-archive\Mono.Tuner\Extensions.cs</Link>
     </Compile>
-    <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\external\linker\src\linker\Linker\AssemblyResolver.cs">
-      <Link>external\mono-archive\Linker\AssemblyResolver.cs</Link>
-    </Compile>
     <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\external\linker\src\linker\Linker\I18nAssemblies.cs">
       <Link>external\mono-archive\Linker\I18nAssemblies.cs</Link>
     </Compile>
@@ -194,4 +191,7 @@
       <LogicalName>Errors.mtouch.resources</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
+  <Target Name="BuildSdkVersions" Inputs="../common/SdkVersions.cs.in;../common/Make.common" Outputs="../common/SdkVersions.cs">
+    <Exec Command="make ../common/SdkVersions.cs" />
+  </Target>
 </Project>

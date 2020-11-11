@@ -14,7 +14,7 @@ namespace Xamarin.Linker {
 
 		protected void Report (Exception exception)
 		{
-			Configuration.Report (exception);
+			LinkerConfiguration.Report (Context, exception);
 		}
 
 		protected void Report (List<Exception> exceptions)
