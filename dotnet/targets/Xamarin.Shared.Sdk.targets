@@ -232,6 +232,23 @@
 			-->
 			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) -b</_ExtraTrimmerArgs>
 
+			<!--
+
+				The linker will treat type checks as a constant value (false),
+				if the type in question is not instantiated, but we're
+				instantiating types using reflection, which the linker can't
+				see. The result is that the
+				CIKernel_BasicTest/CIKernel_TestFromPrograms tests in
+				monotouch-test fail.
+
+				So here we disable this particular linker optimization.
+
+				Ref: https://github.com/mono/linker/pull/1595
+				Ref: https://discord.com/channels/732297728826277939/751137004007456849/776033084431925268
+
+			-->
+			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) --disable-opt unusedtypechecks</_ExtraTrimmerArgs>
+
 			<!-- We always want the linker to process debug symbols, even when building in Release mode, because the AOT compiler uses the managed debug symbols to output DWARF debugging symbols -->
 			<TrimmerRemoveSymbols Condition="'$(TrimmerRemoveSymbols)' == ''">false</TrimmerRemoveSymbols>
 		</PropertyGroup>
