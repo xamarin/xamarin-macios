@@ -29,7 +29,6 @@ steps:
   inputs:
     provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/provision-brew-packages.csx
     provisioning_extra_args: '-vvvv'
-  enabled: false
   timeoutInMinutes: 30
 
 - bash: |
@@ -37,28 +36,17 @@ steps:
   displayName: 'Generate provisionator files.'
 
 - task: xamops.azdevex.provisionator-task.provisionator@1
-  displayName: 'Provision Xcode'
+  displayName: 'Provision Products & Frameworks'
   inputs:
     provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/build-provisioning.csx
     provisioning_extra_args: '-vvvv'
-  enabled: false
   timeoutInMinutes: 250
-
-# Disabled
-- task: xamops.azdevex.provisionator-task.provisionator@1
-  displayName: 'Provision Objective Sharpie'
-  inputs:
-    provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/provision-objective-sharpie.csx
-    provisioning_extra_args: '-vvvv'
-  enabled: false
-  timeoutInMinutes: 30
 
 - task: xamops.azdevex.provisionator-task.provisionator@1
   displayName: 'Provision .NET Core'
   inputs:
     provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/provision-dotnetcore.csx
     provisioning_extra_args: '-vvvv'
-  enabled: false
   timeoutInMinutes: 30
 
 - powershell: |
@@ -188,11 +176,10 @@ steps:
   displayName: 'Signing PR Build'
   condition: and(succeeded(), eq(variables['configuration.SignPkgs'], 'True'), eq(variables['configuration.IsPr'], 'True'))
 
-# HACK HACK: We shold not need to do this, the install of the certs template should be smart enough
-- bash: |
-    security delete-keychain builder.keychain
-  displayName: 'Remove builder keychain'
-  continueOnError: true
+# UNDONE: This step can be removed once the agents have been sanitized
+- template: uninstall-certificates/v1.yml@templates
+  parameters:
+    HostedMacKeychainPassword: $(OSX_KEYCHAIN_PASS)
 
 - template: install-certificates.yml@templates
   parameters:
@@ -200,7 +187,7 @@ steps:
     DeveloperIdInstaller: $(developer-id-installer)
     IphoneDeveloper: $(iphone-developer)
     MacDeveloper: $(mac-developer)
-    HostedMacKeychainPassword: $(AzDO-OnPrem-KeychainPass)
+    HostedMacKeychainPassword: $(OSX_KEYCHAIN_PASS)
 
 # HACK HACK: brew remove python2, but the script uses python2, this is a dirty workaround
 - bash: |
@@ -242,6 +229,10 @@ steps:
   parameters:
     GitHubToken: $(GitHub.Token)
     ArtifactDirectory: $(Build.SourcesDirectory)/package-internal
+
+- template: uninstall-certificates/v1.yml@templates
+  parameters:
+    HostedMacKeychainPassword: $(OSX_KEYCHAIN_PASS)
 
 # upload each of the pkgs into the pipeline artifacts
 - task: PublishPipelineArtifact@1
