@@ -82,6 +82,16 @@ stages:
         displayName: 'Parse labels'
         name: labels
 
+- stage: governance_checks
+  display: 'Governance Checks'
+  jobs:
+    - job: governance
+    displayName: 'Governance Checks'
+    pool:
+      vmImage: windows-latest
+    steps:
+    - template: templates/governance-checks.yml
+
 - stage: build_packages
   displayName: 'Build'
   dependsOn: configure

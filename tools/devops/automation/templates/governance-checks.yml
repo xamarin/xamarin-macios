@@ -1,0 +1,24 @@
+steps:
+
+- checkout: self
+- checkout: maccore
+  persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
+
+- task: CredScan@3
+  displayName: "Run CredScan"
+  inputs:
+    suppressionsFile: '$(System.DefaultWorkingDirectory)/maccore/tools/devops/CredScanSuppressions.json'
+
+- task: PoliCheck@1
+  inputs:
+    inputType: 'Basic'
+    targetType: 'F'
+    targetArgument: '$(Build.SourcesDirectory)'
+    result: 'PoliCheck.xml'
+    optionsUEPATH: '$(System.DefaultWorkingDirectory)/maccore/tools/devops/PoliCheckExclusions.xml'
+
+- task: securedevelopmentteam.vss-secure-development-tools.build-task-postanalysis.PostAnalysis@1
+  displayName: 'Post Analysis'
+  inputs:
+    CredScan: true
+    PoliCheck: true
