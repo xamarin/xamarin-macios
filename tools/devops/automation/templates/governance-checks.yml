@@ -8,12 +8,27 @@ steps:
   displayName: "Run CredScan"
   inputs:
     suppressionsFile: '$(System.DefaultWorkingDirectory)/maccore/tools/devops/CredScanSuppressions.json'
+  
+- powershell: |
+    Write-Host 'Source dir $(Build.SourcesDirectory)'
+    Write-Host 'Working dir $System.DefaultWorkingDirectory)'
+
+    Dir $(Build.SourcesDirectory)
+    Dir $(System.DefaultWorkingDirectory)
+  displayName: Dump enviroment
+
+- powershell: |
+    gci env: | format-table -autosize -wrap
+  displayName: 'Dump Environment'
+
+- task: ms.vss-governance-buildtask.governance-build-task-component-detection.ComponentGovernanceComponentDetection@0
+  displayName: 'Component Detection'
 
 - task: PoliCheck@1
   inputs:
     inputType: 'Basic'
     targetType: 'F'
-    targetArgument: '$(Build.DefaultWorkingDirectory)/xamarin-macios'
+    targetArgument: '$(Build.SourcesDirectory)'
     result: 'PoliCheck.xml'
     optionsUEPATH: '$(System.DefaultWorkingDirectory)/maccore/tools/devops/PoliCheckExclusions.xml'
 
