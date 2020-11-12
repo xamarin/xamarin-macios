@@ -101,6 +101,9 @@ namespace CoreVideo {
 #elif !XAMCORE_3_0
 		[Deprecated (PlatformName.MacOSX, 10, 4)]
 		[Unavailable (PlatformName.iOS)]
+#if IOS
+		[Obsolete ("This API is not available on this platform.")]
+#endif
 		public CGColorSpace ColorSpace {
 			get {
 				return null;
@@ -122,40 +125,40 @@ namespace CoreVideo {
 #endif
 
 		[DllImport (Constants.CoreVideoLibrary)]
-		[iOS (11, 0), Mac (10, 13), TV (11, 0), Watch (4, 0)]
+		[iOS (11, 0), Mac (10, 13), TV (11, 0)]
 		extern static int CVYCbCrMatrixGetIntegerCodePointForString (IntPtr yCbCrMatrixString);
 
-		[iOS (11, 0), Mac (10, 13), TV (11, 0), Watch (4, 0)]
+		[iOS (11, 0), Mac (10, 13), TV (11, 0)]
 		public static int GetCodePoint (CVImageBufferYCbCrMatrix yCbCrMatrix)
 		{
 			return CVYCbCrMatrixGetIntegerCodePointForString (yCbCrMatrix.GetConstant ().Handle);
 		}
 
 		[DllImport (Constants.CoreVideoLibrary)]
-		[iOS (11, 0), Mac (10, 13), TV (11, 0), Watch (4, 0)]
+		[iOS (11, 0), Mac (10, 13), TV (11, 0)]
 		extern static int CVColorPrimariesGetIntegerCodePointForString (IntPtr colorPrimariesString);
 
-		[iOS (11, 0), Mac (10, 13), TV (11, 0), Watch (4, 0)]
+		[iOS (11, 0), Mac (10, 13), TV (11, 0)]
 		public static int GetCodePoint (CVImageBufferColorPrimaries color)
 		{
 			return CVColorPrimariesGetIntegerCodePointForString (color.GetConstant ().Handle);
 		}
 
 		[DllImport (Constants.CoreVideoLibrary)]
-		[iOS (11, 0), Mac (10, 13), TV (11, 0), Watch (4, 0)]
+		[iOS (11, 0), Mac (10, 13), TV (11, 0)]
 		extern static int CVTransferFunctionGetIntegerCodePointForString (IntPtr colorPrimariesString);
 
-		[iOS (11, 0), Mac (10, 13), TV (11, 0), Watch (4, 0)]
+		[iOS (11, 0), Mac (10, 13), TV (11, 0)]
 		public static int GetCodePoint (CVImageBufferTransferFunction function)
 		{
 			return CVTransferFunctionGetIntegerCodePointForString (function.GetConstant ().Handle);
 		}
 
 		[DllImport (Constants.CoreVideoLibrary)]
-		[iOS (11, 0), Mac (10, 13), TV (11, 0), Watch (4, 0)]
+		[iOS (11, 0), Mac (10, 13), TV (11, 0)]
 		extern static IntPtr CVYCbCrMatrixGetStringForIntegerCodePoint (int yCbCrMatrixCodePoint);
 
-		[iOS (11, 0), Mac (10, 13), TV (11, 0), Watch (4, 0)]
+		[iOS (11, 0), Mac (10, 13), TV (11, 0)]
 		public static CVImageBufferYCbCrMatrix GetYCbCrMatrixOption (int yCbCrMatrixCodePoint)
 		{
 			var ret = Runtime.GetNSObject<NSString> (CVYCbCrMatrixGetStringForIntegerCodePoint (yCbCrMatrixCodePoint));
@@ -163,10 +166,10 @@ namespace CoreVideo {
 		}
 
 		[DllImport (Constants.CoreVideoLibrary)]
-		[iOS (11, 0), Mac (10, 13), TV (11, 0), Watch (4, 0)]
+		[iOS (11, 0), Mac (10, 13), TV (11, 0)]
 		extern static IntPtr CVColorPrimariesGetStringForIntegerCodePoint (int colorPrimariesCodePoint);
 
-		[iOS (11, 0), Mac (10, 13), TV (11, 0), Watch (4, 0)]
+		[iOS (11, 0), Mac (10, 13), TV (11, 0)]
 		public static CVImageBufferColorPrimaries GetColorPrimariesOption (int colorPrimariesCodePoint)
 		{
 			var ret = Runtime.GetNSObject<NSString> (CVColorPrimariesGetStringForIntegerCodePoint (colorPrimariesCodePoint));
@@ -174,10 +177,10 @@ namespace CoreVideo {
 		}
 
 		[DllImport (Constants.CoreVideoLibrary)]
-		[iOS (11, 0), Mac (10, 13), TV (11, 0), Watch (4, 0)]
+		[iOS (11, 0), Mac (10, 13), TV (11, 0)]
 		extern static IntPtr CVTransferFunctionGetStringForIntegerCodePoint (int transferFunctionCodePoint);
 
-		[iOS (11, 0), Mac (10, 13), TV (11, 0), Watch (4, 0)]
+		[iOS (11, 0), Mac (10, 13), TV (11, 0)]
 		public static CVImageBufferTransferFunction GetTransferFunctionOption (int transferFunctionCodePoint)
 		{
 			var ret = Runtime.GetNSObject<NSString> (CVTransferFunctionGetStringForIntegerCodePoint (transferFunctionCodePoint));

@@ -116,11 +116,9 @@ namespace CoreGraphics {
 				throw new Exception ("Failed to create CGColorConverter");
 		}
 
-		[iOS (10,0)][Mac (10,12)]
 		[DllImport(Constants.CoreGraphicsLibrary)]
 		extern static IntPtr CGColorConversionInfoCreate (/* cg_nullable CGColorSpaceRef */ IntPtr src, /* cg_nullable CGColorSpaceRef */ IntPtr dst);
 
-		[iOS (10,0)][Mac (10,12)]
 		public CGColorConversionInfo (CGColorSpace source, CGColorSpace destination)
 		{
 			// API accept null arguments but returns null, which we can't use

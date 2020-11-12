@@ -54,7 +54,6 @@ namespace Network {
 		public void SetCalculateReceiveTime (bool shouldCalculateReceiveTime)
 			=> nw_ip_options_set_calculate_receive_time (GetCheckedHandle (), shouldCalculateReceiveTime);
 
-		[TV (13,0), Mac (10,15), iOS (13,0)]
 		public void SetIPLocalAddressPreference (NWIPLocalAddressPreference localAddressPreference)
 			=> nw_ip_options_set_local_address_preference (GetCheckedHandle (), localAddressPreference);
 	}

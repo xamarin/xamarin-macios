@@ -73,6 +73,7 @@ namespace WebKit {
 	}
 
 	[Flags]
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	public enum WebDragSourceAction : ulong {
 		None = 0,
 		DHTML = 1,
@@ -83,11 +84,13 @@ namespace WebKit {
 	}
 
 	[Flags]
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	public enum WebDragDestinationAction : ulong {
 		None = 0,
 		DHTML = 1,
 		Image = 2, 
 		Link = 4,
+		[Obsolete ("This API is not available on this platform.")]
 		Selection = 8,
 		Any = UInt64.MaxValue
 	}

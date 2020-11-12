@@ -320,7 +320,7 @@ namespace AVFoundation {
 			return del;
 		}
 
-		[Obsolete ("Deprecated since iOS 6, Use 'AVAudioSession.Notification.ObserveInterruption' instead.")]
+		[Deprecated (PlatformName.iOS, 6,0, message: "Use 'AVAudioSession.Notification.ObserveInterruption' instead.")]
 		public event EventHandler BeginInterruption {
 			add {
 				EnsureEventDelegate ().cbBeginInterruption += value;
@@ -330,7 +330,7 @@ namespace AVFoundation {
 			}
 		}
 
-		[Obsolete ("Deprecated since iOS 6, Use 'AVAudioSession.Notification.ObserveInterruption' instead.")]
+		[Deprecated (PlatformName.iOS, 6,0, message: "Use 'AVAudioSession.Notification.ObserveInterruption' instead.")]
 		public event EventHandler EndInterruption {
 			add {
 				EnsureEventDelegate ().cbEndInterruption += value;
@@ -340,7 +340,7 @@ namespace AVFoundation {
 			}
 		}
 
-		[Obsolete ("Deprecated since iOS 6, Use 'AVAudioSession.Notification.ObserveAudioRouteChange'.")]
+		[Deprecated (PlatformName.iOS, 6,0, message: "Use 'AVAudioSession.Notification.ObserveAudioRouteChange' instead.")]
 		public event EventHandler<AVCategoryEventArgs> CategoryChanged {
 			add {
 				EnsureEventDelegate ().cbCategoryChanged += value;
@@ -350,7 +350,7 @@ namespace AVFoundation {
 			}
 		}
 
-		[Obsolete ("Deprecated since iOS 6, Use 'AVAudioSession.Notification.ObserveAudioRouteChange'.")]
+		[Deprecated (PlatformName.iOS, 6,0, message: "Use 'AVAudioSession.Notification.ObserveAudioRouteChange' instead.")]
 		public event EventHandler<AVStatusEventArgs> InputAvailabilityChanged {
 			add {
 				EnsureEventDelegate ().cbInputAvailabilityChanged += value;
@@ -360,7 +360,7 @@ namespace AVFoundation {
 			}
 		}
 
-		[Obsolete ("Deprecated since iOS 6, Use 'AVAudioSession.Notification.ObserveAudioRouteChange'.")]
+		[Deprecated (PlatformName.iOS, 6,0, message: "Use 'AVAudioSession.Notification.ObserveAudioRouteChange' instead.")]
 		public event EventHandler<AVSampleRateEventArgs> SampleRateChanged {
 			add {
 				EnsureEventDelegate ().cbSampleRateChanged += value;
@@ -371,7 +371,7 @@ namespace AVFoundation {
 			}
 		}
 
-		[Obsolete ("Use 'AVAudioSession.Notification.ObserveAudioRouteChange', this event does nothing.")]
+		[Deprecated (PlatformName.iOS, 6,0, message: "Use 'AVAudioSession.Notification.ObserveAudioRouteChange' instead.")]
 		public event EventHandler<AVChannelsEventArgs> InputChannelsChanged {
 			add {
 				EnsureEventDelegate ().cbInputChanged += value;
@@ -382,7 +382,7 @@ namespace AVFoundation {
 			}
 		}
 
-		[Obsolete ("Use 'AVAudioSession.Notification.ObserveAudioRouteChange', this event does nothing.")]
+		[Deprecated (PlatformName.iOS, 6,0, message: "Use 'AVAudioSession.Notification.ObserveAudioRouteChange' instead.")]
 		public event EventHandler<AVChannelsEventArgs> OutputChannelsChanged {
 			add {
 				EnsureEventDelegate ().cbOutputChanged += value;

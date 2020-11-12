@@ -49,7 +49,6 @@ namespace CoreML {
 		Generic = 0,
 		FeatureType = 1,
 		IO = 3,
-		[Watch (4,2), TV (11,2), Mac (10,13,2), iOS (11,2)]
 		CustomLayer = 4,
 		CustomModel = 5,
 		Update = 6,

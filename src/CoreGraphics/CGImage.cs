@@ -40,7 +40,9 @@ namespace CoreGraphics {
 		Default             = 0,
 		BoundsIgnoreFraming = (1 << 0),
 		ShouldBeOpaque      = (1 << 1),
-		OnlyShadows         = (1 << 2)
+		OnlyShadows         = (1 << 2),
+		BestResolution      = (1 << 3),
+		NominalResolution   = (1 << 4),
 	}
 
 	// uint32_t -> CGWindow.h (OSX SDK only)

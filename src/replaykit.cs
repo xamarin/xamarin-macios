@@ -37,7 +37,7 @@ namespace ReplayKit {
 		[Export ("previewControllerDelegate", ArgumentSemantic.Weak)][NullAllowed]
 		IRPPreviewViewControllerDelegate PreviewControllerDelegate { get; set; }
 
-		[TV (10, 0), NoiOS]
+		[NoiOS]
 		[NoMac]
 		[Export ("mode", ArgumentSemantic.Assign)]
 		RPPreviewViewControllerMode Mode { get; set; }

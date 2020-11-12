@@ -3185,26 +3185,21 @@ namespace Vision {
 		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
 		// into subclasses so the correct class_ptr is used for the static members and the right enum type is also used.
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Export ("revision")]
 		VNGenerateOpticalFlowRequestRevision Revision { get; set; }
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Export ("supportedRevisions", ArgumentSemantic.Copy)]
 		NSIndexSet WeakSupportedRevisions { get; }
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Wrap ("GetSupportedVersions<VNGenerateOpticalFlowRequestRevision> (WeakSupportedRevisions)")]
 		VNGenerateOpticalFlowRequestRevision [] SupportedRevisions { get; }
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Export ("defaultRevision")]
 		VNGenerateOpticalFlowRequestRevision DefaultRevision { get; }
 
-		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Export ("currentRevision")]
 		VNGenerateOpticalFlowRequestRevision CurrentRevision { get; }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Diagnostics;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
@@ -100,16 +101,6 @@ namespace Xamarin.MacDev.Tasks
 
 		protected abstract void AppendCommandLineArguments (IDictionary<string, string> environment, CommandLineArgumentBuilder args, ITaskItem[] items);
 
-		string GetFullPathToTool ()
-		{
-			if (!string.IsNullOrEmpty (ToolPath))
-				return Path.Combine (ToolPath, ToolExe);
-
-			var path = Path.Combine (DefaultBinDir, ToolExe);
-
-			return File.Exists (path) ? path : ToolExe;
-		}
-
 		static ProcessStartInfo GetProcessStartInfo (IDictionary<string, string> environment, string tool, string args)
 		{
 			var startInfo = new ProcessStartInfo (tool, args);
@@ -124,6 +115,22 @@ namespace Xamarin.MacDev.Tasks
 			return startInfo;
 		}
 
+		static bool? translated;
+
+		[DllImport ("/usr/lib/libSystem.dylib", SetLastError = true)]
+		static extern int sysctlbyname (/* const char */ [MarshalAs (UnmanagedType.LPStr)] string property, ref long oldp, ref long oldlenp, IntPtr newp, /* size_t */ long newlen);
+
+		// https://developer.apple.com/documentation/apple_silicon/about_the_rosetta_translation_environment
+		static bool IsTranslated ()
+		{
+			if (translated == null) {
+				long result = 0;
+				long size = sizeof (long);
+				translated = ((sysctlbyname ("sysctl.proc_translated", ref result, ref size, IntPtr.Zero, 0) != -1) && (result == 1));
+			}
+			return translated.Value;
+		}
+
 		protected int Compile (ITaskItem[] items, string output, ITaskItem manifest)
 		{
 			var environment = new Dictionary<string, string> ();
@@ -135,6 +142,20 @@ namespace Xamarin.MacDev.Tasks
 			if (!string.IsNullOrEmpty (SdkUsrPath))
 				environment.Add ("XCODE_DEVELOPER_USR_PATH", SdkUsrPath);
 
+			if (!string.IsNullOrEmpty (SdkDevPath))
+				environment.Add ("DEVELOPER_DIR", SdkDevPath);
+
+			// workaround for ibtool[d] bug / asserts if Intel version is loaded
+			string tool;
+			if (IsTranslated ()) {
+				// we force the Intel (translated) msbuild process to launch ibtool as "Apple"
+				tool = "arch";
+				args.Add ("-arch", "arm64e");
+				args.Add ("/usr/bin/xcrun");
+			} else {
+				tool = "/usr/bin/xcrun";
+			}
+			args.Add (ToolName);
 			args.Add ("--errors", "--warnings", "--notices");
 			args.Add ("--output-format", "xml1");
 
@@ -152,7 +173,7 @@ namespace Xamarin.MacDev.Tasks
 			foreach (var item in items)
 				args.AddQuoted (item.GetMetadata ("FullPath"));
 
-			var startInfo = GetProcessStartInfo (environment, GetFullPathToTool (), args.ToString ());
+			var startInfo = GetProcessStartInfo (environment, tool, args.ToString ());
 			var errors = new StringBuilder ();
 			int exitCode;
 

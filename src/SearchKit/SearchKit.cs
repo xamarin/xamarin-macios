@@ -465,7 +465,7 @@ namespace SearchKit
 		[DllImport (Constants.SearchKitLibrary)]
 		extern static nint SKIndexGetMaximumBytesBeforeFlush (IntPtr h);
 
-		[Advice ("Apple recommends to use Flush instead of setting these parameters")]
+		[Advice ("Apple recommends to use Flush instead of setting these parameters.")]
 		public nint MaximumBytesBeforeFlush {
 			get {
 				return SKIndexGetMaximumBytesBeforeFlush (handle);

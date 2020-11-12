@@ -59,12 +59,15 @@ namespace Photos
 		nuint PixelHeight { get; }
 
 		[Export ("creationDate", ArgumentSemantic.Strong)]
+		[NullAllowed]
 		NSDate CreationDate { get; }
 
 		[Export ("modificationDate", ArgumentSemantic.Strong)]
+		[NullAllowed]
 		NSDate ModificationDate { get; }
 
 		[Export ("location", ArgumentSemantic.Strong)]
+		[NullAllowed]
 		CLLocation Location { get; }
 
 		[Export ("duration", ArgumentSemantic.Assign)]
@@ -83,6 +86,7 @@ namespace Photos
 
 		[Mac (10, 15)]
 		[Export ("burstIdentifier", ArgumentSemantic.Strong)]
+		[NullAllowed]
 		string BurstIdentifier { get; }
 
 		[Mac (10, 15)]
@@ -112,6 +116,7 @@ namespace Photos
 
 		[Static]
 		[Export ("fetchKeyAssetsInAssetCollection:options:")]
+		[return: NullAllowed]
 		PHFetchResult FetchKeyAssets (PHAssetCollection assetCollection, [NullAllowed] PHFetchOptions options);
 
 		[Mac (10,15)]
@@ -159,13 +164,16 @@ namespace Photos
 
 		[Static]
 		[Export ("creationRequestForAssetFromImageAtFileURL:")]
+		[return: NullAllowed]
 		PHAssetChangeRequest FromImage (NSUrl fileUrl);
 
 		[Static]
 		[Export ("creationRequestForAssetFromVideoAtFileURL:")]
+		[return: NullAllowed]
 		PHAssetChangeRequest FromVideo (NSUrl fileUrl);
 
 		[Export ("placeholderForCreatedAsset", ArgumentSemantic.Strong)]
+		[NullAllowed]
 		PHObjectPlaceholder PlaceholderForCreatedAsset { get; }
 
 		[Static]
@@ -177,9 +185,11 @@ namespace Photos
 		PHAssetChangeRequest ChangeRequest (PHAsset asset);
 
 		[Export ("creationDate", ArgumentSemantic.Strong)]
+		[NullAllowed]
 		NSDate CreationDate { get; set; }
 
 		[Export ("location", ArgumentSemantic.Strong)]
+		[NullAllowed]
 		CLLocation Location { get; set; }
 
 		[Export ("favorite", ArgumentSemantic.Assign)]
@@ -330,10 +340,12 @@ namespace Photos
 
 		[Static]
 		[Export ("changeRequestForAssetCollection:")]
+		[return: NullAllowed]
 		PHAssetCollectionChangeRequest ChangeRequest (PHAssetCollection assetCollection);
 
 		[Static]
 		[Export ("changeRequestForAssetCollection:assets:")]
+		[return: NullAllowed]
 		PHAssetCollectionChangeRequest ChangeRequest (PHAssetCollection assetCollection, PHFetchResult assets);
 
 		[Export ("title", ArgumentSemantic.Strong)]
@@ -400,9 +412,11 @@ namespace Photos
 	interface PHChange {
 
 		[Export ("changeDetailsForObject:")]
-		PHObjectChangeDetails GetObjectChangeDetails ([NullAllowed] PHObject obj);
+		[return: NullAllowed]
+		PHObjectChangeDetails GetObjectChangeDetails (PHObject obj);
 
 		[Export ("changeDetailsForFetchResult:")]
+		[return: NullAllowed]
 		PHFetchResultChangeDetails GetFetchResultChangeDetails (PHFetchResult obj);
 	}
 
@@ -416,6 +430,7 @@ namespace Photos
 		NSObject ObjectBeforeChanges { get; }
 
 		[Export ("objectAfterChanges", ArgumentSemantic.Strong)]
+		[NullAllowed]
 		NSObject ObjectAfterChanges { get; }
 
 		[Export ("assetContentChanged")]
@@ -453,18 +468,21 @@ namespace Photos
 		bool HasIncrementalChanges { get; }
 
 		[Export ("removedIndexes", ArgumentSemantic.Strong)]
+		[NullAllowed]
 		NSIndexSet RemovedIndexes { get; }
 
 		[Export ("removedObjects", ArgumentSemantic.Strong)]
 		PHObject[] RemovedObjects { get; }
 
 		[Export ("insertedIndexes", ArgumentSemantic.Strong)]
+		[NullAllowed]
 		NSIndexSet InsertedIndexes { get; }
 
 		[Export ("insertedObjects", ArgumentSemantic.Strong)]
 		PHObject[] InsertedObjects { get; }
 
 		[Export ("changedIndexes", ArgumentSemantic.Strong)]
+		[NullAllowed]
 		NSIndexSet ChangedIndexes { get; }
 
 		[Export ("changedObjects", ArgumentSemantic.Strong)]
@@ -500,6 +518,7 @@ namespace Photos
 
 		[Mac (10,15)]
 		[Export ("localizedTitle", ArgumentSemantic.Strong)]
+		[NullAllowed]
 		string LocalizedTitle { get; }
 
 		[Export ("canPerformEditOperation:")]
@@ -530,12 +549,15 @@ namespace Photos
 		nuint EstimatedAssetCount { get; }
 
 		[Export ("startDate", ArgumentSemantic.Strong)]
+		[NullAllowed]
 		NSDate StartDate { get; }
 
 		[Export ("endDate", ArgumentSemantic.Strong)]
+		[NullAllowed]
 		NSDate EndDate { get; }
 
 		[Export ("approximateLocation", ArgumentSemantic.Strong)]
+		[NullAllowed]
 		CLLocation ApproximateLocation { get; }
 
 		[Export ("localizedLocationNames", ArgumentSemantic.Strong)]
@@ -573,11 +595,11 @@ namespace Photos
 
 		[Static]
 		[Export ("transientAssetCollectionWithAssets:title:")]
-		PHAssetCollection GetTransientAssetCollection (PHAsset[] assets, string title);
+		PHAssetCollection GetTransientAssetCollection (PHAsset[] assets, [NullAllowed] string title);
 
 		[Static]
 		[Export ("transientAssetCollectionWithAssetFetchResult:title:")]
-		PHAssetCollection GetTransientAssetCollection (PHFetchResult fetchResult, string title);
+		PHAssetCollection GetTransientAssetCollection (PHFetchResult fetchResult, [NullAllowed] string title);
 	}
 
 	[iOS (8,0)]
@@ -593,9 +615,11 @@ namespace Photos
 		PHCollectionListSubtype CollectionListSubtype { get; }
 
 		[Export ("startDate", ArgumentSemantic.Strong)]
+		[NullAllowed]
 		NSDate StartDate { get; }
 
 		[Export ("endDate", ArgumentSemantic.Strong)]
+		[NullAllowed]
 		NSDate EndDate { get; }
 
 		[Export ("localizedLocationNames", ArgumentSemantic.Strong)]
@@ -629,11 +653,11 @@ namespace Photos
 
 		[Static]
 		[Export ("transientCollectionListWithCollections:title:")]
-		PHCollectionList CreateTransientCollectionList (PHAssetCollection[] collections, string title);
+		PHCollectionList CreateTransientCollectionList (PHAssetCollection[] collections, [NullAllowed] string title);
 
 		[Static]
 		[Export ("transientCollectionListWithCollectionsFetchResult:title:")]
-		PHCollectionList CreateTransientCollectionList (PHFetchResult fetchResult, string title);
+		PHCollectionList CreateTransientCollectionList (PHFetchResult fetchResult, [NullAllowed] string title);
 	}
 
 	[iOS (8,0)]
@@ -658,11 +682,19 @@ namespace Photos
 
 		[Static]
 		[Export ("changeRequestForCollectionList:")]
+		[return: NullAllowed]
 		PHCollectionListChangeRequest ChangeRequest (PHCollectionList collectionList);
 
 		[Static]
 		[Export ("changeRequestForCollectionList:childCollections:")]
+		[return: NullAllowed]
 		PHCollectionListChangeRequest ChangeRequest (PHCollectionList collectionList, PHFetchResult childCollections);
+
+		[TV (14,2), Mac (11,0), iOS (14,2)]
+		[Static]
+		[Export ("changeRequestForTopLevelCollectionListUserCollections:")]
+		[return: NullAllowed]
+		PHCollectionListChangeRequest ChangeRequestForTopLevelCollectionList (PHFetchResult childCollections);
 
 		[Export ("title", ArgumentSemantic.Strong)]
 		string Title { get; set; }
@@ -699,12 +731,15 @@ namespace Photos
 		PHAssetMediaSubtype MediaSubtypes { get; }
 
 		[Export ("creationDate", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		NSDate CreationDate { get; }
 
 		[Export ("location", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		CLLocation Location { get; }
 
 		[Export ("uniformTypeIdentifier")]
+		[NullAllowed]
 		string UniformTypeIdentifier { get; }
 
 		[NullAllowed]
@@ -712,6 +747,7 @@ namespace Photos
 		PHAdjustmentData AdjustmentData { get; }
 
 		[Export ("displaySizeImage", ArgumentSemantic.Strong)]
+		[NullAllowed]
 #if MONOMAC
 		NSImage DisplaySizeImage { get; }
 #else
@@ -719,6 +755,7 @@ namespace Photos
 #endif
 
 		[Export ("fullSizeImageURL", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		NSUrl FullSizeImageUrl { get; }
 
 		[Export ("fullSizeImageOrientation")]
@@ -825,9 +862,11 @@ namespace Photos
 		nint IndexOf (NSObject id, NSRange range);
 
 		[Export ("firstObject")]
+		[NullAllowed]
 		NSObject firstObject { get; }
 
 		[Export ("lastObject")]
+		[NullAllowed]
 		NSObject LastObject { get; }
 
 		[Internal, Export ("objectsAtIndexes:")]
@@ -1098,7 +1137,7 @@ namespace Photos
 
 		// no [Async] since we're binding performChangesAndWait:error: too
 		[Export ("performChanges:completionHandler:")]
-		void PerformChanges (Action changeHandler, Action<bool, NSError> completionHandler);
+		void PerformChanges (Action changeHandler, [NullAllowed] Action<bool, NSError> completionHandler);
 
 		[Export ("performChangesAndWait:error:")]
 		bool PerformChangesAndWait (Action changeHandler, out NSError error);
@@ -1251,7 +1290,7 @@ namespace Photos
 		void PrepareLivePhotoForPlayback (CGSize targetSize, [NullAllowed] NSDictionary<NSString, NSObject> options, Action<PHLivePhoto, NSError> handler);
 
 		// the API existed earlier but the key needed to create the strong dictionary did not work
-		[iOS (11,0)][TV (11,0)][Mac (10,12)]
+		[iOS (11,0)][TV (11,0)]
 		[Async]
 		[Wrap ("_PrepareLivePhotoForPlayback (targetSize, options.GetDictionary (), handler)")]
 		void PrepareLivePhotoForPlayback (CGSize targetSize, [NullAllowed] PHLivePhotoEditingOption options, Action<PHLivePhoto, NSError> handler);
@@ -1269,7 +1308,7 @@ namespace Photos
 		void SaveLivePhoto (PHContentEditingOutput output, [NullAllowed] NSDictionary<NSString, NSObject> options, Action<bool, NSError> handler);
 
 		// the API existed earlier but the key needed to create the strong dictionary did not work
-		[iOS (11,0)][TV (11,0)][Mac (10,12)]
+		[iOS (11,0)][TV (11,0)]
 		[Async]
 		[Wrap ("_SaveLivePhoto (output, options.GetDictionary (), handler)")]
 		void SaveLivePhoto (PHContentEditingOutput output, [NullAllowed] PHLivePhotoEditingOption options, Action<bool, NSError> handler);

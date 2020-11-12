@@ -1932,7 +1932,6 @@
 !missing-null-allowed! 'System.Void AppKit.NSFormCell::set_PlaceholderAttributedString(Foundation.NSAttributedString)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSFormCell::set_PlaceholderString(System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSGestureRecognizer::set_Action(ObjCRuntime.Selector)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void AppKit.NSGraphicsContext::set_CurrentContext(AppKit.NSGraphicsContext)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSGroupTouchBarItem::set_CustomizationLabel(System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSHelpManager::FindString(System.String,System.String)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Void AppKit.NSHelpManager::OpenHelpAnchor(System.String,System.String)' is missing an [NullAllowed] on parameter #1
@@ -2240,3 +2239,20 @@
 
 # deprecated API
 !missing-selector! NSLayoutManager::replaceTextStorage: not bound
+
+# helpers
+!extra-enum-value! Managed value 0 for NSApplicationActivationOptions.Default not found in native headers
+!extra-enum-value! Managed value 196608 for NSWorkspaceLaunchOptions.Default not found in native headers
+
+# helpers / alternative names
+!extra-enum-value! Managed value 2 for NSTickMarkPosition.Leading not found in native headers
+!extra-enum-value! Managed value 3 for NSTickMarkPosition.Trailing not found in native headers
+
+# bound as `const` not enums
+!extra-enum-value! Managed value 1 for NSBoxType.NSBoxSecondary not found in native headers
+!extra-enum-value! Managed value 3 for NSBoxType.NSBoxOldStyle not found in native headers
+!extra-enum-value! Managed value 3 for NSBezelStyle.ThickSquare not found in native headers
+!extra-enum-value! Managed value 4 for NSBezelStyle.ThickerSquare not found in native headers
+
+# deprecated in 10.12, now removed
+!extra-enum-value! Managed value 7 for NSWindowButton.FullScreenButton not found in native headers
