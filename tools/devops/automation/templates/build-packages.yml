@@ -180,7 +180,7 @@ steps:
   parameters:
     HostedMacKeychainPassword: $(OSX_KEYCHAIN_PASS)
 
-- template: Keychains/mac/show.v1.yml@templates
+- template: keychains/mac/show.v1.yml@templates
 - template: install-certificates.yml@templates
   parameters:
     DeveloperIdApplication: $(developer-id-application)
@@ -188,7 +188,7 @@ steps:
     IphoneDeveloper: $(iphone-developer)
     MacDeveloper: $(mac-developer)
     HostedMacKeychainPassword: $(OSX_KEYCHAIN_PASS)
-- template: Keychains/mac/show.v1.yml@templates
+- template: keychains/mac/show.v1.yml@templates
 
 - bash: |
     VIRTUAL_ENV_PATH=$(Build.SourcesDirectory)/venv
@@ -224,11 +224,11 @@ steps:
     GitHubToken: $(GitHub.Token)
     ArtifactDirectory: $(Build.SourcesDirectory)/package-internal
 
-- template: Keychains/mac/show.v1.yml@templates
+- template: keychains/mac/show.v1.yml@templates
 - template: uninstall-certificates/v1.yml@templates
   parameters:
     HostedMacKeychainPassword: $(OSX_KEYCHAIN_PASS)
-- template: Keychains/mac/show.v1.yml@templates
+- template: keychains/mac/show.v1.yml@templates
 
 # upload each of the pkgs into the pipeline artifacts
 - task: PublishPipelineArtifact@1
