@@ -190,13 +190,6 @@ steps:
     HostedMacKeychainPassword: $(OSX_KEYCHAIN_PASS)
 - template: Keychains/mac/show.v1.yml@templates
 
-# HACK HACK: brew remove python2, but the script uses python2, this is a dirty workaround
-- bash: |
-    wget https://raw.githubusercontent.com/Homebrew/homebrew-core/86a44a0a552c673a05f11018459c9f5faae3becc/Formula/python@2.rb
-    brew install python@2.rb
-    rm python@2.rb
-  displayName: 'Install Python 2 and pip'
-
 - bash: |
     VIRTUAL_ENV_PATH=$(Build.SourcesDirectory)/venv
     pip install virtualenv
