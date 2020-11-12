@@ -188,7 +188,6 @@ steps:
     IphoneDeveloper: $(iphone-developer)
     MacDeveloper: $(mac-developer)
     HostedMacKeychainPassword: $(OSX_KEYCHAIN_PASS)
-- template: keychains/mac/show.v1.yml@templates
 
 - bash: |
     VIRTUAL_ENV_PATH=$(Build.SourcesDirectory)/venv
@@ -224,7 +223,6 @@ steps:
     GitHubToken: $(GitHub.Token)
     ArtifactDirectory: $(Build.SourcesDirectory)/package-internal
 
-- template: keychains/mac/show.v1.yml@templates
 - template: uninstall-certificates/v1.yml@templates
   parameters:
     HostedMacKeychainPassword: $(OSX_KEYCHAIN_PASS)
