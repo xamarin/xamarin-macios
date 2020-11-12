@@ -29,7 +29,6 @@ steps:
   inputs:
     provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/provision-brew-packages.csx
     provisioning_extra_args: '-vvvv'
-  enabled: false
   timeoutInMinutes: 30
 
 - bash: |
@@ -41,24 +40,13 @@ steps:
   inputs:
     provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/build-provisioning.csx
     provisioning_extra_args: '-vvvv'
-  enabled: false
   timeoutInMinutes: 250
-
-# Disabled
-- task: xamops.azdevex.provisionator-task.provisionator@1
-  displayName: 'Provision Objective Sharpie'
-  inputs:
-    provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/provision-objective-sharpie.csx
-    provisioning_extra_args: '-vvvv'
-  enabled: false
-  timeoutInMinutes: 30
 
 - task: xamops.azdevex.provisionator-task.provisionator@1
   displayName: 'Provision .NET Core'
   inputs:
     provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/provision-dotnetcore.csx
     provisioning_extra_args: '-vvvv'
-  enabled: false
   timeoutInMinutes: 30
 
 - powershell: |
