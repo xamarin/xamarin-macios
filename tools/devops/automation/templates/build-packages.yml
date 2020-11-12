@@ -87,7 +87,6 @@ steps:
   displayName: 'Clear results directory'
   timeoutInMinutes: 5
 
-
 # the following should be using the labels in the PR, we are not yet doing so, but we will in the
 # future
 - bash: |
@@ -188,19 +187,20 @@ steps:
   displayName: 'Signing PR Build'
   condition: and(succeeded(), eq(variables['configuration.SignPkgs'], 'True'), eq(variables['configuration.IsPr'], 'True'))
 
-# HACK HACK: We shold not need to do this, the install of the certs template should be smart enough
-- bash: |
-    security delete-keychain builder.keychain
-  displayName: 'Remove builder keychain'
-  continueOnError: true
+# UNDONE: This should be replaced with the uninstall step added toward the end of the pipeline
+- template: uninstall-certificates/v1.yml@templates
+  parameters:
+    HostedMacKeychainPassword: $(OSX_KEYCHAIN_PASS)
 
+- template: Keychains/mac/show.v1.yml@templates
 - template: install-certificates.yml@templates
   parameters:
     DeveloperIdApplication: $(developer-id-application)
     DeveloperIdInstaller: $(developer-id-installer)
     IphoneDeveloper: $(iphone-developer)
     MacDeveloper: $(mac-developer)
-    HostedMacKeychainPassword: $(AzDO-OnPrem-KeychainPass)
+    HostedMacKeychainPassword: $(OSX_KEYCHAIN_PASS)
+- template: Keychains/mac/show.v1.yml@templates
 
 # HACK HACK: brew remove python2, but the script uses python2, this is a dirty workaround
 - bash: |
@@ -225,7 +225,7 @@ steps:
     deactivate
     rm -Rf "$VIRTUAL_ENV_PATH"
   env:
-    PRODUCTSIGN_KEYCHAIN_PASSWORD: $(AzDO-OnPrem-KeychainPass)
+    PRODUCTSIGN_KEYCHAIN_PASSWORD: $(OSX_KEYCHAIN_PASS)
     MAC_ENTITLEMENTS: $(Build.SourcesDirectory)/xamarin-macios/mac-entitlements.plist
     APP_ID: $(XamarinAppId)
     INSTALL_ID: $(XamarinAppId)
@@ -242,6 +242,12 @@ steps:
   parameters:
     GitHubToken: $(GitHub.Token)
     ArtifactDirectory: $(Build.SourcesDirectory)/package-internal
+
+- template: Keychains/mac/show.v1.yml@templates
+- template: uninstall-certificates/v1.yml@templates
+  parameters:
+    HostedMacKeychainPassword: $(OSX_KEYCHAIN_PASS)
+- template: Keychains/mac/show.v1.yml@templates
 
 # upload each of the pkgs into the pipeline artifacts
 - task: PublishPipelineArtifact@1
