@@ -20,7 +20,7 @@ resources:
   - repository: maccore
     type: github
     name: xamarin/maccore
-    ref: refs/heads/yaml-pipeline-device-tests            # UNDONE: Change back to main once the keychain search list fix has merged to main
+    ref: refs/heads/main
     endpoint: xamarin
 
   - repository: release-scripts
