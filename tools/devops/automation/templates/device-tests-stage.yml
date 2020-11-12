@@ -50,6 +50,10 @@ parameters:
 - name: execute
   type: string
 
+- name: devicePrefix
+  type: string
+  default: 'ios' # default context, since we started dealing with iOS devices. 
+
 stages:
 - stage:
   displayName: ${{ parameters.stageName }}
@@ -87,6 +91,8 @@ stages:
         clean: all
     steps:
     - template: upload-vsdrops.yml
+      parameters: 
+        devicePrefix: ${{ parameters.devicePrefix }}
 
   - job: upload_vsts_tests
     displayName: 'Upload xml to vsts'
@@ -125,3 +131,4 @@ stages:
       parameters:
         statusContext: ${{ parameters.statusContext }}
         vsdropsPrefix: ${{ parameters.vsdropsPrefix }} 
+        devicePrefix: ${{ parameters.devicePrefix }}

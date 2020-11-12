@@ -1,5 +1,11 @@
 
 # job that downloads the html report from the artifacts and uploads them into vsdrops.
+parameters:
+
+- name: devicePrefix
+  type: string 
+  default: 'ios' # default context, since we started dealing with iOS devices. 
+
 steps:
 
 - checkout: self
@@ -12,7 +18,7 @@ steps:
   displayName: 'Publish to Artifact Services Drop'
   inputs:
     dropServiceURI: 'https://devdiv.artifacts.visualstudio.com/DefaultCollection'
-    buildNumber: 'xamarin-macios/device-tests/$(Build.BuildNumber)/$(Build.BuildId)'
+    buildNumber: 'xamarin-macios/device-tests/$(Build.BuildNumber)/$(Build.BuildId)/${{ parameters.devicePrefix }}'
     sourcePath: $(HTML_REPORT_PATH)
     detailedLog: true
     usePat: true 
