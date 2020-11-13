@@ -420,12 +420,12 @@ namespace Xamarin.Bundler {
 			if (Driver.Force) {
 				Driver.Log (3, $"A full rebuild has been forced by the command line argument -f.");
 				valid = false;
-			} else if (!Cache.IsCacheValid ()) {
+			} else if (!Cache.IsCacheValid (this)) {
 				Driver.Log (3, $"A full rebuild has been forced because the cache for {Name} is not valid.");
 				valid = false;
 			} else {
 				foreach (var appex in AppExtensions) {
-					if (appex.Cache.IsCacheValid ())
+					if (appex.Cache.IsCacheValid (this))
 						continue;
 
 					Driver.Log (3, $"A full rebuild has been forced because the cache for {appex.Name} is not valid.");
@@ -501,7 +501,7 @@ namespace Xamarin.Bundler {
 				}
 			} else {
 				// Write the cache data as the last step, so there is no half-done/incomplete (but yet detected as valid) cache.
-				Cache.ValidateCache ();
+				Cache.ValidateCache (this);
 			}
 
 			Console.WriteLine ("{0} built successfully.", AppDirectory);

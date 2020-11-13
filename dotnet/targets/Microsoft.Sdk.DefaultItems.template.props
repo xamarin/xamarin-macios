@@ -71,4 +71,11 @@
 			<IsDefaultItem>true</IsDefaultItem>
 		</Metal>
 	</ItemGroup>
+
+	<!-- Default SceneKit assets inclusion -->
+	<ItemGroup Condition="'$(TargetPlatformIdentifier)' == '@PLATFORM@' And '$(_EnableDefaultXamarinItems)' == 'true' ">
+		<SceneKitAsset Include="**\*.scnassets\*">
+			<IsDefaultItem>true</IsDefaultItem>
+		</SceneKitAsset>
+	</ItemGroup>
 </Project>

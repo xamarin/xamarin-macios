@@ -479,7 +479,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 
 		public static void FixTestLibrariesReferences (this XmlDocument csproj, string platform)
 		{
-			var nodes = csproj.SelectNodes ("//*[local-name() = 'ObjcBindingNativeLibrary' or local-name() = 'ObjcBindingNativeFramework']");
+			var nodes = csproj.SelectNodes ("//*[local-name() = 'ObjcBindingNativeLibrary' or local-name() = 'ObjcBindingNativeFramework' or local-name() = 'NativeReference']");
 			var test_libraries = new string [] {
 				"libtest.a",
 				"libtest2.a",
@@ -620,6 +620,10 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 			var logicalName = csproj.SelectSingleNode ("//*[(local-name() = 'None' or local-name() = 'Content' or local-name() = 'BundleResource')]/*[local-name()='LogicalName' and text() = 'Info.plist']");
 			if (logicalName != null)
 				return logicalName.ParentNode;
+
+			var linkName = csproj.SelectSingleNode ("//*[(local-name() = 'None' or local-name() = 'Content' or local-name() = 'BundleResource')]/*[local-name()='Link' and text() = 'Info.plist']");
+			if (linkName != null)
+				return linkName.ParentNode;
 
 			if (throw_if_not_found)
 				throw new Exception ($"Could not find Info.plist include.");
@@ -963,6 +967,7 @@ namespace Microsoft.DotNet.XHarness.iOS.Shared.Utilities {
 				new string [] { "FilesToCopyChannels", "Include" },
 				new string [] { "CustomMetalSmeltingInput", "Include" },
 				new string [] { "Metal", "Include" },
+				new string [] { "NativeReference", "Include" },
 			};
 			var nodes_with_variables = new string []
 			{

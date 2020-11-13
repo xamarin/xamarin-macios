@@ -186,12 +186,12 @@ public class Cache {
 		} while (true);
 	}
 	
-	string GetArgumentsForCacheData ()
+	string GetArgumentsForCacheData (Application app)
 	{
 		var sb = new StringBuilder ();
 		var args = new List<string> (arguments);
 
-		sb.Append ("# Version: ").Append (Constants.Version).Append ('.').Append (Constants.Revision).AppendLine ();
+		sb.Append ("# Version: ").Append (app.ProductConstants.Version).Append ('.').Append (app.ProductConstants.Revision).AppendLine ();
 		sb.Append (Driver.GetFullPath ()).AppendLine (" \\");
 		CollectArgumentsForCache (args, 0, sb);
 		return sb.ToString ();
@@ -224,7 +224,7 @@ public class Cache {
 		}
 	}
 
-	public bool IsCacheValid ()
+	public bool IsCacheValid (Application app)
 	{
 		var name = "arguments";
 		var pcache = Path.Combine (Location, name);
@@ -232,7 +232,7 @@ public class Cache {
 		if (!File.Exists (pcache)) {
 			Driver.Log (3, "A full rebuild will be performed because the cache is either incomplete or entirely missing.");
 			return false;
-		} else if (GetArgumentsForCacheData () != File.ReadAllText (pcache)) {
+		} else if (GetArgumentsForCacheData (app) != File.ReadAllText (pcache)) {
 			Driver.Log (3, "A full rebuild will be performed because the arguments to " + NAME + " has changed with regards to the cached data.");
 			return false;
 		}
@@ -247,9 +247,9 @@ public class Cache {
 		return true;
 	}
 
-	public bool VerifyCache ()
+	public bool VerifyCache (Application app)
 	{
-		if (!IsCacheValid ()) {
+		if (!IsCacheValid (app)) {
 			Clean ();
 			return false;
 		}
@@ -257,11 +257,11 @@ public class Cache {
 		return true;
 	}
 
-	public void ValidateCache ()
+	public void ValidateCache (Application app)
 	{
 		var name = "arguments";
 		var pcache = Path.Combine (Location, name);
-		File.WriteAllText (pcache, GetArgumentsForCacheData ());
+		File.WriteAllText (pcache, GetArgumentsForCacheData (app));
 	}
 
 	// A stream that reads an assembly and skips the header and the GUID table.
