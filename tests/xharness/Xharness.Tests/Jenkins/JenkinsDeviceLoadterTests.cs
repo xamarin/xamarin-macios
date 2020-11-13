@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Threading.Tasks;
+using Microsoft.DotNet.XHarness.Common.Execution;
+using Microsoft.DotNet.XHarness.Common.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
@@ -66,7 +68,7 @@ namespace Xharness.Tests.Jenkins {
 				get { 
 					var devices = new Mock<IHardwareDeviceLoader> ();
 					var simulators = new Mock<ISimulatorLoader> ();
-					var processManager = new Mock<IProcessManager> ();
+					var processManager = new Mock<IMlaunchProcessManager> ();
 					var db = new Mock<ITCCDatabase> ();
 
 					simulators.Setup (s => s.AvailableDevices).Returns (Array.Empty<SimulatorDevice> ());
@@ -80,13 +82,13 @@ namespace Xharness.Tests.Jenkins {
 		}
 
 		Mock<ILogs> logs;
-		Mock<ILog> log;
+		Mock<IFileBackedLog> log;
 
 		[SetUp]
 		public void SetUp ()
 		{
 			logs = new Mock<ILogs> ();
-			log = new Mock<ILog> ();
+			log = new Mock<IFileBackedLog> ();
 
 			logs.Setup (l => l.Create (
 				It.IsAny<string> (),

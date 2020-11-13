@@ -4,10 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using Microsoft.DotNet.XHarness.Common.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
-using Microsoft.DotNet.XHarness.iOS.Shared.Tasks;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 using Xharness.Jenkins.TestTasks;
 
@@ -427,9 +427,13 @@ namespace Xharness.Jenkins.Reports {
 
 						if (logs.Count () > 0) {
 							foreach (var log in logs) {
+								if (!(log is IFileBackedLog fileLog)) {
+									continue;
+								}
+
 								log.Flush ();
-								var exists = File.Exists (log.FullPath);
-								string log_type = System.Web.MimeMapping.GetMimeMapping (log.FullPath);
+								var exists = File.Exists (fileLog.FullPath);
+								string log_type = System.Web.MimeMapping.GetMimeMapping (fileLog.FullPath);
 								string log_target;
 								switch (log_type) {
 								case "text/xml":
@@ -443,18 +447,18 @@ namespace Xharness.Jenkins.Reports {
 									break;
 								}
 								if (!exists) {
-									writer.WriteLine ("<a href='{0}' type='{2}' target='{3}'>{1}</a> (does not exist)<br />", GetLinkFullPath (log.FullPath.Substring (jenkins.LogDirectory.Length + 1)), log.Description, log_type, log_target);
+									writer.WriteLine ("<a href='{0}' type='{2}' target='{3}'>{1}</a> (does not exist)<br />", GetLinkFullPath (fileLog.FullPath.Substring (jenkins.LogDirectory.Length + 1)), log.Description, log_type, log_target);
 								} else if (log.Description == LogType.BuildLog.ToString ()) {
-									var binlog = log.FullPath.Replace (".txt", ".binlog");
+									var binlog = fileLog.FullPath.Replace (".txt", ".binlog");
 									if (File.Exists (binlog)) {
-										var textLink = string.Format ("<a href='{0}' type='{2}' target='{3}'>{1}</a>", GetLinkFullPath (log.FullPath.Substring (jenkins.LogDirectory.Length + 1)), log.Description, log_type, log_target);
+										var textLink = string.Format ("<a href='{0}' type='{2}' target='{3}'>{1}</a>", GetLinkFullPath (fileLog.FullPath.Substring (jenkins.LogDirectory.Length + 1)), log.Description, log_type, log_target);
 										var binLink = string.Format ("<a href='{0}' type='{2}' target='{3}' style='display:{4}'>{1}</a><br />", GetLinkFullPath (binlog.Substring (jenkins.LogDirectory.Length + 1)), "Binlog download", log_type, log_target, test.Building ? "none" : "inline");
 										writer.Write ("{0} {1}", textLink, binLink);
 									} else {
-										writer.WriteLine ("<a href='{0}' type='{2}' target='{3}'>{1}</a><br />", GetLinkFullPath (log.FullPath.Substring (jenkins.LogDirectory.Length + 1)), log.Description, log_type, log_target);
+										writer.WriteLine ("<a href='{0}' type='{2}' target='{3}'>{1}</a><br />", GetLinkFullPath (fileLog.FullPath.Substring (jenkins.LogDirectory.Length + 1)), log.Description, log_type, log_target);
 									}
 								} else {
-									writer.WriteLine ("<a href='{0}' type='{2}' target='{3}'>{1}</a><br />", GetLinkFullPath (log.FullPath.Substring (jenkins.LogDirectory.Length + 1)), log.Description, log_type, log_target);
+									writer.WriteLine ("<a href='{0}' type='{2}' target='{3}'>{1}</a><br />", GetLinkFullPath (fileLog.FullPath.Substring (jenkins.LogDirectory.Length + 1)), log.Description, log_type, log_target);
 								}
 								if (!exists) {
 									// Don't try to parse files that don't exist
@@ -462,7 +466,7 @@ namespace Xharness.Jenkins.Reports {
 									string summary;
 									List<string> fails;
 									try {
-										using (var reader = log.GetReader ()) {
+										using (var reader = fileLog.GetReader ()) {
 											Tuple<long, object> data;
 											if (!log_data.TryGetValue (log, out data) || data.Item1 != reader.BaseStream.Length) {
 												summary = string.Empty;
@@ -501,7 +505,7 @@ namespace Xharness.Jenkins.Reports {
 								} else if (log.Description == LogType.BuildLog.ToString ()) {
 									HashSet<string> errors;
 									try {
-										using (var reader = log.GetReader ()) {
+										using (var reader = fileLog.GetReader ()) {
 											Tuple<long, object> data;
 											if (!log_data.TryGetValue (log, out data) || data.Item1 != reader.BaseStream.Length) {
 												errors = new HashSet<string> ();
@@ -536,9 +540,9 @@ namespace Xharness.Jenkins.Reports {
 									}
 								} else if (log.Description == LogType.NUnitResult.ToString () || log.Description == LogType.XmlLog.ToString ()) {
 									try {
-										if (File.Exists (log.FullPath) && new FileInfo (log.FullPath).Length > 0) {
-											if (resultParser.IsValidXml (log.FullPath, out var jargon)) {
-												resultParser.GenerateTestReport (writer, log.FullPath, jargon);
+										if (File.Exists (fileLog.FullPath) && new FileInfo (fileLog.FullPath).Length > 0) {
+											if (resultParser.IsValidXml (fileLog.FullPath, out var jargon)) {
+												resultParser.GenerateTestReport (writer, fileLog.FullPath, jargon);
 											}
 										}
 									} catch (Exception ex) {
@@ -546,8 +550,8 @@ namespace Xharness.Jenkins.Reports {
 									}
 								} else if (log.Description == LogType.TrxLog.ToString ()) {
 									try {
-										if (resultParser.IsValidXml (log.FullPath, out var jargon)) {
-											resultParser.GenerateTestReport (writer, log.FullPath, jargon);
+										if (resultParser.IsValidXml (fileLog.FullPath, out var jargon)) {
+											resultParser.GenerateTestReport (writer, fileLog.FullPath, jargon);
 										}
 									} catch (Exception ex) {
 										writer.WriteLine ($"<span style='padding-left: 15px;'>Could not parse {log.Description}: {ex.Message.AsHtml ()}</span><br />");
