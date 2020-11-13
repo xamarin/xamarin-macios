@@ -1,6 +1,6 @@
 ﻿using System.IO;
-using Microsoft.DotNet.XHarness.iOS.Shared.TestImporter;
 using NUnit.Framework;
+using Xharness.TestImporter;
 using Xharness.TestImporter.Xamarin;
 
 namespace Xharness.Tests.TestImporter.Xamarin.Tests {

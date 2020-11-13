@@ -2,8 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization.Json;
-using System.Xml;
+using System.Threading.Tasks;
+using Microsoft.DotNet.XHarness.Common;
+using Microsoft.DotNet.XHarness.Common.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
@@ -45,7 +46,7 @@ namespace Xharness {
 		public string WatchOSAppTemplate { get; set; }
 		public string WatchOSContainerTemplate { get; set; }
 		public XmlResultJargon XmlJargon { get; set; } = XmlResultJargon.NUnitV3;
-		
+
 		// This is the maccore/tests directory.
 		static string root_directory;
 		public static string RootDirectory {
@@ -78,17 +79,19 @@ namespace Xharness {
 	public class Harness : IHarness {
 		readonly TestTarget target;
 		readonly string buildConfiguration = "Debug";
+		readonly IMlaunchProcessManager processManager;
 
-		IProcessManager processManager;
+		public static readonly IHelpers Helpers = new Helpers ();
 
 		public HarnessAction Action { get; }
 		public int Verbosity { get; }
-		public ILog HarnessLog { get; set; }
+		public IFileBackedLog HarnessLog { get; set; }
 		public HashSet<string> Labels { get; }
 		public XmlResultJargon XmlJargon { get; }
 		public IResultParser ResultParser { get; }
 		public ITunnelBore TunnelBore { get; }
-		
+		public AppBundleLocator AppBundleLocator { get; }
+
 		public string XIBuildPath => Path.GetFullPath (Path.Combine (RootDirectory, "..", "tools", "xibuild", "xibuild"));
 
 		string sdkRoot;
@@ -128,8 +131,6 @@ namespace Xharness {
 		public string MONO_IOS_SDK_DESTDIR { get; }
 		public string MONO_MAC_SDK_DESTDIR { get; }
 		public bool ENABLE_XAMARIN { get; }
-		public string DOTNET { get; }
-		public string DOTNET5 { get; }
 
 		// Run
 
@@ -201,13 +202,12 @@ namespace Xharness {
 			MONO_IOS_SDK_DESTDIR = config ["MONO_IOS_SDK_DESTDIR"];
 			MONO_MAC_SDK_DESTDIR = config ["MONO_MAC_SDK_DESTDIR"];
 			ENABLE_XAMARIN = config.ContainsKey ("ENABLE_XAMARIN") && !string.IsNullOrEmpty (config ["ENABLE_XAMARIN"]);
-			DOTNET = config ["DOTNET"];
-			DOTNET5 = config ["DOTNET5"];
 
 			if (string.IsNullOrEmpty (SdkRoot))
 				SdkRoot = config ["XCODE_DEVELOPER_ROOT"] ?? configuration.SdkRoot;
 
-			processManager = new ProcessManager (XcodeRoot, MlaunchPath, GetDotNetExecutable, XIBuildPath);
+			processManager = new MlaunchProcessManager (XcodeRoot, MlaunchPath);
+			AppBundleLocator = new AppBundleLocator (processManager, () => HarnessLog, XIBuildPath, config ["DOTNET"], config ["DOTNET5"]);
 			TunnelBore = new TunnelBore (processManager);
 		}
 
@@ -242,9 +242,11 @@ namespace Xharness {
 			if (string.IsNullOrEmpty (path))
 				return path;
 
+			string originalPath = path;
+
 			do {
 				if (path == "/") {
-					throw new Exception (string.Format ("Could not find Xcode.app in {0}", path));
+					throw new Exception (string.Format ("Could not find Xcode.app in {0}", originalPath));
 				} else if (File.Exists (Path.Combine (path, "Contents", "MacOS", "Xcode"))) {
 					return path;
 				}
@@ -341,7 +343,7 @@ namespace Xharness {
 					configureTarget (target, file, proj.IsNUnitProject, false);
 					unified_targets.Add (target);
 
-					var cloned_project = (MacTestProject)proj.Clone ();
+					var cloned_project = (MacTestProject) proj.Clone ();
 					cloned_project.TargetFrameworkFlavors = MacFlavors.Full;
 					cloned_project.Path = target.ProjectPath;
 					MacTestProjects.Add (cloned_project);
@@ -352,7 +354,7 @@ namespace Xharness {
 					configureTarget (target, file, proj.IsNUnitProject, false);
 					unified_targets.Add (target);
 
-					var cloned_project = (MacTestProject)proj.Clone ();
+					var cloned_project = (MacTestProject) proj.Clone ();
 					cloned_project.TargetFrameworkFlavors = MacFlavors.System;
 					cloned_project.Path = target.ProjectPath;
 					MacTestProjects.Add (cloned_project);
@@ -562,8 +564,7 @@ namespace Xharness {
 
 		int Install ()
 		{
-			if (HarnessLog == null)
-				HarnessLog = new ConsoleLog ();
+			HarnessLog ??= GetAdHocLog();
 
 			foreach (var project in IOSTestProjects) {
 				var runner = CreateAppRunner (project);
@@ -578,8 +579,7 @@ namespace Xharness {
 
 		int Uninstall ()
 		{
-			if (HarnessLog == null)
-				HarnessLog = new ConsoleLog ();
+			HarnessLog ??= GetAdHocLog ();
 
 			foreach (var project in IOSTestProjects) {
 				var runner = CreateAppRunner (project);
@@ -592,8 +592,7 @@ namespace Xharness {
 
 		int Run ()
 		{
-			if (HarnessLog == null)
-				HarnessLog = new ConsoleLog ();
+			HarnessLog ??= GetAdHocLog ();
 
 			foreach (var project in IOSTestProjects) {
 				var runner = CreateAppRunner (project);
@@ -716,10 +715,10 @@ namespace Xharness {
 			}
 		}
 
-		private AppRunner CreateAppRunner (TestProject project)
+		AppRunner CreateAppRunner (TestProject project)
 		{
 			var rv = new AppRunner (processManager,
-				new AppBundleInformationParser (),
+				new AppBundleInformationParser (processManager, AppBundleLocator),
 				new SimulatorLoaderFactory (processManager),
 				new SimpleListenerFactory (UseTcpTunnel ? TunnelBore : null),
 				new DeviceLoaderFactory (processManager),
@@ -737,52 +736,9 @@ namespace Xharness {
 			return rv;
 		}
 
-		// Gets either the DOTNET or DOTNET5 variable, depending on any global.json
-		// config file found in the specified directory or any containing directories.
-		Dictionary<string, string> dotnet_executables = new Dictionary<string, string> ();
-		public string GetDotNetExecutable (string directory)
-		{
-			if (directory == null)
-				throw new ArgumentNullException (nameof (directory));
+		public string GetDotNetExecutable (string directory) => AppBundleLocator.GetDotNetExecutable (directory);
 
-			lock (dotnet_executables) {
-				if (dotnet_executables.TryGetValue (directory, out var value))
-					return value;
-			}
-
-			// Find the first global.json up the directory hierarchy (stopping at the root directory)
-			string global_json = null;
-			var dir = directory;
-			while (dir.Length > 2) {
-				global_json = Path.Combine (dir, "global.json");
-				if (File.Exists (global_json))
-					break;
-				dir = Path.GetDirectoryName (dir);
-			}
-			if (!File.Exists (global_json))
-				throw new Exception ($"Could not find any global.json file in {directory} or above");
-
-			// Parse the global.json we found, and figure out if it tells us to use .NET 3.1.100 or not.
-			var contents = File.ReadAllBytes (global_json);
-			using (var reader =  JsonReaderWriterFactory.CreateJsonReader (contents, new XmlDictionaryReaderQuotas ())) {
-				var doc = new XmlDocument ();
-				doc.Load (reader);
-				var version = doc.SelectSingleNode ("/root/sdk").InnerText;
-				string executable;
-				switch (version [0]) {
-				case '3':
-					executable = DOTNET;
-					break;
-				default:
-					executable = DOTNET5;
-					break;
-				}
-				Log ($"Mapped .NET SDK version {version} to {executable} for {directory}");
-				lock (dotnet_executables) {
-					dotnet_executables [directory] = executable;
-				}
-				return executable;
-			}
-		}
+		private static IFileBackedLog GetAdHocLog () => Microsoft.DotNet.XHarness.Common.Logging.Log.CreateReadableAggregatedLog (
+			new LogFile ("HarnessLog", Path.GetTempFileName ()), new ConsoleLog ());
 	}
 }

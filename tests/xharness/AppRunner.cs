@@ -5,20 +5,22 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.DotNet.XHarness.Common.Execution;
+using Microsoft.DotNet.XHarness.Common.Logging;
+using Microsoft.DotNet.XHarness.Common.Utilities;
+using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
-using Microsoft.DotNet.XHarness.iOS.Shared.Execution.Mlaunch;
-using Xharness.Jenkins.TestTasks;
+using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
+using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
-using Microsoft.DotNet.XHarness.iOS.Shared;
-using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
-using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
-using Xharness.TestTasks;
+using Microsoft.DotNet.XHarness.iOS.Shared.XmlResults;
+using Xharness.Jenkins.TestTasks;
 
 namespace Xharness {
 
 	public class AppRunner {
-		readonly IProcessManager processManager;
+		readonly IMlaunchProcessManager processManager;
 		readonly ISimulatorLoaderFactory simulatorsLoaderFactory;
 		readonly ISimpleListenerFactory listenerFactory;
 		readonly IDeviceLoaderFactory devicesLoaderFactory;
@@ -40,8 +42,8 @@ namespace Xharness {
 
 		string deviceName;
 		string companionDeviceName;
-		ISimulatorDevice [] simulators;
-		ISimulatorDevice simulator => simulators [0];
+		ISimulatorDevice simulator;
+		ISimulatorDevice companionSimulator;
 
 		bool ensureCleanSimulatorState = true;
 		bool EnsureCleanSimulatorState {
@@ -57,11 +59,11 @@ namespace Xharness {
 
 		public string FailureMessage { get; private set; }
 
-		public ILog MainLog { get; set; }
+		public IFileBackedLog MainLog { get; set; }
 
 		public ILogs Logs { get; }
 
-		public AppRunner (IProcessManager processManager,
+		public AppRunner (IMlaunchProcessManager processManager,
 						  IAppBundleInformationParser appBundleInformationParser,
 						  ISimulatorLoaderFactory simulatorsFactory,
 						  ISimpleListenerFactory simpleListenerFactory,
@@ -72,11 +74,12 @@ namespace Xharness {
 						  ITestReporterFactory reporterFactory,
 						  TestTarget target,
 						  IHarness harness,
-						  ILog mainLog,
+						  IFileBackedLog mainLog,
 						  ILogs logs,
 						  string projectFilePath,
 						  string buildConfiguration,
-						  ISimulatorDevice [] simulators = null,
+						  ISimulatorDevice simulator = null,
+						  ISimulatorDevice companionSimulator = null,
 						  string deviceName = null,
 						  string companionDeviceName = null,
 						  bool ensureCleanSimulatorState = false,
@@ -100,7 +103,8 @@ namespace Xharness {
 			this.deviceName = deviceName;
 			this.companionDeviceName = companionDeviceName;
 			this.ensureCleanSimulatorState = ensureCleanSimulatorState;
-			this.simulators = simulators;
+			this.simulator = simulator;
+			this.companionSimulator = companionSimulator;
 			this.buildTask = buildTask;
 			this.target = target;
 			this.variation = variation;
@@ -113,20 +117,20 @@ namespace Xharness {
 
 		public async Task InitializeAsync ()
 		{
-			AppInformation = await appBundleInformationParser.ParseFromProjectAsync (MainLog, processManager, projectFilePath, target, buildConfiguration);
+			AppInformation = await appBundleInformationParser.ParseFromProject (projectFilePath, target, buildConfiguration);
 			AppInformation.Variation = variation;
 		}
 
 		async Task<bool> FindSimulatorAsync ()
 		{
-			if (simulators != null)
+			if (simulator != null)
 				return true;
 
 			var sims = simulatorsLoaderFactory.CreateLoader ();
-			await sims.LoadDevices (Logs.Create ($"simulator-list-{Helpers.Timestamp}.log", "Simulator list"), false, false);
-			simulators = await sims.FindSimulators (target, MainLog);
+			await sims.LoadDevices (Logs.Create ($"simulator-list-{Harness.Helpers.Timestamp}.log", "Simulator list"), false, false);
+			(simulator, companionSimulator) = await sims.FindSimulators (target, MainLog);
 
-			return simulators != null;
+			return simulator != null;
 		}
 
 		async Task FindDevice ()
@@ -176,7 +180,7 @@ namespace Xharness {
 			var totalSize = Directory.GetFiles (AppInformation.AppPath, "*", SearchOption.AllDirectories).Select ((v) => new FileInfo (v).Length).Sum ();
 			MainLog.WriteLine ($"Installing '{AppInformation.AppPath}' to '{companionDeviceName ?? deviceName}'. Size: {totalSize} bytes = {totalSize / 1024.0 / 1024.0:N2} MB");
 
-			return await processManager.ExecuteCommandAsync (args, MainLog, TimeSpan.FromHours (1), cancellation_token: cancellation_token);
+			return await processManager.ExecuteCommandAsync (args, MainLog, TimeSpan.FromHours (1), cancellationToken: cancellation_token);
 		}
 
 		public async Task<ProcessExecutionResult> UninstallAsync ()
@@ -252,10 +256,10 @@ namespace Xharness {
 				args.Add (new SetEnvVariableArgument ("NUNIT_HOSTNAME", ipArg));
 			}
 
-			var listener_log = Logs.Create ($"test-{runMode.ToString ().ToLowerInvariant ()}-{Helpers.Timestamp}.log", LogType.TestLog.ToString (), timestamp: !useXmlOutput);
-			var (transport, listener, listenerTmpFile) = listenerFactory.Create (deviceName, runMode, MainLog, listener_log, isSimulator, true, useXmlOutput);
+			var listener_log = Logs.Create ($"test-{runMode.ToString ().ToLowerInvariant ()}-{Harness.Helpers.Timestamp}.log", LogType.TestLog.ToString (), timestamp: !useXmlOutput);
+			var (transport, listener, listenerTmpFile) = listenerFactory.Create (runMode, MainLog, listener_log, isSimulator, true, useXmlOutput);
 
-			listener.Initialize ();
+			var listenerPort = listener.InitializeAndGetPort ();
 
 			args.Add (new SetAppArgumentArgument ($"-transport:{transport}", true));
 			args.Add (new SetEnvVariableArgument ("NUNIT_TRANSPORT", transport.ToString ().ToUpper ()));
@@ -263,21 +267,20 @@ namespace Xharness {
 			if (transport == ListenerTransport.File)
 				args.Add (new SetEnvVariableArgument ("NUNIT_LOG_FILE", listenerTmpFile));
 
-			args.Add (new SetAppArgumentArgument ($"-hostport:{listener.Port}", true));
-			args.Add (new SetEnvVariableArgument ("NUNIT_HOSTPORT", listener.Port));
+			args.Add (new SetAppArgumentArgument ($"-hostport:{listenerPort}", true));
+			args.Add (new SetEnvVariableArgument ("NUNIT_HOSTPORT", listenerPort));
 
-			if (listenerFactory.UseTcpTunnel)
+			if (listenerFactory.UseTunnel)
 				args.Add (new SetEnvVariableArgument ("USE_TCP_TUNNEL", true));
 
 			listener.StartAsync ();
 
 			// object that will take care of capturing and parsing the results
-			ILog runLog = MainLog;
 			ICrashSnapshotReporter crashReporter = snapshotReporterFactory.Create (MainLog, Logs, isDevice: !isSimulator, deviceName);
 
 			var testReporterTimeout = TimeSpan.FromMinutes (harness.Timeout * timeoutMultiplier);
 			var testReporter = testReporterFactory.Create (MainLog,
-				runLog,
+				MainLog,
 				Logs,
 				crashReporter,
 				listener,
@@ -321,12 +324,13 @@ namespace Xharness {
 					return 1;
 
 				if (runMode != RunMode.WatchOS) {
-					var stdout_log = Logs.CreateFile ($"stdout-{Helpers.Timestamp}.log", "Standard output");
-					var stderr_log = Logs.CreateFile ($"stderr-{Helpers.Timestamp}.log", "Standard error");
+					var stdout_log = Logs.CreateFile ($"stdout-{Harness.Helpers.Timestamp}.log", "Standard output");
+					var stderr_log = Logs.CreateFile ($"stderr-{Harness.Helpers.Timestamp}.log", "Standard error");
 					args.Add (new SetStdoutArgument (stdout_log));
 					args.Add (new SetStderrArgument (stderr_log));
 				}
 
+				var simulators = new [] { simulator, companionSimulator }.Where (s => s != null);
 				var systemLogs = new List<ICaptureLog> ();
 				foreach (var sim in simulators) {
 					// Upload the system log
@@ -350,7 +354,7 @@ namespace Xharness {
 
 				if (EnsureCleanSimulatorState) {
 					foreach (var sim in simulators) {
-						using var tcclog = Logs.Create ($"prepare-simulator-{Helpers.Timestamp}.log", "Simulator preparation");
+						using var tcclog = Logs.Create ($"prepare-simulator-{Harness.Helpers.Timestamp}.log", "Simulator preparation");
 						var rv = await sim.PrepareSimulator (tcclog, AppInformation.BundleIdentifier);
 						tcclog.Description += rv ? " ✅ " : " (failed) ⚠️";
 					}
@@ -363,7 +367,7 @@ namespace Xharness {
 				MainLog.WriteLine ("Starting test run");
 
 				await testReporter.CollectSimulatorResult (
-					processManager.ExecuteCommandAsync (args, runLog, testReporterTimeout, cancellation_token: testReporter.CancellationToken));
+					processManager.ExecuteCommandAsync (args, MainLog, testReporterTimeout, cancellationToken: testReporter.CancellationToken));
 
 				// cleanup after us
 				if (EnsureCleanSimulatorState)
@@ -383,7 +387,7 @@ namespace Xharness {
 
 				args.Add (new DeviceNameArgument (deviceName));
 
-				var deviceSystemLog = Logs.Create ($"device-{deviceName}-{Helpers.Timestamp}.log", "Device log");
+				var deviceSystemLog = Logs.Create ($"device-{deviceName}-{Harness.Helpers.Timestamp}.log", "Device log");
 				var deviceLogCapturer = deviceLogCapturerFactory.Create (harness.HarnessLog, deviceSystemLog, deviceName);
 				deviceLogCapturer.StartCapture ();
 
@@ -392,7 +396,7 @@ namespace Xharness {
 
 					MainLog.WriteLine ("Starting test run");
 
-					if (transport == ListenerTransport.Tcp && listenerFactory.UseTcpTunnel && listener is SimpleTcpListener tcpListener) {
+					if (transport == ListenerTransport.Tcp && listenerFactory.UseTunnel && listener is SimpleTcpListener tcpListener) {
 						// create a new tunnel using the listener
 						var tunnel = listenerFactory.TunnelBore.Create (deviceName, MainLog);
 						tunnel.Open (deviceName, tcpListener, testReporterTimeout, MainLog);
@@ -406,7 +410,7 @@ namespace Xharness {
 						args,
 						aggregatedLog,
 						testReporterTimeout,
-						cancellation_token: testReporter.CancellationToken);
+						cancellationToken: testReporter.CancellationToken);
 
 					await testReporter.CollectDeviceResult (runTestTask);
 				} finally {
@@ -425,7 +429,7 @@ namespace Xharness {
 			listener.Dispose ();
 
 			// close a tunnel if it was created
-			if (!isSimulator && listenerFactory.UseTcpTunnel)
+			if (!isSimulator && listenerFactory.UseTunnel)
 				await listenerFactory.TunnelBore.Close (deviceName);
 
 			// check the final status, copy all the required data

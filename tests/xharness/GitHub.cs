@@ -6,11 +6,10 @@ using System.Linq;
 using System.Net;
 using System.Runtime.Serialization.Json;
 using System.Xml;
-using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
-using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
+using Microsoft.DotNet.XHarness.Common.Execution;
+using Microsoft.DotNet.XHarness.Common.Logging;
 
-namespace Xharness
-{
+namespace Xharness {
 	/// <summary>
 	/// API to interact with the vcs used in the project. It is used to indentify those modified files in a PR and
 	/// choose which tests to execute.

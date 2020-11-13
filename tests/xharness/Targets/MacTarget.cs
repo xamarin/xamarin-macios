@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 
-namespace Xharness.Targets
-{
+namespace Xharness.Targets {
 	public class MacTarget : Target
 	{
 		public MacFlavors Flavor { get; private set; }
@@ -186,7 +184,7 @@ namespace Xharness.Targets
 		{
 			base.PostProcessExecutableProject ();
 
-			ProjectGuid = "{" + Helpers.GenerateStableGuid ().ToString ().ToUpper () + "}";
+			ProjectGuid = "{" + Xharness.Harness.Helpers.GenerateStableGuid ().ToString ().ToUpper () + "}";
 			inputProject.SetProjectGuid (ProjectGuid);
 			inputProject.ResolveAllPaths (TemplateProjectPath);
 		}

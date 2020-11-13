@@ -4,12 +4,12 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
+using Microsoft.DotNet.XHarness.Common.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 
-namespace Xharness.Jenkins.TestTasks
-{
+namespace Xharness.Jenkins.TestTasks {
 	class NUnitExecuteTask : RunTestTask
 	{
 		public string TestLibrary;
@@ -17,7 +17,7 @@ namespace Xharness.Jenkins.TestTasks
 		public bool ProduceHtmlReport = true;
 		public bool InProcess;
 
-		public NUnitExecuteTask (Jenkins jenkins, BuildToolTask build_task, IProcessManager processManager)
+		public NUnitExecuteTask (Jenkins jenkins, BuildToolTask build_task, IMlaunchProcessManager processManager)
 			: base (jenkins, build_task, processManager)
 		{
 		}
