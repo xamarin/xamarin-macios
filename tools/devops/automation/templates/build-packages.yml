@@ -180,7 +180,6 @@ steps:
   parameters:
     HostedMacKeychainPassword: $(OSX_KEYCHAIN_PASS)
 
-- template: keychains/mac/show.v1.yml@templates
 - template: install-certificates.yml@templates
   parameters:
     DeveloperIdApplication: $(developer-id-application)
