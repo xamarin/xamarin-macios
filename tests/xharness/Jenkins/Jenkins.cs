@@ -2,23 +2,24 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Text;
-using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
-using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
-using Xharness.Jenkins.TestTasks;
-using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
+using System.Threading.Tasks;
+using Microsoft.DotNet.XHarness.Common.Execution;
+using Microsoft.DotNet.XHarness.Common.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared;
+using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
-using Microsoft.DotNet.XHarness.iOS.Shared.Tasks;
 using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
+using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
+using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 using Xharness.Jenkins.Reports;
+using Xharness.Jenkins.TestTasks;
 
 namespace Xharness.Jenkins {
 	class Jenkins {
 		public readonly ISimulatorLoader Simulators;
 		public readonly IHardwareDeviceLoader Devices;
-		readonly IProcessManager processManager;
+		readonly IMlaunchProcessManager processManager;
 		public ITunnelBore TunnelBore { get; private set; }
 		readonly TestSelector testSelector;
 		readonly TestVariationsFactory testVariationsFactory;
@@ -64,7 +65,7 @@ namespace Xharness.Jenkins {
 		public bool CleanSuccessfulTestRuns = true;
 		public bool UninstallTestApp = true;
 
-		public ILog MainLog;
+		public IFileBackedLog MainLog;
 		public ILog SimulatorLoadLog => DeviceLoader.SimulatorLoadLog;
 		public ILog DeviceLoadLog => DeviceLoader.DeviceLoadLog;
 
@@ -74,7 +75,7 @@ namespace Xharness.Jenkins {
 				if (string.IsNullOrEmpty (log_directory)) {
 					log_directory = Path.Combine (Harness.JENKINS_RESULTS_DIRECTORY, "tests");
 					if (IsServerMode)
-						log_directory = Path.Combine (log_directory, Helpers.Timestamp);
+						log_directory = Path.Combine (log_directory, Xharness.Harness.Helpers.Timestamp);
 				}
 				return log_directory;
 			}
@@ -93,7 +94,7 @@ namespace Xharness.Jenkins {
 		public IErrorKnowledgeBase ErrorKnowledgeBase => new ErrorKnowledgeBase ();
 		public IResourceManager ResourceManager => resourceManager;
 
-		public Jenkins (IHarness harness, IProcessManager processManager, IResultParser resultParser, ITunnelBore tunnelBore)
+		public Jenkins (IHarness harness, IMlaunchProcessManager processManager, IResultParser resultParser, ITunnelBore tunnelBore)
 		{
 			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 			this.TunnelBore = tunnelBore ?? throw new ArgumentNullException (nameof (tunnelBore));
@@ -240,9 +241,9 @@ namespace Xharness.Jenkins {
 		{
 			try {
 				Directory.CreateDirectory (LogDirectory);
-				ILog log = Logs.Create ($"Harness-{Helpers.Timestamp}.log", "Harness log");
+				IFileBackedLog log = Logs.Create ($"Harness-{Xharness.Harness.Helpers.Timestamp}.log", "Harness log");
 				if (Harness.InCI)
-					log = Log.CreateAggregatedLog (log, new ConsoleLog ());
+					log = Log.CreateReadableAggregatedLog (log, new ConsoleLog ());
 				Harness.HarnessLog = MainLog = log;
 
 				var tasks = new List<Task> ();
@@ -323,9 +324,9 @@ namespace Xharness.Jenkins {
 				lock (report_lock) {
 					var report = Path.Combine (LogDirectory, "index.html");
 					var vsdropsReport = Path.Combine (LogDirectory, "vsdrops_index.html");
-					var tmpreport = Path.Combine (LogDirectory, $"index-{Helpers.Timestamp}.tmp.html");
-					var tmpVsdropsReport = Path.Combine (LogDirectory, $"vsdrops_index-{Helpers.Timestamp}.tmp.html");
-					var tmpmarkdown = string.IsNullOrEmpty (Harness.MarkdownSummaryPath) ? string.Empty : (Harness.MarkdownSummaryPath + $".{Helpers.Timestamp}.tmp");
+					var tmpreport = Path.Combine (LogDirectory, $"index-{Xharness.Harness.Helpers.Timestamp}.tmp.html");
+					var tmpVsdropsReport = Path.Combine (LogDirectory, $"vsdrops_index-{Xharness.Harness.Helpers.Timestamp}.tmp.html");
+					var tmpmarkdown = string.IsNullOrEmpty (Harness.MarkdownSummaryPath) ? string.Empty : (Harness.MarkdownSummaryPath + $".{Xharness.Harness.Helpers.Timestamp}.tmp");
 
 					var allSimulatorTasks = new List<RunSimulatorTask> ();
 					var allExecuteTasks = new List<MacExecuteTask> ();

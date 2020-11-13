@@ -1,4 +1,5 @@
 using System;
+using Microsoft.DotNet.XHarness.Common.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 
@@ -8,9 +9,9 @@ namespace Xharness {
 	}
 
 	public class DeviceLogCapturerFactory : IDeviceLogCapturerFactory {
-		readonly IProcessManager processManager;
+		readonly IMlaunchProcessManager processManager;
 
-		public DeviceLogCapturerFactory (IProcessManager processManager)
+		public DeviceLogCapturerFactory (IMlaunchProcessManager processManager)
 		{
 			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 		}

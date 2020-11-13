@@ -4,8 +4,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.DotNet.XHarness.iOS.Shared;
-using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
-using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 
 namespace Xharness.Jenkins.TestTasks {
 	// This class groups simulator run tasks according to the
@@ -65,15 +63,15 @@ namespace Xharness.Jenkins.TestTasks {
 					await task.SelectSimulatorAsync ();
 				}
 
-				var devices = executingTasks.FirstOrDefault ()?.Simulators; 
-				if (devices == null) { 
+				var devices = executingTasks.FirstOrDefault ()?.Simulators;
+				if (devices == null || !devices.Any()) { 
 					ExecutionResult = TestExecutingResult.DeviceNotFound;
 					return;
 				}
-				Jenkins.MainLog.WriteLine ("Selected simulator: {0}", devices.Length > 0 ? devices [0].Name : "none");
+				Jenkins.MainLog.WriteLine ("Selected simulator: {0}", devices.Count() > 0 ? devices.First().Name : "none");
 
 				foreach (var dev in devices) {
-					using var tcclog = Logs.Create ($"prepare-simulator-{Helpers.Timestamp}.log", "Simulator preparation");
+					using var tcclog = Logs.Create ($"prepare-simulator-{Xharness.Harness.Helpers.Timestamp}.log", "Simulator preparation");
 					var rv = await dev.PrepareSimulator (tcclog, executingTasks.Select ((v) => v.BundleIdentifier).ToArray ());
 					tcclog.Description += rv ? " ✅ " : " (failed) ⚠️";
 					foreach (var task in executingTasks.Where ((v) => v.Simulators.Contains (dev)))

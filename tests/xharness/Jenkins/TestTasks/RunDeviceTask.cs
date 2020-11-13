@@ -6,7 +6,6 @@ using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
-using Xharness.TestTasks;
 
 namespace Xharness.Jenkins.TestTasks {
 	class RunDeviceTask : RunXITask<IHardwareDevice>, IRunDeviceTask
@@ -38,7 +37,7 @@ namespace Xharness.Jenkins.TestTasks {
 			}
 		}
 
-		public RunDeviceTask (Jenkins jenkins, IHardwareDeviceLoader devices, MSBuildTask buildTask, IProcessManager processManager, ITunnelBore tunnelBore, IErrorKnowledgeBase errorKnowledgeBase, bool useTcpTunnel, IEnumerable<IHardwareDevice> candidates)
+		public RunDeviceTask (Jenkins jenkins, IHardwareDeviceLoader devices, MSBuildTask buildTask, IMlaunchProcessManager processManager, ITunnelBore tunnelBore, IErrorKnowledgeBase errorKnowledgeBase, bool useTcpTunnel, IEnumerable<IHardwareDevice> candidates)
 			: base (jenkins, buildTask, processManager, candidates.OrderBy ((v) => v.DebugSpeed))
 		{
 			TunnelBore = tunnelBore;

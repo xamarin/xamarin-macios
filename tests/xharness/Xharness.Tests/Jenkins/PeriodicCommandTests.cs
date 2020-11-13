@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.DotNet.XHarness.Common.Execution;
+using Microsoft.DotNet.XHarness.Common.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 using Moq;
@@ -16,7 +18,7 @@ namespace Xharness.Tests.Jenkins {
 
 		Mock<IProcessManager> processManager;
 		Mock<ILogs> logs;
-		Mock<ILog> log;
+		Mock<IFileBackedLog> log;
 		TimeSpan interval;
 		string command;
 		string arguments;
@@ -26,7 +28,7 @@ namespace Xharness.Tests.Jenkins {
 		{
 			processManager = new Mock<IProcessManager> (MockBehavior.Strict);
 			logs = new Mock<ILogs> ();
-			log = new Mock<ILog> ();
+			log = new Mock<IFileBackedLog> ();
 
 			// common setup for the mocks
 			logs.Setup (l => l.Create (It.Is<string> (s => true), It.Is<string> (s => true), null)).Returns (log.Object);

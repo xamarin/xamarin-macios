@@ -4,6 +4,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
+using Microsoft.DotNet.XHarness.Common.Execution;
+using Microsoft.DotNet.XHarness.Common.Logging;
+using Microsoft.DotNet.XHarness.Common.Utilities;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
@@ -18,7 +21,7 @@ namespace Xharness.Jenkins.TestTasks {
 		public bool BCLTest;
 		public bool IsUnitTest;
 
-		public MacExecuteTask (Jenkins jenkins, BuildToolTask build_task, IProcessManager processManager, ICrashSnapshotReporterFactory crashReportSnapshotFactory)
+		public MacExecuteTask (Jenkins jenkins, BuildToolTask build_task, IMlaunchProcessManager processManager, ICrashSnapshotReporterFactory crashReportSnapshotFactory)
 			: base (jenkins, build_task, processManager)
 		{
 			this.CrashReportSnapshotFactory = crashReportSnapshotFactory ?? throw new ArgumentNullException (nameof (crashReportSnapshotFactory));
@@ -82,7 +85,7 @@ namespace Xharness.Jenkins.TestTasks {
 				using (var proc = new Process ()) {
 					proc.StartInfo.FileName = Path;
 					var arguments = new List<string> ();
-					ILog xmlLog = null;
+					IFileBackedLog xmlLog = null;
 					var useXmlOutput = Harness.InCI || true;
 					if (IsUnitTest) {
 						var extension = useXmlOutput ? "xml" : "log";
@@ -134,10 +137,10 @@ namespace Xharness.Jenkins.TestTasks {
 					if (IsUnitTest) {
 						var reporterFactory = new TestReporterFactory (ProcessManager);
 						var listener = new Microsoft.DotNet.XHarness.iOS.Shared.Listeners.SimpleFileListener (xmlLog.FullPath, log, xmlLog, useXmlOutput);
-						var reporter = reporterFactory.Create (Harness.HarnessLog, log, Logs, snapshot, listener, Harness.ResultParser, new AppBundleInformation ("N/A", "N/A", "N/A", "N/A", null), RunMode.macOS, Harness.XmlJargon, "no device here", TimeSpan.Zero);
+						var reporter = reporterFactory.Create (Harness.HarnessLog, log, Logs, snapshot, listener, Harness.ResultParser, new AppBundleInformation ("N/A", "N/A", "N/A", "N/A", true, null), RunMode.MacOS, Harness.XmlJargon, "no device here", TimeSpan.Zero);
 						var rv = await reporter.ParseResult ();
 						ExecutionResult = rv.ExecutingResult;
-						FailureMessage = rv.FailureMessage;
+						FailureMessage = rv.ExecutingResult == TestExecutingResult.Succeeded ? null : rv.ResultMessage;
 					}
 				}
 			}
