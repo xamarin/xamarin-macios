@@ -122,7 +122,36 @@ stages:
       workspace:
         clean: all
     steps:
-    - template: templates/upload-azure.yml
+    - template: templates/upload-vsdrops.yml
+
+  - job: upload_vsdrops
+    displayName: 'Upload test results to VSDrops'
+    timeoutInMinutes: 1000
+    dependsOn: build # can start as soon as the tests are done
+    condition: succeededOrFailed()
+
+    pool:
+      name: VSEngDeploymentPool
+      demands: agent.os -equals Windows_NT # we need to use a windows machine since vsdrops just works on them and the pool might have diff OS in the agents
+      workspace:
+        clean: all
+    steps:
+    - template: templates/upload-vsdrops.yml
+      parameters:
+        devicePrefix: sim
+
+  - job: upload_vsts_tests
+    displayName: 'Upload xml to vsts'
+    timeoutInMinutes: 1000
+    dependsOn:  build # can start as soon as the tests are done
+    condition: succeededOrFailed()
+    pool:
+      name: VSEngDeploymentPool
+      demands: agent.os -equals Windows_NT #  not needed, but lest not waste our mac with devices, we have less.
+      workspace:
+        clean: all
+    steps:
+    - template: templates/upload-vsts-tests.yml
 
   # ideally we would use a matrix here, like:
   #  - job: device_tests
@@ -155,20 +184,6 @@ stages:
   #
   # Unfortunally, variable expansion will not happen on the right time, and will result in an agent error, to fix that
   # we use a template for the test and we set each of the jobs. Not ideal, but is only a 3 jobs matrix
-
-- template: templates/device-tests-stage.yml
-  parameters:
-    devicePrefix: 'simulator'
-    execute: 'runSimulator'
-    stageName: 'Simulator Tests'
-    iOSDevicePool: 'VSEng-Xamarin-RedmondMacCatalinaBuildPool-iOS-Untrusted'
-    WindowsDevicePool: 'VSEngDeploymentPool'
-    useXamarinStorage: False
-    testsLabels: '--label=run-all-tests,skip-device-tests'
-    statusContext: 'VSTS: Simulator tests'
-    iOSDeviceDemand: 'Agent.OSVersion -equals 10.15' # trick to reuse the device pipeline and add just the mac os x requirement, sneaky :) 
-    vsdropsPrefix: ${{ variables.vsdropsPrefix }}
-    keyringPass: $(ios-pool-keychain-password)
 
 - template: templates/device-tests-stage.yml
   parameters:
