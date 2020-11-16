@@ -9,17 +9,19 @@ namespace Xharness {
 		Console = 8, // Console executable
 	}
 
-	public class MacTestProject : TestProject
-	{
+	public class MacTestProject : TestProject {
 		public MacFlavors TargetFrameworkFlavors;
 
 		public bool GenerateFull => GenerateVariations && (TargetFrameworkFlavors & MacFlavors.Full) == MacFlavors.Full;
 		public bool GenerateSystem => GenerateVariations && (TargetFrameworkFlavors & MacFlavors.System) == MacFlavors.System;
 
-		public bool GenerateVariations {
+		public override bool GenerateVariations {
 			get {
 				// If a bitwise combination of flavors, then we're generating variations
 				return TargetFrameworkFlavors != MacFlavors.Modern && TargetFrameworkFlavors != MacFlavors.Full && TargetFrameworkFlavors != MacFlavors.System && TargetFrameworkFlavors != MacFlavors.Console;
+			}
+			set {
+				throw new Exception ("This value is read-only");
 			}
 		}
 
@@ -34,7 +36,7 @@ namespace Xharness {
 			TargetFrameworkFlavors = targetFrameworkFlavor;
 		}
 
-		public override TestProject Clone()
+		public override TestProject Clone ()
 		{
 			var rv = (MacTestProject) base.Clone ();
 			rv.TargetFrameworkFlavors = TargetFrameworkFlavors;

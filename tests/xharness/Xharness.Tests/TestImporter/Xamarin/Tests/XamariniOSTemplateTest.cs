@@ -1,11 +1,10 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Text;
-using Microsoft.DotNet.XHarness.iOS.Shared.TestImporter;
-using Microsoft.DotNet.XHarness.iOS.Shared.TestImporter.Templates;
-using Microsoft.DotNet.XHarness.iOS.Shared.TestImporter.Templates.Managed;
 using Moq;
 using NUnit.Framework;
+using Xharness.TestImporter;
+using Xharness.TestImporter.Templates;
+using Xharness.TestImporter.Templates.Managed;
 
 namespace Xharness.Tests.TestImporter.Xamarin.Tests {
 
@@ -51,7 +50,7 @@ namespace Xharness.Tests.TestImporter.Xamarin.Tests {
 		{
 			// ignore the fact that all params are the same, we do not care
 			var path = template.GetProjectPath (projectName, platform);
-			Assert.AreEqual (Path.Combine (template.OutputDirectoryPath, expectedName), path);
+			Assert.AreEqual (Path.Combine (template.OutputDirectoryPath, "generated", platform.ToString(), projectName, expectedName), path);
 		}
 
 		[TestCase ("WatchApp", WatchAppType.App, "WatchApp-watchos-app.csproj")]
@@ -60,11 +59,11 @@ namespace Xharness.Tests.TestImporter.Xamarin.Tests {
 		{
 			// ignore the fact that all params are the same, we do not care
 			var path = template.GetProjectPath (projectName, appType);
-			Assert.AreEqual (Path.Combine (template.OutputDirectoryPath, expectedName), path);
+			Assert.AreEqual (Path.Combine (template.OutputDirectoryPath, "generated", Platform.WatchOS.ToString(), projectName, appType.ToString().ToLowerInvariant(), expectedName), path);
 		}
 
 		[TestCase ("/usr/path", Platform.iOS, "Info.plist")]
-		[TestCase ("/usr/second/path", Platform.TvOS, "Info-tv.plist")]
+		[TestCase ("/usr/second/path", Platform.TvOS, "Info-tvos.plist")]
 		[TestCase ("/usr/other/path", Platform.WatchOS, "Info-watchos.plist")]
 		[TestCase ("/usr/other/path", Platform.MacOSFull, "Info-mac.plist")]
 		[TestCase ("/usr/other/path", Platform.MacOSModern, "Info-mac.plist")]

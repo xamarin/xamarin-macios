@@ -1,12 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Microsoft.DotNet.XHarness.iOS.Shared;
-using Microsoft.DotNet.XHarness.iOS.Shared.Tasks;
 
 using Moq;
 using NUnit.Framework;
 
-using Xharness.Jenkins;
+using Xharness.Jenkins.TestTasks;
 
 namespace Xharness.Tests.Jenkins {
 

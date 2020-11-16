@@ -1,16 +1,15 @@
 #nullable enable
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
-
-using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
+using Microsoft.DotNet.XHarness.Common.Execution;
+using Microsoft.DotNet.XHarness.Common.Logging;
 
 namespace Xharness.Jenkins {
-	
+
 	/// <summary>
 	/// Allows to select the tests to be ran depending on certain conditions such as labels of modified files.
 	/// </summary>
