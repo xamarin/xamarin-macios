@@ -175,11 +175,6 @@ steps:
   displayName: 'Signing PR Build'
   condition: and(succeeded(), eq(variables['configuration.SignPkgs'], 'True'), eq(variables['configuration.IsPr'], 'True'))
 
-# UNDONE: This step can be removed once the agents have been sanitized
-- template: uninstall-certificates/v1.yml@templates
-  parameters:
-    HostedMacKeychainPassword: $(OSX_KEYCHAIN_PASS)
-
 - template: install-certificates.yml@templates
   parameters:
     DeveloperIdApplication: $(developer-id-application)
