@@ -8,7 +8,7 @@ namespace FileProvider {
 #if MONOMAC
 	public static partial class NSFileProviderItem_Extensions {
 
-		[Obsolete ("This API was removed from macOS in Xcode 12.2 beta 2")]
+		[Obsolete ("This API was removed from macOS in Xcode 12.2 beta 2.")]
 		public static Foundation.NSNumber GetFavoriteRank (this INSFileProviderItem This)
 		{
 			throw new NotSupportedException ();
