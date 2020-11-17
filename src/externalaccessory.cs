@@ -110,6 +110,7 @@ namespace ExternalAccessory {
 		NSString BluetoothAccessoryPickerErrorDomain { get; }
 #endif
 
+		[Introduced (PlatformName.MacCatalyst, 14, 0)]
 		[NoMac]
 		[Export ("showBluetoothAccessoryPickerWithNameFilter:completion:")]
 		[Async]
@@ -212,7 +213,6 @@ namespace ExternalAccessory {
 
 #if !MONOMAC
 		[NoTV]
-		[iOS (8,0)]
 		[Export ("configureAccessory:withConfigurationUIOnViewController:")]
 		void ConfigureAccessory (EAWiFiUnconfiguredAccessory accessory, UIViewController viewController);
 #endif

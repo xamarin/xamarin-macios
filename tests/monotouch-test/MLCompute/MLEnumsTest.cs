@@ -16,7 +16,7 @@ namespace MonoTouchFixtures.MLCompute {
 		[SetUp]
 		public void SetUp ()
 		{
-			TestRuntime.AssertXcodeVersion (12, 0);
+			TestRuntime.AssertXcodeVersion (12, TestRuntime.MinorXcode12APIMismatch);
 #if !MONOMAC
 			if (Runtime.Arch == Arch.SIMULATOR)
 				Assert.Ignore ("https://github.com/xamarin/maccore/issues/2271");

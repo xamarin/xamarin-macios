@@ -64,7 +64,9 @@ namespace AppKit {
 		DisableMenuBarTransparency = (1 <<  9),
 
 		FullScreen                 = (1 << 10),
-		AutoHideToolbar            = (1 << 11)
+		AutoHideToolbar            = (1 << 11),
+		[Mac (10,11,2)]
+		DisableCursorLocationAssistance = (1 << 12),
 	}
 
 	[Native]
@@ -432,7 +434,9 @@ namespace AppKit {
 		SmartMagnify = 32,
 		QuickLook = 33,
 		Pressure = 34, // 10.10.3, 64-bit-only
-		DirectTouch = 37 // 10.10
+		DirectTouch = 37, // 10.10
+		[Mac (10,15)]
+		ChangeMode = 38,
 	}
 
 	[Flags]
@@ -469,6 +473,8 @@ namespace AppKit {
 		SmartMagnify          = 1UL << (int)NSEventType.SmartMagnify,
 		Pressure              = 1UL << (int)NSEventType.Pressure, // 10.10.3, 64-bit-only
 		DirectTouch           = 1UL << (int)NSEventType.DirectTouch, // 10.10
+		[Mac (10,15)]
+		ChangeMode            = 1UL << (int)NSEventType.ChangeMode,
 		AnyEvent              = unchecked ((ulong)UInt64.MaxValue)
 	}
 
@@ -711,9 +717,14 @@ namespace AppKit {
 		WindowExposed = 0,
 		ApplicationActivated = 1,
 		ApplicationDeactivated = 2,
+		[Mac (10,10)]
+		Touch = 3,
 		WindowMoved = 4,
 		ScreenChanged = 8,
-		AWT = 16
+#if !XAMCORE_4_0
+		[Obsolete ("This API is not available on this platform.")]
+		AWT = 16,
+#endif
 	}
 
 #if !XAMCORE_4_0
@@ -767,7 +778,12 @@ namespace AppKit {
 	
 	[Native]
 	public enum NSViewLayerContentsRedrawPolicy : long {
-		Never, OnSetNeedsDisplay, DuringViewResize, BeforeViewResize
+		Never,
+		OnSetNeedsDisplay,
+		DuringViewResize, 
+		BeforeViewResize,
+		[Mac (10,9)]
+		Crossfade = 4,
 	}
 
 	[Native]
@@ -914,10 +930,10 @@ namespace AppKit {
 	[Native]
 	public enum NSBoxType : ulong {
 		NSBoxPrimary,
-		[Advice ("Identical to 'NSBoxPrimary'.")]
+		[Obsoleted (PlatformName.MacOSX, 10,15, message: "Identical to 'NSBoxPrimary'.")]
 		NSBoxSecondary,
 		NSBoxSeparator,
-		[Advice ("'NSBoxOldStyle' is discouraged. Use 'NSBoxPrimary' or 'NSBoxCustom'.")]
+		[Obsoleted (PlatformName.MacOSX, 10,15, message: "'NSBoxOldStyle' is discouraged. Use 'NSBoxPrimary' or 'NSBoxCustom'.")]
 		NSBoxOldStyle,
 		NSBoxCustom
 	};
@@ -1197,7 +1213,7 @@ namespace AppKit {
 		AllObsolete = 15,
 		Move = 16,
 		Delete = 32,
-		All = UInt32.MaxValue
+		All = ulong.MaxValue,
 	}
 
 	[Native]
@@ -1214,7 +1230,10 @@ namespace AppKit {
 	public enum NSWritingDirection : long {
 		Natural = -1, LeftToRight, RightToLeft,
 		Embedding = 0,
+#if !XAMCORE_4_0
+		[Obsolete ("This API is not available on this platform.")]
 		Override = 2,
+#endif
 	}
 
 #if !XAMCORE_4_0
@@ -1421,7 +1440,10 @@ namespace AppKit {
 	[Native]
 	[Deprecated (PlatformName.MacOSX, 10, 14)]	
 	public enum NSScrollArrowPosition : ulong {
-		MaxEnd, MinEnd, DefaultSetting, None
+		MaxEnd = 0,
+		MinEnd = 1,
+		DefaultSetting = 0,
+		None = 2,
 	}
 
 	[Native]
@@ -1479,7 +1501,12 @@ namespace AppKit {
 
 	[Native]
 	public enum NSTextBlockDimension : ulong {
-		Width, MinimumWidth, MaximumWidth, Height, MinimumHeight, MaximumHeight
+		Width = 0,
+		MinimumWidth = 1,
+		MaximumWidth = 2, 
+		Height = 4,
+		MinimumHeight = 5, 
+		MaximumHeight = 6,
 	}
 	
 	[Native]
@@ -1601,14 +1628,16 @@ namespace AppKit {
 	public enum NSTableViewSelectionHighlightStyle : long {
 		None = -1,
 		Regular = 0,
-		SourceList = 1
+		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Set 'NSTableView.Style' to 'NSTableViewStyle.SourceList' instead.")]
+		SourceList = 1,
 	}
 
 	[Native]
 	public enum NSTableViewDraggingDestinationFeedbackStyle : long {
 		None = -1,
 		Regular = 0,
-		SourceList = 1
+		SourceList = 1,
+		FeedbackStyleGap = 2,
 	}
 
 	[Native]
@@ -1739,7 +1768,9 @@ namespace AppKit {
 	public enum NSTokenStyle : ulong {
 		Default,
 		PlainText,
-		Rounded
+		Rounded,
+		Squared = 3,
+		PlainSquared = 4,
 	}
 
 	[Flags]
@@ -1747,6 +1778,7 @@ namespace AppKit {
 	[Deprecated (PlatformName.MacOSX, 11, 0)]
 	public enum NSWorkspaceLaunchOptions : ulong {
 		Print = 2,
+		WithErrorPresentation = 0x40,
 		InhibitingBackgroundOnly = 0x80,
 		WithoutAddingToRecents = 0x100,
 		WithoutActivation = 0x200,
@@ -2592,7 +2624,10 @@ namespace AppKit {
 	public enum NSWindowTitleVisibility : long {
 		Visible = 0,
 		Hidden = 1,
-		HiddenWhenActive = 2
+#if !XAMCORE_4_0
+		[Obsolete ("This API is not available on this platform.")]
+		HiddenWhenActive = 2,
+#endif
 	}
 
 	[Flags]
@@ -3026,6 +3061,7 @@ namespace AppKit {
 		FullWidth,
 		Inset,
 		SourceList,
+		Plain,
 	}
 
 	[Mac (11,0)]

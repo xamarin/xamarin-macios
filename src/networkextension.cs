@@ -136,6 +136,8 @@ namespace NetworkExtension {
 		NewFlow = 1,
 		DataDecision = 2,
 		FlowClosed = 3,
+		[Mac (10,15,4)][NoiOS]
+		Statistics = 4,
 	}
 
 	[NoWatch, NoTV, NoiOS, Mac (10,15,4)]
@@ -486,7 +488,7 @@ namespace NetworkExtension {
 		[NullAllowed, Export ("sourceAppAuditToken")]
 		NSData SourceAppAuditToken { get; }
 
-		[Mac (10, 15), iOS (13, 1)]
+		[iOS (13, 1)]
 		[Export ("identifier")]
 		NSUuid Identifier { get; }
 	}

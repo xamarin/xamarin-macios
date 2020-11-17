@@ -73,8 +73,6 @@ namespace MonoTouchFixtures.Network {
 		[Test]
 		public void TestStateChangesHandler ()
 		{
-			if (Runtime.Arch == Arch.DEVICE)
-				Assert.Ignore ("This test makes connection assumtions and can crash the device tests.");
 			// In the test we are doing the following:
 			//
 			// 1. Start a browser. At this point, we have no listeners (unless someone is exposing it in the lab)

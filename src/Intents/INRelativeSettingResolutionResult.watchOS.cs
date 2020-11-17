@@ -19,35 +19,35 @@ using CoreFoundation;
 
 namespace Intents {
 	[Register("INRelativeSettingResolutionResult", true)]
-	[Obsolete ("This class is not available on watchOS")]
+	[Obsolete (Constants.UnavailableOnWatchOS)]
 	public unsafe partial class INRelativeSettingResolutionResult : INIntentResolutionResult {
-		public override IntPtr ClassHandle { get { throw new PlatformNotSupportedException ("This class is not supported on watchOS"); } }
+		public override IntPtr ClassHandle { get { throw new PlatformNotSupportedException (Constants.UnavailableOnWatchOS); } }
 
 		protected INRelativeSettingResolutionResult (NSObjectFlag t) : base (t)
 		{
-			throw new PlatformNotSupportedException ("This class is not supported on watchOS");
+			throw new PlatformNotSupportedException (Constants.UnavailableOnWatchOS);
 		}
 
 		protected internal INRelativeSettingResolutionResult (IntPtr handle) : base (handle)
 		{
-			throw new PlatformNotSupportedException ("This class is not supported on watchOS");
+			throw new PlatformNotSupportedException (Constants.UnavailableOnWatchOS);
 		}
 
 		public new static INRelativeSettingResolutionResult NeedsValue {
 			get {
-				throw new PlatformNotSupportedException ("This class is not supported on watchOS");
+				throw new PlatformNotSupportedException (Constants.UnavailableOnWatchOS);
 			}
 		}
 
 		public new static INRelativeSettingResolutionResult NotRequired {
 			get {
-				throw new PlatformNotSupportedException ("This class is not supported on watchOS");
+				throw new PlatformNotSupportedException (Constants.UnavailableOnWatchOS);
 			}
 		}
 
 		public new static INRelativeSettingResolutionResult Unsupported {
 			get {
-				throw new PlatformNotSupportedException ("This class is not supported on watchOS");
+				throw new PlatformNotSupportedException (Constants.UnavailableOnWatchOS);
 			}
 		}
 	} /* class INRelativeSettingResolutionResult */

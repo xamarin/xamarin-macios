@@ -1,2 +1,0 @@
-# os_log_create and friends are not bound.
-!missing-selector! +MXMetricManager::makeLogHandleWithCategory: not bound

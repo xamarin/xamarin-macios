@@ -30,6 +30,7 @@ namespace Extrospection {
 				new RequiresSuperCheck (),
 				new DeprecatedCheck (),
 				new NullabilityCheck (),
+				new UIAppearanceCheck (),
 //				new ListNative (), // for debug
 			};
 			foreach (var assemblyName in assemblyNames) {

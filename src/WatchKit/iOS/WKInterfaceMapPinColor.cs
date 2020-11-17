@@ -6,7 +6,7 @@ using ObjCRuntime;
 
 namespace WatchKit {
 	[Unavailable (PlatformName.iOS, PlatformArchitecture.All)]
-	[Obsolete ("The WatchKit framework has been removed from iOS")]
+	[Obsolete (Constants.WatchKitRemoved)]
 	[EditorBrowsable (EditorBrowsableState.Never)]
 	public enum WKInterfaceMapPinColor : long {
 		Red = 0,

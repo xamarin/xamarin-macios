@@ -229,16 +229,13 @@ namespace MultipeerConnectivity {
 	partial interface MCNearbyServiceBrowserDelegate {
 
 		[Abstract]
-		[Mac (10,9)]
 		[Export ("browser:foundPeer:withDiscoveryInfo:")]
 		void FoundPeer (MCNearbyServiceBrowser browser, MCPeerID peerID, [NullAllowed] NSDictionary info);
 
 		[Abstract]
-		[Mac (10,9)]
 		[Export ("browser:lostPeer:")]
 		void LostPeer (MCNearbyServiceBrowser browser, MCPeerID peerID);
 
-		[Mac (10,9)]
 		[Export ("browser:didNotStartBrowsingForPeers:")]
 		void DidNotStartBrowsingForPeers (MCNearbyServiceBrowser browser, NSError error);
 	}

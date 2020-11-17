@@ -128,7 +128,8 @@ namespace UserNotifications {
 		ProvidesAppNotificationSettings = (1 << 5),
 		[iOS (12, 0), TV(12,0), Watch (5,0)]
 		Provisional = (1 << 6),
-
+		[iOS (13,0)][TV (13,0)][Watch (6,0)]
+		Announcement = (1 << 7),
 	}
 
 	[iOS (10, 0)]
@@ -593,11 +594,11 @@ namespace UserNotifications {
 		[Export ("showPreviewsSetting")]
 		UNShowPreviewsSetting ShowPreviewsSetting { get; }
 
-		[Watch (5, 0), NoTV, Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), NoTV, iOS (12, 0)]
 		[Export ("criticalAlertSetting")]
 		UNNotificationSetting CriticalAlertSetting { get; }
 
-		[Watch (5, 0), NoTV, Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), NoTV, iOS (12, 0)]
 		[Export ("providesAppNotificationSettings")]
 		bool ProvidesAppNotificationSettings { get; }
 

@@ -5693,7 +5693,7 @@ public partial class Generator : IMemberGatherer {
 		}
 
 		PrintXpcInterfaceAttribute (type);
-		print ("{0} interface I{1} : INativeObject, IDisposable{2}", class_visibility, TypeName, ifaces.Count () > 0 ? ", " : string.Empty);
+		print ("{0} partial interface I{1} : INativeObject, IDisposable{2}", class_visibility, TypeName, ifaces.Count () > 0 ? ", " : string.Empty);
 		indent++;
 		sb.Clear ();
 		foreach (var iface in ifaces) {

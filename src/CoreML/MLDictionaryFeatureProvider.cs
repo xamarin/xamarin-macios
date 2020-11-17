@@ -14,7 +14,6 @@ using ObjCRuntime;
 namespace CoreML {
 	public partial class MLDictionaryFeatureProvider {
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		public MLFeatureValue this [string featureName] {
 			get { return GetFeatureValue (featureName); }
 		}

@@ -27,7 +27,6 @@ namespace PassKit {
 		InvalidData = 1,
 		UnsupportedVersion,
 		InvalidSignature,
-		[iOS (8,0)]
 		NotEntitled
 	}
 
@@ -136,6 +135,8 @@ namespace PassKit {
 		White,
 		WhiteOutline,
 		Black,
+		[iOS (14,0)]
+		Automatic = 3,
 	}
 
 	[Mac (11,0)]
@@ -151,6 +152,28 @@ namespace PassKit {
 		InStore,
 		[iOS (10,2)]
 		Donate,
+		[iOS (12,0)]
+		Book,
+		[iOS (12,0)]
+		Checkout,
+		[iOS (12,0)]
+		Subscribe,
+		[iOS (14,0)]
+		Reload = 8,
+		[iOS (14,0)]
+		AddMoney = 9,
+		[iOS (14,0)]
+		TopUp = 10,
+		[iOS (14,0)]
+		Order = 11,
+		[iOS (14,0)]
+		Rent = 12,
+		[iOS (14,0)]
+		Support = 13,
+		[iOS (14,0)]
+		Contribute = 14,
+		[iOS (14,0)]
+		Tip = 15,
 	}
 
 	[Mac (11,0)]

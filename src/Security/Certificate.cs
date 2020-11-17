@@ -262,6 +262,9 @@ namespace Security {
 #else
 		[iOS (10,3)]
 		[TV (10,3)]
+		[Deprecated (PlatformName.iOS, 12,0)]
+		[Deprecated (PlatformName.TvOS, 12,0)]
+		[Deprecated (PlatformName.WatchOS, 5,0)]
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* __nullable SecKeyRef */ IntPtr SecCertificateCopyPublicKey (IntPtr /* SecCertificateRef */ certificate);
 
@@ -361,9 +364,14 @@ namespace Security {
 
 #if MONOMAC
 		[DllImport (Constants.SecurityLibrary)]
+		[Deprecated (PlatformName.MacOSX, 10,13)]
 		static extern /* __nullable CFDataRef */ IntPtr SecCertificateCopySerialNumber (IntPtr /* SecCertificateRef */ certificate, IntPtr /* CFErrorRef * */ error);
 #else
 		[iOS (10,3)]
+		[Deprecated (PlatformName.iOS, 11,0)]
+		[Deprecated (PlatformName.MacOSX, 10,13)]
+		[Deprecated (PlatformName.WatchOS, 4,0)]
+		[Deprecated (PlatformName.TvOS, 11,0)]
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* __nullable CFDataRef */ IntPtr SecCertificateCopySerialNumber (IntPtr /* SecCertificateRef */ certificate);
 #endif

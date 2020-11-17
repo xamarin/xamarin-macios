@@ -5176,7 +5176,7 @@ namespace Foundation
 
 	[BaseType (typeof (NSObject))]
 #if WATCH
-	[Advice ("Not available on watchOS")]
+	[Advice (Constants.UnavailableOnWatchOS)]
 	[DisableDefaultCtor] // "NSUbiquitousKeyValueStore is unavailable" is printed to the log.
 #endif
 	interface NSUbiquitousKeyValueStore {
@@ -6264,7 +6264,7 @@ namespace Foundation
 		[Field ("NSURLIsApplicationKey")]
 		NSString IsApplicationKey { get; }
 
-		[iOS (9,0)][NoMac]
+		[iOS (9,0), Mac(11,0)]
 		[Field ("NSURLFileProtectionKey")]
 		NSString FileProtectionKey { get; }
 
@@ -7346,6 +7346,7 @@ namespace Foundation
 		[Export ("discretionary")]
 		bool Discretionary { [Bind ("isDiscretionary")] get; set; }
 	
+		[Mac (11,0)]
 		[Export ("sessionSendsLaunchEvents")]
 		bool SessionSendsLaunchEvents { get; set; }
 
@@ -7457,6 +7458,7 @@ namespace Foundation
 		[Export ("URLSession:didReceiveChallenge:completionHandler:")]
 		void DidReceiveChallenge (NSUrlSession session, NSUrlAuthenticationChallenge challenge, Action<NSUrlSessionAuthChallengeDisposition,NSUrlCredential> completionHandler);
 	
+		[Mac (11,0)]
 		[Export ("URLSessionDidFinishEventsForBackgroundURLSession:")]
 		void DidFinishEventsForBackgroundSession (NSUrlSession session);
 	}
@@ -10069,15 +10071,12 @@ namespace Foundation
 		NSString ErrorDomain { get; }
 
 #if MONOMAC
-		[Mac (10,10)]
 		[Export ("sourceFrame")]
 		CGRect SourceFrame { get; }
 
-		[Mac (10,10)]
 		[Export ("containerFrame")]
 		CGRect ContainerFrame { get; }
 
-		[Mac (10,10)]
 		[Export ("preferredPresentationSize")]
 		CGSize PreferredPresentationSize { get; }
 
@@ -11969,37 +11968,37 @@ namespace Foundation
 		[Export ("old")]
 		bool Old { [Bind ("isOld")] get; }
 #endif
-		[iOS (7,0), Field ("NSProgressKindFile")]
+		[Field ("NSProgressKindFile")]
 		NSString KindFile { get; }
 	
-		[iOS (7,0), Field ("NSProgressEstimatedTimeRemainingKey")]
+		[Field ("NSProgressEstimatedTimeRemainingKey")]
 		NSString EstimatedTimeRemainingKey { get; }
 	
-		[iOS (7,0), Field ("NSProgressThroughputKey")]
+		[Field ("NSProgressThroughputKey")]
 		NSString ThroughputKey { get; }
 	
-		[iOS (7,0), Field ("NSProgressFileOperationKindKey")]
+		[Field ("NSProgressFileOperationKindKey")]
 		NSString FileOperationKindKey { get; }
 	
-		[iOS (7,0), Field ("NSProgressFileOperationKindDownloading")]
+		[Field ("NSProgressFileOperationKindDownloading")]
 		NSString FileOperationKindDownloading { get; }
 	
-		[iOS (7,0), Field ("NSProgressFileOperationKindDecompressingAfterDownloading")]
+		[Field ("NSProgressFileOperationKindDecompressingAfterDownloading")]
 		NSString FileOperationKindDecompressingAfterDownloading { get; }
 	
-		[iOS (7,0), Field ("NSProgressFileOperationKindReceiving")]
+		[Field ("NSProgressFileOperationKindReceiving")]
 		NSString FileOperationKindReceiving { get; }
 	
-		[iOS (7,0), Field ("NSProgressFileOperationKindCopying")]
+		[Field ("NSProgressFileOperationKindCopying")]
 		NSString FileOperationKindCopying { get; }
 	
-		[iOS (7,0), Field ("NSProgressFileURLKey")]
+		[Field ("NSProgressFileURLKey")]
 		NSString FileURLKey { get; }
 	
-		[iOS (7,0), Field ("NSProgressFileTotalCountKey")]
+		[Field ("NSProgressFileTotalCountKey")]
 		NSString FileTotalCountKey { get; }
 	
-		[iOS (7,0), Field ("NSProgressFileCompletedCountKey")]
+		[Field ("NSProgressFileCompletedCountKey")]
 		NSString FileCompletedCountKey { get; }
 
 #if MONOMAC

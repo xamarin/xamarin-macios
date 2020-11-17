@@ -375,7 +375,7 @@ namespace CoreMidi {
 	[Mac (11, 0), iOS (14, 0)]
 	[BaseType (typeof (NSObject), Name="MIDICIDiscoveredNode")]
 	[DisableDefaultCtor]
-	interface MidiCIDiscoveredNode
+	interface MidiCIDiscoveredNode : NSSecureCoding
 	{
 		[Internal]
 		[Export ("destination")]

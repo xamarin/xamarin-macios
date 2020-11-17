@@ -1,11 +1,6 @@
 # We have our own managed ctor
 !missing-pinvoke! CLLocationCoordinate2DMake is not bound
 
-# xtro is confused because objc has two properties with the same name on objc, one static and the other one an instance one.
-# we did add the deprecation in the correct one. Reported issue: https://github.com/xamarin/xamarin-macios/issues/9026 
-!deprecated-attribute-missing! CLLocationManager::authorizationStatus missing a [Deprecated] attribute
-
-
 ## unsorted
 
 !missing-field! kCLHeadingFilterNone not bound
