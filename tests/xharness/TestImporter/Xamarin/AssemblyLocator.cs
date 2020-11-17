@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using Microsoft.DotNet.XHarness.iOS.Shared.TestImporter;
 
 namespace Xharness.TestImporter.Xamarin {
 

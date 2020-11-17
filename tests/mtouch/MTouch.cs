@@ -3557,17 +3557,12 @@ public partial class NotificationService : UNNotificationServiceExtension
 
 				using (var apptool = new MTouchTool ()) {
 					// Here we do a little bit of surgery on the binding assembly to change the embedded framework (we just add a file into the zip).
-					var modified_framework_binding_library = Path.Combine (tmpdir, Path.GetFileName (framework_binding_library));
-					var framework_zip = Path.Combine (tmpdir, "XTest.framework");
-					var extra_content = Path.Combine (tmpdir, "extra-content");
-					Mono.Cecil.AssemblyDefinition ad = Mono.Cecil.AssemblyDefinition.ReadAssembly (framework_binding_library);
-					var res = (Mono.Cecil.EmbeddedResource) ad.MainModule.Resources.Where ((v) => v.Name == "XTest.framework").First ();
-					File.WriteAllBytes (framework_zip, res.GetResourceData ());
-					File.WriteAllText (extra_content, "Hello world");
-					ExecutionHelper.Execute ("zip", new [] { framework_zip, extra_content });
-					ad.MainModule.Resources.Remove (res);
-					ad.MainModule.Resources.Add (new Mono.Cecil.EmbeddedResource (res.Name, res.Attributes, File.ReadAllBytes (framework_zip)));
-					ad.Write (modified_framework_binding_library);
+					var fx_binding_name = Path.GetFileName (framework_binding_library);
+					var modified_framework_binding_library = Path.Combine (tmpdir, fx_binding_name);
+
+					Bundler.FileCopier.UpdateDirectory (Path.Combine (Path.GetDirectoryName (framework_binding_library), "."), tmpdir);
+					var extra_content = Path.Combine (tmpdir, Path.ChangeExtension (fx_binding_name, ".resources"), "XTest.framework", "XTest");
+					File.AppendAllText (extra_content, "Hello world");
 
 					apptool.Profile = Profile.iOS;
 					apptool.Linker = MTouchLinker.DontLink; // faster
@@ -3577,8 +3572,8 @@ public partial class NotificationService : UNNotificationServiceExtension
 					apptool.AppExtensions.Add (exttool);
 					apptool.AssertExecuteFailure (MTouchAction.BuildSim, "build app");
 					apptool.AssertError (1035, "Cannot include different versions of the framework 'XTest.framework'");
-					apptool.AssertError (1036, $"Framework 'XTest.framework' included from: {exttool.Cache}/XTest.framework (Related to previous error)");
-					apptool.AssertError (1036, $"Framework 'XTest.framework' included from: {apptool.Cache}/XTest.framework (Related to previous error)");
+					apptool.AssertErrorPattern (1036, "Framework 'XTest.framework' included from: .*\\/XTest.framework \\(Related to previous error\\)");
+					apptool.AssertErrorCount (3, "1x 1035, 2x 1036");
 				}
 			}
 		}

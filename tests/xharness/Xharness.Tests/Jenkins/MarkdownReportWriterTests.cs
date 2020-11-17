@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using Microsoft.DotNet.XHarness.iOS.Shared.Tasks;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 using Moq;
 using NUnit.Framework;
 using Xharness.Jenkins.Reports;
+using Xharness.Jenkins.TestTasks;
 
 namespace Xharness.Tests.Jenkins {
 	[TestFixture]

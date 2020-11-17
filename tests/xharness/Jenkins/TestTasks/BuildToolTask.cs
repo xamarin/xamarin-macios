@@ -1,20 +1,16 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Microsoft.DotNet.XHarness.iOS.Shared;
-using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
-using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
-using Microsoft.DotNet.XHarness.iOS.Shared.Tasks;
-using Xharness.TestTasks;
+using Microsoft.DotNet.XHarness.Common.Execution;
+using Microsoft.DotNet.XHarness.Common.Logging;
 
-namespace Xharness.Jenkins.TestTasks
-{
+namespace Xharness.Jenkins.TestTasks {
 	abstract class BuildToolTask : AppleTestTask, IBuildToolTask 
 	{
 		protected BuildTool buildToolTask;
 
 		public IProcessManager ProcessManager { get; }
 
-		public ILog BuildLog {
+		public IFileBackedLog BuildLog {
 			get => buildToolTask.BuildLog;
 			set => buildToolTask.BuildLog = value;
 		}

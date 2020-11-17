@@ -1,13 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using System.Collections.Generic;
+using Xharness.TestImporter;
+using Xharness.TestImporter.Templates;
+using Xharness.TestImporter.Templates.Managed;
 using Xharness.TestImporter.Xamarin;
-using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
-using Microsoft.DotNet.XHarness.iOS.Shared.TestImporter;
-using Microsoft.DotNet.XHarness.iOS.Shared.TestImporter.Templates;
-using Microsoft.DotNet.XHarness.iOS.Shared.TestImporter.Templates.Managed;
-using Microsoft.DotNet.XHarness.iOS.Shared;
 
 namespace Xharness {
 	/// <summary>
@@ -255,7 +253,7 @@ namespace Xharness {
 				throw new ArgumentNullException (nameof (harness));
 			iOSMonoSDKPath = harness.MONO_IOS_SDK_DESTDIR;
 			MacMonoSDKPath = harness.MONO_MAC_SDK_DESTDIR;
-			GuidGenerator = Helpers.GenerateStableGuid;
+			GuidGenerator = Harness.Helpers.GenerateStableGuid;
 			GroupTests = harness.InCI || harness.UseGroupedApps;
 		}
 
@@ -318,8 +316,7 @@ namespace Xharness {
 			return testProjects;
 		}
 
-
-		Tuple<GeneratedProjects, TestPlatform>[] GenerateAlliOSTestProjects ()
+		Tuple<GeneratedProjects, TestPlatform> [] GenerateAlliOSTestProjects ()
 		{
 			var platforms = new [] { Platform.iOS, Platform.TvOS, Platform.WatchOS };
 			var testPlatforms = new [] { TestPlatform.iOS_Unified, TestPlatform.tvOS, TestPlatform.watchOS };
@@ -332,7 +329,8 @@ namespace Xharness {
 			return rv;
 		}
 
-		public GeneratedProjects GenerateAllMacTestProjects (Platform platform) => GenerateTestProjects (GetProjectDefinitions (macTestProjects, platform), platform);
+		public GeneratedProjects GenerateAllMacTestProjects (Platform platform) =>
+			GenerateTestProjects (GetProjectDefinitions (macTestProjects, platform), platform);
 
 		// Map from the projects understood from the test importer to those that AppRunner and friends understand:
 		public List<iOSTestProject> GetiOSBclTargets ()
@@ -354,9 +352,9 @@ namespace Xharness {
 						GenerateVariations = false,
 						TestPlatform = platform,
 					};
-					proj.Dependency = async () => {
-						await tp.GenerationCompleted;
+					proj.Dependency = () => {
 						proj.FailureMessage = tp.Failure;
+						return Task.CompletedTask;
 					};
 					result.Add (proj);
 				}
@@ -384,9 +382,9 @@ namespace Xharness {
 					MTouchExtraArgs = tp.ExtraArgs,
 					TestPlatform = TestPlatform.Mac,
 				};
-				proj.Dependency = async () => {
-					await tp.GenerationCompleted;
+				proj.Dependency = () => {
 					proj.FailureMessage = tp.Failure;
+					return Task.CompletedTask;
 				};
 				result.Add (proj);
 			}
@@ -401,6 +399,5 @@ namespace Xharness {
 			}
 			return result;
 		}
-
 	}
 }
