@@ -465,6 +465,8 @@ namespace Xamarin.Bundler {
 					return "watchOS";
 				case ApplePlatform.MacOSX:
 					return "macOS";
+				case ApplePlatform.MacCatalyst:
+					return "MacCatalyst";
 				default:
 					throw new NotImplementedException ();
 				}
