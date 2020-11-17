@@ -544,6 +544,7 @@ namespace Xamarin.Bundler {
 					case ApplePlatform.iOS:
 					case ApplePlatform.TVOS:
 					case ApplePlatform.WatchOS:
+					case ApplePlatform.MacCatalyst:
 						GenerateIOSMain (sw, abi);
 						break;
 					case ApplePlatform.MacOSX:
