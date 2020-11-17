@@ -885,6 +885,39 @@ $(TVSIMULATOR_DIRECTORIES):
 install-tvsimulator: $(TVSIMULATOR_TARGETS)
 
 #
+# Mac Catalyst Mono runtime pieces
+#
+install-local:: install-maccatalyst
+all-local:: install-maccatalyst
+
+MACCATALYST_DIRECTORIES = \
+	$(IOS_DESTDIR)$(XAMARIN_MACCATALYST_SDK)/Frameworks \
+	$(IOS_DESTDIR)$(XAMARIN_MACCATALYST_SDK)/lib \
+
+MACCATALYST_TARGETS = \
+	$(IOS_DESTDIR)$(XAMARIN_MACCATALYST_SDK)/lib/libmonosgen-2.0.a                 \
+	$(IOS_DESTDIR)$(XAMARIN_MACCATALYST_SDK)/lib/libmono-profiler-log.a            \
+	$(IOS_DESTDIR)$(XAMARIN_MACCATALYST_SDK)/lib/libmono-native.a                  \
+	$(IOS_DESTDIR)$(XAMARIN_MACCATALYST_SDK)/lib/libmonosgen-2.0.dylib             \
+	$(IOS_DESTDIR)$(XAMARIN_MACCATALYST_SDK)/lib/libmono-native.dylib              \
+
+$(IOS_DESTDIR)$(XAMARIN_MACCATALYST_SDK)/lib/%: .stamp-$(MONO_BUILD_MODE) | $(IOS_DESTDIR)$(XAMARIN_MACCATALYST_SDK)/lib
+	$(Q) $(CP) $(MONO_MACCATALYST_SDK_DESTDIR)/maccat-libs/$(notdir $@) $@
+	$(Q) if test -d $(MONO_MACCATALYST_SDK_DESTDIR)/maccat-libs/$(notdir $@).dSYM; then $(CP) -R $(MONO_MACCATALYST_SDK_DESTDIR)/maccat-libs/$(notdir $@).dSYM $(dir $@); fi
+
+$(IOS_DESTDIR)$(XAMARIN_MACCATALYST_SDK)/Frameworks/Mono.framework/Mono: .stamp-$(MONO_BUILD_MODE) | $(IOS_DESTDIR)$(XAMARIN_MACCATALYST_SDK)/Frameworks
+	$(Q) $(CP) -R $(MONO_MACCATALYST_SDK_DESTDIR)/maccat-frameworks/ios-sim/Mono.framework $(IOS_DESTDIR)$(XAMARIN_MACCATALYST_SDK)/Frameworks
+	$(Q) $(CP) -R $(MONO_MACCATALYST_SDK_DESTDIR)/maccat-frameworks/ios-sim/Mono.framework.dSYM $(IOS_DESTDIR)$(XAMARIN_MACCATALYST_SDK)/Frameworks
+
+$(XAMARIN_MACCATALYST_SDK_DIRECTORIES):
+	$(Q) mkdir -p $@
+
+$(MACCATALYST_DIRECTORIES):
+	$(Q) mkdir -p $@
+
+install-maccatalyst:: $(MACCATALYST_TARGETS)
+
+#
 # iPhone device Mono runtime pieces
 #
 install-local:: install-iphoneos
