@@ -944,6 +944,9 @@ namespace Xamarin.Bundler
 			if (App.IsSimulatorBuild)
 				return;
 
+			if (App.Platform == ApplePlatform.MacCatalyst)
+				return;
+
 			// Here we create the tasks to run the AOT compiler.
 			foreach (var a in Assemblies) {
 				if (!a.IsAOTCompiled)
