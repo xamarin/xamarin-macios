@@ -1202,6 +1202,7 @@ namespace Xamarin.Bundler {
 						MarshalManagedExceptions = EnableDebug && IsSimulatorBuild ? MarshalManagedExceptionMode.UnwindNativeCode : MarshalManagedExceptionMode.Disable;
 						break;
 					case ApplePlatform.MacOSX:
+					case ApplePlatform.MacCatalyst:
 						MarshalManagedExceptions = EnableDebug ? MarshalManagedExceptionMode.UnwindNativeCode : MarshalManagedExceptionMode.Disable;
 						break;
 					default:
@@ -1232,6 +1233,7 @@ namespace Xamarin.Bundler {
 						MarshalObjectiveCExceptions = EnableDebug && IsSimulatorBuild ? MarshalObjectiveCExceptionMode.UnwindManagedCode : MarshalObjectiveCExceptionMode.Disable;
 						break;
 					case ApplePlatform.MacOSX:
+					case ApplePlatform.MacCatalyst:
 						MarshalObjectiveCExceptions = EnableDebug ? MarshalObjectiveCExceptionMode.ThrowManagedException : MarshalObjectiveCExceptionMode.Disable;
 						break;
 					default:
