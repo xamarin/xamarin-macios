@@ -619,7 +619,7 @@ namespace MapKit {
 //		void _HandleSelectionAtPoint (CGPoint locationInView);
 
 		[NoTV]
-		[Mac(10,9), iOS(9,0)]
+		[iOS(9,0)]
 		[Export ("showsCompass")]
 		bool ShowsCompass { get; set; }
 

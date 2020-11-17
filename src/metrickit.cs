@@ -405,6 +405,11 @@ namespace MetricKit {
 		[iOS (14,0)]
 		[Export ("pastDiagnosticPayloads", ArgumentSemantic.Strong)]
 		MXDiagnosticPayload[] PastDiagnosticPayloads { get; }
+
+		[Static]
+		[Internal]
+		[Export ("makeLogHandleWithCategory:")]
+		IntPtr /* os_log_t */ _MakeLogHandle (NSString category);
 	}
 
 	interface IMXMetricManagerSubscriber { }

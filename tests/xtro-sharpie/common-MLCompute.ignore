@@ -1,7 +1,3 @@
-## already deprecated (and replaced)
-!missing-selector! +MLCSGDOptimizer::optimizerWithDescriptor:momentumScale:usesNestrovMomentum: not bound
-!missing-selector! MLCTensor::optimizerData: not bound
-
 ## sharpie skip empty types - but they can be used
 !unknown-type! MLCTensorOptimizerDeviceData bound
 
@@ -9,6 +5,7 @@
 !missing-enum-value! MLCActivationType native value MLCActivationTypeCount = 19 not bound
 !missing-enum-value! MLCArithmeticOperation native value MLCArithmeticOperationCount = 26 not bound
 !missing-enum-value! MLCDataType native value MLCDataTypeCount = 6 not bound
+!missing-enum-value! MLCDataType native value MLCDataTypeCount = 8 not bound
 !missing-enum-value! MLCDeviceType native value MLCDeviceTypeCount = 3 not bound
 !missing-enum-value! MLCLossType native value MLCLossTypeCount = 9 not bound
 !missing-enum-value! MLCPoolingType native value MLCPoolingTypeCount = 4 not bound

@@ -4119,15 +4119,15 @@ namespace UIKit {
 		[Export ("collectionView:didEndDisplayingSupplementaryView:forElementOfKind:atIndexPath:")]
 		void SupplementaryViewDisplayingEnded (UICollectionView collectionView, UICollectionReusableView view, NSString elementKind, NSIndexPath indexPath);
 
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GetContextMenuConfigurationForRow' instead.")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GetContextMenuConfiguration' instead.")]
 		[Export ("collectionView:shouldShowMenuForItemAtIndexPath:")]
 		bool ShouldShowMenu (UICollectionView collectionView, NSIndexPath indexPath);
 
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GetContextMenuConfigurationForRow' instead.")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GetContextMenuConfiguration' instead.")]
 		[Export ("collectionView:canPerformAction:forItemAtIndexPath:withSender:")]
 		bool CanPerformAction (UICollectionView collectionView, Selector action, NSIndexPath indexPath, NSObject sender);
 
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GetContextMenuConfigurationForRow' instead.")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GetContextMenuConfiguration' instead.")]
 		[Export ("collectionView:performAction:forItemAtIndexPath:withSender:")]
 		void PerformAction (UICollectionView collectionView, Selector action, NSIndexPath indexPath, NSObject sender);
 
@@ -15689,6 +15689,8 @@ namespace UIKit {
 		IUIViewControllerTransitionCoordinator GetTransitionCoordinator ();
 	}
 
+	[Unavailable (PlatformName.MacCatalyst)]
+	[Advice ("This API is not available when using UIKit on macOS.")]
 	[NoTV]
 	[Deprecated (PlatformName.iOS, 12, 0, message: "No longer supported; please adopt 'WKWebView'.")]
 	[BaseType (typeof (UIView), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] {typeof(UIWebViewDelegate)})]
@@ -15792,6 +15794,8 @@ namespace UIKit {
 		bool AllowsLinkPreview { get; set; }
 	}
 
+	[Unavailable (PlatformName.MacCatalyst)]
+	[Advice ("This API is not available when using UIKit on macOS.")]
 	[NoTV]
 	[Deprecated (PlatformName.iOS, 12, 0, message: "No longer supported; please adopt 'WKWebView' APIs.")]
 	[BaseType (typeof (NSObject))]

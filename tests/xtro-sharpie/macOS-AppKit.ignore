@@ -2235,3 +2235,20 @@
 
 # deprecated API
 !missing-selector! NSLayoutManager::replaceTextStorage: not bound
+
+# helpers
+!extra-enum-value! Managed value 0 for NSApplicationActivationOptions.Default not found in native headers
+!extra-enum-value! Managed value 196608 for NSWorkspaceLaunchOptions.Default not found in native headers
+
+# helpers / alternative names
+!extra-enum-value! Managed value 2 for NSTickMarkPosition.Leading not found in native headers
+!extra-enum-value! Managed value 3 for NSTickMarkPosition.Trailing not found in native headers
+
+# bound as `const` not enums
+!extra-enum-value! Managed value 1 for NSBoxType.NSBoxSecondary not found in native headers
+!extra-enum-value! Managed value 3 for NSBoxType.NSBoxOldStyle not found in native headers
+!extra-enum-value! Managed value 3 for NSBezelStyle.ThickSquare not found in native headers
+!extra-enum-value! Managed value 4 for NSBezelStyle.ThickerSquare not found in native headers
+
+# deprecated in 10.12, now removed
+!extra-enum-value! Managed value 7 for NSWindowButton.FullScreenButton not found in native headers

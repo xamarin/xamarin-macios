@@ -114,6 +114,8 @@ namespace Introspection {
 				case "PKShippingMethod":
 				case "PKSuicaPassProperties": // Conformance not in headers
 				case "PKTransitPassProperties": // Conformance not in headers
+				// Xcode 12.2
+				case "VSAccountApplicationProvider": // Conformance not in headers
 					return true;
 				}
 				break;
@@ -223,6 +225,8 @@ namespace Introspection {
 				case "PKPaymentMerchantSession":
 				case "PKPaymentRequestMerchantSessionUpdate":
 				case "PKShareablePassMetadata":
+				// Xcode 12.2
+				case "VSAccountApplicationProvider": // Conformance not in headers
 					return true;
 				}
 				break;
@@ -328,6 +332,8 @@ namespace Introspection {
 				case "PKPaymentMerchantSession":
 				case "PKPaymentRequestMerchantSessionUpdate":
 				case "PKShareablePassMetadata":
+				// Xcode 12.2
+				case "VSAccountApplicationProvider": // Conformance not in headers
 					return true;
 				}
 				break;

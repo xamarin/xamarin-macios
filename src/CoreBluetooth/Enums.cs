@@ -115,6 +115,7 @@ namespace CoreBluetooth {
 		OperationNotSupported,
 		PeerRemovedPairingInformation,
 		EncryptionTimedOut,
+		TooManyLEPairedDevices = 16,
 	}
 
 	[Watch (4,0)]
