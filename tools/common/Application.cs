@@ -296,6 +296,7 @@ namespace Xamarin.Bundler {
 				case ApplePlatform.WatchOS:
 					return BuildTarget == BuildTarget.Simulator;
 				case ApplePlatform.MacOSX:
+				case ApplePlatform.MacCatalyst:
 					return false;
 				default:
 					throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
