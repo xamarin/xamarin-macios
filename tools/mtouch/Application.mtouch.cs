@@ -1080,7 +1080,7 @@ namespace Xamarin.Bundler {
 				link_tasks.AddRange (target.NativeLink (build_tasks));
 			}
 
-			if (IsDeviceBuild) {
+			if (IsDeviceBuild || Platform == ApplePlatform.MacCatalyst) {
 				// If building for the simulator, the executable is written directly into the expected location within the .app, and no lipo/file copying is needed.
 				if (link_tasks.Count > 1) {
 					// If we have more than one executable, we must lipo them together.
