@@ -15,7 +15,6 @@ using System.ComponentModel;
 #if !XAMCORE_4_0
 namespace CarPlay {
 	[Register (SkipRegistration = true)]
-	[Introduced (PlatformName.iOS, 14, 0)]
 	[Unavailable (PlatformName.iOS, PlatformArchitecture.All)]
 	[Obsolete ("This API has been removed from the native SDK.")]
 	[EditorBrowsable (EditorBrowsableState.Never)]
