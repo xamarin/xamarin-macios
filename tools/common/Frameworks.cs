@@ -17,6 +17,7 @@ public class Framework
 	public Version Version;
 	public Version VersionAvailableInSimulator;
 	public bool AlwaysWeakLinked;
+	public bool Unavailable;
 
 #if MTOUCH || MMP || BUNDLER
 	public bool IsFrameworkAvailableInSimulator (Application app)

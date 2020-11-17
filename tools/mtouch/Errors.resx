@@ -915,6 +915,14 @@
 		<value>This version of {0} requires the {1} {2} SDK (shipped with Xcode {3}). Either upgrade Xcode to get the required header files or set the managed linker behaviour to Link Framework SDKs Only in your project's iOS Build Options > Linker Behavior (to try to avoid the new APIs).</value>
 	</data>
 
+	<data name="MX0181" xml:space="preserve">
+		<value>Not linking with the framework {0} (used by the type {1}) because it's not available on the current platform ({2}).</value>
+	</data>
+
+	<data name="MX0182" xml:space="preserve">
+		<value>Not linking with the framework {0} (referenced by a module reference in {1}) because it's not available on the current platform ({2}).</value>
+	</data>
+
 	<data name="MX1009" xml:space="preserve">
 		<value>Could not copy the assembly '{0}' to '{1}': {2}
 		</value>
