@@ -172,6 +172,7 @@
 		<string>sgen-concurrent</string> <!-- this means stable support for the concurrent GC -->
 		<string>arm64_32</string>
 		<string>altool</string>
+		<string>maccatalyst</string>
 	</array>
 	<key>Optimizations</key>
 	<dict>
