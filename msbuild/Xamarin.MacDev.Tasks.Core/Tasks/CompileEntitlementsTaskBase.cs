@@ -326,6 +326,9 @@ namespace Xamarin.MacDev.Tasks
 			case "MacOSX":
 				platform = MobileProvisionPlatform.MacOS;
 				break;
+			case "MacCatalyst":
+				platform = MobileProvisionPlatform.MacOS;
+				break;
 			default:
 				Log.LogError (MSBStrings.E0048, SdkPlatform);
 				return false;
