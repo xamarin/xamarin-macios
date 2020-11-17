@@ -380,6 +380,8 @@ namespace Xamarin.Bundler {
 				// functions are not required if they're used in an assembly which isn't using dlsym, and we're AOT-compiling.
 				if (App.IsSimulatorBuild)
 					return true;
+				if (App.Platform == ApplePlatform.MacCatalyst)
+					return true;
 				if (single_assembly != null)
 					return App.UseDlsym (single_assembly.FileName);
 
