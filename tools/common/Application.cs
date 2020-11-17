@@ -944,6 +944,7 @@ namespace Xamarin.Bundler {
 				}
 				break;
 			case ApplePlatform.MacOSX:
+			case ApplePlatform.MacCatalyst:
 				validAbis.Add (Abi.x86_64);
 				break;
 			default:
