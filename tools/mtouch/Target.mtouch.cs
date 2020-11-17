@@ -1437,6 +1437,8 @@ namespace Xamarin.Bundler
 			if (App.IsDeviceBuild) {
 				linker_flags.AddOtherFlag ($"-m{Driver.GetTargetMinSdkName (App)}-version-min={App.DeploymentTarget}");
 				linker_flags.AddOtherFlag ($"-isysroot", Driver.GetFrameworkDirectory (App));
+			} else if (App.Platform == ApplePlatform.MacCatalyst) {
+				CompileTask.GetCatalystCompilerFlags (linker_flags, abi, App);
 			} else {
 				CompileTask.GetSimulatorCompilerFlags (linker_flags, false, App);
 			}
