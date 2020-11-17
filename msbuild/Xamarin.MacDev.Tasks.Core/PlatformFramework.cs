@@ -61,6 +61,7 @@ namespace Xamarin.MacDev.Tasks
 			case ApplePlatform.WatchOS:
 				return ManifestKeys.MinimumOSVersion;
 			case ApplePlatform.MacOSX:
+			case ApplePlatform.MacCatalyst:
 				return ManifestKeys.LSMinimumSystemVersion;
 			default:
 				throw new InvalidOperationException ($"Invalid platform: {platform}");
