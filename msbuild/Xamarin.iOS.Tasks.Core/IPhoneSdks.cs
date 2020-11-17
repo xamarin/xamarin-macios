@@ -54,6 +54,8 @@ namespace Xamarin.iOS.Tasks
 				return IPhoneSdks.Watch;
 			case ApplePlatform.TVOS:
 				return IPhoneSdks.TVOS;
+			case ApplePlatform.MacCatalyst:
+				return IPhoneSdks.Native;
 			default:
 				throw new InvalidOperationException (string.Format ("Invalid framework: {0}", framework));
 			}
