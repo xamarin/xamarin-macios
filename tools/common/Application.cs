@@ -887,6 +887,10 @@ namespace Xamarin.Bundler {
 				if (abis.Count == 0)
 					abis.Add (Abi.x86_64);
 				break;
+			case ApplePlatform.MacCatalyst:
+				if (abis.Count == 0)
+					throw ErrorHelper.CreateError (76, Errors.MT0076, "Xamarin.MacCatalyst");
+				break;
 			default:
 				throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
 			}
