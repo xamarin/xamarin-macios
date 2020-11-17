@@ -1107,6 +1107,7 @@ namespace Xamarin.Bundler {
 					else
 						ret += ",major=marksweep";
 					return ret;
+				case ApplePlatform.MacCatalyst:
 				case ApplePlatform.MacOSX:
 					return EnableSGenConc ? "major=marksweep-conc" : "major=marksweep";
 				default:
