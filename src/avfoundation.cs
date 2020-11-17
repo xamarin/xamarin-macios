@@ -12416,6 +12416,10 @@ namespace AVFoundation {
 		[Notification]
 		NSString FailedToDecodeNotification { get; }
 
+		[Field ("AVSampleBufferDisplayLayerFailedToDecodeNotificationErrorKey")]
+		NSString FailedToDecodeNotificationErrorKey { get; }
+
+		// AVSampleBufferDisplayLayerImageProtection
 
 		[TV (12,2), NoWatch, Mac (10,14,4), iOS (12,2)]
 		[Export ("preventsCapture")]
