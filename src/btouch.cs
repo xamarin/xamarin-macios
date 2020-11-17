@@ -186,6 +186,7 @@ public class BindingTouch {
 		case PlatformName.iOS:
 		case PlatformName.WatchOS:
 		case PlatformName.TvOS:
+		case PlatformName.MacCatalyst:
 			var sdkRoot = Environment.GetEnvironmentVariable ("MD_MTOUCH_SDK_ROOT");
 			if (string.IsNullOrEmpty (sdkRoot))
 				sdkRoot = "/Library/Frameworks/Xamarin.iOS.framework/Versions/Current";
