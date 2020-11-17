@@ -408,12 +408,27 @@ namespace Xamarin.Bundler {
 				if (!IsExtension)
 					return null;
 
-				var info_plist = Path.Combine (AppDirectory, "Info.plist");
-				var plist = Driver.FromPList (info_plist);
+				var plist = Driver.FromPList (InfoPListPath);
 				var dict = plist.Get<PDictionary> ("NSExtension");
 				if (dict == null)
 					return null;
 				return dict.GetString ("NSExtensionPointIdentifier");
+			}
+		}
+
+		public string InfoPListPath {
+			get {
+				switch (Platform) {
+				case ApplePlatform.iOS:
+				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
+					return Path.Combine (AppDirectory, "Info.plist");
+				case ApplePlatform.MacCatalyst:
+				case ApplePlatform.MacOSX:
+					return Path.Combine (AppDirectory, "Contents", "Info.plist");
+				default:
+					throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
+				}
 			}
 		}
 

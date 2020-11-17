@@ -381,12 +381,11 @@ namespace Xamarin.Bundler {
 
 		string GetStringFromInfoPList (string key)
 		{
-			return GetStringFromInfoPList (AppDirectory, key);
+			return GetStringFromInfoPList (InfoPListPath, key);
 		}
 
-		string GetStringFromInfoPList (string directory, string key)
+		string GetStringFromInfoPList (string info_plist, string key)
 		{
-			var info_plist = Path.Combine (directory, "Info.plist");
 			if (!File.Exists (info_plist))
 				return null;
 
