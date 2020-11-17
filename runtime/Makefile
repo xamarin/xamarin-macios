@@ -99,6 +99,7 @@ MONOTOUCH_ARM64_SOURCE_STEMS = $(patsubst %.s,%,$(patsubst %.m,%,$(SHARED_ARM64_
 
 define FrameworkTemplate
 
+$(2)_ARCHITECTURES = $(3)
 $(2)_FRAMEWORKS    = $(MONOTOUCH_FRAMEWORKS)
 
 RUNTIME_$(2)_TARGETS_DIRS +=                                        \
@@ -215,6 +216,7 @@ ifdef INCLUDE_DEVICE
 $(eval $(call PlatformTemplate,iphoneos,IPHONEOS,armv7 armv7s arm64))
 endif
 $(eval $(call PlatformTemplate,iphonesimulator,IOSSIMULATOR,x86 x86_64))
+$(eval $(call PlatformTemplate,maccatalyst,MACCATALYST,x86_64))
 endif
 
 ifdef INCLUDE_WATCH
@@ -293,6 +295,7 @@ endef
 
 $(eval $(call LibTemplate,iphoneos,IPHONEOS))
 $(eval $(call LibTemplate,iphonesimulator,IOSSIMULATOR))
+$(eval $(call LibTemplate,maccatalyst,MACCATALYST))
 $(eval $(call LibTemplate,watchos,WATCHOS))
 $(eval $(call LibTemplate,watchsimulator,WATCHSIMULATOR))
 $(eval $(call LibTemplate,tvos,TVOS))
@@ -375,6 +378,8 @@ $(eval $(call LibXamarinTemplate,iphoneos,IPHONEOS))
 $(eval $(call LibXamarinTemplate,iphoneos,IPHONEOS,_DEBUG,-debug))
 $(eval $(call LibXamarinTemplate,iphonesimulator,IOSSIMULATOR))
 $(eval $(call LibXamarinTemplate,iphonesimulator,IOSSIMULATOR,_DEBUG,-debug))
+$(eval $(call LibXamarinTemplate,maccatalyst,MACCATALYST))
+$(eval $(call LibXamarinTemplate,maccatalyst,MACCATALYST,_DEBUG,-debug))
 $(eval $(call LibXamarinTemplate,watchos,WATCHOS))
 $(eval $(call LibXamarinTemplate,watchos,WATCHOS,_DEBUG,-debug))
 $(eval $(call LibXamarinTemplate,watchsimulator,WATCHSIMULATOR))
