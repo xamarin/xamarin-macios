@@ -1631,6 +1631,7 @@ namespace Xamarin.Bundler
 				compiler_flags.AddLinkWith (libnative);
 				switch (app.Platform) {
 				case ApplePlatform.iOS:
+				case ApplePlatform.MacCatalyst:
 					Driver.Log (3, "Adding GSS framework reference.");
 					compiler_flags.AddFramework ("GSS");
 					break;
