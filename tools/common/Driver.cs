@@ -875,6 +875,7 @@ namespace Xamarin.Bundler {
 			case ApplePlatform.TVOS:
 				return app.IsDeviceBuild ? "AppleTVOS" : "AppleTVSimulator";
 			case ApplePlatform.MacOSX:
+			case ApplePlatform.MacCatalyst:
 				return "MacOSX";
 			default:
 				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, app.ProductName);
