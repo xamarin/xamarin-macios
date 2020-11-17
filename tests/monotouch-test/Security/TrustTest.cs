@@ -394,7 +394,7 @@ namespace MonoTouchFixtures.Security {
 				Assert.False (trust.Evaluate (out var error), "Evaluate");
 				Assert.NotNull (error, "error");
 				// We have different error messages that all contain mail.google.com and some different text.
-				Assert.That (error.LocalizedDescription, Is.StringContaining ("mail.google.com"), "LocalizedDescription");
+				Assert.That (error.LocalizedDescription, Does.Contain ("mail.google.com"), "LocalizedDescription");
 			} else if (TestRuntime.CheckXcodeVersion (11, 0)) {
 				Assert.False (trust.Evaluate (out var error), "Evaluate");
 				Assert.NotNull (error, "error");
