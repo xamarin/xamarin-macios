@@ -230,6 +230,7 @@ namespace Xamarin.Bundler {
 				case ApplePlatform.iOS:
 				case ApplePlatform.TVOS:
 				case ApplePlatform.WatchOS:
+				case ApplePlatform.MacCatalyst:
 					return LinkMode == LinkMode.None;
 				case ApplePlatform.MacOSX:
 					return Registrar == RegistrarMode.Static && LinkMode == LinkMode.None;
