@@ -132,6 +132,28 @@ namespace Xharness.Targets
 					break;
 				}
 				break;
+			case "GuiUnit_NET_4_5.csproj":
+				switch (Flavor) {
+				case MacFlavors.Full:
+				case MacFlavors.System:
+					fixed_include = include;
+					return true;
+				case MacFlavors.Modern:
+					fixed_include = Path.Combine (Path.GetDirectoryName (include), "GuiUnit_xammac_mobile" + Path.GetExtension (include));
+					return true;
+				}
+				break;
+			case "GuiUnit_xammac_mobile.csproj":
+				switch (Flavor) {
+				case MacFlavors.Full:
+				case MacFlavors.System:
+					fixed_include = Path.Combine (Path.GetDirectoryName (include), "GuiUnit_NET_4_5" + Path.GetExtension (include));
+					return true;
+				case MacFlavors.Modern:
+					fixed_include = include;
+					return true;
+				}
+				break;
 			}
 
 			return base.FixProjectReference (include, subdir, suffix, out fixed_include);
