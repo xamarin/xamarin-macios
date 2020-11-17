@@ -132,6 +132,22 @@ namespace Xamarin.Bundler {
 		// This variable does not apply to macOS (if assemblies are AOT-compiled, the AOT compiler will output a .dylib next to the assembly and there's nothing extra for us)
 		Dictionary<string, Tuple<AssemblyBuildTarget, string>> assembly_build_targets = new Dictionary<string, Tuple<AssemblyBuildTarget, string>> ();
 
+		public string ContentDirectory {
+			get {
+				switch (Platform) {
+				case ApplePlatform.iOS:
+				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
+					return AppDirectory;
+				case ApplePlatform.MacOSX:
+				case ApplePlatform.MacCatalyst:
+					return Path.Combine (AppDirectory, "Contents", CustomBundleName);
+				default:
+					throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
+				}
+			}
+		}
+
 		// How Mono should be embedded into the app.
 		public AssemblyBuildTarget LibMonoLinkMode {
 			get {
