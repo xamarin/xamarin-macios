@@ -22,9 +22,12 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 
 	<PropertyGroup Condition="'$(_PlatformName)' == ''">
 		<_PlatformName Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.iOS'">iOS</_PlatformName>
+		<_PlatformName Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.MacCatalyst'">iOS</_PlatformName>
 		<_PlatformName Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.TVOS'">tvOS</_PlatformName>
 		<_PlatformName Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.WatchOS'">watchOS</_PlatformName>
 		<_PlatformName Condition="'$(_PlatformName)' == ''">macOS</_PlatformName> <!-- detecting Xamarin.Mac is a bit more complicated, so just fall back to macOS if none of the others match -->
+
+		<_IsMacCatalyst Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.MacCatalyst'">true</_IsMacCatalyst>
 	</PropertyGroup>
 
 	<PropertyGroup>
