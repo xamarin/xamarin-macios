@@ -350,6 +350,51 @@ namespace Xamarin.Bundler {
 			}
 		}
 
+		// Versions for Mac Catalyst are complicated. In some cases we have to use the
+		// corresponding iOS version of the SDK, and in some cases we have to use the
+		// macOS version that iOS version correspond to. In Xcode, when you select the
+		// deployment target, you select a macOS version in the UI, but the corresponding
+		// iOS version is written to the project file. This means that there's a mapping
+		// between the two, and we've captured that mapping in our Versions.plist for
+		// Xamarin.iOS (in the MacCatalystVersionMap plist dictionary). Here we provide
+		// two methods that can convert between iOS version and macOS version either way.
+		Dictionary<Version, Version> mac_catalyst_ios_to_macos_map;
+		Dictionary<Version, Version> GetCatalystiOSTomacOSMap ()
+		{
+			if (mac_catalyst_ios_to_macos_map == null) {
+				var file = Path.Combine (Driver.GetFrameworkCurrentDirectory (this), "Versions.plist");
+				var plist = Driver.FromPList (file);
+				var dict = plist.Get<PDictionary> ("MacCatalystVersionMap");
+
+				mac_catalyst_ios_to_macos_map = new Dictionary<Version, Version> ();
+				foreach (var kvp in dict) {
+					// The input here is fixed, so don't try to parse, just do it, because it should succeed.
+					mac_catalyst_ios_to_macos_map [Version.Parse (kvp.Key)] = Version.Parse (((PString) kvp.Value).Value);
+				}
+			}
+			return mac_catalyst_ios_to_macos_map;
+		}
+
+		public Version GetMacCatalystmacOSVersion (Version iOSVersion)
+		{
+			var map = GetCatalystiOSTomacOSMap ();
+			
+			if (!map.TryGetValue (iOSVersion, out var value))
+				throw ErrorHelper.CreateError (183, Errors.MX0183 /* Could not map the iOS version {0} to a macOS version for Mac Catalyst */, iOSVersion.ToString ());
+
+			return value;
+		}
+
+		public Version GetMacCatalystiOSVersion (Version macVersion)
+		{
+			var map = GetCatalystiOSTomacOSMap ();
+			var iosVersions = map.Where (kvp => kvp.Value == macVersion).Select (v => v.Key).ToArray ();
+			if (iosVersions.Length != 1)
+				throw ErrorHelper.CreateError (184, Errors.MX0184 /* Could not map the Mac Catalyst version {0} to an iOS version */, macVersion.ToString ());
+
+			return iosVersions [0];
+		}
+
 		public string GetProductName ()
 		{
 			return ProductName;

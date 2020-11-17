@@ -91,6 +91,30 @@
 			<string>7.0</string>
 			<string>7.1</string>
 		</array>
+		<key>MacCatalyst</key>
+		<array>
+			<string>13.1</string>
+			<string>13.2</string>
+			<string>13.3</string>
+			<string>13.4</string>
+			<string>13.5</string>
+			<string>14.2</string>
+		</array>
+	</dict>
+	<key>MacCatalystVersionMap</key>
+	<dict>
+		<key>13.1</key>
+		<string>10.15</string>
+		<key>13.2</key>
+		<string>10.15.1</string>
+		<key>13.3</key>
+		<string>10.15.2</string>
+		<key>13.4</key>
+		<string>10.15.4</string>
+		<key>13.5</key>
+		<string>10.15.5</string>
+		<key>14.2</key>
+		<string>11.0</string>
 	</dict>
 	<key>RecommendedXcodeVersion</key>
 	<string>@XCODE_VERSION@</string>

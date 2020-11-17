@@ -2602,6 +2602,16 @@
         <target state="new">Not linking with the framework {0} (referenced by a module reference in {1}) because it's not available on the current platform ({2}).</target>
         <note />
       </trans-unit>
+      <trans-unit id="MX0183">
+        <source>Could not map the iOS version {0} to a macOS version for Mac Catalyst</source>
+        <target state="new">Could not map the iOS version {0} to a macOS version for Mac Catalyst</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MX0184">
+        <source>Could not map the Mac Catalyst version {0} to an iOS version</source>
+        <target state="new">Could not map the Mac Catalyst version {0} to an iOS version</target>
+        <note />
+      </trans-unit>
       <trans-unit id="MX1009">
         <source>Could not copy the assembly '{0}' to '{1}': {2}
 		</source>

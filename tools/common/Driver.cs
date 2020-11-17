@@ -886,7 +886,12 @@ namespace Xamarin.Bundler {
 		public static string GetFrameworkDirectory (Application app)
 		{
 			var platform = GetPlatform (app);
-			return Path.Combine (PlatformsDirectory, platform + ".platform", "Developer", "SDKs", platform + app.SdkVersion.ToString () + ".sdk");
+			switch (app.Platform) {
+			case ApplePlatform.MacCatalyst:
+				return Path.Combine (PlatformsDirectory, platform + ".platform", "Developer", "SDKs", platform + app.GetMacCatalystmacOSVersion (app.SdkVersion).ToString () + ".sdk");
+			default:
+				return Path.Combine (PlatformsDirectory, platform + ".platform", "Developer", "SDKs", platform + app.SdkVersion.ToString () + ".sdk");
+			}
 		}
 
 		public static string GetProductAssembly (Application app)

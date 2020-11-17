@@ -922,6 +922,14 @@
 	<data name="MX0182" xml:space="preserve">
 		<value>Not linking with the framework {0} (referenced by a module reference in {1}) because it's not available on the current platform ({2}).</value>
 	</data>
+    
+    <data name="MX0183" xml:space="preserve">
+        <value>Could not map the iOS version {0} to a macOS version for Mac Catalyst</value>
+    </data>
+    
+    <data name="MX0184" xml:space="preserve">
+        <value>Could not map the Mac Catalyst version {0} to an iOS version</value>
+    </data>
 
 	<data name="MX1009" xml:space="preserve">
 		<value>Could not copy the assembly '{0}' to '{1}': {2}

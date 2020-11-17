@@ -900,6 +900,13 @@ namespace Xamarin.Bundler {
 				DeploymentTarget = new Version (8, 0);
 			}
 
+			if (Platform == ApplePlatform.MacCatalyst) {
+				// The deployment target we expect for Mac Catalyst is the macOS version,
+				// but we're expected to provide the corresponding iOS version pretty much
+				// everywhere, so convert here.
+				DeploymentTarget = GetMacCatalystiOSVersion (DeploymentTarget);
+			}
+
 			if (!enable_msym.HasValue)
 				enable_msym = !EnableDebug && IsDeviceBuild;
 
