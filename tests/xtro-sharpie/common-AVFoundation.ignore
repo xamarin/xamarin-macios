@@ -76,3 +76,5 @@
 # intro says that this is not true
 !missing-protocol-conformance! AVURLAsset should conform to NSItemProviderReading (defined in 'AVURLAssetNSItemProvider' category)
 !missing-protocol-conformance! AVURLAsset should conform to NSItemProviderWriting (defined in 'AVURLAssetNSItemProvider' category)
+
+!missing-field! AVSampleBufferDisplayLayerFailedToDecodeNotificationErrorKey not bound

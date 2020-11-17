@@ -4,7 +4,6 @@
 ## `*Count` are not constant values and can change in the future
 !missing-enum-value! MLCActivationType native value MLCActivationTypeCount = 19 not bound
 !missing-enum-value! MLCArithmeticOperation native value MLCArithmeticOperationCount = 26 not bound
-!missing-enum-value! MLCDataType native value MLCDataTypeCount = 6 not bound
 !missing-enum-value! MLCDataType native value MLCDataTypeCount = 8 not bound
 !missing-enum-value! MLCDeviceType native value MLCDeviceTypeCount = 3 not bound
 !missing-enum-value! MLCLossType native value MLCLossTypeCount = 9 not bound
