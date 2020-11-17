@@ -492,6 +492,7 @@ namespace Xamarin.Bundler {
 					return "-lcompression";
 				return "-weak-lcompression";
 			case ApplePlatform.iOS:
+			case ApplePlatform.MacCatalyst:
 				if (App.DeploymentTarget >= new Version (9,0))
 					return "-lcompression";
 				return "-weak-lcompression";
