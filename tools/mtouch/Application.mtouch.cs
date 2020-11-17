@@ -1012,6 +1012,10 @@ namespace Xamarin.Bundler {
 			get {
 				if (Embeddinator)
 					return Path.Combine (AppDirectory, "Frameworks", ExecutableName + ".framework", ExecutableName);
+
+				if (Platform == ApplePlatform.MacCatalyst)
+					return Path.Combine (AppDirectory, "Contents", "MacOS", ExecutableName);
+
 				return Path.Combine (AppDirectory, ExecutableName);
 			}
 		}
