@@ -853,6 +853,9 @@ namespace Xamarin.Bundler {
 			case ApplePlatform.MacOSX:
 				sdkName = "Xamarin.macOS.sdk";
 				break;
+			case ApplePlatform.MacCatalyst:
+				sdkName = "Xamarin.MacCatalyst.sdk";
+				break;
 			default:
 				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, app.ProductName);
 			}
