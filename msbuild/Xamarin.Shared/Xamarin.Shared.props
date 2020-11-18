@@ -213,6 +213,8 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<!-- This is the prefix used for embedded resources, both for library projects and binding projects -->
 		<_EmbeddedResourcePrefix Condition="'$(_PlatformName)' == 'macOS'">xammac</_EmbeddedResourcePrefix>
 		<_EmbeddedResourcePrefix Condition="'$(_PlatformName)' != 'macOS'">monotouch</_EmbeddedResourcePrefix>
+
+		<_AppBundleManifestRelativePath Condition="'$(_PlatformName)' == 'macOS' Or '$(_IsMacCatalyst)' == 'true'">Contents/</_AppBundleManifestRelativePath>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(IsBindingProject)' == 'true'">

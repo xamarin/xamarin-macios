@@ -279,7 +279,7 @@ namespace Xamarin.iOS.Tasks
 
 		public override bool Execute ()
 		{
-			var mainInfoPath = Path.Combine (AppBundlePath, "Info.plist");
+			var mainInfoPath = PlatformFrameworkHelper.GetAppManifestPath (Platform, AppBundlePath);
 			if (!File.Exists (mainInfoPath)) {
 				Log.LogError (7040, AppBundlePath, MSBStrings.E7040, AppBundlePath);
 				return false;

@@ -384,7 +384,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<GetNativeExecutableName
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
-			AppManifest="$(_AppBundlePath)Info.plist"
+			AppManifest="$(_AppBundlePath)$(_AppBundleManifestRelativePath)Info.plist"
 			>
 			<Output TaskParameter="ExecutableName" PropertyName="_ExecutableName" />
 		</GetNativeExecutableName>
