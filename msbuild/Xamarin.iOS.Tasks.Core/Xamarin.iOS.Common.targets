@@ -650,11 +650,11 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 	<Target Name="_CreateDebugConfiguration" Condition="'$(_BundlerDebug)' == 'true' And '$(IsWatchApp)' == 'false'"
 		DependsOnTargets="_CopyResourcesToBundle;_DetectDebugNetworkConfiguration"
-		Outputs="$(_AppBundlePath)MonoTouchDebugConfiguration.txt" >
+		Outputs="$(_AppResourcesPath)MonoTouchDebugConfiguration.txt" >
 		<CreateDebugConfiguration
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
-			AppBundleDir="$(AppBundleDir)"
+			AppBundleDir="$(_AppResourcesPath)"
 			DebugOverWiFi="$(IOSDebugOverWiFi)"
 			DebugIPAddresses="$(_DebugIPAddresses)"
 			DebuggerPort="$(IOSDebuggerPort)"
