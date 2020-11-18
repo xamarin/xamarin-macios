@@ -24,6 +24,14 @@ steps:
   displayName: 'Remove security UI-prompt (http://stackoverflow.com/a/40039594/183422)'
   condition: succeededOrFailed() # we do not care about the previous process cleanup
 
+- template: install-certificates.yml@templates
+  parameters:
+    DeveloperIdApplication: $(developer-id-application)
+    DeveloperIdInstaller: $(developer-id-installer)
+    IphoneDeveloper: $(iphone-developer)
+    MacDeveloper: $(mac-developer)
+    HostedMacKeychainPassword: $(OSX_KEYCHAIN_PASS)
+
 - task: xamops.azdevex.provisionator-task.provisionator@2
   displayName: 'Provision Brew components'
   inputs:
@@ -174,14 +182,6 @@ steps:
     PRODUCTSIGN_KEYCHAIN_PASSWORD: $(xma-password)
   displayName: 'Signing PR Build'
   condition: and(succeeded(), eq(variables['configuration.SignPkgs'], 'True'), eq(variables['configuration.IsPr'], 'True'))
-
-- template: install-certificates.yml@templates
-  parameters:
-    DeveloperIdApplication: $(developer-id-application)
-    DeveloperIdInstaller: $(developer-id-installer)
-    IphoneDeveloper: $(iphone-developer)
-    MacDeveloper: $(mac-developer)
-    HostedMacKeychainPassword: $(OSX_KEYCHAIN_PASS)
 
 - bash: |
     VIRTUAL_ENV_PATH=$(Build.SourcesDirectory)/venv
