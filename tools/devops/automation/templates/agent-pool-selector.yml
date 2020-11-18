@@ -38,6 +38,7 @@ steps:
       }
 
       Write-Host "Settings:"
+      Write-Host "  targetBranch: ${targetBranch}"
       Write-Host "  isTopicBranch: ${isTopicBranch}"
       Write-Host "  isPullRequest: ${isPullRequest}"
 
