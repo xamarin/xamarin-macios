@@ -292,7 +292,8 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 	<Target Name="_GenerateBundleName" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_ComputeTargetArchitectures;_GenerateAppBundleName;_GenerateAppExBundleName">
 		<PropertyGroup>
-			<_AppResourcesPath>$(_AppBundlePath)</_AppResourcesPath>
+			<_AppResourcesPath Condition="'$(_IsMacCatalyst)' == 'true'">$(_AppBundlePath)Contents\Resources\</_AppResourcesPath>
+			<_AppResourcesPath Condition="'$(_IsMacCatalyst)' != 'true'">$(_AppBundlePath)</_AppResourcesPath>
 		</PropertyGroup>
 	</Target>
 
