@@ -8,7 +8,7 @@ parameters:
 
 steps:
   - powershell: |
-      $buildReason: "$(Build.Reason)"
+      $buildReason = "$(Build.Reason)"
       $buildSourceBranchName = "$(Build.SourceBranchName)"
       $agentPoolPR = "${{ parameters.agentPoolPR }}"
       $agentPoolCI = "${{ parameters.agentPoolCI }}"
