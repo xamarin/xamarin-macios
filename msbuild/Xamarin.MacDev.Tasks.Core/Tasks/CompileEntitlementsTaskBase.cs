@@ -386,6 +386,11 @@ namespace Xamarin.MacDev.Tasks
 
 		bool SaveArchivedExpandedEntitlements (PDictionary archived)
 		{
+			if (Platform == Utils.ApplePlatform.MacCatalyst) {
+				// I'm not sure if we need this in catalyst or not, but skip it until it's proven we actually need it.
+				return true;
+			}
+
 			var path = Path.Combine (EntitlementBundlePath, "archived-expanded-entitlements.xcent");
 
 			if (File.Exists (path)) {
