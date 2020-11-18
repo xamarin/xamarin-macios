@@ -251,27 +251,6 @@ steps:
     artifactName: package-internal
   continueOnError: true
 
-- bash: |
-    if ! test -f ~/Library/Keychains/"$KEYCHAIN".keychain-db; then
-      echo "The '$KEYCHAIN' keychain is not available."
-      exit 1
-    fi
-    security default-keychain -s "$KEYCHAIN.keychain"
-    security list-keychains -s "$KEYCHAIN.keychain"
-    echo "Unlock keychain"
-
-    security unlock-keychain -p "$OSX_KEYCHAIN_PASS"
-    echo "Increase keychain unlock timeout to 6 hours"
-    security set-keychain-settings -lut 21600
-    security -v find-identity "$KEYCHAIN.keychain"
-
-    echo "Remove UI prompt"
-    security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$OSX_KEYCHAIN_PASS" "$KEYCHAIN.keychain" >/dev/null 2>&1
-  env:
-    OSX_KEYCHAIN_PASS: $(OSX_KEYCHAIN_PASS)
-    KEYCHAIN: 'xamarin-macios'
-  displayName: 'Remove security UI-prompt for tests (http://stackoverflow.com/a/40039594/183422)'
-
 - bash:
     rm -rf ~/.config/.mono/keypairs/
 
