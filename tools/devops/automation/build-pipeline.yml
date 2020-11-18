@@ -26,7 +26,7 @@ resources:
   - repository: release-scripts
     type: github
     name: xamarin/release-scripts
-    ref: refs/heads/sign-and-notarized 
+    ref: refs/heads/sign-and-notarized
     endpoint: xamarin
 
 variables:
@@ -68,7 +68,7 @@ stages:
     pool:
       vmImage: ubuntu-latest
     steps:
-      # TODO: do parse labels 
+      # TODO: do parse labels
       - bash: |
           echo '##vso[task.setvariable variable=runSimulator;isOutput=true]true'
           echo '##vso[task.setvariable variable=runDevice32b;isOutput=true]false'
@@ -93,11 +93,23 @@ stages:
   displayName: 'Build'
   dependsOn: configure
   jobs:
+  - job: AgentPoolSelector       # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/phases?view=azure-devops&tabs=yaml
+    pool:                        # Consider using an agentless (server) job here, but would need to host selection logic as an Azure function: https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#server
+      vmImage: 'ubuntu-18.04'
+    steps:
+    - checkout: none             # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
+
+  # Selects appropriate agent pool based on trigger type (PR or CI)
+  - template: templates/agent-pool-selector.yml
+
   - job: build
+    dependsOn: AgentPoolSelector
     displayName: 'Build packages'
     timeoutInMinutes: 1000
+    variables:
+      AgentPoolComputed: $[ dependencies.AgentPoolSelector.outputs['setAgentPool.AgentPoolComputed'] ]
     pool:
-      name: VSEng-Xamarin-RedmondMacCatalinaBuildPool-iOS-Untrusted
+      name: $(AgentPoolComputed)
       demands:
       - Agent.OS -equals Darwin
       - Agent.OSVersion -equals 10.15
@@ -254,7 +266,7 @@ stages:
     pool:
       vmImage: ubuntu-latest
     steps:
-      # TODO: do parse labels 
+      # TODO: do parse labels
       - bash: |
           echo "Samples!"
         displayName: 'Sample testing'

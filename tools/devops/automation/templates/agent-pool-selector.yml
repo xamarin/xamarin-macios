@@ -1,0 +1,54 @@
+#
+# Selects appropriate agent pool based on trigger type (PR or CI)
+#
+parameters:
+  agentPoolPR: 'VSEng-Xamarin-RedmondMacCatalinaBuildPool-iOS-Untrusted'
+  agentPoolCI: 'VSEng-Xamarin-RedmondMacCatalinaBuildPool-iOS-Trusted'
+  condition: succeeded()
+
+steps:
+  - powershell: |
+      $buildReason: "$(Build.Reason)"
+      $buildSourceBranchName = "$(Build.SourceBranchName)"
+      $agentPoolPR = "${{ parameters.agentPoolPR }}"
+      $agentPoolCI = "${{ parameters.agentPoolCI }}"
+
+      Write-Host "buildReason: ${buildReason}"
+      Write-Host "buildSourceBranchName: ${buildSourceBranchName}"
+      Write-Host "agentPoolPR: ${agentPoolPR}"
+      Write-Host "agentPoolCI: ${agentPoolCI}"
+
+      $agentPool = $agentPoolPR       # Default to Catalina PR pool
+      Write-Host "Default agent pool: ${agentPool}"
+
+      [bool] $isTopicBranch = $False
+      [bool] $isPullRequest = $False
+
+      if (-not ($buildSourceBranchName -eq 'main' -or $buildSourceBranchName -eq 'master' -or $buildSourceBranchName.StartsWith('d16-'))) {
+        $isTopicBranch = $True
+      }
+
+      if ($buildReason -eq 'PullRequest') {
+          $prTargetBranchName = "$(System.PullRequest.TargetBranch)"    # This system variable is only defined (and in turn the value macro replaced) when $buildReason is 'PullRequest'. Consequently, it cannot be defined as part of an input parameter
+          Write-Host "prTargetBranchName: System.PullRequest.TargetBranch: ${prTargetBranchName}"
+          $isPullRequest = $True
+          $targetBranch = $prTargetBranchName
+      } else {
+          $targetBranch = $buildSourceBranchName
+      }
+
+      Write-Host "Settings:"
+      Write-Host "  isTopicBranch: ${isTopicBranch}"
+      Write-Host "  isPullRequest: ${isPullRequest}"
+
+      if ($isTopicBranch -or $isPullRequest) {
+        $agentPool = $agentPoolPR      # Untrusted on-prem iOS pool used for PRs targeting main and d16-x release branches
+      } else {
+        $agentPool = $agentPoolCI      # Trusted on-prem iOS pool used for CIs and release branches
+      }
+
+      Write-Host "AgentPoolComputed: ${agentPool}"
+      Write-Host "##vso[task.setvariable variable=AgentPoolComputed;isOutput=true]$agentPool"
+    name: setAgentPool
+    displayName: 'AgentPoolSelector: Select agent pool'
+    condition: ${{ parameters.condition }}
