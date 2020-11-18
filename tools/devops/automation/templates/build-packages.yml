@@ -255,15 +255,15 @@ steps:
     rm -rf ~/.config/.mono/keypairs/
 
     RC=0
-    make -C tests "$TARGET" || RC=$?
+    make -C $(Build.SourcesDirectory)/xamarin-macios/tests "$TARGET" || RC=$?
 
     if [[ x$RC != x0 ]]; then
       exit $RC
     fi
 
-    if test -f "$WORKSPACE/jenkins/failure-stamp"; then
+    if test -f "$(Build.SourcesDirectory)/xamarin-macios//jenkins/failure-stamp"; then
       echo "Something went wrong:"
-      cat "$WORKSPACE/jenkins/pr-comments.md"
+      cat "$(Build.SourcesDirectory)/xamarin-macios//jenkins/pr-comments.md"
       exit 1
     fi
   displayName: 'Run tests'
@@ -271,8 +271,6 @@ steps:
   condition: succeededOrFailed() # we do not care about the previous process cleanup
   env:
     BUILD_REVISION: jenkins
-    KEYCHAIN_PWD_FILE: '~/.config/keychain'
-    KEYCHAIN: 'xamarin-macios'
     TARGET: 'wrench-jenkins'
 
 # Upload TestSummary as an artifact.
