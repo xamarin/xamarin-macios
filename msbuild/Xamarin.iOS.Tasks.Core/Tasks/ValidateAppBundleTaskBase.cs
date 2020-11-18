@@ -309,8 +309,14 @@ namespace Xamarin.iOS.Tasks
 			var deviceTypes = plist.GetUIDeviceFamily ();
 			var deviceFamilies = deviceTypes.ToDeviceFamily ();
 			AppleDeviceFamily[] validFamilies = null;
+			AppleDeviceFamily [] requiredFamilies = null;
 
 			switch (Platform) {
+			case ApplePlatform.MacCatalyst:
+				requiredFamilies = new AppleDeviceFamily [] {
+					AppleDeviceFamily.IPad,
+				};
+				goto case ApplePlatform.iOS;
 			case ApplePlatform.iOS:
 				validFamilies = new AppleDeviceFamily[] {
 					AppleDeviceFamily.IPhone,
@@ -336,6 +342,14 @@ namespace Xamarin.iOS.Tasks
 						if (Array.IndexOf (validFamilies, family) == -1) {
 							Log.LogError (7044, mainInfoPath, MSBStrings.E7044_A, mainInfoPath, family);
 						}
+					}
+				}
+			}
+
+			if (requiredFamilies != null) {
+				foreach (var family in requiredFamilies) {
+					if (!deviceFamilies.Contains (family)) {
+						Log.LogError (7044, mainInfoPath, MSBStrings.E7044_A, mainInfoPath, family);
 					}
 				}
 			}
