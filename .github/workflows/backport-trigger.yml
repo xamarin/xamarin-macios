@@ -1,0 +1,140 @@
+name: Backport Trigger
+
+on:
+  issue_comment:
+    types: [created]
+  workflow_dispatch:
+    inputs:
+      backport_pr_number:
+        description: 'Number of the pull request to backport'
+        required: true
+      backport_target_ref:
+        description: 'Shortname for the target branch for the backport to land'
+        required: true
+      backport_title:
+        description: 'Title of the backport PR'
+        required: true
+      backport_desc:
+        description: 'Description for he backport PR'
+        required: true
+      backport_head_sha:
+        description: SHA of the tip of the backport PR
+
+jobs:
+  launchBackportBuild:
+    runs-on: windows-latest
+    steps:
+      # NOTE: This is one step because of a known vulnerability in workflow commands: https://bugs.chromium.org/p/project-zero/issues/detail?id=2070&can=2&q=&colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary&cells=ids
+      - name: Launch ADO Backport Build
+        run: |
+          function Comment-OnPR {
+            param (
+              $PrNumber,
+              $Message,
+              $Repo
+            )
+
+            $jsonBody = @{
+              body = $Message
+            } | ConvertTo-Json
+
+            $headers = @{ Authorization = "token ${{ secrets.SERVICEACCOUNT_PAT }}"}
+            $uri = "https://api.github.com/repos/$Repo/issues/$PrNumber/comments"
+
+
+            Write-Host "Posting to $uri"
+            Write-Host "$jsonBody"
+            Invoke-WebRequest -UseBasicParsing -Headers $headers -Method POST -Uri $uri -Body $jsonBody
+          }
+
+          $eventName = "${{ github.event_name }}"
+          Write-Host "Action launched by a(n) $eventName event"
+
+          $backportPRNumber = 0
+          $backportTargetBranch = ""
+          $backportTitle = ""
+          $backportDescription = ""
+          $backportHeadSha = ""
+
+          switch ($eventName) {
+            "workflow_dispatch" {
+              # grab from input
+              $backportPRNumber = "${{ github.event.inputs.backport_pr_number }}"
+              $backportTargetBranch = "${{ github.event.inputs.backport_target_ref }}"
+              $backportTitle = "${{ github.event.inputs.backport_title }}"
+              $backportDescription = "${{ github.event.inputs.backport_desc }}"
+              $backportHeadSha = "${{ github.event.inputs.backport_head_sha }}"
+              Break
+            }
+            "issue_comment" {
+              # issue_comment event happens on both PR and issue comments -- we need to filter
+              $isPR = "${{ github.event.issue.pull_request }}"
+
+              if (($isPR -ne $null) -and (-not [System.String]::IsNullOrEmpty($isPR))) {
+                Write-Host "Parsing ${{ github.event.comment.body }}"
+                ($botName, $backport, $backportTargetBranch) = [System.Text.RegularExpressions.Regex]::Split("${{ github.event.comment.body }}", "\s+")
+
+                if ($botName.Equals("@vs-mobiletools-engineering-service2") -and $backport.Equals("backport", [System.StringComparison]::OrdinalIgnoreCase) -and (-not [System.String]::IsNullOrEmpty($backportTargetBranch))) {
+                  # The only information in the github.event.issue.pull_request payload that has the PR number is the url
+                  $headers = $headers = @{ Authorization = "token ${{ secrets.SERVICEACCOUNT_PAT }}"}
+                  Write-Host "Grabbing PR details from ${{ github.event.issue.pull_request.url }}"
+                  $response = Invoke-WebRequest -UseBasicParsing -Headers $headers -Uri "${{ github.event.issue.pull_request.url }}" | ConvertFrom-Json
+                  $backportPRNumber = $response.number
+                  $backportTitle = $response.title
+                  $backportDescription = $response.body
+                  $backportHeadSha = $response.head.sha
+                } else {
+                  Write-Host "Could not parse comment for backport command"
+                  Write-Host "Usage: @vs-mobiletools-engineering-service2 backport TARGET_BRANCH"
+                  exit 0
+                }
+              } else {
+                Write-Host "No-op: Action was launched on an issue comment, not a PR comment"
+                exit 0
+              }
+              Break
+            }
+            default {
+              throw "Unrecognized event: $eventName"
+            }
+          }
+
+          ($repoOwner, $repoName) = "${{ github.repository }}".Split("/")
+          try {
+
+            $launchURI = "https://dev.azure.com/${{ secrets.ADO_PROJECTCOLLECTION }}/${{ secrets.ADO_PROJECT }}/_apis/pipelines/${{ secrets.BACKPORT_PIPELINEID }}/runs?api-version=6.0-preview.1"
+            $parameters = @{
+              BackportRepoName = "$repoName";
+              BackportRepoOrg = "$repoOwner";
+              BackportTargetBranch = "$backportTargetBranch";
+              BackportPRNumber = "$backportPRNumber";
+              BackportTitle = $backportTitle;
+              BackportDescription = $backportDescription;
+              BackportHeadSHA = $backportHeadSha;
+            }
+
+            $json = @{
+              previewRun = false;
+              templateParameters = $parameters;
+              resources = @{ repositories = @{ self = @{ refName = "refs/heads/yaml-pipeline" } } };
+            } | ConvertTo-Json -Depth 10
+
+            Write-Host "Posting to $launchURI"
+            Write-Host $json
+            $encoded = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes(":${{ secrets.ADO_BUILDPAT }}"))
+            $headers = @{ Authorization = "Basic $encoded"}
+
+            $response = Invoke-WebRequest -UseBasicParsing -Method POST -Headers $headers -ContentType "application/json" -Uri $launchURI -Body $json
+            $responseJson = $response.Content | ConvertFrom-Json
+
+            Write-Host "Response:`n$responseJson"
+            # We need to create the link to the DevOps build because it is not provided to us in the response
+            $message = "Backport Job Created! The magic is happening [here](https://dev.azure.com/${{ secrets.ADO_PROJECTCOLLECTION }}/${{ secrets.ADO_PROJECT }}/_build/results?buildId=$($responseJson.id))."
+            Comment-OnPR -PrNumber $BackportPRNumber -Message $message -Repo "${{ github.repository }}"
+            exit 0
+          } catch {
+            $message = "I couldn't create a backport for you :(`n`nHere's the exception message:`n$($_.Exception.Message)"
+            Comment-OnPR -PrNumber $BackportPRNumber -Message $message -Repo "${{ github.repository }}"
+            Write-Error -Message $_ -ErrorAction Stop
+          }
+        shell: pwsh
