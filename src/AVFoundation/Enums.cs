@@ -209,9 +209,7 @@ namespace AVFoundation {
 
 		VideoCompositorFailed = -11858,
 
-#if !MONOMAC
 		RecordingAlreadyInProgress = -11859,
-#endif
 		CreateContentKeyRequestFailed = -11860,
 		UnsupportedOutputSettings = -11861,
 		OperationNotAllowed = -11862,
@@ -228,6 +226,7 @@ namespace AVFoundation {
 		UnsupportedDeviceActiveFormat = -11873,
 		IncorrectlyConfigured = -11875,
 		SegmentStartedWithNonSyncSample = -11876,
+		RosettaNotInstalled = -11877,
 	}
 
 	[Watch (6,0)]
@@ -703,6 +702,8 @@ namespace AVFoundation {
 	public enum AVSampleBufferRequestMode : long {
 		Immediate,
 		Scheduled,
+		[Mac (10,15)]
+		Opportunistic = 2,
 	}
 
 	[NoTV, NoWatch, Mac (10,15), iOS (10,0)]

@@ -80,16 +80,16 @@ namespace Xamarin.Tests
 			case Profile.None:
 				break;
 			case Profile.iOS:
-				targetFramework = TargetFramework.DotNet_5_0_iOS_String;
+				targetFramework = TargetFramework.DotNet_6_0_iOS_String;
 				break;
 			case Profile.tvOS:
-				targetFramework = TargetFramework.DotNet_5_0_tvOS_String;
+				targetFramework = TargetFramework.DotNet_6_0_tvOS_String;
 				break;
 			case Profile.watchOS:
-				targetFramework = TargetFramework.DotNet_5_0_watchOS_String;
+				targetFramework = TargetFramework.DotNet_6_0_watchOS_String;
 				break;
 			case Profile.macOSMobile:
-				targetFramework = TargetFramework.DotNet_5_0_macOS_String;
+				targetFramework = TargetFramework.DotNet_6_0_macOS_String;
 				break;
 			case Profile.macOSFull:
 			case Profile.macOSSystem:

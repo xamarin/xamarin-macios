@@ -315,7 +315,6 @@ namespace Xamarin.iOS.Tasks
 				validFamilies = new AppleDeviceFamily[] {
 					AppleDeviceFamily.IPhone,
 					AppleDeviceFamily.IPad,
-					AppleDeviceFamily.Watch
 				};
 				break;
 			case ApplePlatform.WatchOS:

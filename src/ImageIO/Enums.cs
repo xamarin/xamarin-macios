@@ -74,8 +74,7 @@ namespace ImageIO {
 	}
 
 	// Yes, no [Native] here
-	[iOS (14,1)]
-	[NoTV][NoWatch][NoMac]
+	[Mac (11,0), iOS (14,1), TV (14,2), Watch (7,1)]
 	public enum CGImagePropertyTgaCompression : uint {
 		None = 0,
 		Rle,

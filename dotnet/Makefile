@@ -3,8 +3,8 @@ TOP = ..
 include $(TOP)/Make.config
 include $(TOP)/mk/rules.mk
 
-DOTNET_MANIFESTS_PATH=$(DOTNET5_DIR)/sdk-manifests/$(DOTNET5_VERSION_BAND)
-DOTNET_PACKS_PATH=$(DOTNET5_DIR)/packs
+DOTNET_MANIFESTS_PATH=$(DOTNET6_DIR)/sdk-manifests/$(DOTNET6_VERSION_BAND)
+DOTNET_PACKS_PATH=$(DOTNET6_DIR)/packs
 TMP_PKG_DIR=_pkg
 
 # Create variables prefixed with the correctly cased platform name from the upper-cased platform name. This makes some of the next sections somewhat simpler.
@@ -13,15 +13,16 @@ $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(platform)_NUGET_VERSION_NO_METAD
 define DefineTargets
 $(1)_NUGET_TARGETS = \
 	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/Sdk/AutoImport.props \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/Sdk/Sdk.targets \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Microsoft.$(1).Sdk.SupportedTargetPlatforms.targets \
+	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/Sdk/Sdk.props \
+	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Microsoft.$(1).Sdk.SupportedTargetPlatforms.props \
 	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Microsoft.$(1).Sdk.DefaultItems.props \
+	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Microsoft.$(1).Sdk.props \
 	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Microsoft.$(1).Sdk.targets \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Microsoft.$(1).TargetFrameworkInference.targets \
 	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Xamarin.Shared.Sdk.DefaultItems.targets \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Xamarin.Shared.Sdk.TargetFrameworkInference.targets \
+	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Xamarin.Shared.Sdk.TargetFrameworkInference.props \
+	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Xamarin.Shared.Sdk.props \
 	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Xamarin.Shared.Sdk.targets \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Xamarin.Shared.Sdk.Versions.targets
+	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Xamarin.Shared.Sdk.Versions.props
 endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call DefineTargets,$(platform))))
 
@@ -57,7 +58,7 @@ $(DOTNET_DESTDIR)/Microsoft.watchOS.Sdk/targets/%: targets/% | $(DOTNET_DESTDIR)
 $(DOTNET_DESTDIR)/Microsoft.macOS.Sdk/targets/%: targets/% | $(DOTNET_DESTDIR)/Microsoft.macOS.Sdk/targets
 	$(Q) $(CP) $< $@
 
-targets/%.targets: targets/%.template.targets Makefile $(TOP)/Make.config.inc $(TOP)/.git/HEAD $(TOP)/.git/index
+targets/%.props: targets/%.template.props Makefile $(TOP)/Make.config.inc $(TOP)/.git/HEAD $(TOP)/.git/index
 	$(Q_GEN) sed \
 		-e "s/@IOS_NUGET_VERSION_NO_METADATA@/$(IOS_NUGET_VERSION_NO_METADATA)/g" \
 		-e "s/@TVOS_NUGET_VERSION_NO_METADATA@/$(TVOS_NUGET_VERSION_NO_METADATA)/g" \
@@ -80,7 +81,7 @@ endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call DefaultItems,$(platform))))
 
 define SupportedTargetPlatforms
-Microsoft.$(1).Sdk/targets/Microsoft.$(1).Sdk.SupportedTargetPlatforms.targets: $(TOP)/Versions-ios.plist.in $(TOP)/Versions-mac.plist.in Makefile ./generate-target-platforms.csharp Makefile
+Microsoft.$(1).Sdk/targets/Microsoft.$(1).Sdk.SupportedTargetPlatforms.props: $(TOP)/Versions-ios.plist.in $(TOP)/Versions-mac.plist.in Makefile ./generate-target-platforms.csharp Makefile
 	$(Q) rm -f $$@.tmp
 	$(Q) ./generate-target-platforms.csharp $(1) $$@.tmp
 	$(Q) mv $$@.tmp $$@
@@ -106,8 +107,8 @@ endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call WorkloadTargets,$(platform),$(shell echo $(platform) | tr A-Z a-z),$($(platform)_NUGET_VERSION_NO_METADATA))))
 
 TEMPLATED_FILES = \
-	targets/Xamarin.Shared.Sdk.Versions.targets \
-	$(foreach platform,$(DOTNET_PLATFORMS),Microsoft.$(platform).Sdk/targets/Microsoft.$(platform).Sdk.SupportedTargetPlatforms.targets) \
+	targets/Xamarin.Shared.Sdk.Versions.props \
+	$(foreach platform,$(DOTNET_PLATFORMS),Microsoft.$(platform).Sdk/targets/Microsoft.$(platform).Sdk.SupportedTargetPlatforms.props) \
 
 nupkgs/$(IOS_NUGET).%.nupkg: CURRENT_VERSION_NO_METADATA=$(IOS_NUGET_VERSION_NO_METADATA)
 nupkgs/$(TVOS_NUGET).%.nupkg: CURRENT_VERSION_NO_METADATA=$(TVOS_NUGET_VERSION_NO_METADATA)
@@ -124,7 +125,7 @@ define CreateNuGetTemplate
 nupkgs/$(1).$(2)+$(NUGET_BUILD_METADATA).nupkg: $(TEMPLATED_FILES) $(3) package/$(1)/package.csproj $(wildcard package/*.csproj) $(wildcard $(DOTNET_DESTDIR)/$(1)/* $(DOTNET_DESTDIR)/$(1)/*/* $(DOTNET_DESTDIR)/$(1)/*/*/* $(DOTNET_DESTDIR)/$(1)/*/*/*/*) global.json
 	@# Delete any versions of the nuget we're building
 	$$(Q) rm -f nupkgs/$(1).*.nupkg
-	$$(Q_PACK) $(DOTNET5) pack package/$(1)/package.csproj --output "$$(dir $$@)" $(DOTNET_PACK_VERBOSITY)
+	$$(Q_PACK) $(DOTNET6) pack package/$(1)/package.csproj --output "$$(dir $$@)" $(DOTNET_PACK_VERBOSITY)
 	@# Nuget pack doesn't add the metadata to the filename, but we want that, so rename nuget to contain the full name
 	$$(Q) mv "nupkgs/$(1).$(2).nupkg" "$$@"
 	@# Clean the local feed
@@ -191,7 +192,7 @@ define CreatePackage
 # The workload package
 $(TMP_PKG_DIR)/Microsoft.$1.Workload.$2.pkg: $($(1)_NUGET_TARGETS) $(WORKLOAD_TARGETS) Makefile | $(TMP_PKG_DIR)
 	$$(Q) rm -f $$@
-	$$(Q_GEN) pkgbuild --quiet --version '$2' --root Microsoft.NET.Workload.$1 --component-plist PackageInfo.plist  --install-location /usr/local/share/dotnet/sdk-manifests/$(DOTNET5_VERSION_BAND)/Microsoft.NET.Workload.$1 --identifier com.microsoft.net.$3.workload.pkg $$@.tmp
+	$$(Q_GEN) pkgbuild --quiet --version '$2' --root Microsoft.NET.Workload.$1 --component-plist PackageInfo.plist  --install-location /usr/local/share/dotnet/sdk-manifests/$(DOTNET6_VERSION_BAND)/Microsoft.NET.Workload.$1 --identifier com.microsoft.net.$3.workload.pkg $$@.tmp
 	$$(Q) mv $$@.tmp $$@
 
 # The sdk package
@@ -227,10 +228,10 @@ PACKAGE_TARGETS += $(DOTNET_PKG_DIR)/Microsoft.$1.Bundle.$2.pkg
 
 $(TMP_PKG_DIR)/Microsoft.$1.Bundle.$2.zip: $($(1)_NUGET_TARGETS) $(WORKLOAD_TARGETS) Makefile $(REF_PACK_$(4)) $(SDK_PACK_$(4)) | $(TMP_PKG_DIR)
 	$$(Q) rm -rf $$@ $$@.tmpdir $$@.tmp
-	$$(Q) mkdir -p $$@.tmpdir/dotnet/sdk-manifests/$(DOTNET5_VERSION_BAND)/
+	$$(Q) mkdir -p $$@.tmpdir/dotnet/sdk-manifests/$(DOTNET6_VERSION_BAND)/
 	$$(Q) mkdir -p $$@.tmpdir/dotnet/packs/Microsoft.$1.Sdk
 	$$(Q) mkdir -p $$@.tmpdir/dotnet/packs/Microsoft.$1.Ref
-	$$(Q) $(CP) -r Microsoft.NET.Workload.$1 $$@.tmpdir/dotnet/sdk-manifests/$(DOTNET5_VERSION_BAND)/
+	$$(Q) $(CP) -r Microsoft.NET.Workload.$1 $$@.tmpdir/dotnet/sdk-manifests/$(DOTNET6_VERSION_BAND)/
 	$$(Q) $(CP) -r $(DOTNET_DESTDIR)/Microsoft.$1.Sdk $$@.tmpdir/dotnet/packs/Microsoft.$1.Sdk/$2
 	$$(Q) $(CP) -r $(DOTNET_DESTDIR)/Microsoft.$1.Ref $$@.tmpdir/dotnet/packs/Microsoft.$1.Ref/$2
 	$$(Q_GEN) cd $$@.tmpdir && zip -9rq $$(abspath $$@.tmp) .
@@ -271,11 +272,11 @@ msi: $(MSI_TARGETS)
 package: $(PACKAGE_TARGETS) $(MSI_TARGETS)
 
 ifdef ENABLE_DOTNET
-all-local:: $(TARGETS) targets/Xamarin.Shared.Sdk.Versions.targets
+all-local:: $(TARGETS) targets/Xamarin.Shared.Sdk.Versions.props
 endif
 
 # This tells NuGet to use the exact same dotnet version we've configured in Make.config
-global.json: $(TOP)/global5.json
+global.json: $(TOP)/global6.json
 	$(CP) $< $@
 
 clean-local::

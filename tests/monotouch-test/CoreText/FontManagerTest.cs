@@ -61,7 +61,10 @@ namespace MonoTouchFixtures.CoreText {
 				// Assert.IsNotNull (err, "err 3");
 				err = CTFontManager.UnregisterFontsForUrl (url, CTFontManagerScope.Process);
 #if MONOMAC
-				Assert.IsNull (err, "err 4");
+				if (TestRuntime.CheckXcodeVersion (12,2))
+					Assert.IsNotNull (err, "err 4");
+				else
+					Assert.IsNull (err, "err 4");
 #else
 				Assert.IsNotNull (err, "err 4");
 #endif
@@ -155,7 +158,12 @@ namespace MonoTouchFixtures.CoreText {
 				// Assert.IsNotNull (err [0], "err 3[0]");
 				err = CTFontManager.UnregisterFontsForUrl (new [] { url }, CTFontManagerScope.Process);
 #if MONOMAC
-				Assert.IsNull (err, "err 4");
+				if (TestRuntime.CheckXcodeVersion (12, 2)) {
+					Assert.IsNotNull (err, "err 4");
+					Assert.AreEqual (1, err.Length, "err 4 l");
+					Assert.IsNotNull (err [0], "err 4[0]");
+				} else
+					Assert.IsNull (err, "err 4");
 #else
 				Assert.IsNotNull (err, "err 4");
 				Assert.AreEqual (1, err.Length, "err 4 l");

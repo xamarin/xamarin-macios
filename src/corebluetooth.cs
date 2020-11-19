@@ -445,7 +445,7 @@ namespace CoreBluetooth {
 		[Override]
 		CBDescriptor [] Descriptors { get; set; }
 
-		[iOS (7,0), Export ("subscribedCentrals"), Mac (10,9)]
+		[iOS (7,0), Export ("subscribedCentrals")]
 		CBCentral [] SubscribedCentrals { get; }
 	}
 
@@ -835,7 +835,6 @@ namespace CoreBluetooth {
 	[BaseType (typeof (CBManager), Delegates=new[] { "WeakDelegate" }, Events=new[] { typeof (CBPeripheralManagerDelegate) })]
 	interface CBPeripheralManager {
 
-		[Mac (10,9)] 
 		[Export ("init")]
 		IntPtr Constructor ();
 
@@ -848,7 +847,7 @@ namespace CoreBluetooth {
 		[NoTV]
 		[NoWatch]
 		[DesignatedInitializer]
-		[iOS (7,0),Mac (10,9)]
+		[iOS (7,0)]
 		[Export ("initWithDelegate:queue:options:")]
 		[PostGet ("WeakDelegate")]
 		IntPtr Constructor ([Protocolize] CBPeripheralManagerDelegate peripheralDelegate, [NullAllowed] DispatchQueue queue, [NullAllowed] NSDictionary options);
@@ -1000,19 +999,16 @@ namespace CoreBluetooth {
 	[Watch (4,0)][iOS (11,0)][TV (11,0)][Mac (10,13)]
 	[BaseType (typeof (NSObject), Name = "CBL2CAPChannel")]
 	interface CBL2CapChannel {
-		[Mac (10,13)]
+
 		[Export ("peer")]
 		CBPeer Peer { get; }
 
-		[Mac (10,13)]
 		[Export ("inputStream")]
 		NSInputStream InputStream { get; }
 
-		[Mac (10,13)]
 		[Export ("outputStream")]
 		NSOutputStream OutputStream { get; }
 
-		[Mac (10,13)]
 		[Export ("PSM")]
 		/* uint16_t */ ushort Psm { get; }
 	}

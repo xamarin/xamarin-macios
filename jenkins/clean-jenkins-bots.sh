@@ -95,6 +95,14 @@ oldXcodes=(
 	"/Applications/Xcode_12.0.0-beta3.app"
 	"/Applications/Xcode_12.0.0-beta4.app"
 	"/Applications/Xcode_12.0.0-beta5.app"
+	"/Applications/Xcode_12.0.0-beta6.app"
+	"/Applications/Xcode_12.1.0-GM.app"
+	"/Applications/Xcode_12.0.0-GMb.app"
+	"/Applications/Xcode_12.2.0-beta1.app"
+	"/Applications/Xcode_12.2.0-beta2.app"
+	"/Applications/Xcode_12.2.0-beta3.app"
+	"/Applications/Xcode_12.2.0-beta.3.app"
+	"/Applications/Xcode_12.2.0-rc.app"
 )
 
 for oldXcode in "${oldXcodes[@]}"; do
