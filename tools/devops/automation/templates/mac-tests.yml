@@ -1,0 +1,41 @@
+parameters:
+# name of the pool that contains the iOS devices
+- name: macPool
+  type: string
+
+jobs:
+- job: run_tests
+  displayName: 'Mac OS X tests'
+  timeoutInMinutes: 1000
+  workspace:
+    clean: all
+
+  pool:
+    name: ${{ parameters.macPool }}
+    demands: 
+    - Agent.OS -equals Darwin
+  
+  steps:
+    - checkout: self          # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
+      clean: true             # Executes: git clean -ffdx && git reset --hard HEAD
+      submodules: recursive
+
+    - bash: echo "Hello Tests"
+      displayName: 'So many job'
+
+- job: upload_vsdrops
+  displayName: 'Upload results to vsdrops'
+  dependsOn: run_tests
+  timeoutInMinutes: 1000
+  workspace:
+    clean: all
+
+  pool:
+    name: VSEng-Xamarin-Win-XMA
+    demands: 
+    - Agent.OS -equals Windows_NT
+  
+  steps:
+    - checkout: self          # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
+      clean: true             # Executes: git clean -ffdx && git reset --hard HEAD
+      submodules: recursive

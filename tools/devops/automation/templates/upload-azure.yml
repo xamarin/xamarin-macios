@@ -30,27 +30,6 @@ steps:
     GitHubToken: $(GitHub.Token)
     ArtifactDirectory: $(Build.SourcesDirectory)/package-internal
 
-- powershell: |
-    $execPath="$Env:BUILD_SOURCESDIRECTORY\Xamarin.Build.Tasks\tools\BuildTasks\build-tasks.exe"
-
-    if (-not (Test-Path $execPath -PathType Leaf)) {
-        Write-Host "Build task not found at $execPath!"
-    }
-
-    $maciosPath="$Env:BUILD_SOURCESDIRECTORY"
-
-    Write-Host "Exect path is $execPath" 
-    Write-Host "Macios path is $maciosPath"
-    Write-Host "$Env:VIRTUAL_PATH"
-    Write-Host "Artifacts url wrench/$Env:VIRTUAL_PATH/package"
-
-    Invoke-Expression "$execPath artifacts -s `"$maciosPath`" -a bosstoragemirror -c $Env:STORAGE_PASS -u `"wrench/$Env:VIRTUAL_PATH/package`" -d `"$(Build.SourcesDirectory)\artifacts\package`" -o `"$(Build.SourcesDirectory)\artifacts\package`""
-  env:
-    VIRTUAL_PATH: $(Build.SourceBranchName)/$(Build.SourceVersion)/$(Build.BuildId)
-    GITHUB_AUTH_TOKEN: $(GitHub.Token)
-    STORAGE_PASS: $(auth-xamarin-bosstoragemirror-account-key)
-  displayName: 'Generate artifacts.json'
-
 - task: AzureFileCopy@3
   displayName: 'Publish package to Azure'
   name: upload
@@ -101,13 +80,44 @@ steps:
     outputStorageContainerSasToken: PackageSasToken
 
 - powershell: |
+    $execPath="$Env:BUILD_SOURCESDIRECTORY\Xamarin.Build.Tasks\tools\BuildTasks\build-tasks.exe"
+
+    if (-not (Test-Path $execPath -PathType Leaf)) {
+        Write-Host "Build task not found at $execPath!"
+    }
+
+    $maciosPath="$Env:BUILD_SOURCESDIRECTORY"
+
+    Write-Host "Exect path is $execPath" 
+    Write-Host "Macios path is $maciosPath"
+    Write-Host "$Env:VIRTUAL_PATH"
+    Write-Host "Artifacts url wrench/$Env:VIRTUAL_PATH/package"
+
+    Invoke-Expression "$execPath artifacts -s `"$maciosPath`" -a bosstoragemirror -c $Env:STORAGE_PASS -u `"wrench/$Env:VIRTUAL_PATH/package`" -d `"$(Build.SourcesDirectory)\artifacts\package`" -o `"$(Build.SourcesDirectory)\artifacts\package`""
+  env:
+    VIRTUAL_PATH: $(Build.SourceBranchName)/$(Build.SourceVersion)/$(Build.BuildId)
+    GITHUB_AUTH_TOKEN: $(GitHub.Token)
+    STORAGE_PASS: $(auth-xamarin-bosstoragemirror-account-key)
+  displayName: 'Generate artifacts.json'
+
+# upload the artifacts.json to the build pipeline artifacts so that it can be consumed by other jobs to 
+# get the required urls
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Build Artifacts'
+  inputs:
+    targetPath: $(Build.SourcesDirectory)/artifacts/package/artifacts.json
+    artifactName: pkg-info
+  continueOnError: true
+
+- powershell: |
 
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\tools\devops\automation\scripts\GitHub.psm1
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\tools\devops\automation\scripts\VSTS.psm1
 
     Dir "$(Build.SourcesDirectory)\artifacts\package"
 
-    $pkgsVirtualUrl = "$Env:STORAGE_URI/$(Build.SourceBranchName)/$(Build.SourceVersion)/$(Build.BuildId)/package"
+    # $Env:STORAGE_URI/ ends with a /, annoying
+    $pkgsVirtualUrl = "$Env:STORAGE_URI" +"$(Build.SourceBranchName)/$(Build.SourceVersion)/$(Build.BuildId)/package"
     Write-Host "Urls is $pkgsVirtualUrl"
 
     $pkgsPath = "$(Build.SourcesDirectory)\artifacts\package"

@@ -1,0 +1,65 @@
+#
+# Selects appropriate agent pool based on trigger type (PR or CI)
+#
+parameters:
+  agentPoolPR: 'VSEng-Xamarin-RedmondMacCatalinaBuildPool-iOS-Untrusted'
+  agentPoolPRUrl: 'https://devdiv.visualstudio.com/DevDiv/_settings/agentqueues?queueId=2734&view=agents'
+  agentPoolCI: 'VSEng-Xamarin-RedmondMacCatalinaBuildPool-iOS-Trusted'
+  agentPoolCIUrl: 'https://devdiv.visualstudio.com/DevDiv/_settings/agentqueues?queueId=2748&view=agents'
+  condition: succeeded()
+
+steps:
+  - powershell: |
+      $buildReason = "$(Build.Reason)"
+      $buildSourceBranchName = "$(Build.SourceBranchName)"
+      $agentPoolPR = "${{ parameters.agentPoolPR }}"
+      $agentPoolPRUrl = "${{ parameters.agentPoolPRUrl }}"
+      $agentPoolCI = "${{ parameters.agentPoolCI }}"
+      $agentPoolCIUrl = "${{ parameters.agentPoolCIUrl }}"
+
+      Write-Host "buildReason: ${buildReason}"
+      Write-Host "buildSourceBranchName: ${buildSourceBranchName}"
+      Write-Host "agentPoolPR: ${agentPoolPR}"
+      Write-Host "agentPoolPRUrl: ${agentPoolPRUrl}"
+      Write-Host "agentPoolCI: ${agentPoolCI}"
+      Write-Host "agentPoolCIUrl: ${agentPoolCIUrl}"
+
+      $agentPool = $agentPoolPR       # Default to Catalina PR pool
+      $agentPoolUrl = $agentPoolPRUrl
+      Write-Host "Default agent pool: ${agentPool}"
+
+      [bool] $isTopicBranch = $False
+      [bool] $isPullRequest = $False
+
+      if (-not ($buildSourceBranchName -eq 'main' -or $buildSourceBranchName -eq 'master' -or $buildSourceBranchName.StartsWith('d16-'))) {
+        $isTopicBranch = $True
+      }
+
+      if ($buildReason -eq 'PullRequest') {
+          $prTargetBranchName = "$(System.PullRequest.TargetBranch)"    # This system variable is only defined (and in turn the value macro replaced) when $buildReason is 'PullRequest'. Consequently, it cannot be defined as part of an input parameter
+          Write-Host "prTargetBranchName: System.PullRequest.TargetBranch: ${prTargetBranchName}"
+          $isPullRequest = $True
+          $targetBranch = $prTargetBranchName
+      } else {
+          $targetBranch = $buildSourceBranchName
+      }
+
+      Write-Host "Settings:"
+      Write-Host "  targetBranch: ${targetBranch}"
+      Write-Host "  isTopicBranch: ${isTopicBranch}"
+      Write-Host "  isPullRequest: ${isPullRequest}"
+
+      if ($isTopicBranch -or $isPullRequest) {
+        $agentPool = $agentPoolPR      # Untrusted on-prem iOS pool used for PRs targeting main and d16-x release branches
+        $agentPoolUrl = $agentPoolPRUrl
+      } else {
+        $agentPool = $agentPoolCI      # Trusted on-prem iOS pool used for CIs and release branches
+        $agentPoolUrl = $agentPoolCIUrl
+      }
+
+      Write-Host "AgentPoolComputed: ${agentPool}"
+      Write-Host "Selected agent pool: ${agentPoolUrl}"
+      Write-Host "##vso[task.setvariable variable=AgentPoolComputed;isOutput=true]$agentPool"
+    name: setAgentPool
+    displayName: 'AgentPoolSelector: Select agent pool'
+    condition: ${{ parameters.condition }}
