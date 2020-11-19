@@ -96,7 +96,7 @@ namespace Xharness.Targets {
 		public override string DotNetSdk => "Microsoft.tvOS.Sdk";
 		public override string RuntimeIdentifier => "tvos-x64";
 		public override DevicePlatform ApplePlatform => DevicePlatform.tvOS;
-		public override string TargetFramework => "net5.0-tvos";
+		public override string TargetFramework => "net6.0-tvos";
 		public override string TargetFrameworkForNuGet => "xamarintvos10";
 
 		static Dictionary<string, string> project_guids = new Dictionary<string, string> ();
