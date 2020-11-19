@@ -257,8 +257,10 @@ steps:
     RC=0
     make -C $(Build.SourcesDirectory)/xamarin-macios/tests "$TARGET" || RC=$?
 
-    if [[ x$RC != x0 ]]; then
-      exit $RC
+    if [ $RC -eq 0 ]; then
+      echo '##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Succeeded'
+    else
+      echo '##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Failed'
     fi
 
     if test -f "$(Build.SourcesDirectory)/xamarin-macios//jenkins/failure-stamp"; then
@@ -267,6 +269,7 @@ steps:
       exit 1
     fi
   displayName: 'Run tests'
+  name: runTests # not to be confused with the displayName, this is used to later use the name of the step to access the output variables from an other job
   timeoutInMinutes: 600
   condition: succeededOrFailed() # we do not care about the previous process cleanup
   env:
