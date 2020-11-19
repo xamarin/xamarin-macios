@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 
-namespace Xharness.Targets
-{
+namespace Xharness.Targets {
 	public class MacTarget : Target
 	{
 		public MacFlavors Flavor { get; private set; }
@@ -110,7 +108,7 @@ namespace Xharness.Targets
 		public override string DotNetSdk => "Microsoft.macOS.Sdk";
 		public override string RuntimeIdentifier => "osx-x64";
 		public override DevicePlatform ApplePlatform => DevicePlatform.macOS;
-		public override string TargetFramework => "net5.0-macos";
+		public override string TargetFramework => "net6.0-macos";
 		public override string TargetFrameworkForNuGet => "xamarinmac10";
 
 		protected override bool FixProjectReference (string include, string subdir, string suffix, out string fixed_include)
@@ -186,7 +184,7 @@ namespace Xharness.Targets
 		{
 			base.PostProcessExecutableProject ();
 
-			ProjectGuid = "{" + Helpers.GenerateStableGuid ().ToString ().ToUpper () + "}";
+			ProjectGuid = "{" + Xharness.Harness.Helpers.GenerateStableGuid ().ToString ().ToUpper () + "}";
 			inputProject.SetProjectGuid (ProjectGuid);
 			inputProject.ResolveAllPaths (TemplateProjectPath);
 		}

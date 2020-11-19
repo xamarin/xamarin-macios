@@ -97,6 +97,9 @@ namespace Introspection {
 			// Just available on device
 			case "UsageKey":
 				return Runtime.Arch == Arch.SIMULATOR;
+			// Xcode 12.2 Beta 1 does not ship this but it is available in Xcode 12.0...
+			case "BarometricPressure":
+				return true;
 			default:
 				return base.Skip (p);
 			}
@@ -144,6 +147,9 @@ namespace Introspection {
 			case "MTKModelErrorDomain":
 			case "MTKModelErrorKey":
 				return Runtime.Arch == Arch.SIMULATOR;
+			// Xcode 12.2 Beta 1 does not ship this but it is available in Xcode 12.0...
+			case "HKMetadataKeyBarometricPressure":
+				return true;
 			default:
 				return false;
 			}

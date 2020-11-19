@@ -69,9 +69,13 @@ namespace AppKit
 		High = 90
 	}
 
-#if !COREBUILD
+	[Mac (10,10)] // protocol added in 10.10
+	public partial interface INSAccessibility {}
+
+	[Mac (10,9)] // but the field/notifications are in 10.9
 	public partial class NSAccessibility
 	{
+#if !COREBUILD
 		[Mac (10,10)]
 		[DllImport (Constants.AppKitLibrary)]
 		static extern CGRect NSAccessibilityFrameInView (NSView parentView, CGRect frame);
@@ -225,6 +229,6 @@ namespace AppKit
 		{
 			return NSAccessibilitySetMayContainProtectedContent (flag);
 		}
-	}
 #endif
+	}
 }

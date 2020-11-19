@@ -52,7 +52,7 @@ namespace Introspection {
 			Minimum = new Version (10,9);
 			// Need to special case macOS 'Maximum' version for OS minor subversions (can't change Constants.SdkVersion)
 			// Please comment the code below if needed
-			Maximum = new Version (10,15,5);
+			Maximum = new Version (11,0,0);
 #endif
 			Filter = (AvailabilityBaseAttribute arg) => {
 				return (arg.AvailabilityKind != AvailabilityKind.Introduced) || (arg.Platform != Platform);
@@ -137,7 +137,16 @@ namespace Introspection {
 
 					// Duplicate checks, e.g. same attribute on member and type (extranous metadata)
 					if (ma.Version == ta.Version) {
-						AddErrorLine ($"[FAIL] {ma.Version} ({m}) == {ta.Version} ({t})");
+						switch (t.FullName) {
+						case "AppKit.INSAccessibility":
+							// special case for [I]NSAccessibility type (10.9) / protocol (10.10) mix up
+							// https://github.com/xamarin/xamarin-macios/issues/10009
+							// better some dupes than being inaccurate when protocol members are inlined
+							break;
+						default:
+							AddErrorLine ($"[FAIL] {ma.Version} ({m}) == {ta.Version} ({t})");
+							break;
+						}
 					}
 					// Consistency checks, e.g. member lower than type
 					// note: that's valid in some cases, like a new base type being introduced

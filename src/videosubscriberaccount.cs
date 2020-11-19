@@ -253,6 +253,10 @@ namespace VideoSubscriberAccount {
 		[iOS (13,0)][TV (13,0)][Mac (10,15)]
 		[NullAllowed, Export ("accountProviderAuthenticationToken")]
 		string AccountProviderAuthenticationToken { get; set; }
+
+		[TV (14,2), iOS (14,2), Mac (11,0)]
+		[NullAllowed, Export ("applicationAccountProviders", ArgumentSemantic.Copy)]
+		VSAccountApplicationProvider [] ApplicationAccountProviders { get; set; }
 	}
 
 	[iOS (10,2)]
@@ -330,6 +334,22 @@ namespace VideoSubscriberAccount {
 
 		[Export ("setCurrentSubscription:")]
 		void SetCurrentSubscription ([NullAllowed] VSSubscription currentSubscription);
+	}
+
+	[TV (14,2), iOS (14,2), Mac (11,0)]
+	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface VSAccountApplicationProvider {
+
+		[Export ("initWithLocalizedDisplayName:identifier:")]
+		IntPtr Constructor (string localizedDisplayName, string identifier);
+
+		[Export ("localizedDisplayName")]
+		string LocalizedDisplayName { get; }
+
+		[Export ("identifier")]
+		string Identifier { get; }
 	}
 }
 

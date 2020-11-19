@@ -105,8 +105,10 @@ namespace Xamarin.MacDev.Tasks
 			if (IsAppExtension)
 				args.Add ("--deep");
 
-			if (UseHardenedRuntime)
-				args.Add ("-o runtime");
+			if (UseHardenedRuntime) {
+				args.Add ("-o");
+				args.Add ("runtime");
+			}
 
 			if (UseSecureTimestamp)
 				args.Add ("--timestamp");

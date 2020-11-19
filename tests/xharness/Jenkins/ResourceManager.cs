@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
-using Microsoft.DotNet.XHarness.iOS.Shared.Tasks;
+using Xharness.Jenkins.TestTasks;
 
 #nullable enable
 namespace Xharness.Jenkins {
