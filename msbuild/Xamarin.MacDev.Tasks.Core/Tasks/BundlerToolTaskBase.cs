@@ -5,7 +5,6 @@ using System.IO;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
-using Xamarin.Localization.MSBuild;
 using Xamarin.MacDev;
 using Xamarin.Utils;
 
@@ -156,65 +155,6 @@ namespace Xamarin.MacDev.Tasks {
 
 			// Generate the command line
 			return actualArgs.ToString ();
-		}
-
-		protected string ResolveXCFramework (string xcframework, string platformName, string variant, string architectures)
-		{
-			try {
-				var plist = PDictionary.FromFile (Path.Combine (xcframework, "Info.plist"));
-				var dir = ResolveXCFramework (plist, platformName, variant, architectures);
-				if (!String.IsNullOrEmpty (dir))
-					return Path.Combine (xcframework, dir);
-
-				// either the format was incorrect or we could not find a matching framework
-				// note: last part is not translated since it match the (non-translated) keys inside the `Info.plist`
-				var msg = (dir == null) ? MSBStrings.E0174 : MSBStrings.E0175 + $" SupportedPlatform: '{platformName}', SupportedPlatformVariant: '{variant}', SupportedArchitectures: '{architectures}'.";
-				Log.LogError (msg, xcframework);
-			}
-			catch (Exception) {
-				Log.LogError (MSBStrings.E0174, xcframework);
-			}
-			return null;
-		}
-
-		internal static string ResolveXCFramework (PDictionary plist, string platformName, string variant, string architectures)
-		{
-			// plist structure https://github.com/spouliot/xcframework#infoplist
-			var bundle_package_type = (PString) plist ["CFBundlePackageType"];
-			if (bundle_package_type?.Value != "XFWK")
-				return null;
-			var available_libraries = plist.GetArray ("AvailableLibraries");
-			if ((available_libraries == null) || (available_libraries.Count == 0))
-				return null;
-
-			var platform = platformName.ToLowerInvariant ();
-			var archs = architectures.Split (new char [] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
-			foreach (PDictionary item in available_libraries) {
-				var supported_platform = (PString) item ["SupportedPlatform"];
-				if (supported_platform.Value != platform)
-					continue;
-				// optional key
-				var supported_platform_variant = (PString) item ["SupportedPlatformVariant"];
-				if (supported_platform_variant?.Value != variant)
-					continue;
-				var supported_architectures = (PArray) item ["SupportedArchitectures"];
-				// each architecture we request must be present in the xcframework
-				// but extra architectures in the xcframework are perfectly fine
-				foreach (var arch in archs) {
-					bool found = false;
-					foreach (PString xarch in supported_architectures) {
-						found = String.Compare (arch, xarch.Value, StringComparison.OrdinalIgnoreCase) == 0;
-						if (found)
-							break;
-					}
-					if (!found)
-						return String.Empty;
-				}
-				var library_path = (PString) item ["LibraryPath"];
-				var library_identifier = (PString) item ["LibraryIdentifier"];
-				return Path.Combine (library_identifier, library_path);
-			}
-			return String.Empty;
 		}
 	}
 }

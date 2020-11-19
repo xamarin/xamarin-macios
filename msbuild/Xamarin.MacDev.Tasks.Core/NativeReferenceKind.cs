@@ -3,7 +3,6 @@
 	public enum NativeReferenceKind {
 		Static,
 		Dynamic,
-		Framework,
-		XCFramework,
+		Framework
 	}
 }

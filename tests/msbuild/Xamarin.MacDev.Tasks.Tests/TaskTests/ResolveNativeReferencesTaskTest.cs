@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace Xamarin.MacDev.Tasks.Tests {
 
 	[TestFixture]
-	public class BundlerToolTaskTest {
+	public class ResolveNativeReferencesTaskTest {
 
 		// single arch request (subset are fine)
 		[TestCase ("iOS", null, "arm64", "ios-arm64/Universal.framework")]
@@ -30,7 +30,7 @@ namespace Xamarin.MacDev.Tasks.Tests {
 			// on Xcode 12.2+ you get arm64 for all (iOS, tvOS and watchOS) simulators
 			var path = Path.Combine (Path.GetDirectoryName (GetType ().Assembly.Location), "Resources", "xcf-xcode12.2.plist");
 			var plist = PDictionary.FromFile (path);
-			var result = BundlerToolTaskBase.ResolveXCFramework (plist, platform, variant, architecture);
+			var result = ResolveNativeReferencesBase.ResolveXCFramework (plist, platform, variant, architecture);
 			Assert.That (result, Is.EqualTo (expected), expected);
 		}
 
@@ -38,7 +38,7 @@ namespace Xamarin.MacDev.Tasks.Tests {
 		public void BadInfoPlist ()
 		{
 			var plist = new PDictionary ();
-			var result = BundlerToolTaskBase.ResolveXCFramework (plist, "iOS", null, "x86_64");
+			var result = ResolveNativeReferencesBase.ResolveXCFramework (plist, "iOS", null, "x86_64");
 			Assert.Null (result, "Invalid Info.plist");
 		}
 	}
