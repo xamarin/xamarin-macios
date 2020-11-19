@@ -37,3 +37,20 @@ steps:
   inputs:
     CredScan: true
     PoliCheck: true
+
+- powershell: echo "##vso[task.setvariable variable=CHECKS_FAILED]True"
+  condition: failed() # we failed running the tests, therefore stop the pipeline
+
+- powershell: |
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\tools\devops\automation\scripts\GitHub.psm1
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\tools\devops\automation\scripts\VSTS.psm1
+    $context = "Governance"
+
+    Write-Host "Checks failed: '$Env:CHECKS_FAILED'"
+    if ($Env:CHECKS_FAILED -eq "True") {
+        Set-GitHubStatus -Status "error" -Description "Governance checks failed" -Context "$context"
+    } else {
+        Set-GitHubStatus -Status "success" -Description "Governance checks passed" -Context "$context"
+    }
+  displayName: "Set Github status"
+  condition: succeededOrFailed()
