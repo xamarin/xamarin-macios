@@ -58,7 +58,7 @@ steps:
       }
 
       Write-Host "AgentPoolComputed: ${agentPool}"
-      Write-Host $agentPoolUrl
+      Write-Host "Selected agent pool: ${agentPoolUrl}"
       Write-Host "##vso[task.setvariable variable=AgentPoolComputed;isOutput=true]$agentPool"
     name: setAgentPool
     displayName: 'AgentPoolSelector: Select agent pool'
