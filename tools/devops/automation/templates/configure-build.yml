@@ -1,0 +1,30 @@
+# This job will parse all the labels present in a PR, will set
+# the tags for the build AND will set a number of cofiguration
+# variables to be used by the rest of the projects
+steps:
+- checkout: self          # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
+  clean: true             # Executes: git clean -ffdx && git reset --hard HEAD
+  submodules: recursive
+
+- pwsh: |
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/GitHub.psm1
+
+    $buildReason = "$(Build.Reason)"
+    $buildSourceBranchName = "$(Build.SourceBranchName)"
+    $buildSourceBranch = "$(Build.SourceBranch)"
+
+    Write-Host "buildReason: ${buildReason}"
+    Write-Host "buildSourceBranchName: ${buildSourceBranchName}"
+    Write-Host "buildSourceBranch: $buildSourceBranch"
+
+    if ($buildReason -eq 'PullRequest') {
+      Write-Host "Configuring build from PR."
+      $prInfo = Get-GitHubPRInfo -ChangeId 10115
+      Write-Host $prInfo
+    } else {
+      Write-Host "Configuring build from origin."
+    }
+  env:
+    GITHUB_TOKEN: $(GitHub.Token)
+  name: configuration
+  displayName: 'Configure build'

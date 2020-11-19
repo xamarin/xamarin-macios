@@ -51,7 +51,7 @@ steps:
   displayName: 'Clean workspace'
 
 # Run the pipeline script tests to ensure that we will have not have an unexpected behaviour.
-- bash: make -C $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/device-tests/scripts run-tests
+- bash: make -C $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts run-tests
   displayName: 'Run pipeline script tests'
 
 - pwsh : |
@@ -61,7 +61,7 @@ steps:
 # Uses the powershell cmdlet to remove known directories that are not needed and use space.
 # we might hit issue https://github.com/PowerShell/PowerShell/issues/9246, so we always do exit 0
 - pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/device-tests/scripts/System.psm1
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/System.psm1
     Clear-HD 
     exit 0  
   displayName: 'Disk cleanup'
@@ -74,7 +74,7 @@ steps:
 # 2. Set a comment stating the same as what was sent to the status.
 # 3. Cancel the pipeline and do not execute any of the following steps.
 - pwsh: |
-    cd $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/device-tests/scripts/
+    cd $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/
     Import-Module ./System.psm1
     Import-Module ./VSTS.psm1
     Import-Module ./GitHub.psm1
@@ -164,20 +164,20 @@ steps:
 
 # remove any old processes that might have been left behind.
 - pwsh : |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/device-tests/scripts/System.psm1
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/System.psm1
     Clear-XamarinProcesses 
   displayName: 'Process cleanup'
 
 # Increase mlaunch verbosity. Will step on the old setting present.
 - pwsh : |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/device-tests/scripts/MLaunch.psm1
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MLaunch.psm1
     Set-MLaunchVerbosity -Verbosity 10
   displayName: 'Make mlaunch verbose'
   condition: succeededOrFailed() # we do not care about the previous step 
 
 # Re-start the daemon used to find the devices in the bot.
 - pwsh : |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/device-tests/scripts/MLaunch.psm1
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MLaunch.psm1
     Optimize-DeviceDiscovery 
   displayName: 'Fix device discovery (reset launchctl)'
   condition: succeededOrFailed() # making mlaunch verbose should be a non blocker
@@ -185,7 +185,7 @@ steps:
 # Update the status to pending, that way the monitoring person knows that we started running the tests. Up to this 
 # point we were just setting up the agent.
 - pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/device-tests/scripts/GitHub.psm1 
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/GitHub.psm1 
     Set-GitHubStatus -Status "pending" -Context "$Env:CONTEXT" -Description "Running device tests on $Env:CONTEXT"
   env:
     BUILD_REVISION: $(Build.SourceVersion)
@@ -315,7 +315,7 @@ steps:
 
 # Be nice and clean behind you
 - pwsh: |
-    cd $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/device-tests/scripts/
+    cd $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/
     Import-Module ./System.psm1
     Clear-AfterTests
   displayName: 'Cleanup'
