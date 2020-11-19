@@ -168,7 +168,10 @@ namespace Foundation  {
 
 	[Native]
 	public enum NSDateFormatterBehavior : ulong {
-		Default = 0, Mode_10_4 = 1040
+		Default = 0,
+		[NoiOS][NoTV][NoWatch]
+		Mode_10_0 = 1000,
+		Mode_10_4 = 1040,
 	}
 
 	[Native]

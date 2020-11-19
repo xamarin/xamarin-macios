@@ -61,7 +61,7 @@
 
   <ItemGroup>
     <KnownFrameworkReference Include="Microsoft.$(_PlatformName)"
-                            TargetFramework="net5.0"
+                            TargetFramework="net6.0"
                             RuntimeFrameworkName="Microsoft.$(_PlatformName)"
                             DefaultRuntimeFrameworkVersion="$(_ShortPackageVersion)"
                             LatestRuntimeFrameworkVersion="$(_ShortPackageVersion)"
@@ -84,7 +84,7 @@
    -->
   <ItemGroup Condition="'$(_PlatformName)' == 'macOS'">
     <KnownFrameworkReference Include="Microsoft.NETCore.App.Mono"
-                              TargetFramework="netcoreapp5.0"
+                              TargetFramework="net6.0"
                               RuntimeFrameworkName="Microsoft.NETCore.App.Mono"
                               DefaultRuntimeFrameworkVersion="$(BundledNETCorePlatformsPackageVersion)"
                               LatestRuntimeFrameworkVersion="$(BundledNETCorePlatformsPackageVersion)"

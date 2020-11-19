@@ -29,13 +29,3 @@
 !unknown-native-enum! INRelativeReference bound
 !unknown-native-enum! INRelativeSetting bound
 !unknown-type! INParameter bound
-
-## Changes introduced in Xcode 12 GM for iOS but not reflected in WatchOS we can bring them in later if needed
-!missing-field! INCarChargingConnectorTypeNone not bound
-!missing-null-allowed! 'Intents.INCarChargingConnectorType[] Intents.INCar::get_SupportedChargingConnectors()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.Void Intents.INCar::.ctor(System.String,System.String,System.String,System.String,System.String,CoreGraphics.CGColor,Intents.INCarHeadUnit,Intents.INCarChargingConnectorType[])' is missing an [NullAllowed] on parameter #7
-!missing-selector! INColor::blue not bound
-!missing-selector! INColor::green not bound
-!missing-selector! INColor::initWithRed:green:blue: not bound
-!missing-selector! INColor::red not bound
-!missing-type! INColor not bound

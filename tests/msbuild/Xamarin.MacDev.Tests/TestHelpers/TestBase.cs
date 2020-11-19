@@ -172,7 +172,7 @@ namespace Xamarin.Tests
 			}
 
 			if (Mode == ExecutionMode.DotNet) {
-				var targetPlatform = "net5.0";
+				var targetPlatform = "net6.0";
 				var subdir = string.Empty;
 				var targetPlatformSuffix = string.Empty;
 				var isDevice = Platform == "iPhone";

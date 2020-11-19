@@ -1,8 +1,6 @@
 using System;
 
 using Mono.Cecil;
-using Mono.Tuner;
-using Xamarin.Tuner;
 
 namespace Xamarin.Linker.Steps {
 	// The .NET linker comes with a way to remove attributes (by passing '--link-attributes
@@ -22,14 +20,16 @@ namespace Xamarin.Linker.Steps {
 	// 
 	// The end result is that a custom step is the best solution for now.
 
-	public class RemoveAttributesStep : RemoveAttributesBase {
-		protected DerivedLinkContext LinkContext {
-			get {
-				return LinkerConfiguration.GetInstance (Context).DerivedLinkContext;
-			}
+	public class RemoveAttributesStep : AttributeIteratorBaseStep {
+		protected override void ProcessAttribute (ICustomAttributeProvider provider, CustomAttribute attribute, out bool remove)
+		{
+			remove = IsRemovedAttribute (attribute);
+
+			if (remove)
+				LinkContext.StoreCustomAttribute (provider, attribute);
 		}
 
-		protected override bool IsRemovedAttribute (CustomAttribute attribute)
+		bool IsRemovedAttribute (CustomAttribute attribute)
 		{
 			// this avoids calling FullName (which allocates a string)
 			var attr_type = attribute.Constructor.DeclaringType;
@@ -50,12 +50,6 @@ namespace Xamarin.Linker.Steps {
 			default:
 				return false;
 			}
-		}
-
-		protected override void WillRemoveAttribute (ICustomAttributeProvider provider, CustomAttribute attribute)
-		{
-			LinkContext.StoreCustomAttribute (provider, attribute);
-			base.WillRemoveAttribute (provider, attribute);
 		}
 	}
 }

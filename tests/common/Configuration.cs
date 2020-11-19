@@ -428,7 +428,7 @@ namespace Xamarin.Tests
 		public static string GetRefDirectory (TargetFramework targetFramework)
 		{
 			if (targetFramework.IsDotNet)
-				return Path.Combine (GetDotNetRoot (), GetRefNuGetName (targetFramework), "ref", "net5.0");
+				return Path.Combine (GetDotNetRoot (), GetRefNuGetName (targetFramework), "ref", "net6.0");
 
 			// This is only applicable for .NET
 			throw new InvalidOperationException (targetFramework.ToString ());

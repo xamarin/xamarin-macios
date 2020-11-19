@@ -110,6 +110,7 @@ namespace ExternalAccessory {
 		NSString BluetoothAccessoryPickerErrorDomain { get; }
 #endif
 
+		[Introduced (PlatformName.MacCatalyst, 14, 0)]
 		[NoMac]
 		[Export ("showBluetoothAccessoryPickerWithNameFilter:completion:")]
 		[Async]
