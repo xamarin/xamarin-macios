@@ -285,6 +285,12 @@ steps:
   continueOnError: true
   condition: succeededOrFailed()
 
+- pwsh: |
+    summaryName = "TestSummary.md"
+    summaryPath = "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tests/TestSummary.md"
+    Write-Host "##vso[task.addattachment type=Distributedtask.Core.Summary;name=$summaryName;]$summaryPath"
+  displayName: Set TestSummary
+
 # Archive files for the Html Report so that the report can be easily uploaded as artifacts of the build.
 - task: ArchiveFiles@1
   displayName: 'Archive HtmlReport'

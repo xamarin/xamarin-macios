@@ -280,9 +280,17 @@ steps:
   displayName: 'Publish Artifact: TestSummary'
   inputs:
     targetPath: 'xamarin-macios/tests/TestSummary.md'
-    artifactName: TestSummary
+    artifactName: TestSummary-${{ parameters.vsdropsPrefix }}
   continueOnError: true
   condition: succeededOrFailed()
+
+- pwsh: |
+    summaryName = "TestSummary-$Env:PREFIX.md"
+    summaryPath = "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tests/TestSummary.md"
+    Write-Host "##vso[task.addattachment type=Distributedtask.Core.Summary;name=$summaryName;]$summaryPath"
+  displayName: Set TestSummary
+  env:
+    PREFIX: ${{ parameters.vsdropsPrefix }}
 
 # Archive files for the Html Report so that the report can be easily uploaded as artifacts of the build.
 - task: ArchiveFiles@1
@@ -301,7 +309,7 @@ steps:
   displayName: 'Publish Artifact: HtmlReport'
   inputs:
     targetPath: '$(Build.ArtifactStagingDirectory)/HtmlReport.zip'
-    artifactName: HtmlReport
+    artifactName: HtmlReport-${{ parameters.vsdropsPrefix }}
   continueOnError: true
   condition: succeededOrFailed()
 
