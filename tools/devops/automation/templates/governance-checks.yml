@@ -42,8 +42,8 @@ steps:
   condition: failed() # we failed running the tests, therefore stop the pipeline
 
 - powershell: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\tools\devops\automation\scripts\GitHub.psm1
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\tools\devops\automation\scripts\VSTS.psm1
+    Import-Module "$(System.DefaultWorkingDirectory)\xamarin-macios\tools\devops\automation\scripts\GitHub.psm1"
+    Import-Module "$(System.DefaultWorkingDirectory)\xamarin-macios\tools\devops\automation\scripts\VSTS.psm1"
     $context = "Governance"
 
     Write-Host "Checks failed: '$Env:CHECKS_FAILED'"
