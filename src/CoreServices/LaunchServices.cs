@@ -256,9 +256,11 @@ namespace CoreServices
 			);
 		}
 
+		[Deprecated (PlatformName.MacOSX, 10,15)]
 		[DllImport (Constants.CoreServicesLibrary)]
 		static extern IntPtr LSCopyAllHandlersForURLScheme (IntPtr inUrlScheme);
 
+		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'GetApplicationUrlsForUrl' instead.")]
 		public static string [] GetAllHandlersForUrlScheme (string urlScheme)
 		{
 			if (urlScheme == null)
@@ -269,9 +271,11 @@ namespace CoreServices
 			);
 		}
 
+		[Deprecated (PlatformName.MacOSX, 10,15)]
 		[DllImport (Constants.CoreServicesLibrary)]
 		static extern IntPtr LSCopyDefaultHandlerForURLScheme (IntPtr inUrlScheme);
 
+		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'GetDefaultApplicationUrlForUrl' instead.")]
 		public static string GetDefaultHandlerForUrlScheme (string urlScheme)
 		{
 			if (urlScheme == null)

@@ -37,11 +37,11 @@ Copyright (C) 2013-2014 Xamarin. All rights reserved.
 		</PropertyGroup>
 	</Target>
 
-	<Target Name="_GenerateBundleName" DependsOnTargets="_DetectSigningIdentity">
+	<Target Name="_GenerateBundleName" DependsOnTargets="_DetectSigningIdentity;_ParseBundlerArguments">
 		<PropertyGroup>
 			<AppBundleDir Condition="'$(AppBundleDir)' == ''">$(DeviceSpecificOutputPath)$(_AppBundleName)$(_AppBundleDirExt)</AppBundleDir>
 			<_AppBundlePath>$(AppBundleDir)\</_AppBundlePath>
-
+			<_AppContentsPath>$(_AppBundlePath)Contents\$(_CustomBundleName)\</_AppContentsPath>
 			<_AppResourcesPath>$(_AppBundlePath)Contents\Resources\</_AppResourcesPath>
 
 			<!-- needed for GetTargetPath/Build/Rebuild task outputs -->

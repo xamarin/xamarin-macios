@@ -507,8 +507,7 @@ namespace CoreImage {
 		[return: NullAllowed]
 		CIFilter GetDepthBlurEffectFilter (CIImage image, CIImage disparityImage, [NullAllowed] CIImage portraitEffectsMatte, [NullAllowed] CIImage hairSemanticSegmentation, CGImagePropertyOrientation orientation, [NullAllowed] NSDictionary options);
 
-		[iOS (14,1)]
-		[NoTV][NoMac]
+		[iOS (14,1)][TV (14,2)][Mac (11,0)]
 		[Export ("depthBlurEffectFilterForImage:disparityImage:portraitEffectsMatte:hairSemanticSegmentation:glassesMatte:gainMap:orientation:options:")]
 		[return: NullAllowed]
 		CIFilter GetDepthBlurEffectFilter (CIImage image, CIImage disparityImage, [NullAllowed] CIImage portraitEffectsMatte, [NullAllowed] CIImage hairSemanticSegmentation, [NullAllowed] CIImage glassesMatte, [NullAllowed] CIImage gainMap, CGImagePropertyOrientation orientation, [NullAllowed] NSDictionary options);
@@ -1334,12 +1333,10 @@ namespace CoreImage {
 		[iOS (13,0)][TV (13,0)][Mac (10,15)]
 		bool AuxiliarySemanticSegmentationTeethMatte { get; set; }
 
-		[iOS (14,1)]
-		[NoTV][NoMac]
+		[iOS (14,1)][TV (14,2)][Mac (11,0)]
 		bool AuxiliarySemanticSegmentationGlassesMatte { get; set; }
 
-		[iOS (14,1)]
-		[NoTV][NoMac]
+		[iOS (14,1)][TV (14,2)][Mac (11,0)]
 		bool ToneMapHdrToSdr { get; set; }
 	}
 
@@ -1384,13 +1381,11 @@ namespace CoreImage {
 		[Field ("kCIImageAuxiliarySemanticSegmentationTeethMatte")]
 		NSString AuxiliarySemanticSegmentationTeethMatteKey { get; }
 
-		[iOS (14, 1)]
-		[NoTV][NoMac]
+		[iOS (14,1)][TV (14,2)][Mac (11,0)]
 		[Field ("kCIImageAuxiliarySemanticSegmentationGlassesMatte")]
 		NSString AuxiliarySemanticSegmentationGlassesMatteKey { get; }
 
-		[iOS (14,1)]
-		[NoTV][NoMac]
+		[iOS (14,1)][TV (14,2)][Mac (11,0)]
 		[Field ("kCIImageToneMapHDRtoSDR")]
 		NSString ToneMapHdrToSdrKey { get; }
 
@@ -5191,13 +5186,11 @@ namespace CoreImage {
 		[CoreImageFilterProperty ("inputAuxDataMetadata")]
 		CGImageMetadata AuxDataMetadata { get; set; }
 
-		[iOS (14,1)]
-		[NoTV][NoMac]
+		[iOS (14,1)][TV (14,2)][Mac (11,0)]
 		[CoreImageFilterProperty ("inputGainMap")]
 		CIImage GainMap { get; set; }
 
-		[iOS (14,1)]
-		[NoTV][NoMac]
+		[iOS (14,1)][TV (14,2)][Mac (11,0)]
 		[CoreImageFilterProperty ("inputGlassesImage")]
 		CIImage GlassesImage { get; set; }
 	}
@@ -5753,8 +5746,7 @@ namespace CoreImage {
 		[Field ("kCIImageRepresentationSemanticSegmentationTeethMatteImage")]
 		NSString SemanticSegmentationTeethMatteImageKey { get; }
 
-		[iOS (14,1)]
-		[NoTV][NoMac]
+		[iOS (14,1)][TV (14,2)][Mac (11,0)]
 		[Field ("kCIImageRepresentationSemanticSegmentationGlassesMatteImage")]
 		NSString SemanticSegmentationGlassesMatteImage { get; }
 	}

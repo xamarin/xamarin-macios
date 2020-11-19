@@ -10,8 +10,3 @@
 ## unsorted
 
 !unknown-type! MPMediaItem bound
-
-# Initial result from new rule missing-null-allowed
-!missing-null-allowed! 'System.Void MediaPlayer.MPContentItem::set_Artwork(MediaPlayer.MPMediaItemArtwork)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void MediaPlayer.MPContentItem::set_Subtitle(System.String)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void MediaPlayer.MPContentItem::set_Title(System.String)' is missing an [NullAllowed] on parameter #0

@@ -488,7 +488,7 @@ namespace NetworkExtension {
 		[NullAllowed, Export ("sourceAppAuditToken")]
 		NSData SourceAppAuditToken { get; }
 
-		[Mac (10, 15), iOS (13, 1)]
+		[iOS (13, 1)]
 		[Export ("identifier")]
 		NSUuid Identifier { get; }
 	}

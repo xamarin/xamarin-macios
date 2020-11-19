@@ -3892,27 +3892,27 @@ namespace AVFoundation {
 		[Field ("AVAssetResourceLoadingRequestStreamingContentKeyRequestRequiresPersistentKey")]
 		NSString StreamingContentKeyRequestRequiresPersistentKey { get; }
 
-		[iOS (7,0), Mac (10, 9)]
+		[iOS (7,0)]
 		[Export ("isCancelled")]
 		bool IsCancelled { get; }
 
-		[iOS (7,0), Mac (10, 9)]
+		[iOS (7,0)]
 		[Export ("contentInformationRequest"), NullAllowed]
 		AVAssetResourceLoadingContentInformationRequest ContentInformationRequest { get; }
 
-		[iOS (7,0), Mac (10, 9)]
+		[iOS (7,0)]
 		[Export ("dataRequest"), NullAllowed]
 		AVAssetResourceLoadingDataRequest DataRequest { get; }
 
-		[iOS (7,0), Mac (10, 9)]
+		[iOS (7,0)]
 		[Export ("response", ArgumentSemantic.Copy), NullAllowed]
 		NSUrlResponse Response { get; set; }
 
-		[iOS (7,0), Mac (10, 9)]
+		[iOS (7,0)]
 		[Export ("redirect", ArgumentSemantic.Copy), NullAllowed]
 		NSUrlRequest Redirect { get; set; }
 
-		[iOS (7,0), Mac (10, 9)]
+		[iOS (7,0)]
 		[Export ("finishLoading")]
 		void FinishLoading ();
 		
@@ -6728,7 +6728,7 @@ namespace AVFoundation {
 		CMTime Time{ get;}
 
 #if !XAMCORE_4_0
-		[Field ("AVMetadataObjectTypeFace"), Mac (10,10)]
+		[Field ("AVMetadataObjectTypeFace")]
 		NSString TypeFace { get; }
 
 		[NoTV, iOS (7,0), Mac (10,15)]
@@ -7422,22 +7422,20 @@ namespace AVFoundation {
 	interface AVFragmentedMovieTrack
 	{
 #if !XAMCORE_4_0
-		[Mac (10, 10), NoiOS, NoWatch]
+		[NoiOS, NoWatch]
 		[Field ("AVFragmentedMovieTrackTimeRangeDidChangeNotification")]
 		NSString ATimeRangeDidChangeNotification { get; }
 #endif
 
-		[Mac (10, 10)]
 		[Field ("AVFragmentedMovieTrackTimeRangeDidChangeNotification")]
 		[Notification]
 		NSString TimeRangeDidChangeNotification { get; }
 
-		[Mac (10, 10)]
 		[Notification]
 		[Field ("AVFragmentedMovieTrackSegmentsDidChangeNotification")]
 		NSString SegmentsDidChangeNotification { get; }
 
-		[Mac (10, 10), NoiOS, NoWatch]
+		[NoiOS, NoWatch]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use either 'AVFragmentedMovieTrackTimeRangeDidChangeNotification' or 'AVFragmentedMovieTrackSegmentsDidChangeNotification' instead. In either case, you can assume that the sender's 'TotalSampleDataLength' has changed.")]
 		[Field ("AVFragmentedMovieTrackTotalSampleDataLengthDidChangeNotification")]
 		NSString TotalSampleDataLengthDidChangeNotification { get; }
@@ -11534,7 +11532,8 @@ namespace AVFoundation {
 		bool StartsOnFirstEligibleVariant { get; set; }
 
 		[iOS (14,1)]
-		[NoWatch][NoTV][NoMac]
+		[TV (14,2)][Mac (11,0)]
+		[NoWatch]
 		[Export ("appliesPerFrameHDRDisplayMetadata")]
 		bool AppliesPerFrameHdrDisplayMetadata { get; set; }
 	}
@@ -12413,12 +12412,10 @@ namespace AVFoundation {
 		[Export ("timebase", ArgumentSemantic.Retain)]
 		CMTimebase Timebase { get; }
 
-		[Mac (10,10)]
 		[Field ("AVSampleBufferDisplayLayerFailedToDecodeNotification")]
 		[Notification]
 		NSString FailedToDecodeNotification { get; }
 
-		[Mac (10,10)]
 		[Field ("AVSampleBufferDisplayLayerFailedToDecodeNotificationErrorKey")]
 		NSString FailedToDecodeNotificationErrorKey { get; }
 
@@ -12494,15 +12491,15 @@ namespace AVFoundation {
 		[Field ("AVSpeechSynthesisVoiceIdentifierAlex")]
 		NSString IdentifierAlex { get; }
 
-		[iOS (10, 0), TV (10,0), Mac (10,15)]
+		[iOS (10, 0), TV (10,0)]
 		[Field ("AVSpeechSynthesisIPANotationAttribute")]
 		NSString IpaNotationAttribute { get; }
 
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Watch (6,0), TV (13,0), iOS (13,0)]
 		[Export ("gender")]
 		AVSpeechSynthesisVoiceGender Gender { get; }
 
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Watch (6,0), TV (13,0), iOS (13,0)]
 		[Export ("audioFileSettings")]
 		NSDictionary<NSString, NSObject> AudioFileSettings { get; }
 	}
@@ -13723,7 +13720,8 @@ namespace AVFoundation {
 		[Field ("AVSemanticSegmentationMatteTypeTeeth")]
 		Teeth,
 		[iOS (14,1)]
-		[NoWatch][NoTV][NoMac]
+		[Mac (11,0)]
+		[NoWatch][NoTV]
 		[Field ("AVSemanticSegmentationMatteTypeGlasses")]
 		Glasses,
 	} 
