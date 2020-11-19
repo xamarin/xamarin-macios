@@ -71,8 +71,7 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyWebPDictionary")]
 		NSString WebPDictionary { get; }
 
-		[iOS (14,1)]
-		[NoTV][NoWatch][NoMac]
+		[Mac (11,0), iOS (14,1), TV (14,2), Watch (7,1)]
 		[Field ("kCGImagePropertyTGADictionary")]
 		NSString TgaDictionary { get; }
 
@@ -2036,10 +2035,7 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyWebPCanvasPixelHeight")]
 		NSString WebPCanvasPixelHeight { get; }
 
-		// TGA Dictionary Keys
-
-		[iOS (14,1)]
-		[NoTV][NoWatch][NoMac]
+		[Mac (11,0), iOS (14,1), TV (14,2), Watch (7,1)]
 		[Field ("kCGImagePropertyTGACompression")]
 		NSString TgaCompression { get; }
 	}
@@ -2217,13 +2213,12 @@ namespace ImageIO {
 		[Export ("WebPDictionary")]
 		NSDictionary WebPDictionary { get; set; }
 
-		[iOS (14,1)]
-		[NoTV][NoWatch][NoMac]
+		[Mac (11,0), iOS (14,1), TV (14,2),  Watch (7,1)]
 		[Export ("TgaDictionary")]
 		NSDictionary TgaDictionary { get; set; }
 
 		[iOS (14,1)]
-		[NoTV][NoWatch][NoMac]
+		[TV (14,2)][Watch (7,1)][Mac (11,0)]
 		bool PreserveGainMap { get; set; }
 	}
 
@@ -2302,13 +2297,12 @@ namespace ImageIO {
 		[Static][Wrap ("CGImageProperties.WebPDictionary")]
 		NSString WebPDictionary { get; }
 
-		[iOS (14,1)]
-		[NoTV][NoWatch][NoMac]
+		[Mac (11,0), iOS (14,1), TV (14,2), Watch (7,1)]
 		[Static][Wrap ("CGImageProperties.TgaDictionary")]
 		NSString TgaDictionary { get; }
 
 		[iOS (14,1)]
-		[NoTV][NoWatch][NoMac]
+		[TV (14,2)][Watch (7,1)][Mac (11,0)]
 		[Field ("kCGImageDestinationPreserveGainMap")]
 		NSString PreserveGainMapKey { get; }
 	}
@@ -2366,12 +2360,12 @@ namespace ImageIO {
 		SemanticSegmentationTeethMatte,
 
 		[iOS (14,1)]
-		[NoTV][NoWatch][NoMac]
+		[TV (14,2)][Watch (7,1)][Mac (11,0)]
 		[Field ("kCGImageAuxiliaryDataTypeSemanticSegmentationGlassesMatte")]
 		SemanticSegmentationGlassesMatte,
 
 		[iOS (14,1)]
-		[NoTV][NoWatch][NoMac]
+		[TV (14,2)][Watch (7,1)][Mac (11,0)]
 		[Field ("kCGImageAuxiliaryDataTypeHDRGainMap")]
 		TypeHdrGainMap,
 	}

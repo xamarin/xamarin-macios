@@ -118,16 +118,24 @@ namespace Introspection {
 			case "CKSubscription":
 			case "MPSCnnConvolutionState":
 				return true;
-			case "QTMovie":
-				return TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 14, 4); // Broke in macOS 10.14.4.
+			case "AVSpeechSynthesisVoice": // Calling description crashes the test
+#if __WATCHOS__
+				return TestRuntime.CheckXcodeVersion (12, 2); // CheckExactXcodeVersion is not implemented in watchOS yet but will be covered by iOS parrot below
+#else
+				return TestRuntime.CheckExactXcodeVersion (12, 2, beta: 3);
+#endif
 			}
 
-#if __IOS__
 			switch (type.Namespace) {
+#if __IOS__
 			case "WatchKit":
 				return true; // WatchKit has been removed from iOS.
-			}
+#elif MONOMAC
+			case "QTKit":
+				return true; // QTKit has been removed from macos.
 #endif
+			}
+
 			// skip types that we renamed / rewrite since they won't behave correctly (by design)
 			if (SkipDueToRejectedTypes (type))
 				return true;

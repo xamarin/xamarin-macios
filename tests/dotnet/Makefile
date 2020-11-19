@@ -12,7 +12,7 @@ NuGet.config: $(TOP)/NuGet.config Makefile
 	$(Q) mv $@.tmp $@
 
 # This tells NuGet to use the exact same dotnet version we've configured in Make.config
-global.json: $(TOP)/global5.json
+global.json: $(TOP)/global6.json
 	$(CP) $< $@
 
 ../bgen/global.json: global.json

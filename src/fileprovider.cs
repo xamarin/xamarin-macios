@@ -242,9 +242,18 @@ namespace FileProvider {
 		Renaming = 1 << 3,
 		Trashing = 1 << 4,
 		Deleting = 1 << 5,
+		[NoiOS][NoTV][NoWatch]
+		Evicting = 1 << 6,
 		AddingSubItems = Writing,
 		ContentEnumerating = Reading,
+#if !XAMCORE_4_0
+		[Obsolete ("This enum value is not constant across OS and versions.")]
+	#if MONOMAC
+		All = Reading | Writing | Reparenting | Renaming | Trashing | Deleting | Evicting,
+	#else
 		All = Reading | Writing | Reparenting | Renaming | Trashing | Deleting,
+	#endif
+#endif
 	}
 
 	[iOS (11,0)]
@@ -277,8 +286,13 @@ namespace FileProvider {
 	[BaseType (typeof (NSObject))]
 	interface NSFileProviderDomain {
 
+		[NoMac]
 		[Export ("initWithIdentifier:displayName:pathRelativeToDocumentStorage:")]
 		IntPtr Constructor (string identifier, string displayName, string pathRelativeToDocumentStorage);
+
+		[NoiOS]
+		[Export ("initWithIdentifier:displayName:")]
+		IntPtr Constructor (string identifier, string displayName);
 
 		[Export ("identifier")]
 		string Identifier { get; }
@@ -286,6 +300,7 @@ namespace FileProvider {
 		[Export ("displayName")]
 		string DisplayName { get; }
 
+		[NoMac]
 		[Export ("pathRelativeToDocumentStorage")]
 		string PathRelativeToDocumentStorage { get; }
 
@@ -447,6 +462,7 @@ namespace FileProvider {
 		[Export ("tagData", ArgumentSemantic.Copy)]
 		NSData GetTagData ();
 
+		[NoMac]
 		[return: NullAllowed]
 		[Export ("favoriteRank", ArgumentSemantic.Copy)]
 		NSNumber GetFavoriteRank ();
@@ -506,10 +522,6 @@ namespace FileProvider {
 		NSDictionary GetUserInfo ();
 
 		[NoiOS]
-		[Export ("excludedFromSync")]
-		bool ExcludedFromSync { [Bind ("isExcludedFromSync")] get; }
-
-		[NoiOS]
 		[Export ("fileSystemFlags")]
 		NSFileProviderFileSystemFlags FileSystemFlags { get; }
 
@@ -533,6 +545,7 @@ namespace FileProvider {
 	[DisableDefaultCtor]
 	interface NSFileProviderManager {
 
+		[NoMac]
 		[Static]
 		[Export ("defaultManager", ArgumentSemantic.Strong)]
 		NSFileProviderManager DefaultManager { get; }
@@ -545,16 +558,20 @@ namespace FileProvider {
 		[Export ("registerURLSessionTask:forItemWithIdentifier:completionHandler:")]
 		void Register (NSUrlSessionTask task, string identifier, Action<NSError> completion);
 
+		[NoMac]
 		[Export ("providerIdentifier")]
 		string ProviderIdentifier { get; }
 
+		[NoMac]
 		[Export ("documentStorageURL")]
 		NSUrl DocumentStorageUrl { get; }
 
+		[NoMac]
 		[Static]
 		[Export ("writePlaceholderAtURL:withMetadata:error:")]
 		bool WritePlaceholder (NSUrl placeholderUrl, INSFileProviderItem metadata, out NSError error);
 
+		[NoMac]
 		[Static]
 		[Export ("placeholderURLForURL:")]
 		NSUrl GetPlaceholderUrl (NSUrl url);
@@ -641,13 +658,6 @@ namespace FileProvider {
 		[Async]
 		[Export ("reconnectWithCompletionHandler:")]
 		void Reconnect (Action<NSError> completionHandler);
-#endregion
-
-#region Attribution (NSFileProviderManager)
-		[NoiOS]
-		[Async]
-		[Export ("lookupRequestingApplicationIdentifier:reason:completionHandler:")]
-		void LookupRequestingApplicationIdentifier (NSUuid app, string reason, Action<NSUrl, NSError> completionHandler);
 #endregion
 
 #region Barrier (NSFileProviderManager)
@@ -773,9 +783,6 @@ namespace FileProvider {
 	[NoiOS]
 	[BaseType (typeof (NSObject))]
 	interface NSFileProviderRequest {
-
-		[Export ("requestingApplicationIdentifier", ArgumentSemantic.Strong)]
-		NSUuid RequestingApplicationIdentifier { get; }
 
 		[Export ("isSystemRequest")]
 		bool IsSystemRequest { get; }

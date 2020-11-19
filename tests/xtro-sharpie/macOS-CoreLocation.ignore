@@ -13,7 +13,3 @@
 !missing-selector! CLLocationManager::startMonitoringForRegion:desiredAccuracy: not bound
 !missing-selector! CLLocationManager::allowDeferredLocationUpdatesUntilTraveled:timeout: not bound
 !missing-selector! CLLocationManager::disallowDeferredLocationUpdates not bound
-
-# xtro confuse the instance vs the class property
-!deprecated-attribute-missing! CLLocationManager::locationServicesEnabled missing a [Deprecated] attribute
-!deprecated-attribute-missing! CLLocationManager::headingAvailable missing a [Deprecated] attribute
