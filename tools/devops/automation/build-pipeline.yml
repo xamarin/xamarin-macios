@@ -14,7 +14,7 @@ resources:
   - repository: templates
     type: github
     name: xamarin/yaml-templates
-    ref: refs/heads/main
+    ref: refs/heads/dev/bond/show-keychain
     endpoint: xamarin
 
   - repository: maccore
