@@ -57,11 +57,20 @@ pr:
   autoCancel: true
   branches:
     include:
+    - yaml-pipeline
     - main
     - d16-*
-    - yaml-pipeline                                           # UNDONE: Enable triggering of YAML pipeline changes - remove prior to merging the YAML pipeline build to main
 
 stages:
+- stage: configure
+  displayName: 'Configure'
+  jobs:
+  - job: pipeline_configuration
+    pool:
+      vmImage: ubuntu-latest
+
+    steps:
+    - template: templates/configure-build.yml
 
 - stage: governance_checks
   displayName: 'Governance Checks'
