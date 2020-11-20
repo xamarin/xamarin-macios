@@ -23,7 +23,7 @@ steps:
       # be able to get the labels, the buildSourceBranch follows the pattern: refs/pull/{ChangeId}/merge
       # we could use a regexp but then we would have two problems instead of one
       $changeId = $buildSourceBranch.Replace("refs/pull/", "").Replace("/merge", "")
-      $prInfo = Get-GitHubPRInfo -ChangeId $chageId
+      $prInfo = Get-GitHubPRInfo -ChangeId $changeId
 
       # make peoples life better, loop over the labels and add them as tags in the vsts build
       foreach ($labelInfo in $prInfo.labels) {
