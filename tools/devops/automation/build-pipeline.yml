@@ -61,16 +61,6 @@ pr:
 
 stages:
 
-- stage: configure
-  displayName: 'Configure'
-  jobs:
-  - job: pipeline_configuration
-    pool:
-      vmImage: ubuntu-latest
-
-    steps:
-    - template: templates/configure-build.yml
-
 - stage: governance_checks
   displayName: 'Governance Checks'
   dependsOn: []
@@ -84,8 +74,14 @@ stages:
 
 - stage: build_packages
   displayName: 'Build'
-  dependsOn: configure
   jobs:
+  - job: configure
+    pool:
+      vmImage: ubuntu-latest
+
+    steps:
+    - template: templates/configure-build.yml
+
   - job: AgentPoolSelector       # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/phases?view=azure-devops&tabs=yaml
     pool:                        # Consider using an agentless (server) job here, but would need to host selection logic as an Azure function: https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#server
       vmImage: ubuntu-latest
@@ -96,10 +92,13 @@ stages:
     - template: templates/agent-pool-selector.yml
 
   - job: build
-    dependsOn: AgentPoolSelector
+    dependsOn:
+    - AgentPoolSelector
+    - configure
     displayName: 'Build packages'
     timeoutInMinutes: 1000
     variables:
+      AgentPoolComputed: $[ dependencies.AgentPoolSelector.outputs['setAgentPool.AgentPoolComputed'] ]
       AgentPoolComputed: $[ dependencies.AgentPoolSelector.outputs['setAgentPool.AgentPoolComputed'] ]
     pool:
       name: $(AgentPoolComputed)
