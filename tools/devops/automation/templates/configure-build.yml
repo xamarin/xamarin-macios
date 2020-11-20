@@ -8,6 +8,7 @@ steps:
 
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/tools/devops/automation/scripts/GitHub.psm1
+    $addTags = $false # there is an issue and we cannot do this from forks, ignore it for the time being
 
     $buildReason = "$(Build.Reason)"
     $buildSourceBranchName = "$(Build.SourceBranchName)"
@@ -16,7 +17,7 @@ steps:
     Write-Host "buildReason: ${buildReason}"
     Write-Host "buildSourceBranchName: ${buildSourceBranchName}"
     Write-Host "buildSourceBranch: $buildSourceBranch"
-
+    
     if ($buildReason -eq "PullRequest" -or (($buildReason -eq "Manual") -and ($buildSourceBranchName -eq "merge")) ) {
       Write-Host "Configuring build from PR."
       # This is an interesting step, we do know we are dealing with a PR, but we need the PR id to
@@ -24,22 +25,45 @@ steps:
       # we could use a regexp but then we would have two problems instead of one
       $changeId = $buildSourceBranch.Replace("refs/pull/", "").Replace("/merge", "")
       $prInfo = Get-GitHubPRInfo -ChangeId $changeId
-
-      # make peoples life better, loop over the labels and add them as tags in the vsts build
-      foreach ($labelInfo in $prInfo.labels) {
-        $labelName = $labelInfo.name
-        Write-Host "##vso[build.addbuildtag]$labelName"
-      }
-      # sepcial tag, we want to know if we are using a pr
-      Write-Host "##vso[build.addbuildtag]prBuild"
-
-      # special tag, lets add the target branch, will be useful to the users
-      $ref = $prInfo.base.ref
-      Write-Host "##vso[build.addbuildtag]$ref"
       Write-Host $prInfo
+
+      if ($addTags) {
+        # make peoples life better, loop over the labels and add them as tags in the vsts build
+        foreach ($labelInfo in $prInfo.labels) {
+          $labelName = $labelInfo.name
+          Write-Host "##vso[build.addbuildtag]$labelName"
+        }
+        # sepcial tag, we want to know if we are using a pr
+        Write-Host "##vso[build.addbuildtag]prBuild"
+
+        # special tag, lets add the target branch, will be useful to the users
+        $ref = $prInfo.base.ref
+        Write-Host "##vso[build.addbuildtag]$ref"
+      }
+
+      # set output variables based on the git labels
+      $labelsOfInterest = @(
+        "build-package",
+        "run-internal-tests",
+        "skip-packages",
+        "skip-nugets",
+        "skip-signing",
+        "skip-external-tests",
+        "trigger-device-tests",
+        "run-sample-tests",
+        "skip-packaged-xamarin-mac-tests"
+      )
+
+      foreach ($l in $labelsOfInterest) {
+        $labelPresent = 1 -eq ($prInfo.labels | Where-Object { $_.name -eq "$l"}).Count 
+        Write-Host "##vso[task.setvariable variable=$l;isOutput=true]$labelPresent"
+      }
+
+      Write-Host "##vso[task.setvariable variable=prBuild;isOutput=true]True"
     } else {
       # set the name of the branch under build
       Write-Host "##vso[build.addbuildtag]$buildSourceBranchName"
+      Write-Host "##vso[task.setvariable variable=prBuild;isOutput=true]False"
     }
   env:
     GITHUB_TOKEN: $(GitHub.Token)
