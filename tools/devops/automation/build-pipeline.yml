@@ -67,17 +67,9 @@ stages:
   - job: pipeline_configuration
     pool:
       vmImage: ubuntu-latest
+
     steps:
-      - checkout: none
-      # TODO: do parse labels
-      - bash: |
-          echo '##vso[task.setvariable variable=runSimulator;isOutput=true]true'
-          echo '##vso[task.setvariable variable=runDevice32b;isOutput=true]false'
-          echo '##vso[task.setvariable variable=runDevice64b;isOutput=true]true'
-          echo '##vso[task.setvariable variable=runDeviceTv;isOutput=true]true'
-          echo '##vso[task.setvariable variable=runSamples;isOutput=true]false'
-        displayName: 'Parse labels'
-        name: labels
+    - template: templates/configure-build.yml
 
 - stage: governance_checks
   displayName: 'Governance Checks'

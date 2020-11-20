@@ -375,9 +375,46 @@ function New-GitHubSummaryComment {
     return $request
 }
 
+<# 
+    .SYNOPSIS
+        Get the information of a PR in GitHub.
+
+    .PARAMETER ChangeId
+        The Id whose labels we want to retrieve.
+#>
+function Get-GitHubPRInfo {
+    param (
+        [Parameter(Mandatory)]
+        [String]
+        $ChangeId
+    )
+
+    $envVars = @{
+        "GITHUB_TOKEN" = $Env:GITHUB_TOKEN;
+    }
+
+    foreach ($key in $envVars.Keys) {
+        if (-not($envVars[$key])) {
+            Write-Debug "Environment variable missing: $key"
+            throw [System.InvalidOperationException]::new("Environment variable missing: $key")
+        }
+    }
+
+    $url = "https://api.github.com/repos/xamarin/xamarin-macios/pulls/$ChangeId"
+
+    $headers = @{
+        Authorization = ("token {0}" -f $Env:GITHUB_TOKEN)
+    }
+
+    $request = Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -ContentType 'application/json'
+    Write-Host $request
+    return $request
+}
+
 # module exports, any other functions are private and should not be used outside the module.
 Export-ModuleMember -Function Set-GitHubStatus
 Export-ModuleMember -Function New-GitHubComment
 Export-ModuleMember -Function New-GitHubCommentFromFile
 Export-ModuleMember -Function New-GitHubSummaryComment 
 Export-ModuleMember -Function Test-JobSuccess 
+Export-ModuleMember -Function Get-GitHubPRInfo

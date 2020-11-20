@@ -1,0 +1,47 @@
+# This job will parse all the labels present in a PR, will set
+# the tags for the build AND will set a number of configuration
+# variables to be used by the rest of the projects
+steps:
+- checkout: self          # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
+  clean: true             # Executes: git clean -ffdx && git reset --hard HEAD
+  submodules: recursive
+
+- pwsh: |
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/tools/devops/automation/scripts/GitHub.psm1
+
+    $buildReason = "$(Build.Reason)"
+    $buildSourceBranchName = "$(Build.SourceBranchName)"
+    $buildSourceBranch = "$(Build.SourceBranch)"
+
+    Write-Host "buildReason: ${buildReason}"
+    Write-Host "buildSourceBranchName: ${buildSourceBranchName}"
+    Write-Host "buildSourceBranch: $buildSourceBranch"
+
+    if ($buildReason -eq "PullRequest" -or (($buildReason -eq "Manual") -and ($buildSourceBranchName -eq "merge")) ) {
+      Write-Host "Configuring build from PR."
+      # This is an interesting step, we do know we are dealing with a PR, but we need the PR id to
+      # be able to get the labels, the buildSourceBranch follows the pattern: refs/pull/{ChangeId}/merge
+      # we could use a regexp but then we would have two problems instead of one
+      $changeId = $buildSourceBranch.Replace("refs/pull/", "").Replace("/merge", "")
+      $prInfo = Get-GitHubPRInfo -ChangeId $changeId
+
+      # make peoples life better, loop over the labels and add them as tags in the vsts build
+      foreach ($labelInfo in $prInfo.labels) {
+        $labelName = $labelInfo.name
+        Write-Host "##vso[build.addbuildtag]$labelName"
+      }
+      # sepcial tag, we want to know if we are using a pr
+      Write-Host "##vso[build.addbuildtag]prBuild"
+
+      # special tag, lets add the target branch, will be useful to the users
+      $ref = $prInfo.base.ref
+      Write-Host "##vso[build.addbuildtag]$ref"
+      Write-Host $prInfo
+    } else {
+      # set the name of the branch under build
+      Write-Host "##vso[build.addbuildtag]$buildSourceBranchName"
+    }
+  env:
+    GITHUB_TOKEN: $(GitHub.Token)
+  name: configuration
+  displayName: 'Configure build'

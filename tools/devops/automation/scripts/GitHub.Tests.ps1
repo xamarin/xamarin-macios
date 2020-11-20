@@ -489,3 +489,82 @@ Describe 'Test-JobSuccess' {
         Test-JobSuccess -Status "Random value" | Should -Be $False
     }
 }
+
+Describe 'Get-GitHubPRInfo' {
+    Context 'with all env variables present' {
+
+        BeforeAll {
+            $Script:envVariables = @{
+                "GITHUB_TOKEN" = "GITHUB_TOKEN";
+            }
+
+            $Script:envVariables.GetEnumerator() | ForEach-Object { 
+                $key = $_.Key
+                Set-Item -Path "Env:$key" -Value $_.Value
+            }
+        }
+
+        It 'calls the method succesfully' {
+            Mock Invoke-RestMethod {
+                return @{"status"=200;}
+            }
+            $changeId = "ChangeId"
+
+            Get-GitHubPRInfo -ChangeId $changeId
+
+            # assert the call and compare the expected parameters to the received ones
+            Assert-MockCalled -CommandName Invoke-RestMethod -Times 1 -Scope It -ParameterFilter {
+                # validate each of the params and the payload
+                if ($Uri -ne "https://api.github.com/repos/xamarin/xamarin-macios/pulls/$changeId") {
+                    return $False
+                }
+                if ($Headers.Authorization -ne ("token {0}" -f $envVariables["GITHUB_TOKEN"])) {
+                    return $False
+                }
+                if ($Method -ne "POST") {
+                    return $False
+                }
+                if ($ContentType -ne "application/json") {
+                    return $False
+                }
+
+                return $True
+            }
+
+        }
+
+        It 'calls the method with an error and throws' {
+            Mock Invoke-RestMethod {
+                throw [System.Exception]::("Test")
+            }
+
+            $changeId = "ChangeId"
+
+            { Get-GitHubPRInfo -ChangeId $changeId } | Should -Throw
+        }
+
+    }
+    Context 'without an env variable' {
+        BeforeAll {
+            # clear the env vars
+            $envVariables = @{
+                "GITHUB_TOKEN" = "GITHUB_TOKEN";
+            }
+            $envVariables.GetEnumerator() | ForEach-Object { 
+                $key = $_.Key
+                Remove-Item -Path "Env:$key"
+            }
+        }
+        It 'throws and error' {
+
+            Mock Invoke-RestMethod {
+                return @{"status"=200;}
+            }
+
+            $changeId = "ChangeId"
+
+            { Get-GitHubPRInfo -ChangeId $changeId } | Should -Throw
+            Assert-MockCalled -CommandName Invoke-RestMethod -Times 0 -Scope It 
+        }
+    }
+}
