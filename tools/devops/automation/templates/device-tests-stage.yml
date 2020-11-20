@@ -60,7 +60,7 @@ stages:
   dependsOn:
   - configure
   - build_packages
-  condition: ne(dependencies.configure.outputs['labels.${{ parameters.execute }}'], 'false') # use ne in case is '' and default to true
+  condition: and(succeeded(), ne(dependencies.configure.outputs['labels.${{ parameters.execute }}'], 'false')) # use ne in case is '' and default to true
   jobs:
   - job: tests
     displayName: 'Run iOS Device Tests'
