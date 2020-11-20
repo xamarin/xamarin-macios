@@ -45,7 +45,7 @@ namespace Xharness.Jenkins {
 		public bool IncludetvOS = true;
 		public bool IncludewatchOS = false;
 		public bool IncludeMmpTest;
-		public bool IncludeiOSMSBuild = true;
+		public bool IncludeMSBuild = true;
 		public bool IncludeMtouch;
 		public bool IncludeBtouch;
 		public bool IncludeMacBindingProject;
