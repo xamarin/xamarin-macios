@@ -11,18 +11,22 @@ using Xamarin.MacDev;
 using Xamarin.MacDev.Tasks;
 using Xamarin.Localization.MSBuild;
 
+#nullable enable
+
 namespace Xamarin.MacDev.Tasks {
 
 	public abstract class ResolveNativeReferencesBase : XamarinTask
 	{
 		#region Inputs
 
+		[Required]
 		public string Architectures { get; set; }
 
 		public ITaskItem [] NativeReferences { get; set; }
 
 		public ITaskItem[] References { get; set; }
 
+		[Required]
 		public bool SdkIsSimulator { get; set; }
 
 		#endregion
