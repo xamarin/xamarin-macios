@@ -572,7 +572,12 @@ namespace Xamarin.Bundler {
 			}
 			if (!App.IsDefaultMarshalManagedExceptionMode)
 				sw.WriteLine ("\txamarin_marshal_managed_exception_mode = MarshalManagedExceptionMode{0};", App.MarshalManagedExceptions);
-			sw.WriteLine ("\txamarin_marshal_objectivec_exception_mode = MarshalObjectiveCExceptionMode{0};", "Disable" /* https://github.com/dotnet/runtime/issues/43204 App.MarshalObjectiveCExceptions */);
+#if NET
+			// We require support for dllmap, which isn't in .NET/macOS yet (https://github.com/dotnet/runtime/issues/43204), so disable
+			sw.WriteLine ("\txamarin_marshal_objectivec_exception_mode = MarshalObjectiveCExceptionModeDisable;");
+#else
+			sw.WriteLine ("\txamarin_marshal_objectivec_exception_mode = MarshalObjectiveCExceptionMode{0};", App.MarshalObjectiveCExceptions);
+#endif
 			if (App.DisableLldbAttach.HasValue ? App.DisableLldbAttach.Value : !App.EnableDebug)
 				sw.WriteLine ("\txamarin_disable_lldb_attach = true;");
 			if (App.DisableOmitFramePointer ?? App.EnableDebug)
