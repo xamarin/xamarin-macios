@@ -17,7 +17,7 @@ steps:
     Write-Host "buildSourceBranchName: ${buildSourceBranchName}"
     Write-Host "buildSourceBranch: $buildSourceBranch"
 
-    if ($buildReason -eq 'PullRequest') {
+    if ($buildReason -eq "PullRequest" -or (($buildReason -eq "Manual") -and ($buildSourceBranchName -eq "merge")) ) {
       Write-Host "Configuring build from PR."
       # This is an interesting step, we do know we are dealing with a PR, but we need the PR id to
       # be able to get the labels, the buildSourceBranch follows the pattern: refs/pull/{ChangeId}/merge
