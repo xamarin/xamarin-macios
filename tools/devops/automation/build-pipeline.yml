@@ -69,7 +69,7 @@ stages:
       vmImage: ubuntu-latest
 
     steps:
-    - template: templates/build-packages.yml
+    - template: templates/configure-build.yml
 
 - stage: governance_checks
   displayName: 'Governance Checks'
