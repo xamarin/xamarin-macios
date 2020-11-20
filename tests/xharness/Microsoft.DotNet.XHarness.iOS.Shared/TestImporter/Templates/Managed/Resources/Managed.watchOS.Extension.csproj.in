@@ -27,7 +27,7 @@
     <MtouchDebug>True</MtouchDebug>
     <MtouchExtraArgs></MtouchExtraArgs>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <MtouchArch>i386</MtouchArch>
+    <MtouchArch>i386, x86_64</MtouchArch>
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchLink>None</MtouchLink>
     <MtouchI18n>cjk,mideast,other,rare,west</MtouchI18n>
@@ -42,7 +42,7 @@
     <MtouchLink>None</MtouchLink>
     <MtouchExtraArgs></MtouchExtraArgs>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <MtouchArch>i386</MtouchArch>
+    <MtouchArch>i386, x86_64</MtouchArch>
     <MtouchI18n>cjk,mideast,other,rare,west</MtouchI18n>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">

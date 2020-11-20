@@ -821,11 +821,32 @@ $(WATCHOS_DOTNET_BUILD_DIR)/32/Xamarin.WatchOS%dll $(WATCHOS_DOTNET_BUILD_DIR)/3
 		$(WATCHOS_SOURCES) \
 		@$<
 
+$(WATCHOS_DOTNET_BUILD_DIR)/64/Xamarin.WatchOS%dll $(WATCHOS_DOTNET_BUILD_DIR)/64/Xamarin.WatchOS%pdb $(WATCHOS_DOTNET_BUILD_DIR)/ref/Xamarin.WatchOS%dll: $(WATCHOS_DOTNET_BUILD_DIR)/watchos-generated-sources $(WATCHOS_SOURCES) $(PRODUCT_KEY_PATH) | $(WATCHOS_DOTNET_BUILD_DIR)/64 $(WATCHOS_DOTNET_BUILD_DIR)/ref
+	$(Q_DOTNET_GEN) \
+		$(SYSTEM_CSC) $(DOTNET_FLAGS) -out:$(WATCHOS_DOTNET_BUILD_DIR)/64/Xamarin.WatchOS.dll -optimize \
+		-publicsign -keyfile:$(PRODUCT_KEY_PATH) \
+		-refout:$(WATCHOS_DOTNET_BUILD_DIR)/ref/Xamarin.WatchOS.dll \
+		$(WATCH_DEFINES) \
+		$(ARGS_64) \
+		$(WATCHOS_WARNINGS_TO_FIX) \
+		-warnaserror:$(NULLABILITY_WARNINGS) \
+		$(IOS_CSC_FLAGS_XI) \
+		$(WATCHOS_SOURCES) \
+		@$<
+
 $(WATCH_BUILD_DIR)/watch-32/Xamarin.WatchOS%dll $(WATCH_BUILD_DIR)/watch-32/Xamarin.WatchOS%pdb: $(WATCHOS_SOURCES) $(WATCH_BUILD_DIR)/watch/generated_sources $(PRODUCT_KEY_PATH) | $(WATCH_BUILD_DIR)/watch-32
 	$(call Q_PROF_CSC,watch) $(WATCH_CSC) -nologo -out:$(basename $@).dll -target:library -debug -unsafe -optimize \
 		-publicsign -keyfile:$(PRODUCT_KEY_PATH) $(WATCH_DEFINES) \
 		-deterministic \
 		$(ARGS_32) \
+		-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
+		$(WATCHOS_SOURCES) @$(WATCH_BUILD_DIR)/watch/generated_sources
+
+$(WATCH_BUILD_DIR)/watch-64/Xamarin.WatchOS%dll $(WATCH_BUILD_DIR)/watch-64/Xamarin.WatchOS%pdb: $(WATCHOS_SOURCES) $(WATCH_BUILD_DIR)/watch/generated_sources $(PRODUCT_KEY_PATH) | $(WATCH_BUILD_DIR)/watch-64
+	$(call Q_PROF_CSC,watch) $(WATCH_CSC) -nologo -out:$(basename $@).dll -target:library -debug -unsafe -optimize \
+		-publicsign -keyfile:$(PRODUCT_KEY_PATH) $(WATCH_DEFINES) \
+		-deterministic \
+		$(ARGS_64) \
 		-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
 		$(WATCHOS_SOURCES) @$(WATCH_BUILD_DIR)/watch/generated_sources
 
@@ -862,6 +883,7 @@ WATCH_TARGETS_DIRS +=                                          \
 	$(WATCH_BUILD_DIR)                                         \
 	$(WATCH_BUILD_DIR)/watch                                   \
 	$(WATCH_BUILD_DIR)/watch-32                                \
+	$(WATCH_BUILD_DIR)/watch-64                                \
 	$(WATCH_BUILD_DIR)/reference                               \
 	$(WATCH_BUILD_DIR)/reference/Facades                       \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS \
@@ -873,12 +895,15 @@ WATCH_TARGETS += \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/Xamarin.WatchOS.dll          \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/Xamarin.WatchOS.pdb      \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/Xamarin.WatchOS.dll                        \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/Xamarin.WatchOS.dll                        \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/Xamarin.WatchOS.pdb                    \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/Xamarin.WatchOS.pdb                    \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/MonoTouch.NUnitLite.dll      \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/MonoTouch.NUnitLite.pdb
 
 DOTNET_TARGETS += \
 	$(WATCHOS_DOTNET_BUILD_DIR)/32/Xamarin.WatchOS.dll \
+	$(WATCHOS_DOTNET_BUILD_DIR)/64/Xamarin.WatchOS.dll \
 	$(WATCHOS_DOTNET_BUILD_DIR)/ref/Xamarin.WatchOS.dll \
 	$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Ref/ref/net5.0/Xamarin.WatchOS.dll \
 	$(foreach rid,$(DOTNET_WATCHOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net5.0/Xamarin.WatchOS.dll) \
@@ -888,6 +913,7 @@ DOTNET_TARGETS_DIRS += \
 	$(WATCHOS_DOTNET_BUILD_DIR) \
 	$(WATCHOS_DOTNET_BUILD_DIR)/generated-sources \
 	$(WATCHOS_DOTNET_BUILD_DIR)/32 \
+	$(WATCHOS_DOTNET_BUILD_DIR)/64 \
 	$(WATCHOS_DOTNET_BUILD_DIR)/ref \
 	$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Ref/ref/net5.0 \
 	$(foreach rid,$(DOTNET_WATCHOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net5.0) \
@@ -909,13 +935,25 @@ $(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Ref/ref/net5.0/Xamarin.WatchOS.dll: $(WATCHOS
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/Xamarin.WatchOS.dll: $(WATCH_BUILD_DIR)/watch-32/Xamarin.WatchOS.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits
 	$(Q) install -m 0755 $< $@
 
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/Xamarin.WatchOS.dll: $(WATCH_BUILD_DIR)/watch-64/Xamarin.WatchOS.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits
+	$(Q) install -m 0755 $< $@
+
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/Xamarin.WatchOS.pdb: $(WATCH_BUILD_DIR)/watch-32/Xamarin.WatchOS.pdb | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits
+	$(Q) install -m 0644 $< $@
+
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/Xamarin.WatchOS.pdb: $(WATCH_BUILD_DIR)/watch-64/Xamarin.WatchOS.pdb | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits
 	$(Q) install -m 0644 $< $@
 
 $(foreach rid,$(DOTNET_WATCHOS_RUNTIME_IDENTIFIERS_32),$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net5.0/Xamarin.WatchOS.dll): $(WATCHOS_DOTNET_BUILD_DIR)/32/Xamarin.WatchOS.dll | $(foreach rid,$(DOTNET_WATCHOS_RUNTIME_IDENTIFIERS_32),$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net5.0)
 	$(Q) $(CP) $< $@
 
+$(foreach rid,$(DOTNET_WATCHOS_RUNTIME_IDENTIFIERS_64),$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net5.0/Xamarin.WatchOS.dll): $(WATCHOS_DOTNET_BUILD_DIR)/64/Xamarin.WatchOS.dll | $(foreach rid,$(DOTNET_WATCHOS_RUNTIME_IDENTIFIERS_64),$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net5.0)
+	$(Q) $(CP) $< $@
+
 $(foreach rid,$(DOTNET_WATCHOS_RUNTIME_IDENTIFIERS_32),$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net5.0/Xamarin.WatchOS.pdb): $(WATCHOS_DOTNET_BUILD_DIR)/32/Xamarin.WatchOS.pdb | $(foreach rid,$(DOTNET_WATCHOS_RUNTIME_IDENTIFIERS_32),$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net5.0)
+	$(Q) $(CP) $< $@
+
+$(foreach rid,$(DOTNET_WATCHOS_RUNTIME_IDENTIFIERS_64),$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net5.0/Xamarin.WatchOS.pdb): $(WATCHOS_DOTNET_BUILD_DIR)/64/Xamarin.WatchOS.pdb | $(foreach rid,$(DOTNET_WATCHOS_RUNTIME_IDENTIFIERS_64),$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net5.0)
 	$(Q) $(CP) $< $@
 
 $(WATCH_TARGETS_DIRS):
