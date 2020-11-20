@@ -34,6 +34,18 @@ namespace Xamarin.MacDev.Tasks.Tests {
 			Assert.That (result, Is.EqualTo (expected), expected);
 		}
 
+		[TestCase ("iOS", null, "ARMv7", "ios-arm64_armv7_armv7s/XTest.framework")]
+		// there was no 64bits simulator for watchOS but a i386 one was available
+		[TestCase ("watchOS", "simulator", "x86_64", "")]
+		[TestCase ("watchOS", "simulator", "i386", "watchos-i386-simulator/XTest.framework")]
+		public void PreXcode12 (string platform, string variant, string architecture, string expected)
+		{
+			var path = Path.Combine (Path.GetDirectoryName (GetType ().Assembly.Location), "Resources", "xcf-prexcode12.plist");
+			var plist = PDictionary.FromFile (path);
+			var result = ResolveNativeReferencesBase.ResolveXCFramework (plist, platform, variant, architecture);
+			Assert.That (result, Is.EqualTo (expected), expected);
+		}
+
 		[Test]
 		public void BadInfoPlist ()
 		{

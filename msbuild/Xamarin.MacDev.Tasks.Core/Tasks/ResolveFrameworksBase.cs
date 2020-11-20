@@ -11,14 +11,6 @@ using Xamarin.MacDev;
 using Xamarin.MacDev.Tasks;
 using Xamarin.Localization.MSBuild;
 
-/*
-
-	FrameworkReferences
-	e.g. manifest: Frameworks: UIKit
-	e.g. xcframework
-		- requires platform, architecture
-*/
-
 namespace Xamarin.MacDev.Tasks {
 
 	public abstract class ResolveNativeReferencesBase : XamarinTask
@@ -59,9 +51,10 @@ namespace Xamarin.MacDev.Tasks {
 					var name = nr.ItemSpec;
 					switch (Path.GetExtension (name)) {
 					case ".xcframework":
-						//var resolved = ResolveXCFramework (name);
-						//if (resolved != null)
-						//	native_frameworks.Add (new TaskItem (resolved));
+						var resolved = ResolveXCFramework (name);
+						if (resolved == null)
+							return false;
+						native_frameworks.Add (new TaskItem (resolved));
 						break;
 					case ".framework":
 						native_frameworks.Add (nr);
@@ -95,6 +88,10 @@ namespace Xamarin.MacDev.Tasks {
 							t.SetMetadata ("Kind", "Framework");
 							t.SetMetadata ("Name", resolved);
 							break;
+						case ".framework":
+							t = new TaskItem (Path.Combine (resources, name));
+							t.SetMetadata ("Kind", "Framework");
+							break;
 						default:
 							t = r;
 							break;
@@ -106,6 +103,7 @@ namespace Xamarin.MacDev.Tasks {
 						t.SetMetadata ("IsCxx", "False");
 						t.SetMetadata ("SmartLink", "True");
 
+						// values from manifest, overriding defaults if provided
 						foreach (XmlNode attribute in referenceNode.ChildNodes) {
 							Log.LogMessage ($"{attribute.Name} = {attribute.InnerText}");
 							t.SetMetadata (attribute.Name, attribute.InnerText);
@@ -125,7 +123,7 @@ namespace Xamarin.MacDev.Tasks {
 		protected string ResolveXCFramework (string xcframework)
 		{
 			var platformName = PlatformFrameworkHelper.GetOperatingSystem (TargetFrameworkMoniker);
-			var variant = SdkIsSimulator ? "simulator" : "";
+			var variant = SdkIsSimulator ? "simulator" : null;
 			try {
 				var plist = PDictionary.FromFile (Path.Combine (xcframework, "Info.plist"));
 				var dir = ResolveXCFramework (plist, platformName, variant, Architectures);
