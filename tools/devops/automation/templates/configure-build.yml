@@ -56,14 +56,14 @@ steps:
 
       foreach ($l in $labelsOfInterest) {
         $labelPresent = 1 -eq ($prInfo.labels | Where-Object { $_.name -eq "$l"}).Count 
-        Write-Host '##vso[task.setvariable variable=$l;isOutput=true]$labelPresent'
+        Write-Host "##vso[task.setvariable variable=$l;isOutput=true]$labelPresent"
       }
 
-      Write-Host '##vso[task.setvariable variable=prBuild;isOutput=true]True'
+      Write-Host "##vso[task.setvariable variable=prBuild;isOutput=true]True"
     } else {
       # set the name of the branch under build
       Write-Host "##vso[build.addbuildtag]$buildSourceBranchName"
-      Write-Host '##vso[task.setvariable variable=prBuild;isOutput=true]False'
+      Write-Host "##vso[task.setvariable variable=prBuild;isOutput=true]False"
     }
   env:
     GITHUB_TOKEN: $(GitHub.Token)
