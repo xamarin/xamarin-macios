@@ -28,14 +28,14 @@ steps:
       # make peoples life better, loop over the labels and add them as tags in the vsts build
       foreach ($labelInfo in $prInfo.labels) {
         $labelName = $labelInfo.name
-        Write-Host "##vso[build.addbuildtag]label:$labelName"
+        Write-Host "##vso[build.addbuildtag]$labelName"
       }
       # sepcial tag, we want to know if we are using a pr
       Write-Host "##vso[build.addbuildtag]prBuild"
 
       # special tag, lets add the target branch, will be useful to the users
       $ref = $prInfo.base.ref
-      Write-Host "##vso[build.addbuildtag]target:$ref"
+      Write-Host "##vso[build.addbuildtag]$ref"
       Write-Host $prInfo
     } else {
       # set the name of the branch under build
