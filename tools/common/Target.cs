@@ -556,6 +556,8 @@ namespace Xamarin.Bundler {
 
 		void GenerateMacMain (StringWriter sw)
 		{
+			var assembly_name = App.AssemblyName;
+
 			sw.WriteLine ("#define MONOMAC 1");
 			sw.WriteLine ("#include <xamarin/xamarin.h>");
 			if (App.Registrar == RegistrarMode.PartialStatic)
@@ -570,6 +572,7 @@ namespace Xamarin.Bundler {
 				sw.WriteLine ("\textern NSString* xamarin_custom_bundle_name;");
 				sw.WriteLine ("\txamarin_custom_bundle_name = @\"" + App.CustomBundleName + "\";");
 			}
+			sw.WriteLine ("\txamarin_executable_name = \"{0}\";", assembly_name);
 			if (!App.IsDefaultMarshalManagedExceptionMode)
 				sw.WriteLine ("\txamarin_marshal_managed_exception_mode = MarshalManagedExceptionMode{0};", App.MarshalManagedExceptions);
 			sw.WriteLine ("\txamarin_marshal_objectivec_exception_mode = MarshalObjectiveCExceptionMode{0};", App.MarshalObjectiveCExceptions);
