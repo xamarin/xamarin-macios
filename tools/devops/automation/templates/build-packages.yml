@@ -237,7 +237,7 @@ steps:
     artifactName: package-internal
   continueOnError: true
 
-- bash:
+- bash: |
     set -x
     set -e
 
@@ -252,7 +252,7 @@ steps:
     artifactName: package-internal
   continueOnError: true
 
-- bash:
+- bash: |
     rm -rf ~/.config/.mono/keypairs/
 
     RC=0
