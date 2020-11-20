@@ -19,10 +19,27 @@ steps:
 
     if ($buildReason -eq 'PullRequest') {
       Write-Host "Configuring build from PR."
-      $prInfo = Get-GitHubPRInfo -ChangeId 10115
+      # This is an interesting step, we do know we are dealing with a PR, but we need the PR id to
+      # be able to get the labels, the buildSourceBranch follows the pattern: refs/pull/{ChangeId}/merge
+      # we could use a regexp but then we would have two problems instead of one
+      $changeId = $buildSourceBranch.Replace("refs/pull/", "").Replace("/merge", "")
+      $prInfo = Get-GitHubPRInfo -ChangeId $chageId
+
+      # make peoples life better, loop over the labels and add them as tags in the vsts build
+      foreach ($labelInfo in $prInfo.labels) {
+        $labelName = $labelInfo.name
+        Write-Host "##vso[build.addbuildtag]label:$labelName"
+      }
+      # sepcial tag, we want to know if we are using a pr
+      Write-Host "##vso[build.addbuildtag]prBuild"
+
+      # special tag, lets add the target branch, will be useful to the users
+      $ref = $prInfo.base.ref
+      Write-Host "##vso[build.addbuildtag]target:$ref"
       Write-Host $prInfo
     } else {
-      Write-Host "Configuring build from origin."
+      # set the name of the branch under build
+      Write-Host "##vso[build.addbuildtag]$buildSourceBranchName"
     }
   env:
     GITHUB_TOKEN: $(GitHub.Token)
