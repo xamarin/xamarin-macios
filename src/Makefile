@@ -278,8 +278,8 @@ IOS_TARGETS_DIRS += \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin                      \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/share/doc/MonoTouch      \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS     \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits               \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits               \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/iOS           \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/iOS           \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1             \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/Facades     \
 
@@ -308,10 +308,10 @@ IOS_TARGETS += \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/OpenTK-1.0.dll          \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/OpenTK-1.0.pdb          \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/OpenTK-1.0.dll.config   \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/Xamarin.iOS.dll                   \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/Xamarin.iOS.pdb               \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/Xamarin.iOS.dll                   \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/Xamarin.iOS.pdb               \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/iOS/Xamarin.iOS.dll               \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/iOS/Xamarin.iOS.pdb               \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/iOS/Xamarin.iOS.dll               \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/iOS/Xamarin.iOS.pdb               \
 
 DOTNET_TARGETS += \
 	$(IOS_DOTNET_BUILD_DIR)/32/Xamarin.iOS.dll \
@@ -359,16 +359,16 @@ $(DOTNET_DESTDIR)/$(IOS_NUGET).Ref/ref/net6.0/Xamarin.iOS.dll: $(IOS_DOTNET_BUIL
 	$(Q) $(CP) $< $@
 
 # the actual architecture-specific versions
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/Xamarin.iOS.dll: $(IOS_BUILD_DIR)/native-32/Xamarin.iOS.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/iOS/Xamarin.iOS.dll: $(IOS_BUILD_DIR)/native-32/Xamarin.iOS.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/iOS
 	$(Q) install -m 0755 $< $@
 
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/Xamarin.iOS.pdb: $(IOS_BUILD_DIR)/native-32/Xamarin.iOS.pdb | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/iOS/Xamarin.iOS.pdb: $(IOS_BUILD_DIR)/native-32/Xamarin.iOS.pdb | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/iOS
 	$(Q) install -m 0644 $< $@
 
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/Xamarin.iOS.dll: $(IOS_BUILD_DIR)/native-64/Xamarin.iOS.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/iOS/Xamarin.iOS.dll: $(IOS_BUILD_DIR)/native-64/Xamarin.iOS.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/iOS
 	$(Q) install -m 0755 $< $@
 
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/Xamarin.iOS.pdb: $(IOS_BUILD_DIR)/native-64/Xamarin.iOS.pdb | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/iOS/Xamarin.iOS.pdb: $(IOS_BUILD_DIR)/native-64/Xamarin.iOS.pdb | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/iOS
 	$(Q) install -m 0644 $< $@
 
 $(foreach rid,$(DOTNET_IOS_RUNTIME_IDENTIFIERS_32),$(DOTNET_DESTDIR)/$(IOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0/Xamarin.iOS.dll): $(IOS_DOTNET_BUILD_DIR)/32/Xamarin.iOS.dll | $(foreach rid,$(DOTNET_IOS_RUNTIME_IDENTIFIERS_32),$(DOTNET_DESTDIR)/$(IOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0)
@@ -887,16 +887,18 @@ WATCH_TARGETS_DIRS +=                                          \
 	$(WATCH_BUILD_DIR)/reference/Facades                       \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/share/doc/Xamarin.WatchOS\
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/watchOS       \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/watchOS       \
 
 WATCH_TARGETS += \
 	$(PROJECT_DIR)/xamwatch.csproj                                                          \
 	$(PROJECT_DIR)/MonoTouch.NUnitLite.watchos.csproj                                       \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/Xamarin.WatchOS.dll          \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/Xamarin.WatchOS.pdb      \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/Xamarin.WatchOS.dll                        \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/Xamarin.WatchOS.dll                        \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/Xamarin.WatchOS.pdb                    \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/Xamarin.WatchOS.pdb                    \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/watchOS/Xamarin.WatchOS.dll                \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/watchOS/Xamarin.WatchOS.dll                \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/watchOS/Xamarin.WatchOS.pdb                \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/watchOS/Xamarin.WatchOS.pdb                \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/MonoTouch.NUnitLite.dll      \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/MonoTouch.NUnitLite.pdb
 
@@ -931,16 +933,16 @@ $(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Ref/ref/net6.0/Xamarin.WatchOS.dll: $(WATCHOS
 	$(Q) $(CP) $< $@
 
 # the actual architecture-specific versions
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/Xamarin.WatchOS.dll: $(WATCH_BUILD_DIR)/watch-32/Xamarin.WatchOS.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/watchOS/Xamarin.WatchOS.dll: $(WATCH_BUILD_DIR)/watch-32/Xamarin.WatchOS.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/watchOS
 	$(Q) install -m 0755 $< $@
 
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/Xamarin.WatchOS.dll: $(WATCH_BUILD_DIR)/watch-64/Xamarin.WatchOS.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/watchOS/Xamarin.WatchOS.dll: $(WATCH_BUILD_DIR)/watch-64/Xamarin.WatchOS.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/watchOS
 	$(Q) install -m 0755 $< $@
 
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/Xamarin.WatchOS.pdb: $(WATCH_BUILD_DIR)/watch-32/Xamarin.WatchOS.pdb | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/watchOS/Xamarin.WatchOS.pdb: $(WATCH_BUILD_DIR)/watch-32/Xamarin.WatchOS.pdb | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/watchOS
 	$(Q) install -m 0644 $< $@
 
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/Xamarin.WatchOS.pdb: $(WATCH_BUILD_DIR)/watch-64/Xamarin.WatchOS.pdb | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/watchOS/Xamarin.WatchOS.pdb: $(WATCH_BUILD_DIR)/watch-64/Xamarin.WatchOS.pdb | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/watchOS
 	$(Q) install -m 0644 $< $@
 
 $(foreach rid,$(DOTNET_WATCHOS_RUNTIME_IDENTIFIERS_32),$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0/Xamarin.WatchOS.dll): $(WATCHOS_DOTNET_BUILD_DIR)/32/Xamarin.WatchOS.dll | $(foreach rid,$(DOTNET_WATCHOS_RUNTIME_IDENTIFIERS_32),$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0)
@@ -1144,14 +1146,15 @@ TVOS_TARGETS_DIRS +=                                          \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS   \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/Facades \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/share/doc/Xamarin.TVOS  \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/tvOS         \
 
 TVOS_TARGETS += \
 	$(PROJECT_DIR)/xamtvos.csproj                                                        \
 	$(PROJECT_DIR)/MonoTouch.NUnitLite.tvos.csproj                                       \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/Xamarin.TVOS.dll             \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/Xamarin.TVOS.pdb             \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/Xamarin.TVOS.dll                        \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/Xamarin.TVOS.pdb                        \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/tvOS/Xamarin.TVOS.dll                   \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/tvOS/Xamarin.TVOS.pdb                   \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/OpenTK-1.0.dll               \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/OpenTK-1.0.pdb               \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/OpenTK-1.0.dll.config        \
@@ -1189,10 +1192,10 @@ $(DOTNET_DESTDIR)/$(TVOS_NUGET).Ref/ref/net6.0/Xamarin.TVOS.dll: $(TVOS_DOTNET_B
 	$(Q) $(CP) $< $@
 
 # the actual architecture-specific versions
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/Xamarin.TVOS.dll: $(TVOS_BUILD_DIR)/tvos-64/Xamarin.TVOS.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/tvOS/Xamarin.TVOS.dll: $(TVOS_BUILD_DIR)/tvos-64/Xamarin.TVOS.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/tvOS
 	$(Q) install -m 0755 $< $@
 
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/Xamarin.TVOS.pdb: $(TVOS_BUILD_DIR)/tvos-64/Xamarin.TVOS.pdb | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/tvOS/Xamarin.TVOS.pdb: $(TVOS_BUILD_DIR)/tvos-64/Xamarin.TVOS.pdb | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/tvOS
 	$(Q) install -m 0644 $< $@
 
 $(foreach rid,$(DOTNET_TVOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(TVOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0/Xamarin.TVOS.dll): $(TVOS_DOTNET_BUILD_DIR)/64/Xamarin.TVOS.dll | $(foreach rid,$(DOTNET_TVOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(TVOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0)
