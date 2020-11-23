@@ -50,7 +50,7 @@ bool xamarin_init_mono_debug = false;
 int xamarin_log_level = 0;
 const char *xamarin_executable_name = NULL;
 #if MONOMAC
-NSString * xamarin_custom_bundle_name = nil;
+NSString * xamarin_custom_bundle_name = @"MonoBundle";
 bool xamarin_is_mkbundle = false;
 char *xamarin_entry_assembly_path = NULL;
 #endif
@@ -1390,7 +1390,7 @@ xamarin_get_bundle_path ()
 	} else {
 		bundle_path = [[main_bundle bundlePath] stringByAppendingPathComponent:@"Contents"];
 	}
-	bundle_path = [bundle_path stringByAppendingPathComponent: xamarin_custom_bundle_name == NULL ? @"MonoBundle" : xamarin_custom_bundle_name];
+	bundle_path = [bundle_path stringByAppendingPathComponent: xamarin_custom_bundle_name];
 #else
 	bundle_path = [main_bundle bundlePath];
 #endif

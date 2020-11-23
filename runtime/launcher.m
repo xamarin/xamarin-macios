@@ -300,7 +300,7 @@ update_environment (xamarin_initialize_data *data)
 		monobundle_dir = [data->app_dir stringByAppendingPathComponent: @"Contents"];
 		res_dir = [data->app_dir stringByAppendingPathComponent: @"Contents/Resources"];
 	}
-	monobundle_dir = [monobundle_dir stringByAppendingPathComponent: xamarin_custom_bundle_name == NULL ? @"MonoBundle" : xamarin_custom_bundle_name];
+	monobundle_dir = [monobundle_dir stringByAppendingPathComponent: xamarin_custom_bundle_name];
 
 #ifdef DYNAMIC_MONO_RUNTIME
 	NSString *bin_dir = [data->app_dir stringByAppendingPathComponent: @"Contents/MacOS"];

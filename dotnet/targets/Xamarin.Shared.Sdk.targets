@@ -551,7 +551,9 @@
 		<ItemGroup>
 			<_XamarinMainLibraries Include="$(_XamarinNativeLibraryDirectory)/$(_LibXamarinName)" />
 			<!-- Link with the libraries shipped with the mono runtime pack -->
-			<_XamarinMainLibraries Include="@(_MonoLibrary)" />
+			<_XamarinMainLibraries Include="@(_MonoLibrary)" Condition="'$(_PlatformName)' != 'macOS'" />
+			<!-- But don't link with any dylibs on macOS, because they might have library initializers which may fail - instead delay any failures until whatever feature they provide is needed -->
+			<_XamarinMainLibraries Include="@(_MonoLibrary)" Condition="'$(_PlatformName)' == 'macOS' And ('%(_MonoLibrary.Extension)' == '.a' Or '%(_MonoLibrary.Filename)' == 'libcoreclr')" />
 			<!-- The frameworks we need to link with (both weakly and normally) -->
 			<_NativeExecutableFrameworks Include="@(_LinkerFrameworks)" />
 
