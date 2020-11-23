@@ -156,6 +156,7 @@ namespace Xamarin.Bundler
 			case ApplePlatform.iOS:
 			case ApplePlatform.TVOS:
 			case ApplePlatform.WatchOS:
+			case ApplePlatform.MacCatalyst:
 				return Path.Combine (GetPlatformFrameworkDirectory (app), "..", "..", "64bits", app.PlatformName);
 			default:
 				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, "Xamarin.iOS");

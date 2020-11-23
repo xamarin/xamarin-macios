@@ -773,6 +773,8 @@ namespace Xamarin.Bundler {
 				return Path.Combine (GetFrameworkLibDirectory (app), "mono", "Xamarin.WatchOS");
 			case ApplePlatform.TVOS:
 				return Path.Combine (GetFrameworkLibDirectory (app), "mono", "Xamarin.TVOS");
+			case ApplePlatform.MacCatalyst:
+				return Path.Combine (GetFrameworkLibDirectory (app), "mono", "Xamarin.MacCatalyst");
 			case ApplePlatform.MacOSX:
 #if MMP
 				if (IsUnifiedMobile)

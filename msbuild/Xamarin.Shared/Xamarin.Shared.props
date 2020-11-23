@@ -86,12 +86,14 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		</When>
 	</Choose>
 	<PropertyGroup Condition="'$(_XamarinBclPath)' == ''">
-		<_XamarinBclPath Condition="'$(_PlatformName)' == 'iOS'">$(_XamarinSdkRoot)/lib/mono/Xamarin.iOS/</_XamarinBclPath>
+		<_XamarinBclPath Condition="'$(_PlatformName)' == 'iOS' And '$(_IsMacCatalyst)' == 'true'">$(_XamarinSdkRoot)/lib/mono/Xamarin.MacCatalyst/</_XamarinBclPath>
+		<_XamarinBclPath Condition="'$(_PlatformName)' == 'iOS' And '$(_IsMacCatalyst)' != 'true'">$(_XamarinSdkRoot)/lib/mono/Xamarin.iOS/</_XamarinBclPath>
 		<_XamarinBclPath Condition="'$(_PlatformName)' == 'tvOS'">$(_XamarinSdkRoot)/lib/mono/Xamarin.TVOS/</_XamarinBclPath>
 		<_XamarinBclPath Condition="'$(_PlatformName)' == 'watchOS'">$(_XamarinSdkRoot)/lib/mono/Xamarin.WatchOS/</_XamarinBclPath>
 	</PropertyGroup>
 	<PropertyGroup>
-		<_XamarinPlatformAssemblyName Condition="'$(_PlatformName)' == 'iOS'">Xamarin.iOS.dll</_XamarinPlatformAssemblyName>
+		<_XamarinPlatformAssemblyName Condition="'$(_PlatformName)' == 'iOS' And '$(_IsMacCatalyst)' == 'true'">Xamarin.MacCatalyst.dll</_XamarinPlatformAssemblyName>
+		<_XamarinPlatformAssemblyName Condition="'$(_PlatformName)' == 'iOS' And '$(_IsMacCatalyst)' != 'true'">Xamarin.iOS.dll</_XamarinPlatformAssemblyName>
 		<_XamarinPlatformAssemblyName Condition="'$(_PlatformName)' == 'tvOS'">Xamarin.TVOS.dll</_XamarinPlatformAssemblyName>
 		<_XamarinPlatformAssemblyName Condition="'$(_PlatformName)' == 'watchOS'">Xamarin.WatchOS.dll</_XamarinPlatformAssemblyName>
 		<_XamarinPlatformAssemblyName Condition="'$(_PlatformName)' == 'macOS'">Xamarin.Mac.dll</_XamarinPlatformAssemblyName>
