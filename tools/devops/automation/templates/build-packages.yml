@@ -96,68 +96,68 @@ steps:
     # a branch in origin
     
     if ($buildReason -eq "PullRequest" -or (($buildReason -eq "Manual") -and ($buildSourceBranchName -eq "merge")) ) {
-      echo '##vso[task.setvariable variable=IsPR;isOutput=true]False'
+      Write-Host '##vso[task.setvariable variable=IsPR;isOutput=true]False'
 
       if ($Env:BuildPackage -eq "True") {
-        echo '##vso[task.setvariable variable=BuildPkgs;isOutput=true]True'
+        Write-Host '##vso[task.setvariable variable=BuildPkgs;isOutput=true]True'
       } else {
-        echo '##vso[task.setvariable variable=BuildPkgs;isOutput=true]False'
+        Write-Host '##vso[task.setvariable variable=BuildPkgs;isOutput=true]False'
       }
 
       # interesting case, we have build-pkg and skip-pkg... if that is the case, we build it, but we set a warning
       if ($Env:BuildPackage -eq "True" -and $Env:SkipPackages -eq "True") {
         Write-Host "##vso[task.logissue type=warning]'build-package' and 'skip-packages' are both present. Building packages in case of a doubt."
-        echo '##vso[task.setvariable variable=BuildPkgs;isOutput=true]True'
+        Write-Host "##vso[task.setvariable variable=BuildPkgs;isOutput=true]True"
       } 
 
       # if we want to have device tests, we do need the pkgs so that we can fwd them to the device tests
       if ($Env:TriggerDeviceTests -eq "True") {
-        echo '##vso[task.setvariable variable=BuildPkgs;isOutput=true]True'
-        echo '##vso[task.setvariable variable=RunDeviceTests;isOutput=true]True'
+        Write-Host "##vso[task.setvariable variable=BuildPkgs;isOutput=true]True"
+        Write-Host "##vso[task.setvariable variable=RunDeviceTests;isOutput=true]True"
       }
 
       if ($Env:SkipNugets -eq "True") {
-        echo '##vso[task.setvariable variable=BuildNugets;isOutput=true]False'
+        Write-Host "##vso[task.setvariable variable=BuildNugets;isOutput=true]False"
       } else {
-        echo '##vso[task.setvariable variable=BuildNugets;isOutput=true]True'
+        Write-Host "##vso[task.setvariable variable=BuildNugets;isOutput=true]True"
       }
 
       if ($Env:SkipSigning -eq "True") {
-        echo '##vso[task.setvariable variable=SignPkgs;isOutput=true]False'
+        Write-Host "##vso[task.setvariable variable=SignPkgs;isOutput=true]False"
       } else {
-        echo '##vso[task.setvariable variable=SignPkgs;isOutput=true]True'
+        Write-Host "##vso[task.setvariable variable=SignPkgs;isOutput=true]True"
       }
 
       if ($Env:SkipExternalTests -eq "True") {
-        echo '##vso[task.setvariable variable=RunExternalTests;isOutput=true]False'
+        Write-Host "##vso[task.setvariable variable=RunExternalTests;isOutput=true]False"
       } else {
-        echo '##vso[task.setvariable variable=RunExternalTests;isOutput=true]True'
+        Write-Host "##vso[task.setvariable variable=RunExternalTests;isOutput=true]True"
       }
 
       if ($Env:SkipPackagedXamarinMacTests -eq "True") {
-        echo '##vso[task.setvariable variable=RunMacTests;isOutput=true]False'
+        Write-Host "##vso[task.setvariable variable=RunMacTests;isOutput=true]False"
       } else {
-        echo '##vso[task.setvariable variable=RunMacTests;isOutput=true]True'
+        Write-Host "##vso[task.setvariable variable=RunMacTests;isOutput=true]True"
       }
 
-      echo '##vso[task.setvariable variable=RunSampleTests;isOutput=true]$Env:RunSampleTests'
-      echo '##vso[task.setvariable variable=RunInternalTests;isOutput=true]$Env:RunInternalTests'
+      Write-Host "##vso[task.setvariable variable=RunSampleTests;isOutput=true]$Env:RunSampleTests"
+      Write-Host "##vso[task.setvariable variable=RunInternalTests;isOutput=true]$Env:RunInternalTests"
 
     } else {
       # set the defaults, all the things! o/
-      echo '##vso[task.setvariable variable=IsPR;isOutput=true]False'
+      Write-Host "##vso[task.setvariable variable=IsPR;isOutput=true]False"
 
       # build pkg, nugets and sign them
-      echo '##vso[task.setvariable variable=BuildPkgs;isOutput=true]True'
-      echo '##vso[task.setvariable variable=BuildNugets;isOutput=true]True'
-      echo '##vso[task.setvariable variable=SignPkgs;isOutput=true]True'
+      Write-Host "##vso[task.setvariable variable=BuildPkgs;isOutput=true]True"
+      Write-Host "##vso[task.setvariable variable=BuildNugets;isOutput=true]True"
+      Write-Host "##vso[task.setvariable variable=SignPkgs;isOutput=true]True"
 
       # tests, run all of them, internal, external, device, mac but not sample tests
-      echo '##vso[task.setvariable variable=RunInternalTests;isOutput=true]True'
-      echo '##vso[task.setvariable variable=RunExternalTests;isOutput=true]True'
-      echo '##vso[task.setvariable variable=RunDeviceTests;isOutput=true]True'
-      echo '##vso[task.setvariable variable=RunMacTests;isOutput=true]True'
-      echo '##vso[task.setvariable variable=RunSampleTests;isOutput=true]False'
+      Write-Host "##vso[task.setvariable variable=RunInternalTests;isOutput=true]True"
+      Write-Host "##vso[task.setvariable variable=RunExternalTests;isOutput=true]True"
+      Write-Host "##vso[task.setvariable variable=RunDeviceTests;isOutput=true]True"
+      Write-Host "##vso[task.setvariable variable=RunMacTests;isOutput=true]True"
+      Write-Host "##vso[task.setvariable variable=RunSampleTests;isOutput=true]False"
     }
 
   name: configuration
