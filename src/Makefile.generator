@@ -149,6 +149,21 @@ $(TVOS_BUILD_DIR)/Xamarin.TVOS.BindingAttributes.dll: generator-attributes.cs Ma
 	$(Q_GEN) $(SYSTEM_CSC) -features:strict -nologo -debug -out:$@ -debug generator-attributes.cs -target:library -deterministic
 
 #
+# Xamarin.MacCatalyst
+#
+
+MACCATALYST_TARGETS +=                                                  \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/Xamarin.MacCatalyst.BindingAttributes.dll \
+
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/%.dll: $(MACCATALYST_BUILD_DIR)/%.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen
+	$(Q) install -m 0755 $< $@
+	$(Q) install -m 0644 $(<:.dll=.pdb) $(@:.dll=.pdb)
+
+$(MACCATALYST_BUILD_DIR)/Xamarin.MacCatalyst.BindingAttributes.dll: generator-attributes.cs Makefile.generator
+	$(Q) mkdir -p $(dir $@)
+	$(Q_GEN) $(SYSTEM_CSC) -features:strict -nologo -debug -out:$@ -debug generator-attributes.cs -target:library -deterministic
+
+#
 # Xamarin.Mac (bmac)
 #
 
@@ -201,6 +216,7 @@ install-bgen:	\
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/Xamarin.iOS.BindingAttributes.dll \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/Xamarin.TVOS.BindingAttributes.dll \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/Xamarin.WatchOS.BindingAttributes.dll \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/Xamarin.MacCatalyst.BindingAttributes.dll \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/bgen.exe                 \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/bgen                          \
 
