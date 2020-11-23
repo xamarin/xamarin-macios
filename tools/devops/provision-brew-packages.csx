@@ -1,4 +1,5 @@
-BrewPackages ("cmake", 
+BrewPackages (
+    #"cmake", 
     "autoconf",
     "automake",
     "libtool",
