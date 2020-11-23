@@ -94,11 +94,27 @@ public static class ReflectionExtensions {
 	//
 	public static bool IsUnavailable (this ICustomAttributeProvider provider, Generator generator)
 	{
-		return generator.AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (provider)
-			.Any (attr => attr.AvailabilityKind == AvailabilityKind.Unavailable &&
-				attr.Platform == generator.CurrentPlatform);
+		var attributes = generator.AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (provider);
+		var platform = generator.CurrentPlatform;
+		return IsUnavailable (attributes, platform);
 	}
 	
+	public static bool IsUnavailable (AvailabilityBaseAttribute[] attributes, PlatformName platform)
+	{
+		if (attributes.Any (attr => attr.AvailabilityKind == AvailabilityKind.Unavailable && attr.Platform == platform))
+			return true;
+
+		if (platform == PlatformName.MacCatalyst) {
+			// If we're targetting Mac Catalyst, and we don't have any availability information for Mac Catalyst,
+			// then use the availability for iOS
+			var anyCatalyst = attributes.Any (v => v.Platform == PlatformName.MacCatalyst);
+			if (!anyCatalyst)
+				return IsUnavailable (attributes, PlatformName.iOS);
+		}
+
+		return false;
+	}
+
 	public static AvailabilityBaseAttribute GetAvailability (this ICustomAttributeProvider attrProvider, AvailabilityKind availabilityKind, Generator generator)
 	{
 		return generator.AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (attrProvider)
