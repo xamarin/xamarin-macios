@@ -325,10 +325,18 @@ namespace Xamarin.Bundler {
 
 				bool has_dyn_msgSend;
 
-				if (App.Platform == ApplePlatform.MacOSX) {
-					has_dyn_msgSend = App.MarshalObjectiveCExceptions != MarshalObjectiveCExceptionMode.Disable && !App.RequiresPInvokeWrappers && Is64Build;
-				} else {
+				switch (App.Platform) {
+				case ApplePlatform.iOS:
+				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
 					has_dyn_msgSend = App.IsSimulatorBuild;
+					break;
+				case ApplePlatform.MacCatalyst:
+				case ApplePlatform.MacOSX:
+					has_dyn_msgSend = App.MarshalObjectiveCExceptions != MarshalObjectiveCExceptionMode.Disable && !App.RequiresPInvokeWrappers && Is64Build;
+					break;
+				default:
+					throw ErrorHelper.CreateError (71, Errors.MX0071, App.Platform, App.ProductName);
 				}
 
 				if (has_dyn_msgSend) {
