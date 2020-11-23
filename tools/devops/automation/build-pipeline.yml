@@ -270,7 +270,6 @@ stages:
 - stage: sample_testing
   displayName: 'Sample testing'
   dependsOn:
-  - configure
   - build_packages
   jobs:
   - job: sample_testing
