@@ -1326,6 +1326,10 @@ namespace Xamarin.Bundler
 					method = "xamarin_create_classes_Xamarin_TVOS";
 					library = "Xamarin.TVOS.registrar.a";
 					break;
+				case ApplePlatform.MacCatalyst:
+					method = "xamarin_create_classes_Xamarin_MacCatalyst";
+					library = "Xamarin.MacCatalyst.registrar.a";
+					break;
 				default:
 					throw ErrorHelper.CreateError (71, Errors.MX0071, App.Platform, "Xamarin.iOS");
 				}
