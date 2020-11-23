@@ -251,21 +251,15 @@ stages:
     vsdropsPrefix: ${{ variables.vsdropsPrefix }}
     keyringPass: $(xma-password)
 
-- stage: mac_mojave_tests
-  displayName : 'Mac Mojave Tests'
-  dependsOn: build_packages
-  jobs:
-  - template: templates/mac-tests.yml
-    parameters:
-      macPool: 'Hosted Mac Internal Mojave'
+- template: templates/mac-tests.yml
+  parameters:
+    stageName: 'Mac Mojave Tests'
+    macPool: 'Hosted Mac Internal Mojave'
 
-- stage: mac_sierra_tests
-  displayName : 'Mac High Sierra Tests'
-  dependsOn: build_packages
-  jobs:
-  - template: templates/mac-tests.yml
-    parameters:
-      macPool: 'Hosted Mac Internal'
+- template: templates/mac-tests.yml
+  parameters:
+    stageName: 'Mac High Sierra Tests'
+    macPool: 'Hosted Mac Internal'
 
 # TODO: Not the real step
 - stage: sample_testing
