@@ -135,6 +135,9 @@ public class BindingTouch {
 			case PlatformName.TvOS:
 				yield return Path.Combine (GetSDKRoot (), "lib", "mono", "Xamarin.TVOS");
 				break;
+			case PlatformName.MacCatalyst:
+				yield return Path.Combine (GetSDKRoot (), "lib", "mono", "Xamarin.MacCatalyst");
+				break;
 			case PlatformName.MacOSX:
 				if (target_framework == TargetFramework.Xamarin_Mac_4_5_Full) {
 					yield return Path.Combine (GetSDKRoot (), "lib", "reference", "full");
@@ -372,6 +375,16 @@ public class BindingTouch {
 			if (!IsDotNet) {
 				references.Add ("Facades/System.Drawing.Common");
 				ReferenceFixer.FixSDKReferences (GetSDKRoot (), "lib/mono/Xamarin.WatchOS", references);
+			}
+			break;
+		case ApplePlatform.MacCatalyst:
+			CurrentPlatform = PlatformName.MacCatalyst;
+			nostdlib = true;
+			if (string.IsNullOrEmpty (baselibdll))
+				baselibdll = Path.Combine (GetSDKRoot (), "lib/mono/Xamarin.MacCatalyst/Xamarin.MacCatalyst.dll");
+			if (!IsDotNet) {
+				// references.Add ("Facades/System.Drawing.Common");
+				ReferenceFixer.FixSDKReferences (GetSDKRoot (), "lib/mono/Xamarin.MacCatalyst", references);
 			}
 			break;
 		case ApplePlatform.MacOSX:

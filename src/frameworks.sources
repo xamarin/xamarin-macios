@@ -5,6 +5,7 @@
 # Xamarin.Mac: XamMac.dll and Xamarin.Mac.dll
 # Xamarin.WatchOS: Xamarin.WatchOS.dll
 # Xamarin.TVOS: Xamarin.TVOS.dll
+# Xamarin.MacCatalyst: Xamarin.MacCatalyst.dll
 #
 # First we build an assembly that contains the bare-bones code required
 # to compile the bindings. This is core.dll, and the source code is listed
@@ -2130,6 +2131,103 @@ TVOS_FRAMEWORKS =           \
 	VideoToolbox            \
 	Vision            \
 
+MACCATALYST_FRAMEWORKS = \
+	$(COMMON_FRAMEWORKS) \
+	AVKit \
+	Accounts \
+	AdSupport \
+	AddressBook \
+	AddressBookUI \
+	AppClip \
+	AppTrackingTransparency \
+	ARKit \
+	AssetsLibrary \
+	AudioToolbox \
+	AudioUnit \
+	AutomaticAssessmentConfiguration \
+	BackgroundTasks \
+	BusinessChat \
+	CallKit \
+	CarPlay \
+	CFNetwork \
+	ClassKit \
+	CloudKit \
+	Contacts \
+	ContactsUI \
+	CoreAnimation \
+	CoreAudioKit \
+	CoreGraphics \
+	CoreHaptics \
+	CoreImage \
+	CoreLocation \
+	CoreMIDI \
+	CoreMotion \
+	CoreNFC \
+	CoreSpotlight \
+	CoreTelephony \
+	CoreText \
+	DeviceCheck \
+	EventKit \
+	EventKitUI \
+	ExternalAccessory \
+	FileProvider \
+	GameController \
+	GameplayKit \
+	HealthKit \
+	HealthKitUI \
+	HomeKit \
+	IdentityLookup \
+	IdentityLookupUI \
+	ImageIO \
+	Intents \
+	IntentsUI \
+	IOSurface \
+	JavaScriptCore \
+	LinkPresentation \
+	LocalAuthentication \
+	MapKit \
+	MediaAccessibility \
+	MediaPlayer \
+	MediaToolbox \
+	Messages \
+	MessageUI \
+	Metal \
+	MetalKit \
+	MetalPerformanceShaders \
+	MetricKit \
+	MLCompute \
+	MobileCoreServices \
+	ModelIO \
+	MultipeerConnectivity \
+	NearbyInteraction \
+	NetworkExtension \
+	PassKit \
+	PdfKit \
+	PencilKit \
+	Photos \
+	PhotosUI \
+	PushKit \
+	QuickLook \
+	QuickLookThumbnailing \
+	ReplayKit \
+	SafariServices \
+	ScreenTime \
+	Security \
+	SensorKit \
+	Social \
+	Speech \
+	SystemConfiguration \
+	UIKit XKit \
+	UserNotifications \
+	UserNotificationsUI \
+	VideoToolbox \
+	VideoSubscriberAccount \
+	Vision \
+	VisionKit \
+	WatchConnectivity \
+	WKWebKit \
+	iAd \
+
 #
 # Compute the SOURCES variables.
 #
@@ -2153,3 +2251,8 @@ TVOS_CORE_SOURCES     := $(foreach framework,$(shell echo $(TVOS_FRAMEWORKS) | t
 TVOS_API_SOURCES      := $(foreach framework,$(shell echo $(TVOS_FRAMEWORKS) | tr '[:lower:]' '[:upper:]'),$($(framework)_API_SOURCES))     $(SHARED_API_SOURCES)
 TVOS_APIS             := $(foreach framework,$(shell echo $(TVOS_FRAMEWORKS) | tr '[:upper:]' '[:lower:]'),$(framework).cs)                 $(TVOS_API_SOURCES)
 TVOS_SOURCES          := $(foreach framework,$(shell echo $(TVOS_FRAMEWORKS) | tr '[:lower:]' '[:upper:]'),$($(framework)_SOURCES))         $(SHARED_SOURCES) $(TVOS_CORE_SOURCES)
+
+MACCATALYST_CORE_SOURCES := $(foreach framework,$(shell echo $(MACCATALYST_FRAMEWORKS) | tr '[:lower:]' '[:upper:]'),$($(framework)_CORE_SOURCES)) $(SHARED_CORE_SOURCES)
+MACCATALYST_API_SOURCES  := $(foreach framework,$(shell echo $(MACCATALYST_FRAMEWORKS) | tr '[:lower:]' '[:upper:]'),$($(framework)_API_SOURCES))  $(SHARED_API_SOURCES)
+MACCATALYST_APIS         := $(foreach framework,$(shell echo $(MACCATALYST_FRAMEWORKS) | tr '[:upper:]' '[:lower:]'),$(framework).cs)              $(MACCATALYST_API_SOURCES)
+MACCATALYST_SOURCES      := $(foreach framework,$(shell echo $(MACCATALYST_FRAMEWORKS) | tr '[:lower:]' '[:upper:]'),$($(framework)_SOURCES))      $(SHARED_SOURCES) $(MACCATALYST_CORE_SOURCES)

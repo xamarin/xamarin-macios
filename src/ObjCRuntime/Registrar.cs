@@ -1273,6 +1273,8 @@ namespace Registrar {
 					return "Xamarin.TVOS";
 				case ApplePlatform.MacOSX:
 					return "Xamarin.Mac";
+				case ApplePlatform.MacCatalyst:
+					return "Xamarin.MacCatalyst";
 				default:
 					throw ErrorHelper.CreateError (71, Errors.MX0071, App.Platform, App.ProductName);
 				}
@@ -1284,6 +1286,8 @@ namespace Registrar {
 		internal const string AssemblyName = "Xamarin.WatchOS";
 #elif TVOS
 		internal const string AssemblyName = "Xamarin.TVOS";
+#elif __MACCATALYST__
+		internal const string AssemblyName = "Xamarin.MacCatalyst";
 #elif IOS
 		internal const string AssemblyName = "Xamarin.iOS";
 #else

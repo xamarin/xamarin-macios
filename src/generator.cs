@@ -838,6 +838,9 @@ public partial class Frameworks {
 			case PlatformName.MacOSX:
 				frameworks = macosframeworks;
 				break;
+			case PlatformName.MacCatalyst:
+				frameworks = maccatalystframeworks;
+				break;
 			default:
 				throw new BindingException (1047, CurrentPlatform);
 			}
@@ -887,6 +890,7 @@ public partial class Generator : IMemberGatherer {
 			case PlatformName.iOS:
 			case PlatformName.WatchOS:
 			case PlatformName.TvOS:
+			case PlatformName.MacCatalyst:
 				return "UIApplication";
 			case PlatformName.MacOSX:
 				return "NSApplication";
@@ -988,6 +992,7 @@ public partial class Generator : IMemberGatherer {
 			case PlatformName.iOS:
 			case PlatformName.WatchOS:
 			case PlatformName.TvOS:
+			case PlatformName.MacCatalyst:
 				return "CoreImage";
 			case PlatformName.MacOSX:
 				return "Quartz";
@@ -1003,6 +1008,7 @@ public partial class Generator : IMemberGatherer {
 			case PlatformName.iOS:
 			case PlatformName.WatchOS:
 			case PlatformName.TvOS:
+			case PlatformName.MacCatalyst:
 				return "MobileCoreServices";
 			case PlatformName.MacOSX:
 				return "CoreServices";
@@ -1016,6 +1022,7 @@ public partial class Generator : IMemberGatherer {
 		get {
 			switch (CurrentPlatform) {
 			case PlatformName.iOS:
+			case PlatformName.MacCatalyst:
 				return "PDFKit";
 			case PlatformName.MacOSX:
 				return "Quartz";
@@ -6266,6 +6273,8 @@ public partial class Generator : IMemberGatherer {
 			return "Xamarin.TVOS";
 		case ApplePlatform.WatchOS:
 			return "Xamarin.WatchOS";
+		case ApplePlatform.MacCatalyst:
+			return "Xamarin.MacCatalyst";
 		default:
 			throw ErrorHelper.CreateError (1053, /* Internal error: unknown target framework '{0}'. */ BindingTouch.TargetFramework);
 		}
