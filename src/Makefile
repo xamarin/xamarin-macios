@@ -1351,6 +1351,27 @@ $(PROJECT_DIR)/xammaccatalyst.csproj: xammaccatalyst.tmpl.csproj Makefile $(wild
 $(PROJECT_DIR)/MonoTouch.NUnitLite.maccatalyst.csproj: MonoTouch.NUnitLite.maccatalyst.templ.csproj Makefile touch-unit.sources $(TOP)/Make.config $(TOP)/mk/mono.mk
 	$(Q) sed -e 's*<!--%FILES%-->*$(foreach file,$(MACCATALYST_TOUCHUNIT_SOURCES),<Compile Include="$(file)"/>)*' $< | xmllint --format - > $@
 
+# Type forwarder assembly from Xamarin.iOS.dll -> Xamarin.MacCatalyst.dll
+
+GENERATE_TYPE_FORWARDERS=generate-type-forwarders/bin/Debug/generate-type-forwarders.exe
+
+$(GENERATE_TYPE_FORWARDERS): $(wildcard generate-type-forwarders/*.cs*) Makefile
+	$(Q) $(SYSTEM_MSBUILD) /r generate-type-forwarders/generate-type-forwarders.csproj $(MSBUILD_VERBOSITY)
+
+$(MACCATALYST_BUILD_DIR)/reference/Xamarin.iOS.cs: $(MACCATALYST_BUILD_DIR)/reference/Xamarin.MacCatalyst.dll $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll Makefile $(GENERATE_TYPE_FORWARDERS)
+	$(Q) mono $(GENERATE_TYPE_FORWARDERS) $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll $(MACCATALYST_BUILD_DIR)/reference/Xamarin.MacCatalyst.dll $@.tmp
+	$(Q) mv $@.tmp $@
+
+$(MACCATALYST_BUILD_DIR)/reference/Xamarin.iOS.dll: $(MACCATALYST_BUILD_DIR)/reference/Xamarin.iOS.cs
+	$(Q) $(MACCATALYST_CSC) $< -out:$@ -r:$(MACCATALYST_BUILD_DIR)/reference/Xamarin.MacCatalyst.dll -target:library -deterministic -publicsign -keyfile:$(PRODUCT_KEY_PATH) -nologo -nowarn:618
+
+$(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.iOS.cs: $(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.MacCatalyst.dll $(IOS_DOTNET_BUILD_DIR)/ref/Xamarin.iOS.dll Makefile $(GENERATE_TYPE_FORWARDERS)
+	$(Q) mono $(GENERATE_TYPE_FORWARDERS) $(IOS_DOTNET_BUILD_DIR)/ref/Xamarin.iOS.dll $(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.MacCatalyst.dll $@.tmp
+	$(Q) mv $@.tmp $@
+
+$(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.iOS.dll: $(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.iOS.cs
+	$(Q) $(SYSTEM_CSC) $(DOTNET_FLAGS) $< -out:$@ -r:$(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.MacCatalyst.dll -target:library -deterministic -publicsign -keyfile:$(PRODUCT_KEY_PATH) -nologo -nowarn:618
+
 PROJECT_FILES += $(PROJECT_DIR)/xammaccatalyst.csproj $(PROJECT_DIR)/MonoTouch.NUnitLite.maccatalyst.csproj
 
 clean-maccatalyst:
@@ -1374,13 +1395,16 @@ MACCATALYST_TARGETS += \
 	$(PROJECT_DIR)/MonoTouch.NUnitLite.maccatalyst.csproj                                       \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.MacCatalyst/Xamarin.MacCatalyst.dll      \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.MacCatalyst/Xamarin.MacCatalyst.pdb      \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.MacCatalyst/Xamarin.iOS.dll              \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/MacCatalyst/Xamarin.MacCatalyst.dll            \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/MacCatalyst/Xamarin.MacCatalyst.pdb            \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/MacCatalyst/Xamarin.iOS.dll                    \
 
 DOTNET_TARGETS += \
 	$(MACCATALYST_DOTNET_BUILD_DIR)/64/Xamarin.MacCatalyst.dll \
 	$(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.MacCatalyst.dll \
 	$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Ref/ref/net6.0/Xamarin.MacCatalyst.dll \
+	$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Ref/ref/net6.0/Xamarin.iOS.dll \
 	$(foreach rid,$(DOTNET_MACCATALYST_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0/Xamarin.MacCatalyst.dll) \
 	$(foreach rid,$(DOTNET_MACCATALYST_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0/Xamarin.MacCatalyst.pdb) \
 
@@ -1411,6 +1435,9 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/MacCatalyst/Xamarin.MacCatalyst.dll
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/MacCatalyst/Xamarin.MacCatalyst.pdb: $(MACCATALYST_BUILD_DIR)/maccatalyst-64/Xamarin.MacCatalyst.pdb | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/MacCatalyst
 	$(Q) install -m 0644 $< $@
+
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/MacCatalyst/Xamarin.iOS.dll: $(MACCATALYST_BUILD_DIR)/reference/Xamarin.iOS.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/MacCatalyst
+	$(Q) install -m 0755 $< $@
 
 $(foreach rid,$(DOTNET_MACCATALYST_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0/Xamarin.MacCatalyst.dll): $(MACCATALYST_DOTNET_BUILD_DIR)/64/Xamarin.MacCatalyst.dll | $(foreach rid,$(DOTNET_MACCATALYST_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0)
 	$(Q) $(CP) $< $@
