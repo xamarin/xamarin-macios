@@ -909,6 +909,7 @@ namespace Xamarin.Bundler {
 					validAbis.Add (Abi.ARM64_32 | Abi.LLVM);
 				} else {
 					validAbis.Add (Abi.i386);
+					validAbis.Add (Abi.x86_64);
 				}
 				break;
 			case ApplePlatform.TVOS:
