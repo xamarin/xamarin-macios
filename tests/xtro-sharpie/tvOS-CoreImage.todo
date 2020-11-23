@@ -1,0 +1,3 @@
+!missing-field! kCIImageAuxiliarySemanticSegmentationSkyMatte not bound
+!missing-field! kCIImageRepresentationSemanticSegmentationSkyMatteImage not bound
+!missing-field! kCIInputLocalToneMapAmountKey not bound
