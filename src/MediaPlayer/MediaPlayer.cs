@@ -319,6 +319,7 @@ namespace MediaPlayer {
 	[NoTV]
 	[NoWatch]
 	[iOS (9,3)]
+	[MacCatalyst (13, 0)]
 	[Native]
 	public enum MPMediaLibraryAuthorizationStatus : long {
 		NotDetermined = 0,
@@ -331,6 +332,7 @@ namespace MediaPlayer {
 	[iOS (10,0)]
 	[TV (10,0)]
 	[Watch (5,0)]
+	[MacCatalyst (13, 0)]
 	[Native]
 	public enum MPNowPlayingInfoMediaType : ulong
 	{

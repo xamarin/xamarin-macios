@@ -76,6 +76,7 @@ namespace VideoSubscriberAccount {
 	[iOS (10, 0)]
 	[TV (10, 0)]
 	[Mac (10,14)]
+	[NoMacCatalyst]
 	[Unavailable (PlatformName.WatchOS)]
 	[StrongDictionary ("VSErrorInfoKeys")]
 	interface VSErrorInfo {
@@ -126,6 +127,7 @@ namespace VideoSubscriberAccount {
 		IVSAccountManagerDelegate Delegate { get; set; }
 
 		[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
+		[NoMacCatalyst]
 		[NoMac]
 		[Async]
 		[Export ("checkAccessStatusWithOptions:completionHandler:")]
@@ -161,6 +163,7 @@ namespace VideoSubscriberAccount {
 	[TV (10, 0)]
 	[Mac (10,14)]
 	[Unavailable (PlatformName.WatchOS)]
+	[NoMacCatalyst]
 	[StrongDictionary ("VSCheckAccessOptionKeys")]
 	interface VSAccountManagerAccessOptions {
 

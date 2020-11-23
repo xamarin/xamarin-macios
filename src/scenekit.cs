@@ -2533,6 +2533,7 @@ namespace SceneKit {
 		SCNRenderer FromContext (IntPtr context, [NullAllowed] NSDictionary options);
 
 		[NoWatch]
+		[NoMacCatalyst]
 		[Static]
 		[Wrap ("FromContext (context.GetHandle (), options)")]
 		// GetHandle will return IntPtr.Zero is context is null
@@ -3493,6 +3494,7 @@ namespace SceneKit {
 		bool RendersContinuously { get; set; }
 
 		[NoWatch, NoTV, Mac (10,15), NoiOS]
+		[NoMacCatalyst]
 		[Export ("drawableResizesAsynchronously")]
 		bool DrawableResizesAsynchronously { get; set; }
 	}
