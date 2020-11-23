@@ -308,6 +308,7 @@ steps:
 
     make -C $(Build.SourcesDirectory)/xamarin-macios/tests package-tests
   displayName: 'Package Xamarin.mac tests'
+  condition: and(succeeded(), eq(variables['configuration.RunMacTests'], 'True'))
   continueOnError: true # not a terrible blocking issue
 
 - task: PublishPipelineArtifact@1
@@ -315,9 +316,11 @@ steps:
   inputs:
     targetPath: $(Build.SourcesDirectory)/xamarin-macios/tests/*.7z
     artifactName: package-internal
+  condition: and(succeeded(), eq(variables['configuration.RunMacTests'], 'True'))
   continueOnError: true
 
 - bash: |
+    echo '##vso[task.setvariable variable=TESTS_RAN;isOutput=true]True'
     rm -rf ~/.config/.mono/keypairs/
 
     RC=0
@@ -349,13 +352,14 @@ steps:
     targetPath: 'xamarin-macios/tests/TestSummary.md'
     artifactName: TestSummary
   continueOnError: true
-  condition: succeededOrFailed()
+  condition: and(succeededOrFailed(), eq(variables['runTests.TESTS_RAN'], 'True')) # if tests did not run, there is nothing to do
 
 - pwsh: |
     $summaryName = "TestSummary.md"
     $summaryPath = "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tests/TestSummary.md"
     Write-Host "##vso[task.addattachment type=Distributedtask.Core.Summary;name=$summaryName;]$summaryPath"
   displayName: Set TestSummary
+  condition: and(succeededOrFailed(), eq(variables['runTests.TESTS_RAN'], 'True')) # if tests did not run, there is nothing to do
 
 # Archive files for the Html Report so that the report can be easily uploaded as artifacts of the build.
 - task: ArchiveFiles@1
@@ -365,7 +369,7 @@ steps:
     includeRootFolder: false
     archiveFile: '$(Build.ArtifactStagingDirectory)/HtmlReport.zip'
   continueOnError: true
-  condition: succeededOrFailed()
+  condition: and(succeededOrFailed(), eq(variables['runTests.TESTS_RAN'], 'True')) # if tests did not run, there is nothing to do
 
 # Create HtmlReport artifact. This serves two purposes:
 # 1. It is the way we are going to share the HtmlReport with the publish_html job that is executed on a Windows machine.
@@ -376,4 +380,4 @@ steps:
     targetPath: '$(Build.ArtifactStagingDirectory)/HtmlReport.zip'
     artifactName: HtmlReport
   continueOnError: true
-  condition: succeededOrFailed()
+  condition: and(succeededOrFailed(), eq(variables['runTests.TESTS_RAN'], 'True')) # if tests did not run, there is nothing to do
