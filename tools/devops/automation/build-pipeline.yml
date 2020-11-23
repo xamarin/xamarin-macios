@@ -99,7 +99,26 @@ stages:
     timeoutInMinutes: 1000
     variables:
       AgentPoolComputed: $[ dependencies.AgentPoolSelector.outputs['setAgentPool.AgentPoolComputed'] ]
-      AgentPoolComputed: $[ dependencies.AgentPoolSelector.outputs['setAgentPool.AgentPoolComputed'] ]
+      # add all the variables that have been parsed by the configuration step. Could we have a less verbose way??
+      # 
+      # build-package
+      # run-internal-tests
+      # skip-packages
+      # skip-nugets
+      # skip-signing
+      # skip-external-tests
+      # trigger-device-tests
+      # run-sample-tests
+      # skip-packaged-xamarin-mac-tests
+      BuildPackage: $[ dependencies.configure.outputs['labels.build-package'] ]
+      RunInternalTests: $[ dependencies.configure.outputs['labels.run-internal-tests'] ]
+      SkipPackages: $[ dependencies.configure.outputs['labels.skip-packages'] ]
+      SkipNugets: $[ dependencies.configure.outputs['labels.skip-nugets'] ]
+      SkipSigning: $[ dependencies.configure.outputs['labels.skip-signing'] ]
+      SkipExternalTests: $[ dependencies.configure.outputs['labels.skip-external-tests'] ]
+      TriggerDeviceTests: $[ dependencies.configure.outputs['labels.trigger-device-tests'] ]
+      RunSampleTests: $[ dependencies.configure.outputs['labels.run-sample-tests'] ]
+      SkipPackagedXamarinMacTests: $[ dependencies.configure.outputs['labels.skip-packaged-xamarin-mac-tests'] ]
     pool:
       name: $(AgentPoolComputed)
       demands:
