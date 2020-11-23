@@ -905,6 +905,8 @@ namespace Xamarin.Bundler {
 				return "Xamarin.TVOS";
 			case ApplePlatform.MacOSX:
 				return "Xamarin.Mac";
+			case ApplePlatform.MacCatalyst:
+				return "Xamarin.MacCatalyst";
 			default:
 				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, app.ProductName);
 			}
