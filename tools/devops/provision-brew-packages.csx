@@ -1,5 +1,5 @@
 BrewPackages (
-    #"cmake", 
+    //"cmake", 
     "autoconf",
     "automake",
     "libtool",
