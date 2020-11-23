@@ -43,7 +43,7 @@ namespace Xharness.Jenkins {
 		public bool IncludeiOSExtensions;
 		public bool ForceExtensionBuildOnly;
 		public bool IncludetvOS = true;
-		public bool IncludewatchOS = false;
+		public bool IncludewatchOS = true;
 		public bool IncludeMmpTest;
 		public bool IncludeMSBuild = true;
 		public bool IncludeMtouch;

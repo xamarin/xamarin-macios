@@ -55,7 +55,7 @@
     <!-- Runtime pack identifiers -->
     <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'iOS' ">ios-x64;ios-arm64;ios-arm;ios-x86</_RuntimePackRuntimeIdentifiers>
     <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'tvOS' ">tvos-x64;tvos-arm64</_RuntimePackRuntimeIdentifiers>
-    <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'watchOS' ">watchos-x86;watchos-arm</_RuntimePackRuntimeIdentifiers>
+    <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'watchOS' ">watchos-x86;watchos-x64;watchos-arm</_RuntimePackRuntimeIdentifiers>
     <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'macOS' ">osx-x64</_RuntimePackRuntimeIdentifiers>
   </PropertyGroup>
 
