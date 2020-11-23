@@ -812,7 +812,6 @@ $(WATCHOS_DOTNET_BUILD_DIR)/32/Xamarin.WatchOS%dll $(WATCHOS_DOTNET_BUILD_DIR)/3
 	$(Q_DOTNET_GEN) \
 		$(SYSTEM_CSC) $(DOTNET_FLAGS) -out:$(WATCHOS_DOTNET_BUILD_DIR)/32/Xamarin.WatchOS.dll -optimize \
 		-publicsign -keyfile:$(PRODUCT_KEY_PATH) \
-		-refout:$(WATCHOS_DOTNET_BUILD_DIR)/ref/Xamarin.WatchOS.dll \
 		$(WATCH_DEFINES) \
 		$(ARGS_32) \
 		$(WATCHOS_WARNINGS_TO_FIX) \
