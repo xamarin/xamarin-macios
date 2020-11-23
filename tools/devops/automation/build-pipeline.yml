@@ -272,6 +272,7 @@ stages:
   displayName: 'Sample testing'
   dependsOn:
   - build_packages
+  condition: and(succeeded(), eq (stageDependencies.build_packages.build.outputs['configuration.RunSampleTests'])) 
   jobs:
   - job: sample_testing
     pool:
