@@ -17,3 +17,4 @@ namespace VideoSubscriberAccount {
 		}
 	}
 }
+#endif // !__MACCATALYST__
