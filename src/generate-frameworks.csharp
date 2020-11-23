@@ -1,9 +1,12 @@
 #!/usr/bin/env /Library/Frameworks/Mono.framework/Commands/csharp -s
 
+using System.IO;
+using System.Text;
+
 try {
 	var args = Environment.GetCommandLineArgs ();
 	var defaultArgumentCount = 3;
-	var actualArgumentCount = 4;
+	var actualArgumentCount = 5;
 	if (args.Length != defaultArgumentCount + actualArgumentCount) {
 		Console.WriteLine ($"Need {actualArgumentCount} arguments, got {args.Length - defaultArgumentCount} arguments");
 		Environment.Exit (1);
@@ -11,6 +14,10 @@ try {
 	}
 
 	args = args.Skip (3).ToArray ();
+
+	var csharpOutput = args [0];
+
+	args = args.Skip (1).ToArray ();
 
 	var iosframeworks = args [0].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 	var macosframeworks = args [1].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
@@ -22,27 +29,31 @@ try {
 	var all = new HashSet<string> ();
 	foreach (var fws in allframeworks)
 		foreach (var fw in fws)
-			all.Add (fw)
+			all.Add (fw);
 
-	Console.WriteLine ("using System.Collections.Generic;");
-	Console.WriteLine ();
-	Console.WriteLine ("partial class Frameworks {");
+	var sb = new StringBuilder ();
+	sb.AppendLine ("using System.Collections.Generic;");
+	sb.AppendLine ();
+	sb.AppendLine ("partial class Frameworks {");
 
 	for (int i = 0; i < names.Length; i++) {
 		var name = names [i];
 		var frameworks = allframeworks [i];
-		Console.Write ($"\treadonly HashSet<string> {name} = new HashSet<string> {{\"");
-		Console.Write (string.Join ("\", \"", frameworks));
-		Console.WriteLine ("\"};");
+		sb.Append ($"\treadonly HashSet<string> {name} = new HashSet<string> {{\"");
+		sb.Append (string.Join ("\", \"", frameworks));
+		sb.AppendLine ("\"};");
 	}
 
 	var allArray = all.ToArray ();
 	Array.Sort (allArray);
 	foreach (var fw in allArray)
-		Console.WriteLine ($"\tbool? _{fw.Replace (".", "")};");
+		sb.AppendLine ($"\tbool? _{fw.Replace (".", "")};");
 	foreach (var fw in allArray)
-		Console.WriteLine ($"\tpublic bool Have{fw} {{ get {{ if (!_{fw}.HasValue) _{fw} = GetValue (\"{fw}\"); return _{fw}.Value; }} }}");
-	Console.WriteLine ("}");
+		sb.AppendLine ($"\tpublic bool Have{fw} {{ get {{ if (!_{fw}.HasValue) _{fw} = GetValue (\"{fw}\"); return _{fw}.Value; }} }}");
+	sb.AppendLine ("}");
+
+	File.WriteAllText (csharpOutput, sb.ToString ());
+
 	Environment.Exit (0);
 } catch (Exception e) {
 	Console.WriteLine ("Failed: {0}", e);
