@@ -1571,6 +1571,9 @@ namespace Registrar {
 			case ApplePlatform.MacOSX:
 				currentPlatform = global::ObjCRuntime.PlatformName.MacOSX;
 				break;
+			case ApplePlatform.MacCatalyst:
+				currentPlatform = global::ObjCRuntime.PlatformName.MacCatalyst;
+				break;
 			default:
 				throw ErrorHelper.CreateError (71, Errors.MX0071, App.Platform, App.ProductName);
 			}
