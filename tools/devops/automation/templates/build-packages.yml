@@ -186,7 +186,7 @@ steps:
   # Ensure virtualenv is on the PATH
 - template: set-path/v1.yml@templates
   parameters:
-    prependToPath: '/Users/builder/Library/Python/2.7/bin'
+    prependToPath: '/Users/builder/Library/Python/2.7/bin:/usr/local/bin/virtualenv'
 
 - bash: |
     VIRTUAL_ENV_PATH=$(Build.SourcesDirectory)/venv
