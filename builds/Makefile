@@ -173,7 +173,7 @@ INSTALL_STRIP_FLAG=-s
 endif
 
 #
-# Xamarin.iOS/WatchOS/TVOS/Mac BCL assemblies
+# Xamarin.iOS/WatchOS/TVOS/Mac/MacCatalyst BCL assemblies
 #
 install-local:: install-bcl
 all-local:: install-bcl
@@ -427,16 +427,19 @@ MOBILE_ADDITIONAL_FACADE_ASSEMBLIES = \
 
 TVOS_ASSEMBLIES = $(IOS_ASSEMBLIES)
 WATCHOS_ASSEMBLIES = $(filter-out Mono.Security Mono.Data.Tds,$(IOS_ASSEMBLIES))
+MACCATALYST_ASSEMBLIES = $(IOS_ASSEMBLIES)
 
 IOS_REPL_ASSEMBLIES = mscorlib System System.Core System.Xml Mono.CSharp
 TVOS_REPL_ASSEMBLIES = $(IOS_REPL_ASSEMBLIES)
 WATCHOS_REPL_ASSEMBLIES = $(IOS_REPL_ASSEMBLIES)
+MACCATALYST_REPL_ASSEMBLIES = $(IOS_REPL_ASSEMBLIES)
 
 IOS_FACADE_ASSEMBLIES = $(COMMON_FACADE_ASSEMBLIES) $(MOBILE_ADDITIONAL_FACADE_ASSEMBLIES)
 TVOS_FACADE_ASSEMBLIES = $(COMMON_FACADE_ASSEMBLIES) $(MOBILE_ADDITIONAL_FACADE_ASSEMBLIES)
 WATCHOS_FACADE_ASSEMBLIES = $(COMMON_FACADE_ASSEMBLIES) $(MOBILE_ADDITIONAL_FACADE_ASSEMBLIES)
 MAC_FACADE_ASSEMBLIES = $(COMMON_FACADE_ASSEMBLIES) $(MOBILE_ADDITIONAL_FACADE_ASSEMBLIES)
 MAC_4_5_FACADE_ASSEMBLIES = $(COMMON_FACADE_ASSEMBLIES) System.Net.Http.Rtc
+MACCATALYST_FACADE_ASSEMBLIES = $(COMMON_FACADE_ASSEMBLIES) $(MOBILE_ADDITIONAL_FACADE_ASSEMBLIES)
 
 IOS_BCL_DIRECTORIES = \
 	$(PREFIX)/lib/mono/2.1 \
@@ -455,6 +458,11 @@ TVOS_BCL_DIRECTORIES = \
 	$(PREFIX)/lib/mono/Xamarin.TVOS \
 	$(PREFIX)/lib/mono/Xamarin.TVOS/Facades \
 	$(PREFIX)/lib/mono/Xamarin.TVOS/repl
+
+MACCATALYST_BCL_DIRECTORIES = \
+	$(PREFIX)/lib/mono/Xamarin.MacCatalyst \
+	$(PREFIX)/lib/mono/Xamarin.MacCatalyst/Facades \
+	$(PREFIX)/lib/mono/Xamarin.MacCatalyst/repl
 
 MAC_BCL_DIRECTORIES = \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac \
@@ -490,6 +498,16 @@ TVOS_BCL_TARGETS = \
 	$(foreach file,$(TVOS_FACADE_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.TVOS/Facades/$(file).dll)                         \
 	$(foreach file,$(TVOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.TVOS/repl/$(file).dll)                              \
 	$(foreach file,$(TVOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.TVOS/repl/$(file).pdb)                          \
+
+MACCATALYST_BCL_TARGETS = \
+	$(foreach file,$(MACCATALYST_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.MacCatalyst/$(file).dll)                                    \
+	$(foreach file,$(filter-out $(NO_PDB_ASSEMBLIES),$(MACCATALYST_ASSEMBLIES)),$(PREFIX)/lib/mono/Xamarin.MacCatalyst/$(file).pdb) \
+	$(foreach file,$(MACCATALYST_FACADE_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.MacCatalyst/Facades/$(file).dll)                     \
+
+# the mono archive doesn't have the repl assemblies yet
+MACCATALYST_BCL_TARGETS_DISABLED = \
+	$(foreach file,$(MACCATALYST_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.MacCatalyst/repl/$(file).dll)                          \
+	$(foreach file,$(MACCATALYST_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.MacCatalyst/repl/$(file).pdb)                          \
 
 MAC_BCL_TARGETS = \
 	$(foreach file,$(MAC_ASSEMBLIES),$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/$(file).dll)                \
@@ -535,6 +553,15 @@ $(PREFIX)/lib/mono/Xamarin.TVOS/repl/%: .stamp-$(MONO_BUILD_MODE) | $(PREFIX)/li
 $(PREFIX)/lib/mono/Xamarin.TVOS/%: .stamp-$(MONO_BUILD_MODE) | $(PREFIX)/lib/mono/Xamarin.TVOS
 	$(Q) install -m 0755 $(MONO_IOS_SDK_DESTDIR)/ios-bcl/monotouch_tv/$(notdir $@) $@
 
+$(PREFIX)/lib/mono/Xamarin.MacCatalyst/Facades/%: .stamp-$(MONO_BUILD_MODE) | $(PREFIX)/lib/mono/Xamarin.MacCatalyst/Facades
+	$(Q) install -m 0755 $(MONO_MACCATALYST_SDK_DESTDIR)/maccat-bcl/monotouch/Facades/$(notdir $@) $@
+
+$(PREFIX)/lib/mono/Xamarin.MacCatalyst/repl/%: .stamp-$(MONO_BUILD_MODE) | $(PREFIX)/lib/mono/Xamarin.MacCatalyst/repl
+	$(Q) install -m 0755 $(MONO_MACCATALYST_SDK_DESTDIR)/maccat-bcl/monotouch_runtime/$(notdir $@) $@
+
+$(PREFIX)/lib/mono/Xamarin.MacCatalyst/%: .stamp-$(MONO_BUILD_MODE) | $(PREFIX)/lib/mono/Xamarin.MacCatalyst
+	$(Q) install -m 0755 $(MONO_MACCATALYST_SDK_DESTDIR)/maccat-bcl/monotouch/$(notdir $@) $@
+
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/Facades/%: .stamp-$(MONO_BUILD_MODE) | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/Facades
 	$(Q) install -m 0755 $(MONO_MAC_SDK_DESTDIR)/mac-bcl/xammac/Facades/$(notdir $@) $@
 
@@ -547,7 +574,7 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/Facades/%: .stamp-$(MONO
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/%: .stamp-$(MONO_BUILD_MODE) | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5
 	$(Q) install -m 0755 $(MONO_MAC_SDK_DESTDIR)/mac-bcl/xammac_net_4_5/$(notdir $@) $@
 
-$(IOS_BCL_DIRECTORIES) $(WATCHOS_BCL_DIRECTORIES) $(TVOS_BCL_DIRECTORIES) $(MAC_BCL_DIRECTORIES):
+$(IOS_BCL_DIRECTORIES) $(WATCHOS_BCL_DIRECTORIES) $(TVOS_BCL_DIRECTORIES) $(MAC_BCL_DIRECTORIES) $(MACCATALYST_BCL_DIRECTORIES):
 	$(Q) mkdir -p $@
 
 MONO_ARCHIVE_IOS_IGNORED_ASSEMBLIES = Mono.Simd System.Runtime.CompilerServices.Unsafe nunitlite  # TODO check if we should add them
@@ -589,15 +616,24 @@ mac-45-assemblies-check: $(MAC_BCL_TARGETS)
 	$(Q) if ! diff -u .$@1 .$@2; then echo "\n*** There are assemblies in "$(MONO_MAC_SDK_DESTDIR)/mac-bcl/xammac_net_4_5 " not defined in MAC_4_5_ASSEMBLIES or MAC_4_5_FACADE_ASSEMBLIES ***\n"; exit 1; fi
 	$(Q) rm -f .$@*
 
+maccatalyst-assemblies-check: $(MACCATALYST_BCL_TARGETS)
+	$(Q) rm -f .$@*
+	$(Q) echo $(MACCATALYST_ASSEMBLIES) $(MACCATALYST_FACADE_ASSEMBLIES) $(MONO_ARCHIVE_IOS_IGNORED_ASSEMBLIES) | tr ' ' '\n' | sort > .$@1
+	$(Q) ls -1 $(MONO_MACCATALYST_SDK_DESTDIR)/maccat-bcl/monotouch $(MONO_MACCATALYST_SDK_DESTDIR)/maccat-bcl/monotouch/Facades | grep dll$$ | sed 's/[.]dll//' | sort > .$@2
+	$(Q) if ! diff -u .$@1 .$@2; then echo "\n*** There are assemblies in "$(MONO_MACCATALYST_SDK_DESTDIR)/maccat-bcl/monotouch" not defined in MACCATALYST_ASSEMBLIES or MACCATALYST_FACADE_ASSEMBLIES ***\n"; exit 1; fi
+	$(Q) rm -f .$@*
+
 install-bcl-ios: $(IOS_BCL_TARGETS) ios-assemblies-check
 install-bcl-tvos: $(TVOS_BCL_TARGETS) tvos-assemblies-check
 install-bcl-watchos: $(WATCHOS_BCL_TARGETS) watchos-assemblies-check
 install-bcl-mac: $(MAC_BCL_TARGETS) mac-assemblies-check mac-45-assemblies-check
+install-bcl-maccatalyst: $(MACCATALYST_BCL_TARGETS) maccatalyst-assemblies-check
 
 install-bcl:: install-bcl-ios
 install-bcl:: install-bcl-watchos
 install-bcl:: install-bcl-tvos
 install-bcl:: install-bcl-mac
+install-bcl:: install-bcl-maccatalyst
 ### TODO END
 
 verify-signature:
