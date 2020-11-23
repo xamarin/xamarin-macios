@@ -3444,7 +3444,7 @@ namespace SceneKit {
 		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Please use Metal instead of OpenGL API.")]
 		[Export ("pixelFormat", ArgumentSemantic.Retain)]
 		NSOpenGLPixelFormat PixelFormat { get; set;  }
-#elif !WATCH
+#elif !WATCH && !__MACCATALYST__
 		[Deprecated (PlatformName.iOS, 12, 0, message: "Please use Metal instead of OpenGL API.")]
 		[Deprecated (PlatformName.TvOS, 12, 0, message: "Please use Metal instead of OpenGL API.")]
 		[Export ("eaglContext", ArgumentSemantic.Retain)]

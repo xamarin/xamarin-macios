@@ -345,6 +345,7 @@ namespace MediaPlayer {
 	[Watch (5,0)]
 	[iOS (11, 0)]
 	[TV (11, 0)]
+	[MacCatalyst (13, 0)]
 	[Native]
 	public enum MPNowPlayingPlaybackState : ulong
 	{
