@@ -74,6 +74,7 @@ stages:
 
 - stage: build_packages
   displayName: 'Build'
+  dependsOn: []
   jobs:
   - job: configure
     pool:
