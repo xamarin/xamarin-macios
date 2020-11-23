@@ -6,6 +6,6 @@ BrewPackages (
     "p7zip",
     "python",
     "libmagic", 
-    "msitools"
+    "msitools",
     "wget"
  );
