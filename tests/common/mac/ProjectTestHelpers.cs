@@ -286,9 +286,7 @@ namespace Xamarin.MMP.Tests
 			buildArgs.Insert (0, "--");
 			RunAndAssert (Configuration.XIBuildPath, buildArgs, "Compile", shouldFail, getBuildProjectErrorInfo, environment);
 
-			var log = new StringBuilder ();
-			BuildEngine.PrintBinLog (binlog, log);
-			return log.ToString ();
+			return BinLog.PrintToString (binlog);
 		}
 
 		static string ProjectTextReplacement (UnifiedTestConfig config, string text)
