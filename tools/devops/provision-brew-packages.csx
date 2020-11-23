@@ -5,7 +5,7 @@ BrewPackages (
     //"libtool",
     //"p7zip",
     //"python",
-    "libmagic", 
+    //"libmagic", 
     "msitools"
     //"wget"
  );
