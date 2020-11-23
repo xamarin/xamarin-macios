@@ -184,9 +184,9 @@ steps:
   condition: and(succeeded(), eq(variables['configuration.SignPkgs'], 'True'), eq(variables['configuration.IsPr'], 'True'))
 
   # Ensure virtualenv is on the PATH
-  - template: set-path/v1.yml@templates
-    parameters:
-      prependToPath: '/Users/builder/Library/Python/2.7/bin'
+- template: set-path/v1.yml@templates
+  parameters:
+    prependToPath: '/Users/builder/Library/Python/2.7/bin'
 
 - bash: |
     VIRTUAL_ENV_PATH=$(Build.SourcesDirectory)/venv
