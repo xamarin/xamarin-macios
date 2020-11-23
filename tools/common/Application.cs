@@ -511,6 +511,9 @@ namespace Xamarin.Bundler {
 				if (IsSimulatorBuild)
 					return false;
 
+				if (Platform == ApplePlatform.MacCatalyst)
+					return false;
+
 				return MarshalObjectiveCExceptions == MarshalObjectiveCExceptionMode.ThrowManagedException || MarshalObjectiveCExceptions == MarshalObjectiveCExceptionMode.Abort;
 			}
 		}
