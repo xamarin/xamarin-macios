@@ -108,7 +108,7 @@ namespace Xamarin.Tests {
 
 					var components = v.Split ('/');
 					if (components.Any (v => v.EndsWith (".framework", StringComparison.Ordinal))) {
-						return false; // TODO
+						return false; // This is Mono.framework, which is waiting for https://github.com/dotnet/runtime/issues/42846
 					}
 
 					return true;

@@ -185,7 +185,7 @@ ifdef INCLUDE_WATCH
 ifdef INCLUDE_DEVICE
 $(eval $(call PlatformTemplate,watchos,WATCHOS,armv7k arm64_32))
 endif
-$(eval $(call PlatformTemplate,watchsimulator,WATCHSIMULATOR,x86))
+$(eval $(call PlatformTemplate,watchsimulator,WATCHSIMULATOR,x86 x86_64))
 endif
 
 ifdef INCLUDE_TVOS
@@ -568,6 +568,7 @@ $(eval $(call DotNetCopyLibTemplate,tvOS,tvos-arm64,tvos,arm64))
 endif
 endif
 ifdef INCLUDE_WATCH
+$(eval $(call DotNetCopyLibTemplate,watchOS,watchos-x64,watchsimulator,x86_64))
 $(eval $(call DotNetCopyLibTemplate,watchOS,watchos-x86,watchsimulator,i386))
 ifdef INCLUDE_DEVICE
 $(eval $(call DotNetLipoLibTemplate,watchOS,watchos-arm,watchos,armv7k arm64_32))
@@ -624,6 +625,7 @@ $(eval $(call DotNetCopyFrameworkTemplate,tvOS,tvos-arm64,tvos,arm64,$(IOS_DESTD
 endif
 endif
 ifdef INCLUDE_WATCH
+$(eval $(call DotNetCopyFrameworkTemplate,watchOS,watchos-x64,watchsimulator,x86_64,$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/Frameworks))
 $(eval $(call DotNetCopyFrameworkTemplate,watchOS,watchos-x86,watchsimulator,i386,$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/Frameworks))
 ifdef INCLUDE_DEVICE
 $(eval $(call DotNetLipoFrameworkTemplate,watchOS,watchos-arm,watchos,armv7k arm64_32,$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks))
