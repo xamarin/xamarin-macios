@@ -84,6 +84,30 @@ downloads/%: downloads/%.nupkg
 	$(Q) mv $@.tmp $@
 	$(Q) echo "Unzipped $*."
 
+# Fix the BCL assemblies we get for Mac Catalyst
+fix-maccatalyst-assembly/bin/Debug/fix-maccatalyst-assembly.exe: $(wildcard fix-maccatalyst-assembly/*.cs*) Makefile
+	$(Q) $(SYSTEM_MSBUILD) /r fix-maccatalyst-assembly/fix-maccatalyst-assembly.csproj $(MSBUILD_VERBOSITY)
+
+define FixMacCatalystAssembly
+downloads/$(basename $(MONO_MACCATALYST_FILENAME))/maccat-bcl/monotouch/$(1).dll: .stamp-$(MONO_BUILD_MODE)
+
+downloads/fix-maccatalyst-tmpdir/$(1).dll: downloads/$(basename $(MONO_MACCATALYST_FILENAME))/maccat-bcl/monotouch/$(1).dll Makefile fix-maccatalyst-assembly/bin/Debug/fix-maccatalyst-assembly.exe
+	$(Q) mkdir -p $$(dir $$@)
+	$(Q) mono fix-maccatalyst-assembly/bin/Debug/fix-maccatalyst-assembly.exe $$(abspath $$<) $$(abspath $$@).tmp
+	$(Q) mv $$(abspath $$@).tmp $$(abspath $$@)
+
+$(PREFIX)/lib/mono/Xamarin.MacCatalyst/$(1).dll: downloads/fix-maccatalyst-tmpdir/$(1).dll | $(PREFIX)/lib/mono/Xamarin.MacCatalyst
+	$(Q) $(CP) $$< $$@
+endef
+$(eval $(call FixMacCatalystAssembly,Mono.Security))
+$(eval $(call FixMacCatalystAssembly,mscorlib))
+$(eval $(call FixMacCatalystAssembly,System))
+$(eval $(call FixMacCatalystAssembly,System.Net.Http))
+
+x:
+	echo foo
+	$(MAKE) $(PREFIX)/lib/mono/Xamarin.MacCatalyst/Mono.Security.dll
+
 .stamp-download-mono: $(TOP)/Make.config $(TOP)/mk/mono.mk
 	$(MAKE) download-mono
 	$(Q) touch $@
