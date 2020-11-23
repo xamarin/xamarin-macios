@@ -131,7 +131,7 @@ IOS_GENERATOR=$(BUILD_DIR)/common/bgen.exe
 IOS_GENERATE=$(SYSTEM_MONO) --debug $(IOS_GENERATOR)
 
 IOS_CORE_WARNINGS_TO_FIX=-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX)
-IOS_CORE_DEFINES=-define:COREBUILD $(IOS_DEFINES) $(IOS_native_DEFINES)
+IOS_CORE_DEFINES=-define:COREBUILD $(IOS_DEFINES)
 
 $(IOS_BUILD_DIR)/Constants.cs: Constants.iOS.cs.in Makefile $(TOP)/Make.config.inc | $(IOS_BUILD_DIR)
 	$(call Q_PROF_GEN,ios) sed \
@@ -149,8 +149,8 @@ $(IOS_BUILD_DIR)/native/core.dll: $(IOS_CORE_SOURCES) frameworks.sources $(BUILD
 	$(Q) mkdir -p $(IOS_BUILD_DIR)native
 	$(call Q_PROF_CSC,ios) $(IOS_CSC) -nologo -out:$@ -target:library -debug -unsafe \
 		-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
-		-define:COREBUILD $(IOS_DEFINES) \
 		@$(BUILD_DIR)/ios-defines.rsp \
+		$(IOS_CORE_DEFINES) \
 		$(IOS_CORE_SOURCES)
 
 # generated_sources
@@ -220,7 +220,6 @@ $(IOS_DOTNET_BUILD_DIR)/$(1)/Xamarin.iOS%dll $(IOS_DOTNET_BUILD_DIR)/$(1)/Xamari
 		-publicsign -keyfile:$(PRODUCT_KEY_PATH) \
 		$(3) \
 		$$(IOS_DEFINES) \
-		$$(IOS_native_DEFINES) \
 		$$(IOS_CORE_WARNINGS_TO_FIX) \
 		$$(IOS_CSC_FLAGS_XI) \
 		@$(BUILD_DIR)/ios-defines.rsp \
@@ -766,9 +765,8 @@ $(WATCH_BUILD_DIR)/watch/core.dll: $(WATCHOS_CORE_SOURCES) frameworks.sources $(
 	@mkdir -p $(WATCH_BUILD_DIR)/watch
 	$(call Q_PROF_CSC,watch) $(WATCH_CSC) -nologo -out:$@ -target:library -debug -unsafe \
 		-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
-		-define:COREBUILD    \
-		$(WATCH_DEFINES)     \
 		@$(BUILD_DIR)/watchos-defines.rsp \
+		$(WATCHOS_CORE_DEFINES)     \
 		$(WATCHOS_CORE_SOURCES)
 
 # generated_sources
@@ -1045,9 +1043,8 @@ $(TVOS_BUILD_DIR)/tvos/core.dll: $(TVOS_CORE_SOURCES) frameworks.sources Makefil
 	@mkdir -p $(TVOS_BUILD_DIR)/tvos
 	$(call Q_PROF_CSC,tvos) $(TV_CSC) -nologo -out:$@ -target:library -debug -unsafe \
 		-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
-		-define:COREBUILD    \
-		$(TVOS_DEFINES)     \
 		@$(BUILD_DIR)/tvos-defines.rsp \
+		$(TVOS_CORE_DEFINES)     \
 		$(TVOS_CORE_SOURCES)
 
 # generated_sources
