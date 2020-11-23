@@ -37,8 +37,10 @@ using CoreVideo;
 using ImageIO;
 using IOSurface;
 using Metal;
-#if !MONOMAC
+#if HAS_OPENGLES
 using OpenGLES;
+#endif
+#if !MONOMAC
 using UIKit;
 #else
 using AppKit;
@@ -241,7 +243,7 @@ namespace CoreImage {
 		[Export ("context")]
 		CIContext Create ();
 
-#if !MONOMAC
+#if HAS_OPENGLES
 		[Deprecated (PlatformName.iOS, 12, 0)]
 		[Static]
 		[Export ("contextWithEAGLContext:")]

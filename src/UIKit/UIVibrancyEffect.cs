@@ -3,7 +3,7 @@
 using System;
 using System.Runtime.InteropServices;
 using Foundation;
-#if IOS
+#if HAS_NOTIFICATIONCENTER
 using NotificationCenter;
 #endif
 using ObjCRuntime;
@@ -12,7 +12,8 @@ namespace UIKit {
 
 	public partial class UIVibrancyEffect {
 
-#if IOS // This code comes from NotificationCenter
+#if HAS_NOTIFICATIONCENTER
+		// This code comes from NotificationCenter
 		// This is a [Category] -> C# extension method (see adlib.cs) but it targets on static selector
 		// the resulting syntax does not look good in user code so we provide a better looking API
 		// https://trello.com/c/iQpXOxCd/227-category-and-static-methods-selectors
@@ -42,7 +43,7 @@ namespace UIKit {
 		{
 			return (null as UIVibrancyEffect).GetWidgetEffect (vibrancyStyle);
 		}
-#endif // IOS
+#endif // HAS_NOTIFICATIONCENTER
 	}
 }
 #endif // IOS || TVOS
