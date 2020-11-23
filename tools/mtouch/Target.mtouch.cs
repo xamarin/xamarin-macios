@@ -382,8 +382,14 @@ namespace Xamarin.Bundler
 				case "Xamarin.iOS":
 				case "Xamarin.TVOS":
 				case "Xamarin.WatchOS":
-					if (reference.Name != Driver.GetProductAssembly (App))
+				case "Xamarin.MacCatalyst":
+					if (reference.Name != Driver.GetProductAssembly (App)) {
+						if (App.Platform == ApplePlatform.MacCatalyst && reference.Name == "Xamarin.iOS") {
+							// This is allowed, because it's a facade
+							break;
+						}
 						exceptions.Add (ErrorHelper.CreateError (34, Errors.MT0034, reference.Name, Driver.TargetFramework.Identifier, assembly.FullName));
+					}
 					break;
 				}
 
