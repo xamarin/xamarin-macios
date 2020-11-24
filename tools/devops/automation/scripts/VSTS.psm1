@@ -153,7 +153,7 @@ function Set-BuildTags {
     }
 
     $payload = @{
-        body = ConvertTo-Json $Tags
+        tags = ConvertTo-Json $Tags
     }
 
     return Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body ($payload | ConvertTo-json) -ContentType 'application/json'
