@@ -570,6 +570,7 @@ namespace Xamarin.Bundler {
 				sw.WriteLine ("\textern NSString* xamarin_custom_bundle_name;");
 				sw.WriteLine ("\txamarin_custom_bundle_name = @\"" + App.CustomBundleName + "\";");
 			}
+			sw.WriteLine ("\txamarin_executable_name = \"{0}\";", App.AssemblyName);
 			if (!App.IsDefaultMarshalManagedExceptionMode)
 				sw.WriteLine ("\txamarin_marshal_managed_exception_mode = MarshalManagedExceptionMode{0};", App.MarshalManagedExceptions);
 #if NET
