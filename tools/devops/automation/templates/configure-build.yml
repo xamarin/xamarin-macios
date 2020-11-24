@@ -69,6 +69,9 @@ steps:
     # set the tags using the cmdlet 
     Set-BuildTags -Tags $tags.ToArray()
   env:
+    BUILD_REVISION: $(Build.SourceVersion)
+    CONTEXT: ${{ parameters.statusContext }}
     GITHUB_TOKEN: $(GitHub.Token)
+    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
   name: configuration
   displayName: 'Configure build'
