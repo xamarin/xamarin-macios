@@ -213,7 +213,7 @@ $(eval $(call XCTemplate,iphonesimulator,iphonesimulator,x86 x86_64,))
 $(eval $(call XCTemplate,appletv,tvos,arm64,))
 $(eval $(call XCTemplate,appletvsimulator,tvsimulator,x86_64,))
 $(eval $(call XCTemplate,watchos,watchos,armv7k arm64_32,))
-$(eval $(call XCTemplate,watchsimulator,watchsimulator,x86,))
+$(eval $(call XCTemplate,watchsimulator,watchsimulator,x86 x86_64,))
 ifdef INCLUDE_MAC
 $(eval $(call XCTemplate,macos,macos,x86_64,))
 endif
