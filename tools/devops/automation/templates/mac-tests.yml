@@ -3,39 +3,50 @@ parameters:
 - name: macPool
   type: string
 
-jobs:
-- job: run_tests
-  displayName: 'Mac OS X tests'
-  timeoutInMinutes: 1000
-  workspace:
-    clean: all
+- name: stageName 
+  type: string
 
-  pool:
-    name: ${{ parameters.macPool }}
-    demands: 
-    - Agent.OS -equals Darwin
-  
-  steps:
-    - checkout: self          # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
-      clean: true             # Executes: git clean -ffdx && git reset --hard HEAD
-      submodules: recursive
+stages:
+- stage:
+  displayName: ${{ parameters.stageName }}
+  dependsOn:
+  - build_packages
+  # we need to have the pkgs built and the device sets to be ran, that is decided via the labels or type of build during the build_packages stage
+  condition: and(succeeded(), eq (stageDependencies.build_packages.build.outputs['configuration.RunMacTests'], 'True')) 
 
-    - bash: echo "Hello Tests"
-      displayName: 'So many job'
+  jobs:
+  - job: run_tests
+    displayName: 'Mac OS X tests'
+    timeoutInMinutes: 1000
+    workspace:
+      clean: all
 
-- job: upload_vsdrops
-  displayName: 'Upload results to vsdrops'
-  dependsOn: run_tests
-  timeoutInMinutes: 1000
-  workspace:
-    clean: all
+    pool:
+      name: ${{ parameters.macPool }}
+      demands: 
+      - Agent.OS -equals Darwin
+    
+    steps:
+      - checkout: self          # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
+        clean: true             # Executes: git clean -ffdx && git reset --hard HEAD
+        submodules: recursive
 
-  pool:
-    name: VSEng-Xamarin-Win-XMA
-    demands: 
-    - Agent.OS -equals Windows_NT
-  
-  steps:
-    - checkout: self          # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
-      clean: true             # Executes: git clean -ffdx && git reset --hard HEAD
-      submodules: recursive
+      - bash: echo "Hello Tests"
+        displayName: 'So many job'
+
+  - job: upload_vsdrops
+    displayName: 'Upload results to vsdrops'
+    dependsOn: run_tests
+    timeoutInMinutes: 1000
+    workspace:
+      clean: all
+
+    pool:
+      name: VSEng-Xamarin-Win-XMA
+      demands: 
+      - Agent.OS -equals Windows_NT
+    
+    steps:
+      - checkout: self          # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
+        clean: true             # Executes: git clean -ffdx && git reset --hard HEAD
+        submodules: recursive

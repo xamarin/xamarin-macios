@@ -75,5 +75,5 @@ steps:
     CONTEXT: ${{ parameters.statusContext }}
     GITHUB_TOKEN: $(GitHub.Token)
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
-  name: configuration
+  name: labels 
   displayName: 'Configure build'

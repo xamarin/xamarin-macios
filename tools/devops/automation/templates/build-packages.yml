@@ -38,6 +38,7 @@ steps:
     provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/provision-brew-packages.csx
     provisioning_extra_args: '-vvvv'
   timeoutInMinutes: 30
+  enabled: false
 
 - bash: |
     make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops build-provisioning.csx
@@ -83,18 +84,82 @@ steps:
   displayName: 'Clear results directory'
   timeoutInMinutes: 5
 
-# the following should be using the labels in the PR, we are not yet doing so, but we will in the
-# future
-- bash: |
-    echo '##vso[task.setvariable variable=IsPR;isOutput=true]False'
+# Use the env variables that were set by the label parsing in the configure step
+# print some useful logging to allow to know what is going on AND allow make some
+# choices, there are labels that contradict each other (skip-package vs build-packages)
+# we use warnings for those case we are not sure about.
+- pwsh: |
+    $buildReason = "$(Build.Reason)"
+    $buildSourceBranchName = "$(Build.SourceBranchName)"
 
-    echo '##vso[task.setvariable variable=BuildPkgs;isOutput=true]True'
-    echo '##vso[task.setvariable variable=SignPkgs;isOutput=true]True'
+    # decide if we are dealing with a PR or a re-triggered PR or a build from
+    # a branch in origin
+    
+    if ($buildReason -eq "PullRequest" -or (($buildReason -eq "Manual") -and ($buildSourceBranchName -eq "merge")) ) {
+      Write-Host '##vso[task.setvariable variable=IsPR;isOutput=true]False'
 
-    echo '##vso[task.setvariable variable=BuildNugets;isOutput=true]True'
+      if ($Env:BuildPackage -eq "True") {
+        Write-Host '##vso[task.setvariable variable=BuildPkgs;isOutput=true]True'
+      } else {
+        Write-Host '##vso[task.setvariable variable=BuildPkgs;isOutput=true]False'
+      }
 
-    echo '##vso[task.setvariable variable=HasRunInternalTests;isOutput=true]True'
-    echo '##vso[task.setvariable variable=RunDeviceTests;isOutput=true]True'
+      # interesting case, we have build-pkg and skip-pkg... if that is the case, we build it, but we set a warning
+      if ($Env:BuildPackage -eq "True" -and $Env:SkipPackages -eq "True") {
+        Write-Host "##vso[task.logissue type=warning]'build-package' and 'skip-packages' are both present. Building packages in case of a doubt."
+        Write-Host "##vso[task.setvariable variable=BuildPkgs;isOutput=true]True"
+      } 
+
+      # if we want to have device tests, we do need the pkgs so that we can fwd them to the device tests
+      if ($Env:TriggerDeviceTests -eq "True") {
+        Write-Host "##vso[task.setvariable variable=BuildPkgs;isOutput=true]True"
+        Write-Host "##vso[task.setvariable variable=RunDeviceTests;isOutput=true]True"
+      }
+
+      if ($Env:SkipNugets -eq "True") {
+        Write-Host "##vso[task.setvariable variable=BuildNugets;isOutput=true]False"
+      } else {
+        Write-Host "##vso[task.setvariable variable=BuildNugets;isOutput=true]True"
+      }
+
+      if ($Env:SkipSigning -eq "True") {
+        Write-Host "##vso[task.setvariable variable=SignPkgs;isOutput=true]False"
+      } else {
+        Write-Host "##vso[task.setvariable variable=SignPkgs;isOutput=true]True"
+      }
+
+      if ($Env:SkipExternalTests -eq "True") {
+        Write-Host "##vso[task.setvariable variable=RunExternalTests;isOutput=true]False"
+      } else {
+        Write-Host "##vso[task.setvariable variable=RunExternalTests;isOutput=true]True"
+      }
+
+      if ($Env:SkipPackagedXamarinMacTests -eq "True") {
+        Write-Host "##vso[task.setvariable variable=RunMacTests;isOutput=true]False"
+      } else {
+        Write-Host "##vso[task.setvariable variable=RunMacTests;isOutput=true]True"
+      }
+
+      Write-Host "##vso[task.setvariable variable=RunSampleTests;isOutput=true]$Env:RunSampleTests"
+      Write-Host "##vso[task.setvariable variable=RunInternalTests;isOutput=true]$Env:RunInternalTests"
+
+    } else {
+      # set the defaults, all the things! o/
+      Write-Host "##vso[task.setvariable variable=IsPR;isOutput=true]False"
+
+      # build pkg, nugets and sign them
+      Write-Host "##vso[task.setvariable variable=BuildPkgs;isOutput=true]True"
+      Write-Host "##vso[task.setvariable variable=BuildNugets;isOutput=true]True"
+      Write-Host "##vso[task.setvariable variable=SignPkgs;isOutput=true]True"
+
+      # tests, run all of them, internal, external, device, mac but not sample tests
+      Write-Host "##vso[task.setvariable variable=RunInternalTests;isOutput=true]True"
+      Write-Host "##vso[task.setvariable variable=RunExternalTests;isOutput=true]True"
+      Write-Host "##vso[task.setvariable variable=RunDeviceTests;isOutput=true]True"
+      Write-Host "##vso[task.setvariable variable=RunMacTests;isOutput=true]True"
+      Write-Host "##vso[task.setvariable variable=RunSampleTests;isOutput=true]False"
+    }
+
   name: configuration
   displayName: "Parse PR labels"
   timeoutInMinutes: 5
@@ -243,6 +308,7 @@ steps:
 
     make -C $(Build.SourcesDirectory)/xamarin-macios/tests package-tests
   displayName: 'Package Xamarin.mac tests'
+  condition: and(succeeded(), eq(variables['configuration.RunMacTests'], 'True'))
   continueOnError: true # not a terrible blocking issue
 
 - task: PublishPipelineArtifact@1
@@ -250,18 +316,20 @@ steps:
   inputs:
     targetPath: $(Build.SourcesDirectory)/xamarin-macios/tests/*.7z
     artifactName: package-internal
+  condition: and(succeeded(), eq(variables['configuration.RunMacTests'], 'True'))
   continueOnError: true
 
 - bash: |
+    echo "##vso[task.setvariable variable=TESTS_RAN;isOutput=true]True"
     rm -rf ~/.config/.mono/keypairs/
 
     RC=0
     make -C $(Build.SourcesDirectory)/xamarin-macios/tests "$TARGET" || RC=$?
 
     if [ $RC -eq 0 ]; then
-      echo '##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Succeeded'
+      echo "##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Succeeded"
     else
-      echo '##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Failed'
+      echo "##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Failed"
     fi
 
     if test -f "$(Build.SourcesDirectory)/xamarin-macios//jenkins/failure-stamp"; then
@@ -284,13 +352,14 @@ steps:
     targetPath: 'xamarin-macios/tests/TestSummary.md'
     artifactName: TestSummary
   continueOnError: true
-  condition: succeededOrFailed()
+  condition: and(succeededOrFailed(), eq(variables['runTests.TESTS_RAN'], 'True')) # if tests did not run, there is nothing to do
 
 - pwsh: |
     $summaryName = "TestSummary.md"
     $summaryPath = "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tests/TestSummary.md"
     Write-Host "##vso[task.addattachment type=Distributedtask.Core.Summary;name=$summaryName;]$summaryPath"
   displayName: Set TestSummary
+  condition: and(succeededOrFailed(), eq(variables['runTests.TESTS_RAN'], 'True')) # if tests did not run, there is nothing to do
 
 # Archive files for the Html Report so that the report can be easily uploaded as artifacts of the build.
 - task: ArchiveFiles@1
@@ -300,7 +369,7 @@ steps:
     includeRootFolder: false
     archiveFile: '$(Build.ArtifactStagingDirectory)/HtmlReport.zip'
   continueOnError: true
-  condition: succeededOrFailed()
+  condition: and(succeededOrFailed(), eq(variables['runTests.TESTS_RAN'], 'True')) # if tests did not run, there is nothing to do
 
 # Create HtmlReport artifact. This serves two purposes:
 # 1. It is the way we are going to share the HtmlReport with the publish_html job that is executed on a Windows machine.
@@ -311,4 +380,4 @@ steps:
     targetPath: '$(Build.ArtifactStagingDirectory)/HtmlReport.zip'
     artifactName: HtmlReport
   continueOnError: true
-  condition: succeededOrFailed()
+  condition: and(succeededOrFailed(), eq(variables['runTests.TESTS_RAN'], 'True')) # if tests did not run, there is nothing to do

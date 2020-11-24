@@ -1,4 +1,5 @@
-BrewPackages ("cmake", 
+BrewPackages (
+    "cmake", 
     "autoconf",
     "automake",
     "libtool",
@@ -6,4 +7,5 @@ BrewPackages ("cmake",
     "python",
     "libmagic", 
     "msitools",
-    "wget");
+    "wget"
+ );
