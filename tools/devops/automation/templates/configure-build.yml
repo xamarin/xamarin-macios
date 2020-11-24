@@ -35,6 +35,8 @@ steps:
         $labelName = $labelInfo.name
         Write-Host "Found label $labelName"
         $tags.Add($labelName)
+        $tagsCount = $tags.Count
+        Write-Host "Tags count $tagsCount"
       }
       # special tag, we want to know if we are using a pr
       $tags.Add("prBuild")
