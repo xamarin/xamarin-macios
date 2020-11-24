@@ -156,7 +156,7 @@ function Set-BuildTags {
         body = ConvertTo-Json $Tags
     }
 
-    return Invoke-RestMethod -Uri $url -Headers $headers -Method "PATCH" -Body ($payload | ConvertTo-json) -ContentType 'application/json'
+    return Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body ($payload | ConvertTo-json) -ContentType 'application/json'
 }
 
 
