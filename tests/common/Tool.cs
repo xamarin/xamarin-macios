@@ -199,6 +199,49 @@ namespace Xamarin.Tests
 			ParseMessages (messages, output.ToString ().Split ('\n'), MessageToolName);
 		}
 
+		static bool TrySplitCode (string code, out string prefix, out int number)
+		{
+			prefix = null;
+			number = -1;
+
+			if (code == null)
+				return false;
+
+			for (var i = 0; i < code.Length; i++) {
+				var c = code [i];
+				if (c >= '0' && c <= '9') {
+					prefix = code.Substring (0, i);
+					return int.TryParse (code.Substring (i), out number);
+				}
+			}
+
+			return false;
+		}
+
+		public void ParseBinLog (string binlog)
+		{
+			messages.Clear ();
+			foreach (var buildLogEvent in BinLog.GetBuildMessages (binlog)) {
+				// We're only interested in warnings and errors
+				if (buildLogEvent.Type != BuildLogEventType.Error && buildLogEvent.Type != BuildLogEventType.Warning)
+					continue;
+
+				var msg = new ToolMessage ();
+
+				if (TrySplitCode (buildLogEvent.Code, out var prefix, out var number)) {
+					msg.Prefix = prefix;
+					msg.Number = number;
+				}
+
+				msg.IsError = buildLogEvent.Type == BuildLogEventType.Error;
+				msg.Message = buildLogEvent.Message;
+				msg.LineNumber = buildLogEvent.LineNumber;
+				msg.FileName = buildLogEvent.File;
+
+				messages.Add (msg);
+			}
+		}
+
 		public bool HasErrorPattern (string prefix, int number, string messagePattern)
 		{
 			foreach (var msg in messages) {
@@ -376,6 +419,15 @@ namespace Xamarin.Tests
 				return;
 
 			Assert.Fail ("No warnings expected, but got:\n{0}\t", string.Join ("\n\t", warnings.Select ((v) => v.Message).ToArray ()));
+		}
+
+		public void AssertNoMessage (int number)
+		{
+			var msgs = messages.Where ((v) => v.Number == number);
+			if (!msgs.Any ())
+				return;
+
+			Assert.Fail ("No messages with number {0} expected, but got:\n{1}\t", number, string.Join ("\n\t", msgs.Select ((v) => v.Message).ToArray ()));
 		}
 
 		public bool HasOutput (string line)

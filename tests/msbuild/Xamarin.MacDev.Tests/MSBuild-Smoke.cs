@@ -124,8 +124,8 @@ namespace Xamarin.MMP.Tests
 				var dylib = Path.GetFullPath (Path.Combine (TI.TestDirectory, "test-libraries", ".libs", "macos", "libtest.dylib"));
 				string itemGroup = $"<ItemGroup><NativeReference Include=\"{dylib}\"> <IsCxx>False</IsCxx><Kind>Dynamic</Kind> </NativeReference> </ItemGroup>";
 				string projectPath = TI.GenerateEXEProject (new TI.UnifiedTestConfig (tmpDir) { ProjectName = "UnifiedExample.csproj", ItemGroup = itemGroup });
-				string buildResults = TI.BuildProject (projectPath);
-				Assert.IsFalse (buildResults.Contains ("MM2006"), "BuildUnifiedProject_WittJustNativeRefNoLinkWith_Builds found 2006 warning: " + buildResults);
+				var testResults = TI.BuildProject (projectPath);
+				testResults.Messages.AssertNoMessage (2006);
 				Assert.That (Path.Combine (tmpDir, $"bin", "Debug", "UnifiedExample.app", "Contents", "MonoBundle", Path.GetFileName (dylib)), Does.Exist, "dylib in app");
 
 				Assert.AreEqual (0, ExecutionHelper.Execute ("/usr/bin/otool", new [] { "-L", Path.Combine (tmpDir, "bin/Debug/UnifiedExample.app/Contents/MacOS/UnifiedExample") }, out var output));
@@ -157,10 +157,10 @@ namespace Xamarin.MMP.Tests
 			RunMSBuildTest (tmpDir => {
 				var config = new TI.UnifiedTestConfig (tmpDir) { ProjectName = project, ItemGroup = nativeRefItemGroup };
 				string projectPath = TI.GenerateBindingLibraryProject (config);
-				string buildOutput = TI.BuildProject (projectPath);
+				string buildOutput = TI.BuildProject (projectPath).BuildOutput;
 				Assert.IsTrue (buildOutput.Contains (@"Building target ""CoreCompile"""));
 
-				string secondBuildOutput = TI.BuildProject (projectPath);
+				string secondBuildOutput = TI.BuildProject (projectPath).BuildOutput;
 				Assert.IsFalse (secondBuildOutput.Contains (@"Building target ""CoreCompile"""));
 			});
 		}
@@ -173,10 +173,10 @@ namespace Xamarin.MMP.Tests
 			RunMSBuildTest (tmpDir => {
 				var config = new TI.UnifiedTestConfig (tmpDir) { ProjectName = project };
 				string projectPath = TI.GenerateEXEProject (config);
-				string buildOutput = TI.BuildProject (projectPath);
+				string buildOutput = TI.BuildProject (projectPath).BuildOutput;
 				Assert.IsTrue (buildOutput.Contains (@"Building target ""_CompileToNative"""));
 
-				string secondBuildOutput = TI.BuildProject (projectPath);
+				string secondBuildOutput = TI.BuildProject (projectPath).BuildOutput;
 				Assert.IsFalse (secondBuildOutput.Contains (@"Building target ""_CompileToNative"""));
 			});
 		}
