@@ -9,6 +9,15 @@ function Get-BuildUrl {
 
 <#
     .SYNOPSIS
+        Returns the uri to be used for the VSTS rest API for tags.
+#>
+function Get-TagsRestAPIUrl {
+    $targetUrl = $Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI + "$Env:SYSTEM_TEAMPROJECT/_apis/build/builds/" + $Env:BUILD_BUILDID + "/tags?api-version=6.0"
+    return $targetUrl
+}
+
+<#
+    .SYNOPSIS
         Cancels the pipeline and no other steps of job will be executed.
 
     .EXAMPLE
@@ -114,6 +123,44 @@ function Set-PipelineResult {
     return Invoke-RestMethod -Uri $url -Headers $headers -Method "PATCH" -Body ($payload | ConvertTo-json) -ContentType 'application/json'
 }
 
+function Set-BuildTags {
+    param
+    (
+        [Parameter(Mandatory)]
+        [String[]]
+        $Tags
+    )
+
+    $envVars = @{
+        "SYSTEM_TEAMFOUNDATIONCOLLECTIONURI" = $Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI;
+        "SYSTEM_TEAMPROJECT" = $Env:SYSTEM_TEAMPROJECT;
+        "BUILD_BUILDID" = $Env:BUILD_BUILDID;
+        "SYSTEM_ACCESSTOKEN" = $Env:SYSTEM_ACCESSTOKEN
+    }
+
+    foreach ($key in $envVars.Keys) {
+        if (-not($envVars[$key])) {
+            Write-Debug "Environment variable missing: $key"
+            throw [System.InvalidOperationException]::new("Environment variable missing: $key")
+        }
+    }
+
+    $url = Get-TagsRestAPIUrl 
+    Write-Host "Uri is $url"
+
+    $headers = @{
+        Authorization = ("Bearer {0}" -f $Env:SYSTEM_ACCESSTOKEN)
+    }
+
+    $payload = @{
+        body = ConvertTo-Json $Tags
+    }
+
+    return Invoke-RestMethod -Uri $url -Headers $headers -Method "PATCH" -Body ($payload | ConvertTo-json) -ContentType 'application/json'
+}
+
+
 # export public functions, other functions are private and should not be used ouside the module.
 Export-ModuleMember -Function Stop-Pipeline
 Export-ModuleMember -Function Set-PipelineResult 
+Export-ModuleMember -Function Set-BuildTags
