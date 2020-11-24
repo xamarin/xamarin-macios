@@ -152,11 +152,7 @@ function Set-BuildTags {
         Authorization = ("Bearer {0}" -f $Env:SYSTEM_ACCESSTOKEN)
     }
 
-    $payload = @{
-        tags = ConvertTo-Json $Tags
-    }
-
-    return Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body ($payload | ConvertTo-json) -ContentType 'application/json'
+    return Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body ($Tag| ConvertTo-json) -ContentType 'application/json'
 }
 
 
