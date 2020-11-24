@@ -11,6 +11,8 @@ using System;
 using Vector2 = global::OpenTK.Vector2;
 using Vector3 = global::OpenTK.NVector3;
 
+#nullable enable
+
 namespace ARKit {
 
 #if !XAMCORE_4_0 && IOS
