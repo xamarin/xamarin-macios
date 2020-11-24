@@ -33,6 +33,7 @@ steps:
       # make peoples life better, loop over the labels and add them as tags in the vsts build
       foreach ($labelInfo in $prInfo.labels) {
         $labelName = $labelInfo.name
+        Write-Host "Found label $labelName"
         $tags.Add($labelName)
       }
       # special tag, we want to know if we are using a pr
@@ -68,7 +69,7 @@ steps:
     }
     # set the tags using the cmdlet 
     $tagCount = $tags.Count
-    Write-Host "Found $tagsCount tags"
+    Write-Host "Found '$tagsCount' tags"
     Set-BuildTags -Tags $tags.ToArray()
   env:
     BUILD_REVISION: $(Build.SourceVersion)

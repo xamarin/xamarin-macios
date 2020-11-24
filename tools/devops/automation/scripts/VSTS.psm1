@@ -19,7 +19,7 @@ function Get-TagsRestAPIUrl {
         $Tag
     )
 
-    $targetUrl = $Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI + "$Env:SYSTEM_TEAMPROJECT/_apis/build/builds/" + $Env:BUILD_BUILDID + "/tags/$Tag?api-version=6.0"
+    $targetUrl = $Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI + "$Env:SYSTEM_TEAMPROJECT/_apis/build/builds/" + $Env:BUILD_BUILDID + "/tags/" + $Tag + "?api-version=6.0"
     return $targetUrl
 }
 
