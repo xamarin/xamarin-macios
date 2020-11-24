@@ -320,16 +320,16 @@ steps:
   continueOnError: true
 
 - bash: |
-    echo '##vso[task.setvariable variable=TESTS_RAN;isOutput=true]True'
+    echo "##vso[task.setvariable variable=TESTS_RAN;isOutput=true]True"
     rm -rf ~/.config/.mono/keypairs/
 
     RC=0
     make -C $(Build.SourcesDirectory)/xamarin-macios/tests "$TARGET" || RC=$?
 
     if [ $RC -eq 0 ]; then
-      echo '##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Succeeded'
+      echo "##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Succeeded"
     else
-      echo '##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Failed'
+      echo "##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Failed"
     fi
 
     if test -f "$(Build.SourcesDirectory)/xamarin-macios//jenkins/failure-stamp"; then
