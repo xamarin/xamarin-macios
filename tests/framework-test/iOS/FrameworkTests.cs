@@ -13,7 +13,6 @@ using System.Runtime.InteropServices;
 using MonoTouch;
 using Foundation;
 using ObjCRuntime;
-using UIKit;
 
 using NUnit.Framework;
 
@@ -28,8 +27,10 @@ namespace MonoTouchFixtures {
 		public void CFunction ()
 		{
 			Assert.AreEqual (42, CFunctions.theUltimateAnswer (), "a");
+#if !__MACOS__
 			Assert.AreEqual (42, CFunctions.object_theUltimateAnswer (), "object");
 			Assert.AreEqual (42, CFunctions.ar_theUltimateAnswer (), "ar");
+#endif
 		}
 
 		[Test]
