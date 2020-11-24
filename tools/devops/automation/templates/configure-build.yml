@@ -67,6 +67,8 @@ steps:
       Write-Host "##vso[task.setvariable variable=prBuild;isOutput=true]False"
     }
     # set the tags using the cmdlet 
+    $tagCount = $tags.Count
+    Write-Host "Found $tagsCount tags"
     Set-BuildTags -Tags $tags.ToArray()
   env:
     BUILD_REVISION: $(Build.SourceVersion)

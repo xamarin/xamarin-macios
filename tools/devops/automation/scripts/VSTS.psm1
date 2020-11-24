@@ -12,7 +12,14 @@ function Get-BuildUrl {
         Returns the uri to be used for the VSTS rest API for tags.
 #>
 function Get-TagsRestAPIUrl {
-    $targetUrl = $Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI + "$Env:SYSTEM_TEAMPROJECT/_apis/build/builds/" + $Env:BUILD_BUILDID + "/tags?api-version=6.0"
+    param
+    (
+        [Parameter(Mandatory)]
+        [String]
+        $Tag
+    )
+
+    $targetUrl = $Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI + "$Env:SYSTEM_TEAMPROJECT/_apis/build/builds/" + $Env:BUILD_BUILDID + "/tags/$Tag?api-version=6.0"
     return $targetUrl
 }
 
@@ -126,7 +133,6 @@ function Set-PipelineResult {
 function Set-BuildTags {
     param
     (
-        [Parameter(Mandatory)]
         [String[]]
         $Tags
     )
@@ -145,14 +151,22 @@ function Set-BuildTags {
         }
     }
 
-    $url = Get-TagsRestAPIUrl 
-    Write-Host "Uri is $url"
+    # there is an api to just do one request, but it is not clear what should the body be, and we are trying and failing, ergo, use
+    # the API that sets one tag at at time. 
+    # This is why people should write documentation, now I'm being  annoying with the tags
 
     $headers = @{
         Authorization = ("Bearer {0}" -f $Env:SYSTEM_ACCESSTOKEN)
     }
 
-    return Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body ($Tag| ConvertTo-json) -ContentType 'application/json'
+    foreach ($t in $Tags) {
+        $url = Get-TagsRestAPIUrl -Tag $t
+        Write-Host "Uri is $url"
+
+        Invoke-RestMethod -Uri $url -Headers $headers -Method "PUT"  -ContentType 'application/json'
+    }
+
+
 }
 
 
