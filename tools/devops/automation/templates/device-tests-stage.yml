@@ -58,9 +58,9 @@ stages:
 - stage:
   displayName: ${{ parameters.stageName }}
   dependsOn:
-  - configure
   - build_packages
-  condition: and(succeeded(), ne(dependencies.configure.outputs['labels.${{ parameters.execute }}'], 'false')) # use ne in case is '' and default to true
+  # we need to have the pkgs built and the device sets to be ran, that is decided via the labels or type of build during the build_packages stage
+  condition: and(succeeded(), eq (stageDependencies.build_packages.build.outputs['configuration.RunDeviceTests'], 'True')) 
   jobs:
   - job: tests
     displayName: 'Run iOS Device Tests'

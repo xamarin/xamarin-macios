@@ -61,16 +61,6 @@ pr:
 
 stages:
 
-- stage: configure
-  displayName: 'Configure'
-  jobs:
-  - job: pipeline_configuration
-    pool:
-      vmImage: ubuntu-latest
-
-    steps:
-    - template: templates/configure-build.yml
-
 - stage: governance_checks
   displayName: 'Governance Checks'
   dependsOn: []
@@ -84,8 +74,16 @@ stages:
 
 - stage: build_packages
   displayName: 'Build'
-  dependsOn: configure
+  dependsOn: []
   jobs:
+  - job: configure
+    displayName: 'Configure build'
+    pool:
+      vmImage: ubuntu-latest
+
+    steps:
+    - template: templates/configure-build.yml
+
   - job: AgentPoolSelector       # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/phases?view=azure-devops&tabs=yaml
     pool:                        # Consider using an agentless (server) job here, but would need to host selection logic as an Azure function: https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#server
       vmImage: ubuntu-latest
@@ -96,11 +94,33 @@ stages:
     - template: templates/agent-pool-selector.yml
 
   - job: build
-    dependsOn: AgentPoolSelector
+    dependsOn:
+    - AgentPoolSelector
+    - configure
     displayName: 'Build packages'
     timeoutInMinutes: 1000
     variables:
       AgentPoolComputed: $[ dependencies.AgentPoolSelector.outputs['setAgentPool.AgentPoolComputed'] ]
+      # add all the variables that have been parsed by the configuration step. Could we have a less verbose way??
+      # 
+      # build-package
+      # run-internal-tests
+      # skip-packages
+      # skip-nugets
+      # skip-signing
+      # skip-external-tests
+      # trigger-device-tests
+      # run-sample-tests
+      # skip-packaged-xamarin-mac-tests
+      BuildPackage: $[ dependencies.configure.outputs['labels.build-package'] ]
+      RunInternalTests: $[ dependencies.configure.outputs['labels.run-internal-tests'] ]
+      SkipPackages: $[ dependencies.configure.outputs['labels.skip-packages'] ]
+      SkipNugets: $[ dependencies.configure.outputs['labels.skip-nugets'] ]
+      SkipSigning: $[ dependencies.configure.outputs['labels.skip-signing'] ]
+      SkipExternalTests: $[ dependencies.configure.outputs['labels.skip-external-tests'] ]
+      TriggerDeviceTests: $[ dependencies.configure.outputs['labels.trigger-device-tests'] ]
+      RunSampleTests: $[ dependencies.configure.outputs['labels.run-sample-tests'] ]
+      SkipPackagedXamarinMacTests: $[ dependencies.configure.outputs['labels.skip-packaged-xamarin-mac-tests'] ]
     pool:
       name: $(AgentPoolComputed)
       demands:
@@ -116,7 +136,7 @@ stages:
     displayName: 'Upload packages to Azure'
     timeoutInMinutes: 1000
     dependsOn: build # can start as soon as the tests are done
-    condition: succeeded()
+    condition: and(succeeded(), eq (dependencies.build.outputs['configuration.BuildPkgs'], 'True')) # only run when we do have pkgs
 
     variables:
       Parameters.outputStorageUri: ''
@@ -133,7 +153,7 @@ stages:
     displayName: 'Upload test results to VSDrops'
     timeoutInMinutes: 1000
     dependsOn: build # can start as soon as the tests are done
-    condition: succeededOrFailed()
+    condition: and(succeededOrFailed() , eq (dependencies.build.outputs['runTests.TESTS_RAN'], 'True')) # only run when we did run the tests
 
     pool:
       name: VSEngDeploymentPool
@@ -149,7 +169,7 @@ stages:
     displayName: 'Upload xml to vsts'
     timeoutInMinutes: 1000
     dependsOn:  build # can start as soon as the tests are done
-    condition: succeededOrFailed()
+    condition: and(succeededOrFailed() , eq (dependencies.build.outputs['runTests.TESTS_RAN'], 'True')) # only run when we did run the tests
     pool:
       name: VSEngDeploymentPool
       demands: agent.os -equals Windows_NT #  not needed, but lest not waste our mac with devices, we have less.
@@ -232,28 +252,22 @@ stages:
     vsdropsPrefix: ${{ variables.vsdropsPrefix }}
     keyringPass: $(xma-password)
 
-- stage: mac_mojave_tests
-  displayName : 'Mac Mojave Tests'
-  dependsOn: build_packages
-  jobs:
-  - template: templates/mac-tests.yml
-    parameters:
-      macPool: 'Hosted Mac Internal Mojave'
+- template: templates/mac-tests.yml
+  parameters:
+    stageName: 'Mac Mojave Tests'
+    macPool: 'Hosted Mac Internal Mojave'
 
-- stage: mac_sierra_tests
-  displayName : 'Mac High Sierra Tests'
-  dependsOn: build_packages
-  jobs:
-  - template: templates/mac-tests.yml
-    parameters:
-      macPool: 'Hosted Mac Internal'
+- template: templates/mac-tests.yml
+  parameters:
+    stageName: 'Mac High Sierra Tests'
+    macPool: 'Hosted Mac Internal'
 
 # TODO: Not the real step
 - stage: sample_testing
   displayName: 'Sample testing'
   dependsOn:
-  - configure
   - build_packages
+  condition: and(succeeded(), eq (stageDependencies.build_packages.build.outputs['configuration.RunSampleTests'], 'True')) 
   jobs:
   - job: sample_testing
     pool:

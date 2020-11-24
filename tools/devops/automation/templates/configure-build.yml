@@ -67,5 +67,5 @@ steps:
     }
   env:
     GITHUB_TOKEN: $(GitHub.Token)
-  name: configuration
+  name: labels 
   displayName: 'Configure build'
