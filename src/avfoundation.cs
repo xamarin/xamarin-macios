@@ -13530,7 +13530,6 @@ namespace AVFoundation {
 	}
 
 	[TV (11,0), NoWatch, Mac (10,13), iOS (11,0)]
-	[DisableDefaultCtor]
 	[BaseType (typeof(NSObject))]
 	interface AVRouteDetector {
 		[Notification]
