@@ -21435,10 +21435,10 @@ namespace UIKit {
 	}
 
 	[NoWatch, TV (13,0), iOS (13,0)]
-	delegate UICollectionViewCell UICollectionViewDiffableDataSourceCellProvider (UICollectionView collectionView, NSIndexPath indexPath, NSObject obj);
+	delegate UICollectionViewCell UICollectionViewDiffableDataSourceCellProvider (UICollectionView collectionView, NSIndexPath indexPath, NSObject itemIdentifier);
 
 	[NoWatch, TV (13,0), iOS (13,0)]
-	delegate UICollectionReusableView UICollectionViewDiffableDataSourceSupplementaryViewProvider (UICollectionView collectionView, string str, NSIndexPath indexPath);
+	delegate UICollectionReusableView UICollectionViewDiffableDataSourceSupplementaryViewProvider (UICollectionView collectionView, string elementKind, NSIndexPath indexPath);
 
 	[NoWatch, TV (13,0), iOS (13,0)]
 	[BaseType (typeof (NSObject))]
