@@ -1178,4 +1178,16 @@
     <data name="E7070" xml:space="preserve">
         <value>Invalid architecture ({0}): can't link more than one architecture at a time.</value>
     </data>
+    
+    <data name="E0174" xml:space="preserve">
+        <value>The provided Archive Path is not from a valid archive file (.xcarchive). Archive Path: '{0}'</value>
+    </data>
+    
+    <data name="E0175" xml:space="preserve">
+        <value>Can't get an ISshCommands instance. Please check that a valid connection to the Mac is established.</value>
+    </data>
+    
+    <data name="E0176" xml:space="preserve">
+        <value>An error occurred while trying to copy Archive '{0}' to '{1}'. Details: {2}</value>
+    </data>
 </root>

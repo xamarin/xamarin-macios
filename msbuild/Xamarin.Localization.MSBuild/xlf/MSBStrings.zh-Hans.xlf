@@ -663,6 +663,21 @@
         </target>
         <note />
       </trans-unit>
+      <trans-unit id="E0174">
+        <source>The provided Archive Path is not from a valid archive file (.xcarchive). Archive Path: '{0}'</source>
+        <target state="new">The provided Archive Path is not from a valid archive file (.xcarchive). Archive Path: '{0}'</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="E0175">
+        <source>Can't get an ISshCommands instance. Please check that a valid connection to the Mac is established.</source>
+        <target state="new">Can't get an ISshCommands instance. Please check that a valid connection to the Mac is established.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="E0176">
+        <source>An error occurred while trying to copy Archive '{0}' to '{1}'. Details: {2}</source>
+        <target state="new">An error occurred while trying to copy Archive '{0}' to '{1}'. Details: {2}</target>
+        <note />
+      </trans-unit>
       <trans-unit id="E7001">
         <source>Could not resolve host IPs for WiFi debugger settings.
         </source>
