@@ -134,15 +134,18 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		So we split it into two camps as a prebuild step
 	-->
 	<Target Name="_ExpandNativeReferences" Condition="'$(DesignTimeBuild)' != 'true'" DependsOnTargets="_DetectSdkLocations;_ComputeTargetArchitectures">
+		<ItemGroup>
+			<_FrameworkNativeReference Include="@(NativeReference -> '%(Identity)/%(Filename)')" Condition="'%(Extension)' == '.framework' Or '%(Extension)' == '.xcframework'" />
+			<_FileNativeReference Include="@(NativeReference)" Condition="'%(Extension)' != '.framework' And '%(Extension)' != '.xcframework'" />
+		</ItemGroup>
 		<ResolveNativeReferences
 			Architectures="$(TargetArchitectures)"
-			NativeReferences="@(NativeReference)"
+			NativeReferences="@(_FrameworkNativeReference)"
 			References="@(ReferencePath)"
 			SdkIsSimulator="$(_SdkIsSimulator)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			>
 			<Output TaskParameter="NativeFrameworks" ItemName="_FrameworkNativeReference" />
-			<Output TaskParameter="NativeFiles" ItemName="_FileNativeReference" />
 		</ResolveNativeReferences>
 	</Target>
 	

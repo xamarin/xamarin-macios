@@ -36,19 +36,12 @@ namespace Xamarin.MacDev.Tasks {
 		[Output]
 		public ITaskItem[] NativeFrameworks { get; set; }
 
-		[Output]
-		public ITaskItem[] NativeFiles { get; set; }
-
 		#endregion
 
 		public override bool Execute ()
 		{
 			var native_frameworks = new List<ITaskItem> ();
-			var native_files = new List<ITaskItem> ();
 
-			Log.LogMessage ($"TargetFrameworkMoniker {TargetFrameworkMoniker}");
-			Log.LogMessage ($"Architectures {Architectures}");
-			Log.LogMessage ($"SdkIsSimulator {SdkIsSimulator}");
 			// there can be direct native references inside a project
 			if (NativeReferences != null) {
 				foreach (var nr in NativeReferences) {
@@ -62,9 +55,6 @@ namespace Xamarin.MacDev.Tasks {
 						break;
 					case ".framework":
 						native_frameworks.Add (nr);
-						break;
-					default:
-						native_files.Add (nr);
 						break;
 					}
 				}
@@ -108,10 +98,8 @@ namespace Xamarin.MacDev.Tasks {
 						t.SetMetadata ("SmartLink", "True");
 
 						// values from manifest, overriding defaults if provided
-						foreach (XmlNode attribute in referenceNode.ChildNodes) {
-							Log.LogMessage ($"{attribute.Name} = {attribute.InnerText}");
+						foreach (XmlNode attribute in referenceNode.ChildNodes)
 							t.SetMetadata (attribute.Name, attribute.InnerText);
-						}
 
 						native_frameworks.Add (t);
 					}
@@ -119,7 +107,6 @@ namespace Xamarin.MacDev.Tasks {
 			}
 
 			NativeFrameworks = native_frameworks.ToArray ();
-			NativeFiles = native_files.ToArray ();
 
 			return !Log.HasLoggedErrors;
 		}
