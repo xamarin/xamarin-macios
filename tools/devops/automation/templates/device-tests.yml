@@ -118,6 +118,7 @@ steps:
     rm -f ~/Library/Caches/com.xamarin.provisionator/Provisions/*mobileprovision
     ./maccore/tools/install-qa-provisioning-profiles.sh -v 
   displayName: 'Add provisioning profiles'
+  timeoutInMinutes: 30
   env:
     LOGIN_KEYCHAIN_PASSWORD: ${{ parameters.keyringPass }}
 
