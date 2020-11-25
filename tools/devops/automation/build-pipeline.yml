@@ -112,7 +112,7 @@ stages:
 
 - template: templates/device-tests-stage.yml
   parameters:
-    devicePrefix: 'ios32b'
+    devicePrefix: 'iOS32b'
     execute: 'runDevice32b'
     stageName: 'iOS32b Device Tests'
     iOSDevicePool: 'VSEng-Xamarin-QA'
@@ -126,7 +126,7 @@ stages:
 
 - template: templates/device-tests-stage.yml
   parameters:
-    devicePrefix: 'ios64'
+    devicePrefix: 'iOS64'
     execute: 'runDevice64b'
     stageName: 'iOS64 Device Tests'
     iOSDevicePool: 'VSEng-Xamarin-Mac-Devices'
@@ -140,7 +140,7 @@ stages:
 
 - template: templates/device-tests-stage.yml
   parameters:
-    devicePrefix: 'tvos'
+    devicePrefix: 'tvOS'
     execute: 'runDeviceTv'
     stageName: 'tvOS Device Tests'
     iOSDevicePool: 'VSEng-Xamarin-Mac-Devices'
