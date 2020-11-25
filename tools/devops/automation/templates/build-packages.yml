@@ -248,8 +248,12 @@ steps:
   displayName: 'Signing PR Build'
   condition: and(succeeded(), eq(variables['configuration.SignPkgs'], 'True'), eq(variables['configuration.IsPr'], 'True'))
 
+  # Ensure virtualenv is on the PATH
+- template: set-path/v1.yml@templates
+  parameters:
+    prependToPath: '/Users/builder/Library/Python/2.7/bin'
+
 - bash: |
-    export PATH="$PATH:/Users/builder/Library/Python/2.7/bin"  # UNDONE: Temporary fix until virtualenv is included in the image along with the PATH setting
     VIRTUAL_ENV_PATH=$(Build.SourcesDirectory)/venv
     pip install virtualenv
     virtualenv "$VIRTUAL_ENV_PATH" --system-site-packages
