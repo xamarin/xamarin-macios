@@ -32,6 +32,8 @@ namespace Xharness.Jenkins.TestTasks {
 			get {
 				if (TestProject.IsDotNetProject)
 					return false;
+				if (Platform == TestPlatform.MacCatalyst)
+					return false;
 				return TestProject.RestoreNugetsInProject || !string.IsNullOrEmpty (SolutionPath);
 			}
 		}

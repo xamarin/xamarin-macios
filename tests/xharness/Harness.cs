@@ -557,6 +557,16 @@ namespace Xharness {
 						today_targets.Add (today);
 					}
 				}
+
+				if (!proj.SkipMacCatalystVariation) {
+					var macCatalyst = new MacCatalystTarget {
+						TemplateProjectPath = file,
+						Harness = this,
+						TestProject = proj,
+						ShouldSkipProjectGeneration = proj.IsDotNetProject,
+					};
+					macCatalyst.Execute ();
+				}
 			}
 
 			SolutionGenerator.CreateSolution (this, watchos_targets, "watchos", DevicePlatform.watchOS);

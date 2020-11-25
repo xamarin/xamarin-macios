@@ -61,6 +61,7 @@ namespace Xharness.Jenkins {
 		public bool IncludeNonMonotouch = true;
 		public bool IncludeMonotouch = true;
 		public bool IncludeDotNet;
+		public bool IncludeMacCatalyst;
 
 		public bool CleanSuccessfulTestRuns = true;
 		public bool UninstallTestApp = true;
@@ -234,7 +235,63 @@ namespace Xharness.Jenkins {
 				Console.WriteLine ("Got device tasks completed");
 				Tasks.AddRange (v.Result);
 			});
+
+			// Generate Mac Catalyst tests
+			Tasks.AddRange (CreateMacCatalystTests (crashReportSnapshotFactory));
+
 			return Task.WhenAll (loadsim, loaddev);
+		}
+
+		IEnumerable<ITestTask> CreateMacCatalystTests (CrashSnapshotReporterFactory crashSnapshotReporterFactory)
+		{
+			var projectTasks = new List<RunTestTask> ();
+
+			foreach (var project in Harness.IOSTestProjects) {
+				if (!project.IsExecutableProject)
+					continue;
+
+				if (project.SkipMacCatalystVariation)
+					continue;
+
+				if (!project.GenerateVariations)
+					continue;
+
+				var ignored = project.Ignore ?? !IncludeMacCatalyst;
+				if (!IsIncluded (project))
+					ignored = true;
+
+				var macCatalystProject = project.GenerateVariations ? project.AsMacCatalystProject () : project;
+				var build = new MSBuildTask (jenkins: this, testProject: macCatalystProject, processManager: processManager) {
+					ProjectConfiguration = "Debug",
+					ProjectPlatform = "iPhoneSimulator",
+					Platform = TestPlatform.MacCatalyst,
+					TestName = project.Name,
+				};
+				build.CloneTestProject (MainLog, processManager, macCatalystProject, HarnessConfiguration.RootDirectory);
+
+				RunTestTask task;
+				if (project.IsNUnitProject) {
+					var dll = Path.Combine (Path.GetDirectoryName (build.TestProject.Path), project.Xml.GetOutputAssemblyPath (build.ProjectPlatform, build.ProjectConfiguration).Replace ('\\', '/'));
+					task = new NUnitExecuteTask (this, build, processManager) {
+						TestLibrary = dll,
+						Mode = "MacCatalyst",
+					};
+				} else {
+					task = new MacExecuteTask (this, build, processManager, crashSnapshotReporterFactory) {
+						IsUnitTest = true,
+					};
+				}
+				task.Ignored = ignored;
+				task.Platform = build.Platform;
+				task.TestName = project.Name;
+				task.Timeout = TimeSpan.FromMinutes (120);
+				task.Variation = task.ProjectConfiguration;
+				if (project.IsDotNetProject)
+					task.Variation += " [dotnet]";
+				projectTasks.Add (task);
+			}
+
+			return projectTasks;
 		}
 
 		public int Run ()
