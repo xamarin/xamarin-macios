@@ -14,6 +14,8 @@ using CoreLocation;
 using UIKit;
 using MediaPlayer;
 
+#nullable enable
+
 namespace AssetsLibrary {
 
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Photos' API instead.")]
