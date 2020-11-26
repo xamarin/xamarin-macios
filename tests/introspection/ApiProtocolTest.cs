@@ -334,6 +334,8 @@ namespace Introspection {
 				case "PKShareablePassMetadata":
 				// Xcode 12.2
 				case "VSAccountApplicationProvider": // Conformance not in headers
+				// Xcode 12.3
+				case "ARAppClipCodeAnchor": // Conformance comes from the base type, ARAppClipCodeAnchor conforms to NSSecureCoding but SupportsSecureCoding returned false.
 					return true;
 				}
 				break;

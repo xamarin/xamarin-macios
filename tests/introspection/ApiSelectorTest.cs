@@ -193,6 +193,13 @@ namespace Introspection {
 				if (Runtime.Arch == Arch.SIMULATOR)
 					return true;
 				break;
+			case "ARBodyTrackingConfiguration":
+			case "ARGeoTrackingConfiguration":
+			switch (selectorName) {
+				case "supportsAppClipCodeTracking": // Only available on device
+					return Runtime.Arch == Arch.SIMULATOR;
+				}
+				break;
 #endif
 			}
 			// This ctors needs to be manually bound
