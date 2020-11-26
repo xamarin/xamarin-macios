@@ -16,7 +16,7 @@
     <DefineConstants></DefineConstants>
     <LangVersion>latest</LangVersion>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
-    <RootTestsDirectory>..</RootTestsDirectory>
+    <RootTestsDirectory>..\..</RootTestsDirectory>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
     <DebugSymbols>true</DebugSymbols>
@@ -156,11 +156,11 @@
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.iOS" />
     <PackageReference Include="MonoTouch.Dialog" Version="2.0.0-pre1" />
-    <ProjectReference Include="..\..\external\Touch.Unit\Touch.Client\iOS\Touch.Client-iOS.csproj">
+    <ProjectReference Include="..\..\..\external\Touch.Unit\Touch.Client\iOS\Touch.Client-iOS.csproj">
       <Project>{F611ED96-54B5-4975-99BB-12F50AF95936}</Project>
       <Name>Touch.Client-iOS</Name>
     </ProjectReference>
-    <ProjectReference Include="..\bindings-xcframework-test\bindings-xcframework-test.csproj">
+    <ProjectReference Include="..\..\bindings-xcframework-test\bindings-xcframework-test.csproj">
       <Project>{E40B0B77-3467-4891-9117-7AF8F248E307}</Project>
       <Name>bindings-xcframework-test</Name>
       <ReferenceSourceTarget>ProjectReference</ReferenceSourceTarget>
