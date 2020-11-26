@@ -7,7 +7,7 @@ namespace Bindings.Test
 		[DllImport ("__Internal")]
 		public static extern int theUltimateAnswer ();
 
-#if !XCFRAMEWORK
+#if !__MACOS__ && !XCFRAMEWORK
 		[DllImport ("__Internal")]
 		public static extern int object_theUltimateAnswer ();
 

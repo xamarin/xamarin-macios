@@ -77,6 +77,8 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			_CreateAppBundle;
 			_EmbedProvisionProfile;
 			_CodesignNativeLibraries;
+			_CollectFrameworks;
+			_CodesignFrameworks;
 		</_CodesignAppBundleDependsOn>
 	</PropertyGroup>
 

@@ -12,6 +12,8 @@ using CoreMedia;
 using CoreVideo;
 using AVFoundation;
 
+#nullable enable
+
 namespace AVKit {
 #if !MONOMAC
 	partial class AVPlayerViewController {
