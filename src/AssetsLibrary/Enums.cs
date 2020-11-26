@@ -1,6 +1,8 @@
 using System;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace AssetsLibrary {
 
 	// NSInteger -> ALAssetsLibrary.h
