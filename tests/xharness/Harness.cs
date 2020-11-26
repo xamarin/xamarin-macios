@@ -272,6 +272,7 @@ namespace Xharness {
 
 			MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "Mac", "introspection-mac.csproj")), targetFrameworkFlavor: MacFlavors.Modern) { Name = "introspection" });
 			MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "framework-test", "macOS", "framework-test-mac.csproj")), targetFrameworkFlavor: MacFlavors.Modern) { Name = "framework-test" });
+			MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "xcframework-test", "macOS", "xcframework-test-mac.csproj")), targetFrameworkFlavor: MacFlavors.Modern) { Name = "xcframework-test" });
 
 			var hard_coded_test_suites = new [] {
 				new { Directory = "mmptest", ProjectFile = "mmptest", Name = "mmptest", IsNUnit = true, Configurations = (string[]) null, Platform = "x86", Flavors = MacFlavors.Console, },
@@ -375,7 +376,7 @@ namespace Xharness {
 		void AutoConfigureIOS ()
 		{
 			var test_suites = new string [] { "monotouch-test" };
-			var library_projects = new string [] { "BundledResources", "EmbeddedResources", "bindings-test2", "bindings-xcframework-test" };
+			var library_projects = new string [] { "BundledResources", "EmbeddedResources", "bindings-test2" };
 			var fsharp_test_suites = new string [] { "fsharp" };
 			var fsharp_library_projects = new string [] { "fsharplibrary" };
 

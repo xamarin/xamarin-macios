@@ -13,7 +13,6 @@ using System.Runtime.InteropServices;
 using MonoTouch;
 using Foundation;
 using ObjCRuntime;
-using UIKit;
 
 using NUnit.Framework;
 
