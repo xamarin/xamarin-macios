@@ -191,32 +191,15 @@ $(eval $(call FatFrameworkTemplate,ios-fat,iphoneos,iphonesimulator))
 $(eval $(call FatFrameworkTemplate,tvos-fat,tvos,tvsimulator))
 $(eval $(call FatFrameworkTemplate,watchos-fat,watchos,watchsimulator))
 
-define XCTemplate
-.libs/by-platform/$(1)/XTest.framework/XTest: $(foreach arch,$(3),.libs/$(2)/libtest$(4).$(arch).dylib) | .libs/by-platform/$(1)/XTest.framework
-	$$(call Q_2,LIPO   [$(1)]) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo $$^ -create -output $$@
-
-.libs/by-platform/$(1)/XTest.framework/Info.plist: XTest-Info.plist | .libs/by-platform/$(1)/XTest.framework
-	$$(Q) $(CP) $$^ $$@
-
-.libs/by-platform/$(1)/XTest.framework:
-	$$(Q) mkdir -p $$@
-
-XTEST_XCFRAMEWORKS += .libs/by-platform/$(1)/XTest.framework
-XTEST_XCTARGETS += \
-	.libs/by-platform/$(1)/XTest.framework/XTest \
-	.libs/by-platform/$(1)/XTest.framework/Info.plist \
-
-endef
-
-$(eval $(call XCTemplate,iphoneos,iphoneos,armv7 armv7s arm64,))
-$(eval $(call XCTemplate,iphonesimulator,iphonesimulator,x86 x86_64,))
-$(eval $(call XCTemplate,appletv,tvos,arm64,))
-$(eval $(call XCTemplate,appletvsimulator,tvsimulator,x86_64,))
-$(eval $(call XCTemplate,watchos,watchos,armv7k arm64_32,))
-$(eval $(call XCTemplate,watchsimulator,watchsimulator,x86 x86_64,))
+XCPLATFORMS=iphoneos iphonesimulator tvos tvsimulator watchos watchsimulator
 ifdef INCLUDE_MAC
-$(eval $(call XCTemplate,macos,macos,x86_64,))
+XCPLATFORMS+= macos
 endif
+
+XTEST_XCFRAMEWORKS += $(foreach platform,$(XCPLATFORMS),.libs/$(platform)/XTest.framework)
+XTEST_XCTARGETS += \
+	$(foreach platform,$(XCPLATFORMS),.libs/$(platform)/XTest.framework/XTest) \
+	$(foreach platform,$(XCPLATFORMS),.libs/$(platform)/XTest.framework/Info.plist) \
 
 .libs/XTest.xcframework: $(XTEST_XCTARGETS) Makefile
 	$(Q) rm -rf $@
