@@ -86,6 +86,10 @@ namespace Xamarin.MacDev.Tasks {
 							t = new TaskItem (Path.Combine (resources, name));
 							t.SetMetadata ("Kind", "Framework");
 							break;
+						case ".dylib": // macOS
+							t = new TaskItem (Path.Combine (resources, name));
+							t.SetMetadata ("Kind", "Dynamic");
+							break;
 						default:
 							t = r;
 							break;
