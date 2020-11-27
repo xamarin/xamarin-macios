@@ -1,17 +1,21 @@
-#!/usr/bin/env /Library/Frameworks/Mono.framework/Commands/csharp
+#!/usr/bin/env /Library/Frameworks/Mono.framework/Commands/csharp -s
 
 try {
 	var args = Environment.GetCommandLineArgs ();
-	if (args.Length != 6 /* 2 default + 4 real */) {
-		Console.WriteLine ($"Need 4 arguments, got {args.Length - 2} arguments");
+	var defaultArgumentCount = 3;
+	var actualArgumentCount = 4;
+	if (args.Length != defaultArgumentCount + actualArgumentCount) {
+		Console.WriteLine ($"Need {actualArgumentCount} arguments, got {args.Length - defaultArgumentCount} arguments");
 		Environment.Exit (1);
 		return;
 	}
 
-	var iosframeworks = args [2].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-	var macosframeworks = args [3].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-	var watchosframeworks = args [4].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-	var tvosframeworks = args [5].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+	args = args.Skip (3).ToArray ();
+
+	var iosframeworks = args [0].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+	var macosframeworks = args [1].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+	var watchosframeworks = args [2].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+	var tvosframeworks = args [3].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 	var allframeworks = new string [] [] { iosframeworks, macosframeworks, watchosframeworks, tvosframeworks };
 	var names = new string [] { "iosframeworks", "macosframeworks", "watchosframeworks", "tvosframeworks" };
 
