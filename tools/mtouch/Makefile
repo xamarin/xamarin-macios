@@ -221,7 +221,7 @@ $(MTOUCH_DIR)/mtouch.exe: $(mtouch_dependencies)
 # Partial static registrar libraries
 #
 define RunRegistrar
-%.registrar.$(1).$(2).m %.registrar.$(1).$(2).h: $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/$(3)bits/%.dll $(LOCAL_MTOUCH)
+%.registrar.$(1).$(2).m %.registrar.$(1).$(2).h: $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/$(3)bits/$(9)/%.dll $(LOCAL_MTOUCH)
 	$$(Q_GEN) $$(LOCAL_MTOUCH_COMMAND) --xamarin-framework-directory=$$(IOS_DESTDIR)/$$(MONOTOUCH_PREFIX) $$(MTOUCH_VERBOSITY) --runregistrar:$$(abspath $$(basename $$@).m) --sdkroot $$(XCODE_DEVELOPER_ROOT) --sdk $(4) $$< --registrar:static --target-framework Xamarin.$(5),v1.0 --abi $(2) -r:$(8)/mscorlib.dll
 	$$(Q) touch $$(basename $$@).m $$(basename $$@).h
 
