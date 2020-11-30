@@ -38,7 +38,7 @@ namespace Xamarin {
 			var hasSymbols = false;
 			if (assembly.MainModule.HasModuleReferences) {
 				hasSymbols = true;
-			} else if (assembly.MainModule.HasTypeReference (Namespaces.Foundation + ".FieldAttribute")) {
+			} else if (assembly.MainModule.HasTypeReference ("Foundation.FieldAttribute")) {
 				hasSymbols = true;
 			}
 			if (!hasSymbols)
