@@ -118,6 +118,7 @@ steps:
     rm -f ~/Library/Caches/com.xamarin.provisionator/Provisions/*mobileprovision
     ./maccore/tools/install-qa-provisioning-profiles.sh -v 
   displayName: 'Add provisioning profiles'
+  timeoutInMinutes: 30
   env:
     LOGIN_KEYCHAIN_PASSWORD: ${{ parameters.keyringPass }}
 
@@ -285,8 +286,8 @@ steps:
   condition: succeededOrFailed()
 
 - pwsh: |
-    summaryName = "TestSummary-$Env:PREFIX.md"
-    summaryPath = "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tests/TestSummary.md"
+    $summaryName = "TestSummary-$Env:PREFIX.md"
+    $summaryPath = "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tests/TestSummary.md"
     Write-Host "##vso[task.addattachment type=Distributedtask.Core.Summary;name=$summaryName;]$summaryPath"
   displayName: Set TestSummary
   env:

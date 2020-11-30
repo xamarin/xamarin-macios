@@ -63,7 +63,7 @@ stages:
   condition: and(succeeded(), eq (stageDependencies.build_packages.build.outputs['configuration.RunDeviceTests'], 'True')) 
   jobs:
   - job: tests
-    displayName: 'Run iOS Device Tests'
+    displayName: 'Run ${{ parameters.devicePrefix }} Device Tests'
     timeoutInMinutes: 1000
     pool:
       name: ${{ parameters.iOSDevicePool }}
