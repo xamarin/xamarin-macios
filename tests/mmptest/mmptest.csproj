@@ -120,6 +120,9 @@
     <Compile Include="..\common\BinLog.cs">
       <Link>BinLog.cs</Link>
     </Compile>
+    <Compile Include="..\common\Tool.cs">
+      <Link>src\Tool.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />

@@ -48,5 +48,8 @@
     <Compile Include="..\..\tools\common\StringUtils.cs">
       <Link>StringUtils.cs</Link>
     </Compile>
+    <Compile Include="..\common\Tool.cs">
+      <Link>Tool.cs</Link>
+    </Compile>
   </ItemGroup>
 </Project>
