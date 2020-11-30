@@ -11,6 +11,8 @@ using System;
 using System.Runtime.InteropServices;
 using Matrix4 = global::OpenTK.NMatrix4;
 
+#nullable enable
+
 namespace ARKit {
 	public partial class ARSkeleton3D {
 

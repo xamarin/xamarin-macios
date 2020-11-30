@@ -652,9 +652,6 @@ public class NamespaceManager
 	PlatformName CurrentPlatform { get { return BindingTouch.CurrentPlatform; } }
 	Frameworks Frameworks { get { return BindingTouch.Frameworks; } }
 
-	// Where the core messaging lives
-	public string CoreObjCRuntime { get; private set; }
-
 	// Where user-overrideable messaging may live
 	public string ObjCRuntime { get; private set; }
 
@@ -669,46 +666,45 @@ public class NamespaceManager
 	{
 		BindingTouch = binding_touch;
 
-		CoreObjCRuntime = Get ("ObjCRuntime");
 		ObjCRuntime = String.IsNullOrEmpty (customObjCRuntimeNS)
-			? CoreObjCRuntime
+			? "ObjCRuntime"
 			: customObjCRuntimeNS;
 
 		Messaging = ObjCRuntime + ".Messaging";
 
 		StandardNamespaces = new HashSet<string> {
-			Get ("Foundation"),
-			Get ("ObjCRuntime"),
-			Get ("CoreGraphics")
+			"Foundation",
+			"ObjCRuntime",
+			"CoreGraphics",
 		};
 
 		UINamespaces = new HashSet<string> ();
 		if (Frameworks.HaveAppKit)
-			UINamespaces.Add (Get ("AppKit"));
+			UINamespaces.Add ("AppKit");
 		if (Frameworks.HaveUIKit)
-			UINamespaces.Add (Get ("UIKit"));
+			UINamespaces.Add ("UIKit");
 		if (Frameworks.HaveTwitter)
-			UINamespaces.Add (Get ("Twitter"));
+			UINamespaces.Add ("Twitter");
 		if (Frameworks.HaveGameKit && CurrentPlatform != PlatformName.MacOSX && CurrentPlatform != PlatformName.WatchOS)
-			UINamespaces.Add (Get ("GameKit"));
+			UINamespaces.Add ("GameKit");
 		if (Frameworks.HaveNewsstandKit)
-			UINamespaces.Add (Get ("NewsstandKit"));
+			UINamespaces.Add ("NewsstandKit");
 		if (Frameworks.HaveiAd)
-			UINamespaces.Add (Get ("iAd"));
+			UINamespaces.Add ("iAd");
 		if (Frameworks.HaveQuickLook)
-			UINamespaces.Add (Get ("QuickLook"));
+			UINamespaces.Add ("QuickLook");
 		if (Frameworks.HaveEventKitUI)
-			UINamespaces.Add (Get ("EventKitUI"));
+			UINamespaces.Add ("EventKitUI");
 		if (Frameworks.HaveAddressBookUI)
-			UINamespaces.Add (Get ("AddressBookUI"));
+			UINamespaces.Add ("AddressBookUI");
 		if (Frameworks.HaveMapKit && CurrentPlatform != PlatformName.MacOSX && CurrentPlatform != PlatformName.TvOS && CurrentPlatform != PlatformName.WatchOS)
-			UINamespaces.Add (Get ("MapKit"));
+			UINamespaces.Add ("MapKit");
 		if (Frameworks.HaveMessageUI)
-			UINamespaces.Add (Get ("MessageUI"));
+			UINamespaces.Add ("MessageUI");
 		if (Frameworks.HavePhotosUI)
-			UINamespaces.Add (Get ("PhotosUI"));
+			UINamespaces.Add ("PhotosUI");
 		if (Frameworks.HaveHealthKitUI)
-			UINamespaces.Add (Get ("HealthKitUI"));
+			UINamespaces.Add ("HealthKitUI");
 
 		ImplicitNamespaces = new HashSet<string> ();
 		ImplicitNamespaces.Add ("System");
@@ -717,99 +713,84 @@ public class NamespaceManager
 		ImplicitNamespaces.Add ("System.Diagnostics.CodeAnalysis");
 		ImplicitNamespaces.Add ("System.ComponentModel");
 		ImplicitNamespaces.Add ("System.Threading.Tasks");
-		ImplicitNamespaces.Add (Get ("CoreFoundation"));
-		ImplicitNamespaces.Add (Get ("Foundation"));
-		ImplicitNamespaces.Add (Get ("ObjCRuntime"));
-		ImplicitNamespaces.Add (Get ("CoreGraphics"));
-		ImplicitNamespaces.Add (Get ("CoreML"));
-		ImplicitNamespaces.Add (Get ("SceneKit"));
+		ImplicitNamespaces.Add ("CoreFoundation");
+		ImplicitNamespaces.Add ("Foundation");
+		ImplicitNamespaces.Add ("ObjCRuntime");
+		ImplicitNamespaces.Add ("CoreGraphics");
+		ImplicitNamespaces.Add ("CoreML");
+		ImplicitNamespaces.Add ("SceneKit");
 
 		if (Frameworks.HaveAudioUnit)
-			ImplicitNamespaces.Add (Get ("AudioUnit"));
+			ImplicitNamespaces.Add ("AudioUnit");
 		if (Frameworks.HaveContacts)
-			ImplicitNamespaces.Add (Get ("Contacts"));
+			ImplicitNamespaces.Add ("Contacts");
 		if (Frameworks.HaveCoreAnimation)
-			ImplicitNamespaces.Add (Get ("CoreAnimation"));
+			ImplicitNamespaces.Add ("CoreAnimation");
 		if (Frameworks.HaveCoreLocation)
-			ImplicitNamespaces.Add (Get ("CoreLocation"));
+			ImplicitNamespaces.Add ("CoreLocation");
 		if (Frameworks.HaveCoreVideo)
-			ImplicitNamespaces.Add (Get ("CoreVideo"));
+			ImplicitNamespaces.Add ("CoreVideo");
 		if (Frameworks.HaveCoreMedia)
-			ImplicitNamespaces.Add (Get ("CoreMedia"));
+			ImplicitNamespaces.Add ("CoreMedia");
 		if (Frameworks.HaveSecurity && CurrentPlatform != PlatformName.WatchOS)
-			ImplicitNamespaces.Add (Get ("Security"));
+			ImplicitNamespaces.Add ("Security");
 		if (Frameworks.HaveAVFoundation)
-			ImplicitNamespaces.Add (Get ("AVFoundation"));
+			ImplicitNamespaces.Add ("AVFoundation");
 		if (Frameworks.HaveOpenGL)
-			ImplicitNamespaces.Add (Get ("OpenGL"));
+			ImplicitNamespaces.Add ("OpenGL");
 		if (Frameworks.HaveQTKit)
-			ImplicitNamespaces.Add (Get ("QTKit"));
+			ImplicitNamespaces.Add ("QTKit");
 		if (Frameworks.HaveAppKit)
-			ImplicitNamespaces.Add (Get ("AppKit"));
+			ImplicitNamespaces.Add ("AppKit");
 		if (Frameworks.HaveCloudKit && CurrentPlatform != PlatformName.WatchOS && CurrentPlatform != PlatformName.TvOS && CurrentPlatform != PlatformName.iOS)
-			ImplicitNamespaces.Add (Get ("CloudKit"));
+			ImplicitNamespaces.Add ("CloudKit");
 		if (Frameworks.HaveCoreMotion && CurrentPlatform != PlatformName.WatchOS && CurrentPlatform != PlatformName.TvOS && CurrentPlatform != PlatformName.MacOSX)
-			ImplicitNamespaces.Add (Get ("CoreMotion"));
+			ImplicitNamespaces.Add ("CoreMotion");
 		if (Frameworks.HaveMapKit && CurrentPlatform != PlatformName.WatchOS && CurrentPlatform != PlatformName.TvOS && CurrentPlatform != PlatformName.MacOSX)
-			ImplicitNamespaces.Add (Get ("MapKit"));
+			ImplicitNamespaces.Add ("MapKit");
 		if (Frameworks.HaveUIKit)
-			ImplicitNamespaces.Add (Get ("UIKit"));
+			ImplicitNamespaces.Add ("UIKit");
 		if (Frameworks.HaveNewsstandKit)
-			ImplicitNamespaces.Add (Get ("NewsstandKit"));
+			ImplicitNamespaces.Add ("NewsstandKit");
 		if (Frameworks.HaveGLKit && CurrentPlatform != PlatformName.WatchOS && CurrentPlatform != PlatformName.MacOSX)
-			ImplicitNamespaces.Add (Get ("GLKit"));
+			ImplicitNamespaces.Add ("GLKit");
 		if (Frameworks.HaveQuickLook && CurrentPlatform != PlatformName.WatchOS && CurrentPlatform != PlatformName.TvOS && CurrentPlatform != PlatformName.MacOSX)
-			ImplicitNamespaces.Add (Get ("QuickLook"));
+			ImplicitNamespaces.Add ("QuickLook");
 		if (Frameworks.HaveAddressBook)
-			ImplicitNamespaces.Add (Get ("AddressBook"));
+			ImplicitNamespaces.Add ("AddressBook");
 
 		if (Frameworks.HaveModelIO)
-			ImplicitNamespaces.Add (Get ("ModelIO"));
+			ImplicitNamespaces.Add ("ModelIO");
 		if (Frameworks.HaveMetal)
-			ImplicitNamespaces.Add (Get ("Metal"));
+			ImplicitNamespaces.Add ("Metal");
 
 		if (Frameworks.HaveCoreImage)
-			ImplicitNamespaces.Add (Get ("CoreImage"));
+			ImplicitNamespaces.Add ("CoreImage");
 		if (Frameworks.HavePhotos)
-			ImplicitNamespaces.Add (Get ("Photos"));
+			ImplicitNamespaces.Add ("Photos");
 		if (Frameworks.HaveMediaPlayer)
-			ImplicitNamespaces.Add (Get ("MediaPlayer"));
+			ImplicitNamespaces.Add ("MediaPlayer");
 		if (Frameworks.HaveMessages)
-			ImplicitNamespaces.Add (Get ("Messages"));
+			ImplicitNamespaces.Add ("Messages");
 		if (Frameworks.HaveGameplayKit)
-			ImplicitNamespaces.Add (Get ("GameplayKit"));
+			ImplicitNamespaces.Add ("GameplayKit");
 		if (Frameworks.HaveSpriteKit)
-			ImplicitNamespaces.Add (Get ("SpriteKit"));
+			ImplicitNamespaces.Add ("SpriteKit");
 		if (Frameworks.HaveFileProvider)
-			ImplicitNamespaces.Add (Get ("FileProvider"));
+			ImplicitNamespaces.Add ("FileProvider");
 		if (Frameworks.HaveNetworkExtension)
-			ImplicitNamespaces.Add (Get ("NetworkExtension"));
+			ImplicitNamespaces.Add ("NetworkExtension");
 		if (Frameworks.HaveNetwork)
-			ImplicitNamespaces.Add (Get ("Network"));
+			ImplicitNamespaces.Add ("Network");
 
 		// These are both types and namespaces
 		NamespacesThatConflictWithTypes = new HashSet<string> {
-			Get ("AudioUnit")
+			"AudioUnit",
 		};
 
 
 		if (!skipSystemDrawing)
 			ImplicitNamespaces.Add ("System.Drawing");
-	}
-
-	public string Get (string nsWithoutPrefix)
-	{
-		return nsWithoutPrefix;
-	}
-
-	public string [] Get (IEnumerable<string> nsWithoutPrefix)
-	{
-		return nsWithoutPrefix.Select (ns => Get (ns)).ToArray ();
-	}
-
-	public string [] Get (params string [] nsWithoutPrefix)
-	{
-		return Get ((IEnumerable<string>)nsWithoutPrefix);
 	}
 }
 
@@ -2052,7 +2033,7 @@ public partial class Generator : IMemberGatherer {
 
 		print (m, "\t\tpublic extern static {0} {1} ({3}IntPtr receiver, IntPtr selector{2});",
 		       need_stret ? "void" : ParameterGetMarshalType (new MarshalInfo (this, mi) { EnumMode = enum_mode }, true), method_name, b.ToString (),
-		       need_stret ? (aligned ? "IntPtr" : "out " + FormatTypeUsedIn (ns.CoreObjCRuntime, mi.ReturnType)) + " retval, " : "");
+		       need_stret ? (aligned ? "IntPtr" : "out " + FormatTypeUsedIn ("ObjCRuntime", mi.ReturnType)) + " retval, " : "");
 	}
 
 	bool IsNativeEnum (Type type)
@@ -2231,7 +2212,7 @@ public partial class Generator : IMemberGatherer {
 			marshal_types.Add (TypeManager.CVImageBuffer);
 		}
 		if (Frameworks.HaveMediaToolbox)
-			marshal_types.Add (new MarshalType (TypeManager.MTAudioProcessingTap, create: (NamespaceManager.Get ("MediaToolbox") + ".MTAudioProcessingTap.FromHandle(")));
+			marshal_types.Add (new MarshalType (TypeManager.MTAudioProcessingTap, create: "MediaToolbox.MTAudioProcessingTap.FromHandle("));
 		if (Frameworks.HaveAddressBook) {
 			marshal_types.Add (TypeManager.ABAddressBook);
 			marshal_types.Add (new MarshalType (TypeManager.ABPerson, create: "(ABPerson) ABRecord.FromHandle("));
@@ -2540,7 +2521,7 @@ public partial class Generator : IMemberGatherer {
 		sw = GetOutputStream ("ObjCRuntime", "Trampolines");
 
 		Header (sw);
-		print ("namespace {0} {{", ns.CoreObjCRuntime); indent++;
+		print ("namespace ObjCRuntime {"); indent++;
 		print ("");
 		print_generated_code ();
 		print ("static partial class Trampolines {"); indent++;
@@ -2710,7 +2691,7 @@ public partial class Generator : IMemberGatherer {
 		sw = GetOutputStream ("ObjCRuntime", "Libraries");
 		
 		Header (sw);
-		print ("namespace {0} {{", ns.CoreObjCRuntime); indent++;
+		print ("namespace ObjCRuntime {"); indent++;
 		print_generated_code ();
 		print ("static partial class Libraries {"); indent++;
 		foreach (var library_info in libraries.OrderBy (v => v.Key, StringComparer.Ordinal)) {
@@ -2992,7 +2973,7 @@ public partial class Generator : IMemberGatherer {
 					print ("if ({0} == IntPtr.Zero)", kn);
 					indent++;
 					var libname = BindThirdPartyLibrary ? "__Internal" : lib;
-					print ("{0} = {1}.Dlfcn.GetIntPtr (Libraries.{2}.Handle, \"{3}\");", kn, ns.CoreObjCRuntime, libname, export.Selector);
+					print ("{0} = ObjCRuntime.Dlfcn.GetIntPtr (Libraries.{1}.Handle, \"{2}\");", kn, libname, export.Selector);
 					indent--;
 				}
 				// [NullAllowed] on `UserInfo` requires a check for every case
@@ -3048,11 +3029,11 @@ public partial class Generator : IMemberGatherer {
 						print (GenerateNSValue ("SizeFValue"));
 					else if (fullname == "System.Drawing.RectangleF")
 						print (GenerateNSValue ("RectangleFValue"));
-					else if (fullname == ns.Get ("CoreGraphics.CGPoint"))
+					else if (fullname == "CoreGraphics.CGPoint")
 						print (GenerateNSValue ("CGPointValue"));
-					else if (fullname == ns.Get ("CoreGraphics.CGSize"))
+					else if (fullname == "CoreGraphics.CGSize")
 						print (GenerateNSValue ("CGSizeValue"));
-					else if (fullname == ns.Get ("CoreGraphics.CGRect"))
+					else if (fullname == "CoreGraphics.CGRect")
 						print (GenerateNSValue ("CGRectValue"));
 					else if (is_system_string)
 						print ("return NSString.FromHandle (value);");
@@ -3620,7 +3601,7 @@ public partial class Generator : IMemberGatherer {
 			Type parType = GetCorrectGenericType (pi.ParameterType);
 			if (parType.IsSubclassOf (TypeManager.System_Delegate)){
 				var ti = MakeTrampoline (parType);
-				sb.AppendFormat ("[BlockProxy (typeof ({0}.Trampolines.{1}))]", ns.CoreObjCRuntime, ti.NativeInvokerName);
+				sb.AppendFormat ("[BlockProxy (typeof (ObjCRuntime.Trampolines.{0}))]", ti.NativeInvokerName);
 			}
 
 			if (AttributeManager.HasAttribute<TransientAttribute> (pi))
@@ -3787,7 +3768,7 @@ public partial class Generator : IMemberGatherer {
 			} else if (etype == TypeManager.Selector) {
 				exceptions.Add (ErrorHelper.CreateError (1066, mai.Type.FullName, mi.DeclaringType.FullName, mi.Name));
 			} else {
-				if (NamespaceManager.NamespacesThatConflictWithTypes.Contains (NamespaceManager.Get(etype.Namespace)))
+				if (NamespaceManager.NamespacesThatConflictWithTypes.Contains (etype.Namespace))
 					cast_a = "NSArray.ArrayFromHandle<global::" + etype + ">(";
 				else
 					cast_a = "NSArray.ArrayFromHandle<" + FormatType (mi.DeclaringType, etype) + ">(";
@@ -3990,8 +3971,8 @@ public partial class Generator : IMemberGatherer {
 			return "var ns{0} = NSString.CreateNative ({1});\n";
 		}
 		return
-			ns.CoreObjCRuntime + ".NSStringStruct _s{0}; Console.WriteLine (\"" + CurrentMethod + ": Marshalling: {{1}}\", {1}); \n" +
-			"_s{0}.ClassPtr = " + ns.CoreObjCRuntime + ".NSStringStruct.ReferencePtr;\n" +
+			"ObjCRuntime.NSStringStruct _s{0}; Console.WriteLine (\"" + CurrentMethod + ": Marshalling: {{1}}\", {1}); \n" +
+			"_s{0}.ClassPtr = ObjCRuntime.NSStringStruct.ReferencePtr;\n" +
 			"_s{0}.Flags = 0x010007d1; // RefCount=1, Unicode, InlineContents = 0, DontFreeContents\n" +
 			"_s{0}.UnicodePtr = _p{0};\n" + 
 			"_s{0}.Length = " + (probe_null ? "{1} == null ? 0 : {1}.Length;" : "{1}.Length;\n");
@@ -4303,10 +4284,11 @@ public partial class Generator : IMemberGatherer {
 			case PlatformName.iOS:
 			case PlatformName.WatchOS:
 			case PlatformName.TvOS:
-				s = $"global::{ns.Get ("UIKit")}.UIApplication.EnsureUIThread ();";
+			case PlatformName.MacCatalyst:
+				s = $"global::UIKit.UIApplication.EnsureUIThread ();";
 				break;
 			case PlatformName.MacOSX:
-				s = $"global::{ns.Get ("AppKit")}.NSApplication.EnsureUIThread ();";
+				s = $"global::AppKit.NSApplication.EnsureUIThread ();";
 				break;
 			default:
 				throw new BindingException (1047, CurrentPlatform);
@@ -4564,7 +4546,7 @@ public partial class Generator : IMemberGatherer {
 								postget_avail.Version.Major,
 								postget_avail.Version.Minor,
 								postget [i].MethodName,
-								ns.Get ("UIKit"));
+								"UIKit");
 						}
 					}
 				}
@@ -4583,7 +4565,7 @@ public partial class Generator : IMemberGatherer {
 				print ("ret.SetAsProxy ();");
 
 			if (mi.ReturnType.IsSubclassOf (TypeManager.System_Delegate)) {
-				print ("return global::{0}.Trampolines.{1}.Create (ret)!;", ns.CoreObjCRuntime, trampoline_info.NativeInvokerName);
+				print ("return global::ObjCRuntime.Trampolines.{0}.Create (ret)!;", trampoline_info.NativeInvokerName);
 			} else if (align != null) {
 				print ("if (aligned_assigned)");
 				indent++;
@@ -5327,7 +5309,7 @@ public partial class Generator : IMemberGatherer {
 	{
 		if (mi.ReturnType.IsSubclassOf (TypeManager.System_Delegate)) {
 			var ti = MakeTrampoline (mi.ReturnType);
-			print ("[return: DelegateProxy (typeof ({0}.Trampolines.{1}))]", ns.CoreObjCRuntime, ti.StaticName);
+			print ("[return: DelegateProxy (typeof (ObjCRuntime.Trampolines.{0}))]", ti.StaticName);
 		}
 	}
 
@@ -5336,7 +5318,7 @@ public partial class Generator : IMemberGatherer {
 		type = GetCorrectGenericType (type);
 		if (type.IsSubclassOf (TypeManager.System_Delegate)) {
 			var ti = MakeTrampoline (type);
-			print ("[param: BlockProxy (typeof ({0}.Trampolines.{1}))]", ns.CoreObjCRuntime, ti.NativeInvokerName);
+			print ("[param: BlockProxy (typeof (ObjCRuntime.Trampolines.{0}))]", ti.NativeInvokerName);
 		}
 	}
 
@@ -5700,7 +5682,7 @@ public partial class Generator : IMemberGatherer {
 				sb.Append (", ReturnType = typeof (").Append (RenderType (retType)).Append (")");
 				if (retType.IsSubclassOf (TypeManager.System_Delegate)) {
 					var ti = MakeTrampoline (retType);
-					sb.Append ($", ReturnTypeDelegateProxy = typeof ({ns.CoreObjCRuntime}.Trampolines.{ti.StaticName})");
+					sb.Append ($", ReturnTypeDelegateProxy = typeof (ObjCRuntime.Trampolines.{ti.StaticName})");
 				}
 			}
 			var parameters = mi.GetParameters ();
@@ -5731,7 +5713,7 @@ public partial class Generator : IMemberGatherer {
 					var parType = GetCorrectGenericType (parameters [i].ParameterType);
 					if (parType.IsSubclassOf (TypeManager.System_Delegate)) {
 						var ti = MakeTrampoline (parType);
-						blockProxies [i] = $"typeof ({ns.CoreObjCRuntime}.Trampolines.{ti.NativeInvokerName})";
+						blockProxies [i] = $"typeof (ObjCRuntime.Trampolines.{ti.NativeInvokerName})";
 						anyblockProxy = true;
 					}
 				}
@@ -5777,9 +5759,9 @@ public partial class Generator : IMemberGatherer {
 			if (propType.IsSubclassOf (TypeManager.System_Delegate)) {
 				var ti = MakeTrampoline (propType);
 				if (pi.SetMethod != null)
-					sb.Append ($", ParameterBlockProxy = new Type [] {{ typeof ({ns.CoreObjCRuntime}.Trampolines.{ti.NativeInvokerName}) }}");
+					sb.Append ($", ParameterBlockProxy = new Type [] {{ typeof (ObjCRuntime.Trampolines.{ti.NativeInvokerName}) }}");
 				if (pi.GetMethod != null)
-					sb.Append ($", ReturnTypeDelegateProxy = typeof ({ns.CoreObjCRuntime}.Trampolines.{ti.StaticName})");
+					sb.Append ($", ReturnTypeDelegateProxy = typeof (ObjCRuntime.Trampolines.{ti.StaticName})");
 			}
 			sb.Append (")]");
 			print (sb.ToString ());
@@ -6095,7 +6077,7 @@ public partial class Generator : IMemberGatherer {
 
 	void WriteMarkDirtyIfDerived (StreamWriter sw, Type type)
 	{
-		if (type.Name == "CALayer" && ns.Get ("CoreAnimation") == type.Namespace) {
+		if (type.Name == "CALayer" && "CoreAnimation" == type.Namespace) {
 			sw.WriteLine ("\t\t\tMarkDirtyIfDerived ();");
 		}
 	}
@@ -6567,7 +6549,7 @@ public partial class Generator : IMemberGatherer {
 								sw.WriteLine ("\t\t\tIsDirectBinding = {0};", is_direct_binding_value);
 							if (debug)
 								sw.WriteLine ("\t\t\tConsole.WriteLine (\"{0}.ctor ()\");", TypeName);
-							sw.WriteLine ("\t\t\tInitializeHandle (global::{1}.IntPtr_objc_msgSend (this.Handle, global::{2}.{0}), \"init\");", initSelector, ns.Messaging, ns.CoreObjCRuntime);
+							sw.WriteLine ("\t\t\tInitializeHandle (global::{1}.IntPtr_objc_msgSend (this.Handle, global::ObjCRuntime.{0}), \"init\");", initSelector, ns.Messaging);
 							sw.WriteLine ("\t\t\t");
 							if (is32BitNotSupported)
 								sw.WriteLine ("\t\t#endif");
@@ -6593,8 +6575,8 @@ public partial class Generator : IMemberGatherer {
 							}
 							var indentation = 3;
 							WriteIsDirectBindingCondition (sw, ref indentation, is_direct_binding, is_direct_binding_value,
-							                               () => string.Format ("InitializeHandle (global::{1}.IntPtr_objc_msgSend (this.Handle, global::{2}.{0}), \"init\");", initSelector, ns.Messaging, ns.CoreObjCRuntime),
-							                               () => string.Format ("InitializeHandle (global::{1}.IntPtr_objc_msgSendSuper (this.SuperHandle, global::{2}.{0}), \"init\");", initSelector, ns.Messaging, ns.CoreObjCRuntime));
+							                               () => string.Format ("InitializeHandle (global::{1}.IntPtr_objc_msgSend (this.Handle, global::ObjCRuntime.{0}), \"init\");", initSelector, ns.Messaging),
+							                               () => string.Format ("InitializeHandle (global::{1}.IntPtr_objc_msgSendSuper (this.SuperHandle, global::ObjCRuntime.{0}), \"init\");", initSelector, ns.Messaging));
 
 							WriteMarkDirtyIfDerived (sw, type);
 							if (is32BitNotSupported)
@@ -7387,12 +7369,12 @@ public partial class Generator : IMemberGatherer {
 				print ("}\n");
 				print ("public static {0}{1} Appearance {{", parent_implements_appearance ? "new " : "", appearance_type_name);
 				indent++;
-				print ("get {{ return new {0} (global::{1}.IntPtr_objc_msgSend (class_ptr, {2})); }}", appearance_type_name, ns.Messaging, InlineSelectors ? ns.CoreObjCRuntime + ".Selector.GetHandle (\"appearance\")" : "UIAppearance.SelectorAppearance");
+				print ("get {{ return new {0} (global::{1}.IntPtr_objc_msgSend (class_ptr, {2})); }}", appearance_type_name, ns.Messaging, InlineSelectors ? "ObjCRuntime.Selector.GetHandle (\"appearance\")" : "UIAppearance.SelectorAppearance");
 				indent--;
 				print ("}\n");
 				print ("public static {0}{1} GetAppearance<T> () where T: {2} {{", parent_implements_appearance ? "new " : "", appearance_type_name, TypeName);
 				indent++;
-				print ("return new {0} (global::{1}.IntPtr_objc_msgSend (Class.GetHandle (typeof (T)), {2}));", appearance_type_name, ns.Messaging, InlineSelectors ? ns.CoreObjCRuntime + ".Selector.GetHandle (\"appearance\")" : "UIAppearance.SelectorAppearance");
+				print ("return new {0} (global::{1}.IntPtr_objc_msgSend (Class.GetHandle (typeof (T)), {2}));", appearance_type_name, ns.Messaging, InlineSelectors ? "ObjCRuntime.Selector.GetHandle (\"appearance\")" : "UIAppearance.SelectorAppearance");
 				indent--;
 				print ("}\n");
 				print ("public static {0}{1} AppearanceWhenContainedIn (params Type [] containers)", parent_implements_appearance ? "new " : "", appearance_type_name);
@@ -7898,9 +7880,9 @@ public partial class Generator : IMemberGatherer {
 			type.FullName == "System.Drawing.PointF" ||
 			type.FullName == "System.Drawing.SizeF" ||
 			type.FullName == "System.Drawing.RectangleF" ||
-			type.FullName == ns.Get ("CoreGraphics.CGPoint") ||
-			type.FullName == ns.Get ("CoreGraphics.CGSize") ||
-			type.FullName == ns.Get ("CoreGraphics.CGRect")))
+			type.FullName == "CoreGraphics.CGPoint" ||
+			type.FullName == "CoreGraphics.CGSize" ||
+			type.FullName == "CoreGraphics.CGRect"))
 			return type.FullName + ".Empty";
 
 		if (def is bool)
@@ -7963,7 +7945,7 @@ public partial class Generator : IMemberGatherer {
 				return t.Name;
 			return $"global::{t.Namespace}." + RemoveArity (t.Name) + "<" + string.Join (", ", targs.Select (l => FormatTypeUsedIn (null, l)).ToArray ()) + ">";
 		}
-		if (NamespaceManager.NamespacesThatConflictWithTypes.Contains (NamespaceManager.Get(ns)))
+		if (NamespaceManager.NamespacesThatConflictWithTypes.Contains (ns))
 			return "global::" + t.FullName;
 		if (t.Name == t.Namespace)
 			return "global::" + t.FullName;

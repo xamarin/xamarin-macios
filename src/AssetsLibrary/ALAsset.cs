@@ -14,6 +14,8 @@ using CoreLocation;
 using UIKit;
 using MediaPlayer;
 
+#nullable enable
+
 namespace AssetsLibrary {
 
 	// internally used (not exposed by ObjC)
@@ -45,7 +47,7 @@ namespace AssetsLibrary {
 			get {
 				// note: this can return an NSString like: ALErrorInvalidProperty
 				// which causes an InvalidCastException with a normal cast
-				NSNumber n = ValueForProperty (_PropertyDuration) as NSNumber;
+				var n = ValueForProperty (_PropertyDuration) as NSNumber;
 				return n == null ? double.NaN : n.DoubleValue;
 			}
 		}
@@ -76,7 +78,7 @@ namespace AssetsLibrary {
 			}
 		}
 
-		public NSUrl AssetUrl {
+		public NSUrl? AssetUrl {
 			get {
 				// do not show an ArgumentNullException inside the
 				// debugger for releases before 6.0

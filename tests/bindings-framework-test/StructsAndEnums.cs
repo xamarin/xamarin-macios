@@ -7,11 +7,13 @@ namespace Bindings.Test
 		[DllImport ("__Internal")]
 		public static extern int theUltimateAnswer ();
 
+#if !__MACOS__
 		[DllImport ("__Internal")]
 		public static extern int object_theUltimateAnswer ();
 
 		[DllImport ("__Internal")]
 		public static extern int ar_theUltimateAnswer ();
+#endif
 	}
 
 	// Verify that System.Drawing.Color usage compiles

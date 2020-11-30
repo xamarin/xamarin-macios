@@ -5,6 +5,8 @@ using System.Runtime.InteropServices;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace ARKit {
 	public partial class ARSkeleton {
 
@@ -16,7 +18,7 @@ namespace ARKit {
 		public static NSString CreateJointName (NSString recognizedPointKey)
 		{
 			if (recognizedPointKey == null)
-				throw new ArgumentNullException (nameof (recognizedPointKey));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (recognizedPointKey));
 			return (NSString) Runtime.GetNSObject (ARSkeletonJointNameForRecognizedPointKey (recognizedPointKey.Handle));
 		}
 	}
