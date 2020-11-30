@@ -25,6 +25,20 @@ function Get-TagsRestAPIUrl {
 
 <#
     .SYNOPSIS
+        Returns the auth heater to use with the REST API of VSTS.
+#>
+function Get-AuthHeader([string] $AccessToken)
+{
+    # User name can be anything. It is the personal access token (PAT) token that matters.
+    $user = "AnyUser"
+    $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $user, $AccessToken)))
+    $headers = @{Authorization = "Basic {0}" -f $base64AuthInfo}
+
+    return $headers
+}
+
+<#
+    .SYNOPSIS
         Cancels the pipeline and no other steps of job will be executed.
 
     .EXAMPLE
@@ -119,9 +133,7 @@ function Set-PipelineResult {
 
     $url = Get-BuildUrl
 
-    $headers = @{
-        Authorization = ("Bearer {0}" -f $Env:SYSTEM_ACCESSTOKEN)
-    }
+    $headers = Get-AuthHeader -AccessToken  $Env:SYSTEM_ACCESSTOKEN
 
     $payload = @{
         result = $Status
@@ -155,9 +167,7 @@ function Set-BuildTags {
     # the API that sets one tag at at time. 
     # This is why people should write documentation, now I'm being  annoying with the tags
 
-    $headers = @{
-        Authorization = ("Bearer {0}" -f $Env:SYSTEM_ACCESSTOKEN)
-    }
+    $headers = Get-AuthHeader -AccessToken  $Env:SYSTEM_ACCESSTOKEN
 
     foreach ($t in $Tags) {
         $url = Get-TagsRestAPIUrl -Tag $t
