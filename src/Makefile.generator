@@ -49,7 +49,8 @@ DOTNET_TARGETS_DIRS += \
 
 $(BUILD_DIR)/generator-frameworks.g.cs: frameworks.sources Makefile.generator generate-frameworks.csharp
 	@mkdir -p $(dir $@)
-	@./generate-frameworks.csharp '$(IOS_FRAMEWORKS)' '$(MAC_FRAMEWORKS)' '$(WATCHOS_FRAMEWORKS)' '$(TVOS_FRAMEWORKS)' > $@
+	$(Q) ./generate-frameworks.csharp $@.tmp '$(IOS_FRAMEWORKS)' '$(MAC_FRAMEWORKS)' '$(WATCHOS_FRAMEWORKS)' '$(TVOS_FRAMEWORKS)'
+	$(Q) mv $@.tmp $@
 
 $(DOTNET_BUILD_DIR)/Xamarin.Apple.BindingAttributes.dll: generator-attributes.cs Makefile.generator | $(DOTNET_BUILD_DIR)
 	$(Q_DOTNET_BUILD) $(SYSTEM_CSC) $(DOTNET_FLAGS) -out:$@ $<
