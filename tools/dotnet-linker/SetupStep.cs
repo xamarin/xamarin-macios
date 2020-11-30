@@ -89,6 +89,7 @@ namespace Xamarin {
 			Steps.Add (new ExtractBindingLibrariesStep ());
 			Steps.Add (new RegistrarStep ());
 			Steps.Add (new GenerateMainStep ());
+			Steps.Add (new GenerateReferencesStep ());
 			Steps.Add (new GatherFrameworksStep ());
 
 			Configuration.Write ();

@@ -314,6 +314,10 @@
 		<ReadItemsFromFile File="$(_LinkerItemsDirectory)/_RegistrarFile.items" Condition="Exists('$(_LinkerItemsDirectory)/_RegistrarFile.items')">
 			<Output TaskParameter="Items" ItemName="_RegistrarFile" />
 		</ReadItemsFromFile>
+		<!-- Load _RegistrarFile -->
+		<ReadItemsFromFile File="$(_LinkerItemsDirectory)/_ReferencesFile.items" Condition="Exists('$(_LinkerItemsDirectory)/_ReferencesFile.items')">
+			<Output TaskParameter="Items" ItemName="_ReferencesFile" />
+		</ReadItemsFromFile>
 
 		<ItemGroup>
 			<_AssembliesToAOT Include="@(ResolvedFileToPublish)" Condition="'%(Extension)' == '.dll' Or '%(Extension)' == '.exe' " />
@@ -465,6 +469,9 @@
 				<OutputFile>$(_IntermediateNativeLibraryDir)%(Filename).o</OutputFile>
 			</_CompileNativeExecutableFile>
 			<_CompileNativeExecutableFile Include="@(_RegistrarFile)">
+				<OutputFile>$(_IntermediateNativeLibraryDir)%(Filename).o</OutputFile>
+			</_CompileNativeExecutableFile>
+			<_CompileNativeExecutableFile Include="@(_ReferencesFile)">
 				<OutputFile>$(_IntermediateNativeLibraryDir)%(Filename).o</OutputFile>
 			</_CompileNativeExecutableFile>
 			<_XamarinMainIncludeDirectory Include="$(_XamarinIncludeDirectory)" />
