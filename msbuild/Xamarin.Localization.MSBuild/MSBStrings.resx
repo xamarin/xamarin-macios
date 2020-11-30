@@ -823,7 +823,17 @@
         <value>The {0} SDK version '{1}' is not installed. Using newer version '{2}' instead'.
         </value>
     </data>
-    
+
+    <data name="E0174" xml:space="preserve">
+        <value>{0} has an incorrect or unknown format and cannot be processed.
+        </value>
+    </data>
+
+    <data name="E0175" xml:space="preserve">
+        <value>No matching framework found inside '{0}'.
+        </value>
+    </data>
+
     <data name="E7001" xml:space="preserve">
         <value>Could not resolve host IPs for WiFi debugger settings.
         </value>

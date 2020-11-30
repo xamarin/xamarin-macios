@@ -50,3 +50,5 @@ using System.Runtime.CompilerServices;
 //[assembly: AssemblyDelaySign(false)]
 //[assembly: AssemblyKeyFile("")]
 
+[assembly: InternalsVisibleTo ("Xamarin.MacDev.Tasks.Tests")]
+

@@ -191,6 +191,22 @@ $(eval $(call FatFrameworkTemplate,ios-fat,iphoneos,iphonesimulator))
 $(eval $(call FatFrameworkTemplate,tvos-fat,tvos,tvsimulator))
 $(eval $(call FatFrameworkTemplate,watchos-fat,watchos,watchsimulator))
 
+XCPLATFORMS=iphoneos iphonesimulator tvos tvsimulator watchos watchsimulator
+ifdef INCLUDE_MAC
+XCPLATFORMS+= macos
+endif
+
+XTEST_XCFRAMEWORKS += $(foreach platform,$(XCPLATFORMS),.libs/$(platform)/XTest.framework)
+XTEST_XCTARGETS += \
+	$(foreach platform,$(XCPLATFORMS),.libs/$(platform)/XTest.framework/XTest) \
+	$(foreach platform,$(XCPLATFORMS),.libs/$(platform)/XTest.framework/Info.plist) \
+
+.libs/XTest.xcframework: $(XTEST_XCTARGETS) Makefile
+	$(Q) rm -rf $@
+	$(Q_GEN) $(XCODE_DEVELOPER_ROOT)/usr/bin/xcodebuild -quiet -create-xcframework $(foreach fw,$(XTEST_XCFRAMEWORKS),-framework $(fw)) -output $@
+
+all-local:: .libs/XTest.xcframework
+
 # Xamarin.Mac
 
 MAC_CLANG = DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT) $(MAC_CC)
