@@ -8,7 +8,7 @@ steps:
 
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/tools/devops/automation/scripts/GitHub.psm1
-    $addTags = $false # there is an issue and we cannot do this from forks, ignore it for the time being
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/tools/devops/automation/scripts/VSTS.psm1
 
     $buildReason = "$(Build.Reason)"
     $buildSourceBranchName = "$(Build.SourceBranchName)"
@@ -17,6 +17,9 @@ steps:
     Write-Host "buildReason: ${buildReason}"
     Write-Host "buildSourceBranchName: ${buildSourceBranchName}"
     Write-Host "buildSourceBranch: $buildSourceBranch"
+
+    # the following list will be used to track the tags and set them in VSTS to make the monitoring person life easier
+    [System.Collections.Generic.List[string]]$tags = @()
     
     if ($buildReason -eq "PullRequest" -or (($buildReason -eq "Manual") -and ($buildSourceBranchName -eq "merge")) ) {
       Write-Host "Configuring build from PR."
@@ -27,19 +30,20 @@ steps:
       $prInfo = Get-GitHubPRInfo -ChangeId $changeId
       Write-Host $prInfo
 
-      if ($addTags) {
-        # make peoples life better, loop over the labels and add them as tags in the vsts build
-        foreach ($labelInfo in $prInfo.labels) {
-          $labelName = $labelInfo.name
-          Write-Host "##vso[build.addbuildtag]$labelName"
-        }
-        # sepcial tag, we want to know if we are using a pr
-        Write-Host "##vso[build.addbuildtag]prBuild"
-
-        # special tag, lets add the target branch, will be useful to the users
-        $ref = $prInfo.base.ref
-        Write-Host "##vso[build.addbuildtag]$ref"
+      # make peoples life better, loop over the labels and add them as tags in the vsts build
+      foreach ($labelInfo in $prInfo.labels) {
+        $labelName = $labelInfo.name
+        Write-Host "Found label $labelName"
+        $tags.Add($labelName)
+        $tagsCount = $tags.Count
+        Write-Host "Tags count $tagsCount"
       }
+      # special tag, we want to know if we are using a pr
+      $tags.Add("prBuild")
+
+      # special tag, lets add the target branch, will be useful to the users
+      $ref = $prInfo.base.ref
+      $tags.Add("$ref")
 
       # set output variables based on the git labels
       $labelsOfInterest = @(
@@ -62,10 +66,17 @@ steps:
       Write-Host "##vso[task.setvariable variable=prBuild;isOutput=true]True"
     } else {
       # set the name of the branch under build
-      Write-Host "##vso[build.addbuildtag]$buildSourceBranchName"
+      $tags.Add("$buildSourceBranchName")
       Write-Host "##vso[task.setvariable variable=prBuild;isOutput=true]False"
     }
+    # set the tags using the cmdlet 
+    $tagCount = $tags.Count
+    Write-Host "Found '$tagsCount' tags"
+    Set-BuildTags -Tags $tags.ToArray()
   env:
+    BUILD_REVISION: $(Build.SourceVersion)
+    CONTEXT: ${{ parameters.statusContext }}
     GITHUB_TOKEN: $(GitHub.Token)
+    SYSTEM_ACCESSTOKEN: $(DropsPAT)
   name: labels 
   displayName: 'Configure build'
