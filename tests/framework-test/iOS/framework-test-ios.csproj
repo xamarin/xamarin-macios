@@ -16,7 +16,7 @@
     <DefineConstants></DefineConstants>
     <LangVersion>latest</LangVersion>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
-    <RootTestsDirectory>..</RootTestsDirectory>
+    <RootTestsDirectory>..\..</RootTestsDirectory>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
     <DebugSymbols>true</DebugSymbols>
@@ -148,7 +148,7 @@
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.iOS" />
     <PackageReference Include="MonoTouch.Dialog" Version="2.0.0-pre1" />
-    <ProjectReference Include="..\..\external\Touch.Unit\Touch.Client\iOS\Touch.Client-iOS.csproj">
+    <ProjectReference Include="..\..\..\external\Touch.Unit\Touch.Client\iOS\Touch.Client-iOS.csproj">
       <Project>{F611ED96-54B5-4975-99BB-12F50AF95936}</Project>
       <Name>Touch.Client-iOS</Name>
     </ProjectReference>
@@ -170,7 +170,7 @@
   <Import Project="$(RootTestsDirectory)\nunit.framework.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\..\tests\bindings-framework-test\bindings-framework-test.csproj">
+    <ProjectReference Include="..\..\..\tests\bindings-framework-test\bindings-framework-test.csproj">
       <Project>{E40B0B77-3467-4891-9117-7AF8F248E306}</Project>
       <Name>bindings-framework-test</Name>
     </ProjectReference>

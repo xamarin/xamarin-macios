@@ -11,6 +11,12 @@ namespace ObjCRuntime {
 	public static class ThrowHelper {
 
 		[DoesNotReturn]
+		public static void ThrowArgumentException (string argumentName)
+		{
+			throw new ArgumentException (argumentName);
+		}
+
+		[DoesNotReturn]
 		public static void ThrowArgumentNullException (string argumentName)
 		{
 			throw new ArgumentNullException (argumentName);

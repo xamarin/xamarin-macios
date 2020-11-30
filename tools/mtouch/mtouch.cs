@@ -144,7 +144,7 @@ namespace Xamarin.Bundler
 			switch (app.Platform) {
 			case ApplePlatform.iOS:
 			case ApplePlatform.WatchOS:
-				return Path.Combine (GetPlatformFrameworkDirectory (app), "..", "..", "32bits");
+				return Path.Combine (GetPlatformFrameworkDirectory (app), "..", "..", "32bits", app.PlatformName);
 			default:
 				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, "Xamarin.iOS");
 			}
@@ -156,7 +156,7 @@ namespace Xamarin.Bundler
 			case ApplePlatform.iOS:
 			case ApplePlatform.TVOS:
 			case ApplePlatform.WatchOS:
-				return Path.Combine (GetPlatformFrameworkDirectory (app), "..", "..", "64bits");
+				return Path.Combine (GetPlatformFrameworkDirectory (app), "..", "..", "64bits", app.PlatformName);
 			default:
 				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, "Xamarin.iOS");
 			}

@@ -41,50 +41,58 @@ namespace Xamarin.MacDev.Tasks {
 		//
 		static public string[] GetVerbosityLevel (string commandLine)
 		{
-			const string shortForm = "v:";
-			const string longForm = "verbosity:";
-
 			if (!StringUtils.TryParseArguments (commandLine, out var args, out _))
 				return GetVerbosityLevel (LoggerVerbosity.Normal);
 
+			var hasBinaryLog = false;
 			foreach (var arg in args) {
-				// the minimum length we're looking for is `/v:q`
-				if (arg.Length < 4)
+				// the minimum length we're looking for is `/bl`
+				if (arg.Length < 2)
 					continue;
 				// msbuild accepts two types of argument separator
 				if (arg [0] != '/' && arg [0] != '-')
 					continue;
 
-				var verbosity = String.Empty;
-				// short and long forms are possible, always case sensitive
-				if (arg.IndexOf (shortForm, StringComparison.Ordinal) == 1) {
-					// skip argument prefix (+1) and the (short) argument to get the verbosity level
-					verbosity = arg.Substring (shortForm.Length + 1);
-				} else if (arg.IndexOf (longForm, StringComparison.Ordinal) == 1) {
-					verbosity = arg.Substring (longForm.Length + 1);
-				} else
-					continue;
 
-				// case sensitive
-				switch (verbosity) {
-				case "q":
-				case "quiet":
-					return GetVerbosityLevel (LoggerVerbosity.Quiet);
-				case "m":
-				case "minimal":
-					return GetVerbosityLevel (LoggerVerbosity.Minimal);
-				case "n":
-				case "normal":
-				default:
-					return GetVerbosityLevel (LoggerVerbosity.Normal);
-				case "d":
-				case "detailed":
-					return GetVerbosityLevel (LoggerVerbosity.Detailed);
-				case "diag":
-				case "diagnostic":
-					return GetVerbosityLevel (LoggerVerbosity.Diagnostic);
+				var colon = arg.IndexOf (':');
+				var name = arg.Substring (1, colon == -1 ? arg.Length - 1 : colon - 1);
+				var value = colon == -1 ? string.Empty : arg.Substring (colon + 1);
+
+				// the argument is not case sensitive
+				switch (name.ToLowerInvariant ()) {
+				case "v":
+				case "verbosity":
+					var verbosity = value;
+					// case sensitive
+					switch (verbosity) {
+					case "q":
+					case "quiet":
+						return GetVerbosityLevel (LoggerVerbosity.Quiet);
+					case "m":
+					case "minimal":
+						return GetVerbosityLevel (LoggerVerbosity.Minimal);
+					case "n":
+					case "normal":
+					default:
+						return GetVerbosityLevel (LoggerVerbosity.Normal);
+					case "d":
+					case "detailed":
+						return GetVerbosityLevel (LoggerVerbosity.Detailed);
+					case "diag":
+					case "diagnostic":
+						return GetVerbosityLevel (LoggerVerbosity.Diagnostic);
+					}
+				case "bl":
+				case "binarylogger":
+					hasBinaryLog = true;
+					break;
 				}
 			}
+
+			// A binary log was requested, and verbosity wasn't specified, so default to diagnostic.
+			if (hasBinaryLog)
+				return GetVerbosityLevel (LoggerVerbosity.Diagnostic);
+
 			// nothing is normal
 			return GetVerbosityLevel (LoggerVerbosity.Normal);
 		}
