@@ -37,9 +37,11 @@ using AppKit;
 using CoreVideo;
 using OpenGL;
 #else
-using OpenGLES;
 using UIKit;
 using CAEdrMetadata = Foundation.NSObject;
+#endif
+#if HAS_OPENGLES
+using OpenGLES;
 #endif
 using Foundation;
 using CoreImage;
@@ -964,7 +966,7 @@ namespace CoreAnimation {
 		NSObject ActionForLayer (CALayer layer, string eventKey);
 	}
 	
-#if !MONOMAC
+#if HAS_OPENGLES
 	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'CAMetalLayer' instead.")]
 	[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use 'CAMetalLayer' instead.")]
 	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'CAMetalLayer' instead.")]

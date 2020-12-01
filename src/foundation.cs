@@ -6688,7 +6688,7 @@ namespace Foundation
 		[Async (ResultTypeName = "NSUrlAsyncResult", MethodName="SendRequestAsync")]
 		void SendAsynchronousRequest (NSUrlRequest request, NSOperationQueue queue, NSUrlConnectionDataResponse completionHandler);
 		
-#if IOS
+#if HAS_NEWSSTANDKIT
 		// Extension from iOS5, NewsstandKit
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use Background Remote Notifications instead.")]
 		[NullAllowed]
