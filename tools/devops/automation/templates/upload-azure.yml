@@ -178,6 +178,6 @@ steps:
   env:
     BUILD_REVISION: $(Build.SourceVersion)
     GITHUB_TOKEN: $(GitHub.Token)
-    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+    ACCESSTOKEN: $(System.AccessToken)
     STORAGE_URI: $(Parameters.outputStorageUri)
   displayName: 'Set GithubStatus'

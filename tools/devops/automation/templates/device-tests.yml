@@ -89,7 +89,7 @@ steps:
     BUILD_REVISION: $(Build.SourceVersion)
     CONTEXT: ${{ parameters.statusContext }}
     GITHUB_TOKEN: $(GitHub.Token)
-    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+    ACCESSTOKEN: $(System.AccessToken)
   displayName: 'Check HD Free Space'
   timeoutInMinutes: 5
   condition: succeededOrFailed() # we do not care about the previous step

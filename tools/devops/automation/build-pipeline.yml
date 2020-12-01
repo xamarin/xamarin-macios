@@ -38,6 +38,8 @@ variables:
 - group: XamarinCompatLab                                     # provisionator-uri setting
 - name: GitHub.Token                                          # Override the GitHub.Token setting defined in the Xamarin Release group
   value: $(github--pat--vs-mobiletools-engineering-service2)  # Use a token dedicated to critical production workflows and help avoid GitHub throttling
+- name: AzDoBuildAccess.Token
+  value: $(pat--xamarinc--build-access)
 - name: system.debug
   value: true
 - name: SigningKeychain

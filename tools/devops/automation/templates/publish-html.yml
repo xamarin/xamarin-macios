@@ -52,7 +52,7 @@ steps:
     XAMARIN_STORAGE_FAILED: $(XAMARIN_STORAGE_FAILED) # could not reach xamarin-storage, either the bot is not in the vpn or it finally failed
     TESTS_JOBSTATUS: $(TESTS_JOBSTATUS) # set by the runTests step
     TESTS_SUMMARY: $(TEST_SUMMARY_PATH)
-    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+    ACCESSTOKEN: $(System.AccessToken)
   displayName: 'Add summaries'
   condition: always()
   timeoutInMinutes: 1
