@@ -43,7 +43,7 @@ function Get-AuthHeader([string] $AccessToken)
 
     .EXAMPLE
         Stop-Pipeline
-    
+
     .NOTES
         The cmdlet depends on the following environment variables. If they are not present
         an InvalidOperationException will be thrown.
@@ -71,9 +71,7 @@ function Stop-Pipeline {
 
     $url = Get-BuildUrl
 
-    $headers = @{
-        Authorization = ("Bearer {0}" -f $Env:SYSTEM_ACCESSTOKEN)
-    }
+    $headers = Get-AuthHeader -AccessToken $Env:SYSTEM_ACCESSTOKEN
 
     $payload = @{
         status = "Cancelling"
@@ -88,7 +86,7 @@ function Stop-Pipeline {
 
     .EXAMPLE
         Set-PipelineResult  "failed"
-    
+
     .NOTES
         The cmdlet depends on the following environment variables. If they are not present
         an InvalidOperationException will be thrown.
@@ -100,7 +98,7 @@ function Stop-Pipeline {
 
         The valid values of status are:
         * "canceled" The build was canceled before starting.
-        * "failed" The build completed unsuccessfully. 
+        * "failed" The build completed unsuccessfully.
         * "none" No result
         * "partiallySucceeded" The build completed compilation successfully but had other errors.
         * "succeeded" The build completed successfully.
@@ -164,7 +162,7 @@ function Set-BuildTags {
     }
 
     # there is an api to just do one request, but it is not clear what should the body be, and we are trying and failing, ergo, use
-    # the API that sets one tag at at time. 
+    # the API that sets one tag at at time.
     # This is why people should write documentation, now I'm being  annoying with the tags
 
     $headers = Get-AuthHeader -AccessToken  $Env:SYSTEM_ACCESSTOKEN
@@ -175,12 +173,10 @@ function Set-BuildTags {
 
         Invoke-RestMethod -Uri $url -Headers $headers -Method "PUT"  -ContentType 'application/json'
     }
-
-
 }
 
 
 # export public functions, other functions are private and should not be used ouside the module.
 Export-ModuleMember -Function Stop-Pipeline
-Export-ModuleMember -Function Set-PipelineResult 
+Export-ModuleMember -Function Set-PipelineResult
 Export-ModuleMember -Function Set-BuildTags
