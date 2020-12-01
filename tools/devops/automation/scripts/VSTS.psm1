@@ -175,7 +175,6 @@ function Set-BuildTags {
     }
 }
 
-
 # export public functions, other functions are private and should not be used ouside the module.
 Export-ModuleMember -Function Stop-Pipeline
 Export-ModuleMember -Function Set-PipelineResult
