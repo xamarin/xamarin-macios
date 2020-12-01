@@ -764,6 +764,10 @@ namespace CoreImage {
 		[Field ("kCIInputEnableEDRModeKey")]
 		NSString EnableEdrModeKey { get; }
 
+		[iOS (14,3), TV (14,3), Mac (11,1)]
+		[Field ("kCIInputLocalToneMapAmountKey")]
+		NSString InputLocalToneMapAmountKey { get; }
+
 		[iOS (10,0)]
 		[Field ("kCIOutputNativeSizeKey")]
 		NSString OutputNativeSizeKey { get; }
@@ -1384,6 +1388,10 @@ namespace CoreImage {
 		[iOS (14,1)][TV (14,2)][Mac (11,0)]
 		[Field ("kCIImageAuxiliarySemanticSegmentationGlassesMatte")]
 		NSString AuxiliarySemanticSegmentationGlassesMatteKey { get; }
+
+		[iOS (14,3), TV (14,3), Mac (11,1)]
+		[Field ("kCIImageAuxiliarySemanticSegmentationSkyMatte")]
+		NSString AuxiliarySemanticSegmentationSkyMatteKey { get; }
 
 		[iOS (14,1)][TV (14,2)][Mac (11,0)]
 		[Field ("kCIImageToneMapHDRtoSDR")]
@@ -5749,6 +5757,10 @@ namespace CoreImage {
 		[iOS (14,1)][TV (14,2)][Mac (11,0)]
 		[Field ("kCIImageRepresentationSemanticSegmentationGlassesMatteImage")]
 		NSString SemanticSegmentationGlassesMatteImage { get; }
+
+		[iOS (14,3), TV (14,3), Mac (11,1)]
+		[Field ("kCIImageRepresentationSemanticSegmentationSkyMatteImage")]
+		NSString SemanticSegmentationSkyMatteImage { get; }
 	}
 
 	[iOS (11,0)]
