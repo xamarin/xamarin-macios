@@ -51,7 +51,7 @@ function Get-AuthHeader([string] $AccessToken)
         * SYSTEM_TEAMFOUNDATIONCOLLECTIONURI: Contains the full uri of the VSTS for the team.
         * SYSTEM_TEAMPROJECT: Contains the name of the team in VSTS.
         * BUILD_BUILDID: The id of the build to cancel.
-        * SYSTEM_ACCESSTOKEN: The PAT used to be able to perform the rest call to the VSTS API.
+        * ACCESSTOKEN: The PAT used to be able to perform the rest call to the VSTS API.
 #>
 function Stop-Pipeline {
     # assert that all the env vars that are needed are present, else we do have an error
@@ -59,7 +59,7 @@ function Stop-Pipeline {
         "SYSTEM_TEAMFOUNDATIONCOLLECTIONURI" = $Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI;
         "SYSTEM_TEAMPROJECT" = $Env:SYSTEM_TEAMPROJECT;
         "BUILD_BUILDID" = $Env:BUILD_BUILDID;
-        "SYSTEM_ACCESSTOKEN" = $Env:SYSTEM_ACCESSTOKEN
+        "ACCESSTOKEN" = $Env:ACCESSTOKEN
     }
 
     foreach ($key in $envVars.Keys) {
@@ -71,7 +71,7 @@ function Stop-Pipeline {
 
     $url = Get-BuildUrl
 
-    $headers = Get-AuthHeader -AccessToken $Env:SYSTEM_ACCESSTOKEN
+    $headers = Get-AuthHeader -AccessToken $Env:ACCESSTOKEN
 
     $payload = @{
         status = "Cancelling"
@@ -94,7 +94,7 @@ function Stop-Pipeline {
         * SYSTEM_TEAMFOUNDATIONCOLLECTIONURI: Contains the full uri of the VSTS for the team.
         * SYSTEM_TEAMPROJECT: Contains the name of the team in VSTS.
         * BUILD_BUILDID: The id of the build to cancel.
-        * SYSTEM_ACCESSTOKEN: The PAT used to be able to perform the rest call to the VSTS API.
+        * ACCESSTOKEN: The PAT used to be able to perform the rest call to the VSTS API.
 
         The valid values of status are:
         * "canceled" The build was canceled before starting.
@@ -119,7 +119,7 @@ function Set-PipelineResult {
         "SYSTEM_TEAMFOUNDATIONCOLLECTIONURI" = $Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI;
         "SYSTEM_TEAMPROJECT" = $Env:SYSTEM_TEAMPROJECT;
         "BUILD_BUILDID" = $Env:BUILD_BUILDID;
-        "SYSTEM_ACCESSTOKEN" = $Env:SYSTEM_ACCESSTOKEN
+        "ACCESSTOKEN" = $Env:ACCESSTOKEN
     }
 
     foreach ($key in $envVars.Keys) {
@@ -131,7 +131,7 @@ function Set-PipelineResult {
 
     $url = Get-BuildUrl
 
-    $headers = Get-AuthHeader -AccessToken  $Env:SYSTEM_ACCESSTOKEN
+    $headers = Get-AuthHeader -AccessToken  $Env:ACCESSTOKEN
 
     $payload = @{
         result = $Status
@@ -151,7 +151,7 @@ function Set-BuildTags {
         "SYSTEM_TEAMFOUNDATIONCOLLECTIONURI" = $Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI;
         "SYSTEM_TEAMPROJECT" = $Env:SYSTEM_TEAMPROJECT;
         "BUILD_BUILDID" = $Env:BUILD_BUILDID;
-        "SYSTEM_ACCESSTOKEN" = $Env:SYSTEM_ACCESSTOKEN
+        "ACCESSTOKEN" = $Env:ACCESSTOKEN
     }
 
     foreach ($key in $envVars.Keys) {
@@ -165,7 +165,7 @@ function Set-BuildTags {
     # the API that sets one tag at at time.
     # This is why people should write documentation, now I'm being  annoying with the tags
 
-    $headers = Get-AuthHeader -AccessToken  $Env:SYSTEM_ACCESSTOKEN
+    $headers = Get-AuthHeader -AccessToken  $Env:ACCESSTOKEN
 
     foreach ($t in $Tags) {
         $url = Get-TagsRestAPIUrl -Tag $t

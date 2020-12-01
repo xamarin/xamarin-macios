@@ -12,10 +12,10 @@ Describe 'Stop-Pipeline' {
                 "SYSTEM_TEAMFOUNDATIONCOLLECTIONURI" = "SYSTEM_TEAMFOUNDATIONCOLLECTIONURI";
                 "SYSTEM_TEAMPROJECT" = "SYSTEM_TEAMPROJECT";
                 "BUILD_BUILDID" = "BUILD_BUILDID";
-                "SYSTEM_ACCESSTOKEN" = "SYSTEM_ACCESSTOKEN"
+                "ACCESSTOKEN" = "ACCESSTOKEN"
             }
 
-            $envVariables.GetEnumerator() | ForEach-Object { 
+            $envVariables.GetEnumerator() | ForEach-Object {
                 $key = $_.Key
                 Set-Item -Path "Env:$key" -Value $_.Value
             }
@@ -34,8 +34,8 @@ Describe 'Stop-Pipeline' {
                 if ($Uri -ne $expectedUri) {
                     return $False
                 }
-                
-                if ($Headers.Authorization -ne ("Bearer {0}" -f $envVariables["SYSTEM_ACCESSTOKEN"])) {
+
+                if ($Headers.Authorization -ne ("Bearer {0}" -f $envVariables["ACCESSTOKEN"])) {
                     return $False
                 }
 
@@ -71,10 +71,10 @@ Describe 'Stop-Pipeline' {
                 "SYSTEM_TEAMFOUNDATIONCOLLECTIONURI" = "SYSTEM_TEAMFOUNDATIONCOLLECTIONURI";
                 "SYSTEM_TEAMPROJECT" = "SYSTEM_TEAMPROJECT";
                 "BUILD_BUILDID" = "BUILD_BUILDID";
-                "SYSTEM_ACCESSTOKEN" = "SYSTEM_ACCESSTOKEN" 
+                "ACCESSTOKEN" = "ACCESSTOKEN"
             }
 
-            $Script:envVariables.GetEnumerator() | ForEach-Object { 
+            $Script:envVariables.GetEnumerator() | ForEach-Object {
                 $key = $_.Key
                 Set-Item -Path "Env:$key" -Value $_.Value
                 Remove-Item -Path "Env:$key"
@@ -87,7 +87,7 @@ Describe 'Stop-Pipeline' {
             }
 
             { Stop-Pipeline } | Should -Throw
-            Assert-MockCalled -CommandName Invoke-RestMethod -Times 0 -Scope It 
+            Assert-MockCalled -CommandName Invoke-RestMethod -Times 0 -Scope It
         }
     }
 }
@@ -100,10 +100,10 @@ Describe 'Set-PipelineResult' {
                 "SYSTEM_TEAMFOUNDATIONCOLLECTIONURI" = "SYSTEM_TEAMFOUNDATIONCOLLECTIONURI";
                 "SYSTEM_TEAMPROJECT" = "SYSTEM_TEAMPROJECT";
                 "BUILD_BUILDID" = "BUILD_BUILDID";
-                "SYSTEM_ACCESSTOKEN" = "SYSTEM_ACCESSTOKEN"
+                "ACCESSTOKEN" = "ACCESSTOKEN"
             }
 
-            $envVariables.GetEnumerator() | ForEach-Object { 
+            $envVariables.GetEnumerator() | ForEach-Object {
                 $key = $_.Key
                 Set-Item -Path "Env:$key" -Value $_.Value
             }
@@ -122,8 +122,8 @@ Describe 'Set-PipelineResult' {
                 if ($Uri -ne $expectedUri) {
                     return $False
                 }
-                
-                if ($Headers.Authorization -ne ("Bearer {0}" -f $envVariables["SYSTEM_ACCESSTOKEN"])) {
+
+                if ($Headers.Authorization -ne ("Bearer {0}" -f $envVariables["ACCESSTOKEN"])) {
                     return $False
                 }
 
@@ -159,10 +159,10 @@ Describe 'Set-PipelineResult' {
                 "SYSTEM_TEAMFOUNDATIONCOLLECTIONURI" = "SYSTEM_TEAMFOUNDATIONCOLLECTIONURI";
                 "SYSTEM_TEAMPROJECT" = "SYSTEM_TEAMPROJECT";
                 "BUILD_BUILDID" = "BUILD_BUILDID";
-                "SYSTEM_ACCESSTOKEN" = "SYSTEM_ACCESSTOKEN" 
+                "ACCESSTOKEN" = "ACCESSTOKEN"
             }
 
-            $Script:envVariables.GetEnumerator() | ForEach-Object { 
+            $Script:envVariables.GetEnumerator() | ForEach-Object {
                 $key = $_.Key
                 Set-Item -Path "Env:$key" -Value $_.Value
                 Remove-Item -Path "Env:$key"
@@ -175,7 +175,7 @@ Describe 'Set-PipelineResult' {
             }
 
             { Set-PipelineResult "failed" } | Should -Throw
-            Assert-MockCalled -CommandName Invoke-RestMethod -Times 0 -Scope It 
+            Assert-MockCalled -CommandName Invoke-RestMethod -Times 0 -Scope It
         }
     }
 }
