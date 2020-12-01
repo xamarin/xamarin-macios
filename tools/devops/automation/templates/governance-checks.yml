@@ -8,6 +8,8 @@ steps:
   displayName: "Run CredScan"
   inputs:
     suppressionsFile: '$(System.DefaultWorkingDirectory)/maccore/tools/devops/CredScanSuppressions.json'
+    outputFormat: 'sarif'
+    verboseOutput: true
   
 - powershell: |
     Write-Host 'Source dir $(Build.SourcesDirectory)'
