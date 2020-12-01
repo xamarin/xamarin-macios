@@ -75,8 +75,7 @@ steps:
     Set-BuildTags -Tags $tags.ToArray()
   env:
     BUILD_REVISION: $(Build.SourceVersion)
-    CONTEXT: ${{ parameters.statusContext }}
     GITHUB_TOKEN: $(GitHub.Token)
-    SYSTEM_ACCESSTOKEN: $(DropsPAT)
+    SYSTEM_ACCESSTOKEN: $Env:SYSTEM_ACCESSTOKEN
   name: labels 
   displayName: 'Configure build'
