@@ -558,8 +558,10 @@ namespace Xamarin.Bundler {
 		{
 			sw.WriteLine ("#define MONOMAC 1");
 			sw.WriteLine ("#include <xamarin/xamarin.h>");
+#if !NET
 			if (App.Registrar == RegistrarMode.PartialStatic)
 				sw.WriteLine ("extern \"C\" void xamarin_create_classes_Xamarin_Mac ();");
+#endif
 			sw.WriteLine ();
 			sw.WriteLine ();
 			sw.WriteLine ();
@@ -585,11 +587,12 @@ namespace Xamarin.Bundler {
 				sw.WriteLine ("\txamarin_disable_omit_fp = true;");
 			sw.WriteLine ();
 
-
+#if !NET
 			if (App.Registrar == RegistrarMode.Static)
 				sw.WriteLine ("\txamarin_create_classes ();");
 			else if (App.Registrar == RegistrarMode.PartialStatic)
 				sw.WriteLine ("\txamarin_create_classes_Xamarin_Mac ();");
+#endif
 
 			if (App.EnableDebug)
 				sw.WriteLine ("\txamarin_debug_mode = TRUE;");
