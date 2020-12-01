@@ -2,9 +2,7 @@
 # the tags for the build AND will set a number of configuration
 # variables to be used by the rest of the projects
 steps:
-- checkout: self          # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
-  clean: true             # Executes: git clean -ffdx && git reset --hard HEAD
-  submodules: recursive
+- checkout: none          # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
 
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/tools/devops/automation/scripts/GitHub.psm1
