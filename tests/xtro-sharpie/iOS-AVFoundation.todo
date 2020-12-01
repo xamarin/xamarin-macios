@@ -1,7 +1,0 @@
-!missing-field! AVVideoAppleProRAWBitDepthKey not bound
-!missing-protocol-member! AVCapturePhotoFileDataRepresentationCustomizer::replacementAppleProRAWCompressionSettingsForPhoto:defaultSettings:maximumBitDepth: not found
-!missing-selector! +AVCapturePhotoOutput::isAppleProRAWPixelFormat: not bound
-!missing-selector! +AVCapturePhotoOutput::isBayerRAWPixelFormat: not bound
-!missing-selector! AVCapturePhotoOutput::isAppleProRAWEnabled not bound
-!missing-selector! AVCapturePhotoOutput::isAppleProRAWSupported not bound
-!missing-selector! AVCapturePhotoOutput::setAppleProRAWEnabled: not bound
