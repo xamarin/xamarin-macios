@@ -2,7 +2,9 @@
 # the tags for the build AND will set a number of configuration
 # variables to be used by the rest of the projects
 steps:
-- checkout: none          # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
+- checkout: self          # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
+  clean: true             # Executes: git clean -ffdx && git reset --hard HEAD
+  submodules: false
 
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/tools/devops/automation/scripts/GitHub.psm1
@@ -18,7 +20,7 @@ steps:
 
     # the following list will be used to track the tags and set them in VSTS to make the monitoring person life easier
     [System.Collections.Generic.List[string]]$tags = @()
-    
+
     if ($buildReason -eq "PullRequest" -or (($buildReason -eq "Manual") -and ($buildSourceBranchName -eq "merge")) ) {
       Write-Host "Configuring build from PR."
       # This is an interesting step, we do know we are dealing with a PR, but we need the PR id to
@@ -57,7 +59,7 @@ steps:
       )
 
       foreach ($l in $labelsOfInterest) {
-        $labelPresent = 1 -eq ($prInfo.labels | Where-Object { $_.name -eq "$l"}).Count 
+        $labelPresent = 1 -eq ($prInfo.labels | Where-Object { $_.name -eq "$l"}).Count
         Write-Host "##vso[task.setvariable variable=$l;isOutput=true]$labelPresent"
       }
 
@@ -67,7 +69,7 @@ steps:
       $tags.Add("$buildSourceBranchName")
       Write-Host "##vso[task.setvariable variable=prBuild;isOutput=true]False"
     }
-    # set the tags using the cmdlet 
+    # set the tags using the cmdlet
     $tagCount = $tags.Count
     Write-Host "Found '$tagsCount' tags"
     Set-BuildTags -Tags $tags.ToArray()
@@ -75,5 +77,5 @@ steps:
     BUILD_REVISION: $(Build.SourceVersion)
     GITHUB_TOKEN: $(GitHub.Token)
     SYSTEM_ACCESSTOKEN: $(DropsPAT)
-  name: labels 
+  name: labels
   displayName: 'Configure build'
