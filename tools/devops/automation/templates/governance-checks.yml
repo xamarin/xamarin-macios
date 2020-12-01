@@ -38,6 +38,11 @@ steps:
     CredScan: true
     PoliCheck: true
 
+- task: WhiteSource Bolt@20
+  displayName: "WhiteSource Bolt analysis"
+  inputs:
+    cwd: $(System.DefaultWorkingDirectory)
+
 - powershell: echo "##vso[task.setvariable variable=CHECKS_FAILED]True"
   condition: failed() # we failed running the tests, therefore stop the pipeline
 
