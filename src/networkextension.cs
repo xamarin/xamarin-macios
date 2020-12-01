@@ -195,6 +195,16 @@ namespace NetworkExtension {
 			set;
 		}
 
+		[Mac (11,0)][iOS (14,2)]
+		[Export ("remoteHostname")]
+		[NullAllowed]
+		string RemoteHostname { get; }
+
+		[Mac (11,1)]
+		[NoiOS] // macOS headers says 14.3 but it's not part of the iOS headers as of beta 1
+		[Export ("isBound")]
+		bool IsBound { get; }
+
 #if !XAMCORE_4_0
 		[Field ("NEAppProxyErrorDomain")]
 		NSString ErrorDomain { get; }
@@ -1247,10 +1257,14 @@ namespace NetworkExtension {
 		[Export ("includeAllNetworks")]
 		bool IncludeAllNetworks { get; set; }
 
-		[NoiOS]
+		[iOS (14,2)]
 		[Mac (10,15)]
 		[Export ("excludeLocalNetworks")]
 		bool ExcludeLocalNetworks { get; set; }
+
+		[Mac (11,0)][iOS (14,2)]
+		[Export ("enforceRoutes")]
+		bool EnforceRoutes { get; set; }
 	}
 
 	[iOS (8,0)][Mac (10,10)]
@@ -2277,4 +2291,10 @@ namespace NetworkExtension {
 		void DidReceiveIncomingCall (NEAppPushManager manager, NSDictionary userInfo);
 	}
 
+	[Mac (11,0)]
+	[NoiOS][NoTV][NoWatch]
+	[BaseType (typeof (NEAppProxyProvider))]
+	[DisableDefaultCtor] // `init` returns `nil`
+	interface NETransparentProxyProvider {
+	}
 }

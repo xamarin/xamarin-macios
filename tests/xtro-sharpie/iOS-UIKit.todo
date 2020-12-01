@@ -16,5 +16,3 @@
 !missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::snapshotForExpandingParentItemHandler not bound
 !missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::willCollapseItemHandler not bound
 !missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::willExpandItemHandler not bound
-!missing-enum-value! UIPressType native value UIPressTypePageDown = 8 not bound
-!missing-enum-value! UIPressType native value UIPressTypePageUp = 7 not bound

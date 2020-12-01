@@ -20,3 +20,6 @@
 
 # headers say it is present, but AVMetadataItemFilter is not
 !missing-selector! +AVMetadataItem::metadataItemsFromArray:filteredByMetadataItemFilter: not bound
+
+# The related keys are inside AVVideo which is not available in watchOS
+!missing-field! AVVideoAppleProRAWBitDepthKey not bound
