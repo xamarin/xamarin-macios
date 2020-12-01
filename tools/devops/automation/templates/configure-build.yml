@@ -76,6 +76,6 @@ steps:
   env:
     BUILD_REVISION: $(Build.SourceVersion)
     GITHUB_TOKEN: $(GitHub.Token)
-    SYSTEM_ACCESSTOKEN: $Env:SYSTEM_ACCESSTOKEN
+    SYSTEM_ACCESSTOKEN: $(DropsPAT)
   name: labels 
   displayName: 'Configure build'
