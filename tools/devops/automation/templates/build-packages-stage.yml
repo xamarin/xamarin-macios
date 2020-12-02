@@ -73,7 +73,7 @@ jobs:
     workspace:
       clean: all
   steps:
-  - template: upload-vsdrops.yml
+  - template: upload-azure.yml
 
 - job: upload_vsdrops
   displayName: 'Upload test results to VSDrops'
