@@ -52,6 +52,12 @@ $(BUILD_DIR)/generator-frameworks.g.cs: frameworks.sources Makefile.generator ge
 	$(Q) ./generate-frameworks.csharp $@.tmp '$(IOS_FRAMEWORKS)' '$(MAC_FRAMEWORKS)' '$(WATCHOS_FRAMEWORKS)' '$(TVOS_FRAMEWORKS)'
 	$(Q) mv $@.tmp $@
 
+# This rule means: generate a <platform>-defines.rsp for the frameworks in the variable <PLATFORM>_FRAMEWORKS
+$(BUILD_DIR)/%-defines.rsp: frameworks.sources Makefile.generator generate-defines.csharp
+	@mkdir -p $(dir $@)
+	$(Q) ./generate-defines.csharp $@.tmp '$($(shell echo $* | tr a-z A-Z)_FRAMEWORKS)'
+	$(Q) mv $@.tmp $@
+
 $(DOTNET_BUILD_DIR)/Xamarin.Apple.BindingAttributes.dll: generator-attributes.cs Makefile.generator | $(DOTNET_BUILD_DIR)
 	$(Q_DOTNET_BUILD) $(SYSTEM_CSC) $(DOTNET_FLAGS) -out:$@ $<
 

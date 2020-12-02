@@ -167,18 +167,24 @@ namespace Xamarin.Bundler {
 					LogNativeReference (metadata);
 					ProcessNativeReferenceOptions (metadata);
 
-					if (metadata.LibraryName.EndsWith (".framework", StringComparison.OrdinalIgnoreCase)) {
+					switch (Path.GetExtension (metadata.LibraryName).ToLowerInvariant ()) {
+					case ".framework":
 						AssertiOSVersionSupportsUserFrameworks (metadata.LibraryName);
 						Frameworks.Add (metadata.LibraryName);
 #if MMP // HACK - MMP currently doesn't respect Frameworks on non-App - https://github.com/xamarin/xamarin-macios/issues/5203
 						App.Frameworks.Add (metadata.LibraryName);
 #endif
-
-					} else {
+						break;
+					case ".xcframework":
+						// this is resolved, at msbuild time, into a framework
+						// but we must ignore it here (can't be the `default` case)
+						break;
+					default:
 #if MMP // HACK - MMP currently doesn't respect LinkWith - https://github.com/xamarin/xamarin-macios/issues/5203
 						Driver.native_references.Add (metadata.LibraryName);
 #endif
 						LinkWith.Add (metadata.LibraryName);
+						break;
 					}
 				}
 			}
@@ -267,12 +273,18 @@ namespace Xamarin.Bundler {
 				ProcessNativeReferenceOptions (metadata);
 
 				if (!string.IsNullOrEmpty (linkWith.LibraryName)) {
-					if (linkWith.LibraryName.EndsWith (".framework", StringComparison.OrdinalIgnoreCase)) {
+					switch (Path.GetExtension (linkWith.LibraryName).ToLowerInvariant ()) {
+					case ".framework":
 						AssertiOSVersionSupportsUserFrameworks (linkWith.LibraryName);
-
 						Frameworks.Add (ExtractFramework (assembly, metadata));
-					} else {
+						break;
+					case ".xcframework":
+						// this is resolved, at msbuild time, into a framework
+						// but we must ignore it here (can't be the `default` case)
+						break;
+					default:
 						LinkWith.Add (ExtractNativeLibrary (assembly, metadata));
+						break;
 					}
 				}
 			}

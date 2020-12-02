@@ -428,8 +428,12 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 	<Target Name="_CompileToNative" DependsOnTargets="$(_CompileToNativeDependsOn)"
 		Condition = "'$(IsAppDistribution)' != 'true' And '$(_UsingXamarinSdk)' != 'true'"
-		Inputs="@(_CompileToNativeInput);@(_FrameworkNativeReference);@(_FileNativeReference);@(BundleDependentFiles)"
+		Inputs="@(_CompileToNativeInput);@(_FileNativeReference);@(BundleDependentFiles)"
 		Outputs="$(_NativeExecutable);$(DeviceSpecificOutputPath)mtouch.stamp">
+
+		<ItemGroup>
+			<_FrameworkNativeReference Include="@(_FrameworkNativeReference -> '%(Identity)/%(Filename)')" Condition="'%(Extension)' == '.framework' Or '%(Extension)' == '.xcframework'" />
+		</ItemGroup>
 
 		<MTouch
 			SessionId="$(BuildSessionId)"
@@ -452,7 +456,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			LinkMode="$(_LinkMode)"
 			MainAssembly="$(TargetPath)"
 			MinimumOSVersion="$(_MinimumOSVersion)"
-			NativeReferences="@(NativeReference)"
+			NativeReferences="@(NativeReference);@(_FrameworkNativeReference);@(_FileNativeReference)"
 			OutputPath="$(DeviceSpecificOutputPath)"
 			Profiling="$(MtouchProfiling)"
 			ProjectDir="$(MtouchProjectDirectory)"
