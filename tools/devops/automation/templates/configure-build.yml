@@ -55,7 +55,9 @@ steps:
         "skip-external-tests",
         "trigger-device-tests",
         "run-sample-tests",
-        "skip-packaged-xamarin-mac-tests"
+        "skip-packaged-xamarin-mac-tests",
+        "skip-public-jenkins",
+        "skip-api-comparison"
       )
 
       foreach ($l in $labelsOfInterest) {
