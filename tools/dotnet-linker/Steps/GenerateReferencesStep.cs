@@ -10,8 +10,6 @@ using Xamarin.Linker;
 namespace Xamarin {
 
 	public class GenerateReferencesStep : ConfigurationAwareStep {
-		private Symbols required_symbols = new Symbols ();
-		
 		protected override string Name { get; } = "Generate References";
 		protected override int ErrorCode { get; } = 2320;
 
@@ -19,50 +17,32 @@ namespace Xamarin {
 		{
 			base.TryEndProcess ();
 
+			var app = Configuration.Application;
+			var required_symbols = Configuration.DerivedLinkContext.RequiredSymbols;
 			var items = new List<MSBuildItem> ();
-			var file = Path.Combine (Configuration.CacheDirectory, $"references.mm");
-			if (Configuration.Target.GenerateReferencingSource (file, required_symbols) != null) {
-				var item = new MSBuildItem { Include = file };
-				items.Add (item);
-			}
-			Configuration.WriteOutputForMSBuild ("_ReferencesFile", items);
-		}
-
-		protected override void TryProcessAssembly (AssemblyDefinition assembly)
-		{
-			base.TryProcessAssembly (assembly);
-
-			if (!assembly.MainModule.HasTypes)
-				return;
-
-			var hasSymbols = assembly.MainModule.HasModuleReferences || assembly.MainModule.HasTypeReference ("Foundation.FieldAttribute");
-			if (!hasSymbols)
-				return;
-
-			foreach (var type in assembly.MainModule.Types)
-				ProcessType (type);
-		}
-
-		void ProcessType (TypeDefinition type)
-		{
-			if (type.HasNestedTypes) {
-				foreach (var nested in type.NestedTypes)
-					ProcessType (nested);
-			}
-
-			if (type.HasMethods) {
-				foreach (var method in type.Methods)
-					ProcessMethod (method);
-			}
-		}
-
-		void ProcessMethod (MethodDefinition method)
-		{
-			if (method.IsPInvokeImpl && method.HasPInvokeInfo && method.PInvokeInfo != null) {
-				var pinfo = method.PInvokeInfo;
-				if (pinfo.Module.Name == "__Internal") {
-					required_symbols.AddFunction (pinfo.EntryPoint).AddMember (method);
+				
+			switch (app.SymbolMode) {
+			case SymbolMode.Ignore:
+				break;
+			case SymbolMode.Code:
+				string reference_m = Path.Combine (Configuration.CacheDirectory, "reference.m");
+				reference_m = Configuration.Target.GenerateReferencingSource (reference_m, required_symbols);
+				if (!string.IsNullOrEmpty (reference_m)) {
+					var item = new MSBuildItem { Include = reference_m };
+					items.Add (item);
 				}
+				Configuration.WriteOutputForMSBuild ("_ReferencesFile", items);
+				break;
+			case SymbolMode.Linker:
+			case SymbolMode.Default:
+				foreach (var symbol in required_symbols) {
+					var item = new MSBuildItem { Include = "-u" + symbol.Prefix + symbol.Name };
+					items.Add (item);
+				}
+				Configuration.WriteOutputForMSBuild ("_ReferencesLinkerFlags", items);
+				break;
+			default:
+				throw ErrorHelper.CreateError (99, Errors.MX0099, $"invalid symbol mode: {app.SymbolMode}");
 			}
 		}
 	}

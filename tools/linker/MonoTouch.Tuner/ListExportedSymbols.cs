@@ -10,18 +10,26 @@ using Xamarin.Bundler;
 using Xamarin.Linker;
 using Xamarin.Tuner;
 
-namespace MonoTouch.Tuner
+namespace Xamarin.Linker.Steps
 {
 	public class ListExportedSymbols : BaseStep
 	{
 		PInvokeWrapperGenerator state;
 		bool skip_sdk_assemblies;
 
+#if NET
+		public DerivedLinkContext DerivedLinkContext {
+			get {
+				return LinkerConfiguration.GetInstance (Context).DerivedLinkContext;
+			}
+		}
+#else
 		public DerivedLinkContext DerivedLinkContext {
 			get {
 				return (DerivedLinkContext) Context;
 			}
 		}
+#endif
 
 		internal ListExportedSymbols (PInvokeWrapperGenerator state, bool skip_sdk_assemblies = false)
 		{
@@ -36,8 +44,10 @@ namespace MonoTouch.Tuner
 			if (Annotations.GetAction (assembly) == AssemblyAction.Delete)
 				return;
 
+#if !NET
 			if (skip_sdk_assemblies && Profile.IsSdkAssembly (assembly))
 				return;
+#endif
 
 			if (!assembly.MainModule.HasTypes)
 				return;
