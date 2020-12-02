@@ -17,19 +17,15 @@ namespace Xamarin.Linker.Steps
 		PInvokeWrapperGenerator state;
 		bool skip_sdk_assemblies;
 
+		public DerivedLinkContext DerivedLinkContext {
+			get {
 #if NET
-		public DerivedLinkContext DerivedLinkContext {
-			get {
 				return LinkerConfiguration.GetInstance (Context).DerivedLinkContext;
-			}
-		}
 #else
-		public DerivedLinkContext DerivedLinkContext {
-			get {
 				return (DerivedLinkContext) Context;
+#endif
 			}
 		}
-#endif
 
 		internal ListExportedSymbols (PInvokeWrapperGenerator state, bool skip_sdk_assemblies = false)
 		{

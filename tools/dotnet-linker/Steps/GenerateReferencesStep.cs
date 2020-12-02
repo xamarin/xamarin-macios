@@ -34,7 +34,6 @@ namespace Xamarin {
 				Configuration.WriteOutputForMSBuild ("_ReferencesFile", items);
 				break;
 			case SymbolMode.Linker:
-			case SymbolMode.Default:
 				foreach (var symbol in required_symbols) {
 					var item = new MSBuildItem { Include = "-u" + symbol.Prefix + symbol.Name };
 					items.Add (item);
