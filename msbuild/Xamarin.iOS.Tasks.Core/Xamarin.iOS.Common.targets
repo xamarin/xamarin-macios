@@ -228,7 +228,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 	<Target Name="_CleanAppBundle" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_GenerateBundleName">
 		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(_AppBundlePath)" />
-		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="$(DeviceSpecificOutputPath)mtouch.stamp" />
+		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="$(DeviceSpecificOutputPath)bundler.stamp" />
 	</Target>
 
 	<Target Name="_CleanUploaded" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_ComputeTargetArchitectures">
@@ -412,24 +412,10 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</_CompileToNativeDependsOn>
 	</PropertyGroup>
 
-	<Target Name="_GetCompileToNativeInputs">
-		<ItemGroup>
-			<!-- Skip the reference assemblies. There is currently no scenario where it is valid to pass them to 'mtouch'. They are impossible to AOT. Fixes: https://github.com/xamarin/xamarin-macios/issues/3199 -->
-			<!-- Remove exact references, such as if a package had a framework reference to 'System' that we already have -->
-			<!-- This is exactly what "Microsoft.NuGet.Build.Tasks"'s 'ResolveNuGetPackageAssets' target is doing -->
-			<!-- Effectively 'ResolveNuGetPackageAssets' computes the NuGet packages using their json asset file, adds the full assemblies to 'ReferenceCopyLocalPaths' and outputs the resolved references via '_ReferencesFromNuGetPackages' -->
-			<!-- This requires nuget libraries to be copied locally, which by default only happens for executable projects, so we set 'CopyNuGetImplementations' to true for extensions (see comment in Xamarin.iOS.AppExtension.CSharp.targets for more info) -->
-			<ReferencePath Remove="@(_ReferencesFromNuGetPackages)" />
-			<MTouchReferencePath Include="@(ReferenceCopyLocalPaths)" Condition="'%(Extension)' == '.dll'" />
-			<_CompileToNativeInput Include="$(TargetDir)$(TargetFileName);@(ReferencePath);@(MTouchReferencePath)" />
-			<_CompileToNativeInput Condition="'@(_ResolvedAppExtensionReferences)' != ''" Include="%(_ResolvedAppExtensionReferences.Identity)\..\mtouch.stamp" />
-		</ItemGroup>
-	</Target>
-
 	<Target Name="_CompileToNative" DependsOnTargets="$(_CompileToNativeDependsOn)"
 		Condition = "'$(IsAppDistribution)' != 'true' And '$(_UsingXamarinSdk)' != 'true'"
 		Inputs="@(_CompileToNativeInput);@(_FileNativeReference);@(BundleDependentFiles)"
-		Outputs="$(_NativeExecutable);$(DeviceSpecificOutputPath)mtouch.stamp">
+		Outputs="$(_NativeExecutable);$(DeviceSpecificOutputPath)bundler.stamp">
 
 		<ItemGroup>
 			<_FrameworkNativeReference Include="@(_FrameworkNativeReference -> '%(Identity)/%(Filename)')" Condition="'%(Extension)' == '.framework' Or '%(Extension)' == '.xcframework'" />
@@ -460,7 +446,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			OutputPath="$(DeviceSpecificOutputPath)"
 			Profiling="$(MtouchProfiling)"
 			ProjectDir="$(MtouchProjectDirectory)"
-			References="@(ReferencePath);@(MTouchReferencePath)"
+			References="@(ReferencePath);@(_BundlerReferencePath)"
 			ResponseFilePath="$(DeviceSpecificIntermediateOutputPath)response-file.rsp"
 			SdkRoot="$(_SdkDevPath)"
 			SdkIsSimulator="$(_SdkIsSimulator)"
@@ -486,7 +472,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
 			AlwaysCreate="true"
-			Files="$(DeviceSpecificOutputPath)mtouch.stamp"
+			Files="$(DeviceSpecificOutputPath)bundler.stamp"
 			>
 			<Output TaskParameter="TouchedFiles" ItemName="FileWrites" />
 		</Touch>
