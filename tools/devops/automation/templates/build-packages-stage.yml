@@ -47,6 +47,8 @@ jobs:
     TriggerDeviceTests: $[ dependencies.configure.outputs['labels.trigger-device-tests'] ]
     RunSampleTests: $[ dependencies.configure.outputs['labels.run-sample-tests'] ]
     SkipPackagedXamarinMacTests: $[ dependencies.configure.outputs['labels.skip-packaged-xamarin-mac-tests'] ]
+    SkipPublicJenkins: $[ dependencies.configure.outputs['labels.skip-public-jenkins'] ]
+    SkipApiComparison: $[ dependencies.configure.outputs['labels.skip-api-comparison'] ]
   pool:
     name: $(AgentPoolComputed)
     demands:
