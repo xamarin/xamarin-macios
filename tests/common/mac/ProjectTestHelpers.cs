@@ -242,16 +242,6 @@ namespace Xamarin.MMP.Tests
 			RunAndAssert (Configuration.XIBuildPath, new [] { "--", csprojTarget, "/t:clean" }, "Clean", environment: Configuration.GetBuildEnvironment (ApplePlatform.MacOSX));
 		}
 
-		public static string BuildClassicProject (string csprojTarget)
-		{
-			// This is to force build to use our mmp and not system mmp
-			var buildArgs = new List<string> ();
-			buildArgs.Add ("build");
-			buildArgs.Add (csprojTarget);
-
-			return RunAndAssert ("/Applications/Visual Studio.app/Contents/MacOS/vstool", buildArgs, "Compile", shouldFail: true, environment: Configuration.GetBuildEnvironment (ApplePlatform.MacOSX));
-		}
-
 		public static string BuildProject (string csprojTarget, bool shouldFail = false, bool release = false, Dictionary<string, string> environment = null, IList<string> extraArgs = null)
 		{
 			Configuration.SetBuildVariables (ApplePlatform.MacOSX, ref environment);

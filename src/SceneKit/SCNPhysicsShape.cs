@@ -13,6 +13,8 @@ using System.Runtime.InteropServices;
 using ObjCRuntime;
 using Foundation;
 
+#nullable enable
+
 namespace SceneKit
 {
 	public partial class SCNPhysicsShape
@@ -20,10 +22,10 @@ namespace SceneKit
 		public static SCNPhysicsShape Create (SCNPhysicsShape [] shapes, SCNMatrix4 [] transforms)
 		{
 			if (shapes == null)
-				throw new ArgumentNullException ("shapes");
+				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (shapes));
 
 			if (transforms == null)
-				throw new ArgumentNullException ("transforms");
+				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (transforms));
 
 			var t = new NSValue [transforms.Length];
 			for (var i = 0; i < t.Length; i++)
@@ -37,10 +39,10 @@ namespace SceneKit
 		public static SCNPhysicsShape Create (SCNPhysicsShape [] shapes, SCNVector3 [] transforms)
 		{
 			if (shapes == null)
-				throw new ArgumentNullException ("shapes");
+				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (shapes));
 
 			if (transforms == null)
-				throw new ArgumentNullException ("transforms");
+				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (transforms));
 
 			var t = new NSValue [transforms.Length];
 			for (var i = 0; i < t.Length; i++)
@@ -62,9 +64,9 @@ namespace SceneKit
 			}.ToDictionary ());
 		}
 
-		public static SCNPhysicsShape Create (SCNGeometry geometry, SCNPhysicsShapeOptions options)
+		public static SCNPhysicsShape Create (SCNGeometry geometry, SCNPhysicsShapeOptions? options)
 		{
-			return Create (geometry, options.ToDictionary ());
+			return Create (geometry, options?.ToDictionary ());
 		}
 
 		public static SCNPhysicsShape Create (SCNNode node,
@@ -79,12 +81,12 @@ namespace SceneKit
 			}.ToDictionary ());
 		}
 
-		public static SCNPhysicsShape Create (SCNNode node, SCNPhysicsShapeOptions options)
+		public static SCNPhysicsShape Create (SCNNode node, SCNPhysicsShapeOptions? options)
 		{
-			return Create (node, options.ToDictionary ());
+			return Create (node, options?.ToDictionary ());
 		}
 
-		public SCNPhysicsShapeOptions Options {
+		public SCNPhysicsShapeOptions? Options {
 			get {
 				var o = _Options;
 				if (o == null)
@@ -132,7 +134,7 @@ namespace SceneKit
 				Scale = nret.Vector3Value;
 		}
 		
-		public NSDictionary ToDictionary ()
+		public NSDictionary? ToDictionary ()
 		{
 			var n = 0;
 			if (ShapeType.HasValue) n++;

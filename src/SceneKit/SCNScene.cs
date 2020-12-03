@@ -11,6 +11,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
+#nullable enable
+
 namespace SceneKit
 {
 	public partial class SCNScene : IEnumerable<SCNNode>

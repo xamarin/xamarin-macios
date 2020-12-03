@@ -16,6 +16,8 @@ using CoreAnimation;
 #endif
 using Foundation;
 
+#nullable enable
+
 namespace SceneKit
 {
 	public partial class SCNNode : IEnumerable, IEnumerable<SCNNode>
@@ -45,10 +47,10 @@ namespace SceneKit
 		}
 
 #if !WATCH
-		public void AddAnimation (CAAnimation animation, string key)
+		public void AddAnimation (CAAnimation animation, string? key)
 		{
 			if (key == null) {
-				((ISCNAnimatable) this).AddAnimation (animation, (NSString)null);
+				((ISCNAnimatable) this).AddAnimation (animation, (NSString?) null);
 			} else {
 				using (var s = new NSString (key))
 					((ISCNAnimatable) this).AddAnimation (animation, s);
@@ -58,7 +60,7 @@ namespace SceneKit
 		public void RemoveAnimation (string key, nfloat duration)
 		{
 			if (string.IsNullOrEmpty (key))
-				throw new ArgumentException ("key");
+				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (key));
 
 			using (var s = new NSString (key))
 				((ISCNAnimatable)this).RemoveAnimation (s, duration);
@@ -67,28 +69,25 @@ namespace SceneKit
 		public void RemoveAnimation (string key)
 		{
 			if (string.IsNullOrEmpty (key))
-				throw new ArgumentException ("key");
+				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (key));
 
 			using (var s = new NSString (key))
 				((ISCNAnimatable)this).RemoveAnimation (s);
 		}
 
-		public CAAnimation GetAnimation (string key)
+		public CAAnimation? GetAnimation (string key)
 		{
 			if (string.IsNullOrEmpty (key))
-				throw new ArgumentException ("key");
+				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (key));
 
-			CAAnimation animation = null;
 			using (var s = new NSString (key))
-				animation = ((ISCNAnimatable)this).GetAnimation (s);
-
-			return animation;
+				return ((ISCNAnimatable)this).GetAnimation (s);
 		}
 
 		public void PauseAnimation (string key)
 		{
 			if (string.IsNullOrEmpty (key))
-				throw new ArgumentException ("key");
+				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (key));
 
 			using (var s = new NSString (key))
 				((ISCNAnimatable)this).PauseAnimation (s);
@@ -97,7 +96,7 @@ namespace SceneKit
 		public void ResumeAnimation (string key)
 		{
 			if (string.IsNullOrEmpty (key))
-				throw new ArgumentException ("key");
+				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (key));
 
 			using (var s = new NSString (key))
 				((ISCNAnimatable)this).ResumeAnimation (s);
@@ -106,7 +105,7 @@ namespace SceneKit
 		public bool IsAnimationPaused (string key)
 		{
 			if (string.IsNullOrEmpty (key))
-				throw new ArgumentException ("key");
+				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (key));
 
 			bool isPaused;
 

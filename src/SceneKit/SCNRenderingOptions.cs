@@ -3,6 +3,8 @@
 using System;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace SceneKit
 {
 	[iOS (9,0)][Mac (10,11)]

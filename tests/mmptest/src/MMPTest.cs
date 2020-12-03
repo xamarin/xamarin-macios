@@ -627,20 +627,6 @@ namespace Xamarin.MMP.Tests
 		}
 
 		[Test]
-		[Ignore ("https://github.com/xamarin/xamarin-macios/issues/8939")]
-		public void MM0143 ()
-		{
-			MMPTests.RunMMPTest (tmpDir => {
-				string csprojTarget = Path.Combine (TI.FindSourceDirectory (), "ClassicExample.csproj");
-				string buildOutput = TI.BuildClassicProject (csprojTarget);
-				Console.WriteLine (buildOutput);
-				var rv = new OutputText (buildOutput, string.Empty);
-				rv.Messages.AssertError (143, "Projects using the Classic API are not supported anymore. Please migrate the project to the Unified API.");
-				rv.Messages.AssertWarningCount (0);
-			});
-		}
-
-		[Test]
 		public void MM0144 ()
 		{
 			RunMMPTest (tmpDir => {

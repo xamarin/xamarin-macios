@@ -72,6 +72,7 @@ steps:
     Get-ChildItem env:
   displayName: 'Dump Environment'
   timeoutInMinutes: 1
+  continueOnError: true
 
 # Uses the powershell cmdlet to remove known directories that are not needed and use space.
 # we might hit issue https://github.com/PowerShell/PowerShell/issues/9246, so we always do exit 0

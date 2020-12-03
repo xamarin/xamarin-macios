@@ -195,19 +195,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		<_AppBundleManifestRelativePath>Contents/</_AppBundleManifestRelativePath>
 	</PropertyGroup>
 
-	<Target Name="_GetCompileToNativeInputs"
-		DependsOnTargets="ResolveReferences">
-		<ItemGroup>
-			<!-- Skip the reference assemblies. 'mmp' will fail to AOT them if passed 'aot:all'. Similar to: https://github.com/xamarin/xamarin-macios/issues/3199 -->
-			<!-- Remove exact references, such as if a package had a framework reference to 'System' that we already have -->
-			<!-- This is exactly what "Microsoft.NuGet.Build.Tasks"'s 'ResolveNuGetPackageAssets' target is doing -->
-			<!-- Effectively 'ResolveNuGetPackageAssets' computes the NuGet packages using their json asset file, adds the full assemblies to 'ReferenceCopyLocalPaths' and outputs the resolved references via '_ReferencesFromNuGetPackages' -->
-			<ReferencePath Remove="@(_ReferencesFromNuGetPackages)" />
-			<MmpReferencePath Include="@(ReferenceCopyLocalPaths)" Condition="'%(Extension)' == '.dll'" />
-			<_CompileToNativeInput Include="$(TargetDir)$(TargetFileName);@(MmpReferencePath)" />
-		</ItemGroup>
-	</Target>
-
 	<PropertyGroup>
 		<CompileToNativeDependsOn>
 			_ComputeLinkMode;
@@ -227,7 +214,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 	<Target Name="_CompileToNative" DependsOnTargets="$(CompileToNativeDependsOn)"
 		Condition = "'$(_UsingXamarinSdk)' != 'true'"
 		Inputs="@(_CompileToNativeInput);@(_FileNativeReference);@(BundleDependentFiles)"
-		Outputs="$(_AppBundlePath)Contents\MacOS\$(_AppBundleName)">
+		Outputs="$(_AppBundlePath)Contents\MacOS\$(_AppBundleName);$(DeviceSpecificOutputPath)bundler.stamp">
 
 		<ItemGroup>
 			<_FrameworkNativeReference Include="@(_FrameworkNativeReference -> '%(Identity)/%(Filename)')" Condition="'%(Extension)' == '.framework' Or '%(Extension)' == '.xcframework'" />
@@ -252,7 +239,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			Profiling="$(Profiling)"
 			ExtraArgs="$(_BundlerArguments)"
 			NativeReferences="@(NativeReference);@(_FrameworkNativeReference);@(_FileNativeReference)"
-			References="@(ReferencePath);@(MmpReferencePath)"
+			References="@(ReferencePath);@(_BundlerReferencePath)"
 			ResponseFilePath="$(IntermediateOutputPath)response-file.rsp"
 			SdkRoot="$(_SdkDevPath)"
 			IntermediateOutputPath="$(IntermediateOutputPath)mmp-cache"
@@ -267,6 +254,15 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			XamarinSdkRoot="$(_XamarinSdkRoot)"
 			>
 		</Mmp>
+
+		<Touch
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			AlwaysCreate="true"
+			Files="$(DeviceSpecificOutputPath)bundler.stamp"
+			>
+			<Output TaskParameter="TouchedFiles" ItemName="FileWrites" />
+		</Touch>
 	</Target>
 
 	<Target Name="_CompileImageAssets" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_BeforeCoreCompileImageAssets;_ReadCompileImageAssets;_CoreCompileImageAssets" />
