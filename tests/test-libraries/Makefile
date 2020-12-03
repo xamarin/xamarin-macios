@@ -124,7 +124,7 @@ $(eval $(call Template,tvsimulator,TVSIMULATOR,x86_64,AppleTVSimulator,-mtvos-si
 $(eval $(call Template,tvos,TVOS,arm64,AppleTVOS,-mtvos-version-min=9.0 -fembed-bitcode,TVOS))
 endif
 ifdef INCLUDE_WATCH
-$(eval $(call Template,watchsimulator,WATCHSIMULATOR,x86,WatchSimulator,-mwatchos-simulator-version-min=2.0,WATCHOS))
+$(eval $(call Template,watchsimulator,WATCHSIMULATOR,x86 x86_64,WatchSimulator,-mwatchos-simulator-version-min=2.0,WATCHOS))
 $(eval $(call Template,watchos,WATCHOS,armv7k arm64_32,WatchOS,-mwatchos-version-min=2.0 -fembed-bitcode,WATCHOS))
 endif
 ifdef INCLUDE_MAC
