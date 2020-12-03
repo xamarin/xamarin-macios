@@ -8,7 +8,7 @@
 //
 //
 
-#if !WATCH
+#if HAS_OPENGLES
 
 using System;
 using System.Runtime.InteropServices;

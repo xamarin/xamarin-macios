@@ -145,11 +145,12 @@ $(IOS_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in
 	$(call Q_PROF_GEN,ios) sed < $< > $@ 's|@PRODUCT_NAME@|$(IOS_PRODUCT)|g; s|@PACKAGE_HEAD_REV@|$(PACKAGE_HEAD_REV)|g; s|@PACKAGE_HEAD_BRANCH@|$(CURRENT_BRANCH_SED_ESCAPED)|g; s|@PACKAGE_VERSION_MAJOR@|$(IOS_PACKAGE_VERSION_MAJOR)|g; s|@PACKAGE_VERSION_MINOR@|$(IOS_PACKAGE_VERSION_MINOR)|g; s|@PACKAGE_VERSION_REV@|$(IOS_PACKAGE_VERSION_REV)|g; s|@PACKAGE_VERSION_BUILD@|$(IOS_PACKAGE_VERSION_BUILD)|g'
 
 # core.dll
-$(IOS_BUILD_DIR)/native/core.dll: $(IOS_CORE_SOURCES) frameworks.sources
+$(IOS_BUILD_DIR)/native/core.dll: $(IOS_CORE_SOURCES) frameworks.sources $(BUILD_DIR)/ios-defines.rsp
 	$(Q) mkdir -p $(IOS_BUILD_DIR)native
 	$(call Q_PROF_CSC,ios) $(IOS_CSC) -nologo -out:$@ -target:library -debug -unsafe \
 		-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
 		-define:COREBUILD $(IOS_DEFINES) \
+		@$(BUILD_DIR)/ios-defines.rsp \
 		$(IOS_CORE_SOURCES)
 
 # generated_sources
@@ -183,6 +184,7 @@ $(BUILD_DIR)/ios.rsp: Makefile Makefile.generator frameworks.sources
 		--ns=ObjCRuntime \
 		--target-framework=Xamarin.iOS,v1.0 \
 		$(IOS_APIS) \
+		@$(BUILD_DIR)/ios-defines.rsp \
 		> $@
 
 $(IOS_DOTNET_BUILD_DIR)/ios.rsp: Makefile Makefile.generator frameworks.sources $(DOTNET_COMPILER) | $(IOS_DOTNET_BUILD_DIR)
@@ -195,6 +197,7 @@ $(IOS_DOTNET_BUILD_DIR)/ios.rsp: Makefile Makefile.generator frameworks.sources 
 		-baselib=$(IOS_DOTNET_BUILD_DIR)/core-ios.dll \
 		--target-framework=.NETCoreApp,Version=6.0,Profile=ios \
 		$(IOS_APIS) \
+		@$(BUILD_DIR)/ios-defines.rsp \
 		> $@
 
 define IOS_TARGETS_template
@@ -208,6 +211,7 @@ $(IOS_BUILD_DIR)/native-$(1)%Xamarin.iOS.dll $(IOS_BUILD_DIR)/native-$(1)%Xamari
 		-nowarn:219,618,114,414,1635,3021,$$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
 		-warnaserror:$(NULLABILITY_WARNINGS) \
 		$$(IOS_CSC_FLAGS_XI) \
+		@$(BUILD_DIR)/ios-defines.rsp \
 		$$(IOS_SOURCES) @$(IOS_BUILD_DIR)/native/generated_sources
 
 $(IOS_DOTNET_BUILD_DIR)/$(1)/Xamarin.iOS%dll $(IOS_DOTNET_BUILD_DIR)/$(1)/Xamarin.iOS%pdb $(2): $$(IOS_SOURCES) $$(IOS_DOTNET_BUILD_DIR)/ios-generated-sources $(PRODUCT_KEY_PATH) | $(IOS_DOTNET_BUILD_DIR)/$(1) $(IOS_DOTNET_BUILD_DIR)/ref
@@ -219,6 +223,7 @@ $(IOS_DOTNET_BUILD_DIR)/$(1)/Xamarin.iOS%dll $(IOS_DOTNET_BUILD_DIR)/$(1)/Xamari
 		$$(IOS_native_DEFINES) \
 		$$(IOS_CORE_WARNINGS_TO_FIX) \
 		$$(IOS_CSC_FLAGS_XI) \
+		@$(BUILD_DIR)/ios-defines.rsp \
 		$$(IOS_SOURCES) @$(IOS_DOTNET_BUILD_DIR)/ios-generated-sources
 
 endef
@@ -480,10 +485,11 @@ MAC_GENERATOR=$(BUILD_DIR)/common/bgen.exe
 MAC_GENERATE=$(SYSTEM_MONO) --debug $(MAC_GENERATOR)
 
 define MAC_GENERATOR_template
-$(MAC_BUILD_DIR)/$(1)/core.dll: $(MAC_CORE_SOURCES) frameworks.sources
+$(MAC_BUILD_DIR)/$(1)/core.dll: $(MAC_CORE_SOURCES) frameworks.sources $(BUILD_DIR)/mac-defines.rsp
 	@mkdir -p $(MAC_BUILD_DIR)/$(1)
 	$$(call Q_PROF_CSC,mac/$(1)) \
 		$$(MAC_$(1)_CSC) -nologo -out:$$@ -target:library -debug -unsafe -nowarn:3021,612,618,1635 \
+		@$(BUILD_DIR)/mac-defines.rsp \
 		$$(MAC_BOOTSTRAP_DEFINES) \
 		$(2) \
 		$$(MAC_CORE_SOURCES)
@@ -509,6 +515,7 @@ $(BUILD_DIR)/mac-$(1).rsp: Makefile Makefile.generator frameworks.sources
 		$(2) \
 		$(xm_$(1)_profile) \
 		$(MAC_APIS) \
+		@$(BUILD_DIR)/mac-defines.rsp \
 		> $$@
 endef
 
@@ -531,6 +538,7 @@ $(MAC_BUILD_DIR)/$(1)-64/Xamarin.Mac%dll $(MAC_BUILD_DIR)/$(1)-64/Xamarin.Mac%pd
 		$(MAC_CFNETWORK_SOURCES) $(MAC_HTTP_SOURCES) \
 		$(2) \
 		$$(MAC_SOURCES) \
+		@$(BUILD_DIR)/mac-defines.rsp \
 		@$$<
 
 endef
@@ -572,6 +580,7 @@ $(MACOS_DOTNET_BUILD_DIR)/macos.rsp: Makefile Makefile.generator frameworks.sour
 		-baselib:$(MACOS_DOTNET_BUILD_DIR)/core-macos.dll \
 		--target-framework=.NETCoreApp,Version=6.0,Profile=macos \
 		$(MAC_APIS) \
+		@$(BUILD_DIR)/mac-defines.rsp \
 		> $@
 
 $(MACOS_DOTNET_BUILD_DIR)/64/Xamarin.Mac%dll $(MACOS_DOTNET_BUILD_DIR)/64/Xamarin.Mac%pdb $(MACOS_DOTNET_BUILD_DIR)/ref/Xamarin.Mac%dll: $(MACOS_DOTNET_BUILD_DIR)/macos-generated-sources $(MAC_SOURCES) $(MAC_CFNETWORK_SOURCES) $(SN_KEY) | $(MACOS_DOTNET_BUILD_DIR)/64 $(MACOS_DOTNET_BUILD_DIR)/ref
@@ -585,6 +594,7 @@ $(MACOS_DOTNET_BUILD_DIR)/64/Xamarin.Mac%dll $(MACOS_DOTNET_BUILD_DIR)/64/Xamari
 		$(MAC_CSC_FLAGS_XM) \
 		$(MAC_CFNETWORK_SOURCES) $(MAC_HTTP_SOURCES) $(SHARED_SYSTEM_DRAWING_SOURCES) $(APPLETLS_DEFINES) -D:XAMARIN_MODERN \
 		$(MAC_SOURCES) \
+		@$(BUILD_DIR)/mac-defines.rsp \
 		@$<
 
 DOTNET_TARGETS += \
@@ -752,12 +762,13 @@ $(WATCH_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in $(TOP)/Make.co
 	$(Q) rm -f $@.tmp
 	$(Q) touch $@
 
-$(WATCH_BUILD_DIR)/watch/core.dll: $(WATCHOS_CORE_SOURCES) frameworks.sources | $(WATCH_BUILD_DIR)/watch
+$(WATCH_BUILD_DIR)/watch/core.dll: $(WATCHOS_CORE_SOURCES) frameworks.sources $(BUILD_DIR)/watchos-defines.rsp | $(WATCH_BUILD_DIR)/watch
 	@mkdir -p $(WATCH_BUILD_DIR)/watch
 	$(call Q_PROF_CSC,watch) $(WATCH_CSC) -nologo -out:$@ -target:library -debug -unsafe \
 		-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
 		-define:COREBUILD    \
 		$(WATCH_DEFINES)     \
+		@$(BUILD_DIR)/watchos-defines.rsp \
 		$(WATCHOS_CORE_SOURCES)
 
 # generated_sources
@@ -781,6 +792,7 @@ $(BUILD_DIR)/watchos.rsp: Makefile Makefile.generator frameworks.sources
 		--ns:ObjCRuntime                                         \
 		$(WATCHOS_APIS)                                            \
 		--target-framework=Xamarin.WatchOS,v1.0                     \
+		@$(BUILD_DIR)/watchos-defines.rsp                        \
 		> $@
 
 ### .NET ###
@@ -789,6 +801,7 @@ $(WATCHOS_DOTNET_BUILD_DIR)/core-watchos.dll: $(WATCHOS_CORE_SOURCES) frameworks
 	$(Q_DOTNET_GEN) \
 		$(SYSTEM_CSC) $(DOTNET_FLAGS) \
 		$(WATCHOS_CORE_WARNINGS_TO_FIX) \
+		@$(BUILD_DIR)/watchos-defines.rsp \
 		$(WATCHOS_CORE_DEFINES) \
 		$(WATCHOS_CORE_SOURCES) \
 		-out:$@ \
@@ -806,6 +819,7 @@ $(WATCHOS_DOTNET_BUILD_DIR)/watchos.rsp: Makefile Makefile.generator frameworks.
 		-baselib=$(WATCHOS_DOTNET_BUILD_DIR)/core-watchos.dll \
 		--target-framework=.NETCoreApp,Version=6.0,Profile=watchos \
 		$(WATCHOS_APIS) \
+		@$(BUILD_DIR)/watchos-defines.rsp \
 		> $@
 
 $(WATCHOS_DOTNET_BUILD_DIR)/32/Xamarin.WatchOS%dll $(WATCHOS_DOTNET_BUILD_DIR)/32/Xamarin.WatchOS%pdb: $(WATCHOS_DOTNET_BUILD_DIR)/watchos-generated-sources $(WATCHOS_SOURCES) $(PRODUCT_KEY_PATH) | $(WATCHOS_DOTNET_BUILD_DIR)/32 $(WATCHOS_DOTNET_BUILD_DIR)/ref
@@ -818,6 +832,7 @@ $(WATCHOS_DOTNET_BUILD_DIR)/32/Xamarin.WatchOS%dll $(WATCHOS_DOTNET_BUILD_DIR)/3
 		-warnaserror:$(NULLABILITY_WARNINGS) \
 		$(IOS_CSC_FLAGS_XI) \
 		$(WATCHOS_SOURCES) \
+		@$(BUILD_DIR)/watchos-defines.rsp \
 		@$<
 
 $(WATCHOS_DOTNET_BUILD_DIR)/64/Xamarin.WatchOS%dll $(WATCHOS_DOTNET_BUILD_DIR)/64/Xamarin.WatchOS%pdb $(WATCHOS_DOTNET_BUILD_DIR)/ref/Xamarin.WatchOS%dll: $(WATCHOS_DOTNET_BUILD_DIR)/watchos-generated-sources $(WATCHOS_SOURCES) $(PRODUCT_KEY_PATH) | $(WATCHOS_DOTNET_BUILD_DIR)/64 $(WATCHOS_DOTNET_BUILD_DIR)/ref
@@ -831,6 +846,7 @@ $(WATCHOS_DOTNET_BUILD_DIR)/64/Xamarin.WatchOS%dll $(WATCHOS_DOTNET_BUILD_DIR)/6
 		-warnaserror:$(NULLABILITY_WARNINGS) \
 		$(IOS_CSC_FLAGS_XI) \
 		$(WATCHOS_SOURCES) \
+		@$(BUILD_DIR)/watchos-defines.rsp \
 		@$<
 
 $(WATCH_BUILD_DIR)/watch-32/Xamarin.WatchOS%dll $(WATCH_BUILD_DIR)/watch-32/Xamarin.WatchOS%pdb: $(WATCHOS_SOURCES) $(WATCH_BUILD_DIR)/watch/generated_sources $(PRODUCT_KEY_PATH) | $(WATCH_BUILD_DIR)/watch-32
@@ -839,6 +855,7 @@ $(WATCH_BUILD_DIR)/watch-32/Xamarin.WatchOS%dll $(WATCH_BUILD_DIR)/watch-32/Xama
 		-deterministic \
 		$(ARGS_32) \
 		-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
+		@$(BUILD_DIR)/watchos-defines.rsp \
 		$(WATCHOS_SOURCES) @$(WATCH_BUILD_DIR)/watch/generated_sources
 
 $(WATCH_BUILD_DIR)/watch-64/Xamarin.WatchOS%dll $(WATCH_BUILD_DIR)/watch-64/Xamarin.WatchOS%pdb: $(WATCHOS_SOURCES) $(WATCH_BUILD_DIR)/watch/generated_sources $(PRODUCT_KEY_PATH) | $(WATCH_BUILD_DIR)/watch-64
@@ -847,6 +864,7 @@ $(WATCH_BUILD_DIR)/watch-64/Xamarin.WatchOS%dll $(WATCH_BUILD_DIR)/watch-64/Xama
 		-deterministic \
 		$(ARGS_64) \
 		-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
+		@$(BUILD_DIR)/watchos-defines.rsp \
 		$(WATCHOS_SOURCES) @$(WATCH_BUILD_DIR)/watch/generated_sources
 
 $(WATCH_BUILD_DIR)/reference/Xamarin.WatchOS.dll: $(WATCH_BUILD_DIR)/watch-32/Xamarin.WatchOS.dll | $(WATCH_BUILD_DIR)/reference
@@ -1023,12 +1041,13 @@ $(TVOS_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in $(TOP)/Make.con
 	$(Q) touch $@
 
 
-$(TVOS_BUILD_DIR)/tvos/core.dll: $(TVOS_CORE_SOURCES) frameworks.sources Makefile | $(TVOS_BUILD_DIR)/tvos
+$(TVOS_BUILD_DIR)/tvos/core.dll: $(TVOS_CORE_SOURCES) frameworks.sources Makefile $(BUILD_DIR)/tvos-defines.rsp | $(TVOS_BUILD_DIR)/tvos
 	@mkdir -p $(TVOS_BUILD_DIR)/tvos
 	$(call Q_PROF_CSC,tvos) $(TV_CSC) -nologo -out:$@ -target:library -debug -unsafe \
 		-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
 		-define:COREBUILD    \
 		$(TVOS_DEFINES)     \
+		@$(BUILD_DIR)/tvos-defines.rsp \
 		$(TVOS_CORE_SOURCES)
 
 # generated_sources
@@ -1052,6 +1071,7 @@ $(BUILD_DIR)/tvos.rsp: Makefile Makefile.generator frameworks.sources
 		--ns:ObjCRuntime                                         \
 		$(TVOS_APIS)                                            \
 		--target-framework=Xamarin.TVOS,v1.0                     \
+		@$(BUILD_DIR)/tvos-defines.rsp                           \
 		> $@
 
 ### .NET ###
@@ -1060,6 +1080,7 @@ $(TVOS_DOTNET_BUILD_DIR)/core-tvos.dll: $(TVOS_CORE_SOURCES) frameworks.sources 
 	$(Q_DOTNET_GEN) \
 		$(SYSTEM_CSC) $(DOTNET_FLAGS) \
 		$(TVOS_CORE_WARNINGS_TO_FIX) \
+		@$(BUILD_DIR)/tvos-defines.rsp \
 		$(TVOS_CORE_DEFINES) \
 		$(TVOS_CORE_SOURCES) \
 		-out:$@ \
@@ -1077,6 +1098,7 @@ $(TVOS_DOTNET_BUILD_DIR)/tvos.rsp: Makefile Makefile.generator frameworks.source
 		-baselib=$(TVOS_DOTNET_BUILD_DIR)/core-tvos.dll \
 		--target-framework=.NETCoreApp,Version=6.0,Profile=tvos \
 		$(TVOS_APIS) \
+		@$(BUILD_DIR)/tvos-defines.rsp \
 		> $@
 
 $(TVOS_DOTNET_BUILD_DIR)/64/Xamarin.TVOS%dll $(TVOS_DOTNET_BUILD_DIR)/64/Xamarin.TVOS%pdb $(TVOS_DOTNET_BUILD_DIR)/ref/Xamarin.TVOS%dll: $(TVOS_DOTNET_BUILD_DIR)/tvos-generated-sources $(TVOS_SOURCES) $(PRODUCT_KEY_PATH) | $(TVOS_DOTNET_BUILD_DIR)/64 $(TVOS_DOTNET_BUILD_DIR)/ref
@@ -1090,6 +1112,7 @@ $(TVOS_DOTNET_BUILD_DIR)/64/Xamarin.TVOS%dll $(TVOS_DOTNET_BUILD_DIR)/64/Xamarin
 		-warnaserror:$(NULLABILITY_WARNINGS) \
 		$(IOS_CSC_FLAGS_XI) \
 		$(TVOS_SOURCES) \
+		@$(BUILD_DIR)/tvos-defines.rsp \
 		@$<
 
 $(TVOS_BUILD_DIR)/tvos-64/Xamarin.TVOS%dll $(TVOS_BUILD_DIR)/tvos-64/Xamarin.TVOS%pdb: $(TVOS_SOURCES) $(TVOS_BUILD_DIR)/tvos/generated_sources $(PRODUCT_KEY_PATH) | $(TVOS_BUILD_DIR)/tvos-64
@@ -1098,6 +1121,7 @@ $(TVOS_BUILD_DIR)/tvos-64/Xamarin.TVOS%dll $(TVOS_BUILD_DIR)/tvos-64/Xamarin.TVO
 		-deterministic \
 		$(ARGS_64) \
 		-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
+		@$(BUILD_DIR)/tvos-defines.rsp \
 		$(TVOS_SOURCES) @$(TVOS_BUILD_DIR)/tvos/generated_sources
 
 $(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.dll: $(TVOS_BUILD_DIR)/tvos-64/Xamarin.TVOS.dll | $(TVOS_BUILD_DIR)/reference
