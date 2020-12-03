@@ -41,6 +41,8 @@ using System.Runtime.InteropServices;
 using System.ComponentModel;
 using System.Xml.Serialization;
 
+#nullable enable
+
 namespace SceneKit
 {
     /// <summary>
@@ -656,7 +658,7 @@ namespace SceneKit
         /// </summary>
         /// <param name="other">The other object to be used in the comparison.</param>
         /// <returns>True if both objects are Quaternions of equal value. Otherwise it returns false.</returns>
-        public override bool Equals(object other)
+        public override bool Equals (object? other)
         {
             if (other is SCNQuaternion == false) return false;
                return this == (SCNQuaternion)other;
