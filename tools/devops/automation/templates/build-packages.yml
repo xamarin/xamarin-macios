@@ -189,7 +189,7 @@ steps:
     ./configure $CONFIGURE_FLAGS
     echo $(cat $(Build.SourcesDirectory)/xamarin-macios/configure.inc)
   env:
-    IsPR: variables['configuration.IsPR']
+    IsPR: $(configuration.IsPR)
   displayName: "Configure build"
   timeoutInMinutes: 5
 
