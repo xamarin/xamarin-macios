@@ -63,15 +63,6 @@ pr:
     - d16-*
 
 stages:
-- stage: configure
-  displayName: 'Configure'
-  jobs:
-  - job: pipeline_configuration
-    pool:
-      vmImage: ubuntu-latest
-
-    steps:
-    - template: templates/configure-build.yml
 
 - stage: governance_checks
   displayName: 'Governance Checks'
