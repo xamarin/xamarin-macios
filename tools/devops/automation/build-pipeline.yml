@@ -53,7 +53,7 @@ variables:
 
 trigger: none
 
-# UNDONE: Trigger test: PR WebHook
+# UNDONE: Trigger test: PR WebHook & vsmobiletoolsengineeringsvc2
 pr:
   autoCancel: true
   branches:
