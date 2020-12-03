@@ -136,6 +136,7 @@ steps:
   displayName: 'Add provisioning profiles'
   env:
     LOGIN_KEYCHAIN_PASSWORD: $(OSX_KEYCHAIN_PASS)
+  timeoutInMinutes: 30
 
 # Executed ONLY when the profisioning profiles step failed. At this point, we do know that 
 # we cannot run the tests, therefore:
