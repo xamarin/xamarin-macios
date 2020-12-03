@@ -13,11 +13,13 @@ using System.Collections.Generic;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace SceneKit
 {
 	public partial class SCNSceneSource {
 
-		public NSObject GetEntryWithIdentifier<T> (string uid)
+		public NSObject? GetEntryWithIdentifier<T> (string uid)
 		{
 			return GetEntryWithIdentifier (uid, new Class (typeof (T)));
 		}

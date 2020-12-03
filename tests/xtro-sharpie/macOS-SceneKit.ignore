@@ -8,20 +8,3 @@
 !missing-selector! SCNProgram::tessellationEvaluationShader not bound
 !missing-selector! SCNText::chamferSegmentCount not bound
 !missing-selector! SCNText::setChamferSegmentCount: not bound
-
-# Initial result from new rule extra-null-allowed
-!extra-null-allowed! 'System.Void SceneKit.SCNNodeRendererDelegate::Render(SceneKit.SCNNode,SceneKit.SCNRenderer,Foundation.NSDictionary)' has a extraneous [NullAllowed] on parameter #2
-
-# Initial result from new rule missing-null-allowed
-!missing-null-allowed! 'CoreAnimation.CAAnimation SceneKit.SCNAnimatable::GetAnimation(Foundation.NSString)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSObject SceneKit.SCNLight::GetAttribute(Foundation.NSString)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSString SceneKit.SCNProgram::GetSemanticForSymbol(System.String)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'SceneKit.SCNShape SceneKit.SCNShape::Create(AppKit.NSBezierPath,System.nfloat)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void SceneKit.SCNLight::SetAttribute(Foundation.NSObject,Foundation.NSString)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void SceneKit.SCNProgram::SetSemantic(Foundation.NSString,System.String,Foundation.NSDictionary)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void SceneKit.SCNShadable::HandleBinding(System.String,SceneKit.SCNBindingHandler)' is missing an [NullAllowed] on parameter #1
-!missing-null-allowed! 'System.Void SceneKit.SCNShadable::HandleUnbinding(System.String,SceneKit.SCNBindingHandler)' is missing an [NullAllowed] on parameter #1
-!missing-null-allowed! 'System.Void SceneKit.SCNText::set_ChamferProfile(AppKit.NSBezierPath)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void SceneKit.SCNText::set_Font(AppKit.NSFont)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void SceneKit.SCNView::set_OpenGLContext(AppKit.NSOpenGLContext)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void SceneKit.SCNView::set_PixelFormat(AppKit.NSOpenGLPixelFormat)' is missing an [NullAllowed] on parameter #0
