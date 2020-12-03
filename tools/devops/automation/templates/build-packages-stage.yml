@@ -70,8 +70,7 @@ jobs:
     Parameters.outputStorageUri: ''
 
   pool:
-    name: VSEngDeploymentPool
-    demands: agent.os -equals Windows_NT # we need to use a windows machine since vsdrops just works on them and the pool might have diff OS in the agents
+    vmImage: 'windows-latest'
     workspace:
       clean: all
   steps:
@@ -84,8 +83,7 @@ jobs:
   condition: and(succeededOrFailed() , eq (dependencies.build.outputs['runTests.TESTS_RAN'], 'True')) # only run when we did run the tests
 
   pool:
-    name: VSEngDeploymentPool
-    demands: agent.os -equals Windows_NT # we need to use a windows machine since vsdrops just works on them and the pool might have diff OS in the agents
+    vmImage: 'windows-latest'
     workspace:
       clean: all
   steps:
@@ -99,8 +97,7 @@ jobs:
   dependsOn:  build # can start as soon as the tests are done
   condition: and(succeededOrFailed() , eq (dependencies.build.outputs['runTests.TESTS_RAN'], 'True')) # only run when we did run the tests
   pool:
-    name: VSEngDeploymentPool
-    demands: agent.os -equals Windows_NT #  not needed, but lest not waste our mac with devices, we have less.
+    vmImage: 'windows-latest'
     workspace:
       clean: all
   steps:
