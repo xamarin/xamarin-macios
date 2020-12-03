@@ -751,6 +751,8 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<!-- This is exactly what "Microsoft.NuGet.Build.Tasks"'s 'ResolveNuGetPackageAssets' target is doing -->
 			<!-- Effectively 'ResolveNuGetPackageAssets' computes the NuGet packages using their json asset file, adds the full assemblies to 'ReferenceCopyLocalPaths' and outputs the resolved references via '_ReferencesFromNuGetPackages' -->
 			<ReferencePath Remove="@(_ReferencesFromNuGetPackages)" />
+			<!-- It seems newer version of the .NET SDK uses the 'ResolvedCompileFileDefinitions' property instead of '_ReferencesFromNuGetPackages' -->
+			<ReferencePath Remove="@(ResolvedCompileFileDefinitions)" />
 			<_BundlerReferencePath Include="@(ReferenceCopyLocalPaths)" Condition="'%(Extension)' == '.dll'" />
 			<_CompileToNativeInput Include="$(TargetDir)$(TargetFileName);@(_BundlerReferencePath)" />
 			<_CompileToNativeInput Condition="'@(_ResolvedAppExtensionReferences)' != ''" Include="%(_ResolvedAppExtensionReferences.Identity)\..\bundler.stamp" />
