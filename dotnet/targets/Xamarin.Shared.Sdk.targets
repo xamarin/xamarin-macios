@@ -314,6 +314,14 @@
 		<ReadItemsFromFile File="$(_LinkerItemsDirectory)/_RegistrarFile.items" Condition="Exists('$(_LinkerItemsDirectory)/_RegistrarFile.items')">
 			<Output TaskParameter="Items" ItemName="_RegistrarFile" />
 		</ReadItemsFromFile>
+		<!-- Load _ReferencesFile -->
+		<ReadItemsFromFile File="$(_LinkerItemsDirectory)/_ReferencesFile.items" Condition="Exists('$(_LinkerItemsDirectory)/_ReferencesFile.items')">
+			<Output TaskParameter="Items" ItemName="_ReferencesFile" />
+		</ReadItemsFromFile>
+		<!-- Load _ReferencesLinkerFlags -->
+		<ReadItemsFromFile File="$(_LinkerItemsDirectory)/_ReferencesLinkerFlags.items" Condition="Exists('$(_LinkerItemsDirectory)/_ReferencesLinkerFlags.items')">
+			<Output TaskParameter="Items" ItemName="_ReferencesLinkerFlags" />
+		</ReadItemsFromFile>
 
 		<ItemGroup>
 			<_AssembliesToAOT Include="@(ResolvedFileToPublish)" Condition="'%(Extension)' == '.dll' Or '%(Extension)' == '.exe' " />
@@ -467,6 +475,9 @@
 			<_CompileNativeExecutableFile Include="@(_RegistrarFile)">
 				<OutputFile>$(_IntermediateNativeLibraryDir)%(Filename).o</OutputFile>
 			</_CompileNativeExecutableFile>
+			<_CompileNativeExecutableFile Include="@(_ReferencesFile)">
+				<OutputFile>$(_IntermediateNativeLibraryDir)%(Filename).o</OutputFile>
+			</_CompileNativeExecutableFile>
 			<_XamarinMainIncludeDirectory Include="$(_XamarinIncludeDirectory)" />
 		</ItemGroup>
 	</Target>
@@ -570,7 +581,7 @@
 			DylibRPath="$(_DylibRPath)"
 			EntitlementsInExecutable="$(_CompiledEntitlements)"
 			Frameworks="@(_NativeExecutableFrameworks);@(_BindingLibraryFrameworks)"
-			LinkerFlags="@(_BindingLibraryLinkerFlags);@(_MainLinkerFlags)"
+			LinkerFlags="@(_BindingLibraryLinkerFlags);@(_ReferencesLinkerFlags);@(_MainLinkerFlags)"
 			LinkWithLibraries="@(_XamarinMainLibraries);@(_BindingLibraryLinkWith);@(_MainLinkWith)"
 			MinimumOSVersion="$(_MinimumOSVersion)"
 			ObjectFiles="@(_NativeExecutableObjectFiles)"

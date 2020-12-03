@@ -39,6 +39,8 @@ using pfloat = System.nfloat;
 using pfloat = System.Single;
 #endif
 
+#nullable enable
+
 namespace SceneKit
 {
     /// <summary>Represents a 4D vector using four single-precision floating-point numbers.</summary>
@@ -1057,7 +1059,7 @@ namespace SceneKit
         /// </summary>
         /// <param name="obj">The object to compare to.</param>
         /// <returns>True if the instances are equal; false otherwise.</returns>
-        public override bool Equals(object obj)
+        public override bool Equals (object? obj)
         {
             if (!(obj is SCNVector4))
                 return false;
