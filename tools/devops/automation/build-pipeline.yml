@@ -53,7 +53,7 @@ variables:
 
 trigger: none
 
-# UNDONE: Trigger test ++++++++
+# UNDONE: Trigger test: Disable PR related xamarin-macios webhooks
 pr:
   autoCancel: true
   branches:
