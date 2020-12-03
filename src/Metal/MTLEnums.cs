@@ -1099,7 +1099,7 @@ namespace Metal {
 
 	[Flags, Mac (11,0), NoTV, iOS (13,0)]
 	[MacCatalyst (14, 0)]
-	[Native, Advice ("This API is not available when using UIKit on macOS.")]
+	[Native]
 	public enum MTLSparseTextureMappingMode : ulong {
 		Map = 0x0,
 		Unmap = 0x1,
