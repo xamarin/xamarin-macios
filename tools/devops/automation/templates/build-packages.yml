@@ -380,7 +380,7 @@ steps:
   displayName: 'Publish Artifact: TestSummary'
   inputs:
     targetPath: 'xamarin-macios/tests/TestSummary.md'
-    artifactName: TestSummary
+    artifactName: TestSummary-sim
   continueOnError: true
   condition: and(succeededOrFailed(), eq(variables['runTests.TESTS_RAN'], 'True')) # if tests did not run, there is nothing to do
 
@@ -408,6 +408,6 @@ steps:
   displayName: 'Publish Artifact: HtmlReport'
   inputs:
     targetPath: '$(Build.ArtifactStagingDirectory)/HtmlReport.zip'
-    artifactName: HtmlReport
+    artifactName: HtmlReport-sim
   continueOnError: true
   condition: and(succeededOrFailed(), eq(variables['runTests.TESTS_RAN'], 'True')) # if tests did not run, there is nothing to do

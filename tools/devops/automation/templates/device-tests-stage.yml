@@ -78,6 +78,7 @@ stages:
         useXamarinStorage: ${{ parameters.useXamarinStorage }}
         vsdropsPrefix: ${{ parameters.vsdropsPrefix }} 
         keyringPass: ${{ parameters.keyringPass }} 
+        devicePrefix: ${{ parameters.devicePrefix }}
 
   - job: upload_vsdrops
     displayName: 'Upload report to vsdrops'
@@ -106,6 +107,8 @@ stages:
         clean: all
     steps:
     - template: upload-vsts-tests.yml
+      parameters: 
+        devicePrefix: ${{ parameters.devicePrefix }}
 
   - job: publish_html
     displayName: 'Publish Html report in VSDrops'
