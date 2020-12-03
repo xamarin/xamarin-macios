@@ -661,7 +661,7 @@ namespace SceneKit
         public override bool Equals (object? other)
         {
             if (other is SCNQuaternion == false) return false;
-               return this == (SCNQuaternion)other;
+               return this == (SCNQuaternion?) other;
         }
 
         #endregion
