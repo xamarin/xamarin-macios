@@ -53,7 +53,7 @@ variables:
 
 trigger: none
 
-# UNDONE: Trigger test +
+# UNDONE: Trigger test ++
 pr:
   autoCancel: true
   branches:
