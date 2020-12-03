@@ -37,7 +37,8 @@ namespace Xamarin.MMP.Tests
 
 			var appBuildLog = TI.TestUnifiedExecutable (project);
 
-			return new (bindingBuildLog, appBuildLog);
+			(BuildResult BindingBuildResult, OutputText AppTestResult) rv = (bindingBuildLog, appBuildLog);
+			return rv;
 		}
 
 		internal static BuildResult SetupAndBuildBindingProject (TI.UnifiedTestConfig binding, bool setupDefaultNativeReference, bool shouldFail = false)
