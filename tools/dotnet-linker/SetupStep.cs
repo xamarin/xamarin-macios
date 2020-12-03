@@ -85,10 +85,12 @@ namespace Xamarin {
 				post_sweep_substeps.Add (new RemoveAttributesStep ());
 			}
 
+			Steps.Add (new ListExportedSymbols (null));
 			Steps.Add (new LoadNonSkippedAssembliesStep ());
 			Steps.Add (new ExtractBindingLibrariesStep ());
 			Steps.Add (new RegistrarStep ());
 			Steps.Add (new GenerateMainStep ());
+			Steps.Add (new GenerateReferencesStep ());
 			Steps.Add (new GatherFrameworksStep ());
 
 			Configuration.Write ();
