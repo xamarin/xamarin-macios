@@ -9,6 +9,7 @@ using Mono.Tuner;
 using Xamarin.Bundler;
 using Xamarin.Linker;
 using Xamarin.Tuner;
+using Xamarin.Utils;
 
 namespace Xamarin.Linker.Steps
 {
@@ -122,8 +123,14 @@ namespace Xamarin.Linker.Steps
 				case "__Internal":
 					DerivedLinkContext.RequiredSymbols.AddFunction (pinfo.EntryPoint).AddMember (method);
 					break;
-				case "System.Native":
+
 				case "System.Net.Security.Native":
+#if NET
+					if (DerivedLinkContext.App.Platform == ApplePlatform.TVOS)
+						break; // tvOS does not ship with System.Net.Security.Native due to https://github.com/dotnet/runtime/issues/45535
+					goto case "System.Native";
+#endif
+				case "System.Native":
 				case "System.Security.Cryptography.Native.Apple":
 					DerivedLinkContext.RequireMonoNative = true;
 					DerivedLinkContext.RequiredSymbols.AddFunction (pinfo.EntryPoint).AddMember (method);
