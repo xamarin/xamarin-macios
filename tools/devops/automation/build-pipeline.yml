@@ -53,7 +53,7 @@ variables:
 
 trigger: none
 
-# UNDONE: Trigger test: vsmobiletoolsengineeringsv2 account
+# UNDONE: Trigger test: mjbond-msft account
 pr:
   autoCancel: true
   branches:
