@@ -38,11 +38,10 @@ namespace Xamarin.iOS.Tasks
 
 		public override bool Execute ()
 		{
-			var ips = new List<string> ();
-
 			if (SdkIsSimulator) {
-				ips.Add (IPAddress.Loopback.ToString ());
+				DebugIPAddresses = IPAddress.Loopback.ToString ();
 			} else if (DebugOverWiFi) {
+				var ips = new List<string> ();
 				string [] hosts = null;
 
 				if (!string.IsNullOrEmpty (DebuggerHosts))
@@ -83,9 +82,9 @@ namespace Xamarin.iOS.Tasks
 					Log.LogError (7002, null, MSBStrings.E7002);
 					return false;
 				}
-			}
 
-			DebugIPAddresses = string.Join (";", ips.ToArray ());
+				DebugIPAddresses = string.Join (";", ips);
+			}
 
 			Log.LogTaskProperty ("DebugIPAddresses", DebugIPAddresses);
 
