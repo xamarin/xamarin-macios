@@ -38,7 +38,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Xamarin.iOS.Tasks\Xamarin.iOS.Tasks.csproj" />
-    <ProjectReference Include="..\..\Xamarin.Mac.Tasks\Xamarin.Mac.Tasks.csproj" />
+    <!-- The iOS.Tasks assembly was ILRepacked to include MacDev.Tasks, if we use the references from the project we'get both and the types will collide -->
+    <!-- We still the project reference to mantain the build order dependency, but we add a reference to the assembly explicitly -->
+    <ProjectReference Include="..\..\Xamarin.iOS.Tasks\Xamarin.iOS.Tasks.csproj">
+      <ReferenceOutputAssembly>False</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Xamarin.iOS.Tasks">
+      <HintPath>..\..\Xamarin.iOS.Tasks\bin\$(Configuration)\netstandard2.0\Xamarin.iOS.Tasks.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>

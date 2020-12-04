@@ -1,16 +1,11 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Messaging.Build.Contracts;
 using Xamarin.Messaging.Build.Serialization;
 using Xamarin.Messaging.Client;
-using Xamarin.Messaging.Diagnostics;
 
-namespace Xamarin.Messaging.Build
-{
+namespace Xamarin.Messaging.Build {
 	public class ExecuteTaskMessageHandler : RequestHandler<ExecuteTaskMessage, ExecuteTaskResult>
 	{
 		static readonly ITracer tracer = Tracer.Get<ExecuteTaskMessageHandler>();
@@ -27,10 +22,7 @@ namespace Xamarin.Messaging.Build
 			this.runner = runner;
 		}
 
-		public ExecuteTaskMessageHandler(ITaskRunner runner)
-		{
-			this.runner = runner;
-		}
+		public ExecuteTaskMessageHandler (ITaskRunner runner) => this.runner = runner;
 
 		protected override async Task<ExecuteTaskResult> ExecuteAsync(ExecuteTaskMessage message)
 		{

@@ -23,13 +23,7 @@ namespace Xamarin.Messaging.Build
 
 		internal void LoadTasks(Assembly assembly) => tasks.AddRange(assembly.GetTypes());
 
-		internal void LoadXamarinTasks()
-		{
-			//TODO: FIX ME
-			//this.LoadTasks(typeof(Xamarin.iOS.Tasks.CompileAppManifest).Assembly);
-			//this.LoadTasks(typeof(Xamarin.MacDev.Tasks.ArTool).Assembly);
-			//this.LoadTasks(typeof(Xamarin.Mac.Tasks.CompileAppManifest).Assembly);
-		}
+		internal void LoadXamarinTasks () => LoadTasks (typeof (iOS.Tasks.CompileAppManifest).Assembly);
 
 		public ExecuteTaskResult Execute(string taskName, string inputs)
 		{
