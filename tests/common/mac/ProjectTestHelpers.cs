@@ -12,15 +12,73 @@ using Xamarin.Tests;
 
 namespace Xamarin.MMP.Tests
 {
+	internal class MessageTool : Tool {
+		public MessageTool ()
+		{
+		}
+
+		public MessageTool (string text)
+		{
+			Output.Append (text);
+		}
+
+		protected override string ToolPath => throw new NotImplementedException ();
+
+		protected override string MessagePrefix => "MM";
+	}
+
 	public class OutputText
 	{
-		public string BuildOutput { get; private set; }
+		public BuildResult BuildResult { get; private set; }
 		public string RunOutput { get; private set; }
 
-		public OutputText (string buildOutput, string runOutput)
+		public OutputText (BuildResult buildOutput, string runOutput)
 		{
-			BuildOutput = buildOutput;
+			BuildResult = buildOutput;
 			RunOutput = runOutput;
+		}
+
+		internal MessageTool Messages {
+			get {
+				return BuildResult.Messages;
+			}
+		}
+	}
+
+	public class BuildResult {
+		public readonly string BinLogPath;
+
+		string build_output;
+		public string BuildOutput {
+			get {
+				if (build_output == null)
+					build_output = string.Join ("\n", BuildOutputLines);
+				return build_output;
+			}
+		}
+
+		string [] build_output_lines;
+		public IList<string> BuildOutputLines {
+			get {
+				if (build_output_lines == null)
+					build_output_lines = BinLog.PrintToLines (BinLogPath).ToArray ();
+				return build_output_lines;
+			}
+		}
+
+		public BuildResult (string binLogPath)
+		{
+			BinLogPath = binLogPath;
+		}
+
+		public bool HasMessage (int code)
+		{
+			return Messages.Messages.Any (v => v.Number == code);
+		}
+
+		public bool HasMessage (int code, string message)
+		{
+			return Messages.Messages.Any (v => v.Number == code && v.Message == message);
 		}
 
 		MessageTool messages;
@@ -28,18 +86,10 @@ namespace Xamarin.MMP.Tests
 			get {
 				if (messages == null) {
 					messages = new MessageTool ();
-					messages.Output.Append (BuildOutput);
-					messages.ParseMessages ();
+					messages.ParseBinLog (BinLogPath);
 				}
 				return messages;
 			}
-		}
-
-		internal class MessageTool : Tool
-		{
-			protected override string ToolPath => throw new NotImplementedException ();
-
-			protected override string MessagePrefix => "MM";
 		}
 	}
 
@@ -214,26 +264,21 @@ namespace Xamarin.MMP.Tests
 			StringBuilder output = new StringBuilder ();
 			environment ??= new Dictionary<string, string> ();
 			environment ["MONO_PATH"] = null;
-			int compileResult = Xamarin.Bundler.Driver.RunCommand (exe, args, environment, output, suppressPrintOnErrors: shouldFail);
-			if (!shouldFail && compileResult != 0 && Xamarin.Bundler.Driver.Verbosity < 1) {
-				Console.WriteLine ($"Execution failed; exit code: {compileResult}");
+			environment ["DYLD_FALLBACK_LIBRARY_PATH"] = null;
+			int compileResult = ExecutionHelper.Execute (exe, args, environmentVariables: environment, stdout: output, stderr: output);
+			if (!shouldFail && compileResult != 0) {
+				Console.WriteLine ($"Execution of the following command failed (exit code: {compileResult}):");
+				Console.WriteLine ($"cd {Environment.CurrentDirectory}");
+				foreach (var kvp in Environment.GetEnvironmentVariables ().Cast<System.Collections.DictionaryEntry> ().OrderBy (v => v.Key))
+					Console.WriteLine ($"export {kvp.Key}={StringUtils.Quote (kvp.Value.ToString ())}");
+				Console.WriteLine ($"{exe} {StringUtils.FormatArguments (args)}");
+				Console.WriteLine (output);
 			}
 			Func<string> getInfo = () => getAdditionalFailInfo != null ? getAdditionalFailInfo () : "";
 			bool passed = shouldFail ? compileResult != 0 : compileResult == 0;
-			if (!passed) {
-				string outputLine = PrintRedirectIfLong ($"{exe} {StringUtils.FormatArguments (args)} Output: {output} {getInfo ()}");
-				Assert.Fail ($@"{stepName} {(shouldFail ? "passed" : "failed")} unexpectedly: {outputLine}");
-			}
+			if (!passed)
+				Assert.Fail ($@"{stepName} {(shouldFail ? "passed" : "failed")} unexpectedly. Exit code: {compileResult}.");
 			return output.ToString ();
-		}
-
-		public static string PrintRedirectIfLong (string outputLine)
-		{
-			if (outputLine.Length > 5000) {
-				Console.WriteLine (outputLine);
-				outputLine = "(Additional info redirected to console)";
-			}
-			return outputLine;
 		}
 
 		// In most cases we generate projects in tmp and this is not needed. But nuget and test projects can make that hard
@@ -242,13 +287,15 @@ namespace Xamarin.MMP.Tests
 			RunAndAssert (Configuration.XIBuildPath, new [] { "--", csprojTarget, "/t:clean" }, "Clean", environment: Configuration.GetBuildEnvironment (ApplePlatform.MacOSX));
 		}
 
-		public static string BuildProject (string csprojTarget, bool shouldFail = false, bool release = false, Dictionary<string, string> environment = null, IList<string> extraArgs = null)
+		public static BuildResult BuildProject (string csprojTarget, bool shouldFail = false, bool release = false, Dictionary<string, string> environment = null, IList<string> extraArgs = null)
 		{
 			Configuration.SetBuildVariables (ApplePlatform.MacOSX, ref environment);
 
 			// This is to force build to use our mmp and not system mmp
 			var buildArgs = new List<string> ();
-			buildArgs.Add ("/verbosity:diagnostic");
+			var binlog = Path.Combine (Path.GetDirectoryName (csprojTarget), $"log-{DateTime.Now:yyyyMMdd_HHmmss}.binlog");
+			buildArgs.Add ($"/bl:{binlog}");
+			Console.WriteLine ($"Binlog: {binlog}");
 
 			// Restore any package references
 			buildArgs.Add ("/r");
@@ -271,7 +318,9 @@ namespace Xamarin.MMP.Tests
 			};
 
 			buildArgs.Insert (0, "--");
-			return RunAndAssert (Configuration.XIBuildPath, buildArgs, "Compile", shouldFail, getBuildProjectErrorInfo, environment);
+			RunAndAssert (Configuration.XIBuildPath, buildArgs, "Compile", shouldFail, getBuildProjectErrorInfo, environment);
+
+			return new BuildResult (binlog);
 		}
 
 		static string ProjectTextReplacement (UnifiedTestConfig config, string text)
@@ -410,7 +459,7 @@ namespace Xamarin.MMP.Tests
 			return GenerateEXEProject (config);
 		}
 
-		public static string GenerateAndBuildUnifiedExecutable (UnifiedTestConfig config, bool shouldFail = false, Dictionary<string, string> environment = null)
+		public static BuildResult GenerateAndBuildUnifiedExecutable (UnifiedTestConfig config, bool shouldFail = false, Dictionary<string, string> environment = null)
 		{
 			string csprojTarget = GenerateUnifiedExecutableProject (config);
 			return BuildProject (csprojTarget, shouldFail: shouldFail, release: config.Release, environment: environment);
@@ -425,7 +474,7 @@ namespace Xamarin.MMP.Tests
 		{
 			AddGUIDTestCode (config);
 
-			string buildOutput = GenerateAndBuildUnifiedExecutable (config, shouldFail, environment);
+			var buildOutput = GenerateAndBuildUnifiedExecutable (config, shouldFail, environment);
 			if (shouldFail)
 				return new OutputText (buildOutput, "");
 
@@ -451,7 +500,7 @@ namespace Xamarin.MMP.Tests
 			config.ProjectName = $"{projectName}.csproj";
 			string csprojTarget = GenerateSystemMonoEXEProject (config);
 
-			string buildOutput = BuildProject (csprojTarget, shouldFail: shouldFail, release: config.Release);
+			var buildOutput = BuildProject (csprojTarget, shouldFail: shouldFail, release: config.Release);
 			if (shouldFail)
 				return new OutputText (buildOutput, "");
 
@@ -492,7 +541,7 @@ namespace Xamarin.MMP.Tests
 
 		public static void CopyDirectory (string src, string target)
 		{
-			Xamarin.Bundler.Driver.RunCommand ("/bin/cp", new [] { "-r", src, target });
+			Assert.AreEqual (0, ExecutionHelper.Execute ("/bin/cp", new [] { "-r", src, target }));
 		}
 
 		public static string CopyFileWithSubstitutions (string src, string target, Func<string, string > replacementAction)

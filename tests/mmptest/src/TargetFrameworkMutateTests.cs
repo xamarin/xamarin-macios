@@ -10,9 +10,9 @@ namespace Xamarin.MMP.Tests
 	{
 		const string MigrateCSProjTag = "<MigrateToNewXMIdentifier>true</MigrateToNewXMIdentifier>";
 
-		public bool MatchesTFI (string expected, string buildOutput)
+		public bool MatchesTFI (string expected, BuildResult buildOutput)
 		{
-			string tfiLine = buildOutput.SplitLines ().FirstOrDefault (x => x.StartsWith ("TargetFrameworkIdentifier =", StringComparison.Ordinal));
+			var tfiLine = buildOutput.BuildOutputLines.FirstOrDefault (x => x.StartsWith ("TargetFrameworkIdentifier =", StringComparison.Ordinal));
 			if (tfiLine == null)
 				return false;
 			return tfiLine.Contains (expected);
@@ -26,9 +26,9 @@ namespace Xamarin.MMP.Tests
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
 					XM45 = xm45
 				};
-				var buildOutput = TI.TestUnifiedExecutable (test).BuildOutput;
+				var buildOutput = TI.TestUnifiedExecutable (test).BuildResult;
 				string standardTFI = xm45 ? ".NETFramework" : "Xamarin.Mac";
-				Assert.True (MatchesTFI (standardTFI, buildOutput), $"Build did not have expected TFI: {TI.PrintRedirectIfLong (buildOutput)}");
+				Assert.True (MatchesTFI (standardTFI, buildOutput), $"Build did not have expected TFI.");
 			});
 		}
 
@@ -37,8 +37,8 @@ namespace Xamarin.MMP.Tests
 		{
 			MMPTests.RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { CSProjConfig = MigrateCSProjTag };
-				var buildOutput = TI.TestUnifiedExecutable (test).BuildOutput;
-				Assert.True (MatchesTFI ("Xamarin.Mac", buildOutput), $"Build did not have expected TFI: {TI.PrintRedirectIfLong (buildOutput)}");
+				var buildOutput = TI.TestUnifiedExecutable (test).BuildResult;
+				Assert.True (MatchesTFI ("Xamarin.Mac", buildOutput), $"Build did not have expected TFI.");
 			});
 		}
 
@@ -50,8 +50,8 @@ namespace Xamarin.MMP.Tests
 					XM45 = true,
 					CSProjConfig = MigrateCSProjTag
 				};
-				var buildOutput = TI.TestUnifiedExecutable (test).BuildOutput;
-				Assert.True (MatchesTFI ("Xamarin.Mac.NET", buildOutput), $"Build did not have expected TFI: {TI.PrintRedirectIfLong (buildOutput)}");
+				var buildOutput = TI.TestUnifiedExecutable (test).BuildResult;
+				Assert.True (MatchesTFI ("Xamarin.Mac.NET", buildOutput), $"Build did not have expected TFI.");
 			});
 		}
 	}

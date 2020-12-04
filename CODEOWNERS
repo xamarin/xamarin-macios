@@ -193,7 +193,6 @@
 /tests/xtro-sharpie @spouliot
 /tests/mmptest @rolfbjarne 
 /tests/common/mac @rolfbjarne 
-/tests/msbuild-mac @rolfbjarne 
 /tests/bcl-tests @mandel-macaque
 
 /tools/common @rolfbjarne @spouliot

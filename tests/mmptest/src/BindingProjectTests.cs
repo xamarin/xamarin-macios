@@ -22,9 +22,9 @@ namespace Xamarin.MMP.Tests
 	{
 		internal static string RemoveCSProj (string s) => s.Remove (s.IndexOf (".csproj", StringComparison.InvariantCulture));
 
-		internal static Tuple<string, string> SetupAndBuildLinkedTestProjects (TI.UnifiedTestConfig binding, TI.UnifiedTestConfig project, string tmpDir, bool useProjectReference, bool setupDefaultNativeReference)
+		internal static (BuildResult BindingBuildResult, OutputText AppTestResult) SetupAndBuildLinkedTestProjects (TI.UnifiedTestConfig binding, TI.UnifiedTestConfig project, string tmpDir, bool useProjectReference, bool setupDefaultNativeReference)
 		{
-			string bindingBuildLog = SetupAndBuildBindingProject (binding, setupDefaultNativeReference);
+			var bindingBuildLog = SetupAndBuildBindingProject (binding, setupDefaultNativeReference);
 
 			string bindingName = RemoveCSProj (binding.ProjectName);
 
@@ -35,12 +35,13 @@ namespace Xamarin.MMP.Tests
 
 			project.TestCode = "System.Console.WriteLine (typeof (ExampleBinding.UnifiedWithDepNativeRefLibTestClass));";
 
-			string appBuildLog = TI.TestUnifiedExecutable (project).BuildOutput;
+			var appBuildLog = TI.TestUnifiedExecutable (project);
 
-			return new Tuple<string, string> (bindingBuildLog, appBuildLog);
+			(BuildResult BindingBuildResult, OutputText AppTestResult) rv = (bindingBuildLog, appBuildLog);
+			return rv;
 		}
 
-		internal static string SetupAndBuildBindingProject (TI.UnifiedTestConfig binding, bool setupDefaultNativeReference, bool shouldFail = false)
+		internal static BuildResult SetupAndBuildBindingProject (TI.UnifiedTestConfig binding, bool setupDefaultNativeReference, bool shouldFail = false)
 		{
 			if (setupDefaultNativeReference)
 				binding.ItemGroup += NativeReferenceTests.CreateSingleNativeRef (Path.GetFullPath (NativeReferenceTests.SimpleDylibPath), "Dynamic");
@@ -130,9 +131,9 @@ namespace Xamarin.MMP.Tests
 
 				var logs = SetupAndBuildLinkedTestProjects (projects.Item1, projects.Item2, tmpDir, useProjectReference: false, setupDefaultNativeReference: noEmbedding);
 
-				Assert.True (logs.Item1.Contains ("csc"), "Bindings project must use csc:\n" + logs.Item1); 
+				Assert.True (logs.BindingBuildResult.BuildOutput.Contains ("csc"), "Bindings project must use csc:\n" + logs.Item1); 
 
-				var bgenInvocation = logs.Item1.SplitLines ().First (x => x.Contains ("bin/bgen"));
+				var bgenInvocation = logs.BindingBuildResult.BuildOutputLines.First (x => x.Contains ("bin/bgen"));
 				var bgenParts = bgenInvocation.Split (new char[] { ' ' });
 				var mscorlib = bgenParts.First (x => x.Contains ("mscorlib.dll"));
 				var system = bgenParts.First (x => x.Contains ("System.dll"));
@@ -153,9 +154,9 @@ namespace Xamarin.MMP.Tests
 					throw new NotImplementedException ();
 				}
 
-				Assert.False (logs.Item1.Contains ("CS1685"), "Binding should not contains CS1685 multiple definition warning:\n" + logs.Item1);
+				Assert.False (logs.BindingBuildResult.BuildOutput.Contains ("CS1685"), "Binding should not contains CS1685 multiple definition warning.");
 
-				Assert.False (logs.Item1.Contains ("MSB9004"), "Binding should not contains MSB9004 warning:\n" + logs.Item1);
+				Assert.False (logs.BindingBuildResult.BuildOutput.Contains ("MSB9004"), "Binding should not contains MSB9004 warning");
 
 				string bindingName = RemoveCSProj (projects.Item1.ProjectName);
 				string appName = RemoveCSProj (projects.Item2.ProjectName);

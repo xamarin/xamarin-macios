@@ -78,21 +78,18 @@ namespace Xamarin.MMP.Tests
 					CSProjConfig = $"<MonoBundlingExtraArgs>--dynamic-symbol-mode={mode}</MonoBundlingExtraArgs>\n", 
 				};
 				var output = TI.TestUnifiedExecutable (config);
-				string build_output;
+				var build_output = output.BuildResult.BuildOutput;
 				switch (mode) {
 				case "linker":
 				case "default":
-					build_output = output.BuildOutput;
 					Assert.That (build_output, Does.Contain ("-u "), "reference.m");
 					Assert.That (build_output, Does.Not.Contain ("reference.m"), "reference.m");
 					break;
 				case "code":
-					build_output = output.BuildOutput;
 					Assert.That (build_output, Does.Not.Contain ("-u "), "reference.m");
 					Assert.That (build_output, Does.Contain ("reference.m"), "reference.m");
 					break;
 				case "ignore":
-					build_output = output.BuildOutput;
 					Assert.That (build_output, Does.Not.Contain ("-u "), "reference.m");
 					Assert.That (build_output, Does.Not.Contain ("reference.m"), "reference.m");
 					break;
@@ -117,8 +114,8 @@ namespace Xamarin.MMP.Tests
 					TestCode = "System.Console.WriteLine (typeof (MixedClassLibrary.Class1));",
 				};
 
-				var buildOutput = TI.TestUnifiedExecutable (test, shouldFail: builds_successfully).BuildOutput;
-				Assert.True (buildOutput.Contains ("2014") == builds_successfully, $"Building with {linker} did not give 2014 status {builds_successfully} as expected.\n\n{buildOutput}");
+				var buildOutput = TI.TestUnifiedExecutable (test, shouldFail: builds_successfully).BuildResult;
+				Assert.True (buildOutput.HasMessage (2014) == builds_successfully, $"Building with {linker} did not give 2014 status {builds_successfully} as expected.");
 			});
 		}
 
@@ -127,8 +124,8 @@ namespace Xamarin.MMP.Tests
 		{
 			MMPTests.RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { CSProjConfig = "<MonoBundlingExtraArgs>-v -v --linkplatform</MonoBundlingExtraArgs>" };
-				string buildOutput = TI.TestUnifiedExecutable (test).BuildOutput;
-				Assert.IsTrue (buildOutput.Contains ("Selected Linking: 'Platform'"), $"Build Output did not contain expected selected linking line: {buildOutput}");
+				var testResult = TI.TestUnifiedExecutable (test);
+				Assert.IsTrue (testResult.BuildResult.BuildOutput.Contains ("Selected Linking: 'Platform'"), $"Build Output did not contain expected selected linking line: {testResult}");
 			});
 		}
 
@@ -137,8 +134,8 @@ namespace Xamarin.MMP.Tests
 		{
 			MMPTests.RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { CSProjConfig = "<MonoBundlingExtraArgs>--registrar:partial --linkplatform</MonoBundlingExtraArgs>" };
-				string buildOutput = TI.TestUnifiedExecutable (test, shouldFail: true).BuildOutput;
-				Assert.True (buildOutput.Contains ("2110"), $"Building did not give the expected 2110 error.\n\n{buildOutput}");
+				var testResult = TI.TestUnifiedExecutable (test, shouldFail: true);
+				testResult.BuildResult.Messages.AssertError (2110, "Xamarin.Mac 'Partial Static' registrar does not support linking. Disable linking or use another registrar mode.");
 			});
 		}
 	}
