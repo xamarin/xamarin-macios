@@ -29,11 +29,6 @@ parameters:
   type: string
   default: 'xismoke' 
 
-# name of the pool that contains the Windows devices
-- name: WindowsDevicePool
-  type: string
-  default: 'VSEng-Xamarin-Win-XMA'
-
 - name: useXamarinStorage
   type: boolean
   default: false
@@ -85,8 +80,7 @@ stages:
     dependsOn: tests # can start as soon as the tests are done
     condition: succeededOrFailed()
     pool:
-      name: ${{ parameters.WindowsDevicePool }}
-      demands: agent.os -equals Windows_NT # we need to use a windows machine since vsdrops just works on them and the pool might have diff OS in the agents
+      vmImage: 'windows-latest'
       workspace:
         clean: all
     steps:
@@ -100,8 +94,7 @@ stages:
     dependsOn: tests # can start as soon as the tests are done
     condition: succeededOrFailed()
     pool:
-      name: ${{ parameters.WindowsDevicePool }}
-      demands: agent.os -equals Windows_NT #  not needed, but lest not waste our mac with devices, we have less.
+      vmImage: 'windows-latest'
       workspace:
         clean: all
     steps:
@@ -123,7 +116,7 @@ stages:
       TESTS_BOT: $[ dependencies.tests.outputs['runTests.TESTS_BOT'] ]
       TESTS_JOBSTATUS: $[ dependencies.tests.outputs['runTests.TESTS_JOBSTATUS'] ]
     pool:
-      name: ${{ parameters.WindowsDevicePool }}
+      vmImage: 'windows-latest'
       workspace:
         clean: all
     steps:

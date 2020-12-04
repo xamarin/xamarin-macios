@@ -118,7 +118,6 @@ stages:
     execute: 'runDevice32b'
     stageName: 'iOS32b Device Tests'
     iOSDevicePool: 'VSEng-Xamarin-QA'
-    WindowsDevicePool: 'VSEngDeploymentPool'
     useXamarinStorage: False
     testsLabels: '--label=run-ios-32-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests'
     statusContext: 'VSTS: device tests iOS32b'
@@ -132,7 +131,6 @@ stages:
     execute: 'runDevice64b'
     stageName: 'iOS64 Device Tests'
     iOSDevicePool: 'VSEng-Xamarin-Mac-Devices'
-    WindowsDevicePool: 'VSEngDeploymentPool'
     useXamarinStorage: False
     testsLabels: '--label=run-ios-64-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests'
     statusContext: 'VSTS: device tests iOS'
@@ -146,7 +144,6 @@ stages:
     execute: 'runDeviceTv'
     stageName: 'tvOS Device Tests'
     iOSDevicePool: 'VSEng-Xamarin-Mac-Devices'
-    WindowsDevicePool: 'VSEngDeploymentPool'
     useXamarinStorage: False
     testsLabels: '--label=run-tvos-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests'
     statusContext: 'VSTS: device tests tvOS'
