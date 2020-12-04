@@ -94,11 +94,27 @@ public static class ReflectionExtensions {
 	//
 	public static bool IsUnavailable (this ICustomAttributeProvider provider, Generator generator)
 	{
-		return generator.AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (provider)
-			.Any (attr => attr.AvailabilityKind == AvailabilityKind.Unavailable &&
-				attr.Platform == generator.CurrentPlatform);
+		var attributes = generator.AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (provider);
+		var platform = generator.CurrentPlatform;
+		return IsUnavailable (attributes, platform);
 	}
 	
+	public static bool IsUnavailable (AvailabilityBaseAttribute[] attributes, PlatformName platform)
+	{
+		if (attributes.Any (attr => attr.AvailabilityKind == AvailabilityKind.Unavailable && attr.Platform == platform))
+			return true;
+
+		if (platform == PlatformName.MacCatalyst) {
+			// If we're targetting Mac Catalyst, and we don't have any availability information for Mac Catalyst,
+			// then use the availability for iOS
+			var anyCatalyst = attributes.Any (v => v.Platform == PlatformName.MacCatalyst);
+			if (!anyCatalyst)
+				return IsUnavailable (attributes, PlatformName.iOS);
+		}
+
+		return false;
+	}
+
 	public static AvailabilityBaseAttribute GetAvailability (this ICustomAttributeProvider attrProvider, AvailabilityKind availabilityKind, Generator generator)
 	{
 		return generator.AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (attrProvider)
@@ -822,6 +838,9 @@ public partial class Frameworks {
 			case PlatformName.MacOSX:
 				frameworks = macosframeworks;
 				break;
+			case PlatformName.MacCatalyst:
+				frameworks = maccatalystframeworks;
+				break;
 			default:
 				throw new BindingException (1047, CurrentPlatform);
 			}
@@ -871,6 +890,7 @@ public partial class Generator : IMemberGatherer {
 			case PlatformName.iOS:
 			case PlatformName.WatchOS:
 			case PlatformName.TvOS:
+			case PlatformName.MacCatalyst:
 				return "UIApplication";
 			case PlatformName.MacOSX:
 				return "NSApplication";
@@ -972,6 +992,7 @@ public partial class Generator : IMemberGatherer {
 			case PlatformName.iOS:
 			case PlatformName.WatchOS:
 			case PlatformName.TvOS:
+			case PlatformName.MacCatalyst:
 				return "CoreImage";
 			case PlatformName.MacOSX:
 				return "Quartz";
@@ -987,6 +1008,7 @@ public partial class Generator : IMemberGatherer {
 			case PlatformName.iOS:
 			case PlatformName.WatchOS:
 			case PlatformName.TvOS:
+			case PlatformName.MacCatalyst:
 				return "MobileCoreServices";
 			case PlatformName.MacOSX:
 				return "CoreServices";
@@ -1000,6 +1022,7 @@ public partial class Generator : IMemberGatherer {
 		get {
 			switch (CurrentPlatform) {
 			case PlatformName.iOS:
+			case PlatformName.MacCatalyst:
 				return "PDFKit";
 			case PlatformName.MacOSX:
 				return "Quartz";
@@ -6250,6 +6273,8 @@ public partial class Generator : IMemberGatherer {
 			return "Xamarin.TVOS";
 		case ApplePlatform.WatchOS:
 			return "Xamarin.WatchOS";
+		case ApplePlatform.MacCatalyst:
+			return "Xamarin.MacCatalyst";
 		default:
 			throw ErrorHelper.CreateError (1053, /* Internal error: unknown target framework '{0}'. */ BindingTouch.TargetFramework);
 		}

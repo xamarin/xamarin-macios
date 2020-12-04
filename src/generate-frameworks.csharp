@@ -6,7 +6,7 @@ using System.Text;
 try {
 	var args = Environment.GetCommandLineArgs ();
 	var defaultArgumentCount = 3;
-	var actualArgumentCount = 5;
+	var actualArgumentCount = 6;
 	if (args.Length != defaultArgumentCount + actualArgumentCount) {
 		Console.WriteLine ($"Need {actualArgumentCount} arguments, got {args.Length - defaultArgumentCount} arguments");
 		Environment.Exit (1);
@@ -23,8 +23,21 @@ try {
 	var macosframeworks = args [1].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 	var watchosframeworks = args [2].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 	var tvosframeworks = args [3].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-	var allframeworks = new string [] [] { iosframeworks, macosframeworks, watchosframeworks, tvosframeworks };
-	var names = new string [] { "iosframeworks", "macosframeworks", "watchosframeworks", "tvosframeworks" };
+	var maccatalystframeworks = args [4].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+	var allframeworks = new string [] [] {
+		iosframeworks,
+		macosframeworks,
+		watchosframeworks,
+		tvosframeworks,
+		maccatalystframeworks,
+	};
+	var names = new string [] {
+		"iosframeworks",
+		"macosframeworks",
+		"watchosframeworks",
+		"tvosframeworks",
+		"maccatalystframeworks",
+	};
 
 	var all = new HashSet<string> ();
 	foreach (var fws in allframeworks)

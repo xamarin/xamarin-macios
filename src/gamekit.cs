@@ -1700,6 +1700,7 @@ namespace GameKit {
 #else
 	[NoTV]
 	[Deprecated (PlatformName.iOS, 10, 0)]
+	[NoMacCatalyst]
 	[BaseType (typeof (UINavigationController), Events=new Type [] { typeof (GKFriendRequestComposeViewControllerDelegate)}, Delegates=new string[] {"WeakComposeViewDelegate"})]
 	interface GKFriendRequestComposeViewController : UIAppearance {
 #endif
@@ -1738,6 +1739,7 @@ namespace GameKit {
 	[BaseType (typeof (NSObject))]
 	[Deprecated (PlatformName.iOS, 10,0)]
 	[Deprecated (PlatformName.MacOSX, 10,12)]
+	[NoMacCatalyst]
 	[Model]
 	[Protocol]
 	interface GKFriendRequestComposeViewControllerDelegate {

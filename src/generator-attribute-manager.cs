@@ -261,6 +261,8 @@ public class AttributeManager
 			return AttributeConversionManager.ConvertPlatformAttribute (attribute, PlatformName.WatchOS).Yield ();
 		case "TVAttribute":
 			return AttributeConversionManager.ConvertPlatformAttribute (attribute, PlatformName.TvOS).Yield ();
+		case "MacCatalystAttribute":
+			return AttributeConversionManager.ConvertPlatformAttribute (attribute, PlatformName.MacCatalyst).Yield ();
 		case "LionAttribute":
 			return AttributeFactory.CreateNewIntroducedAttribute (PlatformName.MacOSX, 10, 7).Yield ();
 		case "MountainLionAttribute":
@@ -275,6 +277,8 @@ public class AttributeManager
 			return AttributeFactory.CreateUnavailableAttribute (PlatformName.WatchOS).Yield ();
 		case "NoTVAttribute":
 			return AttributeFactory.CreateUnavailableAttribute (PlatformName.TvOS).Yield ();
+		case "NoMacCatalystAttribute":
+			return AttributeFactory.CreateUnavailableAttribute (PlatformName.MacCatalyst).Yield ();
 		case "AvailabilityAttribute":
 			return AttributeConversionManager.ConvertAvailability (attribute);
 		default:

@@ -7,7 +7,7 @@
 // Copyright 2016 Xamarin Inc. All rights reserved.
 //
 
-#if !MONOMAC
+#if !MONOMAC && !__MACCATALYST__
 
 using System;
 using System.Threading.Tasks;

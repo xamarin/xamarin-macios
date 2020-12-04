@@ -44,6 +44,16 @@ namespace Xharness {
 			return clone;
 		}
 
+		public static TestProject AsMacCatalystProject (this TestProject self)
+		{
+			var clone = self.Clone ();
+			var suffix = string.Empty;
+			if (self.IsDotNetProject)
+				suffix = "-dotnet";
+			clone.Path = Path.Combine (Path.GetDirectoryName (self.Path), Target.ProjectsDir, "maccatalyst" + suffix, Path.GetFileNameWithoutExtension (self.Path) + "-maccatalyst" + Path.GetExtension (self.Path));
+			return clone;
+		}
+
 		// Get the referenced today extension project (if any)
 		public static TestProject GetTodayExtension (this TestProject self)
 		{
