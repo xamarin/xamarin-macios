@@ -13,7 +13,7 @@ namespace Xamarin.Messaging.Build
 {
 	public class ExecuteTaskMessageHandler : RequestHandler<ExecuteTaskMessage, ExecuteTaskResult>
 	{
-		static readonly ITracer tracer = Tracer.Get<ExecuteTaskMessageHandler>();ss
+		static readonly ITracer tracer = Tracer.Get<ExecuteTaskMessageHandler>();
 		static readonly object lockObject = new object();
 
 		ITaskRunner runner;
