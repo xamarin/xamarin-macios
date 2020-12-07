@@ -641,7 +641,8 @@ void monotouch_configure_debugging ()
 #endif
 
 	// Finally, fall back to loading values from MonoTouchDebugConfiguration.txt
-	FILE *debug_conf = fopen ("MonoTouchDebugConfiguration.txt", "r");
+	NSString *conf_path = [bundle_path stringByAppendingPathComponent:@"MonoTouchDebugConfiguration.txt"];
+	FILE *debug_conf = fopen ([conf_path UTF8String], "r");
 	if (debug_conf != NULL) { 
 		bool add_hosts = [hosts count] == 0;
 		char line [128];

@@ -39,6 +39,9 @@ namespace Xamarin.iOS.Tasks
 			case "WatchOS":
 				platform = MobileProvisionPlatform.iOS;
 				break;
+			case "MacCatalyst":
+				platform = MobileProvisionPlatform.MacOS;
+				break;
 			default:
 				Log.LogError (MSBStrings.E0048, SdkPlatform);
 				return false;

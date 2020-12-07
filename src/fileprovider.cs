@@ -15,7 +15,7 @@ using CoreGraphics;
 using Foundation;
 using UniformTypeIdentifiers;
 
-#if IOS && !XAMCORE_4_0
+#if IOS && !XAMCORE_4_0 && !__MACCATALYST__
 using FileProvider;
 
 // This is the original (iOS 8) location of `NSFileProviderExtension`
@@ -215,7 +215,7 @@ namespace FileProvider {
 
 	[iOS (11,0)]
 	[Mac (11,0)]
-	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using Catalyst on macOS.")]
+	[MacCatalyst (13, 0)]
 	[Static]
 	interface NSFileProviderItemIdentifier {
 
@@ -232,7 +232,7 @@ namespace FileProvider {
 
 	[iOS (11,0)]
 	[Mac (10,15)]
-	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using Catalyst on macOS.")]
+	[MacCatalyst (13, 0)]
 	[Native]
 	[Flags]
 	enum NSFileProviderItemCapabilities : ulong {
@@ -258,7 +258,7 @@ namespace FileProvider {
 
 	[iOS (11,0)]
 	[Mac (11,0)]
-	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using Catalyst on macOS.")]
+	[MacCatalyst (13, 0)]
 	[Static]
 	interface NSFileProviderPage {
 
@@ -326,7 +326,7 @@ namespace FileProvider {
 
 	[iOS (11,0)]
 	[Mac (10,15)]
-	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using Catalyst on macOS.")]
+	[MacCatalyst (13, 0)]
 	[Protocol]
 	interface NSFileProviderEnumerationObserver {
 
@@ -352,7 +352,7 @@ namespace FileProvider {
 
 	[iOS (11,0)]
 	[Mac (10,15)]
-	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using Catalyst on macOS.")]
+	[MacCatalyst (13, 0)]
 	[Protocol]
 	interface NSFileProviderChangeObserver {
 
@@ -382,7 +382,7 @@ namespace FileProvider {
 
 	[iOS (11,0)]
 	[Mac (10,15)]
-	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using Catalyst on macOS.")]
+	[MacCatalyst (13, 0)]
 	[Protocol]
 	interface NSFileProviderEnumerator {
 
@@ -405,7 +405,7 @@ namespace FileProvider {
 
 	[iOS (11,0)]
 	[Mac (10,15)]
-	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using Catalyst on macOS.")]
+	[MacCatalyst (13, 0)]
 	[Protocol]
 	interface NSFileProviderItem {
 

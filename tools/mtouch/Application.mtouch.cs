@@ -381,12 +381,11 @@ namespace Xamarin.Bundler {
 
 		string GetStringFromInfoPList (string key)
 		{
-			return GetStringFromInfoPList (AppDirectory, key);
+			return GetStringFromInfoPList (InfoPListPath, key);
 		}
 
-		string GetStringFromInfoPList (string directory, string key)
+		string GetStringFromInfoPList (string info_plist, string key)
 		{
-			var info_plist = Path.Combine (directory, "Info.plist");
 			if (!File.Exists (info_plist))
 				return null;
 
@@ -813,19 +812,21 @@ namespace Xamarin.Bundler {
 					throw new ProductException (3, true, Errors.MX0003, root_wo_ext);
 			}
 
+			var appContentDirectory = ContentDirectory;
+
 			if (IsDualBuild) {
 				var target32 = new Target (this);
 				var target64 = new Target (this);
 
 				target32.ArchDirectory = Path.Combine (Cache.Location, "32");
-				target32.TargetDirectory = IsSimulatorBuild ? Path.Combine (AppDirectory, ".monotouch-32") : Path.Combine (target32.ArchDirectory, "Output");
-				target32.AppTargetDirectory = Path.Combine (AppDirectory, ".monotouch-32");
+				target32.TargetDirectory = IsSimulatorBuild ? Path.Combine (appContentDirectory, ".monotouch-32") : Path.Combine (target32.ArchDirectory, "Output");
+				target32.AppTargetDirectory = Path.Combine (appContentDirectory, ".monotouch-32");
 				target32.Resolver.ArchDirectory = Driver.GetArch32Directory (this);
 				target32.Abis = SelectAbis (abis, Abi.Arch32Mask);
 
 				target64.ArchDirectory = Path.Combine (Cache.Location, "64");
-				target64.TargetDirectory = IsSimulatorBuild ? Path.Combine (AppDirectory, ".monotouch-64") : Path.Combine (target64.ArchDirectory, "Output");
-				target64.AppTargetDirectory = Path.Combine (AppDirectory, ".monotouch-64");
+				target64.TargetDirectory = IsSimulatorBuild ? Path.Combine (appContentDirectory, ".monotouch-64") : Path.Combine (target64.ArchDirectory, "Output");
+				target64.AppTargetDirectory = Path.Combine (appContentDirectory, ".monotouch-64");
 				target64.Resolver.ArchDirectory = Driver.GetArch64Directory (this);
 				target64.Abis = SelectAbis (abis, Abi.Arch64Mask);
 
@@ -834,8 +835,8 @@ namespace Xamarin.Bundler {
 			} else {
 				var target = new Target (this);
 
-				target.TargetDirectory = AppDirectory;
-				target.AppTargetDirectory = IsSimulatorBuild ? AppDirectory : Path.Combine (AppDirectory, Is64Build ? ".monotouch-64" : ".monotouch-32");
+				target.TargetDirectory = appContentDirectory;
+				target.AppTargetDirectory = IsSimulatorBuild ? appContentDirectory : Path.Combine (appContentDirectory, Is64Build ? ".monotouch-64" : ".monotouch-32");
 				target.ArchDirectory = Cache.Location;
 				target.Resolver.ArchDirectory = Driver.GetArchDirectory (this, Is64Build);
 				target.Abis = abis;
@@ -844,10 +845,10 @@ namespace Xamarin.Bundler {
 
 				// Make sure there aren't any lingering .monotouch-* directories.
 				if (IsSimulatorBuild) {
-					var dir = Path.Combine (AppDirectory, ".monotouch-32");
+					var dir = Path.Combine (appContentDirectory, ".monotouch-32");
 					if (Directory.Exists (dir))
 						Directory.Delete (dir, true);
-					dir = Path.Combine (AppDirectory, ".monotouch-64");
+					dir = Path.Combine (appContentDirectory, ".monotouch-64");
 					if (Directory.Exists (dir))
 						Directory.Delete (dir, true);
 				}
@@ -897,6 +898,13 @@ namespace Xamarin.Bundler {
 			if (Platform == ApplePlatform.iOS && (HasDynamicLibraries || HasFrameworks) && DeploymentTarget.Major < 8) {
 				ErrorHelper.Warning (78, Errors.MT0078, DeploymentTarget);
 				DeploymentTarget = new Version (8, 0);
+			}
+
+			if (Platform == ApplePlatform.MacCatalyst) {
+				// The deployment target we expect for Mac Catalyst is the macOS version,
+				// but we're expected to provide the corresponding iOS version pretty much
+				// everywhere, so convert here.
+				DeploymentTarget = GetMacCatalystiOSVersion (DeploymentTarget);
 			}
 
 			if (!enable_msym.HasValue)
@@ -1012,6 +1020,10 @@ namespace Xamarin.Bundler {
 			get {
 				if (Embeddinator)
 					return Path.Combine (AppDirectory, "Frameworks", ExecutableName + ".framework", ExecutableName);
+
+				if (Platform == ApplePlatform.MacCatalyst)
+					return Path.Combine (AppDirectory, "Contents", "MacOS", ExecutableName);
+
 				return Path.Combine (AppDirectory, ExecutableName);
 			}
 		}
@@ -1077,7 +1089,7 @@ namespace Xamarin.Bundler {
 				link_tasks.AddRange (target.NativeLink (build_tasks));
 			}
 
-			if (IsDeviceBuild) {
+			if (IsDeviceBuild || Platform == ApplePlatform.MacCatalyst) {
 				// If building for the simulator, the executable is written directly into the expected location within the .app, and no lipo/file copying is needed.
 				if (link_tasks.Count > 1) {
 					// If we have more than one executable, we must lipo them together.
@@ -1218,7 +1230,7 @@ namespace Xamarin.Bundler {
 			foreach (var kvp in bundle_files) {
 				var name = kvp.Key;
 				var info = kvp.Value;
-				var targetPath = Path.Combine (AppDirectory, name);
+				var targetPath = Path.Combine (ContentDirectory, name);
 				var files = info.Sources;
 				var isFramework = Directory.Exists (files.First ());
 
@@ -1773,10 +1785,10 @@ namespace Xamarin.Bundler {
 						assemblies [0].CopyToDirectory (assemblies [0].Target.AppTargetDirectory, copy_debug_symbols: PackageManagedDebugSymbols, strip: strip, only_copy: true);
 						assemblies [1].CopyToDirectory (assemblies [1].Target.AppTargetDirectory, copy_debug_symbols: PackageManagedDebugSymbols, strip: strip, only_copy: true);
 					} else {
-						assemblies [0].CopyToDirectory (AppDirectory, copy_debug_symbols: PackageManagedDebugSymbols, strip: strip, only_copy: true);
+						assemblies [0].CopyToDirectory (ContentDirectory, copy_debug_symbols: PackageManagedDebugSymbols, strip: strip, only_copy: true);
 					}
 					foreach (var asm in assemblies)
-						asm.CopyAotDataFilesToDirectory (size_specific ? asm.Target.AppTargetDirectory : AppDirectory);
+						asm.CopyAotDataFilesToDirectory (size_specific ? asm.Target.AppTargetDirectory : ContentDirectory);
 					break;
 				case AssemblyBuildTarget.Framework:
 					// Put our resources in a subdirectory in the framework
@@ -1807,7 +1819,7 @@ namespace Xamarin.Bundler {
 			if (LinkMode != LinkMode.None)
 				return;
 
-			RuntimeOptions.Write (AppDirectory);
+			RuntimeOptions.Write (ContentDirectory);
 		}
 
 		public void CreateFrameworkNotice (string output_path)

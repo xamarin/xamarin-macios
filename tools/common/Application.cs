@@ -113,7 +113,7 @@ namespace Xamarin.Bundler {
 
 		public bool? DisableLldbAttach = null; // Only applicable to Xamarin.Mac
 		public bool? DisableOmitFramePointer = null; // Only applicable to Xamarin.Mac
-		public string CustomBundleName = "MonoBundle"; // Only applicable to Xamarin.Mac
+		public string CustomBundleName = "MonoBundle"; // Only applicable to Xamarin.Mac and Mac Catalyst
 
 		public bool? UseMonoFramework;
 
@@ -131,6 +131,22 @@ namespace Xamarin.Bundler {
 		// In the case of a framework, each framework may contain the native code for multiple assemblies.
 		// This variable does not apply to macOS (if assemblies are AOT-compiled, the AOT compiler will output a .dylib next to the assembly and there's nothing extra for us)
 		Dictionary<string, Tuple<AssemblyBuildTarget, string>> assembly_build_targets = new Dictionary<string, Tuple<AssemblyBuildTarget, string>> ();
+
+		public string ContentDirectory {
+			get {
+				switch (Platform) {
+				case ApplePlatform.iOS:
+				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
+					return AppDirectory;
+				case ApplePlatform.MacOSX:
+				case ApplePlatform.MacCatalyst:
+					return Path.Combine (AppDirectory, "Contents", CustomBundleName);
+				default:
+					throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
+				}
+			}
+		}
 
 		// How Mono should be embedded into the app.
 		public AssemblyBuildTarget LibMonoLinkMode {
@@ -230,6 +246,7 @@ namespace Xamarin.Bundler {
 				case ApplePlatform.iOS:
 				case ApplePlatform.TVOS:
 				case ApplePlatform.WatchOS:
+				case ApplePlatform.MacCatalyst:
 					return LinkMode == LinkMode.None;
 				case ApplePlatform.MacOSX:
 					return Registrar == RegistrarMode.Static && LinkMode == LinkMode.None;
@@ -245,6 +262,7 @@ namespace Xamarin.Bundler {
 				case ApplePlatform.iOS:
 				case ApplePlatform.TVOS:
 				case ApplePlatform.WatchOS:
+				case ApplePlatform.MacCatalyst:
 					return "_ios-build";
 				case ApplePlatform.MacOSX:
 					return "_mac-build";
@@ -260,6 +278,7 @@ namespace Xamarin.Bundler {
 				case ApplePlatform.iOS:
 				case ApplePlatform.TVOS:
 				case ApplePlatform.WatchOS:
+				case ApplePlatform.MacCatalyst:
 					return "MD_MTOUCH_SDK_ROOT";
 				case ApplePlatform.MacOSX:
 					return "XAMMAC_FRAMEWORK_PATH";
@@ -277,6 +296,7 @@ namespace Xamarin.Bundler {
 				case ApplePlatform.WatchOS:
 					return BuildTarget == BuildTarget.Device;
 				case ApplePlatform.MacOSX:
+				case ApplePlatform.MacCatalyst:
 					return false;
 				default:
 					throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
@@ -292,6 +312,7 @@ namespace Xamarin.Bundler {
 				case ApplePlatform.WatchOS:
 					return BuildTarget == BuildTarget.Simulator;
 				case ApplePlatform.MacOSX:
+				case ApplePlatform.MacCatalyst:
 					return false;
 				default:
 					throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
@@ -327,6 +348,51 @@ namespace Xamarin.Bundler {
 					is32bits = IsArchEnabled (Abi.Arch32Mask);
 				return is32bits.Value;
 			}
+		}
+
+		// Versions for Mac Catalyst are complicated. In some cases we have to use the
+		// corresponding iOS version of the SDK, and in some cases we have to use the
+		// macOS version that iOS version correspond to. In Xcode, when you select the
+		// deployment target, you select a macOS version in the UI, but the corresponding
+		// iOS version is written to the project file. This means that there's a mapping
+		// between the two, and we've captured that mapping in our Versions.plist for
+		// Xamarin.iOS (in the MacCatalystVersionMap plist dictionary). Here we provide
+		// two methods that can convert between iOS version and macOS version either way.
+		Dictionary<Version, Version> mac_catalyst_ios_to_macos_map;
+		Dictionary<Version, Version> GetCatalystiOSTomacOSMap ()
+		{
+			if (mac_catalyst_ios_to_macos_map == null) {
+				var file = Path.Combine (Driver.GetFrameworkCurrentDirectory (this), "Versions.plist");
+				var plist = Driver.FromPList (file);
+				var dict = plist.Get<PDictionary> ("MacCatalystVersionMap");
+
+				mac_catalyst_ios_to_macos_map = new Dictionary<Version, Version> ();
+				foreach (var kvp in dict) {
+					// The input here is fixed, so don't try to parse, just do it, because it should succeed.
+					mac_catalyst_ios_to_macos_map [Version.Parse (kvp.Key)] = Version.Parse (((PString) kvp.Value).Value);
+				}
+			}
+			return mac_catalyst_ios_to_macos_map;
+		}
+
+		public Version GetMacCatalystmacOSVersion (Version iOSVersion)
+		{
+			var map = GetCatalystiOSTomacOSMap ();
+			
+			if (!map.TryGetValue (iOSVersion, out var value))
+				throw ErrorHelper.CreateError (183, Errors.MX0183 /* Could not map the iOS version {0} to a macOS version for Mac Catalyst */, iOSVersion.ToString ());
+
+			return value;
+		}
+
+		public Version GetMacCatalystiOSVersion (Version macVersion)
+		{
+			var map = GetCatalystiOSTomacOSMap ();
+			var iosVersions = map.Where (kvp => kvp.Value == macVersion).Select (v => v.Key).ToArray ();
+			if (iosVersions.Length != 1)
+				throw ErrorHelper.CreateError (184, Errors.MX0184 /* Could not map the Mac Catalyst version {0} to an iOS version */, macVersion.ToString ());
+
+			return iosVersions [0];
 		}
 
 		public string GetProductName ()
@@ -408,12 +474,27 @@ namespace Xamarin.Bundler {
 				if (!IsExtension)
 					return null;
 
-				var info_plist = Path.Combine (AppDirectory, "Info.plist");
-				var plist = Driver.FromPList (info_plist);
+				var plist = Driver.FromPList (InfoPListPath);
 				var dict = plist.Get<PDictionary> ("NSExtension");
 				if (dict == null)
 					return null;
 				return dict.GetString ("NSExtensionPointIdentifier");
+			}
+		}
+
+		public string InfoPListPath {
+			get {
+				switch (Platform) {
+				case ApplePlatform.iOS:
+				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
+					return Path.Combine (AppDirectory, "Info.plist");
+				case ApplePlatform.MacCatalyst:
+				case ApplePlatform.MacOSX:
+					return Path.Combine (AppDirectory, "Contents", "Info.plist");
+				default:
+					throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
+				}
 			}
 		}
 
@@ -428,6 +509,9 @@ namespace Xamarin.Bundler {
 					return false;
 
 				if (IsSimulatorBuild)
+					return false;
+
+				if (Platform == ApplePlatform.MacCatalyst)
 					return false;
 
 				return MarshalObjectiveCExceptions == MarshalObjectiveCExceptionMode.ThrowManagedException || MarshalObjectiveCExceptions == MarshalObjectiveCExceptionMode.Abort;
@@ -445,6 +529,8 @@ namespace Xamarin.Bundler {
 					return "watchOS";
 				case ApplePlatform.MacOSX:
 					return "macOS";
+				case ApplePlatform.MacCatalyst:
+					return "MacCatalyst";
 				default:
 					throw new NotImplementedException ();
 				}
@@ -726,6 +812,9 @@ namespace Xamarin.Bundler {
 				else
 					MonoNativeMode = MonoNativeMode.Compat;
 				break;
+			case ApplePlatform.MacCatalyst:
+				MonoNativeMode = MonoNativeMode.Unified;
+				break;
 			default:
 				throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
 			}
@@ -735,6 +824,9 @@ namespace Xamarin.Bundler {
 		{
 			switch (MonoNativeMode) {
 			case MonoNativeMode.Unified:
+				if (Platform == ApplePlatform.MacCatalyst)
+					return "libmono-native";
+
 				return "libmono-native-unified";
 			case MonoNativeMode.Compat:
 				return "libmono-native-compat";
@@ -872,6 +964,10 @@ namespace Xamarin.Bundler {
 				if (abis.Count == 0)
 					abis.Add (Abi.x86_64);
 				break;
+			case ApplePlatform.MacCatalyst:
+				if (abis.Count == 0)
+					throw ErrorHelper.CreateError (76, Errors.MT0076, "Xamarin.MacCatalyst");
+				break;
 			default:
 				throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
 			}
@@ -921,6 +1017,7 @@ namespace Xamarin.Bundler {
 				}
 				break;
 			case ApplePlatform.MacOSX:
+			case ApplePlatform.MacCatalyst:
 				validAbis.Add (Abi.x86_64);
 				break;
 			default:
@@ -1083,6 +1180,7 @@ namespace Xamarin.Bundler {
 					else
 						ret += ",major=marksweep";
 					return ret;
+				case ApplePlatform.MacCatalyst:
 				case ApplePlatform.MacOSX:
 					return EnableSGenConc ? "major=marksweep-conc" : "major=marksweep";
 				default:
@@ -1177,6 +1275,7 @@ namespace Xamarin.Bundler {
 						MarshalManagedExceptions = EnableDebug && IsSimulatorBuild ? MarshalManagedExceptionMode.UnwindNativeCode : MarshalManagedExceptionMode.Disable;
 						break;
 					case ApplePlatform.MacOSX:
+					case ApplePlatform.MacCatalyst:
 						MarshalManagedExceptions = EnableDebug ? MarshalManagedExceptionMode.UnwindNativeCode : MarshalManagedExceptionMode.Disable;
 						break;
 					default:
@@ -1207,6 +1306,7 @@ namespace Xamarin.Bundler {
 						MarshalObjectiveCExceptions = EnableDebug && IsSimulatorBuild ? MarshalObjectiveCExceptionMode.UnwindManagedCode : MarshalObjectiveCExceptionMode.Disable;
 						break;
 					case ApplePlatform.MacOSX:
+					case ApplePlatform.MacCatalyst:
 						MarshalObjectiveCExceptions = EnableDebug ? MarshalObjectiveCExceptionMode.ThrowManagedException : MarshalObjectiveCExceptionMode.Disable;
 						break;
 					default:
@@ -1284,6 +1384,7 @@ namespace Xamarin.Bundler {
 			get {
 				switch (Platform) {
 				case ApplePlatform.iOS:
+				case ApplePlatform.MacCatalyst:
 					return ProductConstants.iOS;
 				case ApplePlatform.TVOS:
 					return ProductConstants.tvOS;

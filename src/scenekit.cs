@@ -67,14 +67,17 @@ using GLContext = global::OpenGL.CGLContext;
 #else
 using UIKit;
 
+#if HAS_OPENGLES
+using OpenGLES;
+using GLContext = global::OpenGLES.EAGLContext;
+#else
+using GLContext = global::Foundation.NSObject; // won't be used -> but must compile
+#endif
+
 #if WATCH
-using GLContext = global::Foundation.NSObject; // won't be used -> [NoWatch] but must compile
 using NSView = global::Foundation.NSObject; // won't be used -> [NoWatch] but must compile
 using SCNGeometryTessellator = global::Foundation.NSObject; // won't be used -> [NoWatch] but must compile
 #else
-using OpenGLES;
-
-using GLContext = global::OpenGLES.EAGLContext;
 using NSView = global::UIKit.UIView;
 #endif
 
@@ -2546,6 +2549,7 @@ namespace SceneKit {
 		SCNRenderer FromContext (IntPtr context, [NullAllowed] NSDictionary options);
 
 		[NoWatch]
+		[NoMacCatalyst]
 		[Static]
 		[Wrap ("FromContext (context.GetHandle (), options)")]
 		// GetHandle will return IntPtr.Zero is context is null
@@ -3478,7 +3482,7 @@ namespace SceneKit {
 		[Export ("pixelFormat", ArgumentSemantic.Retain)]
 		[NullAllowed]
 		NSOpenGLPixelFormat PixelFormat { get; set;  }
-#elif !WATCH
+#elif !WATCH && !__MACCATALYST__
 		[Deprecated (PlatformName.iOS, 12, 0, message: "Please use Metal instead of OpenGL API.")]
 		[Deprecated (PlatformName.TvOS, 12, 0, message: "Please use Metal instead of OpenGL API.")]
 		[Export ("eaglContext", ArgumentSemantic.Retain)]
@@ -3532,6 +3536,7 @@ namespace SceneKit {
 		bool RendersContinuously { get; set; }
 
 		[NoWatch, NoTV, Mac (10,15), NoiOS]
+		[NoMacCatalyst]
 		[Export ("drawableResizesAsynchronously")]
 		bool DrawableResizesAsynchronously { get; set; }
 	}

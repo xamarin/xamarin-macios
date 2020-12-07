@@ -89,6 +89,23 @@ define NativeCompilationTemplate
 .libs/iphoneos/%$(1).arm64.framework: | .libs/iphoneos
 	$$(call Q_2,LD,    [iphoneos]) $(DEVICE_CC) $(DEVICE64_CFLAGS)      $$(EXTRA_FLAGS) -dynamiclib -o $$@ $$^ -F$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/Frameworks -fapplication-extension  -miphoneos-version-min=8.0
 
+## maccatalyst (ios on macOS / Catalyst)
+
+.libs/maccatalyst/%$(1).x86_64.o: %.m $(EXTRA_DEPENDENCIES) | .libs/maccatalyst
+	$$(call Q_2,OBJC,  [maccatalyst]) $(SIMULATOR_CC) $(MACCATALYST_OBJC_CFLAGS) $$(EXTRA_DEFINES) $(COMMON_I) -g $(2) -c $$< -o $$@
+
+.libs/maccatalyst/%$(1).x86_64.o: %.c $(EXTRA_DEPENDENCIES) | .libs/maccatalyst
+	$$(call Q_2,CC,    [maccatalyst]) $(SIMULATOR_CC) $(MACCATALYST_CFLAGS)      $$(EXTRA_DEFINES) $(COMMON_I) -g $(2) -c $$< -o $$@
+
+.libs/maccatalyst/%$(1).x86_64.o: %.s $(EXTRA_DEPENDENCIES) | .libs/maccatalyst
+	$$(call Q_2,ASM,   [maccatalyst]) $(SIMULATOR_CC) $(MACCATALYST_CFLAGS)                        $(COMMON_I) -g $(2) -c $$< -o $$@
+
+.libs/maccatalyst/%$(1).x86_64.dylib: | .libs/maccatalyst
+	$$(call Q_2,LD,    [maccatalyst]) $(SIMULATOR_CC) $(MACCATALYST_CFLAGS)      $$(EXTRA_FLAGS) -dynamiclib -o $$@ $$^ -L$(IOS_DESTDIR)$(XAMARIN_MACCATALYST_SDK)/lib -fapplication-extension
+
+.libs/maccatalyst/%$(1).x86_64.framework: | .libs/maccatalyst
+	$$(call Q_2,LD,    [maccatalyst]) $(SIMULATOR_CC) $(MACCATALYST_CFLAGS)      $$(EXTRA_FLAGS) -dynamiclib -o $$@ $$^ -F$(IOS_DESTDIR)$(XAMARIN_MACCATALYST_SDK)/Frameworks -fapplication-extension
+
 ## watch simulator
 
 .libs/watchsimulator/%$(1).x86.o: %.m $(EXTRA_DEPENDENCIES) | .libs/watchsimulator
@@ -185,7 +202,7 @@ endef
 $(eval $(call NativeCompilationTemplate,,-O2))
 $(eval $(call NativeCompilationTemplate,-debug,-DDEBUG))
 
-.libs/iphoneos .libs/iphonesimulator .libs/watchos .libs/watchsimulator .libs/tvos .libs/tvsimulator .libs/iosmac:
+.libs/iphoneos .libs/iphonesimulator .libs/watchos .libs/watchsimulator .libs/tvos .libs/tvsimulator .libs/maccatalyst:
 	$(Q) mkdir -p $@
 
 %.csproj.inc: %.csproj $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/tools/common/create-makefile-fragment.sh

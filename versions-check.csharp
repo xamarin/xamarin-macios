@@ -2,17 +2,17 @@
 
 // this script is to make sure our versions.plist files are not out of date with our min/max supported OS versions.
 
-// arguments are: plistPath iOSMinVersion iOSMaxVersion tvOSMinVersion tvOSMaxVersion watchOSMinVersion watchOSMaxVersion macOSMinVersion macOSMaxVersion
+// arguments are: plistPath iOSMinVersion iOSMaxVersion tvOSMinVersion tvOSMaxVersion watchOSMinVersion watchOSMaxVersion macOSMinVersion macOSMaxVersion MacCatalystOSMinVersion MacCatalystOSMaxVersion
 
 using System.IO;
 using System.Xml;
 
 var args = Environment.GetCommandLineArgs ();
-if (args.Length != 11 /* 2 default + 9 real */) {
+if (args.Length != 13 /* 2 default + 9 real */) {
 	// first arg is "/Library/Frameworks/Mono.framework/Versions/4.8.0/lib/mono/4.5/csharp.exe"
 	// second arg the script itself
 	// then comes the ones we care about
-	Console.WriteLine ("Need 9 arguments, got {0}", args.Length - 2);
+	Console.WriteLine ("Need 11 arguments, got {0}", args.Length - 2);
 	Environment.Exit (1);
 	return;
 }
@@ -26,6 +26,8 @@ var watchOSMin = args [7];
 var watchOSMax = args [8];
 var macOSMin = args [9];
 var macOSMax = args [10];
+var MacCatalystMin = args [11];
+var MacCatalystMax = args [12];
 
 var doc = new System.Xml.XmlDocument ();
 doc.Load (plistPath);
@@ -53,11 +55,11 @@ var check = new Action<string, string, string> ((product, min, max) =>
 		} else if (version > maxVersion) {
 			Console.Error.WriteLine ($"Found the {product} version {v} in {Path.GetFileName (plistPath)}, but it's higher than the supported max {product} version we support ({max}).");
 			failed = true;
-		} else if (version == maxVersion) {
-			foundMax = true;
-		} else if (version == minVersion) {
-			foundMin = true;
 		}
+		if (version == maxVersion)
+			foundMax = true;
+		if (version == minVersion)
+			foundMin = true;
 	}
 	if (!foundMax) {
 		Console.Error.WriteLine ($"Could not find the max {product} version {max} in {Path.GetFileName (plistPath)}.");
@@ -73,5 +75,6 @@ check ("iOS", iOSMin, iOSMax);
 check ("tvOS", tvOSMin, tvOSMax);
 check ("watchOS", watchOSMin, watchOSMax);
 check ("macOS", macOSMin, macOSMax);
+check ("MacCatalyst", MacCatalystMin, MacCatalystMax);
 
 Environment.Exit (failed ? 1 : 0);

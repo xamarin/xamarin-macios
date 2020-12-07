@@ -179,7 +179,7 @@ namespace Xharness.Jenkins {
 			SetEnabled (files, xtroPrefixes, "xtro", ref jenkins.IncludeXtro);
 			SetEnabled (files, cecilPrefixes, "cecil", ref jenkins.IncludeCecil);
 			SetEnabled (files, dotnetFilenames, "dotnet", ref jenkins.IncludeDotNet);
-			SetEnabled (files, msbuildFilenames, "ios-msbuild", ref jenkins.IncludeiOSMSBuild);
+			SetEnabled (files, msbuildFilenames, "msbuild", ref jenkins.IncludeMSBuild);
 		}
 
 		void SelectTestsByLabel (int pullRequest)
@@ -248,7 +248,7 @@ namespace Xharness.Jenkins {
 			SetEnabled (labels, "tvos", ref jenkins.IncludetvOS);
 			SetEnabled (labels, "watchos", ref jenkins.IncludewatchOS);
 			SetEnabled (labels, "mac", ref jenkins.IncludeMac);
-			SetEnabled (labels, "ios-msbuild", ref jenkins.IncludeiOSMSBuild);
+			SetEnabled (labels, "msbuild", ref jenkins.IncludeMSBuild);
 			SetEnabled (labels, "ios-simulator", ref jenkins.IncludeSimulator);
 			SetEnabled (labels, "non-monotouch", ref jenkins.IncludeNonMonotouch);
 			SetEnabled (labels, "monotouch", ref jenkins.IncludeMonotouch);

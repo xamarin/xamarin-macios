@@ -1,4 +1,4 @@
-#if IOS || TVOS || MONOMAC
+#if HAS_MEDIATOOLBOX
 //
 // MTAudioProcessingTap.cs: Type wrapper for MTAudioProcessingTap
 //
@@ -298,4 +298,4 @@ namespace MediaToolbox
 	public class AudioBufferList {}
 #endif
 }
-#endif // IOS || TVOS
+#endif // HAS_MEDIATOOLBOX

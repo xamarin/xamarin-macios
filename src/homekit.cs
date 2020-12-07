@@ -81,6 +81,7 @@ namespace HomeKit {
 		void DidRemoveHome (HMHomeManager manager, HMHome home);
 
 		[iOS (13,0), NoWatch, NoTV, NoMac]
+		[NoMacCatalyst]
 		[Export("homeManager:didReceiveAddAccessoryRequest:"), EventArgs ("HMHomeManagerAddAccessoryRequest")]
 		void DidReceiveAddAccessoryRequest (HMHomeManager manager, HMAddAccessoryRequest request);
 		
@@ -222,6 +223,7 @@ namespace HomeKit {
 	// __WATCHOS_PROHIBITED
 	[NoTV]
 	[iOS (8,0)]
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject), Delegates=new string[] {"WeakDelegate"}, Events=new Type[] {typeof(HMAccessoryBrowserDelegate)})]
 	partial interface HMAccessoryBrowser {
 
@@ -245,6 +247,7 @@ namespace HomeKit {
 
 	[NoTV]
 	[iOS (8,0)]
+	[NoMacCatalyst]
 	[Model, Protocol]
 	[BaseType (typeof (NSObject))]
 	partial interface HMAccessoryBrowserDelegate {
@@ -1700,6 +1703,7 @@ namespace HomeKit {
 	}
 
 	[iOS (13,0), NoWatch, NoMac, NoTV]
+	[NoMacCatalyst]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface HMAddAccessoryRequest {

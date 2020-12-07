@@ -24,8 +24,7 @@ namespace Xamarin.MMP.Tests
 		public static string [] GetUnifiedProjectClangInvocation (string tmpDir, string projectConfig = "")
 		{
 			TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { CSProjConfig = projectConfig };
-			string buildOutput = TI.TestUnifiedExecutable (test).BuildOutput;
-			string [] splitBuildOutput = TI.TestUnifiedExecutable (test).BuildOutput.Split (new string[] { Environment.NewLine }, StringSplitOptions.None);
+			var splitBuildOutput = TI.TestUnifiedExecutable (test).BuildResult.BuildOutputLines;
 			string clangInvocation = splitBuildOutput.Single (x => x.Contains ("usr/bin/clang") && x.Contains ("mmacosx-version-min"));
 			return clangInvocation.Split (new string[] { " " }, StringSplitOptions.None);
 		}
@@ -87,8 +86,8 @@ namespace Xamarin.MMP.Tests
 		{
 			RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { CSProjConfig = "<MonoBundlingExtraArgs>--new-refcount=false</MonoBundlingExtraArgs>" };
-				string buildOutput = TI.TestUnifiedExecutable (test).BuildOutput;
-				Assert.IsTrue (buildOutput.Contains ("Disabling the new refcount logic is deprecated"), "Mobile_NewRefCount_Warns did not warn as expected:\n\n", buildOutput);
+				var testResult = TI.TestUnifiedExecutable (test);
+				testResult.Messages.AssertWarning (80, "Disabling the new refcount logic is deprecated.");
 			});
 		}
 
@@ -136,7 +135,7 @@ namespace Xamarin.MMP.Tests
 				test.XM45 = full;
 
 				var rv = TI.TestUnifiedExecutable (test);
-				Console.WriteLine (rv.BuildOutput);
+				Console.WriteLine (rv.BuildResult);
 				if (full && release) {
 					rv.Messages.AssertWarning (5220, "Skipping framework 'QTKit'. It is prohibited (rejected) by the Mac App Store");
 					// We get the MM5220 twice in the output, once from mmp and once from msbuild repeating what mmp said, so we can't assert that there's exactly 1 warning.
@@ -262,9 +261,8 @@ namespace Xamarin.MMP.Tests
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
 					CSProjConfig = string.Format ("<MonoBundlingExtraArgs>--machine-config={0}</MonoBundlingExtraArgs>", invalidConfigPath)
 				};
-				string buildOutput = TI.TestUnifiedExecutable (test, shouldFail : true).BuildOutput;
-				Assert.IsTrue (buildOutput.Contains ("can not be found"), "Unified_InvalidMachineConfigInBundle_ThrowsError did not error as expected (1):\n\n", buildOutput);
-				Assert.IsTrue (buildOutput.Contains ("97"), "Unified_InvalidMachineConfigInBundle_ThrowsError did not error as expected (2):\n\n", buildOutput);
+				var testResult = TI.TestUnifiedExecutable (test, shouldFail : true);
+				testResult.Messages.AssertError (97, $"machine.config file '{invalidConfigPath}' can not be found.");
 			});
 		}
 
@@ -339,8 +337,9 @@ namespace Xamarin.MMP.Tests
 					TI.GenerateUnifiedExecutableProject (test);
 
 					// And try again. 
-					// If we fail, we'll likley fail with "did not generate an exe" before returning but let's check anyway
-					string secondBuildOutput = TI.BuildProject (Path.Combine (tmpDir, TI.GetUnifiedExecutableProjectName (test)));
+					// If we fail, we'll likely fail with "did not generate an exe" before returning but let's check anyway
+					var secondBuildResult = TI.BuildProject (Path.Combine (tmpDir, TI.GetUnifiedExecutableProjectName (test)));
+					var secondBuildOutput = secondBuildResult.BuildOutput;
 					Assert.IsTrue (!secondBuildOutput.Contains ("Skipping target \"_CompileToNative"), "Did not skip");
 					Assert.IsTrue (secondBuildOutput.Contains ("Building target \"_CompileToNative\" completely"), "Did need to build");
 				}
@@ -397,8 +396,8 @@ namespace Xamarin.MMP.Tests
 			RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { XM45 = xm45 };
 				test.Release = true;
-				string buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
-				Assert.IsFalse (buildResults.Contains ("Xamarin.Mac.registrar"), "Release build should not use partial static registrar");
+				var testResults = TI.TestUnifiedExecutable (test);
+				Assert.IsFalse (testResults.BuildResult.BuildOutput.Contains ("Xamarin.Mac.registrar"), "Release build should not use partial static registrar");
 			});
 		}
 
@@ -410,8 +409,8 @@ namespace Xamarin.MMP.Tests
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { XM45 = xm45 };
 				test.Release = false;
 				test.CSProjConfig = "<DebugSymbols>true</DebugSymbols>";
-				var buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
-				Assert.IsTrue (buildResults.Contains ("Xamarin.Mac.registrar"), "Debug build should use partial static registrar");
+				var testResults = TI.TestUnifiedExecutable (test);
+				Assert.IsTrue (testResults.BuildResult.BuildOutput.Contains ("Xamarin.Mac.registrar"), "Debug build should use partial static registrar");
 			});
 		}
 
@@ -423,8 +422,8 @@ namespace Xamarin.MMP.Tests
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { XM45 = xm45 };
 				test.Release = false;
 				test.CSProjConfig = "<DebugSymbols>true</DebugSymbols><MonoBundlingExtraArgs>--registrar=dynamic</MonoBundlingExtraArgs><XamMacArch>x86_64</XamMacArch>";
-				var buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
-				Assert.IsFalse (buildResults.Contains ("Xamarin.Mac.registrar"), "registrar=dynamic build should not use partial static registrar");
+				var testResult = TI.TestUnifiedExecutable (test);
+				Assert.IsFalse (testResult.BuildResult.BuildOutput.Contains ("Xamarin.Mac.registrar"), "registrar=dynamic build should not use partial static registrar");
 			});
 		}
 
@@ -436,8 +435,8 @@ namespace Xamarin.MMP.Tests
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { XM45 = xm45 };
 				test.Release = false;
 				test.CSProjConfig = "<DebugSymbols>true</DebugSymbols><MonoBundlingExtraArgs>--registrar=partial</MonoBundlingExtraArgs><XamMacArch>x86_64</XamMacArch>";
-				var buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
-				Assert.IsTrue (buildResults.Contains ("Xamarin.Mac.registrar"), "registrar=partial build should use partial static registrar");
+				var testResults = TI.TestUnifiedExecutable (test);
+				Assert.IsTrue (testResults.BuildResult.BuildOutput.Contains ("Xamarin.Mac.registrar"), "registrar=partial build should use partial static registrar");
 			});
 		}
 		//https://testrail.xamarin.com/index.php?/cases/view/234141&group_by=cases:section_id&group_order=asc&group_id=51097
@@ -447,7 +446,7 @@ namespace Xamarin.MMP.Tests
 			RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { XM45 = true };
 				var output = TI.TestUnifiedExecutable (test);
-				Assert.That (output.BuildOutput, Contains.Substring ("Selected target framework: Xamarin.Mac,Version=v4.5,Profile=Full; API: Unified"));
+				Assert.That (output.BuildResult.BuildOutput, Contains.Substring ("Selected target framework: Xamarin.Mac,Version=v4.5,Profile=Full; API: Unified"));
 			});
 		}
 
@@ -659,7 +658,7 @@ namespace Xamarin.MMP.Tests
 				string project = TI.GenerateUnifiedExecutableProject (test);
 				TI.NugetRestore (project);
 				var rv = new OutputText (TI.BuildProject (project), string.Empty);
-				Console.WriteLine (rv.BuildOutput);
+				Console.WriteLine (rv.BuildResult);
 				if (xm45) {
 					var referenced_version = tfv == null ? "2.0.0.0" : "4.0.0.0";
 					rv.Messages.AssertWarningPattern (176, $"The assembly 'System.Web, Version={referenced_version}, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a' was resolved from the system's GAC: /Library/Frameworks/Mono.framework/Versions/.*/lib/mono/gac/System.Web/4.0.0.0__b03f5f7f11d50a3a/System.Web.dll. This could potentially be a problem in the future; to avoid such problems, please make sure to not use assemblies only available in the system's GAC.");
@@ -697,15 +696,18 @@ namespace Xamarin.MMP.Tests
 
 				string project = TI.GenerateUnifiedExecutableProject (test);
 
-				string buildOutput = TI.BuildProject (project);
+				var buildResult = TI.BuildProject (project);
+				var buildOutput = buildResult.BuildOutput;
 				Assert.True (buildOutput.Contains (actool), $"Initial build should run actool");
 
-				buildOutput = TI.BuildProject (project);
+				buildResult = TI.BuildProject (project);
+				buildOutput = buildResult.BuildOutput;
 				Assert.False (buildOutput.Contains (actool), $"Second build should not run actool");
 
 				TI.RunAndAssert ("touch", new [] { Path.Combine (tmpDir, "Assets.xcassets/AppIcon.appiconset/AppIcon-256@2x.png") }, "touch icon");
 
-				buildOutput = TI.BuildProject (project);
+				buildResult = TI.BuildProject (project);
+				buildOutput = buildResult.BuildOutput;
 				Assert.True (buildOutput.Contains (actool), $"Build after touching icon must run actool");
 			});
 		}
@@ -722,7 +724,7 @@ namespace Xamarin.MMP.Tests
 					CSProjConfig = "<EnableCodeSigning>true</EnableCodeSigning>"
 				};
 
-				Func<OutputText, string> findCodesign = o => o.BuildOutput.SplitLines ().Last (x => x.Contains ("Tool /usr/bin/codesign execution started with arguments"));
+				Func<OutputText, string> findCodesign = o => o.BuildResult.BuildOutputLines.Last (x => x.Contains ("Tool /usr/bin/codesign execution started with arguments"));
 
 				var baseOutput = TI.TestUnifiedExecutable (test);
 				string baseCodesign = findCodesign (baseOutput);
@@ -764,7 +766,7 @@ namespace Xamarin.MMP.Tests
 					CSProjConfig = "<EnableCodeSigning>true</EnableCodeSigning>"
 				};
 				TI.TestUnifiedExecutable (test);
-				var output = TI.BuildProject (Path.Combine (tmpDir, full ? "XM45Example.csproj" : "UnifiedExample.csproj"), release: true, extraArgs: new [] { "/p:ArchiveOnBuild=true" });
+				TI.BuildProject (Path.Combine (tmpDir, full ? "XM45Example.csproj" : "UnifiedExample.csproj"), release: true, extraArgs: new [] { "/p:ArchiveOnBuild=true" });
 			});
 
 			// TODO: Add something to validate the archive is loadable by Xcode
@@ -778,7 +780,7 @@ namespace Xamarin.MMP.Tests
 					CSProjConfig = "<MonoBundlingExtraArgs>-link_flags=-fobjc-arc</MonoBundlingExtraArgs>"
 				};
 				TI.TestUnifiedExecutable (test);
-				var output = TI.BuildProject (Path.Combine (tmpDir, "UnifiedExample.csproj"));
+				TI.BuildProject (Path.Combine (tmpDir, "UnifiedExample.csproj"));
 			});
 
 		}

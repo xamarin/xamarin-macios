@@ -40,8 +40,8 @@ namespace Xamarin.MMP.Tests
 
 		void TestBCLCore (string tmpDir, string projectName)
 		{
-			File.Copy (Path.Combine (TI.AssemblyDirectory, TI.TestDirectory + "common/mac/System.Collections.Immutable.dll"), Path.Combine (tmpDir, "System.Collections.Immutable.dll"));
-			string reference = "<Reference Include=\"System.Collections.Immutable\"><HintPath>System.Collections.Immutable.dll</HintPath></Reference>";
+			var dll = Path.GetFullPath (Path.Combine (TI.TestDirectory + "common", "mac", "System.Collections.Immutable.dll"));
+			string reference = $"<Reference Include=\"System.Collections.Immutable\"><HintPath>{dll}</HintPath></Reference>";
 			string testCode = "var v = System.Collections.Immutable.ImmutableArray.CreateRange (new int [] { 42 });";
 			string projectPath = TI.GenerateEXEProject (new TI.UnifiedTestConfig (tmpDir) { ProjectName = projectName, References = reference, TestCode = testCode });
 			TI.BuildProject (projectPath);
@@ -121,68 +121,63 @@ namespace Xamarin.MMP.Tests
 		public void BuildUnifiedProject_WithJustNativeRefNoLinkWith_Builds()
 		{
 			RunMSBuildTest (tmpDir => {
-				string dylibPath = Path.Combine (tmpDir, "dll/");
-				Directory.CreateDirectory (dylibPath);
-				File.Copy (Path.Combine (TI.AssemblyDirectory, TI.TestDirectory + "mac-binding-project/bin/SimpleClassDylib.dylib"), Path.Combine (dylibPath, "SimpleClassDylib.dylib"));
-				string itemGroup = "<ItemGroup><NativeReference Include=\".\\dll\\SimpleClassDylib.dylib\"> <IsCxx>False</IsCxx><Kind>Dynamic</Kind> </NativeReference> </ItemGroup>";
+				var dylib = Path.GetFullPath (Path.Combine (TI.TestDirectory, "test-libraries", ".libs", "macos", "libtest.dylib"));
+				string itemGroup = $"<ItemGroup><NativeReference Include=\"{dylib}\"> <IsCxx>False</IsCxx><Kind>Dynamic</Kind> </NativeReference> </ItemGroup>";
 				string projectPath = TI.GenerateEXEProject (new TI.UnifiedTestConfig (tmpDir) { ProjectName = "UnifiedExample.csproj", ItemGroup = itemGroup });
-				string buildResults = TI.BuildProject (projectPath);
-				Assert.IsFalse (buildResults.Contains ("MM2006"), "BuildUnifiedProject_WittJustNativeRefNoLinkWith_Builds found 2006 warning: " + buildResults);
-				Assert.IsTrue (File.Exists (Path.Combine (tmpDir, "bin/Debug/UnifiedExample.app/Contents/MonoBundle/SimpleClassDylib.dylib")));
+				var testResults = TI.BuildProject (projectPath);
+				testResults.Messages.AssertNoMessage (2006);
+				Assert.That (Path.Combine (tmpDir, $"bin", "Debug", "UnifiedExample.app", "Contents", "MonoBundle", Path.GetFileName (dylib)), Does.Exist, "dylib in app");
 
-				StringBuilder output = new StringBuilder ();
-				Xamarin.Bundler.Driver.RunCommand ("/usr/bin/otool", new [] { "-L", Path.Combine (tmpDir, "bin/Debug/UnifiedExample.app/Contents/MacOS/UnifiedExample") }, output);
-				Assert.IsTrue (output.ToString ().Contains ("SimpleClassDylib.dylib"));
+				Assert.AreEqual (0, ExecutionHelper.Execute ("/usr/bin/otool", new [] { "-L", Path.Combine (tmpDir, "bin/Debug/UnifiedExample.app/Contents/MacOS/UnifiedExample") }, out var output));
+				Assert.IsTrue (output.ToString ().Contains (Path.GetFileName (dylib)));
 			});
 		}
 
 		[Test]
-		public void Build_BindingLibrary_SmokeTest ()
+		[TestCase ("XM45Binding.csproj")]
+		[TestCase ("MobileBinding.csproj")]
+		[TestCase ("BindingProjectWithNoTag.csproj")]
+		public void Build_BindingLibrary_SmokeTest (string projectName)
 		{
 			RunMSBuildTest (tmpDir => {
-				foreach (string projectName in new []{"XM45Binding.csproj", "MobileBinding.csproj", "BindingProjectWithNoTag.csproj"}) {
-					TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { ProjectName = projectName };
-					string projectPath = TI.GenerateBindingLibraryProject (test);
-					TI.BuildProject (projectPath);
-				}
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { ProjectName = projectName };
+				string projectPath = TI.GenerateBindingLibraryProject (test);
+				TI.BuildProject (projectPath);
 			});
 		}
 
 		[Test]
-		public void BuildingSameBindingProject_TwoTimes_ShallNotInvokeMMPTwoTimes ()
+		[TestCase ("XM45Binding.csproj")]
+		[TestCase ("MobileBinding.csproj")]
+		[TestCase ("BindingProjectWithNoTag.csproj")]
+		public void BuildingSameBindingProject_TwoTimes_ShallNotInvokeMMPTwoTimes (string project)
 		{
 			const string nativeRefItemGroup = "<ItemGroup><NativeReference Include = \"\\usr\\lib\\libz.dylib\"><Kind>Dynamic</Kind><SmartLink>False</SmartLink></NativeReference></ItemGroup>";
 
-			RunMSBuildTest (tmpDir =>
-			{
-				foreach (string project in new[] { "XM45Binding.csproj", "MobileBinding.csproj", "BindingProjectWithNoTag.csproj" })
-				{
-					var config = new TI.UnifiedTestConfig (tmpDir) { ProjectName = project, ItemGroup = nativeRefItemGroup };
-					string projectPath = TI.GenerateBindingLibraryProject (config);
-					string buildOutput = TI.BuildProject (projectPath);
-					Assert.IsTrue (buildOutput.Contains (@"Building target ""CoreCompile"""));
+			RunMSBuildTest (tmpDir => {
+				var config = new TI.UnifiedTestConfig (tmpDir) { ProjectName = project, ItemGroup = nativeRefItemGroup };
+				string projectPath = TI.GenerateBindingLibraryProject (config);
+				string buildOutput = TI.BuildProject (projectPath).BuildOutput;
+				Assert.IsTrue (buildOutput.Contains (@"Building target ""CoreCompile"""));
 
-					string secondBuildOutput = TI.BuildProject (projectPath);
-					Assert.IsFalse (secondBuildOutput.Contains (@"Building target ""CoreCompile"""));
-				}
+				string secondBuildOutput = TI.BuildProject (projectPath).BuildOutput;
+				Assert.IsFalse (secondBuildOutput.Contains (@"Building target ""CoreCompile"""));
 			});
 		}
 
 		[Test]
-		public void BuildingSameProject_TwoTimes_ShallNotInvokeMMPTwoTimes ()
+		[TestCase ("UnifiedExample.csproj")]
+		[TestCase ("XM45Example.csproj")]
+		public void BuildingSameProject_TwoTimes_ShallNotInvokeMMPTwoTimes (string project)
 		{
-			RunMSBuildTest (tmpDir =>
-			{
-				foreach (var project in new string[] { "UnifiedExample.csproj", "XM45Example.csproj" })
-				{
-					var config = new TI.UnifiedTestConfig (tmpDir) { ProjectName = project };
-					string projectPath = TI.GenerateEXEProject (config);
-					string buildOutput = TI.BuildProject (projectPath);
-					Assert.IsTrue (buildOutput.Contains (@"Building target ""_CompileToNative"""));
+			RunMSBuildTest (tmpDir => {
+				var config = new TI.UnifiedTestConfig (tmpDir) { ProjectName = project };
+				string projectPath = TI.GenerateEXEProject (config);
+				string buildOutput = TI.BuildProject (projectPath).BuildOutput;
+				Assert.IsTrue (buildOutput.Contains (@"Building target ""_CompileToNative"""));
 
-					string secondBuildOutput = TI.BuildProject (projectPath);
-					Assert.IsFalse (secondBuildOutput.Contains (@"Building target ""_CompileToNative"""));
-				}
+				string secondBuildOutput = TI.BuildProject (projectPath).BuildOutput;
+				Assert.IsFalse (secondBuildOutput.Contains (@"Building target ""_CompileToNative"""));
 			});
 		}
 

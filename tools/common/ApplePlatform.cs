@@ -11,6 +11,7 @@ namespace Xamarin.Utils
 		iOS,
 		WatchOS,
 		TVOS,
+		MacCatalyst,
 	}
 
 	public static class ApplePlatformExtensions {
@@ -25,6 +26,8 @@ namespace Xamarin.Utils
 				return "watchOS";
 			case ApplePlatform.TVOS:
 				return "tvOS";
+			case ApplePlatform.MacCatalyst:
+				return "MacCatalyst";
 			case ApplePlatform.None:
 				return "None";
 			default:

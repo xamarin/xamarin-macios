@@ -426,6 +426,9 @@ namespace Xamarin.MacDev.Tasks
 			case "MacOSX":
 				platform = MobileProvisionPlatform.MacOS;
 				break;
+			case "MacCatalyst":
+				platform = MobileProvisionPlatform.MacOS;
+				break;
 			default:
 				Log.LogError (MSBStrings.E0048, SdkPlatform);
 				return false;
@@ -455,7 +458,7 @@ namespace Xamarin.MacDev.Tasks
 				return false;
 			}
 
-			if (Platform == ApplePlatform.MacOSX) {
+			if (Platform == ApplePlatform.MacOSX || Platform == ApplePlatform.MacCatalyst) {
 				if (!RequireCodeSigning || !string.IsNullOrEmpty (DetectedCodeSigningKey)) {
 					DetectedBundleId = identity.BundleId;
 					DetectedAppId = DetectedBundleId;

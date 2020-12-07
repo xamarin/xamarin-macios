@@ -258,6 +258,11 @@ namespace Xamarin.Bundler {
 #endif
 						}
 
+						if (framework.Unavailable) {
+							ErrorHelper.Warning (181, Errors.MX0181 /* Not linking with the framework {0} (used by the type {1}) because it's not available on the current platform ({2}). */, framework.Name, td.FullName, App.PlatformName);
+							continue;
+						}
+
 						if (App.SdkVersion >= framework.Version) {
 							var add_to = framework.AlwaysWeakLinked || App.DeploymentTarget < framework.Version ? asm.WeakFrameworks : asm.Frameworks;
 							add_to.Add (framework.Name);
@@ -320,10 +325,18 @@ namespace Xamarin.Bundler {
 
 				bool has_dyn_msgSend;
 
-				if (App.Platform == ApplePlatform.MacOSX) {
-					has_dyn_msgSend = App.MarshalObjectiveCExceptions != MarshalObjectiveCExceptionMode.Disable && !App.RequiresPInvokeWrappers && Is64Build;
-				} else {
+				switch (App.Platform) {
+				case ApplePlatform.iOS:
+				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
 					has_dyn_msgSend = App.IsSimulatorBuild;
+					break;
+				case ApplePlatform.MacCatalyst:
+				case ApplePlatform.MacOSX:
+					has_dyn_msgSend = App.MarshalObjectiveCExceptions != MarshalObjectiveCExceptionMode.Disable && !App.RequiresPInvokeWrappers && Is64Build;
+					break;
+				default:
+					throw ErrorHelper.CreateError (71, Errors.MX0071, App.Platform, App.ProductName);
 				}
 
 				if (has_dyn_msgSend) {
@@ -379,6 +392,8 @@ namespace Xamarin.Bundler {
 #if MTOUCH
 				// functions are not required if they're used in an assembly which isn't using dlsym, and we're AOT-compiling.
 				if (App.IsSimulatorBuild)
+					return true;
+				if (App.Platform == ApplePlatform.MacCatalyst)
 					return true;
 				if (single_assembly != null)
 					return App.UseDlsym (single_assembly.FileName);
@@ -537,6 +552,7 @@ namespace Xamarin.Bundler {
 					case ApplePlatform.iOS:
 					case ApplePlatform.TVOS:
 					case ApplePlatform.WatchOS:
+					case ApplePlatform.MacCatalyst:
 						GenerateIOSMain (sw, abi);
 						break;
 					case ApplePlatform.MacOSX:

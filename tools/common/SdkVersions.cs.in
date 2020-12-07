@@ -16,11 +16,13 @@ namespace Xamarin {
 		public const string iOS = "@IOS_SDK_VERSION@";
 		public const string WatchOS = "@WATCHOS_SDK_VERSION@";
 		public const string TVOS = "@TVOS_SDK_VERSION@";
+		public const string MacCatalyst = "@MACCATALYST_SDK_VERSION@";
 
 		public const string MinOSX = "@MIN_OSX_SDK_VERSION@";
 		public const string MiniOS = "@MIN_IOS_SDK_VERSION@";
 		public const string MinWatchOS = "@MIN_WATCHOS_SDK_VERSION@";
 		public const string MinTVOS = "@MIN_TVOS_SDK_VERSION@";
+		public const string MinMacCatalyst = "@MIN_MACCATALYST_SDK_VERSION@";
 
 		public const string MiniOSSimulator = "@MIN_IOS_SIMULATOR_VERSION@";
 		public const string MinWatchOSSimulator = "@MIN_WATCHOS_SIMULATOR_VERSION@";
@@ -40,6 +42,7 @@ namespace Xamarin {
 		public static Version iOSVersion { get { return new Version (iOS); }}
 		public static Version WatchOSVersion { get { return new Version (WatchOS); }}
 		public static Version TVOSVersion { get { return new Version (TVOS); }}
+		public static Version MacCatalystVersion { get { return new Version (MacCatalyst); }}
 
 		public static Version iOSTargetVersion { get { return new Version (MaxiOSDeploymentTarget); }}
 		public static Version WatchOSTargetVersion { get { return new Version (MaxWatchDeploymentTarget); }}
@@ -49,6 +52,7 @@ namespace Xamarin {
 		public static Version MiniOSVersion { get { return new Version (MiniOS); }}
 		public static Version MinWatchOSVersion { get { return new Version (MinWatchOS); }}
 		public static Version MinTVOSVersion { get { return new Version (MinTVOS); }}
+		public static Version MinMacCatalystVersion { get { return new Version (MinMacCatalyst); }}
 
 		public static Version MiniOSSimulatorVersion { get { return new Version (MiniOSSimulator); }}
 		public static Version MinWatchOSSimulatorVersion { get { return new Version (MinWatchOSSimulator); }}
@@ -70,6 +74,7 @@ namespace Xamarin {
 			case ApplePlatform.iOS: return iOSVersion;
 			case ApplePlatform.WatchOS: return WatchOSVersion;
 			case ApplePlatform.TVOS: return TVOSVersion;
+			case ApplePlatform.MacCatalyst: return MacCatalystVersion;
 			default:
 				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", app.Platform, app.ProductName);
 			}
@@ -94,6 +99,7 @@ namespace Xamarin {
 			case ApplePlatform.iOS: return MiniOSVersion;
 			case ApplePlatform.WatchOS: return MinWatchOSVersion;
 			case ApplePlatform.TVOS: return MinTVOSVersion;
+			case ApplePlatform.MacCatalyst: return MinMacCatalystVersion;
 			default:
 				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", app.Platform, app.ProductName);
 			}

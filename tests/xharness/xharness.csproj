@@ -177,6 +177,7 @@
     <Compile Include="TestProjectExtensions.cs" />
     <Compile Include="TestTargetExtensions.cs" />
     <Compile Include="XmlDocumentExtensions.cs" />
+    <Compile Include="Targets\MacCatalystTarget.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\tools\common\SdkVersions.cs">
