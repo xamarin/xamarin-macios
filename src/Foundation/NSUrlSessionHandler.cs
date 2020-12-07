@@ -553,7 +553,7 @@ namespace Foundation {
 						//                        we did not find the data.
 						if (inflight.CancellationToken.IsCancellationRequested) {
 							task?.Cancel ();
-							// return null so that we break out of any deleate method.
+							// return null so that we break out of any delegate method.
 							return null;
 						}
 						return inflight;
