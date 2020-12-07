@@ -17,6 +17,8 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\product.snk</AssemblyOriginatorKeyFile>
     <TargetFrameworkIdentifier>Xamarin.iOS</TargetFrameworkIdentifier>
+    <MtouchArch Condition="'$(Platform)' == 'iPhoneSimulator'">x86_64</MtouchArch>
+    <MtouchArch Condition="'$(Platform)' == 'iPhone'">arm64</MtouchArch>
     <IntermediateOutputPath>obj\$(Platform)\$(Configuration)</IntermediateOutputPath>
     <DefineConstants></DefineConstants>
     <LangVersion>latest</LangVersion>
