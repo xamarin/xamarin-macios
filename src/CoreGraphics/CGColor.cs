@@ -278,7 +278,8 @@ namespace CoreGraphics {
 			/* __nullable CGColorSpaceRef* */ IntPtr space, CGColorRenderingIntent intent,
 			/* CGColorRef __nullable */ IntPtr color, /* __nullable CFDictionaryRef */ IntPtr options);
 
-		static CGColor CreateByMatchingToColorSpace (CGColorSpace space, CGColorRenderingIntent intent,
+		[iOS (9,0)][Mac (10,11)]
+		static public CGColor CreateByMatchingToColorSpace (CGColorSpace space, CGColorRenderingIntent intent,
 			CGColor color, NSDictionary options)
 		{
 			var h = CGColorCreateCopyByMatchingToColorSpace (space == null ? IntPtr.Zero : space.Handle, intent,
