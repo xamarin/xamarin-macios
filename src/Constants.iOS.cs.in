@@ -154,5 +154,7 @@ namespace ObjCRuntime {
 		public const string ScreenTimeLibrary = "/System/Library/Frameworks/ScreenTime.framework/ScreenTime";
 		public const string SensorKitLibrary = "/System/Library/Frameworks/SensorKit.framework/SensorKit";
 		public const string UniformTypeIdentifiersLibrary = "/System/Library/Frameworks/UniformTypeIdentifiers.framework/UniformTypeIdentifiers";
+		// iOS 14.3
+		public const string AdServicesLibrary = "/System/Library/Frameworks/AdServices.framework/AdServices";
 	}
 }

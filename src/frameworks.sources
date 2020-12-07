@@ -1854,6 +1854,7 @@ COMMON_FRAMEWORKS =         \
 MAC_FRAMEWORKS =            \
 	$(COMMON_FRAMEWORKS)    \
 	Accounts                \
+	AdServices              \
 	AdSupport               \
 	AppKit XKit             \
 	AppTrackingTransparency \
@@ -1947,6 +1948,7 @@ IOS_FRAMEWORKS =         \
 	$(COMMON_FRAMEWORKS) \
 	AVKit \
 	Accounts \
+	AdServices \
 	AdSupport \
 	AddressBook \
 	AddressBookUI \
