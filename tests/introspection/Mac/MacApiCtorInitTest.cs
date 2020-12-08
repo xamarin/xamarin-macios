@@ -230,8 +230,8 @@ namespace Introspection {
 				if (Mac.CheckSystemVersion (10, 15)) // QTKit is gone in 10.15
 					return true;
 				break;
-			case "ModelIO": // Looks like it is broken in macOS beta 9
-				if (Mac.CheckSystemVersion (11, 0)) // Causes error on test: turning unknown type for VtValue with unregistered C++ type bool
+			case "ModelIO": // Looks like it is broken in macOS 11.0 beta 9 and fixed in 11.1 beta 2
+				if (!Mac.CheckSystemVersion (11, 1) && Mac.CheckSystemVersion (11, 0)) // Causes error on test: turning unknown type for VtValue with unregistered C++ type bool
 					return true;
 				break;
 			}
