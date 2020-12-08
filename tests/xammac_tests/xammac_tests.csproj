@@ -97,9 +97,6 @@
     <Compile Include="..\EmbeddedResources\ResourcesTest.cs">
       <Link>EmbeddedResources\ResourcesTest.cs</Link>
     </Compile>
-    <Compile Include="..\common\mac\ProjectTestHelpers.cs">
-      <Link>ProjectTestHelpers.cs</Link>
-    </Compile>
     <Compile Include="..\..\tools\common\StringUtils.cs">
       <Link>StringUtils.cs</Link>
     </Compile>

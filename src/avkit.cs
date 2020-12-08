@@ -10,6 +10,9 @@ using CoreImage;
 using CoreMedia;
 using CoreVideo;
 using AVFoundation;
+#if HAS_OPENGLES
+using OpenGLES;
+#endif
 #if !MONOMAC
 using AVCaptureViewControlsStyle = Foundation.NSObject;
 using AVPlayerViewControlsStyle = Foundation.NSObject;
@@ -17,7 +20,6 @@ using AVPlayerViewTrimResult = Foundation.NSObject;
 using NSColor = UIKit.UIColor;
 using NSMenu = Foundation.NSObject;
 using NSView = UIKit.UIView;
-using OpenGLES;
 using UIKit;
 #else
 using AppKit;

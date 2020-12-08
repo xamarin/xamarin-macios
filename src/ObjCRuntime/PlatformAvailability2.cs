@@ -263,6 +263,19 @@ namespace ObjCRuntime
 #endif
 	}
 
+	public sealed class MacCatalystAttribute : IntroducedAttribute
+	{
+		public MacCatalystAttribute (byte major, byte minor)
+			: base (PlatformName.MacCatalyst, (int) major, (int) minor)
+		{
+		}
+
+		public MacCatalystAttribute (byte major, byte minor, byte subminor)
+			: base (PlatformName.MacCatalyst, (int) major, (int) minor, subminor)
+		{
+		}
+	}
+
 	public sealed class NoMacAttribute : UnavailableAttribute
 	{
 		public NoMacAttribute ()
@@ -291,6 +304,14 @@ namespace ObjCRuntime
 	{
 		public NoTVAttribute ()
 			: base (PlatformName.TvOS)
+		{
+		}
+	}
+
+	public sealed class NoMacCatalystAttribute : UnavailableAttribute
+	{
+		public NoMacCatalystAttribute ()
+			: base (PlatformName.MacCatalyst)
 		{
 		}
 	}

@@ -462,17 +462,25 @@ namespace Xamarin.Bundler {
 
 		void AddFramework (string file)
 		{
-			if (Driver.GetFrameworks (App).TryGetValue (file, out var framework) && framework.Version > App.SdkVersion)
-				ErrorHelper.Warning (135, Errors.MX0135, file, FileName, App.PlatformName, framework.Version, App.SdkVersion);
-			else {
-				var strong = (framework == null) || (App.DeploymentTarget >= (App.IsSimulatorBuild ? framework.VersionAvailableInSimulator ?? framework.Version : framework.Version));
-				if (strong) {
-					if (Frameworks.Add (file))
-						Driver.Log (3, "Linking with the framework {0} because it's referenced by a module reference in {1}", file, FileName);
-				} else {
-					if (WeakFrameworks.Add (file))
-						Driver.Log (3, "Linking (weakly) with the framework {0} because it's referenced by a module reference in {1}", file, FileName);
+			if (Driver.GetFrameworks (App).TryGetValue (file, out var framework)) {
+				if (framework.Unavailable) {
+					ErrorHelper.Warning (182, Errors.MX0182 /* Not linking with the framework {0} (referenced by a module reference in {1}) because it's not available on the current platform ({2}). */, framework.Name, FileName, App.PlatformName);
+					return;
 				}
+
+				if (framework.Version > App.SdkVersion) {
+					ErrorHelper.Warning (135, Errors.MX0135, file, FileName, App.PlatformName, framework.Version, App.SdkVersion);
+					return;
+				}
+			}
+
+			var strong = (framework == null) || (App.DeploymentTarget >= (App.IsSimulatorBuild ? framework.VersionAvailableInSimulator ?? framework.Version : framework.Version));
+			if (strong) {
+				if (Frameworks.Add (file))
+					Driver.Log (3, "Linking with the framework {0} because it's referenced by a module reference in {1}", file, FileName);
+			} else {
+				if (WeakFrameworks.Add (file))
+					Driver.Log (3, "Linking (weakly) with the framework {0} because it's referenced by a module reference in {1}", file, FileName);
 			}
 		}
 
@@ -484,6 +492,7 @@ namespace Xamarin.Bundler {
 					return "-lcompression";
 				return "-weak-lcompression";
 			case ApplePlatform.iOS:
+			case ApplePlatform.MacCatalyst:
 				if (App.DeploymentTarget >= new Version (9,0))
 					return "-lcompression";
 				return "-weak-lcompression";

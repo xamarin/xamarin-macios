@@ -19,6 +19,8 @@
 				return "appletvsimulator";
 			case "AppleTVOS":
 				return "appletvos";
+			case "MacCatalyst":
+				return "macosx";
 			}
 
 			return null;

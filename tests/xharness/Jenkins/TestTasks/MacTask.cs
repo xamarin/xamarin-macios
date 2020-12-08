@@ -20,6 +20,8 @@ namespace Xharness.Jenkins.TestTasks {
 					return "Mac Full";
 				case TestPlatform.Mac_System:
 					return "Mac System";
+				case TestPlatform.MacCatalyst:
+					return "Mac Catalyst";
 				default:
 					throw new NotImplementedException (Platform.ToString ());
 				}

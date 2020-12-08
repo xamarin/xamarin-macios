@@ -3347,6 +3347,7 @@ namespace AVFoundation {
 		NSError Error { get; }
 
 		[NullAllowed, Export ("audioOutputDeviceUniqueID"), NoWatch, NoTV, NoiOS]
+		[NoMacCatalyst]
 		string AudioOutputDeviceUniqueId { get; set; }
 
 		[Export ("audioTimePitchAlgorithm")]

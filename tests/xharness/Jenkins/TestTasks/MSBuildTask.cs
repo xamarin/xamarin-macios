@@ -20,6 +20,8 @@ namespace Xharness.Jenkins.TestTasks {
 			get {
 				if (TestProject.IsDotNetProject) // 'dotnet build' will restore
 					return false;
+				if (TestProject.TestPlatform == TestPlatform.MacCatalyst)
+					return false; // we have to do 'msbuild /r'
 				return base.RestoreNugets;
 			}
 		}

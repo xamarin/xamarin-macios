@@ -10,6 +10,7 @@ namespace Xharness {
 		public bool SkipwatchOSARM64_32Variation;
 		public bool SkipwatchOS32Variation;
 		public bool SkiptvOSVariation;
+		public bool SkipMacCatalystVariation;
 		public bool SkipTodayExtensionVariation;
 		public bool SkipDeviceVariations;
 		public bool BuildOnly;

@@ -48,6 +48,14 @@
       <Variable name="MD_MTOUCH_SDK_ROOT" value="../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git" />
     </EnvironmentVariables>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'maccatalyst' ">
+    <StartAction>Project</StartAction>
+    <StartArguments>@build/$(RunConfiguration).rsp</StartArguments>
+    <StartWorkingDirectory>$(ProjectDir)</StartWorkingDirectory>
+    <EnvironmentVariables>
+      <Variable name="MD_MTOUCH_SDK_ROOT" value="../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git" />
+    </EnvironmentVariables>
+  </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'tvos' ">
     <StartAction>Project</StartAction>
     <StartArguments>@build/$(RunConfiguration).rsp</StartArguments>

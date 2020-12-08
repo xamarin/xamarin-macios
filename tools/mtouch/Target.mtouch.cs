@@ -382,8 +382,14 @@ namespace Xamarin.Bundler
 				case "Xamarin.iOS":
 				case "Xamarin.TVOS":
 				case "Xamarin.WatchOS":
-					if (reference.Name != Driver.GetProductAssembly (App))
+				case "Xamarin.MacCatalyst":
+					if (reference.Name != Driver.GetProductAssembly (App)) {
+						if (App.Platform == ApplePlatform.MacCatalyst && reference.Name == "Xamarin.iOS") {
+							// This is allowed, because it's a facade
+							break;
+						}
 						exceptions.Add (ErrorHelper.CreateError (34, Errors.MT0034, reference.Name, Driver.TargetFramework.Identifier, assembly.FullName));
+					}
 					break;
 				}
 
@@ -944,6 +950,9 @@ namespace Xamarin.Bundler
 			if (App.IsSimulatorBuild)
 				return;
 
+			if (App.Platform == ApplePlatform.MacCatalyst)
+				return;
+
 			// Here we create the tasks to run the AOT compiler.
 			foreach (var a in Assemblies) {
 				if (!a.IsAOTCompiled)
@@ -1323,6 +1332,10 @@ namespace Xamarin.Bundler
 					method = "xamarin_create_classes_Xamarin_TVOS";
 					library = "Xamarin.TVOS.registrar.a";
 					break;
+				case ApplePlatform.MacCatalyst:
+					method = "xamarin_create_classes_Xamarin_MacCatalyst";
+					library = "Xamarin.MacCatalyst.registrar.a";
+					break;
 				default:
 					throw ErrorHelper.CreateError (71, Errors.MX0071, App.Platform, "Xamarin.iOS");
 				}
@@ -1430,6 +1443,8 @@ namespace Xamarin.Bundler
 			if (App.IsDeviceBuild) {
 				linker_flags.AddOtherFlag ($"-m{Driver.GetTargetMinSdkName (App)}-version-min={App.DeploymentTarget}");
 				linker_flags.AddOtherFlag ($"-isysroot", Driver.GetFrameworkDirectory (App));
+			} else if (App.Platform == ApplePlatform.MacCatalyst) {
+				CompileTask.GetCatalystCompilerFlags (linker_flags, abi, App);
 			} else {
 				CompileTask.GetSimulatorCompilerFlags (linker_flags, false, App);
 			}
@@ -1622,6 +1637,7 @@ namespace Xamarin.Bundler
 				compiler_flags.AddLinkWith (libnative);
 				switch (app.Platform) {
 				case ApplePlatform.iOS:
+				case ApplePlatform.MacCatalyst:
 					Driver.Log (3, "Adding GSS framework reference.");
 					compiler_flags.AddFramework ("GSS");
 					break;

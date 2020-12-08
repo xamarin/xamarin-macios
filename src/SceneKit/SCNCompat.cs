@@ -149,7 +149,7 @@ namespace SceneKit {
 		}
 	}
 
-#if !MONOMAC && !WATCH
+#if !MONOMAC && !WATCH && !__MACCATALYST__
 	public partial class SCNView {
 		[Watch (6,0), TV (13,0), iOS (13,0)]
 		[Obsolete ("Empty stub. (not a public API).")]

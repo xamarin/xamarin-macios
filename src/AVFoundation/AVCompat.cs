@@ -189,7 +189,7 @@ namespace AVFoundation {
 		}
 	}
 
-#if !MONOMAC
+#if !MONOMAC && !__MACCATALYST__
 	partial class AVSampleBufferAudioRenderer
 	{
 		[Obsolete ("This API is not available on this platform.")]

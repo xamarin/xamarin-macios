@@ -91,7 +91,7 @@ namespace Xharness.Targets
 			return rv.TrimStart ('-');
 		}
 
-		public string PlatformString {
+		public virtual string PlatformString {
 			get {
 				return ApplePlatform.AsString ();
 			}

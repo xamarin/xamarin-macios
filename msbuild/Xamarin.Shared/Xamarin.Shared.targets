@@ -534,8 +534,8 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 	<Target Name="_ComputePkgInfoPath" DependsOnTargets="_GenerateBundleName">
 		<PropertyGroup>
-			<_PkgInfoPath Condition="'$(_PlatformName)' == 'macOS'">$(_AppBundlePath)Contents\PkgInfo</_PkgInfoPath>
 			<_PkgInfoPath Condition="'$(_PlatformName)' != 'macOS'">$(_AppBundlePath)PkgInfo</_PkgInfoPath>
+			<_PkgInfoPath Condition="'$(_PlatformName)' == 'macOS' Or '$(_IsMacCatalyst)' == 'true'">$(_AppBundlePath)Contents\PkgInfo</_PkgInfoPath>
 		</PropertyGroup>
 	</Target>
 
@@ -676,6 +676,9 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<Output TaskParameter="Item" PropertyName="_AppManifest" />
 		</FindItemWithLogicalName>
 		<Error Condition="'$(_AppManifest)' == '' And '$(_CanOutputAppBundle)' == 'true'" Text="Info.plist not found."/>
+		<PropertyGroup>
+			<_AppBundleManifestPath>$(_AppBundlePath)$(_AppBundleManifestRelativePath)$(_AppManifest)</_AppBundleManifestPath>
+		</PropertyGroup>
 	</Target>
 
 	<PropertyGroup Condition="'$(IsBindingProject)' == 'true'">

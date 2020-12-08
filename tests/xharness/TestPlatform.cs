@@ -12,6 +12,7 @@
 		watchOS,
 		watchOS_32,
 		watchOS_64_32,
+		MacCatalyst,
 
 		Mac,
 		Mac_Modern,

@@ -49,8 +49,10 @@ bool xamarin_init_mono_debug = false;
 #endif
 int xamarin_log_level = 0;
 const char *xamarin_executable_name = NULL;
-#if MONOMAC
+#if MONOMAC || TARGET_OS_MACCATALYST
 NSString * xamarin_custom_bundle_name = @"MonoBundle";
+#endif
+#if MONOMAC
 bool xamarin_is_mkbundle = false;
 char *xamarin_entry_assembly_path = NULL;
 #endif
@@ -2635,6 +2637,14 @@ xamarin_locate_assembly_resource (const char *assembly_name, const char *culture
 			return true;
 		}
 	}
+
+#if TARGET_OS_MACCATALYST
+	snprintf (root, sizeof (root), "%s/Contents/%s", app_path, [xamarin_custom_bundle_name UTF8String]);
+	if (xamarin_locate_assembly_resource_for_root (root, culture, resource, path, pathlen)) {
+		LOG_RESOURCELOOKUP (PRODUCT ": Located resource '%s' from macOS content bundle '%s': %s\n", resource, aname, path);
+		return true;
+	}
+#endif
 
 	return false;
 }

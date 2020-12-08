@@ -55,14 +55,14 @@ namespace Xamarin.MMP.Tests
 			return filePath;
 		}
 
-		void NativeReferenceTestCore (string tmpDir, TI.UnifiedTestConfig test, string testName, string libraryName, bool buildShouldBeSuccessful, bool libraryShouldNotBeCopied = false, Func<string, bool> processBuildOutput = null)
+		void NativeReferenceTestCore (string tmpDir, TI.UnifiedTestConfig test, string testName, string libraryName, bool buildShouldBeSuccessful, bool libraryShouldNotBeCopied = false, Func<BuildResult, bool> processBuildOutput = null)
 		{
 			// Mobile
 			test.XM45 = false;
-			string buildResults = TI.TestUnifiedExecutable (test, false).BuildOutput;
-			Assert.IsTrue (!buildShouldBeSuccessful || !buildResults.Contains ("MM2006"), string.Format ("{0} - Mobile had MM2006 state {1} not match expected\n{2}", testName, buildShouldBeSuccessful, buildResults));
+			var testResult = TI.TestUnifiedExecutable (test, false);
+			Assert.IsTrue (!buildShouldBeSuccessful || !testResult.BuildResult.HasMessage (2006), string.Format ("{0} - Mobile had MM2006 state {1} not match expected\n{2}", testName, buildShouldBeSuccessful, testResult));
 			if (processBuildOutput != null)
-				Assert.IsTrue (processBuildOutput (buildResults), string.Format ("{0} - Mobile - We did not see our expected item in the build output: {1}", testName, libraryName));
+				Assert.IsTrue (processBuildOutput (testResult.BuildResult), string.Format ("{0} - Mobile - We did not see our expected item in the build output: {1}", testName, libraryName));
 
 			string mobileBundlePath = Path.Combine (tmpDir, "bin/Debug/UnifiedExample.app/Contents/MonoBundle/");
 			if (libraryName != null)
@@ -70,10 +70,10 @@ namespace Xamarin.MMP.Tests
 
 			// XM45
 			test.XM45 = true;
-			buildResults = TI.TestUnifiedExecutable (test, false).BuildOutput;
-			Assert.IsTrue (!buildShouldBeSuccessful || !buildResults.Contains ("MM2006"), string.Format ("{0} - XM45 had MM2006 state {1} not match expected\n{2}", testName, buildShouldBeSuccessful, buildResults));
+			testResult = TI.TestUnifiedExecutable (test, false);
+			Assert.IsTrue (!buildShouldBeSuccessful || !testResult.BuildResult.HasMessage (2006), string.Format ("{0} - XM45 had MM2006 state {1} not match expected\n{2}", testName, buildShouldBeSuccessful, testResult));
 			if (processBuildOutput != null)
-				Assert.IsTrue (processBuildOutput (buildResults), string.Format ("{0} - Mobile - We did not see our expected item in the build output: {1}", testName, libraryName));
+				Assert.IsTrue (processBuildOutput (testResult.BuildResult), string.Format ("{0} - Mobile - We did not see our expected item in the build output: {1}", testName, libraryName));
 
 			string xm45BundlePath = Path.Combine (tmpDir, "bin/Debug/XM45Example.app/Contents/MonoBundle/");
 			if (libraryName != null)
@@ -112,7 +112,7 @@ namespace Xamarin.MMP.Tests
 			MMPTests.RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { ItemGroup = CreateSingleNativeRef (SimpleStaticPath, "Static") };
 				NativeReferenceTestCore (tmpDir, test, "Unified_WithNativeReferences_InMainProjectWorks - Static", null, true, false, s => {
-					var clangLines = s.Split ('\n').Where (x => x.Contains ("usr/bin/clang"));
+					var clangLines = s.BuildOutputLines.Where (x => x.Contains ("usr/bin/clang"));
 					var staticLib = clangLines.Where (x => x.Contains ("SimpleClassStatic.a"));
 					Assert.That (staticLib, Is.Not.Empty, "SimpleClassStatic.a:\n\t{0}", string.Join ("\n\t", clangLines));
 					return true;
@@ -208,7 +208,7 @@ namespace Xamarin.MMP.Tests
 					ItemGroup = CreateSingleNativeRef ("/Library/Frameworks/Mono.framework/Libraries/libintl.dylib", "Dynamic")
 				};
 				var log = TI.TestUnifiedExecutable (test);
-				Console.WriteLine (log.BuildOutput);
+				Console.WriteLine (log.BuildResult);
 				Assert.True (File.Exists (Path.Combine (tmpDir, "bin/Debug/XM45Example.app/Contents/MonoBundle/libintl.dylib")));
 			});
 		}
