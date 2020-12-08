@@ -4,6 +4,8 @@ using System;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace GameKit {
 
 #if !XAMCORE_3_0
@@ -32,7 +34,7 @@ namespace GameKit {
 	[Obsolete ("This API is not available on this platform.")]
 	public static class GKGameSessionErrorCodeExtensions {
 		[Obsolete ("Always returns null.")]
-		public static NSString GetDomain (this GKGameSessionErrorCode self) => null;
+		public static NSString? GetDomain (this GKGameSessionErrorCode self) => null;
 	}
 #endif
 
