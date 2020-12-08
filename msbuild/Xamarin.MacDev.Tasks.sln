@@ -29,6 +29,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Messaging", "Messaging", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.Messaging.Build", "Messaging\Xamarin.Messaging.Build\Xamarin.Messaging.Build.csproj", "{6E1619DB-6706-4004-8908-C4D8A4FBC0ED}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.iOS.Tasks.Windows", "Xamarin.iOS.Tasks.Windows\Xamarin.iOS.Tasks.Windows.csproj", "{37C7273B-CB32-49B8-8820-1AB0940C7934}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -125,6 +127,14 @@ Global
 		{6E1619DB-6706-4004-8908-C4D8A4FBC0ED}.Debug-net461|Any CPU.Build.0 = Debug|Any CPU
 		{6E1619DB-6706-4004-8908-C4D8A4FBC0ED}.Debug-netstandard2.0|Any CPU.ActiveCfg = Debug|Any CPU
 		{6E1619DB-6706-4004-8908-C4D8A4FBC0ED}.Debug-netstandard2.0|Any CPU.Build.0 = Debug|Any CPU
+		{37C7273B-CB32-49B8-8820-1AB0940C7934}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37C7273B-CB32-49B8-8820-1AB0940C7934}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37C7273B-CB32-49B8-8820-1AB0940C7934}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37C7273B-CB32-49B8-8820-1AB0940C7934}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37C7273B-CB32-49B8-8820-1AB0940C7934}.Debug-net461|Any CPU.ActiveCfg = Debug|Any CPU
+		{37C7273B-CB32-49B8-8820-1AB0940C7934}.Debug-net461|Any CPU.Build.0 = Debug|Any CPU
+		{37C7273B-CB32-49B8-8820-1AB0940C7934}.Debug-netstandard2.0|Any CPU.ActiveCfg = Debug|Any CPU
+		{37C7273B-CB32-49B8-8820-1AB0940C7934}.Debug-netstandard2.0|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
