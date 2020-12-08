@@ -1,0 +1,3 @@
+﻿# tracked DivideByZeroException / Service exited due to SIGFPE
+# https://github.com/mono/mono/issues/20632
+MonoTests.Runtime.JitTests.Exceptions
