@@ -1,4 +1,0 @@
-!missing-enum! AAAttributionErrorCode not bound
-!missing-field! AAAttributionErrorDomain not bound
-!missing-selector! +AAAttribution::attributionTokenWithError: not bound
-!missing-type! AAAttribution not bound

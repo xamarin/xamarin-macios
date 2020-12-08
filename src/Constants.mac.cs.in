@@ -184,5 +184,7 @@ namespace ObjCRuntime {
 		public const string UniformTypeIdentifiersLibrary = "/System/Library/Frameworks/UniformTypeIdentifiers.framework/UniformTypeIdentifiers";
 		public const string UserNotificationsUILibrary = "/System/Library/Frameworks/UserNotificationsUI.framework/UserNotificationsUI";
 
+		// macOS 11.1
+		public const string AdServicesLibrary = "/System/Library/Frameworks/AdServices.framework/AdServices";
 	}
 }
