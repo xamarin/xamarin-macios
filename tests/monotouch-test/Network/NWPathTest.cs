@@ -174,6 +174,13 @@ namespace MonoTouchFixtures.Network {
 			});
 			e.WaitOne (10000);
 		}
+
+		[Test]
+		public void GetUnsatisfiedReason ()
+		{
+			TestRuntime.AssertXcodeVersion (12,2);
+			Assert.That (path.GetUnsatisfiedReason (), Is.EqualTo (NWPathUnsatisfiedReason.NotAvailable));
+		}
 	}
 }
 
