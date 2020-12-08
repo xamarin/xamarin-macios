@@ -23,7 +23,7 @@ steps:
   displayName: 'Extract HmlReport'
   inputs:
     archiveFilePatterns: '$(System.DefaultWorkingDirectory)/Reports/HtmlReport-${{ parameters.devicePrefix }}/HtmlReport.zip'
-    destinationFolder: '$(System.DefaultWorkingDirectory)/HtmlReport'
+    destinationFolder: '$(System.DefaultWorkingDirectory)/HtmlReport-${{ parameters.devicePrefix }}'
 
 # Download the test report to write the comment.
 - task: DownloadPipelineArtifact@2
@@ -34,7 +34,9 @@ steps:
     path: $(System.DefaultWorkingDirectory)\Reports
 
 - powershell: |
-    echo "##vso[task.setvariable variable=TEST_SUMMARY_PATH]$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\Reports\TestSummary-${{ parameters.devicePrefix }}\TestSummary-${{ parameters.devicePrefix }}.md"
-    echo "##vso[task.setvariable variable=HTML_REPORT_PATH]$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\HtmlReport-${{ parameters.devicePrefix }}"
+    Get-ChildItem -Recurse $Env:SYSTEM_DEFAULTWORKINGDIRECTORY
+
+    Write-Host "##vso[task.setvariable variable=TEST_SUMMARY_PATH]$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\Reports\TestSummary-${{ parameters.devicePrefix }}\TestSummary-${{ parameters.devicePrefix }}.md"
+    Write-Host "##vso[task.setvariable variable=HTML_REPORT_PATH]$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\HtmlReport-${{ parameters.devicePrefix }}"
   displayName: Pusblish artifact paths
   name: artifacts # not to be confused with the displayName, this is used to later use the name of the step to access the output variables from an other job
