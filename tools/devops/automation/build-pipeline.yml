@@ -53,7 +53,7 @@ variables:
 
 trigger: none
 
-# UNDONE: Trigger test: xamarin-macios.trigger.test: xamarinhq
+# UNDONE: Trigger test: xamarin-macios: service connection: xamarin (after changing service connections for https://dev.azure.com/xamarin internal & public macios-related pipelines)
 pr:
   autoCancel: true
   branches:
