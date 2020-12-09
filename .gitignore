@@ -13,7 +13,7 @@ _build
 *.pdb
 bin
 obj
-packages
+./packages
 ~.pmcs*
 .DS_Store
 jenkins-results
