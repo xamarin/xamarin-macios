@@ -1,0 +1,31 @@
+
+# Job that will download the other artifact from the tests job and will publish them in the 
+# vsdrops
+
+###########################################################
+# WARNING WARNING WARNING WARNING WARNING WARNING WARNING #
+###########################################################
+
+# This job is executed on WINDOWS! make sure you DO NOT USE
+# bash or linux file paths on scripts. Another important
+# details is that System.DefaultWorkingDirectory
+# on mac os x points on the top dir while on windows 
+# is the checked out dir
+
+parameters:
+
+- name: vsdropsPrefix
+  type: string
+
+steps:
+
+- checkout: self
+  persistCredentials: true
+
+- template: download-artifacts.yml 
+
+- pwsh:
+    Get-ChildItem -Recurse $Env:SYSTEM_DEFAULTWORKINGDIRECTORY
+  displayName: 'Add summaries'
+  condition: always()
+  timeoutInMinutes: 1

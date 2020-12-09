@@ -79,6 +79,8 @@ stages:
   dependsOn: []
   jobs:
     - template: templates/packages/stage.yml
+      parameters:
+        vsdropsPrefix: ${{ variables.vsdropsPrefix }}
 
   # ideally we would use a matrix here, like:
   #  - job: device_tests
