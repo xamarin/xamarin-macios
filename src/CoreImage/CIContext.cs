@@ -30,6 +30,8 @@ using CoreFoundation;
 using ObjCRuntime;
 #if !MONOMAC
 using Metal;
+#endif
+#if HAS_OPENGLES
 using OpenGLES;
 #endif
 namespace CoreImage {
@@ -159,7 +161,7 @@ namespace CoreImage {
 			return FromContext (ctx, (CIContextOptions) null);
 		}
 
-#if !MONOMAC
+#if HAS_OPENGLES
 		public static CIContext FromContext (EAGLContext eaglContext, CIContextOptions options)
 		{
 			if (options == null)

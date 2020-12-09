@@ -43,6 +43,7 @@ namespace Xamarin.iOS.Tasks
 			task.ProvisioningProfile = Path.Combine (Path.GetDirectoryName (GetType ().Assembly.Location), "Resources", "profile.mobileprovision");
 			task.SdkPlatform = "iPhoneOS";
 			task.SdkVersion = "6.1";
+			task.TargetFrameworkMoniker = "Xamarin.iOS,v1.0";
 
 			compiledEntitlements = task.CompiledEntitlements.ItemSpec;
 		}

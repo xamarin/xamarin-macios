@@ -337,10 +337,10 @@ namespace CoreBluetooth {
 		void ConnectedPeripheral (CBCentralManager central, CBPeripheral peripheral);
 
 		[Export ("centralManager:didFailToConnectPeripheral:error:"), EventArgs ("CBPeripheralError")]
-		void FailedToConnectPeripheral (CBCentralManager central, CBPeripheral peripheral, NSError error);
+		void FailedToConnectPeripheral (CBCentralManager central, CBPeripheral peripheral, [NullAllowed] NSError error);
 
 		[Export ("centralManager:didDisconnectPeripheral:error:"), EventArgs ("CBPeripheralError")]
-		void DisconnectedPeripheral (CBCentralManager central, CBPeripheral peripheral, NSError error);
+		void DisconnectedPeripheral (CBCentralManager central, CBPeripheral peripheral, [NullAllowed] NSError error);
 		
 		[Export ("centralManager:willRestoreState:"), EventArgs ("CBWillRestore")]
 		void WillRestoreState (CBCentralManager central, NSDictionary dict);
@@ -446,6 +446,7 @@ namespace CoreBluetooth {
 		CBDescriptor [] Descriptors { get; set; }
 
 		[iOS (7,0), Export ("subscribedCentrals")]
+		[NullAllowed]
 		CBCentral [] SubscribedCentrals { get; }
 	}
 
@@ -455,6 +456,7 @@ namespace CoreBluetooth {
 	interface CBDescriptor {
 		
 		[Export ("value", ArgumentSemantic.Retain)]
+		[NullAllowed]
 		NSObject Value { get;  }
 
 		[Export ("characteristic", ArgumentSemantic.Weak)]
@@ -472,7 +474,7 @@ namespace CoreBluetooth {
 		[Export ("initWithType:value:")]
 		[PostGet ("UUID")]
 		[PostGet ("Value")]
-		IntPtr Constructor (CBUUID uuid, NSObject descriptorValue);
+		IntPtr Constructor (CBUUID uuid, [NullAllowed] NSObject descriptorValue);
 	}
 
 	[Watch (4,0)]
@@ -481,12 +483,14 @@ namespace CoreBluetooth {
 	interface CBPeripheral : NSCopying {
 		[Export ("name", ArgumentSemantic.Retain)]
 		[DisableZeroCopy]
+		[NullAllowed]
 		string Name { get;  }
 
 		[Deprecated (PlatformName.iOS, 8,0)]
 		[Deprecated (PlatformName.MacOSX, 10,13)]
 		[NoWatch]
 		[Export ("RSSI", ArgumentSemantic.Retain)]
+		[NullAllowed]
 		NSNumber RSSI { get;  }
 
 		[NoTV]
@@ -496,6 +500,7 @@ namespace CoreBluetooth {
 		bool IsConnected { get;  }
 
 		[Export ("services", ArgumentSemantic.Retain)]
+		[NullAllowed]
 		CBService [] Services { get;  }
 
 		[Export ("delegate", ArgumentSemantic.Weak), NullAllowed]
@@ -564,44 +569,44 @@ namespace CoreBluetooth {
 		[Deprecated (PlatformName.MacOSX, 10, 13, message : "Use 'RssiRead' instead.")]
 		[Deprecated (PlatformName.iOS, 8, 0, message : "Use 'RssiRead' instead.")]
 		[Export ("peripheralDidUpdateRSSI:error:"), EventArgs ("NSError", true)]
-		void RssiUpdated (CBPeripheral peripheral, NSError error);
+		void RssiUpdated (CBPeripheral peripheral, [NullAllowed] NSError error);
 
 		[iOS (8,0)]
 		[Mac (10,13)]
 		[Export ("peripheral:didReadRSSI:error:"), EventArgs ("CBRssi")]
-		void RssiRead (CBPeripheral peripheral, NSNumber rssi, NSError error);
+		void RssiRead (CBPeripheral peripheral, NSNumber rssi, [NullAllowed] NSError error);
 
 		// FIXME: TYPO: missing 's' (plural)
 		[Export ("peripheral:didDiscoverServices:"), EventArgs ("NSError", true)]
-		void DiscoveredService (CBPeripheral peripheral, NSError error);
+		void DiscoveredService (CBPeripheral peripheral, [NullAllowed] NSError error);
 
 		[Export ("peripheral:didDiscoverIncludedServicesForService:error:"), EventArgs ("CBService")]
-		void DiscoveredIncludedService  (CBPeripheral peripheral, CBService service, NSError error);
+		void DiscoveredIncludedService  (CBPeripheral peripheral, CBService service, [NullAllowed] NSError error);
 
 		[Export ("peripheral:didDiscoverCharacteristicsForService:error:"), EventArgs ("CBService")]
 #if XAMCORE_4_0
-		void DiscoveredCharacteristics (CBPeripheral peripheral, CBService service, NSError error);
+		void DiscoveredCharacteristics (CBPeripheral peripheral, CBService service, [NullAllowed] NSError error);
 #else
-		void DiscoveredCharacteristic (CBPeripheral peripheral, CBService service, NSError error);
+		void DiscoveredCharacteristic (CBPeripheral peripheral, CBService service, [NullAllowed] NSError error);
 #endif
 		
 		[Export ("peripheral:didUpdateValueForCharacteristic:error:"), EventArgs ("CBCharacteristic")]
-		void UpdatedCharacterteristicValue (CBPeripheral peripheral, CBCharacteristic characteristic, NSError error);
+		void UpdatedCharacterteristicValue (CBPeripheral peripheral, CBCharacteristic characteristic, [NullAllowed] NSError error);
 		 
 		[Export ("peripheral:didWriteValueForCharacteristic:error:"), EventArgs ("CBCharacteristic")]
-		void WroteCharacteristicValue (CBPeripheral peripheral, CBCharacteristic characteristic, NSError error);
+		void WroteCharacteristicValue (CBPeripheral peripheral, CBCharacteristic characteristic, [NullAllowed] NSError error);
 
 		[Export ("peripheral:didUpdateNotificationStateForCharacteristic:error:"), EventArgs ("CBCharacteristic")]
-		void UpdatedNotificationState (CBPeripheral peripheral, CBCharacteristic characteristic, NSError error);
+		void UpdatedNotificationState (CBPeripheral peripheral, CBCharacteristic characteristic, [NullAllowed] NSError error);
 
 		[Export ("peripheral:didDiscoverDescriptorsForCharacteristic:error:"), EventArgs ("CBCharacteristic")]
-		void DiscoveredDescriptor (CBPeripheral peripheral, CBCharacteristic characteristic, NSError error);
+		void DiscoveredDescriptor (CBPeripheral peripheral, CBCharacteristic characteristic, [NullAllowed] NSError error);
 
 		[Export ("peripheral:didUpdateValueForDescriptor:error:"), EventArgs ("CBDescriptor")]
-		void UpdatedValue (CBPeripheral peripheral, CBDescriptor descriptor, NSError error);
+		void UpdatedValue (CBPeripheral peripheral, CBDescriptor descriptor, [NullAllowed] NSError error);
 
 		[Export ("peripheral:didWriteValueForDescriptor:error:"), EventArgs ("CBDescriptor")]
-		void WroteDescriptorValue (CBPeripheral peripheral, CBDescriptor descriptor, NSError error);
+		void WroteDescriptorValue (CBPeripheral peripheral, CBDescriptor descriptor, [NullAllowed] NSError error);
 
 		[NoTV]
 		[NoWatch]
@@ -639,9 +644,11 @@ namespace CoreBluetooth {
 #endif
 
 		[Export ("includedServices", ArgumentSemantic.Retain)]
+		[NullAllowed]
 		CBService [] IncludedServices { get; [NotImplemented ("Not available on 'CBService', only available on CBMutableService.")] set;  }
 
 		[Export ("characteristics", ArgumentSemantic.Retain)]
+		[NullAllowed]
 		CBCharacteristic [] Characteristics { get; [NotImplemented ("Not available on 'CBService', only available on CBMutableService.")] set;  }
 
 		[Export ("peripheral", ArgumentSemantic.Weak)]
@@ -663,10 +670,12 @@ namespace CoreBluetooth {
 
 		[Export ("includedServices", ArgumentSemantic.Retain)]
 		[Override]
+		[NullAllowed]
 		CBService[] IncludedServices { get; set; }  // TODO: check array type
 
 		[Export ("characteristics", ArgumentSemantic.Retain)]
 		[Override]
+		[NullAllowed]
 		CBCharacteristic[] Characteristics { get; set; }	// TODO: check array type
 	}
 
@@ -806,6 +815,7 @@ namespace CoreBluetooth {
 		nint Offset { get; }
 
 		[Export ("value", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		NSData Value { get; set; }		
 	}
 
@@ -842,7 +852,7 @@ namespace CoreBluetooth {
 		[NoWatch]
 		[Export ("initWithDelegate:queue:")]
 		[PostGet ("WeakDelegate")]
-		IntPtr Constructor ([Protocolize] CBPeripheralManagerDelegate peripheralDelegate, [NullAllowed] DispatchQueue queue);
+		IntPtr Constructor ([NullAllowed][Protocolize] CBPeripheralManagerDelegate peripheralDelegate, [NullAllowed] DispatchQueue queue);
 
 		[NoTV]
 		[NoWatch]
@@ -850,7 +860,7 @@ namespace CoreBluetooth {
 		[iOS (7,0)]
 		[Export ("initWithDelegate:queue:options:")]
 		[PostGet ("WeakDelegate")]
-		IntPtr Constructor ([Protocolize] CBPeripheralManagerDelegate peripheralDelegate, [NullAllowed] DispatchQueue queue, [NullAllowed] NSDictionary options);
+		IntPtr Constructor ([NullAllowed][Protocolize] CBPeripheralManagerDelegate peripheralDelegate, [NullAllowed] DispatchQueue queue, [NullAllowed] NSDictionary options);
 
 		[NullAllowed]
 		[Wrap ("WeakDelegate")]
@@ -940,10 +950,10 @@ namespace CoreBluetooth {
 		void WillRestoreState (CBPeripheralManager peripheral, NSDictionary dict);
 
 		[Export ("peripheralManagerDidStartAdvertising:error:"), EventArgs ("NSError", true)]
-		void AdvertisingStarted (CBPeripheralManager peripheral, NSError error);
+		void AdvertisingStarted (CBPeripheralManager peripheral, [NullAllowed] NSError error);
 
 		[Export ("peripheralManager:didAddService:error:"), EventArgs ("CBPeripheralManagerService")]
-		void ServiceAdded (CBPeripheralManager peripheral, CBService service, NSError error);
+		void ServiceAdded (CBPeripheralManager peripheral, CBService service, [NullAllowed] NSError error);
 
 		[Export ("peripheralManager:central:didSubscribeToCharacteristic:"), EventArgs ("CBPeripheralManagerSubscription")]
 		void CharacteristicSubscribed (CBPeripheralManager peripheral, CBCentral central, CBCharacteristic characteristic);

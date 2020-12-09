@@ -1089,17 +1089,17 @@ namespace Metal {
 		DepthResolvedSample = 1,
 	}
 
-	[Unavailable (PlatformName.MacCatalyst)]
+
 	[Flags, Mac (11,0), NoTV, iOS (13,0)]
-	[Native, Advice ("This API is not available when using UIKit on macOS.")]
+	[Native]
 	public enum MTLSparseTextureRegionAlignmentMode : ulong {
 		Outward = 0x0,
 		Inward = 0x1,
 	}
 
-	[Unavailable (PlatformName.MacCatalyst)]
 	[Flags, Mac (11,0), NoTV, iOS (13,0)]
-	[Native, Advice ("This API is not available when using UIKit on macOS.")]
+	[MacCatalyst (14, 0)]
+	[Native]
 	public enum MTLSparseTextureMappingMode : ulong {
 		Map = 0x0,
 		Unmap = 0x1,

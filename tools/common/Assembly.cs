@@ -167,18 +167,24 @@ namespace Xamarin.Bundler {
 					LogNativeReference (metadata);
 					ProcessNativeReferenceOptions (metadata);
 
-					if (metadata.LibraryName.EndsWith (".framework", StringComparison.OrdinalIgnoreCase)) {
+					switch (Path.GetExtension (metadata.LibraryName).ToLowerInvariant ()) {
+					case ".framework":
 						AssertiOSVersionSupportsUserFrameworks (metadata.LibraryName);
 						Frameworks.Add (metadata.LibraryName);
 #if MMP // HACK - MMP currently doesn't respect Frameworks on non-App - https://github.com/xamarin/xamarin-macios/issues/5203
 						App.Frameworks.Add (metadata.LibraryName);
 #endif
-
-					} else {
+						break;
+					case ".xcframework":
+						// this is resolved, at msbuild time, into a framework
+						// but we must ignore it here (can't be the `default` case)
+						break;
+					default:
 #if MMP // HACK - MMP currently doesn't respect LinkWith - https://github.com/xamarin/xamarin-macios/issues/5203
 						Driver.native_references.Add (metadata.LibraryName);
 #endif
 						LinkWith.Add (metadata.LibraryName);
+						break;
 					}
 				}
 			}
@@ -267,12 +273,18 @@ namespace Xamarin.Bundler {
 				ProcessNativeReferenceOptions (metadata);
 
 				if (!string.IsNullOrEmpty (linkWith.LibraryName)) {
-					if (linkWith.LibraryName.EndsWith (".framework", StringComparison.OrdinalIgnoreCase)) {
+					switch (Path.GetExtension (linkWith.LibraryName).ToLowerInvariant ()) {
+					case ".framework":
 						AssertiOSVersionSupportsUserFrameworks (linkWith.LibraryName);
-
 						Frameworks.Add (ExtractFramework (assembly, metadata));
-					} else {
+						break;
+					case ".xcframework":
+						// this is resolved, at msbuild time, into a framework
+						// but we must ignore it here (can't be the `default` case)
+						break;
+					default:
 						LinkWith.Add (ExtractNativeLibrary (assembly, metadata));
+						break;
 					}
 				}
 			}
@@ -450,17 +462,25 @@ namespace Xamarin.Bundler {
 
 		void AddFramework (string file)
 		{
-			if (Driver.GetFrameworks (App).TryGetValue (file, out var framework) && framework.Version > App.SdkVersion)
-				ErrorHelper.Warning (135, Errors.MX0135, file, FileName, App.PlatformName, framework.Version, App.SdkVersion);
-			else {
-				var strong = (framework == null) || (App.DeploymentTarget >= (App.IsSimulatorBuild ? framework.VersionAvailableInSimulator ?? framework.Version : framework.Version));
-				if (strong) {
-					if (Frameworks.Add (file))
-						Driver.Log (3, "Linking with the framework {0} because it's referenced by a module reference in {1}", file, FileName);
-				} else {
-					if (WeakFrameworks.Add (file))
-						Driver.Log (3, "Linking (weakly) with the framework {0} because it's referenced by a module reference in {1}", file, FileName);
+			if (Driver.GetFrameworks (App).TryGetValue (file, out var framework)) {
+				if (framework.Unavailable) {
+					ErrorHelper.Warning (182, Errors.MX0182 /* Not linking with the framework {0} (referenced by a module reference in {1}) because it's not available on the current platform ({2}). */, framework.Name, FileName, App.PlatformName);
+					return;
 				}
+
+				if (framework.Version > App.SdkVersion) {
+					ErrorHelper.Warning (135, Errors.MX0135, file, FileName, App.PlatformName, framework.Version, App.SdkVersion);
+					return;
+				}
+			}
+
+			var strong = (framework == null) || (App.DeploymentTarget >= (App.IsSimulatorBuild ? framework.VersionAvailableInSimulator ?? framework.Version : framework.Version));
+			if (strong) {
+				if (Frameworks.Add (file))
+					Driver.Log (3, "Linking with the framework {0} because it's referenced by a module reference in {1}", file, FileName);
+			} else {
+				if (WeakFrameworks.Add (file))
+					Driver.Log (3, "Linking (weakly) with the framework {0} because it's referenced by a module reference in {1}", file, FileName);
 			}
 		}
 
@@ -472,6 +492,7 @@ namespace Xamarin.Bundler {
 					return "-lcompression";
 				return "-weak-lcompression";
 			case ApplePlatform.iOS:
+			case ApplePlatform.MacCatalyst:
 				if (App.DeploymentTarget >= new Version (9,0))
 					return "-lcompression";
 				return "-weak-lcompression";

@@ -1571,6 +1571,9 @@ namespace Registrar {
 			case ApplePlatform.MacOSX:
 				currentPlatform = global::ObjCRuntime.PlatformName.MacOSX;
 				break;
+			case ApplePlatform.MacCatalyst:
+				currentPlatform = global::ObjCRuntime.PlatformName.MacCatalyst;
+				break;
 			default:
 				throw ErrorHelper.CreateError (71, Errors.MX0071, App.Platform, App.ProductName);
 			}
@@ -2112,6 +2115,9 @@ namespace Registrar {
 
 			if (App.IsSimulatorBuild && !App.IsFrameworkAvailableInSimulator (ns)) {
 				Driver.Log (5, "Not importing the framework {0} in the generated registrar code because it's not available in the simulator.", ns);
+				return;
+			} else if (Frameworks.GetFrameworks (App.Platform, false).TryGetValue (ns, out var fw) && fw.Unavailable) {
+				Driver.Log (5, "Not importing the framework {0} in the generated registrar code because it's not available in the current platform.", ns);
 				return;
 			}
 

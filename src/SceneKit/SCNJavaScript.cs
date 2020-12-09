@@ -15,6 +15,8 @@ using System.Runtime.InteropServices;
 using ObjCRuntime;
 using JavaScriptCore;
 
+#nullable enable
+
 namespace SceneKit
 {
 	[Mac (10, 10)]
@@ -27,7 +29,7 @@ namespace SceneKit
 		public static void ExportModule (JSContext context)
 		{
 			if (context == null)
-				throw new ArgumentNullException ("context");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (context));
 
 			SCNExportJavaScriptModule (context.Handle);
 		}

@@ -146,6 +146,9 @@
     <Compile Include="..\linker\MonoTouch.Tuner\Extensions.cs">
       <Link>external\tools\linker\MonoTouch.Tuner\Extensions.cs</Link>
     </Compile>
+    <Compile Include="..\linker\MonoTouch.Tuner\ListExportedSymbols.cs">
+      <Link>external\tools\linker\MonoTouch.Tuner\ListExportedSymbols.cs</Link>
+    </Compile>
     <Compile Include="..\linker\MonoTouch.Tuner\PreserveSmartEnumConversionsSubStep.cs">
       <Link>external\tools\linker\MonoTouch.Tuner\PreserveSmartEnumConversionsSubStep.cs</Link>
     </Compile>

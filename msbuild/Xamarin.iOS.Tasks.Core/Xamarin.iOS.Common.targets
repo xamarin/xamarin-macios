@@ -228,7 +228,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 	<Target Name="_CleanAppBundle" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_GenerateBundleName">
 		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(_AppBundlePath)" />
-		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="$(DeviceSpecificOutputPath)mtouch.stamp" />
+		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="$(DeviceSpecificOutputPath)bundler.stamp" />
 	</Target>
 
 	<Target Name="_CleanUploaded" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_ComputeTargetArchitectures">
@@ -292,7 +292,8 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 	<Target Name="_GenerateBundleName" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_ComputeTargetArchitectures;_GenerateAppBundleName;_GenerateAppExBundleName">
 		<PropertyGroup>
-			<_AppResourcesPath>$(_AppBundlePath)</_AppResourcesPath>
+			<_AppResourcesPath Condition="'$(_IsMacCatalyst)' == 'true'">$(_AppBundlePath)Contents\Resources\</_AppResourcesPath>
+			<_AppResourcesPath Condition="'$(_IsMacCatalyst)' != 'true'">$(_AppBundlePath)</_AppResourcesPath>
 		</PropertyGroup>
 	</Target>
 
@@ -384,7 +385,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<GetNativeExecutableName
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
-			AppManifest="$(_AppBundlePath)Info.plist"
+			AppManifest="$(_AppBundlePath)$(_AppBundleManifestRelativePath)Info.plist"
 			>
 			<Output TaskParameter="ExecutableName" PropertyName="_ExecutableName" />
 		</GetNativeExecutableName>
@@ -412,24 +413,14 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</_CompileToNativeDependsOn>
 	</PropertyGroup>
 
-	<Target Name="_GetCompileToNativeInputs">
-		<ItemGroup>
-			<!-- Skip the reference assemblies. There is currently no scenario where it is valid to pass them to 'mtouch'. They are impossible to AOT. Fixes: https://github.com/xamarin/xamarin-macios/issues/3199 -->
-			<!-- Remove exact references, such as if a package had a framework reference to 'System' that we already have -->
-			<!-- This is exactly what "Microsoft.NuGet.Build.Tasks"'s 'ResolveNuGetPackageAssets' target is doing -->
-			<!-- Effectively 'ResolveNuGetPackageAssets' computes the NuGet packages using their json asset file, adds the full assemblies to 'ReferenceCopyLocalPaths' and outputs the resolved references via '_ReferencesFromNuGetPackages' -->
-			<!-- This requires nuget libraries to be copied locally, which by default only happens for executable projects, so we set 'CopyNuGetImplementations' to true for extensions (see comment in Xamarin.iOS.AppExtension.CSharp.targets for more info) -->
-			<ReferencePath Remove="@(_ReferencesFromNuGetPackages)" />
-			<MTouchReferencePath Include="@(ReferenceCopyLocalPaths)" Condition="'%(Extension)' == '.dll'" />
-			<_CompileToNativeInput Include="$(TargetDir)$(TargetFileName);@(ReferencePath);@(MTouchReferencePath)" />
-			<_CompileToNativeInput Condition="'@(_ResolvedAppExtensionReferences)' != ''" Include="%(_ResolvedAppExtensionReferences.Identity)\..\mtouch.stamp" />
-		</ItemGroup>
-	</Target>
-
 	<Target Name="_CompileToNative" DependsOnTargets="$(_CompileToNativeDependsOn)"
 		Condition = "'$(IsAppDistribution)' != 'true' And '$(_UsingXamarinSdk)' != 'true'"
-		Inputs="@(_CompileToNativeInput);@(_FrameworkNativeReference);@(_FileNativeReference);@(BundleDependentFiles)"
-		Outputs="$(_NativeExecutable);$(DeviceSpecificOutputPath)mtouch.stamp">
+		Inputs="@(_CompileToNativeInput);@(_FileNativeReference);@(BundleDependentFiles)"
+		Outputs="$(_NativeExecutable);$(DeviceSpecificOutputPath)bundler.stamp">
+
+		<ItemGroup>
+			<_FrameworkNativeReference Include="@(_FrameworkNativeReference -> '%(Identity)/%(Filename)')" Condition="'%(Extension)' == '.framework' Or '%(Extension)' == '.xcframework'" />
+		</ItemGroup>
 
 		<MTouch
 			SessionId="$(BuildSessionId)"
@@ -452,11 +443,11 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			LinkMode="$(_LinkMode)"
 			MainAssembly="$(TargetPath)"
 			MinimumOSVersion="$(_MinimumOSVersion)"
-			NativeReferences="@(NativeReference)"
+			NativeReferences="@(NativeReference);@(_FrameworkNativeReference);@(_FileNativeReference)"
 			OutputPath="$(DeviceSpecificOutputPath)"
 			Profiling="$(MtouchProfiling)"
 			ProjectDir="$(MtouchProjectDirectory)"
-			References="@(ReferencePath);@(MTouchReferencePath)"
+			References="@(ReferencePath);@(_BundlerReferencePath)"
 			ResponseFilePath="$(DeviceSpecificIntermediateOutputPath)response-file.rsp"
 			SdkRoot="$(_SdkDevPath)"
 			SdkIsSimulator="$(_SdkIsSimulator)"
@@ -482,7 +473,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
 			AlwaysCreate="true"
-			Files="$(DeviceSpecificOutputPath)mtouch.stamp"
+			Files="$(DeviceSpecificOutputPath)bundler.stamp"
 			>
 			<Output TaskParameter="TouchedFiles" ItemName="FileWrites" />
 		</Touch>
@@ -646,7 +637,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</SpotlightIndexer>
 	</Target>
 
-	<Target Name="_CreateDebugSettings" Condition="'$(_BundlerDebug)' == 'true' And '$(IsWatchApp)' == 'false'"
+	<Target Name="_CreateDebugSettings" Condition="'$(_BundlerDebug)' == 'true' And '$(IsWatchApp)' == 'false' And '$(_IsMacCatalyst)' != 'true'"
 		DependsOnTargets="_CopyResourcesToBundle"
 		Outputs="$(_AppBundlePath)Settings.bundle\Root.plist" >
 		<CreateDebugSettings
@@ -660,11 +651,11 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 	<Target Name="_CreateDebugConfiguration" Condition="'$(_BundlerDebug)' == 'true' And '$(IsWatchApp)' == 'false'"
 		DependsOnTargets="_CopyResourcesToBundle;_DetectDebugNetworkConfiguration"
-		Outputs="$(_AppBundlePath)MonoTouchDebugConfiguration.txt" >
+		Outputs="$(_AppResourcesPath)MonoTouchDebugConfiguration.txt" >
 		<CreateDebugConfiguration
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
-			AppBundleDir="$(AppBundleDir)"
+			AppBundleDir="$(_AppResourcesPath)"
 			DebugOverWiFi="$(IOSDebugOverWiFi)"
 			DebugIPAddresses="$(_DebugIPAddresses)"
 			DebuggerPort="$(IOSDebuggerPort)"
@@ -909,7 +900,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</EmbedMobileProvision>
 	</Target>
 
-	<Target Name="_DetectDebugNetworkConfiguration">
+	<Target Name="_DetectDebugNetworkConfiguration" Condition="'$(_BundlerDebug)' == 'true'">
 		<DetectDebugNetworkConfiguration
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
@@ -1021,59 +1012,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			Source="@(_ResolvedWatchAppReferences)"
 			Destination="$(_AppBundlePath)Watch\%(_ResolvedWatchAppReferences.FileName)%(_ResolvedWatchAppReferences.Extension)"
 		/>
-	</Target>
-
-	<PropertyGroup>
-		<_CollectFrameworksDependsOn>
-			$(_CollectFrameworksDependsOn);
-			_CompileToNative;
-		</_CollectFrameworksDependsOn>
-	</PropertyGroup>
-
-	<Target Name="_CollectFrameworks" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="$(_CollectFrameworksDependsOn)">
-		<CollectFrameworks
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			AppBundlePath="$(_AppBundlePath)"
-			>
-			<Output TaskParameter="Frameworks" ItemName="_Frameworks"/>
-		</CollectFrameworks>
-	</Target>
-
-	<Target Name="_CodesignFrameworks" Condition="'$(_CanOutputAppBundle)' == 'true' And '@(_Frameworks)' != ''" DependsOnTargets="_DetectSigningIdentity;_CollectFrameworks"
-		Inputs="%(_Frameworks.Identity)" Outputs="$(DeviceSpecificIntermediateOutputPath)codesign\%(_Frameworks.Filename)%(_Frameworks.Extension)">
-
-		<PropertyGroup>
-			<_CodesignDisableTimestamp>False</_CodesignDisableTimestamp>
-			<_CodesignDisableTimestamp Condition="'$(_SdkIsSimulator)' == 'true' Or '$(_BundlerDebug)' == 'true'">True</_CodesignDisableTimestamp>
-			<_FrameworkCodeSigningKey>$(_CodeSigningKey)</_FrameworkCodeSigningKey>
-			<_FrameworkCodeSigningKey Condition="'$(_FrameworkCodeSigningKey)' == ''">-</_FrameworkCodeSigningKey>
-		</PropertyGroup>
-
-		<Codesign
-			Condition="'$(IsMacEnabled)' == 'true'"
-			SessionId="$(BuildSessionId)"
-			ToolExe="$(CodesignExe)"
-			ToolPath="$(CodesignPath)"
-			CodesignAllocate="$(_CodesignAllocate)"
-			DisableTimestamp="$(_CodesignDisableTimestamp)"
-			Keychain="$(CodesignKeychain)"
-			Resources="@(_Frameworks)"
-			SigningKey="$(_FrameworkCodeSigningKey)"
-			ExtraArgs="$(CodesignExtraArgs)"
-			>
-		</Codesign>
-
-		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(DeviceSpecificIntermediateOutputPath)codesign" />
-
-		<Touch
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			AlwaysCreate="true"
-			Files="$(DeviceSpecificIntermediateOutputPath)codesign\%(_Frameworks.Filename)%(_Frameworks.Extension)"
-			>
-			<Output TaskParameter="TouchedFiles" ItemName="FileWrites" />
-		</Touch>
 	</Target>
 
 	<Target Name="_ReadAppExtensionCodesignProperties">

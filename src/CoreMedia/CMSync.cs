@@ -399,7 +399,9 @@ namespace CoreMedia {
 
 		bool IsDeprecated ()
 		{
-#if IOS || MONOMAC
+#if __MACCATALYST__
+			return true;
+#elif IOS || MONOMAC
 			return PlatformHelper.CheckSystemVersion (GetMethodDeprecatedMajor, GetMethodDeprecatedMinor);
 #elif TVOS || WATCH
 			return true;

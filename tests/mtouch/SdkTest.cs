@@ -224,7 +224,7 @@ namespace Xamarin.Linker {
 			rv.AddRange (Directory.GetFiles (watchOSPath, "*.dll", SearchOption.TopDirectoryOnly).
 				Select ((v) => v.Substring (watchOSPath.Length)).ToArray ());
 			rv.Remove ("Xamarin.WatchOS.dll");
-			rv.Add (Path.Combine ("..", "..", "32bits", "Xamarin.WatchOS.dll"));
+			rv.Add (Path.Combine ("..", "..", "32bits", "watchOS", "Xamarin.WatchOS.dll"));
 			return rv.ToArray ();
 		}
 

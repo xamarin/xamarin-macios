@@ -122,20 +122,6 @@ namespace Xamarin.Tests {
 			return props.LastOrDefault ()?.Value ?? string.Empty;
 		}
 
-		public static void PrintBinLog (string path, StringBuilder sb)
-		{
-			var reader = new BinLogReader ();
-			foreach (var record in reader.ReadRecords (path)) {
-				if (record == null)
-					continue;
-				var args = record.Args;
-				if (args == null)
-					continue;
-
-				sb.AppendLine (args.Message);
-			}
-		}
-
 		public void ParseBinLog (string log)
 		{
 			ErrorEvents.Clear ();

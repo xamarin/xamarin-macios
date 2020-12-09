@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyCatalystApp", "MyCatalystApp.csproj", "{8F2D37C2-BF1F-408A-8E7E-1B89D2126DFB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|MacCatalyst = Debug|MacCatalyst
+		Release|MacCatalyst = Release|MacCatalyst
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8F2D37C2-BF1F-408A-8E7E-1B89D2126DFB}.Debug|MacCatalyst.ActiveCfg = Debug|MacCatalyst
+		{8F2D37C2-BF1F-408A-8E7E-1B89D2126DFB}.Debug|MacCatalyst.Build.0 = Debug|MacCatalyst
+		{8F2D37C2-BF1F-408A-8E7E-1B89D2126DFB}.Release|MacCatalyst.ActiveCfg = Release|MacCatalyst
+		{8F2D37C2-BF1F-408A-8E7E-1B89D2126DFB}.Release|MacCatalyst.Build.0 = Release|MacCatalyst
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = MyCatalystApp.csproj
+	EndGlobalSection
+EndGlobal

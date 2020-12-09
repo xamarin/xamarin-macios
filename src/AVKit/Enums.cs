@@ -1,6 +1,8 @@
 using ObjCRuntime;
 using Foundation;
 
+#nullable enable
+
 namespace AVKit {
 
 #if !XAMCORE_3_0 || MONOMAC

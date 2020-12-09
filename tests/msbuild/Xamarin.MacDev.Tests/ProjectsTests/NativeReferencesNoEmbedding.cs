@@ -20,13 +20,9 @@ namespace Xamarin.iOS.Tasks
 		{
 			Engine.ProjectCollection.SetGlobalProperty ("Platform", Platform);
 
-			var properties = new Dictionary<string, string> {
-				{ "NoBindingEmbedding", "true" },
-			};
-
 			if (clean)
-				RunTarget (project, "Clean", properties: properties);
-			RunTarget (project, "Build", properties: properties);
+				RunTarget (project, "Clean");
+			RunTarget (project, "Build");
 		}
 
 		string GetMessages () => string.Join ("\n", Engine.Logger.MessageEvents.Select (x => x.Message));

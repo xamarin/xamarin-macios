@@ -20,7 +20,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
-    <Commandlineparameters>../../iphoneos12.0-arm64.pch /Library/Frameworks/Xamarin.iOS.framework/Versions/Current//lib/64bits/Xamarin.iOS.dll</Commandlineparameters>
+    <Commandlineparameters>../../iphoneos12.0-arm64.pch /Library/Frameworks/Xamarin.iOS.framework/Versions/Current//lib/64bits/iOS/Xamarin.iOS.dll</Commandlineparameters>
     <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -33,12 +33,12 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'watchOS' ">
     <StartAction>Project</StartAction>
-    <StartArguments>watchos6.2-armv7.pch ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/32bits/Xamarin.WatchOS.dll</StartArguments>
+    <StartArguments>watchos6.2-armv7.pch ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/32bits/watchOS/Xamarin.WatchOS.dll</StartArguments>
     <StartWorkingDirectory>.</StartWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'iOS' ">
     <StartAction>Project</StartAction>
-    <StartArguments>iphoneos14.0-arm64.pch ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/64bits/Xamarin.iOS.dll ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS/OpenTK-1.0.dll</StartArguments>
+    <StartArguments>iphoneos14.0-arm64.pch ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/64bits/iOS/Xamarin.iOS.dll ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS/OpenTK-1.0.dll</StartArguments>
     <StartWorkingDirectory>.</StartWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'tvOS' ">

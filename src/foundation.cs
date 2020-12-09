@@ -4075,18 +4075,21 @@ namespace Foundation
 
 		[iOS (11,0)]
 		[Mac (10,15)]
+		[NoMacCatalyst]
 		[Static]
 		[Export ("fileProviderErrorForCollisionWithItem:")]
 		NSError GetFileProviderError (INSFileProviderItem existingItem);
 
 		[iOS (11,0)]
 		[Mac (10,15)]
+		[NoMacCatalyst]
 		[Static]
 		[Export ("fileProviderErrorForNonExistentItemWithIdentifier:")]
 		NSError GetFileProviderError (string nonExistentItemIdentifier);
 
 		[NoiOS]
 		[Mac (11,0)]
+		[NoMacCatalyst]
 		[Static]
 		[Export ("fileProviderErrorForRejectedDeletionOfItem:")]
 		NSError GetFileProviderErrorForRejectedDeletion (INSFileProviderItem updatedVersion);
@@ -6688,7 +6691,7 @@ namespace Foundation
 		[Async (ResultTypeName = "NSUrlAsyncResult", MethodName="SendRequestAsync")]
 		void SendAsynchronousRequest (NSUrlRequest request, NSOperationQueue queue, NSUrlConnectionDataResponse completionHandler);
 		
-#if IOS
+#if HAS_NEWSSTANDKIT
 		// Extension from iOS5, NewsstandKit
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use Background Remote Notifications instead.")]
 		[NullAllowed]

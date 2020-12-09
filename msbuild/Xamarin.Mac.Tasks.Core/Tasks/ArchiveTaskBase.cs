@@ -17,7 +17,7 @@ namespace Xamarin.Mac.Tasks
 			var archiveDir = CreateArchiveDirectory ();
 
 			try {
-				var plist = PDictionary.FromFile (Path.Combine (AppBundleDir.ItemSpec, "Contents", "Info.plist"));
+				var plist = PDictionary.FromFile (PlatformFrameworkHelper.GetAppManifestPath (Platform, AppBundleDir.ItemSpec));
 				var productsDir = Path.Combine (archiveDir, "Products");
 
 				// Archive the Applications...

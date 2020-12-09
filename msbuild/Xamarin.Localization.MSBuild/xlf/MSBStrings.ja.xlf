@@ -664,16 +664,30 @@
         <note />
       </trans-unit>
       <trans-unit id="E0174">
+        <source>{0} has an incorrect or unknown format and cannot be processed.
+        </source>
+        <target state="new">{0} has an incorrect or unknown format and cannot be processed.
+        </target>
+        <note />
+      </trans-unit>
+      <trans-unit id="E0175">
+        <source>No matching framework found inside '{0}'.
+        </source>
+        <target state="new">No matching framework found inside '{0}'.
+        </target>
+        <note />
+      </trans-unit>
+      <trans-unit id="E0176">
         <source>The provided Archive Path is not from a valid archive file (.xcarchive). Archive Path: '{0}'</source>
         <target state="new">The provided Archive Path is not from a valid archive file (.xcarchive). Archive Path: '{0}'</target>
         <note />
       </trans-unit>
-      <trans-unit id="E0175">
+      <trans-unit id="E0177">
         <source>Can't get an ISshCommands instance. Please check that a valid connection to the Mac is established.</source>
         <target state="new">Can't get an ISshCommands instance. Please check that a valid connection to the Mac is established.</target>
         <note />
       </trans-unit>
-      <trans-unit id="E0176">
+      <trans-unit id="E0178">
         <source>An error occurred while trying to copy Archive '{0}' to '{1}'. Details: {2}</source>
         <target state="new">An error occurred while trying to copy Archive '{0}' to '{1}'. Details: {2}</target>
         <note />

@@ -310,7 +310,6 @@ namespace Xamarin.MacDev.Tasks
 			PDictionary compiled;
 			PDictionary archived;
 			string path;
-			bool save;
 
 			switch (SdkPlatform) {
 			case "AppleTVSimulator":
@@ -324,6 +323,9 @@ namespace Xamarin.MacDev.Tasks
 				platform = MobileProvisionPlatform.iOS;
 				break;
 			case "MacOSX":
+				platform = MobileProvisionPlatform.MacOS;
+				break;
+			case "MacCatalyst":
 				platform = MobileProvisionPlatform.MacOS;
 				break;
 			default:
@@ -369,26 +371,7 @@ namespace Xamarin.MacDev.Tasks
 				return false;
 			}
 
-			path = Path.Combine (EntitlementBundlePath, "archived-expanded-entitlements.xcent");
-
-			if (File.Exists (path)) {
-				var plist = PDictionary.FromFile (path);
-				var src = archived.ToXml ();
-				var dest = plist.ToXml ();
-
-				save = src != dest;
-			} else {
-				save = true;
-			}
-
-			if (save) {
-				try {
-					archived.Save (path, true);
-				} catch (Exception ex) {
-					Log.LogError (MSBStrings.E0115, ex.Message);
-					return false;
-				}
-			}
+			SaveArchivedExpandedEntitlements (archived);
 
 			if (SdkIsSimulator) {
 				if (compiled.Count > 0) {
@@ -399,6 +382,34 @@ namespace Xamarin.MacDev.Tasks
 			}
 
 			return !Log.HasLoggedErrors;
+		}
+
+		bool SaveArchivedExpandedEntitlements (PDictionary archived)
+		{
+			if (Platform == Utils.ApplePlatform.MacCatalyst) {
+				// I'm not sure if we need this in catalyst or not, but skip it until it's proven we actually need it.
+				return true;
+			}
+
+			var path = Path.Combine (EntitlementBundlePath, "archived-expanded-entitlements.xcent");
+
+			if (File.Exists (path)) {
+				var plist = PDictionary.FromFile (path);
+				var src = archived.ToXml ();
+				var dest = plist.ToXml ();
+
+				if (src == dest)
+					return true;
+			}
+
+			try {
+				archived.Save (path, true);
+			} catch (Exception ex) {
+				Log.LogError (MSBStrings.E0115, ex.Message);
+				return false;
+			}
+
+			return true;
 		}
 	}
 }

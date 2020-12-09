@@ -1401,13 +1401,11 @@ namespace Metal {
 
 		[Introduced (PlatformName.MacCatalyst, 14, 0)]
 		[Mac (11,0), NoTV, iOS (13,0)]
-		[Advice ("This API is not available when using UIKit on macOS.")]
 		[Export ("convertSparseTileRegions:toPixelRegions:withTileSize:numRegions:")]
 		void ConvertSparseTileRegions (IntPtr tileRegions, IntPtr pixelRegions, MTLSize tileSize, nuint numRegions);
 
 		[Introduced (PlatformName.MacCatalyst, 14, 0)]
 		[Mac (11,0), NoTV, iOS (13,0)]
-		[Advice ("This API is not available when using UIKit on macOS.")]
 		[Export ("convertSparsePixelRegions:toTileRegions:withTileSize:alignmentMode:numRegions:")]
 		void ConvertSparsePixelRegions (IntPtr pixelRegions, IntPtr tileRegions, MTLSize tileSize, MTLSparseTextureRegionAlignmentMode mode, nuint numRegions);
 

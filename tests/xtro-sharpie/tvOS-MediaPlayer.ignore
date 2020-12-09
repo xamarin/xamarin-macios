@@ -1,5 +1,4 @@
 ## incorrect macro/parsing - decorated with `MP_API(macos(10.12.2))`
-!missing-enum! MPNowPlayingPlaybackState not bound
 !missing-selector! MPNowPlayingInfoCenter::playbackState not bound
 !missing-selector! MPNowPlayingInfoCenter::setPlaybackState: not bound
 

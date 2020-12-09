@@ -22,7 +22,7 @@ namespace UIKit {
 			return CGRect.Empty;
 		}
 
-#if !TVOS
+#if !TVOS && !__MACCATALYST__
 		[Deprecated (PlatformName.iOS, 3, 2)]
 		public static CGRect BoundsFromNotification (NSNotification n)
 		{
@@ -60,7 +60,7 @@ namespace UIKit {
 			return val.CGPointValue;
 		}
 
-#if !TVOS
+#if !TVOS && !__MACCATALYST__
 		[Deprecated (PlatformName.iOS, 3, 2)]
 		static public CGPoint CenterBeginFromNotification (NSNotification n)
 		{

@@ -12,13 +12,15 @@ using CoreAnimation;
 using AnimationType = global::CoreAnimation.CAAnimation;
 #endif
 
+#nullable enable
+
 namespace SceneKit {
 
 	partial class SCNAction {
 
 #if !XAMCORE_4_0
 		[Obsolete ("Use 'TimingFunction2' property.")]
-		public virtual Action<float> TimingFunction {
+		public virtual Action<float>? TimingFunction {
 			get {
 				if (TimingFunction2 == null)
 					return null;
@@ -53,7 +55,7 @@ namespace SceneKit {
 	[iOS (8, 0)]
 		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Deprecated (PlatformName.TvOS, 10, 0, message: "This API has been totally removed on tvOS.")]
-		public virtual NSObject BorderColor { get; set; }
+		public virtual NSObject? BorderColor { get; set; }
 	}
 
 	partial class SCNRenderer {
@@ -147,7 +149,7 @@ namespace SceneKit {
 		}
 	}
 
-#if !MONOMAC && !WATCH
+#if !MONOMAC && !WATCH && !__MACCATALYST__
 	public partial class SCNView {
 		[Watch (6,0), TV (13,0), iOS (13,0)]
 		[Obsolete ("Empty stub. (not a public API).")]

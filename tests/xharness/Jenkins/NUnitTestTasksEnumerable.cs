@@ -34,9 +34,9 @@ namespace Xharness.Jenkins {
 				ProjectConfiguration = "Debug",
 				Platform = TestPlatform.iOS,
 				TestName = "MSBuild tests",
-				Mode = "iOS (tasks)",
+				Mode = "Tasks",
 				Timeout = TimeSpan.FromMinutes (60),
-				Ignored = !jenkins.IncludeiOSMSBuild,
+				Ignored = !jenkins.IncludeMSBuild,
 				SupportsParallelExecution = false,
 			};
 			yield return nunitExecutioniOSMSBuild;
@@ -56,9 +56,9 @@ namespace Xharness.Jenkins {
 				ProjectConfiguration = "Debug",
 				Platform = TestPlatform.iOS,
 				TestName = "MSBuild tests",
-				Mode = "iOS (integration)",
+				Mode = "Integration",
 				Timeout = TimeSpan.FromMinutes (90),
-				Ignored = !jenkins.IncludeiOSMSBuild,
+				Ignored = !jenkins.IncludeMSBuild,
 				SupportsParallelExecution = false,
 			};
 			yield return nunitExecutioniOSMSBuildIntegration;

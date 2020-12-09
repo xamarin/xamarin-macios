@@ -47,6 +47,15 @@
     <Compile Include="..\..\common\Profile.cs">
       <Link>external\Profile.cs</Link>
     </Compile>
+    <Compile Include="..\..\common\mac\ProjectTestHelpers.cs">
+      <Link>external\ProjectTestHelpers.cs</Link>
+    </Compile>
+    <Compile Include="..\..\common\BinLog.cs">
+      <Link>external\BinLog.cs</Link>
+    </Compile>
+    <Compile Include="..\..\common\Tool.cs">
+      <Link>external\Tool.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\external\Xamarin.MacDev\Xamarin.MacDev\Xamarin.MacDev.csproj" />

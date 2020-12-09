@@ -79,7 +79,7 @@ namespace UIKit {
 			}
 		}
 
-#if !XAMCORE_4_0
+#if !XAMCORE_4_0 && !__MACCATALYST__
 #if MONOMAC
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use the overload that takes 'nint glyphCount' instead.")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use the overload that takes 'nint glyphCount' instead.")]
