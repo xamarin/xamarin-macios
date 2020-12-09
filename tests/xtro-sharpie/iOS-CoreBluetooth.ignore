@@ -4,9 +4,3 @@
 
 ## obsoleted (removed from headers) in iOS 8.4
 !extra-protocol-member! unexpected selector CBPeripheralDelegate::peripheralDidInvalidateServices: found
-
-# Initial result from new rule missing-null-allowed
-!missing-null-allowed! 'Foundation.NSNumber CoreBluetooth.CBPeripheral::get_RSSI()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.Void CoreBluetooth.CBMutableDescriptor::.ctor(CoreBluetooth.CBUUID,Foundation.NSObject)' is missing an [NullAllowed] on parameter #1
-!missing-null-allowed! 'System.Void CoreBluetooth.CBPeripheralManager::.ctor(CoreBluetooth.ICBPeripheralManagerDelegate,CoreFoundation.DispatchQueue)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void CoreBluetooth.CBPeripheralManager::.ctor(CoreBluetooth.ICBPeripheralManagerDelegate,CoreFoundation.DispatchQueue,Foundation.NSDictionary)' is missing an [NullAllowed] on parameter #0

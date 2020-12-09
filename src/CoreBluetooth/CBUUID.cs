@@ -12,6 +12,8 @@ using System;
 using System.Text;
 using Foundation;
 
+#nullable enable
+
 namespace CoreBluetooth {
 
 	public partial class CBUUID : IEquatable<CBUUID> {
@@ -26,7 +28,7 @@ namespace CoreBluetooth {
 		public static CBUUID FromBytes (byte [] bytes)
 		{
 			if (bytes == null) {
-				throw new ArgumentNullException ("bytes");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (bytes));
 			} else if (bytes.Length != 2 && bytes.Length != 4 && bytes.Length != 16) {
 				throw new ArgumentException ("must either be 2, 4, or 16 bytes long", "bytes");
 			}
@@ -66,7 +68,7 @@ namespace CoreBluetooth {
 		}
 
 		// to satisfy IEquatable<T>
-		public unsafe bool Equals (CBUUID obj)
+		public unsafe bool Equals (CBUUID? obj)
 		{
 			return base.Equals (obj);
 		}

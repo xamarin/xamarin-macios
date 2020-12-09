@@ -19,32 +19,8 @@
 # This selector does not exist in macOS, confirmed by intro.
 !missing-selector! GKLeaderboardSet::loadImageWithCompletionHandler: not bound
 
-# Initial result from new rule extra-null-allowed
-!extra-null-allowed! 'System.Void GameKit.GKAchievement::ReportAchievements(GameKit.GKAchievement[],GameKit.GKChallenge[],System.Action`1<Foundation.NSError>)' has a extraneous [NullAllowed] on parameter #1
-!extra-null-allowed! 'System.Void GameKit.GKFriendRequestComposeViewController::AddRecipientPlayers(GameKit.GKPlayer[])' has a extraneous [NullAllowed] on parameter #0
-!extra-null-allowed! 'System.Void GameKit.GKScore::ReportScores(GameKit.GKScore[],GameKit.GKChallenge[],System.Action`1<Foundation.NSError>)' has a extraneous [NullAllowed] on parameter #1
+## property is null by default
 !extra-null-allowed! 'System.Void GameKit.GKVoiceChat::set_PlayerStateUpdateHandler(GameKit.GKPlayerStateUpdateHandler)' has a extraneous [NullAllowed] on parameter #0
-
-# Initial result from new rule missing-null-allowed
-!missing-null-allowed! 'AppKit.NSImage GameKit.GKAchievementDescription::get_Image()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSDate GameKit.GKChallenge::get_CompletionDate()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSDate GameKit.GKSavedGame::get_ModificationDate()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'GameKit.GKAchievement GameKit.GKAchievementChallenge::get_Achievement()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'GameKit.GKPlayer GameKit.GKChallenge::get_IssuingPlayer()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'GameKit.GKPlayer GameKit.GKChallenge::get_ReceivingPlayer()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'GameKit.GKScore GameKit.GKScoreChallenge::get_Score()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'GameKit.GKVoiceChat GameKit.GKMatch::VoiceChatWithName(System.String)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String GameKit.GKChallenge::get_IssuingPlayerID()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String GameKit.GKChallenge::get_Message()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String GameKit.GKChallenge::get_ReceivingPlayerID()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String GameKit.GKPlayer::get_GuestIdentifier()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String GameKit.GKSavedGame::get_DeviceName()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String GameKit.GKSavedGame::get_Name()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String GameKit.GKTurnBasedParticipant::get_PlayerID()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String[] GameKit.GKLocalPlayer::get_Friends()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.Void GameKit.GKDialogController::set_ParentWindow(AppKit.NSWindow)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void GameKit.GKGameSession::SendMessage(System.String,System.String[],Foundation.NSData,GameKit.GKCloudPlayer[],System.Boolean,System.Action`1<Foundation.NSError>)' is missing an [NullAllowed] on parameter #2
-!missing-null-allowed! 'System.Void GameKit.GKMatchmakerViewController::set_DefaultInvitationMessage(System.String)' is missing an [NullAllowed] on parameter #0
 
 # API removed by Apple, marked as deprecated
 !unknown-native-enum! GKAuthenticationType bound

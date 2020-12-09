@@ -586,6 +586,7 @@ namespace GameKit {
 		[iOS (9, 0)]
 		[Mac (10, 11)]
 		[Export ("guestIdentifier")]
+		[NullAllowed]
 		string GuestIdentifier { get; }
 
 		[NoWatch]
@@ -700,7 +701,7 @@ namespace GameKit {
 		[iOS (7,0)][Mac (10,10)]
 		[Export ("reportScores:withEligibleChallenges:withCompletionHandler:"), Static]
 		[Async]
-		void ReportScores (GKScore[] scores, [NullAllowed] GKChallenge[] challenges, [NullAllowed] Action<NSError> completionHandler);
+		void ReportScores (GKScore[] scores, GKChallenge[] challenges, [NullAllowed] Action<NSError> completionHandler);
 
 		[NoWatch]
 		[iOS (14,0)][Mac (11,0)][TV (14,0)]
@@ -713,6 +714,7 @@ namespace GameKit {
 		[Availability (Deprecated = Platform.iOS_8_0, Message = "Pass 'GKPlayers' to 'ChallengeComposeController (GKPlayer [] players, string message, ...)' instead.")]
 		[iOS (7,0)]
 		[Export ("challengeComposeControllerWithPlayers:message:completionHandler:")]
+		[return: NullAllowed]
 		UIViewController ChallengeComposeController ([NullAllowed] string[] playerIDs, [NullAllowed] string message, [NullAllowed] GKChallengeComposeHandler completionHandler);
 #endif
 
@@ -795,6 +797,7 @@ namespace GameKit {
 		[Deprecated (PlatformName.iOS, 8, 0, message : "Use 'LoadFriendPlayers' instead and collect the friends from the invoked callback.")]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'LoadFriendPlayers' instead and collect the friends from the invoked callback.")]
 		[Export ("friends", ArgumentSemantic.Retain)]
+		[NullAllowed]
 		string [] Friends { get;  }
 
 		[Static, Export ("localPlayer")]
@@ -955,12 +958,15 @@ namespace GameKit {
 	[BaseType (typeof (NSObject))]
 	interface GKSavedGame : NSCopying {
 		[Export ("name")]
+		[NullAllowed]
 		string Name { get; }
 
 		[Export ("deviceName")]
+		[NullAllowed]
 		string DeviceName { get; }
 
 		[Export ("modificationDate")]
+		[NullAllowed]
 		NSDate ModificationDate { get; }
 
 		[Export ("loadDataWithCompletionHandler:")]
@@ -1016,6 +1022,7 @@ namespace GameKit {
 		void Disconnect ();
 
 		[Export ("voiceChatWithName:")]
+		[return: NullAllowed]
 		GKVoiceChat VoiceChatWithName (string name);
 
 		[NoTV]
@@ -1372,6 +1379,7 @@ namespace GameKit {
 		[Deprecated (PlatformName.iOS, 7, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Export ("defaultInvitationMessage", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		string DefaultInvitationMessage { get; set;  }
 
 		[Export ("addPlayersToMatch:")]
@@ -1529,7 +1537,7 @@ namespace GameKit {
 		[iOS (7,0), Mac (10,10)]
 		[Export ("reportAchievements:withEligibleChallenges:withCompletionHandler:"), Static]
 		[Async]
-		void ReportAchievements (GKAchievement[] achievements, [NullAllowed] GKChallenge[] challenges, [NullAllowed] Action<NSError> completionHandler);
+		void ReportAchievements (GKAchievement[] achievements, GKChallenge[] challenges, [NullAllowed] Action<NSError> completionHandler);
 
 		[NullAllowed]
 		[iOS (8,0), Mac (10,10)]
@@ -1565,7 +1573,8 @@ namespace GameKit {
 		[iOS (7,0)]
 		[Availability (Deprecated = Platform.iOS_8_0)]
 		[Export ("challengeComposeControllerWithPlayers:message:completionHandler:")]
-		UIViewController ChallengeComposeController (GKPlayer [] playerIDs, [NullAllowed] string message, [NullAllowed] GKChallengeComposeHandler completionHandler);
+		[return: NullAllowed]
+		UIViewController ChallengeComposeController ([NullAllowed] GKPlayer [] playerIDs, [NullAllowed] string message, [NullAllowed] GKChallengeComposeHandler completionHandler);
 #endif
 	}
 
@@ -1608,6 +1617,7 @@ namespace GameKit {
 		
 #if MONOMAC
 		[Export ("image", ArgumentSemantic.Retain)]
+		[NullAllowed]
 		NSImage Image { get; }
 		
 		[Static]
@@ -1622,6 +1632,7 @@ namespace GameKit {
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'LoadImage' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 8, message : "Use 'LoadImage' instead.")]
 		[Export ("image")]
+		[NullAllowed]
 		UIImage Image { get; }
 
 		[NoWatch]
@@ -1676,6 +1687,7 @@ namespace GameKit {
 	[BaseType (typeof (NSResponder))]
 	interface GKDialogController {
 		[Export ("parentWindow", ArgumentSemantic.Weak)]
+		[NullAllowed]
 		NSWindow ParentWindow { get; set; }
 
 		[Export ("presentViewController:")]
@@ -1725,7 +1737,7 @@ namespace GameKit {
 
 		[iOS (8,0), Mac (10,10)]
 		[Export ("addRecipientPlayers:")]
-		void AddRecipientPlayers ([NullAllowed]GKPlayer [] players);
+		void AddRecipientPlayers (GKPlayer [] players);
 
 		[Export ("addRecipientsWithPlayerIDs:")]
 		void AddRecipientsFromPlayerIDs (string [] playerIDs);
@@ -1771,6 +1783,7 @@ namespace GameKit {
 		[Deprecated (PlatformName.iOS, 8, 0, message : "Use 'Player' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'Player' instead.")]
 		[Export ("playerID", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		string PlayerID { get;  }
 
 		[Export ("lastTurnDate", ArgumentSemantic.Copy)]
@@ -2072,12 +2085,14 @@ namespace GameKit {
 		[Deprecated (PlatformName.iOS, 8, 0, message : "Use 'IssuingPlayer' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'IssuingPlayer' instead.")]
 		[Export ("issuingPlayerID", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		string IssuingPlayerID { get; }
 
 		[NoTV]
 		[Deprecated (PlatformName.iOS, 8, 0, message : "Use 'ReceivingPlayer' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'ReceivingPlayer' instead.")]
 		[Export ("receivingPlayerID", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		string ReceivingPlayerID { get; }
 
 		[Export ("state", ArgumentSemantic.Assign)]
@@ -2087,9 +2102,11 @@ namespace GameKit {
 		NSDate IssueDate { get; }
 
 		[Export ("completionDate", ArgumentSemantic.Retain)]
+		[NullAllowed]
 		NSDate CompletionDate { get; }
 
 		[Export ("message", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		string Message { get; }
 
 		[Export ("decline")]
@@ -2101,10 +2118,12 @@ namespace GameKit {
 
 		[iOS (8,0), Mac (10,10)]
 		[Export ("issuingPlayer", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		GKPlayer IssuingPlayer { get; }
 
 		[iOS (8,0), Mac (10,10)]
 		[Export ("receivingPlayer", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		GKPlayer ReceivingPlayer { get; }
 	}
 
@@ -2114,6 +2133,7 @@ namespace GameKit {
 	interface GKScoreChallenge {
 
 		[Export ("score", ArgumentSemantic.Retain)]
+		[NullAllowed]
 		GKScore Score { get; }
 	}
 
@@ -2123,6 +2143,7 @@ namespace GameKit {
 	interface GKAchievementChallenge {
 
 		[Export ("achievement", ArgumentSemantic.Retain)]
+		[NullAllowed]
 		GKAchievement Achievement { get; }
 	}
 
@@ -2504,7 +2525,7 @@ namespace GameKit {
 
 		[Async]
 		[Export ("sendMessageWithLocalizedFormatKey:arguments:data:toPlayers:badgePlayers:completionHandler:")]
-		void SendMessage (string key, string[] arguments, NSData data, GKCloudPlayer[] players, bool badgePlayers, Action<NSError> completionHandler);
+		void SendMessage (string key, string[] arguments, [NullAllowed] NSData data, GKCloudPlayer[] players, bool badgePlayers, Action<NSError> completionHandler);
 
 		[Async]
 		[Export ("clearBadgeForPlayers:completionHandler:")]
