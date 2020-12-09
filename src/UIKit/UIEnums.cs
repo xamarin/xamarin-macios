@@ -1917,10 +1917,10 @@ namespace UIKit {
 		PlayPause,
 		[TV (14,3)]
 		[NoiOS]
-		PageUp = 7,
+		PageUp = 30,
 		[TV (14,3)]
 		[NoiOS]
-		PageDown = 8,
+		PageDown = 31,
 	}
 
 	[NoWatch]

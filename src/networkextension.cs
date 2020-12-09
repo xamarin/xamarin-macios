@@ -200,8 +200,7 @@ namespace NetworkExtension {
 		[NullAllowed]
 		string RemoteHostname { get; }
 
-		[Mac (11,1)]
-		[NoiOS] // macOS headers says 14.3 but it's not part of the iOS headers as of beta 1
+		[Mac (11,1), iOS (14, 3)]
 		[Export ("isBound")]
 		bool IsBound { get; }
 
