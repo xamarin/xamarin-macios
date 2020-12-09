@@ -3,6 +3,8 @@ using System;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace GameKit {
 	public partial class GKLocalPlayerListener {
 
