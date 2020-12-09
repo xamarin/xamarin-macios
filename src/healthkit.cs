@@ -957,10 +957,6 @@ namespace HealthKit {
 		[Watch (7, 2), iOS (14, 3)]
 		[Field ("HKMetadataKeyLowCardioFitnessEventThreshold")]
 		NSString LowCardioFitnessEventThreshold { get; }
-
-		[Watch (7, 2), iOS (14, 3)]
-		[Field ("HKMetadataKeyAppleSixMinuteWalkTestDistanceEstimateType")]
-		NSString AppleSixMinuteWalkTestDistanceEstimateType { get; }
 	}
 
 	[Watch (2,0)]
@@ -3553,11 +3549,5 @@ namespace HealthKit {
 	[Native]
 	enum HKCategoryValueLowCardioFitnessEvent : long {
 		LowFitness = 1,
-	}
-
-	[Watch (7,2), iOS (14,3)]
-	[Native]
-	enum HKAppleSixMinuteWalkTestDistanceEstimateType : long {
-		LowLatency = 1,
 	}
 }
