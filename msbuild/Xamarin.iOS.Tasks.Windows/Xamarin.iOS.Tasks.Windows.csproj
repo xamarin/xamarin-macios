@@ -3,22 +3,12 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <IncludeMSBuildAssets Condition="'$(IncludeMSBuildAssets)' == ''">compile</IncludeMSBuildAssets>
   </PropertyGroup>
   <ItemGroup>
-    <!-- Compile against Microsoft.Build* NuGet refs, but do not copy to OutputDir if IncludeMSBuildAssets was not set. -->
-    <PackageReference Include="Microsoft.Build" Version="15.9.20" IncludeAssets="$(IncludeMSBuildAssets)" />
-    <PackageReference Include="Microsoft.Build.Framework" Version="16.8.0" IncludeAssets="$(IncludeMSBuildAssets)" />
-    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="16.8.0" IncludeAssets="$(IncludeMSBuildAssets)" />
-    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.8.0" IncludeAssets="$(IncludeMSBuildAssets)" />
     <PackageReference Include="Xamarin.Messaging.Build.Client" Version="1.2.93" />
     <PackageReference Include="Xamarin.Messaging.Server" Version="1.2.93" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Xamarin.iOS.Tasks\Xamarin.iOS.Tasks.csproj" />
-  </ItemGroup>
-  <ItemGroup>
     <AgentReference Include="..\Messaging\Xamarin.Messaging.Build\Xamarin.Messaging.Build.csproj" />
-  </ItemGroup>    
-  <Import Project="$(MSBuildThisFileDirectory)..\ILMerge.targets" />
+  </ItemGroup>
 </Project>
