@@ -12,6 +12,8 @@ steps:
   persistCredentials: true
 
 - template: download-artifacts.yml 
+  parameters:
+    devicePrefix: ${{ parameters.devicePrefix }}
 
 # Upload full report to vsdrops using the the build numer and id as uudis.
 - task: ms-vscs-artifact.build-tasks.artifactDropTask-1.artifactDropTask@0

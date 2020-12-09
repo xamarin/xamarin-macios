@@ -66,13 +66,14 @@ stages:
       workspace:
         clean: all
     steps:
-    - template: device-tests.yml
+    - template: build.yml
       parameters:
         testsLabels: ${{ parameters.testsLabels }}
         statusContext: ${{ parameters.statusContext }}
         useXamarinStorage: ${{ parameters.useXamarinStorage }}
         vsdropsPrefix: ${{ parameters.vsdropsPrefix }} 
         keyringPass: ${{ parameters.keyringPass }} 
+        devicePrefix: ${{ parameters.devicePrefix }}
 
   - job: upload_vsdrops
     displayName: 'Upload report to vsdrops'
@@ -84,7 +85,7 @@ stages:
       workspace:
         clean: all
     steps:
-    - template: upload-vsdrops.yml
+    - template: ../common/upload-vsdrops.yml
       parameters: 
         devicePrefix: ${{ parameters.devicePrefix }}
 
@@ -98,7 +99,9 @@ stages:
       workspace:
         clean: all
     steps:
-    - template: upload-vsts-tests.yml
+    - template: ../common/upload-vsts-tests.yml
+      parameters: 
+        devicePrefix: ${{ parameters.devicePrefix }}
 
   - job: publish_html
     displayName: 'Publish Html report in VSDrops'
@@ -120,7 +123,7 @@ stages:
       workspace:
         clean: all
     steps:
-    - template: publish-html.yml
+    - template: ../common/publish-html.yml
       parameters:
         statusContext: ${{ parameters.statusContext }}
         vsdropsPrefix: ${{ parameters.vsdropsPrefix }} 
