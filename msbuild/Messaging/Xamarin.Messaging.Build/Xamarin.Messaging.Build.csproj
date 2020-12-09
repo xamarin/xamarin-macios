@@ -18,6 +18,8 @@
     <PackageReference Include="Mono.Cecil" Version="0.11.1" />
     <PackageReference Include="System.Net.Mqtt.Server" Version="0.6.7-beta" />
     <PackageReference Include="GitInfo" Version="2.1.2" />
+    <!-- We only include build assets to get targets related to agent generation, the assemblies come from Xamarin.iOS.Tasks -->
+    <PackageReference Include="Xamarin.Messaging.Core" Version="1.2.93" IncludeAssets="build"/>
   </ItemGroup>
 
   <ItemGroup>
