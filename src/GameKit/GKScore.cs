@@ -39,6 +39,8 @@ using Foundation;
 using ObjCRuntime;
 using UIKit;
 
+#nullable enable
+
 namespace GameKit {
 	public partial class GKScore {
 
@@ -52,7 +54,7 @@ namespace GameKit {
 		public GKScore (string categoryOrIdentifier)
 		{
 			if (categoryOrIdentifier == null)
-				throw new ArgumentNullException ("categoryOrIdentifier");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (categoryOrIdentifier));
 
 #if WATCH
 			Handle = InitWithLeaderboardIdentifier (categoryOrIdentifier);
