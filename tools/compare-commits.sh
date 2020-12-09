@@ -180,7 +180,7 @@ mkdir -p "$OUTPUT_DIR/project-files"
 ln -s git "$OUTPUT_DIR/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/Current"
 ln -s git "$OUTPUT_DIR/_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/Current"
 
-for dir in 2.1 Xamarin.iOS Xamarin.TVOS Xamarin.WatchOS; do
+for dir in 2.1 Xamarin.iOS Xamarin.TVOS Xamarin.WatchOS Xamarin.MacCatalyst; do
 	$CP -R "$ROOT_DIR/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/mono/$dir" "$OUTPUT_DIR/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/mono"
 done
 
