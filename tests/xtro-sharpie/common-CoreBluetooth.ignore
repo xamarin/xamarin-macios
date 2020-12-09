@@ -13,27 +13,3 @@
 
 ## short lived instance property being replaced with a static one
 !missing-selector! CBManager::authorization not bound
-
-# Initial result from new rule missing-null-allowed
-!missing-null-allowed! 'CoreBluetooth.CBCentral[] CoreBluetooth.CBMutableCharacteristic::get_SubscribedCentrals()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'CoreBluetooth.CBService[] CoreBluetooth.CBPeripheral::get_Services()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSObject CoreBluetooth.CBDescriptor::get_Value()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String CoreBluetooth.CBPeripheral::get_Name()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.Void CoreBluetooth.CBATTRequest::set_Value(Foundation.NSData)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void CoreBluetooth.CBCentralManagerDelegate::DisconnectedPeripheral(CoreBluetooth.CBCentralManager,CoreBluetooth.CBPeripheral,Foundation.NSError)' is missing an [NullAllowed] on parameter #2
-!missing-null-allowed! 'System.Void CoreBluetooth.CBCentralManagerDelegate::FailedToConnectPeripheral(CoreBluetooth.CBCentralManager,CoreBluetooth.CBPeripheral,Foundation.NSError)' is missing an [NullAllowed] on parameter #2
-!missing-null-allowed! 'System.Void CoreBluetooth.CBMutableService::set_Characteristics(CoreBluetooth.CBCharacteristic[])' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void CoreBluetooth.CBMutableService::set_IncludedServices(CoreBluetooth.CBService[])' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void CoreBluetooth.CBPeripheralDelegate::DiscoveredCharacteristic(CoreBluetooth.CBPeripheral,CoreBluetooth.CBService,Foundation.NSError)' is missing an [NullAllowed] on parameter #2
-!missing-null-allowed! 'System.Void CoreBluetooth.CBPeripheralDelegate::DiscoveredDescriptor(CoreBluetooth.CBPeripheral,CoreBluetooth.CBCharacteristic,Foundation.NSError)' is missing an [NullAllowed] on parameter #2
-!missing-null-allowed! 'System.Void CoreBluetooth.CBPeripheralDelegate::DiscoveredIncludedService(CoreBluetooth.CBPeripheral,CoreBluetooth.CBService,Foundation.NSError)' is missing an [NullAllowed] on parameter #2
-!missing-null-allowed! 'System.Void CoreBluetooth.CBPeripheralDelegate::DiscoveredService(CoreBluetooth.CBPeripheral,Foundation.NSError)' is missing an [NullAllowed] on parameter #1
-!missing-null-allowed! 'System.Void CoreBluetooth.CBPeripheralDelegate::RssiRead(CoreBluetooth.CBPeripheral,Foundation.NSNumber,Foundation.NSError)' is missing an [NullAllowed] on parameter #2
-!missing-null-allowed! 'System.Void CoreBluetooth.CBPeripheralDelegate::RssiUpdated(CoreBluetooth.CBPeripheral,Foundation.NSError)' is missing an [NullAllowed] on parameter #1
-!missing-null-allowed! 'System.Void CoreBluetooth.CBPeripheralDelegate::UpdatedCharacterteristicValue(CoreBluetooth.CBPeripheral,CoreBluetooth.CBCharacteristic,Foundation.NSError)' is missing an [NullAllowed] on parameter #2
-!missing-null-allowed! 'System.Void CoreBluetooth.CBPeripheralDelegate::UpdatedNotificationState(CoreBluetooth.CBPeripheral,CoreBluetooth.CBCharacteristic,Foundation.NSError)' is missing an [NullAllowed] on parameter #2
-!missing-null-allowed! 'System.Void CoreBluetooth.CBPeripheralDelegate::UpdatedValue(CoreBluetooth.CBPeripheral,CoreBluetooth.CBDescriptor,Foundation.NSError)' is missing an [NullAllowed] on parameter #2
-!missing-null-allowed! 'System.Void CoreBluetooth.CBPeripheralDelegate::WroteCharacteristicValue(CoreBluetooth.CBPeripheral,CoreBluetooth.CBCharacteristic,Foundation.NSError)' is missing an [NullAllowed] on parameter #2
-!missing-null-allowed! 'System.Void CoreBluetooth.CBPeripheralDelegate::WroteDescriptorValue(CoreBluetooth.CBPeripheral,CoreBluetooth.CBDescriptor,Foundation.NSError)' is missing an [NullAllowed] on parameter #2
-!missing-null-allowed! 'System.Void CoreBluetooth.CBPeripheralManagerDelegate::AdvertisingStarted(CoreBluetooth.CBPeripheralManager,Foundation.NSError)' is missing an [NullAllowed] on parameter #1
-!missing-null-allowed! 'System.Void CoreBluetooth.CBPeripheralManagerDelegate::ServiceAdded(CoreBluetooth.CBPeripheralManager,CoreBluetooth.CBService,Foundation.NSError)' is missing an [NullAllowed] on parameter #2

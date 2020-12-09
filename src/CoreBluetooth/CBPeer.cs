@@ -4,6 +4,8 @@ using Foundation;
 using System;
 using CoreFoundation;
 
+#nullable enable
+
 namespace CoreBluetooth {
 	public partial class CBPeer  {
 		[Deprecated (PlatformName.iOS, 7, 0)]

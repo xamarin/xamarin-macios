@@ -189,7 +189,7 @@ steps:
     ./configure $CONFIGURE_FLAGS
     echo $(cat $(Build.SourcesDirectory)/xamarin-macios/configure.inc)
   env:
-    IsPR: variables['configuration.IsPR']
+    IsPR: $(configuration.IsPR)
   displayName: "Configure build"
   timeoutInMinutes: 5
 
@@ -248,6 +248,8 @@ steps:
   displayName: 'Build Nugets'
   condition: and(succeeded(), eq(variables['configuration.BuildNugets'], 'True'))
   timeoutInMinutes: 180
+  env:
+    BRANCH_NAME: $(Build.SourceBranchName) # expected by make since it used to be set by jenkins
 
 - bash:  $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/productsign.sh
   env:
