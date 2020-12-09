@@ -546,7 +546,7 @@ namespace Foundation {
 						// cancel the task it means that we are not interested in any of the delegate methods:
 						// 
 						// DidReceiveResponse     We might have received a response, but either the user cancelled or a 
-						//                        timeout did, if that is the case, we do not care about the respose.
+						//                        timeout did, if that is the case, we do not care about the response.
 						// DidReceiveData         Of buffer has a partial response ergo garbage and there is not real 
 						//                        reason we would like to add more data.
 						// DidCompleteWithError - We are not changing a behaviour compared to the case in which 
