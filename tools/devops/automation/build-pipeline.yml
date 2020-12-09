@@ -53,7 +53,7 @@ variables:
 
 trigger: none
 
-# UNDONE: Trigger test: xamarin-macios: Enable WebHook #1
+# UNDONE: Trigger test: xamarin-macios: Enable WebHook #2
 pr:
   autoCancel: true
   branches:
