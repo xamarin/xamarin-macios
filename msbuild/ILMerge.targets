@@ -40,6 +40,7 @@
       <MergedAssemblies Include="$(OutputPath)/System.Text.Encodings.Web.dll" />
 
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(Extension)' == '.dll' And $([MSBuild]::ValueOrDefault('%(FileName)', '').StartsWith('Mono.Cecil', StringComparison.OrdinalIgnoreCase))" />
+      <MergedAssemblies Include="@(ReferencePath)" Condition="'%(Extension)' == '.dll' And $([MSBuild]::ValueOrDefault('%(FileName)', '').StartsWith('Xamarin.Messaging', StringComparison.OrdinalIgnoreCase))" />
     </ItemGroup>
     <ItemGroup Condition="$(TargetFramework.StartsWith ('net4'))">
       <MergedAssemblies Include="@(ReferenceCopyLocalPaths)" Condition="'%(Extension)' == '.dll'
