@@ -5,7 +5,7 @@ using System.Text;
 
 using Xamarin.Utils;
 
-namespace GenerateTypeForwarders {
+namespace GenerateFrameworksConstants {
 	class MainClass {
 		public static int Main (string [] args)
 		{
