@@ -141,7 +141,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</ItemGroup>
 		<ResolveNativeReferences
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
+			Condition="'$(IsMacEnabled)' == 'true' And '$(IsBindingProject)' != 'true'"
 			Architectures="$(TargetArchitectures)"
 			NativeReferences="@(_XCFrameworkNativeReference);@(_FrameworkNativeReference)"
 			References="@(ReferencePath)"
