@@ -77,9 +77,6 @@
 !missing-selector! +GKVoiceChatService::defaultVoiceChatService not bound
 !missing-selector! +GKVoiceChatService::isVoIPAllowed not bound
 
-# Initial result from new rule missing-null-allowed
-!missing-null-allowed! 'System.String GameKit.GKTurnBasedParticipant::get_PlayerID()' is missing an [NullAllowed] on return type
-
 # API removed by Apple, marked as deprecated
 !unknown-native-enum! GKAuthenticationType bound
 

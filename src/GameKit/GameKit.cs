@@ -14,6 +14,8 @@ using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 
+#nullable enable
+
 namespace GameKit {
 
 #if !MONOMAC
