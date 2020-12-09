@@ -11,4 +11,12 @@
   <ItemGroup>
     <AgentReference Include="..\Messaging\Xamarin.Messaging.Build\Xamarin.Messaging.Build.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="*.props">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="*.targets">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>
