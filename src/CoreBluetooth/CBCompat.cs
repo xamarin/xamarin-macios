@@ -4,6 +4,8 @@ using Foundation;
 using System;
 using CoreFoundation;
 
+#nullable enable
+
 namespace CoreBluetooth {
 
 #if IOS || MONOMAC

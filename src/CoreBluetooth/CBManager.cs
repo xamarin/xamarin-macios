@@ -2,6 +2,8 @@
 using System;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace CoreBluetooth {
 	public partial class CBManager {
 

@@ -31,6 +31,8 @@ using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace CoreBluetooth {
 
 	//
@@ -51,7 +53,7 @@ namespace CoreBluetooth {
 		{
 		}
 
-		public string LocalName {
+		public string? LocalName {
 			set {
 				SetStringValue (CBAdvertisement.DataLocalNameKey, value);
 			}
@@ -60,7 +62,7 @@ namespace CoreBluetooth {
 			}
 		}
 
-		public CBUUID[] ServicesUUID {
+		public CBUUID[]? ServicesUUID {
 			get {
 				return GetArray<CBUUID> (CBAdvertisement.DataServiceUUIDsKey);
 			}
