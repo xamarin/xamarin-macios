@@ -1280,7 +1280,7 @@ $(BUILD_DIR)/maccatalyst.rsp: Makefile Makefile.generator frameworks.sources
 
 ### .NET ###
 
-$(MACCATALYST_DOTNET_BUILD_DIR)/core-maccatalyst.dll: $(TVOS_CORE_SOURCES) frameworks.sources Makefile | $(MACCATALYST_DOTNET_BUILD_DIR)
+$(MACCATALYST_DOTNET_BUILD_DIR)/core-maccatalyst.dll: $(TVOS_CORE_SOURCES) frameworks.sources Makefile $(BUILD_DIR)/maccatalyst-defines.rsp | $(MACCATALYST_DOTNET_BUILD_DIR)
 	$(Q_DOTNET_GEN) \
 		$(SYSTEM_CSC) $(DOTNET_FLAGS) \
 		$(MACCATALYST_WARNINGS_TO_FIX) \
