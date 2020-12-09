@@ -11,6 +11,8 @@
 using System;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace CoreBluetooth {
 
 	[Mac (10,13)]

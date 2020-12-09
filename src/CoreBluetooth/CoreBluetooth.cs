@@ -3,6 +3,8 @@ using System;
 using Foundation;
 using CoreFoundation;
 
+#nullable enable
+
 namespace CoreBluetooth {
 
 	// The init ctor is invalid, but to present a nicer API (the delegate is optional/
