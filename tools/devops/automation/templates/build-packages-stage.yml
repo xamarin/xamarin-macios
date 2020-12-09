@@ -102,3 +102,5 @@ jobs:
       clean: all
   steps:
   - template: upload-vsts-tests.yml
+    parameters:
+      devicePrefix: sim
