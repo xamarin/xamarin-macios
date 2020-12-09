@@ -78,7 +78,7 @@ stages:
   displayName: 'Build'
   dependsOn: []
   jobs:
-    - template: templates/build-packages-stage.yml
+    - template: templates/packages/stage.yml
 
   # ideally we would use a matrix here, like:
   #  - job: device_tests
@@ -112,7 +112,7 @@ stages:
   # Unfortunally, variable expansion will not happen on the right time, and will result in an agent error, to fix that
   # we use a template for the test and we set each of the jobs. Not ideal, but is only a 3 jobs matrix
 
-- template: templates/device-tests-stage.yml
+- template: templates/devices/stage.yml
   parameters:
     devicePrefix: 'iOS32b'
     execute: 'runDevice32b'
@@ -125,7 +125,7 @@ stages:
     vsdropsPrefix: ${{ variables.vsdropsPrefix }}
     keyringPass: $(xma-password)
 
-- template: templates/device-tests-stage.yml
+- template: templates/devices/stage.yml
   parameters:
     devicePrefix: 'iOS64'
     execute: 'runDevice64b'
@@ -138,7 +138,7 @@ stages:
     vsdropsPrefix: ${{ variables.vsdropsPrefix }}
     keyringPass: $(xma-password)
 
-- template: templates/device-tests-stage.yml
+- template: templates/devices/stage.yml
   parameters:
     devicePrefix: 'tvOS'
     execute: 'runDeviceTv'

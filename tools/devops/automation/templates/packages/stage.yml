@@ -8,7 +8,7 @@ jobs:
     vmImage: ubuntu-latest
 
   steps:
-  - template: configure-build.yml
+  - template: configure.yml
 
 - job: AgentPoolSelector       # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/phases?view=azure-devops&tabs=yaml
   pool:                        # Consider using an agentless (server) job here, but would need to host selection logic as an Azure function: https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#server
@@ -17,7 +17,7 @@ jobs:
   - checkout: none             # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
 
   # Selects appropriate agent pool based on trigger type (PR or CI)
-  - template: agent-pool-selector.yml
+  - template: ../agent-pool-selector.yml
 
 - job: build
   dependsOn:
@@ -58,7 +58,7 @@ jobs:
     clean: all
 
   steps:
-  - template: build-packages.yml
+  - template: build.yml
 
 - job: upload_azure_blob
   displayName: 'Upload packages to Azure'
@@ -87,7 +87,7 @@ jobs:
     workspace:
       clean: all
   steps:
-  - template: upload-vsdrops.yml
+  - template: ../common/upload-vsdrops.yml
     parameters:
       devicePrefix: sim
 
@@ -101,6 +101,6 @@ jobs:
     workspace:
       clean: all
   steps:
-  - template: upload-vsts-tests.yml
+  - template: ../common/upload-vsts-tests.yml
     parameters:
       devicePrefix: sim
