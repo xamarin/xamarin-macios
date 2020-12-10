@@ -1,4 +1,0 @@
-﻿# DivideByZeroException / Service exited due to SIGFPE
-# https://github.com/mono/mono/issues/20632
-MonoTests.System.Numerics.BigIntegerTest.DivRemByZero
-MonoTests.System.Numerics.BigIntegerTest.ModPow
