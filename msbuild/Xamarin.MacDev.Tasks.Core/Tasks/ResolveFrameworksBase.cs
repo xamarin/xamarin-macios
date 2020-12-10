@@ -47,11 +47,18 @@ namespace Xamarin.MacDev.Tasks {
 				foreach (var nr in NativeReferences) {
 					var name = nr.ItemSpec;
 					switch (Path.GetExtension (name)) {
-					case ".xcframework":
-						var resolved = ResolveXCFramework (name);
-						if (resolved == null)
-							return false;
-						native_frameworks.Add (new TaskItem (resolved));
+					// '.' is used to represent a file (instead of the directory)
+					case "":
+						name = Path.GetDirectoryName (name);
+						if (Path.GetExtension (name) == ".xcframework") {
+							var resolved = ResolveXCFramework (name);
+							if (resolved == null)
+								return false;
+							var t = new TaskItem (resolved);
+							t.SetMetadata ("Kind", "Framework");
+							t.SetMetadata ("Name", resolved);
+							native_frameworks.Add (t);
+						}
 						break;
 					case ".framework":
 						native_frameworks.Add (nr);
@@ -140,7 +147,7 @@ namespace Xamarin.MacDev.Tasks {
 			return null;
 		}
 
-		internal static string ResolveXCFramework (PDictionary plist, string platformName, string variant, string architectures)
+		internal static string? ResolveXCFramework (PDictionary plist, string platformName, string variant, string architectures)
 		{
 			// plist structure https://github.com/spouliot/xcframework#infoplist
 			var bundle_package_type = (PString) plist ["CFBundlePackageType"];
