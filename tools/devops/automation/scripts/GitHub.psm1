@@ -456,8 +456,30 @@ class GistFile
 
 <# 
     .SYNOPSIS
-        Creates a new gist that will contain the given collection of files and returns the url
+        Creates a new gist that will contain the given collection of files and returns the urlobject defintion, this
+        is usefull when the 'using' statement generates problems.
+#>
+function New-GistObjectDefinition {
+    param (
 
+        [ValidateNotNullOrEmpty ()]
+        [string]
+        $Name, 
+
+        [ValidateNotNullOrEmpty ()]
+        [string]
+        $Path,
+
+        [ValidateNotNullOrEmpty ()]
+        [string]
+        $Type
+    )
+    return [GistFile]::new($Name, $Path, $Type)
+}
+
+<# 
+    .SYNOPSIS
+        Creates a new gist that will contain the given collection of files and returns the url
 #>
 function New-GistWithFiles {
     param (
@@ -488,8 +510,14 @@ function New-GistWithFiles {
     # create the hashtable that will contain all the information of all types
     $payload = @{
         description = $Description;
-        public = $IsPublic ? $true : $false; # switchs are converted to {\"IsPresent\"=>true} in json :/
         files = @{}; # each file is the name of the file + the hashtable of the data to be used
+    }
+
+    # switchs are converted to {\"IsPresent\"=>true} in json :/ and the ternary operator might not be in all machines
+    if ($IsPublic) {
+        $payload["public"] = $true
+    } else {
+        $payload["public"] = $false
     }
 
     foreach ($g in $Files) {
@@ -517,3 +545,4 @@ Export-ModuleMember -Function New-GitHubSummaryComment
 Export-ModuleMember -Function Test-JobSuccess 
 Export-ModuleMember -Function Get-GitHubPRInfo
 Export-ModuleMember -Function New-GistWithFiles 
+Export-ModuleMember -Function New-GistObjectDefinition 

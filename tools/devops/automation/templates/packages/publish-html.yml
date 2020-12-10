@@ -25,8 +25,7 @@ steps:
 - template: download-artifacts.yml 
 
 - pwsh: |
-    # using will allow to use the classes
-    using module '$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\GitHub.psm1'
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\tools\devops\automation\scripts\GitHub.psm1
 
     $apiDiffRoot = "$Env:STABLE_APIDDIFF_PATH"
     $filePatterns = @{
@@ -43,7 +42,7 @@ steps:
       $filter = $filePatterns[$key]
       $fileName = Get-ChildItem $apiDiffRoot -Filter $filter -Name
       if ($fileName) {
-        $obj = GistFile]::new($fileName, "$apiDiffRoot\$fileName", "markdown")
+        $obj = New-GistObjectDefinition -Name $fileName -Path "$apiDiffRoot\$fileName" -Type "markdown"
         $gistsObj.Add($obj)
         # create a gist just for this file 
         $url = New-GistWithFiles -Description "$key API diff from stable" -Files @($obj)
