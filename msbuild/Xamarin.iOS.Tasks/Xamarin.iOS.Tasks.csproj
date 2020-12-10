@@ -17,7 +17,9 @@
     <PackageReference Include="Microsoft.Build.Framework" Version="16.8.0" IncludeAssets="$(IncludeMSBuildAssets)" />
     <PackageReference Include="Microsoft.Build.Tasks.Core" Version="16.8.0" IncludeAssets="$(IncludeMSBuildAssets)" />
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.8.0" IncludeAssets="$(IncludeMSBuildAssets)" />
-    <PackageReference Include="Xamarin.Messaging.Build.Client" Version="1.2.93" />
+    <PackageReference Include="Xamarin.Messaging.Build.Client" Version="1.2.94" />
+    <!-- Needed from Xamarin.Messaging.Build -->
+    <PackageReference Include="System.Net.Mqtt.Server" Version="0.6.7-beta" />
   </ItemGroup>
 
   <Import Project="$(MSBuildThisFileDirectory)..\ILMerge.targets" />

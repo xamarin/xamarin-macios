@@ -29,6 +29,10 @@
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'Xamarin.MacDev.Tasks'" />
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == '$(AssemblyName).Core'" /> <!-- Use AssemblyName so that the exact same logic works for both Xamarin.iOS.Tasks.dll and Xamarin.Mac.Tasks.dll -->
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'Xamarin.MacDev'" />
+      <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.Diagnostics.Tracer'" />
+      <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.Net.Mqtt.Server'" />
+      <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'Newtonsoft.Json'" />
+      <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'Renci.SshNet'" />
 
       <MergedAssemblies Include="$(OutputPath)/Microsoft.Bcl.AsyncInterfaces.dll" />
       <MergedAssemblies Include="$(OutputPath)/System.Buffers.dll" />
