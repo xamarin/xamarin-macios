@@ -2123,6 +2123,20 @@ namespace Registrar {
 
 			string h;
 			switch (ns) {
+			case "CallKit":
+				if (App.Platform == ApplePlatform.MacOSX) {
+					// AVFoundation can't be imported before CallKit on macOS
+					// Ref: https://github.com/xamarin/maccore/issues/2301
+					// Ref: https://github.com/xamarin/maccore/issues/2257
+					// The fun part is that other frameworks can import AVFoundation, so we can't check for AVFoundation specifically.
+					// Instead add CallKit before any other imports.
+					var firstImport = header.StringBuilder.ToString ().IndexOf ("#import <");
+					if (firstImport >= 0) {
+						header.StringBuilder.Insert (firstImport, "#import <CallKit/CallKit.h>\n");
+						return;
+					}
+				}
+				goto default;
 			case "GLKit":
 				// This prevents this warning:
 				//     /Applications/Xcode83.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk/System/Library/Frameworks/OpenGL.framework/Headers/gl.h:5:2: warning: gl.h and gl3.h are both

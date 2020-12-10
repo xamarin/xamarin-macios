@@ -164,6 +164,7 @@ namespace ObjCRuntime {
 		// macOS 10.16/11.0
 		public const string AccessibilityLibrary = "/System/Library/Frameworks/Accessibility.framework/Accessibility";
 		public const string AppTrackingTransparencyLibrary = "/System/Library/Frameworks/AppTrackingTransparency.framework/AppTrackingTransparency";
+		public const string CallKitLibrary = "/System/Library/Frameworks/CallKitLibrary.framework/CallKitLibrary";
 		public const string ClassKitLibrary = "/System/Library/Frameworks/ClassKit.framework/ClassKit";
 		public const string PassKitLibrary = "/System/Library/Frameworks/PassKit.framework/PassKit";
 		public const string MLComputeLibrary = "/System/Library/Frameworks/MLCompute.framework/MLCompute";
