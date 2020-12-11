@@ -35,12 +35,17 @@ IOS_TARGETS =                                                      \
 	$(wildcard Xamarin.Shared/Xamarin.*.props)       \
 	$(wildcard Xamarin.Shared/Xamarin.*.targets)       \
 
+IOS_WINDOWS_TARGETS =                                                      \
+	$(wildcard Xamarin.iOS.Tasks.Windows/Xamarin.*.props)       \
+	$(wildcard Xamarin.iOS.Tasks.Windows/Xamarin.*.targets)       \
+
 IOS_BINDING_TARGETS = $(wildcard Xamarin.ObjcBinding.Tasks/*.targets)
 
 LOCALIZATION_LANGUAGES=cs de es fr it ja ko pl pt-BR ru tr zh-Hans zh-Hant
 TRANSLATED_ASSEMBLIES = $(foreach locale,$(LOCALIZATION_LANGUAGES),$(locale)/Xamarin.Localization.MSBuild)
 LOCALIZATION_ASSEMBLIES = Xamarin.Localization.MSBuild
 IOS_TASK_ASSEMBLIES = Xamarin.iOS.Tasks $(LOCALIZATION_ASSEMBLIES)
+IOS_WINDOWS_TASK_ASSEMBLIES = Xamarin.iOS.Tasks.Windows
 
 IOS_DIRECTORIES =                                                                                           \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS                                                  \
@@ -75,7 +80,7 @@ ifdef INCLUDE_IOS
 MSBUILD_PRODUCTS += all-ios
 MSBUILD_DIRECTORIES += $(IOS_DIRECTORIES)
 MSBUILD_SYMLINKS += symlinks-ios
-MSBUILD_TASK_ASSEMBLIES += $(IOS_TASK_ASSEMBLIES)
+MSBUILD_TASK_ASSEMBLIES += $(IOS_TASK_ASSEMBLIES) $(IOS_WINDOWS_TASK_ASSEMBLIES)
 endif
 
 ##
@@ -361,30 +366,36 @@ DOTNET_IOS_FILES = $(DOTNET_SHARED_FILES) FrameworkList.xml
 DOTNET_TVOS_FILES = $(TVOS_TARGETS) FrameworkList.xml
 DOTNET_WATCHOS_FILES = $(WATCH_TARGETS) FrameworkList.xml
 DOTNET_MACOS_FILES = $(MAC_TARGETS) $(MAC_BINDING_TARGETS) $(foreach dll,$(MAC_TASK_ASSEMBLIES),$(dll).dll $(dll).pdb) FrameworkList.xml
+DOTNET_IOS_WINDOWS_FILES = $(IOS_WINDOWS_TARGETS) $(foreach dll,$(IOS_WINDOWS_TASK_ASSEMBLIES),$(dll).dll $(dll).pdb) Broker.zip Build.zip
 
 # iOS
 DOTNET_TARGETS += \
-	$(foreach target,$(DOTNET_IOS_FILES)          ,$(DOTNET_DESTDIR)/$(IOS_NUGET).Sdk/tools/msbuild/iOS/$(notdir $(target)))               \
+	$(foreach target,$(DOTNET_IOS_FILES)          ,$(DOTNET_DESTDIR)/$(IOS_NUGET).Sdk/tools/msbuild/iOS/$(notdir $(target)))                 \
+
+# iOS - Windows
+DOTNET_TARGETS += \
+	$(foreach target,$(DOTNET_IOS_WINDOWS_FILES)          ,$(DOTNET_DESTDIR)/$(IOS_WINDOWS_NUGET).Sdk/tools/msbuild/iOS/$(notdir $(target))) \
 
 # tvOS: contains all of the files for iOS as well (for now, we don't need all of them, so this is optimizable)
 DOTNET_TARGETS += \
-	$(foreach target,$(DOTNET_SHARED_FILES)       ,$(DOTNET_DESTDIR)/$(TVOS_NUGET).Sdk/tools/msbuild/iOS/$(notdir $(target)))              \
-	$(foreach target,$(DOTNET_TVOS_FILES)         ,$(DOTNET_DESTDIR)/$(TVOS_NUGET).Sdk/tools/msbuild/tvOS/$(notdir $(target)))             \
+	$(foreach target,$(DOTNET_SHARED_FILES)       ,$(DOTNET_DESTDIR)/$(TVOS_NUGET).Sdk/tools/msbuild/iOS/$(notdir $(target)))                \
+	$(foreach target,$(DOTNET_TVOS_FILES)         ,$(DOTNET_DESTDIR)/$(TVOS_NUGET).Sdk/tools/msbuild/tvOS/$(notdir $(target)))               \
 
 # watchOS: contains all of the files for iOS as well (for now, we don't need all of them, so this is optimizable)
 DOTNET_TARGETS += \
-	$(foreach target,$(DOTNET_SHARED_FILES)       ,$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Sdk/tools/msbuild/iOS/$(notdir $(target)))           \
-	$(foreach target,$(DOTNET_WATCHOS_FILES)      ,$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Sdk/tools/msbuild/watchOS/$(notdir $(target)))       \
+	$(foreach target,$(DOTNET_SHARED_FILES)       ,$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Sdk/tools/msbuild/iOS/$(notdir $(target)))             \
+	$(foreach target,$(DOTNET_WATCHOS_FILES)      ,$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Sdk/tools/msbuild/watchOS/$(notdir $(target)))         \
 
 # macOS
 ifdef INCLUDE_MAC
 DOTNET_TARGETS += \
-	$(foreach target,$(DOTNET_MACOS_FILES)        ,$(DOTNET_DESTDIR)/$(MACOS_NUGET).Sdk/tools/msbuild/macOS/$(notdir $(target)))           \
+	$(foreach target,$(DOTNET_MACOS_FILES)        ,$(DOTNET_DESTDIR)/$(MACOS_NUGET).Sdk/tools/msbuild/macOS/$(notdir $(target)))             \
 
 endif
 
 DOTNET_DIRECTORIES += \
 	$(DOTNET_DESTDIR)/$(IOS_NUGET).Sdk/tools/msbuild/iOS \
+	$(DOTNET_DESTDIR)/$(IOS_WINDOWS_NUGET).Sdk/tools/msbuild/iOS \
 	$(DOTNET_DESTDIR)/$(TVOS_NUGET).Sdk/tools/msbuild/iOS \
 	$(DOTNET_DESTDIR)/$(TVOS_NUGET).Sdk/tools/msbuild/tvOS \
 	$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Sdk/tools/msbuild/iOS \
@@ -395,6 +406,9 @@ $(DOTNET_DESTDIR)/$(MACOS_NUGET).Sdk/tools/msbuild/macOS/%: $(MAC_DESTDIR)$(MAC_
 	$(Q) $(CP) $< $@
 
 $(DOTNET_DESTDIR)/$(IOS_NUGET).Sdk/tools/msbuild/%: $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/% | $(DOTNET_DIRECTORIES)
+	$(Q) $(CP) $< $@
+
+$(DOTNET_DESTDIR)/$(IOS_WINDOWS_NUGET).Sdk/tools/msbuild/iOS/%: Xamarin.iOS.Tasks.Windows/bin/$(CONFIG)/$(TARGETFRAMEWORK)/% | $(DOTNET_DIRECTORIES)
 	$(Q) $(CP) $< $@
 
 $(DOTNET_DESTDIR)/$(TVOS_NUGET).Sdk/tools/msbuild/%: $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/% | $(DOTNET_DIRECTORIES)
