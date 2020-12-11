@@ -211,6 +211,8 @@ $CP -R "$OUTPUT_SRC_DIR/xamarin-macios/src/build" "$OUTPUT_DIR/build"
 # delete files we don't care are different
 cd "$OUTPUT_DIR"
 find "$OUTPUT_DIR/build" "$OUTPUT_DIR/build-new" '(' \
+	-name 'compiler' -or \
+	-name 'bgen' -or \
 	-name '*.dll' -or \
 	-name '*.pdb' -or \
 	-name '*generated-sources' -or \
