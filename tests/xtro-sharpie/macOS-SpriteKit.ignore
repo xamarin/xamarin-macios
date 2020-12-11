@@ -19,16 +19,3 @@
 !missing-selector! SKNode::setAccessibilityRole: not bound
 !missing-selector! SKNode::setAccessibilityRoleDescription: not bound
 !missing-selector! SKNode::setAccessibilitySubrole: not bound
-
-# Initial result from new rule extra-null-allowed
-!extra-null-allowed! 'SpriteKit.SKSpriteNode SpriteKit.SKSpriteNode::FromColor(AppKit.NSColor,CoreGraphics.CGSize)' has a extraneous [NullAllowed] on parameter #0
-!extra-null-allowed! 'System.Void SpriteKit.SKSpriteNode::.ctor(AppKit.NSColor,CoreGraphics.CGSize)' has a extraneous [NullAllowed] on parameter #0
-!extra-null-allowed! 'System.Void SpriteKit.SKSpriteNode::.ctor(SpriteKit.SKTexture,AppKit.NSColor,CoreGraphics.CGSize)' has a extraneous [NullAllowed] on parameter #1
-!extra-null-allowed! 'System.Void SpriteKit.SKSpriteNode::set_Color(AppKit.NSColor)' has a extraneous [NullAllowed] on parameter #0
-
-# Initial result from new rule missing-null-allowed
-!missing-null-allowed! 'SpriteKit.SKScene SpriteKit.SKView::get_Scene()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'SpriteKit.SKTexture SpriteKit.SKView::TextureFromNode(SpriteKit.SKNode)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'SpriteKit.SKTexture SpriteKit.SKView::TextureFromNode(SpriteKit.SKNode,CoreGraphics.CGRect)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'SpriteKit.SKView SpriteKit.SKScene::get_View()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.Void SpriteKit.SKLabelNode::set_FontColor(AppKit.NSColor)' is missing an [NullAllowed] on parameter #0
