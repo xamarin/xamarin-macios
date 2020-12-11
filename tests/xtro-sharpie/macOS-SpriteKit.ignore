@@ -1,3 +1,8 @@
+## this is null-resetable (unit tested)
+!extra-null-allowed! 'System.Void SpriteKit.SKSpriteNode::set_Color(AppKit.NSColor)' has a extraneous [NullAllowed] on parameter #0
+
+## others
+
 !missing-selector! SKNode::accessibilityChildren not bound
 !missing-selector! SKNode::accessibilityFrame not bound
 !missing-selector! SKNode::accessibilityHelp not bound
