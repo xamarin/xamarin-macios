@@ -1,0 +1,84 @@
+!missing-field! JRSMenuDidReuseItemNotification not bound
+!missing-pinvoke! JRSAccessibilityUnregisterUniqueIdForUIElement is not bound
+!missing-pinvoke! JRSCopyCanonicalLanguageForPrimaryLanguage is not bound
+!missing-pinvoke! JRSCopyOSJavaSupportVersion is not bound
+!missing-pinvoke! JRSCopyOSName is not bound
+!missing-pinvoke! JRSCopyOSVersion is not bound
+!missing-pinvoke! JRSCopyPrimaryLanguage is not bound
+!missing-pinvoke! JRSFontAlignStyleForFractionalMeasurement is not bound
+!missing-pinvoke! JRSFontAlignStyleForIntegerMeasurement is not bound
+!missing-pinvoke! JRSFontCreateFallbackFontForCharacters is not bound
+!missing-pinvoke! JRSFontGetAdvancesForGlyphsAndStyle is not bound
+!missing-pinvoke! JRSFontGetBoundingBoxesForGlyphsAndStyle is not bound
+!missing-pinvoke! JRSFontGetRenderingStyleForContext is not bound
+!missing-pinvoke! JRSFontGetRenderingStyleForHints is not bound
+!missing-pinvoke! JRSFontSetRenderingStyleOnContext is not bound
+!missing-pinvoke! JRSFontStyleIsAntialiased is not bound
+!missing-pinvoke! JRSFontStyleUsesFractionalMetrics is not bound
+!missing-pinvoke! JRSSetDefaultLocalization is not bound
+!missing-pinvoke! JRSUIControlCreate is not bound
+!missing-pinvoke! JRSUIControlDraw is not bound
+!missing-pinvoke! JRSUIControlGetHitPart is not bound
+!missing-pinvoke! JRSUIControlGetScrollBarOffsetFor is not bound
+!missing-pinvoke! JRSUIControlGetScrollBarPartBounds is not bound
+!missing-pinvoke! JRSUIControlRelease is not bound
+!missing-pinvoke! JRSUIControlSetAlignmentHorizontal is not bound
+!missing-pinvoke! JRSUIControlSetAlignmentVertical is not bound
+!missing-pinvoke! JRSUIControlSetAnimating is not bound
+!missing-pinvoke! JRSUIControlSetDirection is not bound
+!missing-pinvoke! JRSUIControlSetOrientation is not bound
+!missing-pinvoke! JRSUIControlSetPresentationState is not bound
+!missing-pinvoke! JRSUIControlSetScrollBarPart is not bound
+!missing-pinvoke! JRSUIControlSetSegmentPosition is not bound
+!missing-pinvoke! JRSUIControlSetShowArrows is not bound
+!missing-pinvoke! JRSUIControlSetSize is not bound
+!missing-pinvoke! JRSUIControlSetState is not bound
+!missing-pinvoke! JRSUIControlSetUserInterfaceLayoutDirection is not bound
+!missing-pinvoke! JRSUIControlSetValueByKey is not bound
+!missing-pinvoke! JRSUIControlSetVariant is not bound
+!missing-pinvoke! JRSUIControlSetWidget is not bound
+!missing-pinvoke! JRSUIControlSetWindowType is not bound
+!missing-pinvoke! JRSUIControlShouldScrollToClick is not bound
+!missing-pinvoke! JRSUIGetKey is not bound
+!missing-pinvoke! JRSUIRendererCreate is not bound
+!missing-pinvoke! JRSUIRendererRelease is not bound
+!missing-protocol! JRSMenuDelegate not bound
+!missing-protocol! JRSRemoteLayer not bound
+!missing-selector! +JRSAppKitAWT::awtAppDelegate not bound
+!missing-selector! +JRSAppKitAWT::markAppIsDaemon not bound
+!missing-selector! +JRSAppKitAWT::registerAWTAppWithOptions: not bound
+!missing-selector! +JRSDrag::currentAllowableActions not bound
+!missing-selector! +JRSDrag::currentModifiers not bound
+!missing-selector! +JRSInputMethodController::controller not bound
+!missing-selector! +JRSRenderServer::recieveRenderServer: not bound
+!missing-selector! +JRSRenderServer::sendRenderServer: not bound
+!missing-selector! +JRSRenderServer::startRenderServer not bound
+!missing-selector! +JRSSecurity::executionPolicyForExecutableCodeSignatureEvaluation: not bound
+!missing-selector! +JRSSymbolicator::symbolicatorForPid: not bound
+!missing-selector! +NSCursor::javaBusyButClickableCursor not bound
+!missing-selector! +NSCursor::javaMoveCursor not bound
+!missing-selector! +NSCursor::javaResizeNECursor not bound
+!missing-selector! +NSCursor::javaResizeNWCursor not bound
+!missing-selector! +NSCursor::javaResizeSECursor not bound
+!missing-selector! +NSCursor::javaResizeSWCursor not bound
+!missing-selector! +NSCursor::javaSetAllowsCursorSetInBackground: not bound
+!missing-selector! +NSMenu::javaMenuWithTitle: not bound
+!missing-selector! CALayer::createRemoteLayerBoundTo: not bound
+!missing-selector! CALayer::hostRemoteLayer: not bound
+!missing-selector! JRSInputMethodController::availableInputMethodLocales not bound
+!missing-selector! JRSInputMethodController::currentInputMethodLocale not bound
+!missing-selector! JRSInputMethodController::currentInputMethodName not bound
+!missing-selector! JRSInputMethodController::setCurrentInputMethodForLocale: not bound
+!missing-selector! JRSSymbolicator::addressForSymbol: not bound
+!missing-selector! NSEvent::deadKeyCharacter not bound
+!missing-selector! NSEvent::willBeHandledByComplexInputMethod not bound
+!missing-selector! NSMenu::isJavaMenu not bound
+!missing-selector! NSMenu::setJavaMenuDelegate: not bound
+!missing-selector! NSWindow::javaAddToOrderingGroup: not bound
+!missing-selector! NSWindow::javaRemoveFromOrderingGroup: not bound
+!missing-type! JRSAppKitAWT not bound
+!missing-type! JRSDrag not bound
+!missing-type! JRSInputMethodController not bound
+!missing-type! JRSRenderServer not bound
+!missing-type! JRSSecurity not bound
+!missing-type! JRSSymbolicator not bound

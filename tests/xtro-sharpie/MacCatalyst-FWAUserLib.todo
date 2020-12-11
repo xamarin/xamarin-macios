@@ -1,0 +1,5 @@
+!missing-enum! FWAMIDIDataInfo not bound
+!missing-enum! FWAStreamDirection not bound
+!missing-enum! FWAStreamOptions not bound
+!missing-enum! FWAStreamState not bound
+!missing-enum! FWAudioType not bound

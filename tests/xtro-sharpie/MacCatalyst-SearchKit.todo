@@ -1,0 +1,82 @@
+!missing-enum! SKDocumentIndexState not bound
+!missing-enum! SKIndexType not bound
+!missing-enum! SKSearchType not bound
+!missing-field! kSKEndTermChars not bound
+!missing-field! kSKLanguageTypes not bound
+!missing-field! kSKMaximumTerms not bound
+!missing-field! kSKMinTermLength not bound
+!missing-field! kSKProximityIndexing not bound
+!missing-field! kSKStartTermChars not bound
+!missing-field! kSKStopWords not bound
+!missing-field! kSKSubstitutions not bound
+!missing-field! kSKTermChars not bound
+!missing-pinvoke! SKDocumentCopyURL is not bound
+!missing-pinvoke! SKDocumentCreate is not bound
+!missing-pinvoke! SKDocumentCreateWithURL is not bound
+!missing-pinvoke! SKDocumentGetName is not bound
+!missing-pinvoke! SKDocumentGetParent is not bound
+!missing-pinvoke! SKDocumentGetSchemeName is not bound
+!missing-pinvoke! SKDocumentGetTypeID is not bound
+!missing-pinvoke! SKIndexAddDocument is not bound
+!missing-pinvoke! SKIndexAddDocumentWithText is not bound
+!missing-pinvoke! SKIndexClose is not bound
+!missing-pinvoke! SKIndexCompact is not bound
+!missing-pinvoke! SKIndexCopyDocumentForDocumentID is not bound
+!missing-pinvoke! SKIndexCopyDocumentIDArrayForTermID is not bound
+!missing-pinvoke! SKIndexCopyDocumentProperties is not bound
+!missing-pinvoke! SKIndexCopyDocumentRefsForDocumentIDs is not bound
+!missing-pinvoke! SKIndexCopyDocumentURLsForDocumentIDs is not bound
+!missing-pinvoke! SKIndexCopyInfoForDocumentIDs is not bound
+!missing-pinvoke! SKIndexCopyTermIDArrayForDocumentID is not bound
+!missing-pinvoke! SKIndexCopyTermStringForTermID is not bound
+!missing-pinvoke! SKIndexCreateWithMutableData is not bound
+!missing-pinvoke! SKIndexCreateWithURL is not bound
+!missing-pinvoke! SKIndexDocumentIteratorCopyNext is not bound
+!missing-pinvoke! SKIndexDocumentIteratorCreate is not bound
+!missing-pinvoke! SKIndexDocumentIteratorGetTypeID is not bound
+!missing-pinvoke! SKIndexFlush is not bound
+!missing-pinvoke! SKIndexGetAnalysisProperties is not bound
+!missing-pinvoke! SKIndexGetDocumentCount is not bound
+!missing-pinvoke! SKIndexGetDocumentID is not bound
+!missing-pinvoke! SKIndexGetDocumentState is not bound
+!missing-pinvoke! SKIndexGetDocumentTermCount is not bound
+!missing-pinvoke! SKIndexGetDocumentTermFrequency is not bound
+!missing-pinvoke! SKIndexGetIndexType is not bound
+!missing-pinvoke! SKIndexGetMaximumBytesBeforeFlush is not bound
+!missing-pinvoke! SKIndexGetMaximumDocumentID is not bound
+!missing-pinvoke! SKIndexGetMaximumTermID is not bound
+!missing-pinvoke! SKIndexGetTermDocumentCount is not bound
+!missing-pinvoke! SKIndexGetTermIDForTermString is not bound
+!missing-pinvoke! SKIndexGetTypeID is not bound
+!missing-pinvoke! SKIndexMoveDocument is not bound
+!missing-pinvoke! SKIndexOpenWithData is not bound
+!missing-pinvoke! SKIndexOpenWithMutableData is not bound
+!missing-pinvoke! SKIndexOpenWithURL is not bound
+!missing-pinvoke! SKIndexRemoveDocument is not bound
+!missing-pinvoke! SKIndexRenameDocument is not bound
+!missing-pinvoke! SKIndexSetDocumentProperties is not bound
+!missing-pinvoke! SKIndexSetMaximumBytesBeforeFlush is not bound
+!missing-pinvoke! SKLoadDefaultExtractorPlugIns is not bound
+!missing-pinvoke! SKSearchCancel is not bound
+!missing-pinvoke! SKSearchCreate is not bound
+!missing-pinvoke! SKSearchFindMatches is not bound
+!missing-pinvoke! SKSearchGetTypeID is not bound
+!missing-pinvoke! SKSearchGroupCopyIndexes is not bound
+!missing-pinvoke! SKSearchGroupCreate is not bound
+!missing-pinvoke! SKSearchGroupGetTypeID is not bound
+!missing-pinvoke! SKSearchResultsCopyMatchingTerms is not bound
+!missing-pinvoke! SKSearchResultsCreateWithDocuments is not bound
+!missing-pinvoke! SKSearchResultsCreateWithQuery is not bound
+!missing-pinvoke! SKSearchResultsGetCount is not bound
+!missing-pinvoke! SKSearchResultsGetInfoInRange is not bound
+!missing-pinvoke! SKSearchResultsGetTypeID is not bound
+!missing-pinvoke! SKSummaryCopyParagraphAtIndex is not bound
+!missing-pinvoke! SKSummaryCopyParagraphSummaryString is not bound
+!missing-pinvoke! SKSummaryCopySentenceAtIndex is not bound
+!missing-pinvoke! SKSummaryCopySentenceSummaryString is not bound
+!missing-pinvoke! SKSummaryCreateWithString is not bound
+!missing-pinvoke! SKSummaryGetParagraphCount is not bound
+!missing-pinvoke! SKSummaryGetParagraphSummaryInfo is not bound
+!missing-pinvoke! SKSummaryGetSentenceCount is not bound
+!missing-pinvoke! SKSummaryGetSentenceSummaryInfo is not bound
+!missing-pinvoke! SKSummaryGetTypeID is not bound

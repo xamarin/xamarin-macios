@@ -1,0 +1,265 @@
+!missing-field! kMDAttributeAllValues not bound
+!missing-field! kMDAttributeDisplayValues not bound
+!missing-field! kMDAttributeMultiValued not bound
+!missing-field! kMDAttributeName not bound
+!missing-field! kMDAttributeReadOnlyValues not bound
+!missing-field! kMDAttributeType not bound
+!missing-field! kMDExporterAvaliable not bound
+!missing-field! kMDItemAcquisitionMake not bound
+!missing-field! kMDItemAcquisitionModel not bound
+!missing-field! kMDItemAlbum not bound
+!missing-field! kMDItemAltitude not bound
+!missing-field! kMDItemAperture not bound
+!missing-field! kMDItemAppleLoopDescriptors not bound
+!missing-field! kMDItemAppleLoopsKeyFilterType not bound
+!missing-field! kMDItemAppleLoopsLoopMode not bound
+!missing-field! kMDItemAppleLoopsRootKey not bound
+!missing-field! kMDItemApplicationCategories not bound
+!missing-field! kMDItemAttributeChangeDate not bound
+!missing-field! kMDItemAudiences not bound
+!missing-field! kMDItemAudioBitRate not bound
+!missing-field! kMDItemAudioChannelCount not bound
+!missing-field! kMDItemAudioEncodingApplication not bound
+!missing-field! kMDItemAudioSampleRate not bound
+!missing-field! kMDItemAudioTrackNumber not bound
+!missing-field! kMDItemAuthorAddresses not bound
+!missing-field! kMDItemAuthorEmailAddresses not bound
+!missing-field! kMDItemAuthors not bound
+!missing-field! kMDItemBitsPerSample not bound
+!missing-field! kMDItemCameraOwner not bound
+!missing-field! kMDItemCFBundleIdentifier not bound
+!missing-field! kMDItemCity not bound
+!missing-field! kMDItemCodecs not bound
+!missing-field! kMDItemColorSpace not bound
+!missing-field! kMDItemComment not bound
+!missing-field! kMDItemComposer not bound
+!missing-field! kMDItemContactKeywords not bound
+!missing-field! kMDItemContentCreationDate not bound
+!missing-field! kMDItemContentModificationDate not bound
+!missing-field! kMDItemContentType not bound
+!missing-field! kMDItemContentTypeTree not bound
+!missing-field! kMDItemContributors not bound
+!missing-field! kMDItemCopyright not bound
+!missing-field! kMDItemCountry not bound
+!missing-field! kMDItemCoverage not bound
+!missing-field! kMDItemCreator not bound
+!missing-field! kMDItemDateAdded not bound
+!missing-field! kMDItemDeliveryType not bound
+!missing-field! kMDItemDescription not bound
+!missing-field! kMDItemDirector not bound
+!missing-field! kMDItemDisplayName not bound
+!missing-field! kMDItemDownloadedDate not bound
+!missing-field! kMDItemDueDate not bound
+!missing-field! kMDItemDurationSeconds not bound
+!missing-field! kMDItemEditors not bound
+!missing-field! kMDItemEmailAddresses not bound
+!missing-field! kMDItemEncodingApplications not bound
+!missing-field! kMDItemExecutableArchitectures not bound
+!missing-field! kMDItemExecutablePlatform not bound
+!missing-field! kMDItemEXIFGPSVersion not bound
+!missing-field! kMDItemEXIFVersion not bound
+!missing-field! kMDItemExposureMode not bound
+!missing-field! kMDItemExposureProgram not bound
+!missing-field! kMDItemExposureTimeSeconds not bound
+!missing-field! kMDItemExposureTimeString not bound
+!missing-field! kMDItemFinderComment not bound
+!missing-field! kMDItemFlashOnOff not bound
+!missing-field! kMDItemFNumber not bound
+!missing-field! kMDItemFocalLength not bound
+!missing-field! kMDItemFocalLength35mm not bound
+!missing-field! kMDItemFonts not bound
+!missing-field! kMDItemFSContentChangeDate not bound
+!missing-field! kMDItemFSCreationDate not bound
+!missing-field! kMDItemFSExists not bound
+!missing-field! kMDItemFSHasCustomIcon not bound
+!missing-field! kMDItemFSInvisible not bound
+!missing-field! kMDItemFSIsExtensionHidden not bound
+!missing-field! kMDItemFSIsReadable not bound
+!missing-field! kMDItemFSIsStationery not bound
+!missing-field! kMDItemFSIsWriteable not bound
+!missing-field! kMDItemFSLabel not bound
+!missing-field! kMDItemFSName not bound
+!missing-field! kMDItemFSNodeCount not bound
+!missing-field! kMDItemFSOwnerGroupID not bound
+!missing-field! kMDItemFSOwnerUserID not bound
+!missing-field! kMDItemFSSize not bound
+!missing-field! kMDItemGenre not bound
+!missing-field! kMDItemGPSAreaInformation not bound
+!missing-field! kMDItemGPSDateStamp not bound
+!missing-field! kMDItemGPSDestBearing not bound
+!missing-field! kMDItemGPSDestDistance not bound
+!missing-field! kMDItemGPSDestLatitude not bound
+!missing-field! kMDItemGPSDestLongitude not bound
+!missing-field! kMDItemGPSDifferental not bound
+!missing-field! kMDItemGPSDOP not bound
+!missing-field! kMDItemGPSMapDatum not bound
+!missing-field! kMDItemGPSMeasureMode not bound
+!missing-field! kMDItemGPSProcessingMethod not bound
+!missing-field! kMDItemGPSStatus not bound
+!missing-field! kMDItemGPSTrack not bound
+!missing-field! kMDItemHasAlphaChannel not bound
+!missing-field! kMDItemHeadline not bound
+!missing-field! kMDItemHTMLContent not bound
+!missing-field! kMDItemIdentifier not bound
+!missing-field! kMDItemImageDirection not bound
+!missing-field! kMDItemInformation not bound
+!missing-field! kMDItemInstantMessageAddresses not bound
+!missing-field! kMDItemInstructions not bound
+!missing-field! kMDItemIsApplicationManaged not bound
+!missing-field! kMDItemIsGeneralMIDISequence not bound
+!missing-field! kMDItemIsLikelyJunk not bound
+!missing-field! kMDItemISOSpeed not bound
+!missing-field! kMDItemKeySignature not bound
+!missing-field! kMDItemKeywords not bound
+!missing-field! kMDItemKind not bound
+!missing-field! kMDItemLabelIcon not bound
+!missing-field! kMDItemLabelID not bound
+!missing-field! kMDItemLabelKind not bound
+!missing-field! kMDItemLabelUUID not bound
+!missing-field! kMDItemLanguages not bound
+!missing-field! kMDItemLastUsedDate not bound
+!missing-field! kMDItemLatitude not bound
+!missing-field! kMDItemLayerNames not bound
+!missing-field! kMDItemLensModel not bound
+!missing-field! kMDItemLongitude not bound
+!missing-field! kMDItemLyricist not bound
+!missing-field! kMDItemMaxAperture not bound
+!missing-field! kMDItemMediaTypes not bound
+!missing-field! kMDItemMeteringMode not bound
+!missing-field! kMDItemMusicalGenre not bound
+!missing-field! kMDItemMusicalInstrumentCategory not bound
+!missing-field! kMDItemMusicalInstrumentName not bound
+!missing-field! kMDItemNamedLocation not bound
+!missing-field! kMDItemNumberOfPages not bound
+!missing-field! kMDItemOrganizations not bound
+!missing-field! kMDItemOrientation not bound
+!missing-field! kMDItemOriginalFormat not bound
+!missing-field! kMDItemOriginalSource not bound
+!missing-field! kMDItemPageHeight not bound
+!missing-field! kMDItemPageWidth not bound
+!missing-field! kMDItemParticipants not bound
+!missing-field! kMDItemPath not bound
+!missing-field! kMDItemPerformers not bound
+!missing-field! kMDItemPhoneNumbers not bound
+!missing-field! kMDItemPixelCount not bound
+!missing-field! kMDItemPixelHeight not bound
+!missing-field! kMDItemPixelWidth not bound
+!missing-field! kMDItemProducer not bound
+!missing-field! kMDItemProfileName not bound
+!missing-field! kMDItemProjects not bound
+!missing-field! kMDItemPublishers not bound
+!missing-field! kMDItemRecipientAddresses not bound
+!missing-field! kMDItemRecipientEmailAddresses not bound
+!missing-field! kMDItemRecipients not bound
+!missing-field! kMDItemRecordingDate not bound
+!missing-field! kMDItemRecordingYear not bound
+!missing-field! kMDItemRedEyeOnOff not bound
+!missing-field! kMDItemResolutionHeightDPI not bound
+!missing-field! kMDItemResolutionWidthDPI not bound
+!missing-field! kMDItemRights not bound
+!missing-field! kMDItemSecurityMethod not bound
+!missing-field! kMDItemSpeed not bound
+!missing-field! kMDItemStarRating not bound
+!missing-field! kMDItemStateOrProvince not bound
+!missing-field! kMDItemStreamable not bound
+!missing-field! kMDItemSubject not bound
+!missing-field! kMDItemSupportFileType not bound
+!missing-field! kMDItemTempo not bound
+!missing-field! kMDItemTextContent not bound
+!missing-field! kMDItemTheme not bound
+!missing-field! kMDItemTimeSignature not bound
+!missing-field! kMDItemTimestamp not bound
+!missing-field! kMDItemTitle not bound
+!missing-field! kMDItemTotalBitRate not bound
+!missing-field! kMDItemURL not bound
+!missing-field! kMDItemVersion not bound
+!missing-field! kMDItemVideoBitRate not bound
+!missing-field! kMDItemWhereFroms not bound
+!missing-field! kMDItemWhiteBalance not bound
+!missing-field! kMDLabelAddedNotification not bound
+!missing-field! kMDLabelBundleURL not bound
+!missing-field! kMDLabelChangedNotification not bound
+!missing-field! kMDLabelContentChangeDate not bound
+!missing-field! kMDLabelDisplayName not bound
+!missing-field! kMDLabelIconData not bound
+!missing-field! kMDLabelIconUUID not bound
+!missing-field! kMDLabelIsMutuallyExclusiveSetMember not bound
+!missing-field! kMDLabelKind not bound
+!missing-field! kMDLabelKindIsMutuallyExclusiveSetKey not bound
+!missing-field! kMDLabelKindVisibilityKey not bound
+!missing-field! kMDLabelRemovedNotification not bound
+!missing-field! kMDLabelSetsFinderColor not bound
+!missing-field! kMDLabelUUID not bound
+!missing-field! kMDLabelVisibility not bound
+!missing-field! kMDPrivateVisibility not bound
+!missing-field! kMDPublicVisibility not bound
+!missing-field! kMDQueryDidFinishNotification not bound
+!missing-field! kMDQueryDidUpdateNotification not bound
+!missing-field! kMDQueryProgressNotification not bound
+!missing-field! kMDQueryResultContentRelevance not bound
+!missing-field! kMDQueryScopeAllIndexed not bound
+!missing-field! kMDQueryScopeComputer not bound
+!missing-field! kMDQueryScopeComputerIndexed not bound
+!missing-field! kMDQueryScopeHome not bound
+!missing-field! kMDQueryScopeNetwork not bound
+!missing-field! kMDQueryScopeNetworkIndexed not bound
+!missing-field! kMDQueryUpdateAddedItems not bound
+!missing-field! kMDQueryUpdateChangedItems not bound
+!missing-field! kMDQueryUpdateRemovedItems not bound
+!missing-pinvoke! MDCopyLabelKinds is not bound
+!missing-pinvoke! MDCopyLabelsMatchingExpression is not bound
+!missing-pinvoke! MDCopyLabelsWithKind is not bound
+!missing-pinvoke! MDCopyLabelWithUUID is not bound
+!missing-pinvoke! MDItemCopyAttribute is not bound
+!missing-pinvoke! MDItemCopyAttributeList is not bound
+!missing-pinvoke! MDItemCopyAttributeNames is not bound
+!missing-pinvoke! MDItemCopyAttributes is not bound
+!missing-pinvoke! MDItemCopyLabels is not bound
+!missing-pinvoke! MDItemCreate is not bound
+!missing-pinvoke! MDItemCreateWithURL is not bound
+!missing-pinvoke! MDItemGetTypeID is not bound
+!missing-pinvoke! MDItemRemoveLabel is not bound
+!missing-pinvoke! MDItemsCopyAttributes is not bound
+!missing-pinvoke! MDItemsCreateWithURLs is not bound
+!missing-pinvoke! MDItemSetLabel is not bound
+!missing-pinvoke! MDLabelCopyAttribute is not bound
+!missing-pinvoke! MDLabelCopyAttributeName is not bound
+!missing-pinvoke! MDLabelCreate is not bound
+!missing-pinvoke! MDLabelDelete is not bound
+!missing-pinvoke! MDLabelGetTypeID is not bound
+!missing-pinvoke! MDLabelSetAttributes is not bound
+!missing-pinvoke! MDQueryCopyQueryString is not bound
+!missing-pinvoke! MDQueryCopySortingAttributes is not bound
+!missing-pinvoke! MDQueryCopyValueListAttributes is not bound
+!missing-pinvoke! MDQueryCopyValuesOfAttribute is not bound
+!missing-pinvoke! MDQueryCreate is not bound
+!missing-pinvoke! MDQueryCreateForItems is not bound
+!missing-pinvoke! MDQueryCreateSubset is not bound
+!missing-pinvoke! MDQueryDisableUpdates is not bound
+!missing-pinvoke! MDQueryEnableUpdates is not bound
+!missing-pinvoke! MDQueryExecute is not bound
+!missing-pinvoke! MDQueryGetAttributeValueOfResultAtIndex is not bound
+!missing-pinvoke! MDQueryGetBatchingParameters is not bound
+!missing-pinvoke! MDQueryGetCountOfResultsWithAttributeValue is not bound
+!missing-pinvoke! MDQueryGetIndexOfResult is not bound
+!missing-pinvoke! MDQueryGetResultAtIndex is not bound
+!missing-pinvoke! MDQueryGetResultCount is not bound
+!missing-pinvoke! MDQueryGetSortOptionFlagsForAttribute is not bound
+!missing-pinvoke! MDQueryGetTypeID is not bound
+!missing-pinvoke! MDQueryIsGatheringComplete is not bound
+!missing-pinvoke! MDQuerySetBatchingParameters is not bound
+!missing-pinvoke! MDQuerySetCreateResultFunction is not bound
+!missing-pinvoke! MDQuerySetCreateValueFunction is not bound
+!missing-pinvoke! MDQuerySetDispatchQueue is not bound
+!missing-pinvoke! MDQuerySetMaxCount is not bound
+!missing-pinvoke! MDQuerySetSearchScope is not bound
+!missing-pinvoke! MDQuerySetSortComparator is not bound
+!missing-pinvoke! MDQuerySetSortComparatorBlock is not bound
+!missing-pinvoke! MDQuerySetSortOptionFlagsForAttribute is not bound
+!missing-pinvoke! MDQuerySetSortOrder is not bound
+!missing-pinvoke! MDQueryStop is not bound
+!missing-pinvoke! MDSchemaCopyAllAttributes is not bound
+!missing-pinvoke! MDSchemaCopyAttributesForContentType is not bound
+!missing-pinvoke! MDSchemaCopyDisplayDescriptionForAttribute is not bound
+!missing-pinvoke! MDSchemaCopyDisplayNameForAttribute is not bound
+!missing-pinvoke! MDSchemaCopyMetaAttributesForAttribute is not bound
