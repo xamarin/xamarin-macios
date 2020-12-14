@@ -1,3 +1,8 @@
+parameters:
+- name: runTests
+  type: boolean
+  default: true
+
 steps:
 - checkout: self          # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
   clean: true             # Executes: git clean -ffdx && git reset --hard HEAD
@@ -363,6 +368,7 @@ steps:
   name: runTests # not to be confused with the displayName, this is used to later use the name of the step to access the output variables from an other job
   timeoutInMinutes: 600
   condition: succeededOrFailed() # we do not care about the previous process cleanup
+  enabled: ${{ parameters.runTests }}
   env:
     BUILD_REVISION: jenkins
     TARGET: 'wrench-jenkins'

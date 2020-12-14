@@ -1,5 +1,9 @@
 # template that contains all the different steps to create a pkgs, publish the results and provide feedback to the 
 # developers in github.
+parameters:
+- name: runTests
+  type: boolean
+  default: true
 
 jobs:
 - job: configure
@@ -61,6 +65,8 @@ jobs:
 
   steps:
   - template: build.yml
+    parameters:
+      runTests: ${{ parameters.runTests }}
 
 - job: upload_azure_blob
   displayName: 'Upload packages to Azure'
