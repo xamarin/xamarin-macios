@@ -10,6 +10,8 @@ using System;
 using ObjCRuntime;
 using CoreGraphics;
 
+#nullable enable
+
 namespace SpriteKit {
 
 #if !XAMCORE_3_0 && !MONOMAC
@@ -22,7 +24,7 @@ namespace SpriteKit {
 		}
 
 		[Obsolete ("Use the 'TimingFunction2' property.")]
-		public virtual void SetTimingFunction (SKActionTimingFunction timingFunction)
+		public virtual void SetTimingFunction (SKActionTimingFunction? timingFunction)
 		{
 			TimingFunction = timingFunction;
 		}

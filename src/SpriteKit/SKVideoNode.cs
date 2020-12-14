@@ -11,6 +11,8 @@ using System;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 #if !WATCH
 namespace SpriteKit {
 	public partial class SKVideoNode : SKNode {
