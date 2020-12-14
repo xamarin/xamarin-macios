@@ -61,7 +61,7 @@ namespace MessageUI {
 	[Protocol]
 	interface MFMailComposeViewControllerDelegate {
 		[Export ("mailComposeController:didFinishWithResult:error:")]
-		void Finished (MFMailComposeViewController controller, MFMailComposeResult result, NSError error);
+		void Finished (MFMailComposeViewController controller, MFMailComposeResult result, [NullAllowed] NSError error);
 	}	
 
 	interface MFMessageAvailabilityChangedEventArgs {

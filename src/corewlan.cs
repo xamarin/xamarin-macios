@@ -409,7 +409,7 @@ namespace CoreWlan {
 		 
 		[Deprecated (PlatformName.MacOSX, 11,0)]
 		[Export ("startIBSSModeWithSSID:security:channel:password:error:")]
-		bool StartIbssModeWithSsid (NSData ssidData, CWIbssModeSecurity security, nuint channel, string password, out NSError error);
+		bool StartIbssModeWithSsid (NSData ssidData, CWIbssModeSecurity security, nuint channel, [NullAllowed] string password, out NSError error);
 		 
 		[Export ("disassociate")]
 		void Disassociate ();

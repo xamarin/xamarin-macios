@@ -521,7 +521,7 @@ namespace CoreML {
 		IntPtr Constructor (NSNumber [] shape, MLMultiArrayDataType dataType, out NSError error);
 
 		[Export ("initWithDataPointer:shape:dataType:strides:deallocator:error:")]
-		IntPtr Constructor (IntPtr dataPointer, NSNumber [] shape, MLMultiArrayDataType dataType, NSNumber [] strides, Action<IntPtr> deallocator, out NSError error);
+		IntPtr Constructor (IntPtr dataPointer, NSNumber [] shape, MLMultiArrayDataType dataType, NSNumber [] strides, [NullAllowed] Action<IntPtr> deallocator, out NSError error);
 
 		// From MLMultiArray (NSNumberDataAccess) Category
 

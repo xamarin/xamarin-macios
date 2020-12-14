@@ -10962,7 +10962,7 @@ namespace AVFoundation {
 
 		[Export ("prerollAtRate:completionHandler:")]
 		[Async]
-		void Preroll (float /* defined as 'float' */ rate, AVCompletion onComplete);
+		void Preroll (float /* defined as 'float' */ rate, [NullAllowed] AVCompletion onComplete);
 
 		[Export ("cancelPendingPrerolls")]
 		void CancelPendingPrerolls ();
@@ -11338,14 +11338,14 @@ namespace AVFoundation {
 
 		[Export ("seekToTime:completionHandler:")]
 		[Async]
-		void Seek (CMTime time, AVCompletion completion);
+		void Seek (CMTime time, [NullAllowed] AVCompletion completion);
 
 		[Export ("cancelPendingSeeks")]
 		void CancelPendingSeeks ();
 
 		[Export ("seekToTime:toleranceBefore:toleranceAfter:completionHandler:")]
 		[Async]
-		void Seek (CMTime time, CMTime toleranceBefore, CMTime toleranceAfter, AVCompletion completion);
+		void Seek (CMTime time, CMTime toleranceBefore, CMTime toleranceAfter, [NullAllowed] AVCompletion completion);
 
 		[Export ("selectMediaOption:inMediaSelectionGroup:")]
 		void SelectMediaOption ([NullAllowed] AVMediaSelectionOption mediaSelectionOption, AVMediaSelectionGroup mediaSelectionGroup);
