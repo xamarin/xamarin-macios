@@ -5,6 +5,10 @@ parameters:
   type: boolean
   default: true
 
+- name: runDeviceTests
+  type: boolean
+  default: true
+
 jobs:
 - job: configure
   displayName: 'Configure build'
@@ -67,6 +71,7 @@ jobs:
   - template: build.yml
     parameters:
       runTests: ${{ parameters.runTests }}
+      runDeviceTests: ${{ parameters.runDeviceTests }}
 
 - job: upload_azure_blob
   displayName: 'Upload packages to Azure'
