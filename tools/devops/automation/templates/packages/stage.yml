@@ -132,6 +132,11 @@ jobs:
     workspace:
       clean: all
   steps:
+  - template: ../common/publish-html.yml
+    parameters:
+      statusContext: "Build"
+      vsdropsPrefix: ${{ parameters.vsdropsPrefix }} 
+      devicePrefix: sim
   - template: publish-html.yml
     parameters:
       vsdropsPrefix: ${{ parameters.vsdropsPrefix }} 
