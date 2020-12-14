@@ -170,7 +170,7 @@ public class Frameworks : Dictionary <string, Framework>
 
 					{ "Accounts", 10, 8 },
 					{ "AudioVideoBridging", 10, 8 },
-					{ "CFNetwork", 10, 8, "CoreServices" },
+					{ "CFNetwork", 10, 8 },
 					{ "EventKit", 10, 8 },
 					{ "GameKit", 10, 8 },
 					{ "GLKit", 10, 8 },
