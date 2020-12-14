@@ -141,6 +141,3 @@ jobs:
       statusContext: "Build"
       vsdropsPrefix: ${{ parameters.vsdropsPrefix }} 
       devicePrefix: sim
-  - template: publish-html.yml
-    parameters:
-      vsdropsPrefix: ${{ parameters.vsdropsPrefix }} 
