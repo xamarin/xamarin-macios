@@ -25,7 +25,7 @@ steps:
 - template: download-artifacts.yml 
 
 - pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\tools\devops\automation\scripts\GitHub.psm1
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\GitHub.psm1
 
     $apiDiffRoot = "$Env:STABLE_APIDDIFF_PATH"
     $filePatterns = @{
@@ -73,7 +73,7 @@ steps:
   timeoutInMinutes: 1
 
 - pwsh: |
-    Ge -ChildItem -Recurse $Env:SYSTEM_DEFAULTWORKINGDIRECTORY
+    Get-ChildItem -Recurse $Env:SYSTEM_DEFAULTWORKINGDIRECTORY
   displayName: 'Add summaries'
   condition: always()
   timeoutInMinutes: 1

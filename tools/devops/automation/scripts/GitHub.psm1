@@ -526,13 +526,16 @@ function New-GistWithFiles {
     }
 
     $url = "https://api.github.com/gists"
+    $payloadJson = $payload | ConvertTo-Json
+    Write-Host "Url is $url"
+    Write-Host "Payload is $payloadJson"
 
     $headers = @{
         Accept = "application/vnd.github.v3+json";
         Authorization = ("token {0}" -f $Env:GITHUB_TOKEN);
     } 
 
-    $request = Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body ($payload | ConvertTo-Json)  -ContentType 'application/json'
+    $request = Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body $payloadJson -ContentType 'application/json'
     Write-Host $request
     return $request.html_url
 }
