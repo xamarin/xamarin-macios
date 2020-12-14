@@ -89,15 +89,6 @@ fi
 
 ROOT_DIR=$(git rev-parse --show-toplevel)
 
-# We'll checkout another hash, which may not have this script, and executing a script that is deleted
-# sounds like a bad idea. So copy the scripts to /tmp and execute it from there
-if test -z "$WORKING_DIR"; then
-	$CP -v "$ROOT_DIR/tools/compare-commits.sh" "$ROOT_DIR/tools/diff-to-html" "$TMPDIR/"
-	exec "$TMPDIR/$(basename "$0")" "${ORIGINAL_ARGS[@]}" "--impl-working-dir=$(pwd)"
-	exit $?
-fi
-cd "$WORKING_DIR"
-
 # Go to the root directory of the git repo, so that we don't run into any surprises with paths.
 # Also make ROOT_DIR an absolute path.
 cd "$ROOT_DIR"
@@ -124,69 +115,34 @@ git log "$BASE_HASH..$COMP_HASH" --oneline $GIT_COLOR | sed 's/^/    /'
 COMP_HASH=$(git log -1 --pretty=%H "$COMP_HASH")
 BASE_HASH=$(git log -1 --pretty=%H "$BASE_HASH")
 
-# Save the current branch/hash
-CURRENT_BRANCH=$(git symbolic-ref --short HEAD 2>/dev/null || true)
-CURRENT_HASH=$(git log -1 --pretty=%H)
+# We'll clone xamarin-macios again into a different directory, and build it
 
 GENERATOR_DIFF_FILE=
 APIDIFF_FILE=
 
-HASH_RESTORED=
-function restore_hash ()
-{
-	if test -n "$HASH_RESTORED"; then
-		echo "Previous hash/branch already restored."
-	elif test -z "$CURRENT_BRANCH"; then
-		echo "Restoring the previous hash ${BLUE}${CURRENT_HASH}${CLEAR} (there was no previous branch; probably because HEAD was detached)"
-		git checkout --force "$CURRENT_HASH"
-		echo "Previous hash restored successfully."
-	else
-		echo "Restoring the previous branch ${BLUE}$CURRENT_BRANCH${CLEAR}..."
-		git checkout --quiet --force "$CURRENT_BRANCH"
-		git reset --hard "$CURRENT_HASH"
-		echo "Previous branch restored successfully."
-	fi
-	HASH_RESTORED=1
-}
+OUTPUT_DIR=$ROOT_DIR/tools/comparison
+OUTPUT_SRC_DIR=$OUTPUT_DIR/src
 
 function upon_exit ()
 {
-	restore_hash
-
 	if ! test -z "$GENERATOR_DIFF_FILE"; then
 		echo "Generator diff: $GENERATOR_DIFF_FILE"
 	fi
 	if ! test -z "$APIDIFF_FILE"; then
 		echo "API diff: $APIDIFF_FILE"
 	fi
+
+	if test -f "$ROOT_DIR/NuGet.config.disabled"; then
+		mv "$ROOT_DIR/NuGet.config.disabled" "$ROOT_DIR/NuGet.config"
+	fi
+
+	# Clean up after ourselves (but leave the comparison)
+	rm -Rf "$OUTPUT_SRC_DIR"
+	rm -Rf "$OUTPUT_DIR/build"
+	rm -Rf "$OUTPUT_DIR/build-new"
 }
 
 trap upon_exit EXIT
-
-OUTPUT_SUBDIR=tools/comparison
-OUTPUT_DIR=$ROOT_DIR/$OUTPUT_SUBDIR
-
-rm -Rf "$OUTPUT_DIR"
-
-# Create fake destination directories in $OUTPUT_DIR
-# We will build in src/ setting DESTDIR to these destination directories, but the
-# build in src/ depends on a few files installed from builds/, so copy those files
-# from the normal destination directories.
-echo "${BLUE}Preparing temporary output directory...${CLEAR}"
-mkdir -p "$OUTPUT_DIR/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/mono"
-mkdir -p "$OUTPUT_DIR/_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/git/lib/mono"
-mkdir -p "$OUTPUT_DIR/project-files"
-
-ln -s git "$OUTPUT_DIR/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/Current"
-ln -s git "$OUTPUT_DIR/_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/Current"
-
-for dir in 2.1 Xamarin.iOS Xamarin.TVOS Xamarin.WatchOS Xamarin.MacCatalyst; do
-	$CP -R "$ROOT_DIR/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/mono/$dir" "$OUTPUT_DIR/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/mono"
-done
-
-for dir in Xamarin.Mac 4.5; do
-	$CP -R "$ROOT_DIR/_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/git/lib/mono/$dir" "$OUTPUT_DIR/_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/git/lib/mono"
-done
 
 if test -z "$CURRENT_BRANCH"; then
 	echo "${BLUE}Current hash: ${WHITE}$(git log -1 --pretty="%h: %s")${BLUE} (detached)${CLEAR}"
@@ -194,19 +150,38 @@ else
 	echo "${BLUE}Current branch: ${WHITE}$CURRENT_BRANCH${BLUE} (${WHITE}$(git log -1 --pretty="%h: %s")${BLUE})${CLEAR}"
 fi
 echo "${BLUE}Checking out ${WHITE}$(git log -1 --pretty="%h: %s" "$BASE_HASH")${CLEAR}...${CLEAR}"
-git checkout --quiet --force --detach "$BASE_HASH"
 
-# To ensure that our logic below doesn't modify files it shouldn't, we create a stamp
-# file, and compare the timestamps of all the files that shouldn't be modified to this
-# file's timestamp.
-touch "$OUTPUT_DIR/stamp"
+rm -Rf "$OUTPUT_DIR"
+mkdir -p "$OUTPUT_DIR"
+mkdir -p "$OUTPUT_SRC_DIR"
 
-echo "${BLUE}Building src/...${CLEAR}"
-if ! make -C "$ROOT_DIR/src" BUILD_DIR="$ROOT_DIR/tools/comparison/build" PROJECT_DIR="$OUTPUT_DIR/project-files" "IOS_DESTDIR=$OUTPUT_DIR/_ios-build" "MAC_DESTDIR=$OUTPUT_DIR/_mac-build" "DOTNET_DESTDIR=$OUTPUT_DIR/_build" -j8; then
-	EC=$?
-	report_error_line "${RED}Failed to build src/${CLEAR}"
-	exit "$EC"
+# The top-level NuGet.config interferes with the build in XmlSync (for some
+# reason NuGet picks up the top-level NuGet.config instead of the NuGet.config
+# in XmlSync - even though all documentation I've read states otherwise).
+mv "$ROOT_DIR/NuGet.config" "$ROOT_DIR/NuGet.config.disabled"
+
+cd "$OUTPUT_SRC_DIR"
+git clone https://github.com/xamarin/xamarin-macios --reference "$ROOT_DIR"
+cd xamarin-macios
+git reset --hard "$BASE_HASH"
+cp "$ROOT_DIR/configure.inc" .
+make reset
+make check-versions
+if ! ./system-dependencies.sh; then
+	report_error_line "${RED}Error: The system requirements for the hash to compare against ($WHITE$BASE_HASH$CLEAR) are different than for the current hash. Comparison is currently not supported in this scenario.${CLEAR}"
+	exit 1
 fi
+if ! make all -j8; then
+	report_error_line "${RED}Error: 'make' failed for the hash $WHITE$BASE_HASH$CLEAR.${CLEAR}"
+	exit 1
+fi
+if ! make install -j8; then
+	report_error_line "${RED}Error: 'make install' failed for the hash $WHITE$BASE_HASH$CLEAR.${CLEAR}"
+	exit 1
+fi
+
+# Restore NuGet.config
+mv "$ROOT_DIR/NuGet.config.disabled" "$ROOT_DIR/NuGet.config"
 
 #
 # API diff
@@ -217,13 +192,13 @@ fi
 
 # Calculate apidiff references according to the temporary build
 echo "${BLUE}Updating apidiff references...${CLEAR}"
-if ! make update-refs -C "$ROOT_DIR/tools/apidiff" -j8 APIDIFF_DIR="$OUTPUT_DIR/apidiff" IOS_DESTDIR="$OUTPUT_DIR/_ios-build" MAC_DESTDIR="$OUTPUT_DIR/_mac-build"; then
+if ! make update-refs -C "$ROOT_DIR/tools/apidiff" -j8 APIDIFF_DIR="$OUTPUT_DIR/apidiff" IOS_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_ios-build" MAC_DESTDIR="$OUTPUT_SRC_DIR/xamarin-macios/_mac-build"; then
 	EC=$?
 	report_error_line "${RED}Failed to update apidiff references${CLEAR}"
 	exit "$EC"
 fi
 
-# 
+#
 # Generator diff
 #
 
@@ -231,8 +206,13 @@ fi
 # so that we can remove files we don't want to compare without
 # affecting that build.
 $CP -R "$ROOT_DIR/src/build" "$OUTPUT_DIR/build-new"
+$CP -R "$OUTPUT_SRC_DIR/xamarin-macios/src/build" "$OUTPUT_DIR/build"
+
+# delete files we don't care are different
 cd "$OUTPUT_DIR"
-find build build-new '(' \
+find "$OUTPUT_DIR/build" "$OUTPUT_DIR/build-new" '(' \
+	-name 'compiler' -or \
+	-name 'bgen' -or \
 	-name '*.dll' -or \
 	-name '*.pdb' -or \
 	-name '*generated-sources' -or \
@@ -249,37 +229,7 @@ find build build-new '(' \
 mkdir -p "$OUTPUT_DIR/generator-diff"
 GENERATOR_DIFF_FILE="$OUTPUT_DIR/generator-diff/index.html"
 git diff --no-index build build-new > "$OUTPUT_DIR/generator-diff/generator.diff" || true
-if ! test -f "$TMPDIR/diff-to-html"; then
-	# Some diagnostics to try to figure out https://github.com/xamarin/maccore/issues/1467.
-	echo "The file $TMPDIR/diff-to-html does not exist!"
-	echo "This script: $0"
-	echo "The arguments: $*"
-	echo "Listing the contents of $TMPDIR:"
-	ls -la "$TMPDIR"
-	exit 1
-fi
-"$TMPDIR/diff-to-html" "$OUTPUT_DIR/generator-diff/generator.diff" "$GENERATOR_DIFF_FILE"
-
-# Check if any files in the normal output paths were modified (there should be none)
-MODIFIED_FILES=$(find \
-	"$ROOT_DIR/_ios-build" \
-	"$ROOT_DIR/_mac-build" \
-	"$ROOT_DIR/_build" \
-	"$ROOT_DIR/src" \
-	"$ROOT_DIR/tools/apidiff" \
-	-type f \
-	-not -name '*.xlf' \
-	-newer "$OUTPUT_DIR/stamp")
-
-if test -n "$MODIFIED_FILES"; then
-	# If this list files, it means something's wrong with the build process
-	# (the logic to build/work in a different directory is incomplete/broken)
-	report_error_line "${RED}** Error: The following files were modified, and they shouldn't have been:${CLEAR}"
-	echo "$MODIFIED_FILES" | sed 's/^/    /' | while read line; do report_error_line "$line"; done
-	exit 1
-fi
-
-restore_hash
+"$ROOT_DIR/tools/diff-to-html" "$OUTPUT_DIR/generator-diff/generator.diff" "$GENERATOR_DIFF_FILE"
 
 # Now compare the current build against those references
 echo "${BLUE}Running apidiff...${CLEAR}"
