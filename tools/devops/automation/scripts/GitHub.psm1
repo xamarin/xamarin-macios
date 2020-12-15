@@ -314,7 +314,7 @@ function New-GitHubSummaryComment {
 
         [Parameter(Mandatory)]
         [String]
-        $TestSummaryPath,
+        $TestSummaryPath
     )
 
     $envVars = @{
