@@ -60,7 +60,10 @@ variables:
 - name: USE_TCP_TUNNEL                                        # Needed to ensure that devices uses the usb cable to communicate with the devices to run the tests.
   value: true
 
-trigger: none
+trigger:
+  branches:
+    include:
+    - '*'
 
 pr:
   autoCancel: true
