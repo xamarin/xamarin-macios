@@ -98,6 +98,15 @@ steps:
 # choices, there are labels that contradict each other (skip-package vs build-packages)
 # we use warnings for those case we are not sure about.
 - pwsh: |
+    # we have a number of scripts that require to be executed from the top of the src, rather
+    # than keeping track of the location of the script, we create two env vars that can be used to
+    # get to the top
+    $xamTop = "$(Build.SourcesDirectory)/xamarin-macios/"
+    Write-Host "##vso[task.setvariable variable=XAM_TOP]$xamTop"
+
+    $maccoreTop = "$(Build.SourcesDirectory)/maccore/"
+    Write-Host "##vso[task.setvariable variable=MACCORE_TOP]$maccoreTop"
+
     $buildReason = "$(Build.Reason)"
     $buildSourceBranchName = "$(Build.SourceBranchName)"
 
@@ -252,13 +261,13 @@ steps:
   timeoutInMinutes: 180
 
 # build nugets
-- bash:  $(Build.SourcesDirectory)/xamarin-macios/jenkins/build-nugets.sh
+- bash:  $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/build-nugets.sh
   displayName: 'Build Nugets'
   condition: and(succeeded(), eq(variables['configuration.BuildNugets'], 'True'))
   continueOnError: true # should not stop the build since is not official just yet.
   timeoutInMinutes: 180
 
-- bash:  $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/productsign.sh
+- bash: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/productsign.sh
   env:
     PRODUCTSIGN_KEYCHAIN_PASSWORD: $(xma-password)
   displayName: 'Signing PR Build'
