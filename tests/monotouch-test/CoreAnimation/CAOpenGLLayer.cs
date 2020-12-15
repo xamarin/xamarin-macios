@@ -13,6 +13,9 @@ namespace Xamarin.Mac.Tests
 	[TestFixture]
 	public class CAOpenGLLayerTest
 	{		
+#if !DYNAMIC_REGISTRAR
+		[Ignore ("https://github.com/xamarin/xamarin-macios/issues/10284")]
+#endif
 		[Test]
 		public void SubclassedTest ()
 		{
