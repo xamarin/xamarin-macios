@@ -299,7 +299,6 @@ Describe 'New-GitHubSummaryComment' {
                 $key = $_.Key
                 Set-Item -Path "Env:$key" -Value $_.Value
             }
-            $Script:xamarinStoragePath = "/path/to/xamarin/storage"
             $Script:context = "Testing"
 
             $Script:tempPath = [System.IO.Path]::GetTempFileName()
@@ -319,7 +318,7 @@ Describe 'New-GitHubSummaryComment' {
             # set job as a success
             Set-Item -Path "Env:TESTS_JOBSTATUS" -Value "Succeeded"
 
-            New-GitHubSummaryComment -Context $Script:context -XamarinStoragePath $Script:xamarinStoragePath -TestSummaryPath $Script:tempPath
+            New-GitHubSummaryComment -Context $Script:context -TestSummaryPath $Script:tempPath
 
             # assert rest calls
             Assert-MockCalled -CommandName Set-GitHubStatus -Times 1 -Scope It -ParameterFilter {
@@ -362,7 +361,7 @@ Describe 'New-GitHubSummaryComment' {
 
             Set-Item -Path "Env:TESTS_JOBSTATUS" -Value "Failed"
 
-            New-GitHubSummaryComment -Context $Script:context -XamarinStoragePath $Script:xamarinStoragePath -TestSummaryPath $Script:tempPath
+            New-GitHubSummaryComment -Context $Script:context -TestSummaryPath $Script:tempPath
 
             Assert-MockCalled -CommandName Set-GitHubStatus -Times 1 -Scope It -ParameterFilter {
                 if ($Status -ne "failure") {
@@ -404,7 +403,7 @@ Describe 'New-GitHubSummaryComment' {
 
             Set-Item -Path "Env:TESTS_JOBSTATUS" -Value "Failed"
 
-            New-GitHubSummaryComment -Context $Script:context -XamarinStoragePath $Script:xamarinStoragePath -TestSummaryPath $Script:tempPath
+            New-GitHubSummaryComment -Context $Script:context -TestSummaryPath $Script:tempPath
 
             Assert-MockCalled -CommandName Set-GitHubStatus -Times 1 -Scope It -ParameterFilter {
                 if ($Status -ne "failure") {
@@ -456,7 +455,6 @@ Describe 'New-GitHubSummaryComment' {
                 Remove-Item -Path "Env:$key"
             }
 
-            $Script:xamarinStoragePath = "/path/to/xamarin/storage"
             $Script:context = "Testing"
 
             $Script:tempPath = [System.IO.Path]::GetTempFileName()
@@ -469,7 +467,7 @@ Describe 'New-GitHubSummaryComment' {
         }
 
         It 'throws and exception' {
-            { New-GitHubSummaryComment -Context $Script:context -XamarinStoragePath $Script:xamarinStoragePath -TestSummaryPath $Script:tempPath } | Should -Throw
+            { New-GitHubSummaryComment -Context $Script:context -TestSummaryPath $Script:tempPath } | Should -Throw
         }
     }
 }
