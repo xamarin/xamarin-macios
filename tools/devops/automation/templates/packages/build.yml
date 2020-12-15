@@ -3,6 +3,10 @@ parameters:
   type: boolean
   default: true
 
+- name: runDeviceTests
+  type: boolean
+  default: true
+
 steps:
 - checkout: self          # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
   clean: true             # Executes: git clean -ffdx && git reset --hard HEAD
@@ -163,18 +167,26 @@ steps:
       Write-Host "##vso[task.setvariable variable=BuildNugets;isOutput=true]True"
       Write-Host "##vso[task.setvariable variable=SignPkgs;isOutput=true]True"
 
-      # tests, run all of them, internal, external, device, mac but not sample tests
+      # tests, run all of them, internal, external, mac but not sample tests
       Write-Host "##vso[task.setvariable variable=RunInternalTests;isOutput=true]True"
       Write-Host "##vso[task.setvariable variable=RunExternalTests;isOutput=true]True"
-      Write-Host "##vso[task.setvariable variable=RunDeviceTests;isOutput=true]True"
       Write-Host "##vso[task.setvariable variable=RunMacTests;isOutput=true]True"
       Write-Host "##vso[task.setvariable variable=RunSampleTests;isOutput=true]False"
       Write-Host "##vso[task.setvariable variable=SkipPublicJenkins;isOutput=true]False"
+
+      # if a developer decided to trigger one without device tests, allow it
+      if ($Env:RUN_DEVICE_TESTS -eq "true") {
+        Write-Host "##vso[task.setvariable variable=RunDeviceTests;isOutput=true]True"
+      } else {
+        Write-Host "##vso[task.setvariable variable=RunDeviceTests;isOutput=true]False"
+      }
     }
 
   name: configuration
   displayName: "Parse PR labels"
   timeoutInMinutes: 5
+  env:
+    RUN_DEVICE_TESTS: '${{ parameters.runDeviceTests }}'
 
 - bash: |
     set -x
