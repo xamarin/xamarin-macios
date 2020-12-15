@@ -61,7 +61,7 @@ variables:
   value: true
 
 trigger:
-  - *
+- *
 
 pr:
   autoCancel: true
