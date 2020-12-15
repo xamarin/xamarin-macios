@@ -20,7 +20,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\x86\Debug</OutputPath>
-    <DefineConstants>DEBUG;MONOMAC;XAMMAC_TESTS</DefineConstants>
+    <DefineConstants>DEBUG;MONOMAC;XAMMAC_TESTS;DYNAMIC_REGISTRAR</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>0</WarningLevel>
     <EnableCodeSigning>false</EnableCodeSigning>
