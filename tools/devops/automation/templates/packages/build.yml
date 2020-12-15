@@ -7,6 +7,9 @@ parameters:
   type: boolean
   default: true
 
+- name: vsdropsPrefix
+  type: string
+
 steps:
 - checkout: self          # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
   clean: true             # Executes: git clean -ffdx && git reset --hard HEAD
@@ -361,18 +364,31 @@ steps:
     rm -Rf *.exe *.pdb *.stamp *.zip *.sh ./references ./temp
   displayName: 'API diff (from stable)'
   condition: and(succeeded(), eq(variables['configuration.SkipPublicJenkins'], 'False'))
+  continueOnError: true
   env:
     BUILD_REVISION: 'jenkins'
+
+- task: ArchiveFiles@1
+  displayName: 'Archive API diff (from stable)'
+  inputs:
+    rootFolder: $(Build.SourcesDirectory)/xamarin-macios/tools/apidiff
+    includeRootFolder: false
+    archiveFile: '$(Build.ArtifactStagingDirectory)/apidiff-stable.zip'
+  condition: and(succeeded(), eq(variables['configuration.SkipPublicJenkins'], 'False'))
+  continueOnError: true
 
 - task: PublishPipelineArtifact@1
   displayName: 'Publish API diff (from stable)'
   inputs:
-    targetPath: $(Build.SourcesDirectory)/xamarin-macios/tools/apidiff
+    targetPath: '$(Build.ArtifactStagingDirectory)/apidiff-stable.zip'
     artifactName: apidiff-stable
   condition: and(succeeded(), eq(variables['configuration.SkipPublicJenkins'], 'False'))
   continueOnError: true
 
 - bash: |
+    echo "Running tests on $AGENT_NAME"
+    echo "##vso[task.setvariable variable=TESTS_BOT;isOutput=true]$AGENT_NAME"
+
     echo "##vso[task.setvariable variable=TESTS_RAN;isOutput=true]True"
     rm -rf ~/.config/.mono/keypairs/
 
@@ -398,6 +414,7 @@ steps:
   env:
     BUILD_REVISION: jenkins
     TARGET: 'wrench-jenkins'
+    VSDROPS_URI: '${{ parameters.vsdropsPrefix }}/$(Build.BuildNumber)/$(Build.BuildId);/tests/' # uri used to create the vsdrops index using full uri
 
 # Upload TestSummary as an artifact.
 - task: PublishPipelineArtifact@1

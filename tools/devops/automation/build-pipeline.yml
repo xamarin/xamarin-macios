@@ -89,6 +89,7 @@ stages:
   jobs:
     - template: templates/packages/stage.yml
       parameters:
+        vsdropsPrefix: ${{ variables.vsdropsPrefix }}
         runTests: ${{ parameters.runTests }}
         runDeviceTests: ${{ parameters.runDeviceTests }}
 
