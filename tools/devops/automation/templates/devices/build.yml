@@ -201,61 +201,12 @@ steps:
   condition: succeededOrFailed() # re-starting the daemon should not be an issue
   timeoutInMinutes: 5
 
-# Executed ONLY if we are using the xamarin-storage. Calculate the path to be used and stores it in the XAMARIN_STORAGE_PATH
-# variable which later can be used by other steps.
-- bash: |
-    set -e
-    set -x
-
-    if test -n $BUILD_SOURCEBRANCHNAME; then
-        BUILD_LANE=$BUILD_SOURCEBRANCHNAME
-    else
-        BUILD_LANE=$(basename $(dirname $(dirname $(dirname $XI_PACKAGE))))
-    fi
-
-    ID=$BUILD_BUILDID
-    if test -z $ID; then
-        ID=$(openssl rand -hex 6)
-    fi
-
-    P=jenkins/xamarin-macios/$BUILD_LANE/$BUILD_REVISION/$ID/device-tests
-
-    echo "##vso[task.setvariable variable=XM_STORAGE_PATH]$P"
-
-    X="#vso"
-    set +x
-    echo "[Html report (Boston storage)](http://xamarin-storage/$P/jenkins-results/tests/index.html)" > HtmlReportBoston.md
-    echo "#$X[task.addattachment type=Distributedtask.Core.Summary;name=Html Report;]$PWD/HtmlReportBoston.md"
-    set -x
-
-    echo "Html Report: http://xamarin-storage/$P/jenkins-results/tests/index.html"
-  displayName: 'Print Html Report link'
-  condition: and(always(), ${{ parameters.useXamarinStorage }})
-
 # Run tests. If we are using xamarin-storage add a periodic command to be executed by xharness, else, since we are using vsdrops do nothing.
 - bash: |
     set -x
     set -e
-    P=$(echo $XM_STORAGE_PATH | tr -d \'\")
 
     cd $WORKING_DIR/xamarin-macios
-    if [[ "$USE_XAMARIN_STORAGE" == "True" ]]; then
-      if nc -z xamarin-storage 22 2>/dev/null; then
-        ssh builder@xamarin-storage "mkdir -p /volume1/storage/$P"
-        if [[ $? = 1 ]]; then
-          echo "Remote mkdir failed"
-          echo "##vso[task.setvariable variable=XAMARIN_STORAGE_FAILED;isOutput=true]true"
-          echo "##vso[task.setvariable variable=XAMARIN_STORAGE_PATH;isOutput=true]"
-        else
-          echo "##vso[task.setvariable variable=XAMARIN_STORAGE_PATH;isOutput=true]$P"
-          echo "##vso[task.setvariable variable=XAMARIN_STORAGE_FAILED;isOutput=true]false"
-          export TESTS_PERIODIC_COMMAND="--periodic-interval 10 --periodic-command rsync --periodic-command-arguments '-avz -e \"ssh\" $PWD/jenkins-results builder@xamarin-storage:/volume1/storage/$P'"
-        fi
-      else
-        echo "##vso[task.setvariable variable=XAMARIN_STORAGE_FAILED;isOutput=true]true"
-        echo "##vso[task.setvariable variable=XAMARIN_STORAGE_PATH;isOutput=true]"
-      fi
-    fi
 
     echo "Running tests on $AGENT_NAME"
     echo "##vso[task.setvariable variable=TESTS_BOT;isOutput=true]$AGENT_NAME"

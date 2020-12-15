@@ -290,14 +290,11 @@ function Test-JobSuccess {
     .PARAMETER Context
         The context to be used to link the status and the device test run in the GitHub status API.
 
-    .PARAMETER XamarinStoragePath
-        The xamarin-storage path to which the html report was uploaded.
-
     .PARAMETER TestSummaryPath
         The path to the generated test summary.
 
     .EXAMPLE
-        New-GitHubSummaryComment -Context "$Env:CONTEXT" -XamarinStoragePath "$Env:XAMARIN_STORAGE_PATH" -TestSummaryPath "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin/xamarin-macios/tests/TestSummary.md"
+        New-GitHubSummaryComment -Context "$Env:CONTEXT" -TestSummaryPath "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin/xamarin-macios/tests/TestSummary.md"
     .NOTES
         This cmdlet depends on the following environment variables. If one or more of the variables is missing an
         InvalidOperationException will be thrown:
@@ -317,11 +314,7 @@ function New-GitHubSummaryComment {
 
         [Parameter(Mandatory)]
         [String]
-        $TestSummaryPath,
-
-        [String]
-        [AllowEmptyString()]
-        $XamarinStoragePath
+        $TestSummaryPath
     )
 
     $envVars = @{
@@ -346,12 +339,6 @@ function New-GitHubSummaryComment {
     $headerSb = [System.Text.StringBuilder]::new()
     $headerSb.AppendLine(); # new line to start the list
     $headerSb.AppendLine("* [Azure DevOps]($vstsTargetUrl)")
-    if ([string]::IsNullOrEmpty($XamarinStoragePath)) { # if we do have the storage path but we failed. first part of the -and check string is not null or empty, second check presence of the env var
-        $headerSb.AppendLine("* :warning: xamarin-storage could not be reached :warning:")
-    } else {
-        $xamarinStorageUrl = Get-XamarinStorageIndexUrl -Path $XamarinStoragePath
-        $headerSb.AppendLine("* [Html Report]($xamarinStorageUrl)")
-    }
     if ($Env:VSDROPS_INDEX) {
         # we did generate an index with the files in vsdrops
         $headerSb.AppendLine("* [Html Report (VSDrops)]($Env:VSDROPS_INDEX)")
