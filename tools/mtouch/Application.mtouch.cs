@@ -948,7 +948,8 @@ namespace Xamarin.Bundler {
 						throw ErrorHelper.CreateError (65, Errors.MT0065_A, DeploymentTarget, string.Join (", ", Frameworks.ToArray ()));
 					break;
 				case ApplePlatform.TVOS:
-					// All versions of tvOS support extensions
+				case ApplePlatform.MacCatalyst:
+					// All versions of tvOS and Mac Catalyst support extensions
 					break;
 				default:
 					throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, "Xamarin.iOS");
