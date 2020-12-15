@@ -301,7 +301,19 @@ namespace Xamarin.Utils
 				args.Add ("-Xlinker");
 				args.Add ("-rpath");
 				args.Add ("-Xlinker");
-				args.Add ("@executable_path/Frameworks");
+				switch (Application.Platform) {
+				case ApplePlatform.iOS:
+				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
+					args.Add ("@executable_path/Frameworks");
+					break;
+				case ApplePlatform.MacCatalyst:
+				case ApplePlatform.MacOSX:
+					args.Add ("@executable_path/../Frameworks");
+					break;
+				default:
+					throw ErrorHelper.CreateError (71, Errors.MX0071, Application.Platform, Application.ProductName);
+				}
 				if (Application.IsExtension) {
 					args.Add ("-Xlinker");
 					args.Add ("-rpath");
