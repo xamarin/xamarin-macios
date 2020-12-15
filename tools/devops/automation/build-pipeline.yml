@@ -61,7 +61,9 @@ variables:
   value: true
 
 trigger:
-- *
+  branches:
+    include:
+    - '*'
 
 pr:
   autoCancel: true
