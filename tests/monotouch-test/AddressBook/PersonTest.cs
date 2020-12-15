@@ -22,6 +22,13 @@ namespace MonoTouchFixtures.AddressBook {
 	[Preserve (AllMembers = true)]
 	public class PersonTest {
 		
+		[SetUp]
+		public void Setup ()
+		{
+			// Mac Catalyst system versions follow the macOS system versions.
+			TestRuntime.AssertSystemVersion (PlatformName.MacCatalyst, 11, 0, throwIfOtherPlatform: false);
+		}
+
 		[Test]
 		public void UpdateAddressLine ()
 		{

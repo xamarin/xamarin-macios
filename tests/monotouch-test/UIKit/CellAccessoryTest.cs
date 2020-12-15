@@ -15,7 +15,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void GetPositionBeforeAccessory ()
 		{
-			TestRuntime.AssertXcodeVersion (12, 0);
+			TestRuntime.AssertXcodeVersion (12, TestRuntime.MinorXcode12APIMismatch);
 			var cap = UICellAccessory.GetPositionBeforeAccessory (new Class ("UIButton"));
 			Assert.NotNull (cap, "Class/cap");
 			Assert.That (cap (new UICellAccessory [0]), Is.EqualTo ((nuint) 0), "Class/Invoke");
@@ -28,7 +28,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void GetPositionAfterAccessory ()
 		{
-			TestRuntime.AssertXcodeVersion (12, 0);
+			TestRuntime.AssertXcodeVersion (12, TestRuntime.MinorXcode12APIMismatch);
 			var cap = UICellAccessory.GetPositionAfterAccessory (new Class ("UIButton"));
 			Assert.NotNull (cap, "Class/cap");
 			Assert.That (cap (new UICellAccessory [0]), Is.EqualTo ((nuint) 0), "Class/Invoke");

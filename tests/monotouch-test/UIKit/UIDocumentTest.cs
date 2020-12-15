@@ -21,6 +21,7 @@ using NUnit.Framework;
 
 namespace MonoTouchFixtures.UIKit {
 
+#if !XAMCORE_3_0
 	class DocumentPoker : UIDocument {
 		
 		static FieldInfo bkFileUrl;
@@ -47,6 +48,7 @@ namespace MonoTouchFixtures.UIKit {
 		}
 	}
 	
+#endif // !XAMCORE_3_0
 	class MyUrl : NSUrl {
 		
 		public MyUrl (string url, string annotation) : base (url)
@@ -118,6 +120,7 @@ namespace MonoTouchFixtures.UIKit {
 			}
 		}
 
+#if !XAMCORE_3_0
 		[Test]
 		public void FileUrl_BackingField ()
 		{
@@ -155,6 +158,7 @@ namespace MonoTouchFixtures.UIKit {
 				});
 			}
 		}
+#endif // !XAMCORE_3_0
 
 		[Test]
 		public void Fields ()

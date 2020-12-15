@@ -14,6 +14,12 @@ namespace MonoTouchFixtures.NearbyInteraction {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class NINearbyObjectTest {
+		[SetUp]
+		public void Setup ()
+		{
+			// Mac Catalyst system versions follow the macOS system versions, and NearbyInteraction was introduced to Mac Catalyst later than for the other frameworks, so we have this additional check
+			TestRuntime.AssertSystemVersion (PlatformName.MacCatalyst, 11, 0, throwIfOtherPlatform: false);
+		}
 
 		[Test]
 		public void DirectionNotAvailable ()

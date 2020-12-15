@@ -12,6 +12,7 @@
 using System;
 using Foundation;
 using ExternalAccessory;
+using ObjCRuntime;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.ExternalAccessory {
@@ -41,6 +42,7 @@ namespace MonoTouchFixtures.ExternalAccessory {
 		[Test]
 		public void ShowBluetoothAccessoryPicker ()
 		{
+			TestRuntime.AssertSystemVersion (PlatformName.MacCatalyst, 11, 0, throwIfOtherPlatform: false);
 			EAAccessoryManager.SharedAccessoryManager.ShowBluetoothAccessoryPicker (null, null);
 		}
 #endif

@@ -13,6 +13,7 @@ using NUnit.Framework;
 
 using CarPlay;
 using Foundation;
+using ObjCRuntime;
 
 namespace MonoTouchFixtures.CarPlay {
 
@@ -21,7 +22,12 @@ namespace MonoTouchFixtures.CarPlay {
 	public class CPMessageListItemTest {
 
 		[SetUp]
-		public void Setup () => TestRuntime.AssertXcodeVersion (12, 0);
+		public void Setup ()
+		{
+			TestRuntime.AssertXcodeVersion (12, 0);
+			// Mac Catalyst system versions follow the macOS system versions, and CarPlay was introduced to Mac Catalyst later than for the other frameworks, so we have this additional check
+			TestRuntime.AssertSystemVersion (PlatformName.MacCatalyst, 11, 0, throwIfOtherPlatform: false);
+		}
 
 		[Test]
 		public void InitUsingConversationIdentifier ()

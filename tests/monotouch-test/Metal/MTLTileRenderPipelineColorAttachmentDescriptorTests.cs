@@ -3,6 +3,7 @@
 using System;
 
 using Metal;
+using ObjCRuntime;
 
 using NUnit.Framework;
 
@@ -16,6 +17,8 @@ namespace MonoTouchFixtures.Metal {
 		public void SetUp ()
 		{
 			TestRuntime.AssertXcodeVersion (9, 0);
+			// Mac Catalyst system versions follow the macOS system versions, and MTLTileRenderPipelineColorAttachmentDescriptor was introduced to Mac Catalyst later than for the other frameworks, so we have this additional check
+			TestRuntime.AssertSystemVersion (PlatformName.MacCatalyst, 11, 0, throwIfOtherPlatform: false);
 			descriptor = new MTLTileRenderPipelineColorAttachmentDescriptor ();
 		}
 

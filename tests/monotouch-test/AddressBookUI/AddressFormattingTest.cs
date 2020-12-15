@@ -23,6 +23,13 @@ namespace MonoTouchFixtures.AddressBookUI {
 	[Preserve (AllMembers = true)]
 	public class ABAddressFormattingTest {
 		
+		[SetUp]
+		public void Setup ()
+		{
+			// Mac Catalyst system versions follow the macOS system versions.
+			TestRuntime.AssertSystemVersion (PlatformName.MacCatalyst, 11, 0, throwIfOtherPlatform: false);
+		}
+
 		[Test]
 		public void ChateauFrontenac ()
 		{

@@ -10,6 +10,7 @@
 #if !__TVOS__ && !MONOMAC
 
 using System;
+using System.IO;
 using Foundation;
 using UIKit;
 using PassKit;
@@ -40,7 +41,7 @@ namespace MonoTouchFixtures.PassKit {
 			Assert.NotNull (library.GetPasses (), "GetPasses");
 
 			// and we can't trick the OS to do it for us
-			using (NSUrl url = new NSUrl (NSBundle.MainBundle.BundleUrl + "/BoardingPass.pkpass")) {
+			using (var url = PassTest.GetBoardingPassUrl ()) {
 #if !__WATCHOS__
 				Assert.False (UIApplication.SharedApplication.OpenUrl (url), "OpenUrl");
 #endif

@@ -91,7 +91,7 @@ namespace MonoTouchFixtures.HealthKit {
 				case HKCategoryTypeIdentifier.VaginalDryness:
 				case HKCategoryTypeIdentifier.EnvironmentalAudioExposureEvent:
 				case HKCategoryTypeIdentifier.HandwashingEvent:
-					if (!TestRuntime.CheckXcodeVersion (12, 0))
+					if (!TestRuntime.CheckXcodeVersion (12, TestRuntime.MinorXcode12APIMismatch))
 						continue;
 					break;
 				case HKCategoryTypeIdentifier.HeadphoneAudioExposureEvent:

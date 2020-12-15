@@ -2200,6 +2200,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void VoidPtrToINativeObjectArgument ()
 		{
+			// Mac Catalyst system versions follow the macOS system versions.
+			TestRuntime.AssertSystemVersion (PlatformName.MacCatalyst, 11, 0, throwIfOtherPlatform: false);
+
 			using (var obj = new ABPeoplePickerNavigationControllerDelegateImpl ()) {
 				using (var person = new ABPerson ()) {
 					Messaging.void_objc_msgSend_IntPtr_IntPtr (obj.Handle, Selector.GetHandle ("peoplePickerNavigationController:didSelectPerson:"), IntPtr.Zero, person.Handle);

@@ -24,6 +24,13 @@ namespace MonoTouchFixtures.AddressBook {
 		
 		// very general ABSource related tests (works on both simulator and devices)
 		
+		[SetUp]
+		public void Setup ()
+		{
+			// Mac Catalyst system versions follow the macOS system versions.
+			TestRuntime.AssertSystemVersion (PlatformName.MacCatalyst, 11, 0, throwIfOtherPlatform: false);
+		}
+
 		[Test]
 		public void GetAllSources ()
 		{
