@@ -26,6 +26,11 @@ steps:
     gci env: | format-table -autosize -wrap
   displayName: 'Dump Environment'
 
+- bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/clean-bot.sh
+  displayName: 'Clean bot'
+  env:
+    BUILD_REVISION: 'jenkins'
+
 - bash: |
     security set-key-partition-list -S apple-tool:,apple: -s -k $OSX_KEYCHAIN_PASS login.keychain
   env:
