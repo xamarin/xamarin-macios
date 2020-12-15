@@ -530,7 +530,7 @@ namespace UIKit {
 		[DesignatedInitializer]
 		[Export ("initWithTextAlignment:location:options:")]
 		[PostGet ("Options")]
-		IntPtr Constructor (UITextAlignment alignment, nfloat location, [NullAllowed] NSDictionary options);
+		IntPtr Constructor (UITextAlignment alignment, nfloat location, NSDictionary options);
 
 		[Export ("alignment")]
 		UITextAlignment Alignment { get; }
@@ -570,7 +570,7 @@ namespace UIKit {
 	partial interface NSTextAttachmentContainer {
 		[Abstract]
 		[Export ("imageForBounds:textContainer:characterIndex:")]
-		UIImage GetImageForBounds (CGRect bounds, NSTextContainer textContainer, nuint characterIndex);
+		UIImage GetImageForBounds (CGRect bounds, [NullAllowed] NSTextContainer textContainer, nuint characterIndex);
 
 		[Abstract]
 		[Export ("attachmentBoundsForTextContainer:proposedLineFragment:glyphPosition:characterIndex:")]
@@ -2230,14 +2230,14 @@ namespace UIKit {
 		IntPtr Constructor (double duration, UIViewAnimationCurve curve, [NullAllowed] Action animations);
 	
 		[Export ("initWithDuration:controlPoint1:controlPoint2:animations:")]
-		IntPtr Constructor (double duration, CGPoint point1, CGPoint point2, Action animations);
+		IntPtr Constructor (double duration, CGPoint point1, CGPoint point2, [NullAllowed] Action animations);
 	
 		[Export ("initWithDuration:dampingRatio:animations:")]
 		IntPtr Constructor (double duration, nfloat ratio, [NullAllowed] Action animations);
 	
 		[Static]
 		[Export ("runningPropertyAnimatorWithDuration:delay:options:animations:completion:")]
-		UIViewPropertyAnimator CreateRunningPropertyAnimator (double duration, double delay, UIViewAnimationOptions options, [NullAllowed] Action animations, [NullAllowed] Action<UIViewAnimatingPosition> completion);
+		UIViewPropertyAnimator CreateRunningPropertyAnimator (double duration, double delay, UIViewAnimationOptions options, Action animations, [NullAllowed] Action<UIViewAnimatingPosition> completion);
 	}
 	
 	interface IUIViewControllerPreviewing {}
@@ -3904,7 +3904,7 @@ namespace UIKit {
 		[iOS (7,0)]
 		[Export ("setCollectionViewLayout:animated:completion:")]
 		[Async]
-		void SetCollectionViewLayout (UICollectionViewLayout layout, bool animated, UICompletionHandler completion);
+		void SetCollectionViewLayout (UICollectionViewLayout layout, bool animated, [NullAllowed] UICompletionHandler completion);
 		
 		[iOS (7,0)]
 		[Export ("finishInteractiveTransition")]
@@ -9757,7 +9757,7 @@ namespace UIKit {
 
 		[DesignatedInitializer]
 		[Export ("initWithTransitionStyle:navigationOrientation:options:")]
-		IntPtr Constructor (UIPageViewControllerTransitionStyle style, UIPageViewControllerNavigationOrientation navigationOrientation, NSDictionary options);
+		IntPtr Constructor (UIPageViewControllerTransitionStyle style, UIPageViewControllerNavigationOrientation navigationOrientation, [NullAllowed] NSDictionary options);
 
 		[Export ("setViewControllers:direction:animated:completion:")]
 		[PostGet ("ViewControllers")]
@@ -10130,7 +10130,7 @@ namespace UIKit {
 		string GetTitle (UIPickerView pickerView, nint row, nint component);
 
 		[Export ("pickerView:viewForRow:forComponent:reusingView:")]
-		UIView GetView (UIPickerView pickerView, nint row, nint component, UIView view);
+		UIView GetView (UIPickerView pickerView, nint row, nint component, [NullAllowed] UIView view);
 
 		[Export ("pickerView:didSelectRow:inComponent:")]
 		void Selected (UIPickerView pickerView, nint row, nint component);
@@ -10212,7 +10212,7 @@ namespace UIKit {
 		
 		[Abstract]
 		[Export ("viewWillTransitionToSize:withTransitionCoordinator:")]
-		void ViewWillTransitionToSize (CGSize toSize, [NullAllowed] IUIViewControllerTransitionCoordinator coordinator);
+		void ViewWillTransitionToSize (CGSize toSize, IUIViewControllerTransitionCoordinator coordinator);
 		
 		[Abstract]
 		[Export ("willTransitionToTraitCollection:withTransitionCoordinator:")]
@@ -13617,7 +13617,7 @@ namespace UIKit {
 		[iOS (7,0)]
 		[Export ("initWithFrame:textContainer:")]
 		[PostGet ("TextContainer")]
-		IntPtr Constructor (CGRect frame, NSTextContainer textContainer);
+		IntPtr Constructor (CGRect frame, [NullAllowed] NSTextContainer textContainer);
 	
 		[iOS (7,0)]
 		[Export ("textContainer", ArgumentSemantic.Copy)]
@@ -14311,7 +14311,7 @@ namespace UIKit {
 		[iOS (7,0)]
 		[Static, Export ("performSystemAnimation:onViews:options:animations:completion:")]
 		[Async]
-		void PerformSystemAnimation (UISystemAnimation animation, UIView [] views, UIViewAnimationOptions options, Action parallelAnimations, UICompletionHandler completion);
+		void PerformSystemAnimation (UISystemAnimation animation, UIView [] views, UIViewAnimationOptions options, [NullAllowed] Action parallelAnimations, [NullAllowed] UICompletionHandler completion);
 
 		[TV (13,0), iOS (13,0)] // Yep headers stated iOS 12 but they are such a liars...
 		[Static]
@@ -14321,7 +14321,7 @@ namespace UIKit {
 		[iOS (7,0)]
 		[Static, Export ("animateKeyframesWithDuration:delay:options:animations:completion:")]
 		[Async]
-		void AnimateKeyframes (double duration, double delay, UIViewKeyframeAnimationOptions options, Action animations, UICompletionHandler completion);
+		void AnimateKeyframes (double duration, double delay, UIViewKeyframeAnimationOptions options, Action animations, [NullAllowed] UICompletionHandler completion);
 
 		[iOS (7,0)]
 		[Static, Export ("addKeyframeWithRelativeStartTime:relativeDuration:animations:")]
@@ -14871,7 +14871,7 @@ namespace UIKit {
 
 		[Export ("transitionFromViewController:toViewController:duration:options:animations:completion:")]
 		[Async]
-		/*PROTECTED, MUSTCALLBASE*/ void Transition (UIViewController fromViewController, UIViewController toViewController, double duration, UIViewAnimationOptions options, /* non null */ Action animations, UICompletionHandler completionHandler);
+		/*PROTECTED, MUSTCALLBASE*/ void Transition (UIViewController fromViewController, UIViewController toViewController, double duration, UIViewAnimationOptions options, [NullAllowed] Action animations, [NullAllowed] UICompletionHandler completionHandler);
 
 		[Export ("willMoveToParentViewController:")]
 		void WillMoveToParentViewController ([NullAllowed] UIViewController parent);
@@ -16512,7 +16512,7 @@ namespace UIKit {
 		[iOS (8,3)]
 		[Export ("presentationController:willPresentWithAdaptiveStyle:transitionCoordinator:"),
 			EventName ("WillPresentController"), EventArgs ("UIWillPresentAdaptiveStyle")]
-		void WillPresent (UIPresentationController presentationController, UIModalPresentationStyle style, IUIViewControllerTransitionCoordinator transitionCoordinator);
+		void WillPresent (UIPresentationController presentationController, UIModalPresentationStyle style, [NullAllowed] IUIViewControllerTransitionCoordinator transitionCoordinator);
 
 		[iOS (13,0)]
 		[Export ("presentationControllerShouldDismiss:"),
@@ -16637,15 +16637,15 @@ namespace UIKit {
 	
 		[Async (ResultTypeName = "UIPrinterPickerCompletionResult")]
 		[Export ("presentAnimated:completionHandler:")]
-		bool Present (bool animated, UIPrinterPickerCompletionHandler completion);
+		bool Present (bool animated, [NullAllowed] UIPrinterPickerCompletionHandler completion);
 	
 		[Async (ResultTypeName = "UIPrinterPickerCompletionResult")]
 		[Export ("presentFromRect:inView:animated:completionHandler:")]
-		bool PresentFromRect (CGRect rect, UIView view, bool animated, UIPrinterPickerCompletionHandler completion);
+		bool PresentFromRect (CGRect rect, UIView view, bool animated, [NullAllowed] UIPrinterPickerCompletionHandler completion);
 	
 		[Async (ResultTypeName = "UIPrinterPickerCompletionResult")]
 		[Export ("presentFromBarButtonItem:animated:completionHandler:")]
-		bool PresentFromBarButtonItem (UIBarButtonItem item, bool animated, UIPrinterPickerCompletionHandler completion);
+		bool PresentFromBarButtonItem (UIBarButtonItem item, bool animated, [NullAllowed] UIPrinterPickerCompletionHandler completion);
 	
 		[Export ("dismissAnimated:")]
 		void Dismiss (bool animated);
@@ -16831,15 +16831,15 @@ namespace UIKit {
 
 		[Export ("presentAnimated:completionHandler:")]
 		[Async (ResultTypeName = "UIPrintInteractionResult")]
-		bool Present (bool animated, UIPrintInteractionCompletionHandler completion);
+		bool Present (bool animated, [NullAllowed] UIPrintInteractionCompletionHandler completion);
 
 		[Export ("presentFromBarButtonItem:animated:completionHandler:")]
 		[Async (ResultTypeName = "UIPrintInteractionResult")]
-		bool PresentFromBarButtonItem (UIBarButtonItem item, bool animated, UIPrintInteractionCompletionHandler completion);
+		bool PresentFromBarButtonItem (UIBarButtonItem item, bool animated, [NullAllowed] UIPrintInteractionCompletionHandler completion);
 
 		[Export ("presentFromRect:inView:animated:completionHandler:")]
 		[Async (ResultTypeName = "UIPrintInteractionResult")]
-		bool PresentFromRectInView (CGRect rect, UIView view, bool animated, UIPrintInteractionCompletionHandler completion);
+		bool PresentFromRectInView (CGRect rect, UIView view, bool animated, [NullAllowed] UIPrintInteractionCompletionHandler completion);
 
 		[iOS (7,0), Export ("showsNumberOfCopies")]
 		bool ShowsNumberOfCopies { get; set; }
