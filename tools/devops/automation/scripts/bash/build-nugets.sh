@@ -3,7 +3,7 @@
 # env var shuold have been defined by the CI
 cd $XAM_TOP
 
-DOTNET_NUPKG_DIR=$(make -C tools/devops jenkins print-abspath-variable VARIABLE=DOTNET_NUPKG_DIR | grep "^DOTNET_NUPKG_DIR=" | sed -e 's/^DOTNET_NUPKG_DIR=//')
+DOTNET_NUPKG_DIR=$(make -C tools/devops print-abspath-variable VARIABLE=DOTNET_NUPKG_DIR | grep "^DOTNET_NUPKG_DIR=" | sed -e 's/^DOTNET_NUPKG_DIR=//')
 
 mkdir -p ../package/
 rm -f ../package/*.nupkg
