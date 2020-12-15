@@ -38,7 +38,6 @@ namespace ObjCRuntime
 		WatchOS,
 		TvOS,
 		MacCatalyst,
-		UIKitForMac = MacCatalyst, // temporary
 	}
 
 	public enum AvailabilityKind

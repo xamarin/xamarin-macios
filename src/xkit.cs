@@ -936,7 +936,7 @@ namespace UIKit {
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Please use 'UsesDefaultHyphenation' or 'NSParagraphStyle.HyphenationFactor' instead.")]
 		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Please use 'UsesDefaultHyphenation' or 'NSParagraphStyle.HyphenationFactor' instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Please use 'UsesDefaultHyphenation' or 'NSParagraphStyle.HyphenationFactor' instead.")]
-		[Unavailable (PlatformName.UIKitForMac)]
+		[Unavailable (PlatformName.MacCatalyst)]
 		[Advice ("This API is not available when using UIKit on macOS.")]
 		[NoMacCatalyst]
 		[Export ("hyphenationFactor")]
@@ -1065,7 +1065,7 @@ namespace UIKit {
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use the overload that takes 'nint glyphCount' instead.")]
 		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use the overload that takes 'nint glyphCount' instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use the overload that takes 'nint glyphCount' instead.")]
-		[Unavailable (PlatformName.UIKitForMac)]
+		[Unavailable (PlatformName.MacCatalyst)]
 		[Advice ("This API is not available when using UIKit on macOS.")]
 		[Protected] // Can be overridden
 		[Export ("showCGGlyphs:positions:count:font:matrix:attributes:inContext:")]
