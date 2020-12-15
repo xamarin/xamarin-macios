@@ -3,7 +3,7 @@
 //
 
 
-#if __IOS__
+#if __MACOS__
 
 using System;
 using AppKit;
@@ -135,4 +135,5 @@ namespace MonoTouchFixtures.AppKit {
 	}
 }
 
-#endif // __IOS__
+#endif // __MACOS__
+
