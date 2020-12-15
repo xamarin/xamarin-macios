@@ -71,7 +71,6 @@ pr:
     include:
     - main
     - d16-*
-    - yaml-pipeline                                           # UNDONE: Enable triggering of YAML pipeline changes - remove prior to merging the YAML pipeline build to main
 
 stages:
 
