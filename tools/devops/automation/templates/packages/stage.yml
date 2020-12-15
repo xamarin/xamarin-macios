@@ -75,6 +75,7 @@ jobs:
     parameters:
       runTests: ${{ parameters.runTests }}
       runDeviceTests: ${{ parameters.runDeviceTests }}
+      vsdropsPrefix: ${{ parameters.vsdropsPrefix }} 
 
 - job: upload_azure_blob
   displayName: 'Upload packages to Azure'
