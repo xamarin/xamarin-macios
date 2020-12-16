@@ -15,7 +15,7 @@ steps:
   parameters:
     devicePrefix: ${{ parameters.devicePrefix }}
 
-# Upload full report to vsdrops using the the build numer and id as uudis.
+# Upload full report to vsdrops using the the build numer and id as uuids.
 - task: ms-vscs-artifact.build-tasks.artifactDropTask-1.artifactDropTask@0
   displayName: 'Publish to Artifact Services Drop'
   inputs:

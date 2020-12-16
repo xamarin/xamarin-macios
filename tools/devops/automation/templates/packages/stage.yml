@@ -80,7 +80,7 @@ jobs:
 - job: upload_azure_blob
   displayName: 'Upload packages to Azure'
   timeoutInMinutes: 1000
-  dependsOn: build # can start as soon as the tests are done
+  dependsOn: build # can start as soon as the packages are available
   condition: and(succeeded(), eq (dependencies.build.outputs['configuration.BuildPkgs'], 'True')) # only run when we do have pkgs
 
   variables:

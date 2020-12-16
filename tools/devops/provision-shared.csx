@@ -63,7 +63,7 @@ bool IsAtLeastVersion(string actualVer, string minVer)
     var actualVerChars = actualVer.ToCharArray();
     var minVerChars = minVer.ToCharArray();
 
-    var length = actualVerChars.Length > minVerChars.Length ? minVerChars.Length : actualVerChars.Length;
+    var length = Math.Min (minVerChars.Length, actualVerChars.Length);
 
     var i = 0;
     while (i < length)
@@ -84,13 +84,5 @@ bool IsAtLeastVersion(string actualVer, string minVer)
         return true;
     }
 
-    if (actualVerChars.Length > minVerChars.Length )
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    return actualVerChars.Length > minVerChars.Length;
 }
-
