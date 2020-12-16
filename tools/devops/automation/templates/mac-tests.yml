@@ -1,5 +1,4 @@
 parameters:
-# name of the pool that contains the iOS devices
 - name: macPool
   type: string
 
