@@ -27,8 +27,7 @@ var xcode_path = Path.GetDirectoryName (Path.GetDirectoryName (FindVariable ("XC
 if (!Directory.Exists (xcode_path)) {
 	// Provision
 	var root = Path.GetDirectoryName (Path.GetDirectoryName (FindVariable ("XCODE_DEVELOPER_ROOT")));
-	// HACK var url = FindVariable ("XCODE_URL");
-	var url = "https://netcorenativeassets.blob.core.windows.net/resource-packages/external/macos/xcode/Xcode_12.1_GM_seed.xip";
+	var url = FindVariable ("XCODE_URL");
 	Console.WriteLine ($"Could not find an already installed Xcode in {root}, will download and install from {url}.");
 	var xcode_provisionator_name = Path.GetFileNameWithoutExtension (url).Substring (6); // Strip off 'Xcode_' from the start of the filename
 	Xcode (xcode_provisionator_name)
