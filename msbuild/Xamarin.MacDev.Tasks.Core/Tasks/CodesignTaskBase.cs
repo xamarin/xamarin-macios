@@ -139,7 +139,13 @@ namespace Xamarin.MacDev.Tasks
 			if (!string.IsNullOrEmpty (ExtraArgs))
 				args.Add (ExtraArgs);
 
-			args.Add (Path.GetFullPath (item.ItemSpec));
+			// signing a framework and a file inside a framework is not *always* identical
+			var path = item.ItemSpec;
+			var parent = Path.GetDirectoryName (path);
+			// so do not don't sign `A.framework/A`, sign `A.framework` which will always sign the *bundle*
+			if ((Path.GetExtension (parent) == ".framework") && (Path.GetFileName (path) == Path.GetFileNameWithoutExtension (parent)))
+				path = parent;
+			args.Add (Path.GetFullPath (path));
 
 			return args;
 		}
@@ -229,11 +235,6 @@ namespace Xamarin.MacDev.Tasks
 				}
 			} else if (File.Exists (item.ItemSpec)) {
 				codesignedFiles.Add (item);
-
-				var dirName = Path.GetDirectoryName (item.ItemSpec);
-
-				if (Path.GetExtension (dirName) == ".framework")
-					codesignedFiles.AddRange (Directory.EnumerateFiles (Path.Combine (dirName, CodeSignatureDirName)).Select (x => new TaskItem (x)));
 			}
 
 			return codesignedFiles;
