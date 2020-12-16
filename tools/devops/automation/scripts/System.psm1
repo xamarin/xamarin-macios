@@ -178,54 +178,6 @@ function Clear-XamarinProcesses {
 
 <#
     .SYNOPSIS
-        Remove known paths and directories that are not needed for the tests.
-#>
-function Clear-HD {
-
-    # Delete all the simulator devices. Rolf: These can take up a lot of space over time (I've seen 100+GB on the bots)
-    Remove-InstalledSimulators 
-
-    # print the current state of the HD
-    Get-PSDrive "/" | Format-Table -Wrap
-
-    # common dirs to delete
-    $directories = @(
-        "~/.android",
-        "~/.Trash/*",
-        "~/.nuget",
-        "~/.local/share/NuGet",
-        "~/Downloads/*",
-        "~/Library/Developer/*",
-        "~/Library/Caches/*",
-        "/Library/Frameworks/Xamarin.Android.framework/Versions",
-        "/Library/Developer/CoreSimulator/Profiles/Runtimes",
-        "/Applications/Xcode10*.app",
-        "/Applications/Xcode_10*.app",
-        "/Applications/Xcode11-GM.app",
-        "/Applications/Xcode11-GM2.app",
-        "/Applications/Xcode11.app",
-        "/Applications/Xcode111.app",
-        "/Applications/Visual Studio (Preview).app"
-    )
-
-    foreach ($dir in $directories) {
-        Write-Debug "Removing $dir"
-        try {
-            if (Test-Path -Path $dir) {
-                Remove-Item –Path $dir -Recurse -ErrorAction SilentlyContinue -Force
-            } else {
-                Write-Debug "Path not found '$dir'"
-            }
-        } catch {
-            Write-Debug "Could not remove dir $dir - $_"
-        }
-    }
-
-    Get-PSDrive "/" | Format-Table -Wrap
-}
-
-<#
-    .SYNOPSIS
        Clear all possible leftovers after the tests. 
 #>
 function Clear-AfterTests {
@@ -274,7 +226,6 @@ function Test-HDFreeSpace {
 # module exports, any other functions are private and should not be used outside the module
 Export-ModuleMember -Function Get-SystemInfo
 Export-ModuleMember -Function Clear-XamarinProcesses 
-Export-ModuleMember -Function Clear-HD
 Export-ModuleMember -Function Test-HDFreeSpace
 Export-ModuleMember -Function Clear-AfterTests
 Export-ModuleMember -Function Remove-InstalledSimulators 

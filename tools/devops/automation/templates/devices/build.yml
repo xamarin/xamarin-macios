@@ -45,6 +45,9 @@ steps:
 
 - bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/clean-bot.sh
   displayName: 'Clean bot'
+  env:
+    BUILD_REVISION: 'jenkins'
+  continueOnError: true
 
 - bash: |
     security set-key-partition-list -S apple-tool:,apple: -s -k $KEYCHAIN_PASS login.keychain
@@ -64,16 +67,6 @@ steps:
 - pwsh : |
     gci env: | format-table -autosize -wrap
   displayName: 'Dump Environment'
-
-# Uses the powershell cmdlet to remove known directories that are not needed and use space.
-# we might hit issue https://github.com/PowerShell/PowerShell/issues/9246, so we always do exit 0
-- pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/System.psm1
-    Clear-HD 
-    exit 0  
-  displayName: 'Disk cleanup'
-  timeoutInMinutes: 5
-  continueOnError: true
 
 # Use a cmdlet to check if the space available in the devices root system is larger than 50 gb. If there is not
 # enough space available it:

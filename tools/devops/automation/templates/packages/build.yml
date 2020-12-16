@@ -33,6 +33,7 @@ steps:
   displayName: 'Clean bot'
   env:
     BUILD_REVISION: 'jenkins'
+  continueOnError: true
 
 - bash: |
     security set-key-partition-list -S apple-tool:,apple: -s -k $OSX_KEYCHAIN_PASS login.keychain
