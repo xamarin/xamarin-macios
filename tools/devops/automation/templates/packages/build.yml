@@ -392,8 +392,6 @@ steps:
       cat "$(Build.SourcesDirectory)/xamarin-macios//jenkins/pr-comments.md"
       exit 1
     fi
-    
-    exit $RC
   displayName: 'Run tests'
   name: runTests # not to be confused with the displayName, this is used to later use the name of the step to access the output variables from an other job
   timeoutInMinutes: 600
