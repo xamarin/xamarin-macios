@@ -376,6 +376,8 @@ steps:
   continueOnError: true
 
 - bash: |
+    set -x
+    set -e
     echo "Running tests on $AGENT_NAME"
     echo "##vso[task.setvariable variable=TESTS_BOT;isOutput=true]$AGENT_NAME"
 
