@@ -524,34 +524,61 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</Touch>
 	</Target>
 
-	<Target Name="_GenerateFrameworkDebugSymbols" Condition="'$(ComputedPlatform)' == 'iPhone' And '$(IsWatchApp)' == 'false'" DependsOnTargets="_CompileToNative;_ParseBundlerArguments;_CollectFrameworks"
+	<Target Name="_CopyUserFrameworkDebugSymbols" Condition="'$(ComputedPlatform)' == 'iPhone' And '$(IsWatchApp)' == 'false'" DependsOnTargets="_CompileToNative;_ParseBundlerArguments;"
+		Inputs="%(_FrameworkNativeReference.Name)"
+		Outputs="$(AppBundleDir)\..\%(_FrameworkNativeReference.Filename).framework.dSYM\Contents\Info.plist"
+		>
+
+		<PropertyGroup>
+			<_Source>%(_FrameworkNativeReference.Name)\..\dSYMs\%(_FrameworkNativeReference.Filename).framework.dSYM\</_Source>
+			<_Destination>$(AppBundleDir)\..\%(_FrameworkNativeReference.Filename).framework.dSYM</_Destination>
+		</PropertyGroup>
+
+		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(_Destination)" />
+
+		<!-- if available copy the provided user frameworks .dSYM -->
+		<Ditto
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true' And Exists ('$(_Source)')"
+			Source="$(_Source)"
+			Destination="$(_Destination)"
+		>
+		</Ditto>
+	</Target>
+
+	<Target Name="_GenerateFrameworkDebugSymbols" Condition="'$(ComputedPlatform)' == 'iPhone' And '$(IsWatchApp)' == 'false'" DependsOnTargets="_CopyUserFrameworkDebugSymbols;_CollectFrameworks"
 		Inputs="%(_Frameworks.Identity)"
 		Outputs="$(AppBundleDir)\..\%(_Frameworks.Filename).framework.dSYM\Contents\Info.plist"
 		>
 
-		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(AppBundleDir)\..\%(_Frameworks.Filename).framework.dSYM" />
+		<PropertyGroup>
+			<_Destination>$(AppBundleDir)\..\%(_Frameworks.Filename).framework.dSYM</_Destination>
+		</PropertyGroup>
 
-		<!-- run dsymutil on embedded frameworks -->
-		<DSymUtil
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '$(_NoDSymUtil)' == 'false'"
-			AppBundleDir="$(AppBundleDir)"
-			Architectures=""
-			DSymDir="$(AppBundleDir)\..\%(_Frameworks.Filename).framework.dSYM"
-			Executable="%(_Frameworks.Identity)"
-			ToolExe="$(DSymUtilExe)"
-			ToolPath="$(DSymUtilPath)">
-		</DSymUtil>
+		<!-- if the user framework does not provide it's own dSYM then we try to build one -->
+		<ItemGroup Condition="'$(IsMacEnabled)' == 'true' And !Exists (_Destination)">
+			<!-- run dsymutil on embedded frameworks -->
+			<DSymUtil
+				SessionId="$(BuildSessionId)"
+				Condition="'$(_NoDSymUtil)' == 'false'"
+				AppBundleDir="$(AppBundleDir)"
+				Architectures=""
+				DSymDir="$(_Destination)"
+				Executable="%(_Frameworks.Identity)"
+				ToolExe="$(DSymUtilExe)"
+				ToolPath="$(DSymUtilPath)">
+			</DSymUtil>
 
-		<!-- strip embedded frameworks -->
-		<SymbolStrip
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '$(_NoSymbolStrip)' == 'false'"
-			Executable="%(_Frameworks.Identity)"
-			IsFramework="true"
-			SymbolFile=""
-		>
-		</SymbolStrip>
+			<!-- strip embedded frameworks -->
+			<SymbolStrip
+				SessionId="$(BuildSessionId)"
+				Condition="'$(_NoSymbolStrip)' == 'false'"
+				Executable="%(_Frameworks.Identity)"
+				IsFramework="true"
+				SymbolFile=""
+			>
+			</SymbolStrip>
+		</ItemGroup>
 
 		<!-- _GenerateDebugSymbols will run spotlight to index the dSYMs -->
 	</Target>
