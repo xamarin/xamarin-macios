@@ -50,10 +50,10 @@ steps:
       Write-Host "  isPullRequest: ${isPullRequest}"
 
       if ($isTopicBranch -or $isPullRequest) {
-        $agentPool = $agentPoolPR      # Untrusted on-prem iOS pool used for PRs targeting main and d16-x release branches
+        $agentPool = $agentPoolPR      # Untrusted on-prem iOS pool used for all PRs (including those from forks) and feature/topic branch commits not targeting main or d16-x branches
         $agentPoolUrl = $agentPoolPRUrl
       } else {
-        $agentPool = $agentPoolCI      # Trusted on-prem iOS pool used for CIs and release branches
+        $agentPool = $agentPoolCI      # Trusted on-prem iOS pool used for CIs targeting main and d16-x release branches
         $agentPoolUrl = $agentPoolCIUrl
       }
 
