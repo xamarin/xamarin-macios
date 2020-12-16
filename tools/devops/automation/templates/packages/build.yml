@@ -76,21 +76,11 @@ steps:
     provisioning_extra_args: '-vvvv'
   timeoutInMinutes: 30
 
-- powershell: |
-    if ([IO.Directory]::Exists('/Developer/MonoTouch')) {
-      Write-Host "Deleting /Developer/MonoTouch"
-      bash -c "sudo rm -Rf /Developer/MonoTouch"
-    }
-
-    if ([IO.Directory]::Exists('/Library/Frameworks/Xamarin.iOS.framework')) {
-      Write-Host "Deleting /Library/Frameworks/Xamarin.iOS.framework"
-      bash -c "sudo rm -Rf /Library/Frameworks/Xamarin.iOS.framework"
-    }
-
-    if ([IO.Directory]::Exists('/Library/Frameworks/Xamarin.Mac.framework')) {
-      Write-Host "Deleting /Library/Frameworks/Xamarin.Mac.framework"
-      bash -c "sudo rm -Rf /Library/Frameworks/Xamarin.Mac.framework"
-    }
+- bash: |
+    set -x
+    sudo rm -Rf /Developer/MonoTouch
+    sudo rm -Rf /Library/Frameworks/Xamarin.iOS.framework
+    sudo rm -Rf /Library/Frameworks/Xamarin.Mac.framework
   displayName: 'Delete library folders'
   timeoutInMinutes: 5
 
@@ -387,6 +377,8 @@ steps:
   continueOnError: true
 
 - bash: |
+    set -x
+    set -e
     echo "Running tests on $AGENT_NAME"
     echo "##vso[task.setvariable variable=TESTS_BOT;isOutput=true]$AGENT_NAME"
 
@@ -407,6 +399,8 @@ steps:
       cat "$(Build.SourcesDirectory)/xamarin-macios//jenkins/pr-comments.md"
       exit 1
     fi
+    
+    exit $RC
   displayName: 'Run tests'
   name: runTests # not to be confused with the displayName, this is used to later use the name of the step to access the output variables from an other job
   timeoutInMinutes: 600
