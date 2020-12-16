@@ -75,21 +75,11 @@ steps:
     provisioning_extra_args: '-vvvv'
   timeoutInMinutes: 30
 
-- powershell: |
-    if ([IO.Directory]::Exists('/Developer/MonoTouch')) {
-      Write-Host "Deleting /Developer/MonoTouch"
-      bash -c "sudo rm -Rf /Developer/MonoTouch"
-    }
-
-    if ([IO.Directory]::Exists('/Library/Frameworks/Xamarin.iOS.framework')) {
-      Write-Host "Deleting /Library/Frameworks/Xamarin.iOS.framework"
-      bash -c "sudo rm -Rf /Library/Frameworks/Xamarin.iOS.framework"
-    }
-
-    if ([IO.Directory]::Exists('/Library/Frameworks/Xamarin.Mac.framework')) {
-      Write-Host "Deleting /Library/Frameworks/Xamarin.Mac.framework"
-      bash -c "sudo rm -Rf /Library/Frameworks/Xamarin.Mac.framework"
-    }
+- bash: |
+    set -x
+    sudo rm -Rf /Developer/MonoTouch
+    sudo rm -Rf /Library/Frameworks/Xamarin.iOS.framework
+    sudo rm -Rf /Library/Frameworks/Xamarin.Mac.framework
   displayName: 'Delete library folders'
   timeoutInMinutes: 5
 
