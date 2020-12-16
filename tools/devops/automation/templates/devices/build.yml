@@ -101,12 +101,6 @@ steps:
     set -e
     cd xamarin-macios
     ./configure --enable-xamarin
-    if [[ $? = 0 ]]; then
-      echo "Xamarin private packages configured."
-    else
-      echo "Xamarin packages configuration failed."
-      echo "Configuration exit code $?"
-    fi
   displayName: 'Enable Xamarin'
   timeoutInMinutes: 1
 
