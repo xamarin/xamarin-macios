@@ -69,13 +69,6 @@ steps:
     provisioning_extra_args: '-vvvv'
   timeoutInMinutes: 250
 
-- task: xamops.azdevex.provisionator-task.provisionator@1
-  displayName: 'Provision .NET Core'
-  inputs:
-    provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/provision-dotnetcore.csx
-    provisioning_extra_args: '-vvvv'
-  timeoutInMinutes: 30
-
 - bash: |
     set -x
     sudo rm -Rf /Developer/MonoTouch
