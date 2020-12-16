@@ -48,8 +48,8 @@
 #   line changed in git).
 #
 
-IOS_PACKAGE_VERSION=14.9.0.$(IOS_COMMIT_DISTANCE)
-MAC_PACKAGE_VERSION=7.3.0.$(MAC_COMMIT_DISTANCE)
+IOS_PACKAGE_VERSION=14.9.1.$(IOS_COMMIT_DISTANCE)
+MAC_PACKAGE_VERSION=7.3.1.$(MAC_COMMIT_DISTANCE)
 
 #
 # ** NuGet package version numbers **
@@ -66,8 +66,7 @@ MAC_PACKAGE_VERSION=7.3.0.$(MAC_COMMIT_DISTANCE)
 # WARNING: Do **not** use versions higher than the available Xcode SDK or else we will have issues with mtouch (See https://github.com/xamarin/xamarin-macios/issues/7705)
 # When bumping the major macOS version in MACOS_NUGET_VERSION also update the macOS version where we execute on bots in jenkins/Jenkinsfile (in the 'node' element)
 
-IOS_NUGET_VERSION=14.2.100
-TVOS_NUGET_VERSION=14.2.100
-WATCHOS_NUGET_VERSION=7.1.100
-MACOS_NUGET_VERSION=11.0.100
-MACCATALYST_NUGET_VERSION=14.2.100
+IOS_NUGET_VERSION=14.3.100
+TVOS_NUGET_VERSION=14.3.100
+WATCHOS_NUGET_VERSION=7.2.100
+MACOS_NUGET_VERSION=11.1.100
