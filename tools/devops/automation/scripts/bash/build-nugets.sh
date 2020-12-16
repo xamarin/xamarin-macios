@@ -1,6 +1,11 @@
 #!/bin/bash -ex
 
 # env var should have been defined by the CI
+if test -z "$XAM_TOP"; then
+    echo "Variable XAM_TOP is missing."
+    exit 1
+fi
+
 cd $XAM_TOP
 
 DOTNET_NUPKG_DIR=$(make -C tools/devops print-abspath-variable VARIABLE=DOTNET_NUPKG_DIR | grep "^DOTNET_NUPKG_DIR=" | sed -e 's/^DOTNET_NUPKG_DIR=//')
