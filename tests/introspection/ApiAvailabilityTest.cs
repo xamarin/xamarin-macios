@@ -52,7 +52,7 @@ namespace Introspection {
 			Minimum = new Version (10,9);
 			// Need to special case macOS 'Maximum' version for OS minor subversions (can't change Constants.SdkVersion)
 			// Please comment the code below if needed
-			Maximum = new Version (11,0,0);
+			Maximum = new Version (11,1,0);
 #endif
 			Filter = (AvailabilityBaseAttribute arg) => {
 				return (arg.AvailabilityKind != AvailabilityKind.Introduced) || (arg.Platform != Platform);

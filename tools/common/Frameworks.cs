@@ -258,6 +258,8 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "ScreenTime", "ScreenTime", 11,0 },
 					{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 11,0 },
 					{ "UserNotificationsUI", "UserNotificationsUI", 11,0 },
+
+					{ "AdServices", "AdServices", 11,1 },
 				};
 			}
 			return mac_frameworks;
@@ -413,6 +415,8 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "ScreenTime", "ScreenTime", 14,0 },
 				{ "SensorKit", "SensorKit", 14,0 },
 				{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 14,0 },
+
+				{ "AdServices", "AdServices", 14,3 },
 
 				// the above MUST be kept in sync with simlauncher
 				// see tools/mtouch/Makefile
