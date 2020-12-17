@@ -948,7 +948,8 @@ namespace Xamarin.Bundler {
 						throw ErrorHelper.CreateError (65, Errors.MT0065_A, DeploymentTarget, string.Join (", ", Frameworks.ToArray ()));
 					break;
 				case ApplePlatform.TVOS:
-					// All versions of tvOS support extensions
+				case ApplePlatform.MacCatalyst:
+					// All versions of tvOS and Mac Catalyst support extensions
 					break;
 				default:
 					throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, "Xamarin.iOS");
@@ -1202,7 +1203,7 @@ namespace Xamarin.Bundler {
 				BundleFileInfo info;
 				if (!Path.GetFileName (fw).EndsWith (".framework", StringComparison.Ordinal))
 					continue;
-				var key = $"Frameworks/{Path.GetFileName (fw)}";
+				var key = Path.GetFileName (fw);
 				if (!bundle_files.TryGetValue (key, out info))
 					bundle_files [key] = info = new BundleFileInfo ();
 				info.Sources.Add (fw);
@@ -1230,7 +1231,6 @@ namespace Xamarin.Bundler {
 			foreach (var kvp in bundle_files) {
 				var name = kvp.Key;
 				var info = kvp.Value;
-				var targetPath = Path.Combine (ContentDirectory, name);
 				var files = info.Sources;
 				var isFramework = Directory.Exists (files.First ());
 
@@ -1241,6 +1241,7 @@ namespace Xamarin.Bundler {
 					throw ErrorHelper.CreateError (99, Errors.MX0099, $"'can't process a mix of dylibs and frameworks: {string.Join(", ", files)}'");
 
 				if (isFramework) {
+					var targetPath = Path.Combine (FrameworksDirectory, name);
 					// This is a framework
 					if (files.Count > 1) {
 						// If we have multiple frameworks, check if they're identical, and remove any duplicates
@@ -1290,6 +1291,7 @@ namespace Xamarin.Bundler {
 						}
 					}
 				} else {
+					var targetPath = Path.Combine (ContentDirectory, name);
 					var targetDirectory = Path.GetDirectoryName (targetPath);
 					if (!IsUptodate (files, new string [] { targetPath })) {
 						Directory.CreateDirectory (targetDirectory);
