@@ -728,8 +728,8 @@ namespace UIKit {
 		Unknown            = UIDeviceOrientation.Unknown,
 		Portrait           = UIDeviceOrientation.Portrait,
 		PortraitUpsideDown = UIDeviceOrientation.PortraitUpsideDown,
-		LandscapeLeft      = UIDeviceOrientation.LandscapeRight,
-		LandscapeRight     = UIDeviceOrientation.LandscapeLeft
+		LandscapeLeft      = UIDeviceOrientation.LandscapeLeft,
+		LandscapeRight     = UIDeviceOrientation.LandscapeRight
 	}
 
 	// NSUInteger -> UIApplication.h
