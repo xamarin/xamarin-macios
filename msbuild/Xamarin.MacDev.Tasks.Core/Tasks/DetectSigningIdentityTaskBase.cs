@@ -458,10 +458,24 @@ namespace Xamarin.MacDev.Tasks
 				return false;
 			}
 
-			if (Platform == ApplePlatform.MacOSX || Platform == ApplePlatform.MacCatalyst) {
+			if (Platform == ApplePlatform.MacOSX) {
 				if (!RequireCodeSigning || !string.IsNullOrEmpty (DetectedCodeSigningKey)) {
 					DetectedBundleId = identity.BundleId;
 					DetectedAppId = DetectedBundleId;
+
+					ReportDetectedCodesignInfo ();
+
+					return !Log.HasLoggedErrors;
+				}
+			} else if (Platform == ApplePlatform.MacCatalyst) {
+				var doesNotNeedCodeSigningCertificate = !RequireCodeSigning || !string.IsNullOrEmpty (DetectedCodeSigningKey);
+				if (RequireProvisioningProfile)
+					doesNotNeedCodeSigningCertificate = false;
+				if (doesNotNeedCodeSigningCertificate) {
+					DetectedBundleId = identity.BundleId;
+					DetectedAppId = DetectedBundleId;
+
+					DetectedCodeSigningKey = "-";
 
 					ReportDetectedCodesignInfo ();
 
