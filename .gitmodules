@@ -1,7 +1,11 @@
+[submodule "external/ikvm-fork"]
+    path = external/ikvm-fork
+    url = ../../mono/ikvm-fork
+    branch = master
 [submodule "external/macios-binaries"]
     path = external/macios-binaries
     url = ../../xamarin/macios-binaries
-    branch = main
+    branch = d16-9
 [submodule "external/opentk"]
     path = external/opentk
     url = ../../mono/opentk.git
@@ -13,8 +17,4 @@
 [submodule "external/Xamarin.MacDev"]
     path = external/Xamarin.MacDev
     url = ../../xamarin/Xamarin.MacDev
-    branch = main
-[submodule "external/ikvm-fork"]
-    path = external/ikvm-fork
-    url = ../../mono/ikvm-fork
-    branch = master
+    branch = d16-9
