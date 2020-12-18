@@ -1192,4 +1192,8 @@
     <data name="InvalidFramework" xml:space="preserve">
         <value>Invalid framework: {0}</value>
     </data>
+    
+    <data name="InvalidPlatform" xml:space="preserve">
+        <value>Invalid platform: {0}</value>
+    </data>
 </root>

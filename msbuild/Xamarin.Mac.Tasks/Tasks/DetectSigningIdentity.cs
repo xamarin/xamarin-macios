@@ -6,9 +6,11 @@
 //
 // Copyright 2014 Xamarin Inc.
 
+using Xamarin.MacDev.Tasks;
+
 namespace Xamarin.Mac.Tasks
 {
-	public class DetectSigningIdentity : DetectSigningIdentityTaskCore
+	public class DetectSigningIdentity : DetectSigningIdentityTaskBase
 	{
 	}
 }
