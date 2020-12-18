@@ -789,6 +789,8 @@ namespace Xamarin.Bundler {
 				var name = Path.GetFileNameWithoutExtension (reference);
 				if (name == Driver.GetProductAssembly (this)) {
 					platformAssemblyReference = true;
+				} else if (Platform == ApplePlatform.MacCatalyst && name == "Xamarin.iOS") {
+					// This is allowed, because it's a facade
 				} else {
 					switch (name) {
 					case "Xamarin.iOS":
