@@ -19,7 +19,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 	<PropertyGroup>
 		<!-- Naming convention that relies on the fact that there will be a Microsoft.Windows.iOS.Sdk pack with the same version that the core SDK, on Windows installations only -->
-		<WindowsiOSSdkDirectory>$(MSBuildThisFileDirectory.Replace('Microsoft.iOS.Sdk', 'Microsoft.Windows.iOS.Sdk'))</WindowsiOSSdkDirectory>
+		<WindowsiOSSdkDirectory>$(MSBuildThisFileDirectory.Replace('Microsoft.iOS.Sdk', 'Microsoft.iOS.Windows.Sdk'))</WindowsiOSSdkDirectory>
 	</PropertyGroup>
 
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets" 
