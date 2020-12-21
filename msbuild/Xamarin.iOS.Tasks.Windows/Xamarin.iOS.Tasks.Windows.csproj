@@ -5,8 +5,8 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Xamarin.Messaging.Build.Client" Version="1.2.93" />
-    <PackageReference Include="Xamarin.Messaging.Server" Version="1.2.93" />
+    <PackageReference Include="Xamarin.Messaging.Build.Client" Version="$(MessagingVersion)" />
+    <PackageReference Include="Xamarin.Messaging.Server" Version="$(MessagingVersion)" />
   </ItemGroup>
   <ItemGroup>
     <AgentReference Include="..\Messaging\Xamarin.Messaging.Build\Xamarin.Messaging.Build.csproj" />
