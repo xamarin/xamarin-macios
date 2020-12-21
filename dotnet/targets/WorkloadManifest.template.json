@@ -5,6 +5,7 @@
 			"description": "Microsoft @PLATFORM@ SDK",
 			"packs": [
 				"Microsoft.@PLATFORM@.Sdk",
+				"Microsoft.@PLATFORM@.Windows.Sdk",
 				"Microsoft.@PLATFORM@.Ref",
 			]
 		}
