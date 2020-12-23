@@ -17,6 +17,12 @@ namespace ObjCRuntime {
 		}
 
 		[DoesNotReturn]
+		public static void ThrowArgumentException (string argumentName, string message)
+		{
+			throw new ArgumentException (message, argumentName);
+		}
+
+		[DoesNotReturn]
 		public static void ThrowArgumentNullException (string argumentName)
 		{
 			throw new ArgumentNullException (argumentName);

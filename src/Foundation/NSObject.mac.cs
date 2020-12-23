@@ -42,7 +42,6 @@ namespace Foundation {
 		// note: the linker will remove the unrequired `dlopen` calls
 		// Used to force the loading of AppKit and Foundation
 		// ** DO NOT rename the fields as mmp's linker can remove them when not required **
-		// ** IF YOU ADD ITEMS HERE PLEASE UPDATE linker/ObjCExtensions.cs and mmp/linker/MonoMac.Tuner/MonoMacNamespaces.cs
 		static IntPtr fl = Dlfcn.dlopen (Constants.FoundationLibrary, 1);
 		static IntPtr al = Dlfcn.dlopen (Constants.AppKitLibrary, 1);
 		static IntPtr ab = Dlfcn.dlopen (Constants.AddressBookLibrary, 1);
@@ -109,7 +108,6 @@ namespace Foundation {
 		static IntPtr vs = Dlfcn.dlopen (Constants.VideoSubscriberAccountLibrary, 1);
 		static IntPtr un = Dlfcn.dlopen (Constants.UserNotificationsLibrary, 1);
 		static IntPtr il  = Dlfcn.dlopen (Constants.iTunesLibraryLibrary, 1);
-		// ** IF YOU ADD ITEMS HERE PLEASE UPDATE linker/ObjCExtensions.cs and mmp/linker/MonoMac.Tuner/MonoMacNamespaces.cs
 
 #if !XAMCORE_4_0
 		[Obsolete ("Use PlatformAssembly for easier code sharing across platforms.")]

@@ -205,6 +205,7 @@ namespace SpriteKit {
 		SKNodeFocusBehavior FocusBehavior { get; set; }
 
 		[Export ("parent")]
+		[NullAllowed]
 		SKNode Parent { get; }
 
 		[Export ("children")]
@@ -215,6 +216,7 @@ namespace SpriteKit {
 		string Name { get; set; }
 
 		[Export ("scene")]
+		[NullAllowed]
 		SKScene Scene { get; }
 
 		[Export ("physicsBody", ArgumentSemantic.Retain), NullAllowed]
@@ -247,6 +249,7 @@ namespace SpriteKit {
 		void RemoveFromParent ();
 
 		[Export ("childNodeWithName:")]
+		[return: NullAllowed]
 		SKNode GetChildNode (string name);
 
 		[Export ("enumerateChildNodesWithName:usingBlock:")]
@@ -266,6 +269,7 @@ namespace SpriteKit {
 		bool HasActions { get; }
 
 		[Export ("actionForKey:")]
+		[return: NullAllowed]
 		SKAction GetActionForKey (string key);
 
 		[Export ("removeActionForKey:")]
@@ -449,6 +453,7 @@ namespace SpriteKit {
 	[BaseType (typeof (SKNode))]
 	interface SKFieldNode {
 		[Export ("region", ArgumentSemantic.Retain)]
+		[NullAllowed]
 		SKRegion Region { get; set; }
 
 		[Export ("strength")]
@@ -484,6 +489,7 @@ namespace SpriteKit {
 		float AnimationSpeed { get; set; } /* float, not CGFloat */
 
 		[Export ("texture", ArgumentSemantic.Retain)]
+		[NullAllowed]
 		SKTexture Texture { get; set; }
 
 		[Static, Export ("dragField")]
@@ -570,6 +576,7 @@ namespace SpriteKit {
 
 		[NoWatch]
 		[Export ("view", ArgumentSemantic.Weak)]
+		[NullAllowed]
 		SKView View { get; }
 
 		[Export ("update:")]
@@ -679,6 +686,7 @@ namespace SpriteKit {
 		void AddUniform (SKUniform uniform);
 
 		[Export ("uniformNamed:")]
+		[return: NullAllowed]
 		SKUniform GetUniform (string uniformName);
 
 		[Export ("removeUniformNamed:")]
@@ -705,11 +713,11 @@ namespace SpriteKit {
 		SKSpriteNode FromImageNamed (string name);
 
 		[Static, Export ("spriteNodeWithColor:size:")]
-		SKSpriteNode FromColor ([NullAllowed] UIColor color, CGSize size);
+		SKSpriteNode FromColor (UIColor color, CGSize size);
 
 		[DesignatedInitializer]
 		[Export ("initWithTexture:color:size:")]
-		IntPtr Constructor ([NullAllowed] SKTexture texture, [NullAllowed] UIColor color, CGSize size);
+		IntPtr Constructor ([NullAllowed] SKTexture texture, UIColor color, CGSize size);
 
 		[Export ("initWithTexture:")]
 		IntPtr Constructor ([NullAllowed] SKTexture texture);
@@ -719,7 +727,7 @@ namespace SpriteKit {
 		IntPtr Constructor (string name);
 
 		[Export ("initWithColor:size:")]
-		IntPtr Constructor ([NullAllowed] UIColor color, CGSize size);
+		IntPtr Constructor (UIColor color, CGSize size);
 
 		[Export ("texture", ArgumentSemantic.Retain)]
 		[NullAllowed]
@@ -732,7 +740,7 @@ namespace SpriteKit {
 		nfloat ColorBlendFactor { get; set; }
 
 		[Export ("color", ArgumentSemantic.Retain)]
-		[NullAllowed]
+		[NullAllowed] // it's actually null-resetable (see unit tests)
 		UIColor Color { get; set; }
 
 		[Export ("blendMode")]
@@ -839,6 +847,7 @@ namespace SpriteKit {
 		nfloat GetKeyframeTime (nuint index);
 
 		[Export ("sampleAtTime:")]
+		[return: NullAllowed]
 		NSObject SampleAtTime (nfloat time);
 
 		[Export ("interpolationMode")]
@@ -1199,6 +1208,7 @@ namespace SpriteKit {
 		IntPtr Constructor (CGPath path);
 
 		[Export ("path")]
+		[NullAllowed]
 		CGPath Path { get; }
 
 		[Static, Export ("infiniteRegion")]
@@ -1260,6 +1270,7 @@ namespace SpriteKit {
 		nfloat PreferredMaxLayoutWidth { get; set; }
 
 		[Export ("fontName", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		string FontName { get; set; }
 
 		[Export ("text", ArgumentSemantic.Copy)]
@@ -1274,6 +1285,7 @@ namespace SpriteKit {
 		nfloat FontSize { get; set; }
 
 		[Export ("fontColor", ArgumentSemantic.Retain)]
+		[NullAllowed]
 		UIColor FontColor { get; set; }
 
 		[Export ("colorBlendFactor")]
@@ -1477,9 +1489,11 @@ namespace SpriteKit {
 		void PresentScene (SKScene scene, SKTransition transition);
 
 		[Export ("scene")]
+		[NullAllowed]
 		SKScene Scene { get; }
 
 		[Export ("textureFromNode:")]
+		[return: NullAllowed]
 		SKTexture TextureFromNode (SKNode node);
 
 		[Export ("convertPoint:toScene:")]
@@ -1512,6 +1526,7 @@ namespace SpriteKit {
 
 		[iOS (8,0), Mac (10,10)]
 		[Export ("textureFromNode:crop:")]
+		[return: NullAllowed]
 		SKTexture TextureFromNode (SKNode node, CGRect crop);
 
 		[iOS (10,0)][Mac (10,12)]
@@ -1724,7 +1739,7 @@ namespace SpriteKit {
 		[Export ("preloadTextureAtlases:withCompletionHandler:")]
 		[Async]
 		// Unfortunate name, should have been PreloadTextureAtlases
-		void PreloadTextures (SKTextureAtlas [] textures, [NullAllowed] Action completion);
+		void PreloadTextures (SKTextureAtlas [] textures, Action completion);
 
 		[iOS (9,0), Mac(10,11)]
 		[Static]
@@ -1734,7 +1749,7 @@ namespace SpriteKit {
 
 		[Export ("preloadWithCompletionHandler:")]
 		[Async]
-		void Preload ([NullAllowed] Action completion);
+		void Preload (Action completion);
 
 		[iOS (8,0), Mac (10,10)]
 		[Static, Export ("atlasWithDictionary:")]
@@ -1751,7 +1766,7 @@ namespace SpriteKit {
 		IntPtr Constructor (string name);
 
 		[Export ("initWithName:texture:")]
-		IntPtr Constructor (string name, SKTexture texture);
+		IntPtr Constructor (string name, [NullAllowed] SKTexture texture);
 
 		[Export ("initWithName:float:")]
 		IntPtr Constructor (string name, float /* float, not CGFloat */ value);
@@ -1905,6 +1920,7 @@ namespace SpriteKit {
 		SKUniformType UniformType { get; }
 
 		[Export ("textureValue")]
+		[NullAllowed]
 		SKTexture TextureValue { get; set; }
 
 		[Export ("floatValue")]
@@ -2651,6 +2667,7 @@ namespace SpriteKit {
 		SKPhysicsJoint [] Joints { get; }
 
 		[Export ("node", ArgumentSemantic.Weak)]
+		[NullAllowed]
 		SKNode Node { get; }
 
 		[Export ("velocity")]
@@ -2779,12 +2796,15 @@ namespace SpriteKit {
 		void RemoveAllJoints ();
 
 		[Export ("bodyAtPoint:")]
+		[return: NullAllowed]
 		SKPhysicsBody GetBody (CGPoint point);
 
 		[Export ("bodyInRect:")]
+		[return: NullAllowed]
 		SKPhysicsBody GetBody (CGRect rect);
 
 		[Export ("bodyAlongRayStart:end:")]
+		[return: NullAllowed]
 		SKPhysicsBody GetBody (CGPoint rayStart, CGPoint rayEnd);
 
 		[Export ("enumerateBodiesAtPoint:usingBlock:")]

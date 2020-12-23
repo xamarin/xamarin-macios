@@ -446,7 +446,7 @@ namespace ClassKit {
 		string Details { get; }
 
 		[Export ("initWithKind:details:")]
-		IntPtr Constructor (CLSProgressReportingCapabilityKind kind, string details);
+		IntPtr Constructor (CLSProgressReportingCapabilityKind kind, [NullAllowed] string details);
 	}
 
 }

@@ -11,6 +11,8 @@ using System;
 using CoreGraphics;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace SpriteKit {
 	public partial class SKShapeNode : SKNode {
 
@@ -19,7 +21,7 @@ namespace SpriteKit {
 		public static SKShapeNode FromPoints (CGPoint [] points)
 		{
 			if (points == null)
-				throw new ArgumentNullException (nameof (points));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (points));
 
 			return FromPoints (ref points[0], (nuint) points.Length);
 		}
@@ -29,7 +31,7 @@ namespace SpriteKit {
 		public static SKShapeNode FromPoints (CGPoint [] points, int offset, int length)
 		{
 			if (points == null)
-				throw new ArgumentNullException (nameof (points));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (points));
 			if (offset > points.Length - length)
 				throw new InvalidOperationException ("offset + length must not be greater than the length of the array");
 
@@ -41,7 +43,7 @@ namespace SpriteKit {
 		public static SKShapeNode FromSplinePoints (CGPoint [] points)
 		{
 			if (points == null)
-				throw new ArgumentNullException (nameof (points));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (points));
 
 			return FromSplinePoints (ref points[0], (nuint) points.Length);
 		}
@@ -51,7 +53,7 @@ namespace SpriteKit {
 		public static SKShapeNode FromSplinePoints (CGPoint [] points, int offset, int length)
 		{
 			if (points == null)
-				throw new ArgumentNullException (nameof (points));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (points));
 			if (offset > points.Length - length)
 				throw new InvalidOperationException ("offset + length must not be greater than the length of the array");
 

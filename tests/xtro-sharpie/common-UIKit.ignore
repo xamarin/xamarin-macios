@@ -211,3 +211,6 @@
 ## UITextAlignment is deprecated in iOS6 in favor of NSTextAlignment - values added to avoid breaking changes
 !extra-enum-value! Managed value 3 for UITextAlignment.Justified not found in native headers
 !extra-enum-value! Managed value 4 for UITextAlignment.Natural not found in native headers
+
+## it's a `ref` on a struct, which xtro assumes nullable
+!extra-null-allowed! 'System.Void UIKit.UIScrollViewDelegate::WillEndDragging(UIKit.UIScrollView,CoreGraphics.CGPoint,CoreGraphics.CGPoint&)' has a extraneous [NullAllowed] on parameter #2

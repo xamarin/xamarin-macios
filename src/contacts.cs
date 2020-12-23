@@ -2077,6 +2077,10 @@ namespace Contacts {
 		[Field ("CNLabelPhoneNumberiPhone")]
 		NSString iPhone { get; }
 
+		[Watch (7,2), Mac (11,1), iOS (14,3)]
+		[Field ("CNLabelPhoneNumberAppleWatch")]
+		NSString AppleWatch { get; }
+
 		[Field ("CNLabelPhoneNumberMobile")]
 		NSString Mobile { get; }
 

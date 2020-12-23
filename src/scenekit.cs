@@ -4485,7 +4485,7 @@ namespace SceneKit {
 
 		[Static, Export ("jointWithBodyA:axisA:anchorA:bodyB:axisB:anchorB:")]
 		SCNPhysicsHingeJoint Create (SCNPhysicsBody bodyA, SCNVector3 axisA, SCNVector3 anchorA,
-			[NullAllowed] SCNPhysicsBody bodyB, SCNVector3 axisB, SCNVector3 anchorB);
+			SCNPhysicsBody bodyB, SCNVector3 axisB, SCNVector3 anchorB);
 
 		[Static, Export ("jointWithBody:axis:anchor:")]
 		SCNPhysicsHingeJoint Create (SCNPhysicsBody body, SCNVector3 axis, SCNVector3 anchor);
