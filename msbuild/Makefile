@@ -36,6 +36,8 @@ IOS_TARGETS =                                                      \
 	$(wildcard Xamarin.Shared/Xamarin.*.targets)       \
 
 IOS_WINDOWS_TARGETS =                                                      \
+	$(wildcard Xamarin.iOS.Tasks.Windows/Xamarin.*.props)       \
+	$(wildcard Xamarin.iOS.Tasks.Windows/Xamarin.*.targets)       \
 	$(wildcard Xamarin.iOS.Tasks.Windows/bin/$(CONFIG)/$(TARGETFRAMEWORK)/Xamarin.*.props)       \
 	$(wildcard Xamarin.iOS.Tasks.Windows/bin/$(CONFIG)/$(TARGETFRAMEWORK)/Xamarin.*.targets)       \
 
