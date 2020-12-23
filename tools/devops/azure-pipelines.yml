@@ -1,5 +1,6 @@
 trigger:
   - main
+  - net6-win
 
 jobs:
 - job: macOS
