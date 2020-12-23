@@ -6,10 +6,14 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Xamarin.Messaging.Build.Client" Version="$(MessagingVersion)" />
-    <PackageReference Include="Xamarin.Messaging.Server" Version="$(MessagingVersion)" />
+    <PackageReference Include="Xamarin.Messaging.Server" Version="$(MessagingVersion)" IncludeAssets="contentFiles" />
   </ItemGroup>
   <ItemGroup>
-    <AgentReference Include="..\Messaging\Xamarin.Messaging.Build\Xamarin.Messaging.Build.csproj" />
+    <ProjectReference Include="..\Messaging\Xamarin.Messaging.Build\Xamarin.Messaging.Build.csproj">
+      <ExcludeAssets>all</ExcludeAssets>
+      <ReferenceOutputAssembly>False</ReferenceOutputAssembly>
+      <IsAgent>True</IsAgent>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="*.props">
