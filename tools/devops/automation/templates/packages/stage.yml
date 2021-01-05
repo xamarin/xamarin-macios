@@ -81,7 +81,7 @@ jobs:
   displayName: 'Upload packages to Azure'
   timeoutInMinutes: 1000
   dependsOn: build # can start as soon as the packages are available
-  condition: and(succeeded(), eq (dependencies.build.outputs['configuration.BuildPkgs'], 'True')) # only run when we do have pkgs
+  condition: and(succeeded(), contains (dependencies.build.outputs['configuration.BuildPkgs'], 'True')) # only run when we do have pkgs
 
   variables:
     Parameters.outputStorageUri: ''
@@ -97,7 +97,7 @@ jobs:
   displayName: 'Upload test results to VSDrops'
   timeoutInMinutes: 1000
   dependsOn: build # can start as soon as the tests are done
-  condition: and(succeededOrFailed() , eq (dependencies.build.outputs['runTests.TESTS_RAN'], 'True')) # only run when we did run the tests
+  condition: and(succeededOrFailed() , contains (dependencies.build.outputs['runTests.TESTS_RAN'], 'True')) # only run when we did run the tests
 
   pool:
     vmImage: 'windows-latest'
@@ -112,7 +112,7 @@ jobs:
   displayName: 'Upload xml to vsts'
   timeoutInMinutes: 1000
   dependsOn:  build # can start as soon as the tests are done
-  condition: and(succeededOrFailed() , eq (dependencies.build.outputs['runTests.TESTS_RAN'], 'True')) # only run when we did run the tests
+  condition: and(succeededOrFailed() , contains (dependencies.build.outputs['runTests.TESTS_RAN'], 'True')) # only run when we did run the tests
 
   pool:
     vmImage: 'windows-latest'

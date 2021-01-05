@@ -181,7 +181,7 @@ stages:
   displayName: 'Sample testing'
   dependsOn:
   - build_packages
-  condition: and(succeeded(), eq (stageDependencies.build_packages.build.outputs['configuration.RunSampleTests'], 'True')) 
+  condition: and(succeeded(), contains (stageDependencies.build_packages.build.outputs['configuration.RunSampleTests'], 'True')) 
   jobs:
   - job: sample_testing
     pool:
