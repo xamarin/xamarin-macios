@@ -249,13 +249,13 @@ steps:
     fi
   name: packages
   displayName: 'Build Packages'
-  condition: and(succeeded(), eq(variables['configuration.BuildPkgs'], 'True'))
+  condition: and(succeeded(), contains(variables['configuration.BuildPkgs'], 'True'))
   timeoutInMinutes: 180
 
 # build nugets
 - bash:  $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/build-nugets.sh
   displayName: 'Build Nugets'
-  condition: and(succeeded(), eq(variables['configuration.BuildNugets'], 'True'))
+  condition: and(succeeded(), contains(variables['configuration.BuildNugets'], 'True'))
   continueOnError: true # should not stop the build since is not official just yet.
   timeoutInMinutes: 180
 
@@ -263,7 +263,7 @@ steps:
   env:
     PRODUCTSIGN_KEYCHAIN_PASSWORD: $(xma-password)
   displayName: 'Signing PR Build'
-  condition: and(succeeded(), eq(variables['configuration.SignPkgs'], 'True'), eq(variables['configuration.IsPr'], 'True'))
+  condition: and(succeeded(), contains(variables['configuration.SignPkgs'], 'True'), contains(variables['configuration.IsPr'], 'True'))
 
   # Ensure virtualenv is on the PATH
 - template: set-path/v1.yml@templates
@@ -296,7 +296,7 @@ steps:
     KEYCHAIN: $(SigningKeychain)
   name: notarize
   displayName: 'Signing Release Build'
-  condition: and(succeeded(), eq(variables['configuration.SignPkgs'], 'True'), eq(variables['configuration.IsPr'], 'False'))
+  condition: and(succeeded(), contains(variables['configuration.SignPkgs'], 'True'), contains(variables['configuration.IsPr'], 'False'))
   timeoutInMinutes: 90
 
 - template: generate-workspace-info.yml@templates
@@ -329,7 +329,7 @@ steps:
 
     make -C $(Build.SourcesDirectory)/xamarin-macios/tests package-tests
   displayName: 'Package Xamarin.mac tests'
-  condition: and(succeeded(), eq(variables['configuration.RunMacTests'], 'True'))
+  condition: and(succeeded(), contains(variables['configuration.RunMacTests'], 'True'))
   continueOnError: true # not a terrible blocking issue
 
 - task: PublishPipelineArtifact@1
@@ -337,7 +337,7 @@ steps:
   inputs:
     targetPath: $(Build.SourcesDirectory)/xamarin-macios/tests/*.7z
     artifactName: package-internal
-  condition: and(succeeded(), eq(variables['configuration.RunMacTests'], 'True'))
+  condition: and(succeeded(), contains(variables['configuration.RunMacTests'], 'True'))
   continueOnError: true
 
 - bash: |
@@ -347,7 +347,7 @@ steps:
     cd $(Build.SourcesDirectory)/xamarin-macios/tools/apidiff/
     rm -Rf *.exe *.pdb *.stamp *.zip *.sh ./references ./temp
   displayName: 'API diff (from stable)'
-  condition: and(succeeded(), eq(variables['configuration.SkipPublicJenkins'], 'False'))
+  condition: and(succeeded(), contains(variables['configuration.SkipPublicJenkins'], 'False'))
   continueOnError: true
   env:
     BUILD_REVISION: 'jenkins'
@@ -358,7 +358,7 @@ steps:
     rootFolder: $(Build.SourcesDirectory)/xamarin-macios/tools/apidiff
     includeRootFolder: false
     archiveFile: '$(Build.ArtifactStagingDirectory)/apidiff-stable.zip'
-  condition: and(succeeded(), eq(variables['configuration.SkipPublicJenkins'], 'False'))
+  condition: and(succeeded(), contains(variables['configuration.SkipPublicJenkins'], 'False'))
   continueOnError: true
 
 - task: PublishPipelineArtifact@1
@@ -366,7 +366,7 @@ steps:
   inputs:
     targetPath: '$(Build.ArtifactStagingDirectory)/apidiff-stable.zip'
     artifactName: apidiff-stable
-  condition: and(succeeded(), eq(variables['configuration.SkipPublicJenkins'], 'False'))
+  condition: and(succeeded(), contains(variables['configuration.SkipPublicJenkins'], 'False'))
   continueOnError: true
 
 - bash: |
@@ -409,14 +409,14 @@ steps:
     targetPath: 'xamarin-macios/tests/TestSummary.md'
     artifactName: TestSummary-sim
   continueOnError: true
-  condition: and(succeededOrFailed(), eq(variables['runTests.TESTS_RAN'], 'True')) # if tests did not run, there is nothing to do
+  condition: and(succeededOrFailed(), contains(variables['runTests.TESTS_RAN'], 'True')) # if tests did not run, there is nothing to do
 
 - pwsh: |
     $summaryName = "TestSummary.md"
     $summaryPath = "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tests/TestSummary.md"
     Write-Host "##vso[task.addattachment type=Distributedtask.Core.Summary;name=$summaryName;]$summaryPath"
   displayName: Set TestSummary
-  condition: and(succeededOrFailed(), eq(variables['runTests.TESTS_RAN'], 'True')) # if tests did not run, there is nothing to do
+  condition: and(succeededOrFailed(), contains(variables['runTests.TESTS_RAN'], 'True')) # if tests did not run, there is nothing to do
 
 # Archive files for the Html Report so that the report can be easily uploaded as artifacts of the build.
 - task: ArchiveFiles@1
@@ -426,7 +426,7 @@ steps:
     includeRootFolder: false
     archiveFile: '$(Build.ArtifactStagingDirectory)/HtmlReport.zip'
   continueOnError: true
-  condition: and(succeededOrFailed(), eq(variables['runTests.TESTS_RAN'], 'True')) # if tests did not run, there is nothing to do
+  condition: and(succeededOrFailed(), contains(variables['runTests.TESTS_RAN'], 'True')) # if tests did not run, there is nothing to do
 
 # Create HtmlReport artifact. This serves two purposes:
 # 1. It is the way we are going to share the HtmlReport with the publish_html job that is executed on a Windows machine.
@@ -437,4 +437,4 @@ steps:
     targetPath: '$(Build.ArtifactStagingDirectory)/HtmlReport.zip'
     artifactName: HtmlReport-sim
   continueOnError: true
-  condition: and(succeededOrFailed(), eq(variables['runTests.TESTS_RAN'], 'True')) # if tests did not run, there is nothing to do
+  condition: and(succeededOrFailed(), contains(variables['runTests.TESTS_RAN'], 'True')) # if tests did not run, there is nothing to do
