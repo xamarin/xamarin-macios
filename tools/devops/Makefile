@@ -17,6 +17,7 @@ build-provisioning.csx: build-provisioning.csx.in Makefile $(TOP)/Make.config
 		-e 's#@VS_PACKAGE@#$(MIN_VISUAL_STUDIO_URL)#g' \
 		-e 's#@MIN_SHARPIE_URL@#$(MIN_SHARPIE_URL)#g' \
 		-e 's#@DOTNET_VERSION@#$(DOTNET_VERSION)#g' \
+		-e 's#@DOTNET5_VERSION@#$(DOTNET5_VERSION)#g' \
 		$< > $@;
 
 all check:

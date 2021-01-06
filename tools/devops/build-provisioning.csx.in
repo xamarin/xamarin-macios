@@ -14,3 +14,4 @@ Item ("@MONO_PACKAGE@");
 Item ("@MIN_SHARPIE_URL@");
 Item ("@VS_PACKAGE@");
 DotNetCoreSdk ("@DOTNET_VERSION@");
+DotNetCoreSdk ("@DOTNET5_VERSION@");
