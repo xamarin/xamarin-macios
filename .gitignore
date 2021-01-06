@@ -13,7 +13,7 @@ _build
 *.pdb
 bin
 obj
-packages
+./packages
 ~.pmcs*
 .DS_Store
 jenkins-results
@@ -33,6 +33,7 @@ tests/bcl-test/SystemXunit.csproj
 global.json
 .idea
 device-tests-provisioning.csx
+build-provisioning.csx
 mono_crash.*.json
 *.binlog
 .vscode
