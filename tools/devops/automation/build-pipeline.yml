@@ -71,6 +71,7 @@ pr:
     include:
     - main
     - d16-*
+    - xcode*
 
 stages:
 
