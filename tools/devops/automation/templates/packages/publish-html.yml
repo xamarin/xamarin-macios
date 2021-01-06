@@ -1,0 +1,79 @@
+
+# Job that will download the other artifact from the tests job and will publish them in the 
+# vsdrops
+
+###########################################################
+# WARNING WARNING WARNING WARNING WARNING WARNING WARNING #
+###########################################################
+
+# This job is executed on WINDOWS! make sure you DO NOT USE
+# bash or linux file paths on scripts. Another important
+# details is that System.DefaultWorkingDirectory
+# on mac os x points on the top dir while on windows 
+# is the checked out dir
+
+parameters:
+
+- name: vsdropsPrefix
+  type: string
+
+steps:
+
+- checkout: self
+  persistCredentials: true
+
+- template: download-artifacts.yml 
+
+- pwsh: |
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\GitHub.psm1
+
+    $apiDiffRoot = "$Env:STABLE_APIDDIFF_PATH"
+    $filePatterns = @{
+      "iOS" = "ios-*.md";
+      "macOS"="macos-*.md";
+      "tvOS"="tvos-*.md";
+      "watchOS"="watchos-*.md"
+    }
+
+    [System.Collections.Generic.List[string]]$gistsObj = @()
+    [System.Collections.Generic.List[string]]$gists = @{}
+
+    foreach ($key in $filePatterns.Keys) {
+      $filter = $filePatterns[$key]
+      $fileName = Get-ChildItem $apiDiffRoot -Filter $filter -Name
+      if ($fileName) {
+        $obj = New-GistObjectDefinition -Name $fileName -Path "$apiDiffRoot\$fileName" -Type "markdown"
+        $gistsObj.Add($obj)
+        # create a gist just for this file 
+        $url = New-GistWithFiles -Description "$key API diff from stable" -Files @($obj)
+        Write-Host "New gist created at $url"
+        $gists.Add($key, $url)
+      }
+    }
+
+    # create a gist with all diffs
+    $url = New-GistWithFiles -Description "API diff from stable (all platforms)" -Files $gistsObj 
+    $gists.Add("all", $url)
+
+    # set env variables to be used in later jobs
+    foreach ($key in $gists.Keys) {
+      $envVarName = "$($key.ToUpper())_STABLE_URL" # results in ALL_STABLE_URL/IOS_STABLE_URL etc
+      $url = $gists[$key]
+      Write-Host "##vso[task.setvariable variable=$envVarName]$url"
+    }
+  displayName: 'Create API from stable diff gists'
+  timeoutInMinutes: 1
+  env:
+    GITHUB_TOKEN: $(GitHub.Token)
+
+- pwsh: |
+    Write-Host "Writing comment!"
+  displayName: 'Generating GitHub Comment'
+  condition: always()
+  timeoutInMinutes: 1
+
+- pwsh: |
+    Get-ChildItem -Recurse $Env:SYSTEM_DEFAULTWORKINGDIRECTORY
+  displayName: 'Add summaries'
+  condition: always()
+  timeoutInMinutes: 1
