@@ -195,7 +195,7 @@ function New-GitHubComment {
     $msg.AppendLine()
     $msg.AppendLine("[Pipeline]($targetUrl) on Agent $Env:TESTS_BOT") # Env:TESTS_BOT is added by the pipeline as a variable coming from the execute tests job
 
-    # if the build was due to PR, we want to write the comment in the PR rather than in teh comment
+    # if the build was due to PR, we want to write the comment in the PR rather than in the comment
     if ($Env:BUILD_REASON -eq "PullRequest") {
         # calcualte the change ID which is the PR number 
         $buildSourceBranch = $Env:BUILD_SOURCEBRANCH
