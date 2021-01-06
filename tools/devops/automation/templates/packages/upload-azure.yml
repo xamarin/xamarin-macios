@@ -126,7 +126,7 @@ steps:
     Write-Host "iOS PKG is $iOSPkg"
 
     $macPkg = Get-ChildItem -Path $pkgsPath -File -Force -Name xamarin.mac-*.pkg
-    Write-Host "mac PKG is $iOSPkg"
+    Write-Host "mac PKG is $macPkg"
 
     if (Test-Path "$pkgsPath\$iOSPkg" -PathType Leaf) {
         Set-GitHubStatus -Status "success" -Description $iOSPkg -TargetUrl "$pkgsVirtualUrl/$iOSPkg" -Context "PKG-Xamarin.iOS"
@@ -141,13 +141,13 @@ steps:
     }
 
     if (Test-Path "$pkgsPath\xamarin.mac-*.pkg" -PathType Leaf) {
-       Set-GitHubStatus -Status "success" -Description "$pkgsPath" -TargetUrl "$pkgsVirtualUrl/$macPkg" -Context "PKG-Xamarin.Mac"
+       Set-GitHubStatus -Status "success" -Description "$macPkg" -TargetUrl "$pkgsVirtualUrl/$macPkg" -Context "PKG-Xamarin.Mac"
     } else {
        Set-GitHubStatus -Status "error" -Description "xamarin.mac pkg not found." -Context "PKG-Xamarin.Mac"
     }
 
     if (Test-Path "$pkgsPath\notarized\xamarin.mac-*.pkg" -PathType Leaf) {
-        Set-GitHubStatus -Status "success" -Description "$pkgsPath (Notarized)" -TargetUrl "$pkgsVirtualUrl/notarized/$macPkg" -Context "PKG-Xamarin.Mac-notarized"
+        Set-GitHubStatus -Status "success" -Description "$macPkg (Notarized)" -TargetUrl "$pkgsVirtualUrl/notarized/$macPkg" -Context "PKG-Xamarin.Mac-notarized"
     } else {
        Set-GitHubStatus -Status "error" -Description "Notarized xamarin.mac pkg not found." -Context "PKG-Xamarin.Mac-notarized"
     }
