@@ -170,6 +170,8 @@ function New-GitHubComment {
         "SYSTEM_TEAMPROJECT" = $Env:SYSTEM_TEAMPROJECT;
         "BUILD_DEFINITIONNAME" = $Env:BUILD_DEFINITIONNAME;
         "BUILD_REVISION" = $Env:BUILD_REVISION;
+        "BUILD_REASON" = $Env:BUILD_REASON;
+        "BUILD_SOURCEBRANCH" = $Env:BUILD_SOURCEBRANCH;
         "GITHUB_TOKEN" = $Env:GITHUB_TOKEN;
     }
 
@@ -193,7 +195,16 @@ function New-GitHubComment {
     $msg.AppendLine()
     $msg.AppendLine("[Pipeline]($targetUrl) on Agent $Env:TESTS_BOT") # Env:TESTS_BOT is added by the pipeline as a variable coming from the execute tests job
 
-    $url = "https://api.github.com/repos/xamarin/xamarin-macios/commits/$Env:BUILD_REVISION/comments"
+    # if the build was due to PR, we want to write the comment in the PR rather than in teh comment
+    if ($Env:BUILD_REASON -eq "PullRequest") {
+        # calcualte the change ID which is the PR number 
+        $buildSourceBranch = $Env:BUILD_SOURCEBRANCH
+        $changeId = $buildSourceBranch.Replace("refs/pull/", "").Replace("/merge", "")
+        $url = "https://api.github.com/repos/xamarin/xamarin-macios/issues/$changeId/comments"
+    } else {
+        $url = "https://api.github.com/repos/xamarin/xamarin-macios/commits/$Env:BUILD_REVISION/comments"
+    }
+
     $payload = @{
         body = $msg.ToString()
     }
