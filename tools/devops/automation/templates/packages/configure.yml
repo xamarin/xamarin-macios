@@ -1,0 +1,83 @@
+# This job will parse all the labels present in a PR, will set
+# the tags for the build AND will set a number of configuration
+# variables to be used by the rest of the projects
+steps:
+- checkout: self          # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
+  clean: true             # Executes: git clean -ffdx && git reset --hard HEAD
+  submodules: false
+
+- pwsh: |
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/tools/devops/automation/scripts/GitHub.psm1
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/tools/devops/automation/scripts/VSTS.psm1
+
+    $buildReason = "$(Build.Reason)"
+    $buildSourceBranchName = "$(Build.SourceBranchName)"
+    $buildSourceBranch = "$(Build.SourceBranch)"
+
+    Write-Host "buildReason: ${buildReason}"
+    Write-Host "buildSourceBranchName: ${buildSourceBranchName}"
+    Write-Host "buildSourceBranch: $buildSourceBranch"
+
+    # the following list will be used to track the tags and set them in VSTS to make the monitoring person life easier
+    [System.Collections.Generic.List[string]]$tags = @()
+
+    if ($buildReason -eq "PullRequest" -or (($buildReason -eq "Manual") -and ($buildSourceBranchName -eq "merge")) ) {
+      Write-Host "Configuring build from PR."
+      # This is an interesting step, we do know we are dealing with a PR, but we need the PR id to
+      # be able to get the labels, the buildSourceBranch follows the pattern: refs/pull/{ChangeId}/merge
+      # we could use a regexp but then we would have two problems instead of one
+      $changeId = $buildSourceBranch.Replace("refs/pull/", "").Replace("/merge", "")
+      $prInfo = Get-GitHubPRInfo -ChangeId $changeId
+      Write-Host $prInfo
+
+      # make peoples life better, loop over the labels and add them as tags in the vsts build
+      foreach ($labelInfo in $prInfo.labels) {
+        $labelName = $labelInfo.name
+        Write-Host "Found label $labelName"
+        $tags.Add($labelName)
+        $tagsCount = $tags.Count
+        Write-Host "Tags count $tagsCount"
+      }
+      # special tag, we want to know if we are using a pr
+      $tags.Add("prBuild")
+
+      # special tag, lets add the target branch, will be useful to the users
+      $ref = $prInfo.base.ref
+      $tags.Add("$ref")
+
+      # set output variables based on the git labels
+      $labelsOfInterest = @(
+        "build-package",
+        "run-internal-tests",
+        "skip-packages",
+        "skip-nugets",
+        "skip-signing",
+        "skip-external-tests",
+        "trigger-device-tests",
+        "run-sample-tests",
+        "skip-packaged-xamarin-mac-tests",
+        "skip-public-jenkins",
+        "skip-api-comparison"
+      )
+
+      foreach ($l in $labelsOfInterest) {
+        $labelPresent = 1 -eq ($prInfo.labels | Where-Object { $_.name -eq "$l"}).Count
+        Write-Host "##vso[task.setvariable variable=$l;isOutput=true]$labelPresent"
+      }
+
+      Write-Host "##vso[task.setvariable variable=prBuild;isOutput=true]True"
+    } else {
+      # set the name of the branch under build
+      $tags.Add("$buildSourceBranchName")
+      Write-Host "##vso[task.setvariable variable=prBuild;isOutput=true]False"
+    }
+    # set the tags using the cmdlet
+    $tagCount = $tags.Count
+    Write-Host "Found '$tagsCount' tags"
+    Set-BuildTags -Tags $tags.ToArray()
+  env:
+    BUILD_REVISION: $(Build.SourceVersion)
+    GITHUB_TOKEN: $(GitHub.Token)
+    ACCESSTOKEN: $(AzDoBuildAccess.Token)
+  name: labels
+  displayName: 'Configure build'

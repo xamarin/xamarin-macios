@@ -1,0 +1,38 @@
+steps:
+
+- checkout: self
+  persistCredentials: true
+
+# download the common artifacts + the api diff
+- template: ../common/download-artifacts.yml
+  parameters:
+    devicePrefix: sim
+
+# Download the Html Report that was added by the tests job.
+- task: DownloadPipelineArtifact@2
+  displayName: 'Download API diff (from stable)'
+  inputs:
+    patterns: 'apidiff-stable/apidiff-stable.zip'
+    allowFailedBuilds: true
+    path: $(System.DefaultWorkingDirectory)/Reports
+
+- task: ExtractFiles@1
+  displayName: 'Extract API diff (from stable)'
+  inputs:
+    archiveFilePatterns: '$(System.DefaultWorkingDirectory)/Reports/apidiff-stable/apidiff-stable.zip'
+    destinationFolder: '$(System.DefaultWorkingDirectory)/apidiff-stable'
+
+- powershell: |
+    Get-ChildItem -Recurse $Env:SYSTEM_DEFAULTWORKINGDIRECTORY
+
+    Write-Host "##vso[task.setvariable variable=STABLE_APIDDIFF_PATH]$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\apidiff-stable"
+  displayName: Pusblish apidiff paths
+  name: apidiff # not to be confused with the displayName, this is used to later use the name of the step to access the output variables from an other job
+
+# download the artifacts.json, which will use to find the URI of the built pkg to later be given to the user
+- task: DownloadPipelineArtifact@2
+  displayName: Download artifacts.json
+  inputs:
+    patterns: '**/*.json'
+    allowFailedBuilds: true
+    path: $(Build.SourcesDirectory)/artifacts
