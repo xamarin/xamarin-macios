@@ -400,7 +400,7 @@ steps:
   env:
     BUILD_REVISION: jenkins
     TARGET: 'wrench-jenkins'
-    VSDROPS_URI: '${{ parameters.vsdropsPrefix }}/$(Build.BuildNumber)/$(Build.BuildId);/tests/' # uri used to create the vsdrops index using full uri
+    VSDROPS_URI: '${{ parameters.vsdropsPrefix }}/$(Build.BuildNumber)/$(Build.BuildId)/sim;/tests/' # uri used to create the vsdrops index using full uri
 
 # Upload TestSummary as an artifact.
 - task: PublishPipelineArtifact@1
