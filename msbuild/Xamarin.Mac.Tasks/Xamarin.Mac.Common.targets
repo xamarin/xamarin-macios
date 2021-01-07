@@ -354,6 +354,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			ProjectGuid="$(ProjectGuid)"
 			ProjectTypeGuids="$(ProjectTypeGuids)"
 			OutputPath="$(OutputPath)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			>
 			<Output TaskParameter="ArchiveDir" PropertyName="ArchiveDir" />
 		</Archive>
