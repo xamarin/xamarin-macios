@@ -325,7 +325,10 @@ function New-GitHubSummaryComment {
 
         [Parameter(Mandatory)]
         [String]
-        $TestSummaryPath
+        $TestSummaryPath,
+
+        [string]
+        $Artifacts
     )
 
     $envVars = @{
@@ -347,14 +350,33 @@ function New-GitHubSummaryComment {
     # build the links to provide extra info to the monitoring person, we need to make sure of a few things
     # 1. We do have the xamarin-storage path
     # 2. We did reach the xamarin-storage, stored in the env var XAMARIN_STORAGE_REACHED
-    $headerSb = [System.Text.StringBuilder]::new()
-    $headerSb.AppendLine(); # new line to start the list
-    $headerSb.AppendLine("* [Azure DevOps]($vstsTargetUrl)")
+    $sb = [System.Text.StringBuilder]::new()
+    $sb.AppendLine(); # new line to start the list
+    $sb.AppendLine("* [Azure DevOps]($vstsTargetUrl)")
     if ($Env:VSDROPS_INDEX) {
         # we did generate an index with the files in vsdrops
-        $headerSb.AppendLine("* [Html Report (VSDrops)]($Env:VSDROPS_INDEX)")
+        $sb.AppendLine("* [Html Report (VSDrops)]($Env:VSDROPS_INDEX)")
     }
-    $headerLinks = $headerSb.ToString()
+    if ($Artifacts) {
+        if (-not (Test-Path $Artifacts -PathType Leaf)) {
+            $sb.AppendLine("Path $Artifacts was not found!")
+        } else {
+            # read the json file, convert it to an object and add a line for each artifact
+            $json =  Get-Content $Artifacts | ConvertFrom-Json
+            if ($json.Count -gt 0) {
+                $sb.AppendLine("<details><summary>View packages</summary>")
+                foreach ($a in $json) {
+                    $fileName = $a.url.Substring($a.url.LastIndexOf("/" + 1))
+                    $sb.AppendLine("* [$fileName]($($a.url))")
+                }
+                $sb.AppendLine("</details>")
+            } else {
+                $sb.AppendLine("No packages found.")
+            }
+        }
+    }
+
+    $headerLinks = $sb.ToString()
     $request = $null
 
     if (-not (Test-Path $TestSummaryPath -PathType Leaf)) {
