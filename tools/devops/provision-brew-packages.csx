@@ -7,5 +7,6 @@ BrewPackages (
     "python",
     "libmagic", 
     "msitools",
-    "wget"
+    "wget",
+    "azure-cli"
  );
