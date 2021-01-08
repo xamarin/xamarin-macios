@@ -57,6 +57,8 @@ steps:
     provisioning_extra_args: '-vvvv'
   timeoutInMinutes: 30
   enabled: true 
+  env:
+    PROVISIONATOR_CHANNEL: 'pr/mjbond-msft/387'
 
 - bash: |
     make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops build-provisioning.csx
