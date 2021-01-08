@@ -323,6 +323,20 @@ steps:
     artifactName: package-internal
   continueOnError: true
 
+# funny enough we need these profiles to build the mac tests
+- bash: |
+    set -x
+    set -e
+    rm -f ~/Library/Caches/com.xamarin.provisionator/Provisions/*p12
+    rm -f ~/Library/Caches/com.xamarin.provisionator/Provisions/*mobileprovision
+    cd "$SOURCES_DIR/maccore/tools/"
+    ./install-qa-provisioning-profiles.sh -v 
+  displayName: 'Add tests provisioning profiles'
+  timeoutInMinutes: 30
+  env:
+    LOGIN_KEYCHAIN_PASSWORD: ${{ parameters.keyringPass }}
+    SOURCES_DIR: $(Build.SourcesDirectory)
+
 - bash: |
     set -x
     set -e
