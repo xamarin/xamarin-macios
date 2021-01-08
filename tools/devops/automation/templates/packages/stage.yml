@@ -12,6 +12,9 @@ parameters:
   type: boolean
   default: true
 
+- name: keyringPass
+  type: string
+
 jobs:
 - job: configure
   displayName: 'Configure build'
@@ -76,6 +79,7 @@ jobs:
       runTests: ${{ parameters.runTests }}
       runDeviceTests: ${{ parameters.runDeviceTests }}
       vsdropsPrefix: ${{ parameters.vsdropsPrefix }} 
+      keyringPass: ${{ parameters.keyringPass }} 
 
 - job: upload_azure_blob
   displayName: 'Upload packages to Azure'
