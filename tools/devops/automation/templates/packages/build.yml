@@ -272,6 +272,8 @@ steps:
   inputs: 
     signType: 'Real'  # test is not present for mac.. 
     azureSubscription: 'MicroBuild Signing Task (DevDiv)'
+    version: 1.1.352-g82fc43b9d7
+    feedSource: 'https://pkgs.dev.azure.com/devdiv/_packaging/VS_TempPkgs/nuget/v3/index.json'
   env: 
       SYSTEM_ACCESSTOKEN: $(System.AccessToken) 
 
