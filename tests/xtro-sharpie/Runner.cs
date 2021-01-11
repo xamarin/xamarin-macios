@@ -43,6 +43,8 @@ namespace Extrospection {
 					Helpers.Platform = Platforms.watchOS;
 				else if (name.EndsWith (".TVOS", StringComparison.Ordinal))
 					Helpers.Platform = Platforms.tvOS;
+				else if (name.EndsWith (".MacCatalyst", StringComparison.Ordinal))
+					Helpers.Platform = Platforms.MacCatalyst;
 				managed_reader.Load (assemblyName);
 			}
 			managed_reader.Process ();

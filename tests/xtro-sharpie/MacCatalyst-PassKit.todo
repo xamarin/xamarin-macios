@@ -1,0 +1,1 @@
+!incorrect-protocol-member! PKPaymentAuthorizationControllerDelegate::presentationWindowForPaymentAuthorizationController: is REQUIRED and should be abstract
