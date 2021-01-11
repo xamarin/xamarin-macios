@@ -63,6 +63,7 @@
 !unknown-field! ARSkeletonJointNameRightShoulder bound
 !unknown-field! ARSkeletonJointNameRoot bound
 !unknown-native-enum! ARAltitudeSource bound
+!unknown-native-enum! ARAppClipCodeUrlDecodingState bound
 !unknown-native-enum! ARCoachingGoal bound
 !unknown-native-enum! ARCollaborationDataPriority bound
 !unknown-native-enum! ARConfidenceLevel bound
@@ -98,6 +99,7 @@
 !unknown-protocol! ARSKViewDelegate bound
 !unknown-protocol! ARTrackable bound
 !unknown-type! ARAnchor bound
+!unknown-type! ARAppClipCodeAnchor bound
 !unknown-type! ARBody2D bound
 !unknown-type! ARBodyAnchor bound
 !unknown-type! ARBodyTrackingConfiguration bound

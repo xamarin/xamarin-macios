@@ -10,6 +10,7 @@
 !unknown-field! HKCategoryTypeIdentifierChestTightnessOrPain bound
 !unknown-field! HKCategoryTypeIdentifierChills bound
 !unknown-field! HKCategoryTypeIdentifierConstipation bound
+!unknown-field! HKCategoryTypeIdentifierContraceptive bound
 !unknown-field! HKCategoryTypeIdentifierCoughing bound
 !unknown-field! HKCategoryTypeIdentifierDiarrhea bound
 !unknown-field! HKCategoryTypeIdentifierDizziness bound
@@ -28,8 +29,10 @@
 !unknown-field! HKCategoryTypeIdentifierHotFlashes bound
 !unknown-field! HKCategoryTypeIdentifierIntermenstrualBleeding bound
 !unknown-field! HKCategoryTypeIdentifierIrregularHeartRhythmEvent bound
+!unknown-field! HKCategoryTypeIdentifierLactation bound
 !unknown-field! HKCategoryTypeIdentifierLossOfSmell bound
 !unknown-field! HKCategoryTypeIdentifierLossOfTaste bound
+!unknown-field! HKCategoryTypeIdentifierLowCardioFitnessEvent bound
 !unknown-field! HKCategoryTypeIdentifierLowerBackPain bound
 !unknown-field! HKCategoryTypeIdentifierLowHeartRateEvent bound
 !unknown-field! HKCategoryTypeIdentifierMemoryLapse bound
@@ -40,6 +43,7 @@
 !unknown-field! HKCategoryTypeIdentifierNightSweats bound
 !unknown-field! HKCategoryTypeIdentifierOvulationTestResult bound
 !unknown-field! HKCategoryTypeIdentifierPelvicPain bound
+!unknown-field! HKCategoryTypeIdentifierPregnancy bound
 !unknown-field! HKCategoryTypeIdentifierRapidPoundingOrFlutteringHeartbeat bound
 !unknown-field! HKCategoryTypeIdentifierRunnyNose bound
 !unknown-field! HKCategoryTypeIdentifierSexualActivity bound
@@ -124,6 +128,7 @@
 !unknown-field! HKMetadataKeyIndoorWorkout bound
 !unknown-field! HKMetadataKeyInsulinDeliveryReason bound
 !unknown-field! HKMetadataKeyLapLength bound
+!unknown-field! HKMetadataKeyLowCardioFitnessEventThreshold bound
 !unknown-field! HKMetadataKeyMaximumSpeed bound
 !unknown-field! HKMetadataKeyMenstrualCycleStart bound
 !unknown-field! HKMetadataKeyReferenceRangeLowerLimit bound
@@ -137,6 +142,7 @@
 !unknown-field! HKMetadataKeyUDIDeviceIdentifier bound
 !unknown-field! HKMetadataKeyUDIProductionIdentifier bound
 !unknown-field! HKMetadataKeyVO2MaxTestType bound
+!unknown-field! HKMetadataKeyVO2MaxValue bound
 !unknown-field! HKMetadataKeyWasTakenInLab bound
 !unknown-field! HKMetadataKeyWasUserEntered bound
 !unknown-field! HKMetadataKeyWeatherCondition bound
@@ -294,8 +300,10 @@
 !unknown-native-enum! HKCategoryValueAppleStandHour bound
 !unknown-native-enum! HKCategoryValueAudioExposureEvent bound
 !unknown-native-enum! HKCategoryValueCervicalMucusQuality bound
+!unknown-native-enum! HKCategoryValueContraceptive bound
 !unknown-native-enum! HKCategoryValueEnvironmentalAudioExposureEvent bound
 !unknown-native-enum! HKCategoryValueHeadphoneAudioExposureEvent bound
+!unknown-native-enum! HKCategoryValueLowCardioFitnessEvent bound
 !unknown-native-enum! HKCategoryValueMenstrualFlow bound
 !unknown-native-enum! HKCategoryValueOvulationTestResult bound
 !unknown-native-enum! HKCategoryValuePresence bound
