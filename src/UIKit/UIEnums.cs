@@ -1914,7 +1914,13 @@ namespace UIKit {
 		RightArrow,
 		Select,
 		Menu,
-		PlayPause
+		PlayPause,
+		[TV (14,3)]
+		[NoiOS]
+		PageUp = 30,
+		[TV (14,3)]
+		[NoiOS]
+		PageDown = 31,
 	}
 
 	[NoWatch]

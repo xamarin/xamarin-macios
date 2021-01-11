@@ -1364,6 +1364,10 @@ namespace Xamarin.Bundler {
 				return;
 
 			var arch = App.Abi.AsString ();
+			// macOS frameworks often uses symlinks and we do not
+			// want to replace the symlink with the thin binary
+			// while leaving the fat binary inside the framework
+			dest = GetRealPath (dest);
 			RunLipo (App, new [] { dest, "-thin", arch, "-output", dest });
 			if (name != "MonoPosixHelper" && name != "libmono-native-unified" && name != "libmono-native-compat")
 				ErrorHelper.Warning (2108, Errors.MM2108, name, arch);

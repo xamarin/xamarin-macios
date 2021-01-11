@@ -625,6 +625,10 @@ namespace AVFoundation {
 		[Field ("AVVideoMaxKeyFrameIntervalDurationKey")]
 		NSString MaxKeyFrameIntervalDurationKey { get; }
 
+		[Watch (7,2), TV (14,3), Mac (11,1), iOS (14,3)]
+		[Field ("AVVideoAppleProRAWBitDepthKey")]
+		NSString AppleProRawBitDepthKey { get; }
+
 		[iOS (7,0)]
 		[Mac (10,10)]
 		[Field ("AVVideoAllowFrameReorderingKey")]
@@ -9745,6 +9749,24 @@ namespace AVFoundation {
 		[Export ("availablePhotoCodecTypes")]
 		string [] AvailablePhotoCodecTypes { get; }
 
+		[NoWatch, NoTV, NoMac, iOS (14,3)]
+		[Export ("appleProRAWSupported")]
+		bool AppleProRawSupported { [Bind ("isAppleProRAWSupported")] get; }
+
+		[NoWatch, NoTV, NoMac, iOS (14,3)]
+		[Export ("appleProRAWEnabled")]
+		bool AppleProRawEnabled { [Bind ("isAppleProRAWEnabled")] get; set; }
+
+		[NoWatch, NoTV, NoMac, iOS (14,3)]
+		[Static]
+		[Export ("isBayerRAWPixelFormat:")]
+		bool IsBayerRawPixelFormat (CVPixelFormatType pixelFormat);
+
+		[NoWatch, NoTV, NoMac, iOS (14,3)]
+		[Static]
+		[Export ("isAppleProRAWPixelFormat:")]
+		bool IsAppleProRawPixelFormat (CVPixelFormatType pixelFormat);
+
 		[NoMac]
 		[Export ("availableRawPhotoPixelFormatTypes")]
 		NSNumber [] AvailableRawPhotoPixelFormatTypes { get; }
@@ -13570,6 +13592,10 @@ namespace AVFoundation {
 		[Export ("replacementSemanticSegmentationMatteOfType:forPhoto:")]
 		[return: NullAllowed]
 		AVSemanticSegmentationMatte GetReplacementSemanticSegmentationMatte (NSString semanticSegmentationMatteType, AVCapturePhoto photo);
+
+		[NoWatch, NoTV, NoMac, iOS (14,3)]
+		[Export ("replacementAppleProRAWCompressionSettingsForPhoto:defaultSettings:maximumBitDepth:")]
+		NSDictionary<NSString, NSObject> GetReplacementAppleProRawCompressionSettings (AVCapturePhoto photo, NSDictionary<NSString, NSObject> defaultSettings, nint maximumBitDepth);
 	}
 
 	[NoTV, iOS (11,0), NoWatch, Mac (10,15)]

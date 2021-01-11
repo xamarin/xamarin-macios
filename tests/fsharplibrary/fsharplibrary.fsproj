@@ -41,7 +41,8 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="mscorlib" />
-    <Reference Include="FSharp.Core" />
+    <Reference Include="FSharp.Core" Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.MacCatalyst'" />
+    <PackageReference Include="FSharp.Core" Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.MacCatalyst'" Version="5.0.0" />
     <Reference Include="Xamarin.iOS" />
   </ItemGroup>
   <ItemGroup>

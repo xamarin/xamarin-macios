@@ -1,0 +1,8 @@
+!unknown-field! WCErrorDomain bound
+!unknown-native-enum! WCErrorCode bound
+!unknown-native-enum! WCSessionActivationState bound
+!unknown-protocol! WCSessionDelegate bound
+!unknown-type! WCSession bound
+!unknown-type! WCSessionFile bound
+!unknown-type! WCSessionFileTransfer bound
+!unknown-type! WCSessionUserInfoTransfer bound
