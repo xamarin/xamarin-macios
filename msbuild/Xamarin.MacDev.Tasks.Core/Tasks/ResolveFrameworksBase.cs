@@ -20,11 +20,11 @@ namespace Xamarin.MacDev.Tasks {
 		#region Inputs
 
 		[Required]
-		public string Architectures { get; set; }
+		public string? Architectures { get; set; }
 
-		public ITaskItem [] NativeReferences { get; set; }
+		public ITaskItem []? NativeReferences { get; set; }
 
-		public ITaskItem[] References { get; set; }
+		public ITaskItem []? References { get; set; }
 
 		[Required]
 		public bool SdkIsSimulator { get; set; }
@@ -34,7 +34,7 @@ namespace Xamarin.MacDev.Tasks {
 		#region Outputs
 
 		[Output]
-		public ITaskItem[] NativeFrameworks { get; set; }
+		public ITaskItem []? NativeFrameworks { get; set; }
 
 		#endregion
 
@@ -122,7 +122,7 @@ namespace Xamarin.MacDev.Tasks {
 			return !Log.HasLoggedErrors;
 		}
 
-		protected string ResolveXCFramework (string xcframework)
+		protected string? ResolveXCFramework (string xcframework)
 		{
 			var platformName = PlatformFrameworkHelper.GetOperatingSystem (TargetFrameworkMoniker);
 			// PlatformFrameworkHelper.GetOperatingSystem returns "osx" which does not work for xcframework
@@ -132,13 +132,13 @@ namespace Xamarin.MacDev.Tasks {
 			var variant = SdkIsSimulator ? "simulator" : null;
 			try {
 				var plist = PDictionary.FromFile (Path.Combine (xcframework, "Info.plist"));
-				var dir = ResolveXCFramework (plist, platformName, variant, Architectures);
-				if (!String.IsNullOrEmpty (dir))
-					return Path.Combine (xcframework, dir);
+				var path = ResolveXCFramework (plist, platformName, variant, Architectures!);
+				if (!String.IsNullOrEmpty (path))
+					return Path.Combine (xcframework, path);
 
 				// either the format was incorrect or we could not find a matching framework
 				// note: last part is not translated since it match the (non-translated) keys inside the `Info.plist`
-				var msg = (dir == null) ? MSBStrings.E0174 : MSBStrings.E0175 + $" SupportedPlatform: '{platformName}', SupportedPlatformVariant: '{variant}', SupportedArchitectures: '{Architectures}'.";
+				var msg = (path == null) ? MSBStrings.E0174 : MSBStrings.E0175 + $" SupportedPlatform: '{platformName}', SupportedPlatformVariant: '{variant}', SupportedArchitectures: '{Architectures}'.";
 				Log.LogError (msg, xcframework);
 			}
 			catch (Exception) {
@@ -147,7 +147,7 @@ namespace Xamarin.MacDev.Tasks {
 			return null;
 		}
 
-		internal static string? ResolveXCFramework (PDictionary plist, string platformName, string variant, string architectures)
+		internal static string? ResolveXCFramework (PDictionary plist, string platformName, string? variant, string architectures)
 		{
 			// plist structure https://github.com/spouliot/xcframework#infoplist
 			var bundle_package_type = (PString) plist ["CFBundlePackageType"];
@@ -182,7 +182,7 @@ namespace Xamarin.MacDev.Tasks {
 				}
 				var library_path = (PString) item ["LibraryPath"];
 				var library_identifier = (PString) item ["LibraryIdentifier"];
-				return Path.Combine (library_identifier, library_path);
+				return Path.Combine (library_identifier, library_path, Path.GetFileNameWithoutExtension (library_path));
 			}
 			return String.Empty;
 		}
