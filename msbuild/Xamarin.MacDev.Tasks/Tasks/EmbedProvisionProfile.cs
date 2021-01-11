@@ -1,10 +1,6 @@
-﻿using System;
-using System.Linq;
-
-namespace Xamarin.Mac.Tasks
+﻿namespace Xamarin.MacDev.Tasks
 {
 	public class EmbedProvisionProfile : EmbedProvisionProfileTaskBase
 	{
-
 	}
 }
