@@ -9,6 +9,7 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using System.Collections.Generic;
 using Xamarin.Localization.MSBuild;
+using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks
 {
@@ -230,7 +231,10 @@ namespace Xamarin.MacDev.Tasks
 			} else if (File.Exists (item.ItemSpec)) {
 				codesignedFiles.Add (item);
 
-				var dirName = Path.GetDirectoryName (item.ItemSpec);
+				// on macOS apps {item.ItemSpec} can be a symlink to `Versions/Current/{item.ItemSpec}`
+				// and `Current` also a symlink to `A`... and `_CodeSignature` will be found there
+				var path = PathUtils.ResolveSymbolicLinks (item.ItemSpec);
+				var dirName = Path.GetDirectoryName (path);
 
 				if (Path.GetExtension (dirName) == ".framework")
 					codesignedFiles.AddRange (Directory.EnumerateFiles (Path.Combine (dirName, CodeSignatureDirName)).Select (x => new TaskItem (x)));

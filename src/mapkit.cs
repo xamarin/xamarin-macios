@@ -1068,7 +1068,7 @@ namespace MapKit {
 		[Static]
 		[Internal]
 		[Export ("polygonWithPoints:count:interiorPolygons:")]
-		MKPolygon _FromPoints (IntPtr points, nint count, MKPolygon [] interiorPolygons);
+		MKPolygon _FromPoints (IntPtr points, nint count, [NullAllowed] MKPolygon [] interiorPolygons);
 
 		[Static]
 		[Export ("polygonWithCoordinates:count:"), Internal]
@@ -1077,7 +1077,7 @@ namespace MapKit {
 		[Static]
 		[Internal]
 		[Export ("polygonWithCoordinates:count:interiorPolygons:")]
-		MKPolygon _FromCoordinates (IntPtr coords, nint count, MKPolygon [] interiorPolygons);
+		MKPolygon _FromCoordinates (IntPtr coords, nint count, [NullAllowed] MKPolygon [] interiorPolygons);
 
 		#region MKAnnotation
 		[Export ("coordinate")]

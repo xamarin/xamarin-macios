@@ -93,6 +93,7 @@ include ./Makefile.generator
 include ./generator-diff.mk
 
 COMMON_TARGET_DIRS = \
+	$(BUILD_DIR)                    \
 	$(BUILD_DIR)/common             \
 	$(BUILD_DIR)/common/NativeTypes \
 
@@ -115,6 +116,7 @@ $(SHARED_DESIGNER_CS): $(SHARED_RESX)
 IOS_EXTRA_SOURCES = \
 	$(IOS_OPENTK_1_0_CORE_SOURCES)   \
 	$(IOS_BUILD_DIR)/Constants.cs    \
+	$(BUILD_DIR)/Constants.ios.generated.cs \
 	$(IOS_BUILD_DIR)/AssemblyInfo.cs \
 	$(SHARED_DESIGNER_CS) \
 	$(SHARED_SYSTEM_DRAWING_SOURCES) \
@@ -432,6 +434,7 @@ SN_KEY = $(PRODUCT_KEY_PATH)
 
 MAC_EXTRA_CORE_SOURCES += \
 	$(MAC_BUILD_DIR)/Constants.cs \
+	$(BUILD_DIR)/Constants.macos.generated.cs \
 
 # Add new bindings + source files in frameworks.sources, not here.
 
@@ -725,6 +728,7 @@ WATCHOS_WARNINGS_TO_FIX = -nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_
 
 WATCHOS_EXTRA_CORE_SOURCES = \
     $(WATCH_BUILD_DIR)/Constants.cs    \
+    $(BUILD_DIR)/Constants.watchos.generated.cs \
     $(WATCH_BUILD_DIR)/AssemblyInfo.cs \
     $(IOS_OPENTK_1_0_CORE_SOURCES)     \
     AudioToolbox/AudioBuffers.cs       \
@@ -1004,6 +1008,7 @@ TVOS_WARNINGS_TO_FIX=-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_S
 
 TVOS_EXTRA_CORE_SOURCES = \
 	$(TVOS_BUILD_DIR)/Constants.cs    \
+	$(BUILD_DIR)/Constants.tvos.generated.cs \
     $(TVOS_BUILD_DIR)/AssemblyInfo.cs \
 	$(IOS_OPENTK_1_0_CORE_SOURCES)    \
 	$(SHARED_SYSTEM_DRAWING_SOURCES) \
@@ -1205,6 +1210,7 @@ MACCATALYST_WARNINGS_TO_FIX=-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THA
 
 MACCATALYST_EXTRA_CORE_SOURCES = \
 	$(MACCATALYST_BUILD_DIR)/Constants.cs    \
+	$(BUILD_DIR)/Constants.maccatalyst.generated.cs \
 	$(MACCATALYST_BUILD_DIR)/AssemblyInfo.cs \
 	$(IOS_OPENTK_1_0_CORE_SOURCES)    \
 	$(SHARED_SYSTEM_DRAWING_SOURCES) \
@@ -1528,6 +1534,16 @@ $(DOTNET_COMPILER): Makefile $(TOP)/Make.config | $(DOTNET_BUILD_DIR)
 	$(Q) echo "#!/bin/zsh -e" > $@
 	$(Q) echo "exec $(SYSTEM_CSC) $(DOTNET_FLAGS) \"\$$@\"" >> $@
 	$(Q) chmod +x $@
+
+GENERATE_FRAMEWORKS_CONSTANTS=generate-frameworks-constants/bin/Debug/generate-frameworks-constants.exe
+
+$(GENERATE_FRAMEWORKS_CONSTANTS): $(wildcard generate-frameworks-constants/*.cs*) $(TOP)/tools/common/Frameworks.cs Makefile
+	$(Q) $(SYSTEM_MSBUILD) /r generate-frameworks-constants/generate-frameworks-constants.csproj $(MSBUILD_VERBOSITY)
+
+# This rule means: generate a Constants.<platform>.generated.cs for the frameworks in the variable <PLATFORM>_FRAMEWORKS
+$(BUILD_DIR)/Constants.%.generated.cs: Makefile $(GENERATE_FRAMEWORKS_CONSTANTS) | $(BUILD_DIR)
+	$(Q) mono --debug $(GENERATE_FRAMEWORKS_CONSTANTS) "$*" "$@.tmp"
+	$(Q) mv "$@.tmp" "$@"
 
 # This tells NuGet to use the exact same dotnet version we've configured in Make.config
 global.json: $(TOP)/global6.json

@@ -1130,9 +1130,9 @@ namespace Metal {
 		Apple3 = 1003,
 		Apple4 = 1004,
 		Apple5 = 1005,
-		[NoTV, NoMac, iOS (14,0)] // Yep just available in iOS
+		[NoTV, Mac (11,0), iOS (14,0)]
 		Apple6 = 1006,
-		[NoTV, NoMac, iOS (14,0)] // Yep just available in iOS
+		[NoTV, Mac (11,0), iOS (14,0)]
 		Apple7 = 1007,
 		Mac1 = 2001,
 		Mac2 = 2002,
