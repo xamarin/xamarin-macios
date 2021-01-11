@@ -267,6 +267,14 @@ steps:
   displayName: 'Signing PR Build'
   condition: and(succeeded(), contains(variables['configuration.SignPkgs'], 'True'), contains(variables['configuration.IsPr'], 'True'))
 
+- template: productsign-pkg.yml@templates
+  parameters:
+    UnsignedPkgPath: $(IOS_PKG)
+
+- template: productsign-pkg.yml@templates
+  parameters:
+    UnsignedPkgPath: $(MAC_PKG)
+
 - task: ms-vseng.MicroBuildTasks.30666190-6959-11e5-9f96-f56098202fef.MicroBuildSigningPlugin@3 
   displayName: 'Install Signing Plugin' 
   inputs: 
