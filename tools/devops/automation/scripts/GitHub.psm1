@@ -366,8 +366,15 @@ function New-GitHubSummaryComment {
             if ($json.Count -gt 0) {
                 $sb.AppendLine("<details><summary>View packages</summary>")
                 foreach ($a in $json) {
-                    $fileName = $a.url.Substring($a.url.LastIndexOf("/" + 1))
-                    $sb.AppendLine("* [$fileName]($($a.url))")
+                    $url = $a.url
+                    if ($url.EndsWith(".pkg") -or $url.EndsWith(".nupkg")) {
+                        try {
+                            $fileName = $a.url.Substring($a.url.LastIndexOf("/" + 1))
+                            $sb.AppendLine("* [$fileName]($($a.url))")
+                        } catch {
+                            Write-Host "Could not get file name for url $url"
+                        }
+                    }
                 }
                 $sb.AppendLine("</details>")
             } else {
