@@ -50,7 +50,32 @@ XMAC_PCH = macosx$(OSX_SDK_VERSION)-$(XMAC_ARCH).pch
 $(XMAC_PCH): .stamp-check-sharpie
 	sharpie sdk-db --xcode $(XCODE) -s macosx$(OSX_SDK_VERSION) -a $(XMAC_ARCH) -exclude ClockKit -exclude JavaNativeFoundation
 
+XCAT ?= $(TOP)/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/64bits/MacCatalyst/Xamarin.MacCatalyst.dll
+XCAT_GL ?=
+XCAT_ARCH = x86_64
+XCAT_PCH = ios$(MACCATALYST_SDK_VERSION)-macabi-$(XCAT_ARCH).pch
 
+$(XCAT_PCH): .stamp-check-sharpie
+	sharpie sdk-db --xcode $(XCODE) -s ios$(MACCATALYST_SDK_VERSION)-macabi -a $(XCAT_ARCH) \
+	-exclude AGL \
+	-exclude CalendarStore \
+	-exclude Carbon \
+	-exclude ClockKit \
+	-exclude DiscRecordingUI \
+	-exclude GLKit \
+	-exclude ICADevices \
+	-exclude InputMethodKit \
+	-exclude InstallerPlugins \
+	-exclude IOBluetooth \
+	-exclude IOBluetoothUI \
+	-exclude JavaNativeFoundation \
+	-exclude LDAP \
+	-exclude Python \
+	-exclude Quartz \
+	-exclude SecurityInterface \
+
+
+maccatalyst: $(XCAT_PCH)
 
 ios-$(IOS_SDK_VERSION).g.cs: $(XIOS_PCH)
 
@@ -88,8 +113,16 @@ else
 gen-macos: ; @true
 endif
 
-gen-all: gen-ios gen-tvos gen-watchos gen-macos
-	
+maccatalyst-$(MACCATALYST_SDK_VERSION).g.cs: $(XMAC_PCH)
+
+ifdef INCLUDE_MACCATALYST
+gen-maccatalyst: maccatalyst-$(MACCATALYST_SDK_VERSION).g.cs .stamp-check-sharpie
+	sharpie query -bind $(XCAT_PCH) > maccatalyst-$(MACCATALYST_SDK_VERSION).g.cs
+else
+gen-maccatalyst: ; @true
+endif
+
+gen-all: gen-ios gen-tvos gen-watchos gen-macos gen-maccatalyst
 
 wrench: classify
 
@@ -128,9 +161,16 @@ else
 classify-macos: ; @true
 endif
 
-classify: build $(XIOS_PCH) $(XWATCHOS_PCH) $(XTVOS_PCH) $(XMAC_PCH)
+ifdef INCLUDE_MACCATALYST
+classify-maccatalyst: bin/Debug/xtro-sharpie.exe $(XCAT_PCH)
+	$(MONO) bin/Debug/xtro-sharpie.exe $(XCAT_PCH) $(XCAT)
+else
+classify-maccatalyst: ; @true
+endif
+
+classify: build $(XIOS_PCH) $(XWATCHOS_PCH) $(XTVOS_PCH) $(XMAC_PCH) $(XCAT_PCH)
 	rm -f *.unclassified
-	$(MAKE) -j4 classify-ios classify-tvos classify-watchos classify-macos
+	$(MAKE) -j8 classify-ios classify-tvos classify-watchos classify-macos classify-maccatalyst
 	$(MONO) xtro-sanity/bin/Debug/xtro-sanity.exe .
 	rm -f *.raw
 

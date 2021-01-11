@@ -116,6 +116,8 @@ namespace Extrospection
 				return new Platforms[] { Platforms.iOS, Platforms.tvOS };
 			case Platforms.watchOS:
 				return new Platforms[] { Platforms.iOS, Platforms.watchOS };
+			case Platforms.MacCatalyst:
+				return new Platforms [] { Platforms.iOS, Platforms.MacCatalyst };
 			default:
 				throw new InvalidOperationException ($"Unknown {Helpers.Platform} in GetPlatforms");
 			}

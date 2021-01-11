@@ -1,0 +1,13 @@
+!extra-null-allowed! 'System.Void ModelIO.MDLAsset::.ctor(Foundation.NSUrl,ModelIO.MDLVertexDescriptor,ModelIO.IMDLMeshBufferAllocator,System.Boolean,Foundation.NSError&)' has a extraneous [NullAllowed] on parameter #0
+!extra-null-allowed! 'System.Void ModelIO.MDLMaterial::LoadTextures(ModelIO.IMDLAssetResolver)' has a extraneous [NullAllowed] on parameter #0
+!extra-null-allowed! 'System.Void ModelIO.MDLMaterial::ResolveTextures(ModelIO.IMDLAssetResolver)' has a extraneous [NullAllowed] on parameter #0
+!extra-null-allowed! 'System.Void ModelIO.MDLMesh::set_VertexDescriptor(ModelIO.MDLVertexDescriptor)' has a extraneous [NullAllowed] on parameter #0
+!extra-null-allowed! 'System.Void ModelIO.MDLObject::EnumerateChildObjects(ObjCRuntime.Class,ModelIO.MDLObject,ModelIO.MDLObjectHandler,System.Boolean&)' has a extraneous [NullAllowed] on parameter #3
+!extra-null-allowed! 'System.Void ModelIO.MDLObject::set_Children(ModelIO.IMDLObjectContainerComponent)' has a extraneous [NullAllowed] on parameter #0
+!extra-null-allowed! 'System.Void ModelIO.MDLVertexAttributeData::set_Map(ModelIO.MDLMeshBufferMap)' has a extraneous [NullAllowed] on parameter #0
+!missing-null-allowed! 'ModelIO.MDLMesh ModelIO.MDLMesh::CreateSubdividedMesh(ModelIO.MDLMesh,System.nuint,System.nuint)' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'ModelIO.MDLTexture ModelIO.MDLTexture::CreateTexture(System.String)' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'ModelIO.MDLTexture ModelIO.MDLTexture::CreateTexture(System.String,Foundation.NSBundle)' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'ModelIO.MDLTexture ModelIO.MDLTexture::CreateTextureCube(System.String[])' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'ModelIO.MDLTexture ModelIO.MDLTexture::CreateTextureCube(System.String[],Foundation.NSBundle)' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'System.Void ModelIO.MDLAsset::.ctor(Foundation.NSUrl,ModelIO.MDLVertexDescriptor,ModelIO.IMDLMeshBufferAllocator)' is missing an [NullAllowed] on parameter #0

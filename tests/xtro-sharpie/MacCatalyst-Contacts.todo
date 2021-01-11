@@ -1,0 +1,5 @@
+!missing-protocol-conformance! NSString should conform to CNKeyDescriptor (defined in 'Contacts' category)
+!missing-selector! +CNGroup::predicateForSubgroupsInGroupWithIdentifier: not bound
+!missing-selector! CNContactStore::unifiedMeContactWithKeysToFetch:error: not bound
+!missing-selector! CNSaveRequest::addSubgroup:toGroup: not bound
+!missing-selector! CNSaveRequest::removeSubgroup:fromGroup: not bound
