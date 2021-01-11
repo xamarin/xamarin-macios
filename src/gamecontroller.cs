@@ -1784,4 +1784,10 @@ namespace GameController {
 		[Field ("GCKeyCodeRightGUI")]
 		nint RightGui { get; }
 	}
+
+	[iOS (14,3)][TV (14,3)][Mac (11,1)]
+	[BaseType (typeof (GCMicroGamepad))]
+	[DisableDefaultCtor]
+	interface GCDirectionalGamepad {
+	}
 }

@@ -1,0 +1,440 @@
+parameters:
+- name: runTests
+  type: boolean
+  default: true
+
+- name: runDeviceTests
+  type: boolean
+  default: true
+
+- name: vsdropsPrefix
+  type: string
+
+steps:
+- checkout: self          # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
+  clean: true             # Executes: git clean -ffdx && git reset --hard HEAD
+  submodules: recursive
+
+- checkout: maccore
+  clean: true
+  persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
+
+- checkout: templates
+  clean: true
+
+- checkout: release-scripts
+  clean: true
+
+- powershell: |
+    gci env: | format-table -autosize -wrap
+  displayName: 'Dump Environment'
+
+- bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/clean-bot.sh
+  displayName: 'Clean bot'
+  env:
+    BUILD_REVISION: 'jenkins'
+  continueOnError: true
+
+- bash: |
+    security set-key-partition-list -S apple-tool:,apple: -s -k $OSX_KEYCHAIN_PASS login.keychain
+  env:
+    OSX_KEYCHAIN_PASS: $(OSX_KEYCHAIN_PASS)
+  displayName: 'Remove security UI-prompt (http://stackoverflow.com/a/40039594/183422)'
+  condition: succeededOrFailed() # we do not care about the previous process cleanup
+
+- template: install-certificates.yml@templates
+  parameters:
+    DeveloperIdApplication: $(developer-id-application)
+    DeveloperIdInstaller: $(developer-id-installer)
+    IphoneDeveloper: $(iphone-developer)
+    MacDeveloper: $(mac-developer)
+    HostedMacKeychainPassword: $(OSX_KEYCHAIN_PASS)
+
+- task: xamops.azdevex.provisionator-task.provisionator@2
+  displayName: 'Provision Brew components'
+  inputs:
+    provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/provision-brew-packages.csx
+    provisioning_extra_args: '-vvvv'
+  timeoutInMinutes: 30
+  enabled: false
+
+- bash: |
+    make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops build-provisioning.csx
+  displayName: 'Generate provisionator files.'
+
+- task: xamops.azdevex.provisionator-task.provisionator@1
+  displayName: 'Provision Products & Frameworks'
+  inputs:
+    provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/build-provisioning.csx
+    provisioning_extra_args: '-vvvv'
+  timeoutInMinutes: 250
+
+- bash: |
+    set -x
+    sudo rm -Rf /Developer/MonoTouch
+    sudo rm -Rf /Library/Frameworks/Xamarin.iOS.framework
+    sudo rm -Rf /Library/Frameworks/Xamarin.Mac.framework
+  displayName: 'Delete library folders'
+  timeoutInMinutes: 5
+
+- bash:
+    set -x
+    set -e
+    rm -Rvf $(Build.SourcesDirectory)/package
+    time make -C $(Build.SourcesDirectory)/xamarin-macios/ git-clean-all
+  displayName: 'Clear results directory'
+  timeoutInMinutes: 5
+
+# Use the env variables that were set by the label parsing in the configure step
+# print some useful logging to allow to know what is going on AND allow make some
+# choices, there are labels that contradict each other (skip-package vs build-packages)
+# we use warnings for those case we are not sure about.
+- pwsh: |
+    # we have a number of scripts that require to be executed from the top of the src, rather
+    # than keeping track of the location of the script, we create two env vars that can be used to
+    # get to the top
+    $xamTop = "$(Build.SourcesDirectory)/xamarin-macios/"
+    Write-Host "##vso[task.setvariable variable=XAM_TOP]$xamTop"
+
+    $maccoreTop = "$(Build.SourcesDirectory)/maccore/"
+    Write-Host "##vso[task.setvariable variable=MACCORE_TOP]$maccoreTop"
+
+    $buildReason = "$(Build.Reason)"
+    $buildSourceBranchName = "$(Build.SourceBranchName)"
+
+    # decide if we are dealing with a PR or a re-triggered PR or a build from
+    # a branch in origin
+    
+    if ($buildReason -eq "PullRequest" -or (($buildReason -eq "Manual") -and ($buildSourceBranchName -eq "merge")) ) {
+      Write-Host '##vso[task.setvariable variable=IsPR;isOutput=true]False'
+
+      if ($Env:BuildPackage -eq "True") {
+        Write-Host '##vso[task.setvariable variable=BuildPkgs;isOutput=true]True'
+      } else {
+        Write-Host '##vso[task.setvariable variable=BuildPkgs;isOutput=true]False'
+      }
+
+      # interesting case, we have build-pkg and skip-pkg... if that is the case, we build it, but we set a warning
+      if ($Env:BuildPackage -eq "True" -and $Env:SkipPackages -eq "True") {
+        Write-Host "##vso[task.logissue type=warning]'build-package' and 'skip-packages' are both present. Building packages in case of a doubt."
+        Write-Host "##vso[task.setvariable variable=BuildPkgs;isOutput=true]True"
+      } 
+
+      # if we want to have device tests, we do need the pkgs so that we can fwd them to the device tests
+      if ($Env:TriggerDeviceTests -eq "True") {
+        Write-Host "##vso[task.setvariable variable=BuildPkgs;isOutput=true]True"
+        Write-Host "##vso[task.setvariable variable=RunDeviceTests;isOutput=true]True"
+      }
+
+      if ($Env:SkipNugets -eq "True") {
+        Write-Host "##vso[task.setvariable variable=BuildNugets;isOutput=true]False"
+      } else {
+        Write-Host "##vso[task.setvariable variable=BuildNugets;isOutput=true]True"
+      }
+
+      if ($Env:SkipSigning -eq "True") {
+        Write-Host "##vso[task.setvariable variable=SignPkgs;isOutput=true]False"
+      } else {
+        Write-Host "##vso[task.setvariable variable=SignPkgs;isOutput=true]True"
+      }
+
+      if ($Env:SkipExternalTests -eq "True") {
+        Write-Host "##vso[task.setvariable variable=RunExternalTests;isOutput=true]False"
+      } else {
+        Write-Host "##vso[task.setvariable variable=RunExternalTests;isOutput=true]True"
+      }
+
+      if ($Env:SkipPackagedXamarinMacTests -eq "True") {
+        Write-Host "##vso[task.setvariable variable=RunMacTests;isOutput=true]False"
+      } else {
+        Write-Host "##vso[task.setvariable variable=RunMacTests;isOutput=true]True"
+      }
+
+      if ($Env:SkipPublicJenkins -eq "True") {
+        Write-Host "##vso[task.setvariable variable=SkipPublicJenkins;isOutput=true]True"
+      } else {
+        Write-Host "##vso[task.setvariable variable=SkipPublicJenkins;isOutput=true]False"
+      }
+
+      Write-Host "##vso[task.setvariable variable=RunSampleTests;isOutput=true]$Env:RunSampleTests"
+      Write-Host "##vso[task.setvariable variable=RunInternalTests;isOutput=true]$Env:RunInternalTests"
+
+    } else {
+      # set the defaults, all the things! o/
+      Write-Host "##vso[task.setvariable variable=IsPR;isOutput=true]False"
+
+      # build pkg, nugets and sign them
+      Write-Host "##vso[task.setvariable variable=BuildPkgs;isOutput=true]True"
+      Write-Host "##vso[task.setvariable variable=BuildNugets;isOutput=true]True"
+      Write-Host "##vso[task.setvariable variable=SignPkgs;isOutput=true]True"
+
+      # tests, run all of them, internal, external, mac but not sample tests
+      Write-Host "##vso[task.setvariable variable=RunInternalTests;isOutput=true]True"
+      Write-Host "##vso[task.setvariable variable=RunExternalTests;isOutput=true]True"
+      Write-Host "##vso[task.setvariable variable=RunMacTests;isOutput=true]True"
+      Write-Host "##vso[task.setvariable variable=RunSampleTests;isOutput=true]False"
+      Write-Host "##vso[task.setvariable variable=SkipPublicJenkins;isOutput=true]False"
+
+      # if a developer decided to trigger one without device tests, allow it
+      if ($Env:RUN_DEVICE_TESTS -eq "true") {
+        Write-Host "##vso[task.setvariable variable=RunDeviceTests;isOutput=true]True"
+      } else {
+        Write-Host "##vso[task.setvariable variable=RunDeviceTests;isOutput=true]False"
+      }
+    }
+
+  name: configuration
+  displayName: "Parse PR labels"
+  timeoutInMinutes: 5
+  env:
+    RUN_DEVICE_TESTS: '${{ parameters.runDeviceTests }}'
+
+- bash: |
+    set -x
+    set -e
+
+    if [[ "$IsPR" == "True" ]]; then
+      echo "Xamarin private packages NOT configured. Building a PR."
+      CONFIGURE_FLAGS=""
+    else
+      echo "Xamarin private packages configured."
+      CONFIGURE_FLAGS="--enable-xamarin"
+    fi
+
+    CONFIGURE_FLAGS="$CONFIGURE_FLAGS --enable-dotnet --enable-install-source"
+
+    cd $(Build.SourcesDirectory)/xamarin-macios/
+    ./configure $CONFIGURE_FLAGS
+    echo $(cat $(Build.SourcesDirectory)/xamarin-macios/configure.inc)
+  env:
+    IsPR: $(configuration.IsPR)
+  displayName: "Configure build"
+  timeoutInMinutes: 5
+
+# Actual build of the project
+- bash: |
+    set -x
+    set -e
+    time make -C $(Build.SourcesDirectory)/xamarin-macios/ reset
+    time make -C $(Build.SourcesDirectory)/xamarin-macios/ all -j8
+    time make -C $(Build.SourcesDirectory)/xamarin-macios/ install -j8
+  displayName: 'Build'
+  timeoutInMinutes: 180
+
+# build not signed .pkgs for the SDK
+- bash: |
+    set -x
+    set -e
+    rm -Rf $(Build.SourcesDirectory)/package/*.pkg
+    rm -Rf $(Build.SourcesDirectory)/package/notarized/*.pkg
+    time make -C $(Build.SourcesDirectory)/xamarin-macios/ package
+
+    # output vars for other steps to use and not need to recomputed the paths
+    IOS_PKG=$(find $(Build.SourcesDirectory)/package -type f -name "xamarin.ios-*" | xargs basename)
+    if [ -z "$IOS_PKG" ]; then
+      echo "Xamarin.iOS package not found."
+    else
+      IOS_PKG="$(Build.SourcesDirectory)/package/$IOS_PKG"
+      echo "##vso[task.setvariable variable=IOS_PKG;]$IOS_PKG"
+      echo "Xamarin.iOS package found at $IOS_PKG"
+    fi
+
+    MAC_PKG=$(find $(Build.SourcesDirectory)/package -type f -name "xamarin.mac-*" | xargs basename)
+    if [ -z "$MAC_PKG" ]; then
+      echo "Xamarin.Mac package not found."
+    else
+      MAC_PKG="$(Build.SourcesDirectory)/package/$MAC_PKG"
+      echo "##vso[task.setvariable variable=MAC_PKG;]$MAC_PKG"
+      echo "Xamarin.Mac package found at $MAC_PKG"
+    fi
+  name: packages
+  displayName: 'Build Packages'
+  condition: and(succeeded(), contains(variables['configuration.BuildPkgs'], 'True'))
+  timeoutInMinutes: 180
+
+# build nugets
+- bash:  $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/build-nugets.sh
+  displayName: 'Build Nugets'
+  condition: and(succeeded(), contains(variables['configuration.BuildNugets'], 'True'))
+  continueOnError: true # should not stop the build since is not official just yet.
+  timeoutInMinutes: 180
+
+- bash: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/productsign.sh
+  env:
+    PRODUCTSIGN_KEYCHAIN_PASSWORD: $(xma-password)
+  displayName: 'Signing PR Build'
+  condition: and(succeeded(), contains(variables['configuration.SignPkgs'], 'True'), contains(variables['configuration.IsPr'], 'True'))
+
+  # Ensure virtualenv is on the PATH
+- template: set-path/v1.yml@templates
+  parameters:
+    prependToPath: '/Users/builder/Library/Python/2.7/bin'
+
+- bash: |
+    VIRTUAL_ENV_PATH=$(Build.SourcesDirectory)/venv
+    pip install virtualenv
+    virtualenv "$VIRTUAL_ENV_PATH" --system-site-packages
+    source "$VIRTUAL_ENV_PATH/bin/activate"
+    pip install python-magic
+
+    security unlock-keychain -p $PRODUCTSIGN_KEYCHAIN_PASSWORD builder.keychain
+    PACKAGES="$IOS_PKG $MAC_PKG"
+    echo "Packages found at $PACKAGES"
+
+    echo "$PACKAGES" | xargs python $(Build.SourcesDirectory)/release-scripts/sign_and_notarize.py -a "$APP_ID" -i "$INSTALL_ID" -u "$APPLE_ACCOUNT" -p "$APPLE_PASS" -t "$TEAM_ID" -d $(Build.SourcesDirectory)/package/notarized -e "$MAC_ENTITLEMENTS" -k "$KEYCHAIN"
+
+    deactivate
+    rm -Rf "$VIRTUAL_ENV_PATH"
+  env:
+    PRODUCTSIGN_KEYCHAIN_PASSWORD: $(OSX_KEYCHAIN_PASS)
+    MAC_ENTITLEMENTS: $(Build.SourcesDirectory)/xamarin-macios/mac-entitlements.plist
+    APP_ID: $(XamarinAppId)
+    INSTALL_ID: $(XamarinAppId)
+    APPLE_ACCOUNT: $(XamarinUserId)
+    APPLE_PASS: $(XamarinPassword)
+    TEAM_ID: $(TeamID)
+    KEYCHAIN: $(SigningKeychain)
+  name: notarize
+  displayName: 'Signing Release Build'
+  condition: and(succeeded(), contains(variables['configuration.SignPkgs'], 'True'), contains(variables['configuration.IsPr'], 'False'))
+  timeoutInMinutes: 90
+
+- template: generate-workspace-info.yml@templates
+  parameters:
+    GitHubToken: $(GitHub.Token)
+    ArtifactDirectory: $(Build.SourcesDirectory)/package-internal
+
+- template: uninstall-certificates/v1.yml@templates
+  parameters:
+    HostedMacKeychainPassword: $(OSX_KEYCHAIN_PASS)
+
+# upload each of the pkgs into the pipeline artifacts
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Build Artifacts'
+  inputs:
+    targetPath: $(Build.SourcesDirectory)/package
+    artifactName: package
+  continueOnError: true
+
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Build Internal Artifacts'
+  inputs:
+    targetPath: $(Build.SourcesDirectory)/package-internal 
+    artifactName: package-internal
+  continueOnError: true
+
+- bash: |
+    set -x
+    set -e
+
+    make -C $(Build.SourcesDirectory)/xamarin-macios/tests package-tests
+  displayName: 'Package Xamarin.mac tests'
+  condition: and(succeeded(), contains(variables['configuration.RunMacTests'], 'True'))
+  continueOnError: true # not a terrible blocking issue
+
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Xamarin.Mac tests'
+  inputs:
+    targetPath: $(Build.SourcesDirectory)/xamarin-macios/tests/*.7z
+    artifactName: package-internal
+  condition: and(succeeded(), contains(variables['configuration.RunMacTests'], 'True'))
+  continueOnError: true
+
+- bash: |
+    make -j8 -C $(Build.SourcesDirectory)/xamarin-macios/tools/apidiff jenkins-api-diff
+
+    # remove some files that do not need to be uploaded
+    cd $(Build.SourcesDirectory)/xamarin-macios/tools/apidiff/
+    rm -Rf *.exe *.pdb *.stamp *.zip *.sh ./references ./temp
+  displayName: 'API diff (from stable)'
+  condition: and(succeeded(), contains(variables['configuration.SkipPublicJenkins'], 'False'))
+  continueOnError: true
+  env:
+    BUILD_REVISION: 'jenkins'
+
+- task: ArchiveFiles@1
+  displayName: 'Archive API diff (from stable)'
+  inputs:
+    rootFolder: $(Build.SourcesDirectory)/xamarin-macios/tools/apidiff
+    includeRootFolder: false
+    archiveFile: '$(Build.ArtifactStagingDirectory)/apidiff-stable.zip'
+  condition: and(succeeded(), contains(variables['configuration.SkipPublicJenkins'], 'False'))
+  continueOnError: true
+
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish API diff (from stable)'
+  inputs:
+    targetPath: '$(Build.ArtifactStagingDirectory)/apidiff-stable.zip'
+    artifactName: apidiff-stable
+  condition: and(succeeded(), contains(variables['configuration.SkipPublicJenkins'], 'False'))
+  continueOnError: true
+
+- bash: |
+    set -x
+    set -e
+    echo "Running tests on $AGENT_NAME"
+    echo "##vso[task.setvariable variable=TESTS_BOT;isOutput=true]$AGENT_NAME"
+
+    echo "##vso[task.setvariable variable=TESTS_RAN;isOutput=true]True"
+    rm -rf ~/.config/.mono/keypairs/
+
+    RC=0
+    make -C $(Build.SourcesDirectory)/xamarin-macios/tests "$TARGET" || RC=$?
+
+    if [ $RC -eq 0 ]; then
+      echo "##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Succeeded"
+    else
+      echo "##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Failed"
+    fi
+
+    if test -f "$(Build.SourcesDirectory)/xamarin-macios//jenkins/failure-stamp"; then
+      echo "Something went wrong:"
+      cat "$(Build.SourcesDirectory)/xamarin-macios//jenkins/pr-comments.md"
+      exit 1
+    fi
+  displayName: 'Run tests'
+  name: runTests # not to be confused with the displayName, this is used to later use the name of the step to access the output variables from an other job
+  timeoutInMinutes: 600
+  condition: succeededOrFailed() # we do not care about the previous process cleanup
+  enabled: ${{ parameters.runTests }}
+  env:
+    BUILD_REVISION: jenkins
+    TARGET: 'wrench-jenkins'
+    VSDROPS_URI: '${{ parameters.vsdropsPrefix }}/$(Build.BuildNumber)/$(Build.BuildId)/sim;/tests/' # uri used to create the vsdrops index using full uri
+
+# Upload TestSummary as an artifact.
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Artifact: TestSummary'
+  inputs:
+    targetPath: 'xamarin-macios/tests/TestSummary.md'
+    artifactName: TestSummary-sim
+  continueOnError: true
+  condition: and(succeededOrFailed(), contains(variables['runTests.TESTS_RAN'], 'True')) # if tests did not run, there is nothing to do
+
+- pwsh: |
+    $summaryName = "TestSummary.md"
+    $summaryPath = "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tests/TestSummary.md"
+    Write-Host "##vso[task.addattachment type=Distributedtask.Core.Summary;name=$summaryName;]$summaryPath"
+  displayName: Set TestSummary
+  condition: and(succeededOrFailed(), contains(variables['runTests.TESTS_RAN'], 'True')) # if tests did not run, there is nothing to do
+
+# Archive files for the Html Report so that the report can be easily uploaded as artifacts of the build.
+- task: ArchiveFiles@1
+  displayName: 'Archive HtmlReport'
+  inputs:
+    rootFolder: 'xamarin-macios/jenkins-results'
+    includeRootFolder: false
+    archiveFile: '$(Build.ArtifactStagingDirectory)/HtmlReport.zip'
+  continueOnError: true
+  condition: and(succeededOrFailed(), contains(variables['runTests.TESTS_RAN'], 'True')) # if tests did not run, there is nothing to do
+
+# Create HtmlReport artifact. This serves two purposes:
+# 1. It is the way we are going to share the HtmlReport with the publish_html job that is executed on a Windows machine.
+# 2. Users can download this if they want.
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Artifact: HtmlReport'
+  inputs:
+    targetPath: '$(Build.ArtifactStagingDirectory)/HtmlReport.zip'
+    artifactName: HtmlReport-sim
+  continueOnError: true
+  condition: and(succeededOrFailed(), contains(variables['runTests.TESTS_RAN'], 'True')) # if tests did not run, there is nothing to do

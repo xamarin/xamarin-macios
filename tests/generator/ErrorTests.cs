@@ -204,6 +204,16 @@ namespace GeneratorTests
 		}
 
 		[Test]
+		public void BI1059 ()
+		{
+			var bgen = new BGenTool ();
+			bgen.Profile = Profile.iOS;
+			bgen.CreateTemporaryBinding (File.ReadAllText (Path.Combine (Configuration.SourceRoot, "tests", "generator", "bi1059.cs")));
+			bgen.AssertExecuteError ("build");
+			bgen.AssertError (1059, "Found 2 Foundation.PreserveAttribute attributes on the member the type BI1059. At most one was expected.");
+		}
+
+		[Test]
 		public void BI1060 ()
 		{
 			var bgen = new BGenTool ();

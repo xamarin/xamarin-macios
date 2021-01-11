@@ -19,6 +19,7 @@
 			<string>10.15</string>
 			<string>10.16</string>
 			<string>11.0</string>
+			<string>11.1</string>
 		</array>
 	</dict>
 	<key>RecommendedXcodeVersion</key>

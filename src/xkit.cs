@@ -1069,12 +1069,12 @@ namespace UIKit {
 		[Advice ("This API is not available when using UIKit on macOS.")]
 		[Protected] // Can be overridden
 		[Export ("showCGGlyphs:positions:count:font:matrix:attributes:inContext:")]
-		void ShowGlyphs (IntPtr glyphs, IntPtr positions, nuint glyphCount, NSFont font, CGAffineTransform textMatrix, NSDictionary attributes, [NullAllowed] CGContext graphicsContext);
+		void ShowGlyphs (IntPtr glyphs, IntPtr positions, nuint glyphCount, NSFont font, CGAffineTransform textMatrix, NSDictionary attributes, CGContext graphicsContext);
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Protected] // Can be overridden
 		[Export ("showCGGlyphs:positions:count:font:textMatrix:attributes:inContext:")]
-		void ShowGlyphs (IntPtr glyphs, IntPtr positions, nint glyphCount, NSFont font, CGAffineTransform textMatrix, NSDictionary attributes, [NullAllowed] CGContext graphicsContext);
+		void ShowGlyphs (IntPtr glyphs, IntPtr positions, nint glyphCount, NSFont font, CGAffineTransform textMatrix, NSDictionary attributes, CGContext graphicsContext);
 
 		// Unfortunately we can't provide a nicer API for this, because it uses C-style arrays.
 		// And providing a nicer overload when it's only purpose is to be overridden is useless.

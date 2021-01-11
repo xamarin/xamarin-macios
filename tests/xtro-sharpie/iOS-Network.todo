@@ -19,4 +19,3 @@
 !missing-protocol! OS_nw_privacy_context not bound
 !missing-protocol! OS_nw_resolution_report not bound
 !missing-protocol! OS_nw_resolver_config not bound
-!missing-pinvoke! nw_path_get_unsatisfied_reason is not bound

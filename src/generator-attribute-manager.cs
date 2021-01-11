@@ -466,6 +466,8 @@ public class AttributeManager
 		if (provider is ParameterInfo) {
 			var pi = (ParameterInfo) provider;
 			name = $"the method {pi.Member.DeclaringType.FullName}.{pi.Member.Name}'s parameter #{pi.Position} ({pi.Name})";
+		} else if (provider is Type type) {
+			name = $"the type {type.FullName}";
 		} else if (provider is MemberInfo) {
 			var mi = (MemberInfo) provider;
 			name = $"the member {mi.DeclaringType.FullName}.{mi.Name}";
