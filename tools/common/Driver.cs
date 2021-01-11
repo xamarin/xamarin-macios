@@ -1190,6 +1190,8 @@ namespace Xamarin.Bundler {
 			// Move the dSYM next to its executable
 			if (dsymFolders.Length > 0) {
 				var outputDsymDir = output + ".dSYM";
+				if (Directory.Exists (outputDsymDir))
+					Directory.Delete (outputDsymDir, true);
 				Directory.Move (dsymFolders [0], outputDsymDir);
 				RunCommand ("/usr/bin/mdimport", outputDsymDir);
 			}

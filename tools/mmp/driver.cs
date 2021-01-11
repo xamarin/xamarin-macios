@@ -831,7 +831,7 @@ namespace Xamarin.Bundler {
 
 					// Delete previous content (so we don't have any remaining dsym if we switch from having one to not having one)
 					if (Directory.Exists (abiDir))
-						Directory.Delete (abiDir);
+						Directory.Delete (abiDir, true);
 
 					var main = Path.Combine (abiDir, $"main.m");
 					BuildTarget.GenerateMain (ApplePlatform.MacOSX, abi, main, null);
