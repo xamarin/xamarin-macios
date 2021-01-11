@@ -327,11 +327,10 @@ steps:
   continueOnError: true
 
 # funny enough we need these profiles to build the mac tests
-- bash: |
+- bash: | 
     set -x
     set -e
-    rm -f ~/Library/Caches/com.xamarin.provisionator/Provisions/*p12
-    rm -f ~/Library/Caches/com.xamarin.provisionator/Provisions/*mobileprovision
+
     cd "$SOURCES_DIR/maccore/tools/"
     ./install-qa-provisioning-profiles.sh -v 
   displayName: 'Add tests provisioning profiles'
