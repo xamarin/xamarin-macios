@@ -418,10 +418,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		Inputs="@(_CompileToNativeInput);@(_FileNativeReference);@(BundleDependentFiles)"
 		Outputs="$(_NativeExecutable);$(DeviceSpecificOutputPath)bundler.stamp">
 
-		<ItemGroup>
-			<_FrameworkNativeReference Include="@(_FrameworkNativeReference -> '%(Identity)/%(Filename)')" Condition="'%(Extension)' == '.framework' Or '%(Extension)' == '.xcframework'" />
-		</ItemGroup>
-
 		<MTouch
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
