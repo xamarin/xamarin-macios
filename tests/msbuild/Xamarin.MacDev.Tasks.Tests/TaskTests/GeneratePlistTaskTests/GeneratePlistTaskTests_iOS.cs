@@ -11,7 +11,7 @@ namespace Xamarin.iOS.Tasks
 		public override void ConfigureTask ()
 		{
 			base.ConfigureTask ();
-			Task.DefaultSdkVersion = IPhoneSdks.Native.GetClosestInstalledSdk (IPhoneSdkVersion.V6_1, true).ToString ();
+			Task.DefaultSdkVersion = Sdks.IOS.GetClosestInstalledSdk (IPhoneSdkVersion.V6_1, true).ToString ();
 			Task.TargetFrameworkMoniker = "Xamarin.iOS,v1.0";
 			Task.TargetArchitectures = "ARM64";
 		}

@@ -21,7 +21,7 @@ namespace Xamarin.iOS.Tasks
 
 		protected override bool Compile (PDictionary plist)
 		{
-			var currentSDK = IPhoneSdks.GetSdk (Platform);
+			var currentSDK = Sdks.GetAppleSdk (Platform);
 
 			sdkVersion = IPhoneSdkVersion.Parse (DefaultSdkVersion);
 			if (!currentSDK.SdkIsInstalled (sdkVersion, SdkIsSimulator)) {
@@ -32,7 +32,7 @@ namespace Xamarin.iOS.Tasks
 			supportedDevices = plist.GetUIDeviceFamily ();
 
 			if (!IsWatchApp) {
-				var version = IPhoneSdks.MonoTouch.ExtendedVersion;
+				var version = Sdks.XamIOS.ExtendedVersion;
 				// This key is our supported way of determining if an app
 				// was built with Xamarin, so it needs to be present in all apps.
 
@@ -42,7 +42,7 @@ namespace Xamarin.iOS.Tasks
 			}
 
 			var sdkSettings = currentSDK.GetSdkSettings (sdkVersion, SdkIsSimulator);
-			var dtSettings = currentSDK.GetDTSettings ();
+			var dtSettings = currentSDK.GetAppleDTSettings ();
 
 			SetValue (plist, ManifestKeys.BuildMachineOSBuild, dtSettings.BuildMachineOSBuild);
 			// We have an issue here, this is for consideration by the platform:

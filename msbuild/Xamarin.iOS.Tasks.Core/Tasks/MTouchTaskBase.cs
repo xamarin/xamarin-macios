@@ -488,12 +488,12 @@ namespace Xamarin.iOS.Tasks
 	
 		static string ResolveFrameworkFileOrFacade (string frameworkDir, string fileName)
 		{
-			var facadeFile = Path.Combine (IPhoneSdks.MonoTouch.LibDir, "mono", frameworkDir, "Facades", fileName);
+			var facadeFile = Path.Combine (Sdks.XamIOS.LibDir, "mono", frameworkDir, "Facades", fileName);
 
 			if (File.Exists (facadeFile))
 				return facadeFile;
 
-			var frameworkFile = Path.Combine (IPhoneSdks.MonoTouch.LibDir, "mono", frameworkDir, fileName);
+			var frameworkFile = Path.Combine (Sdks.XamIOS.LibDir, "mono", frameworkDir, fileName);
 			if (File.Exists (frameworkFile))
 				return frameworkFile;
 
