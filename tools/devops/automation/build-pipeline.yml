@@ -23,7 +23,7 @@ resources:
   - repository: templates
     type: github
     name: xamarin/yaml-templates
-    ref: refs/heads/main
+    ref: dev/bond/productsign-pkg-condition
     endpoint: xamarin
 
   - repository: maccore
