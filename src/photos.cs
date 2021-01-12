@@ -131,7 +131,7 @@ namespace Photos
 
 		[Deprecated (PlatformName.TvOS, 11,0)]
 		[Deprecated (PlatformName.iOS, 11,0)]
-		[Unavailable (PlatformName.UIKitForMac)]
+		[Unavailable (PlatformName.MacCatalyst)]
 		[NoMac]
 		[Static]
 		[Advice ("This API is not available when using UIKit on macOS.")]
@@ -1164,7 +1164,7 @@ namespace Photos
 	[Mac (10,13)]
 	[NoTV][NoiOS]
 	[Category]
-	[Unavailable (PlatformName.UIKitForMac)]
+	[Unavailable (PlatformName.MacCatalyst)]
 	[Advice ("This API is not available when using UIKit on macOS.")]
 	[BaseType (typeof (PHPhotoLibrary))]
 	interface PHPhotoLibrary_CloudIdentifiers {
@@ -1360,7 +1360,7 @@ namespace Photos
 
 	[Mac (10,13)]
 	[NoiOS][NoTV]
-	[Unavailable (PlatformName.UIKitForMac)]
+	[Unavailable (PlatformName.MacCatalyst)]
 	[Advice ("This API is not available when using UIKit on macOS.")]
 	[BaseType (typeof (PHAssetCollection))]
 	interface PHProject {
@@ -1374,7 +1374,7 @@ namespace Photos
 	}
 
 	[Mac (10,13)]
-	[Unavailable (PlatformName.UIKitForMac)]
+	[Unavailable (PlatformName.MacCatalyst)]
 	[NoiOS][NoTV]
 	[Advice ("This API is not available when using UIKit on macOS.")]
 	[BaseType (typeof (PHChangeRequest))]
@@ -1404,7 +1404,7 @@ namespace Photos
 
 	[Mac (10,13)]
 	[NoiOS][NoTV]
-	[Unavailable (PlatformName.UIKitForMac)]
+	[Unavailable (PlatformName.MacCatalyst)]
 	[Advice ("This API is not available when using UIKit on macOS.")]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
