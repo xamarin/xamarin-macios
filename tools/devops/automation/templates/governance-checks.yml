@@ -20,6 +20,16 @@ steps:
   displayName: Dump enviroment
 
 - powershell: |
+    Write-Host "IsMacOS: ${IsMacOS}"
+    Write-Host "IsWindows: ${IsWindows}"
+    Write-Host "IsLinux: ${IsLinux}"
+
+    if ($IsMacOS -or $IsLinux) {
+        Write-Host "HOSTNAME: ${env:HOSTNAME}"
+    } else {
+        Write-Host "COMPUTERNAME: ${env:COMPUTERNAME}"
+    }
+
     gci env: | format-table -autosize -wrap
   displayName: 'Dump Environment'
 
