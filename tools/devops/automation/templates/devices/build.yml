@@ -70,7 +70,7 @@ steps:
     Write-Host "IsLinux: ${IsLinux}"
 
     if ($IsMacOS -or $IsLinux) {
-        Write-Host "HOSTNAME: ${env:HOSTNAME}"
+        Write-Host "HOSTNAME: $(hostname)"
     } else {
         Write-Host "COMPUTERNAME: ${env:COMPUTERNAME}"
     }
