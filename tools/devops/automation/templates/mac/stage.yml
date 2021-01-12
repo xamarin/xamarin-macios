@@ -1,8 +1,16 @@
 parameters:
+# name of the pool that contains the iOS devices
 - name: macPool
   type: string
 
 - name: stageName 
+  type: string
+
+- name: statusContext
+  type: string 
+  default: '10.16' # default context, since we started dealing with iOS devices. 
+
+- name: keyringPass
   type: string
 
 stages:
@@ -11,7 +19,8 @@ stages:
   dependsOn:
   - build_packages
   # we need to have the pkgs built and the device sets to be ran, that is decided via the labels or type of build during the build_packages stage
-  condition: and(succeeded(), eq (stageDependencies.build_packages.build.outputs['configuration.RunMacTests'], 'True')) 
+  # condition: and(succeeded(), eq (stageDependencies.build_packages.build.outputs['configuration.RunMacTests'], 'True')) 
+  condition: succeeded()
 
   jobs:
   - job: run_tests
@@ -24,14 +33,12 @@ stages:
       name: ${{ parameters.macPool }}
       demands: 
       - Agent.OS -equals Darwin
-    
-    steps:
-      - checkout: self          # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
-        clean: true             # Executes: git clean -ffdx && git reset --hard HEAD
-        submodules: recursive
 
-      - bash: echo "Hello Tests"
-        displayName: 'So many job'
+    steps:
+    - template: build.yml
+      parameters:
+        statusContext: ${{ parameters.statusContext }}
+        keyringPass: ${{ parameters.keyringPass }} 
 
   - job: upload_vsdrops
     displayName: 'Upload results to vsdrops'
