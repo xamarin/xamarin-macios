@@ -319,13 +319,13 @@ namespace MapKit {
 		bool _OpenMaps ([NullAllowed] MKMapItem [] mapItems, [NullAllowed] NSDictionary launchOptions);
 
 		[iOS (13, 2), NoMac, NoTV, NoWatch]
-		[Introduced (PlatformName.UIKitForMac, 13, 2)]
+		[Introduced (PlatformName.MacCatalyst, 13, 2)]
 		[Async]
 		[Export ("openInMapsWithLaunchOptions:fromScene:completionHandler:")]
 		void OpenInMaps ([NullAllowed] NSDictionary launchOptions, [NullAllowed] UIScene fromScene, Action<NSError> completionHandler);
 
 		[iOS (13, 2), NoMac, NoTV, NoWatch]
-		[Introduced (PlatformName.UIKitForMac, 13, 2)]
+		[Introduced (PlatformName.MacCatalyst, 13, 2)]
 		[Static]
 		[Async]
 		[Export ("openMapsWithItems:launchOptions:fromScene:completionHandler:")]

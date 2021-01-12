@@ -25,7 +25,7 @@ namespace PhotosUI {
 	[iOS (8, 0)]
 	[Mac (10, 13)]
 	[Protocol]
-	[Unavailable (PlatformName.UIKitForMac)]
+	[Unavailable (PlatformName.MacCatalyst)]
 	[Advice ("This API is not available when using UIKit on macOS.")]
 #if !XAMCORE_4_0 && !TVOS && !MONOMAC
 	// According to documentation you're supposed to implement this protocol in a UIViewController subclass,
@@ -474,7 +474,7 @@ namespace PhotosUI {
 	[iOS (8,0)]
 	[NoMac][NoTV]
 	[DisableDefaultCtor]
-	[Unavailable (PlatformName.UIKitForMac)]
+	[Unavailable (PlatformName.MacCatalyst)]
 	[Advice ("This API is not available when using UIKit on macOS.")]
 	[Deprecated (PlatformName.iOS, 13, 0)]
 	[BaseType (typeof (NSExtensionContext))]
