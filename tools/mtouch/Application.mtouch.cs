@@ -1163,7 +1163,7 @@ namespace Xamarin.Bundler {
 			// Make sure we bundle Mono.framework if we need to.
 			if (PackageMonoFramework == true) {
 				BundleFileInfo info;
-				var name = "Frameworks/Mono.framework";
+				var name = "Mono.framework";
 				bundle_files [name] = info = new BundleFileInfo ();
 				info.Sources.Add (GetLibMono (AssemblyBuildTarget.Framework));
 			}
