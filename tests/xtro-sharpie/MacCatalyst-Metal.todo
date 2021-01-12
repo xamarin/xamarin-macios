@@ -1,0 +1,197 @@
+!extra-null-allowed! 'System.String Metal.MTLAttribute::get_Name()' has a extraneous [NullAllowed] on return type
+!incorrect-protocol-member! MTLArgumentEncoder::newArgumentEncoderForBufferAtIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLArgumentEncoder::setAccelerationStructure:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLArgumentEncoder::setComputePipelineState:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLArgumentEncoder::setComputePipelineStates:withRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLArgumentEncoder::setIndirectCommandBuffer:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLArgumentEncoder::setIndirectCommandBuffers:withRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLArgumentEncoder::setIntersectionFunctionTable:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLArgumentEncoder::setIntersectionFunctionTables:withRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLArgumentEncoder::setRenderPipelineState:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLArgumentEncoder::setVisibleFunctionTable:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLArgumentEncoder::setVisibleFunctionTables:withRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLBlitCommandEncoder::copyIndirectCommandBuffer:sourceRange:destination:destinationIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLBlitCommandEncoder::optimizeContentsForCPUAccess: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLBlitCommandEncoder::optimizeContentsForCPUAccess:slice:level: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLBlitCommandEncoder::optimizeContentsForGPUAccess: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLBlitCommandEncoder::optimizeContentsForGPUAccess:slice:level: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLBlitCommandEncoder::optimizeIndirectCommandBuffer:withRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLBlitCommandEncoder::resetCommandsInBuffer:withRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLBlitCommandEncoder::resolveCounters:inRange:destinationBuffer:destinationOffset: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLBlitCommandEncoder::sampleCountersInBuffer:atSampleIndex:withBarrier: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLCommandBuffer::accelerationStructureCommandEncoder is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLCommandBuffer::blitCommandEncoderWithDescriptor: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLCommandBuffer::computeCommandEncoderWithDescriptor: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLCommandBuffer::computeCommandEncoderWithDispatchType: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLCommandBuffer::encodeSignalEvent:value: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLCommandBuffer::encodeWaitForEvent:value: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLCommandBuffer::errorOptions is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLCommandBuffer::logs is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLCommandBuffer::resourceStateCommandEncoder is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLCommandBuffer::resourceStateCommandEncoderWithDescriptor: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLCommandQueue::commandBufferWithDescriptor: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputeCommandEncoder::dispatchType is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputeCommandEncoder::memoryBarrierWithResources:count: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputeCommandEncoder::memoryBarrierWithScope: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputeCommandEncoder::sampleCountersInBuffer:atSampleIndex:withBarrier: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputeCommandEncoder::setAccelerationStructure:atBufferIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputeCommandEncoder::setImageblockWidth:height: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputeCommandEncoder::setIntersectionFunctionTable:atBufferIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputeCommandEncoder::setIntersectionFunctionTables:withBufferRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputeCommandEncoder::setStageInRegionWithIndirectBuffer:indirectBufferOffset: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputeCommandEncoder::setVisibleFunctionTable:atBufferIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputeCommandEncoder::setVisibleFunctionTables:withBufferRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputePipelineState::functionHandleWithFunction: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputePipelineState::imageblockMemoryLengthForDimensions: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputePipelineState::newComputePipelineStateWithAdditionalBinaryFunctions:error: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputePipelineState::newIntersectionFunctionTableWithDescriptor: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputePipelineState::newVisibleFunctionTableWithDescriptor: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputePipelineState::supportIndirectCommandBuffers is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::accelerationStructureSizesWithDescriptor: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::areBarycentricCoordsSupported is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::counterSets is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::maxArgumentBufferSamplerCount is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::maxBufferLength is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::minimumTextureBufferAlignmentForPixelFormat: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newAccelerationStructureWithDescriptor: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newAccelerationStructureWithSize: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newBinaryArchiveWithDescriptor:error: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newCounterSampleBufferWithDescriptor:error: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newDynamicLibrary:error: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newDynamicLibraryWithURL:error: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newEvent is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newIndirectCommandBufferWithDescriptor:maxCommandCount:options: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newRasterizationRateMapWithDescriptor: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newRenderPipelineStateWithTileDescriptor:options:completionHandler: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newRenderPipelineStateWithTileDescriptor:options:reflection:error: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newSharedEvent is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newSharedEventWithHandle: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newSharedTextureWithDescriptor: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::sampleTimestamps:gpuTimestamp: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::sparseTileSizeInBytes is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::sparseTileSizeWithTextureType:pixelFormat:sampleCount: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::supportsCounterSampling: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::supportsDynamicLibraries is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::supportsFunctionPointers is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::supportsPullModelInterpolation is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::supportsRasterizationRateMapWithLayerCount: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::supportsRaytracing is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::supportsShaderBarycentricCoordinates is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::supportsVertexAmplificationCount: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLFunction::options is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLIndirectComputeCommand::setImageblockWidth:height: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLLibrary::installName is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLLibrary::newFunctionWithDescriptor:completionHandler: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLLibrary::newFunctionWithDescriptor:error: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLLibrary::newIntersectionFunctionWithDescriptor:completionHandler: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLLibrary::newIntersectionFunctionWithDescriptor:error: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLLibrary::type is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::dispatchThreadsPerTile: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::drawIndexedPatches:patchIndexBuffer:patchIndexBufferOffset:controlPointIndexBuffer:controlPointIndexBufferOffset:indirectBuffer:indirectBufferOffset: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::drawPatches:patchIndexBuffer:patchIndexBufferOffset:indirectBuffer:indirectBufferOffset: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::executeCommandsInBuffer:indirectBuffer:indirectBufferOffset: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::executeCommandsInBuffer:withRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::sampleCountersInBuffer:atSampleIndex:withBarrier: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setThreadgroupMemoryLength:offset:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setTileBuffer:offset:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setTileBufferOffset:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setTileBuffers:offsets:withRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setTileBytes:length:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setTileSamplerState:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setTileSamplerState:lodMinClamp:lodMaxClamp:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setTileSamplerStates:lodMinClamps:lodMaxClamps:withRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setTileSamplerStates:withRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setTileTexture:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setTileTextures:withRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setVertexAmplificationCount:viewMappings: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::tileHeight is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::tileWidth is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderPipelineState::imageblockMemoryLengthForDimensions: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderPipelineState::imageblockSampleLength is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderPipelineState::maxTotalThreadsPerThreadgroup is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderPipelineState::supportIndirectCommandBuffers is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderPipelineState::threadgroupSizeMatchesTileSize is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLResourceStateCommandEncoder::updateFence: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! MTLResourceStateCommandEncoder::updateTextureMapping:mode:indirectBuffer:indirectBufferOffset: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! MTLResourceStateCommandEncoder::updateTextureMapping:mode:region:mipLevel:slice: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! MTLResourceStateCommandEncoder::updateTextureMappings:mode:regions:mipLevels:slices:numRegions: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! MTLResourceStateCommandEncoder::waitForFence: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! MTLTexture::allowGPUOptimizedContents is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLTexture::isShareable is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLTexture::newSharedTextureHandle is REQUIRED and should be abstract
+!missing-enum! MTLDeviceLocation not bound
+!missing-field! MTLDeviceRemovalRequestedNotification not bound
+!missing-field! MTLDeviceWasAddedNotification not bound
+!missing-field! MTLDeviceWasRemovedNotification not bound
+!missing-null-allowed! 'Foundation.NSObject[] Metal.MTLRenderPipelineReflection::get_FragmentArguments()' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'Foundation.NSObject[] Metal.MTLRenderPipelineReflection::get_VertexArguments()' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'Metal.MTLArrayType Metal.MTLArrayType::ElementArrayType()' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'Metal.MTLArrayType Metal.MTLStructMember::ArrayType()' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'Metal.MTLStructMember Metal.MTLStructType::Lookup(System.String)' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'Metal.MTLStructType Metal.MTLArrayType::ElementStructType()' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'Metal.MTLStructType Metal.MTLStructMember::StructType()' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'System.Void Metal.MTLComputePipelineDescriptor::set_ComputeFunction(Metal.IMTLFunction)' is missing an [NullAllowed] on parameter #0
+!missing-null-allowed! 'System.Void Metal.MTLComputePipelineDescriptor::set_Label(System.String)' is missing an [NullAllowed] on parameter #0
+!missing-null-allowed! 'System.Void Metal.MTLDepthStencilDescriptor::set_BackFaceStencil(Metal.MTLStencilDescriptor)' is missing an [NullAllowed] on parameter #0
+!missing-null-allowed! 'System.Void Metal.MTLDepthStencilDescriptor::set_FrontFaceStencil(Metal.MTLStencilDescriptor)' is missing an [NullAllowed] on parameter #0
+!missing-null-allowed! 'System.Void Metal.MTLDepthStencilDescriptor::set_Label(System.String)' is missing an [NullAllowed] on parameter #0
+!missing-null-allowed! 'System.Void Metal.MTLRenderPassColorAttachmentDescriptorArray::SetObject(Metal.MTLRenderPassColorAttachmentDescriptor,System.nuint)' is missing an [NullAllowed] on parameter #0
+!missing-null-allowed! 'System.Void Metal.MTLRenderPassDescriptor::set_DepthAttachment(Metal.MTLRenderPassDepthAttachmentDescriptor)' is missing an [NullAllowed] on parameter #0
+!missing-null-allowed! 'System.Void Metal.MTLRenderPassDescriptor::set_StencilAttachment(Metal.MTLRenderPassStencilAttachmentDescriptor)' is missing an [NullAllowed] on parameter #0
+!missing-null-allowed! 'System.Void Metal.MTLRenderPipelineColorAttachmentDescriptorArray::SetObject(Metal.MTLRenderPipelineColorAttachmentDescriptor,System.nuint)' is missing an [NullAllowed] on parameter #0
+!missing-null-allowed! 'System.Void Metal.MTLRenderPipelineDescriptor::set_Label(System.String)' is missing an [NullAllowed] on parameter #0
+!missing-null-allowed! 'System.Void Metal.MTLRenderPipelineDescriptor::set_VertexDescriptor(Metal.MTLVertexDescriptor)' is missing an [NullAllowed] on parameter #0
+!missing-null-allowed! 'System.Void Metal.MTLSamplerDescriptor::set_Label(System.String)' is missing an [NullAllowed] on parameter #0
+!missing-null-allowed! 'System.Void Metal.MTLVertexBufferLayoutDescriptorArray::SetObject(Metal.MTLVertexBufferLayoutDescriptor,System.nuint)' is missing an [NullAllowed] on parameter #0
+!missing-pinvoke! MTLCopyAllDevices is not bound
+!missing-pinvoke! MTLCopyAllDevicesWithObserver is not bound
+!missing-pinvoke! MTLRemoveDeviceObserver is not bound
+!missing-protocol-member! MTLBlitCommandEncoder::getTextureAccessCounters:region:mipLevel:slice:resetCounters:countersBuffer:countersBufferOffset: not found
+!missing-protocol-member! MTLBlitCommandEncoder::resetTextureAccessCounters:region:mipLevel:slice: not found
+!missing-protocol-member! MTLBlitCommandEncoder::synchronizeResource: not found
+!missing-protocol-member! MTLBlitCommandEncoder::synchronizeTexture:slice:level: not found
+!missing-protocol-member! MTLBuffer::didModifyRange: not found
+!missing-protocol-member! MTLBuffer::newRemoteBufferViewForDevice: not found
+!missing-protocol-member! MTLBuffer::remoteStorageBuffer not found
+!missing-protocol-member! MTLDevice::isDepth24Stencil8PixelFormatSupported not found
+!missing-protocol-member! MTLDevice::isHeadless not found
+!missing-protocol-member! MTLDevice::isLowPower not found
+!missing-protocol-member! MTLDevice::isRemovable not found
+!missing-protocol-member! MTLDevice::location not found
+!missing-protocol-member! MTLDevice::locationNumber not found
+!missing-protocol-member! MTLDevice::maxTransferRate not found
+!missing-protocol-member! MTLDevice::peerCount not found
+!missing-protocol-member! MTLDevice::peerGroupID not found
+!missing-protocol-member! MTLDevice::peerIndex not found
+!missing-protocol-member! MTLDevice::recommendedMaxWorkingSetSize not found
+!missing-protocol-member! MTLDevice::supports32BitFloatFiltering not found
+!missing-protocol-member! MTLDevice::supports32BitMSAA not found
+!missing-protocol-member! MTLDevice::supportsBCTextureCompression not found
+!missing-protocol-member! MTLDevice::supportsQueryTextureLOD not found
+!missing-protocol-member! MTLRenderCommandEncoder::memoryBarrierWithResources:count:afterStages:beforeStages: not found
+!missing-protocol-member! MTLRenderCommandEncoder::memoryBarrierWithScope:afterStages:beforeStages: not found
+!missing-protocol-member! MTLRenderCommandEncoder::textureBarrier not found
+!missing-protocol-member! MTLTexture::firstMipmapInTail not found
+!missing-protocol-member! MTLTexture::isSparse not found
+!missing-protocol-member! MTLTexture::newRemoteTextureViewForDevice: not found
+!missing-protocol-member! MTLTexture::remoteStorageTexture not found
+!missing-protocol-member! MTLTexture::tailSizeInBytes not found
+!missing-selector! MTLCaptureManager::init not bound
+!missing-selector! MTLHeapDescriptor::hazardTrackingMode not bound
+!missing-selector! MTLHeapDescriptor::resourceOptions not bound
+!missing-selector! MTLHeapDescriptor::setHazardTrackingMode: not bound
+!missing-selector! MTLHeapDescriptor::setResourceOptions: not bound
+!missing-selector! MTLHeapDescriptor::setType: not bound
+!missing-selector! MTLHeapDescriptor::type not bound
+!missing-selector! MTLRasterizationRateLayerDescriptor::horizontal not bound
+!missing-selector! MTLRasterizationRateLayerDescriptor::horizontalSampleStorage not bound
+!missing-selector! MTLRasterizationRateLayerDescriptor::init not bound
+!missing-selector! MTLRasterizationRateLayerDescriptor::sampleCount not bound
+!missing-selector! MTLRasterizationRateLayerDescriptor::vertical not bound
+!missing-selector! MTLRasterizationRateLayerDescriptor::verticalSampleStorage not bound
+!missing-selector! MTLRasterizationRateMapDescriptor::label not bound
+!missing-selector! MTLRasterizationRateMapDescriptor::layerCount not bound
+!missing-selector! MTLRasterizationRateMapDescriptor::layers not bound
+!missing-selector! MTLRasterizationRateMapDescriptor::screenSize not bound
+!missing-selector! MTLRasterizationRateMapDescriptor::setLabel: not bound
+!missing-selector! MTLRasterizationRateMapDescriptor::setScreenSize: not bound

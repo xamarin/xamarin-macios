@@ -5,7 +5,7 @@ using System;
 
 namespace PushKit 
 {
-	[Introduced (PlatformName.UIKitForMac, 13,0)]
+	[Introduced (PlatformName.MacCatalyst, 13,0)]
 	[Watch (6,0)]
 	[Mac (10,15)]
 	[iOS (8,0)]
@@ -19,7 +19,7 @@ namespace PushKit
 		NSData Token { get; }
 	}
 
-	[Introduced (PlatformName.UIKitForMac, 13,0)]
+	[Introduced (PlatformName.MacCatalyst, 13,0)]
 	[Watch (6,0)]
 	[Mac (10,15)]
 	[iOS (8,0)]
@@ -33,7 +33,7 @@ namespace PushKit
 		NSDictionary DictionaryPayload { get; }
 	}
 
-	[Introduced (PlatformName.UIKitForMac, 13,0)]
+	[Introduced (PlatformName.MacCatalyst, 13,0)]
 	[Watch (6,0)]
 	[Mac (10,15)]
 	[iOS (8,0)]
@@ -77,7 +77,7 @@ namespace PushKit
 		[Field ("PKPushTypeComplication")]
 		NSString Complication { get; }
 
-		[Introduced (PlatformName.UIKitForMac, 13,0)]
+		[Introduced (PlatformName.MacCatalyst, 13,0)]
 		[iOS (11,0)]
 		[NoWatch]
 		[Mac (10,15)]
@@ -86,7 +86,7 @@ namespace PushKit
 	}
 
 	[iOS (8,0)]
-	[Introduced (PlatformName.UIKitForMac, 13,0)]
+	[Introduced (PlatformName.MacCatalyst, 13,0)]
 	[Watch (6,0)]
 	[Mac (10,15)]
 	[Model]

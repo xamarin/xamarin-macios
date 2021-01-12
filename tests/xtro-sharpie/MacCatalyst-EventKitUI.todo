@@ -1,0 +1,11 @@
+!unknown-native-enum! EKCalendarChooserDisplayStyle bound
+!unknown-native-enum! EKCalendarChooserSelectionStyle bound
+!unknown-native-enum! EKEventEditViewAction bound
+!unknown-native-enum! EKEventViewAction bound
+!unknown-pinvoke! EventKitUIBundle bound
+!unknown-protocol! EKCalendarChooserDelegate bound
+!unknown-protocol! EKEventEditViewDelegate bound
+!unknown-protocol! EKEventViewDelegate bound
+!unknown-type! EKCalendarChooser bound
+!unknown-type! EKEventEditViewController bound
+!unknown-type! EKEventViewController bound
