@@ -73,6 +73,7 @@ namespace Xamarin.MacDev {
 		{
 			switch (framework) {
 			case ApplePlatform.iOS:
+			case ApplePlatform.MacCatalyst:
 				return IOS;
 			case ApplePlatform.WatchOS:
 				return Watch;
@@ -80,8 +81,6 @@ namespace Xamarin.MacDev {
 				return TVOS;
 			case ApplePlatform.MacOSX:
 				return MacOS;
-			case ApplePlatform.MacCatalyst:
-				return IOS;
 			default:
 				throw new InvalidOperationException (string.Format (MSBStrings.InvalidFramework, framework));
 			}
