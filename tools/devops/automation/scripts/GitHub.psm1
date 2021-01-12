@@ -363,11 +363,11 @@ function New-GitHubSummaryComment {
         $request = New-GitHubComment -Header "Tests failed catastrophically on $Context (no summary found)." -Emoji ":fire:" -Description "Result file $TestSummaryPath not found. $headerLinks"
     } else {
         if (Test-JobSuccess -Status $Env:TESTS_JOBSTATUS) {
-            Set-GitHubStatus -Status "success" -Description "Device tests passed on $Context." -Context "$Context"
-            $request = New-GitHubCommentFromFile -Header "Device tests passed on $Context." -Description "Device tests passed on $Context. $headerLinks"  -Emoji ":white_check_mark:" -Path $TestSummaryPath
+            Set-GitHubStatus -Status "success" -Description "Tests passed on $Context." -Context "$Context"
+            $request = New-GitHubCommentFromFile -Header "Tests passed on $Context." -Description "Tests passed on $Context. $headerLinks"  -Emoji ":white_check_mark:" -Path $TestSummaryPath
         } else {
-            Set-GitHubStatus -Status "failure" -Description "Device tests failed on $Context." -Context "$Context"
-            $request = New-GitHubCommentFromFile -Header "Device tests failed on $Context" -Description "Device tests failed on $Context. $headerLinks" -Emoji ":x:" -Path $TestSummaryPath
+            Set-GitHubStatus -Status "failure" -Description "Tests failed on $Context." -Context "$Context"
+            $request = New-GitHubCommentFromFile -Header "Tests failed on $Context" -Description "Tests failed on $Context. $headerLinks" -Emoji ":x:" -Path $TestSummaryPath
         }
     }
     return $request
