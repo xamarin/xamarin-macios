@@ -364,10 +364,10 @@ function New-GitHubSummaryComment {
     } else {
         if (Test-JobSuccess -Status $Env:TESTS_JOBSTATUS) {
             Set-GitHubStatus -Status "success" -Description "Tests passed on $Context." -Context "$Context"
-            $request = New-GitHubCommentFromFile -Header "Tests passed on $Context." -Description "Ttests passed on $Context. $headerLinks"  -Emoji ":white_check_mark:" -Path $TestSummaryPath
+            $request = New-GitHubCommentFromFile -Header "Tests passed on $Context." -Description "Tests passed on $Context. $headerLinks"  -Emoji ":white_check_mark:" -Path $TestSummaryPath
         } else {
             Set-GitHubStatus -Status "failure" -Description "Tests failed on $Context." -Context "$Context"
-            $request = New-GitHubCommentFromFile -Header "Tests failed on $Context" -Description "Device tests failed on $Context. $headerLinks" -Emoji ":x:" -Path $TestSummaryPath
+            $request = New-GitHubCommentFromFile -Header "Tests failed on $Context" -Description "Tests failed on $Context. $headerLinks" -Emoji ":x:" -Path $TestSummaryPath
         }
     }
     return $request
