@@ -274,20 +274,11 @@ steps:
     prependToPath: '/Users/builder/Library/Python/2.7/bin'
 
 - bash: |
-    VIRTUAL_ENV_PATH=$(Build.SourcesDirectory)/venv
-    pip install virtualenv
-    virtualenv "$VIRTUAL_ENV_PATH" --system-site-packages
-    source "$VIRTUAL_ENV_PATH/bin/activate"
-    pip install python-magic
-
     security unlock-keychain -p $PRODUCTSIGN_KEYCHAIN_PASSWORD builder.keychain
     PACKAGES="$IOS_PKG $MAC_PKG"
     echo "Packages found at $PACKAGES"
 
     echo "$PACKAGES" | xargs python $(Build.SourcesDirectory)/release-scripts/sign_and_notarize.py -a "$APP_ID" -i "$INSTALL_ID" -u "$APPLE_ACCOUNT" -p "$APPLE_PASS" -t "$TEAM_ID" -d $(Build.SourcesDirectory)/package/notarized -e "$MAC_ENTITLEMENTS" -k "$KEYCHAIN"
-
-    deactivate
-    rm -Rf "$VIRTUAL_ENV_PATH"
   env:
     PRODUCTSIGN_KEYCHAIN_PASSWORD: $(OSX_KEYCHAIN_PASS)
     MAC_ENTITLEMENTS: $(Build.SourcesDirectory)/xamarin-macios/mac-entitlements.plist
