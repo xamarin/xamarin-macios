@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <IncludeMSBuildAssets Condition="'$(IncludeMSBuildAssets)' == ''">compile</IncludeMSBuildAssets>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Xamarin.MacDev.Tasks.Core\Xamarin.MacDev.Tasks.Core.csproj" />
+    <ProjectReference Include="..\..\..\external\Xamarin.MacDev\Xamarin.MacDev\Xamarin.MacDev.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="16.8.0" IncludeAssets="$(IncludeMSBuildAssets)" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.8.0" IncludeAssets="$(IncludeMSBuildAssets)" />
+    <PackageReference Include="Xamarin.Messaging.Build.Client" Version="$(MessagingVersion)" />
+    <PackageReference Include="DotNetZip" Version="1.14.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Tasks\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <Import Project="$(MSBuildThisFileDirectory)..\..\ILMerge.targets" />
+</Project>
