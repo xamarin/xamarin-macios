@@ -42,6 +42,23 @@ steps:
     gci env: | format-table -autosize -wrap
   displayName: 'Dump Environment'
 
+- powershell: |
+    Write-Host "Python version"
+    python --version
+
+    Write-Host "Python location"
+    which python
+
+    Write-Host "Python2 location"
+    which python2
+
+    Write-Host "Python3 location"
+    which python3
+
+    Write-Host "Pip version"
+    pip -V
+  displayName: 'Python Information'
+
 - bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/clean-bot.sh
   displayName: 'Clean bot'
   env:
