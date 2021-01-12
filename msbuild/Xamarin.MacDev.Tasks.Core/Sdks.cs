@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 
+using Xamarin.Localization.MSBuild;
 using Xamarin.Utils;
 using Xamarin.MacDev.Tasks;
 
@@ -59,7 +60,7 @@ namespace Xamarin.MacDev {
 			case ApplePlatform.TVOS:
 				return TVOS;
 			default:
-				throw new InvalidOperationException (string.Format ("Invalid framework: {0}", framework));
+				throw new InvalidOperationException (string.Format (MSBStrings.InvalidFramework, framework));
 			}
 		}
 
@@ -82,7 +83,7 @@ namespace Xamarin.MacDev {
 			case ApplePlatform.MacCatalyst:
 				return IOS;
 			default:
-				throw new InvalidOperationException (string.Format ("Invalid framework: {0}", framework));
+				throw new InvalidOperationException (string.Format (MSBStrings.InvalidFramework, framework));
 			}
 		}
 
