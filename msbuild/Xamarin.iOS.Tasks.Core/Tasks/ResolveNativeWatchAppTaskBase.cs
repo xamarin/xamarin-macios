@@ -38,7 +38,7 @@ namespace Xamarin.iOS.Tasks
 
 		public override bool Execute ()
 		{
-			var currentSdk = IPhoneSdks.GetSdk (TargetFrameworkMoniker);
+			var currentSdk = Sdks.GetSdk (TargetFrameworkMoniker);
 			IPhoneSdkVersion version;
 			string sdk_path;
 

@@ -1372,5 +1372,11 @@ namespace Xamarin.Localization.MSBuild {
                 return ResourceManager.GetString("E7070", resourceCulture);
             }
         }
+        
+        public static string InvalidFramework {
+            get {
+                return ResourceManager.GetString("InvalidFramework", resourceCulture);
+            }
+        }
     }
 }

@@ -1188,4 +1188,8 @@
     <data name="E7070" xml:space="preserve">
         <value>Invalid architecture ({0}): can't link more than one architecture at a time.</value>
     </data>
+
+    <data name="InvalidFramework" xml:space="preserve">
+        <value>Invalid framework: {0}</value>
+    </data>
 </root>
