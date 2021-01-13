@@ -90,7 +90,7 @@ stages:
   displayName: 'Build'
   dependsOn: []
   jobs:
-    - template: templates/packages/stage.yml
+    - template: templates/build/stage.yml
       parameters:
         vsdropsPrefix: ${{ variables.vsdropsPrefix }}
         runTests: ${{ parameters.runTests }}
