@@ -14,8 +14,16 @@
 
 parameters:
 
+- name: statusContext
+  type: string 
+  default: 'iOS Device Tests' # default context, since we started dealing with iOS devices. 
+
 - name: vsdropsPrefix
   type: string
+
+- name: devicePrefix
+  type: string 
+  default: 'ios' # default context, since we started dealing with iOS devices. 
 
 steps:
 
@@ -62,18 +70,36 @@ steps:
       Write-Host "##vso[task.setvariable variable=$envVarName]$url"
     }
   displayName: 'Create API from stable diff gists'
+  enabled: false
   timeoutInMinutes: 1
   env:
     GITHUB_TOKEN: $(GitHub.Token)
 
-- pwsh: |
-    Write-Host "Writing comment!"
-  displayName: 'Generating GitHub Comment'
-  condition: always()
-  timeoutInMinutes: 1
-
-- pwsh: |
-    Get-ChildItem -Recurse $Env:SYSTEM_DEFAULTWORKINGDIRECTORY
+- powershell: |
+    $env:VSDROPS_INDEX="$Env:VSDROPSPREFIX/$Env:BUILD_BUILDNUMBER/$Env:BUILD_BUILDID/$Env:DEVICE_PREFIX/;/tests/vsdrops_index.html"
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\GitHub.psm1 
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\VSTS.psm1 
+    if ($Env:BUILD_PACKAGE -eq "True") {
+      Write-Host "Json path is $Env:ARTIFACTS_JSON_PATH"
+      $response = New-GitHubSummaryComment -Context "$Env:CONTEXT" -TestSummaryPath "$Env:TESTS_SUMMARY" -Artifacts "$Env:ARTIFACTS_JSON_PATH"
+      Write-Host $response
+    } else {
+      Write-Host "Json path is $Env:ARTIFACTS_JSON_PATH"
+      $response = New-GitHubSummaryComment -Context "$Env:CONTEXT" -TestSummaryPath "$Env:TESTS_SUMMARY"
+      Write-Host $response
+    }
+    if($Env:TESTS_JOBSTATUS -ne "Succeeded")
+    {
+      Set-PipelineResult -Status partiallySucceeded
+    }
+  env:
+    BUILD_REVISION: $(Build.SourceVersion)
+    CONTEXT: ${{ parameters.statusContext }}
+    DEVICE_PREFIX: ${{ parameters.devicePrefix }}
+    GITHUB_TOKEN: $(GitHub.Token)
+    TESTS_JOBSTATUS: $(TESTS_JOBSTATUS) # set by the runTests step
+    TESTS_SUMMARY: $(TEST_SUMMARY_PATH)
+    ACCESSTOKEN: $(System.AccessToken)
   displayName: 'Add summaries'
   condition: always()
   timeoutInMinutes: 1
