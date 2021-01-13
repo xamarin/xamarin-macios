@@ -20,13 +20,12 @@ function Invoke-Request {
     $count = 0
     do {
         try {
-            Write-Host "Executing"
             # that & is important, tells pwsh to execute the script block, else you simple returns the block itself
             return & $Request
         } catch {
             if ($count -gt $Retries) {
                 # notify and throw
-                Write-Host "Counld not perform request after $Retries attempts."
+                Write-Host "Could not perform request after $Retries attempts."
                 throw $_.Exception
             } else {
                 Write-Host "Error performing request trying in 30s"
