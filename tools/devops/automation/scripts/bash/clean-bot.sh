@@ -107,7 +107,7 @@ oldXcodes=(
 
 # remove wrongly added .xip files under /Applications, confuses provisionator and 
 # are not needed and wrong
-sudo rm -Rf "/Applications/Xcode*.xip"
+sudo rm -Rf /Applications/Xcode*.xip
 
 for oldXcode in "${oldXcodes[@]}"; do
     sudo rm -Rf "$oldXcode"
