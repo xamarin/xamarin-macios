@@ -29,8 +29,35 @@ steps:
   clean: true
 
 - powershell: |
+    Write-Host "IsMacOS: ${IsMacOS}"
+    Write-Host "IsWindows: ${IsWindows}"
+    Write-Host "IsLinux: ${IsLinux}"
+
+    if ($IsMacOS -or $IsLinux) {
+        Write-Host "HOSTNAME: $(hostname)"
+    } else {
+        Write-Host "COMPUTERNAME: ${env:COMPUTERNAME}"
+    }
+
     gci env: | format-table -autosize -wrap
-  displayName: 'Dump Environment'
+  displayName: 'Show Environment'
+
+- powershell: |
+    Write-Host "Python version"
+    python --version
+
+    Write-Host "Python location"
+    which python
+
+    Write-Host "Python2 location"
+    which python2
+
+    Write-Host "Python3 location"
+    which python3
+
+    Write-Host "Pip version"
+    pip -V
+  displayName: 'Show Python information'
 
 - bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/clean-bot.sh
   displayName: 'Clean bot'
