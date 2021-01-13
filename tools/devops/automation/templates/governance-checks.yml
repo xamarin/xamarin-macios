@@ -17,7 +17,7 @@ steps:
 
     Dir $(Build.SourcesDirectory)
     Dir $(System.DefaultWorkingDirectory)
-  displayName: Dump enviroment
+  displayName: Show directories
 
 - powershell: |
     Write-Host "IsMacOS: ${IsMacOS}"
@@ -31,7 +31,7 @@ steps:
     }
 
     gci env: | format-table -autosize -wrap
-  displayName: 'Dump Environment'
+  displayName: 'Show Environment'
 
 - task: ms.vss-governance-buildtask.governance-build-task-component-detection.ComponentGovernanceComponentDetection@0
   displayName: 'Component Detection'

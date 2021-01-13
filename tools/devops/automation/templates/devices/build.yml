@@ -76,7 +76,7 @@ steps:
     }
 
     gci env: | format-table -autosize -wrap
-  displayName: 'Dump Environment'
+  displayName: 'Show Environment'
 
 # Use a cmdlet to check if the space available in the devices root system is larger than 50 gb. If there is not
 # enough space available it:
