@@ -15,15 +15,13 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.iOS.Windows.props" Condition="Exists('$(MSBuildThisFileDirectory)Xamarin.iOS.Windows.props')" />
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Messaging.Build.targets" Condition="Exists('$(MSBuildThisFileDirectory)Xamarin.Messaging.Build.targets') And '$(MessagingBuildTargetsImported)' != 'true'" />
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Messaging.Apple.targets" Condition="Exists('$(MSBuildThisFileDirectory)Xamarin.Messaging.Apple.targets') And '$(MessagingAppleTargetsImported)' != 'true'" />
-	
+
 	<PropertyGroup>
-		<!-- Allows to delete the entire build directory for the app in the mac 
-        It means that all session-id based generated directories will be deleted
-        Specially useful for CI builds where the user wants to clean previous builds
-    -->
+		<!-- Allows to delete the entire build directory for the app in the Mac, which means that all the SessionId based generated directories will be deleted. -->
+        <!-- Specially useful for CI builds where the user wants to clean previous builds -->
 		<RemoveAppDir Condition="'$(RemoveAppDir)' == ''">false</RemoveAppDir>
 	</PropertyGroup>
-	
+
 	<!-- AfterClean belongs to Microsoft.Common.CurrentVersion.targets and it's the last target of the $(CleanDependsOn) -->
 	<!-- so it will run after the Clean completes but before the _SayGoodBye targets, so we ensure to run the remote clean between those two -->
 	<Target Name="_CleanMacBuild" Condition="'$(IsRemoteBuild)' == 'true'" AfterTargets="AfterClean">

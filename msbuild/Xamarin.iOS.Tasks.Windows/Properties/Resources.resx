@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>2.0</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<data name="VerifyXcodeVersion_Error_WithDetails" xml:space="preserve">
+		<value>An error occurred while trying to verify the compatibility between Xcode and Xamarin.iOS. Details: {0}</value>
+	</data>
+	<data name="VerifyXcodeVersion_Error" xml:space="preserve">
+		<value>An error occurred while trying to verify the compatibility between Xcode and Xamarin.iOS</value>
+	</data>
+	<data name="VerifyXcodeVersion_Mismatch" xml:space="preserve">
+		<value>The project was built with a version of Xcode ({0}) that is not compatible which may result in unexpected warnings or errors. Please install Xcode '{1}' or visit the documentation to learn more.</value>
+	</data>
+	<data name="ResolveUniversalTypeIdentifiers_Deserialize_Error" xml:space="preserve">
+		<value>Could not deserialize DataSet {0}</value>
+	</data>
+    <data name="ResolveUniversalTypeIdentifiers_NoImageSet" xml:space="preserve">
+		<value>The file {0} does not have ImageAsset as build action.</value>
+    </data>
+    <data name="ResolveUniversalTypeIdentifiers_UTI_Error" xml:space="preserve">
+		<value>Could not resolve UTI for {0} in catalog {1}</value>
+    </data>
+	<data name="Task_NoConnectionAvailable" xml:space="preserve">
+		<value>There is no available connection to the Mac. Task '{0}' will not be executed</value>
+		<comment>0. task name</comment>
+    </data>
+	<data name="ResolveUniversalTypeIdentifiers_GetUniversalTypeIdentifier" xml:space="preserve">
+		<value>Getting Universal Type Identifier for "{0}'...</value>
+		<comment>0. app name</comment>
+    </data>
+	<data name="LocalUnzip_Error" xml:space="preserve">
+		<value>There was an error unzipping the file {0}: {1}</value>
+	</data>
+	<data name="LocalUnzip_Unzipped" xml:space="preserve">
+		<value>Successfully unzipped the file {0}</value>
+	</data>
+	<data name="LocalUnzip_Unzipping" xml:space="preserve">
+		<value>Unzipping {0}...</value>
+	</data>
+</root>
