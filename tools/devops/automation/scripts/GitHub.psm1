@@ -1,9 +1,9 @@
 <#
     .SYNOPSIS
-        Simple retyr block to workaorund certain issues with the webservices that cannot handle the load.
+        Simple retry block to workaround certain issues with the webservices that cannot handle the load.
 
     .PARAMETER Request
-        The request to be performed and retired if failed.
+        The request to be performed and retried if failed.
 
     .PARAMETER Retries
         The number of times the we will retry to perform the request.
@@ -27,9 +27,9 @@ function Invoke-Request {
                 Write-Host "Could not perform request after $Retries attempts."
                 throw $_.Exception
             } else {
-                Write-Host "Error performing request trying in 30s"
                 $count = $count + 1
                 $seconds = 5 * $count
+                Write-Host "Error performing request trying in $seconds seconds"
                 Start-Sleep -Seconds $seconds
             }
         }
