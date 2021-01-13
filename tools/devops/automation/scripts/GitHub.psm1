@@ -16,7 +16,6 @@ function Invoke-Request {
         [int]
         $Retries=5
     )
-    $stop = $false
     $count = 0
     do {
         try {
@@ -34,7 +33,7 @@ function Invoke-Request {
             }
         }
 
-    } while ($stop -eq $true)
+    } while ($true)
 }
 
 <#
