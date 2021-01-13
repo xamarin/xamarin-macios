@@ -103,17 +103,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		<RemoveDir Directories="$(IntermediateOutputPath)" />
 	</Target>
 
-	<Target Name="_EmbedProvisionProfile" Condition="'$(_ProvisioningProfile)' != ''" DependsOnTargets="_GenerateBundleName"
-		Outputs="$(_AppBundlePath)Contents\embedded.provisionprofile">
-		<EmbedProvisionProfile
-			Condition="'$(IsMacEnabled)' == 'true'"
-			SessionId="$(BuildSessionId)"
-			AppBundleDir="$(AppBundleDir)"
-			ProvisioningProfile="$(_ProvisioningProfile)"
-			>
-		</EmbedProvisionProfile>
-	</Target>
-
 	<Target Name="_CodesignAppBundle" Condition="'$(_RequireCodeSigning)'" DependsOnTargets="$(_CodesignAppBundleDependsOn)">
 		<Codesign
 			Condition="'$(IsMacEnabled)' == 'true'"
@@ -216,10 +205,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		Inputs="@(_CompileToNativeInput);@(_FileNativeReference);@(BundleDependentFiles)"
 		Outputs="$(_AppBundlePath)Contents\MacOS\$(_AppBundleName);$(DeviceSpecificOutputPath)bundler.stamp">
 
-		<ItemGroup>
-			<_FrameworkNativeReference Include="@(_FrameworkNativeReference -> '%(Identity)/%(Filename)')" Condition="'%(Extension)' == '.framework' Or '%(Extension)' == '.xcframework'" />
-		</ItemGroup>
-
 		<Mmp
 			Condition="'$(IsMacEnabled)' == 'true'"
 			SessionId="$(BuildSessionId)"
@@ -238,7 +223,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			I18n="$(I18n)"
 			Profiling="$(Profiling)"
 			ExtraArgs="$(_BundlerArguments)"
-			NativeReferences="@(NativeReference);@(_FrameworkNativeReference);@(_FileNativeReference)"
+			NativeReferences="@(_FrameworkNativeReference);@(_FileNativeReference)"
 			References="@(ReferencePath);@(_BundlerReferencePath)"
 			ResponseFilePath="$(IntermediateOutputPath)response-file.rsp"
 			SdkRoot="$(_SdkDevPath)"

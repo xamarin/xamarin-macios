@@ -90,11 +90,12 @@ stages:
   displayName: 'Build'
   dependsOn: []
   jobs:
-    - template: templates/packages/stage.yml
+    - template: templates/build/stage.yml
       parameters:
         vsdropsPrefix: ${{ variables.vsdropsPrefix }}
         runTests: ${{ parameters.runTests }}
         runDeviceTests: ${{ parameters.runDeviceTests }}
+        keyringPass: $(xma-password)
 
   # ideally we would use a matrix here, like:
   #  - job: device_tests
