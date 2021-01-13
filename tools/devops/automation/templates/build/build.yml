@@ -10,6 +10,9 @@ parameters:
 - name: vsdropsPrefix
   type: string
 
+- name: keyringPass
+  type: string
+
 steps:
 - checkout: self          # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
   clean: true             # Executes: git clean -ffdx && git reset --hard HEAD
@@ -322,6 +325,19 @@ steps:
     targetPath: $(Build.SourcesDirectory)/package-internal 
     artifactName: package-internal
   continueOnError: true
+
+# funny enough we need these profiles to build the mac tests
+- bash: | 
+    set -x
+    set -e
+
+    cd "$SOURCES_DIR/maccore/tools/"
+    ./install-qa-provisioning-profiles.sh -v 
+  displayName: 'Add tests provisioning profiles'
+  timeoutInMinutes: 30
+  env:
+    LOGIN_KEYCHAIN_PASSWORD: ${{ parameters.keyringPass }}
+    SOURCES_DIR: $(Build.SourcesDirectory)
 
 - bash: |
     set -x

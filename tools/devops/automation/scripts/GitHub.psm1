@@ -325,7 +325,10 @@ function New-GitHubSummaryComment {
 
         [Parameter(Mandatory)]
         [String]
-        $TestSummaryPath
+        $TestSummaryPath,
+
+        [string]
+        $Artifacts
     )
 
     $envVars = @{
@@ -347,14 +350,40 @@ function New-GitHubSummaryComment {
     # build the links to provide extra info to the monitoring person, we need to make sure of a few things
     # 1. We do have the xamarin-storage path
     # 2. We did reach the xamarin-storage, stored in the env var XAMARIN_STORAGE_REACHED
-    $headerSb = [System.Text.StringBuilder]::new()
-    $headerSb.AppendLine(); # new line to start the list
-    $headerSb.AppendLine("* [Azure DevOps]($vstsTargetUrl)")
+    $sb = [System.Text.StringBuilder]::new()
+    $sb.AppendLine(); # new line to start the list
+    $sb.AppendLine("* [Azure DevOps]($vstsTargetUrl)")
     if ($Env:VSDROPS_INDEX) {
         # we did generate an index with the files in vsdrops
-        $headerSb.AppendLine("* [Html Report (VSDrops)]($Env:VSDROPS_INDEX)")
+        $sb.AppendLine("* [Html Report (VSDrops)]($Env:VSDROPS_INDEX)")
     }
-    $headerLinks = $headerSb.ToString()
+    if ($Artifacts) {
+        if (-not (Test-Path $Artifacts -PathType Leaf)) {
+            $sb.AppendLine("Path $Artifacts was not found!")
+        } else {
+            # read the json file, convert it to an object and add a line for each artifact
+            $json =  Get-Content $Artifacts | ConvertFrom-Json
+            if ($json.Count -gt 0) {
+                $sb.AppendLine("<details><summary>View packages</summary>")
+                foreach ($a in $json) {
+                    $url = $a.url
+                    if ($url.EndsWith(".pkg") -or $url.EndsWith(".nupkg")) {
+                        try {
+                            $fileName = $a.url.Substring($a.url.LastIndexOf("/" + 1))
+                            $sb.AppendLine("* [$fileName]($($a.url))")
+                        } catch {
+                            Write-Host "Could not get file name for url $url"
+                        }
+                    }
+                }
+                $sb.AppendLine("</details>")
+            } else {
+                $sb.AppendLine("No packages found.")
+            }
+        }
+    }
+
+    $headerLinks = $sb.ToString()
     $request = $null
 
     if (-not (Test-Path $TestSummaryPath -PathType Leaf)) {
@@ -363,11 +392,11 @@ function New-GitHubSummaryComment {
         $request = New-GitHubComment -Header "Tests failed catastrophically on $Context (no summary found)." -Emoji ":fire:" -Description "Result file $TestSummaryPath not found. $headerLinks"
     } else {
         if (Test-JobSuccess -Status $Env:TESTS_JOBSTATUS) {
-            Set-GitHubStatus -Status "success" -Description "Device tests passed on $Context." -Context "$Context"
-            $request = New-GitHubCommentFromFile -Header "Device tests passed on $Context." -Description "Device tests passed on $Context. $headerLinks"  -Emoji ":white_check_mark:" -Path $TestSummaryPath
+            Set-GitHubStatus -Status "success" -Description "Tests passed on $Context." -Context "$Context"
+            $request = New-GitHubCommentFromFile -Header "Tests passed on $Context." -Description "Tests passed on $Context. $headerLinks"  -Emoji ":white_check_mark:" -Path $TestSummaryPath
         } else {
-            Set-GitHubStatus -Status "failure" -Description "Device tests failed on $Context." -Context "$Context"
-            $request = New-GitHubCommentFromFile -Header "Device tests failed on $Context" -Description "Device tests failed on $Context. $headerLinks" -Emoji ":x:" -Path $TestSummaryPath
+            Set-GitHubStatus -Status "failure" -Description "Tests failed on $Context." -Context "$Context"
+            $request = New-GitHubCommentFromFile -Header "Tests failed on $Context" -Description "Tests failed on $Context. $headerLinks" -Emoji ":x:" -Path $TestSummaryPath
         }
     }
     return $request
