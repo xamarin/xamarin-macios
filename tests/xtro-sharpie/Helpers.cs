@@ -15,6 +15,7 @@ namespace Extrospection {
 		iOS,
 		watchOS,
 		tvOS,
+		MacCatalyst,
 	}
 
 	public static partial class Helpers {
@@ -85,7 +86,7 @@ namespace Extrospection {
 
 		public static int GetPlatformManagedValue (Platforms platform)
 		{
-			// None, MacOSX, iOS, WatchOS, TvOS
+			// None, MacOSX, iOS, WatchOS, TvOS, MacCatalyst
 			switch (platform) {
 			case Platforms.macOS:
 				return 1;
@@ -95,6 +96,8 @@ namespace Extrospection {
 				return 3;
 			case Platforms.tvOS:
 				return 4;
+			case Platforms.MacCatalyst:
+				return 5;
 			default:
 				throw new InvalidOperationException ($"Unexpected Platform {Platform} in GetPlatformManagedValue");
 			}
@@ -113,6 +116,8 @@ namespace Extrospection {
 					return "watchos";
 				case Platforms.tvOS:
 					return "tvos";
+				case Platforms.MacCatalyst:
+					return "macos";
 				default:
 					throw new InvalidOperationException ($"Unexpected Platform {Platform} in ClangPlatformName");
 				}

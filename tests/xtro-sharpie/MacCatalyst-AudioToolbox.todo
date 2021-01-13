@@ -1,0 +1,42 @@
+!missing-field! kAudioSession_AudioRouteChangeKey_CurrentRouteDescription not bound
+!missing-field! kAudioSession_AudioRouteChangeKey_PreviousRouteDescription not bound
+!missing-field! kAudioSession_AudioRouteKey_Inputs not bound
+!missing-field! kAudioSession_AudioRouteKey_Outputs not bound
+!missing-field! kAudioSession_AudioRouteKey_Type not bound
+!missing-field! kAudioSession_InputSourceKey_Description not bound
+!missing-field! kAudioSession_InputSourceKey_ID not bound
+!missing-field! kAudioSession_OutputDestinationKey_Description not bound
+!missing-field! kAudioSession_OutputDestinationKey_ID not bound
+!missing-field! kAudioSession_RouteChangeKey_Reason not bound
+!missing-field! kAudioSessionInputRoute_BluetoothHFP not bound
+!missing-field! kAudioSessionInputRoute_BuiltInMic not bound
+!missing-field! kAudioSessionInputRoute_HeadsetMic not bound
+!missing-field! kAudioSessionInputRoute_LineIn not bound
+!missing-field! kAudioSessionInputRoute_USBAudio not bound
+!missing-field! kAudioSessionOutputRoute_AirPlay not bound
+!missing-field! kAudioSessionOutputRoute_BluetoothA2DP not bound
+!missing-field! kAudioSessionOutputRoute_BluetoothHFP not bound
+!missing-field! kAudioSessionOutputRoute_BuiltInReceiver not bound
+!missing-field! kAudioSessionOutputRoute_BuiltInSpeaker not bound
+!missing-field! kAudioSessionOutputRoute_HDMI not bound
+!missing-field! kAudioSessionOutputRoute_Headphones not bound
+!missing-field! kAudioSessionOutputRoute_LineOut not bound
+!missing-field! kAudioSessionOutputRoute_USBAudio not bound
+!missing-pinvoke! AudioComponentCopyConfigurationInfo is not bound
+!missing-pinvoke! AudioComponentValidate is not bound
+!missing-pinvoke! AudioSessionAddPropertyListener is not bound
+!missing-pinvoke! AudioSessionGetProperty is not bound
+!missing-pinvoke! AudioSessionGetPropertySize is not bound
+!missing-pinvoke! AudioSessionInitialize is not bound
+!missing-pinvoke! AudioSessionRemovePropertyListenerWithUserData is not bound
+!missing-pinvoke! AudioSessionSetActive is not bound
+!missing-pinvoke! AudioSessionSetActiveWithFlags is not bound
+!missing-pinvoke! AudioSessionSetProperty is not bound
+!missing-pinvoke! MusicDevicePrepareInstrument is not bound
+!missing-pinvoke! MusicDeviceReleaseInstrument is not bound
+!missing-pinvoke! MusicSequenceLoadSMFDataWithFlags is not bound
+!missing-pinvoke! MusicSequenceLoadSMFWithFlags is not bound
+!missing-pinvoke! MusicSequenceSaveMIDIFile is not bound
+!missing-pinvoke! MusicSequenceSaveSMFData is not bound
+!missing-pinvoke! NewMusicTrackFrom is not bound
+!unknown-pinvoke! AudioComponentGetIcon bound

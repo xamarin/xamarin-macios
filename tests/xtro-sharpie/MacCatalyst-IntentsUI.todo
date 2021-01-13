@@ -1,0 +1,11 @@
+!unknown-native-enum! INUIAddVoiceShortcutButtonStyle bound
+!unknown-native-enum! INUIHostedViewContext bound
+!unknown-native-enum! INUIInteractiveBehavior bound
+!unknown-protocol! INUIAddVoiceShortcutButtonDelegate bound
+!unknown-protocol! INUIAddVoiceShortcutViewControllerDelegate bound
+!unknown-protocol! INUIEditVoiceShortcutViewControllerDelegate bound
+!unknown-protocol! INUIHostedViewControlling bound
+!unknown-protocol! INUIHostedViewSiriProviding bound
+!unknown-type! INUIAddVoiceShortcutButton bound
+!unknown-type! INUIAddVoiceShortcutViewController bound
+!unknown-type! INUIEditVoiceShortcutViewController bound

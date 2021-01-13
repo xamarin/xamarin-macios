@@ -789,6 +789,8 @@ namespace Xamarin.Bundler {
 				var name = Path.GetFileNameWithoutExtension (reference);
 				if (name == Driver.GetProductAssembly (this)) {
 					platformAssemblyReference = true;
+				} else if (Platform == ApplePlatform.MacCatalyst && name == "Xamarin.iOS") {
+					// This is allowed, because it's a facade
 				} else {
 					switch (name) {
 					case "Xamarin.iOS":
@@ -1161,7 +1163,7 @@ namespace Xamarin.Bundler {
 			// Make sure we bundle Mono.framework if we need to.
 			if (PackageMonoFramework == true) {
 				BundleFileInfo info;
-				var name = "Frameworks/Mono.framework";
+				var name = "Mono.framework";
 				bundle_files [name] = info = new BundleFileInfo ();
 				info.Sources.Add (GetLibMono (AssemblyBuildTarget.Framework));
 			}
