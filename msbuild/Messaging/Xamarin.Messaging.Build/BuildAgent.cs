@@ -35,8 +35,13 @@ namespace Xamarin.Messaging.Build
 				.ConfigureAwait(continueOnCapturedContext: false);
 			await TryRegisterHandlerAsync(new CopyItemMessageHandler())
 				.ConfigureAwait(continueOnCapturedContext: false);
-			await TryRegisterHandlerAsync(new GetItemHandler())
+			await TryRegisterHandlerAsync(new GetItemMessageHandler())
 			   .ConfigureAwait(continueOnCapturedContext: false);
+
+			await TryRegisterHandlerAsync (new VerifyXcodeVersionMessageHandler ())
+				.ConfigureAwait (continueOnCapturedContext: false);
+			await TryRegisterHandlerAsync (new GetUniversalTargetIdentifierMessageHandler ())
+				.ConfigureAwait (continueOnCapturedContext: false);
 		}
 
 		protected override async Task SendCustomLogFileMessagesAsync()

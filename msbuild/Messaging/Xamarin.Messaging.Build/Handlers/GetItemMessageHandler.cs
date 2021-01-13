@@ -1,16 +1,11 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Messaging.Build.Contracts;
 using Xamarin.Messaging.Client;
-using Xamarin.Messaging.Diagnostics;
 
-namespace Xamarin.Messaging.Build
-{
-	public class GetItemHandler : RequestHandler<GetItemMessage, GetItemResult>
+namespace Xamarin.Messaging.Build {
+	public class GetItemMessageHandler : RequestHandler<GetItemMessage, GetItemResult>
 	{
 		static readonly ITracer tracer = Tracer.Get<CopyItemMessageHandler>();
 

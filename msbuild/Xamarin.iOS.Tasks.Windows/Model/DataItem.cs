@@ -1,0 +1,27 @@
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+
+namespace Xamarin.iOS.Tasks.Windows {
+	public class DataItem {
+		[JsonProperty ("universal-type-identifier", NullValueHandling = NullValueHandling.Ignore)]
+		public string UniversalTypeIdentifier { get; set; }
+
+		[JsonProperty ("graphicsFeatureSet", NullValueHandling = NullValueHandling.Ignore)]
+		public string GraphicsFeatureSet { get; set; }
+
+		[JsonProperty ("memory", NullValueHandling = NullValueHandling.Ignore)]
+		public string Memory { get; set; }
+
+		[JsonProperty ("idiom", NullValueHandling = NullValueHandling.Ignore)]
+		public string Idiom { get; set; }
+
+		[JsonProperty ("filename", NullValueHandling = NullValueHandling.Ignore)]
+		public string Filename { get; set; }
+
+		//This stores the Asset Catalogs properties we don't support yet, 
+		//by doing this we avoid loosing any change made to the json file outside VS.
+		[JsonExtensionData]
+		IDictionary<string, JToken> UnsopportedData;
+	}
+}
