@@ -199,7 +199,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 			string pacPath = Path.Combine (NSBundle.MainBundle.BundlePath, "example.pac");
 
 			var script = File.ReadAllText (pacPath);
-			var targetUri = NetworkResources.XamarinUri;
+			var targetUri = NetworkResources.MicrosoftUri;
 
 			Exception ex;
 			bool foundProxies;
