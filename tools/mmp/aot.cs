@@ -235,11 +235,17 @@ namespace Xamarin.Bundler {
 
 			if (IsRelease) {
 				// mono --aot creates .dll.dylib.dSYM directories for each assembly AOTed
-				// There isn't an easy was to disable this behavior, so clean up under release
-				Parallel.ForEach (filesToAOT, ParallelOptions, file => {
-					if (RunCommand (DeleteDebugSymbolCommand, new [] { "-r", file + ".dylib.dSYM/" }, monoEnv) != 0)
-						throw ErrorHelper.CreateError (3001, Errors.MX3001, "delete debug info from", file);
-				});
+				// There isn't an easy was to disable this behavior
+				// We move them (cheap) so they can be archived for release builds
+				foreach (var file in filesToAOT) {
+					var source = file + ".dylib.dSYM/";
+					if (Directory.Exists (source)) {
+						var dest = Path.GetFullPath (Path.Combine (source, "..", "..", "..", "..", Path.GetFileName (file) + ".dylib.dSYM/"));
+						if (Directory.Exists (dest))
+							Directory.Delete (dest, true);
+						Directory.Move (source, dest);
+					}
+				}
 			}
 		}
 
@@ -305,7 +311,6 @@ namespace Xamarin.Bundler {
 		}
 
 		public const string StripCommand = "/Library/Frameworks/Mono.framework/Commands/mono-cil-strip";
-		public const string DeleteDebugSymbolCommand = "/bin/rm";
 
 		string MonoPath
 		{
