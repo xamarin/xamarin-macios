@@ -13,6 +13,8 @@ namespace MonoTouchFixtures.SceneKit {
 		[Test]
 		public void Delegate_Nullability ()
 		{
+			TestRuntime.AssertXcodeVersion (9, 0);
+
 			using (var aoc = SCNAvoidOccluderConstraint.FromTarget (null)) {
 				// header says non-null but it's null by default
 				Assert.That (aoc.Delegate, Is.Null, "get");
