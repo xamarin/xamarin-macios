@@ -1,5 +1,44 @@
 <#
     .SYNOPSIS
+        Simple retry block to workaround certain issues with the webservices that cannot handle the load.
+
+    .PARAMETER Request
+        The request to be performed and retried if failed.
+
+    .PARAMETER Retries
+        The number of times the we will retry to perform the request.
+#>
+function Invoke-Request {
+    param (
+        [scriptblock]
+        $Request,
+
+        [int]
+        $Retries=5
+    )
+    $count = 0
+    do {
+        try {
+            # that & is important, tells pwsh to execute the script block, else you simple returns the block itself
+            return & $Request
+        } catch {
+            if ($count -gt $Retries) {
+                # notify and throw
+                Write-Host "Could not perform request after $Retries attempts."
+                throw $_.Exception
+            } else {
+                $count = $count + 1
+                $seconds = 5 * $count
+                Write-Host "Error performing request trying in $seconds seconds"
+                Start-Sleep -Seconds $seconds
+            }
+        }
+
+    } while ($true)
+}
+
+<#
+    .SYNOPSIS
         Returns the target url to be used when setting the status. The target url allows users to get back to the CI event that updated the status.
 #>
 function Get-TargetUrl {
@@ -114,7 +153,7 @@ function Set-GitHubStatus {
         Authorization = ("token {0}" -f $Env:GITHUB_TOKEN)
     }
 
-    return Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body ($payload | ConvertTo-json) -ContentType 'application/json'
+    return Invoke-Request -Request { Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body ($payload | ConvertTo-json) -ContentType 'application/json' }
 }
 
 <#
@@ -213,7 +252,7 @@ function New-GitHubComment {
         Authorization = ("token {0}" -f $Env:GITHUB_TOKEN)
     }
 
-    $request = Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body ($payload | ConvertTo-Json) -ContentType 'application/json'
+    $request = Invoke-Request -Request { Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body ($payload | ConvertTo-Json) -ContentType 'application/json' }
     Write-Host $request
     return $request
 }
@@ -433,7 +472,7 @@ function Get-GitHubPRInfo {
         Authorization = ("token {0}" -f $Env:GITHUB_TOKEN)
     }
 
-    $request = Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -ContentType 'application/json'
+    $request = Invoke-Request -Request { Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -ContentType 'application/json' }
     Write-Host $request
     return $request
 }
@@ -562,7 +601,7 @@ function New-GistWithFiles {
         Authorization = ("token {0}" -f $Env:GITHUB_TOKEN);
     } 
 
-    $request = Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body $payloadJson -ContentType 'application/json'
+    $request = Invoke-Request -Request { Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body $payloadJson -ContentType 'application/json' }
     Write-Host $request
     return $request.html_url
 }
