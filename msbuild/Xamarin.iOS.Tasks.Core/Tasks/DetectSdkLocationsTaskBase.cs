@@ -7,12 +7,6 @@ namespace Xamarin.iOS.Tasks
 {
 	public abstract class DetectSdkLocationsTaskBase : DetectSdkLocationsCoreTaskBase
 	{
-		protected override IAppleSdk CurrentSdk {
-			get {
-				return IPhoneSdks.GetSdk (Platform);
-			}
-		}
-
 		protected override IAppleSdkVersion GetDefaultSdkVersion ()
 		{
 			return IPhoneSdkVersion.UseDefault;
@@ -21,7 +15,7 @@ namespace Xamarin.iOS.Tasks
 		public override bool Execute ()
 		{
 			AppleSdkSettings.Init ();
-			IPhoneSdks.Reload ();
+			Sdks.Reload ();
 
 			TargetArchitecture architectures;
 			if (string.IsNullOrEmpty (TargetArchitectures) || !Enum.TryParse (TargetArchitectures, out architectures))
@@ -34,7 +28,7 @@ namespace Xamarin.iOS.Tasks
 
 		protected override string GetDefaultXamarinSdkRoot ()
 		{
-			return IPhoneSdks.MonoTouch.SdkDir;
+			return Sdks.XamIOS.SdkDir;
 		}
 	}
 }

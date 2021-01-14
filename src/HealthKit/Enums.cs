@@ -541,6 +541,7 @@ namespace HealthKit
 	[Native]
 	public enum HKAppleEcgAlgorithmVersion : long {
 		Version1 = 1,
+		Version2 = 2,
 	}
 
 	[Watch (7,0), iOS (14,0)]

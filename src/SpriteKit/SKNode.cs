@@ -13,6 +13,8 @@ using System.Collections.Generic;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace SpriteKit
 {
 	public partial class SKNode : IEnumerable, IEnumerable<SKNode>
@@ -31,7 +33,7 @@ namespace SpriteKit
 			AddChild (node);
 		}
 
-		public void AddNodes (params SKNode [] nodes)
+		public void AddNodes (params SKNode []? nodes)
 		{
 			if (nodes == null)
 				return;
@@ -51,15 +53,15 @@ namespace SpriteKit
 		}
 
 		[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
-		public static SKNode Create (string filename, Type [] types, out NSError error)
+		public static SKNode? Create (string filename, Type [] types, out NSError error)
 		{
 			// Let's fail early.
 			if (filename == null)
-				throw new ArgumentNullException (nameof (filename));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (filename));
 			if (types == null)
-				throw new ArgumentNullException (nameof (filename));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (types));
 			if (types.Length == 0)
-				throw new InvalidOperationException ($"'{nameof (filename)}' length must be greater than zero.");
+				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (types), "Length must be greater than zero.");
 
 			using (var classes = new NSMutableSet<Class> (types.Length)) {
 				foreach (var type in types)
@@ -69,6 +71,15 @@ namespace SpriteKit
 		}
 
 		[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
-		public static SKNode Create (string filename, NSSet<Class> classes, out NSError error) => Create (filename, classes.Handle, out error);
+		public static SKNode? Create (string filename, NSSet<Class> classes, out NSError error)
+		{
+			// `filename` will be checked by `Create` later
+			if (classes == null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (classes));
+			if (classes.Count == 0)
+				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (classes), "Length must be greater than zero.");
+
+			return Create (filename, classes.Handle, out error);
+		}
 	}
 }

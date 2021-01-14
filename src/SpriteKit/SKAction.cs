@@ -11,6 +11,8 @@ using System;
 using CoreGraphics;
 using CoreFoundation;
 
+#nullable enable
+
 namespace SpriteKit {
 
 #if !XAMCORE_4_0
@@ -27,7 +29,7 @@ namespace SpriteKit {
 
 #if !XAMCORE_4_0
 		[Obsolete ("Use 'TimingFunction2' instead.")]
-		public virtual SKActionTimingFunction TimingFunction { get; set; }
+		public virtual SKActionTimingFunction? TimingFunction { get; set; }
 #endif
 	}
 }

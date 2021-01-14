@@ -275,7 +275,7 @@ namespace Security {
 	[Deprecated (PlatformName.iOS, 13,0, message: "Use 'TlsCipherSuite' instead.")]
 	[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'TlsCipherSuite' instead.")]
 	[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'TlsCipherSuite' instead.")]
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 	public enum SslCipherSuite : uint {
 #else
 	public enum SslCipherSuite : ushort {

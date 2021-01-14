@@ -33,6 +33,7 @@ tests/bcl-test/SystemXunit.csproj
 global*.json
 .idea
 device-tests-provisioning.csx
+build-provisioning.csx
 mono_crash.*.json
 *.binlog
 .vscode

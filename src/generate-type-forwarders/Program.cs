@@ -22,6 +22,11 @@ namespace GenerateTypeForwarders {
 			var sb = new StringBuilder ();
 
 			sb.AppendLine ("using System.Runtime.CompilerServices;");
+
+			foreach (var exportedType in from.MainModule.ExportedTypes) {
+				sb.AppendLine ($"[assembly: TypeForwardedToAttribute (typeof ({exportedType.Namespace}.{exportedType.Name}))]");
+			}
+
 			foreach (var type in from.MainModule.Types) {
 				if (type.IsNotPublic)
 					continue;

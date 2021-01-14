@@ -57,7 +57,7 @@ namespace MonoTouchFixtures.SpriteKit {
 		[Test]
 		public void CtorColor ()
 		{
-			using (var n = new SKSpriteNode ((UIColor) null, CGSize.Empty)) {
+			using (var n = new SKSpriteNode (UIColor.Green, CGSize.Empty)) {
 				CheckEmpty (n);
 			}
 		}
@@ -79,7 +79,7 @@ namespace MonoTouchFixtures.SpriteKit {
 		[Test]
 		public void CtorTextureColor ()
 		{
-			using (var n = new SKSpriteNode (null, null, CGSize.Empty)) {
+			using (var n = new SKSpriteNode (null, UIColor.Green, CGSize.Empty)) {
 				CheckEmpty (n);
 			}
 		}

@@ -38,6 +38,7 @@ namespace ObjCRuntime
 		WatchOS,
 		TvOS,
 		MacCatalyst,
+		[Obsolete ("Use 'MacCatalyst' instead.")]
 		UIKitForMac = MacCatalyst, // temporary
 	}
 

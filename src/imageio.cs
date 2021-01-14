@@ -2213,7 +2213,7 @@ namespace ImageIO {
 		[Export ("WebPDictionary")]
 		NSDictionary WebPDictionary { get; set; }
 
-		[Mac (11,0), iOS (14,1), TV (14,2),  Watch (7,1)]
+		[Mac (11,0), iOS (14,1), TV (14,2), Watch (7,1)]
 		[Export ("TgaDictionary")]
 		NSDictionary TgaDictionary { get; set; }
 
@@ -2368,6 +2368,10 @@ namespace ImageIO {
 		[TV (14,2)][Watch (7,1)][Mac (11,0)]
 		[Field ("kCGImageAuxiliaryDataTypeHDRGainMap")]
 		TypeHdrGainMap,
+
+		[iOS (14,3)][TV (14,3)][Watch (7,2)][Mac (11,1)]
+		[Field ("kCGImageAuxiliaryDataTypeSemanticSegmentationSkyMatte")]
+		SemanticSegmentationSkyMatte,
 	}
 
 	[Mac (10,13), iOS (11,0), TV (11,0), Watch (4,0)]

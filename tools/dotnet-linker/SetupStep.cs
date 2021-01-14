@@ -92,6 +92,8 @@ namespace Xamarin {
 			Steps.Add (new GenerateMainStep ());
 			Steps.Add (new GenerateReferencesStep ());
 			Steps.Add (new GatherFrameworksStep ());
+			Steps.Add (new ComputeNativeBuildFlagsStep ());
+			Steps.Add (new DoneStep ()); // Must be the last step.
 
 			Configuration.Write ();
 

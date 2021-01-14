@@ -925,7 +925,7 @@ namespace Foundation
 
 		[Export ("initWithYear:month:day:hour:minute:second:timeZone:")]
 		[Availability (Deprecated = Platform.Mac_10_10)]
-		IntPtr Constructor (nint year, nuint month, nuint day, nuint hour, nuint minute, nuint second, NSTimeZone aTimeZone);
+		IntPtr Constructor (nint year, nuint month, nuint day, nuint hour, nuint minute, nuint second, [NullAllowed] NSTimeZone aTimeZone);
 
 		[Availability (Deprecated = Platform.Mac_10_10)]
 		[Export ("dateByAddingYears:months:days:hours:minutes:seconds:")]
@@ -1487,7 +1487,7 @@ namespace Foundation
 
 		[iOS (7,0), Mac (10, 9)]
 		[Export ("initWithBytesNoCopy:length:deallocator:")]
-		IntPtr Constructor (IntPtr bytes, nuint length, Action<IntPtr,nuint> deallocator);
+		IntPtr Constructor (IntPtr bytes, nuint length, [NullAllowed] Action<IntPtr,nuint> deallocator);
 
 		// NSDataCompression (NSData)
 
@@ -1761,7 +1761,7 @@ namespace Foundation
 
 		[Export ("dateFormatFromTemplate:options:locale:")]
 		[Static]
-		string GetDateFormatFromTemplate (string template, nuint options, NSLocale locale);
+		string GetDateFormatFromTemplate (string template, nuint options, [NullAllowed] NSLocale locale);
 
 		[Export ("doesRelativeDateFormatting")]
 		bool DoesRelativeDateFormatting { get; set; }
@@ -4993,7 +4993,7 @@ namespace Foundation
 		IntPtr Constructor (string key, bool ascending);
 
 		[Export ("initWithKey:ascending:selector:")]
-		IntPtr Constructor (string key, bool ascending, Selector selector);
+		IntPtr Constructor (string key, bool ascending, [NullAllowed] Selector selector);
 
 		[Export ("initWithKey:ascending:comparator:")]
 		IntPtr Constructor (string key, bool ascending, NSComparator comparator);
@@ -5166,7 +5166,7 @@ namespace Foundation
 		string DataVersion { get; }
 
 		[Export ("localizedName:locale:")]
-		string GetLocalizedName (NSTimeZoneNameStyle style, NSLocale locale);
+		string GetLocalizedName (NSTimeZoneNameStyle style, [NullAllowed] NSLocale locale);
 	}
 
 	interface NSUbiquitousKeyValueStoreChangeEventArgs {
@@ -5754,10 +5754,10 @@ namespace Foundation
 		[DesignatedInitializer]
 		[iOS (7,0), Mac (10, 9)]
 		[Export ("initFileURLWithFileSystemRepresentation:isDirectory:relativeToURL:")]
-		IntPtr Constructor (IntPtr ptrUtf8path, bool isDir, NSUrl baseURL);
+		IntPtr Constructor (IntPtr ptrUtf8path, bool isDir, [NullAllowed] NSUrl baseURL);
 
 		[iOS (7,0), Mac (10, 9), Static, Export ("fileURLWithFileSystemRepresentation:isDirectory:relativeToURL:")]
-		NSUrl FromUTF8Pointer (IntPtr ptrUtf8path, bool isDir, NSUrl baseURL);
+		NSUrl FromUTF8Pointer (IntPtr ptrUtf8path, bool isDir, [NullAllowed] NSUrl baseURL);
 
 #if MONOMAC
 
@@ -6156,7 +6156,7 @@ namespace Foundation
 		NSString IsExcludedFromBackupKey { get; }
 
 		[Export ("bookmarkDataWithOptions:includingResourceValuesForKeys:relativeToURL:error:")]
-		NSData CreateBookmarkData (NSUrlBookmarkCreationOptions options, string [] resourceValues, [NullAllowed] NSUrl relativeUrl, out NSError error);
+		NSData CreateBookmarkData (NSUrlBookmarkCreationOptions options, [NullAllowed] string [] resourceValues, [NullAllowed] NSUrl relativeUrl, out NSError error);
 
 		[Export ("initByResolvingBookmarkData:options:relativeToURL:bookmarkDataIsStale:error:")]
 		IntPtr Constructor (NSData bookmarkData, NSUrlBookmarkResolutionOptions resolutionOptions, [NullAllowed] NSUrl relativeUrl, out bool bookmarkIsStale, out NSError error);
@@ -6397,7 +6397,7 @@ namespace Foundation
 		[Deprecated (PlatformName.WatchOS, 6,0, message : "Use the overload that accepts an 'NSUrl' parameter instead.")]
 		[Deprecated (PlatformName.TvOS, 13,0, message : "Use the overload that accepts an 'NSUrl' parameter instead.")]
 		[Export ("initWithMemoryCapacity:diskCapacity:diskPath:")]
-		IntPtr Constructor (nuint memoryCapacity, nuint diskCapacity, string diskPath);
+		IntPtr Constructor (nuint memoryCapacity, nuint diskCapacity, [NullAllowed] string diskPath);
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Export ("initWithMemoryCapacity:diskCapacity:directoryURL:")]
@@ -6573,7 +6573,7 @@ namespace Foundation
 	[DisableDefaultCtor]
 	interface NSUrlAuthenticationChallenge : NSSecureCoding {
 		[Export ("initWithProtectionSpace:proposedCredential:previousFailureCount:failureResponse:error:sender:")]
-		IntPtr Constructor (NSUrlProtectionSpace space, NSUrlCredential credential, nint previousFailureCount, NSUrlResponse response, [NullAllowed] NSError error, NSUrlConnection sender);
+		IntPtr Constructor (NSUrlProtectionSpace space, NSUrlCredential credential, nint previousFailureCount, [NullAllowed] NSUrlResponse response, [NullAllowed] NSError error, NSUrlConnection sender);
 		
 		[Export ("initWithAuthenticationChallenge:sender:")]
 		IntPtr Constructor (NSUrlAuthenticationChallenge  challenge, NSUrlConnection sender);
@@ -8823,7 +8823,7 @@ namespace Foundation
 		void PerformSelector (Selector selector, NSThread onThread, [NullAllowed] NSObject withObject, bool waitUntilDone);
 		
 		[Export ("performSelector:onThread:withObject:waitUntilDone:modes:")]
-		void PerformSelector (Selector selector, NSThread onThread, [NullAllowed] NSObject withObject, bool waitUntilDone, NSString [] nsRunLoopModes);
+		void PerformSelector (Selector selector, NSThread onThread, [NullAllowed] NSObject withObject, bool waitUntilDone, [NullAllowed] NSString [] nsRunLoopModes);
 		
 		[Static, Export ("cancelPreviousPerformRequestsWithTarget:")]
 		void CancelPreviousPerformRequest (NSObject aTarget);
@@ -9606,7 +9606,7 @@ namespace Foundation
 		IntPtr Constructor (NSUrl url, string mimetype, nint expectedContentLength, [NullAllowed] string textEncodingName);
 
 		[Export ("initWithURL:statusCode:HTTPVersion:headerFields:")]
-		IntPtr Constructor (NSUrl url, nint statusCode, string httpVersion, NSDictionary headerFields);
+		IntPtr Constructor (NSUrl url, nint statusCode, [NullAllowed] string httpVersion, [NullAllowed] NSDictionary headerFields);
 		
 		[Export ("statusCode")]
 		nint StatusCode { get; }
@@ -10709,12 +10709,12 @@ namespace Foundation
 
 		[Export ("enqueueNotification:postingStyle:coalesceMask:forModes:")]
 #if !XAMCORE_4_0
-		void EnqueueNotification (NSNotification notification, NSPostingStyle postingStyle, NSNotificationCoalescing coalesceMask, string [] modes);
+		void EnqueueNotification (NSNotification notification, NSPostingStyle postingStyle, NSNotificationCoalescing coalesceMask, [NullAllowed] string [] modes);
 #else
-		void EnqueueNotification (NSNotification notification, NSPostingStyle postingStyle, NSNotificationCoalescing coalesceMask, NSString [] modes);
+		void EnqueueNotification (NSNotification notification, NSPostingStyle postingStyle, NSNotificationCoalescing coalesceMask, [NullAllowed] NSString [] modes);
 
-		[Wrap ("EnqueueNotification (notification, postingStyle, coalesceMask, modes.GetConstants ())")]
-		void EnqueueNotification (NSNotification notification, NSPostingStyle postingStyle, NSNotificationCoalescing coalesceMask, NSRunLoopMode [] modes);
+		[Wrap ("EnqueueNotification (notification, postingStyle, coalesceMask, modes?.GetConstants ())")]
+		void EnqueueNotification (NSNotification notification, NSPostingStyle postingStyle, NSNotificationCoalescing coalesceMask, [NullAllowed] NSRunLoopMode [] modes);
 #endif
 
 		[Export ("dequeueNotificationsMatching:coalesceMask:")]
@@ -11496,13 +11496,13 @@ namespace Foundation
 		NSDecimalNumber RaiseTo (nuint power);
 
 		[Export ("decimalNumberByRaisingToPower:withBehavior:")]
-		NSDecimalNumber RaiseTo (nuint power, NSObject Behavior);
+		NSDecimalNumber RaiseTo (nuint power, [NullAllowed] NSObject Behavior);
 		
 		[Export ("decimalNumberByMultiplyingByPowerOf10:")]
 		NSDecimalNumber MultiplyPowerOf10 (short power);
 
 		[Export ("decimalNumberByMultiplyingByPowerOf10:withBehavior:")]
-		NSDecimalNumber MultiplyPowerOf10 (short power, NSObject Behavior);
+		NSDecimalNumber MultiplyPowerOf10 (short power, [NullAllowed] NSObject Behavior);
 
 		[Export ("decimalNumberByRoundingAccordingToBehavior:")]
 		NSDecimalNumber Rounding (NSObject behavior);
@@ -12766,7 +12766,7 @@ namespace Foundation
 		bool Read (NSUrl url, NSFileWrapperReadingOptions options, out NSError outError);
 
 		[Export ("writeToURL:options:originalContentsURL:error:")]
-		bool Write (NSUrl url, NSFileWrapperWritingOptions options, NSUrl originalContentsURL, out NSError outError);
+		bool Write (NSUrl url, NSFileWrapperWritingOptions options, [NullAllowed] NSUrl originalContentsURL, out NSError outError);
 
 		[Export ("serializedRepresentation")]
 		NSData GetSerializedRepresentation ();
