@@ -540,11 +540,13 @@
 		<!-- install_name_tool modifies the file in-place, so copy it first to a temporary directory before we fix it -->
 		<Copy
 			Condition="'$(IsMacEnabled)' == 'true'"
+			SessionId="$(BuildSessionId)"
 			SourceFiles="%(_MonoLibraryFix.FullPath)"
 			DestinationFolder="$(_IntermediateNativeLibraryDir)"
 		/>
 		<Exec
 			Condition="'$(IsMacEnabled)' == 'true'"
+			SessionId="$(BuildSessionId)"
 			Command="xcrun install_name_tool -id $(_ExecutablePathPrefix)%(_MonoLibraryFix.Filename)%(_MonoLibraryFix.Extension) %(_MonoLibraryFix.TargetPath)"
 			EnvironmentVariables="DEVELOPER_DIR=$(_SdkDevPath)"
 		/>
