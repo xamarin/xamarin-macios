@@ -11,7 +11,7 @@
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\..\..\product.snk</AssemblyOriginatorKeyFile>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <CodesignEntitlements>..\..\Entitlements.plist</CodesignEntitlements>
+    <CodesignEntitlements Condition="'$(Platform)' == 'iPhoneSimulator'">..\..\Entitlements.plist</CodesignEntitlements>
     <AssetTargetFallback>xamarinios10;$(AssetTargetFallback)</AssetTargetFallback>
     <DefineConstants Condition="'$(Platform)' == 'iPhoneSimulator'">$(DefineConstants);DYNAMIC_REGISTRAR</DefineConstants>
     <DefineConstants Condition="'$(Platform)' != 'iPhoneSimulator'">$(DefineConstants);DEVICE</DefineConstants>
