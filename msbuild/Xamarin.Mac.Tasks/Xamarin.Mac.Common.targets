@@ -69,6 +69,10 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			_CompileToNative;
 			_CreatePkgInfo;
 			_CopyAppExtensionsToBundle;
+			_ReadAppExtensionDebugSymbolProperties;
+			_GenerateAppExtensionDebugSymbols;
+			_PrepareDebugSymbolGeneration;
+			_GenerateDebugSymbols;
 		</CreateAppBundleDependsOn>
 	</PropertyGroup>
 
@@ -194,6 +198,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			ResolveReferences;
 			_CompileEntitlements;
 			_CompileAppManifest;
+			_GetNativeExecutableName;
 			_GetCompileToNativeInputs;
 			_ExpandNativeReferences;
 			_ComputeTargetArchitectures;
@@ -204,10 +209,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		Condition = "'$(_UsingXamarinSdk)' != 'true'"
 		Inputs="@(_CompileToNativeInput);@(_FileNativeReference);@(BundleDependentFiles)"
 		Outputs="$(_AppBundlePath)Contents\MacOS\$(_AppBundleName);$(DeviceSpecificOutputPath)bundler.stamp">
-
-		<ItemGroup>
-			<_FrameworkNativeReference Include="@(_FrameworkNativeReference -> '%(Identity)/%(Filename)')" Condition="'%(Extension)' == '.framework' Or '%(Extension)' == '.xcframework'" />
-		</ItemGroup>
 
 		<Mmp
 			Condition="'$(IsMacEnabled)' == 'true'"
@@ -227,7 +228,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			I18n="$(I18n)"
 			Profiling="$(Profiling)"
 			ExtraArgs="$(_BundlerArguments)"
-			NativeReferences="@(NativeReference);@(_FrameworkNativeReference);@(_FileNativeReference)"
+			NativeReferences="@(_FrameworkNativeReference);@(_FileNativeReference)"
 			References="@(ReferencePath);@(_BundlerReferencePath)"
 			ResponseFilePath="$(IntermediateOutputPath)response-file.rsp"
 			SdkRoot="$(_SdkDevPath)"
@@ -344,6 +345,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			ProjectTypeGuids="$(ProjectTypeGuids)"
 			OutputPath="$(OutputPath)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+			CustomBundleName="$(_CustomBundleName)"
 			>
 			<Output TaskParameter="ArchiveDir" PropertyName="ArchiveDir" />
 		</Archive>

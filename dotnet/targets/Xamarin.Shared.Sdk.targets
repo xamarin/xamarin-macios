@@ -336,6 +336,9 @@
 
 		<ItemGroup>
 			<_AssembliesToAOT Include="@(ResolvedFileToPublish)" Condition="'%(Extension)' == '.dll' Or '%(Extension)' == '.exe' " />
+			<!-- Exclude resource assemblies from AOT compilation -->
+			<_AssembliesToAOT Remove="@(ReferenceSatellitePaths)" /> <!-- this seems to be from referenced projects with satellite assemblies -->
+			<_AssembliesToAOT Remove="@(ResourceCopyLocalItems)" /> <!-- this seems to be from NuGets with satellite assemblies -->
 		</ItemGroup>
 	</Target>
 

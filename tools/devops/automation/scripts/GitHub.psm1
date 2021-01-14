@@ -1,5 +1,44 @@
 <#
     .SYNOPSIS
+        Simple retry block to workaround certain issues with the webservices that cannot handle the load.
+
+    .PARAMETER Request
+        The request to be performed and retried if failed.
+
+    .PARAMETER Retries
+        The number of times the we will retry to perform the request.
+#>
+function Invoke-Request {
+    param (
+        [scriptblock]
+        $Request,
+
+        [int]
+        $Retries=5
+    )
+    $count = 0
+    do {
+        try {
+            # that & is important, tells pwsh to execute the script block, else you simple returns the block itself
+            return & $Request
+        } catch {
+            if ($count -gt $Retries) {
+                # notify and throw
+                Write-Host "Could not perform request after $Retries attempts."
+                throw $_.Exception
+            } else {
+                $count = $count + 1
+                $seconds = 5 * $count
+                Write-Host "Error performing request trying in $seconds seconds"
+                Start-Sleep -Seconds $seconds
+            }
+        }
+
+    } while ($true)
+}
+
+<#
+    .SYNOPSIS
         Returns the target url to be used when setting the status. The target url allows users to get back to the CI event that updated the status.
 #>
 function Get-TargetUrl {
@@ -114,7 +153,7 @@ function Set-GitHubStatus {
         Authorization = ("token {0}" -f $Env:GITHUB_TOKEN)
     }
 
-    return Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body ($payload | ConvertTo-json) -ContentType 'application/json'
+    return Invoke-Request -Request { Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body ($payload | ConvertTo-json) -ContentType 'application/json' }
 }
 
 <#
@@ -213,7 +252,7 @@ function New-GitHubComment {
         Authorization = ("token {0}" -f $Env:GITHUB_TOKEN)
     }
 
-    $request = Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body ($payload | ConvertTo-Json) -ContentType 'application/json'
+    $request = Invoke-Request -Request { Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body ($payload | ConvertTo-Json) -ContentType 'application/json' }
     Write-Host $request
     return $request
 }
@@ -325,7 +364,10 @@ function New-GitHubSummaryComment {
 
         [Parameter(Mandatory)]
         [String]
-        $TestSummaryPath
+        $TestSummaryPath,
+
+        [string]
+        $Artifacts
     )
 
     $envVars = @{
@@ -347,14 +389,40 @@ function New-GitHubSummaryComment {
     # build the links to provide extra info to the monitoring person, we need to make sure of a few things
     # 1. We do have the xamarin-storage path
     # 2. We did reach the xamarin-storage, stored in the env var XAMARIN_STORAGE_REACHED
-    $headerSb = [System.Text.StringBuilder]::new()
-    $headerSb.AppendLine(); # new line to start the list
-    $headerSb.AppendLine("* [Azure DevOps]($vstsTargetUrl)")
+    $sb = [System.Text.StringBuilder]::new()
+    $sb.AppendLine(); # new line to start the list
+    $sb.AppendLine("* [Azure DevOps]($vstsTargetUrl)")
     if ($Env:VSDROPS_INDEX) {
         # we did generate an index with the files in vsdrops
-        $headerSb.AppendLine("* [Html Report (VSDrops)]($Env:VSDROPS_INDEX)")
+        $sb.AppendLine("* [Html Report (VSDrops)]($Env:VSDROPS_INDEX)")
     }
-    $headerLinks = $headerSb.ToString()
+    if ($Artifacts) {
+        if (-not (Test-Path $Artifacts -PathType Leaf)) {
+            $sb.AppendLine("Path $Artifacts was not found!")
+        } else {
+            # read the json file, convert it to an object and add a line for each artifact
+            $json =  Get-Content $Artifacts | ConvertFrom-Json
+            if ($json.Count -gt 0) {
+                $sb.AppendLine("<details><summary>View packages</summary>")
+                foreach ($a in $json) {
+                    $url = $a.url
+                    if ($url.EndsWith(".pkg") -or $url.EndsWith(".nupkg")) {
+                        try {
+                            $fileName = $a.url.Substring($a.url.LastIndexOf("/" + 1))
+                            $sb.AppendLine("* [$fileName]($($a.url))")
+                        } catch {
+                            Write-Host "Could not get file name for url $url"
+                        }
+                    }
+                }
+                $sb.AppendLine("</details>")
+            } else {
+                $sb.AppendLine("No packages found.")
+            }
+        }
+    }
+
+    $headerLinks = $sb.ToString()
     $request = $null
 
     if (-not (Test-Path $TestSummaryPath -PathType Leaf)) {
@@ -363,11 +431,11 @@ function New-GitHubSummaryComment {
         $request = New-GitHubComment -Header "Tests failed catastrophically on $Context (no summary found)." -Emoji ":fire:" -Description "Result file $TestSummaryPath not found. $headerLinks"
     } else {
         if (Test-JobSuccess -Status $Env:TESTS_JOBSTATUS) {
-            Set-GitHubStatus -Status "success" -Description "Device tests passed on $Context." -Context "$Context"
-            $request = New-GitHubCommentFromFile -Header "Device tests passed on $Context." -Description "Device tests passed on $Context. $headerLinks"  -Emoji ":white_check_mark:" -Path $TestSummaryPath
+            Set-GitHubStatus -Status "success" -Description "Tests passed on $Context." -Context "$Context"
+            $request = New-GitHubCommentFromFile -Header "Tests passed on $Context." -Description "Tests passed on $Context. $headerLinks"  -Emoji ":white_check_mark:" -Path $TestSummaryPath
         } else {
-            Set-GitHubStatus -Status "failure" -Description "Device tests failed on $Context." -Context "$Context"
-            $request = New-GitHubCommentFromFile -Header "Device tests failed on $Context" -Description "Device tests failed on $Context. $headerLinks" -Emoji ":x:" -Path $TestSummaryPath
+            Set-GitHubStatus -Status "failure" -Description "Tests failed on $Context." -Context "$Context"
+            $request = New-GitHubCommentFromFile -Header "Tests failed on $Context" -Description "Tests failed on $Context. $headerLinks" -Emoji ":x:" -Path $TestSummaryPath
         }
     }
     return $request
@@ -404,7 +472,7 @@ function Get-GitHubPRInfo {
         Authorization = ("token {0}" -f $Env:GITHUB_TOKEN)
     }
 
-    $request = Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -ContentType 'application/json'
+    $request = Invoke-Request -Request { Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -ContentType 'application/json' }
     Write-Host $request
     return $request
 }
@@ -533,7 +601,7 @@ function New-GistWithFiles {
         Authorization = ("token {0}" -f $Env:GITHUB_TOKEN);
     } 
 
-    $request = Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body $payloadJson -ContentType 'application/json'
+    $request = Invoke-Request -Request { Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body $payloadJson -ContentType 'application/json' }
     Write-Host $request
     return $request.html_url
 }
