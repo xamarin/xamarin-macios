@@ -1378,5 +1378,11 @@ namespace Xamarin.Localization.MSBuild {
                 return ResourceManager.GetString("InvalidFramework", resourceCulture);
             }
         }
+        
+        public static string InvalidPlatform {
+            get {
+                return ResourceManager.GetString("InvalidPlatform", resourceCulture);
+            }
+        }
     }
 }

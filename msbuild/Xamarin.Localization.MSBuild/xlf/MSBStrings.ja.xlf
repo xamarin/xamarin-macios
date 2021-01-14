@@ -1169,6 +1169,11 @@
         <target state="new">Invalid framework: {0}</target>
         <note />
       </trans-unit>
+      <trans-unit id="InvalidPlatform">
+        <source>Invalid platform: {0}</source>
+        <target state="new">Invalid platform: {0}</target>
+        <note />
+      </trans-unit>
       <trans-unit id="M0001">
         <source>Tool {0} execution started with arguments: {1}
         </source>
