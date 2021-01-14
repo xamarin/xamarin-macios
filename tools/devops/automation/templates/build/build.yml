@@ -278,7 +278,8 @@ steps:
     PACKAGES="$IOS_PKG $MAC_PKG"
     echo "Packages found at $PACKAGES"
 
-    echo "$PACKAGES" | xargs python $(Build.SourcesDirectory)/release-scripts/sign_and_notarize.py -a "$APP_ID" -i "$INSTALL_ID" -u "$APPLE_ACCOUNT" -p "$APPLE_PASS" -t "$TEAM_ID" -d $(Build.SourcesDirectory)/package/notarized -e "$MAC_ENTITLEMENTS" -k "$KEYCHAIN"
+    echo "$PACKAGES" | xargs python $(Build.SourcesDirectory)/release-scripts/sign_and_notarize.py --no_notarization -a "$APP_ID" -i "$INSTALL_ID" -u "$APPLE_ACCOUNT" -p "$APPLE_PASS" -t "$TEAM_ID" -d $(Build.SourcesDirectory)/package/notarized -e "$MAC_ENTITLEMENTS" -k "$KEYCHAIN"
+    ls -R $(Build.SourcesDirectory)/package
   env:
     PRODUCTSIGN_KEYCHAIN_PASSWORD: $(OSX_KEYCHAIN_PASS)
     MAC_ENTITLEMENTS: $(Build.SourcesDirectory)/xamarin-macios/mac-entitlements.plist
@@ -292,6 +293,18 @@ steps:
   displayName: 'Signing Release Build'
   condition: and(succeeded(), contains(variables['configuration.SignPkgs'], 'True'), contains(variables['configuration.IsPr'], 'False'))
   timeoutInMinutes: 90
+
+- task: ms-vseng.MicroBuildTasks.30666190-6959-11e5-9f96-f56098202fef.MicroBuildSigningPlugin@3 
+  displayName: 'Install Signing Plugin' 
+  inputs: 
+    signType: 'Real'  # test is not present for mac.. 
+    azureSubscription: 'MicroBuild Signing Task (DevDiv)'
+    version: 1.1.352-g82fc43b9d7
+    feedSource: 'https://pkgs.dev.azure.com/devdiv/_packaging/VS_TempPkgs/nuget/v3/index.json'
+  env: 
+      SYSTEM_ACCESSTOKEN: $(System.AccessToken) 
+
+- pwsh: $(Build.SourcesDirectory)/release-scripts/notarize.ps1 -FolderForApps $(Build.SourcesDirectory)/package 
 
 - template: generate-workspace-info.yml@templates
   parameters:
