@@ -110,7 +110,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 		[Test]
 		public void CreateByMatchingToColorSpace ()
 		{
-			TestRuntime.AssertXcodeVersion (8, 0);
+			TestRuntime.AssertXcodeVersion (11, 0);
 			using (var c = CGColor.CreateByMatchingToColorSpace (null, CGColorRenderingIntent.Default, null, null)) {
 				Assert.IsNull (c, "0");
 			}
