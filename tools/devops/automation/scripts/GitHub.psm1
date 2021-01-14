@@ -205,8 +205,22 @@ function New-GitHubComment {
         $url = "https://api.github.com/repos/xamarin/xamarin-macios/commits/$Env:BUILD_REVISION/comments"
     }
 
+    # github has a max size for the comments to be added in a PR, it can be the case that because we failed so much, that we
+    # cannot add the full message, in that case, we add part of it, then a link to a gist with the content.
+    $maxLength = 32768
+    $body = $msg.ToString()
+    if ($body.Length -ge $maxLength) {
+        # create a gist with the contents, next, add substring of the message - the length of the info about the gist so that users
+        # can click, set that as the body
+        $gist =  New-GistWithContent -Description "Build results" -FileName "TestResult.md" -GistContent $body -FileType "md"
+        $linkMessage = "The message from CI is too large for the GitHub comments. You can find the full results [here]($gist)."
+        $messageLength = $maxLength - ($linkMessage.Length + 2) # +2 is to add a nice space
+        $body = $body.Substring(0, $messageLength);
+        $body = $body + "\n\n" + $linkMessage
+    }
+
     $payload = @{
-        body = $msg.ToString()
+        body = $body
     }
 
     $headers = @{
@@ -481,6 +495,74 @@ class GistFile
     }
 }
 
+function New-GistWithContent {
+    param (
+
+        [ValidateNotNullOrEmpty ()]
+        [string]
+        $Description, 
+
+        [Parameter(Mandatory)]
+        [string]
+        $FileName,
+
+        [Parameter(Mandatory)]
+        [string]
+        $GistContent,
+
+        [Parameter(Mandatory)]
+        [string]
+        $FileType,
+
+        [switch]
+        $IsPublic=$false # default to false, better save than sorry
+    )
+
+    $envVars = @{
+        "GITHUB_TOKEN" = $Env:GITHUB_TOKEN;
+    }
+
+    foreach ($key in $envVars.Keys) {
+        if (-not($envVars[$key])) {
+            Write-Debug "Environment variable missing: $key"
+            throw [System.InvalidOperationException]::new("Environment variable missing: $key")
+        }
+    }
+
+    # create the hashtable that will contain all the information of all types
+    $payload = @{
+        description = $Description;
+        files = @{
+            "$FileName" = @{
+                content = $GistContent;
+                filename = $FileName
+                language = $FileType;
+            };
+        }; # each file is the name of the file + the hashtable of the data to be used
+    }
+
+    # switchs are converted to {\"IsPresent\"=>true} in json :/ and the ternary operator might not be in all machines
+    if ($IsPublic) {
+        $payload["public"] = $true
+    } else {
+        $payload["public"] = $false
+    }
+
+    $url = "https://api.github.com/gists"
+    $payloadJson = $payload | ConvertTo-Json
+    Write-Host "Url is $url"
+    Write-Host "Payload is $payloadJson"
+
+    $headers = @{
+        Accept = "application/vnd.github.v3+json";
+        Authorization = ("token {0}" -f $Env:GITHUB_TOKEN);
+    } 
+
+    $request = Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body $payloadJson -ContentType 'application/json'
+    Write-Host $request
+    return $request.html_url
+}
+
 <# 
     .SYNOPSIS
         Creates a new gist that will contain the given collection of files and returns the urlobject defintion, this
@@ -576,3 +658,4 @@ Export-ModuleMember -Function Test-JobSuccess
 Export-ModuleMember -Function Get-GitHubPRInfo
 Export-ModuleMember -Function New-GistWithFiles 
 Export-ModuleMember -Function New-GistObjectDefinition 
+Export-ModuleMember -Function New-GistWithContent 
