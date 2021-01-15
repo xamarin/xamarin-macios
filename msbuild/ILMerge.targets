@@ -2,6 +2,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <MergeSystemAssemblies Condition="'$(MergeSystemAssemblies)' == ''">true</MergeSystemAssemblies>
   </PropertyGroup>
 
   <ItemGroup>
@@ -38,14 +39,14 @@
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.Net.Mqtt'" />
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.Reactive'" />
 
-      <MergedAssemblies Include="$(OutputPath)/Microsoft.Bcl.AsyncInterfaces.dll" />
-      <MergedAssemblies Include="$(OutputPath)/System.Buffers.dll" />
-      <MergedAssemblies Include="$(OutputPath)/System.Memory.dll" />
-      <MergedAssemblies Include="$(OutputPath)/System.Numerics.Vectors.dll" />
-      <MergedAssemblies Include="$(OutputPath)/System.Runtime.CompilerServices.Unsafe.dll" />
-      <MergedAssemblies Include="$(OutputPath)/System.Text.Json.dll" />
-      <MergedAssemblies Include="$(OutputPath)/System.Threading.Tasks.Extensions.dll" />
-      <MergedAssemblies Include="$(OutputPath)/System.Text.Encodings.Web.dll" />
+      <MergedAssemblies Include="$(OutputPath)/Microsoft.Bcl.AsyncInterfaces.dll" Condition="'$(MergeSystemAssemblies)' == 'true'" />
+      <MergedAssemblies Include="$(OutputPath)/System.Buffers.dll" Condition="'$(MergeSystemAssemblies)' == 'true'" />
+      <MergedAssemblies Include="$(OutputPath)/System.Memory.dll" Condition="'$(MergeSystemAssemblies)' == 'true'" />
+      <MergedAssemblies Include="$(OutputPath)/System.Numerics.Vectors.dll" Condition="'$(MergeSystemAssemblies)' == 'true'" />
+      <MergedAssemblies Include="$(OutputPath)/System.Runtime.CompilerServices.Unsafe.dll" Condition="'$(MergeSystemAssemblies)' == 'true'" />
+      <MergedAssemblies Include="$(OutputPath)/System.Text.Json.dll" Condition="'$(MergeSystemAssemblies)' == 'true'" />
+      <MergedAssemblies Include="$(OutputPath)/System.Threading.Tasks.Extensions.dll" Condition="'$(MergeSystemAssemblies)' == 'true'" />
+      <MergedAssemblies Include="$(OutputPath)/System.Text.Encodings.Web.dll" Condition="'$(MergeSystemAssemblies)' == 'true'" />
 
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(Extension)' == '.dll' And $([MSBuild]::ValueOrDefault('%(FileName)', '').StartsWith('Mono.Cecil', StringComparison.OrdinalIgnoreCase))" />
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(Extension)' == '.dll' And $([MSBuild]::ValueOrDefault('%(FileName)', '').StartsWith('Xamarin.Messaging', StringComparison.OrdinalIgnoreCase))" />

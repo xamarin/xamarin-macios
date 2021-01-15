@@ -3,9 +3,18 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <IncludeMSBuildAssets Condition="'$(IncludeMSBuildAssets)' == ''">compile</IncludeMSBuildAssets>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Xamarin.Messaging.Core" Version="$(MessagingVersion)" />
+    <!-- The iOS.Tasks assembly was ILRepacked so it also includes Messagging assemblies, if we use the references from the project types will collide -->
+    <!-- We still need the project reference to mantain the build order dependency, but we add a reference to the assembly explicitly -->
+    <ProjectReference Include="..\..\Xamarin.iOS.Tasks\Xamarin.iOS.Tasks.csproj">
+      <ReferenceOutputAssembly>False</ReferenceOutputAssembly>
+      <Private>False</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Xamarin.iOS.Tasks">
+      <HintPath>..\..\Xamarin.iOS.Tasks\bin\$(Configuration)\netstandard2.0\Xamarin.iOS.Tasks.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>

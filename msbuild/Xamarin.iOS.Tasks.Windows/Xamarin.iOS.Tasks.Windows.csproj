@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <MergeSystemAssemblies>false</MergeSystemAssemblies>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Xamarin.Messaging.Build.Client" Version="$(MessagingVersion)" />
@@ -39,4 +40,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
   </ItemGroup>
+
+  <Import Project="$(MSBuildThisFileDirectory)..\ILMerge.targets" />
 </Project>
