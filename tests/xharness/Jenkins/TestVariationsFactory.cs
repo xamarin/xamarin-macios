@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.DotNet.XHarness.iOS.Shared;
-using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
+using Microsoft.DotNet.XHarness.Common.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 using Xharness.Jenkins.TestTasks;
@@ -119,10 +118,10 @@ namespace Xharness.Jenkins {
 				case "xammac tests":
 					switch (test.ProjectConfiguration) {
 					case "Release":
-						yield return new TestData { Variation = "Release (all optimizations)", MonoBundlingExtraArgs = "--registrar:static --optimize:all", Debug = false, LinkMode = "Full", Defines = "OPTIMIZEALL"};
+						yield return new TestData { Variation = "Release (all optimizations)", MonoBundlingExtraArgs = "--registrar:static --optimize:all", Debug = false, LinkMode = "Full", Defines = "OPTIMIZEALL", Undefines = "DYNAMIC_REGISTRAR" };
 						break;
 					case "Debug":
-						yield return new TestData { Variation = "Debug (all optimizations)", MonoBundlingExtraArgs = "--registrar:static --optimize:all,-remove-uithread-checks", Debug = true, LinkMode = "Full", Defines = "OPTIMIZEALL", Ignored = !(jenkins.IncludeAll && jenkins.IncludeMac) };
+						yield return new TestData { Variation = "Debug (all optimizations)", MonoBundlingExtraArgs = "--registrar:static --optimize:all,-remove-uithread-checks", Debug = true, LinkMode = "Full", Defines = "OPTIMIZEALL", Undefines = "DYNAMIC_REGISTRAR", Ignored = !(jenkins.IncludeAll && jenkins.IncludeMac) };
 						break;
 					}
 					break;
@@ -214,13 +213,9 @@ namespace Xharness.Jenkins {
 						clone.Xml.Save (clone.Path);
 					});
 
-					MSBuildTask build;
-					if (clone.IsDotNetProject) {
-						build = new DotNetBuildTask (jenkins: jenkins, testProject: clone, processManager: processManager);
-						ignored |= !jenkins.IncludeDotNet;
-					} else {
-						build = new MSBuildTask (jenkins: jenkins, testProject: clone, processManager: processManager);
-					}
+					ignored |= clone.IsDotNetProject && !jenkins.IncludeDotNet;
+
+					var build = new MSBuildTask (jenkins: jenkins, testProject: clone, processManager: processManager);
 					build.ProjectConfiguration = configuration;
 					build.ProjectPlatform = task.ProjectPlatform;
 					build.Platform = task.Platform;

@@ -288,6 +288,7 @@ namespace ObjCRuntime
 		const int sys2 = 1937339186;
 
 		// Deprecated in OSX 10.8 - but no good alternative is (yet) available
+		[Deprecated (PlatformName.MacOSX, 10, 8)]
 		[DllImport ("/System/Library/Frameworks/Carbon.framework/Versions/Current/Carbon")]
 		static extern int Gestalt (int selector, out int result);
 

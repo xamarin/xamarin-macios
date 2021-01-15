@@ -17,8 +17,6 @@ using ObjCRuntime;
 namespace Xamarin.Linker {
 	public class LinkerConfiguration {
 		public List<Abi> Abis;
-		// This is the AssemblyName MSBuild property for the main project (which is also the root/entry assembly)
-		public string AssemblyName { get; private set; }
 		public string CacheDirectory { get; private set; }
 		public Version DeploymentTarget { get; private set; }
 		public HashSet<string> FrameworkAssemblies { get; private set; } = new HashSet<string> ();
@@ -48,9 +46,11 @@ namespace Xamarin.Linker {
 		
 		string user_optimize_flags;
 
-		public static LinkerConfiguration GetInstance (LinkContext context)
+		Dictionary<string, List<MSBuildItem>> msbuild_items = new Dictionary<string, List<MSBuildItem>> ();
+
+		public static LinkerConfiguration GetInstance (LinkContext context, bool createIfNotFound = true)
 		{
-			if (!configurations.TryGetValue (context, out var instance)) {
+			if (!configurations.TryGetValue (context, out var instance) && createIfNotFound) {
 				if (!context.TryGetCustomData ("LinkerOptionsFile", out var linker_options_file))
 					throw new Exception ($"No custom linker options file was passed to the linker (using --custom-data LinkerOptionsFile=...");
 				instance = new LinkerConfiguration (linker_options_file) {
@@ -95,7 +95,8 @@ namespace Xamarin.Linker {
 
 				switch (key) {
 				case "AssemblyName":
-					AssemblyName = value;
+					// This is the AssemblyName MSBuild property for the main project (which is also the root/entry assembly)
+					Application.RootAssemblies.Add (value);
 					break;
 				case "CacheDirectory":
 					CacheDirectory = value;
@@ -238,7 +239,7 @@ namespace Xamarin.Linker {
 			if (Verbosity > 0) {
 				Console.WriteLine ($"LinkerConfiguration:");
 				Console.WriteLine ($"    ABIs: {string.Join (", ", Abis.Select (v => v.AsArchString ()))}");
-				Console.WriteLine ($"    AssemblyName: {AssemblyName}");
+				Console.WriteLine ($"    AssemblyName: {Application.AssemblyName}");
 				Console.WriteLine ($"    CacheDirectory: {CacheDirectory}");
 				Console.WriteLine ($"    Debug: {Application.EnableDebug}");
 				Console.WriteLine ($"    DeploymentTarget: {DeploymentTarget}");
@@ -271,18 +272,57 @@ namespace Xamarin.Linker {
 
 		public void WriteOutputForMSBuild (string itemName, List<MSBuildItem> items)
 		{
-			var xmlNs = XNamespace.Get ("http://schemas.microsoft.com/developer/msbuild/2003");
-			var elements = items.Select (item =>
-				new XElement (xmlNs + itemName,
-					new XAttribute ("Include", item.Include),
-						item.Metadata.Select (metadata => new XElement (xmlNs + metadata.Key, metadata.Value))));
+			if (!msbuild_items.TryGetValue (itemName, out var list)) {
+				msbuild_items [itemName] = items;
+			} else {
+				list.AddRange (items);
+			}
+		}
 
-			var document = new XDocument (
-				new XElement (xmlNs + "Project",
-					new XElement (xmlNs + "ItemGroup",
-						elements)));
+		public void FlushOutputForMSBuild ()
+		{
+			foreach (var kvp in msbuild_items) {
+				var itemName = kvp.Key;
+				var items = kvp.Value;
 
-			document.Save (Path.Combine (ItemsDirectory, itemName + ".items"));
+				var xmlNs = XNamespace.Get ("http://schemas.microsoft.com/developer/msbuild/2003");
+				var elements = items.Select (item =>
+					new XElement (xmlNs + itemName,
+						new XAttribute ("Include", item.Include),
+							item.Metadata.Select (metadata => new XElement (xmlNs + metadata.Key, metadata.Value))));
+
+				var document = new XDocument (
+					new XElement (xmlNs + "Project",
+						new XElement (xmlNs + "ItemGroup",
+							elements)));
+
+				document.Save (Path.Combine (ItemsDirectory, itemName + ".items"));
+			}
+		}
+
+		public static void Report (LinkContext Context, params Exception [] exceptions)
+		{
+			Report (Context, (IList<Exception>) exceptions);
+		}
+
+		public static void Report (LinkContext context, IList<Exception> exceptions)
+		{
+			// We can't really use the linker's reporting facilities and keep our own error codes, because we'll
+			// end up re-using the same error codes the linker already uses for its own purposes. So instead show
+			// a generic error using the linker's Context.LogMessage API, and then print our own errors to stderr.
+			// Since we print using a standard message format, msbuild will parse those error messages and show
+			// them as msbuild errors.
+			var list = ErrorHelper.CollectExceptions (exceptions);
+			var allWarnings = list.All (v => v is ProductException pe && !pe.Error);
+			if (!allWarnings) {
+				// Revisit the error code after https://github.com/mono/linker/issues/1596 has been fixed.
+				var instance = GetInstance (context, false);
+				var platform = (instance?.Platform)?.ToString () ?? "unknown";
+				var msg = MessageContainer.CreateErrorMessage ("Failed to execute the custom steps.", 1999, platform);
+				context.LogMessage (msg);
+			}
+			// ErrorHelper.Show will print our errors and warnings to stderr.
+			ErrorHelper.Show (list);
 		}
 	}
 }

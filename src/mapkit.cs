@@ -319,13 +319,13 @@ namespace MapKit {
 		bool _OpenMaps ([NullAllowed] MKMapItem [] mapItems, [NullAllowed] NSDictionary launchOptions);
 
 		[iOS (13, 2), NoMac, NoTV, NoWatch]
-		[Introduced (PlatformName.UIKitForMac, 13, 2)]
+		[Introduced (PlatformName.MacCatalyst, 13, 2)]
 		[Async]
 		[Export ("openInMapsWithLaunchOptions:fromScene:completionHandler:")]
 		void OpenInMaps ([NullAllowed] NSDictionary launchOptions, [NullAllowed] UIScene fromScene, Action<NSError> completionHandler);
 
 		[iOS (13, 2), NoMac, NoTV, NoWatch]
-		[Introduced (PlatformName.UIKitForMac, 13, 2)]
+		[Introduced (PlatformName.MacCatalyst, 13, 2)]
 		[Static]
 		[Async]
 		[Export ("openMapsWithItems:launchOptions:fromScene:completionHandler:")]
@@ -619,7 +619,7 @@ namespace MapKit {
 //		void _HandleSelectionAtPoint (CGPoint locationInView);
 
 		[NoTV]
-		[Mac(10,9), iOS(9,0)]
+		[iOS(9,0)]
 		[Export ("showsCompass")]
 		bool ShowsCompass { get; set; }
 
@@ -1068,7 +1068,7 @@ namespace MapKit {
 		[Static]
 		[Internal]
 		[Export ("polygonWithPoints:count:interiorPolygons:")]
-		MKPolygon _FromPoints (IntPtr points, nint count, MKPolygon [] interiorPolygons);
+		MKPolygon _FromPoints (IntPtr points, nint count, [NullAllowed] MKPolygon [] interiorPolygons);
 
 		[Static]
 		[Export ("polygonWithCoordinates:count:"), Internal]
@@ -1077,7 +1077,7 @@ namespace MapKit {
 		[Static]
 		[Internal]
 		[Export ("polygonWithCoordinates:count:interiorPolygons:")]
-		MKPolygon _FromCoordinates (IntPtr coords, nint count, MKPolygon [] interiorPolygons);
+		MKPolygon _FromCoordinates (IntPtr coords, nint count, [NullAllowed] MKPolygon [] interiorPolygons);
 
 		#region MKAnnotation
 		[Export ("coordinate")]

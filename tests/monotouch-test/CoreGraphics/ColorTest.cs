@@ -101,12 +101,27 @@ namespace MonoTouchFixtures.CoreGraphics {
 		[Test]
 		public void GetAXName ()
 		{
-			TestRuntime.AssertXcodeVersion (12, 0);
+			TestRuntime.AssertXcodeVersion (12, TestRuntime.MinorXcode12APIMismatch);
 			using (var c = new CGColor (CGConstantColor.Black)) {
 				Assert.IsNotNull (c.AXName, "AXName");
 			}
 		}
 
+		[Test]
+		public void CreateByMatchingToColorSpace ()
+		{
+			TestRuntime.AssertXcodeVersion (11, 0);
+			using (var c = CGColor.CreateByMatchingToColorSpace (null, CGColorRenderingIntent.Default, null, null)) {
+				Assert.IsNull (c, "0");
+			}
+
+			using (var cs = CGColorSpace.CreateGenericRgbLinear ())
+			using (var c1 = CGColor.CreateSrgb (1, 2, 3, 4))
+			using (var c2 = CGColor.CreateByMatchingToColorSpace (cs, CGColorRenderingIntent.Default, c1, null)) {
+				Assert.IsNotNull (c1, "1");
+				Assert.IsNotNull (c2, "2");
+			}
+		}
 	}
 }
 

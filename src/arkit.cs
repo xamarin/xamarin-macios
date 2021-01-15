@@ -292,6 +292,14 @@ namespace ARKit {
 		VisualLocalizationFailed,
 	}
 
+	[iOS (14,3)]
+	[Native]
+	public enum ARAppClipCodeUrlDecodingState : long {
+		Decoding,
+		Failed,
+		Decoded,
+	}
+
 	[iOS (12,0)]
 	[NoWatch, NoTV, NoMac]
 	[Protocol]
@@ -1045,6 +1053,15 @@ namespace ARKit {
 		[iOS (13,0)]
 		[Export ("userFaceTrackingEnabled")]
 		bool UserFaceTrackingEnabled { [Bind ("userFaceTrackingEnabled")] get; set; }
+
+		[iOS (14,3)]
+		[Export ("appClipCodeTrackingEnabled")]
+		bool AppClipCodeTrackingEnabled { get; set; }
+
+		[iOS (14,3)]
+		[Static]
+		[Export ("supportsAppClipCodeTracking")]
+		bool SupportsAppClipCodeTracking { get; }
 
 		[iOS (13,4)]
 		[Static]
@@ -1853,6 +1870,15 @@ namespace ARKit {
 		[Static]
 		[Export ("supportsFrameSemantics:")]
 		bool SupportsFrameSemantics (ARFrameSemantics frameSemantics);
+
+		[iOS (14,3)]
+		[Export ("appClipCodeTrackingEnabled")]
+		bool AppClipCodeTrackingEnabled { get; set; }
+
+		[iOS (14,3)]
+		[Static]
+		[Export ("supportsAppClipCodeTracking")]
+		bool SupportsAppClipCodeTracking { get; }
 	}
 
 	[iOS (13,0)]
@@ -2287,6 +2313,15 @@ namespace ARKit {
 		[Export ("maximumNumberOfTrackedImages")]
 		nint MaximumNumberOfTrackedImages { get; set; }
 
+		[iOS (14,3)]
+		[Export ("appClipCodeTrackingEnabled")]
+		bool AppClipCodeTrackingEnabled { get; set; }
+
+		[iOS (14,3)]
+		[Static]
+		[Export ("supportsAppClipCodeTracking")]
+		bool SupportsAppClipCodeTracking { get; }
+
 		[Export ("detectionObjects", ArgumentSemantic.Copy)]
 		NSSet<ARReferenceObject> DetectionObjects { get; set; }
 
@@ -2322,6 +2357,25 @@ namespace ARKit {
 
 		[Export ("stateReason")]
 		ARGeoTrackingStateReason StateReason { get; }
+	}
+
+	[iOS (14,3)]
+	[BaseType (typeof (ARAnchor))]
+	[DisableDefaultCtor]
+	interface ARAppClipCodeAnchor : ARTrackable {
+
+		// Inlined from 'ARAnchorCopying' protocol (we can't have constructors in interfaces)
+		[Export ("initWithAnchor:")]
+		IntPtr Constructor (ARAnchor anchor);
+
+		[NullAllowed, Export ("url", ArgumentSemantic.Copy)]
+		NSUrl Url { get; }
+
+		[Export ("urlDecodingState", ArgumentSemantic.Assign)]
+		ARAppClipCodeUrlDecodingState UrlDecodingState { get; }
+
+		[Export ("radius")]
+		float Radius { get; }
 	}
 
 }

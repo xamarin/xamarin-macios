@@ -1,16 +1,15 @@
 #nullable enable
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
-
-using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
+using Microsoft.DotNet.XHarness.Common.Execution;
+using Microsoft.DotNet.XHarness.Common.Logging;
 
 namespace Xharness.Jenkins {
-	
+
 	/// <summary>
 	/// Allows to select the tests to be ran depending on certain conditions such as labels of modified files.
 	/// </summary>
@@ -81,6 +80,10 @@ namespace Xharness.Jenkins {
 		static readonly string [] dotnetFilenames = {
 			"msbuild",
 			".*dotnet.*",
+		};
+		static readonly string [] msbuildFilenames = {
+			"msbuild",
+			"tests/msbuild",
 		};
 
 		#endregion
@@ -176,6 +179,7 @@ namespace Xharness.Jenkins {
 			SetEnabled (files, xtroPrefixes, "xtro", ref jenkins.IncludeXtro);
 			SetEnabled (files, cecilPrefixes, "cecil", ref jenkins.IncludeCecil);
 			SetEnabled (files, dotnetFilenames, "dotnet", ref jenkins.IncludeDotNet);
+			SetEnabled (files, msbuildFilenames, "msbuild", ref jenkins.IncludeMSBuild);
 		}
 
 		void SelectTestsByLabel (int pullRequest)
@@ -244,7 +248,7 @@ namespace Xharness.Jenkins {
 			SetEnabled (labels, "tvos", ref jenkins.IncludetvOS);
 			SetEnabled (labels, "watchos", ref jenkins.IncludewatchOS);
 			SetEnabled (labels, "mac", ref jenkins.IncludeMac);
-			SetEnabled (labels, "ios-msbuild", ref jenkins.IncludeiOSMSBuild);
+			SetEnabled (labels, "msbuild", ref jenkins.IncludeMSBuild);
 			SetEnabled (labels, "ios-simulator", ref jenkins.IncludeSimulator);
 			SetEnabled (labels, "non-monotouch", ref jenkins.IncludeNonMonotouch);
 			SetEnabled (labels, "monotouch", ref jenkins.IncludeMonotouch);

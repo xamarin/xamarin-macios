@@ -2,12 +2,10 @@
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.DotNet.XHarness.iOS.Shared;
-using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
-using Microsoft.DotNet.XHarness.iOS.Shared.Tasks;
+using Microsoft.DotNet.XHarness.Common.Logging;
 
 namespace Xharness.Jenkins.TestTasks {
-	abstract class AppleTestTask : Microsoft.DotNet.XHarness.iOS.Shared.Tasks.TestTasks, ITestTask
+	abstract class AppleTestTask : TestTasks, ITestTask
 	{
 		public Jenkins Jenkins { get; private set; }
 		public IHarness Harness { get { return Jenkins.Harness; } }
@@ -46,6 +44,7 @@ namespace Xharness.Jenkins.TestTasks {
 			case TestPlatform.watchOS:
 			case TestPlatform.watchOS_32:
 			case TestPlatform.watchOS_64_32:
+			case TestPlatform.MacCatalyst:
 				process.StartInfo.EnvironmentVariables ["MD_APPLE_SDK_ROOT"] = xcodeRoot;
 				process.StartInfo.EnvironmentVariables ["MD_MTOUCH_SDK_ROOT"] = Path.Combine (Jenkins.Harness.IOS_DESTDIR, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current");
 				process.StartInfo.EnvironmentVariables ["TargetFrameworkFallbackSearchPaths"] = Path.Combine (Jenkins.Harness.IOS_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild-frameworks");
@@ -73,7 +72,7 @@ namespace Xharness.Jenkins.TestTasks {
 				process.StartInfo.EnvironmentVariables ["XAMMAC_FRAMEWORK_PATH"] = Path.Combine (Jenkins.Harness.MAC_DESTDIR, "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current");
 				break;
 			default:
-				throw new NotImplementedException ();
+				throw new NotImplementedException ($"Unknown test platform: {Platform}");
 			}
 
 			foreach (var kvp in Environment) {

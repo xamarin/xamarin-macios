@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 using Xharness.Jenkins.TestTasks;
@@ -11,12 +10,12 @@ namespace Xharness.Jenkins {
 	class MacTestTasksEnumerable : IEnumerable<RunTestTask> {
 
 		readonly Jenkins jenkins;
-		readonly IProcessManager processManager;
+		readonly IMlaunchProcessManager processManager;
 		readonly ICrashSnapshotReporterFactory crashReportSnapshotFactory;
 		readonly ITestVariationsFactory testVariationsFactory;
 
-		public MacTestTasksEnumerable (Jenkins jenkins, 
-								    IProcessManager processManager,
+		public MacTestTasksEnumerable (Jenkins jenkins,
+									IMlaunchProcessManager processManager,
 									ICrashSnapshotReporterFactory crashReportSnapshotFactory,
 									ITestVariationsFactory testVariationsFactory)
 		{

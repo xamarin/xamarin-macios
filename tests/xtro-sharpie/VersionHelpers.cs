@@ -27,6 +27,8 @@ namespace Extrospection
 				return version.Major < 9;
 			case Platforms.watchOS:
 				return version.Major < 2;
+			case Platforms.MacCatalyst:
+				return version.Major < 13;
 			default:
 				throw new InvalidOperationException ($"Unknown platform {Platform} in VersionTooOldToCare");
 			}

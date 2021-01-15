@@ -118,5 +118,7 @@ namespace CoreVideo {
 		TwoComponent16 = 0x32433136, // '2C16'
 		CV16VersatileBayer = 0x62703136, // 'bp16'
 		CV64Rgba_DownscaledProResRaw = 0x62703634, // 'bp64'
+		// iOS 14.2
+		CV64RgbaLE = 0x6C363472,
 	}
 }

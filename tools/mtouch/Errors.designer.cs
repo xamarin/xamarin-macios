@@ -1097,6 +1097,30 @@ namespace Xamarin.Bundler {
             }
         }
         
+        internal static string MX0181 {
+            get {
+                return ResourceManager.GetString("MX0181", resourceCulture);
+            }
+        }
+        
+        internal static string MX0182 {
+            get {
+                return ResourceManager.GetString("MX0182", resourceCulture);
+            }
+        }
+        
+        internal static string MX0183 {
+            get {
+                return ResourceManager.GetString("MX0183", resourceCulture);
+            }
+        }
+        
+        internal static string MX0184 {
+            get {
+                return ResourceManager.GetString("MX0184", resourceCulture);
+            }
+        }
+        
         internal static string MX1009 {
             get {
                 return ResourceManager.GetString("MX1009", resourceCulture);
@@ -1403,6 +1427,12 @@ namespace Xamarin.Bundler {
             }
         }
         
+        internal static string MX_ExceptionalSubSteps {
+            get {
+                return ResourceManager.GetString("MX_ExceptionalSubSteps", resourceCulture);
+            }
+        }
+        
         internal static string MT2101 {
             get {
                 return ResourceManager.GetString("MT2101", resourceCulture);
@@ -1514,6 +1544,18 @@ namespace Xamarin.Bundler {
         internal static string MX2111 {
             get {
                 return ResourceManager.GetString("MX2111", resourceCulture);
+            }
+        }
+        
+        internal static string MX_ConfigurationAwareStep {
+            get {
+                return ResourceManager.GetString("MX_ConfigurationAwareStep", resourceCulture);
+            }
+        }
+        
+        internal static string MX_ConfigurationAwareStepWithAssembly {
+            get {
+                return ResourceManager.GetString("MX_ConfigurationAwareStepWithAssembly", resourceCulture);
             }
         }
         
@@ -2284,7 +2326,7 @@ namespace Xamarin.Bundler {
                 return ResourceManager.GetString("MX5222", resourceCulture);
             }
         }
-
+        
         internal static string MX5223 {
             get {
                 return ResourceManager.GetString("MX5223", resourceCulture);

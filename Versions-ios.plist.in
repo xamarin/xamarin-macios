@@ -41,6 +41,9 @@
 			<string>13.5</string>
 			<string>13.6</string>
 			<string>14.0</string>
+			<string>14.1</string>
+			<string>14.2</string>
+			<string>14.3</string>
 		</array>
 		<key>tvOS</key>
 		<array>
@@ -65,6 +68,8 @@
 			<string>13.3</string>
 			<string>13.4</string>
 			<string>14.0</string>
+			<string>14.2</string>
+			<string>14.3</string>
 		</array>
 		<key>watchOS</key>
 		<array>
@@ -86,7 +91,36 @@
 			<string>6.1</string>
 			<string>6.2</string>
 			<string>7.0</string>
+			<string>7.1</string>
+			<string>7.2</string>
 		</array>
+		<key>MacCatalyst</key>
+		<array>
+			<string>13.1</string>
+			<string>13.2</string>
+			<string>13.3</string>
+			<string>13.4</string>
+			<string>13.5</string>
+			<string>14.2</string>
+			<string>14.3</string>
+		</array>
+	</dict>
+	<key>MacCatalystVersionMap</key>
+	<dict>
+		<key>13.1</key>
+		<string>10.15</string>
+		<key>13.2</key>
+		<string>10.15.1</string>
+		<key>13.3</key>
+		<string>10.15.2</string>
+		<key>13.4</key>
+		<string>10.15.4</string>
+		<key>13.5</key>
+		<string>10.15.5</string>
+		<key>14.2</key>
+		<string>11.0</string>
+		<key>14.3</key>
+		<string>11.1</string>
 	</dict>
 	<key>RecommendedXcodeVersion</key>
 	<string>@XCODE_VERSION@</string>
@@ -168,6 +202,7 @@
 		<string>sgen-concurrent</string> <!-- this means stable support for the concurrent GC -->
 		<string>arm64_32</string>
 		<string>altool</string>
+		<string>maccatalyst</string>
 	</array>
 	<key>Optimizations</key>
 	<dict>

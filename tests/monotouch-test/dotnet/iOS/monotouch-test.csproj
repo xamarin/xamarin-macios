@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project Sdk="Microsoft.iOS.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net5.0-ios</TargetFramework>
+    <TargetFramework>net6.0-ios</TargetFramework>
     <RuntimeIdentifier>ios-x64</RuntimeIdentifier>
     <OutputType>Exe</OutputType>
     <DefineConstants>NET</DefineConstants>
@@ -11,9 +11,10 @@
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\..\..\product.snk</AssemblyOriginatorKeyFile>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <CodesignEntitlements>..\..\Entitlements.plist</CodesignEntitlements>
+    <CodesignEntitlements Condition="'$(Platform)' == 'iPhoneSimulator'">..\..\Entitlements.plist</CodesignEntitlements>
     <AssetTargetFallback>xamarinios10;$(AssetTargetFallback)</AssetTargetFallback>
     <DefineConstants Condition="'$(Platform)' == 'iPhoneSimulator'">$(DefineConstants);DYNAMIC_REGISTRAR</DefineConstants>
+    <DefineConstants Condition="'$(Platform)' != 'iPhoneSimulator'">$(DefineConstants);DEVICE</DefineConstants>
     <RootTestsDirectory>..\..\..</RootTestsDirectory>
   </PropertyGroup>
 
@@ -106,8 +107,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\EmbeddedResources\dotnet\iOS\EmbeddedResources.csproj" />
     <ProjectReference Include="..\..\..\..\tests\bindings-test\dotnet\iOS\bindings-test.csproj" />
-    <!-- https://github.com/mono/linker/issues/1435 -->
-    <!-- <ProjectReference Include="..\..\..\fsharplibrary\dotnet\iOS\fsharplibrary.fsproj" /> -->
+    <ProjectReference Include="..\..\..\fsharplibrary\dotnet\iOS\fsharplibrary.fsproj" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="..\..\CoreImage\Xam.png">
@@ -184,7 +184,7 @@
     <CustomMetalSmeltingInput Include="..\..\Resources\fragmentShader.metal" />
   </ItemGroup>
 
-  <Target Name="CustomMetalSmelting" Inputs="@(CustomMetalSmeltingInput)" Outputs="$(_AppBundlePath)\fragmentShader.metallib" Condition="'$(_SdkIsSimulator)' != 'true'" DependsOnTargets="_GenerateBundleName">
+  <Target Name="CustomMetalSmelting" Inputs="@(CustomMetalSmeltingInput)" Outputs="$(_AppBundlePath)\fragmentShader.metallib" Condition="'$(_SdkIsSimulator)' != 'true'" DependsOnTargets="_GenerateBundleName;_DetectSdkLocations">
     <PropertyGroup>
         <_SmeltingSdk Condition="'$(_PlatformName)' == 'iOS'">iphoneos</_SmeltingSdk>
         <_SmeltingSdk Condition="'$(_PlatformName)' == 'tvOS'">appletvos</_SmeltingSdk>
@@ -192,8 +192,8 @@
         <_SmeltingMinOS Condition="'$(_PlatformName)' == 'tvOS'">-mtvos-version-min=11.0</_SmeltingMinOS>
     </PropertyGroup>
     <MakeDir Directories="$(IntermediateOutputPath);$(AppBundleDir)" />
-    <Exec Command="xcrun -sdk $(_SmeltingSdk) metal -c @(CustomMetalSmeltingInput) -o $(IntermediateOutputPath)\fragmentShader.air $(_SmeltingMinOS)" />
-    <Exec Command="xcrun -sdk $(_SmeltingSdk) metallib $(IntermediateOutputPath)\fragmentShader.air -o $(AppBundleDir)\fragmentShader.metallib" />
+    <Exec Command="xcrun -sdk $(_SmeltingSdk) metal -c @(CustomMetalSmeltingInput) -o $(IntermediateOutputPath)\fragmentShader.air $(_SmeltingMinOS)" EnvironmentVariables="DEVELOPER_DIR=$(_SdkDevPath)" />
+    <Exec Command="xcrun -sdk $(_SmeltingSdk) metallib $(IntermediateOutputPath)\fragmentShader.air -o $(AppBundleDir)\fragmentShader.metallib" EnvironmentVariables="DEVELOPER_DIR=$(_SdkDevPath)" />
   </Target>
 
   <Target Name="BeforeBuild" Inputs="@(GeneratedTestInput)" Outputs="@(GeneratedTestOutput)" DependsOnTargets="CustomMetalSmelting" >

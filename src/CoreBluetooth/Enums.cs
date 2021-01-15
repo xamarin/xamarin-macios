@@ -11,6 +11,8 @@
 using System;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace CoreBluetooth {
 
 	[Mac (10,13)]
@@ -115,6 +117,7 @@ namespace CoreBluetooth {
 		OperationNotSupported,
 		PeerRemovedPairingInformation,
 		EncryptionTimedOut,
+		TooManyLEPairedDevices = 16,
 	}
 
 	[Watch (4,0)]

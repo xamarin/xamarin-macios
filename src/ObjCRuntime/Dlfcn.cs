@@ -59,7 +59,7 @@ namespace ObjCRuntime {
 			static public readonly IntPtr Handle = Dlfcn.dlopen (Constants.CoreMidiLibrary, 0);
 		}
 #endif
-#if !WATCH && !MONOMAC
+#if HAS_OPENGLES
 		static public class OpenGLES
 		{
 			static public readonly IntPtr Handle = Dlfcn.dlopen (Constants.OpenGLESLibrary, 0);

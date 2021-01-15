@@ -5,11 +5,15 @@ using System.Xml;
 namespace Xharness {
 	public static class XmlDocumentExtensions {
 
-		public static void Save (this XmlDocument doc, string path, IHarness harness)
+		public static void Save (this XmlDocument doc, string path, IHarness harness) => 
+			doc.Save (path, (level, message) => harness.Log (level, message));
+
+		public static void Save (this XmlDocument doc, string path, Action<int, string> log)
 		{
 			if (!File.Exists (path)) {
+				Directory.CreateDirectory (Path.GetDirectoryName (path));
 				doc.Save (path);
-				harness.Log (1, "Created {0}", path);
+				log?.Invoke (1, $"Created {path}");
 			} else {
 				var tmpPath = path + ".tmp";
 				doc.Save (tmpPath);
@@ -18,11 +22,11 @@ namespace Xharness {
 
 				if (existing == updated) {
 					File.Delete (tmpPath);
-					harness.Log (1, "Not saved {0}, no change", path);
+					log?.Invoke (1, $"Not saved {path}, no change");
 				} else {
 					File.Delete (path);
 					File.Move (tmpPath, path);
-					harness.Log (1, "Updated {0}", path);
+					log?.Invoke (1, $"Updated {path}");
 				}
 			}
 		}

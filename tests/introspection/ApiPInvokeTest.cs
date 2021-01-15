@@ -211,7 +211,7 @@ namespace Introspection
 						path = null;
 						break;
 #if NET
-					case "QCall":
+					case "libSystem.Globalization.Native":
 						// Globalization hasn't been implemented yet: https://github.com/xamarin/xamarin-macios/issues/8906
 						if (name.StartsWith ("GlobalizationNative_", StringComparison.Ordinal))
 							continue;
@@ -244,7 +244,7 @@ namespace Introspection
 					var lib = Dlfcn.dlopen (path, 0);
 					var h = Dlfcn.dlsym (lib, name);
 					if (h == IntPtr.Zero)
-						ReportError ("Could not find the symbol '{0}' in {1}", name, path);
+						ReportError ("Could not find the symbol '{0}' in {1} for the P/Invoke {2}.{3} in {4}", name, path, t.FullName, m.Name, a.GetName ().Name);
 					Dlfcn.dlclose (lib);
 					n++;
 				}

@@ -63,6 +63,14 @@ namespace CoreTelephony {
 
 		[Field ("CTRadioAccessTechnologyLTE")]
 		NSString LTE { get; }
+
+		[iOS (14,1)]
+		[Field ("CTRadioAccessTechnologyNRNSA")]
+		NSString NRNsa { get; }
+
+		[iOS (14,1)]
+		[Field ("CTRadioAccessTechnologyNR")]
+		NSString NR { get; }
 	}
 
 	interface ICTTelephonyNetworkInfoDelegate {}

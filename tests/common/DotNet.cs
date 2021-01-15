@@ -14,7 +14,7 @@ namespace Xamarin.Tests {
 		public static string Executable {
 			get {
 				if (dotnet_executable == null) {
-					dotnet_executable = Configuration.EvaluateVariable ("DOTNET5");
+					dotnet_executable = Configuration.EvaluateVariable ("DOTNET6");
 					if (string.IsNullOrEmpty (dotnet_executable))
 						throw new Exception ($"Could not find the dotnet executable.");
 					if (!File.Exists (dotnet_executable))
@@ -24,19 +24,19 @@ namespace Xamarin.Tests {
 			}
 		}
 
-		public static ExecutionResult AssertBuild (string project, Dictionary<string, string> properties = null, string verbosity = "diagnostic")
+		public static ExecutionResult AssertBuild (string project, Dictionary<string, string> properties = null)
 		{
-			return Execute ("build", project, properties, verbosity, true);
+			return Execute ("build", project, properties, true);
 		}
 
-		public static ExecutionResult AssertBuildFailure (string project, Dictionary<string, string> properties = null, string verbosity = "diagnostic")
+		public static ExecutionResult AssertBuildFailure (string project, Dictionary<string, string> properties = null)
 		{
-			var rv = Execute ("build", project, properties, verbosity, false);
+			var rv = Execute ("build", project, properties, false);
 			Assert.AreNotEqual (0, rv.ExitCode, "Unexpected success");
 			return rv;
 		}
 
-		public static ExecutionResult Execute (string verb, string project, Dictionary<string, string> properties, string verbosity = "diagnostic", bool assert_success = true)
+		public static ExecutionResult Execute (string verb, string project, Dictionary<string, string> properties, bool assert_success = true)
 		{
 			if (!File.Exists (project))
 				throw new FileNotFoundException ($"The project file '{project}' does not exist.");
@@ -52,23 +52,26 @@ namespace Xamarin.Tests {
 					foreach (var prop in properties)
 						args.Add ($"/p:{prop.Key}={prop.Value}");
 				}
-				if (!string.IsNullOrEmpty (verbosity))
-					args.Add ($"/verbosity:{verbosity}");
-				args.Add ($"/bl:{Path.Combine (Path.GetDirectoryName (project), "log.binlog")}");
+				var binlogPath = Path.Combine (Path.GetDirectoryName (project), $"log-{verb}-{DateTime.Now:yyyyMMdd_HHmmss}.binlog");
+				args.Add ($"/bl:{binlogPath}");
 				var env = new Dictionary<string, string> ();
 				env ["MSBuildSDKsPath"] = null;
 				env ["MSBUILD_EXE_PATH"] = null;
+				// This is a temporary variable to enable the .NET workload resolver, because it's opt-in for now.
+				// Ref: https://github.com/dotnet/sdk/issues/13849
+				env ["MSBuildEnableWorkloadResolver"] = "true";
 				var output = new StringBuilder ();
-				var rv = ExecutionHelper.Execute (Executable, args, env, output, output, workingDirectory: Path.GetDirectoryName (project), timeout: TimeSpan.FromMinutes (10));
-				if (assert_success && rv != 0) {
+				var rv = Execution.RunWithStringBuildersAsync (Executable, args, env, output, output, Console.Out, workingDirectory: Path.GetDirectoryName (project), timeout: TimeSpan.FromMinutes (10)).Result;
+				if (assert_success && rv.ExitCode != 0) {
 					Console.WriteLine ($"'{Executable} {StringUtils.FormatArguments (args)}' failed with exit code {rv}.");
 					Console.WriteLine (output);
-					Assert.AreEqual (0, rv, $"Exit code: {Executable} {StringUtils.FormatArguments (args)}");
+					Assert.AreEqual (0, rv.ExitCode, $"Exit code: {Executable} {StringUtils.FormatArguments (args)}");
 				}
 				return new ExecutionResult {
 					StandardOutput = output,
 					StandardError = output,
-					ExitCode = rv,
+					ExitCode = rv.ExitCode,
+					BinLogPath = binlogPath,
 				};
 			default:
 				throw new NotImplementedException ($"Unknown dotnet action: '{verb}'");
@@ -95,37 +98,17 @@ namespace Xamarin.Tests {
 						return false;
 					case ".dylib": // ignore dylibs, they're not the same
 						return false;
-
-					// There's a lot of TODOs here, those correspond with missing features in .NET and will be removed as those features are implemented
-					case ".png": // TODO
-					case ".metallib": // TODO
-						return false;
 					}
 
 					var filename = Path.GetFileName (v);
 					switch (filename) {
-					case "MonoTouchDebugConfiguration.txt": // TODO
-					case "PkgInfo": // TODO
-					case "Assets.car": // TODO
-					case "runtime-options.plist": // TODO
-					case "Root.plist": // TODO
-						return false;
-					}
-
-					var dir = Path.GetDirectoryName (v);
-					var dirext = Path.GetExtension (dir);
-					switch (dirext) {
-					case ".atlasc": // TODO
-						return false;
+					case "runtime-options.plist":
+						return false; // the .NET runtime will deal with selecting the http handler, no need for us to do anything
 					}
 
 					var components = v.Split ('/');
 					if (components.Any (v => v.EndsWith (".framework", StringComparison.Ordinal))) {
-						return false; // TODO
-					} else if (components.Any (v => v.EndsWith (".appex", StringComparison.Ordinal))) {
-						return false; // TODO
-					} else if (components.Any (v => v.EndsWith (".mlmodelc", StringComparison.Ordinal))) {
-						return false; // TODO
+						return false; // This is Mono.framework, which is waiting for https://github.com/dotnet/runtime/issues/42846
 					}
 
 					return true;
@@ -191,5 +174,6 @@ namespace Xamarin.Tests {
 		public StringBuilder StandardError;
 		public int ExitCode;
 		public bool TimedOut;
+		public string BinLogPath;
 	}
 }

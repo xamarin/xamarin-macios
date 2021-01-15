@@ -1,10 +1,5 @@
 using System;
-using System.Threading.Tasks;
-using Microsoft.DotNet.XHarness.iOS.Shared;
-using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
-using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
-using Microsoft.DotNet.XHarness.iOS.Shared.Tasks;
-using Xharness.TestTasks;
+using Microsoft.DotNet.XHarness.Common.Execution;
 
 namespace Xharness.Jenkins.TestTasks {
 	abstract class BuildProjectTask : BuildToolTask
@@ -16,8 +11,10 @@ namespace Xharness.Jenkins.TestTasks {
 			set => BuildProject.SolutionPath = value;
 		}
 
-		protected BuildProjectTask (Jenkins jenkins, TestProject testProject, IProcessManager processManager) : base (jenkins, processManager)
-			=> TestProject = testProject ?? throw new ArgumentNullException (nameof (testProject));
+		protected BuildProjectTask (Jenkins jenkins, TestProject testProject, IProcessManager processManager)
+			: base (jenkins, testProject, processManager)
+		{
+		}
 
 		public virtual bool RestoreNugets => BuildProject.RestoreNugets;
 

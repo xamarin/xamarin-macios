@@ -261,6 +261,8 @@ public class AttributeManager
 			return AttributeConversionManager.ConvertPlatformAttribute (attribute, PlatformName.WatchOS).Yield ();
 		case "TVAttribute":
 			return AttributeConversionManager.ConvertPlatformAttribute (attribute, PlatformName.TvOS).Yield ();
+		case "MacCatalystAttribute":
+			return AttributeConversionManager.ConvertPlatformAttribute (attribute, PlatformName.MacCatalyst).Yield ();
 		case "LionAttribute":
 			return AttributeFactory.CreateNewIntroducedAttribute (PlatformName.MacOSX, 10, 7).Yield ();
 		case "MountainLionAttribute":
@@ -275,6 +277,8 @@ public class AttributeManager
 			return AttributeFactory.CreateUnavailableAttribute (PlatformName.WatchOS).Yield ();
 		case "NoTVAttribute":
 			return AttributeFactory.CreateUnavailableAttribute (PlatformName.TvOS).Yield ();
+		case "NoMacCatalystAttribute":
+			return AttributeFactory.CreateUnavailableAttribute (PlatformName.MacCatalyst).Yield ();
 		case "AvailabilityAttribute":
 			return AttributeConversionManager.ConvertAvailability (attribute);
 		default:
@@ -403,6 +407,8 @@ public class AttributeManager
 
 	static IList<CustomAttributeData> GetIKVMAttributes (ICustomAttributeProvider provider)
 	{
+		if (provider == null)
+			return null;
 		var member = provider as MemberInfo;
 		if (member != null)
 			return CustomAttributeData.GetCustomAttributes (member);
@@ -460,6 +466,8 @@ public class AttributeManager
 		if (provider is ParameterInfo) {
 			var pi = (ParameterInfo) provider;
 			name = $"the method {pi.Member.DeclaringType.FullName}.{pi.Member.Name}'s parameter #{pi.Position} ({pi.Name})";
+		} else if (provider is Type type) {
+			name = $"the type {type.FullName}";
 		} else if (provider is MemberInfo) {
 			var mi = (MemberInfo) provider;
 			name = $"the member {mi.DeclaringType.FullName}.{mi.Name}";

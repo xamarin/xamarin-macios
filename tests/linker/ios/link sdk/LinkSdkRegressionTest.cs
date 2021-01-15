@@ -902,7 +902,13 @@ namespace LinkSdk {
 			Assert.That (path, Is.EqualTo ("/usr/share"), "path - CommonApplicationData");
 
 			// and the simulator is more lax
-#if !NET // https://github.com/dotnet/runtime/issues/41383
+#if NET
+			// ProgramFiles is different on .NET: https://github.com/dotnet/runtime/pull/41959#discussion_r485069017
+			path = TestFolder (Environment.SpecialFolder.ProgramFiles, readOnly: device, exists: false);
+			var applicationsPath = NSSearchPath.GetDirectories (NSSearchPathDirectory.ApplicationDirectory, NSSearchPathDomain.All, true).FirstOrDefault ();
+			Assert.That (path, Is.EqualTo (applicationsPath), "path - ProgramFiles");
+#else
+
 			path = TestFolder (Environment.SpecialFolder.ProgramFiles, readOnly: device);
 			Assert.That (path, Is.EqualTo ("/Applications"), "path - ProgramFiles");
 #endif
@@ -935,7 +941,11 @@ namespace LinkSdk {
 			path = TestFolder (Environment.SpecialFolder.MyDocuments);
 			Assert.That (path, Is.EqualTo (docs), "path - MyDocuments");
 
+#if NET
+			path = TestFolder (Environment.SpecialFolder.ApplicationData, exists: false);
+#else
 			path = TestFolder (Environment.SpecialFolder.ApplicationData);
+#endif
 			Assert.That (path, Is.EqualTo (docs + "/.config"), "path - ApplicationData");
 
 			path = TestFolder (Environment.SpecialFolder.LocalApplicationData);

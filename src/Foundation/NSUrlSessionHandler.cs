@@ -542,9 +542,20 @@ namespace Foundation {
 
 				lock (sessionHandler.inflightRequestsLock)
 					if (sessionHandler.inflightRequests.TryGetValue (task, out inflight)) {
-						// ensure that we did not cancel the request, if we did, do cancel the task
-						if (inflight.CancellationToken.IsCancellationRequested)
+						// ensure that we did not cancel the request, if we did, do cancel the task, if we 
+						// cancel the task it means that we are not interested in any of the delegate methods:
+						// 
+						// DidReceiveResponse     We might have received a response, but either the user cancelled or a 
+						//                        timeout did, if that is the case, we do not care about the response.
+						// DidReceiveData         Of buffer has a partial response ergo garbage and there is not real 
+						//                        reason we would like to add more data.
+						// DidCompleteWithError - We are not changing a behaviour compared to the case in which 
+						//                        we did not find the data.
+						if (inflight.CancellationToken.IsCancellationRequested) {
 							task?.Cancel ();
+							// return null so that we break out of any delegate method.
+							return null;
+						}
 						return inflight;
 					}
 

@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Xharness.Jenkins.TestTasks;
 
@@ -10,9 +9,9 @@ namespace Xharness.Jenkins {
 	class NUnitTestTasksEnumerable : IEnumerable<NUnitExecuteTask> {
 
 		readonly Jenkins jenkins;
-		readonly IProcessManager processManager;
-		
-		public NUnitTestTasksEnumerable (Jenkins jenkins, IProcessManager processManager)
+		readonly IMlaunchProcessManager processManager;
+
+		public NUnitTestTasksEnumerable (Jenkins jenkins, IMlaunchProcessManager processManager)
 		{
 			this.jenkins = jenkins ?? throw new ArgumentNullException (nameof (jenkins));
 			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
@@ -20,7 +19,7 @@ namespace Xharness.Jenkins {
 
 		public IEnumerator<NUnitExecuteTask> GetEnumerator ()
 		{
-			var netstandard2Project = new TestProject (Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "msbuild", "Xamarin.iOS.Tasks.Tests", "Xamarin.iOS.Tasks.Tests.csproj")));
+			var netstandard2Project = new TestProject (Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "msbuild", "Xamarin.MacDev.Tasks.Tests", "Xamarin.MacDev.Tasks.Tests.csproj")));
 			var buildiOSMSBuild = new MSBuildTask (jenkins: jenkins, testProject: netstandard2Project, processManager: processManager) {
 				SpecifyPlatform = false,
 				SpecifyConfiguration = true,
@@ -30,17 +29,39 @@ namespace Xharness.Jenkins {
 				SupportsParallelExecution = false,
 			};
 			var nunitExecutioniOSMSBuild = new NUnitExecuteTask (jenkins, buildiOSMSBuild, processManager) {
-				TestLibrary = Path.Combine (HarnessConfiguration.RootDirectory, "msbuild", "Xamarin.iOS.Tasks.Tests", "bin", "Debug", "net461", "Xamarin.iOS.Tasks.Tests.dll"),
+				TestLibrary = Path.Combine (HarnessConfiguration.RootDirectory, "msbuild", "Xamarin.MacDev.Tasks.Tests", "bin", "Debug", "net472", "Xamarin.MacDev.Tasks.Tests.dll"),
 				TestProject = netstandard2Project,
 				ProjectConfiguration = "Debug",
 				Platform = TestPlatform.iOS,
 				TestName = "MSBuild tests",
-				Mode = "iOS",
+				Mode = "Tasks",
 				Timeout = TimeSpan.FromMinutes (60),
-				Ignored = !jenkins.IncludeiOSMSBuild,
+				Ignored = !jenkins.IncludeMSBuild,
 				SupportsParallelExecution = false,
 			};
 			yield return nunitExecutioniOSMSBuild;
+			
+			var msbuildIntegrationTestsProject = new TestProject (Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "msbuild", "Xamarin.MacDev.Tests", "Xamarin.MacDev.Tests.csproj")));
+			var buildiOSMSBuildIntegration = new MSBuildTask (jenkins: jenkins, testProject: msbuildIntegrationTestsProject, processManager: processManager) {
+				SpecifyPlatform = false,
+				SpecifyConfiguration = true,
+				ProjectConfiguration = "Debug",
+				Platform = TestPlatform.iOS,
+				SolutionPath = Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "..", "msbuild", "Xamarin.MacDev.Tasks.sln")),
+				SupportsParallelExecution = false,
+			};
+			var nunitExecutioniOSMSBuildIntegration = new NUnitExecuteTask (jenkins, buildiOSMSBuildIntegration, processManager) {
+				TestLibrary = Path.Combine (HarnessConfiguration.RootDirectory, "msbuild", "Xamarin.MacDev.Tests", "bin", "Debug", "net472", "Xamarin.MacDev.Tests.dll"),
+				TestProject = msbuildIntegrationTestsProject,
+				ProjectConfiguration = "Debug",
+				Platform = TestPlatform.iOS,
+				TestName = "MSBuild tests",
+				Mode = "Integration",
+				Timeout = TimeSpan.FromMinutes (90),
+				Ignored = !jenkins.IncludeMSBuild,
+				SupportsParallelExecution = false,
+			};
+			yield return nunitExecutioniOSMSBuildIntegration;
 
 			var installSourcesProject = new TestProject (Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "..", "tools", "install-source", "InstallSourcesTests", "InstallSourcesTests.csproj")));
 			var buildInstallSources = new MSBuildTask (jenkins: jenkins, testProject: installSourcesProject, processManager: processManager) {

@@ -410,7 +410,7 @@ namespace Metal {
 		[iOS (9,0)]
 		Depth32Float_Stencil8 = 260,
 	
-		[NoWatch, iOS (9,0), TV (9,0), Mac (10,11)]
+		[NoWatch, iOS (9,0), TV (9,0)]
 		X32_Stencil8 = 261,
 
 		[Mac (10,12)][NoiOS][NoTV]
@@ -803,9 +803,8 @@ namespace Metal {
 	[iOS (9,0)][Mac (10,11)]
 	[Native]
 	public enum MTLLanguageVersion : ulong {
-#if !MONOMAC
+		[NoMac]
 		v1_0 = (1 << 16),
-#endif
 		v1_1 = (1 << 16) + 1,
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
 		v1_2 = (1 << 16) + 2,
@@ -833,9 +832,8 @@ namespace Metal {
 		None = 0,
 		DepthFromDepthStencil = 1 << 0,
 		StencilFromDepthStencil = 1 << 1,
-#if !MONOMAC
+		[NoMac]
 		RowLinearPvrtc = 1 << 2
-#endif
 	}
 
 	[iOS (9,0)][Mac (10,11)]
@@ -1091,17 +1089,17 @@ namespace Metal {
 		DepthResolvedSample = 1,
 	}
 
-	[Unavailable (PlatformName.MacCatalyst)]
+
 	[Flags, Mac (11,0), NoTV, iOS (13,0)]
-	[Native, Advice ("This API is not available when using UIKit on macOS.")]
+	[Native]
 	public enum MTLSparseTextureRegionAlignmentMode : ulong {
 		Outward = 0x0,
 		Inward = 0x1,
 	}
 
-	[Unavailable (PlatformName.MacCatalyst)]
 	[Flags, Mac (11,0), NoTV, iOS (13,0)]
-	[Native, Advice ("This API is not available when using UIKit on macOS.")]
+	[MacCatalyst (14, 0)]
+	[Native]
 	public enum MTLSparseTextureMappingMode : ulong {
 		Map = 0x0,
 		Unmap = 0x1,
@@ -1132,9 +1130,9 @@ namespace Metal {
 		Apple3 = 1003,
 		Apple4 = 1004,
 		Apple5 = 1005,
-		[NoTV, NoMac, iOS (14,0)] // Yep just available in iOS
+		[NoTV, Mac (11,0), iOS (14,0)]
 		Apple6 = 1006,
-		[NoTV, NoMac, iOS (14,0)] // Yep just available in iOS
+		[NoTV, Mac (11,0), iOS (14,0)]
 		Apple7 = 1007,
 		Mac1 = 2001,
 		Mac2 = 2002,

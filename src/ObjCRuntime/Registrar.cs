@@ -838,7 +838,11 @@ namespace Registrar {
 					var mi = (System.Reflection.MethodInfo) Method;
 					bool is_stret;
 #if __WATCHOS__
-					is_stret = Runtime.Arch == Arch.DEVICE ? Stret.ArmNeedStret (NativeReturnType, null) : Stret.X86NeedStret (NativeReturnType, null);
+					if (Runtime.Arch == Arch.DEVICE) {
+						is_stret = Stret.ArmNeedStret (NativeReturnType, null);
+					} else {
+						is_stret = IntPtr.Size == 4 ? Stret.X86NeedStret (NativeReturnType, null) : Stret.X86_64NeedStret (NativeReturnType, null);
+					}
 #elif MONOMAC
 					is_stret = IntPtr.Size == 8 ? Stret.X86_64NeedStret (NativeReturnType, null) : Stret.X86NeedStret (NativeReturnType, null);
 #elif __IOS__
@@ -1269,6 +1273,8 @@ namespace Registrar {
 					return "Xamarin.TVOS";
 				case ApplePlatform.MacOSX:
 					return "Xamarin.Mac";
+				case ApplePlatform.MacCatalyst:
+					return "Xamarin.MacCatalyst";
 				default:
 					throw ErrorHelper.CreateError (71, Errors.MX0071, App.Platform, App.ProductName);
 				}
@@ -1280,6 +1286,8 @@ namespace Registrar {
 		internal const string AssemblyName = "Xamarin.WatchOS";
 #elif TVOS
 		internal const string AssemblyName = "Xamarin.TVOS";
+#elif __MACCATALYST__
+		internal const string AssemblyName = "Xamarin.MacCatalyst";
 #elif IOS
 		internal const string AssemblyName = "Xamarin.iOS";
 #else

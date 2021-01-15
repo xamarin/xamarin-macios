@@ -168,6 +168,8 @@ SIMLAUNCHER_FRAMEWORKS =  \
 	-weak_framework SensorKit \
 	-weak_framework UniformTypeIdentifiers \
 	-weak_framework NearbyInteraction \
+						\
+	-weak_framework AdServices	\
 
 # keep the above list of weak_framework
 # 1. grouped by iOS versions;
@@ -221,12 +223,12 @@ $(MTOUCH_DIR)/mtouch.exe: $(mtouch_dependencies)
 # Partial static registrar libraries
 #
 define RunRegistrar
-%.registrar.$(1).$(2).m %.registrar.$(1).$(2).h: $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/$(3)bits/%.dll $(LOCAL_MTOUCH)
+%.registrar.$(1).$(2).m %.registrar.$(1).$(2).h: $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/$(3)bits/$(9)/%.dll $(LOCAL_MTOUCH)
 	$$(Q_GEN) $$(LOCAL_MTOUCH_COMMAND) --xamarin-framework-directory=$$(IOS_DESTDIR)/$$(MONOTOUCH_PREFIX) $$(MTOUCH_VERBOSITY) --runregistrar:$$(abspath $$(basename $$@).m) --sdkroot $$(XCODE_DEVELOPER_ROOT) --sdk $(4) $$< --registrar:static --target-framework Xamarin.$(5),v1.0 --abi $(2) -r:$(8)/mscorlib.dll
 	$$(Q) touch $$(basename $$@).m $$(basename $$@).h
 
 .libs/Microsoft.$(9).registrar.$(10)%m .libs/Microsoft.$(9).registrar.$(10)%h: $(TOP)/src/build/dotnet/$(1)/$(3)/Xamarin.$(5).dll $(LOCAL_MTOUCH) | .libs
-	$$(Q_GEN) $$(LOCAL_MTOUCH_COMMAND) --xamarin-framework-directory=$$(IOS_DESTDIR)/$$(MONOTOUCH_PREFIX) $$(MTOUCH_VERBOSITY) --runregistrar:$$(abspath $$(basename $$@).m) --sdkroot $$(XCODE_DEVELOPER_ROOT) --sdk $(4) $$< --registrar:static --target-framework .NETCoreApp,Version=5.0,Profile=$(1) --abi $(2) -r:$(DOTNET5_BCL_DIR)/System.Runtime.dll
+	$$(Q_GEN) $$(LOCAL_MTOUCH_COMMAND) --xamarin-framework-directory=$$(IOS_DESTDIR)/$$(MONOTOUCH_PREFIX) $$(MTOUCH_VERBOSITY) --runregistrar:$$(abspath $$(basename $$@).m) --sdkroot $$(XCODE_DEVELOPER_ROOT) --sdk $(4) $$< --registrar:static --target-framework .NETCoreApp,Version=6.0,Profile=$(1) --abi $(2) -r:$(DOTNET5_BCL_DIR)/System.Runtime.dll
 	$$(Q) touch $$(basename $$@).m $$(basename $$@).h
 
 %.registrar.$(1).$(2).a: %.registrar.$(1).$(2).m %.registrar.$(1).$(2).h
@@ -247,9 +249,11 @@ $(eval $(call RunRegistrar,ios,armv7s,32,$(IOS_SDK_VERSION),iOS,$(DEVICE7S_CFLAG
 $(eval $(call RunRegistrar,ios,arm64,64,$(IOS_SDK_VERSION),iOS,$(DEVICE64_CFLAGS),$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphoneos.sdk/include,$(MONOTOUCH_MONO_PATH),iOS,ios-arm64))
 $(eval $(call RunRegistrar,tvos,x86_64,64,$(TVOS_SDK_VERSION),TVOS,$(SIMULATORTV_CFLAGS),$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/include,$(MONOTOUCH_TV_MONO_PATH),tvOS,tvos-x64))
 $(eval $(call RunRegistrar,tvos,arm64,64,$(TVOS_SDK_VERSION),TVOS,$(DEVICETV_CFLAGS),$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/include,$(MONOTOUCH_TV_MONO_PATH),tvOS,tvos-arm64))
+$(eval $(call RunRegistrar,watchos,x86_64,64,$(WATCH_SDK_VERSION),WatchOS,$(SIMULATORWATCH64_CFLAGS),$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/include,$(MONOTOUCH_WATCH_MONO_PATH),watchOS,watchos-x64))
 $(eval $(call RunRegistrar,watchos,i386,32,$(WATCH_SDK_VERSION),WatchOS,$(SIMULATORWATCH_CFLAGS),$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/include,$(MONOTOUCH_WATCH_MONO_PATH),watchOS,watchos-x86))
 $(eval $(call RunRegistrar,watchos,armv7k,32,$(WATCH_SDK_VERSION),WatchOS,$(DEVICEWATCH_CFLAGS),$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/include,$(MONOTOUCH_WATCH_MONO_PATH),watchOS,armv7k))
 $(eval $(call RunRegistrar,watchos,arm64_32,32,$(WATCH_SDK_VERSION),WatchOS,$(DEVICEWATCH64_32_CFLAGS),$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/include,$(MONOTOUCH_WATCH_MONO_PATH),watchOS,arm64_32))
+$(eval $(call RunRegistrar,maccatalyst,x86_64,64,$(MACCATALYST_SDK_VERSION),MacCatalyst,$(MACCATALYST_CFLAGS),$(IOS_DESTDIR)$(XAMARIN_MACCATALYST_SDK)/include,$(MONOTOUCH_MACCATALYST_MONO_PATH),MacCatalyst,maccatalyst-x64))
 
 %.registrar.ios.simulator.a:     %.registrar.ios.i386.a %.registrar.ios.x86_64.a
 	$(Q_LIPO) $(DEVICE_BIN_PATH)/lipo -create -output $@ $^
@@ -258,6 +262,9 @@ $(eval $(call RunRegistrar,watchos,arm64_32,32,$(WATCH_SDK_VERSION),WatchOS,$(DE
 	$(Q_LIPO) $(DEVICE_BIN_PATH)/lipo -create -output $@ $^
 
 %.registrar.watchos.device.a:    %.registrar.watchos.armv7k.a %.registrar.watchos.arm64_32.a
+	$(Q_LIPO) $(DEVICE_BIN_PATH)/lipo -create -output $@ $^
+
+%.registrar.watchos.simulator.a: %.registrar.watchos.i386.a %.registrar.watchos.x86_64.a
 	$(Q_LIPO) $(DEVICE_BIN_PATH)/lipo -create -output $@ $^
 
 .libs/Microsoft.iOS.registrar.ios-arm.a: .libs/Microsoft.iOS.registrar.armv7.a .libs/Microsoft.iOS.registrar.armv7s.a
@@ -298,6 +305,12 @@ TARGETS += $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/lib/Xamarin.TVOS.registrar.a
 endif
 endif
 
+ifdef INCLUDE_MACCATALYST
+TARGETS +=	\
+	$(IOS_DESTDIR)$(XAMARIN_MACCATALYST_SDK)/lib/Xamarin.MacCatalyst.registrar.a       \
+
+endif
+
 TARGET_DIRS_DOTNET = \
 	$(foreach platform,$(DOTNET_PLATFORMS_MTOUCH),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Runtime.$(rid)/runtimes/$(rid)/native)) \
 
@@ -336,7 +349,7 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/%: % | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/l
 $(IOS_DESTDIR)$(MONOTOUCH_SIMULATOR_SDK)/lib/%.registrar.a: %.registrar.ios.simulator.a | $(IOS_DESTDIR)$(MONOTOUCH_SIMULATOR_SDK)/lib
 	$(Q) $(CP) $< $@
 
-$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/lib/%.registrar.a: %.registrar.watchos.i386.a | $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/lib
+$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/lib/%.registrar.a: %.registrar.watchos.simulator.a | $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/lib
 	$(Q) $(CP) $< $@
 
 $(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/lib/%.registrar.a: %.registrar.tvos.x86_64.a | $(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/lib
@@ -349,6 +362,9 @@ $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/lib/%.registrar.a: %.registrar.watchos.devi
 	$(Q) $(CP) $< $@
 
 $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/lib/%.registrar.a: %.registrar.tvos.arm64.a | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/lib
+	$(Q) $(CP) $< $@
+
+$(IOS_DESTDIR)$(XAMARIN_MACCATALYST_SDK)/lib/%.registrar.a: %.registrar.maccatalyst.x86_64.a | $(IOS_DESTDIR)$(XAMARIN_MACCATALYST_SDK)/lib
 	$(Q) $(CP) $< $@
 
 define InstallRegistrar

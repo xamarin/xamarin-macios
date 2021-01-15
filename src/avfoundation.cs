@@ -625,6 +625,10 @@ namespace AVFoundation {
 		[Field ("AVVideoMaxKeyFrameIntervalDurationKey")]
 		NSString MaxKeyFrameIntervalDurationKey { get; }
 
+		[Watch (7,2), TV (14,3), Mac (11,1), iOS (14,3)]
+		[Field ("AVVideoAppleProRAWBitDepthKey")]
+		NSString AppleProRawBitDepthKey { get; }
+
 		[iOS (7,0)]
 		[Mac (10,10)]
 		[Field ("AVVideoAllowFrameReorderingKey")]
@@ -3347,6 +3351,7 @@ namespace AVFoundation {
 		NSError Error { get; }
 
 		[NullAllowed, Export ("audioOutputDeviceUniqueID"), NoWatch, NoTV, NoiOS]
+		[NoMacCatalyst]
 		string AudioOutputDeviceUniqueId { get; set; }
 
 		[Export ("audioTimePitchAlgorithm")]
@@ -3892,27 +3897,27 @@ namespace AVFoundation {
 		[Field ("AVAssetResourceLoadingRequestStreamingContentKeyRequestRequiresPersistentKey")]
 		NSString StreamingContentKeyRequestRequiresPersistentKey { get; }
 
-		[iOS (7,0), Mac (10, 9)]
+		[iOS (7,0)]
 		[Export ("isCancelled")]
 		bool IsCancelled { get; }
 
-		[iOS (7,0), Mac (10, 9)]
+		[iOS (7,0)]
 		[Export ("contentInformationRequest"), NullAllowed]
 		AVAssetResourceLoadingContentInformationRequest ContentInformationRequest { get; }
 
-		[iOS (7,0), Mac (10, 9)]
+		[iOS (7,0)]
 		[Export ("dataRequest"), NullAllowed]
 		AVAssetResourceLoadingDataRequest DataRequest { get; }
 
-		[iOS (7,0), Mac (10, 9)]
+		[iOS (7,0)]
 		[Export ("response", ArgumentSemantic.Copy), NullAllowed]
 		NSUrlResponse Response { get; set; }
 
-		[iOS (7,0), Mac (10, 9)]
+		[iOS (7,0)]
 		[Export ("redirect", ArgumentSemantic.Copy), NullAllowed]
 		NSUrlRequest Redirect { get; set; }
 
-		[iOS (7,0), Mac (10, 9)]
+		[iOS (7,0)]
 		[Export ("finishLoading")]
 		void FinishLoading ();
 		
@@ -6728,7 +6733,7 @@ namespace AVFoundation {
 		CMTime Time{ get;}
 
 #if !XAMCORE_4_0
-		[Field ("AVMetadataObjectTypeFace"), Mac (10,10)]
+		[Field ("AVMetadataObjectTypeFace")]
 		NSString TypeFace { get; }
 
 		[NoTV, iOS (7,0), Mac (10,15)]
@@ -7422,22 +7427,20 @@ namespace AVFoundation {
 	interface AVFragmentedMovieTrack
 	{
 #if !XAMCORE_4_0
-		[Mac (10, 10), NoiOS, NoWatch]
+		[NoiOS, NoWatch]
 		[Field ("AVFragmentedMovieTrackTimeRangeDidChangeNotification")]
 		NSString ATimeRangeDidChangeNotification { get; }
 #endif
 
-		[Mac (10, 10)]
 		[Field ("AVFragmentedMovieTrackTimeRangeDidChangeNotification")]
 		[Notification]
 		NSString TimeRangeDidChangeNotification { get; }
 
-		[Mac (10, 10)]
 		[Notification]
 		[Field ("AVFragmentedMovieTrackSegmentsDidChangeNotification")]
 		NSString SegmentsDidChangeNotification { get; }
 
-		[Mac (10, 10), NoiOS, NoWatch]
+		[NoiOS, NoWatch]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use either 'AVFragmentedMovieTrackTimeRangeDidChangeNotification' or 'AVFragmentedMovieTrackSegmentsDidChangeNotification' instead. In either case, you can assume that the sender's 'TotalSampleDataLength' has changed.")]
 		[Field ("AVFragmentedMovieTrackTotalSampleDataLengthDidChangeNotification")]
 		NSString TotalSampleDataLengthDidChangeNotification { get; }
@@ -9585,6 +9588,11 @@ namespace AVFoundation {
 		[NoWatch, NoTV, NoMac, iOS (13, 0)]
 		[Export ("autoVirtualDeviceFusionEnabled")]
 		bool AutoVirtualDeviceFusionEnabled { [Bind ("isAutoVirtualDeviceFusionEnabled")] get; set; }
+
+		[iOS (14,1)]
+		[NoMac]
+		[Export ("autoContentAwareDistortionCorrectionEnabled")]
+		bool AutoContentAwareDistortionCorrectionEnabled { [Bind ("isAutoContentAwareDistortionCorrectionEnabled")] get; set; }
 	}
 	
 #if !MONOMAC
@@ -9676,6 +9684,11 @@ namespace AVFoundation {
 		[NoWatch, NoTV, NoMac, iOS (13,0)]
 		[Export ("virtualDeviceFusionEnabled")]
 		bool VirtualDeviceFusionEnabled { [Bind ("isVirtualDeviceFusionEnabled")] get; }
+
+		[iOS (14,1)]
+		[NoMac]
+		[Export ("contentAwareDistortionCorrectionEnabled")]
+		bool ContentAwareDistortionCorrectionEnabled { [Bind ("isContentAwareDistortionCorrectionEnabled")] get; }
 	}
 
 
@@ -9735,6 +9748,24 @@ namespace AVFoundation {
 
 		[Export ("availablePhotoCodecTypes")]
 		string [] AvailablePhotoCodecTypes { get; }
+
+		[NoWatch, NoTV, NoMac, iOS (14,3)]
+		[Export ("appleProRAWSupported")]
+		bool AppleProRawSupported { [Bind ("isAppleProRAWSupported")] get; }
+
+		[NoWatch, NoTV, NoMac, iOS (14,3)]
+		[Export ("appleProRAWEnabled")]
+		bool AppleProRawEnabled { [Bind ("isAppleProRAWEnabled")] get; set; }
+
+		[NoWatch, NoTV, NoMac, iOS (14,3)]
+		[Static]
+		[Export ("isBayerRAWPixelFormat:")]
+		bool IsBayerRawPixelFormat (CVPixelFormatType pixelFormat);
+
+		[NoWatch, NoTV, NoMac, iOS (14,3)]
+		[Static]
+		[Export ("isAppleProRAWPixelFormat:")]
+		bool IsAppleProRawPixelFormat (CVPixelFormatType pixelFormat);
 
 		[NoMac]
 		[Export ("availableRawPhotoPixelFormatTypes")]
@@ -9921,6 +9952,16 @@ namespace AVFoundation {
 		[NoWatch, NoTV, NoMac, iOS (13, 0)]
 		[Export ("virtualDeviceConstituentPhotoDeliveryEnabled")]
 		bool VirtualDeviceConstituentPhotoDeliveryEnabled { [Bind ("isVirtualDeviceConstituentPhotoDeliveryEnabled")] get; set; }
+
+		[iOS (14,1)]
+		[NoMac]
+		[Export ("contentAwareDistortionCorrectionSupported")]
+		bool ContentAwareDistortionCorrectionSupported { [Bind ("isContentAwareDistortionCorrectionSupported")] get; }
+
+		[iOS (14,1)]
+		[NoMac]
+		[Export ("contentAwareDistortionCorrectionEnabled")]
+		bool ContentAwareDistortionCorrectionEnabled { [Bind ("isContentAwareDistortionCorrectionEnabled")] get; set; }
 	}
 	
 	[BaseType (typeof (AVCaptureFileOutput))]
@@ -10943,7 +10984,7 @@ namespace AVFoundation {
 
 		[Export ("prerollAtRate:completionHandler:")]
 		[Async]
-		void Preroll (float /* defined as 'float' */ rate, AVCompletion onComplete);
+		void Preroll (float /* defined as 'float' */ rate, [NullAllowed] AVCompletion onComplete);
 
 		[Export ("cancelPendingPrerolls")]
 		void CancelPendingPrerolls ();
@@ -11319,14 +11360,14 @@ namespace AVFoundation {
 
 		[Export ("seekToTime:completionHandler:")]
 		[Async]
-		void Seek (CMTime time, AVCompletion completion);
+		void Seek (CMTime time, [NullAllowed] AVCompletion completion);
 
 		[Export ("cancelPendingSeeks")]
 		void CancelPendingSeeks ();
 
 		[Export ("seekToTime:toleranceBefore:toleranceAfter:completionHandler:")]
 		[Async]
-		void Seek (CMTime time, CMTime toleranceBefore, CMTime toleranceAfter, AVCompletion completion);
+		void Seek (CMTime time, CMTime toleranceBefore, CMTime toleranceAfter, [NullAllowed] AVCompletion completion);
 
 		[Export ("selectMediaOption:inMediaSelectionGroup:")]
 		void SelectMediaOption ([NullAllowed] AVMediaSelectionOption mediaSelectionOption, AVMediaSelectionGroup mediaSelectionGroup);
@@ -11512,6 +11553,12 @@ namespace AVFoundation {
 		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
 		[Export ("startsOnFirstEligibleVariant")]
 		bool StartsOnFirstEligibleVariant { get; set; }
+
+		[iOS (14,1)]
+		[TV (14,2)][Mac (11,0)]
+		[NoWatch]
+		[Export ("appliesPerFrameHDRDisplayMetadata")]
+		bool AppliesPerFrameHdrDisplayMetadata { get; set; }
 	}
 
 	[NoiOS][NoTV][NoWatch]
@@ -12388,12 +12435,10 @@ namespace AVFoundation {
 		[Export ("timebase", ArgumentSemantic.Retain)]
 		CMTimebase Timebase { get; }
 
-		[Mac (10,10)]
 		[Field ("AVSampleBufferDisplayLayerFailedToDecodeNotification")]
 		[Notification]
 		NSString FailedToDecodeNotification { get; }
 
-		[Mac (10,10)]
 		[Field ("AVSampleBufferDisplayLayerFailedToDecodeNotificationErrorKey")]
 		NSString FailedToDecodeNotificationErrorKey { get; }
 
@@ -12469,15 +12514,15 @@ namespace AVFoundation {
 		[Field ("AVSpeechSynthesisVoiceIdentifierAlex")]
 		NSString IdentifierAlex { get; }
 
-		[iOS (10, 0), TV (10,0), Mac (10,15)]
+		[iOS (10, 0), TV (10,0)]
 		[Field ("AVSpeechSynthesisIPANotationAttribute")]
 		NSString IpaNotationAttribute { get; }
 
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Watch (6,0), TV (13,0), iOS (13,0)]
 		[Export ("gender")]
 		AVSpeechSynthesisVoiceGender Gender { get; }
 
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Watch (6,0), TV (13,0), iOS (13,0)]
 		[Export ("audioFileSettings")]
 		NSDictionary<NSString, NSObject> AudioFileSettings { get; }
 	}
@@ -13547,6 +13592,10 @@ namespace AVFoundation {
 		[Export ("replacementSemanticSegmentationMatteOfType:forPhoto:")]
 		[return: NullAllowed]
 		AVSemanticSegmentationMatte GetReplacementSemanticSegmentationMatte (NSString semanticSegmentationMatteType, AVCapturePhoto photo);
+
+		[NoWatch, NoTV, NoMac, iOS (14,3)]
+		[Export ("replacementAppleProRAWCompressionSettingsForPhoto:defaultSettings:maximumBitDepth:")]
+		NSDictionary<NSString, NSObject> GetReplacementAppleProRawCompressionSettings (AVCapturePhoto photo, NSDictionary<NSString, NSObject> defaultSettings, nint maximumBitDepth);
 	}
 
 	[NoTV, iOS (11,0), NoWatch, Mac (10,15)]
@@ -13697,6 +13746,11 @@ namespace AVFoundation {
 		Hair,
 		[Field ("AVSemanticSegmentationMatteTypeTeeth")]
 		Teeth,
+		[iOS (14,1)]
+		[Mac (11,0)]
+		[NoWatch][NoTV]
+		[Field ("AVSemanticSegmentationMatteTypeGlasses")]
+		Glasses,
 	} 
 
 	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]

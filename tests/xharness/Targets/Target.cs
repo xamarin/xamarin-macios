@@ -91,7 +91,7 @@ namespace Xharness.Targets
 			return rv.TrimStart ('-');
 		}
 
-		public string PlatformString {
+		public virtual string PlatformString {
 			get {
 				return ApplePlatform.AsString ();
 			}
@@ -185,7 +185,7 @@ namespace Xharness.Targets
 		{
 			ProcessProject ();
 			PostProcessExecutableProject ();
-			inputProject.Save (ProjectPath, (l,m) => Harness.Log (l,m));
+			inputProject.Save (ProjectPath, Harness);
 
 			UpdateInfoPList ();
 		}
@@ -202,7 +202,7 @@ namespace Xharness.Targets
 		{
 			ProcessProject ();
 			inputProject.ResolveAllPaths (TemplateProjectPath);
-			inputProject.Save (ProjectPath, (l, m) => Harness.Log (l,m));
+			inputProject.Save (ProjectPath, Harness);
 
 			ProjectGuid = inputProject.GetProjectGuid ();
 		}
@@ -210,7 +210,7 @@ namespace Xharness.Targets
 		protected virtual void CreateDotNetProject ()
 		{
 			ProcessDotNetProject ();
-			inputProject.Save (ProjectPath, (l, m) => Harness.Log (l, m));
+			inputProject.Save (ProjectPath, Harness);
 			UpdateInfoPList ();
 		}
 

@@ -12,22 +12,38 @@ namespace Xamarin.Mac.Tasks
 {
 	public abstract class ArchiveTaskBase : Xamarin.MacDev.Tasks.ArchiveTaskBase
 	{
+
+		[Required]
+		public string CustomBundleName { get; set; } // default is `MonoBundle` but that can be changed with `_CustomBundleName`
+
 		public override bool Execute ()
 		{
 			var archiveDir = CreateArchiveDirectory ();
 
 			try {
-				var plist = PDictionary.FromFile (Path.Combine (AppBundleDir.ItemSpec, "Contents", "Info.plist"));
+				var plist = PDictionary.FromFile (PlatformFrameworkHelper.GetAppManifestPath (Platform, AppBundleDir.ItemSpec));
 				var productsDir = Path.Combine (archiveDir, "Products");
 
 				// Archive the Applications...
 				var appDestDir = Path.Combine (productsDir, "Applications", Path.GetFileName (AppBundleDir.ItemSpec));
 				Ditto (AppBundleDir.ItemSpec, appDestDir);
 
-				// Archive the dSYMs...
-				if (Directory.Exists (DSYMDir)) {
-					var destDir = Path.Combine (archiveDir, "dSYMs", Path.GetFileName (DSYMDir));
-					Ditto (DSYMDir, destDir);
+				// Archive the main dSYM...
+				ArchiveDSym (DSYMDir, archiveDir);
+
+				// for each `.dylib` (file) inside `MonoBundle` there could be a corresponding `.dSYM` - e.g. when using an AOT mode
+				foreach (var dylib in Directory.GetFiles (Path.Combine (AppBundleDir.ItemSpec, "Contents", CustomBundleName), "*.dylib")) {
+					var dsym = Path.Combine (AppBundleDir.ItemSpec, "..", Path.GetFileName (dylib) + ".dSYM");
+					ArchiveDSym (dsym, archiveDir);
+				}
+
+				// for each user framework (directory) that is bundled inside the app we must also archive their dSYMs, if available
+				var fks = Path.Combine (AppBundleDir.ItemSpec, "Contents", "Frameworks");
+				if (Directory.Exists (fks)) {
+					foreach (var fx in Directory.GetDirectories (fks, "*.framework")) {
+						var dsym = Path.Combine (AppBundleDir.ItemSpec, "..", Path.GetFileName (fx) + ".dSYM");
+						ArchiveDSym (dsym, archiveDir);
+					}
 				}
 
 				// Generate an archive Info.plist

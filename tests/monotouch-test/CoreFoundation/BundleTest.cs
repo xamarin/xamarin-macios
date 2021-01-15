@@ -2,6 +2,7 @@
 // Copyright 2015 Xamarin Inc
 //
 using System;
+using System.Collections.Generic;
 using Foundation;
 using CoreFoundation;
 using NUnit.Framework;
@@ -43,6 +44,19 @@ namespace MonoTouchFixtures.CoreFoundation {
 			// grab all bundles and make sure we do get the correct ones using their id
 			var bundles = CFBundle.GetAll ();
 			Assert.IsTrue (bundles.Length > 0);
+
+			// There may be multiple apps providing the same bundle ID (the typical example is that we usually have multiple Xcodes installed)
+			// So compute a map for bundle id -> bundle paths that's used in the second part here to verify the CFBundle.Get results.
+			var dict = new Dictionary<string, List<string>> ();
+			foreach (var bundle in bundles) {
+				var id = bundle.Identifier;
+				if (string.IsNullOrEmpty (id))
+					continue;
+				if (!dict.TryGetValue (id, out var list))
+					dict [id] = list = new List<string> ();
+				list.Add ((string) ((NSString) bundle.Url.Path).ResolveSymlinksInPath ());
+			}
+
 			foreach (CFBundle b in bundles) {
 				var id = b.Identifier;
 				if (!String.IsNullOrEmpty (id)) {
@@ -50,9 +64,8 @@ namespace MonoTouchFixtures.CoreFoundation {
 					Assert.AreEqual (b.Info.Type, otherBundle.Info.Type,
   							 String.Format("Found bundle with diff type and id {0}", id));
 					var bPath = (string) ((NSString) b.Url.Path).ResolveSymlinksInPath ();
-					var otherPath = (string) ((NSString) otherBundle.Url.Path).ResolveSymlinksInPath ();
-					Assert.AreEqual (bPath, otherPath,
-  							 String.Format("Found bundle with diff url and id {0}", id));
+					var list = dict [id];
+					Assert.That (list, Does.Contain (bPath), "None of the bundles for {0} matches the path {1}", id, bPath);
 				}
 			}
 		}
@@ -334,5 +347,38 @@ namespace MonoTouchFixtures.CoreFoundation {
 		{
 			Assert.Throws<ArgumentNullException> (() => CFBundle.GetInfoDictionary (null));
 		}
+
+#if MONOMAC
+		[Test]
+		public void TestIsArchitectureLoadable ()
+		{
+			TestRuntime.AssertXcodeVersion (12, 2);
+
+			bool loadable_x86_64 = CFBundle.IsArchitectureLoadable (CFBundle.Architecture.X86_64);
+			if (global::System.Runtime.InteropServices.RuntimeInformation.ProcessArchitecture == global::System.Runtime.InteropServices.Architecture.X64)
+				Assert.IsTrue (loadable_x86_64, "x86_64 Expected => true");
+			else
+				Assert.IsFalse (loadable_x86_64, "x86_64 Expected => false");
+
+			bool loadable_arm64 = CFBundle.IsArchitectureLoadable (CFBundle.Architecture.ARM64);
+			if (global::System.Runtime.InteropServices.RuntimeInformation.ProcessArchitecture == global::System.Runtime.InteropServices.Architecture.Arm64)
+				Assert.IsTrue (loadable_arm64, "arm64 Expected => true");
+			else
+				Assert.IsFalse (loadable_arm64, "arm64 Expected => false");
+		}
+
+		[Test]
+		public void TestIsExecutableLoadable ()
+		{
+			TestRuntime.AssertXcodeVersion (12, 2);
+
+			var main = CFBundle.GetMain ();
+			var loadableBundle = CFBundle.IsExecutableLoadable (main);
+			Assert.IsTrue (loadableBundle, "loadableBundle");
+
+			var loadableBundleUrl = CFBundle.IsExecutableLoadable (main.ExecutableUrl);
+			Assert.IsTrue (loadableBundleUrl, "loadableBundleUrl");
+		}
+#endif
 	}
 }

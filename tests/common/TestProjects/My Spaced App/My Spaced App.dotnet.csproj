@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project Sdk="Microsoft.iOS.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="../Common.props" />
   <PropertyGroup>
-    <TargetFramework>net5.0-ios</TargetFramework>
+    <TargetFramework>net6.0-ios</TargetFramework>
     <RuntimeIdentifier>ios-x64</RuntimeIdentifier>
     <OutputType>Exe</OutputType>
     <AssemblyName>MySpacedApp</AssemblyName>

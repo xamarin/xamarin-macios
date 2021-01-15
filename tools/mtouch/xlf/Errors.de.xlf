@@ -2592,6 +2592,26 @@
         <target state="new">This version of {0} requires the {1} {2} SDK (shipped with Xcode {3}). Either upgrade Xcode to get the required header files or set the managed linker behaviour to Link Framework SDKs Only in your project's iOS Build Options &gt; Linker Behavior (to try to avoid the new APIs).</target>
         <note />
       </trans-unit>
+      <trans-unit id="MX0181">
+        <source>Not linking with the framework {0} (used by the type {1}) because it's not available on the current platform ({2}).</source>
+        <target state="new">Not linking with the framework {0} (used by the type {1}) because it's not available on the current platform ({2}).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MX0182">
+        <source>Not linking with the framework {0} (referenced by a module reference in {1}) because it's not available on the current platform ({2}).</source>
+        <target state="new">Not linking with the framework {0} (referenced by a module reference in {1}) because it's not available on the current platform ({2}).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MX0183">
+        <source>Could not map the iOS version {0} to a macOS version for Mac Catalyst</source>
+        <target state="new">Could not map the iOS version {0} to a macOS version for Mac Catalyst</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MX0184">
+        <source>Could not map the Mac Catalyst version {0} to an iOS version</source>
+        <target state="new">Could not map the Mac Catalyst version {0} to an iOS version</target>
+        <note />
+      </trans-unit>
       <trans-unit id="MX1009">
         <source>Could not copy the assembly '{0}' to '{1}': {2}
 		</source>
@@ -2767,6 +2787,31 @@
         <target state="new">The tool xcrun failed to find result when looking for the tool '{0}' (the file '{1}' does not exist). Check build log for details.
 		</target>
         <note></note>
+      </trans-unit>
+      <trans-unit id="MX_ConfigurationAwareStep">
+        <source>The linker step '{0}' failed during processing: {1}</source>
+        <target state="new">The linker step '{0}' failed during processing: {1}</target>
+        <note>This is a message when processing fails in the linker.
+			{0} - The name of the step that fails.
+			{1} - A string describing what failed.
+		</note>
+      </trans-unit>
+      <trans-unit id="MX_ConfigurationAwareStepWithAssembly">
+        <source>The linker step '{0}' failed while processing {1}: {2}</source>
+        <target state="new">The linker step '{0}' failed while processing {1}: {2}</target>
+        <note>This is a message when processing an assembly fails in the linker.
+			{0} - The name of the step that fails.
+			{1} - The name of the assembly that failed processing.
+			{1} - A string describing what failed
+		</note>
+      </trans-unit>
+      <trans-unit id="MX_ExceptionalSubSteps">
+        <source>The linker step '{0}' failed processing `{1}`.</source>
+        <target state="new">The linker step '{0}' failed processing `{1}`.</target>
+        <note>This is a message when processing an assembly/type/field/method/property/event fails in the linker.
+			{0} - The name of the step that fails.
+			{1} - The name of the assembly/type/field/method/property/event that failed processing.
+		</note>
       </trans-unit>
       <trans-unit id="default">
         <source>The error message for code {0} could not be found. Please report this missing message on GitHub at https://github.com/xamarin/xamarin-macios/issues/new</source>

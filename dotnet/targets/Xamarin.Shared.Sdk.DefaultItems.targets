@@ -18,28 +18,6 @@
     <EnableDefaultCompileItems Condition=" '$(IsBindingProject)' == 'true' ">false</EnableDefaultCompileItems>
   </PropertyGroup>
 
-  <!-- Default plist file inclusion -->
-  <ItemGroup Condition="'$(_EnableDefaultXamarinItems)' == 'true' ">
-    <None Include="*.plist">
-      <Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
-    </None>
-  </ItemGroup>
-
-  <!-- Default SceneKit assets inclusion -->
-  <ItemGroup Condition="'$(_EnableDefaultXamarinItems)' == 'true' ">
-    <SceneKitAsset Include="**\*.scnassets\*">
-      <IsDefaultItem>true</IsDefaultItem>
-    </SceneKitAsset>
-  </ItemGroup>
-
-  <!-- Default Storyboard file inclusion -->
-  <ItemGroup Condition=" '$(_EnableDefaultXamarinItems)' == 'true' ">
-    <InterfaceDefinition Include="**\*.storyboard;**\*.xib">
-      <Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
-      <IsDefaultItem>true</IsDefaultItem>
-    </InterfaceDefinition>
-  </ItemGroup>
-
   <!-- Architecture -->
   <!-- If the old-style variables are set, use those -->
   <PropertyGroup Condition=" '$(TargetArchitectures)' == '' ">
@@ -77,13 +55,13 @@
     <!-- Runtime pack identifiers -->
     <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'iOS' ">ios-x64;ios-arm64;ios-arm;ios-x86</_RuntimePackRuntimeIdentifiers>
     <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'tvOS' ">tvos-x64;tvos-arm64</_RuntimePackRuntimeIdentifiers>
-    <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'watchOS' ">watchos-x86;watchos-arm</_RuntimePackRuntimeIdentifiers>
+    <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'watchOS' ">watchos-x86;watchos-x64;watchos-arm</_RuntimePackRuntimeIdentifiers>
     <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'macOS' ">osx-x64</_RuntimePackRuntimeIdentifiers>
   </PropertyGroup>
 
   <ItemGroup>
     <KnownFrameworkReference Include="Microsoft.$(_PlatformName)"
-                            TargetFramework="net5.0"
+                            TargetFramework="net6.0"
                             RuntimeFrameworkName="Microsoft.$(_PlatformName)"
                             DefaultRuntimeFrameworkVersion="$(_ShortPackageVersion)"
                             LatestRuntimeFrameworkVersion="$(_ShortPackageVersion)"
@@ -106,7 +84,7 @@
    -->
   <ItemGroup Condition="'$(_PlatformName)' == 'macOS'">
     <KnownFrameworkReference Include="Microsoft.NETCore.App.Mono"
-                              TargetFramework="netcoreapp5.0"
+                              TargetFramework="net6.0"
                               RuntimeFrameworkName="Microsoft.NETCore.App.Mono"
                               DefaultRuntimeFrameworkVersion="$(BundledNETCorePlatformsPackageVersion)"
                               LatestRuntimeFrameworkVersion="$(BundledNETCorePlatformsPackageVersion)"

@@ -133,7 +133,7 @@ namespace Extrospection {
 			// categories have an offset of 1 for the extension method type (spotted as static types)
 			int i = t.IsSealed && t.IsAbstract ? 1 : 0;
 			foreach (var p in decl.Parameters) {
-				var mp = method.Parameters [i];
+				var mp = method.Parameters [i++];
 				// a managed `out` value does not need to be inialized, won't be null (but can be ignored)
 				if (mp.IsOut)
 					continue;
@@ -167,16 +167,15 @@ namespace Extrospection {
 				switch (nullability) {
 				case NullabilityKind.NonNull:
 					if (parameter_nullable == Null.Annotated)
-						Log.On (framework).Add ($"!extra-null-allowed! '{method.FullName}' has a extraneous [NullAllowed] on parameter #{i}");
+						Log.On (framework).Add ($"!extra-null-allowed! '{method.FullName}' has a extraneous [NullAllowed] on parameter #{i-1}");
 					break;
 				case NullabilityKind.Nullable:
 					if (parameter_nullable != Null.Annotated)
-						Log.On (framework).Add ($"!missing-null-allowed! '{method.FullName}' is missing an [NullAllowed] on parameter #{i}");
+						Log.On (framework).Add ($"!missing-null-allowed! '{method.FullName}' is missing an [NullAllowed] on parameter #{i-1}");
 					break;
 				case NullabilityKind.Unspecified:
 					break;
 				}
-				i++;
 			}
 
 			// with .net a constructor will always return something (or throw)

@@ -102,9 +102,6 @@ namespace Xamarin.Bundler {
 			os.WriteOptionDescriptions (Console.Out);
 		}
 
-		public static bool IsUnifiedFullXamMacFramework { get { return TargetFramework == TargetFramework.Xamarin_Mac_4_5_Full; } }
-		public static bool IsUnifiedFullSystemFramework { get { return TargetFramework == TargetFramework.Xamarin_Mac_4_5_System; } }
-		public static bool IsUnifiedMobile { get { return TargetFramework == TargetFramework.Xamarin_Mac_2_0_Mobile; } }
 		public static bool LinkProhibitedFrameworks { get; private set; }
 		public static bool UseLegacyAssemblyResolution { get; private set; }
 
@@ -214,6 +211,12 @@ namespace Xamarin.Bundler {
 						native_references.Add (v);
 						if (v.EndsWith (".framework", true, CultureInfo.InvariantCulture))
 							App.Frameworks.Add (v);
+						else {
+							// allow specifying the library inside the framework directory
+							var p = Path.GetDirectoryName (v);
+							if (p.EndsWith (".framework", true, CultureInfo.InvariantCulture))
+								App.Frameworks.Add (p);
+						}
 					}
 				},
 				{ "custom_bundle_name=", "Specify a custom name for the MonoBundle folder.", v => App.CustomBundleName = v, true }, // Hidden hack for "universal binaries"
@@ -335,7 +338,7 @@ namespace Xamarin.Bundler {
 					}
 				} else {
 					// Write the cache data as the last step, so there is no half-done/incomplete (but yet detected as valid) cache.
-					App.Cache.ValidateCache ();
+					App.Cache.ValidateCache (App);
 				}
 			}
 
@@ -740,60 +743,6 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		static string GenerateMain ()
-		{
-			var sb = new StringBuilder ();
-			using (var sw = new StringWriter (sb)) {
-				sw.WriteLine ("#define MONOMAC 1");
-				sw.WriteLine ("#include <xamarin/xamarin.h>");
-				if (App.Registrar == RegistrarMode.PartialStatic)
-					sw.WriteLine ("extern \"C\" void xamarin_create_classes_Xamarin_Mac ();");
-				sw.WriteLine ();
-				sw.WriteLine ();
-				sw.WriteLine ();
-				sw.WriteLine ("extern \"C\" int xammac_setup ()");
-
-				sw.WriteLine ("{");
-				if (App.CustomBundleName != null) {
-					sw.WriteLine ("\textern NSString* xamarin_custom_bundle_name;");
-					sw.WriteLine ("\txamarin_custom_bundle_name = @\"" + App.CustomBundleName + "\";");
-				}
-				if (!App.IsDefaultMarshalManagedExceptionMode)
-					sw.WriteLine ("\txamarin_marshal_managed_exception_mode = MarshalManagedExceptionMode{0};", App.MarshalManagedExceptions);
-				sw.WriteLine ("\txamarin_marshal_objectivec_exception_mode = MarshalObjectiveCExceptionMode{0};", App.MarshalObjectiveCExceptions);
-				if (App.DisableLldbAttach.HasValue ? App.DisableLldbAttach.Value : !App.EnableDebug)
-					sw.WriteLine ("\txamarin_disable_lldb_attach = true;");
-				if (App.DisableOmitFramePointer ?? App.EnableDebug)
-					sw.WriteLine ("\txamarin_disable_omit_fp = true;");
-				sw.WriteLine ();
-
-
-				if (App.Registrar == RegistrarMode.Static)
-					sw.WriteLine ("\txamarin_create_classes ();");
-				else if (App.Registrar == RegistrarMode.PartialStatic)
-					sw.WriteLine ("\txamarin_create_classes_Xamarin_Mac ();");
-
-				if (App.EnableDebug)
-					sw.WriteLine ("\txamarin_debug_mode = TRUE;");
-
-				sw.WriteLine ($"\tsetenv (\"MONO_GC_PARAMS\", \"{App.MonoGCParams}\", 1);");
-
-				sw.WriteLine ("\txamarin_supports_dynamic_registration = {0};", App.DynamicRegistrationSupported ? "TRUE" : "FALSE");
-
-				if (App.AOTOptions != null && App.AOTOptions.IsHybridAOT)
-					sw.WriteLine ("\txamarin_mac_hybrid_aot = TRUE;");
-
-				if (IsUnifiedMobile)
-					sw.WriteLine ("\txamarin_mac_modern = TRUE;");
-
-				sw.WriteLine ("\treturn 0;");
-				sw.WriteLine ("}");
-				sw.WriteLine ();
-			}
-
-			return sb.ToString ();
-		}
-
 		static void HandleFramework (IList<string> args, string framework, bool weak)
 		{
 			string name = Path.GetFileName (framework);
@@ -848,7 +797,8 @@ namespace Xamarin.Bundler {
 		{
 			string [] cflags = Array.Empty<string> ();
 
-			string mainSource = GenerateMain ();
+			var main = Path.Combine (App.Cache.Location, "main.m");
+			BuildTarget.GenerateMain (ApplePlatform.MacOSX, Abi.x86_64, main, null);
 			string registrarPath = null;
 
 			CheckSystemMonoVersion ();
@@ -1062,8 +1012,6 @@ namespace Xamarin.Bundler {
 					args.Add (state.SourcePath);
 				}
 
-				var main = Path.Combine (App.Cache.Location, "main.m");
-				File.WriteAllText (main, mainSource);
 				sourceFiles.Add (main);
 				args.AddRange (sourceFiles);
 
@@ -1325,6 +1273,10 @@ namespace Xamarin.Bundler {
 			// If we're passed in a framework, ignore
 			if (App.Frameworks.Contains (library))
 				return;
+			// Frameworks don't include the lib name, e.g. `../foo.framework` not `../foo.framework/foo` so check again
+			string path = Path.GetDirectoryName (library);
+			if (App.Frameworks.Contains (path))
+				return;
 
 			// We need to check both the name and the shortened name, since we might get passed:
 			// full path - /foo/bar/libFoo.dylib
@@ -1347,7 +1299,6 @@ namespace Xamarin.Bundler {
 				src = monoDirPath;
 
 			// Now let's check in path with our libName
-			string path = Path.GetDirectoryName (library);
 			if (src == null && !String.IsNullOrEmpty (path)) {
 				string pathWithLibName = Path.Combine (path, name);
 				if (File.Exists (pathWithLibName))
@@ -1422,6 +1373,10 @@ namespace Xamarin.Bundler {
 				return;
 
 			var arch = App.Abi.AsString ();
+			// macOS frameworks often uses symlinks and we do not
+			// want to replace the symlink with the thin binary
+			// while leaving the fat binary inside the framework
+			dest = GetRealPath (dest);
 			RunLipo (App, new [] { dest, "-thin", arch, "-output", dest });
 			if (name != "MonoPosixHelper" && name != "libmono-native-unified" && name != "libmono-native-compat")
 				ErrorHelper.Warning (2108, Errors.MM2108, name, arch);

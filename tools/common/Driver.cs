@@ -27,6 +27,10 @@ namespace Xamarin.Bundler {
 
 		public static bool Force { get; set; }
 
+		public static bool IsUnifiedFullXamMacFramework { get { return TargetFramework == TargetFramework.Xamarin_Mac_4_5_Full; } }
+		public static bool IsUnifiedFullSystemFramework { get { return TargetFramework == TargetFramework.Xamarin_Mac_4_5_System; } }
+		public static bool IsUnifiedMobile { get { return TargetFramework == TargetFramework.Xamarin_Mac_2_0_Mobile; } }
+
 		static Version min_xcode_version = new Version (6, 0);
 #if !NET
 		public static int Main (string [] args)
@@ -769,6 +773,8 @@ namespace Xamarin.Bundler {
 				return Path.Combine (GetFrameworkLibDirectory (app), "mono", "Xamarin.WatchOS");
 			case ApplePlatform.TVOS:
 				return Path.Combine (GetFrameworkLibDirectory (app), "mono", "Xamarin.TVOS");
+			case ApplePlatform.MacCatalyst:
+				return Path.Combine (GetFrameworkLibDirectory (app), "mono", "Xamarin.MacCatalyst");
 			case ApplePlatform.MacOSX:
 #if MMP
 				if (IsUnifiedMobile)
@@ -849,6 +855,9 @@ namespace Xamarin.Bundler {
 			case ApplePlatform.MacOSX:
 				sdkName = "Xamarin.macOS.sdk";
 				break;
+			case ApplePlatform.MacCatalyst:
+				sdkName = "Xamarin.MacCatalyst.sdk";
+				break;
 			default:
 				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, app.ProductName);
 			}
@@ -866,6 +875,7 @@ namespace Xamarin.Bundler {
 			case ApplePlatform.TVOS:
 				return app.IsDeviceBuild ? "AppleTVOS" : "AppleTVSimulator";
 			case ApplePlatform.MacOSX:
+			case ApplePlatform.MacCatalyst:
 				return "MacOSX";
 			default:
 				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, app.ProductName);
@@ -876,7 +886,12 @@ namespace Xamarin.Bundler {
 		public static string GetFrameworkDirectory (Application app)
 		{
 			var platform = GetPlatform (app);
-			return Path.Combine (PlatformsDirectory, platform + ".platform", "Developer", "SDKs", platform + app.SdkVersion.ToString () + ".sdk");
+			switch (app.Platform) {
+			case ApplePlatform.MacCatalyst:
+				return Path.Combine (PlatformsDirectory, platform + ".platform", "Developer", "SDKs", platform + app.GetMacCatalystmacOSVersion (app.SdkVersion).ToString () + ".sdk");
+			default:
+				return Path.Combine (PlatformsDirectory, platform + ".platform", "Developer", "SDKs", platform + app.SdkVersion.ToString () + ".sdk");
+			}
 		}
 
 		public static string GetProductAssembly (Application app)
@@ -890,6 +905,8 @@ namespace Xamarin.Bundler {
 				return "Xamarin.TVOS";
 			case ApplePlatform.MacOSX:
 				return "Xamarin.Mac";
+			case ApplePlatform.MacCatalyst:
+				return "Xamarin.MacCatalyst";
 			default:
 				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, app.ProductName);
 			}
@@ -952,10 +969,10 @@ namespace Xamarin.Bundler {
 
 			if (!accept_any_xcode_version) {
 				if (min_xcode_version != null && XcodeVersion < min_xcode_version)
-					throw ErrorHelper.CreateError (51, Errors.MT0051, Constants.Version, XcodeVersion.ToString (), sdk_root, app.ProductName, min_xcode_version);
+					throw ErrorHelper.CreateError (51, Errors.MT0051, app.ProductConstants.Version, XcodeVersion.ToString (), sdk_root, app.ProductName, min_xcode_version);
 
 				if (XcodeVersion < SdkVersions.XcodeVersion)
-					ErrorHelper.Warning (79, Errors.MT0079, Constants.Version, XcodeVersion.ToString (), sdk_root, SdkVersions.Xcode, app.ProductName);
+					ErrorHelper.Warning (79, Errors.MT0079, app.ProductConstants.Version, XcodeVersion.ToString (), sdk_root, SdkVersions.Xcode, app.ProductName);
 			}
 
 			Driver.Log (1, "Using Xcode {0} ({2}) found in {1}", XcodeVersion, sdk_root, XcodeProductVersion);

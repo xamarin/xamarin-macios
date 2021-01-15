@@ -663,6 +663,20 @@
         </target>
         <note />
       </trans-unit>
+      <trans-unit id="E0174">
+        <source>{0} has an incorrect or unknown format and cannot be processed.
+        </source>
+        <target state="new">{0} has an incorrect or unknown format and cannot be processed.
+        </target>
+        <note />
+      </trans-unit>
+      <trans-unit id="E0175">
+        <source>No matching framework found inside '{0}'.
+        </source>
+        <target state="new">No matching framework found inside '{0}'.
+        </target>
+        <note />
+      </trans-unit>
       <trans-unit id="E7001">
         <source>Could not resolve host IPs for WiFi debugger settings.
         </source>
@@ -1145,6 +1159,21 @@
         <target state="new">Xamarin.iOS 14+ does not support watchOS 1 apps. Please migrate your project to watchOS 2+.</target>
         <note />
       </trans-unit>
+      <trans-unit id="E7070">
+        <source>Invalid architecture ({0}): can't link more than one architecture at a time.</source>
+        <target state="new">Invalid architecture ({0}): can't link more than one architecture at a time.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="InvalidFramework">
+        <source>Invalid framework: {0}</source>
+        <target state="new">Invalid framework: {0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="InvalidPlatform">
+        <source>Invalid platform: {0}</source>
+        <target state="new">Invalid platform: {0}</target>
+        <note />
+      </trans-unit>
       <trans-unit id="M0001">
         <source>Tool {0} execution started with arguments: {1}
         </source>
@@ -1539,7 +1568,7 @@
       <trans-unit id="W0111">
         <source>The iCloud entitlement '{0}' is not supported by the Provisioning Profile.
         </source>
-        <target state="new">The iCloud entitlement '{0}' is not supported by the Provisioning Profile.
+        <target state="translated">Zřizovací profil nepodporuje nárok iCloudu {0}.
         </target>
         <note />
       </trans-unit>

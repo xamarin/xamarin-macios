@@ -67,7 +67,12 @@ namespace Xamarin.MacDev.Tasks {
 
 		#endregion Outputs
 
-		protected abstract IAppleSdk CurrentSdk { get; }
+		protected IAppleSdk CurrentSdk {
+			get {
+				return Sdks.GetAppleSdk (Platform);
+			}
+		}
+
 		protected abstract string GetDefaultXamarinSdkRoot ();
 		protected abstract IAppleSdkVersion GetDefaultSdkVersion ();
 

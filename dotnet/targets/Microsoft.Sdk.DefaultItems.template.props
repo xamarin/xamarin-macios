@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	This file contains default item includes (globs and implicit references).
+
+	*** WARNING ***
+
+	This file is imported by AutoImport.props, and will be imported by all
+	projects using Microsoft.NET.Sdk.  All Item includes in this file *MUST*
+	be hidden behind a TargetPlatformIdentifier based condition.
+
+	This file can also not define any properties. However, due to the
+	order MSBuild evaluates properties, it's possible to use properties
+	defined in our .targets files in conditions in ItemGroups in this
+	file.
+
+	*** WARNING ***
+
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<!-- Default plist file inclusion -->
+	<ItemGroup Condition="'$(TargetPlatformIdentifier)' == '@PLATFORM@' And '$(_EnableDefaultXamarinItems)' == 'true'">
+		<None Include="*.plist">
+			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
+		</None>
+	</ItemGroup>
+
+	<!-- Default SceneKit assets inclusion -->
+	<ItemGroup Condition="'$(TargetPlatformIdentifier)' == '@PLATFORM@' And '$(_EnableDefaultXamarinItems)' == 'true'">
+		<SceneKitAsset Include="**\*.scnassets\*" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" >
+			<IsDefaultItem>true</IsDefaultItem>
+		</SceneKitAsset>
+	</ItemGroup>
+
+	<!-- Default Asset Catalog file inclusion -->
+	<ItemGroup Condition="'$(TargetPlatformIdentifier)' == '@PLATFORM@' And '$(_EnableDefaultXamarinItems)' == 'true' ">
+		<ImageAsset Include="**\*.xcassets\**\*.png;**\*.xcassets\*\*.jpg;**\*.xcassets\**\*.pdf;**\*.xcassets\**\*.json" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)">
+			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
+			<Visible>false</Visible>
+			<IsDefaultItem>true</IsDefaultItem>
+		</ImageAsset>
+	</ItemGroup>
+
+	<!-- Default Storyboard file inclusion -->
+	<ItemGroup Condition="'$(TargetPlatformIdentifier)' == '@PLATFORM@' And '$(_EnableDefaultXamarinItems)' == 'true'">
+		<InterfaceDefinition Include="**\*.storyboard;**\*.xib" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" >
+			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
+			<IsDefaultItem>true</IsDefaultItem>
+		</InterfaceDefinition>
+	</ItemGroup>
+
+	<!-- Default Atlas Texture file inclusion -->
+	<ItemGroup Condition="'$(TargetPlatformIdentifier)' == '@PLATFORM@' And '$(_EnableDefaultXamarinItems)' == 'true'">
+		<AtlasTexture Include="**\*.atlas\*.png" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" >
+			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
+			<IsDefaultItem>true</IsDefaultItem>
+		</AtlasTexture>
+	</ItemGroup>
+
+	<!-- Default CoreMLModel inclusion -->
+	<ItemGroup Condition="'$(TargetPlatformIdentifier)' == '@PLATFORM@' And '$(_EnableDefaultXamarinItems)' == 'true' ">
+		<CoreMLModel Include="**\*.mlmodel" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" >
+			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
+			<IsDefaultItem>true</IsDefaultItem>
+		</CoreMLModel>
+	</ItemGroup>
+
+	<!-- Default Metal inclusion -->
+	<ItemGroup Condition="'$(TargetPlatformIdentifier)' == '@PLATFORM@' And '$(_EnableDefaultXamarinItems)' == 'true' ">
+		<Metal Include="**\*.metal" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" >
+			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
+			<IsDefaultItem>true</IsDefaultItem>
+		</Metal>
+	</ItemGroup>
+
+	<!-- Default SceneKit assets inclusion -->
+	<ItemGroup Condition="'$(TargetPlatformIdentifier)' == '@PLATFORM@' And '$(_EnableDefaultXamarinItems)' == 'true' ">
+		<SceneKitAsset Include="**\*.scnassets\*" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" >
+			<IsDefaultItem>true</IsDefaultItem>
+		</SceneKitAsset>
+	</ItemGroup>
+</Project>

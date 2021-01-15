@@ -131,7 +131,7 @@ namespace Photos
 
 		[Deprecated (PlatformName.TvOS, 11,0)]
 		[Deprecated (PlatformName.iOS, 11,0)]
-		[Unavailable (PlatformName.UIKitForMac)]
+		[Unavailable (PlatformName.MacCatalyst)]
 		[NoMac]
 		[Static]
 		[Advice ("This API is not available when using UIKit on macOS.")]
@@ -690,6 +690,12 @@ namespace Photos
 		[return: NullAllowed]
 		PHCollectionListChangeRequest ChangeRequest (PHCollectionList collectionList, PHFetchResult childCollections);
 
+		[TV (14,2), Mac (11,0), iOS (14,2)]
+		[Static]
+		[Export ("changeRequestForTopLevelCollectionListUserCollections:")]
+		[return: NullAllowed]
+		PHCollectionListChangeRequest ChangeRequestForTopLevelCollectionList (PHFetchResult childCollections);
+
 		[Export ("title", ArgumentSemantic.Strong)]
 		string Title { get; set; }
 
@@ -1158,7 +1164,7 @@ namespace Photos
 	[Mac (10,13)]
 	[NoTV][NoiOS]
 	[Category]
-	[Unavailable (PlatformName.UIKitForMac)]
+	[Unavailable (PlatformName.MacCatalyst)]
 	[Advice ("This API is not available when using UIKit on macOS.")]
 	[BaseType (typeof (PHPhotoLibrary))]
 	interface PHPhotoLibrary_CloudIdentifiers {
@@ -1284,7 +1290,7 @@ namespace Photos
 		void PrepareLivePhotoForPlayback (CGSize targetSize, [NullAllowed] NSDictionary<NSString, NSObject> options, Action<PHLivePhoto, NSError> handler);
 
 		// the API existed earlier but the key needed to create the strong dictionary did not work
-		[iOS (11,0)][TV (11,0)][Mac (10,12)]
+		[iOS (11,0)][TV (11,0)]
 		[Async]
 		[Wrap ("_PrepareLivePhotoForPlayback (targetSize, options.GetDictionary (), handler)")]
 		void PrepareLivePhotoForPlayback (CGSize targetSize, [NullAllowed] PHLivePhotoEditingOption options, Action<PHLivePhoto, NSError> handler);
@@ -1302,7 +1308,7 @@ namespace Photos
 		void SaveLivePhoto (PHContentEditingOutput output, [NullAllowed] NSDictionary<NSString, NSObject> options, Action<bool, NSError> handler);
 
 		// the API existed earlier but the key needed to create the strong dictionary did not work
-		[iOS (11,0)][TV (11,0)][Mac (10,12)]
+		[iOS (11,0)][TV (11,0)]
 		[Async]
 		[Wrap ("_SaveLivePhoto (output, options.GetDictionary (), handler)")]
 		void SaveLivePhoto (PHContentEditingOutput output, [NullAllowed] PHLivePhotoEditingOption options, Action<bool, NSError> handler);
@@ -1354,7 +1360,7 @@ namespace Photos
 
 	[Mac (10,13)]
 	[NoiOS][NoTV]
-	[Unavailable (PlatformName.UIKitForMac)]
+	[Unavailable (PlatformName.MacCatalyst)]
 	[Advice ("This API is not available when using UIKit on macOS.")]
 	[BaseType (typeof (PHAssetCollection))]
 	interface PHProject {
@@ -1368,7 +1374,7 @@ namespace Photos
 	}
 
 	[Mac (10,13)]
-	[Unavailable (PlatformName.UIKitForMac)]
+	[Unavailable (PlatformName.MacCatalyst)]
 	[NoiOS][NoTV]
 	[Advice ("This API is not available when using UIKit on macOS.")]
 	[BaseType (typeof (PHChangeRequest))]
@@ -1398,7 +1404,7 @@ namespace Photos
 
 	[Mac (10,13)]
 	[NoiOS][NoTV]
-	[Unavailable (PlatformName.UIKitForMac)]
+	[Unavailable (PlatformName.MacCatalyst)]
 	[Advice ("This API is not available when using UIKit on macOS.")]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]

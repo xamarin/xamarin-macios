@@ -1,18 +1,18 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.DotNet.XHarness.Common.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
-using Microsoft.DotNet.XHarness.iOS.Shared.Tasks;
 using Xharness.Jenkins.TestTasks;
 
 namespace Xharness.Jenkins {
 	// lets try and keep this class stateless, will make our lifes better
 	class RunSimulatorTasksFactory {
 
-		public async Task<IEnumerable<ITestTask>> CreateAsync (Jenkins jenkins, IProcessManager processManager, TestVariationsFactory testVariationsFactory)
+		public async Task<IEnumerable<ITestTask>> CreateAsync (Jenkins jenkins, IMlaunchProcessManager processManager, TestVariationsFactory testVariationsFactory)
 		{
 			var runSimulatorTasks = new List<RunSimulatorTask> ();
 
@@ -61,13 +61,9 @@ namespace Xharness.Jenkins {
 							break;
 						}
 
-						MSBuildTask derived;
-						if (project.IsDotNetProject) {
-							derived = new DotNetBuildTask (jenkins: jenkins, testProject: project, processManager: processManager);
-							configIgnored |= !jenkins.IncludeDotNet;
-						} else {
-							derived = new MSBuildTask (jenkins: jenkins, testProject: project, processManager: processManager);
-						}
+						configIgnored |= project.IsDotNetProject && !jenkins.IncludeDotNet;
+
+						var derived = new MSBuildTask (jenkins: jenkins, testProject: project, processManager: processManager);
 						derived.ProjectConfiguration = config;
 						derived.ProjectPlatform = "iPhoneSimulator";
 						derived.Platform = testPlatform;
@@ -92,7 +88,6 @@ namespace Xharness.Jenkins {
 					simulators: jenkins.Simulators,
 					buildTask: buildTask,
 					processManager: processManager,
-					tunnelBore: jenkins.TunnelBore,
 					candidates: candidates?.Cast<SimulatorDevice> () ?? test.Candidates)).ToList ();
 
 			if (jenkins.IsServerMode)
@@ -112,7 +107,7 @@ namespace Xharness.Jenkins {
 			return rv;
 		}
 
-		IEnumerable<RunSimulatorTask> CreateAsync (Jenkins jenkins, IProcessManager processManager, MSBuildTask buildTask)
+		IEnumerable<RunSimulatorTask> CreateAsync (Jenkins jenkins, IMlaunchProcessManager processManager, MSBuildTask buildTask)
 		{
 			var runtasks = new List<RunSimulatorTask> ();
 
@@ -162,7 +157,6 @@ namespace Xharness.Jenkins {
 					simulators: jenkins.Simulators,
 					buildTask: buildTask,
 					processManager: processManager,
-					tunnelBore: jenkins.TunnelBore,
 					candidates: sims) {
 					Platform = platforms [i],
 					Ignored = ignored [i] || buildTask.Ignored

@@ -20,7 +20,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\x86\Debug</OutputPath>
-    <DefineConstants>DEBUG;MONOMAC;XAMMAC_TESTS</DefineConstants>
+    <DefineConstants>DEBUG;MONOMAC;XAMMAC_TESTS;DYNAMIC_REGISTRAR</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>0</WarningLevel>
     <EnableCodeSigning>false</EnableCodeSigning>
@@ -73,6 +73,9 @@
     <Compile Include="..\common\Configuration.cs">
       <Link>Configuration.cs</Link>
     </Compile>
+    <Compile Include="..\common\PlatformInfo.cs">
+      <Link>PlatformInfo.cs</Link>
+    </Compile>
     <Compile Include="..\common\TestRuntime.cs">
       <Link>TestRuntime.cs</Link>
     </Compile>
@@ -97,9 +100,6 @@
     <Compile Include="..\EmbeddedResources\ResourcesTest.cs">
       <Link>EmbeddedResources\ResourcesTest.cs</Link>
     </Compile>
-    <Compile Include="..\common\mac\ProjectTestHelpers.cs">
-      <Link>ProjectTestHelpers.cs</Link>
-    </Compile>
     <Compile Include="..\..\tools\common\StringUtils.cs">
       <Link>StringUtils.cs</Link>
     </Compile>
@@ -108,7 +108,6 @@
     </Compile>
     <Compile Include="..\..\tests\test-libraries\TrampolineTest.generated.cs" />
     <Compile Include="..\..\tests\test-libraries\RegistrarTest.generated.cs" />
-    <Compile Include="AppKit\NSGridViewTest.cs" />
     <Compile Include="..\..\tools\common\Driver.execution.cs">
       <Link>Driver.execution.cs</Link>
     </Compile>
@@ -262,10 +261,10 @@
     <GeneratedTestOutput Include="..\..\tests\test-libraries\RegistrarTest.generated.cs" />
     <CustomMetalSmeltingInput Include="..\monotouch-test\Resources\fragmentShader.metal" />
   </ItemGroup>
-  <Target Name="CustomMetalSmelting" Inputs="@(CustomMetalSmeltingInput)" Outputs="$(_AppBundlePath)\Contents\Resources\fragmentShader.metallib" DependsOnTargets="_GenerateBundleName">
+  <Target Name="CustomMetalSmelting" Inputs="@(CustomMetalSmeltingInput)" Outputs="$(_AppBundlePath)\Contents\Resources\fragmentShader.metallib" DependsOnTargets="_GenerateBundleName;_DetectSdkLocations">
     <MakeDir Directories="$(IntermediateOutputPath)\Contents\Resources;$(AppBundleDir)\Contents\Resources" />
-    <Exec Command="xcrun -sdk macosx metal -c @(CustomMetalSmeltingInput) -o $(IntermediateOutputPath)\Contents\Resources\fragmentShader.air -mmacos-version-min=10.13" />
-    <Exec Command="xcrun -sdk macosx metallib $(IntermediateOutputPath)\Contents\Resources\fragmentShader.air -o $(AppBundleDir)\Contents\Resources\fragmentShader.metallib" />
+    <Exec Command="xcrun -sdk macosx metal -c @(CustomMetalSmeltingInput) -o $(IntermediateOutputPath)\Contents\Resources\fragmentShader.air -mmacos-version-min=10.13" EnvironmentVariables="DEVELOPER_DIR=$(_SdkDevPath)"/>
+    <Exec Command="xcrun -sdk macosx metallib $(IntermediateOutputPath)\Contents\Resources\fragmentShader.air -o $(AppBundleDir)\Contents\Resources\fragmentShader.metallib" EnvironmentVariables="DEVELOPER_DIR=$(_SdkDevPath)" />
   </Target>
   <Target Name="BeforeBuild" Inputs="@(GeneratedTestInput)" Outputs="@(GeneratedTestOutput)" DependsOnTargets="CustomMetalSmelting">
     <Exec Command="make -j8 -C $(TestLibrariesDirectory)" />

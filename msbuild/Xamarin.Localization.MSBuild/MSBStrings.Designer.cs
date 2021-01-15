@@ -941,6 +941,18 @@ namespace Xamarin.Localization.MSBuild {
             }
         }
         
+        public static string E0174 {
+            get {
+                return ResourceManager.GetString("E0174", resourceCulture);
+            }
+        }
+        
+        public static string E0175 {
+            get {
+                return ResourceManager.GetString("E0175", resourceCulture);
+            }
+        }
+        
         public static string E7001 {
             get {
                 return ResourceManager.GetString("E7001", resourceCulture);
@@ -1352,6 +1364,24 @@ namespace Xamarin.Localization.MSBuild {
         public static string E7069 {
             get {
                 return ResourceManager.GetString("E7069", resourceCulture);
+            }
+        }
+        
+        public static string E7070 {
+            get {
+                return ResourceManager.GetString("E7070", resourceCulture);
+            }
+        }
+        
+        public static string InvalidFramework {
+            get {
+                return ResourceManager.GetString("InvalidFramework", resourceCulture);
+            }
+        }
+        
+        public static string InvalidPlatform {
+            get {
+                return ResourceManager.GetString("InvalidPlatform", resourceCulture);
             }
         }
     }

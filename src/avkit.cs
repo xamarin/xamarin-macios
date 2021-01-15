@@ -10,6 +10,9 @@ using CoreImage;
 using CoreMedia;
 using CoreVideo;
 using AVFoundation;
+#if HAS_OPENGLES
+using OpenGLES;
+#endif
 #if !MONOMAC
 using AVCaptureViewControlsStyle = Foundation.NSObject;
 using AVPlayerViewControlsStyle = Foundation.NSObject;
@@ -17,7 +20,6 @@ using AVPlayerViewTrimResult = Foundation.NSObject;
 using NSColor = UIKit.UIColor;
 using NSMenu = Foundation.NSObject;
 using NSView = UIKit.UIView;
-using OpenGLES;
 using UIKit;
 #else
 using AppKit;
@@ -105,6 +107,11 @@ namespace AVKit {
 		[NoWatch, NoMac, NoiOS]
 		[Export ("canStopPictureInPicture")]
 		bool CanStopPictureInPicture { get; }
+
+		[iOS (14,2)]
+		[NoWatch, NoTV, NoMac]
+		[Export ("canStartPictureInPictureAutomaticallyFromInline")]
+		bool CanStartPictureInPictureAutomaticallyFromInline { get; set; }
 	}
 	
 	interface IAVPictureInPictureControllerDelegate {}
@@ -260,6 +267,11 @@ namespace AVKit {
 		[iOS (14, 0), NoTV]
 		[Export ("showsTimecodes")]
 		bool ShowsTimecodes { get; set; }
+
+		[iOS (14,2)]
+		[NoWatch, NoTV]
+		[Export ("canStartPictureInPictureAutomaticallyFromInline")]
+		bool CanStartPictureInPictureAutomaticallyFromInline { get; set; }
 	}
 
 	[NoMac]
@@ -361,7 +373,7 @@ namespace AVKit {
 
 		[NoiOS, TV (11,0), NoWatch, NoMac]
 		[Export ("playerViewController:willTransitionToVisibilityOfTransportBar:withAnimationCoordinator:")]
-		void WillTransitionToVisibilityOfTransportBar (AVPlayerViewController playerViewController, bool visible, [NullAllowed] IAVPlayerViewControllerAnimationCoordinator coordinator);
+		void WillTransitionToVisibilityOfTransportBar (AVPlayerViewController playerViewController, bool visible, IAVPlayerViewControllerAnimationCoordinator coordinator);
 		
 		[iOS (13,0), NoTV, NoWatch, NoMac]
 		[Export ("playerViewController:willBeginFullScreenPresentationWithAnimationCoordinator:"), EventArgs ("AVPlayerViewFullScreenPresentationWillBegin")]
@@ -444,32 +456,26 @@ namespace AVKit {
 		[Export ("updatesNowPlayingInfoCenter")]
 		bool UpdatesNowPlayingInfoCenter { get; set; }
 
-		[Mac (10,9)]
 		[NullAllowed]
 		[Export ("actionPopUpButtonMenu")]
 		NSMenu ActionPopUpButtonMenu { get; set; }
 
-		[Mac (10,9)] // No async
+		// No async
 		[Export ("beginTrimmingWithCompletionHandler:")]
 		void BeginTrimming ([NullAllowed] Action<AVPlayerViewTrimResult> handler);
 
-		[Mac (10,9)]
 		[Export ("canBeginTrimming")]
 		bool CanBeginTrimming { get; }
 
-		[Mac (10,9)]
 		[Export ("flashChapterNumber:chapterTitle:")]
 		void FlashChapter (nuint chapterNumber, [NullAllowed] string chapterTitle);
 
-		[Mac (10,9)]
 		[Export ("showsFrameSteppingButtons")]
 		bool ShowsFrameSteppingButtons { get; set; }
 
-		[Mac (10,9)]
 		[Export ("showsFullScreenToggleButton")]
 		bool ShowsFullScreenToggleButton { get; set; }
 
-		[Mac (10,9)]
 		[Export ("showsSharingServiceButton")]
 		bool ShowsSharingServiceButton { get; set; }
 		

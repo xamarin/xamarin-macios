@@ -105,6 +105,8 @@ public class BindingTouch {
 			return Path.Combine (GetSDKRoot (), "lib", "bgen", "Xamarin.WatchOS.BindingAttributes.dll");
 		case PlatformName.TvOS:
 			return Path.Combine (GetSDKRoot (), "lib", "bgen", "Xamarin.TVOS.BindingAttributes.dll");
+		case PlatformName.MacCatalyst:
+			return Path.Combine (GetSDKRoot (), "lib", "bgen", "Xamarin.MacCatalyst.BindingAttributes.dll");
 		case PlatformName.MacOSX:
 			if (target_framework == TargetFramework.Xamarin_Mac_4_5_Full) {
 				return Path.Combine (GetSDKRoot (), "lib", "bgen", "Xamarin.Mac-full.BindingAttributes.dll");
@@ -132,6 +134,9 @@ public class BindingTouch {
 				break;
 			case PlatformName.TvOS:
 				yield return Path.Combine (GetSDKRoot (), "lib", "mono", "Xamarin.TVOS");
+				break;
+			case PlatformName.MacCatalyst:
+				yield return Path.Combine (GetSDKRoot (), "lib", "mono", "Xamarin.MacCatalyst");
 				break;
 			case PlatformName.MacOSX:
 				if (target_framework == TargetFramework.Xamarin_Mac_4_5_Full) {
@@ -186,6 +191,7 @@ public class BindingTouch {
 		case PlatformName.iOS:
 		case PlatformName.WatchOS:
 		case PlatformName.TvOS:
+		case PlatformName.MacCatalyst:
 			var sdkRoot = Environment.GetEnvironmentVariable ("MD_MTOUCH_SDK_ROOT");
 			if (string.IsNullOrEmpty (sdkRoot))
 				sdkRoot = "/Library/Frameworks/Xamarin.iOS.framework/Versions/Current";
@@ -262,8 +268,8 @@ public class BindingTouch {
 			{ "d=", "Defines a symbol", v => defines.Add (v) },
 			{ "api=", "Adds a API definition source file", v => api_sources.Add (v) },
 			{ "s=", "Adds a source file required to build the API", v => core_sources.Add (v) },
-			{ "q", "Quiet", v => Driver.Verbosity++ },
-			{ "v", "Sets verbose mode", v => Driver.Verbosity-- },
+			{ "q", "Quiet", v => ErrorHelper.Verbosity-- },
+			{ "v", "Sets verbose mode", v => ErrorHelper.Verbosity++ },
 			{ "x=", "Adds the specified file to the build, used after the core files are compiled", v => extra_sources.Add (v) },
 			{ "e", "Generates smaller classes that can not be subclassed (previously called 'external mode')", v => external = true },
 			{ "p", "Sets private mode", v => public_mode = false },
@@ -371,6 +377,16 @@ public class BindingTouch {
 				ReferenceFixer.FixSDKReferences (GetSDKRoot (), "lib/mono/Xamarin.WatchOS", references);
 			}
 			break;
+		case ApplePlatform.MacCatalyst:
+			CurrentPlatform = PlatformName.MacCatalyst;
+			nostdlib = true;
+			if (string.IsNullOrEmpty (baselibdll))
+				baselibdll = Path.Combine (GetSDKRoot (), "lib/mono/Xamarin.MacCatalyst/Xamarin.MacCatalyst.dll");
+			if (!IsDotNet) {
+				// references.Add ("Facades/System.Drawing.Common");
+				ReferenceFixer.FixSDKReferences (GetSDKRoot (), "lib/mono/Xamarin.MacCatalyst", references);
+			}
+			break;
 		case ApplePlatform.MacOSX:
 			CurrentPlatform = PlatformName.MacOSX;
 			nostdlib = true;
@@ -457,7 +473,7 @@ public class BindingTouch {
 				cargs.Add ("-lib:" + Path.GetDirectoryName (baselibdll));
 
 			if (Driver.RunCommand (compiler, cargs, null, out var compile_output, true, Driver.Verbosity) != 0)
-				throw ErrorHelper.CreateError (2, compile_output.ToString ().Replace ("\n", "\n\t"));
+				throw ErrorHelper.CreateError (2, $"{compiler} {StringUtils.FormatArguments (cargs)}\n{compile_output}".Replace ("\n", "\n\t"));
 				
 
 			universe = new Universe (UniverseOptions.EnableFunctionPointers | UniverseOptions.ResolveMissingMembers | UniverseOptions.MetadataOnly);
@@ -611,7 +627,7 @@ public class BindingTouch {
 				cargs.Add ("-lib:" + Path.GetDirectoryName (baselibdll));
 
 			if (Driver.RunCommand (compiler, cargs, null, out var generated_compile_output, true, Driver.Verbosity) != 0)
-				throw ErrorHelper.CreateError (1000, generated_compile_output.ToString ().Replace ("\n", "\n\t"));
+				throw ErrorHelper.CreateError (1000, $"{compiler} {StringUtils.FormatArguments (cargs)}\n{generated_compile_output}".Replace ("\n", "\n\t"));
 		} finally {
 			if (delete_temp)
 				Directory.Delete (tmpdir, true);

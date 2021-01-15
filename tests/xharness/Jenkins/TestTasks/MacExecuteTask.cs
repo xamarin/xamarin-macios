@@ -4,6 +4,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
+using Microsoft.DotNet.XHarness.Common.Execution;
+using Microsoft.DotNet.XHarness.Common.Logging;
+using Microsoft.DotNet.XHarness.Common.Utilities;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
@@ -18,7 +21,7 @@ namespace Xharness.Jenkins.TestTasks {
 		public bool BCLTest;
 		public bool IsUnitTest;
 
-		public MacExecuteTask (Jenkins jenkins, BuildToolTask build_task, IProcessManager processManager, ICrashSnapshotReporterFactory crashReportSnapshotFactory)
+		public MacExecuteTask (Jenkins jenkins, BuildToolTask build_task, IMlaunchProcessManager processManager, ICrashSnapshotReporterFactory crashReportSnapshotFactory)
 			: base (jenkins, build_task, processManager)
 		{
 			this.CrashReportSnapshotFactory = crashReportSnapshotFactory ?? throw new ArgumentNullException (nameof (crashReportSnapshotFactory));
@@ -82,23 +85,33 @@ namespace Xharness.Jenkins.TestTasks {
 				using (var proc = new Process ()) {
 					proc.StartInfo.FileName = Path;
 					var arguments = new List<string> ();
-					ILog xmlLog = null;
+					IFileBackedLog xmlLog = null;
 					var useXmlOutput = Harness.InCI || true;
 					if (IsUnitTest) {
 						var extension = useXmlOutput ? "xml" : "log";
 						var type = useXmlOutput ? LogType.XmlLog : LogType.NUnitResult;
 						xmlLog = Logs.Create ($"test-{Platform}-{Timestamp}.{extension}", type.ToString ());
 						arguments.Add ($"-transport:FILE");
+						proc.StartInfo.EnvironmentVariables ["NUNIT_TRANSPORT"] = "FILE";
 						arguments.Add ($"--logfile:{xmlLog.FullPath}");
+						proc.StartInfo.EnvironmentVariables ["NUNIT_LOG_FILE"] = xmlLog.FullPath;
 						if (useXmlOutput) {
 							arguments.Add ("--enablexml");
+							proc.StartInfo.EnvironmentVariables ["NUNIT_ENABLE_XML_OUTPUT"] = "true";
 							arguments.Add ("--xmlmode=wrapped");
+							proc.StartInfo.EnvironmentVariables ["NUNIT_ENABLE_XML_MODE"] = "wrapped";
 							arguments.Add ("--xmlversion=nunitv3");
+							proc.StartInfo.EnvironmentVariables ["NUNIT_XML_VERSION"] = "nunitv3";
 						}
+						arguments.Add ("--autostart");
+						proc.StartInfo.EnvironmentVariables ["NUNIT_AUTOSTART"] = "true";
+						arguments.Add ("--autoexit");
+						proc.StartInfo.EnvironmentVariables ["NUNIT_AUTOEXIT"] = "true";
 					}
 					if (!Harness.GetIncludeSystemPermissionTests (Platform, false))
 						proc.StartInfo.EnvironmentVariables ["DISABLE_SYSTEM_PERMISSION_TESTS"] = "1";
 					proc.StartInfo.EnvironmentVariables ["MONO_DEBUG"] = "no-gdb-backtrace";
+					proc.StartInfo.EnvironmentVariables.Remove ("DYLD_FALLBACK_LIBRARY_PATH"); // VSMac might set this, and the test may end up crashing
 					proc.StartInfo.Arguments = StringUtils.FormatArguments (arguments);
 					Jenkins.MainLog.WriteLine ("Executing {0} ({1})", TestName, Mode);
 					var log = Logs.Create ($"execute-{Platform}-{Timestamp}.txt", LogType.ExecutionLog.ToString ());
@@ -134,10 +147,10 @@ namespace Xharness.Jenkins.TestTasks {
 					if (IsUnitTest) {
 						var reporterFactory = new TestReporterFactory (ProcessManager);
 						var listener = new Microsoft.DotNet.XHarness.iOS.Shared.Listeners.SimpleFileListener (xmlLog.FullPath, log, xmlLog, useXmlOutput);
-						var reporter = reporterFactory.Create (Harness.HarnessLog, log, Logs, snapshot, listener, Harness.ResultParser, new AppBundleInformation ("N/A", "N/A", "N/A", "N/A", null), RunMode.macOS, Harness.XmlJargon, "no device here", TimeSpan.Zero);
+						var reporter = reporterFactory.Create (Harness.HarnessLog, log, Logs, snapshot, listener, Harness.ResultParser, new AppBundleInformation ("N/A", "N/A", "N/A", "N/A", true, null), RunMode.MacOS, Harness.XmlJargon, "no device here", TimeSpan.Zero);
 						var rv = await reporter.ParseResult ();
 						ExecutionResult = rv.ExecutingResult;
-						FailureMessage = rv.FailureMessage;
+						FailureMessage = rv.ExecutingResult == TestExecutingResult.Succeeded ? null : rv.ResultMessage;
 					}
 				}
 			}

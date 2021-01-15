@@ -12,8 +12,3 @@
 
 ## obsoleted (removed from headers) in watchOS 6
 !extra-protocol-member! unexpected selector SCNSceneRenderer::context found
-
-# Initial result from new rule missing-null-allowed
-!missing-null-allowed! 'SceneKit.SCNShape SceneKit.SCNShape::Create(UIKit.UIBezierPath,System.nfloat)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void SceneKit.SCNText::set_ChamferProfile(UIKit.UIBezierPath)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void SceneKit.SCNText::set_Font(UIKit.UIFont)' is missing an [NullAllowed] on parameter #0

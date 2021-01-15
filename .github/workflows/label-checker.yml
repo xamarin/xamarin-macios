@@ -1,0 +1,30 @@
+name: Labels verification
+on:
+  pull_request:
+    types: [opened, reopened, labeled, unlabeled, synchronize]
+
+jobs:
+  labels-check:
+    runs-on: ubuntu-latest
+    name: Labels verification
+
+    steps:
+    - run: echo "$GITHUB_CONTEXT"
+      name: 'Debug context'
+      env:
+        GITHUB_CONTEXT: ${{ toJson(github) }}
+
+    - run: exit 0
+      name: 'Monojenkins PR'
+      # always happy if monojenkins
+      if: github.actor == 'vs-mobiletools-engineering-service2'
+
+    - run: exit 1
+      name: 'User PR with no labels'
+      # failure if not monojenkins and no labels
+      if: github.actor != 'vs-mobiletools-engineering-service2' && join(github.event.pull_request.labels, ',') == ''
+
+    - run: exit 0
+      name: 'User PR with labels'
+      # success if not monojenkins but labels
+      if: github.actor != 'vs-mobiletools-engineering-service2' && join(github.event.pull_request.labels, ',') != ''

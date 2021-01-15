@@ -1,6 +1,7 @@
 using System.IO;
 using System.Collections.Generic;
 
+using Xamarin.MacDev;
 using Xamarin.MacDev.Tasks;
 
 namespace Xamarin.iOS.Tasks
@@ -31,7 +32,7 @@ namespace Xamarin.iOS.Tasks
 
 		protected override string DefaultEntitlementsPath {
 			get {
-				return Path.Combine (IPhoneSdks.GetSdk (TargetFrameworkMoniker).GetSdkPath (SdkVersion, false), "Entitlements.plist");
+				return Path.Combine (Sdks.GetSdk (TargetFrameworkMoniker).GetSdkPath (SdkVersion, false), "Entitlements.plist");
 			}
 		}
 

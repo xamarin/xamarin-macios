@@ -208,10 +208,18 @@ namespace CoreGraphics {
 		[Field ("kCGColorSpaceExtendedLinearITUR_2020")]
 		NSString ExtendedLinearItur_2020 { get; }
 
+		[iOS (14,1), Mac (11,0), TV (14,2), Watch (7,1)]
+		[Field ("kCGColorSpaceExtendedITUR_2020")]
+		NSString ExtendedItur_2020 { get; }
+
 		[Mac (10,14,3)][iOS (12,3)]
 		[TV (12,3)][Watch (5,3)]
 		[Field ("kCGColorSpaceExtendedLinearDisplayP3")]
 		NSString ExtendedLinearDisplayP3 { get; }
+
+		[iOS (14,1), Mac (11,0), TV (14,2), Watch (7,1)]
+		[Field ("kCGColorSpaceExtendedDisplayP3")]
+		NSString ExtendedDisplayP3 { get; }
 
 		[Mac (10,14)][iOS (12,0)]
 		[TV (12,0)][Watch (5,0)]

@@ -13,6 +13,8 @@ using Xamarin.Linker.Steps;
 namespace Xamarin {
 
 	public class SetupStep : ConfigurationAwareStep {
+		protected override string Name { get; } = "Setup";
+		protected override int ErrorCode { get; } = 2300;
 
 		List<IStep> _steps;
 		public List<IStep> Steps {
@@ -47,7 +49,7 @@ namespace Xamarin {
 			throw new InvalidOperationException ($"Could not insert {step} after {stepName} because {stepName} wasn't found.");
 		}
 
-		protected override void Process ()
+		protected override void TryProcess ()
 		{
 			// Don't use --custom-step to load each step, because this assembly
 			// is loaded into the current process once per --custom-step,
@@ -78,15 +80,20 @@ namespace Xamarin {
 				prelink_substeps.Add (new MarkNSObjects ());
 				prelink_substeps.Add (new PreserveSmartEnumConversionsSubStep ());
 				prelink_substeps.Add (new CollectUnmarkedMembersSubStep ());
+				prelink_substeps.Add (new StoreAttributesStep ());
 
 				post_sweep_substeps.Add (new RemoveAttributesStep ());
 			}
 
+			Steps.Add (new ListExportedSymbols (null));
 			Steps.Add (new LoadNonSkippedAssembliesStep ());
 			Steps.Add (new ExtractBindingLibrariesStep ());
 			Steps.Add (new RegistrarStep ());
 			Steps.Add (new GenerateMainStep ());
+			Steps.Add (new GenerateReferencesStep ());
 			Steps.Add (new GatherFrameworksStep ());
+			Steps.Add (new ComputeNativeBuildFlagsStep ());
+			Steps.Add (new DoneStep ()); // Must be the last step.
 
 			Configuration.Write ();
 

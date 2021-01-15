@@ -173,6 +173,16 @@ namespace Xamarin.iOS.Tasks
 					Ditto (DSYMDir, destDir);
 				}
 
+				// for each user framework that is bundled inside the app we must also archive their dSYMs, if available
+				foreach (var fx in Directory.GetDirectories (Path.Combine (AppBundleDir.ItemSpec, "Frameworks"), "*.framework")) {
+					var dsym = Path.GetFileName (fx) + ".dSYM";
+					var fq_dsym = Path.Combine (AppBundleDir.ItemSpec, "..", dsym);
+					if (Directory.Exists (fq_dsym)) {
+						var destDir = Path.Combine (archiveDir, "dSYMs", dsym);
+						Ditto (fq_dsym, destDir);
+					}
+				}
+
 				// Archive the mSYMs...
 				if (Directory.Exists (MSYMDir)) {
 					var destDir = Path.Combine (archiveDir, "mSYMs", Path.GetFileName (MSYMDir));

@@ -37,6 +37,7 @@ namespace Xamarin.Tests {
 		void Clean (string project_path)
 		{
 			var dirs = Directory.GetDirectories (Path.GetDirectoryName (project_path), "*", SearchOption.AllDirectories);
+			dirs = dirs.OrderBy (v => v.Length).Reverse ().ToArray (); // If we have nested directories, make sure to delete the nested one first
 			foreach (var dir in dirs) {
 				var name = Path.GetFileName (dir);
 				if (name != "bin" && name != "obj")
@@ -54,7 +55,7 @@ namespace Xamarin.Tests {
 			Clean (project_path);
 			var result = DotNet.AssertBuild (project_path, verbosity);
 			AssertThatLinkerExecuted (result);
-			AssertAppContents (platform, Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", "net5.0-ios", "ios-x64", "MySingleView.app"));
+			AssertAppContents (platform, Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", "net6.0-ios", "ios-x64", "MySingleView.app"));
 		}
 
 		[Test]
@@ -66,7 +67,7 @@ namespace Xamarin.Tests {
 			Clean (project_path);
 			var result = DotNet.AssertBuild (project_path, verbosity);
 			AssertThatLinkerExecuted (result);
-			AssertAppContents (platform, Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", "net5.0-macos", "osx-x64", "MyCocoaApp.app"));
+			AssertAppContents (platform, Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", "net6.0-macos", "osx-x64", "MyCocoaApp.app"));
 		}
 
 		[Test]
@@ -78,7 +79,7 @@ namespace Xamarin.Tests {
 			Clean (project_path);
 			var result = DotNet.AssertBuild (project_path, verbosity);
 			AssertThatLinkerExecuted (result);
-			AssertAppContents (platform, Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", "net5.0-tvos", "tvos-x64", "MyTVApp.app"));
+			AssertAppContents (platform, Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", "net6.0-tvos", "tvos-x64", "MyTVApp.app"));
 		}
 
 		[Test]
@@ -118,7 +119,7 @@ namespace Xamarin.Tests {
 			Clean (project_path);
 			Configuration.CopyDotNetSupportingFiles (dotnet_bindings_dir);
 			var result = DotNet.AssertBuild (project_path, verbosity);
-			var lines = result.StandardOutput.ToString ().Split ('\n');
+			var lines = BinLog.PrintToLines (result.BinLogPath);
 			// Find the resulting binding assembly from the build log
 			var assemblies = FilterToAssembly (lines, assemblyName);
 			Assert.That (assemblies, Is.Not.Empty, "Assemblies");
@@ -151,7 +152,7 @@ namespace Xamarin.Tests {
 			Clean (project_path);
 			Configuration.CopyDotNetSupportingFiles (dotnet_bindings_dir);
 			var result = DotNet.AssertBuild (project_path, verbosity);
-			var lines = result.StandardOutput.ToString ().Split ('\n');
+			var lines = BinLog.PrintToLines (result.BinLogPath);
 			// Find the resulting binding assembly from the build log
 			var assemblies = FilterToAssembly (lines, assemblyName);
 			Assert.That (assemblies, Is.Not.Empty, "Assemblies");
@@ -179,7 +180,8 @@ namespace Xamarin.Tests {
 			Clean (project_path);
 			Configuration.CopyDotNetSupportingFiles (dotnet_bindings_dir);
 			var result = DotNet.AssertBuild (project_path, verbosity);
-			var lines = result.StandardOutput.ToString ().Split ('\n');
+			var lines = BinLog.PrintToLines (result.BinLogPath).ToList ();
+			Console.WriteLine (string.Join ("\n", lines));
 			// Find the resulting binding assembly from the build log
 			var assemblies = FilterToAssembly (lines, assemblyName);
 			Assert.That (assemblies, Is.Not.Empty, "Assemblies");
@@ -209,7 +211,7 @@ namespace Xamarin.Tests {
 			Clean (project_path);
 			Configuration.CopyDotNetSupportingFiles (dotnet_bindings_dir);
 			var result = DotNet.AssertBuild (project_path, verbosity);
-			var lines = result.StandardOutput.ToString ().Split ('\n');
+			var lines = BinLog.PrintToLines (result.BinLogPath);
 			// Find the resulting binding assembly from the build log
 			var assemblies = FilterToAssembly (lines, assemblyName);
 			Assert.That (assemblies, Is.Not.Empty, "Assemblies");
@@ -239,7 +241,7 @@ namespace Xamarin.Tests {
 			Clean (project_path);
 			Configuration.CopyDotNetSupportingFiles (dotnet_bindings_dir);
 			var result = DotNet.AssertBuild (project_path, verbosity);
-			var lines = result.StandardOutput.ToString ().Split ('\n');
+			var lines = BinLog.PrintToLines (result.BinLogPath);
 			// Find the resulting binding assembly from the build log
 			var assemblies = FilterToAssembly (lines, assemblyName);
 			Assert.That (assemblies, Is.Not.Empty, "Assemblies");
@@ -276,7 +278,7 @@ namespace Xamarin.Tests {
 			var cleanupSupportFiles = Configuration.CopyDotNetSupportingFiles (Path.Combine (Configuration.SourceRoot, "external", "Touch.Unit", "Touch.Client/dotnet"));
 			try {
 				var result = DotNet.AssertBuild (project_path, verbosity);
-				var lines = result.StandardOutput.ToString ().Split ('\n');
+				var lines = BinLog.PrintToLines (result.BinLogPath);
 				// Find the resulting binding assembly from the build log
 				var assemblies = lines.
 					Select (v => v.Trim ()).
@@ -318,11 +320,42 @@ namespace Xamarin.Tests {
 			}
 		}
 
+		[Test]
+		[TestCase ("ios-x64", false)]
+		[TestCase ("ios-arm64", true)]
+		public void IsNotMacBuild (string runtimeIdentifier, bool isDeviceBuild)
+		{
+			if (isDeviceBuild)
+				Configuration.AssertDeviceAvailable ();
+
+			var platform = ApplePlatform.iOS;
+			var project_path = GetProjectPath ("MySingleView");
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Clean (project_path);
+			var properties = new Dictionary<string, string> (verbosity);
+			properties ["RuntimeIdentifier"] = runtimeIdentifier;
+			properties ["IsMacEnabled"] = "false";
+			var result = DotNet.AssertBuild (project_path, properties);
+			AssertThatLinkerDidNotExecute (result);
+			var appPath = Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", "net6.0-ios", runtimeIdentifier, "MySingleView.app");
+			var appExecutable = Path.Combine (appPath, Path.GetFileName (project_path));
+			Assert.That (appPath, Does.Exist, "There is an .app");
+			Assert.That (appExecutable, Does.Not.Empty, "There is no executable");
+			Assert.That (Path.Combine (appPath, "Xamarin.iOS.dll"), Does.Exist, "Xamarin.iOS.dll is in the bundle");
+		}
+
 		void AssertThatLinkerExecuted (ExecutionResult result)
 		{
-			var output = result.StandardOutput.ToString ();
+			var output = BinLog.PrintToString (result.BinLogPath);
 			Assert.That (output, Does.Contain ("Building target \"_RunILLink\" completely."), "Linker did not executed as expected.");
 			Assert.That (output, Does.Contain ("Pipeline Steps:"), "Custom steps did not run as expected.");
+		}
+
+		void AssertThatLinkerDidNotExecute (ExecutionResult result)
+		{
+			var output = BinLog.PrintToString (result.BinLogPath);
+			Assert.That (output, Does.Not.Contain ("Building target \"_RunILLink\" completely."), "Linker did not executed as expected.");
+			Assert.That (output, Does.Not.Contain ("Pipeline Steps:"), "Custom steps did not run as expected.");
 		}
 
 		void AssertAppContents (ApplePlatform platform, string app_directory)
@@ -360,6 +393,37 @@ namespace Xamarin.Tests {
 						return false; // Skip reference assemblies
 					return true;
 				});
+		}
+
+		// This is copied from the KillEverything method in xharness/Microsoft.DotNet.XHarness.iOS.Shared/Hardware/SimulatorDevice.cs and modified to work here.
+		[OneTimeSetUp]
+		public void KillEverything ()
+		{
+			ExecutionHelper.Execute ("launchctl", new [] { "remove", "com.apple.CoreSimulator.CoreSimulatorService" }, timeout: TimeSpan.FromSeconds (10));
+
+			var to_kill = new string [] { "iPhone Simulator", "iOS Simulator", "Simulator", "Simulator (Watch)", "com.apple.CoreSimulator.CoreSimulatorService", "ibtoold" };
+
+			var args = new List<string> ();
+			args.Add ("-9");
+			args.AddRange (to_kill);
+			ExecutionHelper.Execute ("killall", args, timeout: TimeSpan.FromSeconds (10));
+
+			var dirsToBeDeleted = new [] {
+				Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.UserProfile), "Library", "Saved Application State", "com.apple.watchsimulator.savedState"),
+				Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.UserProfile), "Library", "Saved Application State", "com.apple.iphonesimulator.savedState"),
+			};
+
+			foreach (var dir in dirsToBeDeleted) {
+				try {
+					if (Directory.Exists (dir))
+						Directory.Delete (dir, true);
+				} catch (Exception e) {
+					Console.WriteLine ("Could not delete the directory '{0}': {1}", dir, e.Message);
+				}
+			}
+
+			// https://github.com/xamarin/xamarin-macios/issues/10012
+			ExecutionHelper.Execute ("xcrun", new [] { "simctl", "list" });
 		}
 	}
 }

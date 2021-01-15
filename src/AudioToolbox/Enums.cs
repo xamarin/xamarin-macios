@@ -4,7 +4,7 @@ using ObjCRuntime;
 
 namespace AudioToolbox {
 	[Flags]
-	[Introduced (PlatformName.UIKitForMac, 13,0)]
+	[Introduced (PlatformName.MacCatalyst, 13,0)]
 	[NoWatch, TV (10, 0), Mac (10, 12), iOS (10, 0)]
 	public enum AudioSettingsFlags : uint
 	{

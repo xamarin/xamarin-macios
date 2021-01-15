@@ -1381,7 +1381,7 @@ namespace MediaPlayer {
 
 		[NoiOS]
 		[NoTV]
-		[Introduced (PlatformName.UIKitForMac, 13, 0)]
+		[Introduced (PlatformName.MacCatalyst, 13, 0)]
 		[Export ("playbackState")]
 		MPNowPlayingPlaybackState PlaybackState { get; set; }
 
@@ -1755,7 +1755,7 @@ namespace MediaPlayer {
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MPRemoteCommandCenter {
-		[Mac (10,12,2)]
+
 		[Static]
 		[Export ("sharedCommandCenter")]
 		MPRemoteCommandCenter Shared { get; }

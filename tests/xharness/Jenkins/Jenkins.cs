@@ -2,23 +2,24 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Text;
-using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
-using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
-using Xharness.Jenkins.TestTasks;
-using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
+using System.Threading.Tasks;
+using Microsoft.DotNet.XHarness.Common.Execution;
+using Microsoft.DotNet.XHarness.Common.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared;
+using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
-using Microsoft.DotNet.XHarness.iOS.Shared.Tasks;
 using Microsoft.DotNet.XHarness.iOS.Shared.Listeners;
+using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
+using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 using Xharness.Jenkins.Reports;
+using Xharness.Jenkins.TestTasks;
 
 namespace Xharness.Jenkins {
 	class Jenkins {
 		public readonly ISimulatorLoader Simulators;
 		public readonly IHardwareDeviceLoader Devices;
-		readonly IProcessManager processManager;
+		readonly IMlaunchProcessManager processManager;
 		public ITunnelBore TunnelBore { get; private set; }
 		readonly TestSelector testSelector;
 		readonly TestVariationsFactory testVariationsFactory;
@@ -44,7 +45,7 @@ namespace Xharness.Jenkins {
 		public bool IncludetvOS = true;
 		public bool IncludewatchOS = true;
 		public bool IncludeMmpTest;
-		public bool IncludeiOSMSBuild = true;
+		public bool IncludeMSBuild = true;
 		public bool IncludeMtouch;
 		public bool IncludeBtouch;
 		public bool IncludeMacBindingProject;
@@ -60,11 +61,12 @@ namespace Xharness.Jenkins {
 		public bool IncludeNonMonotouch = true;
 		public bool IncludeMonotouch = true;
 		public bool IncludeDotNet;
+		public bool IncludeMacCatalyst;
 
 		public bool CleanSuccessfulTestRuns = true;
 		public bool UninstallTestApp = true;
 
-		public ILog MainLog;
+		public IFileBackedLog MainLog;
 		public ILog SimulatorLoadLog => DeviceLoader.SimulatorLoadLog;
 		public ILog DeviceLoadLog => DeviceLoader.DeviceLoadLog;
 
@@ -74,7 +76,7 @@ namespace Xharness.Jenkins {
 				if (string.IsNullOrEmpty (log_directory)) {
 					log_directory = Path.Combine (Harness.JENKINS_RESULTS_DIRECTORY, "tests");
 					if (IsServerMode)
-						log_directory = Path.Combine (log_directory, Helpers.Timestamp);
+						log_directory = Path.Combine (log_directory, Xharness.Harness.Helpers.Timestamp);
 				}
 				return log_directory;
 			}
@@ -93,7 +95,7 @@ namespace Xharness.Jenkins {
 		public IErrorKnowledgeBase ErrorKnowledgeBase => new ErrorKnowledgeBase ();
 		public IResourceManager ResourceManager => resourceManager;
 
-		public Jenkins (IHarness harness, IProcessManager processManager, IResultParser resultParser, ITunnelBore tunnelBore)
+		public Jenkins (IHarness harness, IMlaunchProcessManager processManager, IResultParser resultParser, ITunnelBore tunnelBore)
 		{
 			this.processManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 			this.TunnelBore = tunnelBore ?? throw new ArgumentNullException (nameof (tunnelBore));
@@ -195,7 +197,7 @@ namespace Xharness.Jenkins {
 			var buildDotNetGeneratorProject = new TestProject (Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "bgen", "bgen-tests.csproj"))) {
 				IsDotNetProject = true,
 			};
-			var buildDotNetGenerator = new DotNetBuildTask (jenkins: this, testProject: buildDotNetGeneratorProject, processManager: processManager) {
+			var buildDotNetGenerator = new MSBuildTask (jenkins: this, testProject: buildDotNetGeneratorProject, processManager: processManager) {
 				TestProject = buildDotNetGeneratorProject,
 				SpecifyPlatform = false,
 				SpecifyConfiguration = false,
@@ -213,7 +215,7 @@ namespace Xharness.Jenkins {
 			var buildDotNetTestsProject = new TestProject (Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "dotnet", "UnitTests", "DotNetUnitTests.csproj"))) {
 				IsDotNetProject = true,
 			};
-			var buildDotNetTests = new DotNetBuildTask (this, testProject: buildDotNetTestsProject, processManager: processManager) {
+			var buildDotNetTests = new MSBuildTask (this, testProject: buildDotNetTestsProject, processManager: processManager) {
 				SpecifyPlatform = false,
 				Platform = TestPlatform.All,
 				ProjectConfiguration = "Debug",
@@ -233,16 +235,72 @@ namespace Xharness.Jenkins {
 				Console.WriteLine ("Got device tasks completed");
 				Tasks.AddRange (v.Result);
 			});
+
+			// Generate Mac Catalyst tests
+			Tasks.AddRange (CreateMacCatalystTests (crashReportSnapshotFactory));
+
 			return Task.WhenAll (loadsim, loaddev);
+		}
+
+		IEnumerable<ITestTask> CreateMacCatalystTests (CrashSnapshotReporterFactory crashSnapshotReporterFactory)
+		{
+			var projectTasks = new List<RunTestTask> ();
+
+			foreach (var project in Harness.IOSTestProjects) {
+				if (!project.IsExecutableProject)
+					continue;
+
+				if (project.SkipMacCatalystVariation)
+					continue;
+
+				if (!project.GenerateVariations)
+					continue;
+
+				var ignored = project.Ignore ?? !IncludeMacCatalyst;
+				if (!IsIncluded (project))
+					ignored = true;
+
+				var macCatalystProject = project.GenerateVariations ? project.AsMacCatalystProject () : project;
+				var build = new MSBuildTask (jenkins: this, testProject: macCatalystProject, processManager: processManager) {
+					ProjectConfiguration = "Debug",
+					ProjectPlatform = "iPhoneSimulator",
+					Platform = TestPlatform.MacCatalyst,
+					TestName = project.Name,
+				};
+				build.CloneTestProject (MainLog, processManager, macCatalystProject, HarnessConfiguration.RootDirectory);
+
+				RunTestTask task;
+				if (project.IsNUnitProject) {
+					var dll = Path.Combine (Path.GetDirectoryName (build.TestProject.Path), project.Xml.GetOutputAssemblyPath (build.ProjectPlatform, build.ProjectConfiguration).Replace ('\\', '/'));
+					task = new NUnitExecuteTask (this, build, processManager) {
+						TestLibrary = dll,
+						Mode = "MacCatalyst",
+					};
+				} else {
+					task = new MacExecuteTask (this, build, processManager, crashSnapshotReporterFactory) {
+						IsUnitTest = true,
+					};
+				}
+				task.Ignored = ignored;
+				task.Platform = build.Platform;
+				task.TestName = project.Name;
+				task.Timeout = TimeSpan.FromMinutes (120);
+				task.Variation = task.ProjectConfiguration;
+				if (project.IsDotNetProject)
+					task.Variation += " [dotnet]";
+				projectTasks.Add (task);
+			}
+
+			return projectTasks;
 		}
 
 		public int Run ()
 		{
 			try {
 				Directory.CreateDirectory (LogDirectory);
-				ILog log = Logs.Create ($"Harness-{Helpers.Timestamp}.log", "Harness log");
+				IFileBackedLog log = Logs.Create ($"Harness-{Xharness.Harness.Helpers.Timestamp}.log", "Harness log");
 				if (Harness.InCI)
-					log = Log.CreateAggregatedLog (log, new ConsoleLog ());
+					log = Log.CreateReadableAggregatedLog (log, new ConsoleLog ());
 				Harness.HarnessLog = MainLog = log;
 
 				var tasks = new List<Task> ();
@@ -323,9 +381,9 @@ namespace Xharness.Jenkins {
 				lock (report_lock) {
 					var report = Path.Combine (LogDirectory, "index.html");
 					var vsdropsReport = Path.Combine (LogDirectory, "vsdrops_index.html");
-					var tmpreport = Path.Combine (LogDirectory, $"index-{Helpers.Timestamp}.tmp.html");
-					var tmpVsdropsReport = Path.Combine (LogDirectory, $"vsdrops_index-{Helpers.Timestamp}.tmp.html");
-					var tmpmarkdown = string.IsNullOrEmpty (Harness.MarkdownSummaryPath) ? string.Empty : (Harness.MarkdownSummaryPath + $".{Helpers.Timestamp}.tmp");
+					var tmpreport = Path.Combine (LogDirectory, $"index-{Xharness.Harness.Helpers.Timestamp}.tmp.html");
+					var tmpVsdropsReport = Path.Combine (LogDirectory, $"vsdrops_index-{Xharness.Harness.Helpers.Timestamp}.tmp.html");
+					var tmpmarkdown = string.IsNullOrEmpty (Harness.MarkdownSummaryPath) ? string.Empty : (Harness.MarkdownSummaryPath + $".{Xharness.Harness.Helpers.Timestamp}.tmp");
 
 					var allSimulatorTasks = new List<RunSimulatorTask> ();
 					var allExecuteTasks = new List<MacExecuteTask> ();

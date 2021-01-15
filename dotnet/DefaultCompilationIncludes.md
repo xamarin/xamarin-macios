@@ -27,6 +27,32 @@ subdirectory are included by default (as `SceneKitAsset` items).
 All \*.storyboard and \*.xib files in the project directory or any
 subdirectory are included by default (as `InterfaceDefinition` items).
 
+## Asset catalogs
+
+All \*.pdf, \*.jpg, \*.png and \*.json files inside asset catalogs
+(\*.xcassets) in the project directory or any subdirectory are included by
+default (as `ImageAsset` items).
+
+## Atlas Textures
+
+All \*.png files inside \*.atlas directories in the project directory or any
+subdirectory are included by default (as `AtlasTexture` items).
+
+## Core ML Models
+
+All \*.mlmodel files anywhere in the project directory or any subdirectory are
+included by default (as `CoreMLModel` items).
+
+## Metal
+
+All \*.metal files anywhere in the project directory or any subdirectory are
+included by default (as `Metal` items).
+
+## SceneKit Assets
+
+All \*.scnassets directories anywhere in the project directory or any
+subdirectory are included by default (as `SceneKitAsset` items).
+
 ## Binding projects
 
 Default compilation includes is turned off for binding projects, because

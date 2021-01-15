@@ -173,7 +173,7 @@ namespace AudioUnit {
 		
 		AUParameterTree ParameterTree {
 			get; 
-			[Introduced (PlatformName.UIKitForMac, 13,0)]
+			[Introduced (PlatformName.MacCatalyst, 13,0)]
 			[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
 			set;
 		}
@@ -278,33 +278,33 @@ namespace AudioUnit {
 
 #endif
 
-		[Introduced (PlatformName.UIKitForMac, 13,0)]
+		[Introduced (PlatformName.MacCatalyst, 13,0)]
 		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
 		[Export ("userPresets", ArgumentSemantic.Copy)]
 		AUAudioUnitPreset[] UserPresets { get; }
 
-		[Introduced (PlatformName.UIKitForMac, 13,0)]
+		[Introduced (PlatformName.MacCatalyst, 13,0)]
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Export ("saveUserPreset:error:")]
 		bool SaveUserPreset (AUAudioUnitPreset userPreset, [NullAllowed] out NSError outError);
 
-		[Introduced (PlatformName.UIKitForMac, 13,0)]
+		[Introduced (PlatformName.MacCatalyst, 13,0)]
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Export ("deleteUserPreset:error:")]
 		bool DeleteUserPreset (AUAudioUnitPreset userPreset, [NullAllowed] out NSError outError);
 
-		[Introduced (PlatformName.UIKitForMac, 13,0)]
+		[Introduced (PlatformName.MacCatalyst, 13,0)]
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Export ("presetStateFor:error:")]
 		[return: NullAllowed]
 		NSDictionary<NSString, NSObject> GetPresetState (AUAudioUnitPreset userPreset, [NullAllowed] out NSError outError);
 
-		[Introduced (PlatformName.UIKitForMac, 13,0)]
+		[Introduced (PlatformName.MacCatalyst, 13,0)]
 		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
 		[Export ("supportsUserPresets")]
 		bool SupportsUserPresets { get; }
 
-		[Introduced (PlatformName.UIKitForMac, 13,0)]
+		[Introduced (PlatformName.MacCatalyst, 13,0)]
 		[NoWatch, NoTV, NoiOS, Mac (10, 15)]
 		[Export ("isLoadedInProcess")]
 		bool IsLoadedInProcess { get; }

@@ -17,13 +17,6 @@ using Xamarin.Utils;
 
 namespace Xamarin.Bundler {
 
-	public enum BitCodeMode {
-		None = 0,
-		ASMOnly = 1,
-		LLVMOnly = 2,
-		MarkerOnly = 3,
-	}
-
 	public enum DlsymOptions
 	{
 		Default,
@@ -57,7 +50,6 @@ namespace Xamarin.Bundler {
 
 		public DlsymOptions DlsymOptions;
 		public List<Tuple<string, bool>> DlsymAssemblies;
-		public bool? UseMonoFramework;
 		public bool? PackageMonoFramework;
 
 		public bool NoFastSim;
@@ -69,12 +61,6 @@ namespace Xamarin.Bundler {
 		public List<string> AotOtherArguments = null;
 		public bool? LLVMAsmWriter;
 		public Dictionary<string, string> LLVMOptimizations = new Dictionary<string, string> ();
-		public List<string> InterpretedAssemblies = new List<string> ();
-
-		// Xamarin.Mac options available here to minimize ifdefs
-		public string CustomBundleName { get { throw ErrorHelper.CreateError (99, Errors.MX0099, "Not supported on this platform"); } }
-		public bool? DisableLldbAttach { get { throw ErrorHelper.CreateError (99, Errors.MX0099, "Not supported on this platform"); } }
-		public bool? DisableOmitFramePointer { get { throw ErrorHelper.CreateError (99, Errors.MX0099, "Not supported on this platform"); } }
 
 		//
 		// Linker config
@@ -84,44 +70,6 @@ namespace Xamarin.Bundler {
 		public bool LinkerDumpDependencies { get; set; }
 		
 		public bool? BuildDSym;
-
-		public bool IsInterpreted (string assembly)
-		{
-			// IsAOTCompiled and IsInterpreted are not opposites: mscorlib.dll can be both.
-			if (!UseInterpreter)
-				return false;
-
-			// Go through the list of assemblies to interpret in reverse order,
-			// so that the last option passed to mtouch takes precedence.
-			for (int i = InterpretedAssemblies.Count - 1; i >= 0; i--) {
-				var opt = InterpretedAssemblies [i];
-				if (opt == "all")
-					return true;
-				else if (opt == "-all")
-					return false;
-				else if (opt == assembly)
-					return true;
-				else if (opt [0] == '-' && opt.Substring (1) == assembly)
-					return false;
-			}
-
-			// There's an implicit 'all' at the start of the list.
-			return true;
-		}
-
-		public bool IsAOTCompiled (string assembly)
-		{
-			if (!UseInterpreter)
-				return true;
-
-			// IsAOTCompiled and IsInterpreted are not opposites: mscorlib.dll can be both:
-			// - mscorlib will always be processed by the AOT compiler to generate required wrapper functions for the interpreter to work
-			// - mscorlib might also be fully AOT-compiled (both when the interpreter is enabled and when it's not)
-			if (assembly == "mscorlib")
-				return true;
-
-			return !IsInterpreted (assembly);
-		}
 
 		public List<string> UserGccFlags;
 
@@ -141,51 +89,7 @@ namespace Xamarin.Bundler {
 		BuildTasks build_tasks;
 		BuildTask final_build_task; // either lipo or file copy (to final destination)
 
-		Dictionary<string, Tuple<AssemblyBuildTarget, string>> assembly_build_targets = new Dictionary<string, Tuple<AssemblyBuildTarget, string>> ();
-
-		public AssemblyBuildTarget LibMonoLinkMode {
-			get {
-				if (Embeddinator) {
-					return AssemblyBuildTarget.StaticObject;
-				} else if (HasFrameworks || UseMonoFramework.Value) {
-					return AssemblyBuildTarget.Framework;
-				} else if (HasDynamicLibraries) {
-					return AssemblyBuildTarget.DynamicLibrary;
-				} else {
-					return AssemblyBuildTarget.StaticObject;
-				}
-			}
-		}
-		public AssemblyBuildTarget LibXamarinLinkMode {
-			get {
-				if (Embeddinator) {
-					return AssemblyBuildTarget.StaticObject;
-				} else if (HasFrameworks) {
-					return AssemblyBuildTarget.Framework;
-				} else if (HasDynamicLibraries) {
-					return AssemblyBuildTarget.DynamicLibrary;
-				} else {
-					return AssemblyBuildTarget.StaticObject;
-				}
-			}
-		}
-		public AssemblyBuildTarget LibPInvokesLinkMode => LibXamarinLinkMode;
-		public AssemblyBuildTarget LibProfilerLinkMode => OnlyStaticLibraries ? AssemblyBuildTarget.StaticObject : AssemblyBuildTarget.DynamicLibrary;
-		public AssemblyBuildTarget LibMonoNativeLinkMode => HasDynamicLibraries ? AssemblyBuildTarget.DynamicLibrary : AssemblyBuildTarget.StaticObject;
-
 		Dictionary<string, BundleFileInfo> bundle_files = new Dictionary<string, BundleFileInfo> ();
-
-		public bool OnlyStaticLibraries {
-			get {
-				return assembly_build_targets.All ((abt) => abt.Value.Item1 == AssemblyBuildTarget.StaticObject);
-			}
-		}
-
-		public bool HasDynamicLibraries {
-			get {
-				return assembly_build_targets.Any ((abt) => abt.Value.Item1 == AssemblyBuildTarget.DynamicLibrary);
-			}
-		}
 
 		public bool HasAnyDynamicLibraries {
 			get {
@@ -200,12 +104,6 @@ namespace Xamarin.Bundler {
 				if (LibMonoNativeLinkMode == AssemblyBuildTarget.DynamicLibrary)
 					return true;
 				return HasDynamicLibraries;
-			}
-		}
-
-		public bool HasFrameworks {
-			get {
-				return assembly_build_targets.Any ((abt) => abt.Value.Item1 == AssemblyBuildTarget.Framework);
 			}
 		}
 
@@ -460,13 +358,6 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		public BitCodeMode BitCodeMode { get; set; }
-
-		public bool EnableAsmOnlyBitCode { get { return BitCodeMode == BitCodeMode.ASMOnly; } }
-		public bool EnableLLVMOnlyBitCode { get { return BitCodeMode == BitCodeMode.LLVMOnly; } }
-		public bool EnableMarkerOnlyBitCode { get { return BitCodeMode == BitCodeMode.MarkerOnly; } }
-		public bool EnableBitCode { get { return BitCodeMode != BitCodeMode.None; } }
-
 		public ICollection<Abi> AllArchitectures {
 			get {
 				if (all_architectures == null) {
@@ -482,19 +373,6 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		public bool HasFrameworksDirectory {
-			get {
-				if (!IsExtension)
-					return true;
-
-				if (IsWatchExtension && Platform == ApplePlatform.WatchOS)
-					return true;
-				
-				return false;
-			}
-		}
-
-
 		public string BundleId {
 			get {
 				return GetStringFromInfoPList ("CFBundleIdentifier");
@@ -503,12 +381,11 @@ namespace Xamarin.Bundler {
 
 		string GetStringFromInfoPList (string key)
 		{
-			return GetStringFromInfoPList (AppDirectory, key);
+			return GetStringFromInfoPList (InfoPListPath, key);
 		}
 
-		string GetStringFromInfoPList (string directory, string key)
+		string GetStringFromInfoPList (string info_plist, string key)
 		{
-			var info_plist = Path.Combine (directory, "Info.plist");
 			if (!File.Exists (info_plist))
 				return null;
 
@@ -542,12 +419,12 @@ namespace Xamarin.Bundler {
 			if (Driver.Force) {
 				Driver.Log (3, $"A full rebuild has been forced by the command line argument -f.");
 				valid = false;
-			} else if (!Cache.IsCacheValid ()) {
+			} else if (!Cache.IsCacheValid (this)) {
 				Driver.Log (3, $"A full rebuild has been forced because the cache for {Name} is not valid.");
 				valid = false;
 			} else {
 				foreach (var appex in AppExtensions) {
-					if (appex.Cache.IsCacheValid ())
+					if (appex.Cache.IsCacheValid (this))
 						continue;
 
 					Driver.Log (3, $"A full rebuild has been forced because the cache for {appex.Name} is not valid.");
@@ -623,7 +500,7 @@ namespace Xamarin.Bundler {
 				}
 			} else {
 				// Write the cache data as the last step, so there is no half-done/incomplete (but yet detected as valid) cache.
-				Cache.ValidateCache ();
+				Cache.ValidateCache (this);
 			}
 
 			Console.WriteLine ("{0} built successfully.", AppDirectory);
@@ -912,6 +789,8 @@ namespace Xamarin.Bundler {
 				var name = Path.GetFileNameWithoutExtension (reference);
 				if (name == Driver.GetProductAssembly (this)) {
 					platformAssemblyReference = true;
+				} else if (Platform == ApplePlatform.MacCatalyst && name == "Xamarin.iOS") {
+					// This is allowed, because it's a facade
 				} else {
 					switch (name) {
 					case "Xamarin.iOS":
@@ -935,19 +814,21 @@ namespace Xamarin.Bundler {
 					throw new ProductException (3, true, Errors.MX0003, root_wo_ext);
 			}
 
+			var appContentDirectory = ContentDirectory;
+
 			if (IsDualBuild) {
 				var target32 = new Target (this);
 				var target64 = new Target (this);
 
 				target32.ArchDirectory = Path.Combine (Cache.Location, "32");
-				target32.TargetDirectory = IsSimulatorBuild ? Path.Combine (AppDirectory, ".monotouch-32") : Path.Combine (target32.ArchDirectory, "Output");
-				target32.AppTargetDirectory = Path.Combine (AppDirectory, ".monotouch-32");
+				target32.TargetDirectory = IsSimulatorBuild ? Path.Combine (appContentDirectory, ".monotouch-32") : Path.Combine (target32.ArchDirectory, "Output");
+				target32.AppTargetDirectory = Path.Combine (appContentDirectory, ".monotouch-32");
 				target32.Resolver.ArchDirectory = Driver.GetArch32Directory (this);
 				target32.Abis = SelectAbis (abis, Abi.Arch32Mask);
 
 				target64.ArchDirectory = Path.Combine (Cache.Location, "64");
-				target64.TargetDirectory = IsSimulatorBuild ? Path.Combine (AppDirectory, ".monotouch-64") : Path.Combine (target64.ArchDirectory, "Output");
-				target64.AppTargetDirectory = Path.Combine (AppDirectory, ".monotouch-64");
+				target64.TargetDirectory = IsSimulatorBuild ? Path.Combine (appContentDirectory, ".monotouch-64") : Path.Combine (target64.ArchDirectory, "Output");
+				target64.AppTargetDirectory = Path.Combine (appContentDirectory, ".monotouch-64");
 				target64.Resolver.ArchDirectory = Driver.GetArch64Directory (this);
 				target64.Abis = SelectAbis (abis, Abi.Arch64Mask);
 
@@ -956,8 +837,8 @@ namespace Xamarin.Bundler {
 			} else {
 				var target = new Target (this);
 
-				target.TargetDirectory = AppDirectory;
-				target.AppTargetDirectory = IsSimulatorBuild ? AppDirectory : Path.Combine (AppDirectory, Is64Build ? ".monotouch-64" : ".monotouch-32");
+				target.TargetDirectory = appContentDirectory;
+				target.AppTargetDirectory = IsSimulatorBuild ? appContentDirectory : Path.Combine (appContentDirectory, Is64Build ? ".monotouch-64" : ".monotouch-32");
 				target.ArchDirectory = Cache.Location;
 				target.Resolver.ArchDirectory = Driver.GetArchDirectory (this, Is64Build);
 				target.Abis = abis;
@@ -966,10 +847,10 @@ namespace Xamarin.Bundler {
 
 				// Make sure there aren't any lingering .monotouch-* directories.
 				if (IsSimulatorBuild) {
-					var dir = Path.Combine (AppDirectory, ".monotouch-32");
+					var dir = Path.Combine (appContentDirectory, ".monotouch-32");
 					if (Directory.Exists (dir))
 						Directory.Delete (dir, true);
-					dir = Path.Combine (AppDirectory, ".monotouch-64");
+					dir = Path.Combine (appContentDirectory, ".monotouch-64");
 					if (Directory.Exists (dir))
 						Directory.Delete (dir, true);
 				}
@@ -1021,6 +902,13 @@ namespace Xamarin.Bundler {
 				DeploymentTarget = new Version (8, 0);
 			}
 
+			if (Platform == ApplePlatform.MacCatalyst) {
+				// The deployment target we expect for Mac Catalyst is the macOS version,
+				// but we're expected to provide the corresponding iOS version pretty much
+				// everywhere, so convert here.
+				DeploymentTarget = GetMacCatalystiOSVersion (DeploymentTarget);
+			}
+
 			if (!enable_msym.HasValue)
 				enable_msym = !EnableDebug && IsDeviceBuild;
 
@@ -1062,7 +950,8 @@ namespace Xamarin.Bundler {
 						throw ErrorHelper.CreateError (65, Errors.MT0065_A, DeploymentTarget, string.Join (", ", Frameworks.ToArray ()));
 					break;
 				case ApplePlatform.TVOS:
-					// All versions of tvOS support extensions
+				case ApplePlatform.MacCatalyst:
+					// All versions of tvOS and Mac Catalyst support extensions
 					break;
 				default:
 					throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, "Xamarin.iOS");
@@ -1130,16 +1019,14 @@ namespace Xamarin.Bundler {
 			return rv;
 		}
 
-		public string AssemblyName {
-			get {
-				return Path.GetFileName (RootAssemblies [0]);
-			}
-		}
-
 		public string Executable {
 			get {
 				if (Embeddinator)
 					return Path.Combine (AppDirectory, "Frameworks", ExecutableName + ".framework", ExecutableName);
+
+				if (Platform == ApplePlatform.MacCatalyst)
+					return Path.Combine (AppDirectory, "Contents", "MacOS", ExecutableName);
+
 				return Path.Combine (AppDirectory, ExecutableName);
 			}
 		}
@@ -1205,7 +1092,7 @@ namespace Xamarin.Bundler {
 				link_tasks.AddRange (target.NativeLink (build_tasks));
 			}
 
-			if (IsDeviceBuild) {
+			if (IsDeviceBuild || Platform == ApplePlatform.MacCatalyst) {
 				// If building for the simulator, the executable is written directly into the expected location within the .app, and no lipo/file copying is needed.
 				if (link_tasks.Count > 1) {
 					// If we have more than one executable, we must lipo them together.
@@ -1276,7 +1163,7 @@ namespace Xamarin.Bundler {
 			// Make sure we bundle Mono.framework if we need to.
 			if (PackageMonoFramework == true) {
 				BundleFileInfo info;
-				var name = "Frameworks/Mono.framework";
+				var name = "Mono.framework";
 				bundle_files [name] = info = new BundleFileInfo ();
 				info.Sources.Add (GetLibMono (AssemblyBuildTarget.Framework));
 			}
@@ -1318,7 +1205,7 @@ namespace Xamarin.Bundler {
 				BundleFileInfo info;
 				if (!Path.GetFileName (fw).EndsWith (".framework", StringComparison.Ordinal))
 					continue;
-				var key = $"Frameworks/{Path.GetFileName (fw)}";
+				var key = Path.GetFileName (fw);
 				if (!bundle_files.TryGetValue (key, out info))
 					bundle_files [key] = info = new BundleFileInfo ();
 				info.Sources.Add (fw);
@@ -1346,7 +1233,6 @@ namespace Xamarin.Bundler {
 			foreach (var kvp in bundle_files) {
 				var name = kvp.Key;
 				var info = kvp.Value;
-				var targetPath = Path.Combine (AppDirectory, name);
 				var files = info.Sources;
 				var isFramework = Directory.Exists (files.First ());
 
@@ -1357,6 +1243,7 @@ namespace Xamarin.Bundler {
 					throw ErrorHelper.CreateError (99, Errors.MX0099, $"'can't process a mix of dylibs and frameworks: {string.Join(", ", files)}'");
 
 				if (isFramework) {
+					var targetPath = Path.Combine (FrameworksDirectory, name);
 					// This is a framework
 					if (files.Count > 1) {
 						// If we have multiple frameworks, check if they're identical, and remove any duplicates
@@ -1406,6 +1293,7 @@ namespace Xamarin.Bundler {
 						}
 					}
 				} else {
+					var targetPath = Path.Combine (ContentDirectory, name);
 					var targetDirectory = Path.GetDirectoryName (targetPath);
 					if (!IsUptodate (files, new string [] { targetPath })) {
 						Directory.CreateDirectory (targetDirectory);
@@ -1901,10 +1789,10 @@ namespace Xamarin.Bundler {
 						assemblies [0].CopyToDirectory (assemblies [0].Target.AppTargetDirectory, copy_debug_symbols: PackageManagedDebugSymbols, strip: strip, only_copy: true);
 						assemblies [1].CopyToDirectory (assemblies [1].Target.AppTargetDirectory, copy_debug_symbols: PackageManagedDebugSymbols, strip: strip, only_copy: true);
 					} else {
-						assemblies [0].CopyToDirectory (AppDirectory, copy_debug_symbols: PackageManagedDebugSymbols, strip: strip, only_copy: true);
+						assemblies [0].CopyToDirectory (ContentDirectory, copy_debug_symbols: PackageManagedDebugSymbols, strip: strip, only_copy: true);
 					}
 					foreach (var asm in assemblies)
-						asm.CopyAotDataFilesToDirectory (size_specific ? asm.Target.AppTargetDirectory : AppDirectory);
+						asm.CopyAotDataFilesToDirectory (size_specific ? asm.Target.AppTargetDirectory : ContentDirectory);
 					break;
 				case AssemblyBuildTarget.Framework:
 					// Put our resources in a subdirectory in the framework
@@ -1935,7 +1823,7 @@ namespace Xamarin.Bundler {
 			if (LinkMode != LinkMode.None)
 				return;
 
-			RuntimeOptions.Write (AppDirectory);
+			RuntimeOptions.Write (ContentDirectory);
 		}
 
 		public void CreateFrameworkNotice (string output_path)

@@ -9,6 +9,8 @@
 #ifdef MONOTOUCH
   #if TARGET_OS_WATCH
 	#define PRODUCT                  "Xamarin.WatchOS"
+  #elif TARGET_OS_MACCATALYST
+  #define PRODUCT                  "Xamarin.MacCatalyst"
   #elif TARGET_OS_IOS
 	#define PRODUCT                  "Xamarin.iOS"
   #elif TARGET_OS_TV
@@ -18,6 +20,8 @@
   #endif
   #if TARGET_OS_WATCH
 	#define PRODUCT_DUAL_ASSEMBLY    "Xamarin.WatchOS.dll"
+  #elif TARGET_OS_MACCATALYST
+  #define PRODUCT_DUAL_ASSEMBLY    "Xamarin.MacCatalyst.dll"
   #elif TARGET_OS_IOS
 	#define PRODUCT_DUAL_ASSEMBLY    "Xamarin.iOS.dll"
   #elif TARGET_OS_TV

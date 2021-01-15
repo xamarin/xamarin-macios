@@ -85,6 +85,12 @@ namespace HealthKit {
 		AppleMoveTime = 2,
 	}
 
+	[Watch (7,1), iOS (14,2)]
+	[Native]
+	public enum HKCategoryValueHeadphoneAudioExposureEvent : long {
+		SevenDayLimit = 1,
+	}
+
 	delegate void HKAnchoredObjectResultHandler2 (HKAnchoredObjectQuery query, HKSample[] results, nuint newAnchor, NSError error);
 
 	[Obsolete ("Use HKAnchoredObjectResultHandler2 instead")]
@@ -924,6 +930,10 @@ namespace HealthKit {
 		[Field ("HKMetadataKeyAudioExposureLevel")]
 		NSString AudioExposureLevel { get; }
 
+		[Watch (7, 1), iOS (14, 2)]
+		[Field ("HKMetadataKeyAudioExposureDuration")]
+		NSString AudioExposureDuration { get; }
+
 		[Watch (7, 0), iOS (14, 0)]
 		[Field ("HKMetadataKeyDevicePlacementSide")]
 		NSString DevicePlacementSide { get; }
@@ -939,6 +949,14 @@ namespace HealthKit {
 		[Watch (7, 0), iOS (14, 0)]
 		[Field ("HKMetadataKeyAppleDeviceCalibrated")]
 		NSString AppleDeviceCalibrated { get; }
+
+		[Watch (7, 2), iOS (14, 3)]
+		[Field ("HKMetadataKeyVO2MaxValue")]
+		NSString VO2MaxValue { get; }
+
+		[Watch (7, 2), iOS (14, 3)]
+		[Field ("HKMetadataKeyLowCardioFitnessEventThreshold")]
+		NSString LowCardioFitnessEventThreshold { get; }
 	}
 
 	[Watch (2,0)]
@@ -1403,6 +1421,9 @@ namespace HealthKit {
 		[Field ("HKSampleSortIdentifierEndDate")]
 		NSString SortIdentifierEndDate { get; }
 
+		[Watch (7, 2), iOS (14, 3)]
+		[Export ("hasUndeterminedDuration")]
+		bool HasUndeterminedDuration { get; }
 	}
 
 	delegate void HKSampleQueryResultsHandler (HKSampleQuery query, HKSample [] results, NSError error);
@@ -2122,6 +2143,26 @@ namespace HealthKit {
 		[Watch (7, 0), iOS (14, 0)]
 		[Field ("HKCategoryTypeIdentifierHandwashingEvent")]
 		HandwashingEvent,
+
+		[Watch (7, 1), iOS (14, 2)]
+		[Field ("HKCategoryTypeIdentifierHeadphoneAudioExposureEvent")]
+		HeadphoneAudioExposureEvent,
+
+		[Watch (7, 2), iOS (14, 3)]
+		[Field ("HKCategoryTypeIdentifierPregnancy")]
+		Pregnancy,
+
+		[Watch (7, 2), iOS (14, 3)]
+		[Field ("HKCategoryTypeIdentifierLactation")]
+		Lactation,
+
+		[Watch (7, 2), iOS (14, 3)]
+		[Field ("HKCategoryTypeIdentifierContraceptive")]
+		Contraceptive,
+
+		[Watch (7, 2), iOS (14, 3)]
+		[Field ("HKCategoryTypeIdentifierLowCardioFitnessEvent")]
+		LowCardioFitnessEvent,
 	}
 
 	[Watch (2,0)]
@@ -3492,4 +3533,21 @@ namespace HealthKit {
 		HKActivityMoveMode ActivityMoveMode { get; }
 	}
 
+	[Watch (7,2), iOS (14,3)]
+	[Native]
+	enum HKCategoryValueContraceptive : long {
+		Unspecified = 1,
+		Implant,
+		Injection,
+		IntrauterineDevice,
+		IntravaginalRing,
+		Oral,
+		Patch,
+	}
+
+	[Watch (7,2), iOS (14,3)]
+	[Native]
+	enum HKCategoryValueLowCardioFitnessEvent : long {
+		LowFitness = 1,
+	}
 }
