@@ -160,6 +160,7 @@ namespace Xharness {
 							break;
 						case ".gitignore":
 						case ".csproj":
+						case ".fsproj":
 						case ".props": // Directory.Build.props
 						case "": // Makefile
 							break; // ignore these files
