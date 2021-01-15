@@ -66,7 +66,7 @@ jobs:
     # set the branch variable name, this is required by jenkins and we have a lot of scripts that depend on it
     BRANCH_NAME: $(Build.SourceBranchName)
   pool:
-    name: VSEng-Xamarin-RedmondMacBuildPool-Test
+    name: $(AgentPoolComputed)
     demands:
     - Agent.OS -equals Darwin
     - Agent.OSVersion -equals 10.15
