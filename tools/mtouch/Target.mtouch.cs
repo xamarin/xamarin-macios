@@ -1682,7 +1682,7 @@ namespace Xamarin.Bundler
 
 			var targetExecutable = Executables.Values.First ();
 
-			Application.TryDelete (targetExecutable);
+			File.Delete (targetExecutable);
 
 			try {
 				var launcher = new StringBuilder ();
