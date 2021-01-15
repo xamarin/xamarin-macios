@@ -335,8 +335,8 @@ steps:
 - task: PublishPipelineArtifact@1
   displayName: 'Publish Xamarin.Mac tests'
   inputs:
-    targetPath: $(Build.SourcesDirectory)/xamarin-macios/tests/*.7z
-    artifactName: package-internal
+    targetPath: $(Build.SourcesDirectory)/xamarin-macios/tests/mac-test-package.7z
+    artifactName: mac-test-package 
   condition: and(succeeded(), contains(variables['configuration.RunMacTests'], 'True'))
   continueOnError: true
 
