@@ -1579,6 +1579,13 @@
         </target>
         <note></note>
       </trans-unit>
+      <trans-unit id="W0176">
+        <source>Conflicting '{0}' and '{1}' options. '{1}' will be ignored.
+        </source>
+        <target state="new">Conflicting '{0}' and '{1}' options. '{1}' will be ignored.
+        </target>
+        <note />
+      </trans-unit>
     </body>
   </file>
 </xliff>

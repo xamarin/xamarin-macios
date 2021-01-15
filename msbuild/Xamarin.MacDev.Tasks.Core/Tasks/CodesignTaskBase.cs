@@ -111,9 +111,13 @@ namespace Xamarin.MacDev.Tasks
 				args.Add ("runtime");
 			}
 
-			if (UseSecureTimestamp)
+			if (UseSecureTimestamp) {
+				if (DisableTimestamp) {
+					// Conflicting '{0}' and '{1}' options. '{1}' will be ignored.
+					Log.LogWarning (MSBStrings.W0176, "UseSecureTimestamp", "DisableTimestamp");
+				}
 				args.Add ("--timestamp");
-			else
+			} else
 				args.Add ("--timestamp=none");
 
 			args.Add ("--sign");
@@ -133,9 +137,6 @@ namespace Xamarin.MacDev.Tasks
 				args.Add ("--entitlements");
 				args.Add (Path.GetFullPath (Entitlements));
 			}
-
-			if (DisableTimestamp)
-				args.Add ("--timestamp=none");
 
 			if (!string.IsNullOrEmpty (ExtraArgs))
 				args.Add (ExtraArgs);
