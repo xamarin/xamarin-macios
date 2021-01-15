@@ -379,7 +379,7 @@ steps:
   displayName: 'Publish Xamarin.Mac tests'
   inputs:
     targetPath: $(Build.SourcesDirectory)/xamarin-macios/tests/mac-test-package.7z
-    artifactName: package-internal
+    artifactName: mac-test-package 
   condition: and(succeeded(), contains(variables['configuration.RunMacTests'], 'True'))
   continueOnError: true
 
