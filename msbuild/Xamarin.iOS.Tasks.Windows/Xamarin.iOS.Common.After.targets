@@ -223,6 +223,60 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 
 		<Touch AlwaysCreate="true" Files="@(_ResolveUTIOutputs)" />
 	</Target>
+
+	<!-- This overrides the NET SDK target, it does the same thing but we add the SessionId property so the copy is also executed remotely -->
+	<!-- https://github.com/dotnet/sdk/blob/master/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.Publish.targets#L222-L250 -->
+	<Target Name="_CopyResolvedFilesToPublishPreserveNewest"
+          DependsOnTargets="_ComputeResolvedFilesToPublishTypes"
+          Inputs="@(_ResolvedFileToPublishPreserveNewest)"
+          Outputs="@(_ResolvedFileToPublishPreserveNewest->'$(PublishDir)%(RelativePath)')">
+
+		<!--
+		PreserveNewest means that we will only copy the source to the destination if the source is newer.
+		SkipUnchangedFiles is not used for that purpose because it will copy if the source and destination
+		differ by size too.  Instead, this target uses inputs and outputs to only copy when the source is newer.
+		-->
+		<Copy Condition="'$(IsMacEnabled)' == 'true'"
+			SessionId="$(BuildSessionId)"
+			SourceFiles="@(_ResolvedFileToPublishPreserveNewest)"
+			DestinationFiles="@(_ResolvedFileToPublishPreserveNewest->'$(PublishDir)%(RelativePath)')"
+			OverwriteReadOnlyFiles="$(OverwriteReadOnlyFiles)"
+			Retries="$(CopyRetryCount)"
+			RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)"
+			UseHardlinksIfPossible="$(CreateHardLinksForPublishFilesIfPossible)"
+			UseSymboliclinksIfPossible="$(CreateSymbolicLinksForPublishFilesIfPossible)">
+
+			<Output TaskParameter="DestinationFiles" ItemName="FileWrites"/>
+
+		</Copy>
+
+	</Target>
+
+	<!-- This overrides the NET SDK target, it does the same thing but we add the SessionId property so the copy is also executed remotely -->
+	<!-- https://github.com/dotnet/sdk/blob/master/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.Publish.targets#L252-L279 -->
+	<Target Name="_CopyResolvedFilesToPublishAlways"
+         DependsOnTargets="_ComputeResolvedFilesToPublishTypes">
+
+		<!--
+		Use SkipUnchangedFiles to prevent unnecessary file copies. The copy will occur if the
+		destination doesn't exist, the source is newer than the destination, or if the source and
+		destination differ by file size.
+		-->
+		<Copy Condition="'$(IsMacEnabled)' == 'true'"
+			SessionId="$(BuildSessionId)"
+			SourceFiles = "@(_ResolvedFileToPublishAlways)"
+			DestinationFiles="@(_ResolvedFileToPublishAlways->'$(PublishDir)%(RelativePath)')"
+			SkipUnchangedFiles="$(SkipCopyUnchangedFiles)"
+			OverwriteReadOnlyFiles="$(OverwriteReadOnlyFiles)"
+			Retries="$(CopyRetryCount)"
+			RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)"
+			UseHardlinksIfPossible="$(CreateHardLinksForPublishFilesIfPossible)"
+			UseSymboliclinksIfPossible="$(CreateSymbolicLinksForPublishFilesIfPossible)">
+
+			<Output TaskParameter="DestinationFiles" ItemName="FileWrites"/>
+
+		</Copy>
+	</Target>
 	
 	<!-- Allows providing SDK-specific target overrides -->
 	<PropertyGroup>
