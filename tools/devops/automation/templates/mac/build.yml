@@ -119,12 +119,11 @@ steps:
   inputs:
     patterns: '**/mac-test-package.7z'
     allowFailedBuilds: true
-    path: $(Build.SourcesDirectory)/artifacts
+    path: $(Build.SourcesDirectory)/artifacts/tmp
 
 - bash: |
-    ls -la $(Build.SourcesDirectory)/artifacts
-    rm -rf $(Build.SourcesDirectory)/artifacts/mac-test-package
-    7z x $(Build.SourcesDirectory)/artifacts/package-mac-tests/mac-test-package.7z -o$(Build.SourcesDirectory)/artifacts/ -bb1
+    ls -la $(Build.SourcesDirectory)/artifacts/tmp
+    7z x $(Build.SourcesDirectory)/artifacts/tmp/mac-test-package/mac-test-package.7z -o$(Build.SourcesDirectory)/artifacts/ -bb1
     ls -la $(Build.SourcesDirectory)/artifacts/mac-test-package
   displayName: Expand tests.
 
