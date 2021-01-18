@@ -715,7 +715,7 @@ namespace Xamarin.Bundler {
 		static void DeleteDir (string dir)
 		{
 			// Xcode generates symlinks inside macOS frameworks
-			var realdir = Target.GetRealPath (dir);
+			var realdir = Target.GetRealPath (dir, warnIfNoSuchPathExists: false);
 			// unlike File.Delete this would throw if the directory does not exists
 			if (Directory.Exists (realdir)) {
 				Directory.Delete (realdir, true);
