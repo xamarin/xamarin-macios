@@ -182,6 +182,9 @@
     <Compile Include="..\common\BitCodeMode.cs">
       <Link>external\tools\common\BitCodeMode.cs</Link>
     </Compile>
+    <Compile Include="..\linker\RemoveUserResourcesSubStep.cs">
+      <Link>external\tools\linker\RemoveUserResourcesSubStep.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\mtouch\Errors.resx">
