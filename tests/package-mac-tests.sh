@@ -30,7 +30,7 @@ make .stamp-configure-projects-mac
 ../tools/xibuild/xibuild -- /r bindings-test/macOS/bindings-test.csproj
 make build-mac-dontlink build-mac-introspection build-mac-linksdk build-mac-linkall build-mac-xammac_tests build-mac-system-dontlink -j8
 
-for app in */bin/x86/*/*.app */generated-projects/*/bin/x86/*/*.app linker/mac/*/bin/x86/*/*.app linker/mac/*/generated-projects/*/bin/x86/*/*.app introspection/Mac/bin/x86/*/*.app; do
+for app in */bin/x86/*/*.app linker/mac/*/bin/x86/*/*.app linker/mac/*/generated-projects/*/bin/x86/*/*.app introspection/Mac/bin/x86/*/*.app; do
 	mkdir -p "$DIR/tests/$app"
 	$CP -R "$app" "$DIR/tests/$app/.."
 done

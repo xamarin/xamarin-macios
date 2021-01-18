@@ -94,6 +94,17 @@ namespace MonoTouchFixtures.HealthKit {
 					if (!TestRuntime.CheckXcodeVersion (12, 0))
 						continue;
 					break;
+				case HKCategoryTypeIdentifier.HeadphoneAudioExposureEvent:
+					if (!TestRuntime.CheckXcodeVersion (12, 2))
+						continue;
+					break;
+				case HKCategoryTypeIdentifier.Pregnancy:
+				case HKCategoryTypeIdentifier.Lactation:
+				case HKCategoryTypeIdentifier.Contraceptive:
+				case HKCategoryTypeIdentifier.LowCardioFitnessEvent:
+					if (!TestRuntime.CheckXcodeVersion (12, 3))
+						continue;
+					break;
 				default:
 					if (!TestRuntime.CheckXcodeVersion (7, 0))
 						continue;

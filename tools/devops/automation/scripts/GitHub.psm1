@@ -1,5 +1,44 @@
 <#
     .SYNOPSIS
+        Simple retry block to workaround certain issues with the webservices that cannot handle the load.
+
+    .PARAMETER Request
+        The request to be performed and retried if failed.
+
+    .PARAMETER Retries
+        The number of times the we will retry to perform the request.
+#>
+function Invoke-Request {
+    param (
+        [scriptblock]
+        $Request,
+
+        [int]
+        $Retries=5
+    )
+    $count = 0
+    do {
+        try {
+            # that & is important, tells pwsh to execute the script block, else you simple returns the block itself
+            return & $Request
+        } catch {
+            if ($count -gt $Retries) {
+                # notify and throw
+                Write-Host "Could not perform request after $Retries attempts."
+                throw $_.Exception
+            } else {
+                $count = $count + 1
+                $seconds = 5 * $count
+                Write-Host "Error performing request trying in $seconds seconds"
+                Start-Sleep -Seconds $seconds
+            }
+        }
+
+    } while ($true)
+}
+
+<#
+    .SYNOPSIS
         Returns the target url to be used when setting the status. The target url allows users to get back to the CI event that updated the status.
 #>
 function Get-TargetUrl {
@@ -114,7 +153,7 @@ function Set-GitHubStatus {
         Authorization = ("token {0}" -f $Env:GITHUB_TOKEN)
     }
 
-    return Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body ($payload | ConvertTo-json) -ContentType 'application/json'
+    return Invoke-Request -Request { Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body ($payload | ConvertTo-json) -ContentType 'application/json' }
 }
 
 <#
@@ -205,15 +244,29 @@ function New-GitHubComment {
         $url = "https://api.github.com/repos/xamarin/xamarin-macios/commits/$Env:BUILD_REVISION/comments"
     }
 
+    # github has a max size for the comments to be added in a PR, it can be the case that because we failed so much, that we
+    # cannot add the full message, in that case, we add part of it, then a link to a gist with the content.
+    $maxLength = 32768
+    $body = $msg.ToString()
+    if ($body.Length -ge $maxLength) {
+        # create a gist with the contents, next, add substring of the message - the length of the info about the gist so that users
+        # can click, set that as the body
+        $gist =  New-GistWithContent -Description "Build results" -FileName "TestResult.md" -GistContent $body -FileType "md"
+        $linkMessage = "The message from CI is too large for the GitHub comments. You can find the full results [here]($gist)."
+        $messageLength = $maxLength - ($linkMessage.Length + 2) # +2 is to add a nice space
+        $body = $body.Substring(0, $messageLength);
+        $body = $body + "\n\n" + $linkMessage
+    }
+
     $payload = @{
-        body = $msg.ToString()
+        body = $body
     }
 
     $headers = @{
         Authorization = ("token {0}" -f $Env:GITHUB_TOKEN)
     }
 
-    $request = Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body ($payload | ConvertTo-Json) -ContentType 'application/json'
+    $request = Invoke-Request -Request { Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body ($payload | ConvertTo-Json) -ContentType 'application/json' }
     Write-Host $request
     return $request
 }
@@ -433,7 +486,7 @@ function Get-GitHubPRInfo {
         Authorization = ("token {0}" -f $Env:GITHUB_TOKEN)
     }
 
-    $request = Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -ContentType 'application/json'
+    $request = Invoke-Request -Request { Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -ContentType 'application/json' }
     Write-Host $request
     return $request
 }
@@ -479,6 +532,74 @@ class GistFile
             language = $this.Type;
         }
     }
+}
+
+function New-GistWithContent {
+    param (
+
+        [ValidateNotNullOrEmpty ()]
+        [string]
+        $Description, 
+
+        [Parameter(Mandatory)]
+        [string]
+        $FileName,
+
+        [Parameter(Mandatory)]
+        [string]
+        $GistContent,
+
+        [Parameter(Mandatory)]
+        [string]
+        $FileType,
+
+        [switch]
+        $IsPublic=$false # default to false, better save than sorry
+    )
+
+    $envVars = @{
+        "GITHUB_TOKEN" = $Env:GITHUB_TOKEN;
+    }
+
+    foreach ($key in $envVars.Keys) {
+        if (-not($envVars[$key])) {
+            Write-Debug "Environment variable missing: $key"
+            throw [System.InvalidOperationException]::new("Environment variable missing: $key")
+        }
+    }
+
+    # create the hashtable that will contain all the information of all types
+    $payload = @{
+        description = $Description;
+        files = @{
+            "$FileName" = @{
+                content = $GistContent;
+                filename = $FileName
+                language = $FileType;
+            };
+        }; # each file is the name of the file + the hashtable of the data to be used
+    }
+
+    # switchs are converted to {\"IsPresent\"=>true} in json :/ and the ternary operator might not be in all machines
+    if ($IsPublic) {
+        $payload["public"] = $true
+    } else {
+        $payload["public"] = $false
+    }
+
+    $url = "https://api.github.com/gists"
+    $payloadJson = $payload | ConvertTo-Json
+    Write-Host "Url is $url"
+    Write-Host "Payload is $payloadJson"
+
+    $headers = @{
+        Accept = "application/vnd.github.v3+json";
+        Authorization = ("token {0}" -f $Env:GITHUB_TOKEN);
+    } 
+
+    $request = Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body $payloadJson -ContentType 'application/json'
+    Write-Host $request
+    return $request.html_url
 }
 
 <# 
@@ -562,7 +683,7 @@ function New-GistWithFiles {
         Authorization = ("token {0}" -f $Env:GITHUB_TOKEN);
     } 
 
-    $request = Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body $payloadJson -ContentType 'application/json'
+    $request = Invoke-Request -Request { Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body $payloadJson -ContentType 'application/json' }
     Write-Host $request
     return $request.html_url
 }
@@ -576,3 +697,4 @@ Export-ModuleMember -Function Test-JobSuccess
 Export-ModuleMember -Function Get-GitHubPRInfo
 Export-ModuleMember -Function New-GistWithFiles 
 Export-ModuleMember -Function New-GistObjectDefinition 
+Export-ModuleMember -Function New-GistWithContent 

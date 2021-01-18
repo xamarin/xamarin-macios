@@ -144,9 +144,8 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<TargetArchitectures Condition="'$(TargetArchitectures)' == '' And '$(_PlatformName)' != 'macOS' And '$(ComputedPlatform)' == 'iPhone'">ARMv7</TargetArchitectures>
 
 		<!-- Debug -->
-		<!-- Xamarin.Mac: use MmpDebug, but if that isn't set, use DebugSymbols -->
+		<!-- Xamarin.Mac: use MmpDebug -->
 		<_BundlerDebug Condition="'$(_BundlerDebug)' == '' And '$(_PlatformName)' == 'macOS'">$(MmpDebug)</_BundlerDebug>
-		<_BundlerDebug Condition="'$(_BundlerDebug)' == '' And '$(_PlatformName)' == 'macOS'">$(DebugSymbols)</_BundlerDebug>
 		<!-- Xamarin.iOS: Use MtouchDebug -->
 		<_BundlerDebug Condition="'$(_BundlerDebug)' == '' And '$(_PlatformName)' != 'macOS'">$(MtouchDebug)</_BundlerDebug>
 		<!-- Otherwise the default is true if we're building a Debug configuration -->
@@ -159,15 +158,16 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<_BundlerArguments Condition="'$(_PlatformName)' != 'macOS'">$(MtouchExtraArgs)</_BundlerArguments>
 
 		<!-- NoSymbolStrip -->
-		<!-- Xamarin.Mac never had an equivalent for MtouchNoSymbolStrip -->
-		<!-- in either case default to 'false' -->
+		<!-- Xamarin.Mac never had an equivalent for MtouchNoSymbolStrip and was never stripped -> true -->
+		<!-- default to 'false' -->
 		<_NoSymbolStrip Condition="'$(_PlatformName)' != 'macOS'">$(MtouchNoSymbolStrip)</_NoSymbolStrip>
+		<_NoSymbolStrip Condition="'$(_PlatformName)' == 'macOS'">true</_NoSymbolStrip>
 		<_NoSymbolStrip Condition="'$(_NoSymbolStrip)' == ''">false</_NoSymbolStrip>
 
 		<!-- NoDSymUtil -->
-		<!-- Xamarin.Mac never had an equivalent for MtouchNoDSymUtil -->
-		<!-- in either case default to 'false' -->
+		<!-- Xamarin.Mac never had an equivalent for MtouchNoDSymUtil and never produced them -> now, produce them by default when archiving -->
 		<_NoDSymUtil Condition="'$(_PlatformName)' != 'macOS'">$(MtouchNoDSymUtil)</_NoDSymUtil>
+		<_NoDSymUtil Condition="'$(_PlatformName)' == 'macOS' And '$(ArchiveOnBuild)' != 'true'">true</_NoDSymUtil>
 		<_NoDSymUtil Condition="'$(_NoDSymUtil)' == ''">false</_NoDSymUtil>
 
 		<!-- DeviceSpecificIntermediateOutputPath -->
