@@ -77,7 +77,9 @@ namespace Xamarin.MacDev.Tasks
 
 		string GetOutputPath (ITaskItem item)
 		{
-			return Path.Combine (StampPath, item.ItemSpec);
+			var path = item.ItemSpec;
+			var app = path.LastIndexOf (".app/");
+			return Path.Combine (StampPath, path.Substring (app + ".app/".Length));
 		}
 
 		bool NeedsCodesign (ITaskItem item)
