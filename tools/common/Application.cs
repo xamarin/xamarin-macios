@@ -697,19 +697,16 @@ namespace Xamarin.Bundler {
 			FileCopier.UpdateDirectory (source, target);
 		}
 
+		static string[] NonEssentialDirectoriesInsideFrameworks = { "CVS", ".svn", ".git", ".hg", "Headers", "PrivateHeaders", "Modules" };
+
 		// Duplicate xcode's `builtin-copy` exclusions
 		public static void ExcludeNonEssentialFrameworkFiles (string framework)
 		{
 			// builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -exclude Headers -exclude PrivateHeaders -exclude Modules -exclude \*.tbd
 			File.Delete (Path.Combine (framework, ".DS_Store"));
-			DeleteDir (Path.Combine (framework, "CVS"));
-			DeleteDir (Path.Combine (framework, ".svn"));
-			DeleteDir (Path.Combine (framework, ".git"));
-			DeleteDir (Path.Combine (framework, ".hg"));
-			DeleteDir (Path.Combine (framework, "Headers"));
-			DeleteDir (Path.Combine (framework, "PrivateHeaders"));
-			DeleteDir (Path.Combine (framework, "Modules"));
 			File.Delete (Path.Combine (framework, "*.tbd"));
+			foreach (var dir in NonEssentialDirectoriesInsideFrameworks)
+				DeleteDir (Path.Combine (framework, dir));
 		}
 
 		static void DeleteDir (string dir)
