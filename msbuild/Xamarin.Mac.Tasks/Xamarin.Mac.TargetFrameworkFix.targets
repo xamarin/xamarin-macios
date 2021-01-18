@@ -33,7 +33,7 @@ Copyright (c) 2018 Microsoft Corp. (www.microsoft.com)
 	<Target Name="FixDesignTimeFacades" AfterTargets="GetReferenceAssemblyPaths" Condition="('$(OS)' != 'Windows_NT')">
 		<ItemGroup>
 			<DesignTimeFacadeDirectories Remove="@(DesignTimeFacadeDirectories)" />
-			<DesignTimeFacadeDirectories Include="$(_XamarinBclPath)/Facades/" />
+			<DesignTimeFacadeDirectories Include="$(_XamarinBclPath)Facades/" />
 		</ItemGroup>
 	</Target>
 </Project>
