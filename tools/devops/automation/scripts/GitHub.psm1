@@ -423,7 +423,7 @@ function New-GitHubSummaryComment {
                     $url = $a.url
                     if ($url.EndsWith(".pkg") -or $url.EndsWith(".nupkg")) {
                         try {
-                            $fileName = $a.url.Substring($a.url.LastIndexOf("/" + 1))
+                            $fileName = $a.url.Substring($a.url.LastIndexOf("/") + 1)
                             Write-Host "Adding link for $fileName"
                             $sb.AppendLine("* [$fileName]($($a.url))")
                         } catch {
