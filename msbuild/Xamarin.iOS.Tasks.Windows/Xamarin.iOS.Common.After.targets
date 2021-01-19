@@ -254,7 +254,7 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 
 	<!-- This overrides the NET SDK target, it does the same thing but we add the SessionId property so the copy is also executed remotely -->
 	<!-- https://github.com/dotnet/sdk/blob/master/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.Publish.targets#L222-L250 -->
-	<Target Name="_CopyResolvedFilesToPublishPreserveNewest
+	<Target Name="_CopyResolvedFilesToPublishPreserveNewest"
 		DependsOnTargets="_ComputeResolvedFilesToPublishTypes"
 		Inputs="@(_ResolvedFileToPublishPreserveNewest)"
 		Outputs="@(_ResolvedFileToPublishPreserveNewest->'$(PublishDir)%(RelativePath)')">
