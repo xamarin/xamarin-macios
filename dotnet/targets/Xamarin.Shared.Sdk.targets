@@ -285,7 +285,7 @@
 				<Type>Xamarin.SetupStep</Type>
 			</_TrimmerCustomSteps>
 
-			<TrimmerRootDescriptor Include="@(_BundlerXmlDefinitions)" />
+			<TrimmerRootDescriptor Include="@(LinkDescription)" />
 		</ItemGroup>
 
 		<!-- Create the file with our custom linker options -->

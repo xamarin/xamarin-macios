@@ -877,7 +877,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<Output TaskParameter="Optimize" PropertyName="_BundlerOptimize"/>
 			<Output TaskParameter="Registrar" PropertyName="_BundlerRegistrar" />
 			<Output TaskParameter="Verbosity" PropertyName="_BundlerVerbosity" />
-			<Output TaskParameter="XmlDefinitions" ItemName="_BundlerXmlDefinitions" />
+			<Output TaskParameter="XmlDefinitions" ItemName="LinkDescription" />
 		</ParseBundlerArguments>
 
 		<PropertyGroup>
