@@ -138,7 +138,7 @@ namespace Xamarin.Bundler {
 		[DllImport (Constants.libSystemLibrary, SetLastError = true)]
 		static extern string realpath (string path, IntPtr zero);
 
-		public static string GetRealPath (string path)
+		public static string GetRealPath (string path, bool warnIfNoSuchPathExists = true)
 		{
 			// For some reason realpath doesn't always like filenames only, and will randomly fail.
 			// Prepend the current directory if there's no directory specified.
@@ -150,7 +150,8 @@ namespace Xamarin.Bundler {
 				return rv;
 
 			var errno = Marshal.GetLastWin32Error ();
-			ErrorHelper.Warning (54, Errors.MT0054, path, FileCopier.strerror (errno), errno);
+			if (warnIfNoSuchPathExists || (errno !=2))
+				ErrorHelper.Warning (54, Errors.MT0054, path, FileCopier.strerror (errno), errno);
 			return path;
 		}
 
