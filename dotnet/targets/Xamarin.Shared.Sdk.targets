@@ -515,6 +515,12 @@
 		</CompileNativeCode>
 	</Target>
 
+	<PropertyGroup>
+		<_UpdateDynamicLibraryIdDependsOn>
+			_ComputeVariables;
+			_ParseBundlerArguments;
+		</_UpdateDynamicLibraryIdDependsOn>
+	</PropertyGroup>
 
 	<!-- The .dylibs shipped with mono comes with the original identity:
 
@@ -527,7 +533,7 @@
 	-->
 	<Target
 		Name="_UpdateDynamicLibraryId"
-		DependsOnTargets="_ComputeVariables;_ParseBundlerArguments"
+		DependsOnTargets="$(_UpdateDynamicLibraryIdDependsOn)"
 		Inputs="@(_MonoLibraryFix)"
 		Outputs="@(_MonoLibraryFix.TargetPath)"
 		Condition=" '$(_PlatformName)' != 'macOS'">
