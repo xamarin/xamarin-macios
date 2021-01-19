@@ -1682,8 +1682,6 @@ namespace Xamarin.Bundler
 
 			var targetExecutable = Executables.Values.First ();
 
-			Application.TryDelete (targetExecutable);
-
 			try {
 				var launcher = new StringBuilder ();
 				launcher.Append (Path.Combine (Driver.GetFrameworkBinDirectory (App), "simlauncher"));
@@ -1694,6 +1692,8 @@ namespace Xamarin.Bundler
 				launcher.Append ("-sgen");
 				if (Directory.Exists (targetExecutable))
 					throw new ArgumentException ($"{targetExecutable} is a directory.");
+				else
+					File.Delete (targetExecutable);
 				File.Copy (launcher.ToString (), targetExecutable);
 				File.SetLastWriteTime (targetExecutable, DateTime.Now);
 			} catch (ProductException) {

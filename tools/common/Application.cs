@@ -726,15 +726,6 @@ namespace Xamarin.Bundler {
 			Driver.Log (1, "Copied {0} to {1}", source, target);
 		}
 
-		public static void TryDelete (string path)
-		{
-			try {
-				if (File.Exists (path))
-					File.Delete (path);
-			} catch {
-			}
-		}
-
 		public void InitializeCommon ()
 		{
 			SelectRegistrar ();
