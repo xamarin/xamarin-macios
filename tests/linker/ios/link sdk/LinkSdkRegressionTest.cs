@@ -75,6 +75,10 @@ namespace LinkSdk {
 		// https://bugzilla.novell.com/show_bug.cgi?id=688414
 		public void Bug205_ExposingIEnumerable ()
 		{
+#if NET
+			if (Runtime.Arch == Arch.DEVICE)
+				Assert.Ignore ("https://github.com/dotnet/runtime/issues/47114");
+#endif
 			var ds = new DataContractSerializer (typeof (IEnumerable<int>));
 			using (var xw = XmlWriter.Create (System.IO.Stream.Null))
 				ds.WriteObject (xw, new int [] { 1, 2, 3 });
@@ -409,6 +413,10 @@ namespace LinkSdk {
 		[Test]
 		public void AsQueryable_3028 ()
 		{
+#if NET
+			if (Runtime.Arch == Arch.DEVICE)
+				Assert.Ignore ("https://github.com/dotnet/runtime/issues/47112");
+#endif
 			string [] foos = new string [] { "hi", "bye" };
 			string f = foos.AsQueryable ().First ();
 			Assert.That (f, Is.EqualTo ("hi"), "f");
@@ -631,6 +639,10 @@ namespace LinkSdk {
 		[Test]
 		public void NetworkInterface_4631 ()
 		{
+#if NET
+			if (Runtime.Arch == Arch.DEVICE)
+				Assert.Ignore ("https://github.com/dotnet/runtime/issues/47120");
+#endif
 			Assert.NotNull (NetworkInterface.GetAllNetworkInterfaces ());
 		}
 		
