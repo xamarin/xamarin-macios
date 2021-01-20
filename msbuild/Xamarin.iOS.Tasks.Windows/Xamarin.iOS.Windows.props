@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
 ***********************************************************************************************
-Xamarin.iOS.Windows.After.targets
+Xamarin.iOS.Windows.props
 
 WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
   created a backup copy.  Incorrect changes to this file will make it
