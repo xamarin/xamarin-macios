@@ -130,9 +130,6 @@ namespace Xamarin.MacDev.Tasks
 		[Output]
 		public string DetectedBundleId { get; set; }
 
-		[Output]
-		public string DetectedBundleVersion { get; set; }
-
 		// This is input too
 		[Output]
 		public string DetectedCodeSigningKey { get; set; }
@@ -517,7 +514,6 @@ namespace Xamarin.MacDev.Tasks
 			}
 
 			DetectedCodesignAllocate = Path.Combine (DeveloperRoot, "Toolchains", "XcodeDefault.xctoolchain", "usr", "bin", "codesign_allocate");
-			DetectedBundleVersion = plist.GetCFBundleVersion ();
 			DetectedDistributionType = type.ToString ();
 
 			identity.BundleId = plist.GetCFBundleIdentifier ();
