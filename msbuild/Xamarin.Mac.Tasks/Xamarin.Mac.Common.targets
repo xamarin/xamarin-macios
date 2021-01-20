@@ -292,6 +292,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			ToolExe="$(ACToolExe)"
 			ToolPath="$(ACToolPath)"
 			AppManifest="$(_AppManifest)"
+			BundleIdentifier="$(_BundleIdentifier)"
 			EnableOnDemandResources="false"
 			ImageAssets="@(ImageAsset)"
 			MinimumOSVersion="$(_MinimumOSVersion)"

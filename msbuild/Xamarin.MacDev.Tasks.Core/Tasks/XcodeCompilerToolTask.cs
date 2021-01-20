@@ -27,6 +27,9 @@ namespace Xamarin.MacDev.Tasks
 		public ITaskItem AppManifest { get; set; }
 
 		[Required]
+		public string BundleIdentifier { get; set; }
+
+		[Required]
 		public string MinimumOSVersion { get; set; }
 
 		[Required]
