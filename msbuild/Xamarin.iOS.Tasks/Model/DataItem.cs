@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Xamarin.iOS.Tasks.Windows {
+namespace Xamarin.iOS.Tasks {
 	public class DataItem {
 		[JsonProperty ("universal-type-identifier", NullValueHandling = NullValueHandling.Ignore)]
 		public string UniversalTypeIdentifier { get; set; }

@@ -47,54 +47,6 @@ namespace Xamarin.iOS.Tasks.Windows.Properties {
             }
         }
         
-        internal static string VerifyXcodeVersion_Error_WithDetails {
-            get {
-                return ResourceManager.GetString("VerifyXcodeVersion_Error_WithDetails", resourceCulture);
-            }
-        }
-        
-        internal static string VerifyXcodeVersion_Error {
-            get {
-                return ResourceManager.GetString("VerifyXcodeVersion_Error", resourceCulture);
-            }
-        }
-        
-        internal static string VerifyXcodeVersion_Mismatch {
-            get {
-                return ResourceManager.GetString("VerifyXcodeVersion_Mismatch", resourceCulture);
-            }
-        }
-        
-        internal static string ResolveUniversalTypeIdentifiers_Deserialize_Error {
-            get {
-                return ResourceManager.GetString("ResolveUniversalTypeIdentifiers_Deserialize_Error", resourceCulture);
-            }
-        }
-        
-        internal static string ResolveUniversalTypeIdentifiers_NoImageSet {
-            get {
-                return ResourceManager.GetString("ResolveUniversalTypeIdentifiers_NoImageSet", resourceCulture);
-            }
-        }
-        
-        internal static string ResolveUniversalTypeIdentifiers_UTI_Error {
-            get {
-                return ResourceManager.GetString("ResolveUniversalTypeIdentifiers_UTI_Error", resourceCulture);
-            }
-        }
-        
-        internal static string Task_NoConnectionAvailable {
-            get {
-                return ResourceManager.GetString("Task_NoConnectionAvailable", resourceCulture);
-            }
-        }
-        
-        internal static string ResolveUniversalTypeIdentifiers_GetUniversalTypeIdentifier {
-            get {
-                return ResourceManager.GetString("ResolveUniversalTypeIdentifiers_GetUniversalTypeIdentifier", resourceCulture);
-            }
-        }
-        
         internal static string LocalUnzip_Error {
             get {
                 return ResourceManager.GetString("LocalUnzip_Error", resourceCulture);

@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Xamarin.iOS.Tasks.Windows {
+namespace Xamarin.iOS.Tasks {
 	public class DataSet {
 		[JsonProperty ("data")]
 		public IEnumerable<DataItem> DataItems { get; set; }

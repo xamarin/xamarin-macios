@@ -6,7 +6,7 @@
     <MergeSystemAssemblies>false</MergeSystemAssemblies>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Xamarin.Messaging.Build.Client" Version="$(MessagingVersion)" />
+    <PackageReference Include="DotNetZip" Version="1.14.0" />
     <PackageReference Include="Xamarin.Messaging.Server" Version="$(MessagingVersion)" IncludeAssets="contentFiles" />
   </ItemGroup>
   <ItemGroup>
@@ -15,7 +15,6 @@
       <ReferenceOutputAssembly>False</ReferenceOutputAssembly>
       <IsAgent>True</IsAgent>
     </ProjectReference>
-    <ProjectReference Include="..\Messaging\Xamarin.Messaging.Build.Contracts\Xamarin.Messaging.Build.Contracts.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Include="*.props">
@@ -27,7 +26,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Tasks\" />
-    <Folder Include="Model\" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Update="Properties\Resources.resx">

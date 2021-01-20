@@ -4,11 +4,11 @@ using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Linq;
-using Xamarin.iOS.Tasks.Windows.Properties;
+using Xamarin.Localization.MSBuild;
 using Xamarin.Messaging.Build.Client;
 using Xamarin.Messaging.Build.Contracts;
 
-namespace Xamarin.iOS.Tasks.Windows {
+namespace Xamarin.iOS.Tasks {
 	public class ResolveUniversalTypeIdentifiers : Task {
 		[Required]
 		public ITaskItem [] ImageAssets { get; set; }
@@ -30,7 +30,7 @@ namespace Xamarin.iOS.Tasks.Windows {
 				var buildClient = connection.Client as BuildClient;
 
 				if (!connection.IsConnected || buildClient == null) {
-					Log.LogWarning (Resources.Task_NoConnectionAvailable, nameof (ResolveUniversalTypeIdentifiers));
+					Log.LogWarning (MSBStrings.E0179, nameof (ResolveUniversalTypeIdentifiers));
 
 					return true;
 				}
@@ -50,7 +50,7 @@ namespace Xamarin.iOS.Tasks.Windows {
 					}
 
 					if (dataset == null) {
-						Log.LogError (Resources.ResolveUniversalTypeIdentifiers_Deserialize_Error, Path.GetDirectoryName (filePath));
+						Log.LogError (MSBStrings.E0180, Path.GetDirectoryName (filePath));
 						continue;
 					}
 
@@ -63,12 +63,10 @@ namespace Xamarin.iOS.Tasks.Windows {
 						var file = ImageAssets.FirstOrDefault (x => Path.GetFileName (x.ItemSpec) == data.Filename);
 
 						if (file == null) {
-							Log.LogWarning (Resources.ResolveUniversalTypeIdentifiers_NoImageSet, data.Filename);
+							Log.LogWarning (MSBStrings.E0181, data.Filename);
 
 							continue;
 						}
-
-						Log.LogMessage (MessageImportance.Normal, "", Resources.ResolveUniversalTypeIdentifiers_GetUniversalTypeIdentifier, buildClient.AppName);
 
 						var message = new GetUniversalTypeIdentifierMessage {
 							Payload = File.ReadAllBytes (file.ItemSpec),
@@ -80,7 +78,7 @@ namespace Xamarin.iOS.Tasks.Windows {
 							.Result;
 
 						if (string.IsNullOrEmpty (response.UniversalTypeIdentifier))
-							Log.LogError (string.Format (Resources.ResolveUniversalTypeIdentifiers_UTI_Error, data.Filename, Path.GetDirectoryName (filePath)));
+							Log.LogError (string.Format (MSBStrings.E0182, data.Filename, Path.GetDirectoryName (filePath)));
 
 						data.UniversalTypeIdentifier = response.UniversalTypeIdentifier;
 					}

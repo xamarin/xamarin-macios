@@ -55,17 +55,10 @@
       <ReferenceOutputAssembly>False</ReferenceOutputAssembly>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\Xamarin.Messaging.Build.Contracts\Xamarin.Messaging.Build.Contracts.csproj">
-      <ReferenceOutputAssembly>False</ReferenceOutputAssembly>
-      <Private>False</Private>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Xamarin.iOS.Tasks">
       <HintPath>..\..\Xamarin.iOS.Tasks\bin\$(Configuration)\netstandard2.0\Xamarin.iOS.Tasks.dll</HintPath>
-    </Reference>
-     <Reference Include="Xamarin.Messaging.Build.Contracts">
-      <HintPath>..\Xamarin.Messaging.Build.Contracts\bin\$(Configuration)\netstandard2.0\Xamarin.Messaging.Build.Contracts.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>

@@ -26,7 +26,7 @@ namespace Xamarin.iOS.Tasks {
 		{
 			if(Path.GetExtension(ArchivePath) != ".xcarchive")
 			{
-				Log.LogError(MSBStrings.E0174, ArchivePath);
+				Log.LogError(MSBStrings.E0176, ArchivePath);
 
 				return false;
 			}
@@ -35,7 +35,7 @@ namespace Xamarin.iOS.Tasks {
 
 			if(!client.IsConnected)
 			{
-				Log.LogError(MSBStrings.E0175, ArchivePath);
+				Log.LogError(MSBStrings.E0177, ArchivePath);
 
 				return false;
 			}
@@ -44,7 +44,7 @@ namespace Xamarin.iOS.Tasks {
 
 			if (sshCommands == null)
 			{
-				Log.LogError(MSBStrings.E0175, ArchivePath);
+				Log.LogError(MSBStrings.E0177, ArchivePath);
 
 				return false;
 			}
@@ -57,7 +57,7 @@ namespace Xamarin.iOS.Tasks {
 			}
 			catch(Exception ex)
 			{
-				Log.LogError(MSBStrings.E0176, ArchivePath, TargetPath, ex.Message);
+				Log.LogError(MSBStrings.E0178, ArchivePath, TargetPath, ex.Message);
 
 				return false;
 			}

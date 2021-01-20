@@ -1,12 +1,12 @@
 ﻿using System;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
-using Xamarin.iOS.Tasks.Windows.Properties;
+using Xamarin.Localization.MSBuild;
 using Xamarin.Messaging.Build.Client;
 using Xamarin.Messaging.Build.Contracts;
 using Threading = System.Threading.Tasks;
 
-namespace Xamarin.iOS.Tasks.Windows {
+namespace Xamarin.iOS.Tasks {
 	public class VerifyXcodeVersion : Task {
 		[Required]
 		public string SessionId { get; set; }
@@ -20,7 +20,7 @@ namespace Xamarin.iOS.Tasks.Windows {
 				var buildClient = connection.Client as BuildClient;
 
 				if (!connection.IsConnected || buildClient == null) {
-					Log.LogWarning (Resources.Task_NoConnectionAvailable, nameof (VerifyXcodeVersion));
+					Log.LogWarning (MSBStrings.E0179, nameof (VerifyXcodeVersion));
 
 					return true;
 				}
@@ -31,15 +31,15 @@ namespace Xamarin.iOS.Tasks.Windows {
 
 				if (!xcodeVerificationResult.IsCompatibleVersion) {
 					if (string.IsNullOrEmpty(xcodeVerificationResult.XcodeVersion) || string.IsNullOrEmpty(xcodeVerificationResult.RecommendedXcodeVersion)) {
-						Log.LogWarning (Resources.VerifyXcodeVersion_Error);
+						Log.LogWarning (MSBStrings.E0183);
 					} else {
-						Log.LogWarning (Resources.VerifyXcodeVersion_Mismatch, xcodeVerificationResult.XcodeVersion, xcodeVerificationResult.RecommendedXcodeVersion);	
+						Log.LogWarning (MSBStrings.E0184, xcodeVerificationResult.XcodeVersion, xcodeVerificationResult.RecommendedXcodeVersion);	
 					}
 				}
 
 				return true;
 			} catch (Exception ex) {
-				Log.LogWarning (Resources.VerifyXcodeVersion_Error_WithDetails, ex.Message);
+				Log.LogWarning (MSBStrings.E0185, ex.Message);
 
 				return true;
 			}
