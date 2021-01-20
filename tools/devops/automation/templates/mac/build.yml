@@ -107,6 +107,13 @@ steps:
     make -C $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/ mac-tests-provisioning.csx
   displayName: 'Generate Provisionator csx file'
 
+- task: xamops.azdevex.provisionator-task.provisionator@1
+  displayName: 'Provision Products & Frameworks'
+  inputs:
+    provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/mac-tests-provisioning.csx
+    provisioning_extra_args: '-vvvv'
+  timeoutInMinutes: 250
+
 # Executed ONLY if we want to clear the provisionator cache.
 - bash: rm -rf "$TOOLS_DIR/provisionator"
   env:
