@@ -779,8 +779,10 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<DetectSigningIdentity
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
+			ApplicationId="$(ApplicationId)"
 			AppBundleName="$(_AppBundleName)"
 			AppManifest="$(_AppManifest)"
+			GenerateApplicationManifest="$(GenerateApplicationManifest)"
 			Keychain="$(CodesignKeychain)"
 			RequireCodeSigning="$(_RequireCodeSigning)"
 			RequireProvisioningProfile="$(_RequireProvisioningProfile)"

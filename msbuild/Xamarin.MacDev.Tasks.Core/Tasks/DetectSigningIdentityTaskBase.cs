@@ -105,6 +105,12 @@ namespace Xamarin.MacDev.Tasks
 		[Required]
 		public string AppManifest { get; set; }
 
+		// Single-project property that maps to CFBundleIdentifier for Apple platforms
+		public string ApplicationId { get; set; }
+
+		// Single-project property that determines whether other single-project properties should have any effect
+		public bool GenerateApplicationManifest { get; set; }
+
 		public string Keychain { get; set; }
 
 		public string SigningKey { get; set; }
@@ -518,8 +524,12 @@ namespace Xamarin.MacDev.Tasks
 
 			identity.BundleId = plist.GetCFBundleIdentifier ();
 			if (string.IsNullOrEmpty (identity.BundleId)) {
-				Log.LogError (null, null, null, AppManifest, 0, 0, 0, 0, MSBStrings.E0139, AppManifest);
-				return false;
+				if (GenerateApplicationManifest && !string.IsNullOrEmpty (ApplicationId)) {
+					identity.BundleId = ApplicationId;
+				} else {
+					Log.LogError (null, null, null, AppManifest, 0, 0, 0, 0, MSBStrings.E0139, AppManifest);
+					return false;
+				}
 			}
 			DetectedBundleId = identity.BundleId;
 			DetectedAppId = DetectedBundleId; // default value that can be changed below

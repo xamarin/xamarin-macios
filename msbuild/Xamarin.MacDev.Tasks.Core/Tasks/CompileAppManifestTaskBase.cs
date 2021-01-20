@@ -88,7 +88,7 @@ namespace Xamarin.MacDev.Tasks
 				return false;
 			}
 
-			plist.SetIfNotPresent (ManifestKeys.CFBundleIdentifier, BundleIdentifier);
+			plist.SetCFBundleIdentifier (BundleIdentifier); // no ifs and buts, we've computed the final bundle identifier (BundleIdentifier) in DetectSigningIdentityTask.
 			plist.SetIfNotPresent (ManifestKeys.CFBundleInfoDictionaryVersion, "6.0");
 			plist.SetIfNotPresent (ManifestKeys.CFBundlePackageType, IsAppExtension ? "XPC!" : "APPL");
 			plist.SetIfNotPresent (ManifestKeys.CFBundleSignature, "????");
