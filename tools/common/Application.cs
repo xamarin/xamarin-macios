@@ -697,6 +697,30 @@ namespace Xamarin.Bundler {
 			FileCopier.UpdateDirectory (source, target);
 		}
 
+		static string[] NonEssentialDirectoriesInsideFrameworks = { "CVS", ".svn", ".git", ".hg", "Headers", "PrivateHeaders", "Modules" };
+
+		// Duplicate xcode's `builtin-copy` exclusions
+		public static void ExcludeNonEssentialFrameworkFiles (string framework)
+		{
+			// builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -exclude Headers -exclude PrivateHeaders -exclude Modules -exclude \*.tbd
+			File.Delete (Path.Combine (framework, ".DS_Store"));
+			File.Delete (Path.Combine (framework, "*.tbd"));
+			foreach (var dir in NonEssentialDirectoriesInsideFrameworks)
+				DeleteDir (Path.Combine (framework, dir));
+		}
+
+		static void DeleteDir (string dir)
+		{
+			// Xcode generates symlinks inside macOS frameworks
+			var realdir = Target.GetRealPath (dir, warnIfNoSuchPathExists: false);
+			// unlike File.Delete this would throw if the directory does not exists
+			if (Directory.Exists (realdir)) {
+				Directory.Delete (realdir, true);
+				if (realdir != dir)
+					File.Delete (dir); // because a symlink is a file :)
+			}
+		}
+
 		[DllImport (Constants.libSystemLibrary)]
 		static extern int readlink (string path, IntPtr buf, int len);
 
@@ -724,15 +748,6 @@ namespace Xamarin.Bundler {
 			if ((attrs & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
 				File.SetAttributes (target, attrs & ~FileAttributes.ReadOnly);
 			Driver.Log (1, "Copied {0} to {1}", source, target);
-		}
-
-		public static void TryDelete (string path)
-		{
-			try {
-				if (File.Exists (path))
-					File.Delete (path);
-			} catch {
-			}
 		}
 
 		public void InitializeCommon ()

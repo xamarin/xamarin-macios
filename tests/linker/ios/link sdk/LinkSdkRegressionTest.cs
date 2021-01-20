@@ -75,6 +75,10 @@ namespace LinkSdk {
 		// https://bugzilla.novell.com/show_bug.cgi?id=688414
 		public void Bug205_ExposingIEnumerable ()
 		{
+#if NET
+			if (Runtime.Arch == Arch.DEVICE)
+				Assert.Ignore ("https://github.com/dotnet/runtime/issues/47114");
+#endif
 			var ds = new DataContractSerializer (typeof (IEnumerable<int>));
 			using (var xw = XmlWriter.Create (System.IO.Stream.Null))
 				ds.WriteObject (xw, new int [] { 1, 2, 3 });
@@ -409,6 +413,10 @@ namespace LinkSdk {
 		[Test]
 		public void AsQueryable_3028 ()
 		{
+#if NET
+			if (Runtime.Arch == Arch.DEVICE)
+				Assert.Ignore ("https://github.com/dotnet/runtime/issues/47112");
+#endif
 			string [] foos = new string [] { "hi", "bye" };
 			string f = foos.AsQueryable ().First ();
 			Assert.That (f, Is.EqualTo ("hi"), "f");
@@ -631,6 +639,10 @@ namespace LinkSdk {
 		[Test]
 		public void NetworkInterface_4631 ()
 		{
+#if NET
+			if (Runtime.Arch == Arch.DEVICE)
+				Assert.Ignore ("https://github.com/dotnet/runtime/issues/47120");
+#endif
 			Assert.NotNull (NetworkInterface.GetAllNetworkInterfaces ());
 		}
 		
@@ -902,7 +914,13 @@ namespace LinkSdk {
 			Assert.That (path, Is.EqualTo ("/usr/share"), "path - CommonApplicationData");
 
 			// and the simulator is more lax
-#if !NET // https://github.com/dotnet/runtime/issues/41383
+#if NET
+			// ProgramFiles is different on .NET: https://github.com/dotnet/runtime/pull/41959#discussion_r485069017
+			path = TestFolder (Environment.SpecialFolder.ProgramFiles, readOnly: device, exists: false);
+			var applicationsPath = NSSearchPath.GetDirectories (NSSearchPathDirectory.ApplicationDirectory, NSSearchPathDomain.All, true).FirstOrDefault ();
+			Assert.That (path, Is.EqualTo (applicationsPath), "path - ProgramFiles");
+#else
+
 			path = TestFolder (Environment.SpecialFolder.ProgramFiles, readOnly: device);
 			Assert.That (path, Is.EqualTo ("/Applications"), "path - ProgramFiles");
 #endif
@@ -935,7 +953,11 @@ namespace LinkSdk {
 			path = TestFolder (Environment.SpecialFolder.MyDocuments);
 			Assert.That (path, Is.EqualTo (docs), "path - MyDocuments");
 
+#if NET
+			path = TestFolder (Environment.SpecialFolder.ApplicationData, exists: false);
+#else
 			path = TestFolder (Environment.SpecialFolder.ApplicationData);
+#endif
 			Assert.That (path, Is.EqualTo (docs + "/.config"), "path - ApplicationData");
 
 			path = TestFolder (Environment.SpecialFolder.LocalApplicationData);

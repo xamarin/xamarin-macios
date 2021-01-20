@@ -226,10 +226,6 @@
 			</_CustomLinkerOptions>
 			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) --custom-data "LinkerOptionsFile=$(_CustomLinkerOptionsFile)"</_ExtraTrimmerArgs>
 
-			<!-- Work around a linker issue: https://github.com/mono/linker/issues/1304 -->
-			<!-- System.Runtime.dll isn't always copied to the .app -->
-			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) -p copy "System.Runtime"</_ExtraTrimmerArgs>
-
 			<!-- TrimMode specifies what the linker will do with framework assemblies -->
 			<TrimMode Condition="'$(_LinkMode)' == 'None'">copy</TrimMode> <!-- Don't use 'copyused', because that might still end up saving some assemblies, and if that's the platform assembly, it may break the partial static registrar -->
 			<TrimMode Condition="'$(_LinkMode)' == 'SdkOnly' Or '$(_LinkMode)' == 'Full'">link</TrimMode>
@@ -336,6 +332,9 @@
 
 		<ItemGroup>
 			<_AssembliesToAOT Include="@(ResolvedFileToPublish)" Condition="'%(Extension)' == '.dll' Or '%(Extension)' == '.exe' " />
+			<!-- Exclude resource assemblies from AOT compilation -->
+			<_AssembliesToAOT Remove="@(ReferenceSatellitePaths)" /> <!-- this seems to be from referenced projects with satellite assemblies -->
+			<_AssembliesToAOT Remove="@(ResourceCopyLocalItems)" /> <!-- this seems to be from NuGets with satellite assemblies -->
 		</ItemGroup>
 	</Target>
 

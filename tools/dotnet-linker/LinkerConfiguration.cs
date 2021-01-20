@@ -46,6 +46,8 @@ namespace Xamarin.Linker {
 		
 		string user_optimize_flags;
 
+		Dictionary<string, List<MSBuildItem>> msbuild_items = new Dictionary<string, List<MSBuildItem>> ();
+
 		public static LinkerConfiguration GetInstance (LinkContext context, bool createIfNotFound = true)
 		{
 			if (!configurations.TryGetValue (context, out var instance) && createIfNotFound) {
@@ -270,18 +272,32 @@ namespace Xamarin.Linker {
 
 		public void WriteOutputForMSBuild (string itemName, List<MSBuildItem> items)
 		{
-			var xmlNs = XNamespace.Get ("http://schemas.microsoft.com/developer/msbuild/2003");
-			var elements = items.Select (item =>
-				new XElement (xmlNs + itemName,
-					new XAttribute ("Include", item.Include),
-						item.Metadata.Select (metadata => new XElement (xmlNs + metadata.Key, metadata.Value))));
+			if (!msbuild_items.TryGetValue (itemName, out var list)) {
+				msbuild_items [itemName] = items;
+			} else {
+				list.AddRange (items);
+			}
+		}
 
-			var document = new XDocument (
-				new XElement (xmlNs + "Project",
-					new XElement (xmlNs + "ItemGroup",
-						elements)));
+		public void FlushOutputForMSBuild ()
+		{
+			foreach (var kvp in msbuild_items) {
+				var itemName = kvp.Key;
+				var items = kvp.Value;
 
-			document.Save (Path.Combine (ItemsDirectory, itemName + ".items"));
+				var xmlNs = XNamespace.Get ("http://schemas.microsoft.com/developer/msbuild/2003");
+				var elements = items.Select (item =>
+					new XElement (xmlNs + itemName,
+						new XAttribute ("Include", item.Include),
+							item.Metadata.Select (metadata => new XElement (xmlNs + metadata.Key, metadata.Value))));
+
+				var document = new XDocument (
+					new XElement (xmlNs + "Project",
+						new XElement (xmlNs + "ItemGroup",
+							elements)));
+
+				document.Save (Path.Combine (ItemsDirectory, itemName + ".items"));
+			}
 		}
 
 		public static void Report (LinkContext Context, params Exception [] exceptions)
@@ -302,7 +318,7 @@ namespace Xamarin.Linker {
 				// Revisit the error code after https://github.com/mono/linker/issues/1596 has been fixed.
 				var instance = GetInstance (context, false);
 				var platform = (instance?.Platform)?.ToString () ?? "unknown";
-				var msg = MessageContainer.CreateErrorMessage ("Failed to execute the custom steps.", 1999, platform);
+				var msg = MessageContainer.CreateCustomErrorMessage ("Failed to execute the custom steps.", 6999, platform);
 				context.LogMessage (msg);
 			}
 			// ErrorHelper.Show will print our errors and warnings to stderr.

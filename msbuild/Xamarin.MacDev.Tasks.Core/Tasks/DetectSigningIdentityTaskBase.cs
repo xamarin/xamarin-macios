@@ -19,12 +19,80 @@ namespace Xamarin.MacDev.Tasks
 		const string AutomaticAdHocProvision = "Automatic:AdHoc";
 		const string AutomaticAppStoreProvision = "Automatic:AppStore";
 		const string AutomaticInHouseProvision = "Automatic:InHouse";
-		
-		protected abstract string DeveloperRoot { get; }
-		protected abstract string[] DevelopmentPrefixes { get; }
-		protected abstract string[] DirectDistributionPrefixes { get; }
-		protected abstract string[] AppStoreDistributionPrefixes { get; }
-		protected abstract string ApplicationIdentifierKey { get; }
+
+		static readonly string [] macAppStoreDistributionPrefixes = { "3rd Party Mac Developer Application", "Apple Distribution" };
+		static readonly string [] macDirectDistributionPrefixes = { "Developer ID Application" };
+		static readonly string [] macDevelopmentPrefixes = { "Mac Developer", "Apple Development" };
+
+		protected string DeveloperRoot {
+			get {
+				return Sdks.GetAppleSdk (TargetFrameworkMoniker).DeveloperRoot;
+			}
+		}
+
+		protected string [] DevelopmentPrefixes {
+			get {
+				switch (Platform) {
+				case ApplePlatform.iOS:
+				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
+					return IPhoneCertificate.DevelopmentPrefixes;
+				case ApplePlatform.MacOSX:
+				case ApplePlatform.MacCatalyst:
+					return macDevelopmentPrefixes;
+				default:
+					throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, Platform));
+				}
+			}
+		}
+
+		protected string [] DirectDistributionPrefixes {
+			get {
+				switch (Platform) {
+				case ApplePlatform.iOS:
+				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
+					return Array.Empty<string> ();
+				case ApplePlatform.MacOSX:
+				case ApplePlatform.MacCatalyst:
+					return macDirectDistributionPrefixes;
+				default:
+					throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, Platform));
+				}
+			}
+		}
+
+		protected string [] AppStoreDistributionPrefixes {
+			get {
+				switch (Platform) {
+				case ApplePlatform.iOS:
+				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
+					return IPhoneCertificate.DistributionPrefixes;
+				case ApplePlatform.MacOSX:
+				case ApplePlatform.MacCatalyst:
+					return macAppStoreDistributionPrefixes;
+				default:
+					throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, Platform));
+				}
+			}
+		}
+
+		protected string ApplicationIdentifierKey {
+			get {
+				switch (Platform) {
+				case ApplePlatform.iOS:
+				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
+					return "application-identifier";
+				case ApplePlatform.MacOSX:
+				case ApplePlatform.MacCatalyst:
+					return "com.apple.application-identifier";
+				default:
+					throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, Platform));
+				}
+			}
+		}
 
 		string provisioningProfileName;
 		string codesignCommonName;
@@ -458,10 +526,24 @@ namespace Xamarin.MacDev.Tasks
 				return false;
 			}
 
-			if (Platform == ApplePlatform.MacOSX || Platform == ApplePlatform.MacCatalyst) {
+			if (Platform == ApplePlatform.MacOSX) {
 				if (!RequireCodeSigning || !string.IsNullOrEmpty (DetectedCodeSigningKey)) {
 					DetectedBundleId = identity.BundleId;
 					DetectedAppId = DetectedBundleId;
+
+					ReportDetectedCodesignInfo ();
+
+					return !Log.HasLoggedErrors;
+				}
+			} else if (Platform == ApplePlatform.MacCatalyst) {
+				var doesNotNeedCodeSigningCertificate = !RequireCodeSigning || !string.IsNullOrEmpty (DetectedCodeSigningKey);
+				if (RequireProvisioningProfile)
+					doesNotNeedCodeSigningCertificate = false;
+				if (doesNotNeedCodeSigningCertificate) {
+					DetectedBundleId = identity.BundleId;
+					DetectedAppId = DetectedBundleId;
+
+					DetectedCodeSigningKey = "-";
 
 					ReportDetectedCodesignInfo ();
 

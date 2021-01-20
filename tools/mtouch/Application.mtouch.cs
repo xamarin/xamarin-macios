@@ -1163,7 +1163,7 @@ namespace Xamarin.Bundler {
 			// Make sure we bundle Mono.framework if we need to.
 			if (PackageMonoFramework == true) {
 				BundleFileInfo info;
-				var name = "Frameworks/Mono.framework";
+				var name = "Mono.framework";
 				bundle_files [name] = info = new BundleFileInfo ();
 				info.Sources.Add (GetLibMono (AssemblyBuildTarget.Framework));
 			}
@@ -1282,6 +1282,7 @@ namespace Xamarin.Bundler {
 						var macho_last_write_time = macho_info.LastWriteTimeUtc; // this returns a date in the 17th century if the file doesn't exist.
 						UpdateDirectory (framework_src, Path.GetDirectoryName (targetPath));
 						if (IsDeviceBuild) {
+							ExcludeNonEssentialFrameworkFiles (targetPath);
 							// Remove architectures we don't care about.
 							MachO.SelectArchitectures (macho_file, AllArchitectures);
 							// Strip bitcode if needed.

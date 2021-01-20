@@ -20,7 +20,7 @@ namespace Xamarin.iOS.Tasks
 		IBTool CreateIBToolTask (ApplePlatform framework, string projectDir, string intermediateOutputPath)
 		{
 			var interfaceDefinitions = new List<ITaskItem> ();
-			var sdk = IPhoneSdks.GetSdk (framework);
+			var sdk = Sdks.GetSdk (framework);
 			var version = IPhoneSdkVersion.GetDefault (sdk, false);
 			var root = sdk.GetSdkPath (version, false);
 			var usr = Path.Combine (sdk.DeveloperRoot, "usr");

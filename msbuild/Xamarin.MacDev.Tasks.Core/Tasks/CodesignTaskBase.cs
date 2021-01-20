@@ -77,7 +77,9 @@ namespace Xamarin.MacDev.Tasks
 
 		string GetOutputPath (ITaskItem item)
 		{
-			return Path.Combine (StampPath, item.ItemSpec);
+			var path = item.ItemSpec;
+			var app = path.LastIndexOf (".app/");
+			return Path.Combine (StampPath, path.Substring (app + ".app/".Length));
 		}
 
 		bool NeedsCodesign (ITaskItem item)
@@ -111,9 +113,13 @@ namespace Xamarin.MacDev.Tasks
 				args.Add ("runtime");
 			}
 
-			if (UseSecureTimestamp)
+			if (UseSecureTimestamp) {
+				if (DisableTimestamp) {
+					// Conflicting '{0}' and '{1}' options. '{1}' will be ignored.
+					Log.LogWarning (MSBStrings.W0176, "UseSecureTimestamp", "DisableTimestamp");
+				}
 				args.Add ("--timestamp");
-			else
+			} else
 				args.Add ("--timestamp=none");
 
 			args.Add ("--sign");
@@ -133,9 +139,6 @@ namespace Xamarin.MacDev.Tasks
 				args.Add ("--entitlements");
 				args.Add (Path.GetFullPath (Entitlements));
 			}
-
-			if (DisableTimestamp)
-				args.Add ("--timestamp=none");
 
 			if (!string.IsNullOrEmpty (ExtraArgs))
 				args.Add (ExtraArgs);

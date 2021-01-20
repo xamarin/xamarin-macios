@@ -15,11 +15,12 @@ DOTNET_DIRECTORIES += \
 
 # dotnet-linker.csproj.inc contains the dotnet_linker_dependencies variable used to determine if mtouch needs to be rebuilt or not.
 dotnet-linker.csproj.inc: export BUILD_EXECUTABLE=$(DOTNET6) build
+dotnet-linker.csproj.inc: export BUILD_VERBOSITY=$(DOTNET_BUILD_VERBOSITY)
 dotnet-linker.csproj.inc: global.json
 -include dotnet-linker.csproj.inc
 
 $(BUILD_DIR)/dotnet-linker%dll $(BUILD_DIR)/dotnet-linker%pdb: Makefile global.json $(dotnet_linker_dependencies)
-	$(Q_DOTNET_BUILD) $(DOTNET6) build $(XBUILD_VERBOSITY)
+	$(Q_DOTNET_BUILD) $(DOTNET6) build dotnet-linker.csproj $(DOTNET_BUILD_VERBOSITY)
 
 $(DOTNET_DESTDIR)/Microsoft.iOS.Sdk/tools/dotnet-linker/%: $(BUILD_DIR)/% | $(DOTNET_DESTDIR)/Microsoft.iOS.Sdk/tools/dotnet-linker
 	$(Q) $(CP) $< $@
