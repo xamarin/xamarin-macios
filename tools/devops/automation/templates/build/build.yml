@@ -86,7 +86,7 @@ steps:
     provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/provision-brew-packages.csx
     provisioning_extra_args: '-vvvv'
   timeoutInMinutes: 30
-  enabled: false
+  enabled: true 
 
 - bash: |
     make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops build-provisioning.csx
@@ -301,20 +301,12 @@ steps:
     prependToPath: '/Users/builder/Library/Python/2.7/bin'
 
 - bash: |
-    VIRTUAL_ENV_PATH=$(Build.SourcesDirectory)/venv
-    pip install virtualenv
-    virtualenv "$VIRTUAL_ENV_PATH" --system-site-packages
-    source "$VIRTUAL_ENV_PATH/bin/activate"
-    pip install python-magic
-
     security unlock-keychain -p $PRODUCTSIGN_KEYCHAIN_PASSWORD builder.keychain
     PACKAGES="$IOS_PKG $MAC_PKG"
     echo "Packages found at $PACKAGES"
 
-    echo "$PACKAGES" | xargs python $(Build.SourcesDirectory)/release-scripts/sign_and_notarize.py -a "$APP_ID" -i "$INSTALL_ID" -u "$APPLE_ACCOUNT" -p "$APPLE_PASS" -t "$TEAM_ID" -d $(Build.SourcesDirectory)/package/notarized -e "$MAC_ENTITLEMENTS" -k "$KEYCHAIN"
-
-    deactivate
-    rm -Rf "$VIRTUAL_ENV_PATH"
+    echo "$PACKAGES" | xargs python $(Build.SourcesDirectory)/release-scripts/sign_and_notarize.py --no_notarization -a "$APP_ID" -i "$INSTALL_ID" -u "$APPLE_ACCOUNT" -p "$APPLE_PASS" -t "$TEAM_ID" -d $(Build.SourcesDirectory)/package/notarized -e "$MAC_ENTITLEMENTS" -k "$KEYCHAIN"
+    ls -R $(Build.SourcesDirectory)/package
   env:
     PRODUCTSIGN_KEYCHAIN_PASSWORD: $(OSX_KEYCHAIN_PASS)
     MAC_ENTITLEMENTS: $(Build.SourcesDirectory)/xamarin-macios/mac-entitlements.plist
@@ -328,6 +320,20 @@ steps:
   displayName: 'Signing Release Build'
   condition: and(succeeded(), contains(variables['configuration.SignPkgs'], 'True'), contains(variables['configuration.IsPr'], 'False'))
   timeoutInMinutes: 90
+
+- task: ms-vseng.MicroBuildTasks.30666190-6959-11e5-9f96-f56098202fef.MicroBuildSigningPlugin@3 
+  displayName: 'Install Signing Plugin' 
+  inputs: 
+    signType: 'Real'  # test is not present for mac.. 
+    azureSubscription: 'MicroBuild Signing Task (DevDiv)'
+    version: 1.1.352-g82fc43b9d7
+    feedSource: 'https://pkgs.dev.azure.com/devdiv/_packaging/VS_TempPkgs/nuget/v3/index.json'
+  condition: and(succeeded(), contains(variables['configuration.SignPkgs'], 'True'), contains(variables['configuration.IsPr'], 'False')) # if we are a PR, the installation of the plugin will return a 403 and everything will collapse
+  env: 
+      SYSTEM_ACCESSTOKEN: $(System.AccessToken) 
+
+- pwsh: $(Build.SourcesDirectory)/release-scripts/notarize.ps1 -FolderForApps $(Build.SourcesDirectory)/package/notarized 
+  displayName: 'ESRP notarizing packages' 
 
 - template: generate-workspace-info.yml@templates
   parameters:
