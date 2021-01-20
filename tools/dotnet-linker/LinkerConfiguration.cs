@@ -318,7 +318,7 @@ namespace Xamarin.Linker {
 				// Revisit the error code after https://github.com/mono/linker/issues/1596 has been fixed.
 				var instance = GetInstance (context, false);
 				var platform = (instance?.Platform)?.ToString () ?? "unknown";
-				var msg = MessageContainer.CreateErrorMessage ("Failed to execute the custom steps.", 1999, platform);
+				var msg = MessageContainer.CreateCustomErrorMessage ("Failed to execute the custom steps.", 6999, platform);
 				context.LogMessage (msg);
 			}
 			// ErrorHelper.Show will print our errors and warnings to stderr.

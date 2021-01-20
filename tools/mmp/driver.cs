@@ -767,10 +767,12 @@ namespace Xamarin.Bundler {
 
 			CreateDirectoryIfNeeded (frameworks_dir);
 			Application.UpdateDirectory (framework, frameworks_dir);
+			var fxdir = Path.Combine (frameworks_dir, name + ".framework");
+			Application.ExcludeNonEssentialFrameworkFiles (fxdir);
 			frameworks_copied_to_bundle_dir = true;
 
 			if (App.Optimizations.TrimArchitectures == true)
-				LipoLibrary (framework, Path.Combine (name, Path.Combine (frameworks_dir, name + ".framework", name)));
+				LipoLibrary (framework, Path.Combine (name, Path.Combine (fxdir, name)));
 		}
 
 		static void CheckSystemMonoVersion ()
