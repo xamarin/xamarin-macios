@@ -272,10 +272,10 @@ partial class TestRuntime
 				return CheckWatchOSSystemVersion (7, 0);
 #elif __TVOS__
 				return ChecktvOSSystemVersion (14, 0);
-#elif MONOMAC || __MACCATALYST__
-				return CheckMacSystemVersion (10, 15, 6);
 #elif __IOS__
 				return CheckiOSSystemVersion (14, 0);
+#elif MONOMAC
+				return CheckMacSystemVersion (10, 15, 6);
 #else
 				throw new NotImplementedException ();
 #endif
@@ -284,10 +284,10 @@ partial class TestRuntime
 				return CheckWatchOSSystemVersion (7, 0);
 #elif __TVOS__
 				return ChecktvOSSystemVersion (14, 0);
-#elif MONOMAC || __MACCATALYST__
-				return CheckMacSystemVersion (10, 15, 6);
 #elif __IOS__
 				return CheckiOSSystemVersion (14, 1);
+#elif MONOMAC
+				return CheckMacSystemVersion (10, 15, 6);
 #else
 				throw new NotImplementedException ();
 #endif
@@ -296,10 +296,10 @@ partial class TestRuntime
 				return CheckWatchOSSystemVersion (7, 1);
 #elif __TVOS__
 				return ChecktvOSSystemVersion (14, 2);
-#elif MONOMAC || __MACCATALYST__
-				return CheckMacSystemVersion (11, 0, 0);
 #elif __IOS__
 				return CheckiOSSystemVersion (14, 2);
+#elif MONOMAC
+				return CheckMacSystemVersion (11, 0, 0);
 #else
 				throw new NotImplementedException ();
 #endif
@@ -326,10 +326,10 @@ partial class TestRuntime
 				return CheckWatchOSSystemVersion (6, 0);
 #elif __TVOS__
 				return ChecktvOSSystemVersion (13, 0);
-#elif MONOMAC || __MACCATALYST__
-				return CheckMacSystemVersion (10, 15, 0);
 #elif __IOS__
 				return CheckiOSSystemVersion (13, 0);
+#elif MONOMAC
+				return CheckMacSystemVersion (10, 15, 0);
 #else
 				throw new NotImplementedException ();
 #endif
@@ -338,10 +338,10 @@ partial class TestRuntime
 				return CheckWatchOSSystemVersion (6, 0);
 #elif __TVOS__
 				return ChecktvOSSystemVersion (13, 0);
-#elif MONOMAC || __MACCATALYST__
-				return CheckMacSystemVersion (10, 15, 0);
 #elif __IOS__
 				return CheckiOSSystemVersion (13, 1);
+#elif MONOMAC
+				return CheckMacSystemVersion (10, 15, 0);
 #else
 				throw new NotImplementedException ();
 #endif
@@ -350,7 +350,7 @@ partial class TestRuntime
 				return CheckWatchOSSystemVersion (6, 1);
 #elif __TVOS__
 				return ChecktvOSSystemVersion (13, 2);
-#elif MONOMAC || __MACCATALYST__
+#elif MONOMAC
 				return CheckMacSystemVersion (10, 15, 1);
 #elif __IOS__
 				return CheckiOSSystemVersion (13, 2);
@@ -362,10 +362,10 @@ partial class TestRuntime
 				return CheckWatchOSSystemVersion (6, 1, 1);
 #elif __TVOS__
 				return ChecktvOSSystemVersion (13, 3);
-#elif MONOMAC || __MACCATALYST__
-				return CheckMacSystemVersion (10, 15, 2);
 #elif __IOS__
 				return CheckiOSSystemVersion (13, 3);
+#elif MONOMAC
+				return CheckMacSystemVersion (10, 15, 2);
 #else
 				throw new NotImplementedException ();
 #endif
@@ -374,10 +374,10 @@ partial class TestRuntime
 				return CheckWatchOSSystemVersion (6, 2);
 #elif __TVOS__
 				return ChecktvOSSystemVersion (13, 4);
-#elif MONOMAC || __MACCATALYST__
-				return CheckMacSystemVersion (10, 15, 4);
 #elif __IOS__
 				return CheckiOSSystemVersion (13, 4);
+#elif MONOMAC
+				return CheckMacSystemVersion (10, 15, 4);
 #else
 				throw new NotImplementedException ();
 #endif
@@ -386,10 +386,10 @@ partial class TestRuntime
 				return CheckWatchOSSystemVersion (6, 2);
 #elif __TVOS__
 				return ChecktvOSSystemVersion (13, 4);
-#elif MONOMAC || __MACCATALYST__
-				return CheckMacSystemVersion (10, 15, 5);
 #elif __IOS__
 				return CheckiOSSystemVersion(13, 5);
+#elif MONOMAC
+				return CheckMacSystemVersion (10, 15, 5);
 #else
 				throw new NotImplementedException ();
 #endif
@@ -398,10 +398,10 @@ partial class TestRuntime
 				return CheckWatchOSSystemVersion (6, 2);
 #elif __TVOS__
 				return ChecktvOSSystemVersion (13, 4);
-#elif MONOMAC || __MACCATALYST__
-				return CheckMacSystemVersion (10, 15, 6);
 #elif __IOS__
 				return CheckiOSSystemVersion(13, 6);
+#elif MONOMAC
+				return CheckMacSystemVersion (10, 15, 6);
 #else
 				throw new NotImplementedException ();
 #endif
@@ -409,9 +409,6 @@ partial class TestRuntime
 				throw new NotImplementedException ();
 			}
 		case 10:
-#if __MACCATALYST__
-			return true;
-#else
 			switch (minor) {
 			case 0:
 #if __WATCHOS__
@@ -452,11 +449,7 @@ partial class TestRuntime
 			default:
 				throw new NotImplementedException ();
 			}
-#endif // __MACCATALYST__
 		case 9:
-#if __MACCATALYST__
-			return true;
-#else
 			switch (minor) {
 			case 0:
 #if __WATCHOS__
@@ -497,11 +490,7 @@ partial class TestRuntime
 			default:
 				throw new NotImplementedException ();
 			}
-#endif // __MACCATALYST__
 		case 8:
-#if __MACCATALYST__
-			return true;
-#else
 			switch (minor) {
 			case 0:
 #if __WATCHOS__
@@ -554,11 +543,7 @@ partial class TestRuntime
 			default:
 				throw new NotImplementedException ();
 			}
-#endif // __MACCATALYST__
 		case 7:
-#if __MACCATALYST__
-			return true;
-#else
 			switch (minor) {
 			case 0:
 #if __WATCHOS__
@@ -611,11 +596,8 @@ partial class TestRuntime
 			default:
 				throw new NotImplementedException ();
 			}
-#endif // __MACCATALYST__
 		case 6:
-#if __MACCATALYST__
-			return true;
-#elif __IOS__
+#if __IOS__
 			switch (minor) {
 			case 0:
 				return CheckiOSSystemVersion (8, 0);
@@ -630,7 +612,7 @@ partial class TestRuntime
 			}
 #elif __TVOS__ || __WATCHOS__
 			return true;
-#elif MONOMAC || __MACCATALYST__
+#elif MONOMAC
 			switch (minor) {
 			case 0:
 				return CheckMacSystemVersion (10, 9, 0);
@@ -647,9 +629,7 @@ partial class TestRuntime
 			throw new NotImplementedException ();
 #endif
 		case 5:
-#if __MACCATALYST__
-			return true;
-#elif __IOS__
+#if __IOS__
 			switch (minor) {
 			case 0:
 				return CheckiOSSystemVersion (7, 0);
@@ -674,9 +654,7 @@ partial class TestRuntime
 			throw new NotImplementedException ();
 #endif
 		case 4:
-#if __MACCATALYST__
-			return true;
-#elif __IOS__
+#if __IOS__
 			switch (minor) {
 			case 1:
 				return true; // iOS 4.3.2
@@ -863,7 +841,7 @@ partial class TestRuntime
 
 	static bool CheckMacSystemVersion (int major, int minor, int build = 0, bool throwIfOtherPlatform = true)
 	{
-#if MONOMAC || __MACCATALYST__
+#if MONOMAC
 		return OSXVersion >= new Version (major, minor, build);
 #else
 		if (throwIfOtherPlatform)
@@ -872,10 +850,10 @@ partial class TestRuntime
 #endif
 	}
 
-	static bool CheckMacCatalystSystemVersion (int major, int minor, int build = 0, bool throwIfOtherPlatform = true)
+	static bool CheckMacCatalystSystemVersion (int major, int minor, bool throwIfOtherPlatform = true)
 	{
 #if __MACCATALYST__
-		return OSXVersion >= new Version (major, minor, build);
+		return UIDevice.CurrentDevice.CheckSystemVersion (major, minor);
 #else
 		if (throwIfOtherPlatform)
 			throw new Exception ("Can't get Mac Catalyst System version on other platforms.");
@@ -891,7 +869,7 @@ partial class TestRuntime
 
 	static void AssertMacCatalystSystemVersion (int major, int minor, int build = 0, bool throwIfOtherPlatform = true)
 	{
-		if (!CheckMacCatalystSystemVersion (major, minor, build, throwIfOtherPlatform))
+		if (!CheckMacCatalystSystemVersion (major, minor, throwIfOtherPlatform))
 			NUnit.Framework.Assert.Ignore ($"This test requires macOS {major}.{minor}.{build}");
 	}
 
