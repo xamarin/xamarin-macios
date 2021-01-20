@@ -231,6 +231,9 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<CompileAppManifest
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
+			AppleShortVersion="$(AppleShortVersion)"
+			ApplicationTitle="$(ApplicationTitle)"
+			ApplicationVersion="$(ApplicationVersion)"
 			AppBundleName="$(_AppBundleName)"
 			AppManifest="$(_AppManifest)"
 			AppManifestBundleDirectory="$(_AppBundlePath)$(_AppBundleManifestRelativePath)"
@@ -238,6 +241,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			BundleIdentifier="$(_BundleIdentifier)"
 			Debug="$(_BundlerDebug)"
 			DefaultSdkVersion="$(_SdkVersion)"
+			GenerateApplicationManifest="$(GenerateApplicationManifest)"
 			IsAppExtension="$(IsAppExtension)"
 			IsWatchApp="$(IsWatchApp)"
 			IsWatchExtension="$(IsWatchExtension)"

@@ -13,6 +13,15 @@ namespace Xamarin.MacDev.Tasks
 	{
 		#region Inputs
 
+		// Single-project property that maps to CFBundleShortVersionString for Apple platforms
+		public string AppleShortVersion { get; set; }
+
+		// Single-project property that maps to CFBundleDisplayName for Apple platforms
+		public string ApplicationTitle { get; set; }
+
+		// Single-project property that maps to CFBundleVersion for Apple platforms
+		public string ApplicationVersion { get; set; }
+
 		[Required]
 		public string AppBundleName { get; set; }
 
@@ -35,6 +44,9 @@ namespace Xamarin.MacDev.Tasks
 
 		[Required]
 		public string DefaultSdkVersion { get; set; }
+
+		// Single-project property that determines whether other single-project properties should have any effect
+		public bool GenerateApplicationManifest { get; set; }
 
 		[Required]
 		public bool IsAppExtension { get; set; }
@@ -92,10 +104,28 @@ namespace Xamarin.MacDev.Tasks
 			plist.SetIfNotPresent (ManifestKeys.CFBundleInfoDictionaryVersion, "6.0");
 			plist.SetIfNotPresent (ManifestKeys.CFBundlePackageType, IsAppExtension ? "XPC!" : "APPL");
 			plist.SetIfNotPresent (ManifestKeys.CFBundleSignature, "????");
-			plist.SetIfNotPresent (ManifestKeys.CFBundleVersion, "1.0");
 			plist.SetIfNotPresent (ManifestKeys.CFBundleExecutable, AssemblyName);
 			plist.SetIfNotPresent (ManifestKeys.CFBundleName, AppBundleName);
 
+			if (GenerateApplicationManifest && !string.IsNullOrEmpty (ApplicationTitle))
+				plist.SetIfNotPresent (ManifestKeys.CFBundleDisplayName, ApplicationTitle);
+
+			string defaultBundleVersion = "1.0";
+			if (GenerateApplicationManifest && !string.IsNullOrEmpty (ApplicationVersion))
+				defaultBundleVersion = ApplicationVersion;
+			plist.SetIfNotPresent (ManifestKeys.CFBundleVersion, defaultBundleVersion);
+
+			string defaultBundleShortVersion = null;
+			if (GenerateApplicationManifest) {
+				if (!string.IsNullOrEmpty (AppleShortVersion))
+					defaultBundleShortVersion = AppleShortVersion;
+				else if (!string.IsNullOrEmpty (ApplicationVersion))
+					defaultBundleShortVersion = ApplicationVersion;
+			}
+			if (string.IsNullOrEmpty (defaultBundleShortVersion))
+				defaultBundleShortVersion = plist.GetCFBundleVersion ();
+			plist.SetIfNotPresent (ManifestKeys.CFBundleShortVersionString, defaultBundleShortVersion);
+			
 			if (!Compile (plist))
 				return false;
 
