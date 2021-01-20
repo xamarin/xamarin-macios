@@ -521,12 +521,11 @@ namespace Xamarin.MacDev.Tasks
 				Log.LogError (null, null, null, AppManifest, 0, 0, 0, 0, MSBStrings.E0139, AppManifest);
 				return false;
 			}
+			DetectedBundleId = identity.BundleId;
+			DetectedAppId = DetectedBundleId; // default value that can be changed below
 
 			if (Platform == ApplePlatform.MacOSX) {
 				if (!RequireCodeSigning || !string.IsNullOrEmpty (DetectedCodeSigningKey)) {
-					DetectedBundleId = identity.BundleId;
-					DetectedAppId = DetectedBundleId;
-
 					ReportDetectedCodesignInfo ();
 
 					return !Log.HasLoggedErrors;
@@ -536,9 +535,6 @@ namespace Xamarin.MacDev.Tasks
 				if (RequireProvisioningProfile)
 					doesNotNeedCodeSigningCertificate = false;
 				if (doesNotNeedCodeSigningCertificate) {
-					DetectedBundleId = identity.BundleId;
-					DetectedAppId = DetectedBundleId;
-
 					DetectedCodeSigningKey = "-";
 
 					ReportDetectedCodesignInfo ();
@@ -572,8 +568,6 @@ namespace Xamarin.MacDev.Tasks
 
 							DetectedProvisioningProfile = identity.Profile.Uuid;
 							DetectedDistributionType = identity.Profile.DistributionType.ToString ();
-							DetectedBundleId = identity.BundleId;
-							DetectedAppId = DetectedBundleId;
 						} else {
 							certs = new X509Certificate2[0];
 
@@ -593,15 +587,11 @@ namespace Xamarin.MacDev.Tasks
 								provisioningProfileName = identity.Profile.Name;
 							}
 
-							DetectedBundleId = identity.BundleId;
 							DetectedAppId = identity.AppId;
 						}
 					} else {
 						// Note: Do not codesign. Codesigning seems to break the iOS Simulator in older versions of Xcode.
 						DetectedCodeSigningKey = null;
-
-						DetectedBundleId = identity.BundleId;
-						DetectedAppId = DetectedBundleId;
 					}
 
 					ReportDetectedCodesignInfo ();
@@ -633,8 +623,6 @@ namespace Xamarin.MacDev.Tasks
 
 				codesignCommonName = SecKeychain.GetCertificateCommonName (certs[0]);
 				DetectedCodeSigningKey = certs[0].Thumbprint;
-				DetectedBundleId = identity.BundleId;
-				DetectedAppId = DetectedBundleId;
 
 				ReportDetectedCodesignInfo ();
 
@@ -674,7 +662,6 @@ namespace Xamarin.MacDev.Tasks
 
 				DetectedProvisioningProfile = identity.Profile.Uuid;
 				DetectedDistributionType = identity.Profile.DistributionType.ToString ();
-				DetectedBundleId = identity.BundleId;
 				DetectedAppId = identity.AppId;
 
 				ReportDetectedCodesignInfo ();
@@ -696,7 +683,6 @@ namespace Xamarin.MacDev.Tasks
 
 				DetectedCodeSigningKey = identity.SigningKey?.Thumbprint;
 				DetectedProvisioningProfile = identity.Profile.Uuid;
-				DetectedBundleId = identity.BundleId;
 				DetectedAppId = identity.AppId;
 
 				ReportDetectedCodesignInfo ();
