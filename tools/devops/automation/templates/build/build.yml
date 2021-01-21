@@ -111,7 +111,7 @@ steps:
     # a branch in origin
     
     if ($buildReason -eq "PullRequest" -or (($buildReason -eq "Manual") -and ($buildSourceBranchName -eq "merge")) ) {
-      $configVars.Add("IsPR", "False")
+      $configVars.Add("IsPR", "True")
 
       if ($Env:BuildPackage -eq "True") {
         $configVars.Add("BuildPkgs", "True")
