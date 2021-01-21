@@ -368,6 +368,7 @@ steps:
     ./install-qa-provisioning-profiles.sh -v 
   displayName: 'Add tests provisioning profiles'
   timeoutInMinutes: 30
+  continueOnError: true # should not stop the build will result in test failures but we do want the pkg
   env:
     LOGIN_KEYCHAIN_PASSWORD: ${{ parameters.keyringPass }}
     SOURCES_DIR: $(Build.SourcesDirectory)
