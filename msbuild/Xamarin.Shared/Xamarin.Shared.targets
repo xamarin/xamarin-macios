@@ -320,7 +320,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<Target Name="_CoreCompileInterfaceDefinitions"
 		Inputs="@(InterfaceDefinition)"
 		Outputs="$(_IBToolCache)"
-		DependsOnTargets="_BeforeCoreCompileInterfaceDefinitions;_GetMinimumOSVersion">
+		DependsOnTargets="_BeforeCoreCompileInterfaceDefinitions;_GetMinimumOSVersion;_DetectSigningIdentity">
 
 		<IBTool
 			SessionId="$(BuildSessionId)"
