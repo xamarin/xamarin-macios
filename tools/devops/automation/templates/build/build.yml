@@ -300,7 +300,7 @@ steps:
   env:
     PRODUCTSIGN_KEYCHAIN_PASSWORD: $(xma-password)
   displayName: 'Signing PR Build'
-  condition: and(succeeded(), contains(variables['configuration.SignPkgs'], 'True'), contains(variables['configuration.IsPr'], 'True'))
+  condition: and(succeeded(), contains(variables['configuration.BuildPkgs'], 'True'), contains(variables['configuration.SignPkgs'], 'True'), contains(variables['configuration.IsPr'], 'True'))
 
   # Ensure virtualenv is on the PATH
 - template: set-path/v1.yml@templates
