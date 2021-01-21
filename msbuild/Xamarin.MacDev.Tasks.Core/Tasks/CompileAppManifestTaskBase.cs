@@ -94,6 +94,7 @@ namespace Xamarin.MacDev.Tasks
 			plist.SetIfNotPresent (ManifestKeys.CFBundleSignature, "????");
 			plist.SetIfNotPresent (ManifestKeys.CFBundleVersion, "1.0");
 			plist.SetIfNotPresent (ManifestKeys.CFBundleExecutable, AssemblyName);
+			plist.SetIfNotPresent (ManifestKeys.CFBundleName, AppBundleName);
 
 			if (!Compile (plist))
 				return false;
