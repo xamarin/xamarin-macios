@@ -8,9 +8,12 @@
 //
 
 using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
+
+using CoreFoundation;
 using Foundation;
 using Security;
 using ObjCRuntime;
@@ -583,8 +586,8 @@ namespace MonoTouchFixtures.Security {
 			SecKey private_key;
 			SecKey public_key;
 			var att = new SecPublicPrivateKeyAttrs ();
-			att.Label = "NotDefault";
-			att.IsPermanent = true;
+			att.Label = $"{CFBundle.GetMain ().Identifier}-{GetType ().FullName}-{Process.GetCurrentProcess ().Id}";
+			att.IsPermanent = false;
 			att.ApplicationTag = new NSData ();
 			att.EffectiveKeySize = 1024;
 			att.CanEncrypt = false;
