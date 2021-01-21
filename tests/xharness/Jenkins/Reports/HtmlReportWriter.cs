@@ -116,7 +116,7 @@ namespace Xharness.Jenkins.Reports {
 
 			writer.WriteLine ($"<span id='x{id_counter++}' class='autorefreshable'>");
 			foreach (var log in jenkins.Logs)
-				writer.WriteLine ("<a href='{0}' type='text/plain;charset=UTF-8'>{1}</a><br />", log.FullPath.Substring (jenkins.LogDirectory.Length + 1), log.Description);
+				writer.WriteLine ("<a href='{0}' type='text/plain;charset=UTF-8'>{1}</a><br />", GetLinkFullPath (log.FullPath.Substring (jenkins.LogDirectory.Length + 1)), log.Description);
 			writer.WriteLine ("</span>");
 
 			var headerColor = "black";
