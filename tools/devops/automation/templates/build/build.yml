@@ -101,6 +101,12 @@ steps:
 
 - bash: |
     set -x
+    set -e
+    $(Build.SourcesDirectory)/xamarin-macios/system-dependencies.sh --provision-simulators
+  displayName: 'Provision simulators'
+
+- bash: |
+    set -x
     sudo rm -Rf /Developer/MonoTouch
     sudo rm -Rf /Library/Frameworks/Xamarin.iOS.framework
     sudo rm -Rf /Library/Frameworks/Xamarin.Mac.framework
