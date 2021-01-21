@@ -27,8 +27,8 @@ namespace MonoTouchFixtures.HomeKit
 		public void Setup ()
 		{
 			TestRuntime.AssertXcodeVersion (9, 0);
-			// Mac Catalyst system versions follow the macOS system versions, and HomeKit was introduced to Mac Catalyst later than for the other frameworks, so we have this additional check
-			TestRuntime.AssertSystemVersion (PlatformName.MacCatalyst, 11, 0, throwIfOtherPlatform: false);
+			// The API here was introduced to Mac Catalyst later than for the other frameworks, so we have this additional check
+			TestRuntime.AssertSystemVersion (PlatformName.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
 		}
 
 		[Test]

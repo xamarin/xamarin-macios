@@ -25,8 +25,8 @@ namespace MonoTouchFixtures.AddressBook {
 		[SetUp]
 		public void Setup ()
 		{
-			// Mac Catalyst system versions follow the macOS system versions.
-			TestRuntime.AssertSystemVersion (PlatformName.MacCatalyst, 11, 0, throwIfOtherPlatform: false);
+			// The API here was introduced to Mac Catalyst later than for the other frameworks, so we have this additional check
+			TestRuntime.AssertSystemVersion (PlatformName.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
 		}
 
 		[Test]

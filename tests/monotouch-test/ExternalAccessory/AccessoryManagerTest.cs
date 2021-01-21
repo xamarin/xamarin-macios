@@ -42,7 +42,8 @@ namespace MonoTouchFixtures.ExternalAccessory {
 		[Test]
 		public void ShowBluetoothAccessoryPicker ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacCatalyst, 11, 0, throwIfOtherPlatform: false);
+			// The API here was introduced to Mac Catalyst later than for the other frameworks, so we have this additional check
+			TestRuntime.AssertSystemVersion (PlatformName.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
 			EAAccessoryManager.SharedAccessoryManager.ShowBluetoothAccessoryPicker (null, null);
 		}
 #endif
