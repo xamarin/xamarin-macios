@@ -285,6 +285,9 @@
 				<Type>Xamarin.SetupStep</Type>
 			</_TrimmerCustomSteps>
 
+			<!-- _BundlerXmlDefinitions comes from any -xml arguments to mtouch/mmp -->
+			<TrimmerRootDescriptor Include="@(_BundlerXmlDefinitions)" />
+			<!-- LinkDescription can be defined in the user's csproj -->
 			<TrimmerRootDescriptor Include="@(LinkDescription)" />
 		</ItemGroup>
 
