@@ -4,8 +4,7 @@ BrewPackages (
     "automake",
     "libtool",
     "p7zip",
-    "python",
-    "libmagic", 
     "msitools",
-    "wget"
+    "wget",
+    "azure-cli"
  );
