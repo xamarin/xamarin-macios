@@ -34,10 +34,13 @@
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'Newtonsoft.Json'" />
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'Renci.SshNet'" />
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'SshNet.Security.Cryptography'" />
+      <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.ComponentModel.Annotations'" />
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.ComponentModel.Composition'" />
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.Diagnostics.Tracer'" />
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.Net.Mqtt'" />
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.Reactive'" />
+      <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.Security.Cryptography.ProtectedData'" />
+      <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.Text.Encoding.CodePages'" />
 
       <MergedAssemblies Include="$(OutputPath)/Microsoft.Bcl.AsyncInterfaces.dll" Condition="'$(MergeSystemAssemblies)' == 'true'" />
       <MergedAssemblies Include="$(OutputPath)/System.Buffers.dll" Condition="'$(MergeSystemAssemblies)' == 'true'" />
