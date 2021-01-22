@@ -91,6 +91,9 @@ namespace MonoTouchFixtures.Security {
 #if MONOMAC
 		[Ignore ("Returns SecAccessible.Invalid")]
 #endif
+#if __MACCATALYST__
+		[Ignore ("This test requires an app signed with the keychain-access-groups entitlement, and for Mac Catalyst that requires a custom provisioning profile.")]
+#endif
 		public void Accessible_17579 ()
 		{
 			Accessible (SecAccessible.AfterFirstUnlock);
@@ -125,6 +128,9 @@ namespace MonoTouchFixtures.Security {
 		}
 
 		[Test]
+#if __MACCATALYST__
+		[Ignore ("This test requires an app signed with the keychain-access-groups entitlement, and for Mac Catalyst that requires a custom provisioning profile.")]
+#endif
 		public void Protocol_17579 ()
 		{
 			Protocol (SecProtocol.Afp);
@@ -189,6 +195,9 @@ namespace MonoTouchFixtures.Security {
 			Assert.That (match.AuthenticationType, Is.EqualTo (type), "AuthenticationType");
 		}
 
+#if __MACCATALYST__
+		[Ignore ("This test requires an app signed with the keychain-access-groups entitlement, and for Mac Catalyst that requires a custom provisioning profile.")]
+#endif
 		[Test]
 		public void AuthenticationType_17579 ()
 		{
@@ -205,6 +214,9 @@ namespace MonoTouchFixtures.Security {
 		// Test Case provided by user
 		// This test case scenario used to fail under iOS 6 or lower
 		[Test]
+#if __MACCATALYST__
+		[Ignore ("This test requires an app signed with the keychain-access-groups entitlement, and for Mac Catalyst that requires a custom provisioning profile.")]
+#endif
 		public void DeskCase_83099_InmutableDictionary ()
 		{
 			var testUsername = "testusername";
@@ -294,6 +306,8 @@ namespace MonoTouchFixtures.Security {
 		[Test]
 #if MONOMAC
 		[Ignore ("SecStatusCode code = SecKeyChain.Add (rec); returns SecStatusCode.Param")]
+#elif __MACCATALYST__
+		[Ignore ("This test requires an app signed with the keychain-access-groups entitlement, and for Mac Catalyst that requires a custom provisioning profile.")]
 #endif
 		public void IdentityRecordTest ()
 		{
