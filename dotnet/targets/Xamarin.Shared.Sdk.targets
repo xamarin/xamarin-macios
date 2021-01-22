@@ -144,6 +144,7 @@
 	<!-- Inject our custom logic into *DependsOn variables -->
 	<PropertyGroup>
 		<BuildDependsOn>
+			_ComputePublishTrimmed;
 			BuildOnlySettings;
 			_CollectBundleResources;
 			_PackLibraryResources;
@@ -189,6 +190,14 @@
 		<_AdditionalTaskAssemblyDirectory>$(_XamarinSdkRootDirectory)tools/dotnet-linker/</_AdditionalTaskAssemblyDirectory>
 		<_AdditionalTaskAssembly>$(_AdditionalTaskAssemblyDirectory)dotnet-linker.dll</_AdditionalTaskAssembly>
 	</PropertyGroup>
+
+	<!-- PublishTrimmed must be calculated as part of a target because IsMacEnabled on Windows will be set after connecting to the Mac -->
+	<Target Name="_ComputePublishTrimmed">
+		<PropertyGroup>
+			<PublishTrimmed Condition="'$(PublishTrimmed)' == '' And ($(_ProjectType.EndsWith('ExecutableProject')) Or $(_ProjectType.EndsWith('AppExtensionProject'))) And '$(IsMacEnabled)' == 'true'">true</PublishTrimmed>
+		</PropertyGroup>
+	</Target>
+
 	<Target Name="_ComputeLinkerArguments" DependsOnTargets="_ComputeLinkMode;_ComputeFrameworkVariables;_ComputeFrameworkAssemblies;ComputeResolvedFilesToPublishList;_ParseBundlerArguments;">
 		<!-- Validate the linker mode -->
 		<Error Text="Invalid link mode: '$(_LinkMode)'. Valid link modes are: 'None', 'SdkOnly' and 'Full'" Condition="'$(_LinkMode)' != 'None' And '$(_LinkMode)' != 'SdkOnly' And '$(_LinkMode)' != 'Full'" />
@@ -747,8 +756,5 @@
 	<Import Project="$(_TargetsDirectory)Xamarin.Mac.AppExtension.$(_ProjectLanguage).targets"     Condition="'$(_ProjectType)' == 'macOSAppExtensionProject' " />
 	<Import Project="$(_TargetsDirectory)Xamarin.Mac.ObjCBinding.$(_ProjectLanguage).targets"      Condition="'$(_ProjectType)' == 'macOSBindingProject' " />
 
-	<PropertyGroup>
-		<!-- PublishTrimmed depends on IsMacEnabled, which is defined in the Xamarin.iOS/Xamarin.Mac targets files we import just above here -->
-		<PublishTrimmed Condition="'$(PublishTrimmed)' == '' And ($(_ProjectType.EndsWith('ExecutableProject')) Or $(_ProjectType.EndsWith('AppExtensionProject'))) And '$(IsMacEnabled)' == 'true'">true</PublishTrimmed>
-	</PropertyGroup>
+	
 </Project>
