@@ -102,11 +102,13 @@ steps:
     # we have a number of scripts that require to be executed from the top of the src, rather
     # than keeping track of the location of the script, we create two env vars that can be used to
     # get to the top
+    $configVars = @{} # var name/value pair, later print twice, to process and debug
+
     $xamTop = "$(Build.SourcesDirectory)/xamarin-macios/"
-    Write-Host "##vso[task.setvariable variable=XAM_TOP]$xamTop"
+    $configVars.Add("XAM_TOP", $xamTop)
 
     $maccoreTop = "$(Build.SourcesDirectory)/maccore/"
-    Write-Host "##vso[task.setvariable variable=MACCORE_TOP]$maccoreTop"
+    $configVars.Add("MACCORE_TOP", $maccoreTop)
 
     $buildReason = "$(Build.Reason)"
     $buildSourceBranchName = "$(Build.SourceBranchName)"
@@ -115,81 +117,86 @@ steps:
     # a branch in origin
     
     if ($buildReason -eq "PullRequest" -or (($buildReason -eq "Manual") -and ($buildSourceBranchName -eq "merge")) ) {
-      Write-Host '##vso[task.setvariable variable=IsPR;isOutput=true]False'
+      $configVars.Add("IsPR", "True")
 
       if ($Env:BuildPackage -eq "True") {
-        Write-Host '##vso[task.setvariable variable=BuildPkgs;isOutput=true]True'
+        $configVars.Add("BuildPkgs", "True")
       } else {
-        Write-Host '##vso[task.setvariable variable=BuildPkgs;isOutput=true]False'
+        $configVars.Add("BuildPkgs", "False")
       }
 
       # interesting case, we have build-pkg and skip-pkg... if that is the case, we build it, but we set a warning
       if ($Env:BuildPackage -eq "True" -and $Env:SkipPackages -eq "True") {
         Write-Host "##vso[task.logissue type=warning]'build-package' and 'skip-packages' are both present. Building packages in case of a doubt."
-        Write-Host "##vso[task.setvariable variable=BuildPkgs;isOutput=true]True"
+        $configVars.Add("BuildPkgs", "True")
       } 
 
       # if we want to have device tests, we do need the pkgs so that we can fwd them to the device tests
       if ($Env:TriggerDeviceTests -eq "True") {
-        Write-Host "##vso[task.setvariable variable=BuildPkgs;isOutput=true]True"
-        Write-Host "##vso[task.setvariable variable=RunDeviceTests;isOutput=true]True"
+        $configVars.Add("BuildPkgs", "True")
+        $configVars.Add("RunDeviceTests", "True")
       }
 
       if ($Env:SkipNugets -eq "True") {
-        Write-Host "##vso[task.setvariable variable=BuildNugets;isOutput=true]False"
+        $configVars.Add("BuildNugets", "False")
       } else {
-        Write-Host "##vso[task.setvariable variable=BuildNugets;isOutput=true]True"
+        $configVars.Add("BuildNugets", "True")
       }
 
       if ($Env:SkipSigning -eq "True") {
-        Write-Host "##vso[task.setvariable variable=SignPkgs;isOutput=true]False"
+        $configVars.Add("SignPkgs", "False")
       } else {
-        Write-Host "##vso[task.setvariable variable=SignPkgs;isOutput=true]True"
+        $configVars.Add("SignPkgs", "True")
       }
 
       if ($Env:SkipExternalTests -eq "True") {
-        Write-Host "##vso[task.setvariable variable=RunExternalTests;isOutput=true]False"
+        $configVars.Add("RunExternalTests", "False")
       } else {
-        Write-Host "##vso[task.setvariable variable=RunExternalTests;isOutput=true]True"
+        $configVars.Add("RunExternalTests", "True")
       }
 
       if ($Env:SkipPackagedXamarinMacTests -eq "True") {
-        Write-Host "##vso[task.setvariable variable=RunMacTests;isOutput=true]False"
+        $configVars.Add("RunMacTests", "False")
       } else {
-        Write-Host "##vso[task.setvariable variable=RunMacTests;isOutput=true]True"
+        $configVars.Add("RunMacTests", "True")
       }
 
       if ($Env:SkipPublicJenkins -eq "True") {
-        Write-Host "##vso[task.setvariable variable=SkipPublicJenkins;isOutput=true]True"
+        $configVars.Add("SkipPublicJenkins", "True")
       } else {
-        Write-Host "##vso[task.setvariable variable=SkipPublicJenkins;isOutput=true]False"
+        $configVars.Add("SkipPublicJenkins", "False")
       }
 
-      Write-Host "##vso[task.setvariable variable=RunSampleTests;isOutput=true]$Env:RunSampleTests"
-      Write-Host "##vso[task.setvariable variable=RunInternalTests;isOutput=true]$Env:RunInternalTests"
+      $configVars.Add("RunSampleTests", $Env:RunSampleTests)
+      $configVars.Add("RunInternalTests", $Env:RunInternalTests)
 
     } else {
       # set the defaults, all the things! o/
-      Write-Host "##vso[task.setvariable variable=IsPR;isOutput=true]False"
+      $configVars.Add("IsPR", "False")
 
       # build pkg, nugets and sign them
-      Write-Host "##vso[task.setvariable variable=BuildPkgs;isOutput=true]True"
-      Write-Host "##vso[task.setvariable variable=BuildNugets;isOutput=true]True"
-      Write-Host "##vso[task.setvariable variable=SignPkgs;isOutput=true]True"
+      $configVars.Add("BuildPkgs", "True")
+      $configVars.Add("BuildNugets", "True")
+      $configVars.Add("SignPkgs", "True")
 
       # tests, run all of them, internal, external, mac but not sample tests
-      Write-Host "##vso[task.setvariable variable=RunInternalTests;isOutput=true]True"
-      Write-Host "##vso[task.setvariable variable=RunExternalTests;isOutput=true]True"
-      Write-Host "##vso[task.setvariable variable=RunMacTests;isOutput=true]True"
-      Write-Host "##vso[task.setvariable variable=RunSampleTests;isOutput=true]False"
-      Write-Host "##vso[task.setvariable variable=SkipPublicJenkins;isOutput=true]False"
+      $configVars.Add("RunInternalTests", "True")
+      $configVars.Add("RunExternalTests", "True")
+      $configVars.Add("RunMacTests", "True")
+      $configVars.Add("RunSampleTests", "False")
+      $configVars.Add("SkipPublicJenkins", "False")
 
       # if a developer decided to trigger one without device tests, allow it
       if ($Env:RUN_DEVICE_TESTS -eq "true") {
-        Write-Host "##vso[task.setvariable variable=RunDeviceTests;isOutput=true]True"
+        $configVars.Add("RunDeviceTests", "True")
       } else {
-        Write-Host "##vso[task.setvariable variable=RunDeviceTests;isOutput=true]False"
+        $configVars.Add("RunDeviceTests", "False")
       }
+    }
+    # write debugging and process of the vars
+    foreach($key in $configVars.Keys) {
+      Write-Host "$key='$($configVars[$key])'"
+      Write-Host "##vso[task.setvariable variable=$key;isOutput=true]$($configVars[$key])"
     }
 
   name: configuration
@@ -272,7 +279,7 @@ steps:
   env:
     PRODUCTSIGN_KEYCHAIN_PASSWORD: $(xma-password)
   displayName: 'Signing PR Build'
-  condition: and(succeeded(), contains(variables['configuration.SignPkgs'], 'True'), contains(variables['configuration.IsPr'], 'True'))
+  condition: and(succeeded(), contains(variables['configuration.BuildPkgs'], 'True'), contains(variables['configuration.SignPkgs'], 'True'), contains(variables['configuration.IsPr'], 'True'))
 
   # Ensure virtualenv is on the PATH
 - template: set-path/v1.yml@templates
