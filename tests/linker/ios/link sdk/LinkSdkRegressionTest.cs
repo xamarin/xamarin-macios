@@ -822,15 +822,17 @@ namespace LinkSdk {
 #endif
 		}
 
-		string TestFolder (Environment.SpecialFolder folder, bool supported = true, bool exists = true, bool readOnly = false)
+		string TestFolder (Environment.SpecialFolder folder, bool supported = true, bool? exists = true, bool readOnly = false)
 		{
 			var path = Environment.GetFolderPath (folder);
 			Assert.That (path.Length > 0, Is.EqualTo (supported), folder.ToString ());
 			if (!supported)
 				return path;
 
-			Assert.That (Directory.Exists (path), Is.EqualTo (exists), path);
-			if (!exists)
+			var dirExists = Directory.Exists (path);
+			if (exists.HasValue)
+				Assert.That (dirExists, Is.EqualTo (exists), path);
+			if (!dirExists)
 				return path;
 
 			string file = Path.Combine (path, "temp.txt");
@@ -954,7 +956,7 @@ namespace LinkSdk {
 			Assert.That (path, Is.EqualTo (docs), "path - MyDocuments");
 
 #if NET
-			path = TestFolder (Environment.SpecialFolder.ApplicationData, exists: false);
+			path = TestFolder (Environment.SpecialFolder.ApplicationData, exists: null /* may or may not exist */);
 #else
 			path = TestFolder (Environment.SpecialFolder.ApplicationData);
 #endif
