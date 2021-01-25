@@ -1422,7 +1422,7 @@ namespace Xamarin.Bundler {
 			// IsAOTCompiled and IsInterpreted are not opposites: mscorlib.dll can be both:
 			// - mscorlib will always be processed by the AOT compiler to generate required wrapper functions for the interpreter to work
 			// - mscorlib might also be fully AOT-compiled (both when the interpreter is enabled and when it's not)
-			if (assembly == "mscorlib")
+			if (assembly == Driver.CorlibName)
 				return true;
 
 			return !IsInterpreted (assembly);
