@@ -17,14 +17,6 @@ using Xamarin.Utils;
 
 namespace Xamarin.Bundler {
 
-	public enum DlsymOptions
-	{
-		Default,
-		All,
-		None,
-		Custom,
-	}
-
 	public partial class Application
 	{
 		public string ProductName = "Xamarin.iOS";
