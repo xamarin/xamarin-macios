@@ -69,6 +69,9 @@ namespace Xamarin.Bundler {
 		public SymbolMode SymbolMode;
 		public HashSet<string> IgnoredSymbols = new HashSet<string> ();
 
+		public DlsymOptions DlsymOptions;
+		public List<Tuple<string, bool>> DlsymAssemblies;
+
 		public string CompilerPath;
 
 		public Application ContainerApp; // For extensions, this is the containing app
@@ -1435,5 +1438,85 @@ namespace Xamarin.Bundler {
 				}
 			}
 		}
+
+		public void SetDlsymOption (string asm, bool dlsym)
+		{
+			if (DlsymAssemblies == null)
+				DlsymAssemblies = new List<Tuple<string, bool>> ();
+
+			DlsymAssemblies.Add (new Tuple<string, bool> (Path.GetFileNameWithoutExtension (asm), dlsym));
+
+			DlsymOptions = DlsymOptions.Custom;
+		}
+
+		public void ParseDlsymOptions (string options)
+		{
+			bool dlsym;
+			if (Driver.TryParseBool (options, out dlsym)) {
+				DlsymOptions = dlsym ? DlsymOptions.All : DlsymOptions.None;
+			} else {
+				if (DlsymAssemblies == null)
+					DlsymAssemblies = new List<Tuple<string, bool>> ();
+
+				var assemblies = options.Split (',');
+				foreach (var assembly in assemblies) {
+					var asm = assembly;
+					if (assembly.StartsWith ("+", StringComparison.Ordinal)) {
+						dlsym = true;
+						asm = assembly.Substring (1);
+					} else if (assembly.StartsWith ("-", StringComparison.Ordinal)) {
+						dlsym = false;
+						asm = assembly.Substring (1);
+					} else {
+						dlsym = true;
+					}
+					DlsymAssemblies.Add (new Tuple<string, bool> (Path.GetFileNameWithoutExtension (asm), dlsym));
+				}
+
+				DlsymOptions = DlsymOptions.Custom;
+			}
+		}
+
+		public bool UseDlsym (string assembly)
+		{
+			string asm;
+
+			if (DlsymAssemblies != null) {
+				asm = Path.GetFileNameWithoutExtension (assembly);
+				foreach (var tuple in DlsymAssemblies) {
+					if (string.Equals (tuple.Item1, asm, StringComparison.Ordinal))
+						return tuple.Item2;
+				}
+			}
+
+			switch (DlsymOptions) {
+			case DlsymOptions.All:
+				return true;
+			case DlsymOptions.None:
+				return false;
+			}
+
+			if (EnableLLVMOnlyBitCode)
+				return false;
+
+			// Even if this assembly is aot'ed, if we are using the interpreter we can't yet
+			// guarantee that code in this assembly won't be executed in interpreted mode,
+			// which can happen for virtual calls between assemblies, during exception handling
+			// etc. We make sure we don't strip away symbols needed for pinvoke calls.
+			// https://github.com/mono/mono/issues/14206
+			if (UseInterpreter)
+				return true;
+
+			switch (Platform) {
+			case ApplePlatform.iOS:
+				return !Profile.IsSdkAssembly (Path.GetFileNameWithoutExtension (assembly));
+			case ApplePlatform.TVOS:
+			case ApplePlatform.WatchOS:
+				return false;
+			default:
+				throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, "Xamarin.iOS");
+			}
+		}
+
 	}
 }
