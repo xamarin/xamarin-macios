@@ -57,6 +57,12 @@ namespace Xamarin.Bundler {
 			Driver.Log (1, $"Registrar mode: {Registrar}");
 		}
 
+		public void Initialize ()
+		{
+			// mSYM support is not implemented in the runtime on .NET 6 afaik
+			EnableMSym = false;
+		}
+
 		public bool HasAnyDynamicLibraries {
 			get { throw new NotImplementedException (); }
 		}

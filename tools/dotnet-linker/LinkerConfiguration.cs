@@ -235,6 +235,7 @@ namespace Xamarin.Linker {
 				throw ErrorHelper.CreateError (99, "Inconsistent platforms. TargetFramework={0}, Platform={1}", Driver.TargetFramework.Platform, Platform);
 
 			Application.InitializeCommon ();
+			Application.Initialize ();
 		}
 
 		public void Write ()
