@@ -61,13 +61,6 @@ namespace Xamarin.iOS.Tasks
 					LogAppManifestError (MSBStrings.E0014, executable);
 			}
 
-			if (IsIOS) {
-				if (!plist.ContainsKey (ManifestKeys.CFBundleName))
-					plist [ManifestKeys.CFBundleName] = plist.ContainsKey (ManifestKeys.CFBundleDisplayName) ? plist.GetString (ManifestKeys.CFBundleDisplayName).Clone () : new PString (AppBundleName);
-			} else {
-				plist.SetIfNotPresent (ManifestKeys.CFBundleName, AppBundleName);
-			}
-
 			if (!string.IsNullOrEmpty (ResourceRules))
 				plist.SetIfNotPresent (ManifestKeys.CFBundleResourceSpecification, Path.GetFileName (ResourceRules));
 			if (!plist.ContainsKey (ManifestKeys.CFBundleSupportedPlatforms))

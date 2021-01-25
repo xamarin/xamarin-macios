@@ -381,7 +381,7 @@ function New-GitHubSummaryComment {
         $TestSummaryPath,
 
         [string]
-        $Artifacts
+        $Artifacts=""
     )
 
     $envVars = @{
@@ -410,7 +410,8 @@ function New-GitHubSummaryComment {
         # we did generate an index with the files in vsdrops
         $sb.AppendLine("* [Html Report (VSDrops)]($Env:VSDROPS_INDEX)")
     }
-    if ($Artifacts) {
+    if (-not [string]::IsNullOrEmpty($Artifacts)) {
+        Write-Host "Parsing artifacts"
         if (-not (Test-Path $Artifacts -PathType Leaf)) {
             $sb.AppendLine("Path $Artifacts was not found!")
         } else {
@@ -418,12 +419,19 @@ function New-GitHubSummaryComment {
             $json =  Get-Content $Artifacts | ConvertFrom-Json
             if ($json.Count -gt 0) {
                 $sb.AppendLine("<details><summary>View packages</summary>")
+                $sb.AppendLine("") # no new line results in a bad rendering in the links
                 foreach ($a in $json) {
                     $url = $a.url
                     if ($url.EndsWith(".pkg") -or $url.EndsWith(".nupkg")) {
                         try {
-                            $fileName = $a.url.Substring($a.url.LastIndexOf("/" + 1))
-                            $sb.AppendLine("* [$fileName]($($a.url))")
+                            $fileName = $a.url.Substring($a.url.LastIndexOf("/") + 1)
+                            Write-Host "Adding link for $fileName"
+                            if ($a.url.Contains("notarized")) {
+                                $link = "* [$fileName (notarized)]($($a.url))"
+                            } else {
+                                $link = "* [$fileName]($($a.url))"
+                            }
+                            $sb.AppendLine($link)
                         } catch {
                             Write-Host "Could not get file name for url $url"
                         }
@@ -434,6 +442,8 @@ function New-GitHubSummaryComment {
                 $sb.AppendLine("No packages found.")
             }
         }
+    } else {
+        Write-Host "Artifacts were not provided."
     }
 
     $headerLinks = $sb.ToString()
