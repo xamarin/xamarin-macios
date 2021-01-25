@@ -42,8 +42,6 @@ namespace Xamarin.Bundler {
 
 		public string Compiler = string.Empty;
 
-		public string AotArguments = "static,asmonly,direct-icalls,";
-		public List<string> AotOtherArguments = null;
 		public bool? LLVMAsmWriter;
 		public Dictionary<string, string> LLVMOptimizations = new Dictionary<string, string> ();
 

@@ -52,23 +52,14 @@ using System.IO;
 using System.Diagnostics;
 using System.Linq;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Text;
 using System.Threading;
 
 using Mono.Options;
-using Mono.Cecil;
-using Mono.Cecil.Cil;
-using Mono.Tuner;
 
-using MonoTouch.Tuner;
-using Registrar;
 using ObjCRuntime;
 
-using Xamarin.Linker;
 using Xamarin.Utils;
-
-using Xamarin.MacDev;
 
 public enum OutputFormat {
 	Default,
@@ -219,81 +210,6 @@ namespace Xamarin.Bundler
 			default:
 				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, "Xamarin.iOS");
 			}
-		}
-
-		public static IList<string> GetAotArguments (Application app, string filename, Abi abi, string outputDir, string outputFile, string llvmOutputFile, string dataFile)
-		{
-			string fname = Path.GetFileName (filename);
-			var args = new List<string> ();
-			bool enable_llvm = (abi & Abi.LLVM) != 0;
-			bool enable_thumb = (abi & Abi.Thumb) != 0;
-			bool enable_debug = app.EnableDebug;
-			bool enable_debug_symbols = app.PackageManagedDebugSymbols;
-			bool llvm_only = app.EnableLLVMOnlyBitCode;
-			bool interp = app.IsInterpreted (Assembly.GetIdentity (filename));
-			bool interp_full = !interp && app.UseInterpreter;
-			bool is32bit = (abi & Abi.Arch32Mask) > 0;
-			string arch = abi.AsArchString ();
-
-			args.Add ("--debug");
-
-			if (enable_llvm)
-				args.Add ("--llvm");
-
-			if (!llvm_only && !interp)
-				args.Add ("-O=gsharedvt");
-			if (app.AotOtherArguments != null)
-				args.AddRange (app.AotOtherArguments);
-			var aot = new StringBuilder ();
-			aot.Append ("--aot=mtriple=");
-			aot.Append (enable_thumb ? arch.Replace ("arm", "thumb") : arch);
-			aot.Append ("-ios,");
-			aot.Append ("data-outfile=").Append (dataFile).Append (",");
-			aot.Append (app.AotArguments);
-			if (llvm_only)
-				aot.Append ("llvmonly,");
-			else if (interp) {
-				if (fname != "mscorlib.dll")
-					throw ErrorHelper.CreateError (99, Errors.MX0099, fname);
-				aot.Append ("interp,");
-			} else if (interp_full) {
-				aot.Append ("interp,full,");
-			} else
-				aot.Append ("full,");
-
-			var aname = Path.GetFileNameWithoutExtension (fname);
-			var sdk_or_product = Profile.IsSdkAssembly (aname) || Profile.IsProductAssembly (aname);
-
-			if (enable_llvm)
-				aot.Append ("nodebug,");
-			else if (!(enable_debug || enable_debug_symbols))
-				aot.Append ("nodebug,");
-			else if (app.DebugAll || app.DebugAssemblies.Contains (fname) || !sdk_or_product)
-				aot.Append ("soft-debug,");
-
-			aot.Append ("dwarfdebug,");
-
-			/* Needed for #4587 */
-			if (enable_debug && !enable_llvm)
-				aot.Append ("no-direct-calls,");
-
-			if (!app.UseDlsym (filename))
-				aot.Append ("direct-pinvoke,");
-
-			if (app.EnableMSym) {
-				var msymdir = Path.Combine (outputDir, "Msym");
-				aot.Append ($"msym-dir={msymdir},");
-			}
-
-			if (enable_llvm)
-				aot.Append ("llvm-path=").Append (GetFrameworkCurrentDirectory (app)).Append ("/LLVM/bin/,");
-
-			aot.Append ("outfile=").Append (outputFile);
-			if (enable_llvm)
-				aot.Append (",llvm-outfile=").Append (llvmOutputFile);
-			args.Add (aot.ToString ());
-			args.Add (filename);
-			return args;
 		}
 
 		public static void CopyAssembly (string source, string target, string target_dir = null)
