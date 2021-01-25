@@ -1430,8 +1430,16 @@ namespace Xamarin.Bundler {
 
 		public IList<string> GetAotArguments (string filename, Abi abi, string outputDir, string outputFile, string llvmOutputFile, string dataFile)
 		{
+			GetAotArguments (filename, abi, outputDir, outputFile, llvmOutputFile, dataFile, out var processArguments, out var aotArguments);
+			processArguments.Add (string.Join (",", aotArguments));
+			processArguments.Add (filename);
+			return processArguments;
+		}
+
+		public void GetAotArguments (string filename, Abi abi, string outputDir, string outputFile, string llvmOutputFile, string dataFile, out List<string> processArguments, out List<string> aotArguments)
+		{
 			string fname = Path.GetFileName (filename);
-			var args = new List<string> ();
+			processArguments = new List<string> ();
 			var app = this;
 			bool enable_llvm = (abi & Abi.LLVM) != 0;
 			bool enable_thumb = (abi & Abi.Thumb) != 0;
@@ -1443,65 +1451,61 @@ namespace Xamarin.Bundler {
 			bool is32bit = (abi & Abi.Arch32Mask) > 0;
 			string arch = abi.AsArchString ();
 
-			args.Add ("--debug");
+			processArguments.Add ("--debug");
 
 			if (enable_llvm)
-				args.Add ("--llvm");
+				processArguments.Add ("--llvm");
 
 			if (!llvm_only && !interp)
-				args.Add ("-O=gsharedvt");
+				processArguments.Add ("-O=gsharedvt");
 			if (app.AotOtherArguments != null)
-				args.AddRange (app.AotOtherArguments);
-			var aot = new StringBuilder ();
-			aot.Append ("--aot=mtriple=");
-			aot.Append (enable_thumb ? arch.Replace ("arm", "thumb") : arch);
-			aot.Append ("-ios,");
-			aot.Append ("data-outfile=").Append (dataFile).Append (",");
-			aot.Append (app.AotArguments);
+				processArguments.AddRange (app.AotOtherArguments);
+			aotArguments = new List<string> ();
+			aotArguments.Add ($"--aot=mtriple={(enable_thumb ? arch.Replace ("arm", "thumb") : arch)}-ios");
+			aotArguments.Add ($"data-outfile={dataFile}");
+			aotArguments.AddRange (app.AotArguments.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries));
 			if (llvm_only)
-				aot.Append ("llvmonly,");
+				aotArguments.Add ("llvmonly");
 			else if (interp) {
 				if (fname != Driver.CorlibName + ".dll")
 					throw ErrorHelper.CreateError (99, Errors.MX0099, fname);
-				aot.Append ("interp,");
+				aotArguments.Add ("interp");
 			} else if (interp_full) {
-				aot.Append ("interp,full,");
+				aotArguments.Add ("interp");
+				aotArguments.Add ("full");
 			} else
-				aot.Append ("full,");
+				aotArguments.Add ("full");
 
 			var aname = Path.GetFileNameWithoutExtension (fname);
 			var sdk_or_product = Profile.IsSdkAssembly (aname) || Profile.IsProductAssembly (aname);
 
 			if (enable_llvm)
-				aot.Append ("nodebug,");
+				aotArguments.Add ("nodebug");
 			else if (!(enable_debug || enable_debug_symbols))
-				aot.Append ("nodebug,");
+				aotArguments.Add ("nodebug");
 			else if (app.DebugAll || app.DebugAssemblies.Contains (fname) || !sdk_or_product)
-				aot.Append ("soft-debug,");
+				aotArguments.Add ("soft-debug");
 
-			aot.Append ("dwarfdebug,");
+			aotArguments.Add ("dwarfdebug");
 
 			/* Needed for #4587 */
 			if (enable_debug && !enable_llvm)
-				aot.Append ("no-direct-calls,");
+				aotArguments.Add ("no-direct-calls");
 
 			if (!app.UseDlsym (filename))
-				aot.Append ("direct-pinvoke,");
+				aotArguments.Add ("direct-pinvoke");
 
 			if (app.EnableMSym) {
 				var msymdir = Path.Combine (outputDir, "Msym");
-				aot.Append ($"msym-dir={msymdir},");
+				aotArguments.Add ($"msym-dir={msymdir}");
 			}
 
 			if (enable_llvm)
-				aot.Append ("llvm-path=").Append (Driver.GetFrameworkCurrentDirectory (app)).Append ("/LLVM/bin/,");
+				aotArguments.Add ($"llvm-path={Driver.GetFrameworkCurrentDirectory (app)}/LLVM/bin/");
 
-			aot.Append ("outfile=").Append (outputFile);
+			aotArguments.Add ($"outfile={outputFile}");
 			if (enable_llvm)
-				aot.Append (",llvm-outfile=").Append (llvmOutputFile);
-			args.Add (aot.ToString ());
-			args.Add (filename);
-			return args;
+				aotArguments.Add ($"llvm-outfile={llvmOutputFile}");
 		}
 
 		public string AssemblyName {
