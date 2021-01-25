@@ -132,10 +132,10 @@ steps:
     $configVars = @{} # var name/value pair, later print twice, to process and debug
 
     $xamTop = "$(Build.SourcesDirectory)/xamarin-macios/"
-    $configVars.Add("XAM_TOP", $xamTop)
+    Write-Host "##vso[task.setvariable variable=XAM_TOP]$xamTop"
 
     $maccoreTop = "$(Build.SourcesDirectory)/maccore/"
-    $configVars.Add("MACCORE_TOP", $maccoreTop)
+    Write-Host "##vso[task.setvariable variable=MACCORE_TOP]$maccoreTop"
 
     $buildReason = "$(Build.Reason)"
     $buildSourceBranchName = "$(Build.SourceBranchName)"
@@ -339,8 +339,6 @@ steps:
   inputs: 
     signType: 'Real'  # test is not present for mac.. 
     azureSubscription: 'MicroBuild Signing Task (DevDiv)'
-    version: 1.1.352-g82fc43b9d7
-    feedSource: 'https://pkgs.dev.azure.com/devdiv/_packaging/VS_TempPkgs/nuget/v3/index.json'
   condition: and(succeeded(), contains(variables['configuration.SignPkgs'], 'True'), contains(variables['configuration.IsPr'], 'False')) # if we are a PR, the installation of the plugin will return a 403 and everything will collapse
   env: 
       SYSTEM_ACCESSTOKEN: $(System.AccessToken) 
