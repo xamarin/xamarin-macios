@@ -85,6 +85,13 @@ namespace Xamarin.Bundler {
 
 		public List<string> InterpretedAssemblies = new List<string> ();
 
+		// EnableMSym: only implemented for Xamarin.iOS
+		bool? enable_msym;
+		public bool EnableMSym {
+			get { return enable_msym.Value; }
+			set { enable_msym = value; }
+		}
+
 		// Linker config
 		public LinkMode LinkMode = LinkMode.Full;
 		public List<string> LinkSkipped = new List<string> ();

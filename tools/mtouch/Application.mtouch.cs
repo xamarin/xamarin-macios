@@ -24,11 +24,6 @@ namespace Xamarin.Bundler {
 		public string ExecutableName;
 
 		public bool EnableCxx;
-		bool? enable_msym;
-		public bool EnableMSym {
-			get { return enable_msym.Value; }
-			set { enable_msym = value; }
-		}
 		public bool EnableRepl;
 
 		public List<string> Extensions = new List<string> (); // A list of the extensions this app contains.
