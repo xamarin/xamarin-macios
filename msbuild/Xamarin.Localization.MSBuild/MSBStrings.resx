@@ -834,6 +834,11 @@
         </value>
     </data>
 
+    <data name="W0176" xml:space="preserve">
+        <value>Conflicting '{0}' and '{1}' options. '{1}' will be ignored.
+        </value>
+    </data>
+
     <data name="E7001" xml:space="preserve">
         <value>Could not resolve host IPs for WiFi debugger settings.
         </value>

@@ -29,7 +29,7 @@ namespace Xamarin.iOS.Tasks
 		public override void BundleName ()
 		{
 			Assert.That (CompiledPlist.ContainsKey (ManifestKeys.CFBundleName), "#1");
-			Assert.AreEqual (CompiledPlist.Get<PString> (ManifestKeys.CFBundleName).Value, displayName, "#2");
+			Assert.AreEqual (CompiledPlist.Get<PString> (ManifestKeys.CFBundleName).Value, appBundleName, "#2");
 		}
 
 		[Test]

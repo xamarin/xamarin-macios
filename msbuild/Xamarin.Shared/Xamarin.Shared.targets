@@ -793,7 +793,6 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 			<Output TaskParameter="DetectedAppId" PropertyName="_AppIdentifier" />
 			<Output TaskParameter="DetectedBundleId" PropertyName="_BundleIdentifier" />
-			<Output TaskParameter="DetectedBundleVersion" PropertyName="_BundleVersion" />
 			<Output TaskParameter="DetectedCodeSigningKey" PropertyName="_CodeSigningKey" />
 			<Output TaskParameter="DetectedCodesignAllocate" PropertyName="_CodesignAllocate" />
 			<Output TaskParameter="DetectedDistributionType" PropertyName="_DistributionType" />

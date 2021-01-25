@@ -101,6 +101,11 @@ namespace LinkAll.Attributes {
 		[Test]
 		public void Runtime_RegisterEntryAssembly ()
 		{
+#if NET
+			if (Runtime.Arch == Arch.DEVICE)
+				Assert.Ignore ("https://github.com/xamarin/xamarin-macios/issues/10457");
+#endif
+
 			var klass = Type.GetType ("ObjCRuntime.Runtime, " + AssemblyName);
 			Assert.NotNull (klass, "Runtime");
 			// RegisterEntryAssembly is only needed for the simulator (not on devices) so it's only preserved for sim builds

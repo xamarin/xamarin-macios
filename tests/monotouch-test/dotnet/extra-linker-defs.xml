@@ -1,0 +1,9 @@
+<linker>
+	<assembly fullname="System.Private.CoreLib">
+		<type fullname="System.Runtime.Loader.AssemblyLoadContext">
+			<!-- https://github.com/dotnet/runtime/issues/46908 -->
+			<!-- native-library.c: netcore_resolve_with_resolving_event () -->
+			<method name="MonoResolveUnmanagedDllUsingEvent" />
+		</type>
+	</assembly>
+</linker>
