@@ -143,7 +143,8 @@ steps:
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\GitHub.psm1 
 
     Write-Host "Found tests"
-    $testsPath = "(Build.SourcesDirectory)/artifacts/mac-test-package/tests"
+    $testsPath = $(Build.SourcesDirectory) + "/artifacts/mac-test-package/tests"
+    Write-Host "Tests path is $testsPath"
     Get-ChildItem -Recurse $testsPath
 
     [System.Collections.Generic.List[string]]$failures = @()
