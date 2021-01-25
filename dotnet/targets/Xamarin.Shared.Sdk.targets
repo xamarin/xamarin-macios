@@ -423,7 +423,7 @@
 			Condition="'$(_SdkIsSimulator)' != 'true' And '$(_PlatformName)' != 'macOS'"
 			DependsOnTargets="_ComputeVariables"
 			Inputs="@(_AssembliesToAOT)"
-			Outputs="@(_AssembliesToAOT -> '$(_AOTOutputDirectory)%(Filename)%(Extension).o')">
+			Outputs="@(_AssembliesToAOT -> '$(_AOTOutputDirectory)%(Arch)\%(Filename)%(Extension).o')">
 
 		<AOTCompile
 			SessionId="$(BuildSessionId)"
@@ -432,7 +432,7 @@
 			AOTCompilerPath="$(_AOTCompiler)"
 			InputDirectory="$(_AOTInputDirectory)"
 			MinimumOSVersion="$(_MinimumOSVersion)"
-			OutputDirectory="$(_AOTOutputDirectory)"
+			OutputDirectory="$(_AOTOutputDirectory)\%(_AssembliesToAOT.Arch)"
 			SdkDevPath="$(_SdkDevPath)"
 			TargetArchitectures="$(TargetArchitectures)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
