@@ -335,13 +335,10 @@
 		<ReadItemsFromFile File="$(_LinkerItemsDirectory)/_ReferencesLinkerFlags.items" Condition="Exists('$(_LinkerItemsDirectory)/_ReferencesLinkerFlags.items')">
 			<Output TaskParameter="Items" ItemName="_ReferencesLinkerFlags" />
 		</ReadItemsFromFile>
-
-		<ItemGroup>
-			<_AssembliesToAOT Include="@(ResolvedFileToPublish)" Condition="'%(Extension)' == '.dll' Or '%(Extension)' == '.exe' " />
-			<!-- Exclude resource assemblies from AOT compilation -->
-			<_AssembliesToAOT Remove="@(ReferenceSatellitePaths)" /> <!-- this seems to be from referenced projects with satellite assemblies -->
-			<_AssembliesToAOT Remove="@(ResourceCopyLocalItems)" /> <!-- this seems to be from NuGets with satellite assemblies -->
-		</ItemGroup>
+		<!-- Load _AssembliesToAOT -->
+		<ReadItemsFromFile File="$(_LinkerItemsDirectory)/_AssembliesToAOT.items" Condition="Exists('$(_LinkerItemsDirectory)/_AssembliesToAOT.items')">
+			<Output TaskParameter="Items" ItemName="_AssembliesToAOT" />
+		</ReadItemsFromFile>
 	</Target>
 
 	<!-- Native code -->
@@ -436,7 +433,6 @@
 			MinimumOSVersion="$(_MinimumOSVersion)"
 			OutputDirectory="$(_AOTOutputDirectory)\%(_AssembliesToAOT.Arch)"
 			SdkDevPath="$(_SdkDevPath)"
-			TargetArchitectures="$(TargetArchitectures)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 		>
 			<Output TaskParameter="AssemblyFiles" ItemName="_AOTAssemblyFiles" />
@@ -461,8 +457,8 @@
 			<_XamarinMainLibraries Include="@(_AOTObjectFiles)" />
 
 			<!-- copy the aotdata files to the .app -->
-			<ResolvedFileToPublish Include="$(_AOTOutputDirectory)%(_AssembliesToAOT.Filename).aotdata.arm64" >
-				<RelativePath>$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)$(PublishDir),$(_NativeExecutablePublishDir)))\%(_AssembliesToAOT.Filename).aotdata.arm64</RelativePath>
+			<ResolvedFileToPublish Include="%(_AssembliesToAOT.AOTData)" >
+				<RelativePath>$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)$(PublishDir),$(_NativeExecutablePublishDir)))\%(_AssembliesToAOT.Filename).aotdata.%(_AssembliesToAOT.Arch)</RelativePath>
 			</ResolvedFileToPublish>
 		</ItemGroup>
 	</Target>
