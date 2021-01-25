@@ -105,10 +105,10 @@ steps:
     $configVars = @{} # var name/value pair, later print twice, to process and debug
 
     $xamTop = "$(Build.SourcesDirectory)/xamarin-macios/"
-    $configVars.Add("XAM_TOP", $xamTop)
+    Write-Host "##vso[task.setvariable variable=XAM_TOP]$xamTop"
 
     $maccoreTop = "$(Build.SourcesDirectory)/maccore/"
-    $configVars.Add("MACCORE_TOP", $maccoreTop)
+    Write-Host "##vso[task.setvariable variable=MACCORE_TOP]$maccoreTop"
 
     $buildReason = "$(Build.Reason)"
     $buildSourceBranchName = "$(Build.SourceBranchName)"
