@@ -90,6 +90,14 @@ namespace Xamarin.MacDev.Tasks
 			}
 		}
 
+		protected void ArchiveMSym (string msymDir, string archiveDir)
+		{
+			if (Directory.Exists (msymDir)) {
+				var destDir = Path.Combine (archiveDir, "mSYMs", Path.GetFileName (msymDir));
+				Ditto (msymDir, destDir);
+			}
+		}
+
 		protected static int Ditto (string source, string destination)
 		{
 			var args = new CommandLineArgumentBuilder ();
