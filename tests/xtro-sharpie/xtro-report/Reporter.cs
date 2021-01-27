@@ -243,9 +243,9 @@ namespace Extrospection {
 			log.WriteLine ("<tr>");
 			log.WriteLine ("<td>Total (per state)</td>");
 			if (full)
-				log.WriteLine ($"<td align='center' bgcolor='green' colspan='{cols + 1}'>{total_ignored}</td>");
-			log.WriteLine ($"<td align='center' bgcolor='red' colspan='{cols}'>{total_unclassfied}</td>");
-			log.WriteLine ($"<td align='center' bgcolor='orange' colspan='{cols}'>{total_todo}</td>");
+				log.WriteLine ($"<td align='center' bgcolor='green' colspan='{Platforms.Length + 1}'>{total_ignored}</td>");
+			log.WriteLine ($"<td align='center' bgcolor='red' colspan='{Platforms.Length}'>{total_unclassfied}</td>");
+			log.WriteLine ($"<td align='center' bgcolor='orange' colspan='{Platforms.Length}'>{total_todo}</td>");
 			log.WriteLine ("</tr>");
 
 			log.WriteLine ("<tr>");
