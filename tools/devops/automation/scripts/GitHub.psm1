@@ -400,7 +400,10 @@ function New-GitHubSummaryComment {
         $TestSummaryPath,
 
         [string]
-        $Artifacts=""
+        $Artifacts="",
+
+        [string]
+        $APIDiff=""
     )
 
     $envVars = @{
@@ -428,6 +431,32 @@ function New-GitHubSummaryComment {
     if ($Env:VSDROPS_INDEX) {
         # we did generate an index with the files in vsdrops
         $sb.AppendLine("* [Html Report (VSDrops)]($Env:VSDROPS_INDEX)")
+    }
+    if (-not [string]::IsNullOrEmpty($APIDiff)) {
+        Write-Host "Parsing API diff"
+        if (-not (Test-Path $APIDiff -PathType Leaf)) {
+            $sb.AppendLine("Path $APIDiff was not found!")
+        } else {
+            # read the json file, convert it to an object and add a line for each artifact
+            $json =  Get-Content $APIDiff | ConvertFrom-Json
+            if ($json.Count -gt 0) {
+                # build the required list
+                $sb.AppendLine("# API diff")
+                $sb.AppendLine($json.message)
+                $sb.AppendLine("<details><summary>View API diff</summary>")
+                $sb.AppendLine("") # no new line results in a bad rendering in the links
+
+                foreach ($linkPlatform in @("index","iOS", "macOS", "tvOS", "watchOS")) {
+                    $sb.AppendLine("* $linkPlatform [vsdrops]($($json.html[$linkPlatform])) [gist]($($json.gist[$linkPlatform]))")
+                }
+                $sb.AppendLine("</details>")
+            } else {
+                $sb.AppendLine("No api diff data found.")
+            }
+        }
+        
+    } else {
+        Write-Host "API diff urls have not been provided."
     }
     if (-not [string]::IsNullOrEmpty($Artifacts)) {
         Write-Host "Parsing artifacts"
