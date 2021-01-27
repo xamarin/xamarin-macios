@@ -194,24 +194,15 @@ namespace MonoTouchFixtures.Security {
 			record.Generic = NSData.FromString (Convert.ToString (setID), NSStringEncoding.UTF8);
 			record.Accessible = SecAccessible.Always;
 			record.Label = RecordLabel;
-
-			Query (queryRec, "SetID 1 - before add");
-
 			SecStatusCode code = SecKeyChain.Add (record);
-
-			Query (queryRec, $"SetID 1 - after add, rv: {code}");
-
 			if (code == SecStatusCode.DuplicateItem) {
 				code = RemoveID ();
-				Query (queryRec, $"SetID 1 - after remove, rv: {code}");
-				if (code == SecStatusCode.Success) {
+				if (code == SecStatusCode.Success)
 					code = SecKeyChain.Add (record);
-					Query (queryRec, $"SetID 1 - after readd, rv: {code}");
-				}
 			}
 			return code;
 		}
-
+		
 		[Test]
 		public void CheckId ()
 		{
@@ -219,75 +210,12 @@ namespace MonoTouchFixtures.Security {
 			// test case from http://stackoverflow.com/questions/9481860/monotouch-cant-get-value-of-existing-keychain-item
 			// not a bug (no class lib fix) just a misuse of the API wrt status codes
 			Guid g = Guid.NewGuid ();
-			Query ("CheckID before add");
 			try {
 				Assert.That (SetID (g), Is.EqualTo (SecStatusCode.Success), "success");
-				Query ("CheckID after add");
 				Assert.That (GetID (), Is.EqualTo (g), "same guid");
 			} finally {
 				RemoveID ();
-				Query ("CheckID after cleanup");
 			}
-		}
-
-		void Query (SecRecord query, string name = "Query.")
-		{
-			Console.WriteLine ($"{name} Service: {query.Service} Label: {query.Label} Account: {query.Account}");
-			var records = SecKeyChain.QueryAsRecord (query, 10, out var code);
-			if (records != null) {
-				Console.WriteLine ($"    Query result: {code}. Got back {records?.Length} records:");
-				if (records != null) {
-					for (var i = 0; i < records.Length; i++) {
-						var rec = records [i];
-						Console.WriteLine ($"        #{i + 1}: {rec} - Service: {rec.Service} Label: {rec.Label} Account: {rec.Account}");
-					}
-				}
-			} else {
-				Console.WriteLine ($"    Query result: {code}. No results.");
-			}
-		}
-
-		void Query (string name = "Query:")
-		{
-			var queryRec = new SecRecord (SecKind.GenericPassword) {
-				Service = "KEYCHAIN_SERVICE",
-				Label = RecordLabel,
-				Account = "KEYCHAIN_ACCOUNT"
-			};
-			Query (queryRec, name);
-
-
-			queryRec = new SecRecord (SecKind.GenericPassword) {
-				Label = RecordLabel,
-				Account = "KEYCHAIN_ACCOUNT"
-			};
-
-			queryRec = new SecRecord (SecKind.GenericPassword) {
-				Service = "KEYCHAIN_SERVICE",
-				Account = "KEYCHAIN_ACCOUNT"
-			};
-			Query (queryRec, name);
-
-			queryRec = new SecRecord (SecKind.GenericPassword) {
-				Service = "KEYCHAIN_SERVICE",
-				Label = RecordLabel,
-			};
-			Query (queryRec, name);
-
-
-			queryRec = new SecRecord (SecKind.GenericPassword) {
-				Account = "KEYCHAIN_ACCOUNT"
-			};
-			Query (queryRec, name);
-
-			queryRec = new SecRecord (SecKind.GenericPassword) {
-				Label = RecordLabel,
-			};
-			Query (queryRec, name);
-			queryRec = new SecRecord (SecKind.GenericPassword) {
-				Service = "KEYCHAIN_SERVICE",
-			};
-			Query (queryRec, name);
 		}
 	}
 }
