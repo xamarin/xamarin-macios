@@ -21,3 +21,4 @@ jobs:
           backport_pipeline_id: ${{ secrets.BACKPORT_PIPELINEID }}
           ado_build_pat: ${{ secrets.ADO_BUILDPAT }}
           github_account_pat: ${{ secrets.SERVICEACCOUNT_PAT }}
+          use_fork: true
