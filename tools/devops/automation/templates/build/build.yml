@@ -28,6 +28,12 @@ steps:
 - checkout: release-scripts
   clean: true
 
+- pwsh: |
+    rm -Rf "$HOME\.git-credentials"
+    git config --global credential.helper store
+    Set-Content -Path "$HOME\.git-credentials" -Value "https://$(GitHub.Token):x-oauth-basic@github.com`n" -NoNewline
+  displayName: 'Add git creds store'
+
 - powershell: |
     Write-Host "IsMacOS: ${IsMacOS}"
     Write-Host "IsWindows: ${IsWindows}"
@@ -500,3 +506,8 @@ steps:
     artifactName: HtmlReport-sim
   continueOnError: true
   condition: and(succeededOrFailed(), contains(variables['runTests.TESTS_RAN'], 'True')) # if tests did not run, there is nothing to do
+
+- pwsh: |
+    rm -Rf "$HOME\.git-credentials"
+  displayName: 'Remove git creds store'
+  condition: always()
