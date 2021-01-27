@@ -84,7 +84,7 @@ namespace CoreData
 	interface NSAtomicStore {
 
 		[Export ("initWithPersistentStoreCoordinator:configurationName:URL:options:")]
-		IntPtr Constructor (NSPersistentStoreCoordinator coordinator, string configurationName, NSUrl url, [NullAllowed] NSDictionary options);
+		IntPtr Constructor ([NullAllowed] NSPersistentStoreCoordinator coordinator, [NullAllowed] string configurationName, NSUrl url, [NullAllowed] NSDictionary options);
 
 		[Export ("load:")]
 		bool Load (out NSError error);
@@ -212,6 +212,7 @@ namespace CoreData
 		// Default property value is null but it cannot be set to that value
 		// NSInternalInconsistencyException Reason: Can't set attributeValueClassName to nil for a non-transient attribute.
 		[Export ("attributeValueClassName")]
+		[NullAllowed]
 		string AttributeValueClassName { get; set; }
 
 		[NullAllowed] // by default this property is null
@@ -251,6 +252,7 @@ namespace CoreData
 		NSManagedObjectModel ManagedObjectModel { get; }
 
 		[Export ("managedObjectClassName")]
+		[NullAllowed]
 		string ManagedObjectClassName { get; set; }
 
 		[NullAllowed, Export ("renamingIdentifier")]
@@ -316,7 +318,6 @@ namespace CoreData
 		[Export ("versionHashModifier")]
 		string VersionHashModifier { get; set; }
 
-		[NullAllowed] // by default this property is null
 		[Export ("compoundIndexes", ArgumentSemantic.Retain)]
 		[Deprecated (PlatformName.iOS, 11, 0, message : "Use 'NSEntityDescription.Indexes' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message : "Use 'NSEntityDescription.Indexes' instead.")]
@@ -325,7 +326,6 @@ namespace CoreData
 		NSPropertyDescription [] CompoundIndexes { get; set; }
 
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
-		[NullAllowed] // by default this property is null
 		[Export ("indexes", ArgumentSemantic.Copy)]
 		NSFetchIndexDescription[] Indexes { get; set; }
 
@@ -343,6 +343,7 @@ namespace CoreData
 	interface NSEntityMapping {
 
 		[Export ("name")]
+		[NullAllowed]
 		string Name { get; set; }
 
 		[Export ("mappingType")]
@@ -365,9 +366,11 @@ namespace CoreData
 		NSData DestinationEntityVersionHash { get; set; }
 
 		[Export ("attributeMappings", ArgumentSemantic.Retain)]
+		[NullAllowed]
 		NSPropertyMapping[] AttributeMappings { get; set; }
 
 		[Export ("relationshipMappings", ArgumentSemantic.Retain)]
+		[NullAllowed]
 		NSPropertyMapping[] RelationshipMappings { get; set; }
 
 		[NullAllowed] // by default this property is null
@@ -558,9 +561,10 @@ namespace CoreData
 		string CacheName { get; }
 
 		[Export ("fetchedObjects")]
+		[NullAllowed]
 		NSObject[] FetchedObjects { get; }
 
-		[NullAllowed, Export ("fetchRequest")]
+		[Export ("fetchRequest")]
 		NSFetchRequest FetchRequest { get; }
 
 		[Export ("managedObjectContext")]
@@ -589,6 +593,7 @@ namespace CoreData
 #if !XAMCORE_4_0
 		// badly named and conflict with the property
 		[Export ("sectionIndexTitleForSectionName:")]
+		[return: NullAllowed]
 		string SectionIndexTitles (string sectionName);
 
 		// expose a method as the property name is taken
@@ -625,6 +630,7 @@ namespace CoreData
 		void DidChangeContent (NSFetchedResultsController controller);
 
 		[Export ("controller:sectionIndexTitleForSectionName:")]
+		[return: NullAllowed]
 		string SectionFor (NSFetchedResultsController controller, string sectionName);
 	}
 
@@ -939,6 +945,7 @@ namespace CoreData
 		bool HasChanges { get; }
 
 		[Export ("objectRegisteredForID:")]
+		[return: NullAllowed]
 		NSManagedObject ObjectRegisteredForID (NSManagedObjectID objectID);
 
 		[Export ("objectWithID:")]
@@ -965,9 +972,9 @@ namespace CoreData
 
 		[Export ("observeValueForKeyPath:ofObject:change:context:")]
 #if XAMCORE_4_0
-		void ObserveValue (string keyPath, [NullAllowed] NSObject object1, [NullAllowed] NSDictionary<NSString, NSObject> change, IntPtr context);
+		void ObserveValue ([NullAllowed] string keyPath, [NullAllowed] NSObject object1, [NullAllowed] NSDictionary<NSString, NSObject> change, IntPtr context);
 #else
-		void ObserveValueForKeyPath (string keyPath, IntPtr object1, [NullAllowed] NSDictionary change, IntPtr context);
+		void ObserveValueForKeyPath ([NullAllowed] string keyPath, IntPtr object1, [NullAllowed] NSDictionary change, IntPtr context);
 #endif
 
 		[Export ("processPendingChanges")]
@@ -1099,9 +1106,11 @@ namespace CoreData
 
 		[iOS (8,0), Mac(10,10)]
 		[Export ("executeRequest:error:")]
+		[return: NullAllowed]
 		NSPersistentStoreResult ExecuteRequest (NSPersistentStoreRequest request, out NSError error);
 
 		[Export ("existingObjectWithID:error:")]
+		[return: NullAllowed]
 		NSManagedObject GetExistingObject (NSManagedObjectID objectID, out NSError error);
 
 		[iOS (9,0), Mac (10,11)]
@@ -1319,9 +1328,9 @@ namespace CoreData
 		[Static, Export ("mappingModelFromBundles:forSourceModel:destinationModel:")]
 		[return: NullAllowed]
 #if XAMCORE_4_0
-		NSMappingModel FromBundles (NSBundle[] bundles, NSManagedObjectModel sourceModel, NSManagedObjectModel destinationModel);
+		NSMappingModel FromBundles ([NullAllowed] NSBundle[] bundles, [NullAllowed] NSManagedObjectModel sourceModel, [NullAllowed] NSManagedObjectModel destinationModel);
 #else
-		NSMappingModel MappingModelFromBundles (NSBundle[] bundles, NSManagedObjectModel sourceModel, NSManagedObjectModel destinationModel);
+		NSMappingModel MappingModelFromBundles ([NullAllowed] NSBundle[] bundles, [NullAllowed] NSManagedObjectModel sourceModel, [NullAllowed] NSManagedObjectModel destinationModel);
 #endif
 
 		[Static, Export ("inferredMappingModelForSourceModel:destinationModel:error:")]
@@ -1329,9 +1338,10 @@ namespace CoreData
 		NSMappingModel GetInferredMappingModel (NSManagedObjectModel source, NSManagedObjectModel destination, out NSError error);
 
 		[Export ("initWithContentsOfURL:")]
-		IntPtr Constructor (NSUrl url);
+		IntPtr Constructor ([NullAllowed] NSUrl url);
 
 		[Export ("entityMappings", ArgumentSemantic.Retain)]
+		[NullAllowed]
 		NSEntityMapping[] EntityMappings { get; set; }
 
 		[Export ("entityMappingsByName", ArgumentSemantic.Copy)]
@@ -1350,6 +1360,7 @@ namespace CoreData
 		NSManagedObject SourceObject { get;  }
 
 		[Export ("objectSnapshot", ArgumentSemantic.Retain)]
+		[NullAllowed]
 #if XAMCORE_4_0
 		NSDictionary<NSString, NSObject> ObjectSnapshot { get; }
 #else
@@ -1357,6 +1368,7 @@ namespace CoreData
 #endif
 
 		[Export ("cachedSnapshot", ArgumentSemantic.Retain)]
+		[NullAllowed]
 #if XAMCORE_4_0
 		NSDictionary<NSString, NSObject> CachedSnapshot { get; }
 #else
@@ -1364,6 +1376,7 @@ namespace CoreData
 #endif
 
 		[Export ("persistedSnapshot", ArgumentSemantic.Retain)]
+		[NullAllowed]
 #if XAMCORE_4_0
 		NSDictionary<NSString, NSObject> PersistedSnapshot { get; }
 #else
@@ -1728,6 +1741,7 @@ namespace CoreData
 		NSUrl Url { get; set; }
 
 		[Export ("identifier")]
+		[NullAllowed]
 		string Identifier { get; set; }
 
 		[Export ("type")]
@@ -1737,6 +1751,7 @@ namespace CoreData
 		bool ReadOnly { [Bind ("isReadOnly")] get; set; }
 
 		[Export ("metadata", ArgumentSemantic.Retain)]
+		[NullAllowed]
 #if XAMCORE_4_0
 		NSDictionary<NSString, NSObject> Metadata { get; set; }
 #else
@@ -1901,13 +1916,13 @@ namespace CoreData
 #endif
 
 		[Static, Export ("registerStoreClass:forStoreType:")]
-		void RegisterStoreClass (Class storeClass, NSString storeType);
+		void RegisterStoreClass ([NullAllowed] Class storeClass, NSString storeType);
 
 		[Deprecated (PlatformName.iOS, 9, 0, message : "Use the method that takes an out NSError parameter.")]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use the method that takes an out NSError parameter.")]
 		[Static, Export ("metadataForPersistentStoreOfType:URL:error:")]
 		[return: NullAllowed]
-		NSDictionary MetadataForPersistentStoreOfType (NSString storeType, NSUrl url, out NSError error);
+		NSDictionary MetadataForPersistentStoreOfType ([NullAllowed] NSString storeType, NSUrl url, out NSError error);
 		
 		[iOS (7,0)]
 		[Mac (10, 9)]
@@ -1918,7 +1933,7 @@ namespace CoreData
 		[Deprecated (PlatformName.iOS, 9, 0, message : "Use the method that takes an 'out NSError' parameter.")]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use the method that takes an 'out NSError' parameter.")]
 		[Static, Export ("setMetadata:forPersistentStoreOfType:URL:error:")]
-		bool SetMetadata (NSDictionary metadata, NSString storeType, NSUrl url, out NSError error);
+		bool SetMetadata ([NullAllowed] NSDictionary metadata, [NullAllowed] NSString storeType, NSUrl url, out NSError error);
 		
 		[iOS (7,0)]
 		[Mac (10,9)]
@@ -1950,6 +1965,7 @@ namespace CoreData
 		NSPersistentStore[] PersistentStores { get; }
 
 		[Export ("persistentStoreForURL:")]
+		[return: NullAllowed]
 		NSPersistentStore PersistentStoreForUrl (NSUrl url);
 
 		[Export ("URLForPersistentStore:")]
@@ -1959,6 +1975,7 @@ namespace CoreData
 		bool SetUrl (NSUrl url, NSPersistentStore store);
 
 		[Export ("addPersistentStoreWithType:configuration:URL:options:error:")]
+		[return: NullAllowed]
 #if XAMCORE_4_0
 		NSPersistentStore AddPersistentStore (NSString storeType, [NullAllowed] string configuration, [NullAllowed] NSUrl storeUrl, [NullAllowed] NSDictionary options, out NSError error);
 #else
@@ -2002,6 +2019,7 @@ namespace CoreData
 #if MONOMAC
 		[Availability (Deprecated = Platform.Mac_10_5)]
 		[Static, Export ("metadataForPersistentStoreWithURL:error:")]
+		[return: NullAllowed]
 		NSDictionary MetadataForPersistentStoreWithUrl (NSUrl url, out NSError error);
 #endif
 		[Field ("NSSQLiteStoreType")]
@@ -2130,7 +2148,7 @@ namespace CoreData
 		[Deprecated (PlatformName.iOS, 10, 0, message: "Please see the release notes and Core Data documentation.")]
 		[Deprecated (PlatformName.MacOSX, 10, 12, message: "Please see the release notes and Core Data documentation.")]
 		[Export ("removeUbiquitousContentAndPersistentStoreAtURL:options:error:")]
-		bool RemoveUbiquitousContentAndPersistentStore (NSUrl storeUrl, NSDictionary options, out NSError error);
+		bool RemoveUbiquitousContentAndPersistentStore (NSUrl storeUrl, [NullAllowed] NSDictionary options, out NSError error);
 
 		[iOS (7,0), Mac (10, 9)]
 		[Notification (typeof (NSPersistentStoreCoordinatorStoreChangeEventArgs))]
@@ -2220,6 +2238,7 @@ namespace CoreData
 		NSAsynchronousFetchRequest FetchRequest { get; }
 
 		[Export ("finalResult", ArgumentSemantic.Retain)]
+		[NullAllowed]
 #if XAMCORE_4_0
 		INSFetchRequestResult[] FinalResult { get; }
 #else
@@ -2237,6 +2256,7 @@ namespace CoreData
 	[BaseType (typeof (NSPersistentStoreResult))]
 	interface NSBatchUpdateResult {
 		[Export ("result", ArgumentSemantic.Retain)]
+		[NullAllowed]
 		NSObject Result { get; }
 
 		[Export ("resultType")]
@@ -2250,9 +2270,11 @@ namespace CoreData
 		NSManagedObjectContext ManagedObjectContext { get; }
 
 		[Export ("operationError", ArgumentSemantic.Retain)]
+		[NullAllowed]
 		NSError OperationError { get; }
 
 		[Export ("progress", ArgumentSemantic.Retain)]
+		[NullAllowed]
 		NSProgress Progress { get; }
 
 		[Export ("cancel")]
@@ -2278,7 +2300,8 @@ namespace CoreData
 		[Export ("entity")]
 		NSEntityDescription Entity { get; }
 
-		[NullAllowed] // by default this property is null
+		// by default this property is null, but docs mention possible 
+		// exception on setter so allowing a null is not a good idea
 		[Export ("name")]
 		string Name { get; set; }
 
@@ -2315,6 +2338,7 @@ namespace CoreData
 		string VersionHashModifier { get; set; }
 
 		[Export ("renamingIdentifier")]
+		[NullAllowed]
 		string RenamingIdentifier { get; set; }
 
 		// 5.0

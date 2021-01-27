@@ -24,6 +24,8 @@ using System;
 
 using ObjCRuntime;
 
+#nullable enable
+
 namespace CoreData {
 
 	// NUInteger -> NSEntityMapping.h
