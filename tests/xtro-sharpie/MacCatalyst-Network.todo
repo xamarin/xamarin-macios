@@ -10,7 +10,6 @@
 !missing-pinvoke! nw_ip_options_set_disable_multicast_loopback is not bound
 !missing-pinvoke! nw_parameters_create_custom_ip is not bound
 !missing-pinvoke! nw_parameters_set_privacy_context is not bound
-!missing-pinvoke! nw_path_get_unsatisfied_reason is not bound
 !missing-pinvoke! nw_path_monitor_prohibit_interface_type is not bound
 !missing-pinvoke! nw_privacy_context_create is not bound
 !missing-pinvoke! nw_privacy_context_disable_logging is not bound
