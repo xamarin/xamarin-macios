@@ -33,6 +33,9 @@ namespace Extrospection {
 					case "INCLUDE_MAC":
 						platforms.Add ("macOS");
 						break;
+					case "INCLUDE_MACCATALYST":
+						platforms.Add ("MacCatalyst");
+						break;
 					}
 				}
 				return platforms;
