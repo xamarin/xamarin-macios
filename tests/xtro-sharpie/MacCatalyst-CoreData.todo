@@ -1,4 +1,3 @@
-!extra-null-allowed! 'CoreData.NSFetchRequest CoreData.NSFetchedResultsController::get_FetchRequest()' has a extraneous [NullAllowed] on return type
 !missing-field! NSBinaryExternalRecordType not bound
 !missing-field! NSEntityNameInPathKey not bound
 !missing-field! NSExternalRecordExtensionOption not bound
@@ -11,10 +10,6 @@
 !missing-field! NSValidateXMLStoreOption not bound
 !missing-field! NSXMLExternalRecordType not bound
 !missing-field! NSXMLStoreType not bound
-!missing-null-allowed! 'Foundation.NSObject[] CoreData.NSFetchedResultsController::get_FetchedObjects()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.Boolean CoreData.NSPersistentStoreCoordinator::RemoveUbiquitousContentAndPersistentStore(Foundation.NSUrl,Foundation.NSDictionary,Foundation.NSError&)' is missing an [NullAllowed] on parameter #1
-!missing-null-allowed! 'System.String CoreData.NSFetchedResultsController::SectionIndexTitles(System.String)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String CoreData.NSFetchedResultsControllerDelegate::SectionFor(CoreData.NSFetchedResultsController,System.String)' is missing an [NullAllowed] on return type
 !missing-protocol-member! NSFetchedResultsControllerDelegate::controller:didChangeContentWithDifference: not found
 !missing-protocol-member! NSFetchedResultsControllerDelegate::controller:didChangeContentWithSnapshot: not found
 !missing-selector! +NSPersistentStoreCoordinator::elementsDerivedFromExternalRecordURL: not bound
