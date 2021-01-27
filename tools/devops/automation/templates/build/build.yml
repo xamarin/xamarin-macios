@@ -132,10 +132,10 @@ steps:
     $configVars = @{} # var name/value pair, later print twice, to process and debug
 
     $xamTop = "$(Build.SourcesDirectory)/xamarin-macios/"
-    $configVars.Add("XAM_TOP", $xamTop)
+    Write-Host "##vso[task.setvariable variable=XAM_TOP]$xamTop"
 
     $maccoreTop = "$(Build.SourcesDirectory)/maccore/"
-    $configVars.Add("MACCORE_TOP", $maccoreTop)
+    Write-Host "##vso[task.setvariable variable=MACCORE_TOP]$maccoreTop"
 
     $buildReason = "$(Build.Reason)"
     $buildSourceBranchName = "$(Build.SourceBranchName)"
@@ -345,6 +345,7 @@ steps:
 
 - pwsh: $(Build.SourcesDirectory)/release-scripts/notarize.ps1 -FolderForApps $(Build.SourcesDirectory)/package/notarized 
   displayName: 'ESRP notarizing packages' 
+  condition: and(succeeded(), contains(variables['configuration.SignPkgs'], 'True'), contains(variables['configuration.IsPr'], 'False')) # if we are a PR, do not use ESRP since is not supported
 
 - template: generate-workspace-info.yml@templates
   parameters:
