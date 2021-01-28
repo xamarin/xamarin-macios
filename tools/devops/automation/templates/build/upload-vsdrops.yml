@@ -31,7 +31,7 @@ steps:
   displayName: 'Publish API diff to Artifact Services Drop'
   inputs:
     dropServiceURI: 'https://devdiv.artifacts.visualstudio.com/DefaultCollection'
-    dropMetadataContainerName: 'DropMetadata-${{ parameters.devicePrefix }}'
+    dropMetadataContainerName: 'DropMetadata-APIDiff'
     buildNumber: 'xamarin-macios/device-tests/$(Build.BuildNumber)/$(Build.BuildId)/APIDiff'
     sourcePath: $(STABLE_APIDDIFF_PATH)
     detailedLog: true
