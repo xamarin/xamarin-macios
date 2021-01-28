@@ -284,7 +284,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 	<Target Name="_CoreCompileImageAssets"
 		Inputs="@(ImageAsset);$(_AppManifest)"
 		Outputs="$(_ACTool_PartialAppManifestCache);$(_ACTool_BundleResourceCache)"
-		DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_BeforeCoreCompileImageAssets;_GetMinimumOSVersion">
+		DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_BeforeCoreCompileImageAssets;_GetMinimumOSVersion;_DetectSigningIdentity">
 
 		<ACTool
 			SessionId="$(BuildSessionId)"
@@ -292,6 +292,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			ToolExe="$(ACToolExe)"
 			ToolPath="$(ACToolPath)"
 			AppManifest="$(_AppManifest)"
+			BundleIdentifier="$(_BundleIdentifier)"
 			EnableOnDemandResources="false"
 			ImageAssets="@(ImageAsset)"
 			MinimumOSVersion="$(_MinimumOSVersion)"

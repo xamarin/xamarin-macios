@@ -223,7 +223,7 @@ namespace Xamarin.MacDev.Tasks
 			var outputManifests = new List<ITaskItem> ();
 			var catalogs = new List<ITaskItem> ();
 			var unique = new HashSet<string> ();
-			string bundleIdentifier = null;
+
 			var knownSpecs = new HashSet<string> ();
 			var clones = new HashSet<string> ();
 			var items = new List<ITaskItem> ();
@@ -236,8 +236,6 @@ namespace Xamarin.MacDev.Tasks
 					Log.LogError (null, null, null, AppManifest.ItemSpec, 0, 0, 0, 0, "{0}", ex.Message);
 					return false;
 				}
-
-				bundleIdentifier = plist.GetCFBundleIdentifier ();
 			}
 
 			for (int i = 0; i < ImageAssets.Length; i++) {
@@ -353,7 +351,7 @@ namespace Xamarin.MacDev.Tasks
 					catalogs.Add (item);
 				}
 
-				if (AppleSdkSettings.XcodeVersion.Major >= 7 && !string.IsNullOrEmpty (bundleIdentifier) && SdkPlatform != "WatchSimulator") {
+				if (AppleSdkSettings.XcodeVersion.Major >= 7 && SdkPlatform != "WatchSimulator") {
 					var text = File.ReadAllText (items[i].ItemSpec);
 
 					if (string.IsNullOrEmpty (text))
@@ -398,7 +396,7 @@ namespace Xamarin.MacDev.Tasks
 					var tagList = tags.ToList ();
 					tagList.Sort ();
 
-					var assetDir = AssetPackUtils.GetAssetPackDirectory (intermediate, bundleIdentifier, tagList, out hash);
+					var assetDir = AssetPackUtils.GetAssetPackDirectory (intermediate, BundleIdentifier, tagList, out hash);
 
 					if (knownSpecs.Add (hash)) {
 						var assetpack = new PDictionary ();
@@ -409,7 +407,7 @@ namespace Xamarin.MacDev.Tasks
 						for (int j = 0; j < tagList.Count; j++)
 							ptags.Add (new PString (tagList[j]));
 
-						assetpack.Add ("bundle-id", new PString (string.Format ("{0}.asset-pack-{1}", bundleIdentifier, hash)));
+						assetpack.Add ("bundle-id", new PString (string.Format ("{0}.asset-pack-{1}", BundleIdentifier, hash)));
 						assetpack.Add ("bundle-path", new PString (Path.GetFullPath (assetDir)));
 						assetpack.Add ("tags", ptags);
 						specs.Add (assetpack);
