@@ -92,12 +92,12 @@ fi
 echo '<?xml version="1.0" encoding="utf-8"?><configuration></configuration>' > $CONFIG_FILE
 
 # add the feed
-nuget sources add -name FEEDME -source "$SOURCE" -username WHATEVER -password "$APIKEY" -config $CONFIG_FILE
+nuget sources add -name FEEDME -source "$SOURCE" -username WHATEVER -password "$APIKEY" -config $CONFIG_FILE -verbosity detailed
 
 # push
 for nuget in "${NUGETS[@]}"; do
 	nuget="$(realpath "$nuget")"
-	nuget push "$nuget" -Source FEEDME -ApiKey WHATEVER -NonInteractive "${VERBOSITY[@]}" -ConfigFile $CONFIG_FILE
+	nuget push "$nuget" -Source FEEDME -ApiKey WHATEVER -NonInteractive "${VERBOSITY[@]}" -ConfigFile $CONFIG_FILE -verbosity detailed
 done
 
 # remove config
