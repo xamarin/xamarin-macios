@@ -38,42 +38,5 @@
 !missing-release-attribute-on-return-value! CoreData.NSManagedObjectID CoreData.NSIncrementalStore::NewObjectIdFor(CoreData.NSEntityDescription,Foundation.NSObject)'s selector's ('newObjectIDForEntity:referenceObject:') Objective-C method family ('new') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
 !missing-release-attribute-on-return-value! Foundation.NSObject CoreData.NSIncrementalStore::NewValue(CoreData.NSRelationshipDescription,CoreData.NSManagedObjectID,CoreData.NSManagedObjectContext,Foundation.NSError&)'s selector's ('newValueForRelationship:forObjectWithID:withContext:error:') Objective-C method family ('new') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
 
-# Initial result from new rule extra-null-allowed
+# by-ref argument, cannot be null
 !extra-null-allowed! 'System.Boolean CoreData.NSManagedObject::ValidateValue(Foundation.NSObject&,System.String,Foundation.NSError&)' has a extraneous [NullAllowed] on parameter #0
-!extra-null-allowed! 'System.Void CoreData.NSEntityDescription::set_CompoundIndexes(CoreData.NSPropertyDescription[])' has a extraneous [NullAllowed] on parameter #0
-!extra-null-allowed! 'System.Void CoreData.NSEntityDescription::set_Indexes(CoreData.NSFetchIndexDescription[])' has a extraneous [NullAllowed] on parameter #0
-!extra-null-allowed! 'System.Void CoreData.NSPropertyDescription::set_Name(System.String)' has a extraneous [NullAllowed] on parameter #0
-
-# Initial result from new rule missing-null-allowed
-!missing-null-allowed! 'CoreData.NSManagedObject CoreData.NSManagedObjectContext::GetExistingObject(CoreData.NSManagedObjectID,Foundation.NSError&)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'CoreData.NSManagedObject CoreData.NSManagedObjectContext::ObjectRegisteredForID(CoreData.NSManagedObjectID)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'CoreData.NSMappingModel CoreData.NSMappingModel::MappingModelFromBundles(Foundation.NSBundle[],CoreData.NSManagedObjectModel,CoreData.NSManagedObjectModel)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'CoreData.NSMappingModel CoreData.NSMappingModel::MappingModelFromBundles(Foundation.NSBundle[],CoreData.NSManagedObjectModel,CoreData.NSManagedObjectModel)' is missing an [NullAllowed] on parameter #1
-!missing-null-allowed! 'CoreData.NSMappingModel CoreData.NSMappingModel::MappingModelFromBundles(Foundation.NSBundle[],CoreData.NSManagedObjectModel,CoreData.NSManagedObjectModel)' is missing an [NullAllowed] on parameter #2
-!missing-null-allowed! 'CoreData.NSPersistentStore CoreData.NSPersistentStoreCoordinator::AddPersistentStoreWithType(Foundation.NSString,System.String,Foundation.NSUrl,Foundation.NSDictionary,Foundation.NSError&)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'CoreData.NSPersistentStore CoreData.NSPersistentStoreCoordinator::PersistentStoreForUrl(Foundation.NSUrl)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'CoreData.NSPersistentStoreResult CoreData.NSManagedObjectContext::ExecuteRequest(CoreData.NSPersistentStoreRequest,Foundation.NSError&)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSDictionary CoreData.NSMergeConflict::get_CachedSnapshot()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSDictionary CoreData.NSMergeConflict::get_ObjectSnapshot()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSDictionary CoreData.NSMergeConflict::get_PersistedSnapshot()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSDictionary CoreData.NSPersistentStoreCoordinator::MetadataForPersistentStoreOfType(Foundation.NSString,Foundation.NSUrl,Foundation.NSError&)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'Foundation.NSError CoreData.NSPersistentStoreAsynchronousResult::get_OperationError()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSObject CoreData.NSBatchUpdateResult::get_Result()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSObject[] CoreData.NSAsynchronousFetchResult::get_FinalResult()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSProgress CoreData.NSPersistentStoreAsynchronousResult::get_Progress()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.Boolean CoreData.NSPersistentStoreCoordinator::SetMetadata(Foundation.NSDictionary,Foundation.NSString,Foundation.NSUrl,Foundation.NSError&)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Boolean CoreData.NSPersistentStoreCoordinator::SetMetadata(Foundation.NSDictionary,Foundation.NSString,Foundation.NSUrl,Foundation.NSError&)' is missing an [NullAllowed] on parameter #1
-!missing-null-allowed! 'System.Void CoreData.NSAtomicStore::.ctor(CoreData.NSPersistentStoreCoordinator,System.String,Foundation.NSUrl,Foundation.NSDictionary)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void CoreData.NSAtomicStore::.ctor(CoreData.NSPersistentStoreCoordinator,System.String,Foundation.NSUrl,Foundation.NSDictionary)' is missing an [NullAllowed] on parameter #1
-!missing-null-allowed! 'System.Void CoreData.NSAttributeDescription::set_AttributeValueClassName(System.String)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void CoreData.NSEntityDescription::set_ManagedObjectClassName(System.String)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void CoreData.NSEntityMapping::set_AttributeMappings(CoreData.NSPropertyMapping[])' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void CoreData.NSEntityMapping::set_Name(System.String)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void CoreData.NSEntityMapping::set_RelationshipMappings(CoreData.NSPropertyMapping[])' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void CoreData.NSManagedObjectContext::ObserveValueForKeyPath(System.String,System.IntPtr,Foundation.NSDictionary,System.IntPtr)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void CoreData.NSMappingModel::.ctor(Foundation.NSUrl)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void CoreData.NSMappingModel::set_EntityMappings(CoreData.NSEntityMapping[])' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void CoreData.NSPersistentStore::set_Identifier(System.String)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void CoreData.NSPersistentStore::set_Metadata(Foundation.NSDictionary)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void CoreData.NSPersistentStoreCoordinator::RegisterStoreClass(ObjCRuntime.Class,Foundation.NSString)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void CoreData.NSPropertyDescription::set_RenamingIdentifier(System.String)' is missing an [NullAllowed] on parameter #0

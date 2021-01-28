@@ -9,6 +9,8 @@
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace CoreData
 {
 	public partial class NSEntityDescription
