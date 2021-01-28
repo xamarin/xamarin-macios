@@ -85,7 +85,6 @@ steps:
     $apiDiffData | ConvertTo-Json | Out-File $path
     Write-Host "##vso[task.setvariable variable=APIDIFF_JSON_PATH]$path"
   displayName: 'Create API from stable diff gists'
-  enabled: false
   timeoutInMinutes: 1
   env:
     GITHUB_TOKEN: $(GitHub.Token)
