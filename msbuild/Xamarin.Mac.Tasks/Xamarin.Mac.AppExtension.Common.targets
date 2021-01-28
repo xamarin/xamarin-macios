@@ -37,7 +37,7 @@ Copyright (C) 2013-2014 Xamarin. All rights reserved.
 		</PropertyGroup>
 	</Target>
 
-	<Target Name="_GenerateBundleName" DependsOnTargets="_DetectSigningIdentity;_ParseBundlerArguments">
+	<Target Name="_GenerateBundleName" DependsOnTargets="_ParseBundlerArguments">
 		<PropertyGroup>
 			<AppBundleDir Condition="'$(AppBundleDir)' == ''">$(DeviceSpecificOutputPath)$(_AppBundleName)$(_AppBundleDirExt)</AppBundleDir>
 			<_AppBundlePath>$(AppBundleDir)\</_AppBundlePath>

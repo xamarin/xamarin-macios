@@ -12,6 +12,8 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
+
+using CoreFoundation;
 using Foundation;
 using Security;
 using ObjCRuntime;
@@ -531,7 +533,7 @@ namespace MonoTouchFixtures.Security {
 			keyGenerationParameters.IsPermanent = false;
 			var privateKeyAttributes = new SecKeyParameters ();
 			privateKeyAttributes.AccessControl = new SecAccessControl (SecAccessible.WhenUnlockedThisDeviceOnly, SecAccessControlCreateFlags.PrivateKeyUsage | SecAccessControlCreateFlags.UserPresence);
-			privateKeyAttributes.Label = "NotDefault";
+			privateKeyAttributes.Label = $"{CFBundle.GetMain ().Identifier}-{GetType ().FullName}-{Process.GetCurrentProcess ().Id}";
 			keyGenerationParameters.PrivateKeyAttrs = privateKeyAttributes;
 
 			NSError error;

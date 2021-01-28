@@ -11,7 +11,8 @@
     <MtouchLink>SdkOnly</MtouchLink>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <AssetTargetFallback>xamarinios10;$(AssetTargetFallback)</AssetTargetFallback>
-    <MtouchExtraArgs>-disable-thread-check -xml=${ProjectDir}/../extra-linker-defs.xml "--dlsym:-link sdk" -gcc_flags="-UhoItsB0rken"</MtouchExtraArgs>
+    <MtouchExtraArgs>-disable-thread-check "--dlsym:-link sdk" -gcc_flags="-UhoItsB0rken"</MtouchExtraArgs>
+    <RootTestsDirectory>..\..\..\..\..</RootTestsDirectory>
   </PropertyGroup>
 
   <ItemGroup>
@@ -44,7 +45,7 @@
     <None Include="..\..\Info.plist">
       <LogicalName>Info.plist</LogicalName>
     </None>
-    <None Include="..\..\extra-linker-defs.xml" />
+    <LinkDescription Include="$(RootTestsDirectory)\linker\ios\link sdk\dotnet\extra-linker-defs.xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\Main.cs" />

@@ -58,6 +58,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 
 		[Test]
+#if NET
+		[Ignore ("https://github.com/xamarin/xamarin-macios/issues/10512")]
+#endif
 		public void RegistrarRemoval ()
 		{
 			// define set by xharness when creating test variations.

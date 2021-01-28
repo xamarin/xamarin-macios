@@ -452,7 +452,7 @@ namespace Xamarin.Bundler {
 #if !MMP_TEST
 		static void FileMove (string source, string target)
 		{
-			Application.TryDelete (target);
+			File.Delete (target);
 			File.Move (source, target);
 		}
 
@@ -500,7 +500,7 @@ namespace Xamarin.Bundler {
 				File.WriteAllText (path, contents);
 				ErrorHelper.Warning (1014, e, Errors.MT1014, path, e.Message);
 			} finally {
-				Application.TryDelete (tmp);
+				File.Delete (tmp);
 			}
 		}
 
@@ -521,7 +521,7 @@ namespace Xamarin.Bundler {
 				File.WriteAllBytes (path, contents);
 				ErrorHelper.Warning (1014, e, Errors.MT1014, path, e.Message);
 			} finally {
-				Application.TryDelete (tmp);
+				File.Delete (tmp);
 			}
 		}
 #endif

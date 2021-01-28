@@ -75,6 +75,10 @@ namespace LinkSdk {
 		// https://bugzilla.novell.com/show_bug.cgi?id=688414
 		public void Bug205_ExposingIEnumerable ()
 		{
+#if NET
+			if (Runtime.Arch == Arch.DEVICE)
+				Assert.Ignore ("https://github.com/dotnet/runtime/issues/47114");
+#endif
 			var ds = new DataContractSerializer (typeof (IEnumerable<int>));
 			using (var xw = XmlWriter.Create (System.IO.Stream.Null))
 				ds.WriteObject (xw, new int [] { 1, 2, 3 });
@@ -409,6 +413,10 @@ namespace LinkSdk {
 		[Test]
 		public void AsQueryable_3028 ()
 		{
+#if NET
+			if (Runtime.Arch == Arch.DEVICE)
+				Assert.Ignore ("https://github.com/dotnet/runtime/issues/47112");
+#endif
 			string [] foos = new string [] { "hi", "bye" };
 			string f = foos.AsQueryable ().First ();
 			Assert.That (f, Is.EqualTo ("hi"), "f");
@@ -631,6 +639,10 @@ namespace LinkSdk {
 		[Test]
 		public void NetworkInterface_4631 ()
 		{
+#if NET
+			if (Runtime.Arch == Arch.DEVICE)
+				Assert.Ignore ("https://github.com/dotnet/runtime/issues/47120");
+#endif
 			Assert.NotNull (NetworkInterface.GetAllNetworkInterfaces ());
 		}
 		
@@ -810,15 +822,17 @@ namespace LinkSdk {
 #endif
 		}
 
-		string TestFolder (Environment.SpecialFolder folder, bool supported = true, bool exists = true, bool readOnly = false)
+		string TestFolder (Environment.SpecialFolder folder, bool supported = true, bool? exists = true, bool readOnly = false)
 		{
 			var path = Environment.GetFolderPath (folder);
 			Assert.That (path.Length > 0, Is.EqualTo (supported), folder.ToString ());
 			if (!supported)
 				return path;
 
-			Assert.That (Directory.Exists (path), Is.EqualTo (exists), path);
-			if (!exists)
+			var dirExists = Directory.Exists (path);
+			if (exists.HasValue)
+				Assert.That (dirExists, Is.EqualTo (exists), path);
+			if (!dirExists)
 				return path;
 
 			string file = Path.Combine (path, "temp.txt");
@@ -942,7 +956,7 @@ namespace LinkSdk {
 			Assert.That (path, Is.EqualTo (docs), "path - MyDocuments");
 
 #if NET
-			path = TestFolder (Environment.SpecialFolder.ApplicationData, exists: false);
+			path = TestFolder (Environment.SpecialFolder.ApplicationData, exists: null /* may or may not exist */);
 #else
 			path = TestFolder (Environment.SpecialFolder.ApplicationData);
 #endif
