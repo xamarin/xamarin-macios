@@ -35,6 +35,8 @@ using AppKit;
 #endif
 using CoreGraphics;
 
+#nullable enable
+
 namespace CoreAnimation {
 
 	public partial class CALayer {
@@ -43,6 +45,9 @@ namespace CoreAnimation {
 		[Export ("initWithLayer:")]
 		public CALayer (CALayer other)
 		{
+			if (other == null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (other));
+
 			if (this.GetType () == typeof (CALayer)){
 				Messaging.IntPtr_objc_msgSend_IntPtr (Handle, Selector.GetHandle (selInitWithLayer), other.Handle);
 			} else {
@@ -79,15 +84,15 @@ namespace CoreAnimation {
 		//    The workaround will ensure that UIView.Layer.Delegate is nulled out when
 		//    the CALayerDelegate is disposed, which will prevent the UIView from
 		//    having a pointer to a freed object.
-		WeakReference calayerdelegate;
-		void SetCALayerDelegate (CALayerDelegate value)
+		WeakReference? calayerdelegate;
+		void SetCALayerDelegate (CALayerDelegate? value)
 		{
 			// Remove ourselves from any existing CALayerDelegate.
 			if (calayerdelegate != null) {
-				var del = (CALayerDelegate) calayerdelegate.Target;
+				var del = (CALayerDelegate?) calayerdelegate.Target;
 				if (del == value)
 					return;
-				del.SetCALayer (null);
+				del?.SetCALayer (null);
 			}
 			// Tell the new CALayerDelegate about ourselves
 			if (value == null) {
@@ -101,7 +106,7 @@ namespace CoreAnimation {
 		void OnDispose ()
 		{
 			if (calayerdelegate != null) {
-				var del = (CALayerDelegate) calayerdelegate.Target;
+				var del = (CALayerDelegate?) calayerdelegate.Target;
 				if (del != null)
 					WeakDelegate = null;
 			}
@@ -131,13 +136,13 @@ namespace CoreAnimation {
 		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
 		public CAContentsFormat ContentsFormat {
 			get { return CAContentsFormatExtensions.GetValue (_ContentsFormat); }
-			set { _ContentsFormat = value.GetConstant (); }
+			set { _ContentsFormat = value.GetConstant ()!; }
 		}
 	}
 
 #if !MONOMAC
 	public partial class CADisplayLink {
-		NSActionDispatcher dispatcher;
+		NSActionDispatcher? dispatcher;
 
 		public static CADisplayLink Create (Action action)
 		{

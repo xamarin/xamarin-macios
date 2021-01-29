@@ -39,23 +39,25 @@ using CoreText;
 using AppKit;
 #endif
 
+#nullable enable
+
 namespace CoreAnimation {
 
 	public partial class CATextLayer {
 
-		public NSAttributedString AttributedString {
+		public NSAttributedString? AttributedString {
 			get {
 				return Runtime.GetNSObject (_AttributedString) as NSAttributedString;
 			}
 			set {
-				_AttributedString = value == null ? IntPtr.Zero : value.Handle;
+				_AttributedString = value.GetHandle ();
 			}
 		}
 		
 		public void SetFont (string fontName)
 		{
 			if (fontName == null)
-				throw new ArgumentNullException ("fontName");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (fontName));
 			using (var nss = new NSString (fontName))
 				_Font = nss.Handle;
 		}
@@ -63,14 +65,14 @@ namespace CoreAnimation {
 		public void SetFont (CGFont font)
 		{
 			if (font == null)
-				throw new ArgumentNullException ("font");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (font));
 			_Font = font.Handle;
 		}
 
 		public void SetFont (CTFont font)
 		{
 			if (font == null)
-				throw new ArgumentNullException ("font");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (font));
 			_Font = font.Handle;
 		}
 
@@ -78,12 +80,12 @@ namespace CoreAnimation {
 		public void SetFont (NSFont font)
 		{
 			if (font == null)
-				throw new ArgumentNullException ("font");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (font));
 			_Font = font.Handle;
 		}
 #endif
 
-		public object WeakFont {
+		public object? WeakFont {
 			get {
 				var handle = _Font;
 				nint type = CFType.GetTypeID (handle);
@@ -146,12 +148,12 @@ namespace CoreAnimation {
 #endif // !XAMCORE_4_0
 		public CATextLayerTruncationMode TextTruncationMode {
 			get { return CATextLayerTruncationModeExtensions.GetValue (WeakTruncationMode); }
-			set { WeakTruncationMode = value.GetConstant (); }
+			set { WeakTruncationMode = value.GetConstant ()!; }
 		}
 
 		public CATextLayerAlignmentMode TextAlignmentMode {
 			get { return CATextLayerAlignmentModeExtensions.GetValue (WeakAlignmentMode); }
-			set { WeakAlignmentMode = value.GetConstant (); }
+			set { WeakAlignmentMode = value.GetConstant ()!; }
 		}
 	}
 }
