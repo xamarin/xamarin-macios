@@ -9,6 +9,7 @@ using NUnit.Framework;
 
 using Xamarin.Utils;
 using Xamarin.Tests;
+using Xamarin.MacDev;
 
 namespace Xamarin.Tests {
 	[TestFixture]
@@ -55,7 +56,14 @@ namespace Xamarin.Tests {
 			Clean (project_path);
 			var result = DotNet.AssertBuild (project_path, verbosity);
 			AssertThatLinkerExecuted (result);
-			AssertAppContents (platform, Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", "net6.0-ios", "ios-x64", "MySingleView.app"));
+			var appPath = Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", "net6.0-ios", "ios-x64", "MySingleView.app");
+			AssertAppContents (platform, appPath);
+			var infoPlistPath = Path.Combine (appPath, "Info.plist");
+			var infoPlist = PDictionary.FromFile (infoPlistPath);
+			Assert.AreEqual ("com.xamarin.mysingletitle", infoPlist.GetString ("CFBundleIdentifier").Value, "CFBundleIdentifier");
+			Assert.AreEqual ("MySingleTitle", infoPlist.GetString ("CFBundleDisplayName").Value, "CFBundleDisplayName");
+			Assert.AreEqual ("3.14", infoPlist.GetString ("CFBundleVersion").Value, "CFBundleVersion");
+			Assert.AreEqual ("3.14", infoPlist.GetString ("CFBundleShortVersionString").Value, "CFBundleShortVersionString");
 		}
 
 		[Test]
