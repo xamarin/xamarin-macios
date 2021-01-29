@@ -422,7 +422,7 @@ function New-GitHubSummaryComment {
                 $sb.AppendLine("") # no new line results in a bad rendering in the links
                 foreach ($a in $json) {
                     $url = $a.url
-                    if ($url.EndsWith(".pkg") -or $url.EndsWith(".nupkg")) {
+                    if ($url.EndsWith(".pkg") -or $url.EndsWith(".nupkg") -or $url.EndsWith(".msi")) {
                         try {
                             $fileName = $a.url.Substring($a.url.LastIndexOf("/") + 1)
                             Write-Host "Adding link for $fileName"
