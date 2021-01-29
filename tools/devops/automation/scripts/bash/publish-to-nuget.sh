@@ -1,5 +1,7 @@
 #!/bin/bash -e
 
+set -x
+
 # Script to publish nugets.
 #
 # Arguments (all required):
