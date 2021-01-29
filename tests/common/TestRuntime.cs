@@ -1095,7 +1095,7 @@ partial class TestRuntime
 			// There's an instance method on EKEventStore to request permission,
 			// but creating the instance can end up blocking the app showing a permission dialog...
 			// (on Mavericks at least)
-#if !__MACCATALYST__
+#if __MACCATALYST__
 			return; // Crossing fingers that this won't hang.
 #else
 			if (TestRuntime.CheckMacSystemVersion (10, 10))
