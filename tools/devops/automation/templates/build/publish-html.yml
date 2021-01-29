@@ -64,7 +64,7 @@ steps:
     $gists.Add("index", $url)
 
     # similar dict but for the html links from vsdrops
-    $apiDiffRoot="$Env:VSDROPSPREFIX/$Env:BUILD_BUILDNUMBER/$Env:BUILD_BUILDID/APIDiff/;/
+    $apiDiffRoot="$Env:VSDROPSPREFIX/$Env:BUILD_BUILDNUMBER/$Env:BUILD_BUILDID/APIDiff/;/"
     $html =  @{
       "iOS" = $apiDiffRoot + "ios-api-diff.html"; 
       "macOS" = $apiDiffRoot + "mac-api-diff.html";
