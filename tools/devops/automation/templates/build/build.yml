@@ -34,7 +34,7 @@ steps:
     git config --global credential.helper store
     Set-Content -Path "$HOME/.git-credentials" -Value "https://$(GitHub.Token):x-oauth-basic@github.com`n" -NoNewline
 
-    # maccore is special, we use fetch there in some bash scripts, but VSTS uses https.. and some pools don't likve the above.. :/
+    # maccore is special, we use fetch there in some bash scripts, but VSTS uses https.. and some pools don't like the above.. :/
     cd $(System.DefaultWorkingDirectory)/maccore 
     git remote remove origin
     git remote add origin https://$(GitHub.Token)@github.com/xamarin/maccore.git
