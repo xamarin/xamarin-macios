@@ -1813,9 +1813,10 @@ namespace ObjCRuntime {
 			get {
 				if (_iOSSupportVersion == null) {
 					// This is how Apple does it: https://github.com/llvm/llvm-project/blob/62ec4ac90738a5f2d209ed28c822223e58aaaeb7/lldb/source/Host/macosx/objcxx/HostInfoMacOSX.mm#L100-L105
-					using (var dict = NSMutableDictionary.FromFile ("/System/Library/CoreServices/SystemVersion.plist")) {
-						_iOSSupportVersion = dict.ObjectForKey ((NSString) "iOSSupportVersion").ToString ();
-					}
+					using var dict = NSMutableDictionary.FromFile ("/System/Library/CoreServices/SystemVersion.plist");
+					using var str = (NSString) "iOSSupportVersion";
+					using var obj = dict.ObjectForKey (str);
+					_iOSSupportVersion = obj.ToString ();
 				}
 				return _iOSSupportVersion;
 			}
