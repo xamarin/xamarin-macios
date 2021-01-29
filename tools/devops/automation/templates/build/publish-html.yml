@@ -40,7 +40,7 @@ steps:
       "iOS" = "ios-*.md";
       "macOS" = "macos-*.md";
       "tvOS" = "tvos-*.md";
-      "watchOS" = "watchos-*.md"
+      "watchOS" = "watchos-*.md";
     }
 
     [System.Collections.Generic.List[string]]$gistsObj = @()
@@ -66,19 +66,19 @@ steps:
     # similar dict but for the html links from vsdrops
     $apiDiffRoot="$Env:VSDROPSPREFIX/$Env:BUILD_BUILDNUMBER/$Env:BUILD_BUILDID/APIDiff/;/
     $html =  @{
-      "iOS" = $apiDiffRoot + "ios-api-diff.html" 
-      "macOS" = $apiDiffRoot + "mac-api-diff.html"
-      "tvOS" = $apiDiffRoot + "tvos-api-diff.html"
-      "watchOS" =$apiDiffRoot + "watchos-api-diff.html"
-      "index"= $apiDiffRoot + "api-diff.html"
+      "iOS" = $apiDiffRoot + "ios-api-diff.html"; 
+      "macOS" = $apiDiffRoot + "mac-api-diff.html";
+      "tvOS" = $apiDiffRoot + "tvos-api-diff.html";
+      "watchOS" =$apiDiffRoot + "watchos-api-diff.html";
+      "index"= $apiDiffRoot + "api-diff.html";
     }
 
     # build a json object that will be used by the comment to write the data for users
     $apiDiffData = @{
-      "gist" = $gists
-      "html" = $html
-      "result" = $Env:APIDIFF_BUILT
-      "message" = $Env:APIDIFF_MESSAGE
+      "gist" = $gists;
+      "html" = $html;
+      "result" = $Env:APIDIFF_BUILT;
+      "message" = $Env:APIDIFF_MESSAGE;
     }
     # write to a file to be used by the comment to parse
     $path = $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\apidiff.json"
