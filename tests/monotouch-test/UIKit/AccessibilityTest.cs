@@ -36,14 +36,14 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void ButtonShapesEnabled ()
 		{
-			TestRuntime.AssertXcodeVersion (12, 0);
+			TestRuntime.AssertXcodeVersion (12, TestRuntime.MinorXcode12APIMismatch);
 			Assert.False (UIAccessibility.ButtonShapesEnabled);
 		}
 
 		[Test]
 		public void PrefersCrossFadeTransitions ()
 		{
-			TestRuntime.AssertXcodeVersion (12, 0);
+			TestRuntime.AssertXcodeVersion (12, TestRuntime.MinorXcode12APIMismatch);
 			Assert.False (UIAccessibility.PrefersCrossFadeTransitions);
 		}
 	}

@@ -29,8 +29,8 @@ namespace MonoTouchFixtures.MultipeerConnectivity {
 			TestRuntime.AssertSystemVersion (PlatformName.TvOS, 10, 0, throwIfOtherPlatform: false);
 			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
 
-			using (var peer = new MCPeerID ()) {
-				Assert.Null (peer.DisplayName, "DisplayName");
+			using (var peer = new MCPeerID ("MyDisplayName")) {
+				Assert.AreEqual ("MyDisplayName", peer.DisplayName, "DisplayName");
 			}
 		}
 

@@ -23,6 +23,7 @@ namespace MonoTouchFixtures.UIKit {
 	[Preserve (AllMembers = true)]
 	public class SimpleTextPrintFormatterTest {
 
+#if !XAMCORE_3_0 // The default ctor is not available in XAMCORE_3_0+
 		[Test]
 		public void DefaultCtor ()
 		{
@@ -44,6 +45,7 @@ namespace MonoTouchFixtures.UIKit {
 				Assert.That (stpf.Text, Is.Empty, "Text");
 			}
 		}
+#endif // !XAMCORE_3_0
 
 		[Test]
 		public void StringCtor ()

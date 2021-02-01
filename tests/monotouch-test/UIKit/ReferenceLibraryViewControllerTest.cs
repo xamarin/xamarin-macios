@@ -15,6 +15,10 @@ namespace MonoTouchFixtures.UIKit {
 	public class ReferenceLibraryViewControllerTest {
 		
 		[Test]
+#if __MACCATALYST__
+		[Ignore ("https://github.com/xamarin/maccore/issues/2348")] // The native class doesn't exist
+#endif
+
 		public void InitWithTerm ()
 		{
 			if (Runtime.Arch == Arch.DEVICE && TestRuntime.CheckSystemVersion (PlatformName.iOS, 9, 0))

@@ -17,7 +17,7 @@ namespace SafariServices {
 
 	// NSInteger -> SSReadingList.h
 	[NoMac][iOS (7,0)]
-	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
+	[MacCatalyst (14,0)]
 	[Native]
 	[ErrorDomain ("SSReadingListErrorDomain")]
 	public enum SSReadingListError : long {
@@ -27,7 +27,8 @@ namespace SafariServices {
 	[NoMac]
 	[iOS (9,0)]
 	[Deprecated (PlatformName.iOS, 10,0, message: "Use 'SFErrorCode' enum.")]
-	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
+	[MacCatalyst (13,4)]
+	[Deprecated (PlatformName.MacCatalyst, 13,4, message: "Use 'SFErrorCode' enum.")]
 	[Native]
 	[ErrorDomain ("SFContentBlockerErrorDomain")]
 	public enum SFContentBlockerErrorCode : long {

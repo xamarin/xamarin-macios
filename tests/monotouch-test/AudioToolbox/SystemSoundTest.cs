@@ -28,11 +28,8 @@ namespace MonoTouchFixtures.AudioToolbox {
 		[Test]
 		public void FromFile ()
 		{
-#if MONOMAC
 			var path = NSBundle.MainBundle.PathForResource ("1", "caf", "AudioToolbox");
-#else
-			var path = Path.GetFullPath (Path.Combine ("AudioToolbox", "1.caf"));
-
+#if !MONOMAC
 			if (Runtime.Arch == Arch.SIMULATOR)
 				Assert.Ignore ("PlaySystemSound doesn't work in the simulator");
 #endif
@@ -54,11 +51,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 		[Test]
 		public void Properties ()
 		{
-#if MONOMAC
 			var path = NSBundle.MainBundle.PathForResource ("1", "caf", "AudioToolbox");
-#else
-			var path = Path.GetFullPath (Path.Combine ("AudioToolbox", "1.caf"));
-#endif
 
 			using (var ss = SystemSound.FromFile (NSUrl.FromFilename (path))) {
 				Assert.That (ss.IsUISound, Is.True, "#1");
@@ -109,11 +102,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 		[Test]
 		public void DisposeTest ()
 		{
-#if MONOMAC
 			var path = NSBundle.MainBundle.PathForResource ("1", "caf", "AudioToolbox");
-#else
-			var path = Path.GetFullPath (Path.Combine ("AudioToolbox", "1.caf"));
-#endif
 
 			var ss = SystemSound.FromFile (NSUrl.FromFilename (path));
 			Assert.That (ss.Handle, Is.Not.EqualTo (IntPtr.Zero), "DisposeTest");

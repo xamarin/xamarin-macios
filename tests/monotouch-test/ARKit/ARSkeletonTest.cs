@@ -17,6 +17,8 @@ namespace monotouchtest.ARKit {
 		public void Setup ()
 		{
 			TestRuntime.AssertXcodeVersion (12, 0);
+			// The API here was introduced to Mac Catalyst later than for the other frameworks, so we have this additional check
+			TestRuntime.AssertSystemVersion (PlatformName.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
 		}
 
 		[Test]

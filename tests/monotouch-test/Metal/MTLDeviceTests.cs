@@ -89,15 +89,11 @@ namespace MonoTouchFixtures.Metal {
 			}
 
 
-#if __MACOS__
 			string metal_code = File.ReadAllText (Path.Combine (NSBundle.MainBundle.ResourcePath, "metal-sample.metal"));
 			string metallib_path = Path.Combine (NSBundle.MainBundle.ResourcePath, "default.metallib");
 			string fragmentshader_path = Path.Combine (NSBundle.MainBundle.ResourcePath, "fragmentShader.metallib");
-#else
-			string metal_code = File.ReadAllText (Path.Combine (NSBundle.MainBundle.BundlePath, "metal-sample.metal"));
-			string metallib_path = Path.Combine (NSBundle.MainBundle.BundlePath, "default.metallib");
-			string fragmentshader_path = Path.Combine (NSBundle.MainBundle.BundlePath, "fragmentShader.metallib");
 
+#if !__MACOS__
 			if (Runtime.Arch == Arch.SIMULATOR)
 				Assert.Ignore ("Metal isn't available in the simulator");
 #endif

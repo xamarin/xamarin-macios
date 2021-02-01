@@ -373,13 +373,15 @@ namespace Xharness {
 
 		void AutoConfigureIOS ()
 		{
-			var test_suites = new string [] { "monotouch-test" };
 			var library_projects = new string [] { "BundledResources", "EmbeddedResources", "bindings-test2", "bindings-framework-test", "bindings-xcframework-test" };
 			var fsharp_test_suites = new string [] { "fsharp" };
 			var fsharp_library_projects = new string [] { "fsharplibrary" };
 
-			foreach (var p in test_suites)
-				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".csproj"))) { Name = p });
+			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "monotouch-test", "monotouch-test.csproj"))) {
+				Name = "monotouch-test",
+				IgnoreMacCatalystVariation = false,
+			});
+
 			foreach (var p in fsharp_test_suites)
 				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".fsproj"))) { Name = p });
 			foreach (var p in library_projects)
