@@ -17,6 +17,9 @@ namespace Xamarin.Messaging.Build
 		internal TaskRunner(ITaskSerializer serializer)
 		{
 			this.serializer = serializer;
+
+			// TODO: Needed by the ILLinkTask, we need to add support for doing this from Windows
+			Environment.SetEnvironmentVariable ("DOTNET_HOST_PATH", "/usr/local/share/dotnet/dotnet");
 		}
 
 		internal IEnumerable<Type> Tasks => tasks.AsReadOnly();

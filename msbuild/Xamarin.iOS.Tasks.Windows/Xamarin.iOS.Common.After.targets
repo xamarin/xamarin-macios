@@ -15,6 +15,7 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.WriteItemsToFile" AssemblyFile="$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.Zip" AssemblyFile="$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.iOS.Tasks.CopyArchiveFiles" AssemblyFile="$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.iOS.Tasks.ILLink" AssemblyFile="$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.iOS.Tasks.Windows.CreateArchiveDirectory" AssemblyFile="Xamarin.iOS.Tasks.Windows.dll" />
 	<UsingTask TaskName="Xamarin.iOS.Tasks.Windows.ResolveUniversalTypeIdentifiers" AssemblyFile="Xamarin.iOS.Tasks.Windows.dll" />
 	<UsingTask TaskName="Xamarin.iOS.Tasks.Windows.LocalUnzip" AssemblyFile="Xamarin.iOS.Tasks.Windows.dll" />
@@ -321,6 +322,79 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 			Condition="'$(IsMacEnabled)' == 'true'" 
 			SessionId="$(BuildSessionId)" 
 			Files="@(_MonoLibraryFixToMac)" />
+	</Target>
+
+	<!-- Overrides Core SDK target to remote the ILLink execution -->
+	<!-- https://github.com/dotnet/sdk/blob/cdf57465e1cba9e44b5c9a76a403d41b1b8f178c/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.ILLink.targets#L76-L132 -->
+	<Target Name="_RunILLink"
+		DependsOnTargets="_ComputeManagedAssemblyToLink;PrepareForILLink"
+		Inputs="$(MSBuildAllProjects);@(ManagedAssemblyToLink);@(TrimmerRootDescriptor);@(ReferencePath)"
+		Outputs="$(_LinkSemaphore)">
+
+		<PropertyGroup>
+			<!-- TODO: get the dotnet path from the Mac -->
+			<_RemoteDotNetDir>/usr/local/share/dotnet/</_RemoteDotNetDir>
+			<!-- We need to use net5.0 because when building from VS it sets MSBuildRuntimeType to Core and will pick net472 (which doesn't contain the illink assembly) -->
+			<_ILLinkDir>$(_ILLinkTasksDirectoryRoot)net5.0/</_ILLinkDir>
+			<_ILLinkRemoteDir>$([System.String]::Copy('$(_ILLinkDir)').Replace('$(NetCoreRoot)', '$(_RemoteDotNetDir)'))/</_ILLinkRemoteDir>
+		</PropertyGroup>
+
+		<ItemGroup>
+			<!-- Include Debug symbols as input so those are copied to the server -->
+			<_ILLinkDebugSymbols Include="@(_DebugSymbolsIntermediatePath)" Condition="'$(_DebugSymbolsProduced)'=='true'" />
+		</ItemGroup>
+
+		<ItemGroup>
+			<!-- Replace the custom steps using the remote file paths for those -->
+			<_TrimmerCustomSteps Remove="$(_AdditionalTaskAssembly)" />
+			<_TrimmerCustomSteps Include="$([System.String]::Copy('$(_AdditionalTaskAssembly)').Replace('$(NetCoreRoot)', '$(_RemoteDotNetDir)'))">
+				<BeforeStep>LoadReferencesStep</BeforeStep>
+				<Type>Xamarin.SetupStep</Type>
+			</_TrimmerCustomSteps>
+		</ItemGroup>
+
+		<Delete SessionId="$(BuildSessionId)" Files="@(_LinkedResolvedFileToPublishCandidate)" />
+		<Xamarin.iOS.Tasks.ILLink 
+				SessionId="$(BuildSessionId)"
+				AssemblyPaths="@(ManagedAssemblyToLink)"
+				ReferenceAssemblyPaths="@(ReferencePath)"
+				RootAssemblyNames="@(TrimmerRootAssembly)"
+				TrimMode="$(TrimMode)"
+				RemoveSymbols="$(TrimmerRemoveSymbols)"
+				FeatureSettings="@(_TrimmerFeatureSettings)"
+				CustomData="@(_TrimmerCustomData)"
+
+				BeforeFieldInit="$(_TrimmerBeforeFieldInit)"
+				OverrideRemoval="$(_TrimmerOverrideRemoval)"
+				UnreachableBodies="$(_TrimmerUnreachableBodies)"
+				UnusedInterfaces="$(_TrimmerUnusedInterfaces)"
+				IPConstProp="$(_TrimmerIPConstProp)"
+				Sealer="$(_TrimmerSealer)"
+
+				Warn="$(ILLinkWarningLevel)"
+				NoWarn="$(NoWarn)"
+				TreatWarningsAsErrors="$(ILLinkTreatWarningsAsErrors)"
+				WarningsAsErrors="$(WarningsAsErrors)"
+				WarningsNotAsErrors="$(WarningsNotAsErrors)"
+
+				CustomSteps="@(_TrimmerCustomSteps)"
+				RootDescriptorFiles="@(TrimmerRootDescriptor)"
+				OutputDirectory="$(IntermediateLinkDir)"
+				DumpDependencies="$(_TrimmerDumpDependencies)"
+				ExtraArgs="$(_ExtraTrimmerArgs)"
+				ToolExe="$(_DotNetHostFileName)"
+				ToolPath="$(_DotNetHostDirectory)"
+				ILLinkPath="$(_ILLinkRemoteDir)illink.dll"
+				LinkerItemsDirectory="$(_LinkerItemsDirectory)"
+				DebugSymbols="@(_ILLinkDebugSymbols)"
+				ContinueOnError="ErrorAndContinue">
+			<Output TaskParameter="ExitCode" PropertyName="_ILLinkExitCode" />
+			<Output TaskParameter="LinkedItems" ItemName="_XamarinLinkedItems" />
+			<Output TaskParameter="LinkerOutputItems" ItemName="_XamarinLinkerItems" />
+		</Xamarin.iOS.Tasks.ILLink>
+
+		<Touch Files="$(_LinkSemaphore)" AlwaysCreate="true" Condition=" '$(_ILLinkExitCode)' == '0' " />
+
 	</Target>
 	
 	<!-- Allows providing SDK-specific target overrides -->

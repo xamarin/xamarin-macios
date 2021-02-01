@@ -17,9 +17,17 @@
     <PackageReference Include="Microsoft.Build.Framework" Version="16.8.0" IncludeAssets="$(IncludeMSBuildAssets)" />
     <PackageReference Include="Microsoft.Build.Tasks.Core" Version="16.8.0" IncludeAssets="$(IncludeMSBuildAssets)" />
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.8.0" IncludeAssets="$(IncludeMSBuildAssets)" />
+    <PackageReference Include="Microsoft.NET.ILLink.Tasks" Version="6.0.0-alpha.1.21072.1" />
     <PackageReference Include="Xamarin.Messaging.Build.Client" Version="$(MessagingVersion)" />
     <!-- Needed from Xamarin.Messaging.Build -->
     <PackageReference Include="System.Net.Mqtt.Server" Version="0.6.7-beta" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- We need the net472 implementation, otherwise the Build agent needs to be a net5.0 app -->
+    <Reference Include="ILLink.Tasks">
+      <HintPath>$(PkgMicrosoft_NET_ILLink_Tasks)\tools\net472\ILLink.Tasks.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>
@@ -44,7 +52,7 @@
 			<ReferencePathToAdd Include="@(RuntimeTargetsCopyLocalItems)" Condition="'%(RuntimeIdentifier)' == 'win' And '%(FileName)' == 'System.Text.Encoding.CodePages'" />
 			<ReferencePathToAdd Include="@(RuntimeTargetsCopyLocalItems)" Condition="'%(RuntimeIdentifier)' == 'win' And '%(FileName)' == 'System.Security.Cryptography.ProtectedData'" />
 
-			<ReferencePath Include="@(ReferencePathToAdd)" >
+			<ReferencePath Include="@(ReferencePathToAdd)">
 				<DestinationSubDirectory />
 			</ReferencePath>
 		</ItemGroup>
