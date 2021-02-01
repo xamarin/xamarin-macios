@@ -308,6 +308,15 @@ steps:
   continueOnError: true # should not stop the build since is not official just yet.
   timeoutInMinutes: 180
 
+- task: NuGetCommand@2
+  displayName: 'Publish Nugets'
+  inputs:
+    command: push
+    packagesToPush: $(Build.SourcesDirectory)/package/*.nupkg
+    nuGetFeedType: external
+    publishFeedCredentials: xamarin-impl public feed
+  condition: and(succeeded(), eq(variables['configuration.BuildNugets'], 'True'))
+
 - bash: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/productsign.sh
   env:
     PRODUCTSIGN_KEYCHAIN_PASSWORD: $(xma-password)
