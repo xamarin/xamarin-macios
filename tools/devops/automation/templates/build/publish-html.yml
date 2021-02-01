@@ -81,7 +81,7 @@ steps:
       "message" = $Env:APIDIFF_MESSAGE;
     }
     # write to a file to be used by the comment to parse
-    $path = $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\apidiff.json"
+    $path = "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\apidiff.json"
     $apiDiffData | ConvertTo-Json | Out-File $path
     Write-Host "##vso[task.setvariable variable=APIDIFF_JSON_PATH]$path"
   displayName: 'Create API from stable diff gists'
