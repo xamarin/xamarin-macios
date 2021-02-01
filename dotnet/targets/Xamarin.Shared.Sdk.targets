@@ -279,9 +279,6 @@
 				<TrimMode>link</TrimMode>
 			</ResolvedFileToPublish>
 
-			<!-- Mark our entry assembly as a root assembly. -->
-			<TrimmerRootAssembly Include="$(AssemblyName)" />
-
 			<!-- add a custom step which inserts any other steps we need -->
 			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)">
 				<BeforeStep>LoadReferencesStep</BeforeStep>
