@@ -3,6 +3,7 @@
 //
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Foundation;
 using CoreFoundation;
 using NUnit.Framework;
@@ -104,10 +105,13 @@ namespace MonoTouchFixtures.CoreFoundation {
 		{
 			var main = CFBundle.GetMain ();
 #if MONOMAC
-			Assert.That (main.ExecutableUrl.ToString (), Contains.Substring (ExpectedAppName + "/Contents/MacOS/xammac_tests"));
+			var executableRelativePath = Path.Combine (ExpectedAppName, "Contents", "MacOS", "xammac_tests");
+#elif __MACCATALYST__
+			var executableRelativePath = Path.Combine (ExpectedAppName, "Contents", "MacOS", "monotouchtest");
 #else
-			Assert.That(main.ExecutableUrl.ToString (), Contains.Substring (ExpectedAppName + "/monotouchtest"));
+			var executableRelativePath = Path.Combine (ExpectedAppName, "monotouchtest");
 #endif
+			Assert.That (main.ExecutableUrl.ToString (), Contains.Substring (executableRelativePath));
 		}
 
 		[Test]

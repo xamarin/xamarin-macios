@@ -1,6 +1,6 @@
 // Copyright 2011 Xamarin Inc. All rights reserved
 
-#if !__WATCHOS__ && !MONOMAC
+#if HAS_GLKIT && !MONOMAC
 
 using System;
 using System.Drawing;
@@ -26,4 +26,4 @@ namespace MonoTouchFixtures.GLKit {
 	}
 }
 
-#endif // !__WATCHOS__
+#endif // HAS_GLKIT && !MONOMAC

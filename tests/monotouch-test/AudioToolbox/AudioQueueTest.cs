@@ -22,7 +22,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 	[Preserve (AllMembers = true)]
 	public class AudioQueueTest
 	{
-#if !MONOMAC // HardwareCodecPolicy and SetChannelAssignments are iOS only
+#if !MONOMAC && !__MACCATALYST__ // HardwareCodecPolicy and SetChannelAssignments are iOS only
 		[Test]
 		public void Properties ()
 		{

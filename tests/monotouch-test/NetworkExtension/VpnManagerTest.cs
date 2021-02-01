@@ -34,7 +34,7 @@ namespace MonoTouchFixtures.NetworkExtension {
 				Assert.Inconclusive ("Requires enabling Personal PVN (entitlements)");
 
 			Assert.That (shared.Connection.Status, Is.EqualTo (NEVpnStatus.Invalid), "Connection");
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 			Assert.True (shared.Enabled, "Enabled");
 #else
 			Assert.False (shared.Enabled, "Enabled");

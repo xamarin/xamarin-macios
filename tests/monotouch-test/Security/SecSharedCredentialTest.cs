@@ -22,6 +22,9 @@ namespace MonoTouchFixtures.Security {
 		[SetUp]
 		public void SetUp ()
 		{
+			// The API here was introduced to Mac Catalyst later than for the other frameworks, so we have this additional check
+			TestRuntime.AssertSystemVersion (PlatformName.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
+
 			domainName = "com.xamarin.monotouch-test";
 			account = "twitter";
 			password = "12345678";

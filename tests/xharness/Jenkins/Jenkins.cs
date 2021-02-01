@@ -61,7 +61,7 @@ namespace Xharness.Jenkins {
 		public bool IncludeNonMonotouch = true;
 		public bool IncludeMonotouch = true;
 		public bool IncludeDotNet;
-		public bool IncludeMacCatalyst;
+		public bool IncludeMacCatalyst = true;
 
 		public bool CleanSuccessfulTestRuns = true;
 		public bool UninstallTestApp = true;
@@ -256,7 +256,7 @@ namespace Xharness.Jenkins {
 				if (!project.GenerateVariations)
 					continue;
 
-				var ignored = project.Ignore ?? !IncludeMacCatalyst;
+				var ignored = project.Ignore ?? !IncludeMacCatalyst || project.IgnoreMacCatalystVariation;
 				if (!IsIncluded (project))
 					ignored = true;
 

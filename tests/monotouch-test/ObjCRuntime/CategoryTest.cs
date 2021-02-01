@@ -99,6 +99,7 @@ namespace MonoTouchFixtures {
 		public void NavigationControllerOverride ()
 		{
 			TestRuntime.IgnoreOnTVOS (); // shouldAutorotate is not available on TVOS.
+			TestRuntime.IgnoreOnMacCatalyst (); // rotation is not available on Mac Catalyst
 
 			try {
 				bool category_invoked = false;

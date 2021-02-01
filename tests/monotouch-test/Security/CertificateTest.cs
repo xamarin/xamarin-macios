@@ -22,7 +22,7 @@ using NUnit.Framework;
 namespace MonoTouchFixtures.Security {
 	
 	[TestFixture]
-	// we want the test to be availble if we use the linker
+	// we want the test to be available if we use the linker
 	[Preserve (AllMembers = true)]
 	public class CertificateTest {
 
@@ -510,7 +510,9 @@ namespace MonoTouchFixtures.Security {
 
 				Assert.NotNull (cert.GetNormalizedIssuerSequence (), "GetNormalizedIssuerSequence");
 				Assert.NotNull (cert.GetNormalizedSubjectSequence (), "GetNormalizedSubjectSequence");
+#if !__MACCATALYST__
 				Assert.NotNull (cert.GetPublicKey (), "GetPublicKey");
+#endif
 			}
 			if (TestRuntime.CheckXcodeVersion (9,0)) {
 				NSError err;

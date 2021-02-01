@@ -228,6 +228,7 @@ namespace Security {
 			}
 		}
 
+#if !__MACCATALYST__ // Neither the macOS nor the non-MacOS one works on Mac Catalyst
 #if MONOMAC
 		/* Only available on OS X v10.7 or later */
 		[DllImport (Constants.SecurityLibrary)]
@@ -279,6 +280,8 @@ namespace Security {
 			return (data == IntPtr.Zero) ? null : new SecKey (data, true);
 		}
 #endif
+#endif // !__MACCATALYST__
+
 		[TV (12,0)][Mac (10,14)][iOS (12,0)][Watch (5,0)]
 		[DllImport (Constants.SecurityLibrary)]
 		static extern IntPtr /* SecKeyRef* */ SecCertificateCopyKey (IntPtr /* SecKeyRef* */ key);

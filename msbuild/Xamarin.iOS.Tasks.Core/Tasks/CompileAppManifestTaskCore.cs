@@ -65,7 +65,6 @@ namespace Xamarin.iOS.Tasks
 				plist.SetIfNotPresent (ManifestKeys.CFBundleResourceSpecification, Path.GetFileName (ResourceRules));
 			if (!plist.ContainsKey (ManifestKeys.CFBundleSupportedPlatforms))
 				plist[ManifestKeys.CFBundleSupportedPlatforms] = new PArray { SdkPlatform };
-			plist.SetIfNotPresent (ManifestKeys.CFBundleShortVersionString, plist.GetCFBundleVersion ());
 
 			string dtCompiler = null;
 			string dtPlatformBuild = null;

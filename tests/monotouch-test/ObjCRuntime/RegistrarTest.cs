@@ -2007,6 +2007,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 
+#if __MACCATALYST__
+		[Ignore ("https://github.com/dotnet/runtime/issues/47407")] // The GC doesn't collect objects with finalizers
+#endif
 		[Test]
 		public void BlockCollection ()
 		{
@@ -2203,6 +2206,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void VoidPtrToINativeObjectArgument ()
 		{
+			// The API here was introduced to Mac Catalyst later than for the other frameworks, so we have this additional check
+			TestRuntime.AssertSystemVersion (PlatformName.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
+
 			using (var obj = new ABPeoplePickerNavigationControllerDelegateImpl ()) {
 				using (var person = new ABPerson ()) {
 					Messaging.void_objc_msgSend_IntPtr_IntPtr (obj.Handle, Selector.GetHandle ("peoplePickerNavigationController:didSelectPerson:"), IntPtr.Zero, person.Handle);
