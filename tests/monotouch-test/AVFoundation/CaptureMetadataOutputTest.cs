@@ -41,11 +41,13 @@ namespace MonoTouchFixtures.AVFoundation {
 				if (TestRuntime.CheckSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false))
 					Assert.AreEqual (new CGRect (0, 0, 1, 1), obj.RectOfInterest, "RectOfInterest");
 
+#if !__MACCATALYST__ // https://github.com/xamarin/maccore/issues/2345
 				obj.WeakMetadataObjectTypes = null;
 				Assert.AreEqual (AVMetadataObjectType.None, obj.MetadataObjectTypes, "MetadataObjectTypes");
 				obj.MetadataObjectTypes = AVMetadataObjectType.None;
 				Assert.AreEqual (AVMetadataObjectType.None, obj.MetadataObjectTypes, "MetadataObjectTypes");
 				obj.SetDelegate (null, null);
+#endif // !__MACCATALYST__
 			}
 		}
 

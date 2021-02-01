@@ -10,6 +10,7 @@
 #if !__TVOS__ && !MONOMAC
 
 using System;
+using System.IO;
 using Foundation;
 using UIKit;
 using PassKit;
@@ -39,9 +40,12 @@ namespace MonoTouchFixtures.PassKit {
 			// not null (but empty by default) and there's no API to add them
 			Assert.NotNull (library.GetPasses (), "GetPasses");
 
-			// and we can't trick the OS to do it for us
-			using (NSUrl url = new NSUrl (NSBundle.MainBundle.BundleUrl + "/BoardingPass.pkpass")) {
-#if !__WATCHOS__
+			using (var url = PassTest.GetBoardingPassUrl ()) {
+#if __MACCATALYST__
+				// we can just open the url
+				Assert.True (UIApplication.SharedApplication.OpenUrl (url), "OpenUrl");
+#elif !__WATCHOS__
+				// and we can't trick the OS to do it for us
 				Assert.False (UIApplication.SharedApplication.OpenUrl (url), "OpenUrl");
 #endif
 			}

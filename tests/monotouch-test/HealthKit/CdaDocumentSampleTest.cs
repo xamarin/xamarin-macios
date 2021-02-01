@@ -35,7 +35,13 @@ namespace MonoTouchFixtures.HealthKit {
 						Assert.That (details.ValidationError.Length, Is.EqualTo ((nint) 0), "Length");
 					}
 				};
-				if (TestRuntime.CheckXcodeVersion (11, 0)) {
+#if __MACCATALYST__
+				var throwsException = false;
+#else
+				var throwsException = TestRuntime.CheckXcodeVersion (11, 0);
+#endif
+
+				if (throwsException) {
 					var ex = Assert.Throws<MonoTouchException> (action, "Exception");
 					Assert.That (ex.Message, Does.Match ("startDate.*and endDate.*exceed the maximum allowed duration for this sample type"), "Exception Message");
 				} else {

@@ -29,10 +29,17 @@ steps:
   clean: true
 
 - pwsh: |
-    rm -Rf "$HOME\.git-credentials"
+    # should we need sudo, no, but someone did something wrong in the images..
+    sudo rm -Rf "$HOME/.git-credentials"
     git config --global credential.helper store
-    Set-Content -Path "$HOME\.git-credentials" -Value "https://$(GitHub.Token):x-oauth-basic@github.com`n" -NoNewline
-  displayName: 'Add git creds store'
+    Set-Content -Path "$HOME/.git-credentials" -Value "https://$(GitHub.Token):x-oauth-basic@github.com`n" -NoNewline
+
+    # maccore is special, we use fetch there in some bash scripts, but VSTS uses https.. and some pools don't like the above.. :/
+    cd $(System.DefaultWorkingDirectory)/maccore 
+    git remote remove origin
+    git remote add origin https://$(GitHub.Token)@github.com/xamarin/maccore.git
+    git remote # don't add -v else we see the pat
+  displayName: 'Clean git mess from VSTS'
 
 - powershell: |
     Write-Host "IsMacOS: ${IsMacOS}"
@@ -308,6 +315,15 @@ steps:
   continueOnError: true # should not stop the build since is not official just yet.
   timeoutInMinutes: 180
 
+- task: NuGetCommand@2
+  displayName: 'Publish Nugets'
+  inputs:
+    command: push
+    packagesToPush: $(Build.SourcesDirectory)/package/*.nupkg
+    nuGetFeedType: external
+    publishFeedCredentials: xamarin-impl public feed
+  condition: and(succeeded(), eq(variables['configuration.BuildNugets'], 'True'))
+
 - bash: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/productsign.sh
   env:
     PRODUCTSIGN_KEYCHAIN_PASSWORD: $(xma-password)
@@ -508,6 +524,7 @@ steps:
   condition: and(succeededOrFailed(), contains(variables['runTests.TESTS_RAN'], 'True')) # if tests did not run, there is nothing to do
 
 - pwsh: |
-    rm -Rf "$HOME\.git-credentials"
+    # should we need sudo, no, but someone did something wrong in the images..
+    sudo rm -Rf "$HOME/.git-credentials"
   displayName: 'Remove git creds store'
   condition: always()

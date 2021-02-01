@@ -74,7 +74,7 @@ namespace MonoTouchFixtures.HealthKit {
 				case HKQuantityTypeIdentifier.WalkingDoubleSupportPercentage:
 				case HKQuantityTypeIdentifier.WalkingSpeed:
 				case HKQuantityTypeIdentifier.WalkingStepLength:
-					if (!TestRuntime.CheckXcodeVersion (12, 0))
+					if (!TestRuntime.CheckXcodeVersion (12, TestRuntime.MinorXcode12APIMismatch))
 						continue;
 					break;
 
