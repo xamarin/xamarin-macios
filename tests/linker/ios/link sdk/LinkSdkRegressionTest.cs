@@ -897,7 +897,11 @@ namespace LinkSdk {
 
 			var path = TestFolder (Environment.SpecialFolder.Desktop, exists: false);
 
+#if __MACCATALYST__
+			path = TestFolder (Environment.SpecialFolder.Favorites, exists: true);
+#else
 			path = TestFolder (Environment.SpecialFolder.Favorites, exists: false);
+#endif
 
 			path = TestFolder (Environment.SpecialFolder.MyMusic, exists: false);
 
