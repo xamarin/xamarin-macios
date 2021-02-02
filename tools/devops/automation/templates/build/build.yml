@@ -330,10 +330,44 @@ steps:
   displayName: 'Signing PR Build'
   condition: and(succeeded(), contains(variables['configuration.BuildPkgs'], 'True'), contains(variables['configuration.SignPkgs'], 'True'), contains(variables['configuration.IsPr'], 'True'))
 
-  # Ensure virtualenv is on the PATH
-- template: set-path/v1.yml@templates
-  parameters:
-    prependToPath: '/Users/builder/Library/Python/2.7/bin'
+- task: MicroBuildSigningPlugin@3
+  displayName: 'Install Signing Plugin'
+  inputs:
+    signType: 'Real'
+    azureSubscription: 'MicroBuild Signing Task (DevDiv)'
+  condition: and(succeeded(), contains(variables['configuration.SignPkgs'], 'True'), contains(variables['configuration.IsPr'], 'False'))
+
+- pwsh : |
+    # Get the list of dmg files to sign
+    $msiFiles = Get-ChildItem -Path $(Build.SourcesDirectory)/package/ -Filter "*.msi"
+
+    # Add those dmg files to an array
+    $SignFiles = @()
+    foreach($msi in $msiFiles) {
+        Write-Host "$($msi.FullName)"
+        $SignFiles += @{ "SrcPath"="$($msi.FullName)"}
+    }
+
+    Write-Host "$msiFiles"
+    
+    # array of dicts
+    $SignFileRecord = @(
+      @{
+        "Certs" = "400"
+        "SignFileList" = msiFiles$
+      }
+    )
+    
+    $SignFileList = @{
+        "SignFileRecordList" = $SignFileRecord
+    }
+    
+    # Write the json to a file
+    ConvertTo-Json -InputObject $SignFileList -Depth 5 | Out-File -FilePath $(Build.ArtifactStagingDirectory)/MsiFiles2Notarize.json -Force
+    dotnet $MBSIGN_APPFOLDER/ddsignfiles.dll /filelist:$(Build.ArtifactStagingDirectory)/MsiFiles2Notarize.json
+  displayName: 'Sign .msi'
+  condition: and(succeeded(), contains(variables['configuration.SignPkgs'], 'True'), contains(variables['configuration.IsPr'], 'False'))
+
 
 - bash: |
     security unlock-keychain -p $PRODUCTSIGN_KEYCHAIN_PASSWORD builder.keychain
