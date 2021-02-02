@@ -426,7 +426,7 @@ namespace LinkAll {
 			}
 		}
 
-#if !__WATCHOS__
+#if !__WATCHOS__ && !__MACCATALYST__
 #if !NET // OpenTK-1.0.dll isn't supported in .NET yet
 		[Test]
 		public void OpenTk10_Preserved ()
@@ -447,7 +447,7 @@ namespace LinkAll {
 			Assert.NotNull (core, "ES20/Core");
 		}
 #endif // !NET
-#endif // !__WATCHOS__
+#endif // !__WATCHOS__ && !__MACCATALYST__
 
 		[Test]
 		public void NestedNSObject ()

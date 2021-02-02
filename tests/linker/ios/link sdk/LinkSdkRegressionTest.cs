@@ -37,7 +37,7 @@ using ObjCRuntime;
 using MapKit;
 #endif
 using UIKit;
-#if !__WATCHOS__
+#if HAS_OPENGLES
 using OpenGLES;
 #endif
 using WebKit;
@@ -422,7 +422,7 @@ namespace LinkSdk {
 			Assert.That (f, Is.EqualTo ("hi"), "f");
 		}
 
-#if !__WATCHOS__
+#if !__WATCHOS__ && !__MACCATALYST__
 #if !NET // OpenTK-1.0.dll is not supported yet
 		[Test]
 		public void OpenTk_3049 ()
@@ -450,7 +450,7 @@ namespace LinkSdk {
 			Assert.NotNull (core, "ES20/Core");
 		}
 #endif // !NET
-#endif // !__WATCHOS__
+#endif // !__WATCHOS__ && !__MACCATALYST__
 		
 		[Test]
 		public void XElement_3137 ()
