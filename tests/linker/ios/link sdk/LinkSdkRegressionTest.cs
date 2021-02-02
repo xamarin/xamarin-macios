@@ -177,6 +177,7 @@ namespace LinkSdk {
 		// http://bugzilla.xamarin.com/show_bug.cgi?id=980
 		public void Bug980_AddressBook_NRE ()
 		{
+			TestRuntime.AssertSystemVersion (PlatformName.MacCatalyst, 14, 0, throwIfOtherPlatform: false); // The AddressBook framework was introduced in Mac Catalyst 14.0
 			using (ABPeoplePickerNavigationController picker = new ABPeoplePickerNavigationController ()) {
 				// no NRE should occur
 				if (UIDevice.CurrentDevice.CheckSystemVersion (8, 0))
@@ -195,6 +196,7 @@ namespace LinkSdk {
 				Assert.That (ABAddressBook.GetAuthorizationStatus (), Is.Not.EqualTo (ABAuthorizationStatus.Authorized),
 					"Please deny access to contacts for this this application (it's important for this test)");
 			}
+			TestRuntime.AssertSystemVersion (PlatformName.MacCatalyst, 14, 0, throwIfOtherPlatform: false); // The AddressBook framework was introduced in Mac Catalyst 14.0
 			Assert.IsNotNull (ABPersonAddressKey.City, "ABPersonAddressKey");
 		}
 #endif // !__TVOS__	&& !__WATCHOS__
