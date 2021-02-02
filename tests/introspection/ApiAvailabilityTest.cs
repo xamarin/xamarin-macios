@@ -36,7 +36,10 @@ namespace Introspection {
 		public ApiAvailabilityTest ()
 		{
 			Maximum = Version.Parse (Constants.SdkVersion);
-#if __IOS__
+#if __MACCATALYST__
+			Platform = PlatformName.MacCatalyst;
+			Minimum = Xamarin.SdkVersions.MinMacCatalystVersion;
+#elif __IOS__
 			Platform = PlatformName.iOS;
 			Minimum = Xamarin.SdkVersions.MiniOSVersion;
 #elif __TVOS__
