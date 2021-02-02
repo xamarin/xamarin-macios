@@ -13,11 +13,12 @@ namespace Xamarin.iOS.Tasks
 			return base.Execute ();
 		}
 
-		public void Cancel ()
+		public override void Cancel ()
 		{
 			if (!string.IsNullOrEmpty (SessionId))
-
 				BuildConnection.CancelAsync (SessionId, BuildEngine4).Wait ();
+			else
+				base.Cancel ();
 		}
 	}
 }

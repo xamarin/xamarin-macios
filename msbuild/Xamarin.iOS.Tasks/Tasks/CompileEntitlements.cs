@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
+using Xamarin.MacDev.Tasks;
 using Xamarin.Messaging.Build.Client;
 
 namespace Xamarin.iOS.Tasks
