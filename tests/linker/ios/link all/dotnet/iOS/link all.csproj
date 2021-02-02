@@ -4,7 +4,7 @@
     <TargetFramework>net6.0-ios</TargetFramework>
     <RuntimeIdentifier>ios-x64</RuntimeIdentifier>
     <OutputType>Exe</OutputType>
-    <DefineConstants>NET</DefineConstants>
+    <DefineConstants>NET;$(DefineConstants)</DefineConstants>
     <LangVersion>latest</LangVersion>
     <RootNamespace>linkall</RootNamespace>
     <AssemblyName>link all</AssemblyName>
@@ -12,6 +12,15 @@
     <AssetTargetFallback>xamarinios10;$(AssetTargetFallback)</AssetTargetFallback>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <MtouchExtraArgs>--optimize=all,-remove-dynamic-registrar,-force-rejected-types-removal</MtouchExtraArgs>
+  </PropertyGroup>
+
+  <!-- We use configurations like Debug64 and Release64, which doesn't work with the default logic we and .NET have -->
+  <PropertyGroup Condition="$(Configuration.Contains('Debug'))">
+    <MtouchDebug>true</MtouchDebug>
+    <DefineConstants>DEBUG;$(DefineConstants)</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="$(Configuration.Contains('Release'))">
+    <Optimize>true</Optimize>
   </PropertyGroup>
 
   <ItemGroup>

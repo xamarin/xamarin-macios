@@ -1,0 +1,29 @@
+!missing-field! _nw_privacy_context_default_context not bound
+!missing-pinvoke! nw_establishment_report_enumerate_resolution_reports is not bound
+!missing-pinvoke! nw_ethernet_channel_cancel is not bound
+!missing-pinvoke! nw_ethernet_channel_create is not bound
+!missing-pinvoke! nw_ethernet_channel_send is not bound
+!missing-pinvoke! nw_ethernet_channel_set_queue is not bound
+!missing-pinvoke! nw_ethernet_channel_set_receive_handler is not bound
+!missing-pinvoke! nw_ethernet_channel_set_state_changed_handler is not bound
+!missing-pinvoke! nw_ethernet_channel_start is not bound
+!missing-pinvoke! nw_ip_options_set_disable_multicast_loopback is not bound
+!missing-pinvoke! nw_parameters_create_custom_ip is not bound
+!missing-pinvoke! nw_parameters_set_privacy_context is not bound
+!missing-pinvoke! nw_path_monitor_prohibit_interface_type is not bound
+!missing-pinvoke! nw_privacy_context_create is not bound
+!missing-pinvoke! nw_privacy_context_disable_logging is not bound
+!missing-pinvoke! nw_privacy_context_flush_cache is not bound
+!missing-pinvoke! nw_privacy_context_require_encrypted_name_resolution is not bound
+!missing-pinvoke! nw_resolution_report_copy_preferred_endpoint is not bound
+!missing-pinvoke! nw_resolution_report_copy_successful_endpoint is not bound
+!missing-pinvoke! nw_resolution_report_get_endpoint_count is not bound
+!missing-pinvoke! nw_resolution_report_get_milliseconds is not bound
+!missing-pinvoke! nw_resolution_report_get_protocol is not bound
+!missing-pinvoke! nw_resolution_report_get_source is not bound
+!missing-pinvoke! nw_resolver_config_add_server_address is not bound
+!missing-pinvoke! nw_resolver_config_create_https is not bound
+!missing-pinvoke! nw_resolver_config_create_tls is not bound
+!missing-protocol! OS_nw_privacy_context not bound
+!missing-protocol! OS_nw_resolution_report not bound
+!missing-protocol! OS_nw_resolver_config not bound

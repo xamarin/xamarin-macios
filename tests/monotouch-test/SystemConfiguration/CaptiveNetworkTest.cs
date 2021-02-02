@@ -74,11 +74,16 @@ namespace MonoTouchFixtures.SystemConfiguration {
 				return;
 
 			Assert.AreEqual (StatusCode.OK, status, "Status");
-			// To get a non-null dictionary back, we must (https://developer.apple.com/documentation/systemconfiguration/1614126-cncopycurrentnetworkinfo)
+			// To get a non-null dictionary back, starting in iOS 12, we must (https://developer.apple.com/documentation/systemconfiguration/1614126-cncopycurrentnetworkinfo)
 			// * Use core location, and request (and get) authorization to use location information
 			// * Add the 'com.apple.developer.networking.wifi-info' entitlement
-			// I tried this, and still got null back, so just assert that we get null.
-			Assert.IsNull (dict, "Dictionary");
+			// We're not using custom entitlements when building for device, which means that we can't make this work at the moment.
+			// So just assert that we get null if running on iOS 12+.
+			if (TestRuntime.CheckXcodeVersion (10, 0)) {
+				Assert.IsNull (dict, "Dictionary");
+			} else {
+				Assert.IsNotNull (dict, "Dictionary");
+			}
 #endif
 		}
 
@@ -155,7 +160,7 @@ namespace MonoTouchFixtures.SystemConfiguration {
 		{
 			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 			bool supported = true;
 #else
 			// that API is deprecated in iOS9 - and it might be why it returns false (or not)

@@ -80,7 +80,7 @@ namespace AudioToolbox {
 		AES3                    = 0x61657333, // 'aes3'
 		EnhancedAES3            = 0x65632d33, // 'ec-3'
 		Flac                    = 0x666c6163, // 'flac'
-		[Introduced (PlatformName.UIKitForMac, 13,0)]
+		[Introduced (PlatformName.MacCatalyst, 13,0)]
 		[NoWatch, iOS (13,0), Mac(10,15), TV (13,0)]
 		LatmInLoas              = 0x6c6f6173, // 'loas'
 		Opus                    = 0x6f707573, // 'opus'

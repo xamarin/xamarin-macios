@@ -4399,6 +4399,7 @@ public class Dummy {
 			var environment_variables = new Dictionary<string, string> ();
 			if (!clean_simulator)
 				environment_variables ["SKIP_SIMULATOR_SETUP"] = "1";
+			environment_variables ["USE_TCP_TUNNEL"] = null;
 
 			var args = new List<string> ();
 			args.Add (Path.Combine (Configuration.RootPath, "tests", "xharness", "xharness.exe"));

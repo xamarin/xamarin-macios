@@ -239,7 +239,7 @@ namespace Xamarin.iOS.Tasks
 		{
 			using (var sdk = new TempSdk()) {
 				Task.TargetFrameworkMoniker = targetFrameworkMoniker;
-				var expectedPath = Path.Combine (IPhoneSdks.MonoTouch.LibDir, "mono", frameworkDir, "Facades", "System.Collections.dll");
+				var expectedPath = Path.Combine (Sdks.XamIOS.LibDir, "mono", frameworkDir, "Facades", "System.Collections.dll");
 				Directory.CreateDirectory (Path.GetDirectoryName (expectedPath));
 				File.WriteAllText (expectedPath, "");
 
@@ -264,7 +264,7 @@ namespace Xamarin.iOS.Tasks
 		{
 			using (var sdk = new TempSdk()) {
 				Task.TargetFrameworkMoniker = targetFrameworkMoniker;
-				var expectedPath = Path.Combine (IPhoneSdks.MonoTouch.LibDir, "mono", frameworkDir, "System.Collections.dll");
+				var expectedPath = Path.Combine (Sdks.XamIOS.LibDir, "mono", frameworkDir, "System.Collections.dll");
 				Directory.CreateDirectory (Path.GetDirectoryName (expectedPath));
 				File.WriteAllText (expectedPath, "");
 
@@ -309,16 +309,16 @@ namespace Xamarin.iOS.Tasks
 				File.WriteAllText (Path.Combine (SdkDir, "Version"), "1.0.0.0"); // Fake Version file so that MonoTouchSdk detects this as a real Sdk location.
 				File.WriteAllText (Path.Combine (SdkDir, "bin", "mtouch"), "echo \"fake mtouch\""); // Fake mtouch binary so that MonoTouchSdk detects this as a real Sdk location.
 				Directory.CreateDirectory (Path.Combine (SdkDir, "lib"));
-				sdk = IPhoneSdks.MonoTouch;
+				sdk = Sdks.XamIOS;
 
-				IPhoneSdks.MonoTouch = new MonoTouchSdk (SdkDir);
+				Sdks.XamIOS = new MonoTouchSdk (SdkDir);
 			}
 
 			public string SdkDir { get; private set; }
 
 			public void Dispose ()
 			{
-				IPhoneSdks.MonoTouch = sdk;
+				Sdks.XamIOS = sdk;
 			}
 		}
 	}

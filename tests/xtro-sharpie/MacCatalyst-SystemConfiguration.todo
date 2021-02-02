@@ -1,0 +1,454 @@
+!missing-field! kSCBondStatusDeviceAggregationStatus not bound
+!missing-field! kSCBondStatusDeviceCollecting not bound
+!missing-field! kSCBondStatusDeviceDistributing not bound
+!missing-field! kSCCompAnyRegex not bound
+!missing-field! kSCCompGlobal not bound
+!missing-field! kSCCompHostNames not bound
+!missing-field! kSCCompInterface not bound
+!missing-field! kSCCompNetwork not bound
+!missing-field! kSCCompService not bound
+!missing-field! kSCCompSystem not bound
+!missing-field! kSCCompUsers not bound
+!missing-field! kSCDynamicStoreDomainFile not bound
+!missing-field! kSCDynamicStoreDomainPlugin not bound
+!missing-field! kSCDynamicStoreDomainPrefs not bound
+!missing-field! kSCDynamicStoreDomainSetup not bound
+!missing-field! kSCDynamicStoreDomainState not bound
+!missing-field! kSCDynamicStorePropNetInterfaces not bound
+!missing-field! kSCDynamicStorePropNetPrimaryInterface not bound
+!missing-field! kSCDynamicStorePropNetPrimaryService not bound
+!missing-field! kSCDynamicStorePropNetServiceIDs not bound
+!missing-field! kSCDynamicStorePropSetupCurrentSet not bound
+!missing-field! kSCDynamicStorePropSetupLastUpdated not bound
+!missing-field! kSCDynamicStoreUseSessionKeys not bound
+!missing-field! kSCEntNet6to4 not bound
+!missing-field! kSCEntNetAirPort not bound
+!missing-field! kSCEntNetDHCP not bound
+!missing-field! kSCEntNetDNS not bound
+!missing-field! kSCEntNetEthernet not bound
+!missing-field! kSCEntNetFireWire not bound
+!missing-field! kSCEntNetInterface not bound
+!missing-field! kSCEntNetIPSec not bound
+!missing-field! kSCEntNetIPv4 not bound
+!missing-field! kSCEntNetIPv6 not bound
+!missing-field! kSCEntNetL2TP not bound
+!missing-field! kSCEntNetLink not bound
+!missing-field! kSCEntNetModem not bound
+!missing-field! kSCEntNetPPP not bound
+!missing-field! kSCEntNetPPPoE not bound
+!missing-field! kSCEntNetPPPSerial not bound
+!missing-field! kSCEntNetPPTP not bound
+!missing-field! kSCEntNetProxies not bound
+!missing-field! kSCEntNetSMB not bound
+!missing-field! kSCEntUsersConsoleUser not bound
+!missing-field! kSCNetworkInterfaceIPv4 not bound
+!missing-field! kSCNetworkInterfaceType6to4 not bound
+!missing-field! kSCNetworkInterfaceTypeBluetooth not bound
+!missing-field! kSCNetworkInterfaceTypeBond not bound
+!missing-field! kSCNetworkInterfaceTypeEthernet not bound
+!missing-field! kSCNetworkInterfaceTypeFireWire not bound
+!missing-field! kSCNetworkInterfaceTypeIEEE80211 not bound
+!missing-field! kSCNetworkInterfaceTypeIPSec not bound
+!missing-field! kSCNetworkInterfaceTypeIPv4 not bound
+!missing-field! kSCNetworkInterfaceTypeIrDA not bound
+!missing-field! kSCNetworkInterfaceTypeL2TP not bound
+!missing-field! kSCNetworkInterfaceTypeModem not bound
+!missing-field! kSCNetworkInterfaceTypePPP not bound
+!missing-field! kSCNetworkInterfaceTypePPTP not bound
+!missing-field! kSCNetworkInterfaceTypeSerial not bound
+!missing-field! kSCNetworkInterfaceTypeVLAN not bound
+!missing-field! kSCNetworkInterfaceTypeWWAN not bound
+!missing-field! kSCNetworkProtocolTypeDNS not bound
+!missing-field! kSCNetworkProtocolTypeIPv4 not bound
+!missing-field! kSCNetworkProtocolTypeIPv6 not bound
+!missing-field! kSCNetworkProtocolTypeProxies not bound
+!missing-field! kSCNetworkProtocolTypeSMB not bound
+!missing-field! kSCPrefCurrentSet not bound
+!missing-field! kSCPrefNetworkServices not bound
+!missing-field! kSCPrefSets not bound
+!missing-field! kSCPrefSystem not bound
+!missing-field! kSCPropInterfaceName not bound
+!missing-field! kSCPropMACAddress not bound
+!missing-field! kSCPropNet6to4Relay not bound
+!missing-field! kSCPropNetAirPortAllowNetCreation not bound
+!missing-field! kSCPropNetAirPortAuthPassword not bound
+!missing-field! kSCPropNetAirPortAuthPasswordEncryption not bound
+!missing-field! kSCPropNetAirPortJoinMode not bound
+!missing-field! kSCPropNetAirPortPowerEnabled not bound
+!missing-field! kSCPropNetAirPortPreferredNetwork not bound
+!missing-field! kSCPropNetAirPortSavePasswords not bound
+!missing-field! kSCPropNetDNSDomainName not bound
+!missing-field! kSCPropNetDNSOptions not bound
+!missing-field! kSCPropNetDNSSearchDomains not bound
+!missing-field! kSCPropNetDNSSearchOrder not bound
+!missing-field! kSCPropNetDNSServerAddresses not bound
+!missing-field! kSCPropNetDNSServerPort not bound
+!missing-field! kSCPropNetDNSServerTimeout not bound
+!missing-field! kSCPropNetDNSSortList not bound
+!missing-field! kSCPropNetDNSSupplementalMatchDomains not bound
+!missing-field! kSCPropNetDNSSupplementalMatchOrders not bound
+!missing-field! kSCPropNetEthernetMediaOptions not bound
+!missing-field! kSCPropNetEthernetMediaSubType not bound
+!missing-field! kSCPropNetEthernetMTU not bound
+!missing-field! kSCPropNetInterfaceDeviceName not bound
+!missing-field! kSCPropNetInterfaceHardware not bound
+!missing-field! kSCPropNetInterfaces not bound
+!missing-field! kSCPropNetInterfaceSubType not bound
+!missing-field! kSCPropNetInterfaceSupportsModemOnHold not bound
+!missing-field! kSCPropNetInterfaceType not bound
+!missing-field! kSCPropNetIPSecAuthenticationMethod not bound
+!missing-field! kSCPropNetIPSecConnectTime not bound
+!missing-field! kSCPropNetIPSecLocalCertificate not bound
+!missing-field! kSCPropNetIPSecLocalIdentifier not bound
+!missing-field! kSCPropNetIPSecLocalIdentifierType not bound
+!missing-field! kSCPropNetIPSecRemoteAddress not bound
+!missing-field! kSCPropNetIPSecSharedSecret not bound
+!missing-field! kSCPropNetIPSecSharedSecretEncryption not bound
+!missing-field! kSCPropNetIPSecStatus not bound
+!missing-field! kSCPropNetIPSecXAuthEnabled not bound
+!missing-field! kSCPropNetIPSecXAuthName not bound
+!missing-field! kSCPropNetIPSecXAuthPassword not bound
+!missing-field! kSCPropNetIPSecXAuthPasswordEncryption not bound
+!missing-field! kSCPropNetIPv4Addresses not bound
+!missing-field! kSCPropNetIPv4BroadcastAddresses not bound
+!missing-field! kSCPropNetIPv4ConfigMethod not bound
+!missing-field! kSCPropNetIPv4DestAddresses not bound
+!missing-field! kSCPropNetIPv4DHCPClientID not bound
+!missing-field! kSCPropNetIPv4Router not bound
+!missing-field! kSCPropNetIPv4SubnetMasks not bound
+!missing-field! kSCPropNetIPv6Addresses not bound
+!missing-field! kSCPropNetIPv6ConfigMethod not bound
+!missing-field! kSCPropNetIPv6DestAddresses not bound
+!missing-field! kSCPropNetIPv6Flags not bound
+!missing-field! kSCPropNetIPv6PrefixLength not bound
+!missing-field! kSCPropNetIPv6Router not bound
+!missing-field! kSCPropNetL2TPIPSecSharedSecret not bound
+!missing-field! kSCPropNetL2TPIPSecSharedSecretEncryption not bound
+!missing-field! kSCPropNetL2TPTransport not bound
+!missing-field! kSCPropNetLinkActive not bound
+!missing-field! kSCPropNetLinkDetaching not bound
+!missing-field! kSCPropNetLocalHostName not bound
+!missing-field! kSCPropNetModemAccessPointName not bound
+!missing-field! kSCPropNetModemConnectionPersonality not bound
+!missing-field! kSCPropNetModemConnectionScript not bound
+!missing-field! kSCPropNetModemConnectSpeed not bound
+!missing-field! kSCPropNetModemDataCompression not bound
+!missing-field! kSCPropNetModemDeviceContextID not bound
+!missing-field! kSCPropNetModemDeviceModel not bound
+!missing-field! kSCPropNetModemDeviceVendor not bound
+!missing-field! kSCPropNetModemDialMode not bound
+!missing-field! kSCPropNetModemErrorCorrection not bound
+!missing-field! kSCPropNetModemHoldCallWaitingAudibleAlert not bound
+!missing-field! kSCPropNetModemHoldDisconnectOnAnswer not bound
+!missing-field! kSCPropNetModemHoldEnabled not bound
+!missing-field! kSCPropNetModemHoldReminder not bound
+!missing-field! kSCPropNetModemHoldReminderTime not bound
+!missing-field! kSCPropNetModemNote not bound
+!missing-field! kSCPropNetModemPulseDial not bound
+!missing-field! kSCPropNetModemSpeaker not bound
+!missing-field! kSCPropNetModemSpeed not bound
+!missing-field! kSCPropNetOverridePrimary not bound
+!missing-field! kSCPropNetPPPACSPEnabled not bound
+!missing-field! kSCPropNetPPPAuthEAPPlugins not bound
+!missing-field! kSCPropNetPPPAuthName not bound
+!missing-field! kSCPropNetPPPAuthPassword not bound
+!missing-field! kSCPropNetPPPAuthPasswordEncryption not bound
+!missing-field! kSCPropNetPPPAuthPrompt not bound
+!missing-field! kSCPropNetPPPAuthProtocol not bound
+!missing-field! kSCPropNetPPPCCPEnabled not bound
+!missing-field! kSCPropNetPPPCCPMPPE128Enabled not bound
+!missing-field! kSCPropNetPPPCCPMPPE40Enabled not bound
+!missing-field! kSCPropNetPPPCommAlternateRemoteAddress not bound
+!missing-field! kSCPropNetPPPCommConnectDelay not bound
+!missing-field! kSCPropNetPPPCommDisplayTerminalWindow not bound
+!missing-field! kSCPropNetPPPCommRedialCount not bound
+!missing-field! kSCPropNetPPPCommRedialEnabled not bound
+!missing-field! kSCPropNetPPPCommRedialInterval not bound
+!missing-field! kSCPropNetPPPCommRemoteAddress not bound
+!missing-field! kSCPropNetPPPCommTerminalScript not bound
+!missing-field! kSCPropNetPPPCommUseTerminalScript not bound
+!missing-field! kSCPropNetPPPConnectTime not bound
+!missing-field! kSCPropNetPPPDeviceLastCause not bound
+!missing-field! kSCPropNetPPPDialOnDemand not bound
+!missing-field! kSCPropNetPPPDisconnectOnFastUserSwitch not bound
+!missing-field! kSCPropNetPPPDisconnectOnIdle not bound
+!missing-field! kSCPropNetPPPDisconnectOnIdleTimer not bound
+!missing-field! kSCPropNetPPPDisconnectOnLogout not bound
+!missing-field! kSCPropNetPPPDisconnectOnSleep not bound
+!missing-field! kSCPropNetPPPDisconnectTime not bound
+!missing-field! kSCPropNetPPPIdleReminder not bound
+!missing-field! kSCPropNetPPPIdleReminderTimer not bound
+!missing-field! kSCPropNetPPPIPCPCompressionVJ not bound
+!missing-field! kSCPropNetPPPIPCPUsePeerDNS not bound
+!missing-field! kSCPropNetPPPLastCause not bound
+!missing-field! kSCPropNetPPPLCPCompressionACField not bound
+!missing-field! kSCPropNetPPPLCPCompressionPField not bound
+!missing-field! kSCPropNetPPPLCPEchoEnabled not bound
+!missing-field! kSCPropNetPPPLCPEchoFailure not bound
+!missing-field! kSCPropNetPPPLCPEchoInterval not bound
+!missing-field! kSCPropNetPPPLCPMRU not bound
+!missing-field! kSCPropNetPPPLCPMTU not bound
+!missing-field! kSCPropNetPPPLCPReceiveACCM not bound
+!missing-field! kSCPropNetPPPLCPTransmitACCM not bound
+!missing-field! kSCPropNetPPPLogfile not bound
+!missing-field! kSCPropNetPPPOverridePrimary not bound
+!missing-field! kSCPropNetPPPPlugins not bound
+!missing-field! kSCPropNetPPPRetryConnectTime not bound
+!missing-field! kSCPropNetPPPSessionTimer not bound
+!missing-field! kSCPropNetPPPStatus not bound
+!missing-field! kSCPropNetPPPUseSessionTimer not bound
+!missing-field! kSCPropNetPPPVerboseLogging not bound
+!missing-field! kSCPropNetProxiesExceptionsList not bound
+!missing-field! kSCPropNetProxiesExcludeSimpleHostnames not bound
+!missing-field! kSCPropNetProxiesFTPEnable not bound
+!missing-field! kSCPropNetProxiesFTPPassive not bound
+!missing-field! kSCPropNetProxiesFTPPort not bound
+!missing-field! kSCPropNetProxiesFTPProxy not bound
+!missing-field! kSCPropNetProxiesGopherEnable not bound
+!missing-field! kSCPropNetProxiesGopherPort not bound
+!missing-field! kSCPropNetProxiesGopherProxy not bound
+!missing-field! kSCPropNetProxiesHTTPEnable not bound
+!missing-field! kSCPropNetProxiesHTTPPort not bound
+!missing-field! kSCPropNetProxiesHTTPProxy not bound
+!missing-field! kSCPropNetProxiesHTTPSEnable not bound
+!missing-field! kSCPropNetProxiesHTTPSPort not bound
+!missing-field! kSCPropNetProxiesHTTPSProxy not bound
+!missing-field! kSCPropNetProxiesProxyAutoConfigEnable not bound
+!missing-field! kSCPropNetProxiesProxyAutoConfigJavaScript not bound
+!missing-field! kSCPropNetProxiesProxyAutoConfigURLString not bound
+!missing-field! kSCPropNetProxiesProxyAutoDiscoveryEnable not bound
+!missing-field! kSCPropNetProxiesRTSPEnable not bound
+!missing-field! kSCPropNetProxiesRTSPPort not bound
+!missing-field! kSCPropNetProxiesRTSPProxy not bound
+!missing-field! kSCPropNetProxiesSOCKSEnable not bound
+!missing-field! kSCPropNetProxiesSOCKSPort not bound
+!missing-field! kSCPropNetProxiesSOCKSProxy not bound
+!missing-field! kSCPropNetServiceOrder not bound
+!missing-field! kSCPropNetSMBNetBIOSName not bound
+!missing-field! kSCPropNetSMBNetBIOSNodeType not bound
+!missing-field! kSCPropNetSMBNetBIOSScope not bound
+!missing-field! kSCPropNetSMBWINSAddresses not bound
+!missing-field! kSCPropNetSMBWorkgroup not bound
+!missing-field! kSCPropSystemComputerName not bound
+!missing-field! kSCPropSystemComputerNameEncoding not bound
+!missing-field! kSCPropUserDefinedName not bound
+!missing-field! kSCPropUsersConsoleUserGID not bound
+!missing-field! kSCPropUsersConsoleUserName not bound
+!missing-field! kSCPropUsersConsoleUserUID not bound
+!missing-field! kSCPropVersion not bound
+!missing-field! kSCResvInactive not bound
+!missing-field! kSCResvLink not bound
+!missing-field! kSCValNetAirPortAuthPasswordEncryptionKeychain not bound
+!missing-field! kSCValNetAirPortJoinModeAutomatic not bound
+!missing-field! kSCValNetAirPortJoinModePreferred not bound
+!missing-field! kSCValNetAirPortJoinModeRanked not bound
+!missing-field! kSCValNetAirPortJoinModeRecent not bound
+!missing-field! kSCValNetAirPortJoinModeStrongest not bound
+!missing-field! kSCValNetInterfaceSubTypeL2TP not bound
+!missing-field! kSCValNetInterfaceSubTypePPPoE not bound
+!missing-field! kSCValNetInterfaceSubTypePPPSerial not bound
+!missing-field! kSCValNetInterfaceSubTypePPTP not bound
+!missing-field! kSCValNetInterfaceType6to4 not bound
+!missing-field! kSCValNetInterfaceTypeEthernet not bound
+!missing-field! kSCValNetInterfaceTypeFireWire not bound
+!missing-field! kSCValNetInterfaceTypeIPSec not bound
+!missing-field! kSCValNetInterfaceTypePPP not bound
+!missing-field! kSCValNetIPSecAuthenticationMethodCertificate not bound
+!missing-field! kSCValNetIPSecAuthenticationMethodHybrid not bound
+!missing-field! kSCValNetIPSecAuthenticationMethodSharedSecret not bound
+!missing-field! kSCValNetIPSecLocalIdentifierTypeKeyID not bound
+!missing-field! kSCValNetIPSecSharedSecretEncryptionKeychain not bound
+!missing-field! kSCValNetIPSecXAuthPasswordEncryptionKeychain not bound
+!missing-field! kSCValNetIPSecXAuthPasswordEncryptionPrompt not bound
+!missing-field! kSCValNetIPv4ConfigMethodAutomatic not bound
+!missing-field! kSCValNetIPv4ConfigMethodBOOTP not bound
+!missing-field! kSCValNetIPv4ConfigMethodDHCP not bound
+!missing-field! kSCValNetIPv4ConfigMethodINFORM not bound
+!missing-field! kSCValNetIPv4ConfigMethodLinkLocal not bound
+!missing-field! kSCValNetIPv4ConfigMethodManual not bound
+!missing-field! kSCValNetIPv4ConfigMethodPPP not bound
+!missing-field! kSCValNetIPv6ConfigMethod6to4 not bound
+!missing-field! kSCValNetIPv6ConfigMethodAutomatic not bound
+!missing-field! kSCValNetIPv6ConfigMethodLinkLocal not bound
+!missing-field! kSCValNetIPv6ConfigMethodManual not bound
+!missing-field! kSCValNetIPv6ConfigMethodRouterAdvertisement not bound
+!missing-field! kSCValNetL2TPIPSecSharedSecretEncryptionKeychain not bound
+!missing-field! kSCValNetL2TPTransportIP not bound
+!missing-field! kSCValNetL2TPTransportIPSec not bound
+!missing-field! kSCValNetModemDialModeIgnoreDialTone not bound
+!missing-field! kSCValNetModemDialModeManual not bound
+!missing-field! kSCValNetModemDialModeWaitForDialTone not bound
+!missing-field! kSCValNetPPPAuthPasswordEncryptionKeychain not bound
+!missing-field! kSCValNetPPPAuthPasswordEncryptionToken not bound
+!missing-field! kSCValNetPPPAuthPromptAfter not bound
+!missing-field! kSCValNetPPPAuthPromptBefore not bound
+!missing-field! kSCValNetPPPAuthProtocolCHAP not bound
+!missing-field! kSCValNetPPPAuthProtocolEAP not bound
+!missing-field! kSCValNetPPPAuthProtocolMSCHAP1 not bound
+!missing-field! kSCValNetPPPAuthProtocolMSCHAP2 not bound
+!missing-field! kSCValNetPPPAuthProtocolPAP not bound
+!missing-field! kSCValNetSMBNetBIOSNodeTypeBroadcast not bound
+!missing-field! kSCValNetSMBNetBIOSNodeTypeHybrid not bound
+!missing-field! kSCValNetSMBNetBIOSNodeTypeMixed not bound
+!missing-field! kSCValNetSMBNetBIOSNodeTypePeer not bound
+!missing-pinvoke! DHCPClientPreferencesCopyApplicationOptions is not bound
+!missing-pinvoke! DHCPClientPreferencesSetApplicationOptions is not bound
+!missing-pinvoke! DHCPInfoGetLeaseExpirationTime is not bound
+!missing-pinvoke! DHCPInfoGetLeaseStartTime is not bound
+!missing-pinvoke! DHCPInfoGetOptionData is not bound
+!missing-pinvoke! SCBondInterfaceCopyAll is not bound
+!missing-pinvoke! SCBondInterfaceCopyAvailableMemberInterfaces is not bound
+!missing-pinvoke! SCBondInterfaceCopyStatus is not bound
+!missing-pinvoke! SCBondInterfaceCreate is not bound
+!missing-pinvoke! SCBondInterfaceGetMemberInterfaces is not bound
+!missing-pinvoke! SCBondInterfaceGetOptions is not bound
+!missing-pinvoke! SCBondInterfaceRemove is not bound
+!missing-pinvoke! SCBondInterfaceSetLocalizedDisplayName is not bound
+!missing-pinvoke! SCBondInterfaceSetMemberInterfaces is not bound
+!missing-pinvoke! SCBondInterfaceSetOptions is not bound
+!missing-pinvoke! SCBondStatusGetInterfaceStatus is not bound
+!missing-pinvoke! SCBondStatusGetMemberInterfaces is not bound
+!missing-pinvoke! SCBondStatusGetTypeID is not bound
+!missing-pinvoke! SCDynamicStoreAddTemporaryValue is not bound
+!missing-pinvoke! SCDynamicStoreAddValue is not bound
+!missing-pinvoke! SCDynamicStoreCopyComputerName is not bound
+!missing-pinvoke! SCDynamicStoreCopyConsoleUser is not bound
+!missing-pinvoke! SCDynamicStoreCopyDHCPInfo is not bound
+!missing-pinvoke! SCDynamicStoreCopyKeyList is not bound
+!missing-pinvoke! SCDynamicStoreCopyLocalHostName is not bound
+!missing-pinvoke! SCDynamicStoreCopyLocation is not bound
+!missing-pinvoke! SCDynamicStoreCopyMultiple is not bound
+!missing-pinvoke! SCDynamicStoreCopyNotifiedKeys is not bound
+!missing-pinvoke! SCDynamicStoreCopyProxies is not bound
+!missing-pinvoke! SCDynamicStoreCopyValue is not bound
+!missing-pinvoke! SCDynamicStoreCreate is not bound
+!missing-pinvoke! SCDynamicStoreCreateRunLoopSource is not bound
+!missing-pinvoke! SCDynamicStoreCreateWithOptions is not bound
+!missing-pinvoke! SCDynamicStoreGetTypeID is not bound
+!missing-pinvoke! SCDynamicStoreKeyCreate is not bound
+!missing-pinvoke! SCDynamicStoreKeyCreateComputerName is not bound
+!missing-pinvoke! SCDynamicStoreKeyCreateConsoleUser is not bound
+!missing-pinvoke! SCDynamicStoreKeyCreateHostNames is not bound
+!missing-pinvoke! SCDynamicStoreKeyCreateLocation is not bound
+!missing-pinvoke! SCDynamicStoreKeyCreateNetworkGlobalEntity is not bound
+!missing-pinvoke! SCDynamicStoreKeyCreateNetworkInterface is not bound
+!missing-pinvoke! SCDynamicStoreKeyCreateNetworkInterfaceEntity is not bound
+!missing-pinvoke! SCDynamicStoreKeyCreateNetworkServiceEntity is not bound
+!missing-pinvoke! SCDynamicStoreKeyCreateProxies is not bound
+!missing-pinvoke! SCDynamicStoreNotifyValue is not bound
+!missing-pinvoke! SCDynamicStoreRemoveValue is not bound
+!missing-pinvoke! SCDynamicStoreSetDispatchQueue is not bound
+!missing-pinvoke! SCDynamicStoreSetMultiple is not bound
+!missing-pinvoke! SCDynamicStoreSetNotificationKeys is not bound
+!missing-pinvoke! SCDynamicStoreSetValue is not bound
+!missing-pinvoke! SCNetworkCheckReachabilityByAddress is not bound
+!missing-pinvoke! SCNetworkCheckReachabilityByName is not bound
+!missing-pinvoke! SCNetworkConnectionCopyExtendedStatus is not bound
+!missing-pinvoke! SCNetworkConnectionCopyServiceID is not bound
+!missing-pinvoke! SCNetworkConnectionCopyStatistics is not bound
+!missing-pinvoke! SCNetworkConnectionCopyUserOptions is not bound
+!missing-pinvoke! SCNetworkConnectionCopyUserPreferences is not bound
+!missing-pinvoke! SCNetworkConnectionCreateWithServiceID is not bound
+!missing-pinvoke! SCNetworkConnectionGetStatus is not bound
+!missing-pinvoke! SCNetworkConnectionGetTypeID is not bound
+!missing-pinvoke! SCNetworkConnectionScheduleWithRunLoop is not bound
+!missing-pinvoke! SCNetworkConnectionSetDispatchQueue is not bound
+!missing-pinvoke! SCNetworkConnectionStart is not bound
+!missing-pinvoke! SCNetworkConnectionStop is not bound
+!missing-pinvoke! SCNetworkConnectionUnscheduleFromRunLoop is not bound
+!missing-pinvoke! SCNetworkInterfaceCopyAll is not bound
+!missing-pinvoke! SCNetworkInterfaceCopyMediaOptions is not bound
+!missing-pinvoke! SCNetworkInterfaceCopyMediaSubTypeOptions is not bound
+!missing-pinvoke! SCNetworkInterfaceCopyMediaSubTypes is not bound
+!missing-pinvoke! SCNetworkInterfaceCopyMTU is not bound
+!missing-pinvoke! SCNetworkInterfaceCreateWithInterface is not bound
+!missing-pinvoke! SCNetworkInterfaceForceConfigurationRefresh is not bound
+!missing-pinvoke! SCNetworkInterfaceGetBSDName is not bound
+!missing-pinvoke! SCNetworkInterfaceGetConfiguration is not bound
+!missing-pinvoke! SCNetworkInterfaceGetExtendedConfiguration is not bound
+!missing-pinvoke! SCNetworkInterfaceGetHardwareAddressString is not bound
+!missing-pinvoke! SCNetworkInterfaceGetInterface is not bound
+!missing-pinvoke! SCNetworkInterfaceGetInterfaceType is not bound
+!missing-pinvoke! SCNetworkInterfaceGetLocalizedDisplayName is not bound
+!missing-pinvoke! SCNetworkInterfaceGetSupportedInterfaceTypes is not bound
+!missing-pinvoke! SCNetworkInterfaceGetSupportedProtocolTypes is not bound
+!missing-pinvoke! SCNetworkInterfaceGetTypeID is not bound
+!missing-pinvoke! SCNetworkInterfaceRefreshConfiguration is not bound
+!missing-pinvoke! SCNetworkInterfaceSetConfiguration is not bound
+!missing-pinvoke! SCNetworkInterfaceSetExtendedConfiguration is not bound
+!missing-pinvoke! SCNetworkInterfaceSetMediaOptions is not bound
+!missing-pinvoke! SCNetworkInterfaceSetMTU is not bound
+!missing-pinvoke! SCNetworkProtocolGetConfiguration is not bound
+!missing-pinvoke! SCNetworkProtocolGetEnabled is not bound
+!missing-pinvoke! SCNetworkProtocolGetProtocolType is not bound
+!missing-pinvoke! SCNetworkProtocolGetTypeID is not bound
+!missing-pinvoke! SCNetworkProtocolSetConfiguration is not bound
+!missing-pinvoke! SCNetworkProtocolSetEnabled is not bound
+!missing-pinvoke! SCNetworkServiceAddProtocolType is not bound
+!missing-pinvoke! SCNetworkServiceCopy is not bound
+!missing-pinvoke! SCNetworkServiceCopyAll is not bound
+!missing-pinvoke! SCNetworkServiceCopyProtocol is not bound
+!missing-pinvoke! SCNetworkServiceCopyProtocols is not bound
+!missing-pinvoke! SCNetworkServiceCreate is not bound
+!missing-pinvoke! SCNetworkServiceEstablishDefaultConfiguration is not bound
+!missing-pinvoke! SCNetworkServiceGetEnabled is not bound
+!missing-pinvoke! SCNetworkServiceGetInterface is not bound
+!missing-pinvoke! SCNetworkServiceGetName is not bound
+!missing-pinvoke! SCNetworkServiceGetServiceID is not bound
+!missing-pinvoke! SCNetworkServiceGetTypeID is not bound
+!missing-pinvoke! SCNetworkServiceRemove is not bound
+!missing-pinvoke! SCNetworkServiceRemoveProtocolType is not bound
+!missing-pinvoke! SCNetworkServiceSetEnabled is not bound
+!missing-pinvoke! SCNetworkServiceSetName is not bound
+!missing-pinvoke! SCNetworkSetAddService is not bound
+!missing-pinvoke! SCNetworkSetContainsInterface is not bound
+!missing-pinvoke! SCNetworkSetCopy is not bound
+!missing-pinvoke! SCNetworkSetCopyAll is not bound
+!missing-pinvoke! SCNetworkSetCopyCurrent is not bound
+!missing-pinvoke! SCNetworkSetCopyServices is not bound
+!missing-pinvoke! SCNetworkSetCreate is not bound
+!missing-pinvoke! SCNetworkSetGetName is not bound
+!missing-pinvoke! SCNetworkSetGetServiceOrder is not bound
+!missing-pinvoke! SCNetworkSetGetSetID is not bound
+!missing-pinvoke! SCNetworkSetGetTypeID is not bound
+!missing-pinvoke! SCNetworkSetRemove is not bound
+!missing-pinvoke! SCNetworkSetRemoveService is not bound
+!missing-pinvoke! SCNetworkSetSetCurrent is not bound
+!missing-pinvoke! SCNetworkSetSetName is not bound
+!missing-pinvoke! SCNetworkSetSetServiceOrder is not bound
+!missing-pinvoke! SCPreferencesAddValue is not bound
+!missing-pinvoke! SCPreferencesApplyChanges is not bound
+!missing-pinvoke! SCPreferencesCommitChanges is not bound
+!missing-pinvoke! SCPreferencesCopyKeyList is not bound
+!missing-pinvoke! SCPreferencesCreate is not bound
+!missing-pinvoke! SCPreferencesCreateWithAuthorization is not bound
+!missing-pinvoke! SCPreferencesGetSignature is not bound
+!missing-pinvoke! SCPreferencesGetTypeID is not bound
+!missing-pinvoke! SCPreferencesGetValue is not bound
+!missing-pinvoke! SCPreferencesLock is not bound
+!missing-pinvoke! SCPreferencesPathCreateUniqueChild is not bound
+!missing-pinvoke! SCPreferencesPathGetLink is not bound
+!missing-pinvoke! SCPreferencesPathGetValue is not bound
+!missing-pinvoke! SCPreferencesPathRemoveValue is not bound
+!missing-pinvoke! SCPreferencesPathSetLink is not bound
+!missing-pinvoke! SCPreferencesPathSetValue is not bound
+!missing-pinvoke! SCPreferencesRemoveValue is not bound
+!missing-pinvoke! SCPreferencesScheduleWithRunLoop is not bound
+!missing-pinvoke! SCPreferencesSetCallback is not bound
+!missing-pinvoke! SCPreferencesSetComputerName is not bound
+!missing-pinvoke! SCPreferencesSetDispatchQueue is not bound
+!missing-pinvoke! SCPreferencesSetLocalHostName is not bound
+!missing-pinvoke! SCPreferencesSetValue is not bound
+!missing-pinvoke! SCPreferencesSynchronize is not bound
+!missing-pinvoke! SCPreferencesUnlock is not bound
+!missing-pinvoke! SCPreferencesUnscheduleFromRunLoop is not bound
+!missing-pinvoke! SCVLANInterfaceCopyAll is not bound
+!missing-pinvoke! SCVLANInterfaceCopyAvailablePhysicalInterfaces is not bound
+!missing-pinvoke! SCVLANInterfaceCreate is not bound
+!missing-pinvoke! SCVLANInterfaceGetOptions is not bound
+!missing-pinvoke! SCVLANInterfaceGetPhysicalInterface is not bound
+!missing-pinvoke! SCVLANInterfaceGetTag is not bound
+!missing-pinvoke! SCVLANInterfaceRemove is not bound
+!missing-pinvoke! SCVLANInterfaceSetLocalizedDisplayName is not bound
+!missing-pinvoke! SCVLANInterfaceSetOptions is not bound
+!missing-pinvoke! SCVLANInterfaceSetPhysicalInterfaceAndTag is not bound

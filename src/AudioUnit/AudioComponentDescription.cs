@@ -71,7 +71,7 @@ namespace AudioUnit
 		System=0x73797320, // 'sys'
 #endif
 		[Mac (10, 15)]
-		[Introduced (PlatformName.UIKitForMac, 13,0)]
+		[Introduced (PlatformName.MacCatalyst, 13,0)]
 		Remote=0x72696f63, // 'rioc'
 		VoiceProcessingIO = 0x7670696f // 'vpio'
 	}
@@ -131,14 +131,14 @@ namespace AudioUnit
 		NetSend=0x6e736e64, // 'nsnd'
 		RogerBeep=0x726f6772, // 'rogr'
 #else
-		[Unavailable (PlatformName.UIKitForMac)]
+		[Unavailable (PlatformName.MacCatalyst)]
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'AudioTypeEffect.GraphicEQ' instead.")]
 		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'AudioTypeEffect.GraphicEQ' instead.")]
 		[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'AudioTypeEffect.GraphicEQ' instead.")]
 		AUiPodEQ=0x69706571, // 'ipeq'
 #endif
 		[Mac (10,15)]
-		[Unavailable (PlatformName.UIKitForMac)]
+		[Unavailable (PlatformName.MacCatalyst)]
 		[Advice ("This API is not available when using UIKit on macOS.")]
 		Reverb2=0x72766232, // 'rvb2'
 		NBandEq=0x6e626571, // 'nbeq'

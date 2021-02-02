@@ -13,6 +13,7 @@ namespace Security {
 	public static partial class SecSharedCredential {
 
 		[DllImport (Constants.SecurityLibrary)]
+		[Introduced (PlatformName.MacCatalyst, 14, 0)]
 		extern static void SecAddSharedWebCredential (IntPtr /* CFStringRef */ fqdn, IntPtr /* CFStringRef */ account, IntPtr /* CFStringRef */ password,
 			IntPtr /* void (^completionHandler)( CFErrorRef error) ) */ completionHandler);
 			
@@ -33,6 +34,7 @@ namespace Security {
 			} 
 		} 
 
+		[Introduced (PlatformName.MacCatalyst, 14, 0)]
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static void AddSharedWebCredential (string domainName, string account, string password, Action<NSError> handler)
 		{
@@ -135,9 +137,11 @@ namespace Security {
 			}
 		}
 
+		[Introduced (PlatformName.MacCatalyst, 14, 0)]
 		[DllImport (Constants.SecurityLibrary)]
 		extern static IntPtr /* CFStringRef */ SecCreateSharedWebCredentialPassword ();
 
+		[Introduced (PlatformName.MacCatalyst, 14, 0)]
 		public static string CreateSharedWebCredentialPassword ()
 		{
 			var handle = SecCreateSharedWebCredentialPassword ();

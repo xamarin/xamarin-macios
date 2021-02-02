@@ -9,6 +9,7 @@ using NUnit.Framework;
 
 using Xamarin.Utils;
 using Xamarin.Tests;
+using Xamarin.MacDev;
 
 namespace Xamarin.Tests {
 	[TestFixture]
@@ -55,7 +56,14 @@ namespace Xamarin.Tests {
 			Clean (project_path);
 			var result = DotNet.AssertBuild (project_path, verbosity);
 			AssertThatLinkerExecuted (result);
-			AssertAppContents (platform, Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", "net6.0-ios", "ios-x64", "MySingleView.app"));
+			var appPath = Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", "net6.0-ios", "ios-x64", "MySingleView.app");
+			AssertAppContents (platform, appPath);
+			var infoPlistPath = Path.Combine (appPath, "Info.plist");
+			var infoPlist = PDictionary.FromFile (infoPlistPath);
+			Assert.AreEqual ("com.xamarin.mysingletitle", infoPlist.GetString ("CFBundleIdentifier").Value, "CFBundleIdentifier");
+			Assert.AreEqual ("MySingleTitle", infoPlist.GetString ("CFBundleDisplayName").Value, "CFBundleDisplayName");
+			Assert.AreEqual ("3.14", infoPlist.GetString ("CFBundleVersion").Value, "CFBundleVersion");
+			Assert.AreEqual ("3.14", infoPlist.GetString ("CFBundleShortVersionString").Value, "CFBundleShortVersionString");
 		}
 
 		[Test]
@@ -302,18 +310,18 @@ namespace Xamarin.Tests {
 				var asm = assemblies.First ();
 				Assert.That (asm, Does.Exist, "Assembly existence");
 
-				// Verify that the resources
+				// Verify that the resources have been linked away
 				var asmDir = Path.GetDirectoryName (asm);
 				var ad = AssemblyDefinition.ReadAssembly (asm, new ReaderParameters { ReadingMode = ReadingMode.Deferred });
 				Assert.That (ad.MainModule.Resources.Count, Is.EqualTo (0), "0 resources for interdependent-binding-projects.dll");
 
 				var ad1 = AssemblyDefinition.ReadAssembly (Path.Combine (asmDir, "bindings-test.dll"), new ReaderParameters { ReadingMode = ReadingMode.Deferred });
-				Assert.That (ad1.MainModule.Resources.Count, Is.EqualTo (1), "1 resource for bindings-test.dll");
-				Assert.That (ad1.MainModule.Resources [0].Name, Is.EqualTo ("libtest.a"), "libtest.a - bindings-test.dll");
+				// The native library is removed from the resources by the linker
+				Assert.That (ad1.MainModule.Resources.Count, Is.EqualTo (0), "0 resources for bindings-test.dll");
 
 				var ad2 = AssemblyDefinition.ReadAssembly (Path.Combine (asmDir, "bindings-test2.dll"), new ReaderParameters { ReadingMode = ReadingMode.Deferred });
-				Assert.That (ad2.MainModule.Resources.Count, Is.EqualTo (1), "1 resource for bindings-test2.dll");
-				Assert.That (ad2.MainModule.Resources [0].Name, Is.EqualTo ("libtest2.a"), "libtest2.a - bindings-test2.dll");
+				// The native library is removed from the resources by the linker
+				Assert.That (ad2.MainModule.Resources.Count, Is.EqualTo (0), "0 resources for bindings-test2.dll");
 			} finally {
 				foreach (var file in cleanupSupportFiles)
 					File.Delete (file);

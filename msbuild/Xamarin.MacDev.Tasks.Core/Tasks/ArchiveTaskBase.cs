@@ -3,9 +3,7 @@ using System.IO;
 using System.Diagnostics;
 
 using Microsoft.Build.Framework;
-using Microsoft.Build.Utilities;
 
-using Xamarin.MacDev;
 using System.Globalization;
 
 namespace Xamarin.MacDev.Tasks
@@ -84,11 +82,25 @@ namespace Xamarin.MacDev.Tasks
 			return archiveDir;
 		}
 
+		protected void ArchiveDSym (string dsymDir, string archiveDir)
+		{
+			if (Directory.Exists (dsymDir)) {
+				var destDir = Path.Combine (archiveDir, "dSYMs", Path.GetFileName (dsymDir));
+				Ditto (dsymDir, destDir);
+			}
+		}
+
+		protected void ArchiveMSym (string msymDir, string archiveDir)
+		{
+			if (Directory.Exists (msymDir)) {
+				var destDir = Path.Combine (archiveDir, "mSYMs", Path.GetFileName (msymDir));
+				Ditto (msymDir, destDir);
+			}
+		}
+
 		protected static int Ditto (string source, string destination)
 		{
 			var args = new CommandLineArgumentBuilder ();
-
-			args.Add ("-rsrc");
 
 			args.AddQuoted (source);
 			args.AddQuoted (destination);

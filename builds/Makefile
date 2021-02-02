@@ -51,6 +51,7 @@ $(DOWNLOADS):
 		fi; \
 		if [[ x$$EC != x0 ]]; then exit $$EC; fi; \
 		if [[ "x$$MACIOS_CACHE_DOWNLOADS" != "x" ]]; then \
+			mkdir -p ~/Library/Caches/xamarin-macios/; \
 			$(CP) $@.tmp ~/Library/Caches/xamarin-macios/"$(notdir $@)"; \
 			echo "Cached the download of $(notdir $@) in ~/Library/Caches/xamarin-macios"; \
 		fi; \

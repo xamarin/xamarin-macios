@@ -16,7 +16,7 @@ using IdentityLookup;
 namespace IdentityLookupUI {
 
 	[iOS (12,0)]
-	[Introduced (PlatformName.UIKitForMac, 13,0)]
+	[Introduced (PlatformName.MacCatalyst, 13,0)]
 	[BaseType (typeof (NSExtensionContext))]
 	interface ILClassificationUIExtensionContext {
 
@@ -25,7 +25,7 @@ namespace IdentityLookupUI {
 	}
 
 	[iOS (12,0)]
-	[Introduced (PlatformName.UIKitForMac, 13,0)]
+	[Introduced (PlatformName.MacCatalyst, 13,0)]
 	[BaseType (typeof (UIViewController))]
 	interface ILClassificationUIExtensionViewController {
 

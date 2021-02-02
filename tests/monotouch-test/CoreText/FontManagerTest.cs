@@ -60,7 +60,7 @@ namespace MonoTouchFixtures.CoreText {
 				// xcode 11 beta 4 stopped reporting errors
 				// Assert.IsNotNull (err, "err 3");
 				err = CTFontManager.UnregisterFontsForUrl (url, CTFontManagerScope.Process);
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 				if (TestRuntime.CheckXcodeVersion (12,2))
 					Assert.IsNotNull (err, "err 4");
 				else
@@ -157,7 +157,7 @@ namespace MonoTouchFixtures.CoreText {
 				// Assert.AreEqual (1, err.Length, "err 3 l");
 				// Assert.IsNotNull (err [0], "err 3[0]");
 				err = CTFontManager.UnregisterFontsForUrl (new [] { url }, CTFontManagerScope.Process);
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 				if (TestRuntime.CheckXcodeVersion (12, 2)) {
 					Assert.IsNotNull (err, "err 4");
 					Assert.AreEqual (1, err.Length, "err 4 l");
@@ -293,7 +293,8 @@ namespace MonoTouchFixtures.CoreText {
 			}
 		}
 
-#if __IOS__
+#if __IOS__ && !__MACCATALYST__
+		// Running this on Mac Catalyst prints "CTFontManagerRequestFonts not implemented for plaform or scope" to the terminal
 		[Test]
 		public void RequestFonts ()
 		{

@@ -29,7 +29,3 @@
 !missing-selector! NSFetchedResultsController::setDelegate: not bound
 !missing-selector! NSPersistentStoreCoordinator::importStoreWithIdentifier:fromExternalRecordsDirectory:toURL:options:withType:error: not bound
 !missing-type! NSFetchedResultsController not bound
-
-# Initial result from new rule missing-null-allowed
-!missing-null-allowed! 'Foundation.NSDictionary CoreData.NSPersistentStoreCoordinator::MetadataForPersistentStoreWithUrl(Foundation.NSUrl,Foundation.NSError&)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.Boolean CoreData.NSPersistentStoreCoordinator::RemoveUbiquitousContentAndPersistentStore(Foundation.NSUrl,Foundation.NSDictionary,Foundation.NSError&)' is missing an [NullAllowed] on parameter #1

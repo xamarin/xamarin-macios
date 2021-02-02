@@ -83,18 +83,10 @@ namespace Xamarin.iOS.Tasks
 
 			// Note: App Extension dSYM dirs exist alongside the main app bundle now that they are generated from the main app's MSBuild targets
 			var dsymDir = Path.Combine (Path.GetDirectoryName (AppBundleDir.ItemSpec), Path.GetFileName (appex.ItemSpec) + ".dSYM");
-
-			if (Directory.Exists (dsymDir)) {
-				var destDir = Path.Combine (archiveDir, "dSYMs", Path.GetFileName (dsymDir));
-				Ditto (dsymDir, destDir);
-			}
+			ArchiveDSym (dsymDir, archiveDir);
 
 			var msymDir = appex.ItemSpec + ".mSYM";
-
-			if (Directory.Exists (msymDir)) {
-				var destDir = Path.Combine (archiveDir, "mSYMs", Path.GetFileName (msymDir));
-				Ditto (msymDir, destDir);
-			}
+			ArchiveMSym (msymDir, archiveDir);
 		}
 
 		void ArchiveWatchApp (ITaskItem watchApp, string archiveDir)
@@ -108,18 +100,10 @@ namespace Xamarin.iOS.Tasks
 			}
 
 			var dsymDir = watchApp.ItemSpec + ".dSYM";
-
-			if (Directory.Exists (dsymDir)) {
-				var destDir = Path.Combine (archiveDir, "dSYMs", Path.GetFileName (dsymDir));
-				Ditto (dsymDir, destDir);
-			}
+			ArchiveDSym (dsymDir, archiveDir);
 
 			var msymDir = watchApp.ItemSpec + ".mSYM";
-
-			if (Directory.Exists (msymDir)) {
-				var destDir = Path.Combine (archiveDir, "mSYMs", Path.GetFileName (msymDir));
-				Ditto (msymDir, destDir);
-			}
+			ArchiveMSym (msymDir, archiveDir);
 		}
 
 		void AddIconPaths (PArray icons, PArray iconFiles, string productsDir)
@@ -168,26 +152,20 @@ namespace Xamarin.iOS.Tasks
 				Ditto (AppBundleDir.ItemSpec, appDestDir);
 
 				// Archive the dSYMs...
-				if (Directory.Exists (DSYMDir)) {
-					var destDir = Path.Combine (archiveDir, "dSYMs", Path.GetFileName (DSYMDir));
-					Ditto (DSYMDir, destDir);
-				}
+				ArchiveDSym (DSYMDir, archiveDir);
 
 				// for each user framework that is bundled inside the app we must also archive their dSYMs, if available
-				foreach (var fx in Directory.GetDirectories (Path.Combine (AppBundleDir.ItemSpec, "Frameworks"), "*.framework")) {
-					var dsym = Path.GetFileName (fx) + ".dSYM";
-					var fq_dsym = Path.Combine (AppBundleDir.ItemSpec, "..", dsym);
-					if (Directory.Exists (fq_dsym)) {
-						var destDir = Path.Combine (archiveDir, "dSYMs", dsym);
-						Ditto (fq_dsym, destDir);
+				var fwks = Path.Combine (AppBundleDir.ItemSpec, "Frameworks");
+				if (Directory.Exists (fwks)) {
+					foreach (var fx in Directory.GetDirectories (fwks, "*.framework")) {
+						var dsym = Path.GetFileName (fx) + ".dSYM";
+						var fq_dsym = Path.Combine (AppBundleDir.ItemSpec, "..", dsym);
+						ArchiveDSym (fq_dsym, archiveDir);
 					}
 				}
 
 				// Archive the mSYMs...
-				if (Directory.Exists (MSYMDir)) {
-					var destDir = Path.Combine (archiveDir, "mSYMs", Path.GetFileName (MSYMDir));
-					Ditto (MSYMDir, destDir);
-				}
+				ArchiveMSym (MSYMDir, archiveDir);
 
 				// Archive the Bitcode symbol maps
 				var bcSymbolMaps = Directory.GetFiles (Path.GetDirectoryName (DSYMDir), "*.bcsymbolmap");

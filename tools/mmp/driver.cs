@@ -211,6 +211,12 @@ namespace Xamarin.Bundler {
 						native_references.Add (v);
 						if (v.EndsWith (".framework", true, CultureInfo.InvariantCulture))
 							App.Frameworks.Add (v);
+						else {
+							// allow specifying the library inside the framework directory
+							var p = Path.GetDirectoryName (v);
+							if (p.EndsWith (".framework", true, CultureInfo.InvariantCulture))
+								App.Frameworks.Add (p);
+						}
 					}
 				},
 				{ "custom_bundle_name=", "Specify a custom name for the MonoBundle folder.", v => App.CustomBundleName = v, true }, // Hidden hack for "universal binaries"
@@ -761,10 +767,12 @@ namespace Xamarin.Bundler {
 
 			CreateDirectoryIfNeeded (frameworks_dir);
 			Application.UpdateDirectory (framework, frameworks_dir);
+			var fxdir = Path.Combine (frameworks_dir, name + ".framework");
+			Application.ExcludeNonEssentialFrameworkFiles (fxdir);
 			frameworks_copied_to_bundle_dir = true;
 
 			if (App.Optimizations.TrimArchitectures == true)
-				LipoLibrary (framework, Path.Combine (name, Path.Combine (frameworks_dir, name + ".framework", name)));
+				LipoLibrary (framework, Path.Combine (name, Path.Combine (fxdir, name)));
 		}
 
 		static void CheckSystemMonoVersion ()
@@ -1267,6 +1275,10 @@ namespace Xamarin.Bundler {
 			// If we're passed in a framework, ignore
 			if (App.Frameworks.Contains (library))
 				return;
+			// Frameworks don't include the lib name, e.g. `../foo.framework` not `../foo.framework/foo` so check again
+			string path = Path.GetDirectoryName (library);
+			if (App.Frameworks.Contains (path))
+				return;
 
 			// We need to check both the name and the shortened name, since we might get passed:
 			// full path - /foo/bar/libFoo.dylib
@@ -1289,7 +1301,6 @@ namespace Xamarin.Bundler {
 				src = monoDirPath;
 
 			// Now let's check in path with our libName
-			string path = Path.GetDirectoryName (library);
 			if (src == null && !String.IsNullOrEmpty (path)) {
 				string pathWithLibName = Path.Combine (path, name);
 				if (File.Exists (pathWithLibName))
@@ -1364,6 +1375,10 @@ namespace Xamarin.Bundler {
 				return;
 
 			var arch = App.Abi.AsString ();
+			// macOS frameworks often uses symlinks and we do not
+			// want to replace the symlink with the thin binary
+			// while leaving the fat binary inside the framework
+			dest = GetRealPath (dest);
 			RunLipo (App, new [] { dest, "-thin", arch, "-output", dest });
 			if (name != "MonoPosixHelper" && name != "libmono-native-unified" && name != "libmono-native-compat")
 				ErrorHelper.Warning (2108, Errors.MM2108, name, arch);

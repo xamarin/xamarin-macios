@@ -7,7 +7,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="XliffTasks" Version="1.0.0-beta.20154.1" />
-    <PackageReference Include="Microsoft.NET.ILLink" Version="5.0.0-preview.3.20417.4" />
+    <PackageReference Include="Microsoft.NET.ILLink" Version="6.0.0-alpha.1.21065.1" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\common\ApplePlatform.cs">
@@ -181,6 +181,9 @@
     </Compile>
     <Compile Include="..\common\BitCodeMode.cs">
       <Link>external\tools\common\BitCodeMode.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\RemoveUserResourcesSubStep.cs">
+      <Link>external\tools\linker\RemoveUserResourcesSubStep.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>

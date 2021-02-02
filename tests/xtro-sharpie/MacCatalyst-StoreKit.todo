@@ -1,0 +1,5 @@
+!missing-selector! +SKDownload::contentURLForProductID: not bound
+!missing-selector! +SKDownload::deleteContentForProductID: not bound
+!missing-selector! SKProduct::contentLengths not bound
+!missing-selector! SKProduct::contentVersion not bound
+!missing-selector! SKProduct::downloadable not bound

@@ -5,7 +5,7 @@ using Xamarin.Messaging.Build.Client;
 
 namespace Xamarin.iOS.Tasks
 {
-	public class CompileEntitlements : CompileEntitlementsTaskCore, ITaskCallback, ICancelableTask
+	public class CompileEntitlements : CompileEntitlementsTaskBase, ITaskCallback, ICancelableTask
 	{
 		protected override string DefaultEntitlementsPath {
 			get {

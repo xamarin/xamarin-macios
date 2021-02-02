@@ -1216,6 +1216,16 @@
         <target state="new">Invalid architecture ({0}): can't link more than one architecture at a time.</target>
         <note />
       </trans-unit>
+      <trans-unit id="InvalidFramework">
+        <source>Invalid framework: {0}</source>
+        <target state="new">Invalid framework: {0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="InvalidPlatform">
+        <source>Invalid platform: {0}</source>
+        <target state="new">Invalid platform: {0}</target>
+        <note />
+      </trans-unit>
       <trans-unit id="M0001">
         <source>Tool {0} execution started with arguments: {1}
         </source>
@@ -1620,6 +1630,13 @@
         <target state="translated">Ни один из установленных профилей подготовки не соответствует идентификатору пакета.
         </target>
         <note></note>
+      </trans-unit>
+      <trans-unit id="W0176">
+        <source>Conflicting '{0}' and '{1}' options. '{1}' will be ignored.
+        </source>
+        <target state="new">Conflicting '{0}' and '{1}' options. '{1}' will be ignored.
+        </target>
+        <note />
       </trans-unit>
     </body>
   </file>

@@ -875,6 +875,11 @@
         </value>
     </data>
 
+    <data name="W0176" xml:space="preserve">
+        <value>Conflicting '{0}' and '{1}' options. '{1}' will be ignored.
+        </value>
+    </data>
+
     <data name="E7001" xml:space="preserve">
         <value>Could not resolve host IPs for WiFi debugger settings.
         </value>
@@ -1228,5 +1233,13 @@
     
     <data name="E7070" xml:space="preserve">
         <value>Invalid architecture ({0}): can't link more than one architecture at a time.</value>
+    </data>
+
+    <data name="InvalidFramework" xml:space="preserve">
+        <value>Invalid framework: {0}</value>
+    </data>
+    
+    <data name="InvalidPlatform" xml:space="preserve">
+        <value>Invalid platform: {0}</value>
     </data>
 </root>

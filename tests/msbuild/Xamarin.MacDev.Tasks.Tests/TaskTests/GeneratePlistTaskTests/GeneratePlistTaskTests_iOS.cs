@@ -11,7 +11,7 @@ namespace Xamarin.iOS.Tasks
 		public override void ConfigureTask ()
 		{
 			base.ConfigureTask ();
-			Task.DefaultSdkVersion = IPhoneSdks.Native.GetClosestInstalledSdk (IPhoneSdkVersion.V6_1, true).ToString ();
+			Task.DefaultSdkVersion = Sdks.IOS.GetClosestInstalledSdk (IPhoneSdkVersion.V6_1, true).ToString ();
 			Task.TargetFrameworkMoniker = "Xamarin.iOS,v1.0";
 			Task.TargetArchitectures = "ARM64";
 		}
@@ -29,7 +29,7 @@ namespace Xamarin.iOS.Tasks
 		public override void BundleName ()
 		{
 			Assert.That (CompiledPlist.ContainsKey (ManifestKeys.CFBundleName), "#1");
-			Assert.AreEqual (CompiledPlist.Get<PString> (ManifestKeys.CFBundleName).Value, displayName, "#2");
+			Assert.AreEqual (CompiledPlist.Get<PString> (ManifestKeys.CFBundleName).Value, appBundleName, "#2");
 		}
 
 		[Test]

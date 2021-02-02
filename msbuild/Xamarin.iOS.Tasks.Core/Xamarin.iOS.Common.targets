@@ -167,7 +167,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 	<PropertyGroup>
 		<_CodesignAppBundleDependsOn>
-			_EmbedMobileProvision;
+			_EmbedProvisionProfile;
 			_CodesignNativeLibraries;
 			_CollectFrameworks;
 			_CodesignFrameworks;
@@ -388,20 +388,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		/>
 	</Target>
 
-	<Target Name="_GetNativeExecutableName" DependsOnTargets="_DetectAppManifest;_GenerateBundleName;_CompileAppManifest">
-		<GetNativeExecutableName
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			AppManifest="$(_AppBundlePath)$(_AppBundleManifestRelativePath)Info.plist"
-			>
-			<Output TaskParameter="ExecutableName" PropertyName="_ExecutableName" />
-		</GetNativeExecutableName>
-
-		<PropertyGroup>
-			<_NativeExecutable>$(_AppBundlePath)$(_ExecutableName)</_NativeExecutable>
-		</PropertyGroup>
-	</Target>
-
 	<PropertyGroup>
 		<_CompileToNativeDependsOn>
 			_ComputeLinkMode;
@@ -425,10 +411,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		Inputs="@(_CompileToNativeInput);@(_FileNativeReference);@(BundleDependentFiles)"
 		Outputs="$(_NativeExecutable);$(DeviceSpecificOutputPath)bundler.stamp">
 
-		<ItemGroup>
-			<_FrameworkNativeReference Include="@(_FrameworkNativeReference -> '%(Identity)/%(Filename)')" Condition="'%(Extension)' == '.framework' Or '%(Extension)' == '.xcframework'" />
-		</ItemGroup>
-
 		<MTouch
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
@@ -450,7 +432,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			LinkMode="$(_LinkMode)"
 			MainAssembly="$(TargetPath)"
 			MinimumOSVersion="$(_MinimumOSVersion)"
-			NativeReferences="@(NativeReference);@(_FrameworkNativeReference);@(_FileNativeReference)"
+			NativeReferences="@(_FrameworkNativeReference);@(_FileNativeReference)"
 			OutputPath="$(DeviceSpecificOutputPath)"
 			Profiling="$(MtouchProfiling)"
 			ProjectDir="$(MtouchProjectDirectory)"
@@ -484,164 +466,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			>
 			<Output TaskParameter="TouchedFiles" ItemName="FileWrites" />
 		</Touch>
-	</Target>
-
-	<Target Name="_ReadAppExtensionDebugSymbolProperties">
-		<ReadItemsFromFile File="%(_ResolvedAppExtensionReferences.Identity)\..\dsym.items" Condition="Exists('%(_ResolvedAppExtensionReferences.Identity)\..\dsym.items')">
-			<Output TaskParameter="Items" ItemName="_AppExtensionDebugSymbolProperties" />
-		</ReadItemsFromFile>
-	</Target>
-
-	<Target Name="_GenerateAppExtensionDebugSymbols" Condition="'$(ComputedPlatform)' == 'iPhone' And '$(IsAppExtension)' == 'false'"
-		DependsOnTargets="_ParseBundlerArguments;_CompileToNative;_ReadAppExtensionDebugSymbolProperties"
-		Inputs="$(_AppBundlePath)PlugIns\%(_AppExtensionDebugSymbolProperties.Identity)\%(_AppExtensionDebugSymbolProperties.NativeExecutable)"
-		Outputs="$(AppBundleDir)\..\%(_AppExtensionDebugSymbolProperties.Identity).dSYM\Contents\Info.plist">
-
-		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(AppBundleDir)\..\%(_AppExtensionDebugSymbolProperties.Identity).dSYM" />
-
-		<!-- run dsymutil on the main bundle -->
-		<DSymUtil
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '%(_AppExtensionDebugSymbolProperties.NoDSymUtil)' == 'false'"
-			AppBundleDir="$(_AppBundlePath)PlugIns\%(_AppExtensionDebugSymbolProperties.Identity)"
-			Architectures="%(_AppExtensionDebugSymbolProperties.CompiledArchitectures)"
-			DSymDir="$(AppBundleDir)\..\%(_AppExtensionDebugSymbolProperties.Identity).dSYM"
-			Executable="$(_AppBundlePath)PlugIns\%(_AppExtensionDebugSymbolProperties.Identity)\%(_AppExtensionDebugSymbolProperties.NativeExecutable)"
-			ToolExe="$(DSymUtilExe)"
-			ToolPath="$(DSymUtilPath)"
-		>
-		</DSymUtil>
-
-		<!-- strip the debug symbols from the $(_NativeExecutable) -->
-		<SymbolStrip
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '%(_AppExtensionDebugSymbolProperties.NoSymbolStrip)' == 'false'"
-			Executable="$(_AppBundlePath)PlugIns\%(_AppExtensionDebugSymbolProperties.Identity)\%(_AppExtensionDebugSymbolProperties.NativeExecutable)"
-			IsFramework="false"
-			SymbolFile="%(_AppExtensionDebugSymbolProperties.SymbolsList)"
-		>
-		</SymbolStrip>
-
-		<!-- touch the dSYM Info.plist so that its mtime is newer than the stripped $(_NativeExecutable) -->
-		<Touch
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '%(_AppExtensionDebugSymbolProperties.NoSymbolStrip)' == 'false'"
-			Files="$(AppBundleDir)\..\%(_AppExtensionDebugSymbolProperties.Identity).dSYM\Contents\Info.plist"
-		>
-		</Touch>
-	</Target>
-
-	<Target Name="_GenerateFrameworkDebugSymbols" Condition="'$(ComputedPlatform)' == 'iPhone' And '$(IsWatchApp)' == 'false'" DependsOnTargets="_CompileToNative;_ParseBundlerArguments;_CollectFrameworks"
-		Inputs="%(_Frameworks.Identity)"
-		Outputs="$(AppBundleDir)\..\%(_Frameworks.Filename).framework.dSYM\Contents\Info.plist"
-		>
-
-		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(AppBundleDir)\..\%(_Frameworks.Filename).framework.dSYM" />
-
-		<!-- run dsymutil on embedded frameworks -->
-		<DSymUtil
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '$(_NoDSymUtil)' == 'false'"
-			AppBundleDir="$(AppBundleDir)"
-			Architectures=""
-			DSymDir="$(AppBundleDir)\..\%(_Frameworks.Filename).framework.dSYM"
-			Executable="%(_Frameworks.Identity)"
-			ToolExe="$(DSymUtilExe)"
-			ToolPath="$(DSymUtilPath)">
-		</DSymUtil>
-
-		<!-- strip embedded frameworks -->
-		<SymbolStrip
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '$(_NoSymbolStrip)' == 'false'"
-			Executable="%(_Frameworks.Identity)"
-			IsFramework="true"
-			SymbolFile=""
-		>
-		</SymbolStrip>
-
-		<!-- _GenerateDebugSymbols will run spotlight to index the dSYMs -->
-	</Target>
-
-	<Target Name="_PrepareDebugSymbolGeneration" Condition="'$(ComputedPlatform)' == 'iPhone' And '$(IsAppExtension)' == 'true' And '$(IsWatchApp)' == 'false'" DependsOnTargets="_CompileToNative;_ParseBundlerArguments"
-			Inputs="$(_NativeExecutable)" Outputs="$(DeviceSpecificOutputPath)dsym.items">
-		<!-- For App Extensions, we delay running dsymutil & strip until it has been copied into the main app bundle... -->
-		<GetFullPath SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" RelativePath="$(_MtouchSymbolsList)">
-			<Output TaskParameter="FullPath" PropertyName="_SymbolsListFullPath" />
-		</GetFullPath>
-
-		<PropertyGroup>
-			<!-- [System.IO.Path]::GetFileName() is safe to use -->
-			<_NativeExecutableFileName>$([System.IO.Path]::GetFileName('$(_NativeExecutable)'))</_NativeExecutableFileName>
-			<_AppBundleFileName>$([System.IO.Path]::GetFileName('$(AppBundleDir)'))</_AppBundleFileName>
-		</PropertyGroup>
-
-		<ItemGroup>
-			<_AppExtensionDebugSymbolProperties Remove="@(_AppExtensionDebugSymbolProperties)" />
-
-			<_AppExtensionDebugSymbolProperties Include="$(_AppBundleFileName)">
-				<CompiledArchitectures>$(_CompiledArchitectures)</CompiledArchitectures>
-				<NativeExecutable>$(_NativeExecutableFileName)</NativeExecutable>
-				<NoSymbolStrip>$(_NoSymbolStrip)</NoSymbolStrip>
-				<SymbolsList>$(_SymbolsListFullPath)</SymbolsList>
-				<NoDSymUtil>$(_NoDSymUtil)</NoDSymUtil>
-			</_AppExtensionDebugSymbolProperties>
-		</ItemGroup>
-
-		<WriteItemsToFile
-			Condition="'$(IsMacEnabled)' == 'true'"
-			Items="@(_AppExtensionDebugSymbolProperties)"
-			ItemName="_AppExtensionDebugSymbolProperties"
-			File="$(DeviceSpecificOutputPath)dsym.items"
-			IncludeMetadata="true"
-			Overwrite="true"
-		/>
-	</Target>
-
-	<Target Name="_GenerateDebugSymbols" Condition="'$(ComputedPlatform)' == 'iPhone' And '$(IsWatchApp)' == 'false'" DependsOnTargets="_CompileToNative;_ParseBundlerArguments;_GenerateFrameworkDebugSymbols;_GenerateAppExtensionDebugSymbols;_PrepareDebugSymbolGeneration"
-		Inputs="$(_NativeExecutable)" Outputs="$(AppBundleDir).dSYM\Contents\Info.plist">
-
-		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '$(IsAppExtension)' == 'false'" Directories="$(AppBundleDir).dSYM" />
-		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '$(IsAppExtension)' == 'false'" Files="$(DeviceSpecificOutputPath)*.bcsymbolmap" />
-
-		<!-- run dsymutil on the main bundle -->
-		<DSymUtil
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '$(_NoDSymUtil)' == 'false' And '$(IsAppExtension)' == 'false'"
-			AppBundleDir="$(AppBundleDir)"
-			Architectures="$(_CompiledArchitectures)"
-			DSymDir="$(AppBundleDir).dSYM"
-			Executable="$(_NativeExecutable)"
-			ToolExe="$(DSymUtilExe)"
-			ToolPath="$(DSymUtilPath)"
-		>
-		</DSymUtil>
-
-		<!-- strip the debug symbols from the $(_NativeExecutable) -->
-		<SymbolStrip
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '$(_NoSymbolStrip)' == 'false' And '$(IsAppExtension)' == 'false'"
-			Executable="$(_NativeExecutable)"
-			IsFramework="false"
-			SymbolFile="$(_MtouchSymbolsList)"
-		>
-		</SymbolStrip>
-
-		<!-- touch the dSYM Info.plist so that its mtime is newer than the stripped $(_NativeExecutable) -->
-		<Touch
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '$(_NoSymbolStrip)' == 'false' And '$(IsAppExtension)' == 'false' And Exists('$(AppBundleDir).dSYM')"
-			Files="$(AppBundleDir).dSYM\Contents\Info.plist"
-		>
-		</Touch>
-
-		<!-- make sure spotlight indexes everything we've built -->
-		<SpotlightIndexer
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '$(_NoDSymUtil)' == 'false' And '$(IsAppExtension)' == 'false'"
-			Input="$(AppBundleDir)/../"
-		>
-		</SpotlightIndexer>
 	</Target>
 
 	<Target Name="_CreateDebugSettings" Condition="'$(_BundlerDebug)' == 'true' And '$(IsWatchApp)' == 'false' And '$(_IsMacCatalyst)' != 'true'"
@@ -804,7 +628,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<Target Name="_CoreCompileImageAssets" 
 		Inputs="@(ImageAsset);$(_AppManifest)"
 		Outputs="$(_ACTool_PartialAppManifestCache);$(_ACTool_BundleResourceCache)"
-		DependsOnTargets="_GetMinimumOSVersion;_DetectSdkLocations;_BeforeCoreCompileImageAssets">
+		DependsOnTargets="_GetMinimumOSVersion;_DetectSdkLocations;_BeforeCoreCompileImageAssets;_DetectSigningIdentity">
 
 		<ACTool
 			SessionId="$(BuildSessionId)"
@@ -812,6 +636,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			ToolExe="$(ACToolExe)"
 			ToolPath="$(ACToolPath)"
 			AppManifest="$(_AppManifest)"
+			BundleIdentifier="$(_BundleIdentifier)"
 			DeviceModel="$(TargetDeviceModel)"
 			DeviceOSVersion="$(TargetDeviceOSVersion)"
 			EnableOnDemandResources="$(EnableOnDemandResources)"
@@ -894,18 +719,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<ItemGroup>
 			<FileWrites Include="$(_TextureAtlasCache)" />
 		</ItemGroup>
-	</Target>
-
-	<Target Name="_EmbedMobileProvision" Condition="'$(_RequireCodeSigning)' == 'true'" DependsOnTargets="_GenerateBundleName;_DetectSigningIdentity"
-		Outputs="$(_AppBundlePath)embedded.mobileprovision">
-		<EmbedMobileProvision
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			AppBundleDir="$(AppBundleDir)"
-			ProvisioningProfile="$(_ProvisioningProfile)"
-			SdkPlatform="$(_SdkPlatform)"
-			>
-		</EmbedMobileProvision>
 	</Target>
 
 	<Target Name="_DetectDebugNetworkConfiguration" Condition="'$(_BundlerDebug)' == 'true'">

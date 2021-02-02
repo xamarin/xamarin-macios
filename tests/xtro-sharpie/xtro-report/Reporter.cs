@@ -10,7 +10,7 @@ namespace Extrospection {
 
 		static SortedSet<string> Frameworks = new SortedSet<string> (StringComparer.OrdinalIgnoreCase);
 
-		static readonly string [] Platforms = new [] { "iOS", "tvOS", "watchOS", "macOS" };
+		static readonly string [] Platforms = new [] { "iOS", "tvOS", "watchOS", "macOS", "MacCatalyst" };
 
 		public static bool ProcessFramework (string framework)
 		{
@@ -243,9 +243,9 @@ namespace Extrospection {
 			log.WriteLine ("<tr>");
 			log.WriteLine ("<td>Total (per state)</td>");
 			if (full)
-				log.WriteLine ($"<td align='center' bgcolor='green' colspan='5'>{total_ignored}</td>");
-			log.WriteLine ($"<td align='center' bgcolor='red' colspan='4'>{total_unclassfied}</td>");
-			log.WriteLine ($"<td align='center' bgcolor='orange' colspan='4'>{total_todo}</td>");
+				log.WriteLine ($"<td align='center' bgcolor='green' colspan='{Platforms.Length + 1}'>{total_ignored}</td>");
+			log.WriteLine ($"<td align='center' bgcolor='red' colspan='{Platforms.Length}'>{total_unclassfied}</td>");
+			log.WriteLine ($"<td align='center' bgcolor='orange' colspan='{Platforms.Length}'>{total_todo}</td>");
 			log.WriteLine ("</tr>");
 
 			log.WriteLine ("<tr>");

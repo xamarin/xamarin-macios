@@ -23,11 +23,7 @@ namespace MonoTouchFixtures.Compression {
 	public class ThoroughCompressionStreamTest
 	{
 
-#if MONOMAC
- 		string uncompressedFilePath = Path.Combine (NSBundle.MainBundle.BundlePath, "Contents/Resources/uncompressed.txt");
-#else
- 		string uncompressedFilePath = Path.Combine (NSBundle.MainBundle.BundlePath, "uncompressed.txt");
-#endif
+		string uncompressedFilePath = Path.Combine (NSBundle.MainBundle.ResourcePath, "uncompressed.txt");
 
 		string firstTempPath;
 		string secondTempPath;
@@ -88,11 +84,7 @@ namespace MonoTouchFixtures.Compression {
 		{
 			if (!TestRuntime.CheckXcodeVersion (7, 0))
 				Assert.Ignore ("Requires iOS 9.0+ or macOS 10.11+");
-#if MONOMAC
- 			string compressedFilePath = Path.Combine (NSBundle.MainBundle.BundlePath, $"Contents/Resources/{compressedFile}");
-#else
- 			string compressedFilePath = Path.Combine (NSBundle.MainBundle.BundlePath, compressedFile);
-#endif
+			string compressedFilePath = Path.Combine (NSBundle.MainBundle.ResourcePath, compressedFile);
 			DecodeRealFile (algorithm, compressedFilePath, uncompressedFilePath);
 		}
 	}

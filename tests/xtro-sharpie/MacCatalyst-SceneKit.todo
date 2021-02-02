@@ -1,0 +1,7 @@
+!extra-protocol-member! unexpected selector SCNSceneRenderer::context found
+!missing-enum-value! SCNAntialiasingMode native value SCNAntialiasingModeMultisampling16X = 4 not bound
+!missing-enum-value! SCNAntialiasingMode native value SCNAntialiasingModeMultisampling8X = 3 not bound
+!missing-protocol-member! SCNProgramDelegate::programIsOpaque: not found
+!missing-selector! SCNMaterialProperty::borderColor not bound
+!missing-selector! SCNMaterialProperty::setBorderColor: not bound
+!missing-selector! SCNRenderer::render not bound

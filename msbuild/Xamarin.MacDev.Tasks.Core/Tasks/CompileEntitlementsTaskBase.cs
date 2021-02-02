@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Microsoft.Build.Framework;
 
 using Xamarin.Localization.MSBuild;
+using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks
 {
@@ -12,6 +13,35 @@ namespace Xamarin.MacDev.Tasks
 	{
 		bool warnedTeamIdentifierPrefix;
 		bool warnedAppIdentifierPrefix;
+
+		static readonly HashSet<string> macAllowedProvisioningKeys = new HashSet<string> {
+			"com.apple.application-identifier",
+			"com.apple.developer.aps-environment",
+			"com.apple.developer.default-data-protection",
+			//"com.apple.developer.icloud-container-development-container-identifiers",
+			//"com.apple.developer.icloud-container-identifiers",
+			//"com.apple.developer.icloud-container-environment",
+			//"com.apple.developer.icloud-services",
+			"com.apple.developer.pass-type-identifiers",
+			"com.apple.developer.team-identifier",
+			//"com.apple.developer.ubiquity-container-identifiers",
+			"get-task-allow",
+		};
+
+		static readonly HashSet<string> iOSAllowedProvisioningKeys = new HashSet<string> {
+			"application-identifier",
+			"aps-environment",
+			"beta-reports-active",
+			"com.apple.developer.default-data-protection",
+
+			"com.apple.developer.icloud-container-environment",
+			"com.apple.developer.icloud-container-identifiers",
+			"com.apple.developer.pass-type-identifiers",
+			"com.apple.developer.team-identifier",
+			"com.apple.developer.ubiquity-container-identifiers",
+			"get-task-allow"
+		};
+
 
 		#region Inputs
 
@@ -55,13 +85,59 @@ namespace Xamarin.MacDev.Tasks
 
 		#endregion
 
-		protected abstract string ApplicationIdentifierKey { get; }
+		protected string ApplicationIdentifierKey {
+			get {
+				switch (Platform) {
+				case ApplePlatform.iOS:
+				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
+					return "application-identifier";
+				case ApplePlatform.MacOSX:
+				case ApplePlatform.MacCatalyst:
+					return "com.apple.application-identifier";
+				default:
+					throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, Platform));
+				}
+			}
+		}
 
-		protected abstract string DefaultEntitlementsPath { get; }
+		protected string DefaultEntitlementsPath {
+			get {
+				return Path.Combine (Sdks.GetAppleSdk (TargetFrameworkMoniker).GetSdkPath (SdkVersion, false), "Entitlements.plist");
+			}
+		}
 
-		protected abstract HashSet<string> AllowedProvisioningKeys { get; }
+		protected HashSet<string> AllowedProvisioningKeys {
+			get {
+				switch (Platform) {
+				case ApplePlatform.iOS:
+				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
+					return iOSAllowedProvisioningKeys;
+				case ApplePlatform.MacOSX:
+				case ApplePlatform.MacCatalyst:
+					return macAllowedProvisioningKeys;
+				default:
+					throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, Platform));
+				}
+			}
+		}
 
-		protected abstract string EntitlementBundlePath { get; }
+		protected string EntitlementBundlePath {
+			get {
+				switch (Platform) {
+				case ApplePlatform.iOS:
+				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
+					return AppBundleDir;
+				case ApplePlatform.MacOSX:
+				case ApplePlatform.MacCatalyst:
+					return Path.Combine (AppBundleDir, "Contents", "Resources");
+				default:
+					throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, Platform));
+				}
+			}
+		}
 
 		protected virtual bool MergeProfileEntitlements {
 			get { return true; }
@@ -272,6 +348,14 @@ namespace Xamarin.MacDev.Tasks
 
 				if (value != null)
 					entitlements[item.Key] = value;
+			}
+
+			switch (Platform) {
+			case ApplePlatform.MacOSX:
+			case ApplePlatform.MacCatalyst:
+				if (Debug && entitlements.TryGetValue ("com.apple.security.app-sandbox", out PBoolean sandbox) && sandbox.Value)
+					entitlements ["com.apple.security.network.client"] = new PBoolean (true);
+				break;
 			}
 
 			return entitlements;

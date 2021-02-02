@@ -145,7 +145,11 @@ namespace Xamarin.iOS.Tasks
 					if (!string.IsNullOrEmpty (value) && bool.TryParse (value, out boolean) && boolean)
 						gcc.Cxx = true;
 				} else if (kind == NativeReferenceKind.Framework) {
-					gcc.Frameworks.Add (item.ItemSpec);
+					var path = item.ItemSpec;
+					// in case the full path to the library is given (msbuild)
+					if (Path.GetExtension (path) != ".framework")
+						path = Path.GetDirectoryName (path);
+					gcc.Frameworks.Add (path);
 				} else {
 					Log.LogWarning (MSBStrings.W0052, item.ItemSpec);
 					continue;
@@ -399,10 +403,10 @@ namespace Xamarin.iOS.Tasks
 			gcc.Arguments.AddQuoted (LinkNativeCodeTaskBase.GetEmbedEntitlementsInExecutableLinkerFlags (CompiledEntitlements));
 
 			foreach (var framework in gcc.Frameworks)
-				args.AddQuotedLine ($"--framework={framework}");
+				args.AddQuotedLine ($"--framework={Path.GetFullPath (framework)}");
 
 			foreach (var framework in gcc.WeakFrameworks)
-				args.AddQuotedLine ($"--weak-framework={framework}");
+				args.AddQuotedLine ($"--weak-framework={Path.GetFullPath (framework)}");
 
 			if (gcc.Cxx)
 				args.AddLine ("--cxx");
@@ -488,12 +492,12 @@ namespace Xamarin.iOS.Tasks
 	
 		static string ResolveFrameworkFileOrFacade (string frameworkDir, string fileName)
 		{
-			var facadeFile = Path.Combine (IPhoneSdks.MonoTouch.LibDir, "mono", frameworkDir, "Facades", fileName);
+			var facadeFile = Path.Combine (Sdks.XamIOS.LibDir, "mono", frameworkDir, "Facades", fileName);
 
 			if (File.Exists (facadeFile))
 				return facadeFile;
 
-			var frameworkFile = Path.Combine (IPhoneSdks.MonoTouch.LibDir, "mono", frameworkDir, fileName);
+			var frameworkFile = Path.Combine (Sdks.XamIOS.LibDir, "mono", frameworkDir, fileName);
 			if (File.Exists (frameworkFile))
 				return frameworkFile;
 

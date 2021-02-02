@@ -1378,6 +1378,13 @@ $(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.iOS.cs: $(MACCATALYST_DOTNET_BUILD_D
 $(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.iOS.dll: $(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.iOS.cs
 	$(Q) $(SYSTEM_CSC) $(DOTNET_FLAGS) $< -out:$@ -r:$(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.MacCatalyst.dll -target:library -deterministic -publicsign -keyfile:$(PRODUCT_KEY_PATH) -nologo -nowarn:618
 
+$(MACCATALYST_BUILD_DIR)/reference/OpenTK-1.0.cs: $(MACCATALYST_BUILD_DIR)/reference/Xamarin.MacCatalyst.dll $(IOS_BUILD_DIR)/reference/OpenTK-1.0.dll Makefile $(GENERATE_TYPE_FORWARDERS)
+	$(Q) mono $(GENERATE_TYPE_FORWARDERS) $(IOS_BUILD_DIR)/reference/OpenTK-1.0.dll $(MACCATALYST_BUILD_DIR)/reference/Xamarin.MacCatalyst.dll $@.tmp
+	$(Q) mv $@.tmp $@
+
+$(MACCATALYST_BUILD_DIR)/reference/OpenTK-1.0.dll: $(MACCATALYST_BUILD_DIR)/reference/OpenTK-1.0.cs
+	$(Q) $(MACCATALYST_CSC) $< -out:$@ -r:$(MACCATALYST_BUILD_DIR)/reference/Xamarin.MacCatalyst.dll -target:library -deterministic -publicsign -keyfile:$(PRODUCT_KEY_PATH) -nologo -nowarn:618
+
 PROJECT_FILES += $(PROJECT_DIR)/xammaccatalyst.csproj $(PROJECT_DIR)/MonoTouch.NUnitLite.maccatalyst.csproj
 
 clean-maccatalyst:
@@ -1405,6 +1412,7 @@ MACCATALYST_TARGETS += \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/MacCatalyst/Xamarin.MacCatalyst.dll            \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/MacCatalyst/Xamarin.MacCatalyst.pdb            \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/MacCatalyst/Xamarin.iOS.dll                    \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/MacCatalyst/OpenTK-1.0.dll                     \
 
 DOTNET_TARGETS += \
 	$(MACCATALYST_DOTNET_BUILD_DIR)/64/Xamarin.MacCatalyst.dll \
@@ -1443,6 +1451,9 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/MacCatalyst/Xamarin.MacCatalyst.pdb
 	$(Q) install -m 0644 $< $@
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/MacCatalyst/Xamarin.iOS.dll: $(MACCATALYST_BUILD_DIR)/reference/Xamarin.iOS.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/MacCatalyst
+	$(Q) install -m 0755 $< $@
+
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/MacCatalyst/OpenTK-1.0.dll: $(MACCATALYST_BUILD_DIR)/reference/OpenTK-1.0.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/MacCatalyst
 	$(Q) install -m 0755 $< $@
 
 $(foreach rid,$(DOTNET_MACCATALYST_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0/Xamarin.MacCatalyst.dll): $(MACCATALYST_DOTNET_BUILD_DIR)/64/Xamarin.MacCatalyst.dll | $(foreach rid,$(DOTNET_MACCATALYST_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0)

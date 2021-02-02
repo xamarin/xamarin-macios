@@ -4,5 +4,9 @@
     <TargetFramework>net6.0-ios</TargetFramework>
     <RuntimeIdentifier>ios-x64</RuntimeIdentifier>
     <OutputType>Exe</OutputType>
+
+    <ApplicationTitle>MySingleTitle</ApplicationTitle>
+    <ApplicationId>com.xamarin.mysingletitle</ApplicationId>
+    <ApplicationVersion>3.14</ApplicationVersion>
   </PropertyGroup>
 </Project>

@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
+using Xamarin.MacDev.Tasks;
 using Xamarin.Messaging.Build.Client;
 
 namespace Xamarin.iOS.Tasks
 {
-	public class DetectSigningIdentity : DetectSigningIdentityTaskCore, ITaskCallback, ICancelableTask
+	public class DetectSigningIdentity : DetectSigningIdentityTaskBase, ITaskCallback, ICancelableTask
 	{
 		public override bool Execute ()
 		{

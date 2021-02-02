@@ -62,7 +62,7 @@ namespace Xamarin.MMP.Tests.Unit
 		int OnRunCommand (string path, IList<string> args, Dictionary<string, string> env, StringBuilder output, bool suppressPrintOnErrors)
 		{
 			commandsRun.Add (Tuple.Create <string, IList<string>>(path, args));
-			if (path != AOTCompiler.StripCommand && path != AOTCompiler.DeleteDebugSymbolCommand) {
+			if (path != AOTCompiler.StripCommand) {
 				Assert.AreEqual (TestRootDir, env ["MONO_PATH"], "MONO_PATH should be set to our expected value");
 			}
 			return 0;
@@ -87,8 +87,6 @@ namespace Xamarin.MMP.Tests.Unit
 
 			foreach (var command in commandsRun) {
 				if (expectStripping && command.Item1 == AOTCompiler.StripCommand)
-					continue;
-				if (expectSymbolDeletion && command.Item1 == AOTCompiler.DeleteDebugSymbolCommand)
 					continue;
 				Assert.IsTrue (command.Item1.EndsWith (GetExpectedMonoCommand (compilerType)), "Unexpected command: " + command.Item1);
 				var argParts = command.Item2;
@@ -128,25 +126,8 @@ namespace Xamarin.MMP.Tests.Unit
 			Assert.IsTrue (filesStripped.All (x => expectedFiles.Contains (x)), "Different files stripped than expected: "  + getErrorDetails ());
 		}
 		
-		List<string> GetDeletedSymbols ()
-		{
-			// Chop off -r prefix and quotes around filename
-			return commandsRun.Where (x => x.Item1 == AOTCompiler.DeleteDebugSymbolCommand).Select (x => x.Item2 [1]).ToList ();
-		}
-
 		string AllCommandsRun => "\nCommands Run:\n\t" + String.Join ("\n\t", commandsRun.Select (x => $"{x.Item1} {x.Item2}"));
 		string FormatDebugList (IEnumerable <string> list) => String.Join (" ", list.Select (x => "\"" + x + "\""));
-
-		void AssertSymbolsDeleted (IEnumerable <string> expectedFiles)
-		{
-			expectedFiles = expectedFiles.Select (x => x + ".dylib.dSYM/").ToList ();
-			List<string> symbolsDeleted = GetDeletedSymbols ();
-
-			Func<string> getErrorDetails = () => $"\n {FormatDebugList (symbolsDeleted)} \nvs\n {FormatDebugList (expectedFiles)}\n{AllCommandsRun}";
-
-			Assert.AreEqual (symbolsDeleted.Count, expectedFiles.Count (), "Different number of symbols deleted than expected: " + getErrorDetails ());
-			Assert.IsTrue (symbolsDeleted.All (x => expectedFiles.Contains (x)), "Different files deleted than expected: "  + getErrorDetails ());
-		}
 
 		void AssertFilesAOTed (IEnumerable <string> expectedFiles, AOTCompilerType compilerType = AOTCompilerType.Bundled64, AOTKind kind = AOTKind.Standard, bool isModern = false, bool expectStripping = false, bool expectSymbolDeletion = false)
 		{
@@ -368,7 +349,6 @@ namespace Xamarin.MMP.Tests.Unit
 			var expectedFiles = FullAppFileList.Where (x => x.EndsWith (".exe") || x.EndsWith (".dll"));
 			AssertFilesAOTed (expectedFiles, kind : AOTKind.Hybrid, expectStripping : true, expectSymbolDeletion : true);
 			AssertFilesStripped (expectedFiles);
-			AssertSymbolsDeleted (expectedFiles);
 		}
 
 		[Test]
@@ -381,7 +361,6 @@ namespace Xamarin.MMP.Tests.Unit
 			var expectedFiles = FullAppFileList.Where (x => x.EndsWith (".exe") || x.EndsWith (".dll"));
 			AssertFilesAOTed (expectedFiles, expectStripping : false, expectSymbolDeletion : true);
 			AssertFilesStripped (new string [] {});
-			AssertSymbolsDeleted (expectedFiles);
 		}
 
 		[Test]

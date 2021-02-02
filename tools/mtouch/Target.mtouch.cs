@@ -87,14 +87,8 @@ namespace Xamarin.Bundler
 		{
 			BundleFileInfo info;
 
-			if (bundle_path == null) {
-				if (source.EndsWith (".framework", StringComparison.Ordinal)) {
-					var bundle_name = Path.GetFileNameWithoutExtension (source);
-					bundle_path = $"Frameworks/{bundle_name}.framework";
-				} else {
-					bundle_path = Path.GetFileName (source);
-				}
-			}
+			if (bundle_path == null)
+				bundle_path = Path.GetFileName (source);
 
 			if (!BundleFiles.TryGetValue (bundle_path, out info))
 				BundleFiles [bundle_path] = info = new BundleFileInfo () { DylibToFramework = dylib_to_framework_conversion };
@@ -1688,8 +1682,6 @@ namespace Xamarin.Bundler
 
 			var targetExecutable = Executables.Values.First ();
 
-			Application.TryDelete (targetExecutable);
-
 			try {
 				var launcher = new StringBuilder ();
 				launcher.Append (Path.Combine (Driver.GetFrameworkBinDirectory (App), "simlauncher"));
@@ -1700,6 +1692,8 @@ namespace Xamarin.Bundler
 				launcher.Append ("-sgen");
 				if (Directory.Exists (targetExecutable))
 					throw new ArgumentException ($"{targetExecutable} is a directory.");
+				else
+					File.Delete (targetExecutable);
 				File.Copy (launcher.ToString (), targetExecutable);
 				File.SetLastWriteTime (targetExecutable, DateTime.Now);
 			} catch (ProductException) {

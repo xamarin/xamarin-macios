@@ -9,6 +9,7 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using System.Collections.Generic;
 using Xamarin.Localization.MSBuild;
+using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks
 {
@@ -76,7 +77,9 @@ namespace Xamarin.MacDev.Tasks
 
 		string GetOutputPath (ITaskItem item)
 		{
-			return Path.Combine (StampPath, item.ItemSpec);
+			var path = item.ItemSpec;
+			var app = path.LastIndexOf (".app/");
+			return Path.Combine (StampPath, path.Substring (app + ".app/".Length));
 		}
 
 		bool NeedsCodesign (ITaskItem item)
@@ -110,9 +113,13 @@ namespace Xamarin.MacDev.Tasks
 				args.Add ("runtime");
 			}
 
-			if (UseSecureTimestamp)
+			if (UseSecureTimestamp) {
+				if (DisableTimestamp) {
+					// Conflicting '{0}' and '{1}' options. '{1}' will be ignored.
+					Log.LogWarning (MSBStrings.W0176, "UseSecureTimestamp", "DisableTimestamp");
+				}
 				args.Add ("--timestamp");
-			else
+			} else
 				args.Add ("--timestamp=none");
 
 			args.Add ("--sign");
@@ -133,13 +140,19 @@ namespace Xamarin.MacDev.Tasks
 				args.Add (Path.GetFullPath (Entitlements));
 			}
 
-			if (DisableTimestamp)
-				args.Add ("--timestamp=none");
-
 			if (!string.IsNullOrEmpty (ExtraArgs))
 				args.Add (ExtraArgs);
 
-			args.Add (Path.GetFullPath (item.ItemSpec));
+			// signing a framework and a file inside a framework is not *always* identical
+			// on macOS apps {item.ItemSpec} can be a symlink to `Versions/Current/{item.ItemSpec}`
+			// and `Current` also a symlink to `A`... and `_CodeSignature` will be found there
+			var path = PathUtils.ResolveSymbolicLinks (item.ItemSpec);
+			var parent = Path.GetDirectoryName (path);
+      
+			// so do not don't sign `A.framework/A`, sign `A.framework` which will always sign the *bundle*
+			if ((Path.GetExtension (parent) == ".framework") && (Path.GetFileName (path) == Path.GetFileNameWithoutExtension (parent)))
+				path = parent;
+			args.Add (Path.GetFullPath (path));
 
 			return args;
 		}
@@ -229,11 +242,6 @@ namespace Xamarin.MacDev.Tasks
 				}
 			} else if (File.Exists (item.ItemSpec)) {
 				codesignedFiles.Add (item);
-
-				var dirName = Path.GetDirectoryName (item.ItemSpec);
-
-				if (Path.GetExtension (dirName) == ".framework")
-					codesignedFiles.AddRange (Directory.EnumerateFiles (Path.Combine (dirName, CodeSignatureDirName)).Select (x => new TaskItem (x)));
 			}
 
 			return codesignedFiles;
