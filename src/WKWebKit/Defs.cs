@@ -11,6 +11,8 @@ using System;
 
 using ObjCRuntime;
 
+#nullable enable
+
 namespace WebKit
 {
 	[Mac (10, 10)]
