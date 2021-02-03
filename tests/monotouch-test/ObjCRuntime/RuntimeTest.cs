@@ -705,5 +705,99 @@ Additional information:
 				date = null;
 			}
 		}
+
+		[Test]
+		public void ToggleRef_NonToggledObjectsShouldBeCollected ()
+		{
+			// This test verifies that toggleable objects that aren't toggled aren't kept alive.
+			// We create a number of managed NSFileManager instance, get a native reference to each of them,
+			// and then we verify that the managed instance is collected.
+			var counter = 100;
+			var handles = new GCHandle [counter];
+			var pointers = new IntPtr [counter];
+
+			var t = new Thread (() =>
+			{
+				for (var i = 0; i < counter; i++) {
+					var obj = new NSFileManager ();
+					// do not toggle
+					obj.DangerousRetain (); // obtain a native reference
+					handles [i] = GCHandle.Alloc (obj, GCHandleType.Weak);
+					pointers [i] = obj.Handle;
+				}
+			}) {
+				IsBackground = true,
+				Name = "ToggleRef_NonToggledObjectsShouldBeCollected",
+			};
+			t.Start ();
+			Assert.IsTrue (t.Join (TimeSpan.FromSeconds (10)), "Background thread completion");
+
+			var checkForCollectedManagedObjects = new Func<bool> (() =>
+			{
+				GC.Collect ();
+				GC.WaitForPendingFinalizers ();
+				for (var i = 0; i < counter; i++) {
+					if (handles [i].Target == null)
+						return true;
+				}
+				return false;
+			});
+
+			// Iterate over the runloop in case something has to happen on the main thread for the objects to be collected.
+			TestRuntime.RunAsync (TimeSpan.FromSeconds (5), () => { }, checkForCollectedManagedObjects);
+
+			Assert.IsTrue (checkForCollectedManagedObjects (), "Any collected objects");
+
+			for (var i = 0; i < counter; i++) {
+				var obj = Runtime.GetNSObject (pointers [i]);
+				Assert.IsNotNull (obj, $"Object #{i} couldn't be resurrected");
+				obj.DangerousRelease (); // release the native reference
+				obj.Dispose ();
+				handles [i].Free ();
+			}
+		}
+
+		[Test]
+		public void ToggleRef_ToggledObjectsShouldNotBeCollected ()
+		{
+			// This test verifies that toggleable objects that are toggled are kept alive while the native peer is alive.
+			// We create a number of managed NSFileManager instance, get a native reference to each of them,
+			// and then we verify that the managed instance won't be collected.
+			//
+			// NSFileManager instances are toggled when the [Weak]Delegate property is set.
+			var del = new NSFileManagerDelegate ();
+			var counter = 100;
+			var handles = new GCHandle [counter];
+			var t = new Thread (() =>
+			{
+				for (var i = 0; i < counter; i++) {
+					var obj = new NSFileManager ();
+					obj.Delegate = del; // toggle
+					obj.DangerousRetain (); // obtain a native reference
+					handles [i] = GCHandle.Alloc (obj, GCHandleType.Weak);
+				}
+			}) {
+				IsBackground = true,
+				Name = "ToggleRef_ToggledObjectsShouldNotBeCollected",
+			};
+			t.Start ();
+			Assert.IsTrue (t.Join (TimeSpan.FromSeconds (10)), "Background thread completion");
+
+			TestRuntime.RunAsync (TimeSpan.FromSeconds (2), () => { }, () =>
+			{
+				// Iterate over the runloop a bit to make sure we're just not collecting because objects are queued on for things to happen on the main thread
+				GC.Collect ();
+				GC.WaitForPendingFinalizers ();
+				return false;
+			});
+
+			for (var i = 0; i < counter; i++) {
+				var obj = (NSFileManager) handles [i].Target;
+				Assert.IsNotNull (obj, $"Object #{i} was unexpectedly collected.");
+				obj.DangerousRelease (); // release the native reference
+				obj.Dispose ();
+				handles [i].Free ();
+			}
+		}
 	}
 }
