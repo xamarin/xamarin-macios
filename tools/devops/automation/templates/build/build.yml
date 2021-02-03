@@ -284,6 +284,22 @@ steps:
     rm -Rf $(Build.SourcesDirectory)/package/*.pkg
     rm -Rf $(Build.SourcesDirectory)/package/notarized/*.pkg
     time make -C $(Build.SourcesDirectory)/xamarin-macios/ package
+  name: packages
+  displayName: 'Build Packages'
+  condition: and(succeeded(), contains(variables['configuration.BuildPkgs'], 'True'))
+  timeoutInMinutes: 180
+
+# build nugets
+- bash:  $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/build-nugets.sh
+  displayName: 'Build Nugets'
+  condition: and(succeeded(), contains(variables['configuration.BuildNugets'], 'True'))
+  continueOnError: true # should not stop the build since is not official just yet.
+  timeoutInMinutes: 180
+
+# build not signed .pkgs for the SDK
+- bash: |
+    set -x
+    set -e
 
     # output vars for other steps to use and not need to recomputed the paths
     IOS_PKG=$(find $(Build.SourcesDirectory)/package -type f -name "xamarin.ios-*" | xargs basename)
@@ -339,16 +355,8 @@ steps:
       echo "##vso[task.setvariable variable=MACOS_DOTNET_PKG;]$MACOS_DOTNET_PKG"
       echo "Microsoft.macOS package found at $MACOS_DOTNET_PKG"
     fi
-  name: packages
-  displayName: 'Build Packages'
+  displayName: 'Sign Packages'
   condition: and(succeeded(), contains(variables['configuration.BuildPkgs'], 'True'))
-  timeoutInMinutes: 180
-
-# build nugets
-- bash:  $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/build-nugets.sh
-  displayName: 'Build Nugets'
-  condition: and(succeeded(), contains(variables['configuration.BuildNugets'], 'True'))
-  continueOnError: true # should not stop the build since is not official just yet.
   timeoutInMinutes: 180
 
 - task: NuGetCommand@2
