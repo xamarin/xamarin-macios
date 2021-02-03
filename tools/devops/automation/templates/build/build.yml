@@ -332,10 +332,12 @@ steps:
 
 - task: MicroBuildSigningPlugin@3
   displayName: 'Install Signing Plugin'
+  condition: and(succeeded(), contains(variables['configuration.SignPkgs'], 'True'), contains(variables['configuration.IsPr'], 'False'))
   inputs:
     signType: 'Real'
     azureSubscription: 'MicroBuild Signing Task (DevDiv)'
-  condition: and(succeeded(), contains(variables['configuration.SignPkgs'], 'True'), contains(variables['configuration.IsPr'], 'False'))
+  env:
+    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
 - pwsh : |
     # Get the list of dmg files to sign
