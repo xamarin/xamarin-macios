@@ -164,9 +164,11 @@ steps:
     if ($failures.Count -ne 0) {
       # post status and comment in the build
       $failedTestsStr = [string]::Join(",",$failures)
-      Set-GitHubStatus -Status "error" -Description "Xamarin.Mac tests on $Env:CONTEXT failed ($failedTestsStr)." -Context "$Env:CONTEXT"
+      Set-GitHubStatus -Status "error" -Description "Xamarin.Mac tests on Mac OS X $Env:CONTEXT failed ($failedTestsStr)." -Context "Mac OS X $Env:CONTEXT"
+      $request = New-GitHubCommentFromFile -Header "Tests failed on Mac OS X $Env:$Context" -Description "Tests failed on Mac OS X $Env:Context. ($failedTestsStr)" -Emoji ":x:"
     } else {
-      Set-GitHubStatus -Status "success" -Description "Xamarin.Mac tests on $Env:CONTEXT passed." -Context "$Env:CONTEXT"
+      Set-GitHubStatus -Status "success" -Description "Xamarin.Mac tests on Mac OS X $Env:CONTEXT passed." -Context "Mac OS X $Env:CONTEXT"
+      $request = New-GitHubCommentFromFile -Header "Tests passed on Mac OS X $Env:$Context" -Description "**All** tests on Mac OS X $Env:Context." -Emoji ":white_check_mark:"
     }
   displayName: 'Run tests'
   env:

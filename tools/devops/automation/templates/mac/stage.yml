@@ -39,20 +39,3 @@ stages:
       parameters:
         statusContext: ${{ parameters.statusContext }}
         keyringPass: ${{ parameters.keyringPass }} 
-
-  - job: upload_vsdrops
-    displayName: 'Upload results to vsdrops'
-    dependsOn: run_tests
-    timeoutInMinutes: 1000
-    workspace:
-      clean: all
-
-    pool:
-      name: VSEng-Xamarin-Win-XMA
-      demands: 
-      - Agent.OS -equals Windows_NT
-    
-    steps:
-      - checkout: self          # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
-        clean: true             # Executes: git clean -ffdx && git reset --hard HEAD
-        submodules: recursive
