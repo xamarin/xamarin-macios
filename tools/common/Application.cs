@@ -466,8 +466,8 @@ namespace Xamarin.Bundler {
 
 		public void ParseInterpreter (string value)
 		{
-			UseInterpreter = !string.IsNullOrEmpty (value);
-			if (UseInterpreter)
+			UseInterpreter = true;
+			if (!string.IsNullOrEmpty (value))
 				InterpretedAssemblies.AddRange (value.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries));
 		}
 

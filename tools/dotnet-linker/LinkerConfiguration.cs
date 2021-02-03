@@ -121,7 +121,8 @@ namespace Xamarin.Linker {
 					IntermediateLinkDir = value;
 					break;
 				case "Interpreter":
-					Application.ParseInterpreter (value);
+					if (!string.IsNullOrEmpty (value))
+						Application.ParseInterpreter (value);
 					break;
 				case "ItemsDirectory":
 					ItemsDirectory = value;
