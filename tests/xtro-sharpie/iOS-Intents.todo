@@ -1,0 +1,14 @@
+!deprecated-attribute-missing! INCallRecord::caller missing a [Deprecated] attribute
+!deprecated-attribute-missing! INCallRecord::initWithIdentifier:dateCreated:caller:callRecordType:callCapability:callDuration:unseen: missing a [Deprecated] attribute
+!deprecated-attribute-missing! INCallRecord::initWithIdentifier:dateCreated:caller:callRecordType:callCapability:callDuration:unseen:numberOfCalls: missing a [Deprecated] attribute
+!extra-designated-initializer! INCallRecord::initWithIdentifier:dateCreated:caller:callRecordType:callCapability:callDuration:unseen:numberOfCalls: is incorrectly decorated with an [DesignatedInitializer] attribute
+!missing-enum-value! INMediaReference native value INMediaReferenceMy = 2 not bound
+!missing-selector! INCallGroup::groupId not bound
+!missing-selector! INCallGroup::groupName not bound
+!missing-selector! INCallGroup::initWithGroupName:groupId: not bound
+!missing-selector! INCallRecord::initWithIdentifier:dateCreated:callRecordType:callCapability:callDuration:unseen: not bound
+!missing-selector! INCallRecord::initWithIdentifier:dateCreated:callRecordType:callCapability:callDuration:unseen:numberOfCalls: not bound
+!missing-selector! INCallRecord::initWithIdentifier:dateCreated:callRecordType:callCapability:callDuration:unseen:participants:numberOfCalls:isCallerIdBlocked: not bound
+!missing-selector! INCallRecord::isCallerIdBlocked not bound
+!missing-selector! INCallRecord::participants not bound
+!missing-type! INCallGroup not bound

@@ -116,6 +116,9 @@ namespace Introspection {
 				case "PKTransitPassProperties": // Conformance not in headers
 				// Xcode 12.2
 				case "VSAccountApplicationProvider": // Conformance not in headers
+				// Xcode 12.5
+				case "HMCharacteristicMetadata":
+				case "HMAccessoryCategory":
 					return true;
 				}
 				break;

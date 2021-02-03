@@ -28,3 +28,6 @@
 !missing-selector! NSOrderedSet::orderedSetByApplyingDifference: not bound
 !missing-type! NSOrderedCollectionChange not bound
 !missing-type! NSOrderedCollectionDifference not bound
+## appended from unclassified file
+!missing-field! NSProgressFileOperationKindUploading not bound
+!missing-field! NSURLUbiquitousItemIsExcludedFromSyncKey not bound

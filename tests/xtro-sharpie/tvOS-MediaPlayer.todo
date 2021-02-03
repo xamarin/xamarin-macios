@@ -1,0 +1,2 @@
+!missing-field! MPMediaItemPropertyIsPreorder not bound
+!missing-selector! MPMediaItem::isPreorder not bound

@@ -69,8 +69,9 @@ jobs:
     name: $(AgentPoolComputed)
     demands:
     - Agent.OS -equals Darwin
-    - Agent.OSVersion -equals 10.15
-    - macios_image -equals v1
+    - Agent.OSVersion -equals 10.16
+    - macios_image -equals v2
+    - XcodeChannel -equals Beta
   workspace:
     clean: all
 

@@ -1,0 +1,7 @@
+!missing-enum! GKFriendsAuthorizationStatus not bound
+!missing-enum-value! GKError native value GKErrorFriendListDenied = 102 not bound
+!missing-enum-value! GKError native value GKErrorFriendListDescriptionMissing = 100 not bound
+!missing-enum-value! GKError native value GKErrorFriendListRestricted = 101 not bound
+!missing-selector! GKLocalPlayer::loadFriends: not bound
+!missing-selector! GKLocalPlayer::loadFriendsAuthorizationStatus: not bound
+!missing-selector! GKLocalPlayer::loadFriendsWithIdentifiers:completionHandler: not bound
