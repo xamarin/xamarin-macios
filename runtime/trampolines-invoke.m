@@ -50,7 +50,7 @@ xamarin_string_to_nsstring (MonoString *obj, bool retain)
 	if (obj == NULL)
 		return NULL;
 
-	char *str = mono_string_to_utf8 ((MonoString *) obj);
+	char *str = mono_string_to_utf8 (obj);
 	NSString *arg;
 	if (retain) {
 		arg = [[NSString alloc] initWithUTF8String:str];
