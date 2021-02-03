@@ -973,8 +973,9 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 	<Target Name="_CollectFrameworks" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="$(_CollectFrameworksDependsOn)">
 		<PropertyGroup>
-			<_FrameworksDirectory Condition="'$(_PlatformName)' != 'macOS'">$(_AppBundlePath)/Frameworks</_FrameworksDirectory>
-			<_FrameworksDirectory Condition="'$(_PlatformName)' == 'macOS'">$(_AppBundlePath)/Contents/Frameworks</_FrameworksDirectory>
+			<_FrameworksDirectory Condition="'$(_FrameworksDirectory)' == '' And '$(_IsMacCatalyst)' == 'true'">$(_AppBundlePath)/Contents/Frameworks</_FrameworksDirectory>
+			<_FrameworksDirectory Condition="'$(_FrameworksDirectory)' == '' And '$(_PlatformName)' != 'macOS'">$(_AppBundlePath)/Frameworks</_FrameworksDirectory>
+			<_FrameworksDirectory Condition="'$(_FrameworksDirectory)' == '' And '$(_PlatformName)' == 'macOS'">$(_AppBundlePath)/Contents/Frameworks</_FrameworksDirectory>
 		</PropertyGroup>
 		<CollectFrameworks
 			SessionId="$(BuildSessionId)"

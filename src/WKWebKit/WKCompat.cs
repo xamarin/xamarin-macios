@@ -2,6 +2,8 @@ using System;
 
 using Foundation;
 
+#nullable enable
+
 namespace WebKit {
 
 #if !XAMCORE_4_0

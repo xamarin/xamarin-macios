@@ -280,7 +280,7 @@
 			</ResolvedFileToPublish>
 
 			<!-- Mark our entry assembly as a root assembly. -->
-			<TrimmerRootAssembly Include="$(AssemblyName)" />
+			<TrimmerRootAssembly Include="@(ResolvedFileToPublish)" Condition="'%(ResolvedFileToPublish.Filename)' == '$(AssemblyName)' And '%(ResolvedFileToPublish.Extension)' == '.dll'" />
 
 			<!-- add a custom step which inserts any other steps we need -->
 			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)">

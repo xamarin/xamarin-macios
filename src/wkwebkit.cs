@@ -33,6 +33,7 @@ namespace WebKit
 		NSUrl Url { get; }
 
 		[Export ("title")]
+		[NullAllowed]
 		string Title { get; }
 
 		[Export ("initialURL", ArgumentSemantic.Copy)]
@@ -45,12 +46,15 @@ namespace WebKit
 	interface WKBackForwardList {
 
 		[Export ("currentItem", ArgumentSemantic.Strong)]
+		[NullAllowed]
 		WKBackForwardListItem CurrentItem { get; }
 
 		[Export ("backItem", ArgumentSemantic.Strong)]
+		[NullAllowed]
 		WKBackForwardListItem BackItem { get; }
 
 		[Export ("forwardItem", ArgumentSemantic.Strong)]
+		[NullAllowed]
 		WKBackForwardListItem ForwardItem { get; }
 
 		[Export ("backList")]
@@ -60,6 +64,7 @@ namespace WebKit
 		WKBackForwardListItem [] ForwardList { get; }
 
 		[Export ("itemAtIndex:")]
+		[return: NullAllowed]
 		WKBackForwardListItem ItemAtIndex (nint index);
 	}
 
@@ -171,6 +176,7 @@ namespace WebKit
 		WKFrameInfo SourceFrame { get; }
 
 		[Export ("targetFrame", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		WKFrameInfo TargetFrame { get; }
 
 		[Export ("navigationType")]
@@ -292,6 +298,7 @@ namespace WebKit
 		NSObject Body { get; }
 
 		[Export ("webView", ArgumentSemantic.Weak)]
+		[NullAllowed]
 		WKWebView WebView { get; }
 
 		[Export ("name")]
@@ -339,6 +346,7 @@ namespace WebKit
 		CGRect Rect { get; set; }
 
 		[Export ("snapshotWidth")]
+		[NullAllowed]
 		NSNumber SnapshotWidth { get; set; }
 
 		[Mac (10,15)]
@@ -489,6 +497,7 @@ namespace WebKit
 	interface WKUIDelegate {
 
 		[Export ("webView:createWebViewWithConfiguration:forNavigationAction:windowFeatures:")]
+		[return: NullAllowed]
 		WKWebView CreateWebView (WKWebView webView, WKWebViewConfiguration configuration,
 			WKNavigationAction navigationAction, WKWindowFeatures windowFeatures);
 
@@ -668,9 +677,11 @@ namespace WebKit
 		WKBackForwardList BackForwardList { get; }
 
 		[Export ("title")]
+		[NullAllowed]
 		string Title { get; }
 
 		[Export ("URL", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		NSUrl Url { get; }
 
 		[Export ("loading")]
@@ -700,27 +711,35 @@ namespace WebKit
 #endif
 
 		[Export ("loadRequest:")]
+		[return: NullAllowed]
 		WKNavigation LoadRequest (NSUrlRequest request);
 
 		[Export ("loadHTMLString:baseURL:")]
+		[return: NullAllowed]
 		WKNavigation LoadHtmlString (NSString htmlString, [NullAllowed] NSUrl baseUrl);
 
 		[Wrap ("LoadHtmlString ((NSString)htmlString, baseUrl)")]
+		[return: NullAllowed]
 		WKNavigation LoadHtmlString (string htmlString, NSUrl baseUrl);
 
 		[Export ("goToBackForwardListItem:")]
+		[return: NullAllowed]
 		WKNavigation GoTo (WKBackForwardListItem item);
 
 		[Export ("goBack")]
+		[return: NullAllowed]
 		WKNavigation GoBack ();
 
 		[Export ("goForward")]
+		[return: NullAllowed]
 		WKNavigation GoForward ();
 
 		[Export ("reload")]
+		[return: NullAllowed]
 		WKNavigation Reload ();
 
 		[Export ("reloadFromOrigin")]
+		[return: NullAllowed]
 		WKNavigation ReloadFromOrigin ();
 
 		[Export ("stopLoading")]
@@ -754,6 +773,7 @@ namespace WebKit
 		
 		[iOS (9,0)][Mac (10,11)]
 		[Export ("customUserAgent")]
+		[NullAllowed]
 		string CustomUserAgent { get; set; }
 
 		[iOS (9,0)][Mac (10,11)]
@@ -849,6 +869,7 @@ namespace WebKit
 
 		[iOS (9,0), Mac(10,11)]
 		[Export ("applicationNameForUserAgent")]
+		[NullAllowed]
 		string ApplicationNameForUserAgent { get; set; }
 
 		[iOS (9,0)][Mac (10,11)]
@@ -903,6 +924,7 @@ namespace WebKit
 		[Mac (10,15)]
 		[iOS (13,0)]
 		[Export ("defaultWebpagePreferences", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		WKWebpagePreferences DefaultWebpagePreferences { get; set; }
 
 		[Mac (11,0)]
@@ -924,27 +946,35 @@ namespace WebKit
 		// Filled in from open source headers
 
 		[Internal, Export ("menuBarVisibility")]
+		[NullAllowed]
 		NSNumber menuBarVisibility { get; }
 
 		[Internal, Export ("statusBarVisibility")]
+		[NullAllowed]
 		NSNumber statusBarVisibility { get; }
 
 		[Internal, Export ("toolbarsVisibility")]
+		[NullAllowed]
 		NSNumber toolbarsVisibility { get; }
 
 		[Internal, Export ("allowsResizing")]
+		[NullAllowed]
 		NSNumber allowsResizing { get; }
 
 		[Internal, Export ("x")]
+		[NullAllowed]
 		NSNumber x { get; }
 
 		[Internal, Export ("y")]
+		[NullAllowed]
 		NSNumber y { get; }
 
 		[Internal, Export ("width")]
+		[NullAllowed]
 		NSNumber width { get; }
 
 		[Internal, Export ("height")]
+		[NullAllowed]
 		NSNumber height { get; }
 	}
 
