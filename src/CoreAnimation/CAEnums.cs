@@ -33,6 +33,8 @@ using System.Runtime.InteropServices;
 using CoreGraphics;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace CoreAnimation {
 
 	// untyped enum -> CALayer.h
