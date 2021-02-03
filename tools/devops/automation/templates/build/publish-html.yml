@@ -44,7 +44,7 @@ steps:
     }
 
     [System.Collections.Generic.List[string]]$gistsObj = @()
-    [System.Collections.Generic.List[string]]$gists = @{}
+    $gists = @{}
 
     foreach ($key in $filePatterns.Keys) {
       $filter = $filePatterns[$key]
