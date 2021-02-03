@@ -216,6 +216,11 @@ namespace Xamarin.Linker {
 						throw new InvalidOperationException ($"Invalid Verbosity '{value}' in {linker_file}");
 					Driver.Verbosity += verbosity;
 					break;
+				case "XamarinRuntime":
+					if (!Enum.TryParse<XamarinRuntime> (value, out var rv))
+						throw new InvalidOperationException ($"Invalid XamarinRuntime '{value}' in {linker_file}");
+					Application.XamarinRuntime = rv;
+					break;
 				default:
 					throw new InvalidOperationException ($"Unknown key '{key}' in {linker_file}");
 				}
@@ -291,6 +296,7 @@ namespace Xamarin.Linker {
 				Console.WriteLine ($"    SdkVersion: {SdkVersion}");
 				Console.WriteLine ($"    UseInterpreter: {Application.UseInterpreter}");
 				Console.WriteLine ($"    Verbosity: {Verbosity}");
+				Console.WriteLine ($"    XamarinRuntime: {Application.XamarinRuntime}");
 			}
 		}
 
