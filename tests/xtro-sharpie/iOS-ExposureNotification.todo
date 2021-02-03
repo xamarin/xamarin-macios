@@ -1,7 +1,0 @@
-!missing-enum! ENActivityFlags not bound
-!missing-selector! ENManager::activityHandler not bound
-!missing-selector! ENManager::diagnosisKeysAvailableHandler not bound
-!missing-selector! ENManager::preAuthorizeDiagnosisKeysWithCompletionHandler: not bound
-!missing-selector! ENManager::requestPreAuthorizedDiagnosisKeysWithCompletionHandler: not bound
-!missing-selector! ENManager::setActivityHandler: not bound
-!missing-selector! ENManager::setDiagnosisKeysAvailableHandler: not bound
