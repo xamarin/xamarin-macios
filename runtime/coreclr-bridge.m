@@ -418,7 +418,7 @@ mono_method_signature (MonoMethod* method)
 {
 	MonoMethodSignature *rv = xamarin_bridge_method_get_signature (method);
 
-	LOG_CORECLR (stderr, "xamarin_bridge_mono_method_signature (%p) => %p\n", method, rv);
+	LOG_CORECLR (stderr, "%s (%p) => %p\n", __func__, method, rv);
 
 	return rv;
 }
