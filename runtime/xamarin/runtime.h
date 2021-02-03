@@ -291,6 +291,7 @@ typedef id (*xamarin_get_handle_func) (MonoObject *info);
 MonoToggleRefStatus	xamarin_gc_toggleref_callback (uint8_t flags, id handle, xamarin_get_handle_func get_handle, MonoObject *info);
 void				xamarin_gc_event (MonoGCEvent event);
 
+void			xamarin_bridge_log_monoobject (MonoObject *obj, const char *stacktrace);
 /*
  * In MonoVM MonoObjects are tracked in memory/the stack directly by the GC, but that doesn't
  * work for CoreCLR, so we make it ref-counted. All code must use the functions below to retain/release
