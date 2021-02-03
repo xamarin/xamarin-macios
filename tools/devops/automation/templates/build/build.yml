@@ -355,8 +355,8 @@ steps:
     # array of dicts
     $SignFileRecord = @(
       @{
-        "Certs" = "400"
-        "SignFileList" = msiFiles$
+        "Certs" = "400";
+        "SignFileList" = $msiFiles;
       }
     )
     
