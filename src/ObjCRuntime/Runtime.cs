@@ -162,6 +162,7 @@ namespace ObjCRuntime {
 			public IntPtr xamarin_objc_msgsend_super;
 			public IntPtr xamarin_objc_msgsend_stret;
 			public IntPtr xamarin_objc_msgsend_super_stret;
+			public IntPtr unhandled_exception_handler;
 #endif
 			public bool IsSimulator {
 				get {

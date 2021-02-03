@@ -43,6 +43,9 @@ struct _MonoMethodSignature {
 	MonoObject *parameters[];
 };
 
+void
+xamarin_coreclr_unhandled_exception_handler (void *context);
+
 #ifdef __cplusplus
 } /* extern "C" */
 #endif

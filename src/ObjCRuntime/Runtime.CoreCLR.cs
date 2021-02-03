@@ -95,6 +95,15 @@ namespace ObjCRuntime {
 
 			if (options->xamarin_objc_msgsend_super_stret != IntPtr.Zero)
 				ObjectiveCMarshal.SetMessageSendCallback (ObjectiveCMarshal.MessageSendFunction.MsgSendSuperStret, options->xamarin_objc_msgsend_super_stret);
+
+			ObjectiveCMarshal.Initialize (null, null, null, UnhandledExceptionPropagationHandler);
+		}
+
+		static unsafe delegate* unmanaged<IntPtr, void> UnhandledExceptionPropagationHandler (Exception exception, RuntimeMethodHandle lastMethod, out IntPtr context)
+		{
+			var exceptionHandler = (delegate* unmanaged<IntPtr, void>) options->unhandled_exception_handler;
+			context = AllocGCHandle (exception);
+			return exceptionHandler;
 		}
 
 		internal static void RegisterToggleReferenceCoreCLR (NSObject obj, IntPtr handle, bool isCustomType)
