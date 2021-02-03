@@ -8,6 +8,8 @@
 //
 
 using System;
+using System.Runtime.InteropServices;
+
 using Foundation;
 using CoreGraphics;
 using ObjCRuntime;
@@ -22,7 +24,11 @@ namespace MonoTouchFixtures.CoreGraphics {
 		int bt_count;
 		int do_checks;
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 		[MonoPInvokeCallback (typeof (Action<IntPtr,IntPtr>))]
+#endif
 		static void BT (IntPtr reserved, IntPtr info)
 		{
 			// sadly the parameters are always identical and we can't know the operator name
@@ -35,7 +41,11 @@ namespace MonoTouchFixtures.CoreGraphics {
 			(scanner.UserInfo as PDFScannerTest).bt_count++;
 		}
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 		[MonoPInvokeCallback (typeof (Action<IntPtr,IntPtr>))]
+#endif
 		static void Do (IntPtr reserved, IntPtr info)
 		{
 			// sadly the parameters are always identical and we can't know the operator name
@@ -97,6 +107,13 @@ namespace MonoTouchFixtures.CoreGraphics {
 				table.SetCallback ("Do", delegate (CGPDFScanner scanner) {
 				// ... drill down to the image
 				});
+#elif NET
+				unsafe {
+					// BT == new paragraph
+					table.SetCallback ("BT", &BT);
+					// Do == the image is inside it
+					table.SetCallback ("Do", &Do);
+				}
 #else
 				// BT == new paragraph
 				table.SetCallback ("BT", BT);
