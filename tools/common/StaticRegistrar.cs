@@ -3989,10 +3989,10 @@ namespace Registrar {
 			body.AppendLine (copyback);
 			body.AppendLine (setup_return);
 			
-			if (trace )
+			if (trace)
 				body.AppendLine (nslog_end);
 
-			body.StringBuilder.AppendLine ("exception_handling:;");
+			body.StringBuilder.AppendLine ("exception_handling:");
 
 			body.AppendLine (cleanup);
 
