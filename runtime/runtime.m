@@ -146,6 +146,12 @@ struct InitializationOptions {
 	const char *EntryAssemblyPath;
 #endif
 	struct AssemblyLocations* AssemblyLocations;
+#if DOTNET
+	void *xamarin_objc_msgsend;
+	void *xamarin_objc_msgsend_super;
+	void *xamarin_objc_msgsend_stret;
+	void *xamarin_objc_msgsend_super_stret;
+#endif
 };
 
 static struct Trampolines trampolines = {
@@ -1252,6 +1258,15 @@ xamarin_initialize ()
 	options.LaunchMode = xamarin_launch_mode;
 	options.EntryAssemblyPath = xamarin_entry_assembly_path;
 #endif
+
+#if defined (CORECLR_RUNTIME)
+	options.xamarin_objc_msgsend = (void *) xamarin_dyn_objc_msgSend;
+	options.xamarin_objc_msgsend_super = (void *) xamarin_dyn_objc_msgSendSuper;
+#if !defined(__aarch64__)
+	options.xamarin_objc_msgsend_stret = (void *) xamarin_dyn_objc_msgSend_stret;
+	options.xamarin_objc_msgsend_super_stret = (void *) xamarin_dyn_objc_msgSendSuper_stret;
+#endif // !defined(__aarch64__)
+#endif // defined(CORECLR_RUNTIME)
 
 	xamarin_bridge_call_runtime_initialize (&options, &exception_gchandle);
 	if (exception_gchandle != INVALID_GCHANDLE) {
@@ -2368,6 +2383,7 @@ xamarin_pinvoke_override (const char *libraryName, const char *entrypointName)
 
 	if (!strcmp (libraryName, "__Internal")) {
 		symbol = dlsym (RTLD_DEFAULT, entrypointName);
+#if !defined (CORECLR_RUNTIME) // we're intercepting objc_msgSend calls using the managed System.Runtime.InteropServices.ObjectiveC.Bridge.SetMessageSendCallback instead.
 #if defined (__i386__) || defined (__x86_64__) || defined (__arm64__)
 	} else if (!strcmp (libraryName, "/usr/lib/libobjc.dylib")) {
 		if (xamarin_marshal_objectivec_exception_mode != MarshalObjectiveCExceptionModeDisable) {
@@ -2384,6 +2400,7 @@ xamarin_pinvoke_override (const char *libraryName, const char *entrypointName)
 			}
 		}
 #endif // defined (__i386__) || defined (__x86_64__) || defined (__arm64__)
+#endif // !defined (CORECLR_RUNTIME)
 	}
 
 	return symbol;
