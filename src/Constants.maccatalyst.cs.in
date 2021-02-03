@@ -2,7 +2,7 @@ namespace ObjCRuntime {
 	public static partial class Constants {
 		public const string Version = "@VERSION@";
 		internal const string Revision = "@REVISION@";
-		public const string SdkVersion = "@IOS_SDK_VERSION@";
+		public const string SdkVersion = "@MACCATALYST_SDK_VERSION@";
 
 		public const string AccelerateImageLibrary = "/System/Library/Frameworks/Accelerate.framework/Frameworks/vImage.framework/vImage";
 		public const string QuartzLibrary = "/System/Library/Frameworks/QuartzCore.framework/QuartzCore";

@@ -68,7 +68,9 @@ namespace MonoTouchFixtures.UIKit {
 				Assert.That (lm.FirstUnlaidCharacterIndex, Is.EqualTo ((nuint) 0), "FirstUnlaidCharacterIndex");
 				Assert.That (lm.FirstUnlaidGlyphIndex, Is.EqualTo ((nuint) 0), "FirstUnlaidGlyphIndex");
 				Assert.False (lm.HasNonContiguousLayout, "HasNonContiguousLayout");
+#if !__MACCATALYST__
 				Assert.That (lm.HyphenationFactor, Is.EqualTo ((nfloat) 0), "HyphenationFactor");
+#endif
 				Assert.That (lm.NumberOfGlyphs, Is.EqualTo ((nuint) 0), "NumberOfGlyphs");
 				Assert.False (lm.ShowsControlCharacters, "ShowsControlCharacters");
 				Assert.False (lm.ShowsInvisibleCharacters, "ShowsInvisibleCharacters");

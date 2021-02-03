@@ -160,7 +160,7 @@ namespace MonoTouchFixtures.SystemConfiguration {
 		{
 			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 			bool supported = true;
 #else
 			// that API is deprecated in iOS9 - and it might be why it returns false (or not)

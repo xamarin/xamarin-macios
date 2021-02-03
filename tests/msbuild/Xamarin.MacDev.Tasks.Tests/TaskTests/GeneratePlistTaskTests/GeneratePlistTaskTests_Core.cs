@@ -128,7 +128,7 @@ namespace Xamarin.iOS.Tasks
 		public virtual void BundleIdentifier ()
 		{
 			Assert.That (CompiledPlist.ContainsKey (ManifestKeys.CFBundleIdentifier), "#1");
-			Assert.AreEqual (CompiledPlist.Get<PString> (ManifestKeys.CFBundleIdentifier).Value, identifier, "#2");
+			Assert.AreEqual (CompiledPlist.Get<PString> (ManifestKeys.CFBundleIdentifier).Value, bundleIdentifier, "#2");
 		}
 
 		[Test]

@@ -8,6 +8,7 @@
 //
 
 using System;
+using System.IO;
 using CoreGraphics;
 #if !__WATCHOS__
 using System.Drawing;
@@ -103,7 +104,7 @@ namespace MonoTouchFixtures.Foundation {
 		}
 
 		//No Mac version of DrawString with those parameters
-#if !__TVOS__ && !__WATCHOS__ && !MONOMAC
+#if !__TVOS__ && !__WATCHOS__ && !MONOMAC && !__MACCATALYST__
 		[Test]
 		[Culture ("en")] // fails for some cultures, e.g. ar-AE
 		public void DrawString_7 ()
@@ -226,7 +227,7 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void FromData ()
 		{
-			UIImage img = UIImage.FromFile ("basn3p08.png");
+			UIImage img = UIImage.FromFile (Path.Combine (NSBundle.MainBundle.ResourcePath, "basn3p08.png"));
 			using (NSData imageData = img.AsPNG ()) {
 				using (var str = NSString.FromData (imageData, NSStringEncoding.UTF8)) {
 					Assert.IsNull (str, "NSDataFromImage");

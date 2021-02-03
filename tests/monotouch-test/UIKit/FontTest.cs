@@ -14,6 +14,9 @@ namespace MonoTouchFixtures.UIKit {
 	public class FontTest {
 		
 		[Test]
+#if __MACCATALYST__
+		[Ignore ("https://github.com/xamarin/maccore/issues/2382")]
+#endif
 		public void WithSize ()
 		{
 			var f1 = UIFont.SystemFontOfSize (10).WithSize (20);
@@ -82,10 +85,12 @@ namespace MonoTouchFixtures.UIKit {
 			f2 = UIFont.SystemFontOfSize (12);
 			SemiFactory_25511 (f1, f2, "SystemFontOfSize");
 
+#if !__MACCATALYST__ // https://github.com/xamarin/maccore/issues/2382
 			// instance
 			f1 = f2.WithSize (12);
 			f2 = f2.WithSize (12);
 			SemiFactory_25511 (f1, f2, "WithSize");
+#endif
 
 			if (!TestRuntime.CheckXcodeVersion (5, 0))
 				return;
@@ -156,7 +161,11 @@ namespace MonoTouchFixtures.UIKit {
 			Assert.IsNotNull (UIFont.ItalicSystemFontOfSize (-5), "ItalicSystemFontOfSize");
 
 			using (var font = UIFont.SystemFontOfSize (12)) {
+#if __MACCATALYST__
+				Assert.IsNull (font.WithSize (-6), "WithSize");
+#else
 				Assert.IsNotNull (font.WithSize (-6), "WithSize");
+#endif
 			}
 		}
 	}

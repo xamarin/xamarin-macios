@@ -170,8 +170,7 @@ namespace IntentsUI {
 	[DisableDefaultCtor]
 	interface INUIAddVoiceShortcutButton {
 
-		[Unavailable (PlatformName.MacCatalyst)]
-		[Advice ("This API is not available when using UIKit on macOS.")]
+		[MacCatalyst (13, 4)]
 		[Export ("initWithStyle:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (INUIAddVoiceShortcutButtonStyle style);

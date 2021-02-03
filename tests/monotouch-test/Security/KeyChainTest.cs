@@ -22,6 +22,9 @@ namespace MonoTouchFixtures.Security {
 		extern static int CFGetRetainCount (IntPtr handle);
 
 		[Test]
+#if __MACCATALYST__
+		[Ignore ("This test requires an app signed with the keychain-access-groups entitlement, and for Mac Catalyst that requires a custom provisioning profile.")]
+#endif
 		public void Add_Certificate ()
 		{
 #if MONOMAC
@@ -51,6 +54,9 @@ namespace MonoTouchFixtures.Security {
 
 #if !MONOMAC // No QueryAsConcreteType on Mac
 		[Test]
+#if __MACCATALYST__
+		[Ignore ("This test requires an app signed with the keychain-access-groups entitlement, and for Mac Catalyst that requires a custom provisioning profile.")]
+#endif
 		public void AddQueryRemove_Identity ()
 		{
 			using (SecRecord rec = new SecRecord (SecKind.Identity))
@@ -87,6 +93,9 @@ namespace MonoTouchFixtures.Security {
 		
 		[Test]
 		// same as Add_Identity but directly p/invoking - shows that the type MUST NOT be included for Identity
+#if __MACCATALYST__
+		[Ignore ("This test requires an app signed with the keychain-access-groups entitlement, and for Mac Catalyst that requires a custom provisioning profile.")]
+#endif
 		public void SecItemAdd_Identity ()
 		{
 			using (NSString valueref = new NSString ("v_Ref"))
@@ -204,6 +213,9 @@ namespace MonoTouchFixtures.Security {
 		}
 		
 		[Test]
+#if __MACCATALYST__
+		[Ignore ("This test requires an app signed with the keychain-access-groups entitlement, and for Mac Catalyst that requires a custom provisioning profile.")]
+#endif
 		public void CheckId ()
 		{
 			TestRuntime.AssertXcodeVersion (5, 1); // macOS 10.9

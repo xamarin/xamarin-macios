@@ -124,6 +124,7 @@ function Set-GitHubStatus {
         "SYSTEM_TEAMPROJECT" = $Env:SYSTEM_TEAMPROJECT;
         "BUILD_BUILDID" = $Env:BUILD_BUILDID;
         "BUILD_REVISION" = $Env:BUILD_REVISION;
+        "BUILD_SOURCEBRANCHNAME" = $Env:BUILD_SOURCEBRANCHNAME;
         "GITHUB_TOKEN" = $Env:GITHUB_TOKEN;
     }
 
@@ -131,6 +132,29 @@ function Set-GitHubStatus {
         if (-not($envVars[$key])) {
             Write-Debug "Enviroment varible missing $key"
             throw [System.InvalidOperationException]::new("Environment variable missing: $key")
+        }
+    }
+
+    $url = "https://api.github.com/repos/xamarin/xamarin-macios/statuses/$Env:BUILD_REVISION"
+
+    $headers = @{
+        Authorization = ("token {0}" -f $Env:GITHUB_TOKEN)
+    }
+
+    $requestContext = $Context
+    # before we set a status, we are going to check if it is present and a success, if it is a success, do not
+    # re-set it. The reason for this is that statuses are linked to the hash of a commit. A commit hash can be in two
+    # different branches. If a hash had a success we will not set the status and we will create a warning and a new context
+    # Why only on success, well we do want to support rebuilds, in any non-success case we want to step over
+    $presentStatuses = Invoke-Request -Request { Invoke-RestMethod -Uri $url -Headers $headers -Method "GET" -ContentType 'application/json' }
+
+    # try to find the status with the same context and make a decision, this is not a dict but an array :/ 
+    foreach ($s in $presentStatuses) {
+        # we found a status from a previous build that was a success, we do not want to step on it
+        if (($s.context -eq $Context) -and ($s.state -eq "success")) {
+            Write-Host "WARNING: Not setting status for $Context because it was already set as a success, using '$Context $Env:BUILD_SOURCEBRANCHNAME' instead."
+            # modify the context to include the branch name in the status
+            $requestContext = "$Context $Env:BUILD_SOURCEBRANCHNAME"
         }
     }
 
@@ -145,12 +169,7 @@ function Set-GitHubStatus {
         state = $Status
         target_url = $detailsUrl
         description = $Description
-        context = $Context
-    }
-    $url = "https://api.github.com/repos/xamarin/xamarin-macios/statuses/$Env:BUILD_REVISION"
-
-    $headers = @{
-        Authorization = ("token {0}" -f $Env:GITHUB_TOKEN)
+        context = $requestContext
     }
 
     return Invoke-Request -Request { Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body ($payload | ConvertTo-json) -ContentType 'application/json' }
@@ -422,7 +441,7 @@ function New-GitHubSummaryComment {
                 $sb.AppendLine("") # no new line results in a bad rendering in the links
                 foreach ($a in $json) {
                     $url = $a.url
-                    if ($url.EndsWith(".pkg") -or $url.EndsWith(".nupkg")) {
+                    if ($url.EndsWith(".pkg") -or $url.EndsWith(".nupkg") -or $url.EndsWith(".msi")) {
                         try {
                             $fileName = $a.url.Substring($a.url.LastIndexOf("/") + 1)
                             Write-Host "Adding link for $fileName"

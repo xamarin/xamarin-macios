@@ -15,6 +15,7 @@ using NUnit.Framework;
 
 using Foundation;
 using HomeKit;
+using ObjCRuntime;
 
 namespace MonoTouchFixtures.HomeKit
 {
@@ -26,6 +27,8 @@ namespace MonoTouchFixtures.HomeKit
 		public void Setup ()
 		{
 			TestRuntime.AssertXcodeVersion (9, 0);
+			// The API here was introduced to Mac Catalyst later than for the other frameworks, so we have this additional check
+			TestRuntime.AssertSystemVersion (PlatformName.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
 		}
 
 		[Test]

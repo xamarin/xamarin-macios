@@ -15,9 +15,11 @@ using Foundation;
 #if !__TVOS__
 using Contacts;
 #endif
+#if MONOMAC || __MACCATALYST__
+using EventKit;
+#endif
 #if MONOMAC
 using AppKit;
-using EventKit;
 #else
 #if !__TVOS__ && !__WATCHOS__
 using AddressBook;
@@ -46,7 +48,7 @@ partial class TestRuntime
 	// Xcode 12.0 removed macOS 11.0 SDK and moved it up to Xcode 12.2
 	// we use this constant to make up for that difference when using
 	// AssertXcodeVersion and CheckXcodeVersion
-#if __MACOS__
+#if __MACOS__ || __MACCATALYST__
 	public const int MinorXcode12APIMismatch = 2;
 #else
 	public const int MinorXcode12APIMismatch = 0;
@@ -84,6 +86,12 @@ partial class TestRuntime
 				version = new Version (major, minor, build);
 			}
 			return version;
+		}
+	}
+#elif __MACCATALYST__
+	public static Version OSXVersion {
+		get {
+			return Version.Parse (UIDevice.CurrentDevice.SystemVersion);
 		}
 	}
 #endif
@@ -216,7 +224,7 @@ partial class TestRuntime
 			if (v.Xcode.Beta != beta)
 				continue;
 
-#if __IOS__
+#if __IOS__ && !__MACCATALYST__
 			if (!CheckExactiOSSystemVersion (v.iOS.Major, v.iOS.Minor))
 				return false;
 			if (v.iOS.Build == "?")
@@ -232,7 +240,7 @@ partial class TestRuntime
 			var actual = GetiOSBuildVersion ();
 			Console.WriteLine (actual);
 			return actual.StartsWith (v.tvOS.Build, StringComparison.Ordinal);
-#elif __MACOS__
+#elif __MACOS__ || __MACCATALYST__
 			if (!CheckExactmacOSSystemVersion (v.macOS.Major, v.macOS.Minor))
 				return false;
 			if (v.macOS.Build == "?")
@@ -342,10 +350,10 @@ partial class TestRuntime
 				return CheckWatchOSSystemVersion (6, 1);
 #elif __TVOS__
 				return ChecktvOSSystemVersion (13, 2);
-#elif __IOS__
-				return CheckiOSSystemVersion (13, 2);
 #elif MONOMAC
 				return CheckMacSystemVersion (10, 15, 1);
+#elif __IOS__
+				return CheckiOSSystemVersion (13, 2);
 #else
 				throw new NotImplementedException ();
 #endif
@@ -708,6 +716,9 @@ partial class TestRuntime
 		case PlatformName.WatchOS:
 			AssertWatchOSSystemVersion (major, minor, throwIfOtherPlatform);
 			break;
+		case PlatformName.MacCatalyst:
+			AssertMacCatalystSystemVersion (major, minor, build, throwIfOtherPlatform);
+			break;
 		default:
 			throw new Exception ($"Unknown platform: {platform}");
 		}
@@ -839,9 +850,26 @@ partial class TestRuntime
 #endif
 	}
 
+	static bool CheckMacCatalystSystemVersion (int major, int minor, bool throwIfOtherPlatform = true)
+	{
+#if __MACCATALYST__
+		return UIDevice.CurrentDevice.CheckSystemVersion (major, minor);
+#else
+		if (throwIfOtherPlatform)
+			throw new Exception ("Can't get Mac Catalyst System version on other platforms.");
+		return true;
+#endif
+	}
+
 	static void AssertMacSystemVersion (int major, int minor, int build = 0, bool throwIfOtherPlatform = true)
 	{
 		if (!CheckMacSystemVersion (major, minor, build, throwIfOtherPlatform))
+			NUnit.Framework.Assert.Ignore ($"This test requires macOS {major}.{minor}.{build}");
+	}
+
+	static void AssertMacCatalystSystemVersion (int major, int minor, int build = 0, bool throwIfOtherPlatform = true)
+	{
+		if (!CheckMacCatalystSystemVersion (major, minor, throwIfOtherPlatform))
 			NUnit.Framework.Assert.Ignore ($"This test requires macOS {major}.{minor}.{build}");
 	}
 
@@ -879,6 +907,13 @@ partial class TestRuntime
 			return false;
 #endif
 		}
+	}
+
+	public static void IgnoreOnMacCatalyst (string message = "")
+	{
+#if __MACCATALYST__
+		NUnit.Framework.Assert.Ignore ($"This test is disabled on Mac Catalyst. {message}");
+#endif
 	}
 
 	public static bool IgnoreTestThatRequiresSystemPermissions ()
@@ -1045,7 +1080,7 @@ partial class TestRuntime
 	}
 #endif // !MONOMAC && !__TVOS__
 
-#if __MACOS__
+#if __MACOS__ || __MACCATALYST__
 	public static void RequestEventStorePermission (EKEntityType entityType, bool assert_granted = false)
 	{
 		TestRuntime.AssertMacSystemVersion (10, 9, throwIfOtherPlatform: false);
@@ -1060,8 +1095,12 @@ partial class TestRuntime
 			// There's an instance method on EKEventStore to request permission,
 			// but creating the instance can end up blocking the app showing a permission dialog...
 			// (on Mavericks at least)
+#if __MACCATALYST__
+			return; // Crossing fingers that this won't hang.
+#else
 			if (TestRuntime.CheckMacSystemVersion (10, 10))
 				return; // Crossing fingers that this won't hang.
+#endif
 			NUnit.Framework.Assert.Ignore ("This test requires permission to access events, but there's no API to request access without potentially showing dialogs.");
 			break;
 		case EKAuthorizationStatus.Denied:
