@@ -1413,8 +1413,13 @@ namespace Xamarin.Bundler {
 		// revision/testing to be used so desired.
 		public bool IsAOTCompiled (string assembly)
 		{
+#if NET
+			if (Platform == ApplePlatform.MacOSX)
+				return false; // AOT on .NET for macOS hasn't been implemented yet.
+#else	
 			if (Platform == ApplePlatform.MacOSX)
 				throw ErrorHelper.CreateError (99, Errors.MX0099, "IsAOTCompiled isn't a valid operation for macOS apps.");
+#endif
 
 			if (!UseInterpreter)
 				return true;
