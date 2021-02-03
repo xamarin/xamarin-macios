@@ -103,9 +103,6 @@ Xamarin.Mac.registrar.full.arm64.m:   $(TOP)/src/build/mac/full-64/Xamarin.Mac.d
 	$(GENERATE_PART_REGISTRAR) --arch=arm64 --target-framework Xamarin.Mac,Version=v4.5,Profile=Full -a:$(FULL_BCL_DIR)/mscorlib.dll
 	$(Q) touch Xamarin.Mac.registrar.full.arm64.m Xamarin.Mac.registrar.full.arm64.h
 
-%.coreclr.x86_64.a: export EXTRA_DEFINES=-DCORECLR_RUNTIME
-%.coreclr.arm64.a: export EXTRA_DEFINES=-DCORECLR_RUNTIME
-
 %.x86_64.a: %.x86_64.m
 	$(Q_CC) $(MAC_CC) -DDEBUG -g -gdwarf-2 -x objective-c++ -std=c++14 -o $@ -c -arch x86_64 $< -Wall -Wno-unguarded-availability-new -I$(TOP)/runtime -mmacosx-version-min=$(MIN_OSX_SDK_VERSION) -fobjc-runtime=macosx $(EXTRA_DEFINES)
 
