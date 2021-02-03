@@ -156,7 +156,7 @@ steps:
     # decide if we are dealing with a PR or a re-triggered PR or a build from
     # a branch in origin
     
-    if ($buildReason -eq "PullRequest" -or (($buildReason -eq "Manual") -and ($buildSourceBranchName -eq "merge")) ) {
+    if ($buildReason -eq "PullRequest" -or (($buildReason -eq "Manual" -or $buildReason -eq "IndividualCI") -and ($buildSourceBranchName -eq "merge")) ) {
       $configVars.Add("IsPR", "True")
 
       if ($Env:BuildPackage -eq "True") {
