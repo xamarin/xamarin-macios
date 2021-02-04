@@ -433,12 +433,13 @@ function New-GitHubSummaryComment {
         $sb.AppendLine("* [Html Report (VSDrops)]($Env:VSDROPS_INDEX)")
     }
     if (-not [string]::IsNullOrEmpty($APIDiff)) {
-        Write-Host "Parsing API diff"
+        Write-Host "Parsing API diff in path $APIDiff"
         if (-not (Test-Path $APIDiff -PathType Leaf)) {
             $sb.AppendLine("Path $APIDiff was not found!")
         } else {
             # read the json file, convert it to an object and add a line for each artifact
             $json =  Get-Content $APIDiff | ConvertFrom-Json
+            Write-Host "API diff json content is $json"
             if ($json.Count -gt 0) {
                 # build the required list
                 $sb.AppendLine("# API diff")
@@ -451,7 +452,9 @@ function New-GitHubSummaryComment {
                 }
                 $sb.AppendLine("</details>")
             } else {
-                $sb.AppendLine("No api diff data found.")
+                $sb.AppendLine("# API diff")
+                $sb.AppendLine("")
+                $sb.AppendLine("**No api diff data found.**")
             }
         }
         
