@@ -3,9 +3,11 @@ using System;
 using CoreGraphics;
 using Foundation;
 
+#nullable enable
+
 namespace PdfKit {
 	partial class PdfBorder {
-		nfloat [] DashPattern {
+		public nfloat []? DashPattern {
 			get {
 				var arr = WeakDashPattern;
 				if (arr == null)
@@ -30,7 +32,7 @@ namespace PdfKit {
 
 #if !IOS
 	partial class PdfAnnotationMarkup {
-		CGPoint [] QuadrilateralPoints {
+		public CGPoint []? QuadrilateralPoints {
 			get {
 				var arr = WeakQuadrilateralPoints;
 				if (arr == null)

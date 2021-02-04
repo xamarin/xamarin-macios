@@ -29,6 +29,9 @@
 using System;
 
 using ObjCRuntime;
+
+#nullable enable
+
 #if MONOMAC || IOS
 
 namespace PdfKit {
