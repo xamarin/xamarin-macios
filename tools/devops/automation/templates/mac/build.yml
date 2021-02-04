@@ -164,11 +164,21 @@ steps:
     if ($failures.Count -ne 0) {
       # post status and comment in the build
       $failedTestsStr = [string]::Join(",",$failures)
-      Set-GitHubStatus -Status "error" -Description "Xamarin.Mac tests on Mac OS X $Env:CONTEXT failed ($failedTestsStr)." -Context "Mac OS X $Env:CONTEXT"
-      $request = New-GitHubCommentFromFile -Header "Tests failed on Mac OS X $Env:$Context" -Description "Tests failed on Mac OS X $Env:Context. ($failedTestsStr)" -Emoji ":x:"
+      Set-GitHubStatus -Status "error" -Description "Xamarin.Mac tests on macOS  $Env:CONTEXT failed ($failedTestsStr)." -Context "macOS $Env:CONTEXT"
+      # build message
+      $msg = [System.Text.StringBuilder]::new()
+      $msg.AppendLine("Tests failed on macOS $Env:Context.")
+      $msg.AppendLine("Failed tests are:")
+      $msg.AppendLine("")
+      foreach ($test in $failures)
+      {
+          $msg.AppendLine("* $test")
+      }
+      $request = New-GitHubCommentFromFile -Header "Tests failed on macOS $Env:CONTEXT" -Description $msg.ToString() -Emoji ":x:"
+
     } else {
-      Set-GitHubStatus -Status "success" -Description "Xamarin.Mac tests on Mac OS X $Env:CONTEXT passed." -Context "Mac OS X $Env:CONTEXT"
-      $request = New-GitHubCommentFromFile -Header "Tests passed on Mac OS X $Env:$Context" -Description "**All** tests on Mac OS X $Env:Context." -Emoji ":white_check_mark:"
+      Set-GitHubStatus -Status "success" -Description "Xamarin.Mac tests on macOS $Env:CONTEXT passed." -Context "macOS $Env:CONTEXT"
+      $request = New-GitHubCommentFromFile -Header "Tests passed on macOS $Env:CONTEXT" -Description "**All** tests on macOS X $Env:Context passed." -Emoji ":white_check_mark:"
     }
   displayName: 'Run tests'
   env:
