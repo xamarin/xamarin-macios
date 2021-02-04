@@ -681,7 +681,8 @@
 		<Exec Command="$(_MlaunchPath) $(_MlaunchInstallArguments)" />
 	</Target>
 
-	<Target Name="_PrepareRunMobile" DependsOnTargets="_DetectSdkLocations;_GenerateBundleName;_InstallMobile" >
+	<!-- This is only needed for mobile platforms, RunCommand and RunArguments are defined for macOS in Microsoft.macOS.Sdk.targets. -->
+	<Target Name="_PrepareRunMobile" DependsOnTargets="_InstallMobile" Condition="'$(_PlatformName)' != 'macOS'">
 		<PropertyGroup>
 			<!-- capture output by default -->
 			<_MlaunchCaptureOutput Condition="'$(_MlaunchCaptureOutput)' == ''">true</_MlaunchCaptureOutput>
@@ -714,8 +715,7 @@
 		</PropertyGroup>
 	</Target>
 
-	<!-- This is only needed for mobile platforms, RunCommand and RunArguments are defined for macOS in Microsoft.macOS.Sdk.targets. -->
-	<Target Name="_PrepareRun" DependsOnTargets="_PrepareRunMobile" BeforeTargets="Run" Condition="'$(_PlatformName)' != 'macOS'" />
+	<Target Name="_PrepareRun" DependsOnTargets="Build;_PrepareRunMobile" BeforeTargets="Run" />
 
 	<!-- Import existing targets -->
 
