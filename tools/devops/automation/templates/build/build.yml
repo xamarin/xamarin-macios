@@ -340,10 +340,10 @@ steps:
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
 - pwsh : |
-    # Get the list of dmg files to sign
+    # Get the list of files to sign
     $msiFiles = Get-ChildItem -Path $(Build.SourcesDirectory)/package/ -Filter "*.msi"
 
-    # Add those dmg files to an array
+    # Add those files to an array
     $SignFiles = @()
     foreach($msi in $msiFiles) {
         Write-Host "$($msi.FullName)"
