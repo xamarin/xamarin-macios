@@ -366,6 +366,11 @@ steps:
     
     # Write the json to a file
     ConvertTo-Json -InputObject $SignFileList -Depth 5 | Out-File -FilePath $(Build.ArtifactStagingDirectory)/MsiFiles2Notarize.json -Force
+
+    $jsonOutput = Get-Content -Path $(Build.ArtifactStagingDirectory)/MsiFiles2Notarize.json -Raw
+    Write-Host "Json file: $(Build.ArtifactStagingDirectory)/MsiFiles2Notarize.json"
+    Write-Host "$jsonOutput"
+
     dotnet $Env:MBSIGN_APPFOLDER/ddsignfiles.dll /filelist:$(Build.ArtifactStagingDirectory)/MsiFiles2Notarize.json
   displayName: 'Sign .msi'
   condition: and(succeeded(), contains(variables['configuration.SignPkgs'], 'True'), contains(variables['configuration.IsPr'], 'False'))
