@@ -37,7 +37,7 @@ using ObjCRuntime;
 using MapKit;
 #endif
 using UIKit;
-#if HAS_OPENGLES
+#if !__WATCHOS__ && !__MACCATALYST__
 using OpenGLES;
 #endif
 using WebKit;
