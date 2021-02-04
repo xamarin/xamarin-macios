@@ -31,6 +31,8 @@ using System.Runtime.InteropServices;
 using Foundation;
 using CoreGraphics;
 
+#nullable enable
+
 namespace CoreAnimation {
 	public unsafe partial class CAMediaTimingFunction {
 		public CGPoint GetControlPoint (nint index)
