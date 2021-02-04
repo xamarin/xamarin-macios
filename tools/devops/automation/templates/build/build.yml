@@ -388,19 +388,31 @@ steps:
     $msiFiles = Get-ChildItem -Path $(Build.SourcesDirectory)/package/ -Filter "*.msi"
 
     # Add those files to an array
-    $SignFiles = @()
+    $msiSignFiles = @()
     foreach($msi in $msiFiles) {
         Write-Host "$($msi.FullName)"
-        $SignFiles += @{ "SrcPath"="$($msi.FullName)"}
+        $msiSignFiles += @{ "SrcPath"="$($msi.FullName)"}
     }
 
     Write-Host "$msiFiles"
+
+    # same process with the *pkg files
+    $pkgFiles = Get-ChildItem -Path $(Build.SourcesDirectory)/package/ -Filter "*.pkg"
+    $pkgSignFiles = @()
+    foreach($pkg in $pkgFiles) {
+        Write-Host "$($pkg.FullName)"
+        $pkgSignFiles += @{ "SrcPath"="$($pkg.FullName)"}
+    }
     
     # array of dicts
     $SignFileRecord = @(
       @{
         "Certs" = "400";
-        "SignFileList" = $SignFiles;
+        "SignFileList" = $msiSignFiles;
+      }
+      @{
+        "Certs" = "8021";
+        "SignFileList" = $pkgSignFiles;
       }
     )
     
@@ -411,30 +423,9 @@ steps:
     # Write the json to a file
     ConvertTo-Json -InputObject $SignFileList -Depth 5 | Out-File -FilePath $(Build.ArtifactStagingDirectory)/MsiFiles2Notarize.json -Force
     dotnet $Env:MBSIGN_APPFOLDER/ddsignfiles.dll /filelist:$(Build.ArtifactStagingDirectory)/MsiFiles2Notarize.json
-  displayName: 'Sign .msi'
-  condition: and(succeeded(), contains(variables['configuration.SignPkgs'], 'True'), contains(variables['configuration.IsPr'], 'False'))
-
-
-- bash: |
-    security unlock-keychain -p $PRODUCTSIGN_KEYCHAIN_PASSWORD builder.keychain
-    PACKAGES="$IOS_PKG $MAC_PKG $IOS_DOTNET_PKG $TVOS_DOTNET_PKG $WATCHOS_DOTNET_PKG $MACOS_DOTNET_PKG"
-    echo "Packages found at $PACKAGES"
-
-    echo "$PACKAGES" | xargs python $(Build.SourcesDirectory)/release-scripts/sign_and_notarize.py --no_notarization -a "$APP_ID" -i "$INSTALL_ID" -u "$APPLE_ACCOUNT" -p "$APPLE_PASS" -t "$TEAM_ID" -d $(Build.SourcesDirectory)/package/notarized -e "$MAC_ENTITLEMENTS" -k "$KEYCHAIN"
-    ls -R $(Build.SourcesDirectory)/package
-  env:
-    PRODUCTSIGN_KEYCHAIN_PASSWORD: $(OSX_KEYCHAIN_PASS)
-    MAC_ENTITLEMENTS: $(Build.SourcesDirectory)/xamarin-macios/mac-entitlements.plist
-    APP_ID: $(XamarinAppId)
-    INSTALL_ID: $(XamarinAppId)
-    APPLE_ACCOUNT: $(XamarinUserId)
-    APPLE_PASS: $(XamarinPassword)
-    TEAM_ID: $(TeamID)
-    KEYCHAIN: $(SigningKeychain)
-  name: notarize
   displayName: 'Signing Release Build'
+  name: signing
   condition: and(succeeded(), contains(variables['configuration.SignPkgs'], 'True'), contains(variables['configuration.IsPr'], 'False'))
-  timeoutInMinutes: 90
 
 - task: ms-vseng.MicroBuildTasks.30666190-6959-11e5-9f96-f56098202fef.MicroBuildSigningPlugin@3 
   displayName: 'Install Notarizing Plugin' 
