@@ -47,9 +47,9 @@ namespace GenerateTypeForwarders {
 			var arrayType = type as ArrayType;
 			if (arrayType != null) {
 				sb.Append (arrayType.ElementType.Name);
-				sb.Append ("[");
+				sb.Append ('[');
 				sb.Append (new string (',', arrayType.Rank - 1));
-				sb.Append ("]");
+				sb.Append (']');
 				return;
 			}
 
@@ -198,7 +198,7 @@ namespace GenerateTypeForwarders {
 			} else {
 				sb.AppendLine ();
 				// if there is a base constructor with the same signature, call it
-				if (method.IsConstructor && method.Parameters.Count > 0) {
+				if (method.IsConstructor && method.HasParameters && method.Parameters.Count > 0) {
 					var baseConstructors = method.DeclaringType.BaseType?.Resolve ()?.Methods?.Where (v => v.IsConstructor && v.Parameters.Count == method.Parameters.Count);
 					if (AnyParameterTypeMatch (baseConstructors, method.Parameters, out var _)) {
 						sb.Append ($"{strIndent}\t: base (");
@@ -248,7 +248,8 @@ namespace GenerateTypeForwarders {
 			matchingMethod = null;
 
 			foreach (var method in methods) {
-				if (method.Parameters.Count != parameters.Count)
+				var parameterCount = method.HasParameters ? method.Parameters.Count : 0;
+				if (parameterCount != parameters.Count)
 					continue;
 				if (parameters.Count == 0) {
 					matchingMethod = method;
@@ -281,9 +282,10 @@ namespace GenerateTypeForwarders {
 				if (fd.IsStatic)
 					sb.Append ("static ");
 				EmitTypeName (sb, fd.FieldType);
-				sb.Append (" ");
+				sb.Append (' ');
 				sb.Append (fd.Name);
-				sb.AppendLine (";");
+				sb.Append (';');
+				sb.AppendLine ();
 			}
 		}
 
@@ -334,7 +336,7 @@ namespace GenerateTypeForwarders {
 				}
 			}
 			EmitTypeName (sb, pd.PropertyType);
-			sb.Append (" ");
+			sb.Append (' ');
 			sb.Append (pd.Name);
 			sb.AppendLine (" {");
 			if (pd.GetMethod != null) {
@@ -354,14 +356,15 @@ namespace GenerateTypeForwarders {
 			sb.Append ("public ");
 			sb.Append ("event ");
 			EmitTypeName (sb, ed.EventType);
-			sb.Append (" ");
+			sb.Append (' ');
 			var dot = ed.Name.LastIndexOf ('.');
 			if (dot >= 0) {
 				sb.Append (ed.Name.Substring (dot + 1));
 			} else {
 				sb.Append (ed.Name);
 			}
-			sb.AppendLine (";");
+			sb.Append (';');
+			sb.AppendLine ();
 		}
 
 		static void EmitPNSE (StringBuilder sb, TypeDefinition type, int indent)
@@ -373,7 +376,7 @@ namespace GenerateTypeForwarders {
 				sb.Append ($"{strIndent}public delegate ");
 				var invoke = type.Methods.First (v => v.Name == "Invoke");
 				EmitTypeName (sb, invoke.ReturnType);
-				sb.Append (" ");
+				sb.Append (' ');
 				sb.Append (type.Name);
 				sb.Append (" (");
 				EmitParameters (sb, invoke.Parameters);
