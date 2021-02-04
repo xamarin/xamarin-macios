@@ -26,6 +26,16 @@
     <WarningLevel>4</WarningLevel>
     <ExternalConsole>true</ExternalConsole>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'Xamarin.iOS.dll' ">
+    <StartAction>Project</StartAction>
+    <StartArguments>../../../build/ios/reference/Xamarin.iOS.dll ../../../build/maccatalyst/reference/Xamarin.MacCatalyst.dll ../../../build/maccatalyst/reference/Xamarin.iOS.cs.tmp</StartArguments>
+    <ExternalConsole>false</ExternalConsole>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'OpenTK-1.0.dll' ">
+    <StartAction>Project</StartAction>
+    <StartArguments>../../../build/ios/reference/OpenTK-1.0.dll ../../../build/maccatalyst/reference/Xamarin.MacCatalyst.dll ../../../build/maccatalyst/reference/OpenTK-1.0.cs.tmp</StartArguments>
+    <ExternalConsole>false</ExternalConsole>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
   </ItemGroup>

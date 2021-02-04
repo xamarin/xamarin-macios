@@ -6,34 +6,36 @@ using Foundation;
 using ObjCRuntime;
 using CoreGraphics;
 
+#nullable enable
+
 namespace CoreAnimation {
 
 	partial class CAScrollLayer {
 
 		[Obsolete ("Use 'CAScroll' enum instead.")]
-		public static NSString ScrollBoth {
+		public static NSString? ScrollBoth {
 			get { return CAScroll.Both.GetConstant (); }
 		}
 
 		[Obsolete ("Use 'CAScroll' enum instead.")]
-		public static NSString ScrollHorizontally {
+		public static NSString? ScrollHorizontally {
 			get { return CAScroll.Horizontally.GetConstant (); }
 		}
 
 		[Obsolete ("Use 'CAScroll' enum instead.")]
-		public static NSString ScrollNone {
+		public static NSString? ScrollNone {
 			get { return CAScroll.None.GetConstant (); }
 		}
 
 		[Obsolete ("Use 'CAScroll' enum instead.")]
-		public static NSString ScrollVertically {
+		public static NSString? ScrollVertically {
 			get { return CAScroll.Vertically.GetConstant (); }
 		}
 	}
 
 	partial class CAAnimation {
 		// cannot be handled by the generator (error BI1110 because it's not an protocol/interface)
-		public CAAnimationDelegate Delegate {
+		public CAAnimationDelegate? Delegate {
 			get { return WeakDelegate as CAAnimationDelegate; }
 			set { WeakDelegate = value; }
 		}
@@ -55,21 +57,21 @@ namespace CoreAnimation {
 		sealed class _CAAnimationDelegate : CAAnimationDelegate { 
 			public _CAAnimationDelegate () { IsDirectBinding = false; }
 
-			internal EventHandler animationStarted;
+			internal EventHandler? animationStarted;
 			[Preserve (Conditional = true)]
-			public override void AnimationStarted (CAAnimation anim)
+			public override void AnimationStarted (CAAnimation? anim)
 			{
-				EventHandler handler = animationStarted;
+				var handler = animationStarted;
 				if (handler != null){
 					handler (anim, EventArgs.Empty);
 				}
 			}
 
-			internal EventHandler<CAAnimationStateEventArgs> animationStopped;
+			internal EventHandler<CAAnimationStateEventArgs>? animationStopped;
 			[Preserve (Conditional = true)]
-			public override void AnimationStopped (CAAnimation anim, bool finished)
+			public override void AnimationStopped (CAAnimation? anim, bool finished)
 			{
-				EventHandler<CAAnimationStateEventArgs> handler = animationStopped;
+				var handler = animationStopped;
 				if (handler != null){
 					var args = new CAAnimationStateEventArgs (finished);
 					handler (anim, args);
@@ -114,7 +116,7 @@ namespace CoreAnimation {
 		}
 
 		[Obsolete ("Empty stub (not a public API).")]
-		public static NSString[] BehaviorTypes { get; }
+		public static NSString[]? BehaviorTypes { get; }
 	}
 
 	public partial class CAMetalLayer {

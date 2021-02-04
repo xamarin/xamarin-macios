@@ -4,6 +4,8 @@ using Foundation;
 using ObjCRuntime;
 using CoreGraphics;
 
+#nullable enable
+
 namespace CoreAnimation {
 	public partial class CAKeyFrameAnimation {
 		public T[] GetValuesAs <T> () where T : class, INativeObject

@@ -136,15 +136,15 @@ namespace CoreAnimation {
 		CADisplayLink Create (NSObject target, Selector sel);
 	
 		[Export ("addToRunLoop:forMode:")]
-		void AddToRunLoop (NSRunLoop runloop, [NullAllowed] NSString mode);
+		void AddToRunLoop (NSRunLoop runloop, NSString mode);
 
-		[Wrap ("AddToRunLoop (runloop, mode.GetConstant ())")]
+		[Wrap ("AddToRunLoop (runloop, mode.GetConstant ()!)")]
 		void AddToRunLoop (NSRunLoop runloop, NSRunLoopMode mode);
 	
 		[Export ("removeFromRunLoop:forMode:")]
-		void RemoveFromRunLoop (NSRunLoop runloop, [NullAllowed] NSString mode);
+		void RemoveFromRunLoop (NSRunLoop runloop, NSString mode);
 
-		[Wrap ("RemoveFromRunLoop (runloop, mode.GetConstant ())")]
+		[Wrap ("RemoveFromRunLoop (runloop, mode.GetConstant ()!)")]
 		void RemoveFromRunLoop (NSRunLoop runloop, NSRunLoopMode mode);
 
 		[Export ("invalidate")]
@@ -192,6 +192,7 @@ namespace CoreAnimation {
 		CALayer Create ();
 
 		[Export ("presentationLayer")]
+		[NullAllowed]
 		CALayer PresentationLayer { get; }
 
 		[Export ("modelLayer")]
@@ -199,7 +200,8 @@ namespace CoreAnimation {
 
 		[Static]
 		[Export ("defaultValueForKey:")]
-		NSObject DefaultValue ([NullAllowed] string key);
+		[return: NullAllowed]
+		NSObject DefaultValue (string key);
 
 		[Static]
 		[Export ("needsDisplayForKey:")]
@@ -242,6 +244,7 @@ namespace CoreAnimation {
 		bool ContentsAreFlipped { get; }
 
 		[Export ("superlayer")]
+		[NullAllowed]
 		CALayer SuperLayer { get; }
 
 		[Export ("removeFromSuperlayer")]
@@ -258,10 +261,10 @@ namespace CoreAnimation {
 		void InsertSublayer (CALayer layer, int index);
 
 		[Export ("insertSublayer:below:")][PostGet ("Sublayers")]
-		void InsertSublayerBelow (CALayer layer, CALayer sibling);
+		void InsertSublayerBelow (CALayer layer, [NullAllowed] CALayer sibling);
 		
 		[Export ("insertSublayer:above:")][PostGet ("Sublayers")]
-		void InsertSublayerAbove (CALayer layer, CALayer sibling);
+		void InsertSublayerAbove (CALayer layer, [NullAllowed] CALayer sibling);
 
 		[Export ("replaceSublayer:with:")][PostGet ("Sublayers")]
 		void ReplaceSublayer (CALayer layer, CALayer with);
@@ -294,6 +297,7 @@ namespace CoreAnimation {
 		double ConvertTimeToLayer (double timeInterval, [NullAllowed] CALayer layer);
 
 		[Export ("hitTest:")]
+		[return: NullAllowed]
 		CALayer HitTest (CGPoint p);
 
 		[Export ("containsPoint:")]
@@ -308,6 +312,7 @@ namespace CoreAnimation {
 
 #if MONOMAC
 		[Export ("layoutManager", ArgumentSemantic.Retain)]
+		[NullAllowed]
 		NSObject LayoutManager { get; set; }
 #endif
 
@@ -367,6 +372,7 @@ namespace CoreAnimation {
 		nfloat BorderWidth { get; set; }
 
 		[Export ("borderColor")]
+		[NullAllowed]
 		CGColor BorderColor { get; set; }
 
 		[Export ("opacity")]
@@ -394,9 +400,11 @@ namespace CoreAnimation {
 
 		[Static]
 		[Export ("defaultActionForKey:")]
+		[return: NullAllowed]
 		NSObject DefaultActionForKey (string eventKey);
 
 		[Export ("actionForKey:")]
+		[return: NullAllowed]
 		NSObject ActionForKey (string eventKey);
 
 		[NullAllowed] // by default this property is null
@@ -416,6 +424,7 @@ namespace CoreAnimation {
 		string [] AnimationKeys { get; }
 
 		[Export ("animationForKey:")]
+		[return: NullAllowed]
 		CAAnimation AnimationForKey (string key);
 
 		[NullAllowed] // by default this property is null
@@ -430,6 +439,7 @@ namespace CoreAnimation {
 		CALayerDelegate Delegate { get; set; }
 
 		[Export ("shadowColor")]
+		[NullAllowed]
 		CGColor ShadowColor { get; set; }
 
 		[Export ("shadowOffset")]
@@ -534,6 +544,7 @@ namespace CoreAnimation {
 		void Resize (CGSize oldSuperlayerSize);
 		
 		[Export ("constraints")]
+		[NullAllowed]
 		CAConstraint[] Constraints { get; set;  }
 
 		[Export ("addConstraint:")]
@@ -624,6 +635,7 @@ namespace CoreAnimation {
 		CGSize DrawableSize { get; set; }
 
 		[Export ("nextDrawable")]
+		[return: NullAllowed]
 		ICAMetalDrawable NextDrawable ();
 		
 		[Export ("presentsWithTransaction")]
@@ -696,6 +708,7 @@ namespace CoreAnimation {
 		bool PreservesDepth { get; set; }
 
 		[Export ("instanceColor")]
+		[NullAllowed]
 		CGColor InstanceColor { get; set; }
 
 		[Export ("instanceRedOffset")]
@@ -872,6 +885,7 @@ namespace CoreAnimation {
 		IntPtr _Font { get; set; }
 		
 		[Export ("foregroundColor")]
+		[NullAllowed]
 		CGColor ForegroundColor { get; set; }
 
 		[Export ("wrapped")]
@@ -963,6 +977,7 @@ namespace CoreAnimation {
 		void LayoutSublayersOfLayer (CALayer layer);
 
 		[Export ("actionForLayer:forKey:"), EventArgs ("CALayerDelegateAction"), DefaultValue (null)]
+		[return: NullAllowed]
 		NSObject ActionForLayer (CALayer layer, string eventKey);
 	}
 	
@@ -1002,7 +1017,8 @@ namespace CoreAnimation {
 	
 		[Static]
 		[Export ("defaultValueForKey:")]
-		NSObject DefaultValue ([NullAllowed] string key);
+		[return: NullAllowed]
+		NSObject DefaultValue (string key);
 	
 		[NullAllowed] // by default this property is null
 		[Export ("timingFunction", ArgumentSemantic.Strong)]
@@ -1027,7 +1043,7 @@ namespace CoreAnimation {
 		void DidChangeValueForKey (string key);
 
 		[Export ("shouldArchiveValueForKey:")]
-		bool ShouldArchiveValueForKey ([NullAllowed] string key);
+		bool ShouldArchiveValueForKey (string key);
 
 		[Field ("kCATransitionFade")]
 		NSString TransitionFade { get; }
@@ -1123,10 +1139,10 @@ namespace CoreAnimation {
 	[Model]
 	interface CAAnimationDelegate {
 		[Export ("animationDidStart:")]
-		void AnimationStarted ([NullAllowed] CAAnimation anim);
+		void AnimationStarted (CAAnimation anim);
 	
 		[Export ("animationDidStop:finished:"), EventArgs ("CAAnimationState")]
-		void AnimationStopped ([NullAllowed] CAAnimation anim, bool finished);
+		void AnimationStopped (CAAnimation anim, bool finished);
 	
 	}
 	
@@ -1313,6 +1329,7 @@ namespace CoreAnimation {
 	
 		[Static]
 		[Export ("valueForKey:")]
+		[return: NullAllowed]
 		NSObject ValueForKey (NSString key);
 	
 		[Static]
@@ -1442,6 +1459,7 @@ namespace CoreAnimation {
 	[BaseType (typeof (NSObject))]
 	interface CAValueFunction : NSSecureCoding {
 		[Export ("functionWithName:"), Static]
+		[return: NullAllowed]
 		CAValueFunction FromName (string name);
 
 		[Export ("name")]
@@ -1571,6 +1589,7 @@ namespace CoreAnimation {
 		nfloat SpinRange { get; set;  }
 		
 		[Export ("color")]
+		[NullAllowed]
 		CGColor Color { get; set;  }
 
 		[Export ("redSpeed")]
@@ -1620,10 +1639,11 @@ namespace CoreAnimation {
 
 		[Static]
 		[Export ("defaultValueForKey:")]
-		NSObject DefaultValueForKey ([NullAllowed] string key);
+		[return: NullAllowed]
+		NSObject DefaultValueForKey (string key);
 
 		[Export ("shouldArchiveValueForKey:")]
-		bool ShouldArchiveValueForKey ([NullAllowed] string key);
+		bool ShouldArchiveValueForKey (string key);
 
 		[Export ("redRange")]
 		float RedRange { get; set; } /* float, not CGFloat */
