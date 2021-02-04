@@ -340,8 +340,9 @@ steps:
     $pkgFiles = Get-ChildItem -Path $(Build.SourcesDirectory)/package/ -Filter "*.pkg"
     $pkgSignFiles = @()
     foreach($pkg in $pkgFiles) {
-        if ($pkg.Name == "delete-xma-build-host.pkg")
+        if ($pkg.Name -eq "delete-xma-build-host.pkg") {
           continue
+        }
         # copy file to the notarize dit
         cp $pkg.FullName $notarizeDir 
         $pkgSignFiles += @{ "SrcPath"="$notarizeDir/$($pkg.Name)"}
