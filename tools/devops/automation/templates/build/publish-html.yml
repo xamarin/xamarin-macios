@@ -43,7 +43,7 @@ steps:
       "watchOS" = "watchos-*.md";
     }
 
-    [System.Collections.Generic.List[string]]$gistsObj = @()
+    [System.Collections.Generic.List[System.Object]]$gistsObj = @()
     $gists = @{}
 
     foreach ($key in $filePatterns.Keys) {
