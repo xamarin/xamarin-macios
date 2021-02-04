@@ -82,8 +82,8 @@ EXTRA_DEPENDENCIES = libtest.h $(GENERATED_FILES) rename.h
 
 COMMON_DYLIB_ARGS=-g -dynamiclib -gdwarf-2 -fms-extensions libframework.m -o $$@ -Wall -framework Foundation -lz
 .libs/$(1)/libtest.x86.dylib: ARCH=i386
-$$(foreach arch,$(3),.libs/$(1)/libtest.$$(arch).dylib): libframework.m | .libs/$(1)
-	$$(call Q_2,CC,    [$(1)]) $$(XCODE_CC) $$(COMMON_DYLIB_ARGS) -arch $$(if $$(ARCH),i386,$$(subst libtest.,,$$(basename $$(notdir $$@)))) $(5)
+.libs/$(1)/libtest.%.dylib: libframework.m | .libs/$(1)
+	$$(call Q_2,CC,    [$(1)]) $$(XCODE_CC) $$(COMMON_DYLIB_ARGS) -arch $$(if $$(ARCH),$$(ARCH),$$*) $(5) $$($(2)_$$(shell echo $$* | tr a-z A-Z)_OBJC_CFLAGS)
 	$$(Q) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/install_name_tool -id @rpath/XTest.framework/XTest $$@
 
 .libs/$(1)/libtest.dylib: $$(foreach arch,$(3),.libs/$(1)/libtest.$$(arch).dylib)
@@ -131,7 +131,7 @@ ifdef INCLUDE_MAC
 $(eval $(call Template,macos,MACOS,x86_64,MacOSX,-mmacosx-version-min=$(MIN_OSX_VERSION_FOR_MAC) -isysroot $(XCODE_DEVELOPER_ROOT)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$(OSX_SDK_VERSION).sdk))
 endif
 ifdef INCLUDE_MACCATALYST
-$(eval $(call Template,maccatalyst,MACCATALYST,x86_64,MacCatalyst,$(MACCATALYST_COMMON_CFLAGS)))
+$(eval $(call Template,maccatalyst,MACCATALYST,x86_64 arm64,MacCatalyst,$(MACCATALYST_COMMON_CFLAGS)))
 endif
 
 .libs/ios-fat .libs/tvos-fat .libs/watchos-fat .libs/maccatalyst-fat:
@@ -154,7 +154,7 @@ $(eval $(call LibTemplate,arm64+x86_64,.libs/tvos/libtest.arm64.o,.libs/tvsimula
 
 $(eval $(call LibTemplate,armv7k+x86,.libs/watchos/libtest.armv7k.o,.libs/watchsimulator/libtest.x86.o,watchos-fat,WATCHOS))
 
-$(eval $(call LibTemplate,x86_64,.libs/maccatalyst/libtest.x86_64.o,,maccatalyst-fat,MACCATALYST))
+$(eval $(call LibTemplate,x86_64+arm64,.libs/maccatalyst/libtest.x86_64.o,.libs/maccatalyst/libtest.arm64.o,maccatalyst-fat,MACCATALYST))
 
 define FatFrameworkTemplate
 .libs/$(1)/XStaticObjectTest.framework/XStaticObjectTest: .libs/$(2)/XStaticObjectTest.framework/XStaticObjectTest .libs/$(3)/XStaticObjectTest.framework/XStaticObjectTest | .libs/$(1)
