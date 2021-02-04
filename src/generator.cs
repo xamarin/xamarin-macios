@@ -728,6 +728,9 @@ public class NamespaceManager
 		ImplicitNamespaces.Add ("System.Diagnostics");
 		ImplicitNamespaces.Add ("System.Diagnostics.CodeAnalysis");
 		ImplicitNamespaces.Add ("System.ComponentModel");
+#if NET
+		ImplicitNamespaces.Add ("System.Runtime.Versioning");
+#endif
 		ImplicitNamespaces.Add ("System.Threading.Tasks");
 		ImplicitNamespaces.Add ("CoreFoundation");
 		ImplicitNamespaces.Add ("Foundation");
@@ -5682,7 +5685,13 @@ public partial class Generator : IMemberGatherer {
 		var optionalInstanceProperties = allProtocolProperties.Where ((v) => !IsRequired (v) && !AttributeManager.HasAttribute<StaticAttribute> (v));
 		var requiredInstanceAsyncMethods = requiredInstanceMethods.Where (m => AttributeManager.HasAttribute<AsyncAttribute> (m)).ToList ();
 
+#if NET
+		// [SupportedOSPlatform] cannot be used on interface - https://github.com/dotnet/runtime/issues/47599
+		// instead we'll generate them on the members
+		PrintAttributes (type, platform:false, preserve:true, advice:true);
+#else
 		PrintAttributes (type, platform:true, preserve:true, advice:true);
+#endif
 		print ("[Protocol (Name = \"{1}\", WrapperType = typeof ({0}Wrapper){2}{3})]", 
 		       TypeName, 
 		       protocol_name, 
@@ -5822,6 +5831,10 @@ public partial class Generator : IMemberGatherer {
 			var mod = string.Empty;
 
 			PrintMethodAttributes (minfo);
+#if NET
+			// TODO - generate them only if they do not exists on the member
+			PrintPlatformAttributes (type);
+#endif
 			PrintPlatformAttributes (mi);
 			print_generated_code ();
 			PrintDelegateProxy (minfo);

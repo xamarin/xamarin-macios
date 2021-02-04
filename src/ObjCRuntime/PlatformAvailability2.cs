@@ -92,6 +92,76 @@ namespace ObjCRuntime
 		public override string ToString ()
 		{
 			var builder = new StringBuilder ();
+#if NET
+			switch (AvailabilityKind) {
+			case AvailabilityKind.Introduced:
+				builder.Append ("[SupportedOSPlatform (\"");
+				break;
+			case AvailabilityKind.Obsoleted:
+				switch (Platform) {
+				case PlatformName.iOS:
+					builder.AppendLine ("#if __IOS__");
+					break;
+				case PlatformName.TvOS:
+					builder.AppendLine ("#if __TVOS__");
+					break;
+				case PlatformName.WatchOS:
+					builder.AppendLine ("#if __WATCHOS__");
+					break;
+				case PlatformName.MacOSX:
+					builder.AppendLine ("#if __MACOS__");
+					break;
+				case PlatformName.MacCatalyst:
+					builder.AppendLine ("#if __MACCATALYST__");
+					break;
+				}
+				builder.Append ("[Obsolete (\"Starting with ");
+				break;
+			case AvailabilityKind.Deprecated:
+			case AvailabilityKind.Unavailable:
+				builder.Append ("[UnsupportedOSPlatform (\"");
+				break;
+			}
+
+			switch (Platform) {
+			case PlatformName.iOS:
+				builder.Append ("ios");
+				break;
+			case PlatformName.TvOS:
+				builder.Append ("tvos");
+				break;
+			case PlatformName.WatchOS:
+				builder.Append ("watchos");
+				break;
+			case PlatformName.MacOSX:
+				builder.Append ("macos"); // no 'x'
+				break;
+			case PlatformName.MacCatalyst:
+				builder.Append ("maccatalyst");
+				break;
+			}
+
+			if (Version != null) {
+				builder.Append (Version.Major).Append ('.').Append (Version.Minor);
+				if (Version.Build >= 0)
+					builder.Append ('.').Append (Version.Build);
+			}
+
+			switch (AvailabilityKind) {
+			case AvailabilityKind.Obsoleted:
+				if (!String.IsNullOrEmpty (Message))
+					builder.Append (' ').Append (Message);
+				// TODO add a URL (wiki?) and DiagnosticId (one per platform?) for documentation
+				builder.AppendLine ("\", DiagnosticId = \"BI1234\", UrlFormat = \"https://github.com/xamarin/xamarin-macios/wiki/Obsolete\")]");
+				builder.Append ("#endif");
+				break;
+			case AvailabilityKind.Introduced:
+			case AvailabilityKind.Deprecated:
+			case AvailabilityKind.Unavailable:
+				builder.Append ("\")]");
+				break;
+			}
+#else
 			builder.AppendFormat ("[{0} ({1}.{2}", AvailabilityKind, nameof (PlatformName), Platform);
 			
 			if (Version != null) {
@@ -107,6 +177,7 @@ namespace ObjCRuntime
 				builder.AppendFormat (", message: \"{0}\"", Message.Replace ("\"", "\"\""));
 
 			builder.Append (")]");
+#endif
 			return builder.ToString ();
 		}
 	}
