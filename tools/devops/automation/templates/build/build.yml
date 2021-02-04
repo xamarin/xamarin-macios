@@ -356,7 +356,7 @@ steps:
     $SignFileRecord = @(
       @{
         "Certs" = "400";
-        "SignFileList" = $msiFiles;
+        "SignFileList" = $SignFiles;
       }
     )
     
