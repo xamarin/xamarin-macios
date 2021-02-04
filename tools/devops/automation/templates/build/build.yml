@@ -334,11 +334,17 @@ steps:
     Write-Host "$msiFiles"
 
     # same process with the *pkg files
+    $notarizeDir = "$(Build.SourcesDirectory)/package/notarized"
+    rm -Rf $notarizeDir 
+    mkdir $notarizeDir 
     $pkgFiles = Get-ChildItem -Path $(Build.SourcesDirectory)/package/ -Filter "*.pkg"
     $pkgSignFiles = @()
     foreach($pkg in $pkgFiles) {
-        Write-Host "$($pkg.FullName)"
-        $pkgSignFiles += @{ "SrcPath"="$($pkg.FullName)"}
+        if ($pkg.Name == "delete-xma-build-host.pkg")
+          continue
+        # copy file to the notarize dit
+        cp $pkg.FullName $notarizeDir 
+        $pkgSignFiles += @{ "SrcPath"="$notarizeDir/$($pkg.Name)"}
     }
     
     # array of dicts
@@ -348,7 +354,7 @@ steps:
         "SignFileList" = $msiSignFiles;
       }
       @{
-        "Certs" = "8021";
+        "Certs" = "8001";
         "SignFileList" = $pkgSignFiles;
       }
     )
