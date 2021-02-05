@@ -15796,7 +15796,6 @@ namespace Foundation
 		string ToString (NSUnit unit);
 	}
 
-	[Mac (10, 9)][iOS (6, 0)][Watch (2, 0)][TV (9, 0)]
 	[BaseType (typeof (NSObject), Name = "NSXPCConnection")]
 	[DisableDefaultCtor]
 	interface NSXpcConnection
@@ -15878,7 +15877,6 @@ namespace Foundation
 
 	interface INSXpcListenerDelegate {}
 
-	[Mac (10, 9)][iOS (6, 0)][Watch (2, 0)][TV (9, 0)]
 	[BaseType (typeof (NSObject), Name = "NSXPCListener", Delegates = new string[] { "WeakDelegate" })]
 	[DisableDefaultCtor]
 	interface NSXpcListener
@@ -15925,7 +15923,6 @@ namespace Foundation
 	}
 
 	[BaseType (typeof (NSObject), Name = "NSXPCInterface")]
-	[Mac (10, 9)][iOS (6, 0)][Watch (2, 0)][TV (9, 0)]
 	[DisableDefaultCtor]
 	interface NSXpcInterface
 	{
@@ -15945,7 +15942,6 @@ namespace Foundation
 		// Methods taking xpc_type_t have been skipped.
 	}
 
-	[iOS (6,0), Watch (2,0), TV (9,0)]
 	[BaseType (typeof (NSObject), Name = "NSXPCListenerEndpoint")]
 	[DisableDefaultCtor]
 	interface NSXpcListenerEndpoint : NSSecureCoding
