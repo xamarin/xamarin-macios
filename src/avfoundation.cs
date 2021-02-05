@@ -195,7 +195,9 @@ namespace AVFoundation {
 		[NoTV][NoWatch]
 		[Field ("AVMediaTypeTimedMetadata")] // last header where I can find this: iOS 5.1 SDK, 10.7 only on Mac
 		[Availability (Obsoleted = Platform.iOS_6_0)]
+		[Deprecated (PlatformName.iOS, 12,0, message: "Always 'null'.")]
 		[Availability (Obsoleted = Platform.Mac_10_8)]
+		[Deprecated (PlatformName.MacOSX, 10,14, message: "Always 'null'.")]
 		NSString TimedMetadata { get; }
 
 		[Field ("AVMediaTypeMuxed")]
