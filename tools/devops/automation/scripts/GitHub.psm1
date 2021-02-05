@@ -420,7 +420,8 @@ function New-GitHubSummaryComment {
         } else {
             # read the json file, convert it to an object and add a line for each artifact
             $json =  Get-Content $APIDiff | ConvertFrom-Json
-            Write-Host "API diff json content is $json"
+            Write-Host "API diff json content is $APIDiff"
+            Write-Host "Json count $($json.Count)"
             if ($json.Count -gt 0) {
                 # build the required list
                 $sb.AppendLine("# API diff")
