@@ -1,6 +1,7 @@
 // Compat.cs: might not be ideal but it eases code sharing with existing code during the initial implementation.
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime.CompilerServices;
 
 using Mono.Cecil;
@@ -57,6 +58,12 @@ namespace Xamarin.Bundler {
 			Driver.Log (1, $"Registrar mode: {Registrar}");
 		}
 
+		public void Initialize ()
+		{
+			// mSYM support is not implemented in the runtime on .NET 6 afaik
+			EnableMSym = false;
+		}
+
 		public bool HasAnyDynamicLibraries {
 			get { throw new NotImplementedException (); }
 		}
@@ -69,6 +76,12 @@ namespace Xamarin.Bundler {
 		public string GetLibXamarin (AssemblyBuildTarget build_target)
 		{
 			throw new NotImplementedException ();
+		}
+
+		public Profile Profile {
+			get {
+				return Configuration.Profile;
+			}
 		}
 	}
 
@@ -139,6 +152,11 @@ namespace Xamarin.Linker {
 			get { return Configuration.PlatformAssembly; }
 		}
 
+		public bool IsProductAssembly (string filename)
+		{
+			return Assembly.GetIdentity (filename) == Configuration.PlatformAssembly;
+		}
+
 		public bool IsProductAssembly (AssemblyDefinition assembly)
 		{
 			return assembly.Name.Name == Configuration.PlatformAssembly;
@@ -147,6 +165,11 @@ namespace Xamarin.Linker {
 		public bool IsSdkAssembly (AssemblyDefinition assembly)
 		{
 			return Configuration.FrameworkAssemblies.Contains (Assembly.GetIdentity (assembly));
+		}
+
+		public bool IsSdkAssembly (string filename)
+		{
+			return Configuration.FrameworkAssemblies.Contains (Assembly.GetIdentity (filename));
 		}
 	}
 }
