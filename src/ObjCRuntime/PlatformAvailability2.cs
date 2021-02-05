@@ -92,7 +92,7 @@ namespace ObjCRuntime
 		public override string ToString ()
 		{
 			var builder = new StringBuilder ();
-#if NET
+#if NET && BGENERATOR
 			switch (AvailabilityKind) {
 			case AvailabilityKind.Introduced:
 				builder.Append ("[SupportedOSPlatform (\"");
