@@ -172,16 +172,16 @@ stages:
 
 - template: templates/mac/stage.yml
   parameters:
-    stageName: 'Mac Mojave Tests'
+    stageName: 'Mac Mojave (10.14)'
     macPool: 'Hosted Mac Internal Mojave'
-    statusContext: '10.14'
+    statusContext: 'Mac Mojave (10.14)'
     keyringPass: $(xma-password)
 
 - template: templates/mac/stage.yml
   parameters:
-    stageName: 'Mac High Sierra Tests'
+    stageName: 'Mac High Sierra (10.13)'
     macPool: 'Hosted Mac Internal'
-    statusContext: '10.13'
+    statusContext: 'Mac High Sierra (10.13)'
     keyringPass: $(xma-password)
 
 # TODO: Not the real step
