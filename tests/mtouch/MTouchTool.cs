@@ -862,7 +862,7 @@ public class IntentHandler : INExtension, IINRidesharingDomainHandling {
 					return false;
 
 				// nm changed its output on xcode 12.5 (it will fail, on purpose, with earlier versions)
-				if (v.EndsWith (": no symbols"))
+				if (v.EndsWith (": no symbols", StringComparison.Ordinal))
 					return false;
 
 				return true;
