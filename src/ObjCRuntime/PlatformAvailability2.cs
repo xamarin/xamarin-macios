@@ -114,6 +114,8 @@ namespace ObjCRuntime
 				case PlatformName.MacCatalyst:
 					builder.AppendLine ("#if __MACCATALYST__");
 					break;
+				default:
+					throw new NotSupportedException ($"Unknown platform: {Platform}");
 				}
 				builder.Append ("[Obsolete (\"Starting with ");
 				break;
@@ -139,13 +141,12 @@ namespace ObjCRuntime
 			case PlatformName.MacCatalyst:
 				builder.Append ("maccatalyst");
 				break;
+			default:
+				throw new NotSupportedException ($"Unknown platform: {Platform}");
 			}
 
-			if (Version != null) {
-				builder.Append (Version.Major).Append ('.').Append (Version.Minor);
-				if (Version.Build >= 0)
-					builder.Append ('.').Append (Version.Build);
-			}
+			if (Version != null)
+				builder.Append (Version.ToString (Version.Build >= 0 ? 3 : 2));
 
 			switch (AvailabilityKind) {
 			case AvailabilityKind.Obsoleted:
