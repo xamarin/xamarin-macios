@@ -151,6 +151,8 @@ namespace ObjCRuntime
 			case AvailabilityKind.Obsoleted:
 				if (!String.IsNullOrEmpty (Message))
 					builder.Append (' ').Append (Message);
+				else
+					builder.Append ('.'); // intro check messages to they end with a '.'
 				// TODO add a URL (wiki?) and DiagnosticId (one per platform?) for documentation
 				builder.AppendLine ("\", DiagnosticId = \"BI1234\", UrlFormat = \"https://github.com/xamarin/xamarin-macios/wiki/Obsolete\")]");
 				builder.Append ("#endif");
