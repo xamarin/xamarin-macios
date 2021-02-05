@@ -393,7 +393,10 @@ namespace Xharness {
 				Name = "framework-test",
 				IgnoreMacCatalystVariation = false,
 			});
-			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "xcframework-test", "iOS", "xcframework-test-ios.csproj"))) { Name = "xcframework-test" });
+			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "xcframework-test", "iOS", "xcframework-test-ios.csproj"))) {
+				Name = "xcframework-test",
+				IgnoreMacCatalystVariation = false,
+			});
 
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bindings-test", "iOS", "bindings-test.csproj")), false) { Name = "bindings-test" });
 
