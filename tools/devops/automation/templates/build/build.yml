@@ -355,7 +355,7 @@ steps:
         "SignFileList" = $msiSignFiles;
       }
       @{
-        "Certs" = "8001";
+        "Certs" = "8023";
         "SignFileList" = $pkgSignFiles;
       }
     )
