@@ -742,7 +742,9 @@ namespace Xamarin.Bundler {
 				sw.WriteLine ("\tmono_marshal_ilgen_init ();");
 				sw.WriteLine ("\tmono_method_builder_ilgen_init ();");
 				sw.WriteLine ("\tmono_sgen_mono_ilgen_init ();");
+#if !NET
 				sw.WriteLine ("\tmono_ee_interp_init (NULL);");
+#endif
 				sw.WriteLine ("\tmono_jit_set_aot_mode (MONO_AOT_MODE_INTERP);");
 			} else if (app.IsDeviceBuild)
 				sw.WriteLine ("\tmono_jit_set_aot_mode (MONO_AOT_MODE_FULL);");

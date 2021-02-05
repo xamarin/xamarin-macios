@@ -1235,6 +1235,15 @@
         <value>Invalid architecture ({0}): can't link more than one architecture at a time.</value>
     </data>
 
+    <data name="E7071" xml:space="preserve">
+        <value>Unable to parse the AOT compiler arguments: {0} ({1})</value>
+        <comment>
+            AOT: Ahead-of-Time
+            {0}: The arguments that failed to parse
+            {1}: A more detailed description about the failure
+        </comment>
+    </data>
+
     <data name="InvalidFramework" xml:space="preserve">
         <value>Invalid framework: {0}</value>
     </data>

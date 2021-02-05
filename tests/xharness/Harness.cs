@@ -389,8 +389,14 @@ namespace Xharness {
 			foreach (var p in fsharp_library_projects)
 				IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".fsproj")), false) { Name = p });
 
-			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "framework-test", "iOS", "framework-test-ios.csproj"))) { Name = "framework-test" });
-			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "xcframework-test", "iOS", "xcframework-test-ios.csproj"))) { Name = "xcframework-test" });
+			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "framework-test", "iOS", "framework-test-ios.csproj"))) {
+				Name = "framework-test",
+				IgnoreMacCatalystVariation = false,
+			});
+			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "xcframework-test", "iOS", "xcframework-test-ios.csproj"))) {
+				Name = "xcframework-test",
+				IgnoreMacCatalystVariation = false,
+			});
 
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bindings-test", "iOS", "bindings-test.csproj")), false) { Name = "bindings-test" });
 
@@ -405,9 +411,15 @@ namespace Xharness {
 				IgnoreMacCatalystVariation = false,
 			});
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "dont link", "dotnet", "iOS", "dont link.csproj"))) { Configurations = new string [] { "Debug", "Release" }, IsDotNetProject = true, SkipiOSVariation = false, SkiptvOSVariation = true, SkipwatchOSVariation = true, SkipTodayExtensionVariation = true, SkipDeviceVariations = false, SkipiOS32Variation = true });
-			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "link all", "link all.csproj"))) { Configurations = new string [] { "Debug", "Release" } });
+			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "link all", "link all.csproj"))) {
+				Configurations = new string [] { "Debug", "Release" },
+				IgnoreMacCatalystVariation = false,
+			});
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "link all", "dotnet", "iOS", "link all.csproj"))) { Configurations = new string [] { "Debug", "Release" }, IsDotNetProject = true, SkipiOSVariation = false, SkiptvOSVariation = true, SkipwatchOSVariation = true, SkipTodayExtensionVariation = true, SkipDeviceVariations = false, SkipiOS32Variation = true });
-			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "link sdk", "link sdk.csproj"))) { Configurations = new string [] { "Debug", "Release" } });
+			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "link sdk", "link sdk.csproj"))) {
+				Configurations = new string [] { "Debug", "Release" },
+				IgnoreMacCatalystVariation = false,
+			});
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "link sdk", "dotnet", "iOS", "link sdk.csproj"))) { Configurations = new string [] { "Debug", "Release" }, IsDotNetProject = true, SkipiOSVariation = false, SkiptvOSVariation = true, SkipwatchOSVariation = true, SkipTodayExtensionVariation = true, SkipDeviceVariations = false, SkipiOS32Variation = true });
 
 			foreach (var flavor in new MonoNativeFlavor [] { MonoNativeFlavor.Compat, MonoNativeFlavor.Unified }) {

@@ -747,6 +747,12 @@ namespace Xamarin.Bundler {
 			}
 		}
 
+		public bool IsInterpreted {
+			get {
+				return App.IsInterpreted (Identity);
+			}
+		}
+
 		public bool IsAOTCompiled {
 			get {
 				return App.IsAOTCompiled (Identity);

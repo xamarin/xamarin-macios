@@ -2761,7 +2761,7 @@ public partial class Generator : IMemberGatherer {
 				print ("[Preserve (Conditional = true)]");
 				print ("public {0} () : base (new NSMutableDictionary ()) {{}}\n", typeName);
 				print ("[Preserve (Conditional = true)]");
-				print ("public {0} (NSDictionary dictionary) : base (dictionary) {{}}\n", typeName);
+				print ("public {0} (NSDictionary? dictionary) : base (dictionary) {{}}\n", typeName);
 
 				foreach (var pi in dictType.GatherProperties (this)) {
 					if (pi.IsUnavailable (this))

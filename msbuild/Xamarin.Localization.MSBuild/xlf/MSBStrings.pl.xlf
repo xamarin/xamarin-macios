@@ -1216,6 +1216,15 @@
         <target state="new">Invalid architecture ({0}): can't link more than one architecture at a time.</target>
         <note />
       </trans-unit>
+      <trans-unit id="E7071">
+        <source>Unable to parse the AOT compiler arguments: {0} ({1})</source>
+        <target state="new">Unable to parse the AOT compiler arguments: {0} ({1})</target>
+        <note>
+            AOT: Ahead-of-Time
+            {0}: The arguments that failed to parse
+            {1}: A more detailed description about the failure
+        </note>
+      </trans-unit>
       <trans-unit id="InvalidFramework">
         <source>Invalid framework: {0}</source>
         <target state="new">Invalid framework: {0}</target>

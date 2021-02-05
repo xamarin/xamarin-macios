@@ -37,7 +37,7 @@ using ObjCRuntime;
 using MapKit;
 #endif
 using UIKit;
-#if !__WATCHOS__
+#if !__WATCHOS__ && !__MACCATALYST__
 using OpenGLES;
 #endif
 using WebKit;
@@ -177,6 +177,7 @@ namespace LinkSdk {
 		// http://bugzilla.xamarin.com/show_bug.cgi?id=980
 		public void Bug980_AddressBook_NRE ()
 		{
+			TestRuntime.AssertSystemVersion (PlatformName.MacCatalyst, 14, 0, throwIfOtherPlatform: false); // The AddressBook framework was introduced in Mac Catalyst 14.0
 			using (ABPeoplePickerNavigationController picker = new ABPeoplePickerNavigationController ()) {
 				// no NRE should occur
 				if (UIDevice.CurrentDevice.CheckSystemVersion (8, 0))
@@ -195,6 +196,7 @@ namespace LinkSdk {
 				Assert.That (ABAddressBook.GetAuthorizationStatus (), Is.Not.EqualTo (ABAuthorizationStatus.Authorized),
 					"Please deny access to contacts for this this application (it's important for this test)");
 			}
+			TestRuntime.AssertSystemVersion (PlatformName.MacCatalyst, 14, 0, throwIfOtherPlatform: false); // The AddressBook framework was introduced in Mac Catalyst 14.0
 			Assert.IsNotNull (ABPersonAddressKey.City, "ABPersonAddressKey");
 		}
 #endif // !__TVOS__	&& !__WATCHOS__
@@ -422,7 +424,7 @@ namespace LinkSdk {
 			Assert.That (f, Is.EqualTo ("hi"), "f");
 		}
 
-#if !__WATCHOS__
+#if !__WATCHOS__ && !__MACCATALYST__
 #if !NET // OpenTK-1.0.dll is not supported yet
 		[Test]
 		public void OpenTk_3049 ()
@@ -450,7 +452,7 @@ namespace LinkSdk {
 			Assert.NotNull (core, "ES20/Core");
 		}
 #endif // !NET
-#endif // !__WATCHOS__
+#endif // !__WATCHOS__ && !__MACCATALYST__
 		
 		[Test]
 		public void XElement_3137 ()
@@ -895,7 +897,11 @@ namespace LinkSdk {
 
 			var path = TestFolder (Environment.SpecialFolder.Desktop, exists: false);
 
+#if __MACCATALYST__
+			path = TestFolder (Environment.SpecialFolder.Favorites, exists: true);
+#else
 			path = TestFolder (Environment.SpecialFolder.Favorites, exists: false);
+#endif
 
 			path = TestFolder (Environment.SpecialFolder.MyMusic, exists: false);
 
