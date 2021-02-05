@@ -21,8 +21,11 @@
 
 using System;
 using System.Reflection;
+using System.Runtime.Versioning;
+using System.Text;
 using NUnit.Framework;
 using ObjCRuntime;
+using Xamarin.Tests;
 
 namespace Introspection {
 
@@ -54,6 +57,10 @@ namespace Introspection {
 			// Please comment the code below if needed
 			Maximum = new Version (11,1,0);
 #endif
+
+			//Filter = (OSPlatformAttribute arg) => {
+			//	return (arg is SupportedOSPlatformAttribute) && arg.PlatformName.StartsWith (Platform.ToString ().ToLowerInvariant ());
+			//};
 			Filter = (AvailabilityBaseAttribute arg) => {
 				return (arg.AvailabilityKind != AvailabilityKind.Introduced) || (arg.Platform != Platform);
 			};
@@ -187,7 +194,11 @@ namespace Introspection {
 		protected AvailabilityBaseAttribute CheckAvailability (ICustomAttributeProvider cap)
 		{
 			var attrs = cap.GetCustomAttributes (false);
-			foreach (var a in attrs) {
+			foreach (var ca in attrs) {
+				var a = ca;
+#if NET
+				a = (a as OSPlatformAttribute)?.Convert ();
+#endif
 				if (a is AvailabilityBaseAttribute aa) {
 					if (Filter (aa))
 						continue;
@@ -213,7 +224,11 @@ namespace Introspection {
 
 		bool IsUnavailable (ICustomAttributeProvider cap)
 		{
-			foreach (var ca in cap.GetCustomAttributes (false)) {
+			foreach (var a in cap.GetCustomAttributes (false)) {
+				var ca = a;
+#if NET
+				ca = (a as OSPlatformAttribute)?.Convert ();
+#endif
 				if (ca is UnavailableAttribute ua) {
 					if (ua.Platform == Platform)
 						return true;
@@ -224,7 +239,11 @@ namespace Introspection {
 
 		AvailabilityBaseAttribute GetAvailable (ICustomAttributeProvider cap)
 		{
-			foreach (var ca in cap.GetCustomAttributes (false)) {
+			foreach (var a in cap.GetCustomAttributes (false)) {
+				var ca = a;
+#if NET
+				ca = (a as OSPlatformAttribute)?.Convert ();
+#endif
 				if (ca is AvailabilityBaseAttribute aa) {
 					if ((aa.AvailabilityKind != AvailabilityKind.Unavailable) && (aa.Platform == Platform))
 						return aa;
@@ -261,5 +280,42 @@ namespace Introspection {
 			}
 			AssertIfErrors ("{0} API with mixed [Unavailable] and availability attributes", Errors);
 		}
+
+#if NET
+		string CheckLegacyAttributes (ICustomAttributeProvider cap)
+		{
+			var sb = new StringBuilder ();
+			foreach (var a in cap.GetCustomAttributes (false)) {
+				if (a is AvailabilityBaseAttribute aa) {
+					sb.AppendLine (aa.ToString ());
+				}
+			}
+			return sb.ToString ();
+		}
+
+		[Test]
+		public void LegacyAttributes ()
+		{
+			//LogProgress = true;
+			Errors = 0;
+			foreach (Type t in Assembly.GetTypes ()) {
+				if (LogProgress)
+					Console.WriteLine ($"T: {t}");
+				var type_level = CheckLegacyAttributes (t);
+				if (type_level.Length > 0)
+					AddErrorLine ($"[FAIL] '{t.FullName}' has legacy attribute(s): {type_level}");
+
+				foreach (var m in t.GetMembers (BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public)) {
+					if (LogProgress)
+						Console.WriteLine ($"M: {m}");
+
+					var member_level = CheckLegacyAttributes (t);
+					if (member_level.Length > 0)
+						AddErrorLine ($"[FAIL] '{t.FullName}::{m.Name}' has legacy attribute(s): {member_level}");
+				}
+			}
+			AssertIfErrors ("{0} API with mixed legacy availability attributes", Errors);
+		}
+#endif
 	}
 }
