@@ -10,7 +10,7 @@ using OpenTK;
 
 namespace MetalPerformanceShaders {
 
-	[iOS (9,0)][Mac (10, 13)][Introduced (PlatformName.MacCatalyst, 13, 0)]
+	[iOS (9,0)][Mac (10, 13)]
 	[Native] // NSUInteger
 	[Flags]	// NS_OPTIONS
 	public enum MPSKernelOptions : ulong {
@@ -29,7 +29,7 @@ namespace MetalPerformanceShaders {
 #endif
 	}
 
-	[iOS (9,0)][Mac (10, 13)][Introduced (PlatformName.MacCatalyst, 13, 0)]
+	[iOS (9,0)][Mac (10, 13)]
 	[Native] // NSUInteger
 	public enum MPSImageEdgeMode : ulong {
 		Zero,
@@ -50,7 +50,7 @@ namespace MetalPerformanceShaders {
 		Premultiplied = 2,
 	}
 	 
-	[iOS (10,0)][TV (10,0)][Mac (10, 13)][Introduced (PlatformName.MacCatalyst, 13, 0)]
+	[iOS (10,0)][TV (10,0)][Mac (10, 13)]
 	public enum MPSDataType : uint { // uint32_t
 		Invalid = 0,
 
@@ -82,7 +82,6 @@ namespace MetalPerformanceShaders {
 	[Flags]
 	[Native]
 	[iOS (13,0), TV (13,0), Mac (10,15)]
-	[Introduced (PlatformName.MacCatalyst, 13, 0)]
 	public enum MPSAliasingStrategy : ulong
 	{
 		Default = 0x0,
@@ -94,7 +93,7 @@ namespace MetalPerformanceShaders {
 		PreferNonTemporaryMemory = 1uL << 3,
 	}
 
-	[iOS (10,0)][TV (10,0)][Mac (10,13)][Introduced (PlatformName.MacCatalyst, 13, 0)]
+	[iOS (10,0)][TV (10,0)][Mac (10,13)]
 	[Native]
 	public enum MPSImageFeatureChannelFormat : ulong {
 		Invalid = 0,
@@ -135,7 +134,6 @@ namespace MetalPerformanceShaders {
 
 	// uses NSUInteger
 	[iOS (13,0), TV (13,0), Mac (10,15)]
-	[Introduced (PlatformName.MacCatalyst, 13, 0)]
 	public struct MPSDimensionSlice {
 		public nuint Start;
 		public nuint Length;
@@ -187,7 +185,6 @@ namespace MetalPerformanceShaders {
 		public Vector4 MaxPixelValue;
 	}
 
-	[Introduced (PlatformName.MacCatalyst, 13, 0)]
 	[TV (11, 0), Mac (10, 13), iOS (11, 0)]
 	public enum MPSMatrixDecompositionStatus {
 		Success = 0,
@@ -197,7 +194,6 @@ namespace MetalPerformanceShaders {
 	}
 
 	[iOS (13,0), TV (13,0), Mac (10,15)]
-	[Introduced (PlatformName.MacCatalyst, 13, 0)]
 	[Flags]
 	[Native]
 	public enum MPSMatrixRandomDistribution : ulong
@@ -293,7 +289,7 @@ namespace MetalPerformanceShaders {
 		ExcludeEdges = (1 << 15),
 	}
 
-	[TV (11, 0), Mac (10, 13), iOS (11, 0)][Introduced (PlatformName.MacCatalyst, 13, 0)]
+	[TV (11, 0), Mac (10, 13), iOS (11, 0)]
 	[Native]
 	public enum MPSDataLayout : ulong {
 		HeightPerWidthPerFeatureChannels = 0,
@@ -355,7 +351,6 @@ namespace MetalPerformanceShaders {
 		}
 #endif
 	}
-	[Introduced (PlatformName.MacCatalyst, 13, 0)]
 	[TV (11, 3), iOS (11, 3), Mac (10, 13, 4)]
 	[Native]
 	public enum MPSStateResourceType : ulong {
@@ -478,7 +473,6 @@ namespace MetalPerformanceShaders {
 		GreaterOrEqual,
 	}
 
-	[Introduced (PlatformName.MacCatalyst, 13, 0)]
 	[TV (11, 3), Mac (10, 13, 4), iOS (11, 3)]
 	public enum MPSCnnLossType : uint {
 		MeanAbsoluteError = 0,
@@ -494,7 +488,6 @@ namespace MetalPerformanceShaders {
 		//Count, // must always be last, and because of this it will cause breaking changes.
 	}
 
-	[Introduced (PlatformName.MacCatalyst, 13, 0)]
 	[TV (11, 3), Mac (10, 13, 4), iOS (11, 3)]
 	public enum MPSCnnReductionType {
 		None = 0,
@@ -586,7 +579,6 @@ namespace MetalPerformanceShaders {
 	}
 
 	[iOS (11,3), TV (11,3), Mac (10,13,4)]
-	[Introduced (PlatformName.MacCatalyst, 13, 0)]
 	public enum MPSCustomKernelIndex : uint
 	{
 		DestIndex = 0,
@@ -599,7 +591,6 @@ namespace MetalPerformanceShaders {
 	}
 
 	[iOS (11,2), TV (11,2), Mac (10,13,2)]
-	[Introduced (PlatformName.MacCatalyst, 13, 0)]
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MPSMatrixOffset
 	{
@@ -607,7 +598,6 @@ namespace MetalPerformanceShaders {
 		public uint ColumnOffset;
 	}
 
-	[Introduced (PlatformName.MacCatalyst, 13, 0)]
 	[TV (11,3), Mac (10,13,4), iOS (11,3)]
 	public enum MPSImageType : uint
 	{
@@ -643,7 +633,6 @@ namespace MetalPerformanceShaders {
 
 	[Flags]
 	[Native]
-	[Introduced (PlatformName.MacCatalyst, 13, 0)]
 	[TV (12,2), Mac (10,14,4), iOS (12,2)]
 	public enum MPSDeviceOptions : ulong
 	{

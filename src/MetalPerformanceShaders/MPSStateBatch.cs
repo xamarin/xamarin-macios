@@ -14,7 +14,6 @@ using Foundation;
 using Metal;
 
 namespace MetalPerformanceShaders {
-	[Introduced (PlatformName.MacCatalyst, 13, 0)]
 	[iOS (11,3), TV (11,3), Mac (10,13,4)]
 	public static partial class MPSStateBatch {
 
@@ -44,13 +43,11 @@ namespace MetalPerformanceShaders {
 			MPSStateBatchSynchronize (stateBatch.Handle, commandBuffer.Handle);
 		}
 
-		[Introduced (PlatformName.MacCatalyst, 13, 0)]
 		[iOS (12,0), TV (12,0), Mac (10,14)]
 		[DllImport (Constants.MetalPerformanceShadersLibrary)]
 		static extern nuint MPSStateBatchResourceSize (IntPtr batch);
 
 		// Using 'NSArray<MPSState>' instead of `MPSState[]` because array 'Handle' matters.
-		[Introduced (PlatformName.MacCatalyst, 13, 0)]
 		[iOS (12,0), TV (12,0), Mac (10,14)]
 		public static nuint GetResourceSize (NSArray<MPSState> stateBatch)
 		{

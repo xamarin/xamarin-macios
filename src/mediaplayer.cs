@@ -1381,7 +1381,6 @@ namespace MediaPlayer {
 
 		[NoiOS]
 		[NoTV]
-		[Introduced (PlatformName.MacCatalyst, 13, 0)]
 		[Export ("playbackState")]
 		MPNowPlayingPlaybackState PlaybackState { get; set; }
 
