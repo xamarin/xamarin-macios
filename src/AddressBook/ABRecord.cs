@@ -38,6 +38,8 @@ using ObjCRuntime;
 
 namespace AddressBook {
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
 	public enum ABRecordType : uint /* uint32_t */ {
 		Person = 0,
 		Group = 1,
@@ -45,6 +47,8 @@ namespace AddressBook {
 	}
 
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
 	public enum ABPropertyType : uint /* uint32_t */ {
 		Invalid         = 0,
 		String          = 0x1,
@@ -60,6 +64,8 @@ namespace AddressBook {
 	}
 
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
 	public class ABRecord : INativeObject, IDisposable {
 
 		public const int InvalidRecordId = -1;
