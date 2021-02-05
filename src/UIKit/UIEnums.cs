@@ -3085,7 +3085,7 @@ namespace UIKit {
 		Number,
 	}
 
-	[Introduced (PlatformName.MacCatalyst, 10, 14)]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch, NoTV, NoiOS]
 	[Native]
 	public enum UISceneCollectionJoinBehavior : long {

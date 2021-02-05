@@ -19865,7 +19865,7 @@ namespace UIKit {
 		[NullAllowed, Export ("requestingScene", ArgumentSemantic.Strong)]
 		UIScene RequestingScene { get; set; }
 
-		[Introduced (PlatformName.MacCatalyst, 10, 14)]
+		[Introduced (PlatformName.MacCatalyst, 14, 0)]
 		[NoWatch, NoTV, NoiOS]
 		[Export ("collectionJoinBehavior", ArgumentSemantic.Assign)]
 		UISceneCollectionJoinBehavior CollectionJoinBehavior { get; set; }
