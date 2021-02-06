@@ -275,3 +275,10 @@
 !missing-type! MPSGraphTensorData not bound
 !missing-type! MPSGraphVariableOp not bound
 !missing-selector! MPSGraph::constantWithScalar:dataType: not bound
+## appended from unclassified file
+!missing-enum! MPSGraphScatterMode not bound
+!missing-selector! MPSGraph::scatterNDWithUpdatesTensor:indicesTensor:shape:batchDimensions:mode:name: not bound
+!missing-selector! MPSGraph::sliceGradientTensor:fwdInShapeTensor:starts:ends:strides:name: not bound
+!missing-selector! MPSGraph::sliceGradientTensor:fwdInShapeTensor:starts:ends:strides:startMask:endMask:squeezeMask:name: not bound
+!missing-selector! MPSGraph::sliceTensor:starts:ends:strides:name: not bound
+!missing-selector! MPSGraph::sliceTensor:starts:ends:strides:startMask:endMask:squeezeMask:name: not bound

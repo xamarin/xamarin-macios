@@ -1,0 +1,4 @@
+!missing-enum! PKRadioTechnology not bound
+!missing-field! PKPaymentNetworkMir not bound
+!missing-selector! PKAddCarKeyPassConfiguration::setSupportedRadioTechnologies: not bound
+!missing-selector! PKAddCarKeyPassConfiguration::supportedRadioTechnologies not bound
