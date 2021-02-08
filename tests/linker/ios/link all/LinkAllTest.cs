@@ -426,7 +426,7 @@ namespace LinkAll {
 			}
 		}
 
-#if !__WATCHOS__
+#if !__WATCHOS__ && !__MACCATALYST__
 #if !NET // OpenTK-1.0.dll isn't supported in .NET yet
 		[Test]
 		public void OpenTk10_Preserved ()
@@ -447,7 +447,7 @@ namespace LinkAll {
 			Assert.NotNull (core, "ES20/Core");
 		}
 #endif // !NET
-#endif // !__WATCHOS__
+#endif // !__WATCHOS__ && !__MACCATALYST__
 
 		[Test]
 		public void NestedNSObject ()
@@ -612,9 +612,15 @@ namespace LinkAll {
 			if (corlib.EndsWith ("/Frameworks/Xamarin.Sdk.framework/MonoBundle/mscorlib.dll", StringComparison.Ordinal))
 				Assert.Pass (corlib);
 
-			var bundlePath = NSBundle.MainBundle.BundlePath;
+#if __MACCATALYST__
+			var bundleLocation = Path.Combine ("Contents", "MonoBundle");
+#else
+			var bundleLocation = string.Empty;
+#endif
+			var bundlePath = Path.Combine (NSBundle.MainBundle.BundlePath, bundleLocation);
 			var isExtension = bundlePath.EndsWith (".appex", StringComparison.Ordinal);
-			var suffix = isExtension ? "link all.appex/mscorlib.dll" : "link all.app/mscorlib.dll";
+			var bundleName = isExtension ? "link all.appex" : "link all.app";
+			var suffix = Path.Combine (bundleName, bundleLocation, "mscorlib.dll");
 			Assert.That (corlib, Does.EndWith (suffix), corlib);
 		}
 	}

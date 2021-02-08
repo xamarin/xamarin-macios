@@ -2,12 +2,14 @@
 using System;
 using Foundation;
 
+#nullable enable
+
 namespace PdfKit {
 	
 	partial class PdfAnnotation {
 #if __IOS__
 		[Obsolete ("Empty stub (not a public API on iOS).")]
-		public virtual string ToolTip { get; }
+		public virtual string? ToolTip { get; }
 #endif
 	}
 
@@ -39,7 +41,7 @@ namespace PdfKit {
 
 #if __IOS__
 		[Obsolete ("Empty stub (not a public API).")]
-		public virtual PdfAction MouseUpAction { get; set; }
+		public virtual PdfAction? MouseUpAction { get; set; }
 
 		[Obsolete ("Empty stub (not a public API).")]
 		public virtual void RemoveAllAppearanceStreams () {}

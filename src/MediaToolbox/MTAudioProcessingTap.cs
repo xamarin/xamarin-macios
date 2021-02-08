@@ -43,7 +43,6 @@ using CoreMedia;
 
 namespace MediaToolbox
 {
-	[iOS (6,0)][Mac (10,9)]
 	public class MTAudioProcessingTap : INativeObject
 #if !COREBUILD
 , IDisposable
