@@ -58,9 +58,6 @@ namespace Introspection {
 			Maximum = new Version (11,1,0);
 #endif
 
-			//Filter = (OSPlatformAttribute arg) => {
-			//	return (arg is SupportedOSPlatformAttribute) && arg.PlatformName.StartsWith (Platform.ToString ().ToLowerInvariant ());
-			//};
 			Filter = (AvailabilityBaseAttribute arg) => {
 				return (arg.AvailabilityKind != AvailabilityKind.Introduced) || (arg.Platform != Platform);
 			};
