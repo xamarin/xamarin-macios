@@ -26,7 +26,7 @@ namespace Xamarin.iOS.Tasks {
 		{
 			if(Path.GetExtension(ArchivePath) != ".xcarchive")
 			{
-				Log.LogError(MSBStrings.E0176, ArchivePath);
+				Log.LogError(MSBStrings.E0186, ArchivePath);
 
 				return false;
 			}

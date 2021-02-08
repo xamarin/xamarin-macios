@@ -953,12 +953,6 @@ namespace Xamarin.Localization.MSBuild {
             }
         }
         
-        public static string E0176 {
-            get {
-                return ResourceManager.GetString("E0176", resourceCulture);
-            }
-        }
-        
         public static string E0177 {
             get {
                 return ResourceManager.GetString("E0177", resourceCulture);
@@ -1010,6 +1004,12 @@ namespace Xamarin.Localization.MSBuild {
         public static string E0185 {
             get {
                 return ResourceManager.GetString("E0185", resourceCulture);
+            }
+        }
+        
+        public static string E0186 {
+            get {
+                return ResourceManager.GetString("E0186", resourceCulture);
             }
         }
         

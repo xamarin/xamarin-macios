@@ -834,10 +834,6 @@
         </value>
     </data>
 
-    <data name="E0176" xml:space="preserve">
-        <value>The provided Archive Path is not from a valid archive file (.xcarchive). Archive Path: '{0}'</value>
-    </data>
-    
     <data name="E0177" xml:space="preserve">
         <value>Can't get an ISshCommands instance. Please check that a valid connection to the Mac is established.</value>
     </data>
@@ -873,6 +869,10 @@
     <data name="E0185" xml:space="preserve">
         <value>An error occurred while trying to verify the compatibility between Xcode and Xamarin.iOS. Details: {0}
         </value>
+    </data>
+
+    <data name="E0186" xml:space="preserve">
+        <value>The provided Archive Path is not from a valid archive file (.xcarchive). Archive Path: '{0}'</value>
     </data>
 
     <data name="W0176" xml:space="preserve">

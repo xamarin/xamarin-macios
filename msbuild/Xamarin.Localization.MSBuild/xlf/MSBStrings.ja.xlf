@@ -677,11 +677,6 @@
         </target>
         <note />
       </trans-unit>
-      <trans-unit id="E0176">
-        <source>The provided Archive Path is not from a valid archive file (.xcarchive). Archive Path: '{0}'</source>
-        <target state="new">The provided Archive Path is not from a valid archive file (.xcarchive). Archive Path: '{0}'</target>
-        <note />
-      </trans-unit>
       <trans-unit id="E0177">
         <source>Can't get an ISshCommands instance. Please check that a valid connection to the Mac is established.</source>
         <target state="new">Can't get an ISshCommands instance. Please check that a valid connection to the Mac is established.</target>
@@ -727,6 +722,11 @@
         </source>
         <target state="new">An error occurred while trying to verify the compatibility between Xcode and Xamarin.iOS. Details: {0}
         </target>
+        <note />
+      </trans-unit>
+      <trans-unit id="E0186">
+        <source>The provided Archive Path is not from a valid archive file (.xcarchive). Archive Path: '{0}'</source>
+        <target state="new">The provided Archive Path is not from a valid archive file (.xcarchive). Archive Path: '{0}'</target>
         <note />
       </trans-unit>
       <trans-unit id="E7001">
