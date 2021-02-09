@@ -15,8 +15,8 @@ namespace Xamarin.Messaging.Build {
 				var recommendedXcodeVersion = GetRecommendedXcodeVersion ();
 
 				result.IsCompatibleVersion = xcodeVersion >= recommendedXcodeVersion;
-				result.XcodeVersion = xcodeVersion.ToString();
-				result.RecommendedXcodeVersion = recommendedXcodeVersion.ToString();
+				result.XcodeVersion = xcodeVersion.ToString ();
+				result.RecommendedXcodeVersion = recommendedXcodeVersion.ToString ();
 			} catch {
 				result.IsCompatibleVersion = false;
 			}
