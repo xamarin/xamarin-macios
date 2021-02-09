@@ -1,5 +1,0 @@
-!missing-selector! CLSActivity::removeAllActivityItems not bound
-!missing-selector! CLSContext::addNavigationChildContext: not bound
-!missing-selector! CLSContext::navigationChildContexts not bound
-!missing-selector! CLSContext::removeNavigationChildContext: not bound
-!missing-selector! CLSDataStore::fetchActivityForURL:completion: not bound
