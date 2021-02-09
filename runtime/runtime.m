@@ -828,11 +828,13 @@ gc_register_toggleref (MonoObject *obj, id self, bool isCustomType)
 #ifdef DEBUG_TOGGLEREF
 	id handle = xamarin_get_nsobject_handle (obj);
 
-	PRINT ("**Registering object %p handle %p RC %d flags: %i",
+	PRINT ("**Registering object %p handle %p RC %d flags: %i isCustomType: %i",
 		obj,
 		handle,
 		(int) (handle ? [handle retainCount] : 0),
-		xamarin_get_nsobject_flags (obj));
+		xamarin_get_nsobject_flags (obj),
+		isCustomType
+		);
 #endif
 	mono_gc_toggleref_add (obj, TRUE);
 
@@ -1801,7 +1803,7 @@ xamarin_create_gchandle (id self, void *managed_object, enum XamarinGCHandleFlag
 	}
 	set_gchandle (self, gchandle, flags);
 #if defined(DEBUG_REF_COUNTING)
-	PRINT ("\tGCHandle created for %p: %d (flags: %p) = %d %s\n", self, gchandle, GINT_TO_POINTER (flags), get_raw_gchandle (self), weak ? "weak" : "strong");
+	PRINT ("\tGCHandle created for %p: %d (flags: %p) = %s managed object: %p\n", self, gchandle, GINT_TO_POINTER (flags), weak ? "weak" : "strong", managed_object);
 #endif
 }
 
@@ -1872,7 +1874,7 @@ xamarin_switch_gchandle (id self, bool to_weak)
 	MONO_THREAD_DETACH; // COOP: this will switch to GC_SAFE
 
 #if defined(DEBUG_REF_COUNTING)
-	PRINT ("Switched object %p to %s GCHandle = %d\n", self, to_weak ? "weak" : "strong", new_gchandle);
+	PRINT ("Switched object %p to %s GCHandle = %d managed object = %p\n", self, to_weak ? "weak" : "strong", new_gchandle, managed_object);
 #endif
 }
 
@@ -1957,7 +1959,7 @@ get_safe_retainCount (id self)
 		// NSCalendar/NSInputStream may end up with a stack overflow where CFGetRetainCount calls itself
 		return 666;
 	} else {
-		return [self retainCount];
+		return (int) [self retainCount];
 	}
 }
 #endif
@@ -1973,8 +1975,8 @@ xamarin_release_managed_ref (id self, MonoObject *managed_obj)
 	GCHandle exception_gchandle = INVALID_GCHANDLE;
 	
 #if defined(DEBUG_REF_COUNTING)
-	PRINT ("monotouch_release_managed_ref (%s Handle=%p) retainCount=%d; HasManagedRef=%i GCHandle=%i IsUserType=%i\n", 
-		class_getName (object_getClass (self)), self, (int32_t) [self retainCount], user_type ? xamarin_has_managed_ref (self) : 666, user_type ? get_gchandle (self) : 666, user_type);
+	PRINT ("monotouch_release_managed_ref (%s Handle=%p) retainCount=%d; HasManagedRef=%i GCHandle=%p IsUserType=%i managed_obj=%p\n", 
+		class_getName (object_getClass (self)), self, (int32_t) [self retainCount], user_type ? xamarin_has_managed_ref (self) : 666, user_type ? get_gchandle_without_flags (self) : (void*) 666, user_type, managed_obj);
 #endif
 
 	xamarin_set_nsobject_flags (managed_obj, xamarin_get_nsobject_flags (managed_obj) & ~NSObjectFlagsHasManagedRef);
@@ -2078,8 +2080,8 @@ xamarin_create_managed_ref (id self, gpointer managed_object, bool retain)
 	bool user_type = is_user_type (self);
 	
 #if defined(DEBUG_REF_COUNTING)
-	PRINT ("monotouch_create_managed_ref (%s Handle=%p) retainCount=%d; HasManagedRef=%i GCHandle=%i IsUserType=%i\n", 
-		class_getName ([self class]), self, get_safe_retainCount (self), user_type ? xamarin_has_managed_ref (self) : 666, user_type ? get_gchandle (self) : 666, user_type);
+	PRINT ("monotouch_create_managed_ref (%s Handle=%p) retainCount=%d; HasManagedRef=%i GCHandle=%i IsUserType=%i managed_object=%p\n", 
+		class_getName ([self class]), self, get_safe_retainCount (self), user_type ? xamarin_has_managed_ref (self) : 666, user_type ? get_gchandle_without_flags (self) : (void*) 666, user_type, managed_object);
 #endif
 	
 	xamarin_set_nsobject_flags ((MonoObject *) managed_object, xamarin_get_nsobject_flags ((MonoObject *) managed_object) | NSObjectFlagsHasManagedRef);

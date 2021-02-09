@@ -687,7 +687,7 @@ xamarin_retain_trampoline (id self, SEL sel)
 	pthread_mutex_lock (&refcount_mutex);
 
 #if defined(DEBUG_REF_COUNTING)
-	int ref_count = [self retainCount];
+	int ref_count = (int) [self retainCount];
 	bool had_managed_ref = xamarin_has_managed_ref (self);
 	GCHandle pre_gchandle = xamarin_get_gchandle (self);
 #endif
