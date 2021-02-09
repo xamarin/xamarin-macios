@@ -435,6 +435,9 @@
     <Compile Include="..\..\external\Xamarin.MacDev\Xamarin.MacDev\PListObject.cs">
       <Link>external\Xamarin.MacDev\Xamarin.MacDev\PListObject.cs</Link>
     </Compile>
+    <Compile Include="..\..\external\Xamarin.MacDev\Xamarin.MacDev\MacCatalystSupport.cs">
+      <Link>external\Xamarin.MacDev\Xamarin.MacDev\MacCatalystSupport.cs</Link>
+    </Compile>
     <Compile Include="..\linker\CustomSymbolWriter.cs">
       <Link>tools\linker\CustomSymbolWriter.cs</Link>
     </Compile>
