@@ -12,7 +12,7 @@ namespace Xamarin.iOS.Tasks
 		{
 			get 
 			{
-				if (string.IsNullOrEmpty (SessionId)) 
+				if (!string.IsNullOrEmpty (SessionId)) 
 				{
 					return "Entitlements.plist";
 				}
@@ -35,8 +35,10 @@ namespace Xamarin.iOS.Tasks
 
 		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied ()
 		{
-			if (!string.IsNullOrEmpty (this.Entitlements))
-				yield return new TaskItem (this.Entitlements);
+			if (!string.IsNullOrEmpty (Entitlements))
+				yield return new TaskItem (Entitlements);
+			else
+				yield return new TaskItem (DefaultEntitlementsPath);
 		}
 
 		public void Cancel ()
