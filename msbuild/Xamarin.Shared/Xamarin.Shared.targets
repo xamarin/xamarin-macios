@@ -1387,6 +1387,32 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</SpotlightIndexer>
 	</Target>
 
+	<Target Name="_GenerateBundleName" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_ComputeTargetArchitectures;_ParseBundlerArguments">
+		<PropertyGroup Condition="'$(AppBundleDir)' == ''">
+			<AppBundleDir Condition="'$(IsAppDistribution)' != 'true'">$(DeviceSpecificOutputPath)$(_AppBundleName)$(AppBundleExtension)</AppBundleDir>
+			<AppBundleDir Condition="'$(IsAppDistribution)' == 'true'">$(ArchivePath)\Products\Applications\$(_AppBundleName)$(AppBundleExtension)</AppBundleDir>
+		</PropertyGroup>
+		<PropertyGroup>
+			<_AppBundlePath>$(AppBundleDir)\</_AppBundlePath>
+			<_AppResourcesPath Condition="'$(_PlatformName)' == 'macOS' Or '$(_IsMacCatalyst)' == 'true'">$(_AppBundlePath)Contents\Resources\</_AppResourcesPath>
+			<_AppResourcesPath Condition="'$(_PlatformName)' != 'macOS' And '$(_IsMacCatalyst)' != 'true'">$(_AppBundlePath)</_AppResourcesPath>
+
+			<_AppContentsPath Condition="'$(_PlatformName)' == 'macOS' Or '$(_IsMacCatalyst)' == 'true'">$(_AppBundlePath)Contents\$(_CustomBundleName)</_AppContentsPath>
+			<_AppContentsPath Condition="'$(_PlatformName)' != 'macOS' And '$(_IsMacCatalyst)' != 'true'">$(_AppBundlePath)</_AppContentsPath>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(IsAppExtension)' == 'true'">
+			<!-- needed for GetTargetPath/Build/Rebuild task outputs -->
+			<_AppExtensionBundlePath>$(MSBuildProjectDirectory)\$(AppBundleDir)</_AppExtensionBundlePath>
+		</PropertyGroup>
+		<ItemGroup Condition="'$(IsAppExtension)' == 'true'">
+			<_AppExtensionBundlePath Include="$(MSBuildProjectDirectory)\$(AppBundleDir)">
+				<!-- We need this metadata to fix the source in VS -->
+				<BuildSessionId>$(BuildSessionId)</BuildSessionId>
+				<BuildServerPath>..\..\$(BuildAppName)\$(BuildSessionId)\$(AppBundleDir)</BuildServerPath>
+			</_AppExtensionBundlePath>
+		</ItemGroup>
+	</Target>
+
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Shared.ObjCBinding.targets" Condition="'$(IsBindingProject)' == 'true'" />
 
 	<!-- Xamarin.ImplicitFacade.targets will detect if we need to add an implicit reference to netstandard.dll -->
