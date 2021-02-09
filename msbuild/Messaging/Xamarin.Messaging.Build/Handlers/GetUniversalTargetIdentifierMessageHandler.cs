@@ -35,7 +35,6 @@ namespace Xamarin.Messaging.Build {
 				startInfo.FileName = "/usr/bin/mdls";
 				startInfo.Arguments = string.Format ("\"{0}\" -name kMDItemContentType", filePath);
 				startInfo.RedirectStandardOutput = true;
-				startInfo.RedirectStandardError = true;
 				startInfo.UseShellExecute = false;
 
 				var proc = new Process ();

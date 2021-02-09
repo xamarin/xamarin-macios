@@ -17,7 +17,7 @@
     <ProjectReference Include="..\Xamarin.MacDev.Tasks.Core\Xamarin.MacDev.Tasks.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="ILLink.Tasks" >
+    <Reference Include="ILLink.Tasks">
       <!-- We need the net472 impl, otherwise the Build agent needs to be a net5.0 app -->
       <HintPath>$(PkgMicrosoft_NET_ILLink_Tasks)\tools\net472\ILLink.Tasks.dll</HintPath>
     </Reference>

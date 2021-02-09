@@ -17,8 +17,12 @@ namespace Xamarin.iOS.Tasks.Windows {
 
 			ArchiveRootDir = Path.Combine (expandedBasePath, DateTime.Now.ToString ("yyyy-MM-dd"));
 
-			if (!Directory.Exists (ArchiveRootDir)) {
+			try {
 				Directory.CreateDirectory (ArchiveRootDir);
+			} catch (Exception ex) {
+				Log.LogErrorFromException (ex);
+
+				return false;
 			}
 
 			return true;
