@@ -368,6 +368,7 @@ DOTNET_IOS_FILES = $(DOTNET_SHARED_FILES) FrameworkList.xml
 DOTNET_TVOS_FILES = $(TVOS_TARGETS) FrameworkList.xml
 DOTNET_WATCHOS_FILES = $(WATCH_TARGETS) FrameworkList.xml
 DOTNET_MACOS_FILES = $(MAC_TARGETS) $(MAC_BINDING_TARGETS) $(foreach dll,$(MAC_TASK_ASSEMBLIES),$(dll).dll $(dll).pdb) FrameworkList.xml
+DOTNET_MACCATALYST_FILES = $(MACCATALYST_TARGETS) FrameworkList.xml
 
 # iOS
 DOTNET_TARGETS += \
@@ -390,6 +391,14 @@ DOTNET_TARGETS += \
 
 endif
 
+# Mac Catalyst
+ifdef INCLUDE_MACCATALYST
+DOTNET_TARGETS += \
+	$(foreach target,$(DOTNET_SHARED_FILES)       ,$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Sdk/tools/msbuild/iOS/$(notdir $(target)))              \
+	$(foreach target,$(DOTNET_MACCATALYST_FILES)  ,$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Sdk/tools/msbuild/MacCatalyst/$(notdir $(target)))      \
+
+endif
+
 DOTNET_DIRECTORIES += \
 	$(DOTNET_DESTDIR)/$(IOS_NUGET).Sdk/tools/msbuild/iOS \
 	$(DOTNET_DESTDIR)/$(IOS_WINDOWS_NUGET).Sdk/tools/msbuild/iOS \
@@ -398,6 +407,8 @@ DOTNET_DIRECTORIES += \
 	$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Sdk/tools/msbuild/iOS \
 	$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Sdk/tools/msbuild/watchOS \
 	$(DOTNET_DESTDIR)/$(MACOS_NUGET).Sdk/tools/msbuild/macOS \
+	$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Sdk/tools/msbuild/iOS \
+	$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Sdk/tools/msbuild/MacCatalyst \
 
 $(DOTNET_DESTDIR)/$(MACOS_NUGET).Sdk/tools/msbuild/macOS/%: $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/msbuild/% | $(DOTNET_DIRECTORIES)
 	$(Q) $(CP) $< $@
@@ -415,6 +426,12 @@ $(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Sdk/tools/msbuild/%: $(IOS_DESTDIR)$(MONOTOUC
 	$(Q) $(CP) $< $@
 
 $(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Sdk/tools/msbuild/watchOS/%: $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/WatchOS/% | $(DOTNET_DIRECTORIES)
+	$(Q) $(CP) $< $@
+
+$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Sdk/tools/msbuild/%: $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/% | $(DOTNET_DIRECTORIES)
+	$(Q) $(CP) $< $@
+
+$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Sdk/tools/msbuild/MacCatalyst/%: $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/MacCatalyst/% | $(DOTNET_DIRECTORIES)
 	$(Q) $(CP) $< $@
 
 MSBUILD_DIRECTORIES += $(DOTNET_DIRECTORIES)
