@@ -8,6 +8,7 @@ using System.Xml;
 
 using Microsoft.Build.Framework;
 
+using Xamarin.Localization.MSBuild;
 using Xamarin.MacDev;
 using Xamarin.MacDev.Tasks;
 using Xamarin.Utils;
@@ -53,7 +54,7 @@ namespace Xamarin.iOS.Tasks {
 					var plist = PDictionary.FromFile (AppManifestPath);
 					return plist.GetUIDeviceFamily ();
 				default:
-					throw new InvalidOperationException ($"Invalid platform: {Platform}");
+					throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, Platform));
 				}
 			}
 		}
@@ -149,7 +150,7 @@ namespace Xamarin.iOS.Tasks {
 						simdevicetype = "com.apple.CoreSimulator.SimDeviceType.Apple-Watch-Series-5-40mm";
 						break;
 					default:
-						throw new InvalidOperationException ($"Invalid platform: {Platform}");
+						throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, Platform));
 					}
 				}
 				DeviceName = $":v2:runtime={simruntime},devicetype={simdevicetype}";

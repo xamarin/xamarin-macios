@@ -36,7 +36,7 @@ namespace Xamarin.MacDev.Tasks
 			case ApplePlatform.MacCatalyst:
 				return MobileProvisionPlatform.MacOS;
 			default:
-				throw new InvalidOperationException ($"Invalid platform: {Platform}");
+				throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, Platform));
 			}
 		}
 
