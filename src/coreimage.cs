@@ -1995,7 +1995,7 @@ namespace CoreImage {
 		[Export ("initWithPortaitEffectsMatte:options:")] // selector typo, rdar filled 42894821
 		IntPtr Constructor (AVPortraitEffectsMatte matte, [NullAllowed] NSDictionary options);
 
-		[TV (11,0), iOS (11,0), Mac (10, 14)]
+		[TV (12,0), iOS (12,0), Mac (10, 14)]
 		[Export ("initWithPortaitEffectsMatte:")] // selector typo, rdar filled 42894821
 		IntPtr Constructor (AVPortraitEffectsMatte matte);
 
