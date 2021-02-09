@@ -730,6 +730,11 @@ namespace Xamarin.Bundler {
 			return framework_dir;
 		}
 
+		public static void SetFrameworkCurrentDirectory (string value)
+		{
+			framework_dir = value;
+		}
+
 		// This is the 'Current/bin' directory of the installed framework
 		// For XI/XM installed from package it's one of these two:
 		//    /Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin
