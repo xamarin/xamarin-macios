@@ -15,7 +15,7 @@ namespace Xamarin.iOS.Tasks
 	public abstract class CompileAppManifestTaskCore : CompileAppManifestTaskBase
 	{
 		IPhoneDeviceType supportedDevices;
-		IPhoneSdkVersion sdkVersion;
+		AppleSdkVersion sdkVersion;
 
 		bool IsIOS { get { return Platform == ApplePlatform.iOS; } }
 
@@ -23,7 +23,7 @@ namespace Xamarin.iOS.Tasks
 		{
 			var currentSDK = Sdks.GetAppleSdk (Platform);
 
-			sdkVersion = IPhoneSdkVersion.Parse (DefaultSdkVersion);
+			sdkVersion = AppleSdkVersion.Parse (DefaultSdkVersion);
 			if (!currentSDK.SdkIsInstalled (sdkVersion, SdkIsSimulator)) {
 				Log.LogError (null, null, null, null, 0, 0, 0, 0, MSBStrings.E0013, Platform, sdkVersion);
 				return false;
@@ -295,7 +295,7 @@ namespace Xamarin.iOS.Tasks
 			var supportsIPad = (supportedDevices & IPhoneDeviceType.IPad) != 0;
 
 			// Validation...
-			if (!IsAppExtension && sdkVersion >= IPhoneSdkVersion.V3_2) {
+			if (!IsAppExtension && sdkVersion >= AppleSdkVersion.V3_2) {
 				IPhoneOrientation orientation;
 
 				if (supportsIPhone) {
