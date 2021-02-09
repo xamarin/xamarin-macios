@@ -18,7 +18,7 @@ namespace Xamarin.iOS.Tasks
 		{
 			try
 			{
-				//This task runs locally, and its porpouse is just to copy the ObjCBindingNativeFrameworks to the build server
+				//This task runs locally, and its purpose is just to copy the ObjCBindingNativeFrameworks to the build server
 				new TaskRunner(SessionId, BuildEngine4).CopyInputsAsync(this).Wait();
 			}
 			catch (Exception ex)

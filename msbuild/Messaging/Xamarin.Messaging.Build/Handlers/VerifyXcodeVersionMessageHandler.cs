@@ -33,16 +33,7 @@ namespace Xamarin.Messaging.Build {
 
 		MonoTouchSdk GetMonoTouchSdk ()
 		{
-			var sdk = default (MonoTouchSdk);
-
-			foreach (var sdkDir in MonoTouchSdk.DefaultLocations) {
-				if (MonoTouchSdk.ValidateSdkLocation (sdkDir)) {
-					sdk = new MonoTouchSdk (sdkDir);
-					break;
-				}
-			}
-
-			return sdk;
+			return Sdks.XamIOS;
 		}
 	}
 }

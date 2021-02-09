@@ -22,6 +22,6 @@ namespace Xamarin.iOS.Tasks {
 		//This stores the Asset Catalogs properties we don't support yet, 
 		//by doing this we avoid loosing any change made to the json file outside VS.
 		[JsonExtensionData]
-		IDictionary<string, JToken> UnsopportedData;
+		IDictionary<string, JToken> UnsupportedData;
 	}
 }
