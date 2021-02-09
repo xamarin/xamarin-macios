@@ -1612,7 +1612,7 @@ namespace Xamarin.Bundler {
 			case ApplePlatform.WatchOS:
 				return false;
 			default:
-				throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, "Xamarin.iOS");
+				throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
 			}
 		}
 
