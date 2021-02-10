@@ -118,7 +118,7 @@ namespace ObjCRuntime {
 		}
 
 		internal unsafe static IntPtr SetFlagsTrampoline {
-			get { return Runtime.options->Trampolines->get_flags_tramp; }
+			get { return Runtime.options->Trampolines->set_flags_tramp; }
 		}
 #endif // !COREBUILD
 	}
