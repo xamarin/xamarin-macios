@@ -124,7 +124,7 @@
 		<key>14.3</key>
 		<string>11.1</string>
 		<key>14.4</key>
-		<string>11.2</string>
+		<string>11.1</string> <!-- Yes 11.1, there is no 11.2 SDK -->
 	</dict>
 	<key>RecommendedXcodeVersion</key>
 	<string>@XCODE_VERSION@</string>
