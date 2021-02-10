@@ -8,8 +8,7 @@ using Xamarin.Messaging.Build.Client;
 using Xamarin.Messaging.Ssh;
 
 namespace Xamarin.iOS.Tasks {
-	public class CopyArchiveFiles : Task, ICancelableTask
-	{
+	public class CopyArchiveFiles : Task, ICancelableTask {
 		[Required]
 		public string ArchivePath { get; set; }
 
@@ -22,69 +21,62 @@ namespace Xamarin.iOS.Tasks {
 		[Required]
 		public string TargetPath { get; set; }
 
-		public override bool Execute()
+		public override bool Execute ()
 		{
-			if(Path.GetExtension(ArchivePath) != ".xcarchive")
-			{
-				Log.LogError(MSBStrings.E0186, ArchivePath);
+			if (Path.GetExtension (ArchivePath) != ".xcarchive") {
+				Log.LogError (MSBStrings.E0186, ArchivePath);
 
 				return false;
 			}
 
-			var client = GetBuildClientAsync().Result;
+			var client = GetBuildClientAsync ().Result;
 
-			if(!client.IsConnected)
-			{
-				Log.LogError(MSBStrings.E0177, ArchivePath);
+			if (!client.IsConnected) {
+				Log.LogError (MSBStrings.E0177, ArchivePath);
 
 				return false;
 			}
 
 			var sshCommands = client.MessagingService.Ssh.Commands;
 
-			if (sshCommands == null)
-			{
-				Log.LogError(MSBStrings.E0177, ArchivePath);
+			if (sshCommands == null) {
+				Log.LogError (MSBStrings.E0177, ArchivePath);
 
 				return false;
 			}
 
-			try
-			{
-				CopyArchiveAsync(sshCommands).Wait();
+			try {
+				CopyArchiveAsync (sshCommands).Wait ();
 
 				return true;
-			}
-			catch(Exception ex)
-			{
-				Log.LogError(MSBStrings.E0178, ArchivePath, TargetPath, ex.Message);
+			} catch (Exception ex) {
+				Log.LogError (MSBStrings.E0178, ArchivePath, TargetPath, ex.Message);
 
 				return false;
 			}
 		}
 
-		public void Cancel() => BuildConnection.CancelAsync(SessionId, BuildEngine4).Wait();
+		public void Cancel () => BuildConnection.CancelAsync (SessionId, BuildEngine4).Wait ();
 
-		async System.Threading.Tasks.Task<IBuildClient> GetBuildClientAsync()
+		async System.Threading.Tasks.Task<IBuildClient> GetBuildClientAsync ()
 		{
 			var connection = await BuildConnection
-				.GetAsync(SessionId, BuildEngine4)
-				.ConfigureAwait(continueOnCapturedContext: false);
+				.GetAsync (SessionId, BuildEngine4)
+				.ConfigureAwait (continueOnCapturedContext: false);
 
 			return connection.Client;
 		}
 
-		async System.Threading.Tasks.Task CopyArchiveAsync(ISshCommands sshCommands)
+		async System.Threading.Tasks.Task CopyArchiveAsync (ISshCommands sshCommands)
 		{
-			var serverHomeDirectory = await sshCommands.GetHomeDirectoryAsync().ConfigureAwait(continueOnCapturedContext: false);
-			var buildPath = PlatformPath.GetServerBuildPath(serverHomeDirectory, AppName, SessionId, TargetPath);
+			var serverHomeDirectory = await sshCommands.GetHomeDirectoryAsync ().ConfigureAwait (continueOnCapturedContext: false);
+			var buildPath = PlatformPath.GetServerBuildPath (serverHomeDirectory, AppName, SessionId, TargetPath);
 
-			if (!Directory.Exists(buildPath))
-			{
-				await sshCommands.CreateDirectoryAsync(buildPath).ConfigureAwait(continueOnCapturedContext: false);
+			if (!Directory.Exists (buildPath)) {
+				await sshCommands.CreateDirectoryAsync (buildPath).ConfigureAwait (continueOnCapturedContext: false);
 			}
 
-			await sshCommands.CopyDirectoryAsync(ArchivePath, buildPath).ConfigureAwait(continueOnCapturedContext: false);
+			await sshCommands.CopyDirectoryAsync (ArchivePath, buildPath).ConfigureAwait (continueOnCapturedContext: false);
 		}
 	}
 }

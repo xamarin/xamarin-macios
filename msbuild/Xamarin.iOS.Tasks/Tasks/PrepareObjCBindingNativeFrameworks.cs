@@ -6,24 +6,19 @@ using System.IO;
 using System.Linq;
 using Xamarin.Messaging.Build.Client;
 
-namespace Xamarin.iOS.Tasks
-{
-	public class PrepareObjCBindingNativeFrameworks : Task, ITaskCallback, ICancelableTask
-	{
+namespace Xamarin.iOS.Tasks {
+	public class PrepareObjCBindingNativeFrameworks : Task, ITaskCallback, ICancelableTask {
 		public string SessionId { get; set; }
 
-		public ITaskItem[] ObjCBindingNativeFrameworks { get; set; }
+		public ITaskItem [] ObjCBindingNativeFrameworks { get; set; }
 
-		public override bool Execute()
+		public override bool Execute ()
 		{
-			try
-			{
+			try {
 				//This task runs locally, and its purpose is just to copy the ObjCBindingNativeFrameworks to the build server
-				new TaskRunner(SessionId, BuildEngine4).CopyInputsAsync(this).Wait();
-			}
-			catch (Exception ex)
-			{
-				Log.LogErrorFromException(ex);
+				new TaskRunner (SessionId, BuildEngine4).CopyInputsAsync (this).Wait ();
+			} catch (Exception ex) {
+				Log.LogErrorFromException (ex);
 
 				return false;
 			}
@@ -31,28 +26,28 @@ namespace Xamarin.iOS.Tasks
 			return true;
 		}
 
-		public bool ShouldCopyToBuildServer(ITaskItem item) => true;
+		public bool ShouldCopyToBuildServer (ITaskItem item) => true;
 
-		public bool ShouldCreateOutputFile(ITaskItem item) => false;
+		public bool ShouldCreateOutputFile (ITaskItem item) => false;
 
-		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied()
+		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied ()
 		{
 			if (ObjCBindingNativeFrameworks == null)
 				yield break;
 
 			foreach (var nativeRef in ObjCBindingNativeFrameworks
-				.Where(x => Directory.Exists(x.ItemSpec))
-				.Select(x => x.ItemSpec))
-				foreach (var item in GetItemsFromNativeReference(nativeRef))
+				.Where (x => Directory.Exists (x.ItemSpec))
+				.Select (x => x.ItemSpec))
+				foreach (var item in GetItemsFromNativeReference (nativeRef))
 					yield return item;
 		}
 
-		public void Cancel() => BuildConnection.CancelAsync(SessionId, BuildEngine4).Wait();
+		public void Cancel () => BuildConnection.CancelAsync (SessionId, BuildEngine4).Wait ();
 
-		IEnumerable<TaskItem> GetItemsFromNativeReference(string folderPath)
+		IEnumerable<TaskItem> GetItemsFromNativeReference (string folderPath)
 		{
-			foreach (var file in Directory.EnumerateFiles(folderPath, "*", SearchOption.AllDirectories)
-				.Select(x => new TaskItem(x)))
+			foreach (var file in Directory.EnumerateFiles (folderPath, "*", SearchOption.AllDirectories)
+				.Select (x => new TaskItem (x)))
 				yield return file;
 		}
 	}

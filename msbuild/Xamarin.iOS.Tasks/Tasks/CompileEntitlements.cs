@@ -6,12 +6,9 @@ using Xamarin.Messaging.Build.Client;
 
 namespace Xamarin.iOS.Tasks {
 	public class CompileEntitlements : CompileEntitlementsTaskBase, ITaskCallback, ICancelableTask {
-		protected override string DefaultEntitlementsPath 
-		{
-			get 
-			{
-				if (!string.IsNullOrEmpty (SessionId)) 
-				{
+		protected override string DefaultEntitlementsPath {
+			get {
+				if (!string.IsNullOrEmpty (SessionId)) {
 					return "Entitlements.plist";
 				}
 

@@ -6,10 +6,8 @@ using System.Collections.Generic;
 using System.Xml;
 using System.Linq;
 
-namespace Xamarin.iOS.Tasks
-{
-	public class CollectMonotouchReferences : Task
-	{
+namespace Xamarin.iOS.Tasks {
+	public class CollectMonotouchReferences : Task {
 
 		const string MsBuildNamespace = "http://schemas.microsoft.com/developer/msbuild/2003";
 		const string MonoTouchUnifiedProjectGuid = "FEACFBD2-3405-455C-9665-78FE426C6842";
@@ -27,18 +25,13 @@ namespace Xamarin.iOS.Tasks
 		{
 			var result = new List<ITaskItem> ();
 
-			if (References != null)
-			{
-				foreach (var reference in References)
-				{
-					try
-					{
+			if (References != null) {
+				foreach (var reference in References) {
+					try {
 						var oldProjectSystem = false;
 
-						using (var reader = XmlReader.Create (reference.ItemSpec))
-						{
-							if (reader.ReadToDescendant ("ProjectTypeGuids", MsBuildNamespace))
-							{
+						using (var reader = XmlReader.Create (reference.ItemSpec)) {
+							if (reader.ReadToDescendant ("ProjectTypeGuids", MsBuildNamespace)) {
 								oldProjectSystem = true;
 
 								var projectTypeGuids = reader.ReadString ();
@@ -48,26 +41,21 @@ namespace Xamarin.iOS.Tasks
 
 								projectTypeGuids = projectTypeGuids.ToUpperInvariant ();
 
-								if (projectTypeGuids.Contains (MonoTouchUnifiedProjectGuid.ToUpperInvariant ()))
-								{
+								if (projectTypeGuids.Contains (MonoTouchUnifiedProjectGuid.ToUpperInvariant ())) {
 									result.Add (reference);
 								}
 							}
 						}
 
-						if (!oldProjectSystem)
-						{
+						if (!oldProjectSystem) {
 							var proj = Project.FromFile (reference.ItemSpec, new ProjectOptions ());
 							var capabilities = proj.GetItems ("ProjectCapability");
 
-							if (capabilities.Any (x => x.EvaluatedInclude == "Apple") && capabilities.Any (x => x.EvaluatedInclude == "Managed"))
-							{
+							if (capabilities.Any (x => x.EvaluatedInclude == "Apple") && capabilities.Any (x => x.EvaluatedInclude == "Managed")) {
 								result.Add (reference);
 							}
 						}
-					}
-					catch
-					{
+					} catch {
 						continue;
 					}
 				}
