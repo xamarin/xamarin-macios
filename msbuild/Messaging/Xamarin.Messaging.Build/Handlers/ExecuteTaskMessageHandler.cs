@@ -33,8 +33,7 @@ namespace Xamarin.Messaging.Build {
 					try {
 						var buildDirectory = Path.Combine (MessagingContext.GetBuildPath (), message.AppName, message.SessionId);
 
-						if (!Directory.Exists (buildDirectory))
-							Directory.CreateDirectory (buildDirectory);
+						Directory.CreateDirectory (buildDirectory);
 
 						Directory.SetCurrentDirectory (buildDirectory);
 
