@@ -420,20 +420,24 @@ function New-GitHubSummaryComment {
         } else {
             # read the json file, convert it to an object and add a line for each artifact
             $json =  Get-Content $APIDiff | ConvertFrom-Json
-            $content = Get-Content $APIDiff   
-            Write-Host "API diff json content is $content"
-            Write-Host "json is $json"
-            Write-Host "Json count $($json.Count)"
-            if ($json.Count -gt 0) {
+            # we are dealing with an object, not a dictionary
+            $hasHtmlLinks = "html" -in $json.PSobject.Properties.Name
+            $hasMDlinks = "gist" -in $json.PSobject.Properties.Name
+            if ($hasHtmlLinks -and $hasMDlinks) {
                 # build the required list
                 $sb.AppendLine("# API diff")
                 $sb.AppendLine($json.message)
                 $sb.AppendLine("<details><summary>View API diff</summary>")
                 $sb.AppendLine("") # no new line results in a bad rendering in the links
 
+                $html = $json | Select-Object -ExpandProperty "html"
+                $gist = $json | Select-Object -ExpandProperty "gist"
                 foreach ($linkPlatform in @("index","iOS", "macOS", "tvOS", "watchOS")) {
-                    $sb.AppendLine("* $linkPlatform [vsdrops]($($json.html[$linkPlatform])) [gist]($($json.gist[$linkPlatform]))")
+                    $htmlLink = $html | Select-Object -ExpandProperty $linkPlatform 
+                    $gistLink = $gist| Select-Object -ExpandProperty $linkPlatform 
+                    $sb.AppendLine("* $linkPlatform [vsdrops]($htmlLink) [gist]($gistLink)")
                 }
+
                 $sb.AppendLine("</details>")
             } else {
                 $sb.AppendLine("# API diff")
