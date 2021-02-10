@@ -175,7 +175,7 @@ namespace Xharness.Jenkins {
 			SetEnabled (files, macBindingProject, "mac-binding-project", ref jenkins.IncludeMacBindingProject);
 			SetEnabled (files, xtroPrefixes, "xtro", ref jenkins.IncludeXtro);
 			SetEnabled (files, cecilPrefixes, "cecil", ref jenkins.IncludeCecil);
-			// SetEnabled (files, dotnetFilenames, "dotnet", ref jenkins.IncludeDotNet);
+			SetEnabled (files, dotnetFilenames, "dotnet", ref jenkins.IncludeDotNet);
 		}
 
 		void SelectTestsByLabel (int pullRequest)
@@ -234,7 +234,7 @@ namespace Xharness.Jenkins {
 			SetEnabled (labels, "xtro", ref jenkins.IncludeXtro);
 			SetEnabled (labels, "cecil", ref jenkins.IncludeCecil);
 			SetEnabled (labels, "old-simulator", ref jenkins.IncludeOldSimulatorTests);
-			// SetEnabled (labels, "dotnet", ref jenkins.IncludeDotNet);
+			SetEnabled (labels, "dotnet", ref jenkins.IncludeDotNet);
 			SetEnabled (labels, "all", ref jenkins.IncludeAll);
 
 			// enabled by default
