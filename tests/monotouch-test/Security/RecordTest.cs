@@ -1,6 +1,9 @@
 // Copyright 2014-2015 Xamarin Inc. All rights reserved
 
 using System;
+using System.Diagnostics;
+
+using CoreFoundation;
 using Foundation;
 using Security;
 #if MONOMAC
@@ -165,7 +168,7 @@ namespace MonoTouchFixtures.Security {
 			SecKeyChain.Remove (rec); // it might already exists (or not)
 
 			rec = new SecRecord (SecKind.InternetPassword) {
-				Account = "AuthenticationType",
+				Account = $"{CFBundle.GetMain ().Identifier}-{GetType ().FullName}-{Process.GetCurrentProcess ().Id}",
 				ValueData = NSData.FromString ("Password"),
 				AuthenticationType = type,
 				Server = "www.xamarin.com"
@@ -173,8 +176,14 @@ namespace MonoTouchFixtures.Security {
 
 			Assert.That (SecKeyChain.Add (rec), Is.EqualTo (SecStatusCode.Success), "Add");
 
+			var query = new SecRecord (SecKind.InternetPassword) {
+				Account = rec.Account,
+				AuthenticationType = rec.AuthenticationType,
+				Server = rec.Server,
+			};
+
 			SecStatusCode code;
-			var match = SecKeyChain.QueryAsRecord (rec, out code);
+			var match = SecKeyChain.QueryAsRecord (query, out code);
 			Assert.That (code, Is.EqualTo (SecStatusCode.Success), "QueryAsRecord");
 
 			Assert.That (match.AuthenticationType, Is.EqualTo (type), "AuthenticationType");
