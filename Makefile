@@ -1,7 +1,11 @@
 TOP=.
-SUBDIRS=builds runtime fsharp src msbuild tools dotnet
+SUBDIRS=builds runtime fsharp src msbuild tools
 include $(TOP)/Make.config
 include $(TOP)/mk/versions.mk
+
+ifdef ENABLE_DOTNET
+SUBDIRS += dotnet
+endif
 
 #
 # Common
