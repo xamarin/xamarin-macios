@@ -834,6 +834,11 @@
         </value>
     </data>
 
+    <data name="W0176" xml:space="preserve">
+        <value>Conflicting '{0}' and '{1}' options. '{1}' will be ignored.
+        </value>
+    </data>
+
     <data name="E0177" xml:space="preserve">
         <value>Can't get an ISshCommands instance. Please check that a valid connection to the Mac is established.</value>
     </data>
@@ -873,11 +878,6 @@
 
     <data name="E0186" xml:space="preserve">
         <value>The provided Archive Path is not from a valid archive file (.xcarchive). Archive Path: '{0}'</value>
-    </data>
-
-    <data name="W0176" xml:space="preserve">
-        <value>Conflicting '{0}' and '{1}' options. '{1}' will be ignored.
-        </value>
     </data>
 
     <data name="E7001" xml:space="preserve">
