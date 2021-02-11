@@ -55,8 +55,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 		<_PreparedResourceRules></_PreparedResourceRules>
 		<_AppBundleName>$(AssemblyName)</_AppBundleName>
-
-		<AppBundleExtension Condition="'$(AppBundleExtension)' == ''">.app</AppBundleExtension>
 	</PropertyGroup>
 
 	<ItemDefinitionGroup>

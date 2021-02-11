@@ -48,7 +48,7 @@ static const char* registers[] =  { "rdi", "rsi", "rdx", "rcx", "r8", "r9", "err
 #endif
 
 static unsigned long 
-param_read_primitive (struct ParamIterator *it, const char **type_ptr, void *target, size_t total_size, guint32 *exception_gchandle)
+param_read_primitive (struct ParamIterator *it, const char **type_ptr, void *target, size_t total_size, GCHandle *exception_gchandle)
 {
 	// COOP: does not access managed memory: any mode.
 	char type = **type_ptr;
@@ -176,7 +176,7 @@ param_read_primitive (struct ParamIterator *it, const char **type_ptr, void *tar
 }
 
 static void
-param_iter_next (enum IteratorAction action, void *context, const char *type, size_t size, void *target, guint32 *exception_gchandle)
+param_iter_next (enum IteratorAction action, void *context, const char *type, size_t size, void *target, GCHandle *exception_gchandle)
 {
 	// COOP: does not access managed memory: any mode.
 	struct ParamIterator *it = (struct ParamIterator *) context;
@@ -227,7 +227,7 @@ param_iter_next (enum IteratorAction action, void *context, const char *type, si
 			break;
 
 		unsigned long c = param_read_primitive (it, &t, targ, size, exception_gchandle);
-		if (*exception_gchandle != 0)
+		if (*exception_gchandle != NULL)
 			return;
 		if (targ != NULL)
 			targ += c;
@@ -247,7 +247,7 @@ param_iter_next (enum IteratorAction action, void *context, const char *type, si
 }
 
 static void
-marshal_return_value (void *context, const char *type, size_t size, void *vvalue, MonoType *mtype, bool retain, MonoMethod *method, MethodDescription *desc, guint32 *exception_gchandle)
+marshal_return_value (void *context, const char *type, size_t size, void *vvalue, MonoType *mtype, bool retain, MonoMethod *method, MethodDescription *desc, GCHandle *exception_gchandle)
 {
 	// COOP: accessing managed memory (as input), so must be in unsafe mode.
 	MONO_ASSERT_GC_UNSAFE;

@@ -245,9 +245,8 @@ xamarin_dispose_helper (void *a)
 	// COOP: this method is executed by the ObjC runtime when a block must be freed.
 	// COOP: it does not touch any managed memory (except to free a gchandle), so any mode goes.
 	struct Block_literal *bl = (struct Block_literal *) a;
-	uint32_t handle = GPOINTER_TO_UINT (bl->global_handle);
-	mono_gchandle_free (handle);
-	bl->global_handle = GINT_TO_POINTER (-1);
+	xamarin_gchandle_free (bl->global_handle);
+	bl->global_handle = INVALID_GCHANDLE;
 	if (atomic_fetch_sub (&bl->descriptor->ref_count, 1) == 0) {
 		free (bl->descriptor); // allocated using Marshal.AllocHGlobal.
 	}
@@ -261,10 +260,7 @@ xamarin_copy_helper (void *dst, void *src)
 	// COOP: it does not touch any managed memory (except to allocate a gchandle), so any mode goes.
 	struct Block_literal *source = (struct Block_literal *) src;
 	struct Block_literal *target = (struct Block_literal *) dst;
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wint-to-void-pointer-cast"
-	target->global_handle = GINT_TO_POINTER (mono_gchandle_new (mono_gchandle_get_target (GPOINTER_TO_UINT (source->local_handle)), FALSE));
-#pragma clang diagnostic pop
+	target->global_handle = xamarin_gchandle_new (xamarin_gchandle_get_target (source->local_handle), FALSE);
 
 	atomic_fetch_add (&source->descriptor->ref_count, 1);
 	target->descriptor = source->descriptor;

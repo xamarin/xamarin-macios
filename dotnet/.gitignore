@@ -1,7 +1,9 @@
+tmpdir
 Microsoft.NET.Workload.*/LICENSE
 WorkloadManifest.json
 nupkgs
 Microsoft.*.Sdk/targets/Microsoft.*.Sdk.SupportedTargetPlatforms.props
 Microsoft.*.Sdk/targets/Microsoft.*.Sdk.DefaultItems.props
+Microsoft.*.Sdk/targets/Microsoft.*.Sdk.Versions.props
 _pkg
 .stamp-*

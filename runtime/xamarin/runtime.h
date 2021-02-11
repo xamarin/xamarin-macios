@@ -19,6 +19,7 @@
 #include "main.h"
 #include "mono-runtime.h"
 #include "runtime-generated.h"
+#include "trampolines.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -166,8 +167,8 @@ void			xamarin_assertion_message (const char *msg, ...) __attribute__((__noretur
 const char *	xamarin_get_bundle_path (); /* Public API */
 // Sets the bundle path (where the managed executable is). By default APP/Contents/MonoBundle.
 void			xamarin_set_bundle_path (const char *path); /* Public API */
-MonoObject *	xamarin_get_managed_object_for_ptr_fast (id self, guint32 *exception_gchandle);
-void			xamarin_check_for_gced_object (MonoObject *obj, SEL sel, id self, MonoMethod *method, guint32 *exception_gchandle);
+MonoObject *	xamarin_get_managed_object_for_ptr_fast (id self, GCHandle *exception_gchandle);
+void			xamarin_check_for_gced_object (MonoObject *obj, SEL sel, id self, MonoMethod *method, GCHandle *exception_gchandle);
 unsigned long 	xamarin_objc_type_size (const char *type);
 bool			xamarin_is_class_nsobject (MonoClass *cls);
 bool			xamarin_is_class_inativeobject (MonoClass *cls);
@@ -175,32 +176,32 @@ bool			xamarin_is_class_array (MonoClass *cls);
 bool			xamarin_is_class_nsnumber (MonoClass *cls);
 bool			xamarin_is_class_nsvalue (MonoClass *cls);
 bool			xamarin_is_class_nsstring (MonoClass *cls);
-bool			xamarin_is_class_nullable (MonoClass *cls, MonoClass **element_type, guint32 *exception_gchandle);
-MonoClass *		xamarin_get_nullable_type (MonoClass *cls, guint32 *exception_gchandle);
+bool			xamarin_is_class_nullable (MonoClass *cls, MonoClass **element_type, GCHandle *exception_gchandle);
+MonoClass *		xamarin_get_nullable_type (MonoClass *cls, GCHandle *exception_gchandle);
 MonoType *		xamarin_get_parameter_type (MonoMethod *managed_method, int index);
-MonoObject *	xamarin_get_nsobject_with_type_for_ptr (id self, bool owns, MonoType* type, guint32 *exception_gchandle);
-MonoObject *	xamarin_get_nsobject_with_type_for_ptr_created (id self, bool owns, MonoType *type, int32_t *created, guint32 *exception_gchandle);
-MonoObject *	xamarin_get_delegate_for_block_parameter (MonoMethod *method, guint32 token_ref, int par, void *nativeBlock, guint32 *exception_gchandle);
-id              xamarin_get_block_for_delegate (MonoMethod *method, MonoObject *delegate, const char *signature /* NULL allowed, but requires the dynamic registrar at runtime to compute */, guint32 token_ref /* INVALID_TOKEN_REF allowed, but requires the dynamic registrar at runtime */, guint32 *exception_gchandle);
+MonoObject *	xamarin_get_nsobject_with_type_for_ptr (id self, bool owns, MonoType* type, GCHandle *exception_gchandle);
+MonoObject *	xamarin_get_nsobject_with_type_for_ptr_created (id self, bool owns, MonoType *type, int32_t *created, GCHandle *exception_gchandle);
+MonoObject *	xamarin_get_delegate_for_block_parameter (MonoMethod *method, guint32 token_ref, int par, void *nativeBlock, GCHandle *exception_gchandle);
+id              xamarin_get_block_for_delegate (MonoMethod *method, MonoObject *delegate, const char *signature /* NULL allowed, but requires the dynamic registrar at runtime to compute */, guint32 token_ref /* INVALID_TOKEN_REF allowed, but requires the dynamic registrar at runtime */, GCHandle *exception_gchandle);
 id				xamarin_get_nsobject_handle (MonoObject *obj);
 void			xamarin_set_nsobject_handle (MonoObject *obj, id handle);
 uint8_t         xamarin_get_nsobject_flags (MonoObject *obj);
 void			xamarin_set_nsobject_flags (MonoObject *obj, uint8_t flags);
 void			xamarin_throw_nsexception (MonoException *exc);
-void			xamarin_rethrow_managed_exception (guint32 original_gchandle, guint32 *exception_gchandle);
+void			xamarin_rethrow_managed_exception (GCHandle original_gchandle, GCHandle *exception_gchandle);
 MonoException *	xamarin_create_exception (const char *msg);
-id				xamarin_get_handle (MonoObject *obj, guint32 *exception_gchandle);
+id				xamarin_get_handle (MonoObject *obj, GCHandle *exception_gchandle);
 char *			xamarin_strdup_printf (const char *msg, ...);
 void *			xamarin_calloc (size_t size);
 void			xamarin_free (void *ptr);
 MonoMethod *	xamarin_get_reflection_method_method (MonoReflectionMethod *method);
-MonoMethod *	xamarin_get_managed_method_for_token (guint32 token_ref, guint32 *exception_gchandle);
+MonoMethod *	xamarin_get_managed_method_for_token (guint32 token_ref, GCHandle *exception_gchandle);
 void			xamarin_framework_peer_lock ();
 void			xamarin_framework_peer_unlock ();
 bool			xamarin_file_exists (const char *path);
-MonoAssembly *	xamarin_open_and_register (const char *path, guint32 *exception_gchandle);
+MonoAssembly *	xamarin_open_and_register (const char *path, GCHandle *exception_gchandle);
 void			xamarin_unhandled_exception_handler (MonoObject *exc, gpointer user_data);
-void			xamarin_ftnptr_exception_handler (guint32 gchandle);
+void			xamarin_ftnptr_exception_handler (GCHandle gchandle);
 void			xamarin_create_classes ();
 const char *	xamarin_skip_encoding_flags (const char *encoding);
 void			xamarin_add_registration_map (struct MTRegistrationMap *map, bool partial);
@@ -210,20 +211,20 @@ void			xamarin_release_block_on_main_thread (void *obj);
 bool			xamarin_has_managed_ref (id self);
 bool			xamarin_has_managed_ref_safe (id self);
 void			xamarin_switch_gchandle (id self, bool to_weak);
-uint32_t		xamarin_get_gchandle (id self);
-void			xamarin_free_gchandle (id self, uint32_t gchandle);
+GCHandle		xamarin_get_gchandle (id self);
+void			xamarin_free_gchandle (id self, GCHandle gchandle);
 void			xamarin_clear_gchandle (id self);
-uint32_t		xamarin_get_gchandle_with_flags (id self);
-void			xamarin_set_gchandle (id self, uint32_t gchandle);
-void			xamarin_create_gchandle (id self, void *managed_object, uint32_t flags, bool force_weak);
+GCHandle		xamarin_get_gchandle_with_flags (id self, enum XamarinGCHandleFlags *flags);
+void			xamarin_set_gchandle_with_flags (id self, GCHandle gchandle, enum XamarinGCHandleFlags flags);
+void			xamarin_create_gchandle (id self, void *managed_object, enum XamarinGCHandleFlags flags, bool force_weak);
 void			xamarin_create_managed_ref (id self, void * managed_object, bool retain);
 void            xamarin_release_managed_ref (id self, MonoObject *managed_obj);
-void			xamarin_notify_dealloc (id self, uint32_t gchandle);
+void			xamarin_notify_dealloc (id self, GCHandle gchandle);
 
 int				xamarin_main (int argc, char *argv[], enum XamarinLaunchMode launch_mode);
 
-char *			xamarin_type_get_full_name (MonoType *type, guint32 *exception_gchandle); // return value must be freed with 'mono_free'
-char *			xamarin_class_get_full_name (MonoClass *klass, guint32 *exception_gchandle); // return value must be freed with 'mono_free'
+char *			xamarin_type_get_full_name (MonoType *type, GCHandle *exception_gchandle); // return value must be freed with 'mono_free'
+char *			xamarin_class_get_full_name (MonoClass *klass, GCHandle *exception_gchandle); // return value must be freed with 'mono_free'
 
 #if DEBUG
 void			xamarin_verify_parameter (MonoObject *obj, SEL sel, id self, id arg, unsigned long index, MonoClass *expected, MonoMethod *method);
@@ -237,10 +238,10 @@ void          	xamarin_install_unhandled_exception_hook (XamarinUnhandledExcepti
 void			xamarin_process_nsexception (NSException *exc);
 void			xamarin_process_nsexception_using_mode (NSException *ns_exception, bool throwManagedAsDefault);
 void			xamarin_process_managed_exception (MonoObject *exc);
-void			xamarin_process_managed_exception_gchandle (guint32 gchandle);
+void			xamarin_process_managed_exception_gchandle (GCHandle gchandle);
 void			xamarin_throw_product_exception (int code, const char *message);
-guint32			xamarin_create_product_exception (int code, const char *message);
-guint32			xamarin_create_product_exception_with_inner_exception (int code, guint32 inner_exception_gchandle /* will be freed */, const char *message);
+GCHandle		xamarin_create_product_exception (int code, const char *message);
+GCHandle		xamarin_create_product_exception_with_inner_exception (int code, GCHandle inner_exception_gchandle /* will be freed */, const char *message);
 NSString *		xamarin_print_all_exceptions (MonoObject *exc);
 
 id				xamarin_invoke_objc_method_implementation (id self, SEL sel, IMP xamarin_impl);
@@ -292,7 +293,8 @@ extern xamarin_register_assemblies_callback xamarin_register_assemblies;
 class XamarinObject {
 public:
 	id native_object;
-	uint32_t gc_handle;
+	GCHandle gc_handle;
+	enum XamarinGCHandleFlags flags;
 
 	~XamarinObject ();
 };
@@ -302,13 +304,15 @@ public:
 @interface XamarinAssociatedObject : NSObject {
 @public
 	id native_object;
-	uint32_t gc_handle;
+	GCHandle gc_handle;
+	enum XamarinGCHandleFlags flags;
 }
 -(void) dealloc;
 @end
 
 @interface NSObject (NonXamarinObject)
--(uint32_t) xamarinGetGCHandle;
+-(GCHandle) xamarinGetGCHandle;
+-(enum XamarinGCHandleFlags) xamarinGetFlags;
 @end
 #endif
 

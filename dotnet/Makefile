@@ -17,12 +17,13 @@ $(1)_NUGET_TARGETS = \
 	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Microsoft.$(1).Sdk.SupportedTargetPlatforms.props \
 	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Microsoft.$(1).Sdk.DefaultItems.props \
 	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Microsoft.$(1).Sdk.props \
+	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Microsoft.$(1).Sdk.Versions.props \
 	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Microsoft.$(1).Sdk.targets \
 	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Xamarin.Shared.Sdk.DefaultItems.targets \
 	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Xamarin.Shared.Sdk.TargetFrameworkInference.props \
 	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Xamarin.Shared.Sdk.props \
 	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Xamarin.Shared.Sdk.targets \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Xamarin.Shared.Sdk.Versions.props
+
 endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call DefineTargets,$(platform))))
 
@@ -46,33 +47,28 @@ CURRENT_HASH_LONG:=$(shell git log -1 --pretty=%H)
 $(DOTNET_DESTDIR)/Microsoft.%: Microsoft.% | $(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/Sdk $(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/targets)
 	$(Q) $(CP) $< $@
 
-$(DOTNET_DESTDIR)/Microsoft.iOS.Sdk/targets/%: targets/% | $(DOTNET_DESTDIR)/Microsoft.iOS.Sdk/targets
-	$(Q) $(CP) $< $@
+define CopyTargets
+$$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/%: targets/% | $$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets
+	$$(Q) $$(CP) $$< $$@
+endef
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call CopyTargets,$(platform))))
 
-$(DOTNET_DESTDIR)/Microsoft.tvOS.Sdk/targets/%: targets/% | $(DOTNET_DESTDIR)/Microsoft.tvOS.Sdk/targets
-	$(Q) $(CP) $< $@
+define VersionsTemplate
+targets/Microsoft.$(1).Sdk.Versions.props: targets/Microsoft.Sdk.Versions.template.props Makefile $(TOP)/Make.config.inc $(TOP)/.git/HEAD $(TOP)/.git/index
+	$$(Q_GEN) sed \
+		-e "s/@PLATFORM@/$(1)/g" \
+		-e "s/@NUGET_VERSION_NO_METADATA@/$$($(2)_NUGET_VERSION_NO_METADATA)/g" \
+		-e "s/@NUGET_VERSION_FULL@/$$($(2)_NUGET_VERSION_FULL)/g" \
+		-e "s/@DEFAULT_TARGET_PLATFORM_VERSION@/$$(DEFAULT_TARGET_PLATFORM_VERSION_$(2))/g" \
+		-e "s/@CURRENT_BRANCH@/$$(CURRENT_BRANCH_SED_ESCAPED)/g" \
+		-e "s/@CURRENT_HASH_LONG@/$$(CURRENT_HASH_LONG)/g" \
+		$$< > $$@.tmp
+	$$(Q) mv $$@.tmp $$@
 
-$(DOTNET_DESTDIR)/Microsoft.watchOS.Sdk/targets/%: targets/% | $(DOTNET_DESTDIR)/Microsoft.watchOS.Sdk/targets
-	$(Q) $(CP) $< $@
-
-$(DOTNET_DESTDIR)/Microsoft.macOS.Sdk/targets/%: targets/% | $(DOTNET_DESTDIR)/Microsoft.macOS.Sdk/targets
-	$(Q) $(CP) $< $@
-
-targets/%.props: targets/%.template.props Makefile $(TOP)/Make.config.inc $(TOP)/.git/HEAD $(TOP)/.git/index
-	$(Q_GEN) sed \
-		-e "s/@IOS_NUGET_VERSION_NO_METADATA@/$(IOS_NUGET_VERSION_NO_METADATA)/g" \
-		-e "s/@IOS_WINDOWS_NUGET_VERSION_NO_METADATA@/$(IOS_WINDOWS_NUGET_VERSION_NO_METADATA)/g" \
-		-e "s/@TVOS_NUGET_VERSION_NO_METADATA@/$(TVOS_NUGET_VERSION_NO_METADATA)/g" \
-		-e "s/@WATCHOS_NUGET_VERSION_NO_METADATA@/$(WATCHOS_NUGET_VERSION_NO_METADATA)/g" \
-		-e "s/@MACOS_NUGET_VERSION_NO_METADATA@/$(MACOS_NUGET_VERSION_NO_METADATA)/g" \
-		-e "s/@IOS_NUGET_VERSION_FULL@/$(IOS_NUGET_VERSION_FULL)/g" \
-		-e "s/@IOS_WINDOWS_NUGET_VERSION_FULL@/$(IOS_WINDOWS_NUGET_VERSION_FULL)/g" \
-		-e "s/@TVOS_NUGET_VERSION_FULL@/$(TVOS_NUGET_VERSION_FULL)/g" \
-		-e "s/@WATCHOS_NUGET_VERSION_FULL@/$(WATCHOS_NUGET_VERSION_FULL)/g" \
-		-e "s/@MACOS_NUGET_VERSION_FULL@/$(MACOS_NUGET_VERSION_FULL)/g" \
-		-e "s/@CURRENT_BRANCH@/$(CURRENT_BRANCH_SED_ESCAPED)/g" \
-		-e "s/@CURRENT_HASH_LONG@/$(CURRENT_HASH_LONG)/g" \
-	$< > $@
+Microsoft.$1.Sdk/targets/Microsoft.$1.Sdk.Versions.props: targets/Microsoft.$1.Sdk.Versions.props
+	$$(Q) $$(CP) $$< $$@
+endef
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call VersionsTemplate,$(platform),$(shell echo $(platform) | tr a-z A-Z))))
 
 define DefaultItems
 Microsoft.$1.Sdk/targets/Microsoft.$1.Sdk.DefaultItems.props: targets/Microsoft.Sdk.DefaultItems.template.props Makefile
@@ -109,20 +105,17 @@ endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call WorkloadTargets,$(platform),$(shell echo $(platform) | tr A-Z a-z),$($(platform)_NUGET_VERSION_NO_METADATA))))
 
 TEMPLATED_FILES = \
-	targets/Xamarin.Shared.Sdk.Versions.props \
+	$(foreach platform,$(DOTNET_PLATFORMS),Microsoft.$(platform).Sdk/targets/Microsoft.$(platform).Sdk.Versions.props) \
 	$(foreach platform,$(DOTNET_PLATFORMS),Microsoft.$(platform).Sdk/targets/Microsoft.$(platform).Sdk.SupportedTargetPlatforms.props) \
 
-nupkgs/$(IOS_NUGET).%.nupkg: CURRENT_VERSION_NO_METADATA=$(IOS_NUGET_VERSION_NO_METADATA)
 nupkgs/$(IOS_WINDOWS_NUGET).%.nupkg: CURRENT_VERSION_NO_METADATA=$(IOS_WINDOWS_NUGET_VERSION_NO_METADATA)
-nupkgs/$(TVOS_NUGET).%.nupkg: CURRENT_VERSION_NO_METADATA=$(TVOS_NUGET_VERSION_NO_METADATA)
-nupkgs/$(WATCHOS_NUGET).%.nupkg: CURRENT_VERSION_NO_METADATA=$(WATCHOS_NUGET_VERSION_NO_METADATA)
-nupkgs/$(MACOS_NUGET).%.nupkg: CURRENT_VERSION_NO_METADATA=$(MACOS_NUGET_VERSION_NO_METADATA)
-
-nupkgs/$(IOS_NUGET).%.nupkg: CURRENT_VERSION_FULL=$(IOS_NUGET_VERSION_FULL)
 nupkgs/$(IOS_WINDOWS_NUGET).%.nupkg: CURRENT_VERSION_FULL=$(IOS_WINDOWS_NUGET_VERSION_FULL)
-nupkgs/$(TVOS_NUGET).%.nupkg: CURRENT_VERSION_FULL=$(TVOS_NUGET_VERSION_FULL)
-nupkgs/$(WATCHOS_NUGET).%.nupkg: CURRENT_VERSION_FULL=$(WATCHOS_NUGET_VERSION_FULL)
-nupkgs/$(MACOS_NUGET).%.nupkg: CURRENT_VERSION_FULL=$(MACOS_NUGET_VERSION_FULL)
+
+define NupkgDefinition
+nupkgs/$($(1)_NUGET).%.nupkg: CURRENT_VERSION_NO_METADATA=$($(1)_NUGET_VERSION_NO_METADATA)
+nupkgs/$($(1)_NUGET).%.nupkg: CURRENT_VERSION_FULL=$($(1)_NUGET_VERSION_FULL)
+endef
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call NupkgDefinition,$(platform))))
 
 # Create the nuget in a temporary directory (nupkgs/)
 define CreateNuGetTemplate
@@ -161,30 +154,21 @@ $(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIM
 $(DOTNET_NUPKG_DIR)/%.nupkg: nupkgs/%.nupkg | $(DOTNET_NUPKG_DIR)
 	$(Q) $(CP) $< $@
 
-RUNTIME_PACKS_IOS = $(foreach rid,$(DOTNET_IOS_RUNTIME_IDENTIFIERS),$(DOTNET_NUPKG_DIR)/$(IOS_NUGET).Runtime.$(rid).$(IOS_NUGET_VERSION_FULL).nupkg)
-RUNTIME_PACKS_TVOS = $(foreach rid,$(DOTNET_TVOS_RUNTIME_IDENTIFIERS),$(DOTNET_NUPKG_DIR)/$(TVOS_NUGET).Runtime.$(rid).$(TVOS_NUGET_VERSION_FULL).nupkg)
-RUNTIME_PACKS_WATCHOS = $(foreach rid,$(DOTNET_WATCHOS_RUNTIME_IDENTIFIERS),$(DOTNET_NUPKG_DIR)/$(WATCHOS_NUGET).Runtime.$(rid).$(WATCHOS_NUGET_VERSION_FULL).nupkg)
-RUNTIME_PACKS_MACOS = $(foreach rid,$(DOTNET_MACOS_RUNTIME_IDENTIFIERS),$(DOTNET_NUPKG_DIR)/$(MACOS_NUGET).Runtime.$(rid).$(MACOS_NUGET_VERSION_FULL).nupkg)
-RUNTIME_PACKS = $(RUNTIME_PACKS_IOS) $(RUNTIME_PACKS_TVOS) $(RUNTIME_PACKS_WATCHOS) $(RUNTIME_PACKS_MACOS)
-
-REF_PACK_IOS = $(DOTNET_NUPKG_DIR)/$(IOS_NUGET).Ref.$(IOS_NUGET_VERSION_FULL).nupkg
-REF_PACK_TVOS = $(DOTNET_NUPKG_DIR)/$(TVOS_NUGET).Ref.$(TVOS_NUGET_VERSION_FULL).nupkg
-REF_PACK_WATCHOS = $(DOTNET_NUPKG_DIR)/$(WATCHOS_NUGET).Ref.$(WATCHOS_NUGET_VERSION_FULL).nupkg
-REF_PACK_MACOS = $(DOTNET_NUPKG_DIR)/$(MACOS_NUGET).Ref.$(MACOS_NUGET_VERSION_FULL).nupkg
-REF_PACKS = $(REF_PACK_IOS) $(REF_PACK_TVOS) $(REF_PACK_WATCHOS) $(REF_PACK_MACOS)
-
-SDK_PACK_IOS = $(DOTNET_NUPKG_DIR)/$(IOS_NUGET).Sdk.$(IOS_NUGET_VERSION_FULL).nupkg
 SDK_PACK_IOS_WINDOWS = $(DOTNET_NUPKG_DIR)/$(IOS_WINDOWS_NUGET).Sdk.$(IOS_WINDOWS_NUGET_VERSION_FULL).nupkg
-SDK_PACK_TVOS = $(DOTNET_NUPKG_DIR)/$(TVOS_NUGET).Sdk.$(TVOS_NUGET_VERSION_FULL).nupkg
-SDK_PACK_WATCHOS = $(DOTNET_NUPKG_DIR)/$(WATCHOS_NUGET).Sdk.$(WATCHOS_NUGET_VERSION_FULL).nupkg
-SDK_PACK_MACOS = $(DOTNET_NUPKG_DIR)/$(MACOS_NUGET).Sdk.$(MACOS_NUGET_VERSION_FULL).nupkg
-SDK_PACKS = $(SDK_PACK_IOS) $(SDK_PACK_IOS_WINDOWS) $(SDK_PACK_TVOS) $(SDK_PACK_WATCHOS) $(SDK_PACK_MACOS)
+SDK_PACKS += $(SDK_PACK_IOS_WINDOWS)
 
-pack-ios: $(RUNTIME_PACKS_IOS) $(REF_PACK_IOS) $(SDK_PACK_IOS)
 pack-ios-windows: $(SDK_PACK_IOS_WINDOWS)
-pack-tvos: $(RUNTIME_PACKS_TVOS) $(REF_PACK_TVOS) $(SDK_PACK_TVOS)
-pack-watchos: $(RUNTIME_PACKS_WATCHOS) $(REF_PACK_WATCHOS) $(SDK_PACK_WATCHOS)
-pack-macos: $(RUNTIME_PACKS_MACOS) $(REF_PACK_MACOS) $(SDK_PACK_MACOS)
+
+define PacksDefinitions
+RUNTIME_PACKS_$(1) = $$(foreach rid,$$(DOTNET_$(1)_RUNTIME_IDENTIFIERS),$(DOTNET_NUPKG_DIR)/$($(1)_NUGET).Runtime.$$(rid).$($(1)_NUGET_VERSION_FULL).nupkg)
+RUNTIME_PACKS += $$(RUNTIME_PACKS_$(1))
+REF_PACKS_$(1) = $(DOTNET_NUPKG_DIR)/$($(1)_NUGET).Ref.$($(1)_NUGET_VERSION_FULL).nupkg
+REF_PACKS += $$(REF_PACKS_$(1))
+SDK_PACKS_$(1) = $(DOTNET_NUPKG_DIR)/$($(1)_NUGET).Sdk.$($(1)_NUGET_VERSION_FULL).nupkg
+SDK_PACKS += $$(SDK_PACKS_$(1))
+pack-$(shell echo $(1) | tr A-Z a-z): $$(RUNTIME_PACKS_$(1)) $$(REF_PACKS_$(1)) $$(SDK_PACKS_$(1))
+endef
+$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(eval $(call PacksDefinitions,$(platform))))
 
 TARGETS += $(RUNTIME_PACKS) $(REF_PACKS) $(SDK_PACKS)
 
@@ -212,19 +196,28 @@ define CreatePackage
 # The workload package
 $(TMP_PKG_DIR)/Microsoft.$1.Workload.$2.pkg: $($(1)_NUGET_TARGETS) $(WORKLOAD_TARGETS) Makefile | $(TMP_PKG_DIR)
 	$$(Q) rm -f $$@
-	$$(Q_GEN) pkgbuild --quiet --version '$2' --root Microsoft.NET.Workload.$1 --component-plist PackageInfo.plist  --install-location /usr/local/share/dotnet/sdk-manifests/$(DOTNET6_VERSION_BAND)/Microsoft.NET.Workload.$1 --identifier com.microsoft.net.$3.workload.pkg $$@.tmp
+	$$(Q) rm -rf tmpdir/Microsoft.$1.Workload.$2/
+	$$(Q) mkdir -p tmpdir/Microsoft.$1.Workload.$2/usr/local/share/dotnet/sdk-manifests/$(DOTNET6_VERSION_BAND)/
+	$$(Q) $$(CP) -r Microsoft.NET.Workload.$1 tmpdir/Microsoft.$1.Workload.$2/usr/local/share/dotnet/sdk-manifests/$(DOTNET6_VERSION_BAND)/
+	$$(Q_GEN) pkgbuild --quiet --version '$2' --root tmpdir/Microsoft.$1.Workload.$2 --component-plist PackageInfo.plist  --install-location / --identifier com.microsoft.net.$3.workload.pkg $$@.tmp
 	$$(Q) mv $$@.tmp $$@
 
 # The sdk package
 $(TMP_PKG_DIR)/Microsoft.$1.Sdk.$2.pkg: $(REF_PACK_$(4)) | $(TMP_PKG_DIR)
 	$$(Q) rm -f $$@
-	$$(Q_GEN) pkgbuild --quiet --version '$2' --root $(DOTNET_DESTDIR)/Microsoft.$1.Sdk --component-plist PackageInfo.plist --install-location /usr/local/share/dotnet/packs/Microsoft.$1.Sdk/$2 --identifier com.microsoft.net.$3.sdk.pkg $$@.tmp
+	$$(Q) rm -rf tmpdir/Microsoft.$1.Sdk.$2/
+	$$(Q) mkdir -p tmpdir/Microsoft.$1.Sdk.$2/usr/local/share/dotnet/packs/Microsoft.$1.Sdk/$2/
+	$$(Q) $$(CP) -r $(DOTNET_DESTDIR)/Microsoft.$1.Sdk/ tmpdir/Microsoft.$1.Sdk.$2/usr/local/share/dotnet/packs/Microsoft.$1.Sdk/$2/
+	$$(Q_GEN) pkgbuild --quiet --version '$2' --root tmpdir/Microsoft.$1.Sdk.$2 --component-plist PackageInfo.plist --install-location / --identifier com.microsoft.net.$3.sdk.pkg $$@.tmp
 	$$(Q) mv $$@.tmp $$@
 
 # The ref package
 $(TMP_PKG_DIR)/Microsoft.$1.Ref.$2.pkg: $(SDK_PACK_$(4)) | $(TMP_PKG_DIR)
 	$$(Q) rm -f $$@
-	$$(Q_GEN) pkgbuild --quiet --version '$2' --root $(DOTNET_DESTDIR)/Microsoft.$1.Ref --component-plist PackageInfo.plist --install-location /usr/local/share/dotnet/packs/Microsoft.$1.Ref/$2 --identifier com.microsoft.net.$3.ref.pkg $$@.tmp
+	$$(Q) rm -rf tmpdir/Microsoft.$1.Ref.$2/
+	$$(Q) mkdir -p tmpdir/Microsoft.$1.Ref.$2/usr/local/share/dotnet/packs/Microsoft.$1.Ref/$2/
+	$$(Q) $$(CP) -r $(DOTNET_DESTDIR)/Microsoft.$1.Ref/ tmpdir/Microsoft.$1.Ref.$2/usr/local/share/dotnet/packs/Microsoft.$1.Ref/$2/
+	$$(Q_GEN) pkgbuild --quiet --version '$2' --root tmpdir/Microsoft.$1.Ref.$2 --component-plist PackageInfo.plist --install-location / --identifier com.microsoft.net.$3.ref.pkg $$@.tmp
 	$$(Q) mv $$@.tmp $$@
 
 # The final bundle package for distribution
@@ -311,7 +304,7 @@ msi: $(MSI_TARGETS)
 package: $(PACKAGE_TARGETS) $(MSI_TARGETS)
 
 ifdef ENABLE_DOTNET
-all-local:: $(TARGETS) targets/Xamarin.Shared.Sdk.Versions.props
+all-local:: $(TARGETS)
 endif
 
 # This tells NuGet to use the exact same dotnet version we've configured in Make.config

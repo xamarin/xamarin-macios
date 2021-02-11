@@ -215,6 +215,10 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<_EmbeddedResourcePrefix Condition="'$(_PlatformName)' != 'macOS'">monotouch</_EmbeddedResourcePrefix>
 
 		<_AppBundleManifestRelativePath Condition="'$(_PlatformName)' == 'macOS' Or '$(_IsMacCatalyst)' == 'true'">Contents/</_AppBundleManifestRelativePath>
+
+		<AppBundleExtension Condition="'$(AppBundleExtension)' == '' And '$(IsAppExtension)' == 'true' And '$(IsXpcService)' == 'true'">.xpc</AppBundleExtension>
+		<AppBundleExtension Condition="'$(AppBundleExtension)' == '' And '$(IsAppExtension)' == 'true'">.appex</AppBundleExtension>
+		<AppBundleExtension Condition="'$(AppBundleExtension)' == ''">.app</AppBundleExtension>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(IsBindingProject)' == 'true'">
