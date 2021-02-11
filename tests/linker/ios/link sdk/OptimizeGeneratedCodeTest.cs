@@ -63,7 +63,7 @@ namespace Linker.Shared {
 		// it's pretty likely to crash if the IL was badly rewritten so running
 		// them makes me feel better ;-)
 		
-#if !__TVOS__ && !__WATCHOS__
+#if !__TVOS__ && !__WATCHOS__ && !__MACCATALYST__
 		[Test]
 		public void IsNewRefcountEnabled ()
 		{

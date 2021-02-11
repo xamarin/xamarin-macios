@@ -26,6 +26,7 @@
 using System;
 using System.IO;
 
+using Xamarin.Localization.MSBuild;
 using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks
@@ -65,7 +66,7 @@ namespace Xamarin.MacDev.Tasks
 			case ApplePlatform.MacCatalyst:
 				return ManifestKeys.LSMinimumSystemVersion;
 			default:
-				throw new InvalidOperationException ($"Invalid platform: {platform}");
+				throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, platform));
 			}
 		}
 
@@ -104,7 +105,7 @@ namespace Xamarin.MacDev.Tasks
 			case ApplePlatform.MacCatalyst:
 				return Path.Combine (appBundlePath, "Contents", "Info.plist");
 			default:
-				throw new InvalidOperationException ($"Invalid platform: {platform}");
+				throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, platform));
 			}
 		}
 	}

@@ -115,6 +115,8 @@ using CoreGraphics;
 using UIKit;
 #endif
 
+#nullable enable
+
 namespace CoreImage {
 	public partial class CIFilter {
 		[iOS (8,0)]
@@ -132,7 +134,7 @@ namespace CoreImage {
 			return _FilterNamesInCategories (categories);
 		}
 
-		public NSObject this [NSString key] {
+		public NSObject? this [NSString key] {
 			get {
 				return ValueForKey (key);
 			}
@@ -141,13 +143,13 @@ namespace CoreImage {
 			}
 		}
 
-		internal NSObject ValueForKey (string key)
+		internal NSObject? ValueForKey (string key)
 		{
 			using (var nskey = new NSString (key))
 				return ValueForKey (nskey);
 		}
 
-		internal void SetValue (string key, NSObject value)
+		internal void SetValue (string key, NSObject? value)
 		{
 			using (var nskey = new NSString (key)){
 				SetValueForKey (value, nskey);
@@ -201,7 +203,7 @@ namespace CoreImage {
 			}
 		}
 
-		internal T Get<T> (string key) where T : class
+		internal T? Get<T> (string key) where T : class
 		{
 			using (var nskey = new NSString (key)) {
 				return ValueForKey (nskey) as T;
@@ -269,7 +271,7 @@ namespace CoreImage {
 		}
 
 #if MONOMAC
-		public virtual CIImage OutputImage {
+		public virtual CIImage? OutputImage {
 			get { return ValueForKey (CIFilterOutputKey.Image) as CIImage; }
 		}
 #endif
@@ -682,7 +684,7 @@ namespace CoreImage {
 		// NSUnknownKeyException [<CICheckerboardGenerator 0x1648cb20> valueForUndefinedKey:]: this class is not key value coding-compliant for the key inputImage.
 		// and those will crash (on devices) if the property is called - and that includes displaying it in the debugger
 		[Obsolete ("Use 'InputImage' instead. If not available then the filter does not support it.")]
-		public CIImage Image {
+		public CIImage? Image {
 			get {
 				return SupportsInputImage ? ValueForKey (CIFilterInputKey.Image) as CIImage : null;
 			}

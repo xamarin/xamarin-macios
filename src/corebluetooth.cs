@@ -610,7 +610,7 @@ namespace CoreBluetooth {
 
 		[NoTV]
 		[NoWatch]
-		[Availability (Introduced = Platform.iOS_6_0, Deprecated = Platform.iOS_7_0, Obsoleted = Platform.iOS_8_4)]
+		[Availability (Deprecated = Platform.iOS_7_0, Obsoleted = Platform.iOS_8_4)]
 		[Export ("peripheralDidInvalidateServices:")]
 		void InvalidatedService (CBPeripheral peripheral);	
 

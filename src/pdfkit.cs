@@ -554,14 +554,17 @@ namespace PdfKit {
 		IntPtr Constructor (CGRect bounds);
 
 		[Export ("page")]
+		[NullAllowed]
 		PdfPage Page { get; set; }
 
 #if XAMCORE_4_0
 		[Protected]
 		[Export ("type")]
+		[NullAllowed]
 		NSString Type { get; set; }
 #else
 		[Export ("type")]
+		[NullAllowed]
 		string Type { get; set; }
 #endif
 
@@ -569,12 +572,15 @@ namespace PdfKit {
 		CGRect Bounds { get; set; }
 		
 		[Export ("modificationDate")]
+		[NullAllowed]
 		NSDate ModificationDate { get; set; }
 
 		[Export ("userName")]
+		[NullAllowed]
 		string UserName { get; set; }
 
 		[Export ("popup")]
+		[NullAllowed]
 #if MONOMAC
 		PdfAnnotationPopup Popup { get; set; }
 #else
@@ -588,6 +594,7 @@ namespace PdfKit {
 		bool ShouldPrint { get; set; }
 
 		[Export ("border")]
+		[NullAllowed]
 		PdfBorder Border { get; set; }
 
 		[Export ("color")]
@@ -600,11 +607,13 @@ namespace PdfKit {
 		PdfAction MouseUpAction { get; set; }
 
 		[Export ("contents")]
+		[NullAllowed]
 		string Contents { get; set; }
 		
 		[NoiOS]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("toolTip")]
+		[NullAllowed]
 		string ToolTip { get; }
 
 		[Export ("hasAppearanceStream")]
@@ -1087,6 +1096,7 @@ namespace PdfKit {
 		IntPtr Constructor (PdfPage page, CGPoint point);
 
 		[Export ("page")]
+		[NullAllowed]
 		PdfPage Page { get; }
 
 		[Export ("point")]
@@ -1160,20 +1170,23 @@ namespace PdfKit {
 		IntPtr Constructor (NSData data);
 
 		[Export ("documentURL")]
+		[NullAllowed]
 		NSUrl DocumentUrl { get; }
 
 		[Export ("documentRef")]
+		[NullAllowed]
 		CGPDFDocument Document { get; }
 
 		[Advice ("Use the strongly typed '[Get|Set]DocumentAttributes' instead.")]
 		[Export ("documentAttributes", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		NSDictionary DocumentAttributes { get; set; }
 
 		[Wrap ("new PdfDocumentAttributes (DocumentAttributes)")]
 		PdfDocumentAttributes GetDocumentAttributes ();
 
-		[Wrap ("DocumentAttributes = attributes.GetDictionary ()!")]
-		void SetDocumentAttributes (PdfDocumentAttributes attributes);
+		[Wrap ("DocumentAttributes = attributes?.GetDictionary ()")]
+		void SetDocumentAttributes ([NullAllowed] PdfDocumentAttributes attributes);
 
 #if XAMCORE_4_0 || IOS
 		[Export ("majorVersion")]
@@ -1228,6 +1241,7 @@ namespace PdfKit {
 		PdfDocumentPermissions PermissionsStatus { get; }
 
 		[Export ("string")]
+		[NullAllowed]
 		string Text { get; }
 		
 		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
@@ -1238,16 +1252,18 @@ namespace PdfKit {
 		PdfDocumentDelegate Delegate { get; set; }
 		
 		[Export ("dataRepresentation")]
+		[return: NullAllowed]
 		NSData GetDataRepresentation ();
 
 		[Export ("dataRepresentationWithOptions:")]
+		[return: NullAllowed]
 		NSData GetDataRepresentation (NSDictionary options);
 
 		[Export ("writeToFile:")]
 		bool Write (string path);
 
 		[Export ("writeToFile:withOptions:")]
-		bool Write (string path, NSDictionary options);
+		bool Write (string path, [NullAllowed] NSDictionary options);
 
 		[Mac (10,13)]
 		[Wrap ("Write (path, options.GetDictionary ()!)")]
@@ -1257,7 +1273,7 @@ namespace PdfKit {
 		bool Write (NSUrl url);
 
 		[Export ("writeToURL:withOptions:")]
-		bool Write (NSUrl url, NSDictionary options);
+		bool Write (NSUrl url, [NullAllowed] NSDictionary options);
 
 		[Mac (10,13)]
 		[Wrap ("Write (url, options.GetDictionary ()!)")]
@@ -1268,12 +1284,14 @@ namespace PdfKit {
 		PdfOutline OutlineRoot { get; set; }
 
 		[Export ("outlineItemForSelection:")]
+		[return: NullAllowed]
 		PdfOutline OutlineItem (PdfSelection selection);
 
 		[Export ("pageCount")]
 		nint PageCount { get; }
 
 		[Export ("pageAtIndex:")]
+		[return: NullAllowed]
 		PdfPage GetPage (nint index);
 
 		[Export ("indexForPage:")]
@@ -1306,29 +1324,35 @@ namespace PdfKit {
 		[Export ("beginFindString:withOptions:")]
 #if MONOMAC && !XAMCORE_4_0
 		[Obsolete ("Use 'FindAsync (string, NSStringCompareOptions)' instead.")]
+		[return: NullAllowed]
 		void FindAsync (string text, nint options);
 
 		[Wrap ("FindAsync (text: text, options: (nint) (int) compareOptions)", IsVirtual = true)]
 #endif
+		[return: NullAllowed]
 		void FindAsync (string text, NSStringCompareOptions compareOptions);
 
 		[Export ("beginFindStrings:withOptions:")]
 #if MONOMAC && !XAMCORE_4_0
 		[Obsolete ("Use 'FindAsync (string [], NSStringCompareOptions)' instead.")]
+		[return: NullAllowed]
 		void FindAsync (string [] text, nint options);
 
 		[Wrap ("FindAsync (text: text, options: (nint) (int) compareOptions)", IsVirtual = true)]
 #endif
+		[return: NullAllowed]
 		void FindAsync (string [] text, NSStringCompareOptions compareOptions);
 
 		[Export ("findString:fromSelection:withOptions:")]
 #if MONOMAC && !XAMCORE_4_0
 		[Obsolete ("Use 'Find (string, PdfSelection, NSStringCompareOptions)' instead.")]
-		PdfSelection Find (string text, PdfSelection selection, nint options);
+		[return: NullAllowed]
+		PdfSelection Find (string text, [NullAllowed] PdfSelection selection, nint options);
 
 		[Wrap ("Find (text: text, selection: selection, options: (nint) (int) compareOptions)", IsVirtual = true)]
 #endif
-		PdfSelection Find (string text, PdfSelection selection, NSStringCompareOptions compareOptions);
+		[return: NullAllowed]
+		PdfSelection Find (string text, [NullAllowed] PdfSelection selection, NSStringCompareOptions compareOptions);
 
 		[Export ("isFinding")]
 		bool IsFinding { get; }
@@ -1337,12 +1361,15 @@ namespace PdfKit {
 		void CancelFind ();
 
 		[Export ("selectionForEntireDocument")]
+		[return: NullAllowed]
 		PdfSelection SelectEntireDocument ();
 
 		[Export ("selectionFromPage:atPoint:toPage:atPoint:")]
+		[return: NullAllowed]
 		PdfSelection GetSelection (PdfPage startPage, CGPoint startPoint, PdfPage endPage, CGPoint endPoint);
 
 		[Export ("selectionFromPage:atCharacterIndex:toPage:atCharacterIndex:")]
+		[return: NullAllowed]
 		PdfSelection GetSelection (PdfPage startPage, nint startCharIndex, PdfPage endPage, nint endCharIndex);
 
 		[NoiOS]
@@ -1411,6 +1438,7 @@ namespace PdfKit {
 		IntPtr Constructor ();
 
 		[Export ("document")]
+		[NullAllowed]
 		PdfDocument Document { get; }
 
 		[Export ("parent"), NullAllowed]
@@ -1433,6 +1461,7 @@ namespace PdfKit {
 		void RemoveFromParent ();
 
 		[Export ("label")]
+		[NullAllowed]
 		string Label { get; set; }
 
 		[Export ("isOpen")]
@@ -1527,9 +1556,11 @@ namespace PdfKit {
 		nint CharacterCount { get; }
 
 		[Export ("string")]
+		[NullAllowed]
 		string Text { get; }
 
 		[Export ("attributedString")]
+		[NullAllowed]
 		NSAttributedString AttributedString { get; }
 
 		[Export ("characterBoundsAtIndex:")]
@@ -1650,9 +1681,11 @@ namespace PdfKit {
 
 		[NoiOS]
 		[Export ("labelFont")]
+		[NullAllowed]
 		NSFont LabelFont { get; set; }
 
 		[Export ("backgroundColor", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		NSColor BackgroundColor { get; set; }
 
 		[NoiOS]
@@ -1687,45 +1720,47 @@ namespace PdfKit {
 	
 		//Verify
 		[Export ("goToFirstPage:")]
-		void GoToFirstPage (NSObject sender);
+		void GoToFirstPage ([NullAllowed] NSObject sender);
 
 		[Export ("canGoToLastPage")]
 		bool CanGoToLastPage { get; }
 
 		[Export ("goToLastPage:")]
-		void GoToLastPage (NSObject sender);
+		void GoToLastPage ([NullAllowed] NSObject sender);
 
 		[Export ("canGoToNextPage")]
 		bool CanGoToNextPage { get; }
 
 		[Export ("goToNextPage:")]
-		void GoToNextPage (NSObject sender);
+		void GoToNextPage ([NullAllowed] NSObject sender);
 
 		[Export ("canGoToPreviousPage")]
 		bool CanGoToPreviousPage { get; }
 
 		[Export ("goToPreviousPage:")]
-		void GoToPreviousPage (NSObject sender);
+		void GoToPreviousPage ([NullAllowed] NSObject sender);
 
 		[Export ("canGoBack")]
 		bool CanGoBack { get; }
 
 		[Export ("goBack:")]
-		void GoBack (NSObject sender);
+		void GoBack ([NullAllowed] NSObject sender);
 
 		[Export ("canGoForward")]
 		bool CanGoForward { get; }
 
 		[Export ("goForward:")]
-		void GoForward (NSObject sender);
+		void GoForward ([NullAllowed] NSObject sender);
 
 		[Export ("currentPage")]
+		[NullAllowed]
 		PdfPage CurrentPage { get; }
 
 		[Export ("goToPage:")]
 		void GoToPage (PdfPage page);
 
 		[Export ("currentDestination")]
+		[NullAllowed]
 		PdfDestination CurrentDestination { get; }
 
 		[Export ("goToDestination:")]
@@ -1813,13 +1848,13 @@ namespace PdfKit {
 		nfloat MaxScaleFactor { get; set; }
 
 		[Export ("zoomIn:")]
-		void ZoomIn (NSObject sender);
+		void ZoomIn ([NullAllowed] NSObject sender);
 
 		[Export ("canZoomIn")]
 		bool CanZoomIn { get; }
 
 		[Export ("zoomOut:")]
-		void ZoomOut (NSObject sender);
+		void ZoomOut ([NullAllowed] NSObject sender);
 
 		[Export ("canZoomOut")]
 		bool CanZoomOut { get; }
@@ -1846,10 +1881,11 @@ namespace PdfKit {
 		void PerformAction (PdfAction action);
 
 		[Export ("currentSelection")]
+		[NullAllowed]
 		PdfSelection CurrentSelection { get; set; }
 
 		[Export ("setCurrentSelection:animate:")]
-		void SetCurrentSelection (PdfSelection selection, bool animate);
+		void SetCurrentSelection ([NullAllowed] PdfSelection selection, bool animate);
 
 		[Export ("clearSelection")]
 		void ClearSelection ();
@@ -1858,9 +1894,10 @@ namespace PdfKit {
 		void SelectAll ([NullAllowed] NSObject sender);
 
 		[Export ("scrollSelectionToVisible:")]
-		void ScrollSelectionToVisible (NSObject sender);
+		void ScrollSelectionToVisible ([NullAllowed] NSObject sender);
 	
 		[Export ("highlightedSelections")]
+		[NullAllowed]
 		PdfSelection [] HighlightedSelections { get; set; }
 
 		[NoiOS]
@@ -1898,6 +1935,7 @@ namespace PdfKit {
 		void Print (NSPrintInfo printInfo, bool doRotate, PdfPrintScalingMode scaleMode);
 
 		[Export ("pageForPoint:nearest:")]
+		[return: NullAllowed]
 		PdfPage GetPage (CGPoint point, bool nearest);
 
 		[Export ("convertPoint:toPage:")]
@@ -1913,6 +1951,7 @@ namespace PdfKit {
 		CGRect ConvertRectangleFromPage (CGRect rect, PdfPage page);
 
 		[Export ("documentView")]
+		[NullAllowed]
 		NSView DocumentView { get; }
 
 		[Export ("layoutDocumentView")]

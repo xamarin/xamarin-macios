@@ -8585,7 +8585,7 @@ namespace UIKit {
 
 		[NoTV]
 		[Export ("adjustsLetterSpacingToFitWidth")]
-		[Availability (Introduced = Platform.iOS_6_0, Deprecated = Platform.iOS_7_0, Message = "Use 'NSKernAttributeName' instead.")]
+		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'NSKernAttributeName' instead.")]
 		bool AdjustsLetterSpacingToFitWidth { get; set;  }
 
 		[Export ("minimumScaleFactor")]

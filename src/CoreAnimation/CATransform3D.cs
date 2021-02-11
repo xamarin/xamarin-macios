@@ -13,6 +13,8 @@ using System.Runtime.InteropServices;
 using ObjCRuntime;
 using CoreGraphics;
 
+#nullable enable
+
 namespace CoreAnimation {
 
 	// CATransform3D.h
@@ -51,7 +53,7 @@ namespace CoreAnimation {
 			return CATransform3DEqualToTransform (this, other);
 		}
 
-		public override bool Equals (object other)
+		public override bool Equals (object? other)
 		{
 			if (!(other is CATransform3D))
 				return false;

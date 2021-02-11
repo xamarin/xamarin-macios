@@ -18,7 +18,6 @@ Copyright (C) 2014-2016 Xamarin. All rights reserved.
 	<PropertyGroup>
 		<IsAppExtension>True</IsAppExtension>
 		<IsWatchExtension>False</IsWatchExtension>
-		<AppBundleExtension>.appex</AppBundleExtension>
 	</PropertyGroup>
 
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.iOS.Common.targets" />

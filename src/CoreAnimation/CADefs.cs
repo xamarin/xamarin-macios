@@ -36,6 +36,8 @@ using ObjCRuntime;
 using Foundation;
 using CoreGraphics;
 
+#nullable enable
+
 namespace CoreAnimation {
 
 	partial class CAAnimation {

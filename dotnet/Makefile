@@ -192,19 +192,28 @@ define CreatePackage
 # The workload package
 $(TMP_PKG_DIR)/Microsoft.$1.Workload.$2.pkg: $($(1)_NUGET_TARGETS) $(WORKLOAD_TARGETS) Makefile | $(TMP_PKG_DIR)
 	$$(Q) rm -f $$@
-	$$(Q_GEN) pkgbuild --quiet --version '$2' --root Microsoft.NET.Workload.$1 --component-plist PackageInfo.plist  --install-location /usr/local/share/dotnet/sdk-manifests/$(DOTNET6_VERSION_BAND)/Microsoft.NET.Workload.$1 --identifier com.microsoft.net.$3.workload.pkg $$@.tmp
+	$$(Q) rm -rf tmpdir/Microsoft.$1.Workload.$2/
+	$$(Q) mkdir -p tmpdir/Microsoft.$1.Workload.$2/usr/local/share/dotnet/sdk-manifests/$(DOTNET6_VERSION_BAND)/
+	$$(Q) $$(CP) -r Microsoft.NET.Workload.$1 tmpdir/Microsoft.$1.Workload.$2/usr/local/share/dotnet/sdk-manifests/$(DOTNET6_VERSION_BAND)/
+	$$(Q_GEN) pkgbuild --quiet --version '$2' --root tmpdir/Microsoft.$1.Workload.$2 --component-plist PackageInfo.plist  --install-location / --identifier com.microsoft.net.$3.workload.pkg $$@.tmp
 	$$(Q) mv $$@.tmp $$@
 
 # The sdk package
 $(TMP_PKG_DIR)/Microsoft.$1.Sdk.$2.pkg: $(REF_PACK_$(4)) | $(TMP_PKG_DIR)
 	$$(Q) rm -f $$@
-	$$(Q_GEN) pkgbuild --quiet --version '$2' --root $(DOTNET_DESTDIR)/Microsoft.$1.Sdk --component-plist PackageInfo.plist --install-location /usr/local/share/dotnet/packs/Microsoft.$1.Sdk/$2 --identifier com.microsoft.net.$3.sdk.pkg $$@.tmp
+	$$(Q) rm -rf tmpdir/Microsoft.$1.Sdk.$2/
+	$$(Q) mkdir -p tmpdir/Microsoft.$1.Sdk.$2/usr/local/share/dotnet/packs/Microsoft.$1.Sdk/$2/
+	$$(Q) $$(CP) -r $(DOTNET_DESTDIR)/Microsoft.$1.Sdk/ tmpdir/Microsoft.$1.Sdk.$2/usr/local/share/dotnet/packs/Microsoft.$1.Sdk/$2/
+	$$(Q_GEN) pkgbuild --quiet --version '$2' --root tmpdir/Microsoft.$1.Sdk.$2 --component-plist PackageInfo.plist --install-location / --identifier com.microsoft.net.$3.sdk.pkg $$@.tmp
 	$$(Q) mv $$@.tmp $$@
 
 # The ref package
 $(TMP_PKG_DIR)/Microsoft.$1.Ref.$2.pkg: $(SDK_PACK_$(4)) | $(TMP_PKG_DIR)
 	$$(Q) rm -f $$@
-	$$(Q_GEN) pkgbuild --quiet --version '$2' --root $(DOTNET_DESTDIR)/Microsoft.$1.Ref --component-plist PackageInfo.plist --install-location /usr/local/share/dotnet/packs/Microsoft.$1.Ref/$2 --identifier com.microsoft.net.$3.ref.pkg $$@.tmp
+	$$(Q) rm -rf tmpdir/Microsoft.$1.Ref.$2/
+	$$(Q) mkdir -p tmpdir/Microsoft.$1.Ref.$2/usr/local/share/dotnet/packs/Microsoft.$1.Ref/$2/
+	$$(Q) $$(CP) -r $(DOTNET_DESTDIR)/Microsoft.$1.Ref/ tmpdir/Microsoft.$1.Ref.$2/usr/local/share/dotnet/packs/Microsoft.$1.Ref/$2/
+	$$(Q_GEN) pkgbuild --quiet --version '$2' --root tmpdir/Microsoft.$1.Ref.$2 --component-plist PackageInfo.plist --install-location / --identifier com.microsoft.net.$3.ref.pkg $$@.tmp
 	$$(Q) mv $$@.tmp $$@
 
 # The final bundle package for distribution
