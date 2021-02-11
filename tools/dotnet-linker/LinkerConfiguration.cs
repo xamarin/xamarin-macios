@@ -17,9 +17,11 @@ using ObjCRuntime;
 namespace Xamarin.Linker {
 	public class LinkerConfiguration {
 		public List<Abi> Abis;
+		public string AOTOutputDirectory;
 		public string CacheDirectory { get; private set; }
 		public Version DeploymentTarget { get; private set; }
 		public HashSet<string> FrameworkAssemblies { get; private set; } = new HashSet<string> ();
+		public string IntermediateLinkDir { get; private set; }
 		public string ItemsDirectory { get; private set; }
 		public bool IsSimulatorBuild { get; private set; }
 		public LinkMode LinkMode => Application.LinkMode;
@@ -98,6 +100,9 @@ namespace Xamarin.Linker {
 					// This is the AssemblyName MSBuild property for the main project (which is also the root/entry assembly)
 					Application.RootAssemblies.Add (value);
 					break;
+				case "AOTOutputDirectory":
+					AOTOutputDirectory = value;
+					break;
 				case "CacheDirectory":
 					CacheDirectory = value;
 					break;
@@ -111,6 +116,13 @@ namespace Xamarin.Linker {
 					break;
 				case "FrameworkAssembly":
 					FrameworkAssemblies.Add (value);
+					break;
+				case "IntermediateLinkDir":
+					IntermediateLinkDir = value;
+					break;
+				case "Interpreter":
+					if (!string.IsNullOrEmpty (value))
+						Application.ParseInterpreter (value);
 					break;
 				case "ItemsDirectory":
 					ItemsDirectory = value;
@@ -232,6 +244,7 @@ namespace Xamarin.Linker {
 				throw ErrorHelper.CreateError (99, "Inconsistent platforms. TargetFramework={0}, Platform={1}", Driver.TargetFramework.Platform, Platform);
 
 			Application.InitializeCommon ();
+			Application.Initialize ();
 		}
 
 		public void Write ()
@@ -239,10 +252,13 @@ namespace Xamarin.Linker {
 			if (Verbosity > 0) {
 				Console.WriteLine ($"LinkerConfiguration:");
 				Console.WriteLine ($"    ABIs: {string.Join (", ", Abis.Select (v => v.AsArchString ()))}");
+				Console.WriteLine ($"    AOTOutputDirectory: {AOTOutputDirectory}");
 				Console.WriteLine ($"    AssemblyName: {Application.AssemblyName}");
 				Console.WriteLine ($"    CacheDirectory: {CacheDirectory}");
 				Console.WriteLine ($"    Debug: {Application.EnableDebug}");
 				Console.WriteLine ($"    DeploymentTarget: {DeploymentTarget}");
+				Console.WriteLine ($"    IntermediateLinkDir: {IntermediateLinkDir}");
+				Console.WriteLine ($"    InterpretedAssemblies: {string.Join (", ", Application.InterpretedAssemblies)}");
 				Console.WriteLine ($"    ItemsDirectory: {ItemsDirectory}");
 				Console.WriteLine ($"    {FrameworkAssemblies.Count} framework assemblies:");
 				foreach (var fw in FrameworkAssemblies.OrderBy (v => v))
@@ -257,6 +273,7 @@ namespace Xamarin.Linker {
 				Console.WriteLine ($"    PlatformAssembly: {PlatformAssembly}.dll");
 				Console.WriteLine ($"    Registrar: {Application.Registrar} (Options: {Application.RegistrarOptions})");
 				Console.WriteLine ($"    SdkVersion: {SdkVersion}");
+				Console.WriteLine ($"    UseInterpreter: {Application.UseInterpreter}");
 				Console.WriteLine ($"    Verbosity: {Verbosity}");
 			}
 		}

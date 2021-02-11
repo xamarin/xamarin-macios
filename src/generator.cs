@@ -89,7 +89,7 @@ public static class ReflectionExtensions {
 	// of [NoiOS] or [NoMac] are applied.
 	//
 	// This needs to merge, because we might have multiple attributes in
-	// use, for example, the availability (iOS (6,0)) and the fact that this
+	// use, for example, the availability (iOS (7,0)) and the fact that this
 	// is not available on Mac (NoMac).
 	//
 	public static bool IsUnavailable (this ICustomAttributeProvider provider, Generator generator)
@@ -2761,7 +2761,7 @@ public partial class Generator : IMemberGatherer {
 				print ("[Preserve (Conditional = true)]");
 				print ("public {0} () : base (new NSMutableDictionary ()) {{}}\n", typeName);
 				print ("[Preserve (Conditional = true)]");
-				print ("public {0} (NSDictionary dictionary) : base (dictionary) {{}}\n", typeName);
+				print ("public {0} (NSDictionary? dictionary) : base (dictionary) {{}}\n", typeName);
 
 				foreach (var pi in dictType.GatherProperties (this)) {
 					if (pi.IsUnavailable (this))

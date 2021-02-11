@@ -19,7 +19,6 @@ Copyright (C) 2015-2016 Xamarin. All rights reserved.
 		<IsAppExtension>True</IsAppExtension>
 		<IsWatchExtension>True</IsWatchExtension>
 		<IOSDebugOverWiFi>True</IOSDebugOverWiFi>
-		<AppBundleExtension>.appex</AppBundleExtension>
 		<MtouchHttpClientHandler Condition="'$(MtouchHttpClientHandler)' == ''">NSUrlSessionHandler</MtouchHttpClientHandler>
 
 		<!-- This must be set before importing Microsoft.CSharp.targets -->

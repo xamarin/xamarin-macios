@@ -33,7 +33,7 @@ namespace Xamarin.MacDev.Tasks {
 				case ApplePlatform.MacOSX:
 					return "Xamarin.Mac";
 				default:
-					throw new InvalidOperationException ($"Invalid platform: {Platform}");
+					throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, Platform));
 				}
 			}
 		}
@@ -74,7 +74,7 @@ namespace Xamarin.MacDev.Tasks {
 				case ApplePlatform.MacCatalyst:
 					return "MacCatalyst";
 				default:
-					throw new InvalidOperationException ($"Invalid platform: {Platform}");
+					throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, Platform));
 				}
 			}
 		}
@@ -93,7 +93,7 @@ namespace Xamarin.MacDev.Tasks {
 			case ApplePlatform.MacCatalyst:
 				return "MacCatalyst";
 			default:
-				throw new InvalidOperationException ($"Invalid platform: {Platform}");
+				throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, Platform));
 			}
 		}
 

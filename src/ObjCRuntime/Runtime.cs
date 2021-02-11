@@ -116,6 +116,8 @@ namespace ObjCRuntime {
 #endif
 			public IntPtr get_gchandle_tramp;
 			public IntPtr set_gchandle_tramp;
+			public IntPtr get_flags_tramp;
+			public IntPtr set_flags_tramp;
 		}
 
 		[Flags]
@@ -332,10 +334,10 @@ namespace ObjCRuntime {
 			return objc_exception_mode;
 		}
 
-		static MarshalManagedExceptionMode OnMarshalManagedException (int exception_handle)
+		static MarshalManagedExceptionMode OnMarshalManagedException (IntPtr exception_handle)
 		{
 			if (MarshalManagedException != null) {
-				var exception = GCHandle.FromIntPtr (new IntPtr (exception_handle)).Target as Exception;
+				var exception = GCHandle.FromIntPtr (exception_handle).Target as Exception;
 				var args = new MarshalManagedExceptionEventArgs ()
 				{
 					Exception = exception,
@@ -408,13 +410,13 @@ namespace ObjCRuntime {
 #endif
 		}
 
-		static void RethrowManagedException (uint exception_gchandle)
+		static void RethrowManagedException (IntPtr exception_gchandle)
 		{
 			var e = (Exception) GCHandle.FromIntPtr ((IntPtr) exception_gchandle).Target;
 			System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture (e).Throw ();
 		}
 
-		static int CreateNSException (IntPtr ns_exception)
+		static IntPtr CreateNSException (IntPtr ns_exception)
 		{
 			Exception ex;
 #if MONOMAC
@@ -422,18 +424,18 @@ namespace ObjCRuntime {
 #else
 			ex = new MonoTouchException (Runtime.GetNSObject<NSException> (ns_exception));
 #endif
-			return GCHandle.ToIntPtr (GCHandle.Alloc (ex)).ToInt32 ();
+			return GCHandle.ToIntPtr (GCHandle.Alloc (ex));
 		}
 
-		static int CreateRuntimeException (int code, IntPtr message)
+		static IntPtr CreateRuntimeException (int code, IntPtr message)
 		{
 			var ex = ErrorHelper.CreateError (code, Marshal.PtrToStringAuto (message));
-			return GCHandle.ToIntPtr (GCHandle.Alloc (ex)).ToInt32 ();
+			return GCHandle.ToIntPtr (GCHandle.Alloc (ex));
 		}
 
-		static IntPtr UnwrapNSException (uint exc_handle)
+		static IntPtr UnwrapNSException (IntPtr exc_handle)
 		{
-			var obj = GCHandle.FromIntPtr (new IntPtr (exc_handle)).Target;
+			var obj = GCHandle.FromIntPtr (exc_handle).Target;
 #if MONOMAC
 			var exc = obj as ObjCException;
 #else
@@ -739,11 +741,11 @@ namespace ObjCRuntime {
 		}
 
 		// If inner_exception_gchandle is provided, it will be freed.
-		static int CreateProductException (int code, uint inner_exception_gchandle, string msg)
+		static IntPtr CreateProductException (int code, IntPtr inner_exception_gchandle, string msg)
 		{
 			Exception inner_exception = null;
-			if (inner_exception_gchandle != 0) {
-				GCHandle gchandle = GCHandle.FromIntPtr (new IntPtr (inner_exception_gchandle));
+			if (inner_exception_gchandle != IntPtr.Zero) {
+				GCHandle gchandle = GCHandle.FromIntPtr (inner_exception_gchandle);
 				inner_exception = (Exception) gchandle.Target;
 				gchandle.Free ();
 			}
@@ -753,7 +755,7 @@ namespace ObjCRuntime {
 			} else {
 				ex = ErrorHelper.CreateError (code, msg);
 			}
-			return GCHandle.ToIntPtr (GCHandle.Alloc (ex, GCHandleType.Normal)).ToInt32 ();
+			return GCHandle.ToIntPtr (GCHandle.Alloc (ex, GCHandleType.Normal));
 		}
 
 		static IntPtr TypeGetFullName (IntPtr type) 

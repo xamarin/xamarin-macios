@@ -304,6 +304,7 @@ steps:
     nuGetFeedType: external
     publishFeedCredentials: xamarin-impl public feed
   condition: and(succeeded(), eq(variables['configuration.BuildNugets'], 'True'))
+  continueOnError: true # should not stop the build since is not official just yet.
 
 - bash: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/productsign.sh
   env:

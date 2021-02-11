@@ -648,7 +648,7 @@ namespace Xamarin.Bundler {
 			var assembly_location_count = 0;
 			var enable_llvm = (abi & Abi.LLVM) != 0;
 
-			register_assemblies.AppendLine ("\tguint32 exception_gchandle = 0;");
+			register_assemblies.AppendLine ("\tGCHandle exception_gchandle = INVALID_GCHANDLE;");
 			foreach (var s in assemblies) {
 				if (!s.IsAOTCompiled)
 					continue;
@@ -742,7 +742,9 @@ namespace Xamarin.Bundler {
 				sw.WriteLine ("\tmono_marshal_ilgen_init ();");
 				sw.WriteLine ("\tmono_method_builder_ilgen_init ();");
 				sw.WriteLine ("\tmono_sgen_mono_ilgen_init ();");
+#if !NET
 				sw.WriteLine ("\tmono_ee_interp_init (NULL);");
+#endif
 				sw.WriteLine ("\tmono_jit_set_aot_mode (MONO_AOT_MODE_INTERP);");
 			} else if (app.IsDeviceBuild)
 				sw.WriteLine ("\tmono_jit_set_aot_mode (MONO_AOT_MODE_FULL);");

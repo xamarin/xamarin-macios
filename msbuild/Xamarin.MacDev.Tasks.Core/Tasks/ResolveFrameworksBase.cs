@@ -124,12 +124,28 @@ namespace Xamarin.MacDev.Tasks {
 
 		protected string? ResolveXCFramework (string xcframework)
 		{
-			var platformName = PlatformFrameworkHelper.GetOperatingSystem (TargetFrameworkMoniker);
-			// PlatformFrameworkHelper.GetOperatingSystem returns "osx" which does not work for xcframework
-			if (platformName == "osx")
-				platformName = "macos";
+			string platformName;
 
-			var variant = SdkIsSimulator ? "simulator" : null;
+			switch (Platform) {
+			case Utils.ApplePlatform.MacCatalyst:
+				platformName = "ios";
+				break;
+			case Utils.ApplePlatform.MacOSX:
+				// PlatformFrameworkHelper.GetOperatingSystem returns "osx" which does not work for xcframework
+				platformName = "macos";
+				break;
+			default:
+				platformName = PlatformFrameworkHelper.GetOperatingSystem (TargetFrameworkMoniker);
+				break;
+			}
+
+			string? variant = null;
+			if (Platform == Utils.ApplePlatform.MacCatalyst) {
+				variant = "maccatalyst";
+			} else if (SdkIsSimulator) {
+				variant = "simulator";
+			}
+
 			try {
 				var plist = PDictionary.FromFile (Path.Combine (xcframework, "Info.plist"));
 				var path = ResolveXCFramework (plist, platformName, variant, Architectures!);

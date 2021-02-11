@@ -461,6 +461,9 @@
     <Compile Include="..\common\BitCodeMode.cs">
       <Link>tools\common\BitCodeMode.cs</Link>
     </Compile>
+    <Compile Include="..\common\DlsymOptions.cs">
+      <Link>tools\common\DlsymOptions.cs</Link>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

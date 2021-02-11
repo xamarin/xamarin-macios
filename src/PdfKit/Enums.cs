@@ -29,6 +29,9 @@
 using System;
 
 using ObjCRuntime;
+
+#nullable enable
+
 #if MONOMAC || IOS
 
 namespace PdfKit {
@@ -101,7 +104,12 @@ namespace PdfKit {
 		Underline = 4
 	}
 
-	[iOS (11,0)]
+#if XAMCORE_4_0
+	[NoiOS]
+#elif IOS
+	[Obsolete (Constants.UnavailableOniOS)]
+#endif
+	[Unavailable (PlatformName.MacCatalyst)]
 	[Native]
 	public enum PdfPrintScalingMode : long {
 		None      = 0,

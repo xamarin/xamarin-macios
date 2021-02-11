@@ -124,6 +124,7 @@
 		<EnableUnsafeUTF7Encoding Condition="'$(EnableUnsafeUTF7Encoding)' == ''">false</EnableUnsafeUTF7Encoding>
 		<EventSourceSupport Condition="'$(EventSourceSupport)' == ''">false</EventSourceSupport>
 		<HttpActivityPropagationSupport Condition="'$(HttpActivityPropagationSupport)' == ''">false</HttpActivityPropagationSupport>
+		<InvariantGlobalization Condition="'$(InvariantGlobalization)' == ''">false</InvariantGlobalization>
 		<StartupHookSupport Condition="'$(StartupHookSupport)' == ''">false</StartupHookSupport>
 		<UseSystemResourceKeys Condition="'$(UseSystemResourceKeys)' == ''">true</UseSystemResourceKeys>
 	</PropertyGroup>
@@ -192,7 +193,7 @@
 		<_AdditionalTaskAssemblyDirectory>$(_XamarinSdkRootDirectory)tools/dotnet-linker/</_AdditionalTaskAssemblyDirectory>
 		<_AdditionalTaskAssembly>$(_AdditionalTaskAssemblyDirectory)dotnet-linker.dll</_AdditionalTaskAssembly>
 	</PropertyGroup>
-	<Target Name="_ComputeLinkerArguments" DependsOnTargets="_ComputeLinkMode;_ComputeFrameworkVariables;_ComputeFrameworkAssemblies;ComputeResolvedFilesToPublishList;_ParseBundlerArguments;">
+	<Target Name="_ComputeLinkerArguments" DependsOnTargets="_ComputeLinkMode;_ComputeFrameworkVariables;_ComputeFrameworkAssemblies;ComputeResolvedFilesToPublishList;_ParseBundlerArguments;_ComputeVariables;">
 		<!-- Validate the linker mode -->
 		<Error Text="Invalid link mode: '$(_LinkMode)'. Valid link modes are: 'None', 'SdkOnly' and 'Full'" Condition="'$(_LinkMode)' != 'None' And '$(_LinkMode)' != 'SdkOnly' And '$(_LinkMode)' != 'Full'" />
 
@@ -208,10 +209,13 @@
 
 			<_CustomLinkerOptions>
 				AssemblyName=$(AssemblyName).dll
+				AOTOutputDirectory=$(_AOTOutputDirectory)
 				CacheDirectory=$(_LinkerCacheDirectory)
 				Debug=$(_BundlerDebug)
 				DeploymentTarget=$(_MinimumOSVersion)
 				@(_XamarinFrameworkAssemblies -> 'FrameworkAssembly=%(Filename)')
+				Interpreter=$(MtouchInterpreter)
+				IntermediateLinkDir=$(IntermediateLinkDir)
 				ItemsDirectory=$(_LinkerItemsDirectory)
 				IsSimulatorBuild=$(_SdkIsSimulator)
 				LinkMode=$(_LinkMode)
@@ -335,13 +339,10 @@
 		<ReadItemsFromFile File="$(_LinkerItemsDirectory)/_ReferencesLinkerFlags.items" Condition="Exists('$(_LinkerItemsDirectory)/_ReferencesLinkerFlags.items')">
 			<Output TaskParameter="Items" ItemName="_ReferencesLinkerFlags" />
 		</ReadItemsFromFile>
-
-		<ItemGroup>
-			<_AssembliesToAOT Include="@(ResolvedFileToPublish)" Condition="'%(Extension)' == '.dll' Or '%(Extension)' == '.exe' " />
-			<!-- Exclude resource assemblies from AOT compilation -->
-			<_AssembliesToAOT Remove="@(ReferenceSatellitePaths)" /> <!-- this seems to be from referenced projects with satellite assemblies -->
-			<_AssembliesToAOT Remove="@(ResourceCopyLocalItems)" /> <!-- this seems to be from NuGets with satellite assemblies -->
-		</ItemGroup>
+		<!-- Load _AssembliesToAOT -->
+		<ReadItemsFromFile File="$(_LinkerItemsDirectory)/_AssembliesToAOT.items" Condition="Exists('$(_LinkerItemsDirectory)/_AssembliesToAOT.items')">
+			<Output TaskParameter="Items" ItemName="_AssembliesToAOT" />
+		</ReadItemsFromFile>
 	</Target>
 
 	<!-- Native code -->
@@ -425,7 +426,7 @@
 			Condition="'$(_SdkIsSimulator)' != 'true' And '$(_PlatformName)' != 'macOS'"
 			DependsOnTargets="_ComputeVariables"
 			Inputs="@(_AssembliesToAOT)"
-			Outputs="@(_AssembliesToAOT -> '$(_AOTOutputDirectory)%(Filename)%(Extension).o')">
+			Outputs="@(_AssembliesToAOT -> '$(_AOTOutputDirectory)%(Arch)\%(Filename)%(Extension).o')">
 
 		<AOTCompile
 			SessionId="$(BuildSessionId)"
@@ -434,9 +435,8 @@
 			AOTCompilerPath="$(_AOTCompiler)"
 			InputDirectory="$(_AOTInputDirectory)"
 			MinimumOSVersion="$(_MinimumOSVersion)"
-			OutputDirectory="$(_AOTOutputDirectory)"
+			OutputDirectory="$(_AOTOutputDirectory)\%(_AssembliesToAOT.Arch)"
 			SdkDevPath="$(_SdkDevPath)"
-			TargetArchitectures="$(TargetArchitectures)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 		>
 			<Output TaskParameter="AssemblyFiles" ItemName="_AOTAssemblyFiles" />
@@ -461,8 +461,8 @@
 			<_XamarinMainLibraries Include="@(_AOTObjectFiles)" />
 
 			<!-- copy the aotdata files to the .app -->
-			<ResolvedFileToPublish Include="$(_AOTOutputDirectory)%(_AssembliesToAOT.Filename).aotdata.arm64" >
-				<RelativePath>$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)$(PublishDir),$(_NativeExecutablePublishDir)))\%(_AssembliesToAOT.Filename).aotdata.arm64</RelativePath>
+			<ResolvedFileToPublish Include="%(_AssembliesToAOT.AOTData)" >
+				<RelativePath>$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)$(PublishDir),$(_NativeExecutablePublishDir)))\%(_AssembliesToAOT.Filename).aotdata.%(_AssembliesToAOT.Arch)</RelativePath>
 			</ResolvedFileToPublish>
 		</ItemGroup>
 	</Target>
@@ -681,7 +681,8 @@
 		<Exec Command="$(_MlaunchPath) $(_MlaunchInstallArguments)" />
 	</Target>
 
-	<Target Name="_PrepareRunMobile" DependsOnTargets="_DetectSdkLocations;_GenerateBundleName;_InstallMobile" >
+	<!-- This is only needed for mobile platforms, RunCommand and RunArguments are defined for macOS in Microsoft.macOS.Sdk.targets. -->
+	<Target Name="_PrepareRunMobile" DependsOnTargets="_InstallMobile" Condition="'$(_PlatformName)' != 'macOS'">
 		<PropertyGroup>
 			<!-- capture output by default -->
 			<_MlaunchCaptureOutput Condition="'$(_MlaunchCaptureOutput)' == ''">true</_MlaunchCaptureOutput>
@@ -714,8 +715,7 @@
 		</PropertyGroup>
 	</Target>
 
-	<!-- This is only needed for mobile platforms, RunCommand and RunArguments are defined for macOS in Microsoft.macOS.Sdk.targets. -->
-	<Target Name="_PrepareRun" DependsOnTargets="_PrepareRunMobile" BeforeTargets="Run" Condition="'$(_PlatformName)' != 'macOS'" />
+	<Target Name="_PrepareRun" DependsOnTargets="Build;_PrepareRunMobile" BeforeTargets="Run" />
 
 	<!-- Import existing targets -->
 

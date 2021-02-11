@@ -185,6 +185,9 @@
     <Compile Include="..\linker\RemoveUserResourcesSubStep.cs">
       <Link>external\tools\linker\RemoveUserResourcesSubStep.cs</Link>
     </Compile>
+    <Compile Include="..\common\DlsymOptions.cs">
+      <Link>external\tools\common\DlsymOptions.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\mtouch\Errors.resx">

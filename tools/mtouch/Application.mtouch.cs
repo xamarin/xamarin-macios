@@ -17,14 +17,6 @@ using Xamarin.Utils;
 
 namespace Xamarin.Bundler {
 
-	public enum DlsymOptions
-	{
-		Default,
-		All,
-		None,
-		Custom,
-	}
-
 	public partial class Application
 	{
 		public string ProductName = "Xamarin.iOS";
@@ -32,11 +24,6 @@ namespace Xamarin.Bundler {
 		public string ExecutableName;
 
 		public bool EnableCxx;
-		bool? enable_msym;
-		public bool EnableMSym {
-			get { return enable_msym.Value; }
-			set { enable_msym = value; }
-		}
 		public bool EnableRepl;
 
 		public List<string> Extensions = new List<string> (); // A list of the extensions this app contains.
@@ -48,8 +35,6 @@ namespace Xamarin.Bundler {
 		public bool ManagedStrip = true;
 		public List<string> NoSymbolStrip = new List<string> ();
 
-		public DlsymOptions DlsymOptions;
-		public List<Tuple<string, bool>> DlsymAssemblies;
 		public bool? PackageMonoFramework;
 
 		public bool NoFastSim;
@@ -57,8 +42,6 @@ namespace Xamarin.Bundler {
 
 		public string Compiler = string.Empty;
 
-		public string AotArguments = "static,asmonly,direct-icalls,";
-		public List<string> AotOtherArguments = null;
 		public bool? LLVMAsmWriter;
 		public Dictionary<string, string> LLVMOptimizations = new Dictionary<string, string> ();
 
@@ -277,85 +260,6 @@ namespace Xamarin.Bundler {
 			if (LLVMOptimizations.TryGetValue ("all", out opt))
 				return opt;
 			return null;
-		}
-
-		public void SetDlsymOption (string asm, bool dlsym)
-		{
-			if (DlsymAssemblies == null)
-				DlsymAssemblies = new List<Tuple<string, bool>> ();
-
-			DlsymAssemblies.Add (new Tuple<string, bool> (Path.GetFileNameWithoutExtension (asm), dlsym));
-
-			DlsymOptions = DlsymOptions.Custom;
-		}
-
-		public void ParseDlsymOptions (string options)
-		{
-			bool dlsym;
-			if (Driver.TryParseBool (options, out dlsym)) {
-				DlsymOptions = dlsym ? DlsymOptions.All : DlsymOptions.None;
-			} else {
-				if (DlsymAssemblies == null)
-					DlsymAssemblies = new List<Tuple<string, bool>> ();
-
-				var assemblies = options.Split (',');
-				foreach (var assembly in assemblies) {
-					var asm = assembly;
-					if (assembly.StartsWith ("+", StringComparison.Ordinal)) {
-						dlsym = true;
-						asm = assembly.Substring (1);
-					} else if (assembly.StartsWith ("-", StringComparison.Ordinal)) {
-						dlsym = false;
-						asm = assembly.Substring (1);
-					} else {
-						dlsym = true;
-					}
-					DlsymAssemblies.Add (new Tuple<string, bool> (Path.GetFileNameWithoutExtension (asm), dlsym));
-				}
-
-				DlsymOptions = DlsymOptions.Custom;
-			}
-		}
-
-		public bool UseDlsym (string assembly)
-		{
-			string asm;
-
-			if (DlsymAssemblies != null) {
-				asm = Path.GetFileNameWithoutExtension (assembly);
-				foreach (var tuple in DlsymAssemblies) {
-					if (string.Equals (tuple.Item1, asm, StringComparison.Ordinal))
-						return tuple.Item2;
-				}
-			}
-
-			switch (DlsymOptions) {
-			case DlsymOptions.All:
-				return true;
-			case DlsymOptions.None:
-				return false;
-			}
-
-			if (EnableLLVMOnlyBitCode)
-				return false;
-
-			// Even if this assembly is aot'ed, if we are using the interpreter we can't yet
-			// guarantee that code in this assembly won't be executed in interpreted mode,
-			// which can happen for virtual calls between assemblies, during exception handling
-			// etc. We make sure we don't strip away symbols needed for pinvoke calls.
-			// https://github.com/mono/mono/issues/14206
-			if (UseInterpreter)
-				return true;
-
-			switch (Platform) {
-			case ApplePlatform.iOS:
-				return !Profile.IsSdkAssembly (Path.GetFileNameWithoutExtension (assembly));
-			case ApplePlatform.TVOS:
-			case ApplePlatform.WatchOS:
-				return false;
-			default:
-				throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, "Xamarin.iOS");
-			}
 		}
 
 		public ICollection<Abi> AllArchitectures {

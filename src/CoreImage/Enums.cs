@@ -24,6 +24,8 @@
 using System;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace CoreImage {
 
 	// convenience enum for values used with kCGImagePropertyOrientation (key) as NSNumber

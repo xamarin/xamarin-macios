@@ -567,6 +567,8 @@ namespace Registrar {
 					case Trampoline.Retain:
 					case Trampoline.GetGCHandle:
 					case Trampoline.SetGCHandle:
+					case Trampoline.GetFlags:
+					case Trampoline.SetFlags:
 						return true;
 					default:
 						return false;
@@ -2048,8 +2050,22 @@ namespace Registrar {
 					}, ref exceptions);
 
 					objcType.Add (new ObjCMethod (this, objcType, null) {
-						Selector = "xamarinSetGCHandle:",
+						Selector = "xamarinSetGCHandle:flags:",
 						Trampoline = Trampoline.SetGCHandle,
+						Signature = "v@:^vi",
+						IsStatic = false,
+					}, ref exceptions);
+
+					objcType.Add (new ObjCMethod (this, objcType, null) {
+						Selector = "xamarinGetFlags",
+						Trampoline = Trampoline.GetFlags,
+						Signature = "i@:",
+						IsStatic = false,
+					}, ref exceptions);
+
+					objcType.Add (new ObjCMethod (this, objcType, null) {
+						Selector = "xamarinSetFlags:",
+						Trampoline = Trampoline.SetFlags,
 						Signature = "v@:i",
 						IsStatic = false,
 					}, ref exceptions);
@@ -2775,6 +2791,8 @@ namespace Registrar {
 		CopyWithZone2,
 		GetGCHandle,
 		SetGCHandle,
+		GetFlags,
+		SetFlags,
 	}
 }
 

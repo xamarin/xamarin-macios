@@ -12,6 +12,8 @@ using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace PdfKit {
 	public partial class PdfAnnotation {
 
@@ -19,9 +21,9 @@ namespace PdfKit {
 		public bool SetValue<T> (T value, PdfAnnotationKey key) where T : class, INativeObject
 		{
 			if (value == null)
-				throw new ArgumentNullException (nameof (value));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 
-			return _SetValue (value.Handle, key.GetConstant ());
+			return _SetValue (value.Handle, key.GetConstant ()!);
 		}
 
 		[Mac (10,12)]
@@ -29,7 +31,7 @@ namespace PdfKit {
 		{
 			var nstr = NSString.CreateNative (str);
 			try {
-				return _SetValue (nstr, key.GetConstant ());
+				return _SetValue (nstr, key.GetConstant ()!);
 			} finally {
 				NSString.ReleaseNative (nstr);
 			}
@@ -38,7 +40,7 @@ namespace PdfKit {
 		[Mac (10,12)]
 		public T GetValue<T> (PdfAnnotationKey key) where T : class, INativeObject
 		{
-			return Runtime.GetINativeObject<T> (_GetValue (key.GetConstant ()), true);
+			return Runtime.GetINativeObject<T> (_GetValue (key.GetConstant ()!), true);
 		}
 
 		public PdfAnnotationKey AnnotationType {

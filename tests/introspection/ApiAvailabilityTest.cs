@@ -38,18 +38,16 @@ namespace Introspection {
 			Maximum = Version.Parse (Constants.SdkVersion);
 #if __IOS__
 			Platform = PlatformName.iOS;
-			Minimum = new Version (6,0);
+			Minimum = Xamarin.SdkVersions.MiniOSVersion;
 #elif __TVOS__
 			Platform = PlatformName.TvOS;
-			Minimum = new Version (9,0);
+			Minimum = Xamarin.SdkVersions.MinTVOSVersion;
 #elif __WATCHOS__
 			Platform = PlatformName.WatchOS;
-			Minimum = new Version (2,0);
-			// Need to special case watchOS 'Maximum' version for OS minor subversions (can't change Constants.SdkVersion)
-			//Maximum = new Version (6,2,5);
+			Minimum = Xamarin.SdkVersions.MinWatchOSVersion;
 #else
 			Platform = PlatformName.MacOSX;
-			Minimum = new Version (10,9);
+			Minimum = Xamarin.SdkVersions.MinOSXVersion;
 			// Need to special case macOS 'Maximum' version for OS minor subversions (can't change Constants.SdkVersion)
 			// Please comment the code below if needed
 			Maximum = new Version (11,1,0);

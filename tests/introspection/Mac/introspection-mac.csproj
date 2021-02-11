@@ -136,6 +136,9 @@
     <Compile Include="..\..\..\tools\common\Frameworks.cs">
       <Link>Frameworks.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\tools\common\SdkVersions.cs">
+      <Link>SdkVersions.cs</Link>
+    </Compile>
     <Compile Include="..\ApiFrameworkTest.cs">
       <Link>ApiFrameworkTest.cs</Link>
     </Compile>
