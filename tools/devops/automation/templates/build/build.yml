@@ -344,9 +344,11 @@ steps:
         if ($pkg.Name -eq "delete-xma-build-host.pkg") {
           continue
         }
-        # copy file to the notarize dit
-        cp $pkg.FullName $notarizeDir 
-        $pkgSignFiles += @{ "SrcPath"="$notarizeDir/$($pkg.Name)"}
+        # signing needs the paths to be zipped... 
+        $zipPath = "$notarizeDir/$($pkg.BaseName).zip"
+        Write-Host "Zip file path is '$zipPath'"
+        ditto -V -ck --sequesterRsrc "$($pkg.FullName)" "$zipPath"
+        $pkgSignFiles += @{ "SrcPath"="$zipPath"}
     }
     
     # array of dicts
