@@ -14,6 +14,8 @@
 #include <stdbool.h>
 #include <stdatomic.h>
 
+#include "xamarin/mono-runtime.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -47,8 +49,8 @@ struct Block_literal {
 	int reserved;
 	void (*invoke)(void *, ...);
 	struct Xamarin_block_descriptor *descriptor;
-	void *local_handle;
-	void *global_handle;
+	GCHandle local_handle;
+	GCHandle global_handle;
 };
 
 struct Xamarin_block_descriptor *  xamarin_get_block_descriptor ();
