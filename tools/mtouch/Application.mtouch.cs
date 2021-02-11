@@ -867,14 +867,14 @@ namespace Xamarin.Bundler {
 				RootAssemblies.Add (Path.Combine (Driver.GetPlatformFrameworkDirectory (this), Driver.GetProductAssembly (this) + ".dll"));
 			}
 
+			InitializeCommon ();
+
 			if (Platform == ApplePlatform.iOS) {
 				if (DeploymentTarget.Major >= 11 && Is32Build) {
 					var invalidArches = abis.Where ((v) => (v & Abi.Arch32Mask) != 0);
 					throw ErrorHelper.CreateError (116, Errors.MT0116, invalidArches.First ());
 				}
 			}
-
-			InitializeCommon ();
 
 			Driver.Watch ("Resolve References", 1);
 		}
