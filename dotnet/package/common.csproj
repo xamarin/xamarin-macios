@@ -1,5 +1,5 @@
 <Project>
-  <Import Project="../targets/Xamarin.Shared.Sdk.Versions.props" />
+  <Import Project="../targets/Microsoft.$(_PlatformName).Sdk.Versions.props" />
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
