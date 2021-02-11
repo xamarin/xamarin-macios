@@ -18,6 +18,15 @@
 extern "C" {
 #endif
 
+/*
+ * Wrapper GCHandle functions that takes pointer sized handles instead of ints,
+ * so that we can adapt our code incrementally to use pointers instead of ints
+ * until Mono's pointer-sized API is available for us.
+ * Ref: https://github.com/dotnet/runtime/commit/3886a63841434af716292172737a42757a15c6a6
+ */
+#define INVALID_GCHANDLE NULL
+typedef void* GCHandle;
+
 /* This is copied from eglib's header files */
 typedef unsigned int   guint;
 typedef int32_t        gboolean;
@@ -271,7 +280,9 @@ typedef enum {
 
 /* metadata/marshal.h */
 
-typedef void (*MonoFtnPtrEHCallback) (guint32 gchandle);
+// The 'gchandle' parameter is defined as a 'guint32' in mono/mono's 2020-02 branch, and as a 'MonoGCHandle' (aka void*) in mono/mono's main branch.
+// Here we go with the latter (void*), because that's the future, and it should also be compatible with the 2020-02 branch.
+typedef void (*MonoFtnPtrEHCallback) (GCHandle gchandle);
 
 /* not in any header */
 
@@ -295,14 +306,7 @@ bool
 
 <# } #>
 
-/*
- * Wrapper GCHandle functions that takes pointer sized handles instead of ints,
- * so that we can adapt our code incrementally to use pointers instead of ints
- * until Mono's pointer-sized API is available for us.
- * Ref: https://github.com/dotnet/runtime/commit/3886a63841434af716292172737a42757a15c6a6
- */
-#define INVALID_GCHANDLE 0
-typedef void* GCHandle;
+
 
 #ifdef __cplusplus
 } /* extern "C" */

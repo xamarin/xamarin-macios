@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace CoreImage {
 
 	public partial class CIDetectorOptions  {
