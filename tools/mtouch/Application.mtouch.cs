@@ -838,7 +838,7 @@ namespace Xamarin.Bundler {
 					// All versions of tvOS and Mac Catalyst support extensions
 					break;
 				default:
-					throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, "Xamarin.iOS");
+					throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
 				}
 			}
 
@@ -1782,7 +1782,7 @@ namespace Xamarin.Bundler {
 				sb.AppendLine ("                <integer>4</integer>");
 				break;
 			default:
-				throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, "Xamarin.iOS");
+				throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
 			}
 			sb.AppendLine ("        </array>");
 

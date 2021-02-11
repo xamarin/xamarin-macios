@@ -1331,7 +1331,7 @@ namespace Xamarin.Bundler
 					library = "Xamarin.MacCatalyst.registrar.a";
 					break;
 				default:
-					throw ErrorHelper.CreateError (71, Errors.MX0071, App.Platform, "Xamarin.iOS");
+					throw ErrorHelper.CreateError (71, Errors.MX0071, App.Platform, App.ProductName);
 				}
 
 				var lib = Path.Combine (Driver.GetProductSdkLibDirectory (App), library);

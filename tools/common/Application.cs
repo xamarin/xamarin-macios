@@ -1438,7 +1438,7 @@ namespace Xamarin.Bundler {
 		public bool IsAOTCompiled (string assembly)
 		{
 #if NET
-			if (Platform == ApplePlatform.MacOSX)
+			if (Platform == ApplePlatform.MacOSX || Platform == ApplePlatform.MacCatalyst)
 				return false; // AOT on .NET for macOS hasn't been implemented yet.
 #else	
 			if (Platform == ApplePlatform.MacOSX)
@@ -1636,7 +1636,7 @@ namespace Xamarin.Bundler {
 			case ApplePlatform.WatchOS:
 				return false;
 			default:
-				throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, "Xamarin.iOS");
+				throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
 			}
 		}
 

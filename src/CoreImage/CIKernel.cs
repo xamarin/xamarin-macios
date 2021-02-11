@@ -12,6 +12,8 @@ using Foundation;
 using ObjCRuntime;
 using CoreGraphics;
 
+#nullable enable
+
 namespace CoreImage {
 	
 	// This Api is also available on iOS 9 according to headers but depends on CIFilter.Apply methods 
@@ -29,7 +31,7 @@ namespace CoreImage {
 		public void SetRegionOfInterest (CIKernelRoiHandler handler)
 		{
 			if (handler == null)
-				throw new ArgumentNullException (nameof (handler));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			roiHandler = handler;
 
