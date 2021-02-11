@@ -701,7 +701,6 @@ all-local:: install-mac-common
 MAC_COMMON_DIRECTORIES = \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_DIR)/Versions \
 	$(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR) \
-	$(DOTNET_DESTDIR)/$(MACOS_NUGET).Sdk \
 
 MAC_COMMON_TARGETS = \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_DIR)/Versions/Current \
@@ -710,7 +709,6 @@ MAC_COMMON_TARGETS = \
 	$(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/Version \
 	$(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/updateinfo \
 	$(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/Versions.plist \
-	$(DOTNET_DESTDIR)/$(MACOS_NUGET).Sdk/Versions.plist \
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_DIR)/Versions/Current: | $(MAC_DESTDIR)$(MAC_FRAMEWORK_DIR)/Versions
 	$(Q_LN) ln -hfs $(MAC_INSTALL_VERSION) $@
@@ -802,9 +800,6 @@ all-local:: install-ios-common
 IOS_COMMON_DIRECTORIES = \
 	$(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions \
 	$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX) \
-	$(DOTNET_DESTDIR)/$(IOS_NUGET).Sdk \
-	$(DOTNET_DESTDIR)/$(TVOS_NUGET).Sdk \
-	$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Sdk \
 
 IOS_COMMON_TARGETS = \
 	$(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current \
@@ -812,9 +807,6 @@ IOS_COMMON_TARGETS = \
 	$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/Version \
 	$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/updateinfo \
 	$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/Versions.plist \
-	$(DOTNET_DESTDIR)/$(IOS_NUGET).Sdk/Versions.plist \
-	$(DOTNET_DESTDIR)/$(TVOS_NUGET).Sdk/Versions.plist \
-	$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Sdk/Versions.plist \
 
 $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current: | $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions
 	$(Q_LN) ln -hfs $(IOS_INSTALL_VERSION) $@
@@ -1109,6 +1101,24 @@ $(TVOS_DIRECTORIES):
 	$(Q) mkdir -p $@
 
 install-tvos: $(TVOS_TARGETS)
+
+#
+# .NET
+#
+
+
+DOTNET_COMMON_DIRECTORIES += \
+	$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(DOTNET_DESTDIR)/$($(platform)_NUGET).Sdk) \
+
+DOTNET_COMMON_TARGETS = \
+	$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(DOTNET_DESTDIR)/$($(platform)_NUGET).Sdk/Versions.plist) \
+
+$(DOTNET_COMMON_DIRECTORIES):
+	$(Q) mkdir -p $@
+
+install-dotnet: $(DOTNET_COMMON_TARGETS)
+install-local:: install-dotnet
+all-local:: install-dotnet
 
 #
 # Cross compilers
