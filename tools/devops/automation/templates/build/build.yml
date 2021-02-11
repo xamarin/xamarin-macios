@@ -370,6 +370,11 @@ steps:
     # Write the json to a file
     ConvertTo-Json -InputObject $SignFileList -Depth 5 | Out-File -FilePath $(Build.ArtifactStagingDirectory)/MsiFiles2Notarize.json -Force
     dotnet $Env:MBSIGN_APPFOLDER/ddsignfiles.dll /filelist:$(Build.ArtifactStagingDirectory)/MsiFiles2Notarize.json
+    #unzipp returned files
+    $zipFiles = Get-ChildItem -Path $notarizeDir -Filter "*.zip"
+    foreach($zip in $zipFiles) {
+      ditto -V -xk "$($zip.FullName)" "$notarizeDir"
+    }
   displayName: 'Signing Release Build'
   name: signing
   condition: and(succeeded(), contains(variables['configuration.SignPkgs'], 'True'), contains(variables['configuration.IsPr'], 'False'))
