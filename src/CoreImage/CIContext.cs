@@ -34,6 +34,9 @@ using Metal;
 #if HAS_OPENGLES
 using OpenGLES;
 #endif
+
+#nullable enable
+
 namespace CoreImage {
 	public class CIContextOptions : DictionaryContainer {
 
@@ -46,7 +49,7 @@ namespace CoreImage {
 		{
 		}
 
-		public CGColorSpace OutputColorSpace {
+		public CGColorSpace? OutputColorSpace {
 			get {
 				return GetNativeValue<CGColorSpace> (CIContext.OutputColorSpace);
 			}
@@ -55,7 +58,7 @@ namespace CoreImage {
 			}
 		}
 
-		public CGColorSpace WorkingColorSpace {
+		public CGColorSpace? WorkingColorSpace {
 			get {
 				return GetNativeValue<CGColorSpace> (CIContext._WorkingColorSpace);
 			}
@@ -133,7 +136,7 @@ namespace CoreImage {
 		}
 
 		[iOS (14,0)][TV (14,0)][Mac (11,0)]
-		public string Name {
+		public string? Name {
 			get {
 				return GetStringValue (CIContext.Name);
 			}
@@ -151,18 +154,18 @@ namespace CoreImage {
 		{
 		}
 
-		public static CIContext FromContext (CGContext ctx, CIContextOptions options)
+		public static CIContext FromContext (CGContext ctx, CIContextOptions? options)
 		{
 			return FromContext (ctx, options?.Dictionary);
 		}
 		
 		public static CIContext FromContext (CGContext ctx)
 		{
-			return FromContext (ctx, (CIContextOptions) null);
+			return FromContext (ctx, (NSDictionary?) null);
 		}
 
 #if HAS_OPENGLES
-		public static CIContext FromContext (EAGLContext eaglContext, CIContextOptions options)
+		public static CIContext FromContext (EAGLContext eaglContext, CIContextOptions? options)
 		{
 			if (options == null)
 				return FromContext (eaglContext);
@@ -170,7 +173,7 @@ namespace CoreImage {
 			return FromContext (eaglContext, options.Dictionary);
 		}
 
-		public static CIContext FromMetalDevice (IMTLDevice device, CIContextOptions options)
+		public static CIContext FromMetalDevice (IMTLDevice device, CIContextOptions? options)
 		{
 			if (options == null)
 				return FromMetalDevice (device);
@@ -181,17 +184,17 @@ namespace CoreImage {
 
 #if MONOMAC
 		[Deprecated (PlatformName.MacOSX, 10, 11)]
-		public CGLayer CreateCGLayer (CGSize size)
+		public CGLayer? CreateCGLayer (CGSize size)
 		{
 			return CreateCGLayer (size, null);
 		}
 #else
-		public static CIContext FromOptions (CIContextOptions options)
+		public static CIContext FromOptions (CIContextOptions? options)
 		{
 			return FromOptions (options?.Dictionary);
 		}
 		
-		public CGImage CreateCGImage (CIImage image, CGRect fromRect, CIFormat ciImageFormat, CGColorSpace colorSpace)
+		public CGImage? CreateCGImage (CIImage image, CGRect fromRect, CIFormat ciImageFormat, CGColorSpace? colorSpace)
 		{
 			return CreateCGImage (image, fromRect, CIImage.CIFormatToInt (ciImageFormat), colorSpace);
 		}
