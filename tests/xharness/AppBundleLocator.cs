@@ -42,7 +42,7 @@ namespace Xharness {
 					{ "Platform", platform },
 				};
 
-				return await GetPropertyByMSBuildEvaluationAsync (projectFile, projectFilePath, "OutputPath", "_GenerateAppBundleName;_GenerateAppExBundleName", properties);
+				return await GetPropertyByMSBuildEvaluationAsync (projectFile, projectFilePath, "OutputPath", "_GenerateBundleName", properties);
 			} else {
 				return projectFile.GetOutputPath (platform, buildConfiguration).Replace ('\\', Path.DirectorySeparatorChar);
 			}

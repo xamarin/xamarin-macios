@@ -295,38 +295,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		/>
 	</Target>
 
-	<Target Name="_GenerateBundleName" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_ComputeTargetArchitectures;_GenerateAppBundleName;_GenerateAppExBundleName">
-		<PropertyGroup>
-			<_AppResourcesPath Condition="'$(_IsMacCatalyst)' == 'true'">$(_AppBundlePath)Contents\Resources\</_AppResourcesPath>
-			<_AppResourcesPath Condition="'$(_IsMacCatalyst)' != 'true'">$(_AppBundlePath)</_AppResourcesPath>
-		</PropertyGroup>
-	</Target>
-
-	<Target Name="_GenerateAppBundleName" Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsAppExtension)' != 'true'" DependsOnTargets="_ComputeTargetArchitectures">
-		<PropertyGroup>
-			<AppBundleDir Condition="'$(IsAppDistribution)' != 'true'">$(DeviceSpecificOutputPath)$(_AppBundleName)$(AppBundleExtension)</AppBundleDir>
-			<AppBundleDir Condition="'$(IsAppDistribution)' == 'true'">$(ArchivePath)\Products\Applications\$(_AppBundleName)$(AppBundleExtension)</AppBundleDir>
-			<_AppBundlePath>$(AppBundleDir)\</_AppBundlePath>
-		</PropertyGroup>
-	</Target>
-
-	<Target Name="_GenerateAppExBundleName" Condition="'$(IsAppExtension)' == 'true'" DependsOnTargets="_ComputeTargetArchitectures">
-		<PropertyGroup>
-			<AppBundleDir Condition="'$(AppBundleDir)' == ''">$(DeviceSpecificOutputPath)$(_AppBundleName)$(AppBundleExtension)</AppBundleDir>
-			<_AppBundlePath>$(AppBundleDir)\</_AppBundlePath>
-
-			<!-- needed for GetTargetPath/Build/Rebuild task outputs -->
-			<_AppExtensionBundlePath>$(MSBuildProjectDirectory)\$(AppBundleDir)</_AppExtensionBundlePath>
-		</PropertyGroup>
-		<ItemGroup>
-			<_AppExtensionBundlePath Include="$(MSBuildProjectDirectory)\$(AppBundleDir)">
-				<!-- We need this metadata to fix the source in VS -->
-				<BuildSessionId>$(BuildSessionId)</BuildSessionId>
-				<BuildServerPath>..\..\$(BuildAppName)\$(BuildSessionId)\$(AppBundleDir)</BuildServerPath>
-			</_AppExtensionBundlePath>
-		</ItemGroup>
-	</Target>
-
 	<Target Name="_GetWatchAppBundlePath" DependsOnTargets="_GenerateBundleName;$(_GetWatchAppBundlePathDependsOn)">
 		<PropertyGroup>
 			<!-- needed for GetTargetPath/Build/Rebuild task outputs -->
