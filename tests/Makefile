@@ -1,14 +1,14 @@
 TOP = ..
 SUBDIRS=test-libraries
 
-ifdef ENABLE_DOTNET
-SUBDIRS += dotnet
-endif
-
 # disabled for now: mac-test
 
 include $(TOP)/Make.config
 include $(TOP)/mk/rules.mk
+
+ifdef ENABLE_DOTNET
+SUBDIRS += dotnet
+endif
 
 MTOUCH=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/bin/mtouch
 UNIT_SERVER_DIR=$(TOUCH_UNIT_PATH)/Touch.Server
