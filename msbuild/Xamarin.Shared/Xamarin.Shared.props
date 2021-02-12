@@ -25,9 +25,9 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<_PlatformName Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.MacCatalyst'">iOS</_PlatformName>
 		<_PlatformName Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.TVOS'">tvOS</_PlatformName>
 		<_PlatformName Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.WatchOS'">watchOS</_PlatformName>
+		<_PlatformName Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.MacCatalyst'">MacCatalyst</_PlatformName>
 		<_PlatformName Condition="'$(_PlatformName)' == ''">macOS</_PlatformName> <!-- detecting Xamarin.Mac is a bit more complicated, so just fall back to macOS if none of the others match -->
 
-		<_IsMacCatalyst Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.MacCatalyst'">true</_IsMacCatalyst>
 	</PropertyGroup>
 
 	<PropertyGroup>
@@ -86,14 +86,14 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		</When>
 	</Choose>
 	<PropertyGroup Condition="'$(_XamarinBclPath)' == ''">
-		<_XamarinBclPath Condition="'$(_PlatformName)' == 'iOS' And '$(_IsMacCatalyst)' == 'true'">$(_XamarinSdkRoot)/lib/mono/Xamarin.MacCatalyst/</_XamarinBclPath>
-		<_XamarinBclPath Condition="'$(_PlatformName)' == 'iOS' And '$(_IsMacCatalyst)' != 'true'">$(_XamarinSdkRoot)/lib/mono/Xamarin.iOS/</_XamarinBclPath>
+		<_XamarinBclPath Condition="'$(_PlatformName)' == 'MacCatalyst'">$(_XamarinSdkRoot)/lib/mono/Xamarin.MacCatalyst/</_XamarinBclPath>
+		<_XamarinBclPath Condition="'$(_PlatformName)' == 'iOS'">$(_XamarinSdkRoot)/lib/mono/Xamarin.iOS/</_XamarinBclPath>
 		<_XamarinBclPath Condition="'$(_PlatformName)' == 'tvOS'">$(_XamarinSdkRoot)/lib/mono/Xamarin.TVOS/</_XamarinBclPath>
 		<_XamarinBclPath Condition="'$(_PlatformName)' == 'watchOS'">$(_XamarinSdkRoot)/lib/mono/Xamarin.WatchOS/</_XamarinBclPath>
 	</PropertyGroup>
 	<PropertyGroup>
-		<_XamarinPlatformAssemblyName Condition="'$(_PlatformName)' == 'iOS' And '$(_IsMacCatalyst)' == 'true'">Xamarin.MacCatalyst.dll</_XamarinPlatformAssemblyName>
-		<_XamarinPlatformAssemblyName Condition="'$(_PlatformName)' == 'iOS' And '$(_IsMacCatalyst)' != 'true'">Xamarin.iOS.dll</_XamarinPlatformAssemblyName>
+		<_XamarinPlatformAssemblyName Condition="'$(_PlatformName)' == 'MacCatalyst'">Xamarin.MacCatalyst.dll</_XamarinPlatformAssemblyName>
+		<_XamarinPlatformAssemblyName Condition="'$(_PlatformName)' == 'iOS'">Xamarin.iOS.dll</_XamarinPlatformAssemblyName>
 		<_XamarinPlatformAssemblyName Condition="'$(_PlatformName)' == 'tvOS'">Xamarin.TVOS.dll</_XamarinPlatformAssemblyName>
 		<_XamarinPlatformAssemblyName Condition="'$(_PlatformName)' == 'watchOS'">Xamarin.WatchOS.dll</_XamarinPlatformAssemblyName>
 		<_XamarinPlatformAssemblyName Condition="'$(_PlatformName)' == 'macOS'">Xamarin.Mac.dll</_XamarinPlatformAssemblyName>
@@ -214,7 +214,7 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<_EmbeddedResourcePrefix Condition="'$(_PlatformName)' == 'macOS'">xammac</_EmbeddedResourcePrefix>
 		<_EmbeddedResourcePrefix Condition="'$(_PlatformName)' != 'macOS'">monotouch</_EmbeddedResourcePrefix>
 
-		<_AppBundleManifestRelativePath Condition="'$(_PlatformName)' == 'macOS' Or '$(_IsMacCatalyst)' == 'true'">Contents/</_AppBundleManifestRelativePath>
+		<_AppBundleManifestRelativePath Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">Contents/</_AppBundleManifestRelativePath>
 
 		<AppBundleExtension Condition="'$(AppBundleExtension)' == '' And '$(IsAppExtension)' == 'true' And '$(IsXpcService)' == 'true'">.xpc</AppBundleExtension>
 		<AppBundleExtension Condition="'$(AppBundleExtension)' == '' And '$(IsAppExtension)' == 'true'">.appex</AppBundleExtension>
@@ -300,7 +300,8 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<DefineConstants Condition="!$(_IsTVOSDefined) And '$(_PlatformName)' == 'tvOS'">__TVOS__;$(DefineConstants)</DefineConstants>
 		<DefineConstants Condition="!$(_IsWatchOSDefined) And '$(_PlatformName)' == 'watchOS'">__WATCHOS__;$(DefineConstants)</DefineConstants>
 		<DefineConstants Condition="!$(_IsMacOSDefined) And '$(_PlatformName)' == 'macOS'">__MACOS__;$(DefineConstants)</DefineConstants>
-		<DefineConstants Condition="!$(_IsMacCatalystDefined) And '$(_PlatformName)' == 'iOS' And '$(_IsMacCatalyst)' == 'true'">__MACCATALYST__;$(DefineConstants)</DefineConstants>
+		<DefineConstants Condition="!$(_IsIOSDefined) And '$(_PlatformName)' == 'MacCatalyst'">__IOS__;$(DefineConstants)</DefineConstants> <!-- We define __IOS__ for MacCatalyst as well for now -->
+		<DefineConstants Condition="!$(_IsMacCatalystDefined) And '$(_PlatformName)' == 'MacCatalyst'">__MACCATALYST__;$(DefineConstants)</DefineConstants>
 	</PropertyGroup>
 
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets"
