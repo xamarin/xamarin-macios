@@ -9,7 +9,7 @@ namespace Xamarin.iOS.Tasks
 	{
 		protected override IAppleSdkVersion GetDefaultSdkVersion ()
 		{
-			return IPhoneSdkVersion.UseDefault;
+			return AppleSdkVersion.UseDefault;
 		}
 
 		public override bool Execute ()
