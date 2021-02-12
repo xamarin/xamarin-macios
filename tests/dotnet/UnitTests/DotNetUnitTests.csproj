@@ -2,6 +2,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <IsPackable>false</IsPackable>
+    <DefineConstants>$(DefineConstants);NET</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
