@@ -7,6 +7,8 @@ DOTNET_MANIFESTS_PATH=$(DOTNET6_DIR)/sdk-manifests/$(DOTNET6_VERSION_BAND)
 DOTNET_PACKS_PATH=$(DOTNET6_DIR)/packs
 TMP_PKG_DIR=_pkg
 
+DOTNET_PLATFORMS_UPPERCASE:=$(shell echo $(DOTNET_PLATFORMS) | tr a-z A-Z)
+
 # Create variables prefixed with the correctly cased platform name from the upper-cased platform name. This makes some of the next sections somewhat simpler.
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(platform)_NUGET_VERSION_NO_METADATA:=$($(shell echo $(platform) | tr a-z A-Z)_NUGET_VERSION_NO_METADATA)))
 

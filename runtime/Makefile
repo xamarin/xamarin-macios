@@ -216,6 +216,8 @@ ifdef INCLUDE_DEVICE
 $(eval $(call PlatformTemplate,iphoneos,IPHONEOS,armv7 armv7s arm64))
 endif
 $(eval $(call PlatformTemplate,iphonesimulator,IOSSIMULATOR,x86 x86_64))
+endif
+ifdef INCLUDE_MACCATALYST
 $(eval $(call PlatformTemplate,maccatalyst,MACCATALYST,x86_64))
 endif
 
@@ -616,6 +618,9 @@ $(eval $(call DotNetLipoLibTemplate,watchOS,watchos-arm,watchos,armv7k arm64_32)
 endif
 endif
 $(eval $(call DotNetCopyLibTemplate,macOS,osx-x64,mac,x86_64))
+ifdef INCLUDE_MACCATALYST
+$(eval $(call DotNetCopyLibTemplate,MacCatalyst,maccatalyst-x64,maccatalyst,x86_64))
+endif
 
 define DotNetFrameworkTemplate
 DOTNET_TARGETS += \
@@ -648,7 +653,7 @@ $(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native/Frameworks/%:
 endef
 
 # macOS does not have the Xamarin[-debug].framework frameworks
-$(foreach platform,$(filter-out macOS,$(DOTNET_PLATFORMS)),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(eval $(call DotNetFrameworkTemplate,$(platform),$(rid)))))
+$(foreach platform,$(filter-out macOS MacCatalyst,$(DOTNET_PLATFORMS)),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(eval $(call DotNetFrameworkTemplate,$(platform),$(rid)))))
 
 # If the RID represents fewer architectures than the library in .libs, then use the LipoTemplate, otherwise the CopyTemplate
 ifdef INCLUDE_IOS
