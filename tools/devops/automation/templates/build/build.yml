@@ -338,10 +338,6 @@ steps:
     GitHubToken: $(GitHub.Token)
     ArtifactDirectory: $(Build.SourcesDirectory)/package-internal
 
-- template: uninstall-certificates/v1.yml@templates
-  parameters:
-    HostedMacKeychainPassword: $(OSX_KEYCHAIN_PASS)
-
 # upload each of the pkgs into the pipeline artifacts
 - task: PublishPipelineArtifact@1
   displayName: 'Publish Build Artifacts'
@@ -486,6 +482,11 @@ steps:
     artifactName: HtmlReport-sim
   continueOnError: true
   condition: and(succeededOrFailed(), contains(variables['runTests.TESTS_RAN'], 'True')) # if tests did not run, there is nothing to do
+
+# this will always be executed, is the default condition in the template
+- template: uninstall-certificates/v1.yml@templates
+  parameters:
+    HostedMacKeychainPassword: $(OSX_KEYCHAIN_PASS)
 
 - pwsh: |
     # should we need sudo, no, but someone did something wrong in the images..
