@@ -35,12 +35,19 @@ IOS_TARGETS =                                                      \
 	$(wildcard Xamarin.Shared/Xamarin.*.props)       \
 	$(wildcard Xamarin.Shared/Xamarin.*.targets)       \
 
+IOS_WINDOWS_TARGETS =                                                      \
+	$(wildcard Xamarin.iOS.Tasks.Windows/Xamarin.*.props)       \
+	$(wildcard Xamarin.iOS.Tasks.Windows/Xamarin.*.targets)       \
+	$(wildcard Xamarin.iOS.Tasks.Windows/bin/$(CONFIG)/$(TARGETFRAMEWORK)/Xamarin.*.props)       \
+	$(wildcard Xamarin.iOS.Tasks.Windows/bin/$(CONFIG)/$(TARGETFRAMEWORK)/Xamarin.*.targets)       \
+
 IOS_BINDING_TARGETS = $(wildcard Xamarin.ObjcBinding.Tasks/*.targets)
 
 LOCALIZATION_LANGUAGES=cs de es fr it ja ko pl pt-BR ru tr zh-Hans zh-Hant
 TRANSLATED_ASSEMBLIES = $(foreach locale,$(LOCALIZATION_LANGUAGES),$(locale)/Xamarin.Localization.MSBuild)
 LOCALIZATION_ASSEMBLIES = Xamarin.Localization.MSBuild
 IOS_TASK_ASSEMBLIES = Xamarin.iOS.Tasks $(LOCALIZATION_ASSEMBLIES)
+IOS_WINDOWS_TASK_ASSEMBLIES = Xamarin.iOS.Tasks.Windows
 
 IOS_DIRECTORIES =                                                                                           \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS                                                  \
@@ -75,7 +82,7 @@ ifdef INCLUDE_IOS
 MSBUILD_PRODUCTS += all-ios
 MSBUILD_DIRECTORIES += $(IOS_DIRECTORIES)
 MSBUILD_SYMLINKS += symlinks-ios
-MSBUILD_TASK_ASSEMBLIES += $(IOS_TASK_ASSEMBLIES)
+MSBUILD_TASK_ASSEMBLIES += $(IOS_TASK_ASSEMBLIES) $(IOS_WINDOWS_TASK_ASSEMBLIES)
 endif
 
 ##
@@ -385,6 +392,7 @@ endif
 
 DOTNET_DIRECTORIES += \
 	$(DOTNET_DESTDIR)/$(IOS_NUGET).Sdk/tools/msbuild/iOS \
+	$(DOTNET_DESTDIR)/$(IOS_WINDOWS_NUGET).Sdk/tools/msbuild/iOS \
 	$(DOTNET_DESTDIR)/$(TVOS_NUGET).Sdk/tools/msbuild/iOS \
 	$(DOTNET_DESTDIR)/$(TVOS_NUGET).Sdk/tools/msbuild/tvOS \
 	$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Sdk/tools/msbuild/iOS \
@@ -413,7 +421,20 @@ MSBUILD_DIRECTORIES += $(DOTNET_DIRECTORIES)
 
 ifdef ENABLE_DOTNET
 MSBUILD_PRODUCTS += $(DOTNET_TARGETS)
+
+ifdef ENABLE_DOTNET_WINDOWS
+DOTNET_IOS_WINDOWS_OUTPUT_FILES = $(foreach dll,$(IOS_WINDOWS_TASK_ASSEMBLIES),$(dll).dll $(dll).pdb) Broker.zip Build.zip
+DOTNET_IOS_WINDOWS_FILES = $(IOS_WINDOWS_TARGETS) $(foreach file,$(DOTNET_IOS_WINDOWS_OUTPUT_FILES),Xamarin.iOS.Tasks.Windows/bin/$(CONFIG)/$(TARGETFRAMEWORK)/$(file))
+
+# Ensures Xamarin.iOS.Tasks.Windows is built and copies the output files to the Sdk Windows pack
+.dotnet-windows: .build-stamp
+	$(CP) $(DOTNET_IOS_WINDOWS_FILES) $(DOTNET_DESTDIR)/$(IOS_WINDOWS_NUGET).Sdk/tools/msbuild/iOS/
+
+all-local:: .dotnet-windows
+dotnet:: .dotnet-windows
 endif
+endif
+
 ##
 ## Common targets ##
 ##
@@ -459,7 +480,7 @@ clean-local::
 	git clean -xfdq
 	cd $(XAMARIN_MACDEV_PATH) && git clean -xfdq
 
-dotnet: $(DOTNET_TARGETS)
+dotnet:: $(DOTNET_TARGETS)
 
 # make will automatically consider files created in chained implicit rules as temporary files, and delete them afterwards
 # marking those files as .SECONDARY will prevent that deletion.

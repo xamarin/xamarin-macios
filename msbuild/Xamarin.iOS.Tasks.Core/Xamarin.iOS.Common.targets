@@ -17,8 +17,15 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.iOS.Common.props" />
 
+	<PropertyGroup>
+		<!-- Naming convention that relies on the fact that there will be a Microsoft.Windows.iOS.Sdk pack with the same version that the core SDK, on Windows installations only -->
+		<WindowsiOSSdkDirectory>$(MSBuildThisFileDirectory.Replace('Microsoft.iOS.Sdk', 'Microsoft.iOS.Windows.Sdk'))</WindowsiOSSdkDirectory>
+	</PropertyGroup>
+
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets" 
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets')"/>
+	<Import Project="$(WindowsiOSSdkDirectory)$(MSBuildThisFileName).Before.targets" 
+			Condition="Exists('$(WindowsiOSSdkDirectory)$(MSBuildThisFileName).Before.targets')"/>
 
 	<!-- *** Code Analysis Setup *** -->
 	<!-- Library projects aren't supported, if we enable Xamarin.Analysis on them, we'll need to revisit the rules and deactivate some (e.g XIA0002). -->
@@ -1260,5 +1267,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets')"/>
-
+	<Import Project="$(WindowsiOSSdkDirectory)$(MSBuildThisFileName).After.targets"
+		Condition="Exists('$(WindowsiOSSdkDirectory)$(MSBuildThisFileName).After.targets')"/>
+		
 </Project>

@@ -149,6 +149,7 @@
 	<!-- Inject our custom logic into *DependsOn variables -->
 	<PropertyGroup>
 		<BuildDependsOn>
+			_ComputePublishTrimmed;
 			BuildOnlySettings;
 			_CollectBundleResources;
 			_PackLibraryResources;
@@ -194,6 +195,14 @@
 		<_AdditionalTaskAssemblyDirectory>$(_XamarinSdkRootDirectory)tools/dotnet-linker/</_AdditionalTaskAssemblyDirectory>
 		<_AdditionalTaskAssembly>$(_AdditionalTaskAssemblyDirectory)dotnet-linker.dll</_AdditionalTaskAssembly>
 	</PropertyGroup>
+
+	<!-- PublishTrimmed must be calculated as part of a target because IsMacEnabled on Windows will be set after connecting to the Mac -->
+	<Target Name="_ComputePublishTrimmed">
+		<PropertyGroup>
+			<PublishTrimmed Condition="'$(PublishTrimmed)' == '' And ($(_ProjectType.EndsWith('ExecutableProject')) Or $(_ProjectType.EndsWith('AppExtensionProject'))) And '$(IsMacEnabled)' == 'true'">true</PublishTrimmed>
+		</PropertyGroup>
+	</Target>
+
 	<Target Name="_ComputeLinkerArguments" DependsOnTargets="_ComputeLinkMode;_ComputeFrameworkVariables;_ComputeFrameworkAssemblies;ComputeResolvedFilesToPublishList;_ParseBundlerArguments;_ComputeVariables;">
 		<!-- Validate the linker mode -->
 		<Error Text="Invalid link mode: '$(_LinkMode)'. Valid link modes are: 'None', 'SdkOnly' and 'Full'" Condition="'$(_LinkMode)' != 'None' And '$(_LinkMode)' != 'SdkOnly' And '$(_LinkMode)' != 'Full'" />
@@ -201,12 +210,15 @@
 		<PropertyGroup>
 			<!-- Pass the custom options to our custom steps -->
 			<_CustomLinkerOptionsFile>$([System.IO.Path]::GetFullPath('$(IntermediateOutputPath)custom-linker-options.txt'))</_CustomLinkerOptionsFile>
+			<_CustomLinkerOptionsFile Condition="'$(BuildSessionId)' != ''">$(IntermediateOutputPath)custom-linker-options.txt</_CustomLinkerOptionsFile>
 
 			<!-- The directory where the linker puts *.items files that will be loaded in the _LoadLinkerOutput target -->
 			<_LinkerItemsDirectory>$([System.IO.Path]::GetFullPath('$(IntermediateOutputPath)linker-items'))</_LinkerItemsDirectory>
+			<_LinkerItemsDirectory Condition="'$(BuildSessionId)' != ''">$(IntermediateOutputPath)linker-items</_LinkerItemsDirectory>
 
 			<!-- A temporary output directory for our linker steps -->
 			<_LinkerCacheDirectory>$([System.IO.Path]::GetFullPath('$(IntermediateOutputPath)linker-cache'))</_LinkerCacheDirectory>
+			<_LinkerCacheDirectory Condition="'$(BuildSessionId)' != ''">$(IntermediateOutputPath)linker-cache</_LinkerCacheDirectory>
 
 			<_CustomLinkerOptions>
 				AssemblyName=$(AssemblyName).dll
@@ -300,44 +312,44 @@
 		</ItemGroup>
 
 		<!-- Create the file with our custom linker options -->
-		<WriteLinesToFile File="$(_CustomLinkerOptionsFile)" Lines="$(_CustomLinkerOptions)" Overwrite="true" />
+		<WriteLinesToFile SessionId="$(BuildSessionId)" File="$(_CustomLinkerOptionsFile)" Lines="$(_CustomLinkerOptions)" Overwrite="true" />
 	</Target>
 
 	<Target Name="_LoadLinkerOutput">
 		<!-- Load _MainFile -->
-		<ReadItemsFromFile File="$(_LinkerItemsDirectory)/_MainFile.items" Condition="Exists('$(_LinkerItemsDirectory)/_MainFile.items')">
+		<ReadItemsFromFile SessionId="$(BuildSessionId)" File="$(_LinkerItemsDirectory)/_MainFile.items" Condition="Exists('$(_LinkerItemsDirectory)/_MainFile.items')">
 			<Output TaskParameter="Items" ItemName="_MainFile" />
 		</ReadItemsFromFile>
 		<!-- Load _MainLinkWith -->
-		<ReadItemsFromFile File="$(_LinkerItemsDirectory)/_MainLinkWith.items" Condition="Exists('$(_LinkerItemsDirectory)/_MainLinkWith.items')">
+		<ReadItemsFromFile SessionId="$(BuildSessionId)" File="$(_LinkerItemsDirectory)/_MainLinkWith.items" Condition="Exists('$(_LinkerItemsDirectory)/_MainLinkWith.items')">
 			<Output TaskParameter="Items" ItemName="_MainLinkWith" />
 		</ReadItemsFromFile>
 		<!-- Load _LinkerFrameworks -->
-		<ReadItemsFromFile File="$(_LinkerItemsDirectory)/_LinkerFrameworks.items" Condition="Exists('$(_LinkerItemsDirectory)/_LinkerFrameworks.items')">
+		<ReadItemsFromFile SessionId="$(BuildSessionId)" File="$(_LinkerItemsDirectory)/_LinkerFrameworks.items" Condition="Exists('$(_LinkerItemsDirectory)/_LinkerFrameworks.items')">
 			<Output TaskParameter="Items" ItemName="_LinkerFrameworks" />
 		</ReadItemsFromFile>
 		<!-- Load _BindingLibraryLinkWith -->
-		<ReadItemsFromFile File="$(_LinkerItemsDirectory)/_BindingLibraryLinkWith.items" Condition="Exists('$(_LinkerItemsDirectory)/_BindingLibraryLinkWith.items')">
+		<ReadItemsFromFile SessionId="$(BuildSessionId)" File="$(_LinkerItemsDirectory)/_BindingLibraryLinkWith.items" Condition="Exists('$(_LinkerItemsDirectory)/_BindingLibraryLinkWith.items')">
 			<Output TaskParameter="Items" ItemName="_BindingLibraryLinkWith" />
 		</ReadItemsFromFile>
 		<!-- Load _BindingLibraryLinkerFlags -->
-		<ReadItemsFromFile File="$(_LinkerItemsDirectory)/_BindingLibraryLinkerFlags.items" Condition="Exists('$(_LinkerItemsDirectory)/_BindingLibraryLinkerFlags.items')">
+		<ReadItemsFromFile SessionId="$(BuildSessionId)" File="$(_LinkerItemsDirectory)/_BindingLibraryLinkerFlags.items" Condition="Exists('$(_LinkerItemsDirectory)/_BindingLibraryLinkerFlags.items')">
 			<Output TaskParameter="Items" ItemName="_BindingLibraryLinkerFlags" />
 		</ReadItemsFromFile>
 		<!-- Load _BindingLibraryFrameworks -->
-		<ReadItemsFromFile File="$(_LinkerItemsDirectory)/_BindingLibraryFrameworks.items" Condition="Exists('$(_LinkerItemsDirectory)/_BindingLibraryFrameworks.items')">
+		<ReadItemsFromFile SessionId="$(BuildSessionId)" File="$(_LinkerItemsDirectory)/_BindingLibraryFrameworks.items" Condition="Exists('$(_LinkerItemsDirectory)/_BindingLibraryFrameworks.items')">
 			<Output TaskParameter="Items" ItemName="_BindingLibraryFrameworks" />
 		</ReadItemsFromFile>
 		<!-- Load _RegistrarFile -->
-		<ReadItemsFromFile File="$(_LinkerItemsDirectory)/_RegistrarFile.items" Condition="Exists('$(_LinkerItemsDirectory)/_RegistrarFile.items')">
+		<ReadItemsFromFile SessionId="$(BuildSessionId)" File="$(_LinkerItemsDirectory)/_RegistrarFile.items" Condition="Exists('$(_LinkerItemsDirectory)/_RegistrarFile.items')">
 			<Output TaskParameter="Items" ItemName="_RegistrarFile" />
 		</ReadItemsFromFile>
 		<!-- Load _ReferencesFile -->
-		<ReadItemsFromFile File="$(_LinkerItemsDirectory)/_ReferencesFile.items" Condition="Exists('$(_LinkerItemsDirectory)/_ReferencesFile.items')">
+		<ReadItemsFromFile SessionId="$(BuildSessionId)" File="$(_LinkerItemsDirectory)/_ReferencesFile.items" Condition="Exists('$(_LinkerItemsDirectory)/_ReferencesFile.items')">
 			<Output TaskParameter="Items" ItemName="_ReferencesFile" />
 		</ReadItemsFromFile>
 		<!-- Load _ReferencesLinkerFlags -->
-		<ReadItemsFromFile File="$(_LinkerItemsDirectory)/_ReferencesLinkerFlags.items" Condition="Exists('$(_LinkerItemsDirectory)/_ReferencesLinkerFlags.items')">
+		<ReadItemsFromFile SessionId="$(BuildSessionId)" File="$(_LinkerItemsDirectory)/_ReferencesLinkerFlags.items" Condition="Exists('$(_LinkerItemsDirectory)/_ReferencesLinkerFlags.items')">
 			<Output TaskParameter="Items" ItemName="_ReferencesLinkerFlags" />
 		</ReadItemsFromFile>
 		<!-- Load _AssembliesToAOT -->
@@ -521,6 +533,12 @@
 		</CompileNativeCode>
 	</Target>
 
+	<PropertyGroup>
+		<_UpdateDynamicLibraryIdDependsOn>
+			_ComputeVariables;
+			_ParseBundlerArguments;
+		</_UpdateDynamicLibraryIdDependsOn>
+	</PropertyGroup>
 
 	<!-- The .dylibs shipped with mono comes with the original identity:
 
@@ -533,7 +551,7 @@
 	-->
 	<Target
 		Name="_UpdateDynamicLibraryId"
-		DependsOnTargets="_ComputeVariables;_ParseBundlerArguments"
+		DependsOnTargets="$(_UpdateDynamicLibraryIdDependsOn)"
 		Inputs="@(_MonoLibraryFix)"
 		Outputs="@(_MonoLibraryFix.TargetPath)"
 		Condition=" '$(_PlatformName)' != 'macOS'">
@@ -546,11 +564,13 @@
 		<!-- install_name_tool modifies the file in-place, so copy it first to a temporary directory before we fix it -->
 		<Copy
 			Condition="'$(IsMacEnabled)' == 'true'"
+			SessionId="$(BuildSessionId)"
 			SourceFiles="%(_MonoLibraryFix.FullPath)"
 			DestinationFolder="$(_IntermediateNativeLibraryDir)"
 		/>
 		<Exec
 			Condition="'$(IsMacEnabled)' == 'true'"
+			SessionId="$(BuildSessionId)"
 			Command="xcrun install_name_tool -id $(_ExecutablePathPrefix)%(_MonoLibraryFix.Filename)%(_MonoLibraryFix.Extension) %(_MonoLibraryFix.TargetPath)"
 			EnvironmentVariables="DEVELOPER_DIR=$(_SdkDevPath)"
 		/>
@@ -745,8 +765,5 @@
 	<Import Project="$(_TargetsDirectory)Xamarin.Mac.AppExtension.$(_ProjectLanguage).targets"     Condition="'$(_ProjectType)' == 'macOSAppExtensionProject' " />
 	<Import Project="$(_TargetsDirectory)Xamarin.Mac.ObjCBinding.$(_ProjectLanguage).targets"      Condition="'$(_ProjectType)' == 'macOSBindingProject' " />
 
-	<PropertyGroup>
-		<!-- PublishTrimmed depends on IsMacEnabled, which is defined in the Xamarin.iOS/Xamarin.Mac targets files we import just above here -->
-		<PublishTrimmed Condition="'$(PublishTrimmed)' == '' And ($(_ProjectType.EndsWith('ExecutableProject')) Or $(_ProjectType.EndsWith('AppExtensionProject'))) And '$(IsMacEnabled)' == 'true'">true</PublishTrimmed>
-	</PropertyGroup>
+	
 </Project>
