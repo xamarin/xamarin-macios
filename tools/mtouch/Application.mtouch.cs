@@ -823,25 +823,6 @@ namespace Xamarin.Bundler {
 				}
 			}
 
-			if (Frameworks.Count > 0) {
-				switch (Platform) {
-				case ApplePlatform.iOS:
-					if (DeploymentTarget < new Version (8, 0))
-						throw ErrorHelper.CreateError (65, Errors.MT0065, DeploymentTarget, string.Join (", ", Frameworks.ToArray ()));
-					break;
-				case ApplePlatform.WatchOS:
-					if (DeploymentTarget < new Version (2, 0))
-						throw ErrorHelper.CreateError (65, Errors.MT0065_A, DeploymentTarget, string.Join (", ", Frameworks.ToArray ()));
-					break;
-				case ApplePlatform.TVOS:
-				case ApplePlatform.MacCatalyst:
-					// All versions of tvOS and Mac Catalyst support extensions
-					break;
-				default:
-					throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
-				}
-			}
-
 			if (IsDeviceBuild) {
 				switch (BitCodeMode) {
 				case BitCodeMode.ASMOnly:
@@ -868,6 +849,25 @@ namespace Xamarin.Bundler {
 			}
 
 			InitializeCommon ();
+
+			if (Frameworks.Count > 0) {
+				switch (Platform) {
+				case ApplePlatform.iOS:
+					if (DeploymentTarget < new Version (8, 0))
+						throw ErrorHelper.CreateError (65, Errors.MT0065, DeploymentTarget, string.Join (", ", Frameworks.ToArray ()));
+					break;
+				case ApplePlatform.WatchOS:
+					if (DeploymentTarget < new Version (2, 0))
+						throw ErrorHelper.CreateError (65, Errors.MT0065_A, DeploymentTarget, string.Join (", ", Frameworks.ToArray ()));
+					break;
+				case ApplePlatform.TVOS:
+				case ApplePlatform.MacCatalyst:
+					// All versions of tvOS and Mac Catalyst support extensions
+					break;
+				default:
+					throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
+				}
+			}
 
 			if (Platform == ApplePlatform.iOS) {
 				if (DeploymentTarget.Major >= 11 && Is32Build) {
