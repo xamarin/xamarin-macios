@@ -793,26 +793,6 @@ namespace Xamarin.Bundler {
 			if (!IsExtension && Platform == ApplePlatform.WatchOS)
 				throw new ProductException (77, true, Errors.MT0077);
 		
-#if ENABLE_BITCODE_ON_IOS
-			if (Platform == ApplePlatform.iOS)
-				DeploymentTarget = new Version (9, 0);
-#endif
-
-			if (DeploymentTarget == null)
-				DeploymentTarget = Xamarin.SdkVersions.GetVersion (this);
-
-			if (Platform == ApplePlatform.iOS && (HasDynamicLibraries || HasFrameworks) && DeploymentTarget.Major < 8) {
-				ErrorHelper.Warning (78, Errors.MT0078, DeploymentTarget);
-				DeploymentTarget = new Version (8, 0);
-			}
-
-			if (Platform == ApplePlatform.MacCatalyst) {
-				// The deployment target we expect for Mac Catalyst is the macOS version,
-				// but we're expected to provide the corresponding iOS version pretty much
-				// everywhere, so convert here.
-				DeploymentTarget = GetMacCatalystiOSVersion (DeploymentTarget);
-			}
-
 			if (!enable_msym.HasValue)
 				enable_msym = !EnableDebug && IsDeviceBuild;
 
@@ -843,25 +823,6 @@ namespace Xamarin.Bundler {
 				}
 			}
 
-			if (Frameworks.Count > 0) {
-				switch (Platform) {
-				case ApplePlatform.iOS:
-					if (DeploymentTarget < new Version (8, 0))
-						throw ErrorHelper.CreateError (65, Errors.MT0065, DeploymentTarget, string.Join (", ", Frameworks.ToArray ()));
-					break;
-				case ApplePlatform.WatchOS:
-					if (DeploymentTarget < new Version (2, 0))
-						throw ErrorHelper.CreateError (65, Errors.MT0065_A, DeploymentTarget, string.Join (", ", Frameworks.ToArray ()));
-					break;
-				case ApplePlatform.TVOS:
-				case ApplePlatform.MacCatalyst:
-					// All versions of tvOS and Mac Catalyst support extensions
-					break;
-				default:
-					throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
-				}
-			}
-
 			if (IsDeviceBuild) {
 				switch (BitCodeMode) {
 				case BitCodeMode.ASMOnly:
@@ -887,14 +848,33 @@ namespace Xamarin.Bundler {
 				RootAssemblies.Add (Path.Combine (Driver.GetPlatformFrameworkDirectory (this), Driver.GetProductAssembly (this) + ".dll"));
 			}
 
+			InitializeCommon ();
+
+			if (Frameworks.Count > 0) {
+				switch (Platform) {
+				case ApplePlatform.iOS:
+					if (DeploymentTarget < new Version (8, 0))
+						throw ErrorHelper.CreateError (65, Errors.MT0065, DeploymentTarget, string.Join (", ", Frameworks.ToArray ()));
+					break;
+				case ApplePlatform.WatchOS:
+					if (DeploymentTarget < new Version (2, 0))
+						throw ErrorHelper.CreateError (65, Errors.MT0065_A, DeploymentTarget, string.Join (", ", Frameworks.ToArray ()));
+					break;
+				case ApplePlatform.TVOS:
+				case ApplePlatform.MacCatalyst:
+					// All versions of tvOS and Mac Catalyst support extensions
+					break;
+				default:
+					throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
+				}
+			}
+
 			if (Platform == ApplePlatform.iOS) {
 				if (DeploymentTarget.Major >= 11 && Is32Build) {
 					var invalidArches = abis.Where ((v) => (v & Abi.Arch32Mask) != 0);
 					throw ErrorHelper.CreateError (116, Errors.MT0116, invalidArches.First ());
 				}
 			}
-
-			InitializeCommon ();
 
 			Driver.Watch ("Resolve References", 1);
 		}
