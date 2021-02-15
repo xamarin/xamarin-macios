@@ -353,7 +353,7 @@
 			<Output TaskParameter="Items" ItemName="_ReferencesLinkerFlags" />
 		</ReadItemsFromFile>
 		<!-- Load _AssembliesToAOT -->
-		<ReadItemsFromFile File="$(_LinkerItemsDirectory)/_AssembliesToAOT.items" Condition="Exists('$(_LinkerItemsDirectory)/_AssembliesToAOT.items')">
+		<ReadItemsFromFile SessionId="$(BuildSessionId)" File="$(_LinkerItemsDirectory)/_AssembliesToAOT.items" Condition="Exists('$(_LinkerItemsDirectory)/_AssembliesToAOT.items')">
 			<Output TaskParameter="Items" ItemName="_AssembliesToAOT" />
 		</ReadItemsFromFile>
 	</Target>
