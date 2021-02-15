@@ -15,21 +15,6 @@ using Foundation;
 
 namespace Security {
 
-	// untyped enum in Security.framework/Headers/SecPolicy.h but the API use CFOptionFlags
-	// which is defined as in CFBase.h (do not trust Apple web documentation)
-	[iOS (7,0)]
-	[Flags]
-	[Native]
-	public enum SecRevocation : ulong {
-		None,
-		OCSPMethod = 1,
-		CRLMethod = 2,
-		PreferCRL = 4,
-		RequirePositiveResponse = 8,
-		NetworkAccessDisabled = 16,
-		UseAnyAvailableMethod = OCSPMethod | CRLMethod
-	}
-
 	public partial class SecPolicy {
 
 		[iOS (7,0)]

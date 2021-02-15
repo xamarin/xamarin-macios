@@ -40,14 +40,4 @@ namespace Network {
 
 		public uint Index => nw_interface_get_index (GetCheckedHandle ());
 	}
-
-	[TV (12,0), Mac (10,14), iOS (12,0)]
-	[Watch (6,0)]
-	public enum NWInterfaceType {
-		Other = 0,
-		Wifi = 1,
-		Cellular = 2,
-		Wired = 3,
-		Loopback = 4,
-	}
 }

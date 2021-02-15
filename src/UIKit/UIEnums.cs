@@ -3164,4 +3164,11 @@ namespace UIKit {
 		Standard = 0xffff,
 	}
 
+	// NSInteger -> UIGuidedAccessRestrictions.h
+	[Native]
+	[iOS (7,0)]
+	public enum UIGuidedAccessRestrictionState : long {
+		Allow,
+		Deny,
+	}
 }

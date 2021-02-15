@@ -73,6 +73,9 @@ namespace CoreGraphics {
 			handle = CGPathCreateMutable ();
 		}
 
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		extern static /* CGMutablePathRef */ IntPtr CGPathCreateMutableCopyByTransformingPath (/* CGPathRef */ IntPtr path, /* const CGAffineTransform* */ ref CGAffineTransform transform);
+
 		public CGPath (CGPath reference, CGAffineTransform transform)
 		{
 			if (reference == null)
@@ -138,6 +141,7 @@ namespace CoreGraphics {
 			}
 		}
 
+#if !COREBUILD
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static bool CGPathEqualToPath (/* CGPathRef */ IntPtr path1, /* CGPathRef */ IntPtr path2);
 
@@ -578,9 +582,6 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static /* CGMutablePathRef */ IntPtr CGPathCreateMutableCopyByTransformingPath (/* CGPathRef */ IntPtr path, /* const CGAffineTransform* */ ref CGAffineTransform transform);
-
-		[DllImport (Constants.CoreGraphicsLibrary)]
 		unsafe extern static IntPtr CGPathCreateWithEllipseInRect (CGRect boundingRect, CGAffineTransform *transform);
 
 		static public unsafe CGPath EllipseFromRect (CGRect boundingRect, CGAffineTransform transform)
@@ -644,5 +645,6 @@ namespace CoreGraphics {
 		{
 			CGPathAddRoundedRect (handle, null, rect, cornerWidth, cornerHeight);
 		}
+#endif // !COREBUILD
 	}
 }
