@@ -7,7 +7,8 @@ namespace Xamarin.Mac.Tasks
 	{
 		protected override IAppleSdkVersion GetDefaultSdkVersion ()
 		{
-			return MacOSXSdkVersion.GetDefault (CurrentSdk);
+			var v = CurrentSdk.GetInstalledSdkVersions (false);
+			return v.Count > 0 ? v [v.Count - 1] : AppleSdkVersion.UseDefault;
 		}
 
 		protected override string GetDefaultXamarinSdkRoot ()

@@ -19,7 +19,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
 	<PropertyGroup Condition="'$(_TaskAssemblyName)' == ''">
-		<_TaskAssemblyName Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'">$(MSBuildThisFileDirectory)..\iOS\Xamarin.iOS.Tasks.dll</_TaskAssemblyName>
+		<_TaskAssemblyName Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS' Or '$(_PlatformName)' == 'MacCatalyst'">$(MSBuildThisFileDirectory)..\iOS\Xamarin.iOS.Tasks.dll</_TaskAssemblyName>
 		<_TaskAssemblyName Condition="'$(_PlatformName)' == 'macOS'">$(MSBuildThisFileDirectory)Xamarin.Mac.Tasks.dll</_TaskAssemblyName>
 	</PropertyGroup>
 
@@ -31,6 +31,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<UsingTask TaskName="Microsoft.Build.Tasks.Move" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Microsoft.Build.Tasks.RemoveDir" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Microsoft.Build.Tasks.Touch" AssemblyFile="$(_TaskAssemblyName)" />
+	<UsingTask TaskName="Microsoft.Build.Tasks.WriteLinesToFile" AssemblyFile="$(_TaskAssemblyName)" />
 
 	<!-- Xamarin.iOS-specific tasks. Some of these are duplicated with the Xamarin.Mac ones below, and should eventually be re-namespaced to be in Xamarin.MacDev -->
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.ACTool" AssemblyFile="$(_TaskAssemblyName)" />
@@ -68,9 +69,11 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.ParseDeviceSpecificBuildInformation" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.PrepareNativeReferences" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.ResolveNativeWatchApp" AssemblyFile="$(_TaskAssemblyName)" />
+	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.ResolveUniversalTypeIdentifiers" AssemblyFile="Xamarin.iOS.Tasks.dll" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.ScnTool" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.TextureAtlas" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.ValidateAppBundleTask" AssemblyFile="$(_TaskAssemblyName)" />
+	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.VerifyXcodeVersion" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.WriteAssetPackManifest" AssemblyFile="$(_TaskAssemblyName)" />
 
 	<!-- Xamarin.Mac-specific tasks. Some of these are duplicated with the Xamarin.iOS ones above, and should eventually be re-namespaced to be in Xamarin.MacDev -->
@@ -539,8 +542,8 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 	<Target Name="_ComputePkgInfoPath" DependsOnTargets="_GenerateBundleName">
 		<PropertyGroup>
-			<_PkgInfoPath Condition="'$(_PlatformName)' != 'macOS'">$(_AppBundlePath)PkgInfo</_PkgInfoPath>
-			<_PkgInfoPath Condition="'$(_PlatformName)' == 'macOS' Or '$(_IsMacCatalyst)' == 'true'">$(_AppBundlePath)Contents\PkgInfo</_PkgInfoPath>
+			<_PkgInfoPath Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">$(_AppBundlePath)Contents\PkgInfo</_PkgInfoPath>
+			<_PkgInfoPath Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'">$(_AppBundlePath)PkgInfo</_PkgInfoPath>
 		</PropertyGroup>
 	</Target>
 
@@ -807,7 +810,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</DetectSigningIdentity>
 
 		<PropertyGroup>
-			<_EmbeddedProvisionProfilePath Condition="'$(_EmbeddedProvisionProfilePath)' == '' And ('$(_PlatformName)' == 'macOS' Or '$(_IsMacCatalyst)' == 'true')">$(_AppBundlePath)Contents\embedded.provisionprofile</_EmbeddedProvisionProfilePath>
+			<_EmbeddedProvisionProfilePath Condition="'$(_EmbeddedProvisionProfilePath)' == '' And ('$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst')">$(_AppBundlePath)Contents\embedded.provisionprofile</_EmbeddedProvisionProfilePath>
 			<_EmbeddedProvisionProfilePath Condition="'$(_EmbeddedProvisionProfilePath)' == '' And ('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS')">$(_AppBundlePath)embedded.mobileprovision</_EmbeddedProvisionProfilePath>
 		</PropertyGroup>
 	</Target>
@@ -935,11 +938,11 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<_LibraryCodeSigningKey Condition="'$(_LibraryCodeSigningKey)' == ''">-</_LibraryCodeSigningKey>
 		</PropertyGroup>
 
-		<ItemGroup Condition="'$(_PlatformName)' == 'macOS'">
+		<ItemGroup Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">
 			<_CodesignNativeLibrary Include="$(_AppContentsPath)\**\*.dylib" />
 			<_CodesignNativeLibrary Include="$(_AppResourcesPath)\**\*.metallib" />
 		</ItemGroup>
-		<ItemGroup Condition="'$(_PlatformName)' != 'macOS'">
+		<ItemGroup Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'">
 			<_CodesignNativeLibrary
 				Include="$(_AppBundlePath)\**\*.dylib;$(_AppBundlePath)\**\*.metallib"
 				Exclude="$(_AppBundlePath)\Watch\**;$(_AppBundlePath)\PlugIns\**"
@@ -973,9 +976,8 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 	<Target Name="_CollectFrameworks" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="$(_CollectFrameworksDependsOn)">
 		<PropertyGroup>
-			<_FrameworksDirectory Condition="'$(_FrameworksDirectory)' == '' And '$(_IsMacCatalyst)' == 'true'">$(_AppBundlePath)/Contents/Frameworks</_FrameworksDirectory>
-			<_FrameworksDirectory Condition="'$(_FrameworksDirectory)' == '' And '$(_PlatformName)' != 'macOS'">$(_AppBundlePath)/Frameworks</_FrameworksDirectory>
-			<_FrameworksDirectory Condition="'$(_FrameworksDirectory)' == '' And '$(_PlatformName)' == 'macOS'">$(_AppBundlePath)/Contents/Frameworks</_FrameworksDirectory>
+			<_FrameworksDirectory Condition="'$(_FrameworksDirectory)' == '' And ('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS')">$(_AppBundlePath)/Frameworks</_FrameworksDirectory>
+			<_FrameworksDirectory Condition="'$(_FrameworksDirectory)' == '' And ('$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst')">$(_AppBundlePath)/Contents/Frameworks</_FrameworksDirectory>
 		</PropertyGroup>
 		<CollectFrameworks
 			SessionId="$(BuildSessionId)"
@@ -1200,8 +1202,8 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</GetNativeExecutableName>
 
 		<PropertyGroup>
-			<_NativeExecutable Condition="'$(_PlatformName)' != 'macOS'">$(_AppBundlePath)$(_ExecutableName)</_NativeExecutable>
-			<_NativeExecutable Condition="'$(_PlatformName)' == 'macOS' Or '$(_IsMacCatalyst)' == 'true'">$(_AppBundlePath)Contents\MacOS\$(_ExecutableName)</_NativeExecutable>
+			<_NativeExecutable Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'">$(_AppBundlePath)$(_ExecutableName)</_NativeExecutable>
+			<_NativeExecutable Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">$(_AppBundlePath)Contents\MacOS\$(_ExecutableName)</_NativeExecutable>
 		</PropertyGroup>
 	</Target>
 
@@ -1385,6 +1387,32 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			Input="$(AppBundleDir)/../"
 		>
 		</SpotlightIndexer>
+	</Target>
+
+	<Target Name="_GenerateBundleName" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_ComputeTargetArchitectures;_ParseBundlerArguments">
+		<PropertyGroup Condition="'$(AppBundleDir)' == ''">
+			<AppBundleDir Condition="'$(IsAppDistribution)' != 'true'">$(DeviceSpecificOutputPath)$(_AppBundleName)$(AppBundleExtension)</AppBundleDir>
+			<AppBundleDir Condition="'$(IsAppDistribution)' == 'true'">$(ArchivePath)\Products\Applications\$(_AppBundleName)$(AppBundleExtension)</AppBundleDir>
+		</PropertyGroup>
+		<PropertyGroup>
+			<_AppBundlePath>$(AppBundleDir)\</_AppBundlePath>
+			<_AppResourcesPath Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">$(_AppBundlePath)Contents\Resources\</_AppResourcesPath>
+			<_AppResourcesPath Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'">$(_AppBundlePath)</_AppResourcesPath>
+
+			<_AppContentsPath Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">$(_AppBundlePath)Contents\$(_CustomBundleName)</_AppContentsPath>
+			<_AppContentsPath Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'">$(_AppBundlePath)</_AppContentsPath>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(IsAppExtension)' == 'true'">
+			<!-- needed for GetTargetPath/Build/Rebuild task outputs -->
+			<_AppExtensionBundlePath>$(MSBuildProjectDirectory)\$(AppBundleDir)</_AppExtensionBundlePath>
+		</PropertyGroup>
+		<ItemGroup Condition="'$(IsAppExtension)' == 'true'">
+			<_AppExtensionBundlePath Include="$(MSBuildProjectDirectory)\$(AppBundleDir)">
+				<!-- We need this metadata to fix the source in VS -->
+				<BuildSessionId>$(BuildSessionId)</BuildSessionId>
+				<BuildServerPath>..\..\$(BuildAppName)\$(BuildSessionId)\$(AppBundleDir)</BuildServerPath>
+			</_AppExtensionBundlePath>
+		</ItemGroup>
 	</Target>
 
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Shared.ObjCBinding.targets" Condition="'$(IsBindingProject)' == 'true'" />

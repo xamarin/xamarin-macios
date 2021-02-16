@@ -775,6 +775,7 @@ namespace Xamarin.Bundler {
 
 		public void InitializeCommon ()
 		{
+			InitializeDeploymentTarget ();
 			SelectRegistrar ();
 			SelectMonoNative ();
 
@@ -792,13 +793,6 @@ namespace Xamarin.Bundler {
 					// Default to the iOS error message, it's better than showing MX0071 (unknown platform), which would be completely unrelated
 					goto case ApplePlatform.iOS;
 				}
-			}
-
-			if (DeploymentTarget != null) {
-				if (DeploymentTarget < Xamarin.SdkVersions.GetMinVersion (this))
-					throw new ProductException (73, true, Errors.MT0073, ProductConstants.Version, DeploymentTarget, Xamarin.SdkVersions.GetMinVersion (this), PlatformName, ProductName);
-				if (DeploymentTarget > Xamarin.SdkVersions.GetVersion (this))
-					throw new ProductException (74, true, Errors.MX0074, ProductConstants.Version, DeploymentTarget, Xamarin.SdkVersions.GetVersion (this), PlatformName, ProductName);
 			}
 
 			if (Platform == ApplePlatform.WatchOS && EnableCoopGC.HasValue && !EnableCoopGC.Value)
@@ -844,6 +838,36 @@ namespace Xamarin.Bundler {
 			ErrorHelper.Show (messages);
 			if (Driver.Verbosity > 3)
 				Driver.Log (4, $"Enabled optimizations: {Optimizations}");
+		}
+
+		void InitializeDeploymentTarget ()
+		{
+#if ENABLE_BITCODE_ON_IOS
+			if (Platform == ApplePlatform.iOS)
+				DeploymentTarget = new Version (9, 0);
+#endif
+
+			if (DeploymentTarget == null)
+				DeploymentTarget = SdkVersions.GetVersion (this);
+
+			if (Platform == ApplePlatform.iOS && (HasDynamicLibraries || HasFrameworks) && DeploymentTarget.Major < 8) {
+				ErrorHelper.Warning (78, Errors.MT0078, DeploymentTarget);
+				DeploymentTarget = new Version (8, 0);
+			}
+
+			if (Platform == ApplePlatform.MacCatalyst) {
+				// The deployment target we expect for Mac Catalyst is the macOS version,
+				// but we're expected to provide the corresponding iOS version pretty much
+				// everywhere, so convert here.
+				DeploymentTarget = GetMacCatalystiOSVersion (DeploymentTarget);
+			}
+
+			if (DeploymentTarget != null) {
+				if (DeploymentTarget < SdkVersions.GetMinVersion (this))
+					throw new ProductException (73, true, Errors.MT0073, ProductConstants.Version, DeploymentTarget, Xamarin.SdkVersions.GetMinVersion (this), PlatformName, ProductName);
+				if (DeploymentTarget > SdkVersions.GetVersion (this))
+					throw new ProductException (74, true, Errors.MX0074, ProductConstants.Version, DeploymentTarget, Xamarin.SdkVersions.GetVersion (this), PlatformName, ProductName);
+			}
 		}
 
 		void SelectMonoNative ()
@@ -1414,7 +1438,7 @@ namespace Xamarin.Bundler {
 		public bool IsAOTCompiled (string assembly)
 		{
 #if NET
-			if (Platform == ApplePlatform.MacOSX)
+			if (Platform == ApplePlatform.MacOSX || Platform == ApplePlatform.MacCatalyst)
 				return false; // AOT on .NET for macOS hasn't been implemented yet.
 #else	
 			if (Platform == ApplePlatform.MacOSX)
@@ -1612,7 +1636,7 @@ namespace Xamarin.Bundler {
 			case ApplePlatform.WatchOS:
 				return false;
 			default:
-				throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, "Xamarin.iOS");
+				throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
 			}
 		}
 

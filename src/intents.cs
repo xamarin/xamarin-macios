@@ -13684,7 +13684,7 @@ namespace Intents {
 		INCallCapability CallCapability { get; }
 	}
 
-	[Watch (4,0), NoTV, NoMac, iOS (11,0)]
+	[Watch (7,0), NoTV, NoMac, iOS (14,0)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	interface INCallRecordResolutionResult {
 

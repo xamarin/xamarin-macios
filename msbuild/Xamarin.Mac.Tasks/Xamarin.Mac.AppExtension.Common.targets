@@ -37,25 +37,6 @@ Copyright (C) 2013-2014 Xamarin. All rights reserved.
 		</PropertyGroup>
 	</Target>
 
-	<Target Name="_GenerateBundleName" DependsOnTargets="_ParseBundlerArguments">
-		<PropertyGroup>
-			<AppBundleDir Condition="'$(AppBundleDir)' == ''">$(DeviceSpecificOutputPath)$(_AppBundleName)$(_AppBundleDirExt)</AppBundleDir>
-			<_AppBundlePath>$(AppBundleDir)\</_AppBundlePath>
-			<_AppContentsPath>$(_AppBundlePath)Contents\$(_CustomBundleName)\</_AppContentsPath>
-			<_AppResourcesPath>$(_AppBundlePath)Contents\Resources\</_AppResourcesPath>
-
-			<!-- needed for GetTargetPath/Build/Rebuild task outputs -->
-			<_AppExtensionBundlePath>$(MSBuildProjectDirectory)\$(AppBundleDir)</_AppExtensionBundlePath>
-		</PropertyGroup>
-		<ItemGroup>
-			<_AppExtensionBundlePath Include="$(MSBuildProjectDirectory)\$(AppBundleDir)">
-				<!-- We need this metadata to fix the source in VS -->
-				<BuildSessionId>$(BuildSessionId)</BuildSessionId>
-				<BuildServerPath>..\..\$(BuildAppName)\$(BuildSessionId)\$(AppBundleDir)</BuildServerPath>
-			</_AppExtensionBundlePath>
-		</ItemGroup>
-	</Target>
-
 	<Target Name="CreateIpa"/>
 
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets"

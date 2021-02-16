@@ -1,0 +1,3 @@
+<Project>
+	<Import Project="Sdk.props" Sdk="Microsoft.MacCatalyst.Sdk" Condition="'$(TargetPlatformIdentifier)' == 'MacCatalyst'" />
+</Project>

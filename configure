@@ -30,8 +30,11 @@ Usage: configure [options]
     --enable-packaged-mono
     --disable-packaged-mono Enable/disable using the precompiled version of mono. If disabled mono will be compiled from source.
 
-    --enable-dotnet         Enable building .NET 5 bits.
-    --disable-dotnet        Disable building .NET 5 bits.
+    --enable-dotnet         Enable building .NET 6 bits.
+    --disable-dotnet        Disable building .NET 6 bits.
+
+    --enable-dotnet-windows         Enable building Windows .NET 6 bits. Building .NET 6 bits must be also enabled (--enable-dotnet).
+    --disable-dotnet-windows        Disable building Windows .NET 6 bits. 
 
     --enable-documentation  Enable building of API documentation
     --disable-documentation Disable building of API documentation.
@@ -118,6 +121,14 @@ while test x$1 != x; do
         ;;
     --disable-dotnet)
         echo "ENABLE_DOTNET=" >> "$CONFIGURED_FILE"
+        shift
+        ;;
+    --enable-dotnet-windows)
+        echo "ENABLE_DOTNET_WINDOWS=1" >> "$CONFIGURED_FILE"
+        shift
+        ;;
+    --disable-dotnet-windows)
+        echo "ENABLE_DOTNET_WINDOWS=" >> "$CONFIGURED_FILE"
         shift
         ;;
     --enable-install-source)

@@ -1,6 +1,37 @@
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Build.Framework;
+using Xamarin.Messaging.Build.Client;
+
 namespace Xamarin.iOS.Tasks
 {
-	public class CompileAppManifest : CompileAppManifestTaskCore
+	public class CompileAppManifest : CompileAppManifestTaskCore, ITaskCallback, ICancelableTask
 	{
+		public override bool Execute ()
+		{
+			if (!string.IsNullOrEmpty (SessionId))
+				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
+
+			return base.Execute ();
+		}
+
+		public bool ShouldCopyToBuildServer (ITaskItem item)
+		{
+			// We don't want to copy partial generated manifest files
+			if (PartialAppManifests != null && PartialAppManifests.Contains (item))
+				return false;
+
+			return true;
+		}
+
+		public bool ShouldCreateOutputFile (ITaskItem item) => true;
+
+		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied () => Enumerable.Empty<ITaskItem> ();
+
+		public void Cancel ()
+		{
+			if (!string.IsNullOrEmpty (SessionId))
+				BuildConnection.CancelAsync (SessionId, BuildEngine4).Wait ();
+		}
 	}
 }

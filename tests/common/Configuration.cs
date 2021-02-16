@@ -39,6 +39,7 @@ namespace Xamarin.Tests
 		public static bool include_mac;
 		public static bool include_tvos;
 		public static bool include_watchos;
+		public static bool include_dotnet_watchos;
 		public static bool include_device;
 
 		static Version xcode_version;
@@ -265,6 +266,7 @@ namespace Xamarin.Tests
 			include_mac = !string.IsNullOrEmpty (GetVariable ("INCLUDE_MAC", ""));
 			include_tvos = !string.IsNullOrEmpty (GetVariable ("INCLUDE_TVOS", ""));
 			include_watchos = !string.IsNullOrEmpty (GetVariable ("INCLUDE_WATCH", ""));
+			include_dotnet_watchos = !string.IsNullOrEmpty (GetVariable ("INCLUDE_DOTNET_WATCH", ""));
 			include_device = !string.IsNullOrEmpty (GetVariable ("INCLUDE_DEVICE", ""));
 			DotNet5BclDir = GetVariable ("DOTNET5_BCL_DIR", null);
 
@@ -805,6 +807,11 @@ namespace Xamarin.Tests
 			case ApplePlatform.WatchOS:
 				if (!include_watchos)
 					Assert.Ignore ("watchOS is not included in this build");
+#if NET
+				if (!include_dotnet_watchos)
+					Assert.Ignore ("watchOS is not included in this build");
+#endif
+					
 				break;
 			case ApplePlatform.MacOSX:
 				if (!include_mac)

@@ -7,6 +7,8 @@ using Microsoft.Build.Utilities;
 namespace Xamarin.MacDev.Tasks {
 	public abstract class CreateEmbeddedResourcesTaskBase : Task
 	{
+		public string SessionId { get; set; }
+
 		[Required]
 		public ITaskItem[] BundleResources { get; set; }
 
