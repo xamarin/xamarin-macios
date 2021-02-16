@@ -498,6 +498,6 @@ namespace Security {
 		PreferCRL = 4,
 		RequirePositiveResponse = 8,
 		NetworkAccessDisabled = 16,
-		UseAnyAvailableMethod = OCSPMethod | CRLMethod
+		UseAnyAvailableMethod = OCSPMethod | CRLMethod,
 	}
 }

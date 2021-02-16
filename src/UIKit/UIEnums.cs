@@ -3166,6 +3166,7 @@ namespace UIKit {
 
 	// NSInteger -> UIGuidedAccessRestrictions.h
 	[Native]
+	[NoWatch]
 	[iOS (7,0)]
 	public enum UIGuidedAccessRestrictionState : long {
 		Allow,

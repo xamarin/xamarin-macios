@@ -223,11 +223,9 @@ namespace AudioUnit
 #endif // !XAMCORE_3_0 || MONOMAC
 
 #if XAMCORE_3_0
-	internal
+	[Internal]
 #else
-	// TODO: Uncomment once bug https://bugzilla.xamarin.com/show_bug.cgi?id=27924 is fixed
-	//[Obsolete ("Please use the strongly typed properties instead.")]
-	public
+	[Obsolete ("Please use the strongly typed properties instead.")]
 #endif
 	enum AudioUnitPropertyIDType { // UInt32 AudioUnitPropertyID
 		// Audio Unit Properties

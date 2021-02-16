@@ -64,7 +64,7 @@ namespace Foundation  {
 		DiacriticInsensitiveSearch = 128,
 		WidthInsensitiveSearch = 256,
 		ForcedOrderingSearch = 512,
-		RegularExpressionSearch = 1024
+		RegularExpressionSearch = 1024,
 	}
 
 	[Native]

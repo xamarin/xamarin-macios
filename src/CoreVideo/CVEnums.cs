@@ -88,7 +88,7 @@ namespace CoreVideo {
 	[Flags]
 	[Watch (4,0)]
 	public enum CVTimeFlags : int {
-		IsIndefinite = 1 << 0
+		IsIndefinite = 1 << 0,
 	}
 
 	[Flags]
@@ -102,7 +102,7 @@ namespace CoreVideo {
 		TopField                    = (1 << 16),
 		BottomField                 = (1 << 17),
 		VideoHostTimeValid          = (VideoTimeValid | HostTimeValid),
-		IsInterlaced                = (TopField | BottomField)
+		IsInterlaced                = (TopField | BottomField),
 	}	
 
 	[Flags]
@@ -121,7 +121,7 @@ namespace CoreVideo {
 		Type2997      = 4,
 		Type2997Drop  = 5,
 		Type60        = 6,
-		Type5994      = 7
+		Type5994      = 7,
 	}
 
 	// CVOptionFlags (uint64_t) -> CVPixelBufferPool.h
