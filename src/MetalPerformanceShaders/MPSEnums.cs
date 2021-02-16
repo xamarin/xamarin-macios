@@ -14,8 +14,8 @@ namespace MetalPerformanceShaders {
 	[Native] // NSUInteger
 	[Flags]	// NS_OPTIONS
 	public enum MPSKernelOptions : ulong {
-		None									= 0,
-		SkipApiValidation						= 1 << 0,
+		None = 0,
+		SkipApiValidation = 1 << 0,
 		AllowReducedPrecision = 1 << 1,
 		[iOS (10,0), TV(10,0)]
 		DisableInternalTiling = 1 << 2,

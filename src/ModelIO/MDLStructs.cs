@@ -44,7 +44,7 @@ namespace ModelIO {
 #endif
 
 	[StructLayout(LayoutKind.Sequential)]
-	public struct  MDLAxisAlignedBoundingBox {
+	public struct MDLAxisAlignedBoundingBox {
 		public Vector3 MaxBounds;
 		public Vector3 MinBounds;
 

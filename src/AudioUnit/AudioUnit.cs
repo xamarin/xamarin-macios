@@ -234,10 +234,15 @@ namespace AudioUnit
 #endif // !COREBUILD
 	}
 
+	public enum AUParameterEventType : uint
+	{
+		Immediate = 1,
+		Ramped = 2,
+	}
+
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioUnitParameterEvent
 	{
-#if !COREBUILD
 		public uint Scope;
 		public uint Element;
 		public uint Parameter;
@@ -271,7 +276,6 @@ namespace AudioUnit
 		}
 
 		public EventValuesStruct EventValues;
-#endif // !COREBUILD
 	}
 
 	public class AudioUnit : IDisposable, ObjCRuntime.INativeObject
@@ -1025,10 +1029,17 @@ namespace AudioUnit
 	}
 #endif // !COREBUILD
 
+	public enum AURenderEventType : byte
+	{
+		Parameter = 1,
+		ParameterRamp = 2,
+		Midi = 8,
+		MidiSysEx = 9,
+	}
+
 	[StructLayout (LayoutKind.Sequential)]
 	public unsafe struct AURenderEventHeader
 	{
-#if !COREBUILD
 		public AURenderEvent * UnsafeNext;
 
 		public AURenderEvent? Next {
@@ -1044,7 +1055,6 @@ namespace AudioUnit
 		public AURenderEventType EventType;
 
 		public byte Reserved;
-#endif // !COREBUILD
 	}
 
 	[StructLayout (LayoutKind.Sequential)]
@@ -1060,7 +1070,6 @@ namespace AudioUnit
 	[StructLayout (LayoutKind.Sequential)]
 	public unsafe struct AUParameterEvent
 	{
-#if !COREBUILD
 		public AURenderEvent * UnsafeNext;
 
 		public AURenderEvent? Next {
@@ -1082,7 +1091,6 @@ namespace AudioUnit
 		public ulong ParameterAddress;
 
 		public float Value;
-#endif // !COREBUILD
 	}
 
 // 	AUAudioTODO - We need testing for these bindings
@@ -1138,13 +1146,16 @@ namespace AudioUnit
 	[iOS (10,0), Mac (10,12)]
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AUParameterAutomationEvent {
-#if !COREBUILD
 		public ulong HostTime;
 		public ulong Address;
 		public float Value;
+#if COREBUILD
+		// keep structure size identical across builds
+		public uint EventType;
+#else
 		public AUParameterAutomationEventType EventType;
+#endif
 		ulong Reserved;
-#endif // !COREBUILD
 	}
 
 #if !COREBUILD

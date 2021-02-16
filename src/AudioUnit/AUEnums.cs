@@ -96,7 +96,7 @@ namespace AudioUnit
 		SF2Preset	= DLSPreset,
 		AUPreset	= 2,
 		Audiofile	= 3,
-		EXS24		= 4
+		EXS24		= 4,
 	}
 
 	public enum AudioUnitParameterUnit // UInt32 AudioUnitParameterUnit
@@ -127,7 +127,7 @@ namespace AudioUnit
 		Beats               = 23,
 		Milliseconds		= 24,
 		Ratio				= 25,
-		CustomUnit			= 26
+		CustomUnit			= 26,
 	}
 
 	[Flags]
@@ -161,18 +161,12 @@ namespace AudioUnit
 		IsGlobalMeta 		= (1 << 28),
 		IsElementMeta		= (1 << 29),
 		IsReadable			= (1 << 30),
-		IsWritable			= ((uint)1 << 31)
+		IsWritable			= ((uint)1 << 31),
 	}
 
 	public enum AudioUnitClumpID // UInt32 in AudioUnitParameterInfo
 	{
-		System = 0
-	}
-
-	public enum AUParameterEventType : uint
-	{
-		Immediate = 1,
-		Ramped = 2,
+		System = 0,
 	}
 
 #if !XAMCORE_3_0 || MONOMAC
@@ -627,7 +621,7 @@ namespace AudioUnit
 		ReverbBlend = 8,
 		GlobalReverbGain = 9,
 		OcclussionAttenuation = 10,
-		ObstructionAttenuation = 11
+		ObstructionAttenuation = 11,
 	}
 
 	[iOS (8, 0)]
@@ -635,7 +629,7 @@ namespace AudioUnit
 		Power = 0,
 		Exponential = 1,
 		Inverse = 2,
-		Linear = 3
+		Linear = 3,
 	}
 
 	[Flags]
@@ -660,7 +654,7 @@ namespace AudioUnit
 		Interrupt              = 0x10,
 		[iOS (8, 0)]
 		[Mac (10, 10)]
-		InterruptAtLoop        = 0x20
+		InterruptAtLoop        = 0x20,
 	}
 
 	public enum AudioUnitScopeType { // UInt32 AudioUnitScope
@@ -671,7 +665,7 @@ namespace AudioUnit
 		Part		= 4,
 		Note		= 5,
 		Layer		= 6,
-		LayerItem	= 7
+		LayerItem	= 7,
 	}
 
 	[Flags]
@@ -683,21 +677,21 @@ namespace AudioUnit
 		OfflineRender = (1 << 6),
 		OfflineComplete = (1 << 7),
 		PostRenderError = (1 << 8),
-		DoNotCheckRenderArgs = (1 << 9)
+		DoNotCheckRenderArgs = (1 << 9),
 	}
 
 	public enum AudioUnitRemoteControlEvent // Unused?
 	{
 		TogglePlayPause		= 1,
 		ToggleRecord		= 2,
-		Rewind				= 3
+		Rewind				= 3,
 	}
 
 	[Native]
 	public enum AudioUnitBusType : long
 	{
 		Input = 1,
-		Output = 2
+		Output = 2,
 	}
 
 	[Native]
@@ -706,26 +700,18 @@ namespace AudioUnit
 		Changed = 1,
 		Moving = 2,
 		Recording = 4,
-		Cycling = 8
+		Cycling = 8,
 	}
 
 	public enum AUEventSampleTime : long
 	{
-		Immediate = unchecked ((long) 0xffffffff00000000)
-	}
-
-	public enum AURenderEventType : byte
-	{
-		Parameter = 1,
-		ParameterRamp = 2,
-		Midi = 8,
-		MidiSysEx = 9
+		Immediate = unchecked ((long) 0xffffffff00000000),
 	}
 
 	[iOS (9,0), Mac (10,11)]
 	public enum AudioComponentInstantiationOptions : uint {
 		OutOfProcess = 1,
-		InProcess = 2
+		InProcess = 2,
 	}
 
 	[Native]
@@ -758,7 +744,7 @@ namespace AudioUnit
 		IsGlobalMeta = (1 << 28),
 		IsElementMeta = (1 << 29),
 		IsReadable = (1 << 30),
-		IsWritable = unchecked((uint)1 << 31)
+		IsWritable = unchecked((uint)1 << 31),
 	}
 
 	public enum AudioComponentValidationResult : uint
@@ -768,7 +754,7 @@ namespace AudioUnit
 		Failed,
 		TimedOut,
 		UnauthorizedErrorOpen,
-		UnauthorizedErrorInit
+		UnauthorizedErrorInit,
 	}
 
 	public enum AUSpatialMixerAttenuationCurve : uint
@@ -776,7 +762,7 @@ namespace AudioUnit
 		Power = 0,
 		Exponential = 1,
 		Inverse = 2,
-		Linear = 3
+		Linear = 3,
 	}
 
 	public enum AU3DMixerRenderingFlags : uint
@@ -787,7 +773,7 @@ namespace AudioUnit
 		DistanceFilter = (1 << 3),
 		DistanceDiffusion = (1 << 4),
 		LinearDistanceAttenuation = (1 << 5),
-		ConstantReverbBlend = (1 << 6)
+		ConstantReverbBlend = (1 << 6),
 	}
 
 	public enum AUReverbRoomType : uint
@@ -804,7 +790,7 @@ namespace AudioUnit
 		LargeRoom2 = 9,
 		MediumHall2 = 10,
 		MediumHall3 = 11,
-		LargeHall2 = 12
+		LargeHall2 = 12,
 	}
 
 	public enum AUScheduledAudioSliceFlags : uint
@@ -814,7 +800,7 @@ namespace AudioUnit
 		BeganToRenderLate = 4,
 		Loop = 8,
 		Interrupt = 16,
-		InterruptAtLoop = 32
+		InterruptAtLoop = 32,
 	}
 
 	public enum AUSpatializationAlgorithm : uint
@@ -835,20 +821,20 @@ namespace AudioUnit
 		Power = 0,
 		Exponential = 1,
 		Inverse = 2,
-		Linear = 3
+		Linear = 3,
 	}
 
 	public enum AUSpatialMixerRenderingFlags : uint
 	{
 		InterAuralDelay = (1 << 0),
-		DistanceAttenuation = (1 << 2)
+		DistanceAttenuation = (1 << 2),
 	}
 
 	[iOS (10,0), Mac (10,12)]
 	public enum AUParameterAutomationEventType : uint {
 		Value = 0,
 		Touch = 1,
-		Release = 2
+		Release = 2,
 	}
 
 	public enum AudioUnitSubType : uint

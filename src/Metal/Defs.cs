@@ -345,7 +345,10 @@ namespace Metal {
 	[Mac (10,15), iOS (13,0), TV (13,0)]
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MTLTextureSwizzleChannels {
-#if !COREBUILD
+#if COREBUILD
+		// keep size identical
+		byte Red, Green, Blue, Alpha;
+#else
 		public MTLTextureSwizzle Red;
 
 		public MTLTextureSwizzle Green;

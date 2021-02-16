@@ -37,7 +37,6 @@ namespace CoreGraphics {
 	// CGAffineTransform.h
 	[StructLayout(LayoutKind.Sequential)]
 	public struct CGAffineTransform {
-#if !COREBUILD
 		public /* CGFloat */ nfloat xx;   // a
 		public /* CGFloat */ nfloat yx;   // b 
 		public /* CGFloat */ nfloat xy;   // c
@@ -45,6 +44,7 @@ namespace CoreGraphics {
 		public /* CGFloat */ nfloat x0;   // tx
 		public /* CGFloat */ nfloat y0;   // ty
 
+#if !COREBUILD
 		//
 		// Constructors
 		//

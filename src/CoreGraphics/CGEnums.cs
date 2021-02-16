@@ -167,7 +167,7 @@ namespace CoreGraphics {
 		String,
 		Array,
 		Dictionary,
-		Stream
+		Stream,
 	};
 
 	[iOS(11,0), Mac(10,13)]
