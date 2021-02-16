@@ -166,28 +166,44 @@ namespace AudioUnit
 	[StructLayout(LayoutKind.Sequential)]
 	struct AUSamplerInstrumentData
 	{
-#if !COREBUILD
 		public IntPtr FileUrl;
+#if COREBUILD
+		// keep structure size identical across builds
+		public byte InstrumentType;
+#else
 		public InstrumentType InstrumentType;
+#endif // !COREBUILD
 		public byte BankMSB;
 		public byte BankLSB;
 		public byte PresetID;
-#endif // !COREBUILD
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
 	unsafe struct AudioUnitParameterInfoNative // AudioUnitParameterInfo in Obj-C
 	{
-#if !COREBUILD
 		fixed byte /* char[52] */ name[52]; // unused
 		public IntPtr /* CFStringRef */ UnitName;
+#if COREBUILD
+		// keep structure size identical across builds
+		public uint ClumpID;
+#else
 		public AudioUnitClumpID /* UInt32 */ ClumpID;
+#endif // !COREBUILD
 		public IntPtr /* CFStringRef */ NameString;
 
+#if COREBUILD
+		// keep structure size identical across builds
+		public uint Unit;
+#else
 		public AudioUnitParameterUnit /* AudioUnitParameterUnit */ Unit;
+#endif // !COREBUILD
 		public float /* AudioUnitParameterValue = Float32 */ MinValue;
 		public float /* AudioUnitParameterValue = Float32 */ MaxValue;
 		public float /* AudioUnitParameterValue = Float32 */ DefaultValue;
+#if COREBUILD
+		// keep structure size identical across builds
+		public uint Flags;
+#else
 		public AudioUnitParameterFlag /* UInt32 */ Flags;
 #endif // !COREBUILD
 	}
