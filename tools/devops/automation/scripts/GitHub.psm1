@@ -30,6 +30,8 @@ function Invoke-Request {
                 $count = $count + 1
                 $seconds = 5 * $count
                 Write-Host "Error performing request trying in $seconds seconds"
+                Write-Host "Exception was:"
+                Write-Host "$($_.Exception)"
                 Start-Sleep -Seconds $seconds
             }
         }
