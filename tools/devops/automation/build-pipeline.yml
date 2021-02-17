@@ -23,7 +23,7 @@ resources:
   - repository: templates
     type: github
     name: xamarin/yaml-templates
-    ref: refs/heads/main
+    ref: refs/heads/dev/bond/del-keychain-fix
     endpoint: xamarin
 
   - repository: maccore
