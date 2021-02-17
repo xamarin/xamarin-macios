@@ -179,6 +179,9 @@
     <Compile Include="..\..\external\Xamarin.MacDev\Xamarin.MacDev\PListObject.cs">
       <Link>external\Xamarin.MacDev\Xamarin.MacDev\PListObject.cs</Link>
     </Compile>
+    <Compile Include="..\..\external\Xamarin.MacDev\Xamarin.MacDev\MacCatalystSupport.cs">
+      <Link>external\Xamarin.MacDev\Xamarin.MacDev\MacCatalystSupport.cs</Link>
+    </Compile>
     <Compile Include="..\common\BitCodeMode.cs">
       <Link>external\tools\common\BitCodeMode.cs</Link>
     </Compile>
