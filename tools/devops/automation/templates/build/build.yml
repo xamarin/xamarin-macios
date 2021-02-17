@@ -504,7 +504,7 @@ steps:
 - bash: |
     report_error ()
     {
-      MESSAGE="🔥 [Failed to create API Diff](%s/console) 🔥"
+      MESSAGE="🔥 [Failed to create API Diff] 🔥"
       echo "##vso[task.setvariable variable=APIDIFF_MESSAGE;isOutput=true]$MESSAGE"
       echo "##vso[task.setvariable variable=APIDIFF_BUILT;isOutput=true]False"
     }

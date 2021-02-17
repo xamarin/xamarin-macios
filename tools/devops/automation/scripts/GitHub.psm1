@@ -447,6 +447,7 @@ function New-GitHubSummaryComment {
             if ($hasHtmlLinks -and $hasMDlinks) {
                 # build the required list
                 $sb.AppendLine("# API diff")
+                Write-Host "Message is '$($json.message)'"
                 $sb.AppendLine($json.message)
                 $sb.AppendLine("<details><summary>View API diff</summary>")
                 $sb.AppendLine("") # no new line results in a bad rendering in the links
