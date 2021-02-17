@@ -225,6 +225,9 @@ namespace Introspection {
 			case "CGColorConverter":
 			case "OSLog": // c api, no need to check
 				return true;
+			case "SecIdentity": // hangs with xcode12.5 beta 2 while loading p12 file
+			case "SecIdentity2": // same (dupe logic)
+				return true;
 #if NET
 			case "SecTrust": // System.EntryPointNotFoundException : AppleCryptoNative_X509ImportCertificate
 			case "SecTrust2": // System.EntryPointNotFoundException : AppleCryptoNative_X509ImportCertificate
