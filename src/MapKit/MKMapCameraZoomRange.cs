@@ -3,6 +3,8 @@
 using System;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace MapKit {
 
 	public enum MKMapCameraZoomRangeType {
