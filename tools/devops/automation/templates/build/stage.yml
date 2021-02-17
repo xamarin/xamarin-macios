@@ -71,7 +71,6 @@ jobs:
     - Agent.OS -equals Darwin
     - Agent.OSVersion -equals 10.15
     - macios_image -equals v1
-    - Agent.Name -equals XAMBOT-1095
   workspace:
     clean: all
 
