@@ -128,9 +128,16 @@ namespace Xamarin.Linker.Steps
 #if NET
 					if (DerivedLinkContext.App.Platform == ApplePlatform.TVOS)
 						break; // tvOS does not ship with System.Net.Security.Native due to https://github.com/dotnet/runtime/issues/45535
+					if (DerivedLinkContext.App.Platform == ApplePlatform.MacOSX)
+						break; // The macOS version of the BCL has several references to native methods supposedly in libSystem.Net.Security.Native that aren't there, so skip it.
 					goto case "System.Native";
 #endif
 				case "System.Native":
+#if NET
+					if (DerivedLinkContext.App.Platform == ApplePlatform.MacOSX)
+						break; // The macOS version of the BCL has several references to native methods supposedly in libSystem.Native that aren't there, so skip it.
+					goto case "System.Security.Cryptography.Native.Apple";
+#endif
 				case "System.Security.Cryptography.Native.Apple":
 					DerivedLinkContext.RequireMonoNative = true;
 					DerivedLinkContext.RequiredSymbols.AddFunction (pinfo.EntryPoint).AddMember (method);
