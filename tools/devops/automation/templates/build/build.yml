@@ -69,7 +69,7 @@ steps:
     which python3
 
     Write-Host "Pip version"
-    pip -V
+    pip3 -V
   displayName: 'Show Python information'
 
 - bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/clean-bot.sh
