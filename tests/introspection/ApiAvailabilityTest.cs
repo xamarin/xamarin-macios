@@ -20,6 +20,7 @@
 //
 
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.Versioning;
 using System.Text;
@@ -276,6 +277,55 @@ namespace Introspection {
 			AssertIfErrors ("{0} API with mixed [Unavailable] and availability attributes", Errors);
 		}
 
+		[Test]
+		public void Duplicates ()
+		{
+			HashSet<string> type_level = new HashSet<string> ();
+			//LogProgress = true;
+			Errors = 0;
+			foreach (Type t in Assembly.GetTypes ()) {
+				if (LogProgress)
+					Console.WriteLine ($"T: {t}");
+
+				type_level.Clear ();
+				foreach (var a in t.GetCustomAttributes (false)) {
+#if NET
+					if (a is OSPlatformAttribute aa)
+						type_level.Add ($"[{a.GetType().Name} (\"{aa.PlatformName}\")]");
+#else
+					if (a is AvailabilityBaseAttribute aa)
+						type_level.Add (aa.ToString ());
+#endif
+				}
+
+				foreach (var m in t.GetMembers (BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)) {
+					if (LogProgress)
+						Console.WriteLine ($"M: {m}");
+
+					// the generator inlines protocol availability
+					// without checking if it duplicates them and, in some cases,
+					// it might lower the version (but that's fine)
+					var ba = m.GetCustomAttribute<BindingImplAttribute> (false);
+					if ((ba != null) && ba.Options.HasFlag (BindingImplOptions.GeneratedCode))
+						continue;
+
+					foreach (var a in m.GetCustomAttributes (false)) {
+						var s = String.Empty;
+#if NET
+						if (a is OSPlatformAttribute aa)
+							s = $"[{a.GetType().Name} (\"{aa.PlatformName}\")]";
+#else
+						if (a is AvailabilityBaseAttribute aa)
+							s = aa.ToString ();
+#endif
+						if ((s.Length > 0) && type_level.Contains (s))
+							AddErrorLine ($"[FAIL] Both '{t}' and '{m}' are marked with `{s}`.");
+					}
+				}
+			}
+			AssertIfErrors ("{0} API with members duplicating type-level attributes", Errors);
+		}
+
 #if NET
 		string CheckLegacyAttributes (ICustomAttributeProvider cap)
 		{
@@ -300,16 +350,48 @@ namespace Introspection {
 				if (type_level.Length > 0)
 					AddErrorLine ($"[FAIL] '{t.FullName}' has legacy attribute(s): {type_level}");
 
-				foreach (var m in t.GetMembers (BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public)) {
+				foreach (var m in t.GetMembers (BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)) {
 					if (LogProgress)
 						Console.WriteLine ($"M: {m}");
 
-					var member_level = CheckLegacyAttributes (t);
+					var member_level = CheckLegacyAttributes (m);
 					if (member_level.Length > 0)
 						AddErrorLine ($"[FAIL] '{t.FullName}::{m.Name}' has legacy attribute(s): {member_level}");
 				}
 			}
 			AssertIfErrors ("{0} API with mixed legacy availability attributes", Errors);
+		}
+
+		void CheckAttributeArgument (ICustomAttributeProvider cap)
+		{
+			foreach (var a in cap.GetCustomAttributes (false)) {
+				var os = (a as OSPlatformAttribute);
+				if (os == null)
+					continue;
+				if (os.Convert () == null)
+					AddErrorLine ($"[FAIL] '{cap}' has incorrect attribute argument: {os.PlatformName}");
+			}
+		}
+
+		[Test]
+		public void AttributeArgument ()
+		{
+			//LogProgress = true;
+			Errors = 0;
+			foreach (Type t in Assembly.GetTypes ()) {
+				if (LogProgress)
+					Console.WriteLine ($"T: {t}");
+
+				CheckAttributeArgument (t);
+
+				foreach (var m in t.GetMembers (BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public)) {
+					if (LogProgress)
+						Console.WriteLine ($"M: {m}");
+
+					CheckAttributeArgument (m);
+				}
+			}
+			AssertIfErrors ("{0} API with incorrect availability attribute arguments", Errors);
 		}
 #endif
 	}
