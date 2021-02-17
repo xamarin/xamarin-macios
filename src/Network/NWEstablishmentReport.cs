@@ -25,13 +25,6 @@ using nw_protocol_definition_t=System.IntPtr;
 namespace Network {
 
 	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
-	public enum NWReportResolutionSource {
-		Query = 1,
-		Cache = 2,
-		ExpiredCache = 3,
-	}
-
-	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
 	public class NWEstablishmentReport : NativeObject {
 
 		internal NWEstablishmentReport (IntPtr handle, bool owns) : base (handle, owns) {}

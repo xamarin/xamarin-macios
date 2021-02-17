@@ -23,33 +23,6 @@ using dispatch_queue_t =System.IntPtr;
 namespace Network {
 
 	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
-	public enum NWWebSocketOpCode : int {
-		Cont = 0x0,
-		Text = 0x1,
-		Binary = 0x2,
-		Close = 0x8,
-		Ping = 0x9,
-		Pong = 0xA,
-		Invalid = -1,
-	}
-
-	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
-	public enum NWWebSocketCloseCode : int {
-		NormalClosure = 1000,
-		GoingAway = 1001,
-		ProtocolError = 1002,
-		UnsupportedData = 1003,
-		NoStatusReceived = 1005,
-		AbnormalClosure = 1006,
-		InvalidFramePayloadData = 1007,
-		PolicyViolation = 1008,
-		MessageTooBig = 1009,
-		MandatoryExtension = 1010,
-		InternalServerError = 1011,
-		TlsHandshake = 1015,
-	}
-
-	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
 	public class NWWebSocketMetadata : NWProtocolMetadata {
 
 		internal NWWebSocketMetadata (IntPtr handle, bool owns) : base (handle, owns) {}

@@ -21,13 +21,6 @@ using nw_ws_request_t=System.IntPtr;
 
 namespace Network {
 
-	// this maps to `nw_ws_version_t` in Network.framework/Headers/ws_options.h (and not the enum from NetworkExtension)
-	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
-	public enum NWWebSocketVersion {
-		Invalid = 0,
-		Version13 = 1,
-	}
-
 	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
 	public class NWWebSocketOptions : NWProtocolOptions {
 		bool autoReplyPing = false;
