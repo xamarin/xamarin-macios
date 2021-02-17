@@ -1,5 +1,5 @@
 //
-// VideoToolbox core types and enumerations
+// VideoToolbox core enumerations
 //
 // Authors: 
 // 		Miguel de Icaza (miguel@xamarin.com)

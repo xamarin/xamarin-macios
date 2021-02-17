@@ -354,7 +354,8 @@ namespace Xamarin.Bundler {
 
 		public static int Concurrency => Driver.Concurrency;
 		public Version DeploymentTarget;
-		public Version SdkVersion;
+		public Version SdkVersion; // for Mac Catalyst this is the iOS version
+		public Version NativeSdkVersion; // this is the same as SdkVersion, except that for Mac Catalyst it's the macOS SDK version.
 	
 		public MonoNativeMode MonoNativeMode { get; set; }
 		List<Abi> abis;
@@ -382,49 +383,20 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		// Versions for Mac Catalyst are complicated. In some cases we have to use the
-		// corresponding iOS version of the SDK, and in some cases we have to use the
-		// macOS version that iOS version correspond to. In Xcode, when you select the
-		// deployment target, you select a macOS version in the UI, but the corresponding
-		// iOS version is written to the project file. This means that there's a mapping
-		// between the two, and we've captured that mapping in our Versions.plist for
-		// Xamarin.iOS (in the MacCatalystVersionMap plist dictionary). Here we provide
-		// two methods that can convert between iOS version and macOS version either way.
-		Dictionary<Version, Version> mac_catalyst_ios_to_macos_map;
-		Dictionary<Version, Version> GetCatalystiOSTomacOSMap ()
-		{
-			if (mac_catalyst_ios_to_macos_map == null) {
-				var file = Path.Combine (Driver.GetFrameworkCurrentDirectory (this), "Versions.plist");
-				var plist = Driver.FromPList (file);
-				var dict = plist.Get<PDictionary> ("MacCatalystVersionMap");
-
-				mac_catalyst_ios_to_macos_map = new Dictionary<Version, Version> ();
-				foreach (var kvp in dict) {
-					// The input here is fixed, so don't try to parse, just do it, because it should succeed.
-					mac_catalyst_ios_to_macos_map [Version.Parse (kvp.Key)] = Version.Parse (((PString) kvp.Value).Value);
-				}
-			}
-			return mac_catalyst_ios_to_macos_map;
-		}
-
 		public Version GetMacCatalystmacOSVersion (Version iOSVersion)
 		{
-			var map = GetCatalystiOSTomacOSMap ();
-			
-			if (!map.TryGetValue (iOSVersion, out var value))
+			if (!MacCatalystSupport.TryGetMacOSVersion (Driver.GetFrameworkDirectory (this), iOSVersion, out var value))
 				throw ErrorHelper.CreateError (183, Errors.MX0183 /* Could not map the iOS version {0} to a macOS version for Mac Catalyst */, iOSVersion.ToString ());
 
 			return value;
 		}
 
-		public Version GetMacCatalystiOSVersion (Version macVersion)
+		public Version GetMacCatalystiOSVersion (Version macOSVersion)
 		{
-			var map = GetCatalystiOSTomacOSMap ();
-			var iosVersions = map.Where (kvp => kvp.Value == macVersion).Select (v => v.Key).ToArray ();
-			if (iosVersions.Length != 1)
-				throw ErrorHelper.CreateError (184, Errors.MX0184 /* Could not map the Mac Catalyst version {0} to an iOS version */, macVersion.ToString ());
+			if (!MacCatalystSupport.TryGetiOSVersion (Driver.GetFrameworkDirectory (this), macOSVersion, out var value))
+				throw ErrorHelper.CreateError (184, Errors.MX0184 /* Could not map the macOS version {0} to a corresponding iOS version for Mac Catalyst */, macOSVersion.ToString ());
 
-			return iosVersions [0];
+			return value;
 		}
 
 		public string GetProductName ()
@@ -781,6 +753,12 @@ namespace Xamarin.Bundler {
 
 			RuntimeOptions = RuntimeOptions.Create (this, HttpMessageHandler, TlsProvider);
 
+			if (Platform == ApplePlatform.MacCatalyst) {
+				// Our input SdkVersion is the macOS SDK version, but the rest of our code expects the supporting iOS version, so convert here.
+				// The macOS SDK version is still stored in NativeSdkVersion for when we need it.
+				SdkVersion = GetMacCatalystiOSVersion (NativeSdkVersion);
+			}
+
 			if (RequiresXcodeHeaders && SdkVersion < SdkVersions.GetVersion (this)) {
 				switch (Platform) {
 				case ApplePlatform.iOS:
@@ -853,13 +831,6 @@ namespace Xamarin.Bundler {
 			if (Platform == ApplePlatform.iOS && (HasDynamicLibraries || HasFrameworks) && DeploymentTarget.Major < 8) {
 				ErrorHelper.Warning (78, Errors.MT0078, DeploymentTarget);
 				DeploymentTarget = new Version (8, 0);
-			}
-
-			if (Platform == ApplePlatform.MacCatalyst) {
-				// The deployment target we expect for Mac Catalyst is the macOS version,
-				// but we're expected to provide the corresponding iOS version pretty much
-				// everywhere, so convert here.
-				DeploymentTarget = GetMacCatalystiOSVersion (DeploymentTarget);
 			}
 
 			if (DeploymentTarget != null) {

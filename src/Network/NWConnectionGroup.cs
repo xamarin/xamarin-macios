@@ -16,16 +16,6 @@ using OS_nw_endpoint=System.IntPtr;
 namespace Network {
 
 	[TV (14,0), Mac (11,0), iOS (14,0), Watch (7,0)]
-	public enum NWConnectionGroupState 
-	{
-		Invalid = 0,
-		Waiting = 1,
-		Ready = 2,
-		Failed = 3,
-		Cancelled = 4,
-	}
-
-	[TV (14,0), Mac (11,0), iOS (14,0), Watch (7,0)]
 	public delegate void NWConnectionGroupReceiveDelegate (DispatchData content, NWContentContext context, bool isCompleted);
 
 	[TV (14,0), Mac (11,0), iOS (14,0), Watch (7,0)]

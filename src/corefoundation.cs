@@ -116,4 +116,16 @@ namespace CoreFoundation {
 		[Field ("kCFStringTransformStripDiacritics")]
 		StripDiacritics,
 	}
+
+	[Mac (10,12), iOS (10,0), Watch (3,0), TV (10,0)]
+	[Introduced (PlatformName.MacCatalyst, 13, 0)]
+	public enum OSLogLevel : byte
+	{
+		// These values must match the os_log_type_t enum in <os/log.h>.
+		Default = 0x00,
+		Info    = 0x01,
+		Debug   = 0x02,
+		Error   = 0x10,
+		Fault   = 0x11,
+	}
 }

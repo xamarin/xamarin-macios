@@ -22,22 +22,6 @@ using nw_service_class_t=System.IntPtr;
 
 namespace Network {
 
-	public enum NWServiceClass {
-		BestEffort = 0,
-		Background = 1,
-		InteractiveVideo = 2,
-		InteractiveVoice = 3,
-		ResponsiveData = 4,
-		Signaling = 5,
-	}
-
-	public enum NWIPEcnFlag {
-		NonEct = 0,
-		Ect = 2,
-		Ect1 = 1,
-		Ce = 3,
-	}
-
 	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Watch (6,0)]
 	public class NWProtocolMetadata : NativeObject {

@@ -23,15 +23,6 @@ using AudioToolbox;
 
 namespace CoreMedia {
 
-	// untyped enum (uses as OSStatus) -> CMFormatDescription.h
-	[Watch (6,0)]
-	public enum CMFormatDescriptionError : int {
-		None				= 0,
-		InvalidParameter	= -12710,
-		AllocationFailed	= -12711,
-		ValueNotAvailable   = -12718,
-	}
-
 	[Watch (6,0)]
 	public class CMFormatDescription : INativeObject, IDisposable {
 		internal IntPtr handle;
@@ -99,8 +90,6 @@ namespace CoreMedia {
 			}
 		}
 
-#endif
-		
 		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* FourCharCode */ uint CMFormatDescriptionGetMediaSubType (/* CMFormatDescriptionRef */ IntPtr desc);
 
@@ -172,8 +161,6 @@ namespace CoreMedia {
 		{
 			return CMFormatDescriptionGetTypeID ();
 		}
-
-#if !COREBUILD
 
 		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* OSStatus */ CMFormatDescriptionError CMFormatDescriptionCreate (/* CFAllocatorRef */ IntPtr allocator, CMMediaType mediaType, /* FourCharCode */ uint mediaSubtype, /* CFDictionaryRef */ IntPtr extensions, /* CMFormatDescriptionRef* */ out IntPtr descOut);
@@ -351,6 +338,7 @@ namespace CoreMedia {
 		{
 		}
 
+#if !COREBUILD
 		[DllImport (Constants.CoreMediaLibrary)]
 		static extern /* OSStatus */ CMFormatDescriptionError CMVideoFormatDescriptionCreate (
 			/* CFAllocatorRef */ IntPtr allocator,
@@ -374,7 +362,6 @@ namespace CoreMedia {
 		{
 		}
 
-#if !COREBUILD
 		public CMVideoDimensions Dimensions {
 			get {
 				return CMVideoFormatDescriptionGetDimensions (handle);

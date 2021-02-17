@@ -21,17 +21,6 @@ using OS_nw_txt_record=System.IntPtr;
 
 namespace Network {
 
-	[Flags, TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
-	public enum NWBrowseResultChange : ulong {
-		Invalid = 0x00,
-		Identical = 0x01,
-		ResultAdded = 0x02,
-		ResultRemoved = 0x04,
-		TxtRecordChanged = 0x20,
-		InterfaceAdded = 0x08, 
-		InterfaceRemoved = 0x10,
-	}
-
 	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
 	public class NWBrowseResult : NativeObject {
 
