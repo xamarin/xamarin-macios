@@ -15,6 +15,8 @@ using CoreLocation;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace MapKit {
 
 #if !WATCH
@@ -106,7 +108,7 @@ namespace MapKit {
 			return a.X != b.X || a.Y != b.Y;
 		}
 
-		public override bool Equals (object other)
+		public override bool Equals (object? other)
 		{
 			if (other is MKMapPoint){
 				var omap = (MKMapPoint) other;
@@ -154,7 +156,7 @@ namespace MapKit {
 			return a.Width != b.Width || a.Height != b.Height;
 		}
 
-		public override bool Equals (object other)
+		public override bool Equals (object? other)
 		{
 			if (other is MKMapSize) {
 				var omap = (MKMapSize) other;
@@ -289,7 +291,7 @@ namespace MapKit {
 			return a.Origin != b.Origin || a.Size != b.Size;
 		}
 
-		public override bool Equals (object other)
+		public override bool Equals (object? other)
 		{
 			if (other is MKMapRect) {
 				var omap = (MKMapRect) other;

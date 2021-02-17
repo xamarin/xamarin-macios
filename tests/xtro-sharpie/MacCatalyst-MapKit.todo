@@ -1,22 +1,4 @@
-!extra-null-allowed! 'System.Boolean MapKit.MKMapItem::_OpenMaps(MapKit.MKMapItem[],Foundation.NSDictionary)' has a extraneous [NullAllowed] on parameter #0
-!extra-null-allowed! 'System.Void MapKit.MKMapItem::OpenMaps(MapKit.MKMapItem[],Foundation.NSDictionary,UIKit.UIScene,System.Action`1<Foundation.NSError>)' has a extraneous [NullAllowed] on parameter #0
-!extra-null-allowed! 'System.Void MapKit.MKMapView::set_SelectedAnnotations(MapKit.IMKAnnotation[])' has a extraneous [NullAllowed] on parameter #0
 !missing-field! MKAnnotationCalloutInfoDidChangeNotification not bound
-!missing-null-allowed! 'CoreLocation.CLHeading MapKit.MKUserLocation::get_Heading()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'CoreLocation.CLLocation MapKit.MKUserLocation::get_Location()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'MapKit.MKAnnotationView MapKit.MKMapView::ViewForAnnotation(MapKit.IMKAnnotation)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'MapKit.MKAnnotationView MapKit.MKMapViewDelegate::GetViewForAnnotation(MapKit.MKMapView,MapKit.IMKAnnotation)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'MapKit.MKOverlayRenderer MapKit.MKMapView::RendererForOverlay(MapKit.IMKOverlay)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'MapKit.MKPolygon[] MapKit.MKPolygon::get_InteriorPolygons()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String MapKit.MKAnnotationView::get_ReuseIdentifier()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String MapKit.MKTileOverlay::get_URLTemplate()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.Void MapKit.MKMapItem::OpenInMaps(Foundation.NSDictionary,UIKit.UIScene,System.Action`1<Foundation.NSError>)' is missing an [NullAllowed] on parameter #2
-!missing-null-allowed! 'System.Void MapKit.MKMapItem::OpenMaps(MapKit.MKMapItem[],Foundation.NSDictionary,UIKit.UIScene,System.Action`1<Foundation.NSError>)' is missing an [NullAllowed] on parameter #3
-!missing-null-allowed! 'System.Void MapKit.MKMapView::DeselectAnnotation(MapKit.IMKAnnotation,System.Boolean)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void MapKit.MKMapView::set_CameraZoomRange(MapKit.MKMapCameraZoomRange)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void MapKit.MKTileOverlay::.ctor(System.String)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void MapKit.MKUserLocation::set_Title(System.String)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void MapKit.MKUserTrackingBarButtonItem::.ctor(MapKit.MKMapView)' is missing an [NullAllowed] on parameter #0
 !missing-pinvoke! MKRoadWidthAtZoomScale is not bound
 !missing-protocol-conformance! MKUserLocation should conform to MKAnnotation
 !missing-protocol-member! MKOverlay::coordinate not found

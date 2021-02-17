@@ -11,6 +11,8 @@ using Foundation;
 using CoreLocation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace MapKit {
 
 	// it's similar to MKDirectionsTransportType values but it's something only used on the managed side
@@ -35,10 +37,10 @@ namespace MapKit {
 
 #if !WATCH // The corresponding key (MKLaunchOptionsCameraKey) is allowed in WatchOS, but there's no MKMapCamera type.
 		[iOS (7,0)]
-		public MKMapCamera Camera { get; set; }
+		public MKMapCamera? Camera { get; set; }
 #endif
 
-		internal NSDictionary ToDictionary ()
+		internal NSDictionary? ToDictionary ()
 		{
 			int n = 0;
 			if (DirectionsMode.HasValue) n++;
@@ -110,14 +112,14 @@ namespace MapKit {
 	}
 	
 	public partial class MKMapItem {
-		public void OpenInMaps (MKLaunchOptions launchOptions = null)
+		public void OpenInMaps (MKLaunchOptions? launchOptions = null)
 		{
-			_OpenInMaps (launchOptions != null ? launchOptions.ToDictionary () : null);
+			_OpenInMaps (launchOptions?.ToDictionary ());
 		}
 
-		public static bool OpenMaps (MKMapItem [] mapItems = null, MKLaunchOptions launchOptions = null)
+		public static bool OpenMaps (MKMapItem [] mapItems, MKLaunchOptions? launchOptions = null)
 		{
-			return _OpenMaps (mapItems, launchOptions != null ? launchOptions.ToDictionary () : null);
+			return _OpenMaps (mapItems, launchOptions?.ToDictionary ());
 		}
 	}
 	
