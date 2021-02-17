@@ -1,1 +1,4 @@
 !missing-selector! HMCameraSource::aspectRatio not bound
+## appended from unclassified file
+!missing-selector! HMCameraStream::audioStreamSetting not bound
+!missing-selector! HMCameraStream::updateAudioStreamSetting:completionHandler: not bound

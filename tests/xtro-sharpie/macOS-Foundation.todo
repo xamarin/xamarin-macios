@@ -31,3 +31,9 @@
 ## appended from unclassified file
 !missing-field! NSProgressFileOperationKindUploading not bound
 !missing-field! NSURLUbiquitousItemIsExcludedFromSyncKey not bound
+## appended from unclassified file
+!missing-selector! NSMutableURLRequest::assumesHTTP3Capable not bound
+!missing-selector! NSMutableURLRequest::setAssumesHTTP3Capable: not bound
+!missing-selector! NSURLRequest::assumesHTTP3Capable not bound
+!missing-selector! NSURLSessionTask::prefersIncrementalDelivery not bound
+!missing-selector! NSURLSessionTask::setPrefersIncrementalDelivery: not bound
