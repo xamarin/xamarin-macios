@@ -34,13 +34,17 @@ namespace Xharness {
 
 		public async Task<string> LocateAppBundle (XmlDocument projectFile, string projectFilePath, TestTarget target, string buildConfiguration)
 		{
-			var platform = target.IsSimulator () ? "iPhoneSimulator" : "iPhone";
+			string platform = string.Empty;
+			if (target != TestTarget.None)
+				platform = target.IsSimulator () ? "iPhoneSimulator" : "iPhone";
 
 			if (projectFile.IsDotNetProject ()) {
 				var properties = new Dictionary<string, string> {
 					{ "Configuration", buildConfiguration },
-					{ "Platform", platform },
 				};
+
+				if (!string.IsNullOrEmpty (platform))
+					properties ["Platform"] = platform;
 
 				return await GetPropertyByMSBuildEvaluationAsync (projectFile, projectFilePath, "OutputPath", "_GenerateBundleName", properties);
 			} else {

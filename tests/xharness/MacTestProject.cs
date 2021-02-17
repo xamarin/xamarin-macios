@@ -7,6 +7,7 @@ namespace Xharness {
 		Full = 2, // Xamarin.Mac/Full app
 		System = 4, // Xamarin.Mac/System app
 		Console = 8, // Console executable
+		DotNet = 16,
 	}
 
 	public class MacTestProject : TestProject {
@@ -17,6 +18,9 @@ namespace Xharness {
 
 		public override bool GenerateVariations {
 			get {
+				if (IsDotNetProject)
+					return false;
+
 				// If a bitwise combination of flavors, then we're generating variations
 				return TargetFrameworkFlavors != MacFlavors.Modern && TargetFrameworkFlavors != MacFlavors.Full && TargetFrameworkFlavors != MacFlavors.System && TargetFrameworkFlavors != MacFlavors.Console;
 			}
