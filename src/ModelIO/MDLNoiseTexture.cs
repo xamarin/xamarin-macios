@@ -4,12 +4,6 @@ using Vector2i = global::OpenTK.Vector2i;
 
 namespace ModelIO {
 
-	[iOS (9,0), Mac (10,11)]
-	public enum  MDLNoiseTextureType {
-		Vector,
-		Cellular,
-	}
-
 	public partial class MDLNoiseTexture {
 
 		public MDLNoiseTexture (float input, string name, Vector2i textureDimensions, MDLTextureChannelEncoding channelEncoding) : this (input, name, textureDimensions, channelEncoding, MDLNoiseTextureType.Vector)

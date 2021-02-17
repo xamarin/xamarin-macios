@@ -63,7 +63,7 @@ public partial class Generator {
 		Tuple<FieldInfo, FieldAttribute> null_field = null;
 		Tuple<FieldInfo, FieldAttribute> default_symbol = null;
 		var underlying_type = GetCSharpTypeName (TypeManager.GetUnderlyingEnumType (type));
-		print ("public enum {0} : {1} {{", type.Name, underlying_type);
+		print ("{0} enum {1} : {2} {{", AttributeManager.HasAttribute<InternalAttribute> (type) ? "internal" : "public", type.Name, underlying_type);
 		indent++;
 		foreach (var f in type.GetFields ()) {
 			// skip value__ field 

@@ -879,6 +879,10 @@
     <data name="E0186" xml:space="preserve">
         <value>The provided Archive Path is not from a valid archive file (.xcarchive). Archive Path: '{0}'</value>
     </data>
+    
+    <data name="E0187" xml:space="preserve">
+        <value>Could not map the macOS version {0} to a corresponding iOS version</value>
+    </data>
 
     <data name="E7001" xml:space="preserve">
         <value>Could not resolve host IPs for WiFi debugger settings.

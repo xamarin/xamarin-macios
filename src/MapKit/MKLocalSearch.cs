@@ -32,6 +32,8 @@ using System.Threading.Tasks;
 using System.Threading;
 using Foundation;
 
+#nullable enable
+
 namespace MapKit {
 	public partial class MKLocalSearch {
 

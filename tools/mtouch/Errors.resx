@@ -928,7 +928,7 @@
     </data>
     
     <data name="MX0184" xml:space="preserve">
-        <value>Could not map the Mac Catalyst version {0} to an iOS version</value>
+        <value>Could not map the macOS version {0} to a corresponding iOS version for Mac Catalyst</value>
     </data>
 
 	<data name="MX1009" xml:space="preserve">

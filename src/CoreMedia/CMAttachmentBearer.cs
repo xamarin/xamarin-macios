@@ -8,12 +8,6 @@ using ObjCRuntime;
 namespace CoreMedia {
 
 	[Watch (6,0)]
-	public enum CMAttachmentMode : uint {
-		ShouldNotPropagate    = 0,
-		ShouldPropagate       = 1
-	};
-
-	[Watch (6,0)]
 	public static class CMAttachmentBearer {
 
 		[DllImport(Constants.CoreMediaLibrary)]

@@ -28,27 +28,6 @@ using UIKit;
 
 namespace CoreMedia {
 
-	// untyped enum (used as an OSStatus) -> CMSampleBuffer.h
-	[Watch (6,0)]
-	public enum CMSampleBufferError : int {
-		None							= 0,
-		AllocationFailed				= -12730,
-		RequiredParameterMissing		= -12731,
-		AlreadyHasDataBuffer			= -12732,
-		BufferNotReady					= -12733,
-		SampleIndexOutOfRange			= -12734,
-		BufferHasNoSampleSizes			= -12735,
-		BufferHasNoSampleTimingInfo		= -12736,
-		ArrayTooSmall					= -12737,
-		InvalidEntryCount				= -12738,
-		CannotSubdivide					= -12739,
-		SampleTimingInfoInvalid			= -12740,
-		InvalidMediaTypeForOperation	= -12741,
-		InvalidSampleData				= -12742,
-		InvalidMediaFormat				= -12743,
-		Invalidated						= -12744,
-	}
-
 	[Watch (6,0)]
 	public class CMSampleBuffer : ICMAttachmentBearer 
 #if !COREBUILD
@@ -784,10 +763,6 @@ namespace CoreMedia {
 		}
 #endif // !COREBUILD
 	}
-
-#if !WATCH
-	public enum LensStabilizationStatus { Active, OutOfRange, Unavailable, Off, None }
-#endif
 
 #if !COREBUILD
 	public partial class CMSampleBufferAttachmentSettings : DictionaryContainer {

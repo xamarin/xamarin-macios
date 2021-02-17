@@ -73,12 +73,12 @@ namespace Xamarin.MacDev {
 		{
 			switch (framework) {
 			case ApplePlatform.iOS:
-			case ApplePlatform.MacCatalyst:
 				return IOS;
 			case ApplePlatform.WatchOS:
 				return Watch;
 			case ApplePlatform.TVOS:
 				return TVOS;
+			case ApplePlatform.MacCatalyst:
 			case ApplePlatform.MacOSX:
 				return MacOS;
 			default:

@@ -19,16 +19,6 @@ using nw_parameters_t=System.IntPtr;
 using nw_establishment_report_t=System.IntPtr;
 
 namespace Network {
-	[TV (12,0), Mac (10,14), iOS (12,0)]
-	[Watch (6,0)]
-	public enum NWConnectionState {
-		Invalid   = 0,
-		Waiting   = 1,
-		Preparing = 2,
-		Ready     = 3,
-		Failed    = 4,
-		Cancelled = 5,
-	}
 
 	//
 	// Signature for a method invoked on data received, the "data" value can be null if the

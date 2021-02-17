@@ -24,15 +24,7 @@ using OS_nw_txt_record=System.IntPtr;
 
 namespace Network {
 
-	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
-	public enum NWTxtRecordFindKey {
-		Invalid = 0,
-		NotPresent = 1,
-		NoValue = 2,
-		EmptyValue = 3,
-		NonEmptyValue = 4,
-	}
-	
+
 	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
 	public class NWTxtRecord : NativeObject {
 		internal NWTxtRecord (IntPtr handle, bool owns) : base (handle, owns) { }

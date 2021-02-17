@@ -16,14 +16,6 @@ using Foundation;
 
 namespace CoreGraphics {
 
-	// uint32_t enum -> CGColorConversionInfo.h
-	[iOS (10,0)][TV (10,0)][Watch (3,0)][Mac (10,12)]
-	public enum CGColorConversionInfoTransformType : uint {
-		FromSpace = 0,
-		ToSpace,
-		ApplySpace
-	}
-
 	[iOS (10,0)][TV (10,0)][Watch (3,0)][Mac (10,12)]
 	[StructLayout (LayoutKind.Sequential)]
 	public struct GColorConversionInfoTriple {

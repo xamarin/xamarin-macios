@@ -1,9 +1,6 @@
 using System;
 
-using Foundation;
-using CoreFoundation;
 using ObjCRuntime;
-using CoreVideo;
 
 namespace Compression {
 
@@ -17,17 +14,20 @@ namespace Compression {
 		Zlib = 0x205,
 	}
 
+	[Internal]
 	enum CompressionStatus {
 		Ok = 0,
 		End = 1,
 		Error = -1,
 	}
 
+	[Internal]
 	enum StreamFlag {
 		Continue = 0, // not present in the API, but makes it nice in our case
 		Finalize = 0x0001,
 	}
 
+	[Internal]
 	enum StreamOperation {
 		Encode = 0,
 		Decode = 1,

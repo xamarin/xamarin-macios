@@ -14,13 +14,6 @@ using System.Runtime.CompilerServices;
 namespace AVFoundation {
 
 #if !WATCH
-	[TV (10,2), Mac (10,12,4), iOS (10,3), NoWatch]
-	public enum AVContentKeyResponseDataType {
-		FairPlayStreamingKeyResponseData,
-		[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
-		AuthorizationTokenData,
-	} 
-
 	public partial class AVContentKeyResponse {
 
 		public static AVContentKeyResponse Create (NSData fairPlayStreamingKeyResponseData) => Create (fairPlayStreamingKeyResponseData, AVContentKeyResponseDataType.FairPlayStreamingKeyResponseData);

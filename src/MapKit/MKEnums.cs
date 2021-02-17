@@ -15,6 +15,8 @@ using CoreLocation;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace MapKit {
 
 	// NSUInteger -> MKDirectionsTypes.h
