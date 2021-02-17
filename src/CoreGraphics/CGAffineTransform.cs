@@ -44,6 +44,7 @@ namespace CoreGraphics {
 		public /* CGFloat */ nfloat x0;   // tx
 		public /* CGFloat */ nfloat y0;   // ty
 
+#if !COREBUILD
 		//
 		// Constructors
 		//
@@ -281,5 +282,6 @@ namespace CoreGraphics {
 		{
 			return CGAffineTransformInvert (this);
 		}
+#endif // !COREBUILD
 	}
 }

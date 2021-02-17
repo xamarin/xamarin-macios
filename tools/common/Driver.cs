@@ -287,13 +287,14 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		static int verbose = GetDefaultVerbosity ();
 		public static int Verbosity {
-			get { return verbose; }
-			set {
-				verbose = value;
-				ErrorHelper.Verbosity = Verbosity;
-			}
+			get { return ErrorHelper.Verbosity; }
+			set { ErrorHelper.Verbosity = value; }
+		}
+
+		static Driver ()
+		{
+			Verbosity = GetDefaultVerbosity ();
 		}
 
 		static int GetDefaultVerbosity ()

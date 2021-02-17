@@ -33,44 +33,15 @@ using CoreGraphics;
 using ObjCRuntime;
 
 namespace Foundation {
-	[Native]
-	public enum NSStringEncoding : ulong {
-		ASCIIStringEncoding = 1,
-		NEXTSTEP = 2,
-		JapaneseEUC = 3,
-		UTF8 = 4,
-		ISOLatin1 = 5,
-		Symbol = 6,
-		NonLossyASCII = 7,
-		ShiftJIS = 8,
-		ISOLatin2 = 9,
-		Unicode = 10,
-		WindowsCP1251 = 11,
-		WindowsCP1252 = 12,
-		WindowsCP1253 = 13,
-		WindowsCP1254 = 14,
-		WindowsCP1250 = 15,
-		ISO2022JP = 21,
-		MacOSRoman = 30,
-		UTF16BigEndian = 0x90000100,
-		UTF16LittleEndian = 0x94000100,
-		UTF32 = 0x8c000100,
-		UTF32BigEndian = 0x98000100,
-		UTF32LittleEndian = 0x9c000100,
-	};
-	
-	[Native]
-	public enum NSStringCompareOptions : ulong {
-		CaseInsensitiveSearch = 1,
-		LiteralSearch = 2,
-		BackwardsSearch = 4,
-		AnchoredSearch = 8,
-		NumericSearch = 64,
-		DiacriticInsensitiveSearch = 128,
-		WidthInsensitiveSearch = 256,
-		ForcedOrderingSearch = 512,
-		RegularExpressionSearch = 1024
-	}
+
+#if COREBUILD
+	[Protocol]
+	public interface INSCopying {}
+	[Protocol]
+	public interface INSCoding {}
+	[Protocol]
+	public interface INSSecureCoding {}
+#endif
 
 	public partial class NSString : NSObject
 #if COREBUILD

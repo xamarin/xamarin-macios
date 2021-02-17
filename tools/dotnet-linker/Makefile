@@ -22,17 +22,11 @@ dotnet-linker.csproj.inc: global.json
 $(BUILD_DIR)/dotnet-linker%dll $(BUILD_DIR)/dotnet-linker%pdb: Makefile global.json $(dotnet_linker_dependencies)
 	$(Q_DOTNET_BUILD) $(DOTNET6) build dotnet-linker.csproj $(DOTNET_BUILD_VERBOSITY)
 
-$(DOTNET_DESTDIR)/Microsoft.iOS.Sdk/tools/dotnet-linker/%: $(BUILD_DIR)/% | $(DOTNET_DESTDIR)/Microsoft.iOS.Sdk/tools/dotnet-linker
-	$(Q) $(CP) $< $@
-
-$(DOTNET_DESTDIR)/Microsoft.tvOS.Sdk/tools/dotnet-linker/%: $(BUILD_DIR)/% | $(DOTNET_DESTDIR)/Microsoft.tvOS.Sdk/tools/dotnet-linker
-	$(Q) $(CP) $< $@
-
-$(DOTNET_DESTDIR)/Microsoft.watchOS.Sdk/tools/dotnet-linker/%: $(BUILD_DIR)/% | $(DOTNET_DESTDIR)/Microsoft.watchOS.Sdk/tools/dotnet-linker
-	$(Q) $(CP) $< $@
-
-$(DOTNET_DESTDIR)/Microsoft.macOS.Sdk/tools/dotnet-linker/%: $(BUILD_DIR)/% | $(DOTNET_DESTDIR)/Microsoft.macOS.Sdk/tools/dotnet-linker
-	$(Q) $(CP) $< $@
+define InstallTemplate
+$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/tools/dotnet-linker/%: $(BUILD_DIR)/% | $(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/tools/dotnet-linker
+	$$(Q) $$(CP) $$< $$@
+endef
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call InstallTemplate,$(platform))))
 
 $(DOTNET_DIRECTORIES):
 	$(Q) mkdir -p $@

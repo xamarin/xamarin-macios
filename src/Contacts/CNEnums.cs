@@ -114,4 +114,36 @@ namespace Contacts {
 	public enum CNPostalAddressFormatterStyle : long {
 		MailingAddress,
 	}
+
+	[iOS (9,0)][Mac (10,11)]
+	[Flags]
+	public enum CNContactOptions : long {
+		None						= 0,
+		Nickname					= 1 << 0,
+		PhoneticGivenName			= 1 << 1,
+		PhoneticMiddleName			= 1 << 2,
+		PhoneticFamilyName			= 1 << 3,
+		OrganizationName			= 1 << 4,
+		DepartmentName				= 1 << 5,
+		JobTitle					= 1 << 6,
+		Birthday					= 1 << 7,
+		NonGregorianBirthday		= 1 << 8,
+		Note						= 1 << 9,
+#if !MONOMAC
+		ImageData					= 1 << 10,
+#endif
+		ThumbnailImageData			= 1 << 11,
+#if !MONOMAC
+		ImageDataAvailable			= 1 << 12,
+#endif
+		Type						= 1 << 13,
+		PhoneNumbers				= 1 << 14,
+		EmailAddresses				= 1 << 15,
+		PostalAddresses				= 1 << 16,
+		Dates						= 1 << 17,
+		UrlAddresses				= 1 << 18,
+		Relations					= 1 << 19,
+		SocialProfiles				= 1 << 20,
+		InstantMessageAddresses		= 1 << 21,
+	}
 }

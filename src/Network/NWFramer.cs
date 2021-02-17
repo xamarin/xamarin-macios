@@ -26,21 +26,6 @@ using OS_nw_parameters=System.IntPtr;
 
 namespace Network {
 
-	// from System/Library/Frameworks/Network.framework/Headers/framer_options.h:
-	[Flags]
-	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
-	public enum NWFramerCreateFlags : uint {
-		Default = 0x00,
-	}
-
-	// from System/Library/Frameworks/Network.framework/Headers/framer_options.h:
-	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
-	public enum NWFramerStartResult {
-		Unknown = 0,
-		Ready = 1,
-		WillMarkReady = 2,
-	}
-
 	public delegate nuint NWFramerParseCompletionDelegate (Memory<byte> buffer, bool isCompleted);
 	public delegate nuint NWFramerInputDelegate (NWFramer framer); 
 

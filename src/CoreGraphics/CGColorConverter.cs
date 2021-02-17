@@ -20,16 +20,6 @@ using Foundation;
 
 namespace CoreGraphics {
 
-	// uint32_t enum -> CGColorConverter.h
-	[TV (9,2)][Obsoleted (PlatformName.TvOS, 10,0, message: "Replaced by 'CGColorConversionInfoTransformType'.")]
-	[iOS (9,3)][Obsoleted (PlatformName.iOS, 10,0, message: "Replaced by 'CGColorConversionInfoTransformType'.")]
-	[Obsolete ("Use 'CGColorConversionInfoTransformType'.")]
-	public enum CGColorConverterTransformType : uint {
-		FromSpace,
-		ToSpace,
-		ApplySpace
-	}
-
 	[TV (9,2)][Obsoleted (PlatformName.TvOS, 10,0, message: "Replaced by 'GColorConversionInfoTriple'.")]
 	[iOS (9,3)][Obsoleted (PlatformName.iOS, 10,0, message: "Replaced by 'GColorConversionInfoTriple'.")]
 	[StructLayout (LayoutKind.Sequential)]

@@ -108,7 +108,11 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 	</Target>
 
 	<Target Name="_CreateEmbeddedResources" DependsOnTargets="_CollectBundleResources">
-		<CreateEmbeddedResources BundleResources="@(_BundleResourceWithLogicalName)" Prefix="$(_EmbeddedResourcePrefix)">
+		<CreateEmbeddedResources 
+			SessionId="$(BuildSessionId)" 
+			BundleResources="@(_BundleResourceWithLogicalName)" 
+			Prefix="$(_EmbeddedResourcePrefix)">
+			
 			<Output ItemName="EmbeddedResource" TaskParameter="EmbeddedResources" />
 		</CreateEmbeddedResources>
 	</Target>

@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <_PlatformName>MacCatalyst</_PlatformName>
+    <_RuntimeIdentifier>maccatalyst-arm64</_RuntimeIdentifier>
+  </PropertyGroup>
+
+  <Import Project="../microsoft.runtime.csproj" />
+</Project>

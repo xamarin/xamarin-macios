@@ -19,14 +19,6 @@ using CoreFoundation;
 using nw_parameters_t=System.IntPtr;
 
 namespace Network {
-	[TV (12,0), Mac (10,14), iOS (12,0)]
-	[Watch (6,0)]
-	public enum NWMultiPathService {
-		Disabled = 0,
-		Handover = 1,
-		Interactive = 2,
-		Aggregate = 3, 
-	}
 
 	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Watch (6,0)]
@@ -498,13 +490,5 @@ namespace Network {
 			get => nw_parameters_get_prohibit_constrained (GetCheckedHandle ());
 			set => nw_parameters_set_prohibit_constrained (GetCheckedHandle (), value);
 		}
-	}
-
-	[TV (12,0), Mac (10,14), iOS (12,0)]
-	[Watch (6,0)]
-	public enum NWParametersExpiredDnsBehavior {
-		Default = 0,
-		Allow = 1,
-		Prohibit = 2,
 	}
 }

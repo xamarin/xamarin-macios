@@ -101,7 +101,7 @@ namespace Xamarin.MacDev.Tasks
 			}
 		}
 
-		protected string DefaultEntitlementsPath {
+		protected virtual string DefaultEntitlementsPath {
 			get {
 				return Path.Combine (Sdks.GetAppleSdk (TargetFrameworkMoniker).GetSdkPath (SdkVersion, false), "Entitlements.plist");
 			}

@@ -58,4 +58,12 @@ namespace AssetsLibrary {
 		Denied,
 		Authorized
 	}
+
+	// internally used (not exposed by ObjC)
+	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Photos' API instead.")]
+	public enum ALAssetType {
+		Video,
+		Photo,
+		Unknown,
+	}
 }

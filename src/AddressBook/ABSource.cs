@@ -38,20 +38,6 @@ using ObjCRuntime;
 
 namespace AddressBook {
 	
-	// note: not a true flag
-	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
-	public enum ABSourceType : int /* typedef int */ {
-		Local		= 0x0,
-		Exchange	= 0x1,
-		ExchangeGAL	= Exchange | SearchableMask,
-		MobileMe	= 0x2,
-		LDAP		= 0x3 | SearchableMask,
-		CardDAV		= 0x4,
-		DAVSearch	= CardDAV | SearchableMask,
-
-		SearchableMask = 0x01000000
-	};	
-	
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	public class ABSource : ABRecord {
 		internal ABSource (IntPtr handle, bool owns)
@@ -77,12 +63,6 @@ namespace AddressBook {
 		}
 	}
 
-	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
-	public enum ABSourceProperty {
-		Name,
-		Type,
-	}
-	
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	static class ABSourcePropertyId {
 

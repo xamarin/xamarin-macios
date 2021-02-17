@@ -39,54 +39,7 @@ using Foundation;
 using ObjCRuntime;
 
 namespace AddressBook {
-	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
-	public enum ABPersonSortBy : uint /* uint32_t */ {
-		FirstName = 0,
-		LastName  = 1,
-	}
 
-	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
-	public enum ABPersonCompositeNameFormat : uint /* uint32_t */ {
-		FirstNameFirst  = 0,
-		LastNameFirst   = 1,
-	}
-
-	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
-	public enum ABPersonProperty {
-		Address,
-		Birthday,
-		CreationDate,
-		Date,
-		Department,
-		Email,
-		FirstName,
-		FirstNamePhonetic,
-		InstantMessage,
-		JobTitle,
-		Kind,
-		LastName,
-		LastNamePhonetic,
-		MiddleName,
-		MiddleNamePhonetic,
-		ModificationDate,
-		Nickname,
-		Note,
-		Organization,
-		Phone,
-		Prefix,
-		RelatedNames,
-		Suffix,
-		Url,
-		SocialProfile
-	}
-
-	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
-	[Native]
-	public enum ABPersonImageFormat : long {
-		Thumbnail = 0,
-		OriginalSize = 2
-	}
-	
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	static class ABPersonPropertyId {
 
@@ -255,13 +208,6 @@ namespace AddressBook {
 		{
 			Anniversary = Dlfcn.GetStringConstant (Libraries.AddressBook.Handle, "kABPersonAnniversaryLabel");
 		}
-	}
-
-	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
-	public enum ABPersonKind {
-		None,
-		Organization,
-		Person,
 	}
 
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]

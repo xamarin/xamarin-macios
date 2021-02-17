@@ -343,18 +343,12 @@ namespace Metal {
 #endif // MONOMAC
 
 	[Mac (10,15), iOS (13,0), TV (13,0)]
-	public enum MTLTextureSwizzle : byte {
-		Zero = 0,
-		One = 1,
-		Red = 2,
-		Green = 3,
-		Blue = 4,
-		Alpha = 5,
-	}
-
-	[Mac (10,15), iOS (13,0), TV (13,0)]
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MTLTextureSwizzleChannels {
+#if COREBUILD
+		// keep size identical
+		byte Red, Green, Blue, Alpha;
+#else
 		public MTLTextureSwizzle Red;
 
 		public MTLTextureSwizzle Green;
@@ -362,6 +356,7 @@ namespace Metal {
 		public MTLTextureSwizzle Blue;
 
 		public MTLTextureSwizzle Alpha;
+#endif
 	}
 
 #if IOS || MONOMAC || COREBUILD

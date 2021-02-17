@@ -173,19 +173,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		</CreateInstallerPackage>
 	</Target>
 
-	<Target Name="_GenerateBundleName" DependsOnTargets="_ParseBundlerArguments">
-		<PropertyGroup>
-			<AppBundleDir>$(OutputPath)$(_AppBundleName)$(AppBundleExtension)</AppBundleDir>
-			<_AppBundlePath>$(AppBundleDir)\</_AppBundlePath>
-			<_AppContentsPath>$(_AppBundlePath)Contents\$(_CustomBundleName)\</_AppContentsPath>
-			<_AppResourcesPath>$(_AppBundlePath)Contents\Resources\</_AppResourcesPath>
-		</PropertyGroup>
-	</Target>
-
-	<PropertyGroup>
-		<_AppBundleManifestRelativePath>Contents/</_AppBundleManifestRelativePath>
-	</PropertyGroup>
-
 	<PropertyGroup>
 		<CompileToNativeDependsOn>
 			_ComputeLinkMode;

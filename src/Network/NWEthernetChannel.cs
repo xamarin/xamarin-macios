@@ -28,17 +28,6 @@ namespace Network {
 	public delegate void NWEthernetChannelReceiveDelegate (DispatchData? content, ushort vlanTag, string? localAddress, string? remoteAddress);
 
 	[NoWatch, NoTV, NoiOS, Mac (10,15)]
-	public enum NWEthernetChannelState 
-	{
-		Invalid = 0,
-		Waiting = 1,
-		Preparing = 2,
-		Ready = 3,
-		Failed = 4,
-		Cancelled = 5,
-	}
-
-	[NoWatch, NoTV, NoiOS, Mac (10,15)]
 	public class NWEthernetChannel : NativeObject {
 
 		internal NWEthernetChannel (IntPtr handle, bool owns) : base (handle, owns) {}

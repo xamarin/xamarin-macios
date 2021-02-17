@@ -2,13 +2,60 @@ using System.Linq;
 using System.Collections.Generic;
 
 using Mono.Cecil;
+using Xamarin.Messaging.Build.Client;
+using Microsoft.Build.Framework;
 
 #nullable enable
 
 namespace Xamarin.MacDev.Tasks
 {
-	public class UnpackLibraryResources : UnpackLibraryResourcesTaskBase
+	public class UnpackLibraryResources : UnpackLibraryResourcesTaskBase, ITaskCallback, ICancelableTask
 	{
+		public override bool Execute ()
+		{
+			bool result;
+
+			if (!string.IsNullOrEmpty (SessionId)) {
+				result = new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
+
+				if (result && BundleResourcesWithLogicalNames != null) {
+					// Fix LogicalName path for Windows
+					foreach (var resource in BundleResourcesWithLogicalNames) {
+						var logicalName = resource.GetMetadata ("LogicalName");
+
+						if (!string.IsNullOrEmpty (logicalName)) {
+							resource.SetMetadata ("LogicalName", logicalName.Replace ("/", "\\"));
+						}
+					}
+				}
+			} else {
+				result = base.Execute ();
+			}	
+
+			return result;
+		}
+
+		public void Cancel ()
+		{
+			if (!string.IsNullOrEmpty (SessionId))
+				BuildConnection.CancelAsync (SessionId, BuildEngine4).Wait ();
+		}
+
+		public bool ShouldCopyToBuildServer (ITaskItem item)
+		{
+			if (item.IsFrameworkItem ())
+				return false;
+
+			if (NoOverwrite != null && NoOverwrite.Contains (item))
+				return false;
+
+			return true;
+		}
+
+		public bool ShouldCreateOutputFile (ITaskItem item) => UnpackedResources?.Contains (item) == true;
+
+		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied () => Enumerable.Empty<ITaskItem> ();
+
 		protected override IEnumerable<ManifestResource> GetAssemblyManifestResources (string fileName)
 		{
 			AssemblyDefinition? assembly = null;

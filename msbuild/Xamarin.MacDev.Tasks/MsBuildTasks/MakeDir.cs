@@ -1,8 +1,26 @@
-﻿using Xamarin.MacDev.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Build.Framework;
+using Xamarin.Messaging.Build.Client;
 
 namespace Microsoft.Build.Tasks
 {
-	public class MakeDir : MakeDirBase
+	public class MakeDir : MakeDirBase, ITaskCallback
 	{
+		public override bool Execute ()
+		{
+			var result = base.Execute ();
+
+			if (!string.IsNullOrEmpty (SessionId))
+				result = new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
+
+			return result;
+		}
+
+		public bool ShouldCopyToBuildServer (ITaskItem item) => true;
+
+		public bool ShouldCreateOutputFile (ITaskItem item) => false;
+
+		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied () => Enumerable.Empty<ITaskItem> ();
 	}
 }

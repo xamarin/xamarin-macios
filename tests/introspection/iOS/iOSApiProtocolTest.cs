@@ -158,6 +158,15 @@ namespace Introspection {
 				if (protocolName == "UIUserActivityRestoring")
 					return true;
 				break;
+			case "ARImageAnchor":
+				// both type and protocol were added in iOS 11.3 but the conformance, for that type, started with iOS 12.0
+				if (protocolName == "ARTrackable")
+					return !TestRuntime.CheckXcodeVersion (10,0);
+				break;
+			case "PHLivePhoto":
+				if (protocolName == "NSItemProviderReading")
+					return !TestRuntime.CheckXcodeVersion (10,0);
+				break;
 			}
 
 			switch (protocolName) {

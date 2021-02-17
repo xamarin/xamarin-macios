@@ -35,19 +35,6 @@ using CoreFoundation;
 
 namespace CoreGraphics {
 
-	// untyped enum -> CGPDFObject.h
-	public enum CGPDFObjectType {
-		Null = 1,
-		Boolean,
-		Integer,
-		Real,
-		Name,
-		String,
-		Array,
-		Dictionary,
-		Stream
-	};
-
 	// CGPDFObject.h
 	public class CGPDFObject : INativeObject {
 
