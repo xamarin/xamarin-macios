@@ -1,5 +1,4 @@
-using System;
-using System.IO;
+using System.Collections.Generic;
 using Mono.Cecil;
 
 namespace Xamarin.Linker {
@@ -11,31 +10,15 @@ namespace Xamarin.Linker {
 		{
 			base.TryProcess ();
 
-			var tryResolve = Configuration.Context.GetType ().GetMethod ("TryResolve");
-			foreach (var asm in Configuration.ManagedAssembliesToLink) {
-				var ad = (AssemblyDefinition) tryResolve.Invoke (Configuration.Context, new object [] { Path.GetFileNameWithoutExtension (asm) });
-				if (ad != null) {
-					Console.WriteLine ($"Loaded {asm} => {ad.FullName} => {ad.MainModule.FileName}");
-				} else {
-					Console.WriteLine ($"Failed to load {asm}");
-				}
-			}
-		}
-
-		protected override void TryProcessAssembly (AssemblyDefinition assembly)
-		{
-			base.TryProcessAssembly (assembly);
-
-			Configuration.Assemblies.Add (assembly);
-		}
-
-		protected override void TryEndProcess ()
-		{
-			foreach (var asm in Configuration.Assemblies)
-				System.Console.WriteLine ($"Collected assembly: {asm.FullName}");
-
-			base.TryEndProcess ();
+			// This is a temporary workaround, we need to mark members and types, and we have to do it before
+			// the MarkStep. However, MarkStep is the first step, and if we add another step before it,
+			// there won't be any assemblies loaded (since MarkStep will load assemblies as needed).
+			// This step now runs at the very beginning, using reflection to call into the linker to load all
+			// the referenced assemblies, so that we can then have another step before MarkStep that does the
+			// custom marking we need to do.
+			var getReferencedAssemblies = Configuration.Context.GetType ().GetMethod ("GetReferencedAssemblies");
+			var assemblies = (IEnumerable<AssemblyDefinition>) getReferencedAssemblies.Invoke (Configuration.Context, new object [0]);
+			Configuration.Assemblies.AddRange (assemblies);
 		}
 	}
 }
-
