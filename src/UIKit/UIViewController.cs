@@ -14,7 +14,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Foundation; 
-#if IOS
+#if HAS_IAD
 using iAd;
 #endif
 using ObjCRuntime;
@@ -62,7 +62,7 @@ namespace UIKit {
 				yield return uiv;
 		}
 
-#if IOS
+#if HAS_IAD
 		// This is a [Category] -> C# extension method (see adlib.cs) but it targets on static selector
 		// the resulting syntax does not look good in user code so we provide a better looking API
 		// https://trello.com/c/iQpXOxCd/227-category-and-static-methods-selectors

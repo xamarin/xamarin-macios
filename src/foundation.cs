@@ -37,8 +37,10 @@ using CoreData;
 using CoreFoundation;
 using Foundation;
 using CoreGraphics;
-#if IOS
+#if HAS_APPCLIP
 using AppClip;
+#endif
+#if IOS
 using QuickLook;
 #endif
 #if !TVOS
@@ -5426,11 +5428,13 @@ namespace Foundation
 		[NullAllowed, Export ("targetContentIdentifier")]
 		string TargetContentIdentifier { get; set; }
 
+#if HAS_APPCLIP
 		// Inlined from NSUserActivity (AppClip)
 		[iOS (14,0)][NoTV][NoMac][NoWatch]
 		[Export ("appClipActivationPayload", ArgumentSemantic.Strong)]
 		[NullAllowed]
 		APActivationPayload AppClipActivationPayload { get; }
+#endif
 	}
 
 	[iOS (8,0)][Mac (10,10)] // same as NSUserActivity
