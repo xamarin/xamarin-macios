@@ -398,7 +398,7 @@
 			<_NativeExecutablePublishDir Condition="'$(_PlatformName)' != 'macOS'">$(MSBuildProjectDirectory)$(_AppBundlePath)\</_NativeExecutablePublishDir>
 			<_NativeExecutablePublishDir Condition="'$(_PlatformName)' == 'macOS'">$(MSBuildProjectDirectory)$(_AppBundlePath)\Contents\MacOS\</_NativeExecutablePublishDir>
 
-			<_AOTCompiler>$(_MonoRuntimePackPath)native/cross/mono-aot-cross</_AOTCompiler>
+			<_AOTCompiler>$(_MonoRuntimePackPath)native/cross/$(RuntimeIdentifier)/mono-aot-cross</_AOTCompiler>
 			<_AOTInputDirectory>$(_IntermediateNativeLibraryDir)aot-input/</_AOTInputDirectory>
 			<_AOTOutputDirectory>$(_IntermediateNativeLibraryDir)aot-output/</_AOTOutputDirectory>
 
