@@ -1601,6 +1601,17 @@ namespace Xamarin.Bundler {
 			if (UseInterpreter)
 				return true;
 
+#if NET
+			asm = Path.GetFileNameWithoutExtension (assembly);
+			switch (asm) {
+			case "System.Net.Security":
+			case "System.Net.Quic":
+				// Some .NET assemblies have P/Invokes to native functions they don't ship. We need to use dlsym for this assemblies.
+				// https://github.com/dotnet/runtime/issues/47533
+				return true;
+			}
+#endif
+
 			switch (Platform) {
 			case ApplePlatform.iOS:
 				return !Profile.IsSdkAssembly (Path.GetFileNameWithoutExtension (assembly));
