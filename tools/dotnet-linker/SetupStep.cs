@@ -59,7 +59,7 @@ namespace Xamarin {
 
 			// Load the list of assemblies loaded by the linker.
 			// This would not be needed of LinkContext.GetAssemblies () was exposed to us.
-			InsertAfter (new CollectAssembliesStep (), "LoadReferencesStep");
+			InsertBefore (new CollectAssembliesStep (), "MarkStep");
 
 			var pre_dynamic_dependency_lookup_substeps = new DotNetSubStepDispatcher ();
 			InsertBefore (pre_dynamic_dependency_lookup_substeps, "MarkStep");
