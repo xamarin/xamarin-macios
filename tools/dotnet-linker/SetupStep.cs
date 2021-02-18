@@ -35,6 +35,7 @@ namespace Xamarin {
 					return;
 				}
 			}
+			DumpSteps ();
 			throw new InvalidOperationException ($"Could not insert {step} before {stepName} because {stepName} wasn't found.");
 		}
 
@@ -46,6 +47,7 @@ namespace Xamarin {
 					return;
 				}
 			}
+			DumpSteps ();
 			throw new InvalidOperationException ($"Could not insert {step} after {stepName} because {stepName} wasn't found.");
 		}
 
@@ -100,24 +102,29 @@ namespace Xamarin {
 			Configuration.Write ();
 
 			if (Configuration.Verbosity > 0) {
-				Console.WriteLine ();
-				Console.WriteLine ("Pipeline Steps:");
-				foreach (var step in Steps) {
-					Console.WriteLine ($"    {step}");
-					if (step is SubStepsDispatcher) {
-						var substeps = typeof (SubStepsDispatcher).GetField ("substeps", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue (step) as IEnumerable<ISubStep>;
-						if (substeps != null) {
-							foreach (var substep in substeps) {
-								Console.WriteLine ($"        {substep}");
-							}
-						}
-					}
-				}
+				DumpSteps ();
 			}
 
 			ErrorHelper.Platform = Configuration.Platform;
 			Directory.CreateDirectory (Configuration.ItemsDirectory);
 			Directory.CreateDirectory (Configuration.CacheDirectory);
+		}
+
+		void DumpSteps ()
+		{
+			Console.WriteLine ();
+			Console.WriteLine ("Pipeline Steps:");
+			foreach (var step in Steps) {
+				Console.WriteLine ($"    {step}");
+				if (step is SubStepsDispatcher) {
+					var substeps = typeof (SubStepsDispatcher).GetField ("substeps", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue (step) as IEnumerable<ISubStep>;
+					if (substeps != null) {
+						foreach (var substep in substeps) {
+							Console.WriteLine ($"        {substep}");
+						}
+					}
+				}
+			}
 		}
 	}
 }
