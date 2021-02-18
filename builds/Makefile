@@ -113,9 +113,33 @@ x:
 	$(MAKE) download-mono
 	$(Q) touch $@
 
+.stamp-download-dotnet-packages: $(TOP)/Make.config downloads/$(basename $(basename $(DOTNET6_TARBALL_NAME))) package-download/global.json package-download/NuGet.config
+	$(Q_GEN) cd package-download && $(DOTNET6) \
+		build \
+		download-packages.proj \
+		/t:WriteBundledNETCorePlatformsPackageVersion \
+		/p:WriteFilePath=$(CURDIR)/BundledNETCorePlatformsPackageVersion.txt \
+		/p:PackageRuntimeIdentifiers="$(DOTNET_RUNTIME_IDENTIFIERS)" \
+		/bl \
+		/v:quiet
+	$(Q) touch $@
+
+BundledNETCorePlatformsPackageVersion.txt: .stamp-download-dotnet-packages
+
+package-download/global.json: $(TOP)/global6.json Makefile
+	$(Q) $(CP) $< $@
+
+# put any downloaded packages in our own directory, not in ~
+package-download/NuGet.config: $(TOP)/NuGet.config Makefile
+	$(Q) $(CP) $< $@
+	$(Q) $(CP) $< $@.tmp
+	$(Q) nuget config -Set globalPackagesFolder=$(abspath $(CURDIR)/downloads) -Config $@.tmp
+	$(Q) mv $@.tmp $@
+
 DOTNET_DOWNLOADS = \
 	downloads/$(basename $(DOTNET5_BCL_REF_NAME)) \
 	downloads/$(basename $(basename $(DOTNET6_TARBALL_NAME))) \
+	.stamp-download-dotnet-packages \
 
 dotnet: $(DOTNET_DOWNLOADS)
 ifdef ENABLE_DOTNET
