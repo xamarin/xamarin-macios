@@ -25,7 +25,6 @@ namespace Xamarin.Linker {
 		public string ItemsDirectory { get; private set; }
 		public bool IsSimulatorBuild { get; private set; }
 		public LinkMode LinkMode => Application.LinkMode;
-		public HashSet<string> ManagedAssembliesToLink = new HashSet<string> ();
 		public string PartialStaticRegistrarLibrary { get; set; }
 		public ApplePlatform Platform { get; private set; }
 		public string PlatformAssembly { get; private set; }
@@ -135,9 +134,6 @@ namespace Xamarin.Linker {
 					if (!Enum.TryParse<LinkMode> (value, true, out var lm))
 						throw new InvalidOperationException ($"Unable to parse the {key} value: {value} in {linker_file}");
 					Application.LinkMode = lm;
-					break;
-				case "ManagedAssemblyToLink":
-					ManagedAssembliesToLink.Add (value);
 					break;
 				case "MarshalManagedExceptionMode":
 					if (!string.IsNullOrEmpty (value)) {
@@ -269,9 +265,6 @@ namespace Xamarin.Linker {
 					Console.WriteLine ($"        {fw}");
 				Console.WriteLine ($"    IsSimulatorBuild: {IsSimulatorBuild}");
 				Console.WriteLine ($"    LinkMode: {LinkMode}");
-				Console.WriteLine ($"    {ManagedAssembliesToLink.Count} assemblies to link:");
-				foreach (var asm in ManagedAssembliesToLink.OrderBy (v => v))
-					Console.WriteLine ($"        {asm}");
 				Console.WriteLine ($"    MarshalManagedExceptions: {Application.MarshalManagedExceptions} (IsDefault: {Application.IsDefaultMarshalManagedExceptionMode})");
 				Console.WriteLine ($"    MarshalObjectiveCExceptions: {Application.MarshalObjectiveCExceptions}");
 				Console.WriteLine ($"    Optimize: {user_optimize_flags} => {Application.Optimizations}");
