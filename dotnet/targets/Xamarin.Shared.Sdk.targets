@@ -203,7 +203,7 @@
 		</PropertyGroup>
 	</Target>
 
-	<Target Name="_ComputeLinkerArguments" DependsOnTargets="_ComputeLinkMode;_ComputeFrameworkVariables;_ComputeFrameworkAssemblies;ComputeResolvedFilesToPublishList;_ParseBundlerArguments;_ComputeVariables;">
+	<Target Name="_ComputeLinkerArguments" DependsOnTargets="_ComputeLinkMode;_ComputeFrameworkVariables;_ComputeFrameworkAssemblies;ComputeResolvedFilesToPublishList;_ParseBundlerArguments;_ComputeVariables;PrepareForILLink;">
 		<!-- Validate the linker mode -->
 		<Error Text="Invalid link mode: '$(_LinkMode)'. Valid link modes are: 'None', 'SdkOnly' and 'Full'" Condition="'$(_LinkMode)' != 'None' And '$(_LinkMode)' != 'SdkOnly' And '$(_LinkMode)' != 'Full'" />
 
@@ -232,6 +232,7 @@
 				ItemsDirectory=$(_LinkerItemsDirectory)
 				IsSimulatorBuild=$(_SdkIsSimulator)
 				LinkMode=$(_LinkMode)
+				@(ManagedAssemblyToLink -> 'ManagedAssemblyToLink=%(FullPath)')
 				MarshalManagedExceptionMode=$(_MarshalManagedExceptionMode)
 				MarshalObjectiveCExceptionMode=$(_MarshalObjectiveCExceptionMode)
 				Optimize=$(_BundlerOptimize)
