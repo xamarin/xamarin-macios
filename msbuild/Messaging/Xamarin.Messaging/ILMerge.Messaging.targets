@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildThisFileDirectory)..\..\ILMerge.Common.targets" />
+
+  <Target Name="ComputeMergedAssemblies">
+    <ItemGroup Condition="$(TargetFramework.StartsWith ('netstandard'))">
+      <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'DotNetZip'" />
+      <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'Newtonsoft.Json'" />
+      <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'Renci.SshNet'" />
+      <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'SshNet.Security.Cryptography'" />
+      <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.ComponentModel.Annotations'" />
+      <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.ComponentModel.Composition'" />
+      <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.Diagnostics.Tracer'" />
+      <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.Net.Mqtt'" />
+      <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.Reactive'" />
+      <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.Security.Cryptography.ProtectedData'" />
+      <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.Text.Encoding.CodePages'" />
+
+      <MergedAssemblies Include="@(ReferencePath)" Condition="'%(Extension)' == '.dll' And $([MSBuild]::ValueOrDefault('%(FileName)', '').StartsWith('Xamarin.Messaging', StringComparison.OrdinalIgnoreCase))" />
+    </ItemGroup>
+  </Target>
+</Project>
