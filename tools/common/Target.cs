@@ -557,6 +557,9 @@ namespace Xamarin.Bundler {
 						GenerateIOSMain (sw, abi);
 						break;
 					case ApplePlatform.MacOSX:
+#if NET
+						GenerateIOSMain (sw, abi);
+#endif
 						GenerateMacMain (sw);
 						break;
 					default:

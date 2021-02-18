@@ -9,7 +9,10 @@
 // Copyright 2011-2012 Xamarin Inc. 
 //
 
+#include <TargetConditionals.h>
+#if !TARGET_OS_OSX
 #include <UIKit/UIKit.h>
+#endif
 #include <sys/time.h>
 #include <zlib.h>
 #include <dlfcn.h>
@@ -199,7 +202,7 @@ extern void mono_gc_init_finalizer_thread (void);
 #if TARGET_OS_WATCH
 		// I haven't found a way to listen for memory warnings on watchOS.
 		// fprintf (stderr, "Need to listen for memory warnings on the watch\n");
-#else
+#elif !TARGET_OS_OSX
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(memoryWarning:) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
 #endif
 	}
