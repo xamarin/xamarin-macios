@@ -3202,6 +3202,21 @@ public partial class Generator : IMemberGatherer {
 			w.WriteLine (a);
 	}
 
+	bool Duplicated (AvailabilityBaseAttribute candidate, AvailabilityBaseAttribute[] attributes)
+	{
+		foreach (var a in attributes) {
+			if (candidate.AvailabilityKind != a.AvailabilityKind)
+				continue;
+			if (candidate.Platform != a.Platform)
+				continue;
+			if (candidate.Version != a.Version)
+				continue;
+			// the actual message (when present) is not really important
+			return true;
+		}
+		return false;
+	}
+
 	public void PrintPlatformAttributes (MemberInfo mi)
 	{
 		if (mi == null)
@@ -3221,6 +3236,8 @@ public partial class Generator : IMemberGatherer {
 				print (availability.ToString ());
 				continue;
 			}
+			if (Duplicated (availability, type_ca))
+				continue;
 			switch (availability.AvailabilityKind) {
 			case AvailabilityKind.Unavailable:
 				// an unavailable member can override type-level attribute
