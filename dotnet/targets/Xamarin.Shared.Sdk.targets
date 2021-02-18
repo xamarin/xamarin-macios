@@ -302,7 +302,7 @@
 
 			<!-- add a custom step which inserts any other steps we need -->
 			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)">
-				<BeforeStep>LoadReferencesStep</BeforeStep>
+				<BeforeStep>MarkStep</BeforeStep>
 				<Type>Xamarin.SetupStep</Type>
 			</_TrimmerCustomSteps>
 

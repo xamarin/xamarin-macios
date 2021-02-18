@@ -60,10 +60,10 @@ namespace Xamarin {
 			InsertAfter (new CollectAssembliesStep (), "LoadReferencesStep");
 
 			var pre_dynamic_dependency_lookup_substeps = new DotNetSubStepDispatcher ();
-			InsertBefore (pre_dynamic_dependency_lookup_substeps, "DynamicDependencyLookupStep");
+			InsertBefore (pre_dynamic_dependency_lookup_substeps, "MarkStep");
 
 			var prelink_substeps = new DotNetSubStepDispatcher ();
-			InsertAfter (prelink_substeps, "RemoveSecurityStep");
+			InsertBefore (prelink_substeps, "MarkStep");
 
 			var post_sweep_substeps = new DotNetSubStepDispatcher ();
 			InsertAfter (post_sweep_substeps, "SweepStep");
