@@ -32,6 +32,8 @@ function Invoke-Request {
                 Write-Host "Error performing request trying in $seconds seconds"
                 Write-Host "Exception was:"
                 Write-Host "$($_.Exception)"
+                Write-Host "Response was:"
+                Write-Host "$($_.Exception.Response)"
                 Start-Sleep -Seconds $seconds
             }
         }
@@ -448,7 +450,8 @@ function New-GitHubSummaryComment {
                 # build the required list
                 $sb.AppendLine("# API diff")
                 Write-Host "Message is '$($json.message)'"
-                $sb.AppendLine($json.message)
+                # TODO: Find the reason for github to complain 
+                # $sb.AppendLine($json.message)
                 $sb.AppendLine("<details><summary>View API diff</summary>")
                 $sb.AppendLine("") # no new line results in a bad rendering in the links
 
