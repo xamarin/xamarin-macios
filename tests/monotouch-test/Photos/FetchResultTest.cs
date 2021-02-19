@@ -16,7 +16,7 @@ using UIKit;
 using ObjCRuntime;
 using Photos;
 using CoreGraphics;
-#if HAS_ASSETLIBRARY
+#if HAS_ASSETSLIBRARY
 using AssetsLibrary;
 #endif
 using NUnit.Framework;
@@ -27,15 +27,21 @@ namespace MonoTouchFixtures.Photos {
 	[Preserve (AllMembers = true)]
 	public class FetchResultTest {
 
+		[SetUp]
+		public void Setup ()
+		{
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+#if HAS_ASSETSLIBRARY
+			if (ALAssetsLibrary.AuthorizationStatus != ALAuthorizationStatus.Authorized)
+				Assert.Inconclusive ("Requires access to the photo library");
+#else
+			Assert.Inconclusive ("Requires access to the photo library");
+#endif
+		}
+
 		[Test]
 		public void FetchResultToArray ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
-
-#if HAS_ASSETLIBRARY
-			if (ALAssetsLibrary.AuthorizationStatus != ALAuthorizationStatus.Authorized)
-				Assert.Inconclusive ("Requires access to the photo library");
-#endif
 			var collection = PHAsset.FetchAssets (PHAssetMediaType.Image, null);
 			if (collection.Count == 0) {
 				XamagramImage.Image.SaveToPhotosAlbum (null);
@@ -50,12 +56,6 @@ namespace MonoTouchFixtures.Photos {
 		[Test]
 		public void FetchResultIndex ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
-				
-#if HAS_ASSETLIBRARY
-			if (ALAssetsLibrary.AuthorizationStatus != ALAuthorizationStatus.Authorized)
-				Assert.Inconclusive ("Requires access to the photo library");
-#endif
 			var collection = PHAsset.FetchAssets (PHAssetMediaType.Image, null);
 			if (collection.Count == 0) {
 				XamagramImage.Image.SaveToPhotosAlbum (null);
@@ -70,12 +70,6 @@ namespace MonoTouchFixtures.Photos {
 		[Test]
 		public void FetchResultObjectsAt ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
-
-#if HAS_ASSETLIBRARY
-			if (ALAssetsLibrary.AuthorizationStatus != ALAuthorizationStatus.Authorized)
-				Assert.Inconclusive ("Requires access to the photo library");
-#endif
 			var collection = PHAsset.FetchAssets (PHAssetMediaType.Image, null);
 			if (collection.Count == 0) {
 				XamagramImage.Image.SaveToPhotosAlbum (null);
