@@ -3217,7 +3217,7 @@ public partial class Generator : IMemberGatherer {
 		return false;
 	}
 
-	public void PrintPlatformAttributes (MemberInfo mi)
+	public void PrintPlatformAttributes (MemberInfo mi, Type type = null)
 	{
 		if (mi == null)
 			return;
@@ -3227,7 +3227,7 @@ public partial class Generator : IMemberGatherer {
 		foreach (var availability in AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (mi)) {
 			if (type_ca == null) {
 				if (mi.DeclaringType != null)
-					type_ca = AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (mi.DeclaringType);
+					type_ca = AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (type ?? mi.DeclaringType);
 				else
 					type_ca = Array.Empty<AvailabilityBaseAttribute> ();
 			}
@@ -4740,7 +4740,7 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 
-	void PrintPropertyAttributes (PropertyInfo pi)
+	void PrintPropertyAttributes (PropertyInfo pi, Type type = null)
 	{
 		foreach (var oa in AttributeManager.GetCustomAttributes<ObsoleteAttribute> (pi)) {
 			print ("[Obsolete (\"{0}\", {1})]", oa.Message, oa.IsError ? "true" : "false");
@@ -4759,7 +4759,7 @@ public partial class Generator : IMemberGatherer {
 			print ("[DebuggerBrowsable (DebuggerBrowsableState.Never)]");
 		}
 
-		PrintPlatformAttributes (pi);
+		PrintPlatformAttributes (pi, type);
 
 		foreach (var sa in AttributeManager.GetCustomAttributes<ThreadSafeAttribute> (pi))
 			print (sa.Safe ? "[ThreadSafe]" : "[ThreadSafe (false)]");
