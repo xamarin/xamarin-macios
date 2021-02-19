@@ -41,3 +41,14 @@ if (!Directory.Exists (xcode_path)) {
 	Console.WriteLine ($"The required Xcode is already installed.");
 	ExecVerbose ("ln", "-Fhs", xcode_path, "/Applications/Xcode.app");
 }
+
+var appleSdkOverride = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.Personal), "Library", "Preferences", "Xamarin", "Settings.plist");
+Item ("Override Apple SDK Settings")
+	.Condition (item => !File.Exists (appleSdkOverride) || GetSettingValue (appleSdkOverride, "AppleSdkRoot") != GetSelectedXcodePath ())
+	.Action (item => {
+		DeleteSafe (appleSdkOverride);
+		CreateSetting (appleSdkOverride, "AppleSdkRoot", GetSelectedXcodePath ());
+		Console.WriteLine ($"New VSMac iOS SDK Location: {GetSelectedXcodePath ()}");
+	});
+
+LogInstalledXcodes ();
