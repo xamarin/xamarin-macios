@@ -210,6 +210,9 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<EnableOnDemandResources Condition="'$(_PlatformName)' == 'macOS' And '$(EnableOnDemandResources)' == ''">false</EnableOnDemandResources>
 		<EnableOnDemandResources Condition="'$(_PlatformName)' != 'macOS' And '$(EnableOnDemandResources)' == ''">true</EnableOnDemandResources>
 
+		<!-- Enable/Disable default ruuntime features -->
+    	<UseNativeHttpHandler Condition="'$(_PlatformName)' != 'macOS' And '$(UseNativeHttpHandler)' == ''">true</UseNativeHttpHandler>
+
 		<!-- This is the prefix used for embedded resources, both for library projects and binding projects -->
 		<_EmbeddedResourcePrefix Condition="'$(_PlatformName)' == 'macOS'">xammac</_EmbeddedResourcePrefix>
 		<_EmbeddedResourcePrefix Condition="'$(_PlatformName)' != 'macOS'">monotouch</_EmbeddedResourcePrefix>
