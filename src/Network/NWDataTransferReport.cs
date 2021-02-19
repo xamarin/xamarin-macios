@@ -23,12 +23,6 @@ using OS_nw_interface=System.IntPtr;
 namespace Network {
 
 	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
-	public enum NWDataTransferReportState {
-		Collecting = 1,
-		Collected = 2,
-	}
-
-	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
 	public class NWDataTransferReport : NativeObject {
 
 		internal NWDataTransferReport (IntPtr handle, bool owns) : base (handle, owns) {}

@@ -34,91 +34,6 @@ using Foundation;
 
 namespace CoreGraphics {
 
-	// untyped enum -> CGPath.h
-	public enum CGLineJoin {
-		Miter,
-		Round,
-		Bevel
-	}
-	
-	// untyped enum -> CGPath.h
-	public enum CGLineCap {
-		Butt,
-		Round,
-		Square
-	}
-	
-	// untyped enum -> CGContext.h
-	public enum CGPathDrawingMode {
-		Fill,
-		EOFill,
-		Stroke,
-		FillStroke,
-		EOFillStroke
-	}
-	
-	// untyped enum -> CGContext.h
-	public enum CGTextDrawingMode : uint {
-		Fill,
-		Stroke,
-		FillStroke,
-		Invisible,
-		FillClip,
-		StrokeClip,
-		FillStrokeClip,
-		Clip
-	}
-
-	// untyped enum -> CGContext.h
-	[Deprecated (PlatformName.iOS, 7, 0)]
-	[Deprecated (PlatformName.MacOSX, 10, 9)]
-	public enum CGTextEncoding {
-		FontSpecific,
-		MacRoman
-	}
-
-	// untyped enum -> CGContext.h
-	public enum CGInterpolationQuality {
-		Default,
-		None,	
-		Low,	
-		High,
-		Medium		       /* Yes, in this order, since Medium was added in 4 */
-	}
-	
-	// untyped enum -> CGContext.h
-	public enum CGBlendMode {
-		Normal,
-		Multiply,
-		Screen,
-		Overlay,
-		Darken,
-		Lighten,
-		ColorDodge,
-		ColorBurn,
-		SoftLight,
-		HardLight,
-		Difference,
-		Exclusion,
-		Hue,
-		Saturation,
-		Color,
-		Luminosity,
-		
-		Clear,
-		Copy,	
-		SourceIn,	
-		SourceOut,	
-		SourceAtop,		
-		DestinationOver,	
-		DestinationIn,	
-		DestinationOut,	
-		DestinationAtop,	
-		XOR,		
-		PlusDarker,		
-		PlusLighter		
-	}
-
 	public class CGContext : INativeObject
 #if !COREBUILD
 		, IDisposable
@@ -1300,17 +1215,5 @@ namespace CoreGraphics {
 			return new CGBitmapContext (Handle, false);
 		}
 #endif // !COREBUILD
-	}
-
-	[iOS(11,0), Mac(10,13)]
-	public enum CGPDFAccessPermissions : uint {
-		AllowsLowQualityPrinting    = (1 << 0),
-		AllowsHighQualityPrinting   = (1 << 1),
-		AllowsDocumentChanges       = (1 << 2),
-		AllowsDocumentAssembly      = (1 << 3),
-		AllowsContentCopying        = (1 << 4),
-		AllowsContentAccessibility  = (1 << 5),
-		AllowsCommenting            = (1 << 6),
-		AllowsFormFieldEntry        = (1 << 7),
 	}
 }

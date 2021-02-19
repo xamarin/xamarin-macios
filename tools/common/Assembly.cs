@@ -563,6 +563,14 @@ namespace Xamarin.Bundler {
 						if (Frameworks.Add ("OpenAL"))
 							Driver.Log (3, "Linking with the framework OpenAL because {0} is referenced by a module reference in {1}", file, FileName);
 						break;
+#if NET
+					case "Carbon":
+						if (App.Platform != ApplePlatform.MacOSX) {
+							Driver.Log (3, $"Not linking with the framework {file} (referenced by a module reference in {FileName}) because it doesn't exist on the target platform.");
+							break;
+						}
+						break;
+#endif
 					default:
 						if (App.Platform == ApplePlatform.MacOSX) {
 							string path = Path.GetDirectoryName (name);

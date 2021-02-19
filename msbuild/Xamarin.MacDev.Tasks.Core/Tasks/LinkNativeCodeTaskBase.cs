@@ -5,6 +5,7 @@ using System.IO;
 using Microsoft.Build.Framework;
 
 using Xamarin.Localization.MSBuild;
+using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks {
 	public abstract class LinkNativeCodeTaskBase : XamarinTask {
@@ -62,14 +63,32 @@ namespace Xamarin.MacDev.Tasks {
 			var arguments = new List<string> ();
 			arguments.Add ("clang");
 
-			arguments.Add ("-arch");
-			arguments.Add (abi);
+			switch (Platform) {
+			case ApplePlatform.iOS:
+			case ApplePlatform.WatchOS:
+			case ApplePlatform.TVOS:
+			case ApplePlatform.MacOSX:
+				arguments.Add (PlatformFrameworkHelper.GetMinimumVersionArgument (TargetFrameworkMoniker, SdkIsSimulator, MinimumOSVersion));
+				arguments.Add ("-isysroot");
+				arguments.Add (SdkRoot);
+
+				arguments.Add ("-arch");
+				arguments.Add (abi);
+
+				break;
+			case ApplePlatform.MacCatalyst:
+				arguments.Add ($"-target");
+				arguments.Add ($"{abi}-apple-ios{MinimumOSVersion}-macabi");
+				arguments.Add ("-isysroot");
+				arguments.Add (SdkRoot);
+				arguments.Add ("-iframework");
+				arguments.Add (Path.Combine (SdkRoot, "System", "iOSSupport", "System", "Library", "Frameworks"));
+				arguments.Add ($"-L{Path.Combine (SdkRoot, "System", "iOSSupport", "usr", "lib")}");
+				break;
+			default:
+				throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, Platform));
+			}
 			
-			arguments.Add (PlatformFrameworkHelper.GetMinimumVersionArgument (TargetFrameworkMoniker, SdkIsSimulator, MinimumOSVersion));
-
-			arguments.Add ("-isysroot");
-			arguments.Add (SdkRoot);
-
 			bool hasDylibs = false;
 			if (LinkWithLibraries != null) {
 				foreach (var libSpec in LinkWithLibraries) {

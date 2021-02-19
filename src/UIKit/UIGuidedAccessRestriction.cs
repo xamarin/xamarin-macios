@@ -18,14 +18,6 @@ using UIKit;
 
 namespace UIKit {
 
-	// NSInteger -> UIGuidedAccessRestrictions.h
-	[Native]
-	[iOS (7,0)]
-	public enum UIGuidedAccessRestrictionState : long {
-		Allow,
-		Deny
-	}
-
 	public static partial class UIGuidedAccessRestriction {
 #if !COREBUILD
 		[iOS (7,0)]

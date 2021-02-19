@@ -34,6 +34,9 @@ namespace Xamarin.Linker {
 				case ApplePlatform.MacOSX:
 					method = "xamarin_create_classes_Xamarin_Mac";
 					break;
+				case ApplePlatform.MacCatalyst:
+					method = "xamarin_create_classes_Xamarin_MacCatalyst";
+					break;
 				default:
 					Report (ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, app.ProductName));
 					break;

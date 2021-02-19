@@ -169,6 +169,9 @@ namespace Xamarin.Linker {
 					case "macOS":
 						Platform = ApplePlatform.MacOSX;
 						break;
+					case "MacCatalyst":
+						Platform = ApplePlatform.MacCatalyst;
+						break;
 					default:
 						throw new InvalidOperationException ($"Unknown platform: {value} for the entry {line} in {linker_file}");
 					}

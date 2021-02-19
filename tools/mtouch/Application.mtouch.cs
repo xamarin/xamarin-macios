@@ -1761,7 +1761,7 @@ namespace Xamarin.Bundler {
 			sb.AppendLine ("        <key>DTSDKBuild</key>");
 			sb.AppendLine ("        <string>12D508</string>");
 			sb.AppendLine ("        <key>DTSDKName</key>");
-			sb.AppendLine ($"        <string>{Driver.GetPlatform (this)}{SdkVersion}</string>");
+			sb.AppendLine ($"        <string>{Driver.GetPlatform (this)}{NativeSdkVersion}</string>");
 			sb.AppendLine ("        <key>DTXcode</key>");
 			sb.AppendLine ("        <string>0620</string>");
 			sb.AppendLine ("        <key>DTXcodeBuild</key>");
