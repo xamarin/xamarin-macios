@@ -7,7 +7,7 @@
 // Copyright 2013 Xamarin Inc. All rights reserved.
 //
 
-#if HAS_PHOTOS
+#if HAS_PHOTOS && !__TVOS__
 
 using System;
 using System.Linq;
@@ -140,4 +140,4 @@ namespace MonoTouchFixtures.Photos {
 	}
 }
 
-#endif // HAS_PHOTOS
+#endif // HAS_PHOTOS && !__TVOS__
