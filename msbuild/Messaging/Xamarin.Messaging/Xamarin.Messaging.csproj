@@ -13,7 +13,7 @@
   <Import Project="$(MSBuildThisFileDirectory)ILMerge.Messaging.targets" />
   
   <!-- Replaces the ProtectedData assembly by the runtime implementation -->
-  <Target Name="CopyRuntimeAssemblies" BeforeTargets="ILRepack">
+  <Target Name="CopyRuntimeAssemblies" BeforeTargets="ComputeMergedAssemblies">
     <ItemGroup>
       <ReferenceCopyLocalToRemove Include="@(ReferenceCopyLocalPaths)" Condition="'%(FileName)' == 'System.Text.Encoding.CodePages'" />
       <ReferenceCopyLocalToRemove Include="@(ReferenceCopyLocalPaths)" Condition="'%(FileName)' == 'System.Security.Cryptography.ProtectedData'" />

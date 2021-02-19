@@ -20,6 +20,10 @@
       <ReferenceOutputAssembly>False</ReferenceOutputAssembly>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="..\Xamarin.Localization.MSBuild\Xamarin.Localization.MSBuild.csproj">
+      <ReferenceSourceTarget>ProjectReference</ReferenceSourceTarget>
+    </ProjectReference>
+    <ProjectReference Include="..\Messaging\Xamarin.Messaging.Build.Contracts\Xamarin.Messaging.Build.Contracts.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Xamarin.Messaging">
@@ -36,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Tasks\" />
+    <Folder Include="Model\" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Update="Properties\Resources.resx">
@@ -49,5 +54,5 @@
     </Compile>
   </ItemGroup>
 
-  <Import Project="$(MSBuildThisFileDirectory)..\ILMerge.targets" />
+  <Import Project="$(MSBuildThisFileDirectory)ILMerge.Windows.targets" />
 </Project>

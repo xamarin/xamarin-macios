@@ -59,6 +59,7 @@
       <ReferenceOutputAssembly>False</ReferenceOutputAssembly>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="..\Xamarin.Messaging.Build.Contracts\Xamarin.Messaging.Build.Contracts.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Xamarin.iOS.Tasks">
