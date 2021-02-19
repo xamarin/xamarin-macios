@@ -46,8 +46,9 @@ IOS_BINDING_TARGETS = $(wildcard Xamarin.ObjcBinding.Tasks/*.targets)
 LOCALIZATION_LANGUAGES=cs de es fr it ja ko pl pt-BR ru tr zh-Hans zh-Hant
 TRANSLATED_ASSEMBLIES = $(foreach locale,$(LOCALIZATION_LANGUAGES),$(locale)/Xamarin.Localization.MSBuild)
 LOCALIZATION_ASSEMBLIES = Xamarin.Localization.MSBuild
-IOS_TASK_ASSEMBLIES = Xamarin.iOS.Tasks $(LOCALIZATION_ASSEMBLIES)
-IOS_WINDOWS_TASK_ASSEMBLIES = Xamarin.iOS.Tasks.Windows
+MESSAGING_ASSEMBLIES = Xamarin.Messaging
+IOS_TASK_ASSEMBLIES = Xamarin.iOS.Tasks $(LOCALIZATION_ASSEMBLIES) $(MESSAGING_ASSEMBLIES)
+IOS_WINDOWS_TASK_ASSEMBLIES = Xamarin.iOS.Tasks.Windows $(MESSAGING_ASSEMBLIES)
 
 IOS_DIRECTORIES =                                                                                           \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS                                                  \
@@ -196,7 +197,7 @@ MAC_TARGETS = \
 
 MAC_BINDING_TARGETS =
 
-MAC_TASK_ASSEMBLIES = Xamarin.Mac.Tasks $(LOCALIZATION_ASSEMBLIES)
+MAC_TASK_ASSEMBLIES = Xamarin.Mac.Tasks $(LOCALIZATION_ASSEMBLIES) $(MESSAGING_ASSEMBLIES)
 
 MAC_DIRECTORIES =                                                                                           \
 	$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin                                \
