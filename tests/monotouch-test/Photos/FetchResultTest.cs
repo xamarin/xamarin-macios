@@ -31,11 +31,15 @@ namespace MonoTouchFixtures.Photos {
 		public void Setup ()
 		{
 			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
-#if HAS_ASSETSLIBRARY
+#if xHAS_ASSETSLIBRARY
 			if (ALAssetsLibrary.AuthorizationStatus != ALAuthorizationStatus.Authorized)
 				Assert.Inconclusive ("Requires access to the photo library");
+#elif __MACCATALYST__
+			TestRuntime.AssertSystemVersion (PlatformName.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
+			if (PHPhotoLibrary.GetAuthorizationStatus (PHAccessLevel.ReadWrite) != PHAuthorizationStatus.Authorized)
+				Assert.Inconclusive ("Requires access to the photo library");
 #else
-			Assert.Inconclusive ("Requires access to the photo library");
+#error Add authorization check for the platform
 #endif
 		}
 
