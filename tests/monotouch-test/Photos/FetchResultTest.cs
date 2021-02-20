@@ -31,7 +31,7 @@ namespace MonoTouchFixtures.Photos {
 		public void Setup ()
 		{
 			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
-#if xHAS_ASSETSLIBRARY
+#if HAS_ASSETSLIBRARY
 			if (ALAssetsLibrary.AuthorizationStatus != ALAuthorizationStatus.Authorized)
 				Assert.Inconclusive ("Requires access to the photo library");
 #elif __MACCATALYST__
