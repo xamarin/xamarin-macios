@@ -19,6 +19,7 @@ namespace Xamarin.Bundler {
 				case ApplePlatform.iOS:
 				case ApplePlatform.TVOS:
 				case ApplePlatform.WatchOS:
+				case ApplePlatform.MacCatalyst:
 				case ApplePlatform.None: // Return "MT" by default instead of throwing an exception, because any exception here will most likely hide whatever other error we're trying to show.
 					return "MT";
 				case ApplePlatform.MacOSX:

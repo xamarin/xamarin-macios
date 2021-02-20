@@ -1,6 +1,8 @@
 using System;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace MapKit {
 
 #if !WATCH || (WATCH && !XAMCORE_4_0)
