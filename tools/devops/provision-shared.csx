@@ -9,6 +9,7 @@ using Newtonsoft.Json.Linq;
 
 using Xamarin.Provisioning;
 using Xamarin.Provisioning.Model;
+using Xamarin.Provisioning.IO;
 
 var commit = Environment.GetEnvironmentVariable ("BUILD_SOURCEVERSION");
 var provision_from_commit = Environment.GetEnvironmentVariable ("PROVISION_FROM_COMMIT") ?? commit;
@@ -98,10 +99,10 @@ void DeleteSafe (string file)
 void RemoveXcodeSymlinks (string xcodeVersion)
 {
 	var xcodePath = Path.Combine ("/Applications", $"{xcodeVersion}.app");
-	var resolvedPath = IO.Symlink.Resolve (xcodePath);
+	var resolvedPath = Symlink.Resolve (xcodePath);
 	if (resolvedPath is string) {
 		Console.WriteLine ($"Removing '{xcodePath}' symlink.");
-		IO.Symlink.Delete (xcodePath);
+		Symlink.Delete (xcodePath);
 		Console.WriteLine ($"Renaming '{resolvedPath}' into '{xcodePath}'");
 		ElevatedExec ("/bin/mv", resolvedPath, xcodePath);
 	} else
