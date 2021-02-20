@@ -96,9 +96,8 @@ void DeleteSafe (string file)
 		File.Delete(file);
 }
 
-void RemoveXcodeSymlinks (string xcodeVersion)
+void RemoveXcodeSymlinks (string xcodePath)
 {
-	var xcodePath = Path.Combine ("/Applications", $"{xcodeVersion}.app");
 	Console.WriteLine ($"Checkig if '{xcodePath}' is a symlink...");
 	var resolvedPath = Symlink.Resolve (xcodePath);
 	Console.WriteLine ($"Path resolved: '{resolvedPath}'");

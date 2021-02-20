@@ -30,6 +30,7 @@ mac-tests-provisioning.csx: mac-tests-provisioning.csx.in Makefile $(TOP)/Make.c
 provision-xcode.csx: provision-xcode.csx.in Makefile $(TOP)/Make.config
 	$(Q_GEN) sed \
 		-e 's#@XCODE_XIP_NAME@#$(notdir $(XCODE_URL))#g' \
+		-e 's#@XCODE_ROOT_PATH@#$(XCODE_DEVELOPER_ROOT)#g' \
 		$< > $@;
 
 
