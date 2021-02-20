@@ -146,14 +146,14 @@ public partial class Generator {
 
 			print ("");
 			print ($"// {pname} protocol members ");
-			GenerateProperties (i, fromProtocol: true);
+			GenerateProperties (i, type);
 
 			// also include base interfaces/protocols
 			GenerateProtocolProperties (i, processed);
 		}
 	}
 
-	void GenerateProperties (Type type, bool fromProtocol = false)
+	void GenerateProperties (Type type, Type originalType = null)
 	{
 		foreach (var p in type.GetProperties (BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)) {
 			if (p.IsUnavailable (this))
@@ -162,7 +162,7 @@ public partial class Generator {
 				continue;
 			
 			print ("");
-			PrintPropertyAttributes (p);
+			PrintPropertyAttributes (p, originalType);
 			print_generated_code ();
 
 			var ptype = p.PropertyType.Name;
@@ -189,7 +189,7 @@ public partial class Generator {
 			case "CIColor":
 			case "CIImage":
 				// protocol-based bindings have annotations - but the older, key-based, versions did not
-				if (!fromProtocol)
+				if (originalType == null)
 					nullable = true;
 				break;
 			}
