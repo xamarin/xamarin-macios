@@ -92,8 +92,8 @@ void CreateSetting (string settingFile, string key, string value) => Exec ("defa
 string GetSettingValue (string settingFile, string keyName) => Exec ("defaults", "read", settingFile, keyName).FirstOrDefault ();
 void DeleteSafe (string file)
 {
-	if (File.Exists(file))
-		File.Delete(file);
+	if (File.Exists (file))
+		File.Delete (file);
 }
 
 void RemoveXcodeSymlinks (string xcodePath)
