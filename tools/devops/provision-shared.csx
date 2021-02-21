@@ -9,6 +9,7 @@ using Newtonsoft.Json.Linq;
 
 using Xamarin.Provisioning;
 using Xamarin.Provisioning.Model;
+using Xamarin.Provisioning.IO;
 
 var commit = Environment.GetEnvironmentVariable ("BUILD_SOURCEVERSION");
 var provision_from_commit = Environment.GetEnvironmentVariable ("PROVISION_FROM_COMMIT") ?? commit;
@@ -85,4 +86,26 @@ bool IsAtLeastVersion(string actualVer, string minVer)
     }
 
     return actualVerChars.Length > minVerChars.Length;
+}
+
+void CreateSetting (string settingFile, string key, string value) => Exec ("defaults", "write", settingFile, key, value);
+string GetSettingValue (string settingFile, string keyName) => Exec ("defaults", "read", settingFile, keyName).FirstOrDefault ();
+void DeleteSafe (string file)
+{
+	if (File.Exists (file))
+		File.Delete (file);
+}
+
+void RemoveXcodeSymlinks (string xcodePath)
+{
+	Console.WriteLine ($"Checkig if '{xcodePath}' is a symlink...");
+	var resolvedPath = Symlink.Resolve (xcodePath);
+	Console.WriteLine ($"Path resolved: '{resolvedPath}'");
+	if (resolvedPath is string) {
+		Console.WriteLine ($"Removing '{xcodePath}' symlink.");
+		Symlink.Delete (xcodePath);
+		Console.WriteLine ($"Renaming '{resolvedPath}' into '{xcodePath}'");
+		ElevatedExec ("/bin/mv", resolvedPath, xcodePath);
+	} else
+		Console.WriteLine ($"'{xcodePath}' is not a symlink.");
 }
