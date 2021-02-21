@@ -14,7 +14,7 @@ using System.Reflection;
 using Foundation;
 using UIKit;
 using ObjCRuntime;
-#if !__TVOS__
+#if HAS_IAD
 using iAd;
 #endif
 using NUnit.Framework;
@@ -172,7 +172,7 @@ namespace MonoTouchFixtures.UIKit {
 			}
 		}
 
-#if !__TVOS__
+#if HAS_IAD
 		[Test]
 		public void InterstitialAds_New ()
 		{
@@ -180,7 +180,7 @@ namespace MonoTouchFixtures.UIKit {
 			
 			UIViewController.PrepareForInterstitialAds ();
 		}
-#endif // !__TVOS__
+#endif // HAS_IAD
 	}
 }
 
