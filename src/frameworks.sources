@@ -2184,10 +2184,8 @@ MACCATALYST_FRAMEWORKS = \
 	AdSupport \
 	AddressBook \
 	AddressBookUI \
-	AppClip \
 	AppTrackingTransparency \
 	ARKit \
-	AssetsLibrary \
 	AudioToolbox \
 	AudioUnit \
 	AutomaticAssessmentConfiguration \
@@ -2210,20 +2208,16 @@ MACCATALYST_FRAMEWORKS = \
 	CoreMotion \
 	CoreNFC \
 	CoreSpotlight \
-	CoreTelephony \
 	CoreText \
 	DeviceCheck \
 	EventKit \
-	EventKitUI \
 	ExternalAccessory \
 	FileProvider \
 	GameController \
 	GameplayKit \
 	HealthKit \
-	HealthKitUI \
 	HomeKit \
 	IdentityLookup \
-	IdentityLookupUI \
 	ImageIO \
 	Intents \
 	IntentsUI \
@@ -2236,7 +2230,6 @@ MACCATALYST_FRAMEWORKS = \
 	MediaPlayer \
 	MediaToolbox \
 	Messages \
-	MessageUI \
 	Metal \
 	MetalKit \
 	MetalPerformanceShaders \
@@ -2270,9 +2263,7 @@ MACCATALYST_FRAMEWORKS = \
 	VideoSubscriberAccount \
 	Vision \
 	VisionKit \
-	WatchConnectivity \
 	WKWebKit \
-	iAd \
 
 #
 # Compute the SOURCES variables.

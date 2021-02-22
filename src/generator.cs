@@ -3202,7 +3202,22 @@ public partial class Generator : IMemberGatherer {
 			w.WriteLine (a);
 	}
 
-	public void PrintPlatformAttributes (MemberInfo mi)
+	bool Duplicated (AvailabilityBaseAttribute candidate, AvailabilityBaseAttribute[] attributes)
+	{
+		foreach (var a in attributes) {
+			if (candidate.AvailabilityKind != a.AvailabilityKind)
+				continue;
+			if (candidate.Platform != a.Platform)
+				continue;
+			if (candidate.Version != a.Version)
+				continue;
+			// the actual message (when present) is not really important
+			return true;
+		}
+		return false;
+	}
+
+	public void PrintPlatformAttributes (MemberInfo mi, Type type = null)
 	{
 		if (mi == null)
 			return;
@@ -3212,7 +3227,7 @@ public partial class Generator : IMemberGatherer {
 		foreach (var availability in AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (mi)) {
 			if (type_ca == null) {
 				if (mi.DeclaringType != null)
-					type_ca = AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (mi.DeclaringType);
+					type_ca = AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (type ?? mi.DeclaringType);
 				else
 					type_ca = Array.Empty<AvailabilityBaseAttribute> ();
 			}
@@ -3221,6 +3236,8 @@ public partial class Generator : IMemberGatherer {
 				print (availability.ToString ());
 				continue;
 			}
+			if (Duplicated (availability, type_ca))
+				continue;
 			switch (availability.AvailabilityKind) {
 			case AvailabilityKind.Unavailable:
 				// an unavailable member can override type-level attribute
@@ -4723,7 +4740,7 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 
-	void PrintPropertyAttributes (PropertyInfo pi)
+	void PrintPropertyAttributes (PropertyInfo pi, Type type = null)
 	{
 		foreach (var oa in AttributeManager.GetCustomAttributes<ObsoleteAttribute> (pi)) {
 			print ("[Obsolete (\"{0}\", {1})]", oa.Message, oa.IsError ? "true" : "false");
@@ -4742,7 +4759,7 @@ public partial class Generator : IMemberGatherer {
 			print ("[DebuggerBrowsable (DebuggerBrowsableState.Never)]");
 		}
 
-		PrintPlatformAttributes (pi);
+		PrintPlatformAttributes (pi, type);
 
 		foreach (var sa in AttributeManager.GetCustomAttributes<ThreadSafeAttribute> (pi))
 			print (sa.Safe ? "[ThreadSafe]" : "[ThreadSafe (false)]");
