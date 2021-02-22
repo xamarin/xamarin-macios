@@ -439,7 +439,6 @@ steps:
   displayName: 'Run tests'
   name: runTests # not to be confused with the displayName, this is used to later use the name of the step to access the output variables from an other job
   timeoutInMinutes: 600
-  condition: succeededOrFailed() # we do not care about the previous process cleanup
   enabled: ${{ parameters.runTests }}
   env:
     BUILD_REVISION: jenkins
