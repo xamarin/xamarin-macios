@@ -3217,40 +3217,41 @@ public partial class Generator : IMemberGatherer {
 		return false;
 	}
 
-	public void PrintPlatformAttributes (MemberInfo mi, Type type = null)
+	public bool PrintPlatformAttributes (MemberInfo mi, Type type = null)
 	{
+		bool printed = false;
 		if (mi == null)
-			return;
+			return printed;
 
-		AvailabilityBaseAttribute[] type_ca = null;
+		AvailabilityBaseAttribute [] type_ca = null;
 
 		foreach (var availability in AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (mi)) {
+			var t = type ?? (mi as TypeInfo) ?? mi.DeclaringType;
 			if (type_ca == null) {
-				if (mi.DeclaringType != null)
-					type_ca = AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (type ?? mi.DeclaringType);
+				if (t != null)
+					type_ca = AttributeManager.GetCustomAttributes<AvailabilityBaseAttribute> (t);
 				else
 					type_ca = Array.Empty<AvailabilityBaseAttribute> ();
 			}
-			// type has nothing, anything on member should be generated
-			if (type_ca.Length == 0) {
-				print (availability.ToString ());
-				continue;
-			}
-			if (Duplicated (availability, type_ca))
+			// if we're comparing to something else (than ourself) then don't generate duplicate attributes
+			if ((mi != t) && Duplicated (availability, type_ca))
 				continue;
 			switch (availability.AvailabilityKind) {
 			case AvailabilityKind.Unavailable:
 				// an unavailable member can override type-level attribute
 				print (availability.ToString ());
+				printed = true;
 				break;
 			default:
 				// can't introduce or deprecate/obsolete a member on a type that is not available
 				if (IsUnavailable (type_ca, availability.Platform))
 					continue;
 				print (availability.ToString ());
+				printed = true;
 				break;
 			}
 		}
+		return printed;
 	}
 
 	static bool IsUnavailable (IEnumerable<AvailabilityBaseAttribute> customAttributes, PlatformName platform)
@@ -3320,13 +3321,13 @@ public partial class Generator : IMemberGatherer {
 		// check if it is an inlined property (e.g. from a protocol)
 		bool isInlined = minfo.type != minfo.property.DeclaringType;
 
-		// we must avoid duplication of availability so we will only print
-		// if the property has no Availability
-		bool propHasNoInfo = !AttributeManager.HasAttribute<AvailabilityBaseAttribute> (minfo.property)
-						                                     && (minfo.property.GetGetMethod () == null || !AttributeManager.HasAttribute<AvailabilityBaseAttribute> (minfo.property.GetGetMethod ()));
-
-		if (isInlined && propHasNoInfo)
-			PrintPlatformAttributes (minfo.property.DeclaringType);
+		if (isInlined) {
+			// print, if not duplicated from the type (being inlined into), the property availability
+			if (!PrintPlatformAttributes (minfo.property, minfo.type)) {
+				// print, if not duplicated from the type (being inlined into), the property declaring type (protocol) availability
+				PrintPlatformAttributes (minfo.property.DeclaringType, minfo.type);
+			}
+		}
 	}
 
 	public string SelectorField (string s, bool ignore_inline_directive = false)
@@ -4881,7 +4882,7 @@ public partial class Generator : IMemberGatherer {
 		}
 
 		print_generated_code ();
-		PrintPropertyAttributes (pi);
+		PrintPropertyAttributes (pi, type);
 
 		// when we inline properties (e.g. from a protocol)
 		// we must look if the type has an [Availability] attribute
@@ -4950,7 +4951,9 @@ public partial class Generator : IMemberGatherer {
 			var ba = GetBindAttribute (getter);
 			string sel = ba != null ? ba.Selector : export.Selector;
 
-			PrintAttributes (pi, platform:true);
+			// print availability separately since we could be inlining
+			PrintPlatformAttributes (pi, type);
+			PrintAttributes (pi, platform:false);
 
 			if (!minfo.is_sealed || !minfo.is_wrapper) {
 				PrintDelegateProxy (pi.GetGetMethod ());

@@ -456,19 +456,19 @@ namespace CoreMedia {
 			return new CMClock (ptr, deprecated);
 		}
 
-		[iOS (9,0)][Mac (10,11), Watch (6,0)]
+		[iOS (9,0)][Mac (10,11)]
 		[DllImport(Constants.CoreMediaLibrary)]
 		static extern unsafe /* CMTimebaseRef */ IntPtr  CMTimebaseCopyMasterTimebase (/* CMTimebaseRef */ IntPtr timebase);
 
-		[iOS (9,0)][Mac (10,11), Watch (6,0)]
+		[iOS (9,0)][Mac (10,11)]
 		[DllImport(Constants.CoreMediaLibrary)]
 		static extern unsafe /* CMClockRef */ IntPtr  CMTimebaseCopyMasterClock (/* CMTimebaseRef */ IntPtr timebase);
 
-		[iOS (9,0)][Mac (10,11), Watch (6,0)]
+		[iOS (9,0)][Mac (10,11)]
 		[DllImport(Constants.CoreMediaLibrary)]
 		static extern unsafe IntPtr /* void* */ CMTimebaseCopyMaster (/* CMTimebaseRef */ IntPtr timebase);
 
-		[iOS (9,0)][Mac (10,11), Watch (6,0)]
+		[iOS (9,0)][Mac (10,11)]
 		[DllImport(Constants.CoreMediaLibrary)]
 		static extern unsafe /* CMClockRef */ IntPtr CMTimebaseCopyUltimateMasterClock (/* CMTimebaseRef */ IntPtr timebase);
 #endif

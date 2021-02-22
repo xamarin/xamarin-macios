@@ -20,6 +20,7 @@
 //
 
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Framework;
 using ObjCRuntime;
@@ -258,6 +259,38 @@ namespace Introspection {
 				}
 			}
 			AssertIfErrors ("{0} API with mixed [Unavailable] and availability attributes", Errors);
+		}
+
+		[Test]
+		public void Duplicates ()
+		{
+			HashSet<string> type_level = new HashSet<string> ();
+			//LogProgress = true;
+			Errors = 0;
+			foreach (Type t in Assembly.GetTypes ()) {
+				if (LogProgress)
+					Console.WriteLine ($"T: {t}");
+
+				type_level.Clear ();
+				foreach (var a in t.GetCustomAttributes (false)) {
+					if (a is AvailabilityBaseAttribute aa)
+						type_level.Add (aa.ToString ());
+				}
+
+				foreach (var m in t.GetMembers (BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)) {
+					if (LogProgress)
+						Console.WriteLine ($"M: {m}");
+
+					foreach (var a in m.GetCustomAttributes (false)) {
+						var s = String.Empty;
+						if (a is AvailabilityBaseAttribute aa)
+							s = aa.ToString ();
+						if ((s.Length > 0) && type_level.Contains (s))
+							AddErrorLine ($"[FAIL] Both '{t}' and '{m}' are marked with `{s}`.");
+					}
+				}
+			}
+			AssertIfErrors ("{0} API with members duplicating type-level attributes", Errors);
 		}
 	}
 }
