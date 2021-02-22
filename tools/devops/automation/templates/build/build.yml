@@ -446,6 +446,13 @@ steps:
     TARGET: 'wrench-jenkins'
     VSDROPS_URI: '${{ parameters.vsdropsPrefix }}/$(Build.BuildNumber)/$(Build.BuildId)/sim;/tests/' # uri used to create the vsdrops index using full uri
 
+# Only executed when the tests failed, that means that we did have a timeout, and we could not set the status, this 
+# later results on an error when publishing the results, if we timeout, we ensure we set the needed vars
+- bash: |
+    echo "##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Failed"
+  displayName: 'On tests timeout'
+  condition: failed()
+
 # Upload TestSummary as an artifact.
 - task: PublishPipelineArtifact@1
   displayName: 'Publish Artifact: TestSummary'
