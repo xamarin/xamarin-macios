@@ -105,10 +105,6 @@ $(eval $(call FixMacCatalystAssembly,mscorlib))
 $(eval $(call FixMacCatalystAssembly,System))
 $(eval $(call FixMacCatalystAssembly,System.Net.Http))
 
-x:
-	echo foo
-	$(MAKE) $(PREFIX)/lib/mono/Xamarin.MacCatalyst/Mono.Security.dll
-
 .stamp-download-mono: $(TOP)/Make.config $(TOP)/mk/mono.mk
 	$(MAKE) download-mono
 	$(Q) touch $@
