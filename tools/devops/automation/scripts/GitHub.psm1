@@ -450,8 +450,7 @@ function New-GitHubSummaryComment {
                 # build the required list
                 $sb.AppendLine("# API diff")
                 Write-Host "Message is '$($json.message)'"
-                # TODO: Find the reason for github to complain 
-                # $sb.AppendLine($json.message)
+                $sb.AppendLine($json.message)
                 $sb.AppendLine("<details><summary>View API diff</summary>")
                 $sb.AppendLine("") # no new line results in a bad rendering in the links
 
@@ -480,6 +479,7 @@ function New-GitHubSummaryComment {
             # read the json file, convert it to an object and add a line for each artifact
             $json =  Get-Content $Artifacts | ConvertFrom-Json
             if ($json.Count -gt 0) {
+                $sb.AppendLine("# Packages generated")
                 $sb.AppendLine("<details><summary>View packages</summary>")
                 $sb.AppendLine("") # no new line results in a bad rendering in the links
                 foreach ($a in $json) {
