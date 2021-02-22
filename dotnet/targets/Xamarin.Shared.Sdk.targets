@@ -251,6 +251,7 @@
 				Platform=$(_PlatformName)
 				PlatformAssembly=$(_PlatformAssemblyName).dll
 				Registrar=$(_BundlerRegistrar)
+				SdkDevPath=$(_SdkDevPath)
 				SdkRootDirectory=$(_XamarinSdkRootDirectory)
 				SdkVersion=$(_SdkVersion)
 				TargetArchitectures=$(TargetArchitectures)
