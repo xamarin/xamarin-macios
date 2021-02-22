@@ -145,6 +145,9 @@ namespace Xamarin.Linker.Steps {
 			switch (name) {
 			case "Xamarin.Forms.Platform.iOS":
 				return true;
+			case "Xamarin.iOS":
+				// for Catalyst this has extra stubs and must be considered has _product_ to remove extra binding code
+				return true;
 			default:
 				return name == ProductAssembly;
 			}
