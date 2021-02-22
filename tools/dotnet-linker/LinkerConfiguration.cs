@@ -234,6 +234,7 @@ namespace Xamarin.Linker {
 			Application.Cache.Location = CacheDirectory;
 			Application.DeploymentTarget = DeploymentTarget;
 			Application.SdkVersion = SdkVersion;
+			Application.NativeSdkVersion = SdkVersion;
 
 			DerivedLinkContext.Target = Target;
 			Target.Abis = Abis;
