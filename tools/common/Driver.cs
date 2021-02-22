@@ -915,7 +915,7 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		static void ValidateXcode (Application app, bool accept_any_xcode_version, bool warn_if_not_found)
+		public static void ValidateXcode (Application app, bool accept_any_xcode_version, bool warn_if_not_found)
 		{
 			if (sdk_root == null) {
 				sdk_root = FindSystemXcode ();
