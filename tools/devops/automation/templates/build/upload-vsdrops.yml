@@ -35,4 +35,4 @@ steps:
     buildNumber: 'xamarin-macios/device-tests/$(Build.BuildNumber)/$(Build.BuildId)/APIDiff'
     sourcePath: $(STABLE_APIDDIFF_PATH)
     detailedLog: true
-    usePat: true 
+    usePat: true
