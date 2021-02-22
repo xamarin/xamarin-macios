@@ -107,24 +107,29 @@ namespace MonoTouchFixtures.Security {
 		void Protocol (SecProtocol protocol)
 		{
 			var rec = new SecRecord (SecKind.InternetPassword) {
-				Account = "Protocol"
+				Account = $"Protocol-{protocol}-{CFBundle.GetMain ().Identifier}-{GetType ().FullName}-{Process.GetCurrentProcess ().Id}",
 			};
-			SecKeyChain.Remove (rec); // it might already exists (or not)
+			try {
+				SecKeyChain.Remove (rec); // it might already exists (or not)
 
-			rec = new SecRecord (SecKind.InternetPassword) {
-				Account = "Protocol",
-				ValueData = NSData.FromString ("Password"),
-				Protocol = protocol,
-				Server = "www.xamarin.com"
-			};
+				rec = new SecRecord (SecKind.InternetPassword) {
+					Account = "Protocol",
+					ValueData = NSData.FromString ("Password"),
+					Protocol = protocol,
+					Server = "www.xamarin.com"
+				};
 
-			Assert.That (SecKeyChain.Add (rec), Is.EqualTo (SecStatusCode.Success), "Add");
+				Assert.That (SecKeyChain.Add (rec), Is.EqualTo (SecStatusCode.Success), "Add");
 
-			SecStatusCode code;
-			var match = SecKeyChain.QueryAsRecord (rec, out code);
-			Assert.That (code, Is.EqualTo (SecStatusCode.Success), "QueryAsRecord");
+				SecStatusCode code;
+				var match = SecKeyChain.QueryAsRecord (rec, out code);
+				Assert.That (code, Is.EqualTo (SecStatusCode.Success), "QueryAsRecord");
 
-			Assert.That (match.Protocol, Is.EqualTo (protocol), "Protocol");
+				Assert.That (match.Protocol, Is.EqualTo (protocol), "Protocol");
+			} finally {
+				// Clean up after us
+				SecKeyChain.Remove (rec);
+			}
 		}
 
 		[Test]
@@ -180,19 +185,24 @@ namespace MonoTouchFixtures.Security {
 				Server = "www.xamarin.com"
 			};
 
-			Assert.That (SecKeyChain.Add (rec), Is.EqualTo (SecStatusCode.Success), "Add");
+			try {
+				Assert.That (SecKeyChain.Add (rec), Is.EqualTo (SecStatusCode.Success), "Add");
 
-			var query = new SecRecord (SecKind.InternetPassword) {
-				Account = rec.Account,
-				AuthenticationType = rec.AuthenticationType,
-				Server = rec.Server,
-			};
+				var query = new SecRecord (SecKind.InternetPassword) {
+					Account = rec.Account,
+					AuthenticationType = rec.AuthenticationType,
+					Server = rec.Server,
+				};
 
-			SecStatusCode code;
-			var match = SecKeyChain.QueryAsRecord (query, out code);
-			Assert.That (code, Is.EqualTo (SecStatusCode.Success), "QueryAsRecord");
+				SecStatusCode code;
+				var match = SecKeyChain.QueryAsRecord (query, out code);
+				Assert.That (code, Is.EqualTo (SecStatusCode.Success), "QueryAsRecord");
 
-			Assert.That (match.AuthenticationType, Is.EqualTo (type), "AuthenticationType");
+				Assert.That (match.AuthenticationType, Is.EqualTo (type), "AuthenticationType");
+			} finally {
+				// Clean up after us
+				SecKeyChain.Remove (rec);
+			}
 		}
 
 #if __MACCATALYST__
