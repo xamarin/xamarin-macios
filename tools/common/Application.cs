@@ -764,6 +764,7 @@ namespace Xamarin.Bundler {
 				case ApplePlatform.iOS:
 				case ApplePlatform.TVOS:
 				case ApplePlatform.WatchOS:
+				case ApplePlatform.MacCatalyst:
 					throw ErrorHelper.CreateError (180, Errors.MX0180, ProductName, PlatformName, SdkVersions.GetVersion (this), SdkVersions.Xcode);
 				case ApplePlatform.MacOSX:
 					throw ErrorHelper.CreateError (179, Errors.MX0179, ProductName, PlatformName, SdkVersions.GetVersion (this), SdkVersions.Xcode);
@@ -1600,11 +1601,23 @@ namespace Xamarin.Bundler {
 			if (UseInterpreter)
 				return true;
 
+#if NET
+			asm = Path.GetFileNameWithoutExtension (assembly);
+			switch (asm) {
+			case "System.Net.Security":
+			case "System.Net.Quic":
+				// Some .NET assemblies have P/Invokes to native functions they don't ship. We need to use dlsym for this assemblies.
+				// https://github.com/dotnet/runtime/issues/47533
+				return true;
+			}
+#endif
+
 			switch (Platform) {
 			case ApplePlatform.iOS:
 				return !Profile.IsSdkAssembly (Path.GetFileNameWithoutExtension (assembly));
 			case ApplePlatform.TVOS:
 			case ApplePlatform.WatchOS:
+			case ApplePlatform.MacCatalyst:
 				return false;
 			default:
 				throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);

@@ -69,7 +69,7 @@ steps:
     which python3
 
     Write-Host "Pip version"
-    pip -V
+    pip3 -V
   displayName: 'Show Python information'
 
 - bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/clean-bot.sh
@@ -421,16 +421,13 @@ steps:
     PACKAGES="$IOS_PKG $MAC_PKG $IOS_DOTNET_PKG $TVOS_DOTNET_PKG $WATCHOS_DOTNET_PKG $MACOS_DOTNET_PKG"
     echo "Packages found at $PACKAGES"
 
-    echo "$PACKAGES" | xargs python3 $(Build.SourcesDirectory)/release-scripts/sign_and_notarize3.py -a "$APP_ID" -i "$INSTALL_ID" -u "$APPLE_ACCOUNT" -p "$APPLE_PASS" -t "$TEAM_ID" -d $(Build.SourcesDirectory)/package/notarized -e "$MAC_ENTITLEMENTS" -k "$KEYCHAIN"
+    echo "$PACKAGES" | xargs python3 $(Build.SourcesDirectory)/release-scripts/sign_and_notarize3.py -a "$APP_ID" -i "$INSTALL_ID" -d $(Build.SourcesDirectory)/package/notarized -e "$MAC_ENTITLEMENTS" -k "$KEYCHAIN"
     ls -R $(Build.SourcesDirectory)/package
   env:
     PRODUCTSIGN_KEYCHAIN_PASSWORD: $(OSX_KEYCHAIN_PASS)
     MAC_ENTITLEMENTS: $(Build.SourcesDirectory)/xamarin-macios/mac-entitlements.plist
     APP_ID: $(XamarinAppId)
     INSTALL_ID: $(XamarinAppId)
-    APPLE_ACCOUNT: $(XamarinUserId)
-    APPLE_PASS: $(XamarinPassword)
-    TEAM_ID: $(TeamID)
     KEYCHAIN: $(SigningKeychain)
   name: notarize
   displayName: 'Signing Release Build'
