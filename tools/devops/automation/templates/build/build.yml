@@ -502,12 +502,24 @@ steps:
   continueOnError: true
 
 - bash: |
+    report_error ()
+    {
+      MESSAGE=$(printf ":fire: Failed to create API Diff from stable (%s/console) :fire:")
+      echo "##vso[task.setvariable variable=APIDIFF_MESSAGE;isOutput=true]$MESSAGE"
+      echo "##vso[task.setvariable variable=APIDIFF_BUILT;isOutput=true]False"
+    }
+    trap report_error ERR
+
     make -j8 -C $(Build.SourcesDirectory)/xamarin-macios/tools/apidiff jenkins-api-diff
 
     # remove some files that do not need to be uploaded
     cd $(Build.SourcesDirectory)/xamarin-macios/tools/apidiff/
     rm -Rf *.exe *.pdb *.stamp *.zip *.sh ./references ./temp
+    MESSAGE=":white_check_mark: API Diff from stable"
+    echo "##vso[task.setvariable variable=APIDIFF_MESSAGE;isOutput=true]$MESSAGE"
+    echo "##vso[task.setvariable variable=APIDIFF_BUILT;isOutput=true]True"
   displayName: 'API diff (from stable)'
+  name: apidiff
   condition: and(succeeded(), contains(variables['configuration.SkipPublicJenkins'], 'False'))
   continueOnError: true
   env:
