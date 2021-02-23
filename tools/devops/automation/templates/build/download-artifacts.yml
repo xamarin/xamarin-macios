@@ -24,7 +24,7 @@ steps:
 
 - powershell: |
     Write-Host "##vso[task.setvariable variable=STABLE_APIDDIFF_PATH]$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\apidiff-stable"
-  displayName: Pusblish apidiff paths
+  displayName: Publish apidiff paths
   name: apidiff # not to be confused with the displayName, this is used to later use the name of the step to access the output variables from an other job
 
 # download the artifacts.json, which will use to find the URI of the built pkg to later be given to the user
@@ -34,13 +34,6 @@ steps:
     patterns: '**/*.json'
     allowFailedBuilds: true
     path: $(Build.SourcesDirectory)/artifacts
-
-- task: DownloadPipelineArtifact@2
-  displayName: Download artifacts.json
-  inputs:
-    patterns: '**/*.json'
-    allowFailedBuilds: true
-    path: $(Build.DefaultWorkingDirectory)/artifacts
 
 - pwsh: |
     Get-ChildItem -Recurse $Env:SYSTEM_DEFAULTWORKINGDIRECTORY

@@ -30,6 +30,10 @@ function Invoke-Request {
                 $count = $count + 1
                 $seconds = 5 * $count
                 Write-Host "Error performing request trying in $seconds seconds"
+                Write-Host "Exception was:"
+                Write-Host "$($_.Exception)"
+                Write-Host "Response was:"
+                Write-Host "$($_.Exception.Response)"
                 Start-Sleep -Seconds $seconds
             }
         }
@@ -400,7 +404,10 @@ function New-GitHubSummaryComment {
         $TestSummaryPath,
 
         [string]
-        $Artifacts=""
+        $Artifacts="",
+
+        [string]
+        $APIDiff=""
     )
 
     $envVars = @{
@@ -429,6 +436,41 @@ function New-GitHubSummaryComment {
         # we did generate an index with the files in vsdrops
         $sb.AppendLine("* [Html Report (VSDrops)]($Env:VSDROPS_INDEX)")
     }
+    if (-not [string]::IsNullOrEmpty($APIDiff)) {
+        Write-Host "Parsing API diff in path $APIDiff"
+        if (-not (Test-Path $APIDiff -PathType Leaf)) {
+            $sb.AppendLine("Path $APIDiff was not found!")
+        } else {
+            # read the json file, convert it to an object and add a line for each artifact
+            $json =  Get-Content $APIDiff | ConvertFrom-Json
+            # we are dealing with an object, not a dictionary
+            $hasHtmlLinks = "html" -in $json.PSobject.Properties.Name
+            $hasMDlinks = "gist" -in $json.PSobject.Properties.Name
+            if ($hasHtmlLinks -and $hasMDlinks) {
+                # build the required list
+                $sb.AppendLine("# API diff")
+                Write-Host "Message is '$($json.message)'"
+                $sb.AppendLine($json.message)
+                $sb.AppendLine("<details><summary>View API diff</summary>")
+                $sb.AppendLine("") # no new line results in a bad rendering in the links
+
+                foreach ($linkPlatform in @("iOS", "macOS", "tvOS", "watchOS")) {
+                    $htmlLink = $json.html | Select-Object -ExpandProperty $linkPlatform 
+                    $gistLink = $json.gist | Select-Object -ExpandProperty $linkPlatform 
+                    $sb.AppendLine("* $linkPlatform [vsdrops]($htmlLink) [gist]($gistLink)")
+                }
+
+                $sb.AppendLine("</details>")
+            } else {
+                $sb.AppendLine("# API diff")
+                $sb.AppendLine("")
+                $sb.AppendLine("**No api diff data found.**")
+            }
+        }
+        
+    } else {
+        Write-Host "API diff urls have not been provided."
+    }
     if (-not [string]::IsNullOrEmpty($Artifacts)) {
         Write-Host "Parsing artifacts"
         if (-not (Test-Path $Artifacts -PathType Leaf)) {
@@ -437,6 +479,7 @@ function New-GitHubSummaryComment {
             # read the json file, convert it to an object and add a line for each artifact
             $json =  Get-Content $Artifacts | ConvertFrom-Json
             if ($json.Count -gt 0) {
+                $sb.AppendLine("# Packages generated")
                 $sb.AppendLine("<details><summary>View packages</summary>")
                 $sb.AppendLine("") # no new line results in a bad rendering in the links
                 foreach ($a in $json) {
