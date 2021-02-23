@@ -34,6 +34,7 @@ global*.json
 .idea
 device-tests-provisioning.csx
 build-provisioning.csx
+provision-xcode.csx
 mono_crash.*.json
 *.binlog
 .vscode
