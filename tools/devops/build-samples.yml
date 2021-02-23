@@ -111,6 +111,11 @@ jobs:
   - bash: ./xamarin-macios/tools/devops/fetch-maccore.sh
     displayName: Fetch correct maccore hash
 
+  - bash: |
+      echo "Requested Xcode $XCODE_URL"
+      make -C $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/ provision-xcode.csx
+    displayName: 'Generate Xcode provisioning csx file'
+
   - task: provisionator@2
     displayName: Xcode
     inputs:
