@@ -1,3 +1,0 @@
-!missing-null-allowed! 'System.Void CarPlay.CPListItem::SetAccessoryImage(UIKit.UIImage)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void CarPlay.CPListItem::SetDetailText(System.String)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void CarPlay.CPListItem::SetImage(UIKit.UIImage)' is missing an [NullAllowed] on parameter #0
