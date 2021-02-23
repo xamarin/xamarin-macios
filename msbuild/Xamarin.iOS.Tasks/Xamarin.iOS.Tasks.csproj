@@ -26,7 +26,7 @@
 
   <ItemGroup>
     <Reference Include="Xamarin.Messaging">
-      <HintPath>..\Messaging\Xamarin.Messaging\bin\$(Configuration)\netstandard2.0\Xamarin.Messaging.dll</HintPath>
+      <HintPath>..\Messaging\Xamarin.Messaging\$(OutputPath)\Xamarin.Messaging.dll</HintPath>
     </Reference>
     <!-- We need the net472 implementation, otherwise the Build agent needs to be a net5.0 app -->
     <Reference Include="ILLink.Tasks">
