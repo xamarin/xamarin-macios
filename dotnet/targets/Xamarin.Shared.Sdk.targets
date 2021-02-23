@@ -125,7 +125,8 @@
 		<EnableUnsafeUTF7Encoding Condition="'$(EnableUnsafeUTF7Encoding)' == ''">false</EnableUnsafeUTF7Encoding>
 		<EventSourceSupport Condition="'$(EventSourceSupport)' == ''">false</EventSourceSupport>
 		<HttpActivityPropagationSupport Condition="'$(HttpActivityPropagationSupport)' == ''">false</HttpActivityPropagationSupport>
-		<InvariantGlobalization Condition="'$(InvariantGlobalization)' == ''">false</InvariantGlobalization>
+		<!-- .NET only supports invariant globalization for Apple platforms for now: https://github.com/xamarin/xamarin-macios/issues/8906 -->
+		<InvariantGlobalization Condition="'$(InvariantGlobalization)' == ''">true</InvariantGlobalization>
 		<StartupHookSupport Condition="'$(StartupHookSupport)' == ''">false</StartupHookSupport>
 		<UseSystemResourceKeys Condition="'$(UseSystemResourceKeys)' == ''">true</UseSystemResourceKeys>
 		<UseNativeHttpHandler Condition="'$(_PlatformName)' != 'macOS' And '$(UseNativeHttpHandler)' == ''">true</UseNativeHttpHandler>
@@ -302,7 +303,7 @@
 
 			<!-- add a custom step which inserts any other steps we need -->
 			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)">
-				<BeforeStep>LoadReferencesStep</BeforeStep>
+				<BeforeStep>MarkStep</BeforeStep>
 				<Type>Xamarin.SetupStep</Type>
 			</_TrimmerCustomSteps>
 
