@@ -46,8 +46,9 @@ IOS_BINDING_TARGETS = $(wildcard Xamarin.ObjcBinding.Tasks/*.targets)
 LOCALIZATION_LANGUAGES=cs de es fr it ja ko pl pt-BR ru tr zh-Hans zh-Hant
 TRANSLATED_ASSEMBLIES = $(foreach locale,$(LOCALIZATION_LANGUAGES),$(locale)/Xamarin.Localization.MSBuild)
 LOCALIZATION_ASSEMBLIES = Xamarin.Localization.MSBuild
-IOS_TASK_ASSEMBLIES = Xamarin.iOS.Tasks $(LOCALIZATION_ASSEMBLIES)
-IOS_WINDOWS_TASK_ASSEMBLIES = Xamarin.iOS.Tasks.Windows
+MESSAGING_ASSEMBLIES = Xamarin.Messaging
+IOS_TASK_ASSEMBLIES = Xamarin.iOS.Tasks $(LOCALIZATION_ASSEMBLIES) $(MESSAGING_ASSEMBLIES)
+IOS_WINDOWS_TASK_ASSEMBLIES = Xamarin.iOS.Tasks.Windows $(MESSAGING_ASSEMBLIES)
 
 IOS_DIRECTORIES =                                                                                           \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS                                                  \
@@ -196,7 +197,7 @@ MAC_TARGETS = \
 
 MAC_BINDING_TARGETS =
 
-MAC_TASK_ASSEMBLIES = Xamarin.Mac.Tasks $(LOCALIZATION_ASSEMBLIES)
+MAC_TASK_ASSEMBLIES = Xamarin.Mac.Tasks $(LOCALIZATION_ASSEMBLIES) $(MESSAGING_ASSEMBLIES)
 
 MAC_DIRECTORIES =                                                                                           \
 	$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin                                \
@@ -271,6 +272,9 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/iOS/%: Xamarin.iOS.Tasks/bin/$(CON
 	$(Q) install -m 644 $< $@
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/iOS/%: Xamarin.Localization.MSBuild/bin/$(CONFIG)/$(TARGETFRAMEWORK)/% | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/iOS
+	$(Q) install -m 644 $< $@
+
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/iOS/%: Messaging/Xamarin.Messaging/bin/$(CONFIG)/$(TARGETFRAMEWORK)/% | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/iOS
 	$(Q) install -m 644 $< $@
 
 ##
@@ -357,6 +361,9 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/msbuild/%: Xamarin.Mac.Tasks/bin/
 	$(Q) install -m 644 $< $@
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/msbuild/%: Xamarin.Localization.MSBuild/bin/$(CONFIG)/$(TARGETFRAMEWORK)/% | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/msbuild
+	$(Q) install -m 644 $< $@
+
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/msbuild/%: Messaging/Xamarin.Messaging/bin/$(CONFIG)/$(TARGETFRAMEWORK)/% | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/msbuild
 	$(Q) install -m 644 $< $@
 ##
 ## net5 targets ##
@@ -467,6 +474,7 @@ all-local:: $(MSBUILD_PRODUCTS) .stamp-test-xml
 # make all the target assemblies build when any of the sources have changed
 $(foreach dll,$(MSBUILD_TASK_ASSEMBLIES),$(dll)/bin/$(CONFIG)/$(TARGETFRAMEWORK)/$(dll).dll $(dll)/bin/$(CONFIG)/$(TARGETFRAMEWORK)/$(dll).pdb): .build-stamp
 $(foreach dll,$(TRANSLATED_ASSEMBLIES),Xamarin.Localization.MSBuild/bin/$(CONFIG)/$(TARGETFRAMEWORK)/$(dll).resources.dll): .build-stamp
+$(foreach dll,$(MESSAGING_ASSEMBLIES),Messaging/Xamarin.Messaging/bin/$(CONFIG)/$(TARGETFRAMEWORK)/$(dll).dll Messaging/Xamarin.Messaging/bin/$(CONFIG)/$(TARGETFRAMEWORK)/$(dll).pdb): .build-stamp
 
 # Always remake the symlinks
 .PHONY: $(MSBUILD_SYMLINKS)

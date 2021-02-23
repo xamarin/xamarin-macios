@@ -6,7 +6,6 @@
     <MergeSystemAssemblies>false</MergeSystemAssemblies>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="DotNetZip" Version="1.14.0" />
     <PackageReference Include="Xamarin.Messaging.Build.Client" Version="$(MessagingVersion)" IncludeAssets="contentFiles" />
     <PackageReference Include="Xamarin.Messaging.Core" Version="$(MessagingVersion)" IncludeAssets="build" />
     <PackageReference Include="Xamarin.Messaging.Server" Version="$(MessagingVersion)" IncludeAssets="contentFiles" />
@@ -17,6 +16,19 @@
       <ReferenceOutputAssembly>False</ReferenceOutputAssembly>
       <IsAgent>True</IsAgent>
     </ProjectReference>
+    <ProjectReference Include="..\Messaging\Xamarin.Messaging\Xamarin.Messaging.csproj">
+      <ReferenceOutputAssembly>False</ReferenceOutputAssembly>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Xamarin.Localization.MSBuild\Xamarin.Localization.MSBuild.csproj">
+      <ReferenceSourceTarget>ProjectReference</ReferenceSourceTarget>
+    </ProjectReference>
+    <ProjectReference Include="..\Messaging\Xamarin.Messaging.Build.Contracts\Xamarin.Messaging.Build.Contracts.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Xamarin.Messaging">
+      <HintPath>..\Messaging\Xamarin.Messaging\bin\$(Configuration)\netstandard2.0\Xamarin.Messaging.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <None Include="*.props">
@@ -28,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Tasks\" />
+    <Folder Include="Model\" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Update="Properties\Resources.resx">
@@ -41,5 +54,5 @@
     </Compile>
   </ItemGroup>
 
-  <Import Project="$(MSBuildThisFileDirectory)..\ILMerge.targets" />
+  <Import Project="$(MSBuildThisFileDirectory)ILMerge.Windows.targets" />
 </Project>
