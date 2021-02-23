@@ -261,6 +261,26 @@ namespace Introspection {
 			AssertIfErrors ("{0} API with mixed [Unavailable] and availability attributes", Errors);
 		}
 
+		static HashSet<string> member_level = new HashSet<string> ();
+
+		void CheckDupes (MemberInfo m, Type t, ISet<string> type_level)
+		{
+			member_level.Clear ();
+			foreach (var a in m.GetCustomAttributes (false)) {
+				var s = String.Empty;
+				if (a is AvailabilityBaseAttribute aa)
+					s = aa.ToString ();
+				if (s.Length > 0) {
+					if (type_level.Contains (s))
+						AddErrorLine ($"[FAIL] Both '{t}' and '{m}' are marked with `{s}`.");
+					if (member_level.Contains (s))
+						AddErrorLine ($"[FAIL] '{m}' is decorated more than once with `{s}`.");
+					else
+						member_level.Add (s);
+				}
+			}
+		}
+
 		[Test]
 		public void Duplicates ()
 		{
@@ -277,17 +297,16 @@ namespace Introspection {
 						type_level.Add (aa.ToString ());
 				}
 
+				foreach (var p in t.GetProperties (BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)) {
+					if (LogProgress)
+						Console.WriteLine ($"P: {p}");
+					CheckDupes (p, t, type_level);
+				}
+
 				foreach (var m in t.GetMembers (BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)) {
 					if (LogProgress)
 						Console.WriteLine ($"M: {m}");
-
-					foreach (var a in m.GetCustomAttributes (false)) {
-						var s = String.Empty;
-						if (a is AvailabilityBaseAttribute aa)
-							s = aa.ToString ();
-						if ((s.Length > 0) && type_level.Contains (s))
-							AddErrorLine ($"[FAIL] Both '{t}' and '{m}' are marked with `{s}`.");
-					}
+					CheckDupes (m, t, type_level);
 				}
 			}
 			AssertIfErrors ("{0} API with members duplicating type-level attributes", Errors);

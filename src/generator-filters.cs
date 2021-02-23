@@ -146,14 +146,14 @@ public partial class Generator {
 
 			print ("");
 			print ($"// {pname} protocol members ");
-			GenerateProperties (i, type);
+			GenerateProperties (i, fromProtocol: true);
 
 			// also include base interfaces/protocols
 			GenerateProtocolProperties (i, processed);
 		}
 	}
 
-	void GenerateProperties (Type type, Type originalType = null)
+	void GenerateProperties (Type type, bool fromProtocol = false)
 	{
 		foreach (var p in type.GetProperties (BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)) {
 			if (p.IsUnavailable (this))
@@ -162,7 +162,9 @@ public partial class Generator {
 				continue;
 			
 			print ("");
-			PrintPropertyAttributes (p, originalType);
+			// this is a bit special since CoreImage filter protocols are much newer than the our generated, key-based bindings
+			// so we do not want to advertise the protocol versions since most properties would be incorrectly advertised
+			PrintPropertyAttributes (p, type);
 			print_generated_code ();
 
 			var ptype = p.PropertyType.Name;
@@ -189,7 +191,7 @@ public partial class Generator {
 			case "CIColor":
 			case "CIImage":
 				// protocol-based bindings have annotations - but the older, key-based, versions did not
-				if (originalType == null)
+				if (!fromProtocol)
 					nullable = true;
 				break;
 			}

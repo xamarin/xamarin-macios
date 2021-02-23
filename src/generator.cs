@@ -3313,23 +3313,6 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 
-	public void PrintPlatformAttributesIfInlined (MemberInformation minfo)
-	{
-		if (minfo == null)
-			return;
-
-		// check if it is an inlined property (e.g. from a protocol)
-		bool isInlined = minfo.type != minfo.property.DeclaringType;
-
-		if (isInlined) {
-			// print, if not duplicated from the type (being inlined into), the property availability
-			if (!PrintPlatformAttributes (minfo.property, minfo.type)) {
-				// print, if not duplicated from the type (being inlined into), the property declaring type (protocol) availability
-				PrintPlatformAttributes (minfo.property.DeclaringType, minfo.type);
-			}
-		}
-	}
-
 	public string SelectorField (string s, bool ignore_inline_directive = false)
 	{
 		string name;
@@ -4741,7 +4724,7 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 
-	void PrintPropertyAttributes (PropertyInfo pi, Type type = null)
+	void PrintPropertyAttributes (PropertyInfo pi, Type type)
 	{
 		foreach (var oa in AttributeManager.GetCustomAttributes<ObsoleteAttribute> (pi)) {
 			print ("[Obsolete (\"{0}\", {1})]", oa.Message, oa.IsError ? "true" : "false");
@@ -4760,7 +4743,17 @@ public partial class Generator : IMemberGatherer {
 			print ("[DebuggerBrowsable (DebuggerBrowsableState.Never)]");
 		}
 
-		PrintPlatformAttributes (pi, type);
+		// if we inline properties (e.g. from a protocol)
+		// we must look if the type has an [Availability] attribute
+		if (type != pi.DeclaringType) {
+			// print, if not duplicated from the type (being inlined into), the property availability
+			if (!PrintPlatformAttributes (pi, type)) {
+				// print, if not duplicated from the type (being inlined into), the property declaring type (protocol) availability
+				PrintPlatformAttributes (pi.DeclaringType, type);
+			}
+		} else {
+			PrintPlatformAttributes (pi, type);
+		}
 
 		foreach (var sa in AttributeManager.GetCustomAttributes<ThreadSafeAttribute> (pi))
 			print (sa.Safe ? "[ThreadSafe]" : "[ThreadSafe (false)]");
@@ -4803,7 +4796,7 @@ public partial class Generator : IMemberGatherer {
 
 		if (wrap != null){
 			print_generated_code ();
-			PrintPropertyAttributes (pi);
+			PrintPropertyAttributes (pi, minfo.type);
 			PrintAttributes (pi, preserve:true, advice:true);
 			print ("{0} {1}{2}{3} {4}{5} {{",
 			       mod,
@@ -4882,11 +4875,7 @@ public partial class Generator : IMemberGatherer {
 		}
 
 		print_generated_code ();
-		PrintPropertyAttributes (pi, type);
-
-		// when we inline properties (e.g. from a protocol)
-		// we must look if the type has an [Availability] attribute
-		PrintPlatformAttributesIfInlined (minfo);
+		PrintPropertyAttributes (pi, minfo.type);
 
 		PrintAttributes (pi, preserve:true, advice:true, bindAs:true);
 
@@ -5842,7 +5831,6 @@ public partial class Generator : IMemberGatherer {
 			var mod = string.Empty;
 
 			PrintMethodAttributes (minfo);
-			PrintPlatformAttributes (mi);
 			print_generated_code ();
 			PrintDelegateProxy (minfo);
 			PrintExport (minfo);
