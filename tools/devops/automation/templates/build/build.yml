@@ -421,7 +421,7 @@ steps:
     PACKAGES="$IOS_PKG $MAC_PKG $IOS_DOTNET_PKG $TVOS_DOTNET_PKG $WATCHOS_DOTNET_PKG $MACOS_DOTNET_PKG"
     echo "Packages found at $PACKAGES"
 
-    echo "$PACKAGES" | xargs -t python3 $(Build.SourcesDirectory)/release-scripts/sign_and_notarize3.py --no_notarization -a "$APP_ID" -i "$INSTALL_ID" -d $(Build.SourcesDirectory)/package/notarized -e "$MAC_ENTITLEMENTS" -k "$KEYCHAIN"
+   echo "$PACKAGES" | xargs -t python3 $(Build.SourcesDirectory)/release-scripts/sign_and_notarize3.py -a "$APP_ID" -i "$INSTALL_ID" -d $(Build.SourcesDirectory)/package/notarized -e "$MAC_ENTITLEMENTS" -k "$KEYCHAIN"
     ls -R $(Build.SourcesDirectory)/package
   env:
     PRODUCTSIGN_KEYCHAIN_PASSWORD: $(OSX_KEYCHAIN_PASS)
