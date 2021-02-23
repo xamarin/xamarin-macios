@@ -7,8 +7,10 @@ using System.Threading;
 
 using CoreFoundation;
 using MapKit;
-#if !__TVOS__ && !__WATCHOS__ && !MONOMAC
+#if HAS_ADDRESSBOOKUI
 using AddressBook;
+#endif
+#if HAS_ADDRESSBOOKUI
 using AddressBookUI;
 #endif
 using Foundation;
@@ -2202,7 +2204,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 #endif // !__WATCHOS__
 
-#if !__TVOS__ && !__WATCHOS__ && !MONOMAC// No ABPeoplePickerNavigationControllerDelegate
+#if HAS_ADDRESSBOOKUI
 		[Test]
 		public void VoidPtrToINativeObjectArgument ()
 		{
@@ -2225,7 +2227,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				personHandle = selectedPerson.Handle;
 			}
 		}
-#endif // !__TVOS__
+#endif // HAS_ADDRESSBOOKUI
 
 #if !__TVOS__ // No Contacts framework in TVOS
 		[Test]

@@ -97,7 +97,21 @@ namespace GenerateTypeForwarders {
 		{
 			if (method.IsPrivate)
 				return;
-			if (!method.IsConstructor && method.IsSpecialName)
+
+			if (method.IsConstructor) {
+				// we can have an internal ctor using internal types that are not generated leading to uncompilable code
+				// e.g. `internal DisplayedPropertiesCollection (ABFunc<NSNumber[]> g, Action<NSNumber[]> s)`
+				if (method.IsAssembly && method.HasParameters) {
+					foreach (var p in method.Parameters) {
+						// check is the type is public - if not it won't be generated
+						if (p.ParameterType.Resolve ().IsNotPublic) {
+							// but we can't skip the generation as without any .ctor the compiler will add a default, public one
+							// so we create a custom signature to ensure an (internal) ctor exists
+							p.ParameterType = method.DeclaringType;
+						}
+					}
+				}
+			} else if (method.IsSpecialName)
 				return;
 
 			if (method.Name == "Finalize")
@@ -201,15 +215,14 @@ namespace GenerateTypeForwarders {
 				if (nsobject && method.IsConstructor && !method.IsStatic)
 					sb.Append ('\t', indent + 1).AppendLine (" : base (System.IntPtr.Zero)");
 				// if there is a base constructor with the same signature, call it
-				else if (method.IsConstructor && method.HasParameters && method.Parameters.Count > 0) {
-					var baseConstructors = method.DeclaringType.BaseType?.Resolve ()?.Methods?.Where (v => v.IsConstructor && v.Parameters.Count == method.Parameters.Count);
-					if (AllParameterTypeMatch (baseConstructors, method.Parameters, out var _)) {
+				else if (method.IsConstructor && method.HasParameters) {
+					var baseConstructors = method.DeclaringType.BaseType?.Resolve ()?.Methods?.Where (v => v.IsConstructor && v.HasParameters);
+					if (StartParameterTypeMatch (baseConstructors, method.Parameters, out var baseCtor)) {
 						sb.Append ($"{strIndent}\t: base (");
-						for (var i = 0; i < method.Parameters.Count; i++) {
-							var param = method.Parameters [i];
+						for (var i = 0; i < baseCtor.Parameters.Count; i++) {
 							if (i > 0)
 								sb.Append (", ");
-							sb.Append ($"@{param.Name}");
+							sb.Append ($"@{method.Parameters [i].Name}"); // need the original name
 						}
 						sb.AppendLine (")");
 					}
@@ -267,6 +280,28 @@ namespace GenerateTypeForwarders {
 				if (match) {
 					matchingMethod = method;
 					return true;
+				}
+			}
+			return false;
+		}
+
+		static bool StartParameterTypeMatch (IEnumerable<MethodDefinition> methods, IList<ParameterDefinition> parameters, out MethodDefinition matchingMethod)
+		{
+			matchingMethod = null;
+
+			foreach (var method in methods) {
+				if (parameters.Count == 0) {
+					matchingMethod = method;
+					return true;
+				}
+				var parameterCount = method.HasParameters ? method.Parameters.Count : 0;
+				for (var i  = 0; i < parameters.Count; i++) {
+					var a = method.Parameters [i];
+					var b = parameters [i];
+					if (a.ParameterType.FullName == b.ParameterType.FullName) {
+						matchingMethod = method;
+						return true;
+					}
 				}
 			}
 			return false;
