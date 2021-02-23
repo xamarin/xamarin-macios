@@ -20,10 +20,17 @@ build-provisioning.csx: build-provisioning.csx.in Makefile $(TOP)/Make.config
 		-e 's#@DOTNET5_VERSION@#$(DOTNET5_VERSION)#g' \
 		$< > $@;
 
+provision-xcode.csx: provision-xcode.csx.in Makefile $(TOP)/Make.config
+	$(Q_GEN) sed \
+		-e 's#@XCODE_XIP_NAME@#$(notdir $(XCODE_URL))#g' \
+		-e 's#@XCODE_ROOT_PATH@#$(XCODE_DEVELOPER_ROOT)#g' \
+		$< > $@;
+
+
 all check:
 	shellcheck *.sh
 
 print-abspath-variable:
 	@echo $(VARIABLE)=$(abspath $($(VARIABLE)))
 
-provisioning: build-provisioning.csx device-tests-provisioning.csx
+provisioning: build-provisioning.csx device-tests-provisioning.csx provision-xcode.csx
