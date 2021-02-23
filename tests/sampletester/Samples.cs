@@ -249,23 +249,4 @@ namespace Samples {
 			return GetSampleTestData (test_data, ORG, REPO, HASH, DEFAULT_BRANCH, timeout: TimeSpan.FromMinutes (10));
 		}
 	}
-
-	[Category (CATEGORY)]
-	public class ConferenceVisionTester : SampleTester {
-		const string ORG = "microsoft";
-		const string REPO = "ConferenceVision";
-		const string CATEGORY = "microsoftconferencevision"; // categories can't contain dashes
-		const string HASH = "b477f99c9e23097b31168697b2c168e90c34fd4d";
-		const string DEFAULT_BRANCH = "master";
-
-		static Dictionary<string, SampleTest> test_data = new Dictionary<string, SampleTest> {
-
-		};
-
-		static IEnumerable<SampleTestData> GetSampleData ()
-		{
-			return GetSampleTestData (test_data, ORG, REPO, HASH, DEFAULT_BRANCH, DefaultTimeout);
-		}
-	}
-
 }
