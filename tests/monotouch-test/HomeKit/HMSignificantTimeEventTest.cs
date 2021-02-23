@@ -8,7 +8,7 @@
 // Copyright 2017 Microsoft. All rights reserved.
 //
 
-#if !MONOMAC
+#if HAS_HOMEKIT
 
 using System;
 using NUnit.Framework;
@@ -41,4 +41,4 @@ namespace MonoTouchFixtures.HomeKit
 	}
 }
 
-#endif
+#endif // HAS_HOMEKIT
