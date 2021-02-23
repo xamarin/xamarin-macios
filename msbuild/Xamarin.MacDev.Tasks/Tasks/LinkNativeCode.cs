@@ -23,7 +23,7 @@ namespace Xamarin.MacDev.Tasks
 
 		// We should avoid copying files from the output path because those already exist on the Mac
 		// and the ones on Windows are empty, so we will break the build
-		public bool ShouldCopyToBuildServer (ITaskItem item) => Path.GetDirectoryName(item.ItemSpec) != outputPath;
+		public bool ShouldCopyToBuildServer (ITaskItem item) => Path.GetDirectoryName (item.ItemSpec) != outputPath;
 
 		public bool ShouldCreateOutputFile (ITaskItem item) => false;
 
