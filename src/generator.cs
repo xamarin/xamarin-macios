@@ -5006,7 +5006,10 @@ public partial class Generator : IMemberGatherer {
 			}
 
 			PrintBlockProxy (pi.PropertyType);
-			PrintAttributes (pi, platform:true);
+
+			// print availability separately since we could be inlining
+			PrintPlatformAttributes (pi, type);
+			PrintAttributes (pi, platform: false);
 
 			if (not_implemented_attr == null && (!minfo.is_sealed || !minfo.is_wrapper))
 				PrintExport (minfo, sel, export.ArgumentSemantic);
