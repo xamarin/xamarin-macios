@@ -51,7 +51,7 @@ namespace AuthenticationServices {
 	[Partial]
 	interface ASExtensionErrorCodeExtensions {
 
-		[NoWatch, NoTV, NoMac, iOS (14,0)]
+		[NoMac, iOS (14,0)]
 		[Field ("ASExtensionLocalizedFailureReasonErrorKey")]
 		NSString LocalizedFailureReasonErrorKey { get; }
 	}

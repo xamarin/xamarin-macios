@@ -404,7 +404,7 @@ namespace SceneKit {
 
 		[Mac (10,9)]
 		[Export ("projectionTransform")]
-		SCNMatrix4 ProjectionTransform { get; [Mac (10,9)] set; }
+		SCNMatrix4 ProjectionTransform { get; set; }
 
 		[Mac (10,9)]
 		[Export ("automaticallyAdjustsZRange")]

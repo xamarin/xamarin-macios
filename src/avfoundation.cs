@@ -13498,7 +13498,6 @@ namespace AVFoundation {
 		[Export ("processContentKeyResponseError:")]
 		void Process (NSError error);
 
-		[NoWatch]
 		[Deprecated (PlatformName.iOS, 11, 2, message: "Use the 'NSError' overload instead.")]
 		[Export ("respondByRequestingPersistableContentKeyRequest"), NoWatch, NoTV, NoMac]
 		void RespondByRequestingPersistableContentKeyRequest ();
