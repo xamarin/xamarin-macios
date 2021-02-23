@@ -1,4 +1,4 @@
-﻿#if __IOS__
+﻿#if HAS_ARKIT
 
 using System;
 using System.Runtime.InteropServices;
@@ -30,4 +30,4 @@ namespace monotouchtest.ARKit {
 
 	}
 }
-#endif
+#endif // HAS_ARKIT
