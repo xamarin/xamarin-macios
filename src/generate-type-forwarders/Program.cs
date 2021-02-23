@@ -203,7 +203,7 @@ namespace GenerateTypeForwarders {
 				// if there is a base constructor with the same signature, call it
 				else if (method.IsConstructor && method.HasParameters && method.Parameters.Count > 0) {
 					var baseConstructors = method.DeclaringType.BaseType?.Resolve ()?.Methods?.Where (v => v.IsConstructor && v.Parameters.Count == method.Parameters.Count);
-					if (AnyParameterTypeMatch (baseConstructors, method.Parameters, out var _)) {
+					if (AllParameterTypeMatch (baseConstructors, method.Parameters, out var _)) {
 						sb.Append ($"{strIndent}\t: base (");
 						for (var i = 0; i < method.Parameters.Count; i++) {
 							var param = method.Parameters [i];
@@ -225,7 +225,7 @@ namespace GenerateTypeForwarders {
 			matchingMethod = null;
 
 			while (type != null) {
-				if (AnyParameterTypeMatch (type.Methods, method, out matchingMethod))
+				if (AllParameterTypeMatch (type.Methods, method, out matchingMethod))
 					return true;
 
 				type = type.BaseType?.Resolve ();
@@ -234,11 +234,11 @@ namespace GenerateTypeForwarders {
 			return false;
 		}
 
-		static bool AnyParameterTypeMatch (IList<MethodDefinition> methods, MethodDefinition method, out MethodDefinition matchingMethod)
+		static bool AllParameterTypeMatch (IList<MethodDefinition> methods, MethodDefinition method, out MethodDefinition matchingMethod)
 		{
 			matchingMethod = null;
 
-			return AnyParameterTypeMatch (methods.Where (v =>
+			return AllParameterTypeMatch (methods.Where (v =>
 				v.Name == method.Name &&
 				v.IsStatic == method.IsStatic &&
 				v.Parameters.Count == method.Parameters.Count &&
@@ -246,7 +246,7 @@ namespace GenerateTypeForwarders {
 			), method.Parameters, out matchingMethod);
 		}
 
-		static bool AnyParameterTypeMatch (IEnumerable<MethodDefinition> methods, IList<ParameterDefinition> parameters, out MethodDefinition matchingMethod)
+		static bool AllParameterTypeMatch (IEnumerable<MethodDefinition> methods, IList<ParameterDefinition> parameters, out MethodDefinition matchingMethod)
 		{
 			matchingMethod = null;
 
@@ -258,13 +258,15 @@ namespace GenerateTypeForwarders {
 					matchingMethod = method;
 					return true;
 				}
+				bool match = true;
 				for (var i  = 0; i < parameters.Count; i++) {
 					var a = method.Parameters [i];
 					var b = parameters [i];
-					if (a.ParameterType.FullName == b.ParameterType.FullName) {
-						matchingMethod = method;
-						return true;
-					}
+					match &= a.ParameterType.FullName == b.ParameterType.FullName;
+				}
+				if (match) {
+					matchingMethod = method;
+					return true;
 				}
 			}
 			return false;

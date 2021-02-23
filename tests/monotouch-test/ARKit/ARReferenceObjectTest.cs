@@ -7,7 +7,7 @@
 // Copyright 2018 Microsoft. All rights reserved.
 //
 
-#if __IOS__
+#if HAS_ARKIT
 
 using System;
 using ARKit;
@@ -47,4 +47,4 @@ namespace MonoTouchFixtures.ARKit {
 	}
 }
 
-#endif
+#endif // HAS_ARKIT
