@@ -30,11 +30,13 @@ namespace Xamarin.MacDev.Tasks
 
 		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied ()
 		{
-			foreach (var dir in IncludeDirectories)
-			{
-				foreach (var file in Directory.EnumerateFiles(dir.ItemSpec, "*.*", SearchOption.AllDirectories))
+			if (IncludeDirectories != null) {
+				foreach (var dir in IncludeDirectories) 
 				{
-					yield return new TaskItem(file);
+					foreach (var file in Directory.EnumerateFiles(dir.ItemSpec, "*.*", SearchOption.AllDirectories)) 
+					{
+						yield return new TaskItem(file);
+					}
 				}
 			}
 		}
