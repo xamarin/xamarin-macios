@@ -131,9 +131,22 @@ namespace Xamarin.Linker.Steps
 						Driver.Log (4, "Did not add native reference to {0} in {1} referenced by {2} in {3}.", pinfo.EntryPoint, pinfo.Module.Name, method.FullName, method.Module.Name);
 						break; // tvOS does not ship with System.Net.Security.Native due to https://github.com/dotnet/runtime/issues/45535
 					}
+
+					if (DerivedLinkContext.App.Platform == ApplePlatform.MacOSX) {
+						Driver.Log (4, "Did not add native reference to {0} in {1} referenced by {2} in {3}.", pinfo.EntryPoint, pinfo.Module.Name, method.FullName, method.Module.Name);
+						break; // The macOS version of the BCL has several references to native methods supposedly in libSystem.Net.Security.Native that aren't there, so skip it.
+					}
+
 					goto case "System.Native";
 #endif
 				case "System.Native":
+#if NET
+					if (DerivedLinkContext.App.Platform == ApplePlatform.MacOSX) {
+						Driver.Log (4, "Did not add native reference to {0} in {1} referenced by {2} in {3}.", pinfo.EntryPoint, pinfo.Module.Name, method.FullName, method.Module.Name);
+						break; // The macOS version of the BCL has several references to native methods supposedly in libSystem.Native that aren't there, so skip it.
+					}
+					goto case "System.Security.Cryptography.Native.Apple";
+#endif
 				case "System.Security.Cryptography.Native.Apple":
 					Driver.Log (4, "Adding native reference to {0} in {1} because it's referenced by {2} in {3}.", pinfo.EntryPoint, pinfo.Module.Name, method.FullName, method.Module.Name);
 					DerivedLinkContext.RequireMonoNative = true;

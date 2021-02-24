@@ -13,7 +13,7 @@ namespace Xharness.Jenkins.TestTasks {
 			get {
 				switch (Platform) {
 				case TestPlatform.Mac:
-					return "Mac";
+					return TestProject?.IsDotNetProject == true ? "Mac [dotnet]" : "Mac";
 				case TestPlatform.Mac_Modern:
 					return "Mac Modern";
 				case TestPlatform.Mac_Full:
