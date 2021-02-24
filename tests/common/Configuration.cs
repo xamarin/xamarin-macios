@@ -40,6 +40,7 @@ namespace Xamarin.Tests
 		public static bool include_tvos;
 		public static bool include_watchos;
 		public static bool include_dotnet_watchos;
+		public static bool include_maccatalyst;
 		public static bool include_device;
 
 		static Version xcode_version;
@@ -267,6 +268,7 @@ namespace Xamarin.Tests
 			include_tvos = !string.IsNullOrEmpty (GetVariable ("INCLUDE_TVOS", ""));
 			include_watchos = !string.IsNullOrEmpty (GetVariable ("INCLUDE_WATCH", ""));
 			include_dotnet_watchos = !string.IsNullOrEmpty (GetVariable ("INCLUDE_DOTNET_WATCH", ""));
+			include_maccatalyst = !string.IsNullOrEmpty (GetVariable ("INCLUDE_MACCATALYST", ""));
 			include_device = !string.IsNullOrEmpty (GetVariable ("INCLUDE_DEVICE", ""));
 			DotNet5BclDir = GetVariable ("DOTNET5_BCL_DIR", null);
 
@@ -291,6 +293,7 @@ namespace Xamarin.Tests
 			Console.WriteLine ("  INCLUDE_MAC={0}", include_mac);
 			Console.WriteLine ("  INCLUDE_TVOS={0}", include_tvos);
 			Console.WriteLine ("  INCLUDE_WATCHOS={0}", include_watchos);
+			Console.WriteLine ("  INCLUDE_MACCATALYST={0}", include_maccatalyst);
 		}
 
 		public static string RootPath {
@@ -817,6 +820,10 @@ namespace Xamarin.Tests
 				if (!include_mac)
 					Assert.Ignore ("macOS is not included in this build");
 				break;
+			case ApplePlatform.MacCatalyst:
+				if (!include_maccatalyst)
+					Assert.Ignore ("Mac Catalyst is not included in this build");
+				break;
 			default:
 				throw new ArgumentOutOfRangeException ($"Unknown platform: {platform}");
 			}
@@ -830,6 +837,7 @@ namespace Xamarin.Tests
 			case "tvos":
 			case "watchos":
 			case "macosx":
+			case "maccatalyst":
 				IgnoreIfIgnoredPlatform ((ApplePlatform) Enum.Parse (typeof (ApplePlatform), platform, true));
 				break;
 			case "macos":

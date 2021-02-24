@@ -4,12 +4,12 @@ using System;
 using System.Runtime.InteropServices;
 using Foundation;
 using ObjCRuntime;
-#if IOS
+#if HAS_IAD
 using iAd;
 #endif
 
 namespace AVKit {
-#if IOS
+#if HAS_IAD
 	public partial class AVPlayerViewController {
 
 		// This is a [Category] -> C# extension method (see adlib.cs) but it targets on static selector

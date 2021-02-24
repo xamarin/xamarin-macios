@@ -1,13 +1,11 @@
 // Copyright 2011 Xamarin Inc. All rights reserved
 
-#if !__TVOS__ && !__WATCHOS__ && !MONOMAC
+#if HAS_IAD
 
 using System;
 using CoreGraphics;
 using Foundation;
-#if !__WATCHOS__
 using iAd;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.iAd {
@@ -37,4 +35,4 @@ namespace MonoTouchFixtures.iAd {
 	}
 }
 
-#endif // !__TVOS__ && !__WATCHOS__
+#endif // HAS_IAD

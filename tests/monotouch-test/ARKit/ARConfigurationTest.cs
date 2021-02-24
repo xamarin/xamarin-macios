@@ -1,4 +1,4 @@
-#if __IOS__
+#if HAS_ARKIT
 
 using System;
 using System.Reflection;
@@ -60,4 +60,4 @@ namespace MonoTouchFixtures.ARKit {
 	}
 }
 
-#endif
+#endif // HAS_ARKIT

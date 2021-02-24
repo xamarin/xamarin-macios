@@ -55,7 +55,7 @@
       <_PackNativePath>runtimes/$(_RuntimeIdentifier)/native</_PackNativePath>
     </PropertyGroup>
     <ItemGroup>
-      <_PackageFiles Include="$(_packagePath)$(_PackTargetPath)/Xamarin.$(_AssemblyInfix).dll" PackagePath="$(_PackTargetPath)" TargetPath="$(_PackTargetPath)" />
+      <_PackageFiles Include="$(_packagePath)$(_PackTargetPath)/*.dll" PackagePath="$(_PackTargetPath)" TargetPath="$(_PackTargetPath)" />
       <_PackageFiles Include="$(_packagePath)$(_PackNativePath)/*.a" PackagePath="$(_PackNativePath)" TargetPath="$(_PackNativePath)" IsNative="true" />
       <_PackageFiles Include="$(_packagePath)$(_PackNativePath)/*.dylib" PackagePath="$(_PackNativePath)" TargetPath="$(_PackNativePath)" IsNative="true" />
       <_FrameworkListFileClass Include="@(_PackageFiles->'%(Filename)%(Extension)')" Profile="$(_PlatformName)" />
