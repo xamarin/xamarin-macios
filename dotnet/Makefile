@@ -29,6 +29,13 @@ $(1)_NUGET_TARGETS = \
 endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call DefineTargets,$(platform))))
 
+define DefineWindowsTargets
+$(1)_WINDOWS_NUGET_TARGETS = \
+	$(DOTNET_DESTDIR)/Microsoft.$(1).Windows.Sdk/targets/Xamarin.Shared.Sdk.Before.targets \
+
+endef
+$(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(eval $(call DefineWindowsTargets,$(platform))))
+
 DIRECTORIES += \
 	$(DOTNET_NUPKG_DIR) \
 	$(DOTNET_PKG_DIR) \
@@ -40,6 +47,7 @@ DIRECTORIES += \
 	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_PACKS_PATH)/Microsoft.$(platform).Sdk) \
 	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_PACKS_PATH)/Microsoft.$(platform).Ref) \
 	$(TMP_PKG_DIR) \
+	$(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Windows.Sdk/targets) \
 
 $(DIRECTORIES):
 	$(Q) mkdir -p $@
@@ -54,6 +62,12 @@ $$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/%: targets/% | $$(DOTNET_DESTDIR)/
 	$$(Q) $$(CP) $$< $$@
 endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call CopyTargets,$(platform))))
+
+define CopyWindowsTargets
+$$(DOTNET_DESTDIR)/Microsoft.$(1).Windows.Sdk/targets/%: WindowsTargets/% | $$(DOTNET_DESTDIR)/Microsoft.$(1).Windows.Sdk/targets
+	$$(Q) $$(CP) $$< $$@
+endef
+$(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(eval $(call CopyWindowsTargets,$(platform))))
 
 define VersionsTemplate
 targets/Microsoft.$(1).Sdk.Versions.props: targets/Microsoft.Sdk.Versions.template.props Makefile $(TOP)/Make.config.inc $(TOP)/.git/HEAD $(TOP)/.git/index

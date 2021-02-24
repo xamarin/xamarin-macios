@@ -396,6 +396,21 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 		<Touch Files="$(_LinkSemaphore)" AlwaysCreate="true" Condition=" '$(_ILLinkExitCode)' == '0' " />
 
 	</Target>
+
+	<!-- Override NET.Sdk Run target to run Exec remotely -->
+	<!-- https://github.com/dotnet/sdk/blob/bc0563507d23a20e71087b03cfa50a5b42b03f06/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.Sdk.targets#L869-L872 -->
+	<Target Name="Run">
+		<Exec SessionId="$(BuildSessionId)" Command="$(RunCommand) $(RunArguments)" WorkingDirectory="$(RunWorkingDirectory)"/>
+	</Target>
+
+	<PropertyGroup>
+		<_PrepareRunDependsOn>
+			_SetShouldDisconnect;
+			$(_PrepareRunDependsOn);
+		</_PrepareRunDependsOn>
+	</PropertyGroup>
+	
+	<Target Name="DisconnectAfterRun" AfterTargets="Run" DependsOnTargets="_SayGoodbye" />
 	
 	<!-- Allows providing SDK-specific target overrides -->
 	<PropertyGroup>

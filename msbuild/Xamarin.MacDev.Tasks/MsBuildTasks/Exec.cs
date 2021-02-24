@@ -57,5 +57,13 @@ namespace Microsoft.Build.Tasks
 				return false;
 			}
 		}
+
+		public override void Cancel ()
+		{
+			if (!string.IsNullOrEmpty (SessionId))
+				BuildConnection.CancelAsync (SessionId, BuildEngine4).Wait ();
+
+			base.Cancel ();
+		}
 	}
 }
