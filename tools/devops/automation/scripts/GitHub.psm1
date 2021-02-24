@@ -461,6 +461,7 @@ function New-GitHubSummaryComment {
                 }
 
                 $sb.AppendLine("</details>")
+                $sb.AppendLine("")
             } else {
                 $sb.AppendLine("# API diff")
                 $sb.AppendLine("")
@@ -480,6 +481,7 @@ function New-GitHubSummaryComment {
             $json =  Get-Content $Artifacts | ConvertFrom-Json
             if ($json.Count -gt 0) {
                 $sb.AppendLine("# Packages generated")
+                $sb.AppendLine("")
                 $sb.AppendLine("<details><summary>View packages</summary>")
                 $sb.AppendLine("") # no new line results in a bad rendering in the links
                 foreach ($a in $json) {
