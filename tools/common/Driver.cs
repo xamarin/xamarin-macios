@@ -730,6 +730,11 @@ namespace Xamarin.Bundler {
 			return framework_dir;
 		}
 
+		public static void SetFrameworkCurrentDirectory (string value)
+		{
+			framework_dir = value;
+		}
+
 		// This is the 'Current/bin' directory of the installed framework
 		// For XI/XM installed from package it's one of these two:
 		//    /Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin
@@ -910,7 +915,7 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		static void ValidateXcode (Application app, bool accept_any_xcode_version, bool warn_if_not_found)
+		public static void ValidateXcode (Application app, bool accept_any_xcode_version, bool warn_if_not_found)
 		{
 			if (sdk_root == null) {
 				sdk_root = FindSystemXcode ();
