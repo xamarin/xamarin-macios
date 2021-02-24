@@ -164,7 +164,8 @@ namespace Samples {
 
 		static IEnumerable<SampleTestData> GetSampleData ()
 		{
-			return GetSampleTestData (test_data, ORG, REPO, HASH, DEFAULT_BRANCH, DefaultTimeout);
+			// Samples.XamarinFormsTester.BuildSample(MarkupExtensions.iOS: Debug|iPhone) needs some extra time 10 minutes
+			return GetSampleTestData (test_data, ORG, REPO, HASH, DEFAULT_BRANCH, TimeSpan.FromMinutes (10));
 		}
 	}
 
@@ -189,7 +190,8 @@ namespace Samples {
 
 		static IEnumerable<SampleTestData> GetSampleData ()
 		{
-			return GetSampleTestData (test_data, ORG, REPO, HASH, DEFAULT_BRANCH, DefaultTimeout);
+			// Samples.XamarinFormsBooksTester.BuildSample(FormattedTextToggle.iOS: Release|iPhone) needs some extra time 10 minutes
+			return GetSampleTestData (test_data, ORG, REPO, HASH, DEFAULT_BRANCH, TimeSpan.FromMinutes (10));
 		}
 	}
 
