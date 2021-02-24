@@ -7,7 +7,7 @@
 // Copyright 2012 Xamarin Inc. All rights reserved.
 //
 
-#if HAS_ADDRESSBOOKUI
+#if HAS_ADDRESSBOOK
 
 using System;
 using Foundation;

@@ -22,7 +22,7 @@ using System.Xml;
 using Mono.Data.Sqlite;
 #endif
 using MonoTouch;
-#if HAS_ADDRESSBOOKUI
+#if HAS_ADDRESSBOOK
 using AddressBook;
 #endif
 #if HAS_ADDRESSBOOKUI
@@ -174,7 +174,7 @@ namespace LinkSdk {
 			Assert.That (m.GetType ().Name, Is.EqualTo ("RuntimeModule"), "RuntimeModule");
 		}
 
-#if HAS_ADDRESSBOOKUI
+#if HAS_ADDRESSBOOK && HAS_ADDRESSBOOKUI
 		[Test]
 		// http://bugzilla.xamarin.com/show_bug.cgi?id=980
 		public void Bug980_AddressBook_NRE ()

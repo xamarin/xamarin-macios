@@ -7,7 +7,7 @@ using System.Threading;
 
 using CoreFoundation;
 using MapKit;
-#if HAS_ADDRESSBOOKUI
+#if HAS_ADDRESSBOOK
 using AddressBook;
 #endif
 #if HAS_ADDRESSBOOKUI
@@ -2204,7 +2204,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 #endif // !__WATCHOS__
 
-#if HAS_ADDRESSBOOKUI
+#if HAS_ADDRESSBOOK && HAS_ADDRESSBOOKUI
 		[Test]
 		public void VoidPtrToINativeObjectArgument ()
 		{
