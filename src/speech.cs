@@ -290,7 +290,7 @@ namespace Speech {
 
 		[iOS (13, 0)]
 		[NullAllowed, Export ("voiceAnalytics")]
-		[Advice ("Use 'SFVoiceAnalytics' from 'SFSpeechRecognitionMetadata' instead.")]
+		[Advice ("Use 'VoiceAnalytics' from 'SFSpeechRecognitionMetadata' instead.")]
 		SFVoiceAnalytics VoiceAnalytics { get; }
 	}
 
@@ -324,4 +324,3 @@ namespace Speech {
 		SFAcousticFeature Voicing { get; }
 	}
 }
-
