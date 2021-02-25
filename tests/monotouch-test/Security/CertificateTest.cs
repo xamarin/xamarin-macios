@@ -609,6 +609,7 @@ namespace MonoTouchFixtures.Security {
 
 #if IOS
 				var att2 = new SecPublicPrivateKeyAttrs ();
+				att2.Label = att.Label;
 				att2.IsPermanent = false;
 				att2.EffectiveKeySize = 1024;
 				att2.CanEncrypt = true;
@@ -628,14 +629,7 @@ namespace MonoTouchFixtures.Security {
 					}
 				}
 			} finally {
-				var query = new SecRecord (SecKind.Key) {
-					Label = att.Label,
-				};
-				SecStatusCode code;
-				do {
-					// For some reason each call to SecKeyChain will only remove a single key, so do a loop.
-					code = SecKeyChain.Remove (query);
-				} while (code == SecStatusCode.Success);
+				KeyTest.DeleteKeysWithLabel (att.Label);
 			}
 		}
 

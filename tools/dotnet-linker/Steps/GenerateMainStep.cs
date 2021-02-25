@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 
 using Xamarin.Linker;
+using Xamarin.Utils;
 
 namespace Xamarin {
 
@@ -34,6 +35,21 @@ namespace Xamarin {
 				contents.AppendLine ("\tsetenv (\"MONO_THREADS_SUSPEND\", \"preemptive\", 1); // https://github.com/dotnet/runtime/issues/47121");
 				contents.AppendLine ("}");
 				contents.AppendLine ();
+
+				if (Configuration.Platform == ApplePlatform.MacOSX) {
+					// mono_config_parse_memory was removed in .NET: https://github.com/dotnet/runtime/pull/48007
+					// however, we still use this function in our libxamarin code, and we can't remove it without affecting
+					// legacy Xamarin.Mac, so just add a dummy implementation of mono_config_parse_memory so that the
+					// native linker doesn't complain. This is a temporary solution: we'll soon build a .NET-specific
+					// libxamarin, in which case we can #ifdef out the call to mono_config_parse_memory for .NET only.
+					contents.AppendLine ("#include <stdio.h>");
+					contents.AppendLine ("extern \"C\" void mono_config_parse_memory (const char *buffer);");
+					contents.AppendLine ("void mono_config_parse_memory (const char *buffer)");
+					contents.AppendLine ("{");
+					contents.AppendLine ("\tfprintf (stderr, \"mono_config_parse_memory has been removed\\n\");");
+					contents.AppendLine ("}");
+					contents.AppendLine ();
+				}
 
 				Configuration.Target.GenerateMain (contents, app.Platform, abi, file, registration_methods);
 

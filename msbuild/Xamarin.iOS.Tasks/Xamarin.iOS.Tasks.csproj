@@ -10,6 +10,10 @@
     <ProjectReference Include="..\Xamarin.MacDev.Tasks.Core\Xamarin.MacDev.Tasks.Core.csproj" />
     <ProjectReference Include="..\Xamarin.MacDev.Tasks\Xamarin.MacDev.Tasks.csproj" />
   <ProjectReference Include="..\Xamarin.iOS.Tasks.Core\Xamarin.iOS.Tasks.Core.csproj" />
+    <ProjectReference Include="..\Messaging\Xamarin.Messaging\Xamarin.Messaging.csproj">
+      <ReferenceOutputAssembly>False</ReferenceOutputAssembly>
+      <Private>False</Private>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <!-- Compile against Microsoft.Build* NuGet refs, but do not copy to OutputDir if IncludeMSBuildAssets was not set. -->
@@ -18,12 +22,12 @@
     <PackageReference Include="Microsoft.Build.Tasks.Core" Version="16.8.0" IncludeAssets="$(IncludeMSBuildAssets)" />
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.8.0" IncludeAssets="$(IncludeMSBuildAssets)" />
     <PackageReference Include="Microsoft.NET.ILLink.Tasks" Version="6.0.0-alpha.1.21072.1" />
-    <PackageReference Include="Xamarin.Messaging.Build.Client" Version="$(MessagingVersion)" />
-    <!-- Needed from Xamarin.Messaging.Build -->
-    <PackageReference Include="System.Net.Mqtt.Server" Version="0.6.7-beta" />
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="Xamarin.Messaging">
+      <HintPath>..\Messaging\Xamarin.Messaging\$(OutputPath)\Xamarin.Messaging.dll</HintPath>
+    </Reference>
     <!-- We need the net472 implementation, otherwise the Build agent needs to be a net5.0 app -->
     <Reference Include="ILLink.Tasks">
       <HintPath>$(PkgMicrosoft_NET_ILLink_Tasks)\tools\net472\ILLink.Tasks.dll</HintPath>
@@ -35,26 +39,4 @@
     <Folder Include="Contracts\" />
   </ItemGroup>
   <Import Project="$(MSBuildThisFileDirectory)..\ILMerge.targets" />
-  
-  <!-- Replaces the ProtectedData assembly by the runtime implementation -->
-  <Target Name="CopyRuntimeAssemblies" BeforeTargets="ILRepack">
-    <ItemGroup>
-      <ReferenceCopyLocalToRemove Include="@(ReferenceCopyLocalPaths)" Condition="'%(FileName)' == 'System.Text.Encoding.CodePages'" />
-      <ReferenceCopyLocalToRemove Include="@(ReferenceCopyLocalPaths)" Condition="'%(FileName)' == 'System.Security.Cryptography.ProtectedData'" />
-
-      <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalToRemove)" />
-
-      <ReferencePathToRemove Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.Text.Encoding.CodePages'" />
-      <ReferencePathToRemove Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.Security.Cryptography.ProtectedData'" />
-
-      <ReferencePath Remove="@(ReferencePathToRemove)" />
-
-      <ReferencePathToAdd Include="@(RuntimeTargetsCopyLocalItems)" Condition="'%(RuntimeIdentifier)' == 'win' And '%(FileName)' == 'System.Text.Encoding.CodePages'" />
-      <ReferencePathToAdd Include="@(RuntimeTargetsCopyLocalItems)" Condition="'%(RuntimeIdentifier)' == 'win' And '%(FileName)' == 'System.Security.Cryptography.ProtectedData'" />
-
-      <ReferencePath Include="@(ReferencePathToAdd)">
-        <DestinationSubDirectory />
-      </ReferencePath>
-    </ItemGroup>
-  </Target>
 </Project>

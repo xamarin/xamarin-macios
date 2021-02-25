@@ -146,6 +146,9 @@ fix-install-permissions:
 	sudo chown -R $(USER) /Library/Frameworks/Xamarin.iOS.framework
 	sudo chown -R $(USER) /Library/Frameworks/Xamarin.Mac.framework
 
+fix-xcode-select:
+	sudo xcode-select -s $(XCODE_DEVELOPER_ROOT)
+
 git-clean-all:
 	@echo "$(COLOR_RED)Cleaning and resetting all dependencies. This is a destructive operation.$(COLOR_CLEAR)"
 	@echo "$(COLOR_RED)You have 5 seconds to cancel (Ctrl-C) if you wish.$(COLOR_CLEAR)"

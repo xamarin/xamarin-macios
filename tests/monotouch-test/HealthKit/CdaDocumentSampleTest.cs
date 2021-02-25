@@ -6,7 +6,7 @@
 //
 // Copyright 2016 Xamarin Inc. All rights reserved.
 //
-#if __IOS__
+#if HAS_HEALTHKIT
 
 using System;
 
@@ -52,4 +52,4 @@ namespace MonoTouchFixtures.HealthKit {
 	}
 }
 
-#endif // __IOS__
+#endif // HAS_HEALTHKIT

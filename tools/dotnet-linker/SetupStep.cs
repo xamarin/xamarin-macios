@@ -35,6 +35,7 @@ namespace Xamarin {
 					return;
 				}
 			}
+			DumpSteps ();
 			throw new InvalidOperationException ($"Could not insert {step} before {stepName} because {stepName} wasn't found.");
 		}
 
@@ -46,6 +47,7 @@ namespace Xamarin {
 					return;
 				}
 			}
+			DumpSteps ();
 			throw new InvalidOperationException ($"Could not insert {step} after {stepName} because {stepName} wasn't found.");
 		}
 
@@ -57,13 +59,13 @@ namespace Xamarin {
 
 			// Load the list of assemblies loaded by the linker.
 			// This would not be needed of LinkContext.GetAssemblies () was exposed to us.
-			InsertAfter (new CollectAssembliesStep (), "LoadReferencesStep");
+			InsertBefore (new CollectAssembliesStep (), "MarkStep");
 
 			var pre_dynamic_dependency_lookup_substeps = new DotNetSubStepDispatcher ();
-			InsertBefore (pre_dynamic_dependency_lookup_substeps, "DynamicDependencyLookupStep");
+			InsertBefore (pre_dynamic_dependency_lookup_substeps, "MarkStep");
 
 			var prelink_substeps = new DotNetSubStepDispatcher ();
-			InsertAfter (prelink_substeps, "RemoveSecurityStep");
+			InsertBefore (prelink_substeps, "MarkStep");
 
 			var post_sweep_substeps = new DotNetSubStepDispatcher ();
 			InsertAfter (post_sweep_substeps, "SweepStep");
@@ -100,24 +102,29 @@ namespace Xamarin {
 			Configuration.Write ();
 
 			if (Configuration.Verbosity > 0) {
-				Console.WriteLine ();
-				Console.WriteLine ("Pipeline Steps:");
-				foreach (var step in Steps) {
-					Console.WriteLine ($"    {step}");
-					if (step is SubStepsDispatcher) {
-						var substeps = typeof (SubStepsDispatcher).GetField ("substeps", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue (step) as IEnumerable<ISubStep>;
-						if (substeps != null) {
-							foreach (var substep in substeps) {
-								Console.WriteLine ($"        {substep}");
-							}
-						}
-					}
-				}
+				DumpSteps ();
 			}
 
 			ErrorHelper.Platform = Configuration.Platform;
 			Directory.CreateDirectory (Configuration.ItemsDirectory);
 			Directory.CreateDirectory (Configuration.CacheDirectory);
+		}
+
+		void DumpSteps ()
+		{
+			Console.WriteLine ();
+			Console.WriteLine ("Pipeline Steps:");
+			foreach (var step in Steps) {
+				Console.WriteLine ($"    {step}");
+				if (step is SubStepsDispatcher) {
+					var substeps = typeof (SubStepsDispatcher).GetField ("substeps", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue (step) as IEnumerable<ISubStep>;
+					if (substeps != null) {
+						foreach (var substep in substeps) {
+							Console.WriteLine ($"        {substep}");
+						}
+					}
+				}
+			}
 		}
 	}
 }

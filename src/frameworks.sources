@@ -2185,14 +2185,12 @@ MACCATALYST_FRAMEWORKS = \
 	AddressBook \
 	AddressBookUI \
 	AppTrackingTransparency \
-	ARKit \
 	AudioToolbox \
 	AudioUnit \
 	AutomaticAssessmentConfiguration \
 	BackgroundTasks \
 	BusinessChat \
 	CallKit \
-	CarPlay \
 	CFNetwork \
 	ClassKit \
 	CloudKit \
@@ -2206,7 +2204,6 @@ MACCATALYST_FRAMEWORKS = \
 	CoreLocation \
 	CoreMIDI \
 	CoreMotion \
-	CoreNFC \
 	CoreSpotlight \
 	CoreText \
 	DeviceCheck \
@@ -2215,12 +2212,9 @@ MACCATALYST_FRAMEWORKS = \
 	FileProvider \
 	GameController \
 	GameplayKit \
-	HealthKit \
-	HomeKit \
 	IdentityLookup \
 	ImageIO \
 	Intents \
-	IntentsUI \
 	IOSurface \
 	JavaScriptCore \
 	LinkPresentation \
@@ -2229,7 +2223,6 @@ MACCATALYST_FRAMEWORKS = \
 	MediaAccessibility \
 	MediaPlayer \
 	MediaToolbox \
-	Messages \
 	Metal \
 	MetalKit \
 	MetalPerformanceShaders \
@@ -2262,7 +2255,6 @@ MACCATALYST_FRAMEWORKS = \
 	VideoToolbox \
 	VideoSubscriberAccount \
 	Vision \
-	VisionKit \
 	WKWebKit \
 
 #
