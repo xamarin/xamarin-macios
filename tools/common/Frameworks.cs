@@ -598,22 +598,43 @@ public class Frameworks : Dictionary <string, Framework>
 			// The headers for Twitter are there, , but no documentation whatsoever online and the native linker fails too
 			catalyst_frameworks ["Twitter"].Unavailable = true;
 
-			// These frameworks were added to Catalyst after they were added to iOS, so we have to adjust the Versions fields
-			var fourteenTwoFrameworks = new [] {
-				"AddressBook",
-				"AddressBookUI",
-				"ARKit",
-				"AssetsLibrary",
-				"CarPlay",
-				"ClassKit",
-				"HomeKit",
-				"Messages",
-				"UserNotificationsUI",
-			};
-			foreach (var fw in fourteenTwoFrameworks) {
-				var f = catalyst_frameworks [fw];
-				f.Version = new Version (14, 2);
-				f.VersionAvailableInSimulator = new Version (14, 2);
+			var min = new Version (13, 0);
+			var v14_2 = new Version (14, 2);
+			foreach (var f in catalyst_frameworks.Values) {
+				switch (f.Name) {
+				// These frameworks were added to Catalyst after they were added to iOS, so we have to adjust the Versions fields
+				case "AddressBook":
+				case "ClassKit":
+					f.Version = v14_2;
+					f.VersionAvailableInSimulator = v14_2;
+					break;
+				// headers-based xtro reporting those are *all* unknown API for Catalyst
+				case "AddressBookUI":
+				case "AppClip":
+				case "ARKit":
+				case "AssetsLibrary":
+				case "CarPlay":
+				case "CoreTelephony":
+				case "EventKitUI":
+				case "HealthKit":
+				case "HealthKitUI":
+				case "iAd":
+				case "IdentityLookupUI":
+				case "HomeKit":
+				case "Messages":
+				case "MessageUI":
+				case "VisionKit":
+				case "WatchConnectivity":
+					f.Unavailable = true;
+					break;
+				// and nothing existed before Catalyst 13.0
+				default:
+					if (f.Version < min)
+						f.Version = min;
+					if (f.VersionAvailableInSimulator < min)
+						f.VersionAvailableInSimulator = min;
+					break;
+				}
 			}
 		}
 		return catalyst_frameworks;
