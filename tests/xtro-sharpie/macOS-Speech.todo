@@ -1,7 +1,0 @@
-!missing-selector! SFSpeechRecognitionMetadata::averagePauseDuration not bound
-!missing-selector! SFSpeechRecognitionMetadata::speakingRate not bound
-!missing-selector! SFSpeechRecognitionMetadata::speechDuration not bound
-!missing-selector! SFSpeechRecognitionMetadata::speechStartTimestamp not bound
-!missing-selector! SFSpeechRecognitionMetadata::voiceAnalytics not bound
-!missing-selector! SFSpeechRecognitionResult::speechRecognitionMetadata not bound
-!missing-type! SFSpeechRecognitionMetadata not bound
