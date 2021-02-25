@@ -599,6 +599,8 @@ namespace CoreMedia {
 		delegate void CMSampleBufferInvalidateCallback (/* CMSampleBufferRef */ IntPtr sbuf, 
 			/* uint64_t */ ulong invalidateRefCon);
 
+		static CMSampleBufferInvalidateCallback invalidate_handler = InvalidateHandler;
+
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (CMSampleBufferInvalidateCallback))]
 #endif
@@ -626,7 +628,7 @@ namespace CoreMedia {
 				return CMSampleBufferError.RequiredParameterMissing;
 
 			invalidate = GCHandle.Alloc (Tuple.Create (invalidateHandler, this));
-			return CMSampleBufferSetInvalidateCallback (handle, InvalidateHandler, (ulong)(IntPtr)invalidate);
+			return CMSampleBufferSetInvalidateCallback (handle, invalidate_handler, (ulong)(IntPtr)invalidate);
 		}
 							
 		[DllImport(Constants.CoreMediaLibrary)]
