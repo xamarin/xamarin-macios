@@ -619,5 +619,3 @@
 !missing-type! UISearchSuggestionItem not bound
 !missing-type! UITitlebar not bound
 !missing-type! UIWebView not bound
-!unknown-native-enum! UITextWritingDirection bound
-!unknown-native-enum! UIToolbarPosition bound
