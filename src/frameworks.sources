@@ -2183,7 +2183,6 @@ MACCATALYST_FRAMEWORKS = \
 	AdServices \
 	AdSupport \
 	AddressBook \
-	AddressBookUI \
 	AppTrackingTransparency \
 	AudioToolbox \
 	AudioUnit \
