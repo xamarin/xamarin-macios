@@ -4724,7 +4724,7 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 
-	void PrintPropertyAttributes (PropertyInfo pi, Type type)
+	void PrintPropertyAttributes (PropertyInfo pi, Type type, bool skipTypeInjection = false)
 	{
 		foreach (var oa in AttributeManager.GetCustomAttributes<ObsoleteAttribute> (pi)) {
 			print ("[Obsolete (\"{0}\", {1})]", oa.Message, oa.IsError ? "true" : "false");
@@ -4747,7 +4747,7 @@ public partial class Generator : IMemberGatherer {
 		// we must look if the type has an [Availability] attribute
 		if (type != pi.DeclaringType) {
 			// print, if not duplicated from the type (being inlined into), the property availability
-			if (!PrintPlatformAttributes (pi, type)) {
+			if (!PrintPlatformAttributes (pi, type) && !skipTypeInjection) {
 				// print, if not duplicated from the type (being inlined into), the property declaring type (protocol) availability
 				PrintPlatformAttributes (pi.DeclaringType, type);
 			}
