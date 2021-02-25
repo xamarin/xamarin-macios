@@ -717,7 +717,7 @@
 	</Target>
 
 	<!-- This is only needed for mobile platforms, RunCommand and RunArguments are defined for macOS in Microsoft.macOS.Sdk.targets. -->
-	<Target Name="_PrepareRunMobile" DependsOnTargets="_InstallMobile" Condition="'$(_PlatformName)' != 'macOS'">
+	<Target Name="_PrepareRunMobile" DependsOnTargets="_InstallMobile" Condition="'$(_PlatformName)' != 'macOS' And '$(_PlatformName)' != 'MacCatalyst'">
 		<PropertyGroup>
 			<!-- capture output by default -->
 			<_MlaunchCaptureOutput Condition="'$(_MlaunchCaptureOutput)' == ''">true</_MlaunchCaptureOutput>
