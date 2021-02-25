@@ -584,20 +584,6 @@ public class Frameworks : Dictionary <string, Framework>
 		if (catalyst_frameworks == null) {
 			catalyst_frameworks = CreateiOSFrameworks (false);
 
-			// These frameworks are not available on Mac Catalyst
-			catalyst_frameworks ["OpenGLES"].Unavailable = true;
-			catalyst_frameworks ["NewsstandKit"].Unavailable = true;
-			catalyst_frameworks ["MediaSetup"].Unavailable = true;
-			catalyst_frameworks ["NotificationCenter"].Unavailable = true;
-			catalyst_frameworks ["GLKit"].Unavailable = true;
-			catalyst_frameworks ["VideoSubscriberAccount"].Unavailable = true;
-
-			// The headers for FileProviderUI exist, but the native linker fails
-			catalyst_frameworks ["FileProviderUI"].Unavailable = true;
-
-			// The headers for Twitter are there, , but no documentation whatsoever online and the native linker fails too
-			catalyst_frameworks ["Twitter"].Unavailable = true;
-
 			var min = new Version (13, 0);
 			var v14_2 = new Version (14, 2);
 			foreach (var f in catalyst_frameworks.Values) {
@@ -608,6 +594,17 @@ public class Frameworks : Dictionary <string, Framework>
 					f.Version = v14_2;
 					f.VersionAvailableInSimulator = v14_2;
 					break;
+				// These frameworks are not available on Mac Catalyst
+				case "OpenGLES":
+				case "NewsstandKit":
+				case "MediaSetup":
+				case "NotificationCenter":
+				case "GLKit":
+				case "VideoSubscriberAccount":
+				// The headers for FileProviderUI exist, but the native linker fails
+				case "FileProviderUI":
+				// The headers for Twitter are there, , but no documentation whatsoever online and the native linker fails too
+				case "Twitter":
 				// headers-based xtro reporting those are *all* unknown API for Catalyst
 				case "AddressBookUI":
 				case "AppClip":
