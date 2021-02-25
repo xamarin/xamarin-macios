@@ -31,10 +31,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.iOS.Tasks.Windows",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.Messaging.Build", "Messaging\Xamarin.Messaging.Build\Xamarin.Messaging.Build.csproj", "{F515F859-A90B-4EF1-A0F2-D1BDD2C3FF36}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.Messaging", "Messaging\Xamarin.Messaging\Xamarin.Messaging.csproj", "{194FB8DC-FA72-4754-AECF-F3037823CF6A}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.Messaging.Build.Contracts", "Messaging\Xamarin.Messaging.Build.Contracts\Xamarin.Messaging.Build.Contracts.csproj", "{35C8C91F-EB52-4886-ABF0-30E9504BD4B8}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -139,22 +135,6 @@ Global
 		{F515F859-A90B-4EF1-A0F2-D1BDD2C3FF36}.Debug-net461|Any CPU.Build.0 = Debug|Any CPU
 		{F515F859-A90B-4EF1-A0F2-D1BDD2C3FF36}.Debug-netstandard2.0|Any CPU.ActiveCfg = Debug|Any CPU
 		{F515F859-A90B-4EF1-A0F2-D1BDD2C3FF36}.Debug-netstandard2.0|Any CPU.Build.0 = Debug|Any CPU
-		{194FB8DC-FA72-4754-AECF-F3037823CF6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{194FB8DC-FA72-4754-AECF-F3037823CF6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{194FB8DC-FA72-4754-AECF-F3037823CF6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{194FB8DC-FA72-4754-AECF-F3037823CF6A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{194FB8DC-FA72-4754-AECF-F3037823CF6A}.Debug-net461|Any CPU.ActiveCfg = Debug|Any CPU
-		{194FB8DC-FA72-4754-AECF-F3037823CF6A}.Debug-net461|Any CPU.Build.0 = Debug|Any CPU
-		{194FB8DC-FA72-4754-AECF-F3037823CF6A}.Debug-netstandard2.0|Any CPU.ActiveCfg = Debug|Any CPU
-		{194FB8DC-FA72-4754-AECF-F3037823CF6A}.Debug-netstandard2.0|Any CPU.Build.0 = Debug|Any CPU
-		{35C8C91F-EB52-4886-ABF0-30E9504BD4B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{35C8C91F-EB52-4886-ABF0-30E9504BD4B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{35C8C91F-EB52-4886-ABF0-30E9504BD4B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{35C8C91F-EB52-4886-ABF0-30E9504BD4B8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{35C8C91F-EB52-4886-ABF0-30E9504BD4B8}.Debug-net461|Any CPU.ActiveCfg = Debug|Any CPU
-		{35C8C91F-EB52-4886-ABF0-30E9504BD4B8}.Debug-net461|Any CPU.Build.0 = Debug|Any CPU
-		{35C8C91F-EB52-4886-ABF0-30E9504BD4B8}.Debug-netstandard2.0|Any CPU.ActiveCfg = Debug|Any CPU
-		{35C8C91F-EB52-4886-ABF0-30E9504BD4B8}.Debug-netstandard2.0|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -192,7 +172,5 @@ Global
 		{14A12D59-A630-42F1-BC19-A63A9D87DB3B} = {D669990B-EE95-4282-AAC4-17CA05AE0575}
 		{17E54157-C5DA-414C-8C28-7F642E6E4FB0} = {D669990B-EE95-4282-AAC4-17CA05AE0575}
 		{F515F859-A90B-4EF1-A0F2-D1BDD2C3FF36} = {F70FD520-F1A7-44F4-A7D5-2E3F471F7CC2}
-		{194FB8DC-FA72-4754-AECF-F3037823CF6A} = {F70FD520-F1A7-44F4-A7D5-2E3F471F7CC2}
-		{35C8C91F-EB52-4886-ABF0-30E9504BD4B8} = {F70FD520-F1A7-44F4-A7D5-2E3F471F7CC2}
 	EndGlobalSection
 EndGlobal
