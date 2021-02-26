@@ -5,6 +5,7 @@ using System.Linq;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
+using Xamarin.MacDev;
 using Xamarin.Localization.MSBuild;
 using Xamarin.Utils;
 
@@ -19,6 +20,9 @@ namespace Xamarin.MacDev.Tasks {
 
 		[Required]
 		public string TargetArchitectures { get; set; }
+
+		[Required]
+		public string AppManifest { get; set; }
 		#endregion
 
 		#region Outputs
@@ -68,10 +72,45 @@ namespace Xamarin.MacDev.Tasks {
 			}
 			plist [ProductDefinitionKeys.Architectures] = archArray;
 
+			if (!plist.TryGetValue (ProductDefinitionKeys.MinimumSystemVersion, out PArray osVersionArray))
+            {
+				var minOSVersion = GetMinimumOSVersion ();
+				if (minOSVersion != null)
+				{
+					osVersionArray = new PArray ();
+					osVersionArray.Add (new PString (minOSVersion));
+				}
+            }
+			if (osVersionArray != null)
+				plist [ProductDefinitionKeys.MinimumSystemVersion] = osVersionArray;
+
 			CompiledProductDefinition = new TaskItem (Path.Combine (OutputDirectory, "Product.plist"));
 			plist.Save (CompiledProductDefinition.ItemSpec, true, false);
 
 			return !Log.HasLoggedErrors;
+		}
+
+		private string GetMinimumOSVersion ()
+        {
+			PDictionary plist;
+
+			try
+			{
+				plist = PDictionary.FromFile (AppManifest);
+			}
+			catch (Exception ex)
+			{
+				Log.LogError (null, null, null, AppManifest, 0, 0, 0, 0, MSBStrings.E0010, AppManifest, ex.Message);
+				return null;
+			}
+
+			if (plist == null)
+			{
+				Log.LogError (null, null, null, AppManifest, 0, 0, 0, 0, MSBStrings.E0122, AppManifest);
+				return null;
+			}
+
+			return plist.GetMinimumSystemVersion ();
 		}
 
 		protected void LogProductDefinitionError (string format, params object [] args)
@@ -89,5 +128,6 @@ namespace Xamarin.MacDev.Tasks {
 
 	public static class ProductDefinitionKeys {
 		public const string Architectures = "arch";
+		public const string MinimumSystemVersion = "os";
 	}
 }

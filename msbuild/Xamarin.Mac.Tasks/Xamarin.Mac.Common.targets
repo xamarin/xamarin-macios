@@ -156,13 +156,14 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		</TextureAtlas>
 	</Target>
 
-	<Target Name="_CompileProductDefinition" Condition="$(CreatePackage)" DependsOnTargets="_ComputeTargetArchitectures">
+	<Target Name="_CompileProductDefinition" Condition="$(CreatePackage)" DependsOnTargets="_DetectAppManifest;_ComputeTargetArchitectures">
 		<CompileProductDefinition
 			Condition="'$(IsMacEnabled)' == 'true'"
 			SessionId="$(BuildSessionId)"
 			ProductDefinition="$(ProductDefinition)"
 			OutputDirectory = "$(IntermediateOutputPath)"
-			TargetArchitectures = "$(TargetArchitectures)">
+			TargetArchitectures = "$(TargetArchitectures)"
+			AppManifest = "$(_AppManifest)">
 			<Output TaskParameter="CompiledProductDefinition" PropertyName="_CompiledProductDefinition" />
 		</CompileProductDefinition>
 	</Target>
