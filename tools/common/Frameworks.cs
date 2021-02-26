@@ -591,6 +591,7 @@ public class Frameworks : Dictionary <string, Framework>
 				// These frameworks were added to Catalyst after they were added to iOS, so we have to adjust the Versions fields
 				case "AddressBook":
 				case "ClassKit":
+				case "UserNotificationsUI":
 					f.Version = v14_2;
 					f.VersionAvailableInSimulator = v14_2;
 					break;
