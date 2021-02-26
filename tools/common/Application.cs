@@ -1360,7 +1360,7 @@ namespace Xamarin.Bundler {
 #if NET
 						// Mono doesn't support dllmaps for Mac Catalyst / macOS in .NET for now:
 						// macOS: https://github.com/dotnet/runtime/issues/43204
-						// Mac Catalyst: https://github.com/dotnet/runtime/issue
+						// Mac Catalyst: https://github.com/dotnet/runtime/issues/48110
 						MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.Disable;
 #else
 						MarshalObjectiveCExceptions = EnableDebug ? MarshalObjectiveCExceptionMode.ThrowManagedException : MarshalObjectiveCExceptionMode.Disable;
