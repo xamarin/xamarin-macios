@@ -14,7 +14,11 @@
 //#define LOG_HTTP(...) do { NSLog (@ __VA_ARGS__); } while (0);
 #define LOG_HTTP(...)
 
+#include <TargetConditionals.h>
+
+#if !TARGET_OS_OSX
 #include <UIKit/UIKit.h>
+#endif
 
 #include <zlib.h>
 
