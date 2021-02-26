@@ -34,16 +34,12 @@ namespace MonoTouchFixtures.AVFoundation {
 				Compare (AVMediaType.MetadataObject, AVMediaTypes.MetadataObject);
 
 			// obsoleted in iOS 6, removed in iOS12
-#if __MACCATALYST__
-			var removed = true;
-#else
-			var removed = TestRuntime.CheckSystemVersion (PlatformName.iOS, 12, 0);
-#endif
-
-			if (removed)
+#if !__MACCATALYST__
+			if (TestRuntime.CheckSystemVersion (PlatformName.iOS, 12, 0))
 				Assert.Null (AVMediaType.TimedMetadata, "AVMediaTypeTimedMetadata");
 			else
 				Compare (AVMediaType.TimedMetadata, AVMediaTypes.TimedMetadata);
+#endif
 		}
 	}
 }

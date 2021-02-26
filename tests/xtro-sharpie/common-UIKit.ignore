@@ -166,6 +166,13 @@
 # Apple renamed it from UITextAlignment and we kept the old name for API compatibility
 !missing-enum! NSTextAlignment not bound
 
+## It got renamed from UITextWritingDirection to NSWritingDirection but it is a breaking change
+## Fixed in XAMCORE_4_0
+!unknown-native-enum! UITextWritingDirection bound
+
+## macro is used in UIBarCommon.h: #define UIToolbarPosition UIBarPosition
+!unknown-native-enum! UIToolbarPosition bound
+
 ## Protocol Inlined Maybe we want to change this in XAMCORE_4_0 since this predates our Category support
 !missing-protocol! UIResponderStandardEditActions not bound
 !missing-protocol-conformance! UIResponder should conform to UIResponderStandardEditActions

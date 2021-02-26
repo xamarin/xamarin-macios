@@ -504,5 +504,4 @@
 !missing-type! MPSSVGFDefaultTextureAllocator not bound
 !missing-type! MPSSVGFDenoiser not bound
 !missing-type! MPSTemporalAA not bound
-!unknown-simd-type-mapping! The Simd type vector_uchar16 does not have a mapping to a managed type. Please add one in SimdCheck.cs
 !wrong-base-type! MPSTriangleAccelerationStructure expected MPSPolygonAccelerationStructure actual MPSAccelerationStructure

@@ -49,6 +49,7 @@ namespace DeviceCheck {
 	}
 
 	[NoWatch, NoTV, NoMac]
+	[NoMacCatalyst]
 	[iOS (14,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]

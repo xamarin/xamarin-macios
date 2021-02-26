@@ -11643,11 +11643,13 @@ namespace Foundation
 	[Model, BaseType (typeof (NSObject))]
 	[Protocol]
 	interface NSPortDelegate {
+		[NoMacCatalyst]
 		[Export ("handlePortMessage:")]
 		void MessageReceived (NSPortMessage message);
 	}
 
 	[BaseType (typeof (NSObject))]
+	[NoMacCatalyst]
 	interface NSPortMessage {
 #if MONOMAC
 		[DesignatedInitializer]

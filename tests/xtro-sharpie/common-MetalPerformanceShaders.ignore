@@ -51,3 +51,6 @@
 !missing-enum-value! MPSCnnReductionType native value MPSCNNReductionTypeCount = 4 not bound
 !missing-enum-value! MPSImageFeatureChannelFormat native value MPSImageFeatureChannelFormatCount = 6 not bound
 !missing-enum-value! MPSRnnMatrixId native value MPSRNNMatrixId_count = 29 not bound
+
+# unused (came along some API yet to be bound)
+!unknown-simd-type-mapping! The Simd type vector_uchar16 does not have a mapping to a managed type. Please add one in SimdCheck.cs
