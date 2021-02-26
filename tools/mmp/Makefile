@@ -20,6 +20,7 @@ $(MMP_DIR)/mmp.exe: $(mmp_dependencies)
 
 MMP_TARGETS_DOTNET = \
 	$(DOTNET_DESTDIR)/Microsoft.macOS.Runtime.osx-x64/runtimes/osx-x64/native/Microsoft.macOS.registrar.a \
+	$(DOTNET_DESTDIR)/Microsoft.macOS.Runtime.osx-arm64/runtimes/osx-arm64/native/Microsoft.macOS.registrar.a \
 
 MMP_TARGETS = \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/mmp \
@@ -29,6 +30,7 @@ MMP_TARGETS = \
 
 MMP_DIRECTORIES_DOTNET = \
 	$(DOTNET_DESTDIR)/Microsoft.macOS.Runtime.osx-x64/runtimes/osx-x64/native \
+	$(DOTNET_DESTDIR)/Microsoft.macOS.Runtime.osx-arm64/runtimes/osx-arm64/native \
 
 MMP_DIRECTORIES = \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin \
@@ -47,6 +49,9 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp/Xamarin.Mac.registrar.%.a: Xa
 	$(Q) $(CP) $<* $(dir $@)
 
 $(DOTNET_DESTDIR)/Microsoft.macOS.Runtime.osx-x64/runtimes/osx-x64/native/Microsoft.macOS.registrar.a: Microsoft.macOS.registrar.x86_64.a | $(DOTNET_DESTDIR)/Microsoft.macOS.Runtime.osx-x64/runtimes/osx-x64/native
+	$(Q) $(CP) $< $@
+
+$(DOTNET_DESTDIR)/Microsoft.macOS.Runtime.osx-arm64/runtimes/osx-arm64/native/Microsoft.macOS.registrar.a: Microsoft.macOS.registrar.arm64.a | $(DOTNET_DESTDIR)/Microsoft.macOS.Runtime.osx-arm64/runtimes/osx-arm64/native
 	$(Q) $(CP) $< $@
 
 $(MMP_DIRECTORIES):
@@ -73,6 +78,10 @@ Microsoft.macOS.registrar.x86_64.m: $(TOP)/src/build/dotnet/macos/64/Xamarin.Mac
 Xamarin.Mac.registrar.full.x86_64.m:   $(TOP)/src/build/mac/full-64/Xamarin.Mac.dll $(LOCAL_MMP)
 	$(GENERATE_PART_REGISTRAR) --arch=x86_64 --target-framework Xamarin.Mac,Version=v4.5,Profile=Full -a:$(FULL_BCL_DIR)/mscorlib.dll
 	$(Q) touch Xamarin.Mac.registrar.full.x86_64.m Xamarin.Mac.registrar.full.x86_64.h
+
+Microsoft.macOS.registrar.arm64.m: $(TOP)/src/build/dotnet/macos/64/Xamarin.Mac.dll $(LOCAL_MMP)
+	$(GENERATE_PART_REGISTRAR) --arch=arm64 --target-framework .NETCoreApp,Version=6.0,Profile=macos -a:$(DOTNET6_BCL_DIR)/System.Runtime.dll
+	$(Q) touch $@ $(basename $@).h
 
 Xamarin.Mac.registrar.full.arm64.m:   $(TOP)/src/build/mac/full-64/Xamarin.Mac.dll $(LOCAL_MMP)
 	$(GENERATE_PART_REGISTRAR) --arch=arm64 --target-framework Xamarin.Mac,Version=v4.5,Profile=Full -a:$(FULL_BCL_DIR)/mscorlib.dll

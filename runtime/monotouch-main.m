@@ -183,7 +183,9 @@ inline void debug_launch_time_print (const char *msg)
  */
 
 #if defined (__arm__) || defined(__aarch64__)
+#if !defined (CORECLR_RUNTIME)
 extern void mono_gc_init_finalizer_thread (void);
+#endif
 #endif
 
 @interface XamarinGCSupport : NSObject {
@@ -214,9 +216,11 @@ extern void mono_gc_init_finalizer_thread (void);
 {
 	// COOP: ?
 #if defined (__arm__) || defined(__aarch64__)
+#if !defined (CORECLR_RUNTIME)
 	MONO_ENTER_GC_UNSAFE;
 	mono_gc_init_finalizer_thread ();
 	MONO_EXIT_GC_UNSAFE;
+#endif
 #endif
 }
 
