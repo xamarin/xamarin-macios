@@ -35,7 +35,10 @@ parameters:
 
 - name: devicePrefix
   type: string 
-  default: 'ios' # default context, since we started dealing with iOS devices. 
+  default: 'ios' # default context, since we started dealing with iOS devices.
+  
+- name: gitHubToken
+  type: string
 
 steps:
 
@@ -124,6 +127,7 @@ steps:
   displayName: 'Add provisioning profiles'
   timeoutInMinutes: 30
   env:
+    AUTH_TOKEN_GITHUB_COM: ${{ parameters.gitHubToken }}
     LOGIN_KEYCHAIN_PASSWORD: ${{ parameters.keyringPass }}
 
 # download the artifacts.json, which will use to find the URI of the built pkg to later be installed by provisionator
