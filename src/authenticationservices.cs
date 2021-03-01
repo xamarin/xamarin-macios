@@ -49,9 +49,15 @@ namespace AuthenticationServices {
 	}
 
 	[Partial]
+#if TVOS || WATCH
+	// The associated enum is not generated (which is normal)
+	// without this define the attributes would be duplicated
+	// on other platforms (where the enum exists)
+	[NoTV][NoWatch]
+#endif
 	interface ASExtensionErrorCodeExtensions {
 
-		[NoWatch, NoTV, NoMac, iOS (14,0)]
+		[NoMac, iOS (14,0)]
 		[Field ("ASExtensionLocalizedFailureReasonErrorKey")]
 		NSString LocalizedFailureReasonErrorKey { get; }
 	}
