@@ -452,7 +452,7 @@ steps:
     {
         foreach($pkg in $files)
         {
-            Write-Host "Zipping $($pkg.FullName) into $zipFileName..."
+            Write-Host "Notarizing $($pkg.FullName) into"
             & dotnet $Env:MBSIGN_APPFOLDER/DDSignFiles.dll /file:"$($pkg.FullName)" /certs:"8020"
         }
     }
