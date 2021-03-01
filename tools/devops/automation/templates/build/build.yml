@@ -445,7 +445,7 @@ steps:
 
 - pwsh: |
     # so... we have to many pkgs, that results in timeouts, so we need to split things and call it several times
-    $pkgDir = $(Build.SourcesDirectory)/package/notarized 
+    $pkgDir = "$(Build.SourcesDirectory)/package/notarized"
     $files = @(Get-ChildItem -Path "$pkgDir/*" -Filter "*.pkg")
     # we are going to be one by one... why? because if we send all, we timeout!!!!
     if ($files.count -gt 0)
