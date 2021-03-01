@@ -143,6 +143,7 @@ stages:
     iOSDeviceDemand: 'xismoke-32'
     vsdropsPrefix: ${{ variables.vsdropsPrefix }}
     keyringPass: $(xma-password)
+    gitHubToken: ${{ variables["GitHub.Token"] }}
 
 - template: templates/devices/stage.yml
   parameters:
@@ -156,6 +157,7 @@ stages:
     iOSDeviceDemand: 'ios'
     vsdropsPrefix: ${{ variables.vsdropsPrefix }}
     keyringPass: $(xma-password)
+    gitHubToken: ${{ variables["GitHub.Token"] }}
 
 - template: templates/devices/stage.yml
   parameters:
@@ -169,6 +171,7 @@ stages:
     iOSDeviceDemand: 'tvos'
     vsdropsPrefix: ${{ variables.vsdropsPrefix }}
     keyringPass: $(xma-password)
+    gitHubToken: ${{ variables["GitHub.Token"] }}
 
 - template: templates/mac/stage.yml
   parameters:
