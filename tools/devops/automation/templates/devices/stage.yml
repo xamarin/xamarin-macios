@@ -47,7 +47,10 @@ parameters:
 
 - name: devicePrefix
   type: string
-  default: 'ios' # default context, since we started dealing with iOS devices. 
+  default: 'ios' # default context, since we started dealing with iOS devices.
+  
+- name: gitHubToken
+  type: string
 
 stages:
 - stage:
@@ -74,6 +77,7 @@ stages:
         vsdropsPrefix: ${{ parameters.vsdropsPrefix }} 
         keyringPass: ${{ parameters.keyringPass }} 
         devicePrefix: ${{ parameters.devicePrefix }}
+        gitHubToken: ${{ parameters.gitHubToken }}
 
   - job: upload_vsdrops
     displayName: 'Upload report to vsdrops'
