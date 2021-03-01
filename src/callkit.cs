@@ -86,7 +86,7 @@ namespace CallKit {
 	{
 		Unknown = 0,
 		InvalidClientProcess = 1,
-		MissingNotificationFilteringEntitlement = 2
+		MissingNotificationFilteringEntitlement = 2,
 	}
 
 	[iOS (10, 0), Mac (11, 0)]
