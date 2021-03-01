@@ -1,4 +1,0 @@
-!missing-enum! CXErrorCodeNotificationServiceExtensionError not bound
-!missing-enum-value! CXErrorCode native value CXErrorCodeMissingVoIPBackgroundMode = 3 not bound
-!missing-field! CXErrorDomainNotificationServiceExtension not bound
-!missing-selector! +CXProvider::reportNewIncomingVoIPPushPayload:completion: not bound
