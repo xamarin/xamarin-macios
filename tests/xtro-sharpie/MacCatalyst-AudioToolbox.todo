@@ -39,4 +39,3 @@
 !missing-pinvoke! MusicSequenceSaveMIDIFile is not bound
 !missing-pinvoke! MusicSequenceSaveSMFData is not bound
 !missing-pinvoke! NewMusicTrackFrom is not bound
-!unknown-pinvoke! AudioComponentGetIcon bound

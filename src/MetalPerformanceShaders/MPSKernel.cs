@@ -20,11 +20,9 @@ namespace MetalPerformanceShaders {
 		}
 
 		[DllImport (Constants.MetalPerformanceShadersLibrary)]
-		[Introduced (PlatformName.MacCatalyst, 13, 0)]
 		[TV (13,0), Mac (10,15), iOS (13,0)]
 		static extern /* id<MTLDevice> _Nullable */ IntPtr MPSGetPreferredDevice (nuint options);
 
-		[Introduced (PlatformName.MacCatalyst, 13, 0)]
 		[TV (13,0), Mac (10,15), iOS (13,0)]
 		public static IMTLDevice GetPreferredDevice (MPSDeviceOptions options)
 		{
@@ -72,11 +70,11 @@ namespace MetalPerformanceShaders {
 #if !COREBUILD
 	public partial class MPSImage {
 
-		[iOS (13,0), TV (12,0), Mac (10,15)][Introduced (PlatformName.MacCatalyst, 13, 0)]
+		[iOS (13,0), TV (12,0), Mac (10,15)]
 		[DllImport (Constants.MetalPerformanceShadersLibrary)]
 		static extern MPSImageType MPSGetImageType (IntPtr image);
 
-		[iOS (13,0), TV (12,0), Mac (10,15)][Introduced (PlatformName.MacCatalyst, 13, 0)]
+		[iOS (13,0), TV (12,0), Mac (10,15)]
 		public MPSImageType ImageType => MPSGetImageType (Handle);
 	}
 

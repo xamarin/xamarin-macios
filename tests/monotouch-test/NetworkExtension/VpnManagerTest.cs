@@ -45,7 +45,7 @@ namespace MonoTouchFixtures.NetworkExtension {
 			var HasLocalizedDescription = TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 11);
 #endif
 			if (HasLocalizedDescription) {
-#if MONOMAC
+#if MONOMAC && !NET
 				Assert.AreEqual ("xammac_tests", shared.LocalizedDescription, "LocalizedDescription");
 #else
 				Assert.AreEqual ("MonoTouchTest", shared.LocalizedDescription, "LocalizedDescription");

@@ -502,12 +502,24 @@ steps:
   continueOnError: true
 
 - bash: |
+    report_error ()
+    {
+      MESSAGE=$(printf ":fire: Failed to create API Diff from stable (%s/console) :fire:")
+      echo "##vso[task.setvariable variable=APIDIFF_MESSAGE;isOutput=true]$MESSAGE"
+      echo "##vso[task.setvariable variable=APIDIFF_BUILT;isOutput=true]False"
+    }
+    trap report_error ERR
+
     make -j8 -C $(Build.SourcesDirectory)/xamarin-macios/tools/apidiff jenkins-api-diff
 
     # remove some files that do not need to be uploaded
     cd $(Build.SourcesDirectory)/xamarin-macios/tools/apidiff/
     rm -Rf *.exe *.pdb *.stamp *.zip *.sh ./references ./temp
+    MESSAGE=":white_check_mark: API Diff from stable"
+    echo "##vso[task.setvariable variable=APIDIFF_MESSAGE;isOutput=true]$MESSAGE"
+    echo "##vso[task.setvariable variable=APIDIFF_BUILT;isOutput=true]True"
   displayName: 'API diff (from stable)'
+  name: apidiff
   condition: and(succeeded(), contains(variables['configuration.SkipPublicJenkins'], 'False'))
   continueOnError: true
   env:
@@ -556,12 +568,18 @@ steps:
   displayName: 'Run tests'
   name: runTests # not to be confused with the displayName, this is used to later use the name of the step to access the output variables from an other job
   timeoutInMinutes: 600
-  condition: succeededOrFailed() # we do not care about the previous process cleanup
   enabled: ${{ parameters.runTests }}
   env:
     BUILD_REVISION: jenkins
     TARGET: 'wrench-jenkins'
     VSDROPS_URI: '${{ parameters.vsdropsPrefix }}/$(Build.BuildNumber)/$(Build.BuildId)/sim;/tests/' # uri used to create the vsdrops index using full uri
+
+# Only executed when the tests failed, that means that we did have a timeout, and we could not set the status, this 
+# later results on an error when publishing the results, if we timeout, we ensure we set the needed vars
+- bash: |
+    echo "##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Failed"
+  displayName: 'On tests timeout'
+  condition: failed()
 
 # Upload TestSummary as an artifact.
 - task: PublishPipelineArtifact@1

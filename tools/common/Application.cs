@@ -1357,7 +1357,14 @@ namespace Xamarin.Bundler {
 						break;
 					case ApplePlatform.MacOSX:
 					case ApplePlatform.MacCatalyst:
+#if NET
+						// Mono doesn't support dllmaps for Mac Catalyst / macOS in .NET for now:
+						// macOS: https://github.com/dotnet/runtime/issues/43204
+						// Mac Catalyst: https://github.com/dotnet/runtime/issues/48110
+						MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.Disable;
+#else
 						MarshalObjectiveCExceptions = EnableDebug ? MarshalObjectiveCExceptionMode.ThrowManagedException : MarshalObjectiveCExceptionMode.Disable;
+#endif
 						break;
 					default:
 						throw ErrorHelper.CreateError (71, Errors.MX0071 /* Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case. */, Platform, ProductName);

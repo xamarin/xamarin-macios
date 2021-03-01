@@ -197,12 +197,32 @@ define NativeCompilationTemplate
 
 .libs/tvos/%$(1).arm64.framework: | .libs/tvos
 	$$(call Q_2,LD,    [tvos]) $(DEVICE_CC)    $(DEVICETV_CFLAGS)            $$(EXTRA_FLAGS) -dynamiclib -o $$@ $$^ -F$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks -fapplication-extension
+
+## macOS
+
+.libs/mac/%$(1).x86_64.o: %.m $(EXTRA_DEPENDENCIES) | .libs/mac
+	$$(call Q_2,OBJC,  [mac]) $(MAC_CC) $(MAC_OBJC_CFLAGS) $$(EXTRA_DEFINES) -arch x86_64 $(COMMON_I) -g $(2) -c $$< -o $$@
+
+.libs/mac/%$(1).x86_64.o: %.c $(EXTRA_DEPENDENCIES) | .libs/mac
+	$$(call Q_2,CC,    [mac]) $(MAC_CC) $(MAC_CFLAGS)      $$(EXTRA_DEFINES) -arch x86_64 $(COMMON_I) -g $(2) -c $$< -o $$@
+
+.libs/mac/%$(1).x86_64.o: %.s $(EXTRA_DEPENDENCIES) | .libs/mac
+	$$(call Q_2,ASM,   [mac]) $(MAC_CC) $(MAC_CFLAGS)                        -arch x86_64  $(COMMON_I) -g $(2) -c $$< -o $$@
+
+.libs/mac/%$(1).x86_64.dylib: | .libs/mac
+	$$(call Q_2,LD,    [mac]) $(MAC_CC) $(MAC_CFLAGS)      $$(EXTRA_FLAGS) -arch x86_64 -dynamiclib -o $$@ $$^ -L$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/lib -fapplication-extension
+
+.libs/mac/%$(1).x86_64.framework: | .libs/mac
+	$$(call Q_2,LD,    [mac]) $(MAC_CC) $(MAC_CFLAGS)      $$(EXTRA_FLAGS) -arch x86_64 -dynamiclib -o $$@ $$^ -F$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/Frameworks -fapplication-extension
+
 endef
 
 $(eval $(call NativeCompilationTemplate,,-O2))
 $(eval $(call NativeCompilationTemplate,-debug,-DDEBUG))
+$(eval $(call NativeCompilationTemplate,-dotnet,-O2))
+$(eval $(call NativeCompilationTemplate,-dotnet-debug,-DDEBUG))
 
-.libs/iphoneos .libs/iphonesimulator .libs/watchos .libs/watchsimulator .libs/tvos .libs/tvsimulator .libs/maccatalyst:
+.libs/iphoneos .libs/iphonesimulator .libs/watchos .libs/watchsimulator .libs/tvos .libs/tvsimulator .libs/maccatalyst .libs/mac:
 	$(Q) mkdir -p $@
 
 %.csproj.inc: %.csproj $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/tools/common/create-makefile-fragment.sh

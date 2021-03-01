@@ -26,7 +26,6 @@ namespace MediaPlayer {
 
 #if !XAMCORE_4_0
 	public partial class MPPlayableContentDataSource : NSObject {
-		[Unavailable (PlatformName.MacOSX, PlatformArchitecture.All)]
 		[iOS (10, 0)]
 		[Obsolete ("Use 'MPPlayableContentDataSource_Extensions.GetContentItemAsync' instead.")]
 		public unsafe virtual Task<MPContentItem> GetContentItemAsync (string identifier)

@@ -7,7 +7,7 @@
 // Copyright 2016 Xamarin Inc. All rights reserved.
 //
 
-#if !__TVOS__ && !__WATCHOS__ && !MONOMAC
+#if HAS_MESSAGE
 
 using System;
 using Foundation;
@@ -42,4 +42,4 @@ namespace MonoTouchFixtures.Messages
 	}
 }
 
-#endif // !__TVOS__ && !__WATCHOS__
+#endif // HAS_MESSAGE

@@ -76,7 +76,12 @@ namespace Xharness.Jenkins.TestTasks {
 			} else {
 				var project = new XmlDocument ();
 				project.LoadWithoutNetworkAccess (ProjectFile);
-				var outputPath = project.GetOutputPath (BuildTask.ProjectPlatform, BuildTask.ProjectConfiguration).Replace ('\\', '/');
+				string outputPath;
+				if (TestProject?.IsDotNetProject == true) {
+					outputPath = await Harness.AppBundleLocator.LocateAppBundle (project, ProjectFile, TestTarget.None, BuildTask.ProjectConfiguration);
+				} else {
+					outputPath = project.GetOutputPath (BuildTask.ProjectPlatform, BuildTask.ProjectConfiguration).Replace ('\\', '/');
+				}
 				var assemblyName = project.GetAssemblyName ();
 				Path = System.IO.Path.Combine (System.IO.Path.GetDirectoryName (ProjectFile), outputPath, assemblyName + ".app", "Contents", "MacOS", assemblyName);
 			}

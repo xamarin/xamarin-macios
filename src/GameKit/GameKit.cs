@@ -304,6 +304,7 @@ namespace GameKit {
 	[iOS (11,3)][Deprecated (PlatformName.iOS, 14,0, message: "Do not use; this API was removed.")]
 	[Mac (10,13,4)][Deprecated (PlatformName.MacOSX, 11,0, message: "Do not use; this API was removed.")]
 	[TV (11,3)][Deprecated (PlatformName.TvOS, 14,0, message: "Do not use; this API was removed.")]
+	[NoMacCatalyst]
 	[Native]
 	public enum GKAuthenticationType : ulong {
 		WithoutUI = 0,

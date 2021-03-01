@@ -38,7 +38,6 @@ namespace StoreKit {
 		protected internal SKAdNetwork (IntPtr handle) : base (handle) { }
 
 		[Obsolete ("Throws a 'NotSupportedException'.")]
-		[Unavailable (PlatformName.TvOS)]
 		public static void RegisterAppForAdNetworkAttribution () => throw new NotSupportedException ();
 	}
 }

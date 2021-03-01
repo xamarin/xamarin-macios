@@ -557,7 +557,11 @@ namespace Xamarin.Bundler {
 						GenerateIOSMain (sw, abi);
 						break;
 					case ApplePlatform.MacOSX:
+#if NET
+						GenerateIOSMain (sw, abi);
+#else
 						GenerateMacMain (sw);
+#endif
 						break;
 					default:
 						throw ErrorHelper.CreateError (71, Errors.MX0071, platform, App.ProductName);

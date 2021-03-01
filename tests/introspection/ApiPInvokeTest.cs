@@ -223,6 +223,10 @@ namespace Introspection
 					case "libSystem.Native":
 						path += ".dylib";
 						break;
+					case "QCall":
+						if (name.StartsWith ("LogThreadPool", StringComparison.Ordinal))
+							continue;
+						break;
 #endif
 					case "libc":
 						// we still have some rogue/not-fully-qualified DllImport

@@ -9,10 +9,12 @@
     <EnableDefaulttvOSItems Condition=" '$(_PlatformName)' == 'tvOS' And '$(EnableDefaulttvOSItems)' == '' ">$(EnableDefaultItems)</EnableDefaulttvOSItems>
     <EnableDefaultwatchOSItems Condition=" '$(_PlatformName)' == 'watchOS' And '$(EnableDefaultwatchOSItems)' == '' ">$(EnableDefaultItems)</EnableDefaultwatchOSItems>
     <EnableDefaultmacOSItems Condition=" '$(_PlatformName)' == 'macOS' And '$(EnableDefaultmacOSItems)' == '' ">$(EnableDefaultItems)</EnableDefaultmacOSItems>
+    <EnableDefaultMacCatalystItems Condition=" '$(_PlatformName)' == 'MacCatalyst' And '$(EnableDefaultMacCatalystItems)' == '' ">$(EnableDefaultItems)</EnableDefaultMacCatalystItems>
     <_EnableDefaultXamarinItems Condition=" '$(_PlatformName)' == 'iOS' ">$(EnableDefaultiOSItems)</_EnableDefaultXamarinItems>
     <_EnableDefaultXamarinItems Condition=" '$(_PlatformName)' == 'tvOS' ">$(EnableDefaulttvOSItems)</_EnableDefaultXamarinItems>
     <_EnableDefaultXamarinItems Condition=" '$(_PlatformName)' == 'watchOS' ">$(EnableDefaultwatchOSItems)</_EnableDefaultXamarinItems>
     <_EnableDefaultXamarinItems Condition=" '$(_PlatformName)' == 'macOS' ">$(EnableDefaultmacOSItems)</_EnableDefaultXamarinItems>
+    <_EnableDefaultXamarinItems Condition=" '$(_PlatformName)' == 'MacCatalyst' ">$(EnableDefaultMacCatalystItems)</_EnableDefaultXamarinItems>
 
     <!-- Don't include default Compile items for binding projects, because that would pick up ApiDefinition.cs and StructsAndEnums.cs -->
     <EnableDefaultCompileItems Condition=" '$(IsBindingProject)' == 'true' ">false</EnableDefaultCompileItems>
@@ -44,10 +46,14 @@
   <PropertyGroup Condition=" '$(TargetArchitectures)' == '' And '$(_PlatformName)' == 'macOS' ">
     <TargetArchitectures Condition=" '$(RuntimeIdentifier)' == 'osx-x64' ">x86_64</TargetArchitectures>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(TargetArchitectures)' == '' And '$(_PlatformName)' == 'MacCatalyst' ">
+    <TargetArchitectures Condition=" '$(RuntimeIdentifier)' == 'maccatalyst-x64' ">x86_64</TargetArchitectures>
+    <TargetArchitectures Condition=" '$(RuntimeIdentifier)' == 'maccatalyst-arm64' ">arm64</TargetArchitectures>
+  </PropertyGroup>
 
-  <PropertyGroup Condition="'$(ComputedPlatform)' == ''">
-    <ComputedPlatform Condition="'$(_PlatformName)' != 'macOS' And ($(TargetArchitectures.Contains('i386')) Or $(TargetArchitectures.Contains('x86_64')))">iPhoneSimulator</ComputedPlatform>
-    <ComputedPlatform Condition="'$(_PlatformName)' != 'macOS' And '$(ComputedPlatform)' == ''">iPhone</ComputedPlatform>
+  <PropertyGroup Condition="'$(ComputedPlatform)' == '' And ('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS') ">
+    <ComputedPlatform Condition="$(TargetArchitectures.Contains('i386')) Or $(TargetArchitectures.Contains('x86_64'))">iPhoneSimulator</ComputedPlatform>
+    <ComputedPlatform Condition="'$(ComputedPlatform)' == ''">iPhone</ComputedPlatform>
   </PropertyGroup>
 
   <!-- Declare the XI/XM framework bundled with this version of the SDK. See Microsoft.NETCoreSdk.BundledVersions.props -->
@@ -57,6 +63,7 @@
     <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'tvOS' ">tvos-x64;tvos-arm64</_RuntimePackRuntimeIdentifiers>
     <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'watchOS' ">watchos-x86;watchos-x64;watchos-arm</_RuntimePackRuntimeIdentifiers>
     <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'macOS' ">osx-x64</_RuntimePackRuntimeIdentifiers>
+    <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'MacCatalyst' ">maccatalyst-x64;maccatalyst-arm64</_RuntimePackRuntimeIdentifiers>
   </PropertyGroup>
 
   <ItemGroup>

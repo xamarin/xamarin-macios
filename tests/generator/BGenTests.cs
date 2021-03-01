@@ -228,10 +228,10 @@ namespace GeneratorTests
 #if NET
 			var preserves = allMembers.Sum ((v) => v.CustomAttributes.Count ((ca) => ca.AttributeType.Name == "SupportedOSPlatformAttribute"));
 			// 2 less because we cannot decorate the interfaces themselves (just the members)
-			Assert.AreEqual (6, preserves, "SupportedOSPlatform attribute count");
+			Assert.AreEqual (8, preserves, "SupportedOSPlatform attribute count");
 #else
 			var preserves = allMembers.Sum ((v) => v.CustomAttributes.Count ((ca) => ca.AttributeType.Name == "IntroducedAttribute"));
-			Assert.AreEqual (8, preserves, "Introduced attribute count"); // If you modified code that generates IntroducedAttributes please update the attribute count
+			Assert.AreEqual (10, preserves, "Introduced attribute count"); // If you modified code that generates IntroducedAttributes please update the attribute count
 #endif
 		}
 

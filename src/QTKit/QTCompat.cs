@@ -115,7 +115,6 @@ namespace QTKit {
 			get { return default(Foundation.NSString); }
 		}
 
-		[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 		public static class Notifications : System.Object {
 			public static Foundation.NSObject ObserveAttributeDidChange (System.EventHandler<Foundation.NSNotificationEventArgs> handler)
 			{
@@ -353,7 +352,6 @@ namespace QTKit {
 			get { return default(Foundation.NSString); }
 		}
 
-		[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 		public static class Notifications : System.Object {
 			public static Foundation.NSObject ObserveAttributeDidChange (System.EventHandler<Foundation.NSNotificationEventArgs> handler)
 			{
@@ -1786,7 +1784,6 @@ namespace QTKit {
 			get { return default(Foundation.NSString); }
 		}
 
-		[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 		public static class Notifications : System.Object {
 			public static Foundation.NSObject ObserveApertureModeDidChange (System.EventHandler<Foundation.NSNotificationEventArgs> handler)
 			{
@@ -2884,7 +2881,6 @@ namespace QTKit {
 			get { return default(Foundation.NSString); }
 		}
 
-		[ObjCRuntime.Obsoleted (ObjCRuntime.PlatformName.MacOSX, 10,15, message: ObjCRuntime.Constants.MacOS32bitsUnavailable)]
 		public static class Notifications : System.Object {
 			public static Foundation.NSObject ObserveRuntimeError (System.EventHandler<Foundation.NSNotificationEventArgs> handler)
 			{

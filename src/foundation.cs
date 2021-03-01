@@ -37,8 +37,10 @@ using CoreData;
 using CoreFoundation;
 using Foundation;
 using CoreGraphics;
-#if IOS
+#if HAS_APPCLIP
 using AppClip;
+#endif
+#if IOS
 using QuickLook;
 #endif
 #if !TVOS
@@ -4002,7 +4004,6 @@ namespace Foundation
 #if !XAMCORE_3_0
 		// now exposed with the corresponding EABluetoothAccessoryPickerError enum
 		[NoMac, NoTV, NoWatch]
-		[NoTV]
 		[Field ("EABluetoothAccessoryPickerErrorDomain", "ExternalAccessory")]
 		NSString EABluetoothAccessoryPickerErrorDomain { get; }
 
@@ -5426,11 +5427,13 @@ namespace Foundation
 		[NullAllowed, Export ("targetContentIdentifier")]
 		string TargetContentIdentifier { get; set; }
 
+#if HAS_APPCLIP
 		// Inlined from NSUserActivity (AppClip)
 		[iOS (14,0)][NoTV][NoMac][NoWatch]
 		[Export ("appClipActivationPayload", ArgumentSemantic.Strong)]
 		[NullAllowed]
 		APActivationPayload AppClipActivationPayload { get; }
+#endif
 	}
 
 	[iOS (8,0)][Mac (10,10)] // same as NSUserActivity
@@ -6532,35 +6535,35 @@ namespace Foundation
 		string AsString ();
 
 		[iOS (9,0), Mac(10,11)]
-		[Export ("rangeOfScheme"), Mac(10,11)]
+		[Export ("rangeOfScheme")]
 		NSRange RangeOfScheme { get; }
 
 		[iOS (9,0), Mac(10,11)]
-		[Export ("rangeOfUser"), Mac(10,11)]
+		[Export ("rangeOfUser")]
 		NSRange RangeOfUser { get; }
 
 		[iOS (9,0), Mac(10,11)]
-		[Export ("rangeOfPassword"), Mac(10,11)]
+		[Export ("rangeOfPassword")]
 		NSRange RangeOfPassword { get; }
 
 		[iOS (9,0), Mac(10,11)]
-		[Export ("rangeOfHost"), Mac(10,11)]
+		[Export ("rangeOfHost")]
 		NSRange RangeOfHost { get; }
 
 		[iOS (9,0), Mac(10,11)]
-		[Export ("rangeOfPort"), Mac(10,11)]
+		[Export ("rangeOfPort")]
 		NSRange RangeOfPort { get; }
 
 		[iOS (9,0), Mac(10,11)]
-		[Export ("rangeOfPath"), Mac(10,11)]
+		[Export ("rangeOfPath")]
 		NSRange RangeOfPath { get; }
 
 		[iOS (9,0), Mac(10,11)]
-		[Export ("rangeOfQuery"), Mac(10,11)]
+		[Export ("rangeOfQuery")]
 		NSRange RangeOfQuery { get; }
 
 		[iOS (9,0), Mac(10,11)]
-		[Export ("rangeOfFragment"), Mac(10,11)]
+		[Export ("rangeOfFragment")]
 		NSRange RangeOfFragment { get; }
 
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
@@ -11639,11 +11642,13 @@ namespace Foundation
 	[Model, BaseType (typeof (NSObject))]
 	[Protocol]
 	interface NSPortDelegate {
+		[NoMacCatalyst]
 		[Export ("handlePortMessage:")]
 		void MessageReceived (NSPortMessage message);
 	}
 
 	[BaseType (typeof (NSObject))]
+	[NoMacCatalyst]
 	interface NSPortMessage {
 #if MONOMAC
 		[DesignatedInitializer]

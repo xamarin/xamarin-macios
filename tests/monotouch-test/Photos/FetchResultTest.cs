@@ -7,7 +7,7 @@
 // Copyright 2013 Xamarin Inc. All rights reserved.
 //
 
-#if !__TVOS__ && !__WATCHOS__ && !MONOMAC
+#if HAS_PHOTOS && !__TVOS__
 
 using System;
 using System.Linq;
@@ -16,7 +16,9 @@ using UIKit;
 using ObjCRuntime;
 using Photos;
 using CoreGraphics;
+#if HAS_ASSETSLIBRARY
 using AssetsLibrary;
+#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Photos {
@@ -25,14 +27,25 @@ namespace MonoTouchFixtures.Photos {
 	[Preserve (AllMembers = true)]
 	public class FetchResultTest {
 
+		[SetUp]
+		public void Setup ()
+		{
+			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+#if HAS_ASSETSLIBRARY
+			if (ALAssetsLibrary.AuthorizationStatus != ALAuthorizationStatus.Authorized)
+				Assert.Inconclusive ("Requires access to the photo library");
+#elif __MACCATALYST__
+			TestRuntime.AssertSystemVersion (PlatformName.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
+			if (PHPhotoLibrary.GetAuthorizationStatus (PHAccessLevel.ReadWrite) != PHAuthorizationStatus.Authorized)
+				Assert.Inconclusive ("Requires access to the photo library");
+#else
+#error Add authorization check for the platform
+#endif
+		}
+
 		[Test]
 		public void FetchResultToArray ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
-
-			if (ALAssetsLibrary.AuthorizationStatus != ALAuthorizationStatus.Authorized)
-				Assert.Inconclusive ("Requires access to the photo library");
-
 			var collection = PHAsset.FetchAssets (PHAssetMediaType.Image, null);
 			if (collection.Count == 0) {
 				XamagramImage.Image.SaveToPhotosAlbum (null);
@@ -47,11 +60,6 @@ namespace MonoTouchFixtures.Photos {
 		[Test]
 		public void FetchResultIndex ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
-				
-			if (ALAssetsLibrary.AuthorizationStatus != ALAuthorizationStatus.Authorized)
-				Assert.Inconclusive ("Requires access to the photo library");
-
 			var collection = PHAsset.FetchAssets (PHAssetMediaType.Image, null);
 			if (collection.Count == 0) {
 				XamagramImage.Image.SaveToPhotosAlbum (null);
@@ -66,11 +74,6 @@ namespace MonoTouchFixtures.Photos {
 		[Test]
 		public void FetchResultObjectsAt ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
-
-			if (ALAssetsLibrary.AuthorizationStatus != ALAuthorizationStatus.Authorized)
-				Assert.Inconclusive ("Requires access to the photo library");
-
 			var collection = PHAsset.FetchAssets (PHAssetMediaType.Image, null);
 			if (collection.Count == 0) {
 				XamagramImage.Image.SaveToPhotosAlbum (null);
@@ -137,4 +140,4 @@ namespace MonoTouchFixtures.Photos {
 	}
 }
 
-#endif // !__TVOS__ && !__WATCHOS__
+#endif // HAS_PHOTOS && !__TVOS__

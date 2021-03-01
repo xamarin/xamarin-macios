@@ -387,4 +387,3 @@
 !missing-type! NSOrderedCollectionChange not bound
 !missing-type! NSOrderedCollectionDifference not bound
 !missing-type! NSURLHandle not bound
-!unknown-type! NSPortMessage bound

@@ -24,14 +24,21 @@ namespace Xamarin.Tests {
 		{
 			var nuget_conf = Path.Combine (root, "NuGet.config");
 			// We're cloning into a subdirectory of xamarin-macios, which already has a NuGet.config
-			// So create a Nuget.config that clears out any previous configuration, so that none of the
-			// sample tests pick up xamarin-macios' NuGet.config.
+			// So create a Nuget.config that clears out any previous configuration and adds nuget.org as
+			// single nuget source so that none of the sample tests pick up xamarin-macios' NuGet.config.
 			File.WriteAllText (nuget_conf,
 @"<?xml version=""1.0"" encoding=""utf-8""?>
 <configuration>
 	<config>
 		<clear />
 	</config>
+	<packageSources>
+		<clear />
+		<add key=""nuget.org"" value=""https://api.nuget.org/v3/index.json"" />
+	</packageSources>
+	<disabledPackageSources>
+		<clear />
+	</disabledPackageSources>
 </configuration>
 ");
 		}

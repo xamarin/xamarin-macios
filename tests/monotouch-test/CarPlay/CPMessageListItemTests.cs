@@ -7,7 +7,7 @@
 // Copyright (c) Microsoft Corporation.
 //
 
-#if __IOS__
+#if HAS_CARPLAY
 using System;
 using NUnit.Framework;
 
@@ -63,4 +63,4 @@ namespace MonoTouchFixtures.CarPlay {
 
 	}
 }
-#endif // __IOS__
+#endif // HAS_CARPLAY

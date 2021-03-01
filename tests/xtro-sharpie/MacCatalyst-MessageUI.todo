@@ -1,9 +1,0 @@
-!unknown-field! MFMailComposeErrorDomain bound
-!unknown-field! MFMessageComposeViewControllerAttachmentAlternateFilename bound
-!unknown-field! MFMessageComposeViewControllerAttachmentURL bound
-!unknown-field! MFMessageComposeViewControllerTextMessageAvailabilityDidChangeNotification bound
-!unknown-field! MFMessageComposeViewControllerTextMessageAvailabilityKey bound
-!unknown-protocol! MFMailComposeViewControllerDelegate bound
-!unknown-protocol! MFMessageComposeViewControllerDelegate bound
-!unknown-type! MFMailComposeViewController bound
-!unknown-type! MFMessageComposeViewController bound
