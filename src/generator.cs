@@ -5843,13 +5843,6 @@ public partial class Generator : IMemberGatherer {
 			var mod = string.Empty;
 
 			PrintMethodAttributes (minfo);
-#if NET
-			// TODO - generate them only if they do not exists on the member
-//			PrintPlatformAttributes (type);
-			PrintPlatformAttributes (mi);
-#else
-			PrintPlatformAttributes (mi);
-#endif
 			print_generated_code ();
 			PrintDelegateProxy (minfo);
 			PrintExport (minfo);
