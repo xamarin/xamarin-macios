@@ -1,7 +1,7 @@
 # Main template that contains all the jobs that are required to run the device tests.
 #
 # The stage contains two different jobs
-# 
+#
 # tests: Runs the tests on a pool that contains devices that are capable to run them.
 # publish_html: Because vsdrop is not supported on macOS we have an extra job that
 #   will run on a pool with Windows devices that will publish the results on VSDrop to
@@ -11,13 +11,13 @@ parameters:
 
 # string that is used to identify the status to be used to expose the result on GitHub
 - name: statusContext
-  type: string 
-  default: 'iOS Device Tests' # default context, since we started dealing with iOS devices. 
+  type: string
+  default: 'iOS Device Tests' # default context, since we started dealing with iOS devices.
 
 # string that contains the extra labels to pass to xharness to select the tests to execute.
 - name: testsLabels
-  type: string 
-  default: '--label=run-ios-64-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests' # default context, since we started dealing with iOS devices. 
+  type: string
+  default: '--label=run-ios-64-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests' # default context, since we started dealing with iOS devices.
 
 # name of the pool that contains the iOS devices
 - name: iOSDevicePool
@@ -27,16 +27,16 @@ parameters:
 # demand that has to be matched by a bot to be able to run the tests.
 - name: iOSDeviceDemand
   type: string
-  default: 'xismoke' 
+  default: 'xismoke'
 
 - name: useXamarinStorage
   type: boolean
   default: false
 
-- name: vsdropsPrefix 
+- name: vsdropsPrefix
   type: string
 
-- name: stageName 
+- name: stageName
   type: string
 
 - name: keyringPass
@@ -48,8 +48,11 @@ parameters:
 - name: devicePrefix
   type: string
   default: 'ios' # default context, since we started dealing with iOS devices.
-  
+
 - name: gitHubToken
+  type: string
+
+- name: xqaCertPass
   type: string
 
 stages:
@@ -74,10 +77,11 @@ stages:
         testsLabels: ${{ parameters.testsLabels }}
         statusContext: ${{ parameters.statusContext }}
         useXamarinStorage: ${{ parameters.useXamarinStorage }}
-        vsdropsPrefix: ${{ parameters.vsdropsPrefix }} 
-        keyringPass: ${{ parameters.keyringPass }} 
+        vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
+        keyringPass: ${{ parameters.keyringPass }}
         devicePrefix: ${{ parameters.devicePrefix }}
         gitHubToken: ${{ parameters.gitHubToken }}
+        xqaCertPass: ${{ parameters.xqaCertPass }}
 
   - job: upload_vsdrops
     displayName: 'Upload report to vsdrops'
@@ -90,7 +94,7 @@ stages:
         clean: all
     steps:
     - template: ../common/upload-vsdrops.yml
-      parameters: 
+      parameters:
         devicePrefix: ${{ parameters.devicePrefix }}
 
   - job: upload_vsts_tests
@@ -104,7 +108,7 @@ stages:
         clean: all
     steps:
     - template: ../common/upload-vsts-tests.yml
-      parameters: 
+      parameters:
         devicePrefix: ${{ parameters.devicePrefix }}
 
   - job: publish_html
@@ -113,7 +117,7 @@ stages:
     dependsOn: # has to wait for the tests to be done AND the data to be uploaded
     - tests
     - upload_vsdrops
-    - upload_vsts_tests 
+    - upload_vsts_tests
     condition: succeededOrFailed()
     variables:
       # Define the variable FOO from the previous job
@@ -128,5 +132,5 @@ stages:
     - template: ../common/publish-html.yml
       parameters:
         statusContext: ${{ parameters.statusContext }}
-        vsdropsPrefix: ${{ parameters.vsdropsPrefix }} 
+        vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
         devicePrefix: ${{ parameters.devicePrefix }}
