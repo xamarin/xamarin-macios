@@ -421,14 +421,11 @@ steps:
     PACKAGES="$IOS_PKG $MAC_PKG $IOS_DOTNET_PKG $TVOS_DOTNET_PKG $WATCHOS_DOTNET_PKG $MACOS_DOTNET_PKG"
     echo "Packages found at $PACKAGES"
 
-    echo "$PACKAGES" | xargs -t python3 $(Build.SourcesDirectory)/release-scripts/sign_and_notarize3.py -a "$APP_ID" -i "$INSTALL_ID" -d $(Build.SourcesDirectory)/package/notarized -e "$MAC_ENTITLEMENTS" -k "$KEYCHAIN"
+    echo "$PACKAGES" | xargs -t python3 $(Build.SourcesDirectory)/release-scripts/esrp_sign.py -c "8023" -d $(Build.SourcesDirectory)/package/notarized -e "$MAC_ENTITLEMENTS"
     ls -R $(Build.SourcesDirectory)/package
   env:
     PRODUCTSIGN_KEYCHAIN_PASSWORD: $(OSX_KEYCHAIN_PASS)
     MAC_ENTITLEMENTS: $(Build.SourcesDirectory)/xamarin-macios/mac-entitlements.plist
-    APP_ID: $(XamarinAppId)
-    INSTALL_ID: $(XamarinAppId)
-    KEYCHAIN: $(SigningKeychain)
   name: notarize
   displayName: 'Signing Release Build'
   condition: and(succeeded(), contains(variables['configuration.SignPkgs'], 'True'), contains(variables['configuration.IsPr'], 'False'))

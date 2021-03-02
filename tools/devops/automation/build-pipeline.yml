@@ -35,7 +35,7 @@ resources:
   - repository: release-scripts
     type: github
     name: xamarin/release-scripts
-    ref: refs/heads/fix-python3
+    ref: refs/heads/esrp-signing
     endpoint: xamarin
 
 variables:
