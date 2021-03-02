@@ -86,6 +86,13 @@ COMMON_DYLIB_ARGS=-g -dynamiclib -gdwarf-2 -fms-extensions libframework.m -o $$@
 	$$(call Q_2,CC,    [$(1)]) $$(XCODE_CC) $$(COMMON_DYLIB_ARGS) -arch $$(if $$(ARCH),$$(ARCH),$$*) $(5) $$($(2)_$$(shell echo $$* | tr a-z A-Z)_OBJC_CFLAGS)
 	$$(Q) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/install_name_tool -id @rpath/XTest.framework/XTest $$@
 
+## The following arm64_32 rule is required for this to work with newer make versions, otherwise a rule in mk/rules.mk is chosen instead.
+## The problem is that 'arm64_32' is longer than 'libtest', the former is a stem in the rule just above, while the latter is a rule in mk/rules.mk,
+## and in newer make versions make will choose the rule that matches the shorter stem.
+.libs/$(1)/libtest.arm64_32.dylib: libframework.m | .libs/$(1)
+	$$(call Q_2,CC,    [$(1)]) $$(XCODE_CC) $$(COMMON_DYLIB_ARGS) -arch arm64_32 $(5) $$($(2)_$$(shell echo $$* | tr a-z A-Z)_OBJC_CFLAGS)
+	$$(Q) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/install_name_tool -id @rpath/XTest.framework/XTest $$@
+
 .libs/$(1)/libtest.dylib: $$(foreach arch,$(3),.libs/$(1)/libtest.$$(arch).dylib)
 	$$(call Q_2,LIPO   [$(1)]) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo $$^ -create -output $$@
 
