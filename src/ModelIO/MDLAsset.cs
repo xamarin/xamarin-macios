@@ -1,3 +1,5 @@
+#nullable enable
+
 using System;
 namespace ModelIO {
 	public partial class MDLAsset {

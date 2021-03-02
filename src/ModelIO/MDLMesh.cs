@@ -24,6 +24,8 @@ using Matrix4 = global::OpenTK.Matrix4;
 using Quaternion = global::OpenTK.Quaternion;
 using MathHelper = global::OpenTK.MathHelper;
 
+#nullable enable
+
 namespace ModelIO {
 
 	partial class MDLMesh {
@@ -143,91 +145,91 @@ namespace ModelIO {
 			return new MDLMesh (mesh, submeshIndex, subdivisionLevels, allocator);
 		}
 
-		public MDLVertexAttributeData AnisotropyVertexData {
+		public MDLVertexAttributeData? AnisotropyVertexData {
 			get {
 				return GetVertexAttributeDataForAttribute (MDLVertexAttributes.Anisotropy);
 			}
 		}
 		
-		public MDLVertexAttributeData BinormalVertexData {
+		public MDLVertexAttributeData? BinormalVertexData {
 			get {
 				return GetVertexAttributeDataForAttribute (MDLVertexAttributes.Binormal);
 			}
 		}
 		
-		public MDLVertexAttributeData BitangentVertexData {
+		public MDLVertexAttributeData? BitangentVertexData {
 			get {
 				return GetVertexAttributeDataForAttribute (MDLVertexAttributes.Bitangent);
 			}
 		}
 		
-		public MDLVertexAttributeData ColorVertexData {
+		public MDLVertexAttributeData? ColorVertexData {
 			get {
 				return GetVertexAttributeDataForAttribute (MDLVertexAttributes.Color);
 			}
 		}
 		
-		public MDLVertexAttributeData EdgeCreaseVertexData {
+		public MDLVertexAttributeData? EdgeCreaseVertexData {
 			get {
 				return GetVertexAttributeDataForAttribute (MDLVertexAttributes.EdgeCrease);
 			}
 		}
 		
-		public MDLVertexAttributeData JointIndicesVertexData {
+		public MDLVertexAttributeData? JointIndicesVertexData {
 			get {
 				return GetVertexAttributeDataForAttribute (MDLVertexAttributes.JointIndices);
 			}
 		}
 		
-		public MDLVertexAttributeData JointWeightsVertexData {
+		public MDLVertexAttributeData? JointWeightsVertexData {
 			get {
 				return GetVertexAttributeDataForAttribute (MDLVertexAttributes.JointWeights);
 			}
 		}
 		
-		public MDLVertexAttributeData NormalVertexData {
+		public MDLVertexAttributeData? NormalVertexData {
 			get {
 				return GetVertexAttributeDataForAttribute (MDLVertexAttributes.Normal);
 			}
 		}
 		
-		public MDLVertexAttributeData OcclusionValueVertexData {
+		public MDLVertexAttributeData? OcclusionValueVertexData {
 			get {
 				return GetVertexAttributeDataForAttribute (MDLVertexAttributes.OcclusionValue);
 			}
 		}
 		
-		public MDLVertexAttributeData PositionVertexData {
+		public MDLVertexAttributeData? PositionVertexData {
 			get {
 				return GetVertexAttributeDataForAttribute (MDLVertexAttributes.Position);
 			}
 		}
 		
-		public MDLVertexAttributeData ShadingBasisUVertexData {
+		public MDLVertexAttributeData? ShadingBasisUVertexData {
 			get {
 				return GetVertexAttributeDataForAttribute (MDLVertexAttributes.ShadingBasisU);
 			}
 		}
 		
-		public MDLVertexAttributeData ShadingBasisVVertexData {
+		public MDLVertexAttributeData? ShadingBasisVVertexData {
 			get {
 				return GetVertexAttributeDataForAttribute (MDLVertexAttributes.ShadingBasisV);
 			}
 		}
 		
-		public MDLVertexAttributeData SubdivisionStencilVertexData {
+		public MDLVertexAttributeData? SubdivisionStencilVertexData {
 			get {
 				return GetVertexAttributeDataForAttribute (MDLVertexAttributes.SubdivisionStencil);
 			}
 		}
 		
-		public MDLVertexAttributeData TangentVertexData {
+		public MDLVertexAttributeData? TangentVertexData {
 			get {
 				return GetVertexAttributeDataForAttribute (MDLVertexAttributes.Tangent);
 			}
 		}
 		
-		public MDLVertexAttributeData TextureCoordinateVertexData {
+		public MDLVertexAttributeData? TextureCoordinateVertexData {
 			get {
 				return GetVertexAttributeDataForAttribute (MDLVertexAttributes.TextureCoordinate);
 			}
