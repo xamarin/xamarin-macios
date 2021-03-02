@@ -52,9 +52,6 @@ namespace Introspection {
 #else
 			Platform = PlatformName.MacOSX;
 			Minimum = Xamarin.SdkVersions.MinOSXVersion;
-			// Need to special case macOS 'Maximum' version for OS minor subversions (can't change Constants.SdkVersion)
-			// Please comment the code below if needed
-			Maximum = new Version (11,1,0);
 #endif
 
 			Filter = (AvailabilityBaseAttribute arg) => {
@@ -286,10 +283,11 @@ namespace Introspection {
 				var s = String.Empty;
 #if NET
 				if (a is OSPlatformAttribute aa)
+					s = $"[{a.GetType().Name} (\"{aa.PlatformName}\")]";
 #else
 				if (a is AvailabilityBaseAttribute aa)
-#endif
 					s = aa.ToString ();
+#endif
 				if (s.Length > 0) {
 					if (type_level.Contains (s))
 						AddErrorLine ($"[FAIL] Both '{t}' and '{m}' are marked with `{s}`.");
@@ -361,6 +359,15 @@ namespace Introspection {
 				if (type_level.Length > 0)
 					AddErrorLine ($"[FAIL] '{t.FullName}' has legacy attribute(s): {type_level}");
 
+				foreach (var p in t.GetProperties (BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)) {
+					if (LogProgress)
+						Console.WriteLine ($"P: {p}");
+
+					var member_level = CheckLegacyAttributes (p);
+					if (member_level.Length > 0)
+						AddErrorLine ($"[FAIL] '{t.FullName}::{p.Name}' has legacy attribute(s): {member_level}");
+				}
+
 				foreach (var m in t.GetMembers (BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)) {
 					if (LogProgress)
 						Console.WriteLine ($"M: {m}");
@@ -371,38 +378,6 @@ namespace Introspection {
 				}
 			}
 			AssertIfErrors ("{0} API with mixed legacy availability attributes", Errors);
-		}
-
-		void CheckAttributeArgument (ICustomAttributeProvider cap)
-		{
-			foreach (var a in cap.GetCustomAttributes (false)) {
-				var os = (a as OSPlatformAttribute);
-				if (os == null)
-					continue;
-				if (os.Convert () == null)
-					AddErrorLine ($"[FAIL] '{cap}' has incorrect attribute argument: {os.PlatformName}");
-			}
-		}
-
-		[Test]
-		public void AttributeArgument ()
-		{
-			//LogProgress = true;
-			Errors = 0;
-			foreach (Type t in Assembly.GetTypes ()) {
-				if (LogProgress)
-					Console.WriteLine ($"T: {t}");
-
-				CheckAttributeArgument (t);
-
-				foreach (var m in t.GetMembers (BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public)) {
-					if (LogProgress)
-						Console.WriteLine ($"M: {m}");
-
-					CheckAttributeArgument (m);
-				}
-			}
-			AssertIfErrors ("{0} API with incorrect availability attribute arguments", Errors);
 		}
 #endif
 	}
