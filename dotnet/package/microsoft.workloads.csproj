@@ -1,0 +1,8 @@
+<Project>
+  <PropertyGroup>
+    <PackageId>Microsoft.NET.Workload.$(_PlatformName)</PackageId>
+    <Description>.NET Workload for $(_PlatformName) platforms</Description>
+    <_packagePath>$(MSBuildThisFileDirectory)..\Microsoft.NET.Workload.$(_PlatformName)\</_packagePath>
+  </PropertyGroup>
+  <Import Project="common.csproj" />
+</Project>
