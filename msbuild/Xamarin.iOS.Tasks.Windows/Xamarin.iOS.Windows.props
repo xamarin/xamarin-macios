@@ -16,7 +16,7 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 		<!-- Naming convention that relies on the fact that the Microsoft.iOS.Sdk pack exists with the same version that the Windows SDK -->
 		<CoreiOSSdkDirectory>$(MSBuildThisFileDirectory.Replace('Microsoft.iOS.Windows.Sdk', 'Microsoft.iOS.Sdk'))</CoreiOSSdkDirectory>
 		<!-- Property originally defined in Xamarin.Messaging.Build.targets, from Xamarin.Messaging.Build.Client package -->
-		<MessagingBuildClientAssemblyFile>$(MSBuildThisFileDirectory)Xamarin.Messaging.dll</MessagingBuildClientAssemblyFile>
+		<MessagingBuildClientAssemblyFile>$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll</MessagingBuildClientAssemblyFile>
 		<MessagingAgentsDirectory>$(MSBuildThisFileDirectory)</MessagingAgentsDirectory>
 	</PropertyGroup>
 </Project>

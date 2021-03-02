@@ -123,7 +123,6 @@ namespace Security {
 		public SecAccessible Accessible { get; private set; }
 		public SecAccessControlCreateFlags Flags { get; private set; }
 
-		[Mac (10,10)][iOS (8,0)]
 		[DllImport (Constants.SecurityLibrary)]
 		extern static IntPtr SecAccessControlCreateWithFlags (IntPtr allocator, /* CFTypeRef */ IntPtr protection, /* SecAccessControlCreateFlags */ nint flags, out IntPtr error);
 #endif

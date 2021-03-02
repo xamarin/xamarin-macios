@@ -98,4 +98,3 @@
 !missing-type! AVCaptureAudioPreviewOutput not bound
 !missing-type! AVCaptureDeviceInputSource not bound
 !missing-type! AVCaptureScreenInput not bound
-!unknown-field! AVMediaTypeTimedMetadata bound

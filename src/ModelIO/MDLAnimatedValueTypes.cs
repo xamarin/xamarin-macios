@@ -23,6 +23,8 @@ using Matrix4d = global::OpenTK.NMatrix4d;
 using Quaternion = global::OpenTK.Quaternion;
 using Quaterniond = global::OpenTK.Quaterniond;
 
+#nullable enable
+
 // Because of the lack of documentation when at the time of binding ModelIO for iOS 11 types
 // we are implementing something similar to what swift is doing here
 // https://github.com/apple/swift/blob/cbdf0ff1e7bfbd192c33d64c9c7d31fbb11f712c/stdlib/public/SDK/ModelIO/ModelIO.swift
@@ -30,7 +32,7 @@ using Quaterniond = global::OpenTK.Quaterniond;
 namespace ModelIO {
 	public partial class MDLAnimatedValue {
 
-		public double [] KeyTimes {
+		public double []? KeyTimes {
 			get {
 				var wkt = WeakKeyTimes;
 				if (wkt == null)
@@ -69,7 +71,7 @@ namespace ModelIO {
 		public virtual void SetValues (float [] array, double time)
 		{
 			if (array == null)
-				throw new ArgumentNullException (nameof (array));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (array));
 
 			unsafe {
 				fixed (float* ptr = array)
@@ -80,7 +82,7 @@ namespace ModelIO {
 		public virtual void SetValues (double [] array, double time)
 		{
 			if (array == null)
-				throw new ArgumentNullException (nameof (array));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (array));
 
 			unsafe {
 				fixed (double* ptr = array)
@@ -115,9 +117,9 @@ namespace ModelIO {
 		public virtual void Reset (float [] values, double [] times)
 		{
 			if (values == null)
-				throw new ArgumentNullException (nameof (values));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (values));
 			if (times == null)
-				throw new ArgumentNullException (nameof (times));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (times));
 
 			unsafe {
 				fixed (float* valuesPtr = values)
@@ -129,9 +131,9 @@ namespace ModelIO {
 		public virtual void Reset (double [] values, double [] times)
 		{
 			if (values == null)
-				throw new ArgumentNullException (nameof (values));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (values));
 			if (times == null)
-				throw new ArgumentNullException (nameof (times));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (times));
 
 			unsafe {
 				fixed (double* valuesPtr = values)
@@ -170,7 +172,7 @@ namespace ModelIO {
 		public virtual void SetValues (Vector3 [] array, double time)
 		{
 			if (array == null)
-				throw new ArgumentNullException (nameof (array));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (array));
 			int typeSize = Marshal.SizeOf (typeof (Vector3));
 
 			unsafe {
@@ -182,7 +184,7 @@ namespace ModelIO {
 		public virtual void SetValues (Vector3d [] array, double time)
 		{
 			if (array == null)
-				throw new ArgumentNullException (nameof (array));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (array));
 			int typeSize = Marshal.SizeOf (typeof (Vector3d));
 
 			unsafe {
@@ -222,9 +224,9 @@ namespace ModelIO {
 		public virtual void Reset (Vector3 [] values, double [] times)
 		{
 			if (values == null)
-				throw new ArgumentNullException (nameof (values));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (values));
 			if (times == null)
-				throw new ArgumentNullException (nameof (times));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (times));
 			int typeSize = Marshal.SizeOf (typeof (Vector3));
 
 			unsafe {
@@ -236,9 +238,9 @@ namespace ModelIO {
 		public virtual void Reset (Vector3d [] values, double [] times)
 		{
 			if (values == null)
-				throw new ArgumentNullException (nameof (values));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (values));
 			if (times == null)
-				throw new ArgumentNullException (nameof (times));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (times));
 			int typeSize = Marshal.SizeOf (typeof (Vector3d));
 
 			unsafe {
@@ -281,7 +283,7 @@ namespace ModelIO {
 		public virtual void SetValues (Quaternion [] array, double time)
 		{
 			if (array == null)
-				throw new ArgumentNullException (nameof (array));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (array));
 			int typeSize = Marshal.SizeOf (typeof (Quaternion));
 
 			unsafe {
@@ -293,7 +295,7 @@ namespace ModelIO {
 		public virtual void SetValues (Quaterniond [] array, double time)
 		{
 			if (array == null)
-				throw new ArgumentNullException (nameof (array));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (array));
 			int typeSize = Marshal.SizeOf (typeof (Quaterniond));
 
 			unsafe {
@@ -333,9 +335,9 @@ namespace ModelIO {
 		public virtual void Reset (Quaternion [] values, double [] times)
 		{
 			if (values == null)
-				throw new ArgumentNullException (nameof (values));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (values));
 			if (times == null)
-				throw new ArgumentNullException (nameof (times));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (times));
 			int typeSize = Marshal.SizeOf (typeof (Quaternion));
 
 			unsafe {
@@ -347,9 +349,9 @@ namespace ModelIO {
 		public virtual void Reset (Quaterniond [] values, double [] times)
 		{
 			if (values == null)
-				throw new ArgumentNullException (nameof (values));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (values));
 			if (times == null)
-				throw new ArgumentNullException (nameof (times));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (times));
 			int typeSize = Marshal.SizeOf (typeof (Quaterniond));
 
 			unsafe {
@@ -391,9 +393,9 @@ namespace ModelIO {
 		public virtual void Reset (float [] values, double [] times)
 		{
 			if (values == null)
-				throw new ArgumentNullException (nameof (values));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (values));
 			if (times == null)
-				throw new ArgumentNullException (nameof (times));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (times));
 
 			unsafe {
 				fixed (float* valuesPtr = values)
@@ -405,9 +407,9 @@ namespace ModelIO {
 		public virtual void Reset (double [] values, double [] times)
 		{
 			if (values == null)
-				throw new ArgumentNullException (nameof (values));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (values));
 			if (times == null)
-				throw new ArgumentNullException (nameof (times));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (times));
 
 			unsafe {
 				fixed (double* valuesPtr = values)
@@ -446,9 +448,9 @@ namespace ModelIO {
 		public virtual void Reset (Vector2 [] values, double [] times)
 		{
 			if (values == null)
-				throw new ArgumentNullException (nameof (values));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (values));
 			if (times == null)
-				throw new ArgumentNullException (nameof (times));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (times));
 			if (values.Length != times.Length)
 				throw new InvalidOperationException ($"The length of the '{nameof (values)}' array and the '{nameof (times)}' array must match.");
 			int typeSize = Marshal.SizeOf (typeof (Vector2));
@@ -462,9 +464,9 @@ namespace ModelIO {
 		public virtual void Reset (Vector2d [] values, double [] times)
 		{
 			if (values == null)
-				throw new ArgumentNullException (nameof (values));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (values));
 			if (times == null)
-				throw new ArgumentNullException (nameof (times));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (times));
 			if (values.Length != times.Length)
 				throw new InvalidOperationException ($"The length of the '{nameof (values)}' array and the '{nameof (times)}' array must match.");
 			int typeSize = Marshal.SizeOf (typeof (Vector2d));
@@ -509,9 +511,9 @@ namespace ModelIO {
 		public virtual void Reset (Vector3 [] values, double [] times)
 		{
 			if (values == null)
-				throw new ArgumentNullException (nameof (values));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (values));
 			if (times == null)
-				throw new ArgumentNullException (nameof (times));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (times));
 			if (values.Length != times.Length)
 				throw new InvalidOperationException ($"The length of the '{nameof (values)}' array and the '{nameof (times)}' array must match.");
 			int typeSize = Marshal.SizeOf (typeof (Vector3));
@@ -525,9 +527,9 @@ namespace ModelIO {
 		public virtual void Reset (Vector3d [] values, double [] times)
 		{
 			if (values == null)
-				throw new ArgumentNullException (nameof (values));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (values));
 			if (times == null)
-				throw new ArgumentNullException (nameof (times));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (times));
 			if (values.Length != times.Length)
 				throw new InvalidOperationException ($"The length of the '{nameof (values)}' array and the '{nameof (times)}' array must match.");
 			int typeSize = Marshal.SizeOf (typeof (Vector3d));
@@ -572,9 +574,9 @@ namespace ModelIO {
 		public virtual void Reset (Vector4 [] values, double [] times)
 		{
 			if (values == null)
-				throw new ArgumentNullException (nameof (values));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (values));
 			if (times == null)
-				throw new ArgumentNullException (nameof (times));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (times));
 			if (values.Length != times.Length)
 				throw new InvalidOperationException ($"The length of the '{nameof (values)}' array and the '{nameof (times)}' array must match.");
 			int typeSize = Marshal.SizeOf (typeof (Vector4));
@@ -588,9 +590,9 @@ namespace ModelIO {
 		public virtual void Reset (Vector4d [] values, double [] times)
 		{
 			if (values == null)
-				throw new ArgumentNullException (nameof (values));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (values));
 			if (times == null)
-				throw new ArgumentNullException (nameof (times));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (times));
 			if (values.Length != times.Length)
 				throw new InvalidOperationException ($"The length of the '{nameof (values)}' array and the '{nameof (times)}' array must match.");
 			int typeSize = Marshal.SizeOf (typeof (Vector4d));
@@ -635,9 +637,9 @@ namespace ModelIO {
 		public virtual void Reset (Matrix4 [] values, double [] times)
 		{
 			if (values == null)
-				throw new ArgumentNullException (nameof (values));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (values));
 			if (times == null)
-				throw new ArgumentNullException (nameof (times));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (times));
 			if (values.Length != times.Length)
 				throw new InvalidOperationException ($"The length of the '{nameof (values)}' array and the '{nameof (times)}' array must match.");
 			int typeSize = Marshal.SizeOf (typeof (Matrix4));
@@ -651,9 +653,9 @@ namespace ModelIO {
 		public virtual void Reset (Matrix4d [] values, double [] times)
 		{
 			if (values == null)
-				throw new ArgumentNullException (nameof (values));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (values));
 			if (times == null)
-				throw new ArgumentNullException (nameof (times));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (times));
 			if (values.Length != times.Length)
 				throw new InvalidOperationException ($"The length of the '{nameof (values)}' array and the '{nameof (times)}' array must match.");
 			int typeSize = Marshal.SizeOf (typeof (Matrix4d));
@@ -698,7 +700,7 @@ namespace ModelIO {
 		public virtual void SetValues (Matrix4 [] array)
 		{
 			if (array == null)
-				throw new ArgumentNullException (nameof (array));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (array));
 			int typeSize = Marshal.SizeOf (typeof (Matrix4));
 
 			unsafe {
@@ -710,7 +712,7 @@ namespace ModelIO {
 		public virtual void SetValues (Matrix4d [] array)
 		{
 			if (array == null)
-				throw new ArgumentNullException (nameof (array));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (array));
 			int typeSize = Marshal.SizeOf (typeof (Matrix4d));
 
 			unsafe {

@@ -351,6 +351,7 @@ namespace AudioUnit
 		}
 
 #if !MONOMAC
+#if !__MACCATALYST__
 		[iOS (7,0)]
 		[Deprecated (PlatformName.iOS, 14,0)]
 		[DllImport(Constants.AudioUnitLibrary)]
@@ -362,6 +363,7 @@ namespace AudioUnit
 		{
 			return new UIKit.UIImage (AudioComponentGetIcon (handle, desiredPointSize));
 		}
+#endif // !__MACCATALYST__
 
 		[iOS (7,0)]
 		[Deprecated (PlatformName.iOS, 13,0)]
