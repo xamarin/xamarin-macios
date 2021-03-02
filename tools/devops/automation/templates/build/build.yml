@@ -453,7 +453,7 @@ steps:
         foreach($pkg in $files)
         {
             Write-Host "Notarizing $($pkg.FullName) into"
-            & dotnet $Env:MBSIGN_APPFOLDER/DDSignFiles.dll /file:"$($pkg.FullName)" /certs:"8020"
+            dotnet $Env:MBSIGN_APPFOLDER/DDSignFiles.dll /file:"$($pkg.FullName)" /certs:"8020"
         }
     }
   displayName: 'ESRP notarizing packages' 
