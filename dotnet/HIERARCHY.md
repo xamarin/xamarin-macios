@@ -62,3 +62,7 @@ Contains reference assemblies.
 ## Microsoft._platform_.Runtime.[runtimeIdentifier]
 
 Contains implementation assemblies and native bits.
+
+## Microsoft._platform.Templates
+
+Contains project & item templates for each platform.

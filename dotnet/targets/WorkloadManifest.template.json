@@ -6,6 +6,7 @@
 			"packs": [
 				"Microsoft.@PLATFORM@.Sdk",
 				"Microsoft.@PLATFORM@.Ref",
+				"Microsoft.@PLATFORM@.Templates"
 			]
 		}
 	},
@@ -16,6 +17,10 @@
 		},
 		"Microsoft.@PLATFORM@.Ref": {
 			"kind": "framework",
+			"version": "@VERSION@"
+		},
+		"Microsoft.@PLATFORM@.Templates": {
+			"kind": "template",
 			"version": "@VERSION@"
 		}
 	}
