@@ -32,7 +32,7 @@ namespace CallKit {
 		Unknown = 0,
 		Unentitled = 1,
 		InvalidArgument = 2,
-		MissingVoIPBackgroundMode = 3
+		MissingVoIPBackgroundMode = 3,
 	}
 
 	[iOS (10, 0), Mac (11, 0)]
