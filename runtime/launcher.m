@@ -185,7 +185,7 @@ get_mono_env_options (int *count)
 	if (n == 0)
 		return NULL;
 
-	argv = (char **) malloc (sizeof (char *) * (n + 1));
+	argv = (char **) malloc (sizeof (char *) * ((unsigned long) n + 1));
 	i = 0;
 
 	while (list != NULL) {
@@ -606,7 +606,7 @@ int xamarin_main (int argc, char **argv, enum XamarinLaunchMode launch_mode)
 		if (xamarin_mac_modern)
 			new_argc += 1;
 
-		char **new_argv = (char **) malloc (sizeof (char *) * (new_argc + 1 /* null terminated */));
+		char **new_argv = (char **) malloc (sizeof (char *) * ((unsigned long) new_argc + 1 /* null terminated */));
 		const char **ptr = (const char **) new_argv;
 		// binary
 		*ptr++ = argv [0];
