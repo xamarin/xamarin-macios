@@ -12,6 +12,9 @@ parameters:
   type: boolean
   default: true
 
+- name: keyringPass
+  type: string
+
 - name: gitHubToken
   type: string
 
