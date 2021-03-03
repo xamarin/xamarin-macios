@@ -226,6 +226,7 @@ namespace Security {
 
 		[Mac (10,9)]
 		[DllImport (Constants.SecurityLibrary)]
+		[return: MarshalAs (UnmanagedType.U1)]
 		extern static bool SecTrustSetExceptions (IntPtr /* SecTrustRef */ trust, IntPtr /* __nullable CFDataRef */ exceptions);
 
 		[Mac (10,9)]
@@ -304,7 +305,7 @@ namespace Security {
 		}
 
 		[DllImport (Constants.SecurityLibrary)]
-		extern static SecStatusCode /* OSStatus */ SecTrustSetAnchorCertificatesOnly (IntPtr /* SecTrustRef */ trust, bool anchorCertificatesOnly);
+		extern static SecStatusCode /* OSStatus */ SecTrustSetAnchorCertificatesOnly (IntPtr /* SecTrustRef */ trust, [MarshalAs (UnmanagedType.I1)] bool anchorCertificatesOnly);
 
 		public SecStatusCode SetAnchorCertificatesOnly (bool anchorCertificatesOnly)
 		{

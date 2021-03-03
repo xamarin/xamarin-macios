@@ -108,7 +108,7 @@ namespace CoreServices {
 
 		[DllImport (Constants.CFNetworkLibrary)]
 		extern static /* CFHTTPMessageRef __nonnull */ IntPtr CFHTTPMessageCreateEmpty (
-			/* CFAllocatorRef __nullable */ IntPtr alloc, /* Boolean */ bool isRequest);
+			/* CFAllocatorRef __nullable */ IntPtr alloc, /* Boolean */ [MarshalAs (UnmanagedType.I1)] bool isRequest);
 
 		public static CFHTTPMessage CreateEmpty (bool request)
 		{
@@ -164,6 +164,7 @@ namespace CoreServices {
 		}
 
 		[DllImport (Constants.CFNetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static /* Boolean */ bool CFHTTPMessageIsRequest (/* CFHTTPMessageRef __nonnull */ IntPtr message);
 
 		public bool IsRequest {
@@ -224,6 +225,7 @@ namespace CoreServices {
 		}
 
 		[DllImport (Constants.CFNetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static /* Boolean */ bool CFHTTPMessageIsHeaderComplete (
 			/* CFHTTPMessageRef __nonnull */ IntPtr message);
 
@@ -235,6 +237,7 @@ namespace CoreServices {
 		}
 
 		[DllImport (Constants.CFNetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static /* Boolean */ bool CFHTTPMessageAppendBytes (
 			/* CFHTTPMessageRef __nonnull */ IntPtr message,
 			/* const UInt8* __nonnull */ byte[] newBytes, /* CFIndex */ nint numBytes);
@@ -295,6 +298,7 @@ namespace CoreServices {
 		}
 
 		[DllImport (Constants.CFNetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static /* Boolean */ bool CFHTTPMessageApplyCredentials (/* CFHTTPMessageRef */ IntPtr request, 
 			/* CFHTTPAuthenticationRef */ IntPtr auth, /* CFString */ IntPtr username, /* CFString */ IntPtr password,
 			/* CFStreamError* */ out CFStreamError error);
@@ -365,13 +369,14 @@ namespace CoreServices {
 		}
 
 		[DllImport (Constants.CFNetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static /* Boolean */ bool CFHTTPMessageAddAuthentication (
 			/* CFHTTPMessageRef __nonnull */ IntPtr request, 
 			/* CFHTTPMessageRef __nullable */ IntPtr authenticationFailureResponse,
 			/* CFStringRef __nonnull */ IntPtr username, 
 			/* CFStringRef __nonnull */ IntPtr password,
 			/* CFStringRef __nullable */ IntPtr authenticationScheme,
-			/* Boolean */ bool forProxy);
+			/* Boolean */ [MarshalAs (UnmanagedType.I1)] bool forProxy);
 
 		public bool AddAuthentication (CFHTTPMessage failureResponse, NSString username,
 		                               NSString password, AuthenticationScheme scheme,
@@ -388,6 +393,7 @@ namespace CoreServices {
 		}
 
 		[DllImport (Constants.CFNetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static /* Boolean */ bool CFHTTPMessageApplyCredentialDictionary (/* CFHTTPMessageRef */ IntPtr request, 
 			/* CFHTTPAuthenticationRef */ IntPtr auth, /* CFDictionaryRef */ IntPtr dict, /* CFStreamError* */ out CFStreamError error);
 

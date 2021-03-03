@@ -737,7 +737,7 @@ namespace AudioToolbox
 
 		[DllImport (Constants.AudioToolboxLibrary)]
 		static extern AudioConverterError AudioConverterGetPropertyInfo (IntPtr inAudioConverter, AudioConverterPropertyID inPropertyID,
-			out int outSize, out bool outWritable);
+			out int outSize, [MarshalAs (UnmanagedType.I1)] out bool outWritable);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
 		static extern AudioConverterError AudioConverterSetProperty (IntPtr inAudioConverter, AudioConverterPropertyID inPropertyID,

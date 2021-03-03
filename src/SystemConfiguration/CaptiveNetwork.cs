@@ -103,10 +103,12 @@ namespace SystemConfiguration {
 
 		[Deprecated (PlatformName.iOS, 9,0)]
 		[DllImport (Constants.SystemConfigurationLibrary)]
+		[return: MarshalAs (UnmanagedType.U1)]
 		extern static bool CNMarkPortalOffline (IntPtr /* CFStringRef __nonnull */ interfaceName);
 
 		[Deprecated (PlatformName.iOS, 9,0)]
 		[DllImport (Constants.SystemConfigurationLibrary)]
+		[return: MarshalAs (UnmanagedType.U1)]
 		extern static bool CNMarkPortalOnline (IntPtr /* CFStringRef __nonnull */ interfaceName);
 
 		[Deprecated (PlatformName.iOS, 9,0)]
@@ -127,6 +129,7 @@ namespace SystemConfiguration {
 
 		[Deprecated (PlatformName.iOS, 9,0)]
 		[DllImport (Constants.SystemConfigurationLibrary)]
+		[return: MarshalAs (UnmanagedType.U1)]
 		extern static bool CNSetSupportedSSIDs (IntPtr /* CFArrayRef __nonnull */ ssidArray);
 
 		[Deprecated (PlatformName.iOS, 9,0)]

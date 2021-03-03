@@ -65,6 +65,7 @@ namespace CoreText {
 
 #if MONOMAC
 		[DllImport (Constants.CoreTextLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool CTFontManagerIsSupportedFont (IntPtr url);
 
 		[Deprecated (PlatformName.MacOSX, 10, 6)]
@@ -88,6 +89,7 @@ namespace CoreText {
 #endif
 
 		[DllImport (Constants.CoreTextLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool CTFontManagerRegisterFontsForURL (IntPtr fontUrl, CTFontManagerScope scope, ref IntPtr error);
 		public static NSError RegisterFontsForUrl (NSUrl fontUrl, CTFontManagerScope scope)
 		{
@@ -137,6 +139,7 @@ namespace CoreText {
 		[Deprecated (PlatformName.WatchOS, 6,0)]
 		[Deprecated (PlatformName.TvOS, 13,0)]
 		[DllImport (Constants.CoreTextLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool CTFontManagerRegisterFontsForURLs(IntPtr arrayRef, CTFontManagerScope scope, ref IntPtr error_array);
 
 		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'RegisterFonts' instead.")]
@@ -168,11 +171,11 @@ namespace CoreText {
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[DllImport (Constants.CoreTextLibrary)]
-		static extern void CTFontManagerRegisterFontURLs (/* CFArrayRef */ IntPtr fontUrls, CTFontManagerScope scope, bool enabled, IntPtr registrationHandler);
+		static extern void CTFontManagerRegisterFontURLs (/* CFArrayRef */ IntPtr fontUrls, CTFontManagerScope scope, [MarshalAs (UnmanagedType.I1)] bool enabled, IntPtr registrationHandler);
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[DllImport (Constants.CoreTextLibrary)]
-		static extern void CTFontManagerRegisterFontURLs (/* CFArrayRef */ IntPtr fontUrls, CTFontManagerScope scope, bool enabled, ref BlockLiteral registrationHandler);
+		static extern void CTFontManagerRegisterFontURLs (/* CFArrayRef */ IntPtr fontUrls, CTFontManagerScope scope, [MarshalAs (UnmanagedType.I1)] bool enabled, ref BlockLiteral registrationHandler);
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[BindingImpl (BindingImplOptions.Optimizable)]
@@ -191,6 +194,7 @@ namespace CoreText {
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool CTFontManagerUnregisterFontsForURL(IntPtr fotUrl, CTFontManagerScope scope, ref IntPtr error);
 
 		public static NSError UnregisterFontsForUrl (NSUrl fontUrl, CTFontManagerScope scope)
@@ -216,6 +220,7 @@ namespace CoreText {
 		[Deprecated (PlatformName.WatchOS, 6,0)]
 		[Deprecated (PlatformName.TvOS, 13,0)]
 		[DllImport (Constants.CoreTextLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool CTFontManagerUnregisterFontsForURLs(IntPtr arrayRef, CTFontManagerScope scope, ref IntPtr error_array);
 
 		[Deprecated (PlatformName.MacOSX, 10,15, message : "Use 'UnregisterFonts' instead.")]
@@ -280,6 +285,7 @@ namespace CoreText {
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool CTFontManagerRegisterGraphicsFont (IntPtr cgfont, out IntPtr error);
 
 		public static bool RegisterGraphicsFont (CGFont font, out NSError error)
@@ -302,6 +308,7 @@ namespace CoreText {
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool CTFontManagerUnregisterGraphicsFont (IntPtr cgfont, out IntPtr error);
 
 		public static bool UnregisterGraphicsFont (CGFont font, out NSError error)
@@ -363,11 +370,11 @@ namespace CoreText {
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[DllImport (Constants.CoreTextLibrary)]
-		static extern unsafe void CTFontManagerRegisterFontDescriptors (/* CFArrayRef */ IntPtr fontDescriptors, CTFontManagerScope scope, bool enabled, IntPtr registrationHandler);
+		static extern unsafe void CTFontManagerRegisterFontDescriptors (/* CFArrayRef */ IntPtr fontDescriptors, CTFontManagerScope scope, [MarshalAs (UnmanagedType.I1)] bool enabled, IntPtr registrationHandler);
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[DllImport (Constants.CoreTextLibrary)]
-		static extern unsafe void CTFontManagerRegisterFontDescriptors (/* CFArrayRef */ IntPtr fontDescriptors, CTFontManagerScope scope, bool enabled, ref BlockLiteral registrationHandler);
+		static extern unsafe void CTFontManagerRegisterFontDescriptors (/* CFArrayRef */ IntPtr fontDescriptors, CTFontManagerScope scope, [MarshalAs (UnmanagedType.I1)] bool enabled, ref BlockLiteral registrationHandler);
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[BindingImpl (BindingImplOptions.Optimizable)]
@@ -412,7 +419,7 @@ namespace CoreText {
 #if __IOS__
 		[iOS (13,0)]
 		[DllImport (Constants.CoreTextLibrary)]
-		static extern /* CFArrayRef */ IntPtr CTFontManagerCopyRegisteredFontDescriptors (CTFontManagerScope scope, bool enabled);
+		static extern /* CFArrayRef */ IntPtr CTFontManagerCopyRegisteredFontDescriptors (CTFontManagerScope scope, [MarshalAs (UnmanagedType.I1)] bool enabled);
 
 		[iOS (13,0)]
 		[NoWatch][NoTV][NoMac]
@@ -458,11 +465,11 @@ namespace CoreText {
 #if __IOS__
 		[NoWatch, NoTV, NoMac, iOS (13,0)]
 		[DllImport (Constants.CoreTextLibrary)]
-		static extern unsafe void CTFontManagerRegisterFontsWithAssetNames (/* CFArrayRef */ IntPtr fontAssetNames, /* CFBundleRef _Nullable */ IntPtr bundle, CTFontManagerScope scope, bool enabled, IntPtr registrationHandler);
+		static extern unsafe void CTFontManagerRegisterFontsWithAssetNames (/* CFArrayRef */ IntPtr fontAssetNames, /* CFBundleRef _Nullable */ IntPtr bundle, CTFontManagerScope scope, [MarshalAs (UnmanagedType.I1)] bool enabled, IntPtr registrationHandler);
 
 		[NoWatch, NoTV, NoMac, iOS (13,0)]
 		[DllImport (Constants.CoreTextLibrary)]
-		static extern unsafe void CTFontManagerRegisterFontsWithAssetNames (/* CFArrayRef */ IntPtr fontAssetNames, /* CFBundleRef _Nullable */ IntPtr bundle, CTFontManagerScope scope, bool enabled, ref BlockLiteral registrationHandler);
+		static extern unsafe void CTFontManagerRegisterFontsWithAssetNames (/* CFArrayRef */ IntPtr fontAssetNames, /* CFBundleRef _Nullable */ IntPtr bundle, CTFontManagerScope scope, [MarshalAs (UnmanagedType.I1)] bool enabled, ref BlockLiteral registrationHandler);
 
 		// reminder that NSBundle and CFBundle are NOT toll-free bridged :(
 		[NoWatch, NoTV, NoMac, iOS (13,0)]

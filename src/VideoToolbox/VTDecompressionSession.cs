@@ -340,6 +340,7 @@ namespace VideoToolbox {
 
 		[Mac (10,13), iOS (11,0), TV (11,0)]
 		[DllImport (Constants.VideoToolboxLibrary)]
+		[return: MarshalAs (UnmanagedType.U1)]
 		extern static bool VTIsHardwareDecodeSupported (CMVideoCodecType codecType);
 
 		[Mac (10,13), iOS (11,0), TV (11,0)]

@@ -30,11 +30,13 @@ namespace Network {
 		internal NWEstablishmentReport (IntPtr handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool nw_establishment_report_get_used_proxy (OS_nw_establishment_report report);
 
 		public bool UsedProxy => nw_establishment_report_get_used_proxy (GetCheckedHandle ());
 
 		[DllImport (Constants.NetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool nw_establishment_report_get_proxy_configured (OS_nw_establishment_report report);
 
 		public bool ProxyConfigured => nw_establishment_report_get_proxy_configured (GetCheckedHandle ());

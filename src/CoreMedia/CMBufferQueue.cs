@@ -46,6 +46,7 @@ namespace CoreMedia {
 		CMBufferGetSize getTotalSize;
 		
 		delegate CMTime BufferGetTimeCallback (/* CMBufferRef */ IntPtr buf, /* void* */ IntPtr refcon);
+		[return: MarshalAs (UnmanagedType.I1)]
 		delegate bool   BufferGetBooleanCallback (/* CMBufferRef */ IntPtr buf, /* void* */ IntPtr refcon);
 		delegate int    BufferCompareCallback (/* CMBufferRef */ IntPtr buf1, /* CMBufferRef */ IntPtr buf2, /* void* */ IntPtr refcon);
 		delegate nint   BufferGetSizeCallback (/* CMBufferRef */ IntPtr buffer, /* void* */ IntPtr refcon);

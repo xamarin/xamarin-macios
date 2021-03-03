@@ -150,6 +150,7 @@ namespace CoreGraphics {
 		}
 		
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGPDFDocumentIsEncrypted (/* CGPDFDocumentRef */ IntPtr document);
 
 		public bool IsEncrypted {
@@ -159,6 +160,7 @@ namespace CoreGraphics {
 		}
 		
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGPDFDocumentUnlockWithPassword (/* CGPDFDocumentRef */ IntPtr document, /* const char* */ string password);
 
 		public bool Unlock (string password)
@@ -167,6 +169,7 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGPDFDocumentIsUnlocked (/* CGPDFDocumentRef */ IntPtr document);
 
 		public bool IsUnlocked {
@@ -176,6 +179,7 @@ namespace CoreGraphics {
 		}
 		
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGPDFDocumentAllowsPrinting (/* CGPDFDocumentRef */ IntPtr document);
 
 		public bool AllowsPrinting {
@@ -185,6 +189,7 @@ namespace CoreGraphics {
 		}
 		
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGPDFDocumentAllowsCopying (/* CGPDFDocumentRef */ IntPtr document);
 
 		public bool AllowsCopying {

@@ -198,6 +198,7 @@ namespace Network {
 
 		[TV (13,0), Mac (10,15), iOS (13,0)]
 		[DllImport (Constants.NetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		internal static extern bool nw_protocol_metadata_is_framer_message (OS_nw_protocol_metadata metadata);
 
 		[TV (13,0), Mac (10,15), iOS (13,0)]
@@ -205,6 +206,7 @@ namespace Network {
 
 		[TV (13,0), Mac (10,15), iOS (13,0)]
 		[DllImport (Constants.NetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		internal static extern bool nw_protocol_metadata_is_ws (OS_nw_protocol_metadata metadata);
 
 		[TV (13,0), Mac (10,15), iOS (13,0)]

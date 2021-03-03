@@ -111,6 +111,7 @@ namespace CoreServices
 		}
 
 		[DllImport (Constants.CoreServicesLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool FSEventsPurgeEventsForDeviceUpToEventId (ulong device, ulong eventId);
 
 		public static bool PurgeEventsForDeviceUpToEventId (ulong device, ulong eventId)
@@ -267,6 +268,7 @@ namespace CoreServices
 		}
 
 		[DllImport (Constants.CoreServicesLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool FSEventStreamStart (IntPtr handle);
 
 		public bool Start ()
