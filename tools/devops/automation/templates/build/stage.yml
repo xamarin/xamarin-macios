@@ -86,6 +86,7 @@ jobs:
       runTests: ${{ parameters.runTests }}
       runDeviceTests: ${{ parameters.runDeviceTests }}
       vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
+      keyringPass: ${{ parameters.keyringPass }}
       gitHubToken: ${{ parameters.gitHubToken }}
       xqaCertPass: ${{ parameters.xqaCertPass }}
 
