@@ -13,6 +13,12 @@ parameters:
 - name: keyringPass
   type: string
 
+- name: gitHubToken
+  type: string
+
+- name: xqaCertPass
+  type: string
+
 steps:
 - checkout: self          # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
   clean: true             # Executes: git clean -ffdx && git reset --hard HEAD
