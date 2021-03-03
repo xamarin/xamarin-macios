@@ -143,6 +143,8 @@ stages:
     iOSDeviceDemand: 'xismoke-32'
     vsdropsPrefix: ${{ variables.vsdropsPrefix }}
     keyringPass: $(xma-password)
+    gitHubToken: ${{ variables['GitHub.Token'] }}
+    xqaCertPass: $(xqa--certificates--password)
 
 - template: templates/devices/stage.yml
   parameters:
@@ -156,6 +158,8 @@ stages:
     iOSDeviceDemand: 'ios'
     vsdropsPrefix: ${{ variables.vsdropsPrefix }}
     keyringPass: $(xma-password)
+    gitHubToken: ${{ variables['GitHub.Token'] }}
+    xqaCertPass: $(xqa--certificates--password)
 
 - template: templates/devices/stage.yml
   parameters:
@@ -169,6 +173,8 @@ stages:
     iOSDeviceDemand: 'tvos'
     vsdropsPrefix: ${{ variables.vsdropsPrefix }}
     keyringPass: $(xma-password)
+    gitHubToken: ${{ variables['GitHub.Token'] }}
+    xqaCertPass: $(xqa--certificates--password)
 
 - template: templates/mac/stage.yml
   parameters:
@@ -189,7 +195,7 @@ stages:
   displayName: 'Sample testing'
   dependsOn:
   - build_packages
-  condition: and(succeeded(), contains (stageDependencies.build_packages.build.outputs['configuration.RunSampleTests'], 'True')) 
+  condition: and(succeeded(), contains (stageDependencies.build_packages.build.outputs['configuration.RunSampleTests'], 'True'))
   jobs:
   - job: sample_testing
     pool:
