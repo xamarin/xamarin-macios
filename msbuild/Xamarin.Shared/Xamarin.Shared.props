@@ -59,7 +59,7 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		     another property name, we "opt out" of this "smart" behavior
 		-->
 		<ComputedPlatform Condition="'$(ComputedPlatform)' == ''">$(Platform)</ComputedPlatform>
-		<ComputedPlatform Condition="'$(_PlatformName)' != 'macOS' And '$(ComputedPlatform)' == 'AnyCPU'">iPhone</ComputedPlatform>
+		<ComputedPlatform Condition="'$(_PlatformName)' != 'macOS' And '$(_PlatformName)' != 'Mac Catalyst' And '$(ComputedPlatform)' == 'AnyCPU'">iPhone</ComputedPlatform>
 	</PropertyGroup>
 
 	<Choose>
