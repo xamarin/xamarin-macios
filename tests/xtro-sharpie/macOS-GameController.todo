@@ -14,3 +14,7 @@
 !missing-selector! GCDualSenseGamepad::touchpadSecondary not bound
 !missing-type! GCDualSenseAdaptiveTrigger not bound
 !missing-type! GCDualSenseGamepad not bound
+!missing-field! GCInputDirectionalCardinalDpad not bound
+!missing-field! GCInputDirectionalDpad not bound
+!missing-selector! +GCController::setShouldMonitorBackgroundEvents: not bound
+!missing-selector! +GCController::shouldMonitorBackgroundEvents not bound
