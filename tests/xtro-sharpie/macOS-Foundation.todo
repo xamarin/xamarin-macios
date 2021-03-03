@@ -37,3 +37,5 @@
 !missing-selector! NSURLRequest::assumesHTTP3Capable not bound
 !missing-selector! NSURLSessionTask::prefersIncrementalDelivery not bound
 !missing-selector! NSURLSessionTask::setPrefersIncrementalDelivery: not bound
+!missing-field! NSMultipleUnderlyingErrorsKey not bound
+!missing-selector! NSError::underlyingErrors not bound

@@ -23,3 +23,4 @@
 !missing-selector! SKAdImpression::timestamp not bound
 !missing-selector! SKAdImpression::version not bound
 !missing-type! SKAdImpression not bound
+!missing-enum-value! SKError native value SKErrorOverlayPresentedInBackgroundScene = 20 not bound

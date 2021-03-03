@@ -2,3 +2,6 @@
 !missing-field! PKPaymentNetworkMir not bound
 !missing-selector! PKAddCarKeyPassConfiguration::setSupportedRadioTechnologies: not bound
 !missing-selector! PKAddCarKeyPassConfiguration::supportedRadioTechnologies not bound
+!deprecated-attribute-missing! PKSuicaPassProperties::isBlacklisted missing a [Deprecated] attribute
+!deprecated-attribute-missing! PKTransitPassProperties::isBlacklisted missing a [Deprecated] attribute
+!missing-selector! PKTransitPassProperties::isBlocked not bound

@@ -1,11 +1,9 @@
 !missing-enum! NSFileProviderDomainTestingModes not bound
 !missing-enum! NSFileProviderTestingOperationSide not bound
 !missing-enum-value! NSFileProviderCreateItemOptions native value NSFileProviderCreateItemDeletionConflicted = 2 not bound
-!missing-enum-value! NSFileProviderError native value NSFileProviderErrorItemHasUnsyncedEdits = -2007 not bound
 !missing-enum-value! NSFileProviderError native value NSFileProviderErrorNonEvictableChildren = -2006 not bound
 !missing-enum-value! NSFileProviderItemCapabilities native value NSFileProviderItemCapabilitiesAllowsAll = 63 not bound
 !missing-enum-value! NSFileProviderItemCapabilities native value NSFileProviderItemCapabilitiesAllowsExcludingFromSync = 128 not bound
-!missing-field! NSFileProviderErrorCausedByErrorsKey not bound
 !missing-field! NSFileProviderMaterializedSetDidChange not bound
 !missing-field! NSFileProviderPendingSetDidChange not bound
 !missing-protocol! NSFileProviderDomainState not bound
@@ -32,3 +30,5 @@
 !missing-protocol! NSFileProviderTestingCreation not bound
 !missing-protocol! NSFileProviderTestingDeletion not bound
 !missing-protocol! NSFileProviderTestingModification not bound
+!missing-enum-value! NSFileProviderError native value NSFileProviderErrorNonEvictable = -2008 not bound
+!missing-enum-value! NSFileProviderError native value NSFileProviderErrorUnsyncedEdits = -2007 not bound

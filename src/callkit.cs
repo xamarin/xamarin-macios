@@ -493,7 +493,7 @@ namespace CallKit {
 
 		[NoWatch, NoTV, NoMac, iOS (14,5)]
 		[Introduced (PlatformName.MacCatalyst, 14, 5)]
-		[Static]
+		[Static, Async]
 		[Export ("reportNewIncomingVoIPPushPayload:completion:")]
 		void ReportNewIncomingVoIPPushPayload (NSDictionary dictionaryPayload, [NullAllowed] Action<NSError> completion);
 
