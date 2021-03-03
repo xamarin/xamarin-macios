@@ -406,9 +406,11 @@ PROJECT_FILES += $(PROJECT_DIR)/xamios.csproj $(PROJECT_DIR)/MonoTouch.NUnitLite
 all-ios: $(IOS_TARGETS)
 install-ios: $(IOS_TARGETS)
 
+ifdef INCLUDE_XAMARIN_LEGACY
 ifdef INCLUDE_IOS
 INSTALL_TARGETS+=install-ios
 ALL_TARGETS+=all-ios
+endif
 endif
 
 #
@@ -624,8 +626,10 @@ MAC_VARIANTS_TARGETS = \
 	$(MAC_BUILD_DIR)/mobile-reference/Xamarin.Mac.dll \
 	$(MAC_BUILD_DIR)/full-reference/Xamarin.Mac.dll \
 
+ifdef INCLUDE_XAMARIN_LEGACY
 INSTALL_TARGETS+=install-mac
 ALL_TARGETS+=all-mac
+endif
 
 MAC_TARGETS_DIRS += \
 	$(MAC_BUILD_DIR) \
@@ -987,9 +991,11 @@ $(WATCH_TARGETS_DIRS):
 all-watch: $(WATCH_TARGETS)
 install-watch: $(WATCH_TARGETS)
 
+ifdef INCLUDE_XAMARIN_LEGACY
 ifdef INCLUDE_WATCH
 ALL_TARGETS += all-watch
 INSTALL_TARGETS += install-watch
+endif
 endif
 
 #
@@ -1468,9 +1474,11 @@ $(MACCATALYST_TARGETS_DIRS):
 all-maccatalyst: $(MACCATALYST_TARGETS)
 install-maccatalyst: $(MACCATALYST_TARGETS)
 
+ifdef INCLUDE_XAMARIN_LEGACY
 ifdef INCLUDE_MACCATALYST
 ALL_TARGETS += all-maccatalyst
 INSTALL_TARGETS += install-maccatalyst
+endif
 endif
 
 ### .NET ###
@@ -1522,9 +1530,11 @@ $(TVOS_TARGETS_DIRS):
 all-tvos: $(TVOS_TARGETS)
 install-tvos: $(TVOS_TARGETS)
 
+ifdef INCLUDE_XAMARIN_LEGACY
 ifdef INCLUDE_TVOS
 ALL_TARGETS += all-tvos
 INSTALL_TARGETS += install-tvos
+endif
 endif
 
 #
