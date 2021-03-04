@@ -36,11 +36,14 @@ MAC_SRC_ASSEMBLIES     = \
 	4.5/Xamarin.Mac 4.5/OpenTK
 WATCHOS_SRC_ASSEMBLIES = Xamarin.WatchOS/Xamarin.WatchOS Xamarin.WatchOS/MonoTouch.NUnitLite Xamarin.WatchOS/System.Net.Http
 TVOS_SRC_ASSEMBLIES    = Xamarin.TVOS/Xamarin.TVOS Xamarin.TVOS/MonoTouch.Dialog-1 Xamarin.TVOS/MonoTouch.NUnitLite Xamarin.TVOS/OpenTK-1.0 Xamarin.TVOS/System.Net.Http
+MACCATALYST_SRC_ASSEMBLIES = Xamarin.MacCatalyst/Xamarin.MacCatalyst Xamarin.MacCatalyst/Xamarin.iOS
+
 
 IOS_ASSEMBLIES     = $(foreach file,$(MONO_ASSEMBLIES),Xamarin.iOS/$(file))    $(IOS_SRC_ASSEMBLIES)
 MAC_ASSEMBLIES     = $(foreach file,$(MONO_ASSEMBLIES),Xamarin.Mac/$(file))     $(MAC_SRC_ASSEMBLIES)
 WATCHOS_ASSEMBLIES = $(foreach file,$(filter-out Mono.Data.Tds Mono.Security,$(MONO_ASSEMBLIES)),Xamarin.WatchOS/$(file)) $(WATCHOS_SRC_ASSEMBLIES)
 TVOS_ASSEMBLIES    = $(foreach file,$(MONO_ASSEMBLIES),Xamarin.TVOS/$(file))    $(TVOS_SRC_ASSEMBLIES)
+MACCATALYST_ASSEMBLIES = $(foreach file,$(MONO_ASSEMBLIES),Xamarin.MacCatalyst/$(file))    $(MACCATALYST_SRC_ASSEMBLIES)
 
 IOS_ARCH_ASSEMBLIES = native-32/Xamarin.iOS native-64/Xamarin.iOS
 MAC_ARCH_ASSEMBLIES =                       native-64/Xamarin.Mac
@@ -100,6 +103,7 @@ $(APIDIFF_DIR)/mac-api-diff.html:     $(foreach file,$(MAC_ASSEMBLIES),$(APIDIFF
 $(APIDIFF_DIR)/ios-api-diff.html:     $(foreach file,$(IOS_ASSEMBLIES),$(APIDIFF_DIR)/diff/xi/$(file).html)
 $(APIDIFF_DIR)/watchos-api-diff.html: $(foreach file,$(WATCHOS_ASSEMBLIES),$(APIDIFF_DIR)/diff/xi/$(file).html)
 $(APIDIFF_DIR)/tvos-api-diff.html:    $(foreach file,$(TVOS_ASSEMBLIES),$(APIDIFF_DIR)/diff/xi/$(file).html)
+$(APIDIFF_DIR)/maccat-api-diff.html:  $(foreach file,$(MACCATALYST_ASSEMBLIES),$(APIDIFF_DIR)/diff/xi/$(file).html)
 
 $(APIDIFF_DIR)/%-api-diff.html:
 	$(Q) rm -f $@
@@ -133,6 +137,9 @@ ifdef INCLUDE_TVOS
 API_DIFF_DEPENDENCIES += $(APIDIFF_DIR)/tvos-api-diff.html
 API_DIFF_DEPENDENCIES += $(APIDIFF_DIR)/diff/ios-to-tvos.html
 endif
+ifdef INCLUDE_MACCATALYST
+API_DIFF_DEPENDENCIES += $(APIDIFF_DIR)/maccat-api-diff.html
+endif
 endif
 
 $(APIDIFF_DIR)/api-diff.html: $(API_DIFF_DEPENDENCIES)
@@ -155,6 +162,13 @@ ifdef INCLUDE_WATCH
 		echo "<h2><a href='watchos-api-diff.html'>Xamarin.WatchOS API diff</a></h2>" >> $@; \
 	else \
 		echo "<h2>Xamarin.WatchOS API diff is empty</h2>" >> $@; \
+	fi;
+endif
+ifdef INCLUDE_MACCATALYST
+	$(Q) if ! grep "No change detected" $(APIDIFF_DIR)/maccat-api-diff.html >/dev/null 2>&1; then  \
+		echo "<h2><a href='maccat-api-diff.html'>Xamarin.MacCatalyst API diff</a></h2>" >> $@; \
+	else \
+		echo "<h2>Xamarin.MacCatalyst API diff is empty</h2>" >> $@; \
 	fi;
 endif
 endif
@@ -201,6 +215,7 @@ IOS_REFS     = $(foreach file,$(IOS_ASSEMBLIES),$(APIDIFF_DIR)/updated-reference
 MAC_REFS     = $(foreach file,$(MAC_ASSEMBLIES),$(APIDIFF_DIR)/updated-references/xm/$(file).xml)
 WATCHOS_REFS = $(foreach file,$(WATCHOS_ASSEMBLIES),$(APIDIFF_DIR)/updated-references/xi/$(file).xml)
 TVOS_REFS    = $(foreach file,$(TVOS_ASSEMBLIES),$(APIDIFF_DIR)/updated-references/xi/$(file).xml)
+MACCATALYST_REFS = $(foreach file,$(MACCATALYST_ASSEMBLIES),$(APIDIFF_DIR)/updated-references/xi/$(file).xml)
 
 $(APIDIFF_DIR)/references/xi/%.xml: $(UNZIP_DIR)/%.dll $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@) $(dir $(APIDIFF_DIR)/references/xi/$*)
@@ -222,8 +237,9 @@ update-tvos-refs: $(TVOS_REFS)
 update-watchos-refs: $(WATCHOS_REFS)
 update-ios-refs: $(IOS_REFS)
 update-mac-refs: $(MAC_REFS)
+update-maccat-refs: $(MACCATALYST_REFS)
 
-update-refs: $(WATCHOS_REFS) $(TVOS_REFS) $(IOS_REFS) $(MAC_REFS)
+update-refs: $(WATCHOS_REFS) $(TVOS_REFS) $(IOS_REFS) $(MAC_REFS) $(MACCATALYST_REFS)
 
 # targets to verify that the 32-bit and 64-bit assemblies have identical API.
 
@@ -270,6 +286,13 @@ else
 watchos-markdown: ; @true
 endif
 
+ifdef INCLUDE_MACCATALYST
+maccat-markdown: merger.exe $(foreach file,$(MACCATALYST_ASSEMBLIES),$(APIDIFF_DIR)/diff/xi/$(file).md)
+	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.MacCatalyst $(CURDIR)/diff/xi/Xamarin.MacCatalyst/ maccat
+else
+maccat-markdown: ; @true
+endif
+
 ifdef INCLUDE_MAC
 macos-markdown: merger.exe $(foreach file,$(MAC_ASSEMBLIES),$(APIDIFF_DIR)/diff/xm/$(file).md)
 	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.Mac $(CURDIR)/diff/xm/Xamarin.Mac/ macos
@@ -284,6 +307,7 @@ wrench-api-diff:
 	@echo "@MonkeyWrench: AddDirectory: $(CURDIR)/diff/xi/Xamarin.iOS"
 	@echo "@MonkeyWrench: AddDirectory: $(CURDIR)/diff/xi/Xamarin.WatchOS"
 	@echo "@MonkeyWrench: AddDirectory: $(CURDIR)/diff/xi/Xamarin.TVOS"
+	@echo "@MonkeyWrench: AddDirectory: $(CURDIR)/diff/xi/Xamarin.MacCatalyst"
 ifdef INCLUDE_MAC
 	@echo "@MonkeyWrench: AddDirectory: $(CURDIR)/diff/xm"
 	@echo "@MonkeyWrench: AddDirectory: $(CURDIR)/diff/xm/4.5"
@@ -299,10 +323,13 @@ ifdef INCLUDE_TVOS
 	@echo "@MonkeyWrench: AddFile: $(CURDIR)/tvos-api-diff.html"
 	@echo "@MonkeyWrench: AddFile: $(CURDIR)/diff/ios-to-tvos.html"
 endif
+ifdef INCLUDE_MACCATALYST
+	@echo "@MonkeyWrench: AddFile: $(CURDIR)/maccat-api-diff.html"
+endif
 endif
 	$(Q) $(MAKE) $(UNZIP_STAMP)
 	$(Q) $(MAKE) all -j8
-	$(Q) $(MAKE) -j8 ios-markdown tvos-markdown watchos-markdown macos-markdown
+	$(Q) $(MAKE) -j8 ios-markdown tvos-markdown watchos-markdown macos-markdown maccat-markdown
 	$(Q) $(CP) api-diff.html index.html
 	@echo "@MonkeyWrench: AddFile: $(CURDIR)/index.html"
 	@echo "@MonkeyWrench: AddFile: $(CURDIR)/api-diff.html"
