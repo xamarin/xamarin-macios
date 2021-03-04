@@ -1127,6 +1127,8 @@ public partial class Generator : IMemberGatherer {
 			return "float";
 		if (t == TypeManager.System_Boolean)
 			return "bool";
+		if (t == TypeManager.System_Char)
+			return "char";
 
 		return formatted ? FormatType (null, t) : t.Name;
 	}
@@ -2034,6 +2036,8 @@ public partial class Generator : IMemberGatherer {
 				var parameterType = ParameterGetMarshalType (new MarshalInfo (this, mi, pi) { EnumMode = enum_mode }, true);
 				if (parameterType == "bool" || parameterType == "out bool" || parameterType == "ref bool")
 					b.Append ("[MarshalAs (UnmanagedType.I1)] ");
+				else if (parameterType == "char" || parameterType == "out char" || parameterType == "ref char")
+					b.Append ("[MarshalAs (UnmanagedType.U2)] ");
 				b.Append (parameterType);
 			} catch (BindingException ex) {
 				throw new BindingException (1079, ex.Error, ex, ex.Message, pi.Name.GetSafeParamName (), mi.DeclaringType, mi.Name);
@@ -2060,6 +2064,8 @@ public partial class Generator : IMemberGatherer {
 		var returnType = need_stret ? "void" : ParameterGetMarshalType (new MarshalInfo (this, mi) { EnumMode = enum_mode }, true);
 		if (returnType == "bool")
 			print (m, "\t\t[return: MarshalAs (UnmanagedType.I1)]");
+		else if (returnType == "char")
+			print (m, "\t\t[return: MarshalAs (UnmanagedType.U2)]");
 
 		print (m, "\t\tpublic extern static {0} {1} ({3}IntPtr receiver, IntPtr selector{2});",
 		       returnType, method_name, b.ToString (),
@@ -3454,8 +3460,8 @@ public partial class Generator : IMemberGatherer {
 			return "nint";
 		if (type == TypeManager.System_nuint)
 			return "nuint";
-		if (type == TypeManager.System_Boolean)
-			return "bool";
+		if (type == TypeManager.System_Char)
+			return "char";
 
 		if (type.IsArray)
 			return FormatTypeUsedIn (usedInNamespace, type.GetElementType ()) + "[" + new string (',', type.GetArrayRank () - 1) + "]";
