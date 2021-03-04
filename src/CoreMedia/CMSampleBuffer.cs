@@ -82,7 +82,7 @@ namespace CoreMedia {
 		extern static CMSampleBufferError CMAudioSampleBufferCreateWithPacketDescriptions (
 			/* CFAllocatorRef */ IntPtr allocator,
 			/* CMBlockBufferRef */ IntPtr dataBuffer,
-			/* Boolean */ bool dataReady,
+			/* Boolean */ [MarshalAs (UnmanagedType.I1)] bool dataReady,
 			/* CMSampleBufferMakeDataReadyCallback */ IntPtr makeDataReadyCallback,
 			/* void */ IntPtr makeDataReadyRefcon,
 			/* CMFormatDescriptionRef */ IntPtr formatDescription,
@@ -217,7 +217,7 @@ namespace CoreMedia {
 		static extern /* OSStatus */ CMSampleBufferError CMSampleBufferCreateForImageBuffer (
 			/* CFAllocatorRef */ IntPtr allocator,
 			/* CVImageBufferRef */ IntPtr imageBuffer,
-			/* Boolean */ bool dataReady,
+			/* Boolean */ [MarshalAs (UnmanagedType.I1)] bool dataReady,
 			/* CMSampleBufferMakeDataReadyCallback */ IntPtr makeDataReadyCallback,
 			/* void* */ IntPtr makeDataReadyRefcon,
 			/* CMVideoFormatDescriptionRef */ IntPtr formatDescription,
@@ -247,6 +247,7 @@ namespace CoreMedia {
 		}
 
 		[DllImport(Constants.CoreMediaLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static /* Boolean */ bool CMSampleBufferDataIsReady (/* CMSampleBufferRef */ IntPtr sbuf);
 		
 		public bool DataIsReady
@@ -428,7 +429,7 @@ namespace CoreMedia {
 		}
 
 		[DllImport(Constants.CoreMediaLibrary)]
-		extern static /* CFArrayRef */ IntPtr CMSampleBufferGetSampleAttachmentsArray (/* CMSampleBufferRef */ IntPtr sbuf, /* Boolean */ bool createIfNecessary);
+		extern static /* CFArrayRef */ IntPtr CMSampleBufferGetSampleAttachmentsArray (/* CMSampleBufferRef */ IntPtr sbuf, /* Boolean */ [MarshalAs (UnmanagedType.I1)] bool createIfNecessary);
 		
 		public CMSampleBufferAttachmentSettings [] GetSampleAttachments (bool createIfNecessary)
 		{
@@ -537,6 +538,7 @@ namespace CoreMedia {
 		}
 		
 		[DllImport(Constants.CoreMediaLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static /* Boolean */ bool CMSampleBufferIsValid (/* CMSampleBufferRef */ IntPtr sbuf);
 		
 		public bool IsValid

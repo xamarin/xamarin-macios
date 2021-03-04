@@ -591,15 +591,19 @@ namespace ObjCRuntime {
 		internal static extern void objc_registerClassPair (IntPtr cls);
 
 		[DllImport ("/usr/lib/libobjc.dylib")]
+		[return: MarshalAs (UnmanagedType.U1)]
 		internal static extern bool class_addIvar (IntPtr cls, string name, IntPtr size, byte alignment, string types);
 
 		[DllImport ("/usr/lib/libobjc.dylib")]
+		[return: MarshalAs (UnmanagedType.U1)]
 		internal static extern bool class_addMethod (IntPtr cls, IntPtr name, IntPtr imp, string types);
 
 		[DllImport ("/usr/lib/libobjc.dylib")]
+		[return: MarshalAs (UnmanagedType.U1)]
 		internal extern static bool class_addMethod (IntPtr cls, IntPtr name, Delegate imp, string types);
 
 		[DllImport ("/usr/lib/libobjc.dylib")]
+		[return: MarshalAs (UnmanagedType.U1)]
 		internal extern static bool class_addProtocol (IntPtr cls, IntPtr protocol);
 
 		[DllImport ("/usr/lib/libobjc.dylib")]
@@ -618,6 +622,7 @@ namespace ObjCRuntime {
 		internal extern static IntPtr class_getInstanceVariable (IntPtr cls, string name);
 
 		[DllImport ("/usr/lib/libobjc.dylib", CharSet=CharSet.Ansi)]
+		[return: MarshalAs (UnmanagedType.U1)]
 		internal extern static bool class_addProperty (IntPtr cls, string name, objc_attribute_prop [] attributes, int count);
 
 		[StructLayout (LayoutKind.Sequential, CharSet=CharSet.Ansi)]

@@ -29,6 +29,7 @@ namespace UIKit {
 
 		[iOS (11, 0), TV (11, 0)]
 		[DllImport (Constants.UIKitLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool UIContentSizeCategoryIsAccessibilityCategory (IntPtr /* NSString */ category);
 
 		[iOS (11, 0), TV (11, 0)]

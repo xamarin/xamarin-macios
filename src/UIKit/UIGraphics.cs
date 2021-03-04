@@ -44,7 +44,7 @@ namespace UIKit {
 		public extern static void BeginImageContext (CGSize size);
 
 		[DllImport (Constants.UIKitLibrary, EntryPoint="UIGraphicsBeginImageContextWithOptions")]
-		public extern static void BeginImageContextWithOptions (CGSize size, bool opaque, nfloat scale);
+		public extern static void BeginImageContextWithOptions (CGSize size, [MarshalAs (UnmanagedType.I1)] bool opaque, nfloat scale);
 	
 		[DllImport (Constants.UIKitLibrary)]
 		static extern IntPtr UIGraphicsGetImageFromCurrentImageContext ();

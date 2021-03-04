@@ -80,6 +80,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool nw_framer_message_access_value (OS_nw_protocol_metadata message, string key, ref BlockLiteral access_value);
 		delegate bool nw_framer_message_access_value_t (IntPtr block, IntPtr data);
 		static nw_framer_message_access_value_t static_AccessValueHandler = TrampolineAccessValueHandler;

@@ -126,6 +126,7 @@ namespace Network {
 
 		[TV (13,0), Mac (10,15), iOS (13,0)]
 		[DllImport (Constants.NetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool nw_path_is_constrained (IntPtr path);
 
 		[TV (13,0), Mac (10,15), iOS (13,0)]

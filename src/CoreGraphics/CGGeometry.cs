@@ -101,6 +101,7 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool CGRectIsNull (CGRect rect);
 
 		public static bool IsNull (this CGRect self)
@@ -109,6 +110,7 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool CGRectIsInfinite (CGRect rect);
 
 		public static bool IsInfinite (this CGRect self)

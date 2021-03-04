@@ -2031,7 +2031,10 @@ public partial class Generator : IMemberGatherer {
 			b.Append (", ");
 
 			try {
-				b.Append (ParameterGetMarshalType (new MarshalInfo (this, mi, pi) { EnumMode = enum_mode }, true));
+				var parameterType = ParameterGetMarshalType (new MarshalInfo (this, mi, pi) { EnumMode = enum_mode }, true);
+				if (parameterType == "bool" || parameterType == "out bool" || parameterType == "ref bool")
+					b.Append ("[MarshalAs (UnmanagedType.I1)] ");
+				b.Append (parameterType);
 			} catch (BindingException ex) {
 				throw new BindingException (1079, ex.Error, ex, ex.Message, pi.Name.GetSafeParamName (), mi.DeclaringType, mi.Name);
 			}
@@ -2054,8 +2057,12 @@ public partial class Generator : IMemberGatherer {
 			print (m, "\t\t[DllImport (LIBOBJC_DYLIB, EntryPoint=\"{0}\")]", entry_point);
 		}
 
+		var returnType = need_stret ? "void" : ParameterGetMarshalType (new MarshalInfo (this, mi) { EnumMode = enum_mode }, true);
+		if (returnType == "bool")
+			print (m, "\t\t[return: MarshalAs (UnmanagedType.I1)]");
+
 		print (m, "\t\tpublic extern static {0} {1} ({3}IntPtr receiver, IntPtr selector{2});",
-		       need_stret ? "void" : ParameterGetMarshalType (new MarshalInfo (this, mi) { EnumMode = enum_mode }, true), method_name, b.ToString (),
+		       returnType, method_name, b.ToString (),
 		       need_stret ? (aligned ? "IntPtr" : "out " + FormatTypeUsedIn ("ObjCRuntime", mi.ReturnType)) + " retval, " : "");
 	}
 

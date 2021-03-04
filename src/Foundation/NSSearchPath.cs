@@ -41,6 +41,6 @@ namespace Foundation
 		}
 
 		[DllImport (Constants.FoundationLibrary)]
-		static extern IntPtr NSSearchPathForDirectoriesInDomains (nuint directory, nuint domainMask, bool expandTilde);
+		static extern IntPtr NSSearchPathForDirectoriesInDomains (nuint directory, nuint domainMask, [MarshalAs (UnmanagedType.I1)] bool expandTilde);
 	}
 }

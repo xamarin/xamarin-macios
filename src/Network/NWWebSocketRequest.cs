@@ -25,6 +25,7 @@ namespace Network {
 		internal NWWebSocketRequest (IntPtr handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		unsafe static extern bool nw_ws_request_enumerate_additional_headers (OS_nw_ws_request request, ref BlockLiteral enumerator);
 
 		delegate void nw_ws_request_enumerate_additional_headers_t (IntPtr block, string header, string value);
@@ -55,6 +56,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool nw_ws_request_enumerate_subprotocols (OS_nw_ws_request request, ref BlockLiteral enumerator);
 
 		delegate void nw_ws_request_enumerate_subprotocols_t (IntPtr block, string subprotocol);

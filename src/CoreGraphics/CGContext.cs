@@ -347,6 +347,7 @@ namespace CoreGraphics {
 
 		
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGContextIsPathEmpty (/* CGContextRef */ IntPtr context);
 
 		public bool IsPathEmpty ()
@@ -371,6 +372,7 @@ namespace CoreGraphics {
 		}
 		
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGContextPathContainsPoint (/* CGContextRef */ IntPtr context, CGPoint point, CGPathDrawingMode mode);
 
 		public bool PathContainsPoint (CGPoint point, CGPathDrawingMode mode)
@@ -1038,7 +1040,7 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static void CGContextSetShouldAntialias (/* CGContextRef */ IntPtr context, bool shouldAntialias);
+		extern static void CGContextSetShouldAntialias (/* CGContextRef */ IntPtr context, [MarshalAs (UnmanagedType.I1)] bool shouldAntialias);
 
 		public void SetShouldAntialias (bool shouldAntialias)
 		{
@@ -1046,14 +1048,14 @@ namespace CoreGraphics {
 		}
 		
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static void CGContextSetAllowsAntialiasing (/* CGContextRef */ IntPtr context, bool allowsAntialiasing);
+		extern static void CGContextSetAllowsAntialiasing (/* CGContextRef */ IntPtr context, [MarshalAs (UnmanagedType.I1)] bool allowsAntialiasing);
 		public void SetAllowsAntialiasing (bool allowsAntialiasing)
 		{
 			CGContextSetAllowsAntialiasing (handle, allowsAntialiasing);
 		}
 			
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static void CGContextSetShouldSmoothFonts (/* CGContextRef */ IntPtr context, bool shouldSmoothFonts);
+		extern static void CGContextSetShouldSmoothFonts (/* CGContextRef */ IntPtr context, [MarshalAs (UnmanagedType.I1)] bool shouldSmoothFonts);
 
 		public void SetShouldSmoothFonts (bool shouldSmoothFonts)
 		{
@@ -1147,7 +1149,7 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static void CGContextSetAllowsFontSmoothing (/* CGContextRef */ IntPtr context, bool shouldSubpixelPositionFonts);
+		extern static void CGContextSetAllowsFontSmoothing (/* CGContextRef */ IntPtr context, [MarshalAs (UnmanagedType.I1)] bool shouldSubpixelPositionFonts);
 
 		public void SetAllowsFontSmoothing (bool allows)
 		{
@@ -1155,7 +1157,7 @@ namespace CoreGraphics {
 		}
 		
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static void CGContextSetAllowsFontSubpixelPositioning (/* CGContextRef */ IntPtr context, bool allowsFontSubpixelPositioning);
+		extern static void CGContextSetAllowsFontSubpixelPositioning (/* CGContextRef */ IntPtr context, [MarshalAs (UnmanagedType.I1)] bool allowsFontSubpixelPositioning);
 
 		public void SetAllowsSubpixelPositioning (bool allows)
 		{
@@ -1163,7 +1165,7 @@ namespace CoreGraphics {
 		}
 		
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static void CGContextSetAllowsFontSubpixelQuantization (/* CGContextRef */ IntPtr context, bool shouldSubpixelQuantizeFonts);
+		extern static void CGContextSetAllowsFontSubpixelQuantization (/* CGContextRef */ IntPtr context, [MarshalAs (UnmanagedType.I1)] bool shouldSubpixelQuantizeFonts);
 
 		public void SetAllowsFontSubpixelQuantization (bool allows)
 		{
@@ -1171,7 +1173,7 @@ namespace CoreGraphics {
 		}
 			
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static void CGContextSetShouldSubpixelPositionFonts (/* CGContextRef */ IntPtr context, bool shouldSubpixelPositionFonts);
+		extern static void CGContextSetShouldSubpixelPositionFonts (/* CGContextRef */ IntPtr context, [MarshalAs (UnmanagedType.I1)] bool shouldSubpixelPositionFonts);
 
 		public void SetShouldSubpixelPositionFonts (bool shouldSubpixelPositionFonts)
 		{
@@ -1179,7 +1181,7 @@ namespace CoreGraphics {
 		}
 		
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static void CGContextSetShouldSubpixelQuantizeFonts (/* CGContextRef */ IntPtr context, bool shouldSubpixelQuantizeFonts);
+		extern static void CGContextSetShouldSubpixelQuantizeFonts (/* CGContextRef */ IntPtr context, [MarshalAs (UnmanagedType.I1)] bool shouldSubpixelQuantizeFonts);
 
 		public void ShouldSubpixelQuantizeFonts (bool shouldSubpixelQuantizeFonts)
 		{

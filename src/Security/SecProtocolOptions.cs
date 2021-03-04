@@ -256,7 +256,8 @@ namespace Security {
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[DllImport (Constants.SecurityLibrary)]
-		static extern bool sec_protocol_options_are_equal (sec_protocol_options_t optionsA, sec_protocol_options_t optionsB);
+		[return: MarshalAs (UnmanagedType.I1)]
+ 		static extern bool sec_protocol_options_are_equal (sec_protocol_options_t optionsA, sec_protocol_options_t optionsB);
 
 		// Equatable would be nice but would fail on earlier OS versions
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]

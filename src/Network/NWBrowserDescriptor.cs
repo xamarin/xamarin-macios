@@ -39,10 +39,11 @@ namespace Network {
 		public static NWBrowserDescriptor CreateBonjourService (string type) => CreateBonjourService (type, null);
 
 		[DllImport (Constants.NetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool nw_browse_descriptor_get_include_txt_record (OS_nw_browse_descriptor descriptor);
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_browse_descriptor_set_include_txt_record (OS_nw_browse_descriptor descriptor, bool include_txt_record);
+		static extern void nw_browse_descriptor_set_include_txt_record (OS_nw_browse_descriptor descriptor, [MarshalAs (UnmanagedType.I1)] bool include_txt_record);
 
 		public bool IncludeTxtRecord {
 			get => nw_browse_descriptor_get_include_txt_record (GetCheckedHandle ()); 
