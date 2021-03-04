@@ -1,5 +1,0 @@
-!missing-enum! PKRadioTechnology not bound
-!missing-field! PKPaymentNetworkMir not bound
-!deprecated-attribute-missing! PKSuicaPassProperties::isBlacklisted missing a [Deprecated] attribute
-!deprecated-attribute-missing! PKTransitPassProperties::isBlacklisted missing a [Deprecated] attribute
-!missing-selector! PKTransitPassProperties::isBlocked not bound
