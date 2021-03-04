@@ -978,6 +978,10 @@ namespace PassKit {
 		[Watch (7,0)][iOS (14,0)]
 		[Field ("PKPaymentNetworkGirocard")]
 		NSString Girocard { get; }
+
+		[Watch (7,3)][Mac (11,3)][iOS (14, 5)]
+		[Field ("PKPaymentNetworkMir")]
+		NSString Mir { get; }
 	}
 
 #if !WATCH
@@ -1177,8 +1181,14 @@ namespace PassKit {
 		[Export ("inStation")]
 		bool InStation { [Bind ("isInStation")] get; }
 
+		[Deprecated (PlatformName.iOS, 14,5, message: "Use 'Blocked' instead.")]
+		[Deprecated (PlatformName.WatchOS, 7,3, message: "Use 'Blocked' instead.")]
 		[Export ("blacklisted")]
 		bool Blacklisted { [Bind ("isBlacklisted")] get; }
+
+		[iOS (14,5)][Watch (7,3)]
+		[Export ("blocked")]
+		bool Blocked { [Bind ("isBlocked")] get; }
 
 		[NullAllowed, Export ("expirationDate", ArgumentSemantic.Copy)]
 		NSDate ExpirationDate { get; }
@@ -1221,6 +1231,8 @@ namespace PassKit {
 		bool GreenCarTicketUsed { [Bind ("isGreenCarTicketUsed")] get; }
 
 		[Export ("blacklisted")]
+		[Deprecated (PlatformName.iOS, 14,5, message: "Use 'Blocked' instead.")] // exists in base class
+		[Deprecated (PlatformName.WatchOS, 7,3, message: "Use 'Blocked' instead.")]
 		bool Blacklisted { [Bind ("isBlacklisted")] get; }
 	}
 
@@ -1484,6 +1496,10 @@ namespace PassKit {
 
 		[Export ("password")]
 		string Password { get; set; }
+
+		[iOS (14,5)]
+		[Export ("supportedRadioTechnologies", ArgumentSemantic.Assign)]
+		PKRadioTechnology SupportedRadioTechnologies { get; set; }
 	}
 
 	interface IPKAddSecureElementPassViewControllerDelegate {}
@@ -1812,5 +1828,14 @@ namespace PassKit {
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface PKPaymentInformationEventExtension {
+	}
+
+	[iOS (14,5)]
+	[Flags]
+	[Native]
+	enum PKRadioTechnology : ulong {
+		None = 0,
+		Nfc = 1 << 0,
+		Bluetooth = 1 << 1,
 	}
 }
