@@ -58,8 +58,6 @@ namespace Xamarin.MacDev.Tasks {
 				case ApplePlatform.TVOS:
 				case ApplePlatform.MacOSX:
 					arguments.Add (PlatformFrameworkHelper.GetMinimumVersionArgument (TargetFrameworkMoniker, SdkIsSimulator, MinimumOSVersion));
-					arguments.Add ("-isysroot");
-					arguments.Add (SdkRoot);
 
 					if (!string.IsNullOrEmpty (arch)) {
 						arguments.Add ("-arch");
@@ -78,6 +76,9 @@ namespace Xamarin.MacDev.Tasks {
 				default:
 					throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, Platform));
 				}
+
+				arguments.Add ("-isysroot");
+				arguments.Add (SdkRoot);
 
 				if (IncludeDirectories != null) {
 					foreach (var inc in IncludeDirectories)
