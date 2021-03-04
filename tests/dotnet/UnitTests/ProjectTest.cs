@@ -101,15 +101,19 @@ namespace Xamarin.Tests {
 		}
 
 		[Test]
-		public void BuildMyCatalystApp ()
+		[TestCase ("maccatalyst-x64")]
+		[TestCase ("maccatalyst-arm64")]
+		public void BuildMyCatalystApp (string runtimeIdentifier)
 		{
 			var platform = ApplePlatform.MacCatalyst;
 			var project_path = GetProjectPath ("MyCatalystApp");
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 			Clean (project_path);
-			var result = DotNet.AssertBuild (project_path, verbosity);
+			var properties = new Dictionary<string, string> (verbosity);
+			properties ["RuntimeIdentifier"] = runtimeIdentifier;
+			var result = DotNet.AssertBuild (project_path, properties);
 			AssertThatLinkerExecuted (result);
-			var appPath = Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", "net6.0-maccatalyst", "maccatalyst-x64", "MyCatalystApp.app");
+			var appPath = Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", "net6.0-maccatalyst", runtimeIdentifier, "MyCatalystApp.app");
 			AssertAppContents (platform, appPath);
 			var infoPlistPath = Path.Combine (appPath, "Contents", "Info.plist");
 			var infoPlist = PDictionary.FromFile (infoPlistPath);

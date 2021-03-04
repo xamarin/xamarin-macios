@@ -48,7 +48,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(TargetArchitectures)' == '' And '$(_PlatformName)' == 'MacCatalyst' ">
     <TargetArchitectures Condition=" '$(RuntimeIdentifier)' == 'maccatalyst-x64' ">x86_64</TargetArchitectures>
-    <TargetArchitectures Condition=" '$(RuntimeIdentifier)' == 'maccatalyst-arm64' ">arm64</TargetArchitectures>
+    <TargetArchitectures Condition=" '$(RuntimeIdentifier)' == 'maccatalyst-arm64' ">ARM64</TargetArchitectures>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(ComputedPlatform)' == '' And ('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS') ">
