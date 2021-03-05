@@ -1187,6 +1187,7 @@ namespace PassKit {
 		bool Blacklisted { [Bind ("isBlacklisted")] get; }
 
 		[iOS (14,5)][Watch (7,3)]
+		[Mac (11,3)]
 		[Export ("blocked")]
 		bool Blocked { [Bind ("isBlocked")] get; }
 
@@ -1498,6 +1499,7 @@ namespace PassKit {
 		string Password { get; set; }
 
 		[iOS (14,5)]
+		[Mac (11,3)]
 		[Export ("supportedRadioTechnologies", ArgumentSemantic.Assign)]
 		PKRadioTechnology SupportedRadioTechnologies { get; set; }
 	}
