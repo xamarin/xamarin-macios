@@ -10,6 +10,7 @@ public class TypeManager {
 	public Type System_Attribute;
 	public Type System_Boolean;
 	public Type System_Byte;
+	public Type System_Char;
 	public Type System_Delegate;
 	public Type System_Double;
 	public Type System_Float;
@@ -172,6 +173,7 @@ public class TypeManager {
 		System_Attribute = Lookup (corlib_assembly, "System", "Attribute");
 		System_Boolean = Lookup (corlib_assembly, "System", "Boolean");
 		System_Byte = Lookup (corlib_assembly, "System", "Byte");
+		System_Char = Lookup (corlib_assembly, "System", "Char");
 		System_Delegate = Lookup (corlib_assembly, "System", "Delegate");
 		System_Double = Lookup (corlib_assembly, "System", "Double");
 		System_Float = Lookup (corlib_assembly, "System", "Single");

@@ -13,9 +13,9 @@ using Mono.Cecil.Cil;
 namespace Cecil.Tests {
 
 	[TestFixture]
-	public class MarshalAsBooleanTest {
+	public class MarshalAsTest {
 		[TestCaseSource (typeof (Helper), "PlatformAssemblies")]
-		public void MarshalAsBoolean (string assemblyPath)
+		public void TestAssembly (string assemblyPath)
 		{
 			var assembly = Helper.GetAssembly (assemblyPath);
 			if (assembly == null)
@@ -48,7 +48,7 @@ namespace Cecil.Tests {
 			var rv = true;
 
 			if (!CheckMarshalAs (checkedTypes, method, method.MethodReturnType.ReturnType, method.MethodReturnType, ref failures)) {
-				AddFailure (ref failures, $"The boolean return type does not have a MarshalAs attribute: {method.FullName}");
+				AddFailure (ref failures, $"The {GetTypeName (method.ReturnType)} return type does not have a MarshalAs attribute: {method.FullName}");
 				rv = false;
 			}
 
@@ -59,7 +59,7 @@ namespace Cecil.Tests {
 					if (paramType.IsByReference)
 						paramType = paramType.GetElementType ();
 					if (!CheckMarshalAs (checkedTypes, method, paramType, param, ref failures)) {
-						AddFailure (ref failures, $"The boolean parameter #{i + 1} ({param.Name}) does not have a MarshalAs attribute: {method.FullName}");
+						AddFailure (ref failures, $"The {GetTypeName (paramType)} parameter #{i + 1} ({param.Name}) does not have a MarshalAs attribute: {method.FullName}");
 						rv = false;
 					}
 				}
@@ -91,11 +91,16 @@ namespace Cecil.Tests {
 					continue;
 
 				if (!CheckMarshalAs (checkedTypes, method, field.FieldType, field, ref failures)) {
-					AddFailure (ref failures, $"The boolean field '{field.Name}' in {tr.FullName} does not have a MarshalAs attribute. Original method: {method.FullName}");
+					AddFailure (ref failures, $"The {GetTypeName (field.FieldType)} field '{field.Name}' in {tr.FullName} does not have a MarshalAs attribute. Original method: {method.FullName}");
 					rv = false;
 				}
 			}
 			return rv;
+		}
+
+		static string GetTypeName (TypeReference type)
+		{
+			return type.Name.ToLower ();
 		}
 
 		static bool IsDelegate (TypeReference tr)
@@ -123,11 +128,16 @@ namespace Cecil.Tests {
 			if (provider.HasMarshalInfo)
 				return true;
 
-			if (type.Namespace != "System" || type.Name != "Boolean")
-				return true;
+			// boolean or char type without MarshalAs directive
+			if (type.Namespace == "System") {
+				switch (type.Name) {
+				case "Boolean":
+				case "Char":
+					return false;
+				}
+			}
 
-			// boolean type without MarshalAs directive.
-			return false;
+			return true;
 		}
 	}
 }
