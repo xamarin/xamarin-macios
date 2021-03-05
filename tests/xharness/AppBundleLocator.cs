@@ -138,7 +138,7 @@ namespace Xharness {
 			if (!File.Exists (global_json))
 				throw new Exception ($"Could not find any global.json file in {directory} or above");
 
-			// Parse the global.json we found, and figure out if it tells us to use .NET 3.1.100 or not.
+			// Parse the global.json we found, and figure out if it tells us to use .NET 3.1.100 / 5.X.XXX or not.
 			var contents = File.ReadAllBytes (global_json);
 
 			using var reader = JsonReaderWriterFactory.CreateJsonReader (contents, new XmlDictionaryReaderQuotas ());
@@ -150,6 +150,7 @@ namespace Xharness {
 
 			switch (version [0]) {
 			case '3':
+			case '5':
 				executable = dotnetPath;
 				break;
 			default:

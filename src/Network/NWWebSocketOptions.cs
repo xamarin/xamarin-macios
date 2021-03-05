@@ -55,7 +55,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_ws_options_set_auto_reply_ping (OS_nw_protocol_options options, bool auto_reply_ping);
+		static extern void nw_ws_options_set_auto_reply_ping (OS_nw_protocol_options options, [MarshalAs (UnmanagedType.I1)] bool auto_reply_ping);
 
 		public bool AutoReplyPing {
 			get { return autoReplyPing;}
@@ -77,7 +77,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_ws_options_set_skip_handshake (OS_nw_protocol_options options, bool skip_handshake);
+		static extern void nw_ws_options_set_skip_handshake (OS_nw_protocol_options options, [MarshalAs (UnmanagedType.I1)] bool skip_handshake);
 
 		public bool SkipHandShake {
 			get { return skipHandShake; }

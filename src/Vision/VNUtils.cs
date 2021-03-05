@@ -24,6 +24,7 @@ namespace Vision {
 		public static CGRect NormalizedIdentityRect { get; } = Dlfcn.GetCGRect (Libraries.Vision.Handle, "VNNormalizedIdentityRect");
 
 		[DllImport (Constants.VisionLibrary, EntryPoint = "VNNormalizedRectIsIdentityRect")]
+		[return: MarshalAs (UnmanagedType.U1)]
 		public static extern bool IsIdentityRect (CGRect rect);
 
 		[DllImport (Constants.VisionLibrary, EntryPoint = "VNImagePointForNormalizedPoint")]

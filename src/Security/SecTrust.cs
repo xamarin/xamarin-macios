@@ -85,11 +85,11 @@ namespace Security {
 
 		[iOS (7,0)][Mac (10,9)]
 		[DllImport (Constants.SecurityLibrary)]
-		extern static SecStatusCode /* OSStatus */ SecTrustGetNetworkFetchAllowed (IntPtr /* SecTrustRef */ trust, out bool /* Boolean* */ allowFetch);
+		extern static SecStatusCode /* OSStatus */ SecTrustGetNetworkFetchAllowed (IntPtr /* SecTrustRef */ trust, [MarshalAs (UnmanagedType.I1)] out bool /* Boolean* */ allowFetch);
 
 		[iOS (7,0)][Mac (10,9)]
 		[DllImport (Constants.SecurityLibrary)]
-		extern static SecStatusCode /* OSStatus */ SecTrustSetNetworkFetchAllowed (IntPtr /* SecTrustRef */ trust, bool /* Boolean */ allowFetch);
+		extern static SecStatusCode /* OSStatus */ SecTrustSetNetworkFetchAllowed (IntPtr /* SecTrustRef */ trust, [MarshalAs (UnmanagedType.I1)] bool /* Boolean */ allowFetch);
 
 		[iOS (7,0)][Mac (10,9)]
 		public bool NetworkFetchAllowed {
@@ -221,6 +221,7 @@ namespace Security {
 
 		[Watch (5,0)][TV (12,0)][Mac (10,14)][iOS (12,0)]
 		[DllImport (Constants.SecurityLibrary)]
+		[return: MarshalAs (UnmanagedType.U1)]
 		static extern bool SecTrustEvaluateWithError (/* SecTrustRef */ IntPtr trust, out /* CFErrorRef** */ IntPtr error);
 
 		[Watch (5,0)][TV (12,0)][Mac (10,14)][iOS (12,0)]

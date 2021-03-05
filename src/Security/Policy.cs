@@ -54,7 +54,7 @@ namespace Security {
 		}
 
 		[DllImport (Constants.SecurityLibrary)]
-		extern static IntPtr /* SecPolicyRef */ SecPolicyCreateSSL (bool server, IntPtr /* CFStringRef */ hostname);
+		extern static IntPtr /* SecPolicyRef */ SecPolicyCreateSSL ([MarshalAs (UnmanagedType.I1)] bool server, IntPtr /* CFStringRef */ hostname);
 
 		static public SecPolicy CreateSslPolicy (bool server, string hostName)
 		{

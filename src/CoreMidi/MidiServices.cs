@@ -1405,7 +1405,7 @@ namespace CoreMidi {
 		[Deprecated (PlatformName.iOS, 14,0)]
 		[Deprecated (PlatformName.MacOSX, 11,0)]
 		[DllImport (Constants.CoreMidiLibrary)]
-		extern static int MIDIDeviceAddEntity (MidiDeviceRef device, /* CFString */ IntPtr name, bool embedded, nuint numSourceEndpoints, nuint numDestinationEndpoints, MidiEntityRef newEntity);
+		extern static int MIDIDeviceAddEntity (MidiDeviceRef device, /* CFString */ IntPtr name, [MarshalAs (UnmanagedType.U1)] bool embedded, nuint numSourceEndpoints, nuint numDestinationEndpoints, MidiEntityRef newEntity);
 
 		public MidiEntity GetEntity (nint entityIndex)
 		{

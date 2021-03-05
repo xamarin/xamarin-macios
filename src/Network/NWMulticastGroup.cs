@@ -26,6 +26,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool nw_group_descriptor_add_endpoint (OS_nw_group_descriptor descriptor, OS_nw_endpoint endpoint);
 
 		public void AddEndpoint (NWEndpoint endpoint)
@@ -36,10 +37,11 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool nw_multicast_group_descriptor_get_disable_unicast_traffic (OS_nw_group_descriptor multicast_descriptor);
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_multicast_group_descriptor_set_disable_unicast_traffic (OS_nw_group_descriptor multicast_descriptor, bool disable_unicast_traffic);
+		static extern void nw_multicast_group_descriptor_set_disable_unicast_traffic (OS_nw_group_descriptor multicast_descriptor, [MarshalAs (UnmanagedType.I1)] bool disable_unicast_traffic);
 
 		public bool DisabledUnicastTraffic {
 			get => nw_multicast_group_descriptor_get_disable_unicast_traffic (GetCheckedHandle ());

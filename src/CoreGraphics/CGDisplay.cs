@@ -72,6 +72,7 @@ namespace CoreGraphics
 
 		[Deprecated (PlatformName.MacOSX, 10, 9)]
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool CGDisplayIsCaptured (uint display);
 
 		public static bool IsCaptured (int display)

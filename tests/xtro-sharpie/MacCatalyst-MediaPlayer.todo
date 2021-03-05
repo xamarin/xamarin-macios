@@ -1,12 +1,3 @@
-!missing-null-allowed! 'Foundation.NSObject MediaPlayer.MPMediaPropertyPredicate::get_Value()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'MediaPlayer.MPContentItem MediaPlayer.MPPlayableContentDataSource::ContentItem(Foundation.NSIndexPath)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'MediaPlayer.MPMediaItem MediaPlayer.MPMediaItemCollection::get_RepresentativeItem()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'MediaPlayer.MPMediaItem[] MediaPlayer.MPMediaPlaylist::get_SeedItems()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'MediaPlayer.MPMediaItem[] MediaPlayer.MPMediaQuery::get_Items()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'MediaPlayer.MPMediaItemCollection[] MediaPlayer.MPMediaQuery::get_Collections()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'MediaPlayer.MPMediaQuerySection[] MediaPlayer.MPMediaQuery::get_CollectionSections()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'MediaPlayer.MPMediaQuerySection[] MediaPlayer.MPMediaQuery::get_ItemSections()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String MediaPlayer.MPMediaPlaylist::get_Name()' is missing an [NullAllowed] on return type
 !missing-protocol! MPNowPlayingSessionDelegate not bound
 !missing-selector! MPMediaEntity::persistentID not bound
 !missing-selector! MPNowPlayingSession::addPlayer: not bound

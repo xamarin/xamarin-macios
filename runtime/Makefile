@@ -205,8 +205,11 @@ $$(RUNTIME_$(2)_TARGETS_DIRS):
 	$(Q) mkdir -p $$@
 
 all-$(2):: $$(RUNTIME_$(2)_TARGETS)
+
+ifdef INCLUDE_XAMARIN_LEGACY
 all-local:: $$(RUNTIME_$(2)_TARGETS)
 install-local:: $$(RUNTIME_$(2)_TARGETS)
+endif
 
 endef
 
@@ -438,7 +441,9 @@ MAC_LIBS =                   \
 #    embedding the Mono runtime).
 #
 
+ifdef INCLUDE_XAMARIN_LEGACY
 all-local:: $(TARGETS)
+endif
 
 define ObjTemplate
 DYNAMIC_DYLIB$(2)_OBJECTS   = $$(foreach src,$$(MAC_SOURCES),.libs/mac/$$(basename $$(src))$(3).dylib.$(1).o)
@@ -547,8 +552,10 @@ $(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/include/%.h: %.h | $(MAC_DESTDIR)$(XAMARIN_MA
 $(RUNTIME_MAC_TARGETS_DIRS):
 	$(Q) mkdir -p $@
 
+ifdef INCLUDE_XAMARIN_LEGACY
 all-local:: $(RUNTIME_MAC_TARGETS)
 install-local:: $(RUNTIME_MAC_TARGETS)
+endif
 
 #
 # .NET

@@ -26,7 +26,7 @@ using OS_nw_parameters=System.IntPtr;
 
 namespace Network {
 
-	public delegate nuint NWFramerParseCompletionDelegate (Memory<byte> buffer, bool isCompleted);
+	public delegate nuint NWFramerParseCompletionDelegate (Memory<byte> buffer, [MarshalAs (UnmanagedType.I1)] bool isCompleted);
 	public delegate nuint NWFramerInputDelegate (NWFramer framer); 
 
 	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
@@ -34,6 +34,7 @@ namespace Network {
 		internal NWFramer (IntPtr handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool nw_framer_write_output_no_copy (OS_nw_framer framer, nuint output_length);
 
 		public bool WriteOutputNoCopy (nuint outputLength) => nw_framer_write_output_no_copy (GetCheckedHandle (), outputLength);
@@ -253,6 +254,7 @@ namespace Network {
 			=> new NWFramerMessage (nw_framer_message_create (GetCheckedHandle ()), owns: true);
 
 		[DllImport (Constants.NetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool nw_framer_prepend_application_protocol (OS_nw_framer framer, OS_nw_protocol_options protocol_options);
 
 		public bool PrependApplicationProtocol (NWProtocolOptions options)
@@ -283,7 +285,8 @@ namespace Network {
 		public void MarkFailedWithError (int errorCode) => nw_framer_mark_failed_with_error (GetCheckedHandle (), errorCode); 
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern bool nw_framer_deliver_input_no_copy (OS_nw_framer framer, nuint input_length, OS_nw_protocol_metadata message, bool is_complete);
+		[return: MarshalAs (UnmanagedType.I1)]
+		static extern bool nw_framer_deliver_input_no_copy (OS_nw_framer framer, nuint input_length, OS_nw_protocol_metadata message, [MarshalAs (UnmanagedType.I1)] bool is_complete);
 
 		public bool DeliverInputNoCopy (nuint length, NWFramerMessage message, bool isComplete)
 		{
@@ -353,6 +356,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern unsafe bool nw_framer_parse_output (OS_nw_framer framer, nuint minimum_incomplete_length, nuint maximum_length, byte *temp_buffer, ref BlockLiteral parse);
 
 		delegate void nw_framer_parse_output_t (IntPtr block, IntPtr buffer, nuint buffer_length, bool is_complete);
@@ -388,6 +392,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern unsafe bool nw_framer_parse_input (OS_nw_framer framer, nuint minimum_incomplete_length, nuint maximum_length, byte *temp_buffer, ref BlockLiteral parse);
 
 		delegate nuint nw_framer_parse_input_t (IntPtr block, IntPtr buffer, nuint buffer_length, bool is_complete);
@@ -424,7 +429,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		unsafe static extern void nw_framer_deliver_input (OS_nw_framer framer, byte *input_buffer, nuint input_length, OS_nw_protocol_metadata message, bool is_complete);
+		unsafe static extern void nw_framer_deliver_input (OS_nw_framer framer, byte *input_buffer, nuint input_length, OS_nw_protocol_metadata message, [MarshalAs (UnmanagedType.I1)] bool is_complete);
 
 		public void DeliverInput (ReadOnlySpan<byte> buffer, NWFramerMessage message, bool isComplete)
 		{

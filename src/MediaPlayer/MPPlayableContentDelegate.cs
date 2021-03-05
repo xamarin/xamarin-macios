@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace MediaPlayer {
 	public partial class MPPlayableContentDelegate {
 		[Obsolete ("Use 'InitiatePlaybackOfContentItem' instead.")]

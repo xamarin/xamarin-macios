@@ -59,6 +59,7 @@ namespace CoreVideo {
 			/* CVMetalTextureRef __nonnull */ IntPtr image);
 
 		[DllImport (Constants.CoreVideoLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static /* Boolean */ bool CVMetalTextureIsFlipped (/* CVMetalTextureRef __nonnull */ IntPtr image);
 
 		[DllImport (Constants.CoreVideoLibrary)]

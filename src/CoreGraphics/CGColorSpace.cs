@@ -486,6 +486,7 @@ namespace CoreGraphics {
 		[Watch (3,0)]
 		[TV (10,0)]
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool CGColorSpaceIsWideGamutRGB (/* CGColorSpaceRef */ IntPtr space);
 
 		[iOS (10,0)][Mac (10,12)]
@@ -500,6 +501,7 @@ namespace CoreGraphics {
 		[iOS (10,0)][Mac (10,12)]
 		[TV (10,0)]
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool CGColorSpaceSupportsOutput (/* CGColorSpaceRef */ IntPtr space);
 
 		[iOS (10,0)][Mac (10,12)]
@@ -535,6 +537,7 @@ namespace CoreGraphics {
 		[Deprecated (PlatformName.TvOS, 13,4)]
 		[Deprecated (PlatformName.WatchOS, 6,2)]
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool CGColorSpaceIsHDR (/* CGColorSpaceRef */ IntPtr space);
 
 		[Mac (10,15)][iOS(13,0)]
@@ -551,6 +554,7 @@ namespace CoreGraphics {
 
 		[iOS (14,0)][TV (14,0)][Watch (7,0)][Mac (11,0)]
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool CGColorSpaceUsesExtendedRange (/* CGColorSpaceRef */ IntPtr space);
 
 		[iOS (14,0)][TV (14,0)][Watch (7,0)][Mac (11,0)]
@@ -562,6 +566,7 @@ namespace CoreGraphics {
 
 		[iOS (14,1), TV (14,2), Watch (7,1), Mac (11,0)]
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool CGColorSpaceUsesITUR_2100TF (/* CGColorSpaceRef */ IntPtr space);
 
 		[iOS (14,1), TV (14,2), Watch (7,1), Mac (11,0)]
