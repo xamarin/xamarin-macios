@@ -3907,7 +3907,7 @@ namespace Registrar {
 			} else {
 				body.WriteLine ("0x{0:X}, &exception_gchandle);", token_ref);
 			}
-			body.Write ("MonoReflectionMethod *reflection_method = (MonoReflectionMethod *) xamarin_gchandle_unwrap (reflection_method_handle);");
+			body.WriteLine ("MonoReflectionMethod *reflection_method = (MonoReflectionMethod *) xamarin_gchandle_unwrap (reflection_method_handle);");
 
 			body.WriteLine ("if (exception_gchandle != INVALID_GCHANDLE) goto exception_handling;");
 			body.WriteLine ("managed_method = xamarin_get_reflection_method_method (reflection_method);");
