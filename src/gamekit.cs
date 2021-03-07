@@ -697,6 +697,7 @@ namespace GameKit {
 		void ReportScores (GKScore[] scores, [NullAllowed] Action<NSError> completionHandler);
 
 		[iOS (7,0)][Mac (10,10)]
+		[NullAllowed] // by default this property is null
 		[Export ("leaderboardIdentifier", ArgumentSemantic.Copy)]
 		string LeaderboardIdentifier { get; set; }
 
