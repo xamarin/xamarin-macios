@@ -362,7 +362,7 @@ steps:
     else
       MACCATALYST_DOTNET_PKG="$(Build.SourcesDirectory)/package/$MACCATALYST_DOTNET_PKG"
       echo "##vso[task.setvariable variable=MACCATALYST_DOTNET_PKG;]$MACCATALYST_DOTNET_PKG"
-      echo "Microsoft.macOS package found at $MACCATALYST_DOTNET_PKG"
+      echo "Microsoft.MacCatalyst package found at $MACCATALYST_DOTNET_PKG"
     fi
   displayName: 'Sign Packages'
   condition: and(succeeded(), contains(variables['configuration.BuildPkgs'], 'True'))
