@@ -47,8 +47,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\tools\mtouch\errors.resx">
-      <Link>errors.resx</Link>
-    </None>
+    <EmbeddedResource Include="..\..\tools\mtouch\errors.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <XlfSourceFormat>Resx</XlfSourceFormat>
+      <XlfOutputItem>EmbeddedResource</XlfOutputItem>
+      <LastGenOutput>Errors.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>Xamarin.Bundler</CustomToolNamespace>
+      <LogicalName>Errors.mtouch.resources</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>
