@@ -1375,14 +1375,14 @@ $(MACCATALYST_BUILD_DIR)/reference/Xamarin.iOS.cs: $(MACCATALYST_BUILD_DIR)/refe
 	$(Q) mv $@.tmp $@
 
 $(MACCATALYST_BUILD_DIR)/reference/Xamarin.iOS.dll: $(MACCATALYST_BUILD_DIR)/reference/Xamarin.iOS.cs
-	$(Q) $(MACCATALYST_CSC) $< -out:$@ -r:$(MACCATALYST_BUILD_DIR)/reference/Xamarin.MacCatalyst.dll -target:library -deterministic -publicsign -keyfile:$(PRODUCT_KEY_PATH) -nologo -nowarn:618 -unsafe
+	$(Q) $(MACCATALYST_CSC) $< -out:$@ -r:$(MACCATALYST_BUILD_DIR)/reference/Xamarin.MacCatalyst.dll -target:library -deterministic -publicsign -keyfile:$(PRODUCT_KEY_PATH) -nologo -nowarn:108,114,618 -unsafe
 
 $(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.iOS.cs: $(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.MacCatalyst.dll $(IOS_DOTNET_BUILD_DIR)/ref/Xamarin.iOS.dll Makefile $(GENERATE_TYPE_FORWARDERS)
 	$(Q) mono $(GENERATE_TYPE_FORWARDERS) $(IOS_DOTNET_BUILD_DIR)/ref/Xamarin.iOS.dll $(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.MacCatalyst.dll $@.tmp
 	$(Q) mv $@.tmp $@
 
 $(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.iOS.dll: $(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.iOS.cs
-	$(Q) $(DOTNET6_CSC) $(DOTNET_FLAGS) $< -out:$@ -r:$(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.MacCatalyst.dll -target:library -deterministic -publicsign -keyfile:$(PRODUCT_KEY_PATH) -nologo -nowarn:618 -unsafe
+	$(Q) $(DOTNET6_CSC) $(DOTNET_FLAGS) $< -out:$@ -r:$(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.MacCatalyst.dll -target:library -deterministic -publicsign -keyfile:$(PRODUCT_KEY_PATH) -nologo -nowarn:108,114,618 -unsafe
 
 $(MACCATALYST_BUILD_DIR)/reference/OpenTK-1.0.cs: $(MACCATALYST_BUILD_DIR)/reference/Xamarin.MacCatalyst.dll $(IOS_BUILD_DIR)/reference/OpenTK-1.0.dll Makefile $(GENERATE_TYPE_FORWARDERS)
 	$(Q) mono $(GENERATE_TYPE_FORWARDERS) $(IOS_BUILD_DIR)/reference/OpenTK-1.0.dll $(MACCATALYST_BUILD_DIR)/reference/Xamarin.MacCatalyst.dll $@.tmp
