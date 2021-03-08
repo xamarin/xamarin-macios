@@ -236,6 +236,8 @@ $(eval $(call NativeCompilationTemplate,,-O2))
 $(eval $(call NativeCompilationTemplate,-debug,-DDEBUG))
 $(eval $(call NativeCompilationTemplate,-dotnet,-O2 -DDOTNET))
 $(eval $(call NativeCompilationTemplate,-dotnet-debug,-DDEBUG -DDOTNET))
+$(eval $(call NativeCompilationTemplate,-dotnet-coreclr,-O2 -DCORECLR_RUNTIME -DDOTNET))
+$(eval $(call NativeCompilationTemplate,-dotnet-coreclr-debug,-DDEBUG -DCORECLR_RUNTIME -DDOTNET))
 
 .libs/iphoneos .libs/iphonesimulator .libs/watchos .libs/watchsimulator .libs/tvos .libs/tvsimulator .libs/maccatalyst .libs/mac:
 	$(Q) mkdir -p $@
