@@ -229,6 +229,7 @@ namespace Foundation {
 
 		void ReleaseManagedRef ()
 		{
+			flags &= ~Flags.HasManagedRef;
 			xamarin_release_managed_ref (handle, this);
 		}
 

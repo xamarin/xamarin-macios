@@ -1979,8 +1979,6 @@ xamarin_release_managed_ref (id self, MonoObject *managed_obj)
 		class_getName (object_getClass (self)), self, (int32_t) [self retainCount], user_type ? xamarin_has_managed_ref (self) : 666, user_type ? get_gchandle_without_flags (self) : (void*) 666, user_type, managed_obj);
 #endif
 
-	xamarin_set_nsobject_flags (managed_obj, xamarin_get_nsobject_flags (managed_obj) & ~NSObjectFlagsHasManagedRef);
-
 	if (user_type) {
 		/* clear MANAGED_REF_BIT */
 		set_flags (self, (enum XamarinGCHandleFlags) (get_flags (self) & ~XamarinGCHandleFlags_HasManagedRef));
