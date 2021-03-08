@@ -164,6 +164,11 @@ namespace Xamarin.MacDev.Tasks
 				}
 			}
 
+			if (Platform == ApplePlatform.MacCatalyst) {
+				args.Add ("--ui-framework-family");
+				args.Add ("uikit");
+			}				
+
 			if (plist != null) {
 				foreach (var targetDevice in GetTargetDevices (plist))
 					args.Add ("--target-device", targetDevice);
