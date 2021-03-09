@@ -156,7 +156,18 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		</TextureAtlas>
 	</Target>
 
-	<Target Name="_CreateInstaller" Condition="$(CreatePackage)" DependsOnTargets="Codesign">
+	<Target Name="_CompileProductDefinition" Condition="$(CreatePackage)" DependsOnTargets="_ComputeTargetArchitectures">
+		<CompileProductDefinition
+			Condition="'$(IsMacEnabled)' == 'true'"
+			SessionId="$(BuildSessionId)"
+			ProductDefinition="$(ProductDefinition)"
+			OutputDirectory = "$(IntermediateOutputPath)"
+			TargetArchitectures = "$(TargetArchitectures)">
+			<Output TaskParameter="CompiledProductDefinition" PropertyName="_CompiledProductDefinition" />
+		</CompileProductDefinition>
+	</Target>
+
+	<Target Name="_CreateInstaller" Condition="$(CreatePackage)" DependsOnTargets="Codesign;_CompileProductDefinition">
 		<CreateInstallerPackage
 			Condition="'$(IsMacEnabled)' == 'true'"
 			SessionId="$(BuildSessionId)"
@@ -167,7 +178,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			AppBundleDir= "$(AppBundleDir)"
 			MainAssembly= "$(TargetPath)"
 			EnablePackageSigning = "$(EnablePackageSigning)"
-			ProductDefinition = "$(ProductDefinition)"
+			ProductDefinition = "$(_CompiledProductDefinition)"
 			PackageSigningKey = "$(PackageSigningKey)"
 			PackagingExtraArgs = "$(PackagingExtraArgs)">
 		</CreateInstallerPackage>
