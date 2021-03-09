@@ -26,6 +26,7 @@ namespace Xamarin.Bundler
 	{
 		public SymbolType Type;
 		public bool Ignore;
+		public Abi? ValidAbis;
 
 		static string ObjectiveCPrefix {
 			get {

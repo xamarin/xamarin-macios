@@ -929,7 +929,7 @@ namespace Xamarin.Bundler {
 						args.Add (f);
 					}
 
-					var requiredSymbols = BuildTarget.GetRequiredSymbols ();
+					var requiredSymbols = BuildTarget.GetRequiredSymbols (target_abis: abi);
 					Driver.WriteIfDifferent (Path.Combine (App.Cache.Location, "exported-symbols-list"), string.Join ("\n", requiredSymbols.Select ((symbol) => symbol.Prefix + symbol.Name).ToArray ()));
 					switch (App.SymbolMode) {
 					case SymbolMode.Ignore:
