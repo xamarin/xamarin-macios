@@ -154,10 +154,10 @@ namespace Foundation {
 		extern static void RegisterToggleRef (NSObject obj, IntPtr handle, bool isCustomType);
 
 		[MethodImplAttribute (MethodImplOptions.InternalCall)]
-		static extern void xamarin_release_managed_ref (IntPtr handle, NSObject managed_obj);
+		static extern void xamarin_release_managed_ref (IntPtr handle, NSObject managed_obj, bool user_type);
 
 		[MethodImplAttribute (MethodImplOptions.InternalCall)]
-		static extern void xamarin_create_managed_ref (IntPtr handle, NSObject obj, bool retain);
+		static extern void xamarin_create_managed_ref (IntPtr handle, NSObject obj, bool retain, bool user_type);
 
 #if !XAMCORE_3_0
 		public static bool IsNewRefcountEnabled ()
@@ -220,13 +220,13 @@ namespace Foundation {
 
 		void CreateManagedRef (bool retain)
 		{
-			xamarin_create_managed_ref (handle, this, retain);
+			xamarin_create_managed_ref (handle, this, retain, Runtime.IsUserType (handle));
 		}
 
 		void ReleaseManagedRef ()
 		{
 			flags &= ~Flags.HasManagedRef;
-			xamarin_release_managed_ref (handle, this);
+			xamarin_release_managed_ref (handle, this, Runtime.IsUserType (handle));
 		}
 
 		static bool IsProtocol (Type type, IntPtr protocol)

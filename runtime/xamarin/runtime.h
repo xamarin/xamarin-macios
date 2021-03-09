@@ -217,8 +217,8 @@ void			xamarin_clear_gchandle (id self);
 GCHandle		xamarin_get_gchandle_with_flags (id self, enum XamarinGCHandleFlags *flags);
 void			xamarin_set_gchandle_with_flags (id self, GCHandle gchandle, enum XamarinGCHandleFlags flags);
 void			xamarin_create_gchandle (id self, void *managed_object, enum XamarinGCHandleFlags flags, bool force_weak);
-void			xamarin_create_managed_ref (id self, void * managed_object, bool retain);
-void            xamarin_release_managed_ref (id self, MonoObject *managed_obj);
+void			xamarin_create_managed_ref (id self, void * managed_object, bool retain, bool user_type);
+void            xamarin_release_managed_ref (id self, MonoObject *managed_obj, bool user_type);
 void			xamarin_notify_dealloc (id self, GCHandle gchandle);
 
 int				xamarin_main (int argc, char *argv[], enum XamarinLaunchMode launch_mode);

@@ -1912,44 +1912,6 @@ xamarin_set_gchandle_with_flags (id self, GCHandle gchandle, enum XamarinGCHandl
 	set_gchandle (self, gchandle, flags);
 }
 
-static int
-find_user_type_index (MTClassMap *map, int lo, int hi, Class cls)
-{
-	if (hi >= lo) {
-		int mid = lo + (hi - lo) / 2;
-
-		if (map [mid].handle == cls)
-			return mid;
-
-		if ((intptr_t) map [mid].handle > (intptr_t) cls)
-			return find_user_type_index (map, lo, mid - 1, cls);
-
-		return find_user_type_index (map, mid + 1, hi, cls);
-	}
-
-	return -1;
-}
-
-static inline bool
-is_user_type (id self)
-{
-	Class cls = object_getClass (self);
-
-	if (options.RegistrationData != NULL && options.RegistrationData->map_count > 0) {
-		MTClassMap *map = options.RegistrationData->map;
-		int idx = find_user_type_index (map, 0, (int) options.RegistrationData->map_count - 1, cls);
-		if (idx >= 0)
-			return (map [idx].flags & MTTypeFlagsUserType) == MTTypeFlagsUserType;
-		// If using the partial static registrar, we need to continue
-		// If full static registrar, we can return false
-		if ((options.flags & InitializationFlagsIsPartialStaticRegistrar) != InitializationFlagsIsPartialStaticRegistrar)
-			return false;
-	}
-
-	// COOP: no managed memory access: any mode
-	return class_getInstanceMethod (cls, @selector (xamarinSetGCHandle:flags:)) != NULL;
-}
-
 #if defined(DEBUG_REF_COUNTING)
 int
 get_safe_retainCount (id self)
@@ -1967,13 +1929,12 @@ get_safe_retainCount (id self)
 #endif
 
 void
-xamarin_release_managed_ref (id self, MonoObject *managed_obj)
+xamarin_release_managed_ref (id self, MonoObject *managed_obj, bool user_type)
 {
 	// COOP: This is an icall, so at entry we're in unsafe mode.
 	// COOP: we stay in unsafe mode (since we write to the managed memory) unless calling a selector (which must be done in safe mode)
 	MONO_ASSERT_GC_UNSAFE;
 	
-	bool user_type = is_user_type (self);
 	GCHandle exception_gchandle = INVALID_GCHANDLE;
 	
 #if defined(DEBUG_REF_COUNTING)
@@ -2068,14 +2029,13 @@ xamarin_release_managed_ref (id self, MonoObject *managed_obj)
 }
 
 void
-xamarin_create_managed_ref (id self, gpointer managed_object, bool retain)
+xamarin_create_managed_ref (id self, gpointer managed_object, bool retain, bool user_type)
 {
 	// COOP: This is an icall, so at entry we're in unsafe mode.
 	// COOP: we stay in unsafe mode (since we write to the managed memory) unless calling a selector (which must be done in safe mode)
 	MONO_ASSERT_GC_UNSAFE;
 	
 	GCHandle gchandle;
-	bool user_type = is_user_type (self);
 	
 #if defined(DEBUG_REF_COUNTING)
 	PRINT ("monotouch_create_managed_ref (%s Handle=%p) retainCount=%d; HasManagedRef=%i GCHandle=%i IsUserType=%i managed_object=%p\n", 
@@ -2899,7 +2859,7 @@ XamarinObject::~XamarinObject ()
  *
  * Do not add a xamarinSetGCHandle:flags: method, since we use the presence
  * of it to detect whether a particular type is a user type or not
- * (see is_user_type).
+ * (see Runtime.IsUserType).
  */
 
 @implementation NSObject (NonXamarinObject)
