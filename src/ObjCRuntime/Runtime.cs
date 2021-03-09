@@ -990,7 +990,7 @@ namespace ObjCRuntime {
 			}
 		}
 					
-		static void NativeObjectHasDied (IntPtr ptr, NSObject managed_obj)
+		internal static void NativeObjectHasDied (IntPtr ptr, NSObject managed_obj)
 		{
 			lock (lock_obj) {
 				if (object_map.TryGetValue (ptr, out var wr)) {
