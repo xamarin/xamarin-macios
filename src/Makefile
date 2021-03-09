@@ -1583,6 +1583,17 @@ endif
 
 project-files: $(PROJECT_FILES)
 
+$(TOP)/tools/common/SdkVersions.cs: $(TOP)/tools/common/SdkVersions.cs.in
+	@$(MAKE) -C $(TOP)/tools/mtouch ../common/SdkVersions.cs
+
+MinimumVersions.cs: MinimumVersions.cs.in Makefile $(TOP)/Make.config
+	$(Q_GEN) sed \
+		-e 's/@DOTNET_MIN_IOS_SDK_VERSION@/$(DOTNET_MIN_IOS_SDK_VERSION)/g' \
+		-e 's/@DOTNET_MIN_TVOS_SDK_VERSION@/$(DOTNET_MIN_TVOS_SDK_VERSION)/' \
+		-e 's/@DOTNET_MIN_OSX_SDK_VERSION@/$(DOTNET_MIN_OSX_SDK_VERSION)/' \
+		-e 's/@DOTNET_MIN_MACCATALYST_SDK_VERSION@/$(DOTNET_MIN_MACCATALYST_SDK_VERSION)/g' \
+		$< > $@
+
 # Using .SECONDARY can cause make to go into an infinite loop.
 # See https://github.com/xamarin/maccore/issues/762.
 #.SECONDARY:
