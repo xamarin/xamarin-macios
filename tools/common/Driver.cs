@@ -96,7 +96,7 @@ namespace Xamarin.Bundler {
 			});
 			options.Add ("target-framework=", "Specify target framework to use. Currently supported: '" + string.Join ("', '", TargetFramework.ValidFrameworks.Select ((v) => v.ToString ())) + "'.", v => SetTargetFramework (v));
 #if MMP
-			options.Add ("abi=", "Comma-separated list of ABIs to target. x86_64.", v => app.ParseAbi (v));
+			options.Add ("abi=", "Comma-separated list of ABIs to target. x86_64, arm64", v => app.ParseAbi (v));
 #else
 			options.Add ("abi=", "Comma-separated list of ABIs to target. Currently supported: armv7, armv7+llvm, armv7+llvm+thumb2, armv7s, armv7s+llvm, armv7s+llvm+thumb2, arm64, arm64+llvm, arm64_32, arm64_32+llvm, i386, x86_64.", v => app.ParseAbi (v));
 #endif
@@ -1168,6 +1168,31 @@ namespace Xamarin.Bundler {
 			sb.Add ("-output");
 			sb.Add (output);
 			RunLipo (app, sb);
+		}
+
+		public static void RunLipoAndCreateDsym (Application app, string output, IEnumerable<string> inputs)
+		{
+			RunLipo (app, output, inputs);
+
+			var dsymFolders = inputs.Select (input => input + ".dSYM").Where (Directory.Exists).ToArray ();
+			if (dsymFolders.Length > 1) {
+				// Lipo the dSYMs into one big happy dSYM
+				var dsymLibsDir = dsymFolders.Select (dsym => Path.Combine (dsym, "Contents", "Resources", "DWARF")).ToArray ();
+				var allLibs = dsymLibsDir.Where (Directory.Exists).SelectMany (dir => Directory.EnumerateFiles (dir)).Select (dir => Path.GetFileName (dir)).Distinct ().ToArray ();
+
+				foreach (var lib in allLibs) {
+					var outputLib = Path.Combine (dsymLibsDir [0], lib);
+					var allDsymInputs = dsymLibsDir.Select (libDir => Path.Combine (libDir, lib)).Where (File.Exists).ToArray ();
+					Driver.RunLipo (app, outputLib, allDsymInputs);
+				}
+			}
+
+			// Move the dSYM next to its executable
+			if (dsymFolders.Length > 0) {
+				var outputDsymDir = output + ".dSYM";
+				Directory.Move (dsymFolders [0], outputDsymDir);
+				RunCommand ("/usr/bin/mdimport", outputDsymDir);
+			}
 		}
 
 		public static void RunLipo (Application app, IList<string> options)

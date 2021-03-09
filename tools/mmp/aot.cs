@@ -191,13 +191,15 @@ namespace Xamarin.Bundler {
 		}
 		
 		AOTOptions options;
+		Abi [] abis;
 		AOTCompilerType compilerType;
 		bool IsRelease;
 		bool IsModern;
 
-		public AOTCompiler (AOTOptions options, AOTCompilerType compilerType, bool isModern, bool isRelease)
+		public AOTCompiler (AOTOptions options, IEnumerable <Abi> abis, AOTCompilerType compilerType, bool isModern, bool isRelease)
 		{
 			this.options = options;
+			this.abis = abis.ToArray ();
 			this.compilerType = compilerType;
 			this.IsModern = isModern;
 			this.IsRelease = isRelease;
@@ -214,17 +216,48 @@ namespace Xamarin.Bundler {
 				throw ErrorHelper.CreateError (0099, Errors.MX0099, $"\"AOTBundle with aot: {options.CompilationType}\" ");
 
 			var monoEnv = new Dictionary<string, string> { { "MONO_PATH", files.RootDir } };
-
 			List<string> filesToAOT = GetFilesToAOT (files);
-			Parallel.ForEach (filesToAOT, ParallelOptions, file => {
-				var cmd = new List<string> ();
-				cmd.Add (options.IsHybridAOT ? "--aot=hybrid" : "--aot");
+
+			bool needsLipo = abis.Length > 1;
+			string tempAotDir = Path.GetDirectoryName (filesToAOT [0]);
+			if (needsLipo) {
+				foreach (var abi in abis) {
+					Directory.CreateDirectory (Path.Combine (tempAotDir, "aot", abi.AsArchString ()));
+				}
+			}
+
+			Parallel.ForEach (filesToAOT.SelectMany (f => abis, (file, abi) => new Tuple <string, Abi> (file, abi)), ParallelOptions, tuple => {
+				var file = tuple.Item1;
+				var abi = tuple.Item2;
+
+				var cmd = new List <string> ();
+				var aotArgs = new List <string> ();
+				aotArgs.Add ($"mtriple={abi.AsArchString ()}");
+				if (options.IsHybridAOT)
+					aotArgs.Add ("hybrid");
+				if (needsLipo)
+					aotArgs.Add ($"outfile={Path.Combine (tempAotDir, "aot", abi.AsArchString (), Path.GetFileName (file) + ".dylib")}");
+				cmd.Add ($"--aot={string.Join (",", aotArgs)}");
 				if (IsModern)
 					cmd.Add ("--runtime=mobile");
 				cmd.Add (file);
-				if (RunCommand (MonoPath, cmd, monoEnv) != 0)
+				if (RunCommand (GetMonoPath (abi), cmd, monoEnv) != 0)
 					throw ErrorHelper.CreateError (3001, Errors.MX3001, "AOT", file);
 			});
+
+			// Lipo the result
+			if(needsLipo) {
+				Parallel.ForEach (filesToAOT, ParallelOptions, file => {
+					string [] inputs = abis.Select (abi => Path.Combine (tempAotDir, "aot", abi.AsArchString (), Path.GetFileName (file) + ".dylib")).ToArray ();
+					string output = file + ".dylib";
+
+					Driver.RunLipoAndCreateDsym (Driver.App, output, inputs);
+				});
+			}
+
+			if (needsLipo) {
+				Directory.Delete (Path.Combine (tempAotDir, "aot"), true);
+			}
 
 			if (IsRelease && options.IsHybridAOT) {
 				Parallel.ForEach (filesToAOT, ParallelOptions, file => {
@@ -312,17 +345,21 @@ namespace Xamarin.Bundler {
 
 		public const string StripCommand = "/Library/Frameworks/Mono.framework/Commands/mono-cil-strip";
 
-		string MonoPath
+		string GetMonoPath (Abi abi)
 		{
-			get {
-				switch (compilerType) {
-				case AOTCompilerType.Bundled64:
+			if (compilerType == AOTCompilerType.Bundled64) {
+				switch (abi) {
+				case Abi.ARM64:
+					return Path.Combine (XamarinMacPrefix, "bin", "aarch64-darwin-mono-sgen");
+				case Abi.x86_64:
 					return Path.Combine (XamarinMacPrefix, "bin", "mono-sgen");
-				case AOTCompilerType.System64:
-					return "/Library/Frameworks/Mono.framework/Commands/mono64";
 				default:
 					throw ErrorHelper.CreateError (0099, Errors.MX0099, $"\"MonoPath with compilerType: {compilerType}\"");
 				}
+			} else if (compilerType == AOTCompilerType.System64 && abi == Abi.x86_64) {
+				return "/Library/Frameworks/Mono.framework/Commands/mono64";
+			} else {
+				throw ErrorHelper.CreateError (0099, Errors.MX0099, $"\"MonoPath with compilerType: {compilerType}\"");
 			}
 		}
 	}

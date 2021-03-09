@@ -392,7 +392,7 @@ $(eval $(call LibXamarinTemplate,tvsimulator,TVSIMULATOR,_DEBUG,-debug))
 # Xamarin.Mac
 #
 
-MAC_ARCHITECTURES = x86_64
+MAC_ARCHITECTURES = x86_64 arm64
 
 CLANG_ARCH = $(addprefix -arch ,$(MAC_ARCHITECTURES))
 MAC_CLANG = DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT) $(MAC_CC) -mmacosx-version-min=$(MIN_OSX_SDK_VERSION)
@@ -401,7 +401,7 @@ MAC_SHIPPED_HEADERS = xamarin/launch.h
 
 MAC_STATIC_CFLAGS = $(MAC_CFLAGS)
 
-MAC_SOURCES = $(SHARED_SOURCES) $(SHARED_X86_64_SOURCES) launcher.m
+MAC_SOURCES = $(SHARED_SOURCES) $(SHARED_X86_64_SOURCES) $(SHARED_ARM64_SOURCES) launcher.m
 
 ALLOWED_UNDEFINED_SYMBOLS = _xamarin_enable_debug _xammac_setup
 
@@ -477,6 +477,8 @@ endef
 
 $(eval $(call ObjTemplate,x86_64,64,,,64))
 $(eval $(call ObjTemplate,x86_64,DEBUG64,-debug,-DDEBUG,64))
+$(eval $(call ObjTemplate,arm64,64,,,64))
+$(eval $(call ObjTemplate,arm64,DEBUG64,-debug,-DDEBUG,64))
 
 $(foreach arch,$(MAC_ARCHITECTURES),.libs/mac/extension-main.$(arch).o): EXTRA_DEFINES=-DEXTENSION
 
@@ -492,22 +494,22 @@ $(foreach arch,$(MAC_ARCHITECTURES),.libs/mac/extension-main.$(arch).o): EXTRA_D
 	$(Q) rm -f $@
 	$(call Q_2,LIPO,  [mac]) $(DEVICE_BIN_PATH)/lipo $^ -create -output $@
 
-.libs/mac/libxammac-debug.dylib: .libs/mac/libxammac-debug.x86_64.dylib
+.libs/mac/libxammac-debug.dylib: .libs/mac/libxammac-debug.x86_64.dylib .libs/mac/libxammac-debug.arm64.dylib
 	$(call Q_2,LIPO,  [mac]) xcrun lipo -create $^ -o $@
 
-.libs/mac/libxammac.dylib: .libs/mac/libxammac.x86_64.dylib
+.libs/mac/libxammac.dylib: .libs/mac/libxammac.x86_64.dylib .libs/mac/libxammac.arm64.dylib
 	$(call Q_2,LIPO,  [mac]) xcrun lipo -create $^ -o $@
 
-.libs/mac/libxammac-debug.a: .libs/mac/libxammac-debug.x86_64.a
+.libs/mac/libxammac-debug.a: .libs/mac/libxammac-debug.x86_64.a .libs/mac/libxammac-debug.arm64.a
 	$(call Q_2,LIPO,  [mac]) xcrun lipo -create $^ -o $@
 
-.libs/mac/libxammac.a: .libs/mac/libxammac.x86_64.a
+.libs/mac/libxammac.a: .libs/mac/libxammac.x86_64.a .libs/mac/libxammac.arm64.a
 	$(call Q_2,LIPO,  [mac]) xcrun lipo -create $^ -o $@
 
-.libs/mac/libxammac-system-debug.a: .libs/mac/libxammac-system-debug.x86_64.a
+.libs/mac/libxammac-system-debug.a: .libs/mac/libxammac-system-debug.x86_64.a .libs/mac/libxammac-system-debug.arm64.a
 	$(call Q_2,LIPO,  [mac]) xcrun lipo -create $^ -o $@
 
-.libs/mac/libxammac-system.a: .libs/mac/libxammac-system.x86_64.a
+.libs/mac/libxammac-system.a: .libs/mac/libxammac-system.x86_64.a .libs/mac/libxammac-system.arm64.a
 	$(call Q_2,LIPO,  [mac]) xcrun lipo -create $^ -o $@
 
 .libs/mac/libxammac-%.a: $(MACIOS_BINARIES_PATH)/libxammac-%.a | .libs/mac
