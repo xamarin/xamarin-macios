@@ -392,7 +392,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<Target Name="_CoreCompileImageAssets"
 		Inputs="@(ImageAsset);$(_AppManifest)"
 		Outputs="$(_ACTool_PartialAppManifestCache);$(_ACTool_BundleResourceCache)"
-		DependsOnTargets="_DetectAppManifest;_GetMinimumOSVersion;_DetectSdkLocations;_BeforeCoreCompileImageAssets;_GetMinimumOSVersion;_DetectSigningIdentity">
+		DependsOnTargets="_DetectAppManifest;_GetMinimumOSVersion;_DetectSdkLocations;_BeforeCoreCompileImageAssets;_GetMinimumOSVersion;_DetectSigningIdentity;_ComputeTargetFrameworkMoniker">
 
 		<ACTool
 			SessionId="$(BuildSessionId)"
@@ -416,7 +416,9 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			SdkBinPath="$(_SdkBinPath)"
 			SdkUsrPath="$(_SdkUsrPath)"
 			SdkPlatform="$(_SdkPlatform)"
-			SdkVersion="$(_SdkVersion)">
+			SdkVersion="$(_SdkVersion)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+			>
 			<Output TaskParameter="PartialAppManifest" ItemName="_PartialAppManifest" />
 			<Output TaskParameter="BundleResources" ItemName="_BundleResourceWithLogicalName" />
 
