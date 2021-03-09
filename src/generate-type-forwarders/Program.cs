@@ -371,7 +371,7 @@ namespace GenerateTypeForwarders {
 					} else {
 						sb.Append ("new ");
 					}
-				} else {
+				} else if (!pd.DeclaringType.IsSealed) {
 					sb.Append ("virtual ");
 				}
 			}
@@ -391,9 +391,11 @@ namespace GenerateTypeForwarders {
 		static void EmitEvent (StringBuilder sb, EventDefinition ed, int indent)
 		{
 			sb.AppendLine ("#pragma warning disable CS0067");
-			var strIndent = new string ('\t', indent);
-			sb.Append (strIndent);
+			sb.Append ('\t', indent);
 			sb.Append ("public ");
+			var e = ed.AddMethod ?? ed.InvokeMethod;
+			if (e.IsStatic)
+				sb.Append ("static ");
 			sb.Append ("event ");
 			EmitTypeName (sb, ed.EventType);
 			sb.Append (' ');
@@ -430,8 +432,13 @@ namespace GenerateTypeForwarders {
 				} else if (type.IsValueType) {
 					sb.Append ("struct ");
 				} else {
-					if (type.IsAbstract)
-						sb.Append ("abstract ");
+					if (type.IsAbstract) {
+						if (type.IsSealed)
+							sb.Append ("static ");
+						else
+							sb.Append ("abstract ");
+					} else if (type.IsSealed)
+						sb.Append ("sealed ");
 					sb.Append ("class ");
 				}
 

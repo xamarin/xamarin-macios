@@ -1984,9 +1984,6 @@ xamarin_release_managed_ref (id self, MonoObject *managed_obj)
 	if (user_type) {
 		/* clear MANAGED_REF_BIT */
 		set_flags (self, (enum XamarinGCHandleFlags) (get_flags (self) & ~XamarinGCHandleFlags_HasManagedRef));
-		MONO_ENTER_GC_SAFE;
-		[self release];
-		MONO_EXIT_GC_SAFE;
 	} else {
 		/* If we're a wrapper type, we need to unregister here, since we won't enter the release trampoline */
 		GCHandle managed_obj_handle = xamarin_gchandle_new (managed_obj, false);
@@ -2061,10 +2058,11 @@ xamarin_release_managed_ref (id self, MonoObject *managed_obj)
 		//
 		xamarin_framework_peer_lock ();
 		xamarin_framework_peer_unlock ();
-		MONO_ENTER_GC_SAFE;
-		[self release];
-		MONO_EXIT_GC_SAFE;
 	}
+
+	MONO_ENTER_GC_SAFE;
+	[self release];
+	MONO_EXIT_GC_SAFE;
 
 	xamarin_process_managed_exception_gchandle (exception_gchandle);
 }
