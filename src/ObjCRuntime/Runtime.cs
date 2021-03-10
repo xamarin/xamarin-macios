@@ -1706,6 +1706,11 @@ namespace ObjCRuntime {
 			throw ErrorHelper.CreateError (8003, "Failed to find the closed generic method '{0}' on the type '{1}'.", open_method.Name, closed_type.FullName);
 		}
 
+		static void GCCollect ()
+		{
+			GC.Collect ();
+		}
+
 		[EditorBrowsable (EditorBrowsableState.Never)]
 #if MONOMAC
 		public static void ReleaseBlockOnMainThread (IntPtr block)
