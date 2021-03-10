@@ -6,18 +6,6 @@
 <#@ import namespace="System.Collections.Generic" #>
 <#
 	var delegates = new XDelegates {
-		new XDelegate ("void", "void", "xamarin_register_nsobject",
-			// Do not automatically convert the 'managed_obj' parameter, the
-			// automatic conversion doesn't support neither the GCHandle type
-			// RegisterNSObject expects (tracking resurrection), nor the fact
-			// that the called method takes ownership of the GCHandle.
-			"GCHandle", "IntPtr", "managed_obj",
-			"id", "IntPtr", "native_obj"
-		) {
-			WrappedManagedFunction = "RegisterNSObject",
-			OnlyDynamicUsage = true,
-		},
-
 		new XDelegate ("void", "void", "xamarin_register_assembly",
 			"GCHandle->MonoReflectionAssembly *", "IntPtr", "assembly"
 		) {
