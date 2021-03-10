@@ -160,6 +160,9 @@ namespace Introspection {
 		}
 
 		[Test]
+#if NET
+		[Ignore ("Requires attributes update - see status in ...")]
+#endif
 		public void Introduced ()
 		{
 			//LogProgress = true;
