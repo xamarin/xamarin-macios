@@ -19,7 +19,6 @@ download-mono: \
 downloads/$(basename $(MONO_IOS_FILENAME)): MONO_URL=$(MONO_IOS_URL)
 downloads/$(basename $(MONO_MAC_FILENAME)): MONO_URL=$(MONO_MAC_URL)
 downloads/$(basename $(MONO_MACCATALYST_FILENAME)): MONO_URL=$(MONO_MACCATALYST_URL)
-downloads/$(DOTNET5_BCL_REF_NAME): MONO_URL=$(DOTNET5_BCL_REF_URL)
 downloads/$(DOTNET6_TARBALL_NAME): MONO_URL=$(DOTNET6_TARBALL)
 
 include $(TOP)/mk/colors.mk
@@ -28,7 +27,6 @@ DOWNLOADS = \
 	downloads/$(MONO_IOS_FILENAME) \
 	downloads/$(MONO_MAC_FILENAME) \
 	downloads/$(MONO_MACCATALYST_FILENAME) \
-	downloads/$(DOTNET5_BCL_REF_NAME) \
 	downloads/$(DOTNET6_TARBALL_NAME) \
 
 # This target downloads the mono archives, there's one for Xamarin.iOS and one for Xamarin.Mac.
@@ -133,7 +131,6 @@ package-download/NuGet.config: $(TOP)/NuGet.config Makefile
 	$(Q) mv $@.tmp $@
 
 DOTNET_DOWNLOADS = \
-	downloads/$(basename $(DOTNET5_BCL_REF_NAME)) \
 	downloads/$(basename $(basename $(DOTNET6_TARBALL_NAME))) \
 	.stamp-download-dotnet-packages \
 
