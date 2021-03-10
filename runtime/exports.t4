@@ -50,10 +50,6 @@
 			"MonoClass *", "klass"
 		),
 
-		new Export ("MonoClass *", "mono_class_get_parent",
-			"MonoClass *", "klass"
-		),
-
 		new Export ("mono_bool", "mono_class_is_subclass_of",
 			"MonoClass *", "klass",
 			"MonoClass *", "klassc",
@@ -568,12 +564,6 @@
 
 		new Export ("void*", "mono_jit_thread_attach",
 			"MonoDomain *", "domain"
-		),
-
-		new Export ("gboolean", "mono_exception_walk_trace",
-			"MonoException *", "exc",
-			"MonoExceptionFrameWalk", "func",
-			"gpointer", "user_data"
 		),
 
 		new Export ("void", "mono_install_unhandled_exception_hook",
