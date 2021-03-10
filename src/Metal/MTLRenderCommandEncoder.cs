@@ -6,6 +6,8 @@ using System.Runtime.InteropServices;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace Metal {
 	public static class IMTLRenderCommandEncoder_Extensions {
 		[Mac (10,13), NoiOS, NoTV, NoWatch]
