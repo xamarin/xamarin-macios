@@ -88,9 +88,9 @@ fix-maccatalyst-assembly/bin/Debug/fix-maccatalyst-assembly.exe: $(wildcard fix-
 	$(Q) $(SYSTEM_MSBUILD) /r fix-maccatalyst-assembly/fix-maccatalyst-assembly.csproj $(MSBUILD_VERBOSITY)
 
 define FixMacCatalystAssembly
-downloads/$(basename $(MONO_MACCATALYST_FILENAME))/maccat-bcl/monotouch/$(1).dll: .stamp-$(MONO_BUILD_MODE)
+$(MONO_MACCATALYST_SDK_DESTDIR)/maccat-bcl/monotouch/$(1).dll: .stamp-$(MONO_BUILD_MODE)
 
-downloads/fix-maccatalyst-tmpdir/$(1).dll: downloads/$(basename $(MONO_MACCATALYST_FILENAME))/maccat-bcl/monotouch/$(1).dll Makefile fix-maccatalyst-assembly/bin/Debug/fix-maccatalyst-assembly.exe
+downloads/fix-maccatalyst-tmpdir/$(1).dll: $(MONO_MACCATALYST_SDK_DESTDIR)/maccat-bcl/monotouch/$(1).dll Makefile fix-maccatalyst-assembly/bin/Debug/fix-maccatalyst-assembly.exe
 	$(Q) mkdir -p $$(dir $$@)
 	$(Q) mono fix-maccatalyst-assembly/bin/Debug/fix-maccatalyst-assembly.exe $$(abspath $$<) $$(abspath $$@).tmp
 	$(Q) mv $$(abspath $$@).tmp $$(abspath $$@)
@@ -181,6 +181,7 @@ SDK_BUILDDIR = $(MONO_PATH)/sdks/builds
 $(SDK_CONFIG):
 	echo "ENABLE_IOS=1" >> $@
 	echo "ENABLE_MAC=1" >> $@
+	echo "ENABLE_MACCAT=1" >> $@
 
 
 ifdef DISABLE_BUILDS_MAKEFILE_DEP
@@ -196,6 +197,7 @@ endif
 .stamp-compile-mono: .stamp-configure-mono $(MONO_DEPENDENCIES) $(BUILDS_MAKEFILE_DEP) $(TOP)/Make.config $(TOP)/mk/mono.mk
 	$(MAKE) -C $(SDK_BUILDDIR) package-ios package-ios-bcl $(SDK_ARGS)
 	$(MAKE) -C $(SDK_BUILDDIR) package-mac package-mac-bcl $(SDK_ARGS)
+	$(MAKE) -C $(SDK_BUILDDIR) package-maccat package-maccat-bcl $(SDK_ARGS)
 	$(Q) touch $@
 
 clean-local::
