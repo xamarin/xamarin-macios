@@ -1,6 +1,8 @@
 #if !COREBUILD
 using System;
 
+#nullable enable
+
 namespace Metal {
 	public partial class MTLRenderPassDescriptor {
 		public unsafe void SetSamplePositions (MTLSamplePosition [] positions)

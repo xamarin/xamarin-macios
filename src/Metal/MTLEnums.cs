@@ -14,6 +14,8 @@ using Foundation;
 using ModelIO;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace Metal {
 
 	[Native]
