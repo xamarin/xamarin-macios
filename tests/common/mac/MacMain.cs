@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Xamarin.Mac.Tests {
@@ -12,7 +13,20 @@ namespace Xamarin.Mac.Tests {
 			arguments.RemoveAll ((arg) => arg.StartsWith ("-psn_", StringComparison.Ordinal));
 
 			var exit_code = await MonoTouch.NUnit.UI.MacRunner.MainAsync (arguments, true, _exit, typeof (MainClass).Assembly);
-			_exit (exit_code);
+
+			var exit_monitor = new Thread (() =>
+			{
+				// Wait for 3 seconds
+				Thread.Sleep (3000);
+				// If we're still here, then something went wrong. Let's exit.
+				Console.WriteLine ($"The process didn't exist within 3s of returning from Main. Assuming something is deadlocked, and will now exit immediately and forcefully (with exit code {exit_code}).");
+				_exit (exit_code);
+			}) {
+				Name = "Exit monitor",
+				IsBackground = true,
+			};
+			exit_monitor.Start ();
+
 			return exit_code;
 		}
 
