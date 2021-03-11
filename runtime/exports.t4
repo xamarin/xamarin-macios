@@ -410,10 +410,6 @@
 			"MonoDebugFormat", "format"
 		),
 
-		new Export ("void", "mono_gc_collect",
-			"int", "generation"
-		),
-
 		new Export ("mono_bool", "mono_is_debugger_attached"),
 
 		#endregion

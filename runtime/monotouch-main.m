@@ -223,7 +223,9 @@ extern void mono_gc_init_finalizer_thread (void);
 - (void) memoryWarning: (NSNotification *) sender
 {
 	// COOP: ?
-	mono_gc_collect (mono_gc_max_generation ());
+	GCHandle exception_gchandle = INVALID_GCHANDLE;
+	xamarin_gc_collect (&exception_gchandle);
+	xamarin_process_managed_exception_gchandle (exception_gchandle);
 }
 
 @end

@@ -1233,7 +1233,9 @@ pump_gc (void *context)
 	mono_thread_attach (mono_get_root_domain ());
 
 	while (xamarin_gc_pump) {
-		mono_gc_collect (mono_gc_max_generation ());
+		GCHandle exception_gchandle = INVALID_GCHANDLE;
+		xamarin_gc_collect (&exception_gchandle);
+		xamarin_process_managed_exception_gchandle (exception_gchandle);
 		MONO_ENTER_GC_SAFE;
 		usleep (1000000);
 		MONO_EXIT_GC_SAFE;
