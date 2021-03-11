@@ -1,90 +1,64 @@
 {
   "images": [
     {
-      "filename": "Icon-Small.png",
-      "size": "29x29",
-      "scale": "1x",
-      "idiom": "iphone"
+      "idiom" : "mac",
+      "scale" : "1x",
+      "size" : "16x16",
+      "filename": "Icon16.png"
     },
     {
-      "filename": "Icon-Small@2x.png",
-      "size": "29x29",
-      "scale": "2x",
-      "idiom": "iphone"
+      "idiom" : "mac",
+      "scale" : "2x",
+      "size" : "16x16",
+      "filename": "Icon32.png"
     },
     {
-      "filename": "Icon-Small-40@2x.png",
-      "size": "40x40",
-      "scale": "2x",
-      "idiom": "iphone"
+      "idiom" : "mac",
+      "scale" : "1x",
+      "size" : "32x32",
+      "filename": "Icon32.png"
     },
     {
-      "filename": "Icon.png",
-      "size": "57x57",
-      "scale": "1x",
-      "idiom": "iphone"
+      "idiom" : "mac",
+      "scale" : "2x",
+      "size" : "32x32",
+      "filename": "Icon64.png"
     },
     {
-      "filename": "Icon@2x.png",
-      "size": "57x57",
-      "scale": "2x",
-      "idiom": "iphone"
+      "idiom" : "mac",
+      "scale" : "1x",
+      "size" : "128x128",
+      "filename": "Icon128.png"
     },
     {
-      "filename": "Icon-60@2x.png",
-      "size": "60x60",
-      "scale": "2x",
-      "idiom": "iphone"
+      "idiom" : "mac",
+      "scale" : "2x",
+      "size" : "128x128",
+      "filename": "Icon256.png"
     },
     {
-      "size": "29x29",
-      "scale": "1x",
-      "idiom": "ipad"
+      "idiom" : "mac",
+      "scale" : "1x",
+      "size" : "256x256",
+      "filename": "Icon256.png"
     },
     {
-      "size": "29x29",
-      "scale": "2x",
-      "idiom": "ipad"
+      "idiom" : "mac",
+      "scale" : "2x",
+      "size" : "256x256",
+      "filename": "Icon512.png"
     },
     {
-      "size": "40x40",
-      "scale": "1x",
-      "idiom": "ipad"
+      "idiom" : "mac",
+      "scale" : "1x",
+      "size" : "512x512",
+      "filename": "Icon512.png"
     },
     {
-      "size": "40x40",
-      "scale": "2x",
-      "idiom": "ipad"
-    },
-    {
-      "size": "50x50",
-      "scale": "1x",
-      "idiom": "ipad"
-    },
-    {
-      "size": "50x50",
-      "scale": "2x",
-      "idiom": "ipad"
-    },
-    {
-      "size": "72x72",
-      "scale": "1x",
-      "idiom": "ipad"
-    },
-    {
-      "size": "72x72",
-      "scale": "2x",
-      "idiom": "ipad"
-    },
-    {
-      "size": "76x76",
-      "scale": "1x",
-      "idiom": "ipad"
-    },
-    {
-      "size": "76x76",
-      "scale": "2x",
-      "idiom": "ipad"
+      "idiom" : "mac",
+      "scale" : "2x",
+      "size" : "512x512",
+      "filename": "Icon1024.png"
     }
   ],
   "info": {

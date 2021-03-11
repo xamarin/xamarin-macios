@@ -10,15 +10,12 @@
     <!-- Download the mono osx pack as well -->
     <!-- I wasn't able to figure out how to only do this if 'osx-x64' is already included -->
     <PackageRuntimeIdentifiers Include="Mono.osx-x64" />
-    
-    <!-- we don't have mac catalyst packs yet -->
-    <PackageRuntimeIdentifiers Remove="maccatalyst-x64" />
 
     <!-- download the runtime packs -->
     <PackageDownload Include="@(PackageRuntimeIdentifiers -> 'Microsoft.NETCore.App.Runtime.%(Identity)')" Version="[$(BundledNETCorePlatformsPackageVersion)]" />
 
     <!-- download the reference assemblies -->
-    <PackageDownload Include="microsoft.netcore.app.ref" Version="[5.0.0]" />
+    <PackageDownload Include="microsoft.netcore.app.ref" Version="[$(BundledNETCorePlatformsPackageVersion)]" />
   </ItemGroup>
 
   <!-- target to write out the BundledNETCorePlatformsPackageVersion to a file -->

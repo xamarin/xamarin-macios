@@ -17,6 +17,8 @@ using Foundation;
 using ObjCRuntime;
 using CoreGraphics;
 
+#nullable enable
+
 namespace MediaPlayer {
 	public partial class MPMediaItem {
 		ulong UInt64ForProperty (NSString property)
@@ -99,37 +101,37 @@ namespace MediaPlayer {
 			}
 		}
 
-		public NSString Title {
+		public NSString? Title {
 			get {
 				return ValueForProperty (TitleProperty) as NSString;
 			}
 		}
 
-		public NSString AlbumTitle {
+		public NSString? AlbumTitle {
 			get {
 				return ValueForProperty (AlbumTitleProperty) as NSString;
 			}
 		}
 
-		public NSString Artist {
+		public NSString? Artist {
 			get {
 				return ValueForProperty (ArtistProperty) as NSString;
 			}
 		}
 
-		public NSString AlbumArtist {
+		public NSString? AlbumArtist {
 			get {
 				return ValueForProperty (AlbumArtistProperty) as NSString;
 			}
 		}
 
-		public NSString Genre {
+		public NSString? Genre {
 			get {
 				return ValueForProperty (GenreProperty) as NSString;
 			}
 		}
 
-		public NSString Composer {
+		public NSString? Composer {
 			get {
 				return ValueForProperty (ComposerProperty) as NSString;
 			}
@@ -165,13 +167,13 @@ namespace MediaPlayer {
 			}
 		}
 
-		public MPMediaItemArtwork Artwork {
+		public MPMediaItemArtwork? Artwork {
 			get {
 				return (ValueForProperty (ArtworkProperty) as MPMediaItemArtwork);
 			}
 		}
 
-		public NSString Lyrics {
+		public NSString? Lyrics {
 			get {
 				return ValueForProperty (LyricsProperty) as NSString;
 			}
@@ -183,7 +185,7 @@ namespace MediaPlayer {
 			}
 		}
 
-		public NSDate ReleaseDate {
+		public NSDate? ReleaseDate {
 			get {
 				return (ValueForProperty (ReleaseDateProperty) as NSDate);
 			}
@@ -195,13 +197,13 @@ namespace MediaPlayer {
 			}
 		}
 
-		public NSString Comments {
+		public NSString? Comments {
 			get {
 				return ValueForProperty (CommentsProperty) as NSString;
 			}
 		}
 
-		public NSUrl AssetURL {
+		public NSUrl? AssetURL {
 			get {
 				return ValueForProperty (AssetURLProperty) as NSUrl;
 			}
@@ -225,19 +227,19 @@ namespace MediaPlayer {
 			}
 		}
 
-		public NSDate LastPlayedDate {
+		public NSDate? LastPlayedDate {
 			get {
 				return (ValueForProperty (LastPlayedDateProperty) as NSDate);
 			}
 		}
 
-		public NSString UserGrouping {
+		public NSString? UserGrouping {
 			get {
 				return ValueForProperty (UserGroupingProperty) as NSString;
 			}
 		}
 
-		public NSString PodcastTitle {
+		public NSString? PodcastTitle {
 			get {
 				return ValueForProperty (PodcastTitleProperty) as NSString;
 			}
@@ -270,14 +272,14 @@ namespace MediaPlayer {
 		}
 
 		[iOS (10,0)]
-		public NSDate DateAdded {
+		public NSDate? DateAdded {
 			get {
 				return (ValueForProperty (DateAddedProperty) as NSDate);
 			}
 		}
 
 		[iOS (10,3)]
-		public NSString PlaybackStoreID {
+		public NSString? PlaybackStoreID {
 			get {
 				return (ValueForProperty (PlaybackStoreIDProperty) as NSString);
 			}

@@ -403,6 +403,7 @@ namespace CoreText {
 
 #region Paragraph Style Access
 		[DllImport (Constants.CoreTextLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern unsafe bool CTParagraphStyleGetValueForSpecifier (IntPtr paragraphStyle, CTParagraphStyleSpecifier spec, nuint valueBufferSize, void* valueBuffer);
 
 		public unsafe CTTextTab[] GetTabStops ()

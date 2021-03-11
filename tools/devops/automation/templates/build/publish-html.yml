@@ -39,6 +39,7 @@ steps:
     $filePatterns = @{
       "iOS" = "ios-*.md";
       "macOS" = "macos-*.md";
+      "macCat" = "maccat-*.md";
       "tvOS" = "tvos-*.md";
       "watchOS" = "watchos-*.md";
     }
@@ -64,10 +65,11 @@ steps:
     $gists["index"] = $url
 
     # similar dict but for the html links from vsdrops
-    $apiDiffRoot="$Env:VSDROPSPREFIX/$Env:BUILD_BUILDNUMBER/$Env:BUILD_BUILDID/APIDiff/;/"
+    $apiDiffRoot="$Env:VSDROPSPREFIX/$Env:BUILD_BUILDNUMBER/$Env:BUILD_BUILDID/apidiff/;/"
     $html =  @{
       "iOS" = $apiDiffRoot + "ios-api-diff.html"; 
       "macOS" = $apiDiffRoot + "mac-api-diff.html";
+      "macCat" = $apiDiffRoot + "maccat-api-diff.html";
       "tvOS" = $apiDiffRoot + "tvos-api-diff.html";
       "watchOS" =$apiDiffRoot + "watchos-api-diff.html";
       "index"= $apiDiffRoot + "api-diff.html";

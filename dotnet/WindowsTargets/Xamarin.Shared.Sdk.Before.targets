@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<PropertyGroup>
+		<_DotNetRootRemoteDirectory Condition="$(_DotNetRootRemoteDirectory) == ''">/usr/local/share/dotnet/</_DotNetRootRemoteDirectory>
+		<_XamarinSdkRemoteRootDirectory Condition="'$(_XamarinSdkRemoteRootDirectory)' == ''">$(_XamarinSdkRootDirectory.Replace('$(NetCoreRoot)', '$(_DotNetRootRemoteDirectory)'))</_XamarinSdkRemoteRootDirectory>
+		<_MlaunchPath Condition="'$(_MlaunchPath)' == ''">$(_XamarinSdkRemoteRootDirectory)tools/bin/mlaunch</_MlaunchPath>
+	</PropertyGroup>
+
+</Project>

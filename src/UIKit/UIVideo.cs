@@ -43,6 +43,7 @@ namespace UIKit {
 		public delegate void SaveStatus (string path, NSError error);
 		
 		[DllImport (Constants.UIKitLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static /* BOOL */ bool UIVideoAtPathIsCompatibleWithSavedPhotosAlbum (/* NSString* */ IntPtr videoPath);
 		
 		public static bool IsCompatibleWithSavedPhotosAlbum (string path)

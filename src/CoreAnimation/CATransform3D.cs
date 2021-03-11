@@ -37,6 +37,7 @@ namespace CoreAnimation {
 		}
 		
 		[DllImport(Constants.QuartzLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CATransform3DIsIdentity (CATransform3D t);
 
 		public bool IsIdentity {
@@ -46,6 +47,7 @@ namespace CoreAnimation {
 		}
 
 		[DllImport(Constants.QuartzLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CATransform3DEqualToTransform (CATransform3D a, CATransform3D b);
 
 		public bool Equals (CATransform3D other)
@@ -160,6 +162,7 @@ namespace CoreAnimation {
 		
 
 		[DllImport(Constants.QuartzLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CATransform3DIsAffine (CATransform3D t);
 
 		public bool IsAffine {

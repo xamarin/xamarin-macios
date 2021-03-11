@@ -132,11 +132,13 @@ namespace GameController {
 		
 		// GCExtendedGamepadSnapshot.h
 		[DllImport (Constants.GameControllerLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool GCExtendedGamepadSnapShotDataV100FromNSData (
 			/* GCExtendedGamepadSnapShotDataV100 * __nullable */ out GCExtendedGamepadSnapShotDataV100 snapshotData, 
 			/* NSData * __nullable */ IntPtr data);
 		
 		[DllImport (Constants.GameControllerLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		[TV (12, 2), Mac (10, 14, 4), iOS (12, 2)]
 		static extern bool GCExtendedGamepadSnapshotDataFromNSData (
 			/* GCExtendedGamepadSnapshotData * __nullable */ out GCExtendedGamepadSnapshotData snapshotData, 

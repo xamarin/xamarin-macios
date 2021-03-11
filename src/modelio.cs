@@ -1038,6 +1038,7 @@ namespace ModelIO {
 		IMDLMeshBufferAllocator Allocator { get; }
 
 		[Export ("zone", ArgumentSemantic.Retain)]
+		[NullAllowed]
 		IMDLMeshBufferZone Zone { get; }
 
 		[Export ("type")]

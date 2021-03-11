@@ -101,15 +101,19 @@ namespace Xamarin.Tests {
 		}
 
 		[Test]
-		public void BuildMyCatalystApp ()
+		[TestCase ("maccatalyst-x64")]
+		[TestCase ("maccatalyst-arm64")]
+		public void BuildMyCatalystApp (string runtimeIdentifier)
 		{
 			var platform = ApplePlatform.MacCatalyst;
 			var project_path = GetProjectPath ("MyCatalystApp");
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 			Clean (project_path);
-			var result = DotNet.AssertBuild (project_path, verbosity);
+			var properties = new Dictionary<string, string> (verbosity);
+			properties ["RuntimeIdentifier"] = runtimeIdentifier;
+			var result = DotNet.AssertBuild (project_path, properties);
 			AssertThatLinkerExecuted (result);
-			var appPath = Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", "net6.0-maccatalyst", "maccatalyst-x64", "MyCatalystApp.app");
+			var appPath = Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", "net6.0-maccatalyst", runtimeIdentifier, "MyCatalystApp.app");
 			AssertAppContents (platform, appPath);
 			var infoPlistPath = Path.Combine (appPath, "Contents", "Info.plist");
 			var infoPlist = PDictionary.FromFile (infoPlistPath);
@@ -409,6 +413,25 @@ namespace Xamarin.Tests {
 				throw new NotImplementedException ($"Unknown platform: {platform}");
 			}
 			Assert.That (info_plist_path, Does.Exist, "Info.plist");
+
+			var assets_path = string.Empty;
+			switch (platform) {
+			case ApplePlatform.iOS:
+				break; // sample project doesn't have assets
+			case ApplePlatform.TVOS:
+				assets_path = Path.Combine (app_directory, "Assets.car");
+				break;
+			case ApplePlatform.WatchOS:
+				break; // sample project doesn't have assets
+			case ApplePlatform.MacOSX:
+			case ApplePlatform.MacCatalyst:
+				assets_path = Path.Combine (app_directory, "Contents", "Resources", "Assets.car");
+				break;
+			default:
+				throw new NotImplementedException ($"Unknown platform: {platform}");
+			}
+			if (!string.IsNullOrEmpty (assets_path))
+				Assert.That (assets_path, Does.Exist, "Assets.car");
 		}
 
 		IEnumerable<string> FilterToAssembly (IEnumerable<string> lines, string assemblyName)

@@ -8,6 +8,8 @@ using ObjCRuntime;
 using iAd;
 #endif
 
+#nullable enable
+
 namespace MediaPlayer {
 
 #if HAS_IAD
@@ -19,7 +21,7 @@ namespace MediaPlayer {
 		[iOS (7,0)]
 		static public void PrepareForPrerollAds ()
 		{
-			(null as MPMoviePlayerController).PreparePrerollAds ();
+			(null as MPMoviePlayerController)!.PreparePrerollAds ();
 		}
 	}
 #endif

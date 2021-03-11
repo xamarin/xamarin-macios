@@ -205,8 +205,11 @@ $$(RUNTIME_$(2)_TARGETS_DIRS):
 	$(Q) mkdir -p $$@
 
 all-$(2):: $$(RUNTIME_$(2)_TARGETS)
+
+ifdef INCLUDE_XAMARIN_LEGACY
 all-local:: $$(RUNTIME_$(2)_TARGETS)
 install-local:: $$(RUNTIME_$(2)_TARGETS)
+endif
 
 endef
 
@@ -437,8 +440,14 @@ MAC_LIBS =                   \
 #    This is used linked into the native executable when using the system Mono (i.e. not)
 #    embedding the Mono runtime).
 #
+# libxamarin-coreclr.a:
+#    This is used when using the CoreCLR runtime instead of Mono.
+#    CORECLR_RUNTIME is defined for these versions of libxamarin.
+#
 
+ifdef INCLUDE_XAMARIN_LEGACY
 all-local:: $(TARGETS)
+endif
 
 define ObjTemplate
 DYNAMIC_DYLIB$(2)_OBJECTS   = $$(foreach src,$$(MAC_SOURCES),.libs/mac/$$(basename $$(src))$(3).dylib.$(1).o)
@@ -547,8 +556,10 @@ $(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/include/%.h: %.h | $(MAC_DESTDIR)$(XAMARIN_MA
 $(RUNTIME_MAC_TARGETS_DIRS):
 	$(Q) mkdir -p $@
 
+ifdef INCLUDE_XAMARIN_LEGACY
 all-local:: $(RUNTIME_MAC_TARGETS)
 install-local:: $(RUNTIME_MAC_TARGETS)
+endif
 
 #
 # .NET
@@ -577,6 +588,17 @@ $(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native/xamarin/%.h: 
 endef
 
 $(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(eval $(call DotNetLibTemplate,$(platform),$(rid)))))
+
+define DotNetCoreClrLibTemplate
+DOTNET_TARGETS += \
+	$(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native/libxamarin-dotnet-coreclr.a \
+	$(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native/libxamarin-dotnet-coreclr-debug.a \
+	$(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native/libxamarin-dotnet-coreclr.dylib \
+	$(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native/libxamarin-dotnet-coreclr-debug.dylib \
+
+endef
+
+$(foreach platform,$(DOTNET_CORECLR_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(eval $(call DotNetCoreClrLibTemplate,$(platform),$(rid)))))
 
 # a few lookup tables, because the data we have is not always in the format we need it
 
@@ -648,7 +670,7 @@ $(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIM
 # https://github.com/dotnet/runtime/issues/48508
 DOTNET_tvos_arm64_LIBDIR=$(TOP)/builds/mono-ios-sdk-destdir/ios-libs/tvos
 
-# The runtime pack is different for macOS/Mon (it has '.Mono' at the end), so add a special case here.
+# The runtime pack is different for macOS/Mono (it has '.Mono' at the end), so add a special case here.
 DOTNET_osx_x64_LIBDIR=$(TOP)/builds/downloads/microsoft.netcore.app.runtime.mono.osx-x64/$(BUNDLED_NETCORE_PLATFORMS_PACKAGE_VERSION)/runtimes/osx-x64/native
 DOTNET_osx_arm64_LIBDIR=$(TOP)/builds/downloads/microsoft.netcore.app.runtime.mono.osx-arm64/$(BUNDLED_NETCORE_PLATFORMS_PACKAGE_VERSION)/runtimes/osx-arm64/native
 
@@ -675,9 +697,13 @@ endef
 #                                           1             2        3          4              5      6        7
 #        call DotNetLibXamarinTemplate (platform, SDK_PLATFORM, rid, rid_with_underscores, arch,       , "-dotnet")
 #        call DotNetLibXamarinTemplate (platform, SDK_PLATFORM, rid, rid_with_underscores, arch, _DEBUG, "-dotnet-debug")
+#        call DotNetLibXamarinTemplate (platform, SDK_PLATFORM, rid, rid_with_underscores, arch, _CORECLR,       "-dotnet-coreclr")
+#        call DotNetLibXamarinTemplate (platform, SDK_PLATFORM, rid, rid_with_underscores, arch, _CORECLR_DEBUG, "-dotnet-coreclr-debug")
 
 $(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(foreach arch,$(DOTNET_$(shell echo $(rid) | tr -- - _)_ARCHITECTURES),$(eval $(call DotNetLibXamarinTemplate,$(DOTNET_$(shell echo $(rid) | tr -- - _)_SDK_PLATFORM),$(shell echo $(DOTNET_$(shell echo $(rid) | tr -- - _)_SDK_PLATFORM) | tr a-z A-Z),$(rid),$(shell echo $(rid) | tr -- - _),$(arch),,-dotnet)))))
 $(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(foreach arch,$(DOTNET_$(shell echo $(rid) | tr -- - _)_ARCHITECTURES),$(eval $(call DotNetLibXamarinTemplate,$(DOTNET_$(shell echo $(rid) | tr -- - _)_SDK_PLATFORM),$(shell echo $(DOTNET_$(shell echo $(rid) | tr -- - _)_SDK_PLATFORM) | tr a-z A-Z),$(rid),$(shell echo $(rid) | tr -- - _),$(arch),_DEBUG,-dotnet-debug)))))
+$(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(foreach arch,$(DOTNET_$(shell echo $(rid) | tr -- - _)_ARCHITECTURES),$(eval $(call DotNetLibXamarinTemplate,$(DOTNET_$(shell echo $(rid) | tr -- - _)_SDK_PLATFORM),$(shell echo $(DOTNET_$(shell echo $(rid) | tr -- - _)_SDK_PLATFORM) | tr a-z A-Z),$(rid),$(shell echo $(rid) | tr -- - _),$(arch),_CORECLR,-dotnet-coreclr)))))
+$(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(foreach arch,$(DOTNET_$(shell echo $(rid) | tr -- - _)_ARCHITECTURES),$(eval $(call DotNetLibXamarinTemplate,$(DOTNET_$(shell echo $(rid) | tr -- - _)_SDK_PLATFORM),$(shell echo $(DOTNET_$(shell echo $(rid) | tr -- - _)_SDK_PLATFORM) | tr a-z A-Z),$(rid),$(shell echo $(rid) | tr -- - _),$(arch),_CORECLR_DEBUG,-dotnet-coreclr-debug)))))
 
 dotnet: $(DOTNET_TARGETS)
 

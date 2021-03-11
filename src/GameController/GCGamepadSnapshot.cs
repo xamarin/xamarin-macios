@@ -55,6 +55,7 @@ namespace GameController {
 		
 		// GCGamepadSnapshot.h
 		[DllImport (Constants.GameControllerLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool GCGamepadSnapShotDataV100FromNSData (
 			/* GCGamepadSnapShotDataV100 * __nullable */ out GCGamepadSnapShotDataV100 snapshotData,
 			/* NSData * __nullable */ IntPtr data);

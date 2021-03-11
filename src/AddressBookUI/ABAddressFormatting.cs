@@ -20,7 +20,7 @@ namespace AddressBookUI {
 	static public class ABAddressFormatting {
 		
 		[DllImport (Constants.AddressBookUILibrary)]
-		static extern IntPtr /* NSString */ ABCreateStringWithAddressDictionary (IntPtr /* NSDictionary */ address, bool addCountryName);
+		static extern IntPtr /* NSString */ ABCreateStringWithAddressDictionary (IntPtr /* NSDictionary */ address, [MarshalAs (UnmanagedType.I1)] bool addCountryName);
 		
 		static public string ToString (NSDictionary address, bool addCountryName)
 		{

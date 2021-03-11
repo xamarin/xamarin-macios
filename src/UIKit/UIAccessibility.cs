@@ -38,6 +38,7 @@ namespace UIKit {
 	public static partial class UIAccessibility {
 		// UIAccessibility.h
 		[DllImport (Constants.UIKitLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static /* BOOL */ bool UIAccessibilityIsVoiceOverRunning ();
 
 		static public bool IsVoiceOverRunning {
@@ -48,6 +49,7 @@ namespace UIKit {
 		
 		// UIAccessibility.h
 		[DllImport (Constants.UIKitLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static /* BOOL */ bool UIAccessibilityIsMonoAudioEnabled ();
 
 		static public bool IsMonoAudioEnabled {
@@ -72,6 +74,7 @@ namespace UIKit {
 		// UIAccessibility.h
 		[iOS (9,0)]
 		[DllImport (Constants.UIKitLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static /* BOOL */ bool UIAccessibilityIsShakeToUndoEnabled ();
 
 		[iOS (9,0)]
@@ -83,6 +86,7 @@ namespace UIKit {
 		
 		// UIAccessibility.h
 		[DllImport (Constants.UIKitLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static /* BOOL */ bool UIAccessibilityIsClosedCaptioningEnabled ();
 
 		static public bool IsClosedCaptioningEnabled {
@@ -93,6 +97,7 @@ namespace UIKit {
 		
 		// UIAccessibility.h
 		[DllImport (Constants.UIKitLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static /* BOOL */ bool UIAccessibilityIsInvertColorsEnabled ();
 
 		static public bool IsInvertColorsEnabled {
@@ -103,6 +108,7 @@ namespace UIKit {
 		
 		// UIAccessibility.h
 		[DllImport (Constants.UIKitLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static /* BOOL */ bool UIAccessibilityIsGuidedAccessEnabled ();
 
 		static public bool IsGuidedAccessEnabled {
@@ -189,7 +195,7 @@ namespace UIKit {
 		// UIAccessibility.h
 		[iOS (7,0)]
 		[DllImport (Constants.UIKitLibrary)]
-		extern unsafe static void UIAccessibilityRequestGuidedAccessSession (/* BOOL */ bool enable, /* void(^completionHandler)(BOOL didSucceed) */ void * completionHandler);
+		extern unsafe static void UIAccessibilityRequestGuidedAccessSession (/* BOOL */ [MarshalAs (UnmanagedType.I1)] bool enable, /* void(^completionHandler)(BOOL didSucceed) */ void * completionHandler);
 
 		[iOS (7,0)]
 		[BindingImpl (BindingImplOptions.Optimizable)]
@@ -231,6 +237,7 @@ namespace UIKit {
 
 		[iOS (8,0)]
 		[DllImport (Constants.UIKitLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool UIAccessibilityDarkerSystemColorsEnabled ();
 
 		[iOS (8,0)]
@@ -252,6 +259,7 @@ namespace UIKit {
 
 		[iOS (8,0)]
 		[DllImport (Constants.UIKitLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool UIAccessibilityIsBoldTextEnabled ();
 
 		[iOS (8,0)]
@@ -263,6 +271,7 @@ namespace UIKit {
 
 		[TV (14,0), iOS (14,0)]
 		[DllImport (Constants.UIKitLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool UIAccessibilityButtonShapesEnabled ();
 
 		[TV (14,0), iOS (14,0)]
@@ -270,6 +279,7 @@ namespace UIKit {
 
 		[iOS (8,0)]
 		[DllImport (Constants.UIKitLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool UIAccessibilityIsGrayscaleEnabled ();
 
 		[iOS (8,0)]
@@ -281,6 +291,7 @@ namespace UIKit {
 
 		[iOS (8,0)]
 		[DllImport (Constants.UIKitLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool UIAccessibilityIsReduceMotionEnabled ();
 
 		[iOS (8,0)]
@@ -292,6 +303,7 @@ namespace UIKit {
 
 		[TV (14,0), iOS (14,0)]
 		[DllImport (Constants.UIKitLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool UIAccessibilityPrefersCrossFadeTransitions ();
 
 		[TV (14,0), iOS (14,0)]
@@ -299,6 +311,7 @@ namespace UIKit {
 
 		[iOS (13,0), TV (13,0)]
 		[DllImport (Constants.UIKitLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool UIAccessibilityIsVideoAutoplayEnabled ();
 
 		[iOS (13,0), TV (13,0)]
@@ -306,6 +319,7 @@ namespace UIKit {
 
 		[iOS (8,0)]
 		[DllImport (Constants.UIKitLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool UIAccessibilityIsReduceTransparencyEnabled ();
 
 		[iOS (8,0)]
@@ -317,6 +331,7 @@ namespace UIKit {
 
 		[iOS (8,0)]
 		[DllImport (Constants.UIKitLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool UIAccessibilityIsSwitchControlRunning ();
 
 		[iOS (8,0)]
@@ -328,6 +343,7 @@ namespace UIKit {
 
 		[iOS (8,0)]
 		[DllImport (Constants.UIKitLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool UIAccessibilityIsSpeakSelectionEnabled ();
 		[iOS (8,0)]
 		static public bool IsSpeakSelectionEnabled {
@@ -338,6 +354,7 @@ namespace UIKit {
 
 		[iOS (8,0)]
 		[DllImport (Constants.UIKitLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool UIAccessibilityIsSpeakScreenEnabled ();
 		[iOS (8,0)]
 		static public bool IsSpeakScreenEnabled {
@@ -348,6 +365,7 @@ namespace UIKit {
 
 		[iOS (10,0), TV (10,0)]
 		[DllImport (Constants.UIKitLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool UIAccessibilityIsAssistiveTouchRunning ();
 		[iOS (10,0), TV (10,0)]
 		public static bool IsAssistiveTouchRunning {
@@ -358,6 +376,7 @@ namespace UIKit {
 
 		[iOS (13,0), TV (13,0)]
 		[DllImport (Constants.UIKitLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool UIAccessibilityShouldDifferentiateWithoutColor ();
 
 		[iOS (13,0), TV (13,0)]
@@ -365,6 +384,7 @@ namespace UIKit {
 
 		[iOS (13,0), TV (13,0)]
 		[DllImport (Constants.UIKitLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool UIAccessibilityIsOnOffSwitchLabelsEnabled ();
 
 		[iOS (13,0), TV (13,0)]

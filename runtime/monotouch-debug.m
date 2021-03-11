@@ -521,7 +521,6 @@ void monotouch_configure_debugging ()
 	NSMutableArray *hosts = [NSMutableArray array];
 	bool debug_enabled = true;
 	NSString *monodevelop_host;
-	NSString *monotouch_debug_enabled;
 
 	if (!strcmp (connection_mode, "default")) {
 		char *evar = getenv ("__XAMARIN_DEBUG_MODE__");
@@ -538,6 +537,7 @@ void monotouch_configure_debugging ()
 	}
  
  #if !(TARGET_OS_MACCATALYST || TARGET_OS_OSX)
+	NSString *monotouch_debug_enabled;
 	// If debugging is enabled (only check for mobile builds - for macOS / Mac Catalyst debugging is always enabled in debug versions of libxamarin)
 	monotouch_debug_enabled = get_preference (preferences, NULL, @"__monotouch_debug_enabled"); 
 	if (monotouch_debug_enabled != nil) {

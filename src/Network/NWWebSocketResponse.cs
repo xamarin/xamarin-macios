@@ -42,6 +42,7 @@ namespace Network {
 		public NWWebSocketResponseStatus Status => nw_ws_response_get_status (GetCheckedHandle ()); 
 
 		[DllImport (Constants.NetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		unsafe static extern bool nw_ws_response_enumerate_additional_headers (OS_nw_ws_response response, ref BlockLiteral enumerator);
 
 		delegate void nw_ws_response_enumerate_additional_headers_t (IntPtr block, string header, string value);

@@ -4,6 +4,8 @@ using System;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace Metal {
 
 	public partial class MTLSharedTextureHandle {
@@ -27,7 +29,7 @@ namespace Metal {
 		public static IMTLCounterSampleBuffer CreateIMTLCounterSampleBuffer (this IMTLDevice This, MTLCounterSampleBufferDescriptor descriptor, out NSError error)
 		{
 			if (descriptor == null)
-				throw new ArgumentNullException ("descriptor");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (descriptor));
 			IntPtr errorValue = IntPtr.Zero;
 
 			var ret = Runtime.GetINativeObject<IMTLCounterSampleBuffer> (global::ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr_ref_IntPtr (This.Handle, Selector.GetHandle ("newCounterSampleBufferWithDescriptor:error:"), descriptor.Handle, ref errorValue), owns: false);
@@ -45,7 +47,7 @@ namespace Metal {
 		public static void SampleCounters (this IMTLComputeCommandEncoder This, IMTLCounterSampleBuffer sampleBuffer, nuint sampleIndex, bool barrier)
 		{
 			if (sampleBuffer == null)
-				throw new ArgumentNullException ("sampleBuffer");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (sampleBuffer));
 			global::ObjCRuntime.Messaging.void_objc_msgSend_IntPtr_nuint_bool (This.Handle, Selector.GetHandle ("sampleCountersInBuffer:atSampleIndex:withBarrier:"), sampleBuffer.Handle, sampleIndex, barrier);
 		}
 	}
