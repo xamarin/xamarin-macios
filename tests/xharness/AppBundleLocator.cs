@@ -100,9 +100,9 @@ namespace Xharness {
 					proc.StartInfo.Arguments = StringUtils.FormatArguments (args);
 					proc.StartInfo.WorkingDirectory = dir;
 
-					var rv = await processManager.RunAsync (proc, getLog() ?? new ConsoleLog(), environmentVariables: env, timeout: TimeSpan.FromSeconds (15));
+					var rv = await processManager.RunAsync (proc, getLog() ?? new ConsoleLog(), environmentVariables: env, timeout: TimeSpan.FromSeconds (120));
 					if (!rv.Succeeded)
-						throw new Exception ($"Unable to evaluate the property {evaluateProperty}.");
+						throw new Exception ($"Unable to evaluate the property {evaluateProperty}, build failed with exit code {rv.ExitCode}. Timed out: {rv.TimedOut}");
 					
 					return File.ReadAllText (output).Trim ();
 				}
