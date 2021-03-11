@@ -1,0 +1,31 @@
+{
+	"Projects": [
+	  {
+		"LanguageSet": "Azure_Languages",
+		"LocItems": [
+		  {
+			"SourceFile": "./msbuild/Xamarin.Localization.MSBuild/MSBStrings.resx",
+			"Languages": "",
+			"CopyOption": "LangIDOnName",
+			"OutputPath": "./msbuild/Xamarin.Localization.MSBuild/TranslatedAssemblies",
+			"LclFile": "",
+			"LciFile": "",
+			"Parser": "",
+			"LssFiles": []
+		  },
+		  {
+			"SourceFile": "./tools/mtouch/Errors.resx",
+			"Languages": "",
+			"CopyOption": "LangIDOnName",
+			"OutputPath": "./tools/mtouch/TranslatedAssemblies",
+			"LclFile": "",
+			"LciFile": "",
+			"Parser": "",
+			"LssFiles": []
+		  }
+		],
+		"LssFiles": [],
+		"CloneLanguageSet": ""
+	  }
+	]
+  }

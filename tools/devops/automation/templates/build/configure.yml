@@ -81,3 +81,19 @@ steps:
     ACCESSTOKEN: $(AzDoBuildAccess.Token)
   name: labels
   displayName: 'Configure build'
+
+steps:
+- task: OneLocBuild@2
+  env:
+    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+  inputs:
+    locProj: '$(Build.SourcesDirectory)/Localize/LocProject.json'
+    outDir: '$(Build.ArtifactStagingDirectory)'
+    isCreatePrSelected: true
+    prSourceBranchPrefix: 'locfiles'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'localizationDrop'
+    publishLocation: 'Container'
