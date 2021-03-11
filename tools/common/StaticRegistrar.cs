@@ -3746,9 +3746,6 @@ namespace Registrar {
 			}
 
 			invoke.AppendLine ("mono_runtime_invoke (managed_method, {0}, arg_ptrs, {1});", isStatic ? "NULL" : "mthis", marshal_exception);
-		
-			if (isCtor)
-				invoke.AppendLine ("xamarin_create_managed_ref (self, mthis, true);");
 
 			body_setup.AppendLine ("GCHandle exception_gchandle = INVALID_GCHANDLE;");
 			// prepare the return value

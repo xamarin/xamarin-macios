@@ -510,7 +510,6 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 		mono_runtime_invoke (method, retval, (void **) arg_ptrs, exception_ptr);
 		if (exception != NULL)
 			goto exception_handling;
-		xamarin_create_managed_ref (self, retval, true);
 	} else {
 		
 #ifdef TRACE
