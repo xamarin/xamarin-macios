@@ -386,11 +386,6 @@ namespace ObjCRuntime {
 		}
 
 #region Wrappers for delegate callbacks
-		static void RegisterNSObject (IntPtr managed_obj, IntPtr native_obj)
-		{
-			RegisterNSObject (GCHandle.FromIntPtr (managed_obj), native_obj, null);
-		}
-
 		static void RegisterAssembly (IntPtr a)
 		{
 			RegisterAssembly ((Assembly) GetGCHandleTarget (a));
@@ -1010,15 +1005,7 @@ namespace ObjCRuntime {
 		}
 		
 		internal static void RegisterNSObject (NSObject obj, IntPtr ptr) {
-			RegisterNSObject (GCHandle.Alloc (obj, GCHandleType.WeakTrackResurrection), ptr, obj);
-		}
-
-		// 'obj' can be provided if the caller has it, otherwise we'll fetch it from the GCHandle
-		// The GCHandle must be a WeakTracResurrection GCHandle, and the caller must not free it
-		internal static void RegisterNSObject (GCHandle handle, IntPtr ptr, NSObject obj)
-		{
-			if (obj == null)
-				obj = (NSObject) handle.Target;
+			var handle = GCHandle.Alloc (obj, GCHandleType.WeakTrackResurrection);
 			lock (lock_obj) {
 				object_map [ptr] = handle;
 				obj.Handle = ptr;
@@ -1717,6 +1704,11 @@ namespace ObjCRuntime {
 			}
 
 			throw ErrorHelper.CreateError (8003, "Failed to find the closed generic method '{0}' on the type '{1}'.", open_method.Name, closed_type.FullName);
+		}
+
+		static void GCCollect ()
+		{
+			GC.Collect ();
 		}
 
 		[EditorBrowsable (EditorBrowsableState.Never)]

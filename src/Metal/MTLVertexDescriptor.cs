@@ -6,6 +6,8 @@ using ModelIO;
 using ObjCRuntime;
 using Metal;
 
+#nullable enable
+
 namespace Metal {
 	public partial class MTLVertexDescriptor {
 

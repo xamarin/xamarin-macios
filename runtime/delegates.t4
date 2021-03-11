@@ -6,16 +6,8 @@
 <#@ import namespace="System.Collections.Generic" #>
 <#
 	var delegates = new XDelegates {
-		new XDelegate ("void", "void", "xamarin_register_nsobject",
-			// Do not automatically convert the 'managed_obj' parameter, the
-			// automatic conversion doesn't support neither the GCHandle type
-			// RegisterNSObject expects (tracking resurrection), nor the fact
-			// that the called method takes ownership of the GCHandle.
-			"GCHandle", "IntPtr", "managed_obj",
-			"id", "IntPtr", "native_obj"
-		) {
-			WrappedManagedFunction = "RegisterNSObject",
-			OnlyDynamicUsage = true,
+		new XDelegate ("void", "void", "xamarin_gc_collect") {
+			WrappedManagedFunction = "GCCollect",
 		},
 
 		new XDelegate ("void", "void", "xamarin_register_assembly",
@@ -353,9 +345,6 @@
 			ReturnType = new Arg (cReturnType, mReturnType, string.Empty);
 			EntryPoint = entryPoint;
 
-			if (arguments == null || arguments.Length == 0)
-				return;
-
 			if (arguments.Length % 3 != 0)
 				throw new Exception (string.Format ("Export arguments params must be a multiple of 3 to form a set of (c type, managed name, name) triples for {0}", entryPoint));
 
@@ -428,8 +417,11 @@
 				sb.Append (EntryPoint.Substring ("xamarin_".Length));
 				sb.Append (" (");
 				sb.Append (invoke_args);
-				if (ExceptionHandling)
-					sb.Append (", exception_gchandle");
+				if (ExceptionHandling) {
+					if (Arguments.Count > 0)
+						sb.Append (", ");
+					sb.Append ("exception_gchandle");
+				}
 
 				if (ReturnType.IsGCHandleConversion)
 					sb.Append (")");
@@ -466,9 +458,6 @@
 
 		string CFormatArgs (string empty, bool nameOnly, bool exposed = false)
 		{
-			if (Arguments == null || Arguments.Count == 0)
-				return empty;
-
 			var builder = new StringBuilder ();
 
 			foreach (var arg in Arguments) {
@@ -481,13 +470,16 @@
 				builder.Append (", ");
 			}
 
-			builder.Length -= 2;
+			if (Arguments.Count > 0)
+				builder.Length -= 2;
 
 			if (ExceptionHandling) {
+				if (Arguments.Count > 0)
+					builder.Append (", ");
 				if (nameOnly) {
-					builder.Append (", exception_gchandle");
+					builder.Append ("exception_gchandle");
 				} else {
-					builder.Append (", GCHandle *exception_gchandle");
+					builder.Append ("GCHandle *exception_gchandle");
 				}
 			}
 
@@ -496,9 +488,6 @@
 
 		string MFormatArgs (string empty, bool nameOnly)
 		{
-			if (Arguments == null || Arguments.Count == 0)
-				return empty;
-
 			var builder = new StringBuilder ();
 
 			foreach (var arg in Arguments) {
@@ -515,13 +504,16 @@
 				builder.Append (", ");
 			}
 
-			builder.Length -= 2;
+			if (Arguments.Count > 0)
+				builder.Length -= 2;
 
 			if (ExceptionHandling) {
 				if (nameOnly) {
 					// nothing to do
 				} else {
-					builder.Append (", out IntPtr exception_gchandle");
+					if (Arguments.Count > 0)
+						builder.Append (", ");
+					builder.Append ("out IntPtr exception_gchandle");
 				}
 			}
 

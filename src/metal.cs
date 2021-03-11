@@ -105,9 +105,11 @@ namespace Metal {
 		nuint Stride { get; }
 
 		[Export ("elementStructType")]
+		[return: NullAllowed]
 		MTLStructType ElementStructType ();
 
 		[Export ("elementArrayType")]
+		[return: NullAllowed]
 		MTLArrayType ElementArrayType ();
 
 		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch]
@@ -1992,9 +1994,8 @@ namespace Metal {
 		[Export ("compareFunction")]
 		MTLCompareFunction CompareFunction { get; set; }
 
-		// [NullAllowed] we can't allow setting null - even if the default value is null
-		// /SourceCache/AcceleratorKit/AcceleratorKit-14.9/Framework/MTLSampler.m:240: failed assertion `label must not be nil.'
 		[Export ("label")]
+		[NullAllowed]
 		string Label { get; set; }
 
 		[Mac (10, 13), iOS (11,0), TV (11,0), NoWatch]
@@ -2018,9 +2019,8 @@ namespace Metal {
 	[BaseType (typeof (NSObject))]
 	partial interface MTLRenderPipelineDescriptor : NSCopying {
 
-		// [NullAllowed] we can't allow setting null - even if the default value is null
-		// /SourceCache/AcceleratorKit/AcceleratorKit-14.9/Framework/MTLRenderPipeline.mm:627: failed assertion `label must not be nil.'
 		[Export ("label")]
+		[NullAllowed]
 		string Label { get; set; }
 
 		[NullAllowed] // by default this property is null
@@ -2032,6 +2032,7 @@ namespace Metal {
 		IMTLFunction FragmentFunction { get; set; }
 
 		[Export ("vertexDescriptor", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		MTLVertexDescriptor VertexDescriptor { get; set; }
 
 		[Export ("sampleCount")]
@@ -2126,7 +2127,7 @@ namespace Metal {
 		MTLRenderPipelineColorAttachmentDescriptor ObjectAtIndexedSubscript (nuint attachmentIndex);
 
 		[Export ("setObject:atIndexedSubscript:"), Internal]
-		void SetObject (MTLRenderPipelineColorAttachmentDescriptor attachment, nuint attachmentIndex);
+		void SetObject ([NullAllowed] MTLRenderPipelineColorAttachmentDescriptor attachment, nuint attachmentIndex);
 	}
 
 	interface IMTLRenderPipelineState {}
@@ -2198,14 +2199,14 @@ namespace Metal {
 		MTLVertexBufferLayoutDescriptor ObjectAtIndexedSubscript (nuint index);
 
 		[Export ("setObject:atIndexedSubscript:"), Internal]
-		void SetObject (MTLVertexBufferLayoutDescriptor bufferDesc, nuint index);
+		void SetObject ([NullAllowed] MTLVertexBufferLayoutDescriptor bufferDesc, nuint index);
 	}
 
 	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
 	[BaseType (typeof(NSObject))]
 	interface MTLAttribute
 	{
-		[NullAllowed, Export ("name")]
+		[Export ("name")]
 		string Name { get; }
 
 		[Export ("attributeIndex")]
@@ -2588,15 +2589,19 @@ namespace Metal {
 
 #if XAMCORE_4_0
 		[Export ("structType")]
+		[NullAllowed]
 		MTLStructType StructType { get; }
 
 		[Export ("arrayType")]
+		[NullAllowed]
 		MTLArrayType ArrayType { get; }
 #else
 		[Export ("structType")]
+		[return: NullAllowed]
 		MTLStructType StructType ();
 
 		[Export ("arrayType")]
+		[return: NullAllowed]
 		MTLArrayType ArrayType ();
 #endif
 
@@ -2620,6 +2625,7 @@ namespace Metal {
 		MTLStructMember [] Members { get; }
 
 		[Export ("memberByName:")]
+		[return: NullAllowed]
 		MTLStructMember Lookup (string name);
 	}
 
@@ -2648,14 +2654,15 @@ namespace Metal {
 		bool DepthWriteEnabled { [Bind ("isDepthWriteEnabled")] get; set; }
 
 		[Export ("frontFaceStencil", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		MTLStencilDescriptor FrontFaceStencil { get; set; }
 
 		[Export ("backFaceStencil", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		MTLStencilDescriptor BackFaceStencil { get; set; }
 
-		// [NullAllowed] we can't allow setting null - even if the default value is null
-		// /SourceCache/AcceleratorKit/AcceleratorKit-14.9/Framework/MTLDepthStencil.m:393: failed assertion `label must not be nil.'
 		[Export ("label")]
+		[NullAllowed]
 		string Label { get; set; }
 	}
 
@@ -3238,6 +3245,7 @@ namespace Metal {
 	[BaseType (typeof (NSObject))]
 	interface MTLRenderPipelineReflection {
 		[Export ("vertexArguments")]
+		[NullAllowed]
 #if XAMCORE_4_0
 		MTLArgument [] VertexArguments { get; }
 #else
@@ -3245,6 +3253,7 @@ namespace Metal {
 #endif
 
 		[Export ("fragmentArguments")]
+		[NullAllowed]
 #if XAMCORE_4_0
 		MTLArgument [] FragmentArguments { get; }
 #else
@@ -3338,7 +3347,7 @@ namespace Metal {
 		MTLRenderPassColorAttachmentDescriptor ObjectAtIndexedSubscript (nuint attachmentIndex);
 
 		[Export ("setObject:atIndexedSubscript:"), Internal]
-		void SetObject (MTLRenderPassColorAttachmentDescriptor attachment, nuint attachmentIndex);
+		void SetObject ([NullAllowed] MTLRenderPassColorAttachmentDescriptor attachment, nuint attachmentIndex);
 	}
 
 	[iOS (8,0)][Mac (10,11)]
@@ -3349,9 +3358,11 @@ namespace Metal {
 		MTLRenderPassColorAttachmentDescriptorArray ColorAttachments { get; }
 
 		[Export ("depthAttachment", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		MTLRenderPassDepthAttachmentDescriptor DepthAttachment { get; set; }
 
 		[Export ("stencilAttachment", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		MTLRenderPassStencilAttachmentDescriptor StencilAttachment { get; set; }
 
 		[NullAllowed] // by default this property is null
@@ -3622,14 +3633,13 @@ namespace Metal {
 	[iOS (9,0)][Mac (10,11)]
 	[BaseType (typeof (NSObject))]
 	interface MTLComputePipelineDescriptor : NSCopying {
-		// it's marked as `nullable` but it asserts with
-		// /BuildRoot/Library/Caches/com.apple.xbs/Sources/Metal/Metal-54.18/Framework/MTLComputePipeline.mm:216: failed assertion `label must not be nil.'
+
 		[Export ("label")]
+		[NullAllowed]
 		string Label { get; set; }
 
-		// it's marked as `nullable` but it asserts with
-		// /BuildRoot/Library/Caches/com.apple.xbs/Sources/Metal/Metal-54.18/Framework/MTLComputePipeline.mm:230: failed assertion `computeFunction must not be nil.'
 		[Export ("computeFunction", ArgumentSemantic.Strong)]
+		[NullAllowed]
 		IMTLFunction ComputeFunction { get; set; }
 
 		[Export ("threadGroupSizeIsMultipleOfThreadExecutionWidth")]

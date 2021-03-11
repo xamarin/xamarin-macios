@@ -214,12 +214,8 @@ namespace Foundation {
 			IsDirectBinding = (this.GetType ().Assembly == PlatformAssembly);
 			Runtime.RegisterNSObject (this, handle);
 
-			// If the NativeRef bit is set, it means that this call was surfaced by
-			// monotouch_ctor_trampoline, which means we do not want to invoke Retain directly,
-			// it will be done by monotouch_ctor_trampoline on return.
 			bool native_ref = (flags & Flags.NativeRef) == Flags.NativeRef;
-			if (!native_ref)
-				CreateManagedRef (!alloced);
+			CreateManagedRef (!alloced || native_ref);
 		}
 
 		void CreateManagedRef (bool retain)
@@ -229,6 +225,7 @@ namespace Foundation {
 
 		void ReleaseManagedRef ()
 		{
+			flags &= ~Flags.HasManagedRef;
 			xamarin_release_managed_ref (handle, this);
 		}
 

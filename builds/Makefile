@@ -19,7 +19,6 @@ download-mono: \
 downloads/$(basename $(MONO_IOS_FILENAME)): MONO_URL=$(MONO_IOS_URL)
 downloads/$(basename $(MONO_MAC_FILENAME)): MONO_URL=$(MONO_MAC_URL)
 downloads/$(basename $(MONO_MACCATALYST_FILENAME)): MONO_URL=$(MONO_MACCATALYST_URL)
-downloads/$(DOTNET5_BCL_REF_NAME): MONO_URL=$(DOTNET5_BCL_REF_URL)
 downloads/$(DOTNET6_TARBALL_NAME): MONO_URL=$(DOTNET6_TARBALL)
 
 include $(TOP)/mk/colors.mk
@@ -28,7 +27,6 @@ DOWNLOADS = \
 	downloads/$(MONO_IOS_FILENAME) \
 	downloads/$(MONO_MAC_FILENAME) \
 	downloads/$(MONO_MACCATALYST_FILENAME) \
-	downloads/$(DOTNET5_BCL_REF_NAME) \
 	downloads/$(DOTNET6_TARBALL_NAME) \
 
 # This target downloads the mono archives, there's one for Xamarin.iOS and one for Xamarin.Mac.
@@ -90,9 +88,9 @@ fix-maccatalyst-assembly/bin/Debug/fix-maccatalyst-assembly.exe: $(wildcard fix-
 	$(Q) $(SYSTEM_MSBUILD) /r fix-maccatalyst-assembly/fix-maccatalyst-assembly.csproj $(MSBUILD_VERBOSITY)
 
 define FixMacCatalystAssembly
-downloads/$(basename $(MONO_MACCATALYST_FILENAME))/maccat-bcl/monotouch/$(1).dll: .stamp-$(MONO_BUILD_MODE)
+$(MONO_MACCATALYST_SDK_DESTDIR)/maccat-bcl/monotouch/$(1).dll: .stamp-$(MONO_BUILD_MODE)
 
-downloads/fix-maccatalyst-tmpdir/$(1).dll: downloads/$(basename $(MONO_MACCATALYST_FILENAME))/maccat-bcl/monotouch/$(1).dll Makefile fix-maccatalyst-assembly/bin/Debug/fix-maccatalyst-assembly.exe
+downloads/fix-maccatalyst-tmpdir/$(1).dll: $(MONO_MACCATALYST_SDK_DESTDIR)/maccat-bcl/monotouch/$(1).dll Makefile fix-maccatalyst-assembly/bin/Debug/fix-maccatalyst-assembly.exe
 	$(Q) mkdir -p $$(dir $$@)
 	$(Q) mono fix-maccatalyst-assembly/bin/Debug/fix-maccatalyst-assembly.exe $$(abspath $$<) $$(abspath $$@).tmp
 	$(Q) mv $$(abspath $$@).tmp $$(abspath $$@)
@@ -133,7 +131,6 @@ package-download/NuGet.config: $(TOP)/NuGet.config Makefile
 	$(Q) mv $@.tmp $@
 
 DOTNET_DOWNLOADS = \
-	downloads/$(basename $(DOTNET5_BCL_REF_NAME)) \
 	downloads/$(basename $(basename $(DOTNET6_TARBALL_NAME))) \
 	.stamp-download-dotnet-packages \
 
@@ -184,6 +181,7 @@ SDK_BUILDDIR = $(MONO_PATH)/sdks/builds
 $(SDK_CONFIG):
 	echo "ENABLE_IOS=1" >> $@
 	echo "ENABLE_MAC=1" >> $@
+	echo "ENABLE_MACCAT=1" >> $@
 
 
 ifdef DISABLE_BUILDS_MAKEFILE_DEP
@@ -199,6 +197,7 @@ endif
 .stamp-compile-mono: .stamp-configure-mono $(MONO_DEPENDENCIES) $(BUILDS_MAKEFILE_DEP) $(TOP)/Make.config $(TOP)/mk/mono.mk
 	$(MAKE) -C $(SDK_BUILDDIR) package-ios package-ios-bcl $(SDK_ARGS)
 	$(MAKE) -C $(SDK_BUILDDIR) package-mac package-mac-bcl $(SDK_ARGS)
+	$(MAKE) -C $(SDK_BUILDDIR) package-maccat package-maccat-bcl $(SDK_ARGS)
 	$(Q) touch $@
 
 clean-local::

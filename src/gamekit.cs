@@ -309,6 +309,7 @@ namespace GameKit {
 		string Category { get; set;  }
 
 		[Export ("title", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		string Title { get;  }
 
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'LoadEntries' instead.")]
@@ -323,6 +324,7 @@ namespace GameKit {
 		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use 'LoadEntries' instead.")]
 		[Deprecated (PlatformName.WatchOS, 7, 0, message: "Use 'LoadEntries' instead.")]
 		[Export ("scores", ArgumentSemantic.Retain)]
+		[NullAllowed]
 		GKScore [] Scores { get;  }
 
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'LoadEntries' instead.")]
@@ -330,6 +332,7 @@ namespace GameKit {
 		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use 'LoadEntries' instead.")]
 		[Deprecated (PlatformName.WatchOS, 7, 0, message: "Use 'LoadEntries' instead.")]
 		[Export ("localPlayerScore", ArgumentSemantic.Retain)]
+		[NullAllowed]
 		GKScore LocalPlayerScore { get;  }
 
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'LoadLeaderboards' instead.")]
@@ -657,6 +660,7 @@ namespace GameKit {
 		long Value { get; set;  }
 
 		[Export ("formattedValue", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		string FormattedValue { get;  }
 
 		[NoWatch]
@@ -1582,15 +1586,19 @@ namespace GameKit {
 	[Watch (3,0)]
 	interface GKAchievementDescription : NSSecureCoding {
 		[Export ("identifier", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		string Identifier { get; }
 
 		[Export ("title", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		string Title { get; }
 
 		[Export ("achievedDescription", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		string AchievedDescription { get; }
 
 		[Export ("unachievedDescription", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		string UnachievedDescription { get; }
 
 		[Export ("maximumPoints", ArgumentSemantic.Assign)]
@@ -1610,6 +1618,7 @@ namespace GameKit {
 		void LoadImage ([NullAllowed] GKImageLoadedHandler imageLoadedHandler);
 
 		[Export ("groupIdentifier", ArgumentSemantic.Retain)]
+		[NullAllowed]
 		string GroupIdentifier { get; }
 
 		[Export ("replayable", ArgumentSemantic.Assign)]
@@ -1777,6 +1786,7 @@ namespace GameKit {
 	interface GKTurnBasedParticipant {
 		[iOS (8,0)][Mac (10,10)]
 		[Export ("player", ArgumentSemantic.Retain)]
+		[NullAllowed]
 		GKPlayer Player { get; }
 
 		[NoTV]
@@ -1787,6 +1797,7 @@ namespace GameKit {
 		string PlayerID { get;  }
 
 		[Export ("lastTurnDate", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		NSDate LastTurnDate { get;  }
 
 		[Export ("status")]
@@ -1796,6 +1807,7 @@ namespace GameKit {
 		GKTurnBasedMatchOutcome MatchOutcome { get; set;  }
 
 		[Export ("timeoutDate", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		NSDate TimeoutDate { get; }
 	}
 
@@ -1860,21 +1872,26 @@ namespace GameKit {
 	[BaseType (typeof (NSObject))]
 	interface GKTurnBasedMatch {
 		[Export ("matchID")]
+		[NullAllowed]
 		string MatchID { get;  }
 
 		[Export ("creationDate")]
+		[NullAllowed]
 		NSDate CreationDate { get;  }
 
 		[Export ("participants", ArgumentSemantic.Retain)]
-		GKTurnBasedParticipant []Participants { get;  }
+		[NullAllowed]
+		GKTurnBasedParticipant [] Participants { get;  }
 
 		[Export ("status")]
 		GKTurnBasedMatchStatus Status { get;  }
 
 		[Export ("currentParticipant", ArgumentSemantic.Retain)]
+		[NullAllowed]
 		GKTurnBasedParticipant CurrentParticipant { get;  }
 
 		[Export ("matchData", ArgumentSemantic.Retain)]
+		[NullAllowed]
 		NSData MatchData { get;  }
 
 		[NullAllowed] // by default this property is null
@@ -1893,7 +1910,7 @@ namespace GameKit {
 
 		[Export ("removeWithCompletionHandler:")]
 		[Async]
-		void Remove (Action<NSError> onCompletion);
+		void Remove ([NullAllowed] Action<NSError> onCompletion);
 
 		[Export ("loadMatchDataWithCompletionHandler:")]
 		[Async]
@@ -1966,14 +1983,17 @@ namespace GameKit {
 
 		[iOS (7,0)][Mac (10,10)]
 		[Export ("exchanges", ArgumentSemantic.Retain)]
+		[NullAllowed]
 		GKTurnBasedExchange [] Exchanges { get; }
 
 		[iOS (7,0)][Mac (10,10)]
 		[Export ("activeExchanges", ArgumentSemantic.Retain)]
+		[NullAllowed]
 		GKTurnBasedExchange [] ActiveExchanges { get; }
 
 		[iOS (7,0)][Mac (10,10)]
 		[Export ("completedExchanges", ArgumentSemantic.Retain)]
+		[NullAllowed]
 		GKTurnBasedExchange [] CompletedExchanges { get; }
 
 		[iOS (7,0)][Mac (10,10)]
@@ -1986,7 +2006,7 @@ namespace GameKit {
 
 		[iOS (7,0)][Mac (10,10)]
 		[Export ("setLocalizableMessageWithKey:arguments:")]
-		void SetMessage (string localizableMessage, params NSObject [] arguments);
+		void SetMessage (string localizableMessage, [NullAllowed] params NSObject [] arguments);
 
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'EndMatchInTurn (NSData, GKLeaderboardScore[], NSObject[], Action<NSError>)' instead.")]
 		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use 'EndMatchInTurn (NSData, GKLeaderboardScore[], NSObject[], Action<NSError>)' instead.")]
@@ -2294,33 +2314,42 @@ namespace GameKit {
 	interface GKTurnBasedExchange
 	{
 		[Export ("exchangeID")]
+		[NullAllowed]
 		string ExchangeID { get; }
 
 		[Export ("sender")]
+		[NullAllowed]
 		GKTurnBasedParticipant Sender { get; }
 
 		[Export ("recipients")]
+		[NullAllowed]
 		GKTurnBasedParticipant [] Recipients { get; }
 
 		[Export ("status", ArgumentSemantic.Assign)]
 		GKTurnBasedExchangeStatus Status { get; }
 
 		[Export ("message")]
+		[NullAllowed]
 		string Message { get; }
 
 		[Export ("data")]
+		[NullAllowed]
 		NSData Data { get; }
 
 		[Export ("sendDate")]
+		[NullAllowed]
 		NSDate SendDate { get; }
 
 		[Export ("timeoutDate")]
+		[NullAllowed]
 		NSDate TimeoutDate { get; }
 
 		[Export ("completionDate")]
+		[NullAllowed]
 		NSDate CompletionDate { get; }
 
 		[Export ("replies")]
+		[NullAllowed]
 		GKTurnBasedExchangeReply [] Replies { get; }
 
 		[Export ("cancelWithLocalizableMessageKey:arguments:completionHandler:")]
@@ -2344,16 +2373,20 @@ namespace GameKit {
 	interface GKTurnBasedExchangeReply
 	{
 		[Export ("recipient")]
+		[NullAllowed]
 		GKTurnBasedParticipant Recipient { get; }
 
 		[Export ("message")]
+		[NullAllowed]
 		string Message { get; }
 
 		[Export ("data")]
+		[NullAllowed]
 		NSData Data { get; }
 
 		[iOS (8,0)]
 		[Export ("replyDate")]
+		[NullAllowed]
 		NSDate ReplyDate { get; }
 	}
 

@@ -1233,7 +1233,9 @@ pump_gc (void *context)
 	mono_thread_attach (mono_get_root_domain ());
 
 	while (xamarin_gc_pump) {
-		mono_gc_collect (mono_gc_max_generation ());
+		GCHandle exception_gchandle = INVALID_GCHANDLE;
+		xamarin_gc_collect (&exception_gchandle);
+		xamarin_process_managed_exception_gchandle (exception_gchandle);
 		MONO_ENTER_GC_SAFE;
 		usleep (1000000);
 		MONO_EXIT_GC_SAFE;
@@ -1979,14 +1981,9 @@ xamarin_release_managed_ref (id self, MonoObject *managed_obj)
 		class_getName (object_getClass (self)), self, (int32_t) [self retainCount], user_type ? xamarin_has_managed_ref (self) : 666, user_type ? get_gchandle_without_flags (self) : (void*) 666, user_type, managed_obj);
 #endif
 
-	xamarin_set_nsobject_flags (managed_obj, xamarin_get_nsobject_flags (managed_obj) & ~NSObjectFlagsHasManagedRef);
-
 	if (user_type) {
 		/* clear MANAGED_REF_BIT */
 		set_flags (self, (enum XamarinGCHandleFlags) (get_flags (self) & ~XamarinGCHandleFlags_HasManagedRef));
-		MONO_ENTER_GC_SAFE;
-		[self release];
-		MONO_EXIT_GC_SAFE;
 	} else {
 		/* If we're a wrapper type, we need to unregister here, since we won't enter the release trampoline */
 		GCHandle managed_obj_handle = xamarin_gchandle_new (managed_obj, false);
@@ -2061,10 +2058,11 @@ xamarin_release_managed_ref (id self, MonoObject *managed_obj)
 		//
 		xamarin_framework_peer_lock ();
 		xamarin_framework_peer_unlock ();
-		MONO_ENTER_GC_SAFE;
-		[self release];
-		MONO_EXIT_GC_SAFE;
 	}
+
+	MONO_ENTER_GC_SAFE;
+	[self release];
+	MONO_EXIT_GC_SAFE;
 
 	xamarin_process_managed_exception_gchandle (exception_gchandle);
 }

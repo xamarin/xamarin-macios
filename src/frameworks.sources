@@ -1799,6 +1799,7 @@ SHARED_API_SOURCES = \
 	ObjCRuntime/ObsoleteConstants.cs \
 
 SHARED_CORE_SOURCES = \
+	MinimumVersions.cs \
 	MonoPInvokeCallbackAttribute.cs \
 	$(BUILD_DIR)/common/NativeTypes/Drawing.cs \
 	$(BUILD_DIR)/common/NativeTypes/Primitives.cs \

@@ -1,5 +1,7 @@
 using System;
 
+#nullable enable
+
 namespace Metal {
 
 	public partial class MTLComputePassSampleBufferAttachmentDescriptorArray {

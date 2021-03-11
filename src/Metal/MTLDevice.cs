@@ -14,6 +14,8 @@ using System.Runtime.InteropServices;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace Metal {
 #if MONOMAC
 	[Advice ("The 'NSString' argument will match a property of 'MTLDeviceNotificationHandler'.")]
@@ -25,9 +27,9 @@ namespace Metal {
 		[DllImport (Constants.MetalLibrary)]
 		extern static IntPtr MTLCreateSystemDefaultDevice ();
 
-		static IMTLDevice system_default;
+		static IMTLDevice? system_default;
 		
-		public static IMTLDevice SystemDefault {
+		public static IMTLDevice? SystemDefault {
 			get {
 				// Metal could be unavailable on the hardware (and we don't want to return an invalid instance)
 				// also the instance could be disposed (by mistake) which would make the app unusable
@@ -67,7 +69,7 @@ namespace Metal {
 		public static IMTLDevice [] GetAllDevices (ref NSObject observer, MTLDeviceNotificationHandler handler)
 		{
 			if (observer == null)
-				throw new ArgumentNullException ("observer");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (observer));
 
 			IntPtr handle = observer.Handle;
 
@@ -108,7 +110,7 @@ namespace Metal {
 		public static void RemoveObserver (NSObject observer)
 		{
 			if (observer == null)
-				throw new ArgumentNullException ("observer");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (observer));
 
 			MTLRemoveDeviceObserver (observer.Handle);
 		}
@@ -116,8 +118,11 @@ namespace Metal {
 	}
 
 	public static partial class MTLDevice_Extensions {
-		public static IMTLBuffer CreateBuffer<T> (this IMTLDevice This, T [] data, MTLResourceOptions options) where T : struct
+		public static IMTLBuffer? CreateBuffer<T> (this IMTLDevice This, T [] data, MTLResourceOptions options) where T : struct
 		{
+			if (data == null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
+
 			var handle = GCHandle.Alloc (data, GCHandleType.Pinned); // This requires a pinned GCHandle, since it's not possible to use unsafe code to get the address of a generic object.
 			try {
 				IntPtr ptr = handle.AddrOfPinnedObject ();
@@ -129,8 +134,11 @@ namespace Metal {
 
 #if !XAMCORE_4_0
 		[Obsolete ("Use the overload that takes an IntPtr instead. The 'data' parameter must be page-aligned and allocated using vm_allocate or mmap, which won't be the case for managed arrays, so this method will always fail.")]
-		public static IMTLBuffer CreateBufferNoCopy<T> (this IMTLDevice This, T [] data, MTLResourceOptions options, MTLDeallocator deallocator) where T : struct
+		public static IMTLBuffer? CreateBufferNoCopy<T> (this IMTLDevice This, T [] data, MTLResourceOptions options, MTLDeallocator deallocator) where T : struct
 		{
+			if (data == null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
+
 			var handle = GCHandle.Alloc (data, GCHandleType.Pinned); // This requires a pinned GCHandle, since it's not possible to use unsafe code to get the address of a generic object.
 			IntPtr ptr = handle.AddrOfPinnedObject ();
 			return This.CreateBufferNoCopy (ptr, (nuint)(data.Length * Marshal.SizeOf (typeof (T))), options, (pointer, length) => {
@@ -142,6 +150,9 @@ namespace Metal {
 
 		public unsafe static void GetDefaultSamplePositions (this IMTLDevice This, MTLSamplePosition [] positions, nuint count)
 		{
+			if (positions == null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (positions));
+
 			if (positions.Length < (nint)count)
 				throw new ArgumentException ("Length of 'positions' cannot be less than 'count'.");
 			fixed (void * handle = positions)
@@ -153,9 +164,9 @@ namespace Metal {
 		public static void ConvertSparseTileRegions (this IMTLDevice This, MTLRegion [] tileRegions, MTLRegion [] pixelRegions, MTLSize tileSize, nuint numRegions)
 		{
 			if (tileRegions == null)
-				throw new ArgumentNullException (nameof (tileRegions));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (tileRegions));
 			if (pixelRegions == null)
-				throw new ArgumentNullException (nameof (pixelRegions));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (pixelRegions));
 
 			var tileRegionsHandle = GCHandle.Alloc (tileRegions, GCHandleType.Pinned);
 			var pixelRegionsHandle = GCHandle.Alloc (pixelRegions, GCHandleType.Pinned);
@@ -173,9 +184,9 @@ namespace Metal {
 		public static void ConvertSparsePixelRegions (this IMTLDevice This, MTLRegion [] pixelRegions, MTLRegion [] tileRegions, MTLSize tileSize, MTLSparseTextureRegionAlignmentMode mode, nuint numRegions)
 		{
 			if (tileRegions == null)
-				throw new ArgumentNullException (nameof (tileRegions));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (tileRegions));
 			if (pixelRegions == null)
-				throw new ArgumentNullException (nameof (pixelRegions));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (pixelRegions));
 
 			var tileRegionsHandle = GCHandle.Alloc (tileRegions, GCHandleType.Pinned);
 			var pixelRegionsHandle = GCHandle.Alloc (pixelRegions, GCHandleType.Pinned);
@@ -193,10 +204,10 @@ namespace Metal {
 #if !XAMCORE_4_0
 		[return: Release]
 		[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
-		public static IMTLLibrary CreateLibrary (this IMTLDevice This, global::CoreFoundation.DispatchData data, out NSError error)
+		public static IMTLLibrary? CreateLibrary (this IMTLDevice This, global::CoreFoundation.DispatchData data, out NSError error)
 		{
 			if (data == null)
-				throw new ArgumentNullException ("data");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
 			IntPtr errorValue = IntPtr.Zero;
 
 			IMTLLibrary ret;
@@ -206,7 +217,7 @@ namespace Metal {
 			return ret;
 		}
 
-		public static IMTLLibrary CreateDefaultLibrary (this IMTLDevice This, NSBundle bundle, out NSError error)
+		public static IMTLLibrary? CreateDefaultLibrary (this IMTLDevice This, NSBundle bundle, out NSError error)
 		{
 			return MTLDevice_Extensions.CreateLibrary (This, bundle, out error);
 		}
