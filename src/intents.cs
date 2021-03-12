@@ -8947,7 +8947,7 @@ namespace Intents {
 		IntPtr Constructor (string identifier, [NullAllowed] NSDate dateCreated, INCallRecordType callRecordType, INCallCapability callCapability, [NullAllowed] [BindAs (typeof (double?))] NSNumber callDuration, [NullAllowed] [BindAs (typeof (bool?))] NSNumber unseen, [NullAllowed] INPerson[] participants, [NullAllowed] [BindAs (typeof (int?))] NSNumber numberOfCalls, [NullAllowed] [BindAs (typeof (bool?))] NSNumber isCallerIdBlocked);
 
 		[Deprecated (PlatformName.iOS, 14, 5, message: "Use '.ctor (string, NSDate, INCallRecordType, INCallCapability, double?, bool?, int?)' instead.")]
-		[Deprecated (PlatformName.WatchOS, 7, 3, message: "Use '.ctor (string, NSDate, INCallRecordType, INCallCapability, double?, bool?, int?)' instead.")]
+		[Deprecated (PlatformName.WatchOS, 7, 4, message: "Use '.ctor (string, NSDate, INCallRecordType, INCallCapability, double?, bool?, int?)' instead.")]
 		[Deprecated (PlatformName.MacOSX, 11, 3, message: "Use '.ctor (string, NSDate, INCallRecordType, INCallCapability, double?, bool?, int?)' instead.")]
 		[Watch (6,0), Mac (10,15), iOS (13,0)]
 		[Export ("initWithIdentifier:dateCreated:caller:callRecordType:callCapability:callDuration:unseen:numberOfCalls:")]
@@ -8958,7 +8958,7 @@ namespace Intents {
 		IntPtr Constructor (string identifier, [NullAllowed] NSDate dateCreated, INCallRecordType callRecordType, INCallCapability callCapability, [NullAllowed] [BindAs (typeof (double?))] NSNumber callDuration, [NullAllowed] [BindAs (typeof (bool?))] NSNumber unseen, [NullAllowed] [BindAs (typeof (int?))] NSNumber numberOfCalls);
 
 		[Deprecated (PlatformName.iOS, 14, 5, message: "Use '.ctor (string, NSDate, INCallRecordType, INCallCapability, double?, bool?)' instead.")]
-		[Deprecated (PlatformName.WatchOS, 7, 3, message: "Use '.ctor (string, NSDate, INCallRecordType, INCallCapability, double?, bool?)' instead.")]
+		[Deprecated (PlatformName.WatchOS, 7, 4, message: "Use '.ctor (string, NSDate, INCallRecordType, INCallCapability, double?, bool?)' instead.")]
 		[Deprecated (PlatformName.MacOSX, 11, 3, message: "Use '.ctor (string, NSDate, INCallRecordType, INCallCapability, double?, bool?)' instead.")]
 		[Export ("initWithIdentifier:dateCreated:caller:callRecordType:callCapability:callDuration:unseen:")]
 		IntPtr Constructor (string identifier, [NullAllowed] NSDate dateCreated, [NullAllowed] INPerson caller, INCallRecordType callRecordType, INCallCapability callCapability, [NullAllowed] NSNumber callDuration, [NullAllowed] NSNumber unseen);
@@ -8974,7 +8974,7 @@ namespace Intents {
 		NSDate DateCreated { get; }
 
 		[Deprecated (PlatformName.iOS, 14, 5)]
-		[Deprecated (PlatformName.WatchOS, 7, 3)]
+		[Deprecated (PlatformName.WatchOS, 7, 4)]
 		[NullAllowed, Export ("caller", ArgumentSemantic.Copy)]
 		INPerson Caller { get; }
 
