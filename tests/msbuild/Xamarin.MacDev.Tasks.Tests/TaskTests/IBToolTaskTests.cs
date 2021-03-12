@@ -81,23 +81,11 @@ namespace Xamarin.iOS.Tasks
 			}
 
 			string [] expected = {
-					"LaunchScreen~ipad.nib/runtime.nib",
-					"LaunchScreen~ipad.nib/objects-8.0+.nib",
-					"Main~ipad.storyboardc/Info-8.0+.plist",
-					"Main~ipad.storyboardc/Info.plist",
-					"Main.storyboardc/UIViewController-BYZ-38-t0r~ipad.nib/runtime.nib",
-					"Main.storyboardc/UIViewController-BYZ-38-t0r~ipad.nib/objects-8.0+.nib",
-					"Main.storyboardc/BYZ-38-t0r-view-8bC-Xf-vdC~iphone.nib/runtime.nib",
-					"Main.storyboardc/BYZ-38-t0r-view-8bC-Xf-vdC~iphone.nib/objects-8.0+.nib",
-					"Main.storyboardc/UIViewController-BYZ-38-t0r~iphone.nib/runtime.nib",
-					"Main.storyboardc/UIViewController-BYZ-38-t0r~iphone.nib/objects-8.0+.nib",
-					"Main.storyboardc/BYZ-38-t0r-view-8bC-Xf-vdC~ipad.nib/runtime.nib",
-					"Main.storyboardc/BYZ-38-t0r-view-8bC-Xf-vdC~ipad.nib/objects-8.0+.nib",
-					"LaunchScreen~iphone.nib/runtime.nib",
-					"LaunchScreen~iphone.nib/objects-8.0+.nib",
-					"Main~iphone.storyboardc/Info-8.0+.plist",
-					"Main~iphone.storyboardc/Info.plist",
-				};
+				"LaunchScreen.nib",
+				"Main.storyboardc/UIViewController-BYZ-38-t0r.nib",
+				"Main.storyboardc/BYZ-38-t0r-view-8bC-Xf-vdC.nib",
+				"Main.storyboardc/Info.plist",
+			};
 
 			var inexistentResource = bundleResources.Except (expected).ToArray ();
 			var unexpectedResource = expected.Except (bundleResources).ToArray ();
