@@ -7,7 +7,7 @@
 // Copyright (c) Microsoft Corporation.
 //
 
-#if IOS || WATCH
+#if IOS
 using System;
 using System.Runtime.InteropServices;
 using Foundation;
@@ -26,4 +26,4 @@ namespace UIKit {
 		}
 	}
 }
-#endif // IOS || WATCH
+#endif // IOS
