@@ -1928,13 +1928,11 @@ get_safe_retainCount (id self)
 #endif
 
 void
-xamarin_release_managed_ref (id self, MonoObject *managed_obj, bool user_type)
+xamarin_release_managed_ref (id self, bool user_type)
 {
 	// COOP: This is an icall, so at entry we're in unsafe mode.
 	// COOP: we stay in unsafe mode (since we write to the managed memory) unless calling a selector (which must be done in safe mode)
 	MONO_ASSERT_GC_UNSAFE;
-	
-	GCHandle exception_gchandle = INVALID_GCHANDLE;
 	
 #if defined(DEBUG_REF_COUNTING)
 	PRINT ("monotouch_release_managed_ref (%s Handle=%p) retainCount=%d; HasManagedRef=%i GCHandle=%p IsUserType=%i managed_obj=%p\n", 
@@ -1945,11 +1943,6 @@ xamarin_release_managed_ref (id self, MonoObject *managed_obj, bool user_type)
 		/* clear MANAGED_REF_BIT */
 		set_flags (self, (enum XamarinGCHandleFlags) (get_flags (self) & ~XamarinGCHandleFlags_HasManagedRef));
 	} else {
-		/* If we're a wrapper type, we need to unregister here, since we won't enter the release trampoline */
-		GCHandle managed_obj_handle = xamarin_gchandle_new (managed_obj, false);
-		xamarin_unregister_nsobject (self, managed_obj_handle, &exception_gchandle);
-		xamarin_gchandle_free (managed_obj_handle);
-
 		//
 		// This lock is needed so that we can safely call retainCount in the
 		// toggleref callback.
@@ -2023,8 +2016,6 @@ xamarin_release_managed_ref (id self, MonoObject *managed_obj, bool user_type)
 	MONO_ENTER_GC_SAFE;
 	[self release];
 	MONO_EXIT_GC_SAFE;
-
-	xamarin_process_managed_exception_gchandle (exception_gchandle);
 }
 
 void
