@@ -7,7 +7,7 @@
 // Copyright (c) Microsoft Corporation.
 //
 
-#if __WATCHOS__ || __IOS__
+#if __IOS__
 
 using System;
 using System.Drawing;
