@@ -4,20 +4,20 @@
 		"LanguageSet": "Azure_Languages",
 		"LocItems": [
 		  {
-			"SourceFile": "./msbuild/Xamarin.Localization.MSBuild/MSBStrings.resx",
+			"SourceFile": "/Users/tjlambert/Documents/TurningOnOneLocBuild/xamarin-macios/tools/devops/../../msbuild/Xamarin.Localization.MSBuild/MSBStrings.resx",
 			"Languages": "",
 			"CopyOption": "LangIDOnName",
-			"OutputPath": "./msbuild/Xamarin.Localization.MSBuild/TranslatedAssemblies",
+			"OutputPath": "/Users/tjlambert/Documents/TurningOnOneLocBuild/xamarin-macios/tools/devops/../../msbuild/Xamarin.Localization.MSBuild/TranslatedAssemblies",
 			"LclFile": "",
 			"LciFile": "",
 			"Parser": "",
 			"LssFiles": []
 		  },
 		  {
-			"SourceFile": "./tools/mtouch/Errors.resx",
+			"SourceFile": "/Users/tjlambert/Documents/TurningOnOneLocBuild/xamarin-macios/tools/devops/../../tools/mtouch/Errors.resx",
 			"Languages": "",
 			"CopyOption": "LangIDOnName",
-			"OutputPath": "./tools/mtouch/TranslatedAssemblies",
+			"OutputPath": "/Users/tjlambert/Documents/TurningOnOneLocBuild/xamarin-macios/tools/devops/../../tools/mtouch/TranslatedAssemblies",
 			"LclFile": "",
 			"LciFile": "",
 			"Parser": "",
@@ -28,4 +28,4 @@
 		"CloneLanguageSet": ""
 	  }
 	]
-  }
+}

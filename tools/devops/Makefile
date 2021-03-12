@@ -33,6 +33,10 @@ provision-xcode.csx: provision-xcode.csx.in Makefile $(TOP)/Make.config
 		-e 's#@XCODE_ROOT_PATH@#$(XCODE_DEVELOPER_ROOT)#g' \
 		$< > $@;
 
+provision-localization.csx: provision-localization.csx.in Makefile $(TOP)/Make.config
+	$(Q_GEN) sed \
+		-e 's#@WORKING_DIRECTORY@#$(PWD)#g' \
+		$< > $(TOP)/Localize/LocProject.json;
 
 all check:
 	shellcheck *.sh
@@ -40,4 +44,4 @@ all check:
 print-abspath-variable:
 	@echo $(VARIABLE)=$(abspath $($(VARIABLE)))
 
-provisioning: build-provisioning.csx device-tests-provisioning.csx provision-xcode.csx
+provisioning: build-provisioning.csx device-tests-provisioning.csx provision-xcode.csx provision-localization.csx
