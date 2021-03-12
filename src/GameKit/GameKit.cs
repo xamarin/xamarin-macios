@@ -344,7 +344,7 @@ namespace GameKit {
 		AutomatchOnly = 2,
 	}
 
-	[Watch (7,3), TV (14,5), Mac (11,3), iOS (14,5)]
+	[Watch (7,4), TV (14,5), Mac (11,3), iOS (14,5)]
 	[Native]
 	public enum GKFriendsAuthorizationStatus : long {
 		NotDetermined = 0,
