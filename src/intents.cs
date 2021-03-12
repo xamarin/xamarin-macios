@@ -1767,7 +1767,7 @@ namespace Intents {
 	public enum INMediaReference : long {
 		Unknown = 0,
 		CurrentlyPlaying,
-		[Watch (7,3), TV (14,5), iOS (14,5)]
+		[Watch (7,4), TV (14,5), iOS (14,5)]
 		My,
 	}
 
@@ -8941,7 +8941,7 @@ namespace Intents {
 	[DisableDefaultCtor]
 	interface INCallRecord : NSCopying, NSSecureCoding {
 
-		[Watch (7,3), Mac (11,3), iOS (14,5)]
+		[Watch (7,4), Mac (11,3), iOS (14,5)]
 		[Export ("initWithIdentifier:dateCreated:callRecordType:callCapability:callDuration:unseen:participants:numberOfCalls:isCallerIdBlocked:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (string identifier, [NullAllowed] NSDate dateCreated, INCallRecordType callRecordType, INCallCapability callCapability, [NullAllowed] [BindAs (typeof (double?))] NSNumber callDuration, [NullAllowed] [BindAs (typeof (bool?))] NSNumber unseen, [NullAllowed] INPerson[] participants, [NullAllowed] [BindAs (typeof (int?))] NSNumber numberOfCalls, [NullAllowed] [BindAs (typeof (bool?))] NSNumber isCallerIdBlocked);
@@ -8953,7 +8953,7 @@ namespace Intents {
 		[Export ("initWithIdentifier:dateCreated:caller:callRecordType:callCapability:callDuration:unseen:numberOfCalls:")]
 		IntPtr Constructor (string identifier, [NullAllowed] NSDate dateCreated, [NullAllowed] INPerson caller, INCallRecordType callRecordType, INCallCapability callCapability, [NullAllowed] [BindAs (typeof (double?))] NSNumber callDuration, [NullAllowed] [BindAs (typeof (bool?))] NSNumber unseen, [NullAllowed] [BindAs (typeof (int?))] NSNumber numberOfCalls);
 
-		[Watch (7,3), Mac (11,3), iOS (14,5)]
+		[Watch (7,4), Mac (11,3), iOS (14,5)]
 		[Export ("initWithIdentifier:dateCreated:callRecordType:callCapability:callDuration:unseen:numberOfCalls:")]
 		IntPtr Constructor (string identifier, [NullAllowed] NSDate dateCreated, INCallRecordType callRecordType, INCallCapability callCapability, [NullAllowed] [BindAs (typeof (double?))] NSNumber callDuration, [NullAllowed] [BindAs (typeof (bool?))] NSNumber unseen, [NullAllowed] [BindAs (typeof (int?))] NSNumber numberOfCalls);
 
@@ -8963,7 +8963,7 @@ namespace Intents {
 		[Export ("initWithIdentifier:dateCreated:caller:callRecordType:callCapability:callDuration:unseen:")]
 		IntPtr Constructor (string identifier, [NullAllowed] NSDate dateCreated, [NullAllowed] INPerson caller, INCallRecordType callRecordType, INCallCapability callCapability, [NullAllowed] NSNumber callDuration, [NullAllowed] NSNumber unseen);
 
-		[Watch (7,3), Mac (11,3), iOS (14,5)]
+		[Watch (7,4), Mac (11,3), iOS (14,5)]
 		[Export ("initWithIdentifier:dateCreated:callRecordType:callCapability:callDuration:unseen:")]
 		IntPtr Constructor (string identifier, [NullAllowed] NSDate dateCreated, INCallRecordType callRecordType, INCallCapability callCapability, [NullAllowed] [BindAs (typeof (double?))] NSNumber callDuration, [NullAllowed] [BindAs (typeof (bool?))] NSNumber unseen);
 
@@ -8998,12 +8998,12 @@ namespace Intents {
 		NSNumber NumberOfCalls { get; }
 
 		[BindAs (typeof (bool?))]
-		[Watch (7,3), NoMac, iOS (14,5)]
+		[Watch (7,4), NoMac, iOS (14,5)]
 		[Export ("isCallerIdBlocked", ArgumentSemantic.Copy)]
 		NSNumber IsCallerIdBlocked { get; }
 
 		[NullAllowed]
-		[Watch (7,3), NoMac, iOS (14,5)]
+		[Watch (7,4), NoMac, iOS (14,5)]
 		[Export ("participants", ArgumentSemantic.Copy)]
 		INPerson[] Participants { get; }
 	}
@@ -14004,7 +14004,7 @@ namespace Intents {
 		INStartCallCallRecordToCallBackResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
-	[Watch (7,3), NoTV, Mac (11,3), iOS (14,5)]
+	[Watch (7,4), NoTV, Mac (11,3), iOS (14,5)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INCallGroup : NSCopying, NSSecureCoding {
