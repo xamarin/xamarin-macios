@@ -42,8 +42,3 @@
 
 # Initial result from new rule extra-null-allowed
 !extra-null-allowed! 'System.Void MediaPlayer.MPRemoteCommand::RemoveTarget(Foundation.NSObject,ObjCRuntime.Selector)' has a extraneous [NullAllowed] on parameter #0
-
-# Initial result from new rule missing-null-allowed
-!missing-null-allowed! 'MediaPlayer.MPNowPlayingInfoLanguageOption MediaPlayer.AVMediaSelectionOption_MPNowPlayingInfoLanguageOptionAdditions::CreateNowPlayingInfoLanguageOption(AVFoundation.AVMediaSelectionOption)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.Void MediaPlayer.MPRemoteCommand::RemoveTarget(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void MediaPlayer.MPRemoteCommand::RemoveTarget(Foundation.NSObject,ObjCRuntime.Selector)' is missing an [NullAllowed] on parameter #1

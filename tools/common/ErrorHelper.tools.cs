@@ -19,11 +19,11 @@ namespace Xamarin.Bundler {
 				case ApplePlatform.iOS:
 				case ApplePlatform.TVOS:
 				case ApplePlatform.WatchOS:
+				case ApplePlatform.MacCatalyst:
+				case ApplePlatform.None: // Return "MT" by default instead of throwing an exception, because any exception here will most likely hide whatever other error we're trying to show.
 					return "MT";
 				case ApplePlatform.MacOSX:
 					return "MM";
-				case ApplePlatform.None:
-					throw new InvalidOperationException ($"ErrorHelper.Platform has not been set.");
 				default:
 					// Do not use the ErrorHandler machinery, because it will probably end up recursing and eventually throwing a StackOverflowException.
 					throw new InvalidOperationException ($"Unknown platform: {Platform}");

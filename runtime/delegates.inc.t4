@@ -27,11 +27,11 @@ struct Delegates {
 
 static struct Delegates delegates = { 0 };
 
-static guint32
+static GCHandle
 create_linked_away_exception (const char *func)
 {
 	char *msg = xamarin_strdup_printf ("The runtime function %s has been linked away.", func);
-	guint32 gchandle = xamarin_create_product_exception (8028, msg);
+	GCHandle gchandle = xamarin_create_product_exception (8028, msg);
 	xamarin_free (msg);
 	return gchandle;
 }

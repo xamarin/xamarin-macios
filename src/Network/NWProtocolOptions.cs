@@ -98,7 +98,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		internal static extern void nw_ip_options_set_calculate_receive_time (IntPtr options, bool calculateReceiveTime);
+		internal static extern void nw_ip_options_set_calculate_receive_time (IntPtr options,[MarshalAs (UnmanagedType.I1)]  bool calculateReceiveTime);
 
 		[Obsolete ("Use the 'NWProtocolIPOptions' class instead.")]
 		public void IPSetCalculateReceiveTime (bool calculateReceiveTime)

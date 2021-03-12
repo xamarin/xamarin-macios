@@ -19,7 +19,7 @@ jobs:
 - job: configure
   displayName: 'Configure build'
   pool:
-    vmImage: ubuntu-latest
+    vmImage: windows-latest
 
   steps:
   - template: configure.yml
@@ -109,7 +109,7 @@ jobs:
     workspace:
       clean: all
   steps:
-  - template: ../common/upload-vsdrops.yml
+  - template: upload-vsdrops.yml
     parameters:
       devicePrefix: sim
 
@@ -144,6 +144,8 @@ jobs:
     BUILD_PACKAGE: $[ dependencies.configure.outputs['labels.build-package'] ]
     TESTS_BOT: $[ dependencies.build.outputs['runTests.TESTS_BOT'] ]
     TESTS_JOBSTATUS: $[ dependencies.build.outputs['runTests.TESTS_JOBSTATUS'] ]
+    APIDIFF_MESSAGE: $[ dependencies.build.outputs['apidiff.APIDIFF_MESSAGE'] ]
+    APIDIFF_BUILT: $[ dependencies.build.outputs['apidiff.APIDIFF_BUILT'] ]
   pool:
     vmImage: 'windows-latest'
     workspace:

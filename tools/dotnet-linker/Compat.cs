@@ -32,6 +32,8 @@ namespace Xamarin.Bundler {
 					return "Microsoft.watchOS";
 				case ApplePlatform.MacOSX:
 					return "Microsoft.macOS";
+				case ApplePlatform.MacCatalyst:
+					return "Microsoft.MacCatalyst";
 				default:
 					throw ErrorHelper.CreateError (177, Errors.MX0177 /* "Unknown platform: {0}. This usually indicates a bug; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case." */, Platform);
 				}
@@ -98,6 +100,11 @@ namespace Xamarin.Bundler {
 		public static string GetArch64Directory (Application app)
 		{
 			throw new NotImplementedException ();
+		}
+
+		public static string SdkRoot {
+			get => sdk_root;
+			set => sdk_root = value;
 		}
 	}
 

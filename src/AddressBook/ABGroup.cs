@@ -111,6 +111,7 @@ namespace AddressBook {
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool ABGroupAddMember (IntPtr group, IntPtr person, out IntPtr error);
 		public void Add (ABRecord person)
 		{
@@ -152,6 +153,7 @@ namespace AddressBook {
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool ABGroupRemoveMember (IntPtr group, IntPtr member, out IntPtr error);
 		public void Remove (ABRecord member)
 		{

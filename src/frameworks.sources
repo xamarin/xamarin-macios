@@ -171,6 +171,10 @@ ASSETSLIBRARY_SOURCES = \
 
 # AudioToolbox
 
+AUDIOTOOLBOX_API_SOURCES = \
+	AudioToolbox/Enums.cs \
+	AudioToolbox/AudioSessions.cs \
+
 AUDIOTOOLBOX_CORE_SOURCES = \
 	AudioToolbox/AudioType.cs \
 	AudioToolbox/MusicSequence.cs \
@@ -187,14 +191,15 @@ AUDIOTOOLBOX_SOURCES = \
 	AudioToolbox/AudioQueue.cs \
 	AudioToolbox/AudioServices.cs \
 	AudioToolbox/AudioSession.cs \
-	AudioToolbox/AudioSessions.cs \
 	AudioToolbox/AudioToolbox.cs \
-	AudioToolbox/Enums.cs \
 	AudioToolbox/SystemSound.cs \
 	AudioToolbox/MusicPlayer.cs \
 	AudioToolbox/MusicTrack.cs \
 
 # AudioUnit 
+
+AUDIOUNIT_API_SOURCES = \
+	AudioUnit/AUEnums.cs \
 
 AUDIOUNIT_CORE_SOURCES = \
 	AudioUnit/AudioComponent.cs \
@@ -302,6 +307,9 @@ CALLKIT_SOURCES = \
 
 # CarPlay
 
+CARPLAY_API_SOURCES = \
+	CarPlay/CPEnums.cs \
+
 CARPLAY_SOURCES = \
 	CarPlay/CPCompat.cs \
 	CarPlay/CPNavigationAlert.cs \
@@ -342,11 +350,13 @@ CFNETWORK_SOURCES = \
 
 # Compression
 
+COMPRESSION_API_SOURCES = \
+	Compression/Enums.cs \
+
 COMPRESSION_SOURCES = \
 	Compression/Compression.cs \
 	Compression/CompressionStreamStruct.cs \
 	Compression/Deflater.cs \
-	Compression/Enums.cs \
 	Compression/Inflater.cs \
 	Compression/TaskToApm.cs \
 
@@ -365,8 +375,10 @@ CONTACTS_SOURCES = \
 
 # CoreAnimation (this is really Quartz.framework)
 
-COREANIMATION_CORE_SOURCES = \
+COREANIMATION_API_SOURCES = \
 	CoreAnimation/CAEnums.cs \
+
+COREANIMATION_CORE_SOURCES = \
 	CoreAnimation/CATransform3D.cs \
 
 COREANIMATION_SOURCES = \
@@ -448,13 +460,15 @@ COREFOUNDATION_SOURCES = \
 
 # CoreGraphics
 
+COREGRAPHICS_API_SOURCES = \
+	CoreGraphics/CGEnums.cs \
+
 COREGRAPHICS_CORE_SOURCES = \
 	CoreGraphics/CGAffineTransform.cs \
 	CoreGraphics/CGColor.cs \
 	CoreGraphics/CGColorSpace.cs \
 	CoreGraphics/CGContext.cs \
 	CoreGraphics/CGDisplay.cs \
-	CoreGraphics/CGEnums.cs \
 	CoreGraphics/CGGeometry.cs \
 	CoreGraphics/CGGradient.cs \
 	CoreGraphics/CGImage.cs \
@@ -488,6 +502,7 @@ COREGRAPHICS_SOURCES = \
 	CoreGraphics/CGPDFScanner.cs \
 	CoreGraphics/CGPDFStream.cs \
 	CoreGraphics/CGPDFString.cs \
+	CoreGraphics/CGPdfTagType.cs \
 	CoreGraphics/CGShading.cs \
 
 # CoreHaptics
@@ -497,9 +512,11 @@ COREHAPTICS_API_SOURCES = \
 
 # CoreImage
 
+COREIMAGE_API_SOURCES = \
+	CoreImage/Enums.cs
+
 COREIMAGE_CORE_SOURCES = \
-	CoreImage/CIImageInitializationOptions.cs \
-	CoreImage/Enums.cs \
+	CoreImage/CIImageInitializationOptions.cs
 
 COREIMAGE_SOURCES = \
 	CoreImage/CIColor.cs \
@@ -513,8 +530,10 @@ COREIMAGE_SOURCES = \
 
 # CoreLocation
 
+CORELOCATION_API_SOURCES = \
+	CoreLocation/CLEnums.cs
+
 CORELOCATION_CORE_SOURCES = \
-	CoreLocation/CLEnums.cs \
 	CoreLocation/CLLocationDistance.cs \
 	CoreLocation/CoreLocation.cs \
 
@@ -524,6 +543,10 @@ CORELOCATION_SOURCES = \
 	CoreLocation/CLLocationManager.cs \
 
 # CoreMedia
+
+COREMEDIA_API_SOURCES = \
+	CoreMedia/CMEnums.cs \
+	CoreMedia/Enums.cs \
 
 COREMEDIA_CORE_SOURCES = \
 	CoreMedia/ICMAttachmentBearer.cs \
@@ -540,9 +563,6 @@ COREMEDIA_SOURCES = \
 	CoreMedia/CMCustomBlockAllocator.cs \
 	CoreMedia/CMBufferQueue.cs \
 	CoreMedia/CMMemoryPool.cs \
-
-COREMEDIA_API_SOURCES = \
-	CoreMedia/Enums.cs \
 
 # CoreMidi
 
@@ -620,14 +640,20 @@ CORETEXT_SOURCES = \
 
 # CoreTelephony
 
+CORETELEPHONY_API_SOURCES = \
+	CoreTelephony/CTEnums.cs \
+
 CORETELEPHONY_CORE_SOURCES = \
 	CoreTelephony/CoreTelephony.cs \
 
 # CoreVideo
 
+COREVIDEO_API_SOURCES = \
+	CoreVideo/CVEnums.cs \
+	CoreVideo/CVPixelFormatType.cs \
+
 COREVIDEO_CORE_SOURCES = \
 	CoreVideo/CoreVideo.cs \
-	CoreVideo/CVPixelFormatType.cs \
 	CoreVideo/CVBuffer.cs \
 	CoreVideo/CVImageBuffer.cs \
 	CoreVideo/CVPixelBuffer.cs \
@@ -687,13 +713,13 @@ FINDERSYNC_CORE_SOURCES = \
 # Foundation
 
 FOUNDATION_API_SOURCES = \
+	Foundation/Enum.cs \
 	Foundation/Enums.cs \
 
 FOUNDATION_CORE_SOURCES = \
 	Foundation/AdviceAttribute.cs \
 	Foundation/ConnectAttribute.cs \
 	Foundation/DictionaryContainer.cs \
-	Foundation/Enum.cs \
 	Foundation/ExportAttribute.cs \
 	Foundation/FieldAttribute.cs \
 	Foundation/LinkerSafeAttribute.cs \
@@ -708,6 +734,7 @@ FOUNDATION_CORE_SOURCES = \
 	Foundation/NSNumber.mac.cs \
 	Foundation/NSNumber2.cs \
 	Foundation/NSObject2.cs \
+	Foundation/NSOperatingSystemVersion.cs \
 	Foundation/NSProgress.cs \
 	Foundation/NSRange.cs \
 	Foundation/NSString.cs \
@@ -819,8 +846,10 @@ FOUNDATION_SOURCES = \
 
 # GameController
 
-GAMECONTROLLER_CORE_SOURCES = \
+GAMECONTROLLER_API_SOURCES = \
 	GameController/Enums.cs \
+
+GAMECONTROLLER_CORE_SOURCES = \
 	GameController/GCController.cs \
 	GameController/GCMotion.cs \
 
@@ -1026,6 +1055,9 @@ MAPKIT_SOURCES = \
 
 # MediaAccessibility
 
+MEDIAACCESSIBILITY_API_SOURCES = \
+	MediaAccessibility/MAEnums.cs \
+
 MEDIAACCESSIBILITY_SOURCES = \
 	MediaAccessibility/MediaAccessibility.cs \
 	MediaAccessibility/MAImageCaptioning.cs \
@@ -1102,6 +1134,9 @@ METALKIT_SOURCES = \
 
 # MetalPerformanceShaders
 
+METALPERFORMANCESHADERS_API_SOURCES = \
+	MetalPerformanceShaders/MPSEnums.cs \
+
 METALPERFORMANCESHADERS_CORE_SOURCES = \
 	MetalPerformanceShaders/MPSDefs.cs \
 	MetalPerformanceShaders/MPSKernel.cs \
@@ -1140,8 +1175,11 @@ MOBILECORESERVICES_SOURCES = \
 
 # ModelIO
 
-MODELIO_CORE_SOURCES = \
+MODELIO_API_SOURCES = \
 	ModelIO/MIEnums.cs \
+
+MODELIO_CORE_SOURCES = \
+	ModelIO/MDLStructs.cs \
 
 MODELIO_SOURCES = \
 	ModelIO/MDLAnimatedQuaternion.cs \
@@ -1179,6 +1217,9 @@ NATURALLANGUAGE_SOURCES = \
 	NaturalLanguage/NLTagger.cs \
 
 # Network
+
+NETWORK_API_SOURCES = \
+	Network/NWEnums.cs \
 
 NETWORK_SOURCES = \
 	Network/NWAdvertiseDescriptor.cs	\
@@ -1246,7 +1287,7 @@ NETWORKEXTENSION_SOURCES = \
 
 # NewsstandKit
 
-NEWSSTANDKIT_CORE_SOURCES = \
+NEWSSTANDKIT_API_SOURCES = \
 	NewsstandKit/Enums.cs \
 
 # NotificationCenter
@@ -1303,7 +1344,7 @@ OPENGL_SOURCES = \
 
 # OpenGLES
 
-OPENGLES_CORE_SOURCES = \
+OPENGLES_API_SOURCES = \
 	OpenGLES/EAGLEnums.cs \
 
 OPENGLES_SOURCES = \
@@ -1437,11 +1478,11 @@ SEARCHKIT_SOURCES = \
 
 SECURITY_API_SOURCES = \
 	Security/Enums.cs \
+	Security/SecureTransport.cs \
 
 SECURITY_CORE_SOURCES = \
 	Security/Certificate.cs \
 	Security/SecAccessControl.cs \
-	Security/SecureTransport.cs \
 	Security/SecProtocolMetadata.cs \
 	Security/SecProtocolOptions.cs \
 	Security/Trust.cs \
@@ -1649,12 +1690,13 @@ VIDEOSUBSCRIBERACCOUNT_SOURCES = \
 
 # VideoToolbox
 
-VIDEOTOOLBOX_CORE_SOURCES = \
+VIDEOTOOLBOX_API_SOURCES = \
 	VideoToolbox/VTDefs.cs \
 
 VIDEOTOOLBOX_SOURCES = \
 	VideoToolbox/VTCompressionProperties.cs \
 	VideoToolbox/VTCompressionSession.cs \
+	VideoToolbox/VTDataRateLimit.cs \
 	VideoToolbox/VTDecompressionProperties.cs \
 	VideoToolbox/VTDecompressionSession.cs \
 	VideoToolbox/VTFrameSilo.cs \
@@ -1682,7 +1724,7 @@ VISION_SOURCES = \
 
 # WatchConnectivity
 
-WATCHCONNECTIVITY_CORE_SOURCES = \
+WATCHCONNECTIVITY_API_SOURCES = \
 	WatchConnectivity/WCEnums.cs \
 
 # WatchKit
@@ -1757,6 +1799,7 @@ SHARED_API_SOURCES = \
 	ObjCRuntime/ObsoleteConstants.cs \
 
 SHARED_CORE_SOURCES = \
+	MinimumVersions.cs \
 	MonoPInvokeCallbackAttribute.cs \
 	$(BUILD_DIR)/common/NativeTypes/Drawing.cs \
 	$(BUILD_DIR)/common/NativeTypes/Primitives.cs \
@@ -2141,18 +2184,13 @@ MACCATALYST_FRAMEWORKS = \
 	AdServices \
 	AdSupport \
 	AddressBook \
-	AddressBookUI \
-	AppClip \
 	AppTrackingTransparency \
-	ARKit \
-	AssetsLibrary \
 	AudioToolbox \
 	AudioUnit \
 	AutomaticAssessmentConfiguration \
 	BackgroundTasks \
 	BusinessChat \
 	CallKit \
-	CarPlay \
 	CFNetwork \
 	ClassKit \
 	CloudKit \
@@ -2166,25 +2204,17 @@ MACCATALYST_FRAMEWORKS = \
 	CoreLocation \
 	CoreMIDI \
 	CoreMotion \
-	CoreNFC \
 	CoreSpotlight \
-	CoreTelephony \
 	CoreText \
 	DeviceCheck \
 	EventKit \
-	EventKitUI \
 	ExternalAccessory \
 	FileProvider \
 	GameController \
 	GameplayKit \
-	HealthKit \
-	HealthKitUI \
-	HomeKit \
 	IdentityLookup \
-	IdentityLookupUI \
 	ImageIO \
 	Intents \
-	IntentsUI \
 	IOSurface \
 	JavaScriptCore \
 	LinkPresentation \
@@ -2193,8 +2223,6 @@ MACCATALYST_FRAMEWORKS = \
 	MediaAccessibility \
 	MediaPlayer \
 	MediaToolbox \
-	Messages \
-	MessageUI \
 	Metal \
 	MetalKit \
 	MetalPerformanceShaders \
@@ -2227,10 +2255,7 @@ MACCATALYST_FRAMEWORKS = \
 	VideoToolbox \
 	VideoSubscriberAccount \
 	Vision \
-	VisionKit \
-	WatchConnectivity \
 	WKWebKit \
-	iAd \
 
 #
 # Compute the SOURCES variables.

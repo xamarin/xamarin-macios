@@ -22,15 +22,6 @@ namespace Network {
 
 	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Watch (6,0)]
-	public enum NWEndpointType {
-		Invalid = 0,
-		Address = 1,
-		Host = 2,
-		BonjourService = 3,
-	}
-
-	[TV (12,0), Mac (10,14), iOS (12,0)]
-	[Watch (6,0)]
 	public class NWEndpoint : NativeObject {
 		public NWEndpoint (IntPtr handle, bool owns) : base (handle, owns) {}
 

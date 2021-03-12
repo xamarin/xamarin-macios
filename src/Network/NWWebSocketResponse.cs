@@ -21,13 +21,6 @@ using OS_nw_ws_response=System.IntPtr;
 namespace Network {
 
 	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
-	public enum NWWebSocketResponseStatus {
-		Invalid = 0,
-		Accept = 1,
-		Reject = 2,
-	}
-
-	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
 	public class NWWebSocketResponse : NativeObject {
 
 		internal NWWebSocketResponse (IntPtr handle, bool owns) : base (handle, owns) {}
@@ -49,6 +42,7 @@ namespace Network {
 		public NWWebSocketResponseStatus Status => nw_ws_response_get_status (GetCheckedHandle ()); 
 
 		[DllImport (Constants.NetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		unsafe static extern bool nw_ws_response_enumerate_additional_headers (OS_nw_ws_response response, ref BlockLiteral enumerator);
 
 		delegate void nw_ws_response_enumerate_additional_headers_t (IntPtr block, string header, string value);

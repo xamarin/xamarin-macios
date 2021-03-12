@@ -18,49 +18,12 @@
 !missing-selector! GKLeaderboardEntry::rank not bound
 !missing-selector! GKLeaderboardEntry::score not bound
 
+## properties are null by default (not changing their behaviour to remain compatible)
+!extra-null-allowed! 'System.Void GameKit.GKScore::set_LeaderboardIdentifier(System.String)' has a extraneous [NullAllowed] on parameter #0
+!extra-null-allowed! 'System.Void GameKit.GKVoiceChat::set_PlayerStateUpdateHandler(GameKit.GKPlayerStateUpdateHandler)' has a extraneous [NullAllowed] on parameter #0
 
 ## unsorted
 
 !incorrect-protocol-member! GKMatchmakerViewControllerDelegate::matchmakerViewController:didFindHostedPlayers: is OPTIONAL and should NOT be abstract
 !incorrect-protocol-member! GKMatchmakerViewControllerDelegate::matchmakerViewController:didFindMatch: is OPTIONAL and should NOT be abstract
 !missing-selector! GKVoiceChat::playerVoiceChatStateDidChangeHandler not bound
-
-# Initial result from new rule extra-null-allowed
-!extra-null-allowed! 'System.Void GameKit.GKScore::set_LeaderboardIdentifier(System.String)' has a extraneous [NullAllowed] on parameter #0
-
-# Initial result from new rule missing-null-allowed
-!missing-null-allowed! 'Foundation.NSData GameKit.GKTurnBasedExchange::get_Data()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSData GameKit.GKTurnBasedExchangeReply::get_Data()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSData GameKit.GKTurnBasedMatch::get_MatchData()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSDate GameKit.GKTurnBasedExchange::get_CompletionDate()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSDate GameKit.GKTurnBasedExchange::get_SendDate()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSDate GameKit.GKTurnBasedExchange::get_TimeoutDate()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSDate GameKit.GKTurnBasedExchangeReply::get_ReplyDate()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSDate GameKit.GKTurnBasedMatch::get_CreationDate()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSDate GameKit.GKTurnBasedParticipant::get_LastTurnDate()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSDate GameKit.GKTurnBasedParticipant::get_TimeoutDate()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'GameKit.GKPlayer GameKit.GKTurnBasedParticipant::get_Player()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'GameKit.GKScore GameKit.GKLeaderboard::get_LocalPlayerScore()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'GameKit.GKScore[] GameKit.GKLeaderboard::get_Scores()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'GameKit.GKTurnBasedExchange[] GameKit.GKTurnBasedMatch::get_ActiveExchanges()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'GameKit.GKTurnBasedExchange[] GameKit.GKTurnBasedMatch::get_CompletedExchanges()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'GameKit.GKTurnBasedExchange[] GameKit.GKTurnBasedMatch::get_Exchanges()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'GameKit.GKTurnBasedExchangeReply[] GameKit.GKTurnBasedExchange::get_Replies()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'GameKit.GKTurnBasedParticipant GameKit.GKTurnBasedExchange::get_Sender()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'GameKit.GKTurnBasedParticipant GameKit.GKTurnBasedExchangeReply::get_Recipient()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'GameKit.GKTurnBasedParticipant GameKit.GKTurnBasedMatch::get_CurrentParticipant()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'GameKit.GKTurnBasedParticipant[] GameKit.GKTurnBasedExchange::get_Recipients()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'GameKit.GKTurnBasedParticipant[] GameKit.GKTurnBasedMatch::get_Participants()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String GameKit.GKAchievementDescription::get_AchievedDescription()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String GameKit.GKAchievementDescription::get_GroupIdentifier()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String GameKit.GKAchievementDescription::get_Identifier()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String GameKit.GKAchievementDescription::get_Title()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String GameKit.GKAchievementDescription::get_UnachievedDescription()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String GameKit.GKLeaderboard::get_Title()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String GameKit.GKScore::get_FormattedValue()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String GameKit.GKTurnBasedExchange::get_ExchangeID()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String GameKit.GKTurnBasedExchange::get_Message()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String GameKit.GKTurnBasedExchangeReply::get_Message()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String GameKit.GKTurnBasedMatch::get_MatchID()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.Void GameKit.GKTurnBasedMatch::Remove(System.Action`1<Foundation.NSError>)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void GameKit.GKTurnBasedMatch::SetMessage(System.String,Foundation.NSObject[])' is missing an [NullAllowed] on parameter #1

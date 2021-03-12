@@ -9,7 +9,10 @@
 // Copyright 2011-2012 Xamarin Inc. 
 //
 
+#include <TargetConditionals.h>
+#if !TARGET_OS_OSX
 #include <UIKit/UIKit.h>
+#endif
 #include <sys/time.h>
 #include <zlib.h>
 #include <dlfcn.h>
@@ -199,7 +202,7 @@ extern void mono_gc_init_finalizer_thread (void);
 #if TARGET_OS_WATCH
 		// I haven't found a way to listen for memory warnings on watchOS.
 		// fprintf (stderr, "Need to listen for memory warnings on the watch\n");
-#else
+#elif !TARGET_OS_OSX
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(memoryWarning:) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
 #endif
 	}
@@ -220,7 +223,9 @@ extern void mono_gc_init_finalizer_thread (void);
 - (void) memoryWarning: (NSNotification *) sender
 {
 	// COOP: ?
-	mono_gc_collect (mono_gc_max_generation ());
+	GCHandle exception_gchandle = INVALID_GCHANDLE;
+	xamarin_gc_collect (&exception_gchandle);
+	xamarin_process_managed_exception_gchandle (exception_gchandle);
 }
 
 @end
@@ -255,7 +260,7 @@ xamarin_main (int argc, char *argv[], enum XamarinLaunchMode launch_mode)
 	DEBUG_LAUNCH_TIME_PRINT ("MonoTouch setup time");
 
 	MonoAssembly *assembly;
-	guint32 exception_gchandle = 0;
+	GCHandle exception_gchandle = NULL;
 	
 	const char *c_bundle_path = xamarin_get_bundle_path ();
 
@@ -442,12 +447,12 @@ xamarin_main (int argc, char *argv[], enum XamarinLaunchMode launch_mode)
 #if defined (__arm__) || defined(__aarch64__)
 	xamarin_register_assemblies ();
 	assembly = xamarin_open_and_register (xamarin_executable_name, &exception_gchandle);
-	if (exception_gchandle != 0)
+	if (exception_gchandle != NULL)
 		xamarin_process_managed_exception_gchandle (exception_gchandle);
 #else
 	if (xamarin_executable_name) {
 		assembly = xamarin_open_and_register (xamarin_executable_name, &exception_gchandle);
-		if (exception_gchandle != 0)
+		if (exception_gchandle != NULL)
 			xamarin_process_managed_exception_gchandle (exception_gchandle);
 	} else {
 		const char *last_slash = strrchr (argv [0], '/');
@@ -457,13 +462,13 @@ xamarin_main (int argc, char *argv[], enum XamarinLaunchMode launch_mode)
 		assembly = xamarin_open_and_register (aname, &exception_gchandle);
 		xamarin_free (aname);
 
-		if (exception_gchandle != 0)
+		if (exception_gchandle != NULL)
 			xamarin_process_managed_exception_gchandle (exception_gchandle);
 	}
 
 	if (xamarin_supports_dynamic_registration) {
 		xamarin_register_entry_assembly (mono_assembly_get_object (mono_domain_get (), assembly), &exception_gchandle);
-		if (exception_gchandle != 0)
+		if (exception_gchandle != NULL)
 			xamarin_process_managed_exception_gchandle (exception_gchandle);
 	}
 #endif

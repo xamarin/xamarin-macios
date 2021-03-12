@@ -16,16 +16,6 @@ using OS_nw_endpoint=System.IntPtr;
 namespace Network {
 
 	[TV (14,0), Mac (11,0), iOS (14,0), Watch (7,0)]
-	public enum NWConnectionGroupState 
-	{
-		Invalid = 0,
-		Waiting = 1,
-		Ready = 2,
-		Failed = 3,
-		Cancelled = 4,
-	}
-
-	[TV (14,0), Mac (11,0), iOS (14,0), Watch (7,0)]
 	public delegate void NWConnectionGroupReceiveDelegate (DispatchData content, NWContentContext context, bool isCompleted);
 
 	[TV (14,0), Mac (11,0), iOS (14,0), Watch (7,0)]
@@ -198,7 +188,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		unsafe static extern void nw_connection_group_set_receive_handler (OS_nw_connection_group group, uint maximum_message_size, bool reject_oversized_messages, BlockLiteral *handler);
+		unsafe static extern void nw_connection_group_set_receive_handler (OS_nw_connection_group group, uint maximum_message_size, [MarshalAs (UnmanagedType.I1)] bool reject_oversized_messages, BlockLiteral *handler);
 
 		delegate void nw_connection_group_receive_handler_t (IntPtr block, IntPtr content, IntPtr context, bool isCompleted);
 		static nw_connection_group_receive_handler_t static_ReceiveHandler = TrampolineReceiveHandler;

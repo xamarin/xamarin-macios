@@ -1,7 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <IsPackable>false</IsPackable>
+    <DefineConstants>$(DefineConstants);NET</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
@@ -9,7 +10,7 @@
     <PackageReference Include="NUnit3TestAdapter" Version="3.15.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
     <PackageReference Include="Mono.Cecil" Version="0.11.2" />
-    <PackageReference Include="MSBuild.StructuredLogger" Version="2.1.215" />
+    <PackageReference Include="MSBuild.StructuredLogger" Version="2.1.303" />
   </ItemGroup>
 
   <ItemGroup>

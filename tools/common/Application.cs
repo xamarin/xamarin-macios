@@ -354,7 +354,8 @@ namespace Xamarin.Bundler {
 
 		public static int Concurrency => Driver.Concurrency;
 		public Version DeploymentTarget;
-		public Version SdkVersion;
+		public Version SdkVersion; // for Mac Catalyst this is the iOS version
+		public Version NativeSdkVersion; // this is the same as SdkVersion, except that for Mac Catalyst it's the macOS SDK version.
 	
 		public MonoNativeMode MonoNativeMode { get; set; }
 		List<Abi> abis;
@@ -382,49 +383,20 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		// Versions for Mac Catalyst are complicated. In some cases we have to use the
-		// corresponding iOS version of the SDK, and in some cases we have to use the
-		// macOS version that iOS version correspond to. In Xcode, when you select the
-		// deployment target, you select a macOS version in the UI, but the corresponding
-		// iOS version is written to the project file. This means that there's a mapping
-		// between the two, and we've captured that mapping in our Versions.plist for
-		// Xamarin.iOS (in the MacCatalystVersionMap plist dictionary). Here we provide
-		// two methods that can convert between iOS version and macOS version either way.
-		Dictionary<Version, Version> mac_catalyst_ios_to_macos_map;
-		Dictionary<Version, Version> GetCatalystiOSTomacOSMap ()
-		{
-			if (mac_catalyst_ios_to_macos_map == null) {
-				var file = Path.Combine (Driver.GetFrameworkCurrentDirectory (this), "Versions.plist");
-				var plist = Driver.FromPList (file);
-				var dict = plist.Get<PDictionary> ("MacCatalystVersionMap");
-
-				mac_catalyst_ios_to_macos_map = new Dictionary<Version, Version> ();
-				foreach (var kvp in dict) {
-					// The input here is fixed, so don't try to parse, just do it, because it should succeed.
-					mac_catalyst_ios_to_macos_map [Version.Parse (kvp.Key)] = Version.Parse (((PString) kvp.Value).Value);
-				}
-			}
-			return mac_catalyst_ios_to_macos_map;
-		}
-
 		public Version GetMacCatalystmacOSVersion (Version iOSVersion)
 		{
-			var map = GetCatalystiOSTomacOSMap ();
-			
-			if (!map.TryGetValue (iOSVersion, out var value))
+			if (!MacCatalystSupport.TryGetMacOSVersion (Driver.GetFrameworkDirectory (this), iOSVersion, out var value))
 				throw ErrorHelper.CreateError (183, Errors.MX0183 /* Could not map the iOS version {0} to a macOS version for Mac Catalyst */, iOSVersion.ToString ());
 
 			return value;
 		}
 
-		public Version GetMacCatalystiOSVersion (Version macVersion)
+		public Version GetMacCatalystiOSVersion (Version macOSVersion)
 		{
-			var map = GetCatalystiOSTomacOSMap ();
-			var iosVersions = map.Where (kvp => kvp.Value == macVersion).Select (v => v.Key).ToArray ();
-			if (iosVersions.Length != 1)
-				throw ErrorHelper.CreateError (184, Errors.MX0184 /* Could not map the Mac Catalyst version {0} to an iOS version */, macVersion.ToString ());
+			if (!MacCatalystSupport.TryGetiOSVersion (Driver.GetFrameworkDirectory (this), macOSVersion, out var value))
+				throw ErrorHelper.CreateError (184, Errors.MX0184 /* Could not map the macOS version {0} to a corresponding iOS version for Mac Catalyst */, macOSVersion.ToString ());
 
-			return iosVersions [0];
+			return value;
 		}
 
 		public string GetProductName ()
@@ -775,16 +747,24 @@ namespace Xamarin.Bundler {
 
 		public void InitializeCommon ()
 		{
+			InitializeDeploymentTarget ();
 			SelectRegistrar ();
 			SelectMonoNative ();
 
 			RuntimeOptions = RuntimeOptions.Create (this, HttpMessageHandler, TlsProvider);
+
+			if (Platform == ApplePlatform.MacCatalyst) {
+				// Our input SdkVersion is the macOS SDK version, but the rest of our code expects the supporting iOS version, so convert here.
+				// The macOS SDK version is still stored in NativeSdkVersion for when we need it.
+				SdkVersion = GetMacCatalystiOSVersion (NativeSdkVersion);
+			}
 
 			if (RequiresXcodeHeaders && SdkVersion < SdkVersions.GetVersion (this)) {
 				switch (Platform) {
 				case ApplePlatform.iOS:
 				case ApplePlatform.TVOS:
 				case ApplePlatform.WatchOS:
+				case ApplePlatform.MacCatalyst:
 					throw ErrorHelper.CreateError (180, Errors.MX0180, ProductName, PlatformName, SdkVersions.GetVersion (this), SdkVersions.Xcode);
 				case ApplePlatform.MacOSX:
 					throw ErrorHelper.CreateError (179, Errors.MX0179, ProductName, PlatformName, SdkVersions.GetVersion (this), SdkVersions.Xcode);
@@ -792,13 +772,6 @@ namespace Xamarin.Bundler {
 					// Default to the iOS error message, it's better than showing MX0071 (unknown platform), which would be completely unrelated
 					goto case ApplePlatform.iOS;
 				}
-			}
-
-			if (DeploymentTarget != null) {
-				if (DeploymentTarget < Xamarin.SdkVersions.GetMinVersion (this))
-					throw new ProductException (73, true, Errors.MT0073, ProductConstants.Version, DeploymentTarget, Xamarin.SdkVersions.GetMinVersion (this), PlatformName, ProductName);
-				if (DeploymentTarget > Xamarin.SdkVersions.GetVersion (this))
-					throw new ProductException (74, true, Errors.MX0074, ProductConstants.Version, DeploymentTarget, Xamarin.SdkVersions.GetVersion (this), PlatformName, ProductName);
 			}
 
 			if (Platform == ApplePlatform.WatchOS && EnableCoopGC.HasValue && !EnableCoopGC.Value)
@@ -844,6 +817,29 @@ namespace Xamarin.Bundler {
 			ErrorHelper.Show (messages);
 			if (Driver.Verbosity > 3)
 				Driver.Log (4, $"Enabled optimizations: {Optimizations}");
+		}
+
+		void InitializeDeploymentTarget ()
+		{
+#if ENABLE_BITCODE_ON_IOS
+			if (Platform == ApplePlatform.iOS)
+				DeploymentTarget = new Version (9, 0);
+#endif
+
+			if (DeploymentTarget == null)
+				DeploymentTarget = SdkVersions.GetVersion (this);
+
+			if (Platform == ApplePlatform.iOS && (HasDynamicLibraries || HasFrameworks) && DeploymentTarget.Major < 8) {
+				ErrorHelper.Warning (78, Errors.MT0078, DeploymentTarget);
+				DeploymentTarget = new Version (8, 0);
+			}
+
+			if (DeploymentTarget != null) {
+				if (DeploymentTarget < SdkVersions.GetMinVersion (this))
+					throw new ProductException (73, true, Errors.MT0073, ProductConstants.Version, DeploymentTarget, Xamarin.SdkVersions.GetMinVersion (this), PlatformName, ProductName);
+				if (DeploymentTarget > SdkVersions.GetVersion (this))
+					throw new ProductException (74, true, Errors.MX0074, ProductConstants.Version, DeploymentTarget, Xamarin.SdkVersions.GetVersion (this), PlatformName, ProductName);
+			}
 		}
 
 		void SelectMonoNative ()
@@ -1361,7 +1357,14 @@ namespace Xamarin.Bundler {
 						break;
 					case ApplePlatform.MacOSX:
 					case ApplePlatform.MacCatalyst:
+#if NET
+						// Mono doesn't support dllmaps for Mac Catalyst / macOS in .NET for now:
+						// macOS: https://github.com/dotnet/runtime/issues/43204
+						// Mac Catalyst: https://github.com/dotnet/runtime/issues/48110
+						MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.Disable;
+#else
 						MarshalObjectiveCExceptions = EnableDebug ? MarshalObjectiveCExceptionMode.ThrowManagedException : MarshalObjectiveCExceptionMode.Disable;
+#endif
 						break;
 					default:
 						throw ErrorHelper.CreateError (71, Errors.MX0071 /* Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case. */, Platform, ProductName);
@@ -1414,7 +1417,7 @@ namespace Xamarin.Bundler {
 		public bool IsAOTCompiled (string assembly)
 		{
 #if NET
-			if (Platform == ApplePlatform.MacOSX)
+			if (Platform == ApplePlatform.MacOSX || Platform == ApplePlatform.MacCatalyst)
 				return false; // AOT on .NET for macOS hasn't been implemented yet.
 #else	
 			if (Platform == ApplePlatform.MacOSX)
@@ -1605,14 +1608,26 @@ namespace Xamarin.Bundler {
 			if (UseInterpreter)
 				return true;
 
+#if NET
+			asm = Path.GetFileNameWithoutExtension (assembly);
+			switch (asm) {
+			case "System.Net.Security":
+			case "System.Net.Quic":
+				// Some .NET assemblies have P/Invokes to native functions they don't ship. We need to use dlsym for this assemblies.
+				// https://github.com/dotnet/runtime/issues/47533
+				return true;
+			}
+#endif
+
 			switch (Platform) {
 			case ApplePlatform.iOS:
 				return !Profile.IsSdkAssembly (Path.GetFileNameWithoutExtension (assembly));
 			case ApplePlatform.TVOS:
 			case ApplePlatform.WatchOS:
+			case ApplePlatform.MacCatalyst:
 				return false;
 			default:
-				throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, "Xamarin.iOS");
+				throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
 			}
 		}
 

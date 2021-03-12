@@ -27,7 +27,7 @@ namespace MonoTouchFixtures.Security {
 #endif
 		public void Add_Certificate ()
 		{
-#if MONOMAC
+#if MONOMAC && !NET
 			Stream certStream = typeof (KeyChainTest).Assembly.GetManifestResourceStream ("xammac_tests.Security.openssl_crt.der");
 #else
 			Stream certStream = typeof(KeyChainTest).Assembly.GetManifestResourceStream ("monotouchtest.Security.openssl_crt.der");

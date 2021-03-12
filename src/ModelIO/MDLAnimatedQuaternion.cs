@@ -24,14 +24,16 @@ using Matrix4d = global::OpenTK.NMatrix4d;
 using Quaternion = global::OpenTK.Quaternion;
 using Quaterniond = global::OpenTK.Quaterniond;
 
+#nullable enable
+
 namespace ModelIO {
 	public partial class MDLAnimatedQuaternion {
 		public virtual void Reset (Quaternion [] values, double [] times)
 		{
 			if (values == null)
-				throw new ArgumentNullException (nameof (values));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (values));
 			if (times == null)
-				throw new ArgumentNullException (nameof (times));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (times));
 			if (values.Length != times.Length)
 				throw new ArgumentOutOfRangeException ($"The '{nameof (values)}' and '{nameof (times)}' arrays must have the same length");
 			int typeSize = Marshal.SizeOf (typeof (Quaternion));
@@ -45,9 +47,9 @@ namespace ModelIO {
 		public virtual void Reset (Quaterniond [] values, double [] times)
 		{
 			if (values == null)
-				throw new ArgumentNullException (nameof (values));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (values));
 			if (times == null)
-				throw new ArgumentNullException (nameof (times));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (times));
 			if (values.Length != times.Length)
 				throw new ArgumentOutOfRangeException ($"The '{nameof (values)}' and '{nameof (times)}' arrays must have the same length");
 

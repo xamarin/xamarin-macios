@@ -465,13 +465,13 @@ namespace AudioUnit
 		static extern int /* OSStatus */ DisposeAUGraph(IntPtr inGraph);
 
 		[DllImport(Constants.AudioToolboxLibrary)]
-		static extern AUGraphError AUGraphIsOpen (IntPtr inGraph, out bool outIsOpen);
+		static extern AUGraphError AUGraphIsOpen (IntPtr inGraph, [MarshalAs (UnmanagedType.I1)] out bool outIsOpen);
 
 		[DllImport(Constants.AudioToolboxLibrary)]
-		static extern AUGraphError AUGraphIsInitialized (IntPtr inGraph, out bool outIsInitialized);
+		static extern AUGraphError AUGraphIsInitialized (IntPtr inGraph, [MarshalAs (UnmanagedType.I1)] out bool outIsInitialized);
 
 		[DllImport(Constants.AudioToolboxLibrary)]
-		static extern AUGraphError AUGraphIsRunning (IntPtr inGraph, out bool outIsRunning);
+		static extern AUGraphError AUGraphIsRunning (IntPtr inGraph, [MarshalAs (UnmanagedType.I1)] out bool outIsRunning);
 
 		[DllImport(Constants.AudioToolboxLibrary)]
 		static extern AUGraphError AUGraphGetCPULoad (IntPtr inGraph, out float /* Float32* */ outAverageCPULoad);
@@ -483,7 +483,7 @@ namespace AudioUnit
 		static extern AUGraphError AUGraphSetNodeInputCallback (IntPtr inGraph, int /* AUNode = SInt32 */ inDestNode, uint /* UInt32 */ inDestInputNumber, ref AURenderCallbackStruct inInputCallback);
 
 		[DllImport(Constants.AudioToolboxLibrary)]
-		static extern AUGraphError AUGraphUpdate (IntPtr inGraph, out bool outIsUpdated);
+		static extern AUGraphError AUGraphUpdate (IntPtr inGraph, [MarshalAs (UnmanagedType.I1)] out bool outIsUpdated);
 
 		[DllImport(Constants.AudioToolboxLibrary)]
 		static extern void CAShow (IntPtr handle);

@@ -24,10 +24,14 @@ namespace Cecil.Tests {
 				return null;
 			if (!cache.TryGetValue (assembly, out var ad)) {
 				if (parameters == null) {
-					ad = AssemblyDefinition.ReadAssembly (assembly);
-				} else {
-					ad = AssemblyDefinition.ReadAssembly (assembly, parameters);
+					var resolver = new DefaultAssemblyResolver ();
+					resolver.AddSearchDirectory (GetBCLDirectory (assembly));
+					parameters = new ReaderParameters () {
+						AssemblyResolver = resolver,
+					};
 				}
+
+				ad = AssemblyDefinition.ReadAssembly (assembly, parameters);
 				cache.Add (assembly, ad);
 			}
 			return ad;
@@ -59,6 +63,30 @@ namespace Cecil.Tests {
 				}
 			}
 			yield break;
+		}
+
+		public static string GetBCLDirectory (string assembly)
+		{
+			var rv = string.Empty;
+
+			switch (Path.GetFileName (assembly)) {
+			case "Xamarin.iOS.dll":
+				rv = Path.GetDirectoryName (Configuration.XamarinIOSDll);
+				break;
+			case "Xamarin.WatchOS.dll":
+				rv = Path.GetDirectoryName (Configuration.XamarinWatchOSDll);
+				break;
+			case "Xamarin.TVOS.dll":
+				rv = Path.GetDirectoryName (Configuration.XamarinTVOSDll);
+				break;
+			case "Xamarin.Mac.dll":
+				rv = Path.GetDirectoryName (assembly);
+				break;
+			default:
+				throw new NotImplementedException (assembly);
+			}
+
+			return rv;
 		}
 
 		public static IEnumerable PlatformAssemblies {

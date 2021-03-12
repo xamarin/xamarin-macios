@@ -96,10 +96,6 @@
 ## It is deprecated and not of much use to expose it
 !missing-selector! +UIColor::groupTableViewBackgroundColor not bound
 
-## It got renamed from UITextWritingDirection to NSWritingDirection but it is a breaking change
-## Fixed in XAMCORE_4_0
-!unknown-native-enum! UITextWritingDirection bound
-
 ## Introduced and deprecated in Xcode 11 and likely it will be removed in a future beta
 !missing-enum! UIDirectionalRectEdge not bound
 !missing-selector! UIGestureRecognizer::initWithCoder: not bound

@@ -77,18 +77,23 @@ namespace AddressBook {
 		public static extern IntPtr CreateMutableCopy (IntPtr multiValue);
 
 		[DllImport (Constants.AddressBookLibrary, EntryPoint="ABMultiValueAddValueAndLabel")]
+		[return: MarshalAs (UnmanagedType.I1)]
 		public static extern bool AddValueAndLabel (IntPtr multiValue, IntPtr value, IntPtr label, out int /* int32_t */ outIdentifier);
 
 		[DllImport (Constants.AddressBookLibrary, EntryPoint="ABMultiValueReplaceValueAtIndex")]
+		[return: MarshalAs (UnmanagedType.I1)]
 		public static extern bool ReplaceValueAtIndex (IntPtr multiValue, IntPtr value, nint index);
 
 		[DllImport (Constants.AddressBookLibrary, EntryPoint="ABMultiValueReplaceLabelAtIndex")]
+		[return: MarshalAs (UnmanagedType.I1)]
 		public static extern bool ReplaceLabelAtIndex (IntPtr multiValue, IntPtr value, nint index);
 
 		[DllImport (Constants.AddressBookLibrary, EntryPoint="ABMultiValueInsertValueAndLabelAtIndex")]
+		[return: MarshalAs (UnmanagedType.I1)]
 		public static extern bool InsertValueAndLabelAtIndex (IntPtr multiValue, IntPtr value, IntPtr label, nint index, out int /* int32_t */ outIdentifier);
 
 		[DllImport (Constants.AddressBookLibrary, EntryPoint="ABMultiValueRemoveValueAndLabelAtIndex")]
+		[return: MarshalAs (UnmanagedType.I1)]
 		public static extern bool RemoveValueAndLabelAtIndex (IntPtr multiValue, nint index);
 
 		public static IntPtr ToIntPtr (NSObject value)

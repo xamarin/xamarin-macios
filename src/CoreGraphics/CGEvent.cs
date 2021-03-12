@@ -86,7 +86,7 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
-		extern static IntPtr CGEventCreateKeyboardEvent (IntPtr source, ushort virtualKey, bool keyDown);
+		extern static IntPtr CGEventCreateKeyboardEvent (IntPtr source, ushort virtualKey, [MarshalAs (UnmanagedType.I1)] bool keyDown);
 
 		public CGEvent (CGEventSource source, ushort virtualKey, bool keyDown)
 		{
@@ -330,7 +330,7 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
-		extern static void CGEventTapEnable (IntPtr machPort, bool enable);
+		extern static void CGEventTapEnable (IntPtr machPort, [MarshalAs (UnmanagedType.I1)] bool enable);
 
 		public static void TapEnable (CFMachPort machPort)
 		{
@@ -347,6 +347,7 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGEventTapIsEnabled (IntPtr machPort);
 
 		public static bool IsTapEnabled (CFMachPort machPort)
@@ -431,18 +432,22 @@ namespace CoreGraphics {
 
 		[Mac (11,0)]
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary, EntryPoint="CGPreflightListenEventAccess")]
+		[return: MarshalAs (UnmanagedType.I1)]
 		public static extern bool PreflightListenEventAccess ();
 
 		[Mac (11,0)]
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary, EntryPoint="CGRequestListenEventAccess")]
+		[return: MarshalAs (UnmanagedType.I1)]
 		public static extern bool RequestListenEventAccess ();
 
 		[Mac (11,0)]
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary, EntryPoint="CGPreflightPostEventAccess")]
+		[return: MarshalAs (UnmanagedType.I1)]
 		public static extern bool PreflightPostEventAccess ();
 
 		[Mac (11,0)]
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary, EntryPoint="CGRequestPostEventAccess")]
+		[return: MarshalAs (UnmanagedType.I1)]
 		public static extern bool RequestPostEventAccess ();
 
 	}

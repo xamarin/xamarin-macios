@@ -15,17 +15,6 @@ using ObjCRuntime;
 
 namespace CoreMedia {
 
-	// untyped enum (used as OSStatus) -> CMSync.h
-	[Watch (6,0)]
-	public enum CMClockError : int
-	{
-		None = 0,
-		MissingRequiredParameter	= -12745,
-		InvalidParameter			= -12746,
-		AllocationFailed			= -12747,
-		UnsupportedOperation		= -12756,
-	}
-
 	// CMSync.h
 	[Watch (6,0)]
 	public class CMClock : CMClockOrTimebase
@@ -38,6 +27,7 @@ namespace CoreMedia {
 			: base (handle, owns)
 		{
 		}
+#if !COREBUILD
 
 		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* CMClockRef */ IntPtr CMClockGetHostTimeClock ();
@@ -80,6 +70,7 @@ namespace CoreMedia {
 		}
 
 		[DllImport(Constants.CoreMediaLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static /* Boolean */ bool CMClockMightDrift (/* CMClockRef */ IntPtr clock, /* CMClockRef */ IntPtr otherClock);
 
 		public bool MightDrift (CMClock otherClock)
@@ -103,18 +94,7 @@ namespace CoreMedia {
 
 		[DllImport(Constants.CoreMediaLibrary, EntryPoint="CMClockMakeHostTimeFromSystemUnits")]
 		public extern static CMTime CreateHostTimeFromSystemUnits (/* uint64_t */ ulong hostTime);
-	}
-
-	// untyped enum (used as OSStatus) -> CMSync.h
-	[Watch (6,0)]
-	public enum CMTimebaseError : int
-	{
-		None = 0,
-		MissingRequiredParameter	= -12748,
-		InvalidParameter			= -12749,
-		AllocationFailed			= -12750,
-		TimerIntervalTooShort		= -12751,
-		ReadOnly					= -12757,
+#endif // !COREBUILD
 	}
 
 	[Watch (6,0)]
@@ -129,6 +109,7 @@ namespace CoreMedia {
 			: base (handle, owns)
 		{
 		}
+#if !COREBUILD
 
 		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* OSStatus */ CMTimebaseError CMTimebaseCreateWithMasterClock (/* CFAllocatorRef */ IntPtr allocator, /* CMClockRef */ IntPtr masterClock, /* CMTimebaseRef* */ out IntPtr timebaseOut);
@@ -476,19 +457,19 @@ namespace CoreMedia {
 			return new CMClock (ptr, deprecated);
 		}
 
-		[iOS (9,0)][Mac (10,11), Watch (6,0)]
+		[iOS (9,0)][Mac (10,11)]
 		[DllImport(Constants.CoreMediaLibrary)]
 		static extern unsafe /* CMTimebaseRef */ IntPtr  CMTimebaseCopyMasterTimebase (/* CMTimebaseRef */ IntPtr timebase);
 
-		[iOS (9,0)][Mac (10,11), Watch (6,0)]
+		[iOS (9,0)][Mac (10,11)]
 		[DllImport(Constants.CoreMediaLibrary)]
 		static extern unsafe /* CMClockRef */ IntPtr  CMTimebaseCopyMasterClock (/* CMTimebaseRef */ IntPtr timebase);
 
-		[iOS (9,0)][Mac (10,11), Watch (6,0)]
+		[iOS (9,0)][Mac (10,11)]
 		[DllImport(Constants.CoreMediaLibrary)]
 		static extern unsafe IntPtr /* void* */ CMTimebaseCopyMaster (/* CMTimebaseRef */ IntPtr timebase);
 
-		[iOS (9,0)][Mac (10,11), Watch (6,0)]
+		[iOS (9,0)][Mac (10,11)]
 		[DllImport(Constants.CoreMediaLibrary)]
 		static extern unsafe /* CMClockRef */ IntPtr CMTimebaseCopyUltimateMasterClock (/* CMTimebaseRef */ IntPtr timebase);
 #endif
@@ -499,16 +480,7 @@ namespace CoreMedia {
 		// CMTimebaseRemoveTimerDispatchSource
 		// CMTimebaseSetTimerDispatchSourceNextFireTime
 		// CMTimebaseSetTimerDispatchSourceToFireImmediately
-	}
-
-	// untyped enum (used as OSStatus) -> CMSync.h
-	[Watch (6,0)]
-	public enum CMSyncError : int {
-		None = 0,
-		MissingRequiredParameter	= -12752,
-		InvalidParameter			= -12753,
-		AllocationFailed			= -12754,
-		RateMustBeNonZero			= -12755,
+#endif // !COREBUILD
 	}
 
 	[Watch (6,0)]
@@ -556,6 +528,7 @@ namespace CoreMedia {
 			}
 		}
 
+#if !COREBUILD
 		[DllImport(Constants.CoreMediaLibrary)]
 		extern static CMTime CMSyncGetTime (/* CMClockOrTimebaseRef */ IntPtr clockOrTimebase);
 
@@ -612,6 +585,7 @@ namespace CoreMedia {
 		}
 
 		[DllImport(Constants.CoreMediaLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static /* Boolean */ bool CMSyncMightDrift (/* CMClockOrTimebaseRef */ IntPtr clockOrTimebase1, /* CMClockOrTimebaseRef */ IntPtr clockOrTimebase2);
 
 		public static bool MightDrift (CMClockOrTimebase clockOrTimebaseA, CMClockOrTimebase clockOrTimebaseB)
@@ -624,5 +598,6 @@ namespace CoreMedia {
 
 			return CMSyncMightDrift (clockOrTimebaseA.Handle, clockOrTimebaseB.Handle);
 		}
+#endif // !COREBUILD
 	}
 }

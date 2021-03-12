@@ -28,27 +28,6 @@ using UIKit;
 
 namespace CoreMedia {
 
-	// untyped enum (used as an OSStatus) -> CMSampleBuffer.h
-	[Watch (6,0)]
-	public enum CMSampleBufferError : int {
-		None							= 0,
-		AllocationFailed				= -12730,
-		RequiredParameterMissing		= -12731,
-		AlreadyHasDataBuffer			= -12732,
-		BufferNotReady					= -12733,
-		SampleIndexOutOfRange			= -12734,
-		BufferHasNoSampleSizes			= -12735,
-		BufferHasNoSampleTimingInfo		= -12736,
-		ArrayTooSmall					= -12737,
-		InvalidEntryCount				= -12738,
-		CannotSubdivide					= -12739,
-		SampleTimingInfoInvalid			= -12740,
-		InvalidMediaTypeForOperation	= -12741,
-		InvalidSampleData				= -12742,
-		InvalidMediaFormat				= -12743,
-		Invalidated						= -12744,
-	}
-
 	[Watch (6,0)]
 	public class CMSampleBuffer : ICMAttachmentBearer 
 #if !COREBUILD
@@ -103,7 +82,7 @@ namespace CoreMedia {
 		extern static CMSampleBufferError CMAudioSampleBufferCreateWithPacketDescriptions (
 			/* CFAllocatorRef */ IntPtr allocator,
 			/* CMBlockBufferRef */ IntPtr dataBuffer,
-			/* Boolean */ bool dataReady,
+			/* Boolean */ [MarshalAs (UnmanagedType.I1)] bool dataReady,
 			/* CMSampleBufferMakeDataReadyCallback */ IntPtr makeDataReadyCallback,
 			/* void */ IntPtr makeDataReadyRefcon,
 			/* CMFormatDescriptionRef */ IntPtr formatDescription,
@@ -238,7 +217,7 @@ namespace CoreMedia {
 		static extern /* OSStatus */ CMSampleBufferError CMSampleBufferCreateForImageBuffer (
 			/* CFAllocatorRef */ IntPtr allocator,
 			/* CVImageBufferRef */ IntPtr imageBuffer,
-			/* Boolean */ bool dataReady,
+			/* Boolean */ [MarshalAs (UnmanagedType.I1)] bool dataReady,
 			/* CMSampleBufferMakeDataReadyCallback */ IntPtr makeDataReadyCallback,
 			/* void* */ IntPtr makeDataReadyRefcon,
 			/* CMVideoFormatDescriptionRef */ IntPtr formatDescription,
@@ -268,6 +247,7 @@ namespace CoreMedia {
 		}
 
 		[DllImport(Constants.CoreMediaLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static /* Boolean */ bool CMSampleBufferDataIsReady (/* CMSampleBufferRef */ IntPtr sbuf);
 		
 		public bool DataIsReady
@@ -449,7 +429,7 @@ namespace CoreMedia {
 		}
 
 		[DllImport(Constants.CoreMediaLibrary)]
-		extern static /* CFArrayRef */ IntPtr CMSampleBufferGetSampleAttachmentsArray (/* CMSampleBufferRef */ IntPtr sbuf, /* Boolean */ bool createIfNecessary);
+		extern static /* CFArrayRef */ IntPtr CMSampleBufferGetSampleAttachmentsArray (/* CMSampleBufferRef */ IntPtr sbuf, /* Boolean */ [MarshalAs (UnmanagedType.I1)] bool createIfNecessary);
 		
 		public CMSampleBufferAttachmentSettings [] GetSampleAttachments (bool createIfNecessary)
 		{
@@ -558,6 +538,7 @@ namespace CoreMedia {
 		}
 		
 		[DllImport(Constants.CoreMediaLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static /* Boolean */ bool CMSampleBufferIsValid (/* CMSampleBufferRef */ IntPtr sbuf);
 		
 		public bool IsValid
@@ -620,6 +601,8 @@ namespace CoreMedia {
 		delegate void CMSampleBufferInvalidateCallback (/* CMSampleBufferRef */ IntPtr sbuf, 
 			/* uint64_t */ ulong invalidateRefCon);
 
+		static CMSampleBufferInvalidateCallback invalidate_handler = InvalidateHandler;
+
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (CMSampleBufferInvalidateCallback))]
 #endif
@@ -647,7 +630,7 @@ namespace CoreMedia {
 				return CMSampleBufferError.RequiredParameterMissing;
 
 			invalidate = GCHandle.Alloc (Tuple.Create (invalidateHandler, this));
-			return CMSampleBufferSetInvalidateCallback (handle, InvalidateHandler, (ulong)(IntPtr)invalidate);
+			return CMSampleBufferSetInvalidateCallback (handle, invalidate_handler, (ulong)(IntPtr)invalidate);
 		}
 							
 		[DllImport(Constants.CoreMediaLibrary)]
@@ -784,10 +767,6 @@ namespace CoreMedia {
 		}
 #endif // !COREBUILD
 	}
-
-#if !WATCH
-	public enum LensStabilizationStatus { Active, OutOfRange, Unavailable, Off, None }
-#endif
 
 #if !COREBUILD
 	public partial class CMSampleBufferAttachmentSettings : DictionaryContainer {

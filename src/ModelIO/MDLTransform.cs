@@ -1,6 +1,8 @@
 using System;
 using MatrixFloat4x4 = global::OpenTK.NMatrix4;
 
+#nullable enable
+
 namespace ModelIO {
 	public partial class MDLTransform {
 #if !XAMCORE_4_0

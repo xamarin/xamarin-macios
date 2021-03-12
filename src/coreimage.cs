@@ -309,6 +309,7 @@ namespace CoreImage {
 
 #if MONOMAC
 		[Internal, Export ("createCGLayerWithSize:info:")]
+		[return: NullAllowed]
 		CGLayer CreateCGLayer (CGSize size, [NullAllowed] NSDictionary info);
 #endif
 
@@ -370,11 +371,13 @@ namespace CoreImage {
 		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[Export ("contextForOfflineGPUAtIndex:")]
 		[Static]
+		[return: NullAllowed]
 		CIContext FromOfflineGpu (int gpuIndex);
 #endif
 
 		[iOS (9,0)][Mac (10,11)]
 		[Export ("workingColorSpace")]
+		[NullAllowed]
 		CGColorSpace WorkingColorSpace { get; }
 
 		[iOS (10,0)][Mac (10,12)]
@@ -539,11 +542,13 @@ namespace CoreImage {
 
 		[Static]
 		[Export ("filterWithName:")]
+		[return: NullAllowed]
 		CIFilter FromName (string name);
 
 		[iOS (8,0), Mac (10,10)]
 		[Static]
 		[Export ("filterWithName:withInputParameters:")]
+		[return: NullAllowed]
 		CIFilter GetFilter (string name, [NullAllowed] NSDictionary inputParameters);
 
 		[Static]
@@ -557,6 +562,7 @@ namespace CoreImage {
 		[iOS(9,0)]
 		[Static]
 		[Export ("localizedNameForFilterName:")]
+		[return: NullAllowed]
 		string FilterLocalizedName (string filterName);
 
 		[iOS(9,0)]
@@ -567,11 +573,13 @@ namespace CoreImage {
 		[iOS(9,0)]
 		[Static]
 		[Export ("localizedDescriptionForFilterName:")]
+		[return: NullAllowed]
 		string FilterLocalizedDescription (string filterName);
 
 		[iOS(9,0)]
 		[Static]
 		[Export ("localizedReferenceDocumentationForFilterName:")]
+		[return: NullAllowed]
 		NSUrl FilterLocalizedReferenceDocumentation (string filterName);
 
 #if MONOMAC && !XAMCORE_4_0
@@ -592,6 +600,7 @@ namespace CoreImage {
 
 #if MONOMAC
 		[Export ("apply:arguments:options:")]
+		[return: NullAllowed]
 		CIImage Apply (CIKernel k, [NullAllowed] NSArray args, [NullAllowed] NSDictionary options);
 
 		[Export ("viewForUIConfiguration:excludedKeys:")]
@@ -600,9 +609,11 @@ namespace CoreImage {
 #else
 		// added in 10.10 but it was already accessible in a different way before (manual bindings)
 		[Export ("outputImage")]
+		[NullAllowed]
 		CIImage OutputImage { get; }
 
 		[Export ("serializedXMPFromFilters:inputImageExtent:"), Static]
+		[return: NullAllowed]
 		NSData SerializedXMP (CIFilter[] filters, CGRect extent); 
 
 		[Export ("filterArrayFromSerializedXMP:inputImageExtent:error:"), Static]
@@ -613,6 +624,7 @@ namespace CoreImage {
 		void SetValueForKey ([NullAllowed] NSObject value, NSString key);
 
 		[Export ("valueForKey:"), Internal]
+		[return: NullAllowed]
 		NSObject ValueForKey (NSString key);
 
 		// CIRAWFilter (CIFilter)
@@ -1227,19 +1239,20 @@ namespace CoreImage {
 
 		[Static]
 		[Export ("filterGeneratorWithContentsOfURL:")]
+		[return: NullAllowed]
 		CIFilterGenerator FromUrl (NSUrl aURL);
 
 		[Export ("initWithContentsOfURL:")]
 		IntPtr Constructor (NSUrl aURL);
 
 		[Export ("connectObject:withKey:toObject:withKey:")]
-		void ConnectObject (NSObject sourceObject, string withSourceKey, NSObject targetObject, string targetKey);
+		void ConnectObject (NSObject sourceObject, [NullAllowed] string withSourceKey, NSObject targetObject, string targetKey);
 
 		[Export ("disconnectObject:withKey:toObject:withKey:")]
 		void DisconnectObject (NSObject sourceObject, string sourceKey, NSObject targetObject, string targetKey);
 
 		[Export ("exportKey:fromObject:withName:")]
-		void ExportKey (string key, NSObject targetObject, string exportedKeyName);
+		void ExportKey (string key, NSObject targetObject, [NullAllowed] string exportedKeyName);
 
 		[Export ("removeExportedKey:")]
 		void RemoveExportedKey (string exportedKeyName);
@@ -1437,7 +1450,7 @@ namespace CoreImage {
 		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		[Static]
 		[Export ("imageWithCGLayer:options:")]
-		CIImage FromLayer (CGLayer layer, NSDictionary options);
+		CIImage FromLayer (CGLayer layer, [NullAllowed] NSDictionary options);
 #endif
 
 		[Static]
@@ -1453,29 +1466,35 @@ namespace CoreImage {
 
 		[Static]
 		[Export ("imageWithContentsOfURL:")]
+		[return: NullAllowed]
 		CIImage FromUrl (NSUrl url);
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Static]
 		[Export ("imageWithContentsOfURL:options:")]
+		[return: NullAllowed]
 		CIImage FromUrl (NSUrl url, [NullAllowed] NSDictionary d);
 
 		[Static]
 		[Wrap ("FromUrl (url, options.GetDictionary ())")]
+		[return: NullAllowed]
 		CIImage FromUrl (NSUrl url, [NullAllowed] CIImageInitializationOptions options);
 
 		[Static]
 		[Export ("imageWithData:")]
+		[return: NullAllowed]
 		CIImage FromData (NSData data);
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Static]
 		[Export ("imageWithData:options:")]
+		[return: NullAllowed]
 		CIImage FromData (NSData data, [NullAllowed] NSDictionary d);
 
 		[Static]
 		[Wrap ("FromData (data, options.GetDictionary ())")]
-		CIImage FromData (NSData data, [NullAllowed] CIImageInitializationOptionsWithMetadata options);
+		[return: NullAllowed]
+		CIImage FromData (NSData data, [NullAllowed] CIImageInitializationOptionsWithMetadata? options);
 
 		[Static]
 		[iOS(9,0)]
@@ -1533,14 +1552,14 @@ namespace CoreImage {
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Static]
 		[Export ("imageWithIOSurface:options:")]
-		CIImage FromSurface (IOSurface.IOSurface surface, NSDictionary options);
+		CIImage FromSurface (IOSurface.IOSurface surface, [NullAllowed] NSDictionary options);
 
 		[iOS (11,0)]
 		[TV (11,0)]
 		[Mac (10,13)]
 		[Static]
-		[Wrap ("FromSurface (surface, options.GetDictionary ()!)")]
-		CIImage FromSurface (IOSurface.IOSurface surface, CIImageInitializationOptions options);
+		[Wrap ("FromSurface (surface, options.GetDictionary ())")]
+		CIImage FromSurface (IOSurface.IOSurface surface, CIImageInitializationOptions? options);
 
 		[Static]
 		[Export ("imageWithColor:")]
@@ -1905,6 +1924,7 @@ namespace CoreImage {
 		[iOS (9,0)][Mac (10,11)]
 		[Static]
 		[Export ("imageWithMTLTexture:options:")]
+		[return: NullAllowed]
 		CIImage FromMetalTexture (IMTLTexture texture, [NullAllowed] NSDictionary<NSString, NSObject> options);
 
 		[iOS (10,0)][Mac (10,12)]
@@ -1995,7 +2015,7 @@ namespace CoreImage {
 		[Export ("initWithPortaitEffectsMatte:options:")] // selector typo, rdar filled 42894821
 		IntPtr Constructor (AVPortraitEffectsMatte matte, [NullAllowed] NSDictionary options);
 
-		[TV (11,0), iOS (11,0), Mac (10, 14)]
+		[TV (12,0), iOS (12,0), Mac (10, 14)]
 		[Export ("initWithPortaitEffectsMatte:")] // selector typo, rdar filled 42894821
 		IntPtr Constructor (AVPortraitEffectsMatte matte);
 
@@ -2231,11 +2251,13 @@ namespace CoreImage {
 		[Deprecated (PlatformName.iOS, 12, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[Static, Export ("kernelsWithString:")]
+		[return: NullAllowed]
 		CIKernel [] FromProgramMultiple (string coreImageShaderProgram);
 
 		[Deprecated (PlatformName.iOS, 12, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[Static, Export ("kernelWithString:")]
+		[return: NullAllowed]
 		CIKernel FromProgramSingle (string coreImageShaderProgram);
 
 		[iOS (11,0)]
@@ -2270,6 +2292,7 @@ namespace CoreImage {
 #endif
 		[Mac (10,11)]
 		[Export ("applyWithExtent:roiCallback:arguments:")]
+		[return: NullAllowed]
 		CIImage ApplyWithExtent (CGRect extent, CIKernelRoiCallback callback, [NullAllowed] NSObject [] args);
 	}
 
@@ -2278,6 +2301,7 @@ namespace CoreImage {
 	[DisableDefaultCtor] // returns a nil handle -> instances of this type are returned from `kernel[s]WithString:`
 	interface CIColorKernel {
 		[Export ("applyWithExtent:arguments:")]
+		[return: NullAllowed]
 		CIImage ApplyWithExtent (CGRect extent, [NullAllowed] NSObject [] args);
 
 		// Note: the API is supported in iOS 8, but with iOS 9, they guarantee
@@ -2285,6 +2309,7 @@ namespace CoreImage {
 		[Deprecated (PlatformName.iOS, 12, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[New, Static, Export ("kernelWithString:")]
+		[return: NullAllowed]
 		CIColorKernel FromProgramSingle (string coreImageShaderProgram);
 	}
 
@@ -2293,6 +2318,7 @@ namespace CoreImage {
 	[DisableDefaultCtor] // returns a nil handle -> instances of this type are returned from `kernel[s]WithString:`
 	interface CIWarpKernel {
 		[Export ("applyWithExtent:roiCallback:inputImage:arguments:")]
+		[return: NullAllowed]
 		CIImage ApplyWithExtent (CGRect extent, CIKernelRoiCallback callback, CIImage image, [NullAllowed] NSObject [] args);
 
 		// Note: the API is supported in iOS 8, but with iOS 9, they guarantee
@@ -2300,6 +2326,7 @@ namespace CoreImage {
 		[Deprecated (PlatformName.iOS, 12, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[New, Static, Export ("kernelWithString:")]
+		[return: NullAllowed]
 		CIWarpKernel FromProgramSingle (string coreImageShaderProgram);
 	}
 
@@ -2315,17 +2342,20 @@ namespace CoreImage {
 
 		[Static]
 		[Export ("imageAccumulatorWithExtent:format:")]
+		[return: NullAllowed]
 		CIImageAccumulator FromRectangle (CGRect rect, CIFormat format);
 
 #if MONOMAC && !XAMCORE_4_0
 		[Obsolete ("Use the overload acceping a 'CIFormat' enum instead of an 'int'.")]
 		[Static]
 		[Wrap ("FromRectangle (rect, (CIFormat) ciImageFormat)")]
+		[return: NullAllowed]
 		CIImageAccumulator FromRectangle (CGRect rect, int ciImageFormat);
 #endif
 
 		[Static]
 		[Export ("imageAccumulatorWithExtent:format:colorSpace:")]
+		[return: NullAllowed]
 		CIImageAccumulator FromRectangle (CGRect extent, CIFormat format, CGColorSpace colorSpace);
 		
 		[Export ("initWithExtent:format:")]
@@ -2390,14 +2420,14 @@ namespace CoreImage {
 
 		[Internal, Static]
 		[Export ("samplerWithImage:options:")]
-		CISampler FromImage (CIImage sourceImag, NSDictionary options);
+		CISampler FromImage (CIImage sourceImag, [NullAllowed] NSDictionary options);
 
 		[Export ("initWithImage:")]
 		IntPtr Constructor (CIImage sourceImage);
 
 		[DesignatedInitializer]
 		[Internal, Export ("initWithImage:options:")]
-		NSObject Constructor (CIImage image, NSDictionary options);
+		NSObject Constructor (CIImage image, [NullAllowed] NSDictionary options);
 
 		[Export ("definition")]
 		CIFilterShape Definition { get; }
@@ -2538,7 +2568,8 @@ namespace CoreImage {
 	[DisableDefaultCtor]
 	interface CIDetector {
 		[Static, Export ("detectorOfType:context:options:"), Internal]
-		CIDetector FromType ([NullAllowed] NSString detectorType, [NullAllowed] CIContext context, [NullAllowed] NSDictionary options);
+		[return: NullAllowed]
+		CIDetector FromType (NSString detectorType, [NullAllowed] CIContext context, [NullAllowed] NSDictionary options);
 
 		[Export ("featuresInImage:")]
 		CIFeature [] FeaturesInImage (CIImage image);
@@ -2733,6 +2764,7 @@ namespace CoreImage {
 		CGPoint BottomRight { get; }
 
 		[Export ("messageString")]
+		[NullAllowed]
 		string MessageString { get; }
 
 		[iOS (11,0)]
@@ -2762,6 +2794,7 @@ namespace CoreImage {
 		CGPoint BottomRight { get; }
 
 		[Export ("subFeatures")]
+		[NullAllowed]
 		CIFeature[] SubFeatures { get; }
 	}
 

@@ -73,6 +73,9 @@ namespace CoreGraphics {
 			handle = CGPathCreateMutable ();
 		}
 
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		extern static /* CGMutablePathRef */ IntPtr CGPathCreateMutableCopyByTransformingPath (/* CGPathRef */ IntPtr path, /* const CGAffineTransform* */ ref CGAffineTransform transform);
+
 		public CGPath (CGPath reference, CGAffineTransform transform)
 		{
 			if (reference == null)
@@ -138,7 +141,9 @@ namespace CoreGraphics {
 			}
 		}
 
+#if !COREBUILD
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGPathEqualToPath (/* CGPathRef */ IntPtr path1, /* CGPathRef */ IntPtr path2);
 
 		public static bool operator == (CGPath path1, CGPath path2)
@@ -352,7 +357,7 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		unsafe extern static void CGPathAddArc (/* CGMutablePathRef */ IntPtr path, CGAffineTransform *m, /* CGFloat */ nfloat x, /* CGFloat */ nfloat y, /* CGFloat */ nfloat radius, /* CGFloat */ nfloat startAngle, /* CGFloat */ nfloat endAngle, bool clockwise);
+		unsafe extern static void CGPathAddArc (/* CGMutablePathRef */ IntPtr path, CGAffineTransform *m, /* CGFloat */ nfloat x, /* CGFloat */ nfloat y, /* CGFloat */ nfloat radius, /* CGFloat */ nfloat startAngle, /* CGFloat */ nfloat endAngle, [MarshalAs (UnmanagedType.I1)] bool clockwise);
 
 		public unsafe void AddArc (CGAffineTransform m, nfloat x, nfloat y, nfloat radius, nfloat startAngle, nfloat endAngle, bool clockwise)
 		{
@@ -408,6 +413,7 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGPathIsEmpty (/* CGPathRef */ IntPtr path);
 
 		public bool IsEmpty {
@@ -417,6 +423,7 @@ namespace CoreGraphics {
 		}
 			
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGPathIsRect (/* CGPathRef */ IntPtr path, out CGRect rect);
 
 		public bool IsRect (out CGRect rect)
@@ -452,7 +459,8 @@ namespace CoreGraphics {
 		}
 		
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		unsafe extern static bool CGPathContainsPoint(IntPtr path, CGAffineTransform *m, CGPoint point, bool eoFill);
+		[return: MarshalAs (UnmanagedType.I1)]
+		unsafe extern static bool CGPathContainsPoint(IntPtr path, CGAffineTransform *m, CGPoint point, [MarshalAs (UnmanagedType.I1)] bool eoFill);
 
 		public unsafe bool ContainsPoint (CGAffineTransform m, CGPoint point, bool eoFill)
 		{
@@ -578,9 +586,6 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static /* CGMutablePathRef */ IntPtr CGPathCreateMutableCopyByTransformingPath (/* CGPathRef */ IntPtr path, /* const CGAffineTransform* */ ref CGAffineTransform transform);
-
-		[DllImport (Constants.CoreGraphicsLibrary)]
 		unsafe extern static IntPtr CGPathCreateWithEllipseInRect (CGRect boundingRect, CGAffineTransform *transform);
 
 		static public unsafe CGPath EllipseFromRect (CGRect boundingRect, CGAffineTransform transform)
@@ -644,5 +649,6 @@ namespace CoreGraphics {
 		{
 			CGPathAddRoundedRect (handle, null, rect, cornerWidth, cornerHeight);
 		}
+#endif // !COREBUILD
 	}
 }

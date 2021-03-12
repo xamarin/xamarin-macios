@@ -12,6 +12,8 @@ using System;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace MediaPlayer {
 	// NSInteger -> MPMoviePlayerController.h
 	[Native]

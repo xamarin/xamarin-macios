@@ -100,10 +100,34 @@ namespace Xamarin.Tests {
 			Assert.That (result.StandardOutput.ToString (), Does.Contain ("The specified RuntimeIdentifier 'watchos-x86' is not recognized."), "Missing runtime pack for watchOS");
 		}
 
+		[Test]
+		[TestCase ("maccatalyst-x64")]
+		[TestCase ("maccatalyst-arm64")]
+		public void BuildMyCatalystApp (string runtimeIdentifier)
+		{
+			var platform = ApplePlatform.MacCatalyst;
+			var project_path = GetProjectPath ("MyCatalystApp");
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Clean (project_path);
+			var properties = new Dictionary<string, string> (verbosity);
+			properties ["RuntimeIdentifier"] = runtimeIdentifier;
+			var result = DotNet.AssertBuild (project_path, properties);
+			AssertThatLinkerExecuted (result);
+			var appPath = Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", "net6.0-maccatalyst", runtimeIdentifier, "MyCatalystApp.app");
+			AssertAppContents (platform, appPath);
+			var infoPlistPath = Path.Combine (appPath, "Contents", "Info.plist");
+			var infoPlist = PDictionary.FromFile (infoPlistPath);
+			Assert.AreEqual ("com.xamarin.mycatalystapp", infoPlist.GetString ("CFBundleIdentifier").Value, "CFBundleIdentifier");
+			Assert.AreEqual ("MyCatalystApp", infoPlist.GetString ("CFBundleDisplayName").Value, "CFBundleDisplayName");
+			Assert.AreEqual ("3.14", infoPlist.GetString ("CFBundleVersion").Value, "CFBundleVersion");
+			Assert.AreEqual ("3.14", infoPlist.GetString ("CFBundleShortVersionString").Value, "CFBundleShortVersionString");
+		}
+
 		[TestCase ("iOS")]
 		[TestCase ("tvOS")]
 		[TestCase ("watchOS")]
 		[TestCase ("macOS")]
+		[TestCase ("MacCatalyst")]
 		public void BuildMyClassLibrary (string platform)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
@@ -117,6 +141,7 @@ namespace Xamarin.Tests {
 		[TestCase ("tvOS")]
 		[TestCase ("watchOS")]
 		[TestCase ("macOS")]
+		[TestCase ("MacCatalyst")]
 		public void BuildEmbeddedResourcesTest (string platform)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
@@ -150,6 +175,7 @@ namespace Xamarin.Tests {
 		[TestCase ("tvOS")]
 		[TestCase ("watchOS")]
 		[TestCase ("macOS")]
+		[TestCase ("MacCatalyst")]
 		public void BuildFSharpLibraryTest (string platform)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
@@ -177,6 +203,7 @@ namespace Xamarin.Tests {
 		[TestCase ("tvOS")]
 		[TestCase ("watchOS")]
 		[TestCase ("macOS")]
+		[TestCase ("MacCatalyst")]
 		public void BuildBindingsTest (string platform)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
@@ -208,6 +235,7 @@ namespace Xamarin.Tests {
 		[TestCase ("tvOS")]
 		[TestCase ("watchOS")]
 		[TestCase ("macOS")]
+		[TestCase ("MacCatalyst")]
 		public void BuildBindingsTest2 (string platform)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
@@ -238,6 +266,7 @@ namespace Xamarin.Tests {
 		[TestCase ("tvOS", "monotouch")]
 		[TestCase ("watchOS", "monotouch")]
 		[TestCase ("macOS", "xammac")]
+		[TestCase ("MacCatalyst", "monotouch")]
 		public void BuildBundledResources (string platform, string prefix)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
@@ -271,6 +300,7 @@ namespace Xamarin.Tests {
 		[TestCase ("tvOS")]
 		// [TestCase ("watchOS")] // No watchOS Touch.Client project for .NET yet
 		// [TestCase ("macOS")] // No macOS Touch.Client project for .NET yet
+		[TestCase ("MacCatalyst")]
 		public void BuildInterdependentBindingProjects (string platform)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
@@ -376,12 +406,32 @@ namespace Xamarin.Tests {
 				info_plist_path = Path.Combine (app_directory, "Info.plist");
 				break;
 			case ApplePlatform.MacOSX:
+			case ApplePlatform.MacCatalyst:
 				info_plist_path = Path.Combine (app_directory, "Contents", "Info.plist");
 				break;
 			default:
 				throw new NotImplementedException ($"Unknown platform: {platform}");
 			}
 			Assert.That (info_plist_path, Does.Exist, "Info.plist");
+
+			var assets_path = string.Empty;
+			switch (platform) {
+			case ApplePlatform.iOS:
+				break; // sample project doesn't have assets
+			case ApplePlatform.TVOS:
+				assets_path = Path.Combine (app_directory, "Assets.car");
+				break;
+			case ApplePlatform.WatchOS:
+				break; // sample project doesn't have assets
+			case ApplePlatform.MacOSX:
+			case ApplePlatform.MacCatalyst:
+				assets_path = Path.Combine (app_directory, "Contents", "Resources", "Assets.car");
+				break;
+			default:
+				throw new NotImplementedException ($"Unknown platform: {platform}");
+			}
+			if (!string.IsNullOrEmpty (assets_path))
+				Assert.That (assets_path, Does.Exist, "Assets.car");
 		}
 
 		IEnumerable<string> FilterToAssembly (IEnumerable<string> lines, string assemblyName)

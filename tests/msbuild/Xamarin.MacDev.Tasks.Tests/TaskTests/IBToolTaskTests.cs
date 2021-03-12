@@ -21,7 +21,7 @@ namespace Xamarin.iOS.Tasks
 		{
 			var interfaceDefinitions = new List<ITaskItem> ();
 			var sdk = Sdks.GetSdk (framework);
-			var version = IPhoneSdkVersion.GetDefault (sdk, false);
+			var version = AppleSdkVersion.GetDefault (sdk, false);
 			var root = sdk.GetSdkPath (version, false);
 			var usr = Path.Combine (sdk.DeveloperRoot, "usr");
 			var bin = Path.Combine (usr, "bin");

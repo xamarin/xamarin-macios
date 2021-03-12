@@ -839,6 +839,51 @@
         </value>
     </data>
 
+    <data name="E0177" xml:space="preserve">
+        <value>Can't get an ISshCommands instance. Please check that a valid connection to the Mac is established.</value>
+    </data>
+    
+    <data name="E0178" xml:space="preserve">
+        <value>An error occurred while trying to copy Archive '{0}' to '{1}'. Details: {2}</value>
+    </data>
+
+    <data name="E0179" xml:space="preserve">
+        <value>There is no available connection to the Mac. Task '{0}' will not be executed</value>
+    </data>
+
+    <data name="E0180" xml:space="preserve">
+        <value>Could not deserialize DataSet {0}</value>
+    </data>
+
+    <data name="E0181" xml:space="preserve">
+        <value>The file {0} does not have ImageAsset as build action.</value>
+    </data>
+
+    <data name="E0182" xml:space="preserve">
+        <value>Could not resolve UTI for {0} in catalog {1}</value>
+    </data>
+
+    <data name="E0183" xml:space="preserve">
+        <value>An error occurred while trying to verify the compatibility between Xcode and Xamarin.iOS</value>
+    </data>
+
+    <data name="E0184" xml:space="preserve">
+        <value>The project was built with a version of Xcode ({0}) that is not compatible which may result in unexpected warnings or errors. Please install Xcode '{1}' or visit the documentation to learn more.</value>
+    </data>
+
+    <data name="E0185" xml:space="preserve">
+        <value>An error occurred while trying to verify the compatibility between Xcode and Xamarin.iOS. Details: {0}
+        </value>
+    </data>
+
+    <data name="E0186" xml:space="preserve">
+        <value>The provided Archive Path is not from a valid archive file (.xcarchive). Archive Path: '{0}'</value>
+    </data>
+    
+    <data name="E0187" xml:space="preserve">
+        <value>Could not map the macOS version {0} to a corresponding iOS version</value>
+    </data>
+
     <data name="E7001" xml:space="preserve">
         <value>Could not resolve host IPs for WiFi debugger settings.
         </value>

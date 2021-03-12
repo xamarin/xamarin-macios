@@ -18,14 +18,6 @@ using UIKit;
 
 namespace UIKit {
 
-	// NSInteger -> UIGuidedAccessRestrictions.h
-	[Native]
-	[iOS (7,0)]
-	public enum UIGuidedAccessRestrictionState : long {
-		Allow,
-		Deny
-	}
-
 	public static partial class UIGuidedAccessRestriction {
 #if !COREBUILD
 		[iOS (7,0)]
@@ -44,7 +36,7 @@ namespace UIKit {
 #if IOS
 		[iOS (12,2)]
 		[DllImport (Constants.UIKitLibrary)]
-		static extern void UIGuidedAccessConfigureAccessibilityFeatures (/* UIGuidedAccessAccessibilityFeature */ nuint features, bool enabled, IntPtr completion);
+		static extern void UIGuidedAccessConfigureAccessibilityFeatures (/* UIGuidedAccessAccessibilityFeature */ nuint features, [MarshalAs (UnmanagedType.I1)] bool enabled, IntPtr completion);
 
 		[iOS (12,2)]
 		public delegate void UIGuidedAccessConfigureAccessibilityFeaturesCompletionHandler (bool success, NSError error);

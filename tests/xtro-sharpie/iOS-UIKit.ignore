@@ -4,9 +4,6 @@
 !missing-selector! UIToolbar::setTintColor: not bound
 !missing-selector! UIToolbar::tintColor not bound
 
-## macro is used in UIBarCommon.h: #define UIToolbarPosition UIBarPosition
-!unknown-native-enum! UIToolbarPosition bound
-
 ### ARM ABI issue wrt variadic arguments
 !missing-selector! UIAlertView::initWithTitle:message:delegate:cancelButtonTitle:otherButtonTitles: not bound
 
@@ -67,10 +64,6 @@
 ## Not really useful to have them exposed
 !missing-pinvoke! UIFontWeightForImageSymbolWeight is not bound
 !missing-pinvoke! UIImageSymbolWeightForFontWeight is not bound
-
-## It got renamed from UITextWritingDirection to NSWritingDirection but it is a breaking change
-## Fixed in XAMCORE_4_0
-!unknown-native-enum! UITextWritingDirection bound
 
 ## Introduced and deprecated in Xcode 11 and likely it will be removed in a future beta
 !missing-enum! UIDirectionalRectEdge not bound

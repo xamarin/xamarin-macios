@@ -34,15 +34,19 @@ namespace Xharness {
 
 		public async Task<string> LocateAppBundle (XmlDocument projectFile, string projectFilePath, TestTarget target, string buildConfiguration)
 		{
-			var platform = target.IsSimulator () ? "iPhoneSimulator" : "iPhone";
+			string platform = string.Empty;
+			if (target != TestTarget.None)
+				platform = target.IsSimulator () ? "iPhoneSimulator" : "iPhone";
 
 			if (projectFile.IsDotNetProject ()) {
 				var properties = new Dictionary<string, string> {
 					{ "Configuration", buildConfiguration },
-					{ "Platform", platform },
 				};
 
-				return await GetPropertyByMSBuildEvaluationAsync (projectFile, projectFilePath, "OutputPath", "_GenerateAppBundleName;_GenerateAppExBundleName", properties);
+				if (!string.IsNullOrEmpty (platform))
+					properties ["Platform"] = platform;
+
+				return await GetPropertyByMSBuildEvaluationAsync (projectFile, projectFilePath, "OutputPath", "_GenerateBundleName", properties);
 			} else {
 				return projectFile.GetOutputPath (platform, buildConfiguration).Replace ('\\', Path.DirectorySeparatorChar);
 			}
@@ -100,9 +104,9 @@ namespace Xharness {
 					proc.StartInfo.Arguments = StringUtils.FormatArguments (args);
 					proc.StartInfo.WorkingDirectory = dir;
 
-					var rv = await processManager.RunAsync (proc, getLog() ?? new ConsoleLog(), environmentVariables: env, timeout: TimeSpan.FromSeconds (15));
+					var rv = await processManager.RunAsync (proc, getLog() ?? new ConsoleLog(), environmentVariables: env, timeout: TimeSpan.FromSeconds (120));
 					if (!rv.Succeeded)
-						throw new Exception ($"Unable to evaluate the property {evaluateProperty}.");
+						throw new Exception ($"Unable to evaluate the property {evaluateProperty}, build failed with exit code {rv.ExitCode}. Timed out: {rv.TimedOut}");
 					
 					return File.ReadAllText (output).Trim ();
 				}
@@ -134,7 +138,7 @@ namespace Xharness {
 			if (!File.Exists (global_json))
 				throw new Exception ($"Could not find any global.json file in {directory} or above");
 
-			// Parse the global.json we found, and figure out if it tells us to use .NET 3.1.100 or not.
+			// Parse the global.json we found, and figure out if it tells us to use .NET 3.1.100 / 5.X.XXX or not.
 			var contents = File.ReadAllBytes (global_json);
 
 			using var reader = JsonReaderWriterFactory.CreateJsonReader (contents, new XmlDictionaryReaderQuotas ());
@@ -146,6 +150,7 @@ namespace Xharness {
 
 			switch (version [0]) {
 			case '3':
+			case '5':
 				executable = dotnetPath;
 				break;
 			default:

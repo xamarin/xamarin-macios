@@ -683,7 +683,7 @@ namespace AudioToolbox {
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static OSStatus AudioFileReadBytes (AudioFileID inAudioFile, bool useCache, long startingByte, ref int numBytes, IntPtr outBuffer);
+		extern static OSStatus AudioFileReadBytes (AudioFileID inAudioFile, [MarshalAs (UnmanagedType.I1)] bool useCache, long startingByte, ref int numBytes, IntPtr outBuffer);
 
 		public int Read (long startingByte, byte [] buffer, int offset, int count, bool useCache)
 		{
@@ -716,7 +716,7 @@ namespace AudioToolbox {
 		}
 		
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static OSStatus AudioFileWriteBytes (AudioFileID audioFile, bool useCache, long startingByte, ref int numBytes, IntPtr buffer);
+		extern static OSStatus AudioFileWriteBytes (AudioFileID audioFile, [MarshalAs (UnmanagedType.I1)] bool useCache, long startingByte, ref int numBytes, IntPtr buffer);
 
 		public int Write (long startingByte, byte [] buffer, int offset, int count, bool useCache)
 		{
@@ -759,7 +759,7 @@ namespace AudioToolbox {
 		
 		[DllImport (Constants.AudioToolboxLibrary)]
 		unsafe extern static OSStatus AudioFileReadPacketData (
-			AudioFileID audioFile, bool useCache, ref int numBytes, 
+			AudioFileID audioFile, [MarshalAs (UnmanagedType.I1)] bool useCache, ref int numBytes, 
 			AudioStreamPacketDescription [] packetDescriptions, long inStartingPacket, ref int numPackets, IntPtr outBuffer);
 
 		public AudioStreamPacketDescription [] ReadPacketData (long inStartingPacket, int nPackets, byte [] buffer)
@@ -937,7 +937,7 @@ namespace AudioToolbox {
 
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static AudioFileError AudioFileWritePackets (
-			AudioFileID audioFile, bool useCache, int inNumBytes, AudioStreamPacketDescription [] inPacketDescriptions,
+			AudioFileID audioFile, [MarshalAs (UnmanagedType.I1)] bool useCache, int inNumBytes, AudioStreamPacketDescription [] inPacketDescriptions,
                         long inStartingPacket, ref int numPackets, IntPtr buffer);
 
 		public int WritePackets (bool useCache, long startingPacket, int numPackets, IntPtr buffer, int byteCount)

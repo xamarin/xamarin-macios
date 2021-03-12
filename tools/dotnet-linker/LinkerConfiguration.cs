@@ -29,6 +29,7 @@ namespace Xamarin.Linker {
 		public ApplePlatform Platform { get; private set; }
 		public string PlatformAssembly { get; private set; }
 		public Version SdkVersion { get; private set; }
+		public string SdkRootDirectory { get; private set; }
 		public int Verbosity => Driver.Verbosity;
 
 		static ConditionalWeakTable<LinkContext, LinkerConfiguration> configurations = new ConditionalWeakTable<LinkContext, LinkerConfiguration> ();
@@ -169,6 +170,9 @@ namespace Xamarin.Linker {
 					case "macOS":
 						Platform = ApplePlatform.MacOSX;
 						break;
+					case "MacCatalyst":
+						Platform = ApplePlatform.MacCatalyst;
+						break;
 					default:
 						throw new InvalidOperationException ($"Unknown platform: {value} for the entry {line} in {linker_file}");
 					}
@@ -178,6 +182,13 @@ namespace Xamarin.Linker {
 					break;
 				case "Registrar":
 					Application.ParseRegistrar (value);
+					break;
+				case "SdkDevPath":
+					Driver.SdkRoot = value;
+					break;
+				case "SdkRootDirectory":
+					SdkRootDirectory = value;
+					Driver.SetFrameworkCurrentDirectory (value);
 					break;
 				case "SdkVersion":
 					if (!Version.TryParse (value, out var sdk_version))
@@ -223,6 +234,7 @@ namespace Xamarin.Linker {
 			Application.Cache.Location = CacheDirectory;
 			Application.DeploymentTarget = DeploymentTarget;
 			Application.SdkVersion = SdkVersion;
+			Application.NativeSdkVersion = SdkVersion;
 
 			DerivedLinkContext.Target = Target;
 			Target.Abis = Abis;
@@ -242,6 +254,8 @@ namespace Xamarin.Linker {
 
 			if (Driver.TargetFramework.Platform != Platform)
 				throw ErrorHelper.CreateError (99, "Inconsistent platforms. TargetFramework={0}, Platform={1}", Driver.TargetFramework.Platform, Platform);
+
+			Driver.ValidateXcode (Application, false, false);
 
 			Application.InitializeCommon ();
 			Application.Initialize ();
@@ -272,6 +286,8 @@ namespace Xamarin.Linker {
 				Console.WriteLine ($"    Platform: {Platform}");
 				Console.WriteLine ($"    PlatformAssembly: {PlatformAssembly}.dll");
 				Console.WriteLine ($"    Registrar: {Application.Registrar} (Options: {Application.RegistrarOptions})");
+				Console.WriteLine ($"    SdkDevPath: {Driver.SdkRoot}");
+				Console.WriteLine ($"    SdkRootDirectory: {SdkRootDirectory}");
 				Console.WriteLine ($"    SdkVersion: {SdkVersion}");
 				Console.WriteLine ($"    UseInterpreter: {Application.UseInterpreter}");
 				Console.WriteLine ($"    Verbosity: {Verbosity}");

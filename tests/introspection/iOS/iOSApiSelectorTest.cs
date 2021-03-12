@@ -386,6 +386,15 @@ namespace Introspection {
 					break;
 				}
 				break;
+			// ARImageAnchor was added in iOS 11.3 but the conformance to ARTrackable, where `isTracked` comes from, started with iOS 12.0
+			case "ARImageAnchor":
+				switch (name) {
+				case "isTracked":
+					if (!TestRuntime.CheckXcodeVersion (10,0))
+						return true;
+					break;
+				}
+				break;
 #endif
 			break;
 		}
@@ -789,6 +798,10 @@ namespace Introspection {
 				case "SKAttributeValue":
 					return !TestRuntime.CheckXcodeVersion (7, 2);
 #endif
+				case "MLDictionaryFeatureProvider":
+				case "MLMultiArray":
+				case "MLFeatureValue":
+					return !TestRuntime.CheckXcodeVersion (10,0);
 				}
 				break;
 			case "mutableCopyWithZone:":
@@ -824,6 +837,16 @@ namespace Introspection {
 						return true;
 					// was a private framework (on iOS) before Xcode 9.0 (shortcut logic)
 					if (!TestRuntime.CheckXcodeVersion (9, 0))
+						return true;
+					break;
+				}
+				break;
+			case "objectWithItemProviderData:typeIdentifier:error:":
+			case "readableTypeIdentifiersForItemProvider":
+				switch (declaredType.Name) {
+				case "PHLivePhoto":
+					// not yet conforming to NSItemProviderReading
+					if (!TestRuntime.CheckXcodeVersion (10,0))
 						return true;
 					break;
 				}

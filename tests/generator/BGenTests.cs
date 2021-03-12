@@ -220,7 +220,7 @@ namespace GeneratorTests
 				.Union (allTypes.SelectMany ((type) => type.Properties));
 
 			var preserves = allMembers.Sum ((v) => v.CustomAttributes.Count ((ca) => ca.AttributeType.Name == "IntroducedAttribute"));
-			Assert.AreEqual (8, preserves, "Introduced attribute count"); // If you modified code that generates IntroducedAttributes please update the attribute count
+			Assert.AreEqual (10, preserves, "Introduced attribute count"); // If you modified code that generates IntroducedAttributes please update the attribute count
 		}
 
 		[Test]

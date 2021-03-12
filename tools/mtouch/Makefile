@@ -228,14 +228,14 @@ define RunRegistrar
 	$$(Q) touch $$(basename $$@).m $$(basename $$@).h
 
 .libs/Microsoft.$(9).registrar.$(10)%m .libs/Microsoft.$(9).registrar.$(10)%h: $(TOP)/src/build/dotnet/$(1)/$(3)/Xamarin.$(5).dll $(LOCAL_MTOUCH) | .libs
-	$$(Q_GEN) $$(LOCAL_MTOUCH_COMMAND) --xamarin-framework-directory=$$(IOS_DESTDIR)/$$(MONOTOUCH_PREFIX) $$(MTOUCH_VERBOSITY) --runregistrar:$$(abspath $$(basename $$@).m) --sdkroot $$(XCODE_DEVELOPER_ROOT) --sdk $(4) $$< --registrar:static --target-framework .NETCoreApp,Version=6.0,Profile=$(1) --abi $(2) -r:$(DOTNET5_BCL_DIR)/System.Runtime.dll
+	$$(Q_GEN) $$(LOCAL_MTOUCH_COMMAND) --xamarin-framework-directory=$$(IOS_DESTDIR)/$$(MONOTOUCH_PREFIX) $$(MTOUCH_VERBOSITY) --runregistrar:$$(abspath $$(basename $$@).m) --sdkroot $$(XCODE_DEVELOPER_ROOT) --sdk $(4) $$< --registrar:static --target-framework .NETCoreApp,Version=6.0,Profile=$(1) --abi $(2) -r:$(DOTNET6_BCL_DIR)/System.Runtime.dll
 	$$(Q) touch $$(basename $$@).m $$(basename $$@).h
 
 %.registrar.$(1).$(2).a: %.registrar.$(1).$(2).m %.registrar.$(1).$(2).h
-	$$(Q_CC) $$(IOS_CC) -DDEBUG -g -gdwarf-2 $(6) -stdlib=libc++ -std=c++14 -x objective-c++ -o $$@ -c $$< -Wall -Wno-unguarded-availability-new -I$(7)
+	$$(Q_CC) $$(IOS_CC) -DDEBUG -g -gdwarf-2 $(6) -stdlib=libc++ -std=c++14 -x objective-c++ -o $$@ -c $$< -Wall -Wno-unguarded-availability-new -I$(7) -I$(TOP)/runtime
 
 .libs/Microsoft.$(9).registrar.$(10).a: .libs/Microsoft.$(9).registrar.$(10).m .libs/Microsoft.$(9).registrar.$(10).h | .libs
-	$$(Q_CC) $$(IOS_CC) -DDEBUG -g -gdwarf-2 $(6) -stdlib=libc++ -std=c++14 -x objective-c++ -o $$@ -c $$< -Wall -Wno-unguarded-availability-new -I$(7)
+	$$(Q_CC) $$(IOS_CC) -DDEBUG -g -gdwarf-2 $(6) -stdlib=libc++ -std=c++14 -x objective-c++ -o $$@ -c $$< -Wall -Wno-unguarded-availability-new -I$(7) -I$(TOP)/runtime
 
 # make will automatically consider files created in chained implicit rules as temporary files, and delete them afterwards
 # marking those files as .SECONDARY will prevent that deletion.
@@ -253,7 +253,8 @@ $(eval $(call RunRegistrar,watchos,x86_64,64,$(WATCH_SDK_VERSION),WatchOS,$(SIMU
 $(eval $(call RunRegistrar,watchos,i386,32,$(WATCH_SDK_VERSION),WatchOS,$(SIMULATORWATCH_CFLAGS),$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/include,$(MONOTOUCH_WATCH_MONO_PATH),watchOS,watchos-x86))
 $(eval $(call RunRegistrar,watchos,armv7k,32,$(WATCH_SDK_VERSION),WatchOS,$(DEVICEWATCH_CFLAGS),$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/include,$(MONOTOUCH_WATCH_MONO_PATH),watchOS,armv7k))
 $(eval $(call RunRegistrar,watchos,arm64_32,32,$(WATCH_SDK_VERSION),WatchOS,$(DEVICEWATCH64_32_CFLAGS),$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/include,$(MONOTOUCH_WATCH_MONO_PATH),watchOS,arm64_32))
-$(eval $(call RunRegistrar,maccatalyst,x86_64,64,$(MACCATALYST_SDK_VERSION),MacCatalyst,$(MACCATALYST_CFLAGS),$(IOS_DESTDIR)$(XAMARIN_MACCATALYST_SDK)/include,$(MONOTOUCH_MACCATALYST_MONO_PATH),MacCatalyst,maccatalyst-x64))
+$(eval $(call RunRegistrar,maccatalyst,x86_64,64,$(MACCATALYST_SDK_VERSION),MacCatalyst,$(MACCATALYST_X86_64_CFLAGS),$(IOS_DESTDIR)$(XAMARIN_MACCATALYST_SDK)/include,$(MONOTOUCH_MACCATALYST_MONO_PATH),MacCatalyst,maccatalyst-x64))
+$(eval $(call RunRegistrar,maccatalyst,arm64,64,$(MACCATALYST_SDK_VERSION),MacCatalyst,$(MACCATALYST_ARM64_CFLAGS),$(IOS_DESTDIR)$(XAMARIN_MACCATALYST_SDK)/include,$(MONOTOUCH_MACCATALYST_MONO_PATH),MacCatalyst,maccatalyst-arm64))
 
 %.registrar.ios.simulator.a:     %.registrar.ios.i386.a %.registrar.ios.x86_64.a
 	$(Q_LIPO) $(DEVICE_BIN_PATH)/lipo -create -output $@ $^
@@ -376,12 +377,15 @@ $(foreach platform,$(DOTNET_PLATFORMS_MTOUCH),$(foreach rid,$(DOTNET_$(platform)
 
 dotnet: $(TARGETS_DOTNET)
 ifdef ENABLE_DOTNET
-TARGETS += $(TARGETS_DOTNET)
+install-local:: $(TARGETS_DOTNET)
+all-local:: $(TARGETS_DOTNET)
 endif
 
+ifdef INCLUDE_XAMARIN_LEGACY
 ifdef INCLUDE_IOS
 install-local:: $(TARGETS)
 all-local:: $(TARGETS)
+endif
 endif
 
 install-mtouch: \

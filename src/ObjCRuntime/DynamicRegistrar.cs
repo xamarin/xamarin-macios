@@ -1006,6 +1006,12 @@ namespace Registrar {
 			case Trampoline.SetGCHandle:
 				tramp = Method.SetGCHandleTrampoline;
 				break;
+			case Trampoline.GetFlags:
+				tramp = Method.GetFlagsTrampoline;
+				break;
+			case Trampoline.SetFlags:
+				tramp = Method.SetFlagsTrampoline;
+				break;
 			default:
 				throw ErrorHelper.CreateError (4144, "Cannot register the method '{0}.{1}' since it does not have an associated trampoline. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", method.DeclaringType.Type.FullName, method.Name);
 			}

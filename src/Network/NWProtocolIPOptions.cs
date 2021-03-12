@@ -21,20 +21,6 @@ using IntPtr=System.IntPtr;
 
 namespace Network {
 
-	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
-	public enum NWIPLocalAddressPreference {
-		Default = 0,
-		Temporary = 1,
-		Stable = 2,
-	}
-
-	[Watch (6,0), TV (12,0), Mac (10,14), iOS (12,0)]
-	public enum NWIPVersion {
-		Any = 0,
-		Version4 = 1,
-		Version6 = 2,
-	}
-
 	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
 	public class NWProtocolIPOptions : NWProtocolOptions {
 		internal NWProtocolIPOptions (IntPtr handle, bool owns) : base (handle, owns) {}

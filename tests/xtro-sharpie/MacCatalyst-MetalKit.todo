@@ -1,3 +1,2 @@
-!missing-null-allowed! 'ModelIO.IMDLMeshBufferZone MetalKit.MTKMeshBuffer::get_Zone()' is missing an [NullAllowed] on return type
 !missing-selector! MTKView::colorspace not bound
 !missing-selector! MTKView::setColorspace: not bound

@@ -9,6 +9,7 @@ ios-*.md
 tvos-*.md
 watchos-*.md
 macos-*.md
+maccat-*.md
 xamarin-*.md
 *.stamp
 bundle-*.zip

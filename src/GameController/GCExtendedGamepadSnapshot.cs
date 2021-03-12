@@ -115,9 +115,6 @@ namespace GameController {
 		[TV (12, 2), Mac (10, 14, 4), iOS (12, 2)]
 		bool RightThumbstickButton;
 
-		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'GCController.GetExtendedGamepadController()' instead.")]
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GCController.GetExtendedGamepadController()' instead.")]
-		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'GCController.GetExtendedGamepadController()' instead.")]
 		[DllImport (Constants.GameControllerLibrary)]
 		[TV (12, 2), Mac (10, 14, 4), iOS (12, 2)]
 		static extern /* NSData * __nullable */ IntPtr NSDataFromGCExtendedGamepadSnapshotData (
@@ -134,28 +131,19 @@ namespace GameController {
 	public partial class GCExtendedGamepadSnapshot {
 		
 		// GCExtendedGamepadSnapshot.h
-		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'GCController.GetExtendedGamepadController()' instead.")]
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GCController.GetExtendedGamepadController()' instead.")]
-		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'GCController.GetExtendedGamepadController()' instead.")]
 		[DllImport (Constants.GameControllerLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool GCExtendedGamepadSnapShotDataV100FromNSData (
 			/* GCExtendedGamepadSnapShotDataV100 * __nullable */ out GCExtendedGamepadSnapShotDataV100 snapshotData, 
 			/* NSData * __nullable */ IntPtr data);
 		
-
-		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'GCController.GetExtendedGamepadController()' instead.")]
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GCController.GetExtendedGamepadController()' instead.")]
-		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'GCController.GetExtendedGamepadController()' instead.")]
 		[DllImport (Constants.GameControllerLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		[TV (12, 2), Mac (10, 14, 4), iOS (12, 2)]
 		static extern bool GCExtendedGamepadSnapshotDataFromNSData (
 			/* GCExtendedGamepadSnapshotData * __nullable */ out GCExtendedGamepadSnapshotData snapshotData, 
 			/* NSData * __nullable */ IntPtr data);
 
-
-		[Deprecated (PlatformName.iOS, 12, 2, message: "Use 'TryGetExtendedSnapShotData' instead.")]
-		[Deprecated (PlatformName.MacOSX, 10, 14, 4, message: "Use 'TryGetExtendedSnapShotData' instead.")]
-		[Deprecated (PlatformName.TvOS, 12, 2, message: "Use 'TryGetExtendedSnapShotData' instead.")]
 		public static bool TryGetSnapShotData (NSData data, out GCExtendedGamepadSnapShotDataV100 snapshotData)
 		{
 			return GCExtendedGamepadSnapShotDataV100FromNSData (out snapshotData, data == null ? IntPtr.Zero : data.Handle);

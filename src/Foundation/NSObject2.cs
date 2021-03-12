@@ -154,10 +154,10 @@ namespace Foundation {
 		extern static void RegisterToggleRef (NSObject obj, IntPtr handle, bool isCustomType);
 
 		[MethodImplAttribute (MethodImplOptions.InternalCall)]
-		static extern void xamarin_release_managed_ref (IntPtr handle, NSObject managed_obj);
+		static extern void xamarin_release_managed_ref (IntPtr handle, NSObject managed_obj, bool user_type);
 
 		[MethodImplAttribute (MethodImplOptions.InternalCall)]
-		static extern void xamarin_create_managed_ref (IntPtr handle, NSObject obj, bool retain);
+		static extern void xamarin_create_managed_ref (IntPtr handle, NSObject obj, bool retain, bool user_type);
 
 #if !XAMCORE_3_0
 		public static bool IsNewRefcountEnabled ()
@@ -214,22 +214,19 @@ namespace Foundation {
 			IsDirectBinding = (this.GetType ().Assembly == PlatformAssembly);
 			Runtime.RegisterNSObject (this, handle);
 
-			// If the NativeRef bit is set, it means that this call was surfaced by
-			// monotouch_ctor_trampoline, which means we do not want to invoke Retain directly,
-			// it will be done by monotouch_ctor_trampoline on return.
 			bool native_ref = (flags & Flags.NativeRef) == Flags.NativeRef;
-			if (!native_ref)
-				CreateManagedRef (!alloced);
+			CreateManagedRef (!alloced || native_ref);
 		}
 
 		void CreateManagedRef (bool retain)
 		{
-			xamarin_create_managed_ref (handle, this, retain);
+			xamarin_create_managed_ref (handle, this, retain, Runtime.IsUserType (handle));
 		}
 
 		void ReleaseManagedRef ()
 		{
-			xamarin_release_managed_ref (handle, this);
+			flags &= ~Flags.HasManagedRef;
+			xamarin_release_managed_ref (handle, this, Runtime.IsUserType (handle));
 		}
 
 		static bool IsProtocol (Type type, IntPtr protocol)

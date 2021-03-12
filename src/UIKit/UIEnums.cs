@@ -2468,9 +2468,11 @@ namespace UIKit {
 		[Field ("UIWindowSceneSessionRoleExternalDisplay")]
 		ExternalDisplay,
 
+#if HAS_CARPLAY
 		[NoTV][NoWatch]
 		[Field ("CPTemplateApplicationSceneSessionRoleApplication", "CarPlay")]
 		CarTemplateApplication,
+#endif
 	}
 
 	[iOS (13,0), TV (13,0), NoWatch]
@@ -3164,4 +3166,12 @@ namespace UIKit {
 		Standard = 0xffff,
 	}
 
+	// NSInteger -> UIGuidedAccessRestrictions.h
+	[Native]
+	[NoWatch]
+	[iOS (7,0)]
+	public enum UIGuidedAccessRestrictionState : long {
+		Allow,
+		Deny,
+	}
 }

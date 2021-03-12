@@ -14,6 +14,8 @@ using Foundation;
 using ModelIO;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace Metal {
 
 	[Native]
@@ -1333,4 +1335,13 @@ namespace Metal {
 		Dynamic = 1,
 	}
 
+	[Mac (10,15), iOS (13,0), TV (13,0)]
+	public enum MTLTextureSwizzle : byte {
+		Zero = 0,
+		One = 1,
+		Red = 2,
+		Green = 3,
+		Blue = 4,
+		Alpha = 5,
+	}
 }

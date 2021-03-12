@@ -22,22 +22,6 @@ using nw_service_class_t=System.IntPtr;
 
 namespace Network {
 
-	public enum NWServiceClass {
-		BestEffort = 0,
-		Background = 1,
-		InteractiveVideo = 2,
-		InteractiveVoice = 3,
-		ResponsiveData = 4,
-		Signaling = 5,
-	}
-
-	public enum NWIPEcnFlag {
-		NonEct = 0,
-		Ect = 2,
-		Ect1 = 1,
-		Ce = 3,
-	}
-
 	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Watch (6,0)]
 	public class NWProtocolMetadata : NativeObject {
@@ -214,6 +198,7 @@ namespace Network {
 
 		[TV (13,0), Mac (10,15), iOS (13,0)]
 		[DllImport (Constants.NetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		internal static extern bool nw_protocol_metadata_is_framer_message (OS_nw_protocol_metadata metadata);
 
 		[TV (13,0), Mac (10,15), iOS (13,0)]
@@ -221,6 +206,7 @@ namespace Network {
 
 		[TV (13,0), Mac (10,15), iOS (13,0)]
 		[DllImport (Constants.NetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		internal static extern bool nw_protocol_metadata_is_ws (OS_nw_protocol_metadata metadata);
 
 		[TV (13,0), Mac (10,15), iOS (13,0)]

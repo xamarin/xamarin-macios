@@ -4,13 +4,15 @@ using System;
 using System.Runtime.InteropServices;
 using Foundation;
 using ObjCRuntime;
-#if IOS
+#if HAS_IAD
 using iAd;
 #endif
 
+#nullable enable
+
 namespace MediaPlayer {
 
-#if IOS
+#if HAS_IAD
 	public partial class MPMoviePlayerController {
 		// This is a [Category] -> C# extension method (see adlib.cs) but it targets on static selector
 		// the resulting syntax does not look good in user code so we provide a better looking API
@@ -19,7 +21,7 @@ namespace MediaPlayer {
 		[iOS (7,0)]
 		static public void PrepareForPrerollAds ()
 		{
-			(null as MPMoviePlayerController).PreparePrerollAds ();
+			(null as MPMoviePlayerController)!.PreparePrerollAds ();
 		}
 	}
 #endif

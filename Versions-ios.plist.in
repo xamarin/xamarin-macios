@@ -44,6 +44,7 @@
 			<string>14.1</string>
 			<string>14.2</string>
 			<string>14.3</string>
+			<string>14.4</string>
 		</array>
 		<key>tvOS</key>
 		<array>
@@ -120,6 +121,8 @@
 		<key>14.2</key>
 		<string>11.0</string>
 		<key>14.3</key>
+		<string>11.1</string>
+		<key>14.4</key>
 		<string>11.1</string>
 	</dict>
 	<key>RecommendedXcodeVersion</key>

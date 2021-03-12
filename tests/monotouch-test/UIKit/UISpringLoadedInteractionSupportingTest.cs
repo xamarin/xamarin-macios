@@ -15,7 +15,9 @@ using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
 using UIKit;
+#if HAS_INTENTUI
 using IntentsUI;
+#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.UIKit {
@@ -93,6 +95,7 @@ namespace MonoTouchFixtures.UIKit {
 			Assert.IsTrue (tableView.SpringLoaded);
 		}
 
+#if HAS_INTENTUI
 		[Test]
 		public void INUIAddVoiceShortcutButtonTest ()
 		{
@@ -102,6 +105,7 @@ namespace MonoTouchFixtures.UIKit {
 			shortcutButton.SpringLoaded = true;
 			Assert.IsTrue (shortcutButton.SpringLoaded);
 		}
+#endif
 	}
 }
 

@@ -119,3 +119,16 @@ bool
 #else
 int xamarin_fix_ranlib_warning_about_no_symbols;
 #endif /* DYNAMIC_MONO_RUNTIME */
+
+#if defined (CORECLR_RUNTIME)
+#include "xamarin/runtime.h"
+
+<# foreach (var export in exports) { #>
+MONO_API <#= export.ReturnType #>
+<#= export.EntryPoint #> (<#= export.ArgumentSignature #>)
+{
+	xamarin_assertion_message ("The method %s has not been implemented for CoreCLR.\n", __func__);
+}
+
+<# } #>
+#endif // CORECLR_RUNTIME

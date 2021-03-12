@@ -10,6 +10,8 @@ using Foundation;
 using ObjCRuntime;
 using MapKit;
 
+#nullable enable
+
 namespace MapKit {
 	public partial class MKOverlayView {
 

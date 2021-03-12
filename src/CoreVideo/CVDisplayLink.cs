@@ -162,6 +162,7 @@ namespace CoreVideo {
 		}
 			
 		[DllImport (Constants.CoreVideoLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CVDisplayLinkIsRunning (IntPtr displayLink);
 		public bool IsRunning {
 			get {

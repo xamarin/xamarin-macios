@@ -25,23 +25,18 @@ using nw_protocol_definition_t=System.IntPtr;
 namespace Network {
 
 	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
-	public enum NWReportResolutionSource {
-		Query = 1,
-		Cache = 2,
-		ExpiredCache = 3,
-	}
-
-	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
 	public class NWEstablishmentReport : NativeObject {
 
 		internal NWEstablishmentReport (IntPtr handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool nw_establishment_report_get_used_proxy (OS_nw_establishment_report report);
 
 		public bool UsedProxy => nw_establishment_report_get_used_proxy (GetCheckedHandle ());
 
 		[DllImport (Constants.NetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool nw_establishment_report_get_proxy_configured (OS_nw_establishment_report report);
 
 		public bool ProxyConfigured => nw_establishment_report_get_proxy_configured (GetCheckedHandle ());

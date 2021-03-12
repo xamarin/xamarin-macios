@@ -936,7 +936,6 @@ namespace UIKit {
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Please use 'UsesDefaultHyphenation' or 'NSParagraphStyle.HyphenationFactor' instead.")]
 		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Please use 'UsesDefaultHyphenation' or 'NSParagraphStyle.HyphenationFactor' instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Please use 'UsesDefaultHyphenation' or 'NSParagraphStyle.HyphenationFactor' instead.")]
-		[Unavailable (PlatformName.MacCatalyst)]
 		[Advice ("This API is not available when using UIKit on macOS.")]
 		[NoMacCatalyst]
 		[Export ("hyphenationFactor")]

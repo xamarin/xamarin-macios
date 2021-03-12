@@ -67,9 +67,6 @@ namespace GameController {
 		public float /* float_t = float */ ButtonA;
 		public float /* float_t = float */ ButtonX;
 
-		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'GCController.GetMicroGamepadController()' instead.")]
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GCController.GetMicroGamepadController()' instead.")]
-		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'GCController.GetMicroGamepadController()' instead.")]
 		[DllImport (Constants.GameControllerLibrary)]
 		[TV (12, 2), Mac (10, 14, 4), iOS (12, 2)]
 		static extern /* NSData * __nullable */ IntPtr NSDataFromGCMicroGamepadSnapshotData (
@@ -91,6 +88,7 @@ namespace GameController {
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GCController.GetMicroGamepadController()' instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'GCController.GetMicroGamepadController()' instead.")]
 		[DllImport (Constants.GameControllerLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool GCMicroGamepadSnapShotDataV100FromNSData (out GCMicroGamepadSnapShotDataV100 snapshotData, /* NSData */ IntPtr data);
 
 		[Deprecated (PlatformName.iOS, 12, 2, message: "Use 'TryGetSnapshotData (NSData, out GCMicroGamepadSnapshotData)' instead.")]
@@ -105,6 +103,7 @@ namespace GameController {
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GCController.GetMicroGamepadController()' instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'GCController.GetMicroGamepadController()' instead.")]
 		[DllImport (Constants.GameControllerLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		[TV (12, 2), Mac (10, 14, 4), iOS (12, 2)]
 		static extern bool GCMicroGamepadSnapshotDataFromNSData (out GCMicroGamepadSnapshotData snapshotData, /* NSData */ IntPtr data);
 

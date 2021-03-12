@@ -9,7 +9,7 @@ namespace Xamarin.iOS.Tasks
 		public override void ConfigureTask ()
 		{
 			base.ConfigureTask ();
-			Task.DefaultSdkVersion = Sdks.TVOS.GetClosestInstalledSdk (IPhoneSdkVersion.V9_0, true).ToString ();
+			Task.DefaultSdkVersion = Sdks.TVOS.GetClosestInstalledSdk (AppleSdkVersion.V9_0, true).ToString ();
 			Task.TargetFrameworkMoniker = "Xamarin.TVOS,v1.0";
 		}
 	}

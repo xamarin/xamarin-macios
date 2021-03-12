@@ -23,15 +23,6 @@ using AudioToolbox;
 
 namespace CoreMedia {
 
-	// untyped enum (uses as OSStatus) -> CMFormatDescription.h
-	[Watch (6,0)]
-	public enum CMFormatDescriptionError : int {
-		None				= 0,
-		InvalidParameter	= -12710,
-		AllocationFailed	= -12711,
-		ValueNotAvailable   = -12718,
-	}
-
 	[Watch (6,0)]
 	public class CMFormatDescription : INativeObject, IDisposable {
 		internal IntPtr handle;
@@ -99,8 +90,6 @@ namespace CoreMedia {
 			}
 		}
 
-#endif
-		
 		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* FourCharCode */ uint CMFormatDescriptionGetMediaSubType (/* CMFormatDescriptionRef */ IntPtr desc);
 
@@ -172,8 +161,6 @@ namespace CoreMedia {
 		{
 			return CMFormatDescriptionGetTypeID ();
 		}
-
-#if !COREBUILD
 
 		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* OSStatus */ CMFormatDescriptionError CMFormatDescriptionCreate (/* CFAllocatorRef */ IntPtr allocator, CMMediaType mediaType, /* FourCharCode */ uint mediaSubtype, /* CFDictionaryRef */ IntPtr extensions, /* CMFormatDescriptionRef* */ out IntPtr descOut);
@@ -308,15 +295,16 @@ namespace CoreMedia {
 		internal extern static CMVideoDimensions CMVideoFormatDescriptionGetDimensions (/* CMVideoFormatDescriptionRef */ IntPtr videoDesc);
 
 		[DllImport (Constants.CoreMediaLibrary)]
-		internal extern static CGRect CMVideoFormatDescriptionGetCleanAperture (/* CMVideoFormatDescriptionRef */ IntPtr videoDesc, /* Boolean */ bool originIsAtTopLeft);
+		internal extern static CGRect CMVideoFormatDescriptionGetCleanAperture (/* CMVideoFormatDescriptionRef */ IntPtr videoDesc, /* Boolean */ [MarshalAs (UnmanagedType.I1)] bool originIsAtTopLeft);
 
 		[DllImport (Constants.CoreMediaLibrary)]
 		internal extern static /* CFArrayRef */ IntPtr CMVideoFormatDescriptionGetExtensionKeysCommonWithImageBuffers ();
 
 		[DllImport (Constants.CoreMediaLibrary)]
-		internal extern static CGSize CMVideoFormatDescriptionGetPresentationDimensions (/* CMVideoFormatDescriptionRef */ IntPtr videoDesc, /* Boolean */ bool usePixelAspectRatio, /* Boolean */ bool useCleanAperture);
+		internal extern static CGSize CMVideoFormatDescriptionGetPresentationDimensions (/* CMVideoFormatDescriptionRef */ IntPtr videoDesc, /* Boolean */ [MarshalAs (UnmanagedType.I1)] bool usePixelAspectRatio, /* Boolean */ [MarshalAs (UnmanagedType.I1)] bool useCleanAperture);
 
 		[DllImport (Constants.CoreMediaLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		internal extern static /* Boolean */ bool CMVideoFormatDescriptionMatchesImageBuffer (/* CMVideoFormatDescriptionRef */ IntPtr videoDesc, /* CVImageBufferRef */ IntPtr imageBuffer);
 
 #endif
@@ -351,6 +339,7 @@ namespace CoreMedia {
 		{
 		}
 
+#if !COREBUILD
 		[DllImport (Constants.CoreMediaLibrary)]
 		static extern /* OSStatus */ CMFormatDescriptionError CMVideoFormatDescriptionCreate (
 			/* CFAllocatorRef */ IntPtr allocator,
@@ -374,7 +363,6 @@ namespace CoreMedia {
 		{
 		}
 
-#if !COREBUILD
 		public CMVideoDimensions Dimensions {
 			get {
 				return CMVideoFormatDescriptionGetDimensions (handle);

@@ -23,14 +23,6 @@ using dispatch_queue_t =System.IntPtr;
 
 namespace Network {
 
-	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
-	public enum NWBrowserState {
-		Invalid = 0,
-		Ready = 1,
-		Failed = 2,
-		Cancelled = 3,
-	}
-
 	public delegate void NWBrowserChangesDelegate (NWBrowseResult? oldResult, NWBrowseResult? newResult, bool completed);
 
 	public delegate void NWBrowserCompleteChangesDelegate (List<(NWBrowseResult? result, NWBrowseResultChange change)>? changes);

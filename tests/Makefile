@@ -1,10 +1,14 @@
 TOP = ..
-SUBDIRS=test-libraries dotnet
+SUBDIRS=test-libraries
 
 # disabled for now: mac-test
 
 include $(TOP)/Make.config
 include $(TOP)/mk/rules.mk
+
+ifdef ENABLE_DOTNET
+SUBDIRS += dotnet
+endif
 
 MTOUCH=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/bin/mtouch
 UNIT_SERVER_DIR=$(TOUCH_UNIT_PATH)/Touch.Server
@@ -103,7 +107,7 @@ test.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk
 	@echo "TVOS_SDK_VERSION=$(TVOS_SDK_VERSION)" >> $@
 	@echo "WATCH_SDK_VERSION=$(WATCH_SDK_VERSION)" >> $@
 	@echo "OSX_SDK_VERSION=$(OSX_SDK_VERSION)" >> $@
-	@echo "DOTNET5_BCL_DIR=$(DOTNET5_BCL_DIR)" >> $@
+	@echo "DOTNET6_BCL_DIR=$(DOTNET6_BCL_DIR)" >> $@
 
 test-system.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk
 	@rm -f $@

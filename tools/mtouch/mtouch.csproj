@@ -396,6 +396,9 @@
     <Compile Include="..\..\external\Xamarin.MacDev\Xamarin.MacDev\PListObject.cs">
       <Link>external\Xamarin.MacDev\Xamarin.MacDev\PListObject.cs</Link>
     </Compile>
+    <Compile Include="..\..\external\Xamarin.MacDev\Xamarin.MacDev\MacCatalystSupport.cs">
+      <Link>external\Xamarin.MacDev\Xamarin.MacDev\MacCatalystSupport.cs</Link>
+    </Compile>
     <Compile Include="..\..\src\ObjCRuntime\Registrar.cs">
       <Link>src\ObjCRuntime\Registrar.cs</Link>
     </Compile>

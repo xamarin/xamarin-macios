@@ -736,6 +736,7 @@ namespace CoreText {
 #endregion
 		[Mac (10,9)]
 		[DllImport (Constants.CoreTextLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool CTFontDescriptorMatchFontDescriptorsWithProgressHandler (IntPtr descriptors, IntPtr mandatoryAttributes,
 			Func<CTFontDescriptorMatchingState, IntPtr, bool> progressHandler);
 

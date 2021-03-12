@@ -137,7 +137,7 @@ namespace Xamarin.Bundler
 			case ApplePlatform.WatchOS:
 				return Path.Combine (GetPlatformFrameworkDirectory (app), "..", "..", "32bits", app.PlatformName);
 			default:
-				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, "Xamarin.iOS");
+				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, app.ProductName);
 			}
 		}
 
@@ -150,7 +150,7 @@ namespace Xamarin.Bundler
 			case ApplePlatform.MacCatalyst:
 				return Path.Combine (GetPlatformFrameworkDirectory (app), "..", "..", "64bits", app.PlatformName);
 			default:
-				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, "Xamarin.iOS");
+				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, app.ProductName);
 			}
 		}
 
@@ -165,7 +165,7 @@ namespace Xamarin.Bundler
 			case ApplePlatform.TVOS:
 				return app.IsDeviceBuild ? "tvos" : "tvos-simulator";
 			default:
-				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, "Xamarin.iOS");
+				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, app.ProductName);
 			}
 		}
 
@@ -180,7 +180,7 @@ namespace Xamarin.Bundler
 			case ApplePlatform.WatchOS:
 				return true;
 			default:
-				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, "Xamarin.iOS");
+				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, app.ProductName);
 			}
 		}
 
@@ -208,7 +208,7 @@ namespace Xamarin.Bundler
 			case ApplePlatform.TVOS:
 				return Path.Combine (cross_prefix, "bin", "arm64-darwin-mono-sgen");
 			default:
-				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, "Xamarin.iOS");
+				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, app.ProductName);
 			}
 		}
 

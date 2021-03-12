@@ -35,19 +35,6 @@ using CoreFoundation;
 
 namespace CoreGraphics {
 
-	// untyped enum -> CGPDFObject.h
-	public enum CGPDFObjectType {
-		Null = 1,
-		Boolean,
-		Integer,
-		Real,
-		Name,
-		String,
-		Array,
-		Dictionary,
-		Stream
-	};
-
 	// CGPDFObject.h
 	public class CGPDFObject : INativeObject {
 
@@ -63,15 +50,19 @@ namespace CoreGraphics {
 		extern static CGPDFObjectType CGPDFObjectGetType (/* CGPDFObjectRef */ IntPtr pdfobj);
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGPDFObjectGetValue (/* CGPDFObjectRef */IntPtr pdfobj, CGPDFObjectType type, /* void* */ out byte value);
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGPDFObjectGetValue (/* CGPDFObjectRef */IntPtr pdfobj, CGPDFObjectType type, /* void* */ out nint value);
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGPDFObjectGetValue (/* CGPDFObjectRef */IntPtr pdfobj, CGPDFObjectType type, /* void* */ out nfloat value);
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGPDFObjectGetValue (/* CGPDFObjectRef */IntPtr pdfobj, CGPDFObjectType type, /* void* */ out IntPtr value);
 
 		public CGPDFObjectType Type {

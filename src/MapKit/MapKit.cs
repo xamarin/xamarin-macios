@@ -15,6 +15,8 @@ using CoreLocation;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace MapKit {
 
 #if !WATCH
@@ -106,7 +108,7 @@ namespace MapKit {
 			return a.X != b.X || a.Y != b.Y;
 		}
 
-		public override bool Equals (object other)
+		public override bool Equals (object? other)
 		{
 			if (other is MKMapPoint){
 				var omap = (MKMapPoint) other;
@@ -154,7 +156,7 @@ namespace MapKit {
 			return a.Width != b.Width || a.Height != b.Height;
 		}
 
-		public override bool Equals (object other)
+		public override bool Equals (object? other)
 		{
 			if (other is MKMapSize) {
 				var omap = (MKMapSize) other;
@@ -289,7 +291,7 @@ namespace MapKit {
 			return a.Origin != b.Origin || a.Size != b.Size;
 		}
 
-		public override bool Equals (object other)
+		public override bool Equals (object? other)
 		{
 			if (other is MKMapRect) {
 				var omap = (MKMapRect) other;
@@ -311,7 +313,8 @@ namespace MapKit {
 		}
 		
 		[DllImport (Constants.MapKitLibrary, EntryPoint="MKMapRectContainsPoint")]
-		static extern bool MKMapRectContainsPoint (MKMapRect rect, MKMapPoint point);
+		[return: MarshalAs (UnmanagedType.I1)]
+ 		static extern bool MKMapRectContainsPoint (MKMapRect rect, MKMapPoint point);
 		
 		public bool Contains (MKMapPoint point)
 		{
@@ -319,6 +322,7 @@ namespace MapKit {
 		}
 
 		[DllImport (Constants.MapKitLibrary, EntryPoint="MKMapRectContainsRect")]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool MKMapRectContainsRect (MKMapRect rect1, MKMapRect rect2);
 		
 		public bool Contains (MKMapRect rect)
@@ -333,6 +337,7 @@ namespace MapKit {
 		static public extern MKMapRect Intersection (MKMapRect rect1, MKMapRect rect2);
 		
 		[DllImport (Constants.MapKitLibrary, EntryPoint="MKMapRectIntersectsRect")]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static public extern bool Intersects (MKMapRect rect1, MKMapRect rect2);
 		
 		[DllImport (Constants.MapKitLibrary, EntryPoint="MKMapRectInset")]
@@ -362,6 +367,7 @@ namespace MapKit {
 		}
 		
 		[DllImport (Constants.MapKitLibrary, EntryPoint="MKMapRectSpans180thMeridian")]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool MKMapRectSpans180thMeridian (MKMapRect rect);
 		
 		public bool Spans180thMeridian {

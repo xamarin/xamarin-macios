@@ -15,14 +15,6 @@ using ObjCRuntime;
 
 namespace CoreSpotlight {
 
-	[iOS (9,0)]
-	public enum CSFileProtection {
-		None,
-		Complete,
-		CompleteUnlessOpen,
-		CompleteUntilFirstUserAuthentication
-	}
-
 	public partial class CSSearchableIndex {
 
 		// Strongly typed version of initWithName:protectionClass:

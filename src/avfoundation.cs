@@ -150,6 +150,7 @@ namespace AVFoundation {
 		[Deprecated (PlatformName.iOS, 12,0, message: "Always 'null'.")]
 		[Obsoleted (PlatformName.MacOSX, 10,8)]
 		[Deprecated (PlatformName.MacOSX, 10,14, message: "Always 'null'.")]
+		[NoMacCatalyst]
 		[Field ("AVMediaTypeTimedMetadata")] // last header where I can find this: iOS 5.1 SDK, 10.7 only on Mac
 		TimedMetadata = 6,
 
@@ -196,6 +197,7 @@ namespace AVFoundation {
 		[Field ("AVMediaTypeTimedMetadata")] // last header where I can find this: iOS 5.1 SDK, 10.7 only on Mac
 		[Availability (Obsoleted = Platform.iOS_6_0)]
 		[Availability (Obsoleted = Platform.Mac_10_8)]
+		[NoMacCatalyst]
 		NSString TimedMetadata { get; }
 
 		[Field ("AVMediaTypeMuxed")]
@@ -13498,7 +13500,6 @@ namespace AVFoundation {
 		[Export ("processContentKeyResponseError:")]
 		void Process (NSError error);
 
-		[NoWatch]
 		[Deprecated (PlatformName.iOS, 11, 2, message: "Use the 'NSError' overload instead.")]
 		[Export ("respondByRequestingPersistableContentKeyRequest"), NoWatch, NoTV, NoMac]
 		void RespondByRequestingPersistableContentKeyRequest ();

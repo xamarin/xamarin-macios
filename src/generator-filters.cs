@@ -117,7 +117,7 @@ public partial class Generator {
 		}
 
 		// properties
-		GenerateProperties (type);
+		GenerateProperties (type, type);
 
 		// protocols
 		GenerateProtocolProperties (type, new HashSet<string> ());
@@ -146,14 +146,14 @@ public partial class Generator {
 
 			print ("");
 			print ($"// {pname} protocol members ");
-			GenerateProperties (i, fromProtocol: true);
+			GenerateProperties (i, type, fromProtocol: true);
 
 			// also include base interfaces/protocols
 			GenerateProtocolProperties (i, processed);
 		}
 	}
 
-	void GenerateProperties (Type type, bool fromProtocol = false)
+	void GenerateProperties (Type type, Type originalType = null, bool fromProtocol = false)
 	{
 		foreach (var p in type.GetProperties (BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)) {
 			if (p.IsUnavailable (this))
@@ -162,7 +162,13 @@ public partial class Generator {
 				continue;
 			
 			print ("");
-			PrintPropertyAttributes (p);
+
+			// an export will be present (only) if it's defined in a protocol
+			var export = AttributeManager.GetCustomAttribute<ExportAttribute> (p);
+
+			// this is a bit special since CoreImage filter protocols are much newer than the our generated, key-based bindings
+			// so we do not want to advertise the protocol versions since most properties would be incorrectly advertised
+			PrintPropertyAttributes (p, originalType, skipTypeInjection: export != null);
 			print_generated_code ();
 
 			var ptype = p.PropertyType.Name;
@@ -197,9 +203,6 @@ public partial class Generator {
 				nullable = true;
 			print ("public {0}{1} {2} {{", ptype, nullable ? "?" : "", p.Name);
 			indent++;
-
-			// an export will be present (only) if it's defined in a protocol
-			var export = AttributeManager.GetCustomAttribute<ExportAttribute> (p);
 
 			var name = AttributeManager.GetCustomAttribute<CoreImageFilterPropertyAttribute> (p)?.Name;
 			// we can skip the name when it's identical to a protocol selector

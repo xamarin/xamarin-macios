@@ -1,9 +1,10 @@
 <Project>
-  <Import Project="../targets/Xamarin.Shared.Sdk.Versions.props" />
+  <Import Project="../targets/Microsoft.$(_PlatformName).Sdk.Versions.props" />
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <IncludeBuildOutput>false</IncludeBuildOutput>
+    <PackageType Condition="'$(PackageType)'==''">DotnetPlatform</PackageType>
     <PackageVersion>$(_PackageVersion)</PackageVersion>
     <RepositoryUrl>https://github.com/xamarin/xamarin-macios</RepositoryUrl>
     <RepositoryBranch>$(CurrentBranch)</RepositoryBranch>
@@ -17,12 +18,13 @@
   <PropertyGroup>
     <_RepositoryPath>$(MSBuildThisFileDirectory)/../..</_RepositoryPath>
     <_buildPath>$(_RepositoryPath)/_build</_buildPath>
-    <_packagePath>$(_buildPath)\$(PackageId)\</_packagePath>
+    <_packagePath Condition="'$(_packagePath)' == ''">$(_buildPath)\$(PackageId)\</_packagePath>
 
     <_AssemblyInfix Condition="'$(_PlatformName)' == 'iOS'">iOS</_AssemblyInfix>
     <_AssemblyInfix Condition="'$(_PlatformName)' == 'tvOS'">TVOS</_AssemblyInfix>
     <_AssemblyInfix Condition="'$(_PlatformName)' == 'watchOS'">WatchOS</_AssemblyInfix>
     <_AssemblyInfix Condition="'$(_PlatformName)' == 'macOS'">Mac</_AssemblyInfix>
+    <_AssemblyInfix Condition="'$(_PlatformName)' == 'MacCatalyst'">MacCatalyst</_AssemblyInfix>
   </PropertyGroup>
 
   <ItemGroup>
@@ -54,7 +56,7 @@
       <_PackNativePath>runtimes/$(_RuntimeIdentifier)/native</_PackNativePath>
     </PropertyGroup>
     <ItemGroup>
-      <_PackageFiles Include="$(_packagePath)$(_PackTargetPath)/Xamarin.$(_AssemblyInfix).dll" PackagePath="$(_PackTargetPath)" TargetPath="$(_PackTargetPath)" />
+      <_PackageFiles Include="$(_packagePath)$(_PackTargetPath)/*.dll" PackagePath="$(_PackTargetPath)" TargetPath="$(_PackTargetPath)" />
       <_PackageFiles Include="$(_packagePath)$(_PackNativePath)/*.a" PackagePath="$(_PackNativePath)" TargetPath="$(_PackNativePath)" IsNative="true" />
       <_PackageFiles Include="$(_packagePath)$(_PackNativePath)/*.dylib" PackagePath="$(_PackNativePath)" TargetPath="$(_PackNativePath)" IsNative="true" />
       <_FrameworkListFileClass Include="@(_PackageFiles->'%(Filename)%(Extension)')" Profile="$(_PlatformName)" />

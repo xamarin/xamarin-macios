@@ -22,8 +22,10 @@ using System.Xml;
 using Mono.Data.Sqlite;
 #endif
 using MonoTouch;
-#if !__TVOS__ && !__WATCHOS__
+#if HAS_ADDRESSBOOK
 using AddressBook;
+#endif
+#if HAS_ADDRESSBOOKUI
 using AddressBookUI;
 #endif
 #if !__WATCHOS__
@@ -172,7 +174,7 @@ namespace LinkSdk {
 			Assert.That (m.GetType ().Name, Is.EqualTo ("RuntimeModule"), "RuntimeModule");
 		}
 
-#if !__TVOS__ && !__WATCHOS__
+#if HAS_ADDRESSBOOK && HAS_ADDRESSBOOKUI
 		[Test]
 		// http://bugzilla.xamarin.com/show_bug.cgi?id=980
 		public void Bug980_AddressBook_NRE ()
@@ -199,7 +201,7 @@ namespace LinkSdk {
 			TestRuntime.AssertSystemVersion (PlatformName.MacCatalyst, 14, 0, throwIfOtherPlatform: false); // The AddressBook framework was introduced in Mac Catalyst 14.0
 			Assert.IsNotNull (ABPersonAddressKey.City, "ABPersonAddressKey");
 		}
-#endif // !__TVOS__	&& !__WATCHOS__
+#endif // HAS_ADDRESSBOOKUI
 
 		[Test]
 		// http://bugzilla.xamarin.com/show_bug.cgi?id=1387

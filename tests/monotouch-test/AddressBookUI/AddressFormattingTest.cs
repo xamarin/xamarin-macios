@@ -7,7 +7,7 @@
 // Copyright 2012-2014, 2016 Xamarin Inc. All rights reserved.
 //
 
-#if !__TVOS__ && !__WATCHOS__ && !MONOMAC
+#if HAS_ADDRESSBOOKUI
 
 using System;
 using System.Globalization;
@@ -76,4 +76,4 @@ namespace MonoTouchFixtures.AddressBookUI {
 	}
 }
 
-#endif // !__TVOS__ && !__WATCHOS__
+#endif // HAS_ADDRESSBOOKUI

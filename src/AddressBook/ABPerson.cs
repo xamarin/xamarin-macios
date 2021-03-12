@@ -39,65 +39,8 @@ using Foundation;
 using ObjCRuntime;
 
 namespace AddressBook {
-	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
-	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
-	public enum ABPersonSortBy : uint /* uint32_t */ {
-		FirstName = 0,
-		LastName  = 1,
-	}
 
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
-	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
-	public enum ABPersonCompositeNameFormat : uint /* uint32_t */ {
-		FirstNameFirst  = 0,
-		LastNameFirst   = 1,
-	}
-
-	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
-	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
-	public enum ABPersonProperty {
-		Address,
-		Birthday,
-		CreationDate,
-		Date,
-		Department,
-		Email,
-		FirstName,
-		FirstNamePhonetic,
-		InstantMessage,
-		JobTitle,
-		Kind,
-		LastName,
-		LastNamePhonetic,
-		MiddleName,
-		MiddleNamePhonetic,
-		ModificationDate,
-		Nickname,
-		Note,
-		Organization,
-		Phone,
-		Prefix,
-		RelatedNames,
-		Suffix,
-		Url,
-		SocialProfile
-	}
-
-	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
-	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
-	[Native]
-	public enum ABPersonImageFormat : long {
-		Thumbnail = 0,
-		OriginalSize = 2
-	}
-	
-	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
-	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
 	static class ABPersonPropertyId {
 
 		public static int Address {get; private set;}
@@ -272,17 +215,6 @@ namespace AddressBook {
 	}
 
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
-	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
-	public enum ABPersonKind {
-		None,
-		Organization,
-		Person,
-	}
-
-	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
-	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
 	static class ABPersonKindId {
 		public static NSNumber Organization {get; private set;}
 		public static NSNumber Person {get; private set;}
@@ -615,6 +547,7 @@ namespace AddressBook {
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool ABPersonSetImageData (IntPtr person, IntPtr imageData, out IntPtr error);
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static IntPtr ABPersonCopyImageData (IntPtr person);
@@ -629,12 +562,14 @@ namespace AddressBook {
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool ABPersonHasImageData (IntPtr person);
 		public bool HasImage {
 			get {return ABPersonHasImageData (Handle);}
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool ABPersonRemoveImageData (IntPtr person, out IntPtr error);
 		public void RemoveImage ()
 		{

@@ -3,6 +3,8 @@ using System.Runtime.InteropServices;
 
 using ObjCRuntime;
 
+#nullable enable
+
 namespace MapKit {
 
 #if !XAMCORE_4_0 && __IOS__

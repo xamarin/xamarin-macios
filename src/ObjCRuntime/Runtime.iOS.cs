@@ -65,7 +65,7 @@ namespace ObjCRuntime {
 		}
 #endif
 			
-#if TVOS || WATCH
+#if TVOS || WATCH || __MACCATALYST__
 		[Advice ("This method is present only to help porting code.")]
 		public static void StartWWAN (Uri uri, Action<Exception> callback)
 		{

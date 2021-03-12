@@ -91,7 +91,7 @@ namespace Network {
 		[TV (13,0), Mac (10,15), iOS (13,0)]
 		public static NWProtocolDefinition CreateWebSocketDefinition () => new NWProtocolDefinition (nw_protocol_copy_ws_definition (), owns: true);
 
-		[Watch (6,0), TV (13,0), Mac (10,15)]
+		[TV (13,0), Mac (10,15)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern unsafe OS_nw_protocol_definition nw_framer_create_definition (string identifier, NWFramerCreateFlags flags, ref BlockLiteral start_handler);
 		delegate NWFramerStartResult nw_framer_create_definition_t (IntPtr block, IntPtr framer);

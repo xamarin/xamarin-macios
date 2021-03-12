@@ -2,13 +2,9 @@ using System;
 using ObjCRuntime;
 using Vector2i = global::OpenTK.Vector2i;
 
-namespace ModelIO {
+#nullable enable
 
-	[iOS (9,0), Mac (10,11)]
-	public enum  MDLNoiseTextureType {
-		Vector,
-		Cellular,
-	}
+namespace ModelIO {
 
 	public partial class MDLNoiseTexture {
 

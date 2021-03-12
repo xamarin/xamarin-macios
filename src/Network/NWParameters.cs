@@ -19,14 +19,6 @@ using CoreFoundation;
 using nw_parameters_t=System.IntPtr;
 
 namespace Network {
-	[TV (12,0), Mac (10,14), iOS (12,0)]
-	[Watch (6,0)]
-	public enum NWMultiPathService {
-		Disabled = 0,
-		Handover = 1,
-		Interactive = 2,
-		Aggregate = 3, 
-	}
 
 	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Watch (6,0)]
@@ -473,7 +465,7 @@ namespace Network {
 
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_parameters_set_include_peer_to_peer (IntPtr handle, bool includePeerToPeer);
+		static extern void nw_parameters_set_include_peer_to_peer (IntPtr handle, [MarshalAs (UnmanagedType.I1)] bool includePeerToPeer);
 
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
@@ -491,20 +483,12 @@ namespace Network {
 
 		[TV (13,0), Mac (10,15), iOS (13,0)]
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_parameters_set_prohibit_constrained (IntPtr parameters, bool prohibit_constrained);
+		static extern void nw_parameters_set_prohibit_constrained (IntPtr parameters, [MarshalAs (UnmanagedType.I1)] bool prohibit_constrained);
 
 		[TV (13,0), Mac (10,15), iOS (13,0)]
 		public bool ProhibitConstrained {
 			get => nw_parameters_get_prohibit_constrained (GetCheckedHandle ());
 			set => nw_parameters_set_prohibit_constrained (GetCheckedHandle (), value);
 		}
-	}
-
-	[TV (12,0), Mac (10,14), iOS (12,0)]
-	[Watch (6,0)]
-	public enum NWParametersExpiredDnsBehavior {
-		Default = 0,
-		Allow = 1,
-		Prohibit = 2,
 	}
 }

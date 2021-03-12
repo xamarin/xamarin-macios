@@ -78,7 +78,7 @@ namespace Xamarin.Bundler {
 			options.Add ("reference=", "Add an assembly to be processed.", v => app.References.Add (v));
 			// Unfortunately -r is used in mmp for something else (--resource), which means we can't use the same arguments for both mtouch and mmp.
 			// So add --reference, which is now used by both (and accepted by bgen as well), and deprecate -r|--ref for mtouch and -a|--assembly for mmp.
-			options.Add ("targetver=", "Minimum supported version of the target OS.", v => {
+			options.Add ("targetver=", "Minimum supported version of the target OS. For Mac Catalyst, this is the corresponding iOS version", v => {
 				try {
 					app.DeploymentTarget = StringUtils.ParseVersion (v);
 				} catch (Exception ex) {
@@ -86,9 +86,10 @@ namespace Xamarin.Bundler {
 				}
 			});
 			options.Add ("sdkroot=", "Specify the location of Apple SDKs, default to 'xcode-select' value.", v => sdk_root = v);
-			options.Add ("sdk=", "Specifies the SDK version to compile against (version, for example \"10.9\").", v => {
+			options.Add ("sdk=", "Specifies the SDK version to compile against (version, for example \"10.9\"). For Mac Catalyst, this is the macOS version of the SDK.", v => {
 				try {
 					app.SdkVersion = StringUtils.ParseVersion (v);
+					app.NativeSdkVersion = app.SdkVersion;
 				} catch (Exception ex) {
 					throw ErrorHelper.CreateError (26, ex, Errors.MX0026, $"sdk:{v}", ex.Message);
 				}
@@ -287,13 +288,14 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		static int verbose = GetDefaultVerbosity ();
 		public static int Verbosity {
-			get { return verbose; }
-			set {
-				verbose = value;
-				ErrorHelper.Verbosity = Verbosity;
-			}
+			get { return ErrorHelper.Verbosity; }
+			set { ErrorHelper.Verbosity = value; }
+		}
+
+		static Driver ()
+		{
+			Verbosity = GetDefaultVerbosity ();
 		}
 
 		static int GetDefaultVerbosity ()
@@ -728,6 +730,11 @@ namespace Xamarin.Bundler {
 			return framework_dir;
 		}
 
+		public static void SetFrameworkCurrentDirectory (string value)
+		{
+			framework_dir = value;
+		}
+
 		// This is the 'Current/bin' directory of the installed framework
 		// For XI/XM installed from package it's one of these two:
 		//    /Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin
@@ -886,12 +893,8 @@ namespace Xamarin.Bundler {
 		public static string GetFrameworkDirectory (Application app)
 		{
 			var platform = GetPlatform (app);
-			switch (app.Platform) {
-			case ApplePlatform.MacCatalyst:
-				return Path.Combine (PlatformsDirectory, platform + ".platform", "Developer", "SDKs", platform + app.GetMacCatalystmacOSVersion (app.SdkVersion).ToString () + ".sdk");
-			default:
-				return Path.Combine (PlatformsDirectory, platform + ".platform", "Developer", "SDKs", platform + app.SdkVersion.ToString () + ".sdk");
-			}
+
+			return Path.Combine (PlatformsDirectory, platform + ".platform", "Developer", "SDKs", platform + app.NativeSdkVersion.ToString () + ".sdk");
 		}
 
 		public static string GetProductAssembly (Application app)
@@ -912,7 +915,7 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		static void ValidateXcode (Application app, bool accept_any_xcode_version, bool warn_if_not_found)
+		public static void ValidateXcode (Application app, bool accept_any_xcode_version, bool warn_if_not_found)
 		{
 			if (sdk_root == null) {
 				sdk_root = FindSystemXcode ();

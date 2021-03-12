@@ -40,7 +40,7 @@ namespace ObjCRuntime {
 		static <#= d.ReturnType.MType #> <#= d.SimpleEntryPoint #> (<#= d.MArgumentSignature #>)
 <# if (d.ExceptionHandling) { #>
 		{	
-			exception_gchandle = 0;
+			exception_gchandle = IntPtr.Zero;
 			try {
 <# if (string.IsNullOrEmpty (d.WrappedManagedFunction)) { #>
 				throw new NotImplementedException ();
@@ -49,7 +49,7 @@ namespace ObjCRuntime {
 <# } #>
 			} catch (Exception ex) {
 				var handle = GCHandle.Alloc (ex, GCHandleType.Normal);
-				exception_gchandle = GCHandle.ToIntPtr (handle).ToInt32 ();
+				exception_gchandle = GCHandle.ToIntPtr (handle);
 <# if (d.SimpleEntryPoint == "get_nsobject_with_type") { #>				created = false;
 <# } #>
 <# if (d.ReturnType.MType != "void") { #>				return default (<#= d.ReturnType.MType #>);

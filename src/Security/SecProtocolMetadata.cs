@@ -25,6 +25,7 @@ namespace Security {
 		// if this ever changes, make this public[tv
 		internal SecProtocolMetadata (IntPtr handle, bool owns) : base (handle, owns) {}
 
+#if !COREBUILD
 		[DllImport (Constants.SecurityLibrary)]
 		extern static IntPtr sec_protocol_metadata_get_negotiated_protocol (IntPtr handle);
 
@@ -33,9 +34,7 @@ namespace Security {
 		[DllImport (Constants.SecurityLibrary)]
 		extern static IntPtr sec_protocol_metadata_copy_peer_public_key (IntPtr handle);
 
-#if !COREBUILD
 		public DispatchData PeerPublicKey => CreateDispatchData (sec_protocol_metadata_copy_peer_public_key (GetCheckedHandle ()));
-#endif
 
 		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'NegotiatedTlsProtocolVersion' instead.")]
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'NegotiatedTlsProtocolVersion' instead.")]
@@ -107,8 +106,6 @@ namespace Security {
 				return false; // This was tested in a native app. We do copy the behaviour.
 			return sec_protocol_metadata_peers_are_equal (metadataA.GetCheckedHandle (), metadataB.GetCheckedHandle ());
 		}
-
-#if !COREBUILD
 
 		delegate void sec_protocol_metadata_access_distinguished_names_handler_t (IntPtr block, IntPtr dispatchData);
  		static sec_protocol_metadata_access_distinguished_names_handler_t static_DistinguishedNamesForPeer = TrampolineDistinguishedNamesForPeer;
@@ -288,6 +285,7 @@ namespace Security {
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[DllImport (Constants.SecurityLibrary)]
+		[return: MarshalAs (UnmanagedType.U1)]
 		static extern bool sec_protocol_metadata_access_pre_shared_keys (IntPtr /* sec_protocol_metadata_t */ handle, ref BlockLiteral block);
 
 		public delegate void SecAccessPreSharedKeysHandler (DispatchData psk, DispatchData pskIdentity);

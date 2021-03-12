@@ -50,10 +50,6 @@
 			"MonoClass *", "klass"
 		),
 
-		new Export ("MonoClass *", "mono_class_get_parent",
-			"MonoClass *", "klass"
-		),
-
 		new Export ("mono_bool", "mono_class_is_subclass_of",
 			"MonoClass *", "klass",
 			"MonoClass *", "klassc",
@@ -410,10 +406,6 @@
 			"MonoDebugFormat", "format"
 		),
 
-		new Export ("void", "mono_gc_collect",
-			"int", "generation"
-		),
-
 		new Export ("mono_bool", "mono_is_debugger_attached"),
 
 		#endregion
@@ -570,12 +562,6 @@
 			"MonoDomain *", "domain"
 		),
 
-		new Export ("gboolean", "mono_exception_walk_trace",
-			"MonoException *", "exc",
-			"MonoExceptionFrameWalk", "func",
-			"gpointer", "user_data"
-		),
-
 		new Export ("void", "mono_install_unhandled_exception_hook",
 			"MonoUnhandledExceptionFunc", "func",
 			"gpointer", "user_data"
@@ -668,6 +654,21 @@
 		),
 
 		#endregion
+
+		#region mini/debugger-agent.h
+
+		new Export ("void", "mono_debugger_agent_parse_options",
+			"const char *", "options"
+		),
+
+		new Export ("gboolean", "mono_debugger_agent_transport_handshake"),
+
+		new Export ("void", "mono_debugger_agent_register_transport",
+			"DebuggerTransport *", "trans"
+		),
+
+		#endregion
+
 	};
 #><#+
 	class Arg

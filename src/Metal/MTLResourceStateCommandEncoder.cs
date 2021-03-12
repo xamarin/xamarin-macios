@@ -12,21 +12,23 @@ using System.Runtime.InteropServices;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace Metal {
 
 	public static partial class MTLResourceStateCommandEncoder_Extensions {
 
-		[NoMac, NoTV, iOS (13,0)]
+		[NoMac, NoTV]
 		public static void Update (this IMTLResourceStateCommandEncoder This, IMTLTexture texture, MTLSparseTextureMappingMode mode, MTLRegion[] regions, nuint[] mipLevels, nuint[] slices)
 		{
 			if (texture == null)
-				throw new ArgumentNullException (nameof (texture));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (texture));
 			if (regions == null)
-				throw new ArgumentNullException (nameof (regions));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (regions));
 			if (mipLevels == null)
-				throw new ArgumentNullException (nameof (mipLevels));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (mipLevels));
 			if (slices == null)
-				throw new ArgumentNullException (nameof (slices));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (slices));
 
 			var regionsHandle = GCHandle.Alloc (regions, GCHandleType.Pinned); 
 			var mipLevelsHandle = GCHandle.Alloc (mipLevels, GCHandleType.Pinned); 

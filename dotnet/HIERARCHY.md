@@ -38,7 +38,7 @@ Files are imported in the following order:
       versions of _platform_ are supported
     * targets/Xamarin.Shared.Sdk.TargetFrameworkInference.props: some TargetFramework
       logic.
-    * targets/Xamarin.Shared.Sdk.Versions.props: declares various properties related to
+    * targets/Microsoft._platform_.Sdk.Versions.props: declares various properties related to
       version information.
     * targets/Xamarin.Shared.Sdk.props: imports other props files.
 
@@ -62,3 +62,7 @@ Contains reference assemblies.
 ## Microsoft._platform_.Runtime.[runtimeIdentifier]
 
 Contains implementation assemblies and native bits.
+
+## Microsoft._platform.Templates
+
+Contains project & item templates for each platform.

@@ -72,7 +72,8 @@ namespace Security {
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[DllImport (Constants.SecurityLibrary)]
-		static extern bool sec_identity_access_certificates (IntPtr identity, ref BlockLiteral block);
+		[return: MarshalAs (UnmanagedType.I1)]
+ 		static extern bool sec_identity_access_certificates (IntPtr identity, ref BlockLiteral block);
 
 		internal delegate void AccessCertificatesHandler (IntPtr block, IntPtr cert);
 		static readonly AccessCertificatesHandler access = TrampolineAccessCertificates;
