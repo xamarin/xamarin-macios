@@ -11,6 +11,9 @@ export MSBuildEnableWorkloadResolver=true
 NuGet.config: $(TOP)/NuGet.config Makefile
 	$(Q) $(CP) $< $@.tmp
 	$(Q) nuget sources add -Name local-dotnet-feed -Source $(abspath $(DOTNET_FEED_DIR)) -ConfigFile $@.tmp
+ifdef CUSTOM_DOTNET
+	$(Q) nuget sources add -Name dev-runtime-feed -Source $(abspath $(DOTNET_RUNTIME_PATH)/artifacts/packages/Release/Shipping) -ConfigFile $@.tmp
+endif
 	$(Q) nuget config -Set globalPackagesFolder=$(abspath $(CURDIR)/packages) -Config $@.tmp
 	$(Q) nuget config -Set repositorypath=$(abspath $(CURDIR)/packages) -Config $@.tmp
 	$(Q) mv $@.tmp $@

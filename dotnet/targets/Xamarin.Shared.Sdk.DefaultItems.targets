@@ -69,6 +69,11 @@
     <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'MacCatalyst' ">maccatalyst-x64;maccatalyst-arm64</_RuntimePackRuntimeIdentifiers>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <_RuntimeFrameworkVersion>$(BundledNETCorePlatformsPackageVersion)</_RuntimeFrameworkVersion>
+    <_RuntimeFrameworkVersion Condition="'$(CUSTOM_DOTNET_VERSION)' != ''">$(CUSTOM_DOTNET_VERSION)</_RuntimeFrameworkVersion>
+  </PropertyGroup>
+
   <ItemGroup>
     <KnownFrameworkReference Include="Microsoft.$(_PlatformName)"
                             TargetFramework="net6.0"

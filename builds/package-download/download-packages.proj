@@ -13,7 +13,8 @@
     <PackageDownload Include="@(PackageRuntimeIdentifiersCoreCLR -> 'Microsoft.NETCore.App.Runtime.%(Identity)')" Version="[$(BundledNETCorePlatformsPackageVersion)]" />
 
     <!-- download the reference assemblies -->
-    <PackageDownload Include="microsoft.netcore.app.ref" Version="[$(BundledNETCorePlatformsPackageVersion)]" />
+    <PackageDownload Include="microsoft.netcore.app.ref" Version="[$(BundledNETCorePlatformsPackageVersion)]" Condition="'$(CustomDotNetVersion)' == ''" />
+    <PackageDownload Include="microsoft.netcore.app.ref" Version="[$(CustomDotNetVersion)]" Condition="'$(CustomDotNetVersion)' != ''" />
   </ItemGroup>
 
   <!-- target to write out the BundledNETCorePlatformsPackageVersion to a file -->
