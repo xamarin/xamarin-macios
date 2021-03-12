@@ -536,3 +536,6 @@
 !extra-ui-appearance-support! UIKit.UIImage UIKit.UISlider::MaxTrackImage(UIKit.UIControlState) should NOT be decorated with [Appearance]
 !extra-ui-appearance-support! UIKit.UIImage UIKit.UISlider::MinTrackImage(UIKit.UIControlState) should NOT be decorated with [Appearance]
 !extra-ui-appearance-support! UIKit.UIImage UIKit.UISlider::ThumbImage(UIKit.UIControlState) should NOT be decorated with [Appearance]
+
+## manually bound
+!missing-field! UIListSeparatorAutomaticInsets not bound

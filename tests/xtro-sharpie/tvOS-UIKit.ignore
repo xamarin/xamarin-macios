@@ -417,3 +417,7 @@
 !extra-ui-appearance-support! UIKit.UIStringAttributes UIKit.UIBarItem::GetTitleTextAttributes(UIKit.UIControlState) should NOT be decorated with [Appearance]
 !extra-ui-appearance-support! UIKit.UIStringAttributes UIKit.UISearchBar::GetScopeBarButtonTitleTextAttributes(UIKit.UIControlState) should NOT be decorated with [Appearance]
 !extra-ui-appearance-support! UIKit.UIStringAttributes UIKit.UISegmentedControl::GetTitleTextAttributes(UIKit.UIControlState) should NOT be decorated with [Appearance]
+
+## Enums not needed on tvOS
+!missing-enum! UIListSeparatorVisibility not bound
+!missing-enum! UIPrintRenderingQuality not bound

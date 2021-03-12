@@ -16,9 +16,3 @@
 !missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::snapshotForExpandingParentItemHandler not bound
 !missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::willCollapseItemHandler not bound
 !missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::willExpandItemHandler not bound
-## appended from unclassified file
-!missing-enum! UIListSeparatorVisibility not bound
-!missing-enum! UIPrintRenderingQuality not bound
-!missing-enum! UISplitViewControllerDisplayModeButtonVisibility not bound
-!missing-selector! UISplitViewController::displayModeButtonVisibility not bound
-!missing-selector! UISplitViewController::setDisplayModeButtonVisibility: not bound
