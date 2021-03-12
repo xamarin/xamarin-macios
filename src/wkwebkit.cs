@@ -1173,6 +1173,7 @@ namespace WebKit
 
 	[Mac (11,3)][iOS (14,5)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
 	interface WKDownload : NSProgressReporting {
 
 		[NullAllowed, Export ("originalRequest")]
