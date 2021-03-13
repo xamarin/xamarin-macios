@@ -262,7 +262,9 @@ namespace CoreMedia {
 		AppleProRes422   = 0x6170636e,
 		AppleProRes422LT = 0x61706373,
 		AppleProRes422Proxy = 0x6170636f,
-		Hevc             = 0x68766331
+		Hevc             = 0x68766331,
+		[iOS (14,5)][TV (14,5)][Watch (7,4)][Mac (11,3)]
+		DolbyVisionHevc  = 0x64766831,
 	}
 
 	// CMVideoDimensions => int32_t width + int32_t height
