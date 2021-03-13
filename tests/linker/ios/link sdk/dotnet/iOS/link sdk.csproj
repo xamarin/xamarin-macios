@@ -42,9 +42,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\..\Info.plist">
-      <LogicalName>Info.plist</LogicalName>
-    </None>
+    <None Include="Info.plist" />
     <LinkDescription Include="$(RootTestsDirectory)\linker\ios\link sdk\dotnet\extra-linker-defs.xml" />
   </ItemGroup>
   <ItemGroup>
