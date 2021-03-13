@@ -19,6 +19,6 @@
 ## This is already deprecated
 !missing-selector! PKPassLibrary::activatePaymentPass:withActivationData:completion: not bound
 
-## Beside being inconsistent, the alternative API (isBlocked) was not available before 7.3
-!deprecated-attribute-wrong! PKSuicaPassProperties::isBlacklisted has 7.3 not 7.0 on [Deprecated] attribute
-!deprecated-attribute-wrong! PKTransitPassProperties::isBlacklisted has 7.3 not 6.4 on [Deprecated] attribute
+## Beside being inconsistent, the alternative API (isBlocked) was not available before 7.4
+!deprecated-attribute-wrong! PKSuicaPassProperties::isBlacklisted has 7.4 not 7.0 on [Deprecated] attribute
+!deprecated-attribute-wrong! PKTransitPassProperties::isBlacklisted has 7.4 not 6.4 on [Deprecated] attribute
