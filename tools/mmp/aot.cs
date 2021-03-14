@@ -218,9 +218,9 @@ namespace Xamarin.Bundler {
 			var monoEnv = new Dictionary<string, string> { { "MONO_PATH", files.RootDir } };
 			List<string> filesToAOT = GetFilesToAOT (files);
 
-			bool needsLipo = abis.Length > 1;
-			string tempAotDir = Path.GetDirectoryName (filesToAOT [0]);
-			if (needsLipo) {
+			bool needsLipo = abis.Length > 1 && filesToAOT.Count > 0;
+			string tempAotDir = needsLipo ? Path.GetDirectoryName (filesToAOT [0]) : null;
+			if (needsLipo && Directory.Exists (tempAotDir)) {
 				foreach (var abi in abis) {
 					Directory.CreateDirectory (Path.Combine (tempAotDir, "aot", abi.AsArchString ()));
 				}
@@ -248,14 +248,15 @@ namespace Xamarin.Bundler {
 			// Lipo the result
 			if(needsLipo) {
 				Parallel.ForEach (filesToAOT, ParallelOptions, file => {
-					string [] inputs = abis.Select (abi => Path.Combine (tempAotDir, "aot", abi.AsArchString (), Path.GetFileName (file) + ".dylib")).ToArray ();
+					string [] inputs = abis.Select (abi => Path.Combine (tempAotDir, "aot", abi.AsArchString (), Path.GetFileName (file) + ".dylib")).Where (File.Exists).ToArray ();
 					string output = file + ".dylib";
 
-					Driver.RunLipoAndCreateDsym (Driver.App, output, inputs);
+					if (inputs.Length > 0)
+						Driver.RunLipoAndCreateDsym (Driver.App, output, inputs);
 				});
 			}
 
-			if (needsLipo) {
+			if (needsLipo && Directory.Exists (tempAotDir)) {
 				Directory.Delete (Path.Combine (tempAotDir, "aot"), true);
 			}
 
