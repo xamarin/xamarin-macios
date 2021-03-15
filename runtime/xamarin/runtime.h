@@ -150,6 +150,10 @@ enum NSObjectFlags {
 	NSObjectFlagsIsCustomType = 128,
 };
 
+enum NSObjectFlags2 {
+	NSObjectFlagsRequiresUIThread = 1,
+};
+
 struct AssemblyLocation {
 	const char *assembly_name; // base name (without extension) of the assembly
 	const char *location; // the directory where the assembly is

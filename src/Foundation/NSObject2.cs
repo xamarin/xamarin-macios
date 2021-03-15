@@ -69,6 +69,7 @@ namespace Foundation {
 		IntPtr handle;
 		IntPtr class_handle;
 		Flags flags;
+		Flags2 flags2;
 
 		// This enum has a native counterpart in runtime.h
 		[Flags]
@@ -81,6 +82,11 @@ namespace Foundation {
 			HasManagedRef = 32,
 			// 64, // Used by SoM
 			IsCustomType = 128,
+		}
+
+		[Flags]
+		enum Flags2 : byte {
+			RequiresUIThread = 1,
 		}
 
 		bool disposed { 
@@ -100,6 +106,11 @@ namespace Foundation {
 
 		internal bool InFinalizerQueue {
 			get { return ((flags & Flags.InFinalizerQueue) == Flags.InFinalizerQueue); }
+		}
+
+		internal bool RequiresUIThread {
+			get { return ((flags2 & Flags2.RequiresUIThread) == Flags2.RequiresUIThread); }
+			set { flags2 = value ? (flags2 | Flags2.RequiresUIThread) : (flags2 & ~Flags2.RequiresUIThread); }
 		}
 
 		bool IsCustomType {
@@ -724,7 +735,7 @@ namespace Foundation {
 			disposed = true;
 			
 			if (handle != IntPtr.Zero) {
-				if (disposing) {
+				if (disposing || (Runtime.DisposeOnlyUIObjectsOnUIThread && IsDirectBinding && !RequiresUIThread)) {
 					ReleaseManagedRef ();
 				} else {
 					NSObject_Disposer.Add (this);

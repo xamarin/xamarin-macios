@@ -37,6 +37,8 @@ namespace ObjCRuntime {
 		static IntPtr NSObjectClass;
 		static bool initialized;
 
+		internal static bool DisposeOnlyUIObjectsOnUIThread;
+
 		internal static IntPtrEqualityComparer IntPtrEqualityComparer;
 		internal static TypeEqualityComparer TypeEqualityComparer;
 
