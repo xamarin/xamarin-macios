@@ -153,7 +153,7 @@ namespace Foundation {
 		[MethodImplAttribute (MethodImplOptions.InternalCall)]
 		extern static void RegisterToggleRef (NSObject obj, IntPtr handle, bool isCustomType);
 
-		[MethodImplAttribute (MethodImplOptions.InternalCall)]
+		[DllImport ("__Internal")]
 		static extern void xamarin_release_managed_ref (IntPtr handle, bool user_type);
 
 		[MethodImplAttribute (MethodImplOptions.InternalCall)]
