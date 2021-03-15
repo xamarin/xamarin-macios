@@ -11,6 +11,7 @@ using AUUnit = AudioUnit.AudioUnit;
 namespace Xamarin.Mac.Tests
 {
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class AVPlayerLayerTests
 	{
 		[Test]

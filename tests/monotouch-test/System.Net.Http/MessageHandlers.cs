@@ -18,14 +18,12 @@ using System.Net.Http.Headers;
 using System.Security.Authentication;
 using System.Text;
 using Foundation;
-#if MONOMAC
-using Foundation;
-#endif
 using ObjCRuntime;
 
 namespace MonoTests.System.Net.Http
 {
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class MessageHandlerTest
 	{
 		public MessageHandlerTest ()

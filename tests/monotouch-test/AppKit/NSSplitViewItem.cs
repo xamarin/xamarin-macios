@@ -9,6 +9,7 @@ using Foundation;
 
 namespace Xamarin.Mac.Tests
 {
+	[Preserve (AllMembers = true)]
 	public class NSSplitViewItemTests
 	{
 		NSSplitViewItem item;

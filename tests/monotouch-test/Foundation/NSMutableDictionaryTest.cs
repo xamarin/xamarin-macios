@@ -9,6 +9,7 @@ using ObjCRuntime;
 namespace monotouchtest
 {
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class NSMutableDictionaryTest {
 		
 		[Test]
