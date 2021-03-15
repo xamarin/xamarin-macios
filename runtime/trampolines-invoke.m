@@ -510,11 +510,6 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 		mono_runtime_invoke (method, retval, (void **) arg_ptrs, exception_ptr);
 		if (exception != NULL)
 			goto exception_handling;
-		xamarin_create_managed_ref (self, retval, true);
-
-		xamarin_register_nsobject (xamarin_gchandle_new_weakref (retval, false), self, &exception_gchandle);
-		if (exception_gchandle != INVALID_GCHANDLE)
-			goto exception_handling;
 	} else {
 		
 #ifdef TRACE
@@ -645,7 +640,7 @@ exception_handling:
 					// If we already have an exception, don't overwrite it with an exception from disposing something.
 					// However we don't want to silently ignore it, so print it.
 					NSLog (@PRODUCT ": An exception occurred while disposing the object %p:", list->data);
-					NSLog (@"%@", xamarin_print_all_exceptions (xamarin_gchandle_get_target (dispose_exception_gchandle)));
+					NSLog (@"%@", xamarin_print_all_exceptions (dispose_exception_gchandle));
 				}
 			}
 			list = list->next;

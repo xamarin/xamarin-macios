@@ -386,11 +386,6 @@ namespace ObjCRuntime {
 		}
 
 #region Wrappers for delegate callbacks
-		static void RegisterNSObject (IntPtr managed_obj, IntPtr native_obj)
-		{
-			RegisterNSObject (GCHandle.FromIntPtr (managed_obj), native_obj, null);
-		}
-
 		static void RegisterAssembly (IntPtr a)
 		{
 			RegisterAssembly ((Assembly) GetGCHandleTarget (a));
@@ -995,7 +990,7 @@ namespace ObjCRuntime {
 			}
 		}
 					
-		static void NativeObjectHasDied (IntPtr ptr, NSObject managed_obj)
+		internal static void NativeObjectHasDied (IntPtr ptr, NSObject managed_obj)
 		{
 			lock (lock_obj) {
 				if (object_map.TryGetValue (ptr, out var wr)) {
@@ -1010,15 +1005,7 @@ namespace ObjCRuntime {
 		}
 		
 		internal static void RegisterNSObject (NSObject obj, IntPtr ptr) {
-			RegisterNSObject (GCHandle.Alloc (obj, GCHandleType.WeakTrackResurrection), ptr, obj);
-		}
-
-		// 'obj' can be provided if the caller has it, otherwise we'll fetch it from the GCHandle
-		// The GCHandle must be a WeakTracResurrection GCHandle, and the caller must not free it
-		internal static void RegisterNSObject (GCHandle handle, IntPtr ptr, NSObject obj)
-		{
-			if (obj == null)
-				obj = (NSObject) handle.Target;
+			var handle = GCHandle.Alloc (obj, GCHandleType.WeakTrackResurrection);
 			lock (lock_obj) {
 				object_map [ptr] = handle;
 				obj.Handle = ptr;
@@ -1539,6 +1526,43 @@ namespace ObjCRuntime {
 			throw new ArgumentException (string.Format ("'{0}' is an unknown protocol", type.FullName));
 		}
 
+		internal static bool IsUserType (IntPtr self)
+		{
+			var cls = Class.object_getClass (self);
+
+			unsafe {
+				if (options->RegistrationMap != null && options->RegistrationMap->map_count > 0) {
+					var map = options->RegistrationMap->map;
+					var idx = FindUserTypeIndex (map, 0, options->RegistrationMap->map_count - 1, cls);
+					if (idx >= 0)
+						return (map [idx].flags & MTTypeFlags.UserType) == MTTypeFlags.UserType;
+					// If using the partial static registrar, we need to continue
+					// If full static registrar, we can return false
+					if ((options->Flags & InitializationFlags.IsPartialStaticRegistrar) != InitializationFlags.IsPartialStaticRegistrar)
+						return false;
+				}
+			}
+
+			return Class.class_getInstanceMethod (cls, Selector.GetHandle ("xamarinSetGCHandle:flags:")) != IntPtr.Zero;
+		}
+
+		static unsafe int FindUserTypeIndex (MTClassMap* map, int lo, int hi, IntPtr cls)
+		{
+			if (hi >= lo) {
+				int mid = lo + (hi - lo) / 2;
+
+				if (map [mid].handle == cls)
+					return mid;
+
+				if ((long) map [mid].handle > (long) cls)
+					return FindUserTypeIndex (map, lo, mid - 1, cls);
+
+				return FindUserTypeIndex (map, mid + 1, hi, cls);
+			}
+
+			return -1;
+		}
+
 		public static void ConnectMethod (Type type, MethodInfo method, Selector selector)
 		{
 			if (selector == null)
@@ -1717,6 +1741,11 @@ namespace ObjCRuntime {
 			}
 
 			throw ErrorHelper.CreateError (8003, "Failed to find the closed generic method '{0}' on the type '{1}'.", open_method.Name, closed_type.FullName);
+		}
+
+		static void GCCollect ()
+		{
+			GC.Collect ();
 		}
 
 		[EditorBrowsable (EditorBrowsableState.Never)]

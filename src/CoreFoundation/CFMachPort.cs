@@ -93,6 +93,7 @@ namespace CoreFoundation
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CFMachPortIsValid (IntPtr handle);
 		public bool IsValid { 
 			get {

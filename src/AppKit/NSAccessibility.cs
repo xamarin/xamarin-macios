@@ -222,7 +222,8 @@ namespace AppKit
 		}
 
 		[DllImport (Constants.AppKitLibrary)]
-		static extern bool NSAccessibilitySetMayContainProtectedContent (bool flag);
+		[return: MarshalAs (UnmanagedType.I1)]
+		static extern bool NSAccessibilitySetMayContainProtectedContent ([MarshalAs (UnmanagedType.I1)] bool flag);
 
 		public static bool SetMayContainProtectedContent (bool flag)
 		{

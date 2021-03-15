@@ -1847,6 +1847,7 @@ namespace CoreText {
 		}
 
 		[DllImport (Constants.CoreTextLibrary, CharSet = CharSet.Unicode)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool CTFontGetGlyphsForCharacters (IntPtr font, char[] characters, CGGlyph[] glyphs, nint count);
 
 		public bool GetGlyphsForCharacters (char[] characters, CGGlyph[] glyphs, nint count)

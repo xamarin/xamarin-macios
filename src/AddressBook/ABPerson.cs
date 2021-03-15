@@ -525,6 +525,7 @@ namespace AddressBook {
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool ABPersonSetImageData (IntPtr person, IntPtr imageData, out IntPtr error);
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static IntPtr ABPersonCopyImageData (IntPtr person);
@@ -539,12 +540,14 @@ namespace AddressBook {
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool ABPersonHasImageData (IntPtr person);
 		public bool HasImage {
 			get {return ABPersonHasImageData (Handle);}
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool ABPersonRemoveImageData (IntPtr person, out IntPtr error);
 		public void RemoveImage ()
 		{

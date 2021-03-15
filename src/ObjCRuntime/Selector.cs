@@ -130,6 +130,7 @@ namespace ObjCRuntime {
 
 		// objc/objc.h
 		[DllImport ("/usr/lib/libobjc.dylib")]
+		[return: MarshalAs (UnmanagedType.U1)]
 		extern static /* BOOL */ bool sel_isMapped (/* SEL */ IntPtr sel);
 	}
 }

@@ -295,15 +295,16 @@ namespace CoreMedia {
 		internal extern static CMVideoDimensions CMVideoFormatDescriptionGetDimensions (/* CMVideoFormatDescriptionRef */ IntPtr videoDesc);
 
 		[DllImport (Constants.CoreMediaLibrary)]
-		internal extern static CGRect CMVideoFormatDescriptionGetCleanAperture (/* CMVideoFormatDescriptionRef */ IntPtr videoDesc, /* Boolean */ bool originIsAtTopLeft);
+		internal extern static CGRect CMVideoFormatDescriptionGetCleanAperture (/* CMVideoFormatDescriptionRef */ IntPtr videoDesc, /* Boolean */ [MarshalAs (UnmanagedType.I1)] bool originIsAtTopLeft);
 
 		[DllImport (Constants.CoreMediaLibrary)]
 		internal extern static /* CFArrayRef */ IntPtr CMVideoFormatDescriptionGetExtensionKeysCommonWithImageBuffers ();
 
 		[DllImport (Constants.CoreMediaLibrary)]
-		internal extern static CGSize CMVideoFormatDescriptionGetPresentationDimensions (/* CMVideoFormatDescriptionRef */ IntPtr videoDesc, /* Boolean */ bool usePixelAspectRatio, /* Boolean */ bool useCleanAperture);
+		internal extern static CGSize CMVideoFormatDescriptionGetPresentationDimensions (/* CMVideoFormatDescriptionRef */ IntPtr videoDesc, /* Boolean */ [MarshalAs (UnmanagedType.I1)] bool usePixelAspectRatio, /* Boolean */ [MarshalAs (UnmanagedType.I1)] bool useCleanAperture);
 
 		[DllImport (Constants.CoreMediaLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		internal extern static /* Boolean */ bool CMVideoFormatDescriptionMatchesImageBuffer (/* CMVideoFormatDescriptionRef */ IntPtr videoDesc, /* CVImageBufferRef */ IntPtr imageBuffer);
 
 #endif

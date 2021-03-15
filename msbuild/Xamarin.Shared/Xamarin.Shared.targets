@@ -363,6 +363,78 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</ItemGroup>
 	</Target>
 
+	<Target Name="_CompileImageAssets" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_ComputeTargetArchitectures;_BeforeCoreCompileImageAssets;_ReadCompileImageAssets;_CoreCompileImageAssets" />
+
+	<Target Name="_BeforeCoreCompileImageAssets"
+		Inputs="@(ImageAsset);$(_AppManifest)"
+		Outputs="$(_ACTool_PartialAppManifestCache);$(_ACTool_BundleResourceCache)">
+
+		<!-- If any ImageAsset or AppManifest is newer than the generated items list, we delete them so that the _CoreCompileImageAssets
+		     target runs again and updates those lists for the next run
+		-->
+		<Delete Files="$(_ACTool_PartialAppManifestCache);$(_ACTool_BundleResourceCache)" />
+		<RemoveDir Directories="$(DeviceSpecificIntermediateOutputPath)actool" />
+	</Target>
+
+	<Target Name="_ReadCompileImageAssets"
+		DependsOnTargets="_BeforeCoreCompileImageAssets">
+
+		<!-- If _BeforeCoreCompileImageAssets did not delete the generated items lists from _CoreCompileImageAsset, then we read them
+		     since that target won't run and we need the output items that are cached in those files, which includes full metadata -->
+		<ReadItemsFromFile File="$(_ACTool_PartialAppManifestCache)" Condition="Exists('$(_ACTool_PartialAppManifestCache)')">
+			<Output TaskParameter="Items" ItemName="_PartialAppManifest" />
+		</ReadItemsFromFile>
+		<ReadItemsFromFile File="$(_ACTool_BundleResourceCache)" Condition="Exists('$(_ACTool_BundleResourceCache)')">
+			<Output TaskParameter="Items" ItemName="_BundleResourceWithLogicalName" />
+		</ReadItemsFromFile>
+	</Target>
+
+	<Target Name="_CoreCompileImageAssets"
+		Inputs="@(ImageAsset);$(_AppManifest)"
+		Outputs="$(_ACTool_PartialAppManifestCache);$(_ACTool_BundleResourceCache)"
+		DependsOnTargets="_DetectAppManifest;_GetMinimumOSVersion;_DetectSdkLocations;_BeforeCoreCompileImageAssets;_GetMinimumOSVersion;_DetectSigningIdentity;_ComputeTargetFrameworkMoniker">
+
+		<ACTool
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true' And '@(ImageAsset)' != ''"
+			ToolExe="$(ACToolExe)"
+			ToolPath="$(ACToolPath)"
+			AppManifest="$(_AppManifest)"
+			BundleIdentifier="$(_BundleIdentifier)"
+			DeviceModel="$(TargetDeviceModel)"
+			DeviceOSVersion="$(TargetDeviceOSVersion)"
+			EnableOnDemandResources="$(EnableOnDemandResources)"
+			ImageAssets="@(ImageAsset)"
+			MinimumOSVersion="$(_MinimumOSVersion)"
+			OptimizePNGs="$(OptimizePNGs)"
+			OutputPath="$(DeviceSpecificOutputPath)"
+			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
+			IsWatchApp="$(IsWatchApp)"
+			ProjectDir="$(MSBuildProjectDirectory)"
+			ResourcePrefix="$(_ResourcePrefix)"
+			SdkDevPath="$(_SdkDevPath)"
+			SdkBinPath="$(_SdkBinPath)"
+			SdkUsrPath="$(_SdkUsrPath)"
+			SdkPlatform="$(_SdkPlatform)"
+			SdkVersion="$(_SdkVersion)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+			>
+			<Output TaskParameter="PartialAppManifest" ItemName="_PartialAppManifest" />
+			<Output TaskParameter="BundleResources" ItemName="_BundleResourceWithLogicalName" />
+
+			<!-- Local items to be persisted to items files -->
+			<Output TaskParameter="PartialAppManifest" ItemName="_ACTool_PartialAppManifest" />
+			<Output TaskParameter="BundleResources" ItemName="_ACTool_BundleResources" />
+		</ACTool>
+
+		<!-- Cache the generated outputs items for incremental build support -->
+		<WriteItemsToFile Items="@(_ACTool_PartialAppManifest)" ItemName="_PartialAppManifest" File="$(_ACTool_PartialAppManifestCache)" Overwrite="true" IncludeMetadata="true" />
+		<WriteItemsToFile Items="@(_ACTool_BundleResources)" ItemName="_BundleResourceWithLogicalName" File="$(_ACTool_BundleResourceCache)" Overwrite="true" IncludeMetadata="true" />
+		<ItemGroup>
+			<FileWrites Include="$(_ACTool_PartialAppManifestCache);$(_ACTool_BundleResourceCache)" />
+		</ItemGroup>
+	</Target>
+
 	<Target Name="_CompileSceneKitAssets" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_ComputeTargetArchitectures;_BeforeCoreCompileSceneKitAssets;_ReadCoreCompileSceneKitAssets;_CoreCompileSceneKitAssets" />
 
 	<Target Name="_BeforeCoreCompileSceneKitAssets"

@@ -150,6 +150,7 @@ namespace AddressBook {
 		// TODO: Should SetValue/CopyValue/RemoveValue be public?
 
 		[DllImport (Constants.AddressBookLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool ABRecordSetValue (IntPtr record, int /* ABPropertyID = int32_t */ property, IntPtr value, out IntPtr error);
 		internal void SetValue (int property, IntPtr value)
 		{
@@ -177,6 +178,7 @@ namespace AddressBook {
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool ABRecordRemoveValue (IntPtr record, int /* ABPropertyID = int32_t */ property, out IntPtr error);
 		internal void RemoveValue (int property)
 		{

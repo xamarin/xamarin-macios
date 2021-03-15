@@ -28,41 +28,41 @@ MACCATALYST_DOTNET_BUILD_DIR=$(DOTNET_BUILD_DIR)/maccatalyst
 GENERATOR_FLAGS=-process-enums -core -nologo -nostdlib -noconfig -native-exception-marshalling --ns:ObjCRuntime
 
 DOTNET_REFERENCES = \
-	/r:$(DOTNET5_BCL_DIR)/System.Buffers.dll \
-	/r:$(DOTNET5_BCL_DIR)/System.Collections.Concurrent.dll \
-	/r:$(DOTNET5_BCL_DIR)/System.Collections.dll \
-	/r:$(DOTNET5_BCL_DIR)/System.Collections.NonGeneric.dll \
-	/r:$(DOTNET5_BCL_DIR)/System.Console.dll \
-	/r:$(DOTNET5_BCL_DIR)/System.Diagnostics.Debug.dll \
-	/r:$(DOTNET5_BCL_DIR)/System.Diagnostics.Tools.dll \
-	/r:$(DOTNET5_BCL_DIR)/System.Drawing.Primitives.dll \
-	/r:$(DOTNET5_BCL_DIR)/System.IO.Compression.dll \
-	/r:$(DOTNET5_BCL_DIR)/System.IO.FileSystem.dll \
-	/r:$(DOTNET5_BCL_DIR)/System.Linq.dll \
-	/r:$(DOTNET5_BCL_DIR)/System.Memory.dll \
-	/r:$(DOTNET5_BCL_DIR)/System.Net.Http.dll \
-	/r:$(DOTNET5_BCL_DIR)/System.Net.NameResolution.dll \
-	/r:$(DOTNET5_BCL_DIR)/System.Net.Primitives.dll \
-	/r:$(DOTNET5_BCL_DIR)/System.Net.Requests.dll \
-	/r:$(DOTNET5_BCL_DIR)/System.Net.Security.dll \
-	/r:$(DOTNET5_BCL_DIR)/System.Net.ServicePoint.dll \
-	/r:$(DOTNET5_BCL_DIR)/System.Net.Sockets.dll \
-	/r:$(DOTNET5_BCL_DIR)/System.Resources.ResourceManager.dll \
-	/r:$(DOTNET5_BCL_DIR)/System.Runtime.dll \
-	/r:$(DOTNET5_BCL_DIR)/System.Runtime.Extensions.dll \
-	/r:$(DOTNET5_BCL_DIR)/System.Runtime.InteropServices.dll \
-	/r:$(DOTNET5_BCL_DIR)/System.Security.Cryptography.X509Certificates.dll \
-	/r:$(DOTNET5_BCL_DIR)/System.Text.RegularExpressions.dll \
-	/r:$(DOTNET5_BCL_DIR)/System.Threading.dll \
-	/r:$(DOTNET5_BCL_DIR)/System.Threading.Tasks.dll \
-	/r:$(DOTNET5_BCL_DIR)/System.Threading.Thread.dll \
-	/r:$(DOTNET5_BCL_DIR)/System.Xml.dll \
-	/r:$(DOTNET5_BCL_DIR)/System.Xml.ReaderWriter.dll \
+	/r:$(DOTNET6_BCL_DIR)/System.Buffers.dll \
+	/r:$(DOTNET6_BCL_DIR)/System.Collections.Concurrent.dll \
+	/r:$(DOTNET6_BCL_DIR)/System.Collections.dll \
+	/r:$(DOTNET6_BCL_DIR)/System.Collections.NonGeneric.dll \
+	/r:$(DOTNET6_BCL_DIR)/System.Console.dll \
+	/r:$(DOTNET6_BCL_DIR)/System.Diagnostics.Debug.dll \
+	/r:$(DOTNET6_BCL_DIR)/System.Diagnostics.Tools.dll \
+	/r:$(DOTNET6_BCL_DIR)/System.Drawing.Primitives.dll \
+	/r:$(DOTNET6_BCL_DIR)/System.IO.Compression.dll \
+	/r:$(DOTNET6_BCL_DIR)/System.IO.FileSystem.dll \
+	/r:$(DOTNET6_BCL_DIR)/System.Linq.dll \
+	/r:$(DOTNET6_BCL_DIR)/System.Memory.dll \
+	/r:$(DOTNET6_BCL_DIR)/System.Net.Http.dll \
+	/r:$(DOTNET6_BCL_DIR)/System.Net.NameResolution.dll \
+	/r:$(DOTNET6_BCL_DIR)/System.Net.Primitives.dll \
+	/r:$(DOTNET6_BCL_DIR)/System.Net.Requests.dll \
+	/r:$(DOTNET6_BCL_DIR)/System.Net.Security.dll \
+	/r:$(DOTNET6_BCL_DIR)/System.Net.ServicePoint.dll \
+	/r:$(DOTNET6_BCL_DIR)/System.Net.Sockets.dll \
+	/r:$(DOTNET6_BCL_DIR)/System.Resources.ResourceManager.dll \
+	/r:$(DOTNET6_BCL_DIR)/System.Runtime.dll \
+	/r:$(DOTNET6_BCL_DIR)/System.Runtime.Extensions.dll \
+	/r:$(DOTNET6_BCL_DIR)/System.Runtime.InteropServices.dll \
+	/r:$(DOTNET6_BCL_DIR)/System.Security.Cryptography.X509Certificates.dll \
+	/r:$(DOTNET6_BCL_DIR)/System.Text.RegularExpressions.dll \
+	/r:$(DOTNET6_BCL_DIR)/System.Threading.dll \
+	/r:$(DOTNET6_BCL_DIR)/System.Threading.Tasks.dll \
+	/r:$(DOTNET6_BCL_DIR)/System.Threading.Thread.dll \
+	/r:$(DOTNET6_BCL_DIR)/System.Xml.dll \
+	/r:$(DOTNET6_BCL_DIR)/System.Xml.ReaderWriter.dll \
 
 DOTNET_FLAGS=/noconfig /nostdlib+ /deterministic /features:strict /nologo /target:library /debug /unsafe /define:NET /define:NET_TODO $(DOTNET_REFERENCES)
 
 DOTNET_COMPILER=$(DOTNET_BUILD_DIR)/compiler
-DOTNET_GENERATOR_FLAGS=$(GENERATOR_FLAGS) -compiler=$(abspath $(DOTNET_COMPILER)) --lib=$(DOTNET5_BCL_DIR) -attributelib:$(DOTNET_BINDING_ATTRIBUTES) $(DOTNET_REFERENCES)
+DOTNET_GENERATOR_FLAGS=$(GENERATOR_FLAGS) -compiler=$(abspath $(DOTNET_COMPILER)) --lib=$(DOTNET6_BCL_DIR) -attributelib:$(DOTNET_BINDING_ATTRIBUTES) $(DOTNET_REFERENCES)
 DOTNET_GENERATOR=$(DOTNET_BUILD_DIR)/bgen/bgen
 DOTNET_BINDING_ATTRIBUTES=$(DOTNET_BUILD_DIR)/Xamarin.Apple.BindingAttributes.dll
 
@@ -165,7 +165,7 @@ $(IOS_BUILD_DIR)/native/generated_sources: $(IOS_GENERATOR) $(IOS_APIS) $(IOS_BU
 
 $(IOS_DOTNET_BUILD_DIR)/core-ios.dll: $(IOS_CORE_SOURCES) frameworks.sources $(BUILD_DIR)/ios-defines.rsp | $(IOS_DOTNET_BUILD_DIR)
 	$(Q_DOTNET_GEN) \
-		$(SYSTEM_CSC) $(DOTNET_FLAGS) \
+		$(DOTNET6_CSC) $(DOTNET_FLAGS) \
 		$(IOS_CORE_WARNINGS_TO_FIX) \
 		@$(BUILD_DIR)/ios-defines.rsp \
 		$(IOS_CORE_DEFINES) \
@@ -220,7 +220,7 @@ $(IOS_BUILD_DIR)/native-$(1)%Xamarin.iOS.dll $(IOS_BUILD_DIR)/native-$(1)%Xamari
 		$$(IOS_SOURCES) @$(IOS_BUILD_DIR)/native/generated_sources
 
 $(IOS_DOTNET_BUILD_DIR)/$(1)/Xamarin.iOS%dll $(IOS_DOTNET_BUILD_DIR)/$(1)/Xamarin.iOS%pdb $(2): $$(IOS_SOURCES) $$(IOS_DOTNET_BUILD_DIR)/ios-generated-sources $(PRODUCT_KEY_PATH) | $(IOS_DOTNET_BUILD_DIR)/$(1) $(IOS_DOTNET_BUILD_DIR)/ref
-	$$(call Q_PROF_CSC,dotnet/$(1)-bit) $(SYSTEM_CSC) $(DOTNET_FLAGS) -out:$(IOS_DOTNET_BUILD_DIR)/$(1)/Xamarin.iOS.dll -unsafe -optimize \
+	$$(call Q_PROF_CSC,dotnet/$(1)-bit) $(DOTNET6_CSC) $(DOTNET_FLAGS) -out:$(IOS_DOTNET_BUILD_DIR)/$(1)/Xamarin.iOS.dll -unsafe -optimize \
 		$$(ARGS_$(1)) \
 		-publicsign -keyfile:$(PRODUCT_KEY_PATH) \
 		$(3) \
@@ -406,9 +406,11 @@ PROJECT_FILES += $(PROJECT_DIR)/xamios.csproj $(PROJECT_DIR)/MonoTouch.NUnitLite
 all-ios: $(IOS_TARGETS)
 install-ios: $(IOS_TARGETS)
 
+ifdef INCLUDE_XAMARIN_LEGACY
 ifdef INCLUDE_IOS
 INSTALL_TARGETS+=install-ios
 ALL_TARGETS+=all-ios
+endif
 endif
 
 #
@@ -566,7 +568,7 @@ $(DOTNET_DESTDIR)/$(MACOS_NUGET).Ref/ref/net6.0/Xamarin.Mac.dll: $(MACOS_DOTNET_
 
 $(MACOS_DOTNET_BUILD_DIR)/core-macos.dll: $(MAC_CORE_SOURCES) frameworks.sources $(BUILD_DIR)/mac-defines.rsp | $(MACOS_DOTNET_BUILD_DIR)
 	$(Q_DOTNET_GEN) \
-		$(SYSTEM_CSC) $(DOTNET_FLAGS) -out:$@ \
+		$(DOTNET6_CSC) $(DOTNET_FLAGS) -out:$@ \
 		$(MAC_CORE_WARNINGS_TO_FIX) \
 		@$(BUILD_DIR)/mac-defines.rsp \
 		$(MAC_CORE_DEFINES) \
@@ -591,7 +593,7 @@ $(MACOS_DOTNET_BUILD_DIR)/macos.rsp: Makefile Makefile.generator frameworks.sour
 
 $(MACOS_DOTNET_BUILD_DIR)/64/Xamarin.Mac%dll $(MACOS_DOTNET_BUILD_DIR)/64/Xamarin.Mac%pdb $(MACOS_DOTNET_BUILD_DIR)/ref/Xamarin.Mac%dll: $(MACOS_DOTNET_BUILD_DIR)/macos-generated-sources $(MAC_SOURCES) $(MAC_CFNETWORK_SOURCES) $(SN_KEY) | $(MACOS_DOTNET_BUILD_DIR)/64 $(MACOS_DOTNET_BUILD_DIR)/ref
 	$(Q_DOTNET_BUILD) \
-		$(SYSTEM_CSC) $(DOTNET_FLAGS) -out:$(MACOS_DOTNET_BUILD_DIR)/64/Xamarin.Mac.dll -optimize \
+		$(DOTNET6_CSC) $(DOTNET_FLAGS) -out:$(MACOS_DOTNET_BUILD_DIR)/64/Xamarin.Mac.dll -optimize \
 		-publicsign -keyfile:$(SN_KEY) \
 		-refout:$(MACOS_DOTNET_BUILD_DIR)/ref/Xamarin.Mac.dll \
 		$(MAC_COMMON_DEFINES) \
@@ -624,8 +626,10 @@ MAC_VARIANTS_TARGETS = \
 	$(MAC_BUILD_DIR)/mobile-reference/Xamarin.Mac.dll \
 	$(MAC_BUILD_DIR)/full-reference/Xamarin.Mac.dll \
 
+ifdef INCLUDE_XAMARIN_LEGACY
 INSTALL_TARGETS+=install-mac
 ALL_TARGETS+=all-mac
+endif
 
 MAC_TARGETS_DIRS += \
 	$(MAC_BUILD_DIR) \
@@ -805,7 +809,7 @@ $(BUILD_DIR)/watchos.rsp: Makefile Makefile.generator frameworks.sources
 
 $(WATCHOS_DOTNET_BUILD_DIR)/core-watchos.dll: $(WATCHOS_CORE_SOURCES) frameworks.sources $(BUILD_DIR)/watchos-defines.rsp | $(WATCHOS_DOTNET_BUILD_DIR)
 	$(Q_DOTNET_GEN) \
-		$(SYSTEM_CSC) $(DOTNET_FLAGS) \
+		$(DOTNET6_CSC) $(DOTNET_FLAGS) \
 		$(WATCHOS_CORE_WARNINGS_TO_FIX) \
 		@$(BUILD_DIR)/watchos-defines.rsp \
 		$(WATCHOS_CORE_DEFINES) \
@@ -830,7 +834,7 @@ $(WATCHOS_DOTNET_BUILD_DIR)/watchos.rsp: Makefile Makefile.generator frameworks.
 
 $(WATCHOS_DOTNET_BUILD_DIR)/32/Xamarin.WatchOS%dll $(WATCHOS_DOTNET_BUILD_DIR)/32/Xamarin.WatchOS%pdb: $(WATCHOS_DOTNET_BUILD_DIR)/watchos-generated-sources $(WATCHOS_SOURCES) $(PRODUCT_KEY_PATH) | $(WATCHOS_DOTNET_BUILD_DIR)/32 $(WATCHOS_DOTNET_BUILD_DIR)/ref
 	$(Q_DOTNET_GEN) \
-		$(SYSTEM_CSC) $(DOTNET_FLAGS) -out:$(WATCHOS_DOTNET_BUILD_DIR)/32/Xamarin.WatchOS.dll -optimize \
+		$(DOTNET6_CSC) $(DOTNET_FLAGS) -out:$(WATCHOS_DOTNET_BUILD_DIR)/32/Xamarin.WatchOS.dll -optimize \
 		-publicsign -keyfile:$(PRODUCT_KEY_PATH) \
 		$(WATCH_DEFINES) \
 		$(ARGS_32) \
@@ -843,7 +847,7 @@ $(WATCHOS_DOTNET_BUILD_DIR)/32/Xamarin.WatchOS%dll $(WATCHOS_DOTNET_BUILD_DIR)/3
 
 $(WATCHOS_DOTNET_BUILD_DIR)/64/Xamarin.WatchOS%dll $(WATCHOS_DOTNET_BUILD_DIR)/64/Xamarin.WatchOS%pdb $(WATCHOS_DOTNET_BUILD_DIR)/ref/Xamarin.WatchOS%dll: $(WATCHOS_DOTNET_BUILD_DIR)/watchos-generated-sources $(WATCHOS_SOURCES) $(PRODUCT_KEY_PATH) | $(WATCHOS_DOTNET_BUILD_DIR)/64 $(WATCHOS_DOTNET_BUILD_DIR)/ref
 	$(Q_DOTNET_GEN) \
-		$(SYSTEM_CSC) $(DOTNET_FLAGS) -out:$(WATCHOS_DOTNET_BUILD_DIR)/64/Xamarin.WatchOS.dll -optimize \
+		$(DOTNET6_CSC) $(DOTNET_FLAGS) -out:$(WATCHOS_DOTNET_BUILD_DIR)/64/Xamarin.WatchOS.dll -optimize \
 		-publicsign -keyfile:$(PRODUCT_KEY_PATH) \
 		-refout:$(WATCHOS_DOTNET_BUILD_DIR)/ref/Xamarin.WatchOS.dll \
 		$(WATCH_DEFINES) \
@@ -926,6 +930,7 @@ WATCH_TARGETS += \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/MonoTouch.NUnitLite.dll      \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/MonoTouch.NUnitLite.pdb
 
+ifdef INCLUDE_DOTNET_WATCHOS
 DOTNET_TARGETS += \
 	$(WATCHOS_DOTNET_BUILD_DIR)/32/Xamarin.WatchOS.dll \
 	$(WATCHOS_DOTNET_BUILD_DIR)/64/Xamarin.WatchOS.dll \
@@ -942,6 +947,8 @@ DOTNET_TARGETS_DIRS += \
 	$(WATCHOS_DOTNET_BUILD_DIR)/ref \
 	$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Ref/ref/net6.0 \
 	$(foreach rid,$(DOTNET_WATCHOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0) \
+
+endif
 
 # reference assemblies, this is just for compilation with XS
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/%.dll: $(WATCH_BUILD_DIR)/reference/%.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/Facades
@@ -987,9 +994,11 @@ $(WATCH_TARGETS_DIRS):
 all-watch: $(WATCH_TARGETS)
 install-watch: $(WATCH_TARGETS)
 
+ifdef INCLUDE_XAMARIN_LEGACY
 ifdef INCLUDE_WATCH
 ALL_TARGETS += all-watch
 INSTALL_TARGETS += install-watch
+endif
 endif
 
 #
@@ -1084,7 +1093,7 @@ $(BUILD_DIR)/tvos.rsp: Makefile Makefile.generator frameworks.sources
 
 $(TVOS_DOTNET_BUILD_DIR)/core-tvos.dll: $(TVOS_CORE_SOURCES) frameworks.sources Makefile $(BUILD_DIR)/tvos-defines.rsp | $(TVOS_DOTNET_BUILD_DIR)
 	$(Q_DOTNET_GEN) \
-		$(SYSTEM_CSC) $(DOTNET_FLAGS) \
+		$(DOTNET6_CSC) $(DOTNET_FLAGS) \
 		$(TVOS_CORE_WARNINGS_TO_FIX) \
 		@$(BUILD_DIR)/tvos-defines.rsp \
 		$(TVOS_CORE_DEFINES) \
@@ -1109,7 +1118,7 @@ $(TVOS_DOTNET_BUILD_DIR)/tvos.rsp: Makefile Makefile.generator frameworks.source
 
 $(TVOS_DOTNET_BUILD_DIR)/64/Xamarin.TVOS%dll $(TVOS_DOTNET_BUILD_DIR)/64/Xamarin.TVOS%pdb $(TVOS_DOTNET_BUILD_DIR)/ref/Xamarin.TVOS%dll: $(TVOS_DOTNET_BUILD_DIR)/tvos-generated-sources $(TVOS_SOURCES) $(PRODUCT_KEY_PATH) | $(TVOS_DOTNET_BUILD_DIR)/64 $(TVOS_DOTNET_BUILD_DIR)/ref
 	$(Q_DOTNET_GEN) \
-		$(SYSTEM_CSC) $(DOTNET_FLAGS) -out:$(TVOS_DOTNET_BUILD_DIR)/64/Xamarin.TVOS.dll -optimize \
+		$(DOTNET6_CSC) $(DOTNET_FLAGS) -out:$(TVOS_DOTNET_BUILD_DIR)/64/Xamarin.TVOS.dll -optimize \
 		-publicsign -keyfile:$(PRODUCT_KEY_PATH) \
 		-refout:$(TVOS_DOTNET_BUILD_DIR)/ref/Xamarin.TVOS.dll \
 		$(TVOS_DEFINES) \
@@ -1288,7 +1297,7 @@ $(BUILD_DIR)/maccatalyst.rsp: Makefile Makefile.generator frameworks.sources
 
 $(MACCATALYST_DOTNET_BUILD_DIR)/core-maccatalyst.dll: $(TVOS_CORE_SOURCES) frameworks.sources Makefile $(BUILD_DIR)/maccatalyst-defines.rsp | $(MACCATALYST_DOTNET_BUILD_DIR)
 	$(Q_DOTNET_GEN) \
-		$(SYSTEM_CSC) $(DOTNET_FLAGS) \
+		$(DOTNET6_CSC) $(DOTNET_FLAGS) \
 		$(MACCATALYST_WARNINGS_TO_FIX) \
 		@$(BUILD_DIR)/maccatalyst-defines.rsp \
 		$(MACCATALYST_CORE_DEFINES) \
@@ -1313,7 +1322,7 @@ $(MACCATALYST_DOTNET_BUILD_DIR)/maccatalyst.rsp: Makefile Makefile.generator fra
 
 $(MACCATALYST_DOTNET_BUILD_DIR)/64/Xamarin.MacCatalyst%dll $(MACCATALYST_DOTNET_BUILD_DIR)/64/Xamarin.MacCatalyst%pdb $(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.MacCatalyst%dll: $(MACCATALYST_DOTNET_BUILD_DIR)/maccatalyst-generated-sources $(MACCATALYST_SOURCES) $(PRODUCT_KEY_PATH) | $(MACCATALYST_DOTNET_BUILD_DIR)/64 $(MACCATALYST_DOTNET_BUILD_DIR)/ref
 	$(Q_DOTNET_GEN) \
-		$(SYSTEM_CSC) $(DOTNET_FLAGS) -out:$(MACCATALYST_DOTNET_BUILD_DIR)/64/Xamarin.MacCatalyst.dll -optimize \
+		$(DOTNET6_CSC) $(DOTNET_FLAGS) -out:$(MACCATALYST_DOTNET_BUILD_DIR)/64/Xamarin.MacCatalyst.dll -optimize \
 		-publicsign -keyfile:$(PRODUCT_KEY_PATH) \
 		-refout:$(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.MacCatalyst.dll \
 		$(MACCATALYST_DEFINES) \
@@ -1369,14 +1378,14 @@ $(MACCATALYST_BUILD_DIR)/reference/Xamarin.iOS.cs: $(MACCATALYST_BUILD_DIR)/refe
 	$(Q) mv $@.tmp $@
 
 $(MACCATALYST_BUILD_DIR)/reference/Xamarin.iOS.dll: $(MACCATALYST_BUILD_DIR)/reference/Xamarin.iOS.cs
-	$(Q) $(MACCATALYST_CSC) $< -out:$@ -r:$(MACCATALYST_BUILD_DIR)/reference/Xamarin.MacCatalyst.dll -target:library -deterministic -publicsign -keyfile:$(PRODUCT_KEY_PATH) -nologo -nowarn:618 -unsafe
+	$(Q) $(MACCATALYST_CSC) $< -out:$@ -r:$(MACCATALYST_BUILD_DIR)/reference/Xamarin.MacCatalyst.dll -target:library -deterministic -publicsign -keyfile:$(PRODUCT_KEY_PATH) -nologo -nowarn:108,114,618 -unsafe
 
 $(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.iOS.cs: $(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.MacCatalyst.dll $(IOS_DOTNET_BUILD_DIR)/ref/Xamarin.iOS.dll Makefile $(GENERATE_TYPE_FORWARDERS)
 	$(Q) mono $(GENERATE_TYPE_FORWARDERS) $(IOS_DOTNET_BUILD_DIR)/ref/Xamarin.iOS.dll $(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.MacCatalyst.dll $@.tmp
 	$(Q) mv $@.tmp $@
 
 $(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.iOS.dll: $(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.iOS.cs
-	$(Q) $(SYSTEM_CSC) $(DOTNET_FLAGS) $< -out:$@ -r:$(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.MacCatalyst.dll -target:library -deterministic -publicsign -keyfile:$(PRODUCT_KEY_PATH) -nologo -nowarn:618 -unsafe
+	$(Q) $(DOTNET6_CSC) $(DOTNET_FLAGS) $< -out:$@ -r:$(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.MacCatalyst.dll -target:library -deterministic -publicsign -keyfile:$(PRODUCT_KEY_PATH) -nologo -nowarn:108,114,618 -unsafe
 
 $(MACCATALYST_BUILD_DIR)/reference/OpenTK-1.0.cs: $(MACCATALYST_BUILD_DIR)/reference/Xamarin.MacCatalyst.dll $(IOS_BUILD_DIR)/reference/OpenTK-1.0.dll Makefile $(GENERATE_TYPE_FORWARDERS)
 	$(Q) mono $(GENERATE_TYPE_FORWARDERS) $(IOS_BUILD_DIR)/reference/OpenTK-1.0.dll $(MACCATALYST_BUILD_DIR)/reference/Xamarin.MacCatalyst.dll $@.tmp
@@ -1468,9 +1477,11 @@ $(MACCATALYST_TARGETS_DIRS):
 all-maccatalyst: $(MACCATALYST_TARGETS)
 install-maccatalyst: $(MACCATALYST_TARGETS)
 
+ifdef INCLUDE_XAMARIN_LEGACY
 ifdef INCLUDE_MACCATALYST
 ALL_TARGETS += all-maccatalyst
 INSTALL_TARGETS += install-maccatalyst
+endif
 endif
 
 ### .NET ###
@@ -1522,9 +1533,11 @@ $(TVOS_TARGETS_DIRS):
 all-tvos: $(TVOS_TARGETS)
 install-tvos: $(TVOS_TARGETS)
 
+ifdef INCLUDE_XAMARIN_LEGACY
 ifdef INCLUDE_TVOS
 ALL_TARGETS += all-tvos
 INSTALL_TARGETS += install-tvos
+endif
 endif
 
 #
@@ -1543,7 +1556,7 @@ $(COMMON_TARGET_DIRS):
 
 $(DOTNET_COMPILER): Makefile $(TOP)/Make.config | $(DOTNET_BUILD_DIR)
 	$(Q) echo "#!/bin/zsh -e" > $@
-	$(Q) echo "exec $(SYSTEM_CSC) $(DOTNET_FLAGS) \"\$$@\"" >> $@
+	$(Q) echo "exec $(DOTNET6_CSC) $(DOTNET_FLAGS) \"\$$@\"" >> $@
 	$(Q) chmod +x $@
 
 GENERATE_FRAMEWORKS_CONSTANTS=generate-frameworks-constants/bin/Debug/generate-frameworks-constants.exe
@@ -1572,6 +1585,17 @@ all-local:: $(DOTNET_TARGETS)
 endif
 
 project-files: $(PROJECT_FILES)
+
+$(TOP)/tools/common/SdkVersions.cs: $(TOP)/tools/common/SdkVersions.cs.in
+	@$(MAKE) -C $(TOP)/tools/mtouch ../common/SdkVersions.cs
+
+MinimumVersions.cs: MinimumVersions.cs.in Makefile $(TOP)/Make.config
+	$(Q_GEN) sed \
+		-e 's/@DOTNET_MIN_IOS_SDK_VERSION@/$(DOTNET_MIN_IOS_SDK_VERSION)/g' \
+		-e 's/@DOTNET_MIN_TVOS_SDK_VERSION@/$(DOTNET_MIN_TVOS_SDK_VERSION)/' \
+		-e 's/@DOTNET_MIN_OSX_SDK_VERSION@/$(DOTNET_MIN_OSX_SDK_VERSION)/' \
+		-e 's/@DOTNET_MIN_MACCATALYST_SDK_VERSION@/$(DOTNET_MIN_MACCATALYST_SDK_VERSION)/g' \
+		$< > $@
 
 # Using .SECONDARY can cause make to go into an infinite loop.
 # See https://github.com/xamarin/maccore/issues/762.

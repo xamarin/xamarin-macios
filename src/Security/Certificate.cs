@@ -884,6 +884,7 @@ namespace Security {
 
 		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
 		[DllImport (Constants.SecurityLibrary)]
+		[return: MarshalAs (UnmanagedType.U1)]
 		static extern bool /* Boolean */ SecKeyIsAlgorithmSupported (IntPtr /* SecKeyRef* */ key, /* SecKeyOperationType */ nint operation, IntPtr /* SecKeyAlgorithm* */ algorithm);
 
 		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
@@ -910,6 +911,7 @@ namespace Security {
 
 		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
 		[DllImport (Constants.SecurityLibrary)]
+		[return: MarshalAs (UnmanagedType.U1)]
 		static extern /* Boolean */ bool SecKeyVerifySignature (/* SecKeyRef */ IntPtr key, /* SecKeyAlgorithm */ IntPtr algorithm, /* CFDataRef */ IntPtr signedData, /* CFDataRef */ IntPtr signature, /* CFErrorRef* */ out IntPtr error);
 
 		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]

@@ -43,7 +43,8 @@ namespace MediaAccessibility {
 #endif
 
 		[DllImport (Constants.MediaAccessibilityLibrary)]
-		static extern bool MACaptionAppearanceAddSelectedLanguage (nint domain,
+		[return: MarshalAs (UnmanagedType.I1)]
+ 		static extern bool MACaptionAppearanceAddSelectedLanguage (nint domain,
 			/* CFStringRef __nonnull */ IntPtr language);
 
 		public static bool AddSelectedLanguage (MACaptionAppearanceDomain domain, string language)

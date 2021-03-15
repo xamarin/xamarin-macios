@@ -314,6 +314,7 @@ namespace MediaPlayer {
 		MPMediaItem [] Items { get; }
 
 		[Export ("representativeItem")]
+		[NullAllowed]
 		MPMediaItem RepresentativeItem { get; }
 
 		[Export ("count")]
@@ -438,6 +439,7 @@ namespace MediaPlayer {
 
 		[iOS (7,0)]
 		[Export ("name")]
+		[NullAllowed]
 		string Name { get; }
 
 		[iOS (7,0)]
@@ -446,6 +448,7 @@ namespace MediaPlayer {
 
 		[iOS (8,0)]
 		[Export ("seedItems")]
+		[NullAllowed]
 		MPMediaItem [] SeedItems { get; }		
 
 		[iOS (9,3)]
@@ -522,9 +525,11 @@ namespace MediaPlayer {
 		void RemoveFilterPredicate (MPMediaPredicate predicate);
 
 		[Export ("items")]
+		[NullAllowed]
 		MPMediaItem [] Items { get; }
 
 		[Export ("collections")]
+		[NullAllowed]
 		MPMediaItemCollection [] Collections { get; }
 
 		[Export ("groupingType")]
@@ -558,9 +563,11 @@ namespace MediaPlayer {
 		MPMediaQuery GenresQuery { get; }
 
 		[Export ("collectionSections")]
+		[NullAllowed]
 		MPMediaQuerySection [] CollectionSections { get; }
 
 		[Export ("itemSections")]
+		[NullAllowed]
 		MPMediaQuerySection [] ItemSections { get; }
 	}
 
@@ -586,6 +593,7 @@ namespace MediaPlayer {
 		string Property { get; }
 
 		[Export ("value", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		NSObject Value { get; }
 
 		[Export ("comparisonType")]
@@ -1530,6 +1538,7 @@ namespace MediaPlayer {
 
 		[Abstract]
 		[Export ("contentItemAtIndexPath:")]
+		[return: NullAllowed]
 #if XAMCORE_4_0
 		MPContentItem GetContentItem (NSIndexPath indexPath);
 #else
@@ -1673,10 +1682,10 @@ namespace MediaPlayer {
 		NSObject AddTarget (Func<MPRemoteCommandEvent,MPRemoteCommandHandlerStatus> handler);
 
 		[Export ("removeTarget:")]
-		void RemoveTarget (NSObject target);
+		void RemoveTarget ([NullAllowed] NSObject target);
 
 		[Export ("removeTarget:action:")]
-		void RemoveTarget ([NullAllowed] NSObject target, Selector action);
+		void RemoveTarget ([NullAllowed] NSObject target, [NullAllowed] Selector action);
 	}
 
 	[Mac (10,12,2)]
@@ -2235,6 +2244,7 @@ namespace MediaPlayer {
 	[BaseType (typeof (AVMediaSelectionOption))]
 	interface AVMediaSelectionOption_MPNowPlayingInfoLanguageOptionAdditions {
 		[Export ("makeNowPlayingInfoLanguageOption")]
+		[return: NullAllowed]
 		MPNowPlayingInfoLanguageOption CreateNowPlayingInfoLanguageOption ();
 	}
 

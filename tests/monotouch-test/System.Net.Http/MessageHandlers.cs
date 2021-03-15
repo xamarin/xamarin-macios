@@ -59,6 +59,11 @@ namespace MonoTests.System.Net.Http
 			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
 			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
 
+#if NET
+			if (handlerType == typeof (HttpClientHandler))
+				Assert.Ignore ("https://github.com/dotnet/runtime/issues/49201");
+#endif
+
 			PrintHandlerToTest ();
 
 			bool done = false;

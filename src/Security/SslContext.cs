@@ -162,7 +162,7 @@ namespace Security {
 		}
 
 		[DllImport (Constants.SecurityLibrary)]
-		extern static /* OSStatus */ SslStatus SSLGetSessionOption (/* SSLContextRef */ IntPtr context, SslSessionOption option, out bool value);
+		extern static /* OSStatus */ SslStatus SSLGetSessionOption (/* SSLContextRef */ IntPtr context, SslSessionOption option, [MarshalAs (UnmanagedType.I1)] out bool value);
 
 		public SslStatus GetSessionOption (SslSessionOption option, out bool value)
 		{
@@ -171,7 +171,7 @@ namespace Security {
 		}
 
 		[DllImport (Constants.SecurityLibrary)]
-		extern static /* OSStatus */ SslStatus SSLSetSessionOption (/* SSLContextRef */ IntPtr context, SslSessionOption option, bool value);
+		extern static /* OSStatus */ SslStatus SSLSetSessionOption (/* SSLContextRef */ IntPtr context, SslSessionOption option, [MarshalAs (UnmanagedType.I1)] bool value);
 
 		public SslStatus SetSessionOption (SslSessionOption option, bool value)
 		{

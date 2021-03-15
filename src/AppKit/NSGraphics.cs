@@ -35,9 +35,9 @@ namespace AppKit {
 		public static readonly float DarkGray = (float) 1/3.0f;
 		
 		[DllImport (Constants.AppKitLibrary)]
-		extern static NSWindowDepth NSBestDepth (IntPtr colorspaceHandle, nint bitsPerSample, nint bitsPerPixel, bool planar, ref bool exactMatch);
+		extern static NSWindowDepth NSBestDepth (IntPtr colorspaceHandle, nint bitsPerSample, nint bitsPerPixel, [MarshalAs (UnmanagedType.I1)] bool planar, [MarshalAs (UnmanagedType.I1)] ref bool exactMatch);
 		
-		public static NSWindowDepth BestDepth (NSString colorspace, nint bitsPerSample, nint bitsPerPixel, bool planar, ref bool exactMatch)
+		public static NSWindowDepth BestDepth (NSString colorspace, nint bitsPerSample, nint bitsPerPixel, [MarshalAs (UnmanagedType.I1)] bool planar, [MarshalAs (UnmanagedType.I1)] ref bool exactMatch)
 		{
 			if (colorspace == null)
 				throw new ArgumentNullException ("colorspace");
@@ -46,6 +46,7 @@ namespace AppKit {
 		}
 
 		[DllImport (Constants.AppKitLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool NSPlanarFromDepth (NSWindowDepth depth);
 		
 		public static bool PlanarFromDepth (NSWindowDepth depth)

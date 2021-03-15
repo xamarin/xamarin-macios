@@ -154,6 +154,7 @@ namespace CoreFoundation {
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CFBundleIsExecutableLoaded (IntPtr bundle);
 		
 		public bool HasLoadedExecutable {
@@ -161,6 +162,7 @@ namespace CoreFoundation {
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CFBundlePreflightExecutable (IntPtr bundle, out IntPtr error);
 		
 		public bool PreflightExecutable (out NSError error)
@@ -173,6 +175,7 @@ namespace CoreFoundation {
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CFBundleLoadExecutableAndReturnError (IntPtr bundle, out IntPtr error);
 		
 		public bool LoadExecutable (out NSError error)

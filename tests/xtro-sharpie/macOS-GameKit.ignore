@@ -19,8 +19,5 @@
 # This selector does not exist in macOS, confirmed by intro.
 !missing-selector! GKLeaderboardSet::loadImageWithCompletionHandler: not bound
 
-## property is null by default
-!extra-null-allowed! 'System.Void GameKit.GKVoiceChat::set_PlayerStateUpdateHandler(GameKit.GKPlayerStateUpdateHandler)' has a extraneous [NullAllowed] on parameter #0
-
 # API removed by Apple, marked as deprecated
 !unknown-native-enum! GKAuthenticationType bound

@@ -96,7 +96,7 @@ namespace ObjCRuntime
 		public extern static IntPtr IntPtr_objc_msgSend_double_double (IntPtr receiver, IntPtr selector, double a, double b);
 
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
-		public extern static IntPtr IntPtr_objc_msgSend_bool (IntPtr receiver, IntPtr selector, bool p1);
+		public extern static IntPtr IntPtr_objc_msgSend_bool (IntPtr receiver, IntPtr selector, [MarshalAs (UnmanagedType.I1)] bool p1);
 
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
 		public extern static double Double_objc_msgSend (IntPtr receiver, IntPtr selector);
@@ -105,6 +105,7 @@ namespace ObjCRuntime
 		public extern static float float_objc_msgSend (IntPtr receiver, IntPtr selector);
 
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
+		[return: MarshalAs (UnmanagedType.I1)]
 		public extern static bool bool_objc_msgSend (IntPtr receiver, IntPtr selector);
 
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
@@ -120,9 +121,11 @@ namespace ObjCRuntime
 		public extern static int int_objc_msgSend_IntPtr (IntPtr receiver, IntPtr selector, IntPtr p1);
 
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
+		[return: MarshalAs (UnmanagedType.I1)]
 		public extern static bool bool_objc_msgSend_IntPtr (IntPtr receiver, IntPtr selector, IntPtr p1);
 
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
+		[return: MarshalAs (UnmanagedType.I1)]
 		public extern static bool bool_objc_msgSend_IntPtr_int (IntPtr receiver, IntPtr selector, IntPtr p1, int p2);
 
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]

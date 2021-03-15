@@ -23,6 +23,7 @@ namespace CoreFoundation {
 		}
 		
 		[DllImport (Constants.CoreFoundationLibrary, EntryPoint="CFEqual")]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CFEqual (/*CFTypeRef*/ IntPtr cf1, /*CFTypeRef*/ IntPtr cf2);
 
 		public static bool Equal (IntPtr cf1, IntPtr cf2)

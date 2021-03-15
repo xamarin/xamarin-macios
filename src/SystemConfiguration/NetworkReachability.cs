@@ -209,12 +209,14 @@ namespace SystemConfiguration {
 		delegate void SCNetworkReachabilityCallBack (/* SCNetworkReachabilityRef */ IntPtr handle, /* SCNetworkReachabilityFlags */ NetworkReachabilityFlags flags, /* void* */ IntPtr info);
 
 		[DllImport (Constants.SystemConfigurationLibrary)]
+		[return: MarshalAs (UnmanagedType.U1)]
 		static extern /* Boolean */ bool SCNetworkReachabilitySetCallback (
 			/* SCNetworkReachabilityRef __nonnull */ IntPtr handle, 
 			/* __nullable */ SCNetworkReachabilityCallBack callout,
 			/* __nullable */ ref SCNetworkReachabilityContext context);
 		
 		[DllImport (Constants.SystemConfigurationLibrary)]
+		[return: MarshalAs (UnmanagedType.U1)]
 		static extern /* Boolean */ bool SCNetworkReachabilitySetCallback (
 			/* SCNetworkReachabilityRef __nullable */ IntPtr handle, 
 			/* __nullable */ SCNetworkReachabilityCallBack callout, 
@@ -268,6 +270,7 @@ namespace SystemConfiguration {
 		}
 
 		[DllImport (Constants.SystemConfigurationLibrary)]
+		[return: MarshalAs (UnmanagedType.U1)]
 		extern static /* Boolean */ bool SCNetworkReachabilityScheduleWithRunLoop (
 			/* SCNetworkReachabilityRef __nonnull */ IntPtr target, /* CFRunLoopRef __nonnull */ IntPtr runloop, 
 			/* CFStringRef __nonnull */ IntPtr runLoopMode);
@@ -310,6 +313,7 @@ namespace SystemConfiguration {
 		}
 
 		[DllImport (Constants.SystemConfigurationLibrary)]
+		[return: MarshalAs (UnmanagedType.U1)]
 		extern static /* Boolean */ bool SCNetworkReachabilitySetDispatchQueue (
 			/* SCNetworkReachabilityRef __nonnull */ IntPtr target,
 			/* dispatch_queue_t __nullable */ IntPtr queue);

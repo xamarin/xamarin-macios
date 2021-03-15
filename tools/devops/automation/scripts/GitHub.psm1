@@ -454,7 +454,7 @@ function New-GitHubSummaryComment {
                 $sb.AppendLine("<details><summary>View API diff</summary>")
                 $sb.AppendLine("") # no new line results in a bad rendering in the links
 
-                foreach ($linkPlatform in @("iOS", "macOS", "tvOS", "watchOS")) {
+                foreach ($linkPlatform in @("iOS", "macOS", "macCat", "tvOS", "watchOS")) {
                     $htmlLink = $json.html | Select-Object -ExpandProperty $linkPlatform 
                     $gistLink = $json.gist | Select-Object -ExpandProperty $linkPlatform 
                     $sb.AppendLine("* $linkPlatform [vsdrops]($htmlLink) [gist]($gistLink)")

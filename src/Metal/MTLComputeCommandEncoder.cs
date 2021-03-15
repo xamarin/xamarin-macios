@@ -3,6 +3,8 @@ using System.Runtime.InteropServices;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace Metal {
 
 #if XAMCORE_4_0
@@ -13,9 +15,9 @@ namespace Metal {
 		public static void SetBuffers (this IMTLComputeCommandEncoder table, IMTLBuffer[] buffers, nuint[] offsets, NSRange range)
 		{
 			if (buffers == null)
-				throw new ArgumentNullException (nameof (buffers));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (buffers));
 			if (offsets == null)
-				throw new ArgumentNullException (nameof (offsets));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (offsets));
 
 			var bufferPtrArray = buffers.Length <= 1024 ? stackalloc IntPtr[buffers.Length] : new IntPtr [buffers.Length];
 			// get all intptr from the array to pass to the lower level call
