@@ -44,4 +44,4 @@ all check:
 print-abspath-variable:
 	@echo $(VARIABLE)=$(abspath $($(VARIABLE)))
 
-provisioning: build-provisioning.csx device-tests-provisioning.csx provision-xcode.csx LocProject.json
+provisioning: build-provisioning.csx device-tests-provisioning.csx provision-xcode.csx
