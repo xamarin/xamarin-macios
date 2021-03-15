@@ -1395,8 +1395,7 @@ namespace Xamarin.Bundler {
 			var prefix = new [] { dest };
 			var suffix = new [] { "-output", dest };
 			List <string> archArgs = new List <string> ();
-			foreach (var abi in App.Abis)
-			{
+			foreach (var abi in App.Abis) {
 				archArgs.Add ("-extract_family");
 				archArgs.Add (abi.ToString ().ToLower ());
 			}

@@ -113,7 +113,7 @@ namespace Xamarin.Tests
 						case MachO.LoadCommands.MinMacOSX:
 							version = SdkVersions.MinOSXVersion;
 							if (slice.Architecture == MachO.Architectures.ARM64) {
-								alternate_version = new Version(11, 0, 0);
+								alternate_version = new Version (11, 0, 0);
 							}
 							mono_native_compat_version = SdkVersions.MinOSXVersion;
 							mono_native_unified_version = new Version (10, 12, 0);

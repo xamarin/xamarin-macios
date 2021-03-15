@@ -246,7 +246,7 @@ namespace Xamarin.Bundler {
 			});
 
 			// Lipo the result
-			if(needsLipo) {
+			if (needsLipo) {
 				Parallel.ForEach (filesToAOT, ParallelOptions, file => {
 					string [] inputs = abis.Select (abi => Path.Combine (tempAotDir, "aot", abi.AsArchString (), Path.GetFileName (file) + ".dylib")).Where (File.Exists).ToArray ();
 					string output = file + ".dylib";
