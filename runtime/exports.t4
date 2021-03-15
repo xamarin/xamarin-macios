@@ -654,6 +654,21 @@
 		),
 
 		#endregion
+
+		#region mini/debugger-agent.h
+
+		new Export ("void", "mono_debugger_agent_parse_options",
+			"const char *", "options"
+		),
+
+		new Export ("gboolean", "mono_debugger_agent_transport_handshake"),
+
+		new Export ("void", "mono_debugger_agent_register_transport",
+			"DebuggerTransport *", "trans"
+		),
+
+		#endregion
+
 	};
 #><#+
 	class Arg

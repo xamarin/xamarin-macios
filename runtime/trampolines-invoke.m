@@ -640,7 +640,7 @@ exception_handling:
 					// If we already have an exception, don't overwrite it with an exception from disposing something.
 					// However we don't want to silently ignore it, so print it.
 					NSLog (@PRODUCT ": An exception occurred while disposing the object %p:", list->data);
-					NSLog (@"%@", xamarin_print_all_exceptions (xamarin_gchandle_get_target (dispose_exception_gchandle)));
+					NSLog (@"%@", xamarin_print_all_exceptions (dispose_exception_gchandle));
 				}
 			}
 			list = list->next;

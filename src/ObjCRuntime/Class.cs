@@ -621,6 +621,9 @@ namespace ObjCRuntime {
 		[DllImport ("/usr/lib/libobjc.dylib")]
 		internal extern static IntPtr class_getInstanceVariable (IntPtr cls, string name);
 
+		[DllImport ("/usr/lib/libobjc.dylib")]
+		internal extern static IntPtr class_getInstanceMethod (IntPtr cls, IntPtr sel);
+
 		[DllImport ("/usr/lib/libobjc.dylib", CharSet=CharSet.Ansi)]
 		[return: MarshalAs (UnmanagedType.U1)]
 		internal extern static bool class_addProperty (IntPtr cls, string name, objc_attribute_prop [] attributes, int count);
