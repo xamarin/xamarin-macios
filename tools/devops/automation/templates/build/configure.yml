@@ -83,6 +83,10 @@ steps:
   displayName: 'Configure build'
 
 steps:
+- bash: |
+    make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops LocProject.json
+  displayName: 'Generate LocProject.json.'
+
 - task: OneLocBuild@2
   env:
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
