@@ -291,7 +291,7 @@ namespace MediaPlayer {
 			}
 		}
 
-		[Watch (7,3), TV (14,5), Mac (11,3), iOS (14,5)]
+		[Watch (7,4), TV (14,5), Mac (11,3), iOS (14,5)]
 		public bool IsPreorder {
 			get {
 				return BoolForProperty (IsPreorderProperty);
