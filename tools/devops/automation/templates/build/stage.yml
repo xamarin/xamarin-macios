@@ -19,7 +19,7 @@ jobs:
 - job: configure
   displayName: 'Configure build'
   pool:
-    vmImage: ubuntu-latest
+    vmImage: windows-latest
 
   steps:
   - template: configure.yml

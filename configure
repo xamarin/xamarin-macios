@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/bash -e
 
 function show_help () {
 cat <<EOL
@@ -58,7 +58,7 @@ fi
 
 echo "# Configure arguments: $*" >> $CONFIGURED_FILE
 
-while test x$1 != x; do
+while test "x$1" != x; do
 	case $1 in
 	--disable-mac)
 		echo "INCLUDE_MAC=" >> $CONFIGURED_FILE

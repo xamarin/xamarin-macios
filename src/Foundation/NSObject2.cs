@@ -154,10 +154,10 @@ namespace Foundation {
 		extern static void RegisterToggleRef (NSObject obj, IntPtr handle, bool isCustomType);
 
 		[MethodImplAttribute (MethodImplOptions.InternalCall)]
-		static extern void xamarin_release_managed_ref (IntPtr handle, NSObject managed_obj);
+		static extern void xamarin_release_managed_ref (IntPtr handle, bool user_type);
 
 		[MethodImplAttribute (MethodImplOptions.InternalCall)]
-		static extern void xamarin_create_managed_ref (IntPtr handle, NSObject obj, bool retain);
+		static extern void xamarin_create_managed_ref (IntPtr handle, NSObject obj, bool retain, bool user_type);
 
 #if !XAMCORE_3_0
 		public static bool IsNewRefcountEnabled ()
@@ -220,13 +220,20 @@ namespace Foundation {
 
 		void CreateManagedRef (bool retain)
 		{
-			xamarin_create_managed_ref (handle, this, retain);
+			flags |= Flags.HasManagedRef;
+			xamarin_create_managed_ref (handle, this, retain, Runtime.IsUserType (handle));
 		}
 
 		void ReleaseManagedRef ()
 		{
+			var handle = this.Handle; // Get a copy of the handle, because it will be cleared out when calling Runtime.NativeObjectHasDied, and we still need the handle later.
+			var user_type = Runtime.IsUserType (handle);
 			flags &= ~Flags.HasManagedRef;
-			xamarin_release_managed_ref (handle, this);
+			if (!user_type) {
+				/* If we're a wrapper type, we need to unregister here, since we won't enter the release trampoline */
+				Runtime.NativeObjectHasDied (handle, this);
+			}
+			xamarin_release_managed_ref (handle, user_type);
 		}
 
 		static bool IsProtocol (Type type, IntPtr protocol)

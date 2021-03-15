@@ -142,14 +142,6 @@ endif
 clean-local::
 	$(Q) rm -Rf downloads .stamp-download-mono
 
-ifdef INJECT_X86_64_SLICE
-X86_64_SLICE=$(abspath $(CURDIR)/x86-64-slice.dylib)
-$(X86_64_SLICE): Makefile
-	echo "void xamarin_x86_64_function_for_notarization_workaround () {}" | $(MAC_CC) -shared -x c -o$@ -
-else
-X86_64_SLICE=
-endif
-
 ifeq ($(MONO_BUILD_FROM_SOURCE),)
 
 all-local:: .stamp-download-mono .stamp-mono-ios-sdk-destdir
@@ -1013,20 +1005,13 @@ IPHONEOS_TARGETS =                                                     \
 	$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/lib/libmono-profiler-log.dylib       \
 	$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/Frameworks/Mono.framework/Mono       \
 
-$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/lib/%: .stamp-$(MONO_BUILD_MODE) $(X86_64_SLICE_ALL) | $(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/lib
-	@#$(Q) $(CP) $(MONO_IOS_SDK_DESTDIR)/ios-libs/ios/$(notdir $@) $@
-	$(Q_LIPO) lipo $(MONO_IOS_SDK_DESTDIR)/ios-libs/ios/$(notdir $@) $(X86_64_SLICE) -create -output $@
+$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/lib/%: .stamp-$(MONO_BUILD_MODE) | $(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/lib
+	$(Q) $(CP) $(MONO_IOS_SDK_DESTDIR)/ios-libs/ios/$(notdir $@) $@
 	$(Q) if test -d $(MONO_IOS_SDK_DESTDIR)/ios-libs/ios/$(notdir $@).dSYM; then $(CP) -R $(MONO_IOS_SDK_DESTDIR)/ios-libs/ios/$(notdir $@).dSYM $(dir $@); fi
 
-$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/Frameworks/Mono.framework/Mono: .stamp-$(MONO_BUILD_MODE) $(X86_64_SLICE_ALL) | $(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/Frameworks
+$(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/Frameworks/Mono.framework/Mono: .stamp-$(MONO_BUILD_MODE) | $(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/Frameworks
 	$(Q) $(CP) -R $(MONO_IOS_SDK_DESTDIR)/ios-frameworks/ios/Mono.framework $(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/Frameworks
 	$(Q) $(CP) -R $(MONO_IOS_SDK_DESTDIR)/ios-frameworks/ios/Mono.framework.dSYM $(IOS_DESTDIR)$(XAMARIN_IPHONEOS_SDK)/Frameworks
-ifdef INJECT_X86_64_SLICE
-	@# inject x86-64 slice
-	$(Q) mv $@ $@.tmp
-	$(Q_LIPO) lipo $@.tmp $(X86_64_SLICE) -create -output $@
-	$(Q) rm $@.tmp
-endif
 
 $(IPHONEOS_DIRECTORIES):
 	$(Q) mkdir -p $@
@@ -1057,20 +1042,13 @@ WATCHOS_TARGETS =                                                             \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/lib/libmono-profiler-log.dylib       \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks/Mono.framework/Mono       \
 
-$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/lib/%: .stamp-$(MONO_BUILD_MODE) $(X86_64_SLICE_ALL) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/lib
-	@#$(Q) $(CP) $(MONO_IOS_SDK_DESTDIR)/ios-libs/watchos/$(notdir $@) $@
-	$(Q_LIPO) lipo $(MONO_IOS_SDK_DESTDIR)/ios-libs/watchos/$(notdir $@) $(X86_64_SLICE) -create -output $@
+$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/lib/%: .stamp-$(MONO_BUILD_MODE) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/lib
+	$(Q) $(CP) $(MONO_IOS_SDK_DESTDIR)/ios-libs/watchos/$(notdir $@) $@
 	$(Q) if test -d $(MONO_IOS_SDK_DESTDIR)/ios-libs/watchos/$(notdir $@).dSYM; then $(CP) -R $(MONO_IOS_SDK_DESTDIR)/ios-libs/watchos/$(notdir $@).dSYM $(dir $@); fi
 
-$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks/Mono.framework/Mono: .stamp-$(MONO_BUILD_MODE) $(X86_64_SLICE_ALL) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks
+$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks/Mono.framework/Mono: .stamp-$(MONO_BUILD_MODE) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks
 	$(Q) $(CP) -R $(MONO_IOS_SDK_DESTDIR)/ios-frameworks/watchos/Mono.framework $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks
 	$(Q) $(CP) -R $(MONO_IOS_SDK_DESTDIR)/ios-frameworks/watchos/Mono.framework.dSYM $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks
-ifdef INJECT_X86_64_SLICE
-	@# inject x86-64 slice
-	$(Q) mv $@ $@.tmp
-	$(Q_LIPO) lipo $@.tmp $(X86_64_SLICE) -create -output $@
-	$(Q) rm $@.tmp
-endif
 
 $(WATCHOS_DIRECTORIES):
 	$(Q) mkdir -p $@
@@ -1101,20 +1079,13 @@ TVOS_TARGETS =                                                             \
 	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/lib/libmono-profiler-log.dylib       \
 	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks/Mono.framework/Mono       \
 
-$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/lib/%: .stamp-$(MONO_BUILD_MODE) $(X86_64_SLICE_ALL) | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/lib
-	@#$(Q) $(CP) $(MONO_IOS_SDK_DESTDIR)/ios-libs/tvos/$(notdir $@) $@
-	$(Q_LIPO) lipo $(MONO_IOS_SDK_DESTDIR)/ios-libs/tvos/$(notdir $@) $(X86_64_SLICE) -create -output $@
+$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/lib/%: .stamp-$(MONO_BUILD_MODE) | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/lib
+	$(Q) $(CP) $(MONO_IOS_SDK_DESTDIR)/ios-libs/tvos/$(notdir $@) $@
 	$(Q) if test -d $(MONO_IOS_SDK_DESTDIR)/ios-libs/tvos/$(notdir $@).dSYM; then $(CP) -R $(MONO_IOS_SDK_DESTDIR)/ios-libs/tvos/$(notdir $@).dSYM $(dir $@); fi
 
-$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks/Mono.framework/Mono: .stamp-$(MONO_BUILD_MODE) $(X86_64_SLICE_ALL) | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks
+$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks/Mono.framework/Mono: .stamp-$(MONO_BUILD_MODE) | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks
 	$(Q) $(CP) -R $(MONO_IOS_SDK_DESTDIR)/ios-frameworks/tvos/Mono.framework $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks
 	$(Q) $(CP) -R $(MONO_IOS_SDK_DESTDIR)/ios-frameworks/tvos/Mono.framework.dSYM $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks
-ifdef INJECT_X86_64_SLICE
-	@# inject x86-64 slice
-	$(Q) mv $@ $@.tmp
-	$(Q_LIPO) lipo $@.tmp $(X86_64_SLICE) -create -output $@
-	$(Q) rm $@.tmp
-endif
 
 $(TVOS_DIRECTORIES):
 	$(Q) mkdir -p $@
