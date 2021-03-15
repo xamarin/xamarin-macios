@@ -1397,7 +1397,7 @@ namespace Xamarin.Bundler {
 			List <string> archArgs = new List <string> ();
 			foreach (var abi in App.Abis) {
 				archArgs.Add ("-extract_family");
-				archArgs.Add (abi.ToString ().ToLower ());
+				archArgs.Add (abi.ToString ().ToLowerInvariant ());
 			}
 			RunLipo (App, prefix.Concat (archArgs).Concat (suffix).ToArray ());
 			if (existingArchs.Except (App.Abis).Count () > 0 && name != "MonoPosixHelper" && name != "libmono-native-unified" && name != "libmono-native-compat")
