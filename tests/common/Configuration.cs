@@ -20,7 +20,7 @@ namespace Xamarin.Tests
 		static string mt_root;
 		static string ios_destdir;
 		static string mac_destdir;
-		public static string DotNet5BclDir;
+		public static string DotNet6BclDir;
 		public static string mt_src_root;
 		public static string sdk_version;
 		public static string watchos_sdk_version;
@@ -270,7 +270,7 @@ namespace Xamarin.Tests
 			include_dotnet_watchos = !string.IsNullOrEmpty (GetVariable ("INCLUDE_DOTNET_WATCH", ""));
 			include_maccatalyst = !string.IsNullOrEmpty (GetVariable ("INCLUDE_MACCATALYST", ""));
 			include_device = !string.IsNullOrEmpty (GetVariable ("INCLUDE_DEVICE", ""));
-			DotNet5BclDir = GetVariable ("DOTNET5_BCL_DIR", null);
+			DotNet6BclDir = GetVariable ("DOTNET6_BCL_DIR", null);
 
 			XcodeVersionString = GetXcodeVersion (xcode_root);
 #if MONOMAC

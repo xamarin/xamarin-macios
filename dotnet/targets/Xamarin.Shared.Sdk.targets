@@ -12,7 +12,12 @@
 
 		<!-- Use single-project MSBuild properties to generate the application manifest by default -->
 		<GenerateApplicationManifest Condition="'$(GenerateApplicationManifest)' == ''">true</GenerateApplicationManifest>
+
+		<XamarinWindowsSdkDirectory Condition="'$(XamarinWindowsSdkDirectory)' == '' And '$(_PlatformName)' == 'iOS'">$(MSBuildThisFileDirectory.Replace('Microsoft.iOS.Sdk', 'Microsoft.iOS.Windows.Sdk'))</XamarinWindowsSdkDirectory>
+		<XamarinWindowsSdkDirectory Condition="'$(XamarinWindowsSdkDirectory)' == '' And '$(_PlatformName)' == 'tvOS'">$(MSBuildThisFileDirectory.Replace('Microsoft.tvOS.Sdk', 'Microsoft.tvOS.Windows.Sdk'))</XamarinWindowsSdkDirectory>
 	</PropertyGroup>
+
+	<Import Project="$(XamarinWindowsSdkDirectory)$(MSBuildThisFileName).Before.targets" Condition="Exists('$(XamarinWindowsSdkDirectory)$(MSBuildThisFileName).Before.targets')" />
 
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CompileNativeCode" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.LinkNativeCode" AssemblyFile="$(_XamarinTaskAssembly)" />
@@ -713,7 +718,7 @@
 			<Output TaskParameter="MlaunchArguments" PropertyName="_MlaunchInstallArguments" />
 		</GetMlaunchArguments>
 
-		<Exec Command="$(_MlaunchPath) $(_MlaunchInstallArguments)" />
+		<Exec SessionId="$(BuildSessionId)" Command="$(_MlaunchPath) $(_MlaunchInstallArguments)" />
 	</Target>
 
 	<!-- This is only needed for mobile platforms, RunCommand and RunArguments are defined for macOS in Microsoft.macOS.Sdk.targets. -->
@@ -750,7 +755,14 @@
 		</PropertyGroup>
 	</Target>
 
-	<Target Name="_PrepareRun" DependsOnTargets="Build;_PrepareRunMobile" BeforeTargets="Run" />
+	<PropertyGroup>
+		<_PrepareRunDependsOn>
+			Build;
+			_PrepareRunMobile;
+		</_PrepareRunDependsOn>
+	</PropertyGroup>
+
+	<Target Name="_PrepareRun" DependsOnTargets="$(_PrepareRunDependsOn)" BeforeTargets="Run" />
 
 	<!-- Import existing targets -->
 

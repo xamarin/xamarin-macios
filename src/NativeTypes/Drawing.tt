@@ -619,10 +619,13 @@ namespace CoreGraphics
 		internal const string CG = Constants.CoreGraphicsLibrary;
 #endif
 		[DllImport (CG)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		internal extern static bool CGRectMakeWithDictionaryRepresentation (IntPtr dict, out CGRect rect);
 		[DllImport (CG)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		internal extern static bool CGPointMakeWithDictionaryRepresentation (IntPtr dict, out CGPoint point);
 		[DllImport (CG)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		internal extern static bool CGSizeMakeWithDictionaryRepresentation (IntPtr dict, out CGSize point);
 
 		[DllImport (CG)]

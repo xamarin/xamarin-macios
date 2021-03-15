@@ -116,6 +116,7 @@ namespace UIKit {
 		}
 
 		[DllImport (Constants.UIKitLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool UIFloatRangeIsInfinite (UIFloatRange range);
 
 		public bool IsInfinite {

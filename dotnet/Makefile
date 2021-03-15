@@ -5,6 +5,7 @@ include $(TOP)/mk/rules.mk
 
 DOTNET_MANIFESTS_PATH=$(DOTNET6_DIR)/sdk-manifests/$(DOTNET6_VERSION_BAND)
 DOTNET_PACKS_PATH=$(DOTNET6_DIR)/packs
+DOTNET_TEMPLATE_PACKS_PATH=$(DOTNET6_DIR)/template-packs
 TMP_PKG_DIR=_pkg
 
 DOTNET_PLATFORMS_UPPERCASE:=$(shell echo $(DOTNET_PLATFORMS) | tr a-z A-Z)
@@ -29,24 +30,36 @@ $(1)_NUGET_TARGETS = \
 endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call DefineTargets,$(platform))))
 
+define DefineWindowsTargets
+$(1)_WINDOWS_NUGET_TARGETS = \
+	$(DOTNET_DESTDIR)/Microsoft.$(1).Windows.Sdk/targets/Xamarin.Shared.Sdk.Before.targets \
+
+endef
+$(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(eval $(call DefineWindowsTargets,$(platform))))
+
 DIRECTORIES += \
 	$(DOTNET_NUPKG_DIR) \
 	$(DOTNET_PKG_DIR) \
 	$(DOTNET_FEED_DIR) \
 	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/Sdk) \
 	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/targets) \
+	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Templates) \
+	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.NET.Workload.$(platform)) \
 	$(DOTNET_MANIFESTS_PATH) \
 	$(DOTNET_PACKS_PATH) \
+	$(DOTNET_TEMPLATE_PACKS_PATH) \
 	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_PACKS_PATH)/Microsoft.$(platform).Sdk) \
 	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_PACKS_PATH)/Microsoft.$(platform).Ref) \
+	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_TEMPLATE_PACKS_PATH)/Microsoft.$(platform).Templates) \
 	$(TMP_PKG_DIR) \
+	$(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Windows.Sdk/targets) \
 
 $(DIRECTORIES):
 	$(Q) mkdir -p $@
 
 CURRENT_HASH_LONG:=$(shell git log -1 --pretty=%H)
 
-$(DOTNET_DESTDIR)/Microsoft.%: Microsoft.% | $(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/Sdk $(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/targets)
+$(DOTNET_DESTDIR)/Microsoft.%: Microsoft.% | $(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/Sdk $(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/targets $(DOTNET_DESTDIR)/Microsoft.$(platform).Templates)
 	$(Q) $(CP) $< $@
 
 define CopyTargets
@@ -54,6 +67,12 @@ $$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/%: targets/% | $$(DOTNET_DESTDIR)/
 	$$(Q) $$(CP) $$< $$@
 endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call CopyTargets,$(platform))))
+
+define CopyWindowsTargets
+$$(DOTNET_DESTDIR)/Microsoft.$(1).Windows.Sdk/targets/%: WindowsTargets/% | $$(DOTNET_DESTDIR)/Microsoft.$(1).Windows.Sdk/targets
+	$$(Q) $$(CP) $$< $$@
+endef
+$(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(eval $(call CopyWindowsTargets,$(platform))))
 
 define VersionsTemplate
 targets/Microsoft.$(1).Sdk.Versions.props: targets/Microsoft.Sdk.Versions.template.props Makefile $(TOP)/Make.config.inc $(TOP)/.git/HEAD $(TOP)/.git/index
@@ -150,6 +169,8 @@ endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call CreateNuGetTemplate,Microsoft.$(platform).Sdk,$($(platform)_NUGET_VERSION_NO_METADATA),$($(platform)_NUGET_TARGETS))))
 $(eval $(call CreateWindowsNuGetTemplate,Microsoft.iOS.Windows.Sdk,$(IOS_WINDOWS_NUGET_VERSION_NO_METADATA),$(IOS_WINDOWS_NUGET_TARGETS)))
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call CreateNuGetTemplate,Microsoft.$(platform).Ref,$($(platform)_NUGET_VERSION_NO_METADATA))))
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call CreateNuGetTemplate,Microsoft.$(platform).Templates,$($(platform)_NUGET_VERSION_NO_METADATA))))
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call CreateNuGetTemplate,Microsoft.NET.Workload.$(platform),$($(platform)_NUGET_VERSION_NO_METADATA))))
 $(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(eval $(call CreateNuGetTemplate,Microsoft.$(platform).Runtime.$(rid),$($(platform)_NUGET_VERSION_NO_METADATA)))))
 
 # Copy the nuget from the temporary directory into the final directory
@@ -170,11 +191,15 @@ REF_PACKS_$(1) = $(DOTNET_NUPKG_DIR)/$($(1)_NUGET).Ref.$($(1)_NUGET_VERSION_FULL
 REF_PACKS += $$(REF_PACKS_$(1))
 SDK_PACKS_$(1) = $(DOTNET_NUPKG_DIR)/$($(1)_NUGET).Sdk.$($(1)_NUGET_VERSION_FULL).nupkg
 SDK_PACKS += $$(SDK_PACKS_$(1))
-pack-$(shell echo $(1) | tr A-Z a-z): $$(RUNTIME_PACKS_$(1)) $$(REF_PACKS_$(1)) $$(SDK_PACKS_$(1))
+TEMPLATE_PACKS_$(1) = $(DOTNET_NUPKG_DIR)/$($(1)_NUGET).Templates.$($(1)_NUGET_VERSION_FULL).nupkg
+TEMPLATE_PACKS += $$(TEMPLATE_PACKS_$(1))
+WORKLOAD_PACKS_$(1) = $(DOTNET_NUPKG_DIR)/$(subst Microsoft.,Microsoft.NET.Workload.,$($(1)_NUGET)).$($(1)_NUGET_VERSION_FULL).nupkg
+WORKLOAD_PACKS += $$(WORKLOAD_PACKS_$(1))
+pack-$(shell echo $(1) | tr A-Z a-z): $$(RUNTIME_PACKS_$(1)) $$(REF_PACKS_$(1)) $$(SDK_PACKS_$(1)) $$(TEMPLATE_PACKS_$(1)) $$(WORKLOAD_PACKS_$(1))
 endef
 $(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(eval $(call PacksDefinitions,$(platform))))
 
-TARGETS += $(RUNTIME_PACKS) $(REF_PACKS) $(SDK_PACKS)
+TARGETS += $(RUNTIME_PACKS) $(REF_PACKS) $(SDK_PACKS) $(TEMPLATE_PACKS) $(WORKLOAD_PACKS)
 
 define InstallWorkload
 $(DOTNET_MANIFESTS_PATH)/Microsoft.NET.Workload.$1: | $(DOTNET_MANIFESTS_PATH)
@@ -186,14 +211,18 @@ $(DOTNET_PACKS_PATH)/Microsoft.$1.Sdk/$2: | $(DOTNET_PACKS_PATH)/Microsoft.$1.Sd
 $(DOTNET_PACKS_PATH)/Microsoft.$1.Ref/$2: | $(DOTNET_PACKS_PATH)/Microsoft.$1.Ref
 	$$(Q_LN) ln -Fhs $$(abspath $(DOTNET_DESTDIR)/Microsoft.$1.Ref) $$(abspath $$@)
 
+$(DOTNET_TEMPLATE_PACKS_PATH)/Microsoft.$1.Templates.$(2).nupkg: $(TEMPLATE_PACKS_$(shell echo $(1) | tr a-z A-Z)) | $(DOTNET_TEMPLATE_PACKS_PATH)
+	$$(Q) $$(CP) $$< $$@
+
 WORKLOAD_TARGETS += \
+	$(DOTNET_TEMPLATE_PACKS_PATH)/Microsoft.$1.Templates.$(2).nupkg \
 	$(DOTNET_MANIFESTS_PATH)/Microsoft.NET.Workload.$1 \
 	$(DOTNET_PACKS_PATH)/Microsoft.$1.Sdk/$2 \
 	$(DOTNET_PACKS_PATH)/Microsoft.$1.Ref/$2
 endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call InstallWorkload,$(platform),$($(platform)_NUGET_VERSION_NO_METADATA))))
 
-# We create three packages: one for the workload, one for the sdk package, and one for the ref package,
+# We create four packages: one for the workload, one for the sdk package, one for the ref package, and one for templates
 # and then bundle them into a single pkg for distribution (named Microsoft.<platform>.Bundle.<version>.pkg).
 # This way we can create and publish separate updates for each workload/sdk/ref package later if we want to.
 define CreatePackage
@@ -224,8 +253,17 @@ $(TMP_PKG_DIR)/Microsoft.$1.Ref.$2.pkg: $(SDK_PACK_$(4)) | $(TMP_PKG_DIR)
 	$$(Q_GEN) pkgbuild --quiet --version '$2' --root tmpdir/Microsoft.$1.Ref.$2 --component-plist PackageInfo.plist --install-location / --identifier com.microsoft.net.$3.ref.pkg $$@.tmp
 	$$(Q) mv $$@.tmp $$@
 
+# The templates package
+$(TMP_PKG_DIR)/Microsoft.$1.Templates.$2.pkg: $(TEMPLATE_PACK_$(4)) | $(TMP_PKG_DIR)
+	$$(Q) rm -f $$@
+	$$(Q) rm -rf tmpdir/Microsoft.$1.Templates.$2/
+	$$(Q) mkdir -p tmpdir/Microsoft.$1.Templates.$2/usr/local/share/dotnet/template-packs/
+	$$(Q) $$(CP) $(TEMPLATE_PACKS_$(4)) tmpdir/Microsoft.$1.Templates.$2/usr/local/share/dotnet/template-packs/$(subst +$(NUGET_BUILD_METADATA),,$(notdir $(TEMPLATE_PACKS_$(4))))
+	$$(Q_GEN) pkgbuild --quiet --version '$2' --root tmpdir/Microsoft.$1.Templates.$2 --component-plist PackageInfo.plist --install-location / --identifier com.microsoft.net.$3.template.pkg $$@.tmp
+	$$(Q) mv $$@.tmp $$@
+
 # The final bundle package for distribution
-$(TMP_PKG_DIR)/Microsoft.$1.Bundle.$2.pkg: $(TMP_PKG_DIR)/Microsoft.$1.Workload.$2.pkg $(TMP_PKG_DIR)/Microsoft.$1.Sdk.$2.pkg $(TMP_PKG_DIR)/Microsoft.$1.Ref.$2.pkg
+$(TMP_PKG_DIR)/Microsoft.$1.Bundle.$2.pkg: $(TMP_PKG_DIR)/Microsoft.$1.Workload.$2.pkg $(TMP_PKG_DIR)/Microsoft.$1.Sdk.$2.pkg $(TMP_PKG_DIR)/Microsoft.$1.Ref.$2.pkg $(TMP_PKG_DIR)/Microsoft.$1.Templates.$2.pkg
 	$$(Q) rm -f $$@
 	$$(Q_GEN) productbuild \
 		--quiet \
@@ -234,6 +272,7 @@ $(TMP_PKG_DIR)/Microsoft.$1.Bundle.$2.pkg: $(TMP_PKG_DIR)/Microsoft.$1.Workload.
 		--package $(TMP_PKG_DIR)/Microsoft.$1.Workload.$2.pkg \
 		--package $(TMP_PKG_DIR)/Microsoft.$1.Sdk.$2.pkg \
 		--package $(TMP_PKG_DIR)/Microsoft.$1.Ref.$2.pkg \
+		--package $(TMP_PKG_DIR)/Microsoft.$1.Templates.$2.pkg \
 		$$@.tmp
 	$$(Q) mv $$@.tmp $$@
 
@@ -243,14 +282,16 @@ $(DOTNET_PKG_DIR)/%: $(TMP_PKG_DIR)/% | $(DOTNET_PKG_DIR)
 
 PACKAGE_TARGETS += $(DOTNET_PKG_DIR)/Microsoft.$1.Bundle.$2.pkg
 
-$(TMP_PKG_DIR)/Microsoft.$1.Bundle.$2.zip: $($(1)_NUGET_TARGETS) $(WORKLOAD_TARGETS) Makefile $(REF_PACK_$(4)) $(SDK_PACK_$(4)) | $(TMP_PKG_DIR)
+$(TMP_PKG_DIR)/Microsoft.$1.Bundle.$2.zip: $($(1)_NUGET_TARGETS) $(WORKLOAD_TARGETS) Makefile $(REF_PACK_$(4)) $(SDK_PACK_$(4)) $(TEMPLATE_PACKS_$(4)) | $(TMP_PKG_DIR)
 	$$(Q) rm -rf $$@ $$@.tmpdir $$@.tmp
 	$$(Q) mkdir -p $$@.tmpdir/dotnet/sdk-manifests/$(DOTNET6_VERSION_BAND)/
 	$$(Q) mkdir -p $$@.tmpdir/dotnet/packs/Microsoft.$1.Sdk
 	$$(Q) mkdir -p $$@.tmpdir/dotnet/packs/Microsoft.$1.Ref
+	$$(Q) mkdir -p $$@.tmpdir/dotnet/template-packs
 	$$(Q) $(CP) -r Microsoft.NET.Workload.$1 $$@.tmpdir/dotnet/sdk-manifests/$(DOTNET6_VERSION_BAND)/
 	$$(Q) $(CP) -r $(DOTNET_DESTDIR)/Microsoft.$1.Sdk $$@.tmpdir/dotnet/packs/Microsoft.$1.Sdk/$2
 	$$(Q) $(CP) -r $(DOTNET_DESTDIR)/Microsoft.$1.Ref $$@.tmpdir/dotnet/packs/Microsoft.$1.Ref/$2
+	$$(Q) $(CP) $(TEMPLATE_PACKS_$(4)) $$@.tmpdir/dotnet/template-packs/$(subst +$(NUGET_BUILD_METADATA),,$(notdir $(TEMPLATE_PACKS_$(4))))
 	$$(Q_GEN) cd $$@.tmpdir && zip -9rq $$(abspath $$@.tmp) .
 	$$(Q) mv $$@.tmp $$@
 	$$(Q) echo Created $$@
@@ -260,16 +301,18 @@ endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call CreatePackage,$(platform),$($(platform)_NUGET_VERSION_NO_METADATA),$(shell echo $(platform) | tr A-Z a-z),$(shell echo $(platform) | tr a-z A-Z))))
 
 define CreateWindowsBundle
-$(TMP_PKG_DIR)/Microsoft.$1.Windows.Bundle.$2.zip: $($(1)_NUGET_TARGETS) $($(1)_WINDOWS_NUGET_TARGETS) $(WORKLOAD_TARGETS) Makefile $(REF_PACK_$(4)) $(SDK_PACK_$(4)) $(SDK_PACK_$(4)_WINDOWS) | $(TMP_PKG_DIR)
+$(TMP_PKG_DIR)/Microsoft.$1.Windows.Bundle.$2.zip: $($(1)_NUGET_TARGETS) $($(1)_WINDOWS_NUGET_TARGETS) $(WORKLOAD_TARGETS) Makefile $(REF_PACK_$(4)) $(SDK_PACK_$(4)) $(SDK_PACK_$(4)_WINDOWS) $(TEMPLATE_PACKS_$(4)) | $(TMP_PKG_DIR)
 	$$(Q) rm -rf $$@ $$@.tmpdir $$@.tmp
 	$$(Q) mkdir -p $$@.tmpdir/dotnet/sdk-manifests/$(DOTNET6_VERSION_BAND)/
 	$$(Q) mkdir -p $$@.tmpdir/dotnet/packs/Microsoft.$1.Sdk
 	$$(Q) mkdir -p $$@.tmpdir/dotnet/packs/Microsoft.$1.Windows.Sdk
 	$$(Q) mkdir -p $$@.tmpdir/dotnet/packs/Microsoft.$1.Ref
+	$$(Q) mkdir -p $$@.tmpdir/dotnet/template-packs
 	$$(Q) $(CP) -r Microsoft.NET.Workload.$1 $$@.tmpdir/dotnet/sdk-manifests/$(DOTNET6_VERSION_BAND)/
 	$$(Q) $(CP) -r $(DOTNET_DESTDIR)/Microsoft.$1.Sdk $$@.tmpdir/dotnet/packs/Microsoft.$1.Sdk/$2
 	$$(Q) $(CP) -r $(DOTNET_DESTDIR)/Microsoft.$1.Windows.Sdk $$@.tmpdir/dotnet/packs/Microsoft.$1.Windows.Sdk/$2
 	$$(Q) $(CP) -r $(DOTNET_DESTDIR)/Microsoft.$1.Ref $$@.tmpdir/dotnet/packs/Microsoft.$1.Ref/$2
+	$$(Q) $(CP) $(TEMPLATE_PACKS_$(4)) $$@.tmpdir/dotnet/template-packs/$(subst +$(NUGET_BUILD_METADATA),,$(notdir $(TEMPLATE_PACKS_$(4))))
 	$$(Q_GEN) cd $$@.tmpdir && zip -9rq $$(abspath $$@.tmp) .
 	$$(Q) mv $$@.tmp $$@
 	$$(Q) echo Created $$@

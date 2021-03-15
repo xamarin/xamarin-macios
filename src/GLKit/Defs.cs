@@ -32,6 +32,8 @@ using Foundation;
 using ModelIO;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace GLKit {
 
 	// GLint (32 bits on 64 bit hardware) -> GLKEffects.h

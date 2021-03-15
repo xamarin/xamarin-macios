@@ -10,6 +10,7 @@ namespace WatchKit {
 	public partial class WKAccessibility {
 
 		[DllImport (Constants.WatchKitLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool WKAccessibilityIsVoiceOverRunning ();
 
 		static public bool IsVoiceOverRunning {
@@ -18,6 +19,7 @@ namespace WatchKit {
 
 		[Watch (4,0)]
 		[DllImport (Constants.WatchKitLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool WKAccessibilityIsReduceMotionEnabled ();
 
 		[Watch (4,0)]

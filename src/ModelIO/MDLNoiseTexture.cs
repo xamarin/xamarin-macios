@@ -2,6 +2,8 @@ using System;
 using ObjCRuntime;
 using Vector2i = global::OpenTK.Vector2i;
 
+#nullable enable
+
 namespace ModelIO {
 
 	public partial class MDLNoiseTexture {

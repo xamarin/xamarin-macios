@@ -61,7 +61,8 @@ namespace CoreGraphics {
 		// CGPDFBoolean -> unsigned char -> CGPDFObject.h
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static bool CGPDFArrayGetBoolean (/* CGPDFArrayRef */ IntPtr array, /* size_t */ nint index, /* CGPDFBoolean* */ out bool value);
+		[return: MarshalAs (UnmanagedType.I1)]
+		extern static bool CGPDFArrayGetBoolean (/* CGPDFArrayRef */ IntPtr array, /* size_t */ nint index, /* CGPDFBoolean* */ [MarshalAs (UnmanagedType.I1)] out bool value);
 
 		public bool GetBoolean (nint idx, out bool result)
 		{
@@ -78,6 +79,7 @@ namespace CoreGraphics {
 		// CGPDFInteger -> long int 32/64 bits -> CGPDFObject.h
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGPDFArrayGetInteger (/* CGPDFArrayRef */ IntPtr array, /* size_t */ nint index, /* CGPDFInteger* */ out nint value);
 
 		public bool GetInt (nint idx, out nint result)
@@ -95,6 +97,7 @@ namespace CoreGraphics {
 		// CGPDFReal -> CGFloat -> CGPDFObject.h
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGPDFArrayGetNumber (/* CGPDFArrayRef */ IntPtr array, /* size_t */ nint index, /* CGPDFReal* */ out nfloat value);
 
 		public bool GetFloat (nint idx, out nfloat result)
@@ -110,6 +113,7 @@ namespace CoreGraphics {
 #endif
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGPDFArrayGetName (/* CGPDFArrayRef */ IntPtr array, /* size_t */ nint index, /* const char** */ out IntPtr value);
 
 		public bool GetName (nint idx, out string result)
@@ -128,6 +132,7 @@ namespace CoreGraphics {
 #endif
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGPDFArrayGetDictionary (/* CGPDFArrayRef */ IntPtr array, /* size_t */ nint index, /* CGPDFDictionaryRef* */ out IntPtr value);
 
 		public bool GetDictionary (nint idx, out CGPDFDictionary result)
@@ -146,6 +151,7 @@ namespace CoreGraphics {
 #endif
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGPDFArrayGetStream (/* CGPDFArrayRef */ IntPtr array, /* size_t */ nint index, /* CGPDFStreamRef* */ out IntPtr value);
 
 		public bool GetStream (nint idx, out CGPDFStream result)
@@ -164,6 +170,7 @@ namespace CoreGraphics {
 #endif
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGPDFArrayGetArray (/* CGPDFArrayRef */ IntPtr array, /* size_t */ nint index, /* CGPDFArrayRef* */ out IntPtr value);
 
 		public bool GetArray (nint idx, out CGPDFArray array)
@@ -182,6 +189,7 @@ namespace CoreGraphics {
 #endif
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGPDFArrayGetString (/* CGPDFArrayRef */ IntPtr array, /* size_t */ nint index, /* CGPDFStringRef* */ out IntPtr value);
 
 		public bool GetString (nint idx, out string result)
@@ -218,6 +226,7 @@ namespace CoreGraphics {
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		[iOS (12, 0)][Mac (10, 14)][TV (12, 0)][Watch (5, 0)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGPDFArrayApplyBlock (/* CGPDFArrayRef */ IntPtr array, /* CGPDFArrayApplierBlock */ ref BlockLiteral block, /* void* */ IntPtr info);
 
 		[iOS (12, 0)][Mac (10, 14)][TV (12, 0)][Watch (5, 0)]

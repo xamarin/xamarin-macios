@@ -4,6 +4,7 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <IncludeBuildOutput>false</IncludeBuildOutput>
+    <PackageType Condition="'$(PackageType)'==''">DotnetPlatform</PackageType>
     <PackageVersion>$(_PackageVersion)</PackageVersion>
     <RepositoryUrl>https://github.com/xamarin/xamarin-macios</RepositoryUrl>
     <RepositoryBranch>$(CurrentBranch)</RepositoryBranch>
@@ -17,7 +18,7 @@
   <PropertyGroup>
     <_RepositoryPath>$(MSBuildThisFileDirectory)/../..</_RepositoryPath>
     <_buildPath>$(_RepositoryPath)/_build</_buildPath>
-    <_packagePath>$(_buildPath)\$(PackageId)\</_packagePath>
+    <_packagePath Condition="'$(_packagePath)' == ''">$(_buildPath)\$(PackageId)\</_packagePath>
 
     <_AssemblyInfix Condition="'$(_PlatformName)' == 'iOS'">iOS</_AssemblyInfix>
     <_AssemblyInfix Condition="'$(_PlatformName)' == 'tvOS'">TVOS</_AssemblyInfix>

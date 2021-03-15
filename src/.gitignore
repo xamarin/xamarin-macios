@@ -12,4 +12,5 @@ xammaccatalyst.csproj
 generator.csproj.inc
 *~
 *.rsp
+MinimumVersions.cs
 

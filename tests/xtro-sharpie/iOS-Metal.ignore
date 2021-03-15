@@ -97,31 +97,6 @@
 !missing-selector! MTLRasterizationRateMapDescriptor::setLabel: not bound
 !missing-selector! MTLRasterizationRateMapDescriptor::setScreenSize: not bound
 
-# Initial result from new rule extra-null-allowed
-!extra-null-allowed! 'System.String Metal.MTLAttribute::get_Name()' has a extraneous [NullAllowed] on return type
-
-# Initial result from new rule missing-null-allowed
-!missing-null-allowed! 'Foundation.NSObject[] Metal.MTLRenderPipelineReflection::get_FragmentArguments()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSObject[] Metal.MTLRenderPipelineReflection::get_VertexArguments()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Metal.MTLArrayType Metal.MTLArrayType::ElementArrayType()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Metal.MTLArrayType Metal.MTLStructMember::ArrayType()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Metal.MTLStructMember Metal.MTLStructType::Lookup(System.String)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Metal.MTLStructType Metal.MTLArrayType::ElementStructType()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Metal.MTLStructType Metal.MTLStructMember::StructType()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.Void Metal.MTLComputePipelineDescriptor::set_ComputeFunction(Metal.IMTLFunction)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void Metal.MTLComputePipelineDescriptor::set_Label(System.String)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void Metal.MTLDepthStencilDescriptor::set_BackFaceStencil(Metal.MTLStencilDescriptor)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void Metal.MTLDepthStencilDescriptor::set_FrontFaceStencil(Metal.MTLStencilDescriptor)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void Metal.MTLDepthStencilDescriptor::set_Label(System.String)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void Metal.MTLRenderPassColorAttachmentDescriptorArray::SetObject(Metal.MTLRenderPassColorAttachmentDescriptor,System.nuint)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void Metal.MTLRenderPassDescriptor::set_DepthAttachment(Metal.MTLRenderPassDepthAttachmentDescriptor)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void Metal.MTLRenderPassDescriptor::set_StencilAttachment(Metal.MTLRenderPassStencilAttachmentDescriptor)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void Metal.MTLRenderPipelineColorAttachmentDescriptorArray::SetObject(Metal.MTLRenderPipelineColorAttachmentDescriptor,System.nuint)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void Metal.MTLRenderPipelineDescriptor::set_Label(System.String)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void Metal.MTLRenderPipelineDescriptor::set_VertexDescriptor(Metal.MTLVertexDescriptor)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void Metal.MTLSamplerDescriptor::set_Label(System.String)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void Metal.MTLVertexBufferLayoutDescriptorArray::SetObject(Metal.MTLVertexBufferLayoutDescriptor,System.nuint)' is missing an [NullAllowed] on parameter #0
-
 # new methods added to a protocol, they will be abstract in XAMCORE_4
 !incorrect-protocol-member! MTLArgumentEncoder::setAccelerationStructure:atIndex: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLArgumentEncoder::setIntersectionFunctionTable:atIndex: is REQUIRED and should be abstract

@@ -20,7 +20,7 @@ namespace Cecil.Tests {
 		{
 			var assembly = Helper.GetAssembly (assemblyPath);
 			if (assembly == null)
-				Assert.Ignore ("{assemblyPath} could not be found (might be disabled in build)");
+				Assert.Ignore ($"{assemblyPath} could not be found (might be disabled in build)");
 			// look inside all .cctor (static constructor) inside `assemblyName`
 			foreach (var m in Helper.FilterMethods (assembly!, (m) => m.IsStatic && m.IsConstructor)) {
 				foreach (var ins in m.Body.Instructions) {
@@ -57,7 +57,7 @@ namespace Cecil.Tests {
 		{
 			var assembly = Helper.GetAssembly (assemblyPath);
 			if (assembly == null) {
-				Assert.Ignore ("{assemblyPath} could not be found (might be disabled in build)");
+				Assert.Ignore ($"{assemblyPath} could not be found (might be disabled in build)");
 				return; // just to help nullability
 			}
 
@@ -97,7 +97,7 @@ namespace Cecil.Tests {
 
 			var assembly = Helper.GetAssembly (assemblyPath);
 			if (assembly == null) {
-				Assert.Ignore ("{assemblyPath} could not be found (might be disabled in build)");
+				Assert.Ignore ($"{assemblyPath} could not be found (might be disabled in build)");
 				return; // just to help nullability
 			}
 			// this has a quite noticeable impact on (small) app size
@@ -140,7 +140,7 @@ namespace Cecil.Tests {
 		{
 			var assembly = Helper.GetAssembly (assemblyPath);
 			if (assembly == null) {
-				Assert.Ignore ("{assemblyPath} could not be found (might be disabled in build)");
+				Assert.Ignore ($"{assemblyPath} could not be found (might be disabled in build)");
 				return; // just to help nullability
 			}
 			List<string> found = new List<string> ();
@@ -170,7 +170,7 @@ namespace Cecil.Tests {
 		{
 			var assembly = Helper.GetAssembly (assemblyPath);
 			if (assembly == null) {
-				Assert.Ignore ("{assemblyPath} could not be found (might be disabled in build)");
+				Assert.Ignore ($"{assemblyPath} could not be found (might be disabled in build)");
 				return; // just to help nullability
 			}
 

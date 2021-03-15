@@ -5,9 +5,11 @@ include $(TOP)/Make.config
 COLOR_GREEN:=$(shell tput setaf 120 2>/dev/null)
 COLOR_CLEAR:=$(shell tput sgr0 2>/dev/null)
 
+ifdef INCLUDE_XAMARIN_LEGACY
 ifdef ENABLE_XAMARIN
 ifdef INCLUDE_MAC
 ENABLE_MLAUNCH=1
+endif
 endif
 endif
 

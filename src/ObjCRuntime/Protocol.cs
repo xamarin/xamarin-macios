@@ -67,10 +67,10 @@ namespace ObjCRuntime {
 		internal extern static void objc_registerProtocol (IntPtr protocol);
 
 		[DllImport ("/usr/lib/libobjc.dylib")]
-		internal extern static void protocol_addProperty (IntPtr protocol, string name, Class.objc_attribute_prop [] attributes, int count, bool isRequired, bool isInstance);
+		internal extern static void protocol_addProperty (IntPtr protocol, string name, Class.objc_attribute_prop [] attributes, int count, [MarshalAs (UnmanagedType.I1)] bool isRequired, [MarshalAs (UnmanagedType.I1)] bool isInstance);
 
 		[DllImport ("/usr/lib/libobjc.dylib")]
-		internal extern static void protocol_addMethodDescription (IntPtr protocol, IntPtr nameSelector, string signature, bool isRequired, bool isInstance);
+		internal extern static void protocol_addMethodDescription (IntPtr protocol, IntPtr nameSelector, string signature, [MarshalAs (UnmanagedType.I1)] bool isRequired, [MarshalAs (UnmanagedType.I1)] bool isInstance);
 
 		[DllImport ("/usr/lib/libobjc.dylib")]
 		internal extern static void protocol_addProtocol (IntPtr protocol, IntPtr addition);

@@ -90,6 +90,7 @@ namespace CoreServices {
 		}
 
 		[DllImport (Constants.CFNetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static /* Boolean */ bool CFHTTPAuthenticationIsValid (/* CFHTTPAuthenticationRef */ IntPtr auth, /* CFStreamError* */ IntPtr error);
 
 		public bool IsValid {
@@ -97,6 +98,7 @@ namespace CoreServices {
 		}
 
 		[DllImport (Constants.CFNetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static /* Boolean */ bool CFHTTPAuthenticationAppliesToRequest (/* CFHTTPAuthenticationRef */ IntPtr auth, /* CFHTTPMessageRef */ IntPtr request);
 
 		public bool AppliesToRequest (CFHTTPMessage request)
@@ -111,6 +113,7 @@ namespace CoreServices {
 		}
 
 		[DllImport (Constants.CFNetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static /* Boolean */ bool CFHTTPAuthenticationRequiresAccountDomain (/* CFHTTPAuthenticationRef */ IntPtr auth);
 
 		public bool RequiresAccountDomain {
@@ -118,6 +121,7 @@ namespace CoreServices {
 		}
 
 		[DllImport (Constants.CFNetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static /* Boolean */ bool CFHTTPAuthenticationRequiresOrderedRequests (/* CFHTTPAuthenticationRef */ IntPtr auth);
 
 		public bool RequiresOrderedRequests {
@@ -125,6 +129,7 @@ namespace CoreServices {
 		}
 
 		[DllImport (Constants.CFNetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static /* Boolean */ bool CFHTTPAuthenticationRequiresUserNameAndPassword (/* CFHTTPAuthenticationRef */ IntPtr auth);
 
 		public bool RequiresUserNameAndPassword {

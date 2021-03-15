@@ -162,7 +162,7 @@ namespace Security {
 		}
 
 		[DllImport (Constants.SecurityLibrary)]
-		extern static /* OSStatus */ SslStatus SSLGetSessionOption (/* SSLContextRef */ IntPtr context, SslSessionOption option, out bool value);
+		extern static /* OSStatus */ SslStatus SSLGetSessionOption (/* SSLContextRef */ IntPtr context, SslSessionOption option, [MarshalAs (UnmanagedType.I1)] out bool value);
 
 		public SslStatus GetSessionOption (SslSessionOption option, out bool value)
 		{
@@ -171,7 +171,7 @@ namespace Security {
 		}
 
 		[DllImport (Constants.SecurityLibrary)]
-		extern static /* OSStatus */ SslStatus SSLSetSessionOption (/* SSLContextRef */ IntPtr context, SslSessionOption option, bool value);
+		extern static /* OSStatus */ SslStatus SSLSetSessionOption (/* SSLContextRef */ IntPtr context, SslSessionOption option, [MarshalAs (UnmanagedType.I1)] bool value);
 
 		public SslStatus SetSessionOption (SslSessionOption option, bool value)
 		{
@@ -532,13 +532,10 @@ namespace Security {
 		}
 
 #if !WATCH
-		[iOS(9,0)][Mac (10,11)]
 		// TODO: Headers say /* Deprecated, does nothing */ but we are not completly sure about it since there is no deprecation macro
 		// Plus they added new members to SslSessionStrengthPolicy enum opened radar://23379052 https://trello.com/c/NbdTLVD3
 		// Xcode 8 beta 1: the P/Invoke was removed completely.
-		[Deprecated (PlatformName.iOS, 9, 2)]
 		[Unavailable (PlatformName.iOS, message : "'SetSessionStrengthPolicy' is not available anymore.")]
-		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		[Unavailable (PlatformName.MacOSX, message : "'SetSessionStrengthPolicy' is not available anymore.")]
 		[Obsolete ("'SetSessionStrengthPolicy' is not available anymore.")]
 		public SslStatus SetSessionStrengthPolicy (SslSessionStrengthPolicy policyStrength)

@@ -6,6 +6,8 @@ using ModelIO;
 using ObjCRuntime;
 using Metal;
 
+#nullable enable
+
 namespace ModelIO {
 	public partial class MDLVertexDescriptor {
 		[DllImport (Constants.MetalKitLibrary)]

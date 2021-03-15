@@ -81,7 +81,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			Assert.Throws<ArgumentNullException> (() => Runtime.RegisterAssembly (null));
 		}
 
-#if !__WATCHOS__ && !__TVOS__ && !MONOMAC
+#if __IOS__ && !__MACCATALYST__
 		[Test]
 		public void StartWWAN ()
 		{
@@ -89,7 +89,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			Assert.Throws<ArgumentException> (delegate { Runtime.StartWWAN (new Uri ("ftp://www.xamarin.com")); }, "ftp");
 			Runtime.StartWWAN (new Uri ("http://www.xamarin.com"));
 		}
-#endif
+#endif // __IOS__ && !__MACCATALYST__
 
 		[Test]
 		public void GetNSObject_Subclass ()

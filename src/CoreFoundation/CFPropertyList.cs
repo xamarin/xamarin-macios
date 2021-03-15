@@ -88,6 +88,7 @@ namespace CoreFoundation
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CFPropertyListIsValid (IntPtr plist, nint format);
 
 		public bool IsValid (CFPropertyListFormat format)

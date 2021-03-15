@@ -25,6 +25,8 @@ using Matrix4 = global::OpenTK.Matrix4;
 using Quaternion = global::OpenTK.Quaternion;
 using MathHelper = global::OpenTK.MathHelper;
 
+#nullable enable
+
 namespace ModelIO {
 	[Native]
 	public enum MDLVertexFormat : ulong {

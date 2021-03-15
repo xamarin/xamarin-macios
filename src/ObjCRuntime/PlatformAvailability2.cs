@@ -51,6 +51,7 @@ namespace ObjCRuntime
 	}
 
 	[AttributeUsage (
+		AttributeTargets.Assembly |
 		AttributeTargets.Class |
 		AttributeTargets.Constructor |
 		AttributeTargets.Delegate |

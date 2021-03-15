@@ -120,9 +120,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\iOS\Info.plist">
-      <LogicalName>Info.plist</LogicalName>
-    </None>
+    <None Include="Info.plist" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="..\..\iOS\LaunchScreen.storyboard" Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" />
