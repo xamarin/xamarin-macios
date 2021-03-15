@@ -1650,7 +1650,7 @@ namespace Xamarin.Bundler {
 			switch (abi) {
 				case Abi.x86_64:
 				case Abi.ARM64:
-					return Path.Combine (Driver.GetFrameworkLibDirectory (Driver.App), arch, flavor, name + ".dll");
+					return Path.Combine (Driver.GetFrameworkLibDirectory (Driver.App), "64bits", flavor, name + ".dll");
 				default:
 					throw new ProductException (5205, true, Errors.MM5205, arch);
 			}
