@@ -86,8 +86,8 @@ steps:
     echo $(pwd)
     echo $(System.DefaultWorkingDirectory)
     echo $(Build.SourcesDirectory)
-    echo ls -Rla
-    echo ls $(Build.SourcesDirectory) -Rla
+    ls -Rla
+    ls $(Build.SourcesDirectory) -Rla
     make -C $(System.DefaultWorkingDirectory)/tools/devops -v
     make -C $(System.DefaultWorkingDirectory)/tools/devops LocProject.json
   displayName: 'Generate LocProject.json'
