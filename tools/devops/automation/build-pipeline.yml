@@ -29,7 +29,7 @@ resources:
   - repository: maccore
     type: github
     name: xamarin/maccore
-    ref: refs/heads/remove-login-keychain-references
+    ref: refs/heads/main
     endpoint: xamarin
 
   - repository: release-scripts
