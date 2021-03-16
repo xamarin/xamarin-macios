@@ -1,6 +1,7 @@
 Make.config.inc
 Make.config.local
 configure.inc
+net6.config
 _ios-build
 _mac-build
 _build

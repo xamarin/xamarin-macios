@@ -4,13 +4,16 @@
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
+
+  <Import Project="..\..\eng\Versions.props" />
+
   <ItemGroup>
     <!-- Compile against Microsoft.Build* NuGet refs, but do not copy to OutputDir. -->
     <PackageReference Include="Microsoft.Build" Version="15.9.20" IncludeAssets="compile" />
     <PackageReference Include="Microsoft.Build.Framework" Version="16.8.0" IncludeAssets="compile" />
     <PackageReference Include="Microsoft.Build.Tasks.Core" Version="16.8.0" IncludeAssets="compile" />
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.8.0" IncludeAssets="compile" />
-    <PackageReference Include="Microsoft.NET.ILLink.Tasks" Version="6.0.0-alpha.1.21072.1" />
+    <PackageReference Include="Microsoft.NET.ILLink.Tasks" Version="$(MicrosoftNETILLinkTasksPackageVersion)" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\Xamarin.MacDev\Xamarin.MacDev\Xamarin.MacDev.csproj" />
