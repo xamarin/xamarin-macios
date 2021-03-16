@@ -12,6 +12,10 @@ using System.Runtime.InteropServices;
 using CoreGraphics;
 using ObjCRuntime;
 
+using CMSampleBufferRef = System.IntPtr;
+using AVContentKey = System.IntPtr;
+using NSError = System.IntPtr;
+
 namespace AVFoundation {
     public partial class AVContentKeySession {
 
@@ -19,9 +23,9 @@ namespace AVFoundation {
         [DllImport (Constants.AVFoundationLibrary)]
         [return: MarshalAs (UnmanagedType.I1)]
         static extern /* BOOL */ bool AVSampleBufferAttachContentKey (
-            /* CMSampleBufferRef */ IntPt sbuf,
-            /* AVContentKey */ IntPt contentKey,
-            /* NSError * _Nullable * _Nullable */ out IntPtr outError);
+            /* CMSampleBufferRef */ CMSampleBufferRef sbuf,
+            /* AVContentKey */ AVContentKey contentKey,
+            /* NSError * _Nullable * _Nullable */ out NSError outError);
         
         [iOS (14, 5), Mac (11, 3), TV (14, 5), Watch (7,4)]
         public static bool AttachContentKey (CMSampleBuffer sampleBuffer, AVContentKey contentKey, out NSError error)

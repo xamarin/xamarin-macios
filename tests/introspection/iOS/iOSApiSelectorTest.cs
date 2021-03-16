@@ -160,10 +160,10 @@ namespace Introspection {
 			switch (declaredType.Name) {
 			case "AVUrlAsset":
 				switch (name) {
-					// fails because it is in-lined via protocol AVContentKeyRecipient
-					case "contentKeySession:didProvideContentKey:":
-						return true;
-					break;
+				// fails because it is in-lined via protocol AVContentKeyRecipient
+				case "contentKeySession:didProvideContentKey:":
+					return true;
+				break;
 				}
 				break;
 			case "NSNull":

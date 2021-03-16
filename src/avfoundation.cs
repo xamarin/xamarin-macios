@@ -1843,7 +1843,7 @@ namespace AVFoundation {
 	{
 		Default = 0,
 		AppWasSuspended = 1,
-		BuiltInMicMuted = 2
+		BuiltInMicMuted = 2,
 	}
 
 	[Mac (11,0)]
@@ -11683,7 +11683,7 @@ namespace AVFoundation {
 	public enum AVVariantPreferences : ulong
 	{
 		None = 0,
-		ScalabilityToLosslessAudio = 1 << 0
+		ScalabilityToLosslessAudio = 1 << 0,
 	}
 
 	[NoiOS][NoTV][NoWatch]
@@ -12402,7 +12402,7 @@ namespace AVFoundation {
 		None = 0,
 		ConstrainsSeekingForwardInPrimaryContent = (1 << 0),
 		RequiresPlaybackAtPreferredRateForAdvancement = (1 << 2),
-		DefaultPolicy = None
+		DefaultPolicy = None,
 	}
 
 	[TV (14,5), Mac (11,3), iOS (14,5)]
@@ -12412,19 +12412,19 @@ namespace AVFoundation {
 	{
 		[Static]
 		[Export ("interstitialEventWithPrimaryItem:time:templateItems:restrictions:resumptionOffset:")]
-		AVPlayerInterstitialEvent InterstitialEventWithPrimaryItem (AVPlayerItem primaryItem, CMTime time, AVPlayerItem[] templateItems, AVPlayerInterstitialEventRestrictions restrictions, CMTime resumptionOffset);
+		AVPlayerInterstitialEvent GetInterstitialEvent (AVPlayerItem primaryItem, CMTime time, AVPlayerItem[] templateItems, AVPlayerInterstitialEventRestrictions restrictions, CMTime resumptionOffset);
 
 		[Static]
 		[Export ("playerInterstitialEventWithPrimaryItem:time:interstitialTemplateItems:restrictions:resumptionOffset:")]
-		AVPlayerInterstitialEvent PlayerInterstitialEventWithPrimaryItem (AVPlayerItem primaryItem, CMTime time, AVPlayerItem[] interstitialTemplateItems, AVPlayerInterstitialEventRestrictions restrictions, CMTime resumptionOffset);
+		AVPlayerInterstitialEvent GetPlayerInterstitialEvent (AVPlayerItem primaryItem, CMTime time, AVPlayerItem[] interstitialTemplateItems, AVPlayerInterstitialEventRestrictions restrictions, CMTime resumptionOffset);
 
 		[Static]
 		[Export ("interstitialEventWithPrimaryItem:date:templateItems:restrictions:resumptionOffset:")]
-		AVPlayerInterstitialEvent InterstitialEventWithPrimaryItem (AVPlayerItem primaryItem, NSDate date, AVPlayerItem[] templateItems, AVPlayerInterstitialEventRestrictions restrictions, CMTime resumptionOffset);
+		AVPlayerInterstitialEvent GetInterstitialEvent (AVPlayerItem primaryItem, NSDate date, AVPlayerItem[] templateItems, AVPlayerInterstitialEventRestrictions restrictions, CMTime resumptionOffset);
 
 		[Static]
 		[Export ("playerInterstitialEventWithPrimaryItem:date:interstitialTemplateItems:restrictions:resumptionOffset:")]
-		AVPlayerInterstitialEvent PlayerInterstitialEventWithPrimaryItem (AVPlayerItem primaryItem, NSDate date, AVPlayerItem[] interstitialTemplateItems, AVPlayerInterstitialEventRestrictions restrictions, CMTime resumptionOffset);
+		AVPlayerInterstitialEvent GetPlayerInterstitialEvent (AVPlayerItem primaryItem, NSDate date, AVPlayerItem[] interstitialTemplateItems, AVPlayerInterstitialEventRestrictions restrictions, CMTime resumptionOffset);
 
 		[NullAllowed, Export ("primaryItem", ArgumentSemantic.Weak)]
 		AVPlayerItem PrimaryItem { get; }
@@ -12455,11 +12455,11 @@ namespace AVFoundation {
 	{
 		[Static]
 		[Export ("interstitialEventObserverWithPrimaryPlayer:")]
-		AVPlayerInterstitialEventObserver InterstitialEventObserverWithPrimaryPlayer (AVPlayer primaryPlayer);
+		AVPlayerInterstitialEventObserver GetInterstitialEventObserver (AVPlayer primaryPlayer);
 
 		[Static]
 		[Export ("playerInterstitialEventObserverWithPrimaryPlayer:")]
-		AVPlayerInterstitialEventObserver PlayerInterstitialEventObserverWithPrimaryPlayer (AVPlayer primaryPlayer);
+		AVPlayerInterstitialEventObserver GetPlayerInterstitialEventObserver (AVPlayer primaryPlayer);
 
 		[Export ("initWithPrimaryPlayer:")]
 		[DesignatedInitializer]
@@ -12496,11 +12496,11 @@ namespace AVFoundation {
 	{
 		[Static]
 		[Export ("interstitialEventControllerWithPrimaryPlayer:")]
-		AVPlayerInterstitialEventController InterstitialEventControllerWithPrimaryPlayer (AVPlayer primaryPlayer);
+		AVPlayerInterstitialEventController GetInterstitialEventController (AVPlayer primaryPlayer);
 
 		[Static]
 		[Export ("playerInterstitialEventControllerWithPrimaryPlayer:")]
-		AVPlayerInterstitialEventController PlayerInterstitialEventControllerWithPrimaryPlayer (AVPlayer primaryPlayer);
+		AVPlayerInterstitialEventController GetPlayerInterstitialEventController (AVPlayer primaryPlayer);
 
 		[Export ("initWithPrimaryPlayer:")]
 		IntPtr Constructor (AVPlayer primaryPlayer);
@@ -13855,7 +13855,7 @@ namespace AVFoundation {
 	{
 		[Static]
 		[Export ("contentKeySpecifierForKeySystem:identifier:options:")]
-		AVContentKeySpecifier ContentKeySpecifierForKeySystem (AVContentKeySystem keySystem, NSObject contentKeyIdentifier, NSDictionary<NSString, NSObject> options);
+		AVContentKeySpecifier GetContentKeySpecifier (AVContentKeySystem keySystem, NSObject contentKeyIdentifier, NSDictionary<NSString, NSObject> options);
 
 		[Export ("initForKeySystem:identifier:options:")]
 		IntPtr Constructor (AVContentKeySystem keySystem, NSObject contentKeyIdentifier, NSDictionary<NSString, NSObject> options);

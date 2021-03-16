@@ -129,7 +129,11 @@ namespace AVFoundation {
 	[Native]
 	// NSInteger - AVCaptureDevice.h
 	public enum AVCaptureExposureMode : long {
-		Locked, AutoExpose, ContinuousAutoExposure, [iOS (8,0), Mac (10,15)] Custom
+		Locked, 
+		AutoExpose, 
+		ContinuousAutoExposure, 
+		[iOS (8,0), Mac (10,15)] 
+		Custom
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
@@ -406,7 +410,7 @@ namespace AVFoundation {
 		[NoMac]
 		[NoTV]
 		[iOS (14,5), Watch (7,3)]
-		OverrideMutedMicrophoneInterruption = 128
+		OverrideMutedMicrophoneInterruption = 128,
 	}
 
 	[Native]
@@ -908,7 +912,7 @@ namespace AVFoundation {
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[TV (11,0), NoWatch, Mac( 10,13), iOS (11,0)]
+	[TV (11,0), NoWatch, Mac (10,13), iOS (11,0)]
 	[Native]
 	public enum AVDepthDataAccuracy : long {
 		Relative = 0,
