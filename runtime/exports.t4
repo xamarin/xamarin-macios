@@ -492,14 +492,6 @@
 
 		#endregion
 
-		#region utils/mono-path.h
-
-		new Export ("gchar *", "mono_path_resolve_symlinks",
-			"const char *", "path"
-		),
-
-		#endregion
-
 		#region utils/mono-publib.h
 
 		new Export ("void", "mono_free",

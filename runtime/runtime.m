@@ -1444,7 +1444,6 @@ xamarin_get_bundle_path ()
 
 	NSBundle *main_bundle = [NSBundle mainBundle];
 	NSString *bundle_path;
-	char *result;
 
 	if (main_bundle == NULL)
 		xamarin_assertion_message ("Could not find the main bundle in the app ([NSBundle mainBundle] returned nil)");
@@ -1460,10 +1459,7 @@ xamarin_get_bundle_path ()
 	bundle_path = [main_bundle bundlePath];
 #endif
 
-	result = mono_path_resolve_symlinks ([bundle_path UTF8String]);
-
-	x_bundle_path = strdup (result);
-	mono_free (result);
+	x_bundle_path = strdup ([[bundle_path stringByStandardizingPath] UTF8String]);
 
 	return x_bundle_path;
 }
