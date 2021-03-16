@@ -91,6 +91,7 @@ namespace Xamarin.Tests {
 		}
 
 		[Test]
+		[Ignore ("watchOS not supported on net6")]
 		public void BuildMyWatchApp ()
 		{
 			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.WatchOS);
@@ -125,7 +126,7 @@ namespace Xamarin.Tests {
 
 		[TestCase ("iOS")]
 		[TestCase ("tvOS")]
-		[TestCase ("watchOS")]
+		// not supported on net6 [TestCase ("watchOS")]
 		[TestCase ("macOS")]
 		[TestCase ("MacCatalyst")]
 		public void BuildMyClassLibrary (string platform)
@@ -139,7 +140,7 @@ namespace Xamarin.Tests {
 
 		[TestCase ("iOS")]
 		[TestCase ("tvOS")]
-		[TestCase ("watchOS")]
+		// not supported on net6 [TestCase ("watchOS")]
 		[TestCase ("macOS")]
 		[TestCase ("MacCatalyst")]
 		public void BuildEmbeddedResourcesTest (string platform)
@@ -173,7 +174,7 @@ namespace Xamarin.Tests {
 
 		[TestCase ("iOS")]
 		[TestCase ("tvOS")]
-		[TestCase ("watchOS")]
+		// not supported on net6 [TestCase ("watchOS")]
 		[TestCase ("macOS")]
 		[TestCase ("MacCatalyst")]
 		public void BuildFSharpLibraryTest (string platform)
@@ -201,7 +202,7 @@ namespace Xamarin.Tests {
 
 		[TestCase ("iOS")]
 		[TestCase ("tvOS")]
-		[TestCase ("watchOS")]
+		// not supported on net6 [TestCase ("watchOS")]
 		[TestCase ("macOS")]
 		[TestCase ("MacCatalyst")]
 		public void BuildBindingsTest (string platform)
@@ -233,7 +234,7 @@ namespace Xamarin.Tests {
 
 		[TestCase ("iOS")]
 		[TestCase ("tvOS")]
-		[TestCase ("watchOS")]
+		// not supported on net6 [TestCase ("watchOS")]
 		[TestCase ("macOS")]
 		[TestCase ("MacCatalyst")]
 		public void BuildBindingsTest2 (string platform)
@@ -264,7 +265,7 @@ namespace Xamarin.Tests {
 
 		[TestCase ("iOS", "monotouch")]
 		[TestCase ("tvOS", "monotouch")]
-		[TestCase ("watchOS", "monotouch")]
+		// not supported on net6 [TestCase ("watchOS")]
 		[TestCase ("macOS", "xammac")]
 		[TestCase ("MacCatalyst", "monotouch")]
 		public void BuildBundledResources (string platform, string prefix)
@@ -298,7 +299,7 @@ namespace Xamarin.Tests {
 
 		[TestCase ("iOS")]
 		[TestCase ("tvOS")]
-		// [TestCase ("watchOS")] // No watchOS Touch.Client project for .NET yet
+		// not supported on net6 [TestCase ("watchOS")]
 		// [TestCase ("macOS")] // No macOS Touch.Client project for .NET yet
 		[TestCase ("MacCatalyst")]
 		public void BuildInterdependentBindingProjects (string platform)

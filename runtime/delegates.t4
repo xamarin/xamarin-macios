@@ -277,6 +277,15 @@
 			WrappedManagedFunction = "CreateRuntimeException",
 			OnlyDynamicUsage = false,
 		},
+
+		new XDelegate ("GCHandle", "IntPtr", "xamarin_create_nsobject",
+			"GCHandle->MonoReflectionType *", "IntPtr", "type_gchandle",
+			"id", "IntPtr", "native_obj",
+			"enum NSObjectFlags", "NSObject.Flags", "flags"
+		) {
+			WrappedManagedFunction = "CreateNSObject",
+			OnlyDynamicUsage = false,
+		},
 	};
 	delegates.CalculateLengths ();
 #><#+
