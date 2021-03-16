@@ -101,9 +101,7 @@
 		<ProjectCapability Include="MacCatalystBinding" Condition="'$(_ProjectType)' == 'MacCatalystBindingProject'" />
 		<ProjectCapability Include="MacCatalystClassLibrary" Condition="'$(_ProjectType)' == 'MacCatalystClassLibrary'" />
 
-		<!-- See https://work.azdo.io/1112733 -->
-		<!-- Conflicts with our targets generator in VS+CPS -->
-		<ProjectCapability Remove="LaunchProfiles" />
+		<ProjectCapability Condition="'$(_KeepLaunchProfiles)' != 'true'" Remove="LaunchProfiles" />
 	</ItemGroup>
 	
 	<PropertyGroup>
