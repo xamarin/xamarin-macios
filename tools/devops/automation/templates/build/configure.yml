@@ -87,8 +87,9 @@ steps:
     echo "system.defaultworkingdirectory: $SYSTEM_DEFAULTWORKINGDIRECTORY"
     echo "build.sourcedirectory: $BUILD_SOURCESDIRECTORY"
     ls $BUILD_SOURCEDIRECTORY -Rla
-    ls SYSTEM_DEFAULTWORKINGDIRECTORY -Rla
-    make -C $BUILD_SOURCEDIRECTORY/tools/devops -v
+    ls $SYSTEM_DEFAULTWORKINGDIRECTORY -Rla
+    make -v
+    make -C $BUILD_SOURCEDIRECTORY/tools/devops
     make -C $BUILD_SOURCEDIRECTORY/tools/devops LocProject.json
   displayName: 'Generate LocProject.json'
   continueOnError: true
