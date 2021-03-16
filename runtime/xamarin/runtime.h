@@ -200,6 +200,9 @@ void			xamarin_bridge_initialize (); // this is called a bit later, after parsin
 unsigned char *	xamarin_load_aot_data (MonoAssembly *assembly, int size, gpointer user_data, void **out_handle);
 void			xamarin_free_aot_data (MonoAssembly *assembly, int size, gpointer user_data, void *handle);
 MonoAssembly*	xamarin_assembly_preload_hook (MonoAssemblyName *aname, char **assemblies_path, void* user_data);
+void			xamarin_vm_initialize ();
+bool			xamarin_bridge_vm_initialize (int propertyCount, const char **propertyKeys, const char **propertyValues);
+void*			xamarin_pinvoke_override (const char *libraryName, const char *entrypointName);
 
 MonoObject *	xamarin_new_nsobject (id self, MonoClass *klass, GCHandle *exception_gchandle);
 bool			xamarin_has_managed_ref (id self);

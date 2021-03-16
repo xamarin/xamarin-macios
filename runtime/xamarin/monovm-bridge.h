@@ -13,6 +13,9 @@
 #ifndef __MONOVM_BRIDGE__
 #define __MONOVM_BRIDGE__
 
+//#define LOG_MONOVM(...)
+#define LOG_MONOVM(...) fprintf (__VA_ARGS__)
+
 #ifdef __cplusplus
 extern "C" {
 #endif

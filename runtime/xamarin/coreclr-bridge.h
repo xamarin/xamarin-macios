@@ -6,6 +6,9 @@
 #ifndef __CORECLR_BRIDGE__
 #define __CORECLR_BRIDGE__
 
+//#define LOG_CORECLR(...)
+#define LOG_CORECLR(...) fprintf (__VA_ARGS__)
+
 #ifdef __cplusplus
 extern "C" {
 #endif
