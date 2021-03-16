@@ -33,6 +33,10 @@ provision-xcode.csx: provision-xcode.csx.in Makefile $(TOP)/Make.config
 		-e 's#@XCODE_ROOT_PATH@#$(XCODE_DEVELOPER_ROOT)#g' \
 		$< > $@;
 
+LocProject.json: LocProject.json.in Makefile $(TOP)/Make.config
+	$(Q_GEN) sed \
+		-e 's#@WORKING_DIRECTORY@#$(PWD)#g' \
+		$< > $(TOP)/Localize/$@;
 
 all check:
 	shellcheck *.sh

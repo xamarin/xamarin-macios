@@ -42,8 +42,8 @@ namespace Xamarin.MMP.Tests
 				Assert.AreEqual (1, archsFound.Count, "Did not contain one archs");
 				Assert.True (archsFound.Contains (Abi.x86_64), "Did not contain x86_64");
 			} else {
-				Assert.AreEqual (2, archsFound.Count, "Did not contain two archs");
-				Assert.True (archsFound.Contains (Abi.i386), "Did not contain i386");
+				Assert.That (archsFound.Count, Is.GreaterThanOrEqualTo (2), "Did not contain two or more archs");
+				Assert.True (archsFound.Contains (Abi.i386) || archsFound.Contains (Abi.ARM64), "Did not contain i386 nor arm64");
 				Assert.True (archsFound.Contains (Abi.x86_64), "Did not contain x86_64");
 			}
 		}

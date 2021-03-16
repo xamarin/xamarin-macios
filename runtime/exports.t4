@@ -153,11 +153,6 @@
 			"MonoString *", "string_obj"
 		),
 
-		new Export ("MonoObject *", "mono_object_new",
-			"MonoDomain *", "domain",
-			"MonoClass *", "klass"
-		),
-
 		new Export ("uintptr_t", "mono_array_length",
 			"MonoArray *", "array"
 		),

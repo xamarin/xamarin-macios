@@ -10,6 +10,7 @@ using CoreGraphics;
 namespace Xamarin.Mac.Tests
 {
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class NSStringTests
 	{
 		[Test]
@@ -65,6 +66,7 @@ namespace Xamarin.Mac.Tests
 	}
 
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class NSAttributedStringTests
 	{
 		[Test]

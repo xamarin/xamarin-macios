@@ -11,6 +11,7 @@ using AVFoundation;
 namespace Xamarin.Mac.Tests
 {
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class AVAudioIONodeTests
 	{
 		[Test]

@@ -15,6 +15,7 @@ using ObjCRuntime;
 namespace Xamarin.Mac.Tests
 {
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class EveryFrameworkSmokeTests
 	{
 		enum LoadStatus { FailTest, Acceptable };

@@ -930,6 +930,7 @@ WATCH_TARGETS += \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/MonoTouch.NUnitLite.dll      \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/MonoTouch.NUnitLite.pdb
 
+ifdef INCLUDE_DOTNET_WATCHOS
 DOTNET_TARGETS += \
 	$(WATCHOS_DOTNET_BUILD_DIR)/32/Xamarin.WatchOS.dll \
 	$(WATCHOS_DOTNET_BUILD_DIR)/64/Xamarin.WatchOS.dll \
@@ -946,6 +947,8 @@ DOTNET_TARGETS_DIRS += \
 	$(WATCHOS_DOTNET_BUILD_DIR)/ref \
 	$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Ref/ref/net6.0 \
 	$(foreach rid,$(DOTNET_WATCHOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0) \
+
+endif
 
 # reference assemblies, this is just for compilation with XS
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/%.dll: $(WATCH_BUILD_DIR)/reference/%.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/Facades

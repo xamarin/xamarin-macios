@@ -990,7 +990,7 @@ namespace ObjCRuntime {
 			}
 		}
 					
-		static void NativeObjectHasDied (IntPtr ptr, NSObject managed_obj)
+		internal static void NativeObjectHasDied (IntPtr ptr, NSObject managed_obj)
 		{
 			lock (lock_obj) {
 				if (object_map.TryGetValue (ptr, out var wr)) {
@@ -1125,6 +1125,11 @@ namespace ObjCRuntime {
 				MissingCtor (ptr, IntPtr.Zero, type, missingCtorResolution);
 
 			return (T) ctor.Invoke (new object[] { ptr, owns});
+		}
+
+		static IntPtr CreateNSObject (IntPtr type_gchandle, IntPtr handle, NSObject.Flags flags)
+		{
+			return NSObject.CreateNSObject (type_gchandle, handle, flags);
 		}
 
 		static ConstructorInfo GetIntPtrConstructor (Type type)

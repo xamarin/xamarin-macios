@@ -22,6 +22,7 @@ using OpenTK;
 
 namespace MonoTouchFixtures.MetalPerformanceShaders {
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class MPSAccelerationStructureTests {
 
 		IMTLDevice device;

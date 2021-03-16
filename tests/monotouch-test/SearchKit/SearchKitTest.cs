@@ -11,6 +11,7 @@ using SearchKit;
 namespace apitest {
 
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class SearchKitTests {
 		string path = $"/tmp/mmptest-my-{System.Diagnostics.Process.GetCurrentProcess ().Id}.index";
 
