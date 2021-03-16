@@ -7,7 +7,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="XliffTasks" Version="1.0.0-beta.20154.1" />
-    <PackageReference Include="Microsoft.NET.ILLink" Version="6.0.0-alpha.1.21065.1" />
+    <PackageReference Include="Microsoft.NET.ILLink" Version="6.0.100-preview.2.21166.1" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\common\ApplePlatform.cs">
