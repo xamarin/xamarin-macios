@@ -18,6 +18,7 @@ namespace Xharness.Jenkins {
 		public bool? Ignored;
 		public bool EnableSGenConc;
 		public bool UseThumb;
+		public string XamarinRuntime;
 		public MonoNativeLinkMode MonoNativeLinkMode;
 		public IEnumerable<IDevice> Candidates;
 	}
