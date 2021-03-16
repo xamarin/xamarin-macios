@@ -35,7 +35,7 @@ resources:
   - repository: release-scripts
     type: github
     name: xamarin/release-scripts
-    ref: refs/heads/sign-and-notarized
+    ref: refs/heads/esrp-signing
     endpoint: xamarin
 
 variables:
