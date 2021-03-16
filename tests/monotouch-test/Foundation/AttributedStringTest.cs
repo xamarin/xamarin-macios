@@ -16,6 +16,7 @@ using CoreText;
 namespace MonoTouchFixtures.Foundation {
 
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class AttributedStringTest {
 
 		CGColor red, yellow;

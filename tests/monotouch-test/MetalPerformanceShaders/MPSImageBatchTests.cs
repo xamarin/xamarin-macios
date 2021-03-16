@@ -20,6 +20,7 @@ using NUnit.Framework;
 
 namespace MonoTouchFixtures.MetalPerformanceShaders {
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class MPSImageBatchTests {
 
 		IMTLDevice device;

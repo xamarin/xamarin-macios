@@ -12,6 +12,7 @@ using SceneKit;
 namespace Xamarin.Mac.Tests
 {
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class SCNViewTests
 	{
 		[SetUp]

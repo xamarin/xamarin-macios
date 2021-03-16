@@ -131,6 +131,7 @@ namespace Xamarin.Bundler {
 		public bool? DisableOmitFramePointer = null; // Only applicable to Xamarin.Mac
 		public string CustomBundleName = "MonoBundle"; // Only applicable to Xamarin.Mac and Mac Catalyst
 
+		public XamarinRuntime XamarinRuntime;
 		public bool? UseMonoFramework;
 
 		// The bitcode mode to compile to.

@@ -17,6 +17,7 @@ using NUnit.Framework;
 
 namespace XamarinTests.ObjCRuntime {
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class RegistrarSharedTest {
 		public static Registrars CurrentRegistrar {
 			get {

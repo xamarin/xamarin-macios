@@ -11,6 +11,7 @@ using NUnit.Framework;
 namespace MonoMacFixtures.AppKit
 {
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class CellTest
 	{
 		[Test]
