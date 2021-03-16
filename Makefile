@@ -11,6 +11,10 @@ endif
 # Common
 #
 
+net6.config: eng/Versions.props
+	grep MicrosoftDotnetSdkInternalPackageVersion eng/Versions.props | sed 's/<*\/*MicrosoftDotnetSdkInternalPackageVersion>//g' | sed 's/ */DOTNET6_VERSION=/' > $@.tmp
+	mv $@.tmp $@
+
 all-local:: check-system
 install-local::
 

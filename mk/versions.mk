@@ -42,7 +42,7 @@ test-$(1)::
 	@echo "   $(2)_VERSION=$($(2)_VERSION)"
 	@echo "   $(2)_PATH=$($(2)_PATH) => $(abspath $($(2)_PATH))"
 
-reset-$(1)::
+reset-$(1):: net6.config
 ifneq ($$(IGNORE_$(2)_VERSION),)
 	@echo "*** Not resetting $(1) because IGNORE_$(2)_VERSION is set"
 else
@@ -50,7 +50,6 @@ else
 	cd $(abspath $($(2)_PATH)/../..) && git submodule update --init --recursive --force -- ./external/$(1)
 	@touch $(THISDIR)/.stamp-reset-$(1)
 endif
-	$(SYSTEM_MSBUILD) /restore eng/generate-make-vars.proj
 
 print-$(1)::
 	@printf "*** %-16s %-45s %s (%s)\n" "$(1)" "$(shell git config submodule.external/$(1).url)" "$(NEEDED_$(2)_VERSION)" "$(shell git config -f $(abspath $(TOP)/.gitmodules) submodule.external/$(1).branch)"
