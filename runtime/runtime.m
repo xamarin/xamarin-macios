@@ -2725,7 +2725,7 @@ xamarin_gchandle_unwrap (GCHandle handle)
 	if (handle == INVALID_GCHANDLE)
 		return NULL;
 	MonoObject *rv = xamarin_gchandle_get_target (handle);
-	mono_gchandle_free (GPOINTER_TO_UINT (handle));
+	xamarin_gchandle_free (handle);
 	return rv;
 }
 
