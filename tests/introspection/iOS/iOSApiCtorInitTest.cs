@@ -127,7 +127,12 @@ namespace Introspection {
 				// and that new base class GKGameCenterViewController did not exists before 6.0
 				// which makes the type unusable in 5.x, ref: https://gist.github.com/spouliot/271b6230a3aa2b58bc6e
 				return !TestRuntime.CheckXcodeVersion (4, 5);
-
+#if __MACCATALYST__
+			// just like macOS the native 'init' method returned nil.
+			// Web docs mentions uthenticaing a local player is required and sample shows a null check after creating the vc
+			case "GKGameCenterViewController":
+				return true;
+#endif
 			// mistake - we should not have exposed those default ctor and now we must live with them
 			case "GCControllerElement":
 			case "GCControllerAxisInput":

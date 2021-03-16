@@ -8,6 +8,7 @@
 //
 
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using NUnit.Framework;
@@ -445,25 +446,26 @@ namespace Introspection {
 		public void Coding ()
 		{
 			Errors = 0;
+			var list = new List<string> ();
 			CheckProtocol ("NSCoding", delegate (Type type, IntPtr klass, bool result) {
+				// `type` conforms to (native) NSCoding so...
 				if (result) {
-					// `type` conforms to (native) NSCoding so...
-					if (result) {
-						// the type should implements INSCoding
-						if (!typeof (INSCoding).IsAssignableFrom (type)) {
-							ReportError ("{0} conforms to NSCoding but does not implement INSCoding", type.Name);
-						}
-						// FIXME: and implement the .ctor(NSCoder)
+					// the type should implements INSCoding
+					if (!typeof (INSCoding).IsAssignableFrom (type)) {
+						list.Add (type.Name);
+						ReportError ("{0} conforms to NSCoding but does not implement INSCoding", type.Name);
 					}
+					// FIXME: and implement the .ctor(NSCoder)
 				}
 			});
-			Assert.AreEqual (Errors, 0, "{0} types conforms to NSCoding but does not implement INSCoding", Errors);
+			Assert.AreEqual (Errors, 0, "{0} types conforms to NSCoding but does not implement INSCoding: {1}", Errors, String.Join ('\n', list));
 		}
 
 		// [Test] -> iOS 6.0+ and Mountain Lion (10.8) +
 		public virtual void SecureCoding ()
 		{
 			Errors = 0;
+			var list = new List<string> ();
 			CheckProtocol ("NSSecureCoding", delegate (Type type, IntPtr klass, bool result) {
 				if (result) {
 					// the type should implements INSSecureCoding
@@ -472,7 +474,7 @@ namespace Introspection {
 					}
 				}
 			});
-			Assert.AreEqual (Errors, 0, "{0} types conforms to NSSecureCoding but does not implement INSSecureCoding", Errors);
+			Assert.AreEqual (Errors, 0, "{0} types conforms to NSSecureCoding but does not implement INSSecureCoding: {1}", Errors, String.Join ('\n', list));
 		}
 
 		bool SupportsSecureCoding (Type type)
@@ -536,38 +538,43 @@ namespace Introspection {
 		public void Copying ()
 		{
 			Errors = 0;
+			var list = new List<string> ();
 			CheckProtocol ("NSCopying", delegate (Type type, IntPtr klass, bool result) {
 				// `type` conforms to (native) NSCopying so...
 				if (result) {
 					// the type should implements INSCopying
 					if (!typeof (INSCopying).IsAssignableFrom (type)) {
+						list.Add (type.Name);
 						ReportError ("{0} conforms to NSCopying but does not implement INSCopying", type.Name);
 					}
 				}
 			});
-			Assert.AreEqual (Errors, 0, "{0} types conforms to NSCopying but does not implement INSCopying", Errors);
+			Assert.AreEqual (Errors, 0, "{0} types conforms to NSCopying but does not implement INSCopying: {1}", Errors, String.Join ('\n', list));
 		}
 
 		[Test]
 		public void MutableCopying ()
 		{
 			Errors = 0;
+			var list = new List<string> ();
 			CheckProtocol ("NSMutableCopying", delegate (Type type, IntPtr klass, bool result) {
 				// `type` conforms to (native) NSMutableCopying so...
 				if (result) {
 					// the type should implements INSMutableCopying
 					if (!typeof (INSMutableCopying).IsAssignableFrom (type)) {
+						list.Add (type.Name);
 						ReportError ("{0} conforms to NSMutableCopying but does not implement INSMutableCopying", type.Name);
 					}
 				}
 			});
-			Assert.AreEqual (Errors, 0, "{0} types conforms to NSMutableCopying but does not implement INSMutableCopying", Errors);
+			Assert.AreEqual (Errors, 0, "{0} types conforms to NSMutableCopying but does not implement INSMutableCopying: {1}", Errors, String.Join ('\n', list));
 		}
 
 		[Test]
 		public void GeneralCase ()
 		{
 			Errors = 0;
+			var list = new List<string> ();
 			foreach (Type t in Assembly.GetTypes ()) {
 				if (!NSObjectType.IsAssignableFrom (t))
 					continue;
@@ -608,14 +615,16 @@ namespace Introspection {
 					if (klass.Handle == IntPtr.Zero) {
 						// This can often by caused by [Protocol] classes with no [Model] but having a [BaseType].
 						// Either have both a Model and BaseType or neither
-						AddErrorLine ("[FAIL] Could not load {0}", t.FullName);
+						var e = "[FAIL] Could not load {t.FullName}";
+						list.Add (e);
+						AddErrorLine (e);
 					} else if (t.IsPublic && !ConformTo (klass.Handle, protocol)) {
 						// note: some internal types, e.g. like UIAppearance subclasses, return false (and there's not much value in changing this)
-						ReportError ("Type {0} (native: {1}) does not conform {2}", t.FullName, klass.Name, protocolName);
+						list.Add ($"Type {t.FullName} (native: {klass.Name}) does not conform {protocolName}");
 					}
 				}
 			}
-			AssertIfErrors ("{0} types do not really conform to the protocol interfaces", Errors);
+			AssertIfErrors ("{0} types do not really conform to the protocol interfaces: {1}", Errors, String.Join ('\n', list));
 		}
 	}
 }

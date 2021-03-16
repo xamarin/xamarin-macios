@@ -11,7 +11,7 @@ using System;
 using Foundation;
 using ObjCRuntime;
 using UIKit;
-#if !__TVOS__
+#if HAS_WATCHCONNECTIVITY
 using WatchConnectivity;
 #endif
 using NUnit.Framework;
@@ -121,13 +121,13 @@ namespace Introspection {
 					return true;
 				break;
 
-#if !__TVOS__
+#if HAS_WATCHCONNECTIVITY
 			case "WatchConnectivity":
 			case "MonoTouch.WatchConnectivity":
 				if (!WCSession.IsSupported)
 					return true;
 				break;
-#endif // !__TVOS__
+#endif // HAS_WATCHCONNECTIVITY
 			}
 
 			switch (type.Name) {
@@ -700,6 +700,16 @@ namespace Introspection {
 				// Xcode 12 beta 2
 				case "HKElectrocardiogram": // Conformance not in headers
 					return true;
+#if __MACCATALYST__
+				// Conformance not in headers
+				case "EKCalendar":
+				case "EKCalendarItem":
+				case "EKEvent":
+				case "EKObject":
+				case "EKReminder":
+				case "EKSource":
+					return true;
+#endif
 				}
 				break;
 			case "NSMutableCopying":
@@ -715,6 +725,20 @@ namespace Introspection {
 				// iOS 13 beta 1 (to be reviewed)
 				case "UIKeyCommand":
 					return true;
+#if __MACCATALYST__
+				// Conformance not in headers
+				case "EKAlarm":
+				case "EKCalendar":
+				case "EKCalendarItem":
+				case "EKEvent":
+				case "EKObject":
+				case "EKParticipant":
+				case "EKRecurrenceRule":
+				case "EKReminder":
+				case "EKSource":
+				case "EKStructuredLocation":
+					return true;
+#endif
 				}
 				break;
 			case "UIAccessibilityIdentification":

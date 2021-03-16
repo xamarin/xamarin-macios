@@ -110,6 +110,7 @@ namespace AVKit {
 
 		[iOS (14,2)]
 		[NoWatch, NoTV, NoMac]
+		[NoMacCatalyst]
 		[Export ("canStartPictureInPictureAutomaticallyFromInline")]
 		bool CanStartPictureInPictureAutomaticallyFromInline { get; set; }
 	}
@@ -270,6 +271,7 @@ namespace AVKit {
 
 		[iOS (14,2)]
 		[NoWatch, NoTV]
+		[NoMacCatalyst]
 		[Export ("canStartPictureInPictureAutomaticallyFromInline")]
 		bool CanStartPictureInPictureAutomaticallyFromInline { get; set; }
 	}

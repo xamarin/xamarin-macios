@@ -13,7 +13,7 @@ using System.Reflection;
 using Foundation;
 using ObjCRuntime;
 using UIKit;
-#if !__TVOS__
+#if HAS_WATCHCONNECTIVITY
 using WatchConnectivity;
 #endif
 using NUnit.Framework;
@@ -71,13 +71,13 @@ namespace Introspection {
 //				if (Runtime.Arch == Arch.DEVICE)
 //					return true;
 //				break;
-#if !__TVOS__
+#if HAS_WATCHCONNECTIVITY
 			case "WatchConnectivity":
 			case "MonoTouch.WatchConnectivity":
 				if (!WCSession.IsSupported)
 					return true;
 				break;
-#endif // !__TVOS__
+#endif // HAS_WATCHCONNECTIVITY
 			}
 
 			switch (type.Name) {
