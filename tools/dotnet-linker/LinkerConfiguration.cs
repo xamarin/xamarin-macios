@@ -115,6 +115,13 @@ namespace Xamarin.Linker {
 						throw new InvalidOperationException ($"Unable to parse the {key} value: {value} in {linker_file}");
 					DeploymentTarget = deployment_target;
 					break;
+				case "EnvironmentVariable":
+					var separators = new char [] { ':', '=' };
+					var equals = value.IndexOfAny (separators);
+					var name = value.Substring (0, equals);
+					var val = value.Substring (equals + 1);
+					Application.EnvironmentVariables.Add (name, val);
+					break;
 				case "FrameworkAssembly":
 					FrameworkAssemblies.Add (value);
 					break;

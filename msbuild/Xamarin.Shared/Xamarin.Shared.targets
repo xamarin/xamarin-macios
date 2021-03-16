@@ -951,6 +951,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			NoDSymUtil="$(_NoDSymUtil)"
 			>
 			<Output TaskParameter="CustomBundleName" ItemName="_CustomBundleName" />
+			<Output TaskParameter="EnvironmentVariables" ItemName="_BundlerEnvironmentVariables" />
 			<Output TaskParameter="MarshalManagedExceptionMode" PropertyName="_MarshalManagedExceptionMode" />
 			<Output TaskParameter="MarshalObjectiveCExceptionMode" PropertyName="_MarshalObjectiveCExceptionMode" />
 			<Output TaskParameter="NoSymbolStrip" PropertyName="_NoSymbolStrip"/>
