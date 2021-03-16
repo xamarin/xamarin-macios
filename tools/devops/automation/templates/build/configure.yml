@@ -83,7 +83,7 @@ steps:
   displayName: 'Configure build'
 
 - bash: |
-    echo "current directory: $(pwd)""
+    echo "current directory: $PWD"
     echo "system.defaultworkingdirectory: $SYSTEM.DEFAULTWORKINGDIRECTORY"
     echo "build.sourcedirectory: $BUILD.SOURCESDIRECTORY"
     ls $BUILD.SOURCEDIRECTORY -Rla
