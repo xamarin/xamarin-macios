@@ -10,6 +10,7 @@ using Foundation;
 
 namespace Xamarin.Mac.Tests
 {
+	[Preserve (AllMembers = true)]
 	public class NSViewTests
 	{
 		NSView view;
@@ -62,18 +63,25 @@ namespace Xamarin.Mac.Tests
 		[Test]
 		public void AllItemsWithNSMenuShouldAllowNull ()
 		{
-			// Can't test typeof (NSResponder) since it is abstract
-			List <Type> types = new List<Type> { typeof (NSCell), typeof (NSMenuItem), typeof (NSPathControl),
-				typeof (NSPopUpButton), typeof (NSPopUpButtonCell) };
+			// Can't test NSResponder since it is abstract
+			var types = new List<Func<NSObject>> {
+				() => new NSCell (),
+				() => new NSMenuItem (),
+				() => new NSPathControl (),
+				() => new NSPopUpButton (),
+				() => new NSPopUpButtonCell (),
+			};
 			// objc[22864]: Cannot form weak reference to instance (0x4268d0) of class NSMenuView. It is possible that this object was over-released, or is in the process of deallocation.
 			// Error occurs in Xcode as well, so not a result of our code
 			// Radar #33966228: "Thanks for the info, I think it would be best to just exclude this case from testing. We might keep your bug around to cover the case of NSWindow having problems in general with non-weak-compatible classes, but I don’t think we’ll fix it just for NSMenuView."
 			//if (IntPtr.Size == 4)
 			//types.Add (typeof (NSMenuView)); // NSMenuView is 32-bit only
 
-			foreach (Type t in types) {
-				object o = Activator.CreateInstance (t);
-				PropertyInfo prop = t.GetProperty("Menu", BindingFlags.Public | BindingFlags.Instance);
+			foreach (var ctor in types) {
+				var o = ctor ();
+				var prop = o.GetType ().GetProperty("Menu", BindingFlags.Public | BindingFlags.Instance);
+				if (prop == null && TestRuntime.IsLinkAll)
+					continue; // the property was linked away.
 				prop.SetValue (o, null, null);
 			}
 

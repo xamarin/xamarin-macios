@@ -1127,6 +1127,11 @@ namespace ObjCRuntime {
 			return (T) ctor.Invoke (new object[] { ptr, owns});
 		}
 
+		static IntPtr CreateNSObject (IntPtr type_gchandle, IntPtr handle, NSObject.Flags flags)
+		{
+			return NSObject.CreateNSObject (type_gchandle, handle, flags);
+		}
+
 		static ConstructorInfo GetIntPtrConstructor (Type type)
 		{
 			lock (intptr_ctor_cache) {

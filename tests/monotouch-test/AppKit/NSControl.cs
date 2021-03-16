@@ -3,11 +3,13 @@ using NUnit.Framework;
 using System;
 
 using AppKit;
+using Foundation;
 using ObjCRuntime;
 
 namespace Xamarin.Mac.Tests
 {
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class NSControlTests
 	{
 		[Test]

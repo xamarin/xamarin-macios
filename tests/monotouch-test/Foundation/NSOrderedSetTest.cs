@@ -16,6 +16,7 @@ using Foundation;
 namespace MonoTouchFixtures.Foundation {
 
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class NSOrderedSetTest {
 
 		[Test]

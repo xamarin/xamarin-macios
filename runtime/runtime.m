@@ -221,16 +221,6 @@ xamarin_get_nsobject_handle (MonoObject *obj)
 	return mobj->handle;
 }
 
-void
-xamarin_set_nsobject_handle (MonoObject *obj, id handle)
-{
-	// COOP: Writing managed data, must be in UNSAFE mode
-	MONO_ASSERT_GC_UNSAFE;
-	
-	struct Managed_NSObject *mobj = (struct Managed_NSObject *) obj;
-	mobj->handle  = handle;
-}
-
 uint8_t
 xamarin_get_nsobject_flags (MonoObject *obj)
 {
@@ -353,6 +343,16 @@ void xamarin_framework_peer_lock_safe ()
 void xamarin_framework_peer_unlock ()
 {
 	pthread_mutex_unlock (&framework_peer_release_lock);
+}
+
+MonoObject *
+xamarin_new_nsobject (id self, MonoClass *klass, GCHandle *exception_gchandle)
+{
+	MonoType *type = mono_class_get_type (klass);
+	MonoReflectionType *rtype = mono_type_get_object (mono_domain_get (), type);
+
+	GCHandle obj = xamarin_create_nsobject (rtype, self, NSObjectFlagsNativeRef, exception_gchandle);
+	return xamarin_gchandle_unwrap (obj);
 }
 
 MonoClass *
@@ -2725,7 +2725,7 @@ xamarin_gchandle_unwrap (GCHandle handle)
 	if (handle == INVALID_GCHANDLE)
 		return NULL;
 	MonoObject *rv = xamarin_gchandle_get_target (handle);
-	mono_gchandle_free (GPOINTER_TO_UINT (handle));
+	xamarin_gchandle_free (handle);
 	return rv;
 }
 

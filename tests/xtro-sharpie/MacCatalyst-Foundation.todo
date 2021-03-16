@@ -1,5 +1,3 @@
-!extra-enum-value! Managed value 1000 for NSDateFormatterBehavior.Mode_10_0 not found in native headers
-!extra-enum-value! Managed value 1000 for NSNumberFormatterBehavior.Version_10_0 not found in native headers
 !missing-enum! NSFileManagerUnmountOptions not bound
 !missing-enum! NSRectEdge not bound
 !missing-enum! NSURLHandleStatus not bound

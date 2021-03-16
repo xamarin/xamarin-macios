@@ -1,4 +1,3 @@
-!extra-requires-super! NSObject::awakeFromNib is incorrectly decorated with an [RequiresSuper] attribute
 !missing-enum! NSAccessibilityAnnotationPosition not bound
 !missing-enum! NSAccessibilityCustomRotorSearchDirection not bound
 !missing-enum! NSAccessibilityCustomRotorType not bound

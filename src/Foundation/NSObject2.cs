@@ -72,7 +72,7 @@ namespace Foundation {
 
 		// This enum has a native counterpart in runtime.h
 		[Flags]
-		enum Flags : byte {
+		internal enum Flags : byte {
 			Disposed = 1,
 			NativeRef = 2,
 			IsDirectBinding = 4,
@@ -143,6 +143,16 @@ namespace Foundation {
 		public void Dispose () {
 			Dispose (true);
 			GC.SuppressFinalize (this);
+		}
+
+		internal static IntPtr CreateNSObject (IntPtr type_gchandle, IntPtr handle, Flags flags)
+		{
+			// This function is called from native code before any constructors have executed.
+			var type = (Type) Runtime.GetGCHandleTarget (type_gchandle);
+			var obj = (NSObject) RuntimeHelpers.GetUninitializedObject (type);
+			obj.handle = handle;
+			obj.flags = flags;
+			return Runtime.AllocGCHandle (obj);
 		}
 
 		internal static IntPtr Initialize ()

@@ -785,7 +785,8 @@ namespace Xamarin.Bundler {
 				sw.WriteLine ("\txamarin_gc_pump = {0};", app.DebugTrack.Value ? "TRUE" : "FALSE");
 			sw.WriteLine ("\txamarin_init_mono_debug = {0};", app.PackageManagedDebugSymbols ? "TRUE" : "FALSE");
 			sw.WriteLine ("\txamarin_executable_name = \"{0}\";", assembly_name);
-			sw.WriteLine ("\tmono_use_llvm = {0};", enable_llvm ? "TRUE" : "FALSE");
+			if (app.XamarinRuntime == XamarinRuntime.MonoVM)
+				sw.WriteLine ("\tmono_use_llvm = {0};", enable_llvm ? "TRUE" : "FALSE");
 			sw.WriteLine ("\txamarin_log_level = {0};", Driver.Verbosity.ToString (CultureInfo.InvariantCulture));
 			sw.WriteLine ("\txamarin_arch_name = \"{0}\";", abi.AsArchString ());
 			if (!app.IsDefaultMarshalManagedExceptionMode)
