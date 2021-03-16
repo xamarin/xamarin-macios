@@ -6,10 +6,12 @@ using NUnit.Framework;
 using AppKit;
 using AudioUnit;
 using AudioToolbox;
+using Foundation;
 
 namespace Xamarin.Mac.Tests
 {
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class AUGraphTests
 	{
 		int graphRenderCallbackCount = 0;

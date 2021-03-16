@@ -12,6 +12,7 @@ using NUnit.Framework;
 namespace MonoTouchFixtures.HttpClientTests
 {
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class HttpClientTest
 	{
 		const int WaitTimeout = 5000;

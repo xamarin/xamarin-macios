@@ -11,6 +11,7 @@ using ObjCRuntime;
 namespace Xamarin.Mac.Tests
 {
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class CAOpenGLLayerTest
 	{		
 #if !DYNAMIC_REGISTRAR

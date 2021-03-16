@@ -26,6 +26,7 @@ namespace Xamarin.Mac.Tests
 	}
 
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class DelegateAndDataSourceTest
 	{
 		[Test]
