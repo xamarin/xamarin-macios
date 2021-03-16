@@ -23,3 +23,11 @@
 
 # The related keys are inside AVVideo which is not available in watchOS
 !missing-field! AVVideoAppleProRAWBitDepthKey not bound
+
+# no tests/samples
+!missing-pinvoke! AVSampleBufferAttachContentKey is not bound
+
+# members of that category are not annotated as supporting watchOS
+!missing-selector! AVPlayerItem::automaticallyHandlesInterstitialEvents not bound
+!missing-selector! AVPlayerItem::setAutomaticallyHandlesInterstitialEvents: not bound
+!missing-selector! AVPlayerItem::templatePlayerItem not bound
