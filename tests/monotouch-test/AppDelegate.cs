@@ -19,7 +19,7 @@ namespace MonoTouchFixtures {
 		static UIWindow window;
 		TouchRunner runner;
 
-#if !__TVOS__
+#if __IOS__
 		public override bool AccessibilityPerformMagicTap ()
 		{
 			try {
