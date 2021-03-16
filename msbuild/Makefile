@@ -444,8 +444,8 @@ DOTNET_IOS_WINDOWS_OUTPUT_FILES = $(foreach dll,$(IOS_WINDOWS_TASK_ASSEMBLIES),$
 DOTNET_IOS_WINDOWS_FILES = $(IOS_WINDOWS_TARGETS) $(foreach file,$(DOTNET_IOS_WINDOWS_OUTPUT_FILES),Xamarin.iOS.Tasks.Windows/bin/$(CONFIG)/$(TARGETFRAMEWORK)/$(file))
 
 # Ensures Xamarin.iOS.Tasks.Windows is built and copies the output files to the Sdk Windows pack
-.dotnet-windows: .build-stamp
-	$(CP) $(DOTNET_IOS_WINDOWS_FILES) $(DOTNET_DESTDIR)/$(IOS_WINDOWS_NUGET).Sdk/tools/msbuild/iOS/
+.dotnet-windows: .build-stamp | $(DOTNET_DESTDIR)/$(IOS_WINDOWS_NUGET).Sdk/tools/msbuild/iOS
+	$(Q) $(CP) $(DOTNET_IOS_WINDOWS_FILES) $(DOTNET_DESTDIR)/$(IOS_WINDOWS_NUGET).Sdk/tools/msbuild/iOS/
 
 all-local:: .dotnet-windows
 dotnet:: .dotnet-windows
