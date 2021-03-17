@@ -402,6 +402,9 @@ namespace Introspection {
 				case "CPListImageRowItem": // conformance not in headers
 				case "CPListItem": // conformance not in headers
 					return true;
+				// iOS 14.5
+				case "GCDualSenseGamepad"
+					return true;
 				}
 				break;
 			case "NSSecureCoding":
@@ -634,6 +637,9 @@ namespace Introspection {
 				case "CPMessageListItemTrailingConfiguration": // conformance not in headers
 				case "CPTextButton": // conformance not in headers
 				case "CPListImageRowItem": // conformance not in headers
+					return true;
+				// iOS 14.5
+				case "GCDualSenseGamepad"
 					return true;
 				}
 				break;
