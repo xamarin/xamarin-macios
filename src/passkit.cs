@@ -770,6 +770,7 @@ namespace PassKit {
 
 		[NoWatch]
 		[NoMac]
+		[NoMacCatalyst]
 		[Export ("icon", ArgumentSemantic.Copy)]
 		UIImage Icon { get; }
 

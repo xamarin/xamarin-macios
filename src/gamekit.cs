@@ -507,6 +507,7 @@ namespace GameKit {
 #if !MONOMAC
 		[NoTV]
 		[NoWatch]
+		[NoMacCatalyst]
 		[Export ("loadImageWithCompletionHandler:")]
 		[Async]
 		void LoadImage ([NullAllowed] GKImageLoadedHandler completionHandler);

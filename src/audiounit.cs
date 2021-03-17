@@ -298,6 +298,7 @@ namespace AudioUnit {
 		[Export ("supportsUserPresets")]
 		bool SupportsUserPresets { get; }
 
+		[Introduced (PlatformName.MacCatalyst, 13, 0)] // needed since it's not in iOS
 		[NoWatch, NoTV, NoiOS, Mac (10, 15)]
 		[Export ("isLoadedInProcess")]
 		bool IsLoadedInProcess { get; }
