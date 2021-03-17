@@ -367,7 +367,7 @@ namespace Xharness {
 				MainLog.WriteLine ("Starting test run");
 
 				await testReporter.CollectSimulatorResult (
-					await processManager.ExecuteCommandAsync (args, MainLog, testReporterTimeout, cancellationToken: testReporter.CancellationToken));
+					processManager.ExecuteCommandAsync (args, MainLog, testReporterTimeout, cancellationToken: testReporter.CancellationToken));
 
 				// cleanup after us
 				if (EnsureCleanSimulatorState)
@@ -412,7 +412,7 @@ namespace Xharness {
 						testReporterTimeout,
 						cancellationToken: testReporter.CancellationToken);
 
-					await testReporter.CollectDeviceResult (await runTestTask);
+					await testReporter.CollectDeviceResult (runTestTask);
 				} finally {
 					deviceLogCapturer.StopCapture ();
 					deviceSystemLog.Dispose ();
