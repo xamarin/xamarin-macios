@@ -456,6 +456,11 @@ namespace GameController {
 		[TV (14, 0), Mac (11, 0), iOS (14, 0)]
 		[Notification, Field ("GCControllerDidStopBeingCurrentNotification")]
 		NSString DidStopBeingCurrentNotification { get; }
+
+		[TV (14,5)][Mac (11,3)][iOS (14,5)]
+		[Static]
+		[Export ("shouldMonitorBackgroundEvents")]
+		bool ShouldMonitorBackgroundEvents { get; set; }
 	}
 
 	[iOS (8,0), Mac (10,10)]
@@ -1789,5 +1794,84 @@ namespace GameController {
 	[BaseType (typeof (GCMicroGamepad))]
 	[DisableDefaultCtor]
 	interface GCDirectionalGamepad {
+	}
+
+	[TV (14,5)][Mac (11,3)][iOS (14,5)]
+	[Native]
+	enum GCDualSenseAdaptiveTriggerMode : long {
+		Off = 0,
+		Feedback = 1,
+		Weapon = 2,
+		Vibration = 3,
+	}
+
+	[TV (14,5)][Mac (11,3)][iOS (14,5)]
+	[Native]
+	enum GCDualSenseAdaptiveTriggerStatus : long {
+		Unknown = -1,
+		FeedbackNoLoad,
+		FeedbackLoadApplied,
+		WeaponReady,
+		WeaponFiring,
+		WeaponFired,
+		VibrationNotVibrating,
+		VibrationIsVibrating,
+	}
+
+	[TV (14,5)][Mac (11,3)][iOS (14,5)]
+	[BaseType (typeof (GCControllerButtonInput))]
+	[DisableDefaultCtor]
+	interface GCDualSenseAdaptiveTrigger {
+
+		[Export ("mode")]
+		GCDualSenseAdaptiveTriggerMode Mode { get; }
+
+		[Export ("status")]
+		GCDualSenseAdaptiveTriggerStatus Status { get; }
+
+		[Export ("armPosition")]
+		float ArmPosition { get; }
+
+		[Export ("setModeFeedbackWithStartPosition:resistiveStrength:")]
+		void SetModeFeedback (float startPosition, float resistiveStrength);
+
+		[Export ("setModeWeaponWithStartPosition:endPosition:resistiveStrength:")]
+		void SetModeWeapon (float startPosition, float endPosition, float resistiveStrength);
+
+		[Export ("setModeVibrationWithStartPosition:amplitude:frequency:")]
+		void SetModeVibration (float startPosition, float amplitude, float frequency);
+
+		[Export ("setModeOff")]
+		void SetModeOff ();
+	}
+
+	[TV (14,5)][Mac (11,3)][iOS (14,5)]
+	[BaseType (typeof (GCExtendedGamepad))]
+	[DisableDefaultCtor] // Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: -[GCControllerButtonInput setIndex:]: unrecognized selector sent to instance 0x60000147eac0
+	interface GCDualSenseGamepad {
+
+		[Export ("touchpadButton")]
+		GCControllerButtonInput TouchpadButton { get; }
+
+		[Export ("touchpadPrimary")]
+		GCControllerDirectionPad TouchpadPrimary { get; }
+
+		[Export ("touchpadSecondary")]
+		GCControllerDirectionPad TouchpadSecondary { get; }
+
+		[Export ("leftTrigger")]
+		GCDualSenseAdaptiveTrigger LeftTrigger { get; }
+
+		[Export ("rightTrigger")]
+		GCDualSenseAdaptiveTrigger RightTrigger { get; }
+	}
+
+	[TV (14,5)][Mac (11,3)][iOS (14,5)]
+	enum GCInputDirectional {
+		[Field ("GCInputDirectionalDpad")]
+		Dpad,
+
+		[Field ("GCInputDirectionalCardinalDpad")]
+		CardinalDpad,
 	}
 }
