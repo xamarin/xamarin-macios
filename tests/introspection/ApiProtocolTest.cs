@@ -615,7 +615,7 @@ namespace Introspection {
 					if (klass.Handle == IntPtr.Zero) {
 						// This can often by caused by [Protocol] classes with no [Model] but having a [BaseType].
 						// Either have both a Model and BaseType or neither
-						var e = "[FAIL] Could not load {t.FullName}";
+						var e = $"[FAIL] Could not load {t.FullName}";
 						list.Add (e);
 						AddErrorLine (e);
 					} else if (t.IsPublic && !ConformTo (klass.Handle, protocol)) {

@@ -38,7 +38,7 @@ namespace MonoTouchFixtures.ExternalAccessory {
 			Assert.IsNotNull (am.ConnectedAccessories, "ConnectedAccessories");
 		}
 
-#if !MONOMAC
+#if !MONOMAC && !__MACCATALYST__
 		[Test]
 		public void ShowBluetoothAccessoryPicker ()
 		{

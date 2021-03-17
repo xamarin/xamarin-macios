@@ -1,2 +1,3 @@
-## fails in introspection tests
+## web docs <quote>On Apple silicon, this method displays an alert to let the user know that the Bluetooth accessory picker is unavailable.</quote>
+## since the base description is for iOS (and the API is not available on macOS) it's not clear what happens on Intel macOS ?!?
 !missing-selector! EAAccessoryManager::showBluetoothAccessoryPickerWithNameFilter:completion: not bound
