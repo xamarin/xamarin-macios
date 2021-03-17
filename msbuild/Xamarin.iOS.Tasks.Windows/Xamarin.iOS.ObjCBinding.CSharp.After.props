@@ -1,20 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<Import Project="$(MSBuildThisFileDirectory)Xamarin.iOS.Windows.props" Condition="Exists('$(MSBuildThisFileDirectory)Xamarin.iOS.Windows.props')" />
-	
-	<UsingTask TaskName="Xamarin.iOS.Tasks.PrepareObjCBindingNativeFrameworks" AssemblyFile="$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll" />
-	
-	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Messaging.Build.targets" Condition="Exists('$(MSBuildThisFileDirectory)Xamarin.Messaging.Build.targets') And '$(MessagingBuildTargetsImported)' != 'true'" />
-	
-	<Target Name="CopyCompressedNativeFrameworkResources" Condition="'@(_NativeFrameworkResource)' != ''" AfterTargets="_CompressNativeFrameworkResources">
-		<CopyFileFromBuildServer SessionId="$(BuildSessionId)" File="$(IntermediateOutputPath)%(_NativeFramework.Filename)%(_NativeFramework.Extension)" />
-	</Target>
-	
-	<!-- This target copies the ObjCBindingNativeFrameworks to the Mac -->
-	<Target Name="PrepareObjCBindingNativeFrameworks" BeforeTargets="_CompressObjCBindingNativeFrameworkResources">
-		<PrepareObjCBindingNativeFrameworks SessionId="$(BuildSessionId)" ObjCBindingNativeFrameworks="@(ObjCBindingNativeFramework)" />
-	</Target>
-	
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">	
 	<!-- Allows providing SDK-specific property overrides -->
 	<PropertyGroup>
 		<XamarinAppleSdkProps>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), 'Xamarin.Apple.Sdk.props'))\Xamarin.Apple.Sdk.props</XamarinAppleSdkProps>
