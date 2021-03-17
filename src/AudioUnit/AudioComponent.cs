@@ -449,7 +449,7 @@ namespace AudioUnit
 		public static NSString ForceValidation = new NSString ("ForceValidation");
 
 //		#define kAudioComponentValidationParameter_LoadOutOfProcess		 "LoadOutOfProcess"
-		[iOS (14,5), Mac (11,3)]
+		[iOS (14,5), TV (14,5), Mac (11,3)]
 		public static NSString LoadOutOfProcess = new NSString ("LoadOutOfProcess");
 
 //		#define kAudioComponentValidationParameter_TimeOut				"TimeOut"
