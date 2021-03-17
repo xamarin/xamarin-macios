@@ -11,4 +11,14 @@
 #include "xamarin/xamarin.h"
 #include "xamarin/coreclr-bridge.h"
 
+void
+xamarin_bridge_setup ()
+{
+}
+
+void
+xamarin_bridge_initialize ()
+{
+}
+
 #endif // CORECLR_RUNTIME
