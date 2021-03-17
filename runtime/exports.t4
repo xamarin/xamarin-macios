@@ -323,7 +323,9 @@
 			"const char *", "func",
 			"const char *", "tdll",
 			"const char *", "tfunc"
-		),
+		) {
+			Mode = DotNetMode.OnlyLegacy,
+		},
 
 		#endregion
 
