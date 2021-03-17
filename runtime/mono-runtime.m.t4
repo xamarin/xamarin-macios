@@ -75,13 +75,13 @@ xamarin_initialize_dynamic_runtime (const char *mono_runtime_prefix)
 
 
 <# foreach (var export in exports) { #>
-<#= export.DotNetIf #>	<#= export.EntryPoint #>_func = (<#= export.EntryPoint #>_def) dlsym (libmono, "<#= export.EntryPoint #>");
+<#= export.DotNetIf #><#= export.RuntimeIf #>	<#= export.EntryPoint #>_func = (<#= export.EntryPoint #>_def) dlsym (libmono, "<#= export.EntryPoint #>");
 <# if (!export.Optional) { #>
 	if (<#= export.EntryPoint #>_func == NULL) {
 		fprintf (stderr, "Could not load <#= export.EntryPoint #>\n");
 		errmsg = "Failed to load the Mono framework.";
 	}
-<#= export.DotNetEndIf #><# } #>
+<#= export.DotNetEndIf #><#= export.RuntimeEndIf #><# } #>
 
 <# } #>
 	xamarin_dynamic_runtime_initialized = 1;
@@ -123,7 +123,10 @@ int xamarin_fix_ranlib_warning_about_no_symbols;
 #if defined (CORECLR_RUNTIME)
 #include "xamarin/runtime.h"
 
-<# foreach (var export in exports) { #>
+<# foreach (var export in exports) {
+	if (export.XamarinRuntime == RuntimeMode.MonoVM)
+		continue;
+#>
 MONO_API <#= export.ReturnType #>
 <#= export.EntryPoint #> (<#= export.ArgumentSignature #>)
 {
