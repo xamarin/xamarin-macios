@@ -14,6 +14,7 @@ namespace Xamarin.Mac.Tests {
 
 			var exit_code = await MonoTouch.NUnit.UI.MacRunner.MainAsync (arguments, true, _exit, typeof (MainClass).Assembly);
 
+#if NET
 			var exit_monitor = new Thread (() =>
 			{
 				// Wait for 3 seconds
@@ -26,6 +27,9 @@ namespace Xamarin.Mac.Tests {
 				IsBackground = true,
 			};
 			exit_monitor.Start ();
+#else
+			_exit (exit_code);
+#endif
 
 			return exit_code;
 		}
