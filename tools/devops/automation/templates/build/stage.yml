@@ -1,11 +1,11 @@
-# template that contains all the different steps to create a pkgs, publish the results and provide feedback to the 
+# template that contains all the different steps to create a pkgs, publish the results and provide feedback to the
 # developers in github.
 parameters:
 - name: runTests
   type: boolean
   default: true
 
-- name: vsdropsPrefix 
+- name: vsdropsPrefix
   type: string
 
 - name: runDeviceTests
@@ -13,6 +13,12 @@ parameters:
   default: true
 
 - name: keyringPass
+  type: string
+
+- name: gitHubToken
+  type: string
+
+- name: xqaCertPass
   type: string
 
 jobs:
@@ -42,7 +48,7 @@ jobs:
   variables:
     AgentPoolComputed: $[ dependencies.AgentPoolSelector.outputs['setAgentPool.AgentPoolComputed'] ]
     # add all the variables that have been parsed by the configuration step. Could we have a less verbose way??
-    # 
+    #
     # build-package
     # run-internal-tests
     # skip-packages
@@ -83,8 +89,10 @@ jobs:
       isPR: ${{ or(eq(variables['Build.Reason'], 'PullRequest'), and(eq(variables['Build.SourceBranchName'], 'merge'), or(eq(variables['Build.Reason'], 'Manual'), eq(variables['Build.Reason'], 'IndividualCI')))) }}
       runTests: ${{ parameters.runTests }}
       runDeviceTests: ${{ parameters.runDeviceTests }}
-      vsdropsPrefix: ${{ parameters.vsdropsPrefix }} 
-      keyringPass: ${{ parameters.keyringPass }} 
+      vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
+      keyringPass: ${{ parameters.keyringPass }}
+      gitHubToken: ${{ parameters.gitHubToken }}
+      xqaCertPass: ${{ parameters.xqaCertPass }}
 
 - job: upload_azure_blob
   displayName: 'Upload packages to Azure'
@@ -140,7 +148,7 @@ jobs:
   - build
   - upload_azure_blob
   - upload_vsdrops
-  - upload_vsts_tests 
+  - upload_vsts_tests
   condition: succeededOrFailed()
   variables:
     # Define the variable FOO from the previous job
@@ -158,5 +166,5 @@ jobs:
   - template: publish-html.yml
     parameters:
       statusContext: "Build"
-      vsdropsPrefix: ${{ parameters.vsdropsPrefix }} 
+      vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
       devicePrefix: sim

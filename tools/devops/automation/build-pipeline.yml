@@ -191,6 +191,8 @@ stages:
         runTests: ${{ parameters.runTests }}
         runDeviceTests: ${{ parameters.runDeviceTests }}
         keyringPass: $(xma-password)
+        gitHubToken: ${{ variables['GitHub.Token'] }}
+        xqaCertPass: $(xqa--certificates--password)
 
 
 - ${{ if or(eq(variables['Build.Reason'], 'IndividualCI'), eq(variables['Build.Reason'], 'Manual')) }}:
