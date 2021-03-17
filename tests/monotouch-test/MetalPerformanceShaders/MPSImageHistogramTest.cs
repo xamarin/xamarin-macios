@@ -3,6 +3,7 @@
 #if !__WATCHOS__
 
 using System;
+using Foundation;
 using ObjCRuntime;
 
 using Metal;
@@ -14,6 +15,7 @@ namespace MonoTouchFixtures.MetalPerformanceShaders
 {
 
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class MPSImageHistogramTest
 	{
 		IMTLDevice device;

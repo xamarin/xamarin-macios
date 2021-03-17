@@ -9,6 +9,7 @@ using NUnit.Framework;
 namespace MonoTouchFixtures.Metal {
 
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class MTLComputeCommandEncoderTest {
 		IMTLDevice device;
 		IMTLCommandQueue commandQ;

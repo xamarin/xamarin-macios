@@ -3034,6 +3034,7 @@ namespace SceneKit {
 #else
 		[Obsoleted (PlatformName.WatchOS, 6, 0, message: "API removed, please do not use.")]
 #endif
+		[NoMacCatalyst]
 		[Export ("context")]
 		IntPtr Context { get;  }
 

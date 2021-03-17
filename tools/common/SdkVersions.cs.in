@@ -18,11 +18,19 @@ namespace Xamarin {
 		public const string TVOS = "@TVOS_SDK_VERSION@";
 		public const string MacCatalyst = "@MACCATALYST_SDK_VERSION@";
 
+#if NET
+		public const string MinOSX = "@DOTNET_MIN_OSX_SDK_VERSION@";
+		public const string MiniOS = "@DOTNET_MIN_IOS_SDK_VERSION@";
+		public const string MinWatchOS = "99.99"; // TODO not supported, many changes required to remove it
+		public const string MinTVOS = "@DOTNET_MIN_TVOS_SDK_VERSION@";
+		public const string MinMacCatalyst = "@DOTNET_MIN_MACCATALYST_SDK_VERSION@";
+#else
 		public const string MinOSX = "@MIN_OSX_SDK_VERSION@";
 		public const string MiniOS = "@MIN_IOS_SDK_VERSION@";
 		public const string MinWatchOS = "@MIN_WATCHOS_SDK_VERSION@";
 		public const string MinTVOS = "@MIN_TVOS_SDK_VERSION@";
 		public const string MinMacCatalyst = "@MIN_MACCATALYST_SDK_VERSION@";
+#endif
 
 		public const string MiniOSSimulator = "@MIN_IOS_SIMULATOR_VERSION@";
 		public const string MinWatchOSSimulator = "@MIN_WATCHOS_SIMULATOR_VERSION@";

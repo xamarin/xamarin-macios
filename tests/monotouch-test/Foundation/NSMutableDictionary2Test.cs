@@ -11,6 +11,7 @@ using ObjCRuntime;
 namespace MonoTouchFixtures.Foundation {
 
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class NSMutableDictionary2Test {
 
 		[Test]

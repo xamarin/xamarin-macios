@@ -453,6 +453,8 @@ namespace CoreFoundation {
 			stream.OnCallback ((CFStreamEventType) (long) type);
 		}
 
+		static CFStreamCallback OnCallbackDelegate = OnCallback;
+
 		protected virtual void OnCallback (CFStreamEventType type)
 		{
 			var args = new StreamEventArgs (type);
@@ -495,7 +497,7 @@ namespace CoreFoundation {
 			var ptr = Marshal.AllocHGlobal (Marshal.SizeOf (typeof (CFStreamClientContext)));
 			try {
 				Marshal.StructureToPtr (ctx, ptr, false);
-				if (!DoSetClient (OnCallback, (nint) (long) args, ptr))
+				if (!DoSetClient (OnCallbackDelegate, (nint) (long) args, ptr))
 					throw new InvalidOperationException ("Stream does not support async events.");
 			} finally {
 				Marshal.FreeHGlobal (ptr);

@@ -50,7 +50,7 @@ xamarin_string_to_nsstring (MonoString *obj, bool retain)
 	if (obj == NULL)
 		return NULL;
 
-	char *str = mono_string_to_utf8 ((MonoString *) obj);
+	char *str = mono_string_to_utf8 (obj);
 	NSString *arg;
 	if (retain) {
 		arg = [[NSString alloc] initWithUTF8String:str];
@@ -503,10 +503,10 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 		 * This problem is documented in the following bug:
 		 * https://bugzilla.xamarin.com/show_bug.cgi?id=6556
 		 */
-		retval = mono_object_new (domain, mono_method_get_class (method));
+		retval = xamarin_new_nsobject (self, mono_method_get_class (method), &exception_gchandle);
+		if (exception_gchandle != INVALID_GCHANDLE)
+			goto exception_handling;
 
-		xamarin_set_nsobject_handle (retval, self);
-		xamarin_set_nsobject_flags (retval, NSObjectFlagsNativeRef);
 		mono_runtime_invoke (method, retval, (void **) arg_ptrs, exception_ptr);
 		if (exception != NULL)
 			goto exception_handling;
@@ -640,7 +640,7 @@ exception_handling:
 					// If we already have an exception, don't overwrite it with an exception from disposing something.
 					// However we don't want to silently ignore it, so print it.
 					NSLog (@PRODUCT ": An exception occurred while disposing the object %p:", list->data);
-					NSLog (@"%@", xamarin_print_all_exceptions (xamarin_gchandle_get_target (dispose_exception_gchandle)));
+					NSLog (@"%@", xamarin_print_all_exceptions (dispose_exception_gchandle));
 				}
 			}
 			list = list->next;

@@ -81,3 +81,27 @@ steps:
     ACCESSTOKEN: $(AzDoBuildAccess.Token)
   name: labels
   displayName: 'Configure build'
+
+- bash: |
+    echo "current directory: $PWD"
+    make LocProject.json
+  displayName: 'Generate LocProject.json'
+  continueOnError: true
+  workingDirectory: $(Build.SourcesDirectory)\tools\devops 
+
+- task: OneLocBuild@2
+  continueOnError: true
+  env:
+    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+  inputs:
+    locProj: '$(Build.SourcesDirectory)\Localize\LocProject.json'
+    outDir: '$(Build.ArtifactStagingDirectory)'
+    isCreatePrSelected: true
+    prSourceBranchPrefix: 'locfiles'
+
+- task: PublishBuildArtifacts@1
+  continueOnError: true
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'localizationDrop'
+    publishLocation: 'Container'

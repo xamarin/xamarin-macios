@@ -6,10 +6,12 @@ using NUnit.Framework;
 using AppKit;
 using AudioUnit;
 using theUnit = AudioUnit.AudioUnit;
+using Foundation;
 
 namespace Xamarin.Mac.Tests
 {
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class AudioUnitTests
 	{
 		theUnit GetAudioUnitForTest ()

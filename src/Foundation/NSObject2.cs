@@ -72,7 +72,7 @@ namespace Foundation {
 
 		// This enum has a native counterpart in runtime.h
 		[Flags]
-		enum Flags : byte {
+		internal enum Flags : byte {
 			Disposed = 1,
 			NativeRef = 2,
 			IsDirectBinding = 4,
@@ -145,6 +145,16 @@ namespace Foundation {
 			GC.SuppressFinalize (this);
 		}
 
+		internal static IntPtr CreateNSObject (IntPtr type_gchandle, IntPtr handle, Flags flags)
+		{
+			// This function is called from native code before any constructors have executed.
+			var type = (Type) Runtime.GetGCHandleTarget (type_gchandle);
+			var obj = (NSObject) RuntimeHelpers.GetUninitializedObject (type);
+			obj.handle = handle;
+			obj.flags = flags;
+			return Runtime.AllocGCHandle (obj);
+		}
+
 		internal static IntPtr Initialize ()
 		{
 			return class_ptr;
@@ -153,11 +163,11 @@ namespace Foundation {
 		[MethodImplAttribute (MethodImplOptions.InternalCall)]
 		extern static void RegisterToggleRef (NSObject obj, IntPtr handle, bool isCustomType);
 
-		[MethodImplAttribute (MethodImplOptions.InternalCall)]
-		static extern void xamarin_release_managed_ref (IntPtr handle, NSObject managed_obj);
+		[DllImport ("__Internal")]
+		static extern void xamarin_release_managed_ref (IntPtr handle, bool user_type);
 
 		[MethodImplAttribute (MethodImplOptions.InternalCall)]
-		static extern void xamarin_create_managed_ref (IntPtr handle, NSObject obj, bool retain);
+		static extern void xamarin_create_managed_ref (IntPtr handle, NSObject obj, bool retain, bool user_type);
 
 #if !XAMCORE_3_0
 		public static bool IsNewRefcountEnabled ()
@@ -220,13 +230,20 @@ namespace Foundation {
 
 		void CreateManagedRef (bool retain)
 		{
-			xamarin_create_managed_ref (handle, this, retain);
+			flags |= Flags.HasManagedRef;
+			xamarin_create_managed_ref (handle, this, retain, Runtime.IsUserType (handle));
 		}
 
 		void ReleaseManagedRef ()
 		{
+			var handle = this.Handle; // Get a copy of the handle, because it will be cleared out when calling Runtime.NativeObjectHasDied, and we still need the handle later.
+			var user_type = Runtime.IsUserType (handle);
 			flags &= ~Flags.HasManagedRef;
-			xamarin_release_managed_ref (handle, this);
+			if (!user_type) {
+				/* If we're a wrapper type, we need to unregister here, since we won't enter the release trampoline */
+				Runtime.NativeObjectHasDied (handle, this);
+			}
+			xamarin_release_managed_ref (handle, user_type);
 		}
 
 		static bool IsProtocol (Type type, IntPtr protocol)

@@ -3,6 +3,7 @@ using NUnit.Framework;
 using System;
 
 using AppKit;
+using Foundation;
 using ObjCRuntime;
 using CoreImage;
 using CoreGraphics;
@@ -10,6 +11,7 @@ using CoreGraphics;
 namespace Xamarin.Mac.Tests
 {
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class CIFilterTests
 	{
 		[Test]

@@ -154,8 +154,17 @@ namespace Xharness.Jenkins.TestTasks {
 						var listener = new Microsoft.DotNet.XHarness.iOS.Shared.Listeners.SimpleFileListener (xmlLog.FullPath, log, xmlLog, useXmlOutput);
 						var reporter = reporterFactory.Create (Harness.HarnessLog, log, Logs, snapshot, listener, Harness.ResultParser, new AppBundleInformation ("N/A", "N/A", "N/A", "N/A", true, null), RunMode.MacOS, Harness.XmlJargon, "no device here", TimeSpan.Zero);
 						var rv = await reporter.ParseResult ();
-						ExecutionResult = rv.ExecutingResult;
-						FailureMessage = rv.ExecutingResult == TestExecutingResult.Succeeded ? null : rv.ResultMessage;
+
+						if (ExecutionResult == TestExecutingResult.Succeeded) {
+							// The process might have crashed, timed out at exit, or otherwise returned a non-zero exit code when all the unit tests passed, in which we shouldn't override the execution result here,
+							ExecutionResult = rv.ExecutingResult;
+						}
+
+						// Set or replace the failure message, depending on whether there already is a failure message or not.
+						if (string.IsNullOrEmpty (FailureMessage))
+							FailureMessage = rv.ResultMessage;
+						else if (!string.IsNullOrEmpty (rv.ResultMessage))
+							FailureMessage += "\n" + rv.ResultMessage;
 					}
 				}
 			}

@@ -1498,6 +1498,7 @@ namespace UIKit {
 		[Export ("accessibilityPerformEscape")]
 		bool AccessibilityPerformEscape ();
 
+		[NoMacCatalyst]
 		[Export ("accessibilityPerformMagicTap")]
 		bool AccessibilityPerformMagicTap ();
 
@@ -3362,6 +3363,7 @@ namespace UIKit {
 		// appropriate to implement the accessibilityPerformMagicTap method in your app delegate."
 		// ref: http://developer.apple.com/library/ios/#featuredarticles/ViewControllerPGforiPhoneOS/Accessibility/AccessibilityfromtheViewControllersPerspective.html
 		[NoTV]
+		[NoMacCatalyst]
 		[Export ("accessibilityPerformMagicTap")]
 		bool AccessibilityPerformMagicTap ();
 

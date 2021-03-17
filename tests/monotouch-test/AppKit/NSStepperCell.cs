@@ -3,10 +3,12 @@ using System;
 using NUnit.Framework;
 
 using AppKit;
+using Foundation;
 
 namespace apitest
 {
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class NSStepperCellTests
 	{
 		NSStepperCell cell;

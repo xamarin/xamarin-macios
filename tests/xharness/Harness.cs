@@ -293,6 +293,7 @@ namespace Xharness {
 				Name = "monotouch-test",
 				IsDotNetProject = true,
 				TargetFrameworkFlavors = MacFlavors.DotNet,
+				Platform = "AnyCPU",
 			});
 
 			foreach (var flavor in new MonoNativeFlavor [] { MonoNativeFlavor.Compat, MonoNativeFlavor.Unified }) {
