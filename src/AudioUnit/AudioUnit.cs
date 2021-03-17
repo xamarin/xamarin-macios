@@ -1169,6 +1169,8 @@ namespace AudioUnit
 		ParametersForOverview = 57,
 		[iOS (10,0), Mac (10,12)]
 		SupportsMpe = 58,
+		[iOS (14,5), TV (14,5), Mac (11,3)]
+		LoadedOutOfProcess = 62,
 
 #if MONOMAC
 		FastDispatch = 5,
@@ -1802,7 +1804,9 @@ namespace AudioUnit
 	[iOS (9,0), Mac (10,11)]
 	public enum AudioComponentInstantiationOptions : uint {
 		OutOfProcess = 1,
-		InProcess = 2
+		InProcess = 2,
+		[iOS (14,5), TV (14,5), Mac (11,3)]
+		LoadedRemotely = 1u << 31,
 	}
 
 	[Native]
