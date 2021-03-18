@@ -403,7 +403,7 @@ namespace Introspection {
 				case "CPListItem": // conformance not in headers
 					return true;
 				// iOS 14.5
-				case "GCDualSenseGamepad"
+				case "GCDualSenseGamepad":
 					return true;
 				}
 				break;
@@ -639,7 +639,7 @@ namespace Introspection {
 				case "CPListImageRowItem": // conformance not in headers
 					return true;
 				// iOS 14.5
-				case "GCDualSenseGamepad"
+				case "GCDualSenseGamepad":
 					return true;
 				}
 				break;
