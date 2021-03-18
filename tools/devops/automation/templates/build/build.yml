@@ -74,8 +74,8 @@ steps:
     Write-Host "Python3 location"
     which python3
 
-    Write-Host "Pip version"
-    pip -V
+    Write-Host "Pip3 version"
+    pip3 -V
   displayName: 'Show Python information'
 
 - bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/clean-bot.sh
