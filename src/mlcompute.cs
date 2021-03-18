@@ -2216,12 +2216,12 @@ namespace MLCompute {
 		Greater = 3,
 		LessOrEqual = 4,
 		GreaterOrEqual = 5,
-		LogicalAND = 6,
-		LogicalOR = 7,
-		LogicalNOT = 8,
-		LogicalNAND = 9,
-		LogicalNOR = 10,
-		LogicalXOR = 11,
+		LogicalAnd = 6,
+		LogicalOr = 7,
+		LogicalNot = 8,
+		LogicalNand = 9,
+		LogicalNor = 10,
+		LogicalXor = 11,
 	}
 
 	[TV (14,5)][Mac (11,3)][iOS (14,5)]
