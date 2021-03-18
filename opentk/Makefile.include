@@ -66,7 +66,7 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/mobile/OpenTK.dll: $(MA
 	$(Q) install -m 0755 $^ $@
 	$(Q) install -m 0644 $(<:.dll=.pdb) $(@:.dll=.pdb)
 
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/x86_64/mobile/OpenTK.dll: $(MAC_BUILD_DIR)/mobile-64/OpenTK.dll | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/x86_64/mobile
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/64bits/mobile/OpenTK.dll: $(MAC_BUILD_DIR)/mobile-64/OpenTK.dll | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/64bits/mobile
 	$(Q) install -m 0755 $^ $@
 	$(Q) install -m 0644 $(<:.dll=.pdb) $(@:.dll=.pdb)
 
@@ -78,7 +78,7 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/net_4_5/OpenTK.dll: $(M
 	$(Q) install -m 0755 $^ $@
 	$(Q) install -m 0644 $(<:.dll=.pdb) $(@:.dll=.pdb)
 
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/x86_64/full/OpenTK.dll: $(MAC_BUILD_DIR)/full-64/OpenTK.dll | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/x86_64/full
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/64bits/full/OpenTK.dll: $(MAC_BUILD_DIR)/full-64/OpenTK.dll | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/64bits/full
 	$(Q) install -m 0755 $^ $@
 	$(Q) install -m 0644 $(<:.dll=.pdb) $(@:.dll=.pdb)
 
@@ -90,9 +90,9 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/%: | $(MAC_DESTDIR)$(MAC
 
 MAC_TARGETS += \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/mobile/OpenTK.dll     \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/x86_64/mobile/OpenTK.dll        \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/64bits/mobile/OpenTK.dll        \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/full/OpenTK.dll       \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/x86_64/full/OpenTK.dll          \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/64bits/full/OpenTK.dll          \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/OpenTK.dll     \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/OpenTK.pdb     \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/net_4_5/OpenTK.dll       \
