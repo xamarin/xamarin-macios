@@ -76,8 +76,6 @@ $(XCAT_PCH): .stamp-check-sharpie
 	-exclude SecurityInterface \
 
 
-maccatalyst: $(XCAT_PCH)
-
 ios-$(IOS_SDK_VERSION).g.cs: $(XIOS_PCH)
 
 ifdef INCLUDE_IOS
@@ -114,7 +112,7 @@ else
 gen-macos: ; @true
 endif
 
-maccatalyst-$(MACCATALYST_SDK_VERSION).g.cs: $(XMAC_PCH)
+maccatalyst-$(MACCATALYST_SDK_VERSION).g.cs: $(XCAT_PCH)
 
 ifdef INCLUDE_MACCATALYST
 gen-maccatalyst: maccatalyst-$(MACCATALYST_SDK_VERSION).g.cs .stamp-check-sharpie
