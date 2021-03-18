@@ -133,7 +133,7 @@ namespace AVFoundation {
 		AutoExpose, 
 		ContinuousAutoExposure, 
 		[iOS (8,0), Mac (10,15)] 
-		Custom
+		Custom,
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
@@ -626,7 +626,7 @@ namespace AVFoundation {
 	[NoMac]
 #endif
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoTV, NoWatch, iOS (8,0), Mac (10,15)]
+	[NoTV, NoWatch, iOS (8,0)]
 	[Native]
 	public enum AVCaptureAutoFocusSystem : long {
 		None,
@@ -974,8 +974,11 @@ namespace AVFoundation {
 		Unavailable = 4
 	}
 
+#if XAMCORE_4_0
+	[NoMac]
+#endif
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch, NoTV, Mac (10,15), iOS (11,0)]
+	[NoWatch, NoTV, iOS (11,0)]
 	[Native]
 	public enum AVCaptureOutputDataDroppedReason : long
 	{

@@ -2368,11 +2368,11 @@ namespace AVFoundation {
 		[Export ("inputOrientation")]
 		AVAudioStereoOrientation InputOrientation { get; }
 
-		[Watch (7,3), TV (14,5), NoMac, iOS (14,5)]
+		[Watch (7,4), TV (14,5), NoMac, iOS (14,5)]
 		[Export ("setPrefersNoInterruptionsFromSystemAlerts:error:")]
 		bool SetPrefersNoInterruptionsFromSystemAlerts (bool inValue, [NullAllowed] out NSError outError);
 
-		[Watch (7, 3), TV (14, 5), NoMac, iOS (14, 5)]
+		[Watch (7, 4), TV (14, 5), NoMac, iOS (14, 5)]
 		[Export ("prefersNoInterruptionsFromSystemAlerts")]
 		bool PrefersNoInterruptionsFromSystemAlerts { get; }
 	}
@@ -2426,7 +2426,7 @@ namespace AVFoundation {
 		[Export ("AVAudioSessionInterruptionOptionKey")]
 		AVAudioSessionInterruptionOptions Option { get; }
 		
-		[iOS (14, 5), Watch (7, 3), NoTV, NoMac]
+		[iOS (14, 5), Watch (7, 4), NoTV, NoMac]
 		[Export ("AVAudioSessionInterruptionReasonKey")]
 		AVAudioSessionInterruptionReason Reason { get; }
 
@@ -11710,19 +11710,17 @@ namespace AVFoundation {
 	}
 
 	[NoWatch]
+	[TV (14, 5), Mac (11, 3), iOS (14, 5)]
 	[Category]
 	[BaseType (typeof(AVPlayerItem))]
 	interface AVPlayerItem_AVPlayerInterstitialSupport
 	{
-		[TV (14, 5), Mac (11, 3), iOS (14, 5)]
 		[Export ("automaticallyHandlesInterstitialEvents")]
 		bool GetAutomaticallyHandlesInterstitialEvents ();
 
-		[TV (14, 5), Mac (11, 3), iOS (14, 5)]
 		[Export ("setAutomaticallyHandlesInterstitialEvents:")]
 		void SetAutomaticallyHandlesInterstitialEvents (bool value);
 
-		[TV (14, 5), Mac (11, 4), iOS (14, 5)]
 		[Export ("templatePlayerItem")]
 		[return: NullAllowed]
 		AVPlayerItem GetTemplatePlayerItem ();
@@ -12734,11 +12732,11 @@ namespace AVFoundation {
 	}
 
 	[NoWatch]
+	[TV (14, 5), Mac (11, 3), iOS (14, 5)]
 	[Category]
 	[BaseType (typeof(AVSampleBufferDisplayLayer))]
 	interface AVSampleBufferDisplayLayer_ProtectedContent
 	{
-		[TV (14, 5), Mac (11, 3), iOS (14, 5)]
 		[Export ("outputObscuredDueToInsufficientExternalProtection")]
 		bool GetOutputObscuredDueToInsufficientExternalProtection ();
 	}
@@ -13047,7 +13045,7 @@ namespace AVFoundation {
 
 		[NoWatch, NoTV, Mac (11, 3), iOS (14, 5)]
 		[Field ("AVAssetDownloadTaskPrefersLosslessAudioKey")]
-		NSString AVAssetDownloadTaskPrefersLosslessAudioKey { get; }
+		NSString PrefersLosslessAudioKey { get; }
 
 		[NoWatch, NoTV, iOS (14, 0)]
 		[Field ("AVAssetDownloadTaskMinimumRequiredPresentationSizeKey")]
@@ -13853,6 +13851,7 @@ namespace AVFoundation {
 	[BaseType (typeof(NSObject))]
 	interface AVContentKeySpecifier
 	{
+		// TODO https://github.com/xamarin/xamarin-macios/issues/10904
 		[Static]
 		[Export ("contentKeySpecifierForKeySystem:identifier:options:")]
 		AVContentKeySpecifier GetContentKeySpecifier (AVContentKeySystem keySystem, NSObject contentKeyIdentifier, NSDictionary<NSString, NSObject> options);
