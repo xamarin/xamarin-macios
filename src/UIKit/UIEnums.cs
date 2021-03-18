@@ -2568,6 +2568,7 @@ namespace UIKit {
 		Root,
 
 		[iOS (14,0), TV (14,0)]
+		[MacCatalyst (14,0)]
 		[Field ("UIMenuOpenRecent")]
 		OpenRecent,
 	}
@@ -3078,6 +3079,7 @@ namespace UIKit {
 	}
 
 	[iOS (14,0), TV (14,0), NoWatch]
+	[MacCatalyst (14,0)]
 	public enum UIPasteboardDetectionPattern {
 		[Field ("UIPasteboardDetectionPatternProbableWebURL")]
 		ProbableWebUrl,

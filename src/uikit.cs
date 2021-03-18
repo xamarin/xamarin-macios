@@ -1064,6 +1064,7 @@ namespace UIKit {
 
 		[NoWatch]
 		[TV (14,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Notification]
 		[Field ("UIAccessibilityButtonShapesEnabledStatusDidChangeNotification")]
 		NSString ButtonShapesEnabledStatusDidChangeNotification { get; }
@@ -1088,6 +1089,7 @@ namespace UIKit {
 
 		[NoWatch]
 		[TV (14,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Notification]
 		[Field ("UIAccessibilityPrefersCrossFadeTransitionsStatusDidChangeNotification")]
 		NSString PrefersCrossFadeTransitionsStatusDidChangeNotification { get; }
@@ -21851,6 +21853,7 @@ namespace UIKit {
 	}
 
 	[NoWatch, TV (14,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DesignatedDefaultCtor]
 	interface UICellAccessory : NSCopying, NSSecureCoding {
@@ -22178,6 +22181,7 @@ namespace UIKit {
 	}
 
 	[NoWatch, NoTV, iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (UIControl))]
 	interface UIColorWell {
 
@@ -22490,6 +22494,7 @@ namespace UIKit {
 	delegate UIColor UIConfigurationColorTransformerHandler (UIColor color);
 
 	[NoWatch, TV (14,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface UIListContentImageProperties : NSCopying, NSSecureCoding {
@@ -22572,6 +22577,7 @@ namespace UIKit {
 	}
 
 	[NoWatch, NoTV, iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface UIPointerLockState {
@@ -22648,6 +22654,7 @@ namespace UIKit {
 	}
 
 	[NoWatch, TV (14,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[Static, Partial]
 	interface UIConfigurationColorTransformer {
 
