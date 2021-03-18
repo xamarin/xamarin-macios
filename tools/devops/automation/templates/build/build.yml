@@ -421,18 +421,23 @@ steps:
     PACKAGES="$IOS_PKG $MAC_PKG $IOS_DOTNET_PKG $TVOS_DOTNET_PKG $WATCHOS_DOTNET_PKG $MACOS_DOTNET_PKG"
     echo "Packages found at $PACKAGES"
 
-    echo "$PACKAGES" | xargs python3 $(Build.SourcesDirectory)/release-scripts/sign_and_notarize3.py -a "$APP_ID" -i "$INSTALL_ID" -d $(Build.SourcesDirectory)/package/notarized -e "$MAC_ENTITLEMENTS" -k "$KEYCHAIN"
+    echo "$PACKAGES" | xargs -t python3 $(Build.SourcesDirectory)/release-scripts/esrp_sign.py -vv -c "8023" -d $(Build.SourcesDirectory)/package/notarized -e "$MAC_ENTITLEMENTS"
     ls -R $(Build.SourcesDirectory)/package
   env:
     PRODUCTSIGN_KEYCHAIN_PASSWORD: $(OSX_KEYCHAIN_PASS)
     MAC_ENTITLEMENTS: $(Build.SourcesDirectory)/xamarin-macios/mac-entitlements.plist
-    APP_ID: $(XamarinAppId)
-    INSTALL_ID: $(XamarinAppId)
-    KEYCHAIN: $(SigningKeychain)
   name: notarize
   displayName: 'Signing Release Build'
   condition: and(succeeded(), contains(variables['configuration.SignPkgs'], 'True'), contains(variables['configuration.IsPr'], 'False'))
   timeoutInMinutes: 180
+
+# upload each of the pkgs into the pipeline artifacts
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Not Notarized Build Artifacts'
+  inputs:
+    targetPath: $(Build.SourcesDirectory)/package/notarized
+    artifactName: not-notarized-pkg
+  continueOnError: true
 
 - task: ms-vseng.MicroBuildTasks.30666190-6959-11e5-9f96-f56098202fef.MicroBuildSigningPlugin@3 
   displayName: 'Install Notarizing Plugin' 
@@ -443,7 +448,19 @@ steps:
   env: 
       SYSTEM_ACCESSTOKEN: $(System.AccessToken) 
 
-- pwsh: $(Build.SourcesDirectory)/release-scripts/notarize.ps1 -FolderForApps $(Build.SourcesDirectory)/package/notarized 
+- pwsh: |
+    # so... we have to many pkgs, that results in timeouts, so we need to split things and call it several times
+    $pkgDir = "$(Build.SourcesDirectory)/package/notarized"
+    $files = @(Get-ChildItem -Path "$pkgDir/*" -Filter "*.pkg")
+    # we are going to be one by one... why? because if we send all, we timeout!!!!
+    if ($files.count -gt 0)
+    {
+        foreach($pkg in $files)
+        {
+            Write-Host "Notarizing $($pkg.FullName) into"
+            dotnet $Env:MBSIGN_APPFOLDER/DDSignFiles.dll /file:"$($pkg.FullName)" /certs:"8020"
+        }
+    }
   displayName: 'ESRP notarizing packages' 
   condition: and(succeeded(), contains(variables['configuration.SignPkgs'], 'True'), contains(variables['configuration.IsPr'], 'False')) # if we are a PR, do not use ESRP since is not supported
 
