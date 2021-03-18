@@ -163,7 +163,6 @@ namespace Introspection {
 				// fails because it is in-lined via protocol AVContentKeyRecipient
 				case "contentKeySession:didProvideContentKey:":
 					return true;
-				break;
 				}
 				break;
 			case "NSNull":

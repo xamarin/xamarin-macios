@@ -1838,6 +1838,7 @@ namespace AVFoundation {
 
 	delegate void AVPermissionGranted (bool granted);
 
+	[iOS (14, 5), Watch (7, 4), NoTV, NoMac]
 	[Native]
 	public enum AVAudioSessionInterruptionReason : ulong
 	{
@@ -10804,7 +10805,6 @@ namespace AVFoundation {
 		NSData GetExtrinsicMatrix (AVCaptureDevice fromDevice, AVCaptureDevice toDevice);
 
 		[NoWatch, NoTV, NoMac, iOS (13,0)]
-		[Advice ("This API is not available when using UIKit on macOS.")]
 		[Export ("globalToneMappingEnabled")]
 		bool GlobalToneMappingEnabled { [Bind ("isGlobalToneMappingEnabled")] get; set; }
 
@@ -12510,7 +12510,7 @@ namespace AVFoundation {
 		AVPlayerInterstitialEvent[] InterstitialEvents { get; set; }
 
 		[Export ("cancelCurrentEventWithResumptionOffset:")]
-		void CancelCurrentEventWithResumptionOffset (CMTime resumptionOffset);
+		void CancelCurrentEvent (CMTime resumptionOffset);
 	}
 
 	[Watch (6,0)]
