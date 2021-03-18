@@ -302,6 +302,14 @@ namespace Xamarin.Bundler {
 			if (dynamic_symbols != null)
 				return;
 
+			string [] dyn_msgSend_functions = new string [] {
+				"xamarin_dyn_objc_msgSend",
+				"xamarin_dyn_objc_msgSendSuper",
+				"xamarin_dyn_objc_msgSend_stret",
+				"xamarin_dyn_objc_msgSendSuper_stret",
+			};
+			Abi dyn_msgSend_valid_abis = Abi.SimulatorArchMask;
+
 			var cache_location = Path.Combine (App.Cache.Location, "entry-points.txt");
 			if (cached_link) {
 				dynamic_symbols = new Symbols ();
@@ -334,17 +342,15 @@ namespace Xamarin.Bundler {
 					break;
 				case ApplePlatform.MacCatalyst:
 				case ApplePlatform.MacOSX:
-					has_dyn_msgSend = App.MarshalObjectiveCExceptions != MarshalObjectiveCExceptionMode.Disable && !App.RequiresPInvokeWrappers && Is64Build;
+					has_dyn_msgSend = App.MarshalObjectiveCExceptions != MarshalObjectiveCExceptionMode.Disable && !App.RequiresPInvokeWrappers && Application.IsArchEnabled (Abis, Abi.x86_64);
 					break;
 				default:
 					throw ErrorHelper.CreateError (71, Errors.MX0071, App.Platform, App.ProductName);
 				}
 
 				if (has_dyn_msgSend) {
-					dynamic_symbols.AddFunction ("xamarin_dyn_objc_msgSend");
-					dynamic_symbols.AddFunction ("xamarin_dyn_objc_msgSendSuper");
-					dynamic_symbols.AddFunction ("xamarin_dyn_objc_msgSend_stret");
-					dynamic_symbols.AddFunction ("xamarin_dyn_objc_msgSendSuper_stret");
+					foreach (var dyn_msgSend_function in dyn_msgSend_functions)
+						dynamic_symbols.AddFunction (dyn_msgSend_function);
 				}
 
 #if MONOTOUCH
@@ -353,6 +359,13 @@ namespace Xamarin.Bundler {
 #endif
 
 				dynamic_symbols.Save (cache_location);
+			}
+
+			foreach (var name in dyn_msgSend_functions) {
+				var symbol = dynamic_symbols.Find (name);
+				if (symbol != null) {
+					symbol.ValidAbis = dyn_msgSend_valid_abis;
+				}
 			}
 
 			foreach (var name in App.IgnoredSymbols) {
@@ -365,9 +378,13 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		bool IsRequiredSymbol (Symbol symbol, Assembly single_assembly = null)
+		bool IsRequiredSymbol (Symbol symbol, Assembly single_assembly = null, Abi? target_abis = null)
 		{
 			if (symbol.Ignore)
+				return false;
+
+			// If this symbol is only defined for certain abis, verify if there is an abi match
+			if (target_abis.HasValue && symbol.ValidAbis.HasValue && (target_abis.Value & symbol.ValidAbis.Value) == 0)
 				return false;
 
 			// Check if this symbol is used in the assembly we're filtering to
@@ -425,13 +442,13 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		public Symbols GetRequiredSymbols (Assembly assembly = null)
+		public Symbols GetRequiredSymbols (Assembly assembly = null, Abi? target_abis = null)
 		{
 			CollectAllSymbols ();
 
 			Symbols filtered = new Symbols ();
 			foreach (var ep in dynamic_symbols) {
-				if (IsRequiredSymbol (ep, assembly)) {
+				if (IsRequiredSymbol (ep, assembly, target_abis)) {
 					filtered.Add (ep);
 				}
 			}

@@ -1826,7 +1826,9 @@ namespace ObjCRuntime {
 		static bool GetIsARM64CallingConvention ()
 		{
 #if MONOMAC
-			return false;
+			unsafe {
+				return NXGetLocalArchInfo ()->Name.StartsWith ("arm64");
+			}
 #elif __IOS__ || __TVOS__
 			return IntPtr.Size == 8 && Arch == Arch.DEVICE;
 #elif __WATCHOS__

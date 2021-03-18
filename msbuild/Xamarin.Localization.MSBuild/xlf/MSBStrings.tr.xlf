@@ -1240,6 +1240,11 @@
         <target state="new">Invalid platform: {0}</target>
         <note />
       </trans-unit>
+      <trans-unit id="E7072">
+        <source>Package product requirement file contains architectures ({0}) which mismatches with target architectures ({1})</source>
+        <target state="new">Package product requirement file contains architectures ({0}) which mismatches with target architectures ({1})</target>
+        <note />
+      </trans-unit>
       <trans-unit id="M0001">
         <source>Tool {0} execution started with arguments: {1}
         </source>
