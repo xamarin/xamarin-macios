@@ -381,6 +381,7 @@ steps:
   inputs:
     signType: 'Real'
     azureSubscription: 'MicroBuild Signing Task (DevDiv)'
+    zipSources: false
   env:
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
