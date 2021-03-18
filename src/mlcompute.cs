@@ -32,6 +32,10 @@ namespace MLCompute {
 		TanhShrink = 16,
 		Threshold = 17,
 		Gelu = 18,
+		[TV (14,5)][Mac (11,3)][iOS (14,5)]
+		HardSwish = 19,
+		[TV (14,5)][Mac (11,3)][iOS (14,5)]
+		Clamp = 20,
 		// Count, // must be last, not available in swift
 	}
 
@@ -64,6 +68,14 @@ namespace MLCompute {
 		Exp2 = 23,
 		Log = 24,
 		Log2 = 25,
+		[TV (14,5)][Mac (11,3)][iOS (14,5)]
+		MultiplyNoNaN = 26,
+		[TV (14,5)][Mac (11,3)][iOS (14,5)]
+		DivideNoNaN = 27,
+		[TV (14,5)][Mac (11,3)][iOS (14,5)]
+		Min = 28,
+		[TV (14,5)][Mac (11,3)][iOS (14,5)]
+		Max = 29,
 		// Count, // must be last, not available in swift
 	}
 
@@ -186,6 +198,12 @@ namespace MLCompute {
 		Min = 4,
 		ArgMax = 5,
 		ArgMin = 6,
+		[TV (14,5)][Mac (11,3)][iOS (14,5)]
+		L1Norm = 7,
+		[TV (14,5)][Mac (11,3)][iOS (14,5)]
+		Any = 8,
+		[TV (14,5)][Mac (11,3)][iOS (14,5)]
+		All = 9,
 		// Count, // must be last, not available in swift
 	}
 
@@ -386,6 +404,16 @@ namespace MLCompute {
 		[Static]
 		[Export ("geluLayer")]
 		MLCActivationLayer GeluLayer { get; }
+
+		[TV (14,5)][Mac (11,3)][iOS (14,5)]
+		[Static]
+		[Export ("hardSwishLayer")]
+		MLCActivationLayer CreateHardSwishLayer ();
+
+		[TV (14,5)][Mac (11,3)][iOS (14,5)]
+		[Static]
+		[Export ("clampLayerWithMinValue:maxValue:")]
+		MLCActivationLayer CreateClampLayer (float minValue, float maxValue);
 	}
 
 	[iOS (14,0)][TV (14,0)][Mac (11,0)]
@@ -660,6 +688,11 @@ namespace MLCompute {
 		[Static]
 		[Export ("dataWithImmutableBytesNoCopy:length:")]
 		MLCTensorData CreateFromImmutableBytesNoCopy (IntPtr bytes, nuint length);
+
+		[TV (14,5)][Mac (11,3)][iOS (14,5)]
+		[Static]
+		[Export ("dataWithBytesNoCopy:length:deallocator:")]
+		MLCTensorData CreateFromBytesNoCopy (IntPtr bytes, nuint length, Action<IntPtr, nuint> deallocator);
 	}
 
 	[iOS (14,0)][TV (14,0)][Mac (11,0)]
@@ -1135,6 +1168,14 @@ namespace MLCompute {
 		[Export ("momentum")]
 		float Momentum { get; }
 
+		[TV (14,5)][Mac (11,3)][iOS (14,5)]
+		[NullAllowed, Export ("mean", ArgumentSemantic.Retain)]
+		MLCTensor Mean { get; }
+
+		[TV (14,5)][Mac (11,3)][iOS (14,5)]
+		[NullAllowed, Export ("variance", ArgumentSemantic.Retain)]
+		MLCTensor Variance { get; }
+
 		[Static]
 		[Export ("layerWithFeatureChannelCount:beta:gamma:varianceEpsilon:")]
 		[return: NullAllowed]
@@ -1144,6 +1185,12 @@ namespace MLCompute {
 		[Export ("layerWithFeatureChannelCount:beta:gamma:varianceEpsilon:momentum:")]
 		[return: NullAllowed]
 		MLCInstanceNormalizationLayer Create (nuint featureChannelCount, [NullAllowed] MLCTensor beta, [NullAllowed] MLCTensor gamma, float varianceEpsilon, float momentum);
+
+		[TV (14,5)][Mac (11,3)][iOS (14,5)]
+		[Static]
+		[Export ("layerWithFeatureChannelCount:mean:variance:beta:gamma:varianceEpsilon:momentum:")]
+		[return: NullAllowed]
+		MLCInstanceNormalizationLayer Create (nuint featureChannelCount, MLCTensor mean, MLCTensor variance, [NullAllowed] MLCTensor beta, [NullAllowed] MLCTensor gamma, float varianceEpsilon, float momentum);
 	}
 
 	[iOS (14,0)][TV (14,0)][Mac (11,0)]
@@ -1668,10 +1715,21 @@ namespace MLCompute {
 		[Export ("dimension")]
 		nuint Dimension { get; }
 
+		[TV (14,5)][Mac (11,3)][iOS (14,5)]
+		[Export ("dimensions")]
+		[BindAs (typeof (nuint[]))]
+		NSNumber[] Dimensions { get; }
+
 		[Static]
 		[Export ("layerWithReductionType:dimension:")]
 		[return: NullAllowed]
 		MLCReductionLayer Create (MLCReductionType reductionType, nuint dimension);
+
+		[TV (14,5)][Mac (11,3)][iOS (14,5)]
+		[Static]
+		[Export ("layerWithReductionType:dimensions:")]
+		[return: NullAllowed]
+		MLCReductionLayer Create (MLCReductionType reductionType, [BindAs (typeof (nuint[]))] NSNumber[] dimensions);
 	}
 
 	[iOS (14,0)][TV (14,0)][Mac (11,0)]
@@ -1679,6 +1737,11 @@ namespace MLCompute {
 	[BaseType (typeof (MLCLayer))]
 	[DisableDefaultCtor]
 	interface MLCReshapeLayer {
+
+		[TV (14,5)][Mac (11,3)][iOS (14,5)]
+		[Export ("shape", ArgumentSemantic.Copy)]
+		[BindAs (typeof (nint[]))]
+		NSNumber[] Shape { get; }
 
 		[Static]
 		[Export ("layerWithShape:")]
@@ -1981,6 +2044,21 @@ namespace MLCompute {
 
 		[Export ("resultTensorsForLayer:")]
 		MLCTensor[] GetResultTensors (MLCLayer layer);
+
+		[TV (14,5)][Mac (11,3)][iOS (14,5)]
+		[Export ("gatherWithDimension:source:indices:")]
+		[return: NullAllowed]
+		MLCTensor Gather (nuint dimension, MLCTensor source, MLCTensor indices);
+
+		[TV (14,5)][Mac (11,3)][iOS (14,5)]
+		[Export ("scatterWithDimension:source:indices:copyFrom:reductionType:")]
+		[return: NullAllowed]
+		MLCTensor Scatter (nuint dimension, MLCTensor source, MLCTensor indices, MLCTensor copyFrom, MLCReductionType reductionType);
+
+		[TV (14,5)][Mac (11,3)][iOS (14,5)]
+		[Export ("selectWithSources:condition:")]
+		[return: NullAllowed]
+		MLCTensor Select (MLCTensor[] sources, MLCTensor condition);
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
@@ -2013,6 +2091,10 @@ namespace MLCompute {
 
 		[Export ("compileWithOptions:device:")]
 		bool Compile (MLCGraphCompilationOptions options, MLCDevice device);
+
+		[TV (14,5)][Mac (11,3)][iOS (14,5)]
+		[Export ("compileWithOptions:device:inputTensors:inputTensorsData:")]
+		bool Compile (MLCGraphCompilationOptions options, MLCDevice device, [NullAllowed] NSDictionary<NSString, MLCTensor> inputTensors, [NullAllowed] NSDictionary<NSString, MLCTensorData> inputTensorsData);
 
 		[Export ("compileOptimizer:")]
 		bool Compile (MLCOptimizer optimizer);
@@ -2102,6 +2184,10 @@ namespace MLCompute {
 		[Export ("compileWithOptions:device:")]
 		bool Compile (MLCGraphCompilationOptions options, MLCDevice device);
 
+		[TV (14,5)][Mac (11,3)][iOS (14,5)]
+		[Export ("compileWithOptions:device:inputTensors:inputTensorsData:")]
+		bool Compile (MLCGraphCompilationOptions options, MLCDevice device, [NullAllowed] NSDictionary<NSString, MLCTensor> inputTensors, [NullAllowed] NSDictionary<NSString, MLCTensorData> inputTensorsData);
+
 		[Export ("linkWithGraphs:")]
 		bool Link (MLCInferenceGraph[] graphs);
 
@@ -2120,5 +2206,74 @@ namespace MLCompute {
 		[Async (ResultTypeName = "MLCGraphCompletionResult")]
 		[Export ("executeWithInputsData:lossLabelsData:lossLabelWeightsData:outputsData:batchSize:options:completionHandler:")]
 		bool Execute (NSDictionary<NSString, MLCTensorData> inputsData, [NullAllowed] NSDictionary<NSString, MLCTensorData> lossLabelsData, [NullAllowed] NSDictionary<NSString, MLCTensorData> lossLabelWeightsData, [NullAllowed] NSDictionary<NSString, MLCTensorData> outputsData, nuint batchSize, MLCExecutionOptions options, [NullAllowed] MLCGraphCompletionHandler completionHandler);
+	}
+
+	[TV (14,5)][Mac (11,3)][iOS (14,5)]
+	enum MLCComparisonOperation {
+		Equal = 0,
+		NotEqual = 1,
+		Less = 2,
+		Greater = 3,
+		LessOrEqual = 4,
+		GreaterOrEqual = 5,
+		LogicalAND = 6,
+		LogicalOR = 7,
+		LogicalNOT = 8,
+		LogicalNAND = 9,
+		LogicalNOR = 10,
+		LogicalXOR = 11,
+	}
+
+	[TV (14,5)][Mac (11,3)][iOS (14,5)]
+	[BaseType (typeof (MLCLayer))]
+	[DisableDefaultCtor]
+	interface MLCComparisonLayer {
+
+		[Export ("operation")]
+		MLCComparisonOperation Operation { get; }
+
+		[Static]
+		[Export ("layerWithOperation:")]
+		MLCComparisonLayer Create (MLCComparisonOperation operation);
+	}
+
+	[TV (14,5)][Mac (11,3)][iOS (14,5)]
+	[BaseType (typeof (MLCLayer))]
+	[DisableDefaultCtor]
+	interface MLCGatherLayer {
+
+		[Export ("dimension")]
+		nuint Dimension { get; }
+
+		[Static]
+		[Export ("layerWithDimension:")]
+		MLCGatherLayer Create (nuint dimension);
+	}
+
+	[TV (14,5)][Mac (11,3)][iOS (14,5)]
+	[BaseType (typeof (MLCLayer))]
+	[DisableDefaultCtor]
+	interface MLCScatterLayer {
+
+		[Export ("dimension")]
+		nuint Dimension { get; }
+
+		[Export ("reductionType")]
+		MLCReductionType ReductionType { get; }
+
+		[Static]
+		[Export ("layerWithDimension:reductionType:")]
+		[return: NullAllowed]
+		MLCScatterLayer Create (nuint dimension, MLCReductionType reductionType);
+	}
+
+	[TV (14,5)][Mac (11,3)][iOS (14,5)]
+	[BaseType (typeof (MLCLayer))]
+	[DisableDefaultCtor]
+	interface MLCSelectionLayer {
+
+		[Static]
+		[Export ("layer")]
+		MLCSelectionLayer Create ();
 	}
 }
