@@ -582,6 +582,16 @@ namespace Introspection {
 				if (Skip (t))
 					continue;
 
+				var klass = new Class (t);
+				if (klass.Handle == IntPtr.Zero) {
+					// This can often by caused by [Protocol] classes with no [Model] but having a [BaseType].
+					// Either have both a Model and BaseType or neither
+					var e = $"[FAIL] Could not load {t.FullName}";
+					list.Add (e);
+					AddErrorLine (e);
+					continue;
+				}
+
 				foreach (var intf in t.GetInterfaces ()) {
 					if (SkipDueToAttribute (intf))
 						continue;
@@ -611,14 +621,7 @@ namespace Introspection {
 					if (LogProgress)
 						Console.WriteLine ("{0} conforms to {1}", t.FullName, protocolName);
 
-					var klass = new Class (t);
-					if (klass.Handle == IntPtr.Zero) {
-						// This can often by caused by [Protocol] classes with no [Model] but having a [BaseType].
-						// Either have both a Model and BaseType or neither
-						var e = $"[FAIL] Could not load {t.FullName}";
-						list.Add (e);
-						AddErrorLine (e);
-					} else if (t.IsPublic && !ConformTo (klass.Handle, protocol)) {
+					if (t.IsPublic && !ConformTo (klass.Handle, protocol)) {
 						// note: some internal types, e.g. like UIAppearance subclasses, return false (and there's not much value in changing this)
 						list.Add ($"Type {t.FullName} (native: {klass.Name}) does not conform {protocolName}");
 					}
