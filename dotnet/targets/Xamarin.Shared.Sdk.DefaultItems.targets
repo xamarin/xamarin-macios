@@ -89,7 +89,7 @@
        The problem is that by default we get the 'Microsoft.NETCore.App.Runtime.osx-x64' runtime pack (the core clr version), when we want the 'Microsoft.NETCore.App.Mono.Runtime.osx-x64' runtime pack.
        This works around that by declaring a new known framework for mono's runtime pack, removing the default 'Microsoft.NETCore.App' framework reference, and adding the mono one.
    -->
-  <ItemGroup Condition="'$(_PlatformName)' == 'macOS'">
+  <ItemGroup Condition="'$(_PlatformName)' == 'macOS' And '$(_XamarinRuntime)' != 'CoreCLR'">
     <KnownFrameworkReference Include="Microsoft.NETCore.App.Mono"
                               TargetFramework="net6.0"
                               RuntimeFrameworkName="Microsoft.NETCore.App.Mono"

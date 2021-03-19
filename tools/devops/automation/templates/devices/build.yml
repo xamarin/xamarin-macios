@@ -55,14 +55,6 @@ steps:
     BUILD_REVISION: 'jenkins'
   continueOnError: true
 
-- bash: |
-    security set-key-partition-list -S apple-tool:,apple: -s -k $KEYCHAIN_PASS login.keychain
-  env:
-    KEYCHAIN_PASS: ${{ parameters.keyringPass }}
-  displayName: 'Remove security UI-prompt (http://stackoverflow.com/a/40039594/183422)'
-  condition: succeededOrFailed() # we do not care about the previous process cleanup
-  continueOnError: true
-
 - bash: cd $(System.DefaultWorkingDirectory)/xamarin-macios/ && git clean -xdf
   displayName: 'Clean workspace'
 
@@ -136,7 +128,6 @@ steps:
     AUTH_TOKEN_LA_MAC_INSTALLER_DISTR_P12: ${{ parameters.xqaCertPass }}
     AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_P12: ${{ parameters.xqaCertPass }}
     AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_2_P12: ${{ parameters.xqaCertPass }}
-    LOGIN_KEYCHAIN_PASSWORD: ${{ parameters.keyringPass }}
 
 # download the artifacts.json, which will use to find the URI of the built pkg to later be installed by provisionator
 - task: DownloadPipelineArtifact@2

@@ -3906,7 +3906,15 @@ public partial class Generator : IMemberGatherer {
 		int index64 = dual_enum ? 1 : 0;
 
 		if (CurrentPlatform == PlatformName.MacOSX) {
+			print ("if (global::ObjCRuntime.Runtime.IsARM64CallingConvention) {");
+			indent++;
+			GenerateInvoke (false, supercall, mi, minfo, selector, args [index64], assign_to_temp, category_type, false, EnumMode.Bit64);
+			indent--;
+			print ("} else {");
+			indent++;
 			GenerateInvoke (x64_stret, supercall, mi, minfo, selector, args[index64], assign_to_temp, category_type, aligned && x64_stret, EnumMode.Bit64);
+			indent--;
+			print ("}");
 			return;
 		}
 

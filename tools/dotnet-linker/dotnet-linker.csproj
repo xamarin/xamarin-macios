@@ -194,6 +194,9 @@
     <Compile Include="..\common\DlsymOptions.cs">
       <Link>external\tools\common\DlsymOptions.cs</Link>
     </Compile>
+    <Compile Include="..\common\XamarinRuntime.cs">
+      <Link>tools\common\XamarinRuntime.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\mtouch\Errors.resx">

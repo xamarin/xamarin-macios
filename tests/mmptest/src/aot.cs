@@ -1,3 +1,5 @@
+extern alias mmp;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,7 +42,7 @@ namespace Xamarin.MMP.Tests.Unit
 
 		void Compile (AOTOptions options, TestFileEnumerator files, AOTCompilerType compilerType = AOTCompilerType.Bundled64, RunCommandDelegate onRunDelegate = null, bool isRelease = false, bool isModern = false)
 		{
-			AOTCompiler compiler = new AOTCompiler (options, compilerType, isModern, isRelease)
+			AOTCompiler compiler = new AOTCompiler (options, GetValidAbis (compilerType), compilerType, isModern, isRelease)
 			{
 				RunCommand = onRunDelegate != null ? onRunDelegate : OnRunCommand,
 				ParallelOptions = new ParallelOptions () { MaxDegreeOfParallelism = 1 },
@@ -68,17 +70,18 @@ namespace Xamarin.MMP.Tests.Unit
 			return 0;
 		}
 
-		string GetExpectedMonoCommand (AOTCompilerType compilerType)
+		string GetExpectedMonoCommand (AOTCompilerType compilerType, Abi currAbi)
 		{
-			switch (compilerType) {
-			case AOTCompilerType.Bundled64:
-				return "mono-sgen";
-			case AOTCompilerType.System64:
+			if (compilerType == AOTCompilerType.Bundled64) {
+				if (currAbi == Abi.x86_64)
+					return "mono-sgen";
+				else if (currAbi == Abi.ARM64)
+					return "aarch64-darwin-mono-sgen";
+			} else if (compilerType == AOTCompilerType.System64 && currAbi == Abi.x86_64) {
 				return "mono64";
-			default:
-				Assert.Fail ("GetMonoPath with invalid option");
-				return "";
 			}
+			Assert.Fail ("GetMonoPath with invalid option");
+			return "";
 		}
 
 		List<string> GetFiledAOTed (AOTCompilerType compilerType = AOTCompilerType.Bundled64, AOTKind kind = AOTKind.Standard, bool isModern = false, bool expectStripping = false, bool expectSymbolDeletion = false)
@@ -88,13 +91,21 @@ namespace Xamarin.MMP.Tests.Unit
 			foreach (var command in commandsRun) {
 				if (expectStripping && command.Item1 == AOTCompiler.StripCommand)
 					continue;
-				Assert.IsTrue (command.Item1.EndsWith (GetExpectedMonoCommand (compilerType)), "Unexpected command: " + command.Item1);
-				var argParts = command.Item2;
 
+				var argParts = command.Item2;
+				const string aotArg = "--aot=";
+				const string tripleArg = "mtriple=";
+				Assert.IsTrue (argParts [0].StartsWith (aotArg), $"First arg should be {aotArg}");
+				var aotParts = argParts [0].Substring (aotArg.Length).Split (new char [] { ',' });
+				Assert.IsTrue (aotParts [0].StartsWith (tripleArg), $"Aot first argument should be {tripleArg}triple");
+				var triple = aotParts [0].Substring (tripleArg.Length);
+				Assert.IsTrue (Enum.TryParse (triple, true, out Abi currAbi), "Triple does not represent a valid abi");
+
+				Assert.IsTrue (command.Item1.EndsWith (GetExpectedMonoCommand (compilerType, currAbi)), "Unexpected command: " + command.Item1);
 				if (kind == AOTKind.Hybrid)
-					Assert.AreEqual (argParts[0], "--aot=hybrid", "First arg should be --aot=hybrid");
-				else
-					Assert.AreEqual (argParts[0], "--aot", "First arg should be --aot");
+					Assert.AreEqual (aotParts [1], "hybrid", "Aot arg should contain hybrid");
+				else if (aotParts.Length > 1)
+					Assert.AreNotEqual (aotParts [1], "hybrid", "Aot arg should not contain hybrid");
 
 				if (isModern)
 					Assert.AreEqual (argParts[1], "--runtime=mobile", "Second arg should be --runtime=mobile");
@@ -135,7 +146,7 @@ namespace Xamarin.MMP.Tests.Unit
 
 			Func<string> getErrorDetails = () => $"\n {FormatDebugList (filesAOTed)} \nvs\n {FormatDebugList (expectedFiles)}\n{AllCommandsRun}";
 
-			Assert.AreEqual (filesAOTed.Count, expectedFiles.Count (), "Different number of files AOT than expected: " + getErrorDetails ());
+			Assert.AreEqual (filesAOTed.Count, expectedFiles.Count () * GetValidAbis (compilerType).Count (), "Different number of files AOT than expected: " + getErrorDetails ());
 			Assert.IsTrue (filesAOTed.All (x => expectedFiles.Contains (x)), "Different files AOT than expected: "  + getErrorDetails ());
 		}
 
@@ -164,6 +175,18 @@ namespace Xamarin.MMP.Tests.Unit
 
 		readonly string [] CoreXMFileList = { "mscorlib.dll", "Xamarin.Mac.dll", "System.dll" };
 		readonly string [] SDKFileList = { "mscorlib.dll", "Xamarin.Mac.dll", "System.dll", "System.Core.dll" };
+
+		IEnumerable <mmp::Xamarin.Abi> GetValidAbis (AOTCompilerType compilerType)
+		{
+			if (compilerType == AOTCompilerType.Bundled64) {
+				yield return mmp::Xamarin.Abi.x86_64;
+				yield return mmp::Xamarin.Abi.ARM64;
+			} else if (compilerType == AOTCompilerType.System64) {
+				yield return mmp::Xamarin.Abi.x86_64;
+			} else {
+				Assert.Fail ("Improper compiler type");
+			}
+		}
 
 		[Test]
 		public void ParsingNone_DoesNoAOT ()

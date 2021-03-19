@@ -98,6 +98,8 @@ stages:
         runTests: ${{ parameters.runTests }}
         runDeviceTests: ${{ parameters.runDeviceTests }}
         keyringPass: $(xma-password)
+        gitHubToken: ${{ variables['GitHub.Token'] }}
+        xqaCertPass: $(xqa--certificates--password)
 
   # ideally we would use a matrix here, like:
   #  - job: device_tests

@@ -127,6 +127,9 @@ namespace ObjCRuntime {
 			DynamicRegistrar		= 0x04,
 			/* unused				= 0x08,*/
 			IsSimulator				= 0x10,
+#if NET
+			IsCoreCLR				= 0x20,
+#endif
 		}
 
 #if MONOMAC
@@ -158,6 +161,15 @@ namespace ObjCRuntime {
 					return (Flags & InitializationFlags.IsSimulator) == InitializationFlags.IsSimulator;
 				}
 			}
+
+#if NET
+			// Future optimization potential: make the linker change this into a constant.
+			internal bool IsCoreCLR {
+				get {
+					return (Flags & InitializationFlags.IsCoreCLR) == InitializationFlags.IsCoreCLR;
+				}
+			}
+#endif
 		}
 
 		internal static unsafe InitializationOptions* options;
@@ -1814,7 +1826,9 @@ namespace ObjCRuntime {
 		static bool GetIsARM64CallingConvention ()
 		{
 #if MONOMAC
-			return false;
+			unsafe {
+				return NXGetLocalArchInfo ()->Name.StartsWith ("arm64");
+			}
 #elif __IOS__ || __TVOS__
 			return IntPtr.Size == 8 && Arch == Arch.DEVICE;
 #elif __WATCHOS__
