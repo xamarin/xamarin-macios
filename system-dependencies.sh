@@ -1009,6 +1009,7 @@ function check_dotnet ()
 	local CACHED_FILE
 	local DOWNLOADED_FILE
 
+	make dotnet.config
 	DOTNET_VERSION=$(grep "^DOTNET_VERSION=" dotnet.config | sed 's/.*=//')
 	URL=https://dotnetcli.azureedge.net/dotnet/Sdk/"$DOTNET_VERSION"/dotnet-sdk-"$DOTNET_VERSION"-osx-x64.pkg
 	INSTALL_DIR=/usr/local/share/dotnet/sdk/"$DOTNET_VERSION"
