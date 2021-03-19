@@ -15,3 +15,6 @@
 
 # no tests/samples
 !missing-pinvoke! AVSampleBufferAttachContentKey is not bound
+
+# not used on tvOS
+!missing-enum! AVAudioSessionInterruptionReason not bound

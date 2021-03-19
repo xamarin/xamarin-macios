@@ -31,3 +31,6 @@
 !missing-selector! AVPlayerItem::automaticallyHandlesInterstitialEvents not bound
 !missing-selector! AVPlayerItem::setAutomaticallyHandlesInterstitialEvents: not bound
 !missing-selector! AVPlayerItem::templatePlayerItem not bound
+
+# not used on watchOS
+!missing-enum! AVAudioSessionInterruptionReason not bound
