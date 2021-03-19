@@ -393,6 +393,9 @@ namespace AVFoundation {
 #endif
 		[NoWatch, iOS (10,0), TV (10,0)]
 		AllowAirPlay = 64,
+
+		[Watch (7,4), NoTV, NoMac, iOS (14,5)]
+		OverrideMutedMicrophoneInterruption = 128,
 	}
 
 	[Native]

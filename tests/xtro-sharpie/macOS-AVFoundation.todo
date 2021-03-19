@@ -1,7 +1,5 @@
-!missing-enum! AVAudioSessionInterruptionReason not bound
 !missing-enum! AVPlayerInterstitialEventRestrictions not bound
 !missing-enum! AVVariantPreferences not bound
-!missing-enum-value! AVAudioSessionCategoryOptions native value AVAudioSessionCategoryOptionOverrideMutedMicrophoneInterruption = 128 not bound
 !missing-field! AVPlayerInterstitialEventObserverCurrentEventDidChangeNotification not bound
 !missing-field! AVPlayerInterstitialEventObserverEventsDidChangeNotification not bound
 !missing-field! AVPlayerWaitingDuringInterstitialEventReason not bound

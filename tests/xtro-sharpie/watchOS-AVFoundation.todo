@@ -1,8 +1,5 @@
-!missing-enum! AVAudioSessionInterruptionReason not bound
 !missing-enum! AVPlayerInterstitialEventRestrictions not bound
 !missing-enum! AVVariantPreferences not bound
-!missing-enum-value! AVAudioSessionCategoryOptions native value AVAudioSessionCategoryOptionOverrideMutedMicrophoneInterruption = 128 not bound
-!missing-field! AVAudioSessionInterruptionReasonKey not bound
 !missing-field! AVPlayerInterstitialEventObserverCurrentEventDidChangeNotification not bound
 !missing-field! AVPlayerInterstitialEventObserverEventsDidChangeNotification not bound
 !missing-field! AVPlayerWaitingDuringInterstitialEventReason not bound
@@ -18,8 +15,6 @@
 !missing-selector! +AVPlayerInterstitialEventController::playerInterstitialEventControllerWithPrimaryPlayer: not bound
 !missing-selector! +AVPlayerInterstitialEventObserver::interstitialEventObserverWithPrimaryPlayer: not bound
 !missing-selector! +AVPlayerInterstitialEventObserver::playerInterstitialEventObserverWithPrimaryPlayer: not bound
-!missing-selector! AVAudioSession::prefersNoInterruptionsFromSystemAlerts not bound
-!missing-selector! AVAudioSession::setPrefersNoInterruptionsFromSystemAlerts:error: not bound
 !missing-selector! AVContentKey::contentKeySpecifier not bound
 !missing-selector! AVContentKeyRequest::contentKey not bound
 !missing-selector! AVContentKeyRequest::contentKeySpecifier not bound

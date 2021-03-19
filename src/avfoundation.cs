@@ -2230,6 +2230,14 @@ namespace AVFoundation {
 		[Export ("preferredInput", ArgumentSemantic.Copy), NullAllowed]
 		AVAudioSessionPortDescription PreferredInput { get; }
 
+		[Watch (7,4), TV (14,5), NoMac, iOS (14,5)]
+		[Export ("setPrefersNoInterruptionsFromSystemAlerts:error:")]
+		bool SetPrefersNoInterruptionsFromSystemAlerts (bool inValue, [NullAllowed] out NSError outError);
+
+		[Watch (7,4), TV (14,5), NoMac, iOS (14,5)]
+		[Export ("prefersNoInterruptionsFromSystemAlerts")]
+		bool PrefersNoInterruptionsFromSystemAlerts { get; }
+
 		[iOS (7,0), NoMac]
 		[NullAllowed, Export ("availableInputs")]
 		AVAudioSessionPortDescription [] AvailableInputs { get; }
@@ -2401,6 +2409,14 @@ namespace AVFoundation {
 		
 	}
 
+	[Watch (7,4), NoTV, NoMac, iOS (14,5)]
+	[Native]
+	public enum AVAudioSessionInterruptionReason : ulong {
+		Default = 0,
+		AppWasSuspended = 1,
+		BuiltInMicMuted = 2,
+	}
+
 	[Mac (11,0)]
 	interface AVAudioSessionInterruptionEventArgs {
 		[Export ("AVAudioSessionInterruptionTypeKey")]
@@ -2409,6 +2425,12 @@ namespace AVFoundation {
 		[Export ("AVAudioSessionInterruptionOptionKey")]
 		AVAudioSessionInterruptionOptions Option { get; }
 
+		[Watch (7,4), NoTV, NoMac, iOS (14,5)]
+		[Export ("AVAudioSessionInterruptionReasonKey")]
+		AVAudioSessionInterruptionReason Reason { get; }
+
+		[Deprecated (PlatformName.iOS, 14, 5, message: "Use 'Reason' property instead.")]
+		[Deprecated (PlatformName.WatchOS, 7, 3, message: "Use 'Reason' property instead.")]
 		[iOS (10, 3), TV (10, 2), Watch (3, 2)]
 		[NullAllowed]
 		[Export ("AVAudioSessionInterruptionWasSuspendedKey")]
