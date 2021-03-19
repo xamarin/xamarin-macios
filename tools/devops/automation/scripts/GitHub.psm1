@@ -459,7 +459,7 @@ function New-GitHubSummaryComment {
                     $gistLink = ""
                     
                     # some do not have md, some do not have html
-                    if ($linkPlatform -in $json.html) 
+                    if ($linkPlatform -in $json.html) {
                         $htmlLinkUrl = $json.html | Select-Object -ExpandProperty $linkPlatform 
                         $htmlLink = "[vsdrops]($htmlLinkUrl)"
                     }
