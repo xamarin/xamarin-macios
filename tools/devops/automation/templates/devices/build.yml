@@ -7,12 +7,12 @@
 parameters:
 
 - name: statusContext
-  type: string 
-  default: 'iOS Device Tests' # default context, since we started dealing with iOS devices. 
+  type: string
+  default: 'iOS Device Tests' # default context, since we started dealing with iOS devices.
 
 - name: testsLabels
-  type: string 
-  default: '--label=run-ios-64-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests' # default context, since we started dealing with iOS devices. 
+  type: string
+  default: '--label=run-ios-64-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests' # default context, since we started dealing with iOS devices.
 
 - name: disableProvisionatorCache
   type: boolean
@@ -23,7 +23,7 @@ parameters:
   default: false
 
 - name: useXamarinStorage
-  type: boolean 
+  type: boolean
   default: false  # xamarin-storage will disappear, so by default do not use it
 
 - name: vsdropsPrefix
@@ -34,8 +34,14 @@ parameters:
   type: string
 
 - name: devicePrefix
-  type: string 
-  default: 'ios' # default context, since we started dealing with iOS devices. 
+  type: string
+  default: 'ios' # default context, since we started dealing with iOS devices.
+
+- name: gitHubToken
+  type: string
+
+- name: xqaCertPass
+  type: string
 
 steps:
 
@@ -49,14 +55,6 @@ steps:
     BUILD_REVISION: 'jenkins'
   continueOnError: true
 
-- bash: |
-    security set-key-partition-list -S apple-tool:,apple: -s -k $KEYCHAIN_PASS login.keychain
-  env:
-    KEYCHAIN_PASS: ${{ parameters.keyringPass }}
-  displayName: 'Remove security UI-prompt (http://stackoverflow.com/a/40039594/183422)'
-  condition: succeededOrFailed() # we do not care about the previous process cleanup
-  continueOnError: true
-
 - bash: cd $(System.DefaultWorkingDirectory)/xamarin-macios/ && git clean -xdf
   displayName: 'Clean workspace'
 
@@ -65,8 +63,18 @@ steps:
   displayName: 'Run pipeline script tests'
 
 - pwsh : |
+    Write-Host "IsMacOS: ${IsMacOS}"
+    Write-Host "IsWindows: ${IsWindows}"
+    Write-Host "IsLinux: ${IsLinux}"
+
+    if ($IsMacOS -or $IsLinux) {
+        Write-Host "HOSTNAME: $(hostname)"
+    } else {
+        Write-Host "COMPUTERNAME: ${env:COMPUTERNAME}"
+    }
+
     gci env: | format-table -autosize -wrap
-  displayName: 'Dump Environment'
+  displayName: 'Show Environment'
 
 # Use a cmdlet to check if the space available in the devices root system is larger than 50 gb. If there is not
 # enough space available it:
@@ -110,11 +118,16 @@ steps:
     set -e
     rm -f ~/Library/Caches/com.xamarin.provisionator/Provisions/*p12
     rm -f ~/Library/Caches/com.xamarin.provisionator/Provisions/*mobileprovision
-    ./maccore/tools/install-qa-provisioning-profiles.sh -v 
+    ./maccore/tools/install-qa-provisioning-profiles.sh -v
   displayName: 'Add provisioning profiles'
   timeoutInMinutes: 30
   env:
-    LOGIN_KEYCHAIN_PASSWORD: ${{ parameters.keyringPass }}
+    AUTH_TOKEN_GITHUB_COM: ${{ parameters.gitHubToken }}
+    AUTH_TOKEN_LA_DEV_APPLE_P12: ${{ parameters.xqaCertPass }}
+    AUTH_TOKEN_LA_DISTR_APPLE_P12: ${{ parameters.xqaCertPass }}
+    AUTH_TOKEN_LA_MAC_INSTALLER_DISTR_P12: ${{ parameters.xqaCertPass }}
+    AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_P12: ${{ parameters.xqaCertPass }}
+    AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_2_P12: ${{ parameters.xqaCertPass }}
 
 # download the artifacts.json, which will use to find the URI of the built pkg to later be installed by provisionator
 - task: DownloadPipelineArtifact@2
@@ -160,7 +173,7 @@ steps:
 # remove any old processes that might have been left behind.
 - pwsh : |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/System.psm1
-    Clear-XamarinProcesses 
+    Clear-XamarinProcesses
   displayName: 'Process cleanup'
 
 # Increase mlaunch verbosity. Will step on the old setting present.
@@ -168,19 +181,19 @@ steps:
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MLaunch.psm1
     Set-MLaunchVerbosity -Verbosity 10
   displayName: 'Make mlaunch verbose'
-  condition: succeededOrFailed() # we do not care about the previous step 
+  condition: succeededOrFailed() # we do not care about the previous step
 
 # Re-start the daemon used to find the devices in the bot.
 - pwsh : |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MLaunch.psm1
-    Optimize-DeviceDiscovery 
+    Optimize-DeviceDiscovery
   displayName: 'Fix device discovery (reset launchctl)'
   condition: succeededOrFailed() # making mlaunch verbose should be a non blocker
 
-# Update the status to pending, that way the monitoring person knows that we started running the tests. Up to this 
+# Update the status to pending, that way the monitoring person knows that we started running the tests. Up to this
 # point we were just setting up the agent.
 - pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/GitHub.psm1 
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/GitHub.psm1
     Set-GitHubStatus -Status "pending" -Context "$Env:CONTEXT" -Description "Running device tests on $Env:CONTEXT"
   env:
     BUILD_REVISION: $(Build.SourceVersion)
@@ -212,7 +225,7 @@ steps:
       echo '##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Failed'
     fi
   env:
-    WORKING_DIR: $(System.DefaultWorkingDirectory) 
+    WORKING_DIR: $(System.DefaultWorkingDirectory)
     TESTS_EXTRA_ARGUMENTS: ${{ parameters.testsLabels }}
     USE_XAMARIN_STORAGE: ${{ parameters.useXamarinStorage }}
     VSDROPS_URI: '${{ parameters.vsdropsPrefix }}/$(Build.BuildNumber)/$(Build.BuildId)/${{ parameters.devicePrefix }};/tests/' # uri used to create the vsdrops index using full uri

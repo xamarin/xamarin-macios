@@ -1,0 +1,184 @@
+parameters:
+
+- name: statusContext
+  type: string 
+  default: '10.16' # default context, since we started dealing with iOS devices. 
+
+- name: clearProvisionatorCache
+  type: boolean
+  default: false
+
+# can depend on the pool, which is annoying, but we should keep it in mind
+- name: keyringPass
+  type: string
+
+steps:
+
+- checkout: self
+- checkout: maccore
+  persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
+
+- bash: |
+    security set-key-partition-list -S apple-tool:,apple: -s -k $KEYCHAIN_PASS login.keychain
+  env:
+    KEYCHAIN_PASS: ${{ parameters.keyringPass }}
+  displayName: 'Remove security UI-prompt (http://stackoverflow.com/a/40039594/183422)'
+  condition: succeededOrFailed() # we do not care about the previous process cleanup
+  continueOnError: true
+
+- bash: cd $(System.DefaultWorkingDirectory)/xamarin-macios/ && git clean -xdf
+  displayName: 'Clean workspace'
+
+
+# download the packages that have been created, install them, later download the zip files that contain the already built
+# tests and execute them.
+
+- pwsh : |
+    gci env: | format-table -autosize -wrap
+  displayName: 'Dump Environment'
+
+- bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/clean-bot.sh
+  displayName: 'Clean bot'
+  env:
+    BUILD_REVISION: 'jenkins'
+  continueOnError: true
+
+# Use a cmdlet to check if the space available in the devices root system is larger than 50 gb. If there is not
+# enough space available it:
+# 1. Set the status of the build to error. It is not a failure since no tests have been ran.
+# 2. Set a comment stating the same as what was sent to the status.
+# 3. Cancel the pipeline and do not execute any of the following steps.
+- pwsh: |
+    cd $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/
+    Import-Module ./System.psm1
+    Import-Module ./VSTS.psm1
+    Import-Module ./GitHub.psm1
+    if ( -not (Test-HDFreeSpace -Size 5)) {
+      Set-GitHubStatus -Status "error" -Description "Not enough free space in the host." -Context "macOS $Env:CONTEXT"
+      New-GitHubComment -Header "Tests failed catastrophically on $Env:CONTEXT" -Emoji ":fire:" -Description "Not enough free space in the host."
+      Stop-Pipeline
+    } else {
+      Set-GitHubStatus -Status "pending" -Description "Tests on <macOS version XYZ> on VSTS have been started." -Context "macOS $Env:CONTEXT"
+    }
+  env:
+    BUILD_REVISION: $(Build.SourceVersion)
+    CONTEXT: ${{ parameters.statusContext }}
+    GITHUB_TOKEN: $(GitHub.Token)
+    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+  displayName: 'Check HD Free Space'
+  timeoutInMinutes: 5
+  condition: succeededOrFailed() # we do not care about the previous step
+
+- task: xamops.azdevex.provisionator-task.provisionator@2
+  displayName: 'Provision Brew components'
+  inputs:
+    provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/provision-brew-packages.csx
+    provisioning_extra_args: '-vvvv'
+  timeoutInMinutes: 30
+  enabled: false
+
+# download the artifacts.json, which will use to find the URI of the built pkg to later be installed by provisionator
+- task: DownloadPipelineArtifact@2
+  displayName: Download artifacts.json
+  inputs:
+    patterns: '**/*.json'
+    allowFailedBuilds: true
+    path: $(Build.SourcesDirectory)/artifacts
+
+- pwsh: |
+    Dir $(Build.SourcesDirectory)/artifacts
+    $json = Get-Content '$(Build.SourcesDirectory)/artifacts/pkg-info/artifacts.json' | Out-String | ConvertFrom-Json
+    foreach ($i in $json) {
+      if ($i.tag -like "xamarin-mac*" -and -not ($i.url -like "*notarized*")) {
+        $url = $i.url
+        Write-Host "##vso[task.setvariable variable=XM_PACKAGE;]$url"
+        break
+      }
+    }
+  displayName: 'Set Mac pkgs url'
+  timeoutInMinutes: 5
+
+- bash: |
+    echo "Pkg uri is $XM_PACKAGE"
+    make -C $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/ mac-tests-provisioning.csx
+  displayName: 'Generate Provisionator csx file'
+
+- task: xamops.azdevex.provisionator-task.provisionator@1
+  displayName: 'Provision Products & Frameworks'
+  inputs:
+    provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/mac-tests-provisioning.csx
+    provisioning_extra_args: '-vvvv'
+  timeoutInMinutes: 250
+
+# Executed ONLY if we want to clear the provisionator cache.
+- bash: rm -rf "$TOOLS_DIR/provisionator"
+  env:
+    TOOLS_DIR: $(Agent.ToolsDirectory)
+  displayName: 'Nuke Provisionator Tool Cache'
+  condition: ${{ parameters.clearProvisionatorCache }}
+
+- task: DownloadPipelineArtifact@2
+  displayName: Download Mac tests
+  inputs:
+    patterns: '**/mac-test-package.7z'
+    allowFailedBuilds: true
+    path: $(Build.SourcesDirectory)/artifacts/tmp
+
+- bash: |
+    ls -Rla $(Build.SourcesDirectory)/artifacts/tmp
+    7z x $(Build.SourcesDirectory)/artifacts/tmp/mac-test-package/mac-test-package.7z -o$(Build.SourcesDirectory)/artifacts/ -bb1
+    ls -Rla $(Build.SourcesDirectory)/artifacts/mac-test-package
+  displayName: Expand tests.
+
+- bash: |
+    ls -Rla $(Build.SourcesDirectory)/artifacts
+    $(Build.SourcesDirectory)/artifacts/mac-test-package/test-dependencies.sh
+  displayName: Install dependencies.
+
+- pwsh: |
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\GitHub.psm1 
+
+    Write-Host "Found tests"
+    $testsPath = "$(Build.SourcesDirectory)/artifacts/mac-test-package/tests"
+    Write-Host "Tests path is $testsPath"
+    Get-ChildItem -Recurse $testsPath
+
+    [System.Collections.Generic.List[string]]$failures = @()
+
+    $macTest = @("dontlink", "apitest", "introspection", "linksdk", "linkall", "xammac_tests")
+    foreach ($t in $macTest) {
+      $testName = "exec-mac-$t"
+      Write-Host "Execution test $testName"
+      make -d -C $testsPath $testName
+      if ($LastExitCode -eq 0) {
+        Write-Host "$t succeeded"
+      } else {
+        Write-Host "$t failed with error $LastExitCode"
+        $failures.Add($t)
+      }
+    }
+    if ($failures.Count -ne 0) {
+      # post status and comment in the build
+      $failedTestsStr = [string]::Join(",",$failures)
+      Set-GitHubStatus -Status "error" -Description "Xamarin.Mac tests on macOS $Env:CONTEXT failed ($failedTestsStr)." -Context "$Env:CONTEXT"
+      # build message
+      $msg = [System.Text.StringBuilder]::new()
+      $msg.AppendLine("Failed tests are:")
+      $msg.AppendLine("")
+      foreach ($test in $failures)
+      {
+          $msg.AppendLine("* $test")
+      }
+      $request = New-GitHubComment -Header "Tests failed on macOS $Env:CONTEXT" -Description "Tests failed on $Env:CONTEXT." -Message $msg.ToString() -Emoji ":x:"
+
+    } else {
+      Set-GitHubStatus -Status "success" -Description "Tests passed Xamarin.Mac tests on macOS $Env:CONTEXT passed." -Context "$Env:CONTEXT"
+      $request = New-GitHubComment -Header "Tests passed on macOS $Env:CONTEXT" -Description "Tests passed" -Message "**All** tests on macOS X $Env:CONTEXT passed." -Emoji ":white_check_mark:"
+    }
+  displayName: 'Run tests'
+  env:
+    CONTEXT: ${{ parameters.statusContext }}
+    BUILD_REVISION: $(Build.SourceVersion)
+    GITHUB_TOKEN: $(GitHub.Token)
+    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+    MONO_DEBUG: no-gdb-backtrace
