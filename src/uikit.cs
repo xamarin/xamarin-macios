@@ -11362,6 +11362,7 @@ namespace UIKit {
 		
 	[BaseType (typeof (NSObject))]
 	[Availability (Deprecated = Platform.iOS_8_0, Message="Use 'UISearchController'.")]
+	[NoMacCatalyst] // Objective-C exception thrown.  Name: NSGenericException Reason: UISearchDisplayController is no longer supported when linking against this version of iOS. Please migrate your application to UISearchController.
 	[NoTV]
 	interface UISearchDisplayController {
 		[Export ("initWithSearchBar:contentsController:")]
@@ -11421,6 +11422,7 @@ namespace UIKit {
 	[Model]
 	[Protocol]
 	[NoTV]
+	[NoMacCatalyst]
 	interface UISearchDisplayDelegate {
 		
 		[Export ("searchDisplayControllerWillBeginSearch:")]
@@ -14733,6 +14735,7 @@ namespace UIKit {
 		// These come from @interface UIViewController (UISearchDisplayControllerSupport)
 		[NoTV]
 		[Availability (Deprecated = Platform.iOS_8_0, Message="Use 'UISearchController' instead.")]
+		[NoMacCatalyst]
 		[Export ("searchDisplayController", ArgumentSemantic.Retain)]
 		UISearchDisplayController SearchDisplayController { get; }
 		

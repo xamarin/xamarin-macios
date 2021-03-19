@@ -12727,6 +12727,7 @@ namespace AVFoundation {
 		AVUrlAsset UrlAsset { get; }
 
 		[Availability (Deprecated = Platform.iOS_10_0)]
+		[NoMacCatalyst]
 		[Export ("destinationURL")]
 		NSUrl DestinationUrl { get; }
 

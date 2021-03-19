@@ -550,6 +550,7 @@ namespace PdfKit {
 
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use '.ctor (CGRect, PDFAnnotationKey, NSDictionary)' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 12, message: "Use '.ctor (CGRect, PDFAnnotationKey, NSDictionary)' instead.")]
+		[NoMacCatalyst]
 		[Export ("initWithBounds:")]
 		IntPtr Constructor (CGRect bounds);
 

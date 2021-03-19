@@ -231,6 +231,10 @@ namespace Introspection {
 					return true;
 				// Xcode 12.3
 				case "GCDirectionalGamepad":
+				case "GCExtendedGamepadSnapshot":
+				case "GCGamepadSnapshot":
+				case "GCMicroGamepadSnapshot":
+				case "GCGamepad":
 					return true;
 				}
 				break;

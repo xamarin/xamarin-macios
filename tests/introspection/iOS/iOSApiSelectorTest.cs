@@ -344,7 +344,7 @@ namespace Introspection {
 					break;
 				}
 				break;
-#if __TVOS__
+#if __TVOS__ || __MACCATALYST__
 			// broken with Xcode 12 beta 1
 			case "CKDiscoveredUserInfo":
 				switch (name) {
