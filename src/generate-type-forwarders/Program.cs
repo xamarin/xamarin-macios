@@ -356,10 +356,10 @@ namespace GenerateTypeForwarders {
 
 		static void EmitProperty (StringBuilder sb, PropertyDefinition pd, int indent)
 		{
+			var m = pd.GetMethod ?? pd.SetMethod;
 			var strIndent = new string ('\t', indent);
 			sb.Append (strIndent);
 			sb.Append ("public ");
-			var m = pd.GetMethod ?? pd.SetMethod;
 			if (m.IsStatic) {
 				sb.Append ("static ");
 				if (HasPropertyInTypeHierarchy (pd.DeclaringType, m, out var _))
@@ -424,7 +424,12 @@ namespace GenerateTypeForwarders {
 				EmitParameters (sb, invoke.Parameters);
 				sb.AppendLine (");");
 			} else {
-				sb.Append ($"{strIndent}public ");
+				sb.Append (strIndent);
+				// other are filtered not to generate stubs
+				if (type.IsNestedFamily)
+					sb.Append ("protected ");
+				else
+					sb.Append ("public ");
 				if (type.IsInterface) {
 					sb.Append ("interface ");
 				} else if (type.IsEnum) {
@@ -483,7 +488,7 @@ namespace GenerateTypeForwarders {
 				sb.Append (" {");
 				sb.AppendLine ();
 				foreach (var nestedType in type.NestedTypes) {
-					if (nestedType.IsNestedPrivate)
+					if (!nestedType.IsNestedPublic && !nestedType.IsNestedFamily)
 						continue;
 					EmitPNSE (sb, nestedType, indent + 1);
 				}
@@ -497,18 +502,22 @@ namespace GenerateTypeForwarders {
 					bt = bt.BaseType?.Resolve ();
 				}
 				foreach (var method in type.Methods) {
+					// need .ctor(IntPtr) for chaining
+					if (!method.IsPublic && !method.IsFamily && !method.IsConstructor)
+						continue;
 					EmitPNSE (sb, method, indent + 1, nsobject);
 				}
 
 				foreach (var field in type.Fields) {
-					if (field.IsPrivate)
+					if (!field.IsPublic && !field.IsFamily)
 						continue;
 
 					EmitField (sb, field, indent + 1);
 				}
 
 				foreach (var prop in type.Properties) {
-					if (prop.GetMethod?.IsPrivate != false && prop.SetMethod?.IsPrivate != false)
+					var m = prop.GetMethod ?? prop.SetMethod;
+					if (m.IsPrivate || m.IsAssembly)
 						continue;
 					EmitProperty (sb, prop, indent + 1);
 				}
