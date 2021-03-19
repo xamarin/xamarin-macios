@@ -71,7 +71,6 @@ steps:
       "iOS" = $apiDiffRoot + "ios-api-diff.html"; 
       "macOS" = $apiDiffRoot + "mac-api-diff.html";
       "macCat" = $apiDiffRoot + "maccat-api-diff.html";
-      "macCatiOS" = $apiDiffRoot + "maccat-to-ios-diff.html";
       "tvOS" = $apiDiffRoot + "tvos-api-diff.html";
       "watchOS" =$apiDiffRoot + "watchos-api-diff.html";
       "index"= $apiDiffRoot + "api-diff.html";
