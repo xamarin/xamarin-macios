@@ -455,9 +455,27 @@ function New-GitHubSummaryComment {
                 $sb.AppendLine("") # no new line results in a bad rendering in the links
 
                 foreach ($linkPlatform in @("iOS", "macOS", "macCat", "macCatiOS", "tvOS", "watchOS")) {
-                    $htmlLink = $json.html | Select-Object -ExpandProperty $linkPlatform 
-                    $gistLink = $json.gist | Select-Object -ExpandProperty $linkPlatform 
-                    $sb.AppendLine("* $linkPlatform [vsdrops]($htmlLink) [gist]($gistLink)")
+                    $htmlLink = ""
+                    $gistLink = ""
+                    
+                    # some do not have md, some do not have html
+                    if ($linkPlatform -in $json.html) 
+                        $htmlLinkUrl = $json.html | Select-Object -ExpandProperty $linkPlatform 
+                        $htmlLink = "[vsdrops]($htmlLinkUrl)"
+                    }
+
+                    if ($linkPlatform -in $json.gist) {
+                        $gistLinkUrl = $json.gist | Select-Object -ExpandProperty $linkPlatform 
+                        $gistLink = "[gist]($gistLinkUrl)")
+                    }
+
+                    if (($htmlLink -eq "") -and ($gistLink -eq "")) {
+                        $sb.AppendLine("* :fire: $linkPlatform :fire: Missing files")
+                    } else {
+                        # I don't like extra ' ' when we are missing vars, use join
+                        $line = @("*", $linkPlatform, $htmlLink, $gistLink) -join " "
+                        $sb.AppendLine($line)
+                    }
                 }
 
                 $sb.AppendLine("</details>")
