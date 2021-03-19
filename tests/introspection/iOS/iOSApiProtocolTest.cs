@@ -36,6 +36,7 @@ namespace Introspection {
 			case "MonoTouch.MetalKit":
 			case "MetalPerformanceShaders":
 			case "MonoTouch.MetalPerformanceShaders":
+			case "MLCompute":
 				if (Runtime.Arch == Arch.SIMULATOR)
 					return true;
 				break;
@@ -58,8 +59,12 @@ namespace Introspection {
 					return true;
 
 				break;
+			case "MTLCounter":
+			case "MTLCounterSampleBuffer":
+			case "MTLCounterSet":
 			case "MTLFence":
 			case "MTLHeap":
+			case "MTLSharedTextureHandle":
 			case "RPSystemBroadcastPickerView": // Symbol not available in simulator
 				if (Runtime.Arch != Arch.DEVICE)
 					return true;
