@@ -954,6 +954,10 @@ namespace ImageKit {
 
 		[Export ("addSaveOptionsToView:")]
 		void AddSaveOptionsToView (NSView view);
+
+		[Mac (11,3)]
+		[Export ("rememberLastSetting")]
+		bool RememberLastSetting { get; set; }
 	}
 
 	[BaseType (typeof (NSObject))]
