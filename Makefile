@@ -11,10 +11,6 @@ endif
 # Common
 #
 
-net6.config: eng/Versions.props
-	grep MicrosoftDotnetSdkInternalPackageVersion eng/Versions.props | sed 's/<*\/*MicrosoftDotnetSdkInternalPackageVersion>//g' | sed 's/ */DOTNET6_VERSION=/' > $@.tmp
-	mv $@.tmp $@
-
 all-local:: check-system
 install-local::
 
@@ -61,9 +57,7 @@ ifdef INCLUDE_IOS
 	@echo Validated file permissions for Xamarin.iOS.
 endif
 
-all-local:: global.json global6.json
-global.json: Make.config Makefile
-	$(Q) printf "{\n\t\"sdk\": {\n\t\t\"version\": \"$(DOTNET_VERSION)\"\n\t}\n}\n" > $@
+all-local:: global6.json
 
 # This tells NuGet to use the exact same dotnet version we've configured in Make.config
 global6.json: $(TOP)/Make.config.inc Makefile $(TOP)/.git/HEAD $(TOP)/.git/index

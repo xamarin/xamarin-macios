@@ -1,7 +1,7 @@
 Make.config.inc
 Make.config.local
 configure.inc
-net6.config
+dotnet.config
 _ios-build
 _mac-build
 _build
@@ -31,7 +31,7 @@ tests/bcl-test/Mac\ OS\ X\ BCL\ \tests*.csproj
 tests/bcl-test/mscorlib*.csproj
 tests/bcl-test/SystemCoreXunit*.csproj
 tests/bcl-test/SystemXunit.csproj
-global*.json
+global6.json
 .idea
 device-tests-provisioning.csx
 build-provisioning.csx

@@ -42,7 +42,7 @@ test-$(1)::
 	@echo "   $(2)_VERSION=$($(2)_VERSION)"
 	@echo "   $(2)_PATH=$($(2)_PATH) => $(abspath $($(2)_PATH))"
 
-reset-$(1):: net6.config
+reset-$(1)::
 ifneq ($$(IGNORE_$(2)_VERSION),)
 	@echo "*** Not resetting $(1) because IGNORE_$(2)_VERSION is set"
 else
