@@ -39,7 +39,8 @@ steps:
     $filePatterns = @{
       "iOS" = "ios-*.md";
       "macOS" = "macos-*.md";
-      "macCat" = "maccat-*.md";
+      "macCat" = "maccat-api*.md";
+      "macCatiOS" = "maccat-to-ios*.md";
       "tvOS" = "tvos-*.md";
       "watchOS" = "watchos-*.md";
     }
@@ -70,6 +71,7 @@ steps:
       "iOS" = $apiDiffRoot + "ios-api-diff.html"; 
       "macOS" = $apiDiffRoot + "mac-api-diff.html";
       "macCat" = $apiDiffRoot + "maccat-api-diff.html";
+      "macCatiOS" = $apiDiffRoot + "maccat-to-ios-diff.html";
       "tvOS" = $apiDiffRoot + "tvos-api-diff.html";
       "watchOS" =$apiDiffRoot + "watchos-api-diff.html";
       "index"= $apiDiffRoot + "api-diff.html";
