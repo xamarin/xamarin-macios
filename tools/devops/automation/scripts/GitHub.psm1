@@ -466,7 +466,7 @@ function New-GitHubSummaryComment {
 
                     if ($linkPlatform -in $json.gist) {
                         $gistLinkUrl = $json.gist | Select-Object -ExpandProperty $linkPlatform 
-                        $gistLink = "[gist]($gistLinkUrl)")
+                        $gistLink = "[gist]($gistLinkUrl)"
                     }
 
                     if (($htmlLink -eq "") -and ($gistLink -eq "")) {
