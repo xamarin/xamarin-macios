@@ -98,6 +98,8 @@ stages:
         runTests: ${{ parameters.runTests }}
         runDeviceTests: ${{ parameters.runDeviceTests }}
         keyringPass: $(xma-password)
+        gitHubToken: ${{ variables['GitHub.Token'] }}
+        xqaCertPass: $(xqa--certificates--password)
 
   # ideally we would use a matrix here, like:
   #  - job: device_tests
@@ -143,6 +145,8 @@ stages:
     iOSDeviceDemand: 'xismoke-32'
     vsdropsPrefix: ${{ variables.vsdropsPrefix }}
     keyringPass: $(xma-password)
+    gitHubToken: ${{ variables['GitHub.Token'] }}
+    xqaCertPass: $(xqa--certificates--password)
 
 - template: templates/devices/stage.yml
   parameters:
@@ -156,6 +160,8 @@ stages:
     iOSDeviceDemand: 'ios'
     vsdropsPrefix: ${{ variables.vsdropsPrefix }}
     keyringPass: $(xma-password)
+    gitHubToken: ${{ variables['GitHub.Token'] }}
+    xqaCertPass: $(xqa--certificates--password)
 
 - template: templates/devices/stage.yml
   parameters:
@@ -169,23 +175,29 @@ stages:
     iOSDeviceDemand: 'tvos'
     vsdropsPrefix: ${{ variables.vsdropsPrefix }}
     keyringPass: $(xma-password)
+    gitHubToken: ${{ variables['GitHub.Token'] }}
+    xqaCertPass: $(xqa--certificates--password)
 
-- template: templates/mac-tests.yml
+- template: templates/mac/stage.yml
   parameters:
-    stageName: 'Mac Mojave Tests'
+    stageName: 'Mac Mojave (10.14)'
     macPool: 'Hosted Mac Internal Mojave'
+    statusContext: 'Mac Mojave (10.14)'
+    keyringPass: $(xma-password)
 
-- template: templates/mac-tests.yml
+- template: templates/mac/stage.yml
   parameters:
-    stageName: 'Mac High Sierra Tests'
+    stageName: 'Mac High Sierra (10.13)'
     macPool: 'Hosted Mac Internal'
+    statusContext: 'Mac High Sierra (10.13)'
+    keyringPass: $(xma-password)
 
 # TODO: Not the real step
 - stage: sample_testing
   displayName: 'Sample testing'
   dependsOn:
   - build_packages
-  condition: and(succeeded(), contains (stageDependencies.build_packages.build.outputs['configuration.RunSampleTests'], 'True')) 
+  condition: and(succeeded(), contains (stageDependencies.build_packages.build.outputs['configuration.RunSampleTests'], 'True'))
   jobs:
   - job: sample_testing
     pool:

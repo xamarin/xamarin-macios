@@ -1,0 +1,40 @@
+parameters:
+# name of the pool that contains the iOS devices
+- name: macPool
+  type: string
+
+- name: stageName 
+  type: string
+
+- name: statusContext
+  type: string 
+  default: '10.16' # default context, since we started dealing with iOS devices. 
+
+- name: keyringPass
+  type: string
+
+stages:
+- stage:
+  displayName: ${{ parameters.stageName }}
+  dependsOn:
+  - build_packages
+  # we need to have the pkgs built and the device sets to be ran, that is decided via the labels or type of build during the build_packages stage
+  condition: and(succeeded(), eq(dependencies.build_packages.outputs['build.configuration.RunDeviceTests'], 'True'))
+
+  jobs:
+  - job: run_tests
+    displayName: 'macOS tests'
+    timeoutInMinutes: 1000
+    workspace:
+      clean: all
+
+    pool:
+      name: ${{ parameters.macPool }}
+      demands: 
+      - Agent.OS -equals Darwin
+
+    steps:
+    - template: build.yml
+      parameters:
+        statusContext: ${{ parameters.statusContext }}
+        keyringPass: ${{ parameters.keyringPass }} 
