@@ -16084,7 +16084,7 @@ namespace UIKit {
 		[Export ("displayModeButtonItem")]
 		UIBarButtonItem DisplayModeButtonItem { get; }
 
-		[iOS (14,5)]
+		[iOS (14,5), TV (14,5)]
 		[Export ("displayModeButtonVisibility", ArgumentSemantic.Assign)]
 		UISplitViewControllerDisplayModeButtonVisibility DisplayModeButtonVisibility { get; set; }
 		
