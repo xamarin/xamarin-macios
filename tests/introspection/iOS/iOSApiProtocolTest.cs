@@ -37,6 +37,7 @@ namespace Introspection {
 			case "MetalPerformanceShaders":
 			case "MonoTouch.MetalPerformanceShaders":
 			case "MLCompute":
+			case "MediaSetup":
 				if (Runtime.Arch == Arch.SIMULATOR)
 					return true;
 				break;

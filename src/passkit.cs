@@ -1711,6 +1711,7 @@ namespace PassKit {
 
 	[NoWatch, NoTV, NoMac]
 	[iOS (14,0)]
+	[NoMacCatalyst] // type cannot be loaded, lack of documentation about usage
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface PKIssuerProvisioningExtensionHandler {

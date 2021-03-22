@@ -1,0 +1,2 @@
+# deprecated in iOS 10, does not respond to selector (intro)
+!missing-selector! AVAssetDownloadTask::destinationURL not bound

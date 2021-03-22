@@ -39,6 +39,12 @@ namespace Introspection {
 			// *** NSForwarding: warning: object 0x5cbd078 of class 'JSExport' does not implement doesNotRecognizeSelector: -- abort
 			case "JSExport":
 				return true;
+#if !XAMCORE_4_0
+			case "MTLCounter":
+			case "MTLCounterSampleBuffer":
+			case "MTLCounterSet":
+				return true; // Incorrectly bound, will be fixed for XAMCORE_4_0.
+#endif
 			default:
 				return SkipDueToAttribute (type);
 			}
@@ -415,12 +421,6 @@ namespace Introspection {
 					break;
 				}
 				break;
-#if !XAMCORE_4_0
-			case "MTLCounter":
-			case "MTLCounterSampleBuffer":
-			case "MTLCounterSet":
-				return true; // Incorrectly bound, will be fixed for XAMCORE_4_0.
-#endif
 			}
 			return false;
 		}
