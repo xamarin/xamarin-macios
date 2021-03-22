@@ -1249,6 +1249,7 @@ pump_gc (void *context)
 }
 #endif /* DEBUG */
 
+#if !defined (CORECLR_RUNTIME)
 static void
 log_callback (const char *log_domain, const char *log_level, const char *message, mono_bool fatal, void *user_data)
 {
@@ -1265,6 +1266,7 @@ print_callback (const char *string, mono_bool is_stdout)
 	// COOP: Not accessing managed memory: any mode
 	PRINT ("%s", string);
 }
+#endif // !defined (CORECLR_RUNTIME)
 
 static int
 xamarin_compare_ints (const void *a, const void *b)
@@ -1323,9 +1325,11 @@ xamarin_initialize_embedded ()
 void
 xamarin_install_log_callbacks ()
 {
+#if !defined (CORECLR_RUNTIME)
 	mono_trace_set_log_handler (log_callback, NULL);
 	mono_trace_set_print_handler (print_callback);
 	mono_trace_set_printerr_handler (print_callback);
+#endif
 }
 
 void
