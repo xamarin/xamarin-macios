@@ -65,7 +65,12 @@ char *xamarin_get_mono_runtime_build_info (); // returns NULL if libmono couldn'
 typedef int32_t	mono_bool;
 
 /* metadata/image.h */
+#if defined (CORECLR_RUNTIME)
+// In Mono, MonoAssembly is not related to MonoObject, but for the CoreCLR bridge we use the same memory representation for both types.
+typedef struct _MonoObject MonoAssembly;
+#else
 typedef struct _MonoAssembly MonoAssembly;
+#endif
 typedef struct _MonoAssemblyName MonoAssemblyName;
 typedef struct _MonoImage MonoImage;
 

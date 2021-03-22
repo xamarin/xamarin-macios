@@ -941,6 +941,7 @@ xamarin_file_exists (const char *path)
 	return stat (path, &buffer) == 0;
 }
 
+// Returns a retained MonoObject. Caller must release.
 MonoAssembly *
 xamarin_open_assembly (const char *name)
 {
@@ -996,6 +997,7 @@ xamarin_register_monoassembly (MonoAssembly *assembly, GCHandle *exception_gchan
 	return *exception_gchandle == INVALID_GCHANDLE;
 }
 
+// Returns a retained MonoObject. Caller must release.
 MonoAssembly *
 xamarin_open_and_register (const char *aname, GCHandle *exception_gchandle)
 {

@@ -10,6 +10,7 @@
 
 using System;
 using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace ObjCRuntime {
@@ -27,6 +28,35 @@ namespace ObjCRuntime {
 		static void log_coreclr (string message)
 		{
 			xamarin_log (message);
+		}
+
+		// Returns a retained MonoObject. Caller must release.
+		static IntPtr FindAssembly (IntPtr assembly_name)
+		{
+			var path = Marshal.PtrToStringAuto (assembly_name);
+			var name = Path.GetFileNameWithoutExtension (path);
+
+			log_coreclr ($"Runtime.FindAssembly (0x{assembly_name.ToString ("x")} = {name})");
+
+			foreach (var asm in AppDomain.CurrentDomain.GetAssemblies ()) {
+				log_coreclr ($"    Assembly from app domain: {asm.GetName ().Name}");
+				if (asm.GetName ().Name == name) {
+					log_coreclr ($"        Match!");
+					return GetMonoObject (asm);
+				}
+			}
+
+			log_coreclr ($"    Did not find the assembly in the app domain's loaded assemblies. Will try to load it.");
+
+			var loadedAssembly = Assembly.LoadFrom (path);
+			if (loadedAssembly != null) {
+				log_coreclr ($"    Loaded {loadedAssembly.GetName ().Name}");
+				return GetMonoObject (loadedAssembly);
+			}
+
+			log_coreclr ($"    Found no assembly named {name}");
+
+			throw new InvalidOperationException ($"Could not find any assemblies named {name}");
 		}
 
 		// Returns a retained MonoObject. Caller must release.

@@ -77,7 +77,9 @@ xamarin_bridge_call_runtime_initialize (struct InitializationOptions* options, G
 void
 xamarin_bridge_register_product_assembly (GCHandle* exception_gchandle)
 {
-	xamarin_open_and_register (PRODUCT_DUAL_ASSEMBLY, exception_gchandle);
+	MonoAssembly *assembly;
+	assembly = xamarin_open_and_register (PRODUCT_DUAL_ASSEMBLY, exception_gchandle);
+	xamarin_mono_object_release (&assembly);
 }
 
 MonoClass *
@@ -141,6 +143,21 @@ xamarin_mono_object_release (MonoObject **mobj_ref)
 	}
 
 	*mobj_ref = NULL;
+}
+
+/* Implementation of the Mono Embedding API */
+
+// returns a retained MonoAssembly *
+MonoAssembly *
+mono_assembly_open (const char * filename, MonoImageOpenStatus * status)
+{
+	assert (status == NULL);
+
+	MonoAssembly *rv = xamarin_find_assembly (filename);
+
+	LOG_CORECLR (stderr, "mono_assembly_open (%s, %p) => MonoObject=%p GCHandle=%p\n", filename, status, rv, rv->gchandle);
+
+	return rv;
 }
 
 #endif // CORECLR_RUNTIME

@@ -251,7 +251,9 @@
 		new Export ("MonoAssembly *", "mono_assembly_open",
 			"const char *",          "filename",
 			"MonoImageOpenStatus *", "status"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		new Export ("MonoImage *", "mono_assembly_get_image",
 			"MonoAssembly *", "assembly"
