@@ -2460,6 +2460,43 @@ xamarin_insert_dllmap ()
 #endif // defined (__i386__) || defined (__x86_64__)
 }
 
+#if DOTNET
+void
+xamarin_vm_initialize ()
+{
+	char *pinvokeOverride = xamarin_strdup_printf ("%p", &xamarin_pinvoke_override);
+	const char *propertyKeys[] = {
+		"APP_PATHS",
+		"PINVOKE_OVERRIDE",
+	};
+	const char *propertyValues[] = {
+		xamarin_get_bundle_path (),
+		pinvokeOverride,
+	};
+	static_assert (sizeof (propertyKeys) == sizeof (propertyValues), "The number of keys and values must be the same.");
+
+	int propertyCount = sizeof (propertyValues) / sizeof (propertyValues [0]);
+	bool rv = xamarin_bridge_vm_initialize (propertyCount, propertyKeys, propertyValues);
+	xamarin_free (pinvokeOverride);
+
+	if (!rv)
+		xamarin_assertion_message ("Failed to initialize the VM");
+}
+
+void*
+xamarin_pinvoke_override (const char *libraryName, const char *entrypointName)
+{
+
+	void* symbol = NULL;
+
+	if (!strcmp (libraryName, "__Internal")) {
+		symbol = dlsym (RTLD_DEFAULT, entrypointName);
+	}
+
+	return symbol;
+}
+#endif
+
 void
 xamarin_printf (const char *format, ...)
 {
