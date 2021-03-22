@@ -11,8 +11,6 @@
 !incorrect-protocol-member! MTLDevice::isHeadless is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::isLowPower is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::recommendedMaxWorkingSetSize is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::drawIndexedPatches:patchIndexBuffer:patchIndexBufferOffset:controlPointIndexBuffer:controlPointIndexBufferOffset:indirectBuffer:indirectBufferOffset: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::drawPatches:patchIndexBuffer:patchIndexBufferOffset:indirectBuffer:indirectBufferOffset: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLRenderCommandEncoder::textureBarrier is REQUIRED and should be abstract
 
 ## New required members on existing protocols
@@ -128,7 +126,6 @@
 !incorrect-protocol-member! MTLArgumentEncoder::setVisibleFunctionTable:atIndex: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLArgumentEncoder::setVisibleFunctionTables:withRange: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLComputeCommandEncoder::setAccelerationStructure:atBufferIndex: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLComputeCommandEncoder::setImageblockWidth:height: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLComputeCommandEncoder::setIntersectionFunctionTable:atBufferIndex: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLComputeCommandEncoder::setIntersectionFunctionTables:withBufferRange: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLComputeCommandEncoder::setVisibleFunctionTable:atBufferIndex: is REQUIRED and should be abstract
@@ -139,8 +136,6 @@
 !incorrect-protocol-member! MTLDevice::newBinaryArchiveWithDescriptor:error: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::newDynamicLibrary:error: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::newDynamicLibraryWithURL:error: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLDevice::newRenderPipelineStateWithTileDescriptor:options:completionHandler: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLDevice::newRenderPipelineStateWithTileDescriptor:options:reflection:error: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::sparseTileSizeInBytes is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::sparseTileSizeWithTextureType:pixelFormat:sampleCount: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::supports32BitFloatFiltering is REQUIRED and should be abstract
@@ -166,30 +161,11 @@
 !incorrect-protocol-member! MTLCommandBuffer::resourceStateCommandEncoderWithDescriptor: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLCommandQueue::commandBufferWithDescriptor: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLComputePipelineState::functionHandleWithFunction: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLComputePipelineState::imageblockMemoryLengthForDimensions: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLComputePipelineState::newComputePipelineStateWithAdditionalBinaryFunctions:error: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLComputePipelineState::newIntersectionFunctionTableWithDescriptor: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLComputePipelineState::newVisibleFunctionTableWithDescriptor: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLComputePipelineState::supportIndirectCommandBuffers is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLFunction::options is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::dispatchThreadsPerTile: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::setThreadgroupMemoryLength:offset:atIndex: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::setTileBuffer:offset:atIndex: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::setTileBufferOffset:atIndex: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::setTileBuffers:offsets:withRange: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::setTileBytes:length:atIndex: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::setTileSamplerState:atIndex: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::setTileSamplerState:lodMinClamp:lodMaxClamp:atIndex: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::setTileSamplerStates:lodMinClamps:lodMaxClamps:withRange: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::setTileSamplerStates:withRange: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::setTileTexture:atIndex: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::setTileTextures:withRange: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::tileHeight is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::tileWidth is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::supportsQueryTextureLOD is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderPipelineState::imageblockMemoryLengthForDimensions: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderPipelineState::imageblockSampleLength is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderPipelineState::maxTotalThreadsPerThreadgroup is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderPipelineState::threadgroupSizeMatchesTileSize is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLIndirectComputeCommand::setImageblockWidth:height: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::isRemovable is REQUIRED and should be abstract
