@@ -12,6 +12,7 @@ using SpriteKit;
 namespace Xamarin.Mac.Tests
 {
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class SKSceneTests
 	{
 		[SetUp]

@@ -15,6 +15,7 @@ namespace Xamarin.Mac.Tasks
 	{
 		Default = 0,
 		i386 = 1,
-		x86_64 = 2
+		x86_64 = 2,
+		ARM64 = 4,
 	}
 }

@@ -88,7 +88,7 @@ namespace Xamarin.MacDev.Tasks
 
 			if (!string.IsNullOrEmpty(ProductDefinition)) {
 				args.Add ("--product");
-				args.AddQuoted (ProductDefinition);
+				args.AddQuoted (Path.GetFullPath (ProductDefinition));
 			}
 
 			args.Add ("--component");

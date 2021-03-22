@@ -54,11 +54,6 @@ namespace ObjCRuntime {
 		static public class LibC {
 			static public readonly IntPtr Handle = Dlfcn.dlopen (Constants.libcLibrary, 0);
 		}
-#if MONOMAC
-		static public class CoreMidi {
-			static public readonly IntPtr Handle = Dlfcn.dlopen (Constants.CoreMidiLibrary, 0);
-		}
-#endif
 #if HAS_OPENGLES
 		static public class OpenGLES
 		{

@@ -138,18 +138,6 @@ typedef struct {
 	BindAsData bindas[];
 } MethodDescription;
 
-// This has a managed equivalent in NSObject2.cs
-enum NSObjectFlags {
-	NSObjectFlagsDisposed = 1,
-	NSObjectFlagsNativeRef = 2,
-	NSObjectFlagsIsDirectBinding = 4,
-	NSObjectFlagsRegisteredToggleRef = 8,
-	NSObjectFlagsInFinalizerQueue = 16,
-	NSObjectFlagsHasManagedRef = 32,
-	// 64, // Used by SoM
-	NSObjectFlagsIsCustomType = 128,
-};
-
 struct AssemblyLocation {
 	const char *assembly_name; // base name (without extension) of the assembly
 	const char *location; // the directory where the assembly is
@@ -184,7 +172,6 @@ MonoObject *	xamarin_get_nsobject_with_type_for_ptr_created (id self, bool owns,
 MonoObject *	xamarin_get_delegate_for_block_parameter (MonoMethod *method, guint32 token_ref, int par, void *nativeBlock, GCHandle *exception_gchandle);
 id              xamarin_get_block_for_delegate (MonoMethod *method, MonoObject *delegate, const char *signature /* NULL allowed, but requires the dynamic registrar at runtime to compute */, guint32 token_ref /* INVALID_TOKEN_REF allowed, but requires the dynamic registrar at runtime */, GCHandle *exception_gchandle);
 id				xamarin_get_nsobject_handle (MonoObject *obj);
-void			xamarin_set_nsobject_handle (MonoObject *obj, id handle);
 uint8_t         xamarin_get_nsobject_flags (MonoObject *obj);
 void			xamarin_set_nsobject_flags (MonoObject *obj, uint8_t flags);
 void			xamarin_throw_nsexception (MonoException *exc);
@@ -197,6 +184,7 @@ void			xamarin_free (void *ptr);
 MonoMethod *	xamarin_get_reflection_method_method (MonoReflectionMethod *method);
 MonoMethod *	xamarin_get_managed_method_for_token (guint32 token_ref, GCHandle *exception_gchandle);
 void			xamarin_framework_peer_lock ();
+void			xamarin_framework_peer_lock_safe ();
 void			xamarin_framework_peer_unlock ();
 bool			xamarin_file_exists (const char *path);
 MonoAssembly *	xamarin_open_and_register (const char *path, GCHandle *exception_gchandle);
@@ -207,7 +195,16 @@ const char *	xamarin_skip_encoding_flags (const char *encoding);
 void			xamarin_add_registration_map (struct MTRegistrationMap *map, bool partial);
 uint32_t		xamarin_find_protocol_wrapper_type (uint32_t token_ref);
 void			xamarin_release_block_on_main_thread (void *obj);
+void			xamarin_bridge_setup (); // this is called very early, before parsing the command line arguments
+void			xamarin_bridge_initialize (); // this is called a bit later, after parsing the command line arguments.
+unsigned char *	xamarin_load_aot_data (MonoAssembly *assembly, int size, gpointer user_data, void **out_handle);
+void			xamarin_free_aot_data (MonoAssembly *assembly, int size, gpointer user_data, void *handle);
+MonoAssembly*	xamarin_assembly_preload_hook (MonoAssemblyName *aname, char **assemblies_path, void* user_data);
+void			xamarin_vm_initialize ();
+bool			xamarin_bridge_vm_initialize (int propertyCount, const char **propertyKeys, const char **propertyValues);
+void*			xamarin_pinvoke_override (const char *libraryName, const char *entrypointName);
 
+MonoObject *	xamarin_new_nsobject (id self, MonoClass *klass, GCHandle *exception_gchandle);
 bool			xamarin_has_managed_ref (id self);
 bool			xamarin_has_managed_ref_safe (id self);
 void			xamarin_switch_gchandle (id self, bool to_weak);

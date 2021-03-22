@@ -2,6 +2,7 @@
 
 using System;
 
+using Foundation;
 using Metal;
 using ObjCRuntime;
 
@@ -10,6 +11,7 @@ using NUnit.Framework;
 namespace MonoTouchFixtures.Metal {
 
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class MTLTileRenderPipelineColorAttachmentDescriptorTests {
 		MTLTileRenderPipelineColorAttachmentDescriptor descriptor = null;
 

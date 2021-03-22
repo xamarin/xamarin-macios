@@ -9,6 +9,7 @@ using Foundation;
 namespace apitest
 {
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class NSTextInputClient
 	{
 		NSTextView textView;

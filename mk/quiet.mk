@@ -33,6 +33,7 @@ Q_SN=   $(if $(V),,@echo "SN       $(@F)";)
 Q_XBUILD=$(if $(V),,@echo "XBUILD  $(@F)";)
 Q_TT=   $(if $(V),,@echo "TT       $(@F)";)
 Q_BUILD=$(if $(V),,@echo "BUILD    $(@F)";)
+Q_CURL=$(if $(V),,@echo "CURL     $(@F)";)
 
 Q_DOTNET_BUILD=$(if $(V),,@echo "CSC      [dotnet] $(@F)";)
 Q_DOTNET_GEN  =$(if $(V),,@echo "GEN      [dotnet] $(@F)";)

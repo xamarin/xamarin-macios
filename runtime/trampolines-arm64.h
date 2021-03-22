@@ -6,14 +6,14 @@ extern "C" {
 #endif
 
 struct BigDouble {
+	struct _f {
+		float f1;
+		float f2;
+	};
 	union {
 		__int128 bits;
 		long double d;
-		struct f {
-			float f1;
-			float f2;
-		};
-		struct f f;
+		_f f;
 	};
 };
 

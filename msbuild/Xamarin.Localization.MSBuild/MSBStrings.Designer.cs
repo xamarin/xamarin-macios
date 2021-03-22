@@ -1462,5 +1462,11 @@ namespace Xamarin.Localization.MSBuild {
                 return ResourceManager.GetString("InvalidPlatform", resourceCulture);
             }
         }
+        
+        public static string E7072 {
+            get {
+                return ResourceManager.GetString("E7072", resourceCulture);
+            }
+        }
     }
 }

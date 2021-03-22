@@ -12,6 +12,7 @@
 
 using System;
 
+using Foundation;
 using Metal;
 using MetalPerformanceShaders;
 using ObjCRuntime;
@@ -20,6 +21,7 @@ using NUnit.Framework;
 
 namespace MonoTouchFixtures.MetalPerformanceShaders {
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class MPSImageNormalizedHistogramTests {
 		IMTLDevice device;
 

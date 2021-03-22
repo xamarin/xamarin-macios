@@ -16,6 +16,7 @@ using NUnit.Framework;
 namespace MonoMacFixtures {
 	
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class AssemblyTest {
 
 		static byte[] pkt = { 0x84, 0xe0, 0x4f, 0xf9, 0xcf, 0xb7, 0x90, 0x65 };

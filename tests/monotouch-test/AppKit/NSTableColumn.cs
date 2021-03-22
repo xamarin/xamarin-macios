@@ -8,6 +8,7 @@ using Foundation;
 
 namespace Xamarin.Mac.Tests
 {
+	[Preserve (AllMembers = true)]
 	public class NSTableColumnTests
 	{
 		NSTableColumn column;

@@ -1,10 +1,12 @@
 #if __MACOS__
 using AppKit;
+using Foundation;
 using NUnit.Framework;
 
 namespace Xamarin.Mac.Tests
 {
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class NSLayoutConstraintTest
 	{
 		[Test]

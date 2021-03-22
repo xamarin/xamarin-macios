@@ -20,6 +20,7 @@ using Xamarin.Mac.Tests;
 namespace MonoMacFixtures.CoreBluetooth
 {
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class CBUUIDTest
 	{
 		[SetUp]

@@ -131,6 +131,7 @@ namespace Xamarin.Bundler {
 		public bool? DisableOmitFramePointer = null; // Only applicable to Xamarin.Mac
 		public string CustomBundleName = "MonoBundle"; // Only applicable to Xamarin.Mac and Mac Catalyst
 
+		public XamarinRuntime XamarinRuntime;
 		public bool? UseMonoFramework;
 
 		// The bitcode mode to compile to.
@@ -1069,6 +1070,7 @@ namespace Xamarin.Bundler {
 			case ApplePlatform.MacOSX:
 			case ApplePlatform.MacCatalyst:
 				validAbis.Add (Abi.x86_64);
+				validAbis.Add (Abi.ARM64);
 				break;
 			default:
 				throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);

@@ -96,10 +96,10 @@ namespace CoreMidi {
 	}
 
 
-		
-#if !MONOMAC
-	[NoMac][NoTV][NoWatch]
+	[NoTV][NoWatch]
+	[Mac (10,15)]
 	[BaseType (typeof (NSObject), Name="MIDINetworkHost")]
+	[DisableDefaultCtor]
 	interface MidiNetworkHost {
 		[Export ("name", ArgumentSemantic.Retain)]
 		string Name { get;  }
@@ -134,7 +134,8 @@ namespace CoreMidi {
 		bool HasSameAddressAs (MidiNetworkHost other);
 	}
 
-	[NoMac][NoTV][NoWatch]
+	[NoTV][NoWatch]
+	[Mac (10,15)]
 	[Static]
 	interface Midi {
 		[Field ("MIDINetworkNotificationContactsDidChange")]
@@ -149,7 +150,9 @@ namespace CoreMidi {
 		NSString NetworkBonjourServiceType { get; }
 	}
 
-	[NoMac][NoTV][NoWatch]
+	[NoTV][NoWatch]
+	[Mac (10,15)]
+	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject), Name="MIDINetworkConnection")]
 	interface MidiNetworkConnection {
 		[Export ("host", ArgumentSemantic.Retain)]
@@ -159,7 +162,8 @@ namespace CoreMidi {
 		MidiNetworkConnection FromHost (MidiNetworkHost host);
 	}
 
-	[NoMac][NoTV][NoWatch]
+	[NoTV][NoWatch]
+	[Mac (10,15)]
 	[BaseType (typeof (NSObject), Name="MIDINetworkSession")]
 	// default 'init' crash the application
 	[DisableDefaultCtor]
@@ -224,7 +228,6 @@ namespace CoreMidi {
 #endif
 
 	}
-#endif
 
 	[NoWatch, NoTV, Mac (10,14), iOS (12,0)]
 	[BaseType (typeof(NSObject), Name="MIDICIProfile")]

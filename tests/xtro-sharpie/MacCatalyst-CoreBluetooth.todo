@@ -1,3 +1,0 @@
-!extra-protocol-member! unexpected selector CBCentralManagerDelegate::centralManager:didRetrieveConnectedPeripherals: found
-!extra-protocol-member! unexpected selector CBCentralManagerDelegate::centralManager:didRetrievePeripherals: found
-!extra-protocol-member! unexpected selector CBPeripheralDelegate::peripheralDidInvalidateServices: found

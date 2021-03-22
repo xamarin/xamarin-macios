@@ -10,6 +10,7 @@ using StoreKit;
 namespace Xamarin.Mac.Tests
 {
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class SKPaymentTests
 	{
 		[Test]
