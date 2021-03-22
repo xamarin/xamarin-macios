@@ -414,6 +414,9 @@
 					}
 				}
 
+				if (ExceptionHandling)
+					sb.AppendLine ("\tGCHandle exception_gchandle_tmp = INVALID_GCHANDLE;");
+
 				sb.Append ("\t");
 				if (!ReturnType.IsVoid) {
 					sb.Append ($"{ReturnType.ExposedCType} rv = ");
@@ -426,10 +429,11 @@
 				sb.Append (EntryPoint.Substring ("xamarin_".Length));
 				sb.Append (" (");
 				sb.Append (invoke_args);
+
 				if (ExceptionHandling) {
 					if (Arguments.Count > 0)
 						sb.Append (", ");
-					sb.Append ("exception_gchandle");
+					sb.Append ("&exception_gchandle_tmp");
 				}
 
 				if (ReturnType.IsGCHandleConversion)
@@ -438,6 +442,19 @@
 				sb.AppendLine (");");
 
 				sb.Append (post_invoke);
+
+				if (ExceptionHandling) {
+					sb.AppendLine ("#if defined (CORECLR_RUNTIME)");
+					sb.AppendLine ("\tif (exception_gchandle == NULL) {");
+					sb.AppendLine ("\t\tif (exception_gchandle_tmp != INVALID_GCHANDLE)");
+					sb.AppendLine ("\t\t\txamarin_handle_bridge_exception (exception_gchandle_tmp, __func__);");
+					sb.AppendLine ("\t} else {");
+					sb.AppendLine ("\t\t*exception_gchandle = exception_gchandle_tmp;");
+					sb.AppendLine ("\t}");
+					sb.AppendLine ("#else");
+					sb.AppendLine ("\t*exception_gchandle = exception_gchandle_tmp;");
+					sb.AppendLine ("#endif");
+				}
 
 				if (!ReturnType.IsVoid)
 					sb.AppendLine ("\treturn rv;");
@@ -465,7 +482,7 @@
 			}
 		}
 
-		string CFormatArgs (string empty, bool nameOnly, bool exposed = false)
+		string CFormatArgs (string empty, bool nameOnly, bool exposed = false, bool functionDeclaration = false)
 		{
 			var builder = new StringBuilder ();
 
@@ -487,6 +504,8 @@
 					builder.Append (", ");
 				if (nameOnly) {
 					builder.Append ("exception_gchandle");
+				} else if (functionDeclaration) {
+					builder.Append ("GCHandle *exception_gchandle = NULL");
 				} else {
 					builder.Append ("GCHandle *exception_gchandle");
 				}
@@ -535,6 +554,10 @@
 
 		public string CArgumentSignatureExposed {
 			get { return CFormatArgs ("void", nameOnly: false, exposed: true); }
+		}
+
+		public string CArgumentSignatureFunctionDeclaration {
+			get { return CFormatArgs ("void", nameOnly: false, exposed: true, functionDeclaration: true); }
 		}
 
 		public string CArgumentNames {

@@ -47,4 +47,17 @@ xamarin_bridge_vm_initialize (int propertyCount, const char **propertyKeys, cons
 	return rv == 0;
 }
 
+void
+xamarin_handle_bridge_exception (GCHandle gchandle, const char *method)
+{
+	if (gchandle == INVALID_GCHANDLE)
+		return;
+
+	if (method == NULL)
+		method = "<unknown method";
+
+	fprintf (stderr, "%s threw an exception: %p\n", method, gchandle);
+	xamarin_assertion_message ("%s threw an exception: %p", method, gchandle);
+}
+
 #endif // CORECLR_RUNTIME
