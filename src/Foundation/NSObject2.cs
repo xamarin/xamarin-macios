@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Threading;
 #if !NO_SYSTEM_DRAWING
 using System.Drawing;
 #endif
@@ -65,9 +66,8 @@ namespace Foundation {
 		// replace older Mono[Touch|Mac]Assembly field (ease code sharing across platforms)
 		public static readonly Assembly PlatformAssembly = typeof (NSObject).Assembly;
 
-		// The order of 'handle' and 'class_handle' is important: do not re-order unless SuperHandle is modified accordingly.
 		IntPtr handle;
-		IntPtr class_handle;
+		IntPtr super; /* objc_super* */
 		Flags flags;
 
 		// This enum has a native counterpart in runtime.h
@@ -81,6 +81,12 @@ namespace Foundation {
 			HasManagedRef = 32,
 			// 64, // Used by SoM
 			IsCustomType = 128,
+		}
+
+		[StructLayout (LayoutKind.Sequential)]
+		struct objc_super {
+			public IntPtr Handle;
+			public IntPtr ClassHandle;
 		}
 
 		bool disposed { 
@@ -153,6 +159,34 @@ namespace Foundation {
 			obj.handle = handle;
 			obj.flags = flags;
 			return Runtime.AllocGCHandle (obj);
+		}
+
+		IntPtr GetSuper ()
+		{
+			if (super == IntPtr.Zero) {
+				IntPtr ptr;
+
+				unsafe {
+					ptr = Marshal.AllocHGlobal (sizeof (objc_super));
+					*(objc_super*) ptr = default (objc_super); // zero fill
+				}
+
+				var previousValue = Interlocked.CompareExchange (ref super, ptr, IntPtr.Zero);
+				if (previousValue != IntPtr.Zero) {
+					// somebody beat us to the assignment.
+					Marshal.FreeHGlobal (ptr);
+					ptr = IntPtr.Zero;
+				}
+			}
+
+			unsafe {
+				objc_super* sup = (objc_super*) super;
+				if (sup->ClassHandle == IntPtr.Zero)
+					sup->ClassHandle = ClassHandle;
+				sup->Handle = handle;
+			}
+
+			return super;
 		}
 
 		internal static IntPtr Initialize ()
@@ -244,6 +278,7 @@ namespace Foundation {
 				Runtime.NativeObjectHasDied (handle, this);
 			}
 			xamarin_release_managed_ref (handle, user_type);
+			FreeData ();
 		}
 
 		static bool IsProtocol (Type type, IntPtr protocol)
@@ -407,13 +442,7 @@ namespace Foundation {
 				if (handle == IntPtr.Zero)
 					throw new ObjectDisposedException (GetType ().Name);
 
-				if (class_handle == IntPtr.Zero)
-					class_handle = ClassHandle;
-
-				unsafe {
-					fixed (IntPtr *ptr = &handle)
-						return (IntPtr) (ptr);
-				}
+				return GetSuper ();
 			}
 		}
 		
@@ -739,6 +768,16 @@ namespace Foundation {
 				} else {
 					NSObject_Disposer.Add (this);
 				}
+			} else {
+				FreeData ();
+			}
+		}
+
+		unsafe void FreeData ()
+		{
+			if (super != IntPtr.Zero) {
+				Marshal.FreeHGlobal (super);
+				super = IntPtr.Zero;
 			}
 		}
 

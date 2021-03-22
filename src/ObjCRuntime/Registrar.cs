@@ -846,7 +846,11 @@ namespace Registrar {
 						is_stret = IntPtr.Size == 4 ? Stret.X86NeedStret (NativeReturnType, null) : Stret.X86_64NeedStret (NativeReturnType, null);
 					}
 #elif MONOMAC
-					is_stret = IntPtr.Size == 8 ? Stret.X86_64NeedStret (NativeReturnType, null) : Stret.X86NeedStret (NativeReturnType, null);
+					if (Runtime.IsARM64CallingConvention) {
+						is_stret = false;
+					} else {
+						is_stret = IntPtr.Size == 8 ? Stret.X86_64NeedStret (NativeReturnType, null) : Stret.X86NeedStret (NativeReturnType, null);
+					}
 #elif __IOS__
 					if (Runtime.Arch == Arch.DEVICE) {
 						is_stret = IntPtr.Size == 4 && Stret.ArmNeedStret (NativeReturnType, null);

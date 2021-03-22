@@ -62,11 +62,17 @@ namespace Xamarin.Mac.Tasks
 			if (arch == XamMacArch.Default)
 				arch = XamMacArch.x86_64;
 
+			List <string> allSupportedArchs = new List <string> ();
 			if (arch.HasFlag (XamMacArch.i386))
-				args.AddLine ("/arch:i386");
+				allSupportedArchs.Add ("i386");
 
 			if (arch.HasFlag (XamMacArch.x86_64))
-				args.AddLine ("/arch:x86_64");
+				allSupportedArchs.Add ("x86_64");
+
+			if (arch.HasFlag (XamMacArch.ARM64))
+				allSupportedArchs.Add ("arm64");
+
+			args.AddLine ($"/abi:{string.Join (",", allSupportedArchs)}");
 
 			switch ((LinkMode ?? string.Empty).ToLower ()) {
 			case "full":

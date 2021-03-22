@@ -492,14 +492,6 @@
 
 		#endregion
 
-		#region utils/mono-path.h
-
-		new Export ("gchar *", "mono_path_resolve_symlinks",
-			"const char *", "path"
-		),
-
-		#endregion
-
 		#region utils/mono-publib.h
 
 		new Export ("void", "mono_free",
@@ -664,12 +656,29 @@
 
 		#endregion
 
+		#region mini/mono-private-unstable.
+
+		new Export ("int", "monovm_initialize",
+			"int", "propertyCount",
+			"const char **", "propertyKeys",
+			"const char **", "propertyValues"
+		) {
+			Mode = DotNetMode.OnlyDotNet,
+		},
+
+		#endregion
 	};
 #><#+
 	class Arg
 	{
 		public string Type;
 		public string Name;
+	}
+
+	enum DotNetMode {
+		Both = 0,
+		OnlyDotNet = 1,
+		OnlyLegacy = 2,
 	}
 
 	class Export
@@ -679,12 +688,35 @@
 		public string AlternativeExpression;
 		public List<Arg> Arguments;
 		public bool Optional;
+		public DotNetMode Mode;
 
 		public Export (string returnType, string entryPoint, params string [] arguments)
 			: this (false, returnType, entryPoint, arguments)
 		{
 		}
 
+		public string DotNetIf {
+			get {
+				switch (Mode) {
+				case DotNetMode.OnlyLegacy:
+					return "#if !DOTNET\n";
+				case DotNetMode.OnlyDotNet:
+					return "#if DOTNET\n";
+				}
+				return string.Empty;
+			}
+		}
+
+		public string DotNetEndIf {
+			get {
+				switch (Mode) {
+				case DotNetMode.OnlyLegacy:
+				case DotNetMode.OnlyDotNet:
+					return "#endif\n";
+				}
+				return string.Empty;
+			}
+		}
 
 		public Export (bool optional, string returnType, string entryPoint, params string [] arguments)
 		{

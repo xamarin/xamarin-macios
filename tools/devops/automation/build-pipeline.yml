@@ -98,6 +98,8 @@ stages:
         runTests: ${{ parameters.runTests }}
         runDeviceTests: ${{ parameters.runDeviceTests }}
         keyringPass: $(xma-password)
+        gitHubToken: ${{ variables['GitHub.Token'] }}
+        xqaCertPass: $(xqa--certificates--password)
 
   # ideally we would use a matrix here, like:
   #  - job: device_tests
@@ -180,6 +182,7 @@ stages:
   parameters:
     stageName: 'Mac Mojave (10.14)'
     macPool: 'Hosted Mac Internal Mojave'
+    osVersion: '10.14'
     statusContext: 'Mac Mojave (10.14)'
     keyringPass: $(xma-password)
 
@@ -187,7 +190,16 @@ stages:
   parameters:
     stageName: 'Mac High Sierra (10.13)'
     macPool: 'Hosted Mac Internal'
+    osVersion: '10.13'
     statusContext: 'Mac High Sierra (10.13)'
+    keyringPass: $(xma-password)
+
+- template: templates/mac/stage.yml
+  parameters:
+    stageName: 'Mac Sierra (10.12)'
+    macPool: 'VSEng-Xamarin-RedmondMacTestPool-iOS'
+    osVersion: '10.12'
+    statusContext: 'Mac Sierra (10.12)'
     keyringPass: $(xma-password)
 
 # TODO: Not the real step

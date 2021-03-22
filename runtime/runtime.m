@@ -132,6 +132,7 @@ enum InitializationFlags : int {
 	InitializationFlagsDynamicRegistrar			= 0x04,
 	/* unused									= 0x08,*/
 	InitializationFlagsIsSimulator				= 0x10,
+	InitializationFlagsIsCoreCLR                = 0x20,
 };
 
 struct InitializationOptions {
@@ -1395,6 +1396,10 @@ xamarin_initialize ()
 	options.flags = (enum InitializationFlags) (options.flags | InitializationFlagsIsSimulator);
 #endif
 
+#if defined (CORECLR_RUNTIME)
+	options.flags = (enum InitializationFlags) (options.flags | InitializationFlagsIsCoreCLR);
+#endif
+
 	options.Delegates = &delegates;
 	options.Trampolines = &trampolines;
 	options.MarshalObjectiveCExceptionMode = xamarin_marshal_objectivec_exception_mode;
@@ -1444,7 +1449,6 @@ xamarin_get_bundle_path ()
 
 	NSBundle *main_bundle = [NSBundle mainBundle];
 	NSString *bundle_path;
-	char *result;
 
 	if (main_bundle == NULL)
 		xamarin_assertion_message ("Could not find the main bundle in the app ([NSBundle mainBundle] returned nil)");
@@ -1460,10 +1464,7 @@ xamarin_get_bundle_path ()
 	bundle_path = [main_bundle bundlePath];
 #endif
 
-	result = mono_path_resolve_symlinks ([bundle_path UTF8String]);
-
-	x_bundle_path = strdup (result);
-	mono_free (result);
+	x_bundle_path = strdup ([[bundle_path stringByStandardizingPath] UTF8String]);
 
 	return x_bundle_path;
 }
@@ -2458,6 +2459,43 @@ xamarin_insert_dllmap ()
 	LOG (PRODUCT ": Added dllmap for objc_msgSend");
 #endif // defined (__i386__) || defined (__x86_64__)
 }
+
+#if DOTNET
+void
+xamarin_vm_initialize ()
+{
+	char *pinvokeOverride = xamarin_strdup_printf ("%p", &xamarin_pinvoke_override);
+	const char *propertyKeys[] = {
+		"APP_PATHS",
+		"PINVOKE_OVERRIDE",
+	};
+	const char *propertyValues[] = {
+		xamarin_get_bundle_path (),
+		pinvokeOverride,
+	};
+	static_assert (sizeof (propertyKeys) == sizeof (propertyValues), "The number of keys and values must be the same.");
+
+	int propertyCount = sizeof (propertyValues) / sizeof (propertyValues [0]);
+	bool rv = xamarin_bridge_vm_initialize (propertyCount, propertyKeys, propertyValues);
+	xamarin_free (pinvokeOverride);
+
+	if (!rv)
+		xamarin_assertion_message ("Failed to initialize the VM");
+}
+
+void*
+xamarin_pinvoke_override (const char *libraryName, const char *entrypointName)
+{
+
+	void* symbol = NULL;
+
+	if (!strcmp (libraryName, "__Internal")) {
+		symbol = dlsym (RTLD_DEFAULT, entrypointName);
+	}
+
+	return symbol;
+}
+#endif
 
 void
 xamarin_printf (const char *format, ...)
