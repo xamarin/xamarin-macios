@@ -446,7 +446,7 @@ function New-GitHubSummaryComment {
             # we are dealing with an object, not a dictionary
             $hasHtmlLinks = "html" -in $json.PSobject.Properties.Name
             $hasMDlinks = "gist" -in $json.PSobject.Properties.Name
-            if ($hasHtmlLinks -and $hasMDlinks) {
+            if ($hasHtmlLinks -or $hasMDlinks) {
                 # build the required list
                 $sb.AppendLine("# API diff")
                 Write-Host "Message is '$($json.message)'"
@@ -455,16 +455,19 @@ function New-GitHubSummaryComment {
                 $sb.AppendLine("") # no new line results in a bad rendering in the links
 
                 foreach ($linkPlatform in @("iOS", "macOS", "macCat", "macCatiOS", "tvOS", "watchOS")) {
-                    $htmlLink = ""
-                    $gistLink = ""
+
+                    $platformHasHtmlLinks = $linkPlatform -in $json.html.PSobject.Properties.Name
+                    $platformHasMDlinks = $linkPlatform -in $json.gist.PSobject.Properties.Name
                     
                     # some do not have md, some do not have html
-                    if ($linkPlatform -in $json.html) {
+                    if ($platformHasHtmlLinks) {
+                        Write-Host "Found html link for $linkPlatform"
                         $htmlLinkUrl = $json.html | Select-Object -ExpandProperty $linkPlatform 
                         $htmlLink = "[vsdrops]($htmlLinkUrl)"
                     }
 
-                    if ($linkPlatform -in $json.gist) {
+                    if ($platformHasMDlinks) {
+                        Write-Host "Found gist link for $linkPlatform"
                         $gistLinkUrl = $json.gist | Select-Object -ExpandProperty $linkPlatform 
                         $gistLink = "[gist]($gistLinkUrl)"
                     }
