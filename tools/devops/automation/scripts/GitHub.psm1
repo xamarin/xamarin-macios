@@ -455,6 +455,8 @@ function New-GitHubSummaryComment {
                 $sb.AppendLine("") # no new line results in a bad rendering in the links
 
                 foreach ($linkPlatform in @("iOS", "macOS", "macCat", "macCatiOS", "tvOS", "watchOS")) {
+                    $htmlLink = ""
+                    $gistLink = ""
 
                     $platformHasHtmlLinks = $linkPlatform -in $json.html.PSobject.Properties.Name
                     $platformHasMDlinks = $linkPlatform -in $json.gist.PSobject.Properties.Name
