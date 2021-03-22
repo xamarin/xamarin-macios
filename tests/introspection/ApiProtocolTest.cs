@@ -351,6 +351,10 @@ namespace Introspection {
 				// Xcode 12.3
 				case "ARAppClipCodeAnchor": // Conformance comes from the base type, ARAppClipCodeAnchor conforms to NSSecureCoding but SupportsSecureCoding returned false.
 				case "GCDirectionalGamepad":
+				case "GCExtendedGamepadSnapshot":
+				case "GCGamepadSnapshot":
+				case "GCMicroGamepadSnapshot":
+				case "GCGamepad":
 					return true;
 				}
 				break;
