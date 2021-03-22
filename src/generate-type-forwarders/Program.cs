@@ -309,15 +309,16 @@ namespace GenerateTypeForwarders {
 
 		static void EmitField (StringBuilder sb, FieldDefinition fd, int indent)
 		{
-			var strIndent = new string ('\t', indent);
 			if (fd.DeclaringType.IsEnum) {
 				if (!fd.IsStatic)
 					return;
-				sb.Append (strIndent);
+				sb.Append ('\t', indent);
 				sb.Append (fd.Name);
-				sb.AppendLine (",");
+				sb.Append (" = ");
+				sb.Append (fd.Constant);
+				sb.Append (',');
 			} else {
-				sb.Append (strIndent);
+				sb.Append ('\t', indent);
 				sb.Append ("public ");
 				if (fd.IsStatic)
 					sb.Append ("static ");
@@ -325,8 +326,8 @@ namespace GenerateTypeForwarders {
 				sb.Append (' ');
 				sb.Append (fd.Name);
 				sb.Append (';');
-				sb.AppendLine ();
 			}
+			sb.AppendLine ();
 		}
 
 		static bool HasPropertyInTypeHierarchy (TypeDefinition type, MethodDefinition accessor, out bool valid)
