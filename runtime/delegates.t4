@@ -286,6 +286,7 @@
 			WrappedManagedFunction = "CreateNSObject",
 			OnlyDynamicUsage = false,
 		},
+
 	};
 	delegates.CalculateLengths ();
 #><#+
@@ -335,6 +336,7 @@
 		public bool ExceptionHandling = true;
 		// Detemines whether the function is only used by the dynamic registrar (in which case we might be able to link the function away if the static registrar is being used)
 		public bool OnlyDynamicUsage;
+		public bool OnlyCoreCLR;
 
 		public string DelegateName {
 			get {
