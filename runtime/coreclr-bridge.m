@@ -116,4 +116,31 @@ xamarin_get_runtime_class ()
 	xamarin_assertion_message ("The method %s it not implemented yet for CoreCLR", __func__);
 }
 
+void
+xamarin_mono_object_retain (MonoObject *mobj)
+{
+	atomic_fetch_add (&mobj->reference_count, 1);
+}
+
+void
+xamarin_mono_object_release (MonoObject **mobj_ref)
+{
+	MonoObject *mobj = *mobj_ref;
+
+	if (mobj == NULL)
+		return;
+
+	int rc = atomic_fetch_sub (&mobj->reference_count, 1) - 1;
+	if (rc == 0) {
+		if (mobj->gchandle != INVALID_GCHANDLE) {
+			xamarin_gchandle_free (mobj->gchandle);
+			mobj->gchandle = INVALID_GCHANDLE;
+		}
+
+		xamarin_free (mobj); // allocated using Marshal.AllocHGlobal.
+	}
+
+	*mobj_ref = NULL;
+}
+
 #endif // CORECLR_RUNTIME
