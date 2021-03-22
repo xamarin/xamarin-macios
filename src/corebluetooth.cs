@@ -321,12 +321,14 @@ namespace CoreBluetooth {
 		[NoTV]
 		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_7_0, Obsoleted = Platform.iOS_8_4)] // Available in iOS 5.0 through iOS 8.4. Deprecated in iOS 7.0.
+		[NoMacCatalyst]
 		[Export ("centralManager:didRetrievePeripherals:"), EventArgs ("CBPeripherals")]
 		void RetrievedPeripherals (CBCentralManager central, CBPeripheral [] peripherals);
 
 		[NoTV]
 		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_7_0, Obsoleted = Platform.iOS_8_4)] // Available in iOS 5.0 through iOS 8.4. Deprecated in iOS 7.0.
+		[NoMacCatalyst]
 		[Export ("centralManager:didRetrieveConnectedPeripherals:"), EventArgs ("CBPeripherals")]
 		void RetrievedConnectedPeripherals (CBCentralManager central, CBPeripheral [] peripherals);
 
@@ -611,6 +613,7 @@ namespace CoreBluetooth {
 		[NoTV]
 		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_7_0, Obsoleted = Platform.iOS_8_4)]
+		[NoMacCatalyst]
 		[Export ("peripheralDidInvalidateServices:")]
 		void InvalidatedService (CBPeripheral peripheral);	
 

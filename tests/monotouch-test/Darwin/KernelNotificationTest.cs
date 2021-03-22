@@ -2,6 +2,7 @@
 using System;
 using System.Diagnostics;
 
+using Foundation;
 using Darwin;
 
 using NUnit.Framework;
@@ -9,6 +10,7 @@ using NUnit.Framework;
 namespace apitest
 {
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class KernelNotificationTest
 	{
 		KernelEvent [] CreateEvents (Process process)

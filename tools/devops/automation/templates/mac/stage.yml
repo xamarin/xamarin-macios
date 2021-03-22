@@ -8,9 +8,12 @@ parameters:
 
 - name: statusContext
   type: string 
-  default: '10.16' # default context, since we started dealing with iOS devices. 
+  default: '10.16'
 
 - name: keyringPass
+  type: string
+
+- name: osVersion
   type: string
 
 stages:
@@ -32,6 +35,7 @@ stages:
       name: ${{ parameters.macPool }}
       demands: 
       - Agent.OS -equals Darwin
+      - Agent.OSVersion -equals ${{ parameters.osVersion }}
 
     steps:
     - template: build.yml

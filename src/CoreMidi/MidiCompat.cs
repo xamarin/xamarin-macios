@@ -29,5 +29,17 @@ namespace CoreMidi {
 	} 
 #endif
 
+#if !MONOMAC && !__MACCATALYST__
+	public partial class MidiNetworkConnection {
+		[Obsolete ("Use static factory method to create an instance.")]
+		public MidiNetworkConnection () => throw new NotSupportedException ();
+	}
+
+	public partial class MidiNetworkHost {
+		[Obsolete ("Use static factory method to create an instance.")]
+		public MidiNetworkHost () => throw new NotSupportedException ();
+	}
+#endif
+
 }
 #endif

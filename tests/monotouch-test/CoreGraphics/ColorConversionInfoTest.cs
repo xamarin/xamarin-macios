@@ -18,6 +18,7 @@ using NUnit.Framework;
 namespace MonoTouchFixtures.CoreGraphics {
 
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class ColorConversionInfoTest {
 
 		[Test]

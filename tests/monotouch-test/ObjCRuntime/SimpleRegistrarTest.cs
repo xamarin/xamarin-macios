@@ -30,6 +30,7 @@ namespace Xamarin.Mac.Tests
 	}
 	
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class SimpleRegistrarTest
 	{
 		[DllImport ("/usr/lib/libobjc.dylib", EntryPoint = "objc_msgSend")]

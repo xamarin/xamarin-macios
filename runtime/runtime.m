@@ -132,6 +132,7 @@ enum InitializationFlags : int {
 	InitializationFlagsDynamicRegistrar			= 0x04,
 	/* unused									= 0x08,*/
 	InitializationFlagsIsSimulator				= 0x10,
+	InitializationFlagsIsCoreCLR                = 0x20,
 };
 
 struct InitializationOptions {
@@ -219,16 +220,6 @@ xamarin_get_nsobject_handle (MonoObject *obj)
 	
 	struct Managed_NSObject *mobj = (struct Managed_NSObject *) obj;
 	return mobj->handle;
-}
-
-void
-xamarin_set_nsobject_handle (MonoObject *obj, id handle)
-{
-	// COOP: Writing managed data, must be in UNSAFE mode
-	MONO_ASSERT_GC_UNSAFE;
-	
-	struct Managed_NSObject *mobj = (struct Managed_NSObject *) obj;
-	mobj->handle  = handle;
 }
 
 uint8_t
@@ -353,6 +344,16 @@ void xamarin_framework_peer_lock_safe ()
 void xamarin_framework_peer_unlock ()
 {
 	pthread_mutex_unlock (&framework_peer_release_lock);
+}
+
+MonoObject *
+xamarin_new_nsobject (id self, MonoClass *klass, GCHandle *exception_gchandle)
+{
+	MonoType *type = mono_class_get_type (klass);
+	MonoReflectionType *rtype = mono_type_get_object (mono_domain_get (), type);
+
+	GCHandle obj = xamarin_create_nsobject (rtype, self, NSObjectFlagsNativeRef, exception_gchandle);
+	return xamarin_gchandle_unwrap (obj);
 }
 
 MonoClass *
@@ -1248,6 +1249,7 @@ pump_gc (void *context)
 }
 #endif /* DEBUG */
 
+#if !defined (CORECLR_RUNTIME)
 static void
 log_callback (const char *log_domain, const char *log_level, const char *message, mono_bool fatal, void *user_data)
 {
@@ -1264,6 +1266,7 @@ print_callback (const char *string, mono_bool is_stdout)
 	// COOP: Not accessing managed memory: any mode
 	PRINT ("%s", string);
 }
+#endif // !defined (CORECLR_RUNTIME)
 
 static int
 xamarin_compare_ints (const void *a, const void *b)
@@ -1322,9 +1325,11 @@ xamarin_initialize_embedded ()
 void
 xamarin_install_log_callbacks ()
 {
+#if !defined (CORECLR_RUNTIME)
 	mono_trace_set_log_handler (log_callback, NULL);
 	mono_trace_set_print_handler (print_callback);
 	mono_trace_set_printerr_handler (print_callback);
+#endif
 }
 
 void
@@ -1395,6 +1400,10 @@ xamarin_initialize ()
 	options.flags = (enum InitializationFlags) (options.flags | InitializationFlagsIsSimulator);
 #endif
 
+#if defined (CORECLR_RUNTIME)
+	options.flags = (enum InitializationFlags) (options.flags | InitializationFlagsIsCoreCLR);
+#endif
+
 	options.Delegates = &delegates;
 	options.Trampolines = &trampolines;
 	options.MarshalObjectiveCExceptionMode = xamarin_marshal_objectivec_exception_mode;
@@ -1444,7 +1453,6 @@ xamarin_get_bundle_path ()
 
 	NSBundle *main_bundle = [NSBundle mainBundle];
 	NSString *bundle_path;
-	char *result;
 
 	if (main_bundle == NULL)
 		xamarin_assertion_message ("Could not find the main bundle in the app ([NSBundle mainBundle] returned nil)");
@@ -1460,10 +1468,7 @@ xamarin_get_bundle_path ()
 	bundle_path = [main_bundle bundlePath];
 #endif
 
-	result = mono_path_resolve_symlinks ([bundle_path UTF8String]);
-
-	x_bundle_path = strdup (result);
-	mono_free (result);
+	x_bundle_path = strdup ([[bundle_path stringByStandardizingPath] UTF8String]);
 
 	return x_bundle_path;
 }
@@ -2459,6 +2464,43 @@ xamarin_insert_dllmap ()
 #endif // defined (__i386__) || defined (__x86_64__)
 }
 
+#if DOTNET
+void
+xamarin_vm_initialize ()
+{
+	char *pinvokeOverride = xamarin_strdup_printf ("%p", &xamarin_pinvoke_override);
+	const char *propertyKeys[] = {
+		"APP_PATHS",
+		"PINVOKE_OVERRIDE",
+	};
+	const char *propertyValues[] = {
+		xamarin_get_bundle_path (),
+		pinvokeOverride,
+	};
+	static_assert (sizeof (propertyKeys) == sizeof (propertyValues), "The number of keys and values must be the same.");
+
+	int propertyCount = sizeof (propertyValues) / sizeof (propertyValues [0]);
+	bool rv = xamarin_bridge_vm_initialize (propertyCount, propertyKeys, propertyValues);
+	xamarin_free (pinvokeOverride);
+
+	if (!rv)
+		xamarin_assertion_message ("Failed to initialize the VM");
+}
+
+void*
+xamarin_pinvoke_override (const char *libraryName, const char *entrypointName)
+{
+
+	void* symbol = NULL;
+
+	if (!strcmp (libraryName, "__Internal")) {
+		symbol = dlsym (RTLD_DEFAULT, entrypointName);
+	}
+
+	return symbol;
+}
+#endif
+
 void
 xamarin_printf (const char *format, ...)
 {
@@ -2725,7 +2767,7 @@ xamarin_gchandle_unwrap (GCHandle handle)
 	if (handle == INVALID_GCHANDLE)
 		return NULL;
 	MonoObject *rv = xamarin_gchandle_get_target (handle);
-	mono_gchandle_free (GPOINTER_TO_UINT (handle));
+	xamarin_gchandle_free (handle);
 	return rv;
 }
 

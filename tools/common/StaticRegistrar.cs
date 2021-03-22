@@ -3723,10 +3723,8 @@ namespace Registrar {
 			
 			// the actual invoke
 			if (isCtor) {
-				invoke.AppendLine ("mthis = mono_object_new (mono_domain_get (), mono_method_get_class (managed_method));");
-				body_setup.AppendLine ("uint8_t flags = NSObjectFlagsNativeRef;");
-				invoke.AppendLine ("xamarin_set_nsobject_handle (mthis, self);");
-				invoke.AppendLine ("xamarin_set_nsobject_flags (mthis, flags);");
+				invoke.AppendLine ("mthis = xamarin_new_nsobject (self, mono_method_get_class (managed_method), &exception_gchandle);");
+				invoke.AppendLine ("if (exception_gchandle != INVALID_GCHANDLE) goto exception_handling;");
 			}
 
 			var marshal_exception = "NULL";

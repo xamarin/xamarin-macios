@@ -10,7 +10,7 @@ namespace Xamarin.MMP.Tests
 {
 	public class CodeStrippingTests
 	{
-		static Func<string, bool> LipoStripConditional = s => s.Contains ("lipo") && s.Contains ("-thin");
+		static Func<string, bool> LipoStripConditional = s => s.Contains ("lipo") && s.Contains ("-extract_family");
 		static Func<string, bool> LipoStripSkipPosixAndMonoNativeConditional = s => LipoStripConditional (s) && !s.Contains ("libMonoPosixHelper.dylib") && !s.Contains ("libmono-native.dylib");
 
 		static bool DidAnyLipoStripSkipPosixAndMonoNative (BuildResult buildResult)

@@ -8,6 +8,7 @@ using AppKit;
 namespace apitest
 {
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class NSFormatterTests
 	{
 		NSNumberFormatter formatter;

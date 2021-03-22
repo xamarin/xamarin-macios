@@ -200,7 +200,7 @@ namespace Foundation  {
 	[Native]
 	public enum NSDateFormatterBehavior : ulong {
 		Default = 0,
-		[NoiOS][NoTV][NoWatch]
+		[NoiOS][NoTV][NoWatch][NoMacCatalyst]
 		Mode_10_0 = 1000,
 		Mode_10_4 = 1040,
 	}
@@ -659,11 +659,11 @@ namespace Foundation  {
 	public enum NSStringDrawingOptions : ulong {
 		UsesLineFragmentOrigin = (1 << 0),
 		UsesFontLeading = (1 << 1),
-		[NoiOS][NoTV][NoWatch]
+		[NoiOS][NoTV][NoWatch][NoMacCatalyst]
 		[Deprecated (PlatformName.MacOSX, 10,11)]
 		DisableScreenFontSubstitution = (1 << 2),
 		UsesDeviceMetrics = (1 << 3),
-		[NoiOS][NoTV][NoWatch]
+		[NoiOS][NoTV][NoWatch][NoMacCatalyst]
 		[Deprecated (PlatformName.MacOSX, 10,11)]
 		OneShot = (1 << 4),
 		TruncatesLastVisibleLine = (1 << 5)
@@ -690,7 +690,7 @@ namespace Foundation  {
 	[Native]
 	public enum NSNumberFormatterBehavior : ulong {
 		Default = 0,
-		[NoiOS][NoTV][NoWatch]
+		[NoiOS][NoTV][NoWatch][NoMacCatalyst]
 		Version_10_0 = 1000,
 		Version_10_4 = 1040
 	}

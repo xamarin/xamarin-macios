@@ -44,6 +44,18 @@ enum XamarinLaunchMode {
 	XamarinLaunchModeEmbedded = 2,
 };
 
+// This has a managed equivalent in NSObject2.cs
+enum NSObjectFlags {
+	NSObjectFlagsDisposed = 1,
+	NSObjectFlagsNativeRef = 2,
+	NSObjectFlagsIsDirectBinding = 4,
+	NSObjectFlagsRegisteredToggleRef = 8,
+	NSObjectFlagsInFinalizerQueue = 16,
+	NSObjectFlagsHasManagedRef = 32,
+	// 64, // Used by SoM
+	NSObjectFlagsIsCustomType = 128,
+};
+
 extern bool mono_use_llvm; // this is defined inside mono
 
 #if DEBUG

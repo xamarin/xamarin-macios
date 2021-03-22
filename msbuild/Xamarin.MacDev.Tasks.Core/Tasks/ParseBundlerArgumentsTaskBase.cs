@@ -8,6 +8,9 @@ namespace Xamarin.MacDev.Tasks {
 		public string ExtraArgs { get; set; }
 
 		[Output]
+		public ITaskItem[] EnvironmentVariables { get; set; }
+
+		[Output]
 		public string MarshalManagedExceptionMode { get; set; }
 
 		[Output]
@@ -45,6 +48,7 @@ namespace Xamarin.MacDev.Tasks {
 			if (!string.IsNullOrEmpty (ExtraArgs)) {
 				var args = CommandLineArgumentBuilder.Parse (ExtraArgs);
 				List<string> xml = null;
+				var envVariables = new List<ITaskItem> ();
 
 				for (int i = 0; i < args.Length; i++) {
 					var arg = args [i];
@@ -63,7 +67,8 @@ namespace Xamarin.MacDev.Tasks {
 					}
 					arg = arg.Substring (index);
 
-					var eq = arg.IndexOfAny (new char [] { ':', '=' });
+					var separators = new char [] { ':', '=' };
+					var eq = arg.IndexOfAny (separators);
 					var value = string.Empty;
 					var name = arg;
 					if (eq >= 0) {
@@ -107,6 +112,12 @@ namespace Xamarin.MacDev.Tasks {
 					case "registrar":
 						Registrar = value;
 						break;
+					case "setenv":
+						var colon = value.IndexOfAny (separators);
+						var item = new TaskItem (value.Substring (0, colon));
+						item.SetMetadata ("Value", value.Substring (colon + 1));
+						envVariables.Add (item);
+						break;
 					case "xml":
 						if (xml == null)
 							xml = new List<string> ();
@@ -125,6 +136,13 @@ namespace Xamarin.MacDev.Tasks {
 						defs.Add (new TaskItem (x));
 					XmlDefinitions = defs.ToArray ();
 				}
+
+				if (envVariables.Count > 0) {
+					if (EnvironmentVariables != null)
+						envVariables.AddRange (EnvironmentVariables);
+					EnvironmentVariables = envVariables.ToArray ();
+				}
+
 			}
 
 			return !Log.HasLoggedErrors;

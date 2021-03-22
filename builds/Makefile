@@ -779,6 +779,7 @@ MAC_TARGETS = \
 	$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/lib/pkgconfig/mono-2.pc                          \
 	$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/etc/mono/assemblies/System/System.config         \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/mono-sgen                            \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/aarch64-darwin-mono-sgen             \
 
 $(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/lib/%: .stamp-$(MONO_BUILD_MODE) | $(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/lib
 	$(Q) $(CP) $(MONO_MAC_SDK_DESTDIR)/mac-libs/$(notdir $@) $@
@@ -796,6 +797,9 @@ $(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/etc/mono/assemblies/System/System.config: mac
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/mono-sgen: .stamp-$(MONO_BUILD_MODE) | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin
 	$(Q) install -m 0755 $(MONO_MAC_SDK_DESTDIR)/mac-bin/mono-sgen $@
+
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/aarch64-darwin-mono-sgen: .stamp-$(MONO_BUILD_MODE) | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin
+	$(Q) install -m 0755 $(MONO_MAC_SDK_DESTDIR)/mac-bin/aarch64-darwin-mono-sgen $@
 
 $(MAC_DIRECTORIES):
 	$(Q) mkdir -p $@

@@ -467,6 +467,9 @@
     <Compile Include="..\common\DlsymOptions.cs">
       <Link>tools\common\DlsymOptions.cs</Link>
     </Compile>
+    <Compile Include="..\common\XamarinRuntime.cs">
+      <Link>tools\common\XamarinRuntime.cs</Link>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

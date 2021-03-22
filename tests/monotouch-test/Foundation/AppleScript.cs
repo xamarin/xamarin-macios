@@ -8,6 +8,7 @@ using Foundation;
 namespace Xamarin.Mac.Tests
 {
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class AppleScriptTests
 	{		
 		[Test]

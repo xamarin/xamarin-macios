@@ -8,12 +8,14 @@
 //
 #if !MONOMAC
 using UIKit;
+using Foundation;
 using ObjCRuntime;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Foundation {
 
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class NSLayoutConstraintTest {
 
 #if !__WATCHOS__ // FIXME: it looks like this test can be rewritten to not use UIViewController, so that it can run on WatchOS as well.

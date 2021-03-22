@@ -6,6 +6,7 @@ using NUnit.Framework;
 namespace Xamarin.Mac.Tests {
 
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class NSMetadataItemTest {
 		
 		[Test]

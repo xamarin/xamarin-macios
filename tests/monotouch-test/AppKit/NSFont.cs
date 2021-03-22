@@ -11,6 +11,7 @@ using CoreText;
 namespace Xamarin.Mac.Tests
 {
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class NSFontTests
 	{
 		[Test]

@@ -44,7 +44,7 @@ $(XTVOS_PCH): .stamp-check-sharpie
 	$(SHARPIE) sdk-db --xcode $(XCODE) -s appletvos$(TVOS_SDK_VERSION) -a $(XTVOS_ARCH) -exclude OSLog
 
 
-XMAC ?= $(TOP)/_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/git/lib/$(XMAC_ARCH)/mobile/Xamarin.Mac.dll
+XMAC ?= $(TOP)/_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/git/lib/64bits/mobile/Xamarin.Mac.dll
 XMAC_ARCH = x86_64
 XMAC_PCH = macosx$(OSX_SDK_VERSION)-$(XMAC_ARCH).pch
 
@@ -75,8 +75,6 @@ $(XCAT_PCH): .stamp-check-sharpie
 	-exclude Quartz \
 	-exclude SecurityInterface \
 
-
-maccatalyst: $(XCAT_PCH)
 
 ios-$(IOS_SDK_VERSION).g.cs: $(XIOS_PCH)
 
@@ -114,7 +112,7 @@ else
 gen-macos: ; @true
 endif
 
-maccatalyst-$(MACCATALYST_SDK_VERSION).g.cs: $(XMAC_PCH)
+maccatalyst-$(MACCATALYST_SDK_VERSION).g.cs: $(XCAT_PCH)
 
 ifdef INCLUDE_MACCATALYST
 gen-maccatalyst: maccatalyst-$(MACCATALYST_SDK_VERSION).g.cs .stamp-check-sharpie

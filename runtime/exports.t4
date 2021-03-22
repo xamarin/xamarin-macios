@@ -153,11 +153,6 @@
 			"MonoString *", "string_obj"
 		),
 
-		new Export ("MonoObject *", "mono_object_new",
-			"MonoDomain *", "domain",
-			"MonoClass *", "klass"
-		),
-
 		new Export ("uintptr_t", "mono_array_length",
 			"MonoArray *", "array"
 		),
@@ -497,14 +492,6 @@
 
 		#endregion
 
-		#region utils/mono-path.h
-
-		new Export ("gchar *", "mono_path_resolve_symlinks",
-			"const char *", "path"
-		),
-
-		#endregion
-
 		#region utils/mono-publib.h
 
 		new Export ("void", "mono_free",
@@ -589,15 +576,21 @@
 		new Export ("void", "mono_trace_set_log_handler",
 			"MonoLogCallback", "callback",
 			"void *", "user_data"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export ("void", "mono_trace_set_print_handler",
 			"MonoPrintCallback", "callback"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export ("void", "mono_trace_set_printerr_handler",
 			"MonoPrintCallback", "callback"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		#endregion
 
@@ -669,12 +662,35 @@
 
 		#endregion
 
+		#region mini/mono-private-unstable.
+
+		new Export ("int", "monovm_initialize",
+			"int", "propertyCount",
+			"const char **", "propertyKeys",
+			"const char **", "propertyValues"
+		) {
+			Mode = DotNetMode.OnlyDotNet,
+		},
+
+		#endregion
 	};
 #><#+
 	class Arg
 	{
 		public string Type;
 		public string Name;
+	}
+
+	enum DotNetMode {
+		Both = 0,
+		OnlyDotNet = 1,
+		OnlyLegacy = 2,
+	}
+
+	enum RuntimeMode {
+		Both = 0,
+		MonoVM = 1,
+		CoreCLR = 2,
 	}
 
 	class Export
@@ -684,13 +700,59 @@
 		public string AlternativeExpression;
 		public List<Arg> Arguments;
 		public bool Optional;
+		public DotNetMode Mode;
+		public RuntimeMode XamarinRuntime;
 
 		public Export (string returnType, string entryPoint, params string [] arguments)
 			: this (false, returnType, entryPoint, arguments)
 		{
 		}
 
+		public string DotNetIf {
+			get {
+				switch (Mode) {
+				case DotNetMode.OnlyLegacy:
+					return "#if !DOTNET\n";
+				case DotNetMode.OnlyDotNet:
+					return "#if DOTNET\n";
+				}
+				return string.Empty;
+			}
+		}
 
+		public string DotNetEndIf {
+			get {
+				switch (Mode) {
+				case DotNetMode.OnlyLegacy:
+				case DotNetMode.OnlyDotNet:
+					return "#endif\n";
+				}
+				return string.Empty;
+			}
+		}
+
+		public string RuntimeIf {
+			get {
+				switch (XamarinRuntime) {
+				case RuntimeMode.CoreCLR:
+					return "#if defined (CORECLR_RUNTIME)\n";
+				case RuntimeMode.MonoVM:
+					return "#if !defined (CORECLR_RUNTIME)\n";
+				}
+				return string.Empty;
+			}
+		}
+
+		public string RuntimeEndIf {
+			get {
+				switch (XamarinRuntime) {
+				case RuntimeMode.CoreCLR:
+				case RuntimeMode.MonoVM:
+					return "#endif\n";
+				}
+				return string.Empty;
+			}
+		}
 		public Export (bool optional, string returnType, string entryPoint, params string [] arguments)
 		{
 			ReturnType = returnType;
