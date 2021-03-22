@@ -1,8 +1,8 @@
 <Project>
   <!--Package versions-->
   <PropertyGroup>
-    <MicrosoftDotnetSdkInternalPackageVersion>6.0.100-preview.3.21166.7</MicrosoftDotnetSdkInternalPackageVersion>
-    <MicrosoftNETILLinkPackageVersion>6.0.100-preview.2.21166.1</MicrosoftNETILLinkPackageVersion>
-    <MicrosoftNETILLinkTasksPackageVersion>6.0.100-preview.2.21166.1</MicrosoftNETILLinkTasksPackageVersion>
+    <MicrosoftDotnetSdkInternalPackageVersion>6.0.100-preview.3.21172.2</MicrosoftDotnetSdkInternalPackageVersion>
+    <MicrosoftNETILLinkPackageVersion>6.0.100-preview.2.21172.2</MicrosoftNETILLinkPackageVersion>
+    <MicrosoftNETILLinkTasksPackageVersion>6.0.100-preview.2.21172.2</MicrosoftNETILLinkTasksPackageVersion>
   </PropertyGroup>
 </Project>
