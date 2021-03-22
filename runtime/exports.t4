@@ -706,6 +706,7 @@
 		public bool Optional;
 		public DotNetMode Mode;
 		public RuntimeMode XamarinRuntime;
+		public bool HasCoreCLRBridgeFunction;
 
 		public Export (string returnType, string entryPoint, params string [] arguments)
 			: this (false, returnType, entryPoint, arguments)
