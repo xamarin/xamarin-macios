@@ -17,6 +17,10 @@
 #include "runtime-internal.h"
 #include "xamarin/xamarin.h"
 
+#if !defined (CORECLR_RUNTIME)
+#include "xamarin/monovm-bridge.h"
+#endif
+
 #if defined (DEBUG)
 //extern BOOL NSZombieEnabled;
 #endif
@@ -186,13 +190,6 @@ static struct Trampolines trampolines = {
 
 static struct InitializationOptions options = { 0 };
 
-struct Managed_NSObject {
-	MonoObject obj;
-	id handle;
-	void *class_handle;
-	uint8_t flags;
-};
-
 static void
 xamarin_add_internal_call (const char *name, const void *method)
 {
@@ -218,8 +215,12 @@ xamarin_get_nsobject_handle (MonoObject *obj)
 	// COOP: Reading managed data, must be in UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
 	
+#if defined (CORECLR_RUNTIME)
+	xamarin_assertion_message ("The method %s it not implemented yet for CoreCLR", __func__);
+#else
 	struct Managed_NSObject *mobj = (struct Managed_NSObject *) obj;
 	return mobj->handle;
+#endif
 }
 
 uint8_t
@@ -228,8 +229,12 @@ xamarin_get_nsobject_flags (MonoObject *obj)
 	// COOP: Reading managed data, must be in UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
 	
+#if defined (CORECLR_RUNTIME)
+	xamarin_assertion_message ("The method %s it not implemented yet for CoreCLR", __func__);
+#else
 	struct Managed_NSObject *mobj = (struct Managed_NSObject *) obj;
 	return mobj->flags;
+#endif
 }
 
 void
@@ -238,8 +243,12 @@ xamarin_set_nsobject_flags (MonoObject *obj, uint8_t flags)
 	// COOP: Writing managed data, must be in UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
 	
+#if defined (CORECLR_RUNTIME)
+	xamarin_assertion_message ("The method %s it not implemented yet for CoreCLR", __func__);
+#else
 	struct Managed_NSObject *mobj = (struct Managed_NSObject *) obj;
 	mobj->flags = flags;
+#endif
 }
 
 MonoType *
@@ -623,21 +632,18 @@ xamarin_create_exception (const char *msg)
 	return (MonoException *) mono_exception_from_name_msg (mono_get_corlib (), "System", "Exception", msg);
 }
 
-typedef struct {
-	MonoObject object;
-	MonoMethod *method;
-	MonoString *name;
-	MonoReflectionType *reftype;
-} PublicMonoReflectionMethod;
-
 MonoMethod *
 xamarin_get_reflection_method_method (MonoReflectionMethod *method)
 {
 	// COOP: Reads managed memory, needs to be in UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
 	
+#if defined (CORECLR_RUNTIME)
+	xamarin_assertion_message ("The method %s it not implemented yet for CoreCLR", __func__);
+#else
 	PublicMonoReflectionMethod *rm = (PublicMonoReflectionMethod *) method;
 	return rm->method;
+#endif
 }
 
 id
