@@ -475,7 +475,9 @@
 
 		new Export ("void", "mono_gc_register_finalizer_callbacks",
 			"MonoGCFinalizerCallbacks *", "callbacks"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 		
 		#endregion
 
@@ -576,15 +578,21 @@
 		new Export ("void", "mono_trace_set_log_handler",
 			"MonoLogCallback", "callback",
 			"void *", "user_data"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export ("void", "mono_trace_set_print_handler",
 			"MonoPrintCallback", "callback"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export ("void", "mono_trace_set_printerr_handler",
 			"MonoPrintCallback", "callback"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		#endregion
 
@@ -681,6 +689,12 @@
 		OnlyLegacy = 2,
 	}
 
+	enum RuntimeMode {
+		Both = 0,
+		MonoVM = 1,
+		CoreCLR = 2,
+	}
+
 	class Export
 	{
 		public string ReturnType;
@@ -689,6 +703,7 @@
 		public List<Arg> Arguments;
 		public bool Optional;
 		public DotNetMode Mode;
+		public RuntimeMode XamarinRuntime;
 
 		public Export (string returnType, string entryPoint, params string [] arguments)
 			: this (false, returnType, entryPoint, arguments)
@@ -718,6 +733,28 @@
 			}
 		}
 
+		public string RuntimeIf {
+			get {
+				switch (XamarinRuntime) {
+				case RuntimeMode.CoreCLR:
+					return "#if defined (CORECLR_RUNTIME)\n";
+				case RuntimeMode.MonoVM:
+					return "#if !defined (CORECLR_RUNTIME)\n";
+				}
+				return string.Empty;
+			}
+		}
+
+		public string RuntimeEndIf {
+			get {
+				switch (XamarinRuntime) {
+				case RuntimeMode.CoreCLR:
+				case RuntimeMode.MonoVM:
+					return "#endif\n";
+				}
+				return string.Empty;
+			}
+		}
 		public Export (bool optional, string returnType, string entryPoint, params string [] arguments)
 		{
 			ReturnType = returnType;

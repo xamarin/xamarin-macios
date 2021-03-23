@@ -1034,6 +1034,7 @@ xamarin_open_and_register (const char *aname, GCHandle *exception_gchandle)
 	return assembly;
 }
 
+#if !defined (CORECLR_RUNTIME)
 static gboolean 
 is_class_finalization_aware (MonoClass *cls)
 {
@@ -1058,6 +1059,7 @@ object_queued_for_finalization (MonoObject *object)
 	//PRINT ("In finalization response for %s.%s %p (handle: %p class_handle: %p flags: %i)\n", 
 	obj->flags |= NSObjectFlagsInFinalizerQueue;
 }
+#endif // !defined (CORECLR_RUNTIME)
 
 /*
  * Registration map
@@ -1249,6 +1251,7 @@ pump_gc (void *context)
 }
 #endif /* DEBUG */
 
+#if !defined (CORECLR_RUNTIME)
 static void
 log_callback (const char *log_domain, const char *log_level, const char *message, mono_bool fatal, void *user_data)
 {
@@ -1265,6 +1268,7 @@ print_callback (const char *string, mono_bool is_stdout)
 	// COOP: Not accessing managed memory: any mode
 	PRINT ("%s", string);
 }
+#endif // !defined (CORECLR_RUNTIME)
 
 static int
 xamarin_compare_ints (const void *a, const void *b)
@@ -1323,9 +1327,11 @@ xamarin_initialize_embedded ()
 void
 xamarin_install_log_callbacks ()
 {
+#if !defined (CORECLR_RUNTIME)
 	mono_trace_set_log_handler (log_callback, NULL);
 	mono_trace_set_print_handler (print_callback);
 	mono_trace_set_printerr_handler (print_callback);
+#endif
 }
 
 void
@@ -1354,11 +1360,13 @@ xamarin_initialize ()
 
 	xamarin_install_log_callbacks ();
 
+#if !defined (CORECLR_RUNTIME)
 	MonoGCFinalizerCallbacks gc_callbacks;
 	gc_callbacks.version = MONO_GC_FINALIZER_EXTENSION_VERSION;
 	gc_callbacks.is_class_finalization_aware = is_class_finalization_aware;
 	gc_callbacks.object_queued_for_finalization = object_queued_for_finalization;
 	mono_gc_register_finalizer_callbacks (&gc_callbacks);
+#endif
 
 	if (xamarin_is_gc_coop) {
 		// There should be no such thing as an unhandled ObjC exception
