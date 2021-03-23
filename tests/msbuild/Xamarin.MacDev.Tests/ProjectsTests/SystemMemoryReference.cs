@@ -21,6 +21,7 @@ namespace Xamarin.iOS.Tasks {
 		{
 			this.BuildProject ("SystemMemoryReference", clean: false);
 
+			Assert.IsTrue (File.Exists (Path.Combine (AppBundlePath, "SystemMemoryReference")), "App bundle not created properly");
 			Assert.IsFalse (File.Exists (Path.Combine (AppBundlePath, "System.Memory.dll")), "System.Memory.dll was incorrectly copied from NuGet");
 		}
 	}
