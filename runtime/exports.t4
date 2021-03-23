@@ -475,7 +475,9 @@
 
 		new Export ("void", "mono_gc_register_finalizer_callbacks",
 			"MonoGCFinalizerCallbacks *", "callbacks"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 		
 		#endregion
 
