@@ -2757,15 +2757,15 @@ xamarin_get_managed_method_for_token (guint32 token_ref, GCHandle *exception_gch
 }
 
 GCHandle
-xamarin_gchandle_new (MonoObject *obj, bool track_resurrection)
+xamarin_gchandle_new (MonoObject *obj, bool pinned)
 {
-	return GINT_TO_POINTER (mono_gchandle_new (obj, track_resurrection));
+	return GINT_TO_POINTER (mono_gchandle_new (obj, pinned));
 }
 
 GCHandle
-xamarin_gchandle_new_weakref (MonoObject *obj, bool pinned)
+xamarin_gchandle_new_weakref (MonoObject *obj, bool track_resurrection)
 {
-	return GINT_TO_POINTER (mono_gchandle_new_weakref (obj, pinned));
+	return GINT_TO_POINTER (mono_gchandle_new_weakref (obj, track_resurrection));
 }
 
 MonoObject *
