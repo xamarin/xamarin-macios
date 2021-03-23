@@ -152,6 +152,18 @@ xamarin_mono_object_release (MonoObject **mobj_ref)
 	*mobj_ref = NULL;
 }
 
+void
+xamarin_mono_object_release (MonoReflectionMethod **mobj)
+{
+	xamarin_mono_object_release ((MonoObject **) mobj);
+}
+
+void
+xamarin_mono_object_release (MonoReflectionType **mobj)
+{
+	xamarin_mono_object_release ((MonoObject **) mobj);
+}
+
 /* Implementation of the Mono Embedding API */
 
 // returns a retained MonoAssembly *
