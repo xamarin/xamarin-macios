@@ -39,7 +39,8 @@ steps:
     $filePatterns = @{
       "iOS" = "ios-*.md";
       "macOS" = "macos-*.md";
-      "macCat" = "maccat-*.md";
+      "macCat" = "maccat-api*.md";
+      "macCatiOS" = "maccat-to-ios*.md";
       "tvOS" = "tvos-*.md";
       "watchOS" = "watchos-*.md";
     }

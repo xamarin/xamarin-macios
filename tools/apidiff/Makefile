@@ -97,6 +97,11 @@ $(APIDIFF_DIR)/diff/ios-to-tvos.html: $(APIDIFF_DIR)/temp/xi/Xamarin.iOS/Xamarin
 	$(Q) sed -e 's_<assembly name="Xamarin.TVOS" version="0.0.0.0">_<assembly name="Xamarin.iOS" version="0.0.0.0">_' $(APIDIFF_DIR)/temp/xi/Xamarin.TVOS/Xamarin.TVOS.xml > $(APIDIFF_DIR)/temp/Xamarin.TVOS-as-iOS.xml
 	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_HTML) $< $(APIDIFF_DIR)/temp/Xamarin.TVOS-as-iOS.xml $@
 
+# this is a hack to show the difference between Catalyst (iOS) and iOS
+$(APIDIFF_DIR)/maccat-to-ios.md: $(APIDIFF_DIR)/temp/xi/Xamarin.iOS/Xamarin.iOS.xml $(APIDIFF_DIR)/temp/xi/Xamarin.MacCatalyst/Xamarin.iOS.xml
+	$(Q) mkdir -p $(dir $@)
+	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_HTML) --md $^ $@
+
 # create diff files for all the assemblies per platform
 
 $(APIDIFF_DIR)/mac-api-diff.html:     $(foreach file,$(MAC_ASSEMBLIES),$(APIDIFF_DIR)/diff/xm/$(file).html)
@@ -139,6 +144,7 @@ API_DIFF_DEPENDENCIES += $(APIDIFF_DIR)/diff/ios-to-tvos.html
 endif
 ifdef INCLUDE_MACCATALYST
 API_DIFF_DEPENDENCIES += $(APIDIFF_DIR)/maccat-api-diff.html
+API_DIFF_DEPENDENCIES += $(APIDIFF_DIR)/maccat-to-ios.md
 endif
 endif
 
@@ -325,6 +331,7 @@ ifdef INCLUDE_TVOS
 endif
 ifdef INCLUDE_MACCATALYST
 	@echo "@MonkeyWrench: AddFile: $(CURDIR)/maccat-api-diff.html"
+	@echo "@MonkeyWrench: AddFile: $(CURDIR)/maccat-to-ios.md"
 endif
 endif
 	$(Q) $(MAKE) $(UNZIP_STAMP)
