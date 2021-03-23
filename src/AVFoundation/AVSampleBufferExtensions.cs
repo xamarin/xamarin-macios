@@ -31,10 +31,10 @@ namespace AVFoundation {
         public static bool AttachContentKey (this CMSampleBuffer sampleBuffer, AVContentKey contentKey, out NSError error)
         {
             if (sampleBuffer == null)
-                throw new ArgumentNullException(nameof(sampleBuffer));
+                throw new ArgumentNullException (nameof (sampleBuffer));
 
             if (contentKey == null)
-                throw new ArgumentNullException(nameof(contentKey));
+                throw new ArgumentNullException (nameof (contentKey));
             
             IntPtr outerr;
             var retVal = AVSampleBufferAttachContentKey (sampleBuffer.Handle, contentKey.Handle, out outerr);
@@ -43,4 +43,4 @@ namespace AVFoundation {
         }
     }
 }
-# endif
+#endif
