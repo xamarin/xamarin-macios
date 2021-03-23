@@ -167,4 +167,15 @@ mono_domain_get (void)
 	return NULL;
 }
 
+// returns a retained MonoReflectionAssembly *
+MonoReflectionAssembly *
+mono_assembly_get_object (MonoDomain * domain, MonoAssembly * assembly)
+{
+	// MonoAssembly and MonoReflectionAssembly are identical in CoreCLR (both are actually MonoObjects).
+	// However, we're returning a retained object, so we need to retain here.
+	xamarin_mono_object_retain (assembly);
+	LOG_CORECLR (stderr, "mono_assembly_get_object (%p, %p): rv: %p\n", domain, assembly, assembly);
+	return assembly;
+}
+
 #endif // CORECLR_RUNTIME
