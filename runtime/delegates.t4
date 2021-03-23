@@ -295,6 +295,21 @@
 			OnlyCoreCLR = true,
 		},
 
+		new XDelegate ("GCHandle", "IntPtr", "xamarin_bridge_create_gchandle",
+			"GCHandle", "IntPtr", "gchandle",
+			"enum XamarinGCHandleType", "GCHandleType", "type"
+		) {
+			WrappedManagedFunction = "CreateGCHandle",
+			OnlyCoreCLR = true,
+		},
+
+		new XDelegate ("void", "void", "xamarin_bridge_free_gchandle",
+			"GCHandle", "IntPtr", "gchandle"
+		) {
+			WrappedManagedFunction = "FreeGCHandle",
+			OnlyCoreCLR = true,
+		},
+
 	};
 	delegates.CalculateLengths ();
 #><#+
