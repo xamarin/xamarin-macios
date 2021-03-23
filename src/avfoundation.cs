@@ -9248,6 +9248,7 @@ namespace AVFoundation {
 	[NoTV]
 	[iOS (8,0)]
 	[BaseType (typeof (AVCaptureBracketedStillImageSettings))]
+	[DisableDefaultCtor]
 	interface AVCaptureManualExposureBracketedStillImageSettings {
 		[Export ("exposureDuration")]
 		CMTime ExposureDuration { get; }
@@ -9263,6 +9264,7 @@ namespace AVFoundation {
 	[NoTV]
 	[iOS (8,0)]
 	[BaseType (typeof (AVCaptureBracketedStillImageSettings))]
+	[DisableDefaultCtor]
 	interface AVCaptureAutoExposureBracketedStillImageSettings {
 		[Export ("exposureTargetBias")]
 		float ExposureTargetBias { get; } /* float, not CGFloat */

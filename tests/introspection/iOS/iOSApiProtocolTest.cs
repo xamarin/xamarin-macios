@@ -74,6 +74,13 @@ namespace Introspection {
 				if (!TestRuntime.CheckXcodeVersion (8, 0))
 					return true;
 				break;
+			case "CAMetalLayer":
+			case "MTLFunctionConstantValues":
+			case "MTLHeapDescriptor":
+				// Symbol not available in simulator - but works on BigSur (others might too)
+				if (Runtime.Arch != Arch.DEVICE)
+					return true;
+				break;
 			case "CMMovementDisorderManager":
 				// From Xcode 10 beta 2:
 				// This requires a special entitlement:
