@@ -256,7 +256,6 @@ AVFOUNDATION_SOURCES = \
 	AVFoundation/AVCaptureVideoPreviewLayer.cs \
 	AVFoundation/AVCompat.cs \
 	AVFoundation/AVContentKeyResponse.cs \
-	AVFoundation/AVContentKeySession.cs \
 	AVFoundation/AVDepthData.cs \
 	AVFoundation/AVFragmentedAsset.cs \
 	AVFoundation/AVFragmentedAssetTrack.cs \
@@ -270,6 +269,7 @@ AVFOUNDATION_SOURCES = \
 	AVFoundation/AVPlayerItemVideoOutput.cs \
 	AVFoundation/AVPlayerLayer.cs \
 	AVFoundation/AVPlayerViewController.cs \
+	AVFoundation/AVSampleBufferExtensions.cs \
 	AVFoundation/AVTextStyleRule.cs \
 	AVFoundation/Events.cs \
 	AVFoundation/AVPlayerLooper.cs \

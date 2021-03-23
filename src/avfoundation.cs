@@ -3369,7 +3369,6 @@ namespace AVFoundation {
 		void StopRequestingMediaData ();
 
 		[TV (14,5), Watch (7,4), Mac (11,3), iOS (14,5)]
-		[Abstract]
 		[Export ("hasSufficientMediaDataForReliablePlaybackStart")]
 		bool HasSufficientMediaDataForReliablePlaybackStart { get; }
 	}

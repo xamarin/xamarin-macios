@@ -32,5 +32,5 @@
 !missing-selector! AVPlayerItem::setAutomaticallyHandlesInterstitialEvents: not bound
 !missing-selector! AVPlayerItem::templatePlayerItem not bound
 
-# not used on watchOS
-!missing-enum! AVAudioSessionInterruptionReason not bound
+# adding abstract member to an existing type would be a breaking change
+!incorrect-protocol-member! AVQueuedSampleBufferRendering::hasSufficientMediaDataForReliablePlaybackStart is REQUIRED and should be abstract
