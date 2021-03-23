@@ -158,9 +158,9 @@ namespace Xamarin.Tests {
 				} else if (args is ProjectEvaluationStartedEventArgs projectEvaluationStarted) {
 					if (verbose)
 						Console.WriteLine ($"ProjectEvaluationStarted: {projectEvaluationStarted.ProjectFile}");
-				} else if (args is ProjectEvaluationFinishedEventArgs projectEvaluationFinished) {
+				} else if (args.GetType ().Name == "ProjectEvaluationFinishedEventArgs") {
 					if (verbose)
-						Console.WriteLine ($"ProjectEvaluationFinished: {projectEvaluationFinished.ProjectFile}");
+						Console.WriteLine ($"ProjectEvaluationFinished: {args}");
 				} else if (args is ProjectStartedEventArgs projectStarted) {
 					if (verbose)
 						Console.WriteLine ($"ProjectStarted: {projectStarted.ProjectFile}");
