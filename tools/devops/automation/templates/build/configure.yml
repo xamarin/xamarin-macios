@@ -98,6 +98,7 @@ steps:
     outDir: '$(Build.ArtifactStagingDirectory)'
     isCreatePrSelected: true
     prSourceBranchPrefix: 'locfiles'
+    patVariable: "$(OneLocBuild--PAT)"
 
 - task: PublishBuildArtifacts@1
   continueOnError: true
