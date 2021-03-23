@@ -320,11 +320,24 @@ namespace GenerateTypeForwarders {
 			} else {
 				sb.Append ('\t', indent);
 				sb.Append ("public ");
-				if (fd.IsStatic)
+				if (fd.IsLiteral)
+					sb.Append ("const ");
+				else if (fd.IsStatic)
 					sb.Append ("static ");
+				if (fd.IsInitOnly)
+					sb.Append ("readonly ");
 				EmitTypeName (sb, fd.FieldType);
 				sb.Append (' ');
 				sb.Append (fd.Name);
+				if (fd.HasConstant) {
+					sb.Append (" = ");
+					bool is_string = fd.Constant is string;
+					if (is_string)
+						sb.Append ('"');
+					sb.Append (fd.Constant);
+					if (is_string)
+						sb.Append ('"');
+				}
 				sb.Append (';');
 			}
 			sb.AppendLine ();
