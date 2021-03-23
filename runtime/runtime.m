@@ -2503,7 +2503,9 @@ xamarin_pinvoke_override (const char *libraryName, const char *entrypointName)
 	void* symbol = NULL;
 
 	if (!strcmp (libraryName, "__Internal")) {
+		symbol = dlsym (RTLD_DEFAULT, entrypointName);
 #if defined (__i386__) || defined (__x86_64__)
+	} else if (!strcmp (libraryName, "/usr/lib/libobjc.dylib")) {
 		if (xamarin_marshal_objectivec_exception_mode != MarshalObjectiveCExceptionModeDisable) {
 			if (!strcmp (entrypointName, "objc_msgSend")) {
 				symbol = (void *) &xamarin_dyn_objc_msgSend;
@@ -2516,9 +2518,6 @@ xamarin_pinvoke_override (const char *libraryName, const char *entrypointName)
 			}
 		}
 #endif // defined (__i386__) || defined (__x86_64__)
-
-		if (symbol == NULL)
-			symbol = dlsym (RTLD_DEFAULT, entrypointName);
 	}
 
 	return symbol;
