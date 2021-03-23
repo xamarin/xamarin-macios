@@ -96,10 +96,6 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			Assert.Ignore ("This test only works in debug mode in the simulator.");
 #endif
 
-#if NET && (__MACOS__ || __MACCATALYST__)
-			Assert.Ignore ("Exception marshalling hasn't been completely implemented on macOS/Mac Catalyst yet, due to removal of the dllmap support");
-#endif
-
 			InstallHandlers ();
 
 			try {
@@ -148,10 +144,6 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			Assert.Ignore ("This test only works in debug mode in the simulator.");
 #endif
 			var hasDebugger = global::System.Diagnostics.Debugger.IsAttached;
-
-#if NET && (__MACOS__ || __MACCATALYST__)
-			Assert.Ignore ("Exception marshalling hasn't been completely implemented on macOS/Mac Catalyst yet, due to removal of the dllmap support");
-#endif
 
 			InstallHandlers ();
 			try {
