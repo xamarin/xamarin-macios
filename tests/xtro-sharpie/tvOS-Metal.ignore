@@ -95,3 +95,8 @@
 !incorrect-protocol-member! MTLDevice::sampleTimestamps:gpuTimestamp: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLRenderCommandEncoder::sampleCountersInBuffer:atSampleIndex:withBarrier: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLIndirectComputeCommand::setImageblockWidth:height: is REQUIRED and should be abstract
+
+## added (catch up to iOS) in tvOS 14.5 but can't be made abstract without breaking changes
+!incorrect-protocol-member! MTLBinaryArchive::addTileRenderPipelineFunctionsWithDescriptor:error: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLIndirectRenderCommand::drawIndexedPatches:patchStart:patchCount:patchIndexBuffer:patchIndexBufferOffset:controlPointIndexBuffer:controlPointIndexBufferOffset:instanceCount:baseInstance:tessellationFactorBuffer:tessellationFactorBufferOffset:tessellationFactorBufferInstanceStride: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLIndirectRenderCommand::drawPatches:patchStart:patchCount:patchIndexBuffer:patchIndexBufferOffset:instanceCount:baseInstance:tessellationFactorBuffer:tessellationFactorBufferOffset:tessellationFactorBufferInstanceStride: is REQUIRED and should be abstract
