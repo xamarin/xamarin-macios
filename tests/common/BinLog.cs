@@ -49,9 +49,13 @@ namespace Xamarin.Tests
 				if (args is ProjectStartedEventArgs psea) {
 					if (psea.Properties != null) {
 						yield return "Initial Properties";
-						var dict = (Dictionary<string, string>) psea.Properties;
-						foreach (var prop in dict.OrderBy (v => v.Key))
-							yield return $"{prop.Key} = {prop.Value}";
+						var dict =  psea.Properties as IDictionary<string, string>;
+						if (dict == null) {
+							yield return $"Unknown property dictionary type: {psea.Properties.GetType ().FullName}";
+						} else { 
+							foreach (var prop in dict.OrderBy (v => v.Key))
+								yield return $"{prop.Key} = {prop.Value}";
+						}
 					}
 				}
 
