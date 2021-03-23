@@ -18,13 +18,37 @@ using Mono.Cecil;
  */
 
 namespace GenerateTypeForwarders {
-	class MainClass {
+	static class MainClass {
 		public static int Main (string [] args)
 		{
 			var forwardFrom = args [0];
 			var forwardTo = args [1];
 			var output = args [2];
 			return Fix (forwardFrom, forwardTo, output);
+		}
+
+		static bool IsVisible (this TypeDefinition type)
+		{
+			if (!type.IsNested)
+				return true;
+			return type.IsNestedPublic || type.IsNestedFamily;
+		}
+
+		static bool IsVisible (this MethodDefinition method)
+		{
+			if (method is null)
+				return false;
+			return method.IsPublic || method.IsFamily;
+		}
+
+		static bool IsVisible (this PropertyDefinition property)
+		{
+			return property.GetMethod.IsVisible () || property.SetMethod.IsVisible ();
+		}
+
+		static bool IsVisible (this FieldDefinition field)
+		{
+			return field.IsPublic || field.IsFamily;
 		}
 
 		static void EmitTypeName (StringBuilder sb, TypeReference type)
@@ -357,10 +381,14 @@ namespace GenerateTypeForwarders {
 
 		static void EmitProperty (StringBuilder sb, PropertyDefinition pd, int indent)
 		{
-			var strIndent = new string ('\t', indent);
-			sb.Append (strIndent);
-			sb.Append ("public ");
-			var m = pd.GetMethod ?? pd.SetMethod;
+			sb.Append ('\t', indent);
+			var gm = pd.GetMethod;
+			var sm = pd.SetMethod;
+			var m = gm ?? sm;
+			if (m.IsPublic)
+				sb.Append ("public ");
+			else
+				sb.Append ("protected ");
 			if (m.IsStatic) {
 				sb.Append ("static ");
 				if (HasPropertyInTypeHierarchy (pd.DeclaringType, m, out var _))
@@ -373,20 +401,32 @@ namespace GenerateTypeForwarders {
 						sb.Append ("new ");
 					}
 				} else if (!pd.DeclaringType.IsSealed) {
-					sb.Append ("virtual ");
+					if (m.IsAbstract)
+						sb.Append ("abstract ");
+					else
+						sb.Append ("virtual ");
 				}
 			}
 			EmitTypeName (sb, pd.PropertyType);
 			sb.Append (' ');
 			sb.Append (pd.Name);
 			sb.AppendLine (" {");
-			if (pd.GetMethod != null) {
-				sb.AppendLine ($"{strIndent}\tget {{ throw new global::System.PlatformNotSupportedException (global::Constants.UnavailableOnMacCatalyst); }}");
+			if (gm.IsVisible ()) {
+				sb.Append ('\t', indent + 1);
+				if (gm.IsAbstract)
+					sb.AppendLine ("get;");
+				else
+					sb.AppendLine ("get { throw new global::System.PlatformNotSupportedException (global::Constants.UnavailableOnMacCatalyst); }");
 			}
-			if (pd.SetMethod != null) {
-				sb.AppendLine ($"{strIndent}\tset {{ throw new global::System.PlatformNotSupportedException (global::Constants.UnavailableOnMacCatalyst); }}");
+			if (pd.SetMethod.IsVisible ()) {
+				sb.Append ('\t', indent + 1);
+				if (sm.IsAbstract)
+					sb.AppendLine ("set;");
+				else
+					sb.AppendLine ("set { throw new global::System.PlatformNotSupportedException (global::Constants.UnavailableOnMacCatalyst); }");
 			}
-			sb.AppendLine ($"{strIndent}}}");
+			sb.Append ('\t', indent);
+			sb.AppendLine ("}");
 		}
 
 		static void EmitEvent (StringBuilder sb, EventDefinition ed, int indent)
@@ -425,7 +465,12 @@ namespace GenerateTypeForwarders {
 				EmitParameters (sb, invoke.Parameters);
 				sb.AppendLine (");");
 			} else {
-				sb.Append ($"{strIndent}public ");
+				sb.Append (strIndent);
+				// other are filtered not to generate stubs
+				if (type.IsNestedFamily)
+					sb.Append ("protected ");
+				else
+					sb.Append ("public ");
 				if (type.IsInterface) {
 					sb.Append ("interface ");
 				} else if (type.IsEnum) {
@@ -484,7 +529,7 @@ namespace GenerateTypeForwarders {
 				sb.Append (" {");
 				sb.AppendLine ();
 				foreach (var nestedType in type.NestedTypes) {
-					if (nestedType.IsNestedPrivate)
+					if (!nestedType.IsVisible ())
 						continue;
 					EmitPNSE (sb, nestedType, indent + 1);
 				}
@@ -498,18 +543,20 @@ namespace GenerateTypeForwarders {
 					bt = bt.BaseType?.Resolve ();
 				}
 				foreach (var method in type.Methods) {
+					// need .ctor(IntPtr) for chaining
+					if (!method.IsVisible () && !method.IsConstructor)
+						continue;
 					EmitPNSE (sb, method, indent + 1, nsobject);
 				}
 
 				foreach (var field in type.Fields) {
-					if (field.IsPrivate)
+					if (!field.IsVisible ())
 						continue;
-
 					EmitField (sb, field, indent + 1);
 				}
 
 				foreach (var prop in type.Properties) {
-					if (prop.GetMethod?.IsPrivate != false && prop.SetMethod?.IsPrivate != false)
+					if (!prop.IsVisible ())
 						continue;
 					EmitProperty (sb, prop, indent + 1);
 				}
