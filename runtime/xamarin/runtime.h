@@ -200,6 +200,7 @@ void			xamarin_bridge_initialize (); // this is called a bit later, after parsin
 unsigned char *	xamarin_load_aot_data (MonoAssembly *assembly, int size, gpointer user_data, void **out_handle);
 void			xamarin_free_aot_data (MonoAssembly *assembly, int size, gpointer user_data, void *handle);
 MonoAssembly*	xamarin_assembly_preload_hook (MonoAssemblyName *aname, char **assemblies_path, void* user_data);
+void			xamarin_handle_bridge_exception (GCHandle gchandle, const char *method);
 void			xamarin_vm_initialize ();
 bool			xamarin_bridge_vm_initialize (int propertyCount, const char **propertyKeys, const char **propertyValues);
 void*			xamarin_pinvoke_override (const char *libraryName, const char *entrypointName);
@@ -264,8 +265,8 @@ void			xamarin_install_log_callbacks ();
  * until Mono's pointer-sized API is available for us.
  * Ref: https://github.com/dotnet/runtime/commit/3886a63841434af716292172737a42757a15c6a6
  */
-GCHandle		xamarin_gchandle_new (MonoObject *obj, bool track_resurrection);
-GCHandle		xamarin_gchandle_new_weakref (MonoObject *obj, bool pinned);
+GCHandle		xamarin_gchandle_new (MonoObject *obj, bool pinned);
+GCHandle		xamarin_gchandle_new_weakref (MonoObject *obj, bool track_resurrection);
 MonoObject *	xamarin_gchandle_get_target (GCHandle handle);
 void			xamarin_gchandle_free (GCHandle handle);
 MonoObject *	xamarin_gchandle_unwrap (GCHandle handle); // Will get the target and free the GCHandle

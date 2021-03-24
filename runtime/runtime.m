@@ -17,6 +17,10 @@
 #include "runtime-internal.h"
 #include "xamarin/xamarin.h"
 
+#if !defined (CORECLR_RUNTIME)
+#include "xamarin/monovm-bridge.h"
+#endif
+
 #if defined (DEBUG)
 //extern BOOL NSZombieEnabled;
 #endif
@@ -186,13 +190,6 @@ static struct Trampolines trampolines = {
 
 static struct InitializationOptions options = { 0 };
 
-struct Managed_NSObject {
-	MonoObject obj;
-	id handle;
-	void *class_handle;
-	uint8_t flags;
-};
-
 static void
 xamarin_add_internal_call (const char *name, const void *method)
 {
@@ -218,8 +215,12 @@ xamarin_get_nsobject_handle (MonoObject *obj)
 	// COOP: Reading managed data, must be in UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
 	
+#if defined (CORECLR_RUNTIME)
+	xamarin_assertion_message ("The method %s it not implemented yet for CoreCLR", __func__);
+#else
 	struct Managed_NSObject *mobj = (struct Managed_NSObject *) obj;
 	return mobj->handle;
+#endif
 }
 
 uint8_t
@@ -228,8 +229,12 @@ xamarin_get_nsobject_flags (MonoObject *obj)
 	// COOP: Reading managed data, must be in UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
 	
+#if defined (CORECLR_RUNTIME)
+	xamarin_assertion_message ("The method %s it not implemented yet for CoreCLR", __func__);
+#else
 	struct Managed_NSObject *mobj = (struct Managed_NSObject *) obj;
 	return mobj->flags;
+#endif
 }
 
 void
@@ -238,8 +243,12 @@ xamarin_set_nsobject_flags (MonoObject *obj, uint8_t flags)
 	// COOP: Writing managed data, must be in UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
 	
+#if defined (CORECLR_RUNTIME)
+	xamarin_assertion_message ("The method %s it not implemented yet for CoreCLR", __func__);
+#else
 	struct Managed_NSObject *mobj = (struct Managed_NSObject *) obj;
 	mobj->flags = flags;
+#endif
 }
 
 MonoType *
@@ -623,21 +632,18 @@ xamarin_create_exception (const char *msg)
 	return (MonoException *) mono_exception_from_name_msg (mono_get_corlib (), "System", "Exception", msg);
 }
 
-typedef struct {
-	MonoObject object;
-	MonoMethod *method;
-	MonoString *name;
-	MonoReflectionType *reftype;
-} PublicMonoReflectionMethod;
-
 MonoMethod *
 xamarin_get_reflection_method_method (MonoReflectionMethod *method)
 {
 	// COOP: Reads managed memory, needs to be in UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
 	
+#if defined (CORECLR_RUNTIME)
+	xamarin_assertion_message ("The method %s is not implemented yet for CoreCLR", __func__);
+#else
 	PublicMonoReflectionMethod *rm = (PublicMonoReflectionMethod *) method;
 	return rm->method;
+#endif
 }
 
 id
@@ -1354,7 +1360,9 @@ xamarin_initialize ()
 	xamarin_initialize_dynamic_runtime (NULL);
 #endif
 
+#if !DOTNET
 	xamarin_insert_dllmap ();
+#endif
 
 	MONO_ENTER_GC_UNSAFE;
 
@@ -2449,6 +2457,8 @@ xamarin_create_product_exception_with_inner_exception (int code, GCHandle inner_
 		return exception_gchandle;
 	return handle;
 }
+
+#if !DOTNET
 void
 xamarin_insert_dllmap ()
 {
@@ -2467,6 +2477,7 @@ xamarin_insert_dllmap ()
 	LOG (PRODUCT ": Added dllmap for objc_msgSend");
 #endif // defined (__i386__) || defined (__x86_64__)
 }
+#endif // !DOTNET
 
 #if DOTNET
 void
@@ -2499,6 +2510,20 @@ xamarin_pinvoke_override (const char *libraryName, const char *entrypointName)
 
 	if (!strcmp (libraryName, "__Internal")) {
 		symbol = dlsym (RTLD_DEFAULT, entrypointName);
+#if defined (__i386__) || defined (__x86_64__)
+	} else if (!strcmp (libraryName, "/usr/lib/libobjc.dylib")) {
+		if (xamarin_marshal_objectivec_exception_mode != MarshalObjectiveCExceptionModeDisable) {
+			if (!strcmp (entrypointName, "objc_msgSend")) {
+				symbol = (void *) &xamarin_dyn_objc_msgSend;
+			} else if (!strcmp (entrypointName, "objc_msgSendSuper")) {
+				symbol = (void *) &xamarin_dyn_objc_msgSendSuper;
+			} else if (!strcmp (entrypointName, "objc_msgSend_stret")) {
+				symbol = (void *) &xamarin_dyn_objc_msgSend_stret;
+			} else if (!strcmp (entrypointName, "objc_msgSendSuper_stret")) {
+				symbol = (void *) &xamarin_dyn_objc_msgSendSuper_stret;
+			}
+		}
+#endif // defined (__i386__) || defined (__x86_64__)
 	}
 
 	return symbol;
@@ -2738,15 +2763,15 @@ xamarin_get_managed_method_for_token (guint32 token_ref, GCHandle *exception_gch
 }
 
 GCHandle
-xamarin_gchandle_new (MonoObject *obj, bool track_resurrection)
+xamarin_gchandle_new (MonoObject *obj, bool pinned)
 {
-	return GINT_TO_POINTER (mono_gchandle_new (obj, track_resurrection));
+	return GINT_TO_POINTER (mono_gchandle_new (obj, pinned));
 }
 
 GCHandle
-xamarin_gchandle_new_weakref (MonoObject *obj, bool pinned)
+xamarin_gchandle_new_weakref (MonoObject *obj, bool track_resurrection)
 {
-	return GINT_TO_POINTER (mono_gchandle_new_weakref (obj, pinned));
+	return GINT_TO_POINTER (mono_gchandle_new_weakref (obj, track_resurrection));
 }
 
 MonoObject *

@@ -49,9 +49,47 @@ namespace Xamarin.Tests
 				if (args is ProjectStartedEventArgs psea) {
 					if (psea.Properties != null) {
 						yield return "Initial Properties";
-						foreach (var prop in psea.Properties.Cast<System.Collections.DictionaryEntry> ().OrderBy (v => v.Key))
-							yield return $"{prop.Key} = {prop.Value}";
+						var dict =  psea.Properties as IDictionary<string, string>;
+						if (dict == null) {
+							yield return $"Unknown property dictionary type: {psea.Properties.GetType ().FullName}";
+						} else { 
+							foreach (var prop in dict.OrderBy (v => v.Key))
+								yield return $"{prop.Key} = {prop.Value}";
+						}
 					}
+				}
+
+				if (args is TaskParameterEventArgs tpea) {
+					switch (tpea.Kind) {
+					case TaskParameterMessageKind.AddItem:
+						yield return "Added Item(s)";
+						break;
+					case TaskParameterMessageKind.RemoveItem:
+						yield return "Removed Item(s)";
+						break;
+					case TaskParameterMessageKind.TaskInput:
+						yield return "Task Parameter";
+						break;
+					case TaskParameterMessageKind.TaskOutput:
+						yield return "Output Item(s)";
+						break;
+					default:
+						yield return $"Unknown Kind ({tpea.Kind})";
+						break;
+					}
+					foreach (var item in tpea.Items) {
+						var taskItem = item as ITaskItem;
+						yield return $"\t{tpea.ItemType}=";
+						if (taskItem != null) {
+							yield return $"\t\t{taskItem.ItemSpec}";
+							foreach (var metadataName in taskItem.MetadataNames) {
+								yield return $"\t\t\t{metadataName}={taskItem.GetMetadata (metadataName?.ToString ())}";
+							}
+						} else {
+							yield return $"\t{item}";
+						}
+					}
+					continue;
 				}
 
 				foreach (var line in args.Message.Split (eols, System.StringSplitOptions.RemoveEmptyEntries))
