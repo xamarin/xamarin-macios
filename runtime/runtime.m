@@ -1354,7 +1354,9 @@ xamarin_initialize ()
 	xamarin_initialize_dynamic_runtime (NULL);
 #endif
 
+#if !DOTNET
 	xamarin_insert_dllmap ();
+#endif
 
 	MONO_ENTER_GC_UNSAFE;
 
@@ -2449,6 +2451,8 @@ xamarin_create_product_exception_with_inner_exception (int code, GCHandle inner_
 		return exception_gchandle;
 	return handle;
 }
+
+#if !DOTNET
 void
 xamarin_insert_dllmap ()
 {
@@ -2467,6 +2471,7 @@ xamarin_insert_dllmap ()
 	LOG (PRODUCT ": Added dllmap for objc_msgSend");
 #endif // defined (__i386__) || defined (__x86_64__)
 }
+#endif // !DOTNET
 
 #if DOTNET
 void
@@ -2499,6 +2504,20 @@ xamarin_pinvoke_override (const char *libraryName, const char *entrypointName)
 
 	if (!strcmp (libraryName, "__Internal")) {
 		symbol = dlsym (RTLD_DEFAULT, entrypointName);
+#if defined (__i386__) || defined (__x86_64__)
+	} else if (!strcmp (libraryName, "/usr/lib/libobjc.dylib")) {
+		if (xamarin_marshal_objectivec_exception_mode != MarshalObjectiveCExceptionModeDisable) {
+			if (!strcmp (entrypointName, "objc_msgSend")) {
+				symbol = (void *) &xamarin_dyn_objc_msgSend;
+			} else if (!strcmp (entrypointName, "objc_msgSendSuper")) {
+				symbol = (void *) &xamarin_dyn_objc_msgSendSuper;
+			} else if (!strcmp (entrypointName, "objc_msgSend_stret")) {
+				symbol = (void *) &xamarin_dyn_objc_msgSend_stret;
+			} else if (!strcmp (entrypointName, "objc_msgSendSuper_stret")) {
+				symbol = (void *) &xamarin_dyn_objc_msgSendSuper_stret;
+			}
+		}
+#endif // defined (__i386__) || defined (__x86_64__)
 	}
 
 	return symbol;
