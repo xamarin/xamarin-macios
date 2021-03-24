@@ -376,6 +376,9 @@ namespace Introspection {
 		}
 
 		[Test]
+#if IOS || TVOS
+		[Ignore ("work in progress")]
+#endif
 		public void LegacyAttributes ()
 		{
 			//LogProgress = true;
