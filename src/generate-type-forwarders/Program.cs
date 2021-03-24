@@ -126,6 +126,12 @@ namespace GenerateTypeForwarders {
 				EmitTypeName (sb, paramType);
 				sb.Append (" @");
 				sb.Append (param.Name);
+
+				if (param.IsOptional) {
+					sb.Append (" = ");
+					// handles `False` for boolean, works fine with numerics
+					sb.Append (param.Constant.ToString ().ToLowerInvariant ());
+				}
 			}
 		}
 
