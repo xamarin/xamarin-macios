@@ -13849,6 +13849,7 @@ namespace AVFoundation {
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (13,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof(AVCaptureSession))]
 	interface AVCaptureMultiCamSession {
 		[Static]
