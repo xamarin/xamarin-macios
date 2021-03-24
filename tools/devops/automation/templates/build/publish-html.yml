@@ -37,12 +37,12 @@ steps:
 
     $apiDiffRoot = "$Env:STABLE_APIDDIFF_PATH"
     $filePatterns = @{
-      "iOS" = "ios-*.md";
-      "macOS" = "macos-*.md";
-      "macCat" = "maccat-api*.md";
-      "macCatiOS" = "maccat-to-ios*.md";
-      "tvOS" = "tvos-*.md";
-      "watchOS" = "watchos-*.md";
+      "iOS" = "^ios-[0-9\-]*\.md$";
+      "macOS" = "^macos-[0-9\-]*\.md$";
+      "macCat" = "^maccat-[0-9\-]*\.md$";
+      "macCatiOS" = "^maccat-to-ios\.md$";
+      "tvOS" = "^tvos-[0-9\-]*\.md$";
+      "watchOS" = "^watchos-[0-9\-]*\.md$";
     }
 
     [System.Collections.Generic.List[System.Object]]$gistsObj = @()
@@ -50,7 +50,7 @@ steps:
 
     foreach ($key in $filePatterns.Keys) {
       $filter = $filePatterns[$key]
-      $fileName = Get-ChildItem $apiDiffRoot -Filter $filter -Name
+      $fileName = Get-ChildItem $apiDiffRoot -Name | Where-Object{$_ -match $filter}  
       if ($fileName) {
         $obj = New-GistObjectDefinition -Name $fileName -Path "$apiDiffRoot\$fileName" -Type "markdown"
         $gistsObj.Add($obj)
