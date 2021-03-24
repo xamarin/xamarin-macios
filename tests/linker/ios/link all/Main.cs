@@ -16,4 +16,16 @@ namespace LinkAll
 		}
 #endif // !__WATCHOS__
 	}
+
+#if NET
+	// https://github.com/mono/linker/issues/1913
+	[Foundation.Preserve (AllMembers = true)]
+	class Preserver 
+	{
+		public Preserver ()
+		{
+			GC.KeepAlive (new System.Runtime.CompilerServices.InternalsVisibleToAttribute ("preserve this constructor"));
+		}
+	}
+#endif
 }

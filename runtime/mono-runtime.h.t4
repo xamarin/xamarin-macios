@@ -54,8 +54,8 @@ char *xamarin_get_mono_runtime_build_info (); // returns NULL if libmono couldn'
 
 #ifdef DYNAMIC_MONO_RUNTIME
 <# foreach (var export in exports) { #>
-#define <#= export.EntryPoint #> <#= export.EntryPoint #>_impl
-<# } #>
+<#= export.DotNetIf #>#define <#= export.EntryPoint #> <#= export.EntryPoint #>_impl
+<#= export.DotNetEndIf #><# } #>
 #endif
 
 /* This is copied from mono's header files */
@@ -97,10 +97,7 @@ typedef struct _MonoReflectionType MonoReflectionType;
 typedef struct _MonoException MonoException;
 typedef struct _MonoThread MonoThread;
 typedef struct _MonoThreadsSync MonoThreadsSync;
-typedef struct {
-	MonoVTable *vtable;
-	MonoThreadsSync *synchronisation;
-} MonoObject;
+typedef struct _MonoObject MonoObject;
 
 typedef struct _MonoReferenceQueue MonoReferenceQueue;
 typedef void (*mono_reference_queue_callback) (void *user_data);
@@ -305,15 +302,16 @@ void mono_gc_init_finalizer_thread ();
 
 <# foreach (var export in exports) { #>
 
-MONO_API <#= export.ReturnType #>
+<#= export.DotNetIf #>MONO_API <#= export.ReturnType #>
 <#= export.EntryPoint #> (<#= export.ArgumentSignature #>);
-<# } #>
+<#= export.DotNetEndIf #><# } #>
 
 <# foreach (var export in exports) {
 	if (!export.Optional)
 		continue; #>
-bool
+<#= export.DotNetIf #>bool
 <#= export.EntryPoint #>_exists ();
+<#= export.DotNetEndIf #>
 
 <# } #>
 
