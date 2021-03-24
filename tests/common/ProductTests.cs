@@ -161,7 +161,7 @@ namespace Xamarin.Tests
 						switch (Path.GetFileName (machoFile)) {
 						case "libmono-native-compat.dylib":
 						case "libmono-native-compat.a":
-							if (mono_native_compat_version != lc_min_version)
+							if (mono_native_compat_version <= lc_min_version)
 								failed.Add ($"Unexpected minOS version (expected {mono_native_compat_version}, found {lc_min_version}) in {machoFile} ({slice.Filename}).");
 							break;
 						case "libmono-native-unified.dylib":
