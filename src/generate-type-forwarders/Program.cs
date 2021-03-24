@@ -424,7 +424,7 @@ namespace GenerateTypeForwarders {
 					if (valid) {
 						sb.Append ("override ");
 					} else {
-						sb.Append ("new ");
+						sb.Append ("new virtual ");
 					}
 				} else if (!pd.DeclaringType.IsSealed) {
 					if (m.IsAbstract)
