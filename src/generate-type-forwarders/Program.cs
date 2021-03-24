@@ -18,13 +18,37 @@ using Mono.Cecil;
  */
 
 namespace GenerateTypeForwarders {
-	class MainClass {
+	static class MainClass {
 		public static int Main (string [] args)
 		{
 			var forwardFrom = args [0];
 			var forwardTo = args [1];
 			var output = args [2];
 			return Fix (forwardFrom, forwardTo, output);
+		}
+
+		static bool IsVisible (this TypeDefinition type)
+		{
+			if (!type.IsNested)
+				return true;
+			return type.IsNestedPublic || type.IsNestedFamily;
+		}
+
+		static bool IsVisible (this MethodDefinition method)
+		{
+			if (method is null)
+				return false;
+			return method.IsPublic || method.IsFamily;
+		}
+
+		static bool IsVisible (this PropertyDefinition property)
+		{
+			return property.GetMethod.IsVisible () || property.SetMethod.IsVisible ();
+		}
+
+		static bool IsVisible (this FieldDefinition field)
+		{
+			return field.IsPublic || field.IsFamily;
 		}
 
 		static void EmitTypeName (StringBuilder sb, TypeReference type)
@@ -309,15 +333,16 @@ namespace GenerateTypeForwarders {
 
 		static void EmitField (StringBuilder sb, FieldDefinition fd, int indent)
 		{
-			var strIndent = new string ('\t', indent);
 			if (fd.DeclaringType.IsEnum) {
 				if (!fd.IsStatic)
 					return;
-				sb.Append (strIndent);
+				sb.Append ('\t', indent);
 				sb.Append (fd.Name);
-				sb.AppendLine (",");
+				sb.Append (" = ");
+				sb.Append (fd.Constant);
+				sb.Append (',');
 			} else {
-				sb.Append (strIndent);
+				sb.Append ('\t', indent);
 				sb.Append ("public ");
 				if (fd.IsStatic)
 					sb.Append ("static ");
@@ -325,8 +350,8 @@ namespace GenerateTypeForwarders {
 				sb.Append (' ');
 				sb.Append (fd.Name);
 				sb.Append (';');
-				sb.AppendLine ();
 			}
+			sb.AppendLine ();
 		}
 
 		static bool HasPropertyInTypeHierarchy (TypeDefinition type, MethodDefinition accessor, out bool valid)
@@ -356,10 +381,14 @@ namespace GenerateTypeForwarders {
 
 		static void EmitProperty (StringBuilder sb, PropertyDefinition pd, int indent)
 		{
-			var m = pd.GetMethod ?? pd.SetMethod;
-			var strIndent = new string ('\t', indent);
-			sb.Append (strIndent);
-			sb.Append ("public ");
+			sb.Append ('\t', indent);
+			var gm = pd.GetMethod;
+			var sm = pd.SetMethod;
+			var m = gm ?? sm;
+			if (m.IsPublic)
+				sb.Append ("public ");
+			else
+				sb.Append ("protected ");
 			if (m.IsStatic) {
 				sb.Append ("static ");
 				if (HasPropertyInTypeHierarchy (pd.DeclaringType, m, out var _))
@@ -372,20 +401,32 @@ namespace GenerateTypeForwarders {
 						sb.Append ("new ");
 					}
 				} else if (!pd.DeclaringType.IsSealed) {
-					sb.Append ("virtual ");
+					if (m.IsAbstract)
+						sb.Append ("abstract ");
+					else
+						sb.Append ("virtual ");
 				}
 			}
 			EmitTypeName (sb, pd.PropertyType);
 			sb.Append (' ');
 			sb.Append (pd.Name);
 			sb.AppendLine (" {");
-			if (pd.GetMethod != null) {
-				sb.AppendLine ($"{strIndent}\tget {{ throw new global::System.PlatformNotSupportedException (global::Constants.UnavailableOnMacCatalyst); }}");
+			if (gm.IsVisible ()) {
+				sb.Append ('\t', indent + 1);
+				if (gm.IsAbstract)
+					sb.AppendLine ("get;");
+				else
+					sb.AppendLine ("get { throw new global::System.PlatformNotSupportedException (global::Constants.UnavailableOnMacCatalyst); }");
 			}
-			if (pd.SetMethod != null) {
-				sb.AppendLine ($"{strIndent}\tset {{ throw new global::System.PlatformNotSupportedException (global::Constants.UnavailableOnMacCatalyst); }}");
+			if (pd.SetMethod.IsVisible ()) {
+				sb.Append ('\t', indent + 1);
+				if (sm.IsAbstract)
+					sb.AppendLine ("set;");
+				else
+					sb.AppendLine ("set { throw new global::System.PlatformNotSupportedException (global::Constants.UnavailableOnMacCatalyst); }");
 			}
-			sb.AppendLine ($"{strIndent}}}");
+			sb.Append ('\t', indent);
+			sb.AppendLine ("}");
 		}
 
 		static void EmitEvent (StringBuilder sb, EventDefinition ed, int indent)
@@ -488,7 +529,7 @@ namespace GenerateTypeForwarders {
 				sb.Append (" {");
 				sb.AppendLine ();
 				foreach (var nestedType in type.NestedTypes) {
-					if (!nestedType.IsNestedPublic && !nestedType.IsNestedFamily)
+					if (!nestedType.IsVisible ())
 						continue;
 					EmitPNSE (sb, nestedType, indent + 1);
 				}
@@ -503,21 +544,19 @@ namespace GenerateTypeForwarders {
 				}
 				foreach (var method in type.Methods) {
 					// need .ctor(IntPtr) for chaining
-					if (!method.IsPublic && !method.IsFamily && !method.IsConstructor)
+					if (!method.IsVisible () && !method.IsConstructor)
 						continue;
 					EmitPNSE (sb, method, indent + 1, nsobject);
 				}
 
 				foreach (var field in type.Fields) {
-					if (!field.IsPublic && !field.IsFamily)
+					if (!field.IsVisible ())
 						continue;
-
 					EmitField (sb, field, indent + 1);
 				}
 
 				foreach (var prop in type.Properties) {
-					var m = prop.GetMethod ?? prop.SetMethod;
-					if (m.IsPrivate || m.IsAssembly)
+					if (!prop.IsVisible ())
 						continue;
 					EmitProperty (sb, prop, indent + 1);
 				}
