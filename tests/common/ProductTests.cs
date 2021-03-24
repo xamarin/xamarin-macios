@@ -107,6 +107,7 @@ namespace Xamarin.Tests
 						Version version;
 						Version alternate_version = null;
 						Version mono_native_compat_version;
+						Version alternate_mono_native_compat_version = null;
 						Version mono_native_unified_version;
 						Version alternate_mono_native_unified_version = null;
 						switch (load_command) {
@@ -132,6 +133,7 @@ namespace Xamarin.Tests
 							}
 							mono_native_compat_version = version;
 							mono_native_unified_version = new Version (10, 0, 0);
+							alternate_mono_native_compat_version = new Version (7, 0, 0); // Xcode 12.4 built binaries
 							break;
 						case MachO.LoadCommands.MintvOS:
 							version = SdkVersions.MinTVOSVersion;
@@ -157,11 +159,13 @@ namespace Xamarin.Tests
 							alternate_version = version;
 						if (alternate_mono_native_unified_version == null)
 							alternate_mono_native_unified_version = mono_native_unified_version;
+						if (alternate_mono_native_compat_version == null)
+							alternate_mono_native_compat_version = mono_native_compat_version;
 
 						switch (Path.GetFileName (machoFile)) {
 						case "libmono-native-compat.dylib":
 						case "libmono-native-compat.a":
-							if (mono_native_compat_version <= lc_min_version)
+							if (mono_native_compat_version != lc_min_version && alternate_mono_native_compat_version != lc_min_version)
 								failed.Add ($"Unexpected minOS version (expected {mono_native_compat_version}, found {lc_min_version}) in {machoFile} ({slice.Filename}).");
 							break;
 						case "libmono-native-unified.dylib":
