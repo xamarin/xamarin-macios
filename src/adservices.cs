@@ -5,6 +5,7 @@ using System;
 namespace AdServices {
 
 	[Mac (11,1), iOS (14,3)]
+	[MacCatalyst (14,3)]
 	[NoTV][NoWatch]
 	[Native]
 	[ErrorDomain ("AAAttributionErrorDomain")]
@@ -15,6 +16,7 @@ namespace AdServices {
 	}
 
 	[Mac (11,1), iOS (14,3)]
+	[MacCatalyst (14,3)]
 	[NoTV][NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
