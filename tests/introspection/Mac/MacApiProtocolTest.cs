@@ -89,6 +89,7 @@ namespace Introspection {
 				case "CXCall": // Conformance not in headers
 				case "CXCallUpdate": // Conformance not in headers
 				case "CXProviderConfiguration": // Conformance not in headers
+				case "GCDualSenseGamepad":
 					return true;
 				default:
 					// CIFilter started implementing NSSecureCoding in 10.11
@@ -181,6 +182,7 @@ namespace Introspection {
 				case "CXCall": // Conformance not in headers
 				case "CXCallUpdate": // Conformance not in headers
 				case "CXProviderConfiguration": // Conformance not in headers
+				case "GCDualSenseGamepad":
 					return true;
 				}
 				break;
