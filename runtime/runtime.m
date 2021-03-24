@@ -639,7 +639,7 @@ xamarin_get_reflection_method_method (MonoReflectionMethod *method)
 	MONO_ASSERT_GC_UNSAFE;
 	
 #if defined (CORECLR_RUNTIME)
-	xamarin_assertion_message ("The method %s it not implemented yet for CoreCLR", __func__);
+	xamarin_assertion_message ("The method %s is not implemented yet for CoreCLR", __func__);
 #else
 	PublicMonoReflectionMethod *rm = (PublicMonoReflectionMethod *) method;
 	return rm->method;
