@@ -93,13 +93,25 @@ namespace GenerateTypeForwarders {
 			}
 		}
 
-		static void EmitParameters (StringBuilder sb, IList<ParameterDefinition> parameters)
+		static void EmitParameters (StringBuilder sb, MethodDefinition method)
 		{
+			var parameters = method.Parameters;
+			bool extension = false;
+			if (method.IsStatic && method.HasCustomAttributes) {
+				foreach (var ca in method.CustomAttributes) {
+					if (ca.AttributeType.FullName != "System.Runtime.CompilerServices.ExtensionAttribute")
+						continue;
+					extension = true;
+					break;
+				}
+			}
 			for (var i = 0; i < parameters.Count; i++) {
 				var param = parameters [i];
 				var paramType = param.ParameterType;
 
-				if (i > 0)
+				if ((i == 0) && extension)
+					sb.Append ("this ");
+				else if (i > 0)
 					sb.Append (", ");
 
 				if (param.IsOut) {
@@ -227,7 +239,8 @@ namespace GenerateTypeForwarders {
 			}
 
 			sb.Append (" (");
-			EmitParameters (sb, method.Parameters);
+			if (method.HasParameters)
+				EmitParameters (sb, method);
 			sb.Append (")");
 			if (constraints != null)
 				sb.Append (constraints);
@@ -462,7 +475,8 @@ namespace GenerateTypeForwarders {
 				sb.Append (' ');
 				sb.Append (type.Name);
 				sb.Append (" (");
-				EmitParameters (sb, invoke.Parameters);
+				if (invoke.HasParameters)
+					EmitParameters (sb, invoke);
 				sb.AppendLine (");");
 			} else {
 				sb.Append (strIndent);
