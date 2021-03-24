@@ -97,10 +97,7 @@ typedef struct _MonoReflectionType MonoReflectionType;
 typedef struct _MonoException MonoException;
 typedef struct _MonoThread MonoThread;
 typedef struct _MonoThreadsSync MonoThreadsSync;
-typedef struct {
-	MonoVTable *vtable;
-	MonoThreadsSync *synchronisation;
-} MonoObject;
+typedef struct _MonoObject MonoObject;
 
 typedef struct _MonoReferenceQueue MonoReferenceQueue;
 typedef void (*mono_reference_queue_callback) (void *user_data);
