@@ -1614,55 +1614,17 @@ namespace ObjCRuntime {
 			ConnectMethod (method.DeclaringType, method, selector);
 		}
 
-#if MONOMAC
-		[DllImport (Constants.FoundationLibrary, EntryPoint = "NSLog")]
-		extern static void NSLog_impl (IntPtr format, [MarshalAs (UnmanagedType.LPStr)] string s);
-		static void NSLog (IntPtr format, string s)
+		[DllImport ("__Internal", CharSet = CharSet.Unicode)]
+		internal extern static void xamarin_log (string s);
+
+		internal static void NSLog (string value)
 		{
-			if (PlatformHelper.CheckSystemVersion (10, 12)) {
-				Console.WriteLine (s);
-			} else {
-				NSLog_impl (format, s);
-			}
+			xamarin_log (value);
 		}
-#else
-		[DllImport (Constants.FoundationLibrary)]
-		extern static void NSLog (IntPtr format, [MarshalAs (UnmanagedType.LPStr)] string s);
-#endif
 
-#if MONOMAC
-		[DllImport ("__Internal")]
-		extern static void xamarin_log (string s);
-		internal static void NSLog (string s)
-		{
-			if (PlatformHelper.CheckSystemVersion (10, 12)) {
-				Console.WriteLine (s);
-			} else {
-				xamarin_log (s);
-			}
-		}
-#else
-		[DllImport ("__Internal", EntryPoint="xamarin_log", CharSet=CharSet.Unicode)]
-		internal extern static void NSLog (string s);
-#endif
-
-#if !MONOMAC
-		[DllImport (Constants.FoundationLibrary, EntryPoint = "NSLog")]
-		extern static void NSLog_arm64 (IntPtr format, IntPtr p2, IntPtr p3, IntPtr p4, IntPtr p5, IntPtr p6, IntPtr p7, IntPtr p8, [MarshalAs (UnmanagedType.LPStr)] string s);
-#endif
-
-		[BindingImpl (BindingImplOptions.Optimizable)]
 		internal static void NSLog (string format, params object[] args)
 		{
-			var fmt = NSString.CreateNative ("%s");
-			var val = (args == null || args.Length == 0) ? format : string.Format (format, args);
-#if !MONOMAC
-			if (IsARM64CallingConvention)
-				NSLog_arm64 (fmt, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, val);
-			else
-#endif
-				NSLog (fmt, val);
-			NSString.ReleaseNative (fmt);
+			xamarin_log (string.Format (format, args));
 		}
 #endif // !COREBUILD
 
