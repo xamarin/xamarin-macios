@@ -96,8 +96,13 @@ namespace ObjCRuntime {
 		[DllImport (Constants.libSystemLibrary, EntryPoint="dlopen")]
 		internal static extern IntPtr _dlopen (string path, int mode /* this is int32, not nint */);
 
-		static bool warningShown;
 		public static IntPtr dlopen (string path, int mode)
+		{
+			return dlopen (path, mode, true);
+		}
+
+		static bool warningShown;
+		internal static IntPtr dlopen (string path, int mode, bool showWarning)
 		{
 			var x = _dlopen (path, mode);
 			if (x != IntPtr.Zero)
@@ -107,13 +112,9 @@ namespace ObjCRuntime {
 			// In iOS >= 9, this fails with:
 			// "no cache image with name (<top>)"
 			if (path.IndexOf ('/') == -1){
-				if (!warningShown){
-					try {
-						Runtime.NSLog ("You are using dlopen without a full path, retrying by prepending /usr/lib");
-						warningShown = true;
-					} catch {
-						// Ignore any failures to show the warning.
-					}
+				if (!warningShown && showWarning) {
+					Runtime.NSLog ("You are using dlopen without a full path, retrying by prepending /usr/lib");
+					warningShown = true;
 				}
 				
 				x = _dlopen ("/usr/lib/" + path, mode);
