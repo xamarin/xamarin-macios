@@ -99,8 +99,8 @@ $(APIDIFF_DIR)/diff/ios-to-tvos.html: $(APIDIFF_DIR)/temp/xi/Xamarin.iOS/Xamarin
 
 # this is a hack to show the difference between Catalyst (iOS) and iOS
 $(APIDIFF_DIR)/maccat-to-ios.md: $(APIDIFF_DIR)/temp/xi/Xamarin.iOS/Xamarin.iOS.xml $(APIDIFF_DIR)/temp/xi/Xamarin.MacCatalyst/Xamarin.iOS.xml
-	$(Q) mkdir -p $(dir $@)
-	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_HTML) --md $^ $@
+	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_HTML) --md $^ $@.tmp
+	$(Q) sed '/^#### Removed Type /d' $@.tmp > $@
 
 # create diff files for all the assemblies per platform
 
