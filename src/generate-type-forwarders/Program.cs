@@ -38,7 +38,7 @@ namespace GenerateTypeForwarders {
 		{
 			if (method is null)
 				return false;
-			return method.IsPublic || method.IsFamily;
+			return method.IsPublic || method.IsFamily || method.IsFamilyOrAssembly;
 		}
 
 		static bool IsVisible (this PropertyDefinition property)
