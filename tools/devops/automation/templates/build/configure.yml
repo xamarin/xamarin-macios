@@ -98,6 +98,8 @@ steps:
     outDir: '$(Build.ArtifactStagingDirectory)'
     isCreatePrSelected: true
     prSourceBranchPrefix: 'locfiles'
+    repoType: gitHub
+    gitHubPatVariable: '$(GitHub.Token)'
     packageSourceAuth: patAuth
     patVariable: '$(OneLocBuild--PAT)'
 
