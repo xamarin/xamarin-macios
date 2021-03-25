@@ -31,6 +31,12 @@ extern "C" {
 
 void *xamarin_marshal_return_value (SEL sel, MonoType *mtype, const char *type, MonoObject *retval, bool retain, MonoMethod *method, MethodDescription *desc, GCHandle *exception_gchandle);
 
+void xamarin_dyn_objc_msgSend ();
+void xamarin_dyn_objc_msgSendSuper ();
+void xamarin_dyn_objc_msgSend_stret ();
+void xamarin_dyn_objc_msgSendSuper_stret ();
+void xamarin_add_internal_call (const char *name, const void *method);
+
 #ifdef __cplusplus
 }
 #endif

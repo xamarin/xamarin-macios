@@ -13,12 +13,33 @@
 #ifndef __MONOVM_BRIDGE__
 #define __MONOVM_BRIDGE__
 
+#include "mono-runtime.h"
+
 //#define LOG_MONOVM(...)
 #define LOG_MONOVM(...) fprintf (__VA_ARGS__)
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+struct _MonoObject {
+	MonoVTable *vtable;
+	MonoThreadsSync *synchronisation;
+};
+
+struct Managed_NSObject {
+	MonoObject obj;
+	id handle;
+	void *class_handle;
+	uint8_t flags;
+};
+
+typedef struct {
+	MonoObject object;
+	MonoMethod *method;
+	MonoString *name;
+	MonoReflectionType *reftype;
+} PublicMonoReflectionMethod;
 
 #ifdef __cplusplus
 } /* extern "C" */

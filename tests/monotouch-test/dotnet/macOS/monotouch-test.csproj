@@ -15,7 +15,6 @@
     <DefineConstants>$(DefineConstants);MONOMAC;XAMMAC_TESTS</DefineConstants>
     <DefineConstants Condition="'$(Configuration)' == 'Debug'">$(DefineConstants);DEBUG;DYNAMIC_REGISTRAR</DefineConstants>
     <RootTestsDirectory>..\..\..</RootTestsDirectory>
-    <MonoBundlingExtraArgs>--marshal-objectivec-exceptions:disable</MonoBundlingExtraArgs>
   </PropertyGroup>
 
   <ItemGroup>
