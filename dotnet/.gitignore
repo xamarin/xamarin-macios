@@ -1,3 +1,4 @@
+global.json
 tmpdir
 Microsoft.NET.Workload.*/LICENSE
 WorkloadManifest.json
