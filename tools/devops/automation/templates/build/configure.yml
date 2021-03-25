@@ -100,7 +100,7 @@ steps:
     prSourceBranchPrefix: 'locfiles'
     repoType: gitHub
     gitHubPatVariable: '$(GitHub.Token)'
-    gitHubPrMergeMethod: [merge|squash|rebase]
+    gitHubPrMergeMethod: merge
     packageSourceAuth: patAuth
     patVariable: '$(OneLocBuild--PAT)'
 
