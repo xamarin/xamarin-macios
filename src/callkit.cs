@@ -502,10 +502,12 @@ namespace CallKit {
 
 		[NoMac] // deprecated and was never added to Mac OS X before 
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use the default constructor instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use the default constructor instead.")]
 		[Export ("initWithLocalizedName:")]
 		IntPtr Constructor (string localizedName);
 
 		[iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[DesignatedInitializer]
 		[Export ("init")]
 		IntPtr Constructor ();
