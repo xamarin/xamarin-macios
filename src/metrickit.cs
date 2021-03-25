@@ -47,6 +47,7 @@ namespace MetricKit {
 		NSMeasurement<NSUnitDuration> CumulativeCpuTime { get; }
 
 		[iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Export ("cumulativeCPUInstructions", ArgumentSemantic.Strong)]
 		NSMeasurement<NSUnit> CumulativeCpuInstructions { get; }
 	}
@@ -140,7 +141,7 @@ namespace MetricKit {
 		[Export ("JSONRepresentation")]
 		NSData JsonRepresentation { get; }
 
-#if IOS
+#if IOS && !__MACCATALYST__
 		[Internal]
 		[Deprecated (PlatformName.iOS, 14,0)]
 		[Export ("DictionaryRepresentation")]
@@ -151,11 +152,13 @@ namespace MetricKit {
 		[Export ("dictionaryRepresentation")]
 		NSDictionary _DictionaryRepresentation14 { get; }
 #else
+		[MacCatalyst (14,0)]
 		[Export ("dictionaryRepresentation")]
 		NSDictionary DictionaryRepresentation { get; }
 #endif
 
 		[iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Export ("platformArchitecture", ArgumentSemantic.Strong)]
 		string PlatformArchitecture { get; }
 	}
@@ -359,7 +362,7 @@ namespace MetricKit {
 		[Export ("JSONRepresentation")]
 		NSData JsonRepresentation { get; }
 
-#if IOS
+#if IOS && !__MACCATALYST__
 		[Internal]
 		[Deprecated (PlatformName.iOS, 14,0)]
 		[Export ("DictionaryRepresentation")]
@@ -370,16 +373,19 @@ namespace MetricKit {
 		[Export ("dictionaryRepresentation")]
 		NSDictionary _DictionaryRepresentation14 { get; }
 #else
+		[MacCatalyst (14,0)]
 		[Export ("dictionaryRepresentation")]
 		NSDictionary DictionaryRepresentation { get; }
 #endif
 
 		[iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[NullAllowed]
 		[Export ("animationMetrics", ArgumentSemantic.Strong)]
 		MXAnimationMetric AnimationMetrics { get; }
 
 		[iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[NullAllowed]
 		[Export ("applicationExitMetrics", ArgumentSemantic.Strong)]
 		MXAppExitMetric ApplicationExitMetrics { get; }
@@ -403,6 +409,7 @@ namespace MetricKit {
 		void Remove (IMXMetricManagerSubscriber subscriber);
 
 		[iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Export ("pastDiagnosticPayloads", ArgumentSemantic.Strong)]
 		MXDiagnosticPayload[] PastDiagnosticPayloads { get; }
 

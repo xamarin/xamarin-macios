@@ -2696,6 +2696,7 @@ namespace CoreData
 	}
 
 	[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface NSPersistentCloudKitContainerEvent : NSCopying {
@@ -2729,6 +2730,7 @@ namespace CoreData
 	}
 
 	[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSPersistentStoreRequest))]
 	interface NSPersistentCloudKitContainerEventRequest {
 		[Export ("resultType", ArgumentSemantic.Assign)]
@@ -2752,6 +2754,7 @@ namespace CoreData
 	}
 
 	[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof(NSPersistentStoreResult))]
 	[DisableDefaultCtor]
 	interface NSPersistentCloudKitContainerEventResult {

@@ -31,6 +31,7 @@ namespace Vision {
 		public static extern CGPoint GetImagePoint (CGPoint normalizedPoint, nuint imageWidth, nuint imageHeight);
 
 		[TV (14,0), Mac (11,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[DllImport (Constants.VisionLibrary, EntryPoint = "VNNormalizedPointForImagePoint")]
 		public static extern CGPoint GetNormalizedPoint (CGPoint imagePoint, nuint imageWidth, nuint imageHeight);
 

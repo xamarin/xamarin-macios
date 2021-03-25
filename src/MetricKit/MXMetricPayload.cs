@@ -1,4 +1,4 @@
-#if IOS
+#if IOS && !__MACCATALYST__
 using System;
 
 using Foundation;
