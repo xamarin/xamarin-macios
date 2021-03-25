@@ -471,6 +471,8 @@ xamarin_main (int argc, char *argv[], enum XamarinLaunchMode launch_mode)
 		xamarin_assertion_message ("Invalid launch mode: %i.", launch_mode);
 		break;
 	}
+
+	xamarin_mono_object_release (&assembly);
 	
 	return rv;
 }

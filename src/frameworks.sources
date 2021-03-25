@@ -1853,6 +1853,7 @@ SHARED_SOURCES = \
 	ObjCRuntime/ReleaseAttribute.cs \
 	ObjCRuntime/RequiredFrameworkAttribute.cs \
 	ObjCRuntime/Runtime.cs \
+	ObjCRuntime/Runtime.CoreCLR.cs \
 	ObjCRuntime/Runtime.iOS.cs \
 	ObjCRuntime/Runtime.mac.cs \
 	ObjCRuntime/RuntimeException.cs \

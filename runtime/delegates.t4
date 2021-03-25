@@ -286,6 +286,15 @@
 			WrappedManagedFunction = "CreateNSObject",
 			OnlyDynamicUsage = false,
 		},
+
+		new XDelegate ("MonoAssembly *", "IntPtr", "xamarin_find_assembly",
+			"const char *","IntPtr", "assembly_name"
+		) {
+			WrappedManagedFunction = "FindAssembly",
+			OnlyDynamicUsage = false,
+			OnlyCoreCLR = true,
+		},
+
 	};
 	delegates.CalculateLengths ();
 #><#+
@@ -335,6 +344,7 @@
 		public bool ExceptionHandling = true;
 		// Detemines whether the function is only used by the dynamic registrar (in which case we might be able to link the function away if the static registrar is being used)
 		public bool OnlyDynamicUsage;
+		public bool OnlyCoreCLR;
 
 		public string DelegateName {
 			get {

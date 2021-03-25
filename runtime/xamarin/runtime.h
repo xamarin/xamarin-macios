@@ -281,6 +281,24 @@ void			xamarin_gchandle_free (GCHandle handle);
 MonoObject *	xamarin_gchandle_unwrap (GCHandle handle); // Will get the target and free the GCHandle
 
 /*
+ * In MonoVM MonoObjects are tracked in memory/the stack directly by the GC, but that doesn't
+ * work for CoreCLR, so we make it ref-counted. All code must use the functions below to retain/release
+ * MonoObjects, although these functions do nothing when using MonoVM.
+ *
+ * The release function take a pointer to the variable that contains the MonoObject, and clears out the value,
+ * to avoid running into use-after-free problems.
+ */
+#if defined(CORECLR_RUNTIME)
+void			xamarin_mono_object_retain (MonoObject *mobj);
+void			xamarin_mono_object_release (MonoObject **mobj);
+#else
+// Nothing to do here.
+#define			xamarin_mono_object_retain(x)
+#define			xamarin_mono_object_release(x) do { *x = NULL; } while (0);
+#endif
+
+
+/*
  * Look for an assembly in the app and open it.
  *
  * Stable API.
