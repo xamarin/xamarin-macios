@@ -688,7 +688,12 @@ namespace Xamarin.MMP.Tests
 		[Test]
 		public void BuildingSameSolutionTwice_ShouldNotRunACToolTwice ()
 		{
-			const string actool = " execution started with arguments: actool --errors --warnings --notices --output-format xml1 --output-partial-info-plist ";
+			Func<string, bool> executedActool = (line) => {
+				if (!line.Contains (" execution started with arguments"))
+					return false;
+				return line.Contains ("actool --errors --warnings --notices --output-format xml1 --output-partial-info-plist ");
+			};
+
 			RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
 					AssetIcons = true
@@ -697,18 +702,15 @@ namespace Xamarin.MMP.Tests
 				string project = TI.GenerateUnifiedExecutableProject (test);
 
 				var buildResult = TI.BuildProject (project);
-				var buildOutput = buildResult.BuildOutput;
-				Assert.True (buildOutput.Contains (actool), $"Initial build should run actool");
+				Assert.True (buildResult.BuildOutputLines.Any (executedActool), $"Initial build should run actool");
 
 				buildResult = TI.BuildProject (project);
-				buildOutput = buildResult.BuildOutput;
-				Assert.False (buildOutput.Contains (actool), $"Second build should not run actool");
+				Assert.False (buildResult.BuildOutputLines.Any (executedActool), $"Second build should not run actool");
 
 				TI.RunAndAssert ("touch", new [] { Path.Combine (tmpDir, "Assets.xcassets/AppIcon.appiconset/AppIcon-256@2x.png") }, "touch icon");
 
 				buildResult = TI.BuildProject (project);
-				buildOutput = buildResult.BuildOutput;
-				Assert.True (buildOutput.Contains (actool), $"Build after touching icon must run actool");
+				Assert.True (buildResult.BuildOutputLines.Any (executedActool), $"Build after touching icon must run actool");
 			});
 		}
 
