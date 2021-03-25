@@ -2511,7 +2511,7 @@ namespace Registrar {
 			else if (method.CurrentTrampoline == Trampoline.SetFlags)
 				return "-(void) xamarinSetFlags: (enum XamarinGCHandleFlags) flags";
 			else if (method.CurrentTrampoline == Trampoline.SetGCHandle)
-				return "-(void) xamarinSetGCHandle: (GCHandle) gchandle flags: (enum XamarinGCHandleFlags) flags";
+				return "-(bool) xamarinSetGCHandle: (GCHandle) gchandle flags: (enum XamarinGCHandleFlags) flags";
 			else if (method.CurrentTrampoline == Trampoline.CopyWithZone1 || method.CurrentTrampoline == Trampoline.CopyWithZone2)
 				return "-(id) copyWithZone: (NSZone *)zone";
 
@@ -3141,11 +3141,16 @@ namespace Registrar {
 				sb.WriteLine ();
 				return;
 			case Trampoline.SetGCHandle:
-				sb.WriteLine ("-(void) xamarinSetGCHandle: (GCHandle) gc_handle flags: (enum XamarinGCHandleFlags) flags");
+				sb.WriteLine ("-(bool) xamarinSetGCHandle: (GCHandle) gc_handle flags: (enum XamarinGCHandleFlags) flags");
 				sb.WriteLine ("{");
+				sb.WriteLine ("if (((flags & XamarinGCHandleFlags_InitialSet) == XamarinGCHandleFlags_InitialSet) && __monoObjectGCHandle.gc_handle != INVALID_GCHANDLE) {");
+				sb.WriteLine ("return false;");
+				sb.WriteLine ("}");
+				sb.WriteLine ("flags = (enum XamarinGCHandleFlags) (flags & ~XamarinGCHandleFlags_InitialSet);"); // Remove the InitialSet flag, we don't want to store it.
 				sb.WriteLine ("__monoObjectGCHandle.gc_handle = gc_handle;");
 				sb.WriteLine ("__monoObjectGCHandle.flags = flags;");
 				sb.WriteLine ("__monoObjectGCHandle.native_object = self;");
+				sb.WriteLine ("return true;");
 				sb.WriteLine ("}");
 				sb.WriteLine ();
 				return;

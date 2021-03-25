@@ -83,6 +83,14 @@ namespace Foundation {
 			IsCustomType = 128,
 		}
 
+		// Must be kept in sync with the same enum in trampolines.h
+		enum XamarinGCHandleFlags : uint {
+			None = 0,
+			WeakGCHandle = 1,
+			HasManagedRef = 2,
+			InitialSet = 4,
+		}
+
 		[StructLayout (LayoutKind.Sequential)]
 		struct objc_super {
 			public IntPtr Handle;
@@ -205,9 +213,6 @@ namespace Foundation {
 		[DllImport ("__Internal")]
 		static extern void xamarin_release_managed_ref (IntPtr handle, bool user_type);
 
-		[MethodImplAttribute (MethodImplOptions.InternalCall)]
-		static extern void xamarin_create_managed_ref (IntPtr handle, NSObject obj, bool retain, bool user_type);
-
 #if !XAMCORE_3_0
 		public static bool IsNewRefcountEnabled ()
 		{
@@ -267,10 +272,26 @@ namespace Foundation {
 			CreateManagedRef (!alloced || native_ref);
 		}
 
+		[DllImport ("__Internal")]
+		static extern bool xamarin_set_gchandle_with_flags (IntPtr handle, IntPtr gchandle, XamarinGCHandleFlags flags);
+
 		void CreateManagedRef (bool retain)
 		{
 			HasManagedRef = true;
-			xamarin_create_managed_ref (handle, this, retain, Runtime.IsUserType (handle));
+			bool isUserType = Runtime.IsUserType (handle);
+			if (isUserType) {
+				var flags = XamarinGCHandleFlags.HasManagedRef | XamarinGCHandleFlags.InitialSet | XamarinGCHandleFlags.WeakGCHandle;
+				var gchandle = GCHandle.Alloc (this, GCHandleType.WeakTrackResurrection);
+				var h = GCHandle.ToIntPtr (gchandle);
+				if (!xamarin_set_gchandle_with_flags (handle, h, flags)) {
+					// A GCHandle already existed: this shouldn't happen, but let's handle it anyway.
+					Runtime.NSLog ("Tried to create a managed reference from an object that already has a managed reference (type: {0})", GetType ());
+					gchandle.Free ();
+				}
+			}
+
+			if (retain)
+				DangerousRetain ();
 		}
 
 		void ReleaseManagedRef ()
