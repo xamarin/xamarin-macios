@@ -87,14 +87,6 @@ xamarin_extension_main_callback xamarin_extension_main = NULL;
 
 /* Local variable */
 
-static MonoImage      *platform_image;
-static MonoClass      *inativeobject_class;
-static MonoClass      *nsobject_class;
-static MonoClass      *nsvalue_class;
-static MonoClass      *nsnumber_class;
-static MonoClass      *nsstring_class;
-static MonoClass      *runtime_class;
-
 static pthread_mutex_t framework_peer_release_lock;
 static MonoGHashTable *xamarin_wrapper_hash;
 
@@ -190,7 +182,7 @@ static struct Trampolines trampolines = {
 
 static struct InitializationOptions options = { 0 };
 
-static void
+void
 xamarin_add_internal_call (const char *name, const void *method)
 {
 	/* COOP: With cooperative GC, icalls will run, like managed methods,
@@ -365,29 +357,13 @@ xamarin_new_nsobject (id self, MonoClass *klass, GCHandle *exception_gchandle)
 	return xamarin_gchandle_unwrap (obj);
 }
 
-MonoClass *
-xamarin_get_nsvalue_class ()
-{
-	if (nsvalue_class == NULL)
-		xamarin_assertion_message ("Internal consistency error, please file a bug (https://github.com/xamarin/xamarin-macios/issues/new). Additional data: can't get the %s class because it's been linked away.\n", "NSValue");
-	return nsvalue_class;
-}
-
-MonoClass *
-xamarin_get_nsnumber_class ()
-{
-	if (nsnumber_class == NULL)
-		xamarin_assertion_message ("Internal consistency error, please file a bug (https://github.com/xamarin/xamarin-macios/issues/new). Additional data: can't get the %s class because it's been linked away.\n", "NSNumber");
-	return nsnumber_class;
-}
-
 bool
 xamarin_is_class_nsobject (MonoClass *cls)
 {
 	// COOP: Reading managed data, must be in UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
 	
-	return mono_class_is_subclass_of (cls, nsobject_class, false);
+	return mono_class_is_subclass_of (cls, xamarin_get_nsobject_class (), false);
 }
 
 bool
@@ -396,7 +372,7 @@ xamarin_is_class_inativeobject (MonoClass *cls)
 	// COOP: Reading managed data, must be in UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
 	
-	return mono_class_is_subclass_of (cls, inativeobject_class, true);
+	return mono_class_is_subclass_of (cls, xamarin_get_inativeobject_class (), true);
 }
 
 bool
@@ -414,6 +390,7 @@ xamarin_is_class_nsnumber (MonoClass *cls)
 	// COOP: Reading managed data, must be in UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
 
+	MonoClass *nsnumber_class = xamarin_get_nsnumber_class ();
 	if (nsnumber_class == NULL)
 		return false;
 
@@ -426,6 +403,7 @@ xamarin_is_class_nsvalue (MonoClass *cls)
 	// COOP: Reading managed data, must be in UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
 
+	MonoClass *nsvalue_class = xamarin_get_nsvalue_class ();
 	if (nsvalue_class == NULL)
 		return false;
 
@@ -438,6 +416,7 @@ xamarin_is_class_nsstring (MonoClass *cls)
 	// COOP: Reading managed data, must be in UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
 
+	MonoClass *nsstring_class = xamarin_get_nsstring_class ();
 	if (nsstring_class == NULL)
 		return false;
 
@@ -460,7 +439,7 @@ xamarin_is_class_nullable (MonoClass *cls, MonoClass **element_type, GCHandle *e
 		static MonoMethod *get_nullable_type = NULL;
 
 		if (get_nullable_type == NULL)
-			get_nullable_type = mono_class_get_method_from_name (runtime_class, "GetNullableType", 1);
+			get_nullable_type = mono_class_get_method_from_name (xamarin_get_runtime_class (), "GetNullableType", 1);
 
 		GCHandle type_handle = xamarin_gchandle_new ((MonoObject *) mono_type_get_object (mono_domain_get (), mono_class_get_type (cls)), false);
 		void *args [1] { type_handle };
@@ -941,16 +920,6 @@ gc_enable_new_refcount (void)
 	mono_profiler_install_gc (gc_event_callback, NULL);
 }
 
-static MonoClass *
-get_class_from_name (MonoImage* image, const char *nmspace, const char *name, bool optional = false)
-{
-	// COOP: this is a convenience function executed only at startup, I believe the mode here doesn't matter.	
-	MonoClass *rv = mono_class_from_name (image, nmspace, name);
-	if (!rv && !optional)
-		xamarin_assertion_message ("Fatal error: failed to load the class '%s.%s'\n.", nmspace, name);
-	return rv;
-}
-
 struct _MonoProfiler {
 	int dummy;
 };
@@ -1015,8 +984,8 @@ xamarin_open_assembly (const char *name)
 	return assembly;
 }
 
-static bool
-register_assembly (MonoAssembly *assembly, GCHandle *exception_gchandle)
+bool
+xamarin_register_monoassembly (MonoAssembly *assembly, GCHandle *exception_gchandle)
 {
 	// COOP: this is a function executed only at startup, I believe the mode here doesn't matter.
 	if (!xamarin_supports_dynamic_registration) {
@@ -1035,7 +1004,7 @@ xamarin_open_and_register (const char *aname, GCHandle *exception_gchandle)
 
 	assembly = xamarin_open_assembly (aname);
 
-	register_assembly (assembly, exception_gchandle);
+	xamarin_register_monoassembly (assembly, exception_gchandle);
 	
 	return assembly;
 }
@@ -1047,6 +1016,7 @@ is_class_finalization_aware (MonoClass *cls)
 	// COOP: This is a callback called by the GC, I believe the mode here doesn't matter.
 	gboolean rv = false;
 
+	MonoClass *nsobject_class = xamarin_get_nsobject_class ();
 	if (nsobject_class)
 		rv = cls == nsobject_class || mono_class_is_assignable_from (nsobject_class, cls);
 
@@ -1346,11 +1316,7 @@ xamarin_initialize ()
 	// COOP: accessing managed memory: UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
 	
-	MonoAssembly *assembly = NULL;
-	MonoMethod *runtime_initialize;
-	void* params[2];
 	GCHandle exception_gchandle = INVALID_GCHANDLE;
-	MonoObject *exc = NULL;
 
 	initialize_started = TRUE;
 
@@ -1384,29 +1350,6 @@ xamarin_initialize ()
 		NSSetUncaughtExceptionHandler (exception_handler);
 	}
 
-	assembly = xamarin_open_assembly (PRODUCT_DUAL_ASSEMBLY);
-
-	if (!assembly)
-		xamarin_assertion_message ("Failed to load %s.", PRODUCT_DUAL_ASSEMBLY);
-	platform_image = mono_assembly_get_image (assembly);
-
-	const char *objcruntime = "ObjCRuntime";
-	const char *foundation = "Foundation";
-
-	runtime_class = get_class_from_name (platform_image, objcruntime, "Runtime");
-	inativeobject_class = get_class_from_name (platform_image, objcruntime, "INativeObject");
-	nsobject_class = get_class_from_name (platform_image, foundation, "NSObject");
-	nsnumber_class = get_class_from_name (platform_image, foundation, "NSNumber", true);
-	nsvalue_class = get_class_from_name (platform_image, foundation, "NSValue", true);
-	nsstring_class = get_class_from_name (platform_image, foundation, "NSString", true);
-
-	xamarin_add_internal_call ("Foundation.NSObject::xamarin_create_managed_ref", (const void *) xamarin_create_managed_ref);
-
-	runtime_initialize = mono_class_get_method_from_name (runtime_class, "Initialize", 1);
-
-	if (runtime_initialize == NULL)
-		xamarin_assertion_message ("Fatal error: failed to load the %s.%s method", "Runtime", "Initialize");
-
 	options.size = sizeof (options);
 #if MONOTOUCH && (defined(__i386__) || defined (__x86_64__))
 	options.flags = (enum InitializationFlags) (options.flags | InitializationFlagsIsSimulator);
@@ -1425,19 +1368,15 @@ xamarin_initialize ()
 	options.EntryAssemblyPath = xamarin_entry_assembly_path;
 #endif
 
-	params [0] = &options;
-
-	mono_runtime_invoke (runtime_initialize, NULL, params, &exc);
-
-	if (exc) {
-		exception_gchandle = xamarin_gchandle_new (exc, false);
+	xamarin_bridge_call_runtime_initialize (&options, &exception_gchandle);
+	if (exception_gchandle != INVALID_GCHANDLE) {
 		NSLog (@PRODUCT ": An exception occurred when calling Runtime.Initialize:\n%@", xamarin_print_all_exceptions (exception_gchandle));
 		xamarin_process_managed_exception_gchandle (exception_gchandle);
 		xamarin_assertion_message ("Can't continue if Runtime.Initialize fails.");
 	}
 
-	if (!register_assembly (assembly, &exception_gchandle))
-		xamarin_process_managed_exception_gchandle (exception_gchandle);
+	xamarin_bridge_register_product_assembly (&exception_gchandle);
+	xamarin_process_managed_exception_gchandle (exception_gchandle);
 
 	xamarin_install_mono_profiler (); // must be called before xamarin_install_nsautoreleasepool_hooks or gc_enable_new_refcount
 
@@ -2763,15 +2702,15 @@ xamarin_get_managed_method_for_token (guint32 token_ref, GCHandle *exception_gch
 }
 
 GCHandle
-xamarin_gchandle_new (MonoObject *obj, bool track_resurrection)
+xamarin_gchandle_new (MonoObject *obj, bool pinned)
 {
-	return GINT_TO_POINTER (mono_gchandle_new (obj, track_resurrection));
+	return GINT_TO_POINTER (mono_gchandle_new (obj, pinned));
 }
 
 GCHandle
-xamarin_gchandle_new_weakref (MonoObject *obj, bool pinned)
+xamarin_gchandle_new_weakref (MonoObject *obj, bool track_resurrection)
 {
-	return GINT_TO_POINTER (mono_gchandle_new_weakref (obj, pinned));
+	return GINT_TO_POINTER (mono_gchandle_new_weakref (obj, track_resurrection));
 }
 
 MonoObject *

@@ -38,7 +38,7 @@ namespace GenerateTypeForwarders {
 		{
 			if (method is null)
 				return false;
-			return method.IsPublic || method.IsFamily;
+			return method.IsPublic || method.IsFamily || method.IsFamilyOrAssembly;
 		}
 
 		static bool IsVisible (this PropertyDefinition property)
@@ -126,6 +126,12 @@ namespace GenerateTypeForwarders {
 				EmitTypeName (sb, paramType);
 				sb.Append (" @");
 				sb.Append (param.Name);
+
+				if (param.IsOptional) {
+					sb.Append (" = ");
+					// handles `False` for boolean, works fine with numerics
+					sb.Append (param.Constant.ToString ().ToLowerInvariant ());
+				}
 			}
 		}
 
@@ -424,7 +430,7 @@ namespace GenerateTypeForwarders {
 					if (valid) {
 						sb.Append ("override ");
 					} else {
-						sb.Append ("new ");
+						sb.Append ("new virtual ");
 					}
 				} else if (!pd.DeclaringType.IsSealed) {
 					if (m.IsAbstract)

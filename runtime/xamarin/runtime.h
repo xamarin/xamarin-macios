@@ -25,6 +25,8 @@
 extern "C" {
 #endif
 
+struct InitializationOptions;
+
 typedef struct {
 	const char *name;
 	const char *type;
@@ -204,6 +206,9 @@ void			xamarin_handle_bridge_exception (GCHandle gchandle, const char *method);
 void			xamarin_vm_initialize ();
 bool			xamarin_bridge_vm_initialize (int propertyCount, const char **propertyKeys, const char **propertyValues);
 void*			xamarin_pinvoke_override (const char *libraryName, const char *entrypointName);
+void			xamarin_bridge_call_runtime_initialize (struct InitializationOptions* options, GCHandle* exception_gchandle);
+void			xamarin_bridge_register_product_assembly (GCHandle* exception_gchandle);
+bool			xamarin_register_monoassembly (MonoAssembly *assembly, GCHandle *exception_gchandle);
 
 MonoObject *	xamarin_new_nsobject (id self, MonoClass *klass, GCHandle *exception_gchandle);
 bool			xamarin_has_managed_ref (id self);
@@ -245,6 +250,10 @@ NSString *		xamarin_print_all_exceptions (GCHandle handle);
 id				xamarin_invoke_objc_method_implementation (id self, SEL sel, IMP xamarin_impl);
 MonoClass *		xamarin_get_nsnumber_class ();
 MonoClass *		xamarin_get_nsvalue_class ();
+MonoClass *		xamarin_get_inativeobject_class ();
+MonoClass *		xamarin_get_nsobject_class ();
+MonoClass *		xamarin_get_nsstring_class ();
+MonoClass *		xamarin_get_runtime_class ();
 
 bool			xamarin_is_managed_exception_marshaling_disabled ();
 
@@ -265,8 +274,8 @@ void			xamarin_install_log_callbacks ();
  * until Mono's pointer-sized API is available for us.
  * Ref: https://github.com/dotnet/runtime/commit/3886a63841434af716292172737a42757a15c6a6
  */
-GCHandle		xamarin_gchandle_new (MonoObject *obj, bool track_resurrection);
-GCHandle		xamarin_gchandle_new_weakref (MonoObject *obj, bool pinned);
+GCHandle		xamarin_gchandle_new (MonoObject *obj, bool pinned);
+GCHandle		xamarin_gchandle_new_weakref (MonoObject *obj, bool track_resurrection);
 MonoObject *	xamarin_gchandle_get_target (GCHandle handle);
 void			xamarin_gchandle_free (GCHandle handle);
 MonoObject *	xamarin_gchandle_unwrap (GCHandle handle); // Will get the target and free the GCHandle
