@@ -8,6 +8,17 @@
   </PropertyGroup>
   <ItemGroup>
     <EmbeddedResource Update="MSBStrings.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>MSBStrings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="MSBStrings.Designer.cs">
+      <DependentUpon>MSBStrings.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="MSBStrings.resx">
     </EmbeddedResource>
     <EmbeddedResource Include="MSBStrings.resx">
     </EmbeddedResource>
