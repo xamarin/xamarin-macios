@@ -232,7 +232,7 @@ namespace GenerateTypeForwarders {
 			if (method.IsAbstract && !method.DeclaringType.IsInterface)
 				sb.Append ("abstract ");
 			if (method.IsVirtual && !method.DeclaringType.IsInterface && !method.IsFinal && !method.IsAbstract) {
-				if (AnyMethodWithSignatureInHierarchy (method.DeclaringType.BaseType?.Resolve (), method, out var matchingMethod) && matchingMethod.IsVirtual) {
+				if (!method.IsNewSlot && AnyMethodWithSignatureInHierarchy (method.DeclaringType.BaseType?.Resolve (), method, out var matchingMethod) && matchingMethod.IsVirtual) {
 					sb.Append ("override ");
 				} else {
 					sb.Append ("virtual ");
@@ -476,7 +476,7 @@ namespace GenerateTypeForwarders {
 					sb.Append ("new ");
 			} else if (m.IsVirtual && !implicit_interface) {
 				if (HasPropertyInTypeHierarchy (pd.DeclaringType, m, out var valid)) {
-					if (valid) {
+					if (!m.IsNewSlot && valid) {
 						sb.Append ("override ");
 					} else {
 						sb.Append ("new virtual ");
