@@ -24,7 +24,6 @@ namespace MetricKit {
 		[Export ("JSONRepresentation")]
 		NSData JsonRepresentation { get; }
 
-#if IOS
 		[Internal]
 		[Deprecated (PlatformName.iOS, 14,0)]
 		[Export ("DictionaryRepresentation")]
@@ -34,10 +33,6 @@ namespace MetricKit {
 		[iOS (14,0)]
 		[Export ("dictionaryRepresentation")]
 		NSDictionary _DictionaryRepresentation14 { get; }
-#else
-		[Export ("dictionaryRepresentation")]
-		NSDictionary DictionaryRepresentation { get; }
-#endif
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (13,0)]
@@ -141,7 +136,6 @@ namespace MetricKit {
 		[Export ("JSONRepresentation")]
 		NSData JsonRepresentation { get; }
 
-#if IOS && !__MACCATALYST__
 		[Internal]
 		[Deprecated (PlatformName.iOS, 14,0)]
 		[Export ("DictionaryRepresentation")]
@@ -149,13 +143,9 @@ namespace MetricKit {
 
 		[Internal]
 		[iOS (14,0)]
-		[Export ("dictionaryRepresentation")]
-		NSDictionary _DictionaryRepresentation14 { get; }
-#else
 		[MacCatalyst (14,0)]
 		[Export ("dictionaryRepresentation")]
-		NSDictionary DictionaryRepresentation { get; }
-#endif
+		NSDictionary _DictionaryRepresentation14 { get; }
 
 		[iOS (14,0)]
 		[MacCatalyst (14,0)]
@@ -362,7 +352,6 @@ namespace MetricKit {
 		[Export ("JSONRepresentation")]
 		NSData JsonRepresentation { get; }
 
-#if IOS && !__MACCATALYST__
 		[Internal]
 		[Deprecated (PlatformName.iOS, 14,0)]
 		[Export ("DictionaryRepresentation")]
@@ -370,13 +359,9 @@ namespace MetricKit {
 
 		[Internal]
 		[iOS (14,0)]
-		[Export ("dictionaryRepresentation")]
-		NSDictionary _DictionaryRepresentation14 { get; }
-#else
 		[MacCatalyst (14,0)]
 		[Export ("dictionaryRepresentation")]
-		NSDictionary DictionaryRepresentation { get; }
-#endif
+		NSDictionary _DictionaryRepresentation14 { get; }
 
 		[iOS (14,0)]
 		[MacCatalyst (14,0)]

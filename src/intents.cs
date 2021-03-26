@@ -1685,8 +1685,10 @@ namespace Intents {
 		CellularDataSettings,
 		RestrictedContent,
 		[Watch (7,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		ServiceUnavailable,
 		[Watch (7,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		RegionRestriction,
 	}
 
@@ -1801,8 +1803,10 @@ namespace Intents {
 		CellularDataSettings,
 		RestrictedContent,
 		[Watch (7,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		ServiceUnavailable,
 		[Watch (7,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		RegionRestriction,
 	}
 
@@ -1861,8 +1865,10 @@ namespace Intents {
 		CellularDataSettings,
 		RestrictedContent,
 		[Watch (7,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		ServiceUnavailable,
 		[Watch (7,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		RegionRestriction,
 	}
 
@@ -1972,8 +1978,10 @@ namespace Intents {
 		CellularDataSettings,
 		RestrictedContent,
 		[Watch (7,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		ServiceUnavailable,
 		[Watch (7,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		RegionRestriction,
 	}
 
@@ -2156,6 +2164,7 @@ namespace Intents {
 		GetRideStatus,
 
 		[Watch (7,0), NoMac, iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Field ("INStartCallIntentIdentifier")]
 		StartCall,
 	}
@@ -2196,6 +2205,7 @@ namespace Intents {
 		Other,
 
 		[Watch (7,0), Mac (11,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Field ("INPersonHandleLabelSchool")]
 		School,
 	}
@@ -2328,6 +2338,7 @@ namespace Intents {
 	}
 
 	[iOS (14,0), NoMac, NoTV, Watch (7,0)]
+	[MacCatalyst (14,0)]
 	enum INCarChargingConnectorType {
 		[DefaultEnumValue]
 		[Field (null)]
@@ -3710,6 +3721,7 @@ namespace Intents {
 		INImage FromName (string name);
 
 		[Watch (7,0), NoMac, iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Static]
 		[Export ("systemImageNamed:")]
 		INImage FromSystem (string systemImageName);
@@ -3829,6 +3841,7 @@ namespace Intents {
 		string SuggestedInvocationPhrase { get; set; }
 
 		[Watch (7,0), NoTV, NoMac, iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Export ("shortcutAvailability", ArgumentSemantic.Assign)]
 		INShortcutAvailabilityOptions ShortcutAvailability { get; set; }
 
@@ -4368,6 +4381,7 @@ namespace Intents {
 		IntPtr Constructor (INPersonHandle personHandle, [NullAllowed] NSPersonNameComponents nameComponents, [NullAllowed] string displayName, [NullAllowed] INImage image, [NullAllowed] string contactIdentifier, [NullAllowed] string customIdentifier);
 
 		[Watch (7,0), iOS (14,0), Mac (11,0)]
+		[MacCatalyst (14,0)]
 		[Export ("initWithPersonHandle:nameComponents:displayName:image:contactIdentifier:customIdentifier:relationship:")]
 		IntPtr Constructor (INPersonHandle personHandle, [NullAllowed] NSPersonNameComponents nameComponents, [NullAllowed] string displayName, [NullAllowed] INImage image, [NullAllowed] string contactIdentifier, [NullAllowed] string customIdentifier, [NullAllowed] string relationship);
 
@@ -6042,6 +6056,7 @@ namespace Intents {
 	interface INSendMessageIntent {
 
 		[Watch (7,0), NoMac, iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Export ("initWithRecipients:outgoingMessageType:content:speakableGroupName:conversationIdentifier:serviceName:sender:attachments:")]
 		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] INPerson[] recipients, INOutgoingMessageType outgoingMessageType, [NullAllowed] string content, [NullAllowed] INSpeakableString speakableGroupName, [NullAllowed] string conversationIdentifier, [NullAllowed] string serviceName, [NullAllowed] INPerson sender, [NullAllowed] INSendMessageAttachment[] attachments);
@@ -6062,6 +6077,7 @@ namespace Intents {
 		INPerson [] Recipients { get; }
 
 		[Watch (7,0), NoMac, iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Export ("outgoingMessageType", ArgumentSemantic.Assign)]
 		INOutgoingMessageType OutgoingMessageType { get; }
 
@@ -6089,6 +6105,7 @@ namespace Intents {
 		INPerson Sender { get; }
 
 		[Watch (7,0), NoMac, iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[NullAllowed]
 		[Export ("attachments", ArgumentSemantic.Copy)]
 		INSendMessageAttachment[] Attachments { get; }
@@ -6139,6 +6156,7 @@ namespace Intents {
 		void ResolveGroupName (INSendMessageIntent intent, Action<INStringResolutionResult> completion);
 
 		[Watch (7,0), NoMac, iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Export ("resolveOutgoingMessageTypeForSendMessage:withCompletion:")]
 		void ResolveOutgoingMessageType (INSendMessageIntent intent, Action<INOutgoingMessageTypeResolutionResult> completion);
 
@@ -7612,10 +7630,12 @@ namespace Intents {
 		INInteraction GetInteraction ();
 
 		[Watch (7,0), NoTV, NoMac, iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Export ("shortcutAvailability")]
 		INShortcutAvailabilityOptions GetShortcutAvailability ();
 
 		[Watch (7,0), NoTV, NoMac, iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Export ("setShortcutAvailability:")]
 		void SetShortcutAvailability (INShortcutAvailabilityOptions shortcutAvailabilityOptions);
 	}
@@ -7997,10 +8017,12 @@ namespace Intents {
 		void HandleGetCarPowerLevelStatus (INGetCarPowerLevelStatusIntent intent, Action<INGetCarPowerLevelStatusIntentResponse> completion);
 
 		[NoWatch, iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Export ("startSendingUpdatesForGetCarPowerLevelStatus:toObserver:")]
 		void StartSendingUpdates (INGetCarPowerLevelStatusIntent intent, IINGetCarPowerLevelStatusIntentResponseObserver observer);
 
 		[NoWatch, iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Export ("stopSendingUpdatesForGetCarPowerLevelStatus:")]
 		void StopSendingUpdates (INGetCarPowerLevelStatusIntent intent);
 
@@ -8020,6 +8042,7 @@ namespace Intents {
 	interface IINGetCarPowerLevelStatusIntentResponseObserver {}
 
 	[NoWatch, NoTV, NoMac, iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[Protocol]
 	interface INGetCarPowerLevelStatusIntentResponseObserver {
 
@@ -8047,6 +8070,7 @@ namespace Intents {
 		INGetCarPowerLevelStatusIntentResponseCode Code { get; }
 
 		[Watch (7, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[NullAllowed, Export ("carIdentifier")]
 		string CarIdentifier { get; set; }
 
@@ -8078,51 +8102,63 @@ namespace Intents {
 		NSNumber MinutesToFull { get; set; }
 
 		[Watch (7, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[NullAllowed, Export ("maximumDistance", ArgumentSemantic.Copy)]
 		NSMeasurement<NSUnitLength> MaximumDistance { get; set; }
 
 		[Watch (7, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[NullAllowed, Export ("distanceRemainingElectric", ArgumentSemantic.Copy)]
 		NSMeasurement<NSUnitLength> DistanceRemainingElectric { get; set; }
 
 		[Watch (7, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[NullAllowed, Export ("maximumDistanceElectric", ArgumentSemantic.Copy)]
 		NSMeasurement<NSUnitLength> MaximumDistanceElectric { get; set; }
 
 		[Watch (7, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[NullAllowed, Export ("distanceRemainingFuel", ArgumentSemantic.Copy)]
 		NSMeasurement<NSUnitLength> DistanceRemainingFuel { get; set; }
 
 		[Watch (7, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[NullAllowed, Export ("maximumDistanceFuel", ArgumentSemantic.Copy)]
 		NSMeasurement<NSUnitLength> MaximumDistanceFuel { get; set; }
 
 		[Watch (7, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[NullAllowed, Export ("consumptionFormulaArguments", ArgumentSemantic.Copy)]
 		NSDictionary<NSString, NSObject> ConsumptionFormulaArguments { get; set; }
 
 		[Watch (7, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[NullAllowed, Export ("chargingFormulaArguments", ArgumentSemantic.Copy)]
 		NSDictionary<NSString, NSObject> ChargingFormulaArguments { get; set; }
 
 		[Watch (7, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[NullAllowed, Export ("dateOfLastStateUpdate", ArgumentSemantic.Copy)]
 		NSDateComponents DateOfLastStateUpdate { get; set; }
 
 		[Watch (7, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[BindAs (typeof (INCarChargingConnectorType))]
 		[NullAllowed, Export ("activeConnector")]
 		NSString ActiveConnector { get; set; }
 
 		[Watch (7, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[NullAllowed, Export ("maximumBatteryCapacity", ArgumentSemantic.Copy)]
 		NSMeasurement<NSUnitEnergy> MaximumBatteryCapacity { get; set; }
 
 		[Watch (7, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[NullAllowed, Export ("currentBatteryCapacity", ArgumentSemantic.Copy)]
 		NSMeasurement<NSUnitEnergy> CurrentBatteryCapacity { get; set; }
 
 		[Watch (7, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[NullAllowed, Export ("minimumBatteryCapacity", ArgumentSemantic.Copy)]
 		NSMeasurement<NSUnitEnergy> MinimumBatteryCapacity { get; set; }
 	}
@@ -9601,6 +9637,7 @@ namespace Intents {
 		IntPtr Constructor (nuint interval, INRecurrenceFrequency frequency);
 
 		[Watch (7,0), NoMac, iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Export ("initWithInterval:frequency:weeklyRecurrenceDays:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (nuint interval, INRecurrenceFrequency frequency, INDayOfWeekOptions weeklyRecurrenceDays);
@@ -9612,6 +9649,7 @@ namespace Intents {
 		INRecurrenceFrequency Frequency { get; }
 
 		[Watch (7,0), NoMac, iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Export ("weeklyRecurrenceDays")]
 		INDayOfWeekOptions WeeklyRecurrenceDays { get; }
 	}
@@ -10741,10 +10779,12 @@ namespace Intents {
 		IntPtr Constructor ([NullAllowed] string identifier, string displayString);
 
 		[Watch (7,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Export ("initWithIdentifier:displayString:subtitleString:displayImage:")]
 		IntPtr Constructor ([NullAllowed] string identifier, string displayString, [NullAllowed] string subtitleString, [NullAllowed] INImage displayImage);
 
 		[Watch (7,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Export ("initWithIdentifier:displayString:pronunciationHint:subtitleString:displayImage:")]
 		IntPtr Constructor ([NullAllowed] string identifier, string displayString, [NullAllowed] string pronunciationHint, [NullAllowed] string subtitleString, [NullAllowed] INImage displayImage);
 
@@ -10766,10 +10806,12 @@ namespace Intents {
 		INSpeakableString [] GetAlternativeSpeakableMatches ();
 
 		[Watch (7,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[NullAllowed, Export ("subtitleString")]
 		string SubtitleString { get; set; }
 
 		[Watch (7,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[NullAllowed, Export ("displayImage", ArgumentSemantic.Strong)]
 		INImage DisplayImage { get; set; }
 
@@ -11745,6 +11787,7 @@ namespace Intents {
 	interface INFlightReservation : NSCopying, NSSecureCoding {
 
 		[Watch (7,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Export ("initWithItemReference:reservationNumber:bookingTime:reservationStatus:reservationHolderName:actions:URL:reservedSeat:flight:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (INSpeakableString itemReference, [NullAllowed] string reservationNumber, [NullAllowed] NSDate bookingTime, INReservationStatus reservationStatus, [NullAllowed] string reservationHolderName, [NullAllowed] INReservationAction[] actions, [NullAllowed] NSUrl url, [NullAllowed] INSeat reservedSeat, INFlight flight);
@@ -11843,6 +11886,7 @@ namespace Intents {
 	interface INLodgingReservation : NSCopying, NSSecureCoding {
 
 		[Watch (7,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Export ("initWithItemReference:reservationNumber:bookingTime:reservationStatus:reservationHolderName:actions:URL:lodgingBusinessLocation:reservationDuration:numberOfAdults:numberOfChildren:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (INSpeakableString itemReference, [NullAllowed] string reservationNumber, [NullAllowed] NSDate bookingTime, INReservationStatus reservationStatus, [NullAllowed] string reservationHolderName, [NullAllowed] INReservationAction[] actions, [NullAllowed] NSUrl url, CLPlacemark lodgingBusinessLocation, INDateComponentsRange reservationDuration, [NullAllowed] [BindAs (typeof (int?))] NSNumber numberOfAdults, [NullAllowed] [BindAs (typeof (int?))] NSNumber numberOfChildren);
@@ -12442,6 +12486,7 @@ namespace Intents {
 	interface INRentalCarReservation : NSCopying, NSSecureCoding {
 
 		[Watch (7,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Export ("initWithItemReference:reservationNumber:bookingTime:reservationStatus:reservationHolderName:actions:URL:rentalCar:rentalDuration:pickupLocation:dropOffLocation:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (INSpeakableString itemReference, [NullAllowed] string reservationNumber, [NullAllowed] NSDate bookingTime, INReservationStatus reservationStatus, [NullAllowed] string reservationHolderName, [NullAllowed] INReservationAction[] actions, [NullAllowed] NSUrl url, INRentalCar rentalCar, INDateComponentsRange rentalDuration, [NullAllowed] CLPlacemark pickupLocation, [NullAllowed] CLPlacemark dropOffLocation);
@@ -12486,6 +12531,7 @@ namespace Intents {
 		INReservationAction [] Actions { get; }
 
 		[Watch (7,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[NullAllowed, Export ("URL", ArgumentSemantic.Copy)]
 		NSUrl Url { get; }
 	}
@@ -12515,6 +12561,7 @@ namespace Intents {
 	interface INRestaurantReservation : NSCopying, NSSecureCoding {
 
 		[Watch (7,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Export ("initWithItemReference:reservationNumber:bookingTime:reservationStatus:reservationHolderName:actions:URL:reservationDuration:partySize:restaurantLocation:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (INSpeakableString itemReference, [NullAllowed] string reservationNumber, [NullAllowed] NSDate bookingTime, INReservationStatus reservationStatus, [NullAllowed] string reservationHolderName, [NullAllowed] INReservationAction[] actions, [NullAllowed] NSUrl url, INDateComponentsRange reservationDuration, [NullAllowed] [BindAs (typeof (int?))] NSNumber partySize, CLPlacemark restaurantLocation);
@@ -12932,6 +12979,7 @@ namespace Intents {
 	interface INStartCallIntent {
 
 		[Watch (7,0), NoTV, NoMac, iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Export ("initWithCallRecordFilter:callRecordToCallBack:audioRoute:destinationType:contacts:callCapability:")]
 		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] INCallRecordFilter callRecordFilter, [NullAllowed] INCallRecord callRecordToCallBack, INCallAudioRoute audioRoute, INCallDestinationType destinationType, [NullAllowed] INPerson[] contacts, INCallCapability callCapability);
@@ -12942,11 +12990,13 @@ namespace Intents {
 		IntPtr Constructor (INCallAudioRoute audioRoute, INCallDestinationType destinationType, [NullAllowed] INPerson[] contacts, INCallRecordType recordTypeForRedialing, INCallCapability callCapability);
 
 		[Watch (7,0), NoTV, NoMac, iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[NullAllowed]
 		[Export ("callRecordFilter", ArgumentSemantic.Copy)]
 		INCallRecordFilter CallRecordFilter { get; }
 
 		[Watch (7,0), NoTV, NoMac, iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[NullAllowed]
 		[Export ("callRecordToCallBack", ArgumentSemantic.Copy)]
 		INCallRecord CallRecordToCallBack { get; }
@@ -12981,6 +13031,7 @@ namespace Intents {
 		void Confirm (INStartCallIntent intent, Action<INStartCallIntentResponse> completion);
 
 		[Watch (7,0), NoTV, NoMac, iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Export ("resolveCallRecordToCallBackForStartCall:withCompletion:")]
 		void ResolveCallRecordToCallBack (INStartCallIntent intent, Action<INCallRecordResolutionResult> completion);
 
@@ -13119,6 +13170,7 @@ namespace Intents {
 	interface INTicketedEventReservation : NSCopying, NSSecureCoding {
 
 		[Watch (7,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Export ("initWithItemReference:reservationNumber:bookingTime:reservationStatus:reservationHolderName:actions:URL:reservedSeat:event:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (INSpeakableString itemReference, [NullAllowed] string reservationNumber, [NullAllowed] NSDate bookingTime, INReservationStatus reservationStatus, [NullAllowed] string reservationHolderName, [NullAllowed] INReservationAction[] actions, [NullAllowed] NSUrl url, [NullAllowed] INSeat reservedSeat, INTicketedEvent @event);
@@ -13181,6 +13233,7 @@ namespace Intents {
 	interface INTrainReservation : NSCopying, NSSecureCoding {
 
 		[Watch (7,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Export ("initWithItemReference:reservationNumber:bookingTime:reservationStatus:reservationHolderName:actions:URL:reservedSeat:trainTrip:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (INSpeakableString itemReference, [NullAllowed] string reservationNumber, [NullAllowed] NSDate bookingTime, INReservationStatus reservationStatus, [NullAllowed] string reservationHolderName, [NullAllowed] INReservationAction[] actions, [NullAllowed] NSUrl url, [NullAllowed] INSeat reservedSeat, INTrainTrip trainTrip);
@@ -13576,6 +13629,7 @@ namespace Intents {
 	}
 
 	[Watch (7,0), NoTV, Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (INReservation))]
 	[DisableDefaultCtor]
 	interface INBoatReservation : NSCopying, NSSecureCoding {
@@ -13592,6 +13646,7 @@ namespace Intents {
 	}
 
 	[Watch (7,0), NoTV, Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INBoatTrip : NSCopying, NSSecureCoding {
@@ -13620,6 +13675,7 @@ namespace Intents {
 	}
 
 	[Watch (7,0), NoTV, Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (INReservation))]
 	[DisableDefaultCtor]
 	interface INBusReservation : NSCopying, NSSecureCoding {
@@ -13636,6 +13692,7 @@ namespace Intents {
 	}
 
 	[Watch (7,0), NoTV, Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INBusTrip : NSCopying, NSSecureCoding {
@@ -13670,6 +13727,7 @@ namespace Intents {
 	}
 
 	[Watch (7,0), NoTV, NoMac, iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INCallRecordFilter : NSCopying, NSSecureCoding {
@@ -13689,6 +13747,7 @@ namespace Intents {
 	}
 
 	[Watch (7,0), NoTV, NoMac, iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	interface INCallRecordResolutionResult {
 
@@ -13734,6 +13793,7 @@ namespace Intents {
 	}
 
 	[Watch (7,0), NoTV, NoMac, iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INCar : NSCopying, NSSecureCoding {
@@ -13776,6 +13836,7 @@ namespace Intents {
 	}
 
 	[Watch (7,0), NoTV, NoMac, iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INCarHeadUnit : NSCopying, NSSecureCoding {
@@ -13792,6 +13853,7 @@ namespace Intents {
 	}
 
 	[Watch (7,0), NoTV, NoMac, iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (INIntent))]
 	[DesignatedDefaultCtor]
 	interface INListCarsIntent {
@@ -13801,6 +13863,7 @@ namespace Intents {
 	interface IINListCarsIntentHandling { }
 
 	[Watch (7,0), NoTV, NoMac, iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[Protocol]
 	interface INListCarsIntentHandling {
 
@@ -13813,6 +13876,7 @@ namespace Intents {
 	}
 
 	[Watch (7,0), NoTV, NoMac, iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
 	interface INListCarsIntentResponse {
@@ -13829,6 +13893,7 @@ namespace Intents {
 	}
 
 	[Watch (7,0), NoTV, Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INObjectCollection<ObjectType> : NSCopying, NSSecureCoding
@@ -13852,6 +13917,7 @@ namespace Intents {
 	}
 
 	[Watch (7,0), NoTV, Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INObjectSection <ObjectType> : NSCopying, NSSecureCoding
@@ -13869,6 +13935,7 @@ namespace Intents {
 	}
 
 	[Watch (7,0), NoTV, NoMac, iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INOutgoingMessageTypeResolutionResult {
@@ -13911,6 +13978,7 @@ namespace Intents {
 	}
 
 	[Watch (7,0), NoTV, NoMac, iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INSendMessageAttachment {
@@ -13924,6 +13992,7 @@ namespace Intents {
 	}
 
 	[Watch (7,0), NoTV, NoMac, iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (INCallRecordResolutionResult))]
 	[DisableDefaultCtor]
 	interface INStartCallCallRecordToCallBackResolutionResult {

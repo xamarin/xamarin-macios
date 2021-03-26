@@ -68,6 +68,7 @@ namespace GameKit {
 #if !MONOMAC
 	[NoWatch]
 	[NoTV]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -87,6 +88,7 @@ namespace GameKit {
 
 	[NoWatch]
 	[NoTV]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'MCBrowserViewController' from the 'MultipeerConnectivity' framework instead.")]
 	interface GKPeerPickerController {
@@ -142,6 +144,7 @@ namespace GameKit {
 
 	[NoWatch] // deprecated in 2.0 (but framework not added before 3.0)
 	[NoTV]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'GKVoiceChat' instead.")]
 	interface GKVoiceChatService {
@@ -2772,6 +2775,7 @@ namespace GameKit {
 	}
 
 	[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	interface GKLeaderboardScore
 	{
