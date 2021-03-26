@@ -9248,6 +9248,7 @@ namespace AVFoundation {
 	[NoTV]
 	[iOS (8,0)]
 	[BaseType (typeof (AVCaptureBracketedStillImageSettings))]
+	[DisableDefaultCtor]
 	interface AVCaptureManualExposureBracketedStillImageSettings {
 		[Export ("exposureDuration")]
 		CMTime ExposureDuration { get; }
@@ -9263,6 +9264,7 @@ namespace AVFoundation {
 	[NoTV]
 	[iOS (8,0)]
 	[BaseType (typeof (AVCaptureBracketedStillImageSettings))]
+	[DisableDefaultCtor]
 	interface AVCaptureAutoExposureBracketedStillImageSettings {
 		[Export ("exposureTargetBias")]
 		float ExposureTargetBias { get; } /* float, not CGFloat */
@@ -12727,6 +12729,7 @@ namespace AVFoundation {
 		AVUrlAsset UrlAsset { get; }
 
 		[Availability (Deprecated = Platform.iOS_10_0)]
+		[NoMacCatalyst]
 		[Export ("destinationURL")]
 		NSUrl DestinationUrl { get; }
 
@@ -13846,6 +13849,7 @@ namespace AVFoundation {
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (13,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof(AVCaptureSession))]
 	interface AVCaptureMultiCamSession {
 		[Static]

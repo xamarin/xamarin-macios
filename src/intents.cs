@@ -3733,21 +3733,25 @@ namespace Intents {
 		// INImage_IntentsUI (IntentsUI)
 
 		[NoMac, NoWatch, NoTV]
+		[NoMacCatalyst]
 		[Static]
 		[Export ("imageWithCGImage:")]
 		INImage FromImage (CGImage image);
 
 		[NoMac, NoWatch, NoTV]
+		[NoMacCatalyst]
 		[Static]
 		[Export ("imageWithUIImage:")]
 		INImage FromImage (UIImage image);
 
 		[NoMac, NoWatch, NoTV]
+		[NoMacCatalyst]
 		[Static]
 		[Export ("imageSizeForIntentResponse:")]
 		CGSize GetImageSize (INIntentResponse response);
 
 		[NoMac, NoWatch, iOS (11,0), NoTV]
+		[NoMacCatalyst]
 		[Async]
 		[Export ("fetchUIImageWithCompletion:")]
 		void FetchImage (Action<UIImage> completion);
@@ -4563,7 +4567,7 @@ namespace Intents {
 	[iOS (10, 0)]
 	[Watch (3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
-#if XAMCORE_4_0 || TVOS
+#if XAMCORE_4_0 || TVOS || __MACCATALYST__
 	[DisableDefaultCtor]
 #endif
 	[TV (14,0)]

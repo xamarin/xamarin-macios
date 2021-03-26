@@ -340,10 +340,12 @@ namespace AudioUnit
 		}
 
 		[NoWatch, TV (14,0), Mac (11,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[DllImport (Constants.AudioUnitLibrary)]
 		static extern unsafe IntPtr AudioComponentCopyIcon (IntPtr comp);
 
 		[NoWatch, TV (14,0), iOS (14,0), Mac (11,0)]
+		[MacCatalyst (14,0)]
 		public UIImage CopyIcon ()
 		{
 			var ptr = AudioComponentCopyIcon (handle);
@@ -367,11 +369,13 @@ namespace AudioUnit
 
 		[iOS (7,0)]
 		[Deprecated (PlatformName.iOS, 13,0)]
+		[MacCatalyst (14,0)]
 		[DllImport(Constants.AudioUnitLibrary)]
 		static extern double AudioComponentGetLastActiveTime (IntPtr comp);
 
 		[iOS (7,0)]
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'AudioUnit' instead.")]
+		[MacCatalyst (14,0)][Deprecated (PlatformName.MacCatalyst, 14,0, message: "Use 'AudioUnit' instead.")]
 		public double LastActiveTime {
 			get {
 				return AudioComponentGetLastActiveTime (handle);

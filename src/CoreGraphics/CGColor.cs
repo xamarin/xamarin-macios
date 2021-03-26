@@ -129,6 +129,7 @@ namespace CoreGraphics {
 		}
 
 		[iOS (14,0)][TV (14,0)][Watch (7,0)]
+		[MacCatalyst (14,0)]
 		public CGColor (CGConstantColor color)
 		{
 			var constant = color.GetConstant ();
@@ -316,10 +317,12 @@ namespace CoreGraphics {
 		}
 
 		[iOS (14,0)][TV (14,0)][Watch (7,0)][Mac (11,0)]
+		[MacCatalyst (14,0)]
 		[DllImport(Constants.CoreGraphicsLibrary)]
 		static extern /* CGColorRef */ IntPtr CGColorCreateGenericCMYK (nfloat cyan, nfloat magenta, nfloat yellow, nfloat black, nfloat alpha);
 
 		[iOS (14,0)][TV (14,0)][Watch (7,0)][Mac (11,0)]
+		[MacCatalyst (14,0)]
 		static public CGColor CreateCmyk (nfloat cyan, nfloat magenta, nfloat yellow, nfloat black, nfloat alpha)
 		{
 			var h = CGColorCreateGenericCMYK (cyan, magenta, yellow, black, alpha);
@@ -327,10 +330,12 @@ namespace CoreGraphics {
 		}
 
 		[iOS (14,0)][TV (14,0)][Watch (7,0)][Mac (11,0)]
+		[MacCatalyst (14,0)]
 		[DllImport (Constants.AccessibilityLibrary)]
 		static extern /* NSString */ IntPtr AXNameFromColor (/* CGColorRef */ IntPtr color);
 
 		[iOS (14,0)][TV (14,0)][Watch (7,0)][Mac (11,0)]
+		[MacCatalyst (14,0)]
 		public string AXName => NSString.FromHandle (AXNameFromColor (handle));
 
 

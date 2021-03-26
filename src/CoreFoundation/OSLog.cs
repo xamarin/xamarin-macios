@@ -27,7 +27,6 @@ using System.Collections.Generic;
 
 namespace CoreFoundation {
 	[Mac (10,12), iOS (10,0), Watch (3,0), TV (10,0)]
-	[Introduced (PlatformName.MacCatalyst, 13, 0)]
 	public sealed class OSLog : NativeObject {
 
 		static OSLog _default;

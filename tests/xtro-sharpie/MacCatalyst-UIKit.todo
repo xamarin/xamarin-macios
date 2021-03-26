@@ -136,7 +136,6 @@
 !missing-null-allowed! 'System.Boolean UIKit.UIManagedDocument::WriteAdditionalContent(Foundation.NSObject,Foundation.NSUrl,Foundation.NSUrl,Foundation.NSError&)' is missing an [NullAllowed] on parameter #2
 !missing-null-allowed! 'System.Boolean UIKit.UIPrintInteractionController::PrintToPrinter(UIKit.UIPrinter,UIKit.UIPrintInteractionCompletionHandler)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Boolean UIKit.UIScrollView::TouchesShouldBegin(Foundation.NSSet,UIKit.UIEvent,UIKit.UIView)' is missing an [NullAllowed] on parameter #1
-!missing-null-allowed! 'System.Boolean UIKit.UISearchDisplayDelegate::ShouldReloadForSearchString(UIKit.UISearchDisplayController,System.String)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Boolean UIKit.UISplitViewControllerDelegate::EventShowDetailViewController(UIKit.UISplitViewController,UIKit.UIViewController,Foundation.NSObject)' is missing an [NullAllowed] on parameter #2
 !missing-null-allowed! 'System.Boolean UIKit.UISplitViewControllerDelegate::EventShowViewController(UIKit.UISplitViewController,UIKit.UIViewController,Foundation.NSObject)' is missing an [NullAllowed] on parameter #2
 !missing-null-allowed! 'System.Boolean UIKit.UITableViewDelegate::CanPerformAction(UIKit.UITableView,ObjCRuntime.Selector,Foundation.NSIndexPath,Foundation.NSObject)' is missing an [NullAllowed] on parameter #3
@@ -349,7 +348,6 @@
 !missing-null-allowed! 'UIKit.UINavigationItem UIKit.UINavigationBar::get_BackItem()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UINavigationItem UIKit.UINavigationBar::get_TopItem()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UINavigationItem UIKit.UINavigationBar::PopNavigationItem(System.Boolean)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'UIKit.UINavigationItem UIKit.UISearchDisplayController::get_NavigationItem()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIPasteboard UIKit.UIPasteboard::FromName(System.String,System.Boolean)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIPinchGestureRecognizer UIKit.UIScrollView::get_PinchGestureRecognizer()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIPopoverPresentationController UIKit.UIViewController::get_PopoverPresentationController()' is missing an [NullAllowed] on return type
@@ -363,7 +361,6 @@
 !missing-null-allowed! 'UIKit.UIResponder UIKit.UIResponder::get_NextResponder()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIScreen UIKit.UIScreen::get_MirroredScreen()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIScreenMode UIKit.UIScreen::get_PreferredMode()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'UIKit.UISearchDisplayController UIKit.UIViewController::get_SearchDisplayController()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UISplitViewController UIKit.UIViewController::get_SplitViewController()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIStoryboard UIKit.UIViewController::get_Storyboard()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIStoryboardSegue UIKit.UIViewController::GetSegueForUnwinding(UIKit.UIViewController,UIKit.UIViewController,System.String)' is missing an [NullAllowed] on parameter #2

@@ -1064,6 +1064,7 @@ namespace UIKit {
 
 		[NoWatch]
 		[TV (14,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Notification]
 		[Field ("UIAccessibilityButtonShapesEnabledStatusDidChangeNotification")]
 		NSString ButtonShapesEnabledStatusDidChangeNotification { get; }
@@ -1088,6 +1089,7 @@ namespace UIKit {
 
 		[NoWatch]
 		[TV (14,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Notification]
 		[Field ("UIAccessibilityPrefersCrossFadeTransitionsStatusDidChangeNotification")]
 		NSString PrefersCrossFadeTransitionsStatusDidChangeNotification { get; }
@@ -11360,6 +11362,7 @@ namespace UIKit {
 		
 	[BaseType (typeof (NSObject))]
 	[Availability (Deprecated = Platform.iOS_8_0, Message="Use 'UISearchController'.")]
+	[NoMacCatalyst] // Objective-C exception thrown.  Name: NSGenericException Reason: UISearchDisplayController is no longer supported when linking against this version of iOS. Please migrate your application to UISearchController.
 	[NoTV]
 	interface UISearchDisplayController {
 		[Export ("initWithSearchBar:contentsController:")]
@@ -11419,6 +11422,7 @@ namespace UIKit {
 	[Model]
 	[Protocol]
 	[NoTV]
+	[NoMacCatalyst]
 	interface UISearchDisplayDelegate {
 		
 		[Export ("searchDisplayControllerWillBeginSearch:")]
@@ -14731,6 +14735,7 @@ namespace UIKit {
 		// These come from @interface UIViewController (UISearchDisplayControllerSupport)
 		[NoTV]
 		[Availability (Deprecated = Platform.iOS_8_0, Message="Use 'UISearchController' instead.")]
+		[NoMacCatalyst]
 		[Export ("searchDisplayController", ArgumentSemantic.Retain)]
 		UISearchDisplayController SearchDisplayController { get; }
 		
@@ -19867,7 +19872,7 @@ namespace UIKit {
 		[NullAllowed, Export ("requestingScene", ArgumentSemantic.Strong)]
 		UIScene RequestingScene { get; set; }
 
-		[Introduced (PlatformName.MacCatalyst, 10, 14)]
+		[Introduced (PlatformName.MacCatalyst, 14, 0)]
 		[NoWatch, NoTV, NoiOS]
 		[Export ("collectionJoinBehavior", ArgumentSemantic.Assign)]
 		UISceneCollectionJoinBehavior CollectionJoinBehavior { get; set; }
@@ -21851,6 +21856,7 @@ namespace UIKit {
 	}
 
 	[NoWatch, TV (14,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DesignatedDefaultCtor]
 	interface UICellAccessory : NSCopying, NSSecureCoding {
@@ -22178,6 +22184,7 @@ namespace UIKit {
 	}
 
 	[NoWatch, NoTV, iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (UIControl))]
 	interface UIColorWell {
 
@@ -22490,6 +22497,7 @@ namespace UIKit {
 	delegate UIColor UIConfigurationColorTransformerHandler (UIColor color);
 
 	[NoWatch, TV (14,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface UIListContentImageProperties : NSCopying, NSSecureCoding {
@@ -22572,6 +22580,7 @@ namespace UIKit {
 	}
 
 	[NoWatch, NoTV, iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface UIPointerLockState {
@@ -22648,6 +22657,7 @@ namespace UIKit {
 	}
 
 	[NoWatch, TV (14,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[Static, Partial]
 	interface UIConfigurationColorTransformer {
 

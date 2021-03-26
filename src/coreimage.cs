@@ -9153,6 +9153,7 @@ namespace CoreImage {
 	[iOS (14,0)]
 	[TV (14,0)]
 	[Mac (11,0)]
+	[MacCatalyst (14,0)]
 	[Protocol (Name="CIColorAbsoluteDifference")]
 	interface CIColorAbsoluteDifferenceProtocol : CIFilterProtocol {
 
@@ -9169,6 +9170,7 @@ namespace CoreImage {
 	[iOS (14,0)]
 	[TV (14,0)]
 	[Mac (11,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (CIFilter))]
 	interface CIColorAbsoluteDifference : CIColorAbsoluteDifferenceProtocol {
 	}
@@ -9176,6 +9178,7 @@ namespace CoreImage {
 	[iOS (14,0)]
 	[TV (14,0)]
 	[Mac (11,0)]
+	[MacCatalyst (14,0)]
 	[Protocol (Name="CIColorThreshold")]
 	interface CIColorThresholdProtocol : CIFilterProtocol {
 
@@ -9192,6 +9195,7 @@ namespace CoreImage {
 	[iOS (14,0)]
 	[TV (14,0)]
 	[Mac (11,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (CIFilter))]
 	interface CIColorThreshold : CIColorThresholdProtocol {
 	}
@@ -9199,6 +9203,7 @@ namespace CoreImage {
 	[iOS (14,0)]
 	[TV (14,0)]
 	[Mac (11,0)]
+	[MacCatalyst (14,0)]
 	[Protocol (Name="CIColorThresholdOtsu")]
 	interface CIColorThresholdOtsuProtocol : CIFilterProtocol {
 
@@ -9211,6 +9216,7 @@ namespace CoreImage {
 	[iOS (14,0)]
 	[TV (14,0)]
 	[Mac (11,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (CIFilter))]
 	interface CIColorThresholdOtsu : CIColorThresholdOtsuProtocol {
 	}
