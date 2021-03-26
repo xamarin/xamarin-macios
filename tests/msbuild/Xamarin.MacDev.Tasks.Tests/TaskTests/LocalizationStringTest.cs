@@ -22,9 +22,11 @@ namespace Xamarin.iOS.Tasks {
 		[TestCase ("it-IT", "TJit")]
 		[TestCase ("ja-JP", "TJja")]
 		[TestCase ("ko-KR", "TJko")]
-		[TestCase ("pl-PL", "TJ")]
+		[TestCase ("nl", "TJnl")]
 		[TestCase ("pt-BR", "TJ")]
+		[TestCase ("pt-PT", "TJ")]
 		[TestCase ("ru-RU", "TJru")]
+		[TestCase ("sv", "TJsv")]
 		[TestCase ("tr-TR", "TJtr")]
 		[TestCase ("zh-CN", "TJzh")]
 		[TestCase ("zh-TW", "TJzh")]
@@ -85,7 +87,6 @@ namespace Xamarin.iOS.Tasks {
 				Assert.IsFalse (string.IsNullOrEmpty (errorCode), "Error code is null or empty");
 				string englishError = TranslateError ("en-US", errorCode);
 				string newCultureError = TranslateError (culture, errorCode);
-
 				Assert.AreNotEqual (englishError, newCultureError, $"\"{errorCode}\" is not translated in {culture}.");
 			} catch (NullReferenceException){
 				Assert.IsFalse (true, $"Error code \"{errorCode}\" was not found");
