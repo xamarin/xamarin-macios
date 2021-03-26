@@ -484,7 +484,7 @@ namespace GenerateTypeForwarders {
 				} else if (!pd.DeclaringType.IsSealed) {
 					if (m.IsAbstract)
 						sb.Append ("abstract ");
-					else
+					else if (!m.IsFinal)
 						sb.Append ("virtual ");
 				}
 			}
