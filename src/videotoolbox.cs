@@ -190,15 +190,18 @@ namespace VideoToolbox {
 		NSString UsingGpuRegistryId { get; }
 
 		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[Field ("kVTCompressionPropertyKey_HDRMetadataInsertionMode")]
 		NSString HdrMetadataInsertionMode { get; }
 
 		[TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[Field ("kVTCompressionPropertyKey_PrioritizeEncodingSpeedOverQuality")]
 		NSString PrioritizeEncodingSpeedOverQuality { get; }
 
 		[iOS (14,1)]
 		[TV (14,2)][Mac (11,0)]
+		[MacCatalyst (14,1)]
 		[Field ("kVTCompressionPropertyKey_PreserveDynamicHDRMetadata")]
 		NSString PreserveDynamicHdrMetadata { get; }
 	}
@@ -333,6 +336,7 @@ namespace VideoToolbox {
 
 		[iOS (14,1)]
 		[TV (14,2)][Mac (11,0)]
+		[MacCatalyst (14,1)]
 		[Export ("PreserveDynamicHdrMetadata")]
 		bool PreserveDynamicHdrMetadata { get; set; }
 	}
@@ -725,6 +729,7 @@ namespace VideoToolbox {
 
 		[iOS (14,1)]
 		[TV (14,2)][Mac (11,0)]
+		[MacCatalyst (14,1)]
 		[Field ("kVTDecompressionPropertyKey_PropagatePerFrameHDRDisplayMetadata")]
 		NSString PropagatePerFrameHdrDisplayMetadata { get; }
 	}
@@ -811,6 +816,7 @@ namespace VideoToolbox {
 
 		[iOS (14,1)]
 		[TV (14,2)][Mac (11,0)]
+		[MacCatalyst (14,1)]
 		[Export ("PropagatePerFrameHdrDisplayMetadata")]
 		bool PropagatePerFrameHhrDisplayMetadata { get; set; }
 	}
@@ -984,6 +990,7 @@ namespace VideoToolbox {
 		NSString IsHardwareAccelerated { get; }
 
 		[iOS (14,2)][TV (14,2)][Mac (11,0)]
+		[MacCatalyst (14,2)]
 		[Field ("kVTVideoEncoderList_SupportsFrameReordering")]
 		NSString SupportsFrameReordering { get; }
 
