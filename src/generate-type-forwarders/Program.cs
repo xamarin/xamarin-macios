@@ -460,8 +460,6 @@ namespace GenerateTypeForwarders {
 
 		static void EmitProperty (StringBuilder sb, PropertyDefinition pd, int indent)
 		{
-			if (pd.DeclaringType.Name == "DisplayedPropertiesCollection")
-				Console.WriteLine ();
 			sb.Append ('\t', indent);
 			var gm = pd.GetMethod;
 			var sm = pd.SetMethod;
