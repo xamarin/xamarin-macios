@@ -269,7 +269,7 @@ namespace Foundation {
 
 		void CreateManagedRef (bool retain)
 		{
-			HasManagedRef = false;
+			HasManagedRef = true;
 			xamarin_create_managed_ref (handle, this, retain, Runtime.IsUserType (handle));
 		}
 
