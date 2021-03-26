@@ -166,10 +166,10 @@ namespace GenerateTypeForwarders {
 				if (param.IsOut) {
 					sb.Append ("out ");
 					if (paramType.IsByReference)
-						paramType = paramType.GetElementType ();
+						paramType = (paramType as TypeSpecification).ElementType;
 				} else if (paramType.IsByReference) {
 					sb.Append ("ref ");
-					paramType = paramType.GetElementType ();
+					paramType = (paramType as TypeSpecification).ElementType;
 				}
 
 				EmitTypeName (sb, paramType);
