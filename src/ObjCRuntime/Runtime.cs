@@ -1006,8 +1006,10 @@ namespace ObjCRuntime {
 		{
 			lock (lock_obj) {
 				if (object_map.TryGetValue (ptr, out var wr)) {
-					if (managed_obj == null || wr.Target == (object) managed_obj)
+					if (managed_obj == null || wr.Target == (object) managed_obj) {
 						object_map.Remove (ptr);
+						wr.Free ();
+					}
 
 				}
 
