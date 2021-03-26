@@ -8503,6 +8503,7 @@ namespace Foundation
 
 		[NoTV]
 		[Availability (Deprecated = Platform.iOS_7_0)]
+		[NoMacCatalyst]
 		[Export ("minimumTrackingAdjustment")]
 		nfloat MinimumTrackingAdjustment { get; set;  }
 

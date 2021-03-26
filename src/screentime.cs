@@ -13,6 +13,7 @@ using UIViewController = AppKit.NSViewController;
 namespace ScreenTime {
 
 	[Mac (11, 0), iOS (14, 0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface STScreenTimeConfiguration : NSSecureCoding {
@@ -21,6 +22,7 @@ namespace ScreenTime {
 	}
 
 	[Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface STScreenTimeConfigurationObserver {
@@ -39,6 +41,7 @@ namespace ScreenTime {
 	}
 
 	[Mac (11, 0), iOS (14, 0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface STWebHistory {
@@ -57,6 +60,7 @@ namespace ScreenTime {
 	}
 
 	[Mac (11, 0), iOS (14, 0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (UIViewController))]
 	[DisableDefaultCtor]
 	interface STWebpageController

@@ -133,6 +133,8 @@ namespace Introspection {
 
 			public AttachableNativeObject (INativeObject obj)
 			{
+				if (obj == null)
+					throw new ArgumentNullException ("obj");
 				nativeObj = obj;
 			}
 
@@ -299,7 +301,11 @@ namespace Introspection {
 					return new CGDataConsumer (destData);
 				}
 			case "CGDataProvider":
+#if __MACCATALYST__
+				filename = Path.Combine ("Contents", "Resources", "xamarin1.png");
+#else
 				filename = "xamarin1.png";
+#endif
 				return new CGDataProvider (filename);
 			case "CGFont":
 				return CGFont.CreateWithFontName ("Courier New");
@@ -364,7 +370,11 @@ namespace Introspection {
 				using (var value = new NSString ("value"))
 					return new CGImageMetadataTag (CGImageMetadataTagNamespaces.Exif, CGImageMetadataTagPrefixes.Exif, name, CGImageMetadataType.Default, value);
 			case "CGImageSource":
+#if __MACCATALYST__
+				filename = Path.Combine ("Contents", "Resources", "xamarin1.png");
+#else
 				filename = "xamarin1.png";
+#endif
 				return CGImageSource.FromUrl (NSUrl.FromFilename (filename));
 			case "SecPolicy":
 				return SecPolicy.CreateSslPolicy (false, null);
@@ -407,7 +417,11 @@ namespace Introspection {
 				CGColor[] cArray = { UIColor.Black.CGColor, UIColor.Clear.CGColor, UIColor.Blue.CGColor };
 				return new CGGradient (null, cArray);
 			case "CGImage":
+#if __MACCATALYST__
+				filename = Path.Combine ("Contents", "Resources", "xamarin1.png");
+#else
 				filename = "xamarin1.png";
+#endif
 				using (var dp = new CGDataProvider (filename))
 					return CGImage.FromPNG (dp, null, false, CGColorRenderingIntent.Default);
 			case "CGColor":
@@ -527,8 +541,11 @@ namespace Introspection {
 					&& !t.IsSubclassOf (DispatchSourceType) && !t.IsInterface && !t.IsAbstract);
 			foreach (var t in types) {
 				if (Skip (t))
-					continue; 
-				var obj = new AttachableNativeObject (GetINativeInstance (t));
+					continue;
+				var n = GetINativeInstance (t);
+				if (n == null)
+					Assert.Fail ("Could not create instance of '{0}'.", t);
+				var obj = new AttachableNativeObject (n);
 				Assert.That (obj.Handle, Is.Not.EqualTo (IntPtr.Zero), t.Name + ".Handle");
 				using (var attch = new CFString ("myAttch")) {
 					CMAttachmentMode otherMode;

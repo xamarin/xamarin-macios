@@ -224,7 +224,7 @@ partial class TestRuntime
 			if (v.Xcode.Beta != beta)
 				continue;
 
-#if __IOS__ && !__MACCATALYST__
+#if __IOS__
 			if (!CheckExactiOSSystemVersion (v.iOS.Major, v.iOS.Minor))
 				return false;
 			if (v.iOS.Build == "?")
@@ -240,7 +240,7 @@ partial class TestRuntime
 			var actual = GetiOSBuildVersion ();
 			Console.WriteLine (actual);
 			return actual.StartsWith (v.tvOS.Build, StringComparison.Ordinal);
-#elif __MACOS__ || __MACCATALYST__
+#elif __MACOS__
 			if (!CheckExactmacOSSystemVersion (v.macOS.Major, v.macOS.Minor))
 				return false;
 			if (v.macOS.Build == "?")

@@ -517,4 +517,22 @@ namespace AVFoundation {
 #endif // TVOS
 #endif // !XAMCORE_4_0
 #endif // !WATCH
+
+#if !XAMCORE_4_0 && IOS // includes __MACCATALYST__
+	public partial class AVCaptureManualExposureBracketedStillImageSettings {
+		[Obsolete ("Use the static 'Create' method to create a working instance of this type.")]
+		public AVCaptureManualExposureBracketedStillImageSettings () : base (NSObjectFlag.Empty)
+		{
+			throw new NotImplementedException ();
+		}
+	}
+
+	public partial class AVCaptureAutoExposureBracketedStillImageSettings {
+		[Obsolete ("Use the static 'Create' method to create a working instance of this type.")]
+		public AVCaptureAutoExposureBracketedStillImageSettings () : base (NSObjectFlag.Empty)
+		{
+			throw new NotImplementedException ();
+		}
+	}
+#endif
 }

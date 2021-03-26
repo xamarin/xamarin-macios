@@ -2556,10 +2556,11 @@ namespace CoreData
 	[DisableDefaultCtor] // NSInternalInconsistencyException Reason: -init results in undefined behavior for NSBatchInsertRequest
 	interface NSBatchInsertRequest {
 
-		[Deprecated (PlatformName.iOS, 14,0, message: "Use 'no yet bound' instead.")]
-		[Deprecated (PlatformName.TvOS, 14,0, message: "Use 'no yet bound' instead.")]
-		[Deprecated (PlatformName.WatchOS, 7,0, message: "Use 'no yet bound' instead.")]
-		[Deprecated (PlatformName.MacOSX, 10,16, message: "Use 'no yet bound' instead.")]
+		[Deprecated (PlatformName.iOS, 14,0, message: "Use another constructor instead.")]
+		[Deprecated (PlatformName.TvOS, 14,0, message: "Use another constructor instead.")]
+		[Deprecated (PlatformName.WatchOS, 7,0, message: "Use another constructor instead.")]
+		[Deprecated (PlatformName.MacOSX, 10,16, message: "Use another constructor instead.")]
+		[NoMacCatalyst]
 		[Export ("init")]
 		IntPtr Constructor ();
 
@@ -2695,6 +2696,7 @@ namespace CoreData
 	}
 
 	[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface NSPersistentCloudKitContainerEvent : NSCopying {
@@ -2728,6 +2730,7 @@ namespace CoreData
 	}
 
 	[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSPersistentStoreRequest))]
 	interface NSPersistentCloudKitContainerEventRequest {
 		[Export ("resultType", ArgumentSemantic.Assign)]
@@ -2751,6 +2754,7 @@ namespace CoreData
 	}
 
 	[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof(NSPersistentStoreResult))]
 	[DisableDefaultCtor]
 	interface NSPersistentCloudKitContainerEventResult {

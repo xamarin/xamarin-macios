@@ -11,9 +11,9 @@ namespace LocalAuthentication {
 		[Mac (10,12,2)]
 		DeviceOwnerAuthenticationWithBiometrics = 1,
 		DeviceOwnerAuthentication = 2,
-		[NoiOS][Mac (10,15)][Introduced (PlatformName.MacCatalyst, 13,0)]
+		[NoiOS][Mac (10,15)]
 		DeviceOwnerAuthenticationWithWatch = 3,
-		[NoiOS][Mac (10,15)][Introduced (PlatformName.MacCatalyst, 13,0)]
+		[NoiOS][Mac (10,15)]
 		OwnerAuthenticationWithBiometricsOrWatch = 4,
 	}
 

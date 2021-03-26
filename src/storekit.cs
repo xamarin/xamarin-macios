@@ -248,10 +248,12 @@ namespace StoreKit {
 		SKStorefront Storefront { get; }
 
 		[NoWatch, NoTV, NoMac, iOS (13,4)]
+		[NoMacCatalyst]
 		[Export ("showPriceConsentIfNeeded")]
 		void ShowPriceConsentIfNeeded ();
 
 		[NoWatch, NoTV, NoMac, iOS (14,0)]
+		[NoMacCatalyst]
 		[Export ("presentCodeRedemptionSheet")]
 		void PresentCodeRedemptionSheet ();
 
