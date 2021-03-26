@@ -333,7 +333,9 @@
 
 		#region metadata/appdomain.h
 
-		new Export ("MonoDomain *", "mono_domain_get"),
+		new Export ("MonoDomain *", "mono_domain_get") {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		new Export ("MonoClass *", "mono_get_intptr_class"),
 
