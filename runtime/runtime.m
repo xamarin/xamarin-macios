@@ -182,6 +182,7 @@ static struct Trampolines trampolines = {
 
 static struct InitializationOptions options = { 0 };
 
+#if !defined (CORECLR_RUNTIME)
 void
 xamarin_add_internal_call (const char *name, const void *method)
 {
@@ -200,6 +201,7 @@ xamarin_add_internal_call (const char *name, const void *method)
 	else
 		mono_add_internal_call (name, method);
 }
+#endif // !CORECLR_RUNTIME
 
 id
 xamarin_get_nsobject_handle (MonoObject *obj)
@@ -811,6 +813,7 @@ xamarin_type_get_full_name (MonoType *type, GCHandle *exception_gchandle)
  * ToggleRef support
  */
 // #define DEBUG_TOGGLEREF 1
+#if !defined (CORECLR_RUNTIME)
 static void
 gc_register_toggleref (MonoObject *obj, id self, bool isCustomType)
 {
@@ -885,7 +888,9 @@ gc_toggleref_callback (MonoObject *object)
 
 	return res;
 }
+#endif
 
+#if !defined (CORECLR_RUNTIME)
 static void
 gc_event_callback (MonoProfiler *prof, MonoGCEvent event, int generation)
 {
@@ -907,18 +912,12 @@ gc_event_callback (MonoProfiler *prof, MonoGCEvent event, int generation)
 static void
 gc_enable_new_refcount (void)
 {
-	// COOP: this is executed at startup, I believe the mode here doesn't matter.
-	pthread_mutexattr_t attr;
-	pthread_mutexattr_init (&attr);
-	pthread_mutexattr_settype (&attr, PTHREAD_MUTEX_RECURSIVE);
-	pthread_mutex_init (&framework_peer_release_lock, &attr);
-	pthread_mutexattr_destroy (&attr);
-
 	mono_gc_toggleref_register_callback (gc_toggleref_callback);
 
 	xamarin_add_internal_call ("Foundation.NSObject::RegisterToggleRef", (const void *) gc_register_toggleref);
 	mono_profiler_install_gc (gc_event_callback, NULL);
 }
+#endif // !CORECLR_RUNTIME
 
 struct _MonoProfiler {
 	int dummy;
@@ -1391,7 +1390,15 @@ xamarin_initialize ()
 	}
 #endif
 
+	pthread_mutexattr_t attr;
+	pthread_mutexattr_init (&attr);
+	pthread_mutexattr_settype (&attr, PTHREAD_MUTEX_RECURSIVE);
+	pthread_mutex_init (&framework_peer_release_lock, &attr);
+	pthread_mutexattr_destroy (&attr);
+
+#if !defined (CORECLR_RUNTIME)
 	gc_enable_new_refcount ();
+#endif
 
 	MONO_EXIT_GC_UNSAFE;
 }
