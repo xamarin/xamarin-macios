@@ -509,11 +509,60 @@
   <ItemGroup>
     <EmbeddedResource Include="Errors.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <XlfSourceFormat>Resx</XlfSourceFormat>
-      <XlfOutputItem>EmbeddedResource</XlfOutputItem>
       <LastGenOutput>Errors.Designer.cs</LastGenOutput>
       <CustomToolNamespace>Xamarin.Bundler</CustomToolNamespace>
       <LogicalName>Errors.mtouch.resources</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TranslatedAssemblies/Errors.cs.resx">
+      <Link>Errors.cs.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TranslatedAssemblies/Errors.de.resx">
+      <Link>Errors.de.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TranslatedAssemblies/Errors.es.resx">
+      <Link>Errors.es.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TranslatedAssemblies/Errors.fr.resx">
+      <Link>Errors.fr.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TranslatedAssemblies/Errors.hu.resx">
+      <Link>Errors.hu.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TranslatedAssemblies/Errors.it.resx">
+      <Link>Errors.it.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TranslatedAssemblies/Errors.ja.resx">
+      <Link>Errors.ja.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TranslatedAssemblies/Errors.ko.resx">
+      <Link>Errors.ko.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TranslatedAssemblies/Errors.nl.resx">
+      <Link>Errors.nl.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TranslatedAssemblies/Errors.pl.resx">
+      <Link>Errors.pl.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TranslatedAssemblies/Errors.pt-BR.resx">
+      <Link>Errors.pt-BR.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TranslatedAssemblies/Errors.pt-PT.resx">
+      <Link>Errors.pt-PT.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TranslatedAssemblies/Errors.ru.resx">
+      <Link>Errors.ru.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TranslatedAssemblies/Errors.sv.resx">
+      <Link>Errors.sv.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TranslatedAssemblies/Errors.tr.resx">
+      <Link>Errors.tr.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TranslatedAssemblies/Errors.zh-Hans.resx">
+      <Link>Errors.zh-Hans.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TranslatedAssemblies/Errors.zh-Hant.resx">
+      <Link>Errors.zh-Hant.resx</Link>
     </EmbeddedResource>
   </ItemGroup>
   <Target Name="BuildSdkVersions" Inputs="../common/SdkVersions.cs.in" Outputs="../common/SdkVersions.cs">
@@ -523,5 +572,4 @@
     <!-- This makes sure that just building the csproj will install the updated mtouch.exe, so that tests get it without having to 'make mtouch' manually -->
     <Exec Command="make mtouch" />
   </Target>
-  <Import Project="..\..\packages\XliffTasks.1.0.0-beta.20078.1\build\XliffTasks.targets" Condition="Exists('..\..\packages\XliffTasks.1.0.0-beta.20078.1\build\XliffTasks.targets')" />
 </Project>
