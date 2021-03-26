@@ -2,10 +2,10 @@
 # Selects appropriate agent pool based on trigger type (PR or CI)
 #
 parameters:
-  agentPoolPR: 'VSEng-Xamarin-RedmondMacCatalinaBuildPool-iOS-Untrusted'
-  agentPoolPRUrl: 'https://devdiv.visualstudio.com/DevDiv/_settings/agentqueues?queueId=2734&view=agents'
-  agentPoolCI: 'VSEng-Xamarin-RedmondMacCatalinaBuildPool-iOS-Trusted'
-  agentPoolCIUrl: 'https://devdiv.visualstudio.com/DevDiv/_settings/agentqueues?queueId=2748&view=agents'
+  agentPoolPR: 'VSEng-Xamarin-RedmondMacBuildPool-iOS-Untrusted'
+  agentPoolPRUrl: 'https://devdiv.visualstudio.com/_settings/agentpools?poolId=366&view=agents'
+  agentPoolCI: 'VSEng-Xamarin-RedmondMacBuildPool-iOS-Trusted'
+  agentPoolCIUrl: 'https://devdiv.visualstudio.com/_settings/agentpools?poolId=367&view=agents'
   condition: succeeded()
 
 steps:
