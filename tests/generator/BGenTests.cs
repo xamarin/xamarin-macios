@@ -224,15 +224,13 @@ namespace GeneratorTests
 				.Union (allTypes.SelectMany ((type) => type.Methods))
 				.Union (allTypes.SelectMany ((type) => type.Fields))
 				.Union (allTypes.SelectMany ((type) => type.Properties));
-
 #if NET
-			var preserves = allMembers.Sum ((v) => v.CustomAttributes.Count ((ca) => ca.AttributeType.Name == "SupportedOSPlatformAttribute"));
-			// 2 less because we cannot decorate the interfaces themselves (just the members)
-			Assert.AreEqual (8, preserves, "SupportedOSPlatform attribute count");
+			const string attrib = "SupportedOSPlatformAttribute";
 #else
-			var preserves = allMembers.Sum ((v) => v.CustomAttributes.Count ((ca) => ca.AttributeType.Name == "IntroducedAttribute"));
-			Assert.AreEqual (10, preserves, "Introduced attribute count"); // If you modified code that generates IntroducedAttributes please update the attribute count
+			const string attrib = "IntroducedAttribute";
 #endif
+			var preserves = allMembers.Sum ((v) => v.CustomAttributes.Count ((ca) => ca.AttributeType.Name == attrib));
+			Assert.AreEqual (10, preserves, "Introduced attribute count"); // If you modified code that generates IntroducedAttributes please update the attribute count
 		}
 
 		[Test]
