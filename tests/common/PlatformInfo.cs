@@ -26,7 +26,10 @@ namespace Xamarin.Tests
 		{
 			string name;
 			string version;
-#if __TVOS__ || __IOS__
+#if __MACCATALYST__
+			name = "MacCatalyst";
+			version = UIDevice.CurrentDevice.SystemVersion;
+#elif __TVOS__ || __IOS__
 			name = UIDevice.CurrentDevice.SystemName;
 			version = UIDevice.CurrentDevice.SystemVersion;
 #elif __WATCHOS__
@@ -41,16 +44,20 @@ namespace Xamarin.Tests
 #error Unknown platform
 #endif
 			name = name?.Replace (" ", String.Empty)?.ToLowerInvariant ();
+			if (name == null)
+				throw new FormatException ("Product name is `null`");
 
 			var platformInfo = new PlatformInfo ();
 
-			if (name != null && name.StartsWith ("mac", StringComparison.Ordinal))
+			if (name.StartsWith ("maccatalyst", StringComparison.Ordinal))
+				platformInfo.Name = PlatformName.MacCatalyst;
+			else if (name.StartsWith ("mac", StringComparison.Ordinal))
 				platformInfo.Name = PlatformName.MacOSX;
-			else if (name != null && (name.StartsWith ("ios", StringComparison.Ordinal) || name.StartsWith ("iphoneos", StringComparison.Ordinal)))
+			else if (name.StartsWith ("ios", StringComparison.Ordinal) || name.StartsWith ("iphoneos", StringComparison.Ordinal))
 				platformInfo.Name = PlatformName.iOS;
-			else if (name != null && name.StartsWith ("tvos", StringComparison.Ordinal))
+			else if (name.StartsWith ("tvos", StringComparison.Ordinal))
 				platformInfo.Name = PlatformName.TvOS;
-			else if (name != null && name.StartsWith ("watchos", StringComparison.Ordinal))
+			else if (name.StartsWith ("watchos", StringComparison.Ordinal))
 				platformInfo.Name = PlatformName.WatchOS;
 			else
 				throw new FormatException ($"Unknown product name: {name}");

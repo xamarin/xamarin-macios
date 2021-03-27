@@ -1948,36 +1948,42 @@ namespace GameplayKit {
 
 		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Deprecated (PlatformName.TvOS, 10, 0)]
+		[NoMacCatalyst]
 		[Export ("initWithMinPosition:maxPosition:minCellSize:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		IntPtr Constructor (Vector2 min, Vector2 max, float minCellSize);
 
 		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Deprecated (PlatformName.TvOS, 10, 0)]
+		[NoMacCatalyst]
 		[Export ("addDataWithPoint:point:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		GKQuadTreeNode AddData (NSObject data, Vector2 point);
 
 		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Deprecated (PlatformName.TvOS, 10, 0)]
+		[NoMacCatalyst]
 		[Export ("addDataWithQuad:quadOrigin:quadSize:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		GKQuadTreeNode AddData (NSObject data, Vector2 quadOrigin, Vector2 quadSize);
 
 		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Deprecated (PlatformName.TvOS, 10, 0)]
+		[NoMacCatalyst]
 		[Export ("queryDataForPoint:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		NSObject[] QueryData (Vector2 point);
 
 		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Deprecated (PlatformName.TvOS, 10, 0)]
+		[NoMacCatalyst]
 		[Export ("queryDataForQuad:quadSize:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		NSObject[] QueryData (Vector2 quadOrigin, Vector2 quadSize);
 
 		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Deprecated (PlatformName.TvOS, 10, 0)]
+		[NoMacCatalyst]
 		[Export ("removeData:withNode:")]
 		bool RemoveData (NSObject data, GKQuadTreeNode node);
 #endif

@@ -167,10 +167,12 @@ namespace Network {
 		}
 
 		[iOS (14,2)][TV (14,2)][Watch (7,1)][Mac (11,0)]
+		[MacCatalyst (14,2)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern NWPathUnsatisfiedReason /* nw_path_unsatisfied_reason_t */ nw_path_get_unsatisfied_reason (IntPtr /* OS_nw_path */ path);
 
 		[iOS (14,2)][TV (14,2)][Watch (7,1)][Mac (11,0)]
+		[MacCatalyst (14,2)]
 		public NWPathUnsatisfiedReason GetUnsatisfiedReason ()
 		{
 			return nw_path_get_unsatisfied_reason (GetCheckedHandle ());

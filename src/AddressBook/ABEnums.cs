@@ -35,6 +35,8 @@ using ObjCRuntime;
 
 namespace AddressBook {
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
 	[Native]
 	[ErrorDomain ("ABAddressBookErrorDomain")]
 	public enum ABAddressBookError : long {
@@ -43,6 +45,8 @@ namespace AddressBook {
 	}
 
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
 	[Native]
 	public enum ABAuthorizationStatus : long {
 		NotDetermined = 0,

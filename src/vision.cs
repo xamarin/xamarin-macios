@@ -393,6 +393,7 @@ namespace Vision {
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	enum VNHumanBodyPoseObservationJointName {
 		[DefaultEnumValue]
 		[Field (null)]
@@ -2609,6 +2610,7 @@ namespace Vision {
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (VNImageBasedRequest))]
 	[DisableDefaultCtor]
 	interface VNDetectContoursRequest {
@@ -2651,6 +2653,7 @@ namespace Vision {
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (VNRecognizedPointsObservation))]
 	[DisableDefaultCtor]
 	interface VNHumanBodyPoseObservation {
@@ -2673,6 +2676,7 @@ namespace Vision {
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (VNImageBasedRequest))]
 	[DisableDefaultCtor]
 	interface VNDetectHumanBodyPoseRequest {
@@ -2721,6 +2725,7 @@ namespace Vision {
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (VNRecognizedPointsObservation))]
 	[DisableDefaultCtor]
 	interface VNHumanHandPoseObservation {
@@ -2743,6 +2748,7 @@ namespace Vision {
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (VNImageBasedRequest))]
 	[DisableDefaultCtor]
 	interface VNDetectHumanHandPoseRequest {
@@ -2794,6 +2800,7 @@ namespace Vision {
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (VNStatefulRequest))]
 	[DisableDefaultCtor]
 	interface VNDetectTrajectoriesRequest {
@@ -2838,6 +2845,7 @@ namespace Vision {
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface VNPoint : NSCopying, NSSecureCoding {
@@ -2871,6 +2879,7 @@ namespace Vision {
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface VNVector : NSCopying, NSSecureCoding {
@@ -2930,6 +2939,7 @@ namespace Vision {
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface VNCircle : NSCopying, NSSecureCoding {
@@ -2963,6 +2973,7 @@ namespace Vision {
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // Not meant to be created but obtained via VNContoursObservation
 	interface VNContour : NSCopying, VNRequestRevisionProviding {
@@ -3001,6 +3012,7 @@ namespace Vision {
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (VNPoint))]
 	[DisableDefaultCtor]
 	interface VNDetectedPoint {
@@ -3010,6 +3022,7 @@ namespace Vision {
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (VNDetectedPoint))]
 	[DisableDefaultCtor]
 	interface VNRecognizedPoint {
@@ -3020,6 +3033,7 @@ namespace Vision {
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface VNGeometryUtils {
@@ -3206,6 +3220,7 @@ namespace Vision {
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (VNObservation))]
 	[DisableDefaultCtor]
 	interface VNTrajectoryObservation {
@@ -3224,6 +3239,7 @@ namespace Vision {
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (VNObservation))]
 	[DisableDefaultCtor]
 	interface VNContoursObservation {
@@ -3253,6 +3269,7 @@ namespace Vision {
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (VNObservation))]
 	[DisableDefaultCtor]
 	interface VNRecognizedPointsObservation {
@@ -3295,6 +3312,7 @@ namespace Vision {
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (VNImageBasedRequest))]
 	[DisableDefaultCtor]
 	interface VNStatefulRequest {
@@ -3333,6 +3351,7 @@ namespace Vision {
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface VNVideoProcessor {
@@ -3354,6 +3373,7 @@ namespace Vision {
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface VNVideoProcessorCadence : NSCopying {
@@ -3361,6 +3381,7 @@ namespace Vision {
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (VNVideoProcessorCadence))]
 	[DisableDefaultCtor]
 	interface VNVideoProcessorFrameRateCadence {
@@ -3374,6 +3395,7 @@ namespace Vision {
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (VNVideoProcessorCadence))]
 	[DisableDefaultCtor]
 	interface VNVideoProcessorTimeIntervalCadence {
@@ -3387,6 +3409,7 @@ namespace Vision {
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	interface VNVideoProcessorRequestProcessingOptions : NSCopying {
 

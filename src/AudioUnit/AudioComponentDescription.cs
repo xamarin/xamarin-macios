@@ -71,7 +71,6 @@ namespace AudioUnit
 		System=0x73797320, // 'sys'
 #endif
 		[Mac (10, 15)]
-		[Introduced (PlatformName.MacCatalyst, 13,0)]
 		Remote=0x72696f63, // 'rioc'
 		VoiceProcessingIO = 0x7670696f // 'vpio'
 	}

@@ -25,7 +25,7 @@ using System.Linq;
 using System.Text;
 
 using NUnit.Framework;
-#if __IOS__
+#if HAS_ARKIT
 using ARKit;
 #endif
 
@@ -603,7 +603,7 @@ namespace Introspection {
 			return SkipDueToAttribute (type);
 		}
 
-#if __IOS__
+#if HAS_ARKIT
 		/// <summary>
 		/// Ensures that all subclasses of a base class that conforms to IARAnchorCopying re-expose its constructor.
 		/// Note: we cannot have constructors in protocols so we have to inline them in every subclass.

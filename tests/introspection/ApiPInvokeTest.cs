@@ -276,6 +276,9 @@ namespace Introspection
 		// it's not complete (there's many more SDK assemblies) but we cannot add all of them into a single project anyway
 
 		[Test]
+#if __MACCATALYST__
+		[Ignore ("https://github.com/xamarin/xamarin-macios/issues/10883")]
+#endif
 		public void Corlib ()
 		{
 			var a = typeof (int).Assembly;
@@ -283,7 +286,9 @@ namespace Introspection
 				Check (a);
 		}
 
-		[Test]
+#if __MACCATALYST__
+		[Ignore ("https://github.com/xamarin/xamarin-macios/issues/10883")]
+#endif
 		public void System ()
 		{
 			var a = typeof (System.Net.WebClient).Assembly;
@@ -291,7 +296,9 @@ namespace Introspection
 				Check (a);
 		}
 
-		[Test]
+#if __MACCATALYST__
+		[Ignore ("https://github.com/xamarin/xamarin-macios/issues/10883")]
+#endif
 		public void SystemCore ()
 		{
 			var a = typeof (Enumerable).Assembly;

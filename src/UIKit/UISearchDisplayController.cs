@@ -1,4 +1,4 @@
-#if !TVOS && !WATCH // __TVOS_PROHIBITED, doesn't show up in WatchOS headers
+#if !TVOS && !WATCH && !__MACCATALYST__ // __TVOS_PROHIBITED, doesn't show up in WatchOS headers
 using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
@@ -29,4 +29,4 @@ namespace UIKit {
 	}
 }
 
-#endif // !TVOS && !WATCH
+#endif // !TVOS && !WATCH && !__MACCATALYST__

@@ -64,7 +64,6 @@ namespace AudioToolbox {
 		AMR = 0x616d7266, // amrf
 		[NoWatch, iOS (11,0), Mac(10,13), TV (11,0)]
 		FLAC =  0x666c6163, // flac
-		[Introduced (PlatformName.MacCatalyst, 13,0)]
 		[NoWatch, iOS (13,0), Mac(10,15), TV (13,0)]
 		LatmInLoas = 0x6c6f6173, // loas
 	}
@@ -215,7 +214,6 @@ namespace AudioToolbox {
 		}
 	}
 
-	[Introduced (PlatformName.MacCatalyst, 13,0)]
 	[NoWatch, iOS (13,0), Mac (10,15), TV (13,0)]
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioPacketRangeByteCountTranslation {
@@ -224,7 +222,6 @@ namespace AudioToolbox {
 		public long ByteCountUpperBound;
 	}
 
-	[Introduced (PlatformName.MacCatalyst, 13,0)]
 	[NoWatch, iOS (13,0), Mac (10,15), TV (13,0)]
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioPacketRollDistanceTranslation {
@@ -232,7 +229,6 @@ namespace AudioToolbox {
 		public long RollDistance;
 	}
 
-	[Introduced (PlatformName.MacCatalyst, 13,0)]
 	[NoWatch, iOS (13,0), Mac (10,15), TV (13,0)]
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioIndependentPacketTranslation {
@@ -240,7 +236,6 @@ namespace AudioToolbox {
 		public long IndependentlyDecodablePacket;
 	}
 
-	[Introduced (PlatformName.MacCatalyst, 13,0)]
 	[NoWatch, iOS (13,0), Mac (10,15), TV (13,0)]
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioPacketDependencyInfoTranslation {

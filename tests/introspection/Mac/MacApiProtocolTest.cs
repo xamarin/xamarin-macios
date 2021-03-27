@@ -21,6 +21,22 @@ namespace Introspection {
 	[TestFixture]
 	public class MonoMacFixtures : ApiProtocolTest {
 
+		protected override bool Skip (Type type)
+		{
+			switch (type.Name) {
+#if !XAMCORE_4_0
+			case "NSDraggingInfo":
+				return true; // Incorrectly bound (BaseType on protocol), will be fixed for XAMCORE_4_0.
+#endif
+			// special cases wrt sandboxing
+			case "NSRemoteOpenPanel":
+			case "NSRemoteSavePanel":
+				return true;
+			default:
+				return base.Skip (type);
+			}
+		}
+
 		protected override bool Skip (Type type, string protocolName)
 		{
 			switch (protocolName) {

@@ -169,6 +169,8 @@ namespace AddressBook {
 	}
 
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
 	public static class ABPersonAddressKey {
 
 		public static NSString City {get; private set;}
@@ -196,6 +198,8 @@ namespace AddressBook {
 	}
 
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
 	public static class ABPersonDateLabel {
 		public static NSString Anniversary {get; private set;}
 
@@ -247,6 +251,8 @@ namespace AddressBook {
 	}
 
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
 	static class ABPersonSocialProfile {
 		public static readonly NSString URLKey;
 		public static readonly NSString ServiceKey;
@@ -264,6 +270,8 @@ namespace AddressBook {
 	}
 
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
 	public static class ABPersonSocialProfileService
 	{
 		public static readonly NSString Twitter;
@@ -289,6 +297,8 @@ namespace AddressBook {
 	}
 	
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
 	public static class ABPersonPhoneLabel {
 		public static NSString HomeFax {get; private set;}
 		public static NSString iPhone {get; private set;}
@@ -319,6 +329,8 @@ namespace AddressBook {
 	}
 
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
 	public static class ABPersonInstantMessageService {
 		public static NSString Aim {get; private set;}
 		public static NSString Icq {get; private set;}
@@ -354,6 +366,8 @@ namespace AddressBook {
 	}
 
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
 	public static class ABPersonInstantMessageKey {
 		public static NSString Service {get; private set;}
 		public static NSString Username {get; private set;}
@@ -372,6 +386,8 @@ namespace AddressBook {
 	}
 
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
 	public static class ABPersonUrlLabel {
 		public static NSString HomePage {get; private set;}
 
@@ -387,6 +403,8 @@ namespace AddressBook {
 	}
 
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
 	public static class ABPersonRelatedNamesLabel {
 		public static NSString Assistant {get; private set;}
 		public static NSString Brother {get; private set;}
@@ -423,6 +441,8 @@ namespace AddressBook {
 	}
 
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
 	public static class ABLabel {
 		public static NSString Home {get; private set;}
 		public static NSString Other {get; private set;}
@@ -443,6 +463,8 @@ namespace AddressBook {
 	}
 
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
 	public class ABPerson : ABRecord, IComparable, IComparable<ABPerson> {
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static IntPtr ABPersonCreate ();
@@ -934,6 +956,10 @@ namespace AddressBook {
 	}
 
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
 	public class SocialProfile : DictionaryContainer
 	{
 		public SocialProfile ()
@@ -983,6 +1009,8 @@ namespace AddressBook {
 	}
 
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
 	public class InstantMessageService : DictionaryContainer
 	{
 		public InstantMessageService ()
@@ -1017,6 +1045,8 @@ namespace AddressBook {
 	}
 
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
 	public class PersonAddress : DictionaryContainer
 	{
 		public PersonAddress ()

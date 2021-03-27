@@ -37,7 +37,10 @@ namespace Introspection {
 		public ApiAvailabilityTest ()
 		{
 			Maximum = Version.Parse (Constants.SdkVersion);
-#if __IOS__
+#if __MACCATALYST__
+			Platform = PlatformName.MacCatalyst;
+			Minimum = Xamarin.SdkVersions.MinMacCatalystVersion;
+#elif __IOS__
 			Platform = PlatformName.iOS;
 			Minimum = Xamarin.SdkVersions.MiniOSVersion;
 #elif __TVOS__
@@ -160,7 +163,7 @@ namespace Introspection {
 		}
 
 		[Test]
-#if NET
+#if NET || __MACCATALYST__
 		[Ignore ("Requires attributes update - see status in https://github.com/xamarin/xamarin-macios/issues/10834")]
 #endif
 		public void Introduced ()

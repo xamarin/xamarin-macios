@@ -68,6 +68,7 @@ namespace GameKit {
 #if !MONOMAC
 	[NoWatch]
 	[NoTV]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -87,6 +88,7 @@ namespace GameKit {
 
 	[NoWatch]
 	[NoTV]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'MCBrowserViewController' from the 'MultipeerConnectivity' framework instead.")]
 	interface GKPeerPickerController {
@@ -142,6 +144,7 @@ namespace GameKit {
 
 	[NoWatch] // deprecated in 2.0 (but framework not added before 3.0)
 	[NoTV]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'GKVoiceChat' instead.")]
 	interface GKVoiceChatService {
@@ -507,6 +510,7 @@ namespace GameKit {
 #if !MONOMAC
 		[NoTV]
 		[NoWatch]
+		[NoMacCatalyst]
 		[Export ("loadImageWithCompletionHandler:")]
 		[Async]
 		void LoadImage ([NullAllowed] GKImageLoadedHandler completionHandler);
@@ -738,12 +742,12 @@ namespace GameKit {
 
 	[NoWatch]
 	[NoTV]
+	[NoMacCatalyst]
 	[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'GKGameCenterViewController' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'GKGameCenterViewController' instead.")]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
-	[NoTV]
 	interface GKLeaderboardViewControllerDelegate {
 		[Abstract]
 		[Export ("leaderboardViewControllerDidFinish:")]
@@ -751,6 +755,7 @@ namespace GameKit {
 	}
 
 	[NoTV][NoWatch]
+	[NoMacCatalyst]
 	[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'GKGameCenterViewController' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'GKGameCenterViewController' instead.")]
 #if MONOMAC
@@ -1658,12 +1663,12 @@ namespace GameKit {
 
 	[NoWatch]
 	[NoTV]
+	[NoMacCatalyst]
 	[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'GKGameCenterViewController' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'GKGameCenterViewController' instead.")]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
-	[NoTV]
 	interface GKAchievementViewControllerDelegate {
 		[Abstract]
 		[Export ("achievementViewControllerDidFinish:")]
@@ -1671,6 +1676,7 @@ namespace GameKit {
 	}
 
 	[NoTV][NoWatch]
+	[NoMacCatalyst]
 	[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'GKGameCenterViewController' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'GKGameCenterViewController' instead.")]
 #if MONOMAC
@@ -2769,6 +2775,7 @@ namespace GameKit {
 	}
 
 	[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	interface GKLeaderboardScore
 	{
