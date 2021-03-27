@@ -121,7 +121,7 @@ namespace GenerateTypeForwarders {
 			if (arrayType != null) {
 				sb.Append (arrayType.ElementType.Name);
 				sb.Append ('[');
-				sb.Append (new string (',', arrayType.Rank - 1));
+				sb.Append (',', arrayType.Rank - 1);
 				sb.Append (']');
 				return;
 			}
@@ -207,8 +207,7 @@ namespace GenerateTypeForwarders {
 			if (method.Name == "Finalize")
 				return;
 
-			var strIndent = new string ('\t', indent);
-			sb.Append (strIndent);
+			sb.Append ('\t', indent);
 
 			if (method.IsPublic)
 				sb.Append ("public ");
@@ -295,7 +294,7 @@ namespace GenerateTypeForwarders {
 			sb.Append (" (");
 			if (method.HasParameters)
 				EmitParameters (sb, method);
-			sb.Append (")");
+			sb.Append (')');
 			if (constraints != null)
 				sb.Append (constraints);
 			if (method.IsAbstract) {
@@ -309,18 +308,18 @@ namespace GenerateTypeForwarders {
 				else if (method.IsConstructor && method.HasParameters) {
 					var baseConstructors = method.DeclaringType.BaseType?.Resolve ()?.Methods?.Where (v => v.IsConstructor && v.HasParameters);
 					if (StartParameterTypeMatch (baseConstructors, method.Parameters, out var baseCtor)) {
-						sb.Append ($"{strIndent}\t: base (");
+						sb.Append ('\t', indent).Append (": base (");
 						for (var i = 0; i < baseCtor.Parameters.Count; i++) {
 							if (i > 0)
 								sb.Append (", ");
-							sb.Append ($"@{method.Parameters [i].Name}"); // need the original name
+							sb.Append ('@').Append (method.Parameters [i].Name); // need the original name
 						}
 						sb.AppendLine (")");
 					}
 				}
-				sb.AppendLine ($"{strIndent}{{");
-				sb.AppendLine ($"{strIndent}\tthrow new global::System.PlatformNotSupportedException (global::Constants.UnavailableOnMacCatalyst);");
-				sb.AppendLine ($"{strIndent}}}");
+				sb.Append ('\t', indent).AppendLine ("{");
+				sb.Append ('\t', indent + 1).AppendLine ("throw new global::System.PlatformNotSupportedException (global::Constants.UnavailableOnMacCatalyst);");
+				sb.Append ('\t', indent).AppendLine ("}");
 			}
 		}
 
@@ -534,10 +533,11 @@ namespace GenerateTypeForwarders {
 		static void EmitPNSE (StringBuilder sb, TypeDefinition type, int indent)
 		{
 			if (!type.IsNested)
-				sb.AppendLine ($"namespace {type.Namespace} {{");
-			var strIndent = new string ('\t', indent);
+				sb.Append ("namespace ").Append (type.Namespace).AppendLine (" {");
+
+			sb.Append ('\t', indent);
 			if (type.BaseType?.FullName == "System.MulticastDelegate") {
-				sb.Append ($"{strIndent}public delegate ");
+				sb.Append ("public delegate ");
 				var invoke = type.Methods.First (v => v.Name == "Invoke");
 				EmitTypeName (sb, invoke.ReturnType);
 				sb.Append (' ');
@@ -547,7 +547,6 @@ namespace GenerateTypeForwarders {
 					EmitParameters (sb, invoke);
 				sb.AppendLine (");");
 			} else {
-				sb.Append (strIndent);
 				// other are filtered not to generate stubs
 				if (type.IsNestedFamily)
 					sb.Append ("protected ");
@@ -663,7 +662,7 @@ namespace GenerateTypeForwarders {
 				foreach (var ev in type.Events)
 					EmitEvent (sb, ev, indent + 1);
 
-				sb.AppendLine ($"{strIndent}}}");
+				sb.Append ('\t', indent).AppendLine ("}");
 			}
 			if (!type.IsNested)
 				sb.AppendLine ("}");
@@ -700,7 +699,9 @@ namespace GenerateTypeForwarders {
 			sb.AppendLine ("using System.Runtime.CompilerServices;");
 
 			foreach (var exportedType in from.MainModule.ExportedTypes) {
-				sb.AppendLine ($"[assembly: TypeForwardedToAttribute (typeof ({exportedType.Namespace}.{exportedType.Name}))]");
+				sb.Append ("[assembly: TypeForwardedToAttribute (typeof (");
+				sb.Append (exportedType.Namespace).Append ('.').Append (exportedType.Name);
+				sb.AppendLine ("))]");
 			}
 
 			var pnseTypes = new List<TypeDefinition> ();
@@ -720,7 +721,7 @@ namespace GenerateTypeForwarders {
 
 				sb.Append ("[assembly: TypeForwardedToAttribute (typeof (");
 				sb.Append (type.Namespace);
-				sb.Append (".");
+				sb.Append ('.');
 
 				if (type.HasGenericParameters) {
 					var nonGeneric = type.Name.Substring (0, type.Name.IndexOf ('`'));
