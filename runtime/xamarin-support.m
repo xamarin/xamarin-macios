@@ -131,7 +131,7 @@ xamarin_timezone_get_local_name ()
 	return (name != nil) ? strdup ([name UTF8String]) : strdup ("Local");
 }
 
-#if !TARGET_OS_WATCH && !TARGET_OS_TV && !(TARGET_OS_MACCATALYST && defined (DOTNET))
+#if !TARGET_OS_WATCH && !TARGET_OS_TV && !(TARGET_OS_MACCATALYST && defined (DOTNET)) && !TARGET_OS_OSX
 void
 xamarin_start_wwan (const char *uri)
 {

@@ -126,6 +126,8 @@ int xamarin_fix_ranlib_warning_about_no_symbols;
 <# foreach (var export in exports) {
 	if (export.XamarinRuntime == RuntimeMode.MonoVM)
 		continue;
+	if (export.HasCoreCLRBridgeFunction)
+		continue;
 #>
 MONO_API <#= export.ReturnType #>
 <#= export.EntryPoint #> (<#= export.ArgumentSignature #>)

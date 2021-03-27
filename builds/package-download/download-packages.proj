@@ -8,8 +8,9 @@
     <PackageRuntimeIdentifiers Include="$(PackageRuntimeIdentifiers.Split(' '))" />
 
     <!-- Download the mono osx pack as well -->
-    <!-- I wasn't able to figure out how to only do this if 'osx-x64' is already included -->
+    <!-- I wasn't able to figure out how to only do this if 'osx-x64'/'osx-arm64' is already included -->
     <PackageRuntimeIdentifiers Include="Mono.osx-x64" />
+    <PackageRuntimeIdentifiers Include="Mono.osx-arm64" />
 
     <!-- download the runtime packs -->
     <PackageDownload Include="@(PackageRuntimeIdentifiers -> 'Microsoft.NETCore.App.Runtime.%(Identity)')" Version="[$(BundledNETCorePlatformsPackageVersion)]" />

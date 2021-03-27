@@ -45,6 +45,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(TargetArchitectures)' == '' And '$(_PlatformName)' == 'macOS' ">
     <TargetArchitectures Condition=" '$(RuntimeIdentifier)' == 'osx-x64' ">x86_64</TargetArchitectures>
+    <TargetArchitectures Condition=" '$(RuntimeIdentifier)' == 'osx-arm64' ">arm64</TargetArchitectures>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(TargetArchitectures)' == '' And '$(_PlatformName)' == 'MacCatalyst' ">
     <TargetArchitectures Condition=" '$(RuntimeIdentifier)' == 'maccatalyst-x64' ">x86_64</TargetArchitectures>
@@ -62,7 +63,7 @@
     <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'iOS' ">ios-x64;ios-arm64;ios-arm;ios-x86</_RuntimePackRuntimeIdentifiers>
     <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'tvOS' ">tvos-x64;tvos-arm64</_RuntimePackRuntimeIdentifiers>
     <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'watchOS' ">watchos-x86;watchos-x64;watchos-arm</_RuntimePackRuntimeIdentifiers>
-    <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'macOS' ">osx-x64</_RuntimePackRuntimeIdentifiers>
+    <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'macOS' ">osx-x64;osx-arm64</_RuntimePackRuntimeIdentifiers>
     <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'MacCatalyst' ">maccatalyst-x64;maccatalyst-arm64</_RuntimePackRuntimeIdentifiers>
   </PropertyGroup>
 
@@ -98,7 +99,7 @@
                               TargetingPackName="Microsoft.NETCore.App.Ref"
                               TargetingPackVersion="$(BundledNETCorePlatformsPackageVersion)"
                               RuntimePackNamePatterns="Microsoft.NETCore.App.Runtime.Mono.**RID**"
-                              RuntimePackRuntimeIdentifiers="osx-x64"
+                              RuntimePackRuntimeIdentifiers="osx-x64;osx-arm64"
                               IsTrimmable="true"
                               />
     <FrameworkReference Remove="Microsoft.NETCore.App" />

@@ -18,10 +18,19 @@
 #define LEGACY_XAMARIN_MAC 0
 #endif
 
+#include "product.h"
 #include "monotouch-debug.h"
 #include "runtime-internal.h"
 #include "xamarin/xamarin.h"
 #include "xamarin/monovm-bridge.h"
+
+static MonoAssembly* entry_assembly = NULL;
+static MonoClass* inativeobject_class = NULL;
+static MonoClass* nsobject_class = NULL;
+static MonoClass* nsvalue_class = NULL;
+static MonoClass* nsnumber_class = NULL;
+static MonoClass* nsstring_class = NULL;
+static MonoClass* runtime_class = NULL;
 
 #if !LEGACY_XAMARIN_MAC
 void
@@ -80,6 +89,111 @@ xamarin_bridge_initialize ()
 	DEBUG_LAUNCH_TIME_PRINT ("\tJIT init time");
 }
 #endif // !LEGACY_XAMARIN_MAC
+
+static MonoClass *
+get_class_from_name (MonoImage* image, const char *nmspace, const char *name, bool optional = false)
+{
+	// COOP: this is a convenience function executed only at startup, I believe the mode here doesn't matter.	
+	MonoClass *rv = mono_class_from_name (image, nmspace, name);
+	if (!rv && !optional)
+		xamarin_assertion_message ("Fatal error: failed to load the class '%s.%s'\n.", nmspace, name);
+	return rv;
+}
+
+void
+xamarin_bridge_call_runtime_initialize (struct InitializationOptions* options, GCHandle* exception_gchandle)
+{
+	MonoMethod *runtime_initialize;
+	void* params[2];
+	MonoObject *exc = NULL;
+	MonoImage* platform_image = NULL;
+
+	entry_assembly = xamarin_open_assembly (PRODUCT_DUAL_ASSEMBLY);
+
+	if (!entry_assembly)
+		xamarin_assertion_message ("Failed to load %s.", PRODUCT_DUAL_ASSEMBLY);
+	platform_image = mono_assembly_get_image (entry_assembly);
+
+	const char *objcruntime = "ObjCRuntime";
+	const char *foundation = "Foundation";
+
+	runtime_class = get_class_from_name (platform_image, objcruntime, "Runtime");
+	inativeobject_class = get_class_from_name (platform_image, objcruntime, "INativeObject");
+	nsobject_class = get_class_from_name (platform_image, foundation, "NSObject");
+	nsnumber_class = get_class_from_name (platform_image, foundation, "NSNumber", true);
+	nsvalue_class = get_class_from_name (platform_image, foundation, "NSValue", true);
+	nsstring_class = get_class_from_name (platform_image, foundation, "NSString", true);
+
+	xamarin_add_internal_call ("Foundation.NSObject::xamarin_create_managed_ref", (const void *) xamarin_create_managed_ref);
+
+	runtime_initialize = mono_class_get_method_from_name (runtime_class, "Initialize", 1);
+
+	if (runtime_initialize == NULL)
+		xamarin_assertion_message ("Fatal error: failed to load the %s.%s method", "Runtime", "Initialize");
+
+	params [0] = options;
+
+	mono_runtime_invoke (runtime_initialize, NULL, params, &exc);
+
+	if (exc)
+		*exception_gchandle = xamarin_gchandle_new (exc, false);
+}
+
+void
+xamarin_bridge_register_product_assembly (GCHandle* exception_gchandle)
+{
+	xamarin_register_monoassembly (entry_assembly, exception_gchandle);
+	// We don't need the entry_assembly around anymore, so release it.
+	xamarin_mono_object_release (&entry_assembly);
+}
+
+MonoClass *
+xamarin_get_inativeobject_class ()
+{
+	if (inativeobject_class == NULL)
+		xamarin_assertion_message ("Internal consistency error, please file a bug (https://github.com/xamarin/xamarin-macios/issues/new). Additional data: can't get the %s class because it's been linked away.\n", "INativeObject");
+	return inativeobject_class;
+}
+
+MonoClass *
+xamarin_get_nsobject_class ()
+{
+	if (nsobject_class == NULL)
+		xamarin_assertion_message ("Internal consistency error, please file a bug (https://github.com/xamarin/xamarin-macios/issues/new). Additional data: can't get the %s class because it's been linked away.\n", "NSObject");
+	return nsobject_class;
+}
+
+MonoClass *
+xamarin_get_nsvalue_class ()
+{
+	if (nsvalue_class == NULL)
+		xamarin_assertion_message ("Internal consistency error, please file a bug (https://github.com/xamarin/xamarin-macios/issues/new). Additional data: can't get the %s class because it's been linked away.\n", "NSValue");
+	return nsvalue_class;
+}
+
+MonoClass *
+xamarin_get_nsnumber_class ()
+{
+	if (nsnumber_class == NULL)
+		xamarin_assertion_message ("Internal consistency error, please file a bug (https://github.com/xamarin/xamarin-macios/issues/new). Additional data: can't get the %s class because it's been linked away.\n", "NSNumber");
+	return nsnumber_class;
+}
+
+MonoClass *
+xamarin_get_nsstring_class ()
+{
+	if (nsstring_class == NULL)
+		xamarin_assertion_message ("Internal consistency error, please file a bug (https://github.com/xamarin/xamarin-macios/issues/new). Additional data: can't get the %s class because it's been linked away.\n", "NSString");
+	return nsstring_class;
+}
+
+MonoClass *
+xamarin_get_runtime_class ()
+{
+	if (runtime_class == NULL)
+		xamarin_assertion_message ("Internal consistency error, please file a bug (https://github.com/xamarin/xamarin-macios/issues/new). Additional data: can't get the %s class because it's been linked away.\n", "Runtime");
+	return runtime_class;
+}
 
 #if DOTNET
 

@@ -550,6 +550,8 @@ run_application_init (xamarin_initialize_data *data)
 
 	MonoImage *image = mono_assembly_get_image (assembly);
 
+	xamarin_mono_object_release (&assembly);
+
 	MonoClass *app_class = mono_class_from_name (image, "AppKit", "NSApplication");
 	if (!app_class)
 		xamarin_assertion_message ("Fatal error: failed to load the NSApplication class");

@@ -38,7 +38,7 @@ namespace GenerateTypeForwarders {
 		{
 			if (method is null)
 				return false;
-			return method.IsPublic || method.IsFamily;
+			return method.IsPublic || method.IsFamily || method.IsFamilyOrAssembly;
 		}
 
 		static bool IsVisible (this PropertyDefinition property)
@@ -49,6 +49,55 @@ namespace GenerateTypeForwarders {
 		static bool IsVisible (this FieldDefinition field)
 		{
 			return field.IsPublic || field.IsFamily;
+		}
+
+		static bool SatisfyAnyInterface (this MethodDefinition method)
+		{
+			return SatisfyInterface (method, method.DeclaringType);
+		}
+
+		static bool SatisfyInterface (MethodDefinition method, TypeDefinition type)
+		{
+			if (!type.HasInterfaces)
+				return false;
+			foreach (var intf in type.Interfaces) {
+				var it = intf.InterfaceType.Resolve ();
+				if (!it.HasMethods)
+					continue;
+				var m = method.FullName.Replace (method.DeclaringType.FullName + "::" + it.FullName + ".", it.FullName + "::");
+				foreach (var im in it.Methods) {
+					if (m == im.FullName)
+						return true;
+				}
+				if (SatisfyInterface (method, it))
+					return true;
+			}
+			return false;
+		}
+
+		static bool SatisfyAnyInterface (this PropertyDefinition property)
+		{
+			return SatisfyInterface (property, property.DeclaringType);
+		}
+
+		static bool SatisfyInterface (PropertyDefinition property, TypeDefinition type)
+		{
+			if (!type.HasInterfaces)
+				return false;
+			// remove the implicit (interface) part of the name
+			var pname = property.Name.Substring (property.Name.LastIndexOf ('.') + 1);
+			foreach (var intf in type.Interfaces) {
+				var it = intf.InterfaceType.Resolve ();
+				if (!it.HasProperties)
+					continue;
+				foreach (var ip in it.Properties) {
+					if ((pname == ip.Name) && (property.PropertyType.FullName == ip.PropertyType.FullName))
+						return true;
+				}
+				if (SatisfyInterface (property, it))
+					return true;
+			}
+			return false;
 		}
 
 		static void EmitTypeName (StringBuilder sb, TypeReference type)
@@ -72,7 +121,7 @@ namespace GenerateTypeForwarders {
 			if (arrayType != null) {
 				sb.Append (arrayType.ElementType.Name);
 				sb.Append ('[');
-				sb.Append (new string (',', arrayType.Rank - 1));
+				sb.Append (',', arrayType.Rank - 1);
 				sb.Append (']');
 				return;
 			}
@@ -117,24 +166,29 @@ namespace GenerateTypeForwarders {
 				if (param.IsOut) {
 					sb.Append ("out ");
 					if (paramType.IsByReference)
-						paramType = paramType.GetElementType ();
+						paramType = (paramType as TypeSpecification).ElementType;
 				} else if (paramType.IsByReference) {
 					sb.Append ("ref ");
-					paramType = paramType.GetElementType ();
+					paramType = (paramType as TypeSpecification).ElementType;
 				}
 
 				EmitTypeName (sb, paramType);
 				sb.Append (" @");
 				sb.Append (param.Name);
+
+				if (param.IsOptional) {
+					sb.Append (" = ");
+					// handles `False` for boolean, works fine with numerics
+					sb.Append (param.Constant.ToString ().ToLowerInvariant ());
+				}
 			}
 		}
 
 		static void EmitPNSE (StringBuilder sb, MethodDefinition method, int indent, bool nsobject)
 		{
-			if (method.IsPrivate)
-				return;
-
 			if (method.IsConstructor) {
+				if (method.IsStatic)
+					return;
 				// we can have an internal ctor using internal types that are not generated leading to uncompilable code
 				// e.g. `internal DisplayedPropertiesCollection (ABFunc<NSNumber[]> g, Action<NSNumber[]> s)`
 				if (method.IsAssembly && method.HasParameters) {
@@ -153,8 +207,7 @@ namespace GenerateTypeForwarders {
 			if (method.Name == "Finalize")
 				return;
 
-			var strIndent = new string ('\t', indent);
-			sb.Append (strIndent);
+			sb.Append ('\t', indent);
 
 			if (method.IsPublic)
 				sb.Append ("public ");
@@ -178,7 +231,7 @@ namespace GenerateTypeForwarders {
 			if (method.IsAbstract && !method.DeclaringType.IsInterface)
 				sb.Append ("abstract ");
 			if (method.IsVirtual && !method.DeclaringType.IsInterface && !method.IsFinal && !method.IsAbstract) {
-				if (AnyMethodWithSignatureInHierarchy (method.DeclaringType.BaseType?.Resolve (), method, out var matchingMethod) && matchingMethod.IsVirtual) {
+				if (!method.IsNewSlot && AnyMethodWithSignatureInHierarchy (method.DeclaringType.BaseType?.Resolve (), method, out var matchingMethod) && matchingMethod.IsVirtual) {
 					sb.Append ("override ");
 				} else {
 					sb.Append ("virtual ");
@@ -241,7 +294,7 @@ namespace GenerateTypeForwarders {
 			sb.Append (" (");
 			if (method.HasParameters)
 				EmitParameters (sb, method);
-			sb.Append (")");
+			sb.Append (')');
 			if (constraints != null)
 				sb.Append (constraints);
 			if (method.IsAbstract) {
@@ -255,18 +308,18 @@ namespace GenerateTypeForwarders {
 				else if (method.IsConstructor && method.HasParameters) {
 					var baseConstructors = method.DeclaringType.BaseType?.Resolve ()?.Methods?.Where (v => v.IsConstructor && v.HasParameters);
 					if (StartParameterTypeMatch (baseConstructors, method.Parameters, out var baseCtor)) {
-						sb.Append ($"{strIndent}\t: base (");
+						sb.Append ('\t', indent).Append (": base (");
 						for (var i = 0; i < baseCtor.Parameters.Count; i++) {
 							if (i > 0)
 								sb.Append (", ");
-							sb.Append ($"@{method.Parameters [i].Name}"); // need the original name
+							sb.Append ('@').Append (method.Parameters [i].Name); // need the original name
 						}
 						sb.AppendLine (")");
 					}
 				}
-				sb.AppendLine ($"{strIndent}{{");
-				sb.AppendLine ($"{strIndent}\tthrow new global::System.PlatformNotSupportedException (global::Constants.UnavailableOnMacCatalyst);");
-				sb.AppendLine ($"{strIndent}}}");
+				sb.Append ('\t', indent).AppendLine ("{");
+				sb.Append ('\t', indent + 1).AppendLine ("throw new global::System.PlatformNotSupportedException (global::Constants.UnavailableOnMacCatalyst);");
+				sb.Append ('\t', indent).AppendLine ("}");
 			}
 		}
 
@@ -411,25 +464,26 @@ namespace GenerateTypeForwarders {
 			var gm = pd.GetMethod;
 			var sm = pd.SetMethod;
 			var m = gm ?? sm;
+			var implicit_interface = pd.Name.IndexOf ('.') != -1;
 			if (m.IsPublic)
 				sb.Append ("public ");
-			else
+			else if (m.IsFamily)
 				sb.Append ("protected ");
 			if (m.IsStatic) {
 				sb.Append ("static ");
 				if (HasPropertyInTypeHierarchy (pd.DeclaringType, m, out var _))
 					sb.Append ("new ");
-			} else if (m.IsVirtual) {
+			} else if (m.IsVirtual && !implicit_interface) {
 				if (HasPropertyInTypeHierarchy (pd.DeclaringType, m, out var valid)) {
-					if (valid) {
+					if (!m.IsNewSlot && valid) {
 						sb.Append ("override ");
 					} else {
-						sb.Append ("new ");
+						sb.Append ("new virtual ");
 					}
 				} else if (!pd.DeclaringType.IsSealed) {
 					if (m.IsAbstract)
 						sb.Append ("abstract ");
-					else
+					else if (!m.IsFinal)
 						sb.Append ("virtual ");
 				}
 			}
@@ -437,14 +491,14 @@ namespace GenerateTypeForwarders {
 			sb.Append (' ');
 			sb.Append (pd.Name);
 			sb.AppendLine (" {");
-			if (gm.IsVisible ()) {
+			if (gm.IsVisible () || ((gm != null) && implicit_interface)) {
 				sb.Append ('\t', indent + 1);
 				if (gm.IsAbstract)
 					sb.AppendLine ("get;");
 				else
 					sb.AppendLine ("get { throw new global::System.PlatformNotSupportedException (global::Constants.UnavailableOnMacCatalyst); }");
 			}
-			if (pd.SetMethod.IsVisible ()) {
+			if (sm.IsVisible () || ((sm != null) && implicit_interface)) {
 				sb.Append ('\t', indent + 1);
 				if (sm.IsAbstract)
 					sb.AppendLine ("set;");
@@ -479,10 +533,11 @@ namespace GenerateTypeForwarders {
 		static void EmitPNSE (StringBuilder sb, TypeDefinition type, int indent)
 		{
 			if (!type.IsNested)
-				sb.AppendLine ($"namespace {type.Namespace} {{");
-			var strIndent = new string ('\t', indent);
+				sb.Append ("namespace ").Append (type.Namespace).AppendLine (" {");
+
+			sb.Append ('\t', indent);
 			if (type.BaseType?.FullName == "System.MulticastDelegate") {
-				sb.Append ($"{strIndent}public delegate ");
+				sb.Append ("public delegate ");
 				var invoke = type.Methods.First (v => v.Name == "Invoke");
 				EmitTypeName (sb, invoke.ReturnType);
 				sb.Append (' ');
@@ -492,7 +547,6 @@ namespace GenerateTypeForwarders {
 					EmitParameters (sb, invoke);
 				sb.AppendLine (");");
 			} else {
-				sb.Append (strIndent);
 				// other are filtered not to generate stubs
 				if (type.IsNestedFamily)
 					sb.Append ("protected ");
@@ -522,6 +576,7 @@ namespace GenerateTypeForwarders {
 					sb.Append (type.Name);
 				}
 
+				bool first = true;
 				if (type.IsEnum) {
 					sb.Append (" : ");
 					var enumType = type.Fields.First (v => v.Name == "value__").FieldType;
@@ -552,7 +607,23 @@ namespace GenerateTypeForwarders {
 				} else if (type.BaseType != null && type.BaseType.FullName != "System.Object") {
 					sb.Append (" : ");
 					EmitTypeName (sb, type.BaseType);
+					first = false;
 				}
+
+				if (type.HasInterfaces) {
+					foreach (var intf in type.Interfaces) {
+						var it = intf.InterfaceType.Resolve ();
+						if (!it.IsVisible ())
+							continue;
+						if (first)
+							sb.Append (" : ");
+						else
+							sb.Append (", ");
+						EmitTypeName (sb, intf.InterfaceType);
+						first = false;
+					}
+				}
+
 				sb.Append (" {");
 				sb.AppendLine ();
 				foreach (var nestedType in type.NestedTypes) {
@@ -571,7 +642,7 @@ namespace GenerateTypeForwarders {
 				}
 				foreach (var method in type.Methods) {
 					// need .ctor(IntPtr) for chaining
-					if (!method.IsVisible () && !method.IsConstructor)
+					if (!method.IsVisible () && !method.IsConstructor && !method.SatisfyAnyInterface ())
 						continue;
 					EmitPNSE (sb, method, indent + 1, nsobject);
 				}
@@ -583,7 +654,7 @@ namespace GenerateTypeForwarders {
 				}
 
 				foreach (var prop in type.Properties) {
-					if (!prop.IsVisible ())
+					if (!prop.IsVisible () && !prop.SatisfyAnyInterface ())
 						continue;
 					EmitProperty (sb, prop, indent + 1);
 				}
@@ -591,7 +662,7 @@ namespace GenerateTypeForwarders {
 				foreach (var ev in type.Events)
 					EmitEvent (sb, ev, indent + 1);
 
-				sb.AppendLine ($"{strIndent}}}");
+				sb.Append ('\t', indent).AppendLine ("}");
 			}
 			if (!type.IsNested)
 				sb.AppendLine ("}");
@@ -628,7 +699,9 @@ namespace GenerateTypeForwarders {
 			sb.AppendLine ("using System.Runtime.CompilerServices;");
 
 			foreach (var exportedType in from.MainModule.ExportedTypes) {
-				sb.AppendLine ($"[assembly: TypeForwardedToAttribute (typeof ({exportedType.Namespace}.{exportedType.Name}))]");
+				sb.Append ("[assembly: TypeForwardedToAttribute (typeof (");
+				sb.Append (exportedType.Namespace).Append ('.').Append (exportedType.Name);
+				sb.AppendLine ("))]");
 			}
 
 			var pnseTypes = new List<TypeDefinition> ();
@@ -648,7 +721,7 @@ namespace GenerateTypeForwarders {
 
 				sb.Append ("[assembly: TypeForwardedToAttribute (typeof (");
 				sb.Append (type.Namespace);
-				sb.Append (".");
+				sb.Append ('.');
 
 				if (type.HasGenericParameters) {
 					var nonGeneric = type.Name.Substring (0, type.Name.IndexOf ('`'));

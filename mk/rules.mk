@@ -230,6 +230,21 @@ define NativeCompilationTemplate
 .libs/mac/%$(1).x86_64.framework: | .libs/mac
 	$$(call Q_2,LD,    [mac]) $(MAC_CC) $(MAC_CFLAGS)      $$(EXTRA_FLAGS) -arch x86_64 -dynamiclib -o $$@ $$^ -F$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/Frameworks -fapplication-extension
 
+.libs/mac/%$(1).arm64.o: %.m $(EXTRA_DEPENDENCIES) | .libs/mac
+	$$(call Q_2,OBJC,  [mac]) $(MAC_CC) $(MAC_OBJC_CFLAGS) $$(EXTRA_DEFINES) -arch arm64 $(COMMON_I) -g $(2) -c $$< -o $$@
+
+.libs/mac/%$(1).arm64.o: %.c $(EXTRA_DEPENDENCIES) | .libs/mac
+	$$(call Q_2,CC,    [mac]) $(MAC_CC) $(MAC_CFLAGS)      $$(EXTRA_DEFINES) -arch arm64 $(COMMON_I) -g $(2) -c $$< -o $$@
+
+.libs/mac/%$(1).arm64.o: %.s $(EXTRA_DEPENDENCIES) | .libs/mac
+	$$(call Q_2,ASM,   [mac]) $(MAC_CC) $(MAC_CFLAGS)                        -arch arm64  $(COMMON_I) -g $(2) -c $$< -o $$@
+
+.libs/mac/%$(1).arm64.dylib: | .libs/mac
+	$$(call Q_2,LD,    [mac]) $(MAC_CC) $(MAC_CFLAGS)      $$(EXTRA_FLAGS) -arch arm64 -dynamiclib -o $$@ $$^ -L$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/lib -fapplication-extension
+
+.libs/mac/%$(1).arm64.framework: | .libs/mac
+	$$(call Q_2,LD,    [mac]) $(MAC_CC) $(MAC_CFLAGS)      $$(EXTRA_FLAGS) -arch arm64 -dynamiclib -o $$@ $$^ -F$(MAC_DESTDIR)$(XAMARIN_MACOS_SDK)/Frameworks -fapplication-extension
+
 endef
 
 $(eval $(call NativeCompilationTemplate,,-O2))
