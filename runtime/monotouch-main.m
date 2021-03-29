@@ -402,11 +402,10 @@ xamarin_main (int argc, char *argv[], enum XamarinLaunchMode launch_mode)
 	xamarin_initialize_cocoa_threads (NULL);
 #endif
 
-	xamarin_bridge_initialize ();
-
 #if DOTNET
 	xamarin_vm_initialize ();
 #endif
+	xamarin_bridge_initialize ();
 
 	xamarin_initialize ();
 	DEBUG_LAUNCH_TIME_PRINT ("\tmonotouch init time");
