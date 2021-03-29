@@ -97,7 +97,12 @@ steps:
     locProj: '$(Build.SourcesDirectory)\Localize\LocProject.json'
     outDir: '$(Build.ArtifactStagingDirectory)'
     isCreatePrSelected: true
+    isAutoCompletePrSelected: false
     prSourceBranchPrefix: 'locfiles'
+    repoType: gitHub
+    gitHubPatVariable: '$(GitHub.Token)'
+    packageSourceAuth: patAuth
+    patVariable: '$(OneLocBuild--PAT)'
 
 - task: PublishBuildArtifacts@1
   continueOnError: true

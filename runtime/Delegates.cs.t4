@@ -26,16 +26,36 @@ namespace ObjCRuntime {
 	public unsafe partial class Runtime {
 		
 <# foreach (var d in delegates) { #>
+<#
+		if (d.OnlyCoreCLR)
+			Write ("#if NET\n");
+#>
 		internal delegate <#= d.ReturnType.MType #> <#= d.SimpleEntryPoint #>_delegate (<#= d.MArgumentSignature #>);
+<#
+		if (d.OnlyCoreCLR)
+			Write ("#endif // NET\n");
+#>
 <# } #>
 
 		internal struct Delegates {
 <# foreach (var d in delegates) { #>
+<#
+		if (d.OnlyCoreCLR)
+			Write ("#if NET\n");
+#>
 			public IntPtr <#= d.SimpleEntryPoint #>;
+<#
+		if (d.OnlyCoreCLR)
+			Write ("#endif // NET\n");
+#>
 <# } #>
 		}
 
 <# 		foreach (var d in delegates) { #>
+<#
+		if (d.OnlyCoreCLR)
+			Write ("#if NET\n");
+#>
 		[MonoPInvokeCallback (typeof (<#= d.SimpleEntryPoint #>_delegate))]
 		static <#= d.ReturnType.MType #> <#= d.SimpleEntryPoint #> (<#= d.MArgumentSignature #>)
 <# if (d.ExceptionHandling) { #>
@@ -65,6 +85,10 @@ namespace ObjCRuntime {
 <# } #>
 		}
 <# } #>
+<#
+		if (d.OnlyCoreCLR)
+			Write ("#endif // NET\n");
+#>
 
 <# } #>
 
@@ -73,7 +97,15 @@ namespace ObjCRuntime {
 		{
 <# foreach (var d in delegates) {
 	if (d.OnlyDynamicUsage) continue; #>
+<#
+	if (d.OnlyCoreCLR)
+		Write ("#if NET\n");
+#>
 			options->Delegates-><#= d.SimpleEntryPoint #> = GetFunctionPointer (new <#= d.SimpleEntryPoint #>_delegate (<#= d.SimpleEntryPoint #>));
+<#
+		if (d.OnlyCoreCLR)
+			Write ("#endif // NET\n");
+#>
 <# } #>
 
 			// The linker will remove this condition (and the subsequent method call) if possible
@@ -85,7 +117,15 @@ namespace ObjCRuntime {
 		{
 <# foreach (var d in delegates) {
 	if (!d.OnlyDynamicUsage) continue; #>
+<#
+	if (d.OnlyCoreCLR)
+		Write ("#if NET\n");
+#>
 			options->Delegates-><#= d.SimpleEntryPoint #> = GetFunctionPointer (new <#= d.SimpleEntryPoint #>_delegate (<#= d.SimpleEntryPoint #>));
+<#
+		if (d.OnlyCoreCLR)
+			Write ("#endif // NET\n");
+#>
 <# } #>
 		}
 	}
