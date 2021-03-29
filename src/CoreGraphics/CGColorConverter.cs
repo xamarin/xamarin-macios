@@ -20,8 +20,12 @@ using Foundation;
 
 namespace CoreGraphics {
 
-	[TV (9,2)][Obsoleted (PlatformName.TvOS, 10,0, message: "Replaced by 'GColorConversionInfoTriple'.")]
-	[iOS (9,3)][Obsoleted (PlatformName.iOS, 10,0, message: "Replaced by 'GColorConversionInfoTriple'.")]
+#if !NET
+	[TV (9,2)]
+	[iOS (9,3)]
+#endif
+	[Obsoleted (PlatformName.TvOS, 10,0, message: "Replaced by 'GColorConversionInfoTriple'.")]
+	[Obsoleted (PlatformName.iOS, 10,0, message: "Replaced by 'GColorConversionInfoTriple'.")]
 	[StructLayout (LayoutKind.Sequential)]
 	public struct CGColorConverterTriple {
 		public CGColorSpace Space;
@@ -30,8 +34,12 @@ namespace CoreGraphics {
 	}
 
 	// CGColorConverter.h
-	[TV (9,2)][Obsoleted (PlatformName.TvOS, 10,0, message: "Replaced by 'CGColorConversionInfo'.")]
-	[iOS (9,3)][Obsoleted (PlatformName.iOS, 10,0, message: "Replaced by 'CGColorConversionInfo'.")]
+#if !NET
+	[TV (9,2)]
+	[iOS (9,3)]
+#endif
+	[Obsoleted (PlatformName.TvOS, 10,0, message: "Replaced by 'CGColorConversionInfo'.")]
+	[Obsoleted (PlatformName.iOS, 10,0, message: "Replaced by 'CGColorConversionInfo'.")]
 	public class CGColorConverter : INativeObject, IDisposable
 	{
 		/* invoked by marshallers */

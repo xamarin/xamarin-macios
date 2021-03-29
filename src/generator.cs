@@ -3233,6 +3233,36 @@ public partial class Generator : IMemberGatherer {
 		return false;
 	}
 
+	// do not generate introduced/supported attributes for versions earlier than the minimum supported
+	// more important since dotnet and legacy have different minimums (so this can't be done in binding files)
+	bool FilterMinimumVersion (AvailabilityBaseAttribute aa)
+	{
+		if (aa.AvailabilityKind != AvailabilityKind.Introduced)
+			return true;
+
+		Version min;
+		switch (aa.Platform) {
+		case PlatformName.iOS:
+			min = Xamarin.SdkVersions.MiniOSVersion;
+			break;
+		case PlatformName.TvOS:
+			min = Xamarin.SdkVersions.MinTVOSVersion;
+			break;
+		case PlatformName.WatchOS:
+			min = Xamarin.SdkVersions.MinWatchOSVersion;
+			break;
+		case PlatformName.MacOSX:
+			min = Xamarin.SdkVersions.MinOSXVersion;
+			break;
+		case PlatformName.MacCatalyst:
+			min = Xamarin.SdkVersions.MinMacCatalystVersion;
+			break;
+		default:
+			throw new BindingException (1047, aa.Platform.ToString ());
+		}
+		return aa.Version > min;
+	}
+
 	public bool PrintPlatformAttributes (MemberInfo mi, Type type = null)
 	{
 		bool printed = false;
@@ -3262,7 +3292,8 @@ public partial class Generator : IMemberGatherer {
 				// can't introduce or deprecate/obsolete a member on a type that is not available
 				if (IsUnavailable (type_ca, availability.Platform))
 					continue;
-				print (availability.ToString ());
+				if (FilterMinimumVersion (availability))
+					print (availability.ToString ());
 				printed = true;
 				break;
 			}
@@ -3323,6 +3354,8 @@ public partial class Generator : IMemberGatherer {
 		// the type, in which we are inlining the current method, might already have the same availability attribute
 		// which we would duplicate if generated
 		foreach (var availability in inlined_ca) {
+			if (!FilterMinimumVersion (availability))
+				continue;
 			var s = availability.ToString ();
 			if (!generated_type_ca.Contains (s))
 				print (s);

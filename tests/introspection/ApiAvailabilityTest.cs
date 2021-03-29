@@ -202,6 +202,19 @@ namespace Introspection {
 		}
 #endif
 
+		string ToString (ICustomAttributeProvider cap)
+		{
+			var s = cap.ToString ();
+			if (cap is MemberInfo mi) {
+				var i = s.IndexOf (' ');
+				if (i != -1) {
+					// a method/property without the declaring type is hard to track down
+					s = s.Insert (i + 1, mi.DeclaringType + "::");
+				}
+			}
+			return s;
+		}
+
 		protected AvailabilityBaseAttribute CheckAvailability (ICustomAttributeProvider cap)
 		{
 			var attrs = cap.GetCustomAttributes (false);
@@ -213,11 +226,11 @@ namespace Introspection {
 				if (a is AvailabilityBaseAttribute aa) {
 					if (Filter (aa))
 						continue;
-					if (aa.Version < Minimum) {
+					if ((aa.AvailabilityKind == AvailabilityKind.Introduced) && (aa.Version <= Minimum)) {
 						switch (aa.Architecture) {
 						case PlatformArchitecture.All:
 						case PlatformArchitecture.None:
-							AddErrorLine ($"[FAIL] {aa.Version} < {Minimum} (Min) on '{cap}'.");
+							AddErrorLine ($"[FAIL] {aa.Version} <= {Minimum} (Min) on '{ToString (cap)}'.");
 							break;
 						default:
 							// An old API still needs the annotations when not available on all architectures
@@ -226,7 +239,7 @@ namespace Introspection {
 						}
 					}
 					if (aa.Version > Maximum)
-						AddErrorLine ($"[FAIL] {aa.Version} > {Maximum} (Max) on '{cap}'.");
+						AddErrorLine ($"[FAIL] {aa.Version} > {Maximum} (Max) on '{ToString (cap)}'.");
 					return aa;
 				}
 			}
