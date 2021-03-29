@@ -698,7 +698,6 @@ namespace CoreBluetooth {
 		[Export ("UUIDWithData:")]
 		CBUUID FromData (NSData theData);
 
-		[Availability (Deprecated = Platform.iOS_9_0)]
 		[Deprecated (PlatformName.MacOSX, 10, 13)]
 		[Deprecated (PlatformName.iOS, 9, 0)]
 		[NoWatch]

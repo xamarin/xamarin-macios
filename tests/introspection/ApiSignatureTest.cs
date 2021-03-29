@@ -857,6 +857,7 @@ namespace Introspection {
 				case "AdviceAttribute":
 				case "ObsoletedAttribute":
 				case "DeprecatedAttribute":
+				case "UnsupportedOSPlatformAttribute":
 					return true;
 				}
 			}
