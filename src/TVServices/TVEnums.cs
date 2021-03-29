@@ -52,26 +52,4 @@ namespace TVServices {
 		ScreenScale1x = (1 << 12),
 		ScreenScale2x = (2 << 12),
 	}
-
-	static public class TVContentItemImageShapeExtensions {
-
-#if NET
-		[UnsupportedOSPlatform ("tvos13.0")]
-#else
-		[Deprecated (PlatformName.TvOS, 13,0)]
-#endif
-		[DllImport (Constants.TVServicesLibrary)]
-		static extern CGSize TVTopShelfImageSizeForShape (/* TVContentItemImageShape */ nint shape,
-			/* TVTopShelfContentStyle */ nint style);
-
-#if NET
-		[UnsupportedOSPlatform ("tvos13.0")]
-#else
-		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'TVTopShelfSectionedContent.GetImageSize' or 'TVTopShelfInsetContent.ImageSize' instead.")]
-#endif
-		static public CGSize GetSize (this TVContentItemImageShape self, TVTopShelfContentStyle style)
-		{
-			return TVTopShelfImageSizeForShape ((nint) (int) self, (nint) (int) style);
-		}
-	}
 }
