@@ -1574,8 +1574,11 @@ TVMLKIT_CORE_SOURCES = \
 
 # TVServices
 
-TVSERVICES_CORE_SOURCES = \
+TVSERVICES_API_SOURCES = \
 	TVServices/TVEnums.cs \
+
+TVSERVICES_CORE_SOURCES = \
+	TVServices/TVContentItemImageShape.cs \
 
 # Twitter
 

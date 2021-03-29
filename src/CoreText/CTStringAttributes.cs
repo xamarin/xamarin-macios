@@ -192,7 +192,9 @@ namespace CoreText {
 			set {Adapter.SetNativeValue (Dictionary, CTStringAttributeKey.ForegroundColor, value);}
 		}
 
+#if !NET
 		[iOS (10,0)][Mac (10,12)]
+#endif
 		public CGColor BackgroundColor {
 			get {
 				var h = IntPtr.Zero;
@@ -302,7 +304,9 @@ namespace CoreText {
 			}
 		}
 
+#if !NET
 		[iOS (10,0)][Mac (10,12)][Watch (3,0)][TV (10,0)]
+#endif
 		public int? HorizontalInVerticalForms {
 			get {
 				var x = CTStringAttributeKey.HorizontalInVerticalForms;

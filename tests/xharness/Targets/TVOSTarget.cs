@@ -65,7 +65,7 @@ namespace Xharness.Targets {
 		protected override string GetMinimumOSVersion (string templateMinimumOSVersion)
 		{
 			if (MonoNativeInfo == null)
-				return "9.0";
+				return Xamarin.SdkVersions.MinTVOS;
 			return MonoNativeHelper.GetMinimumOSVersion (DevicePlatform.tvOS, MonoNativeInfo.Flavor);
 		}
 
