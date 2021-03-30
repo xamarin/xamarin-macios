@@ -90,11 +90,10 @@ steps:
   workingDirectory: $(Build.SourcesDirectory)\tools\devops 
 
 - task: OneLocBuild@2
-  condition: eq('$[PrBuild]', 'True')
+  condition: contains(variables['labels.prBuild'], 'False')
   continueOnError: true
   env:
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
-    PrBuild: $(labels.prBuild)
   inputs:
     locProj: '$(Build.SourcesDirectory)\Localize\LocProject.json'
     outDir: '$(Build.ArtifactStagingDirectory)'
@@ -107,11 +106,9 @@ steps:
     patVariable: '$(OneLocBuild--PAT)'
 
 - task: PublishBuildArtifacts@1
-  condition: eq('$[PrBuild]', 'True')
+  condition: contains(variables['labels.prBuild'], 'False')
   continueOnError: true
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'localizationDrop'
     publishLocation: 'Container'
-  env:
-    PrBuild: $(labels.prBuild)
