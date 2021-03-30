@@ -41,9 +41,9 @@ namespace Xharness {
 		{
 			var client = new WebClient ();
 			client.Headers.Add (HttpRequestHeader.UserAgent, "xamarin");
-			var xharness_github_token_file = Environment.GetEnvironmentVariable ("XHARNESS_GITHUB_TOKEN_FILE");
-			if (!string.IsNullOrEmpty (xharness_github_token_file) && File.Exists (xharness_github_token_file))
-				client.Headers.Add (HttpRequestHeader.Authorization, File.ReadAllText (xharness_github_token_file));
+			var xharness_github_token = Environment.GetEnvironmentVariable ("GITHUB_TOKEN");
+			if (!string.IsNullOrEmpty (xharness_github_token))
+				client.Headers.Add (HttpRequestHeader.Authorization, xharness_github_token);
 			return client;
 		}
 
