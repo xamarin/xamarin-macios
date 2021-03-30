@@ -304,12 +304,16 @@
 		new Export ("void", "mono_add_internal_call",
 			"const char *", "name",
 			"const void *", "method"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export (true, "void", "mono_dangerous_add_raw_internal_call",
 			"const char *", "name",
 			"const void *", "method"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export ("MonoMethodSignature *", "mono_method_signature",
 			"MonoMethod *", "method"
