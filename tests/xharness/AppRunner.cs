@@ -242,7 +242,7 @@ namespace Xharness {
 			if (isSimulator) {
 				args.Add (new SetAppArgumentArgument ("-hostname:127.0.0.1", true));
 				args.Add (new SetEnvVariableArgument ("NUNIT_HOSTNAME", "127.0.0.1"));
-			} else {
+			} else if (!listenerFactory.UseTunnel) {  // if is not simulator AND we are not using the tunnel, if we use the tunnel this is not needed
 				var ips = new StringBuilder ();
 				var ipAddresses = System.Net.Dns.GetHostEntry (System.Net.Dns.GetHostName ()).AddressList;
 				for (int i = 0; i < ipAddresses.Length; i++) {
