@@ -42,5 +42,14 @@ namespace LinkAnyTest {
 			Assert.IsNotNull (filePath, "CallerFilePath");
 		}
 
+#if NET
+		[Test]
+		public void AppContextGetData ()
+		{
+			// https://github.com/dotnet/runtime/issues/50290
+			Assert.IsNotNull (AppContext.GetData ("APP_PATHS"), "APP_PATHS");
+			Assert.IsNotNull (AppContext.GetData ("PINVOKE_OVERRIDE"), "PINVOKE_OVERRIDE");
+		}
+#endif
 	}
 }
