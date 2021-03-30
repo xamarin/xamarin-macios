@@ -30,7 +30,6 @@ steps:
 
       [bool] $isTopicBranch = $False
       [bool] $isPullRequest = $False
-      [bool] $isManualBuild = $False
 
       if (-not ($buildSourceBranchName -eq 'main' -or $buildSourceBranchName -eq 'master' -or $buildSourceBranchName.StartsWith('d16-'))) {
         $isTopicBranch = $True
@@ -44,8 +43,6 @@ steps:
       } else {
           $targetBranch = $buildSourceBranchName
       }
-
-      $isManualBuild = $buildReason -eq 'Manual' 
 
       Write-Host "Settings:"
       Write-Host "  targetBranch: ${targetBranch}"
