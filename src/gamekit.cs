@@ -612,10 +612,12 @@ namespace GameKit {
 		bool ScopedIdsArePersistent { get; }
 
 		[TV (14, 0), NoWatch, Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[Field ("GKPlayerIDNoLongerAvailable")]
 		NSString IdNoLongerAvailable { get; }
 
 		[TV (14, 0), NoWatch, Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[Export ("isInvitable")]
 		bool IsInvitable { get; }
 	}

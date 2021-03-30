@@ -757,6 +757,19 @@ namespace Introspection {
 					break;
 				}
 				break;
+#if MONOMAC || __MACCATALYST__
+			case "MLDictionaryFeatureProvider":
+			case "MLMultiArray":
+			case "MLFeatureValue":
+			case "MLSequence":
+				switch (selectorName) {
+				case "encodeWithCoder:":
+					if (!TestRuntime.CheckXcodeVersion (12, 0))
+						return true;
+					break;
+				}
+				break;
+#endif
 			case "BGTaskScheduler":
 				switch (selectorName) {
 				case "sharedScheduler":

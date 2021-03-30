@@ -68,10 +68,12 @@ namespace ImageIO {
 		NSString HeicsDictionary { get; }
 
 		[Mac (11,0), iOS (14,0), TV (14,0), Watch (7,0)]
+		[MacCatalyst (14,0)]
 		[Field ("kCGImagePropertyWebPDictionary")]
 		NSString WebPDictionary { get; }
 
 		[Mac (11,0), iOS (14,1), TV (14,2), Watch (7,1)]
+		[MacCatalyst (14,1)]
 		[Field ("kCGImagePropertyTGADictionary")]
 		NSString TgaDictionary { get; }
 
@@ -2012,30 +2014,37 @@ namespace ImageIO {
 		// WebP Dictionary Keys
 
 		[Mac (11,0)][iOS (14,0)][TV (14,0)][Watch (7,0)]
+		[MacCatalyst (14,0)]
 		[Field ("kCGImagePropertyWebPLoopCount")]
 		NSString WebPLoopCount { get; }
 
 		[Mac (11,0)][iOS (14,0)][TV (14,0)][Watch (7,0)]
+		[MacCatalyst (14,0)]
 		[Field ("kCGImagePropertyWebPDelayTime")]
 		NSString WebPDelayTime { get; }
 
 		[Mac (11,0)][iOS (14,0)][TV (14,0)][Watch (7,0)]
+		[MacCatalyst (14,0)]
 		[Field ("kCGImagePropertyWebPUnclampedDelayTime")]
 		NSString WebPUnclampedDelayTime { get; }
 
 		[Mac (11,0)][iOS (14,0)][TV (14,0)][Watch (7,0)]
+		[MacCatalyst (14,0)]
 		[Field ("kCGImagePropertyWebPFrameInfoArray")]
 		NSString WebPFrameInfoArray { get; }
 
 		[Mac (11,0)][iOS (14,0)][TV (14,0)][Watch (7,0)]
+		[MacCatalyst (14,0)]
 		[Field ("kCGImagePropertyWebPCanvasPixelWidth")]
 		NSString WebPCanvasPixelWidth { get; }
 
 		[Mac (11,0)][iOS (14,0)][TV (14,0)][Watch (7,0)]
+		[MacCatalyst (14,0)]
 		[Field ("kCGImagePropertyWebPCanvasPixelHeight")]
 		NSString WebPCanvasPixelHeight { get; }
 
 		[Mac (11,0), iOS (14,1), TV (14,2), Watch (7,1)]
+		[MacCatalyst (14,1)]
 		[Field ("kCGImagePropertyTGACompression")]
 		NSString TgaCompression { get; }
 	}
@@ -2210,15 +2219,18 @@ namespace ImageIO {
 		NSDictionary ExifAuxDictionary { get; set; }
 
 		[Mac (11,0), iOS (14,0), TV (14,0), Watch (7,0)]
+		[MacCatalyst (14,0)]
 		[Export ("WebPDictionary")]
 		NSDictionary WebPDictionary { get; set; }
 
 		[Mac (11,0), iOS (14,1), TV (14,2), Watch (7,1)]
+		[MacCatalyst (14,1)]
 		[Export ("TgaDictionary")]
 		NSDictionary TgaDictionary { get; set; }
 
 		[iOS (14,1)]
 		[TV (14,2)][Watch (7,1)][Mac (11,0)]
+		[MacCatalyst (14,1)]
 		bool PreserveGainMap { get; set; }
 	}
 
@@ -2361,15 +2373,18 @@ namespace ImageIO {
 
 		[iOS (14,1)]
 		[TV (14,2)][Watch (7,1)][Mac (11,0)]
+		[MacCatalyst (14,1)]
 		[Field ("kCGImageAuxiliaryDataTypeSemanticSegmentationGlassesMatte")]
 		SemanticSegmentationGlassesMatte,
 
 		[iOS (14,1)]
 		[TV (14,2)][Watch (7,1)][Mac (11,0)]
+		[MacCatalyst (14,1)]
 		[Field ("kCGImageAuxiliaryDataTypeHDRGainMap")]
 		TypeHdrGainMap,
 
 		[iOS (14,3)][TV (14,3)][Watch (7,2)][Mac (11,1)]
+		[MacCatalyst (14,3)]
 		[Field ("kCGImageAuxiliaryDataTypeSemanticSegmentationSkyMatte")]
 		SemanticSegmentationSkyMatte,
 	}

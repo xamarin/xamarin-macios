@@ -11790,6 +11790,7 @@ namespace UIKit {
 		NSString WritingDirection { get; }
 
 		[TV (14,0), Watch (7,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Field ("NSTrackingAttributeName")]
 		NSString Tracking { get; }
 

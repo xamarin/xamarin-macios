@@ -6079,6 +6079,7 @@ namespace Foundation
 		NSString VolumeSupportsAccessPermissionsKey { get; }
 
 		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Field ("NSURLVolumeSupportsFileProtectionKey")]
 		NSString VolumeSupportsFileProtectionKey { get; }
 
@@ -6291,26 +6292,32 @@ namespace Foundation
 		NSString FileProtectionCompleteUntilFirstUserAuthentication { get; }
 
 		[Watch (7,0)][TV (14,0)][Mac (11,0)][iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Field ("NSURLContentTypeKey")]
 		NSString ContentTypeKey { get; }
 
 		[Watch (7,0)][TV (14,0)][Mac (11,0)][iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Field ("NSURLFileContentIdentifierKey")]
 		NSString FileContentIdentifierKey { get; }
 
 		[Watch (7,0)][TV (14,0)][Mac (11,0)][iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Field ("NSURLIsPurgeableKey")]
 		NSString IsPurgeableKey { get; }
 
 		[Watch (7,0)][TV (14,0)][Mac (11,0)][iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Field ("NSURLIsSparseKey")]
 		NSString IsSparseKey { get; }
 
 		[Watch (7,0)][TV (14,0)][Mac (11,0)][iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Field ("NSURLMayHaveExtendedAttributesKey")]
 		NSString MayHaveExtendedAttributesKey { get; }
 
 		[Watch (7,0)][TV (14,0)][Mac (11,0)][iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Field ("NSURLMayShareFileContentKey")]
 		NSString MayShareFileContentKey { get; }
 
