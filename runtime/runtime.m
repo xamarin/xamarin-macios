@@ -19,6 +19,8 @@
 
 #if !defined (CORECLR_RUNTIME)
 #include "xamarin/monovm-bridge.h"
+#else
+#include "xamarin/coreclr-bridge.h"
 #endif
 
 #if defined (DEBUG)
@@ -2706,13 +2708,21 @@ xamarin_get_managed_method_for_token (guint32 token_ref, GCHandle *exception_gch
 GCHandle
 xamarin_gchandle_new (MonoObject *obj, bool pinned)
 {
+#if defined (CORECLR_RUNTIME)
+	return xamarin_bridge_create_gchandle (obj == NULL ? INVALID_GCHANDLE : obj->gchandle, pinned ? XamarinGCHandleTypePinned : XamarinGCHandleTypeNormal);
+#else
 	return GINT_TO_POINTER (mono_gchandle_new (obj, pinned));
+#endif
 }
 
 GCHandle
 xamarin_gchandle_new_weakref (MonoObject *obj, bool track_resurrection)
 {
+#if defined (CORECLR_RUNTIME)
+	return xamarin_bridge_create_gchandle (obj == NULL ? INVALID_GCHANDLE : obj->gchandle, track_resurrection ? XamarinGCHandleTypeWeakTrackResurrection : XamarinGCHandleTypeWeak);
+#else
 	return GINT_TO_POINTER (mono_gchandle_new_weakref (obj, track_resurrection));
+#endif
 }
 
 MonoObject *
@@ -2728,7 +2738,11 @@ xamarin_gchandle_free (GCHandle handle)
 {
 	if (handle == INVALID_GCHANDLE)
 		return;
+#if defined (CORECLR_RUNTIME)
+	xamarin_bridge_free_gchandle (handle);
+#else
 	mono_gchandle_free (GPOINTER_TO_UINT (handle));
+#endif
 }
 
 MonoObject *
