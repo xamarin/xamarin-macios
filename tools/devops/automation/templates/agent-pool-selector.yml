@@ -30,6 +30,7 @@ steps:
 
       [bool] $isTopicBranch = $False
       [bool] $isPullRequest = $False
+      [bool] $isManualBuild = $False
 
       if (-not ($buildSourceBranchName -eq 'main' -or $buildSourceBranchName -eq 'master' -or $buildSourceBranchName.StartsWith('d16-'))) {
         $isTopicBranch = $True
@@ -44,12 +45,14 @@ steps:
           $targetBranch = $buildSourceBranchName
       }
 
+      $isManualBuild = $buildReason -eq 'Manual' 
+
       Write-Host "Settings:"
       Write-Host "  targetBranch: ${targetBranch}"
       Write-Host "  isTopicBranch: ${isTopicBranch}"
       Write-Host "  isPullRequest: ${isPullRequest}"
 
-      if ($isTopicBranch -or $isPullRequest) {
+      if ($isPullRequest) {
         $agentPool = $agentPoolPR      # Untrusted on-prem iOS pool used for all PRs (including those from forks) and feature/topic branch commits not targeting main or d16-x branches
         $agentPoolUrl = $agentPoolPRUrl
       } else {
