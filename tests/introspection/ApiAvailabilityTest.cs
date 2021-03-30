@@ -226,7 +226,8 @@ namespace Introspection {
 				if (a is AvailabilityBaseAttribute aa) {
 					if (Filter (aa))
 						continue;
-					if ((aa.AvailabilityKind == AvailabilityKind.Introduced) && (aa.Version <= Minimum)) {
+					// FIXME should be `<=` but that another large change best done in a different PR
+					if ((aa.AvailabilityKind == AvailabilityKind.Introduced) && (aa.Version < Minimum)) {
 						switch (aa.Architecture) {
 						case PlatformArchitecture.All:
 						case PlatformArchitecture.None:
