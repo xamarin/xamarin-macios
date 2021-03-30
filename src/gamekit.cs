@@ -2701,6 +2701,7 @@ namespace GameKit {
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -2743,6 +2744,7 @@ namespace GameKit {
 	}
 
 	[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface GKLeaderboardEntry

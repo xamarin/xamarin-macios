@@ -458,6 +458,7 @@ namespace Vision {
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	enum VNHumanBodyPoseObservationJointsGroupName {
 		[DefaultEnumValue]
 		[Field (null)]
@@ -486,6 +487,7 @@ namespace Vision {
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	enum VNHumanHandPoseObservationJointName {
 		[DefaultEnumValue]
 		[Field (null)]
@@ -556,6 +558,7 @@ namespace Vision {
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	enum VNHumanHandPoseObservationJointsGroupName {
 		[DefaultEnumValue]
 		[Field (null)]

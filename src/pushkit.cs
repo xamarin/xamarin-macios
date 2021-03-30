@@ -68,9 +68,9 @@ namespace PushKit
 
 		[iOS (9,0)]
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use directly from watchOS instead.")]
-		[Deprecated (PlatformName.MacCatalyst, 13,0, message: "Use directly from watchOS instead.")]
 		[Watch (6,0)]
 		[NoMac]
+		[NoMacCatalyst]
 		[Field ("PKPushTypeComplication")]
 		NSString Complication { get; }
 

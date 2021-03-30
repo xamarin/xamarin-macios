@@ -31,6 +31,7 @@ namespace MetricKit {
 
 		[Internal]
 		[iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Export ("dictionaryRepresentation")]
 		NSDictionary _DictionaryRepresentation14 { get; }
 	}
@@ -420,6 +421,7 @@ namespace MetricKit {
 
 	[NoWatch, NoTV, NoMac]
 	[iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (MXMetric))]
 	[DisableDefaultCtor]
 	interface MXAnimationMetric {
@@ -430,6 +432,7 @@ namespace MetricKit {
 
 	[NoWatch, NoTV, NoMac]
 	[iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (MXMetric))]
 	[DisableDefaultCtor]
 	interface MXAppExitMetric {
@@ -443,6 +446,7 @@ namespace MetricKit {
 
 	[NoWatch, NoTV, NoMac]
 	[iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MXBackgroundExitData : NSSecureCoding {
@@ -480,6 +484,7 @@ namespace MetricKit {
 
 	[NoWatch, NoTV, NoMac]
 	[iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MXForegroundExitData : NSSecureCoding {
@@ -505,6 +510,7 @@ namespace MetricKit {
 
 	[NoWatch, NoTV, NoMac]
 	[iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MXCallStackTree : NSSecureCoding {
@@ -515,6 +521,7 @@ namespace MetricKit {
 
 	[NoWatch, NoTV, NoMac]
 	[iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (MXDiagnostic), Name = "MXCPUExceptionDiagnostic")]
 	[DisableDefaultCtor]
 	interface MXCpuExceptionDiagnostic {
@@ -531,6 +538,7 @@ namespace MetricKit {
 
 	[NoWatch, NoTV, NoMac]
 	[iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (MXDiagnostic))]
 	[DisableDefaultCtor]
 	interface MXCrashDiagnostic {
@@ -562,6 +570,7 @@ namespace MetricKit {
 
 	[NoWatch, NoTV, NoMac]
 	[iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MXDiagnostic : NSSecureCoding {
@@ -581,6 +590,7 @@ namespace MetricKit {
 
 	[NoWatch, NoTV, NoMac]
 	[iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MXDiagnosticPayload : NSSecureCoding {
@@ -612,6 +622,7 @@ namespace MetricKit {
 
 	[NoWatch, NoTV, NoMac]
 	[iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (MXDiagnostic))]
 	[DisableDefaultCtor]
 	interface MXDiskWriteExceptionDiagnostic {
@@ -625,6 +636,7 @@ namespace MetricKit {
 
 	[NoWatch, NoTV, NoMac]
 	[iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (MXDiagnostic))]
 	[DisableDefaultCtor]
 	interface MXHangDiagnostic {

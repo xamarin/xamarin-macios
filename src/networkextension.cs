@@ -340,6 +340,7 @@ namespace NetworkExtension {
 		NEDnsProtocol DnsProtocol { get; }
 
 		[Mac (11,0), iOS (14,0), NoTV, NoWatch]
+		[MacCatalyst (14,0)]
 		[Notification]
 		[Field ("NEDNSSettingsConfigurationDidChangeNotification")]
 		NSString ConfigurationDidChangeNotification { get; }

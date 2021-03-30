@@ -17015,9 +17015,7 @@ namespace UIKit {
 
 	[NoTV]
 	[BaseType (typeof (UIPrintFormatter))]
-#if XAMCORE_4_0
 	[DisableDefaultCtor] // nonfunctional (and it doesn't show up in the header anyway)
-#endif
 	interface UIMarkupTextPrintFormatter {
 		[NullAllowed] // by default this property is null
 		[Export ("markupText", ArgumentSemantic.Copy)]

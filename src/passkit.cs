@@ -1515,6 +1515,7 @@ namespace PassKit {
 
 	[NoWatch, NoTV, NoMac] // under `#if TARGET_OS_IOS`
 	[iOS (13,4)]
+	[MacCatalyst (14,0)] // doc mention 13.4 but we can't load the class
 	[BaseType (typeof (UIViewController))]
 	[DisableDefaultCtor]
 	interface PKAddSecureElementPassViewController {
