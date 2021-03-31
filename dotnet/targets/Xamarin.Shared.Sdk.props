@@ -9,6 +9,7 @@
 	<Import Project="Xamarin.Shared.Sdk.TargetFrameworkInference.props" />
 
 	<PropertyGroup>
+		<SuppressTrimAnalysisWarnings Condition=" '$(SuppressTrimAnalysisWarnings)' == '' ">true</SuppressTrimAnalysisWarnings>
 		<AfterMicrosoftNETSdkTargets>$(AfterMicrosoftNETSdkTargets);$(MSBuildThisFileDirectory)Microsoft.$(_PlatformName).Sdk.targets</AfterMicrosoftNETSdkTargets>
 	</PropertyGroup>
 </Project>
