@@ -572,9 +572,9 @@ steps:
     rm -rf ~/.config/.mono/keypairs/
 
     if [[ "$IsPR" == "True" ]]; then
-      TARGET = 'jenkins'
+      TARGET='jenkins'
     else
-      TARGET = 'wrench-jenkins'
+      TARGET='wrench-jenkins'
     fi
 
     echo "Using target '$TARGET'"
