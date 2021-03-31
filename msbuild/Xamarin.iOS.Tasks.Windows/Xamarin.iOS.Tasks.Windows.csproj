@@ -7,6 +7,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="DotNetZip" Version="1.14.0" />
+    <PackageReference Include="Mono.Cecil" Version="0.11.3" />
     <PackageReference Include="Xamarin.Messaging.Build.Client" Version="$(MessagingVersion)" IncludeAssets="contentFiles" />
     <PackageReference Include="Xamarin.Messaging.Core" Version="$(MessagingVersion)" IncludeAssets="build" />
     <PackageReference Include="Xamarin.Messaging.Server" Version="$(MessagingVersion)" IncludeAssets="contentFiles" />
@@ -17,6 +18,7 @@
       <ReferenceOutputAssembly>False</ReferenceOutputAssembly>
       <IsAgent>True</IsAgent>
     </ProjectReference>
+    <ProjectReference Include="..\..\external\Xamarin.MacDev\Xamarin.MacDev\Xamarin.MacDev.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Include="*.props">
