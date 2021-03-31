@@ -757,7 +757,7 @@ namespace Introspection {
 					break;
 				}
 				break;
-#if MONOMAC || __MACCATALYST__
+#if __MACOS__ || __MACCATALYST__
 			case "MLDictionaryFeatureProvider":
 			case "MLMultiArray":
 			case "MLFeatureValue":

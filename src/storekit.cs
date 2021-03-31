@@ -651,10 +651,12 @@ namespace StoreKit {
 		NSString AdNetworkTimestamp { get; }
 
 		[NoWatch, NoMac, TV (14, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[Field ("SKStoreProductParameterAdNetworkSourceAppStoreIdentifier")]
 		NSString AdNetworkSourceAppStoreIdentifier { get; }
 
 		[NoWatch, NoMac, TV (14, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[Field ("SKStoreProductParameterAdNetworkVersion")]
 		NSString AdNetworkVersion { get; }
 	}

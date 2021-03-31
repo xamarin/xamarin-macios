@@ -21338,22 +21338,27 @@ namespace UIKit {
 		NSIndexPath GetIndexPath (ItemIdentifierType identifier);
 
 		[TV (14,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Export ("reorderingHandlers", ArgumentSemantic.Copy)]
 		UICollectionViewDiffableDataSourceReorderingHandlers<SectionIdentifierType, ItemIdentifierType> ReorderingHandlers { get; set; }
 
 		[TV (14,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Export ("applySnapshot:toSection:animatingDifferences:")]
 		void ApplySnapshot (NSDiffableDataSourceSectionSnapshot<ItemIdentifierType> snapshot, SectionIdentifierType sectionIdentifier, bool animatingDifferences);
 
 		[TV (14,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Export ("applySnapshot:toSection:animatingDifferences:completion:")]
 		void ApplySnapshot (NSDiffableDataSourceSectionSnapshot<ItemIdentifierType> snapshot, SectionIdentifierType sectionIdentifier, bool animatingDifferences, [NullAllowed] Action completion);
 
 		[TV (14,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Export ("snapshotForSection:")]
 		NSDiffableDataSourceSectionSnapshot<ItemIdentifierType> GetSnapshot (SectionIdentifierType section);
 
 		[TV (14,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Export ("sectionSnapshotHandlers", ArgumentSemantic.Copy)]
 		UICollectionViewDiffableDataSourceSectionSnapshotHandlers<ItemIdentifierType> SectionSnapshotHandlers { get; set; }
 	}
@@ -21694,6 +21699,7 @@ namespace UIKit {
 	}
 
 	[NoWatch, TV (14,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	interface NSDiffableDataSourceSectionSnapshot<ItemIdentifierType> : NSCopying
 		where ItemIdentifierType : NSObject {
@@ -21773,6 +21779,7 @@ namespace UIKit {
 	}
 
 	[NoWatch, TV (14,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface UIBackgroundConfiguration : NSCopying, NSSecureCoding {
@@ -21878,18 +21885,21 @@ namespace UIKit {
 	}
 
 	[NoWatch, TV (14,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (UICellAccessory))]
 	interface UICellAccessoryDisclosureIndicator {
 
 	}
 
 	[NoWatch, TV (14,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (UICellAccessory))]
 	interface UICellAccessoryCheckmark {
 
 	}
 
 	[NoWatch, TV (14,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (UICellAccessory))]
 	interface UICellAccessoryDelete {
 
@@ -21901,6 +21911,7 @@ namespace UIKit {
 	}
 
 	[NoWatch, TV (14,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (UICellAccessory))]
 	interface UICellAccessoryInsert {
 
@@ -21912,6 +21923,7 @@ namespace UIKit {
 	}
 
 	[NoWatch, TV (14,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (UICellAccessory))]
 	interface UICellAccessoryReorder {
 
@@ -21920,6 +21932,7 @@ namespace UIKit {
 	}
 
 	[NoWatch, TV (14,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (UICellAccessory))]
 	interface UICellAccessoryMultiselect {
 
@@ -21928,6 +21941,7 @@ namespace UIKit {
 	}
 
 	[NoWatch, NoTV, iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (UICellAccessory))]
 	interface UICellAccessoryOutlineDisclosure {
 
@@ -21939,6 +21953,7 @@ namespace UIKit {
 	}
 
 	[NoWatch, TV (14,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (UICellAccessory))]
 	[DisableDefaultCtor]
 	interface UICellAccessoryLabel {
@@ -21958,9 +21973,11 @@ namespace UIKit {
 	}
 
 	[NoWatch, TV (14,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	delegate nuint UICellAccessoryPosition (UICellAccessory [] accessories);
 
 	[NoWatch, TV (14,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (UICellAccessory))]
 	[DisableDefaultCtor]
 	interface UICellAccessoryCustomView {
@@ -21983,6 +22000,7 @@ namespace UIKit {
 	}
 
 	[NoWatch, TV (14,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (UIViewConfigurationState))]
 	[DisableDefaultCtor]
 	interface UICellConfigurationState {
@@ -22016,6 +22034,7 @@ namespace UIKit {
 	delegate UISwipeActionsConfiguration UICollectionLayoutListSwipeActionsConfigurationProvider (NSIndexPath indexPath);
 
 	[NoWatch, TV (14,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface UICollectionLayoutListConfiguration : NSCopying {
@@ -22052,9 +22071,11 @@ namespace UIKit {
 	}
 
 	[NoWatch, TV (14,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	delegate void UICollectionViewCellRegistrationConfigurationHandler (UICollectionViewCell cell, NSIndexPath indexPath, NSObject item);
 
 	[NoWatch, TV (14,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface UICollectionViewCellRegistration {
@@ -22085,9 +22106,11 @@ namespace UIKit {
 	}
 
 	[NoWatch, TV (14,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	delegate void UICollectionViewSupplementaryRegistrationConfigurationHandler (UICollectionReusableView supplementaryView, string elementKind, NSIndexPath indexPath);
 
 	[NoWatch, TV (14,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface UICollectionViewSupplementaryRegistration {
@@ -22207,6 +22230,7 @@ namespace UIKit {
 	interface IUIConfigurationState {}
 
 	[NoWatch, TV (14,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[Protocol]
 	interface UIConfigurationState : NSCopying, NSSecureCoding {
 
@@ -22241,6 +22265,7 @@ namespace UIKit {
 	interface IUIContentConfiguration {}
 
 	[NoWatch, TV (14,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[Protocol]
 	interface UIContentConfiguration : NSCopying {
 
@@ -22256,6 +22281,7 @@ namespace UIKit {
 	interface IUIContentView {}
 
 	[NoWatch, TV (14,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[Protocol]
 	interface UIContentView {
 
@@ -22265,12 +22291,15 @@ namespace UIKit {
 	}
 
 	[NoWatch, TV (14,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	delegate void UIDeferredMenuElementCompletionHandler (UIMenuElement [] elements);
 
 	[NoWatch, TV (14,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	delegate void UIDeferredMenuElementProviderHandler ([BlockCallback] UIDeferredMenuElementCompletionHandler completion);
 
 	[NoWatch, TV (14,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (UIMenuElement))]
 	[DisableDefaultCtor]
 	interface UIDeferredMenuElement {
@@ -22281,6 +22310,7 @@ namespace UIKit {
 	}
 
 	[NoWatch, TV (14,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	interface NSDiffableDataSourceSectionTransaction <SectionIdentifierType, ItemIdentifierType>
 		where SectionIdentifierType : NSObject
@@ -22301,6 +22331,7 @@ namespace UIKit {
 	}
 
 	[NoWatch, TV (14,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	interface NSDiffableDataSourceTransaction<SectionIdentifierType, ItemIdentifierType>
 		where SectionIdentifierType : NSObject
@@ -22321,6 +22352,7 @@ namespace UIKit {
 	}
 
 	[NoWatch, NoTV, iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface UIIndirectScribbleInteraction : UIInteraction {
@@ -22343,6 +22375,7 @@ namespace UIKit {
 	interface IUIIndirectScribbleInteractionDelegate {}
 
 	[NoWatch, NoTV, iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[Protocol, Model (AutoGeneratedName = true)]
 	[BaseType (typeof (NSObject))]
 	interface UIIndirectScribbleInteractionDelegate {
@@ -22374,6 +22407,7 @@ namespace UIKit {
 	}
 
 	[NoWatch, TV (14,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface UIListContentConfiguration : UIContentConfiguration, NSSecureCoding {
@@ -22475,6 +22509,7 @@ namespace UIKit {
 	}
 
 	[NoWatch, TV (14,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (UIView))]
 	[DisableDefaultCtor]
 	interface UIListContentView : UIContentView {
@@ -22534,6 +22569,7 @@ namespace UIKit {
 	}
 
 	[NoWatch, TV (14,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface UIListContentTextProperties : NSCopying, NSSecureCoding {
@@ -22577,6 +22613,7 @@ namespace UIKit {
 
 	interface UIPointerLockStateDidChangeEventArgs {
 		[NoWatch, NoTV, iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[NullAllowed]
 		[Export ("UIPointerLockStateSceneUserInfoKey")]
 		UIScene Scene { get; }
@@ -22597,6 +22634,7 @@ namespace UIKit {
 	}
 
 	[NoWatch, NoTV, iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface UIScribbleInteraction : UIInteraction {
@@ -22623,6 +22661,7 @@ namespace UIKit {
 	interface IUIScribbleInteractionDelegate { }
 
 	[NoWatch, NoTV, iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[Protocol, Model (AutoGeneratedName = true)]
 	[BaseType (typeof (NSObject))]
 	interface UIScribbleInteractionDelegate {
@@ -22714,6 +22753,7 @@ namespace UIKit {
 	}
 
 	[NoWatch, TV (14,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface UIViewConfigurationState : UIConfigurationState {
@@ -22740,6 +22780,7 @@ namespace UIKit {
 
 	// TODO: Our trampolines generator does not support generic delegate definitions
 	[NoWatch, TV (14,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	interface UICollectionViewDiffableDataSourceSectionSnapshotHandlers<ItemType> : NSCopying
 		where ItemType : NSObject {
@@ -22762,6 +22803,7 @@ namespace UIKit {
 
 	// TODO: Our trampolines generator does not support generic delegate definitions
 	[NoWatch, TV (14,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	interface UICollectionViewDiffableDataSourceReorderingHandlers<SectionType, ItemType> : NSCopying
 		where SectionType : NSObject
@@ -22778,6 +22820,7 @@ namespace UIKit {
 	}
 
 	[TV (14,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[NoWatch]
 	[Native]
 	public enum UIListContentTextTransform : long {

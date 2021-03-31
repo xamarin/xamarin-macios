@@ -2315,6 +2315,7 @@ namespace ImageIO {
 
 		[iOS (14,1)]
 		[TV (14,2)][Watch (7,1)][Mac (11,0)]
+		[MacCatalyst (14,1)]
 		[Field ("kCGImageDestinationPreserveGainMap")]
 		NSString PreserveGainMapKey { get; }
 	}

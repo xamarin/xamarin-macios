@@ -779,6 +779,7 @@ namespace CoreImage {
 		NSString EnableEdrModeKey { get; }
 
 		[iOS (14,3), TV (14,3), Mac (11,1)]
+		[MacCatalyst (14,3)]
 		[Field ("kCIInputLocalToneMapAmountKey")]
 		NSString InputLocalToneMapAmountKey { get; }
 

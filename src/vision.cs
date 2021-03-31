@@ -342,6 +342,7 @@ namespace Vision {
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[Native]
 	enum VNDetectContourRequestRevision : ulong {
 		Unspecified = 0,
@@ -349,6 +350,7 @@ namespace Vision {
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[Native]
 	enum VNDetectHumanBodyPoseRequestRevision : ulong {
 		Unspecified = 0,
@@ -356,6 +358,7 @@ namespace Vision {
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[Native]
 	enum VNDetectHumanHandPoseRequestRevision : ulong {
 		Unspecified = 0,
@@ -363,6 +366,7 @@ namespace Vision {
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[Native]
 	enum VNDetectTrajectoriesRequestRevision : ulong {
 		Unspecified = 0,
@@ -370,6 +374,7 @@ namespace Vision {
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[Native]
 	public enum VNGenerateOpticalFlowRequestComputationAccuracy : ulong {
 		Low = 0,
@@ -379,6 +384,7 @@ namespace Vision {
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[Native]
 	enum VNGenerateOpticalFlowRequestRevision : ulong {
 		Unspecified = 0,
@@ -386,6 +392,7 @@ namespace Vision {
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[Native]
 	enum VNStatefulRequestRevision : ulong {
 		Unspecified = 0,
@@ -1466,6 +1473,7 @@ namespace Vision {
 		float Confidence { get; }
 
 		[TV (14,0), Mac (11,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Export ("timeRange", ArgumentSemantic.Assign)]
 		CMTimeRange TimeRange { get; }
 	}
@@ -1882,18 +1890,22 @@ namespace Vision {
 		IntPtr Constructor (NSData imageData, CGImagePropertyOrientation orientation, VNImageOptions imageOptions);
 
 		[TV (14,0), Mac (11,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Export ("initWithCMSampleBuffer:options:")]
 		IntPtr Constructor (CMSampleBuffer sampleBuffer, NSDictionary options);
 
 		[TV (14,0), Mac (11,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Wrap ("this (sampleBuffer, imageOptions.GetDictionary ()!)")]
 		IntPtr Constructor (CMSampleBuffer sampleBuffer, VNImageOptions imageOptions);
 
 		[TV (14,0), Mac (11,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Export ("initWithCMSampleBuffer:orientation:options:")]
 		IntPtr Constructor (CMSampleBuffer sampleBuffer, CGImagePropertyOrientation orientation, NSDictionary options);
 
 		[TV (14,0), Mac (11,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Wrap ("this (sampleBuffer, orientation, imageOptions.GetDictionary ()!)")]
 		IntPtr Constructor (CMSampleBuffer sampleBuffer, CGImagePropertyOrientation orientation, VNImageOptions imageOptions);
 
@@ -1941,10 +1953,12 @@ namespace Vision {
 		bool Perform (VNRequest [] requests, NSData imageData, CGImagePropertyOrientation orientation, out NSError error);
 
 		[TV (14,0), Mac (11,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Export ("performRequests:onCMSampleBuffer:error:")]
 		bool Perform (VNRequest[] requests, CMSampleBuffer sampleBuffer, [NullAllowed] out NSError error);
 
 		[TV (14,0), Mac (11,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Export ("performRequests:onCMSampleBuffer:orientation:error:")]
 		bool Perform (VNRequest[] requests, CMSampleBuffer sampleBuffer, CGImagePropertyOrientation orientation, [NullAllowed] out NSError error);
 	}
@@ -2076,34 +2090,42 @@ namespace Vision {
 		IntPtr Constructor (NSData imageData, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
 		[TV (14,0), Mac (11,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Export ("initWithTargetedCMSampleBuffer:options:")]
 		IntPtr Constructor (CMSampleBuffer sampleBuffer, NSDictionary optionsDict);
 
 		[TV (14,0), Mac (11,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Wrap ("this (sampleBuffer, options.GetDictionary ()!)")]
 		IntPtr Constructor (CMSampleBuffer sampleBuffer, VNImageOptions options);
 
 		[TV (14,0), Mac (11,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Export ("initWithTargetedCMSampleBuffer:options:completionHandler:")]
 		IntPtr Constructor (CMSampleBuffer sampleBuffer, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[TV (14,0), Mac (11,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Wrap ("this (sampleBuffer, options.GetDictionary ()!, completionHandler)")]
 		IntPtr Constructor (CMSampleBuffer sampleBuffer, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
 		[TV (14,0), Mac (11,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Export ("initWithTargetedCMSampleBuffer:orientation:options:")]
 		IntPtr Constructor (CMSampleBuffer sampleBuffer, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
 
 		[TV (14,0), Mac (11,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Wrap ("this (sampleBuffer, orientation, options.GetDictionary ()!)")]
 		IntPtr Constructor (CMSampleBuffer sampleBuffer, CGImagePropertyOrientation orientation, VNImageOptions options);
 
 		[TV (14,0), Mac (11,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Export ("initWithTargetedCMSampleBuffer:orientation:options:completionHandler:")]
 		IntPtr Constructor (CMSampleBuffer sampleBuffer, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[TV (14,0), Mac (11,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Wrap ("this (sampleBuffer, orientation, options.GetDictionary ()!, completionHandler)")]
 		IntPtr Constructor (CMSampleBuffer sampleBuffer, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 	}
@@ -3067,6 +3089,7 @@ namespace Vision {
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (VNTargetedImageRequest))]
 	interface VNGenerateOpticalFlowRequest {
 
