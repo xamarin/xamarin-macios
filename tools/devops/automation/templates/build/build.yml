@@ -594,6 +594,8 @@ steps:
   timeoutInMinutes: 600
   enabled: ${{ parameters.runTests }}
   env:
+    ${{ if eq(variables['Build.SourceBranchName'], 'main') }}: # only works if you have a main branch
+      XHARNESS_LABELS: 'run-dotnet-tests'
     IsPR: $(configuration.IsPR)
     GITHUB_TOKEN: $(GitHub.Token)  # used to filter the tests to be ran
     BUILD_REVISION: jenkins
