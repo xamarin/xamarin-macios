@@ -87,7 +87,7 @@ steps:
     make LocProject.json
   displayName: 'Generate LocProject.json'
   continueOnError: true
-  workingDirectory: $(Build.SourcesDirectory)\tools\devops
+  workingDirectory: $(Build.SourcesDirectory)\tools\devops 
 
 - task: OneLocBuild@2
   condition: and(contains(variables['labels.prBuild'], 'False'), ${{ eq(variables['Build.SourceBranchName'], 'main') }})
