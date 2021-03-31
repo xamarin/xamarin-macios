@@ -90,6 +90,7 @@ steps:
   workingDirectory: $(Build.SourcesDirectory)\tools\devops 
 
 - task: OneLocBuild@2
+  condition: eq('$(Build.SourceBranchName)', 'merge')
   continueOnError: true
   env:
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
@@ -105,6 +106,7 @@ steps:
     patVariable: '$(OneLocBuild--PAT)'
 
 - task: PublishBuildArtifacts@1
+  condition: eq('$(Build.SourceBranchName)', 'merge')
   continueOnError: true
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
