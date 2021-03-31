@@ -165,7 +165,7 @@ stages:
 
 - template: templates/devices/stage.yml
   parameters:
-    devicePrefix: 'tvOS'
+    devicePrefix: 'tvos'
     execute: 'runDeviceTv'
     stageName: 'tvOS Device Tests'
     iOSDevicePool: 'VSEng-Xamarin-Mac-Devices'
