@@ -160,4 +160,11 @@ mono_assembly_open (const char * filename, MonoImageOpenStatus * status)
 	return rv;
 }
 
+MonoDomain *
+mono_domain_get (void)
+{
+	// This is not needed for CoreCLR.
+	return NULL;
+}
+
 #endif // CORECLR_RUNTIME

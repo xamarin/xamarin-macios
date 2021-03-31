@@ -56,6 +56,13 @@ enum NSObjectFlags {
 	NSObjectFlagsIsCustomType = 128,
 };
 
+enum XamarinGCHandleType : int {
+	XamarinGCHandleTypeWeak = 0,
+	XamarinGCHandleTypeWeakTrackResurrection = 1,
+	XamarinGCHandleTypeNormal = 2,
+	XamarinGCHandleTypePinned = 3,
+};
+
 extern bool mono_use_llvm; // this is defined inside mono
 
 #if DEBUG

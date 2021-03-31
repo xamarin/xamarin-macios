@@ -370,7 +370,7 @@ steps:
       echo "##vso[task.setvariable variable=MACCATALYST_DOTNET_PKG;]$MACCATALYST_DOTNET_PKG"
       echo "Microsoft.MacCatalyst package found at $MACCATALYST_DOTNET_PKG"
     fi
-  displayName: 'Sign Packages'
+  displayName: 'Retrieve packages to sign'
   condition: and(succeeded(), contains(variables['configuration.BuildPkgs'], 'True'))
   timeoutInMinutes: 180
 
@@ -384,18 +384,13 @@ steps:
   condition: and(succeeded(), eq(variables['configuration.BuildNugets'], 'True'))
   continueOnError: true # should not stop the build since is not official just yet.
 
-- bash: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/productsign.sh
-  env:
-    PRODUCTSIGN_KEYCHAIN_PASSWORD: $(xma-password)
-  displayName: 'Signing PR Build'
-  condition: and(succeeded(), contains(variables['configuration.BuildPkgs'], 'True'), contains(variables['configuration.SignPkgs'], 'True'), contains(variables['configuration.IsPr'], 'True'))
-
 - task: MicroBuildSigningPlugin@3
   displayName: 'Install Signing Plugin'
   condition: and(succeeded(), contains(variables['configuration.SignPkgs'], 'True'), contains(variables['configuration.IsPr'], 'False'))
   inputs:
     signType: 'Real'
     azureSubscription: 'MicroBuild Signing Task (DevDiv)'
+    zipSources: false  # we do not use the feature and makes the installation to last 10/12 mins instead of < 1 min
   env:
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
@@ -457,6 +452,7 @@ steps:
   inputs:
     signType: 'Real'  # test is not present for mac..
     azureSubscription: 'MicroBuild Signing Task (DevDiv)'
+    zipSources: false  # we do not use the feature and makes the installation to last 10/12 mins instead of < 1 min
   condition: and(succeeded(), contains(variables['configuration.SignPkgs'], 'True'), contains(variables['configuration.IsPr'], 'False')) # if we are a PR, the installation of the plugin will return a 403 and everything will collapse
   env:
       SYSTEM_ACCESSTOKEN: $(System.AccessToken)
@@ -571,6 +567,14 @@ steps:
     echo "##vso[task.setvariable variable=TESTS_RAN;isOutput=true]True"
     rm -rf ~/.config/.mono/keypairs/
 
+    if [[ "$IsPR" == "True" ]]; then
+      TARGET='jenkins'
+    else
+      TARGET='wrench-jenkins'
+    fi
+
+    echo "Using target '$TARGET'"
+
     RC=0
     make -C $(Build.SourcesDirectory)/xamarin-macios/tests "$TARGET" || RC=$?
 
@@ -590,8 +594,9 @@ steps:
   timeoutInMinutes: 600
   enabled: ${{ parameters.runTests }}
   env:
+    IsPR: $(configuration.IsPR)
+    GITHUB_TOKEN: $(GitHub.Token)  # used to filter the tests to be ran
     BUILD_REVISION: jenkins
-    TARGET: 'wrench-jenkins'
     VSDROPS_URI: '${{ parameters.vsdropsPrefix }}/$(Build.BuildNumber)/$(Build.BuildId)/sim;/tests/' # uri used to create the vsdrops index using full uri
 
 # Only executed when the tests failed, that means that we did have a timeout, and we could not set the status, this

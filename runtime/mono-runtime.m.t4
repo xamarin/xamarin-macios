@@ -81,8 +81,8 @@ xamarin_initialize_dynamic_runtime (const char *mono_runtime_prefix)
 		fprintf (stderr, "Could not load <#= export.EntryPoint #>\n");
 		errmsg = "Failed to load the Mono framework.";
 	}
-<#= export.DotNetEndIf #><#= export.RuntimeEndIf #><# } #>
-
+<# } #>
+<#= export.DotNetEndIf #><#= export.RuntimeEndIf #>
 <# } #>
 	xamarin_dynamic_runtime_initialized = 1;
 
