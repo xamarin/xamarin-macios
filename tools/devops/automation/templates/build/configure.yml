@@ -90,7 +90,7 @@ steps:
   workingDirectory: $(Build.SourcesDirectory)\tools\devops 
 
 - task: OneLocBuild@2
-  condition: contains(variables['labels.prBuild'], 'False')
+  condition: and (contains(variables['labels.prBuild'], 'False'), eq('$(Build.SourceBranchName), 'main'))
   continueOnError: true
   env:
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
@@ -106,7 +106,7 @@ steps:
     patVariable: '$(OneLocBuild--PAT)'
 
 - task: PublishBuildArtifacts@1
-  condition: contains(variables['labels.prBuild'], 'False')
+  condition: and (contains(variables['labels.prBuild'], 'False'), eq('$(Build.SourceBranchName), 'main'))
   continueOnError: true
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
