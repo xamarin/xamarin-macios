@@ -7,7 +7,8 @@ steps:
   submodules: false
 
 - variables:
-    isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
+    - name: isMain
+      value: ${{ eq(variables['Build.SourceBranchName'], 'main') }}
 
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/tools/devops/automation/scripts/GitHub.psm1
