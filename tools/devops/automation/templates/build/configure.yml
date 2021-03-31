@@ -1,10 +1,6 @@
 # This job will parse all the labels present in a PR, will set
 # the tags for the build AND will set a number of configuration
 # variables to be used by the rest of the projects
-variables:
-  - name: isMain
-    value: ${{ eq(variables['Build.SourceBranchName'], 'main') }}
-
 steps:
 - checkout: self          # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
   clean: true             # Executes: git clean -ffdx && git reset --hard HEAD
@@ -94,7 +90,7 @@ steps:
   workingDirectory: $(Build.SourcesDirectory)\tools\devops
 
 - task: OneLocBuild@2
-  condition: and(contains(variables['labels.prBuild'], 'False'), contains($(isMain), 'True'))
+  condition: and(contains(variables['labels.prBuild'], 'False'), ${{ eq(variables['Build.SourceBranchName'], 'main') }})
   continueOnError: true
   env:
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
@@ -110,7 +106,7 @@ steps:
     patVariable: '$(OneLocBuild--PAT)'
 
 - task: PublishBuildArtifacts@1
-  condition: and(contains(variables['labels.prBuild'], 'False'), contains($(isMain), 'True'))
+  condition: and(contains(variables['labels.prBuild'], 'False'), ${{ eq(variables['Build.SourceBranchName'], 'main') }})
   continueOnError: true
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
