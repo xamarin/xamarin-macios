@@ -14,7 +14,9 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
+#if !NET
 using System.Security.Permissions;
+#endif
 using System.Security.Principal;
 using System.Threading;
 using System.Xml;
@@ -49,6 +51,7 @@ using MonoTests.System.Net.Http;
 
 namespace LinkSdk {
 
+#if !NET
 	[FileIOPermission (SecurityAction.LinkDemand, AllLocalFiles = FileIOPermissionAccess.AllAccess)]
 	public class SecurityDeclarationDecoratedUserCode {
 
@@ -58,6 +61,7 @@ namespace LinkSdk {
 			return true;
 		}
 	}
+#endif
 
 	[TestFixture]
 	// we want the test to be availble if we use the linker
@@ -1007,6 +1011,7 @@ namespace LinkSdk {
 		}
 #endif // !__WATCHOS__
 
+#if !NET
 		[Test]
 		public void SecurityDeclaration ()
 		{
@@ -1017,6 +1022,7 @@ namespace LinkSdk {
 			Assert.Null (GetTypeHelper ("System.Security.Permissions.FileIOPermissionAttribute, mscorlib"), "FileIOPermissionAttribute");
 			Assert.Null (GetTypeHelper ("System.Security.Permissions.FileIOPermissionAccess, mscorlib"), "FileIOPermissionAccess");
 		}
+#endif
 
 #if !__WATCHOS__
 		static Type type_uibutton = typeof (UIButton);
