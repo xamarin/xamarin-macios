@@ -434,6 +434,14 @@ steps:
     echo "##vso[task.setvariable variable=TESTS_RAN;isOutput=true]True"
     rm -rf ~/.config/.mono/keypairs/
 
+    if [[ "$IsPR" == "True" ]]; then
+      TARGET='jenkins'
+    else
+      TARGET='wrench-jenkins'
+    fi
+
+    echo "Using target '$TARGET'"
+
     RC=0
     make -C $(Build.SourcesDirectory)/xamarin-macios/tests "$TARGET" || RC=$?
 
@@ -453,8 +461,9 @@ steps:
   timeoutInMinutes: 600
   enabled: ${{ parameters.runTests }}
   env:
+    IsPR: $(configuration.IsPR)
+    GITHUB_TOKEN: $(GitHub.Token)  # used to filter the tests to be ran
     BUILD_REVISION: jenkins
-    TARGET: 'wrench-jenkins'
     VSDROPS_URI: '${{ parameters.vsdropsPrefix }}/$(Build.BuildNumber)/$(Build.BuildId)/sim;/tests/' # uri used to create the vsdrops index using full uri
 
 # Only executed when the tests failed, that means that we did have a timeout, and we could not set the status, this 
