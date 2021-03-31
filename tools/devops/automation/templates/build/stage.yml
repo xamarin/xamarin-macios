@@ -49,6 +49,8 @@ jobs:
   displayName: 'Build packages'
   timeoutInMinutes: 1000
   variables:
+    ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
+      XHARNESS_LABELS: 'run-dotnet-tests'
     AgentPoolComputed: $[ dependencies.AgentPoolSelector.outputs['setAgentPool.AgentPoolComputed'] ]
     # add all the variables that have been parsed by the configuration step. Could we have a less verbose way??
     #
