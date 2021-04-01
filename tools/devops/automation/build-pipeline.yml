@@ -66,6 +66,8 @@ trigger:
   branches:
     include:
     - '*'
+    exclude:
+    - locfiles/*
 
 pr:
   autoCancel: true
