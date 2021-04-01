@@ -67,7 +67,7 @@ trigger:
     include:
     - '*'
     exclude:
-    - locfiles/*
+    - refs/heads/locfiles/*
 
 pr:
   autoCancel: true
