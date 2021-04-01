@@ -61,7 +61,7 @@ namespace Xamarin.MacDev.Tasks {
 			var abi = abis [0].ToNativeArchitecture ();
 
 			var arguments = new List<string> ();
-			arguments.Add ("clang");
+			arguments.Add ("clang++");
 
 			switch (Platform) {
 			case ApplePlatform.iOS:

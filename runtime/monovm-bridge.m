@@ -143,6 +143,8 @@ void
 xamarin_bridge_register_product_assembly (GCHandle* exception_gchandle)
 {
 	xamarin_register_monoassembly (entry_assembly, exception_gchandle);
+	// We don't need the entry_assembly around anymore, so release it.
+	xamarin_mono_object_release (&entry_assembly);
 }
 
 MonoClass *

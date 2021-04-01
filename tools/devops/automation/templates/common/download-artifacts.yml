@@ -34,8 +34,6 @@ steps:
     path: $(System.DefaultWorkingDirectory)\Reports
 
 - powershell: |
-    Get-ChildItem -Recurse $Env:SYSTEM_DEFAULTWORKINGDIRECTORY
-
     Write-Host "##vso[task.setvariable variable=TEST_SUMMARY_PATH]$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\Reports\TestSummary-${{ parameters.devicePrefix }}\TestSummary.md"
     Write-Host "##vso[task.setvariable variable=HTML_REPORT_PATH]$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\HtmlReport-${{ parameters.devicePrefix }}"
   displayName: Pusblish artifact paths

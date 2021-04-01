@@ -106,6 +106,7 @@ namespace LinkAll.Attributes {
 	public class CustomTypeO {
 	}
 
+#if !NET
 	[FileIOPermission (SecurityAction.LinkDemand, AllLocalFiles = FileIOPermissionAccess.AllAccess)]
 	public class SecurityDeclarationDecoratedUserCode {
 
@@ -115,6 +116,7 @@ namespace LinkAll.Attributes {
 			return true;
 		}
 	}
+#endif
 
 	[TestFixture]
 	// we want the tests to be available because we use the linker
@@ -222,6 +224,7 @@ namespace LinkAll.Attributes {
 			//Assert.NotNull (Type.GetType ("LinkAll.Attributes.CustomTypeO"), "CustomTypeO");
 		}
 
+#if !NET
 		[Test]
 		public void SecurityDeclaration ()
 		{
@@ -232,5 +235,6 @@ namespace LinkAll.Attributes {
 			Assert.Null (Type.GetType ("System.Security.Permissions.FileIOPermissionAttribute, " + mscorlib), "FileIOPermissionAttribute");
 			Assert.Null (Type.GetType ("System.Security.Permissions.FileIOPermissionAccess, " + mscorlib), "FileIOPermissionAccess");
 		}
+#endif
 	}
 }

@@ -24,6 +24,7 @@ using NUnit.Framework;
 
 namespace DontLink {
 
+#if !NET
 	[FileIOPermission (SecurityAction.LinkDemand, AllLocalFiles = FileIOPermissionAccess.AllAccess)]
 	public class SecurityDeclarationDecoratedUserCode {
 
@@ -33,6 +34,7 @@ namespace DontLink {
 			return true;
 		}
 	}
+#endif
 
 	[TestFixture]
 	public class DontLinkRegressionTests {
@@ -82,6 +84,7 @@ namespace DontLink {
 			}
 		}
 
+#if !NET
 		[Test]
 		public void SecurityDeclaration ()
 		{
@@ -92,6 +95,7 @@ namespace DontLink {
 			Assert.NotNull (Type.GetType ("System.Security.Permissions.FileIOPermissionAttribute, mscorlib"), "FileIOPermissionAttribute");
 			Assert.NotNull (Type.GetType ("System.Security.Permissions.FileIOPermissionAccess, mscorlib"), "FileIOPermissionAccess");
 		}
+#endif
 
 		[Test]
 		public void DefaultEncoding ()

@@ -251,7 +251,9 @@
 		new Export ("MonoAssembly *", "mono_assembly_open",
 			"const char *",          "filename",
 			"MonoImageOpenStatus *", "status"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		new Export ("MonoImage *", "mono_assembly_get_image",
 			"MonoAssembly *", "assembly"
@@ -302,12 +304,16 @@
 		new Export ("void", "mono_add_internal_call",
 			"const char *", "name",
 			"const void *", "method"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export (true, "void", "mono_dangerous_add_raw_internal_call",
 			"const char *", "name",
 			"const void *", "method"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export ("MonoMethodSignature *", "mono_method_signature",
 			"MonoMethod *", "method"
@@ -331,7 +337,9 @@
 
 		#region metadata/appdomain.h
 
-		new Export ("MonoDomain *", "mono_domain_get"),
+		new Export ("MonoDomain *", "mono_domain_get") {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		new Export ("MonoClass *", "mono_get_intptr_class"),
 
@@ -706,6 +714,7 @@
 		public bool Optional;
 		public DotNetMode Mode;
 		public RuntimeMode XamarinRuntime;
+		public bool HasCoreCLRBridgeFunction;
 
 		public Export (string returnType, string entryPoint, params string [] arguments)
 			: this (false, returnType, entryPoint, arguments)

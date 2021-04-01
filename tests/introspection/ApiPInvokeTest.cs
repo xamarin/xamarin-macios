@@ -299,6 +299,7 @@ namespace Introspection
 				Check (a);
 		}
 
+#if !NET
 		[Test]
 		public void SystemData ()
 		{
@@ -306,5 +307,6 @@ namespace Introspection
 			if (!SkipAssembly (a))
 				Check (a);
 		}
+#endif
 	}
 }

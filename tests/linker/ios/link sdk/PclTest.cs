@@ -2,7 +2,9 @@ using System;
 using System.IO;
 using System.Net;
 using System.ServiceModel;
+#if !NET
 using System.ServiceModel.Channels;
+#endif
 using System.Windows.Input;
 using System.Xml;
 using Foundation;
@@ -68,6 +70,7 @@ namespace LinkSdk {
 			}
 		}
 
+#if !NET
 		[Test]
 		public void ServiceModel ()
 		{
@@ -96,6 +99,7 @@ namespace LinkSdk {
 				throw new NotImplementedException ();
 			}
 		}
+#endif
 
 		[Test]
 		public void Xml ()

@@ -86,7 +86,7 @@ steps:
     Import-Module ./System.psm1
     Import-Module ./VSTS.psm1
     Import-Module ./GitHub.psm1
-    if ( -not (Test-HDFreeSpace -Size 50)) {
+    if ( -not (Test-HDFreeSpace -Size 20)) {
       Set-GitHubStatus -Status "error" -Description "Not enough free space in the host." -Context "$Env:CONTEXT"
       New-GitHubComment -Header "Tests failed catastrophically on $Env:CONTEXT" -Emoji ":fire:" -Description "Not enough free space in the host."
       Stop-Pipeline
