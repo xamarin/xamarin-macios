@@ -283,6 +283,7 @@ namespace CoreLocation {
 		void StopMonitoring (CLRegion region);
 
 		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[Export ("authorizationStatus")]
 		CLAuthorizationStatus AuthorizationStatus { get; }
 
@@ -410,19 +411,23 @@ namespace CoreLocation {
 		void RequestLocation ();
 
 		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[Export ("accuracyAuthorization")]
 		CLAccuracyAuthorization AccuracyAuthorization { get; }
 
 		[Async]
 		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[Export ("requestTemporaryFullAccuracyAuthorizationWithPurposeKey:completion:")]
 		void RequestTemporaryFullAccuracyAuthorization (string purposeKey, [NullAllowed] Action<NSError> completion);
 
 		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[Export ("requestTemporaryFullAccuracyAuthorizationWithPurposeKey:")]
 		void RequestTemporaryFullAccuracyAuthorization (string purposeKey);
 
 		[NoWatch, NoTV, Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[Export ("authorizedForWidgetUpdates")]
 		bool IsAuthorizedForWidgetUpdates { [Bind ("isAuthorizedForWidgetUpdates")] get; }
 

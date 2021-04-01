@@ -176,10 +176,30 @@ namespace Introspection {
 				if (protocolName == "ARTrackable")
 					return !TestRuntime.CheckXcodeVersion (10,0);
 				break;
+#if __MACCATALYST__
 			case "PHLivePhoto":
 				if (protocolName == "NSItemProviderReading")
-					return !TestRuntime.CheckXcodeVersion (10,0);
+					return !TestRuntime.CheckXcodeVersion (12,0);
 				break;
+			case "BCChatButton":
+			case "PKAddPassButton":
+			case "PKPaymentButton":
+			case "UIButton":
+			case "UIControl":
+			case "UISegmentedControl":
+			case "UITextField":
+			case "UIDatePicker":
+			case "UIPageControl":
+			case "UIRefreshControl":
+			case "UISearchTextField":
+			case "UISlider":
+			case "UIStepper":
+			case "UISwitch":
+			case "ASAuthorizationAppleIdButton":
+				if (protocolName == "UIContextMenuInteractionDelegate")
+					return !TestRuntime.CheckXcodeVersion (12, 0);
+				break;
+#endif
 			}
 
 			switch (protocolName) {

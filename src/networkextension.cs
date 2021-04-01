@@ -196,11 +196,13 @@ namespace NetworkExtension {
 		}
 
 		[Mac (11,0)][iOS (14,2)]
+		[MacCatalyst (14,2)]
 		[Export ("remoteHostname")]
 		[NullAllowed]
 		string RemoteHostname { get; }
 
 		[Mac (11,1), iOS (14, 3)]
+		[MacCatalyst (14,3)]
 		[Export ("isBound")]
 		bool IsBound { get; }
 
@@ -336,6 +338,7 @@ namespace NetworkExtension {
 		bool MatchDomainsNoSearch { get; set; }
 
 		[NoWatch, NoTV, Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[Export ("dnsProtocol")]
 		NEDnsProtocol DnsProtocol { get; }
 
@@ -815,6 +818,7 @@ namespace NetworkExtension {
 
 		[Async]
 		[Watch (7,0), NoTV, NoMac, iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Static]
 		[Export ("fetchCurrentWithCompletionHandler:")]
 		void FetchCurrent (Action<NEHotspotNetwork> completionHandler);
@@ -1254,15 +1258,18 @@ namespace NetworkExtension {
 		NEProxySettings ProxySettings { get; set; }
 
 		[Mac (10,15), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Export ("includeAllNetworks")]
 		bool IncludeAllNetworks { get; set; }
 
 		[iOS (14,2)]
 		[Mac (10,15)]
+		[MacCatalyst (14,2)]
 		[Export ("excludeLocalNetworks")]
 		bool ExcludeLocalNetworks { get; set; }
 
 		[Mac (11,0)][iOS (14,2)]
+		[MacCatalyst (14,2)]
 		[Export ("enforceRoutes")]
 		bool EnforceRoutes { get; set; }
 	}
@@ -1370,6 +1377,7 @@ namespace NetworkExtension {
 		bool EnableFallback { get; set; }
 
 		[NoWatch, NoTV, Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[Export ("mtu")]
 		nuint Mtu { get; set; }
 	}
@@ -1504,6 +1512,7 @@ namespace NetworkExtension {
 		bool IsEqualToPath (NWPath path);
 
 		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[Export ("constrained")]
 		bool Constrained { [Bind ("isConstrained")] get; }
 	}
@@ -1697,6 +1706,7 @@ namespace NetworkExtension {
 
 		[NullAllowed]
 		[NoWatch, NoTV, Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[Export ("remoteHostname")]
 		string RemoteHostname { get; }
 	}

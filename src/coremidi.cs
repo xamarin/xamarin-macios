@@ -244,6 +244,7 @@ namespace CoreMidi {
 		IntPtr Constructor (NSData data, string inName);
 
 		[Mac (11, 0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Export ("initWithData:")]
 		IntPtr Constructor (NSData data);
 	}
@@ -265,10 +266,12 @@ namespace CoreMidi {
 		IntPtr Constructor (MidiCIProfile[] enabled, MidiCIProfile[] disabled);
 
 		[Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[Export ("initWithChannel:enabledProfiles:disabledProfiles:")]
 		IntPtr Constructor (byte midiChannelNumber, MidiCIProfile[] enabled, MidiCIProfile[] disabled);
 
 		[Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[Export ("midiChannel")]
 		byte MidiChannel { get; }
 	}

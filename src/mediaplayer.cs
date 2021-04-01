@@ -470,6 +470,7 @@ namespace MediaPlayer {
 		void AddMediaItems (MPMediaItem[] mediaItems, [NullAllowed] Action<NSError> completionHandler);
 
 		[iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[NullAllowed, Export ("cloudGlobalID")]
 		string CloudGlobalId { get; }
 	}
