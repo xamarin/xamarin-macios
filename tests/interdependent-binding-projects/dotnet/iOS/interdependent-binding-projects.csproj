@@ -5,7 +5,7 @@
     <OutputType>Exe</OutputType>
     <SignAssembly>true</SignAssembly>
     <LangVersion>latest</LangVersion>
-    <RuntimeIdentifier>ios-x64</RuntimeIdentifier>
+    <RuntimeIdentifier>iossimulator-x64</RuntimeIdentifier>
     <AssetTargetFallback>xamarinios10;$(AssetTargetFallback)</AssetTargetFallback>
     <RootTestsDirectory>..\..\..\</RootTestsDirectory>
     <!-- This is needed because the packages/ directory might be in the same folder as this project file, and some some packages might have C# files, which would then automatically be included -->

@@ -178,11 +178,11 @@ namespace Xamarin.Tests
 				var isDevice = Platform == "iPhone";
 				switch (TargetFrameworkIdentifier) {
 				case "Xamarin.iOS":
-					subdir = isDevice ? "ios-arm64" : "ios-x64";
+					subdir = isDevice ? "ios-arm64" : "iossimulator-x64";
 					targetPlatformSuffix = "ios";
 					break;
 				case "Xamarin.TVOS":
-					subdir = isDevice ? "tvos-arm64" : "tvos-x64";
+					subdir = isDevice ? "tvos-arm64" : "tvossimulator-x64";
 					targetPlatformSuffix = "tvos";
 					break;
 				case "Xamarin.WatchOS":

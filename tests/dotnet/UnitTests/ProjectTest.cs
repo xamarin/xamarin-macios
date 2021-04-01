@@ -56,7 +56,7 @@ namespace Xamarin.Tests {
 			Clean (project_path);
 			var result = DotNet.AssertBuild (project_path, verbosity);
 			AssertThatLinkerExecuted (result);
-			var appPath = Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", "net6.0-ios", "ios-x64", "MySingleView.app");
+			var appPath = Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", "net6.0-ios", "iossimulator-x64", "MySingleView.app");
 			AssertAppContents (platform, appPath);
 			var infoPlistPath = Path.Combine (appPath, "Info.plist");
 			var infoPlist = PDictionary.FromFile (infoPlistPath);
@@ -87,7 +87,7 @@ namespace Xamarin.Tests {
 			Clean (project_path);
 			var result = DotNet.AssertBuild (project_path, verbosity);
 			AssertThatLinkerExecuted (result);
-			AssertAppContents (platform, Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", "net6.0-tvos", "tvos-x64", "MyTVApp.app"));
+			AssertAppContents (platform, Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", "net6.0-tvos", "tvossimulator-x64", "MyTVApp.app"));
 		}
 
 		[Test]
@@ -360,7 +360,7 @@ namespace Xamarin.Tests {
 		}
 
 		[Test]
-		[TestCase ("ios-x64", false)]
+		[TestCase ("iossimulator-x64", false)]
 		[TestCase ("ios-arm64", true)]
 		public void IsNotMacBuild (string runtimeIdentifier, bool isDeviceBuild)
 		{
