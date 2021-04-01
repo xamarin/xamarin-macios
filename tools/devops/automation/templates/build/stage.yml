@@ -27,6 +27,9 @@ jobs:
   pool:
     vmImage: windows-latest
 
+  variables:
+    isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
+
   steps:
   - template: configure.yml
 
