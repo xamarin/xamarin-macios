@@ -299,6 +299,7 @@ namespace LinkAll {
 			Assert.NotNull (Assembly.ReflectionOnlyLoadFrom (filename), "1");
 		}
 
+#if !NET
 		[Test]
 		public void SystemDataSqlClient ()
 		{
@@ -313,6 +314,7 @@ namespace LinkAll {
 			}
 #endif
 		}
+#endif
 		
 #if !__TVOS__ && !__WATCHOS__
 		[Test]
