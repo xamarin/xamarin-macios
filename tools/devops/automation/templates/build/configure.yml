@@ -49,7 +49,12 @@ steps:
       # we can use $ref for that :)
       $xharnessLabels = $prInfo.labels -join ","
       if ($ref -eq "main" -and -not ("run-dotnet-tests" -in $xharnessLabels)) {
-        $xharnessLabels = @($xharnessLabels, "run-dotnet-tests") -join ","
+        $tags.Add("run-dotnet-tests")
+        if ($xharnessLabels -eq "") {
+          $xharnessLabels = "run-dotnet-tests"
+        } else {
+          $xharnessLabels = @($xharnessLabels, "run-dotnet-tests") -join ","
+        }
       }
 
       Write-Host "##vso[task.setvariable variable=xharness-labels;isOutput=true]$xharnessLabels"
