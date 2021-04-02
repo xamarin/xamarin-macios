@@ -45,6 +45,20 @@ steps:
       $ref = $prInfo.base.ref
       $tags.Add("$ref")
 
+      # decide if we add the run-dotnet-tests label (if not present) this is done only for main
+      # we can use $ref for that :)
+      $xharnessLabels = $prInfo.labels -join ","
+      if ($ref -eq "main" -and -not ("run-dotnet-tests" -in $xharnessLabels)) {
+        $tags.Add("run-dotnet-tests")
+        if ($xharnessLabels -eq "") {
+          $xharnessLabels = "run-dotnet-tests"
+        } else {
+          $xharnessLabels = @($xharnessLabels, "run-dotnet-tests") -join ","
+        }
+      }
+
+      Write-Host "##vso[task.setvariable variable=xharness-labels;isOutput=true]$xharnessLabels"
+
       # set output variables based on the git labels
       $labelsOfInterest = @(
         "build-package",
@@ -90,7 +104,7 @@ steps:
   workingDirectory: $(Build.SourcesDirectory)\tools\devops 
 
 - task: OneLocBuild@2
-  condition: and (contains(variables['labels.prBuild'], 'False'), eq('$(Build.SourceBranchName)', 'main'))
+  condition: and(succeeded(), eq(variables.isMain, 'True'))
   continueOnError: true
   env:
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
@@ -106,7 +120,7 @@ steps:
     patVariable: '$(OneLocBuild--PAT)'
 
 - task: PublishBuildArtifacts@1
-  condition: and (contains(variables['labels.prBuild'], 'False'), eq('$(Build.SourceBranchName)', 'main'))
+  condition: and(succeeded(), eq(variables.isMain, 'True'))
   continueOnError: true
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
