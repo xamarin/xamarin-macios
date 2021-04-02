@@ -222,18 +222,18 @@ stages:
         statusContext: ${{ config['statusContext'] }}
         keyringPass: $(xma-password)
 
-# TODO: Not the real step
-- stage: sample_testing
-  displayName: 'Sample testing'
-  dependsOn:
-  - build_packages
-  condition: and(succeeded(), contains (stageDependencies.build_packages.build.outputs['configuration.RunSampleTests'], 'True'))
-  jobs:
-  - job: sample_testing
-    pool:
-      vmImage: ubuntu-latest
-    steps:
-      # TODO: do parse labels
-      - bash: |
-          echo "Samples!"
-        displayName: 'Sample testing'
+  # TODO: Not the real step
+  - stage: sample_testing
+    displayName: 'Sample testing'
+    dependsOn:
+    - build_packages
+    condition: and(succeeded(), contains (stageDependencies.build_packages.build.outputs['configuration.RunSampleTests'], 'True'))
+    jobs:
+    - job: sample_testing
+      pool:
+        vmImage: ubuntu-latest
+      steps:
+        # TODO: do parse labels
+        - bash: |
+            echo "Samples!"
+          displayName: 'Sample testing'
