@@ -3,7 +3,7 @@
   <Import Project="../Common.props" />
   <PropertyGroup>
     <TargetFramework>net6.0-ios</TargetFramework>
-    <RuntimeIdentifier>ios-x64</RuntimeIdentifier>
+    <RuntimeIdentifier>iossimulator-x64</RuntimeIdentifier>
     <OutputType>Exe</OutputType>
     <AssemblyName>MySpacedApp</AssemblyName>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
