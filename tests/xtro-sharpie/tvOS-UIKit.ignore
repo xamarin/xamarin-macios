@@ -405,3 +405,15 @@
 !missing-enum-value! UICollectionLayoutListAppearance native value UICollectionLayoutListAppearanceInsetGrouped = 2 not bound
 !missing-enum-value! UICollectionLayoutListAppearance native value UICollectionLayoutListAppearanceSidebar = 3 not bound
 !missing-enum-value! UICollectionLayoutListAppearance native value UICollectionLayoutListAppearanceSidebarPlain = 4 not bound
+
+## same as iOS but we used the newer name if `UIStringAttributes` so it requires a different entry
+!extra-ui-appearance-support! System.Void UIKit.UIBarItem::SetTitleTextAttributes(UIKit.UIStringAttributes,UIKit.UIControlState) should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! System.Void UIKit.UISearchBar::SetScopeBarButtonTitle(UIKit.UIStringAttributes,UIKit.UIControlState) should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! System.Void UIKit.UISegmentedControl::SetTitleTextAttributes(UIKit.UIStringAttributes,UIKit.UIControlState) should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! UIKit.UIStringAttributes UIKit.UIBarItem::GetTitleTextAttributes(UIKit.UIControlState) should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! UIKit.UIStringAttributes UIKit.UISearchBar::GetScopeBarButtonTitleTextAttributes(UIKit.UIControlState) should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! UIKit.UIStringAttributes UIKit.UISegmentedControl::GetTitleTextAttributes(UIKit.UIControlState) should NOT be decorated with [Appearance]
+
+## Enums not needed on tvOS
+!missing-enum! UIListSeparatorVisibility not bound
+!missing-enum! UIPrintRenderingQuality not bound

@@ -662,22 +662,22 @@ namespace Metal {
 		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch] Sampler = 59,
 		[Mac (10,13), iOS (11,0), TV (11,0), NoWatch] Pointer = 60,
 
-		[NoMac, iOS (11,0), NoTV, NoWatch] R8Unorm = 62,
-		[NoMac, iOS (11,0), NoTV, NoWatch] R8Snorm = 63,
-		[NoMac, iOS (11,0), NoTV, NoWatch] R16Unorm = 64,
-		[NoMac, iOS (11,0), NoTV, NoWatch] R16Snorm = 65,
-		[NoMac, iOS (11,0), NoTV, NoWatch] Rg8Unorm = 66,
-		[NoMac, iOS (11,0), NoTV, NoWatch] Rg8Snorm = 67,
-		[NoMac, iOS (11,0), NoTV, NoWatch] Rg16Unorm = 68,
-		[NoMac, iOS (11,0), NoTV, NoWatch] Rg16Snorm = 69,
-		[NoMac, iOS (11,0), NoTV, NoWatch] Rgba8Unorm = 70,
-		[NoMac, iOS (11,0), NoTV, NoWatch] Rgba8Unorm_sRgb = 71,
-		[NoMac, iOS (11,0), NoTV, NoWatch] Rgba8Snorm = 72,
-		[NoMac, iOS (11,0), NoTV, NoWatch] Rgba16Unorm = 73,
-		[NoMac, iOS (11,0), NoTV, NoWatch] Rgba16Snorm = 74,
-		[NoMac, iOS (11,0), NoTV, NoWatch] Rgb10A2Unorm = 75,
-		[NoMac, iOS (11,0), NoTV, NoWatch] Rg11B10Float = 76,
-		[NoMac, iOS (11,0), NoTV, NoWatch] Rgb9E5Float = 77,
+		[NoMac, iOS (11,0), TV (14,5), NoWatch] R8Unorm = 62,
+		[NoMac, iOS (11,0), TV (14,5), NoWatch] R8Snorm = 63,
+		[NoMac, iOS (11,0), TV (14,5), NoWatch] R16Unorm = 64,
+		[NoMac, iOS (11,0), TV (14,5), NoWatch] R16Snorm = 65,
+		[NoMac, iOS (11,0), TV (14,5), NoWatch] Rg8Unorm = 66,
+		[NoMac, iOS (11,0), TV (14,5), NoWatch] Rg8Snorm = 67,
+		[NoMac, iOS (11,0), TV (14,5), NoWatch] Rg16Unorm = 68,
+		[NoMac, iOS (11,0), TV (14,5), NoWatch] Rg16Snorm = 69,
+		[NoMac, iOS (11,0), TV (14,5), NoWatch] Rgba8Unorm = 70,
+		[NoMac, iOS (11,0), TV (14,5), NoWatch] Rgba8Unorm_sRgb = 71,
+		[NoMac, iOS (11,0), TV (14,5), NoWatch] Rgba8Snorm = 72,
+		[NoMac, iOS (11,0), TV (14,5), NoWatch] Rgba16Unorm = 73,
+		[NoMac, iOS (11,0), TV (14,5), NoWatch] Rgba16Snorm = 74,
+		[NoMac, iOS (11,0), TV (14,5), NoWatch] Rgb10A2Unorm = 75,
+		[NoMac, iOS (11,0), TV (14,5), NoWatch] Rg11B10Float = 76,
+		[NoMac, iOS (11,0), TV (14,5), NoWatch] Rgb9E5Float = 77,
 
 		[Mac (10,14), iOS (12,0), TV (12,0)] RenderPipeline = 78,
 		[Mac (11,0), iOS (13,0), TV (13,0)] ComputePipeline = 79,
@@ -695,8 +695,8 @@ namespace Metal {
 		Texture = 2,
 		Sampler = 3,
 
-		[NoMac, iOS (11,0), NoTV, NoWatch] ImageblockData = 16,
-		[NoMac, iOS (11,0), NoTV, NoWatch] Imageblock = 17,
+		[NoMac, iOS (11,0), TV (14,5), NoWatch] ImageblockData = 16,
+		[NoMac, iOS (11,0), TV (14,5), NoWatch] Imageblock = 17,
 
 		[iOS (14,0)][Mac (11,0)][NoTV][NoWatch]
 		VisibleFunctionTable = 24,
@@ -1071,9 +1071,9 @@ namespace Metal {
 	{
 		Draw = 1 << 0,
 		DrawIndexed = 1 << 1,
-		[NoTV]
+		[TV (14,5)]
 		DrawPatches = 1 << 2,
-		[NoTV]
+		[TV (14,5)]
 		DrawIndexedPatches = 1 << 3,
 		[Mac (11,0), iOS (13,0), TV (13,0)]
 		ConcurrentDispatch = 1 << 5,
@@ -1082,7 +1082,7 @@ namespace Metal {
 	}
 
 	[iOS (12,0)]
-	[NoTV]
+	[TV (14,5)]
 	[Mac (10,14)]
 	[Native]
 	public enum MTLMultisampleStencilResolveFilter : ulong

@@ -112,6 +112,7 @@ namespace MonoTouchFixtures.CoreMedia {
 			Assert.That (FourCC ((int) CMVideoCodecType.SorensonVideo), Is.EqualTo ("SVQ1"), "SorensonVideo");
 			Assert.That (FourCC ((int) CMVideoCodecType.SorensonVideo3), Is.EqualTo ("SVQ3"), "SorensonVideo3");
 			Assert.That (FourCC ((int) CMVideoCodecType.YUV422YpCbCr8), Is.EqualTo ("2vuy"), "YUV422YpCbCr8");
+			Assert.That (FourCC ((int) CMVideoCodecType.DolbyVisionHevc), Is.EqualTo ("dvh1"), "DolbyVisionHevc");
 		}
 
 		[Test]

@@ -224,6 +224,7 @@ namespace iAd {
 	delegate void ADConversionDetails ([NullAllowed] NSDate appPurchaseDate, [NullAllowed] NSDate iAdImpressionDate);
 	
 	[iOS (7,1)]
+	[Deprecated (PlatformName.iOS, 14,5, message: "Use 'AAAttribution' instead.")]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface ADClient {

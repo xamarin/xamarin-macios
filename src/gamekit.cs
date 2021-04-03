@@ -953,6 +953,23 @@ namespace GameKit {
 		[TV (14,0), Mac (11,0), iOS (14,0)]
 		[Export ("personalizedCommunicationRestricted")]
 		bool PersonalizedCommunicationRestricted { [Bind ("isPersonalizedCommunicationRestricted")] get; }
+
+		// FriendsList Category
+
+		[Watch (7,4), TV (14,5), Mac (11,3), iOS (14,5)]
+		[Async]
+		[Export ("loadFriendsAuthorizationStatus:")]
+		void LoadFriendsAuthorizationStatus (Action<GKFriendsAuthorizationStatus, NSError> completionHandler);
+
+		[Watch (7,4), TV (14,5), Mac (11,3), iOS (14,5)]
+		[Async]
+		[Export ("loadFriends:")]
+		void LoadFriendsList (Action<GKPlayer[], NSError> completionHandler);
+
+		[Watch (7,4), TV (14,5), Mac (11,3), iOS (14,5)]
+		[Async]
+		[Export ("loadFriendsWithIdentifiers:completionHandler:")]
+		void LoadFriendsList (string[] identifiers, Action<GKPlayer[], NSError> completionHandler);
 	}
 
 	[NoWatch]
