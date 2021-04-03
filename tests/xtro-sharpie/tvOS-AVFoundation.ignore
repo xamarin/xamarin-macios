@@ -13,11 +13,5 @@
 !missing-release-attribute-on-return-value! CoreMedia.CMSampleBuffer AVFoundation.AVAssetReaderOutput::CopyNextSampleBuffer()'s selector's ('copyNextSampleBuffer') Objective-C method family ('copy') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
 !missing-release-attribute-on-return-value! CoreVideo.CVPixelBuffer AVFoundation.AVVideoCompositionRenderContext::CreatePixelBuffer()'s selector's ('newPixelBuffer') Objective-C method family ('new') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
 
-# no tests/samples
-!missing-pinvoke! AVSampleBufferAttachContentKey is not bound
-
 # not used on tvOS
 !missing-enum! AVAudioSessionInterruptionReason not bound
-
-# adding abstract member to an existing type would be a breaking change
-!incorrect-protocol-member! AVQueuedSampleBufferRendering::hasSufficientMediaDataForReliablePlaybackStart is REQUIRED and should be abstract
