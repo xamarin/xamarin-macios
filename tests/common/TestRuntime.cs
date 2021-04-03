@@ -312,6 +312,7 @@ partial class TestRuntime
 				return CheckiOSSystemVersion (14, 3);
 #elif MONOMAC
 				return CheckMacSystemVersion (11, 1, 0);
+#endif
 			case 5:
 #if __WATCHOS__
 				return CheckWatchOSSystemVersion (7, 4);
