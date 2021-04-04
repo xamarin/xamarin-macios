@@ -49,6 +49,7 @@ namespace MonoTouchFixtures.AddressBook {
 			Assert.NotNull (ab.GetDefaultSource (), "GetDefaultSource");
 		}
 
+#if !__MACCATALYST__ // Crashes with maccat
 		[Test]
 		public void GetSource ()
 		{
@@ -58,6 +59,7 @@ namespace MonoTouchFixtures.AddressBook {
 			// GetSource(0) is not reliable across device/simulator and iOS versions
 			Assert.Null (ab.GetSource (Int32.MaxValue), "MaxValue");
 		}
+#endif // !__MACCATALYST__
 	}
 }
 
