@@ -16,6 +16,15 @@ steps:
     cd $(Build.SourcesDirectory)/xamarin-macios/tools/apidiff/
     rm -Rf *.exe *.pdb *.stamp *.zip *.sh ./references ./temp
     MESSAGE=":white_check_mark: API Diff from stable"
+
+    if ! grep "href=" jenkins-results/apicomparison/api-diff.html >/dev/null 2>&1; then
+      MESSAGE=":white_check_mark: [API Diff (from PR only)](%s) (no change)" "$URL_API" >> "$WORKSPACE/jenkins/pr-comments.md"
+    elif perl -0777 -pe 's/<script type="text\/javascript">.*?<.script>/script removed/gs' jenkins-results/apicomparison/*.html | grep data-is-breaking; then
+      MESSAGE="[API Diff (from PR only)](%s) (:fire: breaking changes :fire:)" "$URL_API" >> "$WORKSPACE/jenkins/pr-comments.md"
+    else
+      MESSAGE="[API Diff (from PR only)](%s) (please review changes)" "$URL_API" >> "$WORKSPACE/jenkins/pr-comments.md"
+    fi
+
     echo "##vso[task.setvariable variable=APIDIFF_MESSAGE;isOutput=true]$MESSAGE"
     echo "##vso[task.setvariable variable=APIDIFF_BUILT;isOutput=true]True"
   displayName: 'API diff (from stable)'
@@ -41,3 +50,13 @@ steps:
     artifactName: apidiff-stable
   condition: and(succeeded(), contains(variables['configuration.SkipPublicJenkins'], 'False'))
   continueOnError: true
+
+- bash:  $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/compare.sh
+  displayName: 'Generate API diffs'
+  condition: and(succeeded(), contains(variables['configuration.SkipPublicJenkins'], 'False'))
+  name: compare
+
+- bash: |
+    ls -Rla "$BUILD_ARTIFACTSTAGINGDIRECTORY"
+  displayName: ''
+  name: 'Debug' 
