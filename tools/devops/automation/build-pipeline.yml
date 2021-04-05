@@ -69,6 +69,16 @@ trigger:
     exclude:
     - refs/heads/locfiles/*
     - refs/heads/darc-*
+  paths:
+    exclude:
+    - docs
+    - CODEOWNERS
+    - ISSUE_TEMPLATE.md
+    - LICENSE
+    - NOTICE.txt
+    - README.md
+    - SECURITY.MD
+    - src/README.md
 
 pr:
   autoCancel: true
@@ -77,6 +87,16 @@ pr:
     - main
     - d16-*
     - xcode*
+  paths:
+    exclude:
+    - docs
+    - CODEOWNERS
+    - ISSUE_TEMPLATE.md
+    - LICENSE
+    - NOTICE.txt
+    - README.md
+    - SECURITY.MD
+    - src/README.md
 
 stages:
 
