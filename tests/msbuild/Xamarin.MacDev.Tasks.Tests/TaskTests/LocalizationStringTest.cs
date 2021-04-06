@@ -14,22 +14,22 @@ using System.Text;
 namespace Xamarin.iOS.Tasks {
 	[TestFixture]
 	public class LocalizationStringTest : TestBase {
-		[TestCase ("cs-CZ", "TJcs")]
-		[TestCase ("de-DE", "TJde")]
+		[TestCase ("cs-CZ", "cs")]
+		[TestCase ("de-DE", "de")]
 		[TestCase ("en-US", "Unknown image format.")]
-		[TestCase ("es-ES", "TJes")]
-		[TestCase ("fr-FR", "TJfr")]
-		[TestCase ("it-IT", "TJit")]
-		[TestCase ("ja-JP", "TJja")]
-		[TestCase ("ko-KR", "TJko")]
-		[TestCase ("nl", "TJnl")]
-		[TestCase ("pt-BR", "TJ")]
-		[TestCase ("pt-PT", "TJ")]
-		[TestCase ("ru-RU", "TJru")]
-		[TestCase ("sv", "TJsv")]
-		[TestCase ("tr-TR", "TJtr")]
-		[TestCase ("zh-CN", "TJzh")]
-		[TestCase ("zh-TW", "TJzh")]
+		[TestCase ("es-ES", "es")]
+		[TestCase ("fr-FR", "fr")]
+		[TestCase ("it-IT", "it")]
+		[TestCase ("ja-JP", "ja")]
+		[TestCase ("ko-KR", "ko")]
+		[TestCase ("nl", "nl")]
+		[TestCase ("pt-BR", "pt")]
+		[TestCase ("pt-PT", "pt")]
+		[TestCase ("ru-RU", "ru")]
+		[TestCase ("sv", "sv")]
+		[TestCase ("tr-TR", "tr")]
+		[TestCase ("zh-CN", "zh")]
+		[TestCase ("zh-TW", "zh")]
 
 		//[TestCase ("cs-CZ", "došlo k chybě: neznámý formát image")]
 		//[TestCase ("de-DE", "Unbekanntes Imageformat.")]
@@ -87,6 +87,7 @@ namespace Xamarin.iOS.Tasks {
 				Assert.IsFalse (string.IsNullOrEmpty (errorCode), "Error code is null or empty");
 				string englishError = TranslateError ("en-US", errorCode);
 				string newCultureError = TranslateError (culture, errorCode);
+
 				Assert.AreNotEqual (englishError, newCultureError, $"\"{errorCode}\" is not translated in {culture}.");
 			} catch (NullReferenceException){
 				Assert.IsFalse (true, $"Error code \"{errorCode}\" was not found");
