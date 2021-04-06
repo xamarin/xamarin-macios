@@ -34,7 +34,6 @@ function Invoke-Request {
                 Write-Host "$($_.Exception)"
                 Write-Host "Response was:"
                 Write-Host "$($_.Exception.Response)"
-                Write-Host "$($_.Exception.Response.Content.GetStringAsync().Result)"
                 Start-Sleep -Seconds $seconds
             }
         }
@@ -557,11 +556,7 @@ function Get-GitHubPRInfo {
 
     $url = "https://api.github.com/repos/xamarin/xamarin-macios/pulls/$ChangeId"
 
-    $headers = @{
-        Authorization = ("token {0}" -f $Env:GITHUB_TOKEN)
-    }
-
-    $request = Invoke-Request -Request { Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -ContentType 'application/json' }
+    $request = Invoke-Request -Request { Invoke-RestMethod -Uri $url -Method "GET" -ContentType 'application/json' }
     Write-Host $request
     return $request
 }
