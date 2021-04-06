@@ -131,6 +131,8 @@ variables:
   value: true
 - name: TeamName
   value: 'xamarin-macios'
+- name: isPR
+  value: $[ or(eq(variables['Build.Reason'], 'PullRequest'), and(eq(variables['Build.SourceBranchName'], 'merge'), or(eq(variables['Build.Reason'], 'Manual'), eq(variables['Build.Reason'], 'IndividualCI')))) ]
 
 trigger:
   branches:
@@ -194,42 +196,43 @@ stages:
         gitHubToken: ${{ variables['GitHub.Token'] }}
         xqaCertPass: $(xqa--certificates--password)
 
-- ${{ each config in parameters.deviceTestsConfigurations }}:
-  - template: templates/devices/stage.yml
-    parameters:
-      devicePrefix: ${{ config['devicePrefix'] }} 
-      execute: ${{ config['execute'] }} 
-      stageName: ${{ config['stageName'] }} 
-      iOSDevicePool: ${{ config['iOSDevicePool'] }} 
-      useXamarinStorage: ${{ config['useXamarinStorage'] }} 
-      testsLabels: ${{ config['testsLabels'] }} 
-      statusContext: ${{ config['statusContext'] }} 
-      iOSDeviceDemand: ${{ config['iOSDeviceDemand'] }} 
-      vsdropsPrefix: ${{ variables.vsdropsPrefix }}
-      keyringPass: $(xma-password)
-      gitHubToken: ${{ variables['GitHub.Token'] }}
-      xqaCertPass: $(xqa--certificates--password)
+- ${{ if eq(variables['isPR'], 'False') }}:
+  - ${{ each config in parameters.deviceTestsConfigurations }}:
+    - template: templates/devices/stage.yml
+      parameters:
+        devicePrefix: ${{ config['devicePrefix'] }} 
+        execute: ${{ config['execute'] }} 
+        stageName: ${{ config['stageName'] }} 
+        iOSDevicePool: ${{ config['iOSDevicePool'] }} 
+        useXamarinStorage: ${{ config['useXamarinStorage'] }} 
+        testsLabels: ${{ config['testsLabels'] }} 
+        statusContext: ${{ config['statusContext'] }} 
+        iOSDeviceDemand: ${{ config['iOSDeviceDemand'] }} 
+        vsdropsPrefix: ${{ variables.vsdropsPrefix }}
+        keyringPass: $(xma-password)
+        gitHubToken: ${{ variables['GitHub.Token'] }}
+        xqaCertPass: $(xqa--certificates--password)
 
-- ${{ each config in parameters.macTestsConfigurations }}:
-  - template: templates/mac/stage.yml
-    parameters:
-      stageName: ${{ config['stageName'] }}
-      macPool: ${{ config['macPool'] }}
-      statusContext: ${{ config['statusContext'] }}
-      keyringPass: $(xma-password)
+  - ${{ each config in parameters.macTestsConfigurations }}:
+    - template: templates/mac/stage.yml
+      parameters:
+        stageName: ${{ config['stageName'] }}
+        macPool: ${{ config['macPool'] }}
+        statusContext: ${{ config['statusContext'] }}
+        keyringPass: $(xma-password)
 
-# TODO: Not the real step
-- stage: sample_testing
-  displayName: 'Sample testing'
-  dependsOn:
-  - build_packages
-  condition: and(succeeded(), contains (stageDependencies.build_packages.build.outputs['configuration.RunSampleTests'], 'True'))
-  jobs:
-  - job: sample_testing
-    pool:
-      vmImage: ubuntu-latest
-    steps:
-      # TODO: do parse labels
-      - bash: |
-          echo "Samples!"
-        displayName: 'Sample testing'
+  # TODO: Not the real step
+  - stage: sample_testing
+    displayName: 'Sample testing'
+    dependsOn:
+    - build_packages
+    condition: and(succeeded(), contains (stageDependencies.build_packages.build.outputs['configuration.RunSampleTests'], 'True'))
+    jobs:
+    - job: sample_testing
+      pool:
+        vmImage: ubuntu-latest
+      steps:
+        # TODO: do parse labels
+        - bash: |
+            echo "Samples!"
+          displayName: 'Sample testing'
