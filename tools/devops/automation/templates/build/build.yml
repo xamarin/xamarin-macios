@@ -316,6 +316,13 @@ steps:
   condition: and(succeeded(), eq(variables['configuration.BuildNugets'], 'True'))
   continueOnError: true # should not stop the build since is not official just yet.
 
+- pwsh: >-
+    & dotnet build -v:n -t:PushManifestToBuildAssetRegistry
+    -p:NupkgPath=$(Build.SourcesDirectory)/package -p:BuildAssetRegistryToken=$(MaestroAccessToken)
+    $(Build.SourcesDirectory)/xamarin-macios/dotnet/package/Microsoft.iOS.Ref/package.csproj
+  displayName: generate and publish BAR manifest
+  condition: and(succeeded(), eq(variables['configuration.BuildNugets'], 'True'), ne(parameters.isPR, 'True'))
+
 # only sign an notarize in no PR executions
 - ${{ if ne(parameters.isPR, 'True') }}:
   - template: sign-and-notarized.yml
