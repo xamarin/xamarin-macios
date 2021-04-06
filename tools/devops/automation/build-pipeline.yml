@@ -131,8 +131,6 @@ variables:
   value: true
 - name: TeamName
   value: 'xamarin-macios'
-- name: isPR
-  value: $[ or(eq(variables['Build.Reason'], 'PullRequest'), and(eq(variables['Build.SourceBranchName'], 'merge'), or(eq(variables['Build.Reason'], 'Manual'), eq(variables['Build.Reason'], 'IndividualCI')))) ]
 
 trigger:
   branches:
@@ -196,7 +194,7 @@ stages:
         gitHubToken: ${{ variables['GitHub.Token'] }}
         xqaCertPass: $(xqa--certificates--password)
 
-- ${{ if eq(variables['isPR'], 'False') }}:
+- ${{ if or(eq(variables['Build.Reason'], 'IndividualCI'), eq(variables['Build.Reason'], 'Manual')) }}:
   - ${{ each config in parameters.deviceTestsConfigurations }}:
     - template: templates/devices/stage.yml
       parameters:
