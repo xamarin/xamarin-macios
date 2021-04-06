@@ -67,13 +67,13 @@ parameters:
   default: [
     {
       stageName: 'Mac Mojave (10.14)',
-      macPool: 'Hosted Mac Internal Mojave',
+      macPool: 'internal-macos-10.14',
       osVersion: '10.14',
       statusContext: 'Mac Mojave (10.14)'
     },
     {
       stageName: 'Mac High Sierra (10.13)',
-      macPool: 'Hosted Mac Internal',
+      macPool: 'internal-macos-10.13',
       osVersion: '10.13',
       statusContext: 'Mac High Sierra (10.13)'
     },
