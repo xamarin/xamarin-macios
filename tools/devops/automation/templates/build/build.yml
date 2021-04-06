@@ -7,6 +7,10 @@ parameters:
   type: boolean
   default: true
 
+- name: isPR
+  type: boolean
+  default: false
+
 - name: vsdropsPrefix
   type: string
 
@@ -290,25 +294,6 @@ steps:
     rm -Rf $(Build.SourcesDirectory)/package/*.pkg
     rm -Rf $(Build.SourcesDirectory)/package/notarized/*.pkg
     time make -C $(Build.SourcesDirectory)/xamarin-macios/ package
-
-    # output vars for other steps to use and not need to recomputed the paths
-    IOS_PKG=$(find $(Build.SourcesDirectory)/package -type f -name "xamarin.ios-*" | xargs basename)
-    if [ -z "$IOS_PKG" ]; then
-      echo "Xamarin.iOS package not found."
-    else
-      IOS_PKG="$(Build.SourcesDirectory)/package/$IOS_PKG"
-      echo "##vso[task.setvariable variable=IOS_PKG;]$IOS_PKG"
-      echo "Xamarin.iOS package found at $IOS_PKG"
-    fi
-
-    MAC_PKG=$(find $(Build.SourcesDirectory)/package -type f -name "xamarin.mac-*" | xargs basename)
-    if [ -z "$MAC_PKG" ]; then
-      echo "Xamarin.Mac package not found."
-    else
-      MAC_PKG="$(Build.SourcesDirectory)/package/$MAC_PKG"
-      echo "##vso[task.setvariable variable=MAC_PKG;]$MAC_PKG"
-      echo "Xamarin.Mac package found at $MAC_PKG"
-    fi
   name: packages
   displayName: 'Build Packages'
   condition: and(succeeded(), contains(variables['configuration.BuildPkgs'], 'True'))
@@ -321,45 +306,20 @@ steps:
   continueOnError: true # should not stop the build since is not official just yet.
   timeoutInMinutes: 180
 
-  # Ensure virtualenv is on the PATH
-- template: set-path/v1.yml@templates
-  parameters:
-    prependToPath: '/Users/builder/Library/Python/2.7/bin'
+- task: NuGetCommand@2
+  displayName: 'Publish Nugets'
+  inputs:
+    command: push
+    packagesToPush: $(Build.SourcesDirectory)/package/*.nupkg
+    nuGetFeedType: external
+    publishFeedCredentials: xamarin-impl public feed
+  condition: and(succeeded(), eq(variables['configuration.BuildNugets'], 'True'))
+  continueOnError: true # should not stop the build since is not official just yet.
+  timeoutInMinutes: 180
 
-- bash: |
-    security unlock-keychain -p $PRODUCTSIGN_KEYCHAIN_PASSWORD builder.keychain
-    PACKAGES="$IOS_PKG $MAC_PKG"
-    echo "Packages found at $PACKAGES"
-
-    echo "$PACKAGES" | xargs python $(Build.SourcesDirectory)/release-scripts/sign_and_notarize.py --no_notarization -a "$APP_ID" -i "$INSTALL_ID" -u "$APPLE_ACCOUNT" -p "$APPLE_PASS" -t "$TEAM_ID" -d $(Build.SourcesDirectory)/package/notarized -e "$MAC_ENTITLEMENTS" -k "$KEYCHAIN"
-    ls -R $(Build.SourcesDirectory)/package
-  env:
-    PRODUCTSIGN_KEYCHAIN_PASSWORD: $(OSX_KEYCHAIN_PASS)
-    MAC_ENTITLEMENTS: $(Build.SourcesDirectory)/xamarin-macios/mac-entitlements.plist
-    APP_ID: $(XamarinAppId)
-    INSTALL_ID: $(XamarinAppId)
-    APPLE_ACCOUNT: $(XamarinUserId)
-    APPLE_PASS: $(XamarinPassword)
-    TEAM_ID: $(TeamID)
-    KEYCHAIN: $(SigningKeychain)
-  name: notarize
-  displayName: 'Signing Release Build'
-  condition: and(succeeded(), contains(variables['configuration.SignPkgs'], 'True'), contains(variables['configuration.IsPr'], 'False'))
-  timeoutInMinutes: 90
-
-- task: ms-vseng.MicroBuildTasks.30666190-6959-11e5-9f96-f56098202fef.MicroBuildSigningPlugin@3 
-  displayName: 'Install Signing Plugin' 
-  inputs: 
-    signType: 'Real'  # test is not present for mac.. 
-    azureSubscription: 'MicroBuild Signing Task (DevDiv)'
-    zipSources: false  # we do not use the feature and makes the installation to last 10/12 mins instead of < 1 min
-  condition: and(succeeded(), contains(variables['configuration.SignPkgs'], 'True'), contains(variables['configuration.IsPr'], 'False')) # if we are a PR, the installation of the plugin will return a 403 and everything will collapse
-  env:
-      SYSTEM_ACCESSTOKEN: $(System.AccessToken)
-
-- pwsh: $(Build.SourcesDirectory)/release-scripts/notarize.ps1 -FolderForApps $(Build.SourcesDirectory)/package/notarized
-  displayName: 'ESRP notarizing packages'
-  condition: and(succeeded(), contains(variables['configuration.SignPkgs'], 'True'), contains(variables['configuration.IsPr'], 'False')) # if we are a PR, do not use ESRP since is not supported
+# only sign an notarize in no PR executions
+- ${{ if ne(parameters.isPR, 'True') }}:
+  - template: sign-and-notarized.yml
 
 - template: generate-workspace-info.yml@templates
   parameters:
