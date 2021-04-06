@@ -38,3 +38,49 @@ run-unit-tests:
 	cd UnitTests && $(DOTNET) test DotNetUnitTests.csproj $(TEST_FILTER)
 
 all-local:: $(TARGETS)
+
+export MSBuildEnableWorkloadResolver=true
+
+compare compare-size: $(TARGETS)
+	cd size-comparison && git clean -xfdq
+	time $(MAKE) build-oldnet
+	time $(MAKE) build-dotnet
+	$(MAKE) report
+
+report:
+	@if test -z "$(APPCOMPARE)"; then $(MAKE) report-simple; else $(MAKE) report-appcompare; fi
+
+# Set APPCOMPARE to the local working directory of https://github.com/spouliot/dotnet-tools/tree/master/app-compare to use
+report-appcompare:
+	cd $(APPCOMPARE) && dotnet run $(abspath size-comparison/MySingleView/oldnet/bin/iPhone/Release/MySingleView.app) $(abspath size-comparison/MySingleView/dotnet/bin/iPhone/Release/net6.0-ios/ios-arm64/MySingleView.app) > $(CURDIR)/report.md
+	gist $(CURDIR)/report.md
+
+report-simple:
+	@echo
+	@echo "## App sizes"
+	@echo
+	@echo "### Xamarin.iOS"
+	@echo
+	du -hs size-comparison/MySingleView/oldnet/bin/iPhone/Release/MySingleView.app
+	@echo
+	@echo "### .NET 6"
+	@echo
+	du -hs size-comparison/MySingleView/dotnet/bin/iPhone/Release/net6.0-ios/ios-arm64/MySingleView.app
+	@echo
+	@echo "## Assembly sizes"
+	@echo
+	@echo "### Xamarin.iOS"
+	@echo
+	ls -lahS size-comparison/MySingleView/oldnet/bin/iPhone/Release/MySingleView.app/*.dll size-comparison/MySingleView/oldnet/bin/iPhone/Release/MySingleView.app/*.exe
+	@echo
+	@echo "### .NET 6"
+	@echo
+	ls -lahS size-comparison/MySingleView/dotnet/bin/iPhone/Release/net6.0-ios/ios-arm64/*.app/*.dll
+
+
+COMMON_ARGS=/p:Platform=iPhone /p:Configuration=Release
+build-oldnet:
+	$(SYSTEM_MSBUILD) $(XBUILD_VERBOSITY) size-comparison/MySingleView/oldnet/MySingleView.csproj $(COMMON_ARGS) /bl:$@.binlog
+
+build-dotnet: $(TARGETS)
+	$(DOTNET6) build size-comparison/MySingleView/dotnet/MySingleView.csproj --runtime ios-arm64 $(COMMON_ARGS) /bl:$@.binlog
