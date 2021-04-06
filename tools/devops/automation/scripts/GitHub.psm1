@@ -34,6 +34,7 @@ function Invoke-Request {
                 Write-Host "$($_.Exception)"
                 Write-Host "Response was:"
                 Write-Host "$($_.Exception.Response)"
+                Write-Host "$($_.Exception.Response.Content)"
                 Start-Sleep -Seconds $seconds
             }
         }
