@@ -1012,6 +1012,9 @@ partial class TestRuntime
 #if !MONOMAC && !__TVOS__ && !__WATCHOS__
 	public static void CheckAddressBookPermission (bool assert_granted = false)
 	{
+#if __MACCATALYST__
+		NUnit.Framework.Assert.Ignore ("CheckAddressBookPermission -> Ignore in MacCat, it hangs since our TCC hack does not work on BS.");
+#endif
 		switch (ABAddressBook.GetAuthorizationStatus ()) {
 		case ABAuthorizationStatus.NotDetermined:
 			if (IgnoreTestThatRequiresSystemPermissions ())
