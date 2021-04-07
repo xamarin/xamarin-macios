@@ -38,3 +38,25 @@ run-unit-tests:
 	cd UnitTests && $(DOTNET) test DotNetUnitTests.csproj $(TEST_FILTER)
 
 all-local:: $(TARGETS)
+
+export MSBuildEnableWorkloadResolver=true
+
+compare compare-size: $(TARGETS)
+	cd size-comparison && git clean -xfdq
+	time $(MAKE) build-oldnet
+	time $(MAKE) build-dotnet
+	$(MAKE) report
+
+report:
+	cd ../../tools/app-compare && dotnet run $(abspath size-comparison/MySingleView/oldnet/bin/iPhone/Release/MySingleView.app) $(abspath size-comparison/MySingleView/dotnet/bin/iPhone/Release/net6.0-ios/ios-arm64/MySingleView.app) > $(CURDIR)/report.md
+	gist $(CURDIR)/report.md
+
+COMMON_ARGS=/p:Platform=iPhone /p:Configuration=Release
+build-oldnet:
+	$(SYSTEM_MSBUILD) $(XBUILD_VERBOSITY) size-comparison/MySingleView/oldnet/MySingleView.csproj $(COMMON_ARGS) /bl:$@.binlog
+
+build-dotnet: $(TARGETS)
+	$(DOTNET6) build size-comparison/MySingleView/dotnet/MySingleView.csproj --runtime ios-arm64 $(COMMON_ARGS) /bl:$@.binlog
+
+run-dotnet: build-dotnet
+	$(DOTNET6) build -t:Run size-comparison/MySingleView/dotnet/MySingleView.csproj
