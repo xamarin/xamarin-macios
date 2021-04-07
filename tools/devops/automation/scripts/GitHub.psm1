@@ -407,7 +407,10 @@ function New-GitHubSummaryComment {
         $Artifacts="",
 
         [string]
-        $APIDiff=""
+        $APIDiff="",
+
+        [string]
+        $APIGeneratorDiff=""
     )
 
     $envVars = @{
@@ -494,6 +497,19 @@ function New-GitHubSummaryComment {
         
     } else {
         Write-Host "API diff urls have not been provided."
+    }
+    if (-not [string]::IsNullOrEmpty($APIGeneratorDiff)) {
+        Write-Host "Parsing API diff in path $APIGeneratorDiff"
+        if (-not (Test-Path $APIGeneratorDiff -PathType Leaf)) {
+            $sb.AppendLine("Path $APIGeneratorDiff was not found!")
+        } else {
+            $sb.AppendLine("# API & Generator diff")
+            $sb.AppendLine("")
+            $apidiffcomments = Get-Content $APIGeneratorDiff
+            $sb.AppendLine($apidiffcomments)
+        }
+    } else {
+        Write-Host "API & Generator diff comments have not been provided."
     }
     if (-not [string]::IsNullOrEmpty($Artifacts)) {
         Write-Host "Parsing artifacts"
