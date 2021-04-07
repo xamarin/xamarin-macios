@@ -21,9 +21,10 @@
 
 WORKSPACE="$BUILD_ARTIFACTSTAGINGDIRECTORY"
 API_COMPARISON="$WORKSPACE/apicomparison"
-BUILD_URL="http://goestothebuild.com"
-API_URL="http://apiurl.com"
-GENERATOR_URL="http://generator.com"
+BUILD_URL="$SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$SYSTEM_TEAMPROJECT/_build/index?buildId=$BUILD_BUILDID&view=ms.vss-test-web.test-result-details"
+URL_PREFIX="$VSDROPSPREFIX/$BUILD_BUILDNUMBER/$BUILD_BUILDID/apigeneratordiff/;/"
+API_URL="$URL_PREFIX/api-diff.html"
+GENERATOR_URL="$URL_PREFIX/generator-diff/index.html"
 
 # env var should have been defined by the CI
 if test -z "$XAM_TOP"; then
@@ -46,6 +47,7 @@ report_error ()
 	touch "$WORKSPACE/failure-stamp"
 	rm -f "$COMPARE_FAILURE_FILE"
 	echo "*** Comparing API & creating generator diff failed ***"
+	MESSAGE="*** Comparing API & creating generator diff failed ***"
 	exit 0
 }
 trap report_error ERR
@@ -58,6 +60,7 @@ fi
 
 if ! git rev-parse "$BASE" >/dev/null 2>&1; then
 	echo "Can't compare API and create generator diff because the pull request has conflicts that must be resolved first (the branch '$BASE' doesn't exist)."
+	MESSAGE="Can't compare API and create generator diff because the pull request has conflicts that must be resolved first (the branch '$BASE' doesn't exist)."
 	printf ":fire: [Failed to compare API and create generator diff because the pull request has conflicts that must be resolved first](%s/console) :fire:\\n" "$BUILD_URL" >> "$WORKSPACE/api-diff-comments.md"
 	exit 0
 fi
@@ -66,11 +69,13 @@ fi
 
 mkdir -p "$API_COMPARISON"
 
-cp -R "$XAM_TOP/tools/comparison/apidiff/diff" "$API_COMPARISON"
-cp    "$XAM_TOP/tools/comparison/apidiff/*.html" "$API_COMPARISON"
-cp -R "$XAM_TOP/tools/comparison/generator-diff" "$API_COMPARISON"
+ls -Rla ./tools/comparison/apidiff
 
-if ! grep "href=" "$API_HTML_DIFF_WORKSPACE/api-diff.html" >/dev/null 2>&1; then
+cp -R ./tools/comparison/apidiff/diff "$API_COMPARISON"
+cp    ./tools/comparison/apidiff/*.html "$API_COMPARISON"
+cp -R ./tools/comparison/generator-diff "$API_COMPARISON"
+
+if ! grep "href=" "$API_COMPARISON/api-diff.html" >/dev/null 2>&1; then
 	printf ":white_check_mark: [API Diff (from PR only)](%s) (no change)" "$API_URL" >> "$WORKSPACE/api-diff-comments.md"
 elif perl -0777 -pe 's/<script type="text\/javascript">.*?<.script>/script removed/gs' "$API_COMPARISON/*.html" | grep data-is-breaking; then
 	printf ":warning: [API Diff (from PR only)](%s) (:fire: breaking changes :fire:)" "$API_URL" >> "$WORKSPACE/api-diff-comments.md"
@@ -88,4 +93,8 @@ else
 fi
 printf "\\n" >> "$WORKSPACE/api-diff-comments.md"
 
-echo "*** Comparing API & creating generator diff completed ***"
+cp "$WORKSPACE/api-diff-comments.md" "$API_COMPARISON"
+cp "$COMPARE_FAILURE_FILE" "$API_COMPARISON"
+MESSAGE="*** Comparing API & creating generator diff completed ***"
+echo "##vso[task.setvariable variable=API_GENERATOR_DIFF_MESSAGE;isOutput=true]$MESSAGE"
+echo "##vso[task.setvariable variable=API_GENERATOR_BUILT;isOutput=true]True"
