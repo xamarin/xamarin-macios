@@ -2,6 +2,7 @@
 using Microsoft.Build.Utilities;
 using System.IO;
 using System.IO.Compression;
+using Xamarin.iOS.Windows;
 
 namespace Xamarin.iOS.HotRestart.Tasks
 {
@@ -27,17 +28,9 @@ namespace Xamarin.iOS.HotRestart.Tasks
 
 		#endregion
 
-		//readonly string BundlesPath = Path.Combine(Path.GetTempPath(), "Xamarin", "HotRestart", "Bundles");
-
 		public override bool Execute()
 		{
-			// TODO: get paths from the Hot Restart library
-			var BundlesPath = string.Empty;
-
-			Directory.CreateDirectory(BundlesPath);
-
-			// TODO: get paths from the Hot Restart library
-			AppBundlePath = string.Empty; //Path.Combine(BundlesPath, ThisAssembly.Version, SessionId.Substring(0, 8), $"{AppBundleName}.app");
+			AppBundlePath = HotRestartContext.Default.GetAppBundlePath(AppBundleName, SessionId.Substring (0, 8));
 
 			if (!Directory.Exists(AppBundlePath) && ShouldExtract)
 			{
@@ -46,7 +39,6 @@ namespace Xamarin.iOS.HotRestart.Tasks
 					"Xamarin.PreBuilt.iOS.app.zip");
 
 				ZipFile.ExtractToDirectory(preBuiltAppBundlePath, AppBundlePath);
-
 				File.WriteAllText(Path.Combine(AppBundlePath, "Extracted"), string.Empty);
 			}
 

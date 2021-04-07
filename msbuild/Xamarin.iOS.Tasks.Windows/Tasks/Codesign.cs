@@ -1,14 +1,13 @@
-﻿using Microsoft.Build.Framework;
-using Microsoft.Build.Utilities;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
+using System.Text;
 using System.Threading;
+using Microsoft.Build.Framework;
+using Microsoft.Build.Utilities;
 using Xamarin.iOS.Tasks.Windows.Properties;
+using Xamarin.iOS.Windows;
 
-namespace Xamarin.iOS.HotRestart.Tasks
-{
+namespace Xamarin.iOS.HotRestart.Tasks {
 	public class Codesign : Task, ICancelableTask
 	{
 		CancellationTokenSource cancellationSource;
@@ -31,58 +30,48 @@ namespace Xamarin.iOS.HotRestart.Tasks
 
 		public override bool Execute()
 		{
-			try
-			{
+			try {
+				var hotRestartClient = new HotRestartClient ();
 				var plistArgs = new Dictionary<string, string>
 				{
 					{ "CFBundleIdentifier", BundleIdentifier }
 				};
+				var password = hotRestartClient.CertificatesManager.GetCertificatePassword (certificatePath: CodeSigningPath);
 
-				var signingArgs = new List<string>
-				{
-					$"-i=\"{AppBundlePath}\"",
-					$"-p=\"{ProvisioningProfilePath}\"",
-					$"-c=\"{CodeSigningPath}\"",
-					$"-pk=\"{string.Join(",", plistArgs.Keys)}\"",
-					$"-pv=\"{string.Join(",", plistArgs.Values)}\"",
-				};
-
-				// TODO: IDB ref
-				var password = string.Empty;//new LocalCertificatesProvider(string.Empty).GetCertificatePassword(CodeSigningPath);
-
-				if (string.IsNullOrEmpty(password))
-				{
-					throw new Exception(Resources.LocalCodesign_MissingPasswordFile);
+				if (password == null) {
+					throw new Exception (Resources.LocalCodesign_MissingPasswordFile);
 				}
 
-				// TODO: do we still need this message?
-				//Log.LogMessage(MessageImportance.Low, Strings.LocalCodesign.ToolArguments($"{winiOSTerminalPath} {string.Join(" ", signingArgs)}"));
+				hotRestartClient.Sign (AppBundlePath, ProvisioningProfilePath, CodeSigningPath, password, plistArgs);
+			} catch (WindowsiOSException ex) {
+				var message = GetFullExceptionMesage (ex);
 
-				signingArgs.Add($"-w=\"{password}\"");
-
-				var process = new Process();
-
-				cancellationSource = new CancellationTokenSource();
-				//process.RunHotRestartAsync("sign", signingArgs, localContext, cancellationToken: cancellationSource.Token).Do(output =>
-				//{
-				//	Log.LogMessage(MessageImportance.Low, output);
-				//}, error =>
-				//{
-				//	throw error;
-				//}).Wait();
-			}
-			//catch (WindowsiOSException ex)
-			//{
-			//	Log.LogError(null, ex.ErrorCode, null, null, 0, 0, 0, 0, ex.FullMessage());
-			//}
-			catch (Exception ex)
-			{
-				Log.LogErrorFromException(ex);
+				Log.LogError (null, ex.ErrorCode, null, null, 0, 0, 0, 0, message);
+			} catch (Exception ex) {
+				Log.LogErrorFromException (ex);
 			}
 
 			return !Log.HasLoggedErrors;
 		}
 
 		public void Cancel() => cancellationSource?.Cancel();
+
+		string GetFullExceptionMesage (Exception ex)
+		{
+			var messageBuilder = new StringBuilder ();
+
+			return GetFullExceptionMesage (ex, messageBuilder);
+		}
+
+		string GetFullExceptionMesage (Exception ex, StringBuilder messageBuilder)
+		{
+			messageBuilder.AppendLine (ex.Message);
+
+			if (ex.InnerException != null) {
+				return GetFullExceptionMesage (ex.InnerException, messageBuilder);
+			} else {
+				return messageBuilder.ToString ();
+			}
+		}
 	}
 }

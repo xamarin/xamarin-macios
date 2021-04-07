@@ -1,14 +1,14 @@
-﻿using Microsoft.Build.Framework;
-using Microsoft.Build.Utilities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
+using Microsoft.Build.Framework;
+using Microsoft.Build.Utilities;
+using Xamarin.iOS.Windows;
 using Xamarin.MacDev;
 
-namespace Xamarin.iOS.HotRestart.Tasks
-{
+namespace Xamarin.iOS.HotRestart.Tasks {
 	public class DetectSigningIdentity : Task
 	{
 		static readonly string ProvisioningPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Xamarin", "iOS", "Provisioning");
@@ -27,8 +27,7 @@ namespace Xamarin.iOS.HotRestart.Tasks
 
 		string provisioningProfileName;
 		string codesignCommonName;
-		// TODO: IDB ref
-		//ICertificatesProvider certificatesProvider;
+		IHotRestartClient hotRestartClient;
 
 		#region Inputs
 
@@ -74,8 +73,7 @@ namespace Xamarin.iOS.HotRestart.Tasks
 			var platform = MobileProvisionPlatform.iOS;
 			var identity = new CodeSignIdentity();
 
-			// TODO: IDB ref
-			//certificatesProvider = new LocalCertificatesProvider(ProvisioningPath);
+			hotRestartClient = new HotRestartClient();
 
 			try {
 				plist = PDictionary.FromFile(AppManifest);
@@ -83,6 +81,7 @@ namespace Xamarin.iOS.HotRestart.Tasks
 			catch (Exception ex)
 			{
 				Log.LogError(null, null, null, AppManifest, 0, 0, 0, 0, "Error loading '{0}': {1}", AppManifest, ex.Message);
+
 				return false;
 			}
 
@@ -91,6 +90,7 @@ namespace Xamarin.iOS.HotRestart.Tasks
 			if (string.IsNullOrEmpty(identity.BundleId))
 			{
 				Log.LogError(null, null, null, AppManifest, 0, 0, 0, 0, "{0} does not define CFBundleIdentifier", AppManifest);
+
 				return false;
 			}
 
@@ -216,6 +216,7 @@ namespace Xamarin.iOS.HotRestart.Tasks
 			if (!provision.Entitlements.ContainsKey(ApplicationIdentifierKey))
 			{
 				matchLength = 0;
+
 				return null;
 			}
 
@@ -244,6 +245,7 @@ namespace Xamarin.iOS.HotRestart.Tasks
 
 			// Finally if the profile is a wildcard, ensure that the appid matches it for everything before the '*'
 			int star = allowed.IndexOf('*');
+
 			if (star != -1 && star + 1 == allowed.Length && appid.Length >= star && appid.StartsWith(allowed.Substring(0, star), StringComparison.Ordinal))
 			{
 				matchLength = star;
@@ -259,6 +261,7 @@ namespace Xamarin.iOS.HotRestart.Tasks
 		void ReportDetectedCodesignInfo()
 		{
 			Log.LogMessage(MessageImportance.High, "Detected signing identity:");
+
 			if (codesignCommonName != null)
 				Log.LogMessage(MessageImportance.High, "  Code Signing Key: \"{0}\" ({1})", codesignCommonName, DetectedCodeSigningPath);
 			if (provisioningProfileName != null)
@@ -317,6 +320,7 @@ namespace Xamarin.iOS.HotRestart.Tasks
 				var message = "No valid " + PlatformName + " code signing keys found in keychain. Please enable Automatic Provisioning from the iOS Bundle Signing page.";
 
 				Log.LogError(message);
+
 				return false;
 			}
 
@@ -414,7 +418,9 @@ namespace Xamarin.iOS.HotRestart.Tasks
 			{
 				foreach (var f in failures)
 					Log.LogMessage(MessageImportance.Low, "{0}", f);
+
 				Log.LogError($"Could not find any available provisioning profiles for {PlatformName}. Please enable Automatic Provisioning from the iOS Bundle Signing page.");
+
 				return null;
 			}
 
@@ -469,6 +475,7 @@ namespace Xamarin.iOS.HotRestart.Tasks
 			foreach (var pair in pairs)
 			{
 				var appid = ConstructValidAppId(pair.Profile, identity.BundleId, out matchLength);
+
 				if (appid != null)
 				{
 					if (matchLength >= bestMatchLength)
@@ -482,6 +489,7 @@ namespace Xamarin.iOS.HotRestart.Tasks
 						}
 
 						var match = identity.Clone();
+
 						match.SigningKey = pair.SigningKey;
 						match.Profile = pair.Profile;
 						match.AppId = appid;
@@ -491,8 +499,10 @@ namespace Xamarin.iOS.HotRestart.Tasks
 					else
 					{
 						string currentMatches = "";
+
 						foreach (var match in matches)
 							currentMatches += $"{match}; ";
+
 						Log.LogMessage(MessageImportance.Low, "AppID: {0} was ruled out because we already found better matches: {1}.", appid, currentMatches);
 					}
 				}
@@ -501,6 +511,7 @@ namespace Xamarin.iOS.HotRestart.Tasks
 			if (matches.Count == 0)
 			{
 				Log.LogWarning(null, null, null, AppManifest, 0, 0, 0, 0, "No installed provisioning profiles match the bundle identifier.");
+
 				return identity;
 			}
 
@@ -536,14 +547,9 @@ namespace Xamarin.iOS.HotRestart.Tasks
 			return MobileProvisionDistributionType.Any;
 		}
 
-		#region IDB.Local
-		// TODO: IDB ref
+		IEnumerable<X509Certificate2> GetAllCertificates() => hotRestartClient.CertificatesManager.GetInstalledCertificates();
 
-		IEnumerable<X509Certificate2> GetAllCertificates() => null;//certificatesProvider.GetInstalledCertificates();
-
-		public string GetCertificateCommonName (X509Certificate2 certificate) => null;//certificatesProvider.GetCertificateCommonName(certificate.SerialNumber);
-
-		#endregion
+		string GetCertificateCommonName (X509Certificate2 certificate) => hotRestartClient.CertificatesManager.GetCertificateCommonName(certificate.SerialNumber);
 
 		class CodeSignIdentity
 		{
