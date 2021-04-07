@@ -7,7 +7,7 @@
 // Copyright 2012 Xamarin Inc. All rights reserved.
 //
 
-#if HAS_ADDRESSBOOK
+#if !__MACCATALYST__ && HAS_ADDRESSBOOK
 
 using System;
 using Foundation;
@@ -49,7 +49,6 @@ namespace MonoTouchFixtures.AddressBook {
 			Assert.NotNull (ab.GetDefaultSource (), "GetDefaultSource");
 		}
 
-#if !__MACCATALYST__ // Crashes with maccat
 		[Test]
 		public void GetSource ()
 		{
@@ -59,8 +58,7 @@ namespace MonoTouchFixtures.AddressBook {
 			// GetSource(0) is not reliable across device/simulator and iOS versions
 			Assert.Null (ab.GetSource (Int32.MaxValue), "MaxValue");
 		}
-#endif // !__MACCATALYST__
 	}
 }
 
-#endif // HAS_ADDRESSBOOKUI
+#endif // !__MACCATALYST__ && HAS_ADDRESSBOOK - Crashes with maccat
