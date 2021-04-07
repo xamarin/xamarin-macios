@@ -11,6 +11,7 @@
     <PackageReference Include="Xamarin.Messaging.Build.Client" Version="$(MessagingVersion)" IncludeAssets="contentFiles" />
     <PackageReference Include="Xamarin.Messaging.Core" Version="$(MessagingVersion)" IncludeAssets="build" />
     <PackageReference Include="Xamarin.Messaging.Server" Version="$(MessagingVersion)" IncludeAssets="contentFiles" />
+    <PackageReferece Include="Xamarin.iOS.HotRestart.Client" Version="$(HotRestartVersion)" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Messaging\Xamarin.Messaging.Build\Xamarin.Messaging.Build.csproj">
