@@ -125,6 +125,7 @@ namespace Xamarin.Linker.Steps
 					DerivedLinkContext.RequiredSymbols.AddFunction (pinfo.EntryPoint).AddMember (method);
 					break;
 
+				case "libSystem.Net.Security.Native":
 				case "System.Net.Security.Native":
 #if NET
 					if (DerivedLinkContext.App.Platform == ApplePlatform.TVOS) {
@@ -139,6 +140,7 @@ namespace Xamarin.Linker.Steps
 
 					goto case "System.Native";
 #endif
+				case "libSystem.Native":
 				case "System.Native":
 #if NET
 					if (DerivedLinkContext.App.Platform == ApplePlatform.MacOSX) {
@@ -147,6 +149,7 @@ namespace Xamarin.Linker.Steps
 					}
 					goto case "System.Security.Cryptography.Native.Apple";
 #endif
+				case "libSystem.Security.Cryptography.Native.Apple":
 				case "System.Security.Cryptography.Native.Apple":
 					Driver.Log (4, "Adding native reference to {0} in {1} because it's referenced by {2} in {3}.", pinfo.EntryPoint, pinfo.Module.Name, method.FullName, method.Module.Name);
 					DerivedLinkContext.RequireMonoNative = true;
