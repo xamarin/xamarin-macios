@@ -113,7 +113,9 @@ namespace MonoTouchFixtures.UIKit {
 				Assert.Null (vc.ModalViewController, "ModalViewController");
 				Assert.Null (vc.RotatingFooterView, "RotatingFooterView");
 				Assert.Null (vc.RotatingHeaderView, "RotatingHeaderView");
+#if !__MACCATALYST__
 				Assert.Null (vc.SearchDisplayController, "SearchDisplayController");
+#endif
 				Assert.False (vc.WantsFullScreenLayout, "WantsFullScreenLayout");
 #endif
 				Assert.Null (vc.SplitViewController, "SplitViewController");
