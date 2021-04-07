@@ -87,6 +87,7 @@ namespace Xamarin.iOS.HotRestart.Tasks
 			}
 
 			identity.BundleId = plist.GetCFBundleIdentifier();
+
 			if (string.IsNullOrEmpty(identity.BundleId))
 			{
 				Log.LogError(null, null, null, AppManifest, 0, 0, 0, 0, "{0} does not define CFBundleIdentifier", AppManifest);
@@ -100,6 +101,7 @@ namespace Xamarin.iOS.HotRestart.Tasks
 				return false;
 
 			Log.LogMessage(MessageImportance.Low, "Available certificates:");
+
 			foreach (var cert in certs)
 				Log.LogMessage(MessageImportance.Low, "    {0}", GetCertificateCommonName(cert));
 
@@ -126,6 +128,7 @@ namespace Xamarin.iOS.HotRestart.Tasks
 				}
 
 				identity.AppId = ConstructValidAppId(identity.Profile, identity.BundleId);
+
 				if (identity.AppId == null)
 				{
 					Log.LogError(null, null, null, AppManifest, 0, 0, 0, 0, "Project bundle identifier '{0}' does not match specified provisioning profile '{1}'. Please enable Automatic Provisioning from the iOS Bundle Signing page.", identity.BundleId, ProvisioningProfile);
@@ -289,6 +292,7 @@ namespace Xamarin.iOS.HotRestart.Tasks
 			var now = DateTime.Now;
 
 			certs = new List<X509Certificate2>();
+
 			foreach (var certificate in GetAllCertificates())
 			{
 				var cname = GetCertificateCommonName(certificate);
@@ -324,6 +328,7 @@ namespace Xamarin.iOS.HotRestart.Tasks
 			var now = DateTime.Now;
 
 			certs = new List<X509Certificate2>();
+
 			foreach (var certificate in GetAllCertificates())
 			{
 				var cname = GetCertificateCommonName(certificate);
@@ -414,6 +419,7 @@ namespace Xamarin.iOS.HotRestart.Tasks
 			}
 
 			Log.LogMessage(MessageImportance.Low, "Available profiles:");
+
 			foreach (var p in profiles)
 				Log.LogMessage(MessageImportance.Low, "    {0}", p.Name);
 
@@ -459,6 +465,7 @@ namespace Xamarin.iOS.HotRestart.Tasks
 
 			// find matching provisioning profiles with compatible appid, keeping only those with the longest matching (wildcard) ids
 			Log.LogMessage(MessageImportance.Low, "Finding matching provisioning profiles with compatible AppID, keeping only those with the longest matching (wildcard) IDs.");
+
 			foreach (var pair in pairs)
 			{
 				var appid = ConstructValidAppId(pair.Profile, identity.BundleId, out matchLength);

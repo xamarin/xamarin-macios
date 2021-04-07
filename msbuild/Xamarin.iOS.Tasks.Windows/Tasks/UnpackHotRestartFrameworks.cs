@@ -43,6 +43,7 @@ namespace Xamarin.iOS.HotRestart.Tasks
 				foreach (var resource in embeddedFrameworks)
 				{
 					var embeddedFramework = resource as EmbeddedResource;
+
 					if (embeddedFramework == null)
 						continue;
 

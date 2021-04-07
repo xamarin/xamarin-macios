@@ -3,6 +3,7 @@ using Microsoft.Build.Utilities;
 using System;
 using System.IO;
 using System.Linq;
+using Xamarin.iOS.Tasks.Windows.Properties;
 using Xamarin.MacDev;
 
 namespace Xamarin.iOS.HotRestart.Tasks
@@ -37,10 +38,10 @@ namespace Xamarin.iOS.HotRestart.Tasks
 			try
 			{
 				var preBuiltInfoPlistPath = Path.Combine(AppBundlePath, "Info.plist");
+
 				if (!File.Exists(preBuiltInfoPlistPath))
 				{
-					// TODO: localize
-					throw new Exception($"Info.plist file does not exist under {preBuiltInfoPlistPath}, please rebuild your project");
+					throw new Exception(string.Format(Resources.CompileAppManifest_MissinInfoPList, preBuiltInfoPlistPath));
 				}
 
 				var infoPlist = PDictionary.FromFile(AppManifestPath);

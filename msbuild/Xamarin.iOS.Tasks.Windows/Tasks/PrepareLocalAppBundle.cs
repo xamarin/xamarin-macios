@@ -33,14 +33,16 @@ namespace Xamarin.iOS.HotRestart.Tasks
 		{
 			// TODO: get paths from the Hot Restart library
 			var BundlesPath = string.Empty;
+
 			Directory.CreateDirectory(BundlesPath);
 
 			// TODO: get paths from the Hot Restart library
 			AppBundlePath = string.Empty; //Path.Combine(BundlesPath, ThisAssembly.Version, SessionId.Substring(0, 8), $"{AppBundleName}.app");
+
 			if (!Directory.Exists(AppBundlePath) && ShouldExtract)
 			{
 				var preBuiltAppBundlePath = Path.Combine(
-					Path.GetDirectoryName(typeof(PrepareHotRestartAppBundle).Assembly.Location),
+					Path.GetDirectoryName(typeof(PrepareAppBundle).Assembly.Location),
 					"Xamarin.PreBuilt.iOS.app.zip");
 
 				ZipFile.ExtractToDirectory(preBuiltAppBundlePath, AppBundlePath);

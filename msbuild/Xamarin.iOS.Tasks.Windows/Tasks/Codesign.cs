@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
+using Xamarin.iOS.Tasks.Windows.Properties;
 
 namespace Xamarin.iOS.HotRestart.Tasks
 {
@@ -51,7 +52,7 @@ namespace Xamarin.iOS.HotRestart.Tasks
 
 				if (string.IsNullOrEmpty(password))
 				{
-					throw new Exception(Strings.LocalCodesign.MissingPasswordFile);
+					throw new Exception(Resources.LocalCodesign_MissingPasswordFile);
 				}
 
 				// TODO: do we still need this message?
