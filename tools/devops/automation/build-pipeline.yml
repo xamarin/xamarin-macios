@@ -168,6 +168,15 @@ pr:
     - SECURITY.MD
     - src/README.md
 
+# the translations team wants a green build, we can do that on sundays even if 
+# the code did not change and without the device tests.
+- cron: "0 12 * * 0"
+  displayName: Weekly Translations build (Sunday @ noon)
+  branches:
+    include:
+    - main
+  always: true
+
 stages:
 
 - stage: governance_checks
@@ -194,7 +203,7 @@ stages:
         gitHubToken: ${{ variables['GitHub.Token'] }}
         xqaCertPass: $(xqa--certificates--password)
 
-- ${{ if or(eq(variables['Build.Reason'], 'IndividualCI'), eq(variables['Build.Reason'], 'Manual')) }}:
+- ${{ if and(ne(variables['Build.Reason', 'Schedule']), or(eq(variables['Build.Reason'], 'IndividualCI'), eq(variables['Build.Reason'], 'Manual'))) }}:
   - ${{ each config in parameters.deviceTestsConfigurations }}:
     - template: templates/devices/stage.yml
       parameters:
