@@ -386,7 +386,7 @@ namespace Xharness {
 
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "monotouch-test", "monotouch-test.csproj"))) {
 				Name = "monotouch-test",
-				IgnoreMacCatalystVariation = false,
+				IgnoreMacCatalystVariation = true,
 			});
 
 			foreach (var p in fsharp_test_suites)
