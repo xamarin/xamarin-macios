@@ -18,9 +18,5 @@
       <Uri>https://github.com/dotnet/arcade</Uri>
       <Sha>4535393d49a652c05fe7f7b2a4a752fca9ee1f45</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.SharedFramework.Sdk" Version="6.0.0-beta.21205.1">
-      <Uri>https://github.com/dotnet/arcade</Uri>
-      <Sha>4535393d49a652c05fe7f7b2a4a752fca9ee1f45</Sha>
-    </Dependency>
   </ToolsetDependencies>
 </Dependencies>
