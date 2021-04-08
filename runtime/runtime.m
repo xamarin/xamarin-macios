@@ -2437,10 +2437,12 @@ xamarin_vm_initialize ()
 	const char *propertyKeys[] = {
 		"APP_PATHS",
 		"PINVOKE_OVERRIDE",
+		"ICU_DAT_FILE_PATH",
 	};
 	const char *propertyValues[] = {
 		xamarin_get_bundle_path (),
 		pinvokeOverride,
+		"icudt.dat",
 	};
 	static_assert (sizeof (propertyKeys) == sizeof (propertyValues), "The number of keys and values must be the same.");
 
