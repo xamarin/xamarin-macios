@@ -152,7 +152,7 @@ jobs:
   - upload_azure_blob
   - upload_vsdrops
   - upload_vsts_tests
-  condition: succeededOrFailed()
+  condition: and(succeededOrFailed() , contains (dependencies.build.outputs['runTests.TESTS_RAN'], 'True')) # only run when we did run the tests
   variables:
     # Define the variable FOO from the previous job
     # Note the use of single quotes!
