@@ -8,11 +8,11 @@
 parameters:
 - name: runTests
   type: boolean
-  default: true
+  default: false
 
 - name: runDeviceTests
   type: boolean
-  default: true
+  default: false
 
 # We are doing some black magic. We have several templates that 
 # are executed with different parameters. 
@@ -114,7 +114,6 @@ variables:
 - group: Xamarin Signing
 - group: Xamarin Release
 - group: Xamarin Notarization
-- group: Publish-Build-Assets
 - group: XamarinCompatLab                                     # provisionator-uri setting
 - name: GitHub.Token                                          # Override the GitHub.Token setting defined in the Xamarin Release group
   value: $(github--pat--vs-mobiletools-engineering-service2)  # Use a token dedicated to critical production workflows and help avoid GitHub throttling
