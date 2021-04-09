@@ -6,6 +6,10 @@ parameters:
   type: string 
   default: 'ios' # default context, since we started dealing with iOS devices. 
 
+- name: runTests
+  type: boolean
+  default: true
+
 steps:
 
 - checkout: self
@@ -16,15 +20,16 @@ steps:
     devicePrefix: ${{ parameters.devicePrefix }}
 
 # Upload full report to vsdrops using the the build numer and id as uuids.
-- task: ms-vscs-artifact.build-tasks.artifactDropTask-1.artifactDropTask@0
-  displayName: 'Publish Html test report to Artifact Services Drop'
-  inputs:
-    dropServiceURI: 'https://devdiv.artifacts.visualstudio.com/DefaultCollection'
-    dropMetadataContainerName: 'DropMetadata-${{ parameters.devicePrefix }}'
-    buildNumber: 'xamarin-macios/device-tests/$(Build.BuildNumber)/$(Build.BuildId)/${{ parameters.devicePrefix }}'
-    sourcePath: $(HTML_REPORT_PATH)
-    detailedLog: true
-    usePat: true 
+- ${{ if eq(parameters.runTests, true) }}:
+  - task: ms-vscs-artifact.build-tasks.artifactDropTask-1.artifactDropTask@0
+    displayName: 'Publish Html test report to Artifact Services Drop'
+    inputs:
+      dropServiceURI: 'https://devdiv.artifacts.visualstudio.com/DefaultCollection'
+      dropMetadataContainerName: 'DropMetadata-${{ parameters.devicePrefix }}'
+      buildNumber: 'xamarin-macios/device-tests/$(Build.BuildNumber)/$(Build.BuildId)/${{ parameters.devicePrefix }}'
+      sourcePath: $(HTML_REPORT_PATH)
+      detailedLog: true
+      usePat: true 
 
 # Upload the API diff to vsdrops to be able to locate it
 - task: ms-vscs-artifact.build-tasks.artifactDropTask-1.artifactDropTask@0

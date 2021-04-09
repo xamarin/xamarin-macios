@@ -127,6 +127,7 @@ jobs:
   - template: upload-vsdrops.yml
     parameters:
       devicePrefix: sim
+      runTests: ${{ parameters.runTests }}
 
 - job: upload_vsts_tests
   displayName: 'Upload xml to vsts'
@@ -169,5 +170,6 @@ jobs:
   - template: publish-html.yml
     parameters:
       statusContext: "Build"
+      runTests: ${{ parameters.runTests }}
       vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
       devicePrefix: sim
