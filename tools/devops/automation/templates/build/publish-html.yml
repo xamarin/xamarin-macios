@@ -114,6 +114,8 @@ steps:
       Set-PipelineResult -Status partiallySucceeded
       Set-GitHubStatus -Status "error" -Description "Some tests failed." -Context "$(Build.DefinitionName)"
     }
+    # TODO: TEST TEST TEST 
+    Set-GitHubStatus -Status "error" -Description "Some tests failed." -Context "$(Build.DefinitionName)"
   env:
     BUILD_REVISION: $(Build.SourceVersion)
     CONTEXT: ${{ parameters.statusContext }}
