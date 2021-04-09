@@ -12,7 +12,7 @@ steps:
 - template: ../common/download-artifacts.yml
   parameters:
     devicePrefix: sim
-    runTests: ${{ parameter.runTests }}
+    runTests: ${{ parameters.runTests }}
 
 # Download the Html Report that was added by the tests job.
 - task: DownloadPipelineArtifact@2

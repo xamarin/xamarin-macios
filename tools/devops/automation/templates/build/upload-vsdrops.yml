@@ -17,7 +17,7 @@ steps:
 
 - template: download-artifacts.yml 
   parameters:
-    devicePrefix: ${{ parameters.devicePrefix }}
+    runTests: ${{ parameters.runTests }}
 
 # Upload full report to vsdrops using the the build numer and id as uuids.
 - ${{ if eq(parameters.runTests, true) }}:
