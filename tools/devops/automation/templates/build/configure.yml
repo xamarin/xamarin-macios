@@ -52,7 +52,7 @@ steps:
 
       # decide if we add the run-dotnet-tests label (if not present) this is done only for main
       # we can use $ref for that :)
-      $xharnessLabels = $prInfo.labels -join ","
+      $xharnessLabels = $tags -join ","
       if ($ref -eq "main" -and -not ("run-dotnet-tests" -in $xharnessLabels)) {
         $tags.Add("run-dotnet-tests")
         if ($xharnessLabels -eq "") {
