@@ -330,7 +330,7 @@ function run_xcode_first_launch ()
 			$SUDO "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -runFirstLaunch
 			log "Executed '$SUDO $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -runFirstLaunch'"
 		else
-			fail "Xcode has pending first launch tasks. Execute '$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -runFirstLaunch' to execute those tasks."
+			fail "Xcode has pending first launch tasks. Execute 'make fix-xcode-first-run' to execute those tasks."
 			return
 		fi
 	fi
@@ -535,7 +535,7 @@ function check_specific_xcode () {
 				log "Clearing xcrun cache..."
 				xcrun -k
 			else
-				fail "'xcode-select -p' does not point to $XCODE_DEVELOPER_ROOT, it points to $XCODE_SELECT. Execute '$SUDO xcode-select -s $XCODE_DEVELOPER_ROOT' to fix."
+				fail "'xcode-select -p' does not point to $XCODE_DEVELOPER_ROOT, it points to $XCODE_SELECT. Execute 'make fix-xcode-select' to fix."
 			fi
 		fi
 	fi
