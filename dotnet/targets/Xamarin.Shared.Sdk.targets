@@ -137,8 +137,8 @@
 		<EnableUnsafeUTF7Encoding Condition="'$(EnableUnsafeUTF7Encoding)' == ''">false</EnableUnsafeUTF7Encoding>
 		<EventSourceSupport Condition="'$(EventSourceSupport)' == ''">false</EventSourceSupport>
 		<HttpActivityPropagationSupport Condition="'$(HttpActivityPropagationSupport)' == ''">false</HttpActivityPropagationSupport>
-		<!-- .NET only supports invariant globalization for Apple platforms for now: https://github.com/xamarin/xamarin-macios/issues/8906 -->
-		<InvariantGlobalization Condition="'$(InvariantGlobalization)' == ''">true</InvariantGlobalization>
+		<!-- tvOS support blocked by https://github.com/dotnet/runtime/issues/48508 (see xamarin_bridge_vm_initialize in monovm-bridge.m) -->
+		<InvariantGlobalization Condition="'$(_PlatformName)' == 'tvOS' And '$(InvariantGlobalization)' == ''">true</InvariantGlobalization>
 		<StartupHookSupport Condition="'$(StartupHookSupport)' == ''">false</StartupHookSupport>
 		<UseSystemResourceKeys Condition="'$(UseSystemResourceKeys)' == ''">true</UseSystemResourceKeys>
 		<UseNativeHttpHandler Condition="'$(_PlatformName)' != 'macOS' And '$(UseNativeHttpHandler)' == ''">true</UseNativeHttpHandler>
@@ -245,6 +245,7 @@
 				@(_XamarinFrameworkAssemblies -> 'FrameworkAssembly=%(Filename)')
 				Interpreter=$(MtouchInterpreter)
 				IntermediateLinkDir=$(IntermediateLinkDir)
+				InvariantGlobalization=$(InvariantGlobalization)
 				ItemsDirectory=$(_LinkerItemsDirectory)
 				IsSimulatorBuild=$(_SdkIsSimulator)
 				LinkMode=$(_LinkMode)
@@ -696,6 +697,10 @@
 				Update="@(ResolvedFileToPublish)"
 				RelativePath="$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)$(PublishDir),$(_DylibPublishDir)))\%(Filename)%(Extension)"
 				Condition="'%(Extension)' == '.dylib'" />
+			<ResolvedFileToPublish
+				Update="@(ResolvedFileToPublish)"
+				RelativePath="$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)$(PublishDir),$(_AssemblyPublishDir)))%(Filename)%(Extension)"
+				Condition="'$(_PlatformName)' != 'macOS' And '$(InvariantGlobalization)' != 'true' And '%(Filename)%(Extension)' == 'icudt.dat'" />
 		</ItemGroup>
 	</Target>
 
