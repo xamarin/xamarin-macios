@@ -122,6 +122,7 @@
     <Compile Include="..\common\BinLog.cs">
       <Link>BinLog.cs</Link>
     </Compile>
+    <Compile Include="LocalizationTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\tools\mtouch\Errors.resx">
