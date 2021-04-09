@@ -14,6 +14,10 @@ parameters:
   type: boolean
   default: true
 
+- name: runSamples
+  type: boolean
+  default: false
+
 # We are doing some black magic. We have several templates that 
 # are executed with different parameters. 
 #
@@ -232,6 +236,7 @@ stages:
           statusContext: ${{ config['statusContext'] }}
           keyringPass: $(xma-password)
 
+- ${{ if eq(parameters.runSamples, true) }}:
   # TODO: Not the real step
   - stage: sample_testing
     displayName: 'Sample testing'
