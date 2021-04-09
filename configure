@@ -99,7 +99,7 @@ while test "x$1" != x; do
         shift
         ;;
     --disable-xamarin)
-    echo "ENABLE_XAMARIN=0" >> $CONFIGURED_FILE
+    echo "ENABLE_XAMARIN=" >> $CONFIGURED_FILE
         shift
         ;;
     --enable-bitcode-on-ios)
