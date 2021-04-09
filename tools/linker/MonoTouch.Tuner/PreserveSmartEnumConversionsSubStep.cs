@@ -25,10 +25,7 @@ namespace Xamarin.Linker.Steps
 
 		public override SubStepTargets Targets {
 			get {
-				return
-					SubStepTargets.Method
-					| SubStepTargets.Type // SubStepTargets.Type is only needed to work around a linker bug: https://github.com/mono/linker/issues/1458
-					| SubStepTargets.Property;
+				return SubStepTargets.Method | SubStepTargets.Property;
 			}
 		}
 

@@ -27,6 +27,11 @@ steps:
       # be able to get the labels, the buildSourceBranch follows the pattern: refs/pull/{ChangeId}/merge
       # we could use a regexp but then we would have two problems instead of one
       $changeId = $buildSourceBranch.Replace("refs/pull/", "").Replace("/merge", "")
+
+      # add a var with the change id, which can be later consumed by some of the old scripts from
+      # jenkins
+      Write-Host "##vso[task.setvariable variable=pr-number;isOutput=true]$changeId"
+
       $prInfo = Get-GitHubPRInfo -ChangeId $changeId
       Write-Host $prInfo
 
@@ -47,7 +52,7 @@ steps:
 
       # decide if we add the run-dotnet-tests label (if not present) this is done only for main
       # we can use $ref for that :)
-      $xharnessLabels = $prInfo.labels -join ","
+      $xharnessLabels = $tags -join ","
       if ($ref -eq "main" -and -not ("run-dotnet-tests" -in $xharnessLabels)) {
         $tags.Add("run-dotnet-tests")
         if ($xharnessLabels -eq "") {
@@ -111,7 +116,7 @@ steps:
   inputs:
     locProj: '$(Build.SourcesDirectory)\Localize\LocProject.json'
     outDir: '$(Build.ArtifactStagingDirectory)'
-    isCreatePrSelected: true
+    isCreatePrSelected: false
     isAutoCompletePrSelected: false
     prSourceBranchPrefix: 'locfiles'
     repoType: gitHub

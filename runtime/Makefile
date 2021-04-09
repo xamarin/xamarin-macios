@@ -603,22 +603,22 @@ $(foreach platform,$(DOTNET_CORECLR_PLATFORMS),$(foreach rid,$(DOTNET_$(platform
 
 # a few lookup tables, because the data we have is not always in the format we need it
 
-DOTNET_ios-x64_ARCHITECTURES=x86_64
-DOTNET_ios-x86_ARCHITECTURES=x86
+DOTNET_iossimulator-x64_ARCHITECTURES=x86_64
+DOTNET_iossimulator-x86_ARCHITECTURES=x86
 DOTNET_ios-arm_ARCHITECTURES=armv7 armv7s
 DOTNET_ios-arm64_ARCHITECTURES=arm64
-DOTNET_tvos-x64_ARCHITECTURES=x86_64
+DOTNET_tvossimulator-x64_ARCHITECTURES=x86_64
 DOTNET_tvos-arm64_ARCHITECTURES=arm64
 DOTNET_osx-x64_ARCHITECTURES=x86_64
 DOTNET_osx-arm64_ARCHITECTURES=arm64
 DOTNET_maccatalyst-x64_ARCHITECTURES=x86_64
 DOTNET_maccatalyst-arm64_ARCHITECTURES=arm64
 
-DOTNET_ios-x64_SDK_PLATFORM=iphonesimulator
-DOTNET_ios-x86_SDK_PLATFORM=iphonesimulator
+DOTNET_iossimulator-x64_SDK_PLATFORM=iphonesimulator
+DOTNET_iossimulator-x86_SDK_PLATFORM=iphonesimulator
 DOTNET_ios-arm_SDK_PLATFORM=iphoneos
 DOTNET_ios-arm64_SDK_PLATFORM=iphoneos
-DOTNET_tvos-x64_SDK_PLATFORM=tvsimulator
+DOTNET_tvossimulator-x64_SDK_PLATFORM=tvsimulator
 DOTNET_tvos-arm64_SDK_PLATFORM=tvos
 DOTNET_osx-x64_SDK_PLATFORM=mac
 DOTNET_osx-arm64_SDK_PLATFORM=mac
@@ -630,9 +630,9 @@ DOTNET_tvOS_SDK_PLATFORMS=tvsimulator tvos
 DOTNET_macOS_SDK_PLATFORMS=mac
 DOTNET_MacCatalyst_SDK_PLATFORMS=maccatalyst
 
-DOTNET_iphonesimulator_DYLIB_FLAGS=-lmonosgen-2.0 -framework UIKit
-DOTNET_iphoneos_DYLIB_FLAGS=-lmonosgen-2.0 -framework UIKit
-DOTNET_tvsimulator_DYLIB_FLAGS=-lmonosgen-2.0 -framework UIKit
+DOTNET_iphonesimulator_DYLIB_FLAGS=-lmonosgen-2.0 -licudata -licui18n -licuuc -framework UIKit
+DOTNET_iphoneos_DYLIB_FLAGS=-lmonosgen-2.0 -licudata -licui18n -licuuc -framework UIKit
+DOTNET_tvsimulator_DYLIB_FLAGS=-lmonosgen-2.0 -licudata -licui18n -licuuc -framework UIKit
 DOTNET_tvos_DYLIB_FLAGS=-lmonosgen-2.0 -framework UIKit
 DOTNET_maccatalyst_DYLIB_FLAGS=-lmonosgen-2.0 -framework UIKit
 DOTNET_mac_DYLIB_FLAGS=-lcoreclr

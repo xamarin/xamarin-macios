@@ -13,9 +13,6 @@ namespace LinkSdk {
 	[TestFixture]
 	// we want the test to be availble if we use the linker
 	[Preserve (AllMembers = true)]
-#if NET
-	[Ignore ("Type converters are linked away: https://github.com/mono/linker/issues/1451")]
-#endif
 	public class CommonLinkSdkTest {
 
 		[Test]

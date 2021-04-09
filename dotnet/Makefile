@@ -202,7 +202,13 @@ $(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(eval $(call PacksDefinitions,
 TARGETS += $(RUNTIME_PACKS) $(REF_PACKS) $(SDK_PACKS) $(TEMPLATE_PACKS) $(WORKLOAD_PACKS)
 
 define InstallWorkload
-$(DOTNET_MANIFESTS_PATH)/Microsoft.NET.Workload.$1: | $(DOTNET_MANIFESTS_PATH)
+# .NET comes with a workload for us, but we don't want that, we want our own. So delete the workload that comes with .NET.
+.stamp-workload-replace-$1-$(DOTNET6_VERSION):
+	$(Q) echo "Removing existing workload shipped with .NET $(DOTNET6_VERSION): $(DOTNET_MANIFESTS_PATH)/Microsoft.NET.Workload.$1"
+	$(Q) rm -Rf $(DOTNET_MANIFESTS_PATH)/Microsoft.NET.Workload.$1
+	$(Q) touch $$@
+
+$(DOTNET_MANIFESTS_PATH)/Microsoft.NET.Workload.$1: .stamp-workload-replace-$1-$(DOTNET6_VERSION) | $(DOTNET_MANIFESTS_PATH)
 	$$(Q_LN) ln -Fhs $$(abspath Microsoft.NET.Workload.$1) $$(abspath $$@)
 
 $(DOTNET_PACKS_PATH)/Microsoft.$1.Sdk/$2: | $(DOTNET_PACKS_PATH)/Microsoft.$1.Sdk
@@ -361,5 +367,3 @@ global.json: $(TOP)/global6.json
 clean-local::
 	$(Q) rm -Rf $(DOTNET_NUPKG_DIR) $(DOTNET_FEED_DIR)
 	$(Q) git clean -xfdq
-
-.SECONDARY:

@@ -453,7 +453,7 @@ function install_coresimulator ()
 	local CURRENT_CORESIMULATOR_PATH=/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/CoreSimulator
 	local CURRENT_CORESIMULATOR_VERSION=0.0
 	if test -f "$CURRENT_CORESIMULATOR_PATH"; then
-		CURRENT_CORESIMULATOR_VERSION=$(otool -L $CURRENT_CORESIMULATOR_PATH | grep "$CURRENT_CORESIMULATOR_PATH.*current version" | sed -e 's/.*current version//' -e 's/)//' -e 's/[[:space:]]//g')
+		CURRENT_CORESIMULATOR_VERSION=$(otool -L $CURRENT_CORESIMULATOR_PATH | grep "$CURRENT_CORESIMULATOR_PATH.*current version" | sed -e 's/.*current version//' -e 's/)//' -e 's/[[:space:]]//g' | uniq)
 	fi
 
 	# Either version may be composed of either 2 or 3 numbers.
@@ -1009,8 +1009,8 @@ function check_dotnet ()
 	local CACHED_FILE
 	local DOWNLOADED_FILE
 
-	DOTNET_VERSION=$(grep "^DOTNET_VERSION=" Make.config | sed 's/.*=//')
-	URL=$(grep "^DOTNET_URL"= Make.config | sed 's/.*=//')
+	DOTNET_VERSION=$(grep "^DOTNET_VERSION=" dotnet.config | sed 's/.*=//')
+	URL=https://dotnetcli.azureedge.net/dotnet/Sdk/"$DOTNET_VERSION"/dotnet-sdk-"$DOTNET_VERSION"-osx-x64.pkg
 	INSTALL_DIR=/usr/local/share/dotnet/sdk/"$DOTNET_VERSION"
 
 	if test -d "$INSTALL_DIR"; then

@@ -386,7 +386,7 @@ namespace Xharness {
 
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "monotouch-test", "monotouch-test.csproj"))) {
 				Name = "monotouch-test",
-				IgnoreMacCatalystVariation = false,
+				IgnoreMacCatalystVariation = true,
 			});
 
 			foreach (var p in fsharp_test_suites)
@@ -412,7 +412,7 @@ namespace Xharness {
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "iOS", "introspection-ios.csproj"))) { Name = "introspection" });
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "dotnet", "iOS", "introspection.csproj"))) { Name = "introspection", IsDotNetProject = true, SkipiOSVariation = false, SkiptvOSVariation = true, SkipwatchOSVariation = true, SkipTodayExtensionVariation = true, SkipDeviceVariations = false, SkipiOS32Variation = true, });
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "dotnet", "tvOS", "introspection.csproj"))) { Name = "introspection", IsDotNetProject = true, SkipiOSVariation = true, SkiptvOSVariation = true, SkipwatchOSVariation = true, SkipTodayExtensionVariation = true, SkipDeviceVariations = false, SkipiOS32Variation = true, GenerateVariations = false, TestPlatform = TestPlatform.tvOS, });
-			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "monotouch-test", "dotnet", "iOS", "monotouch-test.csproj"))) { Name = "monotouch-test", IsDotNetProject = true, SkipiOSVariation = false, SkiptvOSVariation = true, SkipwatchOSVariation = true, SkipTodayExtensionVariation = true, SkipDeviceVariations = false, SkipiOS32Variation = true, });
+			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "monotouch-test", "dotnet", "iOS", "monotouch-test.csproj"))) { Name = "monotouch-test", IsDotNetProject = true, SkipiOSVariation = false, SkiptvOSVariation = true, SkipwatchOSVariation = true, SkipTodayExtensionVariation = true, SkipDeviceVariations = false, SkipiOS32Variation = true, IgnoreMacCatalystVariation = true });
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "dont link", "dont link.csproj"))) {
 				Configurations = new string [] { "Debug", "Release" },
 				IgnoreMacCatalystVariation = false,

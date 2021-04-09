@@ -1,3 +1,4 @@
+global.json
 build
 MonoTouch.NUnitLite.csproj
 MonoTouch.NUnitLite.tvos.csproj

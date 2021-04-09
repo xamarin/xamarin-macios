@@ -72,6 +72,8 @@ jobs:
     SkipPackagedXamarinMacTests: $[ dependencies.configure.outputs['labels.skip-packaged-xamarin-mac-tests'] ]
     SkipPublicJenkins: $[ dependencies.configure.outputs['labels.skip-public-jenkins'] ]
     SkipApiComparison: $[ dependencies.configure.outputs['labels.skip-api-comparison'] ]
+    # old and ugly env var use by jenkins, we do have parts of the code that use it, contains the PR number
+    ghprbPullId: $[ dependencies.configure.outputs['labels.pr-number'] ]
     # set the branch variable name, this is required by jenkins and we have a lot of scripts that depend on it
     BRANCH_NAME: $(Build.SourceBranchName)
     XHARNESS_LABELS: $[ dependencies.configure.outputs['labels.xharness-labels'] ]
@@ -79,14 +81,14 @@ jobs:
     name: $(AgentPoolComputed)
     demands:
     - Agent.OS -equals Darwin
-    - Agent.OSVersion -equals 10.15
-    - macios_image -equals v1
+    - macios_image -equals v2.1     # Big Sur image with Xcode 12.4 and 12.5 installed
   workspace:
     clean: all
 
   steps:
   - template: build.yml
     parameters:
+      isPR: ${{ or(eq(variables['Build.Reason'], 'PullRequest'), and(eq(variables['Build.SourceBranchName'], 'merge'), or(eq(variables['Build.Reason'], 'Manual'), eq(variables['Build.Reason'], 'IndividualCI')))) }}
       runTests: ${{ parameters.runTests }}
       runDeviceTests: ${{ parameters.runDeviceTests }}
       vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
