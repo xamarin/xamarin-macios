@@ -1,3 +1,8 @@
+parameters:
+- name: runTests
+  type: boolean
+  default: true
+
 steps:
 
 - checkout: self
@@ -7,6 +12,7 @@ steps:
 - template: ../common/download-artifacts.yml
   parameters:
     devicePrefix: sim
+    runTests: ${{ parameters.runTests }}
 
 # Download the Html Report that was added by the tests job.
 - task: DownloadPipelineArtifact@2
