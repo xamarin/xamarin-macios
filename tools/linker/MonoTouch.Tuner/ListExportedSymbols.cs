@@ -170,7 +170,8 @@ namespace Xamarin.Linker.Steps
 				if (addPInvokeSymbol) {
 					Driver.Log (4, "Adding native reference to {0} in {1} because it's referenced by {2} in {3}.", pinfo.EntryPoint, pinfo.Module.Name, method.FullName, method.Module.Name);
 					DerivedLinkContext.RequireMonoNative = true;
-					if (DerivedLinkContext.App.LibMonoNativeLinkMode == AssemblyBuildTarget.StaticObject) {
+					if (DerivedLinkContext.App.Platform != ApplePlatform.MacOSX &&
+						DerivedLinkContext.App.LibMonoNativeLinkMode == AssemblyBuildTarget.StaticObject) {
 						DerivedLinkContext.RequiredSymbols.AddFunction (pinfo.EntryPoint).AddMember (method);
 					}
 				}
