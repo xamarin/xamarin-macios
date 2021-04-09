@@ -35,12 +35,12 @@ jobs:
       version: 5.0.200
 
   - download: macios
-    artifact: package
+    artifact: AssetManifests
 
   - powershell: >-
-      & dotnet build -v:n -t:PushManifestToBuildAssetRegistry
-      -p:NupkgPath=$(Agent.BuildDirectory)\macios\package -p:BuildAssetRegistryToken=$(MaestroAccessToken)
-      $(Build.SourcesDirectory)dotnet\package\Microsoft.iOS.Ref\package.csproj
+      & dotnet build -v:n -t:PushBARManifest
+      -p:BarManifestOutputPath=$(Agent.BuildDirectory)\macios\AssetManifests -p:BuildAssetRegistryToken=$(MaestroAccessToken)
+      $(Build.SourcesDirectory)\dotnet\package\Microsoft.iOS.Ref\package.csproj
     displayName: generate and publish BAR manifest
 
   - powershell: |

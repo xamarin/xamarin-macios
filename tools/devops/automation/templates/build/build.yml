@@ -306,6 +306,10 @@ steps:
   continueOnError: true # should not stop the build since is not official just yet.
   timeoutInMinutes: 180
 
+- script: 'dotnet build -t:GenerateBARManifest /v:n $(Build.SourcesDirectory)/dotnet/package/Microsoft.iOS.Ref/package.csproj'
+  displayName: Generate and Upload BAR Manifest
+  condition: and(succeeded(), contains(variables['configuration.BuildNugets'], 'True'))
+
 - task: NuGetCommand@2
   displayName: 'Publish Nugets'
   inputs:
