@@ -136,7 +136,7 @@
 	<Target Name="_CreateHotRestartCachedBundle" DependsOnTargets="$(_CreateHotRestartCachedBundleDependsOn)" />
 	
 	<!-- Creates HotRestart app bundle and collects files to copy -->
-	<Target Name="_PrepareHotRestartAppBundle" DependsOnTargets="_GenerateBuildSessionId;CopyMdbsToOutputDirectory" 
+	<Target Name="_PrepareHotRestartAppBundle" DependsOnTargets="_GenerateBuildSessionId" 
 					Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsAppExtension)' == 'false' And '$(IsHotRestartBuild)' == 'true'">
 
 		<!--Create app bundle dir and get its path-->
