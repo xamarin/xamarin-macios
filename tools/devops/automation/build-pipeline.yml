@@ -215,7 +215,6 @@ stages:
     parameters:
       stageName: ${{ config['stageName'] }}
       macPool: ${{ config['macPool'] }}
-      osVersion: ${{ config['osVersion'] }}
       statusContext: ${{ config['statusContext'] }}
       keyringPass: $(xma-password)
 
