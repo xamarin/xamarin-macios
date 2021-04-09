@@ -712,6 +712,8 @@ namespace AudioUnit
 	public enum AudioComponentInstantiationOptions : uint {
 		OutOfProcess = 1,
 		InProcess = 2,
+		[iOS (14,5), TV (14,5), Mac (11,3)]
+		LoadedRemotely = 1u << 31,
 	}
 
 	[Native]

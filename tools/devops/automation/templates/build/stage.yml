@@ -81,8 +81,7 @@ jobs:
     name: $(AgentPoolComputed)
     demands:
     - Agent.OS -equals Darwin
-    - Agent.OSVersion -equals 10.15
-    - macios_image -equals v1
+    - macios_image -equals v2.1     # Big Sur image with Xcode 12.4 and 12.5 installed
   workspace:
     clean: all
 

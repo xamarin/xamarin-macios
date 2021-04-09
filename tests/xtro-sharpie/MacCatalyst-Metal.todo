@@ -34,14 +34,12 @@
 !incorrect-protocol-member! MTLComputeCommandEncoder::memoryBarrierWithScope: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLComputeCommandEncoder::sampleCountersInBuffer:atSampleIndex:withBarrier: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLComputeCommandEncoder::setAccelerationStructure:atBufferIndex: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLComputeCommandEncoder::setImageblockWidth:height: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLComputeCommandEncoder::setIntersectionFunctionTable:atBufferIndex: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLComputeCommandEncoder::setIntersectionFunctionTables:withBufferRange: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLComputeCommandEncoder::setStageInRegionWithIndirectBuffer:indirectBufferOffset: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLComputeCommandEncoder::setVisibleFunctionTable:atBufferIndex: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLComputeCommandEncoder::setVisibleFunctionTables:withBufferRange: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLComputePipelineState::functionHandleWithFunction: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLComputePipelineState::imageblockMemoryLengthForDimensions: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLComputePipelineState::newComputePipelineStateWithAdditionalBinaryFunctions:error: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLComputePipelineState::newIntersectionFunctionTableWithDescriptor: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLComputePipelineState::newVisibleFunctionTableWithDescriptor: is REQUIRED and should be abstract
@@ -61,8 +59,6 @@
 !incorrect-protocol-member! MTLDevice::newEvent is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::newIndirectCommandBufferWithDescriptor:maxCommandCount:options: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::newRasterizationRateMapWithDescriptor: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLDevice::newRenderPipelineStateWithTileDescriptor:options:completionHandler: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLDevice::newRenderPipelineStateWithTileDescriptor:options:reflection:error: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::newSharedEvent is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::newSharedEventWithHandle: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::newSharedTextureWithDescriptor: is REQUIRED and should be abstract
@@ -85,31 +81,10 @@
 !incorrect-protocol-member! MTLLibrary::newIntersectionFunctionWithDescriptor:completionHandler: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLLibrary::newIntersectionFunctionWithDescriptor:error: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLLibrary::type is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::dispatchThreadsPerTile: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::drawIndexedPatches:patchIndexBuffer:patchIndexBufferOffset:controlPointIndexBuffer:controlPointIndexBufferOffset:indirectBuffer:indirectBufferOffset: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::drawPatches:patchIndexBuffer:patchIndexBufferOffset:indirectBuffer:indirectBufferOffset: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLRenderCommandEncoder::executeCommandsInBuffer:indirectBuffer:indirectBufferOffset: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLRenderCommandEncoder::executeCommandsInBuffer:withRange: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLRenderCommandEncoder::sampleCountersInBuffer:atSampleIndex:withBarrier: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::setThreadgroupMemoryLength:offset:atIndex: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::setTileBuffer:offset:atIndex: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::setTileBufferOffset:atIndex: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::setTileBuffers:offsets:withRange: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::setTileBytes:length:atIndex: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::setTileSamplerState:atIndex: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::setTileSamplerState:lodMinClamp:lodMaxClamp:atIndex: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::setTileSamplerStates:lodMinClamps:lodMaxClamps:withRange: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::setTileSamplerStates:withRange: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::setTileTexture:atIndex: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::setTileTextures:withRange: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::setVertexAmplificationCount:viewMappings: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::tileHeight is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::tileWidth is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderPipelineState::imageblockMemoryLengthForDimensions: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderPipelineState::imageblockSampleLength is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderPipelineState::maxTotalThreadsPerThreadgroup is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLRenderPipelineState::supportIndirectCommandBuffers is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderPipelineState::threadgroupSizeMatchesTileSize is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLResourceStateCommandEncoder::updateFence: is OPTIONAL and should NOT be abstract
 !incorrect-protocol-member! MTLResourceStateCommandEncoder::updateTextureMapping:mode:indirectBuffer:indirectBufferOffset: is OPTIONAL and should NOT be abstract
 !incorrect-protocol-member! MTLResourceStateCommandEncoder::updateTextureMapping:mode:region:mipLevel:slice: is OPTIONAL and should NOT be abstract

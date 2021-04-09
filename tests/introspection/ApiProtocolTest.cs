@@ -116,6 +116,9 @@ namespace Introspection {
 				case "PKTransitPassProperties": // Conformance not in headers
 				// Xcode 12.2
 				case "VSAccountApplicationProvider": // Conformance not in headers
+				// Xcode 12.5
+				case "HMCharacteristicMetadata":
+				case "HMAccessoryCategory":
 					return true;
 				}
 				break;
@@ -231,6 +234,9 @@ namespace Introspection {
 				// Xcode 12.3
 				case "GCDirectionalGamepad":
 					return true;
+				// Xcode 12.5
+				case "GCDualSenseGamepad":
+					return true;
 				}
 				break;
 			case "NSSecureCoding":
@@ -340,6 +346,9 @@ namespace Introspection {
 				// Xcode 12.3
 				case "ARAppClipCodeAnchor": // Conformance comes from the base type, ARAppClipCodeAnchor conforms to NSSecureCoding but SupportsSecureCoding returned false.
 				case "GCDirectionalGamepad":
+					return true;
+				// Xcode 12.5
+				case "GCDualSenseGamepad":
 					return true;
 				}
 				break;

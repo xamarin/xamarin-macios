@@ -1,28 +1,3 @@
-## unsorted
-
-!incorrect-protocol-member! MTLComputeCommandEncoder::setImageblockWidth:height: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLComputePipelineState::imageblockMemoryLengthForDimensions: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLDevice::newRenderPipelineStateWithTileDescriptor:options:completionHandler: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLDevice::newRenderPipelineStateWithTileDescriptor:options:reflection:error: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::dispatchThreadsPerTile: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::setThreadgroupMemoryLength:offset:atIndex: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::setTileBuffer:offset:atIndex: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::setTileBufferOffset:atIndex: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::setTileBuffers:offsets:withRange: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::setTileBytes:length:atIndex: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::setTileSamplerState:atIndex: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::setTileSamplerState:lodMinClamp:lodMaxClamp:atIndex: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::setTileSamplerStates:lodMinClamps:lodMaxClamps:withRange: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::setTileSamplerStates:withRange: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::setTileTexture:atIndex: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::setTileTextures:withRange: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::tileHeight is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::tileWidth is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderPipelineState::imageblockMemoryLengthForDimensions: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderPipelineState::imageblockSampleLength is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderPipelineState::maxTotalThreadsPerThreadgroup is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderPipelineState::threadgroupSizeMatchesTileSize is REQUIRED and should be abstract
-
 ## New required members on existing protocols
 !incorrect-protocol-member! MTLBlitCommandEncoder::copyIndirectCommandBuffer:sourceRange:destination:destinationIndex: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLBlitCommandEncoder::optimizeContentsForCPUAccess: is REQUIRED and should be abstract
@@ -46,8 +21,6 @@
 !incorrect-protocol-member! MTLDevice::newSharedEvent is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::newSharedEventWithHandle: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLRenderCommandEncoder::executeCommandsInBuffer:withRange: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::drawIndexedPatches:patchIndexBuffer:patchIndexBufferOffset:controlPointIndexBuffer:controlPointIndexBufferOffset:indirectBuffer:indirectBufferOffset: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::drawPatches:patchIndexBuffer:patchIndexBufferOffset:indirectBuffer:indirectBufferOffset: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLRenderPipelineState::supportIndirectCommandBuffers is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLTexture::allowGPUOptimizedContents is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLArgumentEncoder::newArgumentEncoderForBufferAtIndex: is REQUIRED and should be abstract

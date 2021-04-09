@@ -214,3 +214,5 @@
 !missing-pinvoke! SecureDownloadUpdateWithData is not bound
 !missing-pinvoke! SessionCreate is not bound
 !missing-pinvoke! SessionGetInfo is not bound
+!missing-pinvoke! sec_protocol_options_get_enable_encrypted_client_hello is not bound
+!missing-pinvoke! sec_protocol_options_set_enable_encrypted_client_hello is not bound

@@ -149,4 +149,17 @@ namespace MLCompute {
 			return CFString.FetchString (MLCLSTMResultModeDebugDescription (self));
 		}
 	}
+
+	[TV (14,5)][Mac (11,3)][iOS (14,5)]
+	[NoWatch]
+	public static class MLCComparisonOperationExtensions {
+
+		[DllImport (Constants.MLComputeLibrary)]
+		static extern /* NSString */ IntPtr MLCComparisonOperationDebugDescription (MLCComparisonOperation operation);
+
+		public static string GetDebugDescription (this MLCComparisonOperation self)
+		{
+			return CFString.FetchString (MLCComparisonOperationDebugDescription (self));
+		}
+	}
 }
