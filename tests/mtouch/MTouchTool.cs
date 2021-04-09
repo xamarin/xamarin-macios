@@ -861,7 +861,8 @@ public class IntentHandler : INExtension, IINRidesharingDomainHandling {
 				if (v.StartsWith (executable, StringComparison.Ordinal) && v.EndsWith (":", StringComparison.Ordinal))
 					return false;
 
-				if (v == "no symbols")
+				// nm changed its output on xcode 12.5 (it will fail, on purpose, with earlier versions)
+				if (v.EndsWith (": no symbols", StringComparison.Ordinal))
 					return false;
 
 				return true;

@@ -158,6 +158,13 @@ namespace Introspection {
 			var declaredType = method.DeclaringType;
 
 			switch (declaredType.Name) {
+			case "AVUrlAsset":
+				switch (name) {
+				// fails because it is in-lined via protocol AVContentKeyRecipient
+				case "contentKeySession:didProvideContentKey:":
+					return true;
+				}
+				break;
 			case "NSNull":
 				switch (name) {
 				// conformance to CAAction started with iOS8

@@ -911,6 +911,20 @@ namespace StoreKit {
 		[Static]
 		[Export ("updateConversionValue:")]
 		void UpdateConversionValue (nint conversionValue);
+
+		[NoWatch, NoTV, NoMac]
+		[iOS (14,5)]
+		[Static]
+		[Async]
+		[Export ("startImpression:completionHandler:")]
+		void StartImpression (SKAdImpression impression, [NullAllowed] Action<NSError> completion);
+
+		[NoWatch, NoTV, NoMac]
+		[iOS (14,5)]
+		[Static]
+		[Async]
+		[Export ("endImpression:completionHandler:")]
+		void EndImpression (SKAdImpression impression, [NullAllowed] Action<NSError> completion);
 	}
 
 	[iOS (12,2)]
@@ -1142,4 +1156,42 @@ namespace StoreKit {
 		SKOverlayConfiguration Configuration { get; }
 	}
 
+	[NoWatch, NoTV, NoMac]
+	[iOS (14,5)]
+	[BaseType (typeof (NSObject))]
+	interface SKAdImpression {
+
+		[Export ("sourceAppStoreItemIdentifier", ArgumentSemantic.Strong)]
+		NSNumber SourceAppStoreItemIdentifier { get; set; }
+
+		[Export ("advertisedAppStoreItemIdentifier", ArgumentSemantic.Strong)]
+		NSNumber AdvertisedAppStoreItemIdentifier { get; set; }
+
+		[Export ("adNetworkIdentifier", ArgumentSemantic.Strong)]
+		string AdNetworkIdentifier { get; set; }
+
+		[Export ("adCampaignIdentifier", ArgumentSemantic.Strong)]
+		NSNumber AdCampaignIdentifier { get; set; }
+
+		[Export ("adImpressionIdentifier", ArgumentSemantic.Strong)]
+		string AdImpressionIdentifier { get; set; }
+
+		[NullAllowed, Export ("adType", ArgumentSemantic.Strong)]
+		string AdType { get; set; }
+
+		[NullAllowed, Export ("adDescription", ArgumentSemantic.Strong)]
+		string AdDescription { get; set; }
+
+		[NullAllowed, Export ("adPurchaserName", ArgumentSemantic.Strong)]
+		string AdPurchaserName { get; set; }
+
+		[Export ("timestamp", ArgumentSemantic.Strong)]
+		NSNumber Timestamp { get; set; }
+
+		[Export ("signature", ArgumentSemantic.Strong)]
+		string Signature { get; set; }
+
+		[Export ("version", ArgumentSemantic.Strong)]
+		string Version { get; set; }
+	}
 }
