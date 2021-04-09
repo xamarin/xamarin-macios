@@ -116,7 +116,7 @@ steps:
   inputs:
     locProj: '$(Build.SourcesDirectory)\Localize\LocProject.json'
     outDir: '$(Build.ArtifactStagingDirectory)'
-    isCreatePrSelected: true
+    isCreatePrSelected: false
     isAutoCompletePrSelected: false
     prSourceBranchPrefix: 'locfiles'
     repoType: gitHub
