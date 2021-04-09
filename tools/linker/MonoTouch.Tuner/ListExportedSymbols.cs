@@ -104,6 +104,7 @@ namespace Xamarin.Linker.Steps
 		{
 			if (method.IsPInvokeImpl && method.HasPInvokeInfo && method.PInvokeInfo != null) {
 				var pinfo = method.PInvokeInfo;
+				bool addPInvokeSymbol = false;
 
 				if (state != null) {
 					switch (pinfo.EntryPoint) {
@@ -128,36 +129,50 @@ namespace Xamarin.Linker.Steps
 				case "libSystem.Net.Security.Native":
 				case "System.Net.Security.Native":
 #if NET
+					// tvOS does not ship with System.Net.Security.Native due to https://github.com/dotnet/runtime/issues/45535
 					if (DerivedLinkContext.App.Platform == ApplePlatform.TVOS) {
 						Driver.Log (4, "Did not add native reference to {0} in {1} referenced by {2} in {3}.", pinfo.EntryPoint, pinfo.Module.Name, method.FullName, method.Module.Name);
-						break; // tvOS does not ship with System.Net.Security.Native due to https://github.com/dotnet/runtime/issues/45535
+						break;
 					}
-
-					if (DerivedLinkContext.App.Platform == ApplePlatform.MacOSX) {
-						Driver.Log (4, "Did not add native reference to {0} in {1} referenced by {2} in {3}.", pinfo.EntryPoint, pinfo.Module.Name, method.FullName, method.Module.Name);
-						break; // The macOS version of the BCL has several references to native methods supposedly in libSystem.Net.Security.Native that aren't there, so skip it.
-					}
-
-					goto case "System.Native";
 #endif
+					addPInvokeSymbol = true;
+					break;
+
+				case "libSystem.Security.Cryptography.Native.Apple":
+				case "System.Security.Cryptography.Native.Apple":
+#if NET
+					// https://github.com/dotnet/runtime/issues/47533
+					if (DerivedLinkContext.App.Platform == ApplePlatform.iOS) {
+						Driver.Log (4, "Did not add native reference to {0} in {1} referenced by {2} in {3}.", pinfo.EntryPoint, pinfo.Module.Name, method.FullName, method.Module.Name);
+						break;
+					}
+#endif
+					addPInvokeSymbol = true;
+					break;
+
 				case "libSystem.Native":
 				case "System.Native":
 #if NET
-					if (DerivedLinkContext.App.Platform == ApplePlatform.MacOSX) {
+					// https://github.com/dotnet/runtime/issues/47533
+					if (DerivedLinkContext.App.Platform == ApplePlatform.iOS && pinfo.EntryPoint == "SystemNative_ConfigureTerminalForChildProcess") {
 						Driver.Log (4, "Did not add native reference to {0} in {1} referenced by {2} in {3}.", pinfo.EntryPoint, pinfo.Module.Name, method.FullName, method.Module.Name);
-						break; // The macOS version of the BCL has several references to native methods supposedly in libSystem.Native that aren't there, so skip it.
+						break;
 					}
-					goto case "System.Security.Cryptography.Native.Apple";
 #endif
-				case "libSystem.Security.Cryptography.Native.Apple":
-				case "System.Security.Cryptography.Native.Apple":
-					Driver.Log (4, "Adding native reference to {0} in {1} because it's referenced by {2} in {3}.", pinfo.EntryPoint, pinfo.Module.Name, method.FullName, method.Module.Name);
-					DerivedLinkContext.RequireMonoNative = true;
-					DerivedLinkContext.RequiredSymbols.AddFunction (pinfo.EntryPoint).AddMember (method);
+					addPInvokeSymbol = true;
 					break;
+
 				default:
 					Driver.Log (4, "Did not add native reference to {0} in {1} referenced by {2} in {3}.", pinfo.EntryPoint, pinfo.Module.Name, method.FullName, method.Module.Name);
 					break;
+				}
+
+				if (addPInvokeSymbol) {
+					Driver.Log (4, "Adding native reference to {0} in {1} because it's referenced by {2} in {3}.", pinfo.EntryPoint, pinfo.Module.Name, method.FullName, method.Module.Name);
+					DerivedLinkContext.RequireMonoNative = true;
+					if (DerivedLinkContext.App.LibMonoNativeLinkMode == AssemblyBuildTarget.StaticObject) {
+						DerivedLinkContext.RequiredSymbols.AddFunction (pinfo.EntryPoint).AddMember (method);
+					}
 				}
 			}
 
