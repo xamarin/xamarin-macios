@@ -60,8 +60,8 @@
   <!-- Declare the XI/XM framework bundled with this version of the SDK. See Microsoft.NETCoreSdk.BundledVersions.props -->
   <PropertyGroup>
     <!-- Runtime pack identifiers -->
-    <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'iOS' ">ios-x64;ios-arm64;ios-arm;ios-x86</_RuntimePackRuntimeIdentifiers>
-    <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'tvOS' ">tvos-x64;tvos-arm64</_RuntimePackRuntimeIdentifiers>
+    <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'iOS' ">iossimulator-x64;ios-arm64;ios-arm;iossimulator-x86</_RuntimePackRuntimeIdentifiers>
+    <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'tvOS' ">tvossimulator-x64;tvos-arm64</_RuntimePackRuntimeIdentifiers>
     <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'watchOS' ">watchos-x86;watchos-x64;watchos-arm</_RuntimePackRuntimeIdentifiers>
     <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'macOS' ">osx-x64;osx-arm64</_RuntimePackRuntimeIdentifiers>
     <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'MacCatalyst' ">maccatalyst-x64;maccatalyst-arm64</_RuntimePackRuntimeIdentifiers>

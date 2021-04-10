@@ -51,6 +51,8 @@ namespace StoreKit {
 		OverlayTimeout = 17,
 		IneligibleForOffer = 18,
 		UnsupportedPlatform = 19,
+		// iOS 14.5
+		OverlayPresentedInBackgroundScene = 20,
 	}
 
 	// typedef NSInteger SKDownloadState;

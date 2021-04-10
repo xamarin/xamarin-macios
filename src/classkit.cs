@@ -186,6 +186,11 @@ namespace ClassKit {
 
 		[Export ("stop")]
 		void Stop ();
+
+		[Introduced (PlatformName.MacCatalyst, 14,5)]
+		[Mac (11,3)][iOS (14,5)]
+		[Export ("removeAllActivityItems")]
+		void RemoveAllActivityItems ();
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
@@ -315,6 +320,21 @@ namespace ClassKit {
 		[Export ("descendantMatchingIdentifierPath:completion:")]
 		void FindDescendantMatching (string [] identifierPath, Action<CLSContext, NSError> completion);
 
+		[Introduced (PlatformName.MacCatalyst, 14,5)]
+		[Mac (11,3)][iOS (14,5)]
+		[Export ("navigationChildContexts", ArgumentSemantic.Copy)]
+		CLSContext[] NavigationChildContexts { get; }
+
+		[Introduced (PlatformName.MacCatalyst, 14,5)]
+		[Mac (11,3)][iOS (14,5)]
+		[Export ("addNavigationChildContext:")]
+		void AddNavigationChild (CLSContext childContext);
+
+		[Introduced (PlatformName.MacCatalyst, 14,5)]
+		[Mac (11,3)][iOS (14,5)]
+		[Export ("removeNavigationChildContext:")]
+		void RemoveNavigationChild (CLSContext childContext);
+
 		// From CLSContext (Activity) Category
 
 		[NullAllowed, Export ("currentActivity", ArgumentSemantic.Strong)]
@@ -384,6 +404,12 @@ namespace ClassKit {
 
 		[Export ("removeContext:")]
 		void Remove (CLSContext context);
+
+		[Introduced (PlatformName.MacCatalyst, 14,5)]
+		[Mac (11,3)][iOS (14,5)]
+		[Async]
+		[Export ("fetchActivityForURL:completion:")]
+		void FetchActivity (NSUrl url, Action<CLSActivity, NSError> completion);
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]

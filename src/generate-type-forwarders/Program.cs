@@ -24,7 +24,8 @@ namespace GenerateTypeForwarders {
 			var forwardFrom = args [0];
 			var forwardTo = args [1];
 			var output = args [2];
-			return Fix (forwardFrom, forwardTo, output);
+			var min_version = Version.Parse (args [3]);
+			return Fix (forwardFrom, forwardTo, output, min_version);
 		}
 
 		static bool IsVisible (this TypeDefinition type)
@@ -535,9 +536,13 @@ namespace GenerateTypeForwarders {
 			if (!type.IsNested)
 				sb.Append ("namespace ").Append (type.Namespace).AppendLine (" {");
 
-			sb.Append ('\t', indent);
 			if (type.BaseType?.FullName == "System.MulticastDelegate") {
-				sb.Append ("public delegate ");
+				// [Uns|S]upportedOSPlatformAttribute is not supported on delegates
+				// we generate it in legacy so the behaviour remains consistant with older tooling
+				sb.AppendLine ("#if !NET");
+				sb.Append ('\t', indent).AppendLine ("[Unavailable (PlatformName.MacCatalyst)]");
+				sb.AppendLine ("#endif");
+				sb.Append ('\t', indent).Append ("public delegate ");
 				var invoke = type.Methods.First (v => v.Name == "Invoke");
 				EmitTypeName (sb, invoke.ReturnType);
 				sb.Append (' ');
@@ -547,6 +552,12 @@ namespace GenerateTypeForwarders {
 					EmitParameters (sb, invoke);
 				sb.AppendLine (");");
 			} else {
+				sb.AppendLine ("#if NET");
+				sb.Append ('\t', indent).AppendLine ("[UnsupportedOSPlatform (\"maccatalyst\")]");
+				sb.AppendLine ("#else");
+				sb.Append ('\t', indent).AppendLine ("[Unavailable (PlatformName.MacCatalyst)]");
+				sb.AppendLine ("#endif");
+				sb.Append ('\t', indent);
 				// other are filtered not to generate stubs
 				if (type.IsNestedFamily)
 					sb.Append ("protected ");
@@ -686,7 +697,7 @@ namespace GenerateTypeForwarders {
 			sb.Append ('>');
 		}
 
-		static int Fix (string forwardFrom, string forwardTo, string output)
+		static int Fix (string forwardFrom, string forwardTo, string output, Version minVersion)
 		{
 			var rp = new ReaderParameters (ReadingMode.Deferred);
 			var resolver = new DefaultAssemblyResolver ();
@@ -697,6 +708,14 @@ namespace GenerateTypeForwarders {
 			var sb = new StringBuilder ();
 
 			sb.AppendLine ("using System.Runtime.CompilerServices;");
+			sb.AppendLine ("#if NET");
+			sb.AppendLine ("using System.Runtime.Versioning;");
+			sb.AppendLine ("[assembly: TargetPlatform (\"maccatalyst\")]");
+			sb.AppendLine ($"[assembly: SupportedOSPlatform (\"maccatalyst{minVersion.Major}.{minVersion.Minor}\")]");
+			sb.AppendLine ("#else");
+			sb.AppendLine ("using ObjCRuntime;");
+			sb.AppendLine ($"[assembly: Introduced (PlatformName.MacCatalyst, {minVersion.Major},{minVersion.Minor})]");
+			sb.AppendLine ("#endif");
 
 			foreach (var exportedType in from.MainModule.ExportedTypes) {
 				sb.Append ("[assembly: TypeForwardedToAttribute (typeof (");

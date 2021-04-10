@@ -76,3 +76,9 @@
 # intro says that this is not true
 !missing-protocol-conformance! AVURLAsset should conform to NSItemProviderReading (defined in 'AVURLAssetNSItemProvider' category)
 !missing-protocol-conformance! AVURLAsset should conform to NSItemProviderWriting (defined in 'AVURLAssetNSItemProvider' category)
+
+# no tests/samples
+!missing-pinvoke! AVSampleBufferAttachContentKey is not bound
+
+# adding abstract member to an existing type would be a breaking change
+!incorrect-protocol-member! AVQueuedSampleBufferRendering::hasSufficientMediaDataForReliablePlaybackStart is REQUIRED and should be abstract

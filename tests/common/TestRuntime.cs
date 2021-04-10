@@ -312,6 +312,16 @@ partial class TestRuntime
 				return CheckiOSSystemVersion (14, 3);
 #elif MONOMAC
 				return CheckMacSystemVersion (11, 1, 0);
+#endif
+			case 5:
+#if __WATCHOS__
+				return CheckWatchOSSystemVersion (7, 4);
+#elif __TVOS__
+				return ChecktvOSSystemVersion (14, 5);
+#elif __IOS__
+				return CheckiOSSystemVersion (14, 5);
+#elif MONOMAC
+				return CheckMacSystemVersion (11, 3, 0);
 #else
 				throw new NotImplementedException ();
 #endif
@@ -1002,6 +1012,9 @@ partial class TestRuntime
 #if !MONOMAC && !__TVOS__ && !__WATCHOS__
 	public static void CheckAddressBookPermission (bool assert_granted = false)
 	{
+#if __MACCATALYST__
+		NUnit.Framework.Assert.Ignore ("CheckAddressBookPermission -> Ignore in MacCat, it hangs since our TCC hack does not work on BS.");
+#endif
 		switch (ABAddressBook.GetAuthorizationStatus ()) {
 		case ABAuthorizationStatus.NotDetermined:
 			if (IgnoreTestThatRequiresSystemPermissions ())

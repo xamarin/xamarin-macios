@@ -57,9 +57,7 @@ ifdef INCLUDE_IOS
 	@echo Validated file permissions for Xamarin.iOS.
 endif
 
-all-local:: global.json global6.json
-global.json: Make.config Makefile
-	$(Q) printf "{\n\t\"sdk\": {\n\t\t\"version\": \"$(DOTNET_VERSION)\"\n\t}\n}\n" > $@
+all-local:: global6.json
 
 # This tells NuGet to use the exact same dotnet version we've configured in Make.config
 global6.json: $(TOP)/Make.config.inc Makefile $(TOP)/.git/HEAD $(TOP)/.git/index
@@ -148,6 +146,9 @@ fix-install-permissions:
 
 fix-xcode-select:
 	sudo xcode-select -s $(XCODE_DEVELOPER_ROOT)
+
+fix-xcode-first-run:
+	$(XCODE_DEVELOPER_ROOT)/usr/bin/xcodebuild -runFirstLaunch
 
 git-clean-all:
 	@echo "$(COLOR_RED)Cleaning and resetting all dependencies. This is a destructive operation.$(COLOR_CLEAR)"

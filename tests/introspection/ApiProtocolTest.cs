@@ -123,6 +123,9 @@ namespace Introspection {
 				case "PKTransitPassProperties": // Conformance not in headers
 				// Xcode 12.2
 				case "VSAccountApplicationProvider": // Conformance not in headers
+				// Xcode 12.5
+				case "HMCharacteristicMetadata":
+				case "HMAccessoryCategory":
 					return true;
 				}
 				break;
@@ -242,6 +245,9 @@ namespace Introspection {
 				case "GCMicroGamepadSnapshot":
 				case "GCGamepad":
 					return true;
+				// Xcode 12.5
+				case "GCDualSenseGamepad":
+					return true;
 				}
 				break;
 			case "NSSecureCoding":
@@ -355,6 +361,9 @@ namespace Introspection {
 				case "GCGamepadSnapshot":
 				case "GCMicroGamepadSnapshot":
 				case "GCGamepad":
+					return true;
+				// Xcode 12.5
+				case "GCDualSenseGamepad":
 					return true;
 				}
 				break;

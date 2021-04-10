@@ -5,9 +5,12 @@
     <DefineConstants>$(DefineConstants);BUNDLER</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
+
+  <Import Project="..\..\eng\Versions.props" />
+
   <ItemGroup>
     <PackageReference Include="XliffTasks" Version="1.0.0-beta.20154.1" />
-    <PackageReference Include="Microsoft.NET.ILLink" Version="6.0.100-preview.2.21166.1" />
+    <PackageReference Include="Microsoft.NET.ILLink" Version="$(MicrosoftNETILLinkPackageVersion)" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\common\ApplePlatform.cs">

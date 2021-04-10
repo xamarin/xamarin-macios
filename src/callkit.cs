@@ -30,6 +30,7 @@ namespace CallKit {
 		Unknown = 0,
 		Unentitled = 1,
 		InvalidArgument = 2,
+		MissingVoIPBackgroundMode = 3,
 	}
 
 	[iOS (10, 0), Mac (11, 0)]
@@ -70,6 +71,17 @@ namespace CallKit {
 		ExtensionDisabled = 6,
 		CurrentlyLoading = 7,
 		UnexpectedIncrementalRemoval = 8,
+	}
+
+	[iOS (14,5), NoWatch, NoTV, NoMac]
+	[Introduced (PlatformName.MacCatalyst, 14, 5)]
+	[ErrorDomain ("CXErrorDomainNotificationServiceExtension")]
+	[Native]
+	public enum CXErrorCodeNotificationServiceExtensionError : long
+	{
+		Unknown = 0,
+		InvalidClientProcess = 1,
+		MissingNotificationFilteringEntitlement = 2,
 	}
 
 	[iOS (10, 0), Mac (11, 0)]
@@ -453,6 +465,12 @@ namespace CallKit {
 
 		[Export ("reportOutgoingCallWithUUID:connectedAtDate:")]
 		void ReportConnectedOutgoingCall (NSUuid uuid, [NullAllowed] NSDate dateConnected);
+
+		[NoWatch, NoTV, NoMac, iOS (14,5)]
+		[Introduced (PlatformName.MacCatalyst, 14, 5)]
+		[Static, Async]
+		[Export ("reportNewIncomingVoIPPushPayload:completion:")]
+		void ReportNewIncomingVoIPPushPayload (NSDictionary dictionaryPayload, [NullAllowed] Action<NSError> completion);
 
 		[Export ("configuration", ArgumentSemantic.Copy)]
 		CXProviderConfiguration Configuration { get; set; }

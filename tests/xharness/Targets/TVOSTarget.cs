@@ -65,7 +65,7 @@ namespace Xharness.Targets {
 		protected override string GetMinimumOSVersion (string templateMinimumOSVersion)
 		{
 			if (MonoNativeInfo == null)
-				return "9.0";
+				return Xamarin.SdkVersions.MinTVOS;
 			return MonoNativeHelper.GetMinimumOSVersion (DevicePlatform.tvOS, MonoNativeInfo.Flavor);
 		}
 
@@ -94,7 +94,7 @@ namespace Xharness.Targets {
 		}
 
 		public override string DotNetSdk => "Microsoft.tvOS.Sdk";
-		public override string RuntimeIdentifier => "tvos-x64";
+		public override string RuntimeIdentifier => "tvossimulator-x64";
 		public override DevicePlatform ApplePlatform => DevicePlatform.tvOS;
 		public override string TargetFramework => "net6.0-tvos";
 		public override string TargetFrameworkForNuGet => "xamarintvos10";

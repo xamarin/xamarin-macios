@@ -3,6 +3,6 @@
   <PropertyGroup>
     <TargetFramework>net6.0-tvos</TargetFramework>
     <OutputType>Exe</OutputType>
-    <RuntimeIdentifier>tvos-x64</RuntimeIdentifier>
+    <RuntimeIdentifier>tvossimulator-x64</RuntimeIdentifier>
   </PropertyGroup>
 </Project>

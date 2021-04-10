@@ -1413,7 +1413,12 @@ namespace HomeKit {
 	[Watch (3,0), TV (10,0), iOS (10,0)]
 	[Abstract] // documented as such in header file
 	[BaseType (typeof(NSObject))]
-	interface HMCameraSource {}
+	interface HMCameraSource {
+
+		[Watch (7,4), TV (14,5), Mac (11,3), iOS (14,5)]
+		[Export ("aspectRatio")]
+		double AspectRatio { get; }
+	}
 
 	[Watch (3,0), TV (10,0), iOS (10,0)]
 	[BaseType (typeof(HMAccessoryProfile))]
@@ -1479,11 +1484,11 @@ namespace HomeKit {
 	[BaseType (typeof(HMCameraSource))]
 	interface HMCameraStream
 	{
-		[NoTV]
+		[TV (14,5)]
 		[Export ("audioStreamSetting", ArgumentSemantic.Assign)]
 		HMCameraAudioStreamSetting AudioStreamSetting { get; }
 
-		[NoTV]
+		[TV (14,5)]
 		[Async]
 		[Export ("updateAudioStreamSetting:completionHandler:")]
 		void UpdateAudioStreamSetting (HMCameraAudioStreamSetting audioStreamSetting, Action<NSError> completion);

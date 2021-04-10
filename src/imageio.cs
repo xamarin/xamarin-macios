@@ -621,6 +621,10 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyPNGWarning")]
 		NSString PNGWarning { get; }
 
+		[Watch (7,4), TV (14,5), Mac (11,3), iOS (14,5)]
+		[Field ("kCGImagePropertyPNGTransparency")]
+		NSString PNGTransparency { get; }
+
 		// TIFF Dictionary Keys
 
 		[Field ("kCGImagePropertyTIFFCompression")]

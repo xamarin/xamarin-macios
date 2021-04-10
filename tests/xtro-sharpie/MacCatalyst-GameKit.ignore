@@ -14,3 +14,13 @@
 
 # This selector does not exist (respond?) in macOS either
 !missing-selector! GKLeaderboardSet::loadImageWithCompletionHandler: not bound
+# Unavailable in Cat and already deprecated anyways
+!missing-protocol! GKFriendRequestComposeViewControllerDelegate not bound
+!missing-selector! GKFriendRequestComposeViewController+GKFriendRequestComposeViewController::maxNumberOfRecipients not bound
+!missing-selector! GKFriendRequestComposeViewControllerGKFriendRequestComposeViewController::addRecipientPlayers: not bound
+!missing-selector! GKFriendRequestComposeViewControllerGKFriendRequestComposeViewController::addRecipientsWithEmailAddresses: not bound
+!missing-selector! GKFriendRequestComposeViewControllerGKFriendRequestComposeViewController::addRecipientsWithPlayerIDs: not bound
+!missing-selector! GKFriendRequestComposeViewControllerGKFriendRequestComposeViewController::composeViewDelegate not bound
+!missing-selector! GKFriendRequestComposeViewControllerGKFriendRequestComposeViewController::setComposeViewDelegate: not bound
+!missing-selector! GKFriendRequestComposeViewControllerGKFriendRequestComposeViewController::setMessage: not bound
+!missing-type! GKFriendRequestComposeViewController not bound

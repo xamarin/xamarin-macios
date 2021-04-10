@@ -53,6 +53,14 @@ namespace MediaPlayer {
 			return prop.DoubleValue;
 		}
 
+		bool BoolForProperty (NSString property)
+		{
+			var prop = ValueForProperty (property) as NSNumber;
+			if (prop == null)
+				return false;
+			return prop.BoolValue;
+		}
+
 		public ulong PersistentID {
 			get {
 				return UInt64ForProperty (PersistentIDProperty);
@@ -282,6 +290,13 @@ namespace MediaPlayer {
 		public NSString? PlaybackStoreID {
 			get {
 				return (ValueForProperty (PlaybackStoreIDProperty) as NSString);
+			}
+		}
+
+		[Watch (7,4), TV (14,5), Mac (11,3), iOS (14,5)]
+		public bool IsPreorder {
+			get {
+				return BoolForProperty (IsPreorderProperty);
 			}
 		}
 	}

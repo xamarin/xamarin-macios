@@ -161,11 +161,7 @@ namespace MonoTouchFixtures.UIKit {
 			Assert.IsNotNull (UIFont.ItalicSystemFontOfSize (-5), "ItalicSystemFontOfSize");
 
 			using (var font = UIFont.SystemFontOfSize (12)) {
-#if __MACCATALYST__
-				Assert.IsNull (font.WithSize (-6), "WithSize");
-#else
 				Assert.IsNotNull (font.WithSize (-6), "WithSize");
-#endif
 			}
 		}
 	}

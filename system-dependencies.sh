@@ -330,7 +330,7 @@ function run_xcode_first_launch ()
 			$SUDO "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -runFirstLaunch
 			log "Executed '$SUDO $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -runFirstLaunch'"
 		else
-			fail "Xcode has pending first launch tasks. Execute '$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -runFirstLaunch' to execute those tasks."
+			fail "Xcode has pending first launch tasks. Execute 'make fix-xcode-first-run' to execute those tasks."
 			return
 		fi
 	fi
@@ -453,7 +453,7 @@ function install_coresimulator ()
 	local CURRENT_CORESIMULATOR_PATH=/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/CoreSimulator
 	local CURRENT_CORESIMULATOR_VERSION=0.0
 	if test -f "$CURRENT_CORESIMULATOR_PATH"; then
-		CURRENT_CORESIMULATOR_VERSION=$(otool -L $CURRENT_CORESIMULATOR_PATH | grep "$CURRENT_CORESIMULATOR_PATH.*current version" | sed -e 's/.*current version//' -e 's/)//' -e 's/[[:space:]]//g')
+		CURRENT_CORESIMULATOR_VERSION=$(otool -L $CURRENT_CORESIMULATOR_PATH | grep "$CURRENT_CORESIMULATOR_PATH.*current version" | sed -e 's/.*current version//' -e 's/)//' -e 's/[[:space:]]//g' | uniq)
 	fi
 
 	# Either version may be composed of either 2 or 3 numbers.
@@ -535,7 +535,7 @@ function check_specific_xcode () {
 				log "Clearing xcrun cache..."
 				xcrun -k
 			else
-				fail "'xcode-select -p' does not point to $XCODE_DEVELOPER_ROOT, it points to $XCODE_SELECT. Execute '$SUDO xcode-select -s $XCODE_DEVELOPER_ROOT' to fix."
+				fail "'xcode-select -p' does not point to $XCODE_DEVELOPER_ROOT, it points to $XCODE_SELECT. Execute 'make fix-xcode-select' to fix."
 			fi
 		fi
 	fi
@@ -1009,8 +1009,8 @@ function check_dotnet ()
 	local CACHED_FILE
 	local DOWNLOADED_FILE
 
-	DOTNET_VERSION=$(grep "^DOTNET_VERSION=" Make.config | sed 's/.*=//')
-	URL=$(grep "^DOTNET_URL"= Make.config | sed 's/.*=//')
+	DOTNET_VERSION=$(grep "^DOTNET_VERSION=" dotnet.config | sed 's/.*=//')
+	URL=https://dotnetcli.azureedge.net/dotnet/Sdk/"$DOTNET_VERSION"/dotnet-sdk-"$DOTNET_VERSION"-osx-x64.pkg
 	INSTALL_DIR=/usr/local/share/dotnet/sdk/"$DOTNET_VERSION"
 
 	if test -d "$INSTALL_DIR"; then

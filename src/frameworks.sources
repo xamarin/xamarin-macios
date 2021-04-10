@@ -274,6 +274,7 @@ AVFOUNDATION_SOURCES = \
 	AVFoundation/AVPlayerItemVideoOutput.cs \
 	AVFoundation/AVPlayerLayer.cs \
 	AVFoundation/AVPlayerViewController.cs \
+	AVFoundation/AVSampleBufferExtensions.cs \
 	AVFoundation/AVTextStyleRule.cs \
 	AVFoundation/Events.cs \
 	AVFoundation/AVPlayerLooper.cs \
@@ -1574,8 +1575,11 @@ TVMLKIT_CORE_SOURCES = \
 
 # TVServices
 
-TVSERVICES_CORE_SOURCES = \
+TVSERVICES_API_SOURCES = \
 	TVServices/TVEnums.cs \
+
+TVSERVICES_CORE_SOURCES = \
+	TVServices/TVContentItemImageShape.cs \
 
 # Twitter
 
@@ -1643,6 +1647,7 @@ UIKIT_SOURCES = \
 	UIKit/UIImagePickerController.cs \
 	UIKit/UIKeyboard.cs \
 	UIKit/UIKitSynchronizationContext.cs \
+	UIKit/UIListSeparatorConfiguration.cs \
 	UIKit/UINavigationBar.cs \
 	UIKit/UINavigationController.cs \
 	UIKit/UIPageViewController.cs \

@@ -188,6 +188,21 @@ namespace UIKit {
 		GrayscaleDisplay = 1uL << 4,
 	}
 
+	[NoWatch, NoTV, iOS (14,5)]
+	[Native]
+	public enum UIPrintRenderingQuality : long {
+		Best,
+		Responsive,
+	}
+
+	[NoWatch, TV (14,5), iOS (14,5)]
+	[Native]
+	public enum UISplitViewControllerDisplayModeButtonVisibility : long {
+		Automatic,
+		Never,
+		Always,
+	}
+
 #if WATCH
 	// hacks to ease compilation
 	interface CIColor {}
@@ -2358,9 +2373,17 @@ namespace UIKit {
 		[Field ("UIApplicationOpenURLOptionsOpenInPlaceKey")]
 		NSString OpenInPlaceKey { get; }
 
+		[NoWatch, NoTV, iOS (14,5)]
+		[Field ("UIApplicationOpenURLOptionsEventAttributionKey")]
+		NSString OpenUrlOptionsEventAttributionKey { get; }
+
 		[iOS (10,0), TV (10,0)]
 		[Field ("UIApplicationOpenURLOptionUniversalLinksOnly")]
 		NSString UniversalLinksOnlyKey { get; }
+
+		[NoWatch, NoTV, iOS (14,5)]
+		[Field ("UIApplicationOpenExternalURLOptionsEventAttributionKey")]
+		NSString OpenExternalUrlOptionsEventAttributionKey { get; }
 	}
 
 	[NoWatch]
@@ -2698,6 +2721,10 @@ namespace UIKit {
 		[iOS (9,0)]
 		[Field ("UIApplicationLaunchOptionsShortcutItemKey")]
 		NSString LaunchOptionsShortcutItemKey { get; }
+
+		[NoWatch, NoTV, iOS (14,5)]
+		[Field ("UIApplicationLaunchOptionsEventAttributionKey")]
+		NSString LaunchOptionsEventAttributionKey { get; }
 
 		//
 		// 6.0
@@ -16065,6 +16092,10 @@ namespace UIKit {
 		[iOS (8,0)]
 		[Export ("displayModeButtonItem")]
 		UIBarButtonItem DisplayModeButtonItem { get; }
+
+		[iOS (14,5), TV (14,5)]
+		[Export ("displayModeButtonVisibility", ArgumentSemantic.Assign)]
+		UISplitViewControllerDisplayModeButtonVisibility DisplayModeButtonVisibility { get; set; }
 		
 		[iOS (8,0)]
 		[Export ("showViewController:sender:")]
@@ -16722,6 +16753,10 @@ namespace UIKit {
 		[Export ("addPrintFormatter:startingAtPageAtIndex:")]
 		void AddPrintFormatter (UIPrintFormatter formatter, nint pageIndex);
 
+		[iOS (14,5)]
+		[Export ("currentRenderingQualityForRequestedRenderingQuality:")]
+		UIPrintRenderingQuality GetCurrentRenderingQuality (UIPrintRenderingQuality requestedRenderingQuality);
+
 		[Export ("drawContentForPageAtIndex:inRect:")]
 		void DrawContentForPage (nint index, CGRect contentRect);
 
@@ -16892,6 +16927,14 @@ namespace UIKit {
 
 		[Export ("dictionaryRepresentation")]
 		NSDictionary ToDictionary { get; }
+	}
+
+	[NoWatch, NoTV, iOS (14,5)]
+	[BaseType (typeof (NSObject))]
+	interface UIPrintServiceExtension {
+
+		[Export ("printerDestinationsForPrintInfo:")]
+		UIPrinterDestination[] GetPrinterDestinations (UIPrintInfo printInfo);
 	}
 
 	[NoTV]
@@ -19961,6 +20004,11 @@ namespace UIKit {
 
 		[Export ("universalLinksOnly")]
 		bool UniversalLinksOnly { get; set; }
+
+		[NoTV, iOS (14, 5)]
+		[NullAllowed]
+		[Export ("eventAttribution", ArgumentSemantic.Copy)]
+		UIEventAttribution EventAttribution { get; set; }
 	}
 
 	[iOS (13,0), TV (13,0), NoWatch]
@@ -19976,6 +20024,11 @@ namespace UIKit {
 
 		[Export ("openInPlace")]
 		bool OpenInPlace { get; }
+
+		[NoTV, iOS (14,5)]
+		[NullAllowed]
+		[Export ("eventAttribution")]
+		UIEventAttribution EventAttribution { get; }
 	}
 
 	[iOS (13,0), TV (13,0), NoWatch]
@@ -22033,6 +22086,9 @@ namespace UIKit {
 	[NoTV]
 	delegate UISwipeActionsConfiguration UICollectionLayoutListSwipeActionsConfigurationProvider (NSIndexPath indexPath);
 
+	[NoTV]
+	delegate UIListSeparatorConfiguration UICollectionLayoutListItemSeparatorHandler (NSIndexPath indexPath, UIListSeparatorConfiguration sectionSeparatorConfiguration);
+
 	[NoWatch, TV (14,0), iOS (14,0)]
 	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
@@ -22049,6 +22105,15 @@ namespace UIKit {
 		[NoTV]
 		[Export ("showsSeparators")]
 		bool ShowsSeparators { get; set; }
+
+		[Watch (7,4), NoTV, iOS (14,5)]
+		[Export ("separatorConfiguration", ArgumentSemantic.Copy)]
+		UIListSeparatorConfiguration SeparatorConfiguration { get; set; }
+
+		[Watch (7,4), NoTV, iOS (14,5)]
+		[NullAllowed]
+		[Export ("itemSeparatorHandler", ArgumentSemantic.Copy)]
+		UICollectionLayoutListItemSeparatorHandler ItemSeparatorHandler { get; set; }
 
 		[NullAllowed, Export ("backgroundColor", ArgumentSemantic.Assign)]
 		UIColor BackgroundColor { get; set; }
@@ -22829,4 +22894,91 @@ namespace UIKit {
 		Lowercase,
 		Capitalized,
 	}
+
+	[NoWatch, NoTV, iOS (14,5)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface UIEventAttribution : NSCopying {
+
+		[Export ("sourceIdentifier")]
+		byte SourceIdentifier { get; }
+
+		[Export ("destinationURL", ArgumentSemantic.Copy)]
+		NSUrl DestinationUrl { get; }
+
+		[NullAllowed, Export ("reportEndpoint", ArgumentSemantic.Copy)]
+		NSUrl ReportEndpoint { get; }
+
+		[Export ("sourceDescription")]
+		string SourceDescription { get; }
+
+		[Export ("purchaser")]
+		string Purchaser { get; }
+
+		[Export ("initWithSourceIdentifier:destinationURL:sourceDescription:purchaser:")]
+		IntPtr Constructor (byte sourceIdentifier, NSUrl destinationUrl, string sourceDescription, string purchaser);
+	}
+
+	[NoWatch, NoTV, iOS (14,5)]
+	[BaseType (typeof (UIView))]
+	interface UIEventAttributionView {
+
+		[Export ("initWithFrame:")]
+		IntPtr Constructor (CGRect frame);
+	}
+
+	[NoWatch, NoTV, iOS (14,5)]
+	[Native]
+	public enum UIListSeparatorVisibility : long {
+		Automatic,
+		Visible,
+		Hidden,
+	}
+
+	[NoWatch, NoTV, iOS (14,5)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface UIListSeparatorConfiguration : NSCopying, NSSecureCoding {
+
+		[Export ("initWithListAppearance:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (UICollectionLayoutListAppearance listAppearance);
+
+		[Export ("topSeparatorVisibility", ArgumentSemantic.Assign)]
+		UIListSeparatorVisibility TopSeparatorVisibility { get; set; }
+
+		[Export ("bottomSeparatorVisibility", ArgumentSemantic.Assign)]
+		UIListSeparatorVisibility BottomSeparatorVisibility { get; set; }
+
+		[Export ("topSeparatorInsets", ArgumentSemantic.Assign)]
+		NSDirectionalEdgeInsets TopSeparatorInsets { get; set; }
+
+		[Export ("bottomSeparatorInsets", ArgumentSemantic.Assign)]
+		NSDirectionalEdgeInsets BottomSeparatorInsets { get; set; }
+
+		[Export ("color", ArgumentSemantic.Strong)]
+		UIColor Color { get; set; }
+
+		[Export ("multipleSelectionColor", ArgumentSemantic.Strong)]
+		UIColor MultipleSelectionColor { get; set; }
+	}
+
+	[NoWatch, NoTV, iOS (14,5)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface UIPrinterDestination : NSSecureCoding {
+
+		[Export ("initWithURL:")]
+		IntPtr Constructor (NSUrl url);
+
+		[Export ("URL", ArgumentSemantic.Copy)]
+		NSUrl Url { get; set; }
+
+		[NullAllowed, Export ("displayName")]
+		string DisplayName { get; set; }
+
+		[NullAllowed, Export ("txtRecord", ArgumentSemantic.Copy)]
+		NSData TxtRecord { get; set; }
+	}
+
 }

@@ -1,4 +1,4 @@
-﻿﻿﻿//
+﻿﻿//
 // FileProvider C# bindings
 //
 // Authors:
@@ -182,6 +182,11 @@ namespace FileProvider {
 		OlderExtensionVersionRunning = -2003,
 		NewerExtensionVersionFound = -2004,
 		CannotSynchronize = -2005,
+#if MONOMAC
+		NonEvictableChildren = -2006,
+		UnsyncedEdits = -2007,
+		NonEvictable = -2008,
+#endif
 	}
 
 	[iOS (11,0)]
@@ -242,6 +247,8 @@ namespace FileProvider {
 		Deleting = 1 << 5,
 		[NoiOS][NoTV][NoWatch]
 		Evicting = 1 << 6,
+		[NoiOS][NoTV][NoWatch][Mac (11,3)]
+		ExcludingFromSync = 1 << 7,
 		AddingSubItems = Writing,
 		ContentEnumerating = Reading,
 #if !XAMCORE_4_0
@@ -312,6 +319,12 @@ namespace FileProvider {
 		[NoiOS]
 		[Export ("hidden")]
 		bool Hidden { [Bind ("isHidden")] get; set; }
+
+		[Advice ("This API is not available when using UIKit on macOS.")]
+		[Unavailable (PlatformName.MacCatalyst)]
+		[NoWatch, NoTV, NoiOS, Mac (11,3)]
+		[Export ("testingModes", ArgumentSemantic.Assign)]
+		NSFileProviderDomainTestingModes TestingModes { get; set; }
 
 		[NoiOS]
 		[Notification]
@@ -615,6 +628,23 @@ namespace FileProvider {
 		[Export ("signalErrorResolved:completionHandler:")]
 		void SignalErrorResolved (NSError error, Action<NSError> completionHandler);
 
+		[Unavailable (PlatformName.MacCatalyst)]
+		[NoWatch, NoTV, NoiOS, Mac (11,3)]
+		[Export ("globalProgressForKind:")]
+		NSProgress GetGlobalProgress (NSString kind); // NSString intended.
+
+		[Unavailable (PlatformName.MacCatalyst)]
+		[NoWatch, NoTV, NoiOS, Mac (11,3)]
+		[Field ("NSFileProviderMaterializedSetDidChange")]
+		[Notification]
+		NSString MaterializedSetDidChange { get; }
+
+		[Unavailable (PlatformName.MacCatalyst)]
+		[NoWatch, NoTV, NoiOS, Mac (11,3)]
+		[Field ("NSFileProviderPendingSetDidChange")]
+		[Notification]
+		NSString PendingSetDidChange { get; }
+
 #region Import (NSFileProviderManager)
 		[NoiOS]
 		[Static]
@@ -666,6 +696,43 @@ namespace FileProvider {
 		[Export ("waitForStabilizationWithCompletionHandler:")]
 		void WaitForStabilization (Action<NSError> completionHandler);
 #endregion
+
+		[Unavailable (PlatformName.MacCatalyst)]
+		[NoWatch, NoTV, NoiOS, Mac (11,3)]
+		[Export ("enumeratorForPendingItems")]
+		INSFileProviderPendingSetEnumerator GetEnumeratorForPendingItems ();
+
+		// From NSFileProviderManager (TestingModeInteractive) Category
+
+		[Unavailable (PlatformName.MacCatalyst)]
+		[NoWatch, NoTV, NoiOS, Mac (11,3)]
+		[Export ("listAvailableTestingOperationsWithError:")]
+		[return: NullAllowed]
+		INSFileProviderTestingOperation[] ListAvailableTestingOperations ([NullAllowed] out NSError error);
+
+		[Unavailable (PlatformName.MacCatalyst)]
+		[NoWatch, NoTV, NoiOS, Mac (11,3)]
+		[Export ("runTestingOperations:error:")]
+		[return: NullAllowed]
+		NSDictionary<INSFileProviderTestingOperation, NSError> GetRunTestingOperations (INSFileProviderTestingOperation[] operations, [NullAllowed] out NSError error);
+
+	}
+
+	interface INSFileProviderPendingSetEnumerator { }
+
+	[Advice ("This API is not available when using UIKit on macOS.")]
+	[Unavailable (PlatformName.MacCatalyst)]
+	[NoWatch, NoTV, NoiOS, Mac (11,3)]
+	[Protocol]
+	interface NSFileProviderPendingSetEnumerator : NSFileProviderEnumerator {
+
+		[Abstract]
+		[NullAllowed, Export ("domainVersion")]
+		NSFileProviderDomainVersion DomainVersion { get; }
+
+		[Abstract]
+		[Export ("refreshInterval")]
+		double RefreshInterval { get; }
 	}
 
 	// typedef NSString *NSFileProviderDomainIdentifier NS_EXTENSIBLE_STRING_ENUM
@@ -712,6 +779,7 @@ namespace FileProvider {
 	enum NSFileProviderCreateItemOptions : ulong {
 		None = 0,
 		MayAlreadyExist = 1,
+		DeletionConflicted = 2,
 	}
 
 	[Mac (11,0)]
@@ -786,6 +854,12 @@ namespace FileProvider {
 		[NullAllowed]
 		[Export ("requestingExecutable", ArgumentSemantic.Copy)]
 		NSUrl RequestingExecutable { get; }
+
+		[Unavailable (PlatformName.MacCatalyst)]
+		[NoWatch, NoTV, NoiOS, Mac (11,3)]
+		[Advice ("This API is not available when using UIKit on macOS.")]
+		[NullAllowed, Export ("domainVersion")]
+		NSFileProviderDomainVersion DomainVersion { get; }
 	}
 
 	[Mac (11,0)]
@@ -903,5 +977,290 @@ namespace FileProvider {
 
 		[Export ("materializedItemsDidChangeWithCompletionHandler:")]
 		void MaterializedItemsDidChange (Action completionHandler);
+
+		[Advice ("This API is not available when using UIKit on macOS.")]
+		[Unavailable (PlatformName.MacCatalyst)]
+		[NoWatch, NoTV, NoiOS, Mac (11,3)]
+		[Export ("pendingItemsDidChangeWithCompletionHandler:")]
+		void PendingItemsDidChange (Action completionHandler);
+	}
+
+	interface INSFileProviderDomainState { }
+
+	[Advice ("This API is not available when using UIKit on macOS.")]
+	[Unavailable (PlatformName.MacCatalyst)]
+	[NoWatch, NoTV, NoiOS, Mac (11,3)]
+	[Protocol]
+	interface NSFileProviderDomainState {
+
+		[Abstract]
+		[Export ("domainVersion")]
+		NSFileProviderDomainVersion DomainVersion { get; }
+
+		[Abstract]
+		[Export ("userInfo", ArgumentSemantic.Strong)]
+		NSDictionary UserInfo { get; }
+	}
+
+	[Advice ("This API is not available when using UIKit on macOS.")]
+	[Unavailable (PlatformName.MacCatalyst)]
+	[NoWatch, NoTV, NoiOS, Mac (11,3)]
+	[Flags]
+	[Native]
+	public enum NSFileProviderDomainTestingModes : ulong {
+		AlwaysEnabled = 1uL << 0,
+		Interactive = 1uL << 1,
+	}
+
+	[Advice ("This API is not available when using UIKit on macOS.")]
+	[Unavailable (PlatformName.MacCatalyst)]
+	[NoWatch, NoTV, NoiOS, Mac (11,3)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface NSFileProviderDomainVersion : NSSecureCoding {
+
+		[Export ("next")]
+		NSFileProviderDomainVersion Next { get; }
+
+		[Export ("compare:")]
+		NSComparisonResult Compare (NSFileProviderDomainVersion otherVersion);
+	}
+
+	[Unavailable (PlatformName.MacCatalyst)]
+	[NoWatch, NoTV, NoiOS, Mac (11,3)]
+	[Native, Advice ("This API is not available when using UIKit on macOS.")]
+	public enum NSFileProviderTestingOperationType : long {
+		Ingestion = 0,
+		Lookup = 1,
+		Creation = 2,
+		Modification = 3,
+		Deletion = 4,
+		ContentFetch = 5,
+		ChildrenEnumeration = 6,
+		CollisionResolution = 7,
+	}
+
+	interface INSFileProviderTestingOperation : global::ObjCRuntime.INativeObject { }
+
+	[Unavailable (PlatformName.MacCatalyst)]
+	[NoWatch, NoTV, NoiOS, Mac (11,3)]
+	[Protocol, Advice ("This API is not available when using UIKit on macOS.")]
+	interface NSFileProviderTestingOperation {
+
+		[Abstract]
+		[Export ("type")]
+		NSFileProviderTestingOperationType Type { get; }
+
+		[Abstract]
+		[return: NullAllowed]
+		[Export ("asIngestion")]
+		INSFileProviderTestingIngestion GetAsIngestion ();
+
+		[Abstract]
+		[return: NullAllowed]
+		[Export ("asLookup")]
+		INSFileProviderTestingLookup GetAsLookup ();
+
+		[Abstract]
+		[return: NullAllowed]
+		[Export ("asCreation")]
+		INSFileProviderTestingCreation GetAsCreation ();
+
+		[Abstract]
+		[return: NullAllowed]
+		[Export ("asModification")]
+		INSFileProviderTestingModification GetAsModification ();
+
+		[Abstract]
+		[return: NullAllowed]
+		[Export ("asDeletion")]
+		INSFileProviderTestingDeletion GetAsDeletion ();
+
+		[Abstract]
+		[return: NullAllowed]
+		[Export ("asContentFetch")]
+		INSFileProviderTestingContentFetch GetAsContentFetch ();
+
+		[Abstract]
+		[return: NullAllowed]
+		[Export ("asChildrenEnumeration")]
+		INSFileProviderTestingChildrenEnumeration GetAsChildrenEnumeration ();
+
+		[Abstract]
+		[return: NullAllowed]
+		[Export ("asCollisionResolution")]
+		INSFileProviderTestingCollisionResolution GetAsCollisionResolution ();
+	}
+
+	[Unavailable (PlatformName.MacCatalyst)]
+	[NoWatch, NoTV, NoiOS, Mac (11,3)]
+	[Native, Advice ("This API is not available when using UIKit on macOS.")]
+	public enum NSFileProviderTestingOperationSide : ulong {
+		Disk = 0,
+		FileProvider = 1,
+	}
+
+	interface INSFileProviderTestingIngestion { }
+
+	[Unavailable (PlatformName.MacCatalyst)]
+	[NoWatch, NoTV, NoiOS, Mac (11,3)]
+	[Protocol, Advice ("This API is not available when using UIKit on macOS.")]
+	interface NSFileProviderTestingIngestion : NSFileProviderTestingOperation {
+
+		[Abstract]
+		[Export ("side")]
+		NSFileProviderTestingOperationSide Side { get; }
+
+		[Abstract]
+		[Export ("itemIdentifier")]
+		string ItemIdentifier { get; }
+
+		[Abstract]
+		[NullAllowed, Export ("item")]
+		INSFileProviderItem Item { get; }
+	}
+
+	interface INSFileProviderTestingLookup { }
+
+	[Unavailable (PlatformName.MacCatalyst)]
+	[NoWatch, NoTV, NoiOS, Mac (11,3)]
+	[Protocol, Advice ("This API is not available when using UIKit on macOS.")]
+	interface NSFileProviderTestingLookup : NSFileProviderTestingOperation {
+
+		[Abstract]
+		[Export ("side")]
+		NSFileProviderTestingOperationSide Side { get; }
+
+		[Abstract]
+		[Export ("itemIdentifier")]
+		string ItemIdentifier { get; }
+	}
+
+	interface INSFileProviderTestingCreation { }
+
+	[Unavailable (PlatformName.MacCatalyst)]
+	[NoWatch, NoTV, NoiOS, Mac (11,3)]
+	[Protocol, Advice ("This API is not available when using UIKit on macOS.")]
+	interface NSFileProviderTestingCreation : NSFileProviderTestingOperation {
+
+		[Abstract]
+		[Export ("targetSide")]
+		NSFileProviderTestingOperationSide TargetSide { get; }
+
+		[Abstract]
+		[Export ("sourceItem")]
+		INSFileProviderItem SourceItem { get; }
+
+		[Abstract]
+		[NullAllowed, Export ("domainVersion")]
+		NSFileProviderDomainVersion DomainVersion { get; }
+	}
+
+	interface INSFileProviderTestingModification { }
+
+	[Unavailable (PlatformName.MacCatalyst)]
+	[NoWatch, NoTV, NoiOS, Mac (11,3)]
+	[Protocol, Advice ("This API is not available when using UIKit on macOS.")]
+	interface NSFileProviderTestingModification : NSFileProviderTestingOperation {
+
+		[Abstract]
+		[Export ("targetSide")]
+		NSFileProviderTestingOperationSide TargetSide { get; }
+
+		[Abstract]
+		[Export ("sourceItem")]
+		INSFileProviderItem SourceItem { get; }
+
+		[Abstract]
+		[Export ("targetItemIdentifier")]
+		string TargetItemIdentifier { get; }
+
+		[Abstract]
+		[Export ("targetItemBaseVersion")]
+		NSFileProviderItemVersion TargetItemBaseVersion { get; }
+
+		[Abstract]
+		[Export ("changedFields")]
+		NSFileProviderItemFields ChangedFields { get; }
+
+		[Abstract]
+		[NullAllowed, Export ("domainVersion")]
+		NSFileProviderDomainVersion DomainVersion { get; }
+	}
+
+	interface INSFileProviderTestingDeletion { }
+
+	[Unavailable (PlatformName.MacCatalyst)]
+	[NoWatch, NoTV, NoiOS, Mac (11,3)]
+	[Protocol, Advice ("This API is not available when using UIKit on macOS.")]
+	interface NSFileProviderTestingDeletion : NSFileProviderTestingOperation {
+
+		[Abstract]
+		[Export ("targetSide")]
+		NSFileProviderTestingOperationSide TargetSide { get; }
+
+		[Abstract]
+		[Export ("sourceItemIdentifier")]
+		string SourceItemIdentifier { get; }
+
+		[Abstract]
+		[Export ("targetItemIdentifier")]
+		string TargetItemIdentifier { get; }
+
+		[Abstract]
+		[Export ("targetItemBaseVersion")]
+		NSFileProviderItemVersion TargetItemBaseVersion { get; }
+
+		[Abstract]
+		[NullAllowed, Export ("domainVersion")]
+		NSFileProviderDomainVersion DomainVersion { get; }
+	}
+
+	interface INSFileProviderTestingContentFetch { }
+
+	[Unavailable (PlatformName.MacCatalyst)]
+	[NoWatch, NoTV, NoiOS, Mac (11,3)]
+	[Protocol, Advice ("This API is not available when using UIKit on macOS.")]
+	interface NSFileProviderTestingContentFetch : NSFileProviderTestingOperation {
+
+		[Abstract]
+		[Export ("side")]
+		NSFileProviderTestingOperationSide Side { get; }
+
+		[Abstract]
+		[Export ("itemIdentifier")]
+		string ItemIdentifier { get; }
+	}
+
+	interface INSFileProviderTestingChildrenEnumeration { }
+
+	[Unavailable (PlatformName.MacCatalyst)]
+	[NoWatch, NoTV, NoiOS, Mac (11,3)]
+	[Protocol, Advice ("This API is not available when using UIKit on macOS.")]
+	interface NSFileProviderTestingChildrenEnumeration : NSFileProviderTestingOperation {
+
+		[Abstract]
+		[Export ("side")]
+		NSFileProviderTestingOperationSide Side { get; }
+
+		[Abstract]
+		[Export ("itemIdentifier")]
+		string ItemIdentifier { get; }
+	}
+
+	interface INSFileProviderTestingCollisionResolution { }
+
+	[Unavailable (PlatformName.MacCatalyst)]
+	[NoWatch, NoTV, NoiOS, Mac (11,3)]
+	[Protocol, Advice ("This API is not available when using UIKit on macOS.")]
+	interface NSFileProviderTestingCollisionResolution : NSFileProviderTestingOperation {
+
+		[Abstract]
+		[Export ("side")]
+		NSFileProviderTestingOperationSide Side { get; }
+
+		[Abstract]
+		[Export ("renamedItem")]
+		INSFileProviderItem RenamedItem { get; }
 	}
 }

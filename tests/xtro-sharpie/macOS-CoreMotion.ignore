@@ -1,3 +1,4 @@
 ## available in headers but not used in any (available) API
 !missing-enum! CMAttitudeReferenceFrame not bound
+!missing-enum! CMFallDetectionEventUserResolution not bound
 !missing-enum! CMMotionActivityConfidence not bound

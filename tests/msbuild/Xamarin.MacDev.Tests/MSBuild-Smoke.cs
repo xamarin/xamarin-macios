@@ -152,7 +152,8 @@ namespace Xamarin.MMP.Tests
 		[TestCase ("BindingProjectWithNoTag.csproj")]
 		public void BuildingSameBindingProject_TwoTimes_ShallNotInvokeMMPTwoTimes (string project)
 		{
-			const string nativeRefItemGroup = "<ItemGroup><NativeReference Include = \"\\usr\\lib\\libz.dylib\"><Kind>Dynamic</Kind><SmartLink>False</SmartLink></NativeReference></ItemGroup>";
+			var dylib = Path.GetFullPath (Path.Combine (TI.TestDirectory, "test-libraries", ".libs", "macos", "libtest.dylib"));
+			string nativeRefItemGroup = $"<ItemGroup><NativeReference Include = \"{dylib}\"><Kind>Dynamic</Kind><SmartLink>False</SmartLink></NativeReference></ItemGroup>";
 
 			RunMSBuildTest (tmpDir => {
 				var config = new TI.UnifiedTestConfig (tmpDir) { ProjectName = project, ItemGroup = nativeRefItemGroup };

@@ -31,8 +31,9 @@ namespace Xamarin {
 				contents.AppendLine ("#include <stdlib.h>");
 				contents.AppendLine ("static void xamarin_initialize_dotnet ()");
 				contents.AppendLine ("{");
-				contents.AppendLine ("\tsetenv (\"DOTNET_SYSTEM_GLOBALIZATION_INVARIANT\", \"1\", 1); // https://github.com/xamarin/xamarin-macios/issues/8906");
-				contents.AppendLine ("\tsetenv (\"MONO_THREADS_SUSPEND\", \"preemptive\", 1); // https://github.com/dotnet/runtime/issues/47121");
+				if (Configuration.InvariantGlobalization) {
+					contents.AppendLine ("\tsetenv (\"DOTNET_SYSTEM_GLOBALIZATION_INVARIANT\", \"1\", 1);");
+				}
 				contents.AppendLine ("}");
 				contents.AppendLine ();
 

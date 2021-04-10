@@ -1113,6 +1113,9 @@ namespace Introspection {
 			case "cancelPendingPrerolls":                   // 10.8+
 			case "masterClock":                             // 10.8+
 			case "setMasterClock:":				// 10.8+
+			// AVUrlAsset
+			case "contentKeySession:didProvideContentKey:": // fails because it is in-lined via protocol AVContentKeyRecipient
+				return true;
 			// NSDateComponents
 			case "isLeapMonth":				// 10.8+
 			case "setLeapMonth:":				// 10.8+

@@ -242,12 +242,12 @@ define RunRegistrar
 .SECONDARY: Xamarin.$(5).registrar.$(1).$(2).m Xamarin.$(5).registrar.$(1).$(2).h Xamarin.$(5).registrar.$(1).$(2).a
 .SECONDARY: .libs/Microsoft.$(8).registrar.$(2).m .libs/Microsoft.$(8).registrar.$(2).h .libs/Microsoft.$(8).registrar.$(2).a
 endef
-$(eval $(call RunRegistrar,ios,i386,32,$(IOS_SDK_VERSION),iOS,$(SIMULATOR86_CFLAGS),$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphonesimulator.sdk/include,$(MONOTOUCH_MONO_PATH),iOS,ios-x86))
-$(eval $(call RunRegistrar,ios,x86_64,64,$(IOS_SDK_VERSION),iOS,$(SIMULATOR64_CFLAGS),$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphonesimulator.sdk/include,$(MONOTOUCH_MONO_PATH),iOS,ios-x64))
+$(eval $(call RunRegistrar,ios,i386,32,$(IOS_SDK_VERSION),iOS,$(SIMULATOR86_CFLAGS),$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphonesimulator.sdk/include,$(MONOTOUCH_MONO_PATH),iOS,iossimulator-x86))
+$(eval $(call RunRegistrar,ios,x86_64,64,$(IOS_SDK_VERSION),iOS,$(SIMULATOR64_CFLAGS),$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphonesimulator.sdk/include,$(MONOTOUCH_MONO_PATH),iOS,iossimulator-x64))
 $(eval $(call RunRegistrar,ios,armv7,32,$(IOS_SDK_VERSION),iOS,$(DEVICE7_CFLAGS),$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphoneos.sdk/include,$(MONOTOUCH_MONO_PATH),iOS,armv7))
 $(eval $(call RunRegistrar,ios,armv7s,32,$(IOS_SDK_VERSION),iOS,$(DEVICE7S_CFLAGS),$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphoneos.sdk/include,$(MONOTOUCH_MONO_PATH),iOS,armv7s))
 $(eval $(call RunRegistrar,ios,arm64,64,$(IOS_SDK_VERSION),iOS,$(DEVICE64_CFLAGS),$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphoneos.sdk/include,$(MONOTOUCH_MONO_PATH),iOS,ios-arm64))
-$(eval $(call RunRegistrar,tvos,x86_64,64,$(TVOS_SDK_VERSION),TVOS,$(SIMULATORTV_CFLAGS),$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/include,$(MONOTOUCH_TV_MONO_PATH),tvOS,tvos-x64))
+$(eval $(call RunRegistrar,tvos,x86_64,64,$(TVOS_SDK_VERSION),TVOS,$(SIMULATORTV_CFLAGS),$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/include,$(MONOTOUCH_TV_MONO_PATH),tvOS,tvossimulator-x64))
 $(eval $(call RunRegistrar,tvos,arm64,64,$(TVOS_SDK_VERSION),TVOS,$(DEVICETV_CFLAGS),$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/include,$(MONOTOUCH_TV_MONO_PATH),tvOS,tvos-arm64))
 $(eval $(call RunRegistrar,watchos,x86_64,64,$(WATCH_SDK_VERSION),WatchOS,$(SIMULATORWATCH64_CFLAGS),$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/include,$(MONOTOUCH_WATCH_MONO_PATH),watchOS,watchos-x64))
 $(eval $(call RunRegistrar,watchos,i386,32,$(WATCH_SDK_VERSION),WatchOS,$(SIMULATORWATCH_CFLAGS),$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/include,$(MONOTOUCH_WATCH_MONO_PATH),watchOS,watchos-x86))

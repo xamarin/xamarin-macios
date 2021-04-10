@@ -245,6 +245,11 @@ namespace MediaPlayer {
 		[Field ("MPMediaItemPropertyPlaybackStoreID")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString PlaybackStoreIDProperty { get; }
+
+		[Watch (7,4), TV (14,5), Mac (11,3), iOS (14,5)]
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		[Field ("MPMediaItemPropertyIsPreorder")]
+		NSString IsPreorderProperty { get; }
 	}
 
 	[Mac (10,12,2)]
