@@ -142,7 +142,9 @@ namespace MapKit {
 			Height = height;
 		}
 
+#if !NET
 		[TV (9,2)]
+#endif
 		public static MKMapSize World { get { return new MKMapSize (0x10000000, 0x10000000); }}
 		
 		// MKMapSizeEqualToSize
@@ -180,9 +182,13 @@ namespace MapKit {
 
 	// MKGeometry.h
 	[StructLayout (LayoutKind.Sequential)]
+#if !NET
 	[Mac (10,9)]
+#endif
 	public struct MKMapRect {
+#if !NET
 		[TV (9,2)]
+#endif
 		public static readonly MKMapRect Null = new MKMapRect (double.PositiveInfinity, double.PositiveInfinity, 0, 0);
 
 		public MKMapPoint Origin;
@@ -273,7 +279,9 @@ namespace MapKit {
 			}
 		}
 
+#if !NET
 		[TV (9,2)]
+#endif
 		public MKMapRect World {
 			get {
 				return new MKMapRect (0, 0, 0x10000000, 0x10000000);

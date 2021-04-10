@@ -10,7 +10,9 @@ using Foundation;
 
 namespace GameController {
 
-	[iOS (10,0), TV (9,0), Mac (10,12)]
+#if !NET
+	[iOS (10,0), Mac (10,12)]
+#endif
 	// GCMicroGamepadSnapshot.h
 	// float_t are 4 bytes (at least for ARM64)
 	[StructLayout (LayoutKind.Sequential, Pack = 1)]

@@ -16,7 +16,9 @@ using Foundation;
 
 namespace CoreGraphics {
 
+#if !NET
 	[iOS (10,0)][TV (10,0)][Watch (3,0)][Mac (10,12)]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct GColorConversionInfoTriple {
 		public CGColorSpace Space;
@@ -25,7 +27,9 @@ namespace CoreGraphics {
 	}
 
 	// CGColorConverter.h
+#if !NET
 	[iOS (10,0)][TV (10,0)][Watch (3,0)][Mac (10,12)]
+#endif
 	public partial class CGColorConversionInfo : INativeObject, IDisposable {
 
 		/* invoked by marshallers */

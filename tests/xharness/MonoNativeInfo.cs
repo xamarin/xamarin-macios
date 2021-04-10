@@ -71,13 +71,13 @@ namespace Xharness {
 			case MonoNativeFlavor.Compat:
 				switch (platform) {
 				case DevicePlatform.iOS:
-					return "8.0";
+					return Xamarin.SdkVersions.MiniOS;
 				case DevicePlatform.tvOS:
-					return "9.0";
+					return Xamarin.SdkVersions.MinTVOS;
 				case DevicePlatform.watchOS:
-					return "2.0";
+					return Xamarin.SdkVersions.MinWatchOS;
 				case DevicePlatform.macOS:
-					return "10.9";
+					return Xamarin.SdkVersions.MinOSX;
 				default:
 					throw new Exception ($"Unknown DevicePlatform: {platform}");
 				}

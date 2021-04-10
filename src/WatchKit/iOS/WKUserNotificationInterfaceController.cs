@@ -1,13 +1,18 @@
 #if __IOS__
 using System;
 using System.ComponentModel;
+using System.Runtime.Versioning;
 
 using Foundation;
 using ObjCRuntime;
 
 namespace WatchKit {
 	[Register ("WKUserNotificationInterfaceController", SkipRegistration = true)]
+#if NET
+	[UnsupportedOSPlatform ("ios")]
+#else
 	[Unavailable (PlatformName.iOS, PlatformArchitecture.All)]
+#endif
 	[Obsolete (Constants.WatchKitRemoved)]
 	[EditorBrowsable (EditorBrowsableState.Never)]
 	public class WKUserNotificationInterfaceController : WKInterfaceController {
