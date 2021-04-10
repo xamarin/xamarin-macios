@@ -14,6 +14,10 @@ parameters:
   type: boolean
   default: true
 
+- name: runSamples
+  type: boolean
+  default: false
+
 # We are doing some black magic. We have several templates that 
 # are executed with different parameters. 
 #
@@ -138,7 +142,6 @@ trigger:
     - '*'
     exclude:
     - refs/heads/locfiles/*
-    - refs/heads/darc-*
   paths:
     exclude:
     - docs
@@ -168,6 +171,17 @@ pr:
     - SECURITY.MD
     - src/README.md
 
+schedules:
+
+# the translations team wants a green build, we can do that on sundays even if 
+# the code did not change and without the device tests.
+- cron: "0 12 * * 0"
+  displayName: Weekly Translations build (Sunday @ noon)
+  branches:
+    include:
+    - main
+  always: true
+
 stages:
 
 - stage: governance_checks
@@ -194,32 +208,34 @@ stages:
         gitHubToken: ${{ variables['GitHub.Token'] }}
         xqaCertPass: $(xqa--certificates--password)
 
-- ${{ if or(eq(variables['Build.Reason'], 'IndividualCI'), eq(variables['Build.Reason'], 'Manual')) }}:
-  - ${{ each config in parameters.deviceTestsConfigurations }}:
-    - template: templates/devices/stage.yml
-      parameters:
-        devicePrefix: ${{ config['devicePrefix'] }} 
-        execute: ${{ config['execute'] }} 
-        stageName: ${{ config['stageName'] }} 
-        iOSDevicePool: ${{ config['iOSDevicePool'] }} 
-        useXamarinStorage: ${{ config['useXamarinStorage'] }} 
-        testsLabels: ${{ config['testsLabels'] }} 
-        statusContext: ${{ config['statusContext'] }} 
-        iOSDeviceDemand: ${{ config['iOSDeviceDemand'] }} 
-        vsdropsPrefix: ${{ variables.vsdropsPrefix }}
-        keyringPass: $(xma-password)
-        gitHubToken: ${{ variables['GitHub.Token'] }}
-        xqaCertPass: $(xqa--certificates--password)
+- ${{ if eq(parameters.runDeviceTests, true) }}:
+  - ${{ if and(ne(variables['Build.Reason'], 'Schedule'), or(eq(variables['Build.Reason'], 'IndividualCI'), eq(variables['Build.Reason'], 'Manual'))) }}:
+    - ${{ each config in parameters.deviceTestsConfigurations }}:
+      - template: templates/devices/stage.yml
+        parameters:
+          devicePrefix: ${{ config['devicePrefix'] }} 
+          execute: ${{ config['execute'] }} 
+          stageName: ${{ config['stageName'] }} 
+          iOSDevicePool: ${{ config['iOSDevicePool'] }} 
+          useXamarinStorage: ${{ config['useXamarinStorage'] }} 
+          testsLabels: ${{ config['testsLabels'] }} 
+          statusContext: ${{ config['statusContext'] }} 
+          iOSDeviceDemand: ${{ config['iOSDeviceDemand'] }} 
+          vsdropsPrefix: ${{ variables.vsdropsPrefix }}
+          keyringPass: $(xma-password)
+          gitHubToken: ${{ variables['GitHub.Token'] }}
+          xqaCertPass: $(xqa--certificates--password)
 
-  - ${{ each config in parameters.macTestsConfigurations }}:
-    - template: templates/mac/stage.yml
-      parameters:
-        stageName: ${{ config['stageName'] }}
-        macPool: ${{ config['macPool'] }}
-        osVersion: ${{ config['osVersion'] }}
-        statusContext: ${{ config['statusContext'] }}
-        keyringPass: $(xma-password)
+    - ${{ each config in parameters.macTestsConfigurations }}:
+      - template: templates/mac/stage.yml
+        parameters:
+          stageName: ${{ config['stageName'] }}
+          macPool: ${{ config['macPool'] }}
+          osVersion: ${{ config['osVersion'] }}
+          statusContext: ${{ config['statusContext'] }}
+          keyringPass: $(xma-password)
 
+- ${{ if eq(parameters.runSamples, true) }}:
   # TODO: Not the real step
   - stage: sample_testing
     displayName: 'Sample testing'

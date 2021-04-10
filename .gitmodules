@@ -1,3 +1,7 @@
+[submodule "external/ikvm-fork"]
+    path = external/ikvm-fork
+    url = ../../mono/ikvm-fork
+    branch = master
 [submodule "external/macios-binaries"]
     path = external/macios-binaries
     url = ../../xamarin/macios-binaries
@@ -14,7 +18,3 @@
     path = external/Xamarin.MacDev
     url = ../../xamarin/Xamarin.MacDev
     branch = main
-[submodule "external/ikvm-fork"]
-    path = external/ikvm-fork
-    url = ../../mono/ikvm-fork
-    branch = master

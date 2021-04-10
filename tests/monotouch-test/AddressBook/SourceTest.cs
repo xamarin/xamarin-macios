@@ -7,7 +7,7 @@
 // Copyright 2012-2013 Xamarin Inc. All rights reserved.
 //
 
-#if !__TVOS__ && !__WATCHOS__ && !MONOMAC
+#if !__TVOS__ && !__WATCHOS__ && !MONOMAC && !__MACCATALYST__
 
 using System;
 using Foundation;
@@ -49,4 +49,4 @@ namespace MonoTouchFixtures.AddressBook {
 	}
 }
 
-#endif // !__TVOS__ && !__WATCHOS__
+#endif // !__TVOS__ && !__WATCHOS__ && !__MACCATALYST__

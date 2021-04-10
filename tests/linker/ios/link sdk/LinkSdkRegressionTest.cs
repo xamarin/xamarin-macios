@@ -1081,14 +1081,16 @@ namespace LinkSdk {
 		public void Github5024 ()
 		{
 			TestRuntime.AssertXcodeVersion (6,0);
-			var sc = new UISearchController ((UIViewController) null);
-			sc.SetSearchResultsUpdater ((vc) => { });
+			using (var controller = new UISplitViewController ()) {
+				var sc = new UISearchController ((UIViewController)controller);
+				sc.SetSearchResultsUpdater ((vc) => { });
 
-			var a = typeof (UISearchController).AssemblyQualifiedName;
-			var n = a.Replace ("UIKit.UISearchController", "UIKit.UISearchController+__Xamarin_UISearchResultsUpdating");
-			var t = Type.GetType (n);
-			Assert.NotNull (t, "private inner type");
-			Assert.IsNotNull (t.GetMethod ("UpdateSearchResultsForSearchController"), "preserved");
+				var a = typeof (UISearchController).AssemblyQualifiedName;
+				var n = a.Replace ("UIKit.UISearchController", "UIKit.UISearchController+__Xamarin_UISearchResultsUpdating");
+				var t = Type.GetType (n);
+				Assert.NotNull (t, "private inner type");
+				Assert.IsNotNull (t.GetMethod ("UpdateSearchResultsForSearchController"), "preserved");
+			}
 		}
 #endif // !__WATCHOS__
 

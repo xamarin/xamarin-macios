@@ -478,15 +478,15 @@ namespace CarPlay {
 
 		[iOS (14, 0)]
 		[Export ("setDetailText:")]
-		void SetDetailText (string detailText);
+		void SetDetailText ([NullAllowed] string detailText);
 
 		[iOS (14, 0)]
 		[Export ("setImage:")]
-		void SetImage (UIImage image);
+		void SetImage ([NullAllowed] UIImage image);
 
 		[iOS (14, 0)]
 		[Export ("setAccessoryImage:")]
-		void SetAccessoryImage (UIImage accessoryImage);
+		void SetAccessoryImage ([NullAllowed] UIImage accessoryImage);
 
 		[iOS (14, 0)]
 		[Export ("accessoryType", ArgumentSemantic.Assign)]

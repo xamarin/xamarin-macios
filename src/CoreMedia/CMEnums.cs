@@ -124,6 +124,8 @@ namespace CoreMedia {
 		AppleProRes422LT = 0x61706373,
 		AppleProRes422Proxy = 0x6170636f,
 		Hevc             = 0x68766331,
+		[iOS (14,5)][TV (14,5)][Watch (7,4)][Mac (11,3)]
+		DolbyVisionHevc  = 0x64766831,
 	}
 
 	// UInt32 enum => CMFormatDescription.h

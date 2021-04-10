@@ -137,8 +137,8 @@
 		<EnableUnsafeUTF7Encoding Condition="'$(EnableUnsafeUTF7Encoding)' == ''">false</EnableUnsafeUTF7Encoding>
 		<EventSourceSupport Condition="'$(EventSourceSupport)' == ''">false</EventSourceSupport>
 		<HttpActivityPropagationSupport Condition="'$(HttpActivityPropagationSupport)' == ''">false</HttpActivityPropagationSupport>
-		<!-- .NET only supports invariant globalization for Apple platforms for now: https://github.com/xamarin/xamarin-macios/issues/8906 -->
-		<InvariantGlobalization Condition="'$(InvariantGlobalization)' == ''">true</InvariantGlobalization>
+		<!-- tvOS support blocked by https://github.com/dotnet/runtime/issues/48508 (see xamarin_bridge_vm_initialize in monovm-bridge.m) -->
+		<InvariantGlobalization Condition="'$(_PlatformName)' == 'tvOS' And '$(InvariantGlobalization)' == ''">true</InvariantGlobalization>
 		<StartupHookSupport Condition="'$(StartupHookSupport)' == ''">false</StartupHookSupport>
 		<UseSystemResourceKeys Condition="'$(UseSystemResourceKeys)' == ''">true</UseSystemResourceKeys>
 		<UseNativeHttpHandler Condition="'$(_PlatformName)' != 'macOS' And '$(UseNativeHttpHandler)' == ''">true</UseNativeHttpHandler>
@@ -245,6 +245,7 @@
 				@(_XamarinFrameworkAssemblies -> 'FrameworkAssembly=%(Filename)')
 				Interpreter=$(MtouchInterpreter)
 				IntermediateLinkDir=$(IntermediateLinkDir)
+				InvariantGlobalization=$(InvariantGlobalization)
 				ItemsDirectory=$(_LinkerItemsDirectory)
 				IsSimulatorBuild=$(_SdkIsSimulator)
 				LinkMode=$(_LinkMode)
@@ -674,7 +675,6 @@
 	</PropertyGroup>
 
 	<Target Name="_ComputePublishLocation" DependsOnTargets="_GenerateBundleName;_ParseBundlerArguments">
-		<!-- Put .dll, .pdb, .exe and .dylib in the .app -->
 		<PropertyGroup>
 			<_AssemblyPublishDir Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'">$(MSBuildProjectDirectory)$(_AppBundlePath)\</_AssemblyPublishDir>
 			<_AssemblyPublishDir Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">$(MSBuildProjectDirectory)$(_AppBundlePath)\Contents\$(_CustomBundleName)\</_AssemblyPublishDir>
@@ -682,19 +682,25 @@
 			<_DylibPublishDir Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">$(MSBuildProjectDirectory)$(_AppBundlePath)\Contents\$(_CustomBundleName)\</_DylibPublishDir>
 		</PropertyGroup>
 		<ItemGroup>
+			<!-- include .dll, .exe and, for debugging only, .pdb files inside the .app -->
 			<ResolvedFileToPublish
 				Update="@(ResolvedFileToPublish)"
-				RelativePath="$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)$(PublishDir),$(_AssemblyPublishDir)))%(ResolvedFileToPublish.DestinationSubDirectory)%(Filename)%(Extension)"
-				Condition="'%(Extension)' == '.dll' Or '%(Extension)' == '.pdb' Or '%(Extension)' == '.exe'" />
+				RelativePath="$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)$(PublishDir),$(_AssemblyPublishDir)))%(ResolvedFileToPublish.DestinationSubDirectory)\%(Filename)%(Extension)"
+				Condition="'%(Extension)' == '.dll' Or ('$(_BundlerDebug)' == 'true' And '%(Extension)' == '.pdb') Or '%(Extension)' == '.exe'" />
 			<!-- Copy the app.config file to the app bundle -->
 			<ResolvedFileToPublish
 				Update="@(ResolvedFileToPublish)"
-				RelativePath="$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)$(PublishDir),$(_AssemblyPublishDir)))%(ResolvedFileToPublish.DestinationSubDirectory)%(ResolvedFileToPublish.TargetPath)"
+				RelativePath="$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)$(PublishDir),$(_AssemblyPublishDir)))%(ResolvedFileToPublish.DestinationSubDirectory)\%(ResolvedFileToPublish.TargetPath)"
 				Condition="'$(AppConfig)' != '' And '%(ResolvedFileToPublish.OriginalItemSpec)' == '$(AppConfig)' And '%(ResolvedFileToPublish.Link)' == 'app.config' And '%(ResolvedFileToPublish.TargetPath)' != ''" />
+			<!-- .dylib are never needed (nor allowed) for fully AOT'ed applications FIXME https://github.com/xamarin/xamarin-macios/issues/11145 -->
 			<ResolvedFileToPublish
 				Update="@(ResolvedFileToPublish)"
-				RelativePath="$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)$(PublishDir),$(_DylibPublishDir)))%(Filename)%(Extension)"
+				RelativePath="$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)$(PublishDir),$(_DylibPublishDir)))\%(Filename)%(Extension)"
 				Condition="'%(Extension)' == '.dylib'" />
+			<ResolvedFileToPublish
+				Update="@(ResolvedFileToPublish)"
+				RelativePath="$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)$(PublishDir),$(_AssemblyPublishDir)))%(Filename)%(Extension)"
+				Condition="'$(_PlatformName)' != 'macOS' And '$(InvariantGlobalization)' != 'true' And '%(Filename)%(Extension)' == 'icudt.dat'" />
 		</ItemGroup>
 	</Target>
 
