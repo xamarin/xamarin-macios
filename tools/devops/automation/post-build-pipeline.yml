@@ -37,6 +37,9 @@ jobs:
   - download: macios
     artifact: AssetManifests
 
+  - script: make -C $(Build.SourcesDirectory)/dotnet targets/Microsoft.iOS.Sdk.Versions.props
+    displayName: make Microsoft.iOS.Sdk.Versions.props
+
   - powershell: >-
       & dotnet build -v:n -t:PushBARManifest
       -p:BarManifestOutputPath=$(Agent.BuildDirectory)\macios\AssetManifests -p:BuildAssetRegistryToken=$(MaestroAccessToken)
