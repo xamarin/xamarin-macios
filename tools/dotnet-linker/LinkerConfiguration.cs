@@ -22,6 +22,7 @@ namespace Xamarin.Linker {
 		public Version DeploymentTarget { get; private set; }
 		public HashSet<string> FrameworkAssemblies { get; private set; } = new HashSet<string> ();
 		public string IntermediateLinkDir { get; private set; }
+		public bool InvariantGlobalization { get; private set; }
 		public string ItemsDirectory { get; private set; }
 		public bool IsSimulatorBuild { get; private set; }
 		public LinkMode LinkMode => Application.LinkMode;
@@ -227,6 +228,9 @@ namespace Xamarin.Linker {
 					if (!Enum.TryParse<XamarinRuntime> (value, out var rv))
 						throw new InvalidOperationException ($"Invalid XamarinRuntime '{value}' in {linker_file}");
 					Application.XamarinRuntime = rv;
+					break;
+				case "InvariantGlobalization":
+					InvariantGlobalization = string.Equals ("true", value, StringComparison.OrdinalIgnoreCase);
 					break;
 				default:
 					throw new InvalidOperationException ($"Unknown key '{key}' in {linker_file}");

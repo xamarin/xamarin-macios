@@ -11,6 +11,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 using System.Collections.Generic;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
@@ -26,7 +27,10 @@ namespace Xamarin.Tests
 		{
 			string name;
 			string version;
-#if __TVOS__ || __IOS__
+#if __MACCATALYST__
+			name = "MacCatalyst";
+			version = UIDevice.CurrentDevice.SystemVersion;
+#elif __TVOS__ || __IOS__
 			name = UIDevice.CurrentDevice.SystemName;
 			version = UIDevice.CurrentDevice.SystemVersion;
 #elif __WATCHOS__
@@ -41,16 +45,20 @@ namespace Xamarin.Tests
 #error Unknown platform
 #endif
 			name = name?.Replace (" ", String.Empty)?.ToLowerInvariant ();
+			if (name == null)
+				throw new FormatException ("Product name is `null`");
 
 			var platformInfo = new PlatformInfo ();
 
-			if (name != null && name.StartsWith ("mac", StringComparison.Ordinal))
+			if (name.StartsWith ("maccatalyst", StringComparison.Ordinal))
+				platformInfo.Name = PlatformName.MacCatalyst;
+			else if (name.StartsWith ("mac", StringComparison.Ordinal))
 				platformInfo.Name = PlatformName.MacOSX;
-			else if (name != null && (name.StartsWith ("ios", StringComparison.Ordinal) || name.StartsWith ("iphoneos", StringComparison.Ordinal)))
+			else if (name.StartsWith ("ios", StringComparison.Ordinal) || name.StartsWith ("iphoneos", StringComparison.Ordinal))
 				platformInfo.Name = PlatformName.iOS;
-			else if (name != null && name.StartsWith ("tvos", StringComparison.Ordinal))
+			else if (name.StartsWith ("tvos", StringComparison.Ordinal))
 				platformInfo.Name = PlatformName.TvOS;
-			else if (name != null && name.StartsWith ("watchos", StringComparison.Ordinal))
+			else if (name.StartsWith ("watchos", StringComparison.Ordinal))
 				platformInfo.Name = PlatformName.WatchOS;
 			else
 				throw new FormatException ($"Unknown product name: {name}");
@@ -83,6 +91,54 @@ namespace Xamarin.Tests
 
 	public static class AvailabilityExtensions
 	{
+#if NET
+		public static AvailabilityBaseAttribute Convert (this OSPlatformAttribute a)
+		{
+			if (a == null)
+				return null;
+
+			PlatformName p;
+			int n = 0;
+			switch (a.PlatformName) {
+			case string dummy when a.PlatformName.StartsWith ("ios"):
+				p = PlatformName.iOS;
+				n = "ios".Length;
+				break;
+			case string dummy when a.PlatformName.StartsWith ("tvos"):
+				p = PlatformName.TvOS;
+				n = "tvos".Length;
+				break;
+			case string dummy when a.PlatformName.StartsWith ("watchos"):
+				p = PlatformName.WatchOS;
+				n = "watchos".Length;
+				break;
+			case string dummy when a.PlatformName.StartsWith ("macos"):
+				p = PlatformName.MacOSX;
+				n = "macos".Length;
+				break;
+			case string dummy when a.PlatformName.StartsWith ("maccatalyst"):
+				p = PlatformName.MacCatalyst;
+				n = "maccatalyst".Length;
+				break;
+			default:
+				return null;
+			}
+			bool versioned = Version.TryParse (a.PlatformName [n..], out var v);
+
+			if (a is SupportedOSPlatformAttribute)
+				return new IntroducedAttribute (p, v.Major, v.Minor);
+			if (a is UnsupportedOSPlatformAttribute) {
+				// if a version is provided then it means it was deprecated
+				// if no version is provided then it means it's unavailable
+				if (versioned)
+					return new DeprecatedAttribute (p, v.Major, v.Minor);
+				else
+					return new UnavailableAttribute (p);
+			}
+			return null;
+		}
+#endif
+
 		public static bool IsAvailableOnHostPlatform (this ICustomAttributeProvider attributeProvider)
 		{
 			return attributeProvider.IsAvailable (PlatformInfo.Host);
@@ -90,10 +146,22 @@ namespace Xamarin.Tests
 
 		public static bool IsAvailable (this ICustomAttributeProvider attributeProvider, PlatformInfo targetPlatform)
 		{
+#if NET
+			var list = new List<AvailabilityBaseAttribute> ();
+			foreach (var ca in attributeProvider.GetCustomAttributes (true)) {
+				if (ca is OSPlatformAttribute aa)
+					list.Add (aa.Convert ());
+				// FIXME - temporary, while older attributes co-exists (in manual bindings)
+				if (ca is AvailabilityBaseAttribute old)
+					list.Add (old);
+			}
+			return list.IsAvailable (targetPlatform);
+#else
 			return attributeProvider
 				.GetCustomAttributes (true)
 				.OfType<AvailabilityBaseAttribute> ()
 				.IsAvailable (targetPlatform);
+#endif
 		}
 
 		public static bool IsAvailableOnHostPlatform (this IEnumerable<AvailabilityBaseAttribute> attributes)

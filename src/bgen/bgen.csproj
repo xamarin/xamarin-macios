@@ -332,6 +332,9 @@
     <Compile Include="..\..\tools\common\Driver.execution.cs">
       <Link>Driver.execution.cs</Link>
     </Compile>
+    <Compile Include="..\..\tools\common\SdkVersions.cs">
+      <Link>SdkVersions.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\Resources.resx">

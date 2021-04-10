@@ -6,7 +6,6 @@ using ObjCRuntime;
 
 namespace HealthKit {
 	[Obsolete ("Use the 'HKQuantityTypeIdentifier' enum instead.")]
-	[Introduced (PlatformName.WatchOS, 2,0, PlatformArchitecture.All)]
 	[Introduced (PlatformName.iOS, 8,0, PlatformArchitecture.All)]
 	public unsafe static partial class HKQuantityTypeIdentifierKey  {
 		public static NSString ActiveEnergyBurned {
@@ -545,7 +544,6 @@ namespace HealthKit {
 	} /* class HKQuantityTypeIdentifierKey */
 
 	[Obsolete ("Use the 'HKCategoryTypeIdentifier' enum instead.")]
-	[Introduced (PlatformName.WatchOS, 2,0, PlatformArchitecture.All)]
 	[Introduced (PlatformName.iOS, 8,0, PlatformArchitecture.All)]
 	public unsafe static partial class HKCategoryTypeIdentifierKey  {
 		[Introduced (PlatformName.iOS, 9,0, PlatformArchitecture.All)]
@@ -614,7 +612,6 @@ namespace HealthKit {
 	} /* class HKCategoryTypeIdentifierKey */
 
 	[Obsolete ("Use the 'HKCharacteristicTypeIdentifier' enum instead.")]
-	[Introduced (PlatformName.WatchOS, 2,0, PlatformArchitecture.All)]
 	[Introduced (PlatformName.iOS, 8,0, PlatformArchitecture.All)]
 	public unsafe static partial class HKCharacteristicTypeIdentifierKey  {
 		public static NSString BiologicalSex {
@@ -655,7 +652,6 @@ namespace HealthKit {
 	} /* class HKCharacteristicTypeIdentifierKey */
 
 	[Obsolete ("Use the 'HKCorrelationType' enum instead.")]
-	[Introduced (PlatformName.WatchOS, 2,0, PlatformArchitecture.All)]
 	[Introduced (PlatformName.iOS, 8,0, PlatformArchitecture.All)]
 	public unsafe static partial class HKCorrelationTypeKey  {
 		public static NSString IdentifierBloodPressure {

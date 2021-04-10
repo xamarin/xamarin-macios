@@ -559,7 +559,8 @@ namespace Metal {
 		void Wait (IMTLFence fence);
 
 		[Mac (10,13)]
-		[iOS (11,0), NoTV]
+		[iOS (11,0)]
+		[TV (14,5)]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
@@ -595,7 +596,8 @@ namespace Metal {
 		void UseHeaps (IMTLHeap[] heaps, nuint count);
 
 		[Introduced (PlatformName.MacCatalyst, 14, 0)]
-		[iOS (11,0), NoTV, Mac (11,0), NoWatch]
+		[iOS (11,0), Mac (11,0), NoWatch]
+		[TV (14,5)]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
@@ -717,7 +719,8 @@ namespace Metal {
 		[Export ("staticThreadgroupMemoryLength")]
 		nuint StaticThreadgroupMemoryLength { get; }
 
-		[iOS (11,0), NoTV, Mac (11,0), NoWatch]
+		[iOS (11,0), Mac (11,0), NoWatch]
+		[TV (14,5)]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
@@ -1342,7 +1345,8 @@ namespace Metal {
 #endif
 
 		[Introduced (PlatformName.MacCatalyst, 14, 0)]
-		[iOS (11,0), NoTV, Mac (11,0), NoWatch]
+		[iOS (11,0), Mac (11,0), NoWatch]
+		[TV (14,5)]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
@@ -1352,7 +1356,8 @@ namespace Metal {
 		IMTLRenderPipelineState CreateRenderPipelineState (MTLTileRenderPipelineDescriptor descriptor, MTLPipelineOption options, [NullAllowed] out MTLRenderPipelineReflection reflection, [NullAllowed] out NSError error);
 
 		[Introduced (PlatformName.MacCatalyst, 14, 0)]
-		[iOS (11,0), NoTV, Mac (11,0), NoWatch]
+		[iOS (11,0), Mac (11,0), NoWatch]
+		[TV (14,5)]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
@@ -2060,7 +2065,8 @@ namespace Metal {
 		MTLPixelFormat StencilAttachmentPixelFormat { get; set; }
 		
 		[iOS (12,0)]
-		[NoTV, NoWatch]
+		[TV (14,5)]
+		[NoWatch]
 		[Export ("inputPrimitiveTopology", ArgumentSemantic.Assign)]
 		MTLPrimitiveTopologyClass InputPrimitiveTopology { get; set; }
 		
@@ -2142,28 +2148,32 @@ namespace Metal {
 		[Abstract, Export ("device")]
 		IMTLDevice Device { get; }
 
-		[iOS (11, 0), NoTV, Mac (11,0), NoWatch]
+		[iOS (11, 0), Mac (11,0), NoWatch]
+		[TV (14,5)]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
 		[Export ("maxTotalThreadsPerThreadgroup")]
 		nuint MaxTotalThreadsPerThreadgroup { get; }
 
-		[iOS (11, 0), NoTV, Mac (11,0), NoWatch]
+		[iOS (11, 0), Mac (11,0), NoWatch]
+		[TV (14,5)]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
 		[Export ("threadgroupSizeMatchesTileSize")]
 		bool ThreadgroupSizeMatchesTileSize { get; }
 
-		[iOS (11, 0), NoTV, Mac (11,0), NoWatch]
+		[iOS (11, 0), Mac (11,0), NoWatch]
+		[TV (14,5)]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
 		[Export ("imageblockSampleLength")]
 		nuint ImageblockSampleLength { get; }
 
-		[iOS (11,0), NoTV, Mac (11,0), NoWatch]
+		[iOS (11,0), Mac (11,0), NoWatch]
+		[TV (14,5)]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
@@ -2950,7 +2960,8 @@ namespace Metal {
 		void DrawPatches (nuint numberOfPatchControlPoints, nuint patchStart, nuint patchCount, [NullAllowed] IMTLBuffer patchIndexBuffer, nuint patchIndexBufferOffset, nuint instanceCount, nuint baseInstance);
 
 		[iOS (12,0)]
-		[NoTV, NoWatch, Mac (10,12)]
+		[NoWatch, Mac (10,12)]
+		[TV (14,5)]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
@@ -2965,7 +2976,8 @@ namespace Metal {
 		void DrawIndexedPatches (nuint numberOfPatchControlPoints, nuint patchStart, nuint patchCount, [NullAllowed] IMTLBuffer patchIndexBuffer, nuint patchIndexBufferOffset, IMTLBuffer controlPointIndexBuffer, nuint controlPointIndexBufferOffset, nuint instanceCount, nuint baseInstance);
 
 		[iOS (12,0)]
-		[NoTV, NoWatch, Mac (10,12)]
+		[NoWatch, Mac (10,12)]
+		[TV (14,5)]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
@@ -2973,8 +2985,9 @@ namespace Metal {
 		void DrawIndexedPatches (nuint numberOfPatchControlPoints, [NullAllowed] IMTLBuffer patchIndexBuffer, nuint patchIndexBufferOffset, IMTLBuffer controlPointIndexBuffer, nuint controlPointIndexBufferOffset, IMTLBuffer indirectBuffer, nuint indirectBufferOffset);
 
 		[iOS (12,0)]
-		[Mac (10,13), NoTV, NoWatch]
+		[Mac (10,13), NoWatch]
 		[Obsoleted (PlatformName.MacOSX, 10, 14, message: "API removed, please do not use.")]
+		[TV (14,5)]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
@@ -2982,8 +2995,9 @@ namespace Metal {
 		void SetViewports (IntPtr viewports, nuint count);
 
 		[iOS (12,0)]
-		[Mac (10,13), NoTV, NoWatch]
+		[Mac (10,13), NoWatch]
 		[Obsoleted (PlatformName.MacOSX, 10, 14, message: "API removed, please do not use.")]
+		[TV (14,5)]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
@@ -3067,98 +3081,112 @@ namespace Metal {
 		[Export ("memoryBarrierWithResources:count:afterStages:beforeStages:")]
 		void MemoryBarrier (IMTLResource[] resources, nuint count, MTLRenderStages after, MTLRenderStages before);
 
-		[iOS (11, 0), NoTV, Mac (11,0), NoWatch]
+		[iOS (11, 0), Mac (11,0), NoWatch]
+		[TV (14,5)]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
 		[Export ("tileWidth")]
 		nuint TileWidth { get; }
 
-		[iOS (11, 0), NoTV, Mac (11,0), NoWatch]
+		[iOS (11, 0), Mac (11,0), NoWatch]
+		[TV (14,5)]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
 		[Export ("tileHeight")]
 		nuint TileHeight { get; }
 
-		[iOS (11, 0), NoTV, Mac (11,0), NoWatch]
+		[iOS (11, 0), Mac (11,0), NoWatch]
+		[TV (14,5)]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
 		[Export ("setTileBytes:length:atIndex:")]
 		void SetTileBytes (IntPtr /* void* */ bytes, nuint length, nuint index);
 
-		[iOS (11, 0), NoTV, Mac (11,0), NoWatch]
+		[iOS (11, 0), Mac (11,0), NoWatch]
+		[TV (14,5)]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
 		[Export ("setTileBuffer:offset:atIndex:")]
 		void SetTileBuffer ([NullAllowed] IMTLBuffer buffer, nuint offset, nuint index);
 
-		[iOS (11, 0), NoTV, Mac (11,0), NoWatch]
+		[iOS (11, 0), Mac (11,0), NoWatch]
+		[TV (14,5)]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
 		[Export ("setTileBufferOffset:atIndex:")]
 		void SetTileBufferOffset (nuint offset, nuint index);
 
-		[iOS (11, 0), NoTV, Mac (11,0), NoWatch]
+		[iOS (11, 0), Mac (11,0), NoWatch]
+		[TV (14,5)]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
 		[Export ("setTileBuffers:offsets:withRange:")]
 		void SetTileBuffers (IMTLBuffer[] buffers, IntPtr offsets, NSRange range);
 
-		[iOS (11, 0), NoTV, Mac (11,0), NoWatch]
+		[iOS (11, 0), Mac (11,0), NoWatch]
+		[TV (14,5)]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
 		[Export ("setTileTexture:atIndex:")]
 		void SetTileTexture ([NullAllowed] IMTLTexture texture, nuint index);
 
-		[iOS (11, 0), NoTV, Mac (11,0), NoWatch]
+		[iOS (11, 0), Mac (11,0), NoWatch]
+		[TV (14,5)]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
 		[Export ("setTileTextures:withRange:")]
 		void SetTileTextures (IMTLTexture[] textures, NSRange range);
 
-		[iOS (11, 0), NoTV, Mac (11,0), NoWatch]
+		[iOS (11, 0), Mac (11,0), NoWatch]
+		[TV (14,5)]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
 		[Export ("setTileSamplerState:atIndex:")]
 		void SetTileSamplerState ([NullAllowed] IMTLSamplerState sampler, nuint index);
 
-		[iOS (11, 0), NoTV, Mac (11,0), NoWatch]
+		[iOS (11, 0), Mac (11,0), NoWatch]
+		[TV (14,5)]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
 		[Export ("setTileSamplerStates:withRange:")]
 		void SetTileSamplerStates (IMTLSamplerState[] samplers, NSRange range);
 
-		[iOS (11, 0), NoTV, Mac (11,0), NoWatch]
+		[iOS (11, 0), Mac (11,0), NoWatch]
+		[TV (14,5)]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
 		[Export ("setTileSamplerState:lodMinClamp:lodMaxClamp:atIndex:")]
 		void SetTileSamplerState ([NullAllowed] IMTLSamplerState sampler, float lodMinClamp, float lodMaxClamp, nuint index);
 
-		[iOS (11, 0), NoTV, Mac (11,0), NoWatch]
+		[iOS (11, 0), Mac (11,0), NoWatch]
+		[TV (14,5)]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
 		[Export ("setTileSamplerStates:lodMinClamps:lodMaxClamps:withRange:")]
 		void SetTileSamplerStates (IMTLSamplerState[] samplers, IntPtr /* float[] */ lodMinClamps, IntPtr /* float[] */ lodMaxClamps, NSRange range);
 
-		[iOS (11, 0), NoTV, Mac (11,0), NoWatch]
+		[iOS (11, 0), Mac (11,0), NoWatch]
+		[TV (14,5)]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
 		[Export ("dispatchThreadsPerTile:")]
 		void DispatchThreadsPerTile (MTLSize threadsPerTile);
 
-		[iOS (11, 0), NoTV, Mac (11,0), NoWatch]
+		[iOS (11, 0), Mac (11,0), NoWatch]
+		[TV (14,5)]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
@@ -3260,7 +3288,8 @@ namespace Metal {
 		NSObject [] FragmentArguments { get; }
 #endif
 
-		[iOS (11, 0), NoTV, Mac (11,0), NoWatch]
+		[iOS (11, 0), Mac (11,0), NoWatch]
+		[TV (14,5)]
 		[NullAllowed, Export ("tileArguments")]
 		MTLArgument[] TileArguments { get; }
 	}
@@ -3334,7 +3363,7 @@ namespace Metal {
 		uint ClearStencil { get; set; } /* uint32_t */
 
 		[iOS (12,0)]
-		[NoTV]
+		[TV (14,5)]
 		[Mac (10, 14)]
 		[Export ("stencilResolveFilter", ArgumentSemantic.Assign)]
 		MTLMultisampleStencilResolveFilter StencilResolveFilter { get; set; }
@@ -3374,7 +3403,7 @@ namespace Metal {
 		MTLRenderPassDescriptor CreateRenderPassDescriptor ();
 		
 		[iOS (12,0)]
-		[NoTV]
+		[TV (14,5)]
 		[Export ("renderTargetArrayLength")]
 		nuint RenderTargetArrayLength { get; set; }
 
@@ -3386,31 +3415,38 @@ namespace Metal {
 		[Export ("getSamplePositions:count:")]
 		nuint GetSamplePositions ([NullAllowed] IntPtr positions, nuint count);
 
-		[iOS (11, 0), NoTV, NoWatch, Mac (11,0)]
+		[iOS (11, 0), NoWatch, Mac (11,0)]
+		[TV (14,5)]
 		[Export ("imageblockSampleLength")]
 		nuint ImageblockSampleLength { get; set; }
 
-		[iOS (11, 0), NoTV, NoWatch, Mac (11,0)]
+		[iOS (11, 0), NoWatch, Mac (11,0)]
+		[TV (14,5)]
 		[Export ("threadgroupMemoryLength")]
 		nuint ThreadgroupMemoryLength { get; set; }
 
-		[iOS (11, 0), NoTV, NoWatch, Mac (11,0)]
+		[iOS (11, 0), NoWatch, Mac (11,0)]
+		[TV (14,5)]
 		[Export ("tileWidth")]
 		nuint TileWidth { get; set; }
 
-		[iOS (11, 0), NoTV, NoWatch, Mac (11,0)]
+		[iOS (11, 0), NoWatch, Mac (11,0)]
+		[TV (14,5)]
 		[Export ("tileHeight")]
 		nuint TileHeight { get; set; }
 
-		[iOS (11, 0), NoTV, NoWatch, Mac (10,15)]
+		[iOS (11, 0), NoWatch, Mac (10,15)]
+		[TV (14,5)]
 		[Export ("defaultRasterSampleCount")]
 		nuint DefaultRasterSampleCount { get; set; }
 
-		[iOS (11, 0), NoTV, NoWatch, Mac(10,15)]
+		[iOS (11, 0), NoWatch, Mac(10,15)]
+		[TV (14,5)]
 		[Export ("renderTargetWidth")]
 		nuint RenderTargetWidth { get; set; }
 
-		[iOS (11, 0), NoTV, NoWatch, Mac (10,15)]
+		[iOS (11, 0), NoWatch, Mac (10,15)]
+		[TV (14,5)]
 		[Export ("renderTargetHeight")]
 		nuint RenderTargetHeight { get; set; }
 
@@ -4045,7 +4081,8 @@ namespace Metal {
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[iOS (11, 0), NoTV, Mac (11,0), NoWatch]
+	[iOS (11, 0), Mac (11,0), NoWatch]
+	[TV (14,5)]
 	[BaseType (typeof (NSObject))]
 	interface MTLTileRenderPipelineColorAttachmentDescriptor : NSCopying {
 		[Export ("pixelFormat", ArgumentSemantic.Assign)]
@@ -4053,7 +4090,8 @@ namespace Metal {
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[iOS (11, 0), NoTV, Mac (11,0), NoWatch]
+	[iOS (11, 0), Mac (11,0), NoWatch]
+	[TV (14,5)]
 	[BaseType (typeof (NSObject))]
 	interface MTLTileRenderPipelineColorAttachmentDescriptorArray {
 		[Internal]
@@ -4087,8 +4125,10 @@ namespace Metal {
 		[Export ("addRenderPipelineFunctionsWithDescriptor:error:")]
 		bool AddRenderPipelineFunctions (MTLRenderPipelineDescriptor descriptor, [NullAllowed] out NSError error);
 
-		[NoTV]
+#if !TVOS || XAMCORE_4_0
 		[Abstract]
+#endif
+		[TV (14,5)]
 		[Export ("addTileRenderPipelineFunctionsWithDescriptor:error:")]
 		bool AddTileRenderPipelineFunctions (MTLTileRenderPipelineDescriptor descriptor, [NullAllowed] out NSError error);
 
@@ -4099,7 +4139,8 @@ namespace Metal {
 
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[iOS (11, 0), NoTV, Mac (11,0), NoWatch]
+	[iOS (11, 0), Mac (11,0), NoWatch]
+	[TV (14,5)]
 	[BaseType (typeof (NSObject))]
 	interface MTLTileRenderPipelineDescriptor : NSCopying {
 		[NullAllowed]
@@ -4211,13 +4252,17 @@ namespace Metal {
 		[Export ("setFragmentBuffer:offset:atIndex:")]
 		void SetFragmentBuffer (IMTLBuffer buffer, nuint offset, nuint index);
 
+#if !TVOS || XAMCORE_4_0
 		[Abstract]
-		[NoTV]
+#endif
+		[TV (14,5)]
 		[Export ("drawPatches:patchStart:patchCount:patchIndexBuffer:patchIndexBufferOffset:instanceCount:baseInstance:tessellationFactorBuffer:tessellationFactorBufferOffset:tessellationFactorBufferInstanceStride:")]
 		void DrawPatches (nuint numberOfPatchControlPoints, nuint patchStart, nuint patchCount, [NullAllowed] IMTLBuffer patchIndexBuffer, nuint patchIndexBufferOffset, nuint instanceCount, nuint baseInstance, IMTLBuffer buffer, nuint offset, nuint instanceStride);
 
+#if !TVOS || XAMCORE_4_0
 		[Abstract]
-		[NoTV]
+#endif
+		[TV (14,5)]
 		[Export ("drawIndexedPatches:patchStart:patchCount:patchIndexBuffer:patchIndexBufferOffset:controlPointIndexBuffer:controlPointIndexBufferOffset:instanceCount:baseInstance:tessellationFactorBuffer:tessellationFactorBufferOffset:tessellationFactorBufferInstanceStride:")]
 		void DrawIndexedPatches (nuint numberOfPatchControlPoints, nuint patchStart, nuint patchCount, [NullAllowed] IMTLBuffer patchIndexBuffer, nuint patchIndexBufferOffset, IMTLBuffer controlPointIndexBuffer, nuint controlPointIndexBufferOffset, nuint instanceCount, nuint baseInstance, IMTLBuffer buffer, nuint offset, nuint instanceStride);
 

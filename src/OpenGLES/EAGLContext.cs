@@ -21,8 +21,10 @@ namespace OpenGLES
 		}
 #endif
 
+#if !NET
 		[iOS (10,0)]
 		[TV (10,0)]
+#endif
 		public virtual bool PresentRenderBuffer (nuint target, double presentationTime)
 		{
 			return _PresentRenderbufferAtTime (target, presentationTime);

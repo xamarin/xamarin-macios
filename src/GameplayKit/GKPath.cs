@@ -50,7 +50,9 @@ namespace GameplayKit {
 			}
 		}
 
+#if !NET
 		[iOS (10,0), TV (10,0), Mac (10,12)]
+#endif
 		public static GKPath FromPoints (Vector3 [] points, float radius, bool cyclical)
 		{
 			if (points == null)
@@ -68,7 +70,9 @@ namespace GameplayKit {
 			}
 		}
 
+#if !NET
 		[iOS (10,0), TV (10,0), Mac (10,12)]
+#endif
 		public GKPath (Vector3 [] points, float radius, bool cyclical)
 		{
 			if (points == null)

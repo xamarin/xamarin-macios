@@ -7,7 +7,7 @@
 // Copyright 2012 Xamarin Inc. All rights reserved.
 //
 
-#if HAS_ADDRESSBOOK
+#if !__MACCATALYST__ && HAS_ADDRESSBOOK
 
 using System;
 using Foundation;
@@ -61,4 +61,4 @@ namespace MonoTouchFixtures.AddressBook {
 	}
 }
 
-#endif // HAS_ADDRESSBOOKUI
+#endif // !__MACCATALYST__ && HAS_ADDRESSBOOK - Crashes with maccat

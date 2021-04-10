@@ -1,6 +1,7 @@
 #if __IOS__
 using System;
 using System.ComponentModel;
+using System.Runtime.Versioning;
 
 using CoreGraphics;
 using Foundation;
@@ -9,7 +10,11 @@ using UIKit;
 
 namespace WatchKit {
 	[Register ("WKInterfaceObject", SkipRegistration = true)]
+#if NET
+	[UnsupportedOSPlatform ("ios")]
+#else
 	[Unavailable (PlatformName.iOS, PlatformArchitecture.All)]
+#endif
 	[Obsolete (Constants.WatchKitRemoved)]
 	[EditorBrowsable (EditorBrowsableState.Never)]
 	public class WKInterfaceObject : NSObject {
