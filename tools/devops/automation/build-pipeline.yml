@@ -8,11 +8,11 @@
 parameters:
 - name: runTests
   type: boolean
-  default: false
+  default: true
 
 - name: runDeviceTests
   type: boolean
-  default: false
+  default: true
 
 # We are doing some black magic. We have several templates that 
 # are executed with different parameters. 
