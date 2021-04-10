@@ -142,7 +142,6 @@ trigger:
     - '*'
     exclude:
     - refs/heads/locfiles/*
-    - refs/heads/darc-*
   paths:
     exclude:
     - docs

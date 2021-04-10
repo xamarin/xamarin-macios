@@ -147,6 +147,9 @@ fix-install-permissions:
 fix-xcode-select:
 	sudo xcode-select -s $(XCODE_DEVELOPER_ROOT)
 
+fix-xcode-first-run:
+	$(XCODE_DEVELOPER_ROOT)/usr/bin/xcodebuild -runFirstLaunch
+
 git-clean-all:
 	@echo "$(COLOR_RED)Cleaning and resetting all dependencies. This is a destructive operation.$(COLOR_CLEAR)"
 	@echo "$(COLOR_RED)You have 5 seconds to cancel (Ctrl-C) if you wish.$(COLOR_CLEAR)"
