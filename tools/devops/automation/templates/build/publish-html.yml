@@ -109,6 +109,9 @@ steps:
     if($Env:TESTS_JOBSTATUS -ne "Succeeded")
     {
       Set-PipelineResult -Status partiallySucceeded
+      Set-GitHubStatus -Status "error" -Description "Some tests failed." -Context "$(Build.DefinitionName) (Test run)"
+    } else {
+      Set-GitHubStatus -Status "success" -Description "All tests passed." -Context "$(Build.DefinitionName) (Test run)"
     }
   env:
     BUILD_REVISION: $(Build.SourceVersion)
