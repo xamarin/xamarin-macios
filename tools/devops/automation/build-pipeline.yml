@@ -14,6 +14,76 @@ parameters:
   type: boolean
   default: true
 
+# We are doing some black magic. We have several templates that 
+# are executed with different parameters. 
+#
+# The problem with that is that templates cannot be used with the 
+# matrix strategy, so we are doing a little trick based on the following:
+#
+# 1. We can create a template that expands.
+# 2. We can use the each keyword, which allow a loop
+# 3. yaml is a super set of json, therefore, it was jsond dictionaties
+#
+# the following parameters, define an array of dictionaries with the
+# data required by the templates. Do you want a new stage with 
+# device tests, no more copy paste, just add the new config.
+
+- name: deviceTestsConfigurations
+  type: object
+  default: [
+    {
+      devicePrefix: 'iOS32b',
+      execute: 'runDevice32b',
+      stageName: 'iOS32b Device Tests',
+      iOSDevicePool: 'VSEng-Xamarin-QA',
+      useXamarinStorage: False,
+      testsLabels: '--label=run-ios-32-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests',
+      statusContext: 'VSTS: device tests iOS32b',
+      iOSDeviceDemand: 'xismoke-32'
+    },
+    {
+      devicePrefix: 'iOS64',
+      execute: 'runDevice64b',
+      stageName: 'iOS64 Device Tests',
+      iOSDevicePool: 'VSEng-Xamarin-Mac-Devices',
+      useXamarinStorage: False,
+      testsLabels: '--label=run-ios-64-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests',
+      statusContext: 'VSTS: device tests iOS',
+      iOSDeviceDemand: 'ios'
+    },
+    {
+      devicePrefix: 'tvos',
+      execute: 'runDeviceTv',
+      stageName: 'tvOS Device Tests',
+      iOSDevicePool: 'VSEng-Xamarin-Mac-Devices',
+      useXamarinStorage: False,
+      testsLabels: '--label=run-tvos-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests',
+      statusContext: 'VSTS: device tests tvOS',
+      iOSDeviceDemand: 'tvos'
+    }]
+
+- name: macTestsConfigurations
+  type: object
+  default: [
+    {
+      stageName: 'Mac Mojave (10.14)',
+      macPool: 'Hosted Mac Internal Mojave',
+      osVersion: '10.14',
+      statusContext: 'Mac Mojave (10.14)'
+    },
+    {
+      stageName: 'Mac High Sierra (10.13)',
+      macPool: 'Hosted Mac Internal',
+      osVersion: '10.13',
+      statusContext: 'Mac High Sierra (10.13)'
+    },
+    {
+      stageName: 'Mac Sierra (10.12)',
+      macPool: 'VSEng-Xamarin-RedmondMacTestPool-iOS',
+      osVersion: '10.12',
+      statusContext: 'Mac Sierra (10.12)'
+    }]
+
 resources:
   repositories:
   - repository: self
@@ -122,86 +192,25 @@ stages:
         runDeviceTests: ${{ parameters.runDeviceTests }}
         keyringPass: $(xma-password)
 
-  # ideally we would use a matrix here, like:
-  #  - job: device_tests
-  #    displayName: 'Device tests'
-  #    timeoutInMinutes: 1000
-  #
-  #    strategy:
-  #      matrix:
-  #        iOS32: # TODO: This bots should be moved to the ddfun pool
-  #          deviceDemands: 'xismoke-32'
-  #          testsLabels: '--label=run-ios-32-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests'
-  #          poolName: 'VSEng-Xamarin-QA'
-  #        iOS64:
-  #          deviceDemands: 'ios'
-  #          testsLabels: '--label=run-ios-64-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests'
-  #          poolName: 'VSEng-Xamarin-Mac-Devices'
-  #        tvOS:
-  #          deviceDemands: 'tvos'
-  #          testsLabels: '--label=run-tvos-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests'
-  #          poolName: 'VSEng-Xamarin-Mac-Devices'
-  #
-  #    pool:
-  #      name: $(poolName)
-  #      demands: $(deviceDemands)
-  #      workspace:
-  #        clean: all
-  #
-  #    steps:
-  #    - template: templates/device-tests.yml
-  #
-  # Unfortunally, variable expansion will not happen on the right time, and will result in an agent error, to fix that
-  # we use a template for the test and we set each of the jobs. Not ideal, but is only a 3 jobs matrix
+- ${{ each config in parameters.deviceTestsConfigurations }}:
+  - template: templates/devices/stage.yml
+    parameters:
+      devicePrefix: ${{ config['devicePrefix'] }} 
+      execute: ${{ config['execute'] }} 
+      stageName: ${{ config['stageName'] }} 
+      iOSDevicePool: ${{ config['iOSDevicePool'] }} 
+      useXamarinStorage: ${{ config['useXamarinStorage'] }} 
+      testsLabels: ${{ config['testsLabels'] }} 
+      statusContext: ${{ config['statusContext'] }} 
+      iOSDeviceDemand: ${{ config['iOSDeviceDemand'] }} 
+      vsdropsPrefix: ${{ variables.vsdropsPrefix }}
+      keyringPass: $(xma-password)
 
-- template: templates/devices/stage.yml
-  parameters:
-    devicePrefix: 'iOS32b'
-    execute: 'runDevice32b'
-    stageName: 'iOS32b Device Tests'
-    iOSDevicePool: 'VSEng-Xamarin-QA'
-    useXamarinStorage: False
-    testsLabels: '--label=run-ios-32-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests'
-    statusContext: 'VSTS: device tests iOS32b'
-    iOSDeviceDemand: 'xismoke-32'
-    vsdropsPrefix: ${{ variables.vsdropsPrefix }}
-    keyringPass: $(xma-password)
-
-- template: templates/devices/stage.yml
-  parameters:
-    devicePrefix: 'iOS64'
-    execute: 'runDevice64b'
-    stageName: 'iOS64 Device Tests'
-    iOSDevicePool: 'VSEng-Xamarin-Mac-Devices'
-    useXamarinStorage: False
-    testsLabels: '--label=run-ios-64-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests'
-    statusContext: 'VSTS: device tests iOS'
-    iOSDeviceDemand: 'ios'
-    vsdropsPrefix: ${{ variables.vsdropsPrefix }}
-    keyringPass: $(xma-password)
-
-- template: templates/devices/stage.yml
-  parameters:
-    devicePrefix: 'tvos'
-    execute: 'runDeviceTv'
-    stageName: 'tvOS Device Tests'
-    iOSDevicePool: 'VSEng-Xamarin-Mac-Devices'
-    useXamarinStorage: False
-    testsLabels: '--label=run-tvos-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests'
-    statusContext: 'VSTS: device tests tvOS'
-    iOSDeviceDemand: 'tvos'
-    vsdropsPrefix: ${{ variables.vsdropsPrefix }}
-    keyringPass: $(xma-password)
-
-- template: templates/mac-tests.yml
-  parameters:
-    stageName: 'Mac Mojave Tests'
-    macPool: 'Hosted Mac Internal Mojave'
-
-- template: templates/mac-tests.yml
-  parameters:
-    stageName: 'Mac High Sierra Tests'
-    macPool: 'Hosted Mac Internal'
+- ${{ each config in parameters.macTestsConfigurations }}:
+  - template: templates/mac-tests.yml
+    parameters:
+      stageName: ${{ config['stageName'] }}
+      macPool: ${{ config['macPool'] }}
 
 # TODO: Not the real step
 - stage: sample_testing
