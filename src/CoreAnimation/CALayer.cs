@@ -133,7 +133,9 @@ namespace CoreAnimation {
 			}
 		}
 #endif
+#if !NET
 		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+#endif
 		public CAContentsFormat ContentsFormat {
 			get { return CAContentsFormatExtensions.GetValue (_ContentsFormat); }
 			set { _ContentsFormat = value.GetConstant ()!; }

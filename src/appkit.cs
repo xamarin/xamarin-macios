@@ -8343,6 +8343,7 @@ namespace AppKit {
 	}
 
 	[Mac (10, 0, 0, PlatformArchitecture.Arch32)] // kept for the arch limitation
+	[Deprecated (PlatformName.MacOSX, 10, 15, message: "API only available on 32bits platforms.")]
 	[BaseType (typeof (NSView))]
 	interface NSMenuView {
 		[Static]
