@@ -9,13 +9,19 @@
 
 using System;
 using System.ComponentModel;
+using System.Runtime.Versioning;
+
 using Foundation;
 using ObjCRuntime;
 
 #if TVOS && !XAMCORE_4_0
 namespace StoreKit {
 	[Obsolete ("Not usable from tvOS and will be removed in the future.")]
+#if NET
+	[UnsupportedOSPlatform ("tvos")]
+#else
 	[Unavailable (PlatformName.TvOS)]
+#endif
 	public class SKAdNetwork : NSObject {
 
 		[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]

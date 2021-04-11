@@ -45,11 +45,15 @@ namespace Metal {
 #if !COREBUILD
 	public static class MTLVertexFormatExtensions {
 
+#if !NET
 		[iOS (9,0)][Mac (10,11)]
+#endif
 		[DllImport (Constants.MetalKitLibrary)]
 		static extern /* MDLVertexFormat */ nuint MTKModelIOVertexFormatFromMetal (/* MTLVertexFormat */ nuint modelIODescriptor);
 
+#if !NET
 		[iOS (9,0)][Mac (10,11)]
+#endif
 		public static MDLVertexFormat ToModelVertexFormat (this MTLVertexFormat vertexFormat)
 		{
 			nuint mdlVertexFormat = MTKModelIOVertexFormatFromMetal ((nuint)(ulong)vertexFormat);
@@ -254,7 +258,9 @@ namespace Metal {
 		public uint BaseInstance;
 	}
 	
+#if !NET
 	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MTLSizeAndAlign
 	{
@@ -269,7 +275,9 @@ namespace Metal {
 	
 	}
 
+#if !NET
 	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MTLDrawPatchIndirectArguments
 	{
@@ -288,7 +296,9 @@ namespace Metal {
 
 	}
 
+#if !NET
 	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MTLQuadTessellationFactorsHalf
 	{
@@ -305,7 +315,9 @@ namespace Metal {
 	
 	}
 
+#if !NET
 	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MTLTriangleTessellationFactorsHalf
 	{

@@ -6,8 +6,10 @@ using Foundation;
 
 namespace HomeKit {
 
+#if !NET
 	[iOS (8,0)]
 	[TV (10,0)]
+#endif
 	public partial class HMHome
 	{
 		public HMService [] GetServices (HMServiceType serviceTypes) 

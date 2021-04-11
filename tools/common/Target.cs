@@ -786,9 +786,15 @@ namespace Xamarin.Bundler {
 					else
 						mono_native_lib = app.GetLibNativeName () + ".dylib";
 					sw.WriteLine ();
+#if NET
+					sw.WriteLine ($"\tmono_dllmap_insert (NULL, \"libSystem.Native\", NULL, \"{mono_native_lib}\", NULL);");
+					sw.WriteLine ($"\tmono_dllmap_insert (NULL, \"libSystem.Security.Cryptography.Native.Apple\", NULL, \"{mono_native_lib}\", NULL);");
+					sw.WriteLine ($"\tmono_dllmap_insert (NULL, \"libSystem.Net.Security.Native\", NULL, \"{mono_native_lib}\", NULL);");
+#else
 					sw.WriteLine ($"\tmono_dllmap_insert (NULL, \"System.Native\", NULL, \"{mono_native_lib}\", NULL);");
 					sw.WriteLine ($"\tmono_dllmap_insert (NULL, \"System.Security.Cryptography.Native.Apple\", NULL, \"{mono_native_lib}\", NULL);");
 					sw.WriteLine ($"\tmono_dllmap_insert (NULL, \"System.Net.Security.Native\", NULL, \"{mono_native_lib}\", NULL);");
+#endif
 					sw.WriteLine ();
 				}
 			}
