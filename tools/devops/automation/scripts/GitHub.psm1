@@ -505,7 +505,11 @@ function New-GitHubSummaryComment {
         } else {
             $sb.AppendLine("# API & Generator diff")
             $sb.AppendLine("")
-            $apidiffcomments = Get-Content $APIGeneratorDiff
+            # ugly workaround to get decent new lines
+            foreach ($line in Get-Content -Path $APIGeneratorDiff)
+            {
+                $sb.AppendLine($line)
+            }
             $sb.AppendLine($apidiffcomments)
         }
     } else {
