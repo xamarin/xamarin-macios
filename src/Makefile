@@ -1374,21 +1374,21 @@ $(GENERATE_TYPE_FORWARDERS): $(wildcard generate-type-forwarders/*.cs*) Makefile
 	$(Q) $(SYSTEM_MSBUILD) /r generate-type-forwarders/generate-type-forwarders.csproj $(MSBUILD_VERBOSITY)
 
 $(MACCATALYST_BUILD_DIR)/reference/Xamarin.iOS.cs: $(MACCATALYST_BUILD_DIR)/reference/Xamarin.MacCatalyst.dll $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll Makefile $(GENERATE_TYPE_FORWARDERS)
-	$(Q) mono $(GENERATE_TYPE_FORWARDERS) $(abspath $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll) $(abspath $(MACCATALYST_BUILD_DIR)/reference/Xamarin.MacCatalyst.dll) $(abspath $@.tmp)
+	$(Q) mono $(GENERATE_TYPE_FORWARDERS) $(abspath $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll) $(abspath $(MACCATALYST_BUILD_DIR)/reference/Xamarin.MacCatalyst.dll) $(abspath $@.tmp) $(MIN_MACCATALYST_SDK_VERSION)
 	$(Q) mv $@.tmp $@
 
 $(MACCATALYST_BUILD_DIR)/reference/Xamarin.iOS.dll: $(MACCATALYST_BUILD_DIR)/reference/Xamarin.iOS.cs
 	$(Q) $(MACCATALYST_CSC) $< -out:$@ -r:$(MACCATALYST_BUILD_DIR)/reference/Xamarin.MacCatalyst.dll -target:library -deterministic -publicsign -keyfile:$(PRODUCT_KEY_PATH) -nologo -nowarn:108,114,618 -unsafe
 
 $(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.iOS.cs: $(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.MacCatalyst.dll $(IOS_DOTNET_BUILD_DIR)/ref/Xamarin.iOS.dll Makefile $(GENERATE_TYPE_FORWARDERS)
-	$(Q) mono $(GENERATE_TYPE_FORWARDERS) $(IOS_DOTNET_BUILD_DIR)/ref/Xamarin.iOS.dll $(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.MacCatalyst.dll $@.tmp
+	$(Q) mono $(GENERATE_TYPE_FORWARDERS) $(IOS_DOTNET_BUILD_DIR)/ref/Xamarin.iOS.dll $(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.MacCatalyst.dll $@.tmp $(DOTNET_MIN_MACCATALYST_SDK_VERSION)
 	$(Q) mv $@.tmp $@
 
 $(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.iOS.dll: $(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.iOS.cs
 	$(Q) $(DOTNET6_CSC) $(DOTNET_FLAGS) $< -out:$@ -r:$(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.MacCatalyst.dll -target:library -deterministic -publicsign -keyfile:$(PRODUCT_KEY_PATH) -nologo -nowarn:108,114,618 -unsafe
 
 $(MACCATALYST_BUILD_DIR)/reference/OpenTK-1.0.cs: $(MACCATALYST_BUILD_DIR)/reference/Xamarin.MacCatalyst.dll $(IOS_BUILD_DIR)/reference/OpenTK-1.0.dll Makefile $(GENERATE_TYPE_FORWARDERS)
-	$(Q) mono $(GENERATE_TYPE_FORWARDERS) $(IOS_BUILD_DIR)/reference/OpenTK-1.0.dll $(MACCATALYST_BUILD_DIR)/reference/Xamarin.MacCatalyst.dll $@.tmp
+	$(Q) mono $(GENERATE_TYPE_FORWARDERS) $(IOS_BUILD_DIR)/reference/OpenTK-1.0.dll $(MACCATALYST_BUILD_DIR)/reference/Xamarin.MacCatalyst.dll $@.tmp $(MIN_MACCATALYST_SDK_VERSION)
 	$(Q) mv $@.tmp $@
 
 $(MACCATALYST_BUILD_DIR)/reference/OpenTK-1.0.dll: $(MACCATALYST_BUILD_DIR)/reference/OpenTK-1.0.cs $(MACCATALYST_BUILD_DIR)/reference/Xamarin.iOS.dll

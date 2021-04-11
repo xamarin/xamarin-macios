@@ -769,11 +769,15 @@ namespace Security {
 			return _Decrypt (padding, cipherText, ref plainText);
 		}
 
+#if !NET
 		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern IntPtr /* SecKeyRef _Nullable */ SecKeyCreateRandomKey (IntPtr /* CFDictionaryRef* */ parameters, out IntPtr /* CFErrorRef** */ error);
 
+#if !NET
 		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+#endif
 		static public SecKey CreateRandomKey (NSDictionary parameters, out NSError error)
 		{
 			if (parameters == null)
@@ -785,7 +789,9 @@ namespace Security {
 			return key == IntPtr.Zero ? null : new SecKey (key, true);
 		}
 
+#if !NET
 		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+#endif
 		static public SecKey CreateRandomKey (SecKeyType keyType, int keySizeInBits, NSDictionary parameters, out NSError error)
 		{
 			using (var ks = new NSNumber (keySizeInBits))
@@ -796,7 +802,9 @@ namespace Security {
 			}
 		}
 
+#if !NET
 		[Watch (3, 0)][TV (10, 0)][Mac (10, 12)][iOS (10, 0)]
+#endif
 		static public SecKey CreateRandomKey (SecKeyGenerationParameters parameters, out NSError error)
 		{
 			if (parameters == null)
@@ -809,11 +817,15 @@ namespace Security {
 			}
 		}
 
+#if !NET
 		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern IntPtr /* SecKeyRef _Nullable */ SecKeyCreateWithData (IntPtr /* CFDataRef* */ keyData, IntPtr /* CFDictionaryRef* */ attributes, out IntPtr /* CFErrorRef** */ error);
 
+#if !NET
 		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+#endif
 		static public SecKey Create (NSData keyData, NSDictionary parameters, out NSError error)
 		{
 			if (keyData == null)
@@ -827,7 +839,9 @@ namespace Security {
 			return key == IntPtr.Zero ? null : new SecKey (key, true);
 		}
 
+#if !NET
 		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+#endif
 		static public SecKey Create (NSData keyData, SecKeyType keyType, SecKeyClass keyClass, int keySizeInBits, NSDictionary parameters, out NSError error)
 		{
 			using (var ks = new NSNumber (keySizeInBits))
@@ -839,11 +853,15 @@ namespace Security {
 			}
 		}
 
+#if !NET
 		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern IntPtr /* CFDataRef _Nullable */ SecKeyCopyExternalRepresentation (IntPtr /* SecKeyRef* */ key, out IntPtr /* CFErrorRef** */ error);
 
+#if !NET
 		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+#endif
 		public NSData GetExternalRepresentation (out NSError error)
 		{
 			IntPtr err;
@@ -852,7 +870,9 @@ namespace Security {
 			return Runtime.GetNSObject<NSData> (data, true);
 		}
 
+#if !NET
 		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+#endif
 		public NSData GetExternalRepresentation ()
 		{
 			IntPtr err;
@@ -860,44 +880,60 @@ namespace Security {
 			return Runtime.GetNSObject<NSData> (data, true);
 		}
 
+#if !NET
 		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern IntPtr /* CFDictionaryRef _Nullable */ SecKeyCopyAttributes (IntPtr /* SecKeyRef* */ key);
 
+#if !NET
 		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+#endif
 		public NSDictionary GetAttributes ()
 		{
 			var dict = SecKeyCopyAttributes (handle);
 			return Runtime.GetNSObject<NSDictionary> (dict, true);
 		}
 
+#if !NET
 		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern IntPtr /* SecKeyRef* */ SecKeyCopyPublicKey (IntPtr /* SecKeyRef* */ key);
 
+#if !NET
 		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+#endif
 		public SecKey GetPublicKey ()
 		{
 			var key = SecKeyCopyPublicKey (handle);
 			return key == IntPtr.Zero ? null : new SecKey (key, true);
 		}
 
+#if !NET
 		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		[return: MarshalAs (UnmanagedType.U1)]
 		static extern bool /* Boolean */ SecKeyIsAlgorithmSupported (IntPtr /* SecKeyRef* */ key, /* SecKeyOperationType */ nint operation, IntPtr /* SecKeyAlgorithm* */ algorithm);
 
+#if !NET
 		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+#endif
 		public bool IsAlgorithmSupported (SecKeyOperationType operation, SecKeyAlgorithm algorithm)
 		{
 			return SecKeyIsAlgorithmSupported (handle, (int) operation, algorithm.GetConstant ().Handle);
 		}
 
+#if !NET
 		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* CFDataRef _Nullable */ IntPtr SecKeyCreateSignature (/* SecKeyRef */ IntPtr key, /* SecKeyAlgorithm */ IntPtr algorithm, /* CFDataRef */ IntPtr dataToSign, /* CFErrorRef* */ out IntPtr error);
 
+#if !NET
 		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+#endif
 		public NSData CreateSignature (SecKeyAlgorithm algorithm, NSData dataToSign, out NSError error)
 		{
 			if (dataToSign == null)
@@ -909,12 +945,16 @@ namespace Security {
 			return Runtime.GetNSObject<NSData> (data, true);
 		}
 
+#if !NET
 		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		[return: MarshalAs (UnmanagedType.U1)]
 		static extern /* Boolean */ bool SecKeyVerifySignature (/* SecKeyRef */ IntPtr key, /* SecKeyAlgorithm */ IntPtr algorithm, /* CFDataRef */ IntPtr signedData, /* CFDataRef */ IntPtr signature, /* CFErrorRef* */ out IntPtr error);
 
+#if !NET
 		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+#endif
 		public bool VerifySignature (SecKeyAlgorithm algorithm, NSData signedData, NSData signature, out NSError error)
 		{
 			if (signedData == null)
@@ -928,11 +968,15 @@ namespace Security {
 			return result;
 		}
 
+#if !NET
 		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* CFDataRef _Nullable */ IntPtr SecKeyCreateEncryptedData (/* SecKeyRef */ IntPtr key, /* SecKeyAlgorithm */ IntPtr algorithm, /* CFDataRef */ IntPtr plaintext, /* CFErrorRef* */ out IntPtr error);
 
+#if !NET
 		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+#endif
 		public NSData CreateEncryptedData (SecKeyAlgorithm algorithm, NSData plaintext, out NSError error)
 		{
 			if (plaintext == null)
@@ -944,11 +988,15 @@ namespace Security {
 			return Runtime.GetNSObject<NSData> (data, true);
 		}
 
+#if !NET
 		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* CFDataRef _Nullable */ IntPtr SecKeyCreateDecryptedData (/* SecKeyRef */ IntPtr key, /* SecKeyAlgorithm */ IntPtr algorithm, /* CFDataRef */ IntPtr ciphertext, /* CFErrorRef* */ out IntPtr error);
 
+#if !NET
 		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+#endif
 		public NSData CreateDecryptedData (SecKeyAlgorithm algorithm, NSData ciphertext, out NSError error)
 		{
 			if (ciphertext == null)
@@ -960,11 +1008,15 @@ namespace Security {
 			return Runtime.GetNSObject<NSData> (data, true);
 		}
 
+#if !NET
 		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* CFDataRef _Nullable */ IntPtr SecKeyCopyKeyExchangeResult (/* SecKeyRef */ IntPtr privateKey, /* SecKeyAlgorithm */ IntPtr algorithm, /* SecKeyRef */ IntPtr publicKey, /* CFDictionaryRef */ IntPtr parameters, /* CFErrorRef* */ out IntPtr error);
 
+#if !NET
 		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+#endif
 		public NSData GetKeyExchangeResult (SecKeyAlgorithm algorithm, SecKey publicKey, NSDictionary parameters, out NSError error)
 		{
 			if (publicKey == null)
@@ -978,7 +1030,9 @@ namespace Security {
 			return Runtime.GetNSObject<NSData> (data, true);
 		}
 
+#if !NET
 		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+#endif
 		public NSData GetKeyExchangeResult (SecKeyAlgorithm algorithm, SecKey publicKey, SecKeyKeyExchangeParameter parameters, out NSError error)
 		{
 			return GetKeyExchangeResult (algorithm, publicKey, parameters?.Dictionary, out error);

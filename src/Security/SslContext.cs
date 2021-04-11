@@ -545,15 +545,19 @@ namespace Security {
 		}
 #endif
 
+#if !NET
 		[iOS (10,0)][Mac (10,12)]
 		[TV (10,0)]
 		[Watch (3,0)]
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern int SSLSetSessionConfig (IntPtr /* SSLContextRef* */ context, IntPtr /* CFStringRef* */ config);
 
+#if !NET
 		[iOS (10,0)][Mac (10,12)]
 		[TV (10,0)]
 		[Watch (3,0)]
+#endif
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		public int SetSessionConfig (NSString config)
 		{
@@ -563,36 +567,48 @@ namespace Security {
 			return SSLSetSessionConfig (Handle, config.Handle);
 		}
 
+#if !NET
 		[iOS (10,0)][Mac (10,12)]
 		[TV (10,0)]
+#endif
 		public int SetSessionConfig (SslSessionConfig config)
 		{
 			return SetSessionConfig (config.GetConstant ());
 		}
 
+#if !NET
 		[iOS (10,0)][Mac (10,12)]
 		[Watch (3,0)]
 		[TV (10,0)]
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern int SSLReHandshake (IntPtr /* SSLContextRef* */ context);
 
+#if !NET
 		[iOS (10,0)][Mac (10,12)]
 		[Watch (3,0)]
 		[TV (10,0)]
+#endif
 		public int ReHandshake ()
 		{
 			return SSLReHandshake (Handle);
 		}
 
+#if !NET
 		[iOS (9,0)][Mac (10,11)]
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* OSStatus */ SslStatus SSLCopyRequestedPeerName (IntPtr /* SSLContextRef* */ context, byte[] /* char* */ peerName, ref nuint /* size_t */ peerNameLen);
 
+#if !NET
 		[iOS (9,0)][Mac (10,11)]
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* OSStatus */ SslStatus SSLCopyRequestedPeerNameLength (IntPtr /* SSLContextRef* */ context, ref nuint /* size_t */ peerNameLen);
 
+#if !NET
 		[iOS (9,0)][Mac (10,11)]
+#endif
 		public string GetRequestedPeerName ()
 		{
 			var result = String.Empty;
