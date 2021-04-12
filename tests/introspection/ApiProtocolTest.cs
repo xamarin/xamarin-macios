@@ -603,10 +603,28 @@ namespace Introspection {
 				if (klass.Handle == IntPtr.Zero) {
 					// This can often by caused by [Protocol] classes with no [Model] but having a [BaseType].
 					// Either have both a Model and BaseType or neither
-					var e = $"[FAIL] Could not load {t.FullName}";
-					list.Add (e);
-					AddErrorLine (e);
-					continue;
+					switch (t.Name) {
+#if !MONOMAC
+					case "MTLCaptureManager":
+					case "NEHotspotConfiguration":
+					case "NEHotspotConfigurationManager":
+					case "NEHotspotEapSettings":
+					case "NEHotspotHS20Settings":
+					case "SCNGeometryTessellator":
+					case "SKRenderer":
+						// was not possible in iOS 11.4 (current minimum) simulator
+						if (!TestRuntime.CheckXcodeVersion (12,0)) {
+							if (Runtime.Arch == Arch.SIMULATOR)
+								continue;
+						}
+						break;
+#endif
+					default:
+						var e = $"[FAIL] Could not load {t.FullName}";
+						list.Add (e);
+						AddErrorLine (e);
+						continue;
+					}
 				}
 
 				foreach (var intf in t.GetInterfaces ()) {

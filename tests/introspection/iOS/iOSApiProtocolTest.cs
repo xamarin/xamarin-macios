@@ -176,11 +176,11 @@ namespace Introspection {
 				if (protocolName == "ARTrackable")
 					return !TestRuntime.CheckXcodeVersion (10,0);
 				break;
-#if __MACCATALYST__
 			case "PHLivePhoto":
 				if (protocolName == "NSItemProviderReading")
 					return !TestRuntime.CheckXcodeVersion (12,0);
 				break;
+#if __MACCATALYST__
 			case "BCChatButton":
 			case "PKAddPassButton":
 			case "PKPaymentButton":
