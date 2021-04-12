@@ -69,11 +69,12 @@ fi
 
 mkdir -p "$API_COMPARISON"
 
-ls -Rla ./tools/comparison/apidiff
 
 cp -R ./tools/comparison/apidiff/diff "$API_COMPARISON"
 cp    ./tools/comparison/apidiff/*.html "$API_COMPARISON"
 cp -R ./tools/comparison/generator-diff "$API_COMPARISON"
+
+ls -Rla "$API_COMPARISON"
 
 if ! grep "href=" "$API_COMPARISON/api-diff.html" >/dev/null 2>&1; then
 	printf ":white_check_mark: [API Diff (from PR only)](%s) (no change)" "$API_URL" >> "$WORKSPACE/api-diff-comments.md"
@@ -94,7 +95,9 @@ fi
 printf "\\n" >> "$WORKSPACE/api-diff-comments.md"
 
 cp "$WORKSPACE/api-diff-comments.md" "$API_COMPARISON"
-cp "$COMPARE_FAILURE_FILE" "$API_COMPARISON"
+if test -f "$COMPARE_FAILURE_FILE"; then
+	cp "$COMPARE_FAILURE_FILE" "$API_COMPARISON"
+fi
 MESSAGE="*** Comparing API & creating generator diff completed ***"
 echo "##vso[task.setvariable variable=API_GENERATOR_DIFF_MESSAGE;isOutput=true]$MESSAGE"
 echo "##vso[task.setvariable variable=API_GENERATOR_BUILT;isOutput=true]True"
