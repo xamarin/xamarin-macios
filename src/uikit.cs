@@ -330,7 +330,7 @@ namespace UIKit {
 		IUICloudSharingControllerDelegate Delegate { get; set; }
 
 		[NullAllowed, Export ("share", ArgumentSemantic.Strong)]
-		CKShare Share { get; }
+		NSString Share { get; }
 
 		[Export ("availablePermissions", ArgumentSemantic.Assign)]
 		UICloudSharingPermissionOptions AvailablePermissions { get; set; }
