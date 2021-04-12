@@ -11,9 +11,7 @@ resources:
     trigger:
       branches:
       - main
-      - d16-*
       - 6.0.*
-      - publish-bar-manifest
       stages:
       - build_packages
 
