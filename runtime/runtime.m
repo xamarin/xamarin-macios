@@ -338,14 +338,6 @@ void xamarin_framework_peer_lock ()
 	MONO_EXIT_GC_SAFE;
 }
 
-// Same as xamarin_framework_peer_lock, except the current mode should be GC Safe.
-void xamarin_framework_peer_lock_safe ()
-{
-	MONO_ASSERT_GC_SAFE_OR_DETACHED;
-
-	pthread_mutex_lock (&framework_peer_release_lock);
-}
-
 void xamarin_framework_peer_unlock ()
 {
 	pthread_mutex_unlock (&framework_peer_release_lock);
@@ -556,13 +548,15 @@ get_flags (id self)
 }
 
 static inline void
-set_flags_safe (id self, enum XamarinGCHandleFlags flags)
+set_flags (id self, enum XamarinGCHandleFlags flags)
 {
 	// COOP: we call a selector, and that must only be done in SAFE mode.
-	MONO_ASSERT_GC_SAFE_OR_DETACHED;
+	MONO_ASSERT_GC_UNSAFE;
 
+	MONO_ENTER_GC_SAFE;
 	id<XamarinExtendedObject> xself = self;
 	[xself xamarinSetFlags: flags];
+	MONO_EXIT_GC_SAFE;
 }
 
 static inline enum XamarinGCHandleFlags
@@ -1902,9 +1896,10 @@ get_safe_retainCount (id self)
 void
 xamarin_release_managed_ref (id self, bool user_type)
 {
-	// COOP: This is a P/Invoke, so at entry we're in safe mode.
-	MONO_ASSERT_GC_SAFE_OR_DETACHED;
-
+	// COOP: This is an icall, so at entry we're in unsafe mode.
+	// COOP: we stay in unsafe mode (since we write to the managed memory) unless calling a selector (which must be done in safe mode)
+	MONO_ASSERT_GC_UNSAFE;
+	
 #if defined(DEBUG_REF_COUNTING)
 	PRINT ("monotouch_release_managed_ref (%s Handle=%p) retainCount=%d; HasManagedRef=%i GCHandle=%p IsUserType=%i managed_obj=%p\n", 
 		class_getName (object_getClass (self)), self, (int32_t) [self retainCount], user_type ? xamarin_has_managed_ref (self) : 666, user_type ? get_gchandle_without_flags (self) : (void*) 666, user_type, managed_obj);
@@ -1912,7 +1907,7 @@ xamarin_release_managed_ref (id self, bool user_type)
 
 	if (user_type) {
 		/* clear MANAGED_REF_BIT */
-		set_flags_safe (self, (enum XamarinGCHandleFlags) (get_flags_safe (self) & ~XamarinGCHandleFlags_HasManagedRef));
+		set_flags (self, (enum XamarinGCHandleFlags) (get_flags (self) & ~XamarinGCHandleFlags_HasManagedRef));
 	} else {
 		//
 		// This lock is needed so that we can safely call retainCount in the
@@ -1980,11 +1975,13 @@ xamarin_release_managed_ref (id self, bool user_type)
 		//
 		//    This is https://github.com/xamarin/xamarin-macios/issues/3943
 		//
-		xamarin_framework_peer_lock_safe ();
+		xamarin_framework_peer_lock ();
 		xamarin_framework_peer_unlock ();
 	}
 
+	MONO_ENTER_GC_SAFE;
 	[self release];
+	MONO_EXIT_GC_SAFE;
 }
 
 void

@@ -186,7 +186,6 @@ void			xamarin_free (void *ptr);
 MonoMethod *	xamarin_get_reflection_method_method (MonoReflectionMethod *method);
 MonoMethod *	xamarin_get_managed_method_for_token (guint32 token_ref, GCHandle *exception_gchandle);
 void			xamarin_framework_peer_lock ();
-void			xamarin_framework_peer_lock_safe ();
 void			xamarin_framework_peer_unlock ();
 bool			xamarin_file_exists (const char *path);
 MonoAssembly *	xamarin_open_and_register (const char *path, GCHandle *exception_gchandle);
