@@ -984,6 +984,7 @@ namespace PassKit {
 		NSString Girocard { get; }
 
 		[Watch (7,4)][Mac (11,3)][iOS (14, 5)]
+		[MacCatalyst (14,5)]
 		[Field ("PKPaymentNetworkMir")]
 		NSString Mir { get; }
 	}
@@ -1188,12 +1189,14 @@ namespace PassKit {
 		bool InStation { [Bind ("isInStation")] get; }
 
 		[Deprecated (PlatformName.iOS, 14,5, message: "Use 'Blocked' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 14,5, message: "Use 'Blocked' instead.")]
 		[Deprecated (PlatformName.WatchOS, 7,4, message: "Use 'Blocked' instead.")]
 		[Export ("blacklisted")]
 		bool Blacklisted { [Bind ("isBlacklisted")] get; }
 
 		[iOS (14,5)][Watch (7,4)]
 		[Mac (11,3)]
+		[MacCatalyst (14,5)]
 		[Export ("blocked")]
 		bool Blocked { [Bind ("isBlocked")] get; }
 
@@ -1509,6 +1512,7 @@ namespace PassKit {
 
 		[iOS (14,5)]
 		[Mac (11,3)]
+		[MacCatalyst (14,5)]
 		[Export ("supportedRadioTechnologies", ArgumentSemantic.Assign)]
 		PKRadioTechnology SupportedRadioTechnologies { get; set; }
 	}

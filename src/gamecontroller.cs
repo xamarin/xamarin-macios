@@ -474,6 +474,7 @@ namespace GameController {
 		NSString DidStopBeingCurrentNotification { get; }
 
 		[TV (14,5)][Mac (11,3)][iOS (14,5)]
+		[MacCatalyst (14,5)]
 		[Static]
 		[Export ("shouldMonitorBackgroundEvents")]
 		bool ShouldMonitorBackgroundEvents { get; set; }
@@ -1839,6 +1840,7 @@ namespace GameController {
 	}
 
 	[TV (14,5)][Mac (11,3)][iOS (14,5)]
+	[MacCatalyst (14,5)]
 	[Native]
 	enum GCDualSenseAdaptiveTriggerMode : long {
 		Off = 0,
@@ -1848,6 +1850,7 @@ namespace GameController {
 	}
 
 	[TV (14,5)][Mac (11,3)][iOS (14,5)]
+	[MacCatalyst (14,5)]
 	[Native]
 	enum GCDualSenseAdaptiveTriggerStatus : long {
 		Unknown = -1,
@@ -1861,6 +1864,7 @@ namespace GameController {
 	}
 
 	[TV (14,5)][Mac (11,3)][iOS (14,5)]
+	[MacCatalyst (14,5)]
 	[BaseType (typeof (GCControllerButtonInput))]
 	[DisableDefaultCtor]
 	interface GCDualSenseAdaptiveTrigger {
@@ -1888,6 +1892,7 @@ namespace GameController {
 	}
 
 	[TV (14,5)][Mac (11,3)][iOS (14,5)]
+	[MacCatalyst (14,5)]
 	[BaseType (typeof (GCExtendedGamepad))]
 	[DisableDefaultCtor] // Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: -[GCControllerButtonInput setIndex:]: unrecognized selector sent to instance 0x60000147eac0
 	interface GCDualSenseGamepad {
@@ -1909,6 +1914,7 @@ namespace GameController {
 	}
 
 	[TV (14,5)][Mac (11,3)][iOS (14,5)]
+	[MacCatalyst (14,5)]
 	enum GCInputDirectional {
 		[Field ("GCInputDirectionalDpad")]
 		Dpad,

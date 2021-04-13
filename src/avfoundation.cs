@@ -2373,10 +2373,12 @@ namespace AVFoundation {
 		AVAudioStereoOrientation InputOrientation { get; }
 
 		[Watch (7,4), TV (14,5), NoMac, iOS (14,5)]
+		[MacCatalyst (14,5)]
 		[Export ("setPrefersNoInterruptionsFromSystemAlerts:error:")]
 		bool SetPrefersNoInterruptionsFromSystemAlerts (bool inValue, [NullAllowed] out NSError outError);
 
 		[Watch (7, 4), TV (14, 5), NoMac, iOS (14, 5)]
+		[MacCatalyst (14,5)]
 		[Export ("prefersNoInterruptionsFromSystemAlerts")]
 		bool PrefersNoInterruptionsFromSystemAlerts { get; }
 	}
@@ -3372,6 +3374,7 @@ namespace AVFoundation {
 		void StopRequestingMediaData ();
 
 		[TV (14,5), Watch (7,4), Mac (11,3), iOS (14,5)]
+		[MacCatalyst (14,5)]
 		[Export ("hasSufficientMediaDataForReliablePlaybackStart")]
 		bool HasSufficientMediaDataForReliablePlaybackStart { get; }
 	}
@@ -3444,10 +3447,12 @@ namespace AVFoundation {
 		void SetRate (float rate, CMTime time);
 
 		[Watch (7,4), TV (14,5), Mac (11,3), iOS (14,5)]
+		[MacCatalyst (14,5)]
 		[Export ("setRate:time:atHostTime:")]
 		void SetRate (float rate, CMTime time, CMTime hostTime);
 
 		[Watch (7,4), TV (14,5), Mac (11,3), iOS (14,5)]
+		[MacCatalyst (14,5)]
 		[Export ("delaysRateChangeUntilHasSufficientMediaData")]
 		bool DelaysRateChangeUntilHasSufficientMediaData { get; set; }
 
@@ -11166,6 +11171,7 @@ namespace AVFoundation {
 		NSString WaitingWithNoItemToPlayReason { get; }
 
 		[iOS (14, 5), TV (14, 5), Mac (11, 3)]
+		[MacCatalyst (14,5)]
 		[Field ("AVPlayerWaitingDuringInterstitialEventReason")]
 		NSString WaitingDuringInterstitialEventReason { get; }
 
@@ -11671,6 +11677,7 @@ namespace AVFoundation {
 		bool StartsOnFirstEligibleVariant { get; set; }
 
 		[Watch (7, 4), TV (14, 5), Mac (11, 3), iOS (14, 5)]
+		[MacCatalyst (14,5)]
 		[Export ("variantPreferences", ArgumentSemantic.Assign)]
 		AVVariantPreferences VariantPreferences { get; set; }
 
@@ -11682,6 +11689,7 @@ namespace AVFoundation {
 	}
 
 	[Watch (7,4), TV (14,5), Mac (11,3), iOS (14,5)]
+	[MacCatalyst (14,5)]
 	[Flags]
 	[Native]
 	public enum AVVariantPreferences : ulong
@@ -12397,6 +12405,7 @@ namespace AVFoundation {
 	}
 
 	[iOS (14,5), Mac (11,3), TV (14,5)]
+	[MacCatalyst (14,5)]
 	[Flags]
 	[Native]
 	enum AVPlayerInterstitialEventRestrictions : ulong
@@ -12408,6 +12417,7 @@ namespace AVFoundation {
 	}
 
 	[TV (14,5), Mac (11,3), iOS (14,5)]
+	[MacCatalyst (14,5)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface AVPlayerInterstitialEvent
@@ -12452,6 +12462,7 @@ namespace AVFoundation {
 
 	[DisableDefaultCtor]
 	[TV (14,5), Mac (11,3), iOS (14,5)]
+	[MacCatalyst (14,5)]
 	[BaseType (typeof(NSObject))]
 	interface AVPlayerInterstitialEventObserver
 	{
@@ -12493,6 +12504,7 @@ namespace AVFoundation {
 
 	[DisableDefaultCtor]
 	[TV (14,5), Mac (11,3), iOS (14,5)]
+	[MacCatalyst (14,5)]
 	[BaseType (typeof(AVPlayerInterstitialEventObserver))]
 	interface AVPlayerInterstitialEventController
 	{
@@ -12729,6 +12741,7 @@ namespace AVFoundation {
 		NSString RequiresFlushToResumeDecodingDidChangeNotification { get; }
 
 		[TV (14, 5), Watch (7, 4), Mac (11, 3), iOS (14, 5)]
+		[MacCatalyst (14,5)]
 		[Field ("AVSampleBufferDisplayLayerOutputObscuredDueToInsufficientExternalProtectionDidChangeNotification")]
 		[Notification]
 		NSString OutputObscuredDueToInsufficientExternalProtectionDidChangeNotification { get; }
@@ -13049,6 +13062,7 @@ namespace AVFoundation {
 		NSString PrefersHdrKey { get; }
 
 		[NoWatch, NoTV, Mac (11, 3), iOS (14, 5)]
+		[MacCatalyst (14,5)]
 		[Field ("AVAssetDownloadTaskPrefersLosslessAudioKey")]
 		NSString PrefersLosslessAudioKey { get; }
 
@@ -13615,6 +13629,7 @@ namespace AVFoundation {
 	[Protocol]
 	interface AVContentKeyRecipient {
 		[TV (14,5), Mac (11,3), iOS (14,5), Watch (7,4)]
+		[MacCatalyst (14,5)]
 		[Export ("contentKeySession:didProvideContentKey:")]
 		void DidProvideContentKey (AVContentKeySession contentKeySession, AVContentKey contentKey);
 
@@ -13803,10 +13818,12 @@ namespace AVFoundation {
 		NSString RequiresValidationDataInSecureTokenKey { get; }
 
 		[Watch (7,4), TV (14,5), Mac (11,3), iOS (14,5)]
+		[MacCatalyst (14,5)]
 		[Export ("contentKeySpecifier")]
 		AVContentKeySpecifier ContentKeySpecifier { get; }
 
 		[Watch (7,4), TV (14,5), Mac (11,3), iOS (14,5)]
+		[MacCatalyst (14,5)]
 		[NullAllowed, Export ("contentKey")]
 		AVContentKey ContentKey { get; }
 	}
@@ -13852,6 +13869,7 @@ namespace AVFoundation {
 	}
 
 	[TV (14,5), Mac (11,3), iOS (14,5), Watch (7,4)]
+	[MacCatalyst (14,5)]
 	[BaseType (typeof(NSObject))]
 	interface AVContentKeySpecifier
 	{
@@ -13874,6 +13892,7 @@ namespace AVFoundation {
 	}
 
 	[TV (14,5), Mac (11,3), iOS (14,5), Watch (7,4)]
+	[MacCatalyst (14,5)]
 	[BaseType (typeof(NSObject))]
 	interface AVContentKey
 	{

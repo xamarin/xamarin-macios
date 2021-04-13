@@ -104,6 +104,7 @@ namespace VideoToolbox {
 		NSString ExpectedFrameRate { get; }
 
 		[TV (14,5)][Mac (11,3)][iOS (14,5)]
+		[MacCatalyst (14,5)]
 		[Field ("kVTCompressionPropertyKey_BaseLayerFrameRateFraction")]
 		NSString BaseLayerFrameRateFraction { get; }
 
@@ -210,6 +211,7 @@ namespace VideoToolbox {
 		NSString PreserveDynamicHdrMetadata { get; }
 
 		[TV (14,5)][Mac (11,3)][iOS (14,5)]
+		[MacCatalyst (14,5)]
 		[Field ("kVTVideoEncoderSpecification_EnableLowLatencyRateControl")]
 		NSString EnableLowLatencyRateControl { get; }
 	}

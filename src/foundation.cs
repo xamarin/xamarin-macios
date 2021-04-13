@@ -3961,6 +3961,7 @@ namespace Foundation
 		string HelpAnchor { get; }
 
 		[Watch (7,4), TV (14,5), Mac (11,3), iOS (14,5)]
+		[MacCatalyst (14,5)]
 		[Export ("underlyingErrors", ArgumentSemantic.Copy)]
 		NSError [] UnderlyingErrors { get; }
 
@@ -4029,6 +4030,7 @@ namespace Foundation
 		NSString UnderlyingErrorKey { get; }
 
 		[Watch (7,4), TV (14,5), Mac (11,3), iOS (14,5)]
+		[MacCatalyst (14,5)]
 		[Field ("NSMultipleUnderlyingErrorsKey")]
 		NSString MultipleUnderlyingErrorsKey { get; }
 
@@ -6236,6 +6238,7 @@ namespace Foundation
 		NSString UbiquitousItemContainerDisplayNameKey { get; }
 
 		[Watch (7,4), TV (14,5), Mac (11,3), iOS (14,5)]
+		[MacCatalyst (14,5)]
 		[Field ("NSURLUbiquitousItemIsExcludedFromSyncKey")]
 		NSString UbiquitousItemIsExcludedFromSyncKey { get; }
 		
@@ -7871,6 +7874,7 @@ namespace Foundation
 		bool ShouldHandleCookies { get; }
 
 		[Watch (7,4), TV (14,5), Mac (11,3), iOS (14,5)]
+		[MacCatalyst (14,5)]
 		[Export ("assumesHTTP3Capable")]
 		bool AssumesHttp3Capable { get; [NotImplemented] set; }
 	}
@@ -8050,6 +8054,7 @@ namespace Foundation
 		bool AllowsConstrainedNetworkAccess { get; set; }
 
 		[Watch (7,4), TV (14,5), Mac (11,3), iOS (14,5)]
+		[MacCatalyst (14,5)]
 		[Export ("assumesHTTP3Capable")]
 		bool AssumesHttp3Capable { get; set; }
 	}

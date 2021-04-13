@@ -920,6 +920,7 @@ namespace StoreKit {
 
 		[NoWatch, NoTV, NoMac]
 		[iOS (14,5)]
+		[MacCatalyst (14,5)]
 		[Static]
 		[Async]
 		[Export ("startImpression:completionHandler:")]
@@ -927,6 +928,7 @@ namespace StoreKit {
 
 		[NoWatch, NoTV, NoMac]
 		[iOS (14,5)]
+		[MacCatalyst (14,5)]
 		[Static]
 		[Async]
 		[Export ("endImpression:completionHandler:")]
@@ -1166,6 +1168,7 @@ namespace StoreKit {
 
 	[NoWatch, NoTV, NoMac]
 	[iOS (14,5)]
+	[MacCatalyst (14,5)]
 	[BaseType (typeof (NSObject))]
 	interface SKAdImpression {
 

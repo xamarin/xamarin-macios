@@ -196,6 +196,7 @@ namespace UIKit {
 	}
 
 	[NoWatch, TV (14,5), iOS (14,5)]
+	[MacCatalyst (14,5)]
 	[Native]
 	public enum UISplitViewControllerDisplayModeButtonVisibility : long {
 		Automatic,
@@ -2374,6 +2375,7 @@ namespace UIKit {
 		NSString OpenInPlaceKey { get; }
 
 		[NoWatch, NoTV, iOS (14,5)]
+		[MacCatalyst (14,5)]
 		[Field ("UIApplicationOpenURLOptionsEventAttributionKey")]
 		NSString OpenUrlOptionsEventAttributionKey { get; }
 
@@ -2382,6 +2384,7 @@ namespace UIKit {
 		NSString UniversalLinksOnlyKey { get; }
 
 		[NoWatch, NoTV, iOS (14,5)]
+		[MacCatalyst (14,5)]
 		[Field ("UIApplicationOpenExternalURLOptionsEventAttributionKey")]
 		NSString OpenExternalUrlOptionsEventAttributionKey { get; }
 	}
@@ -2723,6 +2726,7 @@ namespace UIKit {
 		NSString LaunchOptionsShortcutItemKey { get; }
 
 		[NoWatch, NoTV, iOS (14,5)]
+		[MacCatalyst (14,5)]
 		[Field ("UIApplicationLaunchOptionsEventAttributionKey")]
 		NSString LaunchOptionsEventAttributionKey { get; }
 
@@ -16094,6 +16098,7 @@ namespace UIKit {
 		UIBarButtonItem DisplayModeButtonItem { get; }
 
 		[iOS (14,5), TV (14,5)]
+		[MacCatalyst (14,5)]
 		[Export ("displayModeButtonVisibility", ArgumentSemantic.Assign)]
 		UISplitViewControllerDisplayModeButtonVisibility DisplayModeButtonVisibility { get; set; }
 		
@@ -16754,6 +16759,7 @@ namespace UIKit {
 		void AddPrintFormatter (UIPrintFormatter formatter, nint pageIndex);
 
 		[iOS (14,5)]
+		[MacCatalyst (14,5)]
 		[Export ("currentRenderingQualityForRequestedRenderingQuality:")]
 		UIPrintRenderingQuality GetCurrentRenderingQuality (UIPrintRenderingQuality requestedRenderingQuality);
 
@@ -16930,6 +16936,7 @@ namespace UIKit {
 	}
 
 	[NoWatch, NoTV, iOS (14,5)]
+	[MacCatalyst (14,5)]
 	[BaseType (typeof (NSObject))]
 	interface UIPrintServiceExtension {
 
@@ -20006,6 +20013,7 @@ namespace UIKit {
 		bool UniversalLinksOnly { get; set; }
 
 		[NoTV, iOS (14, 5)]
+		[MacCatalyst (14,5)]
 		[NullAllowed]
 		[Export ("eventAttribution", ArgumentSemantic.Copy)]
 		UIEventAttribution EventAttribution { get; set; }
@@ -20026,6 +20034,7 @@ namespace UIKit {
 		bool OpenInPlace { get; }
 
 		[NoTV, iOS (14,5)]
+		[MacCatalyst (14,5)]
 		[NullAllowed]
 		[Export ("eventAttribution")]
 		UIEventAttribution EventAttribution { get; }
@@ -22107,10 +22116,12 @@ namespace UIKit {
 		bool ShowsSeparators { get; set; }
 
 		[Watch (7,4), NoTV, iOS (14,5)]
+		[MacCatalyst (14,5)]
 		[Export ("separatorConfiguration", ArgumentSemantic.Copy)]
 		UIListSeparatorConfiguration SeparatorConfiguration { get; set; }
 
 		[Watch (7,4), NoTV, iOS (14,5)]
+		[MacCatalyst (14,5)]
 		[NullAllowed]
 		[Export ("itemSeparatorHandler", ArgumentSemantic.Copy)]
 		UICollectionLayoutListItemSeparatorHandler ItemSeparatorHandler { get; set; }
@@ -22896,6 +22907,7 @@ namespace UIKit {
 	}
 
 	[NoWatch, NoTV, iOS (14,5)]
+	[MacCatalyst (14,5)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface UIEventAttribution : NSCopying {
@@ -22920,6 +22932,7 @@ namespace UIKit {
 	}
 
 	[NoWatch, NoTV, iOS (14,5)]
+	[MacCatalyst (14,5)]
 	[BaseType (typeof (UIView))]
 	interface UIEventAttributionView {
 
@@ -22928,6 +22941,7 @@ namespace UIKit {
 	}
 
 	[NoWatch, NoTV, iOS (14,5)]
+	[MacCatalyst (14,5)]
 	[Native]
 	public enum UIListSeparatorVisibility : long {
 		Automatic,
@@ -22936,6 +22950,7 @@ namespace UIKit {
 	}
 
 	[NoWatch, NoTV, iOS (14,5)]
+	[MacCatalyst (14,5)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface UIListSeparatorConfiguration : NSCopying, NSSecureCoding {
@@ -22964,6 +22979,7 @@ namespace UIKit {
 	}
 
 	[NoWatch, NoTV, iOS (14,5)]
+	[MacCatalyst (14,5)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface UIPrinterDestination : NSSecureCoding {
