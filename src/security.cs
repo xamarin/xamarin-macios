@@ -1115,6 +1115,7 @@ namespace Security {
 		[Field ("kSecAttrAccount")]
 		NSString AccountKey { get; }
 
+		[MacCatalyst (14,0)]
 		[Field ("kSecSharedPassword")]
 		NSString PasswordKey { get; }
 

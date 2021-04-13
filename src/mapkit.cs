@@ -197,10 +197,12 @@ namespace MapKit {
 		void PrepareForDisplay ();
 
 		[TV (14, 0), NoWatch, Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[Export ("zPriority")]
 		float ZPriority { get; set; }
 
 		[TV (14, 0), NoWatch, Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[Export ("selectedZPriority")]
 		float SelectedZPriority { get; set; }
 	}
@@ -1146,10 +1148,12 @@ namespace MapKit {
 		void GetCoords (IntPtr dest, NSRange range);
 
 		[TV (14,0), NoWatch, Mac (11,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Export ("locationAtPointIndex:")]
 		nfloat GetLocation (nuint pointIndex);
 
 		[TV (14,0), NoWatch, Mac (11,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[return: BindAs (typeof (nfloat []))]
 		[Export ("locationsAtPointIndexes:")]
 		NSNumber[] GetLocations (NSIndexSet indexes);
@@ -1213,6 +1217,7 @@ namespace MapKit {
 		IntPtr Constructor (MKLocalSearchRequest request);
 
 		[TV (14,0), NoWatch, Mac (11,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Export ("initWithPointsOfInterestRequest:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (MKLocalPointsOfInterestRequest request);
@@ -1291,10 +1296,12 @@ namespace MapKit {
 		MKCircle Circle { get; }
 
 		[TV (14, 0), NoWatch, Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[Export ("strokeStart")]
 		nfloat StrokeStart { get; set; }
 
 		[TV (14, 0), NoWatch, Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[Export ("strokeEnd")]
 		nfloat StrokeEnd { get; set; }
 	}
@@ -1723,10 +1730,12 @@ namespace MapKit {
 		MKPolygon Polygon { get; }
 
 		[TV (14, 0), NoWatch, Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[Export ("strokeStart")]
 		nfloat StrokeStart { get; set; }
 
 		[TV (14, 0), NoWatch, Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[Export ("strokeEnd")]
 		nfloat StrokeEnd { get; set; }
 	}
@@ -1743,15 +1752,18 @@ namespace MapKit {
 		MKPolyline Polyline { get; }
 
 		[TV (14, 0), NoWatch, Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[Export ("strokeStart")]
 		nfloat StrokeStart { get; set; }
 
 		[TV (14, 0), NoWatch, Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[Export ("strokeEnd")]
 		nfloat StrokeEnd { get; set; }
 	}
 
 	[TV (14, 0), NoWatch, Mac (11, 0), iOS (14, 0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (MKPolylineRenderer))]
 	partial interface MKGradientPolylineRenderer
 	{
@@ -2177,6 +2189,7 @@ namespace MapKit {
 	}
 
 	[TV (14, 0), NoWatch, Mac (11, 0), iOS (14, 0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface MKLocalPointsOfInterestRequest : NSCopying

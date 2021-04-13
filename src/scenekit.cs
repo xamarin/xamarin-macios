@@ -2545,6 +2545,7 @@ namespace SceneKit {
 //		SCNScene Scene { get; set;  }
 
 		// options: nothing today, it is reserved for future use
+		[NoMacCatalyst]
 		[Static, Export ("rendererWithContext:options:")]
 		SCNRenderer FromContext (IntPtr context, [NullAllowed] NSDictionary options);
 

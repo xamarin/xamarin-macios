@@ -187,6 +187,7 @@ namespace CoreVideo {
 		}
 
 #if !WATCH
+#if !__MACCATALYST__
 		public bool? OpenGLESCompatibility {
 			set {
 				SetBooleanValue (CVPixelBuffer.OpenGLESCompatibilityKey, value);
@@ -195,6 +196,7 @@ namespace CoreVideo {
 				return GetBoolValue (CVPixelBuffer.OpenGLESCompatibilityKey);
 			}
 		}
+#endif
 
 		[iOS (8,0)]
 		public bool? MetalCompatibility {

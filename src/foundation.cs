@@ -3961,6 +3961,7 @@ namespace Foundation
 		string HelpAnchor { get; }
 
 		[Watch (7,4), TV (14,5), Mac (11,3), iOS (14,5)]
+		[MacCatalyst (14,5)]
 		[Export ("underlyingErrors", ArgumentSemantic.Copy)]
 		NSError [] UnderlyingErrors { get; }
 
@@ -4029,6 +4030,7 @@ namespace Foundation
 		NSString UnderlyingErrorKey { get; }
 
 		[Watch (7,4), TV (14,5), Mac (11,3), iOS (14,5)]
+		[MacCatalyst (14,5)]
 		[Field ("NSMultipleUnderlyingErrorsKey")]
 		NSString MultipleUnderlyingErrorsKey { get; }
 
@@ -6087,6 +6089,7 @@ namespace Foundation
 		NSString VolumeSupportsAccessPermissionsKey { get; }
 
 		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Field ("NSURLVolumeSupportsFileProtectionKey")]
 		NSString VolumeSupportsFileProtectionKey { get; }
 
@@ -6235,6 +6238,7 @@ namespace Foundation
 		NSString UbiquitousItemContainerDisplayNameKey { get; }
 
 		[Watch (7,4), TV (14,5), Mac (11,3), iOS (14,5)]
+		[MacCatalyst (14,5)]
 		[Field ("NSURLUbiquitousItemIsExcludedFromSyncKey")]
 		NSString UbiquitousItemIsExcludedFromSyncKey { get; }
 		
@@ -6303,26 +6307,32 @@ namespace Foundation
 		NSString FileProtectionCompleteUntilFirstUserAuthentication { get; }
 
 		[Watch (7,0)][TV (14,0)][Mac (11,0)][iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Field ("NSURLContentTypeKey")]
 		NSString ContentTypeKey { get; }
 
 		[Watch (7,0)][TV (14,0)][Mac (11,0)][iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Field ("NSURLFileContentIdentifierKey")]
 		NSString FileContentIdentifierKey { get; }
 
 		[Watch (7,0)][TV (14,0)][Mac (11,0)][iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Field ("NSURLIsPurgeableKey")]
 		NSString IsPurgeableKey { get; }
 
 		[Watch (7,0)][TV (14,0)][Mac (11,0)][iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Field ("NSURLIsSparseKey")]
 		NSString IsSparseKey { get; }
 
 		[Watch (7,0)][TV (14,0)][Mac (11,0)][iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Field ("NSURLMayHaveExtendedAttributesKey")]
 		NSString MayHaveExtendedAttributesKey { get; }
 
 		[Watch (7,0)][TV (14,0)][Mac (11,0)][iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Field ("NSURLMayShareFileContentKey")]
 		NSString MayShareFileContentKey { get; }
 
@@ -7864,6 +7874,7 @@ namespace Foundation
 		bool ShouldHandleCookies { get; }
 
 		[Watch (7,4), TV (14,5), Mac (11,3), iOS (14,5)]
+		[MacCatalyst (14,5)]
 		[Export ("assumesHTTP3Capable")]
 		bool AssumesHttp3Capable { get; [NotImplemented] set; }
 	}
@@ -8043,6 +8054,7 @@ namespace Foundation
 		bool AllowsConstrainedNetworkAccess { get; set; }
 
 		[Watch (7,4), TV (14,5), Mac (11,3), iOS (14,5)]
+		[MacCatalyst (14,5)]
 		[Export ("assumesHTTP3Capable")]
 		bool AssumesHttp3Capable { get; set; }
 	}
@@ -8527,6 +8539,7 @@ namespace Foundation
 
 		[NoTV]
 		[Availability (Deprecated = Platform.iOS_7_0)]
+		[NoMacCatalyst]
 		[Export ("minimumTrackingAdjustment")]
 		nfloat MinimumTrackingAdjustment { get; set;  }
 

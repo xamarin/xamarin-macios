@@ -779,6 +779,7 @@ namespace CoreImage {
 		NSString EnableEdrModeKey { get; }
 
 		[iOS (14,3), TV (14,3), Mac (11,1)]
+		[MacCatalyst (14,3)]
 		[Field ("kCIInputLocalToneMapAmountKey")]
 		NSString InputLocalToneMapAmountKey { get; }
 
@@ -1401,14 +1402,17 @@ namespace CoreImage {
 		NSString AuxiliarySemanticSegmentationTeethMatteKey { get; }
 
 		[iOS (14,1)][TV (14,2)][Mac (11,0)]
+		[MacCatalyst (14,1)]
 		[Field ("kCIImageAuxiliarySemanticSegmentationGlassesMatte")]
 		NSString AuxiliarySemanticSegmentationGlassesMatteKey { get; }
 
 		[iOS (14,3), TV (14,3), Mac (11,1)]
+		[MacCatalyst (14,3)]
 		[Field ("kCIImageAuxiliarySemanticSegmentationSkyMatte")]
 		NSString AuxiliarySemanticSegmentationSkyMatteKey { get; }
 
 		[iOS (14,1)][TV (14,2)][Mac (11,0)]
+		[MacCatalyst (14,1)]
 		[Field ("kCIImageToneMapHDRtoSDR")]
 		NSString ToneMapHdrToSdrKey { get; }
 
@@ -2279,6 +2283,7 @@ namespace CoreImage {
 		[iOS (14,0)]
 		[TV (14,0)]
 		[Mac (11,0)]
+		[MacCatalyst (14,0)]
 		[Static]
 		[Export ("kernelNamesFromMetalLibraryData:")]
 		string[] GetKernelNamesFromMetalLibrary (NSData data);
@@ -2902,6 +2907,7 @@ namespace CoreImage {
 	[iOS (14,0)]
 	[TV (14,0)]
 	[Mac (11,0)]
+	[MacCatalyst (14,0)]
 	[Protocol (Name="CIAreaAverage")]
 	interface CIAreaAverageProtocol : CIFilterProtocol {
 	}
@@ -2922,6 +2928,7 @@ namespace CoreImage {
 	[iOS (14,0)]
 	[TV (14,0)]
 	[Mac (11,0)]
+	[MacCatalyst (14,0)]
 	[Protocol (Name="CIAreaReductionFilter")]
 	interface CIAreaReductionFilterProtocol : CIFilterProtocol {
 
@@ -2937,6 +2944,7 @@ namespace CoreImage {
 	[iOS (14,0)]
 	[TV (14,0)]
 	[Mac (11,0)]
+	[MacCatalyst (14,0)]
 	[Protocol (Name="CIAreaHistogram")]
 	interface CIAreaHistogramProtocol : CIAreaReductionFilterProtocol {
 
@@ -2991,6 +2999,7 @@ namespace CoreImage {
 	[iOS (14,0)]
 	[TV (14,0)]
 	[Mac (11,0)]
+	[MacCatalyst (14,0)]
 	[Protocol (Name="CIAreaMaximum")]
 	interface CIAreaMaximumProtocol : CIAreaReductionFilterProtocol {
 	}
@@ -3004,6 +3013,7 @@ namespace CoreImage {
 	[iOS (14,0)]
 	[TV (14,0)]
 	[Mac (11,0)]
+	[MacCatalyst (14,0)]
 	[Protocol (Name="CIAreaMaximumAlpha")]
 	interface CIAreaMaximumAlphaProtocol : CIAreaReductionFilterProtocol {
 	}
@@ -3017,6 +3027,7 @@ namespace CoreImage {
 	[iOS (14,0)]
 	[TV (14,0)]
 	[Mac (11,0)]
+	[MacCatalyst (14,0)]
 	[Protocol (Name="CIAreaMinimum")]
 	interface CIAreaMinimumProtocol : CIAreaReductionFilterProtocol {
 	}
@@ -3030,6 +3041,7 @@ namespace CoreImage {
 	[iOS (14,0)]
 	[TV (14,0)]
 	[Mac (11,0)]
+	[MacCatalyst (14,0)]
 	[Protocol (Name="CIAreaMinimumAlpha")]
 	interface CIAreaMinimumAlphaProtocol : CIAreaReductionFilterProtocol {
 	}
@@ -3139,6 +3151,7 @@ namespace CoreImage {
 	[iOS (14,0)]
 	[TV (14,0)]
 	[Mac (11,0)]
+	[MacCatalyst (14,0)]
 	[Protocol (Name = "CIBumpDistortion")]
 	interface CIBumpDistortionProtocol : CIFilterProtocol {
 
@@ -3167,6 +3180,7 @@ namespace CoreImage {
 	[iOS (14,0)]
 	[TV (14,0)]
 	[Mac (11,0)]
+	[MacCatalyst (14,0)]
 	[Protocol (Name = "CIBumpDistortionLinear")]
 	interface CIBumpDistortionLinearProtocol : CIFilterProtocol {
 
@@ -3210,6 +3224,7 @@ namespace CoreImage {
 	[iOS (14,0)]
 	[TV (14,0)]
 	[Mac (11,0)]
+	[MacCatalyst (14,0)]
 	[Protocol (Name = "CICircleSplashDistortion")]
 	interface CICircleSplashDistortionProtocol : CIFilterProtocol {
 
@@ -3260,6 +3275,7 @@ namespace CoreImage {
 	[iOS (14,0)]
 	[TV (14,0)]
 	[Mac (11,0)]
+	[MacCatalyst (14,0)]
 	[Protocol (Name = "CICircularWrap")]
 	interface CICircularWrapProtocol : CIFilterProtocol {
 
@@ -3424,6 +3440,7 @@ namespace CoreImage {
 	[iOS (14,0)]
 	[TV (14,0)]
 	[Mac (11,0)]
+	[MacCatalyst (14,0)]
 	[Protocol (Name = "CIColumnAverage")]
 	interface CIColumnAverageProtocol : CIAreaReductionFilterProtocol {
 	}
@@ -3576,6 +3593,7 @@ namespace CoreImage {
 	[iOS (14,0)]
 	[TV (14,0)]
 	[Mac (11,0)]
+	[MacCatalyst (14,0)]
 	[Protocol (Name = "CIDisplacementDistortion")]
 	interface CIDisplacementDistortionProtocol : CIFilterProtocol {
 
@@ -3618,6 +3636,7 @@ namespace CoreImage {
 	[iOS (14,0)]
 	[TV (14,0)]
 	[Mac (11,0)]
+	[MacCatalyst (14,0)]
 	[Protocol (Name = "CIDroste")]
 	interface CIDrosteProtocol : CIFilterProtocol {
 
@@ -3783,6 +3802,7 @@ namespace CoreImage {
 	[iOS (14,0)]
 	[TV (14,0)]
 	[Mac (11,0)]
+	[MacCatalyst (14,0)]
 	[Protocol (Name = "CIGlassDistortion")]
 	interface CIGlassDistortionProtocol : CIFilterProtocol {
 
@@ -3818,6 +3838,7 @@ namespace CoreImage {
 	[iOS (14,0)]
 	[TV (14,0)]
 	[Mac (11,0)]
+	[MacCatalyst (14,0)]
 	[Protocol (Name = "CIGlassLozenge")]
 	interface CIGlassLozengeProtocol : CIFilterProtocol {
 
@@ -3904,6 +3925,7 @@ namespace CoreImage {
 	[iOS (14,0)]
 	[TV (14,0)]
 	[Mac (11,0)]
+	[MacCatalyst (14,0)]
 	[Protocol (Name = "CIHistogramDisplay")]
 	interface CIHistogramDisplayProtocol : CIFilterProtocol {
 
@@ -3946,6 +3968,7 @@ namespace CoreImage {
 	[iOS (14,0)]
 	[TV (14,0)]
 	[Mac (11,0)]
+	[MacCatalyst (14,0)]
 	[Protocol (Name = "CIHoleDistortion")]
 	interface CIHoleDistortionProtocol : CIFilterProtocol {
 
@@ -4018,6 +4041,7 @@ namespace CoreImage {
 	[iOS (14,0)]
 	[TV (14,0)]
 	[Mac (11,0)]
+	[MacCatalyst (14,0)]
 	[Protocol (Name = "CILightTunnel")]
 	interface CILightTunnelProtocol : CIFilterProtocol {
 
@@ -4381,6 +4405,7 @@ namespace CoreImage {
 	[iOS (14,0)]
 	[TV (14,0)]
 	[Mac (11,0)]
+	[MacCatalyst (14,0)]
 	[Protocol (Name = "CIPinchDistortion")]
 	interface CIPinchDistortionProtocol : CIFilterProtocol {
 
@@ -4481,6 +4506,7 @@ namespace CoreImage {
 	[iOS (14,0)]
 	[TV (14,0)]
 	[Mac (11,0)]
+	[MacCatalyst (14,0)]
 	[Protocol (Name="CIRowAverage")]
 	interface CIRowAverageProtocol : CIAreaReductionFilterProtocol {
 	}
@@ -4610,6 +4636,7 @@ namespace CoreImage {
 	[iOS (14,0)]
 	[TV (14,0)]
 	[Mac (11,0)]
+	[MacCatalyst (14,0)]
 	[Protocol (Name = "CIStretchCrop")]
 	interface CIStretchCropProtocol : CIFilterProtocol {
 
@@ -4713,6 +4740,7 @@ namespace CoreImage {
 	[iOS (14,0)]
 	[TV (14,0)]
 	[Mac (11,0)]
+	[MacCatalyst (14,0)]
 	[Protocol (Name = "CITorusLensDistortion")]
 	interface CITorusLensDistortionProtocol : CIFilterProtocol {
 
@@ -4774,6 +4802,7 @@ namespace CoreImage {
 	[iOS (14,0)]
 	[TV (14,0)]
 	[Mac (11,0)]
+	[MacCatalyst (14,0)]
 	[Protocol (Name = "CITwirlDistortion")]
 	interface CITwirlDistortionProtocol : CIFilterProtocol {
 
@@ -4834,6 +4863,7 @@ namespace CoreImage {
 	[iOS (14,0)]
 	[TV (14,0)]
 	[Mac (11,0)]
+	[MacCatalyst (14,0)]
 	[Protocol (Name = "CIVortexDistortion")]
 	interface CIVortexDistortionProtocol : CIFilterProtocol {
 
@@ -4951,6 +4981,7 @@ namespace CoreImage {
 	[iOS (14,0)]
 	[TV (14,0)]
 	[Mac (11,0)]
+	[MacCatalyst (14,0)]
 	[Protocol (Name = "CINinePartStretched")]
 	interface CINinePartStretchedProtocol : CIFilterProtocol {
 
@@ -4996,6 +5027,7 @@ namespace CoreImage {
 	[iOS (14,0)]
 	[TV (14,0)]
 	[Mac (11,0)]
+	[MacCatalyst (14,0)]
 	[Protocol (Name = "CINinePartTiled")]
 	interface CINinePartTiledProtocol : CIFilterProtocol {
 
@@ -5064,6 +5096,7 @@ namespace CoreImage {
 	[iOS (14,0)]
 	[TV (14,0)]
 	[Mac (11,0)]
+	[MacCatalyst (14,0)]
 	[Protocol (Name="CIAreaMinMaxRed")]
 	interface CIAreaMinMaxRedProtocol : CIAreaReductionFilterProtocol {
 	}
@@ -5230,10 +5263,12 @@ namespace CoreImage {
 		CGImageMetadata AuxDataMetadata { get; set; }
 
 		[iOS (14,1)][TV (14,2)][Mac (11,0)]
+		[MacCatalyst (14,1)]
 		[CoreImageFilterProperty ("inputGainMap")]
 		CIImage GainMap { get; set; }
 
 		[iOS (14,1)][TV (14,2)][Mac (11,0)]
+		[MacCatalyst (14,1)]
 		[CoreImageFilterProperty ("inputGlassesImage")]
 		CIImage GlassesImage { get; set; }
 	}
@@ -5790,10 +5825,12 @@ namespace CoreImage {
 		NSString SemanticSegmentationTeethMatteImageKey { get; }
 
 		[iOS (14,1)][TV (14,2)][Mac (11,0)]
+		[MacCatalyst (14,1)]
 		[Field ("kCIImageRepresentationSemanticSegmentationGlassesMatteImage")]
 		NSString SemanticSegmentationGlassesMatteImage { get; }
 
 		[iOS (14,3), TV (14,3), Mac (11,1)]
+		[MacCatalyst (14,3)]
 		[Field ("kCIImageRepresentationSemanticSegmentationSkyMatteImage")]
 		NSString SemanticSegmentationSkyMatteImage { get; }
 	}
@@ -5834,6 +5871,7 @@ namespace CoreImage {
 	[iOS (14,0)]
 	[TV (14,0)]
 	[Mac (11,0)]
+	[MacCatalyst (14,0)]
 	[Protocol (Name="CIAreaMinMax")]
 	interface CIAreaMinMaxProtocol : CIAreaReductionFilterProtocol {
 	}
@@ -5964,6 +6002,7 @@ namespace CoreImage {
 	[iOS (14,0)]
 	[TV (14,0)]
 	[Mac (11,0)]
+	[MacCatalyst (14,0)]
 	[Protocol (Name = "CIKMeans")]
 	interface CIKMeansProtocol : CIAreaReductionFilterProtocol {
 
@@ -9153,6 +9192,7 @@ namespace CoreImage {
 	[iOS (14,0)]
 	[TV (14,0)]
 	[Mac (11,0)]
+	[MacCatalyst (14,0)]
 	[Protocol (Name="CIColorAbsoluteDifference")]
 	interface CIColorAbsoluteDifferenceProtocol : CIFilterProtocol {
 
@@ -9169,6 +9209,7 @@ namespace CoreImage {
 	[iOS (14,0)]
 	[TV (14,0)]
 	[Mac (11,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (CIFilter))]
 	interface CIColorAbsoluteDifference : CIColorAbsoluteDifferenceProtocol {
 	}
@@ -9176,6 +9217,7 @@ namespace CoreImage {
 	[iOS (14,0)]
 	[TV (14,0)]
 	[Mac (11,0)]
+	[MacCatalyst (14,0)]
 	[Protocol (Name="CIColorThreshold")]
 	interface CIColorThresholdProtocol : CIFilterProtocol {
 
@@ -9192,6 +9234,7 @@ namespace CoreImage {
 	[iOS (14,0)]
 	[TV (14,0)]
 	[Mac (11,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (CIFilter))]
 	interface CIColorThreshold : CIColorThresholdProtocol {
 	}
@@ -9199,6 +9242,7 @@ namespace CoreImage {
 	[iOS (14,0)]
 	[TV (14,0)]
 	[Mac (11,0)]
+	[MacCatalyst (14,0)]
 	[Protocol (Name="CIColorThresholdOtsu")]
 	interface CIColorThresholdOtsuProtocol : CIFilterProtocol {
 
@@ -9211,6 +9255,7 @@ namespace CoreImage {
 	[iOS (14,0)]
 	[TV (14,0)]
 	[Mac (11,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (CIFilter))]
 	interface CIColorThresholdOtsu : CIColorThresholdOtsuProtocol {
 	}
