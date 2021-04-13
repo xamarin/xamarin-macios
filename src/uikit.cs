@@ -22907,7 +22907,7 @@ namespace UIKit {
 		UIColor MultipleSelectionColor { get; set; }
 	}
 
-	[NoWatch, NoTV, iOS (14,5)]
+	[NoWatch, NoTV, iOS (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface UIPrinterDestination : NSSecureCoding {
