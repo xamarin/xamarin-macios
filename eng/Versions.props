@@ -2,7 +2,7 @@
   <!--Package versions-->
   <PropertyGroup>
     <MicrosoftDotnetSdkInternalPackageVersion>6.0.100-preview.4.21210.1</MicrosoftDotnetSdkInternalPackageVersion>
-    <MicrosoftNETILLinkPackageVersion>6.0.100-preview.2.21205.2</MicrosoftNETILLinkPackageVersion>
-    <MicrosoftNETILLinkTasksPackageVersion>6.0.100-preview.2.21205.2</MicrosoftNETILLinkTasksPackageVersion>
+    <MicrosoftNETILLinkPackageVersion>6.0.100-preview.2.21212.1</MicrosoftNETILLinkPackageVersion>
+    <MicrosoftNETILLinkTasksPackageVersion>6.0.100-preview.2.21212.1</MicrosoftNETILLinkTasksPackageVersion>
   </PropertyGroup>
 </Project>

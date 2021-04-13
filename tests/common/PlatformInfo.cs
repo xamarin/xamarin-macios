@@ -125,8 +125,11 @@ namespace Xamarin.Tests
 			}
 			bool versioned = Version.TryParse (a.PlatformName [n..], out var v);
 
-			if (a is SupportedOSPlatformAttribute)
+			if (a is SupportedOSPlatformAttribute) {
+				if (!versioned)
+					throw new FormatException (a.PlatformName);
 				return new IntroducedAttribute (p, v.Major, v.Minor);
+			}
 			if (a is UnsupportedOSPlatformAttribute) {
 				// if a version is provided then it means it was deprecated
 				// if no version is provided then it means it's unavailable
