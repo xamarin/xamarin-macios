@@ -307,10 +307,10 @@ steps:
   timeoutInMinutes: 180
 
 - script: >-
-    dotnet build -t:GenerateBARManifest /v:n
+    dotnet build -t:GenerateBuildAssetRegistryManifest /v:n
     $(Build.SourcesDirectory)/xamarin-macios/dotnet/package/Microsoft.iOS.Ref/package.csproj
     -bl:$(Build.ArtifactStagingDirectory)/build-binlogs/generate-bar-manifest.binlog
-  displayName: Generate and Upload BAR Manifest
+  displayName: Generate and Upload Build Asset Registry Manifest
   condition: and(succeeded(), contains(variables['configuration.BuildNugets'], 'True'))
 
 - task: PublishPipelineArtifact@1

@@ -39,11 +39,11 @@ jobs:
     displayName: make Microsoft.iOS.Sdk.Versions.props
 
   - powershell: >-
-      & dotnet build -v:n -t:PushBARManifest
+      & dotnet build -v:n -t:PushManifestToBuildAssetRegistry
       -p:BarManifestOutputPath=$(Agent.BuildDirectory)\macios\AssetManifests -p:BuildAssetRegistryToken=$(MaestroAccessToken)
       $(Build.SourcesDirectory)\dotnet\package\Microsoft.iOS.Ref\package.csproj
       -bl:$(Build.ArtifactStagingDirectory)\post-build-binlogs\push-bar-manifest.binlog
-    displayName: generate and publish BAR manifest
+    displayName: push manifest to build asset registry
 
   - powershell: |
       $versionEndpoint = 'https://maestro-prod.westus2.cloudapp.azure.com/api/assets/darc-version?api-version=2019-01-16'

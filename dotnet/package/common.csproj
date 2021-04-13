@@ -110,7 +110,7 @@
     </Content>
   </ItemGroup>
 
-  <Target Name="GenerateBARManifest" >
+  <Target Name="GenerateBuildAssetRegistryManifest" >
     <ItemGroup>
       <BuildArtifacts Include="$(NupkgPath)\*.nupkg" />
     </ItemGroup>
@@ -140,7 +140,7 @@
     <Message Importance="high" Text="##vso[artifact.upload containerfolder=AssetManifests;artifactname=AssetManifests]$(BarManifestOutputPath)/AssetManifest.xml" />
   </Target>
 
-  <Target Name="PushBARManifest" >
+  <Target Name="PushManifestToBuildAssetRegistry" >
     <PropertyGroup>
       <VersionPrefix>1.0.0</VersionPrefix>
     </PropertyGroup>
