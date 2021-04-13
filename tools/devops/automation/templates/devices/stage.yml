@@ -134,3 +134,4 @@ stages:
         statusContext: ${{ parameters.statusContext }}
         vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
         devicePrefix: ${{ parameters.devicePrefix }}
+        provisioningFailed: $[ dependencies.tests.outputs['runTests.PROVISIONING_FAILED']
