@@ -33,11 +33,11 @@ steps:
 - checkout: self
   persistCredentials: true
 
-- template: download-artifacts.yml 
-  parameters:
-    devicePrefix: ${{ parameters.devicePrefix }}
-
 - ${{ if eq(parameters.provisioningFailed, 'False') }}:
+  - template: download-artifacts.yml 
+    parameters:
+      devicePrefix: ${{ parameters.devicePrefix }}
+
   # Use the cmdlet to post a new summary comment. The cmdlet checks if we have the TestSummary.md file or not. It will also add the appropriate links to the comment. 
   # this step uses variables that have been set by the tests job dependency via output variables, those variables contain if the xamarin-storage could be used and its path
   - powershell: |
