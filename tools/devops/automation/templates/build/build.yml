@@ -306,9 +306,19 @@ steps:
   continueOnError: true # should not stop the build since is not official just yet.
   timeoutInMinutes: 180
 
-- script: 'dotnet build -t:GenerateBARManifest /v:n $(Build.SourcesDirectory)/xamarin-macios/dotnet/package/Microsoft.iOS.Ref/package.csproj'
+- script: >-
+    dotnet build -t:GenerateBARManifest /v:n
+    $(Build.SourcesDirectory)/xamarin-macios/dotnet/package/Microsoft.iOS.Ref/package.csproj
+    -bl:$(Build.ArtifactStagingDirectory)/build-binlogs/generate-bar-manifest.binlog
   displayName: Generate and Upload BAR Manifest
   condition: and(succeeded(), contains(variables['configuration.BuildNugets'], 'True'))
+
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Artifact: build-binlogs'
+  inputs:
+    targetPath: $(Build.ArtifactStagingDirectory)/build-binlogs
+    artifactName: build-binlogs
+  condition: and(succeededOrFailed(), contains(variables['configuration.BuildNugets'], 'True'))
 
 - task: NuGetCommand@2
   displayName: 'Publish Nugets'
