@@ -1,30 +1,6 @@
 # Contains all the different steps to generate the diff API diffs
 
 steps:
-- bash:  $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/compare.sh
-  displayName: 'API & Generator comparison'
-  condition: and(succeeded(), contains(variables['configuration.SkipPublicJenkins'], 'False'))
-  name: compare
-  env:
-    BUILD_REVISION: 'jenkins'
-
-- task: ArchiveFiles@1
-  displayName: 'Archive API & Generator comparison'
-  inputs:
-    rootFolder: $(Build.ArtifactStagingDirectory)/apicomparison
-    includeRootFolder: false
-    archiveFile: '$(Build.ArtifactStagingDirectory)/apicomparison.zip'
-  condition: and(succeeded(), contains(variables['configuration.SkipPublicJenkins'], 'False'))
-  continueOnError: true
-
-- task: PublishPipelineArtifact@1
-  displayName: 'Publish API & Generator comparison'
-  inputs:
-    targetPath: '$(Build.ArtifactStagingDirectory)/apicomparison.zip'
-    artifactName: apicomparison
-  condition: and(succeeded(), contains(variables['configuration.SkipPublicJenkins'], 'False'))
-  continueOnError: true
-  
 # order matters, first compare then diff, else git complains
 - bash: |
     report_error ()
@@ -64,5 +40,29 @@ steps:
   inputs:
     targetPath: '$(Build.ArtifactStagingDirectory)/apidiff-stable.zip'
     artifactName: apidiff-stable
+  condition: and(succeeded(), contains(variables['configuration.SkipPublicJenkins'], 'False'))
+  continueOnError: true
+
+- bash:  $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/compare.sh
+  displayName: 'API & Generator comparison'
+  condition: and(succeeded(), contains(variables['configuration.SkipPublicJenkins'], 'False'))
+  name: compare
+  env:
+    BUILD_REVISION: 'jenkins'
+
+- task: ArchiveFiles@1
+  displayName: 'Archive API & Generator comparison'
+  inputs:
+    rootFolder: $(Build.ArtifactStagingDirectory)/apicomparison
+    includeRootFolder: false
+    archiveFile: '$(Build.ArtifactStagingDirectory)/apicomparison.zip'
+  condition: and(succeeded(), contains(variables['configuration.SkipPublicJenkins'], 'False'))
+  continueOnError: true
+
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish API & Generator comparison'
+  inputs:
+    targetPath: '$(Build.ArtifactStagingDirectory)/apicomparison.zip'
+    artifactName: apicomparison
   condition: and(succeeded(), contains(variables['configuration.SkipPublicJenkins'], 'False'))
   continueOnError: true
