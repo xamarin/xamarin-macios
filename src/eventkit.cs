@@ -357,6 +357,7 @@ namespace EventKit {
 #else
 #if !WATCH
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Replaced by 'ContactPredicate'.")]
+		[MacCatalyst (14,0)]
 		[return: NullAllowed]
 		[Export ("ABRecordWithAddressBook:")]
 		ABRecord GetRecord (ABAddressBook addressBook);

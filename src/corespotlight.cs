@@ -264,6 +264,7 @@ namespace CoreSpotlight {
 		IntPtr Constructor (string itemContentType);
 
 		[iOS (14,0)][TV (14,0)][Mac (11,0)]
+		[MacCatalyst (14,0)]
 		[Export ("initWithContentType:")]
 		IntPtr Constructor (UTType contentType);
 

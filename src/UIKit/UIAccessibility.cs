@@ -302,11 +302,13 @@ namespace UIKit {
 		}
 
 		[TV (14,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[DllImport (Constants.UIKitLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool UIAccessibilityButtonShapesEnabled ();
 
 		[TV (14,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		public static bool ButtonShapesEnabled => UIAccessibilityButtonShapesEnabled ();
 
 #if !NET
@@ -342,11 +344,13 @@ namespace UIKit {
 		}
 
 		[TV (14,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[DllImport (Constants.UIKitLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool UIAccessibilityPrefersCrossFadeTransitions ();
 
 		[TV (14,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		public static bool PrefersCrossFadeTransitions => UIAccessibilityPrefersCrossFadeTransitions ();
 
 		[iOS (13,0), TV (13,0)]
