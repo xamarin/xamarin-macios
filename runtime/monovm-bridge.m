@@ -125,7 +125,6 @@ xamarin_bridge_call_runtime_initialize (struct InitializationOptions* options, G
 	nsstring_class = get_class_from_name (platform_image, foundation, "NSString", true);
 
 	xamarin_add_internal_call ("Foundation.NSObject::xamarin_create_managed_ref", (const void *) xamarin_create_managed_ref);
-	xamarin_add_internal_call ("Foundation.NSObject::xamarin_release_managed_ref", (const void *) xamarin_release_managed_ref);
 
 	runtime_initialize = mono_class_get_method_from_name (runtime_class, "Initialize", 1);
 
