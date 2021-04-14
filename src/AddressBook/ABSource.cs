@@ -39,6 +39,8 @@ using ObjCRuntime;
 namespace AddressBook {
 	
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
 	public class ABSource : ABRecord {
 		internal ABSource (IntPtr handle, bool owns)
 			: base (handle, owns)

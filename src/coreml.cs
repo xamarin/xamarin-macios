@@ -442,6 +442,7 @@ namespace CoreML {
 		MLModelMetadata Metadata { get; }
 
 		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[NullAllowed, Export ("classLabels", ArgumentSemantic.Copy)]
 		NSObject[] ClassLabels { get; }
 
@@ -1019,6 +1020,7 @@ namespace CoreML {
 	}
 
 	[Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[NoTV][NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -1049,6 +1051,7 @@ namespace CoreML {
 	}
 
 	[Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[NoTV][NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]

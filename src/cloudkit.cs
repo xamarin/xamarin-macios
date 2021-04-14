@@ -1615,6 +1615,7 @@ namespace CloudKit {
 		[NoWatch]
 		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'CKRecordZoneSubscription'.")]
 		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use 'CKRecordZoneSubscription'.")]
+		[NoMacCatalyst]
 		[NullAllowed]
 		[Export ("zoneID", ArgumentSemantic.Copy)]
 		CKRecordZoneID ZoneID { get; set; }

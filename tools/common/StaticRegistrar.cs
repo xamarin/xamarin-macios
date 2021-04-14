@@ -2347,14 +2347,11 @@ namespace Registrar {
 
 		string ToObjCParameterType (TypeReference type, string descriptiveMethodName, List<Exception> exceptions, MemberReference inMethod, bool delegateToBlockType = false)
 		{
-			TypeDefinition td = ResolveType (type);
-			var reftype = type as ByReferenceType;
-			ArrayType arrtype = type as ArrayType;
 			GenericParameter gp = type as GenericParameter;
-
 			if (gp != null)
 				return "id";
 
+			var reftype = type as ByReferenceType;
 			if (reftype != null) {
 				string res = ToObjCParameterType (GetElementType (reftype), descriptiveMethodName, exceptions, inMethod);
 				if (res == null)
@@ -2362,6 +2359,7 @@ namespace Registrar {
 				return res + "*";
 			}
 
+			ArrayType arrtype = type as ArrayType;
 			if (arrtype != null)
 				return "NSArray *";
 
@@ -2399,7 +2397,7 @@ namespace Registrar {
 				return sb.ToString ();
 			}
 
-			switch (td.FullName) {
+			switch (type.FullName) {
 			case "System.Drawing.RectangleF": return App.Platform == ApplePlatform.MacOSX ? "NSRect" : "CGRect";
 			case "System.Drawing.PointF": return App.Platform == ApplePlatform.MacOSX ? "NSPoint" : "CGPoint";
 			case "System.Drawing.SizeF": return App.Platform == ApplePlatform.MacOSX ? "NSSize" : "CGSize";
@@ -2432,6 +2430,7 @@ namespace Registrar {
 			case "ObjCRuntime.Selector": return "SEL";
 			case "ObjCRuntime.Class": return "Class";
 			default:
+				TypeDefinition td = ResolveType (type);
 				if (IsNSObject (td)) {
 					if (!IsPlatformType (td))
 						return "id";

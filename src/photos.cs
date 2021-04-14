@@ -691,6 +691,7 @@ namespace Photos
 		PHCollectionListChangeRequest ChangeRequest (PHCollectionList collectionList, PHFetchResult childCollections);
 
 		[TV (14,2), Mac (11,0), iOS (14,2)]
+		[MacCatalyst (14,2)]
 		[Static]
 		[Export ("changeRequestForTopLevelCollectionListUserCollections:")]
 		[return: NullAllowed]
@@ -1118,6 +1119,7 @@ namespace Photos
 		PHAuthorizationStatus AuthorizationStatus { get; }
 
 		[TV (14,0), Mac (11,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Static]
 		[Export ("authorizationStatusForAccessLevel:")]
 		PHAuthorizationStatus GetAuthorizationStatus (PHAccessLevel accessLevel);
@@ -1130,6 +1132,7 @@ namespace Photos
 		void RequestAuthorization (Action<PHAuthorizationStatus> handler);
 
 		[TV (14,0), Mac (11,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Static]
 		[Export ("requestAuthorizationForAccessLevel:handler:")]
 		[Async]

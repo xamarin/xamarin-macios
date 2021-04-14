@@ -40,6 +40,8 @@ using ObjCRuntime;
 
 namespace AddressBook {
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
 	public class ExternalChangeEventArgs : EventArgs {
 		public ExternalChangeEventArgs (ABAddressBook addressBook, NSDictionary info)
 		{
@@ -68,6 +70,11 @@ namespace AddressBook {
 
 		static InitConstants ()
 		{
+#if __MACCATALYST__
+			// avoid TypeLoadException if used before macOS 11.x
+			if (!UIKit.UIDevice.CurrentDevice.CheckSystemVersion (14,0))
+				return;
+#endif
 			// ensure we can init. This is needed before iOS6 (as per doc).
 			IntPtr p = ABAddressBook.ABAddressBookCreate ();
 
@@ -92,6 +99,8 @@ namespace AddressBook {
 	}
 
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
 	public class ABAddressBook : INativeObject, IDisposable, IEnumerable<ABRecord> {
 
 		public static readonly NSString ErrorDomain;

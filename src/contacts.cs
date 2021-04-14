@@ -1259,10 +1259,12 @@ namespace Contacts {
 		NSString SonInLawOrBrotherInLaw { get; }
 
 		[iOS (14, 0), Mac (11, 0), Watch (7, 0)]
+		[MacCatalyst (14,0)]
 		[Field ("CNLabelContactRelationGranddaughterOrNiece")]
 		NSString GranddaughterOrNiece { get; }
 
 		[iOS (14, 0), Mac (11, 0), Watch (7, 0)]
+		[MacCatalyst (14,0)]
 		[Field ("CNLabelContactRelationGrandsonOrNephew")]
 		NSString GrandsonOrNephew { get; }
 
@@ -2078,6 +2080,7 @@ namespace Contacts {
 		NSString iPhone { get; }
 
 		[Watch (7,2), Mac (11,1), iOS (14,3)]
+		[MacCatalyst (14,3)]
 		[Field ("CNLabelPhoneNumberAppleWatch")]
 		NSString AppleWatch { get; }
 
