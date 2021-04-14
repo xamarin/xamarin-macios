@@ -36,7 +36,8 @@ cd $XAM_TOP
 
 MARKDOWN_INDENT="&nbsp;&nbsp;&nbsp;&nbsp;"
 echo "*** Comparing API & creating generator diff... ***"
-export COMPARE_FAILURE_FILE=$TMPDIR/api-diff-compare-failures.txt
+export COMPARE_FAILURE_FILE=$WORKSPACE/api-diff-compare-failures.txt
+echo "Comare failure file is in $COMPARE_FAILURE_FILE"
 report_error ()
 {
 	printf ":fire: [Failed to compare API and create generator diff](%s/console) :fire:\\n" "$BUILD_URL" >> "$WORKSPACE/api-diff-comments.md"
@@ -52,6 +53,9 @@ report_error ()
 }
 trap report_error ERR
 
+echo "####################"
+echo "Pull id is $ghprbPullId"
+echo "####################"
 if test -z "$ghprbPullId"; then
 	BASE=HEAD
 else
