@@ -11,7 +11,7 @@ resources:
     trigger:
       branches:
       - main
-      - 6.0.*
+      - release/*
       stages:
       - build_packages
 
