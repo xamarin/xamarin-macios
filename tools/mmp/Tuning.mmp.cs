@@ -200,7 +200,7 @@ namespace MonoMac.Tuner {
 	}
 
 
-	public class CustomizeMacActions : CustomizeActions
+	public class CustomizeMacActions : CustomizeCoreActions
 	{
 		LinkMode link_mode;
 
