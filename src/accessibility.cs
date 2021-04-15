@@ -5,6 +5,7 @@ using ObjCRuntime;
 namespace Accessibility {
 
 	[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+	[MacCatalyst (14,0)]
 	[Native]
 	public enum AXCustomContentImportance : ulong
 	{
@@ -13,6 +14,7 @@ namespace Accessibility {
 	}
 
 	[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface AXCustomContent : NSCopying, NSSecureCoding
@@ -42,6 +44,7 @@ namespace Accessibility {
 	}
 
 	[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+	[MacCatalyst (14,0)]
 	[Protocol]
 	interface AXCustomContentProvider
 	{

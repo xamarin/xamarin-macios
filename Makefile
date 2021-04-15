@@ -63,10 +63,8 @@ all-local:: global6.json
 global6.json: $(TOP)/Make.config.inc Makefile $(TOP)/.git/HEAD $(TOP)/.git/index
 	$(Q_GEN) \
 		printf "{\n" > $@; \
-		printf "\t\"sdk\": { \"version\": \"$(DOTNET6_VERSION)\" },\n" >> $@; \
-		printf "\t\"msbuild-sdks\": {\n" >> $@; \
-		printf "\t\t\"Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk\": \"5.0.0-beta.20120.1\"\n" >> $@; \
-		printf "\t}\n}\n" >> $@
+		printf "\t\"sdk\": { \"version\": \"$(DOTNET6_VERSION)\" }\n" >> $@; \
+		printf "\n}\n" >> $@
 
 install-hook::
 	@$(MAKE) check-permissions

@@ -13,7 +13,7 @@ using System.Reflection;
 using Foundation;
 using ObjCRuntime;
 using UIKit;
-#if !__TVOS__
+#if HAS_WATCHCONNECTIVITY
 using WatchConnectivity;
 #endif
 using NUnit.Framework;
@@ -71,13 +71,13 @@ namespace Introspection {
 //				if (Runtime.Arch == Arch.DEVICE)
 //					return true;
 //				break;
-#if !__TVOS__
+#if HAS_WATCHCONNECTIVITY
 			case "WatchConnectivity":
 			case "MonoTouch.WatchConnectivity":
 				if (!WCSession.IsSupported)
 					return true;
 				break;
-#endif // !__TVOS__
+#endif // HAS_WATCHCONNECTIVITY
 			}
 
 			switch (type.Name) {
@@ -265,14 +265,14 @@ namespace Introspection {
 				case "shouldUpdateFocusInContext:":
 				case "updateFocusIfNeeded":
 				case "canBecomeFocused":
-#if !__TVOS__
+#if !__TVOS__ && !__MACCATALYST__
 				case "preferredFocusedView":
 #endif
 					int major = declaredType.Name == "SKNode" ? 8 : 9;
 					if (!TestRuntime.CheckXcodeVersion (major, 0))
 						return true;
 					break;
-#if __TVOS__
+#if __TVOS__ || __MACCATALYST__
 				case "preferredFocusedView":
 					return true;
 #endif
@@ -351,7 +351,7 @@ namespace Introspection {
 					break;
 				}
 				break;
-#if __TVOS__
+#if __TVOS__ || __MACCATALYST__
 			// broken with Xcode 12 beta 1
 			case "CKDiscoveredUserInfo":
 				switch (name) {

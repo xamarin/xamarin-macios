@@ -8,6 +8,7 @@ namespace SensorKit {
 
 	[NoWatch, NoTV, NoMac]
 	[iOS (14,0)]
+	[MacCatalyst (14,0)]
 	public static class SRAbsoluteTime {
 
 		[DllImport (Constants.SensorKitLibrary, EntryPoint = "SRAbsoluteTimeGetCurrent")]
