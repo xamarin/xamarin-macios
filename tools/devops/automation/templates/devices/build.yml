@@ -60,10 +60,6 @@ steps:
 - bash: cd $(System.DefaultWorkingDirectory)/xamarin-macios/ && git clean -xdf
   displayName: 'Clean workspace'
 
-# Run the pipeline script tests to ensure that we will have not have an unexpected behaviour.
-- bash: make -C $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts run-tests
-  displayName: 'Run pipeline script tests'
-
 - pwsh : |
     gci env: | format-table -autosize -wrap
   displayName: 'Dump Environment'
