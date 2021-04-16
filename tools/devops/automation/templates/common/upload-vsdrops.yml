@@ -6,22 +6,28 @@ parameters:
   type: string 
   default: 'ios' # default context, since we started dealing with iOS devices. 
 
+# did the provisioning work?
+- name: provisioningFailed
+  type: string 
+  default: 'False'
+
 steps:
 
 - checkout: self
   persistCredentials: true
 
-- template: download-artifacts.yml 
-  parameters:
-    devicePrefix: ${{ parameters.devicePrefix }}
+- ${{ if eq(parameters.provisioningFailed, 'False') }}:
+  - template: download-artifacts.yml 
+    parameters:
+      devicePrefix: ${{ parameters.devicePrefix }}
 
-# Upload full report to vsdrops using the the build numer and id as uuids.
-- task: ms-vscs-artifact.build-tasks.artifactDropTask-1.artifactDropTask@0
-  displayName: 'Publish to Artifact Services Drop'
-  inputs:
-    dropServiceURI: 'https://devdiv.artifacts.visualstudio.com/DefaultCollection'
-    dropMetadataContainerName: 'DropMetadata-${{ parameters.devicePrefix }}'
-    buildNumber: 'xamarin-macios/device-tests/$(Build.BuildNumber)/$(Build.BuildId)/${{ parameters.devicePrefix }}'
-    sourcePath: $(HTML_REPORT_PATH)
-    detailedLog: true
-    usePat: true 
+  # Upload full report to vsdrops using the the build numer and id as uuids.
+  - task: ms-vscs-artifact.build-tasks.artifactDropTask-1.artifactDropTask@0
+    displayName: 'Publish to Artifact Services Drop'
+    inputs:
+      dropServiceURI: 'https://devdiv.artifacts.visualstudio.com/DefaultCollection'
+      dropMetadataContainerName: 'DropMetadata-${{ parameters.devicePrefix }}'
+      buildNumber: 'xamarin-macios/device-tests/$(Build.BuildNumber)/$(Build.BuildId)/${{ parameters.devicePrefix }}'
+      sourcePath: $(HTML_REPORT_PATH)
+      detailedLog: true
+      usePat: true 
