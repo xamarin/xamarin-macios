@@ -671,10 +671,6 @@ $(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIM
 # https://github.com/dotnet/runtime/issues/48508
 DOTNET_tvos-arm64_LIBDIR=$(TOP)/builds/mono-ios-sdk-destdir/ios-libs/tvos
 
-# The runtime pack is different for macOS/Mono (it has '.Mono' at the end), so add a special case here.
-DOTNET_osx-x64_LIBDIR=$(TOP)/builds/downloads/microsoft.netcore.app.runtime.mono.osx-x64/$(BUNDLED_NETCORE_PLATFORMS_PACKAGE_VERSION)/runtimes/osx-x64/native
-DOTNET_osx-arm64_LIBDIR=$(TOP)/builds/downloads/microsoft.netcore.app.runtime.mono.osx-arm64/$(BUNDLED_NETCORE_PLATFORMS_PACKAGE_VERSION)/runtimes/osx-arm64/native
-
 define DotNetLibXamarinTemplate
 
 DOTNET$(6)_$(2)_LIBDIR ?= $$(TOP)/builds/downloads/microsoft.netcore.app.runtime.mono.$(2)/$(BUNDLED_NETCORE_PLATFORMS_PACKAGE_VERSION)/runtimes/$(2)/native
