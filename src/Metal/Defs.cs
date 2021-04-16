@@ -9,6 +9,7 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using Foundation;
 using ModelIO;
@@ -231,7 +232,12 @@ namespace Metal {
 		public uint ThreadGroupsPerGrid3;
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("tvos12.0")]
+#else
 	[Mac (10,14), iOS (12,0), TV (12,0)]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MTLStageInRegionIndirectArguments {
 		public uint StageInOrigin1;
@@ -356,7 +362,13 @@ namespace Metal {
 	}
 #endif // MONOMAC
 
+#if NET
+	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("macos10.15")]
+#else
 	[Mac (10,15), iOS (13,0), TV (13,0)]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MTLTextureSwizzleChannels {
 #if COREBUILD
@@ -374,9 +386,16 @@ namespace Metal {
 	}
 
 #if IOS || MONOMAC || COREBUILD
+
+#if NET
+	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("macos10.15.4")]
+	[SupportedOSPlatform ("maccatalyst13.4")]
+#else
 	[Introduced (PlatformName.iOS, 13,0, PlatformArchitecture.All)]
 	[Introduced (PlatformName.MacCatalyst, 13, 4)]
 	[Introduced (PlatformName.MacOSX, 10, 15, 4)]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MTLVertexAmplificationViewMapping {
 		public uint ViewportArrayIndexOffset;
@@ -384,9 +403,15 @@ namespace Metal {
 		public uint RenderTargetArrayIndexOffset;
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("macos10.15.4")]
+	[SupportedOSPlatform ("maccatalyst13.4")]
+#else
 	[Introduced (PlatformName.iOS, 13,0, PlatformArchitecture.All)]
 	[Introduced (PlatformName.MacCatalyst, 13, 4)]
 	[Introduced (PlatformName.MacOSX, 10, 15, 4)]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MTLCoordinate2D {
 		public float X;
@@ -396,8 +421,15 @@ namespace Metal {
 #endif
 
 #if !TVOS || !XAMCORE_4_0
+
+#if NET
+	[SupportedOSPlatform ("ios14.0")]
+	[SupportedOSPlatform ("macos11.0")]
+	[SupportedOSPlatform ("maccatalyst14.0")]
+#else
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[Mac (11,0), iOS (14,0), NoTV]
+#endif
 #if TVOS && !XAMCORE_4_0
 	[Obsolete ("This API is not available on this platform.")]
 #endif

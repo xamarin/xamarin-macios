@@ -16,7 +16,9 @@ using ObjCRuntime;
 
 namespace Compression
 {
+#if !NET
 	[iOS (9,0), Mac (10,11)]
+#endif
 	public partial class CompressionStream : Stream
 	{
 		private const int DefaultBufferSize = 8192;
