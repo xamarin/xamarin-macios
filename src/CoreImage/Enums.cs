@@ -22,6 +22,7 @@
 //
 
 using System;
+using System.Runtime.Versioning;
 using ObjCRuntime;
 
 #nullable enable
@@ -76,9 +77,14 @@ namespace CoreImage {
 		RGf = 22
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("tvos11.0")]
+#else
 	[iOS (11,0)]
 	[Mac (10,13)]
 	[TV (11,0)]
+#endif
 	[Native]
 	public enum CIQRCodeErrorCorrectionLevel : long {
 		L = 76,
@@ -87,9 +93,14 @@ namespace CoreImage {
 		H = 72,
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("tvos11.0")]
+#else
 	[iOS (11,0)]
 	[Mac (10,13)]
 	[TV (11,0)]
+#endif
 	[Native]
 	public enum CIDataMatrixCodeEccVersion : long {
 		V000 = 0,
@@ -100,9 +111,14 @@ namespace CoreImage {
 		V200 = 200,
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("tvos11.0")]
+#else
 	[iOS (11,0)]
 	[Mac (10,13)]
 	[TV (11,0)]
+#endif
 	[Native]
 	public enum CIRenderDestinationAlphaMode : ulong {
 		None = 0,

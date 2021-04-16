@@ -8,6 +8,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using CoreFoundation;
@@ -17,7 +18,9 @@ using Foundation;
 
 namespace MediaAccessibility {
 
+#if !NET
 	[iOS (7,0)][Mac (10,9)]
+#endif
 	public static partial class MACaptionAppearance {
 
 #if !XAMCORE_4_0
@@ -218,11 +221,23 @@ namespace MediaAccessibility {
 			return (MACaptionAppearanceTextEdgeStyle) (int) rv;
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+#else
 		[TV (13,0), Mac (10,15), iOS (13,0)]
+#endif
 		[DllImport (Constants.MediaAccessibilityLibrary)]
 		static extern void MACaptionAppearanceDidDisplayCaptions (IntPtr /* CFArratRef */ strings);
 
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+#else
 		[TV (13,0), Mac (10,15), iOS (13,0)]
+#endif
 		public static void DidDisplayCaptions (string[] strings)
 		{
 			if ((strings == null) || (strings.Length == 0))
@@ -233,7 +248,13 @@ namespace MediaAccessibility {
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+#else
 		[TV (13,0), Mac (10,15), iOS (13,0)]
+#endif
 		public static void DidDisplayCaptions (NSAttributedString[] strings)
 		{
 			// CFAttributedString is “toll-free bridged” with its Foundation counterpart, NSAttributedString.
@@ -248,7 +269,9 @@ namespace MediaAccessibility {
 	}
 
 	static partial class MAAudibleMedia {
+#if !NET
 		[iOS (8,0)][Mac (10,10)]
+#endif
 		[DllImport (Constants.MediaAccessibilityLibrary)]
 		static extern unsafe IntPtr /* CFArrayRef __nonnull */ MAAudibleMediaCopyPreferredCharacteristics ();
 

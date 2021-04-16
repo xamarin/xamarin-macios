@@ -19,7 +19,9 @@ namespace CoreImage {
 		public FaceDetectorAccuracy? Accuracy { get; set; }
 		public float? MinFeatureSize { get; set; }
 
+#if !NET
 		[iOS (10,0)][Mac (10,12)]
+#endif
 		public int? MaxFeatureCount { get; set; }
 
 		public bool? TrackingEnabled { get; set; }
