@@ -6,14 +6,20 @@
 //
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using Foundation;
 using ObjCRuntime;
 
 namespace OpenGLES {
 
+#if NET
+	[UnsupportedOSPlatform ("ios12.0")]
+	[UnsupportedOSPlatform ("tvos12.0")]
+#else
 	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
+#endif
 	public static class EAGLDrawableProperty {
 		public static readonly NSString ColorFormat;
 		public static readonly NSString RetainedBacking;
@@ -28,8 +34,13 @@ namespace OpenGLES {
 		}
 	}
 
+#if NET
+	[UnsupportedOSPlatform ("ios12.0")]
+	[UnsupportedOSPlatform ("tvos12.0")]
+#else
 	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
+#endif
 	public static class EAGLColorFormat {
 		public static readonly NSString RGB565;
 		public static readonly NSString RGBA8;

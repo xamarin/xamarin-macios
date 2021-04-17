@@ -8,6 +8,7 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using Foundation;
 using ObjCRuntime;
@@ -18,7 +19,12 @@ namespace Metal {
 
 	public static partial class MTLResourceStateCommandEncoder_Extensions {
 
+#if NET
+		[UnsupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
 		[NoMac, NoTV]
+#endif
 		public static void Update (this IMTLResourceStateCommandEncoder This, IMTLTexture texture, MTLSparseTextureMappingMode mode, MTLRegion[] regions, nuint[] mipLevels, nuint[] slices)
 		{
 			if (texture == null)

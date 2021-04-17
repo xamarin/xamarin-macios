@@ -10,6 +10,7 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using Foundation;
 using ObjCRuntime;
@@ -22,7 +23,9 @@ namespace Metal {
 	public delegate void MTLDeviceNotificationHandler (IMTLDevice device, NSString notifyName);
 #endif
 
+#if !NET
 	[iOS (8,0)][Mac (10,11)]
+#endif
 	public static partial class MTLDevice {
 		[DllImport (Constants.MetalLibrary)]
 		extern static IntPtr MTLCreateSystemDefaultDevice ();
@@ -160,7 +163,13 @@ namespace Metal {
 		}
 #if IOS
 
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
+#else
 		[NoMac, NoTV, iOS (13,0)]
+#endif
 		public static void ConvertSparseTileRegions (this IMTLDevice This, MTLRegion [] tileRegions, MTLRegion [] pixelRegions, MTLSize tileSize, nuint numRegions)
 		{
 			if (tileRegions == null)
@@ -180,7 +189,13 @@ namespace Metal {
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
+#else
 		[NoMac, NoTV, iOS (13,0)]
+#endif
 		public static void ConvertSparsePixelRegions (this IMTLDevice This, MTLRegion [] pixelRegions, MTLRegion [] tileRegions, MTLSize tileSize, MTLSparseTextureRegionAlignmentMode mode, nuint numRegions)
 		{
 			if (tileRegions == null)

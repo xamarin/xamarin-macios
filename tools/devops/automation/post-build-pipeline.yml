@@ -53,9 +53,9 @@ jobs:
       & $(Agent.ToolsDirectory)\darc\darc add-build-to-channel --default-channels --id $(BARBuildId) --publishing-infra-version 3 --skip-assets-publishing --password $(MaestroAccessToken) --azdev-pat $(publishing-dnceng-devdiv-code-r-build-re)
     displayName: add build to default darc channel
 
-- task: PublishPipelineArtifact@1
-  displayName: 'Publish Artifact: post-build-binlogs'
-  inputs:
-    targetPath: $(Build.ArtifactStagingDirectory)\post-build-binlogs
-    artifactName: post-build-binlogs
-  condition: succeededOrFailed()
+  - task: PublishPipelineArtifact@1
+    displayName: 'Publish Artifact: post-build-binlogs'
+    inputs:
+      targetPath: $(Build.ArtifactStagingDirectory)\post-build-binlogs
+      artifactName: post-build-binlogs
+    condition: succeededOrFailed()

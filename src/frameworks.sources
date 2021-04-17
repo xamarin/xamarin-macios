@@ -1023,8 +1023,10 @@ ITUNESLIBRARY_SOURCES = \
 
 # JavaScriptCore
 
-JAVASCRIPTCORE_SOURCES = \
+JAVASCRIPTCORE_API_SOURCES = \
 	JavaScriptCore/Enums.cs \
+
+JAVASCRIPTCORE_SOURCES = \
 	JavaScriptCore/Extensions.cs \
 
 # LocalAuthentication
