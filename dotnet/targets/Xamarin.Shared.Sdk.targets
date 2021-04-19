@@ -685,12 +685,12 @@
 			<!-- include .dll, .exe and, for debugging only, .pdb files inside the .app -->
 			<ResolvedFileToPublish
 				Update="@(ResolvedFileToPublish)"
-				RelativePath="$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)$(PublishDir),$(_AssemblyPublishDir)))%(ResolvedFileToPublish.DestinationSubDirectory)\%(Filename)%(Extension)"
+				RelativePath="$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)$(PublishDir),$(_AssemblyPublishDir)))\%(ResolvedFileToPublish.DestinationSubDirectory)\%(Filename)%(Extension)"
 				Condition="'%(Extension)' == '.dll' Or ('$(_BundlerDebug)' == 'true' And '%(Extension)' == '.pdb') Or '%(Extension)' == '.exe'" />
 			<!-- Copy the app.config file to the app bundle -->
 			<ResolvedFileToPublish
 				Update="@(ResolvedFileToPublish)"
-				RelativePath="$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)$(PublishDir),$(_AssemblyPublishDir)))%(ResolvedFileToPublish.DestinationSubDirectory)\%(ResolvedFileToPublish.TargetPath)"
+				RelativePath="$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)$(PublishDir),$(_AssemblyPublishDir)))\%(ResolvedFileToPublish.DestinationSubDirectory)\%(ResolvedFileToPublish.TargetPath)"
 				Condition="'$(AppConfig)' != '' And '%(ResolvedFileToPublish.OriginalItemSpec)' == '$(AppConfig)' And '%(ResolvedFileToPublish.Link)' == 'app.config' And '%(ResolvedFileToPublish.TargetPath)' != ''" />
 			<!-- .dylib are never needed (nor allowed) for fully AOT'ed applications FIXME https://github.com/xamarin/xamarin-macios/issues/11145 -->
 			<ResolvedFileToPublish
