@@ -4,13 +4,13 @@
       <Uri>https://github.com/dotnet/installer</Uri>
       <Sha>aee38a6dd446b512b1ae510d80d2ed1c1f24e79a</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.ILLink" Version="6.0.100-preview.2.21212.1">
+    <Dependency Name="Microsoft.NET.ILLink" Version="6.0.100-preview.2.21217.1">
       <Uri>https://github.com/mono/linker</Uri>
-      <Sha>6bfa2c0657d2dcfd6dce684ab34b470ce567631a</Sha>
+      <Sha>0e2e95e9db92cd41f620f96dda84171cbf34fa6c</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.ILLink.Tasks" Version="6.0.100-preview.2.21212.1">
+    <Dependency Name="Microsoft.NET.ILLink.Tasks" Version="6.0.100-preview.2.21217.1">
       <Uri>https://github.com/mono/linker</Uri>
-      <Sha>6bfa2c0657d2dcfd6dce684ab34b470ce567631a</Sha>
+      <Sha>0e2e95e9db92cd41f620f96dda84171cbf34fa6c</Sha>
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
