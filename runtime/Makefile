@@ -673,7 +673,7 @@ DOTNET_tvos-arm64_LIBDIR=$(TOP)/builds/mono-ios-sdk-destdir/ios-libs/tvos
 
 define DotNetLibXamarinTemplate
 
-DOTNET$(6)_$(2)_LIBDIR ?= $$(TOP)/builds/downloads/microsoft.netcore.app.runtime.mono.$(2)/$(BUNDLED_NETCORE_PLATFORMS_PACKAGE_VERSION)/runtimes/$(2)/native
+DOTNET$(6)_$(2)_LIBDIR ?= $$(TOP)/builds/downloads/microsoft.netcore.app.runtime$(7).$(2)/$(BUNDLED_NETCORE_PLATFORMS_PACKAGE_VERSION)/runtimes/$(2)/native
 DOTNET$(6)_$(2)_DYLIB_FLAGS = $(DOTNET_$(1)_DYLIB_FLAGS) -Wl,-install_name,libxamarin$(5).dylib -framework Foundation -framework CFNetwork -lz -L$(abspath $(DOTNET$(6)_$(2)_LIBDIR))
 
 DOTNET_$(2)_$(3)$(4)_OBJECTS   = $$(patsubst %,.libs/$(1)/%$(5).$(3).o,   $(MONOTOUCH_SOURCE_STEMS)) $$(patsubst %,.libs/$(1)/%$(5).$(3).o,   $(MONOTOUCH_$(shell echo $(3) | tr a-z A-Z)_SOURCE_STEMS))
@@ -691,14 +691,14 @@ endef
 # foreach (var platform in DOTNET_PLATFORMS)
 #   foreach (var rid in DOTNET_<platform>_RUNTIME_IDENTIFIERS))
 #      foreach (var arch in DOTNET_<rid>_ARCHITECTURES)
-#                                           1      2    3      4                  5                     6
-#        call DotNetLibXamarinTemplate (platform, rid, arch,       ,         "-dotnet",)
-#        call DotNetLibXamarinTemplate (platform, rid, arch, _DEBUG,         "-dotnet-debug",)
-#        call DotNetLibXamarinTemplate (platform, rid, arch, _CORECLR,       "-dotnet-coreclr",       _CORECLR)
-#        call DotNetLibXamarinTemplate (platform, rid, arch, _CORECLR_DEBUG, "-dotnet-coreclr-debug", _CORECLR)
+#                                           1      2    3      4                  5                     6       7
+#        call DotNetLibXamarinTemplate (platform, rid, arch,       ,         "-dotnet",                       ,.mono)
+#        call DotNetLibXamarinTemplate (platform, rid, arch, _DEBUG,         "-dotnet-debug",                 ,.mono)
+#        call DotNetLibXamarinTemplate (platform, rid, arch, _CORECLR,       "-dotnet-coreclr",       _CORECLR,)
+#        call DotNetLibXamarinTemplate (platform, rid, arch, _CORECLR_DEBUG, "-dotnet-coreclr-debug", _CORECLR,)
 
-$(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(foreach arch,$(DOTNET_$(rid)_ARCHITECTURES),$(eval $(call DotNetLibXamarinTemplate,$(DOTNET_$(rid)_SDK_PLATFORM),$(rid),$(arch),,-dotnet,)))))
-$(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(foreach arch,$(DOTNET_$(rid)_ARCHITECTURES),$(eval $(call DotNetLibXamarinTemplate,$(DOTNET_$(rid)_SDK_PLATFORM),$(rid),$(arch),_DEBUG,-dotnet-debug,)))))
+$(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(foreach arch,$(DOTNET_$(rid)_ARCHITECTURES),$(eval $(call DotNetLibXamarinTemplate,$(DOTNET_$(rid)_SDK_PLATFORM),$(rid),$(arch),,-dotnet,,.mono)))))
+$(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(foreach arch,$(DOTNET_$(rid)_ARCHITECTURES),$(eval $(call DotNetLibXamarinTemplate,$(DOTNET_$(rid)_SDK_PLATFORM),$(rid),$(arch),_DEBUG,-dotnet-debug,,.mono)))))
 $(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(foreach arch,$(DOTNET_$(rid)_ARCHITECTURES),$(eval $(call DotNetLibXamarinTemplate,$(DOTNET_$(rid)_SDK_PLATFORM),$(rid),$(arch),_CORECLR,-dotnet-coreclr,_CORECLR)))))
 $(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(foreach arch,$(DOTNET_$(rid)_ARCHITECTURES),$(eval $(call DotNetLibXamarinTemplate,$(DOTNET_$(rid)_SDK_PLATFORM),$(rid),$(arch),_CORECLR_DEBUG,-dotnet-coreclr-debug,_CORECLR)))))
 
