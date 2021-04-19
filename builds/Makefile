@@ -114,8 +114,9 @@ $(eval $(call FixMacCatalystAssembly,System.Net.Http))
 		/t:WriteBundledNETCorePlatformsPackageVersion \
 		/p:WriteFilePath=$(CURDIR)/BundledNETCorePlatformsPackageVersion.txt \
 		/p:PackageRuntimeIdentifiers="$(DOTNET_RUNTIME_IDENTIFIERS)" \
+		/p:PackageRuntimeIdentifiersCoreCLR="$(DOTNET_CORECLR_RUNTIME_IDENTIFIERS)" \
 		/bl \
-		/v:quiet
+		$(DOTNET_BUILD_VERBOSITY)
 	$(Q) touch $@
 
 BundledNETCorePlatformsPackageVersion.txt: .stamp-download-dotnet-packages
