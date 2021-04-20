@@ -19,7 +19,6 @@
 #    c. Execute 'ghprbPullId=4614 ./compare.sh'
 #
 
-WORKSPACE="$BUILD_ARTIFACTSTAGINGDIRECTORY"
 API_COMPARISON="$WORKSPACE/apicomparison"
 BUILD_URL="$SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$SYSTEM_TEAMPROJECT/_build/index?buildId=$BUILD_BUILDID&view=ms.vss-test-web.test-result-details"
 URL_PREFIX="$VSDROPSPREFIX/$BUILD_BUILDNUMBER/$BUILD_BUILDID/apigeneratordiff/;/"
@@ -73,8 +72,6 @@ mkdir -p "$API_COMPARISON"
 cp -R ./tools/comparison/apidiff/diff "$API_COMPARISON"
 cp    ./tools/comparison/apidiff/*.html "$API_COMPARISON"
 cp -R ./tools/comparison/generator-diff "$API_COMPARISON"
-
-ls -Rla "$API_COMPARISON"
 
 if ! grep "href=" "$API_COMPARISON/api-diff.html" >/dev/null 2>&1; then
 	printf ":white_check_mark: [API Diff (from PR only)](%s) (no change)" "$API_URL" >> "$WORKSPACE/api-diff-comments.md"

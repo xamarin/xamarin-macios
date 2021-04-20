@@ -1,7 +1,7 @@
 # Contains all the different steps to generate the diff API diffs
 
 steps:
-- bash:  $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/compare.sh
+- bash:  $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/vsts-compare.sh
   displayName: 'API & Generator comparison'
   condition: and(succeeded(), contains(variables['configuration.SkipPublicJenkins'], 'False'))
   name: compare
