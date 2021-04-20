@@ -32,35 +32,34 @@ namespace Xamarin.Tests
 		[TestCase ("zh-TW")]
 		public void CompareErrorCodeMT0015 (string culture)
 		{
+			string errorCode = "MT0015";
 			CultureInfo originalCulture = Thread.CurrentThread.CurrentUICulture;
 
 			try {
-				string englishError = TranslateError ("en-US");
-				string newCultureError = TranslateError (culture);
+				string englishError = TranslateError ("en-US", errorCode);
+				string newCultureError = TranslateError (culture, errorCode);
 
-				Assert.AreNotEqual (englishError, newCultureError, $"\"MT0003\" is not translated in {culture}.");
+				Assert.AreNotEqual (englishError, newCultureError, $"\"{errorCode}\" is not translated in {culture}.");
 			} catch (NullReferenceException){
-				Assert.IsFalse (true, $"Error code \"MT0003\" was not found");
+				Assert.IsFalse (true, $"Error code \"{errorCode}\" was not found");
+			} catch (Exception e) {
+
 			} finally {
 				Thread.CurrentThread.CurrentUICulture = originalCulture;
 			}
 		}
 
-		private string TranslateError (string culture)
+		private string TranslateError (string culture, string errorCode)
 		{
 			CultureInfo cultureInfo = new CultureInfo (culture);
 			Thread.CurrentThread.CurrentUICulture = cultureInfo;
 
+			var type = typeof (Errors);
+			PropertyInfo propertyInfo = type.GetProperty (errorCode, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+			var value = (string) propertyInfo.GetValue (null, null);
+			var value2 = (string) propertyInfo.GetValue (null, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static, null, null, null);
 
-			using (var mtouch = new MTouchTool ()) {
-				mtouch.CreateTemporaryApp ();
-				mtouch.Abi = "invalid-arm";
-				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
-				var messages = mtouch.Messages.GetEnumerator ();
-				messages.MoveNext ();
-				return messages.Current.Message;
-			}
-
+			return value;
 			//PropertyInfo propertyInfo = typeof (Errors).GetProperty (errorCode);
 			//return (string) propertyInfo.GetValue (null, null);
 		}
