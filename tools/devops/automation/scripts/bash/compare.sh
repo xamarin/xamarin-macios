@@ -19,7 +19,6 @@
 #    c. Execute 'ghprbPullId=4614 ./compare.sh'
 #
 
-WORKSPACE="$BUILD_ARTIFACTSTAGINGDIRECTORY"
 API_COMPARISON="$WORKSPACE/apicomparison"
 BUILD_URL="$SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$SYSTEM_TEAMPROJECT/_build/index?buildId=$BUILD_BUILDID&view=ms.vss-test-web.test-result-details"
 URL_PREFIX="$VSDROPSPREFIX/$BUILD_BUILDNUMBER/$BUILD_BUILDID/apigeneratordiff/;/"
