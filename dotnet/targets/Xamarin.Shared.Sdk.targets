@@ -2,8 +2,6 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
 	<PropertyGroup>
-		<!-- Set to true when using the Microsoft.<platform>.Sdk NuGet. This is used by pre-existing/shared targets to tweak behavior depending on build system -->
-		<_UsingXamarinSdk>true</_UsingXamarinSdk>
 		<!-- This is the location of the Microsoft.<platform>.Sdk NuGet (/usr/local/share/dotnet/sdk/<version>/Sdks/Microsoft.[iOS/tvOS/watchOS/macOS].Sdk) -->
 		<_XamarinSdkRootDirectory>$([MSBuild]::NormalizePath('$(MSBuildThisFileDirectory)', '..'))\</_XamarinSdkRootDirectory>
 
@@ -12,12 +10,7 @@
 
 		<!-- Use single-project MSBuild properties to generate the application manifest by default -->
 		<GenerateApplicationManifest Condition="'$(GenerateApplicationManifest)' == ''">true</GenerateApplicationManifest>
-
-		<XamarinWindowsSdkDirectory Condition="'$(XamarinWindowsSdkDirectory)' == '' And '$(_PlatformName)' == 'iOS'">$(MSBuildThisFileDirectory.Replace('Microsoft.iOS.Sdk', 'Microsoft.iOS.Windows.Sdk'))</XamarinWindowsSdkDirectory>
-		<XamarinWindowsSdkDirectory Condition="'$(XamarinWindowsSdkDirectory)' == '' And '$(_PlatformName)' == 'tvOS'">$(MSBuildThisFileDirectory.Replace('Microsoft.tvOS.Sdk', 'Microsoft.tvOS.Windows.Sdk'))</XamarinWindowsSdkDirectory>
 	</PropertyGroup>
-
-	<Import Project="$(XamarinWindowsSdkDirectory)$(MSBuildThisFileName).Before.targets" Condition="Exists('$(XamarinWindowsSdkDirectory)$(MSBuildThisFileName).Before.targets')" />
 
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CompileNativeCode" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.LinkNativeCode" AssemblyFile="$(_XamarinTaskAssembly)" />
