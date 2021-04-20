@@ -14,7 +14,10 @@ using ObjCRuntime;
 
 namespace MetalKit {
 #if !COREBUILD
+
+#if !NET
 	[iOS (9,0)][Mac (10,11)]
+#endif
 	public partial class MTKTextureLoaderOptions : DictionaryContainer {
 
 		public MTLTextureUsage? TextureUsage {
@@ -47,7 +50,9 @@ namespace MetalKit {
 			}
 		}
 
+#if !NET
 		[iOS (10,0)][Mac (10,12)]
+#endif
 		public MTLStorageMode? TextureStorageMode {
 			get {
 				var val = GetNUIntValue (MTKTextureLoaderKeys.TextureStorageModeKey);
@@ -63,7 +68,9 @@ namespace MetalKit {
 			}
 		}
 
+#if !NET
 		[iOS (10,0)][Mac (10,12)]
+#endif
 		public MTKTextureLoaderCubeLayout? CubeLayout {
 			get {
 				var val = GetNSStringValue (MTKTextureLoaderKeys.CubeLayoutKey);
@@ -79,7 +86,9 @@ namespace MetalKit {
 			}
 		}
 
+#if !NET
 		[iOS (10,0)][Mac (10,12)]
+#endif
 		public MTKTextureLoaderOrigin? Origin {
 			get {
 				var val = GetNSStringValue (MTKTextureLoaderKeys.OriginKey);

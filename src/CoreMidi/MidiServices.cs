@@ -38,6 +38,7 @@
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using ObjCRuntime;
 using CoreFoundation;
 using Foundation;
@@ -507,8 +508,13 @@ namespace CoreMidi {
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static int /* OSStatus = SInt32 */ MIDIClientDispose (MidiObjectRef handle);
 
+#if NET
+		[UnsupportedOSPlatform ("ios14.0")]
+		[UnsupportedOSPlatform ("macos11.0")]
+#else
 		[Deprecated (PlatformName.iOS, 14,0)]
 		[Deprecated (PlatformName.MacOSX, 11,0)]
+#endif
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static int /* OSStatus = SInt32 */ MIDISourceCreate (MidiObjectRef handle, IntPtr name, out MidiObjectRef endpoint);
 			
@@ -545,8 +551,13 @@ namespace CoreMidi {
 			return Name;
 		}
 
+#if NET
+		[UnsupportedOSPlatform ("ios14.0")]
+		[UnsupportedOSPlatform ("macos11.0")]
+#else
 		[Deprecated (PlatformName.iOS, 14,0)]
 		[Deprecated (PlatformName.MacOSX, 11,0)]
+#endif
 		public MidiEndpoint CreateVirtualSource (string name, out MidiError statusCode)
 		{
 			using (var nsstr = new NSString (name)){
@@ -561,8 +572,13 @@ namespace CoreMidi {
 			}			
 		}
 
+#if NET
+		[UnsupportedOSPlatform ("ios14.0")]
+		[UnsupportedOSPlatform ("macos11.0")]
+#else
 		[Deprecated (PlatformName.iOS, 14,0)]
 		[Deprecated (PlatformName.MacOSX, 11,0)]
+#endif
 		public MidiEndpoint CreateVirtualDestination (string name, out MidiError status)
 		{
 			var m = new MidiEndpoint (this, name, out status);
@@ -877,8 +893,14 @@ namespace CoreMidi {
 	
 	public class MidiPort : MidiObject {
 #if !COREBUILD
+
+#if NET
+		[UnsupportedOSPlatform ("ios14.0")]
+		[UnsupportedOSPlatform ("macos11.0")]
+#else
 		[Deprecated (PlatformName.iOS, 14,0)]
 		[Deprecated (PlatformName.MacOSX, 11,0)]
+#endif
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static int /* OSStatus = SInt32 */ MIDIInputPortCreate (MidiClientRef client, IntPtr /* CFStringRef */ portName, MidiReadProc readProc, IntPtr context, out MidiPortRef midiPort);
 
@@ -976,13 +998,23 @@ namespace CoreMidi {
 			return (input ? "[input:" : "[output:") + Client + ":" + PortName + "]";
 		}
 
+#if NET
+		[UnsupportedOSPlatform ("ios14.0")]
+		[UnsupportedOSPlatform ("macos11.0")]
+#else
 		[Deprecated (PlatformName.iOS, 14,0)]
 		[Deprecated (PlatformName.MacOSX, 11,0)]
+#endif
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static MidiError /* OSStatus = SInt32 */ MIDISend (MidiPortRef port, MidiEndpointRef endpoint, IntPtr packets);
 
+#if NET
+		[UnsupportedOSPlatform ("ios14.0")]
+		[UnsupportedOSPlatform ("macos11.0")]
+#else
 		[Deprecated (PlatformName.iOS, 14,0)]
 		[Deprecated (PlatformName.MacOSX, 11,0)]
+#endif
 		public MidiError Send (MidiEndpoint endpoint, MidiPacket [] packets)
 		{
 			if (endpoint == null)
@@ -1402,8 +1434,13 @@ namespace CoreMidi {
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static MidiEntityRef MIDIDeviceGetEntity (MidiDeviceRef handle, nint item);
 
+#if NET
+		[UnsupportedOSPlatform ("ios14.0")]
+		[UnsupportedOSPlatform ("macos11.0")]
+#else
 		[Deprecated (PlatformName.iOS, 14,0)]
 		[Deprecated (PlatformName.MacOSX, 11,0)]
+#endif
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static int MIDIDeviceAddEntity (MidiDeviceRef device, /* CFString */ IntPtr name, [MarshalAs (UnmanagedType.U1)] bool embedded, nuint numSourceEndpoints, nuint numDestinationEndpoints, MidiEntityRef newEntity);
 
@@ -1417,7 +1454,11 @@ namespace CoreMidi {
 			return new MidiEntity (h);
 		}
 
+#if NET
+		[UnsupportedOSPlatform ("ios14.0")]
+#else
 		[Deprecated (PlatformName.iOS, 14,0)]
+#endif
 		public int Add (string name, bool embedded, nuint numSourceEndpoints, nuint numDestinationEndpoints, MidiEntity newEntity)
 		{
 			if (handle == MidiObject.InvalidRef)
@@ -1496,7 +1537,12 @@ namespace CoreMidi {
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+#else
 		[Mac (10,15), iOS (13,0)]
+#endif
 		public string NameConfigurationDictionary {
 			get {
 				return GetString (kMIDIPropertyNameConfigurationDictionary);
@@ -1915,8 +1961,13 @@ namespace CoreMidi {
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static int /* OSStatus = SInt32 */ MIDIEndpointDispose (MidiEndpointRef handle);
 		
+#if NET
+		[UnsupportedOSPlatform ("ios14.0")]
+		[UnsupportedOSPlatform ("macos11.0")]
+#else
 		[Deprecated (PlatformName.iOS, 14,0)]
 		[Deprecated (PlatformName.MacOSX, 11,0)]
+#endif
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static MidiError /* OSStatus = SInt32 */ MIDIDestinationCreate (MidiClientRef client, IntPtr /* CFStringRef */ name, MidiReadProc readProc, IntPtr context, out MidiEndpointRef midiEndpoint);
 
@@ -1924,8 +1975,13 @@ namespace CoreMidi {
 		extern static int /* OSStatus = SInt32 */ MIDIFlushOutput (MidiEndpointRef handle);
 
 		[DllImport (Constants.CoreMidiLibrary)]
+#if NET
+		[UnsupportedOSPlatform ("ios14.0")]
+		[UnsupportedOSPlatform ("macos11.0")]
+#else
 		[Deprecated (PlatformName.iOS, 14,0)]
 		[Deprecated (PlatformName.MacOSX, 11,0)]
+#endif
 		extern static MidiError /* OSStatus = SInt32 */ MIDIReceived (MidiEndpointRef handle, IntPtr /* MIDIPacketList* */ packetList);
 		
 		[DllImport (Constants.CoreMidiLibrary)]
@@ -2014,8 +2070,13 @@ namespace CoreMidi {
 			MIDIFlushOutput (handle);
 		}
 
+#if NET
+		[UnsupportedOSPlatform ("ios14.0")]
+		[UnsupportedOSPlatform ("macos11.0")]
+#else
 		[Deprecated (PlatformName.iOS, 14,0)]
 		[Deprecated (PlatformName.MacOSX, 11,0)]
+#endif
 		public MidiError Received (MidiPacket [] packets)
 		{
 			if (packets == null)

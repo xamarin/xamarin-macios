@@ -2568,6 +2568,7 @@ namespace UIKit {
 		Root,
 
 		[iOS (14,0), TV (14,0)]
+		[MacCatalyst (14,0)]
 		[Field ("UIMenuOpenRecent")]
 		OpenRecent,
 	}
@@ -3078,6 +3079,7 @@ namespace UIKit {
 	}
 
 	[iOS (14,0), TV (14,0), NoWatch]
+	[MacCatalyst (14,0)]
 	public enum UIPasteboardDetectionPattern {
 		[Field ("UIPasteboardDetectionPatternProbableWebURL")]
 		ProbableWebUrl,
@@ -3087,7 +3089,7 @@ namespace UIKit {
 		Number,
 	}
 
-	[Introduced (PlatformName.MacCatalyst, 10, 14)]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch, NoTV, NoiOS]
 	[Native]
 	public enum UISceneCollectionJoinBehavior : long {

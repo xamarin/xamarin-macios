@@ -224,7 +224,7 @@ namespace MonoTouch.Tuner {
 		}
 	}
 
-	public class CustomizeIOSActions : CustomizeActions
+	public class CustomizeIOSActions : CustomizeCoreActions
 	{
 		LinkMode link_mode;
 

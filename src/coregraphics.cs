@@ -78,10 +78,12 @@ namespace CoreGraphics {
 		IntPtr kCGPDFContextAccessPermissions { get; }
 
 		[Mac (11,0)][iOS (14,0)][TV (14,0)][Watch (7,0)]
+		[MacCatalyst (14,0)]
 		[Internal][Field ("kCGPDFContextCreateLinearizedPDF")]
 		IntPtr kCGPDFContextCreateLinearizedPDF { get; }
 
 		[Mac (11,0)][iOS (14,0)][TV (14,0)][Watch (7,0)]
+		[MacCatalyst (14,0)]
 		[Internal][Field ("kCGPDFContextCreatePDFA")]
 		IntPtr kCGPDFContextCreatePDFA { get; }
 	}
@@ -209,6 +211,7 @@ namespace CoreGraphics {
 		NSString ExtendedLinearItur_2020 { get; }
 
 		[iOS (14,1), Mac (11,0), TV (14,2), Watch (7,1)]
+		[MacCatalyst (14,1)]
 		[Field ("kCGColorSpaceExtendedITUR_2020")]
 		NSString ExtendedItur_2020 { get; }
 
@@ -218,6 +221,7 @@ namespace CoreGraphics {
 		NSString ExtendedLinearDisplayP3 { get; }
 
 		[iOS (14,1), Mac (11,0), TV (14,2), Watch (7,1)]
+		[MacCatalyst (14,1)]
 		[Field ("kCGColorSpaceExtendedDisplayP3")]
 		NSString ExtendedDisplayP3 { get; }
 
@@ -266,10 +270,12 @@ namespace CoreGraphics {
 		NSString Itur_2020_Hlg { get; }
 
 		[iOS (14,0)][TV (14,0)][Watch (7,0)][Mac (11,0)]
+		[MacCatalyst (14,0)]
 		[Field ("kCGColorSpaceITUR_2100_HLG")]
 		NSString Itur_2100_Hlg { get; }
 
 		[iOS (14,0)][TV (14,0)][Watch (7,0)][Mac (11,0)]
+		[MacCatalyst (14,0)]
 		[Field ("kCGColorSpaceITUR_2100_PQ")]
 		NSString Itur_2100_PQ { get; }
 	}
@@ -365,6 +371,7 @@ namespace CoreGraphics {
 
 	// macOS 10.5
 	[iOS (14,0)][TV (14,0)][Watch (7,0)]
+	[MacCatalyst (14,0)]
 	enum CGConstantColor {
 		[Field ("kCGColorWhite")]
 		White,
