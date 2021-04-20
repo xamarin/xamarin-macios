@@ -39,6 +39,9 @@ namespace MonoTouchFixtures.Foundation {
 		}
 
 		[Test]
+#if NET
+		[Ignore ("https://github.com/xamarin/xamarin-macios/issues/11222")]
+#endif
 		public void All_28300 ()
 		{
 			foreach (var name in NSTimeZone.KnownTimeZoneNames) {
