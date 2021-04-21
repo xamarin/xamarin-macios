@@ -128,6 +128,8 @@ function Set-GitHubStatus {
         "SYSTEM_TEAMPROJECT" = $Env:SYSTEM_TEAMPROJECT;
         "BUILD_BUILDID" = $Env:BUILD_BUILDID;
         "BUILD_REVISION" = $Env:BUILD_REVISION;
+        "BUILD_REASON" = $Env:BUILD_REASON;
+        "SYSTEM_PULLREQUEST_SOURCECOMMITID" = $Env:SYSTEM_PULLREQUEST_SOURCECOMMITID; # provided by vsts by default
         "BUILD_SOURCEBRANCHNAME" = $Env:BUILD_SOURCEBRANCHNAME;
         "GITHUB_TOKEN" = $Env:GITHUB_TOKEN;
     }
@@ -139,7 +141,11 @@ function Set-GitHubStatus {
         }
     }
 
-    $url = "https://api.github.com/repos/xamarin/xamarin-macios/statuses/$Env:BUILD_REVISION"
+    if ($Env:BUILD_REASON -eq "PullRequest") {
+        $url = "https://api.github.com/repos/xamarin/xamarin-macios/statuses/$Env:SYSTEM_PULLREQUEST_SOURCECOMMITID"
+    } else {
+        $url = "https://api.github.com/repos/xamarin/xamarin-macios/statuses/$Env:BUILD_REVISION"
+    }
 
     $headers = @{
         Authorization = ("token {0}" -f $Env:GITHUB_TOKEN)
@@ -258,7 +264,7 @@ function New-GitHubComment {
     $msg.AppendLine("[Pipeline]($targetUrl) on Agent $Env:TESTS_BOT") # Env:TESTS_BOT is added by the pipeline as a variable coming from the execute tests job
     $msg.AppendLine("$Env:BUILD_SOURCEVERSIONMESSAGE") # default envars to provide more context to the result
 
-    # if the build was due to PR, we want to write the comment in the PR rather than in the comment
+    # if the build was due to PR, we want to write the comment in the PR rather than in the commit 
     if ($Env:BUILD_REASON -eq "PullRequest") {
         # calcualte the change ID which is the PR number 
         $buildSourceBranch = $Env:BUILD_SOURCEBRANCH
