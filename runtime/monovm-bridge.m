@@ -11,6 +11,7 @@
 #if !defined (CORECLR_RUNTIME)
 
 #include <TargetConditionals.h>
+#include <pthread.h>
 
 #if !DOTNET && TARGET_OS_OSX
 #define LEGACY_XAMARIN_MAC 1
@@ -193,6 +194,86 @@ xamarin_get_runtime_class ()
 	if (runtime_class == NULL)
 		xamarin_assertion_message ("Internal consistency error, please file a bug (https://github.com/xamarin/xamarin-macios/issues/new). Additional data: can't get the %s class because it's been linked away.\n", "Runtime");
 	return runtime_class;
+}
+
+/* Wrapping threads with NSAutoreleasePool
+ *
+ * We must create an NSAutoreleasePool for each thread, so users
+ * don't have to do it manually.
+ *
+ * Use mono's profiling API to get notified for thread start/stop,
+ * and create a pool that spans the thread's entire lifetime.
+ */
+
+static CFMutableDictionaryRef xamarin_thread_hash = NULL;
+static pthread_mutex_t thread_hash_lock = PTHREAD_MUTEX_INITIALIZER;
+
+static void
+xamarin_thread_start (void *user_data)
+{
+	// COOP: no managed memory access: any mode. Switching to safe mode since we're locking a mutex.
+	NSAutoreleasePool *pool;
+
+	if (mono_thread_is_foreign (mono_thread_current ()))
+		return;
+
+	MONO_ENTER_GC_SAFE;
+
+	pool = [[NSAutoreleasePool alloc] init];
+
+	pthread_mutex_lock (&thread_hash_lock);
+
+	CFDictionarySetValue (xamarin_thread_hash, GINT_TO_POINTER (pthread_self ()), pool);
+
+	pthread_mutex_unlock (&thread_hash_lock);
+
+	MONO_EXIT_GC_SAFE;
+}
+
+static void
+xamarin_thread_finish (void *user_data)
+{
+	// COOP: no managed memory access: any mode. Switching to safe mode since we're locking a mutex.
+	NSAutoreleasePool *pool;
+
+	MONO_ENTER_GC_SAFE;
+
+	/* Don't drain the pool while holding the thread hash lock. */
+	pthread_mutex_lock (&thread_hash_lock);
+
+	pool = (NSAutoreleasePool *) CFDictionaryGetValue (xamarin_thread_hash, GINT_TO_POINTER (pthread_self ()));
+	if (pool)
+		CFDictionaryRemoveValue (xamarin_thread_hash, GINT_TO_POINTER (pthread_self ()));
+
+	pthread_mutex_unlock (&thread_hash_lock);
+
+	if (pool)
+		[pool drain];
+
+	MONO_EXIT_GC_SAFE;
+}
+
+static void
+thread_start (MonoProfiler *prof, uintptr_t tid)
+{
+	// COOP: no managed memory access: any mode.
+	xamarin_thread_start (NULL);
+}
+
+static void
+thread_end (MonoProfiler *prof, uintptr_t tid)
+{
+	// COOP: no managed memory access: any mode.
+	xamarin_thread_finish (NULL);
+}
+
+void
+xamarin_install_nsautoreleasepool_hooks ()
+{
+	// COOP: executed at startup (and no managed memory access): any mode.
+	xamarin_thread_hash = CFDictionaryCreateMutable (kCFAllocatorDefault, 0, NULL, NULL);
+
+	mono_profiler_install_thread (thread_start, thread_end);
 }
 
 #if DOTNET

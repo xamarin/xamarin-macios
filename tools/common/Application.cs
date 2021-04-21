@@ -353,6 +353,14 @@ namespace Xamarin.Bundler {
 			}
 		}
 
+		// It seems the watch simulator is able to correctly select which architecture to use
+		// for a fat executable, so limit ourselves to arch-specific executables anymore.
+		public bool ArchSpecificExecutable {
+			get {
+				return !IsWatchExtension;
+			}
+		}
+
 		public static int Concurrency => Driver.Concurrency;
 		public Version DeploymentTarget;
 		public Version SdkVersion; // for Mac Catalyst this is the iOS version

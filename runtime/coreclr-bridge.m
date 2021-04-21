@@ -49,6 +49,13 @@ xamarin_bridge_vm_initialize (int propertyCount, const char **propertyKeys, cons
 }
 
 void
+xamarin_install_nsautoreleasepool_hooks ()
+{
+	// https://github.com/xamarin/xamarin-macios/issues/11256
+	fprintf (stderr, "TODO: add support for wrapping all threads with NSAutoreleasePools.\n");
+}
+
+void
 xamarin_handle_bridge_exception (GCHandle gchandle, const char *method)
 {
 	if (gchandle == INVALID_GCHANDLE)
@@ -165,6 +172,17 @@ mono_domain_get (void)
 {
 	// This is not needed for CoreCLR.
 	return NULL;
+}
+
+// returns a retained MonoReflectionAssembly *
+MonoReflectionAssembly *
+mono_assembly_get_object (MonoDomain * domain, MonoAssembly * assembly)
+{
+	// MonoAssembly and MonoReflectionAssembly are identical in CoreCLR (both are actually MonoObjects).
+	// However, we're returning a retained object, so we need to retain here.
+	xamarin_mono_object_retain (assembly);
+	LOG_CORECLR (stderr, "mono_assembly_get_object (%p, %p): rv: %p\n", domain, assembly, assembly);
+	return assembly;
 }
 
 #endif // CORECLR_RUNTIME
