@@ -303,35 +303,7 @@ steps:
   timeoutInMinutes: 180
 
 # build nugets
-- bash:  $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/build-nugets.sh
-  displayName: 'Build Nugets'
-  condition: and(succeeded(), contains(variables['configuration.BuildNugets'], 'True'))
-  continueOnError: true # should not stop the build since is not official just yet.
-  timeoutInMinutes: 180
-
-- script: >-
-    dotnet build -t:GenerateBuildAssetRegistryManifest /v:n
-    $(Build.SourcesDirectory)/xamarin-macios/dotnet/package/Microsoft.iOS.Ref/package.csproj
-    -bl:$(Build.ArtifactStagingDirectory)/build-binlogs/generate-bar-manifest.binlog
-  displayName: Generate and Upload Build Asset Registry Manifest
-  condition: and(succeeded(), contains(variables['configuration.BuildNugets'], 'True'))
-
-- task: PublishPipelineArtifact@1
-  displayName: 'Publish Artifact: build-binlogs'
-  inputs:
-    targetPath: $(Build.ArtifactStagingDirectory)/build-binlogs
-    artifactName: build-binlogs
-  condition: and(succeededOrFailed(), contains(variables['configuration.BuildNugets'], 'True'))
-
-- task: NuGetCommand@2
-  displayName: 'Publish Nugets'
-  inputs:
-    command: push
-    packagesToPush: $(Build.SourcesDirectory)/package/*.nupkg
-    nuGetFeedType: external
-    publishFeedCredentials: xamarin-impl public feed
-  condition: and(succeeded(), eq(variables['configuration.BuildNugets'], 'True'))
-  continueOnError: true # should not stop the build since is not official just yet.
+- template: build-nugets.yml
 
 # only sign an notarize in no PR executions
 - ${{ if ne(parameters.isPR, 'True') }}:
