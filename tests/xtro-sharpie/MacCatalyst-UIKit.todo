@@ -49,7 +49,6 @@
 !incorrect-protocol-member! UIFocusItem::frame is REQUIRED and should be abstract
 !incorrect-protocol-member! UITextDocumentProxy::setMarkedText:selectedRange: is REQUIRED and should be abstract
 !incorrect-protocol-member! UITextDocumentProxy::unmarkText is REQUIRED and should be abstract
-!missing-enum! NSTextWritingDirection not bound
 !missing-enum! UIDirectionalRectEdge not bound
 !missing-enum! UITitlebarTitleVisibility not bound
 !missing-enum! UITitlebarToolbarStyle not bound
