@@ -366,7 +366,9 @@
 		new Export ("MonoReflectionAssembly *", "mono_assembly_get_object",
 			"MonoDomain *", "domain",
 			"MonoAssembly *", "assembly"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		new Export ("MonoReflectionMethod *", "mono_method_get_object",
 			"MonoDomain *", "domain",
