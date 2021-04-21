@@ -235,8 +235,8 @@
 			<_LinkerCacheDirectory>$([System.IO.Path]::GetFullPath('$(IntermediateOutputPath)linker-cache'))</_LinkerCacheDirectory>
 			<_LinkerCacheDirectory Condition="'$(BuildSessionId)' != ''">$(IntermediateOutputPath)linker-cache</_LinkerCacheDirectory>
 
-			<_XamarinRuntime Condition="'$(UseMonoRuntime)' == 'true'">Mono<_XamarinRuntime>
-			<_XamarinRuntime Condition="'$(UseMonoRuntime)' != 'true'">CoreCLR<_XamarinRuntime>
+			<_XamarinRuntime Condition="'$(UseMonoRuntime)' == 'true'">Mono</_XamarinRuntime>
+			<_XamarinRuntime Condition="'$(UseMonoRuntime)' != 'true'">CoreCLR</_XamarinRuntime>
 
 			<_CustomLinkerOptions>
 				AssemblyName=$(AssemblyName).dll
