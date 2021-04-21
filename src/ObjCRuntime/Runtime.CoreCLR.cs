@@ -27,7 +27,7 @@ namespace ObjCRuntime {
 		[System.Diagnostics.Conditional ("UNDEFINED")]
 		static void log_coreclr (string message)
 		{
-			xamarin_log (message);
+			NSLog (message);
 		}
 
 		// Returns a retained MonoObject. Caller must release.
