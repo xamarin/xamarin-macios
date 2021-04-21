@@ -49,6 +49,8 @@ namespace LocalAuthentication {
 		AppCancel            = -9,
 		InvalidContext       = -10,
 		WatchNotAvailable    = -11,
+		BiometryNotPaired    = -12,
+		BiometryDisconnected = -13,
 
 		BiometryNotAvailable = TouchIDNotAvailable,
 		BiometryNotEnrolled = TouchIDNotEnrolled,
