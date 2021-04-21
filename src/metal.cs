@@ -1518,14 +1518,16 @@ namespace Metal {
 		[Export ("locationNumber")]
 		nuint LocationNumber { get; }
 
-		[NoiOS, Mac (11, 0), NoTV]
+		[Mac (11, 0), NoTV]
+		[iOS (14,5)]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
 		[Export ("supports32BitFloatFiltering")]
 		bool Supports32BitFloatFiltering { get; }
 
-		[NoiOS, Mac (11, 0), NoTV]
+		[Mac (11, 0), NoTV]
+		[iOS (14,5)]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
@@ -1621,7 +1623,8 @@ namespace Metal {
 		[Export ("supportsFunctionPointers")]
 		bool SupportsFunctionPointers { get; }
 
-		[NoiOS, Mac (11, 0), NoTV]
+		[Mac (11, 0), NoTV]
+		[iOS (14,5)]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
