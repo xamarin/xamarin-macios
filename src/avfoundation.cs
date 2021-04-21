@@ -10820,6 +10820,28 @@ namespace AVFoundation {
 		[NoWatch, NoTV, NoMac, iOS (13, 0)]
 		[Export ("geometricDistortionCorrectionEnabled")]
 		bool GeometricDistortionCorrectionEnabled { [Bind ("isGeometricDistortionCorrectionEnabled")] get; set; }
+
+		// from AVCaptureDevice_AVCaptureDeviceCenterStage
+
+		[NoWatch, NoTV, NoMac]
+		[iOS (14,5)]
+		[MacCatalyst (14,5)]
+		[Static]
+		[Export ("centerStageControlMode", ArgumentSemantic.Assign)]
+		AVCaptureCenterStageControlMode CenterStageControlMode { get; set; }
+
+		[NoWatch, NoTV, NoMac]
+		[iOS (14,5)]
+		[MacCatalyst (14,5)]
+		[Static]
+		[Export ("centerStageEnabled")]
+		bool CenterStageEnabled { [Bind ("isCenterStageEnabled")] get; set; }
+
+		[NoWatch, NoTV, NoMac]
+		[iOS (14,5)]
+		[MacCatalyst (14,5)]
+		[Export ("centerStageActive")]
+		bool CenterStageActive { [Bind ("isCenterStageActive")] get; }
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
@@ -10969,6 +10991,33 @@ namespace AVFoundation {
 		[NoWatch, NoTV, NoMac, iOS (13, 0)]
 		[Export ("geometricDistortionCorrectedVideoFieldOfView")]
 		float GeometricDistortionCorrectedVideoFieldOfView { get; }
+
+		// from AVCaptureDeviceFormat_AVCaptureDeviceFormatCenterStage
+
+		[NoWatch, NoTV, NoMac]
+		[iOS (14,5)]
+		[MacCatalyst (14,5)]
+		[Export ("centerStageSupported")]
+		bool CenterStageSupported { [Bind ("isCenterStageSupported")] get; }
+
+		[NoWatch, NoTV, NoMac]
+		[iOS (14,5)]
+		[MacCatalyst (14,5)]
+		[Export ("videoMinZoomFactorForCenterStage")]
+		nfloat VideoMinZoomFactorForCenterStage { get; }
+
+		[NoWatch, NoTV, NoMac]
+		[iOS (14,5)]
+		[MacCatalyst (14,5)]
+		[Export ("videoMaxZoomFactorForCenterStage")]
+		nfloat VideoMaxZoomFactorForCenterStage { get; }
+
+		[NoWatch, NoTV, NoMac]
+		[iOS (14,5)]
+		[MacCatalyst (14,5)]
+		[Export ("videoFrameRateRangeForCenterStage")]
+		[NullAllowed]
+		AVFrameRateRange VideoFrameRateRangeForCenterStage { get; }
 #endif
 	}
 
@@ -14295,4 +14344,13 @@ namespace AVFoundation {
 		void LeaveArbitration ();
 	}
 
+	[NoWatch, NoTV, NoMac]
+	[iOS (14,5)]
+	[MacCatalyst (14,5)]
+	[Native]
+	public enum AVCaptureCenterStageControlMode : long {
+		User = 0,
+		App = 1,
+		Cooperative = 2,
+	}
 }
