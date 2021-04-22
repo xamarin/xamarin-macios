@@ -164,3 +164,6 @@
 !incorrect-protocol-member! MTLRenderPipelineState::imageblockSampleLength is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLRenderPipelineState::maxTotalThreadsPerThreadgroup is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLRenderPipelineState::threadgroupSizeMatchesTileSize is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::supports32BitFloatFiltering is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::supports32BitMSAA is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::supportsQueryTextureLOD is REQUIRED and should be abstract

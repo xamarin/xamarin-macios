@@ -1,3 +1,12 @@
+# Apple docs: Deprecated in iOS 3.2
+!unknown-field! UIKeyboardBoundsUserInfoKey bound
+!unknown-field! UIKeyboardCenterBeginUserInfoKey bound
+!unknown-field! UIKeyboardCenterEndUserInfoKey bound
+
+## Obsoleted selectors in very early versions of iOS (3.0) and removed in XAMCORE_3_0
+!extra-protocol-member! unexpected selector UITableViewDelegate::tableView:accessoryTypeForRowWithIndexPath: found
+!extra-protocol-member! unexpected selector UIImagePickerControllerDelegate::imagePickerController:didFinishPickingImage:editingInfo: found
+
 # deprecated types, not working at runtime
 !missing-protocol! UISearchDisplayDelegate not bound
 !missing-selector! NSStringDrawingContext::minimumTrackingAdjustment not bound
