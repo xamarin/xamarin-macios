@@ -512,6 +512,20 @@ set_gchandle (id self, GCHandle gc_handle, enum XamarinGCHandleFlags flags)
 	return rv;
 }
 
+static inline bool
+set_gchandle_safe (id self, GCHandle gc_handle, enum XamarinGCHandleFlags flags)
+{
+	bool rv;
+
+	// COOP: we call a selector, and that must only be done in SAFE mode.
+	MONO_ASSERT_GC_SAFE_OR_DETACHED;
+
+	id<XamarinExtendedObject> xself = self;
+	rv = [xself xamarinSetGCHandle: gc_handle flags: flags];
+
+	return rv;
+}
+
 static inline GCHandle
 get_gchandle_without_flags (id self)
 {
@@ -1891,6 +1905,13 @@ xamarin_set_gchandle_with_flags (id self, GCHandle gchandle, enum XamarinGCHandl
 {
 	// COOP: no managed memory access: any mode
 	return set_gchandle (self, gchandle, flags);
+}
+
+bool
+xamarin_set_gchandle_with_flags_safe (id self, GCHandle gchandle, enum XamarinGCHandleFlags flags)
+{
+	// COOP: no managed memory access: any mode
+	return set_gchandle_safe (self, gchandle, flags);
 }
 
 #if defined(DEBUG_REF_COUNTING)

@@ -273,7 +273,7 @@ namespace Foundation {
 		}
 
 		[DllImport ("__Internal")]
-		static extern bool xamarin_set_gchandle_with_flags (IntPtr handle, IntPtr gchandle, XamarinGCHandleFlags flags);
+		static extern bool xamarin_set_gchandle_with_flags_safe (IntPtr handle, IntPtr gchandle, XamarinGCHandleFlags flags);
 
 		void CreateManagedRef (bool retain)
 		{
@@ -283,7 +283,7 @@ namespace Foundation {
 				var flags = XamarinGCHandleFlags.HasManagedRef | XamarinGCHandleFlags.InitialSet | XamarinGCHandleFlags.WeakGCHandle;
 				var gchandle = GCHandle.Alloc (this, GCHandleType.WeakTrackResurrection);
 				var h = GCHandle.ToIntPtr (gchandle);
-				if (!xamarin_set_gchandle_with_flags (handle, h, flags)) {
+				if (!xamarin_set_gchandle_with_flags_safe (handle, h, flags)) {
 					// A GCHandle already existed: this shouldn't happen, but let's handle it anyway.
 					Runtime.NSLog ("Tried to create a managed reference from an object that already has a managed reference (type: {0})", GetType ());
 					gchandle.Free ();
