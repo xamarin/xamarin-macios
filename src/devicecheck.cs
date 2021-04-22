@@ -48,9 +48,10 @@ namespace DeviceCheck {
 		void GenerateToken (DCDeviceGenerateTokenCompletionHandler completion);
 	}
 
-	[NoWatch, NoTV, NoMac]
-	[NoMacCatalyst]
+	[NoWatch, NoTV]
 	[iOS (14,0)]
+	[Mac (11,3)]
+	[MacCatalyst (14,5)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface DCAppAttestService {

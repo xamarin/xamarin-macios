@@ -953,8 +953,8 @@ namespace LinkSdk {
 					Assert.That (path, Does.StartWith ("/private/var/mobile/Applications/"), "pre-Containers");
 			}
 
-#if !__WATCHOS__
-			// tvOS (device sandbox) is more restricive than iOS as it limit access to more
+#if !__WATCHOS__ && !NET
+			// tvOS (device sandbox) is more restrictive than iOS as it limit access to more
 			// directories, mostly because they are not guaranteed to be preserved between executions
 			bool tvos = UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.TV;
 			if (tvos)
@@ -1081,14 +1081,16 @@ namespace LinkSdk {
 		public void Github5024 ()
 		{
 			TestRuntime.AssertXcodeVersion (6,0);
-			var sc = new UISearchController ((UIViewController) null);
-			sc.SetSearchResultsUpdater ((vc) => { });
+			using (var controller = new UISplitViewController ()) {
+				var sc = new UISearchController ((UIViewController)controller);
+				sc.SetSearchResultsUpdater ((vc) => { });
 
-			var a = typeof (UISearchController).AssemblyQualifiedName;
-			var n = a.Replace ("UIKit.UISearchController", "UIKit.UISearchController+__Xamarin_UISearchResultsUpdating");
-			var t = Type.GetType (n);
-			Assert.NotNull (t, "private inner type");
-			Assert.IsNotNull (t.GetMethod ("UpdateSearchResultsForSearchController"), "preserved");
+				var a = typeof (UISearchController).AssemblyQualifiedName;
+				var n = a.Replace ("UIKit.UISearchController", "UIKit.UISearchController+__Xamarin_UISearchResultsUpdating");
+				var t = Type.GetType (n);
+				Assert.NotNull (t, "private inner type");
+				Assert.IsNotNull (t.GetMethod ("UpdateSearchResultsForSearchController"), "preserved");
+			}
 		}
 #endif // !__WATCHOS__
 

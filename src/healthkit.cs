@@ -1904,6 +1904,10 @@ namespace HealthKit {
 		[Watch (7, 0), iOS (14, 0)]
 		[Field ("HKQuantityTypeIdentifierWalkingStepLength")]
 		WalkingStepLength,
+
+		[Watch (7,4)][iOS (14,5)]
+		[Field ("HKQuantityTypeIdentifierAppleMoveTime")]
+		AppleMoveTime,
 	}
 
 	[Watch (2,0)]

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
@@ -35,6 +36,7 @@ namespace Introspection {
 		[Test]
 		public void StaticCtor ()
 		{
+			var issues = new HashSet<string> ();
 			ContinueOnFailure = true;
 			foreach (Type t in Assembly.GetTypes ()) {
 				if (Skip (t))
@@ -49,10 +51,11 @@ namespace Introspection {
 					RuntimeHelpers.RunClassConstructor (t.TypeHandle);
 				}
 				catch (TypeInitializationException e) {
+					issues.Add (t.FullName);
 					ReportError ($"{t.FullName} .cctor could not execute properly: {e}");
 				}
 			}
-			AssertIfErrors ($"{Errors} execution failure(s)");
+			AssertIfErrors ($"{Errors} execution failure(s): " + String.Join (',', issues));
 		}
 	}
 }

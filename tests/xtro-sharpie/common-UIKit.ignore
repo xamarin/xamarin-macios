@@ -243,3 +243,6 @@
 
 ## it's a `ref` on a struct, which xtro assumes nullable
 !extra-null-allowed! 'System.Void UIKit.UIScrollViewDelegate::WillEndDragging(UIKit.UIScrollView,CoreGraphics.CGPoint,CoreGraphics.CGPoint&)' has a extraneous [NullAllowed] on parameter #2
+
+## manually bound
+!missing-field! UIListSeparatorAutomaticInsets not bound

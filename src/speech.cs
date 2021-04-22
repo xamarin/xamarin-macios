@@ -110,6 +110,11 @@ namespace Speech {
 
 		[Export ("final")]
 		bool Final { [Bind ("isFinal")] get; }
+
+		[iOS (14, 5), Mac (11, 3)]
+		[MacCatalyst (14,5)]
+		[NullAllowed, Export ("speechRecognitionMetadata")]
+		SFSpeechRecognitionMetadata SpeechRecognitionMetadata { get; }
 	}
 
 	[iOS (10, 0), Mac (10, 15)]
@@ -219,6 +224,29 @@ namespace Speech {
 		NSOperationQueue Queue { get; set; }
 	}
 
+	[iOS (14,5), Mac (11,3)]
+	[MacCatalyst (14,5)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface SFSpeechRecognitionMetadata : NSCopying, NSSecureCoding
+	{
+
+		[Export ("speakingRate")]
+		double SpeakingRate { get; }
+
+		[Export ("averagePauseDuration")]
+		double AveragePauseDuration { get; }
+
+		[Export ("speechStartTimestamp")]
+		double SpeechStartTimestamp { get; }
+
+		[Export ("speechDuration")]
+		double SpeechDuration { get; }
+
+		[NullAllowed, Export ("voiceAnalytics")]
+		SFVoiceAnalytics VoiceAnalytics { get; }
+	}
+
 	[iOS (10, 0), Mac (10, 15)]
 	[BaseType (typeof (NSObject))]
 	interface SFTranscription : NSCopying, NSSecureCoding {
@@ -231,10 +259,12 @@ namespace Speech {
 
 		[iOS (13, 0)]
 		[Export ("speakingRate")]
+		[Advice ("Use 'SpeakingRate' from 'SFSpeechRecognitionMetadata' instead.")]
 		double SpeakingRate { get; }
 
 		[iOS (13, 0)]
 		[Export ("averagePauseDuration")]
+		[Advice ("Use 'AveragePauseDuration' from 'SFSpeechRecognitionMetadata' instead.")]
 		double AveragePauseDuration { get; }
 	}
 
@@ -262,6 +292,7 @@ namespace Speech {
 
 		[iOS (13, 0)]
 		[NullAllowed, Export ("voiceAnalytics")]
+		[Advice ("Use 'VoiceAnalytics' from 'SFSpeechRecognitionMetadata' instead.")]
 		SFVoiceAnalytics VoiceAnalytics { get; }
 	}
 
@@ -295,4 +326,3 @@ namespace Speech {
 		SFAcousticFeature Voicing { get; }
 	}
 }
-

@@ -21,6 +21,22 @@ namespace Introspection {
 	[TestFixture]
 	public class MonoMacFixtures : ApiProtocolTest {
 
+		protected override bool Skip (Type type)
+		{
+			switch (type.Name) {
+#if !XAMCORE_4_0
+			case "NSDraggingInfo":
+				return true; // Incorrectly bound (BaseType on protocol), will be fixed for XAMCORE_4_0.
+#endif
+			// special cases wrt sandboxing
+			case "NSRemoteOpenPanel":
+			case "NSRemoteSavePanel":
+				return true;
+			default:
+				return base.Skip (type);
+			}
+		}
+
 		protected override bool Skip (Type type, string protocolName)
 		{
 			switch (protocolName) {
@@ -85,6 +101,11 @@ namespace Introspection {
 				case "NSPrintInfo": // Conformance not in headers
 				case "NSPrinter": // Conformance not in headers
 					return true;
+				// Xcode 12.5
+				case "CXCall": // Conformance not in headers
+				case "CXCallUpdate": // Conformance not in headers
+				case "CXProviderConfiguration": // Conformance not in headers
+					return true;
 				default:
 					// CIFilter started implementing NSSecureCoding in 10.11
 					if (!Mac.CheckSystemVersion (10, 11) && (type == typeof(CIFilter) || type.IsSubclassOf (typeof(CIFilter))))
@@ -110,6 +131,8 @@ namespace Introspection {
 				case "NSCollectionViewUpdateItem": // Not declared in header file
 				case "MLPredictionOptions": // Not declared in header file
 				case "FPUIActionExtensionContext": // Conformance not in headers
+				// Xcode 12.5
+				case "CXCall": // Conformance not in headers
 					return true;
 				}
 				break;
@@ -170,6 +193,10 @@ namespace Introspection {
 				case "NSUrlSessionTaskTransactionMetrics": // Conformance not in headers
 				case "NSFileProviderDomain": // Conformance not in headers
 				case "FPUIActionExtensionContext": // Conformance not in headers
+				// Xcode 12.5
+				case "CXCall": // Conformance not in headers
+				case "CXCallUpdate": // Conformance not in headers
+				case "CXProviderConfiguration": // Conformance not in headers
 					return true;
 				}
 				break;

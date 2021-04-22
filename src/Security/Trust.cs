@@ -196,6 +196,7 @@ namespace Security {
 		[TV (14,0)]
 		[Watch (7,0)]
 		[Mac (11,0)]
+		[MacCatalyst (14,0)]
 		[DllImport (Constants.SecurityLibrary)]
 		extern static IntPtr /* SecKeyRef */ SecTrustCopyKey (IntPtr /* SecTrustRef */ trust);
 
@@ -203,6 +204,7 @@ namespace Security {
 		[TV (14,0)]
 		[Watch (7,0)]
 		[Mac (11,0)]
+		[MacCatalyst (14,0)]
 		public SecKey GetKey ()
 		{
 			if (handle == IntPtr.Zero)

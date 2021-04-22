@@ -9,6 +9,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using CoreGraphics;
 using ObjCRuntime;
 using Foundation;
@@ -16,7 +17,13 @@ using Foundation;
 using Vector2 = global::OpenTK.Vector2;
 
 namespace Vision {
+
+#if NET
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("tvos11.0")]
+#else
 	[TV (11,0), Mac (10,13), iOS (11,0)]
+#endif
 	public static partial class VNUtils {
 	
 		// initialized only once (see tests/cecil-tests/)
@@ -30,7 +37,14 @@ namespace Vision {
 		[DllImport (Constants.VisionLibrary, EntryPoint = "VNImagePointForNormalizedPoint")]
 		public static extern CGPoint GetImagePoint (CGPoint normalizedPoint, nuint imageWidth, nuint imageHeight);
 
+#if NET
+		[SupportedOSPlatform ("ios14.0")]
+		[SupportedOSPlatform ("tvos14.0")]
+		[SupportedOSPlatform ("macos11.0")]
+#else
 		[TV (14,0), Mac (11,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
+#endif
 		[DllImport (Constants.VisionLibrary, EntryPoint = "VNNormalizedPointForImagePoint")]
 		public static extern CGPoint GetNormalizedPoint (CGPoint imagePoint, nuint imageWidth, nuint imageHeight);
 
@@ -66,11 +80,23 @@ namespace Vision {
 			return result;
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+#else
 		[TV (13,0), Mac (10,15), iOS (13,0)]
+#endif
 		[DllImport (Constants.VisionLibrary)]
 		static extern nuint VNElementTypeSize (nuint elementType);
 
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+#else
 		[TV (13,0), Mac (10,15), iOS (13,0)]
+#endif
 		public static nuint GetElementTypeSize (VNElementType elementType) => VNElementTypeSize ((nuint) (ulong) elementType);
 	}
 

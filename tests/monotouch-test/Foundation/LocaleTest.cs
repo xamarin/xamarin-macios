@@ -38,9 +38,6 @@ namespace MonoTouchFixtures.Foundation {
 			Assert.That (NSLocale.FromLocaleIdentifier (ident).Identifier, Is.EqualTo (ident), "FromLocaleIdentifier");
 		}
 		
-#if NET
-		[Ignore ("No globalization data yet - https://github.com/xamarin/xamarin-macios/issues/8906")]
-#endif
 		[Test]
 		public void InitRegionInfo ()
 		{

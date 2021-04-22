@@ -22,8 +22,11 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Runtime.Versioning;
+using System.Text;
 using NUnit.Framework;
 using ObjCRuntime;
+using Xamarin.Tests;
 
 namespace Introspection {
 
@@ -37,7 +40,10 @@ namespace Introspection {
 		public ApiAvailabilityTest ()
 		{
 			Maximum = Version.Parse (Constants.SdkVersion);
-#if __IOS__
+#if __MACCATALYST__
+			Platform = PlatformName.MacCatalyst;
+			Minimum = Xamarin.SdkVersions.MinMacCatalystVersion;
+#elif __IOS__
 			Platform = PlatformName.iOS;
 			Minimum = Xamarin.SdkVersions.MiniOSVersion;
 #elif __TVOS__
@@ -52,6 +58,7 @@ namespace Introspection {
 #else
 			#error No Platform Defined
 #endif
+
 			Filter = (AvailabilityBaseAttribute arg) => {
 				return (arg.AvailabilityKind != AvailabilityKind.Introduced) || (arg.Platform != Platform);
 			};
@@ -160,7 +167,7 @@ namespace Introspection {
 		}
 
 		[Test]
-#if NET
+#if NET || __MACCATALYST__
 		[Ignore ("Requires attributes update - see status in https://github.com/xamarin/xamarin-macios/issues/10834")]
 #endif
 		public void Introduced ()
@@ -198,18 +205,36 @@ namespace Introspection {
 		}
 #endif
 
+		string ToString (ICustomAttributeProvider cap)
+		{
+			var s = cap.ToString ();
+			if (cap is MemberInfo mi) {
+				var i = s.IndexOf (' ');
+				if (i != -1) {
+					// a method/property without the declaring type is hard to track down
+					s = s.Insert (i + 1, mi.DeclaringType + "::");
+				}
+			}
+			return s;
+		}
+
 		protected AvailabilityBaseAttribute CheckAvailability (ICustomAttributeProvider cap)
 		{
 			var attrs = cap.GetCustomAttributes (false);
-			foreach (var a in attrs) {
+			foreach (var ca in attrs) {
+				var a = ca;
+#if NET
+				a = (a as OSPlatformAttribute)?.Convert ();
+#endif
 				if (a is AvailabilityBaseAttribute aa) {
 					if (Filter (aa))
 						continue;
-					if (aa.Version < Minimum) {
+					// FIXME should be `<=` but that another large change best done in a different PR
+					if ((aa.AvailabilityKind == AvailabilityKind.Introduced) && (aa.Version < Minimum)) {
 						switch (aa.Architecture) {
 						case PlatformArchitecture.All:
 						case PlatformArchitecture.None:
-							AddErrorLine ($"[FAIL] {aa.Version} < {Minimum} (Min) on '{cap}'.");
+							AddErrorLine ($"[FAIL] {aa.Version} <= {Minimum} (Min) on '{ToString (cap)}'.");
 							break;
 						default:
 							// An old API still needs the annotations when not available on all architectures
@@ -218,7 +243,7 @@ namespace Introspection {
 						}
 					}
 					if (aa.Version > Maximum)
-						AddErrorLine ($"[FAIL] {aa.Version} > {Maximum} (Max) on '{cap}'.");
+						AddErrorLine ($"[FAIL] {aa.Version} > {Maximum} (Max) on '{ToString (cap)}'.");
 					return aa;
 				}
 			}
@@ -227,7 +252,11 @@ namespace Introspection {
 
 		bool IsUnavailable (ICustomAttributeProvider cap)
 		{
-			foreach (var ca in cap.GetCustomAttributes (false)) {
+			foreach (var a in cap.GetCustomAttributes (false)) {
+				var ca = a;
+#if NET
+				ca = (a as OSPlatformAttribute)?.Convert ();
+#endif
 				if (ca is UnavailableAttribute ua) {
 					if (ua.Platform == Platform)
 						return true;
@@ -238,7 +267,11 @@ namespace Introspection {
 
 		AvailabilityBaseAttribute GetAvailable (ICustomAttributeProvider cap)
 		{
-			foreach (var ca in cap.GetCustomAttributes (false)) {
+			foreach (var a in cap.GetCustomAttributes (false)) {
+				var ca = a;
+#if NET
+				ca = (a as OSPlatformAttribute)?.Convert ();
+#endif
 				if (ca is AvailabilityBaseAttribute aa) {
 					if ((aa.AvailabilityKind != AvailabilityKind.Unavailable) && (aa.Platform == Platform))
 						return aa;
@@ -293,8 +326,13 @@ namespace Introspection {
 			member_level.Clear ();
 			foreach (var a in m.GetCustomAttributes (false)) {
 				var s = String.Empty;
+#if NET
+				if (a is OSPlatformAttribute aa)
+					s = $"[{a.GetType().Name} (\"{aa.PlatformName}\")]";
+#else
 				if (a is AvailabilityBaseAttribute aa)
 					s = aa.ToString ();
+#endif
 				if (s.Length > 0) {
 					if (type_level.Contains (s))
 						AddErrorLine ($"[FAIL] Both '{t}' and '{m}' are marked with `{s}`.");
@@ -318,8 +356,13 @@ namespace Introspection {
 
 				type_level.Clear ();
 				foreach (var a in t.GetCustomAttributes (false)) {
+#if NET
+					if (a is OSPlatformAttribute aa)
+						type_level.Add ($"[{a.GetType().Name} (\"{aa.PlatformName}\")]");
+#else
 					if (a is AvailabilityBaseAttribute aa)
 						type_level.Add (aa.ToString ());
+#endif
 				}
 
 				foreach (var p in t.GetProperties (BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)) {
@@ -336,5 +379,54 @@ namespace Introspection {
 			}
 			AssertIfErrors ("{0} API with members duplicating type-level attributes", Errors);
 		}
+
+#if NET
+		string CheckLegacyAttributes (ICustomAttributeProvider cap)
+		{
+			var sb = new StringBuilder ();
+			foreach (var a in cap.GetCustomAttributes (false)) {
+				if (a is AvailabilityBaseAttribute aa) {
+					sb.AppendLine (aa.ToString ());
+				}
+			}
+			return sb.ToString ();
+		}
+
+		[Test]
+#if IOS || TVOS
+		[Ignore ("work in progress")]
+#endif
+		public void LegacyAttributes ()
+		{
+			//LogProgress = true;
+			Errors = 0;
+			foreach (Type t in Assembly.GetTypes ()) {
+				if (LogProgress)
+					Console.WriteLine ($"T: {t}");
+				var type_level = CheckLegacyAttributes (t);
+				if (type_level.Length > 0)
+					AddErrorLine ($"[FAIL] '{t.FullName}' has legacy attribute(s): {type_level}");
+
+				foreach (var p in t.GetProperties (BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)) {
+					if (LogProgress)
+						Console.WriteLine ($"P: {p}");
+
+					var member_level = CheckLegacyAttributes (p);
+					if (member_level.Length > 0)
+						AddErrorLine ($"[FAIL] '{t.FullName}::{p.Name}' has legacy attribute(s): {member_level}");
+				}
+
+				foreach (var m in t.GetMembers (BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)) {
+					if (LogProgress)
+						Console.WriteLine ($"M: {m}");
+
+					var member_level = CheckLegacyAttributes (m);
+					if (member_level.Length > 0)
+						AddErrorLine ($"[FAIL] '{t.FullName}::{m.Name}' has legacy attribute(s): {member_level}");
+				}
+			}
+			AssertIfErrors ("{0} API with mixed legacy availability attributes", Errors);
+		}
+#endif
 	}
 }

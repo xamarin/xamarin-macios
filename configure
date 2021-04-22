@@ -23,7 +23,8 @@ Usage: configure [options]
     --enable-ccache
     --disable-ccache        Enable/disable ccache. Default: enabled if detected.
 
-    --enable-xamarin        Enable additional Xamarin-specific parts of the build.
+    --enable-xamarin
+    --disable-xamarin       Enable/disable additional Xamarin-specific parts of the build.
 
     --disable-packaged-llvm Compile LLVM instead of downloading a precompiled version.
 
@@ -52,34 +53,34 @@ CONFIGURED_FILE=configure.inc
 rm -f $CONFIGURED_FILE
 
 if test -z "$1"; then
-	echo "configure: all default values assumed."
+    echo "configure: all default values assumed."
     exit 0
 fi
 
 echo "# Configure arguments: $*" >> $CONFIGURED_FILE
 
 while test "x$1" != x; do
-	case $1 in
-	--disable-mac)
-		echo "INCLUDE_MAC=" >> $CONFIGURED_FILE
-		echo "Mac Build disabled (partially)"
-		shift
-		;;
+    case $1 in
+    --disable-mac)
+        echo "INCLUDE_MAC=" >> $CONFIGURED_FILE
+        echo "Mac Build disabled (partially)"
+        shift
+        ;;
     --disable-ios-device)
         echo "INCLUDE_DEVICE=" >> $CONFIGURED_FILE
         shift
         ;;
-	--disable-ios)
-		echo "INCLUDE_IOS=" >> $CONFIGURED_FILE
-		echo "INCLUDE_WATCH=" >> $CONFIGURED_FILE
-		echo "INCLUDE_TVOS=" >> $CONFIGURED_FILE
-		echo "iOS Build disabled (partially)"
-		shift
-		;;
-	--disable-strip)
-		echo "DISABLE_STRIP=1" >> $CONFIGURED_FILE
-		shift
-		;;
+    --disable-ios)
+        echo "INCLUDE_IOS=" >> $CONFIGURED_FILE
+        echo "INCLUDE_WATCH=" >> $CONFIGURED_FILE
+        echo "INCLUDE_TVOS=" >> $CONFIGURED_FILE
+        echo "iOS Build disabled (partially)"
+        shift
+        ;;
+    --disable-strip)
+        echo "DISABLE_STRIP=1" >> $CONFIGURED_FILE
+        shift
+        ;;
     --disable-ccache)
         echo "ENABLE_CCACHE=" >> $CONFIGURED_FILE
         shift
@@ -97,15 +98,19 @@ while test "x$1" != x; do
         echo "ENABLE_XAMARIN=1" >> $CONFIGURED_FILE
         shift
         ;;
-	--enable-bitcode-on-ios)
-		# Private option
-		echo "ENABLE_BITCODE_ON_IOS=1" >> $CONFIGURED_FILE
-		shift
-		;;
-	--disable-packaged-llvm)
-		echo "DISABLE_DOWNLOAD_LLVM=1" >> $CONFIGURED_FILE
-		shift
-		;;
+    --disable-xamarin)
+    echo "ENABLE_XAMARIN=" >> $CONFIGURED_FILE
+        shift
+        ;;
+    --enable-bitcode-on-ios)
+        # Private option
+        echo "ENABLE_BITCODE_ON_IOS=1" >> $CONFIGURED_FILE
+        shift
+        ;;
+    --disable-packaged-llvm)
+        echo "DISABLE_DOWNLOAD_LLVM=1" >> $CONFIGURED_FILE
+        shift
+        ;;
     --enable-packaged-mono)
         echo "MONO_BUILD_FROM_SOURCE=" >> "$CONFIGURED_FILE"
         shift
@@ -150,14 +155,14 @@ while test "x$1" != x; do
         echo "INCLUDE_XAMARIN_LEGACY=" >> "$CONFIGURED_FILE"
         shift
         ;;
-	--help|-h)
-		show_help
-		exit 0
-		;;
-	*)
-		echo "Unknown configure argument $1" >&2
-		shift
-		;;
-	esac
+    --help|-h)
+        show_help
+        exit 0
+        ;;
+    *)
+        echo "Unknown configure argument $1" >&2
+        shift
+        ;;
+    esac
 done
 exit 0

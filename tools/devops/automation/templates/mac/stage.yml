@@ -3,11 +3,11 @@ parameters:
 - name: macPool
   type: string
 
-- name: stageName 
+- name: stageName
   type: string
 
 - name: statusContext
-  type: string 
+  type: string
   default: '10.16'
 
 - name: keyringPass

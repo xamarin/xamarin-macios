@@ -3848,7 +3848,7 @@ public class TestApp {
 			var tmpdir = Cache.CreateTemporaryDirectory ();
 			var m = Path.Combine (tmpdir, "file.m");
 			var cs = Path.Combine (tmpdir, "file.cs");
-			var functions = 2500;
+			var functions = 8000;
 			var m_writer = new StringBuilder ();
 			var cs_writer = new StringBuilder ("\n");
 			cs_writer.AppendLine ("namespace Tester {");

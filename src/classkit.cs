@@ -186,6 +186,11 @@ namespace ClassKit {
 
 		[Export ("stop")]
 		void Stop ();
+
+		[Introduced (PlatformName.MacCatalyst, 14,5)]
+		[Mac (11,3)][iOS (14,5)]
+		[Export ("removeAllActivityItems")]
+		void RemoveAllActivityItems ();
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
@@ -272,37 +277,30 @@ namespace ClassKit {
 		[Export ("resignActive")]
 		void ResignActive ();
 
-		[Introduced (PlatformName.MacCatalyst, 14, 0)]
 		[iOS (14, 0)]
 		[Export ("assignable")]
 		bool Assignable { [Bind ("isAssignable")] get; set; }
 
-		[Introduced (PlatformName.MacCatalyst, 14, 0)]
 		[iOS (14, 0)]
 		[Export ("suggestedAge", ArgumentSemantic.Assign)]
 		NSRange SuggestedAge { get; set; }
 
-		[Introduced (PlatformName.MacCatalyst, 14, 0)]
 		[iOS (14, 0)]
 		[Export ("suggestedCompletionTime", ArgumentSemantic.Assign)]
 		NSRange SuggestedCompletionTime { get; set; }
 
-		[Introduced (PlatformName.MacCatalyst, 14, 0)]
 		[iOS (14, 0)]
 		[Export ("progressReportingCapabilities", ArgumentSemantic.Copy)]
 		NSSet<CLSProgressReportingCapability> ProgressReportingCapabilities { get; }
 
-		[Introduced (PlatformName.MacCatalyst, 14, 0)]
 		[iOS (14, 0)]
 		[Export ("setType:")]
 		void SetType (CLSContextType type);
 
-		[Introduced (PlatformName.MacCatalyst, 14, 0)]
 		[iOS (14, 0)]
 		[Export ("addProgressReportingCapabilities:")]
 		void AddProgressReportingCapabilities (NSSet<CLSProgressReportingCapability> capabilities);
 
-		[Introduced (PlatformName.MacCatalyst, 14, 0)]
 		[iOS (14, 0)]
 		[Export ("resetProgressReportingCapabilities")]
 		void ResetProgressReportingCapabilities ();
@@ -321,6 +319,21 @@ namespace ClassKit {
 		[Async]
 		[Export ("descendantMatchingIdentifierPath:completion:")]
 		void FindDescendantMatching (string [] identifierPath, Action<CLSContext, NSError> completion);
+
+		[Introduced (PlatformName.MacCatalyst, 14,5)]
+		[Mac (11,3)][iOS (14,5)]
+		[Export ("navigationChildContexts", ArgumentSemantic.Copy)]
+		CLSContext[] NavigationChildContexts { get; }
+
+		[Introduced (PlatformName.MacCatalyst, 14,5)]
+		[Mac (11,3)][iOS (14,5)]
+		[Export ("addNavigationChildContext:")]
+		void AddNavigationChild (CLSContext childContext);
+
+		[Introduced (PlatformName.MacCatalyst, 14,5)]
+		[Mac (11,3)][iOS (14,5)]
+		[Export ("removeNavigationChildContext:")]
+		void RemoveNavigationChild (CLSContext childContext);
 
 		// From CLSContext (Activity) Category
 
@@ -391,6 +404,12 @@ namespace ClassKit {
 
 		[Export ("removeContext:")]
 		void Remove (CLSContext context);
+
+		[Introduced (PlatformName.MacCatalyst, 14,5)]
+		[Mac (11,3)][iOS (14,5)]
+		[Async]
+		[Export ("fetchActivityForURL:completion:")]
+		void FetchActivity (NSUrl url, Action<CLSActivity, NSError> completion);
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]

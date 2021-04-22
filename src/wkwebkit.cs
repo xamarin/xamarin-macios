@@ -192,6 +192,11 @@ namespace WebKit
 		[Export ("buttonNumber")]
 		nint ButtonNumber { get; }
 #endif
+
+		[Mac (11,3)][iOS (14,5)]
+		[MacCatalyst (14,5)]
+		[Export ("shouldPerformDownload")]
+		bool ShouldPerformDownload { get; }
 	}
 
 	[Mac (10,10), iOS (8,0)]
@@ -238,6 +243,16 @@ namespace WebKit
 		[Mac (11,0)][iOS (14,0)]
 		[Export ("webView:authenticationChallenge:shouldAllowDeprecatedTLS:")]
 		void ShouldAllowDeprecatedTls (WKWebView webView, NSUrlAuthenticationChallenge challenge, Action<bool> decisionHandler);
+
+		[Mac (11,3)][iOS (14,5)]
+		[MacCatalyst (14,5)]
+		[Export ("webView:navigationAction:didBecomeDownload:")]
+		void NavigationActionDidBecomeDownload (WKWebView webView, WKNavigationAction navigationAction, WKDownload download);
+
+		[Mac (11,3)][iOS (14,5)]
+		[MacCatalyst (14,5)]
+		[Export ("webView:navigationResponse:didBecomeDownload:")]
+		void NavigationResponseDidBecomeDownload (WKWebView webView, WKNavigationResponse navigationResponse, WKDownload download);
 	}
 
 	[iOS (8,0), Mac (10,10)] // Not defined in 32-bit
@@ -286,6 +301,11 @@ namespace WebKit
 		[Mac (10, 15), iOS (13, 0)]
 		[Export ("fraudulentWebsiteWarningEnabled")]
 		bool FraudulentWebsiteWarningEnabled { [Bind ("isFraudulentWebsiteWarningEnabled")] get; set; }
+
+		[Mac (11,3)][iOS (14,5)]
+		[MacCatalyst (14,5)]
+		[Export ("textInteractionEnabled")]
+		bool TextInteractionEnabled { get; set; }
 	}
 
 	[iOS (8,0), Mac (10,10)] // Not defined in 32-bit
@@ -308,6 +328,7 @@ namespace WebKit
 		WKFrameInfo FrameInfo { get; }
 
 		[Mac (11,0)][iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Export ("world")]
 		WKContentWorld World { get; }
 	}
@@ -571,10 +592,12 @@ namespace WebKit
 		void AddScriptMessageHandler ([Protocolize] WKScriptMessageHandler scriptMessageHandler, string name);
 
 		[Mac (11,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Export ("addScriptMessageHandler:contentWorld:name:")]
 		void AddScriptMessageHandler (IWKScriptMessageHandler scriptMessageHandler, WKContentWorld world, string name);
 
 		[Mac (11,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Export ("addScriptMessageHandlerWithReply:contentWorld:name:")]
 		void AddScriptMessageHandler (IWKScriptMessageHandlerWithReply scriptMessageHandlerWithReply, WKContentWorld contentWorld, string name);
 
@@ -582,6 +605,7 @@ namespace WebKit
 		void RemoveScriptMessageHandler (string name);
 
 		[Mac (11,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Export ("removeScriptMessageHandlerForName:contentWorld:")]
 		void RemoveScriptMessageHandler (string name, WKContentWorld contentWorld);
 
@@ -598,6 +622,7 @@ namespace WebKit
 		void RemoveAllContentRuleLists ();
 
 		[Mac (11,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Export ("removeAllScriptMessageHandlersFromContentWorld:")]
 		void RemoveAllScriptMessageHandlers (WKContentWorld contentWorld);
 
@@ -615,6 +640,7 @@ namespace WebKit
 		IntPtr Constructor (NSString source, WKUserScriptInjectionTime injectionTime, bool isForMainFrameOnly);
 
 		[Mac (11,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Export ("initWithSource:injectionTime:forMainFrameOnly:inContentWorld:")]
 		IntPtr Constructor (NSString source, WKUserScriptInjectionTime injectionTime, bool isForMainFrameOnly, WKContentWorld contentWorld);
 
@@ -807,42 +833,91 @@ namespace WebKit
 		bool HandlesUrlScheme (string urlScheme);
 
 		[Mac (11,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Async]
 		[Export ("evaluateJavaScript:inFrame:inContentWorld:completionHandler:")]
 		void EvaluateJavaScript (string javaScriptString, [NullAllowed] WKFrameInfo frame, WKContentWorld contentWorld, [NullAllowed] Action<NSObject, NSError> completionHandler);
 
 		[Mac (11,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Async]
 		[Export ("callAsyncJavaScript:arguments:inFrame:inContentWorld:completionHandler:")]
 		void CallAsyncJavaScript (string functionBody, [NullAllowed] NSDictionary<NSString, NSObject> arguments, [NullAllowed] WKFrameInfo frame, WKContentWorld contentWorld, [NullAllowed] Action<NSObject, NSError> completionHandler);
 
 		[Mac (11,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Async]
 		[Export ("createPDFWithConfiguration:completionHandler:")]
 		void CreatePdf ([NullAllowed] WKPdfConfiguration pdfConfiguration, Action<NSData, NSError> completionHandler);
 
 		[Mac (11,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Async]
 		[Export ("createWebArchiveDataWithCompletionHandler:")]
 		void CreateWebArchive (Action<NSData, NSError> completionHandler);
 
 		[Mac (11,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Async]
 		[Export ("findString:withConfiguration:completionHandler:")]
 		void Find (string @string, [NullAllowed] WKFindConfiguration configuration, Action<WKFindResult> completionHandler);
 
 		[Mac (11,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[NullAllowed, Export ("mediaType")]
 		string MediaType { get; set; }
 
 		[Mac (11,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Export ("pageZoom")]
 		nfloat PageZoom { get; set; }
 
 		[NoiOS]
+		[NoMacCatalyst]
 		[Mac (11,0)]
 		[Export ("printOperationWithPrintInfo:")]
 		NSPrintOperation GetPrintOperation (NSPrintInfo printInfo);
+
+		[Mac (11,3)][iOS (14,5)]
+		[MacCatalyst (14,5)]
+		[Export ("closeAllMediaPresentations")]
+		void CloseAllMediaPresentations ();
+
+		[Mac (11,3)][iOS (14,5)]
+		[MacCatalyst (14,5)]
+		[Async]
+		[Export ("pauseAllMediaPlayback:")]
+		void PauseAllMediaPlayback ([NullAllowed] Action completionHandler);
+
+		[Mac (11,3)][iOS (14,5)]
+		[MacCatalyst (14,5)]
+		[Async]
+		[Export ("suspendAllMediaPlayback:")]
+		void SuspendAllMediaPlayback ([NullAllowed] Action completionHandler);
+
+		[Mac (11,3)][iOS (14,5)]
+		[MacCatalyst (14,5)]
+		[Async]
+		[Export ("resumeAllMediaPlayback:")]
+		void ResumeAllMediaPlayback ([NullAllowed] Action completionHandler);
+
+		[Mac (11,3)][iOS (14,5)]
+		[MacCatalyst (14,5)]
+		[Async]
+		[Export ("requestMediaPlaybackState:")]
+		void RequestMediaPlaybackState (Action<WKMediaPlaybackState> completionHandler);
+
+		[Mac (11,3)][iOS (14,5)]
+		[MacCatalyst (14,5)]
+		[Async]
+		[Export ("startDownloadUsingRequest:completionHandler:")]
+		void StartDownload (NSUrlRequest request, Action<WKDownload> completionHandler);
+
+		[Mac (11,3)][iOS (14,5)]
+		[MacCatalyst (14,5)]
+		[Async]
+		[Export ("resumeDownloadFromResumeData:completionHandler:")]
+		void ResumeDownload (NSData resumeData, Action<WKDownload> completionHandler);
 	}
 
 	delegate void WKJavascriptEvaluationResult (NSObject result, NSError error);
@@ -1049,6 +1124,7 @@ namespace WebKit
 	}
 
 	[Mac (11,0)][iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface WKContentWorld {
@@ -1109,5 +1185,70 @@ namespace WebKit
 		[Abstract]
 		[Export ("userContentController:didReceiveScriptMessage:replyHandler:")]
 		void DidReceiveScriptMessage (WKUserContentController userContentController, WKScriptMessage message, Action<NSObject, NSString> replyHandler);
+	}
+
+	[Mac (11,3)][iOS (14,5)]
+	[Native]
+	enum WKDownloadRedirectPolicy : long {
+		Cancel,
+		Allow,
+	}
+
+	[Mac (11,3)][iOS (14,5)]
+	[Native]
+	enum WKMediaPlaybackState : ulong {
+		None,
+		Paused,
+		Suspended,
+		Playing,
+	}
+
+	interface IWKDownloadDelegate {}
+
+	[Mac (11,3)][iOS (14,5)]
+	[MacCatalyst (14,5)]
+	[Protocol, Model (AutoGeneratedName = true)]
+	[BaseType (typeof (NSObject))]
+	interface WKDownloadDelegate {
+
+		[Abstract]
+		[Export ("download:decideDestinationUsingResponse:suggestedFilename:completionHandler:")]
+		void DecideDestination (WKDownload download, NSUrlResponse response, string suggestedFilename, Action<NSUrl> completionHandler);
+
+		[Export ("download:willPerformHTTPRedirection:newRequest:decisionHandler:")]
+		void WillPerformHttpRedirection (WKDownload download, NSHttpUrlResponse response, NSUrlRequest request, Action<WKDownloadRedirectPolicy> decisionHandler);
+
+		[Export ("download:didReceiveAuthenticationChallenge:completionHandler:")]
+		void DidReceiveAuthenticationChallenge (WKDownload download, NSUrlAuthenticationChallenge challenge, Action<NSUrlSessionAuthChallengeDisposition, NSUrlCredential> completionHandler);
+
+		[Export ("downloadDidFinish:")]
+		void DidFinish (WKDownload download);
+
+		[Export ("download:didFailWithError:resumeData:")]
+		void DidFail (WKDownload download, NSError error, [NullAllowed] NSData resumeData);
+	}
+
+	[Mac (11,3)][iOS (14,5)]
+	[MacCatalyst (14,5)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface WKDownload : NSProgressReporting {
+
+		[NullAllowed, Export ("originalRequest")]
+		NSUrlRequest OriginalRequest { get; }
+
+		[NullAllowed, Export ("webView", ArgumentSemantic.Weak)]
+		WKWebView WebView { get; }
+
+		[Wrap ("WeakDelegate")]
+		[NullAllowed]
+		IWKDownloadDelegate Delegate { get; set; }
+
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
+		NSObject WeakDelegate { get; set; }
+
+		[Async]
+		[Export ("cancel:")]
+		void Cancel ([NullAllowed] Action<NSData> completionHandler);
 	}
 }

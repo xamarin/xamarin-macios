@@ -921,6 +921,7 @@ gc_enable_new_refcount (void)
 }
 #endif // !CORECLR_RUNTIME
 
+#if !defined (CORECLR_RUNTIME)
 struct _MonoProfiler {
 	int dummy;
 };
@@ -933,6 +934,7 @@ xamarin_install_mono_profiler ()
 	// (currently gc_enable_new_refcount and xamarin_install_nsautoreleasepool_hooks).
 	mono_profiler_install (&profiler, NULL);
 }
+#endif
 
 bool
 xamarin_file_exists (const char *path)
@@ -994,7 +996,9 @@ xamarin_register_monoassembly (MonoAssembly *assembly, GCHandle *exception_gchan
 		LOG (PRODUCT ": Skipping assembly registration for %s since it's not needed (dynamic registration is not supported)", mono_assembly_name_get_name (mono_assembly_get_name (assembly)));
 		return true;
 	}
-	xamarin_register_assembly (mono_assembly_get_object (mono_domain_get (), assembly), exception_gchandle);
+	MonoReflectionAssembly *rassembly = mono_assembly_get_object (mono_domain_get (), assembly);
+	xamarin_register_assembly (rassembly, exception_gchandle);
+	xamarin_mono_object_release (&rassembly);
 	return *exception_gchandle == INVALID_GCHANDLE;
 }
 
@@ -1381,7 +1385,9 @@ xamarin_initialize ()
 	xamarin_bridge_register_product_assembly (&exception_gchandle);
 	xamarin_process_managed_exception_gchandle (exception_gchandle);
 
+#if !defined (CORECLR_RUNTIME)
 	xamarin_install_mono_profiler (); // must be called before xamarin_install_nsautoreleasepool_hooks or gc_enable_new_refcount
+#endif
 
 	xamarin_install_nsautoreleasepool_hooks ();
 
@@ -2437,10 +2443,12 @@ xamarin_vm_initialize ()
 	const char *propertyKeys[] = {
 		"APP_PATHS",
 		"PINVOKE_OVERRIDE",
+		"ICU_DAT_FILE_PATH",
 	};
 	const char *propertyValues[] = {
 		xamarin_get_bundle_path (),
 		pinvokeOverride,
+		"icudt.dat",
 	};
 	static_assert (sizeof (propertyKeys) == sizeof (propertyValues), "The number of keys and values must be the same.");
 

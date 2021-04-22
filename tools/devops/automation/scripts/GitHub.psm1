@@ -128,6 +128,7 @@ function Set-GitHubStatus {
         "SYSTEM_TEAMPROJECT" = $Env:SYSTEM_TEAMPROJECT;
         "BUILD_BUILDID" = $Env:BUILD_BUILDID;
         "BUILD_REVISION" = $Env:BUILD_REVISION;
+        "BUILD_REASON" = $Env:BUILD_REASON;
         "BUILD_SOURCEBRANCHNAME" = $Env:BUILD_SOURCEBRANCHNAME;
         "GITHUB_TOKEN" = $Env:GITHUB_TOKEN;
     }
@@ -139,7 +140,12 @@ function Set-GitHubStatus {
         }
     }
 
-    $url = "https://api.github.com/repos/xamarin/xamarin-macios/statuses/$Env:BUILD_REVISION"
+    if ($Env:BUILD_REASON -eq "PullRequest") {
+        # the env var is only provided for PR not for builds.
+        $url = "https://api.github.com/repos/xamarin/xamarin-macios/statuses/$Env:SYSTEM_PULLREQUEST_SOURCECOMMITID"
+    } else {
+        $url = "https://api.github.com/repos/xamarin/xamarin-macios/statuses/$Env:BUILD_REVISION"
+    }
 
     $headers = @{
         Authorization = ("token {0}" -f $Env:GITHUB_TOKEN)
@@ -256,8 +262,9 @@ function New-GitHubComment {
     }
     $msg.AppendLine()
     $msg.AppendLine("[Pipeline]($targetUrl) on Agent $Env:TESTS_BOT") # Env:TESTS_BOT is added by the pipeline as a variable coming from the execute tests job
+    $msg.AppendLine("$Env:BUILD_SOURCEVERSIONMESSAGE") # default envars to provide more context to the result
 
-    # if the build was due to PR, we want to write the comment in the PR rather than in the comment
+    # if the build was due to PR, we want to write the comment in the PR rather than in the commit 
     if ($Env:BUILD_REASON -eq "PullRequest") {
         # calcualte the change ID which is the PR number 
         $buildSourceBranch = $Env:BUILD_SOURCEBRANCH
@@ -541,11 +548,18 @@ function New-GitHubSummaryComment {
         Set-GitHubStatus -Status "failure" -Description "Tests failed catastrophically on $Context (no summary found)." -Context "$Context"
         $request = New-GitHubComment -Header "Tests failed catastrophically on $Context (no summary found)." -Emoji ":fire:" -Description "Result file $TestSummaryPath not found. $headerLinks"
     } else {
+
+        # set the context to be "pipeline name (Test run)", example xamarin-macios (Test run)
+        $statusContext = "$Env:BUILD_DEFINITIONNAME (Test run)"
+        if ($Context -ne "Build") { #special case when we deal with the device tests
+            $statusContext = "$Contex - $Env:BUILD_DEFINITIONNAME) (Test run)"
+        }
+
         if (Test-JobSuccess -Status $Env:TESTS_JOBSTATUS) {
-            Set-GitHubStatus -Status "success" -Description "Tests passed on $Context." -Context "$Context"
+            Set-GitHubStatus -Status "success" -Description "All tests passed on $Context." -Context $statusContext
             $request = New-GitHubCommentFromFile -Header "Tests passed on $Context." -Description "Tests passed on $Context. $headerLinks"  -Emoji ":white_check_mark:" -Path $TestSummaryPath
         } else {
-            Set-GitHubStatus -Status "failure" -Description "Tests failed on $Context." -Context "$Context"
+            Set-GitHubStatus -Status "error" -Description "Tests failed on $Context." -Context $statusContext
             $request = New-GitHubCommentFromFile -Header "Tests failed on $Context" -Description "Tests failed on $Context. $headerLinks" -Emoji ":x:" -Path $TestSummaryPath
         }
     }
@@ -579,11 +593,7 @@ function Get-GitHubPRInfo {
 
     $url = "https://api.github.com/repos/xamarin/xamarin-macios/pulls/$ChangeId"
 
-    $headers = @{
-        Authorization = ("token {0}" -f $Env:GITHUB_TOKEN)
-    }
-
-    $request = Invoke-Request -Request { Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -ContentType 'application/json' }
+    $request = Invoke-Request -Request { Invoke-RestMethod -Uri $url -Method "GET" -ContentType 'application/json' }
     Write-Host $request
     return $request
 }

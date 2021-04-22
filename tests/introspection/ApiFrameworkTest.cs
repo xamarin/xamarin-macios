@@ -140,7 +140,7 @@ namespace Introspection {
 			AssertIfErrors ($"{Errors} unknown frameworks found:\n{ErrorData}");
 		}
 
-#if __IOS__
+#if __IOS__ && !__MACCATALYST__
 		[Test]
 		public void Simlauncher ()
 		{

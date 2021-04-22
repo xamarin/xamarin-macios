@@ -1,0 +1,61 @@
+# YAML pipeline for post build operations. 
+# This pipeline will trigger automatically after successful completion of the `build_packages` stage against the specified branches.
+
+trigger: none
+pr: none
+
+resources:
+  pipelines:
+  - pipeline: macios
+    source: xamarin-macios
+    trigger:
+      branches:
+      - main
+      - release/*
+      stages:
+      - build_packages
+
+jobs:
+- job: post_build
+  displayName: Post Build
+  pool:
+    vmImage: windows-2019
+  workspace:
+    clean: all
+  variables:
+  - group: Publish-Build-Assets
+  steps:
+  - checkout: self
+    clean: true
+
+  - task: UseDotNet@2
+    inputs:
+      version: 5.0.200
+
+  - download: macios
+    artifact: AssetManifests
+
+  - script: make -C $(Build.SourcesDirectory)/dotnet targets/Microsoft.iOS.Sdk.Versions.props
+    displayName: make Microsoft.iOS.Sdk.Versions.props
+
+  - powershell: >-
+      & dotnet build -v:n -t:PushManifestToBuildAssetRegistry
+      -p:BarManifestOutputPath=$(Agent.BuildDirectory)\macios\AssetManifests -p:BuildAssetRegistryToken=$(MaestroAccessToken)
+      $(Build.SourcesDirectory)\dotnet\package\Microsoft.iOS.Ref\package.csproj
+      -bl:$(Build.ArtifactStagingDirectory)\post-build-binlogs\push-bar-manifest.binlog
+    displayName: push manifest to build asset registry
+
+  - powershell: |
+      $versionEndpoint = 'https://maestro-prod.westus2.cloudapp.azure.com/api/assets/darc-version?api-version=2019-01-16'
+      $darcVersion = $(Invoke-WebRequest -Uri $versionEndpoint -UseBasicParsing).Content
+      $arcadeServicesSource = 'https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-eng/nuget/v3/index.json'
+      & dotnet tool update microsoft.dotnet.darc --version "$darcVersion" --add-source "$arcadeServicesSource" --tool-path $(Agent.ToolsDirectory)\darc -v n
+      & $(Agent.ToolsDirectory)\darc\darc add-build-to-channel --default-channels --id $(BARBuildId) --publishing-infra-version 3 --skip-assets-publishing --password $(MaestroAccessToken) --azdev-pat $(publishing-dnceng-devdiv-code-r-build-re)
+    displayName: add build to default darc channel
+
+  - task: PublishPipelineArtifact@1
+    displayName: 'Publish Artifact: post-build-binlogs'
+    inputs:
+      targetPath: $(Build.ArtifactStagingDirectory)\post-build-binlogs
+      artifactName: post-build-binlogs
+    condition: succeededOrFailed()

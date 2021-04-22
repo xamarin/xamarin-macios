@@ -101,11 +101,14 @@ namespace GeneratorTests
 			BuildFile (Profile.iOS, "bug15307.cs");
 		}
 
+#if !NET
+		// error BI1055: bgen: Internal error: failed to convert type 'System.Runtime.Versioning.SupportedOSPlatformAttribute, System.Runtime, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
 		[Test]
 		public void Bug15799 ()
 		{
 			BuildFile (Profile.iOS, "bug15799.cs");
 		}
+#endif
 
 		[Test]
 		public void Bug16036 ()
@@ -119,11 +122,14 @@ namespace GeneratorTests
 			BuildFile (Profile.iOS, "bug17232.cs");
 		}
 
+#if !NET
+		// error BI1055: bgen: Internal error: failed to convert type 'System.Runtime.Versioning.SupportedOSPlatformAttribute, System.Runtime, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
 		[Test]
 		public void Bug23041 ()
 		{
 			BuildFile (Profile.iOS, "bug23041.cs");
 		}
+#endif
 
 		[Test]
 		public void Bug24078 ()
@@ -218,8 +224,12 @@ namespace GeneratorTests
 				.Union (allTypes.SelectMany ((type) => type.Methods))
 				.Union (allTypes.SelectMany ((type) => type.Fields))
 				.Union (allTypes.SelectMany ((type) => type.Properties));
-
-			var preserves = allMembers.Sum ((v) => v.CustomAttributes.Count ((ca) => ca.AttributeType.Name == "IntroducedAttribute"));
+#if NET
+			const string attrib = "SupportedOSPlatformAttribute";
+#else
+			const string attrib = "IntroducedAttribute";
+#endif
+			var preserves = allMembers.Sum ((v) => v.CustomAttributes.Count ((ca) => ca.AttributeType.Name == attrib));
 			Assert.AreEqual (10, preserves, "Introduced attribute count"); // If you modified code that generates IntroducedAttributes please update the attribute count
 		}
 
@@ -313,11 +323,14 @@ namespace GeneratorTests
 			Assert.AreEqual (10, methodCount, "Async method count");
 		}
 
+#if !NET
+		// error BI1055: bgen: Internal error: failed to convert type 'System.Runtime.Versioning.SupportedOSPlatformAttribute, System.Runtime, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
 		[Test]
 		public void StackOverflow20696157 ()
 		{
 			BuildFile (Profile.iOS, "sof20696157.cs");
 		}
+#endif
 
 		[Test]
 		public void HyphenInName ()

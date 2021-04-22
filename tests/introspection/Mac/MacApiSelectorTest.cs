@@ -138,13 +138,6 @@ namespace Introspection {
 					if (!Mac.CheckSystemVersion (10, 12)) // NSCoding was added in 10.12
 						return true;
 					break;
-				case "MLDictionaryFeatureProvider":
-				case "MLMultiArray":
-				case "MLFeatureValue":
-				case "MLSequence":
-					if (!Mac.CheckSystemVersion (11, 0)) // NSCoding was added in 10.16 / 11
-						return true;
-					break;
 				}
 				break;
 			case "accessibilityNotifiesWhenDestroyed":
@@ -1120,6 +1113,9 @@ namespace Introspection {
 			case "cancelPendingPrerolls":                   // 10.8+
 			case "masterClock":                             // 10.8+
 			case "setMasterClock:":				// 10.8+
+			// AVUrlAsset
+			case "contentKeySession:didProvideContentKey:": // fails because it is in-lined via protocol AVContentKeyRecipient
+				return true;
 			// NSDateComponents
 			case "isLeapMonth":				// 10.8+
 			case "setLeapMonth:":				// 10.8+

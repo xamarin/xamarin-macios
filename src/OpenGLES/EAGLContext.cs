@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using ObjCRuntime;
 
 namespace OpenGLES
@@ -21,15 +22,22 @@ namespace OpenGLES
 		}
 #endif
 
+#if !NET
 		[iOS (10,0)]
 		[TV (10,0)]
+#endif
 		public virtual bool PresentRenderBuffer (nuint target, double presentationTime)
 		{
 			return _PresentRenderbufferAtTime (target, presentationTime);
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios10.3")]
+		[SupportedOSPlatform ("tvos10.2")]
+#else
 		[iOS (10,3)]
 		[TV (10,2)]
+#endif
 		public virtual bool PresentRenderBuffer (nuint target, double presentationTime, PresentationMode mode)
 		{
 			switch (mode) {

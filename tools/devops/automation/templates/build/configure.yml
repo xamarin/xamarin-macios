@@ -21,6 +21,10 @@ steps:
     # the following list will be used to track the tags and set them in VSTS to make the monitoring person life easier
     [System.Collections.Generic.List[string]]$tags = @()
 
+    if ($buildReason -eq "Schedule") {
+        $tags.Add("cronjob")
+    }
+
     if ($buildReason -eq "PullRequest" -or (($buildReason -eq "Manual") -and ($buildSourceBranchName -eq "merge")) ) {
       Write-Host "Configuring build from PR."
       # This is an interesting step, we do know we are dealing with a PR, but we need the PR id to
@@ -52,7 +56,7 @@ steps:
 
       # decide if we add the run-dotnet-tests label (if not present) this is done only for main
       # we can use $ref for that :)
-      $xharnessLabels = $prInfo.labels -join ","
+      $xharnessLabels = $tags -join ","
       if ($ref -eq "main" -and -not ("run-dotnet-tests" -in $xharnessLabels)) {
         $tags.Add("run-dotnet-tests")
         if ($xharnessLabels -eq "") {
@@ -116,7 +120,7 @@ steps:
   inputs:
     locProj: '$(Build.SourcesDirectory)\Localize\LocProject.json'
     outDir: '$(Build.ArtifactStagingDirectory)'
-    isCreatePrSelected: true
+    isCreatePrSelected: false
     isAutoCompletePrSelected: false
     prSourceBranchPrefix: 'locfiles'
     repoType: gitHub

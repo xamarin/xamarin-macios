@@ -14,6 +14,10 @@ parameters:
   type: boolean
   default: true
 
+- name: runSamples
+  type: boolean
+  default: false
+
 # We are doing some black magic. We have several templates that 
 # are executed with different parameters. 
 #
@@ -66,6 +70,12 @@ parameters:
   type: object
   default: [
     {
+      stageName: 'Mac Catalina (10.15)',
+      macPool: 'VSEng-Xamarin-RedmondMacBuildPool-iOS-Trusted',
+      osVersion: '10.15',
+      statusContext: 'Mac Catalina (10.15)'
+    },
+    {
       stageName: 'Mac Mojave (10.14)',
       macPool: 'internal-macos-10.14',
       osVersion: '10.14',
@@ -76,12 +86,6 @@ parameters:
       macPool: 'internal-macos-10.13',
       osVersion: '10.13',
       statusContext: 'Mac High Sierra (10.13)'
-    },
-    {
-      stageName: 'Mac Sierra (10.12)',
-      macPool: 'VSEng-Xamarin-RedmondMacTestPool-iOS',
-      osVersion: '10.12',
-      statusContext: 'Mac Sierra (10.12)'
     }]
 
 resources:
@@ -131,8 +135,6 @@ variables:
   value: true
 - name: TeamName
   value: 'xamarin-macios'
-- name: isPR
-  value: $[ or(eq(variables['Build.Reason'], 'PullRequest'), and(eq(variables['Build.SourceBranchName'], 'merge'), or(eq(variables['Build.Reason'], 'Manual'), eq(variables['Build.Reason'], 'IndividualCI')))) ]
 
 trigger:
   branches:
@@ -140,7 +142,6 @@ trigger:
     - '*'
     exclude:
     - refs/heads/locfiles/*
-    - refs/heads/darc-*
   paths:
     exclude:
     - docs
@@ -170,6 +171,17 @@ pr:
     - SECURITY.MD
     - src/README.md
 
+schedules:
+
+# the translations team wants a green build, we can do that on sundays even if 
+# the code did not change and without the device tests.
+- cron: "0 12 * * 0"
+  displayName: Weekly Translations build (Sunday @ noon)
+  branches:
+    include:
+    - main
+  always: true
+
 stages:
 
 - stage: governance_checks
@@ -196,32 +208,34 @@ stages:
         gitHubToken: ${{ variables['GitHub.Token'] }}
         xqaCertPass: $(xqa--certificates--password)
 
-- ${{ if eq(variables['isPR'], 'False') }}:
-  - ${{ each config in parameters.deviceTestsConfigurations }}:
-    - template: templates/devices/stage.yml
-      parameters:
-        devicePrefix: ${{ config['devicePrefix'] }} 
-        execute: ${{ config['execute'] }} 
-        stageName: ${{ config['stageName'] }} 
-        iOSDevicePool: ${{ config['iOSDevicePool'] }} 
-        useXamarinStorage: ${{ config['useXamarinStorage'] }} 
-        testsLabels: ${{ config['testsLabels'] }} 
-        statusContext: ${{ config['statusContext'] }} 
-        iOSDeviceDemand: ${{ config['iOSDeviceDemand'] }} 
-        vsdropsPrefix: ${{ variables.vsdropsPrefix }}
-        keyringPass: $(xma-password)
-        gitHubToken: ${{ variables['GitHub.Token'] }}
-        xqaCertPass: $(xqa--certificates--password)
+- ${{ if eq(parameters.runDeviceTests, true) }}:
+  - ${{ if and(ne(variables['Build.Reason'], 'Schedule'), or(eq(variables['Build.Reason'], 'IndividualCI'), eq(variables['Build.Reason'], 'Manual'))) }}:
+    - ${{ each config in parameters.deviceTestsConfigurations }}:
+      - template: templates/devices/stage.yml
+        parameters:
+          devicePrefix: ${{ config['devicePrefix'] }} 
+          execute: ${{ config['execute'] }} 
+          stageName: ${{ config['stageName'] }} 
+          iOSDevicePool: ${{ config['iOSDevicePool'] }} 
+          useXamarinStorage: ${{ config['useXamarinStorage'] }} 
+          testsLabels: ${{ config['testsLabels'] }} 
+          statusContext: ${{ config['statusContext'] }} 
+          iOSDeviceDemand: ${{ config['iOSDeviceDemand'] }} 
+          vsdropsPrefix: ${{ variables.vsdropsPrefix }}
+          keyringPass: $(xma-password)
+          gitHubToken: ${{ variables['GitHub.Token'] }}
+          xqaCertPass: $(xqa--certificates--password)
 
-  - ${{ each config in parameters.macTestsConfigurations }}:
-    - template: templates/mac/stage.yml
-      parameters:
-        stageName: ${{ config['stageName'] }}
-        macPool: ${{ config['macPool'] }}
-        osVersion: ${{ config['osVersion'] }}
-        statusContext: ${{ config['statusContext'] }}
-        keyringPass: $(xma-password)
+    - ${{ each config in parameters.macTestsConfigurations }}:
+      - template: templates/mac/stage.yml
+        parameters:
+          stageName: ${{ config['stageName'] }}
+          macPool: ${{ config['macPool'] }}
+          osVersion: ${{ config['osVersion'] }}
+          statusContext: ${{ config['statusContext'] }}
+          keyringPass: $(xma-password)
 
+- ${{ if eq(parameters.runSamples, true) }}:
   # TODO: Not the real step
   - stage: sample_testing
     displayName: 'Sample testing'

@@ -341,6 +341,7 @@ namespace PassKit {
 		void DidSelectPaymentMethod2 (PKPaymentAuthorizationViewController controller, PKPaymentMethod paymentMethod, Action<PKPaymentRequestPaymentMethodUpdate> completion);
 
 		[Watch (7,0)][iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Export ("paymentAuthorizationViewController:didRequestMerchantSessionUpdate:")]
 		[EventArgs ("PKPaymentRequestMerchantSessionUpdate")]
 		void DidRequestMerchantSessionUpdate (PKPaymentAuthorizationViewController controller, Action<PKPaymentRequestMerchantSessionUpdate> updateHandler);
@@ -770,6 +771,7 @@ namespace PassKit {
 
 		[NoWatch]
 		[NoMac]
+		[NoMacCatalyst]
 		[Export ("icon", ArgumentSemantic.Copy)]
 		UIImage Icon { get; }
 
@@ -972,12 +974,19 @@ namespace PassKit {
 		NSString Mada { get; }
 
 		[Watch (7,0)][iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Field ("PKPaymentNetworkBarcode")]
 		NSString Barcode { get; }
 
 		[Watch (7,0)][iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Field ("PKPaymentNetworkGirocard")]
 		NSString Girocard { get; }
+
+		[Watch (7,4)][Mac (11,3)][iOS (14, 5)]
+		[MacCatalyst (14,5)]
+		[Field ("PKPaymentNetworkMir")]
+		NSString Mir { get; }
 	}
 
 #if !WATCH
@@ -1127,10 +1136,12 @@ namespace PassKit {
 		void DidSelectPaymentMethod (PKPaymentAuthorizationController controller, PKPaymentMethod paymentMethod, Action<PKPaymentRequestPaymentMethodUpdate> completion);
 
 		[Watch (7,0)][iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Export ("paymentAuthorizationController:didRequestMerchantSessionUpdate:")]
 		void DidRequestMerchantSessionUpdate (PKPaymentAuthorizationController controller, Action<PKPaymentRequestMerchantSessionUpdate> handler);
 	
 		[Watch (7,0)][iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Export ("presentationWindowForPaymentAuthorizationController:")]
 		[return: NullAllowed]
 #if MONOMAC
@@ -1177,8 +1188,17 @@ namespace PassKit {
 		[Export ("inStation")]
 		bool InStation { [Bind ("isInStation")] get; }
 
+		[Deprecated (PlatformName.iOS, 14,5, message: "Use 'Blocked' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 14,5, message: "Use 'Blocked' instead.")]
+		[Deprecated (PlatformName.WatchOS, 7,4, message: "Use 'Blocked' instead.")]
 		[Export ("blacklisted")]
 		bool Blacklisted { [Bind ("isBlacklisted")] get; }
+
+		[iOS (14,5)][Watch (7,4)]
+		[Mac (11,3)]
+		[MacCatalyst (14,5)]
+		[Export ("blocked")]
+		bool Blocked { [Bind ("isBlocked")] get; }
 
 		[NullAllowed, Export ("expirationDate", ArgumentSemantic.Copy)]
 		NSDate ExpirationDate { get; }
@@ -1221,6 +1241,8 @@ namespace PassKit {
 		bool GreenCarTicketUsed { [Bind ("isGreenCarTicketUsed")] get; }
 
 		[Export ("blacklisted")]
+		[Deprecated (PlatformName.iOS, 14,5, message: "Use 'Blocked' instead.")] // exists in base class
+		[Deprecated (PlatformName.WatchOS, 7,4, message: "Use 'Blocked' instead.")]
 		bool Blacklisted { [Bind ("isBlacklisted")] get; }
 	}
 
@@ -1437,6 +1459,7 @@ namespace PassKit {
 	[Mac (11,0)]
 	[NoWatch, NoTV]
 	[iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[Native]
 	public enum PKAddShareablePassConfigurationPrimaryAction : ulong {
 		Add,
@@ -1445,6 +1468,7 @@ namespace PassKit {
 
 	[Mac (11,0)]
 	[Watch (7,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[NoTV]
 	[Native]
 	public enum PKBarcodeEventConfigurationDataType : long {
@@ -1455,6 +1479,7 @@ namespace PassKit {
 
 	[NoWatch, NoTV, NoMac]
 	[iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[Native]
 	public enum PKIssuerProvisioningExtensionAuthorizationResult : long {
 		Canceled,
@@ -1484,6 +1509,12 @@ namespace PassKit {
 
 		[Export ("password")]
 		string Password { get; set; }
+
+		[iOS (14,5)]
+		[Mac (11,3)]
+		[MacCatalyst (14,5)]
+		[Export ("supportedRadioTechnologies", ArgumentSemantic.Assign)]
+		PKRadioTechnology SupportedRadioTechnologies { get; set; }
 	}
 
 	interface IPKAddSecureElementPassViewControllerDelegate {}
@@ -1506,6 +1537,7 @@ namespace PassKit {
 
 	[NoWatch, NoTV, NoMac] // under `#if TARGET_OS_IOS`
 	[iOS (13,4)]
+	[MacCatalyst (14,0)] // doc mention 13.4 but we can't load the class
 	[BaseType (typeof (UIViewController))]
 	[DisableDefaultCtor]
 	interface PKAddSecureElementPassViewController {
@@ -1528,6 +1560,7 @@ namespace PassKit {
 	[NoWatch, NoTV]
 	[iOS (14,0)]
 	[Mac (11,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface PKShareablePassMetadata {
@@ -1557,6 +1590,7 @@ namespace PassKit {
 	[NoWatch, NoTV]
 	[iOS (14,0)]
 	[Mac (11,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (PKAddSecureElementPassConfiguration))]
 	[DisableDefaultCtor]
 	interface PKAddShareablePassConfiguration {
@@ -1578,6 +1612,7 @@ namespace PassKit {
 
 	[Mac (11,0)]
 	[Watch (7,0)][iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[NoTV]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -1595,6 +1630,7 @@ namespace PassKit {
 
 	[Mac (11,0)]
 	[Watch (7,0)][iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[NoTV]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -1609,6 +1645,7 @@ namespace PassKit {
 
 	[Mac (11,0)]
 	[Watch (7,0)][iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[NoTV]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -1623,6 +1660,7 @@ namespace PassKit {
 
 	[Mac (11,0)]
 	[Watch (7,0)][iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[NoTV]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -1662,6 +1700,7 @@ namespace PassKit {
 
 	[Mac (11,0)]
 	[Watch (7,0)][iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[NoTV]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -1677,6 +1716,7 @@ namespace PassKit {
 	[NoWatch, NoTV]
 	[iOS (14,0)]
 	[Mac (11,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DesignatedDefaultCtor]
 	interface PKIssuerProvisioningExtensionStatus {
@@ -1694,6 +1734,7 @@ namespace PassKit {
 	[NoWatch, NoTV]
 	[iOS (14,0)]
 	[Mac (11,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface PKIssuerProvisioningExtensionPassEntry {
@@ -1710,6 +1751,7 @@ namespace PassKit {
 
 	[NoWatch, NoTV, NoMac]
 	[iOS (14,0)]
+	[NoMacCatalyst] // type cannot be loaded, lack of documentation about usage
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface PKIssuerProvisioningExtensionHandler {
@@ -1733,6 +1775,7 @@ namespace PassKit {
 
 	[NoWatch, NoTV, NoMac]
 	[iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[Protocol]
 	interface PKIssuerProvisioningExtensionAuthorizationProviding {
 
@@ -1743,15 +1786,18 @@ namespace PassKit {
 
 	[NoWatch, NoTV, NoMac]
 	[iOS (14,0)]
+	[MacCatalyst (14,0)]
 	delegate void PKInformationRequestCompletionBlock (PKBarcodeEventMetadataResponse response);
 
 	[NoWatch, NoTV, NoMac]
 	[iOS (14,0)]
+	[MacCatalyst (14,0)]
 	delegate void PKSignatureRequestCompletionBlock (PKBarcodeEventSignatureResponse response);
 
 	[NoTV]
 	[Mac (11,0)]
 	[Watch (7,0)][iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[Protocol]
 	interface PKPaymentInformationRequestHandling {
 
@@ -1771,6 +1817,7 @@ namespace PassKit {
 	[NoWatch, NoTV]
 	[iOS (14,0)]
 	[Mac (11,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (PKIssuerProvisioningExtensionPassEntry))]
 	[DisableDefaultCtor]
 	interface PKIssuerProvisioningExtensionPaymentPassEntry {
@@ -1785,6 +1832,7 @@ namespace PassKit {
 
 	[NoTV]
 	[Watch (7,0)][Mac (11,0)][iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface PKPaymentMerchantSession {
@@ -1795,6 +1843,7 @@ namespace PassKit {
 
 	[NoTV]
 	[Watch (7,0)][Mac (11,0)][iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	interface PKPaymentRequestMerchantSessionUpdate {
 
@@ -1809,8 +1858,18 @@ namespace PassKit {
 	}
 
 	[Watch (7,0)][Mac (11,0)][iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface PKPaymentInformationEventExtension {
+	}
+
+	[iOS (14,5)]
+	[Flags]
+	[Native]
+	enum PKRadioTechnology : ulong {
+		None = 0,
+		Nfc = 1 << 0,
+		Bluetooth = 1 << 1,
 	}
 }

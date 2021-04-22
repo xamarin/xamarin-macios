@@ -694,6 +694,11 @@ namespace ARKit {
 
 		[Export ("framesPerSecond")]
 		nint FramesPerSecond { get; }
+
+		[iOS (14,5)]
+		[Export ("captureDeviceType")]
+		[return: BindAs (typeof (AVCaptureDeviceType))]
+		NSString CaptureDeviceType { get; }
 	}
 
 	[iOS (11,0)]

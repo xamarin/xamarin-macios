@@ -57,3 +57,7 @@
 !missing-type! VSAccountMetadataRequest not bound
 !missing-type! VSAccountProviderResponse not bound
 !missing-type! VSSubscriptionRegistrationCenter not bound
+!missing-selector! VSAccountApplicationProvider::identifier not bound
+!missing-selector! VSAccountApplicationProvider::initWithLocalizedDisplayName:identifier: not bound
+!missing-selector! VSAccountApplicationProvider::localizedDisplayName not bound
+!missing-type! VSAccountApplicationProvider not bound

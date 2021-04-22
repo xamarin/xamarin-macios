@@ -277,6 +277,7 @@
 !missing-field! kCFURLUbiquitousItemHasUnresolvedConflictsKey not bound
 !missing-field! kCFURLUbiquitousItemIsDownloadedKey not bound
 !missing-field! kCFURLUbiquitousItemIsDownloadingKey not bound
+!missing-field! kCFURLUbiquitousItemIsExcludedFromSyncKey not bound
 !missing-field! kCFURLUbiquitousItemIsUploadedKey not bound
 !missing-field! kCFURLUbiquitousItemIsUploadingKey not bound
 !missing-field! kCFURLUbiquitousItemPercentDownloadedKey not bound

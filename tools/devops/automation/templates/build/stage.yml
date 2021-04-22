@@ -81,8 +81,7 @@ jobs:
     name: $(AgentPoolComputed)
     demands:
     - Agent.OS -equals Darwin
-    - Agent.OSVersion -equals 10.15
-    - macios_image -equals v1
+    - macios_image -equals v2.1     # Big Sur image with Xcode 12.4 and 12.5 installed
   workspace:
     clean: all
 
@@ -100,11 +99,15 @@ jobs:
 - job: upload_azure_blob
   displayName: 'Upload packages to Azure'
   timeoutInMinutes: 1000
-  dependsOn: build # can start as soon as the packages are available
+  dependsOn:
+  - configure
+  - build # can start as soon as the packages are available
   condition: and(succeeded(), contains (dependencies.build.outputs['configuration.BuildPkgs'], 'True')) # only run when we do have pkgs
 
   variables:
     Parameters.outputStorageUri: ''
+    NUGETS_PUBLISHED: $[ dependencies.build.outputs['nugetPublishing.NUGETS_PUBLISHED'] ]
+    SKIP_NUGETS: $[ dependencies.configure.outputs['labels.skip-nugets'] ]
 
   pool:
     vmImage: 'windows-latest'
@@ -127,6 +130,7 @@ jobs:
   - template: upload-vsdrops.yml
     parameters:
       devicePrefix: sim
+      runTests: ${{ parameters.runTests }}
 
 - job: upload_vsts_tests
   displayName: 'Upload xml to vsts'
@@ -169,5 +173,6 @@ jobs:
   - template: publish-html.yml
     parameters:
       statusContext: "Build"
+      runTests: ${{ parameters.runTests }}
       vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
       devicePrefix: sim

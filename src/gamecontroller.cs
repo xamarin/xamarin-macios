@@ -43,30 +43,37 @@ namespace GameController {
 		bool IsAnalog { [Bind ("isAnalog")] get; }
 
 		[TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[NullAllowed, Export ("sfSymbolsName", ArgumentSemantic.Strong)]
 		string SfSymbolsName { get; set; }
 
 		[TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[NullAllowed, Export ("localizedName", ArgumentSemantic.Strong)]
 		string LocalizedName { get; set; }
 
 		[TV (14, 2), Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[NullAllowed, Export ("unmappedSfSymbolsName", ArgumentSemantic.Strong)]
 		string UnmappedSfSymbolsName { get; set; }
 
 		[TV (14, 2), Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[NullAllowed, Export ("unmappedLocalizedName", ArgumentSemantic.Strong)]
 		string UnmappedLocalizedName { get; set; }
 
 		[TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[Export ("aliases")]
 		NSSet<NSString> Aliases { get; }
 
 		[TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[Export ("boundToSystemGesture")]
 		bool IsBoundToSystemGesture { [Bind ("isBoundToSystemGesture")] get; }
 
 		[TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[Export ("preferredSystemGestureState", ArgumentSemantic.Assign)]
 		GCSystemGestureState PreferredSystemGestureState { get; set; }
 	}
@@ -132,10 +139,12 @@ namespace GameController {
 		GCControllerButtonValueChanged PressedChangedHandler { get; set; }
 
 		[TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[NullAllowed, Export ("touchedChangedHandler", ArgumentSemantic.Copy)]
 		GCControllerButtonTouchedChanged TouchedChangedHandler { get; set; }
 
 		[TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[Export ("touched")]
 		bool Touched { [Bind ("isTouched")] get; }
 	}
@@ -313,6 +322,7 @@ namespace GameController {
 		void SetState (GCExtendedGamepad extendedGamepad);
 
 		[TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[NullAllowed, Export ("buttonHome")]
 		GCControllerButtonInput ButtonHome { get; }
 	}
@@ -433,29 +443,41 @@ namespace GameController {
 		GCController GetExtendedGamepadController ();
 
 		[TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[Static]
 		[NullAllowed, Export ("current", ArgumentSemantic.Strong)]
 		GCController Current { get; }
 
 		[TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[NullAllowed, Export ("light", ArgumentSemantic.Retain)]
 		GCDeviceLight Light { get; }
 
 		[TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[NullAllowed, Export ("haptics", ArgumentSemantic.Retain)]
 		GCDeviceHaptics Haptics { get; }
 
 		[TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[NullAllowed, Export ("battery", ArgumentSemantic.Copy)]
 		GCDeviceBattery Battery { get; }
 
 		[TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[Notification, Field ("GCControllerDidBecomeCurrentNotification")]
 		NSString DidBecomeCurrentNotification { get; }
 
 		[TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[Notification, Field ("GCControllerDidStopBeingCurrentNotification")]
 		NSString DidStopBeingCurrentNotification { get; }
+
+		[TV (14,5)][Mac (11,3)][iOS (14,5)]
+		[MacCatalyst (14,5)]
+		[Static]
+		[Export ("shouldMonitorBackgroundEvents")]
+		bool ShouldMonitorBackgroundEvents { get; set; }
 	}
 
 	[iOS (8,0), Mac (10,10)]
@@ -521,26 +543,32 @@ namespace GameController {
 		void SetState (GCMotion motion);
 
 		[TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[Export ("hasAttitude")]
 		bool HasAttitude { get; }
 
 		[TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[Export ("hasRotationRate")]
 		bool HasRotationRate { get; }
 
 		[TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[Export ("sensorsRequireManualActivation")]
 		bool SensorsRequireManualActivation { get; }
 
 		[TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[Export ("sensorsActive")]
 		bool SensorsActive { get; set; }
 
 		[TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[Export ("hasGravityAndUserAcceleration")]
 		bool HasGravityAndUserAcceleration { get; }
 
 		[TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
 		[Export ("acceleration")]
 		GCAcceleration Acceleration { get; set; }
 	}
@@ -633,6 +661,7 @@ namespace GameController {
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface GCColor : NSCopying, NSSecureCoding
@@ -653,6 +682,7 @@ namespace GameController {
 	delegate void GCControllerTouchpadHandler (GCControllerTouchpad touchpad, float xValue, float yValue, float buttonValue, bool buttonPressed);
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (GCControllerElement))]
 	interface GCControllerTouchpad
 	{
@@ -682,6 +712,7 @@ namespace GameController {
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface GCDeviceBattery : NSSecureCoding, NSCoding
@@ -694,6 +725,7 @@ namespace GameController {
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface GCDeviceHaptics
@@ -711,6 +743,7 @@ namespace GameController {
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[Static]
 	interface GCHapticsLocality {
 
@@ -740,6 +773,7 @@ namespace GameController {
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface GCDeviceLight: NSSecureCoding, NSCoding
@@ -749,6 +783,7 @@ namespace GameController {
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (GCExtendedGamepad))]
 	interface GCDualShockGamepad: NSSecureCoding, NSCoding
 	{
@@ -763,6 +798,7 @@ namespace GameController {
 	}
 
 	[TV (14, 0), Mac (11, 0), iOS (14, 0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	interface GCKeyboard : GCDevice, NSSecureCoding, NSCoding
 	{
@@ -783,6 +819,7 @@ namespace GameController {
 	delegate void GCKeyboardValueChangedHandler (GCKeyboardInput keyboard, GCControllerButtonInput key, nint keyCode, bool pressed);
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (GCPhysicalInputProfile))]
 	interface GCKeyboardInput
 	{
@@ -798,6 +835,7 @@ namespace GameController {
 	}
 
 	[Mac (11, 0), iOS (14, 0), TV (14, 0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	interface GCMouse : GCDevice, NSSecureCoding, NSCoding
 	{
@@ -828,10 +866,12 @@ namespace GameController {
 	delegate void GCMouseMoved (GCMouseInput mouse, float deltaX, float deltaY);
 
 	[Mac (11, 0), iOS (14, 0), TV(14, 0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (GCControllerDirectionPad))]
 	interface GCDeviceCursor {}
 
 	[Mac (11,0), iOS (14,0), TV (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (GCPhysicalInputProfile))]
 	interface GCMouseInput
 	{
@@ -857,6 +897,7 @@ namespace GameController {
 	interface IGCDevice {}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[Protocol]
 	interface GCDevice
 	{
@@ -878,6 +919,7 @@ namespace GameController {
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface GCPhysicalInputProfile
@@ -924,6 +966,7 @@ namespace GameController {
 	}
 
 	[TV (14, 0), Mac (11, 0), iOS (14, 0)]
+	[MacCatalyst (14,0)]
 	[Static]
 	interface GCInputXbox {
 
@@ -941,6 +984,7 @@ namespace GameController {
 	}
 
 	[TV (14, 0), Mac (11, 0), iOS (14, 0)]
+	[MacCatalyst (14,0)]
 	[Static]
 	interface GCInput {
 
@@ -1003,6 +1047,7 @@ namespace GameController {
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (GCExtendedGamepad))]
 	interface GCXboxGamepad: NSSecureCoding, NSCoding
 	{
@@ -1021,6 +1066,7 @@ namespace GameController {
 
 	[Static]
 	[TV (14, 0), Mac (11, 0), iOS (14, 0)]
+	[MacCatalyst (14,0)]
 	partial interface GCKey
 	{
 		[Field ("GCKeyA")]
@@ -1403,6 +1449,7 @@ namespace GameController {
 	}
 
 	[TV (14, 0), Mac (11, 0), iOS (14, 0)]
+	[MacCatalyst (14,0)]
 	[Static]
 	interface GCKeyCode
 	{
@@ -1786,8 +1833,93 @@ namespace GameController {
 	}
 
 	[iOS (14,3)][TV (14,3)][Mac (11,1)]
+	[MacCatalyst (14,3)]
 	[BaseType (typeof (GCMicroGamepad))]
 	[DisableDefaultCtor]
 	interface GCDirectionalGamepad {
+	}
+
+	[TV (14,5)][Mac (11,3)][iOS (14,5)]
+	[MacCatalyst (14,5)]
+	[Native]
+	enum GCDualSenseAdaptiveTriggerMode : long {
+		Off = 0,
+		Feedback = 1,
+		Weapon = 2,
+		Vibration = 3,
+	}
+
+	[TV (14,5)][Mac (11,3)][iOS (14,5)]
+	[MacCatalyst (14,5)]
+	[Native]
+	enum GCDualSenseAdaptiveTriggerStatus : long {
+		Unknown = -1,
+		FeedbackNoLoad,
+		FeedbackLoadApplied,
+		WeaponReady,
+		WeaponFiring,
+		WeaponFired,
+		VibrationNotVibrating,
+		VibrationIsVibrating,
+	}
+
+	[TV (14,5)][Mac (11,3)][iOS (14,5)]
+	[MacCatalyst (14,5)]
+	[BaseType (typeof (GCControllerButtonInput))]
+	[DisableDefaultCtor]
+	interface GCDualSenseAdaptiveTrigger {
+
+		[Export ("mode")]
+		GCDualSenseAdaptiveTriggerMode Mode { get; }
+
+		[Export ("status")]
+		GCDualSenseAdaptiveTriggerStatus Status { get; }
+
+		[Export ("armPosition")]
+		float ArmPosition { get; }
+
+		[Export ("setModeFeedbackWithStartPosition:resistiveStrength:")]
+		void SetModeFeedback (float startPosition, float resistiveStrength);
+
+		[Export ("setModeWeaponWithStartPosition:endPosition:resistiveStrength:")]
+		void SetModeWeapon (float startPosition, float endPosition, float resistiveStrength);
+
+		[Export ("setModeVibrationWithStartPosition:amplitude:frequency:")]
+		void SetModeVibration (float startPosition, float amplitude, float frequency);
+
+		[Export ("setModeOff")]
+		void SetModeOff ();
+	}
+
+	[TV (14,5)][Mac (11,3)][iOS (14,5)]
+	[MacCatalyst (14,5)]
+	[BaseType (typeof (GCExtendedGamepad))]
+	[DisableDefaultCtor] // Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: -[GCControllerButtonInput setIndex:]: unrecognized selector sent to instance 0x60000147eac0
+	interface GCDualSenseGamepad {
+
+		[Export ("touchpadButton")]
+		GCControllerButtonInput TouchpadButton { get; }
+
+		[Export ("touchpadPrimary")]
+		GCControllerDirectionPad TouchpadPrimary { get; }
+
+		[Export ("touchpadSecondary")]
+		GCControllerDirectionPad TouchpadSecondary { get; }
+
+		[Export ("leftTrigger")]
+		GCDualSenseAdaptiveTrigger LeftTrigger { get; }
+
+		[Export ("rightTrigger")]
+		GCDualSenseAdaptiveTrigger RightTrigger { get; }
+	}
+
+	[TV (14,5)][Mac (11,3)][iOS (14,5)]
+	[MacCatalyst (14,5)]
+	enum GCInputDirectional {
+		[Field ("GCInputDirectionalDpad")]
+		Dpad,
+
+		[Field ("GCInputDirectionalCardinalDpad")]
+		CardinalDpad,
 	}
 }

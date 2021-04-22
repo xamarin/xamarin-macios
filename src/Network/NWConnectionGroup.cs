@@ -16,12 +16,15 @@ using OS_nw_endpoint=System.IntPtr;
 namespace Network {
 
 	[TV (14,0), Mac (11,0), iOS (14,0), Watch (7,0)]
+	[MacCatalyst (14,0)]
 	public delegate void NWConnectionGroupReceiveDelegate (DispatchData content, NWContentContext context, bool isCompleted);
 
 	[TV (14,0), Mac (11,0), iOS (14,0), Watch (7,0)]
+	[MacCatalyst (14,0)]
 	public delegate void NWConnectionGroupStateChangedDelegate (NWConnectionGroupState state, NWError? error);
 
 	[TV (14,0), Mac (11,0), iOS (14,0), Watch (7,0)]
+	[MacCatalyst (14,0)]
 	public class NWConnectionGroup : NativeObject {
 		protected NWConnectionGroup (IntPtr handle, bool owns) : base (handle, owns) {}
 

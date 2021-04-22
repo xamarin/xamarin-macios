@@ -8,14 +8,20 @@
 //
 
 using System;
+using System.Runtime.Versioning;
 using Foundation;
 using ObjCRuntime;
 
 namespace Intents {
+
+#if NET
+	[SupportedOSPlatform ("tvos14.0")]
+#else
 	[iOS (10, 0)]
 	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
 	[Watch (3, 2)]
 	[TV (14,0)]
+#endif
 	[Register ("INIntentResolutionResult", SkipRegistration = true)]
 	public sealed partial class INIntentResolutionResult<ObjectType> : INIntentResolutionResult
 		where ObjectType : class, INativeObject 
@@ -45,10 +51,20 @@ namespace Intents {
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("macos11.0")]
+#else
 		[Watch (6,0), iOS (13,0), Mac (11,0)]
+#endif
 		public static INIntentResolutionResult GetUnsupported (nint reason) => throw new NotImplementedException ("All subclasses of INIntentResolutionResult must re-implement this method");
 
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("macos11.0")]
+#else
 		[Watch (6,0), iOS (13,0), Mac (11,0)]
+#endif
 		public static INIntentResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason) => throw new NotImplementedException ("All subclasses of INIntentResolutionResult must re-implement this method");
 
 	}

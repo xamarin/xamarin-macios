@@ -3960,6 +3960,11 @@ namespace Foundation
 		[Export ("helpAnchor")]
 		string HelpAnchor { get; }
 
+		[Watch (7,4), TV (14,5), Mac (11,3), iOS (14,5)]
+		[MacCatalyst (14,5)]
+		[Export ("underlyingErrors", ArgumentSemantic.Copy)]
+		NSError [] UnderlyingErrors { get; }
+
 		[Field ("NSCocoaErrorDomain")]
 		NSString CocoaErrorDomain { get;}
 
@@ -4023,6 +4028,11 @@ namespace Foundation
 		
 		[Field ("NSUnderlyingErrorKey")]
 		NSString UnderlyingErrorKey { get; }
+
+		[Watch (7,4), TV (14,5), Mac (11,3), iOS (14,5)]
+		[MacCatalyst (14,5)]
+		[Field ("NSMultipleUnderlyingErrorsKey")]
+		NSString MultipleUnderlyingErrorsKey { get; }
 
 		[Field ("NSLocalizedDescriptionKey")]
 		NSString LocalizedDescriptionKey { get; }
@@ -6079,6 +6089,7 @@ namespace Foundation
 		NSString VolumeSupportsAccessPermissionsKey { get; }
 
 		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Field ("NSURLVolumeSupportsFileProtectionKey")]
 		NSString VolumeSupportsFileProtectionKey { get; }
 
@@ -6225,6 +6236,11 @@ namespace Foundation
 		[Mac (10,10), iOS (8,0)]
 		[Field ("NSURLUbiquitousItemContainerDisplayNameKey")]
 		NSString UbiquitousItemContainerDisplayNameKey { get; }
+
+		[Watch (7,4), TV (14,5), Mac (11,3), iOS (14,5)]
+		[MacCatalyst (14,5)]
+		[Field ("NSURLUbiquitousItemIsExcludedFromSyncKey")]
+		NSString UbiquitousItemIsExcludedFromSyncKey { get; }
 		
 		[Mac (10,10), iOS (8,0)]
 		[Field ("NSURLUbiquitousItemDownloadRequestedKey")]
@@ -6291,26 +6307,32 @@ namespace Foundation
 		NSString FileProtectionCompleteUntilFirstUserAuthentication { get; }
 
 		[Watch (7,0)][TV (14,0)][Mac (11,0)][iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Field ("NSURLContentTypeKey")]
 		NSString ContentTypeKey { get; }
 
 		[Watch (7,0)][TV (14,0)][Mac (11,0)][iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Field ("NSURLFileContentIdentifierKey")]
 		NSString FileContentIdentifierKey { get; }
 
 		[Watch (7,0)][TV (14,0)][Mac (11,0)][iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Field ("NSURLIsPurgeableKey")]
 		NSString IsPurgeableKey { get; }
 
 		[Watch (7,0)][TV (14,0)][Mac (11,0)][iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Field ("NSURLIsSparseKey")]
 		NSString IsSparseKey { get; }
 
 		[Watch (7,0)][TV (14,0)][Mac (11,0)][iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Field ("NSURLMayHaveExtendedAttributesKey")]
 		NSString MayHaveExtendedAttributesKey { get; }
 
 		[Watch (7,0)][TV (14,0)][Mac (11,0)][iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[Field ("NSURLMayShareFileContentKey")]
 		NSString MayShareFileContentKey { get; }
 
@@ -7204,6 +7226,10 @@ namespace Foundation
 		[Export ("priority")]
 		float Priority { get; set; } /* float, not CGFloat */
 
+		[Watch (7,4), TV (14,5), Mac (11,3), iOS (14,5)]
+		[Export ("prefersIncrementalDelivery")]
+		bool PrefersIncrementalDelivery { get; set; }
+
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[NullAllowed, Export ("earliestBeginDate", ArgumentSemantic.Copy)]
 		NSDate EarliestBeginDate { get; set; }
@@ -7846,6 +7872,11 @@ namespace Foundation
 
 		[Export ("HTTPShouldHandleCookies")]
 		bool ShouldHandleCookies { get; }
+
+		[Watch (7,4), TV (14,5), Mac (11,3), iOS (14,5)]
+		[MacCatalyst (14,5)]
+		[Export ("assumesHTTP3Capable")]
+		bool AssumesHttp3Capable { get; [NotImplemented] set; }
 	}
 
 	[BaseType (typeof (NSDictionary))]
@@ -8021,6 +8052,11 @@ namespace Foundation
 		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
 		[Export ("allowsConstrainedNetworkAccess")]
 		bool AllowsConstrainedNetworkAccess { get; set; }
+
+		[Watch (7,4), TV (14,5), Mac (11,3), iOS (14,5)]
+		[MacCatalyst (14,5)]
+		[Export ("assumesHTTP3Capable")]
+		bool AssumesHttp3Capable { get; set; }
 	}
 	
 	[BaseType (typeof (NSObject), Name="NSURLResponse")]
@@ -8503,6 +8539,7 @@ namespace Foundation
 
 		[NoTV]
 		[Availability (Deprecated = Platform.iOS_7_0)]
+		[NoMacCatalyst]
 		[Export ("minimumTrackingAdjustment")]
 		nfloat MinimumTrackingAdjustment { get; set;  }
 
@@ -11999,6 +12036,10 @@ namespace Foundation
 	
 		[Field ("NSProgressFileOperationKindCopying")]
 		NSString FileOperationKindCopying { get; }
+
+		[Watch (7,4), TV (14,5), Mac (11,3), iOS (14,5)]
+		[Field ("NSProgressFileOperationKindUploading")]
+		NSString FileOperationKindUploading { get; }
 	
 		[Field ("NSProgressFileURLKey")]
 		NSString FileURLKey { get; }

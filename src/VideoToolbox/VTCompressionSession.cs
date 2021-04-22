@@ -9,6 +9,7 @@
 //
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using CoreFoundation;
 using ObjCRuntime;
@@ -17,7 +18,12 @@ using CoreMedia;
 using CoreVideo;
 
 namespace VideoToolbox {
+
+#if NET
+	[SupportedOSPlatform ("tvos10.2")]
+#else
 	[iOS (8,0), TV (10,2)]
+#endif
 	public class VTCompressionSession : VTSession {
 		GCHandle callbackHandle;
 
