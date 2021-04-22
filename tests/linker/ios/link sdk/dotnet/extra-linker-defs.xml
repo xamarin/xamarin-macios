@@ -11,6 +11,9 @@
 	<assembly fullname="Xamarin.iOS">
 		<type fullname="CoreBluetooth.CBUUID" preserve="field" />
 	</assembly>
+	<assembly fullname="Xamarin.TVOS">
+		<type fullname="CoreBluetooth.CBUUID" preserve="field" />
+	</assembly>
 	<assembly fullname="System.Private.CoreLib">
 		<type fullname="System.Runtime.Loader.AssemblyLoadContext">
 			<!-- https://github.com/dotnet/runtime/issues/46908 -->
