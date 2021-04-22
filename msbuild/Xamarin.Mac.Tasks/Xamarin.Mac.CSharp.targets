@@ -23,7 +23,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		<TargetFrameworkVersion Condition="'$(TargetFrameworkIdentifier)' == '' And '$(TargetFrameworkVersion)' == ''">v4.5</TargetFrameworkVersion>
 	</PropertyGroup>
 
-	<Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" Condition="'$(_UsingXamarinSdk)' != 'true'" />
+	<Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" Condition="'$(UsingAppleNETSdk)' != 'true'" />
 
 	<Import Project="Xamarin.Mac.Common.targets" />
 

@@ -9,6 +9,8 @@
 	<Import Project="Xamarin.Shared.Sdk.TargetFrameworkInference.props" />
 
 	<PropertyGroup>
+		<!-- Set to true when using the Microsoft.<platform>.Sdk NuGet. This is used by pre-existing/shared targets to tweak behavior depending on build system -->
+		<UsingAppleNETSdk>true</UsingAppleNETSdk>
 		<SuppressTrimAnalysisWarnings Condition=" '$(SuppressTrimAnalysisWarnings)' == '' ">true</SuppressTrimAnalysisWarnings>
 		<AfterMicrosoftNETSdkTargets>$(AfterMicrosoftNETSdkTargets);$(MSBuildThisFileDirectory)Microsoft.$(_PlatformName).Sdk.targets</AfterMicrosoftNETSdkTargets>
 	</PropertyGroup>
