@@ -953,8 +953,8 @@ namespace LinkSdk {
 					Assert.That (path, Does.StartWith ("/private/var/mobile/Applications/"), "pre-Containers");
 			}
 
-#if !__WATCHOS__
-			// tvOS (device sandbox) is more restricive than iOS as it limit access to more
+#if !__WATCHOS__ && !NET
+			// tvOS (device sandbox) is more restrictive than iOS as it limit access to more
 			// directories, mostly because they are not guaranteed to be preserved between executions
 			bool tvos = UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.TV;
 			if (tvos)

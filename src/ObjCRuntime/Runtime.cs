@@ -14,6 +14,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Text;
 
 using Foundation;
 using Registrar;
@@ -1617,16 +1618,29 @@ namespace ObjCRuntime {
 		}
 
 		[DllImport ("__Internal", CharSet = CharSet.Unicode)]
-		internal extern static void xamarin_log (string s);
+		extern static void xamarin_log (string s);
+
+		[DllImport (Constants.libcLibrary)]
+		extern static nint write (int filedes, byte[] buf, nint nbyte);
 
 		internal static void NSLog (string value)
 		{
-			xamarin_log (value);
+			try {
+				xamarin_log (value);
+			} catch {
+				// Append a newline like NSLog does
+				if (!value.EndsWith ('\n'))
+					value += "\n";
+				// Don't use Console.WriteLine, since that brings in a lot of supporting code and may bloat apps.
+				var utf8 = Encoding.UTF8.GetBytes (value);
+				write (2 /* STDERR */, utf8, utf8.Length);
+				// Ignore any errors writing to stderr (might happen on devices if the developer tools haven't been mounted, but xamarin_log should always work on devices).
+			}
 		}
 
 		internal static void NSLog (string format, params object[] args)
 		{
-			xamarin_log (string.Format (format, args));
+			NSLog (string.Format (format, args));
 		}
 #endif // !COREBUILD
 

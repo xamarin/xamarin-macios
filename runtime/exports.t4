@@ -536,7 +536,9 @@
 			"MonoAssembly *", "assembly",
 			"int", "argc",
 			"const char**", "argv"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		new Export ("void", "mono_jit_parse_options",
 			"int", "argc",
