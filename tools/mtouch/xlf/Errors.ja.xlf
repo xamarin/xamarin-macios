@@ -2583,8 +2583,8 @@
         <note />
       </trans-unit>
       <trans-unit id="MX0179">
-        <source>This version of {0} requires the {1} {2} SDK (shipped with Xcode {3}). Either upgrade Xcode to get the required header files or use the dynamic registrar or set the managed linker behaviour to Link Platform or Link Framework SDKs Only in your project's Mac Build Options &gt; Linker Behavior} (to try to avoid the new APIs).</source>
-        <target state="new">This version of {0} requires the {1} {2} SDK (shipped with Xcode {3}). Either upgrade Xcode to get the required header files or use the dynamic registrar or set the managed linker behaviour to Link Platform or Link Framework SDKs Only in your project's Mac Build Options &gt; Linker Behavior} (to try to avoid the new APIs).</target>
+        <source>This version of {0} requires the {1} {2} SDK (shipped with Xcode {3}). Either upgrade Xcode to get the required header files or use the dynamic registrar or set the managed linker behaviour to Link Platform or Link Framework SDKs Only in your project's Mac Build Options &gt; Linker Behavior) (to try to avoid the new APIs).</source>
+        <target state="new">This version of {0} requires the {1} {2} SDK (shipped with Xcode {3}). Either upgrade Xcode to get the required header files or use the dynamic registrar or set the managed linker behaviour to Link Platform or Link Framework SDKs Only in your project's Mac Build Options &gt; Linker Behavior) (to try to avoid the new APIs).</target>
         <note />
       </trans-unit>
       <trans-unit id="MX0180">
