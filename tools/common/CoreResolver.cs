@@ -136,5 +136,9 @@ namespace Xamarin.Bundler {
 
 			return String.Empty;
 		}
+
+		public virtual void Configure ()
+		{
+		}
 	}
 }
