@@ -20,7 +20,7 @@ namespace Xamarin.Messaging.Build {
 
 		protected override Task InitializeAsync ()
 		{
-			SetLicenceEnvironmentVariables ();
+			SetLicenseEnvironmentVariables ();
 
 			return Task.FromResult (true);
 		}
@@ -44,14 +44,14 @@ namespace Xamarin.Messaging.Build {
 
 		protected override async Task SendCustomLogFileMessagesAsync ()
 		{
-			var stderrLogFile = string.Format ("{0}.stderr.log", TracingConfiguration.GetLogFileNameWithoutExtension ());
+			var stderrLogFile = string.Format ("{0}.stderr.log", Tracing.GetLogFileNameWithoutExtension ());
 
 			await Client.SendAsync (new LogFileMessage {
 				LogFile = stderrLogFile
 			}).ConfigureAwait (continueOnCapturedContext: false);
 		}
 
-		void SetLicenceEnvironmentVariables ()
+		void SetLicenseEnvironmentVariables ()
 		{
 			Environment.SetEnvironmentVariable ("VSIDE", "true");
 

@@ -80,7 +80,7 @@ namespace Xharness.Targets {
 
 		protected override string AdditionalDefines {
 			get {
-				return "XAMCORE_3_0;__MACCATALYST__";
+				return "__MACCATALYST__";
 			}
 		}
 

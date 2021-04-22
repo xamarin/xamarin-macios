@@ -19,7 +19,7 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
 	<!-- Add our own pre-build steps -->
-	<PropertyGroup Condition="'$(_UsingXamarinSdk)' != 'true'">
+	<PropertyGroup Condition="'$(UsingAppleNETSdk)' != 'true'">
 		<BuildDependsOn>
 			BuildOnlySettings;
 			_CreateGeneratedSourcesDir;
@@ -29,7 +29,7 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 	</PropertyGroup>
 
 	<!-- Add our own Clean steps -->
-	<PropertyGroup Condition="'$(_UsingXamarinSdk)' != 'true'">
+	<PropertyGroup Condition="'$(UsingAppleNETSdk)' != 'true'">
 		<CleanDependsOn>
 			_CleanGeneratedSources;
 			$(CleanDependsOn)
