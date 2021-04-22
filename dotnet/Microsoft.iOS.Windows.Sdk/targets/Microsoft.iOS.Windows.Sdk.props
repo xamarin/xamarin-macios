@@ -5,6 +5,9 @@
   <Import Project="$(MSBuildThisFileDirectory)..\tools\msbuild\iOS\Xamarin.iOS.Common.Before.targets" />
 
   <PropertyGroup>
+		<_DotNetRootRemoteDirectory Condition="$(_DotNetRootRemoteDirectory) == ''">/usr/local/share/dotnet/</_DotNetRootRemoteDirectory>
+		<_XamarinSdkRemoteRootDirectory Condition="'$(_XamarinSdkRemoteRootDirectory)' == ''">$(_XamarinSdkRootDirectory.Replace('$(NetCoreRoot)', '$(_DotNetRootRemoteDirectory)'))</_XamarinSdkRemoteRootDirectory>
+		<_MlaunchPath Condition="'$(_MlaunchPath)' == ''">$(_XamarinSdkRemoteRootDirectory)tools/bin/mlaunch</_MlaunchPath>
     <AfterMicrosoftNETSdkTargets>$(AfterMicrosoftNETSdkTargets);$(MSBuildThisFileDirectory)..\targets\Microsoft.iOS.Windows.Sdk.targets</AfterMicrosoftNETSdkTargets>
   </PropertyGroup>
 
