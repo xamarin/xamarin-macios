@@ -328,7 +328,6 @@ partial class TestRuntime
 			default:
 				throw new NotImplementedException ();
 			}
-			break;
 		case 11:
 			switch (minor) {
 			case 0:
