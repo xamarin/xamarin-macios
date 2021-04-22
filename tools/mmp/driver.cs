@@ -508,20 +508,7 @@ namespace Xamarin.Bundler {
 
 				App.References.Add (root_assembly);
 				BuildTarget.Resolver.CommandLineAssemblies = App.References;
-
-				if (!UseLegacyAssemblyResolution && (IsUnifiedFullSystemFramework || IsUnifiedFullXamMacFramework)) {
-					// We need to look in the GAC/System mono for both FullSystem and FullXamMac, because that's
-					// how we've been resolving assemblies in the past (Cecil has a fall-back mode where it looks
-					// in the GAC, and we never disabled that, meaning that we always looked in the GAC if failing
-					// to resolve from somewhere else). This makes it explicit that we look in the GAC, and we
-					// now also warn when using FullXamMac and finding assemblies in the GAC.
-					BuildTarget.Resolver.GlobalAssemblyCache = Path.Combine (SystemMonoDirectory, "lib", "mono", "gac");
-					var framework_dir = Path.GetDirectoryName (typeof (object).Module.FullyQualifiedName);
-					BuildTarget.Resolver.SystemFrameworkDirectories = new [] {
-						framework_dir,
-						Path.Combine (framework_dir, "Facades")
-					};
-				}
+				BuildTarget.Resolver.Configure ();
 
 				if (string.IsNullOrEmpty (app_name))
 					app_name = root_wo_ext;
@@ -670,7 +657,7 @@ namespace Xamarin.Bundler {
 		}
 
 		static string system_mono_directory;
-		static string SystemMonoDirectory {
+		public static string SystemMonoDirectory {
 			get {
 				if (system_mono_directory == null)
 					system_mono_directory = RunPkgConfig ("--variable=prefix", force_system_mono: true);
