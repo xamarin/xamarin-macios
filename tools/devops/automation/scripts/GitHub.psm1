@@ -525,11 +525,18 @@ function New-GitHubSummaryComment {
         Set-GitHubStatus -Status "failure" -Description "Tests failed catastrophically on $Context (no summary found)." -Context "$Context"
         $request = New-GitHubComment -Header "Tests failed catastrophically on $Context (no summary found)." -Emoji ":fire:" -Description "Result file $TestSummaryPath not found. $headerLinks"
     } else {
+
+        # set the context to be "pipeline name (Test run)", example xamarin-macios (Test run)
+        $statusContext = "$Env:BUILD_DEFINITIONNAME (Test run)"
+        if ($Context -ne "Build") { #special case when we deal with the device tests
+            $statusContext = "$Contex - $Env:BUILD_DEFINITIONNAME) (Test run)"
+        }
+
         if (Test-JobSuccess -Status $Env:TESTS_JOBSTATUS) {
-            Set-GitHubStatus -Status "success" -Description "Tests passed on $Context." -Context "$Context"
+            Set-GitHubStatus -Status "success" -Description "All tests passed on $Context." -Context $statusContext
             $request = New-GitHubCommentFromFile -Header "Tests passed on $Context." -Description "Tests passed on $Context. $headerLinks"  -Emoji ":white_check_mark:" -Path $TestSummaryPath
         } else {
-            Set-GitHubStatus -Status "failure" -Description "Tests failed on $Context." -Context "$Context"
+            Set-GitHubStatus -Status "error" -Description "Tests failed on $Context." -Context $statusContext
             $request = New-GitHubCommentFromFile -Header "Tests failed on $Context" -Description "Tests failed on $Context. $headerLinks" -Emoji ":x:" -Path $TestSummaryPath
         }
     }
