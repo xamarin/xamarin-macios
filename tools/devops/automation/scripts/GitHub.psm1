@@ -129,7 +129,6 @@ function Set-GitHubStatus {
         "BUILD_BUILDID" = $Env:BUILD_BUILDID;
         "BUILD_REVISION" = $Env:BUILD_REVISION;
         "BUILD_REASON" = $Env:BUILD_REASON;
-        "SYSTEM_PULLREQUEST_SOURCECOMMITID" = $Env:SYSTEM_PULLREQUEST_SOURCECOMMITID; # provided by vsts by default
         "BUILD_SOURCEBRANCHNAME" = $Env:BUILD_SOURCEBRANCHNAME;
         "GITHUB_TOKEN" = $Env:GITHUB_TOKEN;
     }
@@ -142,6 +141,7 @@ function Set-GitHubStatus {
     }
 
     if ($Env:BUILD_REASON -eq "PullRequest") {
+        # the env var is only provided for PR not for builds.
         $url = "https://api.github.com/repos/xamarin/xamarin-macios/statuses/$Env:SYSTEM_PULLREQUEST_SOURCECOMMITID"
     } else {
         $url = "https://api.github.com/repos/xamarin/xamarin-macios/statuses/$Env:BUILD_REVISION"
