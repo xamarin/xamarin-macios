@@ -1,7 +1,7 @@
 
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mtouch", "mtouch.csproj", "{9A1177F5-16E6-45DE-AA69-DC9924EC39B8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mtouchtests", "mtouchtests.csproj", "{9A1177F5-16E6-45DE-AA69-DC9924EC39B8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mtouch", "..\..\tools\mtouch\mtouch.csproj", "{A737EFCC-4348-4EB1-9C14-4FDC0975388D}"
 EndProject

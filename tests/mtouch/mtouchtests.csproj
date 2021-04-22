@@ -8,7 +8,7 @@
     <ProjectGuid>{9A1177F5-16E6-45DE-AA69-DC9924EC39B8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>MTouchTests</RootNamespace>
-    <AssemblyName>mtouch</AssemblyName>
+    <AssemblyName>mtouchtests</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
