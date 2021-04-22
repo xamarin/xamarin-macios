@@ -181,7 +181,7 @@ namespace Xamarin.Bundler
 			get {
 				if (executables == null) {
 					executables = new Dictionary<Abi, string> ();
-					if (App.IsSimulatorBuild) {
+					if (App.IsSimulatorBuild && App.ArchSpecificExecutable) {
 						// When using simlauncher, we copy the executable directly to the target directory.
 						// When not using the simlauncher, but still building for the simulator, we write the executable to a arch-specific app directory (if building for both 32-bit and 64-bit), or just the app directory (if building for a single architecture)
 						if (Abis.Count != 1)
