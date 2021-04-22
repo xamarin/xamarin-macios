@@ -667,10 +667,6 @@ $(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIM
 # LibXamarinTemplate builds libxamarin.a
 #
 
-# The tvOS runtime pack doesn't ship support for bitcode yet, so linking fails. In the meantime, link with the old libmonosgen-2.0.dylib from the mono archive
-# https://github.com/dotnet/runtime/issues/48508
-DOTNET_tvos-arm64_LIBDIR=$(TOP)/builds/mono-ios-sdk-destdir/ios-libs/tvos
-
 define DotNetLibXamarinTemplate
 
 DOTNET$(6)_$(2)_LIBDIR ?= $$(TOP)/builds/downloads/microsoft.netcore.app.runtime$(7).$(2)/$(BUNDLED_NETCORE_PLATFORMS_PACKAGE_VERSION)/runtimes/$(2)/native

@@ -58,7 +58,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	</ItemDefinitionGroup>
 
 	<!-- Insert our app bundle generation step -->
-	<PropertyGroup Condition="'$(_UsingXamarinSdk)' != 'true'">
+	<PropertyGroup Condition="'$(UsingAppleNETSdk)' != 'true'">
 		<BuildDependsOn>
 			BuildOnlySettings;
 			PrepareForBuild;
@@ -124,7 +124,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 	<Target Name="_OptimizeLocalizationFiles" DependsOnTargets="$(OptimizeLocalizationFilesDependsOn)" />
 
-	<PropertyGroup Condition="'$(_UsingXamarinSdk)' != 'true'">
+	<PropertyGroup Condition="'$(UsingAppleNETSdk)' != 'true'">
 		<CreateAppBundleDependsOn>
 			_DetectAppManifest;
 			_DetectSigningIdentity;
@@ -366,7 +366,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	</PropertyGroup>
 
 	<Target Name="_CompileToNative" DependsOnTargets="$(_CompileToNativeDependsOn)"
-		Condition = "'$(IsAppDistribution)' != 'true' And '$(_UsingXamarinSdk)' != 'true'"
+		Condition = "'$(IsAppDistribution)' != 'true' And '$(UsingAppleNETSdk)' != 'true'"
 		Inputs="@(_CompileToNativeInput);@(_FileNativeReference);@(BundleDependentFiles)"
 		Outputs="$(_NativeExecutable);$(DeviceSpecificOutputPath)bundler.stamp">
 
