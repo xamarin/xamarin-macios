@@ -1,5 +1,11 @@
 # Contains all the different steps to generate the diff API diffs
 
+parameters:
+
+- name: prID
+  type: string 
+  default: '' # default empty, meaning we are building in CI 
+
 steps:
 - bash:  $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/vsts-compare.sh
   displayName: 'API & Generator comparison'
@@ -7,6 +13,8 @@ steps:
   name: compare
   env:
     BUILD_REVISION: 'jenkins'
+    ghprbPullId:  ${{ parameters.runTests }} # reusing jenkins vars, to be fixed
+
 
 - task: ArchiveFiles@1
   displayName: 'Archive API & Generator comparison'
@@ -49,6 +57,7 @@ steps:
   continueOnError: true
   env:
     BUILD_REVISION: 'jenkins'
+    ghprbPullId:  ${{ parameters.runTests }} # reusing jenkins vars, to be fixed
 
 - task: ArchiveFiles@1
   displayName: 'Archive API diff (from stable)'
