@@ -5,7 +5,7 @@ using Foundation;
 using ObjCRuntime;
 using OpenTK;
 
-#if !XAMCORE_4_0 && !MONOMAC
+#if !XAMCORE_4_0 && !MONOMAC && !__MACCATALYST__
 
 namespace GameplayKit {
 

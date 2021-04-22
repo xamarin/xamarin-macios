@@ -11,7 +11,7 @@ using System;
 using Foundation;
 using ObjCRuntime;
 using UIKit;
-#if !__TVOS__
+#if HAS_WATCHCONNECTIVITY
 using WatchConnectivity;
 #endif
 using NUnit.Framework;
@@ -36,6 +36,8 @@ namespace Introspection {
 			case "MonoTouch.MetalKit":
 			case "MetalPerformanceShaders":
 			case "MonoTouch.MetalPerformanceShaders":
+			case "MLCompute":
+			case "MediaSetup":
 				if (Runtime.Arch == Arch.SIMULATOR)
 					return true;
 				break;
@@ -58,14 +60,25 @@ namespace Introspection {
 					return true;
 
 				break;
+			case "MTLCounter":
+			case "MTLCounterSampleBuffer":
+			case "MTLCounterSet":
 			case "MTLFence":
 			case "MTLHeap":
+			case "MTLSharedTextureHandle":
 			case "RPSystemBroadcastPickerView": // Symbol not available in simulator
 				if (Runtime.Arch != Arch.DEVICE)
 					return true;
 
 				// Requires iOS 10
 				if (!TestRuntime.CheckXcodeVersion (8, 0))
+					return true;
+				break;
+			case "CAMetalLayer":
+			case "MTLFunctionConstantValues":
+			case "MTLHeapDescriptor":
+				// Symbol not available in simulator - but works on BigSur (others might too)
+				if (Runtime.Arch != Arch.DEVICE)
 					return true;
 				break;
 			case "CMMovementDisorderManager":
@@ -121,13 +134,13 @@ namespace Introspection {
 					return true;
 				break;
 
-#if !__TVOS__
+#if HAS_WATCHCONNECTIVITY
 			case "WatchConnectivity":
 			case "MonoTouch.WatchConnectivity":
 				if (!WCSession.IsSupported)
 					return true;
 				break;
-#endif // !__TVOS__
+#endif // HAS_WATCHCONNECTIVITY
 			}
 
 			switch (type.Name) {
@@ -165,8 +178,28 @@ namespace Introspection {
 				break;
 			case "PHLivePhoto":
 				if (protocolName == "NSItemProviderReading")
-					return !TestRuntime.CheckXcodeVersion (10,0);
+					return !TestRuntime.CheckXcodeVersion (12,0);
 				break;
+#if __MACCATALYST__
+			case "BCChatButton":
+			case "PKAddPassButton":
+			case "PKPaymentButton":
+			case "UIButton":
+			case "UIControl":
+			case "UISegmentedControl":
+			case "UITextField":
+			case "UIDatePicker":
+			case "UIPageControl":
+			case "UIRefreshControl":
+			case "UISearchTextField":
+			case "UISlider":
+			case "UIStepper":
+			case "UISwitch":
+			case "ASAuthorizationAppleIdButton":
+				if (protocolName == "UIContextMenuInteractionDelegate")
+					return !TestRuntime.CheckXcodeVersion (12, 0);
+				break;
+#endif
 			}
 
 			switch (protocolName) {
@@ -700,6 +733,16 @@ namespace Introspection {
 				// Xcode 12 beta 2
 				case "HKElectrocardiogram": // Conformance not in headers
 					return true;
+#if __MACCATALYST__
+				// Conformance not in headers
+				case "EKCalendar":
+				case "EKCalendarItem":
+				case "EKEvent":
+				case "EKObject":
+				case "EKReminder":
+				case "EKSource":
+					return true;
+#endif
 				}
 				break;
 			case "NSMutableCopying":
@@ -715,6 +758,20 @@ namespace Introspection {
 				// iOS 13 beta 1 (to be reviewed)
 				case "UIKeyCommand":
 					return true;
+#if __MACCATALYST__
+				// Conformance not in headers
+				case "EKAlarm":
+				case "EKCalendar":
+				case "EKCalendarItem":
+				case "EKEvent":
+				case "EKObject":
+				case "EKParticipant":
+				case "EKRecurrenceRule":
+				case "EKReminder":
+				case "EKSource":
+				case "EKStructuredLocation":
+					return true;
+#endif
 				}
 				break;
 			case "UIAccessibilityIdentification":

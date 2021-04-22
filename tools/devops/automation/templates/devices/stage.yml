@@ -96,6 +96,7 @@ stages:
     - template: ../common/upload-vsdrops.yml
       parameters:
         devicePrefix: ${{ parameters.devicePrefix }}
+        provisioningFailed: $[ dependencies.tests.outputs['runTests.PROVISIONING_FAILED']
 
   - job: upload_vsts_tests
     displayName: 'Upload xml to vsts'
@@ -110,6 +111,7 @@ stages:
     - template: ../common/upload-vsts-tests.yml
       parameters:
         devicePrefix: ${{ parameters.devicePrefix }}
+        provisioningFailed: $[ dependencies.tests.outputs['runTests.PROVISIONING_FAILED']
 
   - job: publish_html
     displayName: 'Publish Html report in VSDrops'
@@ -134,3 +136,4 @@ stages:
         statusContext: ${{ parameters.statusContext }}
         vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
         devicePrefix: ${{ parameters.devicePrefix }}
+        provisioningFailed: $[ dependencies.tests.outputs['runTests.PROVISIONING_FAILED']

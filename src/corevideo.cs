@@ -413,10 +413,12 @@ namespace CoreVideo {
 
 #if !MONOMAC
 		[NoWatch]
+		[NoMacCatalyst]
 		[Field ("kCVPixelBufferOpenGLESCompatibilityKey")]
 		NSString OpenGLESCompatibilityKey { get; }
 
 		[NoWatch]
+		[NoMacCatalyst]
 		[iOS (9,0)]
 		[Field ("kCVPixelBufferOpenGLESTextureCacheCompatibilityKey")]
 		NSString OpenGLESTextureCacheCompatibilityKey { get; }

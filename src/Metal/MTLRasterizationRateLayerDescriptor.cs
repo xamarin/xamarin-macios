@@ -2,6 +2,7 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using Foundation;
 using ObjCRuntime;
@@ -32,7 +33,11 @@ namespace Metal {
 			}
 		}
 */
+#if NET
+		[UnsupportedOSPlatform ("macos")]
+#else
 		[NoMac]
+#endif
 		static public MTLRasterizationRateLayerDescriptor Create (MTLSize sampleCount, float[] horizontal, float[] vertical)
 		{
 			if (horizontal == null)

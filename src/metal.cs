@@ -1518,14 +1518,16 @@ namespace Metal {
 		[Export ("locationNumber")]
 		nuint LocationNumber { get; }
 
-		[NoiOS, Mac (11, 0), NoTV]
+		[Mac (11, 0), NoTV]
+		[iOS (14,5)]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
 		[Export ("supports32BitFloatFiltering")]
 		bool Supports32BitFloatFiltering { get; }
 
-		[NoiOS, Mac (11, 0), NoTV]
+		[Mac (11, 0), NoTV]
+		[iOS (14,5)]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
@@ -1621,7 +1623,8 @@ namespace Metal {
 		[Export ("supportsFunctionPointers")]
 		bool SupportsFunctionPointers { get; }
 
-		[NoiOS, Mac (11, 0), NoTV]
+		[Mac (11, 0), NoTV]
+		[iOS (14,5)]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
@@ -4667,6 +4670,7 @@ namespace Metal {
 	}
 
 	[Mac (11,0), iOS (14,0), NoTV]
+	[MacCatalyst (14,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (MTLAccelerationStructureGeometryDescriptor))]
 	interface MTLAccelerationStructureBoundingBoxGeometryDescriptor {
@@ -4688,6 +4692,7 @@ namespace Metal {
 	}
 
 	[Mac (11,0), iOS (14,0), NoTV]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	interface MTLAccelerationStructureDescriptor : NSCopying {
 		[Export ("usage", ArgumentSemantic.Assign)]
@@ -4695,6 +4700,7 @@ namespace Metal {
 	}
 
 	[Mac (11,0), iOS (14,0), NoTV]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	interface MTLAccelerationStructureGeometryDescriptor : NSCopying {
 		[Export ("intersectionFunctionTableOffset")]
@@ -4708,6 +4714,7 @@ namespace Metal {
 	}
 
 	[Mac (11,0), iOS (14,0), NoTV]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (MTLAccelerationStructureGeometryDescriptor))]
 	interface MTLAccelerationStructureTriangleGeometryDescriptor {
 		[NullAllowed, Export ("vertexBuffer", ArgumentSemantic.Retain)]
@@ -4744,6 +4751,7 @@ namespace Metal {
 	}
 
 	[Mac (11,0), iOS (14,0), TV (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	interface MTLBlitPassDescriptor : NSCopying
 	{
@@ -4756,6 +4764,7 @@ namespace Metal {
 	}
 
 	[Mac (11,0), iOS (14,0), TV (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	interface MTLBlitPassSampleBufferAttachmentDescriptor : NSCopying {
 		[NullAllowed, Export ("sampleBuffer", ArgumentSemantic.Retain)]
@@ -4769,6 +4778,7 @@ namespace Metal {
 	}
 
 	[Mac (11,0), iOS (14,0), TV (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	interface MTLBlitPassSampleBufferAttachmentDescriptorArray {
 		[Export ("objectAtIndexedSubscript:")]
@@ -4779,6 +4789,7 @@ namespace Metal {
 	}
 
 	[Mac (11,0), iOS (14,0), TV (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	interface MTLCommandBufferDescriptor : NSCopying {
 
@@ -4793,6 +4804,7 @@ namespace Metal {
 	}
 
 	[Mac (11,0), iOS (14,0), TV (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	interface MTLComputePassDescriptor : NSCopying {
 		[Static]
@@ -4807,6 +4819,7 @@ namespace Metal {
 	}
 
 	[Mac (11,0), iOS (14,0), TV (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	interface MTLComputePassSampleBufferAttachmentDescriptor : NSCopying {
 
@@ -4821,6 +4834,7 @@ namespace Metal {
 	}
 
 	[Mac (11,0), iOS (14,0), TV (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	interface MTLComputePassSampleBufferAttachmentDescriptorArray {
 		[Export ("objectAtIndexedSubscript:")]
@@ -4831,6 +4845,7 @@ namespace Metal {
 	}
 
 	[Mac (11,0), iOS (14,0), TV (14,0)]
+	[MacCatalyst (14,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface MTLFunctionDescriptor : NSCopying {
@@ -4852,6 +4867,7 @@ namespace Metal {
 	}
 
 	[Mac (11,0), iOS (14,0), NoTV]
+	[MacCatalyst (14,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (MTLAccelerationStructureDescriptor))]
 	interface MTLInstanceAccelerationStructureDescriptor {
@@ -4876,11 +4892,13 @@ namespace Metal {
 	}
 
 	[Mac (11,0), iOS (14,0), NoTV]
+	[MacCatalyst (14,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (MTLFunctionDescriptor))]
 	interface MTLIntersectionFunctionDescriptor  : NSCopying {}
 
 	[Mac (11,0), iOS (14,0), NoTV]
+	[MacCatalyst (14,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface MTLIntersectionFunctionTableDescriptor : NSCopying {
@@ -4893,6 +4911,7 @@ namespace Metal {
 	}
 
 	[Mac (11,0), iOS (14,0), TV (14,0)]
+	[MacCatalyst (14,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface MTLLinkedFunctions : NSCopying {
@@ -4912,6 +4931,7 @@ namespace Metal {
 	}
 
 	[Mac (11,0), iOS (14,0), NoTV]
+	[MacCatalyst (14,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (MTLAccelerationStructureDescriptor))]
 	interface MTLPrimitiveAccelerationStructureDescriptor {
@@ -4924,6 +4944,7 @@ namespace Metal {
 	}
 
 	[Mac (11,0), iOS (14,0), TV (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	interface MTLRenderPassSampleBufferAttachmentDescriptor : NSCopying {
 		[NullAllowed, Export ("sampleBuffer", ArgumentSemantic.Retain)]
@@ -4943,6 +4964,7 @@ namespace Metal {
 	}
 
 	[Mac (11,0), iOS (14,0), TV (14,0)]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	interface MTLRenderPassSampleBufferAttachmentDescriptorArray {
 		[Export ("objectAtIndexedSubscript:")]
@@ -4954,6 +4976,7 @@ namespace Metal {
 	}
 
 	[Mac (11,0), iOS (14,0), NoTV]
+	[MacCatalyst (14,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface MTLResourceStatePassDescriptor : NSCopying {
@@ -4966,6 +4989,7 @@ namespace Metal {
 	}
 
 	[Mac (11,0), iOS (14,0), NoTV]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	interface MTLResourceStatePassSampleBufferAttachmentDescriptor : NSCopying {
 		[NullAllowed, Export ("sampleBuffer", ArgumentSemantic.Retain)]
@@ -4979,6 +5003,7 @@ namespace Metal {
 	}
 
 	[Mac (11,0), iOS (14,0), NoTV]
+	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	interface MTLResourceStatePassSampleBufferAttachmentDescriptorArray {
 		[Export ("objectAtIndexedSubscript:")]
@@ -4990,6 +5015,7 @@ namespace Metal {
 	}
 
 	[Mac (11,0), iOS (14,0), NoTV]
+	[MacCatalyst (14,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface MTLVisibleFunctionTableDescriptor : NSCopying {
@@ -5004,6 +5030,7 @@ namespace Metal {
 	interface IMTLFunctionHandle {}
 
 	[Mac (11,0), iOS (14,0), NoTV]
+	[MacCatalyst (14,0)]
 	[Protocol]
 	interface MTLFunctionHandle {
 		[Abstract]
@@ -5022,6 +5049,7 @@ namespace Metal {
 	interface IMTLAccelerationStructureCommandEncoder {}
 
 	[Mac (11,0), iOS (14,0), NoTV]
+	[MacCatalyst (14,0)]
 	[Protocol]
 	interface MTLAccelerationStructureCommandEncoder : MTLCommandEncoder {
 		[Abstract]
@@ -5076,6 +5104,7 @@ namespace Metal {
 	interface IMTLVisibleFunctionTable {}
 
 	[Mac (11,0), iOS (14,0), NoTV]
+	[MacCatalyst (14,0)]
 	[Protocol]
 	interface MTLVisibleFunctionTable : MTLResource {
 		[Abstract]
@@ -5090,6 +5119,7 @@ namespace Metal {
 	interface IMTLIntersectionFunctionTable {}
 
 	[Mac (11,0), iOS (14,0), NoTV]
+	[MacCatalyst (14,0)]
 	[Protocol]
 	interface MTLIntersectionFunctionTable : MTLResource {
 		[Abstract]
@@ -5126,6 +5156,7 @@ namespace Metal {
 	}
 
 	[Mac (11,0), iOS (14,0), TV (14,0)]
+	[MacCatalyst (14,0)]
 	[Protocol]
 	interface MTLCommandBufferEncoderInfo {
 
@@ -5145,6 +5176,7 @@ namespace Metal {
 	interface IMTLDynamicLibrary {}
 
 	[Mac (11,0), iOS (14,0), TV (14,0)]
+	[MacCatalyst (14,0)]
 	[Protocol]
 	interface MTLDynamicLibrary {
 	
@@ -5168,12 +5200,14 @@ namespace Metal {
 	interface IMTLLogContainer {}
 
 	[Mac (11,0), iOS (14,0), TV (14,0)]
+	[MacCatalyst (14,0)]
 	[Protocol]
 	interface MTLLogContainer {
 
 	}
 
 	[Mac (11,0), iOS (14,0), TV (14,0)]
+	[MacCatalyst (14,0)]
 	[Protocol]
 	interface MTLFunctionLog {
 		[Abstract]
@@ -5196,6 +5230,7 @@ namespace Metal {
 	interface IMTLFunctionLogDebugLocation {}
 
 	[Mac (11,0), iOS (14,0), TV (14,0)]
+	[MacCatalyst (14,0)]
 	[Protocol]
 	interface MTLFunctionLogDebugLocation {
 		[Abstract]

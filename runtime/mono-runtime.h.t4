@@ -97,7 +97,12 @@ typedef struct _MonoClassField MonoClassField;
 typedef struct _MonoString MonoString;
 typedef struct _MonoArray MonoArray;
 typedef struct _MonoReflectionMethod MonoReflectionMethod;
+#if defined (CORECLR_RUNTIME)
+// In Mono, MonoReflectionAssembly is a substruct of MonoObject, but for the CoreCLR bridge we use the same struct representation for both types.
+typedef struct _MonoObject MonoReflectionAssembly;
+#else
 typedef struct _MonoReflectionAssembly MonoReflectionAssembly;
+#endif
 typedef struct _MonoReflectionType MonoReflectionType;
 typedef struct _MonoException MonoException;
 typedef struct _MonoThread MonoThread;

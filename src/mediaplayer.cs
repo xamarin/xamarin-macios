@@ -247,6 +247,7 @@ namespace MediaPlayer {
 		NSString PlaybackStoreIDProperty { get; }
 
 		[Watch (7,4), TV (14,5), Mac (11,3), iOS (14,5)]
+		[MacCatalyst (14,5)]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Field ("MPMediaItemPropertyIsPreorder")]
 		NSString IsPreorderProperty { get; }
@@ -475,6 +476,7 @@ namespace MediaPlayer {
 		void AddMediaItems (MPMediaItem[] mediaItems, [NullAllowed] Action<NSError> completionHandler);
 
 		[iOS (14,0)]
+		[MacCatalyst (14,0)]
 		[NullAllowed, Export ("cloudGlobalID")]
 		string CloudGlobalId { get; }
 	}
@@ -815,6 +817,7 @@ namespace MediaPlayer {
 #else
 	[NoTV]
 	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
+	[MacCatalyst (14,0)] // docs says 13.0 but this throws: NSInvalidArgumentException Reason: MPMoviePlayerController is no longer available. Use AVPlayerViewController in AVKit.
 	[BaseType (typeof (NSObject))]
 	interface MPMoviePlayerController : MPMediaPlayback {
 #endif
@@ -1159,6 +1162,7 @@ namespace MediaPlayer {
 	[NoTV]
 	[BaseType (typeof (UIViewController))]
 	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'AVPlayerViewController' (AVKit) instead.")]
+	[MacCatalyst (14,0)] // docs says 13.0 but this throws: NSInvalidArgumentException Reason: MPMoviePlayerViewController is no longer available. Use AVPlayerViewController in AVKit.
 	interface MPMoviePlayerViewController {
 		[DesignatedInitializer]
 		[Export ("initWithContentURL:")]
@@ -1394,7 +1398,6 @@ namespace MediaPlayer {
 
 		[NoiOS]
 		[NoTV]
-		[Introduced (PlatformName.MacCatalyst, 13, 0)]
 		[Export ("playbackState")]
 		MPNowPlayingPlaybackState PlaybackState { get; set; }
 

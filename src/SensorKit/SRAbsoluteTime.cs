@@ -1,13 +1,21 @@
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using ObjCRuntime;
 
 #nullable enable
 
 namespace SensorKit {
 
+#if NET
+	[SupportedOSPlatform ("ios14.0")]
+	[UnsupportedOSPlatform ("tvos")]
+	[UnsupportedOSPlatform ("macos")]
+#else
 	[NoWatch, NoTV, NoMac]
 	[iOS (14,0)]
+	[MacCatalyst (14,0)]
+#endif
 	public static class SRAbsoluteTime {
 
 		[DllImport (Constants.SensorKitLibrary, EntryPoint = "SRAbsoluteTimeGetCurrent")]

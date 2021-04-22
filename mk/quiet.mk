@@ -71,7 +71,7 @@ MMP_VERBOSITY=-q
 MTOUCH_VERBOSITY=-q
 MDTOOL_VERBOSITY=
 DOTNET_PACK_VERBOSITY=--verbosity:quiet --nologo
-DOTNET_BUILD_VERBOSITY=--verbosity quiet
+DOTNET_BUILD_VERBOSITY=--verbosity quiet --nologo -consoleLoggerParameters:NoSummary
 NUGET_VERBOSITY=-verbosity quiet
 else
 # CI build
