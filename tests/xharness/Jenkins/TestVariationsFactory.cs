@@ -117,7 +117,7 @@ namespace Xharness.Jenkins {
 				switch (test.TestName) {
 				case "monotouch-test":
 					if (test.TestProject.IsDotNetProject)
-						yield return new TestData { Variation = "Debug (CoreCLR)", Debug = true, XamarinRuntime = "CoreCLR", Ignored = true, };
+						yield return new TestData { Variation = "Debug (CoreCLR)", Debug = true, UseMonoRuntime = false, Ignored = true, };
 					break;
 				case "xammac tests":
 					switch (test.ProjectConfiguration) {
@@ -161,7 +161,7 @@ namespace Xharness.Jenkins {
 					var ignored = test_data.Ignored;
 					var known_failure = test_data.KnownFailure;
 					var candidates = test_data.Candidates;
-					var xamarin_runtime = test_data.XamarinRuntime;
+					var use_mono_runtime = test_data.UseMonoRuntime;
 
 					if (task.TestProject.IsDotNetProject)
 						variation += " [dotnet]";
@@ -215,8 +215,8 @@ namespace Xharness.Jenkins {
 
 						if (!debug && !isMac)
 							clone.Xml.SetMtouchUseLlvm (true, task.ProjectPlatform, configuration);
-						if (!string.IsNullOrEmpty (xamarin_runtime))
-							clone.Xml.SetTopLevelPropertyGroupValue ("_XamarinRuntime", xamarin_runtime);
+						if (use_mono_runtime.HasValue)
+							clone.Xml.SetTopLevelPropertyGroupValue ("UseMonoRuntime", use_mono_runtime.Value ? "true" : "false");
 						clone.Xml.Save (clone.Path);
 					});
 

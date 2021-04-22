@@ -351,7 +351,7 @@ namespace ObjCRuntime
 		static void Check (string property, Platform existing, Platform updated)
 		{
 			if (!PlatformHelper.IsValid (updated)){
-				throw new Exception (String.Format ("Platform setting deteremined invalid, cannot set '{0}' to '{1}' " +
+				throw new Exception (String.Format ("Platform setting determined invalid, cannot set '{0}' to '{1}' " +
 					"as it is already set for the same platform to '{2}'",
 					property, updated, existing));
 			}
