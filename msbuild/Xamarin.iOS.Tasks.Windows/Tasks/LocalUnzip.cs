@@ -5,7 +5,7 @@ using System;
 using System.IO;
 using Xamarin.iOS.Tasks.Windows.Properties;
 
-namespace Xamarin.iOS.Tasks.Windows.Tasks {
+namespace Xamarin.iOS.Tasks.Windows {
 	public class LocalUnzip : Task {
 		[Required]
 		public string ZipFilePath { get; set; }
