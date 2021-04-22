@@ -160,6 +160,7 @@ pr:
     - main
     - d16-*
     - xcode*
+    - release/*
   paths:
     exclude:
     - docs
