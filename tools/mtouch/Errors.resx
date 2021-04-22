@@ -908,7 +908,7 @@
     </data>
 
 	<data name="MX0179" xml:space="preserve">
-		<value>This version of {0} requires the {1} {2} SDK (shipped with Xcode {3}). Either upgrade Xcode to get the required header files or use the dynamic registrar or set the managed linker behaviour to Link Platform or Link Framework SDKs Only in your project's Mac Build Options > Linker Behavior} (to try to avoid the new APIs).</value>
+		<value>This version of {0} requires the {1} {2} SDK (shipped with Xcode {3}). Either upgrade Xcode to get the required header files or use the dynamic registrar or set the managed linker behaviour to Link Platform or Link Framework SDKs Only in your project's Mac Build Options > Linker Behavior) (to try to avoid the new APIs).</value>
 	</data>
 
 	<data name="MX0180" xml:space="preserve">
