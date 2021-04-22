@@ -231,6 +231,9 @@
 			<_LinkerCacheDirectory>$([System.IO.Path]::GetFullPath('$(IntermediateOutputPath)linker-cache'))</_LinkerCacheDirectory>
 			<_LinkerCacheDirectory Condition="'$(BuildSessionId)' != ''">$(IntermediateOutputPath)linker-cache</_LinkerCacheDirectory>
 
+			<_XamarinRuntime Condition="'$(UseMonoRuntime)' == 'true'">MonoVM</_XamarinRuntime>
+			<_XamarinRuntime Condition="'$(UseMonoRuntime)' != 'true'">CoreCLR</_XamarinRuntime>
+
 			<_CustomLinkerOptions>
 				AssemblyName=$(AssemblyName).dll
 				AOTOutputDirectory=$(_AOTOutputDirectory)
@@ -428,7 +431,7 @@
 			<_LibXamarinLinkMode Condition="'$(_LibXamarinLinkMode)' == ''">static</_LibXamarinLinkMode>
 			<_LibXamarinExtension Condition="'$(_LibXamarinLinkMode)' == 'dylib'">dylib</_LibXamarinExtension>
 			<_LibXamarinExtension Condition="'$(_LibXamarinLinkMode)' == 'static'">a</_LibXamarinExtension>
-			<_LibXamarinRuntime Condition="'$(_XamarinRuntime)' == 'CoreCLR'">-coreclr</_LibXamarinRuntime>
+			<_LibXamarinRuntime Condition="'$(UseMonoRuntime)' != 'true'">-coreclr</_LibXamarinRuntime>
 			<_LibXamarinDebug Condition="'$(_BundlerDebug)' == 'true'">-debug</_LibXamarinDebug>
 			<_LibXamarinName Condition="'$(_LibXamarinName)' == ''">libxamarin-dotnet$(_LibXamarinRuntime)$(_LibXamarinDebug).$(_LibXamarinExtension)</_LibXamarinName>
 
