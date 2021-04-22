@@ -129,7 +129,6 @@ function Set-GitHubStatus {
         "BUILD_BUILDID" = $Env:BUILD_BUILDID;
         "BUILD_REVISION" = $Env:BUILD_REVISION;
         "BUILD_REASON" = $Env:BUILD_REASON;
-        "SYSTEM_PULLREQUEST_SOURCECOMMITID" = $Env:SYSTEM_PULLREQUEST_SOURCECOMMITID; # provided by vsts by default
         "BUILD_SOURCEBRANCHNAME" = $Env:BUILD_SOURCEBRANCHNAME;
         "GITHUB_TOKEN" = $Env:GITHUB_TOKEN;
     }
@@ -142,6 +141,7 @@ function Set-GitHubStatus {
     }
 
     if ($Env:BUILD_REASON -eq "PullRequest") {
+        # the env var is only provided for PR not for builds.
         $url = "https://api.github.com/repos/xamarin/xamarin-macios/statuses/$Env:SYSTEM_PULLREQUEST_SOURCECOMMITID"
     } else {
         $url = "https://api.github.com/repos/xamarin/xamarin-macios/statuses/$Env:BUILD_REVISION"
@@ -548,11 +548,18 @@ function New-GitHubSummaryComment {
         Set-GitHubStatus -Status "failure" -Description "Tests failed catastrophically on $Context (no summary found)." -Context "$Context"
         $request = New-GitHubComment -Header "Tests failed catastrophically on $Context (no summary found)." -Emoji ":fire:" -Description "Result file $TestSummaryPath not found. $headerLinks"
     } else {
+
+        # set the context to be "pipeline name (Test run)", example xamarin-macios (Test run)
+        $statusContext = "$Env:BUILD_DEFINITIONNAME (Test run)"
+        if ($Context -ne "Build") { #special case when we deal with the device tests
+            $statusContext = "$Contex - $Env:BUILD_DEFINITIONNAME) (Test run)"
+        }
+
         if (Test-JobSuccess -Status $Env:TESTS_JOBSTATUS) {
-            Set-GitHubStatus -Status "success" -Description "Tests passed on $Context." -Context "$Context"
+            Set-GitHubStatus -Status "success" -Description "All tests passed on $Context." -Context $statusContext
             $request = New-GitHubCommentFromFile -Header "Tests passed on $Context." -Description "Tests passed on $Context. $headerLinks"  -Emoji ":white_check_mark:" -Path $TestSummaryPath
         } else {
-            Set-GitHubStatus -Status "failure" -Description "Tests failed on $Context." -Context "$Context"
+            Set-GitHubStatus -Status "error" -Description "Tests failed on $Context." -Context $statusContext
             $request = New-GitHubCommentFromFile -Header "Tests failed on $Context" -Description "Tests failed on $Context. $headerLinks" -Emoji ":x:" -Path $TestSummaryPath
         }
     }

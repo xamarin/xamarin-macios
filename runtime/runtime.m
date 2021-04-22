@@ -925,6 +925,7 @@ gc_enable_new_refcount (void)
 }
 #endif // !CORECLR_RUNTIME
 
+#if !defined (CORECLR_RUNTIME)
 struct _MonoProfiler {
 	int dummy;
 };
@@ -937,6 +938,7 @@ xamarin_install_mono_profiler ()
 	// (currently gc_enable_new_refcount and xamarin_install_nsautoreleasepool_hooks).
 	mono_profiler_install (&profiler, NULL);
 }
+#endif
 
 bool
 xamarin_file_exists (const char *path)
@@ -1387,7 +1389,9 @@ xamarin_initialize ()
 	xamarin_bridge_register_product_assembly (&exception_gchandle);
 	xamarin_process_managed_exception_gchandle (exception_gchandle);
 
+#if !defined (CORECLR_RUNTIME)
 	xamarin_install_mono_profiler (); // must be called before xamarin_install_nsautoreleasepool_hooks or gc_enable_new_refcount
+#endif
 
 	xamarin_install_nsautoreleasepool_hooks ();
 
