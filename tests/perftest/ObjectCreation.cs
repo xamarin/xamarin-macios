@@ -16,6 +16,7 @@ namespace PerfTest {
 		/* new NSObject () */
 		NSObject obj;
 
+		[Benchmark]
 		public object NSObjectCreation ()
 		{
 			return obj = new NSObject ();
@@ -30,6 +31,7 @@ namespace PerfTest {
 		/* new CustomClass () */
 		CustomClass custom_obj;
 
+		[Benchmark]
 		public object CustomClassCreation ()
 		{
 			return custom_obj = new CustomClass ();
@@ -49,6 +51,7 @@ namespace PerfTest {
 
 		NSObject native_nsobject;
 
+		[Benchmark]
 		public object NativeNSObjectCreation ()
 		{
 
@@ -73,6 +76,7 @@ namespace PerfTest {
 
 		NSObject native_nsobject_retain_release;
 
+		[Benchmark]
 		public object NativeNSObjectRetainReleaseCreation ()
 		{
 
@@ -96,6 +100,7 @@ namespace PerfTest {
 
 		IntPtr CustomClassClassHandle = Class.GetHandle (typeof (CustomClass));
 
+		[Benchmark]
 		public void NativeCustomClassCreation ()
 		{
 
@@ -108,6 +113,8 @@ namespace PerfTest {
 		 */
 
 		NSObject native_customclass_surface;
+
+		[Benchmark]
 		public object NativeCustomClassSurfaceCreation ()
 		{
 
