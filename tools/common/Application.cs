@@ -912,6 +912,7 @@ namespace Xamarin.Bundler {
 				CommandLineAssemblies = RootAssemblies,
 #endif
 			};
+			resolver.Configure ();
 
 			if (Platform == ApplePlatform.iOS && !Driver.IsDotNet) {
 				if (Is32Build) {
@@ -974,7 +975,7 @@ namespace Xamarin.Bundler {
 			if (RootAssemblies.Count == 1)
 				registrar.GenerateSingleAssembly (resolver, resolvedAssemblies.Values, Path.ChangeExtension (registrar_m, "h"), registrar_m, Path.GetFileNameWithoutExtension (RootAssembly));
 			else
-				registrar.Generate (resolvedAssemblies.Values, Path.ChangeExtension (registrar_m, "h"), registrar_m);
+				registrar.Generate (resolver, resolvedAssemblies.Values, Path.ChangeExtension (registrar_m, "h"), registrar_m);
 		}
 
 		public IEnumerable<Abi> Abis {

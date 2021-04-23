@@ -425,8 +425,7 @@ namespace Xharness {
 				IgnoreMacCatalystVariation = false,
 			});
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "link all", "dotnet", "iOS", "link all.csproj"))) { Configurations = new string [] { "Debug", "Release" }, IsDotNetProject = true, SkipiOSVariation = false, SkiptvOSVariation = true, SkipwatchOSVariation = true, SkipTodayExtensionVariation = true, SkipDeviceVariations = false, SkipiOS32Variation = true });
-			// https://github.com/xamarin/xamarin-macios/issues/11243
-			// IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "link all", "dotnet", "tvOS", "link all.csproj"))) { Configurations = new string [] { "Debug", "Release" }, IsDotNetProject = true, SkipiOSVariation = true, SkiptvOSVariation = true, SkipwatchOSVariation = true, SkipTodayExtensionVariation = true, SkipDeviceVariations = false, SkipiOS32Variation = true, GenerateVariations = false, TestPlatform = TestPlatform.tvOS, });
+			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "link all", "dotnet", "tvOS", "link all.csproj"))) { Configurations = new string [] { "Debug", "Release" }, IsDotNetProject = true, SkipiOSVariation = true, SkiptvOSVariation = true, SkipwatchOSVariation = true, SkipTodayExtensionVariation = true, SkipDeviceVariations = false, SkipiOS32Variation = true, GenerateVariations = false, TestPlatform = TestPlatform.tvOS, });
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "link sdk", "link sdk.csproj"))) {
 				Configurations = new string [] { "Debug", "Release" },
 				IgnoreMacCatalystVariation = false,

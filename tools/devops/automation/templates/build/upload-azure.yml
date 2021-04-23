@@ -167,7 +167,7 @@ steps:
     if ($Env:SkipNugets -ne "True") {
       $nugets = Get-ChildItem -Path $pkgsPath -Filter *.nupkg -File -Name
 
-      if ($nugets.Count > 0)
+      if ($nugets.Count > 0) {
         Set-GitHubStatus -Status "success" -Description "Nugets built." -TargetUrl "$pkgsVirtualUrl/$n" -Context "$(Build.DefinitionName) (Nugets built)"
         if ($Env:NUGETS_PUBLISHED -ne "Failed") {
           Set-GitHubStatus -Status "success" -Description "Nugets published." -TargetUrl "$pkgsVirtualUrl/$n" -Context "$(Build.DefinitionName) (Nugets published)"
