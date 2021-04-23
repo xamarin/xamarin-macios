@@ -22,6 +22,8 @@ endif
 export BENCHMARK_OUTPUT_PATH
 BINLOG_TIMESTAMP:=$(shell date +%Y-%m-%d--%H:%M:%S)
 
+PERFLOGFILENAME:=$(BENCHMARK_OUTPUT_PATH)/perflog-$(shell date +%Y-%m-%d--%H:%M:%S).log
+
 # Legacy Xamarin
 
 build-perftest-with-legacy:
@@ -90,7 +92,6 @@ run-perftest:
 	$(Q) $(MAKE) run-perftest-with-legacy
 	@echo "Log files were stored in $(BENCHMARK_OUTPUT_PATH)"
 
-PERFLOGFILENAME:=$(BENCHMARK_OUTPUT_PATH)/perflog-$(shell date +%Y-%m-%d--%H:%M:%S).log
 run-perftest-with-runtime: $(TARGETS)
 	@echo "Running perftest ($(XAMARIN_RUNTIME)) and writing output to $(PERFLOGFILENAME)..."
 	$(Q) mkdir -p $(BENCHMARK_OUTPUT_PATH)
