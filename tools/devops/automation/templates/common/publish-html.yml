@@ -69,7 +69,7 @@ steps:
         $targetUrl = $Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI + "$Env:SYSTEM_TEAMPROJECT/_build/index?buildId=$Env:BUILD_BUILDID&view=ms.vss-test-web.test-result-details"
 
         New-GitHubComment -Header "Tests were not ran ($Env:CONTEXT)." -Emoji ":warning:" -Description "Results were skipped for this run  due to provisioning problems [Azure Devops]($targetUrl). Please contact the bot administrator."
-        Set-GitHubStatus -Status "error" -Description "Provisioning bot for tests failed." -Context "$(Build.DefinitionName) (Test run)"
+        Set-GitHubStatus -Status "error" -Description "Provisioning bot for tests failed." -Context "$Env:CONTEX - $(Build.DefinitionName) (Test run)"
       env:
         BUILD_REVISION: $(Build.SourceVersion)
         CONTEXT: ${{ parameters.statusContext }}
