@@ -13,7 +13,7 @@ steps:
   name: compare
   env:
     BUILD_REVISION: 'jenkins'
-    ghprbPullId:  ${{ parameters.runTests }} # reusing jenkins vars, to be fixed
+    ghprbPullId:  ${{ parameters.prID }} # reusing jenkins vars, to be fixed
 
 
 - task: ArchiveFiles@1
