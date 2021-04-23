@@ -319,6 +319,12 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 			Files="@(_MonoLibraryFixToMac)" />
 	</Target>
 
+	<Target Name="_UpdateDebugType" BeforeTargets="CoreCompile">
+		<PropertyGroup>
+			<DebugType Condition="'$(DebugType)' == 'full'">portable</DebugType>
+		</PropertyGroup>
+	</Target>
+
 	<!-- Overrides Core SDK target to remote the ILLink execution -->
 	<!-- https://github.com/dotnet/sdk/blob/cdf57465e1cba9e44b5c9a76a403d41b1b8f178c/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.ILLink.targets#L76-L132 -->
 	<Target Name="_RunILLink"
