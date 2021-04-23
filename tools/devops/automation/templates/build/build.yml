@@ -408,7 +408,7 @@ steps:
   enabled: ${{ parameters.runTests }}
   env:
     IsPR: $(configuration.IsPR)
-    IsPR: $(configuration.PrID)
+    PrID: $(configuration.PrID)
     GITHUB_TOKEN: $(GitHub.Token)  # used to filter the tests to be ran
     BUILD_REVISION: jenkins
     VSDROPS_URI: '${{ parameters.vsdropsPrefix }}/$(Build.BuildNumber)/$(Build.BuildId)/sim;/tests/' # uri used to create the vsdrops index using full uri
