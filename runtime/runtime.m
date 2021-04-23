@@ -1102,15 +1102,6 @@ xamarin_add_registration_map (struct MTRegistrationMap *map, bool partial)
  * Exception handling
  */
 
-static XamarinUnhandledExceptionFunc unhandled_exception_func;
-
-void 
-xamarin_install_unhandled_exception_hook (XamarinUnhandledExceptionFunc func)
-{
-	// COOP: no managed memory access: any mode
-	unhandled_exception_func = func;	
-}
-
 static MonoObject *
 fetch_exception_property (MonoObject *obj, const char *name, bool is_virtual)
 {
@@ -1163,9 +1154,6 @@ print_exception (MonoObject *exc, bool is_inner, NSMutableString *msg)
 	[msg appendFormat: @"%s (%s)\n", message, type_name];
 	if (trace)
 		[msg appendFormat: @"%s\n", trace];
-
-	if (unhandled_exception_func && !is_inner)
-		unhandled_exception_func (exc, type_name, message, trace);
 
 	mono_free (trace);
 	mono_free (message);
