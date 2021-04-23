@@ -735,7 +735,7 @@ release_gchandle_dictionary_entry (CFAllocatorRef allocator, const void *value)
 }
 
 static const char *associated_key = "x"; // the string value doesn't matter, only the pointer value.
-void
+bool
 xamarin_set_gchandle_trampoline (id self, SEL sel, GCHandle gc_handle, enum XamarinGCHandleFlags flags)
 {
 	// COOP: Called by ObjC (when the setGCHandle:flags: selector is called on an object).
@@ -745,6 +745,13 @@ xamarin_set_gchandle_trampoline (id self, SEL sel, GCHandle gc_handle, enum Xama
 	/* This is for types registered using the dynamic registrar */
 	XamarinAssociatedObject *obj;
 	obj = objc_getAssociatedObject (self, associated_key);
+
+	// Check if we're setting the initial value, in which case we don't want to overwrite
+	if (obj != NULL && obj->gc_handle != INVALID_GCHANDLE && ((flags & XamarinGCHandleFlags_InitialSet) == XamarinGCHandleFlags_InitialSet))
+		return false;
+
+	flags = (enum XamarinGCHandleFlags) (flags & ~XamarinGCHandleFlags_InitialSet); // Remove the InitialSet flag, we don't want to store it.
+
 	if (obj == NULL && gc_handle != INVALID_GCHANDLE) {
 		obj = [[XamarinAssociatedObject alloc] init];
 		obj->gc_handle = gc_handle;
@@ -774,6 +781,8 @@ xamarin_set_gchandle_trampoline (id self, SEL sel, GCHandle gc_handle, enum Xama
 		CFDictionarySetValue (gchandle_hash, self, entry);
 	}
 	pthread_mutex_unlock (&gchandle_hash_lock);
+
+	return true;
 }
 
 GCHandle
