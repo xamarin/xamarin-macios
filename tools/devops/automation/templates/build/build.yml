@@ -169,6 +169,13 @@ steps:
     if ($buildReason -eq "PullRequest" -or (($buildReason -eq "Manual" -or $buildReason -eq "IndividualCI") -and ($buildSourceBranchName -eq "merge")) ) {
       $configVars.Add("IsPR", "True")
 
+      if ([string]::IsNullOrEmpty($Env:ghprbPullId)) {
+        $configVars.Add("PrID", $Env:ghprbPullId)
+      } else {
+        $configVars.Add("PrID", "")
+      }
+
+
       if ($Env:BuildPackage -eq "True") {
         $configVars.Add("BuildPkgs", "True")
       } else {
@@ -401,9 +408,11 @@ steps:
   enabled: ${{ parameters.runTests }}
   env:
     IsPR: $(configuration.IsPR)
+    IsPR: $(configuration.PrID)
     GITHUB_TOKEN: $(GitHub.Token)  # used to filter the tests to be ran
     BUILD_REVISION: jenkins
     VSDROPS_URI: '${{ parameters.vsdropsPrefix }}/$(Build.BuildNumber)/$(Build.BuildId)/sim;/tests/' # uri used to create the vsdrops index using full uri
+
 
 # Only executed when the tests failed, that means that we did have a timeout, and we could not set the status, this
 # later results on an error when publishing the results, if we timeout, we ensure we set the needed vars
