@@ -84,12 +84,12 @@ run-perftest-dotnet:
 	@echo "Log files were stored in $(BENCHMARK_OUTPUT_PATH)"
 
 run-perftest:
+	$(Q) $(MAKE) build-perftest-with-legacy
 	$(Q) $(MAKE) build-perftest-with-coreclr
 	$(Q) $(MAKE) build-perftest-with-mono
-	$(Q) $(MAKE) build-perftest-with-legacy
+	$(Q) $(MAKE) run-perftest-with-legacy
 	$(Q) $(MAKE) run-perftest-with-mono
 	$(Q) $(MAKE) run-perftest-with-coreclr
-	$(Q) $(MAKE) run-perftest-with-legacy
 	@echo "Log files were stored in $(BENCHMARK_OUTPUT_PATH)"
 
 run-perftest-with-runtime: $(TARGETS)
