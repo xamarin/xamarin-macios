@@ -18,8 +18,7 @@
 		},
 		"Microsoft.@PLATFORM@.Windows.Sdk": {
 			"kind": "sdk",
-			"version": "@VERSION@",
-			"platforms": [ "win-x86", "win-x64" ]
+			"version": "@VERSION@"
 		},
 		"Microsoft.@PLATFORM@.Ref": {
 			"kind": "framework",
