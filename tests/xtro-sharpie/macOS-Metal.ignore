@@ -113,8 +113,6 @@
 !incorrect-protocol-member! MTLDevice::newDynamicLibraryWithURL:error: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::sparseTileSizeInBytes is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::sparseTileSizeWithTextureType:pixelFormat:sampleCount: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLDevice::supports32BitFloatFiltering is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLDevice::supports32BitMSAA is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::supportsBCTextureCompression is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::supportsCounterSampling: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::supportsDynamicLibraries is REQUIRED and should be abstract
@@ -141,6 +139,5 @@
 !incorrect-protocol-member! MTLComputePipelineState::newVisibleFunctionTableWithDescriptor: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLComputePipelineState::supportIndirectCommandBuffers is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLFunction::options is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLDevice::supportsQueryTextureLOD is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLIndirectComputeCommand::setImageblockWidth:height: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::isRemovable is REQUIRED and should be abstract
