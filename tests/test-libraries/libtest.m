@@ -303,6 +303,38 @@ static UltimateMachine *shared;
 	{
 	}
 
+	+(void) staticV
+	{
+	}
+
+	-(NSString *) getEmptyString
+	{
+		return [NSString string];
+	}
+
+	-(NSString *) getShortString
+	{
+		return @"this is a short string";
+	}
+
+	-(NSString *) getLongString
+	{
+		return @"this is a much much much longer string that repeats a few times"
+				"this is a much much much longer string that repeats a few times"
+				"this is a much much much longer string that repeats a few times"
+				"this is a much much much longer string that repeats a few times"
+				"this is a much much much longer string that repeats a few times"
+				"this is a much much much longer string that repeats a few times"
+				"this is a much much much longer string that repeats a few times"
+				"this is a much much much longer string that repeats a few times"
+				"this is a much much much longer string that repeats a few times"
+				"this is a much much much longer string that repeats a few times"
+				"this is a much much much longer string that repeats a few times"
+				"this is a much much much longer string that repeats a few times"
+				"this is a much much much longer string that repeats a few times"
+				"this is a much much much longer string that repeats a few times";
+	}
+
 	-(float) F
 	{
 		return _Pf1;

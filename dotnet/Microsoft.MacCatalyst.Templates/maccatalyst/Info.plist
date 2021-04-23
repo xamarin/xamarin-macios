@@ -16,8 +16,6 @@
     <array>
         <integer>2</integer>
     </array>
-    <key>UILaunchStoryboardName</key>
-    <string>LaunchScreen</string>
     <key>UISupportedInterfaceOrientations</key>
     <array>
         <string>UIInterfaceOrientationPortrait</string>

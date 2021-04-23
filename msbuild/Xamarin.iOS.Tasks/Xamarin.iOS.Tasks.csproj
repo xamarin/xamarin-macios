@@ -22,8 +22,6 @@
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.8.0" IncludeAssets="$(IncludeMSBuildAssets)" />
     <PackageReference Include="Microsoft.NET.ILLink.Tasks" Version="$(MicrosoftNETILLinkTasksPackageVersion)" />
     <PackageReference Include="Xamarin.Messaging.Build.Client" Version="$(MessagingVersion)" />
-    <!-- Needed from Xamarin.Messaging.Build -->
-    <PackageReference Include="System.Net.Mqtt.Server" Version="0.6.7-beta" />
   </ItemGroup>
 
   <ItemGroup>
