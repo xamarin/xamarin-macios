@@ -13,7 +13,7 @@ steps:
   name: compare
   env:
     BUILD_REVISION: 'jenkins'
-    ghprbPullId:  ${{ parameters.runTests }} # reusing jenkins vars, to be fixed
+    ghprbPullId:  ${{ parameters.prID }} # reusing jenkins vars, to be fixed
 
 
 - task: ArchiveFiles@1
@@ -57,7 +57,7 @@ steps:
   continueOnError: true
   env:
     BUILD_REVISION: 'jenkins'
-    ghprbPullId:  ${{ parameters.runTests }} # reusing jenkins vars, to be fixed
+    ghprbPullId:  ${{ parameters.prID}} # reusing jenkins vars, to be fixed
 
 - task: ArchiveFiles@1
   displayName: 'Archive API diff (from stable)'
