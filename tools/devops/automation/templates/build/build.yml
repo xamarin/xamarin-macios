@@ -290,7 +290,7 @@ steps:
  # run ASAP so that we do not have any files that got generated confusing git 
 - template: api-diff.yml
   parameters:
-    prID: $[ variables['PrID'] ]
+    prID: variables['PrID']
 
 # build not signed .pkgs for the SDK
 - bash: |
