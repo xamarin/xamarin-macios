@@ -169,7 +169,7 @@ steps:
     if ($buildReason -eq "PullRequest" -or (($buildReason -eq "Manual" -or $buildReason -eq "IndividualCI") -and ($buildSourceBranchName -eq "merge")) ) {
       $configVars.Add("IsPR", "True")
 
-      if ([string]::IsNullOrEmpty($Env:ghprbPullId)) {
+      if (-not [string]::IsNullOrEmpty($Env:ghprbPullId)) {
         $configVars.Add("PrID", $Env:ghprbPullId)
       } else {
         $configVars.Add("PrID", "")
