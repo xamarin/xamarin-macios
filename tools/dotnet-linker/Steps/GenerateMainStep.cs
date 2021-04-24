@@ -29,10 +29,15 @@ namespace Xamarin {
 				var contents = new StringBuilder ();
 
 				contents.AppendLine ("#include <stdlib.h>");
+				contents.AppendLine ();
+				contents.AppendLine ("extern \"C\" const char *xamarin_icu_dat_file_path;");
+				contents.AppendLine ();
 				contents.AppendLine ("static void xamarin_initialize_dotnet ()");
 				contents.AppendLine ("{");
 				if (Configuration.InvariantGlobalization) {
 					contents.AppendLine ("\tsetenv (\"DOTNET_SYSTEM_GLOBALIZATION_INVARIANT\", \"1\", 1);");
+				} else {
+					contents.AppendLine ($"\txamarin_icu_dat_file_path = \"{Configuration.GlobalizationDataFile}\";");
 				}
 				contents.AppendLine ("}");
 				contents.AppendLine ();

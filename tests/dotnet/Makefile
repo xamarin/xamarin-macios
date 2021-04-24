@@ -58,5 +58,5 @@ build-oldnet:
 build-dotnet: $(TARGETS)
 	$(DOTNET6) build size-comparison/MySingleView/dotnet/MySingleView.csproj --runtime ios-arm64 $(COMMON_ARGS) /bl:$@.binlog
 
-run-dotnet: build-dotnet
+run-dotnet: $(TARGETS)
 	$(DOTNET6) build -t:Run size-comparison/MySingleView/dotnet/MySingleView.csproj

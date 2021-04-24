@@ -144,6 +144,10 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
+		<GlobalizationDataFile Condition="'$(_PlatformName)' != 'macOS' And '$(InvariantGlobalization)' != 'true' And '$(GlobalizationDataFile)' == ''">icudt.dat</GlobalizationDataFile>
+	</PropertyGroup>
+
+	<PropertyGroup>
 		<TargetPlatformSupported Condition=" '$(TargetPlatformIdentifier)' == '$(_PlatformName)' ">true</TargetPlatformSupported>
 	</PropertyGroup>
 
@@ -221,6 +225,9 @@
 		<!-- Validate the linker mode -->
 		<Error Text="Invalid link mode: '$(_LinkMode)'. Valid link modes are: 'None', 'SdkOnly' and 'Full'" Condition="'$(_LinkMode)' != 'None' And '$(_LinkMode)' != 'SdkOnly' And '$(_LinkMode)' != 'Full'" />
 
+		<!-- it's invariant or it's one of the ICU data files, not both -->
+		<Error Text="Can not set values for both InvariantGlobalization '$(InvariantGlobalization)' and GlobalizationDataFile '$(GlobalizationDataFile)'" Condition="'$(GlobalizationDataFile)' != '' And '$(InvariantGlobalization)' == 'true'" />
+
 		<PropertyGroup>
 			<!-- Pass the custom options to our custom steps -->
 			<_CustomLinkerOptionsFile>$([System.IO.Path]::GetFullPath('$(IntermediateOutputPath)custom-linker-options.txt'))</_CustomLinkerOptionsFile>
@@ -245,6 +252,7 @@
 				DeploymentTarget=$(_MinimumOSVersion)
 				@(_BundlerEnvironmentVariables -> 'EnvironmentVariable=%(Identity)=%(Value)')
 				@(_XamarinFrameworkAssemblies -> 'FrameworkAssembly=%(Filename)')
+				GlobalizationDataFile=$(GlobalizationDataFile)
 				Interpreter=$(MtouchInterpreter)
 				IntermediateLinkDir=$(IntermediateLinkDir)
 				InvariantGlobalization=$(InvariantGlobalization)
@@ -702,7 +710,7 @@
 			<ResolvedFileToPublish
 				Update="@(ResolvedFileToPublish)"
 				RelativePath="$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)$(PublishDir),$(_AssemblyPublishDir)))\%(Filename)%(Extension)"
-				Condition="'$(_PlatformName)' != 'macOS' And '$(InvariantGlobalization)' != 'true' And '%(Filename)%(Extension)' == 'icudt.dat'" />
+				Condition="'$(_PlatformName)' != 'macOS' And '$(InvariantGlobalization)' != 'true' And '%(Filename)%(Extension)' == '$(GlobalizationDataFile)'" />
 		</ItemGroup>
 	</Target>
 
