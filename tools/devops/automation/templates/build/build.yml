@@ -164,7 +164,7 @@ steps:
     $buildSourceBranchName = "$(Build.SourceBranchName)"
 
     if (-not [string]::IsNullOrEmpty($Env:PrID)) {
-      $configVars.Add("PrID", $Env:ghprbPullId)
+      $configVars.Add("PrID", $Env:PrID)
     } else {
       $configVars.Add("PrID", "")
     }
