@@ -166,16 +166,20 @@ steps:
 
     if ($Env:SkipNugets -ne "True") {
       $nugets = Get-ChildItem -Path $pkgsPath -Filter *.nupkg -File -Name
-      Write-Host $nugets
+      Write-Host $nugets 
+      Write-Host "nuget count is $($nugets.Count)"
 
-      if ($nugets.Count > 0) {
+      if ($nugets.Count -gt 0) {
+        Write-Host "Setting status to success."
         Set-GitHubStatus -Status "success" -Description "Nugets built." -TargetUrl "$pkgsVirtualUrl/$n" -Context "$(Build.DefinitionName) (Nugets built)"
+        Write-Host "Publishing result is $Env:NUGETS_PUBLISHED"
         if ($Env:NUGETS_PUBLISHED -ne "Failed") {
           Set-GitHubStatus -Status "success" -Description "Nugets published." -TargetUrl "$pkgsVirtualUrl/$n" -Context "$(Build.DefinitionName) (Nugets published)"
         } else {
           Set-GitHubStatus -Status "error" -Description "Error when publishing nugets." -TargetUrl "$pkgsVirtualUrl/$n" -Context "$(Build.DefinitionName) (Nugets published)"
         }
       } else {
+        Write-Host "Setting nuget status to failure." 
         Set-GitHubStatus -Status "error" -Description "No nugets were built." -TargetUrl "$pkgsVirtualUrl/$n" -Context "$(Build.DefinitionName) (Nugets built)"
         Set-GitHubStatus -Status "error" -Description "No nugets were published." -TargetUrl "$pkgsVirtualUrl/$n" -Context "$(Build.DefinitionName) (Nugets published)"
       }
