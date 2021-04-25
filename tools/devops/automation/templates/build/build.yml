@@ -379,6 +379,7 @@ steps:
     echo "##vso[task.setvariable variable=TESTS_RAN;isOutput=true]True"
     rm -rf ~/.config/.mono/keypairs/
 
+    echo "PrID is $PrID"
     if [[ "$IsPR" == "True" ]]; then
       TARGET='jenkins'
     else
