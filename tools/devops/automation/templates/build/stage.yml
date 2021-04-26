@@ -73,7 +73,7 @@ jobs:
     SkipPublicJenkins: $[ dependencies.configure.outputs['labels.skip-public-jenkins'] ]
     SkipApiComparison: $[ dependencies.configure.outputs['labels.skip-api-comparison'] ]
     # old and ugly env var use by jenkins, we do have parts of the code that use it, contains the PR number
-    PrID: $[ dependencies.configure.outputs['labels.pr-number'] ]
+    PRID: $[ dependencies.configure.outputs['labels.pr-number'] ]
     # set the branch variable name, this is required by jenkins and we have a lot of scripts that depend on it
     BRANCH_NAME: $(Build.SourceBranchName)
     XHARNESS_LABELS: $[ dependencies.configure.outputs['labels.xharness-labels'] ]
