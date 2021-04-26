@@ -201,7 +201,9 @@
 		new Export ("void", "mono_profiler_install_thread",
 			"MonoProfileThreadFunc", "start",
 			"MonoProfileThreadFunc", "end"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export ("void", "mono_profiler_install_gc",
 			"MonoProfileGCFunc", "callback",
@@ -218,13 +220,17 @@
 
 		new Export ("mono_bool", "mono_thread_is_foreign",
 			"MonoThread *", "thread"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export ("MonoThread * ", "mono_thread_current"),
 
 		new Export ("MonoThread *", "mono_thread_attach",
 			"MonoDomain *", "domain"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export ("mono_bool", "mono_thread_detach_if_exiting"),
 
@@ -351,7 +357,9 @@
 
 		new Export ("MonoClass *", "mono_get_exception_class"),
 
-		new Export ("MonoDomain *", "mono_get_root_domain"),
+		new Export ("MonoDomain *", "mono_get_root_domain") {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export ("void", "mono_domain_set_config", 
 			"MonoDomain *", "domain",
@@ -366,7 +374,9 @@
 		new Export ("MonoReflectionAssembly *", "mono_assembly_get_object",
 			"MonoDomain *", "domain",
 			"MonoAssembly *", "assembly"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		new Export ("MonoReflectionMethod *", "mono_method_get_object",
 			"MonoDomain *", "domain",
@@ -530,7 +540,9 @@
 			"MonoAssembly *", "assembly",
 			"int", "argc",
 			"const char**", "argv"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		new Export ("void", "mono_jit_parse_options",
 			"int", "argc",
@@ -643,12 +655,16 @@
 		new Export (true, "void *", "mono_threads_attach_coop",
 			"MonoDomain *", "domain",
 			"gpointer*", "dummy"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export (true, "void *", "mono_threads_detach_coop",
 			"gpointer", "cookie",
 			"gpointer*", "dummy"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		#endregion
 

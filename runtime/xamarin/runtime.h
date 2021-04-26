@@ -209,6 +209,7 @@ void*			xamarin_pinvoke_override (const char *libraryName, const char *entrypoin
 void			xamarin_bridge_call_runtime_initialize (struct InitializationOptions* options, GCHandle* exception_gchandle);
 void			xamarin_bridge_register_product_assembly (GCHandle* exception_gchandle);
 bool			xamarin_register_monoassembly (MonoAssembly *assembly, GCHandle *exception_gchandle);
+void			xamarin_install_nsautoreleasepool_hooks ();
 
 MonoObject *	xamarin_new_nsobject (id self, MonoClass *klass, GCHandle *exception_gchandle);
 bool			xamarin_has_managed_ref (id self);
@@ -218,9 +219,9 @@ GCHandle		xamarin_get_gchandle (id self);
 void			xamarin_free_gchandle (id self, GCHandle gchandle);
 void			xamarin_clear_gchandle (id self);
 GCHandle		xamarin_get_gchandle_with_flags (id self, enum XamarinGCHandleFlags *flags);
-void			xamarin_set_gchandle_with_flags (id self, GCHandle gchandle, enum XamarinGCHandleFlags flags);
+bool			xamarin_set_gchandle_with_flags (id self, GCHandle gchandle, enum XamarinGCHandleFlags flags);
+bool			xamarin_set_gchandle_with_flags_safe (id self, GCHandle gchandle, enum XamarinGCHandleFlags flags);
 void			xamarin_create_gchandle (id self, void *managed_object, enum XamarinGCHandleFlags flags, bool force_weak);
-void			xamarin_create_managed_ref (id self, void * managed_object, bool retain, bool user_type);
 void            xamarin_release_managed_ref (id self, bool user_type);
 void			xamarin_notify_dealloc (id self, GCHandle gchandle);
 
@@ -390,10 +391,14 @@ public:
 
 #endif /* !TARGET_OS_WATCH */
 
+#if defined(CORECLR_RUNTIME)
+// this is not needed for CoreCLR
+#define MONO_THREAD_ATTACH
+#define MONO_THREAD_DETACH
 // Once we have one mono clone again the TARGET_OS_WATCH
 // condition should be removed (DYNAMIC_MONO_RUNTIME should still
 // be here though).
-#if TARGET_OS_WATCH && !defined (DYNAMIC_MONO_RUNTIME)
+#elif TARGET_OS_WATCH && !defined (DYNAMIC_MONO_RUNTIME)
 #define MONO_THREAD_ATTACH \
 	do { \
 		gpointer __thread_dummy; \

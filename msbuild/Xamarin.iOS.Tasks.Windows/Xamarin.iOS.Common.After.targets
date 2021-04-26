@@ -53,11 +53,6 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 	</Target>
 	
 	<PropertyGroup>
-		<BuildDependsOn>
-			$(BuildDependsOn);
-			CopyAppBundleFromMac;
-			CopyDSYMFromMac
-		</BuildDependsOn>
 		<CreateIpaDependsOn>
 			$(CreateIpaDependsOn);
 			CopyIpaFromMac
@@ -73,7 +68,7 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 		</ArchiveDependsOn>
 	</PropertyGroup>
 	
-	<Target Name="CopyAppBundleFromMac" Condition="'$(OutputType)' == 'Exe' And '$(IsMacEnabled)' == 'true' And '$(CopyAppBundle)' == 'true'">
+	<Target Name="CopyAppBundleFromMac" Condition="'$(OutputType)' == 'Exe' And '$(IsMacEnabled)' == 'true' And '$(CopyAppBundle)' == 'true'" BeforeTargets="BeforeDisconnect">
 		<!-- Creates AppBundle dir on the output path -->
 		<MakeDir Condition="'$(MtouchTargetsEnabled)' And '$(IsMacEnabled)' == 'true'" SessionId="$(BuildSessionId)" Directories="$(DeviceSpecificOutputPath)AppBundle" />
 		<!--Zip AppBundle-->
@@ -157,7 +152,7 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 		</CopyLongPaths>
 	</Target>
 	
-	<Target Name="CopyDSYMFromMac" DependsOnTargets="_SayHello" Condition="'$(IsMacEnabled)' == 'true' And '$(IsAppExtension)' == 'false' And '$(ComputedPlatform)' == 'iPhone' And '$(CopyDSYM)' == 'true' And ('$(BuildIpa)' == 'true' Or '$(CopyAppBundle)' == 'true')">
+	<Target Name="CopyDSYMFromMac" DependsOnTargets="_SayHello" Condition="'$(IsMacEnabled)' == 'true' And '$(IsAppExtension)' == 'false' And '$(ComputedPlatform)' == 'iPhone' And '$(CopyDSYM)' == 'true' And ('$(BuildIpa)' == 'true' Or '$(CopyAppBundle)' == 'true')" BeforeTargets="BeforeDisconnect">
 		<!--Copy watchOS Dsym folders from Mac-->
 		<MSBuild Projects="@(_WatchAppReferenceWithConfigurationExistent)" Targets="CopyDSYMFromMac" Properties="%(_WatchAppReferenceWithConfigurationExistent.SetConfiguration);      %(_WatchAppReferenceWithConfigurationExistent.SetPlatform);      BuildIpa=true" Condition="'$(IsWatchApp)' == 'false' And '@(_WatchAppReferenceWithConfigurationExistent)' != '' And '$(_BuildReferencedExtensionProjects)' != 'true'"></MSBuild>
 		<!--Look for all *.dsym folders int the output path of the main app -->
@@ -324,6 +319,12 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 			Files="@(_MonoLibraryFixToMac)" />
 	</Target>
 
+	<Target Name="_UpdateDebugType" BeforeTargets="CoreCompile">
+		<PropertyGroup>
+			<DebugType Condition="'$(DebugType)' == 'full'">portable</DebugType>
+		</PropertyGroup>
+	</Target>
+
 	<!-- Overrides Core SDK target to remote the ILLink execution -->
 	<!-- https://github.com/dotnet/sdk/blob/cdf57465e1cba9e44b5c9a76a403d41b1b8f178c/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.ILLink.targets#L76-L132 -->
 	<Target Name="_RunILLink"
@@ -357,6 +358,7 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 				ReferenceAssemblyPaths="@(ReferencePath)"
 				RootAssemblyNames="@(TrimmerRootAssembly)"
 				TrimMode="$(TrimMode)"
+				DefaultAction="$(_TrimmerDefaultAction)"
 				RemoveSymbols="$(TrimmerRemoveSymbols)"
 				FeatureSettings="@(_TrimmerFeatureSettings)"
 				CustomData="@(_TrimmerCustomData)"

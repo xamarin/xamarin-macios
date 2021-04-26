@@ -164,13 +164,24 @@ steps:
        Set-GitHubStatus -Status "error" -Description "msbuild.zip not found." -Context "msbuild.zip"
     }
 
-    $nugets =  $files = Get-ChildItem -Path $pkgsPath -Filter *.nupkg -File -Name
+    if ($Env:SkipNugets -ne "True") {
+      $nugets = Get-ChildItem -Path $pkgsPath -Filter *.nupkg -File -Name
 
-    foreach ($n in $nugets) {
-      Set-GitHubStatus -Status "success" -Description "$n" -TargetUrl "$pkgsVirtualUrl/$n" -Context "$n"
+      if ($nugets.Count > 0) {
+        Set-GitHubStatus -Status "success" -Description "Nugets built." -TargetUrl "$pkgsVirtualUrl/$n" -Context "$(Build.DefinitionName) (Nugets built)"
+        if ($Env:NUGETS_PUBLISHED -ne "Failed") {
+          Set-GitHubStatus -Status "success" -Description "Nugets published." -TargetUrl "$pkgsVirtualUrl/$n" -Context "$(Build.DefinitionName) (Nugets published)"
+        } else {
+          Set-GitHubStatus -Status "error" -Description "Error when publishing nugets." -TargetUrl "$pkgsVirtualUrl/$n" -Context "$(Build.DefinitionName) (Nugets published)"
+        }
+      } else {
+        Set-GitHubStatus -Status "error" -Description "No nugets were built." -TargetUrl "$pkgsVirtualUrl/$n" -Context "$(Build.DefinitionName) (Nugets built)"
+        Set-GitHubStatus -Status "error" -Description "No nugets were published." -TargetUrl "$pkgsVirtualUrl/$n" -Context "$(Build.DefinitionName) (Nugets published)"
+      }
     }
 
-    $msi =  $files = Get-ChildItem -Path $pkgsPath -Filter *.msi -File -Name
+
+    $msi = Get-ChildItem -Path $pkgsPath -Filter *.msi -File -Name
 
     foreach ($n in $msi) {
       Set-GitHubStatus -Status "success" -Description "$n" -TargetUrl "$pkgsVirtualUrl/$n" -Context "$n"

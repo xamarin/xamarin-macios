@@ -27,7 +27,7 @@ namespace ObjCRuntime {
 		[System.Diagnostics.Conditional ("UNDEFINED")]
 		static void log_coreclr (string message)
 		{
-			xamarin_log (message);
+			NSLog (message);
 		}
 
 		// Returns a retained MonoObject. Caller must release.
@@ -112,6 +112,12 @@ namespace ObjCRuntime {
 				return;
 
 			Marshal.StructureToPtr (obj, ptr, false);
+		}
+
+		static IntPtr GetAssemblyName (IntPtr gchandle)
+		{
+			var asm = (Assembly) GetGCHandleTarget (gchandle);
+			return Marshal.StringToHGlobalAuto (Path.GetFileName (asm.Location));
 		}
 	}
 }

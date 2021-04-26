@@ -70,6 +70,12 @@ parameters:
   type: object
   default: [
     {
+      stageName: 'Mac Catalina (10.15)',
+      macPool: 'VSEng-Xamarin-RedmondMacBuildPool-iOS-Trusted',
+      osVersion: '10.15',
+      statusContext: 'Mac Catalina (10.15)'
+    },
+    {
       stageName: 'Mac Mojave (10.14)',
       macPool: 'Hosted Mac Internal Mojave',
       osVersion: '10.14',
@@ -80,12 +86,6 @@ parameters:
       macPool: 'Hosted Mac Internal',
       osVersion: '10.13',
       statusContext: 'Mac High Sierra (10.13)'
-    },
-    {
-      stageName: 'Mac Sierra (10.12)',
-      macPool: 'VSEng-Xamarin-RedmondMacTestPool-iOS',
-      osVersion: '10.12',
-      statusContext: 'Mac Sierra (10.12)'
     }]
 
 resources:
@@ -160,6 +160,7 @@ pr:
     - main
     - d16-*
     - xcode*
+    - release/*
   paths:
     exclude:
     - docs

@@ -479,7 +479,7 @@ xamarin_get_nullable_type (MonoClass *cls, GCHandle *exception_gchandle)
 // compiler warning (no 'xamarinGetGChandle' selector found).
 @protocol XamarinExtendedObject
 -(GCHandle) xamarinGetGCHandle;
--(void) xamarinSetGCHandle: (GCHandle) gc_handle flags: (enum XamarinGCHandleFlags) flags;
+-(bool) xamarinSetGCHandle: (GCHandle) gc_handle flags: (enum XamarinGCHandleFlags) flags;
 -(enum XamarinGCHandleFlags) xamarinGetFlags;
 -(void) xamarinSetFlags: (enum XamarinGCHandleFlags) flags;
 @end
@@ -496,16 +496,34 @@ get_gchandle_safe (id self, enum XamarinGCHandleFlags *flags)
 	return rv;
 }
 
-static inline void
+static inline bool
 set_gchandle (id self, GCHandle gc_handle, enum XamarinGCHandleFlags flags)
 {
+	bool rv;
+
 	// COOP: we call a selector, and that must only be done in SAFE mode.
 	MONO_ASSERT_GC_UNSAFE;
 	
 	MONO_ENTER_GC_SAFE;
 	id<XamarinExtendedObject> xself = self;
-	[xself xamarinSetGCHandle: gc_handle flags: flags];
+	rv = [xself xamarinSetGCHandle: gc_handle flags: flags];
 	MONO_EXIT_GC_SAFE;
+
+	return rv;
+}
+
+static inline bool
+set_gchandle_safe (id self, GCHandle gc_handle, enum XamarinGCHandleFlags flags)
+{
+	bool rv;
+
+	// COOP: we call a selector, and that must only be done in SAFE mode.
+	MONO_ASSERT_GC_SAFE_OR_DETACHED;
+
+	id<XamarinExtendedObject> xself = self;
+	rv = [xself xamarinSetGCHandle: gc_handle flags: flags];
+
+	return rv;
 }
 
 static inline GCHandle
@@ -921,6 +939,7 @@ gc_enable_new_refcount (void)
 }
 #endif // !CORECLR_RUNTIME
 
+#if !defined (CORECLR_RUNTIME)
 struct _MonoProfiler {
 	int dummy;
 };
@@ -933,6 +952,7 @@ xamarin_install_mono_profiler ()
 	// (currently gc_enable_new_refcount and xamarin_install_nsautoreleasepool_hooks).
 	mono_profiler_install (&profiler, NULL);
 }
+#endif
 
 bool
 xamarin_file_exists (const char *path)
@@ -994,7 +1014,9 @@ xamarin_register_monoassembly (MonoAssembly *assembly, GCHandle *exception_gchan
 		LOG (PRODUCT ": Skipping assembly registration for %s since it's not needed (dynamic registration is not supported)", mono_assembly_name_get_name (mono_assembly_get_name (assembly)));
 		return true;
 	}
-	xamarin_register_assembly (mono_assembly_get_object (mono_domain_get (), assembly), exception_gchandle);
+	MonoReflectionAssembly *rassembly = mono_assembly_get_object (mono_domain_get (), assembly);
+	xamarin_register_assembly (rassembly, exception_gchandle);
+	xamarin_mono_object_release (&rassembly);
 	return *exception_gchandle == INVALID_GCHANDLE;
 }
 
@@ -1216,7 +1238,9 @@ pump_gc (void *context)
 {
 	// COOP: this runs on a separate thread, so I'm not sure what happens here.
 	//       We can make sure we're in safe mode while sleeping though.
+#if !defined (CORECLR_RUNTIME)
 	mono_thread_attach (mono_get_root_domain ());
+#endif
 
 	while (xamarin_gc_pump) {
 		GCHandle exception_gchandle = INVALID_GCHANDLE;
@@ -1381,7 +1405,9 @@ xamarin_initialize ()
 	xamarin_bridge_register_product_assembly (&exception_gchandle);
 	xamarin_process_managed_exception_gchandle (exception_gchandle);
 
+#if !defined (CORECLR_RUNTIME)
 	xamarin_install_mono_profiler (); // must be called before xamarin_install_nsautoreleasepool_hooks or gc_enable_new_refcount
+#endif
 
 	xamarin_install_nsautoreleasepool_hooks ();
 
@@ -1876,11 +1902,18 @@ xamarin_clear_gchandle (id self)
 	set_gchandle (self, INVALID_GCHANDLE, XamarinGCHandleFlags_None);
 }
 
-void
+bool
 xamarin_set_gchandle_with_flags (id self, GCHandle gchandle, enum XamarinGCHandleFlags flags)
 {
 	// COOP: no managed memory access: any mode
-	set_gchandle (self, gchandle, flags);
+	return set_gchandle (self, gchandle, flags);
+}
+
+bool
+xamarin_set_gchandle_with_flags_safe (id self, GCHandle gchandle, enum XamarinGCHandleFlags flags)
+{
+	// COOP: no managed memory access: any mode
+	return set_gchandle_safe (self, gchandle, flags);
 }
 
 #if defined(DEBUG_REF_COUNTING)
@@ -1985,39 +2018,6 @@ xamarin_release_managed_ref (id self, bool user_type)
 	}
 
 	[self release];
-}
-
-void
-xamarin_create_managed_ref (id self, gpointer managed_object, bool retain, bool user_type)
-{
-	// COOP: This is an icall, so at entry we're in unsafe mode.
-	// COOP: we stay in unsafe mode (since we write to the managed memory) unless calling a selector (which must be done in safe mode)
-	MONO_ASSERT_GC_UNSAFE;
-	
-	GCHandle gchandle;
-	
-#if defined(DEBUG_REF_COUNTING)
-	PRINT ("monotouch_create_managed_ref (%s Handle=%p) retainCount=%d; HasManagedRef=%i GCHandle=%i IsUserType=%i managed_object=%p\n", 
-		class_getName ([self class]), self, get_safe_retainCount (self), user_type ? xamarin_has_managed_ref (self) : 666, user_type ? get_gchandle_without_flags (self) : (void*) 666, user_type, managed_object);
-#endif
-
-	if (user_type) {
-		gchandle = get_gchandle_without_flags (self);
-		if (!gchandle) {
-			xamarin_create_gchandle (self, managed_object, XamarinGCHandleFlags_HasManagedRef, !retain);
-		} else {
-#if defined(DEBUG_REF_COUNTING)
-			xamarin_assertion_message ("GCHandle already exists for %p: %d\n", self, gchandle);
-#endif
-		}
-	}
-
-	if (retain) {
-		MONO_ENTER_GC_SAFE;
-		[self retain];
-		MONO_EXIT_GC_SAFE;
-	}
-	mt_dummy_use (managed_object);
 }
 
 /*

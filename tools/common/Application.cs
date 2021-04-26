@@ -353,6 +353,14 @@ namespace Xamarin.Bundler {
 			}
 		}
 
+		// It seems the watch simulator is able to correctly select which architecture to use
+		// for a fat executable, so limit ourselves to arch-specific executables anymore.
+		public bool ArchSpecificExecutable {
+			get {
+				return !IsWatchExtension;
+			}
+		}
+
 		public static int Concurrency => Driver.Concurrency;
 		public Version DeploymentTarget;
 		public Version SdkVersion; // for Mac Catalyst this is the iOS version
@@ -904,6 +912,7 @@ namespace Xamarin.Bundler {
 				CommandLineAssemblies = RootAssemblies,
 #endif
 			};
+			resolver.Configure ();
 
 			if (Platform == ApplePlatform.iOS && !Driver.IsDotNet) {
 				if (Is32Build) {
@@ -966,7 +975,7 @@ namespace Xamarin.Bundler {
 			if (RootAssemblies.Count == 1)
 				registrar.GenerateSingleAssembly (resolver, resolvedAssemblies.Values, Path.ChangeExtension (registrar_m, "h"), registrar_m, Path.GetFileNameWithoutExtension (RootAssembly));
 			else
-				registrar.Generate (resolvedAssemblies.Values, Path.ChangeExtension (registrar_m, "h"), registrar_m);
+				registrar.Generate (resolver, resolvedAssemblies.Values, Path.ChangeExtension (registrar_m, "h"), registrar_m);
 		}
 
 		public IEnumerable<Abi> Abis {

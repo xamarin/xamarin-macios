@@ -977,7 +977,7 @@ namespace Registrar {
 			// find corlib
 			var corlib_name = Driver.CorlibName;
 			AssemblyDefinition corlib = null;
-			IEnumerable<AssemblyDefinition> candidates = null;
+			var candidates = new List<AssemblyDefinition> ();
 
 			foreach (var assembly in input_assemblies) {
 				if (corlib_name == assembly.Name.Name) {
@@ -989,18 +989,16 @@ namespace Registrar {
 			if (corlib == null)
 				corlib = Resolver.Resolve (AssemblyNameReference.Parse (corlib_name), new ReaderParameters ());
 
-			if (corlib != null) {
-				candidates = new AssemblyDefinition [] { corlib };
-			} else if (Resolver != null) {
-				candidates = Resolver.ToResolverCache ().Values.Cast<AssemblyDefinition> ();
-			}
+			if (corlib != null)
+				candidates.Add (corlib);
 
-			if (candidates != null) {
-				foreach (var candidate in candidates) {
-					foreach (var type in candidate.MainModule.Types) {
-						if (type.Namespace == "System" && type.Name == "Void")
-							return system_void = type;
-					}
+			if (Resolver != null)
+				candidates.AddRange (Resolver.ToResolverCache ().Values.Cast<AssemblyDefinition> ());
+
+			foreach (var candidate in candidates) {
+				foreach (var type in candidate.MainModule.Types) {
+					if (type.Namespace == "System" && type.Name == "Void")
+						return system_void = type;
 				}
 			}
 
@@ -2511,7 +2509,7 @@ namespace Registrar {
 			else if (method.CurrentTrampoline == Trampoline.SetFlags)
 				return "-(void) xamarinSetFlags: (enum XamarinGCHandleFlags) flags";
 			else if (method.CurrentTrampoline == Trampoline.SetGCHandle)
-				return "-(void) xamarinSetGCHandle: (GCHandle) gchandle flags: (enum XamarinGCHandleFlags) flags";
+				return "-(bool) xamarinSetGCHandle: (GCHandle) gchandle flags: (enum XamarinGCHandleFlags) flags";
 			else if (method.CurrentTrampoline == Trampoline.CopyWithZone1 || method.CurrentTrampoline == Trampoline.CopyWithZone2)
 				return "-(id) copyWithZone: (NSZone *)zone";
 
@@ -3141,11 +3139,16 @@ namespace Registrar {
 				sb.WriteLine ();
 				return;
 			case Trampoline.SetGCHandle:
-				sb.WriteLine ("-(void) xamarinSetGCHandle: (GCHandle) gc_handle flags: (enum XamarinGCHandleFlags) flags");
+				sb.WriteLine ("-(bool) xamarinSetGCHandle: (GCHandle) gc_handle flags: (enum XamarinGCHandleFlags) flags");
 				sb.WriteLine ("{");
+				sb.WriteLine ("if (((flags & XamarinGCHandleFlags_InitialSet) == XamarinGCHandleFlags_InitialSet) && __monoObjectGCHandle.gc_handle != INVALID_GCHANDLE) {");
+				sb.WriteLine ("return false;");
+				sb.WriteLine ("}");
+				sb.WriteLine ("flags = (enum XamarinGCHandleFlags) (flags & ~XamarinGCHandleFlags_InitialSet);"); // Remove the InitialSet flag, we don't want to store it.
 				sb.WriteLine ("__monoObjectGCHandle.gc_handle = gc_handle;");
 				sb.WriteLine ("__monoObjectGCHandle.flags = flags;");
 				sb.WriteLine ("__monoObjectGCHandle.native_object = self;");
+				sb.WriteLine ("return true;");
 				sb.WriteLine ("}");
 				sb.WriteLine ();
 				return;
@@ -4764,12 +4767,18 @@ namespace Registrar {
 		public void GenerateSingleAssembly (PlatformResolver resolver, IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, string assembly)
 		{
 			single_assembly = assembly;
-			this.resolver = resolver;
-			Generate (assemblies, header_path, source_path);
+			Generate (resolver, assemblies, header_path, source_path);
 		}
 
 		public void Generate (IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path)
 		{
+			Generate (null, assemblies, header_path, source_path);
+		}
+
+		public void Generate (PlatformResolver resolver, IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path)
+		{
+			this.resolver = resolver;
+
 			if (Target?.CachedLink == true)
 				throw ErrorHelper.CreateError (99, Errors.MX0099, "the static registrar should not execute unless the linker also executed (or was disabled). A potential workaround is to pass '-f' as an additional " + Driver.NAME + " argument to force a full build");
 
