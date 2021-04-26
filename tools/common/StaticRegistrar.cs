@@ -977,7 +977,7 @@ namespace Registrar {
 			// find corlib
 			var corlib_name = Driver.CorlibName;
 			AssemblyDefinition corlib = null;
-			IEnumerable<AssemblyDefinition> candidates = null;
+			var candidates = new List<AssemblyDefinition> ();
 
 			foreach (var assembly in input_assemblies) {
 				if (corlib_name == assembly.Name.Name) {
@@ -989,18 +989,16 @@ namespace Registrar {
 			if (corlib == null)
 				corlib = Resolver.Resolve (AssemblyNameReference.Parse (corlib_name), new ReaderParameters ());
 
-			if (corlib != null) {
-				candidates = new AssemblyDefinition [] { corlib };
-			} else if (Resolver != null) {
-				candidates = Resolver.ToResolverCache ().Values.Cast<AssemblyDefinition> ();
-			}
+			if (corlib != null)
+				candidates.Add (corlib);
 
-			if (candidates != null) {
-				foreach (var candidate in candidates) {
-					foreach (var type in candidate.MainModule.Types) {
-						if (type.Namespace == "System" && type.Name == "Void")
-							return system_void = type;
-					}
+			if (Resolver != null)
+				candidates.AddRange (Resolver.ToResolverCache ().Values.Cast<AssemblyDefinition> ());
+
+			foreach (var candidate in candidates) {
+				foreach (var type in candidate.MainModule.Types) {
+					if (type.Namespace == "System" && type.Name == "Void")
+						return system_void = type;
 				}
 			}
 
@@ -4765,12 +4763,18 @@ namespace Registrar {
 		public void GenerateSingleAssembly (PlatformResolver resolver, IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, string assembly)
 		{
 			single_assembly = assembly;
-			this.resolver = resolver;
-			Generate (assemblies, header_path, source_path);
+			Generate (resolver, assemblies, header_path, source_path);
 		}
 
 		public void Generate (IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path)
 		{
+			Generate (null, assemblies, header_path, source_path);
+		}
+
+		public void Generate (PlatformResolver resolver, IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path)
+		{
+			this.resolver = resolver;
+
 			if (Target?.CachedLink == true)
 				throw ErrorHelper.CreateError (99, Errors.MX0099, "the static registrar should not execute unless the linker also executed (or was disabled). A potential workaround is to pass '-f' as an additional " + Driver.NAME + " argument to force a full build");
 
