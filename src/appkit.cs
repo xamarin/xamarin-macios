@@ -20963,6 +20963,7 @@ namespace AppKit {
 		CGPoint ConvertPointFromBacking (CGPoint point);
 
 		[Mac (10, 14)]
+		[NullAllowed]
 		[Export ("appearanceSource", ArgumentSemantic.Weak)]
 		INSAppearanceCustomization AppearanceSource { get; set; }
 
