@@ -2208,7 +2208,6 @@
 !missing-null-allowed! 'System.Void AppKit.NSWindow::BeginCriticalSheet(AppKit.NSWindow,System.Action`1<System.nint>)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Void AppKit.NSWindow::BeginSheet(AppKit.NSWindow,System.Action`1<System.nint>)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Void AppKit.NSWindow::RunToolbarCustomizationPalette(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void AppKit.NSWindow::set_AppearanceSource(AppKit.INSAppearanceCustomization)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSWindow::set_BackgroundColor(AppKit.NSColor)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSWindow::set_ColorSpace(AppKit.NSColorSpace)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSWindow::set_ContentView(AppKit.NSView)' is missing an [NullAllowed] on parameter #0
