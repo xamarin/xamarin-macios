@@ -48,6 +48,8 @@ TRANSLATED_ASSEMBLIES = $(foreach locale,$(LOCALIZATION_LANGUAGES),$(locale)/Xam
 LOCALIZATION_ASSEMBLIES = Xamarin.Localization.MSBuild
 IOS_TASK_ASSEMBLIES = Xamarin.iOS.Tasks $(LOCALIZATION_ASSEMBLIES)
 IOS_WINDOWS_TASK_ASSEMBLIES = Xamarin.iOS.Tasks.Windows
+IOS_WINDOWS_DEPENDENCIES = Xamarin.iOS.Windows.Client iSign.Core ws2_32
+IOS_WINDOWS_MOBILEDEVICE_TOOLS = iMobileDevice-net bz2 getopt ideviceactivation idevicebackup idevicebackup2 idevicecrashreport idevicedate idevicedebug idevicedebugserverproxy idevicediagnostics ideviceenterrecovery ideviceimagemounter ideviceinfo ideviceinstaller idevicename idevicenotificationproxy idevicepair ideviceprovision idevicerestore idevicescreenshot idevicesyslog idevice_id imobiledevice-net-lighthouse imobiledevice ios_webkit_debug_proxy iproxy irecovery irecovery libcharset libcurl LIBEAY32 libiconv libusb-1.0 libusb0 libxml2 lzma pcre pcreposix plist plistutil plist_cmp plist_test pthreadVC3 readline SSLEAY32 usbmuxd usbmuxd vcruntime140 zip zlib1
 
 IOS_DIRECTORIES =                                                                                           \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS                                                  \
@@ -473,7 +475,13 @@ MSBUILD_DIRECTORIES += $(DOTNET_DIRECTORIES)
 ifdef ENABLE_DOTNET
 MSBUILD_PRODUCTS += $(DOTNET_TARGETS)
 
-DOTNET_IOS_WINDOWS_OUTPUT_FILES = $(foreach dll,$(IOS_WINDOWS_TASK_ASSEMBLIES),$(dll).dll $(dll).pdb) Broker.zip Build.zip
+ifdef ENABLE_DOTNET_WINDOWS
+DOTNET_IOS_WINDOWS_OUTPUT_FILES =                                \
+	$(foreach dll,$(IOS_WINDOWS_TASK_ASSEMBLIES),$(dll).*)       \
+	$(foreach dll,$(IOS_WINDOWS_DEPENDENCIES),$(dll).*)          \
+	$(foreach dll,$(IOS_WINDOWS_MOBILEDEVICE_TOOLS),$(dll).*)    \
+	Broker.zip                                                   \
+	Build.zip
 DOTNET_IOS_WINDOWS_FILES = $(IOS_WINDOWS_TARGETS) $(foreach file,$(DOTNET_IOS_WINDOWS_OUTPUT_FILES),Xamarin.iOS.Tasks.Windows/bin/$(CONFIG)/$(TARGETFRAMEWORK)/$(file))
 
 # Ensures Xamarin.iOS.Tasks.Windows is built and copies the output files to the Sdk Windows pack
