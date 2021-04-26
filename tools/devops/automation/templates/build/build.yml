@@ -163,6 +163,7 @@ steps:
     $buildReason = "$(Build.Reason)"
     $buildSourceBranchName = "$(Build.SourceBranchName)"
 
+    Write-Host "PrID in env is $Env:PrID"
     if (-not [string]::IsNullOrEmpty($Env:PrID)) {
       $configVars.Add("PrID", $Env:PrID)
     } else {
