@@ -1238,7 +1238,9 @@ pump_gc (void *context)
 {
 	// COOP: this runs on a separate thread, so I'm not sure what happens here.
 	//       We can make sure we're in safe mode while sleeping though.
+#if !defined (CORECLR_RUNTIME)
 	mono_thread_attach (mono_get_root_domain ());
+#endif
 
 	while (xamarin_gc_pump) {
 		GCHandle exception_gchandle = INVALID_GCHANDLE;
