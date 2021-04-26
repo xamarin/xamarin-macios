@@ -54,7 +54,7 @@ namespace Xamarin.Tests
 			CultureInfo cultureInfo = new CultureInfo (culture);
 			Thread.CurrentThread.CurrentUICulture = cultureInfo;
 
-			var type = typeof (Errors);
+			var type = typeof (MachO).Assembly.GetType ("Xamarin.Bundler.Errors");
 			PropertyInfo propertyInfo = type.GetProperty (errorCode, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
 			var value = (string) propertyInfo.GetValue (null, null);
 			var value2 = (string) propertyInfo.GetValue (null, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static, null, null, null);
