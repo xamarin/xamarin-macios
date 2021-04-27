@@ -5,4 +5,7 @@ export WORKSPACE="$BUILD_ARTIFACTSTAGINGDIRECTORY"
 echo "GH PR: $ghprbPullId"
 cd $XAM_TOP
 
+echo "Fetch all pull requests."
+git fetch --no-tags --progress https://github.com/xamarin/xamarin-macios +refs/pull/$PR_ID/*:refs/remotes/origin/pr/$PR_ID/*
+
 ./tools/devops/automation/scripts/bash/compare.sh
