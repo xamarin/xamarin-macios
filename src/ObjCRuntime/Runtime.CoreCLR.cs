@@ -75,6 +75,12 @@ namespace ObjCRuntime {
 		}
 
 		// Returns a retained MonoObject. Caller must release.
+		static IntPtr GetMonoObject (IntPtr gchandle)
+		{
+			return GetMonoObject (GetGCHandleTarget (gchandle));
+		}
+
+		// Returns a retained MonoObject. Caller must release.
 		static IntPtr GetMonoObject (object obj)
 		{
 			if (obj == null)

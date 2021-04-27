@@ -16,7 +16,7 @@
 #          the same code as GitHub, checkout the 'origin/pr/<merge>/merge'
 #          branch the previous git fetch command created.
 #
-#    c. Execute 'ghprbPullId=4614 ./compare.sh'
+#    c. Execute 'PR_ID=4614 ./compare.sh'
 #
 
 API_COMPARISON="$WORKSPACE/apicomparison"
@@ -51,10 +51,10 @@ report_error ()
 }
 trap report_error ERR
 
-if test -z "$ghprbPullId"; then
+if test -z "$PR_ID"; then
 	BASE=HEAD
 else
-	BASE="origin/pr/$ghprbPullId/merge"
+	BASE="origin/pr/$PR_ID/merge"
 fi
 
 if ! git rev-parse "$BASE" >/dev/null 2>&1; then
