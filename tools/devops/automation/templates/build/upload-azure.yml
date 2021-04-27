@@ -1,3 +1,8 @@
+parameters:
+- name: enableDotnet
+  type: boolean
+  default: false
+
 steps:
 
 - checkout: self
@@ -164,7 +169,7 @@ steps:
        Set-GitHubStatus -Status "error" -Description "msbuild.zip not found." -Context "msbuild.zip"
     }
 
-    if ($Env:SkipNugets -ne "True") {
+    if ($Env:ENABLE_DOTNET -eq "True" -and  $Env:SkipNugets -ne "True") {
       $nugets = Get-ChildItem -Path $pkgsPath -Filter *.nupkg -File -Name
       Write-Host $nugets 
       Write-Host "nuget count is $($nugets.Count)"
@@ -196,4 +201,6 @@ steps:
     GITHUB_TOKEN: $(GitHub.Token)
     ACCESSTOKEN: $(System.AccessToken)
     STORAGE_URI: $(Parameters.outputStorageUri)
+    ${{ if eq(parameters.enableDotnet, true) }}:
+      ENABLE_DOTNET: "True"
   displayName: 'Set GithubStatus'
