@@ -1,8 +1,8 @@
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="Microsoft.Dotnet.Sdk.Internal" Version="6.0.100-preview.4.21225.7">
+    <Dependency Name="Microsoft.Dotnet.Sdk.Internal" Version="6.0.100-preview.4.21226.14">
       <Uri>https://github.com/dotnet/installer</Uri>
-      <Sha>46607dbb18efc3792cc0d48c4a632a6c71f3504b</Sha>
+      <Sha>d354ca2a89820ce2eecfa1062dbf9b5fe99ff4b3</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.ILLink" Version="6.0.100-preview.2.21212.1">
       <Uri>https://github.com/mono/linker</Uri>
