@@ -10,7 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="XliffTasks" Version="1.0.0-beta.20154.1" />
-    <PackageReference Include="Microsoft.NET.ILLink" Version="$(MicrosoftNETILLinkPackageVersion)" />
+    <PackageReference Include="Microsoft.NET.ILLink" Version="$(MicrosoftNETILLinkTasksPackageVersion)" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\common\ApplePlatform.cs">
