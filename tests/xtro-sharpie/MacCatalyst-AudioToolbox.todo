@@ -24,14 +24,7 @@
 !missing-field! kAudioSessionOutputRoute_USBAudio not bound
 !missing-pinvoke! AudioComponentCopyConfigurationInfo is not bound
 !missing-pinvoke! AudioComponentValidate is not bound
-!missing-pinvoke! AudioSessionAddPropertyListener is not bound
-!missing-pinvoke! AudioSessionGetProperty is not bound
-!missing-pinvoke! AudioSessionGetPropertySize is not bound
-!missing-pinvoke! AudioSessionInitialize is not bound
 !missing-pinvoke! AudioSessionRemovePropertyListenerWithUserData is not bound
-!missing-pinvoke! AudioSessionSetActive is not bound
-!missing-pinvoke! AudioSessionSetActiveWithFlags is not bound
-!missing-pinvoke! AudioSessionSetProperty is not bound
 !missing-pinvoke! MusicDevicePrepareInstrument is not bound
 !missing-pinvoke! MusicDeviceReleaseInstrument is not bound
 !missing-pinvoke! MusicSequenceLoadSMFDataWithFlags is not bound
