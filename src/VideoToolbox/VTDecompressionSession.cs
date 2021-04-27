@@ -9,6 +9,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using CoreFoundation;
 using ObjCRuntime;
@@ -17,7 +18,12 @@ using CoreMedia;
 using CoreVideo;
 
 namespace VideoToolbox {
+
+#if NET
+	[SupportedOSPlatform ("tvos10.2")]
+#else
 	[iOS (8,0), TV (10,2)]
+#endif
 	public class VTDecompressionSession : VTSession {
 
 		GCHandle callbackHandle;
@@ -338,12 +344,22 @@ namespace VideoToolbox {
 			return VTSessionSetProperties (Handle, options.Dictionary.Handle);
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+#else
 		[Mac (10,13), iOS (11,0), TV (11,0)]
+#endif
 		[DllImport (Constants.VideoToolboxLibrary)]
 		[return: MarshalAs (UnmanagedType.U1)]
 		extern static bool VTIsHardwareDecodeSupported (CMVideoCodecType codecType);
 
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+#else
 		[Mac (10,13), iOS (11,0), TV (11,0)]
+#endif
 		public static bool IsHardwareDecodeSupported (CMVideoCodecType codecType)
 		{
 			return VTIsHardwareDecodeSupported (codecType);
