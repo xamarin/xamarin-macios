@@ -1,3 +1,4 @@
 <Project>
 	<Import Project="Sdk.props" Sdk="Microsoft.iOS.Sdk" Condition="'$(TargetPlatformIdentifier)' == 'iOS'" />
+	<Import Project="Sdk.props" Sdk="Microsoft.iOS.Windows.Sdk" Condition=" '$(TargetPlatformIdentifier)' == 'iOS' and $([MSBuild]::IsOSPlatform('windows'))" />
 </Project>
