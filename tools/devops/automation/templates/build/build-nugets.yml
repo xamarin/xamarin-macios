@@ -30,10 +30,11 @@ steps:
     nuGetFeedType: external
     publishFeedCredentials: xamarin-impl public feed
   condition: and(succeeded(), eq(variables['configuration.BuildNugets'], 'True'))
+  continueOnError: true # should not stop the build since is not official just yet.
 
 # Only executed when the publshing of the nugets failed.
 - bash: |
     echo "##vso[task.setvariable variable=NUGETS_PUBLISHED;isOutput=true]Failed"
   name: nugetPublishing
-  displayName: 'On tests timeout'
+  displayName: 'Failed publishing nugets'
   condition: failed()
