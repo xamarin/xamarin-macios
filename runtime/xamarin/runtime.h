@@ -219,9 +219,9 @@ GCHandle		xamarin_get_gchandle (id self);
 void			xamarin_free_gchandle (id self, GCHandle gchandle);
 void			xamarin_clear_gchandle (id self);
 GCHandle		xamarin_get_gchandle_with_flags (id self, enum XamarinGCHandleFlags *flags);
-void			xamarin_set_gchandle_with_flags (id self, GCHandle gchandle, enum XamarinGCHandleFlags flags);
+bool			xamarin_set_gchandle_with_flags (id self, GCHandle gchandle, enum XamarinGCHandleFlags flags);
+bool			xamarin_set_gchandle_with_flags_safe (id self, GCHandle gchandle, enum XamarinGCHandleFlags flags);
 void			xamarin_create_gchandle (id self, void *managed_object, enum XamarinGCHandleFlags flags, bool force_weak);
-void			xamarin_create_managed_ref (id self, void * managed_object, bool retain, bool user_type);
 void            xamarin_release_managed_ref (id self, bool user_type);
 void			xamarin_notify_dealloc (id self, GCHandle gchandle);
 
@@ -291,7 +291,10 @@ MonoObject *	xamarin_gchandle_unwrap (GCHandle handle); // Will get the target a
  */
 #if defined(CORECLR_RUNTIME)
 void			xamarin_mono_object_retain (MonoObject *mobj);
-void			xamarin_mono_object_release (MonoObject **mobj);
+// Use C++ linking to be able to use method overloading.
+extern "C++" void	xamarin_mono_object_release (MonoObject **mobj);
+extern "C++" void	xamarin_mono_object_release (MonoReflectionMethod **mobj);
+extern "C++" void	xamarin_mono_object_release (MonoReflectionType **mobj);
 #else
 // Nothing to do here.
 #define			xamarin_mono_object_retain(x)
@@ -391,10 +394,14 @@ public:
 
 #endif /* !TARGET_OS_WATCH */
 
+#if defined(CORECLR_RUNTIME)
+// this is not needed for CoreCLR
+#define MONO_THREAD_ATTACH
+#define MONO_THREAD_DETACH
 // Once we have one mono clone again the TARGET_OS_WATCH
 // condition should be removed (DYNAMIC_MONO_RUNTIME should still
 // be here though).
-#if TARGET_OS_WATCH && !defined (DYNAMIC_MONO_RUNTIME)
+#elif TARGET_OS_WATCH && !defined (DYNAMIC_MONO_RUNTIME)
 #define MONO_THREAD_ATTACH \
 	do { \
 		gpointer __thread_dummy; \
