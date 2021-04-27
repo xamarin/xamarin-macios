@@ -108,7 +108,7 @@ resources:
   - repository: templates
     type: github
     name: xamarin/yaml-templates
-    ref: refs/heads/main
+    ref: refs/heads/dev/bond/pool-selector    # UNDONE: DO NOT MERGE TO MAIN
     endpoint: xamarin
 
   - repository: maccore

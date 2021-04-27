@@ -43,8 +43,13 @@ jobs:
   steps:
   - checkout: none             # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
 
-  # Selects appropriate agent pool based on trigger type (PR or CI)
-  - template: ../agent-pool-selector.yml
+  # Selects appropriate agent pool based on trigger type (PR or CI); manually triggered builds target the PR pool
+  - template: azure-devops-pools/agent-pool-selector.yml@templates
+    parameters:
+      agentPoolPR: 'VSEng-Xamarin-RedmondMacBuildPool-iOS-Untrusted'
+      agentPoolPRUrl: 'https://devdiv.visualstudio.com/_settings/agentpools?poolId=366&view=agents'
+      agentPoolCI: 'VSEng-Xamarin-RedmondMacBuildPool-iOS-Trusted'
+      agentPoolCIUrl: 'https://devdiv.visualstudio.com/_settings/agentpools?poolId=367&view=agents'
 
 - job: build
   dependsOn:
