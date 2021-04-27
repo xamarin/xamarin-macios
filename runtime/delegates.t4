@@ -295,6 +295,23 @@
 			OnlyCoreCLR = true,
 		},
 
+		new XDelegate ("void", "void", "xamarin_set_flags_for_nsobject",
+			"GCHandle", "IntPtr", "gchandle",
+			"uint8_t", "byte", "flags"
+		) {
+			WrappedManagedFunction = "SetFlagsForNSObject",
+			OnlyDynamicUsage = false,
+			OnlyCoreCLR = true,
+		},
+
+		new XDelegate ("uint8_t", "byte", "xamarin_get_flags_for_nsobject",
+			"GCHandle", "IntPtr", "gchandle"
+		) {
+			WrappedManagedFunction = "GetFlagsForNSObject",
+			OnlyDynamicUsage = false,
+			OnlyCoreCLR = true,
+		},
+
 		new XDelegate ("GCHandle", "IntPtr", "xamarin_bridge_create_gchandle",
 			"GCHandle", "IntPtr", "gchandle",
 			"enum XamarinGCHandleType", "GCHandleType", "type"

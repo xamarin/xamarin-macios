@@ -226,7 +226,7 @@ xamarin_get_nsobject_flags (MonoObject *obj)
 	MONO_ASSERT_GC_UNSAFE;
 	
 #if defined (CORECLR_RUNTIME)
-	xamarin_assertion_message ("The method %s it not implemented yet for CoreCLR", __func__);
+	return xamarin_get_flags_for_nsobject (obj->gchandle);
 #else
 	struct Managed_NSObject *mobj = (struct Managed_NSObject *) obj;
 	return mobj->flags;
@@ -240,7 +240,7 @@ xamarin_set_nsobject_flags (MonoObject *obj, uint8_t flags)
 	MONO_ASSERT_GC_UNSAFE;
 	
 #if defined (CORECLR_RUNTIME)
-	xamarin_assertion_message ("The method %s it not implemented yet for CoreCLR", __func__);
+	xamarin_set_flags_for_nsobject (obj->gchandle, flags);
 #else
 	struct Managed_NSObject *mobj = (struct Managed_NSObject *) obj;
 	mobj->flags = flags;
