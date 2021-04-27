@@ -163,11 +163,11 @@ steps:
     $buildReason = "$(Build.Reason)"
     $buildSourceBranchName = "$(Build.SourceBranchName)"
 
-    Write-Host "PRID in env is $Env:PRID"
-    if (-not [string]::IsNullOrEmpty($Env:PRID)) {
-      $configVars.Add("PRID", $Env:PRID)
+    Write-Host "PrID in env is $Env:PR_ID"
+    if (-not [string]::IsNullOrEmpty($Env:PR_ID)) {
+      $configVars.Add("PR_ID", $Env:PR_ID)
     } else {
-      $configVars.Add("PrID", "")
+      $configVars.Add("PR_ID", "")
     }
 
     # decide if we are dealing with a PR or a re-triggered PR or a build from
@@ -380,7 +380,6 @@ steps:
     echo "##vso[task.setvariable variable=TESTS_RAN;isOutput=true]True"
     rm -rf ~/.config/.mono/keypairs/
 
-    echo "PrID is $PrID"
     if [[ "$IsPR" == "True" ]]; then
       TARGET='jenkins'
     else
@@ -409,7 +408,7 @@ steps:
   enabled: ${{ parameters.runTests }}
   env:
     IsPR: $(configuration.IsPR)
-    PrID: $(configuration.PrID)
+    PR_ID: $(configuration.PR_ID)
     GITHUB_TOKEN: $(GitHub.Token)  # used to filter the tests to be ran
     BUILD_REVISION: jenkins
     VSDROPS_URI: '${{ parameters.vsdropsPrefix }}/$(Build.BuildNumber)/$(Build.BuildId)/sim;/tests/' # uri used to create the vsdrops index using full uri

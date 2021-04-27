@@ -292,7 +292,7 @@ namespace Xharness.Jenkins {
 		
 		public void SelectTests ()
 		{
-			if (!int.TryParse (Environment.GetEnvironmentVariable ("PrID"), out int pullRequest))
+			if (!int.TryParse (Environment.GetEnvironmentVariable ("PR_ID"), out int pullRequest))
 				MainLog.WriteLine ("The environment variable 'PrID' was not found, so no pull requests will be checked for test selection.");
 
 			// First check if can auto-select any tests based on which files were modified.
