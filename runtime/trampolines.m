@@ -96,7 +96,9 @@ xamarin_marshal_return_value_impl (MonoType *mtype, const char *type, MonoObject
 
 			if (desc && desc->bindas [0].original_type_handle != INVALID_GCHANDLE) {
 				MonoReflectionType *original_type = (MonoReflectionType *) xamarin_gchandle_get_target (desc->bindas [0].original_type_handle);
-				return xamarin_generate_conversion_to_native (retval, mono_class_get_type (r_klass), mono_reflection_type_get_type (original_type), method, (void *) INVALID_TOKEN_REF, exception_gchandle);
+				MonoType *original_tp = mono_reflection_type_get_type (original_type);
+				xamarin_mono_object_release (&original_type);
+				return xamarin_generate_conversion_to_native (retval, mono_class_get_type (r_klass), original_tp, method, (void *) INVALID_TOKEN_REF, exception_gchandle);
 			} else if (r_klass == mono_get_string_class ()) {
 				return xamarin_string_to_nsstring ((MonoString *) retval, retain);
 			} else if (xamarin_is_class_array (r_klass)) {
@@ -735,7 +737,7 @@ release_gchandle_dictionary_entry (CFAllocatorRef allocator, const void *value)
 }
 
 static const char *associated_key = "x"; // the string value doesn't matter, only the pointer value.
-void
+bool
 xamarin_set_gchandle_trampoline (id self, SEL sel, GCHandle gc_handle, enum XamarinGCHandleFlags flags)
 {
 	// COOP: Called by ObjC (when the setGCHandle:flags: selector is called on an object).
@@ -745,6 +747,13 @@ xamarin_set_gchandle_trampoline (id self, SEL sel, GCHandle gc_handle, enum Xama
 	/* This is for types registered using the dynamic registrar */
 	XamarinAssociatedObject *obj;
 	obj = objc_getAssociatedObject (self, associated_key);
+
+	// Check if we're setting the initial value, in which case we don't want to overwrite
+	if (obj != NULL && obj->gc_handle != INVALID_GCHANDLE && ((flags & XamarinGCHandleFlags_InitialSet) == XamarinGCHandleFlags_InitialSet))
+		return false;
+
+	flags = (enum XamarinGCHandleFlags) (flags & ~XamarinGCHandleFlags_InitialSet); // Remove the InitialSet flag, we don't want to store it.
+
 	if (obj == NULL && gc_handle != INVALID_GCHANDLE) {
 		obj = [[XamarinAssociatedObject alloc] init];
 		obj->gc_handle = gc_handle;
@@ -774,6 +783,8 @@ xamarin_set_gchandle_trampoline (id self, SEL sel, GCHandle gc_handle, enum Xama
 		CFDictionarySetValue (gchandle_hash, self, entry);
 	}
 	pthread_mutex_unlock (&gchandle_hash_lock);
+
+	return true;
 }
 
 GCHandle
@@ -1489,8 +1500,10 @@ xamarin_smart_enum_to_nsstring (MonoObject *value, void *context /* token ref */
 
 		if (retval == NULL)
 			return NULL;
-		return xamarin_get_nsobject_handle (retval);
 
+		id retval_handle = xamarin_get_nsobject_handle (retval);
+		xamarin_mono_object_release (&retval);
+		return retval_handle;
 	}
 }
 
@@ -1511,14 +1524,19 @@ xamarin_nsstring_to_smart_enum (id value, void *ptr, MonoClass *managedType, voi
 		MonoMethod *managed_method;
 		void *arg_ptrs [1];
 		MonoObject *exception = NULL;
+		MonoObject *arg0 = NULL;
 
 		managed_method = xamarin_get_managed_method_for_token (context_ref /* token ref */, exception_gchandle);
 		if (*exception_gchandle != INVALID_GCHANDLE) return NULL;
 
-		arg_ptrs [0] = xamarin_get_nsobject_with_type_for_ptr (value, false, xamarin_get_parameter_type (managed_method, 0), exception_gchandle);
+		arg0 = xamarin_get_nsobject_with_type_for_ptr (value, false, xamarin_get_parameter_type (managed_method, 0), exception_gchandle);
 		if (*exception_gchandle != INVALID_GCHANDLE) return NULL;
 
+		arg_ptrs [0] = arg0;
+
 		obj = mono_runtime_invoke (managed_method, NULL, arg_ptrs, &exception);
+
+		xamarin_mono_object_release (&arg0);
 
 		if (exception) {
 			*exception_gchandle = xamarin_gchandle_new (exception, FALSE);
@@ -1531,6 +1549,9 @@ xamarin_nsstring_to_smart_enum (id value, void *ptr, MonoClass *managedType, voi
 		ptr = xamarin_calloc (size);
 	void *value_ptr = mono_object_unbox (obj);
 	memcpy (ptr, value_ptr, size);
+
+	xamarin_mono_object_release (&obj);
+
 	return ptr;
 }
 
@@ -1619,6 +1640,7 @@ xamarin_convert_nsarray_to_managed_with_func (NSArray *array, MonoClass *managed
 		} else {
 			mobj = (MonoObject *) convert ([array objectAtIndex: i], NULL, managedElementType, context, exception_gchandle);
 			mono_array_setref (rv, i, mobj);
+			xamarin_mono_object_release (&mobj);
 		}
 		if (*exception_gchandle != INVALID_GCHANDLE) {
 			*exception_gchandle = xamarin_get_exception_for_element_conversion_failure (*exception_gchandle, i);

@@ -73,7 +73,7 @@ jobs:
     SkipPublicJenkins: $[ dependencies.configure.outputs['labels.skip-public-jenkins'] ]
     SkipApiComparison: $[ dependencies.configure.outputs['labels.skip-api-comparison'] ]
     # old and ugly env var use by jenkins, we do have parts of the code that use it, contains the PR number
-    ghprbPullId: $[ dependencies.configure.outputs['labels.pr-number'] ]
+    PR_ID: $[ dependencies.configure.outputs['labels.pr-number'] ]
     # set the branch variable name, this is required by jenkins and we have a lot of scripts that depend on it
     BRANCH_NAME: $(Build.SourceBranchName)
     XHARNESS_LABELS: $[ dependencies.configure.outputs['labels.xharness-labels'] ]
@@ -99,11 +99,15 @@ jobs:
 - job: upload_azure_blob
   displayName: 'Upload packages to Azure'
   timeoutInMinutes: 1000
-  dependsOn: build # can start as soon as the packages are available
+  dependsOn:
+  - configure
+  - build # can start as soon as the packages are available
   condition: and(succeeded(), contains (dependencies.build.outputs['configuration.BuildPkgs'], 'True')) # only run when we do have pkgs
 
   variables:
     Parameters.outputStorageUri: ''
+    NUGETS_PUBLISHED: $[ dependencies.build.outputs['nugetPublishing.NUGETS_PUBLISHED'] ]
+    SKIP_NUGETS: $[ dependencies.configure.outputs['labels.skip-nugets'] ]
 
   pool:
     vmImage: 'windows-latest'

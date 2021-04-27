@@ -63,7 +63,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	</ItemGroup>
 
 	<!-- Do not resolve from the GAC under any circumstances in Mobile -->
-	<PropertyGroup Condition="'$(_UsingXamarinSdk)' != 'true'">
+	<PropertyGroup Condition="'$(UsingAppleNETSdk)' != 'true'">
 		<AssemblySearchPaths>$([System.String]::Copy('$(AssemblySearchPaths)').Replace('{GAC}',''))</AssemblySearchPaths>
 		<AssemblySearchPaths Condition="'$(MSBuildRuntimeVersion)' != ''">$(AssemblySearchPaths.Split(';'))</AssemblySearchPaths>
 	</PropertyGroup>

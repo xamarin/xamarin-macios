@@ -433,7 +433,9 @@ xamarin_main (int argc, char *argv[], enum XamarinLaunchMode launch_mode)
 	}
 
 	if (xamarin_supports_dynamic_registration) {
-		xamarin_register_entry_assembly (mono_assembly_get_object (mono_domain_get (), assembly), &exception_gchandle);
+		MonoReflectionAssembly *rassembly = mono_assembly_get_object (mono_domain_get (), assembly);
+		xamarin_register_entry_assembly (rassembly, &exception_gchandle);
+		xamarin_mono_object_release (&rassembly);
 		if (exception_gchandle != NULL)
 			xamarin_process_managed_exception_gchandle (exception_gchandle);
 	}

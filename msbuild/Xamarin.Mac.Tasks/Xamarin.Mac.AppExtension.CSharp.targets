@@ -26,7 +26,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		<CopyNuGetImplementations Condition="'$(CopyNuGetImplementations)' == ''">true</CopyNuGetImplementations>
 	</PropertyGroup>
 
-	<Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" Condition="'$(_UsingXamarinSdk)' != 'true'" />
+	<Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" Condition="'$(UsingAppleNETSdk)' != 'true'" />
 	<Import Project="Xamarin.Mac.AppExtension.Common.targets" />
 
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets"

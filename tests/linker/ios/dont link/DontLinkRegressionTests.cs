@@ -148,7 +148,11 @@ namespace DontLink {
 			}
 
 			var all_properties = type.GetProperties ();
-			var notsupported_properties = new string [] { "StandardError", "StandardInput", "StandardOutput", "StartInfo" };
+			var notsupported_properties = new string [] { "StandardError", "StandardInput", "StandardOutput",
+#if !NET
+				"StartInfo"
+#endif
+			};
 			foreach (var notsupported_property in notsupported_properties) {
 				foreach (var property in all_properties.Where ((v) => v.Name == notsupported_property)) {
 					if (property.GetGetMethod () != null)

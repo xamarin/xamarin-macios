@@ -49,6 +49,13 @@ xamarin_bridge_vm_initialize (int propertyCount, const char **propertyKeys, cons
 }
 
 void
+xamarin_install_nsautoreleasepool_hooks ()
+{
+	// https://github.com/xamarin/xamarin-macios/issues/11256
+	fprintf (stderr, "TODO: add support for wrapping all threads with NSAutoreleasePools.\n");
+}
+
+void
 xamarin_handle_bridge_exception (GCHandle gchandle, const char *method)
 {
 	if (gchandle == INVALID_GCHANDLE)
@@ -145,6 +152,18 @@ xamarin_mono_object_release (MonoObject **mobj_ref)
 	*mobj_ref = NULL;
 }
 
+void
+xamarin_mono_object_release (MonoReflectionMethod **mobj)
+{
+	xamarin_mono_object_release ((MonoObject **) mobj);
+}
+
+void
+xamarin_mono_object_release (MonoReflectionType **mobj)
+{
+	xamarin_mono_object_release ((MonoObject **) mobj);
+}
+
 /* Implementation of the Mono Embedding API */
 
 // returns a retained MonoAssembly *
@@ -165,6 +184,41 @@ mono_domain_get (void)
 {
 	// This is not needed for CoreCLR.
 	return NULL;
+}
+
+// returns a retained MonoReflectionAssembly *
+MonoReflectionAssembly *
+mono_assembly_get_object (MonoDomain * domain, MonoAssembly * assembly)
+{
+	// MonoAssembly and MonoReflectionAssembly are identical in CoreCLR (both are actually MonoObjects).
+	// However, we're returning a retained object, so we need to retain here.
+	xamarin_mono_object_retain (assembly);
+	LOG_CORECLR (stderr, "mono_assembly_get_object (%p, %p): rv: %p\n", domain, assembly, assembly);
+	return assembly;
+}
+
+int
+mono_jit_exec (MonoDomain * domain, MonoAssembly * assembly, int argc, const char** argv)
+{
+	unsigned int exitCode = 0;
+
+	char *assemblyName = xamarin_bridge_get_assembly_name (assembly->gchandle);
+
+	LOG_CORECLR (stderr, "mono_jit_exec (%p, %p, %i, %p) => EXECUTING %s\n", domain, assembly, argc, argv, assemblyName);
+	for (int i = 0; i < argc; i++) {
+		LOG_CORECLR (stderr, "    Argument #%i: %s\n", i + 1, argv [i]);
+	}
+
+	int rv = coreclr_execute_assembly (coreclr_handle, coreclr_domainId, argc, argv, assemblyName, &exitCode);
+
+	LOG_CORECLR (stderr, "mono_jit_exec (%p, %p, %i, %p) => EXECUTING %s rv: %i exitCode: %i\n", domain, assembly, argc, argv, assemblyName, rv, exitCode);
+
+	xamarin_free (assemblyName);
+
+	if (rv != 0)
+		xamarin_assertion_message ("mono_jit_exec failed: %i\n", rv);
+
+	return (int) exitCode;
 }
 
 #endif // CORECLR_RUNTIME

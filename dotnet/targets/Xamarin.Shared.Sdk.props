@@ -9,6 +9,12 @@
 	<Import Project="Xamarin.Shared.Sdk.TargetFrameworkInference.props" />
 
 	<PropertyGroup>
+		<!-- Set to true when using the Microsoft.<platform>.Sdk NuGet. This is used by pre-existing/shared targets to tweak behavior depending on build system -->
+		<UsingAppleNETSdk>true</UsingAppleNETSdk>
+		<!-- This is the location of the Microsoft.<platform>.Sdk NuGet (/usr/local/share/dotnet/sdk/<version>/Sdks/Microsoft.[iOS/tvOS/watchOS/macOS].Sdk) -->
+		<_XamarinSdkRootDirectory>$([MSBuild]::NormalizePath('$(MSBuildThisFileDirectory)', '..'))\</_XamarinSdkRootDirectory>
+		<_XamarinTaskAssembly Condition="'$(_PlatformName)' != 'macOS'">$(_XamarinSdkRootDirectory)\tools\msbuild\iOS\Xamarin.iOS.Tasks.dll</_XamarinTaskAssembly>
+		<_XamarinTaskAssembly Condition="'$(_PlatformName)' == 'macOS'">$(_XamarinSdkRootDirectory)\tools\msbuild\macOS\Xamarin.Mac.Tasks.dll</_XamarinTaskAssembly>
 		<SuppressTrimAnalysisWarnings Condition=" '$(SuppressTrimAnalysisWarnings)' == '' ">true</SuppressTrimAnalysisWarnings>
 		<AfterMicrosoftNETSdkTargets>$(AfterMicrosoftNETSdkTargets);$(MSBuildThisFileDirectory)Microsoft.$(_PlatformName).Sdk.targets</AfterMicrosoftNETSdkTargets>
 	</PropertyGroup>

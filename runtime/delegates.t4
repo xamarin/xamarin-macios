@@ -310,6 +310,20 @@
 			OnlyCoreCLR = true,
 		},
 
+		new XDelegate ("char *", "IntPtr", "xamarin_bridge_get_assembly_name",
+			"GCHandle", "IntPtr", "gchandle"
+		) {
+			WrappedManagedFunction = "GetAssemblyName",
+			OnlyCoreCLR = true,
+		},
+
+		new XDelegate ("MonoObject*", "IntPtr", "xamarin_bridge_get_monoobject",
+			"GCHandle", "IntPtr", "gchandle"
+		) {
+			WrappedManagedFunction = "GetMonoObject",
+			OnlyCoreCLR = true,
+		},
+
 	};
 	delegates.CalculateLengths ();
 #><#+

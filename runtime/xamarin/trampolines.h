@@ -13,10 +13,12 @@
 extern "C" {
 #endif
 
+// Must be kept in sync with the same enum in NSObject2.cs
 enum XamarinGCHandleFlags : uint32_t {
 	XamarinGCHandleFlags_None = 0,
 	XamarinGCHandleFlags_WeakGCHandle = 1,
 	XamarinGCHandleFlags_HasManagedRef = 2,
+	XamarinGCHandleFlags_InitialSet = 4,
 };
 
 void *		xamarin_trampoline (id self, SEL sel, ...);
@@ -39,7 +41,7 @@ long long	xamarin_static_longret_trampoline (id self, SEL sel, ...);
 id			xamarin_copyWithZone_trampoline1 (id self, SEL sel, NSZone *zone);
 id			xamarin_copyWithZone_trampoline2 (id self, SEL sel, NSZone *zone);
 GCHandle	xamarin_get_gchandle_trampoline (id self, SEL sel);
-void		xamarin_set_gchandle_trampoline (id self, SEL sel, GCHandle gc_handle, enum XamarinGCHandleFlags flags);
+bool		xamarin_set_gchandle_trampoline (id self, SEL sel, GCHandle gc_handle, enum XamarinGCHandleFlags flags);
 enum XamarinGCHandleFlags xamarin_get_flags_trampoline (id self, SEL sel);
 void		xamarin_set_flags_trampoline (id self, SEL sel, enum XamarinGCHandleFlags flags);
 
@@ -89,6 +91,7 @@ enum ArgumentSemantic /* Xcode 4.4 doesn't like this ': int' */ {
 //   `ptr` was passed, this value is also returned, otherwise newly allocated
 //   memory is returned (which must be freed with `xamarin_free`). If an
 //   exception occurs, 'ptr' is returned (and no memory allocated).
+//   If the return value is a MonoObject*, then it's a retained MonoObject*.
 // * xamarin_managed_to_id_func: the resulting Objective-C object.
 
 typedef void *	(*xamarin_id_to_managed_func) (id value, void *ptr, MonoClass *managedType, void *context, GCHandle *exception_gchandle);
