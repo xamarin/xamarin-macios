@@ -91,6 +91,7 @@ enum ArgumentSemantic /* Xcode 4.4 doesn't like this ': int' */ {
 //   `ptr` was passed, this value is also returned, otherwise newly allocated
 //   memory is returned (which must be freed with `xamarin_free`). If an
 //   exception occurs, 'ptr' is returned (and no memory allocated).
+//   If the return value is a MonoObject*, then it's a retained MonoObject*.
 // * xamarin_managed_to_id_func: the resulting Objective-C object.
 
 typedef void *	(*xamarin_id_to_managed_func) (id value, void *ptr, MonoClass *managedType, void *context, GCHandle *exception_gchandle);

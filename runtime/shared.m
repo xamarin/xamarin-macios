@@ -179,7 +179,9 @@ xamarin_copy_helper (void *dst, void *src)
 	// COOP: it does not touch any managed memory (except to allocate a gchandle), so any mode goes.
 	struct Block_literal *source = (struct Block_literal *) src;
 	struct Block_literal *target = (struct Block_literal *) dst;
-	target->global_handle = xamarin_gchandle_new (xamarin_gchandle_get_target (source->local_handle), FALSE);
+	MonoObject *mobj = xamarin_gchandle_get_target (source->local_handle);
+	target->global_handle = xamarin_gchandle_new (mobj, FALSE);
+	xamarin_mono_object_release (&mobj);
 
 	atomic_fetch_add (&source->descriptor->ref_count, 1);
 	target->descriptor = source->descriptor;
