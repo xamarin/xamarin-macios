@@ -292,8 +292,8 @@ namespace Xharness.Jenkins {
 		
 		public void SelectTests ()
 		{
-			if (!int.TryParse (Environment.GetEnvironmentVariable ("ghprbPullId"), out int pullRequest))
-				MainLog.WriteLine ("The environment variable 'ghprbPullId' was not found, so no pull requests will be checked for test selection.");
+			if (!int.TryParse (Environment.GetEnvironmentVariable ("PR_ID"), out int pullRequest))
+				MainLog.WriteLine ("The environment variable 'PR_ID' was not found, so no pull requests will be checked for test selection.");
 
 			// First check if can auto-select any tests based on which files were modified.
 			// This will only enable additional tests, never disable tests.
