@@ -471,6 +471,18 @@ namespace ObjCRuntime {
 			return BlockLiteral.GetBlockForDelegate ((MethodInfo) GetGCHandleTarget (method), GetGCHandleTarget (@delegate), token_ref, Marshal.PtrToStringAuto (signature));
 		}
 
+		static IntPtr GetExceptionMessage (IntPtr exception_gchandle)
+		{
+			var exc = (Exception) GetGCHandleTarget (exception_gchandle);
+			return Marshal.StringToHGlobalAuto (exc.Message);
+		}
+
+		static IntPtr GetExceptionStackTrace (IntPtr exception_gchandle)
+		{
+			var exc = (Exception) GetGCHandleTarget (exception_gchandle);
+			return Marshal.StringToHGlobalAuto (exc.StackTrace);
+		}
+
 		static unsafe Assembly GetEntryAssembly ()
 		{
 			var asm = Assembly.GetEntryAssembly ();
@@ -769,6 +781,14 @@ namespace ObjCRuntime {
 		static IntPtr TypeGetFullName (IntPtr type) 
 		{	
 			return Marshal.StringToHGlobalAuto (((Type) GetGCHandleTarget (type)).FullName);
+		}
+
+		static IntPtr GetObjectTypeFullName (IntPtr gchandle)
+		{
+			var obj = GetGCHandleTarget (gchandle);
+			if (obj == null)
+				return IntPtr.Zero;
+			return Marshal.StringToHGlobalAuto (obj.GetType ().FullName);
 		}
 
 		static IntPtr LookupManagedTypeName (IntPtr klass)

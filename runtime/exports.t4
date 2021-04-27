@@ -168,11 +168,6 @@
 			"MonoObject *", "obj"
 		),
 
-		new Export ("MonoMethod *", "mono_object_get_virtual_method",
-			"MonoObject *", "obj",
-			"MonoMethod *", "method"
-		),
-
 		new Export ("void", "mono_field_get_value",
 			"MonoObject *", "obj",
 			"MonoClassField *", "field",
@@ -356,8 +351,6 @@
 		new Export ("MonoImage *", "mono_get_corlib"),
 
 		new Export ("MonoClass *", "mono_get_array_class"),
-
-		new Export ("MonoClass *", "mono_get_exception_class"),
 
 		new Export ("MonoDomain *", "mono_get_root_domain") {
 			XamarinRuntime = RuntimeMode.MonoVM,
