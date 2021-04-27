@@ -9,6 +9,8 @@ using System.Threading;
 using System.Reflection;
 using Xamarin.Bundler;
 
+
+
 namespace Xamarin.Tests
 {
 	[TestFixture]
@@ -36,9 +38,8 @@ namespace Xamarin.Tests
 			CultureInfo originalCulture = Thread.CurrentThread.CurrentUICulture;
 
 			try {
-				string englishError = TranslateError ("en-US", errorCode);
 				string newCultureError = TranslateError (culture, errorCode);
-
+				string englishError = TranslateError ("en-US", errorCode);
 				Assert.AreNotEqual (englishError, newCultureError, $"\"{errorCode}\" is not translated in {culture}.");
 			} catch (NullReferenceException){
 				Assert.IsFalse (true, $"Error code \"{errorCode}\" was not found");
@@ -54,14 +55,10 @@ namespace Xamarin.Tests
 			CultureInfo cultureInfo = new CultureInfo (culture);
 			Thread.CurrentThread.CurrentUICulture = cultureInfo;
 
-			var type = typeof (Errors);
-			PropertyInfo propertyInfo = type.GetProperty (errorCode, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+			PropertyInfo propertyInfo = typeof (MachO).GetProperty (errorCode, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
 			var value = (string) propertyInfo.GetValue (null, null);
-			var value2 = (string) propertyInfo.GetValue (null, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static, null, null, null);
-
+			//var value2 = (string) propertyInfo.GetValue (null, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static, null, null, null);
 			return value;
-			//PropertyInfo propertyInfo = typeof (Errors).GetProperty (errorCode);
-			//return (string) propertyInfo.GetValue (null, null);
 		}
 	}
 }

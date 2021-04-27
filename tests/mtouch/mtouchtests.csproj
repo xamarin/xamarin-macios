@@ -85,6 +85,18 @@
     <Compile Include="..\..\tools\common\SdkVersions.cs">
       <Link>SdkVersions.cs</Link>
     </Compile>
+    <Compile Include="..\..\tools\common\MachO.cs">
+      <Link>MachO.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\ObjCRuntime\ErrorHelper.cs">
+      <Link>ErrorHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\tools\common\ErrorHelper.tools.cs">
+      <Link>tools\common\ErrorHelper.tools.cs</Link>
+    </Compile>
+    <Compile Include="..\..\tools\mtouch\Errors.Designer.cs">
+      <Link>Errors.Designer.cs</Link>
+    </Compile>
     <Compile Include="ErrorTest.cs" />
     <Compile Include="Setup.cs" />
     <Compile Include="Compat.cs" />
@@ -95,6 +107,11 @@
       <Link>BinLog.cs</Link>
     </Compile>
     <Compile Include="LocalizationTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\tools\mtouch\Errors.resx">
+      <Link>Errors.resx</Link>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\tools\mtouch\mtouch.csproj">
