@@ -13,6 +13,8 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
+using Foundation;
+
 namespace ObjCRuntime {
 
 	public partial class Runtime {
@@ -75,6 +77,12 @@ namespace ObjCRuntime {
 		}
 
 		// Returns a retained MonoObject. Caller must release.
+		static IntPtr GetMonoObject (IntPtr gchandle)
+		{
+			return GetMonoObject (GetGCHandleTarget (gchandle));
+		}
+
+		// Returns a retained MonoObject. Caller must release.
 		static IntPtr GetMonoObject (object obj)
 		{
 			if (obj == null)
@@ -118,6 +126,18 @@ namespace ObjCRuntime {
 		{
 			var asm = (Assembly) GetGCHandleTarget (gchandle);
 			return Marshal.StringToHGlobalAuto (Path.GetFileName (asm.Location));
+		}
+
+		static void SetFlagsForNSObject (IntPtr gchandle, byte flags)
+		{
+			var obj = (NSObject) GetGCHandleTarget (gchandle);
+			obj.FlagsInternal = (NSObject.Flags) flags;
+		}
+
+		static byte GetFlagsForNSObject (IntPtr gchandle)
+		{
+			var obj = (NSObject) GetGCHandleTarget (gchandle);
+			return (byte) obj.FlagsInternal;
 		}
 	}
 }

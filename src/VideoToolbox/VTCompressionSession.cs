@@ -204,11 +204,15 @@ namespace VideoToolbox {
 			return null;
 		}
 
+#if !NET
 		[Mac (10,9)]
+#endif
 		[DllImport (Constants.VideoToolboxLibrary)]
 		extern static VTStatus VTCompressionSessionPrepareToEncodeFrames (IntPtr handle);
 
+#if !NET
 		[Mac (10,9)]
+#endif
 		public VTStatus PrepareToEncodeFrames ()
 		{
 			if (Handle == IntPtr.Zero)
@@ -306,11 +310,15 @@ namespace VideoToolbox {
 			return VTCompressionSessionCompleteFrames (Handle, completeUntilPresentationTimeStamp);
 		}
 
+#if !NET
 		[Mac (10,10)]
+#endif
 		[DllImport (Constants.VideoToolboxLibrary)]
 		extern static VTStatus VTCompressionSessionBeginPass (IntPtr session, VTCompressionSessionOptionFlags flags, IntPtr reserved);
 
+#if !NET
 		[Mac (10,10)]
+#endif
 		public VTStatus BeginPass (VTCompressionSessionOptionFlags flags)
 		{
 			if (Handle == IntPtr.Zero)
@@ -318,15 +326,21 @@ namespace VideoToolbox {
 			return VTCompressionSessionBeginPass (Handle, flags, IntPtr.Zero);
 		}
 
+#if !NET
 		[Mac (10,10)]
+#endif
 		[DllImport (Constants.VideoToolboxLibrary)]
 		extern static VTStatus VTCompressionSessionEndPass (IntPtr session, out byte furtherPassesRequestedOut, IntPtr reserved);
 
+#if !NET
 		[Mac (10,10)]
+#endif
 		[DllImport (Constants.VideoToolboxLibrary)]
 		extern static VTStatus VTCompressionSessionEndPass (IntPtr session, IntPtr ptrByte, IntPtr reserved);
 
+#if !NET
 		[Mac (10,10)]
+#endif
 		public VTStatus EndPass (out bool furtherPassesRequested)
 		{
 			if (Handle == IntPtr.Zero)
@@ -347,14 +361,18 @@ namespace VideoToolbox {
 			return VTCompressionSessionEndPass (Handle, IntPtr.Zero, IntPtr.Zero);
 		}
 
+#if !NET
 		[Mac (10,10)]
+#endif
 		[DllImport (Constants.VideoToolboxLibrary)]
 		extern static VTStatus VTCompressionSessionGetTimeRangesForNextPass (
 			/* VTCompressionSessionRef */ IntPtr session, 
 			/* CMItemCount* */ out int itemCount, 
 			/* const CMTimeRange** */ out IntPtr target);
 
+#if !NET
 		[Mac (10,10)]
+#endif
 		public VTStatus GetTimeRangesForNextPass (out CMTimeRange [] timeRanges)
 		{
 			if (Handle == IntPtr.Zero)

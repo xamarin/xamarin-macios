@@ -126,7 +126,9 @@
 
 		new Export ("void", "mono_raise_exception",
 			"MonoException *", "ex"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export ("char*", "mono_array_addr_with_size",
 			"MonoArray *", "array",
