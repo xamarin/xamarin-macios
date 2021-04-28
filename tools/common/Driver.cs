@@ -238,6 +238,13 @@ namespace Xamarin.Bundler {
 			options.Add ("warn-on-type-ref=", "Warn if any of the comma-separated types is referenced by assemblies - both before and after linking.", v => {
 				app.WarnOnTypeRef.AddRange (v.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries));
 			});
+			options.Add ("xamarin-runtime=", "Which runtime to use (MonoVM or CoreCLR).", v => {
+				if (!Enum.TryParse<XamarinRuntime> (v, out var rv))
+					throw new InvalidOperationException ($"Invalid XamarinRuntime '{v}'");
+				app.XamarinRuntime = rv;
+			}, true /* hidden - this is only for build-time --runregistrar support */);
+
+
 			// Keep the ResponseFileSource option at the end.
 			options.Add (new Mono.Options.ResponseFileSource ());
 
