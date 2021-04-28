@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net6.0-macos</TargetFramework>
-    <NativeLibName>macos</NativeLibName>
+    <NativeLibName>macos-fat</NativeLibName>
   </PropertyGroup>
   <Import Project="..\shared.targets" />
 </Project>
