@@ -5,7 +5,7 @@ export WORKSPACE="$BUILD_ARTIFACTSTAGINGDIRECTORY"
 echo "GH PR: $ghprbPullId"
 cd $XAM_TOP
 
-if test -z "$PR_ID"; then
+if [[ $PR_ID ]]; then
     git fetch --no-tags --progress https://github.com/xamarin/xamarin-macios +refs/pull/$PR_ID/*:refs/remotes/origin/pr/$PR_ID/*
 fi
 
