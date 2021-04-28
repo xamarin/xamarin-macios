@@ -30,6 +30,12 @@ steps:
     if ($buildReason -eq "Schedule") {
         $tags.Add("cronjob")
     }
+    if ($Env:ENABLE_DOTNET -eq "True") {
+      Write-Host "dotnet will be enabled for the build because ENABLE_DOTNET was '$Env:ENABLE_DOTNET'"
+    } else {
+      Write-Host "dotnet will be disabled for the build because ENABLE_DOTNET was '$Env:ENABLE_DOTNET'"
+    }
+
 
     if ($buildReason -eq "PullRequest" -or (($buildReason -eq "Manual") -and ($buildSourceBranchName -eq "merge")) ) {
       Write-Host "Configuring build from PR."
@@ -64,6 +70,7 @@ steps:
       # we can use $ref for that :)
       $xharnessLabels = $tags -join ","
       if ($Env:ENABLE_DOTNET -eq "True" -and -not ("run-dotnet-tests" -in $xharnessLabels)) {
+        Write-Host "Adding label run-dotnet-tests to xharness."
         $tags.Add("run-dotnet-tests")
         if ($xharnessLabels -eq "") {
           $xharnessLabels = "run-dotnet-tests"
