@@ -89,6 +89,16 @@ xamarin_bridge_register_product_assembly (GCHandle* exception_gchandle)
 	xamarin_mono_object_release (&assembly);
 }
 
+MonoMethod *
+xamarin_bridge_get_mono_method (MonoReflectionMethod *method)
+{
+	// MonoMethod and MonoReflectionMethod are identical in CoreCLR (both are actually MonoObjects).
+	// However, we're returning a retained object, so we need to retain here.
+	xamarin_mono_object_retain (method);
+	LOG_CORECLR (stderr, "%s (%p): rv: %p\n", __func__, method, method);
+	return method;
+}
+
 MonoClass *
 xamarin_get_nsnumber_class ()
 {
@@ -150,12 +160,6 @@ xamarin_mono_object_release (MonoObject **mobj_ref)
 	}
 
 	*mobj_ref = NULL;
-}
-
-void
-xamarin_mono_object_release (MonoReflectionMethod **mobj)
-{
-	xamarin_mono_object_release ((MonoObject **) mobj);
 }
 
 void
