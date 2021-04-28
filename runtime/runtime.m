@@ -212,7 +212,9 @@ xamarin_get_nsobject_handle (MonoObject *obj)
 	MONO_ASSERT_GC_UNSAFE;
 	
 #if defined (CORECLR_RUNTIME)
-	xamarin_assertion_message ("The method %s it not implemented yet for CoreCLR", __func__);
+	id rv = xamarin_get_handle_for_inativeobject (obj);
+	LOG_CORECLR (stderr, "xamarin_get_nsobject_handle (%p) => %p\n", obj, rv);
+	return rv;
 #else
 	struct Managed_NSObject *mobj = (struct Managed_NSObject *) obj;
 	return mobj->handle;
