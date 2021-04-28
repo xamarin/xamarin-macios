@@ -770,6 +770,8 @@ namespace Foundation {
 
 		public override string ToString ()
 		{
+			if (disposed)
+				return base.ToString ();
 			return Description ?? base.ToString ();
 		}
 
