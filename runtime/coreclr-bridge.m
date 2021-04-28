@@ -227,4 +227,12 @@ mono_jit_exec (MonoDomain * domain, MonoAssembly * assembly, int argc, const cha
 	return (int) exitCode;
 }
 
+MonoClass *
+mono_method_get_class (MonoMethod * method)
+{
+	MonoClass *rv = xamarin_bridge_get_method_declaring_type (method);
+	LOG_CORECLR (stderr, "%s (%p) => %p\n", __func__, method, rv);
+	return rv;
+}
+
 #endif // CORECLR_RUNTIME

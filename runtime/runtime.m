@@ -724,7 +724,9 @@ xamarin_check_for_gced_object (MonoObject *obj, SEL sel, id self, MonoMethod *me
 	
 	if (obj != NULL) {
 #if DEBUG
-		verify_cast (mono_method_get_class (method), obj, [self class], sel, method, exception_gchandle);
+		MonoClass *declaring_type = mono_method_get_class (method);
+		verify_cast (declaring_type, obj, [self class], sel, method, exception_gchandle);
+		xamarin_mono_object_release (&declaring_type);
 #endif
 		return;
 	}
