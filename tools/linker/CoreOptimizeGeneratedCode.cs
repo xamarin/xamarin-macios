@@ -1,6 +1,7 @@
 // Copyright 2012-2013, 2016 Xamarin Inc. All rights reserved.
 
 using System;
+using System.Collections.Generic;
 using ObjCRuntime;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
@@ -18,16 +19,31 @@ using Mono.Linker.Steps;
 
 namespace Xamarin.Linker {
 
+#if NET
+	public class OptimizeGeneratedCodeHandler : ExceptionalMarkHandler {
+#else
 	public class OptimizeGeneratedCodeSubStep : ExceptionalSubStep {
 		// If the type currently being processed is a direct binding or not.
 		// A null value means it's not a constant value, and can't be inlined.
 		bool? isdirectbinding_constant;
+#endif
 
 		protected override string Name { get; } = "Binding Optimizer";
 		protected override int ErrorCode { get; } = 2020;
 
+#if NET
+		Dictionary<AssemblyDefinition, bool?> _hasOptimizableCode;
+		Dictionary<AssemblyDefinition, bool?> HasOptimizableCode {
+			get {
+				if (_hasOptimizableCode == null)
+					_hasOptimizableCode = new Dictionary<AssemblyDefinition, bool?> ();
+				return _hasOptimizableCode;
+			}
+		}
+#else
 		protected bool HasOptimizableCode { get; private set; }
 		protected bool IsExtensionType { get; private set; }
+#endif
 
 		public bool IsDualBuild {
 			get { return LinkContext.App.IsDualBuild; }
@@ -52,9 +68,14 @@ namespace Xamarin.Linker {
 
 		bool? is_arm64_calling_convention;
 
+#if NET
+		public override void Initialize (LinkContext context, MarkContext markContext)
+		{
+#else
 		public override void Initialize (LinkContext context)
 		{
 			base.Initialize (context);
+#endif
 
 			if (Optimizations.InlineIsARM64CallingConvention == true) {
 				var target = LinkContext.Target;
@@ -84,18 +105,42 @@ namespace Xamarin.Linker {
 					is_arm64_calling_convention = false;
 				}
 			}
+#if NET
+			this.context = context;
+			markContext.RegisterMarkMethodAction (ProcessMethod);
+#endif
 		}
 
+
+#if !NET
 		public override SubStepTargets Targets {
 			get { return SubStepTargets.Assembly | SubStepTargets.Type | SubStepTargets.Method; }
 		}
-		
+#endif
+
+#if NET
+		bool IsActiveFor (AssemblyDefinition assembly, out bool hasOptimizableCode)
+#else
 		public override bool IsActiveFor (AssemblyDefinition assembly)
+#endif
 		{
+#if NET
+			hasOptimizableCode = false;
+			if (HasOptimizableCode.TryGetValue (assembly, out bool? optimizable)) {
+				if (optimizable == true)
+					hasOptimizableCode = true;
+				return optimizable != null;
+			}
+#else
+			bool hasOptimizableCode = false;
+#endif
 			// we're sure "pure" SDK assemblies don't use XamMac.dll (i.e. they are the Product assemblies)
 			if (Profile.IsSdkAssembly (assembly)) {
 #if DEBUG
 				Console.WriteLine ("Assembly {0} : skipped (SDK)", assembly);
+#endif
+#if NET
+				HasOptimizableCode.Add (assembly, null);
 #endif
 				return false;
 			}
@@ -106,14 +151,16 @@ namespace Xamarin.Linker {
 #if DEBUG
 				Console.WriteLine ("Assembly {0} : skipped ({1})", assembly, action);
 #endif
+#if NET
+				HasOptimizableCode.Add (assembly, null);
+#endif
 				return false;
 			}
 			
 			// if the assembly does not refer to [CompilerGeneratedAttribute] then there's not much we can do
-			HasOptimizableCode = false;
 			foreach (TypeReference tr in assembly.MainModule.GetTypeReferences ()) {
 				if (tr.Is (Namespaces.ObjCRuntime, "BindingImplAttribute")) {
-					HasOptimizableCode = true;
+					hasOptimizableCode = true;
 					break;
 				}
 
@@ -121,29 +168,34 @@ namespace Xamarin.Linker {
 #if DEBUG
 					Console.WriteLine ("Assembly {0} : processing", assembly);
 #endif
-					HasOptimizableCode = true;
+					hasOptimizableCode = true;
 					break;
 				}
 			}
 #if DEBUG
-			if (!HasOptimizableCode)
+			if (!hasOptimizableCode)
 				Console.WriteLine ("Assembly {0} : no [CompilerGeneratedAttribute] nor [BindingImplAttribute] present (applying basic optimizations)", assembly);
 #endif
 			// we always apply the step
+#if NET
+			HasOptimizableCode.Add (assembly, hasOptimizableCode);
+#else
+			HasOptimizableCode = hasOptimizableCode;
+#endif
 			return true;
 		}
 
+#if !NET
 		protected override void Process (TypeDefinition type)
 		{
 			if (!HasOptimizableCode)
 				return;
 
-			isdirectbinding_constant = type.IsNSObject (LinkContext) ? type.GetIsDirectBindingConstant (LinkContext) : null;
+			isdirectbinding_constant = IsDirectBindingConstant (type);
 
-			// if 'type' inherits from NSObject inside an assembly that has [GeneratedCode]
-			// or for static types used for optional members (using extensions methods), they can be optimized too
-			IsExtensionType = type.IsSealed && type.IsAbstract && type.Name.EndsWith ("_Extensions", StringComparison.Ordinal);
+			IsExtensionType = GetIsExtensionType (type);
 		}
+#endif
 
 		// [GeneratedCode] is not enough - e.g. it's used for anonymous delegates even if the 
 		// code itself is not tool/compiler generated
@@ -629,14 +681,32 @@ namespace Xamarin.Linker {
 			base.Process (assembly);
 		}
 
+		bool GetIsExtensionType (TypeDefinition type)
+		{
+			// if 'type' inherits from NSObject inside an assembly that has [GeneratedCode]
+			// or for static types used for optional members (using extensions methods), they can be optimized too
+			return type.IsSealed && type.IsAbstract && type.Name.EndsWith ("_Extensions", StringComparison.Ordinal);
+		}
+
 		protected override void Process (MethodDefinition method)
 		{
+#if NET
+			if (!IsActiveFor (method.DeclaringType.Module.Assembly, out bool hasOptimizableCode))
+				return;
+#endif
+
 			if (!method.HasBody)
 				return;
 
 			if (method.IsBindingImplOptimizableCode (LinkContext)) {
 				// We optimize all methods that have the [BindingImpl (BindingImplAttributes.Optimizable)] attribute.
-			} else if (!Driver.IsXAMCORE_4_0 && (method.IsGeneratedCode (LinkContext) && (IsExtensionType || IsExport (method)))) {
+			} else if (!Driver.IsXAMCORE_4_0 && (method.IsGeneratedCode (LinkContext) && (
+#if NET
+				GetIsExtensionType (method.DeclaringType)
+#else
+				IsExtensionType
+#endif
+				|| IsExport (method)))) {
 				// We optimize methods that have the [GeneratedCodeAttribute] and is either an extension type or an exported method
 			} else {
 				// but it would be too risky to apply on user-generated code
@@ -762,6 +832,11 @@ namespace Xamarin.Linker {
 			ins.Operand = null;
 		}
 
+		bool? IsDirectBindingConstant (TypeDefinition type)
+		{
+			return type.IsNSObject (LinkContext) ? type.GetIsDirectBindingConstant (LinkContext) : null;
+		}
+
 		void ProcessIsDirectBinding (MethodDefinition caller, Instruction ins)
 		{
 			const string operation = "inline IsDirectBinding";
@@ -769,6 +844,9 @@ namespace Xamarin.Linker {
 			if (Optimizations.InlineIsDirectBinding != true)
 				return;
 
+#if NET
+			bool? isdirectbinding_constant = IsDirectBindingConstant (caller.DeclaringType);
+#endif
 			// If we don't know the constant isdirectbinding value, then we can't inline anything
 			if (!isdirectbinding_constant.HasValue)
 				return;

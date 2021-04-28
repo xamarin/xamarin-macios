@@ -13,54 +13,68 @@ namespace Xamarin.Linker.Steps {
 
 	public class ApplyPreserveAttribute : ApplyPreserveAttributeBase {
 
+#if !NET
 		HashSet<TypeDefinition> preserve_synonyms;
+#endif
 
 		public override bool IsActiveFor (AssemblyDefinition assembly)
 		{
 			return Annotations.GetAction (assembly) == AssemblyAction.Link;
 		}
 
+#if NET
+		public override void ProcessAssembly (AssemblyDefinition assembly)
+		{
+			ProcessAssemblyAttributes (assembly);
+		}
+#else
 		public override void Initialize (LinkContext context)
 		{
 			base.Initialize (context);
 
 			// we cannot override ProcessAssembly as some decisions needs to be done before applying the [Preserve]
 			// synonyms
+			foreach (var assembly in context.GetAssemblies ())
+				ProcessAssemblyAttributes (assembly);
+		}
+#endif
 
-			foreach (var assembly in context.GetAssemblies ()) {
-				if (!assembly.HasCustomAttributes)
+		void ProcessAssemblyAttributes (AssemblyDefinition assembly)
+		{
+			if (!assembly.HasCustomAttributes)
+				return;
+
+			foreach (var attribute in assembly.CustomAttributes) {
+				if (!attribute.Constructor.DeclaringType.Is (Namespaces.Foundation, "PreserveAttribute"))
 					continue;
 
-				foreach (var attribute in assembly.CustomAttributes) {
-					if (!attribute.Constructor.DeclaringType.Is (Namespaces.Foundation, "PreserveAttribute"))
-						continue;
+				if (!attribute.HasConstructorArguments)
+					continue;
+				var tr = (attribute.ConstructorArguments [0].Value as TypeReference);
+				if (tr == null)
+					continue;
 
-					if (!attribute.HasConstructorArguments)
-						continue;
-					var tr = (attribute.ConstructorArguments [0].Value as TypeReference);
-					if (tr == null)
-						continue;
-
-					// we do not call `this.ProcessType` since
-					// (a) we're potentially processing a different assembly and `is_active` represent the current one
-					// (b) it will try to fetch the [Preserve] attribute on the type (and it's not there) as `base` would
-					var type = tr.Resolve ();
-					Annotations.Mark (type);
-					if (attribute.HasFields) {
-						foreach (var named_argument in attribute.Fields) {
-							if (named_argument.Name == "AllMembers" && (bool)named_argument.Argument.Value)
-								Annotations.SetPreserve (type, TypePreserve.All);
-						}
-					}
-
-					// if the type is a custom attribute then it means we want to preserve what's decorated
-					// with this attribute (not just the attribute alone)
-					if (type.Inherits ("System", "Attribute")) {
-						if (preserve_synonyms == null)
-							preserve_synonyms = new HashSet<TypeDefinition> ();
-						preserve_synonyms.Add (type);
+				// we do not call `this.ProcessType` since
+				// (a) we're potentially processing a different assembly and `is_active` represent the current one
+				// (b) it will try to fetch the [Preserve] attribute on the type (and it's not there) as `base` would
+				var type = tr.Resolve ();
+				Annotations.Mark (type);
+				if (attribute.HasFields) {
+					foreach (var named_argument in attribute.Fields) {
+						if (named_argument.Name == "AllMembers" && (bool)named_argument.Argument.Value)
+							Annotations.SetPreserve (type, TypePreserve.All);
 					}
 				}
+
+#if !NET
+				// if the type is a custom attribute then it means we want to preserve what's decorated
+				// with this attribute (not just the attribute alone)
+				if (type.Inherits ("System", "Attribute")) {
+					if (preserve_synonyms == null)
+						preserve_synonyms = new HashSet<TypeDefinition> ();
+					preserve_synonyms.Add (type);
+				}
+#endif
 			}
 		}
 
@@ -74,8 +88,12 @@ namespace Xamarin.Linker.Steps {
 				removeAttribute = true;
 				return true;
 			}
+#if NET
+			return false;
+#else
 			// we need to resolve (as many reference instances can exists)
 			return ((preserve_synonyms != null) && preserve_synonyms.Contains (type.Resolve ()));
+#endif
 		}
 	}
 }

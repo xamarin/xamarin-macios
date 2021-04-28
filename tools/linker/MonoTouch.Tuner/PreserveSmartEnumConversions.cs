@@ -17,19 +17,35 @@ using Xamarin.Bundler;
 
 namespace Xamarin.Linker.Steps
 {
+#if NET
+	public class PreserveSmartEnumConversionsHandler : ExceptionalMarkHandler
+#else
 	public class PreserveSmartEnumConversionsSubStep : ExceptionalSubStep
+#endif
 	{
 		Dictionary<TypeDefinition, Tuple<MethodDefinition, MethodDefinition>> cache;
 		protected override string Name { get; } = "Smart Enum Conversion Preserver";
 		protected override int ErrorCode { get; } = 2200;
 
+#if NET
+		public override void Initialize (LinkContext context, MarkContext markContext)
+		{
+			this.context = context;
+			markContext.RegisterMarkMethodAction (ProcessMethod);
+		}
+#else
 		public override SubStepTargets Targets {
 			get {
 				return SubStepTargets.Method | SubStepTargets.Property;
 			}
 		}
+#endif
 
+#if NET
+		bool IsActiveFor (AssemblyDefinition assembly)
+#else
 		public override bool IsActiveFor (AssemblyDefinition assembly)
+#endif
 		{
 			if (Profile.IsProductAssembly (assembly))
 				return true;
@@ -43,6 +59,13 @@ namespace Xamarin.Linker.Steps
 			return false;
 		}
 
+#if NET
+		void Mark (Tuple<MethodDefinition, MethodDefinition> pair)
+		{
+			context.Annotations.Mark (pair.Item1);
+			context.Annotations.Mark (pair.Item2);
+		}
+#else
 		void Preserve (Tuple<MethodDefinition, MethodDefinition> pair, MethodDefinition conditionA, MethodDefinition conditionB = null)
 		{
 			if (conditionA != null) {
@@ -54,8 +77,13 @@ namespace Xamarin.Linker.Steps
 				context.Annotations.AddPreservedMethod (conditionB, pair.Item2);
 			}
 		}
+#endif
 
+#if NET
+		void ProcessAttributeProvider (ICustomAttributeProvider provider)
+#else
 		void ProcessAttributeProvider (ICustomAttributeProvider provider, MethodDefinition conditionA, MethodDefinition conditionB = null)
+#endif
 		{
 			if (provider?.HasCustomAttributes != true)
 				return;
@@ -84,7 +112,11 @@ namespace Xamarin.Linker.Steps
 
 				Tuple<MethodDefinition, MethodDefinition> pair;
 				if (cache != null && cache.TryGetValue (managedEnumType, out pair)) {
+#if NET
+					// The pair was already marked if it was cached.
+#else
 					Preserve (pair, conditionA, conditionB);
+#endif
 					continue;
 				}
 
@@ -142,20 +174,48 @@ namespace Xamarin.Linker.Steps
 				if (cache == null)
 					cache = new Dictionary<TypeDefinition, Tuple<MethodDefinition, MethodDefinition>> ();
 				cache.Add (managedEnumType, pair);
+#if NET
+				Mark (pair);
+#else
 				Preserve (pair, conditionA, conditionB);
+#endif
 			}
 		}
 
 		protected override void Process (MethodDefinition method)
 		{
+#if NET
+			static bool IsPropertyMethod (MethodDefinition method)
+			{
+				return (method.SemanticsAttributes & MethodSemanticsAttributes.Getter) != 0 ||
+					(method.SemanticsAttributes & MethodSemanticsAttributes.Setter) != 0;				
+			}
+
+			ProcessAttributeProvider (method);
+			ProcessAttributeProvider (method.MethodReturnType);
+
+			if (method.HasParameters) {
+				foreach (var p in method.Parameters)
+					ProcessAttributeProvider (p);
+			}
+			if (IsPropertyMethod (method)) {
+				foreach (PropertyDefinition property in method.DeclaringType.Properties)
+					if (property.GetMethod == method || property.SetMethod == method) {
+						ProcessAttributeProvider (property);
+						break;
+					}
+			}
+#else
 			ProcessAttributeProvider (method, method);
 			ProcessAttributeProvider (method.MethodReturnType, method);
 			if (method.HasParameters) {
 				foreach (var p in method.Parameters)
 					ProcessAttributeProvider (p, method);
 			}
+#endif
 		}
 
+#if !NET
 		protected override void Process (PropertyDefinition property)
 		{
 			ProcessAttributeProvider (property, property.GetMethod, property.SetMethod);
@@ -164,5 +224,6 @@ namespace Xamarin.Linker.Steps
 			if (property.SetMethod != null)
 				Process (property.SetMethod);
 		}
+#endif
 	}
 }

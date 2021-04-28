@@ -27,6 +27,17 @@ namespace Xamarin {
 			}
 		}
 
+		List<IMarkHandler> _markHandlers;
+		List<IMarkHandler> MarkHandlers {
+			get {
+				if (_markHandlers == null) {
+					var pipeline = typeof (LinkContext).GetProperty ("Pipeline").GetGetMethod ().Invoke (Context, null);
+					_markHandlers = (List<IMarkHandler>) pipeline.GetType ().GetProperty ("MarkHandlers").GetValue (pipeline);
+				}
+				return _markHandlers;
+			}
+		}
+
 		void InsertBefore (IStep step, string stepName)
 		{
 			for (int i = 0; i < Steps.Count; i++) {
@@ -61,28 +72,31 @@ namespace Xamarin {
 			// This would not be needed of LinkContext.GetAssemblies () was exposed to us.
 			InsertBefore (new CollectAssembliesStep (), "MarkStep");
 
-			var pre_dynamic_dependency_lookup_substeps = new DotNetSubStepDispatcher ();
-			InsertBefore (pre_dynamic_dependency_lookup_substeps, "MarkStep");
-
-			var prelink_substeps = new DotNetSubStepDispatcher ();
-			InsertBefore (prelink_substeps, "MarkStep");
+			var pre_mark_substeps = new DotNetSubStepDispatcher ();
+			InsertBefore (pre_mark_substeps, "MarkStep");
 
 			var post_sweep_substeps = new DotNetSubStepDispatcher ();
 			InsertAfter (post_sweep_substeps, "SweepStep");
 
 			if (Configuration.LinkMode != LinkMode.None) {
-				pre_dynamic_dependency_lookup_substeps.Add (new PreserveBlockCodeSubStep ());
+				MarkHandlers.Add (new PreserveBlockCodeHandler ());
 
 				// We need to run the ApplyPreserveAttribute step even we're only linking sdk assemblies, because even
 				// though we know that sdk assemblies will never have Preserve attributes, user assemblies may have
 				// [assembly: LinkSafe] attributes, which means we treat them as sdk assemblies and those may have
 				// Preserve attributes.
-				prelink_substeps.Add (new ApplyPreserveAttribute ());
-				prelink_substeps.Add (new OptimizeGeneratedCodeSubStep ());
-				prelink_substeps.Add (new MarkNSObjects ());
-				prelink_substeps.Add (new PreserveSmartEnumConversionsSubStep ());
-				prelink_substeps.Add (new CollectUnmarkedMembersSubStep ());
-				prelink_substeps.Add (new StoreAttributesStep ());
+				// TODO: LinkSafeAttribute doesn't appear to be handled anywhere. Is this attribute still supported?
+				// ApplyPreserveAttribute no longer runs on all assemblies. [assembly: Preserve (typeof (SomeAttribute))] will
+				// no longer give SomeAttribute "Preserve" semantics.
+				MarkHandlers.Add (new DotNetMarkAssemblySubStepDispatcher (new ApplyPreserveAttribute ()));
+				MarkHandlers.Add (new OptimizeGeneratedCodeHandler ());
+				// MarkNSObjects will run for all marked assemblies.
+				MarkHandlers.Add (new DotNetMarkAssemblySubStepDispatcher (new MarkNSObjects ()));
+				MarkHandlers.Add (new PreserveSmartEnumConversionsHandler ());
+
+				// TODO: these steps should probably run after mark.
+				pre_mark_substeps.Add (new CollectUnmarkedMembersSubStep ());
+				pre_mark_substeps.Add (new StoreAttributesStep ());
 
 				post_sweep_substeps.Add (new RemoveAttributesStep ());
 			}
