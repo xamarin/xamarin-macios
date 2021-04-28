@@ -283,7 +283,7 @@ steps:
       CONFIGURE_FLAGS="$CONFIGURE_FLAGS --enable-dotnet --enable-dotnet-windows"
     fi
 
-    CONFIGURE_FLAGS="$CONFIGURE_FLAGS --enable-dotnet --enable-dotnet-windows --enable-install-source"
+    CONFIGURE_FLAGS="$CONFIGURE_FLAGS --enable-install-source"
     echo "Configuration falgs are '$CONFIGURE_FLAGS'"
 
     cd $(Build.SourcesDirectory)/xamarin-macios/
