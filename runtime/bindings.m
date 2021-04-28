@@ -21,7 +21,7 @@
  */
 
 xm_nfloat_t
-xamarin_nfloat_objc_msgSend (id self, SEL sel)
+xamarin_nfloat_objc_msgSend_exception (id self, SEL sel, GCHandle *exception_gchandle)
 {
 	@try {
 #if defined(__i386__)
@@ -30,18 +30,20 @@ xamarin_nfloat_objc_msgSend (id self, SEL sel)
 		return ((nfloat_send) objc_msgSend) (self, sel);
 #endif
 	} @catch (NSException *e) {
-		xamarin_process_nsexception (e);
+		xamarin_process_nsexception_using_mode (e, true, exception_gchandle);
+		return 0;
 	}
 }
 
 xm_nfloat_t
-xamarin_nfloat_objc_msgSendSuper (struct objc_super *super, SEL sel)
+xamarin_nfloat_objc_msgSendSuper_exception (struct objc_super *super, SEL sel, GCHandle *exception_gchandle)
 {
 	@try {
 		// there is no objc_msgSendSuper_fpret: http://lists.apple.com/archives/objc-language/2006/Jun/msg00012.html
 		return ((nfloat_sendsuper) objc_msgSendSuper) (super, sel);
 	} @catch (NSException *e) {
-		xamarin_process_nsexception (e);
+		xamarin_process_nsexception_using_mode (e, true, exception_gchandle);
+		return 0;
 	}
 }
 

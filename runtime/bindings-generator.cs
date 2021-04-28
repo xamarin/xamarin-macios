@@ -3013,6 +3013,8 @@ namespace Xamarin.BindingMethods.Generator
 					funcName.Append (GetTypeNameForSignature (func.Parameters [i].TypeData.ManagedType));
 				}
 			}
+			if (func.MarshalExceptions)
+				funcName.Append ("_exception");
 			return funcName.ToString ();
 		}
 
@@ -3049,7 +3051,7 @@ namespace Xamarin.BindingMethods.Generator
 			}
 		}
 
-		static void WriteParametersNativeDeclaration (StringWriter writer, ParameterData [] parameters, bool isTypedef)
+		static void WriteParametersNativeDeclaration (StringWriter writer, ParameterData [] parameters, bool isTypedef, FunctionData func)
 		{
 			if (parameters == null)
 				return;
@@ -3065,6 +3067,9 @@ namespace Xamarin.BindingMethods.Generator
 				writer.Write (isTypedef ? "f" : "p");
 				writer.Write (i);
 			}
+
+			if (!isTypedef && func.MarshalExceptions)
+				writer.Write (", GCHandle *exception_gchandle");
 		}
 
 		static void WriteMessageStretSenderCode (StringWriter writer, TypeData type, bool isSuper)
@@ -3088,7 +3093,8 @@ namespace Xamarin.BindingMethods.Generator
 		static void WriteCatchHandler (StringWriter writer)
 		{
 			writer.WriteLine ("\t} @catch (NSException *e) {");
-			writer.WriteLine ("\t\txamarin_process_nsexception_using_mode (e, true);");
+			writer.WriteLine ("\t\txamarin_process_nsexception_using_mode (e, true, exception_gchandle);");
+			writer.WriteLine ("\t\treturn NULL;");
 			writer.WriteLine ("\t}");
 		}
 
@@ -3129,14 +3135,14 @@ namespace Xamarin.BindingMethods.Generator
 
 			// typedef
 			writer.Write ("typedef {0} (*func_{1}) (id self, SEL sel", func.ReturnType == null ? "void" : func.ReturnType.NativeType, funcName.ToString ());
-			WriteParametersNativeDeclaration (writer, func.Parameters, true);
+			WriteParametersNativeDeclaration (writer, func.Parameters, true, func);
 			writer.WriteLine (");");
 
 			// declaration
 			writer.WriteLine (func.ReturnType != null ? func.ReturnType.NativeWrapperType : "void");
 			writer.Write (funcName);
 			writer.Write (" (id self, SEL sel");
-			WriteParametersNativeDeclaration (writer, func.Parameters, false);
+			WriteParametersNativeDeclaration (writer, func.Parameters, false, func);
 			writer.WriteLine (")");
 
 			// body
@@ -3192,14 +3198,14 @@ namespace Xamarin.BindingMethods.Generator
 
 			// typedef
 			writer.Write ("typedef {0} (*func_{1}) (struct objc_super *super, SEL sel", func.ReturnType == null ? "void" : func.ReturnType.NativeType, funcName.ToString ());
-			WriteParametersNativeDeclaration (writer, func.Parameters, true);
+			WriteParametersNativeDeclaration (writer, func.Parameters, true, func);
 			writer.WriteLine (");");
 
 			// declaration
 			writer.WriteLine (func.ReturnType != null ? func.ReturnType.NativeWrapperType : "void");
 			writer.Write (funcName);
 			writer.Write (" (struct objc_super *super, SEL sel");
-			WriteParametersNativeDeclaration (writer, func.Parameters, false);
+			WriteParametersNativeDeclaration (writer, func.Parameters, false, func);
 			writer.WriteLine (")");
 
 			// body
@@ -3256,14 +3262,14 @@ namespace Xamarin.BindingMethods.Generator
 
 			// typedef
 			writer.Write ("typedef {0} (*func_{1}) (id self, SEL sel", func.ReturnType.NativeType, funcName.ToString ());
-			WriteParametersNativeDeclaration (writer, func.Parameters, true);
+			WriteParametersNativeDeclaration (writer, func.Parameters, true, func);
 			writer.WriteLine (");");
 
 			// declaration
 			writer.WriteLine ("void");
 			writer.Write (funcName);
 			writer.Write (" ({0} *stret_rv, id self, SEL sel", func.ReturnType.NativeWrapperType);
-			WriteParametersNativeDeclaration (writer, func.Parameters, false);
+			WriteParametersNativeDeclaration (writer, func.Parameters, false, func);
 			writer.WriteLine (")");
 
 			// body
@@ -3320,14 +3326,14 @@ namespace Xamarin.BindingMethods.Generator
 
 			// typedef
 			writer.Write ("typedef {0} (*func_{1}) (struct objc_super *super, SEL sel", func.ReturnType.NativeType, funcName.ToString ());
-			WriteParametersNativeDeclaration (writer, func.Parameters, true);
+			WriteParametersNativeDeclaration (writer, func.Parameters, true, func);
 			writer.WriteLine (");");
 
 			// declaration
 			writer.WriteLine ("void");
 			writer.Write (funcName);
 			writer.Write (" ({0} *stret_rv, struct objc_super *super, SEL sel", func.ReturnType.NativeWrapperType);
-			WriteParametersNativeDeclaration (writer, func.Parameters, false);
+			WriteParametersNativeDeclaration (writer, func.Parameters, false, func);
 			writer.WriteLine (")");
 
 			// body

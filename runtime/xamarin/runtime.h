@@ -240,7 +240,7 @@ void			xamarin_set_gc_pump_enabled (bool value);
 typedef void  	(*XamarinUnhandledExceptionFunc)         (MonoObject *exc, const char *type_name, const char *message, const char *trace);
 void          	xamarin_install_unhandled_exception_hook (XamarinUnhandledExceptionFunc func);
 void			xamarin_process_nsexception (NSException *exc);
-void			xamarin_process_nsexception_using_mode (NSException *ns_exception, bool throwManagedAsDefault);
+void			xamarin_process_nsexception_using_mode (NSException *ns_exception, bool throwManagedAsDefault, GCHandle *output_exception);
 void			xamarin_process_managed_exception (MonoObject *exc);
 void			xamarin_process_managed_exception_gchandle (GCHandle gchandle);
 void			xamarin_throw_product_exception (int code, const char *message);

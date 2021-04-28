@@ -2235,11 +2235,11 @@ xamarin_skip_encoding_flags (const char *encoding)
 void
 xamarin_process_nsexception (NSException *ns_exception)
 {
-	xamarin_process_nsexception_using_mode (ns_exception, false);
+	xamarin_process_nsexception_using_mode (ns_exception, false, NULL);
 }
 
 void
-xamarin_process_nsexception_using_mode (NSException *ns_exception, bool throwManagedAsDefault)
+xamarin_process_nsexception_using_mode (NSException *ns_exception, bool throwManagedAsDefault, GCHandle *output_exception)
 {
 	XamarinGCHandle *exc_handle;
 	GCHandle exception_gchandle = INVALID_GCHANDLE;
@@ -2280,12 +2280,17 @@ xamarin_process_nsexception_using_mode (NSException *ns_exception, bool throwMan
 				handle = exception_gchandle;
 				exception_gchandle = INVALID_GCHANDLE;
 			}
-			MONO_ENTER_GC_UNSAFE;
-			MonoObject *exc = xamarin_gchandle_get_target (handle);
-			mono_runtime_set_pending_exception ((MonoException *) exc, false);
-			xamarin_mono_object_release (&exc);
-			xamarin_gchandle_free (handle);
-			MONO_EXIT_GC_UNSAFE;
+
+			if (output_exception == NULL) {
+				MONO_ENTER_GC_UNSAFE;
+				MonoObject *exc = xamarin_gchandle_get_target (handle);
+				mono_runtime_set_pending_exception ((MonoException *) exc, false);
+				xamarin_mono_object_release (&exc);
+				xamarin_gchandle_free (handle);
+				MONO_EXIT_GC_UNSAFE;
+			} else {
+				*output_exception = handle;
+			}
 		}
 		break;
 	case MarshalObjectiveCExceptionModeAbort:

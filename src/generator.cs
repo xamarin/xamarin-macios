@@ -1983,8 +1983,12 @@ public partial class Generator : IMemberGatherer {
 	string MakeSig (string send, bool stret, MethodInfo mi, bool aligned, EnumMode enum_mode = EnumMode.Compat)
 	{
 		var sb = new StringBuilder ();
-		
-		if (ShouldMarshalNativeExceptions (mi))
+		var shouldMarshalNativeExceptions = ShouldMarshalNativeExceptions (mi);
+		var marshalDirective = AttributeManager.GetCustomAttribute<MarshalDirectiveAttribute> (mi);
+
+		if (!string.IsNullOrEmpty (marshalDirective?.NativePrefix))
+			sb.Append (marshalDirective.NativePrefix);
+		else if (shouldMarshalNativeExceptions)
 			sb.Append ("xamarin_");
 		
 		try {
@@ -2009,13 +2013,11 @@ public partial class Generator : IMemberGatherer {
 			}
 		}
 
-		var marshalDirective = AttributeManager.GetCustomAttribute<MarshalDirectiveAttribute> (mi);
-		if (marshalDirective != null) {
-			if (!string.IsNullOrEmpty (marshalDirective.NativePrefix))
-				sb.Insert (0, marshalDirective.NativePrefix);
-			if (!string.IsNullOrEmpty (marshalDirective.NativeSuffix))
-				sb.Append (marshalDirective.NativeSuffix);
-		}
+		if (shouldMarshalNativeExceptions)
+			sb.Append ("_exception");
+
+		if (!string.IsNullOrEmpty (marshalDirective?.NativeSuffix))
+			sb.Append (marshalDirective.NativeSuffix);
 
 		return sb.ToString ();
 	}
@@ -2048,6 +2050,9 @@ public partial class Generator : IMemberGatherer {
 			b.Append (" ");
 			b.Append ("arg" + (++n));
 		}
+
+		if (ShouldMarshalNativeExceptions (mi))
+			b.Append (", out IntPtr exception_gchandle");
 
 		string entry_point;
 		if (method_name.IndexOf ("objc_msgSendSuper", StringComparison.Ordinal) != -1) {
@@ -3893,6 +3898,8 @@ public partial class Generator : IMemberGatherer {
 			selector_field = SelectorField (selector);
 		}
 
+		if (ShouldMarshalNativeExceptions (mi))
+			args += ", out exception_gchandle";
 
 		if (stret){
 			string ret_val = aligned ? "aligned_ret" : "out ret";
@@ -4496,8 +4503,13 @@ public partial class Generator : IMemberGatherer {
 		MarshalType marshalType;
 		bool needsPtrZeroCheck = LookupMarshal (mi.ReturnType, out marshalType) && !marshalType.HasCustomCreate;
 
+		var shouldMarshalNativeExceptions = ShouldMarshalNativeExceptions (mi);
+		if (shouldMarshalNativeExceptions)
+			print ("IntPtr exception_gchandle = IntPtr.Zero;");
+
 		bool use_temp_return  =
 			minfo.is_return_release ||
+			(mi.Name != "Constructor" && shouldMarshalNativeExceptions && mi.ReturnType != TypeManager.System_Void) ||
 			(mi.Name != "Constructor" && (CheckNeedStret (mi) || disposes.Length > 0 || postget != null) && mi.ReturnType != TypeManager.System_Void) ||
 			(AttributeManager.HasAttribute<FactoryAttribute> (mi)) ||
 			((body_options & BodyOption.NeedsTempReturn) == BodyOption.NeedsTempReturn) ||
@@ -4536,7 +4548,7 @@ public partial class Generator : IMemberGatherer {
 			if (external || minfo.is_interface_impl || minfo.is_extension_method) {
 				GenerateNewStyleInvoke (false, mi, minfo, sel, argsArray, needs_temp, category_type);
 			} else {
-				var may_throw = ShouldMarshalNativeExceptions (mi);
+				var may_throw = shouldMarshalNativeExceptions;
 				var null_handle = may_throw && mi.Name == "Constructor";
 				if (null_handle) {
 					print ("try {");
@@ -4563,6 +4575,9 @@ public partial class Generator : IMemberGatherer {
 			GenerateNewStyleInvoke (false, mi, minfo, sel, argsArray, needs_temp, category_type);
 		}
 		
+		if (shouldMarshalNativeExceptions)
+			print ("Runtime.ThrowException (exception_gchandle);");
+
 		if (minfo.is_return_release) {
 
 			// Make sure we generate the required signature in Messaging only if needed 
