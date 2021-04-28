@@ -675,6 +675,8 @@ xamarin_get_handle (MonoObject *obj, GCHandle *exception_gchandle)
 		xamarin_free (msg);
 		*exception_gchandle = xamarin_gchandle_new ((MonoObject *) exc, FALSE);
 	}
+
+	xamarin_mono_object_release (&klass);
 	
 	return rv;
 }
@@ -703,6 +705,7 @@ verify_cast (MonoClass *to, MonoObject *obj, Class from_class, SEL sel, MonoMeth
 		mono_free (to_name);
 		xamarin_free (msg);
 		mono_free (method_full_name);
+		xamarin_mono_object_release (&from);
 		*exception_gchandle = xamarin_gchandle_new ((MonoObject *) mono_ex, FALSE);
 	}
 }
@@ -1166,7 +1169,9 @@ xamarin_print_all_exceptions (GCHandle gchandle)
 	NSMutableString *str = [[NSMutableString alloc] init];
 	// fetch the field, since the property might have been linked away.
 	int counter = 0;
-	MonoClassField *inner_exception = mono_class_get_field_from_name (mono_object_get_class (exc), "_innerException");
+	MonoClass *exc_class = mono_object_get_class (exc);
+	MonoClassField *inner_exception = mono_class_get_field_from_name (exc_class, "_innerException");
+	xamarin_mono_object_release (&exc_class);
 
 	do {
 		print_exception (exc, counter > 0, str);
@@ -2361,7 +2366,9 @@ xamarin_process_managed_exception (MonoObject *exception)
 			const char *fullname;
 			MONO_THREAD_ATTACH; // COOP: will switch to GC_UNSAFE
 			
-			fullname = xamarin_type_get_full_name (mono_class_get_type (mono_object_get_class (exception)), &exception_gchandle);
+			MonoClass *exception_class = mono_object_get_class (exception);
+			fullname = xamarin_type_get_full_name (mono_class_get_type (exception_class), &exception_gchandle);
+			xamarin_mono_object_release (&exception_class);
 			if (exception_gchandle != INVALID_GCHANDLE) {
 				PRINT (PRODUCT ": Got an exception when trying to get the typename for an exception (this exception will be ignored):");
 				PRINT ("%@", xamarin_print_all_exceptions (exception_gchandle));
