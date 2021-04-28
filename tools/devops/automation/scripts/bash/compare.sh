@@ -77,8 +77,6 @@ cp -R ./tools/comparison/apidiff/diff "$API_COMPARISON"
 cp    ./tools/comparison/apidiff/*.html "$API_COMPARISON"
 cp -R ./tools/comparison/generator-diff "$API_COMPARISON"
 
-ls -Rla jenkins-results
-
 if ! grep "href=" "$API_COMPARISON/api-diff.html" >/dev/null 2>&1; then
 	printf ":white_check_mark: [API Diff (from PR only)](%s) (no change)" "$API_URL" >> "$WORKSPACE/api-diff-comments.md"
 elif perl -0777 -pe 's/<script type="text\/javascript">.*?<.script>/script removed/gs' "$API_COMPARISON/*.html" | grep data-is-breaking; then
@@ -88,9 +86,9 @@ else
 fi
 printf "\\n" >> "$WORKSPACE/api-diff-comments.md"
 
-if ! test -s jenkins-results/generator-diff/generator.diff; then
+if ! test -s $API_COMPARISON/generator-diff/generator.diff; then
 	printf ":white_check_mark: [Generator Diff](%s) (no change)" "$GENERATOR_URL" >> "$WORKSPACE/api-diff-comments.md"
-elif grep "^[+-][^+-]" jenkins-results/generator-diff/generator.diff | grep -v "^.[[]assembly: AssemblyInformationalVersion" | grep -v "^[+-][[:space:]]*internal const string Revision =" >/dev/null 2>&1; then
+elif grep "^[+-][^+-]" $API_COMPARISON/generator-diff/generator.diff | grep -v "^.[[]assembly: AssemblyInformationalVersion" | grep -v "^[+-][[:space:]]*internal const string Revision =" >/dev/null 2>&1; then
 	printf ":information_source: [Generator Diff](%s) (please review changes)" "$GENERATOR_URL" >> "$WORKSPACE/api-diff-comments.md"
 else
 	printf ":white_check_mark: [Generator Diff](%s) (only version changes)" "$GENERATOR_URL" >> "$WORKSPACE/api-diff-comments.md"
