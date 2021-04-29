@@ -73,19 +73,22 @@ parameters:
       stageName: 'Mac Catalina (10.15)',
       macPool: 'VSEng-Xamarin-RedmondMacBuildPool-iOS-Trusted',
       osVersion: '10.15',
-      statusContext: 'Mac Catalina (10.15)'
+      statusContext: 'Mac Catalina (10.15)',
+      checkDemands: true
     },
     {
       stageName: 'Mac Mojave (10.14)',
       macPool: 'Hosted Mac Internal Mojave',
       osVersion: '10.14',
-      statusContext: 'Mac Mojave (10.14)'
+      statusContext: 'Mac Mojave (10.14)',
+      checkDemands: false
     },
     {
       stageName: 'Mac High Sierra (10.13)',
       macPool: 'Hosted Mac Internal',
       osVersion: '10.13',
-      statusContext: 'Mac High Sierra (10.13)'
+      statusContext: 'Mac High Sierra (10.13)',
+      checkDemands: false
     }]
 
 resources:
@@ -135,6 +138,8 @@ variables:
   value: true
 - name: TeamName
   value: 'xamarin-macios'
+- name: PROVISIONATOR_CHANNEL
+  value: 'pr/mandel-macaque/401'
 
 trigger:
   branches:
@@ -235,6 +240,7 @@ stages:
           osVersion: ${{ config['osVersion'] }}
           statusContext: ${{ config['statusContext'] }}
           keyringPass: $(xma-password)
+          checkDemands: ${{ config['checkDemands'] }}
 
 - ${{ if eq(parameters.runSamples, true) }}:
   # TODO: Not the real step

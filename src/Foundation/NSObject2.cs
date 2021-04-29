@@ -207,6 +207,13 @@ namespace Foundation {
 			return class_ptr;
 		}
 
+#if NET
+		internal Flags FlagsInternal {
+			get { return flags; }
+			set { flags = value; }
+		}
+#endif
+
 		[MethodImplAttribute (MethodImplOptions.InternalCall)]
 		extern static void RegisterToggleRef (NSObject obj, IntPtr handle, bool isCustomType);
 
@@ -763,6 +770,8 @@ namespace Foundation {
 
 		public override string ToString ()
 		{
+			if (disposed)
+				return base.ToString ();
 			return Description ?? base.ToString ();
 		}
 

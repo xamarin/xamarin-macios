@@ -237,8 +237,6 @@ void			xamarin_check_objc_type (id obj, Class expected_class, SEL sel, id self, 
 
 void			xamarin_set_gc_pump_enabled (bool value);
 
-typedef void  	(*XamarinUnhandledExceptionFunc)         (MonoObject *exc, const char *type_name, const char *message, const char *trace);
-void          	xamarin_install_unhandled_exception_hook (XamarinUnhandledExceptionFunc func);
 void			xamarin_process_nsexception (NSException *exc);
 void			xamarin_process_nsexception_using_mode (NSException *ns_exception, bool throwManagedAsDefault);
 void			xamarin_process_managed_exception (MonoObject *exc);
@@ -291,7 +289,11 @@ MonoObject *	xamarin_gchandle_unwrap (GCHandle handle); // Will get the target a
  */
 #if defined(CORECLR_RUNTIME)
 void			xamarin_mono_object_retain (MonoObject *mobj);
-void			xamarin_mono_object_release (MonoObject **mobj);
+// Use C++ linking to be able to use method overloading, so that callers don't have to cast their variables to 'MonoObject**' (which improves type safety a lot).
+extern "C++" void	xamarin_mono_object_release (MonoObject **mobj);
+extern "C++" void	xamarin_mono_object_release (MonoReflectionMethod **mobj);
+extern "C++" void	xamarin_mono_object_release (MonoReflectionType **mobj);
+extern "C++" void	xamarin_mono_object_release (MonoString **mobj);
 #else
 // Nothing to do here.
 #define			xamarin_mono_object_retain(x)
