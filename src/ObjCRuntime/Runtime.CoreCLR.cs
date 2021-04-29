@@ -169,6 +169,19 @@ namespace ObjCRuntime {
 			return GetMonoObject (obj.GetType ());
 		}
 
+		static bool IsInstance (MonoObjectPtr mobj, MonoObjectPtr mtype)
+		{
+			var obj = GetMonoObjectTarget (mobj);
+			if (obj == null)
+				return false;
+
+			var type = (Type) GetMonoObjectTarget (mtype);
+			var rv = type.IsAssignableFrom (obj.GetType ());
+
+			log_coreclr ($"IsInstance ({obj.GetType ()}, {type})");
+
+			return rv;
+		}
 	}
 }
 
