@@ -294,6 +294,11 @@ steps:
   displayName: 'Build'
   timeoutInMinutes: 180
 
+ # run ASAP so that we do not have any files that got generated confusing git 
+- template: api-diff.yml
+  parameters:
+    prID: variables['PrID']
+
 # build not signed .pkgs for the SDK
 - bash: |
     set -x
@@ -368,8 +373,6 @@ steps:
     artifactName: mac-test-package
   condition: and(succeeded(), contains(variables['configuration.RunMacTests'], 'True'))
   continueOnError: true
-
-- template: api-diff.yml
 
 - bash: |
     set -x

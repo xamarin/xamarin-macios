@@ -214,6 +214,7 @@ find "$OUTPUT_DIR/build" "$OUTPUT_DIR/build-new" '(' \
 	-name 'compiler' -or \
 	-name 'bgen' -or \
 	-name '*.dll' -or \
+	-name '*.editorconfig' -or \
 	-name '*.pdb' -or \
 	-name '*generated-sources' -or \
 	-name 'generated_sources' -or \
