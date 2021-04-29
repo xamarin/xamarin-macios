@@ -21,8 +21,8 @@ $(DOTNET_BUILD_DIR)/bgen/bgen:  $(generator_dependencies) Makefile.generator $(B
 
 
 $(DOTNET_DESTDIR)/%.Sdk/tools/lib/bgen/bgen: $(DOTNET_BUILD_DIR)/bgen/bgen | $(DOTNET_DESTDIR)/%.Sdk/tools/lib/bgen
-	$(Q) rm -f $(dir $@)/bgen*
-	$(Q) $(CP) $<* $(dir $@)
+	$(Q) rm -Rf "$(dir $@)"
+	$(Q) $(CP) -r "$(dir $<)" "$(dir $@)"
 
 $(DOTNET_DESTDIR)/%.Sdk/tools/bin/bgen: bgen/bgen.dotnet | $(DOTNET_DESTDIR)/%.Sdk/tools/bin
 	$(Q) $(CP) $< $@
