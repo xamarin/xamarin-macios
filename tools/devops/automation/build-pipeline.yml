@@ -138,6 +138,8 @@ variables:
   value: true
 - name: TeamName
   value: 'xamarin-macios'
+- name: PROVISIONATOR_CHANNEL
+  value: 'pr/mandel-macaque/401'
 
 trigger:
   branches:
