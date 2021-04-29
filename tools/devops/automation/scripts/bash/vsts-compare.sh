@@ -6,7 +6,6 @@ echo "GH PR: $PR_ID"
 cd $XAM_TOP
 
 if [[ $PR_ID ]]; then
-    echo "Fets PR info +refs/pull/$PR_ID/*:refs/remotes/origin/pr/$PR_ID/*"
     git fetch --no-tags --progress https://github.com/xamarin/xamarin-macios +refs/pull/$PR_ID/*:refs/remotes/origin/pr/$PR_ID/*
 fi
 
