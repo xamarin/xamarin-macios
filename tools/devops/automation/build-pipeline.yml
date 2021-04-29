@@ -118,7 +118,7 @@ resources:
   - repository: ci-results
     type: github
     name: mandel-macaque/mandel-macaque.github.io
-    ref: refs/heads/sign-and-notarized
+    ref: refs/heads/main
     endpoint: xamarin
 
 variables:
