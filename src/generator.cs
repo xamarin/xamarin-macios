@@ -3191,25 +3191,26 @@ public partial class Generator : IMemberGatherer {
 		print (sw, format, args);
 	}
 
+	static char [] newlineCharacters = new char [] { '\n' };
+
 	public void print (StreamWriter w, string format)
 	{
 		if (indent < 0)
 			throw new InvalidOperationException ("Indent is a negative value.");
 
-		string[] lines = format.Split (new char [] { '\n' });
-		string lwsp = new string ('\t', indent);
-		
-		for (int i = 0; i < lines.Length; i++)
-			w.WriteLine (lwsp + lines[i]);
+		var lines = format.Split (newlineCharacters);
+
+		for (int i = 0; i < lines.Length; i++) {
+			if (lines [i].Length == 0)
+				continue;
+			w.Write ('\t', indent);
+			w.WriteLine (lines [i]);
+		}
 	}
 
 	public void print (StreamWriter w, string format, params object [] args)
 	{
-		string[] lines = String.Format (format, args).Split (new char [] { '\n' });
-		string lwsp = new string ('\t', indent);
-		
-		for (int i = 0; i < lines.Length; i++)
-			w.WriteLine (lwsp + lines[i]);
+		print (w, string.Format (format, args));
 	}
 
 	public void print (StreamWriter w, IEnumerable e)
