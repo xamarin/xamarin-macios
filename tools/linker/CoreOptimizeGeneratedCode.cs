@@ -70,12 +70,11 @@ namespace Xamarin.Linker {
 
 #if NET
 		public override void Initialize (LinkContext context, MarkContext markContext)
-		{
 #else
 		public override void Initialize (LinkContext context)
+#endif
 		{
 			base.Initialize (context);
-#endif
 
 			if (Optimizations.InlineIsARM64CallingConvention == true) {
 				var target = LinkContext.Target;
@@ -106,7 +105,6 @@ namespace Xamarin.Linker {
 				}
 			}
 #if NET
-			this.context = context;
 			markContext.RegisterMarkMethodAction (ProcessMethod);
 #endif
 		}

@@ -30,7 +30,7 @@ namespace Xamarin.Linker.Steps
 #if NET
 		public override void Initialize (LinkContext context, MarkContext markContext)
 		{
-			this.context = context;
+			base.Initialize (context);
 			markContext.RegisterMarkMethodAction (ProcessMethod);
 		}
 #else
@@ -187,8 +187,7 @@ namespace Xamarin.Linker.Steps
 #if NET
 			static bool IsPropertyMethod (MethodDefinition method)
 			{
-				return (method.SemanticsAttributes & MethodSemanticsAttributes.Getter) != 0 ||
-					(method.SemanticsAttributes & MethodSemanticsAttributes.Setter) != 0;				
+				return method.IsGetter || method.IsSetter;
 			}
 
 			ProcessAttributeProvider (method);

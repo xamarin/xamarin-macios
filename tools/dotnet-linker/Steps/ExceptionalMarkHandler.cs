@@ -12,17 +12,22 @@ using Mono.Linker.Steps;
 
 namespace Xamarin.Linker {
 
-    // Similar to ExceptionalSubStep, but this only runs for marked members
-    // that were registered for handling by the subclass.
+	// Similar to ExceptionalSubStep, but this only runs for marked members
+	// that were registered for handling by the subclass.
 	public abstract class ExceptionalMarkHandler : IMarkHandler
 	{
 		public abstract void Initialize (LinkContext context, MarkContext markContext);
 
+		public virtual void Initialize (LinkContext context)
+		{
+			this.context = context;
+		}
+
 		protected DerivedLinkContext LinkContext => Configuration.DerivedLinkContext;
 
-		protected LinkContext context { get; set; }
+		protected LinkContext context { get; private set; }
 
-        protected AnnotationStore Annotations => context.Annotations;
+		protected AnnotationStore Annotations => context.Annotations;
 		protected LinkerConfiguration Configuration => LinkerConfiguration.GetInstance (context);
 
 		protected Profile Profile => Configuration.Profile;

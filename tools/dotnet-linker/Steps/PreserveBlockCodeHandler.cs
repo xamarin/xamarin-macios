@@ -18,7 +18,7 @@ namespace Xamarin.Linker.Steps {
 
 		public override void Initialize (LinkContext context, MarkContext markContext)
 		{
-			this.context = context;
+			base.Initialize (context);
 			markContext.RegisterMarkTypeAction (ProcessType);
 		}
 
@@ -42,7 +42,7 @@ namespace Xamarin.Linker.Steps {
 
 			// First make sure we got the right class
 			// The type for the field we're looking for is abstract, sealed and nested and contains exactly 1 field.
-			if (!type.IsAbstract || !type.IsSealed || !type.IsNested)
+			if (!type.HasFields || !type.IsAbstract || !type.IsSealed || !type.IsNested)
 				return;
 			if (type.Fields.Count != 1)
 				return;
@@ -53,7 +53,7 @@ namespace Xamarin.Linker.Steps {
 				return;
 
 			// The class has a readonly field named 'Handler'
-			var field = type.Fields.Single ();
+			var field = type.Fields [0];
 			if (!field.IsInitOnly)
 				return;
 			if (field.Name != "Handler")
@@ -65,7 +65,7 @@ namespace Xamarin.Linker.Steps {
 			var method = type.Methods.SingleOrDefault (v => {
 				if (v.Name != "Invoke")
 					return false;
-				if (v.Parameters.Count == 0)
+				if (!v.HasParameters)
 					return false;
 				if (!v.HasCustomAttributes)
 					return false;
