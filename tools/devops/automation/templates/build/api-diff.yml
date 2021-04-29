@@ -75,3 +75,20 @@ steps:
     artifactName: apidiff-stable
   condition: and(succeeded(), contains(variables['configuration.SkipPublicJenkins'], 'False'))
   continueOnError: true
+
+- pwsh: |
+    Write-Host "Testing if possible."
+    if ($Env:BUILD_REASON -eq "PullRequest") {
+        # the env var is only provided for PR not for builds.
+        $commit = "$Env:SYSTEM_PULLREQUEST_SOURCECOMMITID"
+    } else {
+        $commit = "$Env:BUILD_REVISION"
+    }
+    cd "$(Build.SourcesDirectory)/ci-results"
+    git checkout -b "ci/$commit"
+    mkdir -p "ci/$commit"
+    cp -R "$Env:BUILD_ARTIFACTSTAGINGDIRECTORY/apicomparison" "ci/$commit/apicomparison"
+    git add "ci/$commit"
+    git commit -m"Build results for xamarin-macios commit $commit"
+    git push origin "ci/$commit"
+  displayName: 'Update github page'

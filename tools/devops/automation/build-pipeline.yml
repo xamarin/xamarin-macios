@@ -115,6 +115,12 @@ resources:
     ref: refs/heads/sign-and-notarized
     endpoint: xamarin
 
+  - repository: ci-results
+    type: github
+    name: mandel-macaque/mandel-macaque.github.io
+    ref: refs/heads/sign-and-notarized
+    endpoint: xamarin
+
 variables:
 - group: xamops-azdev-secrets
 - group: Xamarin-Secrets
