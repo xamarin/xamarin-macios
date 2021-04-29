@@ -165,6 +165,7 @@ jobs:
     TESTS_JOBSTATUS: $[ dependencies.build.outputs['runTests.TESTS_JOBSTATUS'] ]
     APIDIFF_MESSAGE: $[ dependencies.build.outputs['apidiff.APIDIFF_MESSAGE'] ]
     APIDIFF_BUILT: $[ dependencies.build.outputs['apidiff.APIDIFF_BUILT'] ]
+    PR_ID: $[ dependencies.configure.outputs['labels.pr-number'] ]
   pool:
     vmImage: 'windows-latest'
     workspace:
