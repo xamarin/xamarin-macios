@@ -33,10 +33,6 @@ jobs:
 
   variables:
     isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
-    PRBuildPool: 'VSEng-Xamarin-RedmondMacBuildPool-iOS-Untrusted'
-    PRBuildPoolUrl: 'https://devdiv.visualstudio.com/_settings/agentpools?poolId=366&view=agents'
-    CIBuildPool: 'VSEng-Xamarin-RedmondMacBuildPool-iOS-Trusted'
-    CIBuildPoolUrl: 'https://devdiv.visualstudio.com/_settings/agentpools?poolId=367&view=agents'
 
   steps:
   - template: configure.yml
