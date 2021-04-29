@@ -33,6 +33,10 @@ jobs:
 
   variables:
     isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
+    PRBuildPool: 'VSEng-Xamarin-RedmondMacBuildPool-iOS-Untrusted'
+    PRBuildPoolUrl: 'https://devdiv.visualstudio.com/_settings/agentpools?poolId=366&view=agents'
+    CIBuildPool: 'VSEng-Xamarin-RedmondMacBuildPool-iOS-Trusted'
+    CIBuildPoolUrl: 'https://devdiv.visualstudio.com/_settings/agentpools?poolId=367&view=agents'
 
   steps:
   - template: configure.yml
@@ -46,10 +50,10 @@ jobs:
   # Selects appropriate agent pool based on trigger type (PR or CI); manually triggered builds target the PR pool
   - template: azure-devops-pools/agent-pool-selector.yml@templates
     parameters:
-      agentPoolPR: 'VSEng-Xamarin-RedmondMacBuildPool-iOS-Untrusted'
-      agentPoolPRUrl: 'https://devdiv.visualstudio.com/_settings/agentpools?poolId=366&view=agents'
-      agentPoolCI: 'VSEng-Xamarin-RedmondMacBuildPool-iOS-Trusted'
-      agentPoolCIUrl: 'https://devdiv.visualstudio.com/_settings/agentpools?poolId=367&view=agents'
+      agentPoolPR: $(PRBuildPool)
+      agentPoolPRUrl: $(PRBuildPoolUrl)
+      agentPoolCI: $(CIBuildPool)
+      agentPoolCIUrl: $(CIBuildPoolUrl)
 
 - job: build
   dependsOn:
