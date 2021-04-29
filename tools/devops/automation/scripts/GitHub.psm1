@@ -549,17 +549,25 @@ function New-GitHubSummaryComment {
         $statusContext = "$Contex - $Env:BUILD_DEFINITIONNAME) (Test run)"
     }
 
+    # make a diff between a PR and a CI build so that users do not get confused.
+    $prefix = "";
+    if ([string]::IsNullOrEmpty($Env:PR_ID)) {
+        $prefix = "[CI Build]"
+    } else {
+        $prefix = "[PR Build]"
+    }
+
     if (-not (Test-Path $TestSummaryPath -PathType Leaf)) {
         Write-Host "No test summary found"
-        Set-GitHubStatus -Status "failure" -Description "Tests failed catastrophically on $Context (no summary found)." -Context $statusContext
+        Set-GitHubStatus -Status "failure" -Description "$prefix Tests failed catastrophically on $Context (no summary found)." -Context $statusContext
         $request = New-GitHubComment -Header "Tests failed catastrophically on $Context (no summary found)." -Emoji ":fire:" -Description "Result file $TestSummaryPath not found. $headerLinks"
     } else {
         if (Test-JobSuccess -Status $Env:TESTS_JOBSTATUS) {
             Set-GitHubStatus -Status "success" -Description "All tests passed on $Context." -Context $statusContext
-            $request = New-GitHubCommentFromFile -Header "Tests passed on $Context." -Description "Tests passed on $Context. $headerLinks"  -Emoji ":white_check_mark:" -Path $TestSummaryPath
+            $request = New-GitHubCommentFromFile -Header "$prefix Tests passed on $Context." -Description "Tests passed on $Context. $headerLinks"  -Emoji ":white_check_mark:" -Path $TestSummaryPath
         } else {
             Set-GitHubStatus -Status "error" -Description "Tests failed on $Context." -Context $statusContext
-            $request = New-GitHubCommentFromFile -Header "Tests failed on $Context" -Description "Tests failed on $Context. $headerLinks" -Emoji ":x:" -Path $TestSummaryPath
+            $request = New-GitHubCommentFromFile -Header "$prefix Tests failed on $Context" -Description "Tests failed on $Context. $headerLinks" -Emoji ":x:" -Path $TestSummaryPath
         }
     }
     return $request
