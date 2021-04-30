@@ -38,10 +38,11 @@ namespace Xamarin.Tests
 				var newCultureError = TranslateError (culture, errorCode);
 				Assert.AreNotEqual (englishError, newCultureError, $"\"{errorCode}\" is not translated in {culture}.");
 			} catch (NullReferenceException){
-				Assert.IsFalse (true, $"Error code \"{errorCode}\" was not found");
+				Assert.Fail ($"Error code \"{errorCode}\" was not found");
+			} catch (AssertionException) {
+				throw;
 			} catch (Exception e) {
-				if (e.GetType () != typeof (AssertionException))
-					Assert.Fail ($"There was an issue obtaining the {culture} translation for {errorCode}.");
+					Assert.Fail ($"There was an issue obtaining the {culture} translation for {errorCode}. {e.Message}");
 			} finally {
 				Thread.CurrentThread.CurrentUICulture = originalUICulture;
 				Thread.CurrentThread.CurrentCulture = originalCulture;

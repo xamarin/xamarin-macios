@@ -80,7 +80,7 @@ namespace Xamarin.iOS.Tasks {
 
 				Assert.AreNotEqual (englishError, newCultureError, $"\"{errorCode}\" is not translated in {culture}.");
 			} catch (NullReferenceException){
-				Assert.IsFalse (true, $"Error code \"{errorCode}\" was not found");
+				Assert.Fail ($"Error code \"{errorCode}\" was not found");
 			} finally {
 				Thread.CurrentThread.CurrentUICulture = originalUICulture;
 				Thread.CurrentThread.CurrentCulture = originalCulture;

@@ -565,11 +565,6 @@
       <Link>Errors.zh-Hant.resx</Link>
     </EmbeddedResource>
   </ItemGroup>
-
-  <ItemGroup>
-    <Resources Include="obj/Debug/mtouch.Errors.cs.resources"></Resources>
-  </ItemGroup>
-  
   <Target Name="BuildSdkVersions" Inputs="../common/SdkVersions.cs.in" Outputs="../common/SdkVersions.cs">
     <Exec Command="make ../common/SdkVersions.cs" />
   </Target>
