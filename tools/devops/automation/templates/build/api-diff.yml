@@ -84,7 +84,7 @@ steps:
     } else {
         $commit = "$Env:BUILD_REVISION"
     }
-    cd "$(Build.SourcesDirectory)/ci-results"
+    cd "$(Build.SourcesDirectory)/mandel-macaque.github.io"
     git checkout -b "ci/$commit"
     mkdir -p "ci/$commit"
     cp -R "$Env:BUILD_ARTIFACTSTAGINGDIRECTORY/apicomparison" "ci/$commit/apicomparison"
