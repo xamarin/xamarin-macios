@@ -1,14 +1,11 @@
 using System;
-using System.IO;
-using System.Diagnostics;
-using Xamarin.Tests;
-
 using NUnit.Framework;
 using System.Globalization;
 using System.Threading;
 using System.Reflection;
-using Xamarin.Bundler;
 using System.Resources;
+using System.Text;
+using System.Collections.Generic;
 
 namespace Xamarin.Tests
 {
@@ -17,7 +14,6 @@ namespace Xamarin.Tests
 	{
 		[TestCase ("cs-CZ")]
 		[TestCase ("de-DE")]
-		[TestCase ("en-US")]
 		[TestCase ("es-ES")]
 		[TestCase ("fr-FR")]
 		[TestCase ("it-IT")]
@@ -31,24 +27,24 @@ namespace Xamarin.Tests
 		[TestCase ("tr-TR")]
 		[TestCase ("zh-CN")]
 		[TestCase ("zh-TW")]
-		public void CompareErrorCodeMT0015 (string culture)
+		public void TestSpecificErrorCode (string culture)
 		{
-			string errorCode = "MT0015";
-			CultureInfo originalCulture = Thread.CurrentThread.CurrentUICulture;
+			var errorCode = "MT0015";
+			var originalUICulture = Thread.CurrentThread.CurrentUICulture;
+			var originalCulture = Thread.CurrentThread.CurrentCulture;
 
 			try {
-				string englishError = TranslateError ("en-US", errorCode);
-				string newCultureError = TranslateError (culture, errorCode);
-				
-				
-
+				var englishError = TranslateError ("en-US", errorCode);
+				var newCultureError = TranslateError (culture, errorCode);
 				Assert.AreNotEqual (englishError, newCultureError, $"\"{errorCode}\" is not translated in {culture}.");
 			} catch (NullReferenceException){
 				Assert.IsFalse (true, $"Error code \"{errorCode}\" was not found");
 			} catch (Exception e) {
-
+				if (e.GetType () != typeof (AssertionException))
+					Assert.Fail ($"There was an issue obtaining the {culture} translation for {errorCode}.");
 			} finally {
-				Thread.CurrentThread.CurrentUICulture = originalCulture;
+				Thread.CurrentThread.CurrentUICulture = originalUICulture;
+				Thread.CurrentThread.CurrentCulture = originalCulture;
 			}
 		}
 
@@ -58,36 +54,58 @@ namespace Xamarin.Tests
 			Thread.CurrentThread.CurrentUICulture = cultureInfo;
 			Thread.CurrentThread.CurrentCulture = cultureInfo;
 
-			string [] resNames = typeof (MachO).Assembly.GetManifestResourceNames ();
+			var resourceManager = new ResourceManager ("mtouch.Errors", typeof (MachO).Assembly);
+			return resourceManager.GetString (errorCode, cultureInfo);
+		}
 
-			//var type = typeof (MachO).Assembly.GetType ("Xamarin.Bundler.Errors");
-			//PropertyInfo propertyInfo = type.GetProperty (errorCode, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
-			//var value = (string) propertyInfo.GetValue (null, null);
-			//var value2 = (string) propertyInfo.GetValue (null, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static, null, null, null);
+		List<string> IgnoredProperties = new List<string> () {
+			"ResourceManager",
+			"Culture",
+			"_default",
+		};
 
-			//var rm = new System.Resources.ResourceManager ("Errors.mtouch", typeof (MachO).Assembly);
-			//var resourceSet = rm.GetResourceSet (cultureInfo, false, true);
-			//var tryThis = rm.GetString ("MT0015", cultureInfo);
+		[TestCase ("cs-CZ")]
+		[TestCase ("de-DE")]
+		[TestCase ("es-ES")]
+		[TestCase ("fr-FR")]
+		[TestCase ("it-IT")]
+		[TestCase ("ja-JP")]
+		[TestCase ("ko-KR")]
+		[TestCase ("nl")]
+		[TestCase ("pt-BR")]
+		[TestCase ("pt-PT")]
+		[TestCase ("ru-RU")]
+		[TestCase ("sv")]
+		[TestCase ("tr-TR")]
+		[TestCase ("zh-CN")]
+		[TestCase ("zh-TW")]
+		public void AllErrorTranslation (string culture)
+		{
+			var errorList = new StringBuilder ();
 
-			var rm2 = new System.Resources.ResourceManager ("mtouch.Errors", typeof (MachO).Assembly);
-			var rm2ResouceSet = rm2.GetResourceSet (cultureInfo, false, true);
-			var tryThis4 = rm2.GetString ("MT0015", cultureInfo);
+			var originalUICulture = Thread.CurrentThread.CurrentUICulture;
+			var originalCulture = Thread.CurrentThread.CurrentCulture;
 
-			// Try to get the resources from CreateFileBasedResourceManager
-			ResourceSet resourceSet2;
-			string tryThis2;
-			string tryThis3;
-			var curDir = Directory.GetCurrentDirectory ();
-			var manuallyGrabbedResourceMan = System.Resources.ResourceManager.CreateFileBasedResourceManager ("mtouch.Errors", "../../../../tools/mtouch/obj/Debug/", null);
-			if (manuallyGrabbedResourceMan != null) {
-				resourceSet2 = manuallyGrabbedResourceMan.GetResourceSet (cultureInfo, false, true);
-				tryThis2 = manuallyGrabbedResourceMan.GetString ("MT0015", cultureInfo);
-				tryThis3 = resourceSet2.GetString ("MT0015");
+			// since the Xamarin.Bundler.Errors type is inaccessible, we go through MachO to access it
+			var errorsAssembly = typeof (MachO).Assembly.GetType ("Xamarin.Bundler.Errors");
+			var props = errorsAssembly.GetProperties (BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Static);
+
+			foreach (var errorCodeInfo in props) {
+				try {
+					var errorCode = errorCodeInfo.Name;
+					if (IgnoredProperties.Contains(errorCode))
+						continue;
+					string englishError = TranslateError ("en-US", errorCode);
+					string newCultureError = TranslateError (culture, errorCode);
+
+					if (englishError == newCultureError)
+						errorList.Append ($"{errorCode} ");
+				} finally {
+					Thread.CurrentThread.CurrentUICulture = originalUICulture;
+					Thread.CurrentThread.CurrentCulture = originalCulture;
+				}
 			}
-			
-
-
-			return tryThis4;
+			Assert.IsEmpty (errorList.ToString (), $"The following errors were not translated:");
 		}
 	}
 }

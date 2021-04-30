@@ -14,40 +14,26 @@ using System.Text;
 namespace Xamarin.iOS.Tasks {
 	[TestFixture]
 	public class LocalizationStringTest : TestBase {
-		[TestCase ("cs-CZ", "cs")]
-		[TestCase ("de-DE", "de")]
+		[TestCase ("cs-CZ", "došlo k chybě: neznámý formát image")]
+		[TestCase ("de-DE", "Unbekanntes Imageformat.")]
 		[TestCase ("en-US", "Unknown image format.")]
-		[TestCase ("es-ES", "es")]
-		[TestCase ("fr-FR", "fr")]
-		[TestCase ("it-IT", "it")]
-		[TestCase ("ja-JP", "ja")]
-		[TestCase ("ko-KR", "ko")]
+		[TestCase ("es-ES", "formato de imagen desconocido.")]
+		[TestCase ("fr-FR", "format d'image inconnu.")]
+		[TestCase ("it-IT", "Formato immagine sconosciuto.")]
+		[TestCase ("ja-JP", "の読み込みでエラーが発生しました: 画像の形式が不明です。")]
+		[TestCase ("ko-KR", "을(를) 로드하는 동안 오류 발생: 알 수 없는 이미지 형식입니다.")]
 		[TestCase ("nl", "nl")]
-		[TestCase ("pt-BR", "pt")]
-		[TestCase ("pt-PT", "pt")]
-		[TestCase ("ru-RU", "ru")]
+		[TestCase ("pl-PL", "nieznany format obrazu.")]
+		[TestCase ("pt-BR", "formato de imagem desconhecido.")]
+		[TestCase ("ru-RU", "неизвестный формат изображения.")]
 		[TestCase ("sv", "sv")]
-		[TestCase ("tr-TR", "tr")]
-		[TestCase ("zh-CN", "zh")]
-		[TestCase ("zh-TW", "zh")]
-
-		//[TestCase ("cs-CZ", "došlo k chybě: neznámý formát image")]
-		//[TestCase ("de-DE", "Unbekanntes Imageformat.")]
-		//[TestCase ("en-US", "Unknown image format.")]
-		//[TestCase ("es-ES", "formato de imagen desconocido.")]
-		//[TestCase ("fr-FR", "format d'image inconnu.")]
-		//[TestCase ("it-IT", "Formato immagine sconosciuto.")]
-		//[TestCase ("ja-JP", "の読み込みでエラーが発生しました: 画像の形式が不明です。")]
-		//[TestCase ("ko-KR", "을(를) 로드하는 동안 오류 발생: 알 수 없는 이미지 형식입니다.")]
-		//[TestCase ("pl-PL", "nieznany format obrazu.")]
-		//[TestCase ("pt-BR", "formato de imagem desconhecido.")]
-		//[TestCase ("ru-RU", "неизвестный формат изображения.")]
-		//[TestCase ("tr-TR", "yüklenirken hata oluştu: Görüntü biçimi bilinmiyor.")]
-		//[TestCase ("zh-CN", "时出错: 未知图像格式")]
-		//[TestCase ("zh-TW", "時發生錯誤: 未知的映像格式。")]
+		[TestCase ("tr-TR", "yüklenirken hata oluştu: Görüntü biçimi bilinmiyor.")]
+		[TestCase ("zh-CN", "时出错: 未知图像格式")]
+		[TestCase ("zh-TW", "時發生錯誤: 未知的映像格式。")]
 		public void AllSupportedTranslations (string culture, string errorMessage)
 		{
-			CultureInfo originalCulture = Thread.CurrentThread.CurrentUICulture;
+			CultureInfo originalUICulture = Thread.CurrentThread.CurrentUICulture;
+			CultureInfo originalCulture = Thread.CurrentThread.CurrentCulture;
 			CultureInfo newCulture;
 			try {
 				newCulture = new CultureInfo (culture);
@@ -58,9 +44,10 @@ namespace Xamarin.iOS.Tasks {
 				Assert.IsFalse (task.Execute (), "Execute failure");
 				Assert.AreEqual (1, Engine.Logger.ErrorEvents.Count, "ErrorCount");
 				bool isTranslated = Engine.Logger.ErrorEvents[0].Message.Contains (errorMessage);
-				Assert.IsTrue (isTranslated, culture + ": is not supported correctly. ");
+				Assert.IsTrue (isTranslated, $"Should contain \"{errorMessage}\", but instead has value: \"{Engine.Logger.ErrorEvents[0].Message}\"");
 			} finally {
-				Thread.CurrentThread.CurrentUICulture = originalCulture;
+				Thread.CurrentThread.CurrentUICulture = originalUICulture;
+				Thread.CurrentThread.CurrentCulture = originalCulture;
 			}
 		}
 
@@ -71,9 +58,11 @@ namespace Xamarin.iOS.Tasks {
 		[TestCase ("it-IT")]
 		[TestCase ("ja-JP")]
 		[TestCase ("ko-KR")]
+		[TestCase ("nl")]
 		[TestCase ("pl-PL")]
 		[TestCase ("pt-BR")]
 		[TestCase ("ru-RU")]
+		[TestCase ("sv")]
 		[TestCase ("tr-TR")]
 		[TestCase ("zh-CN")]
 		[TestCase ("zh-TW")]
@@ -81,7 +70,8 @@ namespace Xamarin.iOS.Tasks {
 		{
 			// insert which error code you'd like to test
 			string errorCode = "E0007";
-			CultureInfo originalCulture = Thread.CurrentThread.CurrentUICulture;
+			CultureInfo originalUICulture = Thread.CurrentThread.CurrentUICulture;
+			CultureInfo originalCulture = Thread.CurrentThread.CurrentCulture;
 
 			try {
 				Assert.IsFalse (string.IsNullOrEmpty (errorCode), "Error code is null or empty");
@@ -92,7 +82,8 @@ namespace Xamarin.iOS.Tasks {
 			} catch (NullReferenceException){
 				Assert.IsFalse (true, $"Error code \"{errorCode}\" was not found");
 			} finally {
-				Thread.CurrentThread.CurrentUICulture = originalCulture;
+				Thread.CurrentThread.CurrentUICulture = originalUICulture;
+				Thread.CurrentThread.CurrentCulture = originalCulture;
 			}
 		}
 
@@ -120,9 +111,11 @@ namespace Xamarin.iOS.Tasks {
 		[TestCase ("it-IT")]
 		[TestCase ("ja-JP")]
 		[TestCase ("ko-KR")]
+		[TestCase ("nl")]
 		[TestCase ("pl-PL")]
 		[TestCase ("pt-BR")]
 		[TestCase ("ru-RU")]
+		[TestCase ("sv")]
 		[TestCase ("tr-TR")]
 		[TestCase ("zh-CN")]
 		[TestCase ("zh-TW")]
@@ -135,7 +128,8 @@ namespace Xamarin.iOS.Tasks {
 
 			string fullCulturePath = $"{Directory.GetCurrentDirectory ()}/TaskTests/LocalizationIgnore/{culture}-Translations.ignore";
 			string shortCulturePath = $"xamarin-macios/tests/msbuild/Xamarin.MacDev.Tasks.Tests/TaskTests/LocalizationIgnore/{culture}-Translations.ignore";
-			CultureInfo originalCulture = Thread.CurrentThread.CurrentUICulture;
+			CultureInfo originalUICulture = Thread.CurrentThread.CurrentUICulture;
+			CultureInfo originalCulture = Thread.CurrentThread.CurrentCulture;
 
 			cultureIgnoreList = ReadFile (fullCulturePath);
 
@@ -156,7 +150,8 @@ namespace Xamarin.iOS.Tasks {
 					} else if (englishError == newCultureError)
 						errorList.Append ($"{errorCode} ");
 				} finally {
-					Thread.CurrentThread.CurrentUICulture = originalCulture;
+					Thread.CurrentThread.CurrentUICulture = originalUICulture;
+					Thread.CurrentThread.CurrentCulture = originalCulture;
 				}
 			}
 
