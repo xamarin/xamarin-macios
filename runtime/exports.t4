@@ -20,11 +20,6 @@
 			"int", "param_count"
 		),
 
-		new Export ("MonoClassField *", "mono_class_get_field_from_name",
-			"MonoClass *", "klass",
-			"const char *", "name"
-		),
-
 		new Export ("mono_bool", "mono_class_is_assignable_from",
 			"MonoClass *", "klass",
 			"MonoClass *", "oklass"
@@ -166,12 +161,6 @@
 
 		new Export ("MonoClass *", "mono_object_get_class",
 			"MonoObject *", "obj"
-		),
-
-		new Export ("void", "mono_field_get_value",
-			"MonoObject *", "obj",
-			"MonoClassField *", "field",
-			"void *", "value"
 		),
 
 		new Export ("MonoObject *", "mono_value_box",

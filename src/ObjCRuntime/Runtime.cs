@@ -477,10 +477,32 @@ namespace ObjCRuntime {
 			return Marshal.StringToHGlobalAuto (exc.Message);
 		}
 
-		static IntPtr GetExceptionStackTrace (IntPtr exception_gchandle)
+		static void PrintException (Exception exc, bool isInnerException, StringBuilder sb)
 		{
-			var exc = (Exception) GetGCHandleTarget (exception_gchandle);
-			return Marshal.StringToHGlobalAuto (exc.StackTrace);
+			if (isInnerException)
+				sb.AppendLine (" --- inner exception ---");
+			sb.AppendLine ($"{exc.Message} ({exc.GetType ().FullName})");
+			var trace = exc.StackTrace;
+			if (!string.IsNullOrEmpty (trace))
+				sb.AppendLine (trace);
+		}
+
+		static IntPtr PrintAllExceptions (IntPtr exception_gchandle)
+		{
+			var str = new StringBuilder ();
+			try {
+				var exc = (Exception) GetGCHandleTarget (exception_gchandle);
+
+				int counter = 0;
+				do {
+					PrintException (exc, counter > 0, str);
+					exc = exc.InnerException;
+				} while (counter < 10 && exc != null);
+			} catch (Exception exception) {
+				str.Append ($"Failed to print exception: {exception}");
+			}
+
+			return Marshal.StringToHGlobalAuto (str.ToString ());
 		}
 
 		static unsafe Assembly GetEntryAssembly ()

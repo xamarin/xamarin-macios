@@ -51,9 +51,9 @@
 			WrappedManagedFunction = "GetExceptionMessage",
 		},
 
-		new XDelegate ("char *", "IntPtr", "xamarin_get_exception_stacktrace",
-			"GCHandle", "IntPtr", "exc_handle") {
-			WrappedManagedFunction = "GetExceptionStackTrace",
+		new XDelegate ("char *", "IntPtr", "xamarin_print_all_exceptions_wrapper",
+			"GCHandle", "IntPtr", "gchandle") {
+			WrappedManagedFunction = "PrintAllExceptions",
 		},
 
 		new XDelegate ("char *", "IntPtr", "xamarin_get_object_type_fullname",

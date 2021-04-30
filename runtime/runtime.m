@@ -1098,53 +1098,22 @@ xamarin_add_registration_map (struct MTRegistrationMap *map, bool partial)
  * Exception handling
  */
 
-static void
-print_exception (GCHandle exception_gchandle, bool is_inner, NSMutableString *msg)
-{
-	// COOP: reading managed memory and executing managed code: must be in UNSAFE mode
-	MONO_ASSERT_GC_UNSAFE;
-	
-	char *type_name = xamarin_get_object_type_fullname (exception_gchandle);
-	char *trace = xamarin_get_exception_message (exception_gchandle);
-	char *message = xamarin_get_exception_stacktrace (exception_gchandle);
-
-	if (is_inner)
-		[msg appendString:@" --- inner exception ---\n"];
-	[msg appendFormat: @"%s (%s)\n", message, type_name];
-	if (trace)
-		[msg appendFormat: @"%s\n", trace];
-
-	xamarin_free (trace);
-	xamarin_free (message);
-	xamarin_free (type_name);
-}
-
 NSString *
 xamarin_print_all_exceptions (GCHandle gchandle)
 {
-	// COOP: reading managed memory and executing managed code: must be in UNSAFE mode
-	MONO_ASSERT_GC_UNSAFE;
-	
-	MonoObject *exc = xamarin_gchandle_get_target (gchandle);
-	NSMutableString *str = [[NSMutableString alloc] init];
-	// fetch the field, since the property might have been linked away.
-	int counter = 0;
-	MonoClassField *inner_exception = mono_class_get_field_from_name (mono_object_get_class (exc), "_innerException");
+	GCHandle exception_gchandle = INVALID_GCHANDLE;
 
-	do {
-		print_exception (gchandle, counter > 0, str);
-		if (inner_exception) {
-			mono_field_get_value (exc, inner_exception, &exc);
-		} else {
-			LOG ("Could not find the field _innerException in System.Exception\n");
-			break;
-		}
-	} while (counter++ < 10 && exc);
+	char *msg = xamarin_print_all_exceptions_wrapper (gchandle, &exception_gchandle);
+	if (exception_gchandle != INVALID_GCHANDLE) {
+		// Not much we can do here but returning a very generic message, since we failed to print one exception, it's reasonable to assume that printing another won't work either.
+		xamarin_gchandle_free (exception_gchandle);
+		exception_gchandle = INVALID_GCHANDLE;
+		return [NSString stringWithFormat: @"An exception occurred while trying to get a string representation for the exception %p (%p)", gchandle, exception_gchandle];
+	}
 
-	xamarin_mono_object_release (&exc);
-
-	[str autorelease];
-	return str;
+	NSString *rv = [NSString stringWithUTF8String: msg];
+	xamarin_free (msg);
+	return rv;
 }
 
 void
@@ -2321,23 +2290,33 @@ xamarin_process_managed_exception (MonoObject *exception)
 			NSString *name;
 			NSString *reason;
 			NSDictionary *userInfo;
-			const char *fullname;
+			char *fullname;
 			MONO_THREAD_ATTACH; // COOP: will switch to GC_UNSAFE
 			
-			fullname = xamarin_type_get_full_name (mono_class_get_type (mono_object_get_class (exception)), &exception_gchandle);
+			fullname = xamarin_get_object_type_fullname (handle, &exception_gchandle);
 			if (exception_gchandle != INVALID_GCHANDLE) {
 				PRINT (PRODUCT ": Got an exception when trying to get the typename for an exception (this exception will be ignored):");
 				PRINT ("%@", xamarin_print_all_exceptions (exception_gchandle));
 				xamarin_gchandle_free (exception_gchandle);
 				exception_gchandle = INVALID_GCHANDLE;
-				fullname = "Unknown";
+				name = @"Unknown type";
+			} else {
+				name = [NSString stringWithUTF8String: fullname];
+				xamarin_free (fullname);
 			}
 
-			name = [NSString stringWithUTF8String: fullname];
+			char *message = xamarin_get_exception_message (handle, &exception_gchandle);
+			if (exception_gchandle != INVALID_GCHANDLE) {
+				PRINT (PRODUCT ": Got an exception when trying to get the message for an exception (this exception will be ignored):");
+				PRINT ("%@", xamarin_print_all_exceptions (exception_gchandle));
+				xamarin_gchandle_free (exception_gchandle);
+				exception_gchandle = INVALID_GCHANDLE;
+				reason = @"Unknown message";
+			} else {
+				reason = [NSString stringWithUTF8String: message];
+				xamarin_free (message);
+			}
 
-			char *message = xamarin_get_exception_message (handle);
-			reason = [NSString stringWithUTF8String: message];
-			mono_free (message);
 			userInfo = [NSDictionary dictionaryWithObject: [XamarinGCHandle createWithHandle: handle] forKey: @"XamarinManagedExceptionHandle"];
 			
 			MONO_THREAD_DETACH; // COOP: this will switch to GC_SAFE
