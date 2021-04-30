@@ -15,6 +15,8 @@ using System.Runtime.InteropServices;
 
 using Foundation;
 
+using MonoObjectPtr=System.IntPtr;
+
 namespace ObjCRuntime {
 
 	public partial class Runtime {
@@ -107,6 +109,17 @@ namespace ObjCRuntime {
 			return rv;
 		}
 
+		static object GetMonoObjectTarget (MonoObjectPtr mobj)
+		{
+			if (mobj == IntPtr.Zero)
+				return null;
+
+			unsafe {
+				MonoObject *monoobj = (MonoObject *) mobj;
+				return GetGCHandleTarget (monoobj->GCHandle);
+			}
+		}
+
 		static IntPtr MarshalStructure<T> (T value) where T: struct
 		{
 			var rv = Marshal.AllocHGlobal (Marshal.SizeOf (typeof (T)));
@@ -139,6 +152,13 @@ namespace ObjCRuntime {
 			var obj = (NSObject) GetGCHandleTarget (gchandle);
 			return (byte) obj.FlagsInternal;
 		}
+
+		static IntPtr GetMethodDeclaringType (MonoObjectPtr mobj)
+		{
+			var method = (MethodBase) GetMonoObjectTarget (mobj);
+			return GetMonoObject (method.DeclaringType);
+		}
+
 	}
 }
 

@@ -646,15 +646,7 @@ xamarin_create_exception (const char *msg)
 MonoMethod *
 xamarin_get_reflection_method_method (MonoReflectionMethod *method)
 {
-	// COOP: Reads managed memory, needs to be in UNSAFE mode
-	MONO_ASSERT_GC_UNSAFE;
-	
-#if defined (CORECLR_RUNTIME)
-	xamarin_assertion_message ("The method %s is not implemented yet for CoreCLR", __func__);
-#else
-	PublicMonoReflectionMethod *rm = (PublicMonoReflectionMethod *) method;
-	return rm->method;
-#endif
+	return xamarin_bridge_get_mono_method (method);
 }
 
 id
@@ -724,7 +716,9 @@ xamarin_check_for_gced_object (MonoObject *obj, SEL sel, id self, MonoMethod *me
 	
 	if (obj != NULL) {
 #if DEBUG
-		verify_cast (mono_method_get_class (method), obj, [self class], sel, method, exception_gchandle);
+		MonoClass *declaring_type = mono_method_get_class (method);
+		verify_cast (declaring_type, obj, [self class], sel, method, exception_gchandle);
+		xamarin_mono_object_release (&declaring_type);
 #endif
 		return;
 	}
@@ -1104,15 +1098,6 @@ xamarin_add_registration_map (struct MTRegistrationMap *map, bool partial)
  * Exception handling
  */
 
-static XamarinUnhandledExceptionFunc unhandled_exception_func;
-
-void 
-xamarin_install_unhandled_exception_hook (XamarinUnhandledExceptionFunc func)
-{
-	// COOP: no managed memory access: any mode
-	unhandled_exception_func = func;	
-}
-
 static MonoObject *
 fetch_exception_property (MonoObject *obj, const char *name, bool is_virtual)
 {
@@ -1165,9 +1150,6 @@ print_exception (MonoObject *exc, bool is_inner, NSMutableString *msg)
 	[msg appendFormat: @"%s (%s)\n", message, type_name];
 	if (trace)
 		[msg appendFormat: @"%s\n", trace];
-
-	if (unhandled_exception_func && !is_inner)
-		unhandled_exception_func (exc, type_name, message, trace);
 
 	mono_free (trace);
 	mono_free (message);
