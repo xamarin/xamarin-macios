@@ -15,6 +15,8 @@ using System.Runtime.InteropServices;
 
 using Foundation;
 
+using Xamarin.Bundler;
+
 using MonoObjectPtr=System.IntPtr;
 
 namespace ObjCRuntime {
@@ -22,7 +24,7 @@ namespace ObjCRuntime {
 	public partial class Runtime {
 		// This struct must be kept in sync with the _MonoObject struct in coreclr-bridge.h
 		[StructLayout (LayoutKind.Sequential)]
-		struct MonoObject {
+		internal struct MonoObject {
 			public int ReferenceCount;
 			public IntPtr GCHandle;
 		}
@@ -109,6 +111,11 @@ namespace ObjCRuntime {
 			return rv;
 		}
 
+		static unsafe object GetMonoObjectTarget (MonoObject* mobj)
+		{
+			return GetMonoObjectTarget ((IntPtr) mobj);
+		}
+
 		static object GetMonoObjectTarget (MonoObjectPtr mobj)
 		{
 			if (mobj == IntPtr.Zero)
@@ -182,6 +189,183 @@ namespace ObjCRuntime {
 
 			return rv;
 		}
+
+		static unsafe MonoObject* InvokeMethod (MonoObject* methodobj, MonoObject* instanceobj, IntPtr native_parameters)
+		{
+			var method = (MethodBase) GetMonoObjectTarget (methodobj);
+			var instance = GetMonoObjectTarget (instanceobj);
+			var rv = InvokeMethod (method, instance, native_parameters);
+			return (MonoObject *) GetMonoObject (rv);
+		}
+
+		// Return value: NULL or a MonoObject* that must be released with xamarin_mono_object_safe_release.
+		// Any MonoObject* ref parameters must also be retained and must be released with xamarin_mono_object_release.
+		static object InvokeMethod (MethodBase method, object instance, IntPtr native_parameters)
+		{
+			var methodParameters = method.GetParameters ();
+			var parameters = new object [methodParameters.Length];
+			var inputParameters = new object [methodParameters.Length];
+			var nativeParameters = new IntPtr [methodParameters.Length];
+
+			// Copy native array of void* to managed array of IntPtr to make the subsequent code simpler.
+			unsafe {
+				IntPtr* nativeParams = (IntPtr*) native_parameters;
+				for (var i = 0; i < methodParameters.Length; i++) {
+					nativeParameters [i] = nativeParams [i];
+				}
+			}
+
+			// Log our input
+			log_coreclr ($"InvokeMethod ({method.DeclaringType.FullName}::{method}, {instance}, 0x{native_parameters.ToString ("x")})");
+			for (var i = 0; i < methodParameters.Length; i++) {
+				var nativeParam = nativeParameters [i];
+				var p = methodParameters [i];
+				var paramType = p.ParameterType;
+				if (paramType.IsByRef)
+					paramType = paramType.GetElementType ();
+				log_coreclr ($"    Argument #{i + 1}: Type = {p.ParameterType.FullName} IsByRef: {p.ParameterType.IsByRef} IsOut: {p.IsOut} IsClass: {paramType.IsClass} IsInterface: {paramType.IsInterface} NativeParameter: 0x{nativeParam.ToString ("x")}");
+			}
+
+			// Process the arguments, and convert to what MethodBase.Invoke expects
+			for (var i = 0; i < methodParameters.Length; i++) {
+				var nativeParam = nativeParameters [i];
+				var p = methodParameters [i];
+				var paramType = p.ParameterType;
+				var isByRef = paramType.IsByRef;
+				if (isByRef)
+					paramType = paramType.GetElementType ();
+				log_coreclr ($"    Marshalling #{i + 1}: IntPtr => 0x{nativeParam.ToString ("x")} => {p.ParameterType.FullName} [...]");
+
+				if (paramType == typeof (IntPtr)) {
+					log_coreclr ($"        IntPtr");
+					if (isByRef) {
+						if (p.IsOut) {
+							parameters [i] = Marshal.AllocHGlobal (IntPtr.Size);
+						} else {
+							parameters [i] = nativeParam == IntPtr.Zero ? IntPtr.Zero : Marshal.ReadIntPtr (nativeParam);
+						}
+					} else {
+						parameters [i] = nativeParam == IntPtr.Zero ? IntPtr.Zero : Marshal.ReadIntPtr (nativeParam);
+					}
+					log_coreclr ($"            => 0x{((IntPtr) parameters [i]).ToString ("x")}");
+				} else if (paramType.IsClass || paramType.IsInterface || (paramType.IsValueType && IsNullable (paramType))) {
+					log_coreclr ($"        IsClass/IsInterface/IsNullable IsByRef: {isByRef} IsOut: {p.IsOut} ParameterType: {paramType}");
+					if (nativeParam != IntPtr.Zero) {
+						unsafe {
+							MonoObject* mono_obj = (MonoObject *) nativeParam;
+							// dereference if it's a byref type
+							if (isByRef)
+								mono_obj = *(MonoObject**) mono_obj;
+							// get the object
+							parameters [i] = GetMonoObjectTarget (mono_obj);
+						}
+					}
+					log_coreclr ($"            => {(parameters [i] == null ? "<null>" : parameters [i].GetType ().FullName)}");
+				} else if (paramType.IsValueType) {
+					log_coreclr ($"        IsValueType IsByRef: {isByRef} IsOut: {p.IsOut} nativeParam: 0x{nativeParam.ToString ("x")} ParameterType: {paramType}");
+					if (nativeParam != IntPtr.Zero) {
+						// We need to unwrap nullable types and enum types to their underlying struct type.
+						var structType = paramType;
+						Type enumType = null;
+						if (IsNullable (structType))
+							structType = Nullable.GetUnderlyingType (structType);
+						if (structType.IsEnum) {
+							enumType = structType;
+							structType = Enum.GetUnderlyingType (structType);
+						}
+						// convert the pointer to the corresponding structure
+						var vt = PtrToStructure (nativeParam, structType);
+						// convert the structure to the enum type if that's what we need
+						if (enumType != null)
+							vt = Enum.ToObject (enumType, vt);
+						parameters [i] = vt;
+					}
+					log_coreclr ($"            => {(parameters [i] == null ? "<null>" : parameters [i].ToString ())}");
+				} else {
+					throw ErrorHelper.CreateError (8037, Errors.MX8037 /* Don't know how to marshal the parameter of type {p.ParameterType.FullName} for parameter {p.Name} in call to {method} */, p.ParameterType.FullName, p.Name, method);
+				}
+			}
+
+			// Make a copy of the array of parameters, so that we can figure out if there were any ref parameters that the method modified.
+			parameters.CopyTo (inputParameters, 0);
+
+			// Call the actual method
+			log_coreclr ($"    Invoking...");
+
+			var rv = method.Invoke (instance, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance, null, parameters, null);
+
+			// Copy any byref parameters back out again
+			var byrefParameterCount = 0;
+			for (var i = 0; i < methodParameters.Length; i++) {
+				var p = methodParameters [i];
+				if (!p.IsOut && !p.ParameterType.IsByRef)
+					continue;
+
+				byrefParameterCount++;
+
+				log_coreclr ($"    Marshalling #{i + 1} back (Type: {p.ParameterType.FullName}) value: {(parameters [i] == null ? "<null>" : parameters [i].GetType ().FullName)}");
+
+				var parameterType = p.ParameterType.GetElementType ();
+				var isMonoObject = parameterType.IsClass || parameterType.IsInterface || (parameterType.IsValueType && IsNullable (parameterType));
+
+				var nativeParam = nativeParameters [i];
+
+				if (nativeParam == IntPtr.Zero) {
+					log_coreclr ($"    No output pointer was provided.");
+					continue;
+				}
+
+				if (parameters [i] == inputParameters [i]) {
+					log_coreclr ($"        The argument didn't change, no marshalling required");
+					if (parameters [i] != null && parameterType != typeof (IntPtr) && isMonoObject) {
+						// byref parameters must be retained
+						xamarin_mono_object_retain (ref nativeParam);
+					}
+					continue;
+				}
+
+				if (parameterType == typeof (IntPtr)) {
+					Marshal.WriteIntPtr (nativeParam, (IntPtr) parameters [i]);
+					log_coreclr ($"        IntPtr: 0x{((IntPtr) parameters [i]).ToString ("x")} => Type: {parameters [i]?.GetType ()} nativeParam: 0x{nativeParam.ToString ("x")}");
+				} else if (isMonoObject) {
+					var ptr = GetMonoObject (parameters [i]);
+					Marshal.WriteIntPtr (nativeParam, ptr);
+					log_coreclr ($"        IsClass/IsInterface/IsNullable: {(parameters [i] == null ? "<null>" : parameters [i].GetType ().FullName)}  nativeParam: 0x{nativeParam.ToString ("x")} -> MonoObject: 0x{ptr.ToString ("x")}");
+				} else if (parameterType.IsValueType) {
+					StructureToPtr (parameters [i], nativeParam);
+					log_coreclr ($"        IsValueType: {(parameters [i] == null ? "<null>" : parameters [i].ToString ())} nativeParam: 0x{nativeParam.ToString ("x")}");
+				} else {
+					throw ErrorHelper.CreateError (8038, Errors.MX8038 /* Don't know how to marshal back the parameter of type {p.ParameterType.FullName} for parameter {p.Name} in call to {method} */, p.ParameterType.FullName, p.Name, method);
+				}
+			}
+
+			// we're done!
+			log_coreclr ($"    Invoke complete with {byrefParameterCount} ref parameters and return value of type {rv?.GetType ()}");
+
+			return rv;
+		}
+
+		static bool IsNullable (Type type)
+		{
+			if (Nullable.GetUnderlyingType (type) != null)
+				return true;
+
+			if (type.IsGenericType && type.GetGenericTypeDefinition () == typeof (Nullable<>))
+				return true;
+
+			return false;
+		}
+
+		static object PtrToStructure (IntPtr ptr, Type type)
+		{
+			if (ptr == IntPtr.Zero)
+				return null;
+
+			return Marshal.PtrToStructure (ptr, type);
+		}
+
+		[DllImport ("__Internal")]
+		static extern void xamarin_mono_object_retain (ref IntPtr mono_object);
 	}
 }
 

@@ -99,7 +99,9 @@
 			"void *",        "obj",
 			"void **",       "params",
 			"MonoObject **", "exc"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		new Export ("uint32_t", "mono_gchandle_new",
 			"MonoObject *", "obj",

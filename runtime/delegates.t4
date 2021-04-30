@@ -382,6 +382,17 @@
 			OnlyDynamicUsage = false,
 			OnlyCoreCLR = true,
 		},
+
+		new XDelegate ("MonoObject *", "MonoObject *", "xamarin_bridge_runtime_invoke_method",
+			"MonoObject *", "MonoObject *", "method",
+			"MonoObject *", "MonoObject *", "instance",
+			"void**", "IntPtr", "parameters"
+		) {
+			WrappedManagedFunction = "InvokeMethod",
+			OnlyDynamicUsage = false,
+			OnlyCoreCLR = true,
+		},
+
 	};
 	delegates.CalculateLengths ();
 #><#+
