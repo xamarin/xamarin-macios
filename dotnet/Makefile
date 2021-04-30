@@ -176,9 +176,11 @@ $(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIM
 $(DOTNET_NUPKG_DIR)/%.nupkg: nupkgs/%.nupkg | $(DOTNET_NUPKG_DIR)
 	$(Q) $(CP) $< $@
 
+ifdef INCLUDE_IOS
 SDK_PACK_IOS_WINDOWS = $(DOTNET_NUPKG_DIR)/$(IOS_WINDOWS_NUGET).Sdk.$(IOS_WINDOWS_NUGET_VERSION_FULL).nupkg
 ifdef ENABLE_DOTNET_WINDOWS
 SDK_PACKS += $(SDK_PACK_IOS_WINDOWS)
+endif
 endif
 
 pack-ios-windows: $(SDK_PACK_IOS_WINDOWS)

@@ -179,6 +179,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 	reflection_method = (MonoReflectionMethod *) xamarin_gchandle_get_target (desc->method_handle);
 	ADD_TO_MONOOBJECT_RELEASE_LIST (reflection_method);
 	method = xamarin_get_reflection_method_method (reflection_method);
+	ADD_TO_MONOOBJECT_RELEASE_LIST (method);
 	msig = mono_method_signature (method);
 	semantic = desc->semantic & ArgumentSemanticMask;
 	isCategoryInstance = (desc->semantic & ArgumentSemanticCategoryInstance) == ArgumentSemanticCategoryInstance;
@@ -542,7 +543,10 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 		 * This problem is documented in the following bug:
 		 * https://bugzilla.xamarin.com/show_bug.cgi?id=6556
 		 */
-		retval = xamarin_new_nsobject (self, mono_method_get_class (method), &exception_gchandle);
+		MonoClass *declaring_type = mono_method_get_class (method);
+		ADD_TO_MONOOBJECT_RELEASE_LIST (declaring_type);
+
+		retval = xamarin_new_nsobject (self, declaring_type, &exception_gchandle);
 		if (exception_gchandle != INVALID_GCHANDLE)
 			goto exception_handling;
 		ADD_TO_MONOOBJECT_RELEASE_LIST (retval);

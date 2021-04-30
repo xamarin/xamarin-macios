@@ -3756,7 +3756,10 @@ namespace Registrar {
 			
 			// the actual invoke
 			if (isCtor) {
-				invoke.AppendLine ("mthis = xamarin_new_nsobject (self, mono_method_get_class (managed_method), &exception_gchandle);");
+				body_setup.AppendLine ("MonoClass *declaring_type = NULL;");
+				invoke.AppendLine ("declaring_type = mono_method_get_class (managed_method);");
+				invoke.AppendLine ("mthis = xamarin_new_nsobject (self, declaring_type, &exception_gchandle);");
+				invoke.AppendLine ("xamarin_mono_object_release (&declaring_type);");
 				cleanup.AppendLine ("xamarin_mono_object_release (&mthis);");
 				invoke.AppendLine ("if (exception_gchandle != INVALID_GCHANDLE) goto exception_handling;");
 			}

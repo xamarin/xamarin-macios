@@ -1423,6 +1423,7 @@ MACCATALYST_TARGETS += \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/MacCatalyst/Xamarin.iOS.dll                    \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/MacCatalyst/OpenTK-1.0.dll                     \
 
+ifdef INCLUDE_MACCATALYST
 DOTNET_TARGETS += \
 	$(MACCATALYST_DOTNET_BUILD_DIR)/64/Xamarin.MacCatalyst.dll \
 	$(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.MacCatalyst.dll \
@@ -1438,6 +1439,8 @@ DOTNET_TARGETS_DIRS += \
 	$(MACCATALYST_DOTNET_BUILD_DIR)/ref \
 	$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Ref/ref/net6.0 \
 	$(foreach rid,$(DOTNET_MACCATALYST_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(MACCATALYST_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0) \
+
+endif
 
 # reference assemblies, this is just for compilation with XS
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.MacCatalyst/%.dll: $(MACCATALYST_BUILD_DIR)/reference/%.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.MacCatalyst $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.MacCatalyst/Facades
@@ -1486,6 +1489,7 @@ endif
 
 ### .NET ###
 
+ifdef INCLUDE_TVOS
 DOTNET_TARGETS += \
 	$(TVOS_DOTNET_BUILD_DIR)/64/Xamarin.TVOS.dll \
 	$(TVOS_DOTNET_BUILD_DIR)/ref/Xamarin.TVOS.dll \
@@ -1500,6 +1504,8 @@ DOTNET_TARGETS_DIRS += \
 	$(TVOS_DOTNET_BUILD_DIR)/ref \
 	$(DOTNET_DESTDIR)/$(TVOS_NUGET).Ref/ref/net6.0 \
 	$(foreach rid,$(DOTNET_TVOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(TVOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/net6.0) \
+
+endif
 
 # reference assemblies, this is just for compilation with XS
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/%.dll: $(TVOS_BUILD_DIR)/reference/%.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/Facades

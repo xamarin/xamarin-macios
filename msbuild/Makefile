@@ -396,18 +396,27 @@ DOTNET_MACOS_FILES = $(MAC_TARGETS) $(MAC_BINDING_TARGETS) $(foreach dll,$(MAC_T
 DOTNET_MACCATALYST_FILES = $(MACCATALYST_TARGETS) FrameworkList.xml
 
 # iOS
+ifdef INCLUDE_IOS
 DOTNET_TARGETS += \
 	$(foreach target,$(DOTNET_IOS_FILES)          ,$(DOTNET_DESTDIR)/$(IOS_NUGET).Sdk/tools/msbuild/iOS/$(notdir $(target)))               \
 
+endif
+
 # tvOS: contains all of the files for iOS as well (for now, we don't need all of them, so this is optimizable)
+ifdef INCLUDE_TVOS
 DOTNET_TARGETS += \
 	$(foreach target,$(DOTNET_SHARED_FILES)       ,$(DOTNET_DESTDIR)/$(TVOS_NUGET).Sdk/tools/msbuild/iOS/$(notdir $(target)))              \
 	$(foreach target,$(DOTNET_TVOS_FILES)         ,$(DOTNET_DESTDIR)/$(TVOS_NUGET).Sdk/tools/msbuild/tvOS/$(notdir $(target)))             \
 
+endif
+
 # watchOS: contains all of the files for iOS as well (for now, we don't need all of them, so this is optimizable)
+ifdef INCLUDE_WATCH
 DOTNET_TARGETS += \
 	$(foreach target,$(DOTNET_SHARED_FILES)       ,$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Sdk/tools/msbuild/iOS/$(notdir $(target)))           \
 	$(foreach target,$(DOTNET_WATCHOS_FILES)      ,$(DOTNET_DESTDIR)/$(WATCHOS_NUGET).Sdk/tools/msbuild/watchOS/$(notdir $(target)))       \
+
+endif
 
 # macOS
 ifdef INCLUDE_MAC

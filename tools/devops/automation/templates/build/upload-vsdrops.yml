@@ -41,3 +41,13 @@ steps:
     sourcePath: $(STABLE_APIDDIFF_PATH)
     detailedLog: true
     usePat: true
+
+- task: ms-vscs-artifact.build-tasks.artifactDropTask-1.artifactDropTask@0
+  displayName: 'Publish API & Generator comparisonn to Artifact Services Drop'
+  inputs:
+    dropServiceURI: 'https://devdiv.artifacts.visualstudio.com/DefaultCollection'
+    dropMetadataContainerName: 'DropMetadata-APIGeneratorDiff'
+    buildNumber: 'xamarin-macios/device-tests/$(Build.BuildNumber)/$(Build.BuildId)/APIGeneratorDiff'
+    sourcePath: $(STABLE_APID_GENERATOR_DIFF_PATH)
+    detailedLog: true
+    usePat: true

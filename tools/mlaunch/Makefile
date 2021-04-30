@@ -8,7 +8,9 @@ COLOR_CLEAR:=$(shell tput sgr0 2>/dev/null)
 ifdef INCLUDE_XAMARIN_LEGACY
 ifdef ENABLE_XAMARIN
 ifdef INCLUDE_MAC
+ifdef INCLUDE_IOS
 ENABLE_MLAUNCH=1
+endif
 endif
 endif
 endif
@@ -33,6 +35,7 @@ clean-local::
 endif
 
 ifdef ENABLE_DOTNET
+ifdef ENABLE_IOS
 all-local:: build-and-install
 	$(MAKE) $(foreach platform,$(DOTNET_PLATFORMS_MOBILE),$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/tools/bin/mlaunch)
 	$(Q) for platform in $(DOTNET_PLATFORMS_MOBILE); do \
@@ -44,6 +47,7 @@ $(DOTNET_DESTDIR)/Microsoft.%.Sdk/tools/bin/mlaunch: $(IOS_DESTDIR)/Library/Fram
 
 $(DOTNET_DESTDIR)/Microsoft.%.Sdk/tools/bin:
 	$(Q) mkdir -p $@
+endif
 endif
 
 ifdef ENABLE_XAMARIN
