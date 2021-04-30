@@ -223,7 +223,7 @@ find "$OUTPUT_DIR/build" "$OUTPUT_DIR/build-new" '(' \
 	-name 'Constants.cs' -or \
 	-name 'generator.csproj*' -or \
 	-name 'bgen.csproj.*' -or \
-	-nmae 'bgen.runtimeconfig.dev.json' -or \
+	-name 'bgen.runtimeconfig.dev.json' -or \
 	-name 'PublishOutputs.*.txt' -or \
 	-name '*.cache' \
 	')' -delete
