@@ -1114,8 +1114,8 @@ print_exception (GCHandle exception_gchandle, bool is_inner, NSMutableString *ms
 	if (trace)
 		[msg appendFormat: @"%s\n", trace];
 
-	mono_free (trace);
-	mono_free (message);
+	xamarin_free (trace);
+	xamarin_free (message);
 	xamarin_free (type_name);
 }
 
