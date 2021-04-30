@@ -135,13 +135,13 @@ $(eval $(call Template,watchsimulator,WATCHSIMULATOR,x86 x86_64,WatchSimulator,-
 $(eval $(call Template,watchos,WATCHOS,armv7k arm64_32,WatchOS,-mwatchos-version-min=2.0 -fembed-bitcode -isysroot $(DEVICEWATCH_SDK)))
 endif
 ifdef INCLUDE_MAC
-$(eval $(call Template,macos,MACOS,x86_64,MacOSX,-mmacosx-version-min=$(MIN_OSX_VERSION_FOR_MAC) -isysroot $(XCODE_DEVELOPER_ROOT)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$(OSX_SDK_VERSION).sdk))
+$(eval $(call Template,macos,MACOS,x86_64 arm64,MacOSX,-mmacosx-version-min=$(MIN_OSX_VERSION_FOR_MAC) -isysroot $(XCODE_DEVELOPER_ROOT)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$(OSX_SDK_VERSION).sdk))
 endif
 ifdef INCLUDE_MACCATALYST
 $(eval $(call Template,maccatalyst,MACCATALYST,x86_64 arm64,MacCatalyst,$(MACCATALYST_COMMON_CFLAGS)))
 endif
 
-.libs/ios-fat .libs/tvos-fat .libs/watchos-fat .libs/maccatalyst-fat:
+.libs/ios-fat .libs/tvos-fat .libs/watchos-fat .libs/maccatalyst-fat .libs/macos-fat:
 	$(Q) mkdir -p $@
 
 define LibTemplate
@@ -157,11 +157,21 @@ $(eval $(call LibTemplate,armv7+7s,.libs/iphoneos/libtest.armv7.o,.libs/iphoneos
 $(eval $(call LibTemplate,armv7+x86,.libs/iphoneos/libtest.armv7.o,.libs/iphonesimulator/libtest.x86.o,ios-fat,IOS))
 $(eval $(call LibTemplate,armv7s+x86,.libs/iphoneos/libtest.armv7s.o,.libs/iphonesimulator/libtest.x86.o,ios-fat,IOS))
 
+ifdef INCLUDE_TVOS
 $(eval $(call LibTemplate,arm64+x86_64,.libs/tvos/libtest.arm64.o,.libs/tvsimulator/libtest.x86_64.o,tvos-fat,TVOS))
+endif
 
+ifdef INCLUDE_WATCH
 $(eval $(call LibTemplate,armv7k+x86,.libs/watchos/libtest.armv7k.o,.libs/watchsimulator/libtest.x86.o,watchos-fat,WATCHOS))
+endif
 
+ifdef INCLUDE_MACCATALYST
 $(eval $(call LibTemplate,x86_64+arm64,.libs/maccatalyst/libtest.x86_64.o,.libs/maccatalyst/libtest.arm64.o,maccatalyst-fat,MACCATALYST))
+endif
+
+ifdef INCLUDE_MAC
+$(eval $(call LibTemplate,x86_64+arm64,.libs/macos/libtest.x86_64.o,.libs/macos/libtest.arm64.o,macos-fat,MACOS))
+endif
 
 define FatFrameworkTemplate
 .libs/$(1)/XStaticObjectTest.framework/XStaticObjectTest: .libs/$(2)/XStaticObjectTest.framework/XStaticObjectTest .libs/$(3)/XStaticObjectTest.framework/XStaticObjectTest | .libs/$(1)
@@ -202,11 +212,28 @@ all-local:: $$($(3)_TARGETS)
 endef
 
 $(eval $(call FatFrameworkTemplate,ios-fat,iphoneos,iphonesimulator))
+ifdef INCLUDE_TVOS
 $(eval $(call FatFrameworkTemplate,tvos-fat,tvos,tvsimulator))
+endif
+ifdef INCLUDE_WATCH
 $(eval $(call FatFrameworkTemplate,watchos-fat,watchos,watchsimulator))
+endif
+ifdef INCLUDE_MACCATALYST
 $(eval $(call FatFrameworkTemplate,maccatalyst-fat,maccatalyst,maccatalyst))
+endif
+ifdef INCLUDE_MAC
+$(eval $(call FatFrameworkTemplate,macos-fat,macos,macos))
+endif
 
-XCPLATFORMS=iphoneos iphonesimulator tvos tvsimulator watchos watchsimulator
+ifdef INCLUDE_IOS
+XCPLATFORMS+= iphoneos iphonesimulator
+endif
+ifdef INCLUDE_TVOS
+XCPLATFORMS+= tvos tvsimulator
+endif
+ifdef INCLUDE_WATCH
+XCPLATFORMS+= watchos watchsimulator
+endif
 ifdef INCLUDE_MAC
 XCPLATFORMS+= macos
 endif
