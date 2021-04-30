@@ -82,7 +82,12 @@ typedef enum {
 } MonoImageOpenStatus;
 
 /* metadata/metadata.h */
+#if defined (CORECLR_RUNTIME)
+// In Mono, MonoClass is not related to MonoObject at all, but for the CoreCLR bridge we use the same struct representation for both types.
+typedef struct _MonoObject MonoClass;
+#else
 typedef struct _MonoClass MonoClass;
+#endif
 typedef struct _MonoDomain MonoDomain;
 #if defined (CORECLR_RUNTIME)
 // In Mono, MonoMethod is not related to MonoObject at all, but for the CoreCLR bridge we use the same struct representation for both types.
