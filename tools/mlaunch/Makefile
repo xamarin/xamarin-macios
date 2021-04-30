@@ -13,7 +13,7 @@ endif
 endif
 endif
 
-DOTNET_PLATFORMS_MOBILE=$(filter-out macOS,$(DOTNET_PLATFORMS))
+DOTNET_PLATFORMS_MOBILE=$(filter-out macOS MacCatalyst,$(DOTNET_PLATFORMS))
 
 ifdef ENABLE_MLAUNCH
 build-and-install:
