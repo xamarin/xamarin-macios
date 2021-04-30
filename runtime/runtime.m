@@ -646,15 +646,7 @@ xamarin_create_exception (const char *msg)
 MonoMethod *
 xamarin_get_reflection_method_method (MonoReflectionMethod *method)
 {
-	// COOP: Reads managed memory, needs to be in UNSAFE mode
-	MONO_ASSERT_GC_UNSAFE;
-	
-#if defined (CORECLR_RUNTIME)
-	xamarin_assertion_message ("The method %s is not implemented yet for CoreCLR", __func__);
-#else
-	PublicMonoReflectionMethod *rm = (PublicMonoReflectionMethod *) method;
-	return rm->method;
-#endif
+	return xamarin_bridge_get_mono_method (method);
 }
 
 id

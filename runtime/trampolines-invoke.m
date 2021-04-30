@@ -179,6 +179,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 	reflection_method = (MonoReflectionMethod *) xamarin_gchandle_get_target (desc->method_handle);
 	ADD_TO_MONOOBJECT_RELEASE_LIST (reflection_method);
 	method = xamarin_get_reflection_method_method (reflection_method);
+	ADD_TO_MONOOBJECT_RELEASE_LIST (method);
 	msig = mono_method_signature (method);
 	semantic = desc->semantic & ArgumentSemanticMask;
 	isCategoryInstance = (desc->semantic & ArgumentSemanticCategoryInstance) == ArgumentSemanticCategoryInstance;

@@ -146,6 +146,16 @@ xamarin_bridge_register_product_assembly (GCHandle* exception_gchandle)
 	xamarin_mono_object_release (&entry_assembly);
 }
 
+MonoMethod *
+xamarin_bridge_get_mono_method (MonoReflectionMethod *method)
+{
+	// COOP: Reads managed memory, needs to be in UNSAFE mode
+	MONO_ASSERT_GC_UNSAFE;
+
+	PublicMonoReflectionMethod *rm = (PublicMonoReflectionMethod *) method;
+	return rm->method;
+}
+
 MonoClass *
 xamarin_get_inativeobject_class ()
 {
