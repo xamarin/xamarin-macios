@@ -17,6 +17,10 @@ parameters:
 - name: runSamples
   type: boolean
   default: false
+  
+- name: provisionatorChannel
+  type: string
+  default: 'latest'
 
 # We are doing some black magic. We have several templates that 
 # are executed with different parameters. 
@@ -135,6 +139,9 @@ variables:
   value: true
 - name: TeamName
   value: 'xamarin-macios'
+- name: PROVISIONATOR_CHANNEL
+  value: ${{ parameters.provisionatorChannel }}
+  
 
 trigger:
   branches:
