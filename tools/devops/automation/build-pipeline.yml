@@ -14,6 +14,10 @@ parameters:
   type: boolean
   default: true
 
+- name: enableDotnet
+  type: boolean
+  default: true
+
 # We are doing some black magic. We have several templates that 
 # are executed with different parameters. 
 #
@@ -191,7 +195,7 @@ stages:
         runTests: ${{ parameters.runTests }}
         runDeviceTests: ${{ parameters.runDeviceTests }}
         keyringPass: $(xma-password)
-
+        enableDotnet: ${{ parameters.enableDotnet }}
 
 - ${{ if or(eq(variables['Build.Reason'], 'IndividualCI'), eq(variables['Build.Reason'], 'Manual')) }}:
   - ${{ each config in parameters.deviceTestsConfigurations }}:
