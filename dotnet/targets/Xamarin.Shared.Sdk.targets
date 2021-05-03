@@ -138,6 +138,8 @@
 		<EventSourceSupport Condition="'$(EventSourceSupport)' == ''">false</EventSourceSupport>
 		<HttpActivityPropagationSupport Condition="'$(HttpActivityPropagationSupport)' == ''">false</HttpActivityPropagationSupport>
 		<StartupHookSupport Condition="'$(StartupHookSupport)' == ''">false</StartupHookSupport>
+		<!-- native bits for ICU are not ready for Catalyst - https://github.com/xamarin/xamarin-macios/issues/11392 -->
+		<InvariantGlobalization Condition="'$(_PlatformName)' == 'MacCatalyst' And '$(InvariantGlobalization)' == ''">true</InvariantGlobalization>
 		<UseSystemResourceKeys Condition="'$(UseSystemResourceKeys)' == ''">true</UseSystemResourceKeys>
 		<UseNativeHttpHandler Condition="'$(_PlatformName)' != 'macOS' And '$(UseNativeHttpHandler)' == ''">true</UseNativeHttpHandler>
 	</PropertyGroup>
