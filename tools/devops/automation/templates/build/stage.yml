@@ -21,6 +21,10 @@ parameters:
 - name: xqaCertPass
   type: string
 
+- name: enableDotnet
+  type: boolean
+  default: false
+
 jobs:
 - job: configure
   displayName: 'Configure build'
@@ -95,6 +99,7 @@ jobs:
       keyringPass: ${{ parameters.keyringPass }}
       gitHubToken: ${{ parameters.gitHubToken }}
       xqaCertPass: ${{ parameters.xqaCertPass }}
+      enableDotnet: ${{ parameters.enableDotnet }}
 
 - job: upload_azure_blob
   displayName: 'Upload packages to Azure'
@@ -115,6 +120,8 @@ jobs:
       clean: all
   steps:
   - template: upload-azure.yml
+    parameters:
+      enableDotnet: ${{ parameters.enableDotnet }}
 
 - job: upload_vsdrops
   displayName: 'Upload test results to VSDrops'

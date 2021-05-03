@@ -22,6 +22,10 @@ parameters:
   type: string
   default: 'latest'
 
+- name: enableDotnet
+  type: boolean
+  default: true
+
 # We are doing some black magic. We have several templates that 
 # are executed with different parameters. 
 #
@@ -218,6 +222,7 @@ stages:
         keyringPass: $(xma-password)
         gitHubToken: ${{ variables['GitHub.Token'] }}
         xqaCertPass: $(xqa--certificates--password)
+        enableDotnet: ${{ parameters.enableDotnet }}
 
 - ${{ if eq(parameters.runDeviceTests, true) }}:
   - ${{ if and(ne(variables['Build.Reason'], 'Schedule'), or(eq(variables['Build.Reason'], 'IndividualCI'), eq(variables['Build.Reason'], 'Manual'))) }}:
