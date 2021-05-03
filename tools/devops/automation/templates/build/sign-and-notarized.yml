@@ -5,6 +5,10 @@ parameters:
   type: string
   default: 'Real'
 
+- name: enableDotnet
+  type: boolean
+  default: false
+
 steps:
 
 - bash: |
@@ -86,36 +90,37 @@ steps:
     zipSources: false  # we do not use the feature and makes the installation to last 10/12 mins instead of < 1 min
   env:
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+ 
+- ${{ if eq(parameters.enableDotnet, true) }}:
+  - pwsh : |
+      # Get the list of files to sign
+      $msiFiles = Get-ChildItem -Path $(Build.SourcesDirectory)/package/ -Filter "*.msi"
 
-- pwsh : |
-    # Get the list of files to sign
-    $msiFiles = Get-ChildItem -Path $(Build.SourcesDirectory)/package/ -Filter "*.msi"
-
-    # Add those files to an array
-    $SignFiles = @()
-    foreach($msi in $msiFiles) {
-        Write-Host "$($msi.FullName)"
-        $SignFiles += @{ "SrcPath"="$($msi.FullName)"}
-    }
-
-    Write-Host "$msiFiles"
-
-    # array of dicts
-    $SignFileRecord = @(
-      @{
-        "Certs" = "400";
-        "SignFileList" = $SignFiles;
+      # Add those files to an array
+      $SignFiles = @()
+      foreach($msi in $msiFiles) {
+          Write-Host "$($msi.FullName)"
+          $SignFiles += @{ "SrcPath"="$($msi.FullName)"}
       }
-    )
 
-    $SignFileList = @{
-        "SignFileRecordList" = $SignFileRecord
-    }
+      Write-Host "$msiFiles"
 
-    # Write the json to a file
-    ConvertTo-Json -InputObject $SignFileList -Depth 5 | Out-File -FilePath $(Build.ArtifactStagingDirectory)/MsiFiles2Notarize.json -Force
-    dotnet $Env:MBSIGN_APPFOLDER/ddsignfiles.dll /filelist:$(Build.ArtifactStagingDirectory)/MsiFiles2Notarize.json
-  displayName: 'Sign .msi'
+      # array of dicts
+      $SignFileRecord = @(
+        @{
+          "Certs" = "400";
+          "SignFileList" = $SignFiles;
+        }
+      )
+
+      $SignFileList = @{
+          "SignFileRecordList" = $SignFileRecord
+      }
+
+      # Write the json to a file
+      ConvertTo-Json -InputObject $SignFileList -Depth 5 | Out-File -FilePath $(Build.ArtifactStagingDirectory)/MsiFiles2Notarize.json -Force
+      dotnet $Env:MBSIGN_APPFOLDER/ddsignfiles.dll /filelist:$(Build.ArtifactStagingDirectory)/MsiFiles2Notarize.json
+    displayName: 'Sign .msi'
 
 - bash: |
     security unlock-keychain -p $PRODUCTSIGN_KEYCHAIN_PASSWORD builder.keychain
