@@ -28,6 +28,10 @@ namespace Xamarin.Linker.Steps
 			}
 		}
 
+		public ListExportedSymbols () : this (null)
+		{
+		}
+
 		internal ListExportedSymbols (PInvokeWrapperGenerator state, bool skip_sdk_assemblies = false)
 		{
 			this.state = state;
