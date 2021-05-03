@@ -2,12 +2,12 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">	
 	<UsingTask TaskName="Xamarin.iOS.Tasks.CompileEntitlements" AssemblyFile="Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.iOS.Tasks.UnpackLibraryResources" AssemblyFile="Xamarin.iOS.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.iOS.HotRestart.Tasks.Codesign" AssemblyFile="Xamarin.iOS.Windows.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.iOS.HotRestart.Tasks.CollectDynamicFrameworks" AssemblyFile="Xamarin.iOS.Windows.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.iOS.HotRestart.Tasks.CompileAppManifest" AssemblyFile="Xamarin.iOS.Windows.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.iOS.HotRestart.Tasks.DetectSigningIdentity" AssemblyFile="Xamarin.iOS.Windows.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.iOS.HotRestart.Tasks.PrepareAppBundle" AssemblyFile="Xamarin.iOS.Windows.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.iOS.HotRestart.Tasks.UnpackFrameworks" AssemblyFile="Xamarin.iOS.Windows.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.iOS.HotRestart.Tasks.Codesign" AssemblyFile="Xamarin.iOS.Tasks.Windows.dll" />
+	<UsingTask TaskName="Xamarin.iOS.HotRestart.Tasks.CollectDynamicFrameworks" AssemblyFile="Xamarin.iOS.Tasks.Windows.dll" />
+	<UsingTask TaskName="Xamarin.iOS.HotRestart.Tasks.CompileAppManifest" AssemblyFile="Xamarin.iOS.Tasks.Windows.dll" />
+	<UsingTask TaskName="Xamarin.iOS.HotRestart.Tasks.DetectSigningIdentity" AssemblyFile="Xamarin.iOS.Tasks.Windows.dll" />
+	<UsingTask TaskName="Xamarin.iOS.HotRestart.Tasks.PrepareAppBundle" AssemblyFile="Xamarin.iOS.Tasks.Windows.dll" />
+	<UsingTask TaskName="Xamarin.iOS.HotRestart.Tasks.UnpackFrameworks" AssemblyFile="Xamarin.iOS.Tasks.Windows.dll" />
 	
 	<Import Project="Xamarin.iOS.HotRestart.props" />
 
