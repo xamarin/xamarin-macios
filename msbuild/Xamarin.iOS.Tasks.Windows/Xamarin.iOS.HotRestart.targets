@@ -17,7 +17,7 @@
 	<Target Name="_DetectSigningIdentity" AfterTargets="_DetectAppManifest" 
 		Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsHotRestartBuild)' == 'true' And '$(IsHotRestartEnvironmentReady)' == 'true'" >
 		
-		<DetectSigningIdentity 
+		<HotRestart.Tasks.DetectSigningIdentity 
 			AppManifest="$(_AppManifest)"
 			ProvisioningProfile="$(CodesignProvision)"
 			SigningKey="$(CodesignKey)">
@@ -28,11 +28,11 @@
 			<Output TaskParameter="DetectedCodeSigningPath" PropertyName="_CodeSigningPath" />
 			<Output TaskParameter="DetectedProvisioningProfileId" PropertyName="_ProvisioningProfileId" />
 			<Output TaskParameter="DetectedProvisioningProfilePath" PropertyName="_ProvisioningProfilePath" />
-		</DetectSigningIdentity>
+		</HotRestart.Tasks.DetectSigningIdentity>
 	</Target>
 
 	<Target Name="_CollectHotRestartBundleResources" Condition="'$(IsHotRestartBuild)' == 'true'">
-		<CollectBundleResources
+		<HotRestart.Tasks.CollectBundleResources
 			OptimizePropertyLists="$(OptimizePropertyLists)"
 			OptimizePNGs="$(OptimizePNGs)"
 			BundleResources="@(Content);@(BundleResource)"
@@ -40,13 +40,13 @@
 			ResourcePrefix="$(IPhoneResourcePrefix)">
 
 			<Output TaskParameter="BundleResourcesWithLogicalNames" ItemName="_HotRestartBundleResourceWithLogicalName"/>
-		</CollectBundleResources>
+		</HotRestart.Tasks.CollectBundleResources>
 	</Target>
 
 	<Target Name="_UnpackHotRestartLibraryResources" DependsOnTargets="_CollectHotRestartBundleResources"
 		Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsHotRestartBuild)' == 'true'" >
 
-		<UnpackLibraryResources
+		<HotRestart.Tasks.UnpackLibraryResources
 			Prefix="monotouch"
 			NoOverwrite="@(_HotRestartBundleResourceWithLogicalName)"
 			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
@@ -54,7 +54,7 @@
 			ReferencedLibraries="@(ReferencePath);@(ReferenceDependencyPaths);@(_ReferencesFromNuGetPackages)">
 
 			<Output TaskParameter="BundleResourcesWithLogicalNames" ItemName="_HotRestartBundleResourceWithLogicalName" />
-		</UnpackLibraryResources>
+		</HotRestart.Tasks.UnpackLibraryResources>
 	</Target>
 
 	<!-- Gets the list of assemblies that may contain frameworks -->
@@ -170,7 +170,7 @@
 		Inputs="$(_AppManifest);$(HotRestartAppBundlePath)\Extracted"
 		Outputs="$(HotRestartSignedAppDir)$(_AppManifest);$(HotRestartSignedAppDir)Extracted">
 
-		<CompileAppManifest
+		<HotRestart.Tasks.CompileAppManifest
 			AppBundlePath="$(HotRestartAppBundlePath)"
 			AppManifestPath="$(_AppManifest)" />
 	</Target>
@@ -192,7 +192,7 @@
 			SdkPlatform="iPhoneOS"
 			SdkVersion="12.2"
 			SdkDevPath=" "
-			TargetFrameworkMoniker="$(TargetFrameworkMoniker)" />
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)" />
 	</Target>
 
 	<Target Name="_CopyFilesToHotRestartBundle"
@@ -300,7 +300,7 @@
 		Inputs="@(_CodeSignHotRestartInputs)"
 		Outputs="@(_CodeSignHotRestartInputs -> '%(Outputs)')">
 		
-		<Codesign
+		<HotRestart.Tasks.Codesign
 			AppBundlePath="$(HotRestartAppBundlePath)"
 			BundleIdentifier="$(_BundleIdentifier)"
 			CodeSigningPath="$(_CodeSigningPath)"
