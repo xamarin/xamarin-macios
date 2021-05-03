@@ -329,7 +329,9 @@
 
 		new Export ("MonoClass *", "mono_method_get_class",
 			"MonoMethod *", "method"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		new Export ("void", "mono_dllmap_insert",
 			"MonoImage *", "assembly",

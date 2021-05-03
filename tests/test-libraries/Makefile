@@ -157,11 +157,17 @@ $(eval $(call LibTemplate,armv7+7s,.libs/iphoneos/libtest.armv7.o,.libs/iphoneos
 $(eval $(call LibTemplate,armv7+x86,.libs/iphoneos/libtest.armv7.o,.libs/iphonesimulator/libtest.x86.o,ios-fat,IOS))
 $(eval $(call LibTemplate,armv7s+x86,.libs/iphoneos/libtest.armv7s.o,.libs/iphonesimulator/libtest.x86.o,ios-fat,IOS))
 
+ifdef INCLUDE_TVOS
 $(eval $(call LibTemplate,arm64+x86_64,.libs/tvos/libtest.arm64.o,.libs/tvsimulator/libtest.x86_64.o,tvos-fat,TVOS))
+endif
 
+ifdef INCLUDE_WATCH
 $(eval $(call LibTemplate,armv7k+x86,.libs/watchos/libtest.armv7k.o,.libs/watchsimulator/libtest.x86.o,watchos-fat,WATCHOS))
+endif
 
+ifdef INCLUDE_MACCATALYST
 $(eval $(call LibTemplate,x86_64+arm64,.libs/maccatalyst/libtest.x86_64.o,.libs/maccatalyst/libtest.arm64.o,maccatalyst-fat,MACCATALYST))
+endif
 
 ifdef INCLUDE_MAC
 $(eval $(call LibTemplate,x86_64+arm64,.libs/macos/libtest.x86_64.o,.libs/macos/libtest.arm64.o,macos-fat,MACOS))
@@ -206,14 +212,28 @@ all-local:: $$($(3)_TARGETS)
 endef
 
 $(eval $(call FatFrameworkTemplate,ios-fat,iphoneos,iphonesimulator))
+ifdef INCLUDE_TVOS
 $(eval $(call FatFrameworkTemplate,tvos-fat,tvos,tvsimulator))
+endif
+ifdef INCLUDE_WATCH
 $(eval $(call FatFrameworkTemplate,watchos-fat,watchos,watchsimulator))
+endif
+ifdef INCLUDE_MACCATALYST
 $(eval $(call FatFrameworkTemplate,maccatalyst-fat,maccatalyst,maccatalyst))
+endif
 ifdef INCLUDE_MAC
 $(eval $(call FatFrameworkTemplate,macos-fat,macos,macos))
 endif
 
-XCPLATFORMS=iphoneos iphonesimulator tvos tvsimulator watchos watchsimulator
+ifdef INCLUDE_IOS
+XCPLATFORMS+= iphoneos iphonesimulator
+endif
+ifdef INCLUDE_TVOS
+XCPLATFORMS+= tvos tvsimulator
+endif
+ifdef INCLUDE_WATCH
+XCPLATFORMS+= watchos watchsimulator
+endif
 ifdef INCLUDE_MAC
 XCPLATFORMS+= macos
 endif

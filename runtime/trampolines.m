@@ -1493,6 +1493,8 @@ xamarin_smart_enum_to_nsstring (MonoObject *value, void *context /* token ref */
 
 		retval = mono_runtime_invoke (managed_method, NULL, arg_ptrs, &exception);
 
+		xamarin_mono_object_release (&managed_method);
+
 		if (exception) {
 			*exception_gchandle = xamarin_gchandle_new (exception, FALSE);
 			return NULL;
@@ -1530,13 +1532,17 @@ xamarin_nsstring_to_smart_enum (id value, void *ptr, MonoClass *managedType, voi
 		if (*exception_gchandle != INVALID_GCHANDLE) return NULL;
 
 		arg0 = xamarin_get_nsobject_with_type_for_ptr (value, false, xamarin_get_parameter_type (managed_method, 0), exception_gchandle);
-		if (*exception_gchandle != INVALID_GCHANDLE) return NULL;
+		if (*exception_gchandle != INVALID_GCHANDLE) {
+			xamarin_mono_object_release (&managed_method);
+			return NULL;
+		}
 
 		arg_ptrs [0] = arg0;
 
 		obj = mono_runtime_invoke (managed_method, NULL, arg_ptrs, &exception);
 
 		xamarin_mono_object_release (&arg0);
+		xamarin_mono_object_release (&managed_method);
 
 		if (exception) {
 			*exception_gchandle = xamarin_gchandle_new (exception, FALSE);
