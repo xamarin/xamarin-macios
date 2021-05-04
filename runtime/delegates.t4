@@ -46,6 +46,23 @@
 			OnlyDynamicUsage = false,
 		},
 
+		new XDelegate ("char *", "IntPtr", "xamarin_get_exception_message",
+			"GCHandle", "IntPtr", "exc_handle") {
+			WrappedManagedFunction = "GetExceptionMessage",
+		},
+
+		new XDelegate ("char *", "IntPtr", "xamarin_print_all_exceptions_wrapper",
+			"GCHandle", "IntPtr", "gchandle") {
+			WrappedManagedFunction = "PrintAllExceptions",
+		},
+
+		new XDelegate ("char *", "IntPtr", "xamarin_get_object_type_fullname",
+			"GCHandle", "IntPtr", "gchandle"
+		) {
+			WrappedManagedFunction = "GetObjectTypeFullName",
+			OnlyDynamicUsage = false,
+		},
+
 		new XDelegate ("GCHandle->MonoObject *", "IntPtr", "xamarin_get_block_wrapper_creator",
 			"GCHandle->MonoReflectionMethod *", "IntPtr", "method",
 			"int", "int", "parameter"

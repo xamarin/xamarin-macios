@@ -471,6 +471,40 @@ namespace ObjCRuntime {
 			return BlockLiteral.GetBlockForDelegate ((MethodInfo) GetGCHandleTarget (method), GetGCHandleTarget (@delegate), token_ref, Marshal.PtrToStringAuto (signature));
 		}
 
+		static IntPtr GetExceptionMessage (IntPtr exception_gchandle)
+		{
+			var exc = (Exception) GetGCHandleTarget (exception_gchandle);
+			return Marshal.StringToHGlobalAuto (exc.Message);
+		}
+
+		static void PrintException (Exception exc, bool isInnerException, StringBuilder sb)
+		{
+			if (isInnerException)
+				sb.AppendLine (" --- inner exception ---");
+			sb.AppendLine ($"{exc.Message} ({exc.GetType ().FullName})");
+			var trace = exc.StackTrace;
+			if (!string.IsNullOrEmpty (trace))
+				sb.AppendLine (trace);
+		}
+
+		static IntPtr PrintAllExceptions (IntPtr exception_gchandle)
+		{
+			var str = new StringBuilder ();
+			try {
+				var exc = (Exception) GetGCHandleTarget (exception_gchandle);
+
+				int counter = 0;
+				do {
+					PrintException (exc, counter > 0, str);
+					exc = exc.InnerException;
+				} while (counter < 10 && exc != null);
+			} catch (Exception exception) {
+				str.Append ($"Failed to print exception: {exception}");
+			}
+
+			return Marshal.StringToHGlobalAuto (str.ToString ());
+		}
+
 		static unsafe Assembly GetEntryAssembly ()
 		{
 			var asm = Assembly.GetEntryAssembly ();
@@ -769,6 +803,14 @@ namespace ObjCRuntime {
 		static IntPtr TypeGetFullName (IntPtr type) 
 		{	
 			return Marshal.StringToHGlobalAuto (((Type) GetGCHandleTarget (type)).FullName);
+		}
+
+		static IntPtr GetObjectTypeFullName (IntPtr gchandle)
+		{
+			var obj = GetGCHandleTarget (gchandle);
+			if (obj == null)
+				return IntPtr.Zero;
+			return Marshal.StringToHGlobalAuto (obj.GetType ().FullName);
 		}
 
 		static IntPtr LookupManagedTypeName (IntPtr klass)
