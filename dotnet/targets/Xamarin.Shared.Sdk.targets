@@ -8,6 +8,7 @@
 
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CompileNativeCode" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.LinkNativeCode" AssemblyFile="$(_XamarinTaskAssembly)" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.SymbolStrip" AssemblyFile="$(_XamarinTaskAssembly)" />
 
 	<!-- Project types and how do we distinguish between them
 
@@ -126,6 +127,8 @@
 		<EnableUnsafeUTF7Encoding Condition="'$(EnableUnsafeUTF7Encoding)' == ''">false</EnableUnsafeUTF7Encoding>
 		<EventSourceSupport Condition="'$(EventSourceSupport)' == ''">false</EventSourceSupport>
 		<HttpActivityPropagationSupport Condition="'$(HttpActivityPropagationSupport)' == ''">false</HttpActivityPropagationSupport>
+		<!-- native bits for ICU are not ready for Catalyst - https://github.com/xamarin/xamarin-macios/issues/11392 -->
+		<InvariantGlobalization Condition="'$(_PlatformName)' == 'MacCatalyst' And '$(InvariantGlobalization)' == ''">true</InvariantGlobalization>
 		<StartupHookSupport Condition="'$(StartupHookSupport)' == ''">false</StartupHookSupport>
 		<UseSystemResourceKeys Condition="'$(UseSystemResourceKeys)' == ''">true</UseSystemResourceKeys>
 		<UseNativeHttpHandler Condition="'$(_PlatformName)' != 'macOS' And '$(UseNativeHttpHandler)' == ''">true</UseNativeHttpHandler>
@@ -641,6 +644,17 @@
 			SdkRoot="$(_SdkRoot)"
 			TargetArchitectures="$(TargetArchitectures)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+		/>
+
+		<!-- remove the `-u` prefix from `_ReferencesLinkerFlags` so we can give the output file to `strip` -->
+		<WriteLinesToFile SessionId="$(BuildSessionId)" File="$(_MtouchSymbolsList)" Lines="@(_ReferencesLinkerFlags->'%(Identity)'->Substring (2))" Overwrite="true" />
+
+		<SymbolStrip
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true' And '$(_NoSymbolStrip)' == 'false' And '$(IsAppExtension)' == 'false'"
+			Executable="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName)"
+			IsFramework="false"
+			SymbolFile="$(_MtouchSymbolsList)"
 		/>
 
 		<ItemGroup>

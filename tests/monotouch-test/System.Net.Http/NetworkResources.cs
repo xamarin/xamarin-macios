@@ -9,7 +9,7 @@ namespace MonoTests.System.Net.Http
 	{
 		public static readonly string MicrosoftUrl = "https://www.microsoft.com";
 		public static readonly Uri MicrosoftUri = new Uri (MicrosoftUrl);
-		public static readonly string XamarinUrl = "https://xamarin.com";
+		public static readonly string XamarinUrl = "https://dotnet.microsoft.com/apps/xamarin";
 		public static readonly Uri XamarinUri = new Uri (XamarinUrl);
 		public static readonly string StatsUrl = "https://api.imgur.com/2/stats";
 
