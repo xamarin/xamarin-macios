@@ -17,5 +17,8 @@
 		<_XamarinTaskAssembly Condition="'$(_PlatformName)' == 'macOS'">$(_XamarinSdkRootDirectory)\tools\msbuild\macOS\Xamarin.Mac.Tasks.dll</_XamarinTaskAssembly>
 		<SuppressTrimAnalysisWarnings Condition=" '$(SuppressTrimAnalysisWarnings)' == '' ">true</SuppressTrimAnalysisWarnings>
 		<AfterMicrosoftNETSdkTargets>$(AfterMicrosoftNETSdkTargets);$(MSBuildThisFileDirectory)Microsoft.$(_PlatformName).Sdk.targets</AfterMicrosoftNETSdkTargets>
+
+		<!-- _XamarinSdkRoot is used by the existing MSBuild targets files -->
+		<_XamarinSdkRoot Condition="'$(_XamarinSdkRoot)' == ''">$(_XamarinSdkRootDirectory)</_XamarinSdkRoot>
 	</PropertyGroup>
 </Project>
