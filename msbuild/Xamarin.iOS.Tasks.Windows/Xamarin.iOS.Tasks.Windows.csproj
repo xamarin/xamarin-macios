@@ -58,6 +58,7 @@
         <DestinationSubDirectory />
       </ReferencePath>
       <ReferenceToPreserve Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.Diagnostics.Tracer'" />
+      <ReferenceToPreserve Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.Security.Cryptography.ProtectedData'" />
     </ItemGroup>
   </Target>
 </Project>
