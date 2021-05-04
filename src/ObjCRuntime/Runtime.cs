@@ -1892,6 +1892,24 @@ namespace ObjCRuntime {
 			}
 		}
 #endif
+
+		// Takes a GCHandle (as an IntPtr) for an exception, frees the GCHandle, and throws the exception.
+		// If the IntPtr does not represent a valid GCHandle, then the function just returns.
+		// This method must be public, because the generator can generate calls to it (thus third-party binding libraries may need it).
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		public static void ThrowException (IntPtr gchandle)
+		{
+			if (gchandle == IntPtr.Zero)
+				return;
+			var handle = GCHandle.FromIntPtr (gchandle);
+			var exc = handle.Target as Exception;
+			handle.Free ();
+
+			if (exc == null)
+				return;
+
+			throw exc;
+		}
 	}
 	
 	internal class IntPtrEqualityComparer : IEqualityComparer<IntPtr>

@@ -204,8 +204,8 @@ namespace GeneratorTests
 			bgen.AssertExecute ("build");
 			bgen.AssertNoWarnings ();
 
-			bgen.AssertApiCallsMethod ("Test", "MarshalInProperty", "get_Shared", "xamarin_IntPtr_objc_msgSend", "MarshalInProperty.Shared getter");
-			bgen.AssertApiCallsMethod ("Test", "MarshalOnProperty", "get_Shared", "xamarin_IntPtr_objc_msgSend", "MarshalOnProperty.Shared getter");
+			bgen.AssertApiCallsMethod ("Test", "MarshalInProperty", "get_Shared", "xamarin_IntPtr_objc_msgSend_exception", "MarshalInProperty.Shared getter");
+			bgen.AssertApiCallsMethod ("Test", "MarshalOnProperty", "get_Shared", "xamarin_IntPtr_objc_msgSend_exception", "MarshalOnProperty.Shared getter");
 		}
 
 		[Test]

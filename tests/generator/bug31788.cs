@@ -6,7 +6,7 @@ namespace Test
 	interface SimServiceConnectionManager {}
 
 	// Both these should produce the same output,
-	// both calling xamarin_IntPtr_objc_msgSend
+	// both calling xamarin_IntPtr_objc_msgSend_exception
 	[BaseType (typeof (NSObject))]
 	interface MarshalOnProperty
 	{

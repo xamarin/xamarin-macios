@@ -32,8 +32,8 @@ typedef float (*float_sendsuper) (struct objc_super *super, SEL sel);
 typedef xm_nfloat_t (*nfloat_send) (id self, SEL sel);
 typedef xm_nfloat_t (*nfloat_sendsuper) (struct objc_super *super, SEL sel);
 
-xm_nfloat_t xamarin_nfloat_objc_msgSend (id self, SEL sel);
-xm_nfloat_t xamarin_nfloat_objc_msgSendSuper (struct objc_super *super, SEL sel);
+xm_nfloat_t xamarin_nfloat_objc_msgSend_exception (id self, SEL sel, GCHandle *exception_gchandle);
+xm_nfloat_t xamarin_nfloat_objc_msgSendSuper_exception (struct objc_super *super, SEL sel, GCHandle *exception_gchandle);
 
 void * xamarin_IntPtr_objc_msgSend_IntPtr_IntPtr_int (id self, SEL sel, void *a, void *b, int c);
 void * xamarin_IntPtr_objc_msgSendSuper_IntPtr_IntPtr_int (struct objc_super *super, SEL sel, void *a, void *b, int c);
