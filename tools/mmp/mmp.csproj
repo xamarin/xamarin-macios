@@ -492,63 +492,79 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Errors.Designer.cs</LastGenOutput>
       <CustomToolNamespace>Xamarin.Bundler</CustomToolNamespace>
-      <LogicalName>mmp.tool.mtouch.Errors.resources</LogicalName>
+      <ManifestResourceName>mtouch.Errors</ManifestResourceName>
     </EmbeddedResource>
     <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.cs.resx">
       <Link>tools\mtouch\Errors.cs.resx</Link>
+      <ManifestResourceName>mtouch.Errors.cs</ManifestResourceName>
     </EmbeddedResource>
     <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.de.resx">
       <Link>tools\mtouch\Errors.de.resx</Link>
+      <ManifestResourceName>mtouch.Errors.de</ManifestResourceName>
     </EmbeddedResource>
     <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.es.resx">
       <Link>tools\mtouch\Errors.es.resx</Link>
+      <ManifestResourceName>mtouch.Errors.es</ManifestResourceName>
     </EmbeddedResource>
     <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.fr.resx">
       <Link>tools\mtouch\Errors.fr.resx</Link>
+      <ManifestResourceName>mtouch.Errors.fr</ManifestResourceName>
     </EmbeddedResource>
     <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.hu.resx">
       <Link>tools\mtouch\Errors.hu.resx</Link>
+      <ManifestResourceName>mtouch.Errors.hu</ManifestResourceName>
     </EmbeddedResource>
     <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.it.resx">
       <Link>tools\mtouch\Errors.it.resx</Link>
+      <ManifestResourceName>mtouch.Errors.it</ManifestResourceName>
     </EmbeddedResource>
     <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.ja.resx">
       <Link>tools\mtouch\Errors.ja.resx</Link>
+      <ManifestResourceName>mtouch.Errors.ja</ManifestResourceName>
     </EmbeddedResource>
     <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.ko.resx">
       <Link>tools\mtouch\Errors.ko.resx</Link>
+      <ManifestResourceName>mtouch.Errors.ko</ManifestResourceName>
     </EmbeddedResource>
     <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.nl.resx">
       <Link>tools\mtouch\Errors.nl.resx</Link>
+      <ManifestResourceName>mtouch.Errors.nl</ManifestResourceName>
     </EmbeddedResource>
     <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.pl.resx">
       <Link>tools\mtouch\Errors.pl.resx</Link>
+      <ManifestResourceName>mtouch.Errors.pl</ManifestResourceName>
     </EmbeddedResource>
     <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.pt-BR.resx">
       <Link>tools\mtouch\Errors.pt-BR.resx</Link>
+      <ManifestResourceName>mtouch.Errors.pt-BR</ManifestResourceName>
     </EmbeddedResource>
     <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.pt-PT.resx">
       <Link>tools\mtouch\Errors.pt-PT.resx</Link>
+      <ManifestResourceName>mtouch.Errors.pt-PT</ManifestResourceName>
     </EmbeddedResource>
     <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.ru.resx">
       <Link>tools\mtouch\Errors.ru.resx</Link>
+      <ManifestResourceName>mtouch.Errors.ru</ManifestResourceName>
     </EmbeddedResource>
     <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.sv.resx">
       <Link>tools\mtouch\Errors.sv.resx</Link>
+      <ManifestResourceName>mtouch.Errors.sv</ManifestResourceName>
     </EmbeddedResource>
     <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.tr.resx">
       <Link>tools\mtouch\Errors.tr.resx</Link>
+      <ManifestResourceName>mtouch.Errors.tr</ManifestResourceName>
     </EmbeddedResource>
     <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.zh-Hans.resx">
       <Link>tools\mtouch\Errors.zh-Hans.resx</Link>
+      <ManifestResourceName>mtouch.Errors.zh-Hans</ManifestResourceName>
     </EmbeddedResource>
     <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.zh-Hant.resx">
       <Link>tools\mtouch\Errors.zh-Hant.resx</Link>
+      <ManifestResourceName>mtouch.Errors.zh-Hant</ManifestResourceName>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="Makefile" />
-    <None Include="packages.config" />
     <None Include="..\..\docs\website\mmp-errors.md">
       <Link>docs\website\mmp-errors.md</Link>
     </None>
