@@ -239,7 +239,7 @@ void			xamarin_check_objc_type (id obj, Class expected_class, SEL sel, id self, 
 void			xamarin_set_gc_pump_enabled (bool value);
 
 void			xamarin_process_nsexception (NSException *exc);
-void			xamarin_process_nsexception_using_mode (NSException *ns_exception, bool throwManagedAsDefault);
+void			xamarin_process_nsexception_using_mode (NSException *ns_exception, bool throwManagedAsDefault, GCHandle *output_exception);
 void			xamarin_process_managed_exception (MonoObject *exc);
 void			xamarin_process_managed_exception_gchandle (GCHandle gchandle);
 void			xamarin_throw_product_exception (int code, const char *message);

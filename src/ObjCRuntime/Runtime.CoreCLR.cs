@@ -159,6 +159,16 @@ namespace ObjCRuntime {
 			return GetMonoObject (method.DeclaringType);
 		}
 
+		static IntPtr ObjectGetType (MonoObjectPtr mobj)
+		{
+			var obj = GetMonoObjectTarget (mobj);
+			if (obj == null) {
+				log_coreclr ($"ObjectGetType (0x{mobj.ToString ("x")}) => null object");
+				return IntPtr.Zero;
+			}
+			return GetMonoObject (obj.GetType ());
+		}
+
 	}
 }
 
