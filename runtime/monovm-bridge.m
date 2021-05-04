@@ -284,6 +284,13 @@ xamarin_install_nsautoreleasepool_hooks ()
 	mono_profiler_install_thread (thread_start, thread_end);
 }
 
+void
+xamarin_bridge_free_mono_signature (MonoMethodSignature **psig)
+{
+	// nothing to free here
+	*psig = NULL;
+}
+
 #if DOTNET
 
 bool

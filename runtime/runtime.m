@@ -266,6 +266,8 @@ xamarin_get_parameter_type (MonoMethod *managed_method, int index)
 			p = mono_signature_get_params (msig, &iter);
 	}
 	
+	xamarin_bridge_free_mono_signature (&msig);
+
 	return p;
 }
 

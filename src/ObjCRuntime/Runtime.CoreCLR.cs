@@ -29,6 +29,15 @@ namespace ObjCRuntime {
 			public IntPtr GCHandle;
 		}
 
+		// This struct must be kept in sync with the _MonoMethodSignature struct in coreclr-bridge.h
+		[StructLayout (LayoutKind.Sequential)]
+		unsafe struct MonoMethodSignature {
+			public MonoObject* Method;
+			public int ParameterCount;
+			public MonoObject* ReturnType;
+			public MonoObject* Parameters;
+		}
+
 		// Comment out the attribute to get all printfs
 		[System.Diagnostics.Conditional ("UNDEFINED")]
 		static void log_coreclr (string message)
@@ -188,6 +197,40 @@ namespace ObjCRuntime {
 			log_coreclr ($"IsInstance ({obj.GetType ()}, {type})");
 
 			return rv;
+		}
+
+		static unsafe IntPtr GetMethodSignature (MonoObject* methodobj)
+		{
+			var method = (MethodBase) GetMonoObjectTarget (methodobj);
+			var parameters = method.GetParameters ();
+			var parameterCount = parameters.Length;
+			var rv = Marshal.AllocHGlobal (sizeof (MonoMethodSignature) + sizeof (MonoObjectPtr) * parameterCount);
+
+			MonoMethodSignature* signature = (MonoMethodSignature *) rv;
+			signature->Method = methodobj;
+			xamarin_mono_object_retain (methodobj);
+			signature->ParameterCount = parameterCount;
+			signature->ReturnType = (MonoObject *) GetMonoObject (GetMethodReturnType (method));
+
+			MonoObject** mparams = &signature->Parameters;
+			for (var i = 0; i < parameterCount; i++) {
+				var p = parameters [i];
+				mparams [i] = (MonoObject *) GetMonoObject (p.ParameterType);
+			}
+
+			return rv;
+		}
+
+		static Type GetMethodReturnType (MethodBase method)
+		{
+			if (method is MethodInfo minfo)
+				return minfo.ReturnType;
+
+			// Constructors return the instance that was created, which is the declaring type of the constructor.
+			if (method is ConstructorInfo cinfo)
+				return cinfo.DeclaringType;
+
+			return null;
 		}
 
 		static unsafe MonoObject* InvokeMethod (MonoObject* methodobj, MonoObject* instanceobj, IntPtr native_parameters)
@@ -366,6 +409,9 @@ namespace ObjCRuntime {
 
 		[DllImport ("__Internal")]
 		static extern void xamarin_mono_object_retain (ref IntPtr mono_object);
+
+		[DllImport ("__Internal")]
+		unsafe static extern void xamarin_mono_object_retain (MonoObject* mono_object);
 	}
 }
 

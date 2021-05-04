@@ -351,6 +351,14 @@
 			OnlyCoreCLR = true,
 		},
 
+		new XDelegate ("MonoMethodSignature *", "IntPtr", "xamarin_bridge_method_get_signature",
+			"MonoObject *", "MonoObject *", "method"
+		) {
+			WrappedManagedFunction = "GetMethodSignature",
+			OnlyDynamicUsage = false,
+			OnlyCoreCLR = true,
+		},
+
 		new XDelegate ("MonoObject*", "IntPtr", "xamarin_bridge_get_monoobject",
 			"GCHandle", "IntPtr", "gchandle"
 		) {

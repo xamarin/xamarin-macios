@@ -96,7 +96,12 @@ typedef struct _MonoObject MonoMethod;
 typedef struct _MonoMethod MonoMethod;
 #endif
 typedef struct _MonoMethodSignature MonoMethodSignature;
+#if defined (CORECLR_RUNTIME)
+// In Mono, MonoType is not related to MonoObject at all, but for the CoreCLR bridge we use the same struct representation for both types.
+typedef struct _MonoObject MonoType;
+#else
 typedef struct _MonoType MonoType;
+#endif
 
 /* metadata/class.h */
 typedef struct MonoVTable MonoVTable;

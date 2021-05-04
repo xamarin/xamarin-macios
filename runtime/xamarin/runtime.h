@@ -209,6 +209,7 @@ void*			xamarin_pinvoke_override (const char *libraryName, const char *entrypoin
 void			xamarin_bridge_call_runtime_initialize (struct InitializationOptions* options, GCHandle* exception_gchandle);
 void			xamarin_bridge_register_product_assembly (GCHandle* exception_gchandle);
 MonoMethod *	xamarin_bridge_get_mono_method (MonoReflectionMethod *method);
+void			xamarin_bridge_free_mono_signature (MonoMethodSignature **signature);
 bool			xamarin_register_monoassembly (MonoAssembly *assembly, GCHandle *exception_gchandle);
 void			xamarin_install_nsautoreleasepool_hooks ();
 
