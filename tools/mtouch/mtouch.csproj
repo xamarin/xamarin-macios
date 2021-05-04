@@ -512,55 +512,55 @@
       <CustomToolNamespace>Xamarin.Bundler</CustomToolNamespace>
       <LogicalName>mtouch.Errors.resources</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="TranslatedAssemblies/Errors.cs.resx">
+    <EmbeddedResource Include="TranslatedAssemblies\Errors.cs.resx">
       <Link>Errors.cs.resx</Link>
     </EmbeddedResource>
-    <EmbeddedResource Include="TranslatedAssemblies/Errors.de.resx">
+    <EmbeddedResource Include="TranslatedAssemblies\Errors.de.resx">
       <Link>Errors.de.resx</Link>
     </EmbeddedResource>
-    <EmbeddedResource Include="TranslatedAssemblies/Errors.es.resx">
+    <EmbeddedResource Include="TranslatedAssemblies\Errors.es.resx">
       <Link>Errors.es.resx</Link>
     </EmbeddedResource>
-    <EmbeddedResource Include="TranslatedAssemblies/Errors.fr.resx">
+    <EmbeddedResource Include="TranslatedAssemblies\Errors.fr.resx">
       <Link>Errors.fr.resx</Link>
     </EmbeddedResource>
-    <EmbeddedResource Include="TranslatedAssemblies/Errors.hu.resx">
+    <EmbeddedResource Include="TranslatedAssemblies\Errors.hu.resx">
       <Link>Errors.hu.resx</Link>
     </EmbeddedResource>
-    <EmbeddedResource Include="TranslatedAssemblies/Errors.it.resx">
+    <EmbeddedResource Include="TranslatedAssemblies\Errors.it.resx">
       <Link>Errors.it.resx</Link>
     </EmbeddedResource>
-    <EmbeddedResource Include="TranslatedAssemblies/Errors.ja.resx">
+    <EmbeddedResource Include="TranslatedAssemblies\Errors.ja.resx">
       <Link>Errors.ja.resx</Link>
     </EmbeddedResource>
-    <EmbeddedResource Include="TranslatedAssemblies/Errors.ko.resx">
+    <EmbeddedResource Include="TranslatedAssemblies\Errors.ko.resx">
       <Link>Errors.ko.resx</Link>
     </EmbeddedResource>
-    <EmbeddedResource Include="TranslatedAssemblies/Errors.nl.resx">
+    <EmbeddedResource Include="TranslatedAssemblies\Errors.nl.resx">
       <Link>Errors.nl.resx</Link>
     </EmbeddedResource>
-    <EmbeddedResource Include="TranslatedAssemblies/Errors.pl.resx">
+    <EmbeddedResource Include="TranslatedAssemblies\Errors.pl.resx">
       <Link>Errors.pl.resx</Link>
     </EmbeddedResource>
-    <EmbeddedResource Include="TranslatedAssemblies/Errors.pt-BR.resx">
+    <EmbeddedResource Include="TranslatedAssemblies\Errors.pt-BR.resx">
       <Link>Errors.pt-BR.resx</Link>
     </EmbeddedResource>
-    <EmbeddedResource Include="TranslatedAssemblies/Errors.pt-PT.resx">
+    <EmbeddedResource Include="TranslatedAssemblies\Errors.pt-PT.resx">
       <Link>Errors.pt-PT.resx</Link>
     </EmbeddedResource>
-    <EmbeddedResource Include="TranslatedAssemblies/Errors.ru.resx">
+    <EmbeddedResource Include="TranslatedAssemblies\Errors.ru.resx">
       <Link>Errors.ru.resx</Link>
     </EmbeddedResource>
-    <EmbeddedResource Include="TranslatedAssemblies/Errors.sv.resx">
+    <EmbeddedResource Include="TranslatedAssemblies\Errors.sv.resx">
       <Link>Errors.sv.resx</Link>
     </EmbeddedResource>
-    <EmbeddedResource Include="TranslatedAssemblies/Errors.tr.resx">
+    <EmbeddedResource Include="TranslatedAssemblies\Errors.tr.resx">
       <Link>Errors.tr.resx</Link>
     </EmbeddedResource>
-    <EmbeddedResource Include="TranslatedAssemblies/Errors.zh-Hans.resx">
+    <EmbeddedResource Include="TranslatedAssemblies\Errors.zh-Hans.resx">
       <Link>Errors.zh-Hans.resx</Link>
     </EmbeddedResource>
-    <EmbeddedResource Include="TranslatedAssemblies/Errors.zh-Hant.resx">
+    <EmbeddedResource Include="TranslatedAssemblies\Errors.zh-Hant.resx">
       <Link>Errors.zh-Hant.resx</Link>
     </EmbeddedResource>
   </ItemGroup>

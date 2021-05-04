@@ -489,12 +489,61 @@
     </EmbeddedResource>
     <EmbeddedResource Include="..\mtouch\Errors.resx">
       <Link>tools\mtouch\Errors.resx</Link>
-      <XlfSourceFormat>Resx</XlfSourceFormat>
-      <XlfOutputItem>EmbeddedResource</XlfOutputItem>
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Errors.Designer.cs</LastGenOutput>
       <CustomToolNamespace>Xamarin.Bundler</CustomToolNamespace>
       <LogicalName>mtouch.Errors.resources</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.cs.resx">
+      <Link>tools\mtouch\Errors.cs.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.de.resx">
+      <Link>tools\mtouch\Errors.de.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.es.resx">
+      <Link>tools\mtouch\Errors.es.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.fr.resx">
+      <Link>tools\mtouch\Errors.fr.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.hu.resx">
+      <Link>tools\mtouch\Errors.hu.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.it.resx">
+      <Link>tools\mtouch\Errors.it.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.ja.resx">
+      <Link>tools\mtouch\Errors.ja.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.ko.resx">
+      <Link>tools\mtouch\Errors.ko.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.nl.resx">
+      <Link>tools\mtouch\Errors.nl.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.pl.resx">
+      <Link>tools\mtouch\Errors.pl.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.pt-BR.resx">
+      <Link>tools\mtouch\Errors.pt-BR.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.pt-PT.resx">
+      <Link>tools\mtouch\Errors.pt-PT.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.ru.resx">
+      <Link>tools\mtouch\Errors.ru.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.sv.resx">
+      <Link>tools\mtouch\Errors.sv.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.tr.resx">
+      <Link>tools\mtouch\Errors.tr.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.zh-Hans.resx">
+      <Link>tools\mtouch\Errors.zh-Hans.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.zh-Hant.resx">
+      <Link>tools\mtouch\Errors.zh-Hant.resx</Link>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
