@@ -24,7 +24,7 @@ parameters:
 
 - name: enableDotnet
   type: boolean
-  default: true
+  default: false 
 
 # We are doing some black magic. We have several templates that 
 # are executed with different parameters. 
