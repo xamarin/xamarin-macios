@@ -5,6 +5,7 @@ using System.Linq;
 using Microsoft.Build.Framework;
 
 using Xamarin.Localization.MSBuild;
+using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks {
 	public abstract class DetectSdkLocationsCoreTaskBase : XamarinTask {
@@ -76,6 +77,21 @@ namespace Xamarin.MacDev.Tasks {
 		protected abstract string GetDefaultXamarinSdkRoot ();
 		protected abstract IAppleSdkVersion GetDefaultSdkVersion ();
 
+		protected string GetEnvironmentVariableOverride ()
+		{
+			switch (Platform) {
+			case ApplePlatform.iOS:
+			case ApplePlatform.TVOS:
+			case ApplePlatform.WatchOS:
+			case ApplePlatform.MacCatalyst:
+				return "MD_MTOUCH_SDK_ROOT";
+			case ApplePlatform.MacOSX:
+				return "XAMMAC_FRAMEWORK_PATH";
+			default:
+				throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, Platform));
+			}
+		}
+
 		protected void EnsureSdkPath ()
 		{
 			SdkPlatform = GetSdkPlatform (SdkIsSimulator);
@@ -132,6 +148,11 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
+			// If XamarinSdkRoot is set, then make that override any other value, and in order to do so,
+			// set the corresponding environment variable accordingly.
+			if (!string.IsNullOrEmpty (XamarinSdkRoot))
+				Environment.SetEnvironmentVariable (GetEnvironmentVariableOverride (), XamarinSdkRoot);
+
 			if (EnsureAppleSdkRoot ())
 				EnsureSdkPath ();
 			EnsureXamarinSdkRoot ();
