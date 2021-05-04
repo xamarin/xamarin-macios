@@ -492,7 +492,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Errors.Designer.cs</LastGenOutput>
       <CustomToolNamespace>Xamarin.Bundler</CustomToolNamespace>
-      <LogicalName>mtouch.Errors.resources</LogicalName>
+      <LogicalName>mmp.tool.mtouch.Errors.resources</LogicalName>
     </EmbeddedResource>
     <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.cs.resx">
       <Link>tools\mtouch\Errors.cs.resx</Link>
