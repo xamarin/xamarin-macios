@@ -18,6 +18,9 @@
 		Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsHotRestartBuild)' == 'true' And '$(IsHotRestartEnvironmentReady)' == 'true'" >
 		
 		<HotRestart.Tasks.DetectSigningIdentity 
+			GenerateApplicationManifest="$(GenerateApplicationManifest)"
+			ApplicationId="$(ApplicationId)"
+			ApplicationTitle="$(ApplicationTitle)"
 			AppManifest="$(_AppManifest)"
 			ProvisioningProfile="$(CodesignProvision)"
 			SigningKey="$(CodesignKey)">
