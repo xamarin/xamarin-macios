@@ -209,6 +209,8 @@ stages:
         iOSDeviceDemand: ${{ config['iOSDeviceDemand'] }} 
         vsdropsPrefix: ${{ variables.vsdropsPrefix }}
         keyringPass: $(xma-password)
+        gitHubToken: ${{ variables['GitHub.Token'] }}
+        xqaCertPass: $(xqa--certificates--password)
 
   - ${{ each config in parameters.macTestsConfigurations }}:
     - template: templates/mac-tests.yml
