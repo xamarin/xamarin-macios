@@ -8,8 +8,8 @@
     <ProjectGuid>{9A1177F5-16E6-45DE-AA69-DC9924EC39B8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>MTouchTests</RootNamespace>
-    <AssemblyName>mtouch</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <AssemblyName>mtouchtests</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -27,8 +27,13 @@
     <Reference Include="System.Xml" />
     <PackageReference Include="NUnit" Version="3.12.0" />
     <PackageReference Include="NUnit.ConsoleRunner" Version="3.11.1" />
-    <PackageReference Include="Mono.Cecil" Version="0.11.1" />
     <PackageReference Include="MSBuild.StructuredLogger" Version="2.1.472" />
+    <Reference Include="Mono.Cecil">
+      <HintPath>..\..\builds\mono-ios-sdk-destdir\ios-bcl\monotouch_tools\Mono.Cecil.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Mdb">
+      <HintPath>..\..\builds\mono-ios-sdk-destdir\ios-bcl\monotouch_tools\Mono.Cecil.Mdb.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MTouch.cs" />
@@ -43,9 +48,6 @@
       <Link>Configuration.cs</Link>
     </Compile>
     <Compile Include="MiscTests.cs" />
-    <Compile Include="..\..\tools\linker\MobileProfile.cs">
-      <Link>MobileProfile.cs</Link>
-    </Compile>
     <Compile Include="SdkTest.cs" />
     <Compile Include="MTouchTool.cs" />
     <Compile Include="TimingTests.cs" />
@@ -80,42 +82,12 @@
     <Compile Include="..\..\msbuild\Xamarin.Mac.Tasks\Tasks\MetalLib.cs">
       <Link>MetalLib.cs</Link>
     </Compile>
-    <Compile Include="..\..\tools\common\MachO.cs">
-      <Link>MachO.cs</Link>
-    </Compile>
-    <Compile Include="..\..\src\ObjCRuntime\ErrorHelper.cs">
-      <Link>ErrorHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\..\tools\common\ErrorHelper.tools.cs">
-      <Link>tools\common\ErrorHelper.tools.cs</Link>
-    </Compile>
     <Compile Include="..\..\tools\common\SdkVersions.cs">
       <Link>SdkVersions.cs</Link>
     </Compile>
-    <Compile Include="..\..\tools\mtouch\Errors.Designer.cs">
-      <Link>Errors.Designer.cs</Link>
-    </Compile>
-    <Compile Include="..\..\tools\common\error.cs">
-      <Link>error.cs</Link>
-    </Compile>
     <Compile Include="ErrorTest.cs" />
-    <Compile Include="..\..\tools\common\ApplePlatform.cs">
-      <Link>tools\common\ApplePlatform.cs</Link>
-    </Compile>
     <Compile Include="Setup.cs" />
     <Compile Include="Compat.cs" />
-    <Compile Include="..\..\tools\common\Driver.execution.cs">
-      <Link>Driver.execution.cs</Link>
-    </Compile>
-    <Compile Include="..\..\tools\common\Execution.cs">
-      <Link>Execution.cs</Link>
-    </Compile>
-    <Compile Include="..\..\tools\common\TargetFramework.cs">
-      <Link>TargetFramework.cs</Link>
-    </Compile>
-    <Compile Include="..\..\tools\common\FileCopier.cs">
-      <Link>tools\common\FileCopier.cs</Link>
-    </Compile>
     <Compile Include="..\common\Tool.cs">
       <Link>Tool.cs</Link>
     </Compile>
@@ -124,9 +96,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\tools\mtouch\Errors.resx">
-      <Link>Errors.resx</Link>
-    </None>
+    <ProjectReference Include="..\..\tools\mtouch\mtouch.csproj">
+      <Project>{A737EFCC-4348-4EB1-9C14-4FDC0975388D}</Project>
+      <Name>mtouch</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
