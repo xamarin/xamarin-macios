@@ -1783,6 +1783,7 @@ namespace SpriteKit {
 		[TV (10,0)]
 		[Export ("initWithName:vectorFloat2:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		[MarshalNativeExceptions]
 #if WATCH
 		IntPtr Constructor (string name, Vector2 value);
 #else
@@ -2094,6 +2095,7 @@ namespace SpriteKit {
 		[Static]
 		[Export ("uniformWithName:vectorFloat2:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		[MarshalNativeExceptions]
 		SKUniform Create (string name, Vector2 value);
 
 		[iOS (10,0)][Mac (10,12)]

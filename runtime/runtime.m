@@ -1098,90 +1098,22 @@ xamarin_add_registration_map (struct MTRegistrationMap *map, bool partial)
  * Exception handling
  */
 
-static MonoObject *
-fetch_exception_property (MonoObject *obj, const char *name, bool is_virtual)
-{
-	// COOP: reading managed memory and executing managed code: must be in UNSAFE mode
-	MONO_ASSERT_GC_UNSAFE;
-	
-	MonoMethod *get = NULL;
-	MonoMethod *get_virt = NULL;
-	MonoObject *exc = NULL;
-
-	get = mono_class_get_method_from_name (mono_get_exception_class (), name, 0);
-	if (get) {
-		if (is_virtual) {
-			get_virt = mono_object_get_virtual_method (obj, get);
-			if (get_virt)
-				get = get_virt;
-		}
-
-		return (MonoObject *) mono_runtime_invoke (get, obj, NULL, &exc);
-	} else {
-		PRINT ("Could not find the property System.Exception.%s", name);
-	}
-	
-	return NULL;
-}
-
-static char *
-fetch_exception_property_string (MonoObject *obj, const char *name, bool is_virtual)
-{
-	// COOP: reading managed memory and executing managed code: must be in UNSAFE mode
-	MONO_ASSERT_GC_UNSAFE;
-	
-	MonoString *str = (MonoString *) fetch_exception_property (obj, name, is_virtual);
-	return str ? mono_string_to_utf8 (str) : NULL;
-}
-
-static void
-print_exception (MonoObject *exc, bool is_inner, NSMutableString *msg)
-{
-	// COOP: reading managed memory and executing managed code: must be in UNSAFE mode
-	MONO_ASSERT_GC_UNSAFE;
-	
-	MonoClass *type = mono_object_get_class (exc);
-	char *type_name = xamarin_strdup_printf ("%s.%s", mono_class_get_namespace (type), mono_class_get_name (type));
-	char *trace = fetch_exception_property_string (exc, "get_StackTrace", true);
-	char *message = fetch_exception_property_string (exc, "get_Message", true);
-
-	if (is_inner)
-		[msg appendString:@" --- inner exception ---\n"];
-	[msg appendFormat: @"%s (%s)\n", message, type_name];
-	if (trace)
-		[msg appendFormat: @"%s\n", trace];
-
-	mono_free (trace);
-	mono_free (message);
-	xamarin_free (type_name);
-}
-
 NSString *
 xamarin_print_all_exceptions (GCHandle gchandle)
 {
-	// COOP: reading managed memory and executing managed code: must be in UNSAFE mode
-	MONO_ASSERT_GC_UNSAFE;
-	
-	MonoObject *exc = xamarin_gchandle_get_target (gchandle);
-	NSMutableString *str = [[NSMutableString alloc] init];
-	// fetch the field, since the property might have been linked away.
-	int counter = 0;
-	MonoClassField *inner_exception = mono_class_get_field_from_name (mono_object_get_class (exc), "_innerException");
+	GCHandle exception_gchandle = INVALID_GCHANDLE;
 
-	do {
-		print_exception (exc, counter > 0, str);
-		if (inner_exception) {
-			mono_field_get_value (exc, inner_exception, &exc);
-		} else {
-			LOG ("Could not find the field _innerException in System.Exception\n");
-			break;
-		}
-	} while (counter++ < 10 && exc);
+	char *msg = xamarin_print_all_exceptions_wrapper (gchandle, &exception_gchandle);
+	if (exception_gchandle != INVALID_GCHANDLE) {
+		// Not much we can do here but returning a very generic message, since we failed to print one exception, it's reasonable to assume that printing another won't work either.
+		xamarin_gchandle_free (exception_gchandle);
+		exception_gchandle = INVALID_GCHANDLE;
+		return [NSString stringWithFormat: @"An exception occurred while trying to get a string representation for the exception %p (%p)", gchandle, exception_gchandle];
+	}
 
-	xamarin_mono_object_release (&exc);
-
-	[str autorelease];
-	return str;
+	NSString *rv = [NSString stringWithUTF8String: msg];
+	xamarin_free (msg);
+	return rv;
 }
 
 void
@@ -2217,11 +2149,11 @@ xamarin_skip_encoding_flags (const char *encoding)
 void
 xamarin_process_nsexception (NSException *ns_exception)
 {
-	xamarin_process_nsexception_using_mode (ns_exception, false);
+	xamarin_process_nsexception_using_mode (ns_exception, false, NULL);
 }
 
 void
-xamarin_process_nsexception_using_mode (NSException *ns_exception, bool throwManagedAsDefault)
+xamarin_process_nsexception_using_mode (NSException *ns_exception, bool throwManagedAsDefault, GCHandle *output_exception)
 {
 	XamarinGCHandle *exc_handle;
 	GCHandle exception_gchandle = INVALID_GCHANDLE;
@@ -2262,12 +2194,17 @@ xamarin_process_nsexception_using_mode (NSException *ns_exception, bool throwMan
 				handle = exception_gchandle;
 				exception_gchandle = INVALID_GCHANDLE;
 			}
-			MONO_ENTER_GC_UNSAFE;
-			MonoObject *exc = xamarin_gchandle_get_target (handle);
-			mono_runtime_set_pending_exception ((MonoException *) exc, false);
-			xamarin_mono_object_release (&exc);
-			xamarin_gchandle_free (handle);
-			MONO_EXIT_GC_UNSAFE;
+
+			if (output_exception == NULL) {
+				MONO_ENTER_GC_UNSAFE;
+				MonoObject *exc = xamarin_gchandle_get_target (handle);
+				mono_runtime_set_pending_exception ((MonoException *) exc, false);
+				xamarin_mono_object_release (&exc);
+				xamarin_gchandle_free (handle);
+				MONO_EXIT_GC_UNSAFE;
+			} else {
+				*output_exception = handle;
+			}
 		}
 		break;
 	case MarshalObjectiveCExceptionModeAbort:
@@ -2358,23 +2295,33 @@ xamarin_process_managed_exception (MonoObject *exception)
 			NSString *name;
 			NSString *reason;
 			NSDictionary *userInfo;
-			const char *fullname;
+			char *fullname;
 			MONO_THREAD_ATTACH; // COOP: will switch to GC_UNSAFE
 			
-			fullname = xamarin_type_get_full_name (mono_class_get_type (mono_object_get_class (exception)), &exception_gchandle);
+			fullname = xamarin_get_object_type_fullname (handle, &exception_gchandle);
 			if (exception_gchandle != INVALID_GCHANDLE) {
 				PRINT (PRODUCT ": Got an exception when trying to get the typename for an exception (this exception will be ignored):");
 				PRINT ("%@", xamarin_print_all_exceptions (exception_gchandle));
 				xamarin_gchandle_free (exception_gchandle);
 				exception_gchandle = INVALID_GCHANDLE;
-				fullname = "Unknown";
+				name = @"Unknown type";
+			} else {
+				name = [NSString stringWithUTF8String: fullname];
+				xamarin_free (fullname);
 			}
 
-			name = [NSString stringWithUTF8String: fullname];
+			char *message = xamarin_get_exception_message (handle, &exception_gchandle);
+			if (exception_gchandle != INVALID_GCHANDLE) {
+				PRINT (PRODUCT ": Got an exception when trying to get the message for an exception (this exception will be ignored):");
+				PRINT ("%@", xamarin_print_all_exceptions (exception_gchandle));
+				xamarin_gchandle_free (exception_gchandle);
+				exception_gchandle = INVALID_GCHANDLE;
+				reason = @"Unknown message";
+			} else {
+				reason = [NSString stringWithUTF8String: message];
+				xamarin_free (message);
+			}
 
-			char *message = fetch_exception_property_string (exception, "get_Message", true);
-			reason = [NSString stringWithUTF8String: message];
-			mono_free (message);
 			userInfo = [NSDictionary dictionaryWithObject: [XamarinGCHandle createWithHandle: handle] forKey: @"XamarinManagedExceptionHandle"];
 			
 			MONO_THREAD_DETACH; // COOP: this will switch to GC_SAFE
@@ -2954,7 +2901,9 @@ xamarin_get_is_debug ()
 bool
 xamarin_is_managed_exception_marshaling_disabled ()
 {
-#if DEBUG
+#if defined (CORECLR_RUNTIME)
+	return false; // never disable exception marshalling for CoreCLR.
+#elif DEBUG
 	if (xamarin_is_gc_coop)
 		return false;
 
