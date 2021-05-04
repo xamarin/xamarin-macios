@@ -14,7 +14,7 @@
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Messaging.Build.targets" Condition="Exists('$(MSBuildThisFileDirectory)Xamarin.Messaging.Build.targets') And '$(MessagingBuildTargetsImported)' != 'true'" />
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Messaging.Apple.targets" Condition="Exists('$(MSBuildThisFileDirectory)Xamarin.Messaging.Apple.targets') And '$(MessagingAppleTargetsImported)' != 'true'" />
 	
-	<Target Name="_DetectSigningIdentity" AfterTargets="_DetectAppManifest" 
+	<Target Name="_DetectHotRestartSigningIdentity" AfterTargets="_DetectAppManifest" 
 		Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsHotRestartBuild)' == 'true' And '$(IsHotRestartEnvironmentReady)' == 'true'" >
 		
 		<HotRestart.Tasks.DetectSigningIdentity 
@@ -61,14 +61,13 @@
 	</Target>
 
 	<!-- Gets the list of assemblies that may contain frameworks -->
-	<Target Name="_CollectFrameworkAssemblies" Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsHotRestartBuild)' == 'true'">
+	<Target Name="_CollectHotRestartFrameworkAssemblies" Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsHotRestartBuild)' == 'true'">
 		<ItemGroup>
-			<AssembliesWithFrameworks Include="@(ReferenceCopyHotRestartPaths)" Condition="'%(Extension)' == '.dll'"
-																Exclude="@(ReferenceSatellitePaths)"/>
+			<AssembliesWithFrameworks Condition="'%(Extension)' == '.dll'" Include="@(ReferenceCopyHotRestartPaths)" Exclude="@(ReferenceSatellitePaths)"/>
 		</ItemGroup>
 	</Target>
 
-	<Target Name="_UnpackFrameworkAssemblies" 
+	<Target Name="_UnpackHotRestartFrameworkAssemblies" 
 		Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsHotRestartBuild)' == 'true' And '$(UnpackHotRestartFrameworks)' == 'true'"
 		Inputs="@(AssembliesWithFrameworks)"
 		Outputs="@(AssembliesWithFrameworks -> '$(DeviceSpecificIntermediateOutputPath)UnpackedFrameworks\%(Filename)%(Extension).stamp')" >
@@ -97,14 +96,14 @@
 	</Target>
 
 	<PropertyGroup>
-		<_CollectDynamicFrameworksDependsOn>
-			_CollectFrameworkAssemblies;
-			_UnpackFrameworkAssemblies;
+		<_CollectHotRestartDynamicFrameworksDependsOn>
+			_CollectHotRestartFrameworkAssemblies;
+			_UnpackHotRestartFrameworkAssemblies;
 			_CollectHotRestartFrameworks;
-		</_CollectDynamicFrameworksDependsOn>
+		</_CollectHotRestartDynamicFrameworksDependsOn>
 	</PropertyGroup>
 	
-	<Target Name="_CollectDynamicFrameworks" DependsOnTargets="$(_CollectDynamicFrameworksDependsOn)"
+	<Target Name="_CollectHotRestartDynamicFrameworks" DependsOnTargets="$(_CollectHotRestartDynamicFrameworksDependsOn)"
 		Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsHotRestartBuild)' == 'true'"
 		Inputs="@(_HotRestartFrameworkExecutables)"
 		Outputs="@(_HotRestartFrameworkExecutables -> '%(Outputs)')" >
@@ -262,7 +261,7 @@
 
 	<Target Name="_CopyFrameworksToHotRestartBundle"
 		Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsAppExtension)' == 'false' And '$(IsHotRestartBuild)' == 'true'"
-		DependsOnTargets="_CreateHotRestartCachedBundle;_CollectDynamicFrameworks"
+		DependsOnTargets="_CreateHotRestartCachedBundle;_CollectHotRestartDynamicFrameworks"
 		Inputs="@(_HotRestartFrameworkFiles)"
 		Outputs="@(_HotRestartFrameworkFiles -> '$(HotRestartSignedAppDir)Frameworks\%(FrameworkDir)%(RecursiveDir)%(Filename)%(Extension)')">
 
