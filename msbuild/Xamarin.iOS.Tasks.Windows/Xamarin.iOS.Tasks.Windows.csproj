@@ -49,19 +49,15 @@
   <!-- Replaces the reference assemblies by the runtime implementation -->
   <Target Name="CopyRuntimeAssemblies" BeforeTargets="ILRepack">
     <ItemGroup>
-      <ReferenceCopyLocalToRemove Include="@(ReferenceCopyLocalPaths)" Condition="'%(FileName)' == 'System.Text.Encoding.CodePages'" />
-      
+      <ReferenceCopyLocalToRemove Include="@(ReferenceCopyLocalPaths)" Condition="'%(FileName)' == 'System.Text.Encoding.CodePages'" />   
       <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalToRemove)" />
-
       <ReferencePathToRemove Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.Text.Encoding.CodePages'" />
-
       <ReferencePath Remove="@(ReferencePathToRemove)" />
-
       <ReferencePathToAdd Include="@(RuntimeTargetsCopyLocalItems)" Condition="'%(RuntimeIdentifier)' == 'win' And '%(FileName)' == 'System.Text.Encoding.CodePages'" />
-
       <ReferencePath Include="@(ReferencePathToAdd)">
         <DestinationSubDirectory />
       </ReferencePath>
+      <ReferenceToPreserve Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.Diagnostics.Tracer'" />
     </ItemGroup>
   </Target>
 </Project>
