@@ -7,12 +7,12 @@
 parameters:
 
 - name: statusContext
-  type: string 
-  default: 'iOS Device Tests' # default context, since we started dealing with iOS devices. 
+  type: string
+  default: 'iOS Device Tests' # default context, since we started dealing with iOS devices.
 
 - name: testsLabels
-  type: string 
-  default: '--label=run-ios-64-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests' # default context, since we started dealing with iOS devices. 
+  type: string
+  default: '--label=run-ios-64-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests' # default context, since we started dealing with iOS devices.
 
 - name: disableProvisionatorCache
   type: boolean
@@ -23,7 +23,7 @@ parameters:
   default: false
 
 - name: useXamarinStorage
-  type: boolean 
+  type: boolean
   default: false  # xamarin-storage will disappear, so by default do not use it
 
 - name: vsdropsPrefix
@@ -34,8 +34,8 @@ parameters:
   type: string
 
 - name: devicePrefix
-  type: string 
-  default: 'ios' # default context, since we started dealing with iOS devices. 
+  type: string
+  default: 'ios' # default context, since we started dealing with iOS devices.
 
 steps:
 
@@ -47,14 +47,6 @@ steps:
   displayName: 'Clean bot'
   env:
     BUILD_REVISION: 'jenkins'
-  continueOnError: true
-
-- bash: |
-    security set-key-partition-list -S apple-tool:,apple: -s -k $KEYCHAIN_PASS login.keychain
-  env:
-    KEYCHAIN_PASS: ${{ parameters.keyringPass }}
-  displayName: 'Remove security UI-prompt (http://stackoverflow.com/a/40039594/183422)'
-  condition: succeededOrFailed() # we do not care about the previous process cleanup
   continueOnError: true
 
 - bash: cd $(System.DefaultWorkingDirectory)/xamarin-macios/ && git clean -xdf
@@ -106,11 +98,16 @@ steps:
     set -e
     rm -f ~/Library/Caches/com.xamarin.provisionator/Provisions/*p12
     rm -f ~/Library/Caches/com.xamarin.provisionator/Provisions/*mobileprovision
-    ./maccore/tools/install-qa-provisioning-profiles.sh -v 
+    ./maccore/tools/install-qa-provisioning-profiles.sh -v
   displayName: 'Add provisioning profiles'
   timeoutInMinutes: 30
   env:
-    LOGIN_KEYCHAIN_PASSWORD: ${{ parameters.keyringPass }}
+    AUTH_TOKEN_GITHUB_COM: ${{ parameters.gitHubToken }}
+    AUTH_TOKEN_LA_DEV_APPLE_P12: ${{ parameters.xqaCertPass }}
+    AUTH_TOKEN_LA_DISTR_APPLE_P12: ${{ parameters.xqaCertPass }}
+    AUTH_TOKEN_LA_MAC_INSTALLER_DISTR_P12: ${{ parameters.xqaCertPass }}
+    AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_P12: ${{ parameters.xqaCertPass }}
+    AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_2_P12: ${{ parameters.xqaCertPass }}
 
 # download the artifacts.json, which will use to find the URI of the built pkg to later be installed by provisionator
 - task: DownloadPipelineArtifact@2
@@ -158,6 +155,6 @@ steps:
     Write-Host "##vso[task.setvariable variable=provisioningSuccess;]False"
   condition: failed()
 
-- template: run-tests.yml 
-  parameters: 
+- template: run-tests.yml
+  parameters:
     botProvisioningSuccess: $[ variables.provisioningSuccess ]

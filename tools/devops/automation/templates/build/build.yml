@@ -17,6 +17,12 @@ parameters:
 - name: keyringPass
   type: string
 
+- name: gitHubToken
+  type: string
+
+- name: xqaCertPass
+  type: string
+
 steps:
 - checkout: self          # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
   clean: true             # Executes: git clean -ffdx && git reset --hard HEAD
@@ -39,7 +45,7 @@ steps:
     Set-Content -Path "$HOME/.git-credentials" -Value "https://$(GitHub.Token):x-oauth-basic@github.com`n" -NoNewline
 
     # maccore is special, we use fetch there in some bash scripts, but VSTS uses https.. and some pools don't like the above.. :/
-    cd $(System.DefaultWorkingDirectory)/maccore 
+    cd $(System.DefaultWorkingDirectory)/maccore
     git remote remove origin
     git remote add origin https://$(GitHub.Token)@github.com/xamarin/maccore.git
     git remote # don't add -v else we see the pat
@@ -93,7 +99,7 @@ steps:
     provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/provision-brew-packages.csx
     provisioning_extra_args: '-vvvv'
   timeoutInMinutes: 30
-  enabled: true 
+  enabled: true
 
 - bash: |
     make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops build-provisioning.csx
@@ -156,7 +162,7 @@ steps:
 
     # decide if we are dealing with a PR or a re-triggered PR or a build from
     # a branch in origin
-    
+
     if ($buildReason -eq "PullRequest" -or (($buildReason -eq "Manual") -and ($buildSourceBranchName -eq "merge")) ) {
       $configVars.Add("IsPR", "True")
 
@@ -170,7 +176,7 @@ steps:
       if ($Env:BuildPackage -eq "True" -and $Env:SkipPackages -eq "True") {
         Write-Host "##vso[task.logissue type=warning]'build-package' and 'skip-packages' are both present. Building packages in case of a doubt."
         $configVars.Add("BuildPkgs", "True")
-      } 
+      }
 
       # if we want to have device tests, we do need the pkgs so that we can fwd them to the device tests
       if ($Env:TriggerDeviceTests -eq "True") {
@@ -328,22 +334,27 @@ steps:
 - task: PublishPipelineArtifact@1
   displayName: 'Publish Build Internal Artifacts'
   inputs:
-    targetPath: $(Build.SourcesDirectory)/package-internal 
+    targetPath: $(Build.SourcesDirectory)/package-internal
     artifactName: package-internal
   continueOnError: true
 
 # funny enough we need these profiles to build the mac tests
-- bash: | 
+- bash: |
     set -x
     set -e
 
     cd "$SOURCES_DIR/maccore/tools/"
-    ./install-qa-provisioning-profiles.sh -v 
+    ./install-qa-provisioning-profiles.sh -v
   displayName: 'Add tests provisioning profiles'
   timeoutInMinutes: 30
   continueOnError: true # should not stop the build will result in test failures but we do want the pkg
   env:
-    LOGIN_KEYCHAIN_PASSWORD: ${{ parameters.keyringPass }}
+    AUTH_TOKEN_GITHUB_COM: ${{ parameters.gitHubToken }}
+    AUTH_TOKEN_LA_DEV_APPLE_P12: ${{ parameters.xqaCertPass }}
+    AUTH_TOKEN_LA_DISTR_APPLE_P12: ${{ parameters.xqaCertPass }}
+    AUTH_TOKEN_LA_MAC_INSTALLER_DISTR_P12: ${{ parameters.xqaCertPass }}
+    AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_P12: ${{ parameters.xqaCertPass }}
+    AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_2_P12: ${{ parameters.xqaCertPass }}
     SOURCES_DIR: $(Build.SourcesDirectory)
 
 - bash: |
@@ -359,7 +370,7 @@ steps:
   displayName: 'Publish Xamarin.Mac tests'
   inputs:
     targetPath: $(Build.SourcesDirectory)/xamarin-macios/tests/mac-test-package.7z
-    artifactName: mac-test-package 
+    artifactName: mac-test-package
   condition: and(succeeded(), contains(variables['configuration.RunMacTests'], 'True'))
   continueOnError: true
 
@@ -407,7 +418,7 @@ steps:
     BUILD_REVISION: jenkins
     VSDROPS_URI: '${{ parameters.vsdropsPrefix }}/$(Build.BuildNumber)/$(Build.BuildId)/sim;/tests/' # uri used to create the vsdrops index using full uri
 
-# Only executed when the tests failed, that means that we did have a timeout, and we could not set the status, this 
+# Only executed when the tests failed, that means that we did have a timeout, and we could not set the status, this
 # later results on an error when publishing the results, if we timeout, we ensure we set the needed vars
 - bash: |
     echo "##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Failed"
