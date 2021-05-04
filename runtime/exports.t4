@@ -157,7 +157,9 @@
 		new Export ("MonoObject *", "mono_object_isinst",
 			"MonoObject *", "obj",
 			"MonoClass *", "klass"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		new Export ("MonoClass *", "mono_object_get_class",
 			"MonoObject *", "obj"

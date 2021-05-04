@@ -247,4 +247,12 @@ mono_object_get_class (MonoObject * obj)
 	return rv;
 }
 
+MonoObject *
+mono_object_isinst (MonoObject * obj, MonoClass * klass)
+{
+	bool rv = xamarin_bridge_isinstance (obj, klass);
+	LOG_CORECLR (stderr, "%s (%p, %p) => %i\n", __func__, obj, klass, rv);
+	return rv ? obj : NULL;
+}
+
 #endif // CORECLR_RUNTIME
