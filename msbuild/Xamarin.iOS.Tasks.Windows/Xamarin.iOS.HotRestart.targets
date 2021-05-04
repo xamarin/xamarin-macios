@@ -35,7 +35,7 @@
 	</Target>
 
 	<Target Name="_CollectHotRestartBundleResources" Condition="'$(IsHotRestartBuild)' == 'true'">
-		<HotRestart.Tasks.CollectBundleResources
+		<CollectBundleResources
 			OptimizePropertyLists="$(OptimizePropertyLists)"
 			OptimizePNGs="$(OptimizePNGs)"
 			BundleResources="@(Content);@(BundleResource)"
@@ -43,13 +43,13 @@
 			ResourcePrefix="$(IPhoneResourcePrefix)">
 
 			<Output TaskParameter="BundleResourcesWithLogicalNames" ItemName="_HotRestartBundleResourceWithLogicalName"/>
-		</HotRestart.Tasks.CollectBundleResources>
+		</CollectBundleResources>
 	</Target>
 
 	<Target Name="_UnpackHotRestartLibraryResources" DependsOnTargets="_CollectHotRestartBundleResources"
 		Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsHotRestartBuild)' == 'true'" >
 
-		<HotRestart.Tasks.UnpackLibraryResources
+		<UnpackLibraryResources
 			Prefix="monotouch"
 			NoOverwrite="@(_HotRestartBundleResourceWithLogicalName)"
 			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
@@ -57,7 +57,7 @@
 			ReferencedLibraries="@(ReferencePath);@(ReferenceDependencyPaths);@(_ReferencesFromNuGetPackages)">
 
 			<Output TaskParameter="BundleResourcesWithLogicalNames" ItemName="_HotRestartBundleResourceWithLogicalName" />
-		</HotRestart.Tasks.UnpackLibraryResources>
+		</UnpackLibraryResources>
 	</Target>
 
 	<!-- Gets the list of assemblies that may contain frameworks -->
