@@ -94,36 +94,42 @@ xamarin_marshal_return_value_impl (MonoType *mtype, const char *type, MonoObject
 		case _C_ID: {
 			MonoClass *r_klass = mono_object_get_class ((MonoObject *) retval);
 
+			void *returnValue;
 			if (desc && desc->bindas [0].original_type_handle != INVALID_GCHANDLE) {
 				MonoReflectionType *original_type = (MonoReflectionType *) xamarin_gchandle_get_target (desc->bindas [0].original_type_handle);
 				MonoType *original_tp = mono_reflection_type_get_type (original_type);
 				xamarin_mono_object_release (&original_type);
-				return xamarin_generate_conversion_to_native (retval, mono_class_get_type (r_klass), original_tp, method, (void *) INVALID_TOKEN_REF, exception_gchandle);
+				returnValue = xamarin_generate_conversion_to_native (retval, mono_class_get_type (r_klass), original_tp, method, (void *) INVALID_TOKEN_REF, exception_gchandle);
 			} else if (r_klass == mono_get_string_class ()) {
-				return xamarin_string_to_nsstring ((MonoString *) retval, retain);
+				returnValue = xamarin_string_to_nsstring ((MonoString *) retval, retain);
 			} else if (xamarin_is_class_array (r_klass)) {
 				NSArray *rv = xamarin_managed_array_to_nsarray ((MonoArray *) retval, NULL, r_klass, exception_gchandle);
 				if (retain && rv)
 					[rv retain];
-				return rv;
+				returnValue = rv;
 			} else if (xamarin_is_class_nsobject (r_klass)) {
 				id i = xamarin_get_handle (retval, exception_gchandle);
-				if (*exception_gchandle != INVALID_GCHANDLE)
-					return NULL;
+				if (*exception_gchandle != INVALID_GCHANDLE) {
+					returnValue = NULL;
+				} else {
+					xamarin_framework_peer_lock ();
+					[i retain];
+					xamarin_framework_peer_unlock ();
+					if (!retain)
+						[i autorelease];
 
-				xamarin_framework_peer_lock ();
-				[i retain];
-				xamarin_framework_peer_unlock ();
-				if (!retain)
-					[i autorelease];
-
-				mt_dummy_use (retval);
-				return i;
+					mt_dummy_use (retval);
+					returnValue = i;
+				}
 			} else if (xamarin_is_class_inativeobject (r_klass)) {
-				return xamarin_get_handle_for_inativeobject (retval, exception_gchandle);
+				returnValue = xamarin_get_handle_for_inativeobject (retval, exception_gchandle);
 			} else {
 				xamarin_assertion_message ("Don't know how to marshal a return value of type '%s.%s'. Please file a bug with a test case at https://github.com/xamarin/xamarin-macios/issues/new\n", mono_class_get_namespace (r_klass), mono_class_get_name (r_klass)); 
 			}
+
+			xamarin_mono_object_release (&r_klass);
+
+			return returnValue;
 		}
 		case _C_CHARPTR:
 			return (void *) mono_string_to_utf8 ((MonoString *) retval);
@@ -1589,7 +1595,10 @@ xamarin_convert_managed_to_nsarray_with_func (MonoArray *array, xamarin_managed_
 		return [NSArray array];
 
 	buf = (id *) malloc (sizeof (id) * length);
-	MonoClass *element_class = mono_class_get_element_class (mono_object_get_class ((MonoObject *) array));
+	MonoClass *object_class = mono_object_get_class ((MonoObject *) array);
+	MonoClass *element_class = mono_class_get_element_class (object_class);
+	xamarin_mono_object_release (&object_class);
+
 	bool is_value_type = mono_class_is_valuetype (element_class);
 	if (is_value_type) {
 		element_size = (size_t) mono_class_value_size (element_class, NULL);

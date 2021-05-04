@@ -161,7 +161,9 @@
 
 		new Export ("MonoClass *", "mono_object_get_class",
 			"MonoObject *", "obj"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		new Export ("MonoObject *", "mono_value_box",
 			"MonoDomain *", "domain",

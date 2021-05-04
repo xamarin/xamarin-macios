@@ -675,6 +675,8 @@ xamarin_get_handle (MonoObject *obj, GCHandle *exception_gchandle)
 		xamarin_free (msg);
 		*exception_gchandle = xamarin_gchandle_new ((MonoObject *) exc, FALSE);
 	}
+
+	xamarin_mono_object_release (&klass);
 	
 	return rv;
 }
@@ -703,6 +705,7 @@ verify_cast (MonoClass *to, MonoObject *obj, Class from_class, SEL sel, MonoMeth
 		mono_free (to_name);
 		xamarin_free (msg);
 		mono_free (method_full_name);
+		xamarin_mono_object_release (&from);
 		*exception_gchandle = xamarin_gchandle_new ((MonoObject *) mono_ex, FALSE);
 	}
 }

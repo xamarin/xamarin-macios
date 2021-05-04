@@ -239,4 +239,12 @@ mono_method_get_class (MonoMethod * method)
 	return rv;
 }
 
+MonoClass *
+mono_object_get_class (MonoObject * obj)
+{
+	MonoClass *rv = xamarin_bridge_object_get_type (obj);
+	LOG_CORECLR (stderr, "%s (%p) => %p\n", __func__, obj, rv);
+	return rv;
+}
+
 #endif // CORECLR_RUNTIME
