@@ -22,13 +22,7 @@ namespace Xamarin.MacDev {
 			Reload ();
 		}
 
-		public static void CheckInfoCaches ()
-		{
-			XamIOS.CheckCaches ();
-			XamMac.CheckCaches ();
-		}
-
-		public static void Reload ()
+		static void Reload ()
 		{
 			var monotouch = Environment.GetEnvironmentVariable (MTOUCH_LOCATION_ENV_VAR);
 
