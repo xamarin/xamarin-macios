@@ -407,7 +407,9 @@
 			"MonoDebugFormat", "format"
 		),
 
-		new Export ("mono_bool", "mono_is_debugger_attached"),
+		new Export ("mono_bool", "mono_is_debugger_attached") {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		#endregion
 

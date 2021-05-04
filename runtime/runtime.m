@@ -2901,7 +2901,9 @@ xamarin_get_is_debug ()
 bool
 xamarin_is_managed_exception_marshaling_disabled ()
 {
-#if DEBUG
+#if defined (CORECLR_RUNTIME)
+	return false; // never disable exception marshalling for CoreCLR.
+#elif DEBUG
 	if (xamarin_is_gc_coop)
 		return false;
 
