@@ -63,6 +63,18 @@ enum XamarinGCHandleType : int {
 	XamarinGCHandleTypePinned = 3,
 };
 
+// Keep in sync with Runtime.LookupTypes in Runtime.CoreCLR.cs
+enum XamarinLookupTypes : int {
+	XamarinLookupTypes_System_Array,
+	XamarinLookupTypes_System_String,
+	XamarinLookupTypes_System_IntPtr,
+	XamarinLookupTypes_Foundation_NSNumber,
+	XamarinLookupTypes_Foundation_NSObject,
+	XamarinLookupTypes_Foundation_NSString,
+	XamarinLookupTypes_Foundation_NSValue,
+	XamarinLookupTypes_ObjCRuntime_INativeObject,
+};
+
 extern bool mono_use_llvm; // this is defined inside mono
 
 #if DEBUG

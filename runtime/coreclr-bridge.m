@@ -360,4 +360,52 @@ mono_class_is_delegate (MonoClass *klass)
 	return rv;
 }
 
+bool
+xamarin_is_class_nsobject (MonoClass *cls)
+{
+	return xamarin_bridge_is_class_of_type (cls, XamarinLookupTypes_Foundation_NSObject);
+}
+
+bool
+xamarin_is_class_inativeobject (MonoClass *cls)
+{
+	return xamarin_bridge_is_class_of_type (cls, XamarinLookupTypes_ObjCRuntime_INativeObject);
+}
+
+bool
+xamarin_is_class_array (MonoClass *cls)
+{
+	return xamarin_bridge_is_class_of_type (cls, XamarinLookupTypes_System_Array);
+}
+
+bool
+xamarin_is_class_nsnumber (MonoClass *cls)
+{
+	return xamarin_bridge_is_class_of_type (cls, XamarinLookupTypes_Foundation_NSNumber);
+}
+
+bool
+xamarin_is_class_nsvalue (MonoClass *cls)
+{
+	return xamarin_bridge_is_class_of_type (cls, XamarinLookupTypes_Foundation_NSValue);
+}
+
+bool
+xamarin_is_class_nsstring (MonoClass *cls)
+{
+	return xamarin_bridge_is_class_of_type (cls, XamarinLookupTypes_Foundation_NSString);
+}
+
+bool
+xamarin_is_class_intptr (MonoClass *cls)
+{
+	return xamarin_bridge_is_class_of_type (cls, XamarinLookupTypes_System_IntPtr);
+}
+
+bool
+xamarin_is_class_string (MonoClass *cls)
+{
+	return xamarin_bridge_is_class_of_type (cls, XamarinLookupTypes_System_String);
+}
+
 #endif // CORECLR_RUNTIME

@@ -102,7 +102,7 @@ xamarin_marshal_return_value_impl (MonoType *mtype, const char *type, MonoObject
 				MonoType *original_tp = mono_reflection_type_get_type (original_type);
 				xamarin_mono_object_release (&original_type);
 				returnValue = xamarin_generate_conversion_to_native (retval, mono_class_get_type (r_klass), original_tp, method, (void *) INVALID_TOKEN_REF, exception_gchandle);
-			} else if (r_klass == mono_get_string_class ()) {
+			} else if (xamarin_is_class_string (r_klass)) {
 				returnValue = xamarin_string_to_nsstring ((MonoString *) retval, retain);
 			} else if (xamarin_is_class_array (r_klass)) {
 				NSArray *rv = xamarin_managed_array_to_nsarray ((MonoArray *) retval, NULL, r_klass, exception_gchandle);
@@ -1245,7 +1245,7 @@ xamarin_managed_array_to_nsarray (MonoArray *array, MonoType *managed_type, Mono
 
 	xamarin_mono_object_release (&mclass);
 
-	if (e_klass == mono_get_string_class ()) {
+	if (xamarin_is_class_string (e_klass)) {
 		return xamarin_managed_string_array_to_nsarray (array, exception_gchandle);
 	} else if (xamarin_is_class_nsobject (e_klass)) {
 		return xamarin_managed_nsobject_array_to_nsarray (array, exception_gchandle);
@@ -1336,7 +1336,7 @@ xamarin_nsarray_to_managed_array (NSArray *array, MonoType *managed_type, MonoCl
 	xamarin_mono_object_release (&mclass);
 
 	MonoClass *e_klass = mono_class_get_element_class (managed_class);
-	if (e_klass == mono_get_string_class ()) {
+	if (xamarin_is_class_string (e_klass)) {
 		return xamarin_nsarray_to_managed_string_array (array, exception_gchandle);
 	} else if (xamarin_is_class_nsobject (e_klass)) {
 		return xamarin_nsarray_to_managed_nsobject_array (array, managed_type, e_klass, exception_gchandle);

@@ -309,7 +309,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 								arg_frame [ofs] = mobj;
 								ADD_TO_MONOOBJECT_RELEASE_LIST (mobj);
 								LOGZ (" argument %i is a ref ptr/INativeObject %p: %p\n", i + 1, arg, arg_frame [ofs]);
-							} else if (p_klass == mono_get_string_class ()) {
+							} else if (xamarin_is_class_string (p_klass)) {
 								MonoString *mstr = xamarin_nsstring_to_string (domain, *(NSString **) arg);
 								arg_frame [ofs] = mstr;
 								ADD_TO_MONOOBJECT_RELEASE_LIST (mstr);
@@ -422,7 +422,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 					id id_arg = (id) arg;
 					MonoClass *p_klass = mono_class_from_mono_type (p);
 					ADD_TO_MONOOBJECT_RELEASE_LIST (p_klass);
-					if (p_klass == mono_get_intptr_class ()) {
+					if (xamarin_is_class_intptr (p_klass)) {
 						arg_frame [ofs] = id_arg;
 						arg_ptrs [i + mofs] = &arg_frame [frameofs];
 						LOGZ (" argument %i is IntPtr: %p\n", i + 1, id_arg);
@@ -431,7 +431,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 						arg_ptrs [i + mofs] = NULL;
 						break;
 					} else {
-						if (p_klass == mono_get_string_class ()) {
+						if (xamarin_is_class_string (p_klass)) {
 							NSString *str = (NSString *) id_arg;
 							MonoString *mstr = xamarin_nsstring_to_string (domain, str);
 							arg_ptrs [i + mofs] = mstr;
@@ -633,7 +633,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 					continue;
 				} else if (value == NULL) {
 					LOGZ (" writing back null to argument at index %i (%p)\n", i + 1, arg);
-				} else if (p_klass == mono_get_string_class ()) {
+				} else if (xamarin_is_class_string (p_klass)) {
 					obj = xamarin_string_to_nsstring ((MonoString *) value, false);
 					LOGZ (" writing back managed string %p to argument at index %i (%p)\n", value, i + 1, arg);
 				} else if (xamarin_is_class_nsobject (p_klass)) {

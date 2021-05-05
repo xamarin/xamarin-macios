@@ -22,6 +22,18 @@ using MonoObjectPtr=System.IntPtr;
 namespace ObjCRuntime {
 
 	public partial class Runtime {
+		// Keep in sync with XamarinLookupTypes in coreclr-bridge.h
+		internal enum TypeLookup {
+			System_Array,
+			System_String,
+			System_IntPtr,
+			Foundation_NSNumber,
+			Foundation_NSObject,
+			Foundation_NSString,
+			Foundation_NSValue,
+			ObjCRuntime_INativeObject,
+		}
+
 		// This struct must be kept in sync with the _MonoObject struct in coreclr-bridge.h
 		[StructLayout (LayoutKind.Sequential)]
 		internal struct MonoObject {
@@ -72,6 +84,49 @@ namespace ObjCRuntime {
 			log_coreclr ($"    Found no assembly named {name}");
 
 			throw new InvalidOperationException ($"Could not find any assemblies named {name}");
+		}
+
+		unsafe static bool IsClassOfType (MonoObject *typeobj, TypeLookup match)
+		{
+			return IsClassOfType ((Type) GetMonoObjectTarget (typeobj), match);
+		}
+
+		static bool IsClassOfType (Type type, TypeLookup match)
+		{
+			var rv = false;
+
+			switch (match) {
+			case TypeLookup.System_Array:
+				rv = type.IsArray;
+				break;
+			case TypeLookup.System_String:
+				rv = type == typeof (System.String);
+				break;
+			case TypeLookup.System_IntPtr:
+				rv = type == typeof (System.IntPtr);
+				break;
+			case TypeLookup.Foundation_NSNumber:
+				rv = typeof (Foundation.NSNumber).IsAssignableFrom (type);
+				break;
+			case TypeLookup.Foundation_NSObject:
+				rv = typeof (Foundation.NSObject).IsAssignableFrom (type);
+				break;
+			case TypeLookup.Foundation_NSString:
+				rv = typeof (Foundation.NSString).IsAssignableFrom (type);
+				break;
+			case TypeLookup.Foundation_NSValue:
+				rv = typeof (Foundation.NSValue).IsAssignableFrom (type);
+				break;
+			case TypeLookup.ObjCRuntime_INativeObject:
+				rv = typeof (ObjCRuntime.INativeObject).IsAssignableFrom (type);
+				break;
+			default:
+				throw new ArgumentOutOfRangeException (nameof (type));
+			}
+
+			log_coreclr ($"IsClassOfType ({type}, {match}) => {rv}");
+
+			return rv;
 		}
 
 		static IntPtr CreateGCHandle (IntPtr gchandle, GCHandleType type)
