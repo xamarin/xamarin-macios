@@ -185,6 +185,14 @@ namespace ObjCRuntime {
 			return GetMonoObject (obj.GetType ());
 		}
 
+		unsafe static bool IsDelegate (MonoObject* typeobj)
+		{
+			var type = (Type) GetMonoObjectTarget (typeobj);
+			var rv = typeof (MulticastDelegate).IsAssignableFrom (type);
+			log_coreclr ($"IsDelegate ({type.FullName}) => {rv}");
+			return rv;
+		}
+
 		static bool IsInstance (MonoObjectPtr mobj, MonoObjectPtr mtype)
 		{
 			var obj = GetMonoObjectTarget (mobj);

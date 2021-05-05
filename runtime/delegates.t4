@@ -408,6 +408,14 @@
 			OnlyDynamicUsage = false,
 			OnlyCoreCLR = true,
 		},
+
+		new XDelegate ("bool", "bool", "xamarin_bridge_is_delegate",
+			"MonoObject *", "MonoObject *", "typeobj"
+		) {
+			WrappedManagedFunction = "IsDelegate",
+			OnlyDynamicUsage = false,
+			OnlyCoreCLR = true,
+		},
 	};
 	delegates.CalculateLengths ();
 #><#+
