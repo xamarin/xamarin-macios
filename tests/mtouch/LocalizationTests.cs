@@ -55,7 +55,7 @@ namespace Xamarin.Tests
 			Thread.CurrentThread.CurrentUICulture = cultureInfo;
 			Thread.CurrentThread.CurrentCulture = cultureInfo;
 
-			var resourceManager = new ResourceManager ("mtouch.Errors", typeof (MachO).Assembly);
+			var resourceManager = new ResourceManager ("Errors.mtouch", typeof (MachO).Assembly);
 			return resourceManager.GetString (errorCode, cultureInfo);
 		}
 
