@@ -39,8 +39,8 @@ IOS_TARGETS =                                                      \
 IOS_WINDOWS_TARGETS =                                                      \
 	$(wildcard Xamarin.iOS.Tasks.Windows/Xamarin.*.props)       \
 	$(wildcard Xamarin.iOS.Tasks.Windows/Xamarin.*.targets)       \
-	$(wildcard Xamarin.iOS.Tasks.Windows/bin/$(CONFIG)/$(TARGETFRAMEWORK)/Xamarin.*.props)       \
-	$(wildcard Xamarin.iOS.Tasks.Windows/bin/$(CONFIG)/$(TARGETFRAMEWORK)/Xamarin.*.targets)       \
+	$(wildcard Xamarin.iOS.Tasks.Windows/bin/$(CONFIG)/$(TARGETFRAMEWORK)/$(WINDOWSRUNTIMEIDENTIFIER)/Xamarin.*.props)       \
+	$(wildcard Xamarin.iOS.Tasks.Windows/bin/$(CONFIG)/$(TARGETFRAMEWORK)/$(WINDOWSRUNTIMEIDENTIFIER)/Xamarin.*.targets)       \
 
 IOS_BINDING_TARGETS = $(wildcard Xamarin.ObjcBinding.Tasks/*.targets)
 
