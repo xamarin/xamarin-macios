@@ -353,6 +353,16 @@ mono_class_from_mono_type (MonoType *type)
 }
 
 mono_bool
+mono_type_is_byref (MonoType *type)
+{
+	bool rv = xamarin_bridge_is_byref (type);
+
+	LOG_CORECLR (stderr, "%s (%p) => %i\n", __func__, type, rv);
+
+	return rv;
+}
+
+mono_bool
 mono_class_is_delegate (MonoClass *klass)
 {
 	bool rv = xamarin_bridge_is_delegate (klass);

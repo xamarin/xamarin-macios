@@ -405,7 +405,9 @@
 
 		new Export ("mono_bool", "mono_type_is_byref", 
 			"MonoType *", "type"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		new Export ("MonoType *", "mono_signature_get_return_type",
 			"MonoMethodSignature *", "sig"
