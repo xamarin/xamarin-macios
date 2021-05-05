@@ -189,6 +189,26 @@ mono_assembly_open (const char * filename, MonoImageOpenStatus * status)
 	return rv;
 }
 
+const char *
+mono_class_get_namespace (MonoClass * klass)
+{
+	char *rv = xamarin_bridge_class_get_namespace (klass);
+
+	LOG_CORECLR (stderr, "%s (%p) => %s\n", __func__, klass, rv);
+
+	return rv;
+}
+
+const char *
+mono_class_get_name (MonoClass * klass)
+{
+	char *rv = xamarin_bridge_class_get_name (klass);
+
+	LOG_CORECLR (stderr, "%s (%p) => %s\n", __func__, klass, rv);
+
+	return rv;
+}
+
 MonoDomain *
 mono_domain_get (void)
 {
