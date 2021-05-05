@@ -233,6 +233,15 @@ namespace ObjCRuntime {
 			return null;
 		}
 
+		// This should work like mono_class_from_mono_type.
+		static unsafe MonoObject* TypeToClass (MonoObject* typeobj)
+		{
+			var type = (Type) GetMonoObjectTarget (typeobj);
+			if (type.IsByRef)
+				type = type.GetElementType ();
+			return (MonoObject *) GetMonoObject (type);
+		}
+
 		static unsafe MonoObject* InvokeMethod (MonoObject* methodobj, MonoObject* instanceobj, IntPtr native_parameters)
 		{
 			var method = (MethodBase) GetMonoObjectTarget (methodobj);

@@ -401,6 +401,13 @@
 			OnlyCoreCLR = true,
 		},
 
+		new XDelegate ("MonoObject *", "MonoObject *", "xamarin_bridge_type_to_class",
+			"MonoObject *", "MonoObject *", "typeobj"
+		) {
+			WrappedManagedFunction = "TypeToClass",
+			OnlyDynamicUsage = false,
+			OnlyCoreCLR = true,
+		},
 	};
 	delegates.CalculateLengths ();
 #><#+

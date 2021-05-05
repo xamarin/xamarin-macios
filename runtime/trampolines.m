@@ -85,7 +85,9 @@ xamarin_marshal_return_value_impl (MonoType *mtype, const char *type, MonoObject
 
 		case _C_PTR: {
 			MonoClass *klass = mono_class_from_mono_type (mtype);
-			if (mono_class_is_delegate (klass)) {
+			bool is_delegate = mono_class_is_delegate (klass);
+			xamarin_mono_object_release (&klass);
+			if (is_delegate) {
 				return xamarin_get_block_for_delegate (method, retval, NULL, INVALID_TOKEN_REF, exception_gchandle);
 			} else {
 				return *(void **) mono_object_unbox (retval);
@@ -919,6 +921,9 @@ xamarin_generate_conversion_to_native (MonoObject *value, MonoType *inputType, M
 
 exception_handling:
 
+	xamarin_mono_object_release (&managedType);
+	xamarin_mono_object_release (&nativeType);
+
 	return convertedValue;
 }
 
@@ -994,6 +999,9 @@ xamarin_generate_conversion_to_managed (id value, MonoType *inputType, MonoType 
 	}
 
 exception_handling:
+
+	xamarin_mono_object_release (&managedType);
+	xamarin_mono_object_release (&nativeType);
 
 	return convertedValue;
 }
@@ -1227,10 +1235,15 @@ xamarin_managed_array_to_nsarray (MonoArray *array, MonoType *managed_type, Mono
 	if (array == NULL)
 		return NULL;
 
-	if (managed_class == NULL)
-		managed_class = mono_class_from_mono_type (managed_type);
+	MonoClass *mclass = NULL;
+	if (managed_class == NULL) {
+		mclass = mono_class_from_mono_type (managed_type);
+		managed_class = mclass;
+	}
 
 	MonoClass *e_klass = mono_class_get_element_class (managed_class);
+
+	xamarin_mono_object_release (&mclass);
 
 	if (e_klass == mono_get_string_class ()) {
 		return xamarin_managed_string_array_to_nsarray (array, exception_gchandle);
@@ -1260,9 +1273,15 @@ xamarin_nsarray_to_managed_string_array (NSArray *array, GCHandle *exception_gch
 MonoArray *
 xamarin_nsarray_to_managed_nsobject_array (NSArray *array, MonoType *array_type, MonoClass *element_class, GCHandle *exception_gchandle)
 {
+	if (element_class == NULL) {
+		MonoClass *mclass = mono_class_from_mono_type (array_type);
+		element_class = mono_class_get_element_class (mclass);
+		xamarin_mono_object_release (&mclass);
+	}
+
 	struct conversion_data data = { 0 };
 	data.domain = mono_domain_get ();
-	data.element_class = element_class == NULL ? mono_class_get_element_class (mono_class_from_mono_type (array_type)) : element_class;
+	data.element_class = element_class;
 	data.element_type = mono_class_get_type (data.element_class);
 	data.element_reflection_type = mono_type_get_object (data.domain, data.element_type);
 	return xamarin_convert_nsarray_to_managed_with_func (array, data.element_class, xamarin_nsobject_to_object, &data, exception_gchandle);
@@ -1271,9 +1290,15 @@ xamarin_nsarray_to_managed_nsobject_array (NSArray *array, MonoType *array_type,
 MonoArray *
 xamarin_nsarray_to_managed_inativeobject_array (NSArray *array, MonoType *array_type, MonoClass *element_class, GCHandle *exception_gchandle)
 {
+	if (element_class == NULL) {
+		MonoClass *mclass = mono_class_from_mono_type (array_type);
+		element_class = mono_class_get_element_class (mclass);
+		xamarin_mono_object_release (&mclass);
+	}
+
 	struct conversion_data data = { 0 };
 	data.domain = mono_domain_get ();
-	data.element_class = element_class == NULL ? mono_class_get_element_class (mono_class_from_mono_type (array_type)) : element_class;
+	data.element_class = element_class;
 	data.element_type = mono_class_get_type (data.element_class);
 	data.element_reflection_type = mono_type_get_object (data.domain, data.element_type);
 	return xamarin_convert_nsarray_to_managed_with_func (array, data.element_class, xamarin_nsobject_to_inativeobject, &data, exception_gchandle);
@@ -1282,8 +1307,14 @@ xamarin_nsarray_to_managed_inativeobject_array (NSArray *array, MonoType *array_
 MonoArray *
 xamarin_nsarray_to_managed_inativeobject_array_static (NSArray *array, MonoType *array_type, MonoClass *element_class, uint32_t iface_token_ref, uint32_t implementation_token_ref, GCHandle *exception_gchandle)
 {
+	if (element_class == NULL) {
+		MonoClass *mclass = mono_class_from_mono_type (array_type);
+		element_class = mono_class_get_element_class (mclass);
+		xamarin_mono_object_release (&mclass);
+	}
+
 	struct conversion_data data = { 0 };
-	data.element_class = element_class == NULL ? mono_class_get_element_class (mono_class_from_mono_type (array_type)) : element_class;
+	data.element_class = element_class;
 	data.element_type = mono_class_get_type (data.element_class);
 	data.iface_token_ref = iface_token_ref;
 	data.implementation_token_ref = implementation_token_ref;
@@ -1296,8 +1327,13 @@ xamarin_nsarray_to_managed_array (NSArray *array, MonoType *managed_type, MonoCl
 	if (array == NULL)
 		return NULL;
 
-	if (managed_class == NULL)
-		managed_class = mono_class_from_mono_type (managed_type);
+	MonoClass *mclass = NULL;
+	if (managed_class == NULL) {
+		mclass = mono_class_from_mono_type (managed_type);
+		managed_class = mclass;
+	}
+
+	xamarin_mono_object_release (&mclass);
 
 	MonoClass *e_klass = mono_class_get_element_class (managed_class);
 	if (e_klass == mono_get_string_class ()) {
@@ -1372,7 +1408,9 @@ xamarin_get_nsnumber_converter (MonoClass *managedType, MonoMethod *method, bool
 		} else if (!strcmp (fullname, "System.nfloat")) {
 			func = to_managed ? (void *) xamarin_nsnumber_to_nfloat : (void *) xamarin_nfloat_to_nsnumber;
 		} else if (mono_class_is_enum (managedType)) {
-			func = xamarin_get_nsnumber_converter (mono_class_from_mono_type (mono_class_enum_basetype (managedType)), method, to_managed, exception_gchandle);
+			MonoClass *baseClass = mono_class_from_mono_type (mono_class_enum_basetype (managedType));
+			func = xamarin_get_nsnumber_converter (baseClass, method, to_managed, exception_gchandle);
+			xamarin_mono_object_release (&baseClass);
 		} else {
 			*exception_gchandle = xamarin_create_bindas_exception (mono_class_get_type (managedType), mono_class_get_type (xamarin_get_nsnumber_class ()), method);
 			goto exception_handling;

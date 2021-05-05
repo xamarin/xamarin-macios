@@ -299,7 +299,11 @@ xamarin_get_nsobject_with_type_for_ptr_created (id self, bool owns, MonoType *ty
 
 	if (gchandle != INVALID_GCHANDLE) {
 		mobj = xamarin_gchandle_get_target (gchandle);
-		if (mono_object_isinst (mobj, mono_class_from_mono_type (type)) != NULL) {
+		MonoClass *klass = mono_class_from_mono_type (type);
+		bool isinst = mono_object_isinst (mobj, klass) != NULL;
+		xamarin_mono_object_release (&klass);
+
+		if (isinst) {
 			return mobj;
 		} else {
 			xamarin_mono_object_release (&mobj);
