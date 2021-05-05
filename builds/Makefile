@@ -747,6 +747,9 @@ $(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/Versions.plist: $(TOP)/Versions-mac.
 $(DOTNET_DESTDIR)/$(MACOS_NUGET).Sdk/Versions.plist: $(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/Versions.plist | $(DOTNET_DESTDIR)/$(MACOS_NUGET).Sdk
 	$(Q) $(CP) $< $@
 
+$(DOTNET_DESTDIR)/$(MACOS_NUGET).Sdk/tools/buildinfo: $(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/buildinfo | $(DOTNET_DESTDIR)/$(MACOS_NUGET).Sdk/tools
+	$(Q) $(CP) $< $@
+
 $(MAC_COMMON_DIRECTORIES):
 	$(Q) mkdir -p $@
 
@@ -844,6 +847,9 @@ $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/Versions.plist: $(TOP)/Versions-ios.plist.in 
 	$(Q_GEN) sed -e 's/@XCODE_VERSION@/$(XCODE_VERSION)/g' -e "s/@MONO_VERSION@/$(shell cat $(MONO_IOS_SDK_DESTDIR)/ios-mono-version.txt)/g" $< > $@
 
 $(DOTNET_DESTDIR)/%.Sdk/Versions.plist: $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/Versions.plist | $(DOTNET_DESTDIR)/%.Sdk
+	$(Q) $(CP) $< $@
+
+$(DOTNET_DESTDIR)/%.Sdk/tools/buildinfo: $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/buildinfo | $(DOTNET_DESTDIR)/%.Sdk/tools
 	$(Q) $(CP) $< $@
 
 $(IOS_COMMON_DIRECTORIES):
@@ -1104,9 +1110,11 @@ install-tvos: $(TVOS_TARGETS)
 
 DOTNET_COMMON_DIRECTORIES += \
 	$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(DOTNET_DESTDIR)/$($(platform)_NUGET).Sdk) \
+	$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(DOTNET_DESTDIR)/$($(platform)_NUGET).Sdk/tools) \
 
 DOTNET_COMMON_TARGETS = \
 	$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(DOTNET_DESTDIR)/$($(platform)_NUGET).Sdk/Versions.plist) \
+	$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(DOTNET_DESTDIR)/$($(platform)_NUGET).Sdk/tools/buildinfo) \
 
 $(DOTNET_COMMON_DIRECTORIES):
 	$(Q) mkdir -p $@

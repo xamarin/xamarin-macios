@@ -103,6 +103,7 @@ steps:
 
       Write-Host "##vso[task.setvariable variable=prBuild;isOutput=true]True"
     } else {
+      $tags.Add("ciBuild")
       # set the name of the branch under build
       $tags.Add("$buildSourceBranchName")
       Write-Host "##vso[task.setvariable variable=prBuild;isOutput=true]False"
