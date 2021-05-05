@@ -895,6 +895,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			SdkVersion="$(_SdkVersion)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			TargetArchitectures="$(TargetArchitectures)"
+			XamarinSdkRoot="$(_XamarinSdkRoot)"
 			>
 
 			<Output TaskParameter="SdkVersion" PropertyName="_SdkVersion" />
