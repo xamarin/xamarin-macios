@@ -510,58 +510,75 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Errors.Designer.cs</LastGenOutput>
       <CustomToolNamespace>Xamarin.Bundler</CustomToolNamespace>
-      <LogicalName>mtouch.Errors.resources</LogicalName>
+      <ManifestResourceName>Errors.mtouch</ManifestResourceName>
     </EmbeddedResource>
     <EmbeddedResource Include="TranslatedAssemblies\Errors.cs.resx">
       <Link>Errors.cs.resx</Link>
+      <ManifestResourceName>Errors.mtouch.cs</ManifestResourceName>
     </EmbeddedResource>
     <EmbeddedResource Include="TranslatedAssemblies\Errors.de.resx">
       <Link>Errors.de.resx</Link>
+      <ManifestResourceName>Errors.mtouch.de</ManifestResourceName>
     </EmbeddedResource>
     <EmbeddedResource Include="TranslatedAssemblies\Errors.es.resx">
       <Link>Errors.es.resx</Link>
+      <ManifestResourceName>Errors.mtouch.es</ManifestResourceName>
     </EmbeddedResource>
     <EmbeddedResource Include="TranslatedAssemblies\Errors.fr.resx">
       <Link>Errors.fr.resx</Link>
+      <ManifestResourceName>Errors.mtouch.fr</ManifestResourceName>
     </EmbeddedResource>
     <EmbeddedResource Include="TranslatedAssemblies\Errors.hu.resx">
       <Link>Errors.hu.resx</Link>
+      <ManifestResourceName>Errors.mtouch.hu</ManifestResourceName>
     </EmbeddedResource>
     <EmbeddedResource Include="TranslatedAssemblies\Errors.it.resx">
       <Link>Errors.it.resx</Link>
+      <ManifestResourceName>Errors.mtouch.it</ManifestResourceName>
     </EmbeddedResource>
     <EmbeddedResource Include="TranslatedAssemblies\Errors.ja.resx">
       <Link>Errors.ja.resx</Link>
+      <ManifestResourceName>Errors.mtouch.ja</ManifestResourceName>
     </EmbeddedResource>
     <EmbeddedResource Include="TranslatedAssemblies\Errors.ko.resx">
       <Link>Errors.ko.resx</Link>
+      <ManifestResourceName>Errors.mtouch.ko</ManifestResourceName>
     </EmbeddedResource>
     <EmbeddedResource Include="TranslatedAssemblies\Errors.nl.resx">
       <Link>Errors.nl.resx</Link>
+      <ManifestResourceName>Errors.mtouch.nl</ManifestResourceName>
     </EmbeddedResource>
     <EmbeddedResource Include="TranslatedAssemblies\Errors.pl.resx">
       <Link>Errors.pl.resx</Link>
+      <ManifestResourceName>Errors.mtouch.pl</ManifestResourceName>
     </EmbeddedResource>
     <EmbeddedResource Include="TranslatedAssemblies\Errors.pt-BR.resx">
       <Link>Errors.pt-BR.resx</Link>
+      <ManifestResourceName>Errors.mtouch.pt-BR</ManifestResourceName>
     </EmbeddedResource>
     <EmbeddedResource Include="TranslatedAssemblies\Errors.pt-PT.resx">
       <Link>Errors.pt-PT.resx</Link>
+      <ManifestResourceName>Errors.mtouch.pt-PT</ManifestResourceName>
     </EmbeddedResource>
     <EmbeddedResource Include="TranslatedAssemblies\Errors.ru.resx">
       <Link>Errors.ru.resx</Link>
+      <ManifestResourceName>Errors.mtouch.ru</ManifestResourceName>
     </EmbeddedResource>
     <EmbeddedResource Include="TranslatedAssemblies\Errors.sv.resx">
       <Link>Errors.sv.resx</Link>
+      <ManifestResourceName>Errors.mtouch.sv</ManifestResourceName>
     </EmbeddedResource>
     <EmbeddedResource Include="TranslatedAssemblies\Errors.tr.resx">
       <Link>Errors.tr.resx</Link>
+      <ManifestResourceName>Errors.mtouch.tr</ManifestResourceName>
     </EmbeddedResource>
     <EmbeddedResource Include="TranslatedAssemblies\Errors.zh-Hans.resx">
       <Link>Errors.zh-Hans.resx</Link>
+      <ManifestResourceName>Errors.mtouch.zh-Hans</ManifestResourceName>
     </EmbeddedResource>
     <EmbeddedResource Include="TranslatedAssemblies\Errors.zh-Hant.resx">
       <Link>Errors.zh-Hant.resx</Link>
+      <ManifestResourceName>Errors.mtouch.zh-Hant</ManifestResourceName>
     </EmbeddedResource>
   </ItemGroup>
   <Target Name="BuildSdkVersions" Inputs="../common/SdkVersions.cs.in" Outputs="../common/SdkVersions.cs">
