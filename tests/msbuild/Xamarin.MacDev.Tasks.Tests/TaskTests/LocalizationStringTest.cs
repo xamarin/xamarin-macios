@@ -30,6 +30,7 @@ namespace Xamarin.iOS.Tasks {
 		[TestCase ("tr-TR", "yüklenirken hata oluştu: Görüntü biçimi bilinmiyor.")]
 		[TestCase ("zh-CN", "时出错: 未知图像格式")]
 		[TestCase ("zh-TW", "時發生錯誤: 未知的映像格式。")]
+		[Ignore ("OneLocBuild will return proper translated resx files.")]
 		public void AllSupportedTranslations (string culture, string errorMessage)
 		{
 			CultureInfo originalUICulture = Thread.CurrentThread.CurrentUICulture;
@@ -66,6 +67,7 @@ namespace Xamarin.iOS.Tasks {
 		[TestCase ("tr-TR")]
 		[TestCase ("zh-CN")]
 		[TestCase ("zh-TW")]
+		[Ignore ("OneLocBuild will return proper translated resx files.")]
 		public void SpecificErrorTranslation (string culture)
 		{
 			// insert which error code you'd like to test
@@ -119,6 +121,7 @@ namespace Xamarin.iOS.Tasks {
 		[TestCase ("tr-TR")]
 		[TestCase ("zh-CN")]
 		[TestCase ("zh-TW")]
+		[Ignore ("OneLocBuild will return proper translated resx files.")]
 		public void AllErrorTranslation (string culture)
 		{
 			StringBuilder errorList = new StringBuilder (string.Empty);

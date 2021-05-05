@@ -27,6 +27,7 @@ namespace Xamarin.Tests
 		[TestCase ("tr-TR")]
 		[TestCase ("zh-CN")]
 		[TestCase ("zh-TW")]
+		[Ignore ("OneLocBuild will return proper translated resx files.")]
 		public void TestSpecificErrorCode (string culture)
 		{
 			var errorCode = "MT0015";
@@ -80,6 +81,7 @@ namespace Xamarin.Tests
 		[TestCase ("tr-TR")]
 		[TestCase ("zh-CN")]
 		[TestCase ("zh-TW")]
+		[Ignore ("OneLocBuild will return proper translated resx files.")]
 		public void AllErrorTranslation (string culture)
 		{
 			var errorList = new StringBuilder ();
