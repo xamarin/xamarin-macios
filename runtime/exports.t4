@@ -57,7 +57,9 @@
 
 		new Export ("mono_bool", "mono_class_is_valuetype",
 			"MonoClass *", "klass"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		new Export ("mono_bool", "mono_class_is_enum",
 			"MonoClass *", "klass"

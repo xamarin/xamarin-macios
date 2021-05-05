@@ -422,6 +422,12 @@ namespace ObjCRuntime {
 			return type.IsByRef;
 		}
 
+		unsafe static bool IsValueType (MonoObject *typeobj)
+		{
+			var type = (Type) GetMonoObjectTarget (typeobj);
+			return type.IsValueType;
+		}
+
 		static object PtrToStructure (IntPtr ptr, Type type)
 		{
 			if (ptr == IntPtr.Zero)
