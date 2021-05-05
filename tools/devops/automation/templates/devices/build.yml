@@ -37,6 +37,12 @@ parameters:
   type: string
   default: 'ios' # default context, since we started dealing with iOS devices.
 
+- name: gitHubToken
+  type: string
+
+- name: xqaCertPass
+  type: string
+
 steps:
 
 - checkout: self
