@@ -128,7 +128,7 @@ steps:
   continueOnError: true
   workingDirectory: $(Build.SourcesDirectory)\tools\devops 
 
-- ${{ if eq(variables['Build.Reason'], 'Schedule') }}:
+- ${{ if eq(variables['Build.Reason'], 'Manual') }}:
   - task: OneLocBuild@2
     condition: and(succeeded(), eq(variables.isMain, 'True'))
     continueOnError: true
