@@ -147,7 +147,7 @@ steps:
 
     [System.Collections.Generic.List[string]]$failures = @()
 
-    $macTest = @("dontlink", "apitest", "introspection", "linksdk", "linkall", "xammac_tests")
+    $macTest = @("dontlink", "introspection", "linksdk", "linkall", "xammac_tests")
     foreach ($t in $macTest) {
       $testName = "exec-mac-$t"
       Write-Host "Execution test $testName"
