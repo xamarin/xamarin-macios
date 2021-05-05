@@ -142,7 +142,7 @@ define CreateNuGetTemplate
 nupkgs/$(1)$(4).$(2)+$(NUGET_BUILD_METADATA).nupkg: $(TEMPLATED_FILES) $(3) package/$(1)/package.csproj $(wildcard package/*.csproj) $(wildcard $(DOTNET_DESTDIR)/$(1)/* $(DOTNET_DESTDIR)/$(1)/*/* $(DOTNET_DESTDIR)/$(1)/*/*/* $(DOTNET_DESTDIR)/$(1)/*/*/*/*) global.json
 	@# Delete any versions of the nuget we're building
 	$$(Q) rm -f nupkgs/$(1).*.nupkg
-	$$(Q_PACK) $(DOTNET6) pack package/$(1)/package.csproj --output "$$(dir $$@)" $(DOTNET_PACK_VERBOSITY)
+	$$(Q_PACK) $(DOTNET6) pack package/$(1)/package.csproj -p:VersionBand=$(DOTNET6_VERSION_BAND) --output "$$(dir $$@)" $(DOTNET_PACK_VERBOSITY)
 	@# Nuget pack doesn't add the metadata to the filename, but we want that, so rename nuget to contain the full name
 	$$(Q) mv "nupkgs/$(1)$(4).$(2).nupkg" "$$@"
 	@# Clean the local feed

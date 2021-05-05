@@ -1,6 +1,7 @@
 <Project>
   <PropertyGroup>
-    <PackageId>Microsoft.NET.Sdk.$(_PlatformName).Manifest-6.0.100</PackageId>
+    <!-- NOTE: $(VersionBand) is passed in via Makefile -->
+    <PackageId>Microsoft.NET.Sdk.$(_PlatformName).Manifest-$(VersionBand)</PackageId>
     <Description>.NET Workload for $(_PlatformName) platforms</Description>
     <_packagePath>$(MSBuildThisFileDirectory)..\Microsoft.NET.Sdk.$(_PlatformName)\</_packagePath>
   </PropertyGroup>
