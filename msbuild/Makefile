@@ -23,6 +23,7 @@ MSBUILD_TASK_ASSEMBLIES      =
 ALL_SOURCES:= $(shell git ls-files | sed 's/ /\\ /g') $(wildcard $(XAMARIN_MACDEV_PATH)/Xamarin.MacDev/*.cs) $(wildcard $(XAMARIN_MACDEV_PATH)/Xamarin.MacDev/*.csproj)
 CONFIG      = Debug
 TARGETFRAMEWORK = netstandard2.0
+WINDOWSRUNTIMEIDENTIFIER = win
 
 ##
 ## XI definitions
@@ -482,7 +483,7 @@ DOTNET_IOS_WINDOWS_OUTPUT_FILES =                                \
 	$(foreach dll,$(IOS_WINDOWS_MOBILEDEVICE_TOOLS),$(dll).*)    \
 	Broker.zip                                                   \
 	Build.zip
-DOTNET_IOS_WINDOWS_FILES = $(IOS_WINDOWS_TARGETS) $(foreach file,$(DOTNET_IOS_WINDOWS_OUTPUT_FILES),Xamarin.iOS.Tasks.Windows/bin/$(CONFIG)/$(TARGETFRAMEWORK)/$(file))
+DOTNET_IOS_WINDOWS_FILES = $(IOS_WINDOWS_TARGETS) $(foreach file,$(DOTNET_IOS_WINDOWS_OUTPUT_FILES),Xamarin.iOS.Tasks.Windows/bin/$(CONFIG)/$(TARGETFRAMEWORK)/$(WINDOWSRUNTIMEIDENTIFIER)/$(file))
 
 # Ensures Xamarin.iOS.Tasks.Windows is built and copies the output files to the Sdk Windows pack
 .dotnet-windows: .build-stamp | $(DOTNET_DESTDIR)/$(IOS_WINDOWS_NUGET).Sdk/tools/msbuild/iOS

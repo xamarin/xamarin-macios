@@ -4,6 +4,7 @@
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <MergeSystemAssemblies>false</MergeSystemAssemblies>
+    <RuntimeIdentifier>win</RuntimeIdentifier>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="DotNetZip" Version="1.14.0" />
@@ -49,14 +50,11 @@
   <!-- Replaces the reference assemblies by the runtime implementation -->
   <Target Name="CopyRuntimeAssemblies" BeforeTargets="ILRepack">
     <ItemGroup>
-      <ReferenceCopyLocalToRemove Include="@(ReferenceCopyLocalPaths)" Condition="'%(FileName)' == 'System.Text.Encoding.CodePages'" />   
-      <ReferenceCopyLocalToRemove Include="@(ReferenceCopyLocalPaths)" Condition="'%(FileName)' == 'System.Security.Cryptography.ProtectedData'" />
+      <ReferenceCopyLocalToRemove Include="@(ReferenceCopyLocalPaths)" Condition="'%(FileName)' == 'System.Text.Encoding.CodePages'" />
       <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalToRemove)" />
       <ReferencePathToRemove Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.Text.Encoding.CodePages'" />
-      <ReferencePathToRemove Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.Security.Cryptography.ProtectedData'" />
       <ReferencePath Remove="@(ReferencePathToRemove)" />
       <ReferencePathToAdd Include="@(RuntimeTargetsCopyLocalItems)" Condition="'%(RuntimeIdentifier)' == 'win' And '%(FileName)' == 'System.Text.Encoding.CodePages'" />
-      <ReferencePathToAdd Include="@(RuntimeTargetsCopyLocalItems)" Condition="'%(RuntimeIdentifier)' == 'win' And '%(FileName)' == 'System.Security.Cryptography.ProtectedData'" />
       <ReferencePath Include="@(ReferencePathToAdd)">
         <DestinationSubDirectory />
       </ReferencePath>
