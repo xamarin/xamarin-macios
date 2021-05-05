@@ -2,23 +2,13 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
 	<PropertyGroup>
-		<!-- This is the location of the Microsoft.<platform>.Sdk NuGet (/usr/local/share/dotnet/sdk/<version>/Sdks/Microsoft.[iOS/tvOS/watchOS/macOS].Sdk) -->
-		<_XamarinSdkRootDirectory>$([MSBuild]::NormalizePath('$(MSBuildThisFileDirectory)', '..'))\</_XamarinSdkRootDirectory>
-
-		<_XamarinTaskAssembly Condition="'$(_PlatformName)' != 'macOS'">$(_XamarinSdkRootDirectory)\tools\msbuild\iOS\Xamarin.iOS.Tasks.dll</_XamarinTaskAssembly>
-		<_XamarinTaskAssembly Condition="'$(_PlatformName)' == 'macOS'">$(_XamarinSdkRootDirectory)\tools\msbuild\macOS\Xamarin.Mac.Tasks.dll</_XamarinTaskAssembly>
-
 		<!-- Use single-project MSBuild properties to generate the application manifest by default -->
 		<GenerateApplicationManifest Condition="'$(GenerateApplicationManifest)' == ''">true</GenerateApplicationManifest>
-
-		<XamarinWindowsSdkDirectory Condition="'$(XamarinWindowsSdkDirectory)' == '' And '$(_PlatformName)' == 'iOS'">$(MSBuildThisFileDirectory.Replace('Microsoft.iOS.Sdk', 'Microsoft.iOS.Windows.Sdk'))</XamarinWindowsSdkDirectory>
-		<XamarinWindowsSdkDirectory Condition="'$(XamarinWindowsSdkDirectory)' == '' And '$(_PlatformName)' == 'tvOS'">$(MSBuildThisFileDirectory.Replace('Microsoft.tvOS.Sdk', 'Microsoft.tvOS.Windows.Sdk'))</XamarinWindowsSdkDirectory>
 	</PropertyGroup>
-
-	<Import Project="$(XamarinWindowsSdkDirectory)$(MSBuildThisFileName).Before.targets" Condition="Exists('$(XamarinWindowsSdkDirectory)$(MSBuildThisFileName).Before.targets')" />
 
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CompileNativeCode" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.LinkNativeCode" AssemblyFile="$(_XamarinTaskAssembly)" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.SymbolStrip" AssemblyFile="$(_XamarinTaskAssembly)" />
 
 	<!-- Project types and how do we distinguish between them
 
@@ -137,10 +127,11 @@
 		<EnableUnsafeUTF7Encoding Condition="'$(EnableUnsafeUTF7Encoding)' == ''">false</EnableUnsafeUTF7Encoding>
 		<EventSourceSupport Condition="'$(EventSourceSupport)' == ''">false</EventSourceSupport>
 		<HttpActivityPropagationSupport Condition="'$(HttpActivityPropagationSupport)' == ''">false</HttpActivityPropagationSupport>
-		<HttpNativeHandler Condition="'$(_PlatformName)' != 'macOS' And '$(HttpNativeHandler)' == ''">true</HttpNativeHandler>
-		<InvariantGlobalization Condition="'$(InvariantGlobalization)' == ''">false</InvariantGlobalization>
+		<!-- native bits for ICU are not ready for Catalyst - https://github.com/xamarin/xamarin-macios/issues/11392 -->
+		<InvariantGlobalization Condition="'$(_PlatformName)' == 'MacCatalyst' And '$(InvariantGlobalization)' == ''">true</InvariantGlobalization>
 		<StartupHookSupport Condition="'$(StartupHookSupport)' == ''">false</StartupHookSupport>
 		<UseSystemResourceKeys Condition="'$(UseSystemResourceKeys)' == ''">true</UseSystemResourceKeys>
+		<UseNativeHttpHandler Condition="'$(_PlatformName)' != 'macOS' And '$(UseNativeHttpHandler)' == ''">true</UseNativeHttpHandler>
 	</PropertyGroup>
 
 	<PropertyGroup>
@@ -401,7 +392,8 @@
 			<_XamarinRefAssemblyDirectory>$(_XamarinRefPackageDirectory)/ref/net6.0/</_XamarinRefAssemblyDirectory>
 			<_XamarinRefAssemblyPath>$(_XamarinRefAssemblyDirectory)$(_PlatformAssemblyName).dll</_XamarinRefAssemblyPath>
 
-			<_LibPartialStaticRegistrar>$(_XamarinNativeLibraryDirectory)/Microsoft.$(_PlatformName).registrar.a</_LibPartialStaticRegistrar>
+			<_LibPartialStaticRegistrar Condition="'$(UseMonoRuntime)' == 'true'">$(_XamarinNativeLibraryDirectory)/Microsoft.$(_PlatformName).registrar.a</_LibPartialStaticRegistrar>
+			<_LibPartialStaticRegistrar Condition="'$(UseMonoRuntime)' != 'true'">$(_XamarinNativeLibraryDirectory)/Microsoft.$(_PlatformName).registrar.coreclr.a</_LibPartialStaticRegistrar>
 
 			<_MonoRuntimePackPath>%(_MonoFrameworkReference.RuntimePackPath)/runtimes/$(RuntimeIdentifier)/</_MonoRuntimePackPath>
 		</PropertyGroup>
@@ -652,6 +644,17 @@
 			SdkRoot="$(_SdkRoot)"
 			TargetArchitectures="$(TargetArchitectures)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+		/>
+
+		<!-- remove the `-u` prefix from `_ReferencesLinkerFlags` so we can give the output file to `strip` -->
+		<WriteLinesToFile SessionId="$(BuildSessionId)" File="$(_MtouchSymbolsList)" Lines="@(_ReferencesLinkerFlags->'%(Identity)'->Substring (2))" Overwrite="true" />
+
+		<SymbolStrip
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true' And '$(_NoSymbolStrip)' == 'false' And '$(IsAppExtension)' == 'false'"
+			Executable="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName)"
+			IsFramework="false"
+			SymbolFile="$(_MtouchSymbolsList)"
 		/>
 
 		<ItemGroup>

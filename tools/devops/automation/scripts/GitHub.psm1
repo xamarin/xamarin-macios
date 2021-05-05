@@ -414,7 +414,10 @@ function New-GitHubSummaryComment {
         $Artifacts="",
 
         [string]
-        $APIDiff=""
+        $APIDiff="",
+
+        [string]
+        $APIGeneratorDiff=""
     )
 
     $envVars = @{
@@ -502,6 +505,23 @@ function New-GitHubSummaryComment {
     } else {
         Write-Host "API diff urls have not been provided."
     }
+    if (-not [string]::IsNullOrEmpty($APIGeneratorDiff)) {
+        Write-Host "Parsing API diff in path $APIGeneratorDiff"
+        if (-not (Test-Path $APIGeneratorDiff -PathType Leaf)) {
+            $sb.AppendLine("Path $APIGeneratorDiff was not found!")
+        } else {
+            $sb.AppendLine("# API & Generator diff")
+            $sb.AppendLine("")
+            # ugly workaround to get decent new lines
+            foreach ($line in Get-Content -Path $APIGeneratorDiff)
+            {
+                $sb.AppendLine($line)
+            }
+            $sb.AppendLine($apidiffcomments)
+        }
+    } else {
+        Write-Host "API & Generator diff comments have not been provided."
+    }
     if (-not [string]::IsNullOrEmpty($Artifacts)) {
         Write-Host "Parsing artifacts"
         if (-not (Test-Path $Artifacts -PathType Leaf)) {
@@ -549,17 +569,25 @@ function New-GitHubSummaryComment {
         $statusContext = "$Contex - $Env:BUILD_DEFINITIONNAME) (Test run)"
     }
 
+    # make a diff between a PR and a CI build so that users do not get confused.
+    $prefix = "";
+    if ([string]::IsNullOrEmpty($Env:PR_ID)) {
+        $prefix = "[CI Build]"
+    } else {
+        $prefix = "[PR Build]"
+    }
+
     if (-not (Test-Path $TestSummaryPath -PathType Leaf)) {
         Write-Host "No test summary found"
-        Set-GitHubStatus -Status "failure" -Description "Tests failed catastrophically on $Context (no summary found)." -Context $statusContext
+        Set-GitHubStatus -Status "failure" -Description "$prefix Tests failed catastrophically on $Context (no summary found)." -Context $statusContext
         $request = New-GitHubComment -Header "Tests failed catastrophically on $Context (no summary found)." -Emoji ":fire:" -Description "Result file $TestSummaryPath not found. $headerLinks"
     } else {
         if (Test-JobSuccess -Status $Env:TESTS_JOBSTATUS) {
             Set-GitHubStatus -Status "success" -Description "All tests passed on $Context." -Context $statusContext
-            $request = New-GitHubCommentFromFile -Header "Tests passed on $Context." -Description "Tests passed on $Context. $headerLinks"  -Emoji ":white_check_mark:" -Path $TestSummaryPath
+            $request = New-GitHubCommentFromFile -Header "$prefix Tests passed on $Context." -Description "Tests passed on $Context. $headerLinks"  -Emoji ":white_check_mark:" -Path $TestSummaryPath
         } else {
             Set-GitHubStatus -Status "error" -Description "Tests failed on $Context." -Context $statusContext
-            $request = New-GitHubCommentFromFile -Header "Tests failed on $Context" -Description "Tests failed on $Context. $headerLinks" -Emoji ":x:" -Path $TestSummaryPath
+            $request = New-GitHubCommentFromFile -Header "$prefix Tests failed on $Context" -Description "Tests failed on $Context. $headerLinks" -Emoji ":x:" -Path $TestSummaryPath
         }
     }
     return $request

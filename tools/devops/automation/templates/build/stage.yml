@@ -21,6 +21,10 @@ parameters:
 - name: xqaCertPass
   type: string
 
+- name: enableDotnet
+  type: boolean
+  default: false
+
 jobs:
 - job: configure
   displayName: 'Configure build'
@@ -73,7 +77,7 @@ jobs:
     SkipPublicJenkins: $[ dependencies.configure.outputs['labels.skip-public-jenkins'] ]
     SkipApiComparison: $[ dependencies.configure.outputs['labels.skip-api-comparison'] ]
     # old and ugly env var use by jenkins, we do have parts of the code that use it, contains the PR number
-    ghprbPullId: $[ dependencies.configure.outputs['labels.pr-number'] ]
+    PR_ID: $[ dependencies.configure.outputs['labels.pr-number'] ]
     # set the branch variable name, this is required by jenkins and we have a lot of scripts that depend on it
     BRANCH_NAME: $(Build.SourceBranchName)
     XHARNESS_LABELS: $[ dependencies.configure.outputs['labels.xharness-labels'] ]
@@ -95,6 +99,7 @@ jobs:
       keyringPass: ${{ parameters.keyringPass }}
       gitHubToken: ${{ parameters.gitHubToken }}
       xqaCertPass: ${{ parameters.xqaCertPass }}
+      enableDotnet: ${{ parameters.enableDotnet }}
 
 - job: upload_azure_blob
   displayName: 'Upload packages to Azure'
@@ -115,6 +120,8 @@ jobs:
       clean: all
   steps:
   - template: upload-azure.yml
+    parameters:
+      enableDotnet: ${{ parameters.enableDotnet }}
 
 - job: upload_vsdrops
   displayName: 'Upload test results to VSDrops'
@@ -165,6 +172,7 @@ jobs:
     TESTS_JOBSTATUS: $[ dependencies.build.outputs['runTests.TESTS_JOBSTATUS'] ]
     APIDIFF_MESSAGE: $[ dependencies.build.outputs['apidiff.APIDIFF_MESSAGE'] ]
     APIDIFF_BUILT: $[ dependencies.build.outputs['apidiff.APIDIFF_BUILT'] ]
+    PR_ID: $[ dependencies.configure.outputs['labels.pr-number'] ]
   pool:
     vmImage: 'windows-latest'
     workspace:

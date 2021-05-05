@@ -32,10 +32,11 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 
 	<PropertyGroup>
 		<!-- _XamarinSdkRoot
-			Xamarin.Mac: Defaults to XamarinMacFrameworkRoot, otherwise /Library/Frameworks/Xamarin.Mac.framework/Versions/Current
+			Xamarin.Mac: Defaults to XamarinMacFrameworkRoot, otherwise use XAMMAC_FRAMEWORK_PATH, otherwise /Library/Frameworks/Xamarin.Mac.framework/Versions/Current
 			Xamarin.iOS: Defaults to MonoTouchSdkRoot, otherwise use MD_MTOUCH_SDK_ROOT, otherwise /Library/Frameworks/Xamarin.iOS.framework/Versions/Current
 		-->
 		<_XamarinSdkRoot Condition="'$(_XamarinSdkRoot)' == '' And '$(_PlatformName)' == 'macOS' ">$(XamarinMacFrameworkRoot)</_XamarinSdkRoot>
+		<_XamarinSdkRoot Condition="'$(_XamarinSdkRoot)' == '' And '$(_PlatformName)' == 'macOS' ">$(XAMMAC_FRAMEWORK_PATH)</_XamarinSdkRoot>
 		<_XamarinSdkRoot Condition="'$(_XamarinSdkRoot)' == '' And '$(_PlatformName)' == 'macOS' ">/Library/Frameworks/Xamarin.Mac.framework/Versions/Current</_XamarinSdkRoot>
 		<_XamarinSdkRoot Condition="'$(_XamarinSdkRoot)' == '' And '$(_PlatformName)' != 'macOS' ">$(MonoTouchSdkRoot)</_XamarinSdkRoot>
 		<_XamarinSdkRoot Condition="'$(_XamarinSdkRoot)' == '' And '$(_PlatformName)' != 'macOS' ">$(MD_MTOUCH_SDK_ROOT)</_XamarinSdkRoot>

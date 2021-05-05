@@ -32,7 +32,9 @@ $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call DefineTargets,$(platform)))
 
 define DefineWindowsTargets
 $(1)_WINDOWS_NUGET_TARGETS = \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Windows.Sdk/targets/Xamarin.Shared.Sdk.Before.targets \
+	$(DOTNET_DESTDIR)/Microsoft.$(1).Windows.Sdk/Sdk/Sdk.props \
+	$(DOTNET_DESTDIR)/Microsoft.$(1).Windows.Sdk/targets/Microsoft.$(1).Windows.Sdk.props \
+	$(DOTNET_DESTDIR)/Microsoft.$(1).Windows.Sdk/targets/Microsoft.$(1).Windows.Sdk.targets \
 
 endef
 $(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(eval $(call DefineWindowsTargets,$(platform))))
@@ -52,6 +54,7 @@ DIRECTORIES += \
 	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_PACKS_PATH)/Microsoft.$(platform).Ref) \
 	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_TEMPLATE_PACKS_PATH)/Microsoft.$(platform).Templates) \
 	$(TMP_PKG_DIR) \
+	$(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Windows.Sdk/Sdk) \
 	$(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Windows.Sdk/targets) \
 
 $(DIRECTORIES):
@@ -59,7 +62,8 @@ $(DIRECTORIES):
 
 CURRENT_HASH_LONG:=$(shell git log -1 --pretty=%H)
 
-$(DOTNET_DESTDIR)/Microsoft.%: Microsoft.% | $(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/Sdk $(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/targets $(DOTNET_DESTDIR)/Microsoft.$(platform).Templates)
+$(DOTNET_DESTDIR)/Microsoft.%: Microsoft.% | $(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/Sdk $(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/targets $(DOTNET_DESTDIR)/Microsoft.$(platform).Templates) \
+		$(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Windows.Sdk/Sdk $(DOTNET_DESTDIR)/Microsoft.$(platform).Windows.Sdk/targets)
 	$(Q) $(CP) $< $@
 
 define CopyTargets
@@ -67,12 +71,6 @@ $$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/%: targets/% | $$(DOTNET_DESTDIR)/
 	$$(Q) $$(CP) $$< $$@
 endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call CopyTargets,$(platform))))
-
-define CopyWindowsTargets
-$$(DOTNET_DESTDIR)/Microsoft.$(1).Windows.Sdk/targets/%: WindowsTargets/% | $$(DOTNET_DESTDIR)/Microsoft.$(1).Windows.Sdk/targets
-	$$(Q) $$(CP) $$< $$@
-endef
-$(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(eval $(call CopyWindowsTargets,$(platform))))
 
 define VersionsTemplate
 targets/Microsoft.$(1).Sdk.Versions.props: targets/Microsoft.Sdk.Versions.template.props Makefile $(TOP)/Make.config.inc $(TOP)/.git/HEAD $(TOP)/.git/index
@@ -108,7 +106,7 @@ endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call SupportedTargetPlatforms,$(platform))))
 
 define WorkloadTargets
-Microsoft.NET.Workload.$(1)/WorkloadManifest.json: targets/WorkloadManifest.template.json Makefile $(TOP)/Make.config.inc $(TOP)/.git/HEAD $(TOP)/.git/index
+Microsoft.NET.Workload.$(1)/WorkloadManifest.json: $4 Makefile $(TOP)/Make.config.inc $(TOP)/.git/HEAD $(TOP)/.git/index
 	$$(Q) rm -f $$@.tmp
 	$$(Q_GEN) sed \
 		-e "s/@VERSION@/$3/g" \
@@ -123,7 +121,8 @@ Microsoft.NET.Workload.$(1)/LICENSE: $(TOP)/LICENSE
 WORKLOAD_TARGETS += Microsoft.NET.Workload.$(1)/WorkloadManifest.json
 WORKLOAD_TARGETS += Microsoft.NET.Workload.$(1)/LICENSE
 endef
-$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call WorkloadTargets,$(platform),$(shell echo $(platform) | tr A-Z a-z),$($(platform)_NUGET_VERSION_NO_METADATA))))
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call WorkloadTargets,$(platform),$(shell echo $(platform) | tr A-Z a-z),$($(platform)_NUGET_VERSION_NO_METADATA), \
+	$(if $(findstring $(platform),$(DOTNET_WINDOWS_PLATFORMS)),targets/WorkloadManifest.windows.template.json,targets/WorkloadManifest.template.json))))
 
 TEMPLATED_FILES = \
 	$(foreach platform,$(DOTNET_PLATFORMS),Microsoft.$(platform).Sdk/targets/Microsoft.$(platform).Sdk.Versions.props) \
@@ -167,7 +166,7 @@ endef
 
 # Create the NuGet packaging targets. It's amazing what make allows you to do...
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call CreateNuGetTemplate,Microsoft.$(platform).Sdk,$($(platform)_NUGET_VERSION_NO_METADATA),$($(platform)_NUGET_TARGETS))))
-$(eval $(call CreateWindowsNuGetTemplate,Microsoft.iOS.Windows.Sdk,$(IOS_WINDOWS_NUGET_VERSION_NO_METADATA),$(IOS_WINDOWS_NUGET_TARGETS)))
+$(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(eval $(call CreateWindowsNuGetTemplate,Microsoft.$(platform).Windows.Sdk,$(IOS_WINDOWS_NUGET_VERSION_NO_METADATA),$($(platform)_WINDOWS_NUGET_TARGETS))))
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call CreateNuGetTemplate,Microsoft.$(platform).Ref,$($(platform)_NUGET_VERSION_NO_METADATA))))
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call CreateNuGetTemplate,Microsoft.$(platform).Templates,$($(platform)_NUGET_VERSION_NO_METADATA))))
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call CreateNuGetTemplate,Microsoft.NET.Workload.$(platform),$($(platform)_NUGET_VERSION_NO_METADATA))))
@@ -177,9 +176,11 @@ $(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIM
 $(DOTNET_NUPKG_DIR)/%.nupkg: nupkgs/%.nupkg | $(DOTNET_NUPKG_DIR)
 	$(Q) $(CP) $< $@
 
+ifdef INCLUDE_IOS
 SDK_PACK_IOS_WINDOWS = $(DOTNET_NUPKG_DIR)/$(IOS_WINDOWS_NUGET).Sdk.$(IOS_WINDOWS_NUGET_VERSION_FULL).nupkg
 ifdef ENABLE_DOTNET_WINDOWS
 SDK_PACKS += $(SDK_PACK_IOS_WINDOWS)
+endif
 endif
 
 pack-ios-windows: $(SDK_PACK_IOS_WINDOWS)

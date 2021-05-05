@@ -16,6 +16,10 @@ parameters:
 - name: osVersion
   type: string
 
+- name: checkDemands
+  type: boolean
+  default: true
+
 stages:
 - stage:
   displayName: ${{ parameters.stageName }}
@@ -33,9 +37,10 @@ stages:
 
     pool:
       name: ${{ parameters.macPool }}
-      demands: 
-      - Agent.OS -equals Darwin
-      - Agent.OSVersion -equals ${{ parameters.osVersion }}
+      ${{ if eq(parameters.checkDemands, true) }}:
+        demands: 
+        - Agent.OS -equals Darwin
+        - Agent.OSVersion -equals ${{ parameters.osVersion }}
 
     steps:
     - template: build.yml

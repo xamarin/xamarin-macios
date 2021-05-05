@@ -18,7 +18,7 @@ all-local::
 # or multiple tests:
 #     make run-tests TEST_FIXTURE="-test=Xamarin.MTouch.MT1016,Xamarin.MTouch.MT1017"
 
-run-tests: bin/Debug/mtouch.dll test.config
+run-tests: bin/Debug/mtouchtests.dll test.config
 	rm -f .failed-stamp
 	$(TOP)/tools/nunit3-console-3.11.1 "$(abspath $<)" "--result=$(abspath $(CURDIR)/TestResult.xml);format=nunit2" $(TEST_FIXTURE) --labels=All --inprocess || touch $(CURDIR)/.failed-stamp
 	@# Create an html file and tell MonkeyWrench to upload it (if we're running there)
@@ -27,14 +27,14 @@ run-tests: bin/Debug/mtouch.dll test.config
 		echo "@MonkeyWrench: AddFile: $$PWD/index.html")
 	@[[ ! -e .failed-stamp ]] 
 
-# mtouch.csproj.inc contains the mtouch_dependencies variable used to determine if mtouch.dll needs to be rebuilt or not.
--include mtouch.csproj.inc
+# mtouchtests.csproj.inc contains the mtouch_dependencies variable used to determine if mtouchtests.dll needs to be rebuilt or not.
+-include mtouchtests.csproj.inc
 
-bin/Debug/mtouch.dll: $(mtouch_dependencies)
-	$(SYSTEM_XIBUILD) -- mtouch.csproj /r $(XBUILD_VERBOSITY)
+bin/Debug/mtouchtests.dll: $(mtouch_dependencies)
+	$(SYSTEM_XIBUILD) -- mtouchtests.csproj /r $(XBUILD_VERBOSITY)
 	$(Q) rm -f .failed-stamp
 
-build: bin/Debug/mtouch.dll
+build: bin/Debug/mtouchtests.dll
 
 test.config: $(TOP)/Make.config Makefile
 	@rm -f $@

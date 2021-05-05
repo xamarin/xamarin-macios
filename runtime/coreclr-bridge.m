@@ -64,8 +64,8 @@ xamarin_handle_bridge_exception (GCHandle gchandle, const char *method)
 	if (method == NULL)
 		method = "<unknown method";
 
-	fprintf (stderr, "%s threw an exception: %p\n", method, gchandle);
-	xamarin_assertion_message ("%s threw an exception: %p", method, gchandle);
+	fprintf (stderr, "%s threw an exception: %p => %s\n", method, gchandle, [xamarin_print_all_exceptions (gchandle) UTF8String]);
+	xamarin_assertion_message ("%s threw an exception: %p = %s", method, gchandle, [xamarin_print_all_exceptions (gchandle) UTF8String]);
 }
 
 typedef void (*xamarin_runtime_initialize_decl)(struct InitializationOptions* options);
@@ -87,6 +87,16 @@ xamarin_bridge_register_product_assembly (GCHandle* exception_gchandle)
 	MonoAssembly *assembly;
 	assembly = xamarin_open_and_register (PRODUCT_DUAL_ASSEMBLY, exception_gchandle);
 	xamarin_mono_object_release (&assembly);
+}
+
+MonoMethod *
+xamarin_bridge_get_mono_method (MonoReflectionMethod *method)
+{
+	// MonoMethod and MonoReflectionMethod are identical in CoreCLR (both are actually MonoObjects).
+	// However, we're returning a retained object, so we need to retain here.
+	xamarin_mono_object_retain (method);
+	LOG_CORECLR (stderr, "%s (%p): rv: %p\n", __func__, method, method);
+	return method;
 }
 
 MonoClass *
@@ -152,6 +162,18 @@ xamarin_mono_object_release (MonoObject **mobj_ref)
 	*mobj_ref = NULL;
 }
 
+void
+xamarin_mono_object_release (MonoReflectionType **mobj)
+{
+	xamarin_mono_object_release ((MonoObject **) mobj);
+}
+
+void
+xamarin_mono_object_release (MonoString **mobj)
+{
+	xamarin_mono_object_release ((MonoObject **) mobj);
+}
+
 /* Implementation of the Mono Embedding API */
 
 // returns a retained MonoAssembly *
@@ -207,6 +229,30 @@ mono_jit_exec (MonoDomain * domain, MonoAssembly * assembly, int argc, const cha
 		xamarin_assertion_message ("mono_jit_exec failed: %i\n", rv);
 
 	return (int) exitCode;
+}
+
+MonoClass *
+mono_method_get_class (MonoMethod * method)
+{
+	MonoClass *rv = xamarin_bridge_get_method_declaring_type (method);
+	LOG_CORECLR (stderr, "%s (%p) => %p\n", __func__, method, rv);
+	return rv;
+}
+
+MonoClass *
+mono_object_get_class (MonoObject * obj)
+{
+	MonoClass *rv = xamarin_bridge_object_get_type (obj);
+	LOG_CORECLR (stderr, "%s (%p) => %p\n", __func__, obj, rv);
+	return rv;
+}
+
+MonoObject *
+mono_object_isinst (MonoObject * obj, MonoClass * klass)
+{
+	bool rv = xamarin_bridge_isinstance (obj, klass);
+	LOG_CORECLR (stderr, "%s (%p, %p) => %i\n", __func__, obj, klass, rv);
+	return rv ? obj : NULL;
 }
 
 #endif // CORECLR_RUNTIME

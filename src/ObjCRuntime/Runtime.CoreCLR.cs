@@ -13,6 +13,10 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
+using Foundation;
+
+using MonoObjectPtr=System.IntPtr;
+
 namespace ObjCRuntime {
 
 	public partial class Runtime {
@@ -75,6 +79,12 @@ namespace ObjCRuntime {
 		}
 
 		// Returns a retained MonoObject. Caller must release.
+		static IntPtr GetMonoObject (IntPtr gchandle)
+		{
+			return GetMonoObject (GetGCHandleTarget (gchandle));
+		}
+
+		// Returns a retained MonoObject. Caller must release.
 		static IntPtr GetMonoObject (object obj)
 		{
 			if (obj == null)
@@ -99,6 +109,17 @@ namespace ObjCRuntime {
 			return rv;
 		}
 
+		static object GetMonoObjectTarget (MonoObjectPtr mobj)
+		{
+			if (mobj == IntPtr.Zero)
+				return null;
+
+			unsafe {
+				MonoObject *monoobj = (MonoObject *) mobj;
+				return GetGCHandleTarget (monoobj->GCHandle);
+			}
+		}
+
 		static IntPtr MarshalStructure<T> (T value) where T: struct
 		{
 			var rv = Marshal.AllocHGlobal (Marshal.SizeOf (typeof (T)));
@@ -118,6 +139,48 @@ namespace ObjCRuntime {
 		{
 			var asm = (Assembly) GetGCHandleTarget (gchandle);
 			return Marshal.StringToHGlobalAuto (Path.GetFileName (asm.Location));
+		}
+
+		static void SetFlagsForNSObject (IntPtr gchandle, byte flags)
+		{
+			var obj = (NSObject) GetGCHandleTarget (gchandle);
+			obj.FlagsInternal = (NSObject.Flags) flags;
+		}
+
+		static byte GetFlagsForNSObject (IntPtr gchandle)
+		{
+			var obj = (NSObject) GetGCHandleTarget (gchandle);
+			return (byte) obj.FlagsInternal;
+		}
+
+		static IntPtr GetMethodDeclaringType (MonoObjectPtr mobj)
+		{
+			var method = (MethodBase) GetMonoObjectTarget (mobj);
+			return GetMonoObject (method.DeclaringType);
+		}
+
+		static IntPtr ObjectGetType (MonoObjectPtr mobj)
+		{
+			var obj = GetMonoObjectTarget (mobj);
+			if (obj == null) {
+				log_coreclr ($"ObjectGetType (0x{mobj.ToString ("x")}) => null object");
+				return IntPtr.Zero;
+			}
+			return GetMonoObject (obj.GetType ());
+		}
+
+		static bool IsInstance (MonoObjectPtr mobj, MonoObjectPtr mtype)
+		{
+			var obj = GetMonoObjectTarget (mobj);
+			if (obj == null)
+				return false;
+
+			var type = (Type) GetMonoObjectTarget (mtype);
+			var rv = type.IsAssignableFrom (obj.GetType ());
+
+			log_coreclr ($"IsInstance ({obj.GetType ()}, {type})");
+
+			return rv;
 		}
 	}
 }
