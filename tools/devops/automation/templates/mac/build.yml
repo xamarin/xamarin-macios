@@ -37,6 +37,10 @@ steps:
     gci env: | format-table -autosize -wrap
   displayName: 'Dump Environment'
 
+- bash: |
+    ioreg -l | grep -e Manufacturer -e 'Vendor Name'
+  displayName: 'Dump Hardware'
+
 - bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/clean-bot.sh
   displayName: 'Clean bot'
   env:
