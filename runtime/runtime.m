@@ -2331,7 +2331,7 @@ xamarin_create_product_exception_with_inner_exception (int code, GCHandle inner_
 void
 xamarin_insert_dllmap ()
 {
-#if defined (OBJC_ZEROCOST_EXCEPTIONS) && (defined (__i386__) || defined (__x86_64__))
+#if defined (OBJC_ZEROCOST_EXCEPTIONS) && (defined (__i386__) || defined (__x86_64__) || defined (__arm64__))
 	if (xamarin_marshal_objectivec_exception_mode == MarshalObjectiveCExceptionModeDisable)
 		return;
 #if DYLIB
@@ -2341,10 +2341,12 @@ xamarin_insert_dllmap ()
 #endif
 	mono_dllmap_insert (NULL, "/usr/lib/libobjc.dylib", "objc_msgSend",            lib, "xamarin_dyn_objc_msgSend");
 	mono_dllmap_insert (NULL, "/usr/lib/libobjc.dylib", "objc_msgSendSuper",       lib, "xamarin_dyn_objc_msgSendSuper");
+#if !defined (__arm64__)
 	mono_dllmap_insert (NULL, "/usr/lib/libobjc.dylib", "objc_msgSend_stret",      lib, "xamarin_dyn_objc_msgSend_stret");
 	mono_dllmap_insert (NULL, "/usr/lib/libobjc.dylib", "objc_msgSendSuper_stret", lib, "xamarin_dyn_objc_msgSendSuper_stret");
+#endif
 	LOG (PRODUCT ": Added dllmap for objc_msgSend");
-#endif // defined (__i386__) || defined (__x86_64__)
+#endif // defined (__i386__) || defined (__x86_64__) || defined (__arm64__)
 }
 #endif // !DOTNET
 
@@ -2381,20 +2383,22 @@ xamarin_pinvoke_override (const char *libraryName, const char *entrypointName)
 
 	if (!strcmp (libraryName, "__Internal")) {
 		symbol = dlsym (RTLD_DEFAULT, entrypointName);
-#if defined (__i386__) || defined (__x86_64__)
+#if defined (__i386__) || defined (__x86_64__) || defined (__arm64__)
 	} else if (!strcmp (libraryName, "/usr/lib/libobjc.dylib")) {
 		if (xamarin_marshal_objectivec_exception_mode != MarshalObjectiveCExceptionModeDisable) {
 			if (!strcmp (entrypointName, "objc_msgSend")) {
 				symbol = (void *) &xamarin_dyn_objc_msgSend;
 			} else if (!strcmp (entrypointName, "objc_msgSendSuper")) {
 				symbol = (void *) &xamarin_dyn_objc_msgSendSuper;
+#if !defined (__arm64__)
 			} else if (!strcmp (entrypointName, "objc_msgSend_stret")) {
 				symbol = (void *) &xamarin_dyn_objc_msgSend_stret;
 			} else if (!strcmp (entrypointName, "objc_msgSendSuper_stret")) {
 				symbol = (void *) &xamarin_dyn_objc_msgSendSuper_stret;
+#endif // !defined (__arm64__)
 			}
 		}
-#endif // defined (__i386__) || defined (__x86_64__)
+#endif // defined (__i386__) || defined (__x86_64__) || defined (__arm64__)
 	}
 
 	return symbol;
