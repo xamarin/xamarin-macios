@@ -66,6 +66,8 @@ namespace Xamarin.Linker.Steps {
 					}
 				}
 
+				// In .NET6, ApplyPreserveAttribute no longer runs on all assemblies.
+				// [assembly: Preserve (typeof (SomeAttribute))] no longer gives SomeAttribute "Preserve" semantics.
 #if !NET
 				// if the type is a custom attribute then it means we want to preserve what's decorated
 				// with this attribute (not just the attribute alone)

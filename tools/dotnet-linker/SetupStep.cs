@@ -85,16 +85,13 @@ namespace Xamarin {
 				// though we know that sdk assemblies will never have Preserve attributes, user assemblies may have
 				// [assembly: LinkSafe] attributes, which means we treat them as sdk assemblies and those may have
 				// Preserve attributes.
-				// TODO: LinkSafeAttribute doesn't appear to be handled anywhere. Is this attribute still supported?
-				// ApplyPreserveAttribute no longer runs on all assemblies. [assembly: Preserve (typeof (SomeAttribute))] will
-				// no longer give SomeAttribute "Preserve" semantics.
 				MarkHandlers.Add (new DotNetMarkAssemblySubStepDispatcher (new ApplyPreserveAttribute ()));
 				MarkHandlers.Add (new OptimizeGeneratedCodeHandler ());
-				// MarkNSObjects will run for all marked assemblies.
 				MarkHandlers.Add (new DotNetMarkAssemblySubStepDispatcher (new MarkNSObjects ()));
 				MarkHandlers.Add (new PreserveSmartEnumConversionsHandler ());
 
-				// TODO: these steps should probably run after mark.
+				// This step could be run after Mark to avoid tracking all members:
+				// https://github.com/xamarin/xamarin-macios/issues/11447
 				pre_mark_substeps.Add (new CollectUnmarkedMembersSubStep ());
 				pre_mark_substeps.Add (new StoreAttributesStep ());
 
