@@ -255,4 +255,23 @@ mono_object_isinst (MonoObject * obj, MonoClass * klass)
 	return rv ? obj : NULL;
 }
 
+MonoObject *
+mono_runtime_invoke (MonoMethod * method, void * obj, void ** params, MonoObject ** exc)
+{
+	MonoObject *rv = NULL;
+	GCHandle exception_gchandle = INVALID_GCHANDLE;
+
+	LOG_CORECLR (stderr, "%s (%p, %p, %p, %p)\n", __func__, method, obj, params, exc);
+
+	rv = xamarin_bridge_runtime_invoke_method (method, (MonoObject *) obj, params, &exception_gchandle);
+
+	if (exc == NULL) {
+		xamarin_handle_bridge_exception (exception_gchandle, __func__);
+	} else {
+		*exc = xamarin_gchandle_unwrap (exception_gchandle);
+	}
+
+	return rv;
+}
+
 #endif // CORECLR_RUNTIME
