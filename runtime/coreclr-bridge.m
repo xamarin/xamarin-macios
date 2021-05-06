@@ -58,6 +58,13 @@ xamarin_install_nsautoreleasepool_hooks ()
 }
 
 void
+mono_runtime_set_pending_exception (MonoException *exc, mono_bool overwrite)
+{
+	LOG_CORECLR (stderr, "%s (%p, %i)\n", __func__, exc, overwrite);
+	xamarin_bridge_set_pending_exception (exc);
+}
+
+void
 xamarin_handle_bridge_exception (GCHandle gchandle, const char *method)
 {
 	if (gchandle == INVALID_GCHANDLE)

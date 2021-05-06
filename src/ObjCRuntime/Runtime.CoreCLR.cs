@@ -89,6 +89,13 @@ namespace ObjCRuntime {
 			throw new InvalidOperationException ($"Could not find any assemblies named {name}");
 		}
 
+		static unsafe void SetPendingException (MonoObject* exception_obj)
+		{
+			var exc = (Exception) GetMonoObjectTarget (exception_obj);
+			// This requires https://github.com/dotnet/runtime/pull/52146 to be merged and packages available.
+			Console.WriteLine ("Not implemented: SetPendingException ({0})", exc);;
+		}
+
 		unsafe static bool IsClassOfType (MonoObject *typeobj, TypeLookup match)
 		{
 			return IsClassOfType ((Type) GetMonoObjectTarget (typeobj), match);
