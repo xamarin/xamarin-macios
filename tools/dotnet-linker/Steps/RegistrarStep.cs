@@ -4,6 +4,8 @@ using System.IO;
 using Xamarin.Bundler;
 using Xamarin.Utils;
 
+using Mono.Cecil;
+
 namespace Xamarin.Linker {
 	public class RegistrarStep : ConfigurationAwareStep {
 		protected override string Name { get; } = "Registrar";
@@ -48,7 +50,12 @@ namespace Xamarin.Linker {
 				var dir = Configuration.CacheDirectory;
 				var header = Path.Combine (dir, "registrar.h");
 				var code = Path.Combine (dir, "registrar.mm");
-				Configuration.Target.StaticRegistrar.Generate (Configuration.Assemblies, header, code);
+				var bundled_assemblies = new List<AssemblyDefinition> ();
+				foreach (var assembly in Configuration.Assemblies) {
+					if (Annotations.GetAction (assembly) != Mono.Linker.AssemblyAction.Delete)
+						bundled_assemblies.Add (assembly);
+				}
+				Configuration.Target.StaticRegistrar.Generate (bundled_assemblies, header, code);
 
 				var items = new List<MSBuildItem> ();
 				foreach (var abi in Configuration.Abis) {

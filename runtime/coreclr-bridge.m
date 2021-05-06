@@ -64,8 +64,8 @@ xamarin_handle_bridge_exception (GCHandle gchandle, const char *method)
 	if (method == NULL)
 		method = "<unknown method";
 
-	fprintf (stderr, "%s threw an exception: %p\n", method, gchandle);
-	xamarin_assertion_message ("%s threw an exception: %p", method, gchandle);
+	fprintf (stderr, "%s threw an exception: %p => %s\n", method, gchandle, [xamarin_print_all_exceptions (gchandle) UTF8String]);
+	xamarin_assertion_message ("%s threw an exception: %p = %s", method, gchandle, [xamarin_print_all_exceptions (gchandle) UTF8String]);
 }
 
 typedef void (*xamarin_runtime_initialize_decl)(struct InitializationOptions* options);
@@ -245,6 +245,14 @@ mono_object_get_class (MonoObject * obj)
 	MonoClass *rv = xamarin_bridge_object_get_type (obj);
 	LOG_CORECLR (stderr, "%s (%p) => %p\n", __func__, obj, rv);
 	return rv;
+}
+
+MonoObject *
+mono_object_isinst (MonoObject * obj, MonoClass * klass)
+{
+	bool rv = xamarin_bridge_isinstance (obj, klass);
+	LOG_CORECLR (stderr, "%s (%p, %p) => %i\n", __func__, obj, klass, rv);
+	return rv ? obj : NULL;
 }
 
 #endif // CORECLR_RUNTIME

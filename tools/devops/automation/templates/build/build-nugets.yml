@@ -22,15 +22,17 @@ steps:
     artifactName: build-binlogs
   condition: and(succeededOrFailed(), contains(variables['configuration.BuildNugets'], 'True'))
 
-- task: NuGetCommand@2
-  displayName: 'Publish Nugets'
-  inputs:
-    command: push
-    packagesToPush: $(Build.SourcesDirectory)/package/*.nupkg
-    nuGetFeedType: external
-    publishFeedCredentials: xamarin-impl public feed
-  condition: and(succeeded(), eq(variables['configuration.BuildNugets'], 'True'))
-  continueOnError: true # should not stop the build since is not official just yet.
+# do not publish on pull requets
+- ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
+  - task: NuGetCommand@2
+    displayName: 'Publish Nugets'
+    inputs:
+      command: push
+      packagesToPush: $(Build.SourcesDirectory)/package/*.nupkg
+      nuGetFeedType: external
+      publishFeedCredentials: xamarin-impl public feed
+    condition: and(succeeded(), eq(variables['configuration.BuildNugets'], 'True'))
+    continueOnError: true # should not stop the build since is not official just yet.
 
 # Only executed when the publshing of the nugets failed.
 - bash: |
