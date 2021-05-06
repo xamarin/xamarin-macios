@@ -82,7 +82,9 @@
 
 		new Export ("MonoType *", "mono_class_get_type",
 			"MonoClass *", "klass"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 		#endregion
 
 		#region metadata/class-internals.h
