@@ -33,7 +33,6 @@ jobs:
 
   variables:
     isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
-    isTJ: $[eq(variables['Build.SourceBranch'], 'refs/heads/OneLocBuildArtifact')]
 
   steps:
   - template: configure.yml
