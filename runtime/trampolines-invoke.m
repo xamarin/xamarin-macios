@@ -138,7 +138,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 	MonoObject *mthis = NULL;
 	MethodDescription *desc = NULL;
 	MonoMethod *method;
-	MonoMethodSignature *msig;
+	MonoMethodSignature *msig = NULL;
 	MonoReflectionMethod *reflection_method = NULL;
 	int semantic;
 	bool isCategoryInstance;
@@ -729,6 +729,8 @@ exception_handling:
 		free (writeback);
 		writeback = NULL;
 	}
+
+	xamarin_bridge_free_mono_signature (&msig);
 
 	MONO_THREAD_DETACH; // COOP: This will switch to GC_SAFE
 

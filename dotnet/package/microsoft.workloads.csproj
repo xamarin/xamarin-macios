@@ -1,8 +1,9 @@
 <Project>
   <PropertyGroup>
-    <PackageId>Microsoft.NET.Workload.$(_PlatformName)</PackageId>
+    <!-- NOTE: $(VersionBand) is passed in via Makefile -->
+    <PackageId>Microsoft.NET.Sdk.$(_PlatformName).Manifest-$(VersionBand)</PackageId>
     <Description>.NET Workload for $(_PlatformName) platforms</Description>
-    <_packagePath>$(MSBuildThisFileDirectory)..\Microsoft.NET.Workload.$(_PlatformName)\</_packagePath>
+    <_packagePath>$(MSBuildThisFileDirectory)..\Microsoft.NET.Sdk.$(_PlatformName)\</_packagePath>
   </PropertyGroup>
   <Import Project="common.csproj" />
   <ItemGroup>

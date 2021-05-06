@@ -69,6 +69,7 @@ namespace Tools {
 
 			switch (Path.GetExtension (item.Name)) {
 			case ".aotdata":
+			case ".arm64": // actually .aotdata.arm64
 				aotdata1 += s1;
 				aotdata2 += s2;
 				break;
@@ -108,7 +109,7 @@ namespace Tools {
 			Output.WriteLine ("| | | | | |");
 			WriteStats ("Native subtotal", native1 + aotdata1, native2 + aotdata2);
 			WriteStats ("    Executable", native1, native2);
-			WriteStats ("    AOT data *.aotdata", aotdata1, aotdata2);
+			WriteStats ("    AOT data", aotdata1, aotdata2);
 			Output.WriteLine ("| | | | | |");
 			WriteStats ("Managed *.dll/exe", managed1, managed2);
 			Output.WriteLine ("| | | | | |");

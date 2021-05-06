@@ -1,5 +1,5 @@
 {
-	"version": 5,
+	"version": "@VERSION@",
 	"workloads": {
 		"microsoft-@PLATFORM_LOWERCASE@-sdk-full": {
 			"description": "Microsoft @PLATFORM@ SDK",

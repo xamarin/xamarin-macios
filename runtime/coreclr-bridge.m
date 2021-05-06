@@ -64,8 +64,8 @@ xamarin_handle_bridge_exception (GCHandle gchandle, const char *method)
 	if (method == NULL)
 		method = "<unknown method";
 
-	fprintf (stderr, "%s threw an exception: %p\n", method, gchandle);
-	xamarin_assertion_message ("%s threw an exception: %p", method, gchandle);
+	fprintf (stderr, "%s threw an exception: %p => %s\n", method, gchandle, [xamarin_print_all_exceptions (gchandle) UTF8String]);
+	xamarin_assertion_message ("%s threw an exception: %p = %s", method, gchandle, [xamarin_print_all_exceptions (gchandle) UTF8String]);
 }
 
 typedef void (*xamarin_runtime_initialize_decl)(struct InitializationOptions* options);
@@ -245,6 +245,90 @@ mono_object_get_class (MonoObject * obj)
 	MonoClass *rv = xamarin_bridge_object_get_type (obj);
 	LOG_CORECLR (stderr, "%s (%p) => %p\n", __func__, obj, rv);
 	return rv;
+}
+
+MonoObject *
+mono_object_isinst (MonoObject * obj, MonoClass * klass)
+{
+	bool rv = xamarin_bridge_isinstance (obj, klass);
+	LOG_CORECLR (stderr, "%s (%p, %p) => %i\n", __func__, obj, klass, rv);
+	return rv ? obj : NULL;
+}
+
+// Return value: NULL, or a retained MonoObject* that must be freed with xamarin_mono_object_release.
+// Returns NULL in case of exception.
+MonoObject *
+mono_runtime_invoke (MonoMethod * method, void * obj, void ** params, MonoObject ** exc)
+{
+	MonoObject *rv = NULL;
+	GCHandle exception_gchandle = INVALID_GCHANDLE;
+
+	LOG_CORECLR (stderr, "%s (%p, %p, %p, %p)\n", __func__, method, obj, params, exc);
+
+	rv = xamarin_bridge_runtime_invoke_method (method, (MonoObject *) obj, params, &exception_gchandle);
+
+	if (exc == NULL) {
+		xamarin_handle_bridge_exception (exception_gchandle, __func__);
+	} else {
+		*exc = xamarin_gchandle_unwrap (exception_gchandle);
+	}
+
+	return rv;
+}
+
+MonoMethodSignature *
+mono_method_signature (MonoMethod* method)
+{
+	MonoMethodSignature *rv = xamarin_bridge_method_get_signature (method);
+
+	LOG_CORECLR (stderr, "xamarin_bridge_mono_method_signature (%p) => %p\n", method, rv);
+
+	return rv;
+}
+
+MonoType *
+mono_signature_get_params (MonoMethodSignature* sig, void ** iter)
+{
+	int* p = (int *) iter;
+	if (*p >= sig->parameter_count) {
+		LOG_CORECLR (stderr, "%s (%p, %p => %i) => DONE\n", __func__, sig, iter, *p);
+		return NULL;
+	}
+
+	MonoObject *rv = sig->parameters [*p];
+	xamarin_mono_object_retain (rv);
+
+	LOG_CORECLR (stderr, "%s (%p, %p => %i) => %p NEXT\n", __func__, sig, iter, *p, rv->gchandle);
+
+	*p = *p + 1;
+
+	return rv;
+}
+
+MonoType *
+mono_signature_get_return_type (MonoMethodSignature* sig)
+{
+	MonoType *rv = sig->return_type;
+	xamarin_mono_object_retain (rv);
+
+	LOG_CORECLR (stderr, "%s (%p) => %p\n", __func__, sig, rv);
+
+	return rv;
+}
+
+void
+xamarin_bridge_free_mono_signature (MonoMethodSignature **psig)
+{
+	MonoMethodSignature *sig = *psig;
+
+	for (int i = 0; i < sig->parameter_count; i++) {
+		xamarin_mono_object_release (&sig->parameters [i]);
+	}
+	xamarin_mono_object_release (&sig->return_type);
+
+	mono_free (sig);
+
+	*psig = NULL;
 }
 
 #endif // CORECLR_RUNTIME
