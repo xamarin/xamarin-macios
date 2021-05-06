@@ -163,12 +163,6 @@ xamarin_mono_object_release (MonoObject **mobj_ref)
 }
 
 void
-xamarin_mono_object_release (MonoReflectionType **mobj)
-{
-	xamarin_mono_object_release ((MonoObject **) mobj);
-}
-
-void
 xamarin_mono_object_release (MonoString **mobj)
 {
 	xamarin_mono_object_release ((MonoObject **) mobj);
@@ -312,6 +306,18 @@ mono_signature_get_return_type (MonoMethodSignature* sig)
 	xamarin_mono_object_retain (rv);
 
 	LOG_CORECLR (stderr, "%s (%p) => %p\n", __func__, sig, rv);
+
+	return rv;
+}
+
+MonoReflectionType *
+mono_type_get_object (MonoDomain *domain, MonoType *type)
+{
+	MonoReflectionType *rv = type;
+
+	xamarin_mono_object_retain (rv);
+
+	LOG_CORECLR (stderr, "%s (%p, %p) => %p\n", __func__, domain, type, rv);
 
 	return rv;
 }

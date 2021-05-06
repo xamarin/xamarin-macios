@@ -293,7 +293,6 @@ MonoObject *	xamarin_gchandle_unwrap (GCHandle handle); // Will get the target a
 void			xamarin_mono_object_retain (MonoObject *mobj);
 // Use C++ linking to be able to use method overloading, so that callers don't have to cast their variables to 'MonoObject**' (which improves type safety a lot).
 extern "C++" void	xamarin_mono_object_release (MonoObject **mobj);
-extern "C++" void	xamarin_mono_object_release (MonoReflectionType **mobj);
 extern "C++" void	xamarin_mono_object_release (MonoString **mobj);
 #else
 // Nothing to do here.
