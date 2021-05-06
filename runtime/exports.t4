@@ -148,7 +148,9 @@
 		new Export ("MonoString *", "mono_string_new",
 			"MonoDomain *", "domain",
 			"const char *", "text"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		new Export ("MonoArray *", "mono_array_new",
 			"MonoDomain *", "domain",

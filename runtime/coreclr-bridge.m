@@ -492,4 +492,14 @@ mono_string_to_utf8 (MonoString *string_obj)
 	return rv;
 }
 
+MonoString *
+mono_string_new (MonoDomain *domain, const char *text)
+{
+	MonoString *rv = xamarin_bridge_new_string (text);
+
+	LOG_CORECLR (stderr, "%s (%p, %s) => %p\n", __func__, domain, text, rv);
+
+	return rv;
+}
+
 #endif // CORECLR_RUNTIME
