@@ -156,12 +156,13 @@ steps:
     locProj: '$(Build.SourcesDirectory)\Localize\LocProject.json'
     outDir: '$(Build.ArtifactStagingDirectory)'
     isCreatePrSelected: eq(variables['Build.Reason'], 'Schedule')
-    isAutoCompletePrSelected: false
-    prSourceBranchPrefix: 'locfiles'
-    repoType: gitHub
-    gitHubPatVariable: '$(GitHub.Token)'
-    packageSourceAuth: patAuth
-    patVariable: '$(OneLocBuild--PAT)'
+    ${{ if eq(variables['Build.Reason'], 'Schedule') }}:
+      isAutoCompletePrSelected: false
+      prSourceBranchPrefix: 'locfiles'
+      repoType: gitHub
+      gitHubPatVariable: '$(GitHub.Token)'
+      packageSourceAuth: patAuth
+      patVariable: '$(OneLocBuild--PAT)'
 
 - task: PublishBuildArtifacts@1
   condition: and(succeeded(), eq(variables.isTJ, 'True'))
