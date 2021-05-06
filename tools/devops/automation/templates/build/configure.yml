@@ -158,11 +158,10 @@ steps:
     isCreatePrSelected: eq(variables['Build.Reason'], 'Schedule')
     packageSourceAuth: patAuth
     patVariable: '$(OneLocBuild--PAT)'
-    ${{ if eq(variables['Build.Reason'], 'Schedule') }}:
-      isAutoCompletePrSelected: false
-      prSourceBranchPrefix: 'locfiles'
-      repoType: gitHub
-      gitHubPatVariable: '$(GitHub.Token)'
+    isAutoCompletePrSelected: false
+    prSourceBranchPrefix: 'locfiles'
+    repoType: gitHub
+    gitHubPatVariable: '$(GitHub.Token)'
 
 - task: PublishBuildArtifacts@1
   condition: and(succeeded(), eq(variables.isMain, 'True'))
