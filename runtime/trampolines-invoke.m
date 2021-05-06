@@ -270,7 +270,9 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 								exception = (MonoObject *) mono_get_exception_execution_engine ("Invalid type encoding for parameter");
 								goto exception_handling;
 							}
-							bool is_parameter_out = xamarin_is_parameter_out (mono_method_get_object (domain, method, NULL), (int) i, &exception_gchandle);
+							MonoReflectionMethod *rmethod = mono_method_get_object (domain, method, NULL);
+							bool is_parameter_out = xamarin_is_parameter_out (rmethod, (int) i, &exception_gchandle);
+							ADD_TO_MONOOBJECT_RELEASE_LIST (rmethod);
 							if (exception_gchandle != INVALID_GCHANDLE)
 								goto exception_handling;
 
@@ -463,7 +465,9 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 							ADD_TO_MONOOBJECT_RELEASE_LIST (obj);
 
 							if (created && obj) {
-								bool is_transient = xamarin_is_parameter_transient (mono_method_get_object (domain, method, NULL), (int32_t) i, &exception_gchandle);
+								MonoReflectionMethod *rmethod = mono_method_get_object (domain, method, NULL);
+								bool is_transient = xamarin_is_parameter_transient (rmethod, (int32_t) i, &exception_gchandle);
+								ADD_TO_MONOOBJECT_RELEASE_LIST (rmethod);
 								if (exception_gchandle != INVALID_GCHANDLE)
 									goto exception_handling;
 								if (is_transient)
