@@ -29,6 +29,14 @@ struct _MonoObject {
 	GCHandle gchandle;
 };
 
+// This struct must be kept in sync with the MonoMethodSignature struct in Runtime.CoreCLR.cs
+struct _MonoMethodSignature {
+	MonoObject *method;
+	int parameter_count;
+	MonoObject *return_type;
+	MonoObject *parameters[];
+};
+
 #ifdef __cplusplus
 } /* extern "C" */
 #endif

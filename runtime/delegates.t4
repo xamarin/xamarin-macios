@@ -351,6 +351,14 @@
 			OnlyCoreCLR = true,
 		},
 
+		new XDelegate ("MonoMethodSignature *", "IntPtr", "xamarin_bridge_method_get_signature",
+			"MonoObject *", "MonoObject *", "method"
+		) {
+			WrappedManagedFunction = "GetMethodSignature",
+			OnlyDynamicUsage = false,
+			OnlyCoreCLR = true,
+		},
+
 		new XDelegate ("MonoObject*", "IntPtr", "xamarin_bridge_get_monoobject",
 			"GCHandle", "IntPtr", "gchandle"
 		) {
@@ -382,6 +390,17 @@
 			OnlyDynamicUsage = false,
 			OnlyCoreCLR = true,
 		},
+
+		new XDelegate ("MonoObject *", "MonoObject *", "xamarin_bridge_runtime_invoke_method",
+			"MonoObject *", "MonoObject *", "method",
+			"MonoObject *", "MonoObject *", "instance",
+			"void**", "IntPtr", "parameters"
+		) {
+			WrappedManagedFunction = "InvokeMethod",
+			OnlyDynamicUsage = false,
+			OnlyCoreCLR = true,
+		},
+
 	};
 	delegates.CalculateLengths ();
 #><#+

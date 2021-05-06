@@ -23,9 +23,6 @@
     <type fullname="ObjCRuntime.DesignatedInitializerAttribute">
       <attribute internal="RemoveAttributeInstances" />
     </type>
-    <type fullname="ObjCRuntime.LinkWithAttribute">
-      <attribute internal="RemoveAttributeInstances" />
-    </type>
     <type fullname="ObjCRuntime.NotImplementedAttribute">
       <attribute internal="RemoveAttributeInstances" />
     </type>

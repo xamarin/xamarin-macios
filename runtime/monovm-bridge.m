@@ -284,6 +284,13 @@ xamarin_install_nsautoreleasepool_hooks ()
 	mono_profiler_install_thread (thread_start, thread_end);
 }
 
+void
+xamarin_bridge_free_mono_signature (MonoMethodSignature **psig)
+{
+	// nothing to free here
+	*psig = NULL;
+}
+
 #if DOTNET
 
 bool
@@ -296,6 +303,24 @@ xamarin_bridge_vm_initialize (int propertyCount, const char **propertyKeys, cons
 	LOG_MONOVM (stderr, "xamarin_vm_initialize (%i, %p, %p): rv: %i\n", propertyCount, propertyKeys, propertyValues, rv);
 
 	return rv == 0;
+}
+
+// We have a P/Invoke to xamarin_mono_object_retain in managed code, but the
+// corresponding native method only really exists when using CoreCLR. However,
+// the P/Invoke might not always be linked away (if the linker isn't enabled
+// for instance), in which case we must still have a native function. So
+// provide an empty implementation of xamarin_mono_object_retain (since it
+// doesn't have to do anything when using MonoVM). We still keep the #define
+// that does nothing, so that all the native code that calls
+// xamarin_mono_object_retain, will completely disappear when using MonoVM.
+#undef xamarin_mono_object_retain
+extern "C" {
+	void xamarin_mono_object_retain (MonoObject *mobj);
+}
+void
+xamarin_mono_object_retain (MonoObject *mobj)
+{
+	// Nothing to do here
 }
 
 #endif // DOTNET

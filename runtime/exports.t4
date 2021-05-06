@@ -99,7 +99,9 @@
 			"void *",        "obj",
 			"void **",       "params",
 			"MonoObject **", "exc"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		new Export ("uint32_t", "mono_gchandle_new",
 			"MonoObject *", "obj",
@@ -313,7 +315,9 @@
 
 		new Export ("MonoMethodSignature *", "mono_method_signature",
 			"MonoMethod *", "method"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		new Export ("MonoClass *", "mono_method_get_class",
 			"MonoMethod *", "method"
@@ -389,7 +393,9 @@
 		new Export ("MonoType *", "mono_signature_get_params",
 			"MonoMethodSignature *", "sig",
 			"void **", "iter"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		new Export ("mono_bool", "mono_type_is_byref", 
 			"MonoType *", "type"
@@ -397,7 +403,9 @@
 
 		new Export ("MonoType *", "mono_signature_get_return_type",
 			"MonoMethodSignature *", "sig"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		new Export ("int", "mono_type_get_type",
 			"MonoType *", "type"

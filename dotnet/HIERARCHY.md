@@ -1,6 +1,6 @@
 # File layout
 
-## Microsoft._platform_.Workload
+## Microsoft.NET.Sdk._platform_
 
 * WorkloadManifest.json: workload manifest that describes the different
   workloads for _platform_.
