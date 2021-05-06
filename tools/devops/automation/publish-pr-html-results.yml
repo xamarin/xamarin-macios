@@ -22,7 +22,7 @@ resources:
   pipelines:
   - pipeline: macios
     source: xamarin-macios
-    trigger: true # always do trigger
+    trigger:
       stages:
       - build_packages
 
