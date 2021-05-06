@@ -21,5 +21,6 @@ namespace Xharness.Jenkins {
 		public bool? UseMonoRuntime;
 		public MonoNativeLinkMode MonoNativeLinkMode;
 		public IEnumerable<IDevice> Candidates;
+		public string XamMacArch;
 	}
 }
