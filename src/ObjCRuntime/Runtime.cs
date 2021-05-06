@@ -175,6 +175,13 @@ namespace ObjCRuntime {
 
 		internal static unsafe InitializationOptions* options;
 
+#if NET
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		internal unsafe static bool IsCoreCLR {
+			get { return options->IsCoreCLR; }
+		}
+#endif
+
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static bool DynamicRegistrationSupported {
 			get {
