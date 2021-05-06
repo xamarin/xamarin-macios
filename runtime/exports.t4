@@ -162,7 +162,9 @@
 
 		new Export ("char *", "mono_string_to_utf8",
 			"MonoString *", "string_obj"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		new Export ("uintptr_t", "mono_array_length",
 			"MonoArray *", "array"
