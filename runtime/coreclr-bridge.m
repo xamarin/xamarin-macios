@@ -331,6 +331,12 @@ xamarin_bridge_free_mono_signature (MonoMethodSignature **psig)
 	*psig = NULL;
 }
 
+void
+mono_free (void *ptr)
+{
+	free (ptr);
+}
+
 MonoClass *
 mono_class_from_mono_type (MonoType *type)
 {

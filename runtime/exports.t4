@@ -520,7 +520,9 @@
 
 		new Export ("void", "mono_free",
 			"void *", "ptr"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		#endregion
 
