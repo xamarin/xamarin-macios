@@ -3,10 +3,11 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
   </PropertyGroup>
+  <PropertyGroup>
+    <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
+  </PropertyGroup>
   <ItemGroup>
     <EmbeddedResource Update="MSBStrings.resx">
-      <XlfSourceFormat>Resx</XlfSourceFormat>
-      <XlfOutputItem>EmbeddedResource</XlfOutputItem>
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>MSBStrings.Designer.cs</LastGenOutput>
     </EmbeddedResource>
@@ -17,6 +18,59 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="XliffTasks" Version="1.0.0-beta.20154.1" />
+    <EmbeddedResource Include="MSBStrings.resx">
+    </EmbeddedResource>
+    <EmbeddedResource Include="TranslatedAssemblies/MSBStrings.cs.resx">
+      <Link>MSBStrings.cs.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TranslatedAssemblies/MSBStrings.de.resx">
+      <Link>MSBStrings.de.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TranslatedAssemblies/MSBStrings.es.resx">
+      <Link>MSBStrings.es.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TranslatedAssemblies/MSBStrings.fr.resx">
+      <Link>MSBStrings.fr.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TranslatedAssemblies/MSBStrings.hu.resx">
+      <Link>MSBStrings.hu.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TranslatedAssemblies/MSBStrings.it.resx">
+      <Link>MSBStrings.it.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TranslatedAssemblies/MSBStrings.ja.resx">
+      <Link>MSBStrings.ja.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TranslatedAssemblies/MSBStrings.ko.resx">
+      <Link>MSBStrings.ko.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TranslatedAssemblies/MSBStrings.nl.resx">
+      <Link>MSBStrings.nl.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TranslatedAssemblies/MSBStrings.pl.resx">
+      <Link>MSBStrings.pl.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TranslatedAssemblies/MSBStrings.pt-BR.resx">
+      <Link>MSBStrings.pt-BR.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TranslatedAssemblies/MSBStrings.pt-PT.resx">
+      <Link>MSBStrings.pt-PT.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TranslatedAssemblies/MSBStrings.ru.resx">
+      <Link>MSBStrings.ru.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TranslatedAssemblies/MSBStrings.sv.resx">
+      <Link>MSBStrings.sv.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TranslatedAssemblies/MSBStrings.tr.resx">
+      <Link>MSBStrings.tr.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TranslatedAssemblies/MSBStrings.zh-Hans.resx">
+      <Link>MSBStrings.zh-Hans.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TranslatedAssemblies/MSBStrings.zh-Hant.resx">
+      <Link>MSBStrings.zh-Hant.resx</Link>
+    </EmbeddedResource>
   </ItemGroup>
+
 </Project>
