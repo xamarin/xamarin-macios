@@ -339,4 +339,12 @@ mono_class_from_mono_type (MonoType *type)
 	return rv;
 }
 
+mono_bool
+mono_class_is_delegate (MonoClass *klass)
+{
+	bool rv = xamarin_bridge_is_delegate (klass);
+	LOG_CORECLR (stderr, "%s (%p) => %i\n", __func__, klass, rv);
+	return rv;
+}
+
 #endif // CORECLR_RUNTIME
