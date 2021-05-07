@@ -534,6 +534,12 @@ namespace ObjCRuntime {
 			return (MonoObject*) GetMonoObject (obj);
 		}
 
+		static unsafe ulong GetArrayLength (MonoObject* obj)
+		{
+			var array = (Array) GetMonoObjectTarget (obj);
+			return (ulong) array.Length;
+		}
+
 		static bool IsNullable (Type type)
 		{
 			if (Nullable.GetUnderlyingType (type) != null)

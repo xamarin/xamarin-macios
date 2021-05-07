@@ -178,7 +178,9 @@
 
 		new Export ("uintptr_t", "mono_array_length",
 			"MonoArray *", "array"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		new Export ("MonoObject *", "mono_object_isinst",
 			"MonoObject *", "obj",

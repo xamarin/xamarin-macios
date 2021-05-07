@@ -555,6 +555,14 @@ mono_array_new (MonoDomain *domain, MonoClass *eclass, uintptr_t n)
 	return rv;
 }
 
+uintptr_t
+mono_array_length (MonoArray *array)
+{
+	uintptr_t rv = (uintptr_t) xamarin_bridge_get_array_length (array);
+	LOG_CORECLR (stderr, "%s (%p) => %llu\n", __func__, array, (uint64_t) rv);
+	return rv;
+}
+
 char *
 mono_string_to_utf8 (MonoString *string_obj)
 {
