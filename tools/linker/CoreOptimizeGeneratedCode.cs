@@ -711,15 +711,6 @@ namespace Xamarin.Linker {
 				return;
 			}
 
-			if (!LinkContext.App.DynamicRegistrationSupported && method.Name == "get_DynamicRegistrationSupported" && method.DeclaringType.Is (Namespaces.ObjCRuntime, "Runtime")) {
-				// Rewrite to return 'false'
-				var instr = method.Body.Instructions;
-				instr.Clear ();
-				instr.Add (Instruction.Create (OpCodes.Ldc_I4_0));
-				instr.Add (Instruction.Create (OpCodes.Ret));
-				return; // nothing else to do here.
-			}
-
 			if (Optimizations.InlineIsARM64CallingConvention == true && is_arm64_calling_convention.HasValue && method.Name == "GetIsARM64CallingConvention" && method.DeclaringType.Is (Namespaces.ObjCRuntime, "Runtime")) {
 				// Rewrite to return the constant value
 				var instr = method.Body.Instructions;
@@ -759,9 +750,13 @@ namespace Xamarin.Linker {
 			case "get_IsDirectBinding":
 				ProcessIsDirectBinding (caller, ins);
 				break;
+#if !NET
+			// ILLink does this optimization since the property returns a constant `true` (built time)
+			// or `false` - if `RegistrarRemovalTrackingStep` decide it's possible to do without
 			case "get_DynamicRegistrationSupported":
 				ProcessIsDynamicSupported (caller, ins);
 				break;
+#endif
 			case "SetupBlock":
 			case "SetupBlockUnsafe":
 				return ProcessSetupBlock (caller, ins);

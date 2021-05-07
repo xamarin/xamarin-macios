@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Linq;
 using Mono.Cecil;
+using Mono.Cecil.Cil;
 using Mono.Linker;
-using Mono.Linker.Steps;
 
 using Xamarin.Bundler;
 using Xamarin.Linker;
 #if !NET
+using Mono.Linker.Steps;
 using Mono.Tuner;
 using Xamarin.Tuner;
 #endif
@@ -25,7 +26,7 @@ namespace MonoTouch.Tuner {
 
 		Optimizations Optimizations => Configuration.Application.Optimizations;
 
-		string PlatformAssembly => Configuration.PlatformAssembly;
+		string PlatformAssemblyName => Configuration.PlatformAssembly;
 
 		protected override void TryProcessAssembly (AssemblyDefinition assembly)
 		{
@@ -36,7 +37,7 @@ namespace MonoTouch.Tuner {
 
 		Optimizations Optimizations => ((DerivedLinkContext) Context).App.Optimizations;
 
-		string PlatformAssembly => ((MobileProfile) Profile.Current).ProductAssembly;
+		string PlatformAssemblyName => ((MobileProfile) Profile.Current).ProductAssembly;
 
 		int WarnCode => 2107; // for compatibility
 
@@ -46,6 +47,7 @@ namespace MonoTouch.Tuner {
 			base.ProcessAssembly (assembly);
 		}
 #endif
+		AssemblyDefinition PlatformAssembly;
 
 		bool dynamic_registration_support_required;
 
@@ -63,8 +65,11 @@ namespace MonoTouch.Tuner {
 				return false;
 
 			// The product assembly itself is safe as long as it's linked
-			if (Profile.IsProductAssembly (assembly))
-				return Annotations.GetAction (assembly) != AssemblyAction.Link;
+			if (Profile.IsProductAssembly (assembly)) {
+				if (Annotations.GetAction (assembly) != AssemblyAction.Link)
+					return false;
+				PlatformAssembly = assembly;
+			}
 
 			// Can't touch the forbidden fruit in the product assembly unless there's a reference to it
 			var hasProductReference = false;
@@ -78,7 +83,7 @@ namespace MonoTouch.Tuner {
 				return false;
 
 			// Check if the assembly references any methods that require the dynamic registrar
-			var productAssemblyName = PlatformAssembly;
+			var productAssemblyName = PlatformAssemblyName;
 			var requires = false;
 			foreach (var mr in assembly.MainModule.GetMemberReferences ()) {
 				if (mr.DeclaringType == null || string.IsNullOrEmpty (mr.DeclaringType.Namespace))
@@ -170,6 +175,18 @@ namespace MonoTouch.Tuner {
 				// If dynamic registration is not required, and removal of the dynamic registrar hasn't already
 				// been disabled, then we can remove it!
 				Optimizations.RemoveDynamicRegistrar = !dynamic_registration_support_required;
+				// ILLink will optimize `Runtime.Initialize` based on `DynamicRegistrationSupported` returning a constant (`true`)
+				// and this will runs before we have the chance to set it to `false` in `CoreOptimizedGeneratedCode` so we instead
+				// do the change here so the linker can do this without further ado
+				// note: it does not matter for _legacy_ so we apply the change (to earlier) to minimize the difference between them
+				if (PlatformAssembly != null) {
+					var method = PlatformAssembly.MainModule.GetType ("ObjCRuntime.Runtime").Methods.First ((n) => n.Name == "get_DynamicRegistrationSupported");
+					// Rewrite to return 'false'
+					var instr = method.Body.Instructions;
+					instr.Clear ();
+					instr.Add (Instruction.Create (OpCodes.Ldc_I4_0));
+					instr.Add (Instruction.Create (OpCodes.Ret));
+				}
 				Driver.Log (4, "Optimization dynamic registrar removal: {0}", Optimizations.RemoveDynamicRegistrar.Value ? "enabled" : "disabled");
 #if MTOUCH
 				var app = (Context as DerivedLinkContext).App;
