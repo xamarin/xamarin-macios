@@ -331,4 +331,12 @@ xamarin_bridge_free_mono_signature (MonoMethodSignature **psig)
 	*psig = NULL;
 }
 
+MonoClass *
+mono_class_from_mono_type (MonoType *type)
+{
+	MonoClass *rv = xamarin_bridge_type_to_class (type);
+	LOG_CORECLR (stderr, "%s (%p) => %p\n", __func__, type, rv);
+	return rv;
+}
+
 #endif // CORECLR_RUNTIME

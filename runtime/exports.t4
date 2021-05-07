@@ -27,7 +27,9 @@
 
 		new Export ("MonoClass *", "mono_class_from_mono_type",
 			"MonoType *", "type"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		new Export ("mono_bool", "mono_class_is_delegate",
 			"MonoClass *", "klass"
