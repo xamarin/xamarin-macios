@@ -551,6 +551,36 @@
 			OnlyDynamicUsage = false,
 			OnlyCoreCLR = true,
 		},
+
+		new XDelegate ("void", "void", "mono_array_setref",
+			"MonoArray *", "MonoObject *", "arrayobj",
+			"uint64_t", "ulong", "index",
+			"MonoObject *", "MonoObject *", "valueobj"
+		) {
+			WrappedManagedFunction = "SetArrayObjectValue",
+			OnlyDynamicUsage = false,
+			OnlyCoreCLR = true,
+		},
+
+		new XDelegate ("void", "void", "xamarin_bridge_set_array_struct_value",
+			"MonoArray *", "MonoObject *", "arrayobj",
+			"uint64_t", "ulong", "index",
+			"MonoClass *", "MonoObject *", "typeobj",
+			"void *", "IntPtr", "valueptr"
+		) {
+			WrappedManagedFunction = "SetArrayStructValue",
+			OnlyDynamicUsage = false,
+			OnlyCoreCLR = true,
+		},
+
+		new XDelegate ("MonoObject *", "MonoObject *", "mono_array_get",
+			"MonoArray *", "MonoObject *", "arrayobj",
+			"uint64_t", "ulong", "index"
+		) {
+			WrappedManagedFunction = "GetArrayObjectValue",
+			OnlyDynamicUsage = false,
+			OnlyCoreCLR = true,
+		},
 	};
 	delegates.CalculateLengths ();
 #><#+
@@ -604,7 +634,11 @@
 
 		public string DelegateName {
 			get {
-				return EntryPoint.Substring ("xamarin_".Length);
+				if (EntryPoint.StartsWith ("xamarin_"))
+					return EntryPoint.Substring ("xamarin_".Length);
+				if (EntryPoint.StartsWith ("mono_", StringComparison.Ordinal))
+					return EntryPoint.Substring ("mono_".Length);
+				throw new NotImplementedException ($"Unknown prefix for {EntryPoint}");
 			}
 		}
 
@@ -623,8 +657,8 @@
 			if (arguments.Length % 3 != 0)
 				throw new Exception (string.Format ("Export arguments params must be a multiple of 3 to form a set of (c type, managed name, name) triples for {0}", entryPoint));
 
-			if (!entryPoint.StartsWith ("xamarin_"))
-				throw new Exception ("All entry points must start with 'xamarin_'");
+			if (!entryPoint.StartsWith ("xamarin_", StringComparison.Ordinal) && !entryPoint.StartsWith ("mono_", StringComparison.Ordinal))
+				throw new Exception ("All entry points must start with 'xamarin_' or 'mono_'");
 
 			Arguments = new List<Arg> ();
 			for (var i = 0; i < arguments.Length; i += 3)
@@ -692,7 +726,7 @@
 				}
 
 				sb.Append ("delegates.");
-				sb.Append (EntryPoint.Substring ("xamarin_".Length));
+				sb.Append (DelegateName);
 				sb.Append (" (");
 				sb.Append (invoke_args);
 
@@ -732,7 +766,11 @@
 
 		public string SimpleEntryPoint {
 			get {
-				return EntryPoint.Substring ("xamarin_".Length);
+				if (EntryPoint.StartsWith ("xamarin_"))
+					return EntryPoint.Substring ("xamarin_".Length);
+				if (EntryPoint.StartsWith ("mono_", StringComparison.Ordinal))
+					return EntryPoint.Substring ("mono_".Length);
+				throw new NotImplementedException ($"Unknown prefix for {EntryPoint}");
 			}
 		}
 

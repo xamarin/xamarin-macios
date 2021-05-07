@@ -33,7 +33,7 @@ struct Delegates {
 		if (d.OnlyCoreCLR)
 			Write ("#if DOTNET\n");
 #>
-	func_<#= d.EntryPoint #><#= d.AlignEntryPoint #> <#= d.EntryPoint.Substring ("xamarin_".Length) #>;
+	func_<#= d.EntryPoint #><#= d.AlignEntryPoint #> <#= d.SimpleEntryPoint #>;
 <#
 		if (d.OnlyCoreCLR)
 			Write ("#endif // DOTNET\n");

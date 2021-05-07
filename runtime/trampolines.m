@@ -1696,8 +1696,10 @@ xamarin_convert_managed_to_nsarray_with_func (MonoArray *array, xamarin_managed_
 {
 	id *buf = NULL;
 	NSArray *rv = NULL;
+#if !defined (CORECLR_RUNTIME)
 	size_t element_size = 0;
 	char *ptr = NULL;
+#endif
 
 	if (array == NULL)
 		return NULL;
@@ -1707,6 +1709,8 @@ xamarin_convert_managed_to_nsarray_with_func (MonoArray *array, xamarin_managed_
 		return [NSArray array];
 
 	buf = (id *) malloc (sizeof (id) * length);
+
+#if !defined (CORECLR_RUNTIME)
 	MonoClass *object_class = mono_object_get_class ((MonoObject *) array);
 	MonoClass *element_class = mono_class_get_element_class (object_class);
 	xamarin_mono_object_release (&object_class);
@@ -1716,13 +1720,24 @@ xamarin_convert_managed_to_nsarray_with_func (MonoArray *array, xamarin_managed_
 		element_size = (size_t) mono_class_value_size (element_class, NULL);
 		ptr = (char *) mono_array_addr_with_size (array, (int) element_size, 0);
 	}
+#endif
+
 	for (unsigned long i = 0; i < length; i++) {
 		MonoObject *value;
+#if defined (CORECLR_RUNTIME)
+		value = mono_array_get (array, i, exception_gchandle);
+#else
 		if (is_value_type) {
 			value = mono_value_box (mono_domain_get (), element_class, ptr + element_size * i);
 		} else {
 			value = mono_array_get (array, MonoObject *, i);
 		}
+#endif
+		if (*exception_gchandle != INVALID_GCHANDLE) {
+			*exception_gchandle = xamarin_get_exception_for_element_conversion_failure (*exception_gchandle, i);
+			goto exception_handling;
+		}
+
 		buf [i] = convert (value, context, exception_gchandle);
 		if (*exception_gchandle != INVALID_GCHANDLE) {
 			*exception_gchandle = xamarin_get_exception_for_element_conversion_failure (*exception_gchandle, i);
@@ -1733,7 +1748,9 @@ xamarin_convert_managed_to_nsarray_with_func (MonoArray *array, xamarin_managed_
 
 exception_handling:
 	free (buf);
+#if !defined (CORECLR_RUNTIME)
 	xamarin_mono_object_release (&element_class);
+#endif
 
 	return rv;
 }
@@ -1753,22 +1770,33 @@ xamarin_convert_nsarray_to_managed_with_func (NSArray *array, MonoClass *managed
 	bool is_value_type = mono_class_is_valuetype (managedElementType);
 	MonoObject *mobj;
 	void *valueptr = NULL;
+#if !defined (CORECLR_RUNTIME)
 	size_t element_size = 0;
 	char *ptr = NULL;
+#endif
 
+#if !defined (CORECLR_RUNTIME)
 	if (is_value_type) {
 		element_size = (size_t) mono_class_value_size (managedElementType, NULL);
 		ptr = (char *) mono_array_addr_with_size (rv, (int) element_size, 0);
 	}
+#endif
+
 	for (unsigned long i = 0; i < length; i++) {
 		if (is_value_type) {
 			valueptr = convert ([array objectAtIndex: i], valueptr, managedElementType, context, exception_gchandle);
+#if defined (CORECLR_RUNTIME)
+			xamarin_bridge_set_array_struct_value (rv, i, managedElementType, valueptr, exception_gchandle);
+#else
 			memcpy (ptr, valueptr, element_size);
 			ptr += element_size;
+#endif
 		} else {
 			mobj = (MonoObject *) convert ([array objectAtIndex: i], NULL, managedElementType, context, exception_gchandle);
-			mono_array_setref (rv, i, mobj);
-			xamarin_mono_object_release (&mobj);
+			if (*exception_gchandle == INVALID_GCHANDLE) {
+				mono_array_setref (rv, i, mobj, exception_gchandle);
+				xamarin_mono_object_release (&mobj);
+			}
 		}
 		if (*exception_gchandle != INVALID_GCHANDLE) {
 			*exception_gchandle = xamarin_get_exception_for_element_conversion_failure (*exception_gchandle, i);
