@@ -483,6 +483,9 @@
     <Compile Include="..\common\XamarinRuntime.cs">
       <Link>tools\common\XamarinRuntime.cs</Link>
     </Compile>
+    <Compile Include="..\linker\RegistrarRemovalTrackingStep.cs">
+      <Link>tools\linker\RegistrarRemovalTrackingStep.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Core" />
