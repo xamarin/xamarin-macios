@@ -5,6 +5,7 @@ using System.Reflection;
 
 using Mono.Linker;
 using Mono.Linker.Steps;
+using MonoTouch.Tuner;
 
 using Xamarin.Bundler;
 using Xamarin.Linker;
@@ -71,6 +72,9 @@ namespace Xamarin {
 			// Load the list of assemblies loaded by the linker.
 			// This would not be needed of LinkContext.GetAssemblies () was exposed to us.
 			InsertBefore (new CollectAssembliesStep (), "MarkStep");
+
+			// the final decision to remove/keep the dynamic registrar must be done before the linking step
+			InsertBefore (new RegistrarRemovalTrackingStep (), "MarkStep");
 
 			var pre_mark_substeps = new DotNetSubStepDispatcher ();
 			InsertBefore (pre_mark_substeps, "MarkStep");

@@ -9,7 +9,6 @@
   <Import Project="..\..\eng\Versions.props" />
 
   <ItemGroup>
-    <PackageReference Include="XliffTasks" Version="1.0.0-beta.20154.1" />
     <PackageReference Include="Microsoft.NET.ILLink" Version="$(MicrosoftNETILLinkPackageVersion)" />
   </ItemGroup>
   <ItemGroup>
@@ -197,16 +196,85 @@
     <Compile Include="..\common\XamarinRuntime.cs">
       <Link>tools\common\XamarinRuntime.cs</Link>
     </Compile>
+    <Compile Include="..\linker\RegistrarRemovalTrackingStep.cs">
+      <Link>tools\linker\RegistrarRemovalTrackingStep.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\mtouch\Errors.resx">
       <Link>tools\mtouch\Errors.resx</Link>
-      <XlfSourceFormat>Resx</XlfSourceFormat>
-      <XlfOutputItem>EmbeddedResource</XlfOutputItem>
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Errors.Designer.cs</LastGenOutput>
       <CustomToolNamespace>Xamarin.Bundler</CustomToolNamespace>
-      <LogicalName>Errors.mtouch.resources</LogicalName>
+      <ManifestResourceName>Errors.mtouch</ManifestResourceName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.cs.resx">
+      <Link>tools\mtouch\Errors.cs.resx</Link>
+      <ManifestResourceName>Errors.mtouch.cs</ManifestResourceName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.de.resx">
+      <Link>tools\mtouch\Errors.de.resx</Link>
+      <ManifestResourceName>Errors.mtouch.de</ManifestResourceName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.es.resx">
+      <Link>tools\mtouch\Errors.es.resx</Link>
+      <ManifestResourceName>Errors.mtouch.es</ManifestResourceName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.fr.resx">
+      <Link>tools\mtouch\Errors.fr.resx</Link>
+      <ManifestResourceName>Errors.mtouch.fr</ManifestResourceName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.hu.resx">
+      <Link>tools\mtouch\Errors.hu.resx</Link>
+      <ManifestResourceName>Errors.mtouch.hu</ManifestResourceName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.it.resx">
+      <Link>tools\mtouch\Errors.it.resx</Link>
+      <ManifestResourceName>Errors.mtouch.it</ManifestResourceName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.ja.resx">
+      <Link>tools\mtouch\Errors.ja.resx</Link>
+      <ManifestResourceName>Errors.mtouch.ja</ManifestResourceName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.ko.resx">
+      <Link>tools\mtouch\Errors.ko.resx</Link>
+      <ManifestResourceName>Errors.mtouch.ko</ManifestResourceName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.nl.resx">
+      <Link>tools\mtouch\Errors.nl.resx</Link>
+      <ManifestResourceName>Errors.mtouch.nl</ManifestResourceName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.pl.resx">
+      <Link>tools\mtouch\Errors.pl.resx</Link>
+      <ManifestResourceName>Errors.mtouch.pl</ManifestResourceName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.pt-BR.resx">
+      <Link>tools\mtouch\Errors.pt-BR.resx</Link>
+      <ManifestResourceName>Errors.mtouch.pt-BR</ManifestResourceName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.pt-PT.resx">
+      <Link>tools\mtouch\Errors.pt-PT.resx</Link>
+      <ManifestResourceName>Errors.mtouch.pt-PT</ManifestResourceName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.ru.resx">
+      <Link>tools\mtouch\Errors.ru.resx</Link>
+      <ManifestResourceName>Errors.mtouch.ru</ManifestResourceName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.sv.resx">
+      <Link>tools\mtouch\Errors.sv.resx</Link>
+      <ManifestResourceName>Errors.mtouch.sv</ManifestResourceName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.tr.resx">
+      <Link>tools\mtouch\Errors.tr.resx</Link>
+      <ManifestResourceName>Errors.mtouch.tr</ManifestResourceName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.zh-Hans.resx">
+      <Link>tools\mtouch\Errors.zh-Hans.resx</Link>
+      <ManifestResourceName>Errors.mtouch.zh-Hans</ManifestResourceName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.zh-Hant.resx">
+      <Link>tools\mtouch\Errors.zh-Hant.resx</Link>
+      <ManifestResourceName>Errors.mtouch.zh-Hant</ManifestResourceName>
     </EmbeddedResource>
   </ItemGroup>
   <Target Name="BuildSdkVersions" Inputs="../common/SdkVersions.cs.in;../common/Make.common" Outputs="../common/SdkVersions.cs">

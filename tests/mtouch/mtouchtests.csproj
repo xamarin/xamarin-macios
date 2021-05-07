@@ -94,6 +94,7 @@
     <Compile Include="..\common\BinLog.cs">
       <Link>BinLog.cs</Link>
     </Compile>
+    <Compile Include="LocalizationTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\tools\mtouch\mtouch.csproj">
