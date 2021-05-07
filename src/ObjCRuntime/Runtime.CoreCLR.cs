@@ -9,6 +9,7 @@
 #if NET && !COREBUILD
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -547,6 +548,75 @@ namespace ObjCRuntime {
 				UserData = user_data,
 			};
 			queue.Table.Add (obj, entry);
+		}
+
+		/* Managed version of mono_g_hash_table The mono_g_hash_table can be configured
+		   in several ways, depending on whether the GC should track keys,
+		   values or both, but in our case we only want the GC to track the
+		   values (MONO_HASH_VALUE_GC).
+		   Semantics:
+		   * Custom compare and hash functions from native code.
+		   * Keep a strong reference to the values of the hash table.
+		 */
+		class MonoHashTable : IEqualityComparer<IntPtr> {
+			Dictionary<IntPtr, object> Table;
+			HashFunc Hash;
+			EqualityFunc Compare;
+
+			delegate uint HashFunc (IntPtr ptr);
+			delegate bool EqualityFunc (IntPtr a, IntPtr b);
+
+			public MonoHashTable (IntPtr hash_func, IntPtr compare_func)
+			{
+				Table = new Dictionary<IntPtr, object> ();
+				Hash = Marshal.GetDelegateForFunctionPointer<HashFunc> (hash_func);
+				Compare = Marshal.GetDelegateForFunctionPointer<EqualityFunc> (compare_func);
+			}
+
+			public void Insert (IntPtr key, object obj)
+			{
+				Table [key] = obj;
+			}
+
+			public object Lookup (IntPtr key)
+			{
+				if (Table.TryGetValue (key, out var value))
+					return value;
+				return null;
+			}
+
+			bool IEqualityComparer<IntPtr>.Equals (IntPtr x, IntPtr y)
+			{
+				return Compare (x, y);
+			}
+
+			int IEqualityComparer<IntPtr>.GetHashCode (IntPtr obj)
+			{
+				unchecked {
+					return (int) Hash (obj);
+				}
+			}
+		}
+
+		static unsafe MonoObject* CreateMonoHashTable (IntPtr hash_method, IntPtr compare_method, int type)
+		{
+			if (type != 2 /* MONO_HASH_VALUE_GC */)
+				throw new NotSupportedException ($"Unsupported hash table type: {type}");
+
+			return (MonoObject*) GetMonoObject (new MonoHashTable (hash_method, compare_method));
+		}
+
+		static unsafe void MonoHashTableInsert (MonoObject* tableobj, IntPtr key, MonoObject* valueobj)
+		{
+			var table = (MonoHashTable) GetMonoObjectTarget (tableobj);
+			var value = GetMonoObjectTarget (valueobj);
+			table.Insert (key, value);
+		}
+
+		static unsafe MonoObject* MonoHashTableLookup (MonoObject* tableobj, IntPtr key)
+		{
+			var dict = (MonoHashTable) GetMonoObjectTarget (tableobj);
+			return (MonoObject*) GetMonoObject (dict.Lookup (key));
 		}
 
 		[DllImport ("__Internal")]

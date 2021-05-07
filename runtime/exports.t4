@@ -469,18 +469,24 @@
 			"GHashFunc", "hash_func",
 			"GEqualFunc", "key_equal_func",
 			"MonoGHashGCType", "type"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		new Export ("gpointer", "mono_g_hash_table_lookup",
 			"MonoGHashTable *", "hash",
 			"gconstpointer", "key"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		new Export ("void", "mono_g_hash_table_insert",
 			"MonoGHashTable *", "hash",
 			"gpointer", "k",
 			"gpointer", "v"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		#endregion
 

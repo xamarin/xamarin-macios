@@ -302,7 +302,12 @@ typedef enum {
 	MONO_HASH_KEY_VALUE_GC = MONO_HASH_KEY_GC | MONO_HASH_VALUE_GC,
 } MonoGHashGCType;
 
+#if defined (CORECLR_RUNTIME)
+// In Mono, MonoGHashTable is not related to MonoObject, but for the CoreCLR bridge we use the same memory representation for both types.
+typedef struct _MonoObject MonoGHashTable;
+#else
 typedef struct _MonoGHashTable MonoGHashTable;
+#endif
 
 /* utils/mono-logger.h */
 

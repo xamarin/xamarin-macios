@@ -1955,8 +1955,10 @@ get_method_block_wrapper_creator (MonoMethod *method, int par, GCHandle *excepti
 	res = (MonoObject *) mono_g_hash_table_lookup (xamarin_wrapper_hash, &mp);
 	pthread_mutex_unlock (&wrapper_hash_lock);
 	if (res != NULL){
+		rv = xamarin_gchandle_new (res, false);
+		xamarin_mono_object_release (&res);
 		// PRINT ("Found match: %x", (int) res);
-		return xamarin_gchandle_new (res, false);
+		return rv;
 	}
 
 	MonoReflectionMethod *reflection_method = mono_method_get_object (mono_domain_get (), method, NULL);

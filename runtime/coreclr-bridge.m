@@ -259,6 +259,32 @@ mono_jit_exec (MonoDomain * domain, MonoAssembly * assembly, int argc, const cha
 	return (int) exitCode;
 }
 
+MonoGHashTable *
+mono_g_hash_table_new_type (GHashFunc hash_func, GEqualFunc key_equal_func, MonoGHashGCType type)
+{
+	MonoGHashTable *rv = xamarin_bridge_mono_hash_table_create (hash_func, key_equal_func, type);
+
+	LOG_CORECLR (stderr, "%s (%p, %p, %u) => %p\n", __func__, hash_func, key_equal_func, type, rv);
+
+	return rv;
+}
+
+gpointer
+mono_g_hash_table_lookup (MonoGHashTable *hash, gconstpointer key) // NEEDS REVIEW
+{
+	MonoObject *rv = xamarin_bridge_mono_hash_table_lookup (hash, key);
+	LOG_CORECLR (stderr, "%s (%p, %p) => %p\n", __func__, hash, key, rv);
+	return rv;
+}
+
+void
+mono_g_hash_table_insert (MonoGHashTable *hash, gpointer k, gpointer v)
+{
+	MonoObject *obj = (MonoObject *) v;
+	LOG_CORECLR (stderr, "%s (%p, %p, %p)\n", __func__, hash, k, v);
+	xamarin_bridge_mono_hash_table_insert (hash, k, obj);
+}
+
 MonoClass *
 mono_method_get_class (MonoMethod * method)
 {
