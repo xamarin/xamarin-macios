@@ -245,6 +245,17 @@ mono_method_get_object (MonoDomain *domain, MonoMethod *method, MonoClass *refcl
 	return rv;
 }
 
+MonoType *
+mono_reflection_type_get_type (MonoReflectionType *reftype)
+{
+	// MonoType and MonoReflectionType are identical in CoreCLR (both are actually MonoObjects).
+	// However, we're returning a retained object, so we need to retain here.
+	MonoType *rv = reftype;
+	xamarin_mono_object_retain (rv);
+	LOG_CORECLR (stderr, "%s (%p) => %p\n", __func__, reftype, rv);
+	return rv;
+}
+
 int
 mono_jit_exec (MonoDomain * domain, MonoAssembly * assembly, int argc, const char** argv)
 {
