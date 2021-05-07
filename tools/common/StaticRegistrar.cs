@@ -3810,7 +3810,7 @@ namespace Registrar {
 				if (returntype != method.NativeReturnType) {
 					body_setup.AppendLine ("MonoClass *retparamclass = NULL;");
 					cleanup.AppendLine ("xamarin_mono_object_release (&retparamclass);");
-					setup_call_stack.AppendLine ("retparamclass = xamarin_get_parameter_type (managed_method, -1);");
+					setup_call_stack.AppendLine ("retparamclass = mono_class_from_mono_type (xamarin_get_parameter_type (managed_method, -1));");
 					GenerateConversionToNative (returntype, method.NativeReturnType, setup_return, descriptiveMethodName, ref exceptions, method, "retval", "res", "retparamclass");
 				} else if (returntype.IsValueType) {
 					setup_return.AppendLine ("res = *({0} *) mono_object_unbox ((MonoObject *) retval);", rettype);
