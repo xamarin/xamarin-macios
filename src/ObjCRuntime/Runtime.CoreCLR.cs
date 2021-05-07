@@ -531,6 +531,11 @@ namespace ObjCRuntime {
 			return false;
 		}
 
+		static unsafe MonoObject* GetStringClass ()
+		{
+			return (MonoObject *) GetMonoObject (typeof (string));
+		}
+
 		unsafe static bool IsByRef (MonoObject *typeobj)
 		{
 			var type = (Type) GetMonoObjectTarget (typeobj);

@@ -369,7 +369,9 @@
 			XamarinRuntime = RuntimeMode.MonoVM,
 		},
 
-		new Export ("MonoClass *", "mono_get_string_class"),
+		new Export ("MonoClass *", "mono_get_string_class") {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		new Export ("MonoImage *", "mono_get_corlib"),
 

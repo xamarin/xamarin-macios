@@ -1271,7 +1271,10 @@ xamarin_managed_array_to_nsarray (MonoArray *array, MonoType *managed_type, Mono
 MonoArray *
 xamarin_nsarray_to_managed_string_array (NSArray *array, GCHandle *exception_gchandle)
 {
-	return xamarin_convert_nsarray_to_managed_with_func (array, mono_get_string_class (), xamarin_convert_nsstring_to_string, 0, exception_gchandle);
+	MonoClass *stringClass = mono_get_string_class ();
+	MonoArray *rv = xamarin_convert_nsarray_to_managed_with_func (array, stringClass, xamarin_convert_nsstring_to_string, 0, exception_gchandle);
+	xamarin_mono_object_release (&stringClass);
+	return rv;
 }
 
 MonoArray *
