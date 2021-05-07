@@ -527,6 +527,13 @@ namespace ObjCRuntime {
 			return (MonoObject *) GetMonoObject (Marshal.PtrToStringAuto (text));
 		}
 
+		static unsafe MonoObject* CreateArray (MonoObject* typeobj, ulong elements)
+		{
+			var type = (Type) GetMonoObjectTarget (typeobj);
+			var obj = Array.CreateInstance (type, (int) elements);
+			return (MonoObject*) GetMonoObject (obj);
+		}
+
 		static bool IsNullable (Type type)
 		{
 			if (Nullable.GetUnderlyingType (type) != null)
