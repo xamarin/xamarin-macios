@@ -41,6 +41,19 @@ steps:
     ioreg -l | grep -e Manufacturer -e 'Vendor Name'
   displayName: 'Dump Hardware'
 
+- bash: |
+    vmware=$(ioreg -l | grep -e Manufacturer -e 'Vendor Name' | grep -e 'VMWare' | wc -l)
+    if [[ $vmare -gt 0 ]]; then
+      echo "##vso[task.setvariable variable=VM_VENDOR]VMWare"
+    fi
+
+    virtualbox=$(ioreg -l | grep -e Manufacturer -e 'Vendor Name' | grep -e 'VirtualBox' | wc -l)
+    if [[ $virtualbox -gt 0 ]]; then
+      echo "##vso[task.setvariable variable=VM_VENDOR]VirtualBox"
+    fi
+
+  displayName: 'Set VM Vendor'
+
 - bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/clean-bot.sh
   displayName: 'Clean bot'
   env:
