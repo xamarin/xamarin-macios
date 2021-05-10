@@ -40,9 +40,21 @@ namespace Xamarin.Linker {
 				return _hasOptimizableCode;
 			}
 		}
+
+		Dictionary<AssemblyDefinition, bool> _inlineIntPtrSize;
+		Dictionary<AssemblyDefinition, bool> InlineIntPtrSize {
+			get {
+				if (_inlineIntPtrSize == null)
+					_inlineIntPtrSize = new Dictionary<AssemblyDefinition, bool> ();
+				return _inlineIntPtrSize;
+			}
+		}
 #else
 		protected bool HasOptimizableCode { get; private set; }
 		protected bool IsExtensionType { get; private set; }
+
+		// This is per assembly, so we set it in 'void Process (AssemblyDefinition)'
+		bool InlineIntPtrSize { get; set; }
 #endif
 
 		public bool IsDualBuild {
@@ -62,9 +74,6 @@ namespace Xamarin.Linker {
 				return LinkContext.App.Optimizations;
 			}
 		}
-
-		// This is per assembly, so we set it in 'void Process (AssemblyDefinition)'
-		bool InlineIntPtrSize { get; set; }
 
 		bool? is_arm64_calling_convention;
 
@@ -653,8 +662,14 @@ namespace Xamarin.Linker {
 				instructions.RemoveAt (last_reachable + 1);
 		}
 
-		protected override void Process (AssemblyDefinition assembly)
+		bool GetInlineIntPtrSize (AssemblyDefinition assembly)
 		{
+#if NET
+			if (InlineIntPtrSize.TryGetValue (assembly, out bool inlineIntPtrSize))
+				return inlineIntPtrSize;
+#else
+			bool inlineIntPtrSize;
+#endif
 			// The "get_Size" is a performance (over size) optimization.
 			// It always makes sense for platform assemblies because:
 			// * Xamarin.TVOS.dll only ship the 64 bits code paths (all 32 bits code is extra weight better removed)
@@ -668,16 +683,31 @@ namespace Xamarin.Linker {
 			//
 			// TODO: we could make this an option "optimize for size vs optimize for speed" in the future
 			if (Optimizations.InlineIntPtrSize.HasValue) {
-				InlineIntPtrSize = Optimizations.InlineIntPtrSize.Value;
+				inlineIntPtrSize = Optimizations.InlineIntPtrSize.Value;
 			} else if (!IsDualBuild) {
-				InlineIntPtrSize = true;
+				inlineIntPtrSize = true;
 			} else {
-				InlineIntPtrSize = (Profile.Current as BaseProfile).ProductAssembly == assembly.Name.Name;
+				inlineIntPtrSize = (Profile.Current as BaseProfile).ProductAssembly == assembly.Name.Name;
 			}
-			Driver.Log (4, "Optimization 'inline-intptr-size' enabled for assembly '{0}'.", assembly.Name);
+			if (inlineIntPtrSize)
+				Driver.Log (4, "Optimization 'inline-intptr-size' enabled for assembly '{0}'.", assembly.Name);
+
+#if NET
+			InlineIntPtrSize.Add (assembly, inlineIntPtrSize);
+#else
+			InlineIntPtrSize = inlineIntPtrSize;
+#endif
+			return inlineIntPtrSize;
+		}
+
+#if !NET
+		protected override void Process (AssemblyDefinition assembly)
+		{
+			GetInlineIntPtrSize (assembly);
 
 			base.Process (assembly);
 		}
+#endif
 
 		bool GetIsExtensionType (TypeDefinition type)
 		{
@@ -810,8 +840,13 @@ namespace Xamarin.Linker {
 
 		void ProcessIntPtrSize (MethodDefinition caller, Instruction ins)
 		{
+#if NET
+			if (!GetInlineIntPtrSize (caller.Module.Assembly))
+				return;
+#else
 			if (!InlineIntPtrSize)
 				return;
+#endif
 
 			// This will inline IntPtr.Size to load the corresponding constant value instead
 
