@@ -228,7 +228,9 @@
 			XamarinRuntime = RuntimeMode.MonoVM,
 		},
 
-		new Export ("mono_bool", "mono_thread_detach_if_exiting"),
+		new Export ("mono_bool", "mono_thread_detach_if_exiting") {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		#endregion
 
@@ -522,7 +524,9 @@
 
 		new Export ("void", "mono_free",
 			"void *", "ptr"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		#endregion
 

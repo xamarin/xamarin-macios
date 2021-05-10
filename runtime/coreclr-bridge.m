@@ -331,6 +331,19 @@ xamarin_bridge_free_mono_signature (MonoMethodSignature **psig)
 	*psig = NULL;
 }
 
+void
+mono_free (void *ptr)
+{
+	free (ptr);
+}
+
+mono_bool
+mono_thread_detach_if_exiting ()
+{
+	// Nothing to do here for CoreCLR.
+	return true;
+}
+
 MonoClass *
 mono_class_from_mono_type (MonoType *type)
 {
