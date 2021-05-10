@@ -175,6 +175,11 @@ namespace MonoTouch.Tuner {
 				// If dynamic registration is not required, and removal of the dynamic registrar hasn't already
 				// been disabled, then we can remove it!
 				Optimizations.RemoveDynamicRegistrar = !dynamic_registration_support_required;
+			}
+
+			Driver.Log (4, "Optimization dynamic registrar removal: {0}", Optimizations.RemoveDynamicRegistrar.Value ? "enabled" : "disabled");
+
+			if (Optimizations.RemoveDynamicRegistrar.Value) {
 				// ILLink will optimize `Runtime.Initialize` based on `DynamicRegistrationSupported` returning a constant (`true`)
 				// and this will runs before we have the chance to set it to `false` in `CoreOptimizedGeneratedCode` so we instead
 				// do the change here so the linker can do this without further ado
@@ -187,18 +192,17 @@ namespace MonoTouch.Tuner {
 					instr.Add (Instruction.Create (OpCodes.Ldc_I4_0));
 					instr.Add (Instruction.Create (OpCodes.Ret));
 				}
-				Driver.Log (4, "Optimization dynamic registrar removal: {0}", Optimizations.RemoveDynamicRegistrar.Value ? "enabled" : "disabled");
-#if MTOUCH
-				var app = (Context as DerivedLinkContext).App;
-				if (app.IsCodeShared) {
-					foreach (var appex in app.AppExtensions) {
-						if (!appex.IsCodeShared)
-							continue;
-						appex.Optimizations.RemoveDynamicRegistrar = app.Optimizations.RemoveDynamicRegistrar;
-					}
-				}
-#endif
 			}
+#if MTOUCH
+			var app = (Context as DerivedLinkContext).App;
+			if (app.IsCodeShared) {
+				foreach (var appex in app.AppExtensions) {
+					if (!appex.IsCodeShared)
+						continue;
+					appex.Optimizations.RemoveDynamicRegistrar = app.Optimizations.RemoveDynamicRegistrar;
+				}
+			}
+#endif
 		}
 	}
 }

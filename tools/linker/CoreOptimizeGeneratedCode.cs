@@ -864,6 +864,7 @@ namespace Xamarin.Linker {
 			ins.Operand = null;
 		}
 
+#if !NET
 		void ProcessIsDynamicSupported (MethodDefinition caller, Instruction ins)
 		{
 			const string operation = "inline Runtime.DynamicRegistrationSupported";
@@ -883,6 +884,7 @@ namespace Xamarin.Linker {
 			ins.OpCode = LinkContext.App.DynamicRegistrationSupported ? OpCodes.Ldc_I4_1 : OpCodes.Ldc_I4_0;
 			ins.Operand = null;
 		}
+#endif
 
 		int ProcessSetupBlock (MethodDefinition caller, Instruction ins)
 		{
