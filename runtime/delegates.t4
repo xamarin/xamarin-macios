@@ -329,6 +329,22 @@
 			OnlyCoreCLR = true,
 		},
 
+		new XDelegate ("char *", "IntPtr", "xamarin_bridge_class_get_namespace",
+			"MonoObject *", "MonoObject *", "typeobj"
+		) {
+			WrappedManagedFunction = "ClassGetNamespace",
+			OnlyDynamicUsage = false,
+			OnlyCoreCLR = true,
+		},
+
+		new XDelegate ("char *", "IntPtr", "xamarin_bridge_class_get_name",
+			"MonoObject *", "MonoObject *", "typeobj"
+		) {
+			WrappedManagedFunction = "ClassGetName",
+			OnlyDynamicUsage = false,
+			OnlyCoreCLR = true,
+		},
+
 		new XDelegate ("GCHandle", "IntPtr", "xamarin_bridge_create_gchandle",
 			"GCHandle", "IntPtr", "gchandle",
 			"enum XamarinGCHandleType", "GCHandleType", "type"

@@ -241,6 +241,20 @@ namespace ObjCRuntime {
 			return null;
 		}
 
+		unsafe static IntPtr ClassGetNamespace (MonoObject *typeobj)
+		{
+			var type = (Type) GetMonoObjectTarget (typeobj);
+			var rv = type.Namespace;
+			return Marshal.StringToHGlobalAuto (rv);
+		}
+
+		unsafe static IntPtr ClassGetName (MonoObject *typeobj)
+		{
+			var type = (Type) GetMonoObjectTarget (typeobj);
+			var rv = type.Name;
+			return Marshal.StringToHGlobalAuto (rv);
+		}
+
 		// This should work like mono_class_from_mono_type.
 		static unsafe MonoObject* TypeToClass (MonoObject* typeobj)
 		{

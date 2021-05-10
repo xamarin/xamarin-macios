@@ -43,11 +43,15 @@
 
 		new Export ("const char *", "mono_class_get_namespace",
 			"MonoClass *", "klass"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		new Export ("const char *", "mono_class_get_name",
 			"MonoClass *", "klass"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		new Export ("mono_bool", "mono_class_is_subclass_of",
 			"MonoClass *", "klass",
