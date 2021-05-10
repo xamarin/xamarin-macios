@@ -291,6 +291,84 @@ xamarin_bridge_free_mono_signature (MonoMethodSignature **psig)
 	*psig = NULL;
 }
 
+bool
+xamarin_is_class_nsobject (MonoClass *cls)
+{
+	// COOP: Reading managed data, must be in UNSAFE mode
+	MONO_ASSERT_GC_UNSAFE;
+
+	return mono_class_is_subclass_of (cls, xamarin_get_nsobject_class (), false);
+}
+
+bool
+xamarin_is_class_inativeobject (MonoClass *cls)
+{
+	// COOP: Reading managed data, must be in UNSAFE mode
+	MONO_ASSERT_GC_UNSAFE;
+
+	return mono_class_is_subclass_of (cls, xamarin_get_inativeobject_class (), true);
+}
+
+bool
+xamarin_is_class_array (MonoClass *cls)
+{
+	// COOP: Reading managed data, must be in UNSAFE mode
+	MONO_ASSERT_GC_UNSAFE;
+
+	return mono_class_is_subclass_of (cls, mono_get_array_class (), false);
+}
+
+bool
+xamarin_is_class_nsnumber (MonoClass *cls)
+{
+	// COOP: Reading managed data, must be in UNSAFE mode
+	MONO_ASSERT_GC_UNSAFE;
+
+	MonoClass *nsnumber_class = xamarin_get_nsnumber_class ();
+	if (nsnumber_class == NULL)
+		return false;
+
+	return mono_class_is_subclass_of (cls, nsnumber_class, false);
+}
+
+bool
+xamarin_is_class_nsvalue (MonoClass *cls)
+{
+	// COOP: Reading managed data, must be in UNSAFE mode
+	MONO_ASSERT_GC_UNSAFE;
+
+	MonoClass *nsvalue_class = xamarin_get_nsvalue_class ();
+	if (nsvalue_class == NULL)
+		return false;
+
+	return mono_class_is_subclass_of (cls, nsvalue_class, false);
+}
+
+bool
+xamarin_is_class_nsstring (MonoClass *cls)
+{
+	// COOP: Reading managed data, must be in UNSAFE mode
+	MONO_ASSERT_GC_UNSAFE;
+
+	MonoClass *nsstring_class = xamarin_get_nsstring_class ();
+	if (nsstring_class == NULL)
+		return false;
+
+	return mono_class_is_subclass_of (cls, nsstring_class, false);
+}
+
+bool
+xamarin_is_class_intptr (MonoClass *cls)
+{
+	return cls == mono_get_intptr_class ();
+}
+
+bool
+xamarin_is_class_string (MonoClass *cls)
+{
+	return cls == mono_get_string_class ();
+}
+
 #if DOTNET
 
 bool

@@ -167,6 +167,8 @@ bool			xamarin_is_class_nsnumber (MonoClass *cls);
 bool			xamarin_is_class_nsvalue (MonoClass *cls);
 bool			xamarin_is_class_nsstring (MonoClass *cls);
 bool			xamarin_is_class_nullable (MonoClass *cls, MonoClass **element_type, GCHandle *exception_gchandle);
+bool			xamarin_is_class_intptr (MonoClass *cls);
+bool			xamarin_is_class_string (MonoClass *cls);
 MonoClass *		xamarin_get_nullable_type (MonoClass *cls, GCHandle *exception_gchandle);
 MonoType *		xamarin_get_parameter_type (MonoMethod *managed_method, int index);
 MonoObject *	xamarin_get_nsobject_with_type_for_ptr (id self, bool owns, MonoType* type, GCHandle *exception_gchandle);
