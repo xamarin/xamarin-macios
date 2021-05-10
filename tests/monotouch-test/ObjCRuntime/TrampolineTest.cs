@@ -25,24 +25,22 @@ namespace MonoTouchFixtures.ObjCRuntime {
 	public class TrampolineTest {
 		public static readonly nfloat pi = 3.14159f;
 #if MONOMAC
-		public static bool IsSim64 { get { return IntPtr.Size == 8; } }
-		public static bool IsSim32 { get { return IntPtr.Size == 4; } }
-		public static bool IsArm64 { get { return false; } }
-		public static bool IsArm32 { get { return false; } }
+		public static bool IsX64 { get { return IntPtr.Size == 8 && !IsArm64CallingConvention; } }
+		public static bool IsX86 { get { return IntPtr.Size == 4; } }
 #else
-		public static bool IsSim64 { get { return IntPtr.Size == 8 && Runtime.Arch == Arch.SIMULATOR; } }
-		public static bool IsSim32 { get { return IntPtr.Size == 4 && Runtime.Arch == Arch.SIMULATOR; } }
-		public static bool IsArm64 { get { return IntPtr.Size == 8 && Runtime.Arch == Arch.DEVICE; } }
+		public static bool IsX64 { get { return IntPtr.Size == 8 && Runtime.Arch == Arch.SIMULATOR && !IsArm64CallingConvention; } }
+		public static bool IsX86 { get { return IntPtr.Size == 4 && Runtime.Arch == Arch.SIMULATOR; } }
+#endif
+		public static bool IsArm64 { get { return IntPtr.Size == 8 && IsArm64CallingConvention; } }
 		public static bool IsArm32 {
 			get {
-#if __WATCHOS__
+#if __WATCHOS__ || __MACOS__
 				return false;
 #else
 				return IntPtr.Size == 4 && Runtime.Arch == Arch.DEVICE;
 #endif
 			}
 		}
-#endif
 
 		public static bool IsArm64CallingConvention {
 			get {
