@@ -358,14 +358,17 @@ namespace MonoTouchFixtures.CoreFoundation {
 		{
 			TestRuntime.AssertXcodeVersion (12, 2);
 
+			var isX64Executable = global::System.Runtime.InteropServices.RuntimeInformation.ProcessArchitecture == global::System.Runtime.InteropServices.Architecture.X64;
+			var isArm64Executable = global::System.Runtime.InteropServices.RuntimeInformation.ProcessArchitecture == global::System.Runtime.InteropServices.Architecture.Arm64;
+
 			bool loadable_x86_64 = CFBundle.IsArchitectureLoadable (CFBundle.Architecture.X86_64);
-			if (global::System.Runtime.InteropServices.RuntimeInformation.ProcessArchitecture == global::System.Runtime.InteropServices.Architecture.X64)
+			if (isX64Executable || isArm64Executable)
 				Assert.IsTrue (loadable_x86_64, "x86_64 Expected => true");
 			else
 				Assert.IsFalse (loadable_x86_64, "x86_64 Expected => false");
 
 			bool loadable_arm64 = CFBundle.IsArchitectureLoadable (CFBundle.Architecture.ARM64);
-			if (global::System.Runtime.InteropServices.RuntimeInformation.ProcessArchitecture == global::System.Runtime.InteropServices.Architecture.Arm64)
+			if (isArm64Executable)
 				Assert.IsTrue (loadable_arm64, "arm64 Expected => true");
 			else
 				Assert.IsFalse (loadable_arm64, "arm64 Expected => false");
