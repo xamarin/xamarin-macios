@@ -27,11 +27,15 @@
 
 		new Export ("MonoClass *", "mono_class_from_mono_type",
 			"MonoType *", "type"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		new Export ("mono_bool", "mono_class_is_delegate",
 			"MonoClass *", "klass"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		new Export ("MonoClass *", "mono_class_get_element_class",
 			"MonoClass *", "klass"
@@ -39,21 +43,29 @@
 
 		new Export ("const char *", "mono_class_get_namespace",
 			"MonoClass *", "klass"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		new Export ("const char *", "mono_class_get_name",
 			"MonoClass *", "klass"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		new Export ("mono_bool", "mono_class_is_subclass_of",
 			"MonoClass *", "klass",
 			"MonoClass *", "klassc",
 			"mono_bool", "check_interfaces"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export ("mono_bool", "mono_class_is_valuetype",
 			"MonoClass *", "klass"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		new Export ("mono_bool", "mono_class_is_enum",
 			"MonoClass *", "klass"
@@ -224,7 +236,9 @@
 			XamarinRuntime = RuntimeMode.MonoVM,
 		},
 
-		new Export ("mono_bool", "mono_thread_detach_if_exiting"),
+		new Export ("mono_bool", "mono_thread_detach_if_exiting") {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		#endregion
 
@@ -343,13 +357,17 @@
 			HasCoreCLRBridgeFunction = true,
 		},
 
-		new Export ("MonoClass *", "mono_get_intptr_class"),
+		new Export ("MonoClass *", "mono_get_intptr_class") {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export ("MonoClass *", "mono_get_string_class"),
 
 		new Export ("MonoImage *", "mono_get_corlib"),
 
-		new Export ("MonoClass *", "mono_get_array_class"),
+		new Export ("MonoClass *", "mono_get_array_class") {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export ("MonoDomain *", "mono_get_root_domain") {
 			XamarinRuntime = RuntimeMode.MonoVM,
@@ -381,7 +399,9 @@
 		new Export ("MonoReflectionType *", "mono_type_get_object",
 			"MonoDomain *", "domain",
 			"MonoType *", "type"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		new Export ("MonoType *", "mono_reflection_type_get_type",
 			"MonoReflectionType *", "reftype"
@@ -399,7 +419,9 @@
 
 		new Export ("mono_bool", "mono_type_is_byref", 
 			"MonoType *", "type"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		new Export ("MonoType *", "mono_signature_get_return_type",
 			"MonoMethodSignature *", "sig"
@@ -481,17 +503,17 @@
 
 		new Export ("MonoReferenceQueue *", "mono_gc_reference_queue_new",
 			"mono_reference_queue_callback", "callback"
-		),
-
-		new Export ("void", "mono_gc_reference_queue_free",
-			"MonoReferenceQueue *", "queue"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		new Export ("gboolean", "mono_gc_reference_queue_add",
 			"MonoReferenceQueue *", "queue",
 			"MonoObject *", "obj",
 			"void *", "user_data"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		new Export ("void", "mono_gc_register_finalizer_callbacks",
 			"MonoGCFinalizerCallbacks *", "callbacks"
@@ -518,7 +540,9 @@
 
 		new Export ("void", "mono_free",
 			"void *", "ptr"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		#endregion
 

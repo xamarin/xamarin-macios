@@ -167,6 +167,8 @@ bool			xamarin_is_class_nsnumber (MonoClass *cls);
 bool			xamarin_is_class_nsvalue (MonoClass *cls);
 bool			xamarin_is_class_nsstring (MonoClass *cls);
 bool			xamarin_is_class_nullable (MonoClass *cls, MonoClass **element_type, GCHandle *exception_gchandle);
+bool			xamarin_is_class_intptr (MonoClass *cls);
+bool			xamarin_is_class_string (MonoClass *cls);
 MonoClass *		xamarin_get_nullable_type (MonoClass *cls, GCHandle *exception_gchandle);
 MonoType *		xamarin_get_parameter_type (MonoMethod *managed_method, int index);
 MonoObject *	xamarin_get_nsobject_with_type_for_ptr (id self, bool owns, MonoType* type, GCHandle *exception_gchandle);
@@ -293,7 +295,6 @@ MonoObject *	xamarin_gchandle_unwrap (GCHandle handle); // Will get the target a
 void			xamarin_mono_object_retain (MonoObject *mobj);
 // Use C++ linking to be able to use method overloading, so that callers don't have to cast their variables to 'MonoObject**' (which improves type safety a lot).
 extern "C++" void	xamarin_mono_object_release (MonoObject **mobj);
-extern "C++" void	xamarin_mono_object_release (MonoReflectionType **mobj);
 extern "C++" void	xamarin_mono_object_release (MonoString **mobj);
 #else
 // Nothing to do here.

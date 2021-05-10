@@ -299,14 +299,21 @@ xamarin_get_nsobject_with_type_for_ptr_created (id self, bool owns, MonoType *ty
 
 	if (gchandle != INVALID_GCHANDLE) {
 		mobj = xamarin_gchandle_get_target (gchandle);
-		if (mono_object_isinst (mobj, mono_class_from_mono_type (type)) != NULL) {
+		MonoClass *klass = mono_class_from_mono_type (type);
+		bool isinst = mono_object_isinst (mobj, klass) != NULL;
+		xamarin_mono_object_release (&klass);
+
+		if (isinst) {
 			return mobj;
 		} else {
 			xamarin_mono_object_release (&mobj);
 		}
 	}
 
-	return xamarin_get_nsobject_with_type (self, mono_type_get_object (mono_domain_get (), type), created, exception_gchandle);
+	MonoReflectionType *rtype = mono_type_get_object (mono_domain_get (), type);
+	MonoObject *rv = xamarin_get_nsobject_with_type (self, rtype, created, exception_gchandle);
+	xamarin_mono_object_release (&rtype);
+	return rv;
 }
 
 MonoObject *
@@ -365,73 +372,8 @@ xamarin_new_nsobject (id self, MonoClass *klass, GCHandle *exception_gchandle)
 	MonoReflectionType *rtype = mono_type_get_object (mono_domain_get (), type);
 
 	GCHandle obj = xamarin_create_nsobject (rtype, self, NSObjectFlagsNativeRef, exception_gchandle);
+	xamarin_mono_object_release (&rtype);
 	return xamarin_gchandle_unwrap (obj);
-}
-
-bool
-xamarin_is_class_nsobject (MonoClass *cls)
-{
-	// COOP: Reading managed data, must be in UNSAFE mode
-	MONO_ASSERT_GC_UNSAFE;
-	
-	return mono_class_is_subclass_of (cls, xamarin_get_nsobject_class (), false);
-}
-
-bool
-xamarin_is_class_inativeobject (MonoClass *cls)
-{
-	// COOP: Reading managed data, must be in UNSAFE mode
-	MONO_ASSERT_GC_UNSAFE;
-	
-	return mono_class_is_subclass_of (cls, xamarin_get_inativeobject_class (), true);
-}
-
-bool
-xamarin_is_class_array (MonoClass *cls)
-{
-	// COOP: Reading managed data, must be in UNSAFE mode
-	MONO_ASSERT_GC_UNSAFE;
-	
-	return mono_class_is_subclass_of (cls, mono_get_array_class (), false);
-}
-
-bool
-xamarin_is_class_nsnumber (MonoClass *cls)
-{
-	// COOP: Reading managed data, must be in UNSAFE mode
-	MONO_ASSERT_GC_UNSAFE;
-
-	MonoClass *nsnumber_class = xamarin_get_nsnumber_class ();
-	if (nsnumber_class == NULL)
-		return false;
-
-	return mono_class_is_subclass_of (cls, nsnumber_class, false);
-}
-
-bool
-xamarin_is_class_nsvalue (MonoClass *cls)
-{
-	// COOP: Reading managed data, must be in UNSAFE mode
-	MONO_ASSERT_GC_UNSAFE;
-
-	MonoClass *nsvalue_class = xamarin_get_nsvalue_class ();
-	if (nsvalue_class == NULL)
-		return false;
-
-	return mono_class_is_subclass_of (cls, nsvalue_class, false);
-}
-
-bool
-xamarin_is_class_nsstring (MonoClass *cls)
-{
-	// COOP: Reading managed data, must be in UNSAFE mode
-	MONO_ASSERT_GC_UNSAFE;
-
-	MonoClass *nsstring_class = xamarin_get_nsstring_class ();
-	if (nsstring_class == NULL)
-		return false;
-
-	return mono_class_is_subclass_of (cls, nsstring_class, false);
 }
 
 // Returns if a MonoClass is nullable.
@@ -835,7 +777,10 @@ xamarin_type_get_full_name (MonoType *type, GCHandle *exception_gchandle)
 	// COOP: Reads managed memory, needs to be in UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
 	
-	return xamarin_reflection_type_get_full_name (mono_type_get_object (mono_domain_get (), type), exception_gchandle);
+	MonoReflectionType *rtype = mono_type_get_object (mono_domain_get (), type);
+	char *rv = xamarin_reflection_type_get_full_name (rtype, exception_gchandle);
+	xamarin_mono_object_release (&rtype);
+	return rv;
 }
 
 /*
