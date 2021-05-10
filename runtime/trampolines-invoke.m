@@ -303,7 +303,9 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 								ADD_TO_MONOOBJECT_RELEASE_LIST (mobj);
 								LOGZ (" argument %i is a ref NSObject parameter: %p = %p\n", i + 1, arg, arg_frame [ofs]);
 							} else if (xamarin_is_class_inativeobject (p_klass)) {
-								MonoObject *mobj = xamarin_get_inative_object_dynamic (*(NSObject **) arg, false, mono_type_get_object (domain, p), &exception_gchandle);
+								MonoReflectionType *reflectionp = mono_type_get_object (domain, p);
+								ADD_TO_MONOOBJECT_RELEASE_LIST (reflectionp);
+								MonoObject *mobj = xamarin_get_inative_object_dynamic (*(NSObject **) arg, false, reflectionp, &exception_gchandle);
 								if (exception_gchandle != INVALID_GCHANDLE)
 									goto exception_handling;
 								arg_frame [ofs] = mobj;
@@ -354,7 +356,9 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 									[id_arg autorelease];
 								}
 								MonoObject *obj;
-								obj = xamarin_get_inative_object_dynamic (id_arg, false, mono_type_get_object (domain, p), &exception_gchandle);
+								MonoReflectionType *reflectionp = mono_type_get_object (domain, p);
+								ADD_TO_MONOOBJECT_RELEASE_LIST (reflectionp);
+								obj = xamarin_get_inative_object_dynamic (id_arg, false, reflectionp, &exception_gchandle);
 								if (exception_gchandle != INVALID_GCHANDLE)
 									goto exception_handling;
 								ADD_TO_MONOOBJECT_RELEASE_LIST (obj);
@@ -476,7 +480,9 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 								[id_arg autorelease];
 							}
 							MonoObject *obj;
-							obj = xamarin_get_inative_object_dynamic (id_arg, false, mono_type_get_object (domain, p), &exception_gchandle);
+							MonoReflectionType *reflectionp = mono_type_get_object (domain, p);
+							ADD_TO_MONOOBJECT_RELEASE_LIST (reflectionp);
+							obj = xamarin_get_inative_object_dynamic (id_arg, false, reflectionp, &exception_gchandle);
 							if (exception_gchandle != INVALID_GCHANDLE)
 								goto exception_handling;
 							ADD_TO_MONOOBJECT_RELEASE_LIST (obj);

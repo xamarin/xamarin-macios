@@ -163,12 +163,6 @@ xamarin_mono_object_release (MonoObject **mobj_ref)
 }
 
 void
-xamarin_mono_object_release (MonoReflectionType **mobj)
-{
-	xamarin_mono_object_release ((MonoObject **) mobj);
-}
-
-void
 xamarin_mono_object_release (MonoString **mobj)
 {
 	xamarin_mono_object_release ((MonoObject **) mobj);
@@ -185,6 +179,26 @@ mono_assembly_open (const char * filename, MonoImageOpenStatus * status)
 	MonoAssembly *rv = xamarin_find_assembly (filename);
 
 	LOG_CORECLR (stderr, "mono_assembly_open (%s, %p) => MonoObject=%p GCHandle=%p\n", filename, status, rv, rv->gchandle);
+
+	return rv;
+}
+
+const char *
+mono_class_get_namespace (MonoClass * klass)
+{
+	char *rv = xamarin_bridge_class_get_namespace (klass);
+
+	LOG_CORECLR (stderr, "%s (%p) => %s\n", __func__, klass, rv);
+
+	return rv;
+}
+
+const char *
+mono_class_get_name (MonoClass * klass)
+{
+	char *rv = xamarin_bridge_class_get_name (klass);
+
+	LOG_CORECLR (stderr, "%s (%p) => %s\n", __func__, klass, rv);
 
 	return rv;
 }
@@ -316,6 +330,18 @@ mono_signature_get_return_type (MonoMethodSignature* sig)
 	return rv;
 }
 
+MonoReflectionType *
+mono_type_get_object (MonoDomain *domain, MonoType *type)
+{
+	MonoReflectionType *rv = type;
+
+	xamarin_mono_object_retain (rv);
+
+	LOG_CORECLR (stderr, "%s (%p, %p) => %p\n", __func__, domain, type, rv);
+
+	return rv;
+}
+
 void
 xamarin_bridge_free_mono_signature (MonoMethodSignature **psig)
 {
@@ -353,10 +379,30 @@ mono_class_from_mono_type (MonoType *type)
 }
 
 mono_bool
+mono_type_is_byref (MonoType *type)
+{
+	bool rv = xamarin_bridge_is_byref (type);
+
+	LOG_CORECLR (stderr, "%s (%p) => %i\n", __func__, type, rv);
+
+	return rv;
+}
+
+mono_bool
 mono_class_is_delegate (MonoClass *klass)
 {
 	bool rv = xamarin_bridge_is_delegate (klass);
 	LOG_CORECLR (stderr, "%s (%p) => %i\n", __func__, klass, rv);
+	return rv;
+}
+
+mono_bool
+mono_class_is_valuetype (MonoClass * klass)
+{
+	bool rv = xamarin_bridge_is_valuetype (klass);
+
+	LOG_CORECLR (stderr, "%s (%p) => %i\n", __func__, klass, rv);
+
 	return rv;
 }
 
