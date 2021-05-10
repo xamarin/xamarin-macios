@@ -61,7 +61,9 @@
 
 		new Export ("mono_bool", "mono_class_is_valuetype",
 			"MonoClass *", "klass"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		new Export ("mono_bool", "mono_class_is_enum",
 			"MonoClass *", "klass"
@@ -409,7 +411,9 @@
 
 		new Export ("mono_bool", "mono_type_is_byref", 
 			"MonoType *", "type"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		new Export ("MonoType *", "mono_signature_get_return_type",
 			"MonoMethodSignature *", "sig"
