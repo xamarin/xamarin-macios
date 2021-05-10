@@ -82,7 +82,7 @@ namespace Xharness.Jenkins {
 			yield return nunitExecutionInstallSource;
 
 			var buildMTouch = new MakeTask (jenkins: jenkins, processManager: processManager) {
-				TestProject = new TestProject (Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "mtouch", "mtouch.sln"))),
+				TestProject = new TestProject (Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "mtouch", "mtouchtests.sln"))),
 				SpecifyPlatform = false,
 				SpecifyConfiguration = false,
 				Platform = TestPlatform.iOS,
@@ -90,8 +90,8 @@ namespace Xharness.Jenkins {
 				WorkingDirectory = Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "mtouch")),
 			};
 			var nunitExecutionMTouch = new NUnitExecuteTask (jenkins, buildMTouch, processManager) {
-				TestLibrary = Path.Combine (HarnessConfiguration.RootDirectory, "mtouch", "bin", "Debug", "mtouch.dll"),
-				TestProject = new TestProject (Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "mtouch", "mtouch.csproj"))),
+				TestLibrary = Path.Combine (HarnessConfiguration.RootDirectory, "mtouch", "bin", "Debug", "mtouchtests.dll"),
+				TestProject = new TestProject (Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "mtouch", "mtouchtests.csproj"))),
 				Platform = TestPlatform.iOS,
 				TestName = "MTouch tests",
 				Timeout = TimeSpan.FromMinutes (180),

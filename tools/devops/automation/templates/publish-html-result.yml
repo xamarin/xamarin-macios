@@ -1,0 +1,21 @@
+# generic steps to get the test results, remove any private informaiton and add them to the github page.
+parameters:
+
+- name: reason 
+  type: string 
+  default: 'pr' # default reason is a pr build 
+
+steps:
+
+- checkout: self
+  persistCredentials: true
+
+- pwsh: |
+    Write-Host "Work in progress"
+  displayName: 'Remove logs'
+  timeoutInMinutes: 1
+
+- pwsh: |
+    Write-Host "Work in progress"
+  displayName: 'Create remote branch'
+  timeoutInMinutes: 1

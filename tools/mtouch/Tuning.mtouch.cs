@@ -143,6 +143,7 @@ namespace MonoTouch.Tuner {
 
 			if (options.LinkMode != LinkMode.None) {
 				pipeline.Append (new CoreTypeMapStep ());
+				pipeline.Append (new RegistrarRemovalTrackingStep ());
 
 				pipeline.Append (GetSubSteps ());
 

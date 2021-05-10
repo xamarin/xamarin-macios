@@ -82,11 +82,26 @@ typedef enum {
 } MonoImageOpenStatus;
 
 /* metadata/metadata.h */
+#if defined (CORECLR_RUNTIME)
+// In Mono, MonoClass is not related to MonoObject at all, but for the CoreCLR bridge we use the same struct representation for both types.
+typedef struct _MonoObject MonoClass;
+#else
 typedef struct _MonoClass MonoClass;
+#endif
 typedef struct _MonoDomain MonoDomain;
+#if defined (CORECLR_RUNTIME)
+// In Mono, MonoMethod is not related to MonoObject at all, but for the CoreCLR bridge we use the same struct representation for both types.
+typedef struct _MonoObject MonoMethod;
+#else
 typedef struct _MonoMethod MonoMethod;
+#endif
 typedef struct _MonoMethodSignature MonoMethodSignature;
+#if defined (CORECLR_RUNTIME)
+// In Mono, MonoType is not related to MonoObject at all, but for the CoreCLR bridge we use the same struct representation for both types.
+typedef struct _MonoObject MonoType;
+#else
 typedef struct _MonoType MonoType;
+#endif
 
 /* metadata/class.h */
 typedef struct MonoVTable MonoVTable;
@@ -96,12 +111,14 @@ typedef struct _MonoClassField MonoClassField;
 /* metadata/object.h */
 typedef struct _MonoString MonoString;
 typedef struct _MonoArray MonoArray;
-typedef struct _MonoReflectionMethod MonoReflectionMethod;
 #if defined (CORECLR_RUNTIME)
 // In Mono, MonoReflectionAssembly is a substruct of MonoObject, but for the CoreCLR bridge we use the same struct representation for both types.
 typedef struct _MonoObject MonoReflectionAssembly;
+// Same for MonoReflectionMethod
+typedef struct _MonoObject MonoReflectionMethod;
 #else
 typedef struct _MonoReflectionAssembly MonoReflectionAssembly;
+typedef struct _MonoReflectionMethod MonoReflectionMethod;
 #endif
 typedef struct _MonoReflectionType MonoReflectionType;
 typedef struct _MonoException MonoException;

@@ -12,4 +12,5 @@ macos-*.md
 maccat-*.md
 xamarin-*.md
 *.stamp
+*.md.tmp
 bundle-*.zip

@@ -30,8 +30,8 @@ UNREFERENCED_SYMBOLS = 							\
 	_xamarin_timezone_get_data					\
 	_xamarin_timezone_get_names					\
 	_xamarin_timezone_get_local_name			\
-	_xamarin_IntPtr_objc_msgSend_IntPtr			\
-	_xamarin_IntPtr_objc_msgSendSuper_IntPtr	\
+	_xamarin_IntPtr_objc_msgSend_IntPtr_exception		\
+	_xamarin_IntPtr_objc_msgSendSuper_IntPtr_exception	\
 	_xamarin_release_managed_ref				\
 	_xamarin_CGPoint__VNNormalizedFaceBoundingBoxPointForLandmarkPoint_Vector2_CGRect_nuint_nuint_string \
 	_xamarin_CGPoint__VNImagePointForFaceLandmarkPoint_Vector2_CGRect_nuint_nuint_string \

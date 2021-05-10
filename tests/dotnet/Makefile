@@ -58,5 +58,10 @@ build-oldnet:
 build-dotnet: $(TARGETS)
 	$(DOTNET6) build size-comparison/MySingleView/dotnet/MySingleView.csproj --runtime ios-arm64 $(COMMON_ARGS) /bl:$@.binlog
 
-run-dotnet: build-dotnet
-	$(DOTNET6) build -t:Run size-comparison/MySingleView/dotnet/MySingleView.csproj
+run-dotnet: $(TARGETS)
+	$(DOTNET6) build -t:Run size-comparison/MySingleView/dotnet/MySingleView.csproj --runtime ios-arm64 $(COMMON_ARGS)
+
+# this will break the signature, so app won't run anymore. Use it only to compare final size w/legacy
+# https://github.com/xamarin/xamarin-macios/issues/11445
+strip-dotnet:
+	$(foreach file, $(wildcard size-comparison/MySingleView/dotnet/bin/iPhone/Release/net6.0-ios/ios-arm64/MySingleView.app/*.dll), mono-cil-strip $(file) $(file);)

@@ -208,6 +208,8 @@ bool			xamarin_bridge_vm_initialize (int propertyCount, const char **propertyKey
 void*			xamarin_pinvoke_override (const char *libraryName, const char *entrypointName);
 void			xamarin_bridge_call_runtime_initialize (struct InitializationOptions* options, GCHandle* exception_gchandle);
 void			xamarin_bridge_register_product_assembly (GCHandle* exception_gchandle);
+MonoMethod *	xamarin_bridge_get_mono_method (MonoReflectionMethod *method);
+void			xamarin_bridge_free_mono_signature (MonoMethodSignature **signature);
 bool			xamarin_register_monoassembly (MonoAssembly *assembly, GCHandle *exception_gchandle);
 void			xamarin_install_nsautoreleasepool_hooks ();
 
@@ -237,10 +239,8 @@ void			xamarin_check_objc_type (id obj, Class expected_class, SEL sel, id self, 
 
 void			xamarin_set_gc_pump_enabled (bool value);
 
-typedef void  	(*XamarinUnhandledExceptionFunc)         (MonoObject *exc, const char *type_name, const char *message, const char *trace);
-void          	xamarin_install_unhandled_exception_hook (XamarinUnhandledExceptionFunc func);
 void			xamarin_process_nsexception (NSException *exc);
-void			xamarin_process_nsexception_using_mode (NSException *ns_exception, bool throwManagedAsDefault);
+void			xamarin_process_nsexception_using_mode (NSException *ns_exception, bool throwManagedAsDefault, GCHandle *output_exception);
 void			xamarin_process_managed_exception (MonoObject *exc);
 void			xamarin_process_managed_exception_gchandle (GCHandle gchandle);
 void			xamarin_throw_product_exception (int code, const char *message);
@@ -293,7 +293,6 @@ MonoObject *	xamarin_gchandle_unwrap (GCHandle handle); // Will get the target a
 void			xamarin_mono_object_retain (MonoObject *mobj);
 // Use C++ linking to be able to use method overloading, so that callers don't have to cast their variables to 'MonoObject**' (which improves type safety a lot).
 extern "C++" void	xamarin_mono_object_release (MonoObject **mobj);
-extern "C++" void	xamarin_mono_object_release (MonoReflectionMethod **mobj);
 extern "C++" void	xamarin_mono_object_release (MonoReflectionType **mobj);
 extern "C++" void	xamarin_mono_object_release (MonoString **mobj);
 #else

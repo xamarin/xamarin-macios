@@ -9,6 +9,8 @@
     <_XamarinSdkRemoteRootDirectory Condition="'$(_XamarinSdkRemoteRootDirectory)' == ''">$(_XamarinSdkRootDirectory.Replace('$(NetCoreRoot)', '$(_DotNetRootRemoteDirectory)'))</_XamarinSdkRemoteRootDirectory>
     <_MlaunchPath Condition="'$(_MlaunchPath)' == ''">$(_XamarinSdkRemoteRootDirectory)tools/bin/mlaunch</_MlaunchPath>
     <AfterMicrosoftNETSdkTargets>$(AfterMicrosoftNETSdkTargets);$(MSBuildThisFileDirectory)..\targets\Microsoft.iOS.Windows.Sdk.targets</AfterMicrosoftNETSdkTargets>
+
+    <_XamarinSdkRootOnMac Condition="'$(_XamarinSdkRoot)' != ''">$(_XamarinSdkRoot.Replace('$(NetCoreRoot)', '$(_DotNetRootRemoteDirectory)'))</_XamarinSdkRootOnMac>
   </PropertyGroup>
 
 </Project>

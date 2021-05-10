@@ -17,6 +17,14 @@ parameters:
 - name: runSamples
   type: boolean
   default: false
+  
+- name: provisionatorChannel
+  type: string
+  default: 'latest'
+
+- name: enableDotnet
+  type: boolean
+  default: true
 
 # We are doing some black magic. We have several templates that 
 # are executed with different parameters. 
@@ -139,7 +147,15 @@ variables:
 - name: TeamName
   value: 'xamarin-macios'
 - name: PROVISIONATOR_CHANNEL
-  value: 'pr/mandel-macaque/401'
+  value: ${{ parameters.provisionatorChannel }}
+- name: PRBuildPool
+  value: 'VSEng-Xamarin-RedmondMacBuildPool-iOS-Untrusted'
+- name: PRBuildPoolUrl
+  value: 'https://devdiv.visualstudio.com/_settings/agentpools?poolId=366&view=agents'
+- name: CIBuildPool
+  value: 'VSEng-Xamarin-RedmondMacBuildPool-iOS-Trusted'
+- name: CIBuildPoolUrl
+  value: 'https://devdiv.visualstudio.com/_settings/agentpools?poolId=367&view=agents'
 
 trigger:
   branches:
@@ -213,6 +229,7 @@ stages:
         keyringPass: $(xma-password)
         gitHubToken: ${{ variables['GitHub.Token'] }}
         xqaCertPass: $(xqa--certificates--password)
+        enableDotnet: ${{ parameters.enableDotnet }}
 
 - ${{ if eq(parameters.runDeviceTests, true) }}:
   - ${{ if and(ne(variables['Build.Reason'], 'Schedule'), or(eq(variables['Build.Reason'], 'IndividualCI'), eq(variables['Build.Reason'], 'Manual'))) }}:

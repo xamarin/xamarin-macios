@@ -97,7 +97,7 @@ namespace Xamarin
 class X : Foundation.NSObject {
 	public X ()
 	{
-		ValueForKey (null); // calls xamarin_IntPtr_objc_msgSend_IntPtr, so that it's not linked away.
+		ValueForKey (null); // calls xamarin_IntPtr_objc_msgSend_IntPtr_exception, so that it's not linked away.
 	}
 }
 ";
@@ -108,14 +108,14 @@ class X : Foundation.NSObject {
 				mtouch.AssertExecute (MTouchAction.BuildDev, "build");
 
 				Assert.That (mtouch.NativeSymbolsInExecutable, Does.Contain ("_xamarin_pinvoke_wrapper_objc_msgSend"), "symbols");
-				Assert.That (mtouch.NativeSymbolsInExecutable, Does.Contain ("_xamarin_IntPtr_objc_msgSend_IntPtr"), "symbols 2");
+				Assert.That (mtouch.NativeSymbolsInExecutable, Does.Contain ("_xamarin_IntPtr_objc_msgSend_IntPtr_exception"), "symbols 2");
 
 				// build again with llvm enabled
 				mtouch.Abi = "arm64+llvm";
 				mtouch.AssertExecute (MTouchAction.BuildDev, "build llvm");
 
 				Assert.That (mtouch.NativeSymbolsInExecutable, Does.Contain ("_xamarin_pinvoke_wrapper_objc_msgSend"), "symbols llvm");
-				Assert.That (mtouch.NativeSymbolsInExecutable, Does.Contain ("_xamarin_IntPtr_objc_msgSend_IntPtr"), "symbols llvm 2");
+				Assert.That (mtouch.NativeSymbolsInExecutable, Does.Contain ("_xamarin_IntPtr_objc_msgSend_IntPtr_exception"), "symbols llvm 2");
 			}
 		}
 

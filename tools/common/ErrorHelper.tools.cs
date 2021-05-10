@@ -10,7 +10,7 @@ using Mono.Cecil.Cil;
 using Xamarin.Utils;
 
 namespace Xamarin.Bundler {
-	static partial class ErrorHelper {
+	public static partial class ErrorHelper {
 		public static ApplePlatform Platform;
 
 		internal static string Prefix {

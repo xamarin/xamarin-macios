@@ -138,7 +138,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 	MonoObject *mthis = NULL;
 	MethodDescription *desc = NULL;
 	MonoMethod *method;
-	MonoMethodSignature *msig;
+	MonoMethodSignature *msig = NULL;
 	MonoReflectionMethod *reflection_method = NULL;
 	int semantic;
 	bool isCategoryInstance;
@@ -179,6 +179,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 	reflection_method = (MonoReflectionMethod *) xamarin_gchandle_get_target (desc->method_handle);
 	ADD_TO_MONOOBJECT_RELEASE_LIST (reflection_method);
 	method = xamarin_get_reflection_method_method (reflection_method);
+	ADD_TO_MONOOBJECT_RELEASE_LIST (method);
 	msig = mono_method_signature (method);
 	semantic = desc->semantic & ArgumentSemanticMask;
 	isCategoryInstance = (desc->semantic & ArgumentSemanticCategoryInstance) == ArgumentSemanticCategoryInstance;
@@ -220,7 +221,9 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 			// this might be a [Native] enum, in which case managed code expects a 64-bit value.
 
 			MonoClass *p_klass = mono_class_from_mono_type (p);
-			if (mono_class_is_enum (p_klass) && mono_class_value_size (p_klass, NULL) == 8) {
+			bool is_native_enum = mono_class_is_enum (p_klass) && mono_class_value_size (p_klass, NULL) == 8;
+			xamarin_mono_object_release (&p_klass);
+			if (is_native_enum) {
 				// Don't bother checking for the attribute (it's quite expensive),
 				// just check whether managed code expects a 64-bit value and assume
 				// we end up in this condition because it's a [Native] enum.
@@ -262,6 +265,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 						case _C_SEL:
 						case _C_ID: {
 							MonoClass *p_klass = mono_class_from_mono_type (p);
+							ADD_TO_MONOOBJECT_RELEASE_LIST (p_klass);
 							if (!mono_type_is_byref (p)) {
 								exception = (MonoObject *) mono_get_exception_execution_engine ("Invalid type encoding for parameter");
 								goto exception_handling;
@@ -336,6 +340,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 						}
 						default: {
 							MonoClass *p_klass = mono_class_from_mono_type (p);
+							ADD_TO_MONOOBJECT_RELEASE_LIST  (p_klass);
 							if (mono_class_is_delegate (p_klass)) {
 								MonoObject *del = xamarin_get_delegate_for_block_parameter (method, INVALID_TOKEN_REF, (int) i, arg, &exception_gchandle);
 								if (exception_gchandle != INVALID_GCHANDLE)
@@ -416,6 +421,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 				case _C_ID: {
 					id id_arg = (id) arg;
 					MonoClass *p_klass = mono_class_from_mono_type (p);
+					ADD_TO_MONOOBJECT_RELEASE_LIST (p_klass);
 					if (p_klass == mono_get_intptr_class ()) {
 						arg_frame [ofs] = id_arg;
 						arg_ptrs [i + mofs] = &arg_frame [frameofs];
@@ -542,7 +548,10 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 		 * This problem is documented in the following bug:
 		 * https://bugzilla.xamarin.com/show_bug.cgi?id=6556
 		 */
-		retval = xamarin_new_nsobject (self, mono_method_get_class (method), &exception_gchandle);
+		MonoClass *declaring_type = mono_method_get_class (method);
+		ADD_TO_MONOOBJECT_RELEASE_LIST (declaring_type);
+
+		retval = xamarin_new_nsobject (self, declaring_type, &exception_gchandle);
 		if (exception_gchandle != INVALID_GCHANDLE)
 			goto exception_handling;
 		ADD_TO_MONOOBJECT_RELEASE_LIST (retval);
@@ -610,6 +619,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 
 			if (type [0] == _C_PTR && (type [1] == _C_ID || type [1] == _C_SEL || type [1] == _C_CLASS)) {
 				MonoClass *p_klass = mono_class_from_mono_type (p);
+				ADD_TO_MONOOBJECT_RELEASE_LIST (p_klass);
 				MonoObject *value = *(MonoObject **) arg_ptrs [i + mofs];
 				MonoObject *pvalue = (MonoObject *) arg_copy [i + mofs];
 				NSObject *obj = NULL;
@@ -725,6 +735,8 @@ exception_handling:
 		free (writeback);
 		writeback = NULL;
 	}
+
+	xamarin_bridge_free_mono_signature (&msig);
 
 	MONO_THREAD_DETACH; // COOP: This will switch to GC_SAFE
 

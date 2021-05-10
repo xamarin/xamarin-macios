@@ -1,6 +1,12 @@
 # This job will parse all the labels present in a PR, will set
 # the tags for the build AND will set a number of configuration
 # variables to be used by the rest of the projects
+parameters:
+
+- name: enableDotnet
+  type: boolean
+  default: false
+
 steps:
 - checkout: self          # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
   clean: true             # Executes: git clean -ffdx && git reset --hard HEAD
@@ -10,27 +16,39 @@ steps:
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/tools/devops/automation/scripts/GitHub.psm1
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/tools/devops/automation/scripts/VSTS.psm1
 
-    $buildReason = "$(Build.Reason)"
-    $buildSourceBranchName = "$(Build.SourceBranchName)"
-    $buildSourceBranch = "$(Build.SourceBranch)"
+    # we are going to use a custom object to store all the configuration of the build, this later
+    # will be uploaded as an artifact so that it can be easily shared with the cascade pipelines
+    $configuration = [PSCustomObject]@{
+      BuildReason = "$(Build.Reason)"
+      BuildSourceBranchName = "$(Build.SourceBranchName)"
+      BuildSourceBranch = "$(Build.SourceBranch)"
+      BuildId = "$(Build.BuildId)"
+    }
 
-    Write-Host "buildReason: ${buildReason}"
-    Write-Host "buildSourceBranchName: ${buildSourceBranchName}"
-    Write-Host "buildSourceBranch: $buildSourceBranch"
+
+    Write-Host "buildReason: $($configuration.BuildReason)"
+    Write-Host "buildSourceBranchName: $($configuration.BuildSourceBranchName)"
+    Write-Host "buildSourceBranch: $($configuration.BuildSourceBranch)"
 
     # the following list will be used to track the tags and set them in VSTS to make the monitoring person life easier
     [System.Collections.Generic.List[string]]$tags = @()
 
-    if ($buildReason -eq "Schedule") {
+    if ($configuration.BuildReason -eq "Schedule") {
         $tags.Add("cronjob")
     }
+    if ($Env:ENABLE_DOTNET -eq "True") {
+      Write-Host "dotnet will be enabled for the build because ENABLE_DOTNET was '$Env:ENABLE_DOTNET'"
+    } else {
+      Write-Host "dotnet will be disabled for the build because ENABLE_DOTNET was '$Env:ENABLE_DOTNET'"
+    }
 
-    if ($buildReason -eq "PullRequest" -or (($buildReason -eq "Manual") -and ($buildSourceBranchName -eq "merge")) ) {
+
+    if ($configuration.BuildReason -eq "PullRequest" -or (($configuration.BuildReason -eq "Manual") -and ($configuration.BuildSourceBranchName -eq "merge")) ) {
       Write-Host "Configuring build from PR."
       # This is an interesting step, we do know we are dealing with a PR, but we need the PR id to
       # be able to get the labels, the buildSourceBranch follows the pattern: refs/pull/{ChangeId}/merge
       # we could use a regexp but then we would have two problems instead of one
-      $changeId = $buildSourceBranch.Replace("refs/pull/", "").Replace("/merge", "")
+      $changeId = $configuration.BuildSourceBranch.Replace("refs/pull/", "").Replace("/merge", "")
 
       # add a var with the change id, which can be later consumed by some of the old scripts from
       # jenkins
@@ -57,7 +75,8 @@ steps:
       # decide if we add the run-dotnet-tests label (if not present) this is done only for main
       # we can use $ref for that :)
       $xharnessLabels = $tags -join ","
-      if ($ref -eq "main" -and -not ("run-dotnet-tests" -in $xharnessLabels)) {
+      if ($Env:ENABLE_DOTNET -eq "True" -and -not ("run-dotnet-tests" -in $xharnessLabels)) {
+        Write-Host "Adding label run-dotnet-tests to xharness."
         $tags.Add("run-dotnet-tests")
         if ($xharnessLabels -eq "") {
           $xharnessLabels = "run-dotnet-tests"
@@ -90,20 +109,36 @@ steps:
 
       Write-Host "##vso[task.setvariable variable=prBuild;isOutput=true]True"
     } else {
+      $tags.Add("ciBuild")
       # set the name of the branch under build
-      $tags.Add("$buildSourceBranchName")
+      $tags.Add("$($configuration.BuildSourceBranchName)")
       Write-Host "##vso[task.setvariable variable=prBuild;isOutput=true]False"
     }
     # set the tags using the cmdlet
     $tagCount = $tags.Count
     Write-Host "Found '$tagsCount' tags"
     Set-BuildTags -Tags $tags.ToArray()
+    # add the tags and serialize to json
+    $configuration | Add-Member -NotePropertyName Tags -NotePropertyValue $tags
+    $jsonPath = Join-Path -Path "$(Build.ArtifactStagingDirectory)" -ChildPath "configuration.json" 
+    $configuration | ConvertTo-Json | Set-Content -Path $jsonPath
+    Write-Host "Configuration json:'$jsonPath'"
   env:
     BUILD_REVISION: $(Build.SourceVersion)
     GITHUB_TOKEN: $(GitHub.Token)
     ACCESSTOKEN: $(AzDoBuildAccess.Token)
+    ${{ if eq(parameters.enableDotnet, true) }}:
+      ENABLE_DOTNET: "True"
   name: labels
   displayName: 'Configure build'
+
+# upload config to be consumed later
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Artifact: configuration.json'
+  inputs:
+    targetPath: '$(Build.ArtifactStagingDirectory)/configuration.json'
+    artifactName: build-configuration
+  continueOnError: true
 
 - bash: |
     echo "current directory: $PWD"
@@ -120,13 +155,13 @@ steps:
   inputs:
     locProj: '$(Build.SourcesDirectory)\Localize\LocProject.json'
     outDir: '$(Build.ArtifactStagingDirectory)'
-    isCreatePrSelected: false
+    isCreatePrSelected: eq(variables['Build.Reason'], 'Schedule')
+    packageSourceAuth: patAuth
+    patVariable: '$(OneLocBuild--PAT)'
     isAutoCompletePrSelected: false
     prSourceBranchPrefix: 'locfiles'
     repoType: gitHub
     gitHubPatVariable: '$(GitHub.Token)'
-    packageSourceAuth: patAuth
-    patVariable: '$(OneLocBuild--PAT)'
 
 - task: PublishBuildArtifacts@1
   condition: and(succeeded(), eq(variables.isMain, 'True'))
