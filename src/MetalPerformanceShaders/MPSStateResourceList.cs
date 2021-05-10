@@ -30,12 +30,10 @@ namespace MetalPerformanceShaders {
 			}
 
 			MPSStateResourceList ret;
-#if !MONOMAC
 			// Learned the hard way about arm64's variadic arguments calling conventions are different...
-			if (IntPtr.Size == 8 && Runtime.Arch == Arch.DEVICE)
+			if (Runtime.IsARM64CallingConvention)
 				ret = Runtime.GetNSObject<MPSStateResourceList> (IntPtr_objc_msgSend_IntPtrx3_FakeIntPtrx5_IntPtrx10 (class_ptr, Selector.GetHandle ("resourceListWithTextureDescriptors:"), arr [0], IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, arr [1], arr [2], arr [3], arr [4], arr [5], arr [6], arr [7], arr [8], arr [9], IntPtr.Zero));
 			else
-#endif
 				ret = Runtime.GetNSObject<MPSStateResourceList> (IntPtr_objc_msgSend_IntPtrx13 (class_ptr, Selector.GetHandle ("resourceListWithTextureDescriptors:"), arr [0], arr [1], arr [2], arr [3], arr [4], arr [5], arr [6], arr [7], arr [8], arr [9], IntPtr.Zero));
 
 			return ret;
@@ -55,21 +53,19 @@ namespace MetalPerformanceShaders {
 			}
 
 			MPSStateResourceList ret;
-#if !MONOMAC
 			// Learned the hard way about arm64's variadic arguments calling conventions are different...
-			if (IntPtr.Size == 8 && Runtime.Arch == Arch.DEVICE)
+			if (Runtime.IsARM64CallingConvention)
 				ret = Runtime.GetNSObject<MPSStateResourceList> (IntPtr_objc_msgSend_IntPtrx3_FakeIntPtrx5_IntPtrx10 (class_ptr, Selector.GetHandle ("resourceListWithBufferSizes:"), arr [0], IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, arr [1], arr [2], arr [3], arr [4], arr [5], arr [6], arr [7], arr [8], arr [9], IntPtr.Zero));
 			else
-#endif
 				ret = Runtime.GetNSObject<MPSStateResourceList> (IntPtr_objc_msgSend_IntPtrx13 (class_ptr, Selector.GetHandle ("resourceListWithBufferSizes:"), arr [0], arr [1], arr [2], arr [3], arr [4], arr [5], arr [6], arr [7], arr [8], arr [9], IntPtr.Zero));
 
 			return ret;
 		}
 
-#if !MONOMAC
+
 		[DllImport (Constants.ObjectiveCLibrary, EntryPoint = "objc_msgSend")]
 		static extern IntPtr IntPtr_objc_msgSend_IntPtrx3_FakeIntPtrx5_IntPtrx10 (IntPtr receiver, IntPtr selector, IntPtr arg0, IntPtr argFake1, IntPtr argFake2, IntPtr argFake3, IntPtr argFake4, IntPtr argFake5, IntPtr arg1, IntPtr arg2, IntPtr arg3, IntPtr arg4, IntPtr arg5, IntPtr arg6, IntPtr arg7, IntPtr arg8, IntPtr arg9, IntPtr arg10);
-#endif
+
 		[DllImport (Constants.ObjectiveCLibrary, EntryPoint = "objc_msgSend")]
 		static extern IntPtr IntPtr_objc_msgSend_IntPtrx13 (IntPtr receiver, IntPtr selector, IntPtr arg0, IntPtr arg1, IntPtr arg2, IntPtr arg3, IntPtr arg4, IntPtr arg5, IntPtr arg6, IntPtr arg7, IntPtr arg8, IntPtr arg9, IntPtr arg10);
 	}
