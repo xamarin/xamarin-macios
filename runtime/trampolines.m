@@ -1284,7 +1284,11 @@ xamarin_nsarray_to_managed_nsobject_array (NSArray *array, MonoType *array_type,
 	data.element_class = element_class;
 	data.element_type = mono_class_get_type (data.element_class);
 	data.element_reflection_type = mono_type_get_object (data.domain, data.element_type);
-	return xamarin_convert_nsarray_to_managed_with_func (array, data.element_class, xamarin_nsobject_to_object, &data, exception_gchandle);
+	MonoArray *rv = xamarin_convert_nsarray_to_managed_with_func (array, data.element_class, xamarin_nsobject_to_object, &data, exception_gchandle);
+
+	xamarin_mono_object_release (&data.element_reflection_type);
+
+	return rv;
 }
 
 MonoArray *
@@ -1301,7 +1305,11 @@ xamarin_nsarray_to_managed_inativeobject_array (NSArray *array, MonoType *array_
 	data.element_class = element_class;
 	data.element_type = mono_class_get_type (data.element_class);
 	data.element_reflection_type = mono_type_get_object (data.domain, data.element_type);
-	return xamarin_convert_nsarray_to_managed_with_func (array, data.element_class, xamarin_nsobject_to_inativeobject, &data, exception_gchandle);
+	MonoArray *rv = xamarin_convert_nsarray_to_managed_with_func (array, data.element_class, xamarin_nsobject_to_inativeobject, &data, exception_gchandle);
+
+	xamarin_mono_object_release (&data.element_reflection_type);
+
+	return rv;
 }
 
 MonoArray *
@@ -1561,7 +1569,9 @@ xamarin_nsstring_to_smart_enum (id value, void *ptr, MonoClass *managedType, voi
 
 	if (context_ref == INVALID_TOKEN_REF) {
 		// This requires the dynamic registrar to invoke the correct conversion function
-		obj = xamarin_convert_nsstring_to_smart_enum (value, mono_type_get_object (mono_domain_get (), mono_class_get_type (managedType)), exception_gchandle);
+		MonoReflectionType *rManagedType = mono_type_get_object (mono_domain_get (), mono_class_get_type (managedType));
+		obj = xamarin_convert_nsstring_to_smart_enum (value, rManagedType, exception_gchandle);
+		xamarin_mono_object_release (&rManagedType);
 		if (*exception_gchandle != INVALID_GCHANDLE)
 			return ptr;
 	} else {
