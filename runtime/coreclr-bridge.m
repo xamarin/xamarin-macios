@@ -280,7 +280,7 @@ mono_g_hash_table_new_type (GHashFunc hash_func, GEqualFunc key_equal_func, Mono
 }
 
 gpointer
-mono_g_hash_table_lookup (MonoGHashTable *hash, gconstpointer key) // NEEDS REVIEW
+mono_g_hash_table_lookup (MonoGHashTable *hash, gconstpointer key)
 {
 	MonoObject *rv = xamarin_bridge_mono_hash_table_lookup (hash, key);
 	LOG_CORECLR (stderr, "%s (%p, %p) => %p\n", __func__, hash, key, rv);
