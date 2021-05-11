@@ -37,6 +37,10 @@ steps:
     gci env: | format-table -autosize -wrap
   displayName: 'Dump Environment'
 
+- bash: |
+    ioreg -l | grep -e Manufacturer -e 'Vendor Name'
+  displayName: 'Dump Hardware'
+
 - bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/clean-bot.sh
   displayName: 'Clean bot'
   env:
@@ -147,7 +151,7 @@ steps:
 
     [System.Collections.Generic.List[string]]$failures = @()
 
-    $macTest = @("dontlink", "apitest", "introspection", "linksdk", "linkall", "xammac_tests")
+    $macTest = @("dontlink", "introspection", "linksdk", "linkall", "xammac_tests")
     foreach ($t in $macTest) {
       $testName = "exec-mac-$t"
       Write-Host "Execution test $testName"
