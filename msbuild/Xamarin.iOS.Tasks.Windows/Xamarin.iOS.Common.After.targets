@@ -357,6 +357,7 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 				ReferenceAssemblyPaths="@(ReferencePath)"
 				RootAssemblyNames="@(TrimmerRootAssembly)"
 				TrimMode="$(TrimMode)"
+				DefaultAction="$(TrimmerDefaultAction)"
 				RemoveSymbols="$(TrimmerRemoveSymbols)"
 				FeatureSettings="@(_TrimmerFeatureSettings)"
 				CustomData="@(_TrimmerCustomData)"
@@ -373,6 +374,7 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 				TreatWarningsAsErrors="$(ILLinkTreatWarningsAsErrors)"
 				WarningsAsErrors="$(WarningsAsErrors)"
 				WarningsNotAsErrors="$(WarningsNotAsErrors)"
+				SingleWarn="$(TrimmerSingleWarn)"
 
 				CustomSteps="@(_TrimmerCustomSteps)"
 				RootDescriptorFiles="@(TrimmerRootDescriptor)"

@@ -11,5 +11,10 @@
 	<PropertyGroup>
 		<SuppressTrimAnalysisWarnings Condition=" '$(SuppressTrimAnalysisWarnings)' == '' ">true</SuppressTrimAnalysisWarnings>
 		<AfterMicrosoftNETSdkTargets>$(AfterMicrosoftNETSdkTargets);$(MSBuildThisFileDirectory)Microsoft.$(_PlatformName).Sdk.targets</AfterMicrosoftNETSdkTargets>
+
+		<!-- _XamarinSdkRoot is used by the existing MSBuild targets files -->
+		<_XamarinSdkRoot Condition="'$(_XamarinSdkRoot)' == ''">$(_XamarinSdkRootDirectory)</_XamarinSdkRoot>
+		<!-- _XamarinSdkRootOnMac this should be passed to tasks that need to access the Xamarin Sdk dir on the Mac, this value will be overriden from Windows -->
+		<_XamarinSdkRootOnMac>$(_XamarinSdkRoot)</_XamarinSdkRootOnMac>
 	</PropertyGroup>
 </Project>
