@@ -509,6 +509,17 @@ namespace ObjCRuntime {
 			return rv;
 		}
 
+		static unsafe IntPtr StringToUtf8 (MonoObject* obj)
+		{
+			var str = (string) GetMonoObjectTarget (obj);
+			return Marshal.StringToHGlobalAuto (str);
+		}
+
+		static unsafe MonoObject* NewString (IntPtr text)
+		{
+			return (MonoObject *) GetMonoObject (Marshal.PtrToStringAuto (text));
+		}
+
 		static bool IsNullable (Type type)
 		{
 			if (Nullable.GetUnderlyingType (type) != null)

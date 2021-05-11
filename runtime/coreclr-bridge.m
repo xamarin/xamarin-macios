@@ -164,12 +164,6 @@ xamarin_mono_object_release (MonoObject **mobj_ref)
 	*mobj_ref = NULL;
 }
 
-void
-xamarin_mono_object_release (MonoString **mobj)
-{
-	xamarin_mono_object_release ((MonoObject **) mobj);
-}
-
 /* Implementation of the Mono Embedding API */
 
 // returns a retained MonoAssembly *
@@ -515,6 +509,26 @@ bool
 xamarin_is_class_string (MonoClass *cls)
 {
 	return xamarin_bridge_is_class_of_type (cls, XamarinLookupTypes_System_String);
+}
+
+char *
+mono_string_to_utf8 (MonoString *string_obj)
+{
+	char *rv = xamarin_bridge_string_to_utf8 (string_obj);
+
+	LOG_CORECLR (stderr, "%s (%p) => %s\n", __func__, string_obj, rv);
+
+	return rv;
+}
+
+MonoString *
+mono_string_new (MonoDomain *domain, const char *text)
+{
+	MonoString *rv = xamarin_bridge_new_string (text);
+
+	LOG_CORECLR (stderr, "%s (%p, %s) => %p\n", __func__, domain, text, rv);
+
+	return rv;
 }
 
 #endif // CORECLR_RUNTIME
