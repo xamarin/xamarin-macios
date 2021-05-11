@@ -284,7 +284,7 @@ steps:
     fi
 
     CONFIGURE_FLAGS="$CONFIGURE_FLAGS --enable-install-source"
-    echo "Configuration falgs are '$CONFIGURE_FLAGS'"
+    echo "Configuration flags are '$CONFIGURE_FLAGS'"
 
     cd $(Build.SourcesDirectory)/xamarin-macios/
     ./configure $CONFIGURE_FLAGS
