@@ -160,7 +160,9 @@
 
 		new Export ("void *", "mono_object_unbox",
 			"MonoObject *", "obj"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		new Export ("char *", "mono_string_to_utf8",
 			"MonoString *", "string_obj"

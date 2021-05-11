@@ -156,6 +156,8 @@ xamarin_mono_object_release (MonoObject **mobj_ref)
 			mobj->gchandle = INVALID_GCHANDLE;
 		}
 
+		xamarin_free (mobj->struct_value); // allocated using Marshal.AllocHGlobal.
+
 		xamarin_free (mobj); // allocated using Marshal.AllocHGlobal.
 	}
 
@@ -295,6 +297,19 @@ mono_object_isinst (MonoObject * obj, MonoClass * klass)
 	bool rv = xamarin_bridge_isinstance (obj, klass);
 	LOG_CORECLR (stderr, "%s (%p, %p) => %i\n", __func__, obj, klass, rv);
 	return rv ? obj : NULL;
+}
+
+void *
+mono_object_unbox (MonoObject *obj)
+{
+	void *rv = obj->struct_value;
+
+	if (rv == NULL)
+		xamarin_assertion_message ("%s (%p) => no struct value?\n", __func__);
+
+	LOG_CORECLR (stderr, "%s (%p) => %p\n", __func__, obj, rv);
+
+	return rv;
 }
 
 // Return value: NULL, or a retained MonoObject* that must be freed with xamarin_mono_object_release.
