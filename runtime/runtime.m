@@ -370,6 +370,7 @@ xamarin_new_nsobject (id self, MonoClass *klass, GCHandle *exception_gchandle)
 {
 	MonoType *type = mono_class_get_type (klass);
 	MonoReflectionType *rtype = mono_type_get_object (mono_domain_get (), type);
+	xamarin_mono_object_release (&type);
 
 	GCHandle obj = xamarin_create_nsobject (rtype, self, NSObjectFlagsNativeRef, exception_gchandle);
 	xamarin_mono_object_release (&rtype);
@@ -768,7 +769,11 @@ xamarin_class_get_full_name (MonoClass *klass, GCHandle *exception_gchandle)
 	// COOP: Reads managed memory, needs to be in UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
 	
-	return xamarin_type_get_full_name (mono_class_get_type (klass), exception_gchandle);
+	MonoType *type = mono_class_get_type (klass);
+	char * rv = xamarin_type_get_full_name (type, exception_gchandle);
+	xamarin_mono_object_release (&type);
+
+	return rv;
 }
 
 char *

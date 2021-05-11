@@ -210,6 +210,20 @@ mono_domain_get (void)
 	return NULL;
 }
 
+MonoType *
+mono_class_get_type (MonoClass *klass)
+{
+	// MonoClass and MonoType are identical in CoreCLR (both are actually MonoObjects).
+	// However, we're returning a retained object, so we need to retain here.
+	MonoType *rv = klass;
+
+	xamarin_mono_object_retain (rv);
+
+	LOG_CORECLR (stderr, "%s (%p) => %p\n", __func__, klass, rv);
+
+	return rv;
+}
+
 // returns a retained MonoReflectionAssembly *
 MonoReflectionAssembly *
 mono_assembly_get_object (MonoDomain * domain, MonoAssembly * assembly)
