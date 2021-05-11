@@ -145,6 +145,11 @@ partial class TestRuntime
 #if !MONOMAC
 		if (ObjCRuntime.Runtime.Arch == Arch.SIMULATOR)
 			NUnit.Framework.Assert.Ignore ("This test only runs on device.");
+#else
+		// enviroment variable set by the CI when running on a VM
+		var vmVendor = Environment.GetEnvironmentVariable ("VM_VENDOR");
+		if (!string.IsNullOrEmpty (vmVendor))
+			NUnit.Framework.Assert.Ignore ($"This test only runs on device. Found vm vendor: {vmVendor}");
 #endif
 	}
 
