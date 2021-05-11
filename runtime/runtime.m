@@ -310,7 +310,10 @@ xamarin_get_nsobject_with_type_for_ptr_created (id self, bool owns, MonoType *ty
 		}
 	}
 
-	return xamarin_get_nsobject_with_type (self, mono_type_get_object (mono_domain_get (), type), created, exception_gchandle);
+	MonoReflectionType *rtype = mono_type_get_object (mono_domain_get (), type);
+	MonoObject *rv = xamarin_get_nsobject_with_type (self, rtype, created, exception_gchandle);
+	xamarin_mono_object_release (&rtype);
+	return rv;
 }
 
 MonoObject *
@@ -367,75 +370,11 @@ xamarin_new_nsobject (id self, MonoClass *klass, GCHandle *exception_gchandle)
 {
 	MonoType *type = mono_class_get_type (klass);
 	MonoReflectionType *rtype = mono_type_get_object (mono_domain_get (), type);
+	xamarin_mono_object_release (&type);
 
 	GCHandle obj = xamarin_create_nsobject (rtype, self, NSObjectFlagsNativeRef, exception_gchandle);
+	xamarin_mono_object_release (&rtype);
 	return xamarin_gchandle_unwrap (obj);
-}
-
-bool
-xamarin_is_class_nsobject (MonoClass *cls)
-{
-	// COOP: Reading managed data, must be in UNSAFE mode
-	MONO_ASSERT_GC_UNSAFE;
-	
-	return mono_class_is_subclass_of (cls, xamarin_get_nsobject_class (), false);
-}
-
-bool
-xamarin_is_class_inativeobject (MonoClass *cls)
-{
-	// COOP: Reading managed data, must be in UNSAFE mode
-	MONO_ASSERT_GC_UNSAFE;
-	
-	return mono_class_is_subclass_of (cls, xamarin_get_inativeobject_class (), true);
-}
-
-bool
-xamarin_is_class_array (MonoClass *cls)
-{
-	// COOP: Reading managed data, must be in UNSAFE mode
-	MONO_ASSERT_GC_UNSAFE;
-	
-	return mono_class_is_subclass_of (cls, mono_get_array_class (), false);
-}
-
-bool
-xamarin_is_class_nsnumber (MonoClass *cls)
-{
-	// COOP: Reading managed data, must be in UNSAFE mode
-	MONO_ASSERT_GC_UNSAFE;
-
-	MonoClass *nsnumber_class = xamarin_get_nsnumber_class ();
-	if (nsnumber_class == NULL)
-		return false;
-
-	return mono_class_is_subclass_of (cls, nsnumber_class, false);
-}
-
-bool
-xamarin_is_class_nsvalue (MonoClass *cls)
-{
-	// COOP: Reading managed data, must be in UNSAFE mode
-	MONO_ASSERT_GC_UNSAFE;
-
-	MonoClass *nsvalue_class = xamarin_get_nsvalue_class ();
-	if (nsvalue_class == NULL)
-		return false;
-
-	return mono_class_is_subclass_of (cls, nsvalue_class, false);
-}
-
-bool
-xamarin_is_class_nsstring (MonoClass *cls)
-{
-	// COOP: Reading managed data, must be in UNSAFE mode
-	MONO_ASSERT_GC_UNSAFE;
-
-	MonoClass *nsstring_class = xamarin_get_nsstring_class ();
-	if (nsstring_class == NULL)
-		return false;
-
-	return mono_class_is_subclass_of (cls, nsstring_class, false);
 }
 
 // Returns if a MonoClass is nullable.
@@ -830,7 +769,11 @@ xamarin_class_get_full_name (MonoClass *klass, GCHandle *exception_gchandle)
 	// COOP: Reads managed memory, needs to be in UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
 	
-	return xamarin_type_get_full_name (mono_class_get_type (klass), exception_gchandle);
+	MonoType *type = mono_class_get_type (klass);
+	char * rv = xamarin_type_get_full_name (type, exception_gchandle);
+	xamarin_mono_object_release (&type);
+
+	return rv;
 }
 
 char *
@@ -839,7 +782,10 @@ xamarin_type_get_full_name (MonoType *type, GCHandle *exception_gchandle)
 	// COOP: Reads managed memory, needs to be in UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
 	
-	return xamarin_reflection_type_get_full_name (mono_type_get_object (mono_domain_get (), type), exception_gchandle);
+	MonoReflectionType *rtype = mono_type_get_object (mono_domain_get (), type);
+	char *rv = xamarin_reflection_type_get_full_name (rtype, exception_gchandle);
+	xamarin_mono_object_release (&rtype);
+	return rv;
 }
 
 /*
@@ -2018,7 +1964,10 @@ get_method_block_wrapper_creator (MonoMethod *method, int par, GCHandle *excepti
 		return xamarin_gchandle_new (res, false);
 	}
 
-	res = xamarin_get_block_wrapper_creator (mono_method_get_object (mono_domain_get (), method, NULL), (int) par, exception_gchandle);
+	MonoReflectionMethod *reflection_method = mono_method_get_object (mono_domain_get (), method, NULL);
+	res = xamarin_get_block_wrapper_creator (reflection_method, (int) par, exception_gchandle);
+	xamarin_mono_object_release (&reflection_method);
+
 	if (*exception_gchandle != INVALID_GCHANDLE)
 		return INVALID_GCHANDLE;
 	// PRINT ("New value: %x", (int) res);
@@ -2111,7 +2060,10 @@ id
 xamarin_get_block_for_delegate (MonoMethod *method, MonoObject *delegate, const char *signature, guint32 token_ref, GCHandle *exception_gchandle)
 {
 	// COOP: accesses managed memory: unsafe mode.
-	return xamarin_create_delegate_proxy (mono_method_get_object (mono_domain_get (), method, NULL), delegate, signature, token_ref, exception_gchandle);
+	MonoReflectionMethod *reflection_method = mono_method_get_object (mono_domain_get (), method, NULL);
+	id rv = xamarin_create_delegate_proxy (reflection_method, delegate, signature, token_ref, exception_gchandle);
+	xamarin_mono_object_release (&reflection_method);
+	return rv;
 }
 
 void

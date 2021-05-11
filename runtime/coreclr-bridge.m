@@ -156,22 +156,12 @@ xamarin_mono_object_release (MonoObject **mobj_ref)
 			mobj->gchandle = INVALID_GCHANDLE;
 		}
 
+		xamarin_free (mobj->struct_value); // allocated using Marshal.AllocHGlobal.
+
 		xamarin_free (mobj); // allocated using Marshal.AllocHGlobal.
 	}
 
 	*mobj_ref = NULL;
-}
-
-void
-xamarin_mono_object_release (MonoReflectionType **mobj)
-{
-	xamarin_mono_object_release ((MonoObject **) mobj);
-}
-
-void
-xamarin_mono_object_release (MonoString **mobj)
-{
-	xamarin_mono_object_release ((MonoObject **) mobj);
 }
 
 /* Implementation of the Mono Embedding API */
@@ -189,11 +179,45 @@ mono_assembly_open (const char * filename, MonoImageOpenStatus * status)
 	return rv;
 }
 
+const char *
+mono_class_get_namespace (MonoClass * klass)
+{
+	char *rv = xamarin_bridge_class_get_namespace (klass);
+
+	LOG_CORECLR (stderr, "%s (%p) => %s\n", __func__, klass, rv);
+
+	return rv;
+}
+
+const char *
+mono_class_get_name (MonoClass * klass)
+{
+	char *rv = xamarin_bridge_class_get_name (klass);
+
+	LOG_CORECLR (stderr, "%s (%p) => %s\n", __func__, klass, rv);
+
+	return rv;
+}
+
 MonoDomain *
 mono_domain_get (void)
 {
 	// This is not needed for CoreCLR.
 	return NULL;
+}
+
+MonoType *
+mono_class_get_type (MonoClass *klass)
+{
+	// MonoClass and MonoType are identical in CoreCLR (both are actually MonoObjects).
+	// However, we're returning a retained object, so we need to retain here.
+	MonoType *rv = klass;
+
+	xamarin_mono_object_retain (rv);
+
+	LOG_CORECLR (stderr, "%s (%p) => %p\n", __func__, klass, rv);
+
+	return rv;
 }
 
 // returns a retained MonoReflectionAssembly *
@@ -205,6 +229,20 @@ mono_assembly_get_object (MonoDomain * domain, MonoAssembly * assembly)
 	xamarin_mono_object_retain (assembly);
 	LOG_CORECLR (stderr, "mono_assembly_get_object (%p, %p): rv: %p\n", domain, assembly, assembly);
 	return assembly;
+}
+
+MonoReflectionMethod *
+mono_method_get_object (MonoDomain *domain, MonoMethod *method, MonoClass *refclass)
+{
+	// MonoMethod and MonoReflectionMethod are identical in CoreCLR (both are actually MonoObjects).
+	// However, we're returning a retained object, so we need to retain here.
+	MonoReflectionMethod *rv = method;
+
+	xamarin_mono_object_retain (rv);
+
+	LOG_CORECLR (stderr, "%s (%p, %p, %p) => %p\n", __func__, domain, method, refclass, rv);
+
+	return rv;
 }
 
 int
@@ -253,6 +291,19 @@ mono_object_isinst (MonoObject * obj, MonoClass * klass)
 	bool rv = xamarin_bridge_isinstance (obj, klass);
 	LOG_CORECLR (stderr, "%s (%p, %p) => %i\n", __func__, obj, klass, rv);
 	return rv ? obj : NULL;
+}
+
+void *
+mono_object_unbox (MonoObject *obj)
+{
+	void *rv = obj->struct_value;
+
+	if (rv == NULL)
+		xamarin_assertion_message ("%s (%p) => no struct value?\n", __func__);
+
+	LOG_CORECLR (stderr, "%s (%p) => %p\n", __func__, obj, rv);
+
+	return rv;
 }
 
 // Return value: NULL, or a retained MonoObject* that must be freed with xamarin_mono_object_release.
@@ -316,6 +367,18 @@ mono_signature_get_return_type (MonoMethodSignature* sig)
 	return rv;
 }
 
+MonoReflectionType *
+mono_type_get_object (MonoDomain *domain, MonoType *type)
+{
+	MonoReflectionType *rv = type;
+
+	xamarin_mono_object_retain (rv);
+
+	LOG_CORECLR (stderr, "%s (%p, %p) => %p\n", __func__, domain, type, rv);
+
+	return rv;
+}
+
 void
 xamarin_bridge_free_mono_signature (MonoMethodSignature **psig)
 {
@@ -329,6 +392,26 @@ xamarin_bridge_free_mono_signature (MonoMethodSignature **psig)
 	mono_free (sig);
 
 	*psig = NULL;
+}
+
+MonoReferenceQueue *
+mono_gc_reference_queue_new (mono_reference_queue_callback callback)
+{
+	MonoReferenceQueue *rv = xamarin_bridge_gc_reference_queue_new (callback);
+
+	LOG_CORECLR (stderr, "%s (%p) => %p\n", __func__, callback, rv);
+
+	return rv;
+}
+
+gboolean
+mono_gc_reference_queue_add (MonoReferenceQueue *queue, MonoObject *obj, void *user_data)
+{
+	LOG_CORECLR (stderr, "%s (%p, %p, %p)\n", __func__, queue, obj, user_data);
+
+	xamarin_bridge_gc_reference_queue_add (queue, obj, user_data);
+
+	return true;
 }
 
 void
@@ -353,10 +436,98 @@ mono_class_from_mono_type (MonoType *type)
 }
 
 mono_bool
+mono_type_is_byref (MonoType *type)
+{
+	bool rv = xamarin_bridge_is_byref (type);
+
+	LOG_CORECLR (stderr, "%s (%p) => %i\n", __func__, type, rv);
+
+	return rv;
+}
+
+mono_bool
 mono_class_is_delegate (MonoClass *klass)
 {
 	bool rv = xamarin_bridge_is_delegate (klass);
 	LOG_CORECLR (stderr, "%s (%p) => %i\n", __func__, klass, rv);
+	return rv;
+}
+
+mono_bool
+mono_class_is_valuetype (MonoClass * klass)
+{
+	bool rv = xamarin_bridge_is_valuetype (klass);
+
+	LOG_CORECLR (stderr, "%s (%p) => %i\n", __func__, klass, rv);
+
+	return rv;
+}
+
+bool
+xamarin_is_class_nsobject (MonoClass *cls)
+{
+	return xamarin_bridge_is_class_of_type (cls, XamarinLookupTypes_Foundation_NSObject);
+}
+
+bool
+xamarin_is_class_inativeobject (MonoClass *cls)
+{
+	return xamarin_bridge_is_class_of_type (cls, XamarinLookupTypes_ObjCRuntime_INativeObject);
+}
+
+bool
+xamarin_is_class_array (MonoClass *cls)
+{
+	return xamarin_bridge_is_class_of_type (cls, XamarinLookupTypes_System_Array);
+}
+
+bool
+xamarin_is_class_nsnumber (MonoClass *cls)
+{
+	return xamarin_bridge_is_class_of_type (cls, XamarinLookupTypes_Foundation_NSNumber);
+}
+
+bool
+xamarin_is_class_nsvalue (MonoClass *cls)
+{
+	return xamarin_bridge_is_class_of_type (cls, XamarinLookupTypes_Foundation_NSValue);
+}
+
+bool
+xamarin_is_class_nsstring (MonoClass *cls)
+{
+	return xamarin_bridge_is_class_of_type (cls, XamarinLookupTypes_Foundation_NSString);
+}
+
+bool
+xamarin_is_class_intptr (MonoClass *cls)
+{
+	return xamarin_bridge_is_class_of_type (cls, XamarinLookupTypes_System_IntPtr);
+}
+
+bool
+xamarin_is_class_string (MonoClass *cls)
+{
+	return xamarin_bridge_is_class_of_type (cls, XamarinLookupTypes_System_String);
+}
+
+char *
+mono_string_to_utf8 (MonoString *string_obj)
+{
+	char *rv = xamarin_bridge_string_to_utf8 (string_obj);
+
+	LOG_CORECLR (stderr, "%s (%p) => %s\n", __func__, string_obj, rv);
+
+	return rv;
+}
+
+MonoString *
+mono_string_new (MonoDomain *domain, const char *text)
+{
+	MonoString *rv = xamarin_bridge_new_string (text);
+
+	LOG_CORECLR (stderr, "%s (%p, %s) => %p\n", __func__, domain, text, rv);
+
 	return rv;
 }
 

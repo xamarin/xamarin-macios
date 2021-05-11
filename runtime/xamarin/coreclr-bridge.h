@@ -27,6 +27,12 @@ extern "C" {
 struct _MonoObject {
 	int _Atomic reference_count;
 	GCHandle gchandle;
+	// We write the value of the struct here every time we create a MonoObject instance.
+	// We can also fetch this value when it's needed (as opposed to creating it every time),
+	// but that runs into threading issues (what if two threads needs it at the same time?).
+	// Nothing unsolvable, but I'm going with the simplest solution until this is proven
+	// to be a problem.
+	void *struct_value;
 };
 
 // This struct must be kept in sync with the MonoMethodSignature struct in Runtime.CoreCLR.cs

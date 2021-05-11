@@ -109,24 +109,31 @@ typedef struct MonoVTable MonoVTable;
 typedef struct _MonoClassField MonoClassField;
 
 /* metadata/object.h */
+#if defined (CORECLR_RUNTIME)
+// In Mono, these types are substructs of MonoObject, but for the CoreCLR bridge we use the same struct representation for both types.
+typedef struct _MonoObject MonoString;
+typedef struct _MonoObject MonoArray;
+typedef struct _MonoObject MonoReflectionAssembly;
+typedef struct _MonoObject MonoReflectionMethod;
+typedef struct _MonoObject MonoReflectionType;
+#else
 typedef struct _MonoString MonoString;
 typedef struct _MonoArray MonoArray;
-#if defined (CORECLR_RUNTIME)
-// In Mono, MonoReflectionAssembly is a substruct of MonoObject, but for the CoreCLR bridge we use the same struct representation for both types.
-typedef struct _MonoObject MonoReflectionAssembly;
-// Same for MonoReflectionMethod
-typedef struct _MonoObject MonoReflectionMethod;
-#else
 typedef struct _MonoReflectionAssembly MonoReflectionAssembly;
 typedef struct _MonoReflectionMethod MonoReflectionMethod;
-#endif
 typedef struct _MonoReflectionType MonoReflectionType;
+#endif
 typedef struct _MonoException MonoException;
 typedef struct _MonoThread MonoThread;
 typedef struct _MonoThreadsSync MonoThreadsSync;
 typedef struct _MonoObject MonoObject;
 
+#if defined (CORECLR_RUNTIME)
+// In Mono, MonoReferenceQueue is not related to MonoObject at all, but for the CoreCLR bridge we use the same struct representation for both types.
+typedef struct _MonoObject MonoReferenceQueue;
+#else
 typedef struct _MonoReferenceQueue MonoReferenceQueue;
+#endif
 typedef void (*mono_reference_queue_callback) (void *user_data);
 
 #define mono_array_addr(array,type,index) ((type*)(void*) mono_array_addr_with_size (array, sizeof (type), index))
