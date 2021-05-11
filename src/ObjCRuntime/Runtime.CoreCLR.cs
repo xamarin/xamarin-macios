@@ -41,6 +41,7 @@ namespace ObjCRuntime {
 		internal struct MonoObject {
 			public int ReferenceCount;
 			public IntPtr GCHandle;
+			public IntPtr StructValue;
 		}
 
 		// This struct must be kept in sync with the _MonoMethodSignature struct in coreclr-bridge.h
@@ -169,6 +170,7 @@ namespace ObjCRuntime {
 			var mobj = new MonoObject ();
 			mobj.GCHandle = handle;
 			mobj.ReferenceCount = 1;
+			mobj.StructValue = WriteStructure (obj);
 
 			IntPtr rv = MarshalStructure (mobj);
 
@@ -206,6 +208,31 @@ namespace ObjCRuntime {
 				return;
 
 			Marshal.StructureToPtr (obj, ptr, false);
+		}
+
+		static IntPtr WriteStructure (object obj)
+		{
+			if (obj == null)
+				return IntPtr.Zero;
+
+			if (!obj.GetType ().IsValueType)
+				return IntPtr.Zero;
+
+			var structType = obj.GetType ();
+			// Unwrap enums
+			if (structType.IsEnum) {
+				structType = Enum.GetUnderlyingType (structType);
+				obj = Convert.ChangeType (obj, structType);
+			}
+
+			var size = SizeOf (obj.GetType ());
+			var output = Marshal.AllocHGlobal (size);
+
+			StructureToPtr (obj, output);
+
+			log_coreclr ($"WriteStructure ({obj}) => Pointer: 0x{output.ToString ("x")} Size: {size}");
+
+			return output;
 		}
 
 		static IntPtr GetAssemblyName (IntPtr gchandle)
@@ -319,6 +346,13 @@ namespace ObjCRuntime {
 			if (type.IsByRef)
 				type = type.GetElementType ();
 			return (MonoObject *) GetMonoObject (type);
+		}
+
+		static int SizeOf (Type type)
+		{
+			if (type.IsEnum) // https://github.com/dotnet/runtime/issues/12258
+				type = Enum.GetUnderlyingType (type);
+			return Marshal.SizeOf (type);
 		}
 
 		static unsafe MonoObject* InvokeMethod (MonoObject* methodobj, MonoObject* instanceobj, IntPtr native_parameters)
@@ -474,6 +508,17 @@ namespace ObjCRuntime {
 			log_coreclr ($"    Invoke complete with {byrefParameterCount} ref parameters and return value of type {rv?.GetType ()}");
 
 			return rv;
+		}
+
+		static unsafe IntPtr StringToUtf8 (MonoObject* obj)
+		{
+			var str = (string) GetMonoObjectTarget (obj);
+			return Marshal.StringToHGlobalAuto (str);
+		}
+
+		static unsafe MonoObject* NewString (IntPtr text)
+		{
+			return (MonoObject *) GetMonoObject (Marshal.PtrToStringAuto (text));
 		}
 
 		static bool IsNullable (Type type)

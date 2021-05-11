@@ -101,7 +101,9 @@ xamarin_marshal_return_value_impl (MonoType *mtype, const char *type, MonoObject
 				MonoReflectionType *original_type = (MonoReflectionType *) xamarin_gchandle_get_target (desc->bindas [0].original_type_handle);
 				MonoType *original_tp = mono_reflection_type_get_type (original_type);
 				xamarin_mono_object_release (&original_type);
-				returnValue = xamarin_generate_conversion_to_native (retval, mono_class_get_type (r_klass), original_tp, method, (void *) INVALID_TOKEN_REF, exception_gchandle);
+				MonoType *r_type = mono_class_get_type (r_klass);
+				returnValue = xamarin_generate_conversion_to_native (retval, r_type, original_tp, method, (void *) INVALID_TOKEN_REF, exception_gchandle);
+				xamarin_mono_object_release (&r_type);
 			} else if (xamarin_is_class_string (r_klass)) {
 				returnValue = xamarin_string_to_nsstring ((MonoString *) retval, retain);
 			} else if (xamarin_is_class_array (r_klass)) {
@@ -1254,7 +1256,9 @@ xamarin_managed_array_to_nsarray (MonoArray *array, MonoType *managed_type, Mono
 	}
 
 	// Don't know how to convert: show an exception.
-	char *element_name = xamarin_type_get_full_name (mono_class_get_type (e_klass), exception_gchandle);
+	MonoType *e_type = mono_class_get_type (e_klass);
+	char *element_name = xamarin_type_get_full_name (e_type, exception_gchandle);
+	xamarin_mono_object_release (&e_type);
 	if (*exception_gchandle != INVALID_GCHANDLE)
 		return NULL;
 	char *msg = xamarin_strdup_printf ("Unable to convert from a managed array of %s to an NSArray.", element_name);
@@ -1286,6 +1290,7 @@ xamarin_nsarray_to_managed_nsobject_array (NSArray *array, MonoType *array_type,
 	data.element_reflection_type = mono_type_get_object (data.domain, data.element_type);
 	MonoArray *rv = xamarin_convert_nsarray_to_managed_with_func (array, data.element_class, xamarin_nsobject_to_object, &data, exception_gchandle);
 
+	xamarin_mono_object_release (&data.element_type);
 	xamarin_mono_object_release (&data.element_reflection_type);
 
 	return rv;
@@ -1307,6 +1312,7 @@ xamarin_nsarray_to_managed_inativeobject_array (NSArray *array, MonoType *array_
 	data.element_reflection_type = mono_type_get_object (data.domain, data.element_type);
 	MonoArray *rv = xamarin_convert_nsarray_to_managed_with_func (array, data.element_class, xamarin_nsobject_to_inativeobject, &data, exception_gchandle);
 
+	xamarin_mono_object_release (&data.element_type);
 	xamarin_mono_object_release (&data.element_reflection_type);
 
 	return rv;
@@ -1326,7 +1332,12 @@ xamarin_nsarray_to_managed_inativeobject_array_static (NSArray *array, MonoType 
 	data.element_type = mono_class_get_type (data.element_class);
 	data.iface_token_ref = iface_token_ref;
 	data.implementation_token_ref = implementation_token_ref;
-	return xamarin_convert_nsarray_to_managed_with_func (array, data.element_class, xamarin_nsobject_to_inativeobject_static, &data, exception_gchandle);
+
+	MonoArray *rv = xamarin_convert_nsarray_to_managed_with_func (array, data.element_class, xamarin_nsobject_to_inativeobject_static, &data, exception_gchandle);
+
+	xamarin_mono_object_release (&data.element_type);
+
+	return rv;
 }
 
 MonoArray *
@@ -1353,7 +1364,9 @@ xamarin_nsarray_to_managed_array (NSArray *array, MonoType *managed_type, MonoCl
 	}
 
 	// Don't know how to convert: show an exception.
-	char *element_name = xamarin_type_get_full_name (mono_class_get_type (e_klass), exception_gchandle);
+	MonoType *e_type = mono_class_get_type (e_klass);
+	char *element_name = xamarin_type_get_full_name (e_type, exception_gchandle);
+	xamarin_mono_object_release (&e_type);
 	if (*exception_gchandle != INVALID_GCHANDLE)
 		return NULL;
 	char *msg = xamarin_strdup_printf ("Unable to convert from an NSArray to a managed array of %s.", element_name);
@@ -1368,11 +1381,13 @@ xamarin_get_nsnumber_converter (MonoClass *managedType, MonoMethod *method, bool
 {
 	int type;
 	void * func = NULL;
+	MonoType *mtype = NULL;
 	char *fullname = xamarin_class_get_full_name (managedType, exception_gchandle);
 	if (*exception_gchandle != INVALID_GCHANDLE)
 		goto exception_handling;
 
-	type = mono_type_get_type (mono_class_get_type (managedType));
+	mtype = mono_class_get_type (managedType);
+	type = mono_type_get_type (mtype);
 
 	switch (type) {
 	case MONO_TYPE_I1:
@@ -1420,13 +1435,16 @@ xamarin_get_nsnumber_converter (MonoClass *managedType, MonoMethod *method, bool
 			func = xamarin_get_nsnumber_converter (baseClass, method, to_managed, exception_gchandle);
 			xamarin_mono_object_release (&baseClass);
 		} else {
-			*exception_gchandle = xamarin_create_bindas_exception (mono_class_get_type (managedType), mono_class_get_type (xamarin_get_nsnumber_class ()), method);
+			MonoType *nsnumberType = mono_class_get_type (xamarin_get_nsnumber_class ());
+			*exception_gchandle = xamarin_create_bindas_exception (mtype, nsnumberType, method);
+			xamarin_mono_object_release (&nsnumberType);
 			goto exception_handling;
 		}
 	}
 
 exception_handling:
 	xamarin_free (fullname);
+	xamarin_mono_object_release (&mtype);
 
 	return func;
 }
@@ -1488,7 +1506,11 @@ xamarin_get_nsvalue_converter (MonoClass *managedType, MonoMethod *method, bool 
 		func = to_managed ? (void *) xamarin_nsvalue_to_uioffset : (void *) xamarin_uioffset_to_nsvalue;
 #endif
 	} else {
-		*exception_gchandle = xamarin_create_bindas_exception (mono_class_get_type (managedType), mono_class_get_type (xamarin_get_nsvalue_class ()), method);
+		MonoType *mType = mono_class_get_type (managedType);
+		MonoType *nsvalueType = mono_class_get_type (xamarin_get_nsvalue_class ());
+		*exception_gchandle = xamarin_create_bindas_exception (mType, nsvalueType, method);
+		xamarin_mono_object_release (&mType);
+		xamarin_mono_object_release (&nsvalueType);
 		goto exception_handling;
 	}
 
@@ -1569,7 +1591,9 @@ xamarin_nsstring_to_smart_enum (id value, void *ptr, MonoClass *managedType, voi
 
 	if (context_ref == INVALID_TOKEN_REF) {
 		// This requires the dynamic registrar to invoke the correct conversion function
-		MonoReflectionType *rManagedType = mono_type_get_object (mono_domain_get (), mono_class_get_type (managedType));
+		MonoType *mType = mono_class_get_type (managedType);
+		MonoReflectionType *rManagedType = mono_type_get_object (mono_domain_get (), mType);
+		xamarin_mono_object_release (&mType);
 		obj = xamarin_convert_nsstring_to_smart_enum (value, rManagedType, exception_gchandle);
 		xamarin_mono_object_release (&rManagedType);
 		if (*exception_gchandle != INVALID_GCHANDLE)

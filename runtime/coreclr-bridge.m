@@ -156,16 +156,12 @@ xamarin_mono_object_release (MonoObject **mobj_ref)
 			mobj->gchandle = INVALID_GCHANDLE;
 		}
 
+		xamarin_free (mobj->struct_value); // allocated using Marshal.AllocHGlobal.
+
 		xamarin_free (mobj); // allocated using Marshal.AllocHGlobal.
 	}
 
 	*mobj_ref = NULL;
-}
-
-void
-xamarin_mono_object_release (MonoString **mobj)
-{
-	xamarin_mono_object_release ((MonoObject **) mobj);
 }
 
 /* Implementation of the Mono Embedding API */
@@ -208,6 +204,20 @@ mono_domain_get (void)
 {
 	// This is not needed for CoreCLR.
 	return NULL;
+}
+
+MonoType *
+mono_class_get_type (MonoClass *klass)
+{
+	// MonoClass and MonoType are identical in CoreCLR (both are actually MonoObjects).
+	// However, we're returning a retained object, so we need to retain here.
+	MonoType *rv = klass;
+
+	xamarin_mono_object_retain (rv);
+
+	LOG_CORECLR (stderr, "%s (%p) => %p\n", __func__, klass, rv);
+
+	return rv;
 }
 
 // returns a retained MonoReflectionAssembly *
@@ -307,6 +317,19 @@ mono_object_isinst (MonoObject * obj, MonoClass * klass)
 	bool rv = xamarin_bridge_isinstance (obj, klass);
 	LOG_CORECLR (stderr, "%s (%p, %p) => %i\n", __func__, obj, klass, rv);
 	return rv ? obj : NULL;
+}
+
+void *
+mono_object_unbox (MonoObject *obj)
+{
+	void *rv = obj->struct_value;
+
+	if (rv == NULL)
+		xamarin_assertion_message ("%s (%p) => no struct value?\n", __func__);
+
+	LOG_CORECLR (stderr, "%s (%p) => %p\n", __func__, obj, rv);
+
+	return rv;
 }
 
 // Return value: NULL, or a retained MonoObject* that must be freed with xamarin_mono_object_release.
@@ -512,6 +535,26 @@ bool
 xamarin_is_class_string (MonoClass *cls)
 {
 	return xamarin_bridge_is_class_of_type (cls, XamarinLookupTypes_System_String);
+}
+
+char *
+mono_string_to_utf8 (MonoString *string_obj)
+{
+	char *rv = xamarin_bridge_string_to_utf8 (string_obj);
+
+	LOG_CORECLR (stderr, "%s (%p) => %s\n", __func__, string_obj, rv);
+
+	return rv;
+}
+
+MonoString *
+mono_string_new (MonoDomain *domain, const char *text)
+{
+	MonoString *rv = xamarin_bridge_new_string (text);
+
+	LOG_CORECLR (stderr, "%s (%p, %s) => %p\n", __func__, domain, text, rv);
+
+	return rv;
 }
 
 #endif // CORECLR_RUNTIME

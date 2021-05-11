@@ -504,6 +504,22 @@
 			OnlyDynamicUsage = false,
 			OnlyCoreCLR = true,
 		},
+
+		new XDelegate ("char *", "IntPtr", "xamarin_bridge_string_to_utf8",
+			"MonoObject *", "MonoObject *", "obj"
+		) {
+			WrappedManagedFunction = "StringToUtf8",
+			OnlyDynamicUsage = false,
+			OnlyCoreCLR = true,
+		},
+
+		new XDelegate ("MonoString *", "MonoObject *", "xamarin_bridge_new_string",
+			"const char *", "IntPtr", "text"
+		) {
+			WrappedManagedFunction = "NewString",
+			OnlyDynamicUsage = false,
+			OnlyCoreCLR = true,
+		},
 	};
 	delegates.CalculateLengths ();
 #><#+

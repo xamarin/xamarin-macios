@@ -82,7 +82,9 @@
 
 		new Export ("MonoType *", "mono_class_get_type",
 			"MonoClass *", "klass"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 		#endregion
 
 		#region metadata/class-internals.h
@@ -148,7 +150,9 @@
 		new Export ("MonoString *", "mono_string_new",
 			"MonoDomain *", "domain",
 			"const char *", "text"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		new Export ("MonoArray *", "mono_array_new",
 			"MonoDomain *", "domain",
@@ -158,11 +162,15 @@
 
 		new Export ("void *", "mono_object_unbox",
 			"MonoObject *", "obj"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		new Export ("char *", "mono_string_to_utf8",
 			"MonoString *", "string_obj"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		new Export ("uintptr_t", "mono_array_length",
 			"MonoArray *", "array"
