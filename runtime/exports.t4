@@ -39,7 +39,9 @@
 
 		new Export ("MonoClass *", "mono_class_get_element_class",
 			"MonoClass *", "klass"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		new Export ("const char *", "mono_class_get_namespace",
 			"MonoClass *", "klass"

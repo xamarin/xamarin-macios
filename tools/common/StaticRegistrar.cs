@@ -4463,6 +4463,7 @@ namespace Registrar {
 				underlyingNativeType = GetElementType (nativeType);
 				underlyingManagedType = GetElementType (managedType);
 				sb.AppendLine ($"{classVariableName} = mono_class_get_element_class ({managedClassExpression});");
+				cleanup.AppendLine ($"xamarin_mono_object_release (&{classVariableName});");
 			} else if (isManagedNullable) {
 				underlyingManagedType = GetNullableType (managedType);
 				sb.AppendLine ($"{classVariableName} = xamarin_get_nullable_type ({managedClassExpression}, &exception_gchandle);");
@@ -4550,6 +4551,7 @@ namespace Registrar {
 				underlyingNativeType = GetElementType (nativeType);
 				underlyingManagedType = GetElementType (managedType);
 				sb.AppendLine ($"{classVariableName} = mono_class_get_element_class ({managedClassExpression});");
+				cleanup.AppendLine ($"xamarin_mono_object_release (&{classVariableName});");
 			} else if (isManagedNullable) {
 				underlyingManagedType = GetNullableType (managedType);
 				sb.AppendLine ($"{classVariableName} = xamarin_get_nullable_type ({managedClassExpression}, &exception_gchandle);");

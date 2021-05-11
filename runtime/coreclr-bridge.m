@@ -463,6 +463,14 @@ mono_class_is_valuetype (MonoClass * klass)
 	return rv;
 }
 
+MonoClass *
+mono_class_get_element_class (MonoClass *klass)
+{
+	MonoClass *rv = xamarin_bridge_get_element_class (klass);
+	LOG_CORECLR (stderr, "%s (%p) => %p\n", __func__, klass, rv);
+	return rv;
+}
+
 bool
 xamarin_is_class_nsobject (MonoClass *cls)
 {
