@@ -12,6 +12,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
 
 using Foundation;
 
@@ -22,11 +23,24 @@ using MonoObjectPtr=System.IntPtr;
 namespace ObjCRuntime {
 
 	public partial class Runtime {
+		// Keep in sync with XamarinLookupTypes in coreclr-bridge.h
+		internal enum TypeLookup {
+			System_Array,
+			System_String,
+			System_IntPtr,
+			Foundation_NSNumber,
+			Foundation_NSObject,
+			Foundation_NSString,
+			Foundation_NSValue,
+			ObjCRuntime_INativeObject,
+		}
+
 		// This struct must be kept in sync with the _MonoObject struct in coreclr-bridge.h
 		[StructLayout (LayoutKind.Sequential)]
 		internal struct MonoObject {
 			public int ReferenceCount;
 			public IntPtr GCHandle;
+			public IntPtr StructValue;
 		}
 
 		// This struct must be kept in sync with the _MonoMethodSignature struct in coreclr-bridge.h
@@ -74,6 +88,49 @@ namespace ObjCRuntime {
 			throw new InvalidOperationException ($"Could not find any assemblies named {name}");
 		}
 
+		unsafe static bool IsClassOfType (MonoObject *typeobj, TypeLookup match)
+		{
+			return IsClassOfType ((Type) GetMonoObjectTarget (typeobj), match);
+		}
+
+		static bool IsClassOfType (Type type, TypeLookup match)
+		{
+			var rv = false;
+
+			switch (match) {
+			case TypeLookup.System_Array:
+				rv = type.IsArray;
+				break;
+			case TypeLookup.System_String:
+				rv = type == typeof (System.String);
+				break;
+			case TypeLookup.System_IntPtr:
+				rv = type == typeof (System.IntPtr);
+				break;
+			case TypeLookup.Foundation_NSNumber:
+				rv = typeof (Foundation.NSNumber).IsAssignableFrom (type);
+				break;
+			case TypeLookup.Foundation_NSObject:
+				rv = typeof (Foundation.NSObject).IsAssignableFrom (type);
+				break;
+			case TypeLookup.Foundation_NSString:
+				rv = typeof (Foundation.NSString).IsAssignableFrom (type);
+				break;
+			case TypeLookup.Foundation_NSValue:
+				rv = typeof (Foundation.NSValue).IsAssignableFrom (type);
+				break;
+			case TypeLookup.ObjCRuntime_INativeObject:
+				rv = typeof (ObjCRuntime.INativeObject).IsAssignableFrom (type);
+				break;
+			default:
+				throw new ArgumentOutOfRangeException (nameof (type));
+			}
+
+			log_coreclr ($"IsClassOfType ({type}, {match}) => {rv}");
+
+			return rv;
+		}
+
 		static IntPtr CreateGCHandle (IntPtr gchandle, GCHandleType type)
 		{
 			// It's valid to create a GCHandle to a null value.
@@ -112,6 +169,7 @@ namespace ObjCRuntime {
 			var mobj = new MonoObject ();
 			mobj.GCHandle = handle;
 			mobj.ReferenceCount = 1;
+			mobj.StructValue = WriteStructure (obj);
 
 			IntPtr rv = MarshalStructure (mobj);
 
@@ -151,6 +209,31 @@ namespace ObjCRuntime {
 			Marshal.StructureToPtr (obj, ptr, false);
 		}
 
+		static IntPtr WriteStructure (object obj)
+		{
+			if (obj == null)
+				return IntPtr.Zero;
+
+			if (!obj.GetType ().IsValueType)
+				return IntPtr.Zero;
+
+			var structType = obj.GetType ();
+			// Unwrap enums
+			if (structType.IsEnum) {
+				structType = Enum.GetUnderlyingType (structType);
+				obj = Convert.ChangeType (obj, structType);
+			}
+
+			var size = SizeOf (obj.GetType ());
+			var output = Marshal.AllocHGlobal (size);
+
+			StructureToPtr (obj, output);
+
+			log_coreclr ($"WriteStructure ({obj}) => Pointer: 0x{output.ToString ("x")} Size: {size}");
+
+			return output;
+		}
+
 		static IntPtr GetAssemblyName (IntPtr gchandle)
 		{
 			var asm = (Assembly) GetGCHandleTarget (gchandle);
@@ -183,6 +266,14 @@ namespace ObjCRuntime {
 				return IntPtr.Zero;
 			}
 			return GetMonoObject (obj.GetType ());
+		}
+
+		unsafe static bool IsDelegate (MonoObject* typeobj)
+		{
+			var type = (Type) GetMonoObjectTarget (typeobj);
+			var rv = typeof (MulticastDelegate).IsAssignableFrom (type);
+			log_coreclr ($"IsDelegate ({type.FullName}) => {rv}");
+			return rv;
 		}
 
 		static bool IsInstance (MonoObjectPtr mobj, MonoObjectPtr mtype)
@@ -231,6 +322,36 @@ namespace ObjCRuntime {
 				return cinfo.DeclaringType;
 
 			return null;
+		}
+
+		unsafe static IntPtr ClassGetNamespace (MonoObject *typeobj)
+		{
+			var type = (Type) GetMonoObjectTarget (typeobj);
+			var rv = type.Namespace;
+			return Marshal.StringToHGlobalAuto (rv);
+		}
+
+		unsafe static IntPtr ClassGetName (MonoObject *typeobj)
+		{
+			var type = (Type) GetMonoObjectTarget (typeobj);
+			var rv = type.Name;
+			return Marshal.StringToHGlobalAuto (rv);
+		}
+
+		// This should work like mono_class_from_mono_type.
+		static unsafe MonoObject* TypeToClass (MonoObject* typeobj)
+		{
+			var type = (Type) GetMonoObjectTarget (typeobj);
+			if (type.IsByRef)
+				type = type.GetElementType ();
+			return (MonoObject *) GetMonoObject (type);
+		}
+
+		static int SizeOf (Type type)
+		{
+			if (type.IsEnum) // https://github.com/dotnet/runtime/issues/12258
+				type = Enum.GetUnderlyingType (type);
+			return Marshal.SizeOf (type);
 		}
 
 		static unsafe MonoObject* InvokeMethod (MonoObject* methodobj, MonoObject* instanceobj, IntPtr native_parameters)
@@ -388,6 +509,17 @@ namespace ObjCRuntime {
 			return rv;
 		}
 
+		static unsafe IntPtr StringToUtf8 (MonoObject* obj)
+		{
+			var str = (string) GetMonoObjectTarget (obj);
+			return Marshal.StringToHGlobalAuto (str);
+		}
+
+		static unsafe MonoObject* NewString (IntPtr text)
+		{
+			return (MonoObject *) GetMonoObject (Marshal.PtrToStringAuto (text));
+		}
+
 		static bool IsNullable (Type type)
 		{
 			if (Nullable.GetUnderlyingType (type) != null)
@@ -399,12 +531,67 @@ namespace ObjCRuntime {
 			return false;
 		}
 
+		unsafe static bool IsByRef (MonoObject *typeobj)
+		{
+			var type = (Type) GetMonoObjectTarget (typeobj);
+			return type.IsByRef;
+		}
+
+		unsafe static bool IsValueType (MonoObject *typeobj)
+		{
+			var type = (Type) GetMonoObjectTarget (typeobj);
+			return type.IsValueType;
+		}
+
 		static object PtrToStructure (IntPtr ptr, Type type)
 		{
 			if (ptr == IntPtr.Zero)
 				return null;
 
 			return Marshal.PtrToStructure (ptr, type);
+		}
+
+		/* Managed version of a mono_reference_queue */
+		/* The semantics are:
+		 * - Adding an object to the queue will not prevent the GC from collecting it (it's a weak reference)
+		 * - A native callback will be called when the object is collected.
+		 * This can be accomplished with a ConditionalWeakTable: the object in question is the key, and then
+		 * we add a wrapper object as the value, and we call the native callback when the wrapper object is
+		 * collected.
+		 */
+		delegate void mono_reference_queue_callback (IntPtr user_data);
+
+		class ReferenceQueue {
+			public mono_reference_queue_callback Callback;
+			public ConditionalWeakTable<object, object> Table = new ConditionalWeakTable<object, object> ();
+		}
+
+		class ReferenceQueueEntry {
+			public ReferenceQueue Queue;
+			public IntPtr UserData;
+
+			~ReferenceQueueEntry ()
+			{
+				Queue.Callback (UserData);
+			}
+		}
+
+		unsafe static MonoObject* CreateGCReferenceQueue (IntPtr callback)
+		{
+			var queue = new ReferenceQueue ();
+			queue.Callback = Marshal.GetDelegateForFunctionPointer<mono_reference_queue_callback> (callback);
+			return (MonoObject *) GetMonoObject (queue);
+		}
+
+		unsafe static void GCReferenceQueueAdd (MonoObject* mqueue, MonoObject* mobj, IntPtr user_data)
+		{
+			var queue = (ReferenceQueue) GetMonoObjectTarget (mqueue);
+			var obj = GetMonoObjectTarget (mobj);
+			var entry = new ReferenceQueueEntry () {
+				Queue = queue,
+				UserData = user_data,
+			};
+			queue.Table.Add (obj, entry);
 		}
 
 		[DllImport ("__Internal")]

@@ -1,0 +1,488 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+<resheader name="resmimetype"><value>text/microsoft-resx</value></resheader><resheader name="version"><value>1.3</value></resheader><resheader name="reader"><value>System.Resources.ResXResourceReader, resgen, Version=4.0.0.0, Culture=neutral, PublicKeyToken=null</value></resheader><resheader name="writer"><value>System.Resources.ResXResourceWriter, resgen, Version=4.0.0.0, Culture=neutral, PublicKeyToken=null</value></resheader><data name="InvalidPlatform"><value>Invalid platform: {0}</value></data>
+  <data name="E7044_A"><value>{0} 无效: UIDeviceFamily 密钥必须包含“{1}”的值。
+</value></data>
+  <data name="E7022_A"><value>Watch 应用“{0}”不包含 Watch 扩展。
+</value></data>
+  <data name="E7029_A"><value>Watch 应用“{0}”具有无效的 Info.plist: NSExtension 字典必须包含 NSExtensionPointIdentifier。
+</value></data>
+  <data name="E7031_A"><value>Watch 应用“{0}”具有无效的 Info.plist: NSExtensionAttributes 字典必须包含 WKAppBundleIdentifier。
+</value></data>
+  <data name="E7032_A"><value>WatchKit 扩展“{0}”具有无效的 Info.plist: UIRequiredDeviceCapabilities 数组不应包含 "watch-companion" 功能。
+</value></data>
+  <data name="E7038_A"><value>Watch 应用“{0}”具有无效的 Info.plist: WKCompanionAppBundleIdentifier 必须存在，并且必须与主应用捆绑包的 CFBundleIdentifier 匹配。
+</value></data>
+  <data name="E0011"><value>无法分析 MinimumOSVersion 值“{0}”
+</value></data>
+  <data name="E0010"><value>加载“{0}”时出错: {1}
+</value></data>
+  <data name="E0013"><value>未安装“{1}”的 {0} SDK。
+</value></data>
+  <data name="E0012"><value>无法分析 TargetArchitectures“{0}”
+        </value></data>
+  <data name="E0014"><value>可执行文件(CFBundleExecutable)名称({0})不能以 ".app" 结尾，因为 iOS 可能无法启动应用。
+</value></data>
+  <data name="E0003"><value>执行工具“{0}”时出错: {1}
+</value></data>
+  <data name="E0004"><value>未能 codesign“{0}”: {1}
+</value></data>
+  <data name="E0005"><value>未能对 “{0}” 进行代码签名
+</value></data>
+  <data name="E0006"><value>  找不到“{0}”。
+</value></data>
+  <data name="E0007"><value>加载“{0}”时出错: 未知图像格式。
+</value></data>
+  <data name="E0008"><value>“{2}”的 iTunesArtwork 维度({0}x{1})无效。
+</value></data>
+  <data name="E0009"><value>针对“{2}”检测到多个具有相同的维数的 iTunesArtwork 文件({0}x{1})。
+        </value></data>
+  <data name="E0032"><value>无法找到 SDK bin 目录
+</value></data>
+  <data name="E0023"><value>iTunesMetadata.plist 数量不能超过 1 个。
+        </value></data>
+  <data name="E0024"><value>加载设置 plist 文件“{0}/Settings.bundle/Root.plist”时出错: {1}。
+</value></data>
+  <data name="E0025"><value>无法分析 SDK 版本“{0}”
+</value></data>
+  <data name="E0055"><value>无法加载 Info.plist: {0}
+</value></data>
+  <data name="E0057"><value>无效的体系结构:“{0}”。
+</value></data>
+  <data name="E0050"><value>未知的搜索选项: {0}
+</value></data>
+  <data name="E0053"><value>Xamarin.iOS 不再支持目标体系结构 ARMv6。请选择受支持的体系结构。
+</value></data>
+  <data name="E0059"><value>找不到目标设备。
+</value></data>
+  <data name="E0058"><value>无法分析目标设备信息。
+</value></data>
+  <data name="E0044"><value>在“{0}”中找不到有效的 Xcode 应用捆绑包。请在 Visual Studio 的首选项 {1} 中更新 Apple SDK 位置。
+</value></data>
+  <data name="E0045"><value>找不到有效的可用 Xcode 开发人员路径
+</value></data>
+  <data name="E0046"><value>找不到“{0}”
+        </value></data>
+  <data name="E0048"><value>未知的 SQL 平台: {0}
+</value></data>
+  <data name="E0049"><value>找不到具有名称或 UUID {0} 的预配配置文件。
+</value></data>
+  <data name="E0070"><value>在 Xcode 应用捆绑包中找不到 WatchKit 启动程序。
+</value></data>
+  <data name="E0066"><value>未能分析 SdkVersion“{0}”。
+</value></data>
+  <data name="E0067"><value>Xcode 10 不支持 watchOS 1 应用。请升级到 watchOS 2 应用，或使用较旧版本的 Xcode。</value></data>
+  <data name="E0064"><value>找不到 iOS 版本信息。
+</value></data>
+  <data name="E0065"><value>找不到资源规则文件“{0}”。
+</value></data>
+  <data name="E0062"><value>找不到设备操作系统信息。
+</value></data>
+  <data name="E0063"><value>找不到设备模型信息。
+</value></data>
+  <data name="E0060"><value>找不到设备体系结构信息。
+</value></data>
+  <data name="E0061"><value>无效的目标体系结构:“{0}”
+</value></data>
+  <data name="E0068"><value>需要安装 Xcode &gt;= 6.2 才能生成 WatchKit 应用程序。
+</value></data>
+  <data name="E0069"><value>iOS {0} 不支持 WatchKit。
+</value></data>
+  <data name="E0099"><value>  在磁盘上找不到捆绑资源“{0}”(应位于“{1}”中)
+</value></data>
+  <data name="E0098"><value>{0} 已失败。
+        </value></data>
+  <data name="E0091"><value>找不到文件: {0}
+</value></data>
+  <data name="E0093"><value>未生成部分 Info.plist 文件: {0}
+</value></data>
+  <data name="E0092"><value>无效的 JSON: {0}
+</value></data>
+  <data name="E0094"><value>未能加载 {0} 日志文件“{1}”: {2}
+        </value></data>
+  <data name="E0097"><value>未指定 API 定义文件。
+</value></data>
+  <data name="E0089"><value>无法识别的平台: {0}
+</value></data>
+  <data name="E0084"><value>在路径“{}”中找不到 {0}“{1}”SDK
+        </value></data>
+  <data name="E0085"><value>在“{2}”中找不到 {0}“{1}”SDK usr 路径
+        </value></data>
+  <data name="E0086"><value>找不到有效的 Xcode 开发人员路径
+</value></data>
+  <data name="E0112"><value>未找到 Entitlements.plist 模板“{0}”。
+</value></data>
+  <data name="E0113"><value>加载 Entitlements.plist 模板“{0}”时出错: {1}
+</value></data>
+  <data name="E0114"><value>写入 xcent 文件“{0}”时出错: {1}
+</value></data>
+  <data name="E0115"><value>写入 archived-expanded-entitlements.xcent 文件时出错: {0}
+</value></data>
+  <data name="E0117"><value>{0} 已退出，代码为 {1}
+</value></data>
+  <data name="E0133"><value>已安装的预配配置文件均与已安装 {0} {1} 签名标识不匹配。
+</value></data>
+  <data name="E0130"><value>密钥链中找不到 {0} 代码签名密钥“{1}”。
+</value></data>
+  <data name="E0131"><value>在 {1} 上找不到 {0} 的任何可用预配配置文件。
+</value></data>
+  <data name="E0139"><value>{0} 未定义 CFBundleIdentifier
+</value></data>
+  <data name="E0101"><value>Info.plist 文件应具有生成操作 "None"。
+</value></data>
+  <data name="E0100"><value>路径“{0}”将导致应用捆绑包外的文件无法使用。
+</value></data>
+  <data name="E0102"><value>名称“{0}”是预留名称，不能使用。
+</value></data>
+  <data name="E0107"><value>加载部分 Info.plist 模板文件“{0}”时出错: {1}
+</value></data>
+  <data name="E0154"><value>无法分析数组索引: {0}
+</value></data>
+  <data name="E0155"><value>数组索引超出项“{0}”的范围
+</value></data>
+  <data name="E0156"><value>{0} 值不支持子属性。
+</value></data>
+  <data name="E0157"><value>不支持获取 {0} 值。
+</value></data>
+  <data name="E0150"><value>  AssemblyPath 不能为 null 或空
+</value></data>
+  <data name="E0152"><value>未指定任何属性。
+</value></data>
+  <data name="E0153"><value>“{0}”中的字典不包含该密钥: {1}
+</value></data>
+  <data name="E0158"><value>文件“{0}”不存在。
+</value></data>
+  <data name="E0159"><value>文件“{0}”与“{1}”冲突。
+</value></data>
+  <data name="E0123"><value>创建包失败。无法分析其他参数。
+</value></data>
+  <data name="E0122"><value>加载“{0}”时出错
+</value></data>
+  <data name="E0120"><value>保存“{0}”时出错: {1}
+</value></data>
+  <data name="E0124"><value>标识“{0}”与默认密钥链中的任何有效证书/私钥对都不匹配。
+        </value></data>
+  <data name="E0128"><value>在密钥链中找不到有效的 {0} 代码签名密钥。需要从 https://developer.apple.com 请求代码签名证书。
+</value></data>
+  <data name="E0177"><value>Can't get an ISshCommands instance. Please check that a valid connection to the Mac is established.</value></data>
+  <data name="E0174"><value>{0} has an incorrect or unknown format and cannot be processed.
+        </value></data>
+  <data name="E0175"><value>No matching framework found inside '{0}'.
+        </value></data>
+  <data name="E0172"><value>未安装 {0} SDK 版本“{1}”，找不到更新的版本。
+        </value></data>
+  <data name="E0173"><value>未安装 {0} SDK 版本“{1}”。请改用更新的版本“{2}”。
+        </value></data>
+  <data name="E0170"><value>在 {1} 中找不到 {0}。
+        </value></data>
+  <data name="E0171"><value>未安装 {0} SDK。
+        </value></data>
+  <data name="E0178"><value>An error occurred while trying to copy Archive '{0}' to '{1}'. Details: {2}</value></data>
+  <data name="E0179"><value>There is no available connection to the Mac. Task '{0}' will not be executed</value></data>
+  <data name="E0145"><value>没有与指定的预配配置文件“{1}”匹配的 {0} 签名标识。
+</value></data>
+  <data name="E0144"><value>找不到指定的 {0} 预配配置文件“{1}”
+</value></data>
+  <data name="E0147"><value>捆绑包标识符“{0}”与所选签名标识“{0}”的任何已安装的预配配置文件都不匹配。
+</value></data>
+  <data name="E0146"><value>捆绑包标识符“{0}”与所选签名标识“{0}”的任何已安装的预配配置文件都不匹配。
+</value></data>
+  <data name="E0141"><value>项目捆绑包标识符“{0}”与指定的预配配置文件“{1}”不匹配
+</value></data>
+  <data name="E0140"><value>找不到指定的 {0} 预配配置文件“{1}”
+</value></data>
+  <data name="E0148"><value>捆绑包标识符“{0}”与任何已安装的预配配置文件都不匹配。
+</value></data>
+  <data name="E0167"><value>DestinationFiles 数目必须与 SourceFiles 数目匹配。
+</value></data>
+  <data name="E0166"><value>必须指定 DestinationFolder 或 DestinationFiles，但不能同时指定这两者。
+</value></data>
+  <data name="E0161"><value>项必须具有计算出的逻辑名称。
+</value></data>
+  <data name="E0160"><value>Watch 应用/扩展需要 Xcode 6.2 或更高版本。当前的 Xcode 版本为 {0}
+</value></data>
+  <data name="E0169"><value>未知的目标框架标识符: {0}。
+        </value></data>
+  <data name="E0181"><value>The file {0} does not have ImageAsset as build action.</value></data>
+  <data name="E0180"><value>Could not deserialize DataSet {0}</value></data>
+  <data name="E0183"><value>An error occurred while trying to verify the compatibility between Xcode and Xamarin.iOS</value></data>
+  <data name="E0182"><value>Could not resolve UTI for {0} in catalog {1}</value></data>
+  <data name="E0185"><value>An error occurred while trying to verify the compatibility between Xcode and Xamarin.iOS. Details: {0}
+        </value></data>
+  <data name="E0184"><value>The project was built with a version of Xcode ({0}) that is not compatible which may result in unexpected warnings or errors. Please install Xcode '{1}' or visit the documentation to learn more.</value></data>
+  <data name="E0187"><value>Could not map the macOS version {0} to a corresponding iOS version</value></data>
+  <data name="E0186"><value>The provided Archive Path is not from a valid archive file (.xcarchive). Archive Path: '{0}'</value></data>
+  <data name="E7061"><value>合并: 读取文件时出错: {0}
+</value></data>
+  <data name="E7060"><value>合并: 不存在条目“{0}”
+</value></data>
+  <data name="E7063"><value>设置: 包含无效数组索引的条目“{0}”
+</value></data>
+  <data name="E7062"><value>设置: 未正确指定的条目“{0}”
+</value></data>
+  <data name="E7064"><value>设置: 不存在条目“{0}”
+</value></data>
+  <data name="E7069"><value>Xamarin.iOS 14+ does not support watchOS 1 apps. Please migrate your project to watchOS 2+.</value></data>
+  <data name="E7068"><value>除非绑定项目中存在本机引用，否则无法创建绑定资源包。
+</value></data>
+  <data name="E7070"><value>Invalid architecture ({0}): can't link more than one architecture at a time.</value></data>
+  <data name="E7071"><value>Unable to parse the AOT compiler arguments: {0} ({1})</value></data>
+  <data name="E7072"><value>Package product requirement file contains architectures ({0}) which mismatches with target architectures ({1})</value></data>
+  <data name="E7043"><value>{0} 未指定任何 CFBundleSupportedPlatforms。
+</value></data>
+  <data name="E7042"><value>{0} 未指定任何 CFBundleExecutable。
+</value></data>
+  <data name="E7041"><value>{0} 未指定任何 CFBundleIdentifier。
+</value></data>
+  <data name="E7040"><value>应用捆绑包 {0} 不包含 Info.plist。
+</value></data>
+  <data name="E7047"><value>添加: 包含无效数组索引的条目“{0}”
+</value></data>
+  <data name="E7046"><value>添加: 未正确指定的条目“{0}”
+</value></data>
+  <data name="E7045"><value>无法识别的类型: {Type}
+</value></data>
+  <data name="E7044"><value>{0} 未指定任何 UIDeviceFamily。
+</value></data>
+  <data name="E7049"><value>添加: 无法向父项添加条目“{0}”
+</value></data>
+  <data name="E7048"><value>添加: 已存在的条目“{0}”
+</value></data>
+  <data name="E7052"><value>删除: 不存在条目“{0}”
+</value></data>
+  <data name="E7053"><value>导入: 未正确指定的条目“{0}”
+</value></data>
+  <data name="E7050"><value>删除: 无法从父项中删除条目“{0}”
+</value></data>
+  <data name="E7051"><value>删除: 包含无效数组索引的条目“{0}”
+</value></data>
+  <data name="E7056"><value>导入: 无法向父项添加条目“{0}”
+</value></data>
+  <data name="E7057"><value>合并: 无法将数组条目添加到字典
+</value></data>
+  <data name="E7054"><value>导入: 包含无效数组索引的条目“{0}”
+</value></data>
+  <data name="E7055"><value>导入: 读取文件时出错: {0}
+</value></data>
+  <data name="E7058"><value>合并: 指定的条目必须是容器
+</value></data>
+  <data name="E7059"><value>合并: 包含无效数组索引的条目“{0}”
+</value></data>
+  <data name="E7025"><value>Watch 应用“{0}”未指定任何 CFBundleExecutable。
+</value></data>
+  <data name="E7024"><value>Watch 应用“{0}”未指定任何 CFBundleIdentifier。
+</value></data>
+  <data name="E7027"><value>Watch 应用“{0}”具有以非法后缀 "key" 结尾的 CFBundleIdentifier ({1})。
+</value></data>
+  <data name="E7026"><value>Watch 应用“{0}”具有无效的 CFBundleIdentifier ({1})，它不以主应用捆绑包的 CFBundleIdentifier ({2})开头。
+</value></data>
+  <data name="E7021"><value>Watch 应用“{0}”具有无效的 Info.plist: 不得包含 LSRequiresIPhoneOS 密钥。
+</value></data>
+  <data name="E7020"><value>Watch 应用“{0}”具有无效的 Info.plist: WKWatchKitApp 密钥必须存在，并且值为 "true"。
+</value></data>
+  <data name="E7023"><value>Watch 应用“{0}”不包含 Info.plist。
+</value></data>
+  <data name="E7022"><value>Watch 应用“{0}”不包含任何 Watch 扩展。
+</value></data>
+  <data name="E7029"><value>Watch 应用“{0}”具有无效的 Info.plist: NSExtensionPointIdentifier 必须为 "com.apple.watchkit"。
+</value></data>
+  <data name="E7028"><value>Watch 应用“{0}”具有无效的 Info.plist: 它不包含 NSExtension 字典。
+</value></data>
+  <data name="E7034"><value>Watch 应用“{0}”未指定 CFBundleIdentifier。
+</value></data>
+  <data name="E7035"><value>Watch 应用“{0}”没有有效的 UIDeviceFamily 值。期望查找“{1}”，但找到“{2} ({3})”。
+</value></data>
+  <data name="E7036"><value>Watch 应用“{0}”未指定任何 CFBundleExecutable。
+</value></data>
+  <data name="E7037"><value>WatchKit 扩展“{0}”具有无效的 WKAppBundleIdentifier 值(“{1}”)，它与 Watch 应用的 CFBundleIdentifier (“{2}”)不匹配。
+</value></data>
+  <data name="E7030"><value>Watch 应用“{0}”具有无效的 Info.plist: NSExtension 字典必须包含 NSExtensionAttributes。
+</value></data>
+  <data name="E7031"><value>Watch 应用“{0}”具有无效的 WKAppBundleIdentifier 值(“{1}”)，它与父 Watch 应用捆绑包的 CFBundleIdentifier  (“{2}”)不匹配。
+</value></data>
+  <data name="E7032"><value>WatchKit 扩展“{0}”具有无效的 Info.plist: UIRequiredDeviceCapabilities 字典不应包含 "watch-companion" 功能。
+</value></data>
+  <data name="E7033"><value>Watch 应用“{0}”不包含 Info.plist。
+</value></data>
+  <data name="E7038"><value>Watch 应用“{0}”具有无效的 WKCompanionAppBundleIdentifier 值 ("{1}")，它与主应用捆绑包的 CFBundleIdentifier  ("{2}") 不匹配。
+</value></data>
+  <data name="E7039"><value>Watch 应用“{0}”具有无效的 Info.plist: 不得包含 LSRequiresIPhoneOS 密钥。
+</value></data>
+  <data name="E7007"><value>应用扩展“{0}”有一个以非法后缀 ".key" 结尾的 CFBundleIdentifier ({1})。
+</value></data>
+  <data name="E7006"><value>应用扩展“{0}”的 CFBundleIdentifier ({1})无效，它不以主应用捆绑包的 CFBundleIdentifier ({2})开头。
+</value></data>
+  <data name="E7005"><value>应用扩展“{0}”未指定 CFBundleExecutable。
+</value></data>
+  <data name="E7004"><value>应用扩展“{0}”未指定 CFBundleIdentifier。
+</value></data>
+  <data name="E7003"><value>应用扩展“{0}”不包含 Info.plist。
+</value></data>
+  <data name="E7002"><value>此计算机没有任何网络适配器。在通过 WiFi 对设备进行调试或分析时需要此适配器。
+</value></data>
+  <data name="E7001"><value>无法解析 WiFi 调试程序设置的主机 IP。
+</value></data>
+  <data name="E7009"><value>应用扩展“{0}”包含无效的 Info.plist: 它不包含 NSExtension 字典。
+</value></data>
+  <data name="E7008"><value>应用扩展“{0}”未指定 CFBundleShortVersionString。
+</value></data>
+  <data name="E7016"><value>Watch 应用“{0}”具有无效的 CFBundleIdentifier ({1})，它不以主应用捆绑包的 CFBundleIdentifier ({2})开头。
+</value></data>
+  <data name="E7017"><value>Watch 应用“{0}”没有有效的 UIDeviceFamily 值。期望查找 "Watch (4)"，但找到“{1} ({2})”。
+</value></data>
+  <data name="E7014"><value>Watch 应用“{0}”不包含 Info.plist。
+</value></data>
+  <data name="E7015"><value>Watch 应用“{0}”未指定 CFBundleIdentifier。
+</value></data>
+  <data name="E7010"><value>应用扩展“{0}”包含无效的 Info.plist: NSExtension 字典不包含 NSExtensionPointIdentifier 值。
+</value></data>
+  <data name="E7018"><value>Watch 应用 "{name}" 未指定 CFBundleExecutable
+</value></data>
+  <data name="E7019"><value>Watch 应用“{0}”具有无效的 WKCompanionAppBundleIdentifier 值 ("{1}")，它与主应用捆绑包的 CFBundleIdentifier  ("{2}") 不匹配。
+</value></data>
+  <data name="M0018"><value>已允许任意 HTTP 加载以支持调试。
+</value></data>
+  <data name="M0017"><value>已允许所有 http 加载。
+</value></data>
+  <data name="M0001"><value>从以下参数开始执行工具 {0}: {1}
+</value></data>
+  <data name="M0002"><value>工具 {0} 执行已完成(退出代码 = {1})。
+</value></data>
+  <data name="M0047"><value>正在“{1}”中搜索“{0}”
+</value></data>
+  <data name="M0119"><value>即将跳过“{0}”，因为输出文件“{1}”较新。
+</value></data>
+  <data name="M0116"><value>工具 {0} 执行已完成。
+</value></data>
+  <data name="M0138"><value>多个预配配置文件与捆绑包标识符匹配。请使用第一个匹配项。
+</value></data>
+  <data name="M0132"><value>“{0}”与“{1}”不匹配。
+</value></data>
+  <data name="M0136"><value>AppID: 已排除 {0}，因为我们找到了更好的匹配项: {1}。
+</value></data>
+  <data name="M0134"><value>查找具有兼容 AppID 的匹配预配配置文件，仅保留那些具有最长的匹配(通配符) ID 的配置文件。
+</value></data>
+  <data name="M0135"><value>AppID: 已排除 {0}，因为我们找到了更好的匹配项: {1}。
+</value></data>
+  <data name="M0105"><value>未找到 Frameworks 目录。
+</value></data>
+  <data name="M0151"><value>生成的捆绑包名称: {0}
+</value></data>
+  <data name="M0129"><value>证书“{0}”与“{1}”不匹配。
+        </value></data>
+  <data name="M0121"><value>正在创建绑定资源包: {0}
+</value></data>
+  <data name="M0127"><value>证书“{0}”已过期 ({1})
+</value></data>
+  <data name="M0126"><value>证书“{0}”与所有前缀“{1}”都不匹配。
+</value></data>
+  <data name="M0125"><value>检测到的签名标识:
+</value></data>
+  <data name="M0149"><value>  在 {1} 中找到 {0}
+</value></data>
+  <data name="M0143"><value>找到了多个签名标识。请使用第一个标识。
+</value></data>
+  <data name="M0142"><value>多个签名标识与“{0}”匹配。请使用第一个匹配项。
+</value></data>
+  <data name="M0168"><value>  正在跳过框架程序集: {0}
+</value></data>
+  <data name="M0165"><value>正在将文件从“{0}”复制到“{1}”
+</value></data>
+  <data name="M0164"><value>正在创建目录“{0}”
+</value></data>
+  <data name="M0163"><value>文件不存在，将创建: {0}
+</value></data>
+  <data name="M0162"><value>已跳过重复条目: {0}
+</value></data>
+  <data name="W0020"><value>受支持的 iPhone 方向不匹配
+</value></data>
+  <data name="W0021"><value>尚未设置受支持的 iPad 方向
+</value></data>
+  <data name="W0022"><value>受支持的 iPad 方向不匹配
+</value></data>
+  <data name="W0016"><value>针对 watchOS 进行生成时，只能虚设 watchOS 4.3 SDK。
+</value></data>
+  <data name="W0019"><value>尚未设置受支持的 iPhone 方向
+</value></data>
+  <data name="W0075"><value>Watch 应用“{0}”未指定任何 CFBundleShortVersionString
+</value></data>
+  <data name="W0074"><value>应用扩展“{0}”的 NSExtensionPointIdentifier 值(“{1}”)无法识别。
+</value></data>
+  <data name="W0077"><value>Watch 应用“{0}”未指定任何 CFBundleVersion
+</value></data>
+  <data name="W0076"><value>Watch 应用“{0}”的 CFBundleShortVersionString ({1})与主应用捆绑包的 CFBundleShortVersionString ({2})不匹配
+</value></data>
+  <data name="W0071"><value>应用扩展“{0}”的 CFBundleShortVersionString ({1})与主应用捆绑包的 CFBundleShortVersionString ({2})不匹配
+</value></data>
+  <data name="W0073"><value>应用扩展“{0}”的 CFBundleVersion ({1})与主应用捆绑包的 CFBundleVersion ({2})不匹配
+</value></data>
+  <data name="W0072"><value>应用扩展“{0}”未指定任何 CFBundleVersion
+</value></data>
+  <data name="W0079"><value>Watch 扩展 “{0}”未指定任何 CFBundleShortVersionString)
+</value></data>
+  <data name="W0078"><value>Watch 应用“{0}”的 CFBundleVersion ({1})与主应用捆绑包的 CFBundleVersion ({2})不匹配
+</value></data>
+  <data name="W0054"><value>无法创建响应文件“{0}”: {1}
+</value></data>
+  <data name="W0052"><value>不支持动态本机引用:“{0}”
+</value></data>
+  <data name="W0051"><value>“{0}”的本机引用类型未知。
+</value></data>
+  <data name="W0090"><value>资产不属于资产目录: {0}
+</value></data>
+  <data name="W0095"><value>无法分析 altool 输出: {0}。
+            输出: {1}
+        </value></data>
+  <data name="W0082"><value>Watch 扩展 “{0}”的 CFBundleVersion ({1})与主应用捆绑包的 CFBundleVersion ({2})不匹配
+</value></data>
+  <data name="W0080"><value>Watch 扩展 “{0}”的 CFBundleShortVersionString ({1})与主应用捆绑包的 CFBundleShortVersionString ({2})不匹配
+</value></data>
+  <data name="W0081"><value>Watch 扩展 “{0}”未指定任何 CFBundleVersion
+</value></data>
+  <data name="W0137"><value>没有与捆绑包标识符匹配的已安装的预配配置文件。
+</value></data>
+  <data name="W0110"><value>iCloud 权利(如“{0}”)需要预配配置文件。
+</value></data>
+  <data name="W0111"><value>iCloud 权利 "{0}" 不受预配配置文件支持。
+        </value></data>
+  <data name="W0176"><value>Conflicting '{0}' and '{1}' options. '{1}' will be ignored.
+        </value></data>
+  <data name="W0103"><value>在“框架”目录中找到了一个非框架目录: {0}
+</value></data>
+  <data name="W0106"><value>无法确定清单密钥“{0}”的值
+</value></data>
+  <data name="W0104"><value>框架 {0} 不包含名为 {1} 的二进制文件
+</value></data>
+  <data name="W0109"><value>无法在不具有预配配置文件的 Entitlements.plist 中扩展 $(AppIdentifierPrefix)。
+</value></data>
+  <data name="W0108"><value>无法在不具有预配配置文件的 Entitlements.plist 中扩展 $(TeamIdentifierPrefix)。
+</value></data>
+  <data name="InvalidFramework"><value>Invalid framework: {0}</value></data>
+  </root>

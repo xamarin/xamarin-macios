@@ -1,0 +1,488 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+<resheader name="resmimetype"><value>text/microsoft-resx</value></resheader><resheader name="version"><value>1.3</value></resheader><resheader name="reader"><value>System.Resources.ResXResourceReader, resgen, Version=4.0.0.0, Culture=neutral, PublicKeyToken=null</value></resheader><resheader name="writer"><value>System.Resources.ResXResourceWriter, resgen, Version=4.0.0.0, Culture=neutral, PublicKeyToken=null</value></resheader><data name="InvalidPlatform"><value>Invalid platform: {0}</value></data>
+  <data name="E7044_A"><value>{0} является недопустимым: ключ UIDeviceFamily должен содержать значение для "{1}".
+        </value></data>
+  <data name="E7022_A"><value>Приложение Watch "{0}" не содержит расширение Watch.
+        </value></data>
+  <data name="E7029_A"><value>Расширение Watch "{0}" имеет недопустимый файл Info.plist: словарь NSExtension должен содержать NSExtensionPointIdentifier.
+        </value></data>
+  <data name="E7031_A"><value>Расширение Watch "{0}" имеет недопустимый файл Info.plist: словарь NSExtensionAttributes должен содержать WKAppBundleIdentifier.
+        </value></data>
+  <data name="E7032_A"><value>Расширение WatchKit "{0}" имеет недопустимый файл Info.plist: массив UIRequiredDeviceCapabilities не должен содержать возможность watch-companion.
+        </value></data>
+  <data name="E7038_A"><value>Приложение Watch "{0}" имеет недопустимый файл Info.plist: должен существовать ключ WKCompanionAppBundleIdentifier, соответствующий CFBundleIdentifier основного пакета приложения.
+        </value></data>
+  <data name="E0011"><value>Не удалось проанализировать значение MinimumOSVersion "{0}".
+        </value></data>
+  <data name="E0010"><value>Ошибка при загрузке "{0}": {1}
+        </value></data>
+  <data name="E0013"><value>Пакет SDK {0} для "{1}" не установлен.
+        </value></data>
+  <data name="E0012"><value>Не удалось проанализировать TargetArchitectures "{0}".
+        </value></data>
+  <data name="E0014"><value>Имя исполняемого (CFBundleExecutable) файла ({0}) не может заканчиваться на ".app", так как iOS может не запустить приложение.
+        </value></data>
+  <data name="E0003"><value>Ошибка при выполнении средства "{0}": {1}
+        </value></data>
+  <data name="E0004"><value>Не удалось выполнить подписывание кода в "{0}": {1}
+        </value></data>
+  <data name="E0005"><value>Не удалось выполнить подписывание кода в "{0}".
+        </value></data>
+  <data name="E0006"><value>  Не удалось найти "{0}".
+        </value></data>
+  <data name="E0007"><value>Ошибка при загрузке "{0}": неизвестный формат изображения.
+        </value></data>
+  <data name="E0008"><value>Недопустимые размеры iTunesArtwork ({0}x{1}) для "{2}".
+        </value></data>
+  <data name="E0009"><value>Обнаружены файлы iTunesArtwork с одинаковыми размерами ({0}x{1}) для "{2}".
+        </value></data>
+  <data name="E0032"><value>Не удалось найти каталог bin пакета SDK.
+        </value></data>
+  <data name="E0023"><value>Невозможно использовать больше одного файла iTunesMetadata.plist.
+        </value></data>
+  <data name="E0024"><value>Ошибка при загрузке PLIST-файла параметров "{0}/Settings.bundle/Root.plist": {1}.
+        </value></data>
+  <data name="E0025"><value>Не удалось проанализировать версию пакета SDK "{0}".
+        </value></data>
+  <data name="E0055"><value>Не удалось загрузить Info.plist: {0}
+        </value></data>
+  <data name="E0057"><value>Недопустимые архитектуры: "{0}".
+        </value></data>
+  <data name="E0050"><value>Неизвестный параметр поиска: {0}.
+        </value></data>
+  <data name="E0053"><value>Целевая архитектура ARMv6 больше не поддерживается в Xamarin.iOS. Выберите поддерживаемую архитектуру.
+        </value></data>
+  <data name="E0059"><value>Целевое устройство не найдено.
+        </value></data>
+  <data name="E0058"><value>Не удалось проанализировать сведения о целевом устройстве.
+        </value></data>
+  <data name="E0044"><value>Не удалось найти допустимый пакет приложения Xcode в каталоге "{0}". Обновите расположение пакета SDK для Apple в настройках Visual Studio: {1}.
+        </value></data>
+  <data name="E0045"><value>Не удалось найти пригодный для использования путь к папке Developer в Xcode.
+        </value></data>
+  <data name="E0046"><value>Не удалось найти "{0}"
+        </value></data>
+  <data name="E0048"><value>Неизвестная платформа пакета SDK: {0}.
+        </value></data>
+  <data name="E0049"><value>Не удалось найти профиль подготовки с именем или UUID {0}.
+        </value></data>
+  <data name="E0070"><value>Не удалось найти средство запуска WatchKit в пакете приложения Xcode.
+        </value></data>
+  <data name="E0066"><value>Не удалось проанализировать SdkVersion "{0}".
+        </value></data>
+  <data name="E0067"><value>Xcode 10 не поддерживает приложения watchOS 1. Перейдите на приложения watchOS 2 либо используйте более раннюю версию Xcode.</value></data>
+  <data name="E0064"><value>Сведения о версии iOS не найдены.
+        </value></data>
+  <data name="E0065"><value>Файл правил ресурсов "{0}" не найден.
+        </value></data>
+  <data name="E0062"><value>Сведения об операционной системе устройства не найдены.
+        </value></data>
+  <data name="E0063"><value>Сведения о модели устройства не найдены.
+        </value></data>
+  <data name="E0060"><value>Сведения об архитектуре устройства не найдены.
+        </value></data>
+  <data name="E0061"><value>Недопустимая целевая архитектура: "{0}".
+        </value></data>
+  <data name="E0068"><value>Для сборки приложений WatchKit требуется установить Xcode как минимум версии 6.2.
+        </value></data>
+  <data name="E0069"><value>iOS {0} не поддерживает WatchKit.
+        </value></data>
+  <data name="E0099"><value>  Ресурс пакета "{0}" не найден на диске (должен быть в "{1}").
+        </value></data>
+  <data name="E0098"><value>Сбой {0}.
+        </value></data>
+  <data name="E0091"><value>Файл не найден: {0}.
+        </value></data>
+  <data name="E0093"><value>Частичный файл Info.plist не создан: {0}.
+        </value></data>
+  <data name="E0092"><value>Недопустимый код JSON: {0}.
+        </value></data>
+  <data name="E0094"><value>Не удалось загрузить файл журнала {0} "{1}": {2}
+        </value></data>
+  <data name="E0097"><value>Не указан файл определения API.
+        </value></data>
+  <data name="E0089"><value>Неопознанная платформа: {0}.
+        </value></data>
+  <data name="E0084"><value>Не удалось найти пакет SDK версии {1} для {0} по пути "{}".
+        </value></data>
+  <data name="E0085"><value>Не удалось найти пользовательский путь к пакету SDK версии "{1}" для {0} по пути "{2}".
+        </value></data>
+  <data name="E0086"><value>Не удалось найти допустимый путь к папке Developer в Xcode.
+        </value></data>
+  <data name="E0112"><value>Шаблон Entitlements.plist "{0}" не найден.
+        </value></data>
+  <data name="E0113"><value>Ошибка при загрузке шаблона Entitlements.plist "{0}": {1}
+        </value></data>
+  <data name="E0114"><value>Ошибка записи файла XCENT "{0}": {1}
+        </value></data>
+  <data name="E0115"><value>Ошибка при записи файла archived-expanded-entitlements.xcent: {0}
+        </value></data>
+  <data name="E0117"><value>{0} завершает работу с кодом {1}.
+        </value></data>
+  <data name="E0133"><value>Ни один из установленных профилей подготовки не соответствует установленным удостоверениям подписывания {1} {0}.
+        </value></data>
+  <data name="E0130"><value>В связке ключей не найден ключ подписывания кода {0} "{1}".
+        </value></data>
+  <data name="E0131"><value>Не удалось найти доступные профили подготовки для {0} в {1}.
+        </value></data>
+  <data name="E0139"><value>{0} не определяет ключ CFBundleIdentifier.
+        </value></data>
+  <data name="E0101"><value>Файлы Info.plist должны иметь действие сборки "Нет".
+        </value></data>
+  <data name="E0100"><value>Путь "{0}" приведет к тому, что файл окажется вне пакета приложения и использовать его будет невозможно.
+        </value></data>
+  <data name="E0102"><value>Имя "{0}" зарезервировано и не может использоваться.
+        </value></data>
+  <data name="E0107"><value>Ошибка при загрузке частичного файла шаблона Info.plist "{0}": {1}
+        </value></data>
+  <data name="E0154"><value>Не удалось проанализировать индекс массива: {0}.
+        </value></data>
+  <data name="E0155"><value>Индекс массива выходит за пределы диапазона для элемента "{0}".
+        </value></data>
+  <data name="E0156"><value>Значения {0} не поддерживают дочерние свойства.
+        </value></data>
+  <data name="E0157"><value>Получение значений {0} не поддерживается.
+        </value></data>
+  <data name="E0150"><value>  Значение AssemblyPath не может быть пустым или равным NULL.
+        </value></data>
+  <data name="E0152"><value>Свойство не указано.
+        </value></data>
+  <data name="E0153"><value>Словарь в "{0}" не содержал ключ: {1}.
+        </value></data>
+  <data name="E0158"><value>Файл "{0}" не существует.
+        </value></data>
+  <data name="E0159"><value>Файл "{0}" конфликтует с "{1}".
+        </value></data>
+  <data name="E0123"><value>Сбой при создании пакета. Не удалось проанализировать дополнительные аргументы.
+        </value></data>
+  <data name="E0122"><value>Ошибка при загрузке "{0}".
+        </value></data>
+  <data name="E0120"><value>Ошибка при сохранении "{0}": {1}
+        </value></data>
+  <data name="E0124"><value>Удостоверение "{0}" не соответствует ни одному допустимому сертификату или паре закрытых ключей в цепочке ключей по умолчанию.
+        </value></data>
+  <data name="E0128"><value>В связке ключей не найдены допустимые ключи подписывания кода {0}. Запросите сертификат подписывания кода на https://developer.apple.com.
+        </value></data>
+  <data name="E0177"><value>Can't get an ISshCommands instance. Please check that a valid connection to the Mac is established.</value></data>
+  <data name="E0174"><value>{0} has an incorrect or unknown format and cannot be processed.
+        </value></data>
+  <data name="E0175"><value>No matching framework found inside '{0}'.
+        </value></data>
+  <data name="E0172"><value>Версия пакета SDK для {0} "{1}" не установлена, и более новая версия не найдена.
+        </value></data>
+  <data name="E0173"><value>Версия пакета SDK для {0} "{1}" не установлена. Вместо нее используется более новая версия "{2}".
+        </value></data>
+  <data name="E0170"><value>Не удалось найти {0} в {1}.
+        </value></data>
+  <data name="E0171"><value>Пакет SDK {0} не установлен.
+        </value></data>
+  <data name="E0178"><value>An error occurred while trying to copy Archive '{0}' to '{1}'. Details: {2}</value></data>
+  <data name="E0179"><value>There is no available connection to the Mac. Task '{0}' will not be executed</value></data>
+  <data name="E0145"><value>Ни одно удостоверение подписывания {0} не соответствует указанному профилю подготовки "{1}".
+        </value></data>
+  <data name="E0144"><value>Указанный профиль подготовки {0} "{1}" не найден.
+        </value></data>
+  <data name="E0147"><value>Идентификатор пакета "{0}" не соответствует ни одному установленному профилю подготовки для выбранного удостоверения подписывания "{0}".
+        </value></data>
+  <data name="E0146"><value>Идентификатор пакета "{0}" не соответствует ни одному установленному профилю подготовки для выбранного удостоверения подписывания "{0}".
+        </value></data>
+  <data name="E0141"><value>Идентификатор пакета проекта "{0}" не соответствует указанному профилю подготовки "{1}".
+        </value></data>
+  <data name="E0140"><value>Указанный профиль подготовки {0} "{1}" не найден.
+        </value></data>
+  <data name="E0148"><value>Идентификатор пакета "{0}" не соответствует ни одному установленному профилю подготовки.
+        </value></data>
+  <data name="E0167"><value>Число DestinationFiles должно соответствовать числу SourceFiles.
+        </value></data>
+  <data name="E0166"><value>Укажите либо DestinationFolder, либо DestinationFiles, но не и то и другое одновременно.
+        </value></data>
+  <data name="E0161"><value>Для элементов должны быть вычислены логические имена.
+        </value></data>
+  <data name="E0160"><value>Приложения и расширения Watch требуют Xcode 6.2 или более поздней версии. Текущая версия Xcode: {0}.
+        </value></data>
+  <data name="E0169"><value>Неизвестный идентификатор целевой платформы: {0}.
+        </value></data>
+  <data name="E0181"><value>The file {0} does not have ImageAsset as build action.</value></data>
+  <data name="E0180"><value>Could not deserialize DataSet {0}</value></data>
+  <data name="E0183"><value>An error occurred while trying to verify the compatibility between Xcode and Xamarin.iOS</value></data>
+  <data name="E0182"><value>Could not resolve UTI for {0} in catalog {1}</value></data>
+  <data name="E0185"><value>An error occurred while trying to verify the compatibility between Xcode and Xamarin.iOS. Details: {0}
+        </value></data>
+  <data name="E0184"><value>The project was built with a version of Xcode ({0}) that is not compatible which may result in unexpected warnings or errors. Please install Xcode '{1}' or visit the documentation to learn more.</value></data>
+  <data name="E0187"><value>Could not map the macOS version {0} to a corresponding iOS version</value></data>
+  <data name="E0186"><value>The provided Archive Path is not from a valid archive file (.xcarchive). Archive Path: '{0}'</value></data>
+  <data name="E7061"><value>Объединение: ошибка при чтении файла {0}.
+        </value></data>
+  <data name="E7060"><value>Объединение: запись "{0}" не существует.
+        </value></data>
+  <data name="E7063"><value>Задание: запись "{0}" содержит недопустимый индекс массива.
+        </value></data>
+  <data name="E7062"><value>Задание: запись "{0}" указана неверно.
+        </value></data>
+  <data name="E7064"><value>Задание: запись "{0}" не существует.
+        </value></data>
+  <data name="E7069"><value>Xamarin.iOS 14+ does not support watchOS 1 apps. Please migrate your project to watchOS 2+.</value></data>
+  <data name="E7068"><value>Создание пакета ресурсов привязки возможно, только если в проекте привязки есть собственные ссылки.
+        </value></data>
+  <data name="E7070"><value>Invalid architecture ({0}): can't link more than one architecture at a time.</value></data>
+  <data name="E7071"><value>Unable to parse the AOT compiler arguments: {0} ({1})</value></data>
+  <data name="E7072"><value>Package product requirement file contains architectures ({0}) which mismatches with target architectures ({1})</value></data>
+  <data name="E7043"><value>{0} не указывает ключ CFBundleSupportedPlatforms.
+        </value></data>
+  <data name="E7042"><value>{0} не указывает ключ CFBundleExecutable.
+        </value></data>
+  <data name="E7041"><value>{0} не указывает ключ CFBundleIdentifier.
+        </value></data>
+  <data name="E7040"><value>Пакет приложения {0} не содержит Info.plist.
+        </value></data>
+  <data name="E7047"><value>Добавление: запись "{0}" содержит недопустимый индекс массива.
+        </value></data>
+  <data name="E7046"><value>Добавление: запись "{0}" указана неверно.
+        </value></data>
+  <data name="E7045"><value>Неопознанный тип: {Type}.
+        </value></data>
+  <data name="E7044"><value>{0} не указывает ключ UIDeviceFamily.
+        </value></data>
+  <data name="E7049"><value>Добавление: невозможно добавить запись "{0}" в родительский элемент.
+        </value></data>
+  <data name="E7048"><value>Добавление: запись "{0}" уже существует.
+        </value></data>
+  <data name="E7052"><value>Удаление: запись "{0}" не существует.
+        </value></data>
+  <data name="E7053"><value>Импорт: запись "{0}" указана неверно.
+        </value></data>
+  <data name="E7050"><value>Удаление: невозможно удалить запись "{0}" из родительского элемента.
+        </value></data>
+  <data name="E7051"><value>Удаление: запись "{0}" содержит недопустимый индекс массива.
+        </value></data>
+  <data name="E7056"><value>Импорт: невозможно добавить запись "{0}" в родительский элемент.
+        </value></data>
+  <data name="E7057"><value>Объединение: невозможно добавить записи массива в словарь.
+        </value></data>
+  <data name="E7054"><value>Импорт: запись "{0}" содержит недопустимый индекс массива.
+        </value></data>
+  <data name="E7055"><value>Импорт: ошибка чтения файла {0}.
+        </value></data>
+  <data name="E7058"><value>Объединение: указанная запись должна быть контейнером.
+        </value></data>
+  <data name="E7059"><value>Объединение: запись "{0}" содержит недопустимый индекс массива.
+        </value></data>
+  <data name="E7025"><value>Расширение Watch "{0}" не указывает ключ CFBundleExecutable.
+        </value></data>
+  <data name="E7024"><value>Расширение Watch "{0}" не указывает ключ CFBundleIdentifier.
+        </value></data>
+  <data name="E7027"><value>Расширение Watch "{0}" имеет ключ CFBundleIdentifier ({1}), который заканчивается недопустимым суффиксом ".key".
+        </value></data>
+  <data name="E7026"><value>Расширение Watch "{0}" имеет недопустимый ключ CFBundleIdentifier ({1}), который не начинается с CFBundleIdentifier основного пакета приложения ({2}).
+        </value></data>
+  <data name="E7021"><value>Приложение Watch "{0}" имеет недопустимый файл Info.plist: в нем не должно быть ключа LSRequiresIPhoneOS.
+        </value></data>
+  <data name="E7020"><value>Приложение Watch "{0}" имеет недопустимый файл Info.plist: должен присутствовать ключ WKWatchKitApp со значением true.
+        </value></data>
+  <data name="E7023"><value>Расширение Watch "{0}" не содержит Info.plist.
+        </value></data>
+  <data name="E7022"><value>Приложение Watch "{0}" не содержит расширений Watch.
+        </value></data>
+  <data name="E7029"><value>Расширение Watch "{0}" имеет недопустимый файл Info.plist: ключ NSExtensionPointIdentifier должен иметь значение "com.apple.watchkit".
+        </value></data>
+  <data name="E7028"><value>Расширение Watch "{0}" имеет недопустимый файл Info.plist: он не содержит словаря NSExtension.
+        </value></data>
+  <data name="E7034"><value>Приложение Watch "{0}" не указывает ключ CFBundleIdentifier.
+        </value></data>
+  <data name="E7035"><value>Приложение Watch "{0}" не имеет допустимого значения UIDeviceFamily. Ожидается "{1}", но обнаружено "{2} ({3})".
+        </value></data>
+  <data name="E7036"><value>Приложение Watch "{0}" не указывает ключ CFBundleExecutable.
+        </value></data>
+  <data name="E7037"><value>Расширение WatchKit "{0}" имеет недопустимое значение WKAppBundleIdentifier ("{1}"), которое не соответствует CFBundleIdentifier приложения Watch ("{2}").
+        </value></data>
+  <data name="E7030"><value>Расширение Watch "{0}" имеет недопустимый файл Info.plist: словарь NSExtension должен содержать NSExtensionAttributes.
+        </value></data>
+  <data name="E7031"><value>Расширение Watch "{0}" имеет недопустимое значение WKAppBundleIdentifier ("{1}"), которое не соответствует значению CFBundleIdentifier родительского пакета приложения Watch ("{2}").
+        </value></data>
+  <data name="E7032"><value>Расширение WatchKit "{0}" имеет недопустимый файл Info.plist: словарь UIRequiredDeviceCapabilities не должен содержать возможность watch-companion.
+        </value></data>
+  <data name="E7033"><value>Приложение Watch "{0}" не содержит info.plist.
+        </value></data>
+  <data name="E7038"><value>Приложение Watch "{0}" имеет недопустимое значение WKCompanionAppBundleIdentifier ("{1}"), которое не соответствует CFBundleIdentifier основного пакета приложения ("{2}").
+        </value></data>
+  <data name="E7039"><value>Приложение Watch "{0}" имеет недопустимый файл Info.plist: в нем не должно быть ключа LSRequiresIPhoneOS.
+        </value></data>
+  <data name="E7007"><value>Расширение приложения "{0}" имеет ключ CFBundleIdentifier ({1}), который заканчивается недопустимым суффиксом ".key".
+        </value></data>
+  <data name="E7006"><value>Расширение приложения "{0}" имеет недопустимый ключ CFBundleIdentifier ({1}), который не начинается с CFBundleIdentifier основного пакета приложения ({2}).
+        </value></data>
+  <data name="E7005"><value>Расширение приложения "{0}" не указывает ключ CFBundleExecutable.
+        </value></data>
+  <data name="E7004"><value>Расширение приложения "{0}" не указывает ключ CFBundleIdentifier.
+        </value></data>
+  <data name="E7003"><value>Расширение приложения "{0}" не содержит Info.plist.
+        </value></data>
+  <data name="E7002"><value>На этом компьютере нет сетевых адаптеров. Они необходимы при отладке или профилировании устройства с помощью Wi-Fi.
+        </value></data>
+  <data name="E7001"><value>Не удалось разрешить IP-адреса узлов для параметров отладчика Wi-Fi.
+        </value></data>
+  <data name="E7009"><value>Расширение приложения "{0}" имеет недопустимый файл Info.plist: он не содержит словаря NSExtension.
+        </value></data>
+  <data name="E7008"><value>Расширение приложения "{0}" не указывает ключ CFBundleShortVersionString.
+        </value></data>
+  <data name="E7016"><value>Приложение Watch "{0}" имеет недопустимый ключ CFBundleIdentifier ({1}), который не начинается с CFBundleIdentifier основного пакета приложения ({2}).
+        </value></data>
+  <data name="E7017"><value>Приложение Watch "{0}" не имеет допустимого значения UIDeviceFamily. Ожидается "Watch (4)", но обнаружено "{1} ({2})".
+        </value></data>
+  <data name="E7014"><value>Приложение Watch "{0}" не содержит info.plist.
+        </value></data>
+  <data name="E7015"><value>Приложение Watch "{0}" не указывает ключ CFBundleIdentifier.
+        </value></data>
+  <data name="E7010"><value>Расширение приложения "{0}" имеет недопустимый файл Info.plist: словарь NSExtension не содержит значения NSExtensionPointIdentifier.
+        </value></data>
+  <data name="E7018"><value>Приложение Watch "{name}" не указывает ключ CFBundleExecutable.
+        </value></data>
+  <data name="E7019"><value>Приложение Watch "{0}" имеет недопустимое значение WKCompanionAppBundleIdentifier ("{1}"), которое не соответствует CFBundleIdentifier основного пакета приложения ("{2}").
+        </value></data>
+  <data name="M0018"><value>Разрешены произвольные нагрузки HTTP для поддержки отладки.
+        </value></data>
+  <data name="M0017"><value>Все нагрузки HTTP уже разрешены.
+        </value></data>
+  <data name="M0001"><value>Выполнение средства {0} запущено с аргументами: {1}.
+        </value></data>
+  <data name="M0002"><value>Выполнение средства {0} завершено (код выхода = {1}).
+        </value></data>
+  <data name="M0047"><value>Идет поиск "{0}" в "{1}".
+        </value></data>
+  <data name="M0119"><value>"{0}" пропускается, так как выходной файл "{1}" более новый.
+        </value></data>
+  <data name="M0116"><value>Выполнение средства {0} завершено.
+        </value></data>
+  <data name="M0138"><value>Идентификатору пакета соответствует множество профилей подготовки; используется первое совпадение.
+        </value></data>
+  <data name="M0132"><value>"{0}" не соответствует "{1}".
+        </value></data>
+  <data name="M0136"><value>AppID {0} исключается, так как уже найдены более точные совпадения: {1}.
+        </value></data>
+  <data name="M0134"><value>Выполняется поиск соответствующих профилей подготовки с совместимым идентификатором AppID. Будут оставлены только профили с самыми длинными совпадающими идентификаторами (с подстановочными знаками).
+        </value></data>
+  <data name="M0135"><value>AppID {0} исключается, так как найдено более точное совпадение: {1}.
+        </value></data>
+  <data name="M0105"><value>Каталог Frameworks не найден.
+        </value></data>
+  <data name="M0151"><value>Имя созданного пакета: {0}.
+        </value></data>
+  <data name="M0129"><value>Сертификат "{0}" не соответствует "{1}".
+        </value></data>
+  <data name="M0121"><value>Создание пакета ресурсов привязки: {0}.
+        </value></data>
+  <data name="M0127"><value>Срок действия сертификата "{0}" истек ({1}).
+        </value></data>
+  <data name="M0126"><value>Сертификат "{0}" не соответствует ни одному из префиксов "{1}".
+        </value></data>
+  <data name="M0125"><value>Обнаружено удостоверение подписывания:
+        </value></data>
+  <data name="M0149"><value>Файл {0} найден здесь: {1}
+        </value></data>
+  <data name="M0143"><value>Найдено множество удостоверений подписывания; используется первое из них.
+        </value></data>
+  <data name="M0142"><value>Множество удостоверений подписывания соответствуют "{0}"; используется первое совпадение.
+        </value></data>
+  <data name="M0168"><value>  Пропускается сборка платформы: {0}.
+        </value></data>
+  <data name="M0165"><value>Идет копирование файла из "{0}" в "{1}".
+        </value></data>
+  <data name="M0164"><value>Идет создание каталога "{0}".
+        </value></data>
+  <data name="M0163"><value>Файл не существует. Будет создано: {0}.
+        </value></data>
+  <data name="M0162"><value>Пропущена повторяющаяся запись: {0}.
+        </value></data>
+  <data name="W0020"><value>Поддерживаемые ориентации iPhone не соответствуют ориентациям iPad.
+        </value></data>
+  <data name="W0021"><value>Не заданы поддерживаемые ориентации iPad.
+        </value></data>
+  <data name="W0022"><value>Поддерживаемые ориентации iPad не являются соответствующими парами.
+        </value></data>
+  <data name="W0016"><value>Имитировать пакет SDK для watchOS 4.3 можно только при сборке для watchOS.
+        </value></data>
+  <data name="W0019"><value>Не заданы поддерживаемые ориентации iPhone.
+        </value></data>
+  <data name="W0075"><value>Приложение Watch "{0}" не указывает ключ CFBundleShortVersionString.
+        </value></data>
+  <data name="W0074"><value>Расширение приложения "{0}" имеет неопознанное значение NSExtensionPointIdentifier ("{1}").
+        </value></data>
+  <data name="W0077"><value>Приложение Watch "{0}" не указывает ключ CFBundleVersion.
+        </value></data>
+  <data name="W0076"><value>Приложение Watch "{0}" имеет ключ CFBundleShortVersionString ({1}), который не соответствует CFBundleShortVersionString основного пакета приложения ({2}).
+        </value></data>
+  <data name="W0071"><value>Расширение приложения "{0}" имеет ключ CFBundleShortVersionString ({1}), который не соответствует CFBundleShortVersionString основного пакета приложения ({2}).
+        </value></data>
+  <data name="W0073"><value>Расширение приложения "{0}" имеет ключ CFBundleVersion ({1}), который не соответствует CFBundleVersion основного пакета приложения ({2}).
+        </value></data>
+  <data name="W0072"><value>Расширение приложения "{0}" не указывает ключ CFBundleVersion.
+        </value></data>
+  <data name="W0079"><value>Расширение Watch "{0}" не указывает ключ CFBundleShortVersionString.
+        </value></data>
+  <data name="W0078"><value>Приложение Watch "{0}" имеет ключ CFBundleVersion ({1}), который не соответствует CFBundleVersion основного пакета приложения ({2}).
+        </value></data>
+  <data name="W0054"><value>Не удалось создать файл ответов "{0}": {1}
+        </value></data>
+  <data name="W0052"><value>Динамические собственные ссылки не поддерживаются: "{0}".
+        </value></data>
+  <data name="W0051"><value>Неизвестный собственный ссылочный тип для "{0}".
+        </value></data>
+  <data name="W0090"><value>Ресурс не входит в каталог ресурсов: {0}.
+        </value></data>
+  <data name="W0095"><value>Не удалось проанализировать вывод altool: {0}.
+            Выходные данные: {1}
+        </value></data>
+  <data name="W0082"><value>Расширение Watch "{0}" имеет ключ CFBundleVersion ({1}), который не соответствует CFBundleVersion основного пакета приложения ({2}).
+        </value></data>
+  <data name="W0080"><value>Расширение Watch "{0}" имеет ключ CFBundleShortVersionString ({1}), который не соответствует CFBundleShortVersionString основного пакета приложения ({2}).
+        </value></data>
+  <data name="W0081"><value>Расширение Watch "{0}" не указывает ключ CFBundleVersion.
+        </value></data>
+  <data name="W0137"><value>Ни один из установленных профилей подготовки не соответствует идентификатору пакета.
+        </value></data>
+  <data name="W0110"><value>Права на iCloud, такие как "{0}", требуют профиля подготовки.
+        </value></data>
+  <data name="W0111"><value>Право на iCloud "{0}" не поддерживается профилем подготовки.
+        </value></data>
+  <data name="W0176"><value>Conflicting '{0}' and '{1}' options. '{1}' will be ignored.
+        </value></data>
+  <data name="W0103"><value>В каталоге Frameworks найден каталог, который не относится к платформе: {0}.
+        </value></data>
+  <data name="W0106"><value>Не удалось определить значение для ключа манифеста "{0}".
+        </value></data>
+  <data name="W0104"><value>Платформа {0} не содержит двоичный файл с именем {1}.
+        </value></data>
+  <data name="W0109"><value>Невозможно развернуть $(AppIdentifierPrefix) в Entitlements.plist без профиля подготовки.
+        </value></data>
+  <data name="W0108"><value>Невозможно развернуть $(TeamIdentifierPrefix) в Entitlements.plist без профиля подготовки.
+        </value></data>
+  <data name="InvalidFramework"><value>Invalid framework: {0}</value></data>
+  </root>

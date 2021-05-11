@@ -3387,7 +3387,10 @@ namespace Registrar {
 				var isVariadic = i + 1 == num_arg && method.IsVariadic;
 
 				if (type != nativetype) {
-					GenerateConversionToManaged (nativetype, type, setup_call_stack, descriptiveMethodName, ref exceptions, method, $"p{i}", $"arg_ptrs [{i}]", $"mono_class_from_mono_type (xamarin_get_parameter_type (managed_method, {i}))");
+					body_setup.AppendLine ("MonoClass *paramclass{0} = NULL;", i);
+					cleanup.AppendLine ("xamarin_mono_object_release (&paramclass{0});", i);
+					setup_call_stack.AppendLine ("paramclass{0} = mono_class_from_mono_type (xamarin_get_parameter_type (managed_method, {0}));", i);
+					GenerateConversionToManaged (nativetype, type, setup_call_stack, descriptiveMethodName, ref exceptions, method, $"p{i}", $"arg_ptrs [{i}]", $"paramclass{i}");
 					if (isRef || isOut)
 						throw ErrorHelper.CreateError (4163, Errors.MT4163_B, descriptiveMethodName);
 					continue;
@@ -3618,7 +3621,10 @@ namespace Registrar {
 								setup_call_stack.AppendLine ("goto exception_handling;");
 								setup_call_stack.AppendLine ("}");
 								if (App.EnableDebug) {
-									setup_call_stack.AppendLine ("xamarin_verify_parameter (mobj{0}, _cmd, self, nsobj{0}, {0}, mono_class_from_mono_type (paramtype{0}), managed_method);", i);
+									body_setup.AppendLine ("MonoClass *paramclass{0} = NULL;", i);
+									cleanup.AppendLine ("xamarin_mono_object_release (&paramclass{0});", i);
+									setup_call_stack.AppendLine ("paramclass{0} = mono_class_from_mono_type (paramtype{0});", i);
+									setup_call_stack.AppendLine ("xamarin_verify_parameter (mobj{0}, _cmd, self, nsobj{0}, {0}, paramclass{0}, managed_method);", i);
 								}
 								setup_call_stack.AppendLine ("}");
 							}
@@ -3649,7 +3655,10 @@ namespace Registrar {
 							setup_call_stack.AppendLine ("goto exception_handling;");
 							setup_call_stack.AppendLine ("}");
 							if (App.EnableDebug) {
-								setup_call_stack.AppendLine ("xamarin_verify_parameter (mobj{0}, _cmd, self, nsobj{0}, {0}, mono_class_from_mono_type (paramtype{0}), managed_method);", i);
+								body_setup.AppendLine ("MonoClass *paramclass{0} = NULL;", i);
+								cleanup.AppendLine ("xamarin_mono_object_release (&paramclass{0});", i);
+								setup_call_stack.AppendLine ("paramclass{0} = mono_class_from_mono_type (paramtype{0});", i);
+								setup_call_stack.AppendLine ("xamarin_verify_parameter (mobj{0}, _cmd, self, nsobj{0}, {0}, paramclass{0}, managed_method);", i);
 							}
 							setup_call_stack.AppendLine ("}");
 							setup_call_stack.AppendLine ("arg_ptrs [{0}] = mobj{0};", i);
@@ -3691,7 +3700,10 @@ namespace Registrar {
 								setup_call_stack.AppendLine ("inobj{0} = xamarin_get_inative_object_static (*p{0}, false, 0x{1:X} /* {2} */, 0x{3:X} /* {4} */, &exception_gchandle);", i, CreateTokenReference (td, TokenType.TypeDef), td.FullName, CreateTokenReference (nativeObjType, TokenType.TypeDef), nativeObjType.FullName);
 								setup_call_stack.AppendLine ("if (exception_gchandle != INVALID_GCHANDLE) goto exception_handling;");
 							} else {
-								setup_call_stack.AppendLine ("inobj{0} = xamarin_get_inative_object_dynamic (*p{0}, false, mono_type_get_object (mono_domain_get (), type{0}), &exception_gchandle);", i);
+								body_setup.AppendLine ("MonoReflectionType *reflectiontype{0} = NULL;", i);
+								cleanup.AppendLine ("xamarin_mono_object_release (&reflectiontype{0});", i);
+								setup_call_stack.AppendLine ("reflectiontype{0} = mono_type_get_object (mono_domain_get (), type{0});", i);
+								setup_call_stack.AppendLine ("inobj{0} = xamarin_get_inative_object_dynamic (*p{0}, false, reflectiontype{0}, &exception_gchandle);", i);
 								setup_call_stack.AppendLine ("if (exception_gchandle != INVALID_GCHANDLE) goto exception_handling;");
 							}
 							// We need to keep a copy of the inobj argument, because it may change during the call to managed code, and we still have to release the original value.
@@ -3709,7 +3721,10 @@ namespace Registrar {
 							if (td.IsInterface) {
 								setup_call_stack.AppendLine ("inobj{0} = xamarin_get_inative_object_static (p{0}, false, 0x{1:X} /* {2} */, 0x{3:X} /* {4} */, &exception_gchandle);", i, CreateTokenReference (td, TokenType.TypeDef), td.FullName, CreateTokenReference (nativeObjType, TokenType.TypeDef), nativeObjType.FullName);
 							} else {
-								setup_call_stack.AppendLine ("inobj{0} = xamarin_get_inative_object_dynamic (p{0}, false, mono_type_get_object (mono_domain_get (), type{0}), &exception_gchandle);", i);
+								body_setup.AppendLine ("MonoReflectionType *reflectiontype{0} = NULL;", i);
+								cleanup.AppendLine ("xamarin_mono_object_release (&reflectiontype{0});", i);
+								setup_call_stack.AppendLine ("reflectiontype{0} = mono_type_get_object (mono_domain_get (), type{0});", i);
+								setup_call_stack.AppendLine ("inobj{0} = xamarin_get_inative_object_dynamic (p{0}, false, reflectiontype{0}, &exception_gchandle);", i);
 							}
 							setup_call_stack.AppendLine ("if (exception_gchandle != INVALID_GCHANDLE) goto exception_handling;");
 							setup_call_stack.AppendLine ("arg_ptrs [{0}] = inobj{0};", i);
@@ -3799,7 +3814,10 @@ namespace Registrar {
 				var retain = method.RetainReturnValue;
 
 				if (returntype != method.NativeReturnType) {
-					GenerateConversionToNative (returntype, method.NativeReturnType, setup_return, descriptiveMethodName, ref exceptions, method, "retval", "res", "mono_class_from_mono_type (xamarin_get_parameter_type (managed_method, -1))");
+					body_setup.AppendLine ("MonoClass *retparamclass = NULL;");
+					cleanup.AppendLine ("xamarin_mono_object_release (&retparamclass);");
+					setup_call_stack.AppendLine ("retparamclass = mono_class_from_mono_type (xamarin_get_parameter_type (managed_method, -1));");
+					GenerateConversionToNative (returntype, method.NativeReturnType, setup_return, descriptiveMethodName, ref exceptions, method, "retval", "res", "retparamclass");
 				} else if (returntype.IsValueType) {
 					setup_return.AppendLine ("res = *({0} *) mono_object_unbox ((MonoObject *) retval);", rettype);
 				} else if (isArray) {

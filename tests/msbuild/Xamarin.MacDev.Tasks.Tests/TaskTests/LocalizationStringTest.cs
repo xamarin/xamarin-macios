@@ -19,18 +19,23 @@ namespace Xamarin.iOS.Tasks {
 		[TestCase ("en-US", "Unknown image format.")]
 		[TestCase ("es-ES", "formato de imagen desconocido.")]
 		[TestCase ("fr-FR", "format d'image inconnu.")]
+		[TestCase ("hu", "hu")]
 		[TestCase ("it-IT", "Formato immagine sconosciuto.")]
 		[TestCase ("ja-JP", "の読み込みでエラーが発生しました: 画像の形式が不明です。")]
 		[TestCase ("ko-KR", "을(를) 로드하는 동안 오류 발생: 알 수 없는 이미지 형식입니다.")]
+		[TestCase ("nl", "nl")]
 		[TestCase ("pl-PL", "nieznany format obrazu.")]
 		[TestCase ("pt-BR", "formato de imagem desconhecido.")]
+		[TestCase ("pt-PT", "pt-PT")]
 		[TestCase ("ru-RU", "неизвестный формат изображения.")]
+		[TestCase ("sv", "sv")]
 		[TestCase ("tr-TR", "yüklenirken hata oluştu: Görüntü biçimi bilinmiyor.")]
 		[TestCase ("zh-CN", "时出错: 未知图像格式")]
 		[TestCase ("zh-TW", "時發生錯誤: 未知的映像格式。")]
 		public void AllSupportedTranslations (string culture, string errorMessage)
 		{
-			CultureInfo originalCulture = Thread.CurrentThread.CurrentUICulture;
+			CultureInfo originalUICulture = Thread.CurrentThread.CurrentUICulture;
+			CultureInfo originalCulture = Thread.CurrentThread.CurrentCulture;
 			CultureInfo newCulture;
 			try {
 				newCulture = new CultureInfo (culture);
@@ -41,9 +46,10 @@ namespace Xamarin.iOS.Tasks {
 				Assert.IsFalse (task.Execute (), "Execute failure");
 				Assert.AreEqual (1, Engine.Logger.ErrorEvents.Count, "ErrorCount");
 				bool isTranslated = Engine.Logger.ErrorEvents[0].Message.Contains (errorMessage);
-				Assert.IsTrue (isTranslated, culture + ": is not supported correctly. ");
+				Assert.IsTrue (isTranslated, $"Should contain \"{errorMessage}\", but instead has value: \"{Engine.Logger.ErrorEvents[0].Message}\"");
 			} finally {
-				Thread.CurrentThread.CurrentUICulture = originalCulture;
+				Thread.CurrentThread.CurrentUICulture = originalUICulture;
+				Thread.CurrentThread.CurrentCulture = originalCulture;
 			}
 		}
 
@@ -51,12 +57,16 @@ namespace Xamarin.iOS.Tasks {
 		[TestCase ("de-DE")]
 		[TestCase ("es-ES")]
 		[TestCase ("fr-FR")]
+		[TestCase ("hu")]
 		[TestCase ("it-IT")]
 		[TestCase ("ja-JP")]
 		[TestCase ("ko-KR")]
+		[TestCase ("nl")]
 		[TestCase ("pl-PL")]
 		[TestCase ("pt-BR")]
+		[TestCase ("pt-PT")]
 		[TestCase ("ru-RU")]
+		[TestCase ("sv")]
 		[TestCase ("tr-TR")]
 		[TestCase ("zh-CN")]
 		[TestCase ("zh-TW")]
@@ -64,7 +74,8 @@ namespace Xamarin.iOS.Tasks {
 		{
 			// insert which error code you'd like to test
 			string errorCode = "E0007";
-			CultureInfo originalCulture = Thread.CurrentThread.CurrentUICulture;
+			CultureInfo originalUICulture = Thread.CurrentThread.CurrentUICulture;
+			CultureInfo originalCulture = Thread.CurrentThread.CurrentCulture;
 
 			try {
 				Assert.IsFalse (string.IsNullOrEmpty (errorCode), "Error code is null or empty");
@@ -73,9 +84,10 @@ namespace Xamarin.iOS.Tasks {
 
 				Assert.AreNotEqual (englishError, newCultureError, $"\"{errorCode}\" is not translated in {culture}.");
 			} catch (NullReferenceException){
-				Assert.IsFalse (true, $"Error code \"{errorCode}\" was not found");
+				Assert.Fail ($"Error code \"{errorCode}\" was not found");
 			} finally {
-				Thread.CurrentThread.CurrentUICulture = originalCulture;
+				Thread.CurrentThread.CurrentUICulture = originalUICulture;
+				Thread.CurrentThread.CurrentCulture = originalCulture;
 			}
 		}
 
@@ -100,15 +112,20 @@ namespace Xamarin.iOS.Tasks {
 		[TestCase ("de-DE")]
 		[TestCase ("es-ES")]
 		[TestCase ("fr-FR")]
+		[TestCase ("hu")]
 		[TestCase ("it-IT")]
 		[TestCase ("ja-JP")]
 		[TestCase ("ko-KR")]
+		[TestCase ("nl")]
 		[TestCase ("pl-PL")]
+		[TestCase ("pt-PT")]
 		[TestCase ("pt-BR")]
 		[TestCase ("ru-RU")]
+		[TestCase ("sv")]
 		[TestCase ("tr-TR")]
 		[TestCase ("zh-CN")]
 		[TestCase ("zh-TW")]
+		[Ignore ("OneLocBuild will return proper translated resx files.")]
 		public void AllErrorTranslation (string culture)
 		{
 			StringBuilder errorList = new StringBuilder (string.Empty);
@@ -118,7 +135,8 @@ namespace Xamarin.iOS.Tasks {
 
 			string fullCulturePath = $"{Directory.GetCurrentDirectory ()}/TaskTests/LocalizationIgnore/{culture}-Translations.ignore";
 			string shortCulturePath = $"xamarin-macios/tests/msbuild/Xamarin.MacDev.Tasks.Tests/TaskTests/LocalizationIgnore/{culture}-Translations.ignore";
-			CultureInfo originalCulture = Thread.CurrentThread.CurrentUICulture;
+			CultureInfo originalUICulture = Thread.CurrentThread.CurrentUICulture;
+			CultureInfo originalCulture = Thread.CurrentThread.CurrentCulture;
 
 			cultureIgnoreList = ReadFile (fullCulturePath);
 
@@ -139,7 +157,8 @@ namespace Xamarin.iOS.Tasks {
 					} else if (englishError == newCultureError)
 						errorList.Append ($"{errorCode} ");
 				} finally {
-					Thread.CurrentThread.CurrentUICulture = originalCulture;
+					Thread.CurrentThread.CurrentUICulture = originalUICulture;
+					Thread.CurrentThread.CurrentCulture = originalCulture;
 				}
 			}
 

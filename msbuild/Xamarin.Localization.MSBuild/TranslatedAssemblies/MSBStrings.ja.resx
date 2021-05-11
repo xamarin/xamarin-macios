@@ -1,0 +1,488 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+<resheader name="resmimetype"><value>text/microsoft-resx</value></resheader><resheader name="version"><value>1.3</value></resheader><resheader name="reader"><value>System.Resources.ResXResourceReader, resgen, Version=4.0.0.0, Culture=neutral, PublicKeyToken=null</value></resheader><resheader name="writer"><value>System.Resources.ResXResourceWriter, resgen, Version=4.0.0.0, Culture=neutral, PublicKeyToken=null</value></resheader><data name="InvalidPlatform"><value>Invalid platform: {0}</value></data>
+  <data name="E7044_A"><value>{0} が無効です。UIDeviceFamily キーに '{1}' の値を含める必要があります。
+        </value></data>
+  <data name="E7022_A"><value>Watch App '{0}' に Watch Extension が含まれていません。
+        </value></data>
+  <data name="E7029_A"><value>Watch Extension '{0}' に無効な Info.plist があります。NSExtension ディクショナリに NSExtensionPointIdentifier を含める必要があります。
+        </value></data>
+  <data name="E7031_A"><value>Watch Extension '{0}' に無効な Info.plist があります。NSExtensionAttributes ディクショナリに WKAppBundleIdentifier を含める必要があります。
+        </value></data>
+  <data name="E7032_A"><value>WatchKit 拡張機能 '{0}' に無効な Info.plist があります。UIRequiredDeviceCapabilities 配列に 'watch-companion' 機能を含めることはできません。
+        </value></data>
+  <data name="E7038_A"><value>Watch App '{0}' に無効な Info.plist があります。WKCompanionAppBundleIdentifier が存在し、メイン アプリ バンドルの CFBundleIdentifier と一致している必要があります。
+        </value></data>
+  <data name="E0011"><value>MinimumOSVersion 値 '{0}' を解析できませんでした
+        </value></data>
+  <data name="E0010"><value>'{0}' の読み込みエラーです: {1}
+        </value></data>
+  <data name="E0013"><value>'{1}' の {0} SDK がインストールされていません。
+        </value></data>
+  <data name="E0012"><value>TargetArchitectures'{0}' を解析できませんでした
+        </value></data>
+  <data name="E0014"><value>iOS でアプリの起動に失敗する可能性があるため、実行可能ファイル (CFBundleExecutable) の名前 ({0}) の末尾に '.app' を使用することはできません。
+        </value></data>
+  <data name="E0003"><value>ツール '{0}' の実行でエラーが発生しました: {1}
+        </value></data>
+  <data name="E0004"><value>'{0}' の codesign に失敗しました: {1}
+        </value></data>
+  <data name="E0005"><value>'{0}' の codesign に失敗しました
+        </value></data>
+  <data name="E0006"><value>  '{0}' が見つかりません。
+        </value></data>
+  <data name="E0007"><value>'{0}' の読み込みでエラーが発生しました: 画像の形式が不明です。
+        </value></data>
+  <data name="E0008"><value>'{2}' に対して iTunesArtwork の大きさ ({0}x{1}) が無効です。
+        </value></data>
+  <data name="E0009"><value>'{2}' に対して同じ大きさ ({0}x{1}) の iTunesArtwork ファイルが複数検出されました。
+        </value></data>
+  <data name="E0032"><value>SDK bin ディレクトリが見つかりませんでした
+        </value></data>
+  <data name="E0023"><value>複数の iTunesMetadata.plist を持つことはできません。
+        </value></data>
+  <data name="E0024"><value>設定 plist ファイル '{0}/Settings.bundle/Root.plist' の読み込みでエラーが発生しました: {1}。
+        </value></data>
+  <data name="E0025"><value>SDK バージョン '{0}' を解析できませんでした
+        </value></data>
+  <data name="E0055"><value>Info.plist を読み込めませんでした: {0}
+        </value></data>
+  <data name="E0057"><value>無効なアーキテクチャです: '{0}'。
+        </value></data>
+  <data name="E0050"><value>不明な検索オプションです: {0}
+        </value></data>
+  <data name="E0053"><value>ターゲット アーキテクチャ ARMv6 は、Xamarin.iOS ではサポートされなくなりました。サポートされているアーキテクチャを選択してください。
+        </value></data>
+  <data name="E0059"><value>ターゲット デバイスが見つかりません。
+        </value></data>
+  <data name="E0058"><value>ターゲット デバイス情報を解析できませんでした。
+        </value></data>
+  <data name="E0044"><value>'{0}' に、有効な Xcode アプリ バンドルが見つかりませんでした。Visual Studio の設定 {1} で、Apple SDK の場所を更新してください。
+        </value></data>
+  <data name="E0045"><value>有効で使用可能な Xcode Developer パスが見つかりませんでした
+        </value></data>
+  <data name="E0046"><value>'{0}' が見つかりませんでした
+        </value></data>
+  <data name="E0048"><value>不明な SDK プラットフォームです: {0}
+        </value></data>
+  <data name="E0049"><value>名前または UUID が {0} のプロビジョニング プロファイルが見つかりませんでした。
+        </value></data>
+  <data name="E0070"><value>Xcode アプリ バンドルに WatchKit ランチャーが見つかりませんでした。
+        </value></data>
+  <data name="E0066"><value>SdkVersion '{0}' を解析できませんでした。
+        </value></data>
+  <data name="E0067"><value>Xcode 10 では、watchOS 1 アプリはサポートされていません。watchOS 2 アプリにアップグレードするか、以前のバージョンの Xcode を使用してください。</value></data>
+  <data name="E0064"><value>iOS のバージョン情報が見つかりません。
+        </value></data>
+  <data name="E0065"><value>リソース ルール ファイル '{0}' が見つかりません。
+        </value></data>
+  <data name="E0062"><value>デバイスのオペレーティング システム情報が見つかりません。
+        </value></data>
+  <data name="E0063"><value>デバイスのモデル情報が見つかりません。
+        </value></data>
+  <data name="E0060"><value>デバイス アーキテクチャ情報が見つかりません。
+        </value></data>
+  <data name="E0061"><value>無効なターゲット アーキテクチャです: '{0}'
+        </value></data>
+  <data name="E0068"><value>WatchKit アプリケーションをビルドするには、Xcode 6.2 以上をインストールする必要があります。
+        </value></data>
+  <data name="E0069"><value>iOS {0} では、WatchKit はサポートされていません。
+        </value></data>
+  <data name="E0099"><value>  バンドル リソース '{0}' がディスク上に見つかりません ('{1}' にあるはずです)
+        </value></data>
+  <data name="E0098"><value>{0} が失敗しました。
+        </value></data>
+  <data name="E0091"><value>ファイルが見つかりません: {0}
+        </value></data>
+  <data name="E0093"><value>部分的な Info.plist ファイルは生成されませんでした: {0}
+        </value></data>
+  <data name="E0092"><value>無効な JSON です: {0}
+        </value></data>
+  <data name="E0094"><value>{0} ログ ファイル '{1}' を読み込めませんでした: {2}
+        </value></data>
+  <data name="E0097"><value>API 定義ファイルが指定されていません。
+        </value></data>
+  <data name="E0089"><value>認識されないプラットフォームです: {0}
+        </value></data>
+  <data name="E0084"><value>パス '{}' に {0} '{1}' SDK が見つかりませんでした
+        </value></data>
+  <data name="E0085"><value>'{2}' に {0} '{1}' SDK usr パスが見つかりませんでした
+        </value></data>
+  <data name="E0086"><value>有効な Xcode Developer パスが見つかりませんでした
+        </value></data>
+  <data name="E0112"><value>Entitlements.plist テンプレート '{0}' が見つかりません。
+        </value></data>
+  <data name="E0113"><value>Entitlements.plist テンプレート '{0}' の読み込みでエラーが発生しました: {1}
+        </value></data>
+  <data name="E0114"><value>xcent ファイル '{0}' の作成でエラーが発生しました: {1}
+        </value></data>
+  <data name="E0115"><value>archived-expanded-entitlements.xcent ファイルの書き込みでエラーが発生しました: {0}
+        </value></data>
+  <data name="E0117"><value>{0} がコード {1} で終了しました
+        </value></data>
+  <data name="E0133"><value>インストールされている {0} {1} 署名 ID と一致するプロビジョニング プロファイルがインストールされていません。
+        </value></data>
+  <data name="E0130"><value>キーチェーンに {0} コード署名キー '{1}' が見つかりません。
+        </value></data>
+  <data name="E0131"><value>{1} で {0} に対して利用可能なプロビジョニング プロファイルが見つかりませんでした。
+        </value></data>
+  <data name="E0139"><value>{0} で CFBundleIdentifier が定義されていません
+        </value></data>
+  <data name="E0101"><value>Info.plist ファイルのビルド アクションは 'None' である必要があります。
+        </value></data>
+  <data name="E0100"><value>パス '{0}' は、アプリ バンドル外のファイルを指しているため、使用できません。
+        </value></data>
+  <data name="E0102"><value>名前 '{0}' は予約されているため、使用できません。
+        </value></data>
+  <data name="E0107"><value>部分的な Info.plist テンプレート ファイル '{0}' の読み込みでエラーが発生しました: {1}
+        </value></data>
+  <data name="E0154"><value>配列インデックスを解析できませんでした: {0}
+        </value></data>
+  <data name="E0155"><value>項目 '{0}' の配列インデックスが範囲外です
+        </value></data>
+  <data name="E0156"><value>{0} 値は、子プロパティをサポートしていません。
+        </value></data>
+  <data name="E0157"><value>{0} 値の取得はサポートされていません。
+        </value></data>
+  <data name="E0150"><value>  AssemblyPath を null または空にすることはできません
+        </value></data>
+  <data name="E0152"><value>プロパティが指定されていません。
+        </value></data>
+  <data name="E0153"><value>'{0}' にあるディクショナリにキーが含まれていませんでした: {1}
+        </value></data>
+  <data name="E0158"><value>ファイル '{0}' は存在しません。
+        </value></data>
+  <data name="E0159"><value>ファイル '{0}' が '{1}' と競合しています。
+        </value></data>
+  <data name="E0123"><value>パッケージの作成に失敗しました。追加の引数を解析できませんでした。
+        </value></data>
+  <data name="E0122"><value>'{0}' の読み込みでエラーが発生しました
+        </value></data>
+  <data name="E0120"><value>'{0}' の保存でエラーが発生しました: {1}
+        </value></data>
+  <data name="E0124"><value>ID '{0}' は、既定のキーチェーンにある証明書および秘密キーのどの有効なペアにも一致しません。
+        </value></data>
+  <data name="E0128"><value>キーチェーンに有効な {0} コード署名キーが見つかりません。https://developer.apple.com からコード署名証明書を依頼する必要があります。
+        </value></data>
+  <data name="E0177"><value>Can't get an ISshCommands instance. Please check that a valid connection to the Mac is established.</value></data>
+  <data name="E0174"><value>{0} has an incorrect or unknown format and cannot be processed.
+        </value></data>
+  <data name="E0175"><value>No matching framework found inside '{0}'.
+        </value></data>
+  <data name="E0172"><value>{0} SDK バージョン '{1}' がインストールされていません。また、それより新しいバージョンも見つかりませんでした。
+        </value></data>
+  <data name="E0173"><value>{0} SDK バージョン '{1}' がインストールされていません。代わりに、それより新しいバージョン '{2}' を使用します。
+        </value></data>
+  <data name="E0170"><value>{1} に {0} が見つかりませんでした。
+        </value></data>
+  <data name="E0171"><value>{0} SDK がインストールされていません。
+        </value></data>
+  <data name="E0178"><value>An error occurred while trying to copy Archive '{0}' to '{1}'. Details: {2}</value></data>
+  <data name="E0179"><value>There is no available connection to the Mac. Task '{0}' will not be executed</value></data>
+  <data name="E0145"><value>指定されたプロビジョニング プロファイル '{1}' と一致する {0} 署名 ID がありません。
+        </value></data>
+  <data name="E0144"><value>指定された {0} プロビジョニング プロファイル '{1}' が見つかりませんでした
+        </value></data>
+  <data name="E0147"><value>バンドル識別子 '{0}' は、選ばれている署名 ID '{0}' のどのインストール済みプロビジョニング プロファイルとも一致しません。
+        </value></data>
+  <data name="E0146"><value>バンドル識別子 '{0}' は、選ばれている署名 ID '{0}' のどのインストール済みプロビジョニング プロファイルとも一致しません。
+        </value></data>
+  <data name="E0141"><value>プロジェクトのバンドル識別子 '{0}' は指定されたプロビジョニング プロファイル '{1}' と一致しません
+        </value></data>
+  <data name="E0140"><value>指定された {0} プロビジョニング プロファイル '{1}' が見つかりませんでした
+        </value></data>
+  <data name="E0148"><value>バンドル識別子 '{0}' は、どのインストール済みプロビジョニング プロファイルとも一致しません。
+        </value></data>
+  <data name="E0167"><value>DestinationFiles の数は、SourceFiles の数と一致する必要があります。
+        </value></data>
+  <data name="E0166"><value>DestinationFolder または DestinationFiles のいずれかを指定する必要があります。両方は指定できません。
+        </value></data>
+  <data name="E0161"><value>項目には論理名を計算する必要があります。
+        </value></data>
+  <data name="E0160"><value>Watch App および Extension には Xcode 6.2 以降が必要です。現在の Xcode バージョンは {0} です
+        </value></data>
+  <data name="E0169"><value>不明なターゲット フレームワーク識別子です: {0}。
+        </value></data>
+  <data name="E0181"><value>The file {0} does not have ImageAsset as build action.</value></data>
+  <data name="E0180"><value>Could not deserialize DataSet {0}</value></data>
+  <data name="E0183"><value>An error occurred while trying to verify the compatibility between Xcode and Xamarin.iOS</value></data>
+  <data name="E0182"><value>Could not resolve UTI for {0} in catalog {1}</value></data>
+  <data name="E0185"><value>An error occurred while trying to verify the compatibility between Xcode and Xamarin.iOS. Details: {0}
+        </value></data>
+  <data name="E0184"><value>The project was built with a version of Xcode ({0}) that is not compatible which may result in unexpected warnings or errors. Please install Xcode '{1}' or visit the documentation to learn more.</value></data>
+  <data name="E0187"><value>Could not map the macOS version {0} to a corresponding iOS version</value></data>
+  <data name="E0186"><value>The provided Archive Path is not from a valid archive file (.xcarchive). Archive Path: '{0}'</value></data>
+  <data name="E7061"><value>マージ: ファイルの読み取りでエラーが発生しました: {0}
+        </value></data>
+  <data name="E7060"><value>マージ: エントリ "{0}" が存在しません
+        </value></data>
+  <data name="E7063"><value>設定: エントリ "{0}" に無効な配列インデックスが含まれています
+        </value></data>
+  <data name="E7062"><value>設定: エントリ "{0}" は正しく指定されていません
+        </value></data>
+  <data name="E7064"><value>設定: エントリ "{0}" が存在しません
+        </value></data>
+  <data name="E7069"><value>Xamarin.iOS 14+ does not support watchOS 1 apps. Please migrate your project to watchOS 2+.</value></data>
+  <data name="E7068"><value>バインド プロジェクトにネイティブ参照がある場合を除いて、バインド リソース パッケージは作成できません。
+        </value></data>
+  <data name="E7070"><value>Invalid architecture ({0}): can't link more than one architecture at a time.</value></data>
+  <data name="E7071"><value>Unable to parse the AOT compiler arguments: {0} ({1})</value></data>
+  <data name="E7072"><value>Package product requirement file contains architectures ({0}) which mismatches with target architectures ({1})</value></data>
+  <data name="E7043"><value>{0} は CFBundleSupportedPlatforms を指定していません。
+        </value></data>
+  <data name="E7042"><value>{0} は CFBundleExecutable を指定していません。
+        </value></data>
+  <data name="E7041"><value>{0} は CFBundleIdentifier を指定していません。
+        </value></data>
+  <data name="E7040"><value>アプリ バンドル {0} に Info.plist が含まれていません。
+        </value></data>
+  <data name="E7047"><value>追加: エントリ "{0}" に無効な配列インデックスが含まれています
+        </value></data>
+  <data name="E7046"><value>追加: エントリ "{0}" は正しく指定されていません
+        </value></data>
+  <data name="E7045"><value>認識されない型です: {Type}
+        </value></data>
+  <data name="E7044"><value>{0} は UIDeviceFamily を指定していません。
+        </value></data>
+  <data name="E7049"><value>追加: エントリ "{0}" を親に追加できません
+        </value></data>
+  <data name="E7048"><value>追加: "{0}" エントリは既に存在します
+        </value></data>
+  <data name="E7052"><value>削除: エントリ "{0}" が存在しません
+        </value></data>
+  <data name="E7053"><value>インポート: エントリ "{0}" は正しく指定されていません
+        </value></data>
+  <data name="E7050"><value>削除: 親からエントリ "{0}" を削除できません
+        </value></data>
+  <data name="E7051"><value>削除: エントリ "{0}" に無効な配列インデックスが含まれています
+        </value></data>
+  <data name="E7056"><value>インポート: エントリ "{0}" を親に追加できません
+        </value></data>
+  <data name="E7057"><value>マージ: 配列エントリをディクショナリに追加できません
+        </value></data>
+  <data name="E7054"><value>インポート: エントリ "{0}" に無効な配列インデックスが含まれています
+        </value></data>
+  <data name="E7055"><value>インポート: ファイルの読み取りでエラーが発生しました: {0}
+        </value></data>
+  <data name="E7058"><value>マージ: 指定されたエントリはコンテナーである必要があります
+        </value></data>
+  <data name="E7059"><value>マージ: エントリ "{0}" に無効な配列インデックスが含まれています
+        </value></data>
+  <data name="E7025"><value>Watch Extension '{0}' で CFBundleExecutable が指定されていません。
+        </value></data>
+  <data name="E7024"><value>Watch Extension '{0}' で CFBundleIdentifier が指定されていません。
+        </value></data>
+  <data name="E7027"><value>Watch Extension '{0}' に、無効なサフィックス ".key" で終わる CFBundleIdentifier ({1}) が含まれています。
+        </value></data>
+  <data name="E7026"><value>Watch Extension '{0}' に無効な CFBundleIdentifier ({1}) が含まれています。メイン アプリ バンドルの CFBundleIdentifier ({2}) で始まっていません。
+        </value></data>
+  <data name="E7021"><value>Watch App '{0}' に無効な Info.plist があります。LSRequiresIPhoneOS キーを指定することはできません。
+        </value></data>
+  <data name="E7020"><value>Watch App '{0}' に無効な Info.plist があります。WKWatchKitApp キーを指定し、'true' の値を設定する必要があります。
+        </value></data>
+  <data name="E7023"><value>Watch Extension '{0}' に Info.plist が含まれていません。
+        </value></data>
+  <data name="E7022"><value>Watch App '{0}' に Watch Extension が 1 つも含まれていません。
+        </value></data>
+  <data name="E7029"><value>Watch Extension '{0}' に無効な Info.plist があります。NSExtensionPointIdentifier は "com.apple.watchkit" でなければなりません。
+        </value></data>
+  <data name="E7028"><value>Watch Extension '{0}' に無効な Info.plist があります。NSExtension ディクショナリが含まれていません。
+        </value></data>
+  <data name="E7034"><value>Watch App '{0}' で CFBundleIdentifier が指定されていません。
+        </value></data>
+  <data name="E7035"><value>Watch App '{0}' に、有効な UIDeviceFamily 値がありません。'{1}' が必要ですが、'{2} ({3})' が見つかりました。
+        </value></data>
+  <data name="E7036"><value>Watch App '{0}' で CFBundleExecutable が指定されていません。
+        </value></data>
+  <data name="E7037"><value>WatchKit 拡張機能 '{0}' に無効な WKAppBundleIdentifier 値 ('{1}') が含まれています。これは、Watch App の CFBundleIdentifier ('{2}') と一致しません。
+        </value></data>
+  <data name="E7030"><value>Watch Extension '{0}' に無効な Info.plist があります。NSExtension ディクショナリに NSExtensionAttributes を含める必要があります。
+        </value></data>
+  <data name="E7031"><value>Watch Extension '{0}' に無効な WKAppBundleIdentifier 値 ('{1}') が含まれています。これは、親 Watch アプリ バンドルの CFBundleIdentifier ('{2}') と一致しません。
+        </value></data>
+  <data name="E7032"><value>WatchKit 拡張機能 '{0}' に無効な Info.plist があります。UIRequiredDeviceCapabilities ディクショナリに 'watch-companion' 機能を含めることはできません。
+        </value></data>
+  <data name="E7033"><value>Watch App '{0}' に Info.plist が含まれていません。
+        </value></data>
+  <data name="E7038"><value>Watch App '{0}' に無効な WKCompanionAppBundleIdentifier 値があります ('{1}')。メイン アプリ バンドルの CFBundleIdentifier ('{2}') と一致しません。
+        </value></data>
+  <data name="E7039"><value>Watch App '{0}' に無効な Info.plist があります。LSRequiresIPhoneOS キーを指定することはできません。
+        </value></data>
+  <data name="E7007"><value>アプリ拡張機能 '{0}' に、無効なサフィックス ".key" で終わる CFBundleIdentifier ({1}) が含まれています。
+        </value></data>
+  <data name="E7006"><value>アプリ拡張機能 '{0}' に無効な CFBundleIdentifier ({1}) が含まれています。メイン アプリ バンドルの CFBundleIdentifier ({2}) で始まっていません。
+        </value></data>
+  <data name="E7005"><value>アプリ拡張機能 '{0}' で CFBundleExecutable が指定されていません。
+        </value></data>
+  <data name="E7004"><value>アプリ拡張機能 '{0}' で CFBundleIdentifier が指定されていません。
+        </value></data>
+  <data name="E7003"><value>アプリ拡張機能 '{0}' に Info.plist が含まれていません。
+        </value></data>
+  <data name="E7002"><value>このマシンにはネットワーク アダプターがありません。これは、WiFi を使用してデバイス上でデバッグまたはプロファイルを行うときに必要です。
+        </value></data>
+  <data name="E7001"><value>WiFi デバッガー設定のホスト IP を解決できませんでした。
+        </value></data>
+  <data name="E7009"><value>アプリ拡張機能 '{0}' に無効な Info.plist があります。NSExtension ディクショナリが含まれていません。
+        </value></data>
+  <data name="E7008"><value>アプリ拡張機能 '{0}' で CFBundleShortVersionString が指定されていません。
+        </value></data>
+  <data name="E7016"><value>Watch App '{0}' に無効な CFBundleIdentifier ({1}) が含まれています。メイン アプリ バンドルの CFBundleIdentifier ({2}) で始まっていません。
+        </value></data>
+  <data name="E7017"><value>Watch App '{0}' に、有効な UIDeviceFamily 値がありません。'Watch (4)' が必要ですが、'{1} ({2})' が見つかりました。
+        </value></data>
+  <data name="E7014"><value>Watch App '{0}' に Info.plist が含まれていません。
+        </value></data>
+  <data name="E7015"><value>Watch App '{0}' で CFBundleIdentifier が指定されていません。
+        </value></data>
+  <data name="E7010"><value>アプリ拡張機能 '{0}' に無効な Info.plist があります。NSExtension ディクショナリに NSExtensionPointIdentifier 値が含まれていません。
+        </value></data>
+  <data name="E7018"><value>Watch App '{name}' で CFBundleExecutable が指定されていません
+        </value></data>
+  <data name="E7019"><value>Watch App '{0}' に無効な WKCompanionAppBundleIdentifier 値があります ('{1}')。メイン アプリ バンドルの CFBundleIdentifier ('{2}') と一致しません。
+        </value></data>
+  <data name="M0018"><value>デバッグをサポートするための任意の HTTP 読み込みが許可されました。
+        </value></data>
+  <data name="M0017"><value>すべての http 読み込みは既に許可されています。
+        </value></data>
+  <data name="M0001"><value>ツール {0} の実行が開始されました。引数: {1}
+        </value></data>
+  <data name="M0002"><value>ツール {0} の実行が完了しました (終了コード = {1})。
+        </value></data>
+  <data name="M0047"><value>'{1}' で '{0}' を検索しています
+        </value></data>
+  <data name="M0119"><value>出力ファイル '{1}' のほうが新しいため、'{0}' をスキップしています。
+        </value></data>
+  <data name="M0116"><value>ツール {0} の実行が完了しました。
+        </value></data>
+  <data name="M0138"><value>複数のプロビジョニング プロファイルがバンドル識別子と一致しています。最初に一致したものを使用します。
+        </value></data>
+  <data name="M0132"><value>'{0}' が '{1}' と一致しません。
+        </value></data>
+  <data name="M0136"><value>AppID: よりマッチ率の高いものが既に見つかっているため、{0} を除外しました: {1}。
+        </value></data>
+  <data name="M0134"><value>互換性のある AppID を持つ、一致するプロビジョニング プロファイルを検索し、最長一致 (ワイルドカード) の ID を持つもののみを保持しています。
+        </value></data>
+  <data name="M0135"><value>AppID: よりマッチ率の高いものが見つかったため、{0} を除外しました: {1}。
+        </value></data>
+  <data name="M0105"><value>フレームワーク ディレクトリが見つかりません。
+        </value></data>
+  <data name="M0151"><value>生成されたバンドル名: {0}
+        </value></data>
+  <data name="M0129"><value>証明書 '{0}' が '{1}' と一致しません。
+        </value></data>
+  <data name="M0121"><value>バインド リソース パッケージを作成しています: {0}
+        </value></data>
+  <data name="M0127"><value>証明書 '{0}' の有効期限が切れています ({1})
+        </value></data>
+  <data name="M0126"><value>証明書 '{0}' が、プレフィックス '{1}' のうちどれとも一致しません。
+        </value></data>
+  <data name="M0125"><value>署名 ID が検出されました:
+        </value></data>
+  <data name="M0149"><value>  {0} が次の場所に見つかりました: {1}
+        </value></data>
+  <data name="M0143"><value>複数の署名 ID が見つかりました。最初の ID を使用します。
+        </value></data>
+  <data name="M0142"><value>複数の署名 ID が '{0}' と一致します。最初の一致を使用します。
+        </value></data>
+  <data name="M0168"><value>  フレームワーク アセンブリをスキップしています: {0}
+        </value></data>
+  <data name="M0165"><value>'{0}' から '{1}' へファイルをコピーしています
+        </value></data>
+  <data name="M0164"><value>ディレクトリ '{0}' を作成しています
+        </value></data>
+  <data name="M0163"><value>ファイルが存在しないため、作成されます: {0}
+        </value></data>
+  <data name="M0162"><value>重複するエントリがスキップされました: {0}
+        </value></data>
+  <data name="W0020"><value>サポートされている iPhone の向きが一致するペアになっていません
+        </value></data>
+  <data name="W0021"><value>サポートされている iPad の向きが設定されていません
+        </value></data>
+  <data name="W0022"><value>サポートされている iPad の向きがペアになっていません
+        </value></data>
+  <data name="W0016"><value>watchOS 向けのビルド時に、watchOS 4.3 SDK に対してのみフェイクを作成できます。
+        </value></data>
+  <data name="W0019"><value>サポートされている iPhone の向きが設定されていません
+        </value></data>
+  <data name="W0075"><value>Watch App '{0}' で CFBundleShortVersionString が指定されていません
+        </value></data>
+  <data name="W0074"><value>アプリ拡張機能 '{0}' に、認識されない NSExtensionPointIdentifier 値 ('{1}') があります。
+        </value></data>
+  <data name="W0077"><value>Watch App '{0}' で CFBundleVersion が指定されていません
+        </value></data>
+  <data name="W0076"><value>Watch App '{0}' に、メイン アプリ バンドルの CFBundleShortVersionString ({2}) と一致しない CFBundleShortVersionString ({1}) があります
+        </value></data>
+  <data name="W0071"><value>アプリ拡張機能 '{0}' に、メイン アプリ バンドルの CFBundleShortVersionString ({2}) と一致しない CFBundleShortVersionString ({1}) があります
+        </value></data>
+  <data name="W0073"><value>アプリ拡張機能 '{0}' に、メイン アプリ バンドルの CFBundleVersion ({2}) と一致しない CFBundleVersion ({1}) があります
+        </value></data>
+  <data name="W0072"><value>アプリ拡張機能 '{0}' で CFBundleVersion が指定されていません
+        </value></data>
+  <data name="W0079"><value>Watch Extension '{0}' で CFBundleShortVersionString が指定されていません
+        </value></data>
+  <data name="W0078"><value>Watch App '{0}' に、メイン アプリ バンドルの CFBundleVersion ({2}) と一致しない CFBundleVersion ({1}) があります
+        </value></data>
+  <data name="W0054"><value>応答ファイル '{0}' を作成できませんでした: {1}
+        </value></data>
+  <data name="W0052"><value>動的なネイティブ参照はサポートされていません: '{0}'
+        </value></data>
+  <data name="W0051"><value>'{0}' のネイティブ参照型が不明です。
+        </value></data>
+  <data name="W0090"><value>資産は資産カタログの一部ではありません: {0}
+        </value></data>
+  <data name="W0095"><value>altool の出力を解析できませんでした: {0}。
+            出力: {1}
+        </value></data>
+  <data name="W0082"><value>Watch Extension '{0}' に、メイン アプリ バンドルの CFBundleVersion ({2}) と一致しない CFBundleVersion ({1}) があります
+        </value></data>
+  <data name="W0080"><value>Watch Extension '{0}' に、メイン アプリ バンドルの CFBundleShortVersionString ({2}) と一致しない CFBundleShortVersionString ({1}) があります
+        </value></data>
+  <data name="W0081"><value>Watch Extension '{0}' で CFBundleVersion が指定されていません
+        </value></data>
+  <data name="W0137"><value>バンドル識別子と一致するインストールされたプロビジョニング プロファイルがありません。
+        </value></data>
+  <data name="W0110"><value>iCloud エンタイトルメント ('{0}' など) にはプロビジョニング プロファイルが必要です。
+        </value></data>
+  <data name="W0111"><value>iCloud エンタイトルメント '{0}' は、プロビジョニング プロファイルでサポートされていません。
+        </value></data>
+  <data name="W0176"><value>Conflicting '{0}' and '{1}' options. '{1}' will be ignored.
+        </value></data>
+  <data name="W0103"><value>フレームワーク ディレクトリ内にフレームワークではないディレクトリが見つかりました: {0}
+        </value></data>
+  <data name="W0106"><value>マニフェスト キー '{0}' の値を特定できませんでした
+        </value></data>
+  <data name="W0104"><value>フレームワーク {0} には、{1} という名前のバイナリが含まれていません
+        </value></data>
+  <data name="W0109"><value>プロビジョニング プロファイルなしで Entitlements.plist 内の $(AppIdentifierPrefix) を展開することはできません。
+        </value></data>
+  <data name="W0108"><value>プロビジョニング プロファイルなしで Entitlements.plist 内の $(TeamIdentifierPrefix) を展開することはできません。
+        </value></data>
+  <data name="InvalidFramework"><value>Invalid framework: {0}</value></data>
+  </root>

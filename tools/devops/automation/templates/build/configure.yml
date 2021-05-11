@@ -147,22 +147,21 @@ steps:
   continueOnError: true
   workingDirectory: $(Build.SourcesDirectory)\tools\devops 
 
-- ${{ if eq(variables['Build.Reason'], 'Schedule') }}:
-  - task: OneLocBuild@2
-    condition: and(succeeded(), eq(variables.isMain, 'True'))
-    continueOnError: true
-    env:
-      SYSTEM_ACCESSTOKEN: $(System.AccessToken)
-    inputs:
-      locProj: '$(Build.SourcesDirectory)\Localize\LocProject.json'
-      outDir: '$(Build.ArtifactStagingDirectory)'
-      isCreatePrSelected: true
-      isAutoCompletePrSelected: false
-      prSourceBranchPrefix: 'locfiles'
-      repoType: gitHub
-      gitHubPatVariable: '$(GitHub.Token)'
-      packageSourceAuth: patAuth
-      patVariable: '$(OneLocBuild--PAT)'
+- task: OneLocBuild@2
+  condition: and(succeeded(), eq(variables.isMain, 'True'))
+  continueOnError: true
+  env:
+    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+  inputs:
+    locProj: '$(Build.SourcesDirectory)\Localize\LocProject.json'
+    outDir: '$(Build.ArtifactStagingDirectory)'
+    isCreatePrSelected: eq(variables['Build.Reason'], 'Schedule')
+    packageSourceAuth: patAuth
+    patVariable: '$(OneLocBuild--PAT)'
+    isAutoCompletePrSelected: false
+    prSourceBranchPrefix: 'locfiles'
+    repoType: gitHub
+    gitHubPatVariable: '$(GitHub.Token)'
 
 - task: PublishBuildArtifacts@1
   condition: and(succeeded(), eq(variables.isMain, 'True'))
