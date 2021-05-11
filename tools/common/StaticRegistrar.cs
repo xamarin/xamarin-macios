@@ -783,6 +783,12 @@ namespace Registrar {
 			}
 		}
 
+		protected override bool IsARM64 {
+			get {
+				return Application.IsArchEnabled (Target?.Abis ?? App.Abis, Xamarin.Abi.ARM64);
+			}
+		}
+
 		protected override Exception CreateExceptionImpl (int code, bool error, Exception innerException, MethodDefinition method, string message, params object[] args)
 		{
 			return ErrorHelper.Create (App, code, error, innerException, method, message, args);
