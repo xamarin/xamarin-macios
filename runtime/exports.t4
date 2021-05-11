@@ -394,7 +394,9 @@
 			"MonoDomain *", "domain",
 			"MonoMethod *", "method",
 			"MonoClass *", "refclass"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		new Export ("MonoReflectionType *", "mono_type_get_object",
 			"MonoDomain *", "domain",
