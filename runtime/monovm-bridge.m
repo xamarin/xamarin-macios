@@ -172,20 +172,20 @@ xamarin_get_nsobject_class ()
 	return nsobject_class;
 }
 
-MonoClass *
-xamarin_get_nsvalue_class ()
+MonoType *
+xamarin_get_nsvalue_type ()
 {
 	if (nsvalue_class == NULL)
 		xamarin_assertion_message ("Internal consistency error, please file a bug (https://github.com/xamarin/xamarin-macios/issues/new). Additional data: can't get the %s class because it's been linked away.\n", "NSValue");
-	return nsvalue_class;
+	return mono_class_get_type (nsvalue_class);
 }
 
-MonoClass *
-xamarin_get_nsnumber_class ()
+MonoType *
+xamarin_get_nsnumber_type ()
 {
 	if (nsnumber_class == NULL)
 		xamarin_assertion_message ("Internal consistency error, please file a bug (https://github.com/xamarin/xamarin-macios/issues/new). Additional data: can't get the %s class because it's been linked away.\n", "NSNumber");
-	return nsnumber_class;
+	return mono_class_get_type (nsnumber_class);
 }
 
 MonoClass *
@@ -324,7 +324,6 @@ xamarin_is_class_nsnumber (MonoClass *cls)
 	// COOP: Reading managed data, must be in UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
 
-	MonoClass *nsnumber_class = xamarin_get_nsnumber_class ();
 	if (nsnumber_class == NULL)
 		return false;
 
@@ -337,7 +336,6 @@ xamarin_is_class_nsvalue (MonoClass *cls)
 	// COOP: Reading managed data, must be in UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
 
-	MonoClass *nsvalue_class = xamarin_get_nsvalue_class ();
 	if (nsvalue_class == NULL)
 		return false;
 

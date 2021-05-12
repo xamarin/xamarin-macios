@@ -145,6 +145,29 @@ namespace ObjCRuntime {
 			return rv;
 		}
 
+		static unsafe MonoObject* LookupType (TypeLookup type)
+		{
+			Type rv = null;
+
+			switch (type) {
+			case TypeLookup.Foundation_NSNumber:
+				rv = typeof (Foundation.NSNumber);
+				break;
+			case TypeLookup.Foundation_NSValue:
+				rv = typeof (Foundation.NSValue);
+				break;
+			case TypeLookup.System_String:
+				rv = typeof (string);
+				break;
+			default:
+				throw new ArgumentOutOfRangeException (nameof (type));
+			}
+
+			log_coreclr ($"LookupType ({type}) => {rv}");
+
+			return (MonoObject*) GetMonoObject (rv);
+		}
+
 		static unsafe MonoObject* GetElementClass (MonoObject* classobj)
 		{
 			var type = (Type) GetMonoObjectTarget (classobj);
@@ -626,11 +649,6 @@ namespace ObjCRuntime {
 				return true;
 
 			return false;
-		}
-
-		static unsafe MonoObject* GetStringClass ()
-		{
-			return (MonoObject *) GetMonoObject (typeof (string));
 		}
 
 		unsafe static bool IsByRef (MonoObject *typeobj)

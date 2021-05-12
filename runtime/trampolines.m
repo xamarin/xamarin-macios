@@ -1462,7 +1462,7 @@ xamarin_get_nsnumber_converter (MonoClass *managedType, MonoMethod *method, bool
 		func = xamarin_get_nsnumber_converter (baseClass, method, to_managed, exception_gchandle);
 		xamarin_mono_object_release (&baseClass);
 	} else {
-		MonoType *nsnumberType = mono_class_get_type (xamarin_get_nsnumber_class ());
+		MonoType *nsnumberType = xamarin_get_nsnumber_type ();
 		*exception_gchandle = xamarin_create_bindas_exception (mtype, nsnumberType, method);
 		xamarin_mono_object_release (&nsnumberType);
 		goto exception_handling;
@@ -1533,7 +1533,7 @@ xamarin_get_nsvalue_converter (MonoClass *managedType, MonoMethod *method, bool 
 #endif
 	} else {
 		MonoType *mType = mono_class_get_type (managedType);
-		MonoType *nsvalueType = mono_class_get_type (xamarin_get_nsvalue_class ());
+		MonoType *nsvalueType = xamarin_get_nsvalue_type ();
 		*exception_gchandle = xamarin_create_bindas_exception (mType, nsvalueType, method);
 		xamarin_mono_object_release (&mType);
 		xamarin_mono_object_release (&nsvalueType);

@@ -489,8 +489,10 @@
 			OnlyCoreCLR = true,
 		},
 
-		new XDelegate ("MonoObject *", "MonoObject *", "xamarin_bridge_get_string_class") {
-			WrappedManagedFunction = "GetStringClass",
+		new XDelegate ("MonoClass *", "MonoObject *", "xamarin_bridge_lookup_class",
+			"enum XamarinLookupTypes", "Runtime.TypeLookup", "type"
+		) {
+			WrappedManagedFunction = "LookupType",
 			OnlyDynamicUsage = false,
 			OnlyCoreCLR = true,
 		},

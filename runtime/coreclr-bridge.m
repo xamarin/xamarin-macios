@@ -108,40 +108,20 @@ xamarin_bridge_get_mono_method (MonoReflectionMethod *method)
 	return method;
 }
 
-MonoClass *
-xamarin_get_nsnumber_class ()
+MonoType *
+xamarin_get_nsnumber_type ()
 {
-	xamarin_assertion_message ("The method %s it not implemented yet for CoreCLR", __func__);
+	MonoClass *rv = xamarin_bridge_lookup_class (XamarinLookupTypes_Foundation_NSNumber);
+	LOG_CORECLR (stderr, "%s () => %p\n", __func__, rv);
+	return rv;
 }
 
-MonoClass *
-xamarin_get_nsvalue_class ()
+MonoType *
+xamarin_get_nsvalue_type ()
 {
-	xamarin_assertion_message ("The method %s it not implemented yet for CoreCLR", __func__);
-}
-
-MonoClass *
-xamarin_get_inativeobject_class ()
-{
-	xamarin_assertion_message ("The method %s it not implemented yet for CoreCLR", __func__);
-}
-
-MonoClass *
-xamarin_get_nsobject_class ()
-{
-	xamarin_assertion_message ("The method %s it not implemented yet for CoreCLR", __func__);
-}
-
-MonoClass *
-xamarin_get_nsstring_class ()
-{
-	xamarin_assertion_message ("The method %s it not implemented yet for CoreCLR", __func__);
-}
-
-MonoClass *
-xamarin_get_runtime_class ()
-{
-	xamarin_assertion_message ("The method %s it not implemented yet for CoreCLR", __func__);
+	MonoClass *rv = xamarin_bridge_lookup_class (XamarinLookupTypes_Foundation_NSValue);
+	LOG_CORECLR (stderr, "%s () => %p\n", __func__, rv);
+	return rv;
 }
 
 void
@@ -492,7 +472,7 @@ mono_class_from_mono_type (MonoType *type)
 MonoClass *
 mono_get_string_class ()
 {
-	MonoClass *rv = xamarin_bridge_get_string_class ();
+	MonoClass *rv = xamarin_bridge_lookup_class (XamarinLookupTypes_System_String);
 	LOG_CORECLR (stderr, "%s () => %p.\n", __func__, rv);
 	return rv;
 }
