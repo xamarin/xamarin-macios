@@ -463,6 +463,14 @@ mono_class_from_mono_type (MonoType *type)
 	return rv;
 }
 
+MonoClass *
+mono_get_string_class ()
+{
+	MonoClass *rv = xamarin_bridge_get_string_class ();
+	LOG_CORECLR (stderr, "%s () => %p.\n", __func__, rv);
+	return rv;
+}
+
 mono_bool
 mono_type_is_byref (MonoType *type)
 {
