@@ -339,6 +339,14 @@ mono_object_isinst (MonoObject * obj, MonoClass * klass)
 	return rv ? obj : NULL;
 }
 
+MonoObject *
+mono_value_box (MonoDomain *domain, MonoClass *klass, void *val)
+{
+	MonoObject *rv = xamarin_bridge_box (klass, val);
+	LOG_CORECLR (stderr, "%s (%p, %p, %p) => %p\n", __func__, domain, klass, val, rv);
+	return rv;
+}
+
 void *
 mono_object_unbox (MonoObject *obj)
 {
