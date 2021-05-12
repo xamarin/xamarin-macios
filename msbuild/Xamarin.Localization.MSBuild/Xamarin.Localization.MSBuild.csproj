@@ -32,9 +32,6 @@
     <EmbeddedResource Include="TranslatedAssemblies/MSBStrings.fr.resx">
       <Link>MSBStrings.fr.resx</Link>
     </EmbeddedResource>
-    <EmbeddedResource Include="TranslatedAssemblies/MSBStrings.hu.resx">
-      <Link>MSBStrings.hu.resx</Link>
-    </EmbeddedResource>
     <EmbeddedResource Include="TranslatedAssemblies/MSBStrings.it.resx">
       <Link>MSBStrings.it.resx</Link>
     </EmbeddedResource>
@@ -44,23 +41,14 @@
     <EmbeddedResource Include="TranslatedAssemblies/MSBStrings.ko.resx">
       <Link>MSBStrings.ko.resx</Link>
     </EmbeddedResource>
-    <EmbeddedResource Include="TranslatedAssemblies/MSBStrings.nl.resx">
-      <Link>MSBStrings.nl.resx</Link>
-    </EmbeddedResource>
     <EmbeddedResource Include="TranslatedAssemblies/MSBStrings.pl.resx">
       <Link>MSBStrings.pl.resx</Link>
     </EmbeddedResource>
     <EmbeddedResource Include="TranslatedAssemblies/MSBStrings.pt-BR.resx">
       <Link>MSBStrings.pt-BR.resx</Link>
     </EmbeddedResource>
-    <EmbeddedResource Include="TranslatedAssemblies/MSBStrings.pt-PT.resx">
-      <Link>MSBStrings.pt-PT.resx</Link>
-    </EmbeddedResource>
     <EmbeddedResource Include="TranslatedAssemblies/MSBStrings.ru.resx">
       <Link>MSBStrings.ru.resx</Link>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TranslatedAssemblies/MSBStrings.sv.resx">
-      <Link>MSBStrings.sv.resx</Link>
     </EmbeddedResource>
     <EmbeddedResource Include="TranslatedAssemblies/MSBStrings.tr.resx">
       <Link>MSBStrings.tr.resx</Link>

@@ -224,10 +224,6 @@
       <Link>tools\mtouch\Errors.fr.resx</Link>
       <ManifestResourceName>Errors.mtouch.fr</ManifestResourceName>
     </EmbeddedResource>
-    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.hu.resx">
-      <Link>tools\mtouch\Errors.hu.resx</Link>
-      <ManifestResourceName>Errors.mtouch.hu</ManifestResourceName>
-    </EmbeddedResource>
     <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.it.resx">
       <Link>tools\mtouch\Errors.it.resx</Link>
       <ManifestResourceName>Errors.mtouch.it</ManifestResourceName>
@@ -240,10 +236,6 @@
       <Link>tools\mtouch\Errors.ko.resx</Link>
       <ManifestResourceName>Errors.mtouch.ko</ManifestResourceName>
     </EmbeddedResource>
-    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.nl.resx">
-      <Link>tools\mtouch\Errors.nl.resx</Link>
-      <ManifestResourceName>Errors.mtouch.nl</ManifestResourceName>
-    </EmbeddedResource>
     <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.pl.resx">
       <Link>tools\mtouch\Errors.pl.resx</Link>
       <ManifestResourceName>Errors.mtouch.pl</ManifestResourceName>
@@ -252,17 +244,9 @@
       <Link>tools\mtouch\Errors.pt-BR.resx</Link>
       <ManifestResourceName>Errors.mtouch.pt-BR</ManifestResourceName>
     </EmbeddedResource>
-    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.pt-PT.resx">
-      <Link>tools\mtouch\Errors.pt-PT.resx</Link>
-      <ManifestResourceName>Errors.mtouch.pt-PT</ManifestResourceName>
-    </EmbeddedResource>
     <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.ru.resx">
       <Link>tools\mtouch\Errors.ru.resx</Link>
       <ManifestResourceName>Errors.mtouch.ru</ManifestResourceName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.sv.resx">
-      <Link>tools\mtouch\Errors.sv.resx</Link>
-      <ManifestResourceName>Errors.mtouch.sv</ManifestResourceName>
     </EmbeddedResource>
     <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.tr.resx">
       <Link>tools\mtouch\Errors.tr.resx</Link>
