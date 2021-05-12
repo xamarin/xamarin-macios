@@ -937,7 +937,7 @@ exception_handling:
 
 
 void *
-xamarin_generate_conversion_to_managed (id value, MonoType *inputType, MonoType *outputType, MonoMethod *method, GCHandle *exception_gchandle, void *context, /*SList*/ void **free_list)
+xamarin_generate_conversion_to_managed (id value, MonoType *inputType, MonoType *outputType, MonoMethod *method, GCHandle *exception_gchandle, void *context, /*SList*/ void **free_list, /*SList*/ void**release_list_ptr)
 {
 	// COOP: Reads managed memory, needs to be in UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
@@ -999,6 +999,9 @@ xamarin_generate_conversion_to_managed (id value, MonoType *inputType, MonoType 
 			convertedValue = xamarin_convert_nsarray_to_managed_with_func (value, underlyingManagedType, func, context, exception_gchandle);
 			if (*exception_gchandle != INVALID_GCHANDLE)
 				goto exception_handling;
+			SList* release_list = *(SList**) release_list_ptr;
+			if (release_list != NULL)
+				*release_list_ptr = s_list_prepend (release_list, convertedValue);
 		} else {
 			convertedValue = func (value, NULL, underlyingManagedType, context, exception_gchandle);
 			if (*exception_gchandle != INVALID_GCHANDLE)

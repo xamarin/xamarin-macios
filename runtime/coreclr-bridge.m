@@ -8,6 +8,8 @@
 
 #if defined (CORECLR_RUNTIME)
 
+#include <inttypes.h>
+
 #include "product.h"
 #include "xamarin/xamarin.h"
 #include "xamarin/coreclr-bridge.h"
@@ -543,6 +545,22 @@ bool
 xamarin_is_class_string (MonoClass *cls)
 {
 	return xamarin_bridge_is_class_of_type (cls, XamarinLookupTypes_System_String);
+}
+
+MonoArray *
+mono_array_new (MonoDomain *domain, MonoClass *eclass, uintptr_t n)
+{
+	MonoArray *rv = xamarin_bridge_create_array (eclass, n);
+	LOG_CORECLR (stderr, "%s (%p, %p, %" PRIdPTR ") => %p\n", __func__, domain, eclass, n, rv);
+	return rv;
+}
+
+uintptr_t
+mono_array_length (MonoArray *array)
+{
+	uintptr_t rv = (uintptr_t) xamarin_bridge_get_array_length (array);
+	LOG_CORECLR (stderr, "%s (%p) => %llu\n", __func__, array, (uint64_t) rv);
+	return rv;
 }
 
 char *

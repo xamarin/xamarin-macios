@@ -160,7 +160,9 @@
 			"MonoDomain *", "domain",
 			"MonoClass *", "eclass",
 			"uintptr_t", "n"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		new Export ("void *", "mono_object_unbox",
 			"MonoObject *", "obj"
@@ -176,7 +178,9 @@
 
 		new Export ("uintptr_t", "mono_array_length",
 			"MonoArray *", "array"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		new Export ("MonoObject *", "mono_object_isinst",
 			"MonoObject *", "obj",
