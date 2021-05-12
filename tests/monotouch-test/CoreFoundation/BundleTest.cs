@@ -362,6 +362,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 			var isArm64Executable = global::System.Runtime.InteropServices.RuntimeInformation.ProcessArchitecture == global::System.Runtime.InteropServices.Architecture.Arm64;
 
 			bool loadable_x86_64 = CFBundle.IsArchitectureLoadable (CFBundle.Architecture.X86_64);
+			// Due to Rosetta, both x64 and arm64 executables are loadable on Apple Silicon.
 			if (isX64Executable || isArm64Executable)
 				Assert.IsTrue (loadable_x86_64, "x86_64 Expected => true");
 			else
