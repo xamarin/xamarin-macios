@@ -931,6 +931,10 @@
         <value>Could not map the macOS version {0} to a corresponding iOS version for Mac Catalyst</value>
     </data>
 
+	<data name="MX0185" xml:space="preserve">
+		<value>The option '{0}' cannot take the value '{1}' when using CoreCLR.</value>
+	</data>
+
 	<data name="MX1009" xml:space="preserve">
 		<value>Could not copy the assembly '{0}' to '{1}': {2}
 		</value>
