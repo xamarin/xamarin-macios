@@ -1106,6 +1106,7 @@ namespace Registrar {
 		protected abstract int GetValueTypeSize (TType type);
 		protected abstract bool IsSimulatorOrDesktop { get; }
 		protected abstract bool Is64Bits { get; }
+		protected abstract bool IsARM64 { get; } 
 		protected abstract Exception CreateExceptionImpl (int code, bool error, Exception innerException, TMethod method, string message, params object[] args);
 		protected abstract Exception CreateExceptionImpl (int code, bool error, Exception innerException, TType type, string message, params object [] args);
 		protected abstract string PlatformName { get; }
@@ -2629,7 +2630,7 @@ namespace Registrar {
 			case "System.Boolean":
 				// map managed 'bool' to ObjC BOOL = 'unsigned char' in OSX and 32bit iOS architectures and 'bool' in 64bit iOS architectures
 				#if MONOMAC
-				return "c";
+				return IsARM64 ? "B" : "c";
 				#else
 				return Is64Bits ? "B" : "c";
 				#endif

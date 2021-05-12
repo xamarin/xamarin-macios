@@ -132,6 +132,12 @@ namespace ObjCRuntime {
 			return rv;
 		}
 
+		static unsafe MonoObject* GetElementClass (MonoObject* classobj)
+		{
+			var type = (Type) GetMonoObjectTarget (classobj);
+			return (MonoObject*) GetMonoObject (type.GetElementType ());
+		}
+
 		static IntPtr CreateGCHandle (IntPtr gchandle, GCHandleType type)
 		{
 			// It's valid to create a GCHandle to a null value.
@@ -521,6 +527,19 @@ namespace ObjCRuntime {
 			return (MonoObject *) GetMonoObject (Marshal.PtrToStringAuto (text));
 		}
 
+		static unsafe MonoObject* CreateArray (MonoObject* typeobj, ulong elements)
+		{
+			var type = (Type) GetMonoObjectTarget (typeobj);
+			var obj = Array.CreateInstance (type, (int) elements);
+			return (MonoObject*) GetMonoObject (obj);
+		}
+
+		static unsafe ulong GetArrayLength (MonoObject* obj)
+		{
+			var array = (Array) GetMonoObjectTarget (obj);
+			return (ulong) array.Length;
+		}
+
 		static bool IsNullable (Type type)
 		{
 			if (Nullable.GetUnderlyingType (type) != null)
@@ -530,6 +549,11 @@ namespace ObjCRuntime {
 				return true;
 
 			return false;
+		}
+
+		static unsafe MonoObject* GetStringClass ()
+		{
+			return (MonoObject *) GetMonoObject (typeof (string));
 		}
 
 		unsafe static bool IsByRef (MonoObject *typeobj)

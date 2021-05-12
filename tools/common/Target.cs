@@ -302,13 +302,12 @@ namespace Xamarin.Bundler {
 			if (dynamic_symbols != null)
 				return;
 
-			string [] dyn_msgSend_functions = new string [] {
-				"xamarin_dyn_objc_msgSend",
-				"xamarin_dyn_objc_msgSendSuper",
-				"xamarin_dyn_objc_msgSend_stret",
-				"xamarin_dyn_objc_msgSendSuper_stret",
+			var dyn_msgSend_functions = new [] {
+				new { Name = "xamarin_dyn_objc_msgSend", ValidAbis = Abi.SimulatorArchMask | Abi.ARM64 },
+				new { Name = "xamarin_dyn_objc_msgSendSuper", ValidAbis = Abi.SimulatorArchMask | Abi.ARM64 },
+				new { Name = "xamarin_dyn_objc_msgSend_stret", ValidAbis = Abi.SimulatorArchMask },
+				new { Name = "xamarin_dyn_objc_msgSendSuper_stret", ValidAbis = Abi.SimulatorArchMask },
 			};
-			Abi dyn_msgSend_valid_abis = Abi.SimulatorArchMask;
 
 			var cache_location = Path.Combine (App.Cache.Location, "entry-points.txt");
 			if (cached_link) {
@@ -342,7 +341,7 @@ namespace Xamarin.Bundler {
 					break;
 				case ApplePlatform.MacCatalyst:
 				case ApplePlatform.MacOSX:
-					has_dyn_msgSend = App.MarshalObjectiveCExceptions != MarshalObjectiveCExceptionMode.Disable && !App.RequiresPInvokeWrappers && Application.IsArchEnabled (Abis, Abi.x86_64);
+					has_dyn_msgSend = App.MarshalObjectiveCExceptions != MarshalObjectiveCExceptionMode.Disable && !App.RequiresPInvokeWrappers;
 					break;
 				default:
 					throw ErrorHelper.CreateError (71, Errors.MX0071, App.Platform, App.ProductName);
@@ -350,7 +349,7 @@ namespace Xamarin.Bundler {
 
 				if (has_dyn_msgSend) {
 					foreach (var dyn_msgSend_function in dyn_msgSend_functions)
-						dynamic_symbols.AddFunction (dyn_msgSend_function);
+						dynamic_symbols.AddFunction (dyn_msgSend_function.Name);
 				}
 
 #if MONOTOUCH
@@ -361,10 +360,10 @@ namespace Xamarin.Bundler {
 				dynamic_symbols.Save (cache_location);
 			}
 
-			foreach (var name in dyn_msgSend_functions) {
-				var symbol = dynamic_symbols.Find (name);
+			foreach (var dynamicFunction in dyn_msgSend_functions) {
+				var symbol = dynamic_symbols.Find (dynamicFunction.Name);
 				if (symbol != null) {
-					symbol.ValidAbis = dyn_msgSend_valid_abis;
+					symbol.ValidAbis = dynamicFunction.ValidAbis;
 				}
 			}
 

@@ -8,6 +8,8 @@
 
 #if defined (CORECLR_RUNTIME)
 
+#include <inttypes.h>
+
 #include "product.h"
 #include "xamarin/xamarin.h"
 #include "xamarin/coreclr-bridge.h"
@@ -461,6 +463,14 @@ mono_class_from_mono_type (MonoType *type)
 	return rv;
 }
 
+MonoClass *
+mono_get_string_class ()
+{
+	MonoClass *rv = xamarin_bridge_get_string_class ();
+	LOG_CORECLR (stderr, "%s () => %p.\n", __func__, rv);
+	return rv;
+}
+
 mono_bool
 mono_type_is_byref (MonoType *type)
 {
@@ -486,6 +496,14 @@ mono_class_is_valuetype (MonoClass * klass)
 
 	LOG_CORECLR (stderr, "%s (%p) => %i\n", __func__, klass, rv);
 
+	return rv;
+}
+
+MonoClass *
+mono_class_get_element_class (MonoClass *klass)
+{
+	MonoClass *rv = xamarin_bridge_get_element_class (klass);
+	LOG_CORECLR (stderr, "%s (%p) => %p\n", __func__, klass, rv);
 	return rv;
 }
 
@@ -535,6 +553,22 @@ bool
 xamarin_is_class_string (MonoClass *cls)
 {
 	return xamarin_bridge_is_class_of_type (cls, XamarinLookupTypes_System_String);
+}
+
+MonoArray *
+mono_array_new (MonoDomain *domain, MonoClass *eclass, uintptr_t n)
+{
+	MonoArray *rv = xamarin_bridge_create_array (eclass, n);
+	LOG_CORECLR (stderr, "%s (%p, %p, %" PRIdPTR ") => %p\n", __func__, domain, eclass, n, rv);
+	return rv;
+}
+
+uintptr_t
+mono_array_length (MonoArray *array)
+{
+	uintptr_t rv = (uintptr_t) xamarin_bridge_get_array_length (array);
+	LOG_CORECLR (stderr, "%s (%p) => %llu\n", __func__, array, (uint64_t) rv);
+	return rv;
 }
 
 char *

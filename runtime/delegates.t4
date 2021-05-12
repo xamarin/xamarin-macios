@@ -472,6 +472,12 @@
 			OnlyCoreCLR = true,
 		},
 
+		new XDelegate ("MonoObject *", "MonoObject *", "xamarin_bridge_get_string_class") {
+			WrappedManagedFunction = "GetStringClass",
+			OnlyDynamicUsage = false,
+			OnlyCoreCLR = true,
+		},
+
 		new XDelegate ("bool", "bool", "xamarin_bridge_is_byref",
 			"MonoObject *", "MonoObject *", "typeobj"
 		) {
@@ -484,6 +490,14 @@
 			"MonoObject *", "MonoObject *", "typeobj"
 		) {
 			WrappedManagedFunction = "IsValueType",
+			OnlyDynamicUsage = false,
+			OnlyCoreCLR = true,
+		},
+
+		new XDelegate ("MonoObject *", "MonoObject *", "xamarin_bridge_get_element_class",
+			"MonoObject *", "MonoObject *", "classobj"
+		) {
+			WrappedManagedFunction = "GetElementClass",
 			OnlyDynamicUsage = false,
 			OnlyCoreCLR = true,
 		},
@@ -517,6 +531,23 @@
 			"const char *", "IntPtr", "text"
 		) {
 			WrappedManagedFunction = "NewString",
+			OnlyDynamicUsage = false,
+			OnlyCoreCLR = true,
+		},
+
+		new XDelegate ("MonoArray *", "MonoObject *", "xamarin_bridge_create_array",
+			"MonoClass *", "MonoObject *", "typeobj",
+			"uint64_t", "ulong", "elements"
+		) {
+			WrappedManagedFunction = "CreateArray",
+			OnlyDynamicUsage = false,
+			OnlyCoreCLR = true,
+		},
+
+		new XDelegate ("uint64_t", "ulong", "xamarin_bridge_get_array_length",
+			"MonoArray *", "MonoObject *", "arrayobj"
+		) {
+			WrappedManagedFunction = "GetArrayLength",
 			OnlyDynamicUsage = false,
 			OnlyCoreCLR = true,
 		},
