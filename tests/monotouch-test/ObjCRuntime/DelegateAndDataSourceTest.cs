@@ -132,6 +132,9 @@ namespace Xamarin.Mac.Tests
 				if (PlatformHelper.CheckSystemVersion (11, 0))
 					return true;
 				break;
+			case "SKView":
+				// on vms results on a crash
+				return TestRuntime.IsVM;
 			}
 
 			switch (t.Namespace) {

@@ -97,6 +97,8 @@ namespace Introspection {
 			case "NSUnitPressure": // -init should never be called on NSUnit!
 			case "NSUnitSpeed": // -init should never be called on NSUnit!
 				return true;
+			case "NSMenuView":
+				return TestRuntime.IsVM; // skip on vms due to hadware problems
 			case "MPSCnnNeuron": // Cannot directly initialize MPSCNNNeuron. Use one of the sub-classes of MPSCNNNeuron
 			case "MPSCnnNeuronPReLU":
 			case "MPSCnnNeuronHardSigmoid":
