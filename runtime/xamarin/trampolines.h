@@ -98,7 +98,7 @@ typedef void *	(*xamarin_id_to_managed_func) (id value, void *ptr, MonoClass *ma
 typedef id		(*xamarin_managed_to_id_func) (MonoObject *value, void *context, GCHandle *exception_gchandle);
 
 id              xamarin_generate_conversion_to_native (MonoObject *value, MonoType *inputType, MonoType *outputType, MonoMethod *method, void *context, GCHandle *exception_gchandle);
-void *          xamarin_generate_conversion_to_managed (id value, MonoType *inputType, MonoType *outputType, MonoMethod *method, GCHandle *exception_gchandle, void *context, /*SList*/ void **free_list);
+void *          xamarin_generate_conversion_to_managed (id value, MonoType *inputType, MonoType *outputType, MonoMethod *method, GCHandle *exception_gchandle, void *context, /*SList*/ void **free_list, /*SList*/ void **release_list_ptr);
 NSNumber *      xamarin_convert_managed_to_nsnumber (MonoObject *value, MonoClass *managedType, MonoMethod *method, void *context, GCHandle *exception_gchandle);
 NSValue *       xamarin_convert_managed_to_nsvalue (MonoObject *value, MonoClass *managedType, MonoMethod *method, void *context, GCHandle *exception_gchandle);
 NSString *      xamarin_convert_managed_to_nsstring (MonoObject *value, MonoType *managedType, MonoType *nativeType, MonoMethod *method, GCHandle *exception_gchandle);
