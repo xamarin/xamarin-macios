@@ -14,6 +14,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
+using System.Text;
 
 using Foundation;
 
@@ -756,6 +757,36 @@ namespace ObjCRuntime {
 		{
 			var dict = (MonoHashTable) GetMonoObjectTarget (tableobj);
 			return (MonoObject*) GetMonoObject (dict.Lookup (key));
+		}
+
+		static unsafe IntPtr GetMethodFullName (MonoObject* mobj)
+		{
+			return Marshal.StringToHGlobalAuto (GetMethodFullName ((MethodBase) GetMonoObjectTarget (mobj)));
+		}
+
+		static string GetMethodFullName (MethodBase method)
+		{
+			if (method == null)
+				return null;
+
+			// The return value is used in error messages, so there's not a
+			// specific format we have to return, it just has to be helpful.
+
+			var returnType = (method as MethodInfo)?.ReturnType ?? typeof (void);
+			var sb = new StringBuilder ();
+			sb.Append (returnType.FullName);
+			sb.Append (' ');
+			sb.Append (method.DeclaringType.FullName);
+			sb.Append (' ');
+			sb.Append ('(');
+			var parameters = method.GetParameters ();
+			for (var i = 0; i < parameters.Length; i++) {
+				if (i > 0)
+					sb.Append (", ");
+				sb.Append (parameters [i].ParameterType.FullName);
+			}
+			sb.Append (')');
+			return sb.ToString ();
 		}
 
 		[DllImport ("__Internal")]

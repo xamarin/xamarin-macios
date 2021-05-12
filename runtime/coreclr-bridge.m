@@ -208,6 +208,16 @@ mono_class_get_name (MonoClass * klass)
 	return rv;
 }
 
+char *
+mono_method_full_name (MonoMethod *method, mono_bool signature)
+{
+	char *rv = xamarin_bridge_get_method_full_name (method);
+
+	LOG_CORECLR (stderr, "%s (%p, %i) => %s\n", __func__, method, signature, rv);
+
+	return rv;
+}
+
 MonoDomain *
 mono_domain_get (void)
 {

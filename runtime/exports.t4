@@ -104,7 +104,9 @@
 		new Export ("char *", "mono_method_full_name",
 			"MonoMethod *", "method",
 			"mono_bool", "signature"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		#endregion
 
