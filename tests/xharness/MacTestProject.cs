@@ -8,6 +8,7 @@ namespace Xharness {
 		System = 4, // Xamarin.Mac/System app
 		Console = 8, // Console executable
 		DotNet = 16,
+		MacCatalyst = 32,
 	}
 
 	public class MacTestProject : TestProject {
