@@ -407,8 +407,11 @@ xamarin_is_class_nullable (MonoClass *cls, MonoClass **element_type, GCHandle *e
 
 		MonoReflectionType *nullable_type = (MonoReflectionType *) xamarin_gchandle_unwrap (nullable_type_handle);
 
-		if (element_type != NULL && nullable_type != NULL)
-			*element_type = mono_class_from_mono_type (mono_reflection_type_get_type (nullable_type));
+		if (element_type != NULL && nullable_type != NULL) {
+			MonoType *mono_type = mono_reflection_type_get_type (nullable_type);
+			*element_type = mono_class_from_mono_type (mono_type);
+			xamarin_mono_object_release (&mono_type);
+		}
 
 		bool is_nullable = nullable_type != NULL;
 		xamarin_mono_object_release (&nullable_type);
