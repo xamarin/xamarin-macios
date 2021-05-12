@@ -610,6 +610,11 @@ namespace ObjCRuntime {
 			return boxed;
 		}
 
+		static unsafe bool IsNullable (MonoObject* type)
+		{
+			return IsNullable ((Type) GetMonoObjectTarget (type));
+		}
+
 		static bool IsNullable (Type type)
 		{
 			if (Nullable.GetUnderlyingType (type) != null)
