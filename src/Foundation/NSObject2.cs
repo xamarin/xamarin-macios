@@ -220,6 +220,27 @@ namespace Foundation {
 		[DllImport ("__Internal")]
 		static extern void xamarin_release_managed_ref (IntPtr handle, bool user_type);
 
+#if NET
+		static void RegisterToggleRefMonoVM (NSObject obj, IntPtr handle, bool isCustomType)
+		{
+			// We need this indirection for CoreCLR, otherwise JITting RegisterToggleReference will throw System.Security.SecurityException: ECall methods must be packaged into a system module.
+			RegisterToggleRef (obj, handle, isCustomType);
+		}
+#endif
+
+		static void RegisterToggleReference (NSObject obj, IntPtr handle, bool isCustomType)
+		{
+#if NET
+			if (Runtime.IsCoreCLR) {
+				Runtime.RegisterToggleReferenceCoreCLR (obj, handle, isCustomType);
+			} else {
+				RegisterToggleRefMonoVM (obj, handle, isCustomType);
+			}
+#else
+			RegisterToggleRef (obj, handle, isCustomType);
+#endif
+		}
+
 #if !XAMCORE_3_0
 		public static bool IsNewRefcountEnabled ()
 		{
@@ -245,7 +266,7 @@ namespace Foundation {
 				return;
 			
 			IsRegisteredToggleRef = true;
-			RegisterToggleRef (this, Handle, allowCustomTypes);
+			RegisterToggleReference (this, Handle, allowCustomTypes);
 		}
 
 		private void InitializeObject (bool alloced) {
