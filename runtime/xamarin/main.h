@@ -75,6 +75,13 @@ enum XamarinLookupTypes : int {
 	XamarinLookupTypes_ObjCRuntime_INativeObject,
 };
 
+// Keep in sync with Runtime.ExceptionType in Runtime.CoreCLR.cs
+enum XamarinExceptionTypes : int {
+	XamarinExceptionTypes_System_Exception,
+	XamarinExceptionTypes_System_InvalidCastException,
+	XamarinExceptionTypes_System_EntryPointNotFoundException,
+};
+
 extern bool mono_use_llvm; // this is defined inside mono
 
 #if DEBUG

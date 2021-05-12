@@ -369,6 +369,24 @@ xamarin_is_class_string (MonoClass *cls)
 	return cls == mono_get_string_class ();
 }
 
+MonoException *
+xamarin_create_system_invalid_cast_exception (const char *message)
+{
+	return (MonoException *) mono_exception_from_name_msg (mono_get_corlib (), "System", "InvalidCastException", message);
+}
+
+MonoException *
+xamarin_create_system_exception (const char *message)
+{
+	return (MonoException *) mono_exception_from_name_msg (mono_get_corlib (), "System", "Exception", message);
+}
+
+MonoException *
+xamarin_create_system_entry_point_not_found_exception (const char *entrypoint)
+{
+	return (MonoException *) mono_exception_from_name_msg (mono_get_corlib (), "System", "EntryPointNotFoundException", entrypoint);
+}
+
 #if DOTNET
 
 bool

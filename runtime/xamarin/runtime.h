@@ -248,6 +248,9 @@ void			xamarin_process_managed_exception_gchandle (GCHandle gchandle);
 void			xamarin_throw_product_exception (int code, const char *message);
 GCHandle		xamarin_create_product_exception (int code, const char *message);
 GCHandle		xamarin_create_product_exception_with_inner_exception (int code, GCHandle inner_exception_gchandle /* will be freed */, const char *message);
+MonoException *	xamarin_create_system_exception (const char *message);
+MonoException *	xamarin_create_system_invalid_cast_exception (const char *message);
+MonoException *	xamarin_create_system_entry_point_not_found_exception (const char *entrypoint);
 NSString *		xamarin_print_all_exceptions (GCHandle handle);
 
 id				xamarin_invoke_objc_method_implementation (id self, SEL sel, IMP xamarin_impl);
