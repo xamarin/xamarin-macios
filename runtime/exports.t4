@@ -450,10 +450,6 @@
 			HasCoreCLRBridgeFunction = true,
 		},
 
-		new Export ("int", "mono_type_get_type",
-			"MonoType *", "type"
-		),
-
 		#endregion
 
 		#region metadata/mono-debug.h
