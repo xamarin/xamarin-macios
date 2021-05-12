@@ -931,6 +931,7 @@ exception_handling:
 	xamarin_mono_object_release (&nativeType);
 	xamarin_mono_object_release (&nativeElementType);
 	xamarin_mono_object_release (&managedElementType);
+	xamarin_mono_object_release (&nullableManagedType);
 
 	return convertedValue;
 }
@@ -1019,6 +1020,7 @@ exception_handling:
 	xamarin_mono_object_release (&nativeType);
 	xamarin_mono_object_release (&nativeElementType);
 	xamarin_mono_object_release (&managedElementType);
+	xamarin_mono_object_release (&nullableManagedType);
 
 	return convertedValue;
 }

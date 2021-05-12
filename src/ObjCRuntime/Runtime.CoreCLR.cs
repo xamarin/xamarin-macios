@@ -151,6 +151,13 @@ namespace ObjCRuntime {
 			return (MonoObject*) GetMonoObject (type.GetElementType ());
 		}
 
+		static unsafe MonoObject* GetNullableElementType (MonoObject* typeobj)
+		{
+			var type = (Type) GetMonoObjectTarget (typeobj);
+			var elementType = type.GetGenericArguments () [0];
+			return (MonoObject*) GetMonoObject (elementType);
+		}
+
 		static IntPtr CreateGCHandle (IntPtr gchandle, GCHandleType type)
 		{
 			// It's valid to create a GCHandle to a null value.
