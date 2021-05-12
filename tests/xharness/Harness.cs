@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Microsoft.DotNet.XHarness.Common;
 using Microsoft.DotNet.XHarness.Common.Logging;
@@ -781,5 +782,25 @@ namespace Xharness {
 
 		private static IFileBackedLog GetAdHocLog () => Microsoft.DotNet.XHarness.Common.Logging.Log.CreateReadableAggregatedLog (
 			new LogFile ("HarnessLog", Path.GetTempFileName ()), new ConsoleLog ());
+
+		// Return true if the current machine can run ARM64 binaries.
+		static bool? canRunArm64;
+		public static bool CanRunArm64 {
+			get {
+				if (!canRunArm64.HasValue) {
+					int rv = 0;
+					IntPtr size = (IntPtr) sizeof (int);
+					if (sysctlbyname ("hw.optional.arm64", ref rv, ref size, IntPtr.Zero, IntPtr.Zero) == 0) {
+						canRunArm64 = rv == 1;
+					} else {
+						canRunArm64 = false;
+					}
+				}
+				return canRunArm64.Value;
+			}
+		}
+
+		[DllImport ("libc")]
+		static extern int sysctlbyname (string name, ref int value, ref IntPtr size, IntPtr zero, IntPtr zeroAgain);
 	}
 }

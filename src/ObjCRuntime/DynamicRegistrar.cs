@@ -144,6 +144,12 @@ namespace Registrar {
 			}
 		}
 
+		protected override bool IsARM64 {
+			get {
+				return Runtime.IsARM64CallingConvention;
+			}
+		}
+
 		public void RegisterMethod (Type type, MethodInfo minfo, ExportAttribute ea)
 		{
 			if (!IsNSObject (type))
