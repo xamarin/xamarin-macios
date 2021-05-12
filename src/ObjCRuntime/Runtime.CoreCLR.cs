@@ -25,7 +25,7 @@ using MonoObjectPtr=System.IntPtr;
 namespace ObjCRuntime {
 
 	public partial class Runtime {
-		// Keep in sync with XamarinLookupTypes in coreclr-bridge.h
+		// Keep in sync with XamarinLookupTypes in main.h
 		internal enum TypeLookup {
 			System_Array,
 			System_String,
