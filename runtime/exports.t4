@@ -423,7 +423,9 @@
 
 		new Export ("MonoType *", "mono_reflection_type_get_type",
 			"MonoReflectionType *", "reftype"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 		#endregion
 
 		#region metadata/metadata.h

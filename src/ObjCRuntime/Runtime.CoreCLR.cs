@@ -60,6 +60,12 @@ namespace ObjCRuntime {
 			NSLog (message);
 		}
 
+		internal static void RegisterToggleReferenceCoreCLR (NSObject obj, IntPtr handle, bool isCustomType)
+		{
+			// This requires https://github.com/dotnet/runtime/pull/52146 to be merged and packages available.
+			Console.WriteLine ("Not implemented: RegisterToggleReferenceCoreCLR");
+		}
+
 		// Returns a retained MonoObject. Caller must release.
 		static IntPtr FindAssembly (IntPtr assembly_name)
 		{

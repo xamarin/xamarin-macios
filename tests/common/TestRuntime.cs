@@ -148,6 +148,16 @@ partial class TestRuntime
 #endif
 	}
 
+	public static void AssertNotVirtualMachine ()
+	{
+#if MONOMAC
+		// enviroment variable set by the CI when running on a VM
+		var vmVendor = Environment.GetEnvironmentVariable ("VM_VENDOR");
+		if (!string.IsNullOrEmpty (vmVendor))
+			NUnit.Framework.Assert.Ignore ($"This test only runs on device. Found vm vendor: {vmVendor}");
+#endif
+	}
+
 	// This function checks if the current Xcode version is exactly (neither higher nor lower) the requested one.
 	public static bool CheckExactXcodeVersion (int major, int minor, int beta = 0)
 	{
