@@ -111,6 +111,8 @@ xamarin_bridge_get_mono_method (MonoReflectionMethod *method)
 MonoType *
 xamarin_get_nsnumber_type ()
 {
+	// xamarin_bridge_lookup_class returns a MonoClass*, and this method returns a MonoType*,
+	// but they're interchangeable for CoreCLR (they're all just MonoObject*s), so this is fine.
 	MonoClass *rv = xamarin_bridge_lookup_class (XamarinLookupTypes_Foundation_NSNumber);
 	LOG_CORECLR (stderr, "%s () => %p\n", __func__, rv);
 	return rv;
@@ -119,6 +121,8 @@ xamarin_get_nsnumber_type ()
 MonoType *
 xamarin_get_nsvalue_type ()
 {
+	// xamarin_bridge_lookup_class returns a MonoClass*, and this method returns a MonoType*,
+	// but they're interchangeable for CoreCLR (they're all just MonoObject*s), so this is fine.
 	MonoClass *rv = xamarin_bridge_lookup_class (XamarinLookupTypes_Foundation_NSValue);
 	LOG_CORECLR (stderr, "%s () => %p\n", __func__, rv);
 	return rv;
