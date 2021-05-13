@@ -20,6 +20,8 @@ namespace Xamarin.Mac.Tests
 		[Test]
 		public void SubclassedTest ()
 		{
+			TestRuntime.AssertNotVirtualMachine ();
+
 			using (var layer = new OpenGLLayer ()) {
 				Messaging.IntPtr_objc_msgSend (layer.Handle, Selector.GetHandle ("copyCGLPixelFormatForDisplayMask:"));
 			}

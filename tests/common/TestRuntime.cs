@@ -148,6 +148,9 @@ partial class TestRuntime
 #endif
 	}
 
+	public static bool IsVM => 
+		!string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("VM_VENDOR"));
+
 	public static void AssertNotVirtualMachine ()
 	{
 #if MONOMAC
