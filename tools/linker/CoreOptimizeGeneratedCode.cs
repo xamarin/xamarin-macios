@@ -811,10 +811,10 @@ namespace Xamarin.Linker {
 
 		void ProcessEnsureUIThread (MethodDefinition caller, Instruction ins)
 		{
-#if MONOTOUCH
-			const string operation = "remove calls to UIApplication::EnsureUIThread";
-#else
+#if MONOMAC
 			const string operation = "remove calls to NSApplication::EnsureUIThread";
+#else
+			const string operation = "remove calls to UIApplication::EnsureUIThread";
 #endif
 
 			if (Optimizations.RemoveUIThreadChecks != true)
@@ -822,11 +822,11 @@ namespace Xamarin.Linker {
 
 			// Verify we're checking the right get_EnsureUIThread call
 			var mr = ins.Operand as MethodReference;
-#if MONOTOUCH
-			if (!mr.DeclaringType.Is (Namespaces.UIKit, "UIApplication"))
+#if MONOMAC
+			if (!mr.DeclaringType.Is (Namespaces.AppKit, "NSApplication"))
 				return;
 #else
-			if (!mr.DeclaringType.Is (Namespaces.AppKit, "NSApplication"))
+			if (!mr.DeclaringType.Is (Namespaces.UIKit, "UIApplication"))
 				return;
 #endif
 
