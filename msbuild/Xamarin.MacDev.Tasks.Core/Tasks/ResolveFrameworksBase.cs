@@ -57,6 +57,12 @@ namespace Xamarin.MacDev.Tasks {
 							var t = new TaskItem (resolved);
 							t.SetMetadata ("Kind", "Framework");
 							t.SetMetadata ("Name", resolved);
+
+							// add some metadata from the original item
+							var addToAppBundle = nr.GetMetadata ("AddToAppBundle");
+							if (!string.IsNullOrEmpty (addToAppBundle))
+								t.SetMetadata ("AddToAppBundle", addToAppBundle);
+
 							native_frameworks.Add (t);
 						}
 						break;

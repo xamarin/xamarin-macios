@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 using Mono.Cecil;
 
@@ -19,18 +20,21 @@ namespace Xamarin.Tests {
 			{ "MonoBundlingExtraArgs", "-v" },
 		};
 
-		string GetProjectPath (string project, string subdir = null)
+		string GetProjectPath (string project, string subdir = null, ApplePlatform? platform = null)
 		{
 			var project_dir = Path.Combine (Configuration.SourceRoot, "tests", "dotnet", project);
 			if (!string.IsNullOrEmpty (subdir))
 				project_dir = Path.Combine (project_dir, subdir);
+
+			if (platform.HasValue)
+				project_dir = Path.Combine (project_dir, platform.Value.AsString ());
 
 			var project_path = Path.Combine (project_dir, project + ".csproj");
 			if (!File.Exists (project_path))
 				project_path = Path.ChangeExtension (project_path, "sln");
 
 			if (!File.Exists (project_path))
-				throw new FileNotFoundException ($"Could not find the project or solution {project}");
+				throw new FileNotFoundException ($"Could not find the project or solution {project} - {project_path} does not exist.");
 
 			return project_path;
 		}
@@ -381,6 +385,42 @@ namespace Xamarin.Tests {
 			Assert.That (appPath, Does.Exist, "There is an .app");
 			Assert.That (appExecutable, Does.Not.Empty, "There is no executable");
 			Assert.That (Path.Combine (appPath, "Xamarin.iOS.dll"), Does.Exist, "Xamarin.iOS.dll is in the bundle");
+		}
+
+		[Test]
+		[TestCase ("NativeDynamicLibraryReferencesApp", ApplePlatform.iOS, "iossimulator-x64")]
+		[TestCase ("NativeDynamicLibraryReferencesApp", ApplePlatform.MacOSX, "osx-x64")]
+		[TestCase ("NativeFileReferencesApp", ApplePlatform.iOS, "iossimulator-x64")]
+		[TestCase ("NativeFileReferencesApp", ApplePlatform.MacOSX, "osx-x64")]
+		[TestCase ("NativeFrameworkReferencesApp", ApplePlatform.iOS, "iossimulator-x64")]
+		[TestCase ("NativeFrameworkReferencesApp", ApplePlatform.MacOSX, "osx-x64")]
+		public void BuildAndExecuteNativeReferencesTestApp (string project, ApplePlatform platform, string runtimeIdentifier)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var project_path = GetProjectPath (project, platform: platform);
+			Clean (project_path);
+			var properties = new Dictionary<string, string> (verbosity);
+			properties ["RuntimeIdentifier"] = runtimeIdentifier;
+			DotNet.AssertBuild (project_path, properties);
+
+			if (platform == ApplePlatform.MacOSX || platform == ApplePlatform.MacCatalyst) {
+				var appPath = Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", platform.ToFramework (), runtimeIdentifier, project + ".app");
+				var appExecutable = Path.Combine (appPath, "Contents", "MacOS", Path.GetFileNameWithoutExtension (project_path));
+				Assert.That (appExecutable, Does.Exist, "There is an executable");
+				ExecuteWithMagicWordAndAssert (appExecutable);
+			}
+		}
+
+		void ExecuteWithMagicWordAndAssert (string executable)
+		{
+			var magicWord = Guid.NewGuid ().ToString ();
+			var env = new Dictionary<string, string> { { "MAGIC_WORD", magicWord } };
+
+			var output = new StringBuilder ();
+			var rv = Execution.RunWithStringBuildersAsync (executable, Array.Empty<string> (), environment: env, standardOutput: output, standardError: output, timeout: TimeSpan.FromSeconds (15)).Result;
+			Assert.That (output.ToString (), Does.Contain (magicWord), "Contains magic word");
+			Assert.AreEqual (0, rv.ExitCode, "ExitCode");
 		}
 
 		void AssertThatLinkerExecuted (ExecutionResult result)

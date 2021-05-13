@@ -84,14 +84,14 @@ COMMON_DYLIB_ARGS=-g -dynamiclib -gdwarf-2 -fms-extensions libframework.m -o $$@
 .libs/$(1)/libtest.x86.dylib: ARCH=i386
 .libs/$(1)/libtest.%.dylib: libframework.m | .libs/$(1)
 	$$(call Q_2,CC,    [$(1)]) $$(XCODE_CC) $$(COMMON_DYLIB_ARGS) -arch $$(if $$(ARCH),$$(ARCH),$$*) $(5) $$($(2)_$$(shell echo $$* | tr a-z A-Z)_OBJC_CFLAGS)
-	$$(Q) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/install_name_tool -id @rpath/XTest.framework/XTest $$@
+	$$(Q) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/install_name_tool -id @rpath/libtest.dylib $$@
 
 ## The following arm64_32 rule is required for this to work with newer make versions, otherwise a rule in mk/rules.mk is chosen instead.
 ## The problem is that 'arm64_32' is longer than 'libtest', the former is a stem in the rule just above, while the latter is a rule in mk/rules.mk,
 ## and in newer make versions make will choose the rule that matches the shorter stem.
 .libs/$(1)/libtest.arm64_32.dylib: libframework.m | .libs/$(1)
 	$$(call Q_2,CC,    [$(1)]) $$(XCODE_CC) $$(COMMON_DYLIB_ARGS) -arch arm64_32 $(5) $$($(2)_$$(shell echo $$* | tr a-z A-Z)_OBJC_CFLAGS)
-	$$(Q) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/install_name_tool -id @rpath/XTest.framework/XTest $$@
+	$$(Q) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/install_name_tool -id @rpath/libtest.dylib $$@
 
 .libs/$(1)/libtest.dylib: $$(foreach arch,$(3),.libs/$(1)/libtest.$$(arch).dylib)
 	$$(call Q_2,LIPO   [$(1)]) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo $$^ -create -output $$@
@@ -99,6 +99,7 @@ COMMON_DYLIB_ARGS=-g -dynamiclib -gdwarf-2 -fms-extensions libframework.m -o $$@
 # XTest is a framework where the binary code is a (fat) dynamic library
 .libs/$(1)/XTest.framework/XTest: .libs/$(1)/libtest.dylib | .libs/$(1)/XTest.framework
 	$$(Q) $(CP) $$^ $$@
+	$$(Q) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/install_name_tool -id @rpath/XTest.framework/XTest $$@
 
 .libs/$(1)/XTest.framework/Info.plist: XTest-Info.plist | .libs/$(1)/XTest.framework
 	$$(Q) $(CP) $$^ $$@
@@ -201,10 +202,14 @@ endif
 .libs/$(1)/libtest2.a: .libs/$(2)/libtest2.a .libs/$(3)/libtest2.a | .libs/$(1)
 	$(Q) lipo -create -output $$@ $$^
 
+.libs/$(1)/libtest.dylib: .libs/$(2)/libtest.dylib .libs/$(3)/libtest.dylib | .libs/$(1)
+	$(Q) lipo -create -output $$@ $$^
+
 $(3)_TARGETS += \
 	.libs/$(1)/XTest.framework/XTest .libs/$(1)/XTest.framework/Info.plist \
 	.libs/$(1)/XStaticObjectTest.framework/XStaticObjectTest \
 	.libs/$(1)/XStaticArTest.framework/XStaticArTest \
+	.libs/$(1)/libtest.dylib \
 	.libs/$(1)/libtest.a \
 	.libs/$(1)/libtest2.a \
 
