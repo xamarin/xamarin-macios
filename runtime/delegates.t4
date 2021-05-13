@@ -503,6 +503,14 @@
 			OnlyCoreCLR = true,
 		},
 
+		new XDelegate ("MonoObject *", "MonoObject *", "xamarin_bridge_get_enum_basetype",
+			"MonoObject *", "MonoObject *", "typeobj"
+		) {
+			WrappedManagedFunction = "GetEnumBaseType",
+			OnlyDynamicUsage = false,
+			OnlyCoreCLR = true,
+		},
+
 		new XDelegate ("bool", "bool", "xamarin_bridge_is_byref",
 			"MonoObject *", "MonoObject *", "typeobj"
 		) {

@@ -507,6 +507,16 @@ mono_class_is_enum (MonoClass *klass)
 	return rv;
 }
 
+MonoType *
+mono_class_enum_basetype (MonoClass *klass)
+{
+	MonoType *rv = xamarin_bridge_get_enum_basetype (klass);
+
+	LOG_CORECLR (stderr, "%s (%p) => %p\n", __func__, klass, rv);
+
+	return rv;
+}
+
 mono_bool
 mono_type_is_byref (MonoType *type)
 {
