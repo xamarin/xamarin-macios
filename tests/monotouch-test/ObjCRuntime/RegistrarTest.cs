@@ -60,13 +60,10 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 
 		[Test]
-#if NET
-		[Ignore ("https://github.com/xamarin/xamarin-macios/issues/10512")]
-#endif
 		public void RegistrarRemoval ()
 		{
 			// define set by xharness when creating test variations.
-			// It's not safe to remove the dynamic registrar in monotouch-test (by design; some of the tested API makes it unsafe, and the linker correcty detects this),
+			// It's not safe to remove the dynamic registrar in monotouch-test (by design; some of the tested API makes it unsafe, and the linker correctly detects this),
 			// so the dynamic registrar will only be removed if manually requested.
 			// Also removal of the dynamic registrar is not supported in XM
 #if OPTIMIZEALL && !__MACOS__
@@ -1352,7 +1349,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			Assert.AreNotEqual (IntPtr.Zero, Runtime.GetProtocol (iProtocol), "IProtocol");
 			Assert.IsTrue (Messaging.bool_objc_msgSend_IntPtr (Class.GetHandle (typeof (MyProtocolImplementation)), Selector.GetHandle ("conformsToProtocol:"), Runtime.GetProtocol (iProtocol)), "Interface/IProtocol");
 #if !__TVOS__ && !__WATCHOS__ && !MONOMAC
+	#if !NET // https://github.com/xamarin/xamarin-macios/issues/11540
 			Assert.IsTrue (Messaging.bool_objc_msgSend_IntPtr (Class.GetHandle (typeof (Test24970)), Selector.GetHandle ("conformsToProtocol:"), Protocol.GetHandle ("UIApplicationDelegate")), "UIApplicationDelegate/17669");
+	#endif
 #endif
 			// We don't support [Adopts] (yet at least).
 //			Assert.IsTrue (Messaging.bool_objc_msgSend_IntPtr (Class.GetHandle (typeof (ConformsToProtocolTestClass)), Selector.GetHandle ("conformsToProtocol:"), Runtime.GetProtocol ("NSCoding")), "Adopts/ConformsToProtocolTestClass");
