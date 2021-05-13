@@ -337,6 +337,14 @@
 			OnlyCoreCLR = true,
 		},
 
+		new XDelegate ("char *", "IntPtr", "xamarin_bridge_get_method_full_name",
+			"MonoObject *", "MonoObject *", "mobj"
+		) {
+			WrappedManagedFunction = "GetMethodFullName",
+			OnlyDynamicUsage = false,
+			OnlyCoreCLR = true,
+		},
+
 		new XDelegate ("char *", "IntPtr", "xamarin_bridge_class_get_namespace",
 			"MonoObject *", "MonoObject *", "typeobj"
 		) {
