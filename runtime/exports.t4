@@ -199,7 +199,9 @@
 			"MonoDomain *", "domain",
 			"MonoClass *", "klass",
 			"void *", "val"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		new Export ("void", "mono_gc_wbarrier_set_arrayref",
 			"MonoArray *", "arr",
