@@ -25,9 +25,6 @@ namespace LinkSdk {
 		}
 
 		[Test]
-#if NET
-		[Ignore ("https://github.com/dotnet/runtime/issues/49201")]
-#endif
 		public void System ()
 		{
 #if __WATCHOS__
