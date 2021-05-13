@@ -546,6 +546,63 @@ namespace ObjCRuntime {
 			return (ulong) array.Length;
 		}
 
+		static unsafe void SetArrayObjectValue (MonoObject *arrayobj, ulong index, MonoObject *mobj)
+		{
+			var array = (Array) GetMonoObjectTarget (arrayobj);
+			var obj = GetMonoObjectTarget (mobj);
+			array.SetValue (obj, (long) index);
+		}
+
+		static unsafe void SetArrayStructValue (MonoObject *arrayobj, ulong index, MonoObject *typeobj, IntPtr valueptr)
+		{
+			var array = (Array) GetMonoObjectTarget (arrayobj);
+			var elementType = (Type) GetMonoObjectTarget (typeobj);
+			var obj = Box (elementType, valueptr);
+			array.SetValue (obj, (long) index);
+		}
+
+		static unsafe MonoObject* GetArrayObjectValue (MonoObject* arrayobj, ulong index)
+		{
+			var array = (Array) GetMonoObjectTarget (arrayobj);
+			var obj = array.GetValue ((long) index);
+			return (MonoObject *) GetMonoObject (obj);
+		}
+
+		static unsafe MonoObject* Box (MonoObject* typeobj, IntPtr value)
+		{
+			var type = (Type) GetMonoObjectTarget (typeobj);
+			var rv = Box (type, value);
+			return (MonoObject *) GetMonoObject (rv);
+		}
+
+		static object Box (Type type, IntPtr value)
+		{
+			var structType = type;
+			Type enumType = null;
+
+			// We can have a nullable enum value
+			if (IsNullable (structType)) {
+				if (value == IntPtr.Zero)
+					return null;
+
+				structType = Nullable.GetUnderlyingType (structType);
+			}
+
+			if (structType.IsEnum) {
+				// Change to underlying enum type
+				enumType = structType;
+				structType = Enum.GetUnderlyingType (structType);
+			}
+
+			var boxed = PtrToStructure (value, structType);
+			if (enumType != null) {
+				// Convert to enum value
+				boxed = Enum.ToObject (enumType, boxed);
+			}
+
+			return boxed;
+		}
+
 		static bool IsNullable (Type type)
 		{
 			if (Nullable.GetUnderlyingType (type) != null)
