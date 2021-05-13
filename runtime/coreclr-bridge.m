@@ -535,6 +535,16 @@ mono_class_is_valuetype (MonoClass * klass)
 	return rv;
 }
 
+int32_t
+mono_class_value_size (MonoClass *klass, uint32_t *align)
+{
+	int32_t rv = xamarin_bridge_sizeof (klass);
+
+	LOG_CORECLR (stderr, "%s (%p, %p) => %i\n", __func__, klass, align, rv);
+
+	return rv;
+}
+
 gboolean
 mono_class_is_nullable (MonoClass * klass)
 {
