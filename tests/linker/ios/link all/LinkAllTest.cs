@@ -559,6 +559,10 @@ namespace LinkAll {
 		[Test]
 		public void Aot_27116 ()
 		{
+#if NET
+			if (Runtime.Arch == Arch.DEVICE)
+				Assert.Ignore ("https://github.com/dotnet/runtime/issues/47120");
+#endif
 			var nix = (from nic in System.Net.NetworkInformation.NetworkInterface.GetAllNetworkInterfaces ()
 				where nic.Id.StartsWith ("en") || nic.Id.StartsWith ("pdp_ip") select nic);
 			Assert.NotNull (nix);
