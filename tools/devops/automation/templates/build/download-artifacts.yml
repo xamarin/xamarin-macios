@@ -48,8 +48,9 @@ steps:
 
 - powershell: |
     Write-Host "##vso[task.setvariable variable=STABLE_APIDDIFF_PATH]$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\apidiff-stable"
-    if ($Env:apiGeneratorDiffBuilt -eq "True")
+    if ($Env:apiGeneratorDiffBuilt -eq "True") {
       Write-Host "##vso[task.setvariable variable=STABLE_APID_GENERATOR_DIFF_PATH]$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\apicomparison"
+    }
   displayName: Publish apidiff paths
   name: apidiff # not to be confused with the displayName, this is used to later use the name of the step to access the output variables from an other job
   env:
