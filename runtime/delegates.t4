@@ -519,6 +519,14 @@
 			OnlyCoreCLR = true,
 		},
 
+		new XDelegate ("MonoObject *", "MonoObject *", "xamarin_bridge_get_nullable_element_type",
+			"MonoObject *", "MonoObject *", "typeobj"
+		) {
+			WrappedManagedFunction = "GetNullableElementType",
+			OnlyDynamicUsage = false,
+			OnlyCoreCLR = true,
+		},
+
 		new XDelegate ("bool", "bool", "xamarin_bridge_is_delegate",
 			"MonoObject *", "MonoObject *", "typeobj"
 		) {
