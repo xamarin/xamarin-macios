@@ -60,13 +60,10 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 
 		[Test]
-#if NET
-		[Ignore ("https://github.com/xamarin/xamarin-macios/issues/10512")]
-#endif
 		public void RegistrarRemoval ()
 		{
 			// define set by xharness when creating test variations.
-			// It's not safe to remove the dynamic registrar in monotouch-test (by design; some of the tested API makes it unsafe, and the linker correcty detects this),
+			// It's not safe to remove the dynamic registrar in monotouch-test (by design; some of the tested API makes it unsafe, and the linker correctly detects this),
 			// so the dynamic registrar will only be removed if manually requested.
 			// Also removal of the dynamic registrar is not supported in XM
 #if OPTIMIZEALL && !__MACOS__
