@@ -2202,8 +2202,13 @@ xamarin_process_managed_exception (MonoObject *exception)
 		mode = MarshalManagedExceptionModeDefault;
 	}
 
-	if (mode == MarshalManagedExceptionModeDefault)
+	if (mode == MarshalManagedExceptionModeDefault) {
+#if defined (CORECLR_RUNTIME)
+		mode = MarshalManagedExceptionModeThrowObjectiveCException;
+#else
 		mode = xamarin_is_gc_coop ? MarshalManagedExceptionModeThrowObjectiveCException : MarshalManagedExceptionModeUnwindNativeCode;
+#endif
+	}
 
 	switch (mode) {
 #if !defined (CORECLR_RUNTIME) // CoreCLR won't unwind through native frames, so we'll have to abort (in the default case statement)
