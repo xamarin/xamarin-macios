@@ -1421,7 +1421,6 @@ xamarin_nsarray_to_managed_array (NSArray *array, MonoType *managed_type, MonoCl
 static void *
 xamarin_get_nsnumber_converter (MonoClass *managedType, MonoMethod *method, bool to_managed, GCHandle *exception_gchandle)
 {
-	int type;
 	void * func = NULL;
 	MonoType *mtype = NULL;
 	char *fullname = xamarin_class_get_full_name (managedType, exception_gchandle);
@@ -1429,59 +1428,44 @@ xamarin_get_nsnumber_converter (MonoClass *managedType, MonoMethod *method, bool
 		goto exception_handling;
 
 	mtype = mono_class_get_type (managedType);
-	type = mono_type_get_type (mtype);
 
-	switch (type) {
-	case MONO_TYPE_I1:
+	if (!strcmp (fullname, "System.SByte")) {
 		func = to_managed ? (void *) xamarin_nsnumber_to_sbyte : (void *) xamarin_sbyte_to_nsnumber;
-		break;
-	case MONO_TYPE_U1:
+	} else if (!strcmp (fullname, "System.Byte")) {
 		func = to_managed ? (void *) xamarin_nsnumber_to_byte : (void *) xamarin_byte_to_nsnumber;
-		break;
-	case MONO_TYPE_I2:
+	} else if (!strcmp (fullname, "System.Int16")) {
 		func = to_managed ? (void *) xamarin_nsnumber_to_short : (void *) xamarin_short_to_nsnumber;
-		break;
-	case MONO_TYPE_U2:
+	} else if (!strcmp (fullname, "System.UInt16")) {
 		func = to_managed ? (void *) xamarin_nsnumber_to_ushort : (void *) xamarin_ushort_to_nsnumber;
-		break;
-	case MONO_TYPE_I4:
+	} else if (!strcmp (fullname, "System.Int32")) {
 		func = to_managed ? (void *) xamarin_nsnumber_to_int : (void *) xamarin_int_to_nsnumber;
-		break;
-	case MONO_TYPE_U4:
+	} else if (!strcmp (fullname, "System.UInt32")) {
 		func = to_managed ? (void *) xamarin_nsnumber_to_uint : (void *) xamarin_uint_to_nsnumber;
-		break;
-	case MONO_TYPE_I8:
+	} else if (!strcmp (fullname, "System.Int64")) {
 		func = to_managed ? (void *) xamarin_nsnumber_to_long : (void *) xamarin_long_to_nsnumber;
-		break;
-	case MONO_TYPE_U8:
+	} else if (!strcmp (fullname, "System.UInt64")) {
 		func = to_managed ? (void *) xamarin_nsnumber_to_ulong : (void *) xamarin_ulong_to_nsnumber;
-		break;
-	case MONO_TYPE_R4:
+	} else if (!strcmp (fullname, "System.Single")) {
 		func = to_managed ? (void *) xamarin_nsnumber_to_float : (void *) xamarin_float_to_nsnumber;
-		break;
-	case MONO_TYPE_R8:
+	} else if (!strcmp (fullname, "System.Double")) {
 		func = to_managed ? (void *) xamarin_nsnumber_to_double : (void *) xamarin_double_to_nsnumber;
-		break;
-	case MONO_TYPE_BOOLEAN:
+	} else if (!strcmp (fullname, "System.Boolean")) {
 		func = to_managed ? (void *) xamarin_nsnumber_to_bool : (void *) xamarin_bool_to_nsnumber;
-		break;
-	default:
-		if (!strcmp (fullname, "System.nint")) {
-			func = to_managed ? (void *) xamarin_nsnumber_to_nint : (void *) xamarin_nint_to_nsnumber;
-		} else if (!strcmp (fullname, "System.nuint")) {
-			func = to_managed ? (void *) xamarin_nsnumber_to_nuint : (void *) xamarin_nuint_to_nsnumber;
-		} else if (!strcmp (fullname, "System.nfloat")) {
-			func = to_managed ? (void *) xamarin_nsnumber_to_nfloat : (void *) xamarin_nfloat_to_nsnumber;
-		} else if (mono_class_is_enum (managedType)) {
-			MonoClass *baseClass = mono_class_from_mono_type (mono_class_enum_basetype (managedType));
-			func = xamarin_get_nsnumber_converter (baseClass, method, to_managed, exception_gchandle);
-			xamarin_mono_object_release (&baseClass);
-		} else {
-			MonoType *nsnumberType = mono_class_get_type (xamarin_get_nsnumber_class ());
-			*exception_gchandle = xamarin_create_bindas_exception (mtype, nsnumberType, method);
-			xamarin_mono_object_release (&nsnumberType);
-			goto exception_handling;
-		}
+	} else if (!strcmp (fullname, "System.nint")) {
+		func = to_managed ? (void *) xamarin_nsnumber_to_nint : (void *) xamarin_nint_to_nsnumber;
+	} else if (!strcmp (fullname, "System.nuint")) {
+		func = to_managed ? (void *) xamarin_nsnumber_to_nuint : (void *) xamarin_nuint_to_nsnumber;
+	} else if (!strcmp (fullname, "System.nfloat")) {
+		func = to_managed ? (void *) xamarin_nsnumber_to_nfloat : (void *) xamarin_nfloat_to_nsnumber;
+	} else if (mono_class_is_enum (managedType)) {
+		MonoClass *baseClass = mono_class_from_mono_type (mono_class_enum_basetype (managedType));
+		func = xamarin_get_nsnumber_converter (baseClass, method, to_managed, exception_gchandle);
+		xamarin_mono_object_release (&baseClass);
+	} else {
+		MonoType *nsnumberType = mono_class_get_type (xamarin_get_nsnumber_class ());
+		*exception_gchandle = xamarin_create_bindas_exception (mtype, nsnumberType, method);
+		xamarin_mono_object_release (&nsnumberType);
+		goto exception_handling;
 	}
 
 exception_handling:
