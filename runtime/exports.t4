@@ -71,7 +71,9 @@
 
 		new Export ("mono_bool", "mono_class_is_enum",
 			"MonoClass *", "klass"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		new Export ("MonoType *", "mono_class_enum_basetype",
 			"MonoClass *", "klass"

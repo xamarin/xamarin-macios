@@ -498,6 +498,16 @@ mono_get_string_class ()
 }
 
 mono_bool
+mono_class_is_enum (MonoClass *klass)
+{
+	bool rv = xamarin_bridge_is_enum (klass);
+
+	LOG_CORECLR (stderr, "%s (%p) => %i\n", __func__, klass, rv);
+
+	return rv;
+}
+
+mono_bool
 mono_type_is_byref (MonoType *type)
 {
 	bool rv = xamarin_bridge_is_byref (type);

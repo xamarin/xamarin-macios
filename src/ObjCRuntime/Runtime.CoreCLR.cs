@@ -645,6 +645,12 @@ namespace ObjCRuntime {
 			return type.IsValueType;
 		}
 
+		unsafe static bool IsEnum (MonoObject *typeobj)
+		{
+			var type = (Type) GetMonoObjectTarget (typeobj);
+			return type.IsEnum;
+		}
+
 		static object PtrToStructure (IntPtr ptr, Type type)
 		{
 			if (ptr == IntPtr.Zero)
