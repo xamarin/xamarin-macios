@@ -96,7 +96,9 @@
 
 		new Export (true, "MonoClass *", "mono_class_get_nullable_param",
 			"MonoClass *", "klass"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 		#endregion
 
 		#region metadata/debug-helpers.h
@@ -199,7 +201,9 @@
 			"MonoDomain *", "domain",
 			"MonoClass *", "klass",
 			"void *", "val"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		new Export ("void", "mono_gc_wbarrier_set_arrayref",
 			"MonoArray *", "arr",

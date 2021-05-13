@@ -401,6 +401,15 @@
 			OnlyCoreCLR = true,
 		},
 
+		new XDelegate ("MonoObject *", "MonoObject *", "xamarin_bridge_box",
+			"MonoObject *", "MonoObject *", "typeobj",
+			"void *", "IntPtr", "value"
+		) {
+			WrappedManagedFunction = "Box",
+			OnlyDynamicUsage = false,
+			OnlyCoreCLR = true,
+		},
+
 		new XDelegate ("MonoObject*", "IntPtr", "xamarin_bridge_get_monoobject",
 			"GCHandle", "IntPtr", "gchandle"
 		) {
@@ -506,6 +515,14 @@
 			"MonoObject *", "MonoObject *", "classobj"
 		) {
 			WrappedManagedFunction = "GetElementClass",
+			OnlyDynamicUsage = false,
+			OnlyCoreCLR = true,
+		},
+
+		new XDelegate ("MonoObject *", "MonoObject *", "xamarin_bridge_get_nullable_element_type",
+			"MonoObject *", "MonoObject *", "typeobj"
+		) {
+			WrappedManagedFunction = "GetNullableElementType",
 			OnlyDynamicUsage = false,
 			OnlyCoreCLR = true,
 		},

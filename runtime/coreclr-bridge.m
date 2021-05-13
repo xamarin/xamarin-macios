@@ -339,6 +339,14 @@ mono_object_isinst (MonoObject * obj, MonoClass * klass)
 	return rv ? obj : NULL;
 }
 
+MonoObject *
+mono_value_box (MonoDomain *domain, MonoClass *klass, void *val)
+{
+	MonoObject *rv = xamarin_bridge_box (klass, val);
+	LOG_CORECLR (stderr, "%s (%p, %p, %p) => %p\n", __func__, domain, klass, val, rv);
+	return rv;
+}
+
 void *
 mono_object_unbox (MonoObject *obj)
 {
@@ -521,6 +529,14 @@ MonoClass *
 mono_class_get_element_class (MonoClass *klass)
 {
 	MonoClass *rv = xamarin_bridge_get_element_class (klass);
+	LOG_CORECLR (stderr, "%s (%p) => %p\n", __func__, klass, rv);
+	return rv;
+}
+
+MonoClass *
+mono_class_get_nullable_param (MonoClass * klass)
+{
+	MonoClass *rv = xamarin_bridge_get_nullable_element_type (klass);
 	LOG_CORECLR (stderr, "%s (%p) => %p\n", __func__, klass, rv);
 	return rv;
 }

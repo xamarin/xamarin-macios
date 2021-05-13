@@ -4474,6 +4474,7 @@ namespace Registrar {
 				underlyingManagedType = GetNullableType (managedType);
 				sb.AppendLine ($"{classVariableName} = xamarin_get_nullable_type ({managedClassExpression}, &exception_gchandle);");
 				sb.AppendLine ($"if (exception_gchandle != INVALID_GCHANDLE) goto exception_handling;");
+				cleanup.AppendLine ($"xamarin_mono_object_release (&{classVariableName});");
 			} else {
 				sb.AppendLine ($"{classVariableName} = {managedClassExpression};");
 			}
@@ -4565,6 +4566,7 @@ namespace Registrar {
 				underlyingManagedType = GetNullableType (managedType);
 				sb.AppendLine ($"{classVariableName} = xamarin_get_nullable_type ({managedClassExpression}, &exception_gchandle);");
 				sb.AppendLine ($"if (exception_gchandle != INVALID_GCHANDLE) goto exception_handling;");
+				cleanup.AppendLine ($"xamarin_mono_object_release (&{classVariableName});");
 			} else {
 				sb.AppendLine ($"{classVariableName} = {managedClassExpression};");
 			}
