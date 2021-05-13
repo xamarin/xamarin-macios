@@ -18,50 +18,58 @@
 #if __arm64__
 
 .subsections_via_symbols
-.text
-.align 2
+.section	__TEXT,__text,regular,pure_instructions
+.globl _xamarin_arm64_common_trampoline
+.p2align 2
 _xamarin_arm64_common_trampoline:
-	mov x9, sp ;#Save sp to a temporary register
-	sub sp, sp, #256 ;# allocate 224 bytes from the stack (stack must always be 16-byte aligned) + 16 bytes for the stack frame + 8*2 bytes for _self and _sel
+	.cfi_startproc
+
+	mov x9, sp ; Save sp to a temporary register
 
 	# Create stack frame
-	stp x29, x30, [sp, #0x00]
-	mov x29, sp
+	stp	x29, x30, [sp, #-16]!           ; Push x29, x30 to the stack
+	mov	x29, sp
+	.cfi_def_cfa x29, 16
+	.cfi_offset x30, -8
+	.cfi_offset x29, -16
 
-	stp x16, x9, [sp, #0x10]
-	stp  x0, x1, [sp, #0x20]
-	stp  x2, x3, [sp, #0x30]
-	stp  x4, x5, [sp, #0x40]
-	stp  x6, x7, [sp, #0x50]
-	str  x8,     [sp, #0x60]
+	sub sp, sp, #240 ;# allocate 224 bytes from the stack (stack must always be 16-byte aligned) + 8*2 bytes for _self and _sel
 
-	stp  q0, q1, [sp, #0x70]
-	stp  q2, q3, [sp, #0x90]
-	stp  q4, q5, [sp, #0xb0]
-	stp  q6, q7, [sp, #0xd0]
+	stp x16, x9, [sp, #0x00]
+	stp  x0, x1, [sp, #0x10]
+	stp  x2, x3, [sp, #0x20]
+	stp  x4, x5, [sp, #0x30]
+	stp  x6, x7, [sp, #0x40]
+	str  x8,     [sp, #0x50]
 
-	add x0, sp, #0x10 ;# the first two pointers are the stack frame (x29, x30), the rest is a pointer to a XamarinCallState struct.
+	stp  q0, q1, [sp, #0x60]
+	stp  q2, q3, [sp, #0x80]
+	stp  q4, q5, [sp, #0xa0]
+	stp  q6, q7, [sp, #0xc0]
+
+	mov x0, sp
 	bl	_xamarin_arch_trampoline
 
 	# get return value(s)
 
-	ldp x16, x9, [sp, #0x10]
-	ldp  x0, x1, [sp, #0x20]
-	ldp  x2, x3, [sp, #0x30]
-	ldp  x4, x5, [sp, #0x40]
-	ldp  x6, x7, [sp, #0x50]
-	ldr  x8,     [sp, #0x60]
+	ldp x16, x9, [sp, #0x00]
+	ldp  x0, x1, [sp, #0x10]
+	ldp  x2, x3, [sp, #0x20]
+	ldp  x4, x5, [sp, #0x30]
+	ldp  x6, x7, [sp, #0x40]
+	ldr  x8,     [sp, #0x50]
 
-	ldp  q0, q1, [sp, #0x70]
-	ldp  q2, q3, [sp, #0x90]
-	ldp  q4, q5, [sp, #0xb0]
-	ldp  q6, q7, [sp, #0xd0]
+	ldp  q0, q1, [sp, #0x60]
+	ldp  q2, q3, [sp, #0x80]
+	ldp  q4, q5, [sp, #0xa0]
+	ldp  q6, q7, [sp, #0xc0]
 
-	ldp	x29, x30, [sp, #0x00]
-	add sp, sp, #256 ;# deallocate 224 bytes from the stack + 16 bytes for stack frame + 8*2 bytes for _self and _sel
+	add sp, sp, #240          ; deallocate 224 bytes from the stack + 8*2 bytes for _self and _sel
+
+	ldp	x29, x30, [sp], #16   ; pop x29, x30
 
 	ret
-
+.cfi_endproc
 #
 # trampolines
 #

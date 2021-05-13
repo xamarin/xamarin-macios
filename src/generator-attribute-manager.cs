@@ -182,6 +182,12 @@ public class AttributeManager
 			return typeof (Visibility);
 		case "WrapAttribute":
 			return typeof (WrapAttribute);
+#if NET
+		case "System.Runtime.Versioning.SupportedOSPlatformAttribute":
+			return typeof (System.Runtime.Versioning.SupportedOSPlatformAttribute);
+		case "System.Runtime.Versioning.UnsupportedOSPlatformAttribute":
+			return typeof (System.Runtime.Versioning.UnsupportedOSPlatformAttribute);
+#endif
 		}
 
 		switch (fullname) {
@@ -246,6 +252,9 @@ public class AttributeManager
 		case null: // Root namespace such as PlatformAvailabilityShadow.cs
 		case "MonoTouch.ObjCRuntime":
 		case "ObjCRuntime":
+#if NET
+		case "System.Runtime.Versioning":
+#endif
 			break;
 		default:
 			return Enumerable.Empty<System.Attribute> ();
@@ -281,10 +290,63 @@ public class AttributeManager
 			return AttributeFactory.CreateUnavailableAttribute (PlatformName.MacCatalyst).Yield ();
 		case "AvailabilityAttribute":
 			return AttributeConversionManager.ConvertAvailability (attribute);
+#if NET
+		case "SupportedOSPlatformAttribute":
+			var sarg = attribute.ConstructorArguments [0].Value as string;
+			(var sp, var sv) = ParseOSPlatformAttribute (sarg);
+			return AttributeFactory.CreateNewIntroducedAttribute (sp, sv.Major, sv.Minor).Yield ();
+		case "UnsupportedOSPlatformAttribute":
+			var uarg = attribute.ConstructorArguments [0].Value as string;
+			(var up, var uv) = ParseOSPlatformAttribute (uarg);
+			// might have been available for a while...
+			if (uv == null)
+				return AttributeFactory.CreateUnavailableAttribute (up).Yield ();
+			else
+				return Enumerable.Empty<System.Attribute> ();
+#endif
 		default:
 			return Enumerable.Empty<System.Attribute> ();
 		}
 	}
+
+#if NET
+	static (PlatformName, Version) ParseOSPlatformAttribute (string arg)
+	{
+		PlatformName name;
+		int len;
+		switch (arg) {
+		case string s when s.StartsWith ("ios", StringComparison.Ordinal):
+			name = PlatformName.iOS;
+			len = "ios".Length;
+			break;
+		case string s when s.StartsWith ("tvos", StringComparison.Ordinal):
+			name = PlatformName.TvOS;
+			len = "tvos".Length;
+			break;
+		case string s when s.StartsWith ("watchos", StringComparison.Ordinal):
+			name = PlatformName.WatchOS;
+			len = "watchos".Length;
+			break;
+		case string s when s.StartsWith ("macos", StringComparison.Ordinal):
+			name = PlatformName.MacOSX;
+			len = "macos".Length;
+			break;
+		case string s when s.StartsWith ("maccatalyst", StringComparison.Ordinal):
+			name = PlatformName.MacCatalyst;
+			len = "maccatalyst".Length;
+			break;
+		default:
+			throw new BindingException (1047, arg);
+		}
+
+		Version version = null;
+		if (arg.Length > len) {
+			if (!Version.TryParse (arg [len..], out version))
+				throw new BindingException (1047, arg);
+		}
+		return (name, version);
+	}
+#endif
 
 	IEnumerable<T> CreateAttributeInstance <T> (CustomAttributeData attribute, ICustomAttributeProvider provider) where T : System.Attribute
 	{

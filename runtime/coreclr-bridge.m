@@ -8,6 +8,8 @@
 
 #if defined (CORECLR_RUNTIME)
 
+#include <inttypes.h>
+
 #include "product.h"
 #include "xamarin/xamarin.h"
 #include "xamarin/coreclr-bridge.h"
@@ -53,6 +55,13 @@ xamarin_install_nsautoreleasepool_hooks ()
 {
 	// https://github.com/xamarin/xamarin-macios/issues/11256
 	fprintf (stderr, "TODO: add support for wrapping all threads with NSAutoreleasePools.\n");
+}
+
+void
+mono_runtime_set_pending_exception (MonoException *exc, mono_bool overwrite)
+{
+	LOG_CORECLR (stderr, "%s (%p, %i)\n", __func__, exc, overwrite);
+	xamarin_bridge_set_pending_exception (exc);
 }
 
 void
@@ -199,6 +208,16 @@ mono_class_get_name (MonoClass * klass)
 	return rv;
 }
 
+char *
+mono_method_full_name (MonoMethod *method, mono_bool signature)
+{
+	char *rv = xamarin_bridge_get_method_full_name (method);
+
+	LOG_CORECLR (stderr, "%s (%p, %i) => %s\n", __func__, method, signature, rv);
+
+	return rv;
+}
+
 MonoDomain *
 mono_domain_get (void)
 {
@@ -245,6 +264,17 @@ mono_method_get_object (MonoDomain *domain, MonoMethod *method, MonoClass *refcl
 	return rv;
 }
 
+MonoType *
+mono_reflection_type_get_type (MonoReflectionType *reftype)
+{
+	// MonoType and MonoReflectionType are identical in CoreCLR (both are actually MonoObjects).
+	// However, we're returning a retained object, so we need to retain here.
+	MonoType *rv = reftype;
+	xamarin_mono_object_retain (rv);
+	LOG_CORECLR (stderr, "%s (%p) => %p\n", __func__, reftype, rv);
+	return rv;
+}
+
 int
 mono_jit_exec (MonoDomain * domain, MonoAssembly * assembly, int argc, const char** argv)
 {
@@ -269,6 +299,32 @@ mono_jit_exec (MonoDomain * domain, MonoAssembly * assembly, int argc, const cha
 	return (int) exitCode;
 }
 
+MonoGHashTable *
+mono_g_hash_table_new_type (GHashFunc hash_func, GEqualFunc key_equal_func, MonoGHashGCType type)
+{
+	MonoGHashTable *rv = xamarin_bridge_mono_hash_table_create (hash_func, key_equal_func, type);
+
+	LOG_CORECLR (stderr, "%s (%p, %p, %u) => %p\n", __func__, hash_func, key_equal_func, type, rv);
+
+	return rv;
+}
+
+gpointer
+mono_g_hash_table_lookup (MonoGHashTable *hash, gconstpointer key)
+{
+	MonoObject *rv = xamarin_bridge_mono_hash_table_lookup (hash, key);
+	LOG_CORECLR (stderr, "%s (%p, %p) => %p\n", __func__, hash, key, rv);
+	return rv;
+}
+
+void
+mono_g_hash_table_insert (MonoGHashTable *hash, gpointer k, gpointer v)
+{
+	MonoObject *obj = (MonoObject *) v;
+	LOG_CORECLR (stderr, "%s (%p, %p, %p)\n", __func__, hash, k, v);
+	xamarin_bridge_mono_hash_table_insert (hash, k, obj);
+}
+
 MonoClass *
 mono_method_get_class (MonoMethod * method)
 {
@@ -291,6 +347,14 @@ mono_object_isinst (MonoObject * obj, MonoClass * klass)
 	bool rv = xamarin_bridge_isinstance (obj, klass);
 	LOG_CORECLR (stderr, "%s (%p, %p) => %i\n", __func__, obj, klass, rv);
 	return rv ? obj : NULL;
+}
+
+MonoObject *
+mono_value_box (MonoDomain *domain, MonoClass *klass, void *val)
+{
+	MonoObject *rv = xamarin_bridge_box (klass, val);
+	LOG_CORECLR (stderr, "%s (%p, %p, %p) => %p\n", __func__, domain, klass, val, rv);
+	return rv;
 }
 
 void *
@@ -435,6 +499,14 @@ mono_class_from_mono_type (MonoType *type)
 	return rv;
 }
 
+MonoClass *
+mono_get_string_class ()
+{
+	MonoClass *rv = xamarin_bridge_get_string_class ();
+	LOG_CORECLR (stderr, "%s () => %p.\n", __func__, rv);
+	return rv;
+}
+
 mono_bool
 mono_type_is_byref (MonoType *type)
 {
@@ -460,6 +532,32 @@ mono_class_is_valuetype (MonoClass * klass)
 
 	LOG_CORECLR (stderr, "%s (%p) => %i\n", __func__, klass, rv);
 
+	return rv;
+}
+
+gboolean
+mono_class_is_nullable (MonoClass * klass)
+{
+	bool rv = xamarin_bridge_is_nullable (klass);
+
+	LOG_CORECLR (stderr, "%s (%p) => %i\n", __func__, klass, rv);
+
+	return rv;
+}
+
+MonoClass *
+mono_class_get_element_class (MonoClass *klass)
+{
+	MonoClass *rv = xamarin_bridge_get_element_class (klass);
+	LOG_CORECLR (stderr, "%s (%p) => %p\n", __func__, klass, rv);
+	return rv;
+}
+
+MonoClass *
+mono_class_get_nullable_param (MonoClass * klass)
+{
+	MonoClass *rv = xamarin_bridge_get_nullable_element_type (klass);
+	LOG_CORECLR (stderr, "%s (%p) => %p\n", __func__, klass, rv);
 	return rv;
 }
 
@@ -509,6 +607,22 @@ bool
 xamarin_is_class_string (MonoClass *cls)
 {
 	return xamarin_bridge_is_class_of_type (cls, XamarinLookupTypes_System_String);
+}
+
+MonoArray *
+mono_array_new (MonoDomain *domain, MonoClass *eclass, uintptr_t n)
+{
+	MonoArray *rv = xamarin_bridge_create_array (eclass, n);
+	LOG_CORECLR (stderr, "%s (%p, %p, %" PRIdPTR ") => %p\n", __func__, domain, eclass, n, rv);
+	return rv;
+}
+
+uintptr_t
+mono_array_length (MonoArray *array)
+{
+	uintptr_t rv = (uintptr_t) xamarin_bridge_get_array_length (array);
+	LOG_CORECLR (stderr, "%s (%p) => %llu\n", __func__, array, (uint64_t) rv);
+	return rv;
 }
 
 char *

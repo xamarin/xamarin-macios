@@ -116,14 +116,15 @@ typedef struct _MonoObject MonoArray;
 typedef struct _MonoObject MonoReflectionAssembly;
 typedef struct _MonoObject MonoReflectionMethod;
 typedef struct _MonoObject MonoReflectionType;
+typedef struct _MonoObject MonoException;
 #else
 typedef struct _MonoString MonoString;
 typedef struct _MonoArray MonoArray;
 typedef struct _MonoReflectionAssembly MonoReflectionAssembly;
 typedef struct _MonoReflectionMethod MonoReflectionMethod;
 typedef struct _MonoReflectionType MonoReflectionType;
-#endif
 typedef struct _MonoException MonoException;
+#endif
 typedef struct _MonoThread MonoThread;
 typedef struct _MonoThreadsSync MonoThreadsSync;
 typedef struct _MonoObject MonoObject;
@@ -136,14 +137,16 @@ typedef struct _MonoReferenceQueue MonoReferenceQueue;
 #endif
 typedef void (*mono_reference_queue_callback) (void *user_data);
 
+#if !defined (CORECLR_RUNTIME)
 #define mono_array_addr(array,type,index) ((type*)(void*) mono_array_addr_with_size (array, sizeof (type), index))
 #define mono_array_get(array,type,index) ( *(type*)mono_array_addr ((array), type, (index)) )
-#define mono_array_setref(array,index,value)	\
+#define mono_array_setref(array,index,value,exception_gchandle)	\
 	do {	\
 		void **__p = (void **) mono_array_addr ((array), void*, (index));	\
 		mono_gc_wbarrier_set_arrayref ((array), __p, (MonoObject*)(value));	\
 		/* *__p = (value);*/	\
 	} while (0)
+#endif // !defined (CORECLR_RUNTIME)
 
 /* metadata/assembly.h */
 
@@ -302,7 +305,12 @@ typedef enum {
 	MONO_HASH_KEY_VALUE_GC = MONO_HASH_KEY_GC | MONO_HASH_VALUE_GC,
 } MonoGHashGCType;
 
+#if defined (CORECLR_RUNTIME)
+// In Mono, MonoGHashTable is not related to MonoObject, but for the CoreCLR bridge we use the same memory representation for both types.
+typedef struct _MonoObject MonoGHashTable;
+#else
 typedef struct _MonoGHashTable MonoGHashTable;
+#endif
 
 /* utils/mono-logger.h */
 

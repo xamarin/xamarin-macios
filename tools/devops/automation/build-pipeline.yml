@@ -46,7 +46,8 @@ parameters:
     {
       devicePrefix: 'iOS32b',
       execute: 'runDevice32b',
-      stageName: 'iOS32b Device Tests',
+      stageName: 'ios32b_device',
+      displayName: 'iOS32b Device Tests',
       iOSDevicePool: 'VSEng-Xamarin-QA',
       useXamarinStorage: False,
       testsLabels: '--label=run-ios-32-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests',
@@ -56,7 +57,8 @@ parameters:
     {
       devicePrefix: 'iOS64',
       execute: 'runDevice64b',
-      stageName: 'iOS64 Device Tests',
+      stageName: 'ios64b_device',
+      displayName: 'iOS64 Device Tests',
       iOSDevicePool: 'VSEng-Xamarin-Mac-Devices',
       useXamarinStorage: False,
       testsLabels: '--label=run-ios-64-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests',
@@ -66,7 +68,8 @@ parameters:
     {
       devicePrefix: 'tvos',
       execute: 'runDeviceTv',
-      stageName: 'tvOS Device Tests',
+      stageName: 'tvos_device',
+      displayName: 'tvOS Device Tests',
       iOSDevicePool: 'VSEng-Xamarin-Mac-Devices',
       useXamarinStorage: False,
       testsLabels: '--label=run-tvos-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests',
@@ -78,21 +81,24 @@ parameters:
   type: object
   default: [
     {
-      stageName: 'Mac Catalina (10.15)',
+      stageName: 'mac_10_15',
+      displayName: 'Mac Catalina (10.15)',
       macPool: 'VSEng-Xamarin-RedmondMacBuildPool-iOS-Trusted',
       osVersion: '10.15',
       statusContext: 'Mac Catalina (10.15)',
       checkDemands: true
     },
     {
-      stageName: 'Mac Mojave (10.14)',
+      stageName: 'mac_10_14',
+      displayName: 'Mac Mojave (10.14)',
       macPool: 'Hosted Mac Internal Mojave',
       osVersion: '10.14',
       statusContext: 'Mac Mojave (10.14)',
       checkDemands: false
     },
     {
-      stageName: 'Mac High Sierra (10.13)',
+      stageName: 'mac_10_13',
+      displayName: 'Mac High Sierra (10.13)',
       macPool: 'Hosted Mac Internal',
       osVersion: '10.13',
       statusContext: 'Mac High Sierra (10.13)',
@@ -224,8 +230,8 @@ stages:
     - template: templates/build/stage.yml
       parameters:
         vsdropsPrefix: ${{ variables.vsdropsPrefix }}
-        runTests: ${{ parameters.runTests }}
-        runDeviceTests: ${{ parameters.runDeviceTests }}
+        runTests: ${{ and(parameters.runTests, ne(variables['Build.Reason'], 'Schedule'))}}
+        runDeviceTests: ${{ and(parameters.runDeviceTests, ne(variables['Build.Reason'], 'Schedule')) }}
         keyringPass: $(xma-password)
         gitHubToken: ${{ variables['GitHub.Token'] }}
         xqaCertPass: $(xqa--certificates--password)
@@ -239,6 +245,7 @@ stages:
           devicePrefix: ${{ config['devicePrefix'] }} 
           execute: ${{ config['execute'] }} 
           stageName: ${{ config['stageName'] }} 
+          displayName: ${{ config['displayName'] }} 
           iOSDevicePool: ${{ config['iOSDevicePool'] }} 
           useXamarinStorage: ${{ config['useXamarinStorage'] }} 
           testsLabels: ${{ config['testsLabels'] }} 
@@ -253,6 +260,7 @@ stages:
       - template: templates/mac/stage.yml
         parameters:
           stageName: ${{ config['stageName'] }}
+          displayName: ${{ config['displayName'] }}
           macPool: ${{ config['macPool'] }}
           osVersion: ${{ config['osVersion'] }}
           statusContext: ${{ config['statusContext'] }}

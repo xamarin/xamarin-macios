@@ -32,6 +32,7 @@ namespace Xharness.Jenkins {
 			var supports_interpreter = test.Platform != TestPlatform.iOS_Unified32;
 			var supports_dynamic_registrar_on_device = test.Platform == TestPlatform.iOS_Unified64 || test.Platform == TestPlatform.tvOS;
 			var ignore = test.TestProject.Ignore;
+			var mac_supports_arm64 = Harness.CanRunArm64;
 
 			switch (test.ProjectPlatform) {
 			case "iPhone":
@@ -96,7 +97,7 @@ namespace Xharness.Jenkins {
 				switch (test.TestName) {
 				case "monotouch-test":
 					// The default is to run monotouch-test with the dynamic registrar (in the simulator), so that's already covered
-					yield return new TestData { Variation = "Debug (LinkSdk)", Debug = true, Profiling = false, LinkMode = "LinkSdk", Ignored = ignore };
+					yield return new TestData { Variation = "Debug (LinkSdk)", Debug = true, Profiling = false, LinkMode = test.TestProject.IsDotNetProject ? "SdkOnly" : "LinkSdk", Ignored = ignore };
 					yield return new TestData { Variation = "Debug (static registrar)", MTouchExtraArgs = "--registrar:static", Debug = true, Profiling = false, Undefines = "DYNAMIC_REGISTRAR", Ignored = ignore };
 					yield return new TestData { Variation = "Release (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = false, Profiling = false, LinkMode = "Full", Defines = "OPTIMIZEALL", Undefines = "DYNAMIC_REGISTRAR", Ignored = ignore };
 					yield return new TestData { Variation = "Debug (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all,-remove-uithread-checks", Debug = true, Profiling = false, LinkMode = "Full", Defines = "OPTIMIZEALL", Undefines = "DYNAMIC_REGISTRAR", Ignored = ignore ?? !jenkins.IncludeAll };
@@ -116,16 +117,22 @@ namespace Xharness.Jenkins {
 			case "x86":
 				switch (test.TestName) {
 				case "monotouch-test":
-					if (test.TestProject.IsDotNetProject)
-						yield return new TestData { Variation = "Debug (CoreCLR)", Debug = true, UseMonoRuntime = false, Ignored = true, };
+					if (test.TestProject.IsDotNetProject) {
+						var isDotNetReady = false;
+						yield return new TestData { Variation = "Debug (CoreCLR)", Debug = true, UseMonoRuntime = false, Ignored = !isDotNetReady || !jenkins.IncludeMac, };
+						yield return new TestData { Variation = "Debug (ARM64)", Debug = true, Profiling = false, Ignored = !isDotNetReady || !jenkins.IncludeMac || !mac_supports_arm64, RuntimeIdentifier = "osx-arm64", };
+						yield return new TestData { Variation = "Debug (CoreCLR, ARM64)", Debug = true, UseMonoRuntime = false, Profiling = false, Ignored = !isDotNetReady || !jenkins.IncludeMac || !mac_supports_arm64, RuntimeIdentifier = "osx-arm64", };
+					}
 					break;
 				case "xammac tests":
 					switch (test.ProjectConfiguration) {
 					case "Release":
 						yield return new TestData { Variation = "Release (all optimizations)", MonoBundlingExtraArgs = "--registrar:static --optimize:all", Debug = false, LinkMode = "Full", Defines = "OPTIMIZEALL", Undefines = "DYNAMIC_REGISTRAR" };
+						yield return new TestData { Variation = "Release (ARM64)", XamMacArch = "ARM64", Debug = false, Ignored = !mac_supports_arm64 || !jenkins.IncludeMac };
 						break;
 					case "Debug":
 						yield return new TestData { Variation = "Debug (all optimizations)", MonoBundlingExtraArgs = "--registrar:static --optimize:all,-remove-uithread-checks", Debug = true, LinkMode = "Full", Defines = "OPTIMIZEALL", Undefines = "DYNAMIC_REGISTRAR", Ignored = !(jenkins.IncludeAll && jenkins.IncludeMac) };
+						yield return new TestData { Variation = "Debug (ARM64)", XamMacArch = "ARM64", Debug = true, Ignored = !mac_supports_arm64 || !jenkins.IncludeMac };
 						break;
 					}
 					break;
@@ -162,6 +169,8 @@ namespace Xharness.Jenkins {
 					var known_failure = test_data.KnownFailure;
 					var candidates = test_data.Candidates;
 					var use_mono_runtime = test_data.UseMonoRuntime;
+					var xammac_arch = test_data.XamMacArch;
+					var runtime_identifer = test_data.RuntimeIdentifier;
 
 					if (task.TestProject.IsDotNetProject)
 						variation += " [dotnet]";
@@ -217,6 +226,10 @@ namespace Xharness.Jenkins {
 							clone.Xml.SetMtouchUseLlvm (true, task.ProjectPlatform, configuration);
 						if (use_mono_runtime.HasValue)
 							clone.Xml.SetTopLevelPropertyGroupValue ("UseMonoRuntime", use_mono_runtime.Value ? "true" : "false");
+						if (!string.IsNullOrEmpty (xammac_arch))
+							clone.Xml.SetNode ("XamMacArch", xammac_arch, task.ProjectPlatform, configuration);
+						if (!string.IsNullOrEmpty (runtime_identifer))
+							clone.Xml.SetNode ("RuntimeIdentifier", runtime_identifer);
 						clone.Xml.Save (clone.Path);
 					});
 

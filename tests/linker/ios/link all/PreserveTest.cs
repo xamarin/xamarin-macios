@@ -77,6 +77,9 @@ namespace LinkAll.Attributes {
 		}
 
 		[Test]
+#if NET
+		[Ignore ("This feature is not supported by dotnet's ILLink -> https://github.com/xamarin/xamarin-macios/issues/8900")]
+#endif
 		public void PreserveTypeWithCustomAttribute ()
 		{
 			var t = Type.GetType ("LinkAll.Attributes.MemberWithCustomAttribute" + WorkAroundLinkerHeuristics);

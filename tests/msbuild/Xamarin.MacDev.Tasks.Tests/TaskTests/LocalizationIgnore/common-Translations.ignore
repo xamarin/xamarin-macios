@@ -1,5 +1,6 @@
 # Insert Error codes that are waiting on translations below (one per line)
-E0067
+E0174
+E0175
 E0177
 E0178
 E0179
@@ -8,6 +9,7 @@ E0181
 E0182
 E0183
 E0184
+E0185
 E0186
 E0187
 E7069
@@ -16,3 +18,4 @@ E7071
 InvalidFramework
 InvalidPlatform
 E7072
+W0176

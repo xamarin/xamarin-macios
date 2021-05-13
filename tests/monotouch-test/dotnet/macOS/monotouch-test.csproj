@@ -15,6 +15,7 @@
     <DefineConstants>$(DefineConstants);MONOMAC;XAMMAC_TESTS</DefineConstants>
     <DefineConstants Condition="'$(Configuration)' == 'Debug'">$(DefineConstants);DEBUG;DYNAMIC_REGISTRAR</DefineConstants>
     <RootTestsDirectory>..\..\..</RootTestsDirectory>
+    <LinkMode>None</LinkMode>
   </PropertyGroup>
 
   <ItemGroup>

@@ -23,7 +23,8 @@ namespace Mono.Tuner {
 					| SubStepTargets.Field
 					| SubStepTargets.Method
 					| SubStepTargets.Property
-					| SubStepTargets.Event;
+					| SubStepTargets.Event
+					| SubStepTargets.Assembly;
 			}
 		}
 

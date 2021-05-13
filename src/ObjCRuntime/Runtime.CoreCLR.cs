@@ -9,10 +9,12 @@
 #if NET && !COREBUILD
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
+using System.Text;
 
 using Foundation;
 
@@ -59,6 +61,12 @@ namespace ObjCRuntime {
 			NSLog (message);
 		}
 
+		internal static void RegisterToggleReferenceCoreCLR (NSObject obj, IntPtr handle, bool isCustomType)
+		{
+			// This requires https://github.com/dotnet/runtime/pull/52146 to be merged and packages available.
+			Console.WriteLine ("Not implemented: RegisterToggleReferenceCoreCLR");
+		}
+
 		// Returns a retained MonoObject. Caller must release.
 		static IntPtr FindAssembly (IntPtr assembly_name)
 		{
@@ -86,6 +94,13 @@ namespace ObjCRuntime {
 			log_coreclr ($"    Found no assembly named {name}");
 
 			throw new InvalidOperationException ($"Could not find any assemblies named {name}");
+		}
+
+		static unsafe void SetPendingException (MonoObject* exception_obj)
+		{
+			var exc = (Exception) GetMonoObjectTarget (exception_obj);
+			// This requires https://github.com/dotnet/runtime/pull/52146 to be merged and packages available.
+			Console.WriteLine ("Not implemented: SetPendingException ({0})", exc);;
 		}
 
 		unsafe static bool IsClassOfType (MonoObject *typeobj, TypeLookup match)
@@ -129,6 +144,19 @@ namespace ObjCRuntime {
 			log_coreclr ($"IsClassOfType ({type}, {match}) => {rv}");
 
 			return rv;
+		}
+
+		static unsafe MonoObject* GetElementClass (MonoObject* classobj)
+		{
+			var type = (Type) GetMonoObjectTarget (classobj);
+			return (MonoObject*) GetMonoObject (type.GetElementType ());
+		}
+
+		static unsafe MonoObject* GetNullableElementType (MonoObject* typeobj)
+		{
+			var type = (Type) GetMonoObjectTarget (typeobj);
+			var elementType = type.GetGenericArguments () [0];
+			return (MonoObject*) GetMonoObject (elementType);
 		}
 
 		static IntPtr CreateGCHandle (IntPtr gchandle, GCHandleType type)
@@ -520,6 +548,81 @@ namespace ObjCRuntime {
 			return (MonoObject *) GetMonoObject (Marshal.PtrToStringAuto (text));
 		}
 
+		static unsafe MonoObject* CreateArray (MonoObject* typeobj, ulong elements)
+		{
+			var type = (Type) GetMonoObjectTarget (typeobj);
+			var obj = Array.CreateInstance (type, (int) elements);
+			return (MonoObject*) GetMonoObject (obj);
+		}
+
+		static unsafe ulong GetArrayLength (MonoObject* obj)
+		{
+			var array = (Array) GetMonoObjectTarget (obj);
+			return (ulong) array.Length;
+		}
+
+		static unsafe void SetArrayObjectValue (MonoObject *arrayobj, ulong index, MonoObject *mobj)
+		{
+			var array = (Array) GetMonoObjectTarget (arrayobj);
+			var obj = GetMonoObjectTarget (mobj);
+			array.SetValue (obj, (long) index);
+		}
+
+		static unsafe void SetArrayStructValue (MonoObject *arrayobj, ulong index, MonoObject *typeobj, IntPtr valueptr)
+		{
+			var array = (Array) GetMonoObjectTarget (arrayobj);
+			var elementType = (Type) GetMonoObjectTarget (typeobj);
+			var obj = Box (elementType, valueptr);
+			array.SetValue (obj, (long) index);
+		}
+
+		static unsafe MonoObject* GetArrayObjectValue (MonoObject* arrayobj, ulong index)
+		{
+			var array = (Array) GetMonoObjectTarget (arrayobj);
+			var obj = array.GetValue ((long) index);
+			return (MonoObject *) GetMonoObject (obj);
+		}
+
+		static unsafe MonoObject* Box (MonoObject* typeobj, IntPtr value)
+		{
+			var type = (Type) GetMonoObjectTarget (typeobj);
+			var rv = Box (type, value);
+			return (MonoObject *) GetMonoObject (rv);
+		}
+
+		static object Box (Type type, IntPtr value)
+		{
+			var structType = type;
+			Type enumType = null;
+
+			// We can have a nullable enum value
+			if (IsNullable (structType)) {
+				if (value == IntPtr.Zero)
+					return null;
+
+				structType = Nullable.GetUnderlyingType (structType);
+			}
+
+			if (structType.IsEnum) {
+				// Change to underlying enum type
+				enumType = structType;
+				structType = Enum.GetUnderlyingType (structType);
+			}
+
+			var boxed = PtrToStructure (value, structType);
+			if (enumType != null) {
+				// Convert to enum value
+				boxed = Enum.ToObject (enumType, boxed);
+			}
+
+			return boxed;
+		}
+
+		static unsafe bool IsNullable (MonoObject* type)
+		{
+			return IsNullable ((Type) GetMonoObjectTarget (type));
+		}
+
 		static bool IsNullable (Type type)
 		{
 			if (Nullable.GetUnderlyingType (type) != null)
@@ -529,6 +632,11 @@ namespace ObjCRuntime {
 				return true;
 
 			return false;
+		}
+
+		static unsafe MonoObject* GetStringClass ()
+		{
+			return (MonoObject *) GetMonoObject (typeof (string));
 		}
 
 		unsafe static bool IsByRef (MonoObject *typeobj)
@@ -592,6 +700,105 @@ namespace ObjCRuntime {
 				UserData = user_data,
 			};
 			queue.Table.Add (obj, entry);
+		}
+
+		/* Managed version of mono_g_hash_table The mono_g_hash_table can be configured
+		   in several ways, depending on whether the GC should track keys,
+		   values or both, but in our case we only want the GC to track the
+		   values (MONO_HASH_VALUE_GC).
+		   Semantics:
+		   * Custom compare and hash functions from native code.
+		   * Keep a strong reference to the values of the hash table.
+		 */
+		class MonoHashTable : IEqualityComparer<IntPtr> {
+			Dictionary<IntPtr, object> Table;
+			HashFunc Hash;
+			EqualityFunc Compare;
+
+			delegate uint HashFunc (IntPtr ptr);
+			delegate bool EqualityFunc (IntPtr a, IntPtr b);
+
+			public MonoHashTable (IntPtr hash_func, IntPtr compare_func)
+			{
+				Table = new Dictionary<IntPtr, object> ();
+				Hash = Marshal.GetDelegateForFunctionPointer<HashFunc> (hash_func);
+				Compare = Marshal.GetDelegateForFunctionPointer<EqualityFunc> (compare_func);
+			}
+
+			public void Insert (IntPtr key, object obj)
+			{
+				Table [key] = obj;
+			}
+
+			public object Lookup (IntPtr key)
+			{
+				if (Table.TryGetValue (key, out var value))
+					return value;
+				return null;
+			}
+
+			bool IEqualityComparer<IntPtr>.Equals (IntPtr x, IntPtr y)
+			{
+				return Compare (x, y);
+			}
+
+			int IEqualityComparer<IntPtr>.GetHashCode (IntPtr obj)
+			{
+				unchecked {
+					return (int) Hash (obj);
+				}
+			}
+		}
+
+		static unsafe MonoObject* CreateMonoHashTable (IntPtr hash_method, IntPtr compare_method, int type)
+		{
+			if (type != 2 /* MONO_HASH_VALUE_GC */)
+				throw new NotSupportedException ($"Unsupported hash table type: {type}");
+
+			return (MonoObject*) GetMonoObject (new MonoHashTable (hash_method, compare_method));
+		}
+
+		static unsafe void MonoHashTableInsert (MonoObject* tableobj, IntPtr key, MonoObject* valueobj)
+		{
+			var table = (MonoHashTable) GetMonoObjectTarget (tableobj);
+			var value = GetMonoObjectTarget (valueobj);
+			table.Insert (key, value);
+		}
+
+		static unsafe MonoObject* MonoHashTableLookup (MonoObject* tableobj, IntPtr key)
+		{
+			var dict = (MonoHashTable) GetMonoObjectTarget (tableobj);
+			return (MonoObject*) GetMonoObject (dict.Lookup (key));
+		}
+
+		static unsafe IntPtr GetMethodFullName (MonoObject* mobj)
+		{
+			return Marshal.StringToHGlobalAuto (GetMethodFullName ((MethodBase) GetMonoObjectTarget (mobj)));
+		}
+
+		static string GetMethodFullName (MethodBase method)
+		{
+			if (method == null)
+				return null;
+
+			// The return value is used in error messages, so there's not a
+			// specific format we have to return, it just has to be helpful.
+
+			var returnType = (method as MethodInfo)?.ReturnType ?? typeof (void);
+			var sb = new StringBuilder ();
+			sb.Append (returnType.FullName);
+			sb.Append (' ');
+			sb.Append (method.DeclaringType.FullName);
+			sb.Append (' ');
+			sb.Append ('(');
+			var parameters = method.GetParameters ();
+			for (var i = 0; i < parameters.Length; i++) {
+				if (i > 0)
+					sb.Append (", ");
+				sb.Append (parameters [i].ParameterType.FullName);
+			}
+			sb.Append (')');
+			return sb.ToString ();
 		}
 
 		[DllImport ("__Internal")]
