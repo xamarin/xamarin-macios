@@ -92,7 +92,9 @@
 		#region metadata/class-internals.h
 		new Export (true, "gboolean", "mono_class_is_nullable",
 			"MonoClass *", "klass"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		new Export (true, "MonoClass *", "mono_class_get_nullable_param",
 			"MonoClass *", "klass"

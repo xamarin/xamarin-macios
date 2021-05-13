@@ -525,6 +525,16 @@ mono_class_is_valuetype (MonoClass * klass)
 	return rv;
 }
 
+gboolean
+mono_class_is_nullable (MonoClass * klass)
+{
+	bool rv = xamarin_bridge_is_nullable (klass);
+
+	LOG_CORECLR (stderr, "%s (%p) => %i\n", __func__, klass, rv);
+
+	return rv;
+}
+
 MonoClass *
 mono_class_get_element_class (MonoClass *klass)
 {
