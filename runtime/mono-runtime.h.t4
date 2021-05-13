@@ -116,14 +116,15 @@ typedef struct _MonoObject MonoArray;
 typedef struct _MonoObject MonoReflectionAssembly;
 typedef struct _MonoObject MonoReflectionMethod;
 typedef struct _MonoObject MonoReflectionType;
+typedef struct _MonoObject MonoException;
 #else
 typedef struct _MonoString MonoString;
 typedef struct _MonoArray MonoArray;
 typedef struct _MonoReflectionAssembly MonoReflectionAssembly;
 typedef struct _MonoReflectionMethod MonoReflectionMethod;
 typedef struct _MonoReflectionType MonoReflectionType;
-#endif
 typedef struct _MonoException MonoException;
+#endif
 typedef struct _MonoThread MonoThread;
 typedef struct _MonoThreadsSync MonoThreadsSync;
 typedef struct _MonoObject MonoObject;
