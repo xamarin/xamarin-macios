@@ -37,7 +37,7 @@ jobs:
     isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
     isManual: $[eq(variables['Build.Reason'], 'Manual')]
     # isLocalizationBuild: $[or(eq(variables.isScheduled, 'True'), and(eq(variables.isManual, 'True'), and(eq('${{ parameters.runTests }}', false), eq('${{ parameters.runDeviceTests }}', false))))]
-    isLocalizationBuild: ${{ or(eq(variables['Build.Reason'], 'Schedule'), and(eq(variables['Build.Reason'], 'Manual'), and(eq( parameters.runTests, false), eq( parameters.runDeviceTests, false))))]
+    isLocalizationBuild: ${{ or(eq(variables['Build.Reason'], 'Schedule'), and(eq(variables['Build.Reason'], 'Manual'), and(eq( parameters.runTests, false), eq( parameters.runDeviceTests, false)))) }}
 
   steps:
   - template: configure.yml
