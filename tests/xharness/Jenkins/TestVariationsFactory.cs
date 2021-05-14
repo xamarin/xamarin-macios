@@ -122,6 +122,7 @@ namespace Xharness.Jenkins {
 						yield return new TestData { Variation = "Debug (CoreCLR)", Debug = true, UseMonoRuntime = false, Ignored = !isDotNetReady || !jenkins.IncludeMac, };
 						yield return new TestData { Variation = "Debug (ARM64)", Debug = true, Profiling = false, Ignored = !isDotNetReady || !jenkins.IncludeMac || !mac_supports_arm64, RuntimeIdentifier = "osx-arm64", };
 						yield return new TestData { Variation = "Debug (CoreCLR, ARM64)", Debug = true, UseMonoRuntime = false, Profiling = false, Ignored = !isDotNetReady || !jenkins.IncludeMac || !mac_supports_arm64, RuntimeIdentifier = "osx-arm64", };
+						yield return new TestData { Variation = "Debug (CoreCLR, static registrar)", MonoBundlingExtraArgs = "--registrar:static", Debug = true, UseMonoRuntime = false, Undefines = "DYNAMIC_REGISTRAR", Ignored = !isDotNetReady || !jenkins.IncludeMac, };
 					}
 					break;
 				case "xammac tests":
