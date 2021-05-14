@@ -36,9 +36,8 @@ jobs:
     isLocalization: $[eq(variables['Build.SourceBranch'], 'refs/heads/Localization')]
     isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
     isManual: $[eq(variables['Build.Reason'], 'Manual')]
-    # if we use $[] we cannot access parameters and that's why that is null
-    # isLocalizationBuild: ${{ or(eq(variables.isScheduled, 'True'), and(eq(variables.isManual, 'True'), and(eq('${{ parameters.runTests }}', false), eq('${{ parameters.runDeviceTests }}', false)))) }}
-
+    # isLocalizationBuild: $[or(eq(variables.isScheduled, 'True'), and(eq(variables.isManual, 'True'), and(eq('${{ parameters.runTests }}', false), eq('${{ parameters.runDeviceTests }}', false))))]
+    isLocalizationBuild: ${{ or(eq(variables['Build.Reason'], 'Schedule'), and(eq(variables['Build.Reason'], 'Manual'), and(eq( parameters.runTests, false), eq( parameters.runDeviceTests, false))))]
 
   steps:
   - template: configure.yml
@@ -61,7 +60,7 @@ jobs:
   dependsOn:
   - AgentPoolSelector
   - configure
-  condition: and(succeeded(), or(eq(variables.isScheduled, 'True'), and(eq(variables.isManual, 'True'), and(eq('${{ parameters.runTests }}', false), eq('${{ parameters.runDeviceTests }}', false)))))
+  condition: and(succeeded(), eq(variables.isLocalizationBuild, 'False'))
   displayName: 'Build packages'
   timeoutInMinutes: 1000
   variables:
@@ -119,7 +118,7 @@ jobs:
   dependsOn:
   - configure
   - build # can start as soon as the packages are available
-  condition: and(succeeded(), contains (dependencies.build.outputs['configuration.BuildPkgs'], 'True'), or(eq(variables.isScheduled, 'True'), and(eq(variables.isManual, 'True'), and(eq('${{ parameters.runTests }}', false), eq('${{ parameters.runDeviceTests }}', false))))) # only run when we do have pkgs
+  condition: and(succeeded(), contains (dependencies.build.outputs['configuration.BuildPkgs'], 'True'), eq(variables.isLocalizationBuild, 'False')) # only run when we do have pkgs
 
   variables:
     Parameters.outputStorageUri: ''
@@ -139,7 +138,7 @@ jobs:
   displayName: 'Upload test results to VSDrops'
   timeoutInMinutes: 1000
   dependsOn: build # can start as soon as the tests are done
-  condition: and(succeededOrFailed() , contains (dependencies.build.outputs['runTests.TESTS_RAN'], 'True'), or(eq(variables.isScheduled, 'True'), and(eq(variables.isManual, 'True'), and(eq('${{ parameters.runTests }}', false), eq('${{ parameters.runDeviceTests }}', false))))) # only run when we did run the tests
+  condition: and(succeededOrFailed() , contains (dependencies.build.outputs['runTests.TESTS_RAN'], 'True'), eq(variables.isLocalizationBuild, 'False')) # only run when we did run the tests
 
   pool:
     vmImage: 'windows-latest'
@@ -156,7 +155,7 @@ jobs:
   displayName: 'Upload xml to vsts'
   timeoutInMinutes: 1000
   dependsOn:  build # can start as soon as the tests are done
-  condition: and(succeededOrFailed(), contains(dependencies.build.outputs['runTests.TESTS_RAN'], 'True'), or(eq(variables.isScheduled, 'True'), and(eq(variables.isManual, 'True'), and(eq('${{ parameters.runTests }}', false), eq('${{ parameters.runDeviceTests }}', false))))) # only run when we did run the tests
+  condition: and(succeededOrFailed(), contains(dependencies.build.outputs['runTests.TESTS_RAN'], 'True'), eq(variables.isLocalizationBuild, 'False')) # only run when we did run the tests
 
   pool:
     vmImage: 'windows-latest'
@@ -176,7 +175,7 @@ jobs:
   - upload_azure_blob
   - upload_vsdrops
   - upload_vsts_tests
-  condition: and(succeededOrFailed(), or(eq(variables.isScheduled, 'True'), and(eq(variables.isManual, 'True'), and(eq('${{ parameters.runTests }}', false), eq('${{ parameters.runDeviceTests }}', false)))))
+  condition: and(succeededOrFailed(), eq(variables.isLocalizationBuild, 'False'))
   variables:
     # Define the variable FOO from the previous job
     # Note the use of single quotes!
