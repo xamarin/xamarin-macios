@@ -161,6 +161,9 @@ steps:
     $testsPath = "$(Build.SourcesDirectory)/artifacts/mac-test-package/tests"
     Write-Host "Tests path is $testsPath"
 
+    # pring enviroment
+    dir env:
+
     [System.Collections.Generic.List[string]]$failures = @()
 
     $macTest = @("dontlink", "introspection", "linksdk", "linkall", "xammac_tests")
