@@ -36,9 +36,7 @@ jobs:
     isLocalization: $[eq(variables['Build.SourceBranch'], 'refs/heads/Localization')]
     isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
     isManual: $[eq(variables['Build.Reason'], 'Manual')]
-    isLocalizationBuild: $[or(eq(variables.isSchedule, 'True'), and(eq(variables.isManual, 'True'), and(eq('${{ parameters.runTests }}', false), eq('${{ parameters.runDeviceTests }}', false))))]
-    isVariableInsideVariable: variables.isManual
-    isVariableInsideVariableWithBrackets: $[variables.isManual]
+    isLocalizationBuild: $[or(eq(variables.isScheduled, 'True'), and(eq(variables.isManual, 'True'), and(eq('${{ parameters.runTests }}', false), eq('${{ parameters.runDeviceTests }}', false))))]
 
   steps:
   - template: configure.yml
