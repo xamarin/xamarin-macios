@@ -21,6 +21,10 @@ parameters:
 - name: xqaCertPass
   type: string
 
+- name: enableDotnet
+  type: boolean
+  default: false
+
 jobs:
 - job: configure
   displayName: 'Configure build'
@@ -29,6 +33,7 @@ jobs:
 
   variables:
     isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
+    isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
 
   steps:
   - template: configure.yml
@@ -39,8 +44,13 @@ jobs:
   steps:
   - checkout: none             # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
 
-  # Selects appropriate agent pool based on trigger type (PR or CI)
-  - template: ../agent-pool-selector.yml
+  # Selects appropriate agent pool based on trigger type (PR or CI); manually triggered builds target the PR pool
+  - template: azure-devops-pools/agent-pool-selector.yml@templates
+    parameters:
+      agentPoolPR: $(PRBuildPool)
+      agentPoolPRUrl: $(PRBuildPoolUrl)
+      agentPoolCI: $(CIBuildPool)
+      agentPoolCIUrl: $(CIBuildPoolUrl)
 
 - job: build
   dependsOn:
@@ -73,7 +83,7 @@ jobs:
     SkipPublicJenkins: $[ dependencies.configure.outputs['labels.skip-public-jenkins'] ]
     SkipApiComparison: $[ dependencies.configure.outputs['labels.skip-api-comparison'] ]
     # old and ugly env var use by jenkins, we do have parts of the code that use it, contains the PR number
-    ghprbPullId: $[ dependencies.configure.outputs['labels.pr-number'] ]
+    PR_ID: $[ dependencies.configure.outputs['labels.pr-number'] ]
     # set the branch variable name, this is required by jenkins and we have a lot of scripts that depend on it
     BRANCH_NAME: $(Build.SourceBranchName)
     XHARNESS_LABELS: $[ dependencies.configure.outputs['labels.xharness-labels'] ]
@@ -95,15 +105,20 @@ jobs:
       keyringPass: ${{ parameters.keyringPass }}
       gitHubToken: ${{ parameters.gitHubToken }}
       xqaCertPass: ${{ parameters.xqaCertPass }}
+      enableDotnet: ${{ parameters.enableDotnet }}
 
 - job: upload_azure_blob
   displayName: 'Upload packages to Azure'
   timeoutInMinutes: 1000
-  dependsOn: build # can start as soon as the packages are available
+  dependsOn:
+  - configure
+  - build # can start as soon as the packages are available
   condition: and(succeeded(), contains (dependencies.build.outputs['configuration.BuildPkgs'], 'True')) # only run when we do have pkgs
 
   variables:
     Parameters.outputStorageUri: ''
+    NUGETS_PUBLISHED: $[ dependencies.build.outputs['nugetPublishing.NUGETS_PUBLISHED'] ]
+    SKIP_NUGETS: $[ dependencies.configure.outputs['labels.skip-nugets'] ]
 
   pool:
     vmImage: 'windows-latest'
@@ -111,6 +126,8 @@ jobs:
       clean: all
   steps:
   - template: upload-azure.yml
+    parameters:
+      enableDotnet: ${{ parameters.enableDotnet }}
 
 - job: upload_vsdrops
   displayName: 'Upload test results to VSDrops'
@@ -127,12 +144,13 @@ jobs:
     parameters:
       devicePrefix: sim
       runTests: ${{ parameters.runTests }}
+      apiGeneratorDiffBuilt: $[ dependencies.build.outputs['apiGeneratorDiff.API_GENERATOR_BUILT'] ]
 
 - job: upload_vsts_tests
   displayName: 'Upload xml to vsts'
   timeoutInMinutes: 1000
   dependsOn:  build # can start as soon as the tests are done
-  condition: and(succeededOrFailed() , contains (dependencies.build.outputs['runTests.TESTS_RAN'], 'True')) # only run when we did run the tests
+  condition: and(succeededOrFailed(), contains(dependencies.build.outputs['runTests.TESTS_RAN'], 'True')) # only run when we did run the tests
 
   pool:
     vmImage: 'windows-latest'
@@ -161,6 +179,7 @@ jobs:
     TESTS_JOBSTATUS: $[ dependencies.build.outputs['runTests.TESTS_JOBSTATUS'] ]
     APIDIFF_MESSAGE: $[ dependencies.build.outputs['apidiff.APIDIFF_MESSAGE'] ]
     APIDIFF_BUILT: $[ dependencies.build.outputs['apidiff.APIDIFF_BUILT'] ]
+    PR_ID: $[ dependencies.configure.outputs['labels.pr-number'] ]
   pool:
     vmImage: 'windows-latest'
     workspace:

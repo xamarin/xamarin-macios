@@ -151,6 +151,8 @@ steps:
     ls -Rla $(Build.SourcesDirectory)/artifacts
     $(Build.SourcesDirectory)/artifacts/mac-test-package/test-dependencies.sh
   displayName: Install dependencies.
+  env:
+    IGNORE_DOTNET: 1  # Not needed for the tests.
 
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\GitHub.psm1 
@@ -158,7 +160,6 @@ steps:
     Write-Host "Found tests"
     $testsPath = "$(Build.SourcesDirectory)/artifacts/mac-test-package/tests"
     Write-Host "Tests path is $testsPath"
-    Get-ChildItem -Recurse $testsPath
 
     [System.Collections.Generic.List[string]]$failures = @()
 

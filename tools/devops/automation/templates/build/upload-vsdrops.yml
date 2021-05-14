@@ -10,6 +10,10 @@ parameters:
   type: boolean
   default: true
 
+- name: apiGeneratorDiffBuilt
+  type: string 
+  default: true
+
 steps:
 
 - checkout: self
@@ -18,6 +22,7 @@ steps:
 - template: download-artifacts.yml 
   parameters:
     runTests: ${{ parameters.runTests }}
+    apiGeneratorDiffBuilt: ${{ contains(parameters.apiGeneratorDiffBuilt, 'True') }}
 
 # Upload full report to vsdrops using the the build numer and id as uuids.
 - ${{ if eq(parameters.runTests, true) }}:
@@ -41,3 +46,14 @@ steps:
     sourcePath: $(STABLE_APIDDIFF_PATH)
     detailedLog: true
     usePat: true
+
+- ${{ if contains(parameters.apiGeneratorDiffBuilt, 'True') }}:
+  - task: ms-vscs-artifact.build-tasks.artifactDropTask-1.artifactDropTask@0
+    displayName: 'Publish API & Generator comparisonn to Artifact Services Drop'
+    inputs:
+      dropServiceURI: 'https://devdiv.artifacts.visualstudio.com/DefaultCollection'
+      dropMetadataContainerName: 'DropMetadata-APIGeneratorDiff'
+      buildNumber: 'xamarin-macios/device-tests/$(Build.BuildNumber)/$(Build.BuildId)/APIGeneratorDiff'
+      sourcePath: $(STABLE_APID_GENERATOR_DIFF_PATH)
+      detailedLog: true
+      usePat: true
