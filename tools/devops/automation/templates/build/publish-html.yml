@@ -29,6 +29,10 @@ parameters:
   type: boolean
   default: true
 
+- name: apiGeneratorDiffBuilt
+  type: string 
+  default: true
+
 steps:
 
 - checkout: self
@@ -37,6 +41,7 @@ steps:
 - template: download-artifacts.yml 
   parameters:
     runTests: ${{ parameters.runTests }}
+    apiGeneratorDiffBuilt: ${{ contains(parameters.apiGeneratorDiffBuilt, 'True') }}
 
 - ${{ if eq(parameters.runTests, true) }}:
   - pwsh: |
