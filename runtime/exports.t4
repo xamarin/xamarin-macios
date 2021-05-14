@@ -84,7 +84,9 @@
 		new Export ("int32_t", "mono_class_value_size",
 			"MonoClass *", "klass",
 			"uint32_t *", "align"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		new Export ("MonoType *", "mono_class_get_type",
 			"MonoClass *", "klass"

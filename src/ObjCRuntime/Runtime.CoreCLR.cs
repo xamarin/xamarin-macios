@@ -427,6 +427,12 @@ namespace ObjCRuntime {
 			return (MonoObject *) GetMonoObject (type);
 		}
 
+		static unsafe int SizeOf (MonoObject* typeobj)
+		{
+			var type = (Type) GetMonoObjectTarget (typeobj);
+			return SizeOf (type);
+		}
+
 		static int SizeOf (Type type)
 		{
 			if (type.IsEnum) // https://github.com/dotnet/runtime/issues/12258
