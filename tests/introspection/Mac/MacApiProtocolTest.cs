@@ -32,7 +32,6 @@ namespace Introspection {
 			case "NSRemoteOpenPanel":
 			case "NSRemoteSavePanel":
 				return true;
-			case "NSMenuView":
 			case "AVCaptureSynchronizedDataCollection":
 			case "AVCaptureSynchronizedData":
 				return TestRuntime.IsVM; // skip only on vms
