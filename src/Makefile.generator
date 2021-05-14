@@ -161,7 +161,7 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/%.dll: $(MACCATALYST_BUILD_DIR)/%.dll
 
 $(MACCATALYST_BUILD_DIR)/Xamarin.MacCatalyst.BindingAttributes.dll: generator-attributes.cs Makefile.generator
 	$(Q) mkdir -p $(dir $@)
-	$(Q_GEN) $(SYSTEM_CSC) -features:strict -nologo -debug -out:$@ -debug generator-attributes.cs -target:library -deterministic
+	$(Q_GEN) $(MACCATALYST_CSC) -features:strict -nologo -debug -out:$@ -debug generator-attributes.cs -target:library -deterministic
 
 #
 # Xamarin.Mac (bmac)

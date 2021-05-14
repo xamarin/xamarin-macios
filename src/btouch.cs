@@ -481,6 +481,11 @@ public class BindingTouch {
 					assemblyPaths.AddRange (Directory.GetFiles (path, "*.dll"));
 				}
 			}
+			foreach (var r in references) {
+				if (File.Exists (r)) {
+					assemblyPaths.Add (r);
+				}
+			}
 			assemblyPaths.Add (baselibdll);
 			assemblyPaths.Add (GetAttributeLibraryPath ());
 
