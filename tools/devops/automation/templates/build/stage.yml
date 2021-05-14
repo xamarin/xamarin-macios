@@ -33,7 +33,9 @@ jobs:
 
   variables:
     isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
+    isLocalization: $[eq(variables['Build.SourceBranch'], 'refs/heads/Localization')]
     isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
+    isManual: $[eq(variables['Build.Reason'], 'Manual')]
 
   steps:
   - template: configure.yml
