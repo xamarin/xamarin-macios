@@ -108,40 +108,24 @@ xamarin_bridge_get_mono_method (MonoReflectionMethod *method)
 	return method;
 }
 
-MonoClass *
-xamarin_get_nsnumber_class ()
+MonoType *
+xamarin_get_nsnumber_type ()
 {
-	xamarin_assertion_message ("The method %s it not implemented yet for CoreCLR", __func__);
+	// xamarin_bridge_lookup_class returns a MonoClass*, and this method returns a MonoType*,
+	// but they're interchangeable for CoreCLR (they're all just MonoObject*s), so this is fine.
+	MonoClass *rv = xamarin_bridge_lookup_class (XamarinLookupTypes_Foundation_NSNumber);
+	LOG_CORECLR (stderr, "%s () => %p\n", __func__, rv);
+	return rv;
 }
 
-MonoClass *
-xamarin_get_nsvalue_class ()
+MonoType *
+xamarin_get_nsvalue_type ()
 {
-	xamarin_assertion_message ("The method %s it not implemented yet for CoreCLR", __func__);
-}
-
-MonoClass *
-xamarin_get_inativeobject_class ()
-{
-	xamarin_assertion_message ("The method %s it not implemented yet for CoreCLR", __func__);
-}
-
-MonoClass *
-xamarin_get_nsobject_class ()
-{
-	xamarin_assertion_message ("The method %s it not implemented yet for CoreCLR", __func__);
-}
-
-MonoClass *
-xamarin_get_nsstring_class ()
-{
-	xamarin_assertion_message ("The method %s it not implemented yet for CoreCLR", __func__);
-}
-
-MonoClass *
-xamarin_get_runtime_class ()
-{
-	xamarin_assertion_message ("The method %s it not implemented yet for CoreCLR", __func__);
+	// xamarin_bridge_lookup_class returns a MonoClass*, and this method returns a MonoType*,
+	// but they're interchangeable for CoreCLR (they're all just MonoObject*s), so this is fine.
+	MonoClass *rv = xamarin_bridge_lookup_class (XamarinLookupTypes_Foundation_NSValue);
+	LOG_CORECLR (stderr, "%s () => %p\n", __func__, rv);
+	return rv;
 }
 
 void
@@ -204,6 +188,16 @@ mono_class_get_name (MonoClass * klass)
 	char *rv = xamarin_bridge_class_get_name (klass);
 
 	LOG_CORECLR (stderr, "%s (%p) => %s\n", __func__, klass, rv);
+
+	return rv;
+}
+
+char *
+mono_method_full_name (MonoMethod *method, mono_bool signature)
+{
+	char *rv = xamarin_bridge_get_method_full_name (method);
+
+	LOG_CORECLR (stderr, "%s (%p, %i) => %s\n", __func__, method, signature, rv);
 
 	return rv;
 }
@@ -339,6 +333,14 @@ mono_object_isinst (MonoObject * obj, MonoClass * klass)
 	return rv ? obj : NULL;
 }
 
+MonoObject *
+mono_value_box (MonoDomain *domain, MonoClass *klass, void *val)
+{
+	MonoObject *rv = xamarin_bridge_box (klass, val);
+	LOG_CORECLR (stderr, "%s (%p, %p, %p) => %p\n", __func__, domain, klass, val, rv);
+	return rv;
+}
+
 void *
 mono_object_unbox (MonoObject *obj)
 {
@@ -370,6 +372,30 @@ mono_runtime_invoke (MonoMethod * method, void * obj, void ** params, MonoObject
 		*exc = xamarin_gchandle_unwrap (exception_gchandle);
 	}
 
+	return rv;
+}
+
+MonoException *
+xamarin_create_system_exception (const char *message)
+{
+	MonoException *rv = xamarin_bridge_create_exception (XamarinExceptionTypes_System_Exception, message);
+	LOG_CORECLR (stderr, "%s (%p) => %p\n", __func__, message, rv);
+	return rv;
+}
+
+MonoException *
+xamarin_create_system_invalid_cast_exception (const char *message)
+{
+	MonoException *rv = xamarin_bridge_create_exception (XamarinExceptionTypes_System_InvalidCastException, message);
+	LOG_CORECLR (stderr, "%s (%p) => %p\n", __func__, message, rv);
+	return rv;
+}
+
+MonoException *
+xamarin_create_system_entry_point_not_found_exception (const char *entrypoint)
+{
+	MonoException *rv = xamarin_bridge_create_exception (XamarinExceptionTypes_System_EntryPointNotFoundException, entrypoint);
+	LOG_CORECLR (stderr, "%s (%p) => %p\n", __func__, entrypoint, rv);
 	return rv;
 }
 
@@ -430,6 +456,9 @@ xamarin_bridge_free_mono_signature (MonoMethodSignature **psig)
 {
 	MonoMethodSignature *sig = *psig;
 
+	if (sig == NULL)
+		return;
+
 	for (int i = 0; i < sig->parameter_count; i++) {
 		xamarin_mono_object_release (&sig->parameters [i]);
 	}
@@ -484,7 +513,7 @@ mono_class_from_mono_type (MonoType *type)
 MonoClass *
 mono_get_string_class ()
 {
-	MonoClass *rv = xamarin_bridge_get_string_class ();
+	MonoClass *rv = xamarin_bridge_lookup_class (XamarinLookupTypes_System_String);
 	LOG_CORECLR (stderr, "%s () => %p.\n", __func__, rv);
 	return rv;
 }
@@ -517,10 +546,28 @@ mono_class_is_valuetype (MonoClass * klass)
 	return rv;
 }
 
+gboolean
+mono_class_is_nullable (MonoClass * klass)
+{
+	bool rv = xamarin_bridge_is_nullable (klass);
+
+	LOG_CORECLR (stderr, "%s (%p) => %i\n", __func__, klass, rv);
+
+	return rv;
+}
+
 MonoClass *
 mono_class_get_element_class (MonoClass *klass)
 {
 	MonoClass *rv = xamarin_bridge_get_element_class (klass);
+	LOG_CORECLR (stderr, "%s (%p) => %p\n", __func__, klass, rv);
+	return rv;
+}
+
+MonoClass *
+mono_class_get_nullable_param (MonoClass * klass)
+{
+	MonoClass *rv = xamarin_bridge_get_nullable_element_type (klass);
 	LOG_CORECLR (stderr, "%s (%p) => %p\n", __func__, klass, rv);
 	return rv;
 }

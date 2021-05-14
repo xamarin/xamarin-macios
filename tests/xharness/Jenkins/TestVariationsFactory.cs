@@ -104,7 +104,7 @@ namespace Xharness.Jenkins {
 				switch (test.TestName) {
 				case "monotouch-test":
 					// The default is to run monotouch-test with the dynamic registrar (in the simulator), so that's already covered
-					yield return new TestData { Variation = "Debug (LinkSdk)", Debug = true, Profiling = false, LinkMode = "LinkSdk", Ignored = ignore };
+					yield return new TestData { Variation = "Debug (LinkSdk)", Debug = true, Profiling = false, LinkMode = test.TestProject.IsDotNetProject ? "SdkOnly" : "LinkSdk", Ignored = ignore };
 					yield return new TestData { Variation = "Debug (static registrar)", MTouchExtraArgs = "--registrar:static", Debug = true, Profiling = false, Undefines = "DYNAMIC_REGISTRAR", Ignored = ignore };
 					yield return new TestData { Variation = "Release (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all", Debug = false, Profiling = false, LinkMode = "Full", Defines = "OPTIMIZEALL", Undefines = "DYNAMIC_REGISTRAR", Ignored = ignore };
 					yield return new TestData { Variation = "Debug (all optimizations)", MTouchExtraArgs = "--registrar:static --optimize:all,-remove-uithread-checks", Debug = true, Profiling = false, LinkMode = "Full", Defines = "OPTIMIZEALL", Undefines = "DYNAMIC_REGISTRAR", Ignored = ignore ?? !jenkins.IncludeAll };

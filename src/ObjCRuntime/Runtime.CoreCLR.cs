@@ -14,6 +14,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
+using System.Text;
 
 using Foundation;
 
@@ -34,6 +35,13 @@ namespace ObjCRuntime {
 			Foundation_NSString,
 			Foundation_NSValue,
 			ObjCRuntime_INativeObject,
+		}
+
+		// Keep in sync with XamarinExceptionType in main.h
+		internal enum ExceptionType {
+			System_Exception,
+			System_InvalidCastException,
+			System_EntryPointNotFoundException,
 		}
 
 		// This struct must be kept in sync with the _MonoObject struct in coreclr-bridge.h
@@ -64,6 +72,28 @@ namespace ObjCRuntime {
 		{
 			// This requires https://github.com/dotnet/runtime/pull/52146 to be merged and packages available.
 			Console.WriteLine ("Not implemented: RegisterToggleReferenceCoreCLR");
+		}
+
+		static unsafe MonoObject* CreateException (ExceptionType type, IntPtr arg0)
+		{
+			Exception rv = null;
+			var str0 = Marshal.PtrToStringAuto (arg0);
+
+			switch (type) {
+			case ExceptionType.System_Exception:
+				rv = new System.Exception (str0);
+				break;
+			case ExceptionType.System_InvalidCastException:
+				rv = new System.InvalidCastException (str0);
+				break;
+			case ExceptionType.System_EntryPointNotFoundException:
+				rv = new System.EntryPointNotFoundException (str0);
+				break;
+			default:
+				throw new ArgumentOutOfRangeException (nameof (type));
+			}
+
+			return (MonoObject*) GetMonoObject (rv);
 		}
 
 		// Returns a retained MonoObject. Caller must release.
@@ -145,10 +175,40 @@ namespace ObjCRuntime {
 			return rv;
 		}
 
+		static unsafe MonoObject* LookupType (TypeLookup type)
+		{
+			Type rv = null;
+
+			switch (type) {
+			case TypeLookup.Foundation_NSNumber:
+				rv = typeof (Foundation.NSNumber);
+				break;
+			case TypeLookup.Foundation_NSValue:
+				rv = typeof (Foundation.NSValue);
+				break;
+			case TypeLookup.System_String:
+				rv = typeof (string);
+				break;
+			default:
+				throw new ArgumentOutOfRangeException (nameof (type));
+			}
+
+			log_coreclr ($"LookupType ({type}) => {rv}");
+
+			return (MonoObject*) GetMonoObject (rv);
+		}
+
 		static unsafe MonoObject* GetElementClass (MonoObject* classobj)
 		{
 			var type = (Type) GetMonoObjectTarget (classobj);
 			return (MonoObject*) GetMonoObject (type.GetElementType ());
+		}
+
+		static unsafe MonoObject* GetNullableElementType (MonoObject* typeobj)
+		{
+			var type = (Type) GetMonoObjectTarget (typeobj);
+			var elementType = type.GetGenericArguments () [0];
+			return (MonoObject*) GetMonoObject (elementType);
 		}
 
 		static IntPtr CreateGCHandle (IntPtr gchandle, GCHandleType type)
@@ -610,6 +670,11 @@ namespace ObjCRuntime {
 			return boxed;
 		}
 
+		static unsafe bool IsNullable (MonoObject* type)
+		{
+			return IsNullable ((Type) GetMonoObjectTarget (type));
+		}
+
 		static bool IsNullable (Type type)
 		{
 			if (Nullable.GetUnderlyingType (type) != null)
@@ -619,11 +684,6 @@ namespace ObjCRuntime {
 				return true;
 
 			return false;
-		}
-
-		static unsafe MonoObject* GetStringClass ()
-		{
-			return (MonoObject *) GetMonoObject (typeof (string));
 		}
 
 		unsafe static bool IsByRef (MonoObject *typeobj)
@@ -756,6 +816,36 @@ namespace ObjCRuntime {
 		{
 			var dict = (MonoHashTable) GetMonoObjectTarget (tableobj);
 			return (MonoObject*) GetMonoObject (dict.Lookup (key));
+		}
+
+		static unsafe IntPtr GetMethodFullName (MonoObject* mobj)
+		{
+			return Marshal.StringToHGlobalAuto (GetMethodFullName ((MethodBase) GetMonoObjectTarget (mobj)));
+		}
+
+		static string GetMethodFullName (MethodBase method)
+		{
+			if (method == null)
+				return null;
+
+			// The return value is used in error messages, so there's not a
+			// specific format we have to return, it just has to be helpful.
+
+			var returnType = (method as MethodInfo)?.ReturnType ?? typeof (void);
+			var sb = new StringBuilder ();
+			sb.Append (returnType.FullName);
+			sb.Append (' ');
+			sb.Append (method.DeclaringType.FullName);
+			sb.Append (' ');
+			sb.Append ('(');
+			var parameters = method.GetParameters ();
+			for (var i = 0; i < parameters.Length; i++) {
+				if (i > 0)
+					sb.Append (", ");
+				sb.Append (parameters [i].ParameterType.FullName);
+			}
+			sb.Append (')');
+			return sb.ToString ();
 		}
 
 		[DllImport ("__Internal")]

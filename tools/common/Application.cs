@@ -1326,7 +1326,9 @@ namespace Xamarin.Bundler {
 		{
 			switch (MarshalManagedExceptions) {
 			case MarshalManagedExceptionMode.Default:
-				if (EnableCoopGC.Value) {
+				if (XamarinRuntime == XamarinRuntime.CoreCLR) {
+					MarshalManagedExceptions = MarshalManagedExceptionMode.ThrowObjectiveCException;
+				} else if (EnableCoopGC.Value) {
 					MarshalManagedExceptions = MarshalManagedExceptionMode.ThrowObjectiveCException;
 				} else {
 					switch (Platform) {
@@ -1349,6 +1351,8 @@ namespace Xamarin.Bundler {
 			case MarshalManagedExceptionMode.Disable:
 				if (EnableCoopGC.Value)
 					throw ErrorHelper.CreateError (89, Errors.MT0089, "--marshal-managed-exceptions", MarshalManagedExceptions.ToString ().ToLowerInvariant ());
+				if (XamarinRuntime == XamarinRuntime.CoreCLR)
+					throw ErrorHelper.CreateError (185, Errors.MX0185 /* The option '{0}' cannot take the value '{1}' when using CoreCLR. */, "--marshal-managed-exceptions", MarshalManagedExceptions.ToString ().ToLowerInvariant ());
 				break;
 			}
 		}
@@ -1357,7 +1361,9 @@ namespace Xamarin.Bundler {
 		{
 			switch (MarshalObjectiveCExceptions) {
 			case MarshalObjectiveCExceptionMode.Default:
-				if (EnableCoopGC.Value) {
+				if (XamarinRuntime == XamarinRuntime.CoreCLR) {
+					MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.ThrowManagedException;
+				} else if (EnableCoopGC.Value) {
 					MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.ThrowManagedException;
 				} else {
 					switch (Platform) {
@@ -1379,6 +1385,8 @@ namespace Xamarin.Bundler {
 			case MarshalObjectiveCExceptionMode.Disable:
 				if (EnableCoopGC.Value)
 					throw ErrorHelper.CreateError (89, Errors.MT0089, "--marshal-objectivec-exceptions", MarshalObjectiveCExceptions.ToString ().ToLowerInvariant ());
+				if (XamarinRuntime == XamarinRuntime.CoreCLR)
+					throw ErrorHelper.CreateError (185, Errors.MX0185 /* The option '{0}' cannot take the value '{1}' when using CoreCLR. */, "--marshal-objectivec-exceptions", MarshalObjectiveCExceptions.ToString ().ToLowerInvariant ());
 				break;
 			}
 		}

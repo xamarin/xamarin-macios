@@ -588,7 +588,7 @@ xamarin_create_exception (const char *msg)
 	// COOP: calls mono, needs to be in UNSAFE mode.
 	MONO_ASSERT_GC_UNSAFE;
 	
-	return (MonoException *) mono_exception_from_name_msg (mono_get_corlib (), "System", "Exception", msg);
+	return xamarin_create_system_exception (msg);
 }
 
 MonoMethod *
@@ -648,7 +648,7 @@ verify_cast (MonoClass *to, MonoObject *obj, Class from_class, SEL sel, MonoMeth
 		"Additional information:\n"
 		"\tSelector: %s\n"
 		"\tMethod: %s\n", from_name, class_getName(from_class), to_name, sel_getName (sel), method_full_name);
-		MonoException *mono_ex = mono_exception_from_name_msg (mono_get_corlib (), "System", "InvalidCastException", msg);
+		MonoException *mono_ex = xamarin_create_system_invalid_cast_exception (msg);
 		mono_free (from_name);
 		mono_free (to_name);
 		xamarin_free (msg);
@@ -759,7 +759,7 @@ xamarin_check_objc_type (id obj, Class expected_class, SEL sel, id self, int ind
 //
 //	char *method_full_name = mono_method_full_name (method, TRUE);
 //	char *msg = xamarin_strdup_printf (m, obj, object_getClassName (obj), class_getName (expected_class), sel, method_full_name, index);
-//	MonoException *mono_ex = mono_exception_from_name_msg (mono_get_corlib (), "System", "InvalidCastException", msg);
+//	MonoException *mono_ex = xamarin_create_system_invalid_cast_exception (msg);
 //	xamarin_free (msg);
 //	mono_free (method_full_name);
 //	mono_raise_exception (mono_ex);
@@ -2202,8 +2202,13 @@ xamarin_process_managed_exception (MonoObject *exception)
 		mode = MarshalManagedExceptionModeDefault;
 	}
 
-	if (mode == MarshalManagedExceptionModeDefault)
+	if (mode == MarshalManagedExceptionModeDefault) {
+#if defined (CORECLR_RUNTIME)
+		mode = MarshalManagedExceptionModeThrowObjectiveCException;
+#else
 		mode = xamarin_is_gc_coop ? MarshalManagedExceptionModeThrowObjectiveCException : MarshalManagedExceptionModeUnwindNativeCode;
+#endif
+	}
 
 	switch (mode) {
 #if !defined (CORECLR_RUNTIME) // CoreCLR won't unwind through native frames, so we'll have to abort (in the default case statement)
@@ -2305,7 +2310,10 @@ xamarin_process_managed_exception (MonoObject *exception)
 #endif
 	case MarshalManagedExceptionModeAbort:
 	default:
-		xamarin_assertion_message ("Aborting due to trying to marshal managed exception:\n%s\n", [xamarin_print_all_exceptions (exception) UTF8String]);
+		handle = xamarin_gchandle_new (exception, false);
+		const char *msg = [xamarin_print_all_exceptions (handle) UTF8String];
+		xamarin_gchandle_free (handle);
+		xamarin_assertion_message ("Aborting due to trying to marshal managed exception:\n%s\n", msg);
 		break;
 	}
 }

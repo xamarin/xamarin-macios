@@ -92,11 +92,15 @@
 		#region metadata/class-internals.h
 		new Export (true, "gboolean", "mono_class_is_nullable",
 			"MonoClass *", "klass"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		new Export (true, "MonoClass *", "mono_class_get_nullable_param",
 			"MonoClass *", "klass"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 		#endregion
 
 		#region metadata/debug-helpers.h
@@ -104,7 +108,9 @@
 		new Export ("char *", "mono_method_full_name",
 			"MonoMethod *", "method",
 			"mono_bool", "signature"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		#endregion
 
@@ -199,7 +205,9 @@
 			"MonoDomain *", "domain",
 			"MonoClass *", "klass",
 			"void *", "val"
-		),
+		) {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		new Export ("void", "mono_gc_wbarrier_set_arrayref",
 			"MonoArray *", "arr",
@@ -450,10 +458,6 @@
 			HasCoreCLRBridgeFunction = true,
 		},
 
-		new Export ("int", "mono_type_get_type",
-			"MonoType *", "type"
-		),
-
 		#endregion
 
 		#region metadata/mono-debug.h
@@ -520,7 +524,9 @@
 			"const char *", "name_space",
 			"const char *", "name",
 			"const char *", "msg"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export ("MonoException *", "mono_get_exception_out_of_memory"),
 
