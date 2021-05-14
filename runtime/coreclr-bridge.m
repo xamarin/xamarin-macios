@@ -108,40 +108,24 @@ xamarin_bridge_get_mono_method (MonoReflectionMethod *method)
 	return method;
 }
 
-MonoClass *
-xamarin_get_nsnumber_class ()
+MonoType *
+xamarin_get_nsnumber_type ()
 {
-	xamarin_assertion_message ("The method %s it not implemented yet for CoreCLR", __func__);
+	// xamarin_bridge_lookup_class returns a MonoClass*, and this method returns a MonoType*,
+	// but they're interchangeable for CoreCLR (they're all just MonoObject*s), so this is fine.
+	MonoClass *rv = xamarin_bridge_lookup_class (XamarinLookupTypes_Foundation_NSNumber);
+	LOG_CORECLR (stderr, "%s () => %p\n", __func__, rv);
+	return rv;
 }
 
-MonoClass *
-xamarin_get_nsvalue_class ()
+MonoType *
+xamarin_get_nsvalue_type ()
 {
-	xamarin_assertion_message ("The method %s it not implemented yet for CoreCLR", __func__);
-}
-
-MonoClass *
-xamarin_get_inativeobject_class ()
-{
-	xamarin_assertion_message ("The method %s it not implemented yet for CoreCLR", __func__);
-}
-
-MonoClass *
-xamarin_get_nsobject_class ()
-{
-	xamarin_assertion_message ("The method %s it not implemented yet for CoreCLR", __func__);
-}
-
-MonoClass *
-xamarin_get_nsstring_class ()
-{
-	xamarin_assertion_message ("The method %s it not implemented yet for CoreCLR", __func__);
-}
-
-MonoClass *
-xamarin_get_runtime_class ()
-{
-	xamarin_assertion_message ("The method %s it not implemented yet for CoreCLR", __func__);
+	// xamarin_bridge_lookup_class returns a MonoClass*, and this method returns a MonoType*,
+	// but they're interchangeable for CoreCLR (they're all just MonoObject*s), so this is fine.
+	MonoClass *rv = xamarin_bridge_lookup_class (XamarinLookupTypes_Foundation_NSValue);
+	LOG_CORECLR (stderr, "%s () => %p\n", __func__, rv);
+	return rv;
 }
 
 void
@@ -391,6 +375,30 @@ mono_runtime_invoke (MonoMethod * method, void * obj, void ** params, MonoObject
 	return rv;
 }
 
+MonoException *
+xamarin_create_system_exception (const char *message)
+{
+	MonoException *rv = xamarin_bridge_create_exception (XamarinExceptionTypes_System_Exception, message);
+	LOG_CORECLR (stderr, "%s (%p) => %p\n", __func__, message, rv);
+	return rv;
+}
+
+MonoException *
+xamarin_create_system_invalid_cast_exception (const char *message)
+{
+	MonoException *rv = xamarin_bridge_create_exception (XamarinExceptionTypes_System_InvalidCastException, message);
+	LOG_CORECLR (stderr, "%s (%p) => %p\n", __func__, message, rv);
+	return rv;
+}
+
+MonoException *
+xamarin_create_system_entry_point_not_found_exception (const char *entrypoint)
+{
+	MonoException *rv = xamarin_bridge_create_exception (XamarinExceptionTypes_System_EntryPointNotFoundException, entrypoint);
+	LOG_CORECLR (stderr, "%s (%p) => %p\n", __func__, entrypoint, rv);
+	return rv;
+}
+
 MonoMethodSignature *
 mono_method_signature (MonoMethod* method)
 {
@@ -448,6 +456,9 @@ xamarin_bridge_free_mono_signature (MonoMethodSignature **psig)
 {
 	MonoMethodSignature *sig = *psig;
 
+	if (sig == NULL)
+		return;
+
 	for (int i = 0; i < sig->parameter_count; i++) {
 		xamarin_mono_object_release (&sig->parameters [i]);
 	}
@@ -502,8 +513,28 @@ mono_class_from_mono_type (MonoType *type)
 MonoClass *
 mono_get_string_class ()
 {
-	MonoClass *rv = xamarin_bridge_get_string_class ();
+	MonoClass *rv = xamarin_bridge_lookup_class (XamarinLookupTypes_System_String);
 	LOG_CORECLR (stderr, "%s () => %p.\n", __func__, rv);
+	return rv;
+}
+
+mono_bool
+mono_class_is_enum (MonoClass *klass)
+{
+	bool rv = xamarin_bridge_is_enum (klass);
+
+	LOG_CORECLR (stderr, "%s (%p) => %i\n", __func__, klass, rv);
+
+	return rv;
+}
+
+MonoType *
+mono_class_enum_basetype (MonoClass *klass)
+{
+	MonoType *rv = xamarin_bridge_get_enum_basetype (klass);
+
+	LOG_CORECLR (stderr, "%s (%p) => %p\n", __func__, klass, rv);
+
 	return rv;
 }
 
@@ -531,6 +562,16 @@ mono_class_is_valuetype (MonoClass * klass)
 	bool rv = xamarin_bridge_is_valuetype (klass);
 
 	LOG_CORECLR (stderr, "%s (%p) => %i\n", __func__, klass, rv);
+
+	return rv;
+}
+
+int32_t
+mono_class_value_size (MonoClass *klass, uint32_t *align)
+{
+	int32_t rv = xamarin_bridge_sizeof (klass);
+
+	LOG_CORECLR (stderr, "%s (%p, %p) => %i\n", __func__, klass, align, rv);
 
 	return rv;
 }

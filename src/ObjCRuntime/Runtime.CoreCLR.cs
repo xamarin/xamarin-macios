@@ -37,6 +37,13 @@ namespace ObjCRuntime {
 			ObjCRuntime_INativeObject,
 		}
 
+		// Keep in sync with XamarinExceptionType in main.h
+		internal enum ExceptionType {
+			System_Exception,
+			System_InvalidCastException,
+			System_EntryPointNotFoundException,
+		}
+
 		// This struct must be kept in sync with the _MonoObject struct in coreclr-bridge.h
 		[StructLayout (LayoutKind.Sequential)]
 		internal struct MonoObject {
@@ -65,6 +72,28 @@ namespace ObjCRuntime {
 		{
 			// This requires https://github.com/dotnet/runtime/pull/52146 to be merged and packages available.
 			Console.WriteLine ("Not implemented: RegisterToggleReferenceCoreCLR");
+		}
+
+		static unsafe MonoObject* CreateException (ExceptionType type, IntPtr arg0)
+		{
+			Exception rv = null;
+			var str0 = Marshal.PtrToStringAuto (arg0);
+
+			switch (type) {
+			case ExceptionType.System_Exception:
+				rv = new System.Exception (str0);
+				break;
+			case ExceptionType.System_InvalidCastException:
+				rv = new System.InvalidCastException (str0);
+				break;
+			case ExceptionType.System_EntryPointNotFoundException:
+				rv = new System.EntryPointNotFoundException (str0);
+				break;
+			default:
+				throw new ArgumentOutOfRangeException (nameof (type));
+			}
+
+			return (MonoObject*) GetMonoObject (rv);
 		}
 
 		// Returns a retained MonoObject. Caller must release.
@@ -144,6 +173,29 @@ namespace ObjCRuntime {
 			log_coreclr ($"IsClassOfType ({type}, {match}) => {rv}");
 
 			return rv;
+		}
+
+		static unsafe MonoObject* LookupType (TypeLookup type)
+		{
+			Type rv = null;
+
+			switch (type) {
+			case TypeLookup.Foundation_NSNumber:
+				rv = typeof (Foundation.NSNumber);
+				break;
+			case TypeLookup.Foundation_NSValue:
+				rv = typeof (Foundation.NSValue);
+				break;
+			case TypeLookup.System_String:
+				rv = typeof (string);
+				break;
+			default:
+				throw new ArgumentOutOfRangeException (nameof (type));
+			}
+
+			log_coreclr ($"LookupType ({type}) => {rv}");
+
+			return (MonoObject*) GetMonoObject (rv);
 		}
 
 		static unsafe MonoObject* GetElementClass (MonoObject* classobj)
@@ -373,6 +425,12 @@ namespace ObjCRuntime {
 			if (type.IsByRef)
 				type = type.GetElementType ();
 			return (MonoObject *) GetMonoObject (type);
+		}
+
+		static unsafe int SizeOf (MonoObject* typeobj)
+		{
+			var type = (Type) GetMonoObjectTarget (typeobj);
+			return SizeOf (type);
 		}
 
 		static int SizeOf (Type type)
@@ -634,11 +692,6 @@ namespace ObjCRuntime {
 			return false;
 		}
 
-		static unsafe MonoObject* GetStringClass ()
-		{
-			return (MonoObject *) GetMonoObject (typeof (string));
-		}
-
 		unsafe static bool IsByRef (MonoObject *typeobj)
 		{
 			var type = (Type) GetMonoObjectTarget (typeobj);
@@ -649,6 +702,23 @@ namespace ObjCRuntime {
 		{
 			var type = (Type) GetMonoObjectTarget (typeobj);
 			return type.IsValueType;
+		}
+
+		unsafe static bool IsEnum (MonoObject *typeobj)
+		{
+			var type = (Type) GetMonoObjectTarget (typeobj);
+			return type.IsEnum;
+		}
+
+		static unsafe MonoObject* GetEnumBaseType (MonoObject* typeobj)
+		{
+			var type = (Type) GetMonoObjectTarget (typeobj);
+			return (MonoObject*) GetMonoObject (GetEnumBaseType (type));
+		}
+
+		static Type GetEnumBaseType (Type type)
+		{
+			return type.GetEnumUnderlyingType ();
 		}
 
 		static object PtrToStructure (IntPtr ptr, Type type)
