@@ -254,8 +254,8 @@ MonoException *	xamarin_create_system_entry_point_not_found_exception (const cha
 NSString *		xamarin_print_all_exceptions (GCHandle handle);
 
 id				xamarin_invoke_objc_method_implementation (id self, SEL sel, IMP xamarin_impl);
-MonoClass *		xamarin_get_nsnumber_class ();
-MonoClass *		xamarin_get_nsvalue_class ();
+MonoType *		xamarin_get_nsnumber_type ();
+MonoType *		xamarin_get_nsvalue_type ();
 MonoClass *		xamarin_get_inativeobject_class ();
 MonoClass *		xamarin_get_nsobject_class ();
 MonoClass *		xamarin_get_nsstring_class ();
