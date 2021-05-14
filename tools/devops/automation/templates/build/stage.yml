@@ -58,6 +58,7 @@ jobs:
   dependsOn:
   - AgentPoolSelector
   - configure
+  condition: and(succeeded(), and(ne(variables.isSchedule, 'True'), and(ne(variables.isManual, 'True'), or(eq('${{ parameters.runTests }}', true), eq('${{ parameters.runDeviceTests }}', true)))))
   displayName: 'Build packages'
   timeoutInMinutes: 1000
   variables:
