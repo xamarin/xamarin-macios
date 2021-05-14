@@ -21,11 +21,19 @@ parameters:
 - name: xqaCertPass
   type: string
 
+- name: enableDotnet
+  type: boolean
+  default: false
+
 jobs:
 - job: configure
   displayName: 'Configure build'
   pool:
     vmImage: windows-latest
+
+  variables:
+    isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
+    isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
 
   steps:
   - template: configure.yml
@@ -36,8 +44,13 @@ jobs:
   steps:
   - checkout: none             # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
 
-  # Selects appropriate agent pool based on trigger type (PR or CI)
-  - template: ../agent-pool-selector.yml
+  # Selects appropriate agent pool based on trigger type (PR or CI); manually triggered builds target the PR pool
+  - template: azure-devops-pools/agent-pool-selector.yml@templates
+    parameters:
+      agentPoolPR: $(PRBuildPool)
+      agentPoolPRUrl: $(PRBuildPoolUrl)
+      agentPoolCI: $(CIBuildPool)
+      agentPoolCIUrl: $(CIBuildPoolUrl)
 
 - job: build
   dependsOn:
@@ -92,15 +105,20 @@ jobs:
       keyringPass: ${{ parameters.keyringPass }}
       gitHubToken: ${{ parameters.gitHubToken }}
       xqaCertPass: ${{ parameters.xqaCertPass }}
+      enableDotnet: ${{ parameters.enableDotnet }}
 
 - job: upload_azure_blob
   displayName: 'Upload packages to Azure'
   timeoutInMinutes: 1000
-  dependsOn: build # can start as soon as the packages are available
+  dependsOn:
+  - configure
+  - build # can start as soon as the packages are available
   condition: and(succeeded(), contains (dependencies.build.outputs['configuration.BuildPkgs'], 'True')) # only run when we do have pkgs
 
   variables:
     Parameters.outputStorageUri: ''
+    NUGETS_PUBLISHED: $[ dependencies.build.outputs['nugetPublishing.NUGETS_PUBLISHED'] ]
+    SKIP_NUGETS: $[ dependencies.configure.outputs['labels.skip-nugets'] ]
 
   pool:
     vmImage: 'windows-latest'
@@ -108,6 +126,8 @@ jobs:
       clean: all
   steps:
   - template: upload-azure.yml
+    parameters:
+      enableDotnet: ${{ parameters.enableDotnet }}
 
 - job: upload_vsdrops
   displayName: 'Upload test results to VSDrops'
@@ -123,12 +143,14 @@ jobs:
   - template: upload-vsdrops.yml
     parameters:
       devicePrefix: sim
+      runTests: ${{ parameters.runTests }}
+      apiGeneratorDiffBuilt: $[ dependencies.build.outputs['apiGeneratorDiff.API_GENERATOR_BUILT'] ]
 
 - job: upload_vsts_tests
   displayName: 'Upload xml to vsts'
   timeoutInMinutes: 1000
   dependsOn:  build # can start as soon as the tests are done
-  condition: and(succeededOrFailed() , contains (dependencies.build.outputs['runTests.TESTS_RAN'], 'True')) # only run when we did run the tests
+  condition: and(succeededOrFailed(), contains(dependencies.build.outputs['runTests.TESTS_RAN'], 'True')) # only run when we did run the tests
 
   pool:
     vmImage: 'windows-latest'
@@ -166,5 +188,6 @@ jobs:
   - template: publish-html.yml
     parameters:
       statusContext: "Build"
+      runTests: ${{ parameters.runTests }}
       vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
       devicePrefix: sim

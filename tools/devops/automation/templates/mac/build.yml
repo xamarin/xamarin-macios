@@ -37,6 +37,23 @@ steps:
     gci env: | format-table -autosize -wrap
   displayName: 'Dump Environment'
 
+- bash: |
+    ioreg -l | grep -e Manufacturer -e 'Vendor Name'
+  displayName: 'Dump Hardware'
+
+- bash: |
+    vmware=$(ioreg -l | grep -e Manufacturer -e 'Vendor Name' | grep -e 'VMWare' | wc -l)
+    if [[ $vmare -gt 0 ]]; then
+      echo "##vso[task.setvariable variable=VM_VENDOR]VMWare"
+    fi
+
+    virtualbox=$(ioreg -l | grep -e Manufacturer -e 'Vendor Name' | grep -e 'VirtualBox' | wc -l)
+    if [[ $virtualbox -gt 0 ]]; then
+      echo "##vso[task.setvariable variable=VM_VENDOR]VirtualBox"
+    fi
+
+  displayName: 'Set VM Vendor'
+
 - bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/clean-bot.sh
   displayName: 'Clean bot'
   env:
@@ -143,11 +160,10 @@ steps:
     Write-Host "Found tests"
     $testsPath = "$(Build.SourcesDirectory)/artifacts/mac-test-package/tests"
     Write-Host "Tests path is $testsPath"
-    Get-ChildItem -Recurse $testsPath
 
     [System.Collections.Generic.List[string]]$failures = @()
 
-    $macTest = @("dontlink", "apitest", "introspection", "linksdk", "linkall", "xammac_tests")
+    $macTest = @("dontlink", "introspection", "linksdk", "linkall", "xammac_tests")
     foreach ($t in $macTest) {
       $testName = "exec-mac-$t"
       Write-Host "Execution test $testName"

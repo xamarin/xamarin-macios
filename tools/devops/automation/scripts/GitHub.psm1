@@ -456,7 +456,7 @@ function New-GitHubSummaryComment {
             # we are dealing with an object, not a dictionary
             $hasHtmlLinks = "html" -in $json.PSobject.Properties.Name
             $hasMDlinks = "gist" -in $json.PSobject.Properties.Name
-            if ($hasHtmlLinks -and $hasMDlinks) {
+            if ($hasHtmlLinks -or $hasMDlinks) {
                 # build the required list
                 $sb.AppendLine("# API diff")
                 Write-Host "Message is '$($json.message)'"
@@ -464,10 +464,33 @@ function New-GitHubSummaryComment {
                 $sb.AppendLine("<details><summary>View API diff</summary>")
                 $sb.AppendLine("") # no new line results in a bad rendering in the links
 
-                foreach ($linkPlatform in @("iOS", "macOS", "tvOS", "watchOS")) {
-                    $htmlLink = $json.html | Select-Object -ExpandProperty $linkPlatform 
-                    $gistLink = $json.gist | Select-Object -ExpandProperty $linkPlatform 
-                    $sb.AppendLine("* $linkPlatform [vsdrops]($htmlLink) [gist]($gistLink)")
+                foreach ($linkPlatform in @("iOS", "macOS", "macCat", "macCatiOS", "tvOS", "watchOS")) {
+                    $htmlLink = ""
+                    $gistLink = ""
+
+                    $platformHasHtmlLinks = $linkPlatform -in $json.html.PSobject.Properties.Name
+                    $platformHasMDlinks = $linkPlatform -in $json.gist.PSobject.Properties.Name
+                    
+                    # some do not have md, some do not have html
+                    if ($platformHasHtmlLinks) {
+                        Write-Host "Found html link for $linkPlatform"
+                        $htmlLinkUrl = $json.html | Select-Object -ExpandProperty $linkPlatform 
+                        $htmlLink = "[vsdrops]($htmlLinkUrl)"
+                    }
+
+                    if ($platformHasMDlinks) {
+                        Write-Host "Found gist link for $linkPlatform"
+                        $gistLinkUrl = $json.gist | Select-Object -ExpandProperty $linkPlatform 
+                        $gistLink = "[gist]($gistLinkUrl)"
+                    }
+
+                    if (($htmlLink -eq "") -and ($gistLink -eq "")) {
+                        $sb.AppendLine("* :fire: $linkPlatform :fire: Missing files")
+                    } else {
+                        # I don't like extra ' ' when we are missing vars, use join
+                        $line = @("*", $linkPlatform, $htmlLink, $gistLink) -join " "
+                        $sb.AppendLine($line)
+                    }
                 }
 
                 $sb.AppendLine("</details>")
@@ -513,7 +536,7 @@ function New-GitHubSummaryComment {
                 $sb.AppendLine("") # no new line results in a bad rendering in the links
                 foreach ($a in $json) {
                     $url = $a.url
-                    if ($url.EndsWith(".pkg") -or $url.EndsWith(".nupkg")) {
+                    if ($url.EndsWith(".pkg") -or $url.EndsWith(".nupkg") -or $url.EndsWith(".msi")) {
                         try {
                             $fileName = $a.url.Substring($a.url.LastIndexOf("/") + 1)
                             Write-Host "Adding link for $fileName"

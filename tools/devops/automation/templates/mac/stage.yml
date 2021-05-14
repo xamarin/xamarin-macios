@@ -3,12 +3,15 @@ parameters:
 - name: macPool
   type: string
 
-- name: stageName 
+- name: stageName
+  type: string
+
+- name: displayName
   type: string
 
 - name: statusContext
-  type: string 
-  default: '10.16' # default context, since we started dealing with iOS devices. 
+  type: string
+  default: '10.16'
 
 - name: keyringPass
   type: string
@@ -21,8 +24,8 @@ parameters:
   default: true
 
 stages:
-- stage:
-  displayName: ${{ parameters.stageName }}
+- stage: ${{ parameters.stageName }}
+  displayName: ${{ parameters.displayName }}
   dependsOn:
   - build_packages
   # we need to have the pkgs built and the device sets to be ran, that is decided via the labels or type of build during the build_packages stage
