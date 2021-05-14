@@ -23,6 +23,10 @@ parameters:
 - name: xqaCertPass
   type: string
 
+- name: enableDotnet
+  type: boolean
+  default: false
+
 steps:
 - checkout: self          # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
   clean: true             # Executes: git clean -ffdx && git reset --hard HEAD
@@ -163,6 +167,13 @@ steps:
     $buildReason = "$(Build.Reason)"
     $buildSourceBranchName = "$(Build.SourceBranchName)"
 
+    Write-Host "PrID in env is $Env:PR_ID"
+    if (-not [string]::IsNullOrEmpty($Env:PR_ID)) {
+      $configVars.Add("PR_ID", $Env:PR_ID)
+    } else {
+      $configVars.Add("PR_ID", "")
+    }
+
     # decide if we are dealing with a PR or a re-triggered PR or a build from
     # a branch in origin
 
@@ -267,13 +278,21 @@ steps:
       CONFIGURE_FLAGS="--enable-xamarin"
     fi
 
-    CONFIGURE_FLAGS="$CONFIGURE_FLAGS --enable-dotnet --enable-dotnet-windows --enable-install-source"
+    if [[ "$EnableDotNet" == "True" ]]; then
+      echo "Enabling dotnet builds."
+      CONFIGURE_FLAGS="$CONFIGURE_FLAGS --enable-dotnet --enable-dotnet-windows"
+    fi
+
+    CONFIGURE_FLAGS="$CONFIGURE_FLAGS --enable-install-source"
+    echo "Configuration falgs are '$CONFIGURE_FLAGS'"
 
     cd $(Build.SourcesDirectory)/xamarin-macios/
     ./configure $CONFIGURE_FLAGS
     echo $(cat $(Build.SourcesDirectory)/xamarin-macios/configure.inc)
   env:
     IsPR: $(configuration.IsPR)
+    ${{ if eq(parameters.enableDotnet, true) }}:
+      EnableDotNet: 'True'
   displayName: "Configure build"
   timeoutInMinutes: 5
 
@@ -286,6 +305,11 @@ steps:
     time make -C $(Build.SourcesDirectory)/xamarin-macios/ install -j8
   displayName: 'Build'
   timeoutInMinutes: 180
+
+ # run ASAP so that we do not have any files that got generated confusing git 
+- template: api-diff.yml
+  parameters:
+    prID: variables['PrID']
 
 # build not signed .pkgs for the SDK
 - bash: |
@@ -300,39 +324,14 @@ steps:
   timeoutInMinutes: 180
 
 # build nugets
-- bash:  $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/build-nugets.sh
-  displayName: 'Build Nugets'
-  condition: and(succeeded(), contains(variables['configuration.BuildNugets'], 'True'))
-  continueOnError: true # should not stop the build since is not official just yet.
-  timeoutInMinutes: 180
-
-- script: >-
-    dotnet build -t:GenerateBuildAssetRegistryManifest /v:n
-    $(Build.SourcesDirectory)/xamarin-macios/dotnet/package/Microsoft.iOS.Ref/package.csproj
-    -bl:$(Build.ArtifactStagingDirectory)/build-binlogs/generate-bar-manifest.binlog
-  displayName: Generate and Upload Build Asset Registry Manifest
-  condition: and(succeeded(), contains(variables['configuration.BuildNugets'], 'True'))
-
-- task: PublishPipelineArtifact@1
-  displayName: 'Publish Artifact: build-binlogs'
-  inputs:
-    targetPath: $(Build.ArtifactStagingDirectory)/build-binlogs
-    artifactName: build-binlogs
-  condition: and(succeededOrFailed(), contains(variables['configuration.BuildNugets'], 'True'))
-
-- task: NuGetCommand@2
-  displayName: 'Publish Nugets'
-  inputs:
-    command: push
-    packagesToPush: $(Build.SourcesDirectory)/package/*.nupkg
-    nuGetFeedType: external
-    publishFeedCredentials: xamarin-impl public feed
-  condition: and(succeeded(), eq(variables['configuration.BuildNugets'], 'True'))
-  continueOnError: true # should not stop the build since is not official just yet.
+- ${{ if eq(parameters.enableDotnet, true) }}:
+  - template: build-nugets.yml
 
 # only sign an notarize in no PR executions
 - ${{ if ne(parameters.isPR, 'True') }}:
   - template: sign-and-notarized.yml
+    parameters:
+      enableDotnet: ${{ parameters.enableDotnet }}
 
 - template: generate-workspace-info.yml@templates
   parameters:
@@ -390,8 +389,6 @@ steps:
   condition: and(succeeded(), contains(variables['configuration.RunMacTests'], 'True'))
   continueOnError: true
 
-- template: api-diff.yml
-
 - bash: |
     set -x
     set -e
@@ -429,9 +426,11 @@ steps:
   enabled: ${{ parameters.runTests }}
   env:
     IsPR: $(configuration.IsPR)
+    PR_ID: $(configuration.PR_ID)
     GITHUB_TOKEN: $(GitHub.Token)  # used to filter the tests to be ran
     BUILD_REVISION: jenkins
     VSDROPS_URI: '${{ parameters.vsdropsPrefix }}/$(Build.BuildNumber)/$(Build.BuildId)/sim;/tests/' # uri used to create the vsdrops index using full uri
+
 
 # Only executed when the tests failed, that means that we did have a timeout, and we could not set the status, this
 # later results on an error when publishing the results, if we timeout, we ensure we set the needed vars
