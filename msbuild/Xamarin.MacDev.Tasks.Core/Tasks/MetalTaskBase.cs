@@ -100,8 +100,12 @@ namespace Xamarin.MacDev.Tasks
 			args.Add ("-o");
 			args.AddQuoted (Path.ChangeExtension (path, ".air"));
 
-			args.Add (PlatformFrameworkHelper.GetMinimumVersionArgument (TargetFrameworkMoniker, SdkIsSimulator, MinimumOSVersion));
-
+			if (Platform == ApplePlatform.MacCatalyst) {
+				args.Add ($"-target");
+				args.Add ($"air64-apple-ios{MinimumOSVersion}-macabi");
+			} else {
+				args.Add (PlatformFrameworkHelper.GetMinimumVersionArgument (TargetFrameworkMoniker, SdkIsSimulator, MinimumOSVersion));
+			}
 			args.AddQuoted (SourceFile.ItemSpec);
 
 			return args.ToString ();
