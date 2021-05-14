@@ -383,6 +383,15 @@
 			OnlyCoreCLR = true,
 		},
 
+		new XDelegate ("MonoObject *", "MonoObject *", "xamarin_bridge_create_exception",
+			"enum XamarinExceptionTypes", "Runtime.ExceptionType", "type",
+			"const char *", "IntPtr", "arg0"
+		) {
+			WrappedManagedFunction = "CreateException",
+			OnlyDynamicUsage = false,
+			OnlyCoreCLR = true,
+		},
+
 		new XDelegate ("MonoMethodSignature *", "IntPtr", "xamarin_bridge_method_get_signature",
 			"MonoObject *", "MonoObject *", "method"
 		) {

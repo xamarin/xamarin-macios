@@ -391,6 +391,30 @@ mono_runtime_invoke (MonoMethod * method, void * obj, void ** params, MonoObject
 	return rv;
 }
 
+MonoException *
+xamarin_create_system_exception (const char *message)
+{
+	MonoException *rv = xamarin_bridge_create_exception (XamarinExceptionTypes_System_Exception, message);
+	LOG_CORECLR (stderr, "%s (%p) => %p\n", __func__, message, rv);
+	return rv;
+}
+
+MonoException *
+xamarin_create_system_invalid_cast_exception (const char *message)
+{
+	MonoException *rv = xamarin_bridge_create_exception (XamarinExceptionTypes_System_InvalidCastException, message);
+	LOG_CORECLR (stderr, "%s (%p) => %p\n", __func__, message, rv);
+	return rv;
+}
+
+MonoException *
+xamarin_create_system_entry_point_not_found_exception (const char *entrypoint)
+{
+	MonoException *rv = xamarin_bridge_create_exception (XamarinExceptionTypes_System_EntryPointNotFoundException, entrypoint);
+	LOG_CORECLR (stderr, "%s (%p) => %p\n", __func__, entrypoint, rv);
+	return rv;
+}
+
 MonoMethodSignature *
 mono_method_signature (MonoMethod* method)
 {

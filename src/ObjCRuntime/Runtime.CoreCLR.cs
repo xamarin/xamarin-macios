@@ -37,6 +37,13 @@ namespace ObjCRuntime {
 			ObjCRuntime_INativeObject,
 		}
 
+		// Keep in sync with XamarinExceptionType in main.h
+		internal enum ExceptionType {
+			System_Exception,
+			System_InvalidCastException,
+			System_EntryPointNotFoundException,
+		}
+
 		// This struct must be kept in sync with the _MonoObject struct in coreclr-bridge.h
 		[StructLayout (LayoutKind.Sequential)]
 		internal struct MonoObject {
@@ -65,6 +72,28 @@ namespace ObjCRuntime {
 		{
 			// This requires https://github.com/dotnet/runtime/pull/52146 to be merged and packages available.
 			Console.WriteLine ("Not implemented: RegisterToggleReferenceCoreCLR");
+		}
+
+		static unsafe MonoObject* CreateException (ExceptionType type, IntPtr arg0)
+		{
+			Exception rv = null;
+			var str0 = Marshal.PtrToStringAuto (arg0);
+
+			switch (type) {
+			case ExceptionType.System_Exception:
+				rv = new System.Exception (str0);
+				break;
+			case ExceptionType.System_InvalidCastException:
+				rv = new System.InvalidCastException (str0);
+				break;
+			case ExceptionType.System_EntryPointNotFoundException:
+				rv = new System.EntryPointNotFoundException (str0);
+				break;
+			default:
+				throw new ArgumentOutOfRangeException (nameof (type));
+			}
+
+			return (MonoObject*) GetMonoObject (rv);
 		}
 
 		// Returns a retained MonoObject. Caller must release.
