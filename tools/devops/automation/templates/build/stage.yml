@@ -37,7 +37,7 @@ jobs:
     isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
     isManual: $[eq(variables['Build.Reason'], 'Manual')]
     # Preferably would like to check if we have the tests checked and in Manual but could not get runtime and compile varable cooperating
-    isScheduledOrManual: $[or(eq(variables['Build.Reason'], 'Schedule'), (eq(variables['Build.Reason'], 'Manual')]
+    isScheduledOrManual: $[or(eq(variables['Build.Reason'], 'Schedule'), (eq(variables['Build.Reason'], 'Manual'))]
 
   steps:
   - template: configure.yml
