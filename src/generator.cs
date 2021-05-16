@@ -6093,7 +6093,7 @@ public partial class Generator : IMemberGatherer {
 				var propertyTypes = properties.GroupBy ((v) => v.PropertyType.FullName).Select ((v) => v.First ()).ToArray ();
 				if (propertyTypes.Length > 1) {
 					exceptions.Add (ErrorHelper.CreateError (1070, type.FullName, gr.Key, propertyTypes [0].DeclaringType.FullName, propertyTypes [1].DeclaringType.FullName,
-						propertyTypes [0], FormatType (type, propertyTypes [0].PropertyType), propertyTypes [1], FormatType (type, propertyTypes [0].PropertyType)));
+						FormatPropertyInfo (propertyTypes [0]), FormatType (type, propertyTypes [0].PropertyType), FormatPropertyInfo (propertyTypes [1]), FormatType (type, propertyTypes [0].PropertyType)));
 				}
 
 				// Select the best match of the properties: prefer a read/write property if it exists, otherwise a readonly or writeonly property.
