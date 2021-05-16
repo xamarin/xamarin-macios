@@ -158,32 +158,6 @@ public class BindingTouch {
 			yield return lib;
 	}
 
-	string LocateAssembly (string name)
-	{
-		foreach (var asm in universe.GetAssemblies ()) {
-			if (asm.GetName ().Name == name)
-				return asm.Location;
-		}
-
-		foreach (var lib in GetLibraryDirectories ()) {
-			var path = Path.Combine (lib, name);
-			if (File.Exists (path))
-				return path;
-			path += ".dll";
-			if (File.Exists (path))
-				return path;
-		}
-
-		// Look in our references to see if we were explicity passed a path to the library we're looking for
-		foreach (var reference in references) {
-			var refname = Path.GetFileName (reference);
-			if (refname == name || refname == name + ".dll")
-				return reference;
-		}
-
-		throw new FileNotFoundException ($"Could not find the assembly '{name}' in any of the directories: {string.Join (", ", GetLibraryDirectories ())}");
-	}
-
 	string GetSDKRoot ()
 	{
 		switch (CurrentPlatform) {
@@ -474,23 +448,10 @@ public class BindingTouch {
 			if (Driver.RunCommand (compiler, cargs, null, out var compile_output, true, Driver.Verbosity) != 0)
 				throw ErrorHelper.CreateError (2, $"{compiler} {StringUtils.FormatArguments (cargs)}\n{compile_output}".Replace ("\n", "\n\t"));
 
-			// TODO: Replace with lazy resolver
-			var assemblyPaths = new List<string> ();
-			foreach (var path in GetLibraryDirectories ()) {
-				if (Directory.Exists (path)) {
-					assemblyPaths.AddRange (Directory.GetFiles (path, "*.dll"));
-				}
-			}
-			foreach (var r in references) {
-				if (File.Exists (r)) {
-					assemblyPaths.Add (r);
-				}
-			}
-			assemblyPaths.Add (baselibdll);
-			assemblyPaths.Add (GetAttributeLibraryPath ());
-
 			universe = new MetadataLoadContext (
-				new PathAssemblyResolver (assemblyPaths),
+				new SearchPathsAssemblyResolver (
+					GetLibraryDirectories ().ToArray (),
+					references.ToArray ()),
 				"mscorlib"
 			);
 
@@ -662,5 +623,42 @@ static class ReferenceFixer
 			references.Remove (r);
 			AddSDKReference (references, sdk_path, r + ".dll");
 		}
+	}
+}
+
+class SearchPathsAssemblyResolver : MetadataAssemblyResolver
+{
+	private readonly string[] libraryPaths;
+	private readonly string[] references;
+
+	public SearchPathsAssemblyResolver (string[] libraryPaths, string[] references)
+	{
+		this.libraryPaths = libraryPaths;
+		this.references = references;
+	}
+
+	public override Assembly? Resolve (MetadataLoadContext context, AssemblyName assemblyName)
+	{
+		string? name = assemblyName.Name;
+		if (name != null) {
+			foreach (var asm in context.GetAssemblies ()) {
+				if (asm.GetName ().Name == name)
+					return asm;
+			}
+
+			string dllName = name + ".dll";
+			foreach (var libraryPath in libraryPaths) {
+				string path = Path.Combine(libraryPath, dllName);
+				if (File.Exists (path)) {
+					return context.LoadFromAssemblyPath (path);
+				}
+			}
+			foreach (var reference in references) {
+				if (Path.GetFileName (reference).Equals (dllName, StringComparison.OrdinalIgnoreCase)) {
+					return context.LoadFromAssemblyPath (reference);
+				}
+			}
+		}
+		return null;
 	}
 }
