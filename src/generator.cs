@@ -6102,7 +6102,7 @@ public partial class Generator : IMemberGatherer {
 					bestMatch = readwrite;
 				} else if (@readonly != null && writeonly != null) {
 					exceptions.Add (ErrorHelper.CreateError (1067, type.FullName, gr.Key, @readonly.DeclaringType.FullName, writeonly.DeclaringType.FullName,
-						@readonly, writeonly));
+						FormatPropertyInfo (@readonly), FormatPropertyInfo (writeonly)));
 					continue;
 				} else if (@readonly != null) {
 					bestMatch = @readonly;
@@ -6975,7 +6975,7 @@ public partial class Generator : IMemberGatherer {
 							else if (btype == TypeManager.System_nuint || btype == TypeManager.System_UInt64)
 								print ($"return ({fieldTypeName}) (ulong) Dlfcn.GetNUInt (Libraries.{library_name}.Handle, \"{fieldAttr.SymbolName}\");");
 							else
-								throw new BindingException (1014, true, fieldTypeName, field_pi);
+								throw new BindingException (1014, true, fieldTypeName, FormatPropertyInfo (field_pi));
 						} else {
 							if (btype == TypeManager.System_Int32)
 								print ($"return ({fieldTypeName}) Dlfcn.GetInt32 (Libraries.{library_name}.Handle, \"{fieldAttr.SymbolName}\");");
@@ -6986,13 +6986,13 @@ public partial class Generator : IMemberGatherer {
 							else if (btype == TypeManager.System_UInt64)
 								print ($"return ({fieldTypeName}) Dlfcn.GetUInt64 (Libraries.{library_name}.Handle, \"{fieldAttr.SymbolName}\");");
 							else
-								throw new BindingException (1014, true, fieldTypeName, field_pi);
+								throw new BindingException (1014, true, fieldTypeName, FormatPropertyInfo (field_pi));
 						}
 					} else {
 						if (field_pi.PropertyType == TypeManager.System_String)
 							throw new BindingException (1013, true);
 						else
-							throw new BindingException (1014, true, fieldTypeName, field_pi);
+							throw new BindingException (1014, true, fieldTypeName, FormatPropertyInfo (field_pi));
 					}
 					
 					indent--;
@@ -7307,7 +7307,7 @@ public partial class Generator : IMemberGatherer {
 											print ("{0} = null;", j.Name.GetSafeParamName ());
 										}
 									}
-										
+
 									print ("return {0}!;", def);
 								}
 							}
@@ -7999,9 +7999,10 @@ public partial class Generator : IMemberGatherer {
 		if (mi.ReturnType.IsEnum) {
 			if (def is string)
 				return def;
-			var name = mi.ReturnType.GetEnumName (def);
+			var name = Enum.GetName (mi.ReturnType, def);
 			if (string.IsNullOrEmpty (name)) {
-				return "(" + mi.ReturnType.FullName + ") " + def;
+				// The value could be negative so it need to be enclosed in parenthesis
+				return "(" + mi.ReturnType.FullName + ") (" + def + ")";
 			} else {
 				return mi.ReturnType.FullName + "." + name;
 			}
@@ -8070,6 +8071,11 @@ public partial class Generator : IMemberGatherer {
 			return @"""""";
 
 		return $"@\"{s.Replace ("\"", "\"\"")}\"";
+	}
+
+	private static string FormatPropertyInfo (PropertyInfo pi)
+	{
+		return pi.DeclaringType.FullName + " " + pi.Name;
 	}
 
 	// Format a provider for error messages
