@@ -27,7 +27,7 @@ steps:
 
     # calculate the commit to later share it with the cascade pipelines 
     if ($Env:BUILD_REASON -eq "PullRequest") {
-        $changeId = $config.BuildSourceBranch.Replace("refs/pull/", "").Replace("/merge", "")
+        $changeId = $configuration.BuildSourceBranch.Replace("refs/pull/", "").Replace("/merge", "")
     } else {
         $changeId = $Env:BUILD_REVISION
     }
