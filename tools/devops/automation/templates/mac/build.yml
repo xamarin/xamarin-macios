@@ -42,18 +42,25 @@ steps:
   displayName: 'Dump Hardware'
 
 - bash: |
-    vmware=$(ioreg -l | grep -e Manufacturer -e 'Vendor Name' | grep -e 'VMWare' | wc -l)
+    vmware=$(ioreg -l | grep -e 'VMWare' | wc -l)
     echo "VMWare coung $vmware"
     if [[ $vmare -gt 0 ]]; then
       echo "Using VMWare virtualization."
       echo "##vso[task.setvariable variable=VM_VENDOR]VMWare"
     fi
 
-    virtualbox=$(ioreg -l | grep -e Manufacturer -e 'Vendor Name' | grep -e 'VirtualBox' | wc -l)
+    virtualbox=$(ioreg -l | grep -e 'VirtualBox' | wc -l)
     echo "VirtualBox count $virtualbox"
     if [[ $virtualbox -gt 0 ]]; then
       echo "Using VirtualBox virtualization."
       echo "##vso[task.setvariable variable=VM_VENDOR]VirtualBox"
+    fi
+
+    parallels=$(ioreg -l | grep -e 'Parallels' | wc -l)
+    echo "Parallels coung $parallels"
+    if [[ $parallels-gt 0 ]]; then
+      echo "Using VMWare virtualization."
+      echo "##vso[task.setvariable variable=VM_VENDOR]Parallels"
     fi
 
   displayName: 'Set VM Vendor'
