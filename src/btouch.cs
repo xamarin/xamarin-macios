@@ -628,8 +628,8 @@ static class ReferenceFixer
 
 class SearchPathsAssemblyResolver : MetadataAssemblyResolver
 {
-	private readonly string[] libraryPaths;
-	private readonly string[] references;
+	readonly string[] libraryPaths;
+	readonly string[] references;
 
 	public SearchPathsAssemblyResolver (string[] libraryPaths, string[] references)
 	{
@@ -648,7 +648,7 @@ class SearchPathsAssemblyResolver : MetadataAssemblyResolver
 
 			string dllName = name + ".dll";
 			foreach (var libraryPath in libraryPaths) {
-				string path = Path.Combine(libraryPath, dllName);
+				string path = Path.Combine (libraryPath, dllName);
 				if (File.Exists (path)) {
 					return context.LoadFromAssemblyPath (path);
 				}
