@@ -37,25 +37,13 @@ namespace Xamarin.MacDev.Tasks {
 				}
 
 				if (kind == NativeReferenceKind.Static) {
-					var libName = Path.GetFileName (item.ItemSpec);
-
-					if (libName.EndsWith (".a", StringComparison.Ordinal))
-						libName = libName.Substring (0, libName.Length - 2);
-
-					if (libName.StartsWith ("lib", StringComparison.Ordinal))
-						libName = libName.Substring (3);
-
-					if (!string.IsNullOrEmpty (Path.GetDirectoryName (item.ItemSpec)))
-						Arguments.AddQuoted ("-L" + Path.GetDirectoryName (item.ItemSpec));
-
-					Arguments.AddQuoted ("-l" + libName);
-
 					value = item.GetMetadata ("ForceLoad");
 
 					if (!string.IsNullOrEmpty (value) && bool.TryParse (value, out boolean) && boolean) {
 						Arguments.Add ("-force_load");
-						Arguments.AddQuoted (item.ItemSpec);
 					}
+
+					Arguments.AddQuoted (item.ItemSpec);
 
 					value = item.GetMetadata ("IsCxx");
 
