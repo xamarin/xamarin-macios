@@ -569,7 +569,7 @@ namespace ObjCRuntime {
 					log_coreclr ($"        The argument didn't change, no marshalling required");
 					if (parameters [i] != null && parameterType != typeof (IntPtr) && isMonoObject) {
 						// byref parameters must be retained
-						xamarin_mono_object_retain (ref nativeParam);
+						xamarin_mono_object_retain (Marshal.ReadIntPtr (nativeParam));
 					}
 					continue;
 				}
@@ -872,7 +872,7 @@ namespace ObjCRuntime {
 		}
 
 		[DllImport ("__Internal")]
-		static extern void xamarin_mono_object_retain (ref IntPtr mono_object);
+		static extern void xamarin_mono_object_retain (IntPtr mono_object);
 
 		[DllImport ("__Internal")]
 		unsafe static extern void xamarin_mono_object_retain (MonoObject* mono_object);
