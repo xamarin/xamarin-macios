@@ -268,6 +268,8 @@ namespace AudioUnit
 		ParametersForOverview = 57,
 		[iOS (10,0), Mac (10,12)]
 		SupportsMpe = 58,
+		[iOS (14,5), TV (14,5), Mac (11,3)]
+		LoadedOutOfProcess = 62,
 
 #if MONOMAC
 		FastDispatch = 5,
