@@ -224,7 +224,7 @@ public class AttributeManager
 			// Report a warning if we find the same type in multiple assemblies though.
 			var assemblies = BindingTouch.universe.GetAssemblies ();
 			foreach (var asm in assemblies) {
-				var lookup = asm.GetType (type.Namespace + "." + type.Name);// .FindType (new TypeName (type.Namespace, type.Name));
+				var lookup = asm.GetType (type.Namespace + "." + type.Name);
 				if (lookup == null)
 					continue;
 				if (lookup.Assembly != asm) {
