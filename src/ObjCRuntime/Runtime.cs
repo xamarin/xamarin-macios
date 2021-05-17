@@ -171,7 +171,7 @@ namespace ObjCRuntime {
 		internal unsafe static bool IsCoreCLR {
 			get {
 				// The linker may turn calls to this property into a constant
-				return (options->Flags & InitializationFlags.IsCoreCLR) == InitializationFlags.IsCoreCLR;
+				return (options->Flags.HasFlag (InitializationFlags.IsCoreCLR));
 			}
 		}
 #endif
