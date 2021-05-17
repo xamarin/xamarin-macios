@@ -111,7 +111,11 @@ steps:
 
       $buildReason = "$(Build.Reason)"
       $buildSourceBranchName = "$(Build.SourceBranchName)"
-      $apiGeneratorComment= Join-Path -Path "$Env:STABLE_APID_GENERATOR_DIFF_PATH" -ChildPath "api-diff-comments.md"
+      if ($Env:STABLE_APID_GENERATOR_DIFF_PATH) {
+        $apiGeneratorComment= Join-Path -Path "$Env:STABLE_APID_GENERATOR_DIFF_PATH" -ChildPath "api-diff-comments.md"
+      } else {
+        $apiGeneratorComment = ""
+      }
 
       if ($buildReason -ne "PullRequest" -or $Env:BUILD_PACKAGE -eq "True") {
         Write-Host "Json path is $Env:ARTIFACTS_JSON_PATH"
