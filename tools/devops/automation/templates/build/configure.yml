@@ -11,6 +11,7 @@ steps:
 - checkout: self          # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
   clean: true             # Executes: git clean -ffdx && git reset --hard HEAD
   submodules: false
+  persistCredentials: true
 
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/tools/devops/automation/scripts/GitHub.psm1
