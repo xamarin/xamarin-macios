@@ -155,7 +155,7 @@ steps:
     git merge origin/main
     git push origin Localization
   displayName: "Sync Localization branch with main"
-  condition: and(succeeded(), in(variables['build.reason'], 'Schedule', 'Manual'))
+  condition: and(succeeded(), in(variables['build.reason'], 'Schedule', 'Manual'), eq(variables.isMain, 'True'))
 
 - task: OneLocBuild@2
   condition: and(succeeded(), eq(variables.isMain, 'True'))
