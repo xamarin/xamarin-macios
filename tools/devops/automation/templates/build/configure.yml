@@ -148,14 +148,14 @@ steps:
   workingDirectory: $(Build.SourcesDirectory)\tools\devops 
 
 - task: OneLocBuild@2
-  condition: and(succeeded(), eq(variables.isMain, 'True'))
+  condition: and(succeeded(), eq(variables.isLocalization, 'True'))
   continueOnError: true
   env:
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
   inputs:
     locProj: '$(Build.SourcesDirectory)\Localize\LocProject.json'
     outDir: '$(Build.ArtifactStagingDirectory)'
-    isCreatePrSelected: eq(variables.isSchedule, 'True')
+    isCreatePrSelected: or(eq(variables.isSchedule, 'True'), eq(variables.isManual, 'True'))
     packageSourceAuth: patAuth
     patVariable: '$(OneLocBuild--PAT)'
     isAutoCompletePrSelected: false
@@ -164,7 +164,7 @@ steps:
     gitHubPatVariable: '$(GitHub.Token)'
 
 - task: PublishBuildArtifacts@1
-  condition: and(succeeded(), eq(variables.isMain, 'True'))
+  condition: and(succeeded(), eq(variables.isLocalization, 'True'))
   continueOnError: true
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
