@@ -42,6 +42,7 @@ namespace ObjCRuntime {
 			System_Exception,
 			System_InvalidCastException,
 			System_EntryPointNotFoundException,
+			System_OutOfMemoryException,
 		}
 
 		// This struct must be kept in sync with the _MonoObject struct in coreclr-bridge.h
@@ -88,6 +89,9 @@ namespace ObjCRuntime {
 				break;
 			case ExceptionType.System_EntryPointNotFoundException:
 				rv = new System.EntryPointNotFoundException (str0);
+				break;
+			case ExceptionType.System_OutOfMemoryException:
+				rv = new System.OutOfMemoryException ();
 				break;
 			default:
 				throw new ArgumentOutOfRangeException (nameof (type));

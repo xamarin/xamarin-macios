@@ -534,7 +534,9 @@
 			XamarinRuntime = RuntimeMode.MonoVM,
 		},
 
-		new Export ("MonoException *", "mono_get_exception_out_of_memory"),
+		new Export ("MonoException *", "mono_get_exception_out_of_memory") {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		#endregion
 
