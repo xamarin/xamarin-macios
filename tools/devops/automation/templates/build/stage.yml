@@ -34,6 +34,7 @@ jobs:
   variables:
     isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
     isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
+    gitHubToken: ${{ parameters.gitHubToken }}
 
   steps:
   - template: configure.yml
