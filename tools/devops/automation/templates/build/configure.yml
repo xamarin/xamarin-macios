@@ -151,7 +151,6 @@ steps:
 - powershell: |
     git config user.email "valco@microsoft.com"
     git config user.name "vs-mobiletools-engineering-service2"
-    git config --global user.password "$(githubToken)"
     git checkout -b Localization origin/Localization
     git merge origin/main
     git push origin Localization
