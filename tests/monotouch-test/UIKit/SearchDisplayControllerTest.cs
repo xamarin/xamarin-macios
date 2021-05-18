@@ -7,7 +7,7 @@
 // Copyright 2012 Xamarin Inc. All rights reserved.
 //
 
-#if !XAMCORE_3_0 && !MONOMAC
+#if !XAMCORE_3_0 && !MONOMAC && !__MACCATALYST__
 
 using System;
 using System.Drawing;
