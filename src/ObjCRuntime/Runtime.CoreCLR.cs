@@ -427,6 +427,12 @@ namespace ObjCRuntime {
 			return (MonoObject *) GetMonoObject (type);
 		}
 
+		static unsafe int SizeOf (MonoObject* typeobj)
+		{
+			var type = (Type) GetMonoObjectTarget (typeobj);
+			return SizeOf (type);
+		}
+
 		static int SizeOf (Type type)
 		{
 			if (type.IsEnum) // https://github.com/dotnet/runtime/issues/12258
@@ -563,7 +569,7 @@ namespace ObjCRuntime {
 					log_coreclr ($"        The argument didn't change, no marshalling required");
 					if (parameters [i] != null && parameterType != typeof (IntPtr) && isMonoObject) {
 						// byref parameters must be retained
-						xamarin_mono_object_retain (ref nativeParam);
+						xamarin_mono_object_retain (Marshal.ReadIntPtr (nativeParam));
 					}
 					continue;
 				}
@@ -696,6 +702,23 @@ namespace ObjCRuntime {
 		{
 			var type = (Type) GetMonoObjectTarget (typeobj);
 			return type.IsValueType;
+		}
+
+		unsafe static bool IsEnum (MonoObject *typeobj)
+		{
+			var type = (Type) GetMonoObjectTarget (typeobj);
+			return type.IsEnum;
+		}
+
+		static unsafe MonoObject* GetEnumBaseType (MonoObject* typeobj)
+		{
+			var type = (Type) GetMonoObjectTarget (typeobj);
+			return (MonoObject*) GetMonoObject (GetEnumBaseType (type));
+		}
+
+		static Type GetEnumBaseType (Type type)
+		{
+			return type.GetEnumUnderlyingType ();
 		}
 
 		static object PtrToStructure (IntPtr ptr, Type type)
@@ -849,7 +872,7 @@ namespace ObjCRuntime {
 		}
 
 		[DllImport ("__Internal")]
-		static extern void xamarin_mono_object_retain (ref IntPtr mono_object);
+		static extern void xamarin_mono_object_retain (IntPtr mono_object);
 
 		[DllImport ("__Internal")]
 		unsafe static extern void xamarin_mono_object_retain (MonoObject* mono_object);
