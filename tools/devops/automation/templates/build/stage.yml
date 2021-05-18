@@ -136,7 +136,7 @@ jobs:
   condition: and(succeededOrFailed() , contains (dependencies.build.outputs['runTests.TESTS_RAN'], 'True')) # only run when we did run the tests
 
   variables:
-    API_GENERATOR_BUILT: $[ dependencies.build.outputs['apiGeneratorDiff.API_GENERATOR_BUILT'] ]
+    API_GENERATOR_DIFF_BUILT: $[ dependencies.build.outputs['apiGeneratorDiff.API_GENERATOR_BUILT'] ]
 
   pool:
     vmImage: 'windows-latest'
@@ -147,7 +147,6 @@ jobs:
     parameters:
       devicePrefix: sim
       runTests: ${{ parameters.runTests }}
-      apiGeneratorDiffBuilt: $[ dependencies.build.outputs['apiGeneratorDiff.API_GENERATOR_BUILT'] ]
 
 - job: upload_vsts_tests
   displayName: 'Upload xml to vsts'
@@ -182,6 +181,7 @@ jobs:
     TESTS_JOBSTATUS: $[ dependencies.build.outputs['runTests.TESTS_JOBSTATUS'] ]
     APIDIFF_MESSAGE: $[ dependencies.build.outputs['apidiff.APIDIFF_MESSAGE'] ]
     APIDIFF_BUILT: $[ dependencies.build.outputs['apidiff.APIDIFF_BUILT'] ]
+    API_GENERATOR_DIFF_BUILT: $[ dependencies.build.outputs['apiGeneratorDiff.API_GENERATOR_BUILT'] ]
     PR_ID: $[ dependencies.configure.outputs['labels.pr-number'] ]
   pool:
     vmImage: 'windows-latest'
@@ -193,5 +193,4 @@ jobs:
       statusContext: "Build"
       runTests: ${{ parameters.runTests }}
       vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
-      apiGeneratorDiffBuilt: $[ dependencies.build.outputs['apiGeneratorDiff.API_GENERATOR_BUILT'] ]
       devicePrefix: sim
