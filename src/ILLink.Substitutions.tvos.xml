@@ -1,0 +1,7 @@
+<linker>
+  <assembly fullname="Xamarin.TVOS">
+    <type fullname="ObjCRuntime.Runtime">
+      <method signature="System.Boolean get_IsCoreCLR()" body="stub" value="false" />
+    </type>
+  </assembly>
+</linker>

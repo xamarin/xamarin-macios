@@ -162,15 +162,6 @@ namespace ObjCRuntime {
 					return (Flags & InitializationFlags.IsSimulator) == InitializationFlags.IsSimulator;
 				}
 			}
-
-#if NET
-			// Future optimization potential: make the linker change this into a constant.
-			internal bool IsCoreCLR {
-				get {
-					return (Flags & InitializationFlags.IsCoreCLR) == InitializationFlags.IsCoreCLR;
-				}
-			}
-#endif
 		}
 
 		internal static unsafe InitializationOptions* options;
@@ -178,7 +169,10 @@ namespace ObjCRuntime {
 #if NET
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		internal unsafe static bool IsCoreCLR {
-			get { return options->IsCoreCLR; }
+			get {
+				// The linker may turn calls to this property into a constant
+				return (options->Flags.HasFlag (InitializationFlags.IsCoreCLR));
+			}
 		}
 #endif
 
@@ -1606,8 +1600,8 @@ namespace ObjCRuntime {
 					if (idx >= 0)
 						return (map [idx].flags & MTTypeFlags.UserType) == MTTypeFlags.UserType;
 					// If using the partial static registrar, we need to continue
-					// If full static registrar, we can return false
-					if ((options->Flags & InitializationFlags.IsPartialStaticRegistrar) != InitializationFlags.IsPartialStaticRegistrar)
+					// If full static registrar, we can return false, as long as the dynamic registrar is not supported
+					if (!DynamicRegistrationSupported && (options->Flags & InitializationFlags.IsPartialStaticRegistrar) != InitializationFlags.IsPartialStaticRegistrar)
 						return false;
 				}
 			}
