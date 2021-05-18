@@ -1,3 +1,4 @@
+#if ENABLE_DOTNET
 using System;
 using System.IO;
 
@@ -91,3 +92,4 @@ namespace Xamarin.iOS.Tasks {
 		}
 	}
 }
+#endif

@@ -75,6 +75,11 @@ else
 # verbose build
 XHARNESS_VERBOSITY=--verbose
 endif
+ifdef ENABLE_DOTNET
+XHARNESS_CONSTANTS="ENABLE_DOTNET"
+else
+XHARNESS_CONSTANTS=""
+endif
 
 #
 # To run all the tests, just do:
@@ -212,7 +217,7 @@ $(TOP)/tools/common/SdkVersions.cs: $(TOP)/tools/common/SdkVersions.cs.in
 	@touch $@
 
 xharness/xharness.exe: $(xharness_dependencies) test.config test-system.config .stamp-src-project-files $(TOP)/tools/common/SdkVersions.cs
-	$(Q_GEN) $(SYSTEM_MSBUILD) /restore $(MSBUILD_VERBOSITY_QUIET) xharness/xharness.csproj
+	$(Q_GEN) $(SYSTEM_MSBUILD) /restore $(MSBUILD_VERBOSITY_QUIET) xharness/xharness.csproj /p:DefineConstants=$(XHARNESS_CONSTANTS)
 xharness/xharness.csproj.inc: export BUILD_VERBOSITY=$(XBUILD_VERBOSITY)
 xharness/xharness.csproj.inc: export ABSOLUTE_PATHS=1
 -include xharness/xharness.csproj.inc
