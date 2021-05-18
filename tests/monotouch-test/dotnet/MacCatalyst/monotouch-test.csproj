@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net6.0-macos</TargetFramework>
-    <RuntimeIdentifier>osx-x64</RuntimeIdentifier>
+    <TargetFramework>net6.0-maccatalyst</TargetFramework>
+    <RuntimeIdentifier>maccatalyst-x64</RuntimeIdentifier>
     <OutputType>Exe</OutputType>
     <DefineConstants>NET</DefineConstants>
     <LangVersion>latest</LangVersion>
@@ -12,29 +12,27 @@
     <AssemblyOriginatorKeyFile>..\..\..\..\product.snk</AssemblyOriginatorKeyFile>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <CodesignEntitlements Condition="'$(Platform)' == 'iPhoneSimulator'">..\..\Entitlements.plist</CodesignEntitlements>
-    <DefineConstants>$(DefineConstants);MONOMAC;XAMMAC_TESTS</DefineConstants>
-    <DefineConstants Condition="'$(Configuration)' == 'Debug'">$(DefineConstants);DEBUG;DYNAMIC_REGISTRAR</DefineConstants>
+    <AssetTargetFallback>xamarinios10;$(AssetTargetFallback)</AssetTargetFallback>
+    <DefineConstants Condition="'$(Platform)' == 'iPhoneSimulator'">$(DefineConstants);DYNAMIC_REGISTRAR</DefineConstants>
+    <DefineConstants Condition="'$(Platform)' != 'iPhoneSimulator'">$(DefineConstants);DEVICE</DefineConstants>
     <RootTestsDirectory>..\..\..</RootTestsDirectory>
-    <LinkMode>None</LinkMode>
+    <MtouchLink>None</MtouchLink>
+    <MtouchExtraArgs>-xml=${ProjectDir}/../extra-linker-defs.xml</MtouchExtraArgs>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="NUnitLite" Version="3.12.0" />
-    <!-- <PackageReference Include="MonoTouch.Dialog" Version="2.0.0-pre1" /> -->
-    <ProjectReference Include="..\..\..\..\external\Touch.Unit\Touch.Client\dotnet\macOS\Touch.Client-macOS.dotnet.csproj" />
+    <PackageReference Include="MonoTouch.Dialog" Version="2.0.0-pre1" />
+    <ProjectReference Include="..\..\..\..\external\Touch.Unit\Touch.Client\dotnet\MacCatalyst\Touch.Client-MacCatalyst.dotnet.csproj" />
     <!-- MonoTouch.Dialog references System.Json, which isn't shipped with .NET5, so reference the NuGet instead -->
     <PackageReference Include="System.Json" Version="4.7.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Info.plist">
-      <LogicalName>Info.plist</LogicalName>
-    </None>
+    <None Include="Info.plist" />
     <None Include="..\..\Entitlements.plist" />
     <None Include="..\..\app.config" />
     <None Include="..\..\EmptyNib.xib" />
-
-    <LinkDescription Include="$(RootTestsDirectory)\monotouch-test\dotnet\extra-linker-defs.xml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -49,47 +47,14 @@
     <Compile Include="..\..\..\api-shared\CoreFoundation\CFNotificationCenterTest.cs">
       <Link>CoreFoundation\CFNotificationCenterTest.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\common\Configuration.cs">
-      <Link>Configuration.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\common\TestRuntime.cs">
       <Link>TestRuntime.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\common\mac\TestRuntime.macos.cs">
-      <Link>TestRuntime.macos.cs</Link>
     </Compile>
     <Compile Include="..\..\..\common\ConditionalCompilation.cs">
       <Link>ConditionalCompilation.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\common\ExecutionHelper.cs">
-      <Link>ExecutionHelper.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\common\Extensions.cs">
       <Link>Extensions.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\common\PlatformInfo.cs">
-      <Link>PlatformInfo.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\common\Profile.cs">
-      <Link>Extensions.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\mtouch\Cache.cs">
-      <Link>Cache.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\common\mac\MacMain.cs">
-      <Link>MacMain.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\..\tools\common\ApplePlatform.cs">
-      <Link>ApplePlatform.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\..\tools\common\Execution.cs">
-      <Link>Execution.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\..\tools\common\TargetFramework.cs">
-      <Link>TargetFramework.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\..\tools\common\StringUtils.cs">
-      <Link>StringUtils.cs</Link>
     </Compile>
   </ItemGroup>
 
@@ -130,9 +95,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\EmbeddedResources\dotnet\macOS\EmbeddedResources.csproj" />
-    <ProjectReference Include="..\..\..\..\tests\bindings-test\dotnet\macOS\bindings-test.csproj" />
-    <ProjectReference Include="..\..\..\fsharplibrary\dotnet\macOS\fsharplibrary.fsproj" />
+    <ProjectReference Include="..\..\..\EmbeddedResources\dotnet\MacCatalyst\EmbeddedResources.csproj" />
+    <ProjectReference Include="..\..\..\..\tests\bindings-test\dotnet\MacCatalyst\bindings-test.csproj" />
+    <ProjectReference Include="..\..\..\fsharplibrary\dotnet\MacCatalyst\fsharplibrary.fsproj" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="..\..\CoreImage\Xam.png">
@@ -209,29 +174,20 @@
     <CustomMetalSmeltingInput Include="..\..\Resources\fragmentShader.metal" />
   </ItemGroup>
 
-  <Target Name="ComputeMetalOutputPath" DependsOnTargets="_GenerateBundleName;_DetectSdkLocations">
-    <PropertyGroup>
-      <MetalBundleSubDirectory Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">Contents/Resources/</MetalBundleSubDirectory>
-    </PropertyGroup>
-  </Target>
-
-  <Target Name="CustomMetalSmelting" Inputs="@(CustomMetalSmeltingInput)" Outputs="$(_AppBundlePath)\$(MetalBundleSubDirectory)fragmentShader.metallib" Condition="'$(_SdkIsSimulator)' != 'true'" DependsOnTargets="_GenerateBundleName;_DetectSdkLocations;ComputeMetalOutputPath" BeforeTargets="BeforeBuild">
+  <Target Name="CustomMetalSmelting" Inputs="@(CustomMetalSmeltingInput)" Outputs="$(_AppBundlePath)\fragmentShader.metallib" Condition="'$(_SdkIsSimulator)' != 'true'" DependsOnTargets="_GenerateBundleName;_DetectSdkLocations">
     <PropertyGroup>
         <_SmeltingSdk Condition="'$(_PlatformName)' == 'iOS'">iphoneos</_SmeltingSdk>
         <_SmeltingSdk Condition="'$(_PlatformName)' == 'tvOS'">appletvos</_SmeltingSdk>
-        <_SmeltingSdk Condition="'$(_PlatformName)' == 'macOS'">macosx</_SmeltingSdk>
         <_SmeltingMinOS Condition="'$(_PlatformName)' == 'iOS'">-mios-version-min=11.0</_SmeltingMinOS>
         <_SmeltingMinOS Condition="'$(_PlatformName)' == 'tvOS'">-mtvos-version-min=11.0</_SmeltingMinOS>
-        <_SmeltingMinOS Condition="'$(_PlatformName)' == 'macOS'">-mmacos-version-min=10.13</_SmeltingMinOS>
     </PropertyGroup>
-    <MakeDir Directories="$(IntermediateOutputPath)/$(MetalBundleSubDirectory);$(AppBundleDir)/$(MetalBundleSubDirectory)" />
-    <Exec Command="xcrun -sdk $(_SmeltingSdk) metal -c @(CustomMetalSmeltingInput) -o $(IntermediateOutputPath)$(MetalBundleSubDirectory)\fragmentShader.air $(_SmeltingMinOS)" EnvironmentVariables="DEVELOPER_DIR=$(_SdkDevPath)" />
-    <Exec Command="xcrun -sdk $(_SmeltingSdk) metallib $(IntermediateOutputPath)/$(MetalBundleSubDirectory)fragmentShader.air -o $(AppBundleDir)/$(MetalBundleSubDirectory)fragmentShader.metallib" EnvironmentVariables="DEVELOPER_DIR=$(_SdkDevPath)" />
+    <MakeDir Directories="$(IntermediateOutputPath);$(AppBundleDir)" />
+    <Exec Command="xcrun -sdk $(_SmeltingSdk) metal -c @(CustomMetalSmeltingInput) -o $(IntermediateOutputPath)\fragmentShader.air $(_SmeltingMinOS)" EnvironmentVariables="DEVELOPER_DIR=$(_SdkDevPath)" />
+    <Exec Command="xcrun -sdk $(_SmeltingSdk) metallib $(IntermediateOutputPath)\fragmentShader.air -o $(AppBundleDir)\fragmentShader.metallib" EnvironmentVariables="DEVELOPER_DIR=$(_SdkDevPath)" />
   </Target>
 
-  <Target Name="BuildTestLibraries" Inputs="@(GeneratedTestInput)" Outputs="@(GeneratedTestOutput)" BeforeTargets="BeforeBuild" >
+  <Target Name="BeforeBuild" Inputs="@(GeneratedTestInput)" Outputs="@(GeneratedTestOutput)" DependsOnTargets="CustomMetalSmelting" >
     <Exec Command="make -j8 -C $(TestLibrariesDirectory)" />
-    <Exec Command="make -j8 -C $(TestLibrariesDirectory)/custom-type-assembly build-assembly" />
   </Target>
   <Import Project="$(RootTestsDirectory)\nunit.framework.targets" />
 </Project>

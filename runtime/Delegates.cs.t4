@@ -98,8 +98,10 @@ namespace ObjCRuntime {
 <# foreach (var d in delegates) {
 	if (d.OnlyDynamicUsage) continue; #>
 <#
-	if (d.OnlyCoreCLR)
+	if (d.OnlyCoreCLR) {
 		Write ("#if NET\n");
+		Write ("\t\t\tif (IsCoreCLR)\n\t");
+	}
 #>
 			options->Delegates-><#= d.SimpleEntryPoint #> = GetFunctionPointer (new <#= d.SimpleEntryPoint #>_delegate (<#= d.SimpleEntryPoint #>));
 <#
@@ -118,8 +120,10 @@ namespace ObjCRuntime {
 <# foreach (var d in delegates) {
 	if (!d.OnlyDynamicUsage) continue; #>
 <#
-	if (d.OnlyCoreCLR)
+	if (d.OnlyCoreCLR) {
 		Write ("#if NET\n");
+		Write ("\t\t\tif (IsCoreCLR)\n\t");
+	}
 #>
 			options->Delegates-><#= d.SimpleEntryPoint #> = GetFunctionPointer (new <#= d.SimpleEntryPoint #>_delegate (<#= d.SimpleEntryPoint #>));
 <#
