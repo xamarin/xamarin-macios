@@ -22,11 +22,10 @@ steps:
     $configFile =  Join-Path $(Build.SourcesDirectory) build-configuration
     $config = Get-Content $configFile | ConvertFrom-Json
     # export variables to be present in the othe steps
-    # "BuildReason": "IndividualCI",
-    Write-Host "##vso[task.setvariable variable=BuildSourceBranchName]$($config.BuildSourceBranchName)"
-    Write-Host "##vso[task.setvariable variable=BuildSourceBranch]$($config.BuildSourceBranch)"
-    Write-Host "##vso[task.setvariable variable=BuildId]$($config.BuildId)"
-    Write-Host "##vso[task.setvariable variable=Commit]$($config.Commit)"
+    Write-Host "##vso[task.setvariable variable=BuildSourceBranchName;isOutput=true]$($config.BuildSourceBranchName)"
+    Write-Host "##vso[task.setvariable variable=BuildSourceBranch;isOutput=true]$($config.BuildSourceBranch)"
+    Write-Host "##vso[task.setvariable variable=BuildId;isOutput=true]$($config.BuildId)"
+    Write-Host "##vso[task.setvariable variable=Commit;isOutput=true]$($config.Commit)"
   name: configuration
   displayName: 'Parse build configuration'
   timeoutInMinutes: 1
