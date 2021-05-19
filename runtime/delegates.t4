@@ -380,7 +380,6 @@
 			"GCHandle", "IntPtr", "gchandle"
 		) {
 			WrappedManagedFunction = "GetAssemblyName",
-			OnlyCoreCLR = true,
 		},
 
 		new XDelegate ("MonoObject *", "MonoObject *", "xamarin_bridge_create_exception",

@@ -974,7 +974,17 @@ xamarin_register_monoassembly (MonoAssembly *assembly, GCHandle *exception_gchan
 {
 	// COOP: this is a function executed only at startup, I believe the mode here doesn't matter.
 	if (!xamarin_supports_dynamic_registration) {
-		LOG (PRODUCT ": Skipping assembly registration for %s since it's not needed (dynamic registration is not supported)", mono_assembly_name_get_name (mono_assembly_get_name (assembly)));
+		if (xamarin_log_level > 0) {
+			MonoReflectionAssembly *rassembly = mono_assembly_get_object (mono_domain_get (), assembly);
+			GCHandle assembly_gchandle = xamarin_gchandle_new ((MonoObject *) rassembly, false);
+			xamarin_mono_object_release (&rassembly);
+
+			char *assembly_name = xamarin_bridge_get_assembly_name (assembly_gchandle);
+			xamarin_gchandle_free (assembly_gchandle);
+
+			LOG (PRODUCT ": Skipping assembly registration for %s since it's not needed (dynamic registration is not supported)", assembly_name);
+			mono_free (assembly_name);
+		}
 		return true;
 	}
 	MonoReflectionAssembly *rassembly = mono_assembly_get_object (mono_domain_get (), assembly);
