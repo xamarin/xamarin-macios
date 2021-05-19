@@ -214,6 +214,7 @@ MonoMethod *	xamarin_bridge_get_mono_method (MonoReflectionMethod *method);
 void			xamarin_bridge_free_mono_signature (MonoMethodSignature **signature);
 bool			xamarin_register_monoassembly (MonoAssembly *assembly, GCHandle *exception_gchandle);
 void			xamarin_install_nsautoreleasepool_hooks ();
+void			xamarin_enable_new_refcount ();
 
 MonoObject *	xamarin_new_nsobject (id self, MonoClass *klass, GCHandle *exception_gchandle);
 bool			xamarin_has_managed_ref (id self);
@@ -285,6 +286,10 @@ GCHandle		xamarin_gchandle_new_weakref (MonoObject *obj, bool track_resurrection
 MonoObject *	xamarin_gchandle_get_target (GCHandle handle);
 void			xamarin_gchandle_free (GCHandle handle);
 MonoObject *	xamarin_gchandle_unwrap (GCHandle handle); // Will get the target and free the GCHandle
+
+typedef id (*xamarin_get_handle_func) (MonoObject *info);
+MonoToggleRefStatus	xamarin_gc_toggleref_callback (uint8_t flags, id handle, xamarin_get_handle_func get_handle, MonoObject *info);
+void				xamarin_gc_event (MonoGCEvent event);
 
 /*
  * In MonoVM MonoObjects are tracked in memory/the stack directly by the GC, but that doesn't

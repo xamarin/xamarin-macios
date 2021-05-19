@@ -796,51 +796,24 @@ xamarin_type_get_full_name (MonoType *type, GCHandle *exception_gchandle)
  * ToggleRef support
  */
 // #define DEBUG_TOGGLEREF 1
-#if !defined (CORECLR_RUNTIME)
-static void
-gc_register_toggleref (MonoObject *obj, id self, bool isCustomType)
-{
-	// COOP: This is an icall, at entry we're in unsafe mode. Managed memory is accessed, so we stay in unsafe mode.
-	MONO_ASSERT_GC_UNSAFE;
 
-#ifdef DEBUG_TOGGLEREF
-	id handle = xamarin_get_nsobject_handle (obj);
-
-	PRINT ("**Registering object %p handle %p RC %d flags: %i isCustomType: %i",
-		obj,
-		handle,
-		(int) (handle ? [handle retainCount] : 0),
-		xamarin_get_nsobject_flags (obj),
-		isCustomType
-		);
-#endif
-	mono_gc_toggleref_add (obj, TRUE);
-
-	// Make sure the GCHandle we have is a weak one for custom types.
-	if (isCustomType) {
-		MONO_ENTER_GC_SAFE;
-		xamarin_switch_gchandle (self, true);
-		MONO_EXIT_GC_SAFE;
-	}
-}
-
-static MonoToggleRefStatus
-gc_toggleref_callback (MonoObject *object)
+MonoToggleRefStatus
+xamarin_gc_toggleref_callback (uint8_t flags, id handle, xamarin_get_handle_func get_handle, MonoObject *info)
 {
 	// COOP: this is a callback called by the GC, so I assume the mode here doesn't matter
-	id handle = NULL;
 	MonoToggleRefStatus res;
 
-	uint8_t flags = xamarin_get_nsobject_flags (object);
 	bool disposed = (flags & NSObjectFlagsDisposed) == NSObjectFlagsDisposed;
 	bool has_managed_ref = (flags & NSObjectFlagsHasManagedRef) == NSObjectFlagsHasManagedRef;
 
 	if (disposed || !has_managed_ref) {
 		res = MONO_TOGGLE_REF_DROP; /* Already disposed, we don't need the managed object around */
 	} else {
-		handle = xamarin_get_nsobject_handle (object);
+		if (handle == NULL)
+			handle = get_handle (info);
+
 		if (handle == NULL) { /* This shouldn't really happen */
-			return MONO_TOGGLE_REF_DROP;
+			res = MONO_TOGGLE_REF_DROP;
 		} else {
 			if ([handle retainCount] == 1)
 				res = MONO_TOGGLE_REF_WEAK;
@@ -861,21 +834,17 @@ gc_toggleref_callback (MonoObject *object)
 		rv = "UNKNOWN";
 	}
 	const char *cn = NULL;
-	if (handle == NULL) {
-		cn = object_getClassName (xamarin_get_nsobject_handle (object));
-	} else {
-		cn = object_getClassName (handle);
-	}
+	if (handle == NULL)
+		handle = get_handle (info);
+	cn = object_getClassName (handle);
 	PRINT ("\tinspecting %p handle:%p %s flags: %i RC %d -> %s\n", object, handle, cn, (int) flags, (int) (handle ? [handle retainCount] : 0), rv);
 #endif
 
 	return res;
 }
-#endif
 
-#if !defined (CORECLR_RUNTIME)
-static void
-gc_event_callback (MonoProfiler *prof, MonoGCEvent event, int generation)
+void
+xamarin_gc_event (MonoGCEvent event)
 {
 	// COOP: this is a callback called by the GC, I believe the mode here doesn't matter.
 	switch (event) {
@@ -891,16 +860,6 @@ gc_event_callback (MonoProfiler *prof, MonoGCEvent event, int generation)
 		break;
 	}
 }
-
-static void
-gc_enable_new_refcount (void)
-{
-	mono_gc_toggleref_register_callback (gc_toggleref_callback);
-
-	xamarin_add_internal_call ("Foundation.NSObject::RegisterToggleRef", (const void *) gc_register_toggleref);
-	mono_profiler_install_gc (gc_event_callback, NULL);
-}
-#endif // !CORECLR_RUNTIME
 
 #if !defined (CORECLR_RUNTIME)
 struct _MonoProfiler {
@@ -1309,9 +1268,7 @@ xamarin_initialize ()
 	pthread_mutex_init (&framework_peer_release_lock, &attr);
 	pthread_mutexattr_destroy (&attr);
 
-#if !defined (CORECLR_RUNTIME)
-	gc_enable_new_refcount ();
-#endif
+	xamarin_enable_new_refcount ();
 
 	MONO_EXIT_GC_UNSAFE;
 }
