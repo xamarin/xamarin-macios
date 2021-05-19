@@ -1,6 +1,8 @@
 TOP=../..
 include $(TOP)/Make.config
 
+SUBDIRS += custom-type-assembly
+
 # without this many compiler warnings about unused functions and variables
 # in system headers show up.
 export CCACHE_CPP2=1

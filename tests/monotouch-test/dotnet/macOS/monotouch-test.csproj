@@ -58,6 +58,9 @@
     <Compile Include="..\..\..\api-shared\CoreFoundation\CFNotificationCenterTest.cs">
       <Link>CoreFoundation\CFNotificationCenterTest.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\common\Configuration.cs">
+      <Link>Configuration.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\common\TestRuntime.cs">
       <Link>TestRuntime.cs</Link>
     </Compile>
@@ -67,14 +70,35 @@
     <Compile Include="..\..\..\common\ConditionalCompilation.cs">
       <Link>ConditionalCompilation.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\common\ExecutionHelper.cs">
+      <Link>ExecutionHelper.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\common\Extensions.cs">
       <Link>Extensions.cs</Link>
     </Compile>
     <Compile Include="..\..\..\common\PlatformInfo.cs">
       <Link>PlatformInfo.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\common\Profile.cs">
+      <Link>Extensions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\mtouch\Cache.cs">
+      <Link>Cache.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\common\mac\MacMain.cs">
       <Link>MacMain.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\tools\common\ApplePlatform.cs">
+      <Link>ApplePlatform.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\tools\common\Execution.cs">
+      <Link>Execution.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\tools\common\TargetFramework.cs">
+      <Link>TargetFramework.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\tools\common\StringUtils.cs">
+      <Link>StringUtils.cs</Link>
     </Compile>
   </ItemGroup>
 
@@ -216,6 +240,7 @@
 
   <Target Name="BuildTestLibraries" Inputs="@(GeneratedTestInput)" Outputs="@(GeneratedTestOutput)" BeforeTargets="BeforeBuild" >
     <Exec Command="make -j8 -C $(TestLibrariesDirectory)" />
+    <Exec Command="make -j8 -C $(TestLibrariesDirectory)/custom-type-assembly build-assembly" />
   </Target>
   <Import Project="$(RootTestsDirectory)\nunit.framework.targets" />
 </Project>
