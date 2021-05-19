@@ -75,11 +75,6 @@ else
 # verbose build
 XHARNESS_VERBOSITY=--verbose
 endif
-ifdef ENABLE_DOTNET
-XHARNESS_CONSTANTS="ENABLE_DOTNET"
-else
-XHARNESS_CONSTANTS=""
-endif
 
 #
 # To run all the tests, just do:
@@ -113,6 +108,7 @@ test.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk
 	@echo "WATCH_SDK_VERSION=$(WATCH_SDK_VERSION)" >> $@
 	@echo "OSX_SDK_VERSION=$(OSX_SDK_VERSION)" >> $@
 	@echo "DOTNET6_BCL_DIR=$(DOTNET6_BCL_DIR)" >> $@
+	@echo "ENABLE_DOTNET=$(ENABLE_DOTNET)" >> $@
 
 test-system.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk
 	@rm -f $@
@@ -217,7 +213,7 @@ $(TOP)/tools/common/SdkVersions.cs: $(TOP)/tools/common/SdkVersions.cs.in
 	@touch $@
 
 xharness/xharness.exe: $(xharness_dependencies) test.config test-system.config .stamp-src-project-files $(TOP)/tools/common/SdkVersions.cs
-	$(Q_GEN) $(SYSTEM_MSBUILD) /restore $(MSBUILD_VERBOSITY_QUIET) xharness/xharness.csproj /p:DefineConstants=$(XHARNESS_CONSTANTS)
+	$(Q_GEN) $(SYSTEM_MSBUILD) /restore $(MSBUILD_VERBOSITY_QUIET) xharness/xharness.csproj
 xharness/xharness.csproj.inc: export BUILD_VERBOSITY=$(XBUILD_VERBOSITY)
 xharness/xharness.csproj.inc: export ABSOLUTE_PATHS=1
 -include xharness/xharness.csproj.inc
