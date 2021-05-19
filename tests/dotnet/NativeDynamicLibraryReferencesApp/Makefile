@@ -17,14 +17,7 @@ all-mac: prepare
 	$(DOTNET6) build macOS/*.csproj /bl
 
 run-mac:
-	./macOS/bin/Debug/net6.0-macos/osx-x64/NativeReferences.app/Contents/MacOS/NativeReferences
-
-build:
-	cd $(TOP) && rm -Rf _build
-	cd $(TOP)/dotnet && git clean -xfd
-	cd $(TOP)/tests && git clean -xfd
-	cd $(TOP)/msbuild && git clean -xfd
-	unset MSBuildEnableWorkloadResolver && $(MAKE) -C $(TOP) all -j9 && $(MAKE) -C $(TOP) install -j9
+	./macOS/bin/Debug/net6.0-macos/osx-x64/$(notdir $(CURDIR)).app/Contents/MacOS/$(notdir $(CURDIR))
 
 diag:
 	cd .. && $(MAKE) global.json NuGet.config
