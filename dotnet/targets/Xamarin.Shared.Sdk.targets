@@ -685,7 +685,7 @@
 			LinkerFlags="@(_BindingLibraryLinkerFlags);@(_ReferencesLinkerFlags);@(_MainLinkerFlags)"
 			LinkWithLibraries="@(_XamarinMainLibraries);@(_BindingLibraryLinkWith);@(_MainLinkWith)"
 			MinimumOSVersion="$(_MinimumOSVersion)"
-			NativeReferences="@(NativeReference)"
+			NativeReferences="@(_FileNativeReference);@(_FrameworkNativeReference)"
 			ObjectFiles="@(_NativeExecutableObjectFiles)"
 			OutputFile="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName)"
 			SdkDevPath="$(_SdkDevPath)"
