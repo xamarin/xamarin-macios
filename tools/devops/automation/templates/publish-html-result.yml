@@ -10,9 +10,24 @@ steps:
 - checkout: self
   persistCredentials: true
 
+# download the json that contains all the info that triggered this build
+- task: DownloadPipelineArtifact@2
+  displayName: Download configuration.json
+  inputs:
+    patterns: '**/configuration.json'
+    allowFailedBuilds: true
+    path: $(Build.SourcesDirectory)/build-configuration
+
 - pwsh: |
-    Write-Host "Work in progress"
-  displayName: 'Remove logs'
+    $configFile =  Join-Path $(Build.SourcesDirectory) build-configuration
+    $config = Get-Content $configFile | ConvertFrom-Json
+    # export variables to be present in the othe steps
+    Write-Host "##vso[task.setvariable variable=BuildSourceBranchName;isOutput=true]$($config.BuildSourceBranchName)"
+    Write-Host "##vso[task.setvariable variable=BuildSourceBranch;isOutput=true]$($config.BuildSourceBranch)"
+    Write-Host "##vso[task.setvariable variable=BuildId;isOutput=true]$($config.BuildId)"
+    Write-Host "##vso[task.setvariable variable=Commit;isOutput=true]$($config.Commit)"
+  name: configuration
+  displayName: 'Parse build configuration'
   timeoutInMinutes: 1
 
 - pwsh: |
