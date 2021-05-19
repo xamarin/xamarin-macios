@@ -190,4 +190,5 @@ jobs:
       statusContext: "Build"
       runTests: ${{ parameters.runTests }}
       vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
+      apiGeneratorDiffBuilt: $[ dependencies.build.outputs['apiGeneratorDiff.API_GENERATOR_BUILT'] ]
       devicePrefix: sim

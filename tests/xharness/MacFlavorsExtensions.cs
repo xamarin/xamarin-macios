@@ -13,6 +13,7 @@ namespace Xharness {
 				MacFlavors.Modern => TestPlatform.Mac_Modern,
 				MacFlavors.System => TestPlatform.Mac_System,
 				MacFlavors.DotNet => TestPlatform.Mac,
+				MacFlavors.MacCatalyst => TestPlatform.MacCatalyst,
 				_ => throw new NotImplementedException (flavor.ToString ()),
 			};
 		}
