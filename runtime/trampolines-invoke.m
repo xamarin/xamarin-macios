@@ -267,7 +267,9 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 							MonoClass *p_klass = mono_class_from_mono_type (p);
 							ADD_TO_MONOOBJECT_RELEASE_LIST (p_klass);
 							if (!mono_type_is_byref (p)) {
-								exception = (MonoObject *) mono_get_exception_execution_engine ("Invalid type encoding for parameter");
+								GCHandle ex_handle = xamarin_create_runtime_exception (8040, "Invalid type encoding for parameter", &exception_gchandle);
+								if (exception_gchandle == INVALID_GCHANDLE)
+									exception_gchandle = ex_handle;
 								goto exception_handling;
 							}
 							MonoReflectionMethod *rmethod = mono_method_get_object (domain, method, NULL);

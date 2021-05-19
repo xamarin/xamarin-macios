@@ -521,10 +521,6 @@
 
 		#region metadata/exception.h
 
-		new Export ("MonoException *", "mono_get_exception_execution_engine",
-			"const char *", "msg"
-		),
-
 		new Export ("MonoException *", "mono_exception_from_name_msg",
 			"MonoImage *", "image",
 			"const char *", "name_space",
