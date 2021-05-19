@@ -49,10 +49,10 @@ namespace Xharness.Jenkins {
 				Platform = TestPlatform.iOS,
 				SolutionPath = Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "..", "msbuild", "Xamarin.MacDev.Tasks.sln")),
 				SupportsParallelExecution = false,
-#if ENABLE_DOTNET
-				Constants = { "ENABLE_DOTNET" }
-#endif
 			};
+			if (jenkins.IncludeDotNet) {
+				buildiOSMSBuildIntegration.Constants.Add ("ENABLE_DOTNET");
+			}
 			var nunitExecutioniOSMSBuildIntegration = new NUnitExecuteTask (jenkins, buildiOSMSBuildIntegration, processManager) {
 				TestLibrary = Path.Combine (HarnessConfiguration.RootDirectory, "msbuild", "Xamarin.MacDev.Tests", "bin", "Debug", "net472", "Xamarin.MacDev.Tests.dll"),
 				TestProject = msbuildIntegrationTestsProject,

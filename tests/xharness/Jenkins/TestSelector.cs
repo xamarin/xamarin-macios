@@ -327,6 +327,11 @@ namespace Xharness.Jenkins {
 				MainLog.WriteLine ("The macOS build is disabled, so any macOS tests will be disabled as well.");
 				jenkins.IncludeMac = false;
 			}
+
+			if (!Harness.ENABLE_DOTNET) {
+				MainLog.WriteLine ("The .NET build is disabled, so any .NET tests will be disabled as well.");
+				jenkins.IncludeDotNet = false;
+			}
 		}
 	}
 }
