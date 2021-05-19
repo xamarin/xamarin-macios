@@ -11,6 +11,7 @@ steps:
 - checkout: self          # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
   clean: true             # Executes: git clean -ffdx && git reset --hard HEAD
   submodules: false
+  persistCredentials: true
 
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/tools/devops/automation/scripts/GitHub.psm1
@@ -154,6 +155,15 @@ steps:
   displayName: 'Generate LocProject.json'
   continueOnError: true
   workingDirectory: $(Build.SourcesDirectory)\tools\devops 
+
+- powershell: |
+    git config user.email "valco@microsoft.com"
+    git config user.name "vs-mobiletools-engineering-service2"
+    git checkout -b Localization origin/Localization
+    git merge origin/main
+    git push origin Localization
+  displayName: "Sync Localization branch with main"
+  condition: and(succeeded(), in(variables['build.reason'], 'Schedule', 'Manual'), eq(variables.isMain, 'True'))
 
 - task: OneLocBuild@2
   condition: and(succeeded(), eq(variables.isMain, 'True'))
