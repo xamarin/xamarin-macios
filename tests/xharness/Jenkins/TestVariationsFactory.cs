@@ -125,14 +125,13 @@ namespace Xharness.Jenkins {
 				switch (test.TestName) {
 				case "monotouch-test":
 					if (test.TestProject.IsDotNetProject) {
-						var isDotNetReady = false;
 						if (test.Platform != TestPlatform.MacCatalyst)
-							yield return new TestData { Variation = "Debug (CoreCLR)", Debug = true, UseMonoRuntime = false, Ignored = !isDotNetReady || !jenkins.IncludeMac, };
-						yield return new TestData { Variation = "Debug (ARM64)", Debug = true, Profiling = false, Ignored = !isDotNetReady || !jenkins.IncludeMac || !mac_supports_arm64, RuntimeIdentifier = arm64_runtime_identifier, };
+							yield return new TestData { Variation = "Debug (CoreCLR)", Debug = true, UseMonoRuntime = false, Ignored = !jenkins.IncludeMac, };
+						yield return new TestData { Variation = "Debug (ARM64)", Debug = true, Profiling = false, Ignored = !jenkins.IncludeMac || !mac_supports_arm64, RuntimeIdentifier = arm64_runtime_identifier, };
 						if (test.Platform != TestPlatform.MacCatalyst) {
-							yield return new TestData { Variation = "Debug (CoreCLR, ARM64)", Debug = true, UseMonoRuntime = false, Profiling = false, Ignored = !isDotNetReady || !jenkins.IncludeMac || !mac_supports_arm64, RuntimeIdentifier = arm64_runtime_identifier, };
-							yield return new TestData { Variation = "Debug (CoreCLR, static registrar)", MonoBundlingExtraArgs = "--registrar:static", Debug = true, UseMonoRuntime = false, Undefines = "DYNAMIC_REGISTRAR", Ignored = !isDotNetReady || !jenkins.IncludeMac, };
-							yield return new TestData { Variation = "Debug (CoreCLR, static registrar, ARM64)", MonoBundlingExtraArgs = "--registrar:static", Debug = true, UseMonoRuntime = false, Undefines = "DYNAMIC_REGISTRAR", Profiling = false, Ignored = !isDotNetReady || !jenkins.IncludeMac || !mac_supports_arm64, RuntimeIdentifier = arm64_runtime_identifier, };
+							yield return new TestData { Variation = "Debug (CoreCLR, ARM64)", Debug = true, UseMonoRuntime = false, Profiling = false, Ignored = !jenkins.IncludeMac || !mac_supports_arm64, RuntimeIdentifier = arm64_runtime_identifier, };
+							yield return new TestData { Variation = "Debug (CoreCLR, static registrar)", MonoBundlingExtraArgs = "--registrar:static", Debug = true, UseMonoRuntime = false, Undefines = "DYNAMIC_REGISTRAR", Ignored = !jenkins.IncludeMac , };
+							yield return new TestData { Variation = "Debug (CoreCLR, static registrar, ARM64)", MonoBundlingExtraArgs = "--registrar:static", Debug = true, UseMonoRuntime = false, Undefines = "DYNAMIC_REGISTRAR", Profiling = false, Ignored = !jenkins.IncludeMac || !mac_supports_arm64, RuntimeIdentifier = arm64_runtime_identifier, };
 						}
 					}
 					break;
