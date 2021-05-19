@@ -868,6 +868,8 @@ namespace ObjCRuntime {
 			sb.Append (returnType.FullName);
 			sb.Append (' ');
 			sb.Append (method.DeclaringType.FullName);
+			sb.Append ('.');
+			sb.Append (method.Name);
 			sb.Append (' ');
 			sb.Append ('(');
 			var parameters = method.GetParameters ();
