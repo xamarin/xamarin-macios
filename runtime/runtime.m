@@ -619,9 +619,10 @@ xamarin_get_handle (MonoObject *obj, GCHandle *exception_gchandle)
 		char *msg = xamarin_strdup_printf ("Unable to marshal from %s.%s to an Objective-C object. "
 									"The managed class must either inherit from NSObject or implement INativeObject.",
 									mono_class_get_namespace (klass), mono_class_get_name (klass));
-		MonoException *exc = mono_get_exception_execution_engine (msg);
+		GCHandle ex_handle = xamarin_create_runtime_exception (8039, msg, exception_gchandle);
 		xamarin_free (msg);
-		*exception_gchandle = xamarin_gchandle_new ((MonoObject *) exc, FALSE);
+		if (*exception_gchandle == INVALID_GCHANDLE)
+			*exception_gchandle = ex_handle;
 	}
 
 	xamarin_mono_object_release (&klass);

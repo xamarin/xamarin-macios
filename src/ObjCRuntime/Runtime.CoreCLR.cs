@@ -286,7 +286,12 @@ namespace ObjCRuntime {
 			if (obj == null)
 				return;
 
-			Marshal.StructureToPtr (obj, ptr, false);
+			if (obj is bool b) {
+				// Only write a single byte for bools
+				Marshal.WriteByte (ptr, b ? (byte) 1 : (byte) 0);
+			} else {
+				Marshal.StructureToPtr (obj, ptr, false);
+			}
 		}
 
 		static IntPtr WriteStructure (object obj)
@@ -726,6 +731,10 @@ namespace ObjCRuntime {
 			if (ptr == IntPtr.Zero)
 				return null;
 
+			// Only read a single byte for bools.
+			if (type == typeof (bool))
+				return Marshal.ReadByte (ptr) != 0;
+
 			return Marshal.PtrToStructure (ptr, type);
 		}
 
@@ -859,6 +868,8 @@ namespace ObjCRuntime {
 			sb.Append (returnType.FullName);
 			sb.Append (' ');
 			sb.Append (method.DeclaringType.FullName);
+			sb.Append ('.');
+			sb.Append (method.Name);
 			sb.Append (' ');
 			sb.Append ('(');
 			var parameters = method.GetParameters ();

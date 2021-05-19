@@ -595,8 +595,11 @@
 			SdkRoot="$(_SdkRoot)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 		>
-			<Output TaskParameter="ObjectFiles" ItemName="_NativeExecutableObjectFiles" />
 		</CompileNativeCode>
+
+		<ItemGroup>
+			<_NativeExecutableObjectFiles Include="@(_CompileNativeExecutableFile -> '%(OutputFile)')" />
+		</ItemGroup>
 	</Target>
 
 	<PropertyGroup>
