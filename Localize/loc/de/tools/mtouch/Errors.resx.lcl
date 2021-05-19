@@ -1750,6 +1750,9 @@
       <Item ItemId=";MT2003_C" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Option '--optimize={0}' will be ignored since it's only applicable to {1}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Die Option "--optimize={0}" wird ignoriert, weil sie nur auf {1} anwendbar ist.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -3250,48 +3253,78 @@
       <Item ItemId=";MX0177" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Unknown platform: {0}. This usually indicates a bug; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Unbekannte Plattform: {0}. Dies weist in der Regel auf einen Fehler hin. Erstellen Sie einen Fehlerbericht mit einem Testfall unter https://github.com/xamarin/xamarin-macios/issues/new.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";MX0178" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Debugging symbol file for '{0}' is not valid and was ignored.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Die Debuggen-Symboldatei für '{0}' ist ungültig und wurde ignoriert.]D;]A;        ]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";MX0179" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[This version of {0} requires the {1} {2} SDK (shipped with Xcode {3}). Either upgrade Xcode to get the required header files or use the dynamic registrar or set the managed linker behaviour to Link Platform or Link Framework SDKs Only in your project's Mac Build Options > Linker Behavior) (to try to avoid the new APIs).]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Diese Version von {0} erfordert das {1} {2} SDK (ausgeliefert mit Xcode {3}). Aktualisieren Sie Xcode, um die erforderlichen Headerdateien abzurufen, oder verwenden Sie die dynamische Registrierungsstelle oder legen Sie das Verhalten von verwaltetem Linker zum Verknüpfen von Plattform- oder Framework-SDKs nur in den Mac-Buildoptionen Ihres Projekts > Linkerverhalten fest) (um zu versuchen, die neuen APIs zu vermeiden).]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";MX0180" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[This version of {0} requires the {1} {2} SDK (shipped with Xcode {3}). Either upgrade Xcode to get the required header files or set the managed linker behaviour to Link Framework SDKs Only in your project's iOS Build Options > Linker Behavior (to try to avoid the new APIs).]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Diese Version von {0} erfordert das {1} {2} SDK (ausgeliefert mit Xcode {3}). Aktualisieren Sie Xcode, um die erforderlichen Headerdateien abzurufen, oder legen Sie das Verhalten von verwaltetem Linker zum Verknüpfen von Plattform- oder Framework-SDKs nur in den iOS-Buildoptionen Ihres Projekts > Linkerverhalten fest (um zu versuchen, die neuen APIs zu vermeiden).]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";MX0181" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Not linking with the framework {0} (used by the type {1}) because it's not available on the current platform ({2}).]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Keine Verknüpfung mit dem Framework {0} (vom Typ "{1}" verwendet), da es auf der aktuellen Plattform ({2}) nicht verfügbar ist.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";MX0182" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Not linking with the framework {0} (referenced by a module reference in {1}) because it's not available on the current platform ({2}).]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Das Framework {0} wird nicht verknüpft (referenziert durch einen Modulverweis in {1}), weil es auf der aktuellen Plattform ({2}) nicht verfügbar ist.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";MX0183" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Could not map the iOS version {0} to a macOS version for Mac Catalyst]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Die IOS-Version {0} konnte keiner macOS-Version für Mac Catalyst zugeordnet werden.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";MX0184" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Could not map the macOS version {0} to a corresponding iOS version for Mac Catalyst]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Die macOS-Version {0} konnte keiner entsprechenden macOS-Version für Mac Catalyst zugeordnet werden.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";MX0185" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The option '{0}' cannot take the value '{1}' when using CoreCLR.]]></Val>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -3433,12 +3466,18 @@
       <Item ItemId=";MX5222" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The native linker failed to execute: {0}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new]D;]A; 		]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Der native Linker konnte nicht ausgeführt werden: {0}. Melden Sie einen Fehlerbericht unter https://github.com/xamarin/xamarin-macios/issues/new]D;]A; 		]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";MX5223" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Did not link with the framework '{0}', because the current {1} SDK does not contain support for this framework in the simulator.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Das Framework "{0}" konnte nicht verknüpft werden, da das aktuelle {1} SDK keine Unterstützung für dieses Framework im Simulator enthält.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -3517,30 +3556,45 @@
       <Item ItemId=";MX8037" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Don't know how to marshal the parameter of type {0} for parameter {1} in call to {2}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Es ist nicht bekannt, wie der Parameter vom Typ {0} für den Parameter {1} im Aufruf von {2} gemarshallt wird.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";MX8038" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Don't know how to marshal back the parameter of type {0} for parameter {1} in call to {2}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Es ist nicht bekannt, wie der Parameter vom Typ {0} für den Parameter {1} im Aufruf von {2} zurückgemarshallt wird.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";MX_ConfigurationAwareStep" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The linker step '{0}' failed during processing: {1}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Linkerschritt '{0}' ist bei der Verarbeitung von {1} fehlgeschlagen]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";MX_ConfigurationAwareStepWithAssembly" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The linker step '{0}' failed while processing {1}: {2}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Linkerschritt '{0}' ist während der Verarbeitung von {1}: {2} fehlgeschlagen]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";MX_ExceptionalSubSteps" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The linker step '{0}' failed processing `{1}`.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Linkerschritt '{0}' konnte „{1}“ nicht verarbeiten.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
