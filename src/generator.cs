@@ -7415,7 +7415,12 @@ public partial class Generator : IMemberGatherer {
 			//
 			if (!is_static_class){
 				var disposeAttr = AttributeManager.GetCustomAttributes<DisposeAttribute> (type);
-				if (disposeAttr.Length > 0 || instance_fields_to_clear_on_dispose.Count > 0){
+#if NET
+				bool dispose_backing_fields = false; // using reflection inside NSObject
+#else
+				bool dispose_backing_fields = (instance_fields_to_clear_on_dispose.Count > 0);
+#endif
+				if (disposeAttr.Length > 0 || dispose_backing_fields){
 					print_generated_code ();
 					print ("protected override void Dispose (bool disposing)");
 					print ("{");
@@ -7427,7 +7432,7 @@ public partial class Generator : IMemberGatherer {
 					
 					print ("base.Dispose (disposing);");
 					
-					if (instance_fields_to_clear_on_dispose.Count > 0) {
+					if (dispose_backing_fields) {
 						print ("if (Handle == IntPtr.Zero) {");
 						indent++;
 						foreach (var field in instance_fields_to_clear_on_dispose.OrderBy (f => f, StringComparer.Ordinal))

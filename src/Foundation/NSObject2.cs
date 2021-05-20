@@ -829,12 +829,18 @@ namespace Foundation {
 			}
 		}
 
-		unsafe void FreeData ()
+		void FreeData ()
 		{
 			if (super != IntPtr.Zero) {
 				Marshal.FreeHGlobal (super);
 				super = IntPtr.Zero;
 			}
+#if NET
+			foreach (var field in GetType ().GetFields (BindingFlags.Instance | BindingFlags.NonPublic)) {
+				if (field.Name.StartsWith ("__mt_", StringComparison.Ordinal))
+					field.SetValue (this, null);
+			}
+#endif
 		}
 
 		[Register ("__NSObject_Disposer")]
