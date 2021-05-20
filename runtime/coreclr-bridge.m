@@ -399,6 +399,14 @@ xamarin_create_system_entry_point_not_found_exception (const char *entrypoint)
 	return rv;
 }
 
+MonoException *
+mono_get_exception_out_of_memory ()
+{
+	MonoException *rv = xamarin_bridge_create_exception (XamarinExceptionTypes_System_OutOfMemoryException, NULL);
+	LOG_CORECLR (stderr, "%s (%p) => %p\n", __func__, entrypoint, rv);
+	return rv;
+}
+
 MonoMethodSignature *
 mono_method_signature (MonoMethod* method)
 {
