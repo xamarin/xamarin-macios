@@ -1462,9 +1462,11 @@ xamarin_get_nsnumber_converter (MonoClass *managedType, MonoMethod *method, bool
 	} else if (!strcmp (fullname, "System.nfloat")) {
 		func = to_managed ? (void *) xamarin_nsnumber_to_nfloat : (void *) xamarin_nfloat_to_nsnumber;
 	} else if (mono_class_is_enum (managedType)) {
-		MonoClass *baseClass = mono_class_from_mono_type (mono_class_enum_basetype (managedType));
+		MonoType *baseType = mono_class_enum_basetype (managedType);
+		MonoClass *baseClass = mono_class_from_mono_type (baseType);
 		func = xamarin_get_nsnumber_converter (baseClass, method, to_managed, exception_gchandle);
 		xamarin_mono_object_release (&baseClass);
+		xamarin_mono_object_release (&baseType);
 	} else {
 		MonoType *nsnumberType = xamarin_get_nsnumber_type ();
 		*exception_gchandle = xamarin_create_bindas_exception (mtype, nsnumberType, method);
