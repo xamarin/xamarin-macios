@@ -1,3 +1,4 @@
+## macOS only (added in 10.15) without any catalyst annotations (headers or web docs)
 !missing-protocol! ASWebAuthenticationSessionWebBrowserSessionHandling not bound
 !missing-selector! +ASWebAuthenticationSessionWebBrowserSessionManager::sharedManager not bound
 !missing-selector! ASWebAuthenticationSessionWebBrowserSessionManager::sessionHandler not bound
