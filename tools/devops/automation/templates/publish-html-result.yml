@@ -45,7 +45,7 @@ steps:
     git config user.name "vs-mobiletools-engineering-service2"
 
     $branchName = "$Env:OriginalSourceBranch/$Env:OriginalCommit/$Env:OriginalBuildId"
-    if (Env:OriginalBuildReason -eq "PullRequest") {
+    if ($Env:OriginalBuildReason -eq "PullRequest") {
       $branchName = "pr/$branchName"
     } else {
       $branchName = "ci/$branchName"
