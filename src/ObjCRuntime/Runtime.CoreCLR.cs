@@ -341,10 +341,10 @@ namespace ObjCRuntime {
 			return (byte) obj.FlagsInternal;
 		}
 
-		static IntPtr GetMethodDeclaringType (MonoObjectPtr mobj)
+		static unsafe MonoObject* GetMethodDeclaringType (MonoObject *mobj)
 		{
 			var method = (MethodBase) GetMonoObjectTarget (mobj);
-			return GetMonoObject (method.DeclaringType);
+			return (MonoObject *) GetMonoObject (method.DeclaringType);
 		}
 
 		static IntPtr ObjectGetType (MonoObjectPtr mobj)
