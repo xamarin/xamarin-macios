@@ -5,6 +5,10 @@ parameters:
   type: string 
   default: 'pr' # default reason is a pr build 
 
+- name: devicePrefix
+  type: string 
+  default: 'sim' # always sim, but use a param to move in the future if needed
+
 steps:
 
 - checkout: self
@@ -31,6 +35,59 @@ steps:
   displayName: 'Parse build configuration'
   timeoutInMinutes: 1
 
+# download all the artifacts we are interested in and expand them
+# Download the Html Report that was added by the tests job.
+- task: DownloadPipelineArtifact@2
+  displayName: Download html report 
+  inputs:
+    patterns: 'HtmlReport-{{ parameters.devicePrefix }}/HtmlReport.zip'
+    allowFailedBuilds: true
+    path: $(System.DefaultWorkingDirectory)/Reports
+
+- task: ExtractFiles@1
+  displayName: 'Extract HmlReport'
+  continueOnError: true # not an issue, pwsh will see if we did get the data
+  inputs:
+    archiveFilePatterns: '$(System.DefaultWorkingDirectory)/Reports/HtmlReport-${{ parameters.devicePrefix }}/HtmlReport.zip'
+    destinationFolder: '$(System.DefaultWorkingDirectory)/HtmlReport-${{ parameters.devicePrefix }}'
+
+- task: DownloadPipelineArtifact@2
+  displayName: 'Download API diff (from stable)'
+  inputs:
+    patterns: 'apidiff-stable/apidiff-stable.zip'
+    allowFailedBuilds: true
+    path: $(System.DefaultWorkingDirectory)/Reports
+
+- task: ExtractFiles@1
+  displayName: 'Extract API diff (from stable)'
+  continueOnError: true # not an issue, pwsh will see if we did get the data
+  inputs:
+    archiveFilePatterns: '$(System.DefaultWorkingDirectory)/Reports/apidiff-stable/apidiff-stable.zip'
+    destinationFolder: '$(System.DefaultWorkingDirectory)/apidiff-stable'
+
+- task: DownloadPipelineArtifact@2
+  displayName: 'Download API & Generator comparison'
+  inputs:
+    patterns: 'apicomparison/apicomparison.zip'
+    allowFailedBuilds: true
+    path: $(System.DefaultWorkingDirectory)/Reports
+
+- task: ExtractFiles@1
+  displayName: 'Extract API & Generator comparison'
+  continueOnError: true # not an issue, pwsh will see if we did get the data
+  inputs:
+    archiveFilePatterns: '$(System.DefaultWorkingDirectory)/Reports/apicomparison/apicomparison.zip'
+    destinationFolder: '$(System.DefaultWorkingDirectory)/apicomparison'
+
+- pwsh: |
+    Get-ChildItem $(System.DefaultWorkingDirectory) -Recurse
+    # show all the paths to remove
+    Get-ChildItem -Path $(System.DefaultWorkingDirectory) -Filter *.log -Recurse -File | ForEach-Object {
+      Write-Host "Log to remove $_"
+    }
+  displayName: 'Remove private logs'
+  timeoutInMinutes: 10
+
 - pwsh: |
     git config user.email "valco@microsoft.com"
     git config user.name "vs-mobiletools-engineering-service2"
@@ -47,7 +104,7 @@ steps:
     cd $htmlRepo 
     git checkout -b $branchName 
   displayName: 'Create remote branch'
-  timeoutInMinutes: 1
+  timeoutInMinutes: 10
   env:
     OriginalBuildReason: $(configuration.BuildReason)
     OriginalSourceBranch: $(configuration.BuildSourceBranchName)
