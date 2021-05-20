@@ -230,6 +230,7 @@ bool			xamarin_set_gchandle_with_flags_safe (id self, GCHandle gchandle, enum Xa
 void			xamarin_create_gchandle (id self, void *managed_object, enum XamarinGCHandleFlags flags, bool force_weak);
 void            xamarin_release_managed_ref (id self, bool user_type);
 void			xamarin_notify_dealloc (id self, GCHandle gchandle);
+void			xamarin_release_static_dictionaries ();
 
 int				xamarin_main (int argc, char *argv[], enum XamarinLaunchMode launch_mode);
 
