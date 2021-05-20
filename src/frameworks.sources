@@ -64,6 +64,11 @@ ADDRESSBOOKUI_SOURCES = \
 	AddressBookUI/ABUnknownPersonViewController.cs \
 	AddressBookUI/DisplayedPropertiesCollection.cs \
 
+# AdSupport
+
+ADSUPPORT_SOURCES = \
+	AdSupport/ASCompat.cs \
+
 # AppKit
 
 APPKIT_CORE_SOURCES = \

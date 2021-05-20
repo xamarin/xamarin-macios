@@ -29,6 +29,12 @@ xamarin_bridge_initialize ()
 {
 }
 
+void
+xamarin_enable_new_refcount ()
+{
+	// Nothing to do here.
+}
+
 bool
 xamarin_bridge_vm_initialize (int propertyCount, const char **propertyKeys, const char **propertyValues)
 {
@@ -395,6 +401,14 @@ MonoException *
 xamarin_create_system_entry_point_not_found_exception (const char *entrypoint)
 {
 	MonoException *rv = xamarin_bridge_create_exception (XamarinExceptionTypes_System_EntryPointNotFoundException, entrypoint);
+	LOG_CORECLR (stderr, "%s (%p) => %p\n", __func__, entrypoint, rv);
+	return rv;
+}
+
+MonoException *
+mono_get_exception_out_of_memory ()
+{
+	MonoException *rv = xamarin_bridge_create_exception (XamarinExceptionTypes_System_OutOfMemoryException, NULL);
 	LOG_CORECLR (stderr, "%s (%p) => %p\n", __func__, entrypoint, rv);
 	return rv;
 }
