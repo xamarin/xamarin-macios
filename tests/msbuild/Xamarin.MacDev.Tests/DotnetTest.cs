@@ -51,6 +51,8 @@ namespace Xamarin.iOS.Tasks {
 		[TestCase ("MyXamarinFormsApp")]
 		public void CompareBuilds (string project, int expectedErrorCount = 0)
 		{
+			Configuration.AssertDotNetAvailable ();
+
 			tfi = "Xamarin.iOS";
 			switch (project) {
 			case "MyMetalGame":

@@ -1546,6 +1546,7 @@ namespace ObjCRuntime {
 			throw new ArgumentException (string.Format ("'{0}' is an unknown protocol", type.FullName));
 		}
 
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		internal static bool IsUserType (IntPtr self)
 		{
 			var cls = Class.object_getClass (self);
@@ -1557,8 +1558,8 @@ namespace ObjCRuntime {
 					if (idx >= 0)
 						return (map [idx].flags & MTTypeFlags.UserType) == MTTypeFlags.UserType;
 					// If using the partial static registrar, we need to continue
-					// If full static registrar, we can return false
-					if ((options->Flags & InitializationFlags.IsPartialStaticRegistrar) != InitializationFlags.IsPartialStaticRegistrar)
+					// If full static registrar, we can return false, as long as the dynamic registrar is not supported
+					if (!DynamicRegistrationSupported && (options->Flags & InitializationFlags.IsPartialStaticRegistrar) != InitializationFlags.IsPartialStaticRegistrar)
 						return false;
 				}
 			}
