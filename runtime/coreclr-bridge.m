@@ -29,6 +29,12 @@ xamarin_bridge_initialize ()
 {
 }
 
+void
+xamarin_enable_new_refcount ()
+{
+	// Nothing to do here.
+}
+
 bool
 xamarin_bridge_vm_initialize (int propertyCount, const char **propertyKeys, const char **propertyValues)
 {

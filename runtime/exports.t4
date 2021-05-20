@@ -240,7 +240,9 @@
 		new Export ("void", "mono_profiler_install_gc",
 			"MonoProfileGCFunc", "callback",
 			"MonoProfileGCResizeFunc", "heap_resize_callback"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export ("void", "mono_profiler_load",
 			"const char *", "desc"
@@ -567,7 +569,9 @@
 		new Export ("void", "mono_gc_toggleref_add",
 			"MonoObject *", "object",
 			"mono_bool", "strong_ref"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export ("void", "mono_gc_toggleref_register_callback",
 			"MonoToggleRefCallback", "process_toggleref"
