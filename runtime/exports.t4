@@ -490,12 +490,6 @@
 
 		#endregion
 
-		#region metadata/mono-gc.h
-
-		new Export ("int", "mono_gc_max_generation"),
-
-		#endregion
-
 		#region metadata/mono-hash.h
 
 		new Export ("MonoGHashTable *", "mono_g_hash_table_new_type",
@@ -610,11 +604,6 @@
 		) {
 			HasCoreCLRBridgeFunction = true,
 		},
-
-		new Export ("void", "mono_jit_parse_options",
-			"int", "argc",
-			"char**", "argv"
-		),
 
 		new Export ("void", "mono_jit_set_aot_mode",
 			"MonoAotMode", "mode"
