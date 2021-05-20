@@ -3541,6 +3541,7 @@ namespace Registrar {
 						body_setup.AppendLine ("NSArray *arr{0} = NULL;", i);
 						if (isByRefArray) {
 							body_setup.AppendLine ("MonoArray *original_marr{0} = NULL;", i);
+							cleanup.AppendLine ("xamarin_mono_object_release (&original_marr{0});", i);
 							setup_call_stack.AppendLine ("if (p{0} == NULL) {{", i);
 							setup_call_stack.AppendLine ("arg_ptrs [{0}] = NULL;", i);
 							setup_call_stack.AppendLine ("} else {");
@@ -3559,9 +3560,11 @@ namespace Registrar {
 						if (isString) {
 							setup_call_stack.AppendLine ("marr{0} = xamarin_nsarray_to_managed_string_array (arr{0}, &exception_gchandle);", i);
 							setup_call_stack.AppendLine ("if (exception_gchandle != INVALID_GCHANDLE) goto exception_handling;");
+							cleanup.AppendLine ("xamarin_mono_object_release (&marr{0});", i);
 						} else if (isNSObject) {
 							setup_call_stack.AppendLine ("marr{0} = xamarin_nsarray_to_managed_nsobject_array (arr{0}, xamarin_get_parameter_type (managed_method, {0}), NULL, &exception_gchandle);", i);
 							setup_call_stack.AppendLine ("if (exception_gchandle != INVALID_GCHANDLE) goto exception_handling;");
+							cleanup.AppendLine ("xamarin_mono_object_release (&marr{0});", i);
 						} else if (isINativeObject) {
 							TypeDefinition nativeObjType = elementType.Resolve ();
 							var isNativeObjectInterface = nativeObjType.IsInterface;
@@ -3586,6 +3589,7 @@ namespace Registrar {
 							} else {
 								setup_call_stack.AppendLine ("marr{0} = xamarin_nsarray_to_managed_inativeobject_array (arr{0}, xamarin_get_parameter_type (managed_method, {0}), NULL, &exception_gchandle);", i);
 							}
+							cleanup.AppendLine ("xamarin_mono_object_release (&marr{0});", i);
 							setup_call_stack.AppendLine ("if (exception_gchandle != INVALID_GCHANDLE) goto exception_handling;");
 						} else {
 							throw ErrorHelper.CreateError (App, 4111, method.Method, Errors.MT4111, type.FullName, descriptiveMethodName);
