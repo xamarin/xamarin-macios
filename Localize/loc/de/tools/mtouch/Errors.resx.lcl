@@ -3325,6 +3325,9 @@
       <Item ItemId=";MX0185" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The option '{0}' cannot take the value '{1}' when using CoreCLR.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Bei Verwendung von CoreCLR kann die Option "{0}" nicht den Wert "{1}" annehmen.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
