@@ -3283,6 +3283,7 @@ namespace Registrar {
 			invoke.Indentation = indent;
 			setup_call_stack.Indentation = indent;
 			setup_return.Indentation = indent;
+			cleanup.Indentation = indent;
 
 			var token_ref = CreateTokenReference (method.Method, TokenType.Method);
 
