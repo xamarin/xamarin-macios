@@ -691,12 +691,6 @@ namespace ObjCRuntime {
 			return ((INativeObject) GetGCHandleTarget (ptr)).Handle;
 		}
 
-		static IntPtr GetAssemblyName (IntPtr gchandle)
-		{
-			var asm = (Assembly) GetGCHandleTarget (gchandle);
-			return Marshal.StringToHGlobalAuto (Path.GetFileName (asm.Location));
-		}
-
 		static void UnregisterNSObject (IntPtr native_obj, IntPtr managed_obj) 
 		{
 			NativeObjectHasDied (native_obj, GetGCHandleTarget (managed_obj) as NSObject);
