@@ -86,6 +86,10 @@ namespace Xharness.Jenkins {
 			"tests/msbuild",
 		};
 
+		static readonly string [] xharnessPrefix = {
+			"tests/xharness",
+		};
+
 		#endregion
 
 		public TestSelector (Jenkins jenkins, IProcessManager processManager, IVersionControlSystem versionControlSystem)
@@ -180,6 +184,7 @@ namespace Xharness.Jenkins {
 			SetEnabled (files, cecilPrefixes, "cecil", ref jenkins.IncludeCecil);
 			SetEnabled (files, dotnetFilenames, "dotnet", ref jenkins.IncludeDotNet);
 			SetEnabled (files, msbuildFilenames, "msbuild", ref jenkins.IncludeMSBuild);
+			SetEnabled (files, xharnessPrefix, "all", ref jenkins.IncludeAll);
 		}
 
 		void SelectTestsByLabel (int pullRequest)

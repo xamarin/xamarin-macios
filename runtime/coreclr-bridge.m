@@ -77,7 +77,7 @@ xamarin_handle_bridge_exception (GCHandle gchandle, const char *method)
 		return;
 
 	if (method == NULL)
-		method = "<unknown method";
+		method = "<unknown method>";
 
 	fprintf (stderr, "%s threw an exception: %p => %s\n", method, gchandle, [xamarin_print_all_exceptions (gchandle) UTF8String]);
 	xamarin_assertion_message ("%s threw an exception: %p = %s", method, gchandle, [xamarin_print_all_exceptions (gchandle) UTF8String]);
@@ -418,7 +418,7 @@ mono_method_signature (MonoMethod* method)
 {
 	MonoMethodSignature *rv = xamarin_bridge_method_get_signature (method);
 
-	LOG_CORECLR (stderr, "xamarin_bridge_mono_method_signature (%p) => %p\n", method, rv);
+	LOG_CORECLR (stderr, "%s (%p) => %p\n", __func__, method, rv);
 
 	return rv;
 }

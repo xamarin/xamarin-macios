@@ -871,7 +871,7 @@ xamarin_install_mono_profiler ()
 {
 	static _MonoProfiler profiler = { 0 };
 	// This must be done before any other mono_profiler_install_* functions are called
-	// (currently gc_enable_new_refcount and xamarin_install_nsautoreleasepool_hooks).
+	// (currently xamarin_enable_new_refcount and xamarin_install_nsautoreleasepool_hooks).
 	mono_profiler_install (&profiler, NULL);
 }
 #endif
@@ -1264,7 +1264,7 @@ xamarin_initialize ()
 	xamarin_process_managed_exception_gchandle (exception_gchandle);
 
 #if !defined (CORECLR_RUNTIME)
-	xamarin_install_mono_profiler (); // must be called before xamarin_install_nsautoreleasepool_hooks or gc_enable_new_refcount
+	xamarin_install_mono_profiler (); // must be called before xamarin_install_nsautoreleasepool_hooks or xamarin_enable_new_refcount
 #endif
 
 	xamarin_install_nsautoreleasepool_hooks ();
@@ -2499,6 +2499,7 @@ xamarin_locate_assembly_resource_for_root (const char *root, const char *culture
 	return false;
 }
 
+#if !defined (CORECLR_RUNTIME)
 bool
 xamarin_locate_assembly_resource_for_name (MonoAssemblyName *assembly_name, const char *resource, char *path, size_t pathlen)
 {
@@ -2506,6 +2507,7 @@ xamarin_locate_assembly_resource_for_name (MonoAssemblyName *assembly_name, cons
 	const char *aname = mono_assembly_name_get_name (assembly_name);
 	return xamarin_locate_assembly_resource (aname, culture, resource, path, pathlen);
 }
+#endif
 
 // #define LOG_RESOURCELOOKUP(...) do { NSLog (@ __VA_ARGS__); } while (0);
 #define LOG_RESOURCELOOKUP(...)

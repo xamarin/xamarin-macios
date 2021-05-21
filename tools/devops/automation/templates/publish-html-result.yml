@@ -5,21 +5,20 @@ parameters:
   type: string 
   default: 'pr' # default reason is a pr build 
 
+- name: devicePrefix
+  type: string 
+  default: 'sim' # always sim, but use a param to move in the future if needed
+
 steps:
 
 - checkout: self
   persistCredentials: true
 
-# download the json that contains all the info that triggered this build
-- task: DownloadPipelineArtifact@2
-  displayName: Download configuration.json
-  inputs:
-    patterns: '**/configuration.json'
-    allowFailedBuilds: true
-    path: $(Build.SourcesDirectory)/build-configuration
+# downlod ALL artifacts
+- download: macios 
 
 - pwsh: |
-    $configFile =  Join-Path $(Build.SourcesDirectory) "build-configuration" "configuration.json"
+    $configFile = Join-Path $(PIPELINE.WORKSPACE) "macios" "build-configuration" "configuration.json"
     $config = Get-Content $configFile | ConvertFrom-Json
     # export variables to be present in the othe steps
     Write-Host "##vso[task.setvariable variable=BuildReason;isOutput=true]$($config.BuildReason)"
@@ -32,11 +31,21 @@ steps:
   timeoutInMinutes: 1
 
 - pwsh: |
+    $downloadsPath = Join-Path $(PIPELINE.WORKSPACE) "macios"
+    Get-ChildItem  $downloadsPath -Recurse
+    # show all the paths to remove
+    Get-ChildItem -Path $downloadsPath -Filter *.log -Recurse -File | ForEach-Object {
+      Write-Host "Log to remove $_"
+    }
+  displayName: 'Remove private logs'
+  timeoutInMinutes: 10
+
+- pwsh: |
     git config user.email "valco@microsoft.com"
     git config user.name "vs-mobiletools-engineering-service2"
 
     $branchName = "$Env:OriginalSourceBranch/$Env:OriginalCommit/$Env:OriginalBuildId"
-    if (Env:OriginalBuildReason -eq "PullRequest") {
+    if ($Env:OriginalBuildReason -eq "PullRequest") {
       $branchName = "pr/$branchName"
     } else {
       $branchName = "ci/$branchName"
@@ -47,7 +56,7 @@ steps:
     cd $htmlRepo 
     git checkout -b $branchName 
   displayName: 'Create remote branch'
-  timeoutInMinutes: 1
+  timeoutInMinutes: 10
   env:
     OriginalBuildReason: $(configuration.BuildReason)
     OriginalSourceBranch: $(configuration.BuildSourceBranchName)
