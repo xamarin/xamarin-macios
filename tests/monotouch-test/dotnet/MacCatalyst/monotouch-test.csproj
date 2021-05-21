@@ -17,7 +17,6 @@
     <DefineConstants Condition="'$(Platform)' != 'iPhoneSimulator'">$(DefineConstants);DEVICE</DefineConstants>
     <RootTestsDirectory>..\..\..</RootTestsDirectory>
     <MtouchLink>None</MtouchLink>
-    <MtouchExtraArgs>-xml=${ProjectDir}/../extra-linker-defs.xml</MtouchExtraArgs>
   </PropertyGroup>
 
   <ItemGroup>
@@ -33,6 +32,8 @@
     <None Include="..\..\Entitlements.plist" />
     <None Include="..\..\app.config" />
     <None Include="..\..\EmptyNib.xib" />
+
+    <LinkDescription Include="$(RootTestsDirectory)\monotouch-test\dotnet\extra-linker-defs.xml" />
   </ItemGroup>
 
   <ItemGroup>
