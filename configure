@@ -45,6 +45,8 @@ Usage: configure [options]
 
     --enable-legacy-xamarin  Enable building the legacy version of Xamarin.iOS/Xamarin.Mac.
     --disable-legacy-xamarin Disable building the legacy version of Xamarin.iOS/Xamarin.Mac.
+
+    --custom-dotnet=[artifacts] Use a locally built version of dotnet/runtime. See docs/CORECLR.md for detailed instructions about how to build dotnet/runtime from source.
 EOL
 }
 
@@ -154,6 +156,16 @@ while test "x$1" != x; do
     --disable-legacy-xamarin)
         echo "INCLUDE_XAMARIN_LEGACY=" >> "$CONFIGURED_FILE"
         shift
+        ;;
+    --custom-dotnet=*)
+        echo "CUSTOM_DOTNET=1" >> "$CONFIGURED_FILE"
+        echo "DOTNET_RUNTIME_PATH=${1:16}" >> "$CONFIGURED_FILE"
+        shift
+        ;;
+    --custom-dotnet)
+        echo "CUSTOM_DOTNET=1" >> "$CONFIGURED_FILE"
+        echo "DOTNET_RUNTIME_PATH=$2" >> "$CONFIGURED_FILE"
+        shift 2
         ;;
     --help|-h)
         show_help
