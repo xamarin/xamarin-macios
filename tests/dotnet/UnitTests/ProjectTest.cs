@@ -55,6 +55,7 @@ namespace Xamarin.Tests {
 		[TestCase ("iossimulator-x86")]
 		[TestCase ("iossimulator-x64")]
 		[TestCase ("ios-arm64")]
+		[TestCase ("ios-arm")]
 		public void BuildMySingleView (string runtimeIdentifier)
 		{
 			var platform = ApplePlatform.iOS;
