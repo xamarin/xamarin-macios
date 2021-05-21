@@ -607,6 +607,15 @@ namespace Xamarin
 
 			return rv;
 		}
+
+		public static bool IsStaticLibrary (string filename, bool throw_if_error = false)
+		{
+			using (var fs = new FileStream (filename, FileMode.Open, FileAccess.Read, FileShare.Read)) {
+				using (var reader = new BinaryReader (fs)) {
+					return IsStaticLibrary (reader, throw_if_error);
+				}
+			}
+		}
 	}
 
 	public class MachOFile

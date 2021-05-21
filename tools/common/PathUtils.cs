@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace Xamarin.Utils
 {
@@ -130,6 +131,25 @@ namespace Xamarin.Utils
 			if (rv != 0)
 				throw new Exception (string.Format ("Could not create the symlink '{0}': {1}", symlink, Marshal.GetLastWin32Error ()));
 		}
+
+		[DllImport ("/usr/lib/libSystem.dylib", SetLastError = true)]
+		static extern int readlink (string path, [Out] byte[] buffer, IntPtr len);
+
+		public static string GetSymlinkTarget (string path)
+		{
+			byte [] buffer = null;
+			int rv;
+			do {
+				buffer = new byte [(buffer?.Length ?? 0) + 1024];
+				rv = readlink (path, buffer, (IntPtr) (buffer.Length - 1));
+			} while (rv == buffer.Length - 1);
+
+			if (rv == -1)
+				throw new Exception (string.Format ("Could not readlink '{0}': {1}", path, Marshal.GetLastWin32Error ()));
+
+			return Encoding.UTF8.GetString (buffer, 0, rv);
+		}
+
 		[DllImport ("/usr/lib/libSystem.dylib")]
 		static extern int unlink (string pathname);
 

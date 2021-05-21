@@ -1814,6 +1814,69 @@ namespace Xamarin.Localization.MSBuild {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to At least one app bundle must be specified..
+        /// </summary>
+        public static string E7073 {
+            get {
+                return ResourceManager.GetString("E7073", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The app bundle {0} does not exist..
+        /// </summary>
+        public static string E7074 {
+            get {
+                return ResourceManager.GetString("E7074", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No &apos;SpecificSubDirectory&apos; metadata was provided for the app bundle {0}..
+        /// </summary>
+        public static string E7075 {
+            get {
+                return ResourceManager.GetString("E7075", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Can&apos;t merge the symlink &apos;{0}&apos;, it has different targets..
+        /// </summary>
+        public static string E7076 {
+            get {
+                return ResourceManager.GetString("E7076", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to merge the file &apos;{0}&apos;, it&apos;s different between the input app bundles..
+        /// </summary>
+        public static string E7077 {
+            get {
+                return ResourceManager.GetString("E7077", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid app bundle: the Mach-O file {0} has dependent files..
+        /// </summary>
+        public static string E7078 {
+            get {
+                return ResourceManager.GetString("E7078", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid app bundle: the file {0} has different types between the input app bundles..
+        /// </summary>
+        public static string E7079 {
+            get {
+                return ResourceManager.GetString("E7079", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid framework: {0}.
         /// </summary>
         public static string InvalidFramework {

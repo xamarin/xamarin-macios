@@ -1259,4 +1259,32 @@
     <data name="E7072" xml:space="preserve">
         <value>Package product requirement file contains architectures ({0}) which mismatches with target architectures ({1})</value>
     </data>
+
+    <data name="E7073" xml:space="preserve">
+        <value>At least one app bundle must be specified.</value>
+    </data>
+
+    <data name="E7074" xml:space="preserve">
+        <value>The app bundle {0} does not exist.</value>
+    </data>
+
+    <data name="E7075" xml:space="preserve">
+        <value>No 'SpecificSubDirectory' metadata was provided for the app bundle {0}.</value>
+    </data>
+
+    <data name="E7076" xml:space="preserve">
+        <value>Can't merge the symlink '{0}', it has different targets.</value>
+    </data>
+
+    <data name="E7077" xml:space="preserve">
+        <value>Unable to merge the file '{0}', it's different between the input app bundles.</value>
+    </data>
+
+    <data name="E7078" xml:space="preserve">
+        <value>Invalid app bundle: the Mach-O file {0} has dependent files.</value>
+    </data>
+
+    <data name="E7079" xml:space="preserve">
+        <value>Invalid app bundle: the file {0} has different types between the input app bundles.</value>
+    </data>
 </root>
