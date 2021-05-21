@@ -31,6 +31,7 @@
 #include "../tools/mtouch/monotouch-fixes.c"
 #endif
 
+#if !defined (CORECLR_RUNTIME)
 unsigned char *
 xamarin_load_aot_data (MonoAssembly *assembly, int size, gpointer user_data, void **out_handle)
 {
@@ -147,6 +148,7 @@ xamarin_assembly_preload_hook (MonoAssemblyName *aname, char **assemblies_path, 
 
 	return mono_assembly_open (path, NULL);
 }
+#endif // !defined (CORECLR_RUNTIME)
 
 #ifdef DEBUG_LAUNCH_TIME
 uint64_t startDate = 0;
