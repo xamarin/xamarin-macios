@@ -39,8 +39,7 @@ steps:
     }
     $branchName = "$prefix/$branchName"
     Write-Host "##vso[task.setvariable variable=PublishingBranchName;isOutput=true]$branchName"
-    $destinationPath = Join-Path $prefix $Env:OriginalSourceBranch $Env:OriginalCommit $Env:OriginalBuildId
-    Write-Host "##vso[task.setvariable variable=PublishingPath;isOutput=true]$destinationPath"
+    Write-Host "##vso[task.setvariable variable=PublishingPath;isOutput=true]$branchName"
   name: configuration
   displayName: 'Parse build configuration'
   timeoutInMinutes: 1
