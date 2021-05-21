@@ -36,9 +36,13 @@ namespace Xamarin.MacDev.Tasks {
 		[Required]
 		public string MinimumOSVersion { get; set; }
 
+		public ITaskItem [] NativeReferences { get; set; }
+
 		public ITaskItem[] Frameworks { get; set; }
 
 		public string DylibRPath { get; set; }
+
+		public string FrameworkRPath { get; set; }
 
 		[Required]
 		public string TargetArchitectures { get; set; }
@@ -62,6 +66,30 @@ namespace Xamarin.MacDev.Tasks {
 
 			var arguments = new List<string> ();
 			arguments.Add ("clang++");
+
+			var hasEmbeddedFrameworks = false;
+
+			if (NativeReferences?.Length > 0) {
+				var linkerArguments = new LinkerOptions ();
+				linkerArguments.BuildNativeReferenceFlags (Log, NativeReferences);
+				foreach (var framework in linkerArguments.Frameworks) {
+					var fullPath = Path.GetFullPath (framework);
+					arguments.Add ("-F");
+					arguments.Add (Path.GetDirectoryName (fullPath));
+					arguments.Add ("-framework");
+					arguments.Add (Path.GetFileNameWithoutExtension (fullPath));
+				}
+				foreach (var framework in linkerArguments.WeakFrameworks) {
+					var fullPath = Path.GetFullPath (framework);
+					arguments.Add ("-F");
+					arguments.Add (Path.GetDirectoryName (fullPath));
+					arguments.Add ("-weak_framework");
+					arguments.Add (Path.GetFileNameWithoutExtension (fullPath));
+				}
+				arguments.AddRange (linkerArguments.Arguments.ToList ());
+
+				hasEmbeddedFrameworks |= linkerArguments.Frameworks.Count > 0 || linkerArguments.WeakFrameworks.Count > 0;
+			}
 
 			switch (Platform) {
 			case ApplePlatform.iOS:
@@ -125,6 +153,11 @@ namespace Xamarin.MacDev.Tasks {
 			if (hasDylibs) {
 				arguments.Add ("-rpath");
 				arguments.Add (DylibRPath ?? "@executable_path");
+			}
+
+			if (hasEmbeddedFrameworks) {
+				arguments.Add ("-rpath");
+				arguments.Add (FrameworkRPath ?? "@executable_path/Frameworks");
 			}
 
 			if (Frameworks != null) {
