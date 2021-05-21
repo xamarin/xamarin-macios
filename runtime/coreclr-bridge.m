@@ -77,7 +77,7 @@ xamarin_handle_bridge_exception (GCHandle gchandle, const char *method)
 		return;
 
 	if (method == NULL)
-		method = "<unknown method";
+		method = "<unknown method>";
 
 	fprintf (stderr, "%s threw an exception: %p => %s\n", method, gchandle, [xamarin_print_all_exceptions (gchandle) UTF8String]);
 	xamarin_assertion_message ("%s threw an exception: %p = %s", method, gchandle, [xamarin_print_all_exceptions (gchandle) UTF8String]);
