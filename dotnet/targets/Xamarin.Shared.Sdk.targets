@@ -9,6 +9,7 @@
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CompileNativeCode" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.LinkNativeCode" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.SymbolStrip" AssemblyFile="$(_XamarinTaskAssembly)" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.MergeAppBundles" AssemblyFile="$(_XamarinTaskAssembly)" />
 
 	<!-- Project types and how do we distinguish between them
 
@@ -156,7 +157,8 @@
 
 	<!-- Inject our custom logic into *DependsOn variables -->
 	<PropertyGroup>
-		<BuildDependsOn>
+		<!-- single-rid build -->
+		<BuildDependsOn Condition="'$(RuntimeIdentifiers)' == '' And '$(_IsMultiRidBuild)' != 'true'">
 			_ComputePublishTrimmed;
 			BuildOnlySettings;
 			_CollectBundleResources;
@@ -167,9 +169,28 @@
 			Codesign;
 		</BuildDependsOn>
 
+		<!-- inner build for multi-rid build -->
+		<BuildDependsOn Condition="'$(_IsMultiRidBuild)' == 'true'">
+			_ComputePublishTrimmed;
+			BuildOnlySettings;
+			_CollectBundleResources;
+			_PackLibraryResources;
+			_UnpackLibraryResources;
+			$(BuildDependsOn);
+			_CreateAppBundle;
+		</BuildDependsOn>
+
+		<!-- outer build for multi-rid build -->
+		<BuildDependsOn Condition="'$(RuntimeIdentifiers)' != ''">
+			_RunRidSpecificBuild;
+			_CreateMergedAppBundle;
+			Codesign;
+		</BuildDependsOn>
+
 		<!-- We re-use ComputeFilesToPublish & CopyFilesToPublishDirectory to copy files to the .app -->
 		<!-- ComputeFilesToPublish will run ILLink -->
-		<CreateAppBundleDependsOn>
+		<!-- single-rid build (either plain single, or inner build for multi-rid build) -->
+		<CreateAppBundleDependsOn Condition="'$(RuntimeIdentifiers)' == ''">
 			_DetectAppManifest;
 			_CopyResourcesToBundle;
 			_CompileCoreMLModels;
@@ -193,10 +214,16 @@
 			_CopyAppExtensionsToBundle;
 		</CreateAppBundleDependsOn>
 
-		<CreateAppBundleDependsOn Condition="'$(_PlatformName)' != 'macOS'">
+		<!-- single-rid build (either plain single, or inner build for multi-rid build) -->
+		<CreateAppBundleDependsOn Condition="'$(_PlatformName)' != 'macOS' And '$(RuntimeIdentifiers)' == ''">
 			_CreateDebugSettings;
 			_CreateDebugConfiguration;
 			$(CreateAppBundleDependsOn);
+		</CreateAppBundleDependsOn>
+
+		<!-- outer build for multi-rid build -->
+		<CreateAppBundleDependsOn Condition="'$(RuntimeIdentifiers)' != ''">
+			_CreateMergedAppBundle;
 		</CreateAppBundleDependsOn>
 	</PropertyGroup>
 
@@ -211,6 +238,79 @@
 		<PropertyGroup>
 			<PublishTrimmed Condition="'$(PublishTrimmed)' == '' And '$(RuntimeIdentifier)' != '' And ($(_ProjectType.EndsWith('ExecutableProject')) Or $(_ProjectType.EndsWith('AppExtensionProject'))) And '$(IsMacEnabled)' == 'true'">true</PublishTrimmed>
 		</PropertyGroup>
+	</Target>
+
+	<!-- If we have multiple runtime identifiers, then we need to run an inner build for each of them -->
+	<Target Name="_BuildRidSpecificAppBundle"
+		DependsOnTargets="Build"
+		Returns="@(_AssemblyPublishDirectory)"
+		>
+		<ItemGroup>
+			<_AssemblyPublishDirectory Include="$(MSBuildProjectDirectory)/$(_AppBundlePath)" RuntimeIdentifier="$(RuntimeIdentifier)" />
+		</ItemGroup>
+	</Target>
+
+	<Target Name="_RunRidSpecificBuild" Condition="'$(RuntimeIdentifiers)' != '' And '$(RuntimeIdentifier)' == ''" DependsOnTargets="_DetectSdkLocations;_GenerateBundleName">
+		<ItemGroup>
+			<!-- Convert RuntimeIdentifiers (a property) to an item group -->
+			<_RuntimeIdentifiersAsItems Include="$(RuntimeIdentifiers)" Condition=" '$(RuntimeIdentifiers)' != '' " />
+			<_RuntimeIdentifiersAsItems Update="@(_RuntimeIdentifiersAsItems)">
+				<!-- Platform = "rid-arch".Substring (0, "rid-arch".IndexOf ('-')) -->
+				<Platform>$([System.String]::new('%(Identity)').Substring(0, $([System.String]::new('%(Identity)').IndexOf ('-'))))</Platform>
+			</_RuntimeIdentifiersAsItems>
+
+			<!-- Verify that we're not mixing simulator + device RIDs in a single build -->
+			<_RuntimeIdentifierPlatforms Include="@(_RuntimeIdentifiersAsItems -> '%(Platform)')" />
+			<_RuntimeIdentifierDistinctPlatforms Include="@(_RuntimeIdentifierPlatforms->Distinct())" />
+		</ItemGroup>
+
+		<!-- Show an error if we're mixing simulator + device RIDs in a single build -->
+		<Error Condition="@(_RuntimeIdentifierDistinctPlatforms->Count()) > 1" Text="Building for all the runtime identifiers '$(RuntimeIdentifiers)' at the same time isn't possible, because they represent different platform variations." />
+
+		<!-- Execute the inner builds -->
+		<MSBuild
+			Projects="$(MSBuildProjectFile)"
+			Targets="_BuildRidSpecificAppBundle"
+			Properties="RuntimeIdentifier=%(_RuntimeIdentifiersAsItems.Identity);RuntimeIdentifiers=;_IsMultiRidBuild=true">
+			<Output TaskParameter="TargetOutputs" ItemName="_AssemblyPublishDirectories" />
+		</MSBuild>
+
+		<!-- Set the RID-specific subdirectory as metadata -->
+		<ItemGroup>
+			<_AssemblyPublishDirectories>
+				<SpecificSubDirectory>.xamarin/%(RuntimeIdentifier)</SpecificSubDirectory>
+			</_AssemblyPublishDirectories>
+		</ItemGroup>
+	</Target>
+
+	<Target Name="_CreateMergedAppBundle"
+		Inputs="@(_AssemblyPublishDirectories -> %(_AssemblyPublishDirectories.Identity)/**)"
+		Outputs="$(DeviceSpecificIntermediateOutputPath)$(_AppBundleName).mergestamp"
+		DependsOnTargets="_RunRidSpecificBuild"
+		>
+		<ItemGroup>
+			<!-- If we're creating a runtimeconfig.json file, then the resulting binary runtimeconfig.bin file can be put in the architecture-specific subdirectory -->
+			<_ArchitectureSpecificFiles Include="$(_RuntimeConfigurationFile)" Condition="'$(GenerateRuntimeConfigurationFiles)' != ''" />
+		</ItemGroup>
+
+		<MergeAppBundles
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			ArchitectureSpecificFiles="@(_ArchitectureSpecificFiles)"
+			InputAppBundles="@(_AssemblyPublishDirectories)"
+			OutputAppBundle="$(MSBuildProjectDirectory)/$(_AppBundlePath)"
+			SdkDevPath="$(_SdkDevPath)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+		/>
+
+		<Touch
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			AlwaysCreate="true"
+			Files="$(DeviceSpecificIntermediateOutputPath)$(_AppBundleName).mergestamp"
+			>
+			<Output TaskParameter="TouchedFiles" ItemName="FileWrites" />
+		</Touch>
 	</Target>
 
 	<Target Name="_ComputeLinkerArguments" DependsOnTargets="_ComputeLinkMode;_ComputeFrameworkVariables;_ComputeFrameworkAssemblies;ComputeResolvedFilesToPublishList;_ParseBundlerArguments;_ComputeVariables;_CreateRuntimeConfiguration">
