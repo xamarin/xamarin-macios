@@ -4002,6 +4002,13 @@ namespace Registrar {
 			body.WriteLine ("managed_method = xamarin_get_reflection_method_method (reflection_method);");
 			if (merge_bodies)
 				body.WriteLine ("*managed_method_ptr = managed_method;");
+
+			// If the managed_method instance is stored in a static variable, we can't release it until process exit.
+			if (merge_bodies || !isGeneric) {
+				body.WriteLine ("xamarin_mono_object_release_at_process_exit (managed_method);");
+			} else {
+				cleanup.AppendLine ("xamarin_mono_object_release (&managed_method);");
+			}
 			
 			body.WriteLine ("}");
 
