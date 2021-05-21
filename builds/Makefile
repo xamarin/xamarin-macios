@@ -109,8 +109,6 @@ $(eval $(call FixMacCatalystAssembly,System.Net.Http))
 
 ifdef CUSTOM_DOTNET
 DOWNLOAD_DOTNET_VERSION=$(CUSTOM_DOTNET_VERSION)
-else
-DOWNLOAD_DOTNET_VERSION=$(DOTNET6_VERSION)
 endif
 
 .stamp-download-dotnet-packages: $(TOP)/Make.config downloads/$(basename $(basename $(DOTNET6_TARBALL_NAME))) package-download/global.json package-download/NuGet.config
