@@ -422,6 +422,9 @@
     <Compile Include="..\common\FileCopier.cs">
       <Link>tools\common\FileCopier.cs</Link>
     </Compile>
+    <Compile Include="..\common\PathUtils.cs">
+      <Link>tools\common\PathUtils.cs</Link>
+    </Compile>
     <Compile Include="..\common\Symbols.cs">
       <Link>tools\common\Symbols.cs</Link>
     </Compile>

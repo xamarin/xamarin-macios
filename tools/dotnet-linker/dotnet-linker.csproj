@@ -88,6 +88,9 @@
     <Compile Include="..\common\PInvokeWrapperGenerator.cs">
       <Link>external\tools\common\PInvokeWrapperGenerator.cs</Link>
     </Compile>
+    <Compile Include="..\common\PathUtils.cs">
+      <Link>external\tools\common\PathUtils.cs</Link>
+    </Compile>
     <Compile Include="..\common\PListExtensions.cs">
       <Link>external\tools\common\PListExtensions.cs</Link>
     </Compile>

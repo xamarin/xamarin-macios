@@ -114,6 +114,71 @@ namespace Xamarin.Utils
 		{
 			return Path.GetFullPath (Path.Combine (baseDirectory, relative));
 		}
+
+		[DllImport ("/usr/lib/libSystem.dylib", SetLastError = true)]
+		static extern int symlink (string path1, string path2);
+
+		public static bool Symlink (string target, string symlink)
+		{
+			return PathUtils.symlink (target, symlink) == 0;
+		}
+
+		public static void CreateSymlink (string symlink, string target)
+		{
+			FileDelete (symlink); // Delete any existing symlinks.
+			var rv = PathUtils.symlink (target, symlink);
+			if (rv != 0)
+				throw new Exception (string.Format ("Could not create the symlink '{0}': {1}", symlink, Marshal.GetLastWin32Error ()));
+		}
+		[DllImport ("/usr/lib/libSystem.dylib")]
+		static extern int unlink (string pathname);
+
+		// File.Delete can't always delete symlinks (in particular if the symlink points to a file that doesn't exist).
+		public static void FileDelete (string file)
+		{
+			unlink (file);
+			// ignore any errors.
+		}
+
+		struct timespec {
+			public IntPtr tv_sec;
+			public IntPtr tv_nsec;
+		}
+
+		struct stat { /* when _DARWIN_FEATURE_64_BIT_INODE is defined */
+			public uint st_dev;
+			public ushort st_mode;
+			public ushort st_nlink;
+			public ulong st_ino;
+			public uint st_uid;
+			public uint st_gid;
+			public uint st_rdev;
+			public timespec st_atimespec;
+			public timespec st_mtimespec;
+			public timespec st_ctimespec;
+			public timespec st_birthtimespec;
+			public ulong st_size;
+			public ulong st_blocks;
+			public uint st_blksize;
+			public uint st_flags;
+			public uint st_gen;
+			public uint st_lspare;
+			public ulong st_qspare_1;
+			public ulong st_qspare_2;
+		}
+
+		[DllImport ("/usr/lib/libSystem.dylib", EntryPoint = "lstat$INODE64", SetLastError = true)]
+		static extern int lstat (string path, out stat buf);
+
+		public static bool IsSymlink (string file)
+		{
+			stat buf;
+			var rv = lstat (file, out buf);
+			if (rv != 0)
+				throw new Exception (string.Format ("Could not lstat '{0}': {1}", file, Marshal.GetLastWin32Error ()));
+			const int S_IFLNK = 40960;
+			return (buf.st_mode & S_IFLNK) == S_IFLNK;
+		}
 	}
 }
 
