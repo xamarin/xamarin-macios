@@ -398,6 +398,88 @@ namespace Xamarin.Tests {
 		}
 
 		[Test]
+		[TestCase (ApplePlatform.iOS, "iossimulator-x86;iossimulator-x64")]
+		[TestCase (ApplePlatform.iOS, "ios-arm;ios-arm64")]
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64")]
+		public void BuildFatApp (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			var project = "MySimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var project_path = GetProjectPath (project, platform: platform);
+			Clean (project_path);
+			var properties = new Dictionary<string, string> (verbosity);
+			properties ["RuntimeIdentifiers"] = runtimeIdentifiers;
+			var result = DotNet.AssertBuild (project_path, properties);
+			AssertThatLinkerExecuted (result);
+			var appPath = Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", platform.ToFramework (), $"{project}.app");
+			var infoPlistPath = GetInfoPListPath (platform, appPath);
+			Assert.That (infoPlistPath, Does.Exist, "Info.plist");
+			var infoPlist = PDictionary.FromFile (infoPlistPath);
+			Assert.AreEqual ("com.xamarin.mysimpleapp", infoPlist.GetString ("CFBundleIdentifier").Value, "CFBundleIdentifier");
+			Assert.AreEqual ("MySimpleApp", infoPlist.GetString ("CFBundleDisplayName").Value, "CFBundleDisplayName");
+			Assert.AreEqual ("3.14", infoPlist.GetString ("CFBundleVersion").Value, "CFBundleVersion");
+			Assert.AreEqual ("3.14", infoPlist.GetString ("CFBundleShortVersionString").Value, "CFBundleShortVersionString");
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.iOS, "iossimulator-x86;iossimulator-x64")]
+		[TestCase (ApplePlatform.iOS, "ios-arm;ios-arm64", "MtouchLink=SdkOnly")]
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64")]
+		public void BuildFatMonoTouchTest (ApplePlatform platform, string runtimeIdentifiers, params string[] additionalProperties)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var project_path = Path.Combine (Configuration.SourceRoot, "tests", "monotouch-test", "dotnet", platform.AsString (), "monotouch-test.csproj");
+			Configuration.CopyDotNetSupportingFiles (Path.GetDirectoryName (Path.GetDirectoryName (project_path)));
+			Configuration.CopyDotNetSupportingFiles (Path.Combine (Configuration.SourceRoot, "tests", "bindings-test", "dotnet"));
+			Configuration.CopyDotNetSupportingFiles (Path.Combine (Configuration.SourceRoot, "tests", "bindings-test2", "dotnet"));
+			Configuration.CopyDotNetSupportingFiles (Path.Combine (Configuration.SourceRoot, "tests", "fsharplibrary", "dotnet"));
+			Configuration.CopyDotNetSupportingFiles (Path.Combine (Configuration.SourceRoot, "external", "Touch.Unit", "Touch.Client", "dotnet"));
+			Clean (project_path);
+			var properties = new Dictionary<string, string> (verbosity);
+			properties ["RuntimeIdentifiers"] = runtimeIdentifiers;
+			if (additionalProperties != null) {
+				foreach (var prop in additionalProperties) {
+					var eq = prop.IndexOf ('=');
+					var name = prop.Substring (0, eq);
+					var value = prop.Substring (eq + 1);
+					properties [name] = value;
+				}
+			}
+			var result = DotNet.AssertBuild (project_path, properties);
+			var appPath = Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", platform.ToFramework (), "monotouchtest.app");
+			var infoPlistPath = GetInfoPListPath (platform, appPath);
+			Assert.That (infoPlistPath, Does.Exist, "Info.plist");
+			var infoPlist = PDictionary.FromFile (infoPlistPath);
+			Assert.AreEqual ("com.xamarin.monotouch-test", infoPlist.GetString ("CFBundleIdentifier").Value, "CFBundleIdentifier");
+			Assert.AreEqual ("MonoTouchTest", infoPlist.GetString ("CFBundleDisplayName").Value, "CFBundleDisplayName");
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.iOS, "ios-arm;ios-arm64;iossimulator-x64;iossimulator-x86")]
+		[TestCase (ApplePlatform.iOS, "ios-arm64;iossimulator-x64")]
+		[TestCase (ApplePlatform.iOS, "ios-arm64;ios-arm;iossimulator-x64")]
+		[TestCase (ApplePlatform.iOS, "ios-arm64;iossimulator-x64;iossimulator-x86")]
+		[TestCase (ApplePlatform.TVOS, "tvos-arm64;tvossimulator-x64")]
+		public void InvalidRuntimeIdentifiers (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			var project = "MySimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var project_path = GetProjectPath (project, platform: platform);
+			Clean (project_path);
+			var properties = new Dictionary<string, string> (verbosity);
+			properties ["RuntimeIdentifiers"] = runtimeIdentifiers;
+			var rv = DotNet.AssertBuildFailure (project_path, properties);
+			var errors = BinLog.GetBuildMessages (rv.BinLogPath).Where (v => v.Type == BuildLogEventType.Error).ToArray ();
+			Assert.AreEqual (1, errors.Length, "Error count");
+			Assert.AreEqual ($"Building for all the runtime identifiers '{runtimeIdentifiers}' at the same time isn't possible, because they represent different platform variations.", errors [0].Message, "Error message");
+		}
+
+		[Test]
 		[TestCase ("iossimulator-x64", false)]
 		[TestCase ("ios-arm64", true)]
 		public void IsNotMacBuild (string runtimeIdentifier, bool isDeviceBuild)
@@ -506,22 +588,24 @@ namespace Xamarin.Tests {
 			Assert.That (output, Does.Not.Contain ("LinkerConfiguration:"), "Custom steps did not run as expected.");
 		}
 
-		void AssertAppContents (ApplePlatform platform, string app_directory)
+		string GetInfoPListPath (ApplePlatform platform, string app_directory)
 		{
-			string info_plist_path;
 			switch (platform) {
 			case ApplePlatform.iOS:
 			case ApplePlatform.TVOS:
 			case ApplePlatform.WatchOS:
-				info_plist_path = Path.Combine (app_directory, "Info.plist");
-				break;
+				return Path.Combine (app_directory, "Info.plist");
 			case ApplePlatform.MacOSX:
 			case ApplePlatform.MacCatalyst:
-				info_plist_path = Path.Combine (app_directory, "Contents", "Info.plist");
-				break;
+				return Path.Combine (app_directory, "Contents", "Info.plist");
 			default:
 				throw new NotImplementedException ($"Unknown platform: {platform}");
 			}
+		}
+
+		void AssertAppContents (ApplePlatform platform, string app_directory)
+		{
+			var info_plist_path = GetInfoPListPath (platform, app_directory);
 			Assert.That (info_plist_path, Does.Exist, "Info.plist");
 
 			var assets_path = string.Empty;
