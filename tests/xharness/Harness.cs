@@ -304,6 +304,7 @@ namespace Xharness {
 				IsDotNetProject = true,
 				TargetFrameworkFlavors = MacFlavors.MacCatalyst,
 				Platform = "AnyCPU",
+				Ignore = !ENABLE_DOTNET,
 			});
 
 			foreach (var flavor in new MonoNativeFlavor [] { MonoNativeFlavor.Compat, MonoNativeFlavor.Unified }) {
