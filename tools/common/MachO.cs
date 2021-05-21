@@ -573,7 +573,12 @@ namespace Xamarin
 			var pos = reader.BaseStream.Position;
 
 			var bytes = reader.ReadBytes (8);
-			var rv = bytes [0] == '!' && bytes [1] == '<' && bytes [2] == 'a' && bytes [3] == 'r' && bytes [4] == 'c' && bytes [5] == 'h' && bytes [6] == '>' && bytes [7] == 0xa;
+			bool rv;
+			if (bytes.Length < 8) {
+				rv = false;
+			} else {
+				rv = bytes [0] == '!' && bytes [1] == '<' && bytes [2] == 'a' && bytes [3] == 'r' && bytes [4] == 'c' && bytes [5] == 'h' && bytes [6] == '>' && bytes [7] == 0xa;
+			}
 			reader.BaseStream.Position = pos;
 
 			if (throw_if_error && !rv)
