@@ -67,6 +67,9 @@
     <Compile Include="..\common\FileCopier.cs">
       <Link>external\tools\common\FileCopier.cs</Link>
     </Compile>
+    <Compile Include="..\common\FileUtils.cs">
+      <Link>external\tools\common\FileUtils.cs</Link>
+    </Compile>
     <Compile Include="..\common\LinkMode.cs">
       <Link>external\tools\common\LinkMode.cs</Link>
     </Compile>

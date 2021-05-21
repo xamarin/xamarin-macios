@@ -425,6 +425,9 @@
     <Compile Include="..\common\BuildTasks.cs">
       <Link>tools\common\BuildTasks.cs</Link>
     </Compile>
+    <Compile Include="..\common\FileUtils.cs">
+      <Link>tools\common\FileUtils.cs</Link>
+    </Compile>
     <Compile Include="..\common\PathUtils.cs">
       <Link>tools\common\PathUtils.cs</Link>
     </Compile>
