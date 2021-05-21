@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using IKVM.Reflection;
-using Type = IKVM.Reflection.Type;
+using System.Reflection;
 using PlatformName = ObjCRuntime.PlatformName;
 
 public class AttributeManager
@@ -205,7 +204,7 @@ public class AttributeManager
 	}
 
 	// This method gets the System.Type for a IKVM.Reflection.Type to a System.Type.
-	System.Type ConvertType (Type type, ICustomAttributeProvider provider)
+	System.Type ConvertTypeFromMeta (Type type, ICustomAttributeProvider provider)
 	{
 		var rv = LookupReflectionType (type.FullName, provider);
 		if (rv == null)
@@ -214,7 +213,7 @@ public class AttributeManager
 	}
 
 	// This method gets the IKVM.Reflection.Type for a System.Type.
-	Type ConvertType (System.Type type, ICustomAttributeProvider provider)
+	Type ConvertTypeToMeta (System.Type type, ICustomAttributeProvider provider)
 	{
 		var ikvm_type_lookup = BindingTouch.IKVMTypeLookup;
 
@@ -225,7 +224,7 @@ public class AttributeManager
 			// Report a warning if we find the same type in multiple assemblies though.
 			var assemblies = BindingTouch.universe.GetAssemblies ();
 			foreach (var asm in assemblies) {
-				var lookup = asm.FindType (new TypeName (type.Namespace, type.Name));
+				var lookup = asm.GetType (type.Namespace + "." + type.Name);
 				if (lookup == null)
 					continue;
 				if (lookup.Assembly != asm) {
@@ -248,7 +247,7 @@ public class AttributeManager
 
 	static IEnumerable<System.Attribute> ConvertOldAttributes (CustomAttributeData attribute)
 	{
- 		switch (attribute.AttributeType.Namespace) {
+ 		switch (attribute.GetAttributeType ().Namespace) {
 		case null: // Root namespace such as PlatformAvailabilityShadow.cs
 		case "MonoTouch.ObjCRuntime":
 		case "ObjCRuntime":
@@ -260,7 +259,7 @@ public class AttributeManager
 			return Enumerable.Empty<System.Attribute> ();
 		}
 
-		switch (attribute.AttributeType.Name) {
+		switch (attribute.GetAttributeType ().Name) {
 		case "SinceAttribute":
 		case "iOSAttribute":
 			return AttributeConversionManager.ConvertPlatformAttribute (attribute, PlatformName.iOS).Yield ();
@@ -354,11 +353,11 @@ public class AttributeManager
 		if (convertedAttributes.Any ())
 			return convertedAttributes.OfType<T> ();
 
-		var expectedType = ConvertType (typeof (T), provider);
-		if (attribute.AttributeType != expectedType && !IsSubclassOf (expectedType, attribute.AttributeType))
+		var expectedType = ConvertTypeToMeta (typeof (T), provider);
+		if (attribute.GetAttributeType () != expectedType && !IsSubclassOf (expectedType, attribute.GetAttributeType ()))
 			return Enumerable.Empty<T> ();
 
-		System.Type attribType = ConvertType (attribute.AttributeType, provider);
+		System.Type attribType = ConvertTypeFromMeta (attribute.GetAttributeType (), provider);
 
 		var constructorArguments = new object [attribute.ConstructorArguments.Count];
 
@@ -395,7 +394,7 @@ public class AttributeManager
 				}
 				break;
 			default:
-				ctorTypes [i] = ConvertType (paramType, provider);
+				ctorTypes [i] = ConvertTypeFromMeta (paramType, provider);
 				break;
 			}
 			if (ctorTypes [i] == null)
@@ -410,13 +409,13 @@ public class AttributeManager
 			var arg = attribute.NamedArguments [i];
 			var value = arg.TypedValue.Value;
 			if (arg.TypedValue.ArgumentType == TypeManager.System_String_Array) {
-				var typed_values = (CustomAttributeTypedArgument []) arg.TypedValue.Value;
+				var typed_values = ((IEnumerable<CustomAttributeTypedArgument>) arg.TypedValue.Value).ToArray ();
 				var arr = new string [typed_values.Length];
 				for (int a = 0; a < arr.Length; a++)
 					arr [a] = (string) typed_values [a].Value;
 				value = arr;
 			} else if (arg.TypedValue.ArgumentType.FullName == "System.Type[]") {
-				var typed_values = (CustomAttributeTypedArgument []) arg.TypedValue.Value;
+				var typed_values = ((IEnumerable<CustomAttributeTypedArgument>) arg.TypedValue.Value).ToArray ();
 				var arr = new Type [typed_values.Length];
 				for (int a = 0; a < arr.Length; a++)
 					arr [a] = (Type) typed_values [a].Value;
@@ -443,7 +442,7 @@ public class AttributeManager
 		for (int i = 0; i < attributes.Count; i++) {
 
 			// special compiler attribtues not usable from C#
-			switch (attributes [i].AttributeType.FullName) {
+			switch (attributes [i].GetAttributeType ().FullName) {
 			case "System.Runtime.CompilerServices.NullableAttribute":
 			case "System.Runtime.CompilerServices.NullableContextAttribute":
 				continue;
@@ -473,16 +472,16 @@ public class AttributeManager
 			return null;
 		var member = provider as MemberInfo;
 		if (member != null)
-			return CustomAttributeData.GetCustomAttributes (member);
+			return member.GetCustomAttributesData ();
 		var assembly = provider as Assembly;
 		if (assembly != null)
-			return CustomAttributeData.GetCustomAttributes (assembly);
+			return assembly.GetCustomAttributesData ();
 		var pinfo = provider as ParameterInfo;
 		if (pinfo != null)
-			return CustomAttributeData.GetCustomAttributes (pinfo);
+			return pinfo.GetCustomAttributesData ();
 		var module = provider as Module;
 		if (module != null)
-			return CustomAttributeData.GetCustomAttributes (module);
+			return module.GetCustomAttributesData ();
 		throw new BindingException (1051, true, provider.GetType ().FullName);
 	}
 
@@ -490,23 +489,23 @@ public class AttributeManager
 	{
 		var attribs = GetIKVMAttributes (provider);
 		for (int i = 0; i < attribs.Count; i++)
-			if (attribs [i].AttributeType.Name == type_name)
+			if (attribs [i].GetAttributeType ().Name == type_name)
 				return true;
 		return false;
 	}
 
 	public bool HasAttribute<T> (ICustomAttributeProvider provider) where T : Attribute
 	{
-		var attribute_type = ConvertType (typeof (T), provider);
+		var attribute_type = ConvertTypeToMeta (typeof (T), provider);
 		var attribs = GetIKVMAttributes (provider);
 		if (attribs == null || attribs.Count == 0)
 			return false;
 
 		for (int i = 0; i < attribs.Count; i++) {
 			var attrib = attribs [i];
-			if (attrib.AttributeType == attribute_type)
+			if (attrib.GetAttributeType () == attribute_type)
 				return true;
-			if (IsSubclassOf (attribute_type, attrib.AttributeType))
+			if (IsSubclassOf (attribute_type, attrib.GetAttributeType ()))
 				return true;
 		}
 
@@ -570,7 +569,7 @@ public static class AttributeConversionManager
 			return b.ToString ();
 		};
 
-		Func<string> unknownFormatError = () => $"Unknown format for old style availability attribute {attribute.AttributeType.FullName} {attribute.ConstructorArguments.Count} {createErrorMessage ()}";
+		Func<string> unknownFormatError = () => $"Unknown format for old style availability attribute {attribute.GetAttributeType ().FullName} {attribute.ConstructorArguments.Count} {createErrorMessage ()}";
 
 		object [] ctorValues;
 		System.Type [] ctorTypes;
@@ -795,4 +794,28 @@ public static class EnumerableExtensions
 	{
 		yield return item;
 	}
+}
+
+public static class CustomAttributeDataExtensions
+{
+#if !NET
+	static Type roCustomAttributeDataType;
+	static PropertyInfo attributeTypeProperty;
+
+	static CustomAttributeDataExtensions ()
+	{
+		roCustomAttributeDataType = typeof(MetadataLoadContext).Assembly.GetType ("System.Reflection.TypeLoading.RoCustomAttributeData");
+		attributeTypeProperty = roCustomAttributeDataType.GetProperty ("AttributeType");
+	}
+
+	public static Type GetAttributeType (this CustomAttributeData data)
+	{
+		// Workaround for CustomAttributeData.AttributeType not being declared as virtual in Mono
+		if (data.GetType ().IsSubclassOf (roCustomAttributeDataType))
+			return (Type) attributeTypeProperty.GetValue (data);
+		return data.AttributeType;
+	}
+#else
+	public static Type GetAttributeType (this CustomAttributeData data) => data.AttributeType;
+#endif
 }

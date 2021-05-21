@@ -22,11 +22,8 @@
 
 using System;
 using System.Collections.Generic;
-#if BGENERATOR
-using IKVM.Reflection;
-using Type = IKVM.Reflection.Type;
-#else
 using System.Reflection;
+#if !BGENERATOR
 using Generator = System.Object;
 #endif
 using System.Runtime.InteropServices;
