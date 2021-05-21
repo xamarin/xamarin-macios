@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+
+		<ApplicationTitle>NativeFrameworkReferences</ApplicationTitle>
+		<ApplicationId>com.xamarin.nativeframeworkreferences</ApplicationId>
+		<ApplicationVersion>1.0</ApplicationVersion>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<NativeReference Include="..\..\..\test-libraries\.libs\$(FatName)\XTest.framework" Kind="Framework" />
+		<NativeReference Include="..\..\..\test-libraries\.libs\$(FatName)\XStaticArTest.framework" Kind="Framework" CopyToAppBundle="false" />
+		<NativeReference Include="..\..\..\test-libraries\.libs\$(FatName)\XStaticObjectTest.framework" Kind="Framework" CopyToAppBundle="false" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Include="../*.cs" />
+		<None Include="../Info.plist">
+			<Link>Info.plist</Link>
+		</None>
+	</ItemGroup>
+</Project>

@@ -42,6 +42,7 @@ namespace ObjCRuntime {
 			System_Exception,
 			System_InvalidCastException,
 			System_EntryPointNotFoundException,
+			System_OutOfMemoryException,
 		}
 
 		// This struct must be kept in sync with the _MonoObject struct in coreclr-bridge.h
@@ -88,6 +89,9 @@ namespace ObjCRuntime {
 				break;
 			case ExceptionType.System_EntryPointNotFoundException:
 				rv = new System.EntryPointNotFoundException (str0);
+				break;
+			case ExceptionType.System_OutOfMemoryException:
+				rv = new System.OutOfMemoryException ();
 				break;
 			default:
 				throw new ArgumentOutOfRangeException (nameof (type));
@@ -286,7 +290,12 @@ namespace ObjCRuntime {
 			if (obj == null)
 				return;
 
-			Marshal.StructureToPtr (obj, ptr, false);
+			if (obj is bool b) {
+				// Only write a single byte for bools
+				Marshal.WriteByte (ptr, b ? (byte) 1 : (byte) 0);
+			} else {
+				Marshal.StructureToPtr (obj, ptr, false);
+			}
 		}
 
 		static IntPtr WriteStructure (object obj)
@@ -332,10 +341,10 @@ namespace ObjCRuntime {
 			return (byte) obj.FlagsInternal;
 		}
 
-		static IntPtr GetMethodDeclaringType (MonoObjectPtr mobj)
+		static unsafe MonoObject* GetMethodDeclaringType (MonoObject *mobj)
 		{
 			var method = (MethodBase) GetMonoObjectTarget (mobj);
-			return GetMonoObject (method.DeclaringType);
+			return (MonoObject *) GetMonoObject (method.DeclaringType);
 		}
 
 		static IntPtr ObjectGetType (MonoObjectPtr mobj)
@@ -425,6 +434,12 @@ namespace ObjCRuntime {
 			if (type.IsByRef)
 				type = type.GetElementType ();
 			return (MonoObject *) GetMonoObject (type);
+		}
+
+		static unsafe int SizeOf (MonoObject* typeobj)
+		{
+			var type = (Type) GetMonoObjectTarget (typeobj);
+			return SizeOf (type);
 		}
 
 		static int SizeOf (Type type)
@@ -563,7 +578,7 @@ namespace ObjCRuntime {
 					log_coreclr ($"        The argument didn't change, no marshalling required");
 					if (parameters [i] != null && parameterType != typeof (IntPtr) && isMonoObject) {
 						// byref parameters must be retained
-						xamarin_mono_object_retain (ref nativeParam);
+						xamarin_mono_object_retain (Marshal.ReadIntPtr (nativeParam));
 					}
 					continue;
 				}
@@ -698,10 +713,31 @@ namespace ObjCRuntime {
 			return type.IsValueType;
 		}
 
+		unsafe static bool IsEnum (MonoObject *typeobj)
+		{
+			var type = (Type) GetMonoObjectTarget (typeobj);
+			return type.IsEnum;
+		}
+
+		static unsafe MonoObject* GetEnumBaseType (MonoObject* typeobj)
+		{
+			var type = (Type) GetMonoObjectTarget (typeobj);
+			return (MonoObject*) GetMonoObject (GetEnumBaseType (type));
+		}
+
+		static Type GetEnumBaseType (Type type)
+		{
+			return type.GetEnumUnderlyingType ();
+		}
+
 		static object PtrToStructure (IntPtr ptr, Type type)
 		{
 			if (ptr == IntPtr.Zero)
 				return null;
+
+			// Only read a single byte for bools.
+			if (type == typeof (bool))
+				return Marshal.ReadByte (ptr) != 0;
 
 			return Marshal.PtrToStructure (ptr, type);
 		}
@@ -836,6 +872,8 @@ namespace ObjCRuntime {
 			sb.Append (returnType.FullName);
 			sb.Append (' ');
 			sb.Append (method.DeclaringType.FullName);
+			sb.Append ('.');
+			sb.Append (method.Name);
 			sb.Append (' ');
 			sb.Append ('(');
 			var parameters = method.GetParameters ();
@@ -849,7 +887,7 @@ namespace ObjCRuntime {
 		}
 
 		[DllImport ("__Internal")]
-		static extern void xamarin_mono_object_retain (ref IntPtr mono_object);
+		static extern void xamarin_mono_object_retain (IntPtr mono_object);
 
 		[DllImport ("__Internal")]
 		unsafe static extern void xamarin_mono_object_retain (MonoObject* mono_object);

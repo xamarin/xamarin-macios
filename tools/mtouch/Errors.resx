@@ -2129,4 +2129,16 @@
 {2} - The name of a method.
 		</comment>
 	</data>
+
+	<data name="MX8039" xml:space="preserve">
+		<value>Unable to marshal from {0} to an Objective-C object. The managed class must either inherit from NSObject or implement INativeObject.</value>
+		<comment>
+{0} - The name of a type.
+		</comment>
+	</data>
+
+	<data name="MX8040" xml:space="preserve">
+		<value>Invalid type encoding for parameter.</value>
+	</data>
+
 </root>

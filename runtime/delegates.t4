@@ -400,6 +400,14 @@
 			OnlyCoreCLR = true,
 		},
 
+		new XDelegate ("int32_t", "int", "xamarin_bridge_sizeof",
+			"MonoObject *", "MonoObject *", "typeobj"
+		) {
+			WrappedManagedFunction = "SizeOf",
+			OnlyDynamicUsage = false,
+			OnlyCoreCLR = true,
+		},
+
 		new XDelegate ("MonoReferenceQueue *", "MonoObject *", "xamarin_bridge_gc_reference_queue_new",
 			"mono_reference_queue_callback", "IntPtr", "callback"
 		) {
@@ -463,8 +471,8 @@
 			OnlyCoreCLR = true,
 		},
 
-		new XDelegate ("MonoObject *", "IntPtr", "xamarin_bridge_get_method_declaring_type",
-			"MonoObject *", "IntPtr", "gchandle"
+		new XDelegate ("MonoObject *", "MonoObject *", "xamarin_bridge_get_method_declaring_type",
+			"MonoObject *", "MonoObject *", "mobj"
 		) {
 			WrappedManagedFunction = "GetMethodDeclaringType",
 			OnlyDynamicUsage = false,
@@ -510,6 +518,22 @@
 			"enum XamarinLookupTypes", "Runtime.TypeLookup", "type"
 		) {
 			WrappedManagedFunction = "LookupType",
+			OnlyDynamicUsage = false,
+			OnlyCoreCLR = true,
+		},
+
+		new XDelegate ("bool", "bool", "xamarin_bridge_is_enum",
+			"MonoObject *", "MonoObject *", "typeobj"
+		) {
+			WrappedManagedFunction = "IsEnum",
+			OnlyDynamicUsage = false,
+			OnlyCoreCLR = true,
+		},
+
+		new XDelegate ("MonoObject *", "MonoObject *", "xamarin_bridge_get_enum_basetype",
+			"MonoObject *", "MonoObject *", "typeobj"
+		) {
+			WrappedManagedFunction = "GetEnumBaseType",
 			OnlyDynamicUsage = false,
 			OnlyCoreCLR = true,
 		},

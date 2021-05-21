@@ -29,6 +29,12 @@ xamarin_bridge_initialize ()
 {
 }
 
+void
+xamarin_enable_new_refcount ()
+{
+	// Nothing to do here.
+}
+
 bool
 xamarin_bridge_vm_initialize (int propertyCount, const char **propertyKeys, const char **propertyValues)
 {
@@ -399,12 +405,20 @@ xamarin_create_system_entry_point_not_found_exception (const char *entrypoint)
 	return rv;
 }
 
+MonoException *
+mono_get_exception_out_of_memory ()
+{
+	MonoException *rv = xamarin_bridge_create_exception (XamarinExceptionTypes_System_OutOfMemoryException, NULL);
+	LOG_CORECLR (stderr, "%s (%p) => %p\n", __func__, entrypoint, rv);
+	return rv;
+}
+
 MonoMethodSignature *
 mono_method_signature (MonoMethod* method)
 {
 	MonoMethodSignature *rv = xamarin_bridge_method_get_signature (method);
 
-	LOG_CORECLR (stderr, "xamarin_bridge_mono_method_signature (%p) => %p\n", method, rv);
+	LOG_CORECLR (stderr, "%s (%p) => %p\n", __func__, method, rv);
 
 	return rv;
 }
@@ -519,6 +533,26 @@ mono_get_string_class ()
 }
 
 mono_bool
+mono_class_is_enum (MonoClass *klass)
+{
+	bool rv = xamarin_bridge_is_enum (klass);
+
+	LOG_CORECLR (stderr, "%s (%p) => %i\n", __func__, klass, rv);
+
+	return rv;
+}
+
+MonoType *
+mono_class_enum_basetype (MonoClass *klass)
+{
+	MonoType *rv = xamarin_bridge_get_enum_basetype (klass);
+
+	LOG_CORECLR (stderr, "%s (%p) => %p\n", __func__, klass, rv);
+
+	return rv;
+}
+
+mono_bool
 mono_type_is_byref (MonoType *type)
 {
 	bool rv = xamarin_bridge_is_byref (type);
@@ -542,6 +576,16 @@ mono_class_is_valuetype (MonoClass * klass)
 	bool rv = xamarin_bridge_is_valuetype (klass);
 
 	LOG_CORECLR (stderr, "%s (%p) => %i\n", __func__, klass, rv);
+
+	return rv;
+}
+
+int32_t
+mono_class_value_size (MonoClass *klass, uint32_t *align)
+{
+	int32_t rv = xamarin_bridge_sizeof (klass);
+
+	LOG_CORECLR (stderr, "%s (%p, %p) => %i\n", __func__, klass, align, rv);
 
 	return rv;
 }

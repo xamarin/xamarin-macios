@@ -212,9 +212,8 @@ namespace Introspection
 						break;
 #if NET
 					case "libSystem.Globalization.Native":
-						// Globalization hasn't been implemented yet: https://github.com/xamarin/xamarin-macios/issues/8906
-						if (name.StartsWith ("GlobalizationNative_", StringComparison.Ordinal))
-							continue;
+						// load from executable (like __Internal above since it's part of the static library)
+						path = null;
 						break;
 					case "libhostpolicy":
 						// There's no libhostpolicy library.
@@ -222,10 +221,6 @@ namespace Introspection
 						continue;
 					case "libSystem.Native":
 						path += ".dylib";
-						break;
-					case "QCall":
-						if (name.StartsWith ("LogThreadPool", StringComparison.Ordinal))
-							continue;
 						break;
 #endif
 					case "libc":

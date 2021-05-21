@@ -80,6 +80,7 @@ enum XamarinExceptionTypes : int {
 	XamarinExceptionTypes_System_Exception,
 	XamarinExceptionTypes_System_InvalidCastException,
 	XamarinExceptionTypes_System_EntryPointNotFoundException,
+	XamarinExceptionTypes_System_OutOfMemoryException,
 };
 
 extern bool mono_use_llvm; // this is defined inside mono

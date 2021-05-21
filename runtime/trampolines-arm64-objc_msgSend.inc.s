@@ -133,6 +133,11 @@ Lcatchbegin:
 	bl	_xamarin_process_nsexception_using_mode
 Lcatchend:
 	bl	_objc_end_catch
+	; xamarin_process_nsexception_using_mode might have set a pending managed exception, which means we end up executing more code here
+	; in theory, any pending managed exceptions should be thrown automatically upon returning to managed code.
+	; however, things may go wrong, and if the pending managed exception isn't thrown, then make sure we don't return some random value.
+	; returning a constant NULL/0 is at least consistent behavior, and is less likely to crash the process than any other value.
+	mov x0, #0
 	b	Lafterinvoke
 Lcatchcatchhandler:
 	mov	x19, x0

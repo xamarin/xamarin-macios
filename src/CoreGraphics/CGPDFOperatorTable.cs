@@ -71,10 +71,25 @@ namespace CoreGraphics {
 
 		public IntPtr Handle { get; private set; }
 
+		// We need this P/Invoke for legacy AOT scenarios (since we have public API taking a 'Action<IntPtr, IntPtr>', and with this particular native function we can't wrap the delegate)
+		// Unfortunately CoreCLR doesn't support generic Action delegates in P/Invokes: https://github.com/dotnet/runtime/issues/32963
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGPDFOperatorTableSetCallback (/* CGPDFOperatorTableRef */ IntPtr table, /* const char */ string name, /* CGPDFOperatorCallback */ Action<IntPtr,IntPtr> callback);
 
+#if NET
+		// This signature requires C# 9 (so .NET only).
+		// The good part about this signature is that it enforces at compile time that 'callback' is callable from native code in a FullAOT scenario.
+		// The bad part is that it's unsafe code (and callers must be in unsafe mode as well).
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		unsafe extern static void CGPDFOperatorTableSetCallback (/* CGPDFOperatorTableRef */ IntPtr table, /* const char */ string name, /* CGPDFOperatorCallback */ delegate* unmanaged<IntPtr, IntPtr, void> callback);
+#endif
+
 #if MONOMAC
+		// This signature can work everywhere, but we can't enforce at compile time that 'callback' is a delegate to a static function (which is required for FullAOT scenarios),
+		// so limit it to non-FullAOT platforms (macOS)
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		extern static void CGPDFOperatorTableSetCallback (/* CGPDFOperatorTableRef */ IntPtr table, /* const char */ string name, /* CGPDFOperatorCallback */ CGPDFOperatorCallback callback);
+
 		// this won't work with AOT since the callback must be decorated with [MonoPInvokeCallback]
 		public void SetCallback (string name, Action<CGPDFScanner,object> callback)
 		{
@@ -82,9 +97,9 @@ namespace CoreGraphics {
 				throw new ArgumentNullException ("name");
 
 			if (callback == null)
-				CGPDFOperatorTableSetCallback (Handle, name, null);
+				CGPDFOperatorTableSetCallback (Handle, name, (CGPDFOperatorCallback) null);
 			else
-				CGPDFOperatorTableSetCallback (Handle, name, new Action<IntPtr, IntPtr> (delegate (IntPtr reserved, IntPtr gchandle) {
+				CGPDFOperatorTableSetCallback (Handle, name, new CGPDFOperatorCallback (delegate (IntPtr reserved, IntPtr gchandle) {
 					// we could do 'new CGPDFScanner (reserved, true)' but we would not get `UserInfo` (managed state) back
 					// we could GCHandle `userInfo` but that would (even more) diverge both code bases :(
 					var scanner = GetScannerFromInfo (gchandle);
@@ -94,7 +109,11 @@ namespace CoreGraphics {
 
 		[Advice ("Use the nicer SetCallback(string,Action<CGPDFScanner,object>) API when possible.")]
 #endif
+
 		// this API is ugly - but I do not see a better way with the AOT limitation
+#if NET && !MONOMAC
+		[Obsolete ("Use the overload that takes a function pointer ('delegate*<IntPtr,IntPtr,void>') instead.")]
+#endif
 		public void SetCallback (string name, Action<IntPtr,IntPtr> callback)
 		{
 			if (name == null)
@@ -102,6 +121,17 @@ namespace CoreGraphics {
 
 			CGPDFOperatorTableSetCallback (Handle, name, callback);
 		}
+
+#if NET
+		// this signature requires C# 9 and unsafe code
+		public unsafe void SetCallback (string name, delegate* unmanaged<IntPtr, IntPtr, void> callback)
+		{
+			if (name == null)
+				throw new ArgumentNullException (nameof (name));
+
+			CGPDFOperatorTableSetCallback (Handle, name, callback);
+		}
+#endif
 
 		static public CGPDFScanner GetScannerFromInfo (IntPtr gchandle)
 		{

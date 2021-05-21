@@ -3283,6 +3283,7 @@ namespace Registrar {
 			invoke.Indentation = indent;
 			setup_call_stack.Indentation = indent;
 			setup_return.Indentation = indent;
+			cleanup.Indentation = indent;
 
 			var token_ref = CreateTokenReference (method.Method, TokenType.Method);
 
@@ -3989,10 +3990,10 @@ namespace Registrar {
 			body.AppendLine (copyback);
 			body.AppendLine (setup_return);
 			
-			if (trace )
+			if (trace)
 				body.AppendLine (nslog_end);
 
-			body.StringBuilder.AppendLine ("exception_handling:;");
+			body.StringBuilder.AppendLine ("exception_handling:");
 
 			body.AppendLine (cleanup);
 
@@ -4880,6 +4881,11 @@ namespace Registrar {
 			if (App.EnableDebug) {
 				header.WriteLine ("#define DEBUG 1");
 				methods.WriteLine ("#define DEBUG 1");
+			}
+
+			if (App.XamarinRuntime == XamarinRuntime.CoreCLR) {
+				header.WriteLine ("#define CORECLR_RUNTIME");
+				methods.WriteLine ("#define CORECLR_RUNTIME");
 			}
 
 			header.WriteLine ("#include <stdarg.h>");

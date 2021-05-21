@@ -32,6 +32,7 @@ namespace AdSupport {
 		NSUuid AdvertisingIdentifier { get; }
 
 		[NoTV][NoiOS]
+		[NoMac] // unclear when that was changed (xcode 12 GM allowed it)
 		[Export ("clearAdvertisingIdentifier")]
 		void ClearAdvertisingIdentifier ();
 	}

@@ -34,5 +34,24 @@ namespace Xamarin.Utils
 				return "Unknown";
 			}
 		}
+
+		public static string ToFramework (this ApplePlatform @this)
+		{
+			var netVersion = "net6.0";
+			switch (@this) {
+			case ApplePlatform.iOS:
+				return netVersion + "-ios";
+			case ApplePlatform.MacOSX:
+				return netVersion + "-macos";
+			case ApplePlatform.WatchOS:
+				return netVersion + "-watchos";
+			case ApplePlatform.TVOS:
+				return netVersion + "-tvos";
+			case ApplePlatform.MacCatalyst:
+				return netVersion + "-maccatalyst";
+			default:
+				return "Unknown";
+			}
+		}
 	}
 }

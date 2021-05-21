@@ -113,7 +113,7 @@ namespace Xamarin.iOS.Tasks
 				Log.LogError (7069, info, MSBStrings.E7069 /* Xamarin.iOS 14+ does not support watchOS 1 apps. Please migrate your project to watchOS 2+. */);
 				break;
 			default:
-				Log.LogWarning (MSBStrings.W0073, name, extensionPointIdentifier);
+				Log.LogWarning (MSBStrings.W0074, name, extensionPointIdentifier);
 				break;
 			}
 		}
