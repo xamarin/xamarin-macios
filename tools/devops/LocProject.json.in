@@ -1,7 +1,7 @@
 {
 	"Projects": [
 	  {
-		"LanguageSet": "Azure_Languages",
+		"LanguageSet": "VS_Main_Languages",
 		"LocItems": [
 		  {
 			"SourceFile": "@WORKING_DIRECTORY@/../../msbuild/Xamarin.Localization.MSBuild/MSBStrings.resx",

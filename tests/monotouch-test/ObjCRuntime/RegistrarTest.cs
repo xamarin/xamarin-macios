@@ -2145,6 +2145,55 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 
+#if __MACOS__
+		[Test]
+		public void CustomUserTypeWithDynamicallyLoadedAssembly ()
+		{
+			var customTypeAssemblyPath = global::System.IO.Path.Combine (global::Xamarin.Tests.Configuration.RootPath, "tests", "test-libraries", "custom-type-assembly", ".libs", "macos", "custom-type-assembly.dll");
+			Assert.That (customTypeAssemblyPath, Does.Exist, "existence");
+
+			var size = 10;
+			var handles = new GCHandle [size];
+			var array = new NSMutableArray ();
+
+			// Create a bunch instances of a custom object the static registrar didn't know about at build time.
+			// We do this on a different thread to prevent the GC from finding these instances on the main thread's stack.
+			var thread = new Thread (() => {
+				var customTypeAssembly = global::System.Reflection.Assembly.LoadFrom (customTypeAssemblyPath);
+				var customType = customTypeAssembly.GetType ("MyCustomType");
+				for (var i = 0; i < size; i++) {
+					var obj = (NSObject) global::System.Activator.CreateInstance (customType);
+					array.Add (obj);
+					handles [i] = GCHandle.Alloc (obj, GCHandleType.Weak);
+				}
+				// Run the GC a couple of times.
+				GC.Collect ();
+				GC.WaitForPendingFinalizers ();
+				GC.Collect ();
+				GC.WaitForPendingFinalizers ();
+			}) {
+				IsBackground = true,
+				Name = "CustomUserTypeWithDynamicallyLoadedAssembly",
+			};
+			thread.Start ();
+			Assert.IsTrue (thread.Join (TimeSpan.FromSeconds (30)), "Background thread done");
+
+			// Run the main loop for a little while.
+			var counter = size;
+			TestRuntime.RunAsync (TimeSpan.FromSeconds (10), () => { }, () => counter-- <= 0 );
+
+			// Verify that none of the managed instances have been collected by the GC:
+			for (var i = 0; i < size; i++) {
+				Assert.IsNotNull (handles [i].Target, $"Target #{i}");
+				((NSObject) handles [i].Target).Dispose ();
+			}
+
+			// Make sure the GC doesn't collect our array of custom objects.
+			array.Dispose ();
+			GC.KeepAlive (array);
+		}
+#endif
+
 #if !__WATCHOS__ && !MONOMAC
 		class Bug28757A : NSObject, IUITableViewDataSource
 		{

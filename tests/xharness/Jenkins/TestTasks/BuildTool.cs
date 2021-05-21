@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.DotNet.XHarness.Common.Execution;
 using Microsoft.DotNet.XHarness.Common.Logging;
@@ -14,6 +15,7 @@ namespace Xharness.Jenkins.TestTasks {
 
 		public bool SpecifyPlatform { get; set; } = true;
 		public bool SpecifyConfiguration { get; set; } = true;
+		public List<string> Constants { get; } = new List<string> ();
 
 		public BuildTool (IProcessManager processManager)
 		{

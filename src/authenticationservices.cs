@@ -49,14 +49,15 @@ namespace AuthenticationServices {
 	}
 
 	[Partial]
-#if TVOS || WATCH
-	// The associated enum is not generated (which is normal)
-	// without this define the attributes would be duplicated
-	// on other platforms (where the enum exists)
-	[NoTV][NoWatch]
-#endif
 	interface ASExtensionErrorCodeExtensions {
 
+#if TVOS || WATCH
+		// Type `ASExtensionErrorCode` is already decorated, so it becomes a duplicate (after code gen)
+		// on those platforms and intro tests complains (on other platforms, e.g. iOS, Catalyst)
+		// OTOH if we don't add them here then we'll get the extra, not really usable, extension type
+		// on tvOS and watchOS (which is incorrect)
+		[NoTV][NoWatch]
+#endif
 		[NoMac, iOS (14,0)]
 		[Field ("ASExtensionLocalizedFailureReasonErrorKey")]
 		NSString LocalizedFailureReasonErrorKey { get; }
