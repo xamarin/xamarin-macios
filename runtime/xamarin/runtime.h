@@ -201,6 +201,7 @@ uint32_t		xamarin_find_protocol_wrapper_type (uint32_t token_ref);
 void			xamarin_release_block_on_main_thread (void *obj);
 void			xamarin_bridge_setup (); // this is called very early, before parsing the command line arguments
 void			xamarin_bridge_initialize (); // this is called a bit later, after parsing the command line arguments.
+void			xamarin_bridge_shutdown (); // this is called just before returning from xamarin_main
 unsigned char *	xamarin_load_aot_data (MonoAssembly *assembly, int size, gpointer user_data, void **out_handle);
 void			xamarin_free_aot_data (MonoAssembly *assembly, int size, gpointer user_data, void *handle);
 MonoAssembly*	xamarin_assembly_preload_hook (MonoAssemblyName *aname, char **assemblies_path, void* user_data);

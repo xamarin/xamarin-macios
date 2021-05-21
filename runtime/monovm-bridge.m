@@ -89,6 +89,11 @@ xamarin_bridge_initialize ()
 	mono_install_assembly_preload_hook (xamarin_assembly_preload_hook, NULL);
 	DEBUG_LAUNCH_TIME_PRINT ("\tJIT init time");
 }
+
+void
+xamarin_bridge_shutdown ()
+{
+}
 #endif // !LEGACY_XAMARIN_MAC
 
 static MonoClass *

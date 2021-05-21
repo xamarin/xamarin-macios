@@ -169,6 +169,14 @@ xamarin_bridge_initialize ()
 }
 
 void
+xamarin_bridge_shutdown ()
+{
+#if defined (TRACK_MONOOBJECTS)
+	xamarin_bridge_dump_monoobjects ();
+#endif
+}
+
+void
 xamarin_enable_new_refcount ()
 {
 	// Nothing to do here.
