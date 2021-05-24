@@ -5,7 +5,7 @@
     <Cmt Name="LcxAdmin" />
     <Cmt Name="Rccx" />
   </OwnedComments>
-  <Settings Name="@vsLocTools@\default.lss" Type="Lss" />
+  <Settings Name="TJ_is_adding_this_to_test_DO_NOT_MERGE!!" Type="Lss" />
   <Item ItemId=";MSBStrings.resx" ItemType="0" PsrId="211" Leaf="false">
     <Disp Icon="Expand" Expand="true" Disp="true" LocTbl="false" />
     <Item ItemId=";Strings" ItemType="0" PsrId="211" Leaf="false">
