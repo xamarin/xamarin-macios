@@ -6,7 +6,7 @@ on:
 
 jobs:
   pull-request:
-    name: [Localization PR to main]
+    name: '[Localization PR to main]'
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
