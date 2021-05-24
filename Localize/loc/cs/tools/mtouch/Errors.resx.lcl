@@ -14,7 +14,7 @@
         <Str Cat="Text">
           <Val><![CDATA[This version of Xamarin.Mac requires Mono {0} (the current Mono version is {1}). Please update the Mono.framework from http://mono-project.com/Downloads]D;]A;		]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Tato verze rozšíření Xamarin.Mac vyžaduje rozhraní Mono {0} (aktuální verze rozhraní Mono je {1}). Aktualizujte si prosím rozhraní Mono z webu http://mono-project.com/Downloads.]D;]A;		]]></Val>
+            <Val><![CDATA[TJ Making a change here!! Tato verze rozšíření Xamarin.Mac vyžaduje rozhraní Mono {0} (aktuální verze rozhraní Mono je {1}). Aktualizujte si prosím rozhraní Mono z webu http://mono-project.com/Downloads.]D;]A;		]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
