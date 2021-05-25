@@ -27,7 +27,7 @@
 #include "runtime-internal.h"
 #include "delegates.h"
 
-#if defined(__x86_64__)
+#if defined(__x86_64__) && !DOTNET
 #include "../tools/mtouch/monotouch-fixes.c"
 #endif
 
@@ -251,7 +251,7 @@ xamarin_main (int argc, char *argv[], enum XamarinLaunchMode launch_mode)
 	const char *managed_argv [argc + 2];
 	int managed_argc = 1;
 
-#if defined(__x86_64__)
+#if defined(__x86_64__) && !DOTNET
 	patch_sigaction ();
 #endif
 
