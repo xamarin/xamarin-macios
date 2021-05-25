@@ -14,6 +14,9 @@ steps:
 - checkout: self
   persistCredentials: true
 
+- checkout: macios.ci 
+  clean: true
+
 # downlod ALL artifacts
 - download: macios 
 
@@ -26,35 +29,29 @@ steps:
     Write-Host "##vso[task.setvariable variable=BuildSourceBranch;isOutput=true]$($config.BuildSourceBranch)"
     Write-Host "##vso[task.setvariable variable=BuildId;isOutput=true]$($config.BuildId)"
     Write-Host "##vso[task.setvariable variable=Commit;isOutput=true]$($config.Commit)"
+    # calculate branch name and destination dir
+    $branchName = "$($config.BuildSourceBranchName)/$($config.Commit)/$($config.BuildId)"
+    $prefix = ""
+    if ($Env:OriginalBuildReason -eq "PullRequest") {
+      $prefix = "pr"
+    } else {
+      $prefix = "ci"
+    }
+    $branchName = "$prefix/$branchName"
+    Write-Host "##vso[task.setvariable variable=PublishingBranchName;isOutput=true]$branchName"
+    Write-Host "##vso[task.setvariable variable=PublishingPath;isOutput=true]$branchName"
   name: configuration
   displayName: 'Parse build configuration'
   timeoutInMinutes: 1
 
 - pwsh: |
-    $downloadsPath = Join-Path $(PIPELINE.WORKSPACE) "macios"
-    Get-ChildItem  $downloadsPath -Recurse
-    # show all the paths to remove
-    Get-ChildItem -Path $downloadsPath -Filter *.log -Recurse -File | ForEach-Object {
-      Write-Host "Log to remove $_"
-    }
-  displayName: 'Remove private logs'
-  timeoutInMinutes: 10
-
-- pwsh: |
     git config user.email "valco@microsoft.com"
     git config user.name "vs-mobiletools-engineering-service2"
 
-    $branchName = "$Env:OriginalSourceBranch/$Env:OriginalCommit/$Env:OriginalBuildId"
-    if ($Env:OriginalBuildReason -eq "PullRequest") {
-      $branchName = "pr/$branchName"
-    } else {
-      $branchName = "ci/$branchName"
-    }
-
-    Write-Host "New branch name: $branchName"
+    Write-Host "New branch name: $Env:PublishingBranchName"
     $htmlRepo = Join-Path $(Build.SourcesDirectory) "macios.ci"
     cd $htmlRepo 
-    git checkout -b $branchName 
+    git checkout -b $Env:PublishingBranchName
   displayName: 'Create remote branch'
   timeoutInMinutes: 10
   env:
@@ -62,5 +59,39 @@ steps:
     OriginalSourceBranch: $(configuration.BuildSourceBranchName)
     OriginalBuildId: $(configuration.BuildId)
     OriginalCommit: $(configuration.Commit)
+    PublishingBranchName: $(configuration.PublishingBranchName)
+
+- pwsh: |
+    $downloadsPath = Join-Path $(PIPELINE.WORKSPACE) "macios"
+    # debugging
+    Get-ChildItem  $downloadsPath -Recurse
+    $destinationRoot =  Join-Path $(Build.SourcesDirectory) "macios.ci" $Env:PublishingPath
+    Write-Host "Destination root: $destinationRoot"
+    mkdir -p $destinationRoot 
+
+    # find all zips, and expand them
+    $zips = Get-ChildItem -Path $downloadsPath -Filter *.zip -Recurse -File
+    foreach($zip in $zips) {
+      $destinationPath = Join-Path $destinationRoot $zip.Directory
+      Write-Host "Expanding $($zip.FullName) to $destinationPath"
+      Expand-Archive -LiteralPath $zip.FullName -DestinationPath $destinationPath 
+    }
+
+    # debugging
+    Get-ChildItem $destinationRoot -Recurse
+
+    # clean logs, print those rm calls for debugging
+    Get-ChildItem -Path $destinationRoot -Filter *.log -Recurse -File | ForEach-Object {
+      Write-Host "rm $($_.FullName)"
+      rm $_.FullName
+    }
+
+    # debugging
+    Get-ChildItem $destinationRoot -Recurse
+  displayName: 'Add files and clean logs'
+  timeoutInMinutes: 15
+  env:
+    PublishingPath: $(configuration.PublishingPath)
+
 
 
