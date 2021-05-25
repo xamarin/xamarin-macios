@@ -11,6 +11,7 @@
 #include <inttypes.h>
 
 #include "product.h"
+#include "runtime-internal.h"
 #include "xamarin/xamarin.h"
 #include "xamarin/coreclr-bridge.h"
 
@@ -18,6 +19,132 @@
 
 unsigned int coreclr_domainId = 0;
 void *coreclr_handle = NULL;
+
+#if defined (TRACK_MONOOBJECTS)
+
+// To enable tracking of MonoObject* instances, uncomment the TRACK_MONOOBJECTS define in:
+// * runtime/runtime-internal.h
+// * src/ObjCRuntime/Runtime.CoreCLR.cs
+// Both defines must be uncommented for tracking to work. Once enabled, you can opt-in to
+// capturing the stack trace of when the MonoObject* was created, by setting the
+// MONOOBJECT_TRACKING_WITH_STACKTRACES environment variable.
+
+#include <execinfo.h>
+#include <pthread.h>
+
+static int _Atomic monoobject_created = 0;
+static int _Atomic monoobject_destroyed = 0;
+static CFMutableDictionaryRef monoobject_dict = NULL;
+static pthread_mutex_t monoobject_lock = PTHREAD_MUTEX_INITIALIZER;
+
+struct monoobject_tracked_entry {
+	char *managed;
+	void *addresses [128];
+	int frames;
+	char *native;
+};
+
+static char *
+get_stacktrace (void **addresses, int frames)
+{
+	// get the symbols for the addresses
+	char** strs = backtrace_symbols (addresses, frames);
+
+	// compute the total length of all the symbols, adding 1 for every line (for the newline)
+	size_t length = 0;
+	int i;
+	for (i = 0; i < frames; i++)
+		length += strlen (strs [i]) + 1;
+	length++;
+
+	// format the symbols as one long string with newlines
+	char *rv = (char *) calloc (1, length);
+	char *buffer = rv;
+	size_t left = length;
+	for (i = 0; i < frames; i++) {
+		snprintf (buffer, left, "%s\n", strs [i]);
+		size_t slen = strlen (strs [i]) + 1;
+		left -= slen;
+		buffer += slen;
+	}
+	free (strs);
+
+	return rv;
+}
+
+void
+xamarin_bridge_log_monoobject (MonoObject *mobj, const char *stacktrace)
+{
+	// add stack traces if we have them / they've been been requested
+	if (monoobject_dict != NULL) {
+		// create a new entry
+		struct monoobject_tracked_entry *value = (struct monoobject_tracked_entry *) calloc (1, sizeof (struct monoobject_tracked_entry));
+
+		value->managed = stacktrace ? xamarin_strdup_printf ("%s", stacktrace) : NULL;
+		value->frames = backtrace ((void **) &value->addresses, sizeof (value->addresses) / sizeof (&value->addresses [0]));
+
+		// insert into our dictionary of monoobjects
+		pthread_mutex_lock (&monoobject_lock);
+		CFDictionarySetValue (monoobject_dict, mobj, value);
+		pthread_mutex_unlock (&monoobject_lock);
+	}
+
+	atomic_fetch_add (&monoobject_created, 1);
+}
+
+void
+xamarin_bridge_dump_monoobjects ()
+{
+	if (monoobject_dict != NULL) {
+		// dump the monoobject's that haven't been freed (max 10 entries).
+		pthread_mutex_lock (&monoobject_lock);
+
+		// get the keys and values
+		unsigned int length = (unsigned int) CFDictionaryGetCount (monoobject_dict);
+		MonoObject** keys = (MonoObject **) calloc (1, sizeof (void*) * length);
+		char** values = (char **) calloc (1, sizeof (char*) * length);
+		CFDictionaryGetKeysAndValues (monoobject_dict, (const void **) keys, (const void **) values);
+
+		// is there anything left in the dictionary? if so, show that
+		unsigned int items_to_show = length > 10 ? 10 : length;
+		if (items_to_show > 0) {
+			fprintf (stderr, "⚠️ There were %i MonoObjects created, %i MonoObjects freed, so %i were not freed.\n", (int) monoobject_created, (int) monoobject_destroyed, (int) (monoobject_created - monoobject_destroyed));
+			fprintf (stderr, "Showing the first %i (of %i) MonoObjects:\n", items_to_show, length);
+			for (unsigned int i = 0; i < items_to_show; i++) {
+				MonoObject *obj = keys [i];
+				struct monoobject_tracked_entry *value = (struct monoobject_tracked_entry *) values [i];
+				fprintf (stderr, "Object %i/%i %p RC: %i\n", i + 1, (int) length, obj, (int) obj->reference_count);
+				if (value->managed && *value->managed)
+					fprintf (stderr, "\tManaged stack trace:\n%s\n", value->managed);
+				if (value->native == NULL && value->frames > 0)
+					value->native = get_stacktrace (value->addresses, value->frames);
+				if (value->native && *value->native)
+					fprintf (stderr, "\tNative stack trace:\n%s\n", value->native);
+			}
+			fprintf (stderr, "⚠️ There were %i MonoObjects created, %i MonoObjects freed, so %i were not freed.\n", (int) monoobject_created, (int) monoobject_destroyed, (int) (monoobject_created - monoobject_destroyed));
+		} else {
+			fprintf (stderr, "✅ There were %i MonoObjects created, %i MonoObjects freed, so no leaked MonoObjects.\n", (int) monoobject_created, (int) monoobject_destroyed);
+		}
+		pthread_mutex_unlock (&monoobject_lock);
+
+		free (keys);
+		free (values);
+	} else {
+		fprintf (stderr, "There were %i MonoObjects created, %i MonoObjects freed, so %i were not freed.\n", (int) monoobject_created, (int) monoobject_destroyed, (int) (monoobject_created - monoobject_destroyed));
+	}
+}
+
+static void
+monoobject_dict_free_value (CFAllocatorRef allocator, const void *value)
+{
+	struct monoobject_tracked_entry* v = (struct monoobject_tracked_entry *) value;
+	xamarin_free (v->managed);
+	if (v->native)
+		free (v->native);
+	free (v);
+}
+
+#endif // defined (TRACK_MONOOBJECTS)
 
 void
 xamarin_bridge_setup ()
@@ -27,6 +154,26 @@ xamarin_bridge_setup ()
 void
 xamarin_bridge_initialize ()
 {
+#if defined (TRACK_MONOOBJECTS)
+	// Only capture the stack trace if requested explicitly, it has a very significant perf hit (monotouch-test is 3x slower).
+	const char *with_stacktraces = getenv ("MONOOBJECT_TRACKING_WITH_STACKTRACES");
+	if (with_stacktraces && *with_stacktraces) {
+		// Create a dictionary to store the stack traces
+		CFDictionaryValueCallBacks value_callbacks = { 0 };
+		value_callbacks.release = monoobject_dict_free_value;
+		monoobject_dict = CFDictionaryCreateMutable (kCFAllocatorDefault, 0, NULL, &value_callbacks);
+
+		fprintf (stderr, "Stack traces enabled for MonoObject tracking.\n");
+	}
+#endif // defined (TRACK_MONOOBJECTS)
+}
+
+void
+xamarin_bridge_shutdown ()
+{
+#if defined (TRACK_MONOOBJECTS)
+	xamarin_bridge_dump_monoobjects ();
+#endif
 }
 
 void
@@ -158,6 +305,15 @@ xamarin_mono_object_release (MonoObject **mobj_ref)
 		xamarin_free (mobj->struct_value); // allocated using Marshal.AllocHGlobal.
 
 		xamarin_free (mobj); // allocated using Marshal.AllocHGlobal.
+
+#if defined (TRACK_MONOOBJECTS)
+		if (monoobject_dict != NULL) {
+			pthread_mutex_lock (&monoobject_lock);
+			CFDictionaryRemoveValue (monoobject_dict, mobj);
+			pthread_mutex_unlock (&monoobject_lock);
+		}
+		atomic_fetch_add (&monoobject_destroyed, 1);
+#endif
 	}
 
 	*mobj_ref = NULL;

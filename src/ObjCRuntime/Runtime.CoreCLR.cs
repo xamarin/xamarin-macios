@@ -6,6 +6,14 @@
 //
 // Copyright 2021 Microsoft Corp.
 
+
+// Uncomment the TRACK_MONOOBJECTS define to show a summary at process exit of
+// the MonoObjects that were created, and if any were not freed. If there are
+// leaked MonoObjects, a list of them will be printed.
+// This has an equivalent variable in runtime/runtime-internal.m
+// which must be set for tracking to work.
+//#define TRACK_MONOOBJECTS
+
 #if NET && !COREBUILD
 
 using System;
@@ -61,6 +69,10 @@ namespace ObjCRuntime {
 			public MonoObject* ReturnType;
 			public MonoObject* Parameters;
 		}
+
+#if TRACK_MONOOBJECTS
+		static bool? track_monoobject_with_stacktraces;
+#endif
 
 		// Comment out the attribute to get all printfs
 		[System.Diagnostics.Conditional ("UNDEFINED")]
@@ -259,6 +271,13 @@ namespace ObjCRuntime {
 
 			log_coreclr ($"GetMonoObjectImpl ({obj.GetType ()}) => 0x{rv.ToString ("x")} => GCHandle=0x{handle.ToString ("x")}");
 
+#if TRACK_MONOOBJECTS
+			// Only capture the stack trace if requested explicitly, it has a very significant perf hit (monotouch-test is 3x slower).
+			if (!track_monoobject_with_stacktraces.HasValue)
+				track_monoobject_with_stacktraces = !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("MONOOBJECT_TRACKING_WITH_STACKTRACES"));
+			xamarin_bridge_log_monoobject (rv, track_monoobject_with_stacktraces.Value ? Environment.StackTrace : null);
+#endif
+
 			return rv;
 		}
 
@@ -277,6 +296,11 @@ namespace ObjCRuntime {
 				return GetGCHandleTarget (monoobj->GCHandle);
 			}
 		}
+
+#if TRACK_MONOOBJECTS
+		[DllImport ("__Internal", CharSet = CharSet.Auto)]
+		static extern void xamarin_bridge_log_monoobject (IntPtr mono_object, string stack_trace);
+#endif
 
 		static IntPtr MarshalStructure<T> (T value) where T: struct
 		{

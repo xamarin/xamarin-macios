@@ -89,6 +89,11 @@ xamarin_bridge_initialize ()
 	mono_install_assembly_preload_hook (xamarin_assembly_preload_hook, NULL);
 	DEBUG_LAUNCH_TIME_PRINT ("\tJIT init time");
 }
+
+void
+xamarin_bridge_shutdown ()
+{
+}
 #endif // !LEGACY_XAMARIN_MAC
 
 static MonoClass *
@@ -416,6 +421,19 @@ xamarin_mono_object_retain (MonoObject *mobj)
 {
 	// Nothing to do here
 }
+
+#if defined (TRACK_MONOOBJECTS)
+// This function is needed for the corresponding managed P/Invoke to not make
+// the native linker fail due to an unresolved symbol. This method should
+// never end up being called (it'll be linked away by the native linker if the
+// managed linker removes the P/Invoke, and never called from managed code
+// otherwise).
+void
+xamarin_bridge_log_monoobject (MonoObject *mobj, const char *stacktrace)
+{
+	xamarin_assertion_message ("%s is not available on MonoVM", __func__);
+}
+#endif // defined (TRACK_MONOOBJECTS)
 
 #endif // DOTNET
 
