@@ -48,6 +48,11 @@ steps:
     $htmlRepo = Join-Path $(Build.SourcesDirectory) "macios.ci"
     cd $htmlRepo 
 
+    # it uses https which is problematic, we move to use the pat so that a push will work
+    git remote remove origin
+    git remote add origin https://$(GitHub.Token)@github.com/xamarin/macios.ci.git
+    git remote # don't add -v else we see the pat
+
     git config user.email "valco@microsoft.com"
     git config user.name "vs-mobiletools-engineering-service2"
 
@@ -94,6 +99,9 @@ steps:
       Get-ChildItem $destinationRoot -Recurse
     }
     cd $htmlRepo 
+    git config user.email "valco@microsoft.com"
+    git config user.name "vs-mobiletools-engineering-service2"
+
     git add $Env:PublishingPath
     git commit -m"[CI] Add test results for build $Env:OriginalBuildId"
     git push origin $Env:PublishingBranchName
