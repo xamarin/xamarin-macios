@@ -3,6 +3,10 @@
     <type fullname="ObjCRuntime.Runtime">
       <method signature="System.Boolean get_IsCoreCLR()" body="stub" value="false" />
     </type>
+    <type fullname="UIKit.UIApplication">
+      <method name="EnsureEventAndDelegateAreNotMismatched" body="stub" feature="System.Diagnostics.Debugger.IsSupported" featurevalue="false" />
+      <method name="EnsureDelegateAssignIsNotOverwritingInternalDelegate" body="stub" feature="System.Diagnostics.Debugger.IsSupported" featurevalue="false" />
+    </type>
     <type fullname="UIKit.UIButton">
       <method signature="System.Void VerifyIsUIButton()" body="stub" feature="System.Diagnostics.Debugger.IsSupported" featurevalue="false" />
     </type>

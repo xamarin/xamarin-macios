@@ -1064,6 +1064,20 @@ namespace LinkSdk {
 			Assert.That (il.Length, Is.EqualTo (1), "il == 1");
 #endif
 		}
+
+		[Test]
+		public void EnsureEventAndDelegateAreNotMismatched ()
+		{
+			var m = typeof (UIApplication).GetMethod ("EnsureEventAndDelegateAreNotMismatched", BindingFlags.Static | BindingFlags.NonPublic);
+			CheckILLinkStubbedMethod (m);
+		}
+
+		[Test]
+		public void EnsureDelegateAssignIsNotOverwritingInternalDelegate ()
+		{
+			var m = typeof (UIApplication).GetMethod ("EnsureDelegateAssignIsNotOverwritingInternalDelegate", BindingFlags.Static | BindingFlags.NonPublic);
+			CheckILLinkStubbedMethod (m);
+		}
 #endif
 
 		[Test]
