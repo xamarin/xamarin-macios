@@ -32,7 +32,7 @@ steps:
     # calculate branch name and destination dir
     $branchName = ""
     if ($config.BuildReason -eq "PullRequest") {
-      $branchName = "pr/PR$(config.Commit)"
+      $branchName = "pr/PR$($config.Commit)"
     } else {
       $branchName = "ci/$($config.BuildSourceBranchName)/$($config.Commit)"
     }
@@ -111,4 +111,3 @@ steps:
     PublishingPath: $(configuration.PublishingPath)
     OriginalBuildId: $(configuration.BuildId)
     PublishingBranchName: $(configuration.PublishingBranchName)
-
