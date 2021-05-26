@@ -1174,4 +1174,13 @@ partial class TestRuntime
 #endif
 		}
 	}
+
+#if NET
+	// If we're not Mono, then we're CoreCLR.
+	public static bool IsCoreCLR {
+		get {
+			return Type.GetType ("Mono.Runtime") == null;
+		}
+	}
+#endif
 }

@@ -433,9 +433,6 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 
 		[Test]
-#if NET
-		[Ignore ("Ignored on CoreCLR for now due to missing support for marshalling exceptions")]
-#endif
 		public void TestGeneric ()
 		{
 			var g1 = new GenericTestClass<string> ();
@@ -1233,6 +1230,28 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 		void ThrowsICEIfDebug (TestDelegate code, string message, bool execute_release_mode = true)
 		{
+#if NET
+			if (TestRuntime.IsCoreCLR) {
+				if (execute_release_mode) {
+					// In CoreCLR will either throw an ArgumentException:
+					//     <System.ArgumentException: Object of type 'Foundation.NSObject' cannot be converted to type 'Foundation.NSSet'.
+					// or a RuntimeException:
+					//     <ObjCRuntime.RuntimeException: Failed to marshal the value at index 0.
+					try {
+						code ();
+						Assert.Fail ($"Unexpectedly no exception occured: {message}");
+					} catch (ArgumentException) {
+						// OK
+					} catch (RuntimeException) {
+						// OK
+					} catch (Exception e) {
+						Assert.Fail ($"Unexpectedly failed with exception of type {e.GetType ()} - expected either ArgumentException or RuntimeException: {message}");
+					}
+				}
+				return;
+			}
+#endif
+
 // The type checks have been disabled for now.
 //#if DEBUG
 //			Assert.Throws<InvalidCastException> (code, message);
