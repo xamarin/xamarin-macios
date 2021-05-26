@@ -30,17 +30,14 @@ steps:
     Write-Host "##vso[task.setvariable variable=BuildId;isOutput=true]$($config.BuildId)"
     Write-Host "##vso[task.setvariable variable=Commit;isOutput=true]$($config.Commit)"
     # calculate branch name and destination dir
-    $prefix = ""
     $branchName = ""
     if ($config.BuildReason -eq "PullRequest") {
-      $prefix = "pr"
-      $branchName = "PR$(config.Commit)"
+      $branchName = "pr/PR$(config.Commit)"
     } else {
-      $prefix = "ci"
-      $branchName = $config.BuildSourceBranchName
+      $branchName = "ci/$($config.BuildSourceBranchName)/$($config.Commit)"
     }
 
-    $branchName = "$prefix/$branchName/$($config.Commit)/$($config.BuildId)"
+    $branchName = "$branchName/$($config.BuildId)"
     Write-Host "##vso[task.setvariable variable=PublishingBranchName;isOutput=true]$branchName"
     Write-Host "##vso[task.setvariable variable=PublishingPath;isOutput=true]$branchName"
   name: configuration
@@ -107,7 +104,7 @@ steps:
 
     git add $Env:PublishingPath
     git commit -m"[CI] Add test results for build $Env:OriginalBuildId"
-    git push origin $Env:PublishingBranchName
+    git push origin $Env:PublishingBranchName -f
   displayName: 'Add files and clean logs'
   timeoutInMinutes: 30
   env:
