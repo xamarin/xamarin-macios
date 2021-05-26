@@ -80,6 +80,7 @@ namespace Xharness.Jenkins {
 		static readonly string [] dotnetFilenames = {
 			"msbuild",
 			".*dotnet.*",
+			"eng", // bumping .NET modifies files in this directory
 		};
 		static readonly string [] msbuildFilenames = {
 			"msbuild",
