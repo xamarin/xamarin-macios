@@ -22,6 +22,7 @@ steps:
 
 - pwsh: |
     $configFile = Join-Path $(PIPELINE.WORKSPACE) "macios" "build-configuration" "configuration.json"
+    Get-Content $configFile | Write-Host
     $config = Get-Content $configFile | ConvertFrom-Json
     # export variables to be present in the othe steps
     Write-Host "##vso[task.setvariable variable=BuildReason;isOutput=true]$($config.BuildReason)"
@@ -80,7 +81,7 @@ steps:
     # find all zips, and expand them
     $zips = Get-ChildItem -Path $downloadsPath -Filter *.zip -Recurse -File
     foreach($zip in $zips) {
-      $destinationPath = Join-Path $destinationRoot $zip.Directory
+      $destinationPath = Join-Path $destinationRoot $zip.Directory.Name
       Write-Host "Expanding $($zip.FullName) to $destinationPath"
       Expand-Archive -LiteralPath $zip.FullName -DestinationPath $destinationPath 
     }
@@ -91,6 +92,12 @@ steps:
 
     # clean logs, print those rm calls for debugging
     Get-ChildItem -Path $destinationRoot -Filter *.log -Recurse -File | ForEach-Object {
+      Write-Host "rm $($_.FullName)"
+      rm $_.FullName
+    }
+
+    # clean txt files
+    Get-ChildItem -Path $destinationRoot -Filter *.txt -Recurse -File | ForEach-Object {
       Write-Host "rm $($_.FullName)"
       rm $_.FullName
     }
