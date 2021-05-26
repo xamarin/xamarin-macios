@@ -761,6 +761,8 @@ namespace Introspection {
 			case "MLDictionaryFeatureProvider":
 			case "MLMultiArray":
 			case "MLFeatureValue":
+#endif
+#if __MACOS__ || __MACCATALYST__ || __WATCHOS__
 			case "MLSequence":
 				switch (selectorName) {
 				case "encodeWithCoder:":
