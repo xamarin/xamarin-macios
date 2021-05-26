@@ -6,6 +6,9 @@ using System.Reflection;
 using System.Resources;
 using System.Text;
 using System.Collections.Generic;
+using System.IO;
+using System.Xml.Linq;
+using System.Linq;
 
 namespace Xamarin.Tests
 {
@@ -105,6 +108,32 @@ namespace Xamarin.Tests
 				}
 			}
 			Assert.IsEmpty (errorList.ToString (), $"The following errors were not translated:");
+		}
+
+		readonly string [] ignoreList = {
+			"ResourceManager",
+			"Culture",
+			"_default",
+			"default",
+		};
+
+		[Test]
+		public void UpdatedResources ()
+		{
+			var resxPath = Path.Combine (Directory.GetCurrentDirectory (), "../../tools/mtouch/Errors.resx");
+			var xml = XDocument.Load (resxPath);
+			var resxNames = xml.Root.Descendants ().Where (n => n.Name == "data").Select (n => n.Attribute ("name").Value);
+			var resxHashSet = new HashSet<string> (resxNames);
+
+			var errorsAssembly = typeof (MachO).Assembly.GetType ("Xamarin.Bundler.Errors");
+			var resourceNames = errorsAssembly.GetProperties (BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Static).Select (s => s.Name);
+			var resourceHashSet = new HashSet<string> (resourceNames);
+
+			var errorsNotInResources = string.Join (" ", resxHashSet.Where (n => !resourceHashSet.Contains (n) && !ignoreList.Contains (n)));
+			var errorsNotInResx = string.Join (" ", resourceHashSet.Where (n => !resxHashSet.Contains (n) && !ignoreList.Contains (n)));
+
+			Assert.IsEmpty (errorsNotInResources, $"The following error(s) were found in Errors.resx but not through the mtouch resources. Try to recompile the mtouch project and then the test project\n{errorsNotInResources}");
+			Assert.IsEmpty (errorsNotInResx, $"The following error(s) were found in the mtouch resources but not in Errors.resx. Try to recompile the mtouch project and then the test project\n{errorsNotInResx}");
 		}
 	}
 }

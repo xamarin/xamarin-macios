@@ -11,17 +11,17 @@
 namespace Xamarin.Bundler {
     using System;
     using System.Reflection;
-
-
-    [System.CodeDom.Compiler.GeneratedCodeAttribute ("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
-    [System.Diagnostics.DebuggerNonUserCodeAttribute ()]
-    [System.Runtime.CompilerServices.CompilerGeneratedAttribute ()]
+    
+    
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [System.Diagnostics.DebuggerNonUserCodeAttribute()]
+    [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Errors {
-
+        
         private static System.Resources.ResourceManager resourceMan;
-
+        
         private static System.Globalization.CultureInfo resourceCulture;
-
+        
         [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         internal Errors() {
         }
@@ -30,7 +30,7 @@ namespace Xamarin.Bundler {
         internal static System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.Equals(null, resourceMan)) {
-                    System.Resources.ResourceManager temp = new System.Resources.ResourceManager("Errors.mtouch", typeof(Errors).Assembly);
+                    System.Resources.ResourceManager temp = new System.Resources.ResourceManager("mtouch.Errors", typeof(Errors).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -2432,6 +2432,30 @@ namespace Xamarin.Bundler {
         internal static string MT8018 {
             get {
                 return ResourceManager.GetString("MT8018", resourceCulture);
+            }
+        }
+        
+        internal static string MX8037 {
+            get {
+                return ResourceManager.GetString("MX8037", resourceCulture);
+            }
+        }
+        
+        internal static string MX8038 {
+            get {
+                return ResourceManager.GetString("MX8038", resourceCulture);
+            }
+        }
+        
+        internal static string MX8039 {
+            get {
+                return ResourceManager.GetString("MX8039", resourceCulture);
+            }
+        }
+        
+        internal static string MX8040 {
+            get {
+                return ResourceManager.GetString("MX8040", resourceCulture);
             }
         }
     }
