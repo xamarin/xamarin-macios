@@ -147,6 +147,8 @@ struct InitializationOptions {
 #endif
 	struct AssemblyLocations* AssemblyLocations;
 #if DOTNET
+	// This struct must be kept in sync with the corresponding struct in Runtime.cs, and since we use the same managed code for both MonoVM and CoreCLR,
+	// we can't restrict the following fields to CORECLR_RUNTIME only, we can only exclude it from legacy Xamarin.
 	void *xamarin_objc_msgsend;
 	void *xamarin_objc_msgsend_super;
 	void *xamarin_objc_msgsend_stret;
