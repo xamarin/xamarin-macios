@@ -13,6 +13,7 @@
     <Authors>Microsoft</Authors>
     <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
     <PackageProjectUrl>https://github.com/xamarin/xamarin-macios</PackageProjectUrl>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
 
     <GenerateDependencyFile>false</GenerateDependencyFile>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
