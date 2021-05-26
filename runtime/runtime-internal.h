@@ -25,6 +25,13 @@
 #define DEBUG_LAUNCH_TIME_PRINT(...)
 #endif
 
+// Uncomment the TRACK_MONOOBJECTS define to show a summary at process exit of
+// the MonoObjects that were created, and if any were not freed. If there are
+// leaked MonoObjects, a list of them will be printed.
+// This has an equivalent variable in src/ObjCRuntime/Runtime.CoreCLR.cs,
+// which must be set for tracking to work.
+//#define TRACK_MONOOBJECTS
+
 #ifdef __cplusplus
 extern "C" {
 #endif

@@ -1025,18 +1025,16 @@ namespace LinkSdk {
 #endif
 
 #if !__WATCHOS__
-		static Type type_uibutton = typeof (UIButton);
-
 		[Test]
-#if NET
-		[Ignore ("Not implemented yet: https://github.com/xamarin/xamarin-macios/issues/9612")]
-#endif
 		public void UIButtonSubclass ()
 		{
 			// ensure the linker keeps the .ctor(UIButtonType) around
 			using (var b = new UIButton (UIButtonType.Custom)) {
 				// https://trello.com/c/Nf2B8mIM/484-remove-debug-code-in-the-linker
-				var m = type_uibutton.GetMethod ("VerifyIsUIButton", BindingFlags.Instance | BindingFlags.NonPublic);
+				var m = b.GetType ().GetMethod ("VerifyIsUIButton", BindingFlags.Instance | BindingFlags.NonPublic);
+#if NET
+				CheckILLinkStubbedMethod (m);
+#else // NET
 #if DEBUG
 				// kept in debug builds
 				Assert.NotNull (m, "VerifyIsUIButton");
@@ -1044,10 +1042,29 @@ namespace LinkSdk {
 				// removed from release builds
 				Assert.Null (m, "VerifyIsUIButton");
 #endif
+#endif // NET
 			}
 		}
 
 #endif // !__WATCHOS__
+
+#if NET
+		static void CheckILLinkStubbedMethod (MethodInfo m)
+		{
+			// ILLink does not remove the method, but it can "stub" (empty) it
+			Assert.NotNull (m, "Method not found (null");
+			var mb = m.GetMethodBody ();
+			Assert.NotNull (m, "GetMethodBody");
+			var il = mb.GetILAsByteArray ();
+#if DEBUG
+			// means some stuff in addition to the `ret` instruction
+			Assert.That (il.Length, Is.GreaterThan (1), "il > 1");
+#else
+			// empty means a `ret` instruction (and that's true even if IL is stripped)
+			Assert.That (il.Length, Is.EqualTo (1), "il == 1");
+#endif
+		}
+#endif
 
 		[Test]
 		public void MonoRuntime34671 ()

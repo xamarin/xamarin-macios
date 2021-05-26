@@ -11,6 +11,9 @@ export MSBuildEnableWorkloadResolver=true
 NuGet.config: $(TOP)/NuGet.config Makefile
 	$(Q) $(CP) $< $@.tmp
 	$(Q) nuget sources add -Name local-dotnet-feed -Source $(abspath $(DOTNET_FEED_DIR)) -ConfigFile $@.tmp
+ifdef CUSTOM_DOTNET
+	$(Q) nuget sources add -Name dev-runtime-feed -Source $(abspath $(DOTNET_RUNTIME_PATH)/artifacts/packages/Release/Shipping) -ConfigFile $@.tmp
+endif
 	$(Q) nuget config -Set globalPackagesFolder=$(abspath $(CURDIR)/packages) -Config $@.tmp
 	$(Q) nuget config -Set repositorypath=$(abspath $(CURDIR)/packages) -Config $@.tmp
 	$(Q) mv $@.tmp $@
@@ -65,3 +68,10 @@ run-dotnet: $(TARGETS)
 # https://github.com/xamarin/xamarin-macios/issues/11445
 strip-dotnet:
 	$(foreach file, $(wildcard size-comparison/MySingleView/dotnet/bin/iPhone/Release/net6.0-ios/ios-arm64/MySingleView.app/*.dll), mono-cil-strip $(file) $(file);)
+
+# this target will copy NuGet.config and global.json to the directories that need it for their .NET build to work correctly.
+copy-dotnet-config: $(TARGETS)
+	$(Q) for dir in $(shell ls -d $(abspath $(TOP)/tests/*/dotnet)); do \
+		$(CP) -c NuGet.config global.json $$dir; \
+	done
+	$(Q) $(CP) -c NuGet.config global.json $(TOP)/external/Touch.Unit/Touch.Client/dotnet

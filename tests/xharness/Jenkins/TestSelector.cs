@@ -86,6 +86,10 @@ namespace Xharness.Jenkins {
 			"tests/msbuild",
 		};
 
+		static readonly string [] xharnessPrefix = {
+			"tests/xharness",
+		};
+
 		#endregion
 
 		public TestSelector (Jenkins jenkins, IProcessManager processManager, IVersionControlSystem versionControlSystem)
@@ -180,6 +184,7 @@ namespace Xharness.Jenkins {
 			SetEnabled (files, cecilPrefixes, "cecil", ref jenkins.IncludeCecil);
 			SetEnabled (files, dotnetFilenames, "dotnet", ref jenkins.IncludeDotNet);
 			SetEnabled (files, msbuildFilenames, "msbuild", ref jenkins.IncludeMSBuild);
+			SetEnabled (files, xharnessPrefix, "all", ref jenkins.IncludeAll);
 		}
 
 		void SelectTestsByLabel (int pullRequest)
@@ -326,6 +331,11 @@ namespace Xharness.Jenkins {
 			if (!Harness.INCLUDE_MAC) {
 				MainLog.WriteLine ("The macOS build is disabled, so any macOS tests will be disabled as well.");
 				jenkins.IncludeMac = false;
+			}
+
+			if (!Harness.ENABLE_DOTNET) {
+				MainLog.WriteLine ("The .NET build is disabled, so any .NET tests will be disabled as well.");
+				jenkins.IncludeDotNet = false;
 			}
 		}
 	}

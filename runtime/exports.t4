@@ -12,18 +12,24 @@
 			"MonoImage *",  "image",
 			"const char *", "name_space",
 			"const char *", "name"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export ("MonoMethod *", "mono_class_get_method_from_name",
 			"MonoClass *", "klass",
 			"const char *", "name",
 			"int", "param_count"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export ("mono_bool", "mono_class_is_assignable_from",
 			"MonoClass *", "klass",
 			"MonoClass *", "oklass"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export ("MonoClass *", "mono_class_from_mono_type",
 			"MonoType *", "type"
@@ -134,20 +140,28 @@
 		new Export ("uint32_t", "mono_gchandle_new",
 			"MonoObject *", "obj",
 			"mono_bool", "pinned"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export ("MonoObject *", "mono_gchandle_get_target",
 			"uint32_t", "gchandle"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export ("void", "mono_gchandle_free",
 			"uint32_t", "gchandle"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export ("uint32_t", "mono_gchandle_new_weakref",
 			"MonoObject *", "obj",
 			"mono_bool", "track_resurrection"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export ("void", "mono_raise_exception",
 			"MonoException *", "ex"
@@ -159,7 +173,9 @@
 			"MonoArray *", "array",
 			"int", "size",
 			"uintptr_t", "idx"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export ("MonoString *", "mono_string_new",
 			"MonoDomain *", "domain",
@@ -219,7 +235,9 @@
 			"MonoArray *", "arr",
 			"void *", "slot_ptr",
 			"MonoObject *", "value"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		#endregion
 
@@ -228,7 +246,9 @@
 		new Export ("void", "mono_profiler_install",
 			"MonoProfiler *", "prof",
 			"MonoProfileFunc", "shutdown_callback"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export ("void", "mono_profiler_install_thread",
 			"MonoProfileThreadFunc", "start",
@@ -240,11 +260,15 @@
 		new Export ("void", "mono_profiler_install_gc",
 			"MonoProfileGCFunc", "callback",
 			"MonoProfileGCResizeFunc", "heap_resize_callback"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export ("void", "mono_profiler_load",
 			"const char *", "desc"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		#endregion
 
@@ -256,7 +280,9 @@
 			XamarinRuntime = RuntimeMode.MonoVM,
 		},
 
-		new Export ("MonoThread * ", "mono_thread_current"),
+		new Export ("MonoThread * ", "mono_thread_current") {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export ("MonoThread *", "mono_thread_attach",
 			"MonoDomain *", "domain"
@@ -287,7 +313,9 @@
 
 		new Export ("void", "mono_set_assemblies_path",
 			"const char *", "path"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export ("MonoAssembly *", "mono_assembly_open",
 			"const char *",          "filename",
@@ -298,45 +326,65 @@
 
 		new Export ("MonoImage *", "mono_assembly_get_image",
 			"MonoAssembly *", "assembly"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export ("MonoAssemblyName *", "mono_assembly_name_new",
 			"const char *", "name"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export ("void", "mono_assembly_name_free",
 			"MonoAssemblyName *", "aname"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export ("MonoAssembly *", "mono_assembly_loaded",
 			"MonoAssemblyName *", "aname"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export ("void", "mono_register_machine_config",
 			"const char *", "config_xml"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export ("void", "mono_set_dirs",
 			"const char *", "assembly_dir",
 			"const char *", "config_dir"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export ("const char *", "mono_assembly_name_get_name",
 			"MonoAssemblyName *", "aname"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export ("const char *", "mono_assembly_name_get_culture",
 			"MonoAssemblyName *", "aname"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export ("void", "mono_install_assembly_preload_hook",
 			"MonoAssemblyPreLoadFunc", "func",
 			"void *", "user_data"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export ("MonoAssemblyName *", "mono_assembly_get_name",
 			"MonoAssembly *", "assembly"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		#endregion
 
@@ -394,7 +442,9 @@
 			HasCoreCLRBridgeFunction = true,
 		},
 
-		new Export ("MonoImage *", "mono_get_corlib"),
+		new Export ("MonoImage *", "mono_get_corlib") {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export ("MonoClass *", "mono_get_array_class") {
 			XamarinRuntime = RuntimeMode.MonoVM,
@@ -408,7 +458,9 @@
 			"MonoDomain *", "domain",
 			"const char *", "base_dir",
 			"const char *", "config_file_name"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		#endregion
 
@@ -470,7 +522,9 @@
 
 		new Export ("void", "mono_debug_init",
 			"MonoDebugFormat", "format"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export ("mono_bool", "mono_is_debugger_attached") {
 			XamarinRuntime = RuntimeMode.MonoVM,
@@ -482,13 +536,9 @@
 
 		new Export ("void", "mono_config_parse_memory",
 			"const char *", "buffer"
-		),
-
-		#endregion
-
-		#region metadata/mono-gc.h
-
-		new Export ("int", "mono_gc_max_generation"),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		#endregion
 
@@ -521,10 +571,6 @@
 
 		#region metadata/exception.h
 
-		new Export ("MonoException *", "mono_get_exception_execution_engine",
-			"const char *", "msg"
-		),
-
 		new Export ("MonoException *", "mono_exception_from_name_msg",
 			"MonoImage *", "image",
 			"const char *", "name_space",
@@ -534,7 +580,9 @@
 			XamarinRuntime = RuntimeMode.MonoVM,
 		},
 
-		new Export ("MonoException *", "mono_get_exception_out_of_memory"),
+		new Export ("MonoException *", "mono_get_exception_out_of_memory") {
+			HasCoreCLRBridgeFunction = true,
+		},
 
 		#endregion
 
@@ -567,11 +615,15 @@
 		new Export ("void", "mono_gc_toggleref_add",
 			"MonoObject *", "object",
 			"mono_bool", "strong_ref"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export ("void", "mono_gc_toggleref_register_callback",
 			"MonoToggleRefCallback", "process_toggleref"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		#endregion
 
@@ -587,16 +639,22 @@
 
 		#region mini/jit.h
 
-		new Export ("char *", "mono_get_runtime_build_info"),
+		new Export ("char *", "mono_get_runtime_build_info") {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export ("MonoDomain *", "mono_jit_init_version",
 			"const char *", "root_domain_name",
 			"const char *", "runtime_version"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export ("MonoDomain *", "mono_jit_init",
 			"const char *", "file"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export ("int", "mono_jit_exec",
 			"MonoDomain *", "domain",
@@ -607,26 +665,29 @@
 			HasCoreCLRBridgeFunction = true,
 		},
 
-		new Export ("void", "mono_jit_parse_options",
-			"int", "argc",
-			"char**", "argv"
-		),
-
 		new Export ("void", "mono_jit_set_aot_mode",
 			"MonoAotMode", "mode"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export ("void", "mono_set_signal_chaining",
 			"mono_bool", "chain_signals"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export ("void", "mono_set_crash_chaining",
 			"mono_bool", "chain_signals"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export ("void", "mono_jit_set_trace_options",
 			"const char *", "option"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		#endregion
 
@@ -634,27 +695,37 @@
 
 		new Export ("void*", "mono_jit_thread_attach",
 			"MonoDomain *", "domain"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export ("void", "mono_install_unhandled_exception_hook",
 			"MonoUnhandledExceptionFunc", "func",
 			"gpointer", "user_data"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export ("int", "mono_main",
 			"int",     "argc",
 			"char **", "argv"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export (true, "void", "mono_install_load_aot_data_hook",
 			"MonoLoadAotDataFunc", "load_func",
 			"MonoFreeAotDataFunc", "free_func",
 			"gpointer", "user_data"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export (true, "gboolean", "mini_parse_debug_option",
 			"const char *", "option"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		#endregion
 
@@ -685,32 +756,48 @@
 
 		new Export (true, "void*", "mono_threads_enter_gc_unsafe_region",
 			"void **", "stackdata"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export (true, "void", "mono_threads_exit_gc_unsafe_region",
 			"void *", "cookie",
 			"void **", "stackdata"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export (true, "void*", "mono_threads_enter_gc_safe_region",
 			"void **", "stackdata"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export (true, "void", "mono_threads_exit_gc_safe_region",
 			"void *", "cookie",
 			"void **", "stackdata"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
-		new Export (true, "void", "mono_threads_assert_gc_safe_region" ),
+		new Export (true, "void", "mono_threads_assert_gc_safe_region") {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
-		new Export (true, "void", "mono_threads_assert_gc_unsafe_region" ),
+		new Export (true, "void", "mono_threads_assert_gc_unsafe_region") {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
-		new Export (true, "void", "mono_threads_assert_gc_starting_region" ),
+		new Export (true, "void", "mono_threads_assert_gc_starting_region") {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 	
 		#endregion
 
 		#region utils/mono-threads.h
-		new Export (true, "void*", "mono_thread_info_current_unchecked" ),
+		new Export (true, "void*", "mono_thread_info_current_unchecked") {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 		#endregion
 
 		#region metadata/threads-types.h
@@ -735,7 +822,9 @@
 
 		new Export (true, "void", "mono_install_ftnptr_eh_callback",
 			"MonoFtnPtrEHCallback", "callback"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		#endregion
 
@@ -743,13 +832,19 @@
 
 		new Export ("void", "mono_debugger_agent_parse_options",
 			"const char *", "options"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
-		new Export ("gboolean", "mono_debugger_agent_transport_handshake"),
+		new Export ("gboolean", "mono_debugger_agent_transport_handshake") {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		new Export ("void", "mono_debugger_agent_register_transport",
 			"DebuggerTransport *", "trans"
-		),
+		) {
+			XamarinRuntime = RuntimeMode.MonoVM,
+		},
 
 		#endregion
 

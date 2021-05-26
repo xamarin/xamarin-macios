@@ -140,7 +140,7 @@ IOS_CORE_DEFINES=-define:COREBUILD $(IOS_DEFINES)
 $(IOS_BUILD_DIR)/Constants.cs: Constants.iOS.cs.in Makefile $(TOP)/Make.config.inc | $(IOS_BUILD_DIR)
 	$(call Q_PROF_GEN,ios) sed \
 		-e "s/@VERSION@/$(IOS_PACKAGE_VERSION_MAJOR).$(IOS_PACKAGE_VERSION_MINOR).$(IOS_PACKAGE_VERSION_REV)/g" \
-		-e 's/@REVISION@/$(IOS_COMMIT_DISTANCE) ($(CURRENT_BRANCH_SED_ESCAPED): $(shell git log -1 --pretty=%h)/g' \
+		-e 's/@REVISION@/$(IOS_COMMIT_DISTANCE) ($(CURRENT_BRANCH_SED_ESCAPED): $(shell git log -1 --pretty=%h))/g' \
 		-e "s/@IOS_SDK_VERSION@/$(IOS_SDK_VERSION)/g" \
 		$< > $@
 
@@ -479,7 +479,7 @@ MAC_HTTP_SOURCES = \
 $(MAC_BUILD_DIR)/Constants.cs: Constants.mac.cs.in Makefile $(TOP)/Make.config.inc | $(MAC_BUILD_DIR)
 	$(Q) sed \
 			-e "s/@VERSION@/$(MAC_PACKAGE_VERSION_MAJOR).$(MAC_PACKAGE_VERSION_MINOR).$(MAC_PACKAGE_VERSION_REV)/g" \
-			-e 's/@REVISION@/$(MAC_COMMIT_DISTANCE) ($(CURRENT_BRANCH_SED_ESCAPED): $(shell git log -1 --pretty=%h)/g' \
+			-e 's/@REVISION@/$(MAC_COMMIT_DISTANCE) ($(CURRENT_BRANCH_SED_ESCAPED): $(shell git log -1 --pretty=%h))/g' \
 			-e "s/@OSX_SDK_VERSION@/$(OSX_SDK_VERSION)/g" \
 			-e "s/@MIN_XM_MONO_VERSION@/$(MIN_XM_MONO_VERSION)/g" \
 		$< > $@
@@ -769,7 +769,7 @@ WATCHOS_SOURCES +=                \
 $(WATCH_BUILD_DIR)/Constants.cs: $(TOP)/src/Constants.watch.cs.in Makefile $(TOP)/Make.config.inc | $(WATCH_BUILD_DIR)
 	$(call Q_PROF_GEN,watch) sed \
 		-e "s/@VERSION@/$(IOS_PACKAGE_VERSION_MAJOR).$(IOS_PACKAGE_VERSION_MINOR).$(IOS_PACKAGE_VERSION_REV)/g" \
-		-e 's/@REVISION@/$(IOS_COMMIT_DISTANCE) ($(CURRENT_BRANCH_SED_ESCAPED): $(shell git log -1 --pretty=%h)/g' \
+		-e 's/@REVISION@/$(IOS_COMMIT_DISTANCE) ($(CURRENT_BRANCH_SED_ESCAPED): $(shell git log -1 --pretty=%h))/g' \
 		-e "s/@WATCH_SDK_VERSION@/$(WATCH_SDK_VERSION)/g" \
 		$< > $@
 
@@ -1058,7 +1058,7 @@ TVOS_SOURCES +=                \
 $(TVOS_BUILD_DIR)/Constants.cs: $(TOP)/src/Constants.tvos.cs.in Makefile $(TOP)/Make.config.inc | $(TVOS_BUILD_DIR)
 	$(call Q_PROF_GEN,tvos) sed \
 		-e "s/@VERSION@/$(IOS_PACKAGE_VERSION_MAJOR).$(IOS_PACKAGE_VERSION_MINOR).$(IOS_PACKAGE_VERSION_REV)/g" \
-		-e 's/@REVISION@/$(IOS_COMMIT_DISTANCE) ($(CURRENT_BRANCH_SED_ESCAPED): $(shell git log -1 --pretty=%h)/g' \
+		-e 's/@REVISION@/$(IOS_COMMIT_DISTANCE) ($(CURRENT_BRANCH_SED_ESCAPED): $(shell git log -1 --pretty=%h))/g' \
 		-e "s/@TVOS_SDK_VERSION@/$(TVOS_SDK_VERSION)/g" \
 		$< > $@
 
@@ -1268,7 +1268,7 @@ MACCATALYST_SOURCES +=                \
 $(MACCATALYST_BUILD_DIR)/Constants.cs: $(TOP)/src/Constants.maccatalyst.cs.in Makefile $(TOP)/Make.config.inc | $(MACCATALYST_BUILD_DIR)
 	$(call Q_PROF_GEN,maccatalyst) sed \
 		-e "s/@VERSION@/$(IOS_PACKAGE_VERSION_MAJOR).$(IOS_PACKAGE_VERSION_MINOR).$(IOS_PACKAGE_VERSION_REV)/g" \
-		-e 's/@REVISION@/$(IOS_COMMIT_DISTANCE) ($(CURRENT_BRANCH_SED_ESCAPED): $(shell git log -1 --pretty=%h)/g' \
+		-e 's/@REVISION@/$(IOS_COMMIT_DISTANCE) ($(CURRENT_BRANCH_SED_ESCAPED): $(shell git log -1 --pretty=%h))/g' \
 		-e "s/@MACCATALYST_SDK_VERSION@/$(MACCATALYST_SDK_VERSION)/g" \
 		$< > $@
 

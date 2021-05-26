@@ -89,6 +89,11 @@ xamarin_bridge_initialize ()
 	mono_install_assembly_preload_hook (xamarin_assembly_preload_hook, NULL);
 	DEBUG_LAUNCH_TIME_PRINT ("\tJIT init time");
 }
+
+void
+xamarin_bridge_shutdown ()
+{
+}
 #endif // !LEGACY_XAMARIN_MAC
 
 static MonoClass *
@@ -417,6 +422,79 @@ xamarin_mono_object_retain (MonoObject *mobj)
 	// Nothing to do here
 }
 
+#if defined (TRACK_MONOOBJECTS)
+// This function is needed for the corresponding managed P/Invoke to not make
+// the native linker fail due to an unresolved symbol. This method should
+// never end up being called (it'll be linked away by the native linker if the
+// managed linker removes the P/Invoke, and never called from managed code
+// otherwise).
+void
+xamarin_bridge_log_monoobject (MonoObject *mobj, const char *stacktrace)
+{
+	xamarin_assertion_message ("%s is not available on MonoVM", __func__);
+}
+#endif // defined (TRACK_MONOOBJECTS)
+
 #endif // DOTNET
+
+/*
+ * ToggleRef support
+ */
+// #define DEBUG_TOGGLEREF 1
+
+static void
+gc_register_toggleref (MonoObject *obj, id self, bool isCustomType)
+{
+	// COOP: This is an icall, at entry we're in unsafe mode. Managed memory is accessed, so we stay in unsafe mode.
+	MONO_ASSERT_GC_UNSAFE;
+
+#ifdef DEBUG_TOGGLEREF
+	id handle = xamarin_get_nsobject_handle (obj);
+
+	PRINT ("**Registering object %p handle %p RC %d flags: %i isCustomType: %i",
+		obj,
+		handle,
+		(int) (handle ? [handle retainCount] : 0),
+		xamarin_get_nsobject_flags (obj),
+		isCustomType
+		);
+#endif
+	mono_gc_toggleref_add (obj, TRUE);
+
+	// Make sure the GCHandle we have is a weak one for custom types.
+	if (isCustomType) {
+		MONO_ENTER_GC_SAFE;
+		xamarin_switch_gchandle (self, true);
+		MONO_EXIT_GC_SAFE;
+	}
+}
+
+static MonoToggleRefStatus
+gc_toggleref_callback (MonoObject *object)
+{
+	// COOP: this is a callback called by the GC, so I assume the mode here doesn't matter
+	MonoToggleRefStatus res;
+	uint8_t flags = xamarin_get_nsobject_flags (object);
+
+	res = xamarin_gc_toggleref_callback (flags, NULL, xamarin_get_nsobject_handle, object);
+
+	return res;
+}
+
+static void
+gc_event_callback (MonoProfiler *prof, MonoGCEvent event, int generation)
+{
+	// COOP: this is a callback called by the GC, I believe the mode here doesn't matter.
+	xamarin_gc_event (event);
+}
+
+void
+xamarin_enable_new_refcount ()
+{
+	mono_gc_toggleref_register_callback (gc_toggleref_callback);
+
+	xamarin_add_internal_call ("Foundation.NSObject::RegisterToggleRef", (const void *) gc_register_toggleref);
+	mono_profiler_install_gc (gc_event_callback, NULL);
+}
 
 #endif // !CORECLR_RUNTIME

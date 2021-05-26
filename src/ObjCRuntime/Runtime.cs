@@ -1589,6 +1589,7 @@ namespace ObjCRuntime {
 			throw new ArgumentException (string.Format ("'{0}' is an unknown protocol", type.FullName));
 		}
 
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		internal static bool IsUserType (IntPtr self)
 		{
 			var cls = Class.object_getClass (self);

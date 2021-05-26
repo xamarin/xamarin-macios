@@ -5,17 +5,110 @@ parameters:
   type: string 
   default: 'pr' # default reason is a pr build 
 
+- name: devicePrefix
+  type: string 
+  default: 'sim' # always sim, but use a param to move in the future if needed
+
 steps:
 
 - checkout: self
   persistCredentials: true
 
+- checkout: macios.ci 
+  clean: true
+
+# downlod ALL artifacts
+- download: macios 
+
 - pwsh: |
-    Write-Host "Work in progress"
-  displayName: 'Remove logs'
+    $configFile = Join-Path $(PIPELINE.WORKSPACE) "macios" "build-configuration" "configuration.json"
+    $config = Get-Content $configFile | ConvertFrom-Json
+    # export variables to be present in the othe steps
+    Write-Host "##vso[task.setvariable variable=BuildReason;isOutput=true]$($config.BuildReason)"
+    Write-Host "##vso[task.setvariable variable=BuildSourceBranchName;isOutput=true]$($config.BuildSourceBranchName)"
+    Write-Host "##vso[task.setvariable variable=BuildSourceBranch;isOutput=true]$($config.BuildSourceBranch)"
+    Write-Host "##vso[task.setvariable variable=BuildId;isOutput=true]$($config.BuildId)"
+    Write-Host "##vso[task.setvariable variable=Commit;isOutput=true]$($config.Commit)"
+    # calculate branch name and destination dir
+    $branchName = "$($config.BuildSourceBranchName)/$($config.Commit)/$($config.BuildId)"
+    $prefix = ""
+    if ($Env:OriginalBuildReason -eq "PullRequest") {
+      $prefix = "pr"
+    } else {
+      $prefix = "ci"
+    }
+    $branchName = "$prefix/$branchName"
+    Write-Host "##vso[task.setvariable variable=PublishingBranchName;isOutput=true]$branchName"
+    Write-Host "##vso[task.setvariable variable=PublishingPath;isOutput=true]$branchName"
+  name: configuration
+  displayName: 'Parse build configuration'
   timeoutInMinutes: 1
 
 - pwsh: |
-    Write-Host "Work in progress"
+    $htmlRepo = Join-Path $(Build.SourcesDirectory) "macios.ci"
+    cd $htmlRepo 
+
+    # it uses https which is problematic, we move to use the pat so that a push will work
+    git remote remove origin
+    git remote add origin https://$(GitHub.Token)@github.com/xamarin/macios.ci.git
+    git remote # don't add -v else we see the pat
+
+    git config user.email "valco@microsoft.com"
+    git config user.name "vs-mobiletools-engineering-service2"
+
+    Write-Host "New branch name: $Env:PublishingBranchName"
+    git checkout -b $Env:PublishingBranchName
   displayName: 'Create remote branch'
-  timeoutInMinutes: 1
+  timeoutInMinutes: 10
+  env:
+    OriginalBuildReason: $(configuration.BuildReason)
+    OriginalSourceBranch: $(configuration.BuildSourceBranchName)
+    OriginalBuildId: $(configuration.BuildId)
+    OriginalCommit: $(configuration.Commit)
+    PublishingBranchName: $(configuration.PublishingBranchName)
+
+- pwsh: |
+    $htmlRepo = Join-Path $(Build.SourcesDirectory) "macios.ci"
+    $downloadsPath = Join-Path $(PIPELINE.WORKSPACE) "macios"
+    if ($Env:SYSTEM_DEBUG) {
+      Get-ChildItem  $downloadsPath -Recurse
+    }
+    $destinationRoot =  Join-Path $(Build.SourcesDirectory) "macios.ci" $Env:PublishingPath
+    Write-Host "Destination root: $destinationRoot"
+    mkdir -p $destinationRoot 
+
+    # find all zips, and expand them
+    $zips = Get-ChildItem -Path $downloadsPath -Filter *.zip -Recurse -File
+    foreach($zip in $zips) {
+      $destinationPath = Join-Path $destinationRoot $zip.Directory
+      Write-Host "Expanding $($zip.FullName) to $destinationPath"
+      Expand-Archive -LiteralPath $zip.FullName -DestinationPath $destinationPath 
+    }
+
+    if ($Env:SYSTEM_DEBUG) {
+      Get-ChildItem $destinationRoot -Recurse
+    }
+
+    # clean logs, print those rm calls for debugging
+    Get-ChildItem -Path $destinationRoot -Filter *.log -Recurse -File | ForEach-Object {
+      Write-Host "rm $($_.FullName)"
+      rm $_.FullName
+    }
+
+    if ($Env:SYSTEM_DEBUG) {
+      Get-ChildItem $destinationRoot -Recurse
+    }
+    cd $htmlRepo 
+    git config user.email "valco@microsoft.com"
+    git config user.name "vs-mobiletools-engineering-service2"
+
+    git add $Env:PublishingPath
+    git commit -m"[CI] Add test results for build $Env:OriginalBuildId"
+    git push origin $Env:PublishingBranchName
+  displayName: 'Add files and clean logs'
+  timeoutInMinutes: 30
+  env:
+    PublishingPath: $(configuration.PublishingPath)
+    OriginalBuildId: $(configuration.BuildId)
+    PublishingBranchName: $(configuration.PublishingBranchName)
+

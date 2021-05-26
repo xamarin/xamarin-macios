@@ -433,6 +433,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 
 		[Test]
+#if NET
+		[Ignore ("Ignored on CoreCLR for now due to missing support for marshalling exceptions")]
+#endif
 		public void TestGeneric ()
 		{
 			var g1 = new GenericTestClass<string> ();
@@ -1240,6 +1243,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 
 		[Test]
+#if NET
+		[Ignore ("Ignored on CoreCLR for now due to missing support for marshalling exceptions")]
+#endif
 		public void TestConstrainedGenericType ()
 		{
 			IntPtr value;
@@ -2148,7 +2154,11 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void CustomUserTypeWithDynamicallyLoadedAssembly ()
 		{
+#if NET
+			var customTypeAssemblyPath = global::System.IO.Path.Combine (global::Xamarin.Tests.Configuration.RootPath, "tests", "test-libraries", "custom-type-assembly", ".libs", "dotnet", "macos", "custom-type-assembly.dll");
+#else
 			var customTypeAssemblyPath = global::System.IO.Path.Combine (global::Xamarin.Tests.Configuration.RootPath, "tests", "test-libraries", "custom-type-assembly", ".libs", "macos", "custom-type-assembly.dll");
+#endif
 			Assert.That (customTypeAssemblyPath, Does.Exist, "existence");
 
 			var size = 10;

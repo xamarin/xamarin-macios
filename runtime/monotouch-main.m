@@ -27,10 +27,11 @@
 #include "runtime-internal.h"
 #include "delegates.h"
 
-#if defined(__x86_64__)
+#if defined(__x86_64__) && !DOTNET
 #include "../tools/mtouch/monotouch-fixes.c"
 #endif
 
+#if !defined (CORECLR_RUNTIME)
 unsigned char *
 xamarin_load_aot_data (MonoAssembly *assembly, int size, gpointer user_data, void **out_handle)
 {
@@ -147,6 +148,7 @@ xamarin_assembly_preload_hook (MonoAssemblyName *aname, char **assemblies_path, 
 
 	return mono_assembly_open (path, NULL);
 }
+#endif // !defined (CORECLR_RUNTIME)
 
 #ifdef DEBUG_LAUNCH_TIME
 uint64_t startDate = 0;
@@ -249,7 +251,7 @@ xamarin_main (int argc, char *argv[], enum XamarinLaunchMode launch_mode)
 	const char *managed_argv [argc + 2];
 	int managed_argc = 1;
 
-#if defined(__x86_64__)
+#if defined(__x86_64__) && !DOTNET
 	patch_sigaction ();
 #endif
 
@@ -458,7 +460,14 @@ xamarin_main (int argc, char *argv[], enum XamarinLaunchMode launch_mode)
 		snprintf (base_dir, sizeof (base_dir), "%s/" ARCH_SUBDIR, xamarin_get_bundle_path ());
 		snprintf (config_file_name, sizeof (config_file_name), "%s/%s.config", base_dir, xamarin_executable_name); // xamarin_executable_name should never be NULL for extensions.
 
+#if defined (CORECLR_RUNTIME)
+		// Need to figure out how to implement the equivalent of mono_domain_set_config for CoreCLR.
+		// That will need a test case (app extension), which we haven't implemented for CoreCLR yet.
+		// It's likely to require a completely different implementation, probably a property passed to coreclr_initialize.
+		xamarin_assertion_message ("Not implemented for CoreCLR: mono_domain_set_config.");
+#else
 		mono_domain_set_config (mono_domain_get (), base_dir, config_file_name);
+#endif
 
 		rv = xamarin_extension_main (argc, argv);
 		break;
@@ -475,5 +484,7 @@ xamarin_main (int argc, char *argv[], enum XamarinLaunchMode launch_mode)
 
 	xamarin_mono_object_release (&assembly);
 	
+	xamarin_bridge_shutdown ();
+
 	return rv;
 }

@@ -132,6 +132,7 @@ namespace Xharness {
 		public string MONO_IOS_SDK_DESTDIR { get; }
 		public string MONO_MAC_SDK_DESTDIR { get; }
 		public bool ENABLE_XAMARIN { get; }
+		public bool ENABLE_DOTNET { get; }
 
 		// Run
 
@@ -203,6 +204,7 @@ namespace Xharness {
 			MONO_IOS_SDK_DESTDIR = config ["MONO_IOS_SDK_DESTDIR"];
 			MONO_MAC_SDK_DESTDIR = config ["MONO_MAC_SDK_DESTDIR"];
 			ENABLE_XAMARIN = config.ContainsKey ("ENABLE_XAMARIN") && !string.IsNullOrEmpty (config ["ENABLE_XAMARIN"]);
+			ENABLE_DOTNET = config.ContainsKey ("ENABLE_DOTNET") && !string.IsNullOrEmpty (config ["ENABLE_DOTNET"]);
 
 			if (string.IsNullOrEmpty (SdkRoot))
 				SdkRoot = config ["XCODE_DEVELOPER_ROOT"] ?? configuration.SdkRoot;
@@ -295,6 +297,7 @@ namespace Xharness {
 				IsDotNetProject = true,
 				TargetFrameworkFlavors = MacFlavors.DotNet,
 				Platform = "AnyCPU",
+				Ignore = !ENABLE_DOTNET,
 			});
 
 			MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "monotouch-test", "dotnet", "MacCatalyst", "monotouch-test.csproj"))) {
@@ -302,6 +305,7 @@ namespace Xharness {
 				IsDotNetProject = true,
 				TargetFrameworkFlavors = MacFlavors.MacCatalyst,
 				Platform = "AnyCPU",
+				Ignore = !ENABLE_DOTNET,
 			});
 
 			foreach (var flavor in new MonoNativeFlavor [] { MonoNativeFlavor.Compat, MonoNativeFlavor.Unified }) {

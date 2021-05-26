@@ -30,12 +30,7 @@
 //
 using System;
 using System.Globalization;
-#if BGENERATOR
-using IKVM.Reflection;
-using Type = IKVM.Reflection.Type;
-#else
 using System.Reflection;
-#endif
 using ObjCRuntime;
 using Registrar;
 

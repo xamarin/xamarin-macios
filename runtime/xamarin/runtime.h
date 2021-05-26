@@ -201,6 +201,7 @@ uint32_t		xamarin_find_protocol_wrapper_type (uint32_t token_ref);
 void			xamarin_release_block_on_main_thread (void *obj);
 void			xamarin_bridge_setup (); // this is called very early, before parsing the command line arguments
 void			xamarin_bridge_initialize (); // this is called a bit later, after parsing the command line arguments.
+void			xamarin_bridge_shutdown (); // this is called just before returning from xamarin_main
 unsigned char *	xamarin_load_aot_data (MonoAssembly *assembly, int size, gpointer user_data, void **out_handle);
 void			xamarin_free_aot_data (MonoAssembly *assembly, int size, gpointer user_data, void *handle);
 MonoAssembly*	xamarin_assembly_preload_hook (MonoAssemblyName *aname, char **assemblies_path, void* user_data);
@@ -214,6 +215,7 @@ MonoMethod *	xamarin_bridge_get_mono_method (MonoReflectionMethod *method);
 void			xamarin_bridge_free_mono_signature (MonoMethodSignature **signature);
 bool			xamarin_register_monoassembly (MonoAssembly *assembly, GCHandle *exception_gchandle);
 void			xamarin_install_nsautoreleasepool_hooks ();
+void			xamarin_enable_new_refcount ();
 
 MonoObject *	xamarin_new_nsobject (id self, MonoClass *klass, GCHandle *exception_gchandle);
 bool			xamarin_has_managed_ref (id self);
@@ -286,6 +288,11 @@ MonoObject *	xamarin_gchandle_get_target (GCHandle handle);
 void			xamarin_gchandle_free (GCHandle handle);
 MonoObject *	xamarin_gchandle_unwrap (GCHandle handle); // Will get the target and free the GCHandle
 
+typedef id (*xamarin_get_handle_func) (MonoObject *info);
+MonoToggleRefStatus	xamarin_gc_toggleref_callback (uint8_t flags, id handle, xamarin_get_handle_func get_handle, MonoObject *info);
+void				xamarin_gc_event (MonoGCEvent event);
+
+void			xamarin_bridge_log_monoobject (MonoObject *obj, const char *stacktrace);
 /*
  * In MonoVM MonoObjects are tracked in memory/the stack directly by the GC, but that doesn't
  * work for CoreCLR, so we make it ref-counted. All code must use the functions below to retain/release
