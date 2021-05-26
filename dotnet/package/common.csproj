@@ -10,7 +10,9 @@
     <RepositoryUrl>https://github.com/xamarin/xamarin-macios</RepositoryUrl>
     <RepositoryBranch>$(CurrentBranch)</RepositoryBranch>
     <RepositoryCommit>$(CurrentHash)</RepositoryCommit>
-    <Authors>Xamarin</Authors>
+    <Authors>Microsoft</Authors>
+    <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
+    <PackageProjectUrl>https://github.com/xamarin/xamarin-macios</PackageProjectUrl>
 
     <GenerateDependencyFile>false</GenerateDependencyFile>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
@@ -35,10 +37,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="$(_packagePath)**">
-      <Pack>true</Pack>
-      <PackagePath>\</PackagePath>
-    </Content>
+    <None Include="$(_RepositoryPath)/LICENSE" Pack="true" PackagePath="/" />
+    <Content Include="$(_packagePath)**" Pack="true" PackagePath="/" />
   </ItemGroup>
 
   <!-- Code to automatically create FrameworkList.xml or RuntimeList.xml -->
