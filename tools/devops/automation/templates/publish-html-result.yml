@@ -30,14 +30,17 @@ steps:
     Write-Host "##vso[task.setvariable variable=BuildId;isOutput=true]$($config.BuildId)"
     Write-Host "##vso[task.setvariable variable=Commit;isOutput=true]$($config.Commit)"
     # calculate branch name and destination dir
-    $branchName = "$($config.BuildSourceBranchName)/$($config.Commit)/$($config.BuildId)"
     $prefix = ""
-    if ($Env:OriginalBuildReason -eq "PullRequest") {
+    $branchName = ""
+    if ($config.BuildReason -eq "PullRequest") {
       $prefix = "pr"
+      $branchName = "PR$(config.Commit)"
     } else {
       $prefix = "ci"
+      $branchName = $config.BuildSourceBranchName
     }
-    $branchName = "$prefix/$branchName"
+
+    $branchName = "$prefix/$branchName/$($config.Commit)/$($config.BuildId)"
     Write-Host "##vso[task.setvariable variable=PublishingBranchName;isOutput=true]$branchName"
     Write-Host "##vso[task.setvariable variable=PublishingPath;isOutput=true]$branchName"
   name: configuration
