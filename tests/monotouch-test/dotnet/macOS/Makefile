@@ -3,10 +3,6 @@ TOP=../../../..
 include $(TOP)/Make.config
 include $(TOP)/mk/colors.mk
 
-# This is a temporary variable to enable the .NET workload resolver, because it's opt-in for now.
-# Ref: https://github.com/dotnet/sdk/issues/13849
-export MSBuildEnableWorkloadResolver=true
-
 # To run monotouch-test with MonoVM:
 #    make run-monovm
 # To run monotouch-test with CoreCLR:
