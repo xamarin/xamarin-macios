@@ -90,39 +90,13 @@ steps:
       Get-ChildItem $destinationRoot -Recurse
     }
 
-    # clean logs, print those rm calls for debugging
-    Get-ChildItem -Path $destinationRoot -Filter *.log -Recurse -File | ForEach-Object {
-      Write-Host "rm $($_.FullName)"
-      rm $_.FullName
-    }
-
-    # clean txt files
-    Get-ChildItem -Path $destinationRoot -Filter *.txt -Recurse -File | ForEach-Object {
-      Write-Host "rm $($_.FullName)"
-      rm $_.FullName
-    }
-
-    # clean xml files
-    Get-ChildItem -Path $destinationRoot -Filter *.xml -Recurse -File | ForEach-Object {
-      Write-Host "rm $($_.FullName)"
-      rm $_.FullName
-    }
-
-    # clean xml files
-    Get-ChildItem -Path $destinationRoot -Filter *.crash -Recurse -File | ForEach-Object {
-      Write-Host "rm $($_.FullName)"
-      rm $_.FullName
-    }
-
-    # remove all css and js because they are nor needed 
-    Get-ChildItem -Path $destinationRoot -Filter *.css -Recurse -File | ForEach-Object {
-      Write-Host "rm $($_.FullName)"
-      rm $_.FullName
-    }
-
-    Get-ChildItem -Path $destinationRoot -Filter *.js -Recurse -File | ForEach-Object {
-      Write-Host "rm $($_.FullName)"
-      rm $_.FullName
+    # clean logs, xml, etc print those rm calls for debugging
+    $extensionsToDelete = @("*.log", "*.tmp", "*.txt", "*.xml", "*.crash", "*.css", "*.js", "*.cs", "*.binlog")
+    foreach ($extension in $extensionsToDelete) {
+      Get-ChildItem -Path $destinationRoot -Filter $extension -Recurse -File | ForEach-Object {
+        Write-Host "rm $($_.FullName)"
+        rm $_.FullName
+      }
     }
 
     # remove empty dirs
