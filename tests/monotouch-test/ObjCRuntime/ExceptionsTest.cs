@@ -85,9 +85,6 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 		// Simulator/desktop only (except for watchOS, where it works everywhere)
 		[Test]
-#if NET
-		[Ignore ("Ignored on CoreCLR for now due to missing support for marshalling exceptions")]
-#endif
 		public void ObjCException ()
 		{
 #if !__WATCHOS__ && !__MACOS__
@@ -134,9 +131,6 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 		// Simulator/desktop only test (except for watchOS, where it works everywhere)
 		[Test]
-#if NET
-		[Ignore ("Ignored on CoreCLR for now due to missing support for marshalling exceptions")]
-#endif
 		public void ManagedExceptionPassthrough ()
 		{
 			Exception thrownException = null;

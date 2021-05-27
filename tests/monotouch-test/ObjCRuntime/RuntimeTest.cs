@@ -616,9 +616,6 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 #if DYNAMIC_REGISTRAR
 		[Test]
-#if NET
-		[Ignore ("Ignored on CoreCLR for now due to missing support for marshalling exceptions")]
-#endif
 		public void MX8029_b ()
 		{
 			try {
@@ -640,9 +637,6 @@ Additional information:
 		}
 
 		[Test]
-#if NET
-		[Ignore ("Ignored on CoreCLR for now due to missing support for marshalling exceptions")]
-#endif
 		public void MX8033 ()
 		{
 			try {
