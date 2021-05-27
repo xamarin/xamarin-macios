@@ -567,7 +567,7 @@ function New-GitHubSummaryComment {
         $githubPagePrefix = "$githubPagePrefix/pr/PR$Env:PR_ID"
     }
 
-    $githubPagePrefix = "/$Env:BUILD_BUILDID"
+    $githubPagePrefix = "$githubPagePrefix/$Env:BUILD_BUILDID"
     $sb.AppendLine("# GitHub pages")
     $sb.AppendLine()
     $sb.AppendLine("Results can be found in the following github pages (it might take some time to publish):")
