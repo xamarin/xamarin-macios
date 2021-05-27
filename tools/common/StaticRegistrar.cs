@@ -3795,6 +3795,7 @@ namespace Registrar {
 			}
 
 			var marshal_exception = "NULL";
+			var post_invoke_check = string.Empty;
 			if (App.MarshalManagedExceptions != MarshalManagedExceptionMode.Disable) {
 				body_setup.AppendLine ("MonoObject *exception = NULL;");
 				if (App.EnableDebug && App.IsDefaultMarshalManagedExceptionMode) {
@@ -3803,6 +3804,7 @@ namespace Registrar {
 				} else {
 					marshal_exception = "&exception";
 				}
+				post_invoke_check = "if (exception != NULL) goto exception_handling;";
 			}
 
 			if (!isVoid) {
@@ -3812,6 +3814,9 @@ namespace Registrar {
 			}
 
 			invoke.AppendLine ("mono_runtime_invoke (managed_method, {0}, arg_ptrs, {1});", isStatic ? "NULL" : "mthis", marshal_exception);
+
+			if (!string.IsNullOrEmpty (post_invoke_check))
+				invoke.AppendLine (post_invoke_check);
 
 			body_setup.AppendLine ("GCHandle exception_gchandle = INVALID_GCHANDLE;");
 			// prepare the return value
