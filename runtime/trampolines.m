@@ -1009,8 +1009,12 @@ xamarin_generate_conversion_to_managed (id value, MonoType *inputType, MonoType 
 				goto exception_handling;
 			*(SList **) free_list = s_list_prepend (*(SList **) free_list, convertedValue);
 
-			if (isManagedNullable)
+			if (isManagedNullable) {
 				convertedValue = mono_value_box (mono_domain_get (), underlyingManagedType, convertedValue);
+				SList* release_list = *(SList**) release_list_ptr;
+				if (release_list != NULL)
+					*release_list_ptr = s_list_prepend (release_list, convertedValue);
+			}
 		}
 	}
 
