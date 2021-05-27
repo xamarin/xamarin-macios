@@ -4530,7 +4530,10 @@ namespace Registrar {
 					body_setup.AppendLine ($"void *{tmpName2} = NULL;");
 					sb.AppendLine ($"{tmpName2} = {func} ({inputName}, &{tmpName}, {classVariableName}, GINT_TO_POINTER ({token}), &exception_gchandle);");
 					sb.AppendLine ("if (exception_gchandle != INVALID_GCHANDLE) goto exception_handling;");
-					sb.AppendLine ($"{outputName} = mono_value_box (mono_domain_get (), {classVariableName}, {tmpName2});");
+					body_setup.AppendLine ($"MonoObject *mobj_conversion_{parameter} = NULL;");
+					sb.AppendLine ($"mobj_conversion_{parameter} = mono_value_box (mono_domain_get (), {classVariableName}, {tmpName2});");
+					sb.AppendLine ($"{outputName} = mobj_conversion_{parameter};");
+					cleanup.AppendLine ($"xamarin_mono_object_release (&mobj_conversion_{parameter});");
 				} else {
 					sb.AppendLine ($"{outputName} = {func} ({inputName}, &{tmpName}, {classVariableName}, GINT_TO_POINTER ({token}), &exception_gchandle);");
 					sb.AppendLine ("if (exception_gchandle != INVALID_GCHANDLE) goto exception_handling;");
