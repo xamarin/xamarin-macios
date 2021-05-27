@@ -19,6 +19,10 @@ namespace Xamarin.Linker {
 			var getReferencedAssemblies = Configuration.Context.GetType ().GetMethod ("GetReferencedAssemblies");
 			var assemblies = (IEnumerable<AssemblyDefinition>) getReferencedAssemblies.Invoke (Configuration.Context, new object [0]);
 			Configuration.Assemblies.AddRange (assemblies);
+			foreach (var assembly in assemblies) {
+				if (!Configuration.AssembliesByName.TryAdd (assembly.Name.Name, assembly))
+					throw new InvalidOperationException ($"Multiple assemblies with the same name: {assembly.Name.Name}");
+			}
 		}
 	}
 }

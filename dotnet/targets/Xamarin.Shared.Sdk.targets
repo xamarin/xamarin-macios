@@ -318,11 +318,12 @@
 				pre-mark custom steps
 			-->
 			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" BeforeStep="MarkStep" Type="Xamarin.SetupStep" />
+			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" BeforeStep="MarkStep" Type="MonoTouch.Tuner.CoreTypeMapStep" />
 			<!-- Load the list of assemblies loaded by the linker. -->
 			<!-- This would not be needed if LinkContext.GetAssemblies () was exposed to us. -->
 			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" BeforeStep="MarkStep" Type="Xamarin.Linker.CollectAssembliesStep" />
 			<!-- The final decision to remove/keep the dynamic registrar must be done before the linking step -->
-			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" BeforeStep="MarkStep" Type="MonoTouch.Tuner.RegistrarRemovalTrackigStep" />
+			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" BeforeStep="MarkStep" Type="MonoTouch.Tuner.RegistrarRemovalTrackingStep" />
 			<!-- TODO: these steps should probably run after mark. -->
 			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" BeforeStep="MarkStep" Condition="'$(_LinkMode)' != 'None'" Type="Xamarin.Linker.Steps.StoreMembersAndAttributesDispatcher" />
 
@@ -331,11 +332,10 @@
 			-->
 			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" Condition="'$(_LinkMode)' != 'None'" Type="Xamarin.Linker.Steps.PreserveBlockCodeHandler" />
 			<!--
-				We need to run the ApplyPreserveAttribute step even we're only linking sdk assemblies, because even
+				We need to run the ApplyPreserveAttribute step even if we're only linking sdk assemblies, because even
 				though we know that sdk assemblies will never have Preserve attributes, user assemblies may have
 				[assembly: LinkSafe] attributes, which means we treat them as sdk assemblies and those may have
 				Preserve attributes.
-				TODO: LinkSafeAttribute doesn't appear to be handled anywhere. Is this attribute still supported?
 				ApplyPreserveAttribute no longer runs on all assemblies. [assembly: Preserve (typeof (SomeAttribute))] will
 				no longer give SomeAttribute "Preserve" semantics.
 			-->

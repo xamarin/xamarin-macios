@@ -20,27 +20,101 @@ using Xamarin.Tuner;
 namespace MonoTouch.Tuner {
 
 	// This class is shared between Xamarin.Mac and Xamarin.iOS
-	public class CoreTypeMapStep : TypeMapStep {
-		HashSet<TypeDefinition> cached_isnsobject = new HashSet<TypeDefinition> ();
-		Dictionary<TypeDefinition, bool?> isdirectbinding_value = new Dictionary<TypeDefinition, bool?> ();
+	public class CoreTypeMapStep :
+#if NET
+		ConfigurationAwareStep
+#else
+		TypeMapStep
+#endif
+	{
 
+#if NET
+		protected override string Name { get; } = "CoreTypeMap";
+		protected override int ErrorCode { get; } = 2381;
+
+		Profile Profile => new Profile (Configuration);
+
+		Dictionary<AssemblyDefinition, bool> _transitivelyReferencesProduct = new Dictionary<AssemblyDefinition, bool> ();
+		bool TransitivelyReferencesProduct (AssemblyDefinition assembly)
+		{
+			if (_transitivelyReferencesProduct.TryGetValue (assembly, out bool result))
+				return result;
+
+			if (Profile.IsProductAssembly (assembly)) {
+				_transitivelyReferencesProduct.Add (assembly, true);
+				return true;
+			}
+
+			foreach (var reference in assembly.MainModule.AssemblyReferences) {
+				if (!Configuration.AssembliesByName.TryGetValue (reference.Name, out AssemblyDefinition resolvedReference))
+					continue;
+
+				if (TransitivelyReferencesProduct (resolvedReference)) {
+					_transitivelyReferencesProduct.Add (assembly, true);
+					return true;
+				}
+			}
+
+			_transitivelyReferencesProduct.Add (assembly, false);
+			return false;
+		}
+
+		protected override void TryProcessAssembly (AssemblyDefinition assembly)
+		{
+			// We are only interested in types transitively derived from NSObject,
+			// which lives in the product assembly.
+			if (!TransitivelyReferencesProduct (assembly))
+				return;
+
+			foreach (var type in assembly.MainModule.Types)
+				ProcessType (type);
+		}
+
+		void ProcessType (TypeDefinition type)
+		{
+			MapType (type);
+
+			if (!type.HasNestedTypes)
+				return;
+
+			foreach (var nestedType in type.NestedTypes)
+				ProcessType (nestedType);
+		}
+
+		DerivedLinkContext LinkContext => Configuration.DerivedLinkContext;
+#else
 		DerivedLinkContext LinkContext {
 			get {
 				return (DerivedLinkContext) base.Context;
 			}
 		}
+#endif
 
+		HashSet<TypeDefinition> cached_isnsobject = new HashSet<TypeDefinition> ();
+		Dictionary<TypeDefinition, bool?> isdirectbinding_value = new Dictionary<TypeDefinition, bool?> ();
+
+#if NET
+		protected override void TryEndProcess ()
+		{
+#else
 		protected override void EndProcess ()
 		{
 			base.EndProcess ();
+#endif
 
 			LinkContext.CachedIsNSObject = cached_isnsobject;
 			LinkContext.IsDirectBindingValue = isdirectbinding_value;
 		}
 
-		protected override void MapType (TypeDefinition type)
+		protected
+#if !NET
+		override
+#endif
+		void MapType (TypeDefinition type)
 		{
+#if !NET
 			base.MapType (type);
+#endif
 
 			// additional checks for NSObject to check if the type is a *generated* bindings
 			// bonus: we cache, for every type, whether or not it inherits from NSObject (very useful later)
@@ -77,7 +151,13 @@ namespace MonoTouch.Tuner {
 
 			bool rv;
 			if (!ci_filter_types.TryGetValue (type, out rv)) {
-				rv = type.Is (Namespaces.CoreImage, "CIFilter") || IsCIFilter (type.Resolve ().BaseType);
+				rv = type.Is (Namespaces.CoreImage, "CIFilter") || IsCIFilter (
+#if NET
+					Context.Resolve (type).BaseType
+#else
+					type.Resolve ().BaseType
+#endif
+				);
 				ci_filter_types [type] = rv;
 			}
 			return rv;
@@ -97,10 +177,18 @@ namespace MonoTouch.Tuner {
 			// * https://bugzilla.xamarin.com/show_bug.cgi?id=15465
 			if (IsCIFilter (type)) {
 				isdirectbinding_value [type] = null;
+#if NET
+				var base_type = Context.Resolve (type.BaseType);
+#else
 				var base_type = type.BaseType.Resolve ();
+#endif
 				while (base_type != null && IsNSObject (base_type)) {
 					isdirectbinding_value [base_type] = null;
+#if NET
+					base_type = Context.Resolve (base_type.BaseType);
+#else
 					base_type = base_type.BaseType.Resolve ();
+#endif
 				}
 				return;
 			}
@@ -111,11 +199,19 @@ namespace MonoTouch.Tuner {
 				isdirectbinding_value [type] = false;
 
 				// We must clear IsDirectBinding for any wrapper superclasses.
+#if NET
+				var base_type = Context.Resolve (type.BaseType);
+#else
 				var base_type = type.BaseType.Resolve ();
+#endif
 				while (base_type != null && IsNSObject (base_type)) {
 					if (IsWrapperType (base_type))
 						isdirectbinding_value [base_type] = null;
+#if NET
+					base_type = Context.Resolve (base_type.BaseType);
+#else
 					base_type = base_type.BaseType.Resolve ();
+#endif
 				}
 			} else {
 				isdirectbinding_value [type] = true; // Let's try 'true' first, any derived non-wrapper classes will clear it if needed

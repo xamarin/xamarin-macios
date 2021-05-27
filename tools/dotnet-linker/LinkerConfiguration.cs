@@ -47,7 +47,8 @@ namespace Xamarin.Linker {
 
 		// The list of assemblies is populated in CollectAssembliesStep.
 		public List<AssemblyDefinition> Assemblies = new List<AssemblyDefinition> ();
-		
+		public Dictionary<string, AssemblyDefinition> AssembliesByName = new Dictionary<string, AssemblyDefinition> ();
+
 		string user_optimize_flags;
 
 		Dictionary<string, List<MSBuildItem>> msbuild_items = new Dictionary<string, List<MSBuildItem>> ();

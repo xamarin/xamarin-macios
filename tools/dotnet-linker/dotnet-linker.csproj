@@ -106,6 +106,9 @@
     <Compile Include="..\linker\CoreOptimizeGeneratedCode.cs">
       <Link>external\tools\linker\CoreOptimizeGeneratedCode.cs</Link>
     </Compile>
+    <Compile Include="..\linker\CoreTypeMapStep.cs">
+      <Link>external\tools\linker\CoreTypeMapStep.cs</Link>
+    </Compile>
     <Compile Include="..\..\src\ObjCRuntime\Registrar.cs">
       <Link>external\src\ObjCRuntime\Registrar.cs</Link>
     </Compile>
