@@ -35,4 +35,4 @@ jobs:
       name: 'Remove data'
       env:
         MACIOS_CI_PATH: ${{ github.workspace }}/macios.ci 
-        PR_NUMBER: ${{ github.number }} 
+        PR_NUMBER: ${{ github.event.number }} 
