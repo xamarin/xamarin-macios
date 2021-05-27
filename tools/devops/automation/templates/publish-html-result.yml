@@ -102,6 +102,18 @@ steps:
       rm $_.FullName
     }
 
+    # clean xml files
+    Get-ChildItem -Path $destinationRoot -Filter *.xml -Recurse -File | ForEach-Object {
+      Write-Host "rm $($_.FullName)"
+      rm $_.FullName
+    }
+
+    # remove empty dirs
+    Get-ChildItem $destinationRoot -Recurse -Force -Directory |
+      Sort-Object -Property FullName -Descending |
+      Where-Object { $($_ | Get-ChildItem -Force | Select-Object -First 1).Count -eq 0 } |
+      Remove-Item -Verbose
+
     if ($Env:SYSTEM_DEBUG) {
       Get-ChildItem $destinationRoot -Recurse
     }
