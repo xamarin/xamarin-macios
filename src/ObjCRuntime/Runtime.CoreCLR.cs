@@ -20,8 +20,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.ObjectiveC;
 using System.Text;
 
 using Foundation;
@@ -79,6 +80,21 @@ namespace ObjCRuntime {
 		static void log_coreclr (string message)
 		{
 			NSLog (message);
+		}
+
+		static unsafe void InitializeCoreCLRBridge (InitializationOptions* options)
+		{
+			if (options->xamarin_objc_msgsend != IntPtr.Zero)
+				ObjectiveCMarshal.SetMessageSendCallback (ObjectiveCMarshal.MessageSendFunction.MsgSend, options->xamarin_objc_msgsend);
+
+			if (options->xamarin_objc_msgsend_super != IntPtr.Zero)
+				ObjectiveCMarshal.SetMessageSendCallback (ObjectiveCMarshal.MessageSendFunction.MsgSendSuper, options->xamarin_objc_msgsend_super);
+
+			if (options->xamarin_objc_msgsend_stret != IntPtr.Zero)
+				ObjectiveCMarshal.SetMessageSendCallback (ObjectiveCMarshal.MessageSendFunction.MsgSendStret, options->xamarin_objc_msgsend_stret);
+
+			if (options->xamarin_objc_msgsend_super_stret != IntPtr.Zero)
+				ObjectiveCMarshal.SetMessageSendCallback (ObjectiveCMarshal.MessageSendFunction.MsgSendSuperStret, options->xamarin_objc_msgsend_super_stret);
 		}
 
 		internal static void RegisterToggleReferenceCoreCLR (NSObject obj, IntPtr handle, bool isCustomType)

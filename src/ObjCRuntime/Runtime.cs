@@ -157,6 +157,12 @@ namespace ObjCRuntime {
 #endif
 			IntPtr AssemblyLocations;
 
+#if NET
+			public IntPtr xamarin_objc_msgsend;
+			public IntPtr xamarin_objc_msgsend_super;
+			public IntPtr xamarin_objc_msgsend_stret;
+			public IntPtr xamarin_objc_msgsend_super_stret;
+#endif
 			public bool IsSimulator {
 				get {
 					return (Flags & InitializationFlags.IsSimulator) == InitializationFlags.IsSimulator;
@@ -279,6 +285,11 @@ namespace ObjCRuntime {
 
 			objc_exception_mode = options->MarshalObjectiveCExceptionMode;
 			managed_exception_mode = options->MarshalManagedExceptionMode;
+
+#if NET
+			if (IsCoreCLR)
+				InitializeCoreCLRBridge (options);
+#endif
 
 			initialized = true;
 #if PROFILE

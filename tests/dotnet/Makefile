@@ -2,10 +2,6 @@ TOP=../..
 
 include $(TOP)/Make.config
 
-# This is a temporary variable to enable the .NET workload resolver, because it's opt-in for now.
-# Ref: https://github.com/dotnet/sdk/issues/13849
-export MSBuildEnableWorkloadResolver=true
-
 # This tells NuGet to use the nupkgs we're building locally,
 # and to put any extracted packages in the 'packages' directory (to not clutter up ~/.nuget/packages)
 NuGet.config: $(TOP)/NuGet.config Makefile
@@ -41,8 +37,6 @@ run-unit-tests:
 	cd UnitTests && $(DOTNET) test DotNetUnitTests.csproj $(TEST_FILTER)
 
 all-local:: $(TARGETS)
-
-export MSBuildEnableWorkloadResolver=true
 
 compare compare-size: $(TARGETS)
 	cd size-comparison && git clean -xfdq

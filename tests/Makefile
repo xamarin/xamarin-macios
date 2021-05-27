@@ -49,10 +49,6 @@ export MSBuildExtensionsPathFallbackPathsOverride=$(IOS_DESTDIR)/Library/Framewo
 export XAMMAC_FRAMEWORK_PATH=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
 export XamarinMacFrameworkRoot=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
 
-# This is a temporary variable to enable the .NET workload resolver, because it's opt-in for now.
-# Ref: https://github.com/dotnet/sdk/issues/13849
-export MSBuildEnableWorkloadResolver=true
-
 ifneq ($(RELEASE),)
 ifneq ($(BITCODE),)
 CONFIG=Release-bitcode
