@@ -19,9 +19,10 @@ You'll need to run a script in the dotnet/arcade repo to install the dotnet glob
 tool, join the `arcade-contrib` GitHub team, and run the [`darc authenticate`][2]
 command to add the PATs required by the tool.
 
-The GitHub PAT that you add must have the full `repo` scope enabled if you want to
-work with any of the `subcription` commands.  Subscriptions control the automated
-creation of dependency update pull requests.
+The GitHub PAT that you add must have the full `repo` scope enabled if you
+want to work with any of the `subcription` commands. You'll also have to
+enable SSO (for the xamarin org). Subscriptions control the automated creation
+of dependency update pull requests.
 
 
 To add a new dependency, run the [`darc add-dependency`][3] command at the root
@@ -39,6 +40,12 @@ To configure automatic updates, use the [`darc add-subscription`][5] command
 to enroll a target repo/branch into updates from a particular channel:
 ```
 darc add-subscription --channel ".NET 6" --source-repo https://github.com/dotnet/installer --target-repo https://github.com/xamarin/xamarin-macios --target-branch main --update-frequency everyWeek --standard-automerge
+```
+
+To configure automatic updates for a release branch, use the following arguments:
+
+```
+darc add-subscription --channel ".NET 6.0.1xx SDK Preview 5" --source-repo https://github.com/dotnet/installer --target-repo https://github.com/xamarin/xamarin-macios --target-branch release/6.0.1xx-preview5 --update-frequency everyDay
 ```
 
 Once a subscription is configured, pull requests will be created automatically

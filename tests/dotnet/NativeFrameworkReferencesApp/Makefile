@@ -2,10 +2,6 @@ TOP=../../..
 
 include $(TOP)/Make.config
 
-# This is a temporary variable to enable the .NET workload resolver, because it's opt-in for now.
-# Ref: https://github.com/dotnet/sdk/issues/13849
-export MSBuildEnableWorkloadResolver=true
-
 prepare:
 	cd .. && $(MAKE) global.json NuGet.config
 	rm -Rf */bin */obj

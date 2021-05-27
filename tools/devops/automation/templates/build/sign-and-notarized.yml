@@ -153,3 +153,11 @@ steps:
 
 - pwsh: $(Build.SourcesDirectory)/release-scripts/notarize.ps1 -FolderForApps $(Build.SourcesDirectory)/package/notarized
   displayName: 'ESRP notarizing packages'
+
+- pwsh: |
+    $notarizedRoot = Join-Path $(Build.SourcesDirectory) package notarized
+    Get-ChildItem -Path $notarizedRoot -Filter *.pkg -Recurse -File | ForEach-Object {
+       Write-Host "pkgutil --check-signature $($_.FullName)"
+       pkgutil --check-signature "$($_.FullName)"
+    }
+  displayName: 'Verify ESRP notarization'

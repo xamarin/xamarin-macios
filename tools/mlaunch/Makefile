@@ -35,7 +35,7 @@ clean-local::
 endif
 
 ifdef ENABLE_DOTNET
-ifdef ENABLE_IOS
+ifdef INCLUDE_IOS
 all-local:: build-and-install
 	$(MAKE) $(foreach platform,$(DOTNET_PLATFORMS_MOBILE),$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/tools/bin/mlaunch)
 	$(Q) for platform in $(DOTNET_PLATFORMS_MOBILE); do \

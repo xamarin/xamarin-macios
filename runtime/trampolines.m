@@ -1009,8 +1009,12 @@ xamarin_generate_conversion_to_managed (id value, MonoType *inputType, MonoType 
 				goto exception_handling;
 			*(SList **) free_list = s_list_prepend (*(SList **) free_list, convertedValue);
 
-			if (isManagedNullable)
+			if (isManagedNullable) {
 				convertedValue = mono_value_box (mono_domain_get (), underlyingManagedType, convertedValue);
+				SList* release_list = *(SList**) release_list_ptr;
+				if (release_list != NULL)
+					*release_list_ptr = s_list_prepend (release_list, convertedValue);
+			}
 		}
 	}
 
@@ -1709,7 +1713,7 @@ xamarin_convert_managed_to_nsarray_with_func (MonoArray *array, xamarin_managed_
 #endif
 
 	for (unsigned long i = 0; i < length; i++) {
-		MonoObject *value;
+		MonoObject *value = NULL;
 #if defined (CORECLR_RUNTIME)
 		value = mono_array_get (array, i, exception_gchandle);
 #else
@@ -1725,6 +1729,8 @@ xamarin_convert_managed_to_nsarray_with_func (MonoArray *array, xamarin_managed_
 		}
 
 		buf [i] = convert (value, context, exception_gchandle);
+		xamarin_mono_object_release (&value);
+
 		if (*exception_gchandle != INVALID_GCHANDLE) {
 			*exception_gchandle = xamarin_get_exception_for_element_conversion_failure (*exception_gchandle, i);
 			goto exception_handling;
