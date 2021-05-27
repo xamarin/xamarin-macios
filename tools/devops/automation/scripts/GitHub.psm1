@@ -562,7 +562,7 @@ function New-GitHubSummaryComment {
 
     $githubPagePrefix = "https://xamarin.github.io/macios.ci"
     if (-not [string]::IsNullOrEmpty($Env:PR_ID)) {
-        $githubPagePrefix = "$githubPagePrefix/ci/$Env:BUILD_SOURCEBRANCHNAME/$Env:BUILD_REVISION/$Env:BUILD_BUILDID"
+        $githubPagePrefix = "$githubPagePrefix/pr/PR$Env:PR_ID"
         $sb.AppendLine("# GitHub pages")
         $sb.AppendLine()
         $sb.AppendLine("Results can be found in the following github pages (it might take some time to publish):")
