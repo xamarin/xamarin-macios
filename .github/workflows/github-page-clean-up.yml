@@ -4,7 +4,7 @@ on:
   pull_request:
     types: [closed]
 
-# lock to ensrue we do not step on eachother
+# lock to ensure we do not step on each other
 concurrency: 
   group: 'macios.ci-cleanup'
   cancel-in-progress: false
@@ -36,4 +36,3 @@ jobs:
       env:
         MACIOS_CI_PATH: ${{ github.workspace }}/macios.ci 
         PR_NUMBER: ${{ github.number }} 
-
