@@ -560,6 +560,22 @@ function New-GitHubSummaryComment {
         Write-Host "Artifacts were not provided."
     }
 
+    $githubPagePrefix = "https://xamarin.github.io/macios.ci"
+    if ([string]::IsNullOrEmpty($Env:PR_ID)) {
+        $githubPagePrefix = "$githubPagePrefix/ci/$Env:BUILD_SOURCEBRANCHNAME/$Env:BUILD_REVISION"
+    } else {
+        $githubPagePrefix = "$githubPagePrefix/pr/PR$Env:PR_ID"
+    }
+
+    $githubPagePrefix = "/$Env:BUILD_BUILDID"
+    $sb.AppendLine("# GitHub pages")
+    $sb.AppendLine()
+    $sb.AppendLine("Results can be found in the following github pages (it might take some time to publish):")
+    $sb.AppendLine()
+    $sb.AppendLine("* [Test results]($githubPagePrefix/HtmlReport-sim/tests/vsdrops_index.html)")
+    $sb.AppendLine("* [API diff ]($githubPagePrefix/HtmlReport-sim/api-diff/api-diff.html)")
+    $sb.AppendLine("* [API & Generator diff]($githubPagePrefix/apicomparison/api-diff.html)")
+
     $headerLinks = $sb.ToString()
     $request = $null
 
