@@ -108,6 +108,23 @@ steps:
       rm $_.FullName
     }
 
+    # clean xml files
+    Get-ChildItem -Path $destinationRoot -Filter *.crash -Recurse -File | ForEach-Object {
+      Write-Host "rm $($_.FullName)"
+      rm $_.FullName
+    }
+
+    # remove all css and js because they are nor needed 
+    Get-ChildItem -Path $destinationRoot -Filter *.css -Recurse -File | ForEach-Object {
+      Write-Host "rm $($_.FullName)"
+      rm $_.FullName
+    }
+
+    Get-ChildItem -Path $destinationRoot -Filter *.js -Recurse -File | ForEach-Object {
+      Write-Host "rm $($_.FullName)"
+      rm $_.FullName
+    }
+
     # remove empty dirs
     Get-ChildItem $destinationRoot -Recurse -Force -Directory |
       Sort-Object -Property FullName -Descending |
