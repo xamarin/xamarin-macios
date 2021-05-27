@@ -1,4 +1,5 @@
-﻿using System;
+#if !NET // https://github.com/xamarin/xamarin-macios/issues/11710
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
@@ -78,3 +79,5 @@ namespace LinkAll.Mef {
 		}
 	}
 }
+#endif // !NET
+
