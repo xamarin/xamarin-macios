@@ -57,9 +57,6 @@ namespace Xamarin.Tests {
 				var env = new Dictionary<string, string> ();
 				env ["MSBuildSDKsPath"] = null;
 				env ["MSBUILD_EXE_PATH"] = null;
-				// This is a temporary variable to enable the .NET workload resolver, because it's opt-in for now.
-				// Ref: https://github.com/dotnet/sdk/issues/13849
-				env ["MSBuildEnableWorkloadResolver"] = "true";
 				var output = new StringBuilder ();
 				var rv = Execution.RunWithStringBuildersAsync (Executable, args, env, output, output, Console.Out, workingDirectory: Path.GetDirectoryName (project), timeout: TimeSpan.FromMinutes (10)).Result;
 				if (assert_success && rv.ExitCode != 0) {
