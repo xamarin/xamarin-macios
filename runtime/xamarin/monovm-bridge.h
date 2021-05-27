@@ -15,8 +15,8 @@
 
 #include "mono-runtime.h"
 
-//#define LOG_MONOVM(...)
-#define LOG_MONOVM(...) fprintf (__VA_ARGS__)
+#define LOG_MONOVM(...)
+//#define LOG_MONOVM(...) fprintf (__VA_ARGS__)
 
 #ifdef __cplusplus
 extern "C" {
