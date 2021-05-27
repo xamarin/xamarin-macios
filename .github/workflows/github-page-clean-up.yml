@@ -1,0 +1,39 @@
+name: Clean PR macios.ci data
+
+on:
+  pull_request:
+    types: [closed]
+
+# lock to ensrue we do not step on eachother
+concurrency: 
+  group: 'macios.ci-cleanup'
+  cancel-in-progress: false
+
+jobs:
+  clean-up:
+    runs-on: ubuntu-latest
+    name: Clean PR data
+
+    steps:
+    - run: echo "$GITHUB_CONTEXT"
+      name: 'Debug context'
+      env:
+        GITHUB_CONTEXT: ${{ toJson(github) }}
+
+    - uses: actions/checkout@master
+      with:
+        name: xamarin/macios.ci
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        path: macios.ci
+
+    - run: |
+        cd $MACIOS_CI_PATH
+        git checkout -b "pr/clean/PR$PR_NUMBER"
+        git rm -r "pr/PR$PR_NUMBER"
+        git commit -m"[Action] Remove data of PR $PR_NUMBER" -a
+        git push origin "pr/clean/PR$PR_NUMBER" -f
+      name: 'Remove data'
+      env:
+        MACIOS_CI_PATH: ${{ github.workspace }}/macios.ci 
+        PR_NUMBER: ${{ github.number }} 
+
