@@ -27,12 +27,17 @@ jobs:
         path: macios.ci
 
     - run: |
-        cd $MACIOS_CI_PATH
-        git checkout -b "pr/clean/PR$PR_NUMBER"
-        git rm -r "pr/PR$PR_NUMBER"
-        git commit -m"[Action] Remove data of PR $PR_NUMBER" -a
-        git push origin "pr/clean/PR$PR_NUMBER" -f
+        PR_DATA="pr/PR$PR_NUMBER"
+        if [[ -f "$PR_DATA" ]]; then
+          cd $MACIOS_CI_PATH
+          git checkout -b "pr/clean/PR$PR_NUMBER"
+          git rm -r $PR_DATA
+          git commit -m"[Action] Remove data of PR $PR_NUMBER" -a
+          git push origin "pr/clean/PR$PR_NUMBER" -f
+        else
+          echo "PR has no data in the static page."
+        fi
       name: 'Remove data'
       env:
         MACIOS_CI_PATH: ${{ github.workspace }}/macios.ci 
-        PR_NUMBER: ${{ github.number }} 
+        PR_NUMBER: ${{ github.event.number }} 
