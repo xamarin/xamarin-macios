@@ -177,6 +177,28 @@ xamarin_bridge_shutdown ()
 }
 
 void
+xamarin_coreclr_reference_tracking_begin_end_callback ()
+{
+	LOG_CORECLR (stderr, "%s () reference_tracking_end: %i\n", __func__, reference_tracking_end);
+}
+
+int
+xamarin_coreclr_reference_tracking_is_referenced_callback (void* ptr)
+{
+	int rv = 0;
+
+	LOG_CORECLR (stderr, "%s (%p) => %i\n", __func__, ptr, rv);
+
+	return rv;
+}
+
+void
+xamarin_coreclr_reference_tracking_tracked_object_entered_finalization (void* ptr)
+{
+	LOG_CORECLR (stderr, "%s (%p)\n", __func__, ptr);
+}
+
+void
 xamarin_coreclr_unhandled_exception_handler (void *context)
 {
 	// 'context' is the GCHandle returned by the managed Runtime.UnhandledExceptionPropagationHandler function.
