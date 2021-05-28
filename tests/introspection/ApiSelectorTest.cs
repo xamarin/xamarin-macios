@@ -946,7 +946,7 @@ namespace Introspection {
 				bool result = bool_objc_msgSend_IntPtr (class_ptr, responds_handle, Selector.GetHandle (name));
 				bool response = CheckResponse (result, t, m, ref name);
 				if (!response)
-					ReportError ("Selector not found for {0}", name);
+					ReportError ("Selector not found for {0} in {1} on {2}", name, m, t.FullName);
 				n++;
 			}
 		}
