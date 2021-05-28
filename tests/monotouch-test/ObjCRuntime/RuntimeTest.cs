@@ -625,11 +625,21 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				}
 			} catch (RuntimeException re) {
 				Assert.AreEqual (8029, re.Code, "Code");
-				Assert.AreEqual (@"Unable to marshal the array parameter #1 whose managed type is 'System.Int32[]' to managed.
+				string expectedExceptionMessage;
+				if (TestRuntime.IsCoreCLR) {
+					expectedExceptionMessage = @"Unable to marshal the array parameter #1 whose managed type is 'System.Int32[]' to managed.
+Additional information:
+	Selector: setIntArray:
+	Method: System.Void MonoTouchFixtures.ObjCRuntime.RuntimeTest+Dummy.SetIntArray (System.Int32[])
+";
+				} else {
+					expectedExceptionMessage = @"Unable to marshal the array parameter #1 whose managed type is 'System.Int32[]' to managed.
 Additional information:
 	Selector: setIntArray:
 	Method: MonoTouchFixtures.ObjCRuntime.RuntimeTest/Dummy:SetIntArray (int[])
-", re.Message, "Message");
+";
+				}
+				Assert.AreEqual (expectedExceptionMessage, re.Message, "Message");
 				var inner = (RuntimeException)re.InnerException;
 				Assert.AreEqual (8031, inner.Code, "Inner Code");
 				Assert.AreEqual ("Unable to convert from an NSArray to a managed array of System.Int32.", inner.Message, "Inner Message");
@@ -644,11 +654,21 @@ Additional information:
 				Assert.Fail ("An exception should have been thrown");
 			} catch (RuntimeException re) {
 				Assert.AreEqual (8033, re.Code, "Code");
-				Assert.AreEqual (@"Unable to marshal the return value of type 'System.Int32[]' to Objective-C.
+				string expectedExceptionMessage;
+				if (TestRuntime.IsCoreCLR) {
+					expectedExceptionMessage = @"Unable to marshal the return value of type 'System.Int32[]' to Objective-C.
+Additional information:
+	Selector: intArray
+	Method: System.Int32[] MonoTouchFixtures.ObjCRuntime.RuntimeTest+Dummy.GetIntArray ()
+";
+				} else {
+					expectedExceptionMessage = @"Unable to marshal the return value of type 'System.Int32[]' to Objective-C.
 Additional information:
 	Selector: intArray
 	Method: MonoTouchFixtures.ObjCRuntime.RuntimeTest/Dummy:GetIntArray ()
-", re.Message, "Message");
+";
+				}
+				Assert.AreEqual (expectedExceptionMessage, re.Message, "Message");
 				var inner = (RuntimeException) re.InnerException;
 				Assert.AreEqual (8032, inner.Code, "Inner Code");
 				Assert.AreEqual ("Unable to convert from a managed array of System.Int32 to an NSArray.", inner.Message, "Inner Message");
