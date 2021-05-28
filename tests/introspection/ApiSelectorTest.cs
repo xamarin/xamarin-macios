@@ -757,12 +757,10 @@ namespace Introspection {
 					break;
 				}
 				break;
-#if __MACOS__ || __MACCATALYST__
+#if __MACOS__ || __MACCATALYST__ || __WATCHOS__
 			case "MLDictionaryFeatureProvider":
 			case "MLMultiArray":
 			case "MLFeatureValue":
-#endif
-#if __MACOS__ || __MACCATALYST__ || __WATCHOS__
 			case "MLSequence":
 				switch (selectorName) {
 				case "encodeWithCoder:":
