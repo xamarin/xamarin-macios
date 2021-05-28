@@ -138,6 +138,13 @@ namespace Introspection {
 					if (!Mac.CheckSystemVersion (10, 12)) // NSCoding was added in 10.12
 						return true;
 					break;
+				case "MLDictionaryFeatureProvider":
+				case "MLMultiArray":
+				case "MLFeatureValue":
+				case "MLSequence":
+					if (Mac.CheckSystemVersion (10, 15)) // Fail on Catalina, pass in older OS
+						return true;
+					break;
 				}
 				break;
 			case "accessibilityNotifiesWhenDestroyed":

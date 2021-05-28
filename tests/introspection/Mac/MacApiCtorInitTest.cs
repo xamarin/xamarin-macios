@@ -200,7 +200,10 @@ namespace Introspection {
 				return TestRuntime.CheckXcodeVersion (11, 2);
 			case "GameKit.GKGameCenterViewController": // the native 'init' method returned nil.
 				return TestRuntime.CheckXcodeVersion (11, 2);
-
+			case "MetalPerformanceShaders.MPSPredicate":
+				if (Mac.CheckSystemVersion (10, 15)) // Fails on Catalina: Could not initialize an instance of the type 'MetalPerformanceShaders.MPSPredicate': the native 'init' method returned nil. 
+					return true;
+				break;
 			}
 
 			switch (type.Namespace) {
