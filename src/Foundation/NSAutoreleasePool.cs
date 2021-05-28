@@ -28,6 +28,10 @@ using System.Runtime.InteropServices;
 
 using ObjCRuntime;
 
+#if XAMCORE_4_0
+#error Turn this entire file into generated code.
+#endif
+
 namespace Foundation {
 	[Register ("NSAutoreleasePool", true)]
 	public class NSAutoreleasePool : NSObject
