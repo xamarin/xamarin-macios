@@ -270,8 +270,10 @@ xamarin_get_parameter_type (MonoMethod *managed_method, int index)
 	if (index == -1) {
 		p = mono_signature_get_return_type (msig);
 	} else {
-		for (int i = 0; i < index + 1; i++)
+		for (int i = 0; i < index + 1; i++) {
+			xamarin_mono_object_release (&p);
 			p = mono_signature_get_params (msig, &iter);
+		}
 	}
 	
 	xamarin_bridge_free_mono_signature (&msig);

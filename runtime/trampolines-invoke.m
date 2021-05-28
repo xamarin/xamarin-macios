@@ -97,6 +97,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 	bool is_static = (type & Tramp_Static) == Tramp_Static;
 	bool is_ctor = type == Tramp_Ctor;
 	const char *ret_type = NULL;
+	MonoType *sig_ret_type = NULL;
 
 	if (is_ctor) {
 		bool has_nsobject = xamarin_has_nsobject (self, &exception_gchandle);
@@ -194,6 +195,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 	if (isCategoryInstance) {
 		// we know this must be an id
 		p = mono_signature_get_params (msig, &iter);
+		ADD_TO_MONOOBJECT_RELEASE_LIST (p);
 		MonoObject* catobj = xamarin_get_nsobject_with_type_for_ptr (self, false, p, &exception_gchandle);
 		if (exception_gchandle != INVALID_GCHANDLE) {
 			exception_gchandle = xamarin_get_exception_for_parameter (8029, exception_gchandle, "Unable to marshal the parameter", sel, method, p, 0, true);
@@ -213,6 +215,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 		unsigned long size = xamarin_objc_type_size (type);
 		int frameofs = ofs;
 		p = mono_signature_get_params (msig, &iter);
+		ADD_TO_MONOOBJECT_RELEASE_LIST (p);
 		
 #if __SIZEOF_POINTER__ == 4
 		if (*type == 'i' || *type == 'I') {
@@ -615,6 +618,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 			unsigned long size = xamarin_objc_type_size (type);
 
 			p = mono_signature_get_params (msig, &iter);
+			ADD_TO_MONOOBJECT_RELEASE_LIST (p);
 
 			// Skip over any structs. In any case they can't be write-back parameters.
 			// Also skip over anything we're not supposed to write back to.
@@ -686,11 +690,14 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 
 	ret_type = [sig methodReturnType];
 	ret_type = xamarin_skip_encoding_flags (ret_type);
+
+	sig_ret_type = mono_signature_get_return_type (msig);
 	if (is_ctor) {
-		marshal_return_value (context, "|", __SIZEOF_POINTER__, self, mono_signature_get_return_type (msig), (desc->semantic & ArgumentSemanticRetainReturnValue) != 0, method, desc, &exception_gchandle);
+		marshal_return_value (context, "|", __SIZEOF_POINTER__, self, sig_ret_type, (desc->semantic & ArgumentSemanticRetainReturnValue) != 0, method, desc, &exception_gchandle);
 	} else if (*ret_type != 'v') {
-		marshal_return_value (context, ret_type, [sig methodReturnLength], retval, mono_signature_get_return_type (msig), (desc->semantic & ArgumentSemanticRetainReturnValue) != 0, method, desc, &exception_gchandle);
+		marshal_return_value (context, ret_type, [sig methodReturnLength], retval, sig_ret_type, (desc->semantic & ArgumentSemanticRetainReturnValue) != 0, method, desc, &exception_gchandle);
 	}
+	xamarin_mono_object_release (&sig_ret_type);
 
 exception_handling:
 	;
