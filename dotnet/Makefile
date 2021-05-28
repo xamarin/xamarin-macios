@@ -106,7 +106,7 @@ endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call SupportedTargetPlatforms,$(platform))))
 
 define WorkloadTargets
-Microsoft.NET.Sdk.$(1)/WorkloadManifest.json: $4 Makefile $(TOP)/Make.config.inc $(TOP)/.git/HEAD $(TOP)/.git/index
+Microsoft.NET.Sdk.$(1)/WorkloadManifest.json: targets/WorkloadManifest.$(1).template.json Makefile $(TOP)/Make.config.inc $(TOP)/.git/HEAD $(TOP)/.git/index
 	$$(Q) rm -f $$@.tmp
 	$$(Q_GEN) sed \
 		-e "s/@VERSION@/$3/g" \
@@ -121,8 +121,7 @@ Microsoft.NET.Sdk.$(1)/LICENSE: $(TOP)/LICENSE
 WORKLOAD_TARGETS += Microsoft.NET.Sdk.$(1)/WorkloadManifest.json
 WORKLOAD_TARGETS += Microsoft.NET.Sdk.$(1)/LICENSE
 endef
-$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call WorkloadTargets,$(platform),$(shell echo $(platform) | tr A-Z a-z),$($(platform)_NUGET_VERSION_NO_METADATA), \
-	$(if $(findstring $(platform),$(DOTNET_WINDOWS_PLATFORMS)),targets/WorkloadManifest.windows.template.json,targets/WorkloadManifest.template.json))))
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call WorkloadTargets,$(platform),$(shell echo $(platform) | tr A-Z a-z),$($(platform)_NUGET_VERSION_NO_METADATA))))
 
 TEMPLATED_FILES = \
 	$(foreach platform,$(DOTNET_PLATFORMS),Microsoft.$(platform).Sdk/targets/Microsoft.$(platform).Sdk.Versions.props) \
