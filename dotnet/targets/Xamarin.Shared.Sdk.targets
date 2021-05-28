@@ -507,6 +507,8 @@
 			Inputs="@(_AssembliesToAOT)"
 			Outputs="@(_AssembliesToAOT -> '$(_AOTOutputDirectory)%(Arch)\%(Filename)%(Extension).o')">
 
+		<Error Text="The AOT compiler '$(_AOTCompiler)' does not exist." Condition="!Exists ($(_AOTCompiler))" />
+
 		<AOTCompile
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
