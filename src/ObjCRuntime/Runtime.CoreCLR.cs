@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ObjectiveC;
 using System.Text;
@@ -591,7 +592,15 @@ namespace ObjCRuntime {
 			// Call the actual method
 			log_coreclr ($"    Invoking...");
 
-			var rv = method.Invoke (instance, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance, null, parameters, null);
+			object rv = null;
+
+			try {
+				rv = method.Invoke (instance, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance, null, parameters, null);
+			} catch (TargetInvocationException tie)	{
+				var ex = tie.InnerException ?? tie;
+				// This will re-throw the original exception and preserve the stacktrace.
+				ExceptionDispatchInfo.Capture (ex).Throw ();
+			}
 
 			// Copy any byref parameters back out again
 			var byrefParameterCount = 0;
