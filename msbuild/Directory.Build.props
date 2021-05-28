@@ -1,5 +1,5 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<PropertyGroup>
-		<MessagingVersion>1.3.8</MessagingVersion>
+		<MessagingVersion>1.3.21</MessagingVersion>
 	</PropertyGroup>
 </Project>

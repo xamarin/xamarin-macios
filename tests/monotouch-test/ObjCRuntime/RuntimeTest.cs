@@ -579,9 +579,6 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 
 		[Test]
-#if NET
-		[Ignore ("Ignored on CoreCLR for now due to missing support for marshalling exceptions")]
-#endif
 		public void MX8029 ()
 		{
 			var handle = Messaging.IntPtr_objc_msgSend (Messaging.IntPtr_objc_msgSend (Class.GetHandle (typeof (Dummy)), Selector.GetHandle ("alloc")), Selector.GetHandle ("init"));
