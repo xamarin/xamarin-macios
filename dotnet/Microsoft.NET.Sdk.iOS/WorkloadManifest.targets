@@ -1,4 +1,7 @@
 <Project>
 	<Import Project="Sdk.props" Sdk="Microsoft.iOS.Sdk" Condition="'$(TargetPlatformIdentifier)' == 'iOS'" />
 	<Import Project="Sdk.props" Sdk="Microsoft.iOS.Windows.Sdk" Condition=" '$(TargetPlatformIdentifier)' == 'iOS' and $([MSBuild]::IsOSPlatform('windows'))" />
+
+	<Import Project="Sdk.props" Sdk="Microsoft.NETCore.App.Runtime.AOT.Cross.ios-arm" Condition="'$(TargetPlatformIdentifier)' == 'iOS' And '$(RuntimeIdentifier)' == 'ios-arm'" />
+	<Import Project="Sdk.props" Sdk="Microsoft.NETCore.App.Runtime.AOT.Cross.ios-arm64" Condition="'$(TargetPlatformIdentifier)' == 'iOS' And '$(RuntimeIdentifier)' == 'ios-arm64'" />
 </Project>
