@@ -313,6 +313,17 @@ namespace Xamarin.Tests
 				return path;
 			}
 		}
+
+		public static bool TryGetRootPath (out string rootPath)
+		{
+			try {
+				rootPath = RootPath;
+				return true;
+			} catch (Exception e) {
+				rootPath = null;
+				return false;
+			}
+		}
 			
 		static string TestAssemblyDirectory {
 			get {
