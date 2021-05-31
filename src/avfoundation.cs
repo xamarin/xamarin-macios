@@ -12467,6 +12467,7 @@ namespace AVFoundation {
 
 	[TV (14,5), Mac (11,3), iOS (14,5)]
 	[MacCatalyst (14,5)]
+	[Watch (7,4)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface AVPlayerInterstitialEvent
@@ -12512,6 +12513,7 @@ namespace AVFoundation {
 	[DisableDefaultCtor]
 	[TV (14,5), Mac (11,3), iOS (14,5)]
 	[MacCatalyst (14,5)]
+	[Watch (7,4)]
 	[BaseType (typeof(NSObject))]
 	interface AVPlayerInterstitialEventObserver
 	{
@@ -12554,6 +12556,7 @@ namespace AVFoundation {
 	[DisableDefaultCtor]
 	[TV (14,5), Mac (11,3), iOS (14,5)]
 	[MacCatalyst (14,5)]
+	[Watch (7,4)]
 	[BaseType (typeof(AVPlayerInterstitialEventObserver))]
 	interface AVPlayerInterstitialEventController
 	{
