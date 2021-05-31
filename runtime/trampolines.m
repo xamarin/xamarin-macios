@@ -1462,9 +1462,11 @@ xamarin_get_nsnumber_converter (MonoClass *managedType, MonoMethod *method, bool
 	} else if (!strcmp (fullname, "System.nfloat")) {
 		func = to_managed ? (void *) xamarin_nsnumber_to_nfloat : (void *) xamarin_nfloat_to_nsnumber;
 	} else if (mono_class_is_enum (managedType)) {
-		MonoClass *baseClass = mono_class_from_mono_type (mono_class_enum_basetype (managedType));
+		MonoType *baseType = mono_class_enum_basetype (managedType);
+		MonoClass *baseClass = mono_class_from_mono_type (baseType);
 		func = xamarin_get_nsnumber_converter (baseClass, method, to_managed, exception_gchandle);
 		xamarin_mono_object_release (&baseClass);
+		xamarin_mono_object_release (&baseType);
 	} else {
 		MonoType *nsnumberType = xamarin_get_nsnumber_type ();
 		*exception_gchandle = xamarin_create_bindas_exception (mtype, nsnumberType, method);
@@ -1618,6 +1620,7 @@ xamarin_nsstring_to_smart_enum (id value, void *ptr, MonoClass *managedType, voi
 {
 	guint32 context_ref = GPOINTER_TO_UINT (context);
 	MonoObject *obj;
+	MonoType *parameterType = NULL;
 
 	if (context_ref == INVALID_TOKEN_REF) {
 		// This requires the dynamic registrar to invoke the correct conversion function
@@ -1639,7 +1642,9 @@ xamarin_nsstring_to_smart_enum (id value, void *ptr, MonoClass *managedType, voi
 		managed_method = xamarin_get_managed_method_for_token (context_ref /* token ref */, exception_gchandle);
 		if (*exception_gchandle != INVALID_GCHANDLE) return NULL;
 
-		arg0 = xamarin_get_nsobject_with_type_for_ptr (value, false, xamarin_get_parameter_type (managed_method, 0), exception_gchandle);
+		parameterType = xamarin_get_parameter_type (managed_method, 0);
+		arg0 = xamarin_get_nsobject_with_type_for_ptr (value, false, parameterType, exception_gchandle);
+		xamarin_mono_object_release (&parameterType);
 		if (*exception_gchandle != INVALID_GCHANDLE) {
 			xamarin_mono_object_release (&managed_method);
 			return NULL;
