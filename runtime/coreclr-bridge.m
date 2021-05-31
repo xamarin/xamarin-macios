@@ -244,8 +244,6 @@ xamarin_bridge_vm_initialize (int propertyCount, const char **propertyKeys, cons
 void
 xamarin_install_nsautoreleasepool_hooks ()
 {
-	// https://github.com/xamarin/xamarin-macios/issues/11256
-	fprintf (stderr, "TODO: add support for wrapping all threads with NSAutoreleasePools.\n");
 }
 
 void
