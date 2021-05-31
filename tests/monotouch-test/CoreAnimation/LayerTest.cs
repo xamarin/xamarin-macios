@@ -107,9 +107,6 @@ namespace MonoTouchFixtures.CoreAnimation {
 		static int TextLayersDisposed;
 		static int Generation;
 		[Test]
-#if __MACCATALYST__
-		[Ignore ("https://github.com/dotnet/runtime/issues/47407")] // The GC doesn't collect objects with finalizers
-#endif
 		public void TestBug26532()
 		{
 			TextLayersDisposed = 0;
