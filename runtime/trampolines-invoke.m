@@ -640,6 +640,8 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 				MonoObject *pvalue = (MonoObject *) arg_copy [i + mofs];
 				NSObject *obj = NULL;
 
+				ADD_TO_MONOOBJECT_RELEASE_LIST (value);
+
 				if (value == pvalue) {
 					// No need to copy back if the value didn't change
 					// For arrays this means that we won't copy back arrays if an element in the array changed (which can happen in managed code: the array pointer and size are immutable, but array elements can change).
