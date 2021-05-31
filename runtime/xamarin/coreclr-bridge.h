@@ -43,6 +43,18 @@ struct _MonoMethodSignature {
 	MonoObject *parameters[];
 };
 
+void
+xamarin_coreclr_reference_tracking_begin_end_callback ();
+
+int
+xamarin_coreclr_reference_tracking_is_referenced_callback (void* ptr);
+
+void
+xamarin_coreclr_reference_tracking_tracked_object_entered_finalization (void* ptr);
+
+void
+xamarin_coreclr_unhandled_exception_handler (void *context);
+
 #ifdef __cplusplus
 } /* extern "C" */
 #endif

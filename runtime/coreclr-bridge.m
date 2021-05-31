@@ -177,6 +177,44 @@ xamarin_bridge_shutdown ()
 }
 
 void
+xamarin_coreclr_reference_tracking_begin_end_callback ()
+{
+	LOG_CORECLR (stderr, "%s () reference_tracking_end: %i\n", __func__, reference_tracking_end);
+}
+
+int
+xamarin_coreclr_reference_tracking_is_referenced_callback (void* ptr)
+{
+	int rv = 0;
+
+	LOG_CORECLR (stderr, "%s (%p) => %i\n", __func__, ptr, rv);
+
+	return rv;
+}
+
+void
+xamarin_coreclr_reference_tracking_tracked_object_entered_finalization (void* ptr)
+{
+	LOG_CORECLR (stderr, "%s (%p)\n", __func__, ptr);
+}
+
+void
+xamarin_coreclr_unhandled_exception_handler (void *context)
+{
+	// 'context' is the GCHandle returned by the managed Runtime.UnhandledExceptionPropagationHandler function.
+	GCHandle exception_gchandle = (GCHandle) context;
+
+	LOG_CORECLR (stderr, "%s (%p)\n", __func__, context);
+
+	// xamarin_process_managed_exception_gchandle will free the GCHandle
+	xamarin_process_managed_exception_gchandle (exception_gchandle);
+
+	// The call to xamarin_process_managed_exception_gchandle should either abort or throw an Objective-C exception,
+	// and in neither case should we end up here, so just assert.
+	xamarin_assertion_message ("Failed to process unhandled managed exception.");
+}
+
+void
 xamarin_enable_new_refcount ()
 {
 	// Nothing to do here.

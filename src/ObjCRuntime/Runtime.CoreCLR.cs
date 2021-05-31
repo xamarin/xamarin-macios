@@ -95,6 +95,18 @@ namespace ObjCRuntime {
 
 			if (options->xamarin_objc_msgsend_super_stret != IntPtr.Zero)
 				ObjectiveCMarshal.SetMessageSendCallback (ObjectiveCMarshal.MessageSendFunction.MsgSendSuperStret, options->xamarin_objc_msgsend_super_stret);
+
+			delegate* unmanaged<void> beginEndCallback = (delegate* unmanaged<void>) options->reference_tracking_begin_end_callback;
+			delegate* unmanaged<IntPtr, int> isReferencedCallback = (delegate* unmanaged<IntPtr, int>) options->reference_tracking_is_referenced_callback;
+			delegate* unmanaged<IntPtr, void> trackedObjectEnteredFinalization = (delegate* unmanaged<IntPtr, void>) options->reference_tracking_tracked_object_entered_finalization;
+			ObjectiveCMarshal.Initialize (beginEndCallback, isReferencedCallback, trackedObjectEnteredFinalization, UnhandledExceptionPropagationHandler);
+		}
+
+		static unsafe delegate* unmanaged<IntPtr, void> UnhandledExceptionPropagationHandler (Exception exception, RuntimeMethodHandle lastMethod, out IntPtr context)
+		{
+			var exceptionHandler = (delegate* unmanaged<IntPtr, void>) options->unhandled_exception_handler;
+			context = AllocGCHandle (exception);
+			return exceptionHandler;
 		}
 
 		internal static void RegisterToggleReferenceCoreCLR (NSObject obj, IntPtr handle, bool isCustomType)
