@@ -24,7 +24,6 @@ namespace MonoTouchFixtures.AudioToolbox {
 	[Preserve (AllMembers = true)]
 	public class SystemSoundTest
 	{
-#if !MONOMAC // Currently no AppDelegate in xammac_test
 		[Test]
 		public void FromFile ()
 		{
@@ -43,10 +42,9 @@ namespace MonoTouchFixtures.AudioToolbox {
 					}));
 
 				ss.PlaySystemSound ();
-				Assert.IsTrue (MonoTouchFixtures.AppDelegate.RunAsync (DateTime.Now.AddSeconds (timeout), async () => { }, () => completed), "PlaySystemSound");
+				Assert.IsTrue (TestRuntime.RunAsync (DateTime.Now.AddSeconds (timeout), async () => { }, () => completed), "PlaySystemSound");
 			}
 		}
-#endif
 
 		[Test]
 		public void Properties ()
@@ -59,7 +57,6 @@ namespace MonoTouchFixtures.AudioToolbox {
 			}
 		}
 
-#if !MONOMAC // Currently no AppDelegate in xammac_test
 		[Test]
 		public void TestCallbackPlaySystem ()
 		{
@@ -73,7 +70,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 				const int timeout = 10;
 
 				completed = false;
-				Assert.IsTrue (MonoTouchFixtures.AppDelegate.RunAsync (DateTime.Now.AddSeconds (timeout), async () =>
+				Assert.IsTrue (TestRuntime.RunAsync (DateTime.Now.AddSeconds (timeout), async () =>
 					ss.PlaySystemSound (() => {	completed = true; }
 				), () => completed), "TestCallbackPlaySystem");
 			}
@@ -92,12 +89,11 @@ namespace MonoTouchFixtures.AudioToolbox {
 				const int timeout = 10;
 
 				completed = false;
-				Assert.IsTrue (MonoTouchFixtures.AppDelegate.RunAsync (DateTime.Now.AddSeconds (timeout), async () =>
+				Assert.IsTrue (TestRuntime.RunAsync (DateTime.Now.AddSeconds (timeout), async () =>
 					ss.PlayAlertSound (() => { completed = true; }
 				), () => completed), "TestCallbackPlayAlert");
 			}
 		}
-#endif
 
 		[Test]
 		public void DisposeTest ()
