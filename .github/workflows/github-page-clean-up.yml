@@ -20,11 +20,20 @@ jobs:
       env:
         GITHUB_CONTEXT: ${{ toJson(github) }}
 
+    steps:
+    - run: |
+        ls -R $WORKSPACE
+      name: 'Debug checkouts'
+      env:
+        GITHUB_CONTEXT: ${{ toJson(github) }}
+        WORKSPACE: ${{ github.workspace }}
+
     - uses: actions/checkout@master
       with:
         name: xamarin/macios.ci
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ secrets.GITHUB_TOKEN }}
         path: macios.ci
+        lfs: true
 
     - run: |
         PR_DATA="pr/PR$PR_NUMBER"
