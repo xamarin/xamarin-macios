@@ -19,9 +19,9 @@ jobs:
 
     - uses: actions/checkout@v2
       with:
-        name: xamarin/macios.ci
+        repository: 'xamarin/macios.ci'
         token: ${{ secrets.GITHUB_TOKEN }}
-        path: macios.ci
+        path: ../macios.ci
         lfs: true
 
     steps:
@@ -51,5 +51,5 @@ jobs:
         fi
       name: 'Remove data'
       env:
-        MACIOS_CI_PATH: ${{ github.workspace }}/macios.ci 
+        MACIOS_CI_PATH: ${{ github.workspace }}/../macios.ci 
         PR_NUMBER: ${{ github.event.number }} 
