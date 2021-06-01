@@ -29,7 +29,8 @@ jobs:
     - run: |
         PR_DATA="pr/PR$PR_NUMBER"
         cd $MACIOS_CI_PATH
-        if [[ -f "$PR_DATA" ]]; then
+        ls "$MACIOS_CI_PATH/pr"
+        if [[ -d "$PR_DATA" ]]; then
           git checkout -b "pr/clean/PR$PR_NUMBER"
           git rm -r $PR_DATA
           git commit -m"[Action] Remove data of PR $PR_NUMBER" -a
