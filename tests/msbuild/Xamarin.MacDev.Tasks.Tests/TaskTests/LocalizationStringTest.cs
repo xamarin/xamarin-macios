@@ -11,6 +11,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
+using Xamarin.Tests;
 
 namespace Xamarin.iOS.Tasks {
 	[TestFixture]
