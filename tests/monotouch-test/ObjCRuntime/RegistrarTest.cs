@@ -2033,9 +2033,6 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 
-#if __MACCATALYST__
-		[Ignore ("https://github.com/dotnet/runtime/issues/47407")] // The GC doesn't collect objects with finalizers
-#endif
 		[Test]
 		public void BlockCollection ()
 		{
