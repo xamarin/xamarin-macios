@@ -1175,14 +1175,12 @@ partial class TestRuntime
 		}
 	}
 
-#if NET
 	// There's no official API yet for distinguishing between CoreCLR and MonoVM (https://github.com/dotnet/runtime/issues/49481)
 	// (checking for the Mono.Runtime type doesn't work, because the BCL is the same, so there's never a Mono.Runtime type).
 	// However, the System.__Canon type seems to be CoreCLR-only.
 	public static bool IsCoreCLR {
 		get {
-			return Type.GetType ("System.__Canon") is not null;
+			return !(Type.GetType ("System.__Canon") is null);
 		}
 	}
-#endif
 }

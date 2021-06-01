@@ -2033,9 +2033,6 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 
-#if __MACCATALYST__
-		[Ignore ("https://github.com/dotnet/runtime/issues/47407")] // The GC doesn't collect objects with finalizers
-#endif
 		[Test]
 		public void BlockCollection ()
 		{
@@ -2173,10 +2170,13 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void CustomUserTypeWithDynamicallyLoadedAssembly ()
 		{
+			if (!global::Xamarin.Tests.Configuration.TryGetRootPath (out var rootPath))
+				Assert.Ignore ("This test must be executed a source checkout.");
+
 #if NET
-			var customTypeAssemblyPath = global::System.IO.Path.Combine (global::Xamarin.Tests.Configuration.RootPath, "tests", "test-libraries", "custom-type-assembly", ".libs", "dotnet", "macos", "custom-type-assembly.dll");
+			var customTypeAssemblyPath = global::System.IO.Path.Combine (rootPath, "tests", "test-libraries", "custom-type-assembly", ".libs", "dotnet", "macos", "custom-type-assembly.dll");
 #else
-			var customTypeAssemblyPath = global::System.IO.Path.Combine (global::Xamarin.Tests.Configuration.RootPath, "tests", "test-libraries", "custom-type-assembly", ".libs", "macos", "custom-type-assembly.dll");
+			var customTypeAssemblyPath = global::System.IO.Path.Combine (rootPath, "tests", "test-libraries", "custom-type-assembly", ".libs", "macos", "custom-type-assembly.dll");
 #endif
 			Assert.That (customTypeAssemblyPath, Does.Exist, "existence");
 

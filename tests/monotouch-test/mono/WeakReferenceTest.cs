@@ -37,9 +37,6 @@ namespace MonoTouchFixtures {
 			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
 		}
 
-#if __MACCATALYST__
-		[Ignore ("https://github.com/dotnet/runtime/issues/47407")] // The GC doesn't collect objects with finalizers
-#endif
 		[Test]
 		public void NoRetainCyclesExpectedTest ()
 		{

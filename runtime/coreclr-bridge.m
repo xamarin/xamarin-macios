@@ -9,9 +9,11 @@
 #if defined (CORECLR_RUNTIME)
 
 #include <inttypes.h>
+#include <pthread.h>
 
 #include "product.h"
 #include "runtime-internal.h"
+#include "slinked-list.h"
 #include "xamarin/xamarin.h"
 #include "xamarin/coreclr-bridge.h"
 
@@ -19,6 +21,8 @@
 
 unsigned int coreclr_domainId = 0;
 void *coreclr_handle = NULL;
+pthread_mutex_t monoobject_lock = PTHREAD_MUTEX_INITIALIZER;
+SList *release_at_exit = NULL; // A list of MonoObject*s to be released at process exit
 
 #if defined (TRACK_MONOOBJECTS)
 
@@ -30,12 +34,10 @@ void *coreclr_handle = NULL;
 // MONOOBJECT_TRACKING_WITH_STACKTRACES environment variable.
 
 #include <execinfo.h>
-#include <pthread.h>
 
 static int _Atomic monoobject_created = 0;
 static int _Atomic monoobject_destroyed = 0;
 static CFMutableDictionaryRef monoobject_dict = NULL;
-static pthread_mutex_t monoobject_lock = PTHREAD_MUTEX_INITIALIZER;
 
 struct monoobject_tracked_entry {
 	char *managed;
@@ -113,7 +115,9 @@ xamarin_bridge_dump_monoobjects ()
 			for (unsigned int i = 0; i < items_to_show; i++) {
 				MonoObject *obj = keys [i];
 				struct monoobject_tracked_entry *value = (struct monoobject_tracked_entry *) values [i];
-				fprintf (stderr, "Object %i/%i %p RC: %i\n", i + 1, (int) length, obj, (int) obj->reference_count);
+				char *fullname = xamarin_get_object_type_fullname (obj->gchandle);
+				fprintf (stderr, "Object %i/%i %p RC: %i Type: %s\n", i + 1, (int) length, obj, (int) obj->reference_count, fullname);
+				xamarin_free (fullname);
 				if (value->managed && *value->managed)
 					fprintf (stderr, "\tManaged stack trace:\n%s\n", value->managed);
 				if (value->native == NULL && value->frames > 0)
@@ -171,6 +175,22 @@ xamarin_bridge_initialize ()
 void
 xamarin_bridge_shutdown ()
 {
+	SList *list;
+
+	// Free our list of MonoObject*s to free at process exist.
+	// No need to keep the lock locked while we traverse the list, the only thing we need to protect
+	// are reads and writes to the 'release_at_exit' variable, so let's do just that.
+	pthread_mutex_lock (&monoobject_lock);
+	list = release_at_exit;
+	release_at_exit = NULL;
+	pthread_mutex_unlock (&monoobject_lock);
+
+	while (list) {
+		xamarin_mono_object_release ((MonoObject **) &list->data);
+		list = list->next;
+	}
+	s_list_free (list);
+
 #if defined (TRACK_MONOOBJECTS)
 	xamarin_bridge_dump_monoobjects ();
 #endif
@@ -354,6 +374,14 @@ xamarin_mono_object_release (MonoObject **mobj_ref)
 	}
 
 	*mobj_ref = NULL;
+}
+
+void
+xamarin_mono_object_release_at_process_exit (MonoObject *mobj)
+{
+	pthread_mutex_lock (&monoobject_lock);
+	release_at_exit = s_list_prepend (release_at_exit, mobj);
+	pthread_mutex_unlock (&monoobject_lock);
 }
 
 /* Implementation of the Mono Embedding API */
@@ -666,6 +694,7 @@ xamarin_bridge_free_mono_signature (MonoMethodSignature **psig)
 	if (sig == NULL)
 		return;
 
+	xamarin_mono_object_release (&sig->method);
 	for (int i = 0; i < sig->parameter_count; i++) {
 		xamarin_mono_object_release (&sig->parameters [i]);
 	}
