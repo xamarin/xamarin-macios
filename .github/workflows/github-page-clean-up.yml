@@ -13,6 +13,7 @@ jobs:
   clean-up:
     runs-on: ubuntu-latest
     name: Clean PR data
+    steps:
 
     - uses: actions/checkout@v2
       name: checkout
@@ -24,7 +25,6 @@ jobs:
         path: macios.ci
         lfs: true
 
-    steps:
     - run: echo "$GITHUB_CONTEXT"
       name: 'Debug context'
       env:
