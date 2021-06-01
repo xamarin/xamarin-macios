@@ -103,6 +103,7 @@ xamarin_marshal_return_value_impl (MonoType *mtype, const char *type, MonoObject
 				xamarin_mono_object_release (&original_type);
 				MonoType *r_type = mono_class_get_type (r_klass);
 				returnValue = xamarin_generate_conversion_to_native (retval, r_type, original_tp, method, (void *) INVALID_TOKEN_REF, exception_gchandle);
+				xamarin_mono_object_release (&original_tp);
 				xamarin_mono_object_release (&r_type);
 			} else if (xamarin_is_class_string (r_klass)) {
 				returnValue = xamarin_string_to_nsstring ((MonoString *) retval, retain);
