@@ -142,7 +142,10 @@ namespace Introspection {
 				case "MLMultiArray":
 				case "MLFeatureValue":
 				case "MLSequence":
-					if (Mac.CheckSystemVersion (10, 15)) // Fail on Catalina, pass in older OS
+					// Fail on Catalina, pass in older OS
+					if (Mac.CheckSystemVersion (10, 14))
+						break;
+					if (Mac.CheckSystemVersion (10, 15))
 						return true;
 					break;
 				}

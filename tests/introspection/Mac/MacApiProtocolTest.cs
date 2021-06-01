@@ -40,8 +40,8 @@ namespace Introspection {
 			case "MPSCnnYoloLossNode":
 			case "CXProvider":
 				return TestRuntime.IsVM; // skip only on vms
-			case "NSMenuView":
-				return TestRuntime.IsVM || IntPtr.Size != 8; // skip on vms or 64b
+			case "NSMenuView": // not longer supported
+				return true;
 			default:
 				return base.Skip (type);
 			}
