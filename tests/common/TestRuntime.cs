@@ -1180,7 +1180,7 @@ partial class TestRuntime
 	// However, the System.__Canon type seems to be CoreCLR-only.
 	public static bool IsCoreCLR {
 		get {
-			return Type.GetType ("System.__Canon") is not null;
+			return !(Type.GetType ("System.__Canon") is null);
 		}
 	}
 }
