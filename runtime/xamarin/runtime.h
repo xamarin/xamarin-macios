@@ -230,6 +230,7 @@ bool			xamarin_set_gchandle_with_flags_safe (id self, GCHandle gchandle, enum Xa
 void			xamarin_create_gchandle (id self, void *managed_object, enum XamarinGCHandleFlags flags, bool force_weak);
 void            xamarin_release_managed_ref (id self, bool user_type);
 void			xamarin_notify_dealloc (id self, GCHandle gchandle);
+void			xamarin_release_static_dictionaries ();
 
 int				xamarin_main (int argc, char *argv[], enum XamarinLaunchMode launch_mode);
 
@@ -306,10 +307,12 @@ void			xamarin_mono_object_retain (MonoObject *mobj);
 // Use C++ linking to be able to use method overloading, so that callers don't have to cast their variables to 'MonoObject**' (which improves type safety a lot).
 extern "C++" void	xamarin_mono_object_release (MonoObject **mobj);
 extern "C++" void	xamarin_mono_object_release (MonoString **mobj);
+void			xamarin_mono_object_release_at_process_exit (MonoObject *mobj);
 #else
 // Nothing to do here.
 #define			xamarin_mono_object_retain(x)
 #define			xamarin_mono_object_release(x) do { *x = NULL; } while (0);
+#define			xamarin_mono_object_release_at_process_exit(x)
 #endif
 
 
