@@ -2,8 +2,8 @@ using Mono.Linker.Steps;
 using Xamarin.Linker;
 
 namespace Xamarin.Linker.Steps {
-	class RemoveAttributesDispatcher : SubStepsDispatcher {
-		public RemoveAttributesDispatcher ()
+	class PostSweepDispatcher : SubStepsDispatcher {
+		public PostSweepDispatcher ()
 			: base (new [] { new RemoveAttributesStep () })
 		{
 		}

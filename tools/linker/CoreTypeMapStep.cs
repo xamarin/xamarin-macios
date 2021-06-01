@@ -46,7 +46,8 @@ namespace MonoTouch.Tuner {
 			}
 
 			foreach (var reference in assembly.MainModule.AssemblyReferences) {
-				if (!Configuration.AssembliesByName.TryGetValue (reference.Name, out AssemblyDefinition resolvedReference))
+				var resolvedReference = Configuration.Context.GetLoadedAssembly (reference.Name);
+				if (resolvedReference == null)
 					continue;
 
 				if (TransitivelyReferencesProduct (resolvedReference)) {
@@ -151,13 +152,7 @@ namespace MonoTouch.Tuner {
 
 			bool rv;
 			if (!ci_filter_types.TryGetValue (type, out rv)) {
-				rv = type.Is (Namespaces.CoreImage, "CIFilter") || IsCIFilter (
-#if NET
-					Context.Resolve (type).BaseType
-#else
-					type.Resolve ().BaseType
-#endif
-				);
+				rv = type.Is (Namespaces.CoreImage, "CIFilter") || IsCIFilter (Context.Resolve (type).BaseType);
 				ci_filter_types [type] = rv;
 			}
 			return rv;
@@ -177,18 +172,10 @@ namespace MonoTouch.Tuner {
 			// * https://bugzilla.xamarin.com/show_bug.cgi?id=15465
 			if (IsCIFilter (type)) {
 				isdirectbinding_value [type] = null;
-#if NET
 				var base_type = Context.Resolve (type.BaseType);
-#else
-				var base_type = type.BaseType.Resolve ();
-#endif
 				while (base_type != null && IsNSObject (base_type)) {
 					isdirectbinding_value [base_type] = null;
-#if NET
 					base_type = Context.Resolve (base_type.BaseType);
-#else
-					base_type = base_type.BaseType.Resolve ();
-#endif
 				}
 				return;
 			}
@@ -199,19 +186,11 @@ namespace MonoTouch.Tuner {
 				isdirectbinding_value [type] = false;
 
 				// We must clear IsDirectBinding for any wrapper superclasses.
-#if NET
 				var base_type = Context.Resolve (type.BaseType);
-#else
-				var base_type = type.BaseType.Resolve ();
-#endif
 				while (base_type != null && IsNSObject (base_type)) {
 					if (IsWrapperType (base_type))
 						isdirectbinding_value [base_type] = null;
-#if NET
 					base_type = Context.Resolve (base_type.BaseType);
-#else
-					base_type = base_type.BaseType.Resolve ();
-#endif
 				}
 			} else {
 				isdirectbinding_value [type] = true; // Let's try 'true' first, any derived non-wrapper classes will clear it if needed
