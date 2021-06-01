@@ -307,10 +307,12 @@ void			xamarin_mono_object_retain (MonoObject *mobj);
 // Use C++ linking to be able to use method overloading, so that callers don't have to cast their variables to 'MonoObject**' (which improves type safety a lot).
 extern "C++" void	xamarin_mono_object_release (MonoObject **mobj);
 extern "C++" void	xamarin_mono_object_release (MonoString **mobj);
+void			xamarin_mono_object_release_at_process_exit (MonoObject *mobj);
 #else
 // Nothing to do here.
 #define			xamarin_mono_object_retain(x)
 #define			xamarin_mono_object_release(x) do { *x = NULL; } while (0);
+#define			xamarin_mono_object_release_at_process_exit(x)
 #endif
 
 
