@@ -693,6 +693,7 @@ xamarin_bridge_free_mono_signature (MonoMethodSignature **psig)
 	if (sig == NULL)
 		return;
 
+	xamarin_mono_object_release (&sig->method);
 	for (int i = 0; i < sig->parameter_count; i++) {
 		xamarin_mono_object_release (&sig->parameters [i]);
 	}
