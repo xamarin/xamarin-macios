@@ -82,7 +82,20 @@ namespace Xamarin.Tests {
 			var rv = new List<MSBuildItem> ();
 
 			// Items inside ItemGroups
-			var items = build.FindChildrenRecursive<Item> (v => (v.Parent as Folder)?.Name == name);
+			var items = build.FindChildrenRecursive<Item> (v => {
+				var parent = v.Parent as NamedNode;
+				if (parent?.Name != name)
+					return false;
+
+				if (!(parent is Folder || (parent is AddItem && parent.Parent is Folder)))
+					return false;
+
+				parent = parent.Parent as NamedNode;
+				if (parent?.Name == "OutputItems")
+					return false;
+
+				return true;
+			});
 			foreach (var item in items) {
 				rv.Add (CreateItem (item));
 			}
@@ -91,7 +104,10 @@ namespace Xamarin.Tests {
 			var resolvedProjectPath = PathUtils.ResolveSymbolicLinks (project.ProjectCSProjPath);
 			var outputItems = build.FindChildrenRecursive<Item> (v => {
 				var parent = v.Parent as NamedNode;
-				if (parent?.Name != name || !(parent is Parameter))
+				if (parent?.Name != name)
+					return false;
+
+				if (!(parent is Parameter || parent is AddItem))
 					return false;
 
 				parent = parent.Parent as NamedNode;
