@@ -2071,6 +2071,22 @@ xamarin_get_block_for_delegate (MonoMethod *method, MonoObject *delegate, const 
 }
 
 void
+xamarin_release_static_dictionaries ()
+{
+#if defined (CORECLR_RUNTIME)
+	// Release static dictionaries of cached objects. If we end up trying to
+	// add objects to these dictionaries after this point (on a background
+	// thread), the dictionaries will be re-created (and leak) - which
+	// shouldn't be a problem, because at this point the process is about to
+	// exit anyway.
+	pthread_mutex_lock (&wrapper_hash_lock);
+	xamarin_mono_object_release (&block_wrapper_queue);
+	xamarin_mono_object_release (&xamarin_wrapper_hash);
+	pthread_mutex_unlock (&wrapper_hash_lock);
+#endif
+}
+
+void
 xamarin_set_use_sgen (bool value)
 {
 }
