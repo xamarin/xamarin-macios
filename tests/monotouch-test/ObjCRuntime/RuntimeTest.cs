@@ -512,8 +512,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 			// Strangely enough there seems to be a race condition here, not all threads will necessarily
 			// have completed the autorelease by this point. Some should have though, so assert that the object
-			// was released on at least one thread.
-			Assert.That ((int) obj.RetainCount, Is.LessThan (10), "RC");
+			// was released on at least half the threads.
+			Assert.That ((int) obj.RetainCount, Is.LessThan (count / 2), "RC");
 
 			obj.Dispose ();
 		}
