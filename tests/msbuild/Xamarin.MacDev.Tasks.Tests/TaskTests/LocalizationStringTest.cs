@@ -170,7 +170,7 @@ namespace Xamarin.iOS.Tasks {
 		[Test]
 		public void UpdatedResources ()
 		{
-			var resxPath = Path.Combine (Directory.GetCurrentDirectory (), "../../../msbuild/Xamarin.Localization.MSBuild/MSBStrings.resx");
+			var resxPath = Path.Combine (Configuration.RootPath, "msbuild", "Xamarin.Localization.MSBuild", "MSBStrings.resx");
 			var xml = XDocument.Load (resxPath);
 			var resxNames = xml.Root.Descendants ().Where (n => n.Name == "data").Select (n => n.Attribute ("name").Value);
 			var resxHashSet = new HashSet<string> (resxNames);
