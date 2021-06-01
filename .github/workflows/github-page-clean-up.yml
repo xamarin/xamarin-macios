@@ -14,6 +14,16 @@ jobs:
     runs-on: ubuntu-latest
     name: Clean PR data
 
+    - uses: actions/checkout@v2
+      name: checkout
+
+    - uses: actions/checkout@v2
+      with:
+        name: xamarin/macios.ci
+        token: ${{ secrets.GITHUB_TOKEN }}
+        path: macios.ci
+        lfs: true
+
     steps:
     - run: echo "$GITHUB_CONTEXT"
       name: 'Debug context'
@@ -24,15 +34,8 @@ jobs:
         ls -R $WORKSPACE
       name: 'Debug checkouts'
       env:
-        GITHUB_CONTEXT: ${{ toJson(github) }}
         WORKSPACE: ${{ github.workspace }}
 
-    - uses: actions/checkout@master
-      with:
-        name: xamarin/macios.ci
-        token: ${{ secrets.GITHUB_TOKEN }}
-        path: macios.ci
-        lfs: true
 
     - run: |
         PR_DATA="pr/PR$PR_NUMBER"
