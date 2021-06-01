@@ -115,7 +115,9 @@ xamarin_bridge_dump_monoobjects ()
 			for (unsigned int i = 0; i < items_to_show; i++) {
 				MonoObject *obj = keys [i];
 				struct monoobject_tracked_entry *value = (struct monoobject_tracked_entry *) values [i];
-				fprintf (stderr, "Object %i/%i %p RC: %i\n", i + 1, (int) length, obj, (int) obj->reference_count);
+				char *fullname = xamarin_get_object_type_fullname (obj->gchandle);
+				fprintf (stderr, "Object %i/%i %p RC: %i Type: %s\n", i + 1, (int) length, obj, (int) obj->reference_count, fullname);
+				xamarin_free (fullname);
 				if (value->managed && *value->managed)
 					fprintf (stderr, "\tManaged stack trace:\n%s\n", value->managed);
 				if (value->native == NULL && value->frames > 0)
