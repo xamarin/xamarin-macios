@@ -111,7 +111,7 @@ namespace Xamarin.Tests
 		[Test]
 		public void UpdatedResources ()
 		{
-			var resxPath = Path.Combine (Directory.GetCurrentDirectory (), "../../tools/mtouch/Errors.resx");
+			var resxPath = Path.Combine (Configuration.RootPath, "tools", "mtouch", "Errors.resx");
 			var xml = XDocument.Load (resxPath);
 			var resxNames = xml.Root.Descendants ().Where (n => n.Name == "data").Select (n => n.Attribute ("name").Value);
 			var resxHashSet = new HashSet<string> (resxNames);
@@ -127,4 +127,3 @@ namespace Xamarin.Tests
 		}
 	}
 }
-
