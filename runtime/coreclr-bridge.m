@@ -244,6 +244,7 @@ xamarin_bridge_vm_initialize (int propertyCount, const char **propertyKeys, cons
 void
 xamarin_install_nsautoreleasepool_hooks ()
 {
+	// No need to do anything here for CoreCLR.
 }
 
 void
