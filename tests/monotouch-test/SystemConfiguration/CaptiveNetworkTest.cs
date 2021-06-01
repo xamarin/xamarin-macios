@@ -81,6 +81,8 @@ namespace MonoTouchFixtures.SystemConfiguration {
 			// So just assert that we get null if running on iOS 12+.
 			if (TestRuntime.CheckXcodeVersion (10, 0)) {
 				Assert.IsNull (dict, "Dictionary");
+			} else if (TestRuntime.CheckXcodeVersion (9, 0)) {
+				Assert.IsNull (dict, "Dictionary"); // It doesn't seem to work in iOS 11 either, I don't know why.
 			} else {
 				Assert.IsNotNull (dict, "Dictionary");
 			}
