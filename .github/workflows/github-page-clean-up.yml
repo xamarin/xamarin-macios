@@ -24,6 +24,7 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
         path: macios.ci
         lfs: true
+        ref: main
 
     - run: echo "$GITHUB_CONTEXT"
       name: 'Debug context'
