@@ -52,7 +52,7 @@ namespace AudioToolbox {
 
 		Action completionRoutine;
 		GCHandle gc_handle;
-		static readonly Action<SystemSoundId, IntPtr> SoundCompletionCallback = SoundCompletionShared;
+		static readonly AddSystemSoundCompletionCallback SoundCompletionCallback = SoundCompletionShared;
 
 		internal SystemSound (uint soundId, bool ownsHandle)
 		{
@@ -180,9 +180,11 @@ namespace AudioToolbox {
 			AudioServicesPlaySystemSound (soundId);
 		}
 
-		static unsafe readonly Action<IntPtr> static_action = TrampolineAction;
+		delegate void TrampolineCallback (IntPtr blockPtr);
 
-		[MonoPInvokeCallback (typeof (Action<IntPtr>))]
+		static unsafe readonly TrampolineCallback static_action = TrampolineAction;
+
+		[MonoPInvokeCallback (typeof (TrampolineCallback))]
 		static unsafe void TrampolineAction (IntPtr blockPtr)
 		{
 			var block = (BlockLiteral *) blockPtr;
@@ -295,8 +297,10 @@ namespace AudioToolbox {
 			}
 		}
 
+		delegate void AddSystemSoundCompletionCallback (SystemSoundId id, IntPtr clientData);
+
 		[DllImport (Constants.AudioToolboxLibrary)]
-		static extern AudioServicesError AudioServicesAddSystemSoundCompletion (uint soundId, IntPtr runLoop, IntPtr runLoopMode, Action<SystemSoundId, IntPtr> completionRoutine, IntPtr clientData);
+		static extern AudioServicesError AudioServicesAddSystemSoundCompletion (uint soundId, IntPtr runLoop, IntPtr runLoopMode, AddSystemSoundCompletionCallback completionRoutine, IntPtr clientData);
 
 		[MonoPInvokeCallback (typeof (Action<SystemSoundId, IntPtr>))]
 		static void SoundCompletionShared (SystemSoundId id, IntPtr clientData)
