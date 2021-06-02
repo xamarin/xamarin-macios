@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Microsoft.Build.Framework;
 using Xamarin.Messaging.Build.Client;
 
@@ -9,7 +9,7 @@ namespace Xamarin.MacDev.Tasks
 		public override bool Execute ()
 		{
 			try {
-				if (!string.IsNullOrEmpty (SessionId)) {
+				if (ShouldExecuteRemotely ()) {
 					// Copy the bundle files to the build server
 					new TaskRunner (SessionId, BuildEngine4).CopyInputsAsync (this).Wait ();
 				}
@@ -25,7 +25,7 @@ namespace Xamarin.MacDev.Tasks
 
 		public void Cancel ()
 		{
-			if (!string.IsNullOrEmpty (SessionId))
+			if (ShouldExecuteRemotely ())
 				BuildConnection.CancelAsync (SessionId, BuildEngine4).Wait ();
 		}
 	}

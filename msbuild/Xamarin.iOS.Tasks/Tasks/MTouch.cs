@@ -13,7 +13,7 @@ namespace Xamarin.iOS.Tasks
 
 		public override bool Execute ()
 		{
-			if (string.IsNullOrEmpty (SessionId))
+			if (!ShouldExecuteRemotely ())
 				return base.Execute ();
 
 			var frameworkAssemblies = References.Where (x => x.IsFrameworkItem ());

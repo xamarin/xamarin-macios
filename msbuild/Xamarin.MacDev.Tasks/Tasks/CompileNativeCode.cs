@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
@@ -10,7 +10,7 @@ namespace Xamarin.MacDev.Tasks
 	{
 		public override bool Execute ()
 		{
-			if (string.IsNullOrEmpty (SessionId))
+			if (!ShouldExecuteRemotely ())
 				return base.Execute ();
 
 			foreach (var info in CompileInfo)
@@ -43,7 +43,7 @@ namespace Xamarin.MacDev.Tasks
 
 		public void Cancel ()
 		{
-			if (!string.IsNullOrEmpty (SessionId))
+			if (ShouldExecuteRemotely ())
 				BuildConnection.CancelAsync (SessionId, BuildEngine4).Wait ();
 		}
 	}

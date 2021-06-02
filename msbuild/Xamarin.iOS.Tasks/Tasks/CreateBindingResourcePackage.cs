@@ -1,4 +1,4 @@
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 
@@ -13,7 +13,7 @@ namespace Xamarin.iOS.Tasks
 	{
 		public override bool Execute ()
 		{
-			if (!string.IsNullOrEmpty (SessionId))
+			if (ShouldExecuteRemotely ())
 				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
 
 			return base.Execute ();
@@ -37,7 +37,7 @@ namespace Xamarin.iOS.Tasks
 
 		public void Cancel ()
 		{
-			if (!string.IsNullOrEmpty (SessionId))
+			if (ShouldExecuteRemotely ())
 				BuildConnection.CancelAsync (SessionId, BuildEngine4).Wait ();
 		}
 
