@@ -340,6 +340,16 @@ MSI_TARGETS += $(DOTNET_PKG_DIR)/Microsoft.NET.Workload.$1.$2.msi
 endef
 $(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(eval $(call CreateMsi,$(platform),$($(platform)_NUGET_VERSION_NO_METADATA))))
 
+export DOTNETSDK_WORKLOAD_MANIFEST_ROOTS:=$(abspath ./Workloads)
+
+.stamp-install-workloads: Makefile $(WORKLOAD_TARGETS)
+	$(Q) $(DOTNET6) workload install --skip-manifest-update \
+		microsoft-net-runtime-ios microsoft-net-runtime-tvos \
+		$(foreach platform,$(DOTNET_PLATFORMS),microsoft-$(shell echo $(platform) | tr A-Z a-z)-sdk-full)
+	$(Q) touch $@
+
+TARGETS += .stamp-install-workloads
+
 .stamp-check-wixl:
 	$(Q) if ! type wixl; then \
 		echo "Installing msitools to get wixl..."; \
