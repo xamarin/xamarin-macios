@@ -50,7 +50,8 @@ namespace CoreGraphics
 
 		public static bool operator == (<#= type.Name #> l, <#= type.Name #> r)
 		{
-			return l.<#= type.X_Width #> == r.<#= type.X_Width #> && l.<#= type.Y_Height #> == r.<#= type.Y_Height #>;
+			// the following version of Equals cannot be removed by the linker, while == can be
+			return l.Equals (r);
 		}
 
 		public static bool operator != (<#= type.Name #> l, <#= type.Name #> r)
@@ -188,22 +189,18 @@ namespace CoreGraphics
 <# } #>
 		public override bool Equals (object obj)
 		{
-			if (obj is <#= type.Name #>) {
-				return this == (<#= type.Name #>)obj;
-			}
-
-			return false;
+			return (obj is <#= type.Name #> t) && Equals (t);
 		}
 
 <# if (type.Name == "CGPoint") { #>
 		public bool Equals (CGPoint point)
 		{
-			return this == point;
+			return point.<#= type.X_Width #> == <#= type.X_Width #> && point.<#= type.Y_Height #> == <#= type.Y_Height #>;
 		}
 <# } else { #>
 		public bool Equals (CGSize size)
 		{
-			return this == size;
+			return size.<#= type.X_Width #> == <#= type.X_Width #> && size.<#= type.Y_Height #> == <#= type.Y_Height #>;
 		}
 <# } #>
 
@@ -278,11 +275,8 @@ namespace CoreGraphics
 
 		public static bool operator == (CGRect left, CGRect right)
 		{
-			return
-				left.X == right.X &&
-				left.Y == right.Y &&
-				left.Width == right.Width &&
-				left.Height == right.Height;
+			// the following version of Equals cannot be removed by the linker, while == can be
+			return left.Equals (right);
 		}
 
 		public static bool operator != (CGRect left, CGRect right)
@@ -552,16 +546,16 @@ namespace CoreGraphics
 
 		public override bool Equals (object obj)
 		{
-			if (obj is CGRect) {
-				return this == (CGRect)obj;
-			}
-
-			return false;
+			return (obj is CGRect rect) && Equals (rect);
 		}
 
 		public bool Equals (CGRect rect)
 		{
-			return this == rect;
+			return
+				x == rect.x &&
+				y == rect.y &&
+				width == rect.width &&
+				height == rect.height;
 		}
 
 		public override int GetHashCode ()
