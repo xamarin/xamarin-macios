@@ -148,6 +148,14 @@ partial class TestRuntime
 #endif
 	}
 
+	public static void AssertNotSimulator ()
+	{
+#if !__MACOS__
+		if (ObjCRuntime.Runtime.Arch == Arch.SIMULATOR)
+			NUnit.Framework.Assert.Ignore ("This test does not work in the simulator.");
+#endif
+	}
+
 	public static bool IsVM => 
 		!string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("VM_VENDOR"));
 

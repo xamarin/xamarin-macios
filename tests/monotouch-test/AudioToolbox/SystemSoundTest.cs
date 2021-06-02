@@ -28,11 +28,9 @@ namespace MonoTouchFixtures.AudioToolbox {
 		[Test]
 		public void FromFile ()
 		{
+			TestRuntime.AssertNotSimulator ();
+
 			var path = NSBundle.MainBundle.PathForResource ("1", "caf", "AudioToolbox");
-#if !MONOMAC
-			if (Runtime.Arch == Arch.SIMULATOR)
-				Assert.Ignore ("PlaySystemSound doesn't work in the simulator");
-#endif
 
 			using (var ss = SystemSound.FromFile (NSUrl.FromFilename (path))) {
 				var completed = false;
@@ -63,6 +61,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 		[Test]
 		public void TestCallbackPlaySystem ()
 		{
+			TestRuntime.AssertNotSimulator ();
 			TestRuntime.AssertSystemVersion (PlatformName.iOS, 9, 0, throwIfOtherPlatform: false);
 
 			string path = Path.Combine (NSBundle.MainBundle.ResourcePath, "drum01.mp3");
@@ -82,6 +81,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 		[Test]
 		public void TestCallbackPlayAlert ()
 		{
+			TestRuntime.AssertNotSimulator ();
 			TestRuntime.AssertSystemVersion (PlatformName.iOS, 9, 0, throwIfOtherPlatform: false);
 
 			string path = Path.Combine (NSBundle.MainBundle.ResourcePath, "drum01.mp3");
