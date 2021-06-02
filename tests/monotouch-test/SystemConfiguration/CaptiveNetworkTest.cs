@@ -79,13 +79,8 @@ namespace MonoTouchFixtures.SystemConfiguration {
 			// * Add the 'com.apple.developer.networking.wifi-info' entitlement
 			// We're not using custom entitlements when building for device, which means that we can't make this work at the moment.
 			// So just assert that we get null if running on iOS 12+.
-			if (TestRuntime.CheckXcodeVersion (10, 0)) {
-				Assert.IsNull (dict, "Dictionary");
-			} else if (TestRuntime.CheckXcodeVersion (9, 0)) {
-				Assert.IsNull (dict, "Dictionary"); // It doesn't seem to work in iOS 11 either, I don't know why.
-			} else {
-				Assert.IsNotNull (dict, "Dictionary");
-			}
+			// Also assert that we get null in all other cases as well, since we link with the iOS 13+ SDK.
+			Assert.IsNull (dict, "Dictionary");
 #endif
 		}
 
