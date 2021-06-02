@@ -204,8 +204,8 @@ namespace GeneratorTests
 			bgen.AssertExecute ("build");
 			bgen.AssertNoWarnings ();
 
-			bgen.AssertApiCallsMethod ("Test", "MarshalInProperty", "get_Shared", "xamarin_IntPtr_objc_msgSend", "MarshalInProperty.Shared getter");
-			bgen.AssertApiCallsMethod ("Test", "MarshalOnProperty", "get_Shared", "xamarin_IntPtr_objc_msgSend", "MarshalOnProperty.Shared getter");
+			bgen.AssertApiCallsMethod ("Test", "MarshalInProperty", "get_Shared", "xamarin_IntPtr_objc_msgSend_exception", "MarshalInProperty.Shared getter");
+			bgen.AssertApiCallsMethod ("Test", "MarshalOnProperty", "get_Shared", "xamarin_IntPtr_objc_msgSend_exception", "MarshalOnProperty.Shared getter");
 		}
 
 		[Test]
@@ -592,7 +592,7 @@ namespace GeneratorTests
 			bgen.AddTestApiDefinition ("ghissue5416b.cs");
 			bgen.CreateTemporaryBinding ();
 			bgen.AssertExecute ("build");
-			bgen.AssertWarning (1118, "[NullAllowed] should not be used on methods, like 'NSString Method(Foundation.NSDate, Foundation.NSObject)', but only on properties, parameters and return values.");
+			bgen.AssertWarning (1118, "[NullAllowed] should not be used on methods, like 'Foundation.NSString Method(Foundation.NSDate, Foundation.NSObject)', but only on properties, parameters and return values.");
 		}
 
 		[Test]
@@ -603,7 +603,7 @@ namespace GeneratorTests
 			bgen.AddTestApiDefinition ("ghissue5416a.cs");
 			bgen.CreateTemporaryBinding ();
 			bgen.AssertExecute ("build");
-			bgen.AssertWarning (1118, "[NullAllowed] should not be used on methods, like 'Void set_Setter(Foundation.NSString)', but only on properties, parameters and return values.");
+			bgen.AssertWarning (1118, "[NullAllowed] should not be used on methods, like 'System.Void set_Setter(Foundation.NSString)', but only on properties, parameters and return values.");
 		}
 
 		[Test]

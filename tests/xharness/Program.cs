@@ -127,6 +127,10 @@ namespace Xharness {
 			// XS sets this, which breaks pretty much everything if it doesn't match what was passed to --sdkroot.
 			Environment.SetEnvironmentVariable ("XCODE_DEVELOPER_DIR_PATH", null);
 
+			// MSBuild gets confused sometimes, and runs into some sort of deadlock. Disable node re-use to try to mitigate that.
+			// Ref: https://github.com/xamarin/maccore/issues/2444
+			Environment.SetEnvironmentVariable ("MSBUILDDISABLENODEREUSE", "1");
+
 			var harness = new Harness (new XmlResultParser (), action, configuration);
 
 			return harness.Execute ();

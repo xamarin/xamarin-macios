@@ -2,23 +2,13 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
 	<PropertyGroup>
-		<!-- This is the location of the Microsoft.<platform>.Sdk NuGet (/usr/local/share/dotnet/sdk/<version>/Sdks/Microsoft.[iOS/tvOS/watchOS/macOS].Sdk) -->
-		<_XamarinSdkRootDirectory>$([MSBuild]::NormalizePath('$(MSBuildThisFileDirectory)', '..'))\</_XamarinSdkRootDirectory>
-
-		<_XamarinTaskAssembly Condition="'$(_PlatformName)' != 'macOS'">$(_XamarinSdkRootDirectory)\tools\msbuild\iOS\Xamarin.iOS.Tasks.dll</_XamarinTaskAssembly>
-		<_XamarinTaskAssembly Condition="'$(_PlatformName)' == 'macOS'">$(_XamarinSdkRootDirectory)\tools\msbuild\macOS\Xamarin.Mac.Tasks.dll</_XamarinTaskAssembly>
-
 		<!-- Use single-project MSBuild properties to generate the application manifest by default -->
 		<GenerateApplicationManifest Condition="'$(GenerateApplicationManifest)' == ''">true</GenerateApplicationManifest>
-
-		<XamarinWindowsSdkDirectory Condition="'$(XamarinWindowsSdkDirectory)' == '' And '$(_PlatformName)' == 'iOS'">$(MSBuildThisFileDirectory.Replace('Microsoft.iOS.Sdk', 'Microsoft.iOS.Windows.Sdk'))</XamarinWindowsSdkDirectory>
-		<XamarinWindowsSdkDirectory Condition="'$(XamarinWindowsSdkDirectory)' == '' And '$(_PlatformName)' == 'tvOS'">$(MSBuildThisFileDirectory.Replace('Microsoft.tvOS.Sdk', 'Microsoft.tvOS.Windows.Sdk'))</XamarinWindowsSdkDirectory>
 	</PropertyGroup>
-
-	<Import Project="$(XamarinWindowsSdkDirectory)$(MSBuildThisFileName).Before.targets" Condition="Exists('$(XamarinWindowsSdkDirectory)$(MSBuildThisFileName).Before.targets')" />
 
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CompileNativeCode" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.LinkNativeCode" AssemblyFile="$(_XamarinTaskAssembly)" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.SymbolStrip" AssemblyFile="$(_XamarinTaskAssembly)" />
 
 	<!-- Project types and how do we distinguish between them
 
@@ -137,10 +127,14 @@
 		<EnableUnsafeUTF7Encoding Condition="'$(EnableUnsafeUTF7Encoding)' == ''">false</EnableUnsafeUTF7Encoding>
 		<EventSourceSupport Condition="'$(EventSourceSupport)' == ''">false</EventSourceSupport>
 		<HttpActivityPropagationSupport Condition="'$(HttpActivityPropagationSupport)' == ''">false</HttpActivityPropagationSupport>
-		<HttpNativeHandler Condition="'$(_PlatformName)' != 'macOS' And '$(HttpNativeHandler)' == ''">true</HttpNativeHandler>
-		<InvariantGlobalization Condition="'$(InvariantGlobalization)' == ''">false</InvariantGlobalization>
+		<!-- native bits for ICU are not ready for Catalyst - https://github.com/xamarin/xamarin-macios/issues/11392 -->
+		<InvariantGlobalization Condition="'$(_PlatformName)' == 'MacCatalyst' And '$(InvariantGlobalization)' == ''">true</InvariantGlobalization>
 		<StartupHookSupport Condition="'$(StartupHookSupport)' == ''">false</StartupHookSupport>
 		<UseSystemResourceKeys Condition="'$(UseSystemResourceKeys)' == ''">true</UseSystemResourceKeys>
+		<UseNativeHttpHandler Condition="'$(_PlatformName)' != 'macOS' And '$(UseNativeHttpHandler)' == ''">true</UseNativeHttpHandler>
+
+		<!-- We don't need to generate reference assemblies for apps or app extensions -->
+		<ProduceReferenceAssembly Condition="'$(ProduceReferenceAssembly)' == '' And ('$(OutputType)' == 'Exe' Or '$(IsAppExtension)' == 'true')">false</ProduceReferenceAssembly>
 	</PropertyGroup>
 
 	<PropertyGroup>
@@ -192,6 +186,8 @@
 			_ResolveAppExtensionReferences;
 			_ExtendAppExtensionReferences;
 			_ComputeLinkerArguments;
+			_ComputeFrameworkFilesToPublish;
+			_ComputeDynamicLibrariesToPublish;
 			ComputeFilesToPublish;
 			_LoadLinkerOutput;
 			_CompileNativeExecutable;
@@ -345,6 +341,43 @@
 		<WriteLinesToFile SessionId="$(BuildSessionId)" File="$(_CustomLinkerOptionsFile)" Lines="$(_CustomLinkerOptions)" Overwrite="true" />
 	</Target>
 
+	<!-- Look in the NativeReference items for frameworks that need to be added to the app bundle, and add all those frameworks to ResolvedFileToPublish (as separate files) -->
+	<Target Name="_ComputeFrameworkFilesToPublish" DependsOnTargets="_ExpandNativeReferences;_ComputeVariables">
+		<ItemGroup>
+			<!-- Expand each framework (which are directories) into all the files in the framework -->
+			<!-- Support a 'CopyToAppBundle' metadata that can be set to 'false' to avoid copying a framework to the app bundle -->
+			<_FrameworkFilesToPublish Include="%(_FrameworkNativeReference.RootDir)%(_FrameworkNativeReference.Directory)/**/*" Condition="'%(_FrameworkNativeReference.Kind)' == 'Framework' And '%(_FrameworkNativeReference.CopyToAppBundle)' != 'false'">
+				<_FrameworkIdentity>%(RootDir)%(Directory)</_FrameworkIdentity>
+				<_FrameworkPath>$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)$(PublishDir),$(_AppBundleFrameworksDir)))\%(Filename).framework</_FrameworkPath>
+				<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+			</_FrameworkFilesToPublish>
+
+			<!-- Compute the relative path of each file in the framework relative to the framework directory -->
+			<_FrameworkFilesToPublish Update="@(_FrameworkFilesToPublish)">
+				<_FrameworkRelativePath>$([System.String]::Copy('%(Identity)').Substring($([System.String]::Copy('%(_FrameworkIdentity)').Length)))</_FrameworkRelativePath>
+			</_FrameworkFilesToPublish>
+
+			<!-- Add all the framework files to ResolvedFileToPublish -->
+			<ResolvedFileToPublish Include="@(_FrameworkFilesToPublish)">
+				<RelativePath>%(_FrameworkFilesToPublish._FrameworkPath)\%(_FrameworkFilesToPublish._FrameworkRelativePath)</RelativePath>
+			</ResolvedFileToPublish>
+		</ItemGroup>
+	</Target>
+
+	<!-- Look in the NativeReference items for dylibs that need to be added to the app bundle, and add all those frameworks to ResolvedFileToPublish (as separate files) -->
+	<Target Name="_ComputeDynamicLibrariesToPublish" DependsOnTargets="_ExpandNativeReferences;_ComputeVariables">
+		<ItemGroup>
+			<!-- Support a 'CopyToAppBundle' metadata that can be set to 'false' to avoid copying a framework to the app bundle -->
+			<_DynamicLibraryToPublish Include="@(_FileNativeReference)" Condition="'%(_FileNativeReference.Kind)' == 'Dynamic' And '%(_FileNativeReference.CopyToAppBundle)' != 'false'">
+				<RelativePath>$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)$(PublishDir),$(_AppBundleFrameworksDir)))\$(_DylibRelativePath)%(Filename)%(Extension)</RelativePath>
+				<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+			</_DynamicLibraryToPublish>
+
+			<!-- Add all the dynamic libraries to ResolvedFileToPublish -->
+			<ResolvedFileToPublish Include="@(_DynamicLibraryToPublish)" />
+		</ItemGroup>
+	</Target>
+
 	<Target Name="_LoadLinkerOutput">
 		<!-- Load _MainFile -->
 		<ReadItemsFromFile SessionId="$(BuildSessionId)" File="$(_LinkerItemsDirectory)/_MainFile.items" Condition="Exists('$(_LinkerItemsDirectory)/_MainFile.items')">
@@ -409,7 +442,8 @@
 			<_XamarinRefAssemblyDirectory>$(_XamarinRefPackageDirectory)/ref/net6.0/</_XamarinRefAssemblyDirectory>
 			<_XamarinRefAssemblyPath>$(_XamarinRefAssemblyDirectory)$(_PlatformAssemblyName).dll</_XamarinRefAssemblyPath>
 
-			<_LibPartialStaticRegistrar>$(_XamarinNativeLibraryDirectory)/Microsoft.$(_PlatformName).registrar.a</_LibPartialStaticRegistrar>
+			<_LibPartialStaticRegistrar Condition="'$(UseMonoRuntime)' == 'true'">$(_XamarinNativeLibraryDirectory)/Microsoft.$(_PlatformName).registrar.a</_LibPartialStaticRegistrar>
+			<_LibPartialStaticRegistrar Condition="'$(UseMonoRuntime)' != 'true'">$(_XamarinNativeLibraryDirectory)/Microsoft.$(_PlatformName).registrar.coreclr.a</_LibPartialStaticRegistrar>
 
 			<_MonoRuntimePackPath>%(_MonoFrameworkReference.RuntimePackPath)/runtimes/$(RuntimeIdentifier)/</_MonoRuntimePackPath>
 		</PropertyGroup>
@@ -428,6 +462,8 @@
 			<_NativeExecutableName>$(_AppBundleName)</_NativeExecutableName>
 			<_NativeExecutablePublishDir Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'">$(MSBuildProjectDirectory)$(_AppBundlePath)\</_NativeExecutablePublishDir>
 			<_NativeExecutablePublishDir Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">$(MSBuildProjectDirectory)$(_AppBundlePath)\Contents\MacOS\</_NativeExecutablePublishDir>
+			<_AppBundleFrameworksDir Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'">$(MSBuildProjectDirectory)$(_AppBundlePath)\Frameworks\</_AppBundleFrameworksDir>
+			<_AppBundleFrameworksDir Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">$(MSBuildProjectDirectory)$(_AppBundlePath)\Contents\Frameworks\</_AppBundleFrameworksDir>
 
 			<_AOTCompiler>$(_MonoRuntimePackPath)native/cross/$(RuntimeIdentifier)/mono-aot-cross</_AOTCompiler>
 			<_AOTInputDirectory>$(_IntermediateNativeLibraryDir)aot-input/</_AOTInputDirectory>
@@ -446,6 +482,15 @@
 			<_LibXamarinDebug Condition="'$(_BundlerDebug)' == 'true'">-debug</_LibXamarinDebug>
 			<_LibXamarinName Condition="'$(_LibXamarinName)' == ''">libxamarin-dotnet$(_LibXamarinRuntime)$(_LibXamarinDebug).$(_LibXamarinExtension)</_LibXamarinName>
 
+			<!-- the path relative to the root of the app bundle where dynamic libraries should be placed -->
+			<_DylibRelativePath Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'">/</_DylibRelativePath>
+			<_DylibRelativePath Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">Contents/$(_CustomBundleName)/</_DylibRelativePath>
+
+			<_DylibRPath Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'">@executable_path</_DylibRPath>
+			<_DylibRPath Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">@executable_path/../$(_CustomBundleName)/</_DylibRPath>
+
+			<_EmbeddedFrameworksRPath Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'">@executable_path/Frameworks</_EmbeddedFrameworksRPath>
+			<_EmbeddedFrameworksRPath Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">@executable_path/../Frameworks/</_EmbeddedFrameworksRPath>
 		</PropertyGroup>
 
 		<ItemGroup>
@@ -561,8 +606,11 @@
 			SdkRoot="$(_SdkRoot)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 		>
-			<Output TaskParameter="ObjectFiles" ItemName="_NativeExecutableObjectFiles" />
 		</CompileNativeCode>
+
+		<ItemGroup>
+			<_NativeExecutableObjectFiles Include="@(_CompileNativeExecutableFile -> '%(OutputFile)')" />
+		</ItemGroup>
 	</Target>
 
 	<PropertyGroup>
@@ -622,18 +670,15 @@
 			Inputs="@(_NativeExecutableObjectFiles)"
 			Outputs="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName)"
 		>
-
-		<PropertyGroup>
-			<_DylibRPath Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'">@executable_path</_DylibRPath>
-			<_DylibRPath Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">@executable_path/../$(_CustomBundleName)/</_DylibRPath>
-		</PropertyGroup>
-
 		<ItemGroup>
 			<_XamarinMainLibraries Include="$(_XamarinNativeLibraryDirectory)/$(_LibXamarinName)" />
 			<!-- Link with the libraries shipped with the mono runtime pack -->
 			<_XamarinMainLibraries Include="@(_MonoLibrary)" Condition="'$(_PlatformName)' != 'macOS'" />
 			<!-- But don't link with any dylibs on macOS, because they might have library initializers which may fail - instead delay any failures until whatever feature they provide is needed -->
 			<_XamarinMainLibraries Include="@(_MonoLibrary)" Condition="'$(_PlatformName)' == 'macOS' And ('%(_MonoLibrary.Extension)' == '.a' Or '%(_MonoLibrary.Filename)' == 'libcoreclr')" />
+			<!-- Link with static libraries from NativeReference items ((xc)frameworks are handled in the _ComputeFrameworkFilesToPublish target, and dynamic libraries are handled in the _ComputeDynamicLibrariesToPublish target) -->
+			<_XamarinMainLibraries Include="@(_FileNativeReference)" />
+
 			<!-- The frameworks we need to link with (both weakly and normally) -->
 			<_NativeExecutableFrameworks Include="@(_LinkerFrameworks)" />
 
@@ -649,10 +694,12 @@
 			SessionId="$(BuildSessionId)"
 			DylibRPath="$(_DylibRPath)"
 			EntitlementsInExecutable="$(_CompiledEntitlements)"
+			FrameworkRPath="$(_EmbeddedFrameworksRPath)"
 			Frameworks="@(_NativeExecutableFrameworks);@(_BindingLibraryFrameworks)"
 			LinkerFlags="@(_BindingLibraryLinkerFlags);@(_ReferencesLinkerFlags);@(_MainLinkerFlags)"
 			LinkWithLibraries="@(_XamarinMainLibraries);@(_BindingLibraryLinkWith);@(_MainLinkWith)"
 			MinimumOSVersion="$(_MinimumOSVersion)"
+			NativeReferences="@(_FileNativeReference);@(_FrameworkNativeReference)"
 			ObjectFiles="@(_NativeExecutableObjectFiles)"
 			OutputFile="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName)"
 			SdkDevPath="$(_SdkDevPath)"
@@ -660,6 +707,17 @@
 			SdkRoot="$(_SdkRoot)"
 			TargetArchitectures="$(TargetArchitectures)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+		/>
+
+		<!-- remove the `-u` prefix from `_ReferencesLinkerFlags` so we can give the output file to `strip` -->
+		<WriteLinesToFile SessionId="$(BuildSessionId)" File="$(_MtouchSymbolsList)" Lines="@(_ReferencesLinkerFlags->'%(Identity)'->Substring (2))" Overwrite="true" />
+
+		<SymbolStrip
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true' And '$(_NoSymbolStrip)' == 'false' And '$(IsAppExtension)' == 'false'"
+			Executable="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName)"
+			IsFramework="false"
+			SymbolFile="$(_MtouchSymbolsList)"
 		/>
 
 		<ItemGroup>

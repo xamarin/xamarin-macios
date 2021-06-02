@@ -45,10 +45,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using IKVM.Reflection;
-using Type = IKVM.Reflection.Type;
 using System.Text;
 using System.ComponentModel;
+using System.Reflection;
 
 using ObjCRuntime;
 using Foundation;
@@ -1378,10 +1377,10 @@ public partial class Generator : IMemberGatherer {
 		var isEnum = retType.IsEnum;
 		var parameterName = pi != null ? pi.Name.GetSafeParamName () : "value";
 		var denullify = isNullable ? ".Value" : string.Empty;
-		var nullCheck = isNullable ? $"{parameterName} == null ? null : " : string.Empty;
+		var nullCheck = isNullable ? $"{parameterName} is null ? null : " : string.Empty;
 
 		if (isNullable || !isValueType)
-			temp = string.Format ("{0} == null ? null : ", parameterName);
+			temp = string.Format ("{0} is null ? null : ", parameterName);
 
 		if (originalType == TypeManager.NSNumber) {
 			var enumCast = isEnum ? $"(int)" : string.Empty;
@@ -1398,7 +1397,7 @@ public partial class Generator : IMemberGatherer {
 			}
 			temp = string.Format ("{3}NSValue.From{0} ({2}{1});", typeStr, denullify, parameterName, nullCheck);
 		} else if (originalType == TypeManager.NSString && IsSmartEnum (retType)) {
-			temp = isNullable ? $"{parameterName} == null ? null : " : string.Empty;
+			temp = isNullable ? $"{parameterName} is null ? null : " : string.Empty;
 			temp += $"{FormatType (retType.DeclaringType, retType)}Extensions.GetConstant ({parameterName}{denullify});";
 		} else if (originalType.IsArray && originalType.GetArrayRank () == 1) {
 			if (!retType.IsArray) {
@@ -1727,7 +1726,7 @@ public partial class Generator : IMemberGatherer {
 					var refname = $"__xamarin_pref{pi.Position}";
 					convert.Append ($"var {refname} = Runtime.GetINativeObject<{RenderType (nt)}> ({safe_name}, false);");
 					pars.Append ($"ref IntPtr {safe_name}");
-					postConvert.Append ($"{safe_name} = {refname} == null ? IntPtr.Zero : {refname}.Handle;");
+					postConvert.Append ($"{safe_name} = {refname} is null ? IntPtr.Zero : {refname}.Handle;");
 					invoke.Append ($"ref {refname}");
 					continue;
 				}
@@ -1821,9 +1820,9 @@ public partial class Generator : IMemberGatherer {
 		}
 
 		if (HasBindAsAttribute (pi))
-			return string.Format ("nsb_{0} == null ? IntPtr.Zero : nsb_{0}.Handle", pi.Name);
+			return string.Format ("nsb_{0} is null ? IntPtr.Zero : nsb_{0}.Handle", pi.Name);
 		if (propInfo != null && HasBindAsAttribute (propInfo))
-			return string.Format ("nsb_{0} == null ? IntPtr.Zero : nsb_{0}.Handle", propInfo.Name);
+			return string.Format ("nsb_{0} is null ? IntPtr.Zero : nsb_{0}.Handle", propInfo.Name);
 
 		var safe_name = pi.Name.GetSafeParamName ();
 
@@ -1848,7 +1847,7 @@ public partial class Generator : IMemberGatherer {
 				
 				if (mai.ZeroCopyStringMarshal){
 					if (allow_null)
-						return String.Format ("{0} == null ? IntPtr.Zero : (IntPtr)(&_s{0})", pi.Name);
+						return String.Format ("{0} is null ? IntPtr.Zero : (IntPtr)(&_s{0})", pi.Name);
 					else
 						return String.Format ("(IntPtr)(&_s{0})", pi.Name);
 				} else {
@@ -1871,7 +1870,7 @@ public partial class Generator : IMemberGatherer {
 			//Type etype = pi.ParameterType.GetElementType ();
 
 			if (null_allowed_override || AttributeManager.HasAttribute<NullAllowedAttribute> (pi))
-				return String.Format ("nsa_{0} == null ? IntPtr.Zero : nsa_{0}.Handle", pi.Name);
+				return String.Format ("nsa_{0} is null ? IntPtr.Zero : nsa_{0}.Handle", pi.Name);
 			return "nsa_" + pi.Name + ".Handle";
 		}
 
@@ -1893,13 +1892,13 @@ public partial class Generator : IMemberGatherer {
 
 		if (IsDictionaryContainerType(pi.ParameterType)){
 			if (null_allowed_override || AttributeManager.HasAttribute<NullAllowedAttribute> (pi))
-				return String.Format ("{0} == null ? IntPtr.Zero : {0}.Dictionary.Handle", safe_name);
+				return String.Format ("{0} is null ? IntPtr.Zero : {0}.Dictionary.Handle", safe_name);
 			return safe_name + ".Dictionary.Handle";
 		}
 
 		if (pi.ParameterType.IsGenericParameter) {
 			if (null_allowed_override || AttributeManager.HasAttribute<NullAllowedAttribute> (pi))
-				return string.Format ("{0} == null ? IntPtr.Zero : {0}.Handle", safe_name);
+				return string.Format ("{0} is null ? IntPtr.Zero : {0}.Handle", safe_name);
 			return safe_name + ".Handle";
 		}
 
@@ -1983,8 +1982,12 @@ public partial class Generator : IMemberGatherer {
 	string MakeSig (string send, bool stret, MethodInfo mi, bool aligned, EnumMode enum_mode = EnumMode.Compat)
 	{
 		var sb = new StringBuilder ();
-		
-		if (ShouldMarshalNativeExceptions (mi))
+		var shouldMarshalNativeExceptions = ShouldMarshalNativeExceptions (mi);
+		var marshalDirective = AttributeManager.GetCustomAttribute<MarshalDirectiveAttribute> (mi);
+
+		if (!string.IsNullOrEmpty (marshalDirective?.NativePrefix))
+			sb.Append (marshalDirective.NativePrefix);
+		else if (shouldMarshalNativeExceptions)
 			sb.Append ("xamarin_");
 		
 		try {
@@ -2009,13 +2012,11 @@ public partial class Generator : IMemberGatherer {
 			}
 		}
 
-		var marshalDirective = AttributeManager.GetCustomAttribute<MarshalDirectiveAttribute> (mi);
-		if (marshalDirective != null) {
-			if (!string.IsNullOrEmpty (marshalDirective.NativePrefix))
-				sb.Insert (0, marshalDirective.NativePrefix);
-			if (!string.IsNullOrEmpty (marshalDirective.NativeSuffix))
-				sb.Append (marshalDirective.NativeSuffix);
-		}
+		if (shouldMarshalNativeExceptions)
+			sb.Append ("_exception");
+
+		if (!string.IsNullOrEmpty (marshalDirective?.NativeSuffix))
+			sb.Append (marshalDirective.NativeSuffix);
 
 		return sb.ToString ();
 	}
@@ -2048,6 +2049,9 @@ public partial class Generator : IMemberGatherer {
 			b.Append (" ");
 			b.Append ("arg" + (++n));
 		}
+
+		if (ShouldMarshalNativeExceptions (mi))
+			b.Append (", out IntPtr exception_gchandle");
 
 		string entry_point;
 		if (method_name.IndexOf ("objc_msgSendSuper", StringComparison.Ordinal) != -1) {
@@ -3017,7 +3021,7 @@ public partial class Generator : IMemberGatherer {
 				}
 				// [NullAllowed] on `UserInfo` requires a check for every case
 				print ("var userinfo = Notification.UserInfo;");
-				print ("if (userinfo == null)");
+				print ("if (userinfo is null)");
 				indent++;
 				if (probe_presence)
 					print ("return false;");
@@ -3191,25 +3195,26 @@ public partial class Generator : IMemberGatherer {
 		print (sw, format, args);
 	}
 
+	static char [] newlineCharacters = new char [] { '\n' };
+
 	public void print (StreamWriter w, string format)
 	{
 		if (indent < 0)
 			throw new InvalidOperationException ("Indent is a negative value.");
 
-		string[] lines = format.Split (new char [] { '\n' });
-		string lwsp = new string ('\t', indent);
-		
-		for (int i = 0; i < lines.Length; i++)
-			w.WriteLine (lwsp + lines[i]);
+		var lines = format.Split (newlineCharacters);
+
+		for (int i = 0; i < lines.Length; i++) {
+			if (lines [i].Length == 0)
+				continue;
+			w.Write ('\t', indent);
+			w.WriteLine (lines [i]);
+		}
 	}
 
 	public void print (StreamWriter w, string format, params object [] args)
 	{
-		string[] lines = String.Format (format, args).Split (new char [] { '\n' });
-		string lwsp = new string ('\t', indent);
-		
-		for (int i = 0; i < lines.Length; i++)
-			w.WriteLine (lwsp + lines[i]);
+		print (w, string.Format (format, args));
 	}
 
 	public void print (StreamWriter w, IEnumerable e)
@@ -3893,6 +3898,8 @@ public partial class Generator : IMemberGatherer {
 			selector_field = SelectorField (selector);
 		}
 
+		if (ShouldMarshalNativeExceptions (mi))
+			args += ", out exception_gchandle";
 
 		if (stret){
 			string ret_val = aligned ? "aligned_ret" : "out ret";
@@ -4056,7 +4063,7 @@ public partial class Generator : IMemberGatherer {
 			"_s{0}.ClassPtr = ObjCRuntime.NSStringStruct.ReferencePtr;\n" +
 			"_s{0}.Flags = 0x010007d1; // RefCount=1, Unicode, InlineContents = 0, DontFreeContents\n" +
 			"_s{0}.UnicodePtr = _p{0};\n" + 
-			"_s{0}.Length = " + (probe_null ? "{1} == null ? 0 : {1}.Length;" : "{1}.Length;\n");
+			"_s{0}.Length = " + (probe_null ? "{1} is null ? 0 : {1}.Length;" : "{1}.Length;\n");
 	}
 	
 	public string GenerateDisposeString (bool probe_null, bool must_copy)
@@ -4184,7 +4191,7 @@ public partial class Generator : IMemberGatherer {
 					disposes.AppendFormat ("\nnsb_{0}?.Dispose ();", propInfo.Name);
 				} else if (etype == TypeManager.System_String) {
 					if (null_allowed_override || AttributeManager.HasAttribute<NullAllowedAttribute> (pi)) {
-						convs.AppendFormat ("var nsa_{0} = {1} == null ? null : NSArray.FromStrings ({1});\n", pi.Name, pi.Name.GetSafeParamName ());
+						convs.AppendFormat ("var nsa_{0} = {1} is null ? null : NSArray.FromStrings ({1});\n", pi.Name, pi.Name.GetSafeParamName ());
 						disposes.AppendFormat ("if (nsa_{0} != null)\n\tnsa_{0}.Dispose ();\n", pi.Name);
 					} else {
 						convs.AppendFormat ("var nsa_{0} = NSArray.FromStrings ({1});\n", pi.Name, pi.Name.GetSafeParamName ());
@@ -4194,7 +4201,7 @@ public partial class Generator : IMemberGatherer {
 					exceptions.Add (ErrorHelper.CreateError (1065, mai.Type.FullName, string.IsNullOrEmpty (pi.Name) ? $"#{pi.Position}" : pi.Name, mi.DeclaringType.FullName, mi.Name));
 				} else {
 					if (null_allowed_override || AttributeManager.HasAttribute<NullAllowedAttribute> (pi)) {
-						convs.AppendFormat ("var nsa_{0} = {1} == null ? null : NSArray.FromNSObjects ({1});\n", pi.Name, pi.Name.GetSafeParamName ());
+						convs.AppendFormat ("var nsa_{0} = {1} is null ? null : NSArray.FromNSObjects ({1});\n", pi.Name, pi.Name.GetSafeParamName ());
 						disposes.AppendFormat ("if (nsa_{0} != null)\n\tnsa_{0}.Dispose ();\n", pi.Name);
 					} else {
 						convs.AppendFormat ("var nsa_{0} = NSArray.FromNSObjects ({1});\n", pi.Name, pi.Name.GetSafeParamName ());
@@ -4209,7 +4216,7 @@ public partial class Generator : IMemberGatherer {
 				convs.AppendFormat ("BlockLiteral *block_ptr_{0};\n", pi.Name);
 				convs.AppendFormat ("BlockLiteral block_{0};\n", pi.Name);
 				if (null_allowed){
-					convs.AppendFormat ("if ({0} == null){{\n", pi.Name.GetSafeParamName ());
+					convs.AppendFormat ("if ({0} is null){{\n", pi.Name.GetSafeParamName ());
 					convs.AppendFormat ("\tblock_ptr_{0} = null;\n", pi.Name);
 					convs.AppendFormat ("}} else {{\n");
 					extra = "\t";
@@ -4270,12 +4277,12 @@ public partial class Generator : IMemberGatherer {
 						by_ref_init.AppendFormat ("IntPtr {0}OriginalValue = {0}Value;\n", pi.Name.GetSafeParamName ());
 					} else if (isArrayOfNSObject || isArrayOfINativeObjectSubclass) {
 						by_ref_init.Insert (0, string.Format ("NSArray {0}ArrayValue = NSArray.FromNSObjects ({0});\n", pi.Name.GetSafeParamName ()));
-						by_ref_init.AppendFormat ("{0}ArrayValue == null ? IntPtr.Zero : {0}ArrayValue.Handle;\n", pi.Name.GetSafeParamName ());
+						by_ref_init.AppendFormat ("{0}ArrayValue is null ? IntPtr.Zero : {0}ArrayValue.Handle;\n", pi.Name.GetSafeParamName ());
 					} else if (isArrayOfString) {
-						by_ref_init.Insert (0, string.Format ("NSArray {0}ArrayValue = {0} == null ? null : NSArray.FromStrings ({0});\n", pi.Name.GetSafeParamName ()));
-						by_ref_init.AppendFormat ("{0}ArrayValue == null ? IntPtr.Zero : {0}ArrayValue.Handle;\n", pi.Name.GetSafeParamName ());
+						by_ref_init.Insert (0, string.Format ("NSArray {0}ArrayValue = {0} is null ? null : NSArray.FromStrings ({0});\n", pi.Name.GetSafeParamName ()));
+						by_ref_init.AppendFormat ("{0}ArrayValue is null ? IntPtr.Zero : {0}ArrayValue.Handle;\n", pi.Name.GetSafeParamName ());
 					} else if (isNSObject || isINativeObjectSubclass) {
-						by_ref_init.AppendFormat ("{0} == null ? IntPtr.Zero : {0}.Handle;\n", pi.Name.GetSafeParamName ());
+						by_ref_init.AppendFormat ("{0} is null ? IntPtr.Zero : {0}.Handle;\n", pi.Name.GetSafeParamName ());
 					} else {
 						throw ErrorHelper.CreateError (88, mai.Type, mi);
 					}
@@ -4287,7 +4294,7 @@ public partial class Generator : IMemberGatherer {
 					by_ref_processing.AppendFormat ("{0} = NSString.FromHandle ({0}Value);\n", pi.Name.GetSafeParamName ());
 				} else if (isArray) {
 					if (!pi.IsOut)
-						by_ref_processing.AppendFormat ("if ({0}Value != ({0}ArrayValue == null ? IntPtr.Zero : {0}ArrayValue.Handle))\n\t", pi.Name.GetSafeParamName ());
+						by_ref_processing.AppendFormat ("if ({0}Value != ({0}ArrayValue is null ? IntPtr.Zero : {0}ArrayValue.Handle))\n\t", pi.Name.GetSafeParamName ());
 
 					if (isArrayOfNSObject || isArrayOfINativeObjectSubclass) {
 						by_ref_processing.AppendFormat ("{0} = NSArray.ArrayFromHandle<{1}> ({0}Value);\n", pi.Name.GetSafeParamName (), RenderType (elementType.GetElementType ()));
@@ -4303,7 +4310,7 @@ public partial class Generator : IMemberGatherer {
 					by_ref_processing.AppendFormat ("{0} = Runtime.GetNSObject<{1}> ({0}Value);\n", pi.Name.GetSafeParamName (), RenderType (elementType));
 				} else if (isINativeObjectSubclass) {
 					if (!pi.IsOut)
-						by_ref_processing.AppendFormat ("if ({0}Value != ({0} == null ? IntPtr.Zero : {0}.Handle))\n\t", pi.Name.GetSafeParamName ());
+						by_ref_processing.AppendFormat ("if ({0}Value != ({0} is null ? IntPtr.Zero : {0}.Handle))\n\t", pi.Name.GetSafeParamName ());
 					by_ref_processing.AppendFormat ("{0} = Runtime.GetINativeObject<{1}> ({0}Value, {2}, {3});\n", pi.Name.GetSafeParamName (), RenderType (elementType), isForcedType ? "true" : "false", isForcedType ? isForcedOwns : "false");
 				} else {
 					throw ErrorHelper.CreateError (88, mai.Type, mi);
@@ -4347,7 +4354,7 @@ public partial class Generator : IMemberGatherer {
 					print ($"var {safe_name}__handle__ = {safe_name}.GetHandle ();");
 				}
 			} else if (needs_null_check) {
-				print ("if ({0} == null)", safe_name);
+				print ("if ({0} is null)", safe_name);
 				print ("\tObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof ({0}));", safe_name);
 			}
 		}
@@ -4496,8 +4503,13 @@ public partial class Generator : IMemberGatherer {
 		MarshalType marshalType;
 		bool needsPtrZeroCheck = LookupMarshal (mi.ReturnType, out marshalType) && !marshalType.HasCustomCreate;
 
+		var shouldMarshalNativeExceptions = ShouldMarshalNativeExceptions (mi);
+		if (shouldMarshalNativeExceptions)
+			print ("IntPtr exception_gchandle = IntPtr.Zero;");
+
 		bool use_temp_return  =
 			minfo.is_return_release ||
+			(mi.Name != "Constructor" && shouldMarshalNativeExceptions && mi.ReturnType != TypeManager.System_Void) ||
 			(mi.Name != "Constructor" && (CheckNeedStret (mi) || disposes.Length > 0 || postget != null) && mi.ReturnType != TypeManager.System_Void) ||
 			(AttributeManager.HasAttribute<FactoryAttribute> (mi)) ||
 			((body_options & BodyOption.NeedsTempReturn) == BodyOption.NeedsTempReturn) ||
@@ -4536,7 +4548,7 @@ public partial class Generator : IMemberGatherer {
 			if (external || minfo.is_interface_impl || minfo.is_extension_method) {
 				GenerateNewStyleInvoke (false, mi, minfo, sel, argsArray, needs_temp, category_type);
 			} else {
-				var may_throw = ShouldMarshalNativeExceptions (mi);
+				var may_throw = shouldMarshalNativeExceptions;
 				var null_handle = may_throw && mi.Name == "Constructor";
 				if (null_handle) {
 					print ("try {");
@@ -4563,6 +4575,9 @@ public partial class Generator : IMemberGatherer {
 			GenerateNewStyleInvoke (false, mi, minfo, sel, argsArray, needs_temp, category_type);
 		}
 		
+		if (shouldMarshalNativeExceptions)
+			print ("Runtime.ThrowException (exception_gchandle);");
+
 		if (minfo.is_return_release) {
 
 			// Make sure we generate the required signature in Messaging only if needed 
@@ -4871,7 +4886,7 @@ public partial class Generator : IMemberGatherer {
 
 				if (IsDictionaryContainerType (pi.PropertyType)) {
 					print ("var src = {0} != null ? new NSMutableDictionary ({0}) : null;", wrap);
-					print ("return src == null ? null! : new {0}(src);", FormatType (pi.DeclaringType, pi.PropertyType));
+					print ("return src is null ? null! : new {0}(src);", FormatType (pi.DeclaringType, pi.PropertyType));
 				} else {
 					if (IsArrayOfWrappedType (pi.PropertyType))
 						print ("return NSArray.FromArray<{0}>({1} as NSArray);", FormatType (pi.DeclaringType, pi.PropertyType.GetElementType ()), wrap);
@@ -4893,7 +4908,7 @@ public partial class Generator : IMemberGatherer {
 
 				if (minfo.protocolize || is_protocol_wrapper){
 					print ("var rvalue = value as NSObject;");
-					print ("if (value != null && rvalue == null)");
+					print ("if (!(value is null) && rvalue is null)");
 					print ("\tthrow new ArgumentException (\"The object passed of type \" + value.GetType () + \" does not derive from NSObject\");");
 				}
 							
@@ -6078,7 +6093,7 @@ public partial class Generator : IMemberGatherer {
 				var propertyTypes = properties.GroupBy ((v) => v.PropertyType.FullName).Select ((v) => v.First ()).ToArray ();
 				if (propertyTypes.Length > 1) {
 					exceptions.Add (ErrorHelper.CreateError (1070, type.FullName, gr.Key, propertyTypes [0].DeclaringType.FullName, propertyTypes [1].DeclaringType.FullName,
-						propertyTypes [0], FormatType (type, propertyTypes [0].PropertyType), propertyTypes [1], FormatType (type, propertyTypes [0].PropertyType)));
+						FormatPropertyInfo (propertyTypes [0]), FormatType (type, propertyTypes [0].PropertyType), FormatPropertyInfo (propertyTypes [1]), FormatType (type, propertyTypes [0].PropertyType)));
 				}
 
 				// Select the best match of the properties: prefer a read/write property if it exists, otherwise a readonly or writeonly property.
@@ -6087,7 +6102,7 @@ public partial class Generator : IMemberGatherer {
 					bestMatch = readwrite;
 				} else if (@readonly != null && writeonly != null) {
 					exceptions.Add (ErrorHelper.CreateError (1067, type.FullName, gr.Key, @readonly.DeclaringType.FullName, writeonly.DeclaringType.FullName,
-						@readonly, writeonly));
+						FormatPropertyInfo (@readonly), FormatPropertyInfo (writeonly)));
 					continue;
 				} else if (@readonly != null) {
 					bestMatch = @readonly;
@@ -6897,19 +6912,19 @@ public partial class Generator : IMemberGatherer {
 					print ("get {");
 					indent++;
 					if (field_pi.PropertyType == TypeManager.NSString){
-						print ("if (_{0} == null)", field_pi.Name);
+						print ("if (_{0} is null)", field_pi.Name);
 						indent++;
 						print ("_{0} = Dlfcn.GetStringConstant (Libraries.{2}.Handle, \"{1}\");", field_pi.Name, fieldAttr.SymbolName, library_name);
 						indent--;
 						print ("return _{0};", field_pi.Name);
 					} else if (field_pi.PropertyType.Name == "NSArray"){
-						print ("if (_{0} == null)", field_pi.Name);
+						print ("if (_{0} is null)", field_pi.Name);
 						indent++;
 						print ("_{0} = Runtime.GetNSObject<NSArray> (Dlfcn.GetIndirect (Libraries.{2}.Handle, \"{1}\"));", field_pi.Name, fieldAttr.SymbolName, library_name);
 						indent--;
 						print ("return _{0};", field_pi.Name);
 					} else if (field_pi.PropertyType.Name == "UTType") {
-						print ("if (_{0} == null)", field_pi.Name);
+						print ("if (_{0} is null)", field_pi.Name);
 						indent++;
 						print ("_{0} = Runtime.GetNSObject<UTType> (Dlfcn.GetIntPtr (Libraries.{2}.Handle, \"{1}\"));", field_pi.Name, fieldAttr.SymbolName, library_name);
 						indent--;
@@ -6949,7 +6964,7 @@ public partial class Generator : IMemberGatherer {
 					} else if (field_pi.PropertyType.IsEnum) {
 						var btype = field_pi.PropertyType.GetEnumUnderlyingType ();
 						if (smartEnumTypeName != null) {
-							print ("if (_{0} == null)", field_pi.Name);
+							print ("if (_{0} is null)", field_pi.Name);
 							indent++;
 							print ("_{0} = Dlfcn.GetStringConstant (Libraries.{2}.Handle, \"{1}\");", field_pi.Name, fieldAttr.SymbolName, library_name);
 							indent--;
@@ -6960,7 +6975,7 @@ public partial class Generator : IMemberGatherer {
 							else if (btype == TypeManager.System_nuint || btype == TypeManager.System_UInt64)
 								print ($"return ({fieldTypeName}) (ulong) Dlfcn.GetNUInt (Libraries.{library_name}.Handle, \"{fieldAttr.SymbolName}\");");
 							else
-								throw new BindingException (1014, true, fieldTypeName, field_pi);
+								throw new BindingException (1014, true, fieldTypeName, FormatPropertyInfo (field_pi));
 						} else {
 							if (btype == TypeManager.System_Int32)
 								print ($"return ({fieldTypeName}) Dlfcn.GetInt32 (Libraries.{library_name}.Handle, \"{fieldAttr.SymbolName}\");");
@@ -6971,13 +6986,13 @@ public partial class Generator : IMemberGatherer {
 							else if (btype == TypeManager.System_UInt64)
 								print ($"return ({fieldTypeName}) Dlfcn.GetUInt64 (Libraries.{library_name}.Handle, \"{fieldAttr.SymbolName}\");");
 							else
-								throw new BindingException (1014, true, fieldTypeName, field_pi);
+								throw new BindingException (1014, true, fieldTypeName, FormatPropertyInfo (field_pi));
 						}
 					} else {
 						if (field_pi.PropertyType == TypeManager.System_String)
 							throw new BindingException (1013, true);
 						else
-							throw new BindingException (1014, true, fieldTypeName, field_pi);
+							throw new BindingException (1014, true, fieldTypeName, FormatPropertyInfo (field_pi));
 					}
 					
 					indent--;
@@ -7131,14 +7146,14 @@ public partial class Generator : IMemberGatherer {
 
 						print ("var del = {1} as _{0};", dtype.Name, delName);
 
-						print ("if (del == null){");
+						print ("if (del is null){");
 						indent++;
 						if (!hasKeepRefUntil)
 							print ("del = (_{0}){1} ();", dtype.Name, delegateCreationMethodName);
 						else {
 							string oref = "new object[] {\"oref\"}";
 							print ("del = (_{0}){1} ({2});", dtype.Name, delegateCreationMethodName, oref);
-							print ("if (instances == null) instances = new System.Collections.ArrayList ();");
+							print ("if (instances is null) instances = new System.Collections.ArrayList ();");
 							print ("if (!instances.Contains (this)) instances.Add (this);");
 						}
 						print ("{0} = (I{1})del;", delName, dtype.Name);
@@ -7148,10 +7163,10 @@ public partial class Generator : IMemberGatherer {
 					}
 					else {
 						print ("var del = {0};", delName);
-						print ("if (del == null || (!(del is _{0}))){{", dtype.Name);
+						print ("if (del is null || (!(del is _{0}))){{", dtype.Name);
 						print ("\tdel = new _{0} ({1});", dtype.Name, bta.KeepRefUntil == null ? "" : "oref");
 						if (hasKeepRefUntil) {
-							print ("\tif (instances == null) instances = new System.Collections.ArrayList ();");
+							print ("\tif (instances is null) instances = new System.Collections.ArrayList ();");
 							print ("\tif (!instances.Contains (this)) instances.Add (this);");
 						}
 						print ("\t{0} = del;", delName);
@@ -7292,7 +7307,7 @@ public partial class Generator : IMemberGatherer {
 											print ("{0} = null;", j.Name.GetSafeParamName ());
 										}
 									}
-										
+
 									print ("return {0}!;", def);
 								}
 							}
@@ -7318,7 +7333,7 @@ public partial class Generator : IMemberGatherer {
 						print ("public override bool RespondsToSelector (Selector? sel)");
 						print ("{");
 						++indent;
-						print ("if (sel == null)");
+						print ("if (sel is null)");
 						++indent;
 						print ("return false;");
 						--indent;
@@ -7984,9 +7999,10 @@ public partial class Generator : IMemberGatherer {
 		if (mi.ReturnType.IsEnum) {
 			if (def is string)
 				return def;
-			var name = mi.ReturnType.GetEnumName (def);
+			var name = Enum.GetName (mi.ReturnType, def);
 			if (string.IsNullOrEmpty (name)) {
-				return "(" + mi.ReturnType.FullName + ") " + def;
+				// The value could be negative so it need to be enclosed in parenthesis
+				return "(" + mi.ReturnType.FullName + ") (" + def + ")";
 			} else {
 				return mi.ReturnType.FullName + "." + name;
 			}
@@ -8055,6 +8071,11 @@ public partial class Generator : IMemberGatherer {
 			return @"""""";
 
 		return $"@\"{s.Replace ("\"", "\"\"")}\"";
+	}
+
+	private static string FormatPropertyInfo (PropertyInfo pi)
+	{
+		return pi.DeclaringType.FullName + " " + pi.Name;
 	}
 
 	// Format a provider for error messages

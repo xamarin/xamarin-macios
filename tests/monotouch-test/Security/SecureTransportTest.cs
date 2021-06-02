@@ -137,6 +137,9 @@ namespace MonoTouchFixtures.Security {
 		}
 
 		[Test]
+#if NET
+		[Ignore ("Fails on ARM64 due to: https://github.com/xamarin/xamarin-macios/issues/11498)")]
+#endif
 		public void SslSupportedCiphers ()
 		{
 			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);

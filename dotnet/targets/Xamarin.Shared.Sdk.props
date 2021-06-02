@@ -11,7 +11,19 @@
 	<PropertyGroup>
 		<!-- Set to true when using the Microsoft.<platform>.Sdk NuGet. This is used by pre-existing/shared targets to tweak behavior depending on build system -->
 		<UsingAppleNETSdk>true</UsingAppleNETSdk>
+		<!-- This is the location of the Microsoft.<platform>.Sdk NuGet (/usr/local/share/dotnet/sdk/<version>/Sdks/Microsoft.[iOS/tvOS/watchOS/macOS].Sdk) -->
+		<_XamarinSdkRootDirectory>$([MSBuild]::NormalizePath('$(MSBuildThisFileDirectory)', '..'))\</_XamarinSdkRootDirectory>
+		<_XamarinTaskAssembly Condition="'$(_PlatformName)' != 'macOS'">$(_XamarinSdkRootDirectory)\tools\msbuild\iOS\Xamarin.iOS.Tasks.dll</_XamarinTaskAssembly>
+		<_XamarinTaskAssembly Condition="'$(_PlatformName)' == 'macOS'">$(_XamarinSdkRootDirectory)\tools\msbuild\macOS\Xamarin.Mac.Tasks.dll</_XamarinTaskAssembly>
 		<SuppressTrimAnalysisWarnings Condition=" '$(SuppressTrimAnalysisWarnings)' == '' ">true</SuppressTrimAnalysisWarnings>
 		<AfterMicrosoftNETSdkTargets>$(AfterMicrosoftNETSdkTargets);$(MSBuildThisFileDirectory)Microsoft.$(_PlatformName).Sdk.targets</AfterMicrosoftNETSdkTargets>
+
+		<!-- _XamarinSdkRoot is used by the existing MSBuild targets files -->
+		<_XamarinSdkRoot Condition="'$(_XamarinSdkRoot)' == ''">$(_XamarinSdkRootDirectory)</_XamarinSdkRoot>
+		<!-- _XamarinSdkRootOnMac this should be passed to tasks that need to access the Xamarin Sdk dir on the Mac, this value will be overriden from Windows -->
+		<_XamarinSdkRootOnMac>$(_XamarinSdkRoot)</_XamarinSdkRootOnMac>
+
+		<!-- We don't need any dependency files -->
+		<GenerateDependencyFile Condition="'$(GenerateDependencyFile)' == ''">false</GenerateDependencyFile>
 	</PropertyGroup>
 </Project>

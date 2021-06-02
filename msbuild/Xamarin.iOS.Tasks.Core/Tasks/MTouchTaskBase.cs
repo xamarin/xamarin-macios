@@ -15,21 +15,6 @@ namespace Xamarin.iOS.Tasks
 {
 	public abstract class MTouchTaskBase : BundlerToolTaskBase
 	{
-		class GccOptions
-		{
-			public CommandLineArgumentBuilder Arguments { get; private set; }
-			public HashSet<string> WeakFrameworks { get; private set; }
-			public HashSet<string> Frameworks { get; private set; }
-			public bool Cxx { get; set; }
-
-			public GccOptions ()
-			{
-				Arguments = new CommandLineArgumentBuilder ();
-				WeakFrameworks = new HashSet<string> ();
-				Frameworks = new HashSet<string> ();
-			}
-		}
-
 		#region Inputs
 
 		public string Architectures { get; set; }
@@ -102,86 +87,6 @@ namespace Xamarin.iOS.Tasks
 			Directory.CreateDirectory (AppBundleDir);
 
 			return base.ExecuteTool (pathToTool, responseFileCommands, commandLineCommands);
-		}
-
-		void BuildNativeReferenceFlags (GccOptions gcc)
-		{
-			if (NativeReferences == null)
-				return;
-
-			foreach (var item in NativeReferences) {
-				var value = item.GetMetadata ("Kind");
-				NativeReferenceKind kind;
-				bool boolean;
-
-				if (string.IsNullOrEmpty (value) || !Enum.TryParse (value, out kind)) {
-					Log.LogWarning (MSBStrings.W0051, item.ItemSpec);
-					continue;
-				}
-
-				if (kind == NativeReferenceKind.Static) {
-					var libName = Path.GetFileName (item.ItemSpec);
-
-					if (libName.EndsWith (".a", StringComparison.Ordinal))
-						libName = libName.Substring (0, libName.Length - 2);
-
-					if (libName.StartsWith ("lib", StringComparison.Ordinal))
-						libName = libName.Substring (3);
-
-					if (!string.IsNullOrEmpty (Path.GetDirectoryName (item.ItemSpec)))
-						gcc.Arguments.AddQuoted ("-L" + Path.GetDirectoryName (item.ItemSpec));
-
-					gcc.Arguments.AddQuoted ("-l" + libName);
-
-					value = item.GetMetadata ("ForceLoad");
-
-					if (!string.IsNullOrEmpty (value) && bool.TryParse (value, out boolean) && boolean) {
-						gcc.Arguments.Add ("-force_load");
-						gcc.Arguments.AddQuoted (item.ItemSpec);
-					}
-
-					value = item.GetMetadata ("IsCxx");
-
-					if (!string.IsNullOrEmpty (value) && bool.TryParse (value, out boolean) && boolean)
-						gcc.Cxx = true;
-				} else if (kind == NativeReferenceKind.Framework) {
-					var path = item.ItemSpec;
-					// in case the full path to the library is given (msbuild)
-					if (Path.GetExtension (path) != ".framework")
-						path = Path.GetDirectoryName (path);
-					gcc.Frameworks.Add (path);
-				} else {
-					Log.LogWarning (MSBStrings.W0052, item.ItemSpec);
-					continue;
-				}
-
-				value = item.GetMetadata ("NeedsGccExceptionHandling");
-				if (!string.IsNullOrEmpty (value) && bool.TryParse (value, out boolean) && boolean) {
-					if (!gcc.Arguments.Contains ("-lgcc_eh"))
-						gcc.Arguments.Add ("-lgcc_eh");
-				}
-
-				value = item.GetMetadata ("WeakFrameworks");
-				if (!string.IsNullOrEmpty (value)) {
-					foreach (var framework in value.Split (' ', '\t'))
-						gcc.WeakFrameworks.Add (framework);
-				}
-
-				value = item.GetMetadata ("Frameworks");
-				if (!string.IsNullOrEmpty (value)) {
-					foreach (var framework in value.Split (' ', '\t'))
-						gcc.Frameworks.Add (framework);
-				}
-
-				// Note: these get merged into gccArgs by our caller
-				value = item.GetMetadata ("LinkerFlags");
-				if (!string.IsNullOrEmpty (value)) {
-					var linkerFlags = CommandLineArgumentBuilder.Parse (value);
-
-					foreach (var flag in linkerFlags)
-						gcc.Arguments.AddQuoted (flag);
-				}
-			}
 		}
 
 		static string Unquote (string text, int startIndex)
@@ -335,7 +240,7 @@ namespace Xamarin.iOS.Tasks
 			// don't have mtouch generate the dsyms...
 			args.AddLine ("--dsym=no");
 
-			var gcc = new GccOptions ();
+			var gcc = new LinkerOptions ();
 
 			if (!string.IsNullOrEmpty (ExtraArgs)) {
 				var extraArgs = CommandLineArgumentBuilder.Parse (ExtraArgs);
@@ -399,7 +304,7 @@ namespace Xamarin.iOS.Tasks
 				}
 			}
 
-			BuildNativeReferenceFlags (gcc);
+			gcc.BuildNativeReferenceFlags (Log, NativeReferences);
 			gcc.Arguments.AddQuoted (LinkNativeCodeTaskBase.GetEmbedEntitlementsInExecutableLinkerFlags (CompiledEntitlements));
 
 			foreach (var framework in gcc.Frameworks)

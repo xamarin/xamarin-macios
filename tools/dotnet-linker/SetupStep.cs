@@ -5,6 +5,7 @@ using System.Reflection;
 
 using Mono.Linker;
 using Mono.Linker.Steps;
+using MonoTouch.Tuner;
 
 using Xamarin.Bundler;
 using Xamarin.Linker;
@@ -24,6 +25,17 @@ namespace Xamarin {
 					_steps = (List<IStep>) pipeline.GetType ().GetField ("_steps", BindingFlags.Instance | BindingFlags.NonPublic).GetValue (pipeline);
 				}
 				return _steps;
+			}
+		}
+
+		List<IMarkHandler> _markHandlers;
+		List<IMarkHandler> MarkHandlers {
+			get {
+				if (_markHandlers == null) {
+					var pipeline = typeof (LinkContext).GetProperty ("Pipeline").GetGetMethod ().Invoke (Context, null);
+					_markHandlers = (List<IMarkHandler>) pipeline.GetType ().GetProperty ("MarkHandlers").GetValue (pipeline);
+				}
+				return _markHandlers;
 			}
 		}
 
@@ -61,28 +73,31 @@ namespace Xamarin {
 			// This would not be needed of LinkContext.GetAssemblies () was exposed to us.
 			InsertBefore (new CollectAssembliesStep (), "MarkStep");
 
-			var pre_dynamic_dependency_lookup_substeps = new DotNetSubStepDispatcher ();
-			InsertBefore (pre_dynamic_dependency_lookup_substeps, "MarkStep");
+			// the final decision to remove/keep the dynamic registrar must be done before the linking step
+			InsertBefore (new RegistrarRemovalTrackingStep (), "MarkStep");
 
-			var prelink_substeps = new DotNetSubStepDispatcher ();
-			InsertBefore (prelink_substeps, "MarkStep");
+			var pre_mark_substeps = new DotNetSubStepDispatcher ();
+			InsertBefore (pre_mark_substeps, "MarkStep");
 
 			var post_sweep_substeps = new DotNetSubStepDispatcher ();
 			InsertAfter (post_sweep_substeps, "SweepStep");
 
 			if (Configuration.LinkMode != LinkMode.None) {
-				pre_dynamic_dependency_lookup_substeps.Add (new PreserveBlockCodeSubStep ());
+				MarkHandlers.Add (new PreserveBlockCodeHandler ());
 
 				// We need to run the ApplyPreserveAttribute step even we're only linking sdk assemblies, because even
 				// though we know that sdk assemblies will never have Preserve attributes, user assemblies may have
 				// [assembly: LinkSafe] attributes, which means we treat them as sdk assemblies and those may have
 				// Preserve attributes.
-				prelink_substeps.Add (new ApplyPreserveAttribute ());
-				prelink_substeps.Add (new OptimizeGeneratedCodeSubStep ());
-				prelink_substeps.Add (new MarkNSObjects ());
-				prelink_substeps.Add (new PreserveSmartEnumConversionsSubStep ());
-				prelink_substeps.Add (new CollectUnmarkedMembersSubStep ());
-				prelink_substeps.Add (new StoreAttributesStep ());
+				MarkHandlers.Add (new DotNetMarkAssemblySubStepDispatcher (new ApplyPreserveAttribute ()));
+				MarkHandlers.Add (new OptimizeGeneratedCodeHandler ());
+				MarkHandlers.Add (new DotNetMarkAssemblySubStepDispatcher (new MarkNSObjects ()));
+				MarkHandlers.Add (new PreserveSmartEnumConversionsHandler ());
+
+				// This step could be run after Mark to avoid tracking all members:
+				// https://github.com/xamarin/xamarin-macios/issues/11447
+				pre_mark_substeps.Add (new CollectUnmarkedMembersSubStep ());
+				pre_mark_substeps.Add (new StoreAttributesStep ());
 
 				post_sweep_substeps.Add (new RemoveAttributesStep ());
 			}

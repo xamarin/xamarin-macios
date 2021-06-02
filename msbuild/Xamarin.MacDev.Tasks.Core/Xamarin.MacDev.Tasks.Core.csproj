@@ -53,7 +53,7 @@
       <XlfOutputItem>EmbeddedResource</XlfOutputItem>
       <LastGenOutput>Errors.Designer.cs</LastGenOutput>
       <CustomToolNamespace>Xamarin.Bundler</CustomToolNamespace>
-      <LogicalName>Errors.mtouch.resources</LogicalName>
+      <LogicalName>mtouch.Errors.resources</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
 </Project>

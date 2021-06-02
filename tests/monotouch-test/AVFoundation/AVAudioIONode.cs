@@ -17,6 +17,8 @@ namespace Xamarin.Mac.Tests
 		[Test]
 		public void AVAudioIONodeTests_AudioUnitTest ()
 		{
+			TestRuntime.AssertNotVirtualMachine ();
+
 			Asserts.EnsureYosemite ();
 
 			AVAudioEngine eng = new AVAudioEngine();

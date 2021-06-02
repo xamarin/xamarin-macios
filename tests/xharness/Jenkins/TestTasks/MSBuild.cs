@@ -32,6 +32,8 @@ namespace Xharness.Jenkins.TestTasks {
 			if (Platform == TestPlatform.MacCatalyst)
 				args.Add ("/r");
 			args.Add (projectFile);
+			if (Constants.Count > 0)
+				args.Add($"/p:DefineConstants=\"{string.Join(";", Constants)}\"");
 			return args;
 		}
 

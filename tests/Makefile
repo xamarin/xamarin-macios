@@ -49,10 +49,6 @@ export MSBuildExtensionsPathFallbackPathsOverride=$(IOS_DESTDIR)/Library/Framewo
 export XAMMAC_FRAMEWORK_PATH=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
 export XamarinMacFrameworkRoot=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
 
-# This is a temporary variable to enable the .NET workload resolver, because it's opt-in for now.
-# Ref: https://github.com/dotnet/sdk/issues/13849
-export MSBuildEnableWorkloadResolver=true
-
 ifneq ($(RELEASE),)
 ifneq ($(BITCODE),)
 CONFIG=Release-bitcode
@@ -108,6 +104,7 @@ test.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk
 	@echo "WATCH_SDK_VERSION=$(WATCH_SDK_VERSION)" >> $@
 	@echo "OSX_SDK_VERSION=$(OSX_SDK_VERSION)" >> $@
 	@echo "DOTNET6_BCL_DIR=$(DOTNET6_BCL_DIR)" >> $@
+	@echo "ENABLE_DOTNET=$(ENABLE_DOTNET)" >> $@
 
 test-system.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk
 	@rm -f $@
@@ -381,7 +378,7 @@ wrench-%:
 
 wrench-jenkins: xharness/xharness.exe
 	$(Q) rm -f $@-failed.stamp
-	$(Q) ulimit -n 4096 && $(SYSTEM_MONO) --trace=E:all --debug $(CURDIR)/$< $(XHARNESS_VERBOSITY) --jenkins --autoconf --rootdir $(CURDIR) --sdkroot $(XCODE_DEVELOPER_ROOT) --label run-all-tests,skip-ios-32-tests,skip-device-tests --markdown-summary=$(abspath $(CURDIR))/TestSummary.md $(TESTS_PERIODIC_COMMAND) || echo "$$?" > $@-failed.stamp
+	$(Q) ulimit -n 4096 && $(SYSTEM_MONO) --trace=E:all --debug $(CURDIR)/$< $(XHARNESS_VERBOSITY) --jenkins --autoconf --rootdir $(CURDIR) --sdkroot $(XCODE_DEVELOPER_ROOT) --label run-all-tests,skip-device-tests --markdown-summary=$(abspath $(CURDIR))/TestSummary.md $(TESTS_PERIODIC_COMMAND) || echo "$$?" > $@-failed.stamp
 	@echo "@MonkeyWrench: SetSummary: <br/>`cat $(abspath $(CURDIR))/TestSummary.md | awk 1 ORS='<br/>'`"
 	@echo "@MonkeyWrench: AddFile: $(abspath $(CURDIR))/TestSummary.md"
 	$(Q) if test -e $@-failed.stamp; then EC=`cat $@-failed.stamp`; rm -f $@-failed.stamp; exit $$EC; fi

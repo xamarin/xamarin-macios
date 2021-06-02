@@ -80,10 +80,15 @@ namespace Xharness.Jenkins {
 		static readonly string [] dotnetFilenames = {
 			"msbuild",
 			".*dotnet.*",
+			"eng", // bumping .NET modifies files in this directory
 		};
 		static readonly string [] msbuildFilenames = {
 			"msbuild",
 			"tests/msbuild",
+		};
+
+		static readonly string [] xharnessPrefix = {
+			"tests/xharness",
 		};
 
 		#endregion
@@ -180,6 +185,7 @@ namespace Xharness.Jenkins {
 			SetEnabled (files, cecilPrefixes, "cecil", ref jenkins.IncludeCecil);
 			SetEnabled (files, dotnetFilenames, "dotnet", ref jenkins.IncludeDotNet);
 			SetEnabled (files, msbuildFilenames, "msbuild", ref jenkins.IncludeMSBuild);
+			SetEnabled (files, xharnessPrefix, "all", ref jenkins.IncludeAll);
 		}
 
 		void SelectTestsByLabel (int pullRequest)
@@ -292,8 +298,8 @@ namespace Xharness.Jenkins {
 		
 		public void SelectTests ()
 		{
-			if (!int.TryParse (Environment.GetEnvironmentVariable ("ghprbPullId"), out int pullRequest))
-				MainLog.WriteLine ("The environment variable 'ghprbPullId' was not found, so no pull requests will be checked for test selection.");
+			if (!int.TryParse (Environment.GetEnvironmentVariable ("PR_ID"), out int pullRequest))
+				MainLog.WriteLine ("The environment variable 'PR_ID' was not found, so no pull requests will be checked for test selection.");
 
 			// First check if can auto-select any tests based on which files were modified.
 			// This will only enable additional tests, never disable tests.
@@ -326,6 +332,11 @@ namespace Xharness.Jenkins {
 			if (!Harness.INCLUDE_MAC) {
 				MainLog.WriteLine ("The macOS build is disabled, so any macOS tests will be disabled as well.");
 				jenkins.IncludeMac = false;
+			}
+
+			if (!Harness.ENABLE_DOTNET) {
+				MainLog.WriteLine ("The .NET build is disabled, so any .NET tests will be disabled as well.");
+				jenkins.IncludeDotNet = false;
 			}
 		}
 	}

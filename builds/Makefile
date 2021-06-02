@@ -107,6 +107,10 @@ $(eval $(call FixMacCatalystAssembly,System.Net.Http))
 	$(MAKE) download-mono
 	$(Q) touch $@
 
+ifdef CUSTOM_DOTNET
+DOWNLOAD_DOTNET_VERSION=$(CUSTOM_DOTNET_VERSION)
+endif
+
 .stamp-download-dotnet-packages: $(TOP)/Make.config downloads/$(basename $(basename $(DOTNET6_TARBALL_NAME))) package-download/global.json package-download/NuGet.config
 	$(Q_GEN) cd package-download && $(DOTNET6) \
 		build \
@@ -115,6 +119,7 @@ $(eval $(call FixMacCatalystAssembly,System.Net.Http))
 		/p:WriteFilePath=$(CURDIR)/BundledNETCorePlatformsPackageVersion.txt \
 		/p:PackageRuntimeIdentifiers="$(DOTNET_RUNTIME_IDENTIFIERS)" \
 		/p:PackageRuntimeIdentifiersCoreCLR="$(DOTNET_CORECLR_RUNTIME_IDENTIFIERS)" \
+		/p:CustomDotNetVersion="$(DOWNLOAD_DOTNET_VERSION)" \
 		/bl \
 		$(DOTNET_BUILD_VERBOSITY)
 	$(Q) touch $@
@@ -129,6 +134,9 @@ package-download/NuGet.config: $(TOP)/NuGet.config Makefile
 	$(Q) $(CP) $< $@
 	$(Q) $(CP) $< $@.tmp
 	$(Q) nuget config -Set globalPackagesFolder=$(abspath $(CURDIR)/downloads) -Config $@.tmp
+ifdef CUSTOM_DOTNET
+	$(Q) nuget sources add -Name dev-runtime-feed -Source $(abspath $(DOTNET_RUNTIME_PATH)/artifacts/packages/Release/Shipping) -ConfigFile $@.tmp
+endif
 	$(Q) mv $@.tmp $@
 
 DOTNET_DOWNLOADS = \
@@ -747,6 +755,9 @@ $(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/Versions.plist: $(TOP)/Versions-mac.
 $(DOTNET_DESTDIR)/$(MACOS_NUGET).Sdk/Versions.plist: $(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/Versions.plist | $(DOTNET_DESTDIR)/$(MACOS_NUGET).Sdk
 	$(Q) $(CP) $< $@
 
+$(DOTNET_DESTDIR)/$(MACOS_NUGET).Sdk/tools/buildinfo: $(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/buildinfo | $(DOTNET_DESTDIR)/$(MACOS_NUGET).Sdk/tools
+	$(Q) $(CP) $< $@
+
 $(MAC_COMMON_DIRECTORIES):
 	$(Q) mkdir -p $@
 
@@ -844,6 +855,9 @@ $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/Versions.plist: $(TOP)/Versions-ios.plist.in 
 	$(Q_GEN) sed -e 's/@XCODE_VERSION@/$(XCODE_VERSION)/g' -e "s/@MONO_VERSION@/$(shell cat $(MONO_IOS_SDK_DESTDIR)/ios-mono-version.txt)/g" $< > $@
 
 $(DOTNET_DESTDIR)/%.Sdk/Versions.plist: $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/Versions.plist | $(DOTNET_DESTDIR)/%.Sdk
+	$(Q) $(CP) $< $@
+
+$(DOTNET_DESTDIR)/%.Sdk/tools/buildinfo: $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/buildinfo | $(DOTNET_DESTDIR)/%.Sdk/tools
 	$(Q) $(CP) $< $@
 
 $(IOS_COMMON_DIRECTORIES):
@@ -1104,9 +1118,11 @@ install-tvos: $(TVOS_TARGETS)
 
 DOTNET_COMMON_DIRECTORIES += \
 	$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(DOTNET_DESTDIR)/$($(platform)_NUGET).Sdk) \
+	$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(DOTNET_DESTDIR)/$($(platform)_NUGET).Sdk/tools) \
 
 DOTNET_COMMON_TARGETS = \
 	$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(DOTNET_DESTDIR)/$($(platform)_NUGET).Sdk/Versions.plist) \
+	$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(DOTNET_DESTDIR)/$($(platform)_NUGET).Sdk/tools/buildinfo) \
 
 $(DOTNET_COMMON_DIRECTORIES):
 	$(Q) mkdir -p $@

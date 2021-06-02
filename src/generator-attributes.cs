@@ -1,11 +1,5 @@
 using System;
-
-#if BGENERATOR
-using IKVM.Reflection;
-using Type = IKVM.Reflection.Type;
-#else
 using System.Reflection;
-#endif
 
 //
 // All the attributes in this file are compiled into two binaries:

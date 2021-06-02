@@ -212,9 +212,8 @@ namespace Introspection
 						break;
 #if NET
 					case "libSystem.Globalization.Native":
-						// Globalization hasn't been implemented yet: https://github.com/xamarin/xamarin-macios/issues/8906
-						if (name.StartsWith ("GlobalizationNative_", StringComparison.Ordinal))
-							continue;
+						// load from executable (like __Internal above since it's part of the static library)
+						path = null;
 						break;
 					case "libhostpolicy":
 						// There's no libhostpolicy library.
@@ -222,10 +221,6 @@ namespace Introspection
 						continue;
 					case "libSystem.Native":
 						path += ".dylib";
-						break;
-					case "QCall":
-						if (name.StartsWith ("LogThreadPool", StringComparison.Ordinal))
-							continue;
 						break;
 #endif
 					case "libc":
@@ -260,7 +255,7 @@ namespace Introspection
 
 		// Note: this looks very similar to the "SymbolExists" test above (and it is)
 		// except that we never skip based on availability attributes or __Internal...
-		// since this is a test to ensure thigns will work at native link time (e.g. 
+		// since this is a test to ensure things will work at native link time (e.g.
 		// for devices) when dlsym is disabled
 
 		[Test]
@@ -286,6 +281,7 @@ namespace Introspection
 				Check (a);
 		}
 
+		[Test]
 #if __MACCATALYST__
 		[Ignore ("https://github.com/xamarin/xamarin-macios/issues/10883")]
 #endif
@@ -296,6 +292,7 @@ namespace Introspection
 				Check (a);
 		}
 
+		[Test]
 #if __MACCATALYST__
 		[Ignore ("https://github.com/xamarin/xamarin-macios/issues/10883")]
 #endif

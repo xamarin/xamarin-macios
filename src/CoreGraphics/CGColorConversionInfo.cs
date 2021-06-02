@@ -53,7 +53,6 @@ namespace CoreGraphics {
 			/* CGColorSpaceRef __nullable */ IntPtr space3, CGColorConversionInfoTransformType transform3, CGColorRenderingIntent intent3,
 			IntPtr lastSpaceMarker);
 
-#if !MONOMAC
 		// https://developer.apple.com/library/ios/documentation/Xcode/Conceptual/iPhoneOSABIReference/Articles/ARM64FunctionCallingConventions.html
 		// Declare dummies until we're on the stack then the arguments
 		// <quote>C language requires arguments smaller than int to be promoted before a call, but beyond that, unused bytes on the stack are not specified by this ABI</quote>
@@ -68,7 +67,6 @@ namespace CoreGraphics {
 			IntPtr space2, nuint transform2, nint intent2,
 			IntPtr space3, nuint transform3, nint intent3,
 			IntPtr lastSpaceMarker);
-#endif
 
 		static GColorConversionInfoTriple empty = new GColorConversionInfoTriple ();
 
@@ -92,7 +90,6 @@ namespace CoreGraphics {
 			var first = triples [0]; // there's always one
 			var second = triples.Length > 1 ? triples [1] : empty; 
 			var third = triples.Length > 2 ? triples [2] : empty;
-#if !MONOMAC
 			if (Runtime.IsARM64CallingConvention) {
 				Handle = CGColorConversionInfoCreateFromList_arm64 (o, first.Space.GetHandle (), (uint) first.Transform, (int) first.Intent,
 					IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero,
@@ -100,14 +97,11 @@ namespace CoreGraphics {
 					third.Space.GetHandle (), (uint) third.Transform, (int) third.Intent,
 					IntPtr.Zero);
 			} else {
-#endif
 				Handle = CGColorConversionInfoCreateFromList (o, first.Space.GetHandle (), first.Transform, first.Intent,
 					second.Space.GetHandle (), second.Transform, second.Intent,
 					third.Space.GetHandle (), third.Transform, third.Intent,
 					IntPtr.Zero);
-#if !MONOMAC
 			}
-#endif
 			if (Handle == IntPtr.Zero)
 				throw new Exception ("Failed to create CGColorConverter");
 		}

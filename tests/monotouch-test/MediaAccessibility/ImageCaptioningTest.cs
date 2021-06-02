@@ -110,6 +110,12 @@ namespace MonoTouchFixtures.MediaAccessibility {
 						Assert.Null (s, "ro / back to original");
 					}
 					Assert.Null (e, "ro / get back / no error");
+
+					// Restore original value
+					Assert.True (MAImageCaptioning.SetCaption (url, null, out e), "Set 2");
+					s = MAImageCaptioning.GetCaption (url, out e);
+					Assert.Null (s, "ro / back to null");
+					Assert.Null (e, "ro / get back null / no error");
 				}
 
 				// 2nd try with a read/write copy

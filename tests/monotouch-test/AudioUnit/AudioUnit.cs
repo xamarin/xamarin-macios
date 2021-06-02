@@ -31,6 +31,8 @@ namespace Xamarin.Mac.Tests
 		[Test]
 		public void GetCurrentDevice_Test ()
 		{
+			TestRuntime.AssertNotVirtualMachine ();
+
 			theUnit unit = GetAudioUnitForTest ();
 
 			uint device = unit.GetCurrentDevice (AudioUnitScopeType.Global);

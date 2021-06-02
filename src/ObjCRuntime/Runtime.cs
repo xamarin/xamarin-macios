@@ -157,23 +157,34 @@ namespace ObjCRuntime {
 #endif
 			IntPtr AssemblyLocations;
 
+#if NET
+			public IntPtr xamarin_objc_msgsend;
+			public IntPtr xamarin_objc_msgsend_super;
+			public IntPtr xamarin_objc_msgsend_stret;
+			public IntPtr xamarin_objc_msgsend_super_stret;
+			public IntPtr unhandled_exception_handler;
+			public IntPtr reference_tracking_begin_end_callback;
+			public IntPtr reference_tracking_is_referenced_callback;
+			public IntPtr reference_tracking_tracked_object_entered_finalization;
+#endif
 			public bool IsSimulator {
 				get {
 					return (Flags & InitializationFlags.IsSimulator) == InitializationFlags.IsSimulator;
 				}
 			}
-
-#if NET
-			// Future optimization potential: make the linker change this into a constant.
-			internal bool IsCoreCLR {
-				get {
-					return (Flags & InitializationFlags.IsCoreCLR) == InitializationFlags.IsCoreCLR;
-				}
-			}
-#endif
 		}
 
 		internal static unsafe InitializationOptions* options;
+
+#if NET
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		internal unsafe static bool IsCoreCLR {
+			get {
+				// The linker may turn calls to this property into a constant
+				return (options->Flags.HasFlag (InitializationFlags.IsCoreCLR));
+			}
+		}
+#endif
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static bool DynamicRegistrationSupported {
@@ -278,6 +289,11 @@ namespace ObjCRuntime {
 
 			objc_exception_mode = options->MarshalObjectiveCExceptionMode;
 			managed_exception_mode = options->MarshalManagedExceptionMode;
+
+#if NET
+			if (IsCoreCLR)
+				InitializeCoreCLRBridge (options);
+#endif
 
 			initialized = true;
 #if PROFILE
@@ -469,6 +485,40 @@ namespace ObjCRuntime {
 		static IntPtr CreateDelegateProxy (IntPtr method, IntPtr @delegate, IntPtr signature, uint token_ref)
 		{
 			return BlockLiteral.GetBlockForDelegate ((MethodInfo) GetGCHandleTarget (method), GetGCHandleTarget (@delegate), token_ref, Marshal.PtrToStringAuto (signature));
+		}
+
+		static IntPtr GetExceptionMessage (IntPtr exception_gchandle)
+		{
+			var exc = (Exception) GetGCHandleTarget (exception_gchandle);
+			return Marshal.StringToHGlobalAuto (exc.Message);
+		}
+
+		static void PrintException (Exception exc, bool isInnerException, StringBuilder sb)
+		{
+			if (isInnerException)
+				sb.AppendLine (" --- inner exception ---");
+			sb.AppendLine ($"{exc.Message} ({exc.GetType ().FullName})");
+			var trace = exc.StackTrace;
+			if (!string.IsNullOrEmpty (trace))
+				sb.AppendLine (trace);
+		}
+
+		static IntPtr PrintAllExceptions (IntPtr exception_gchandle)
+		{
+			var str = new StringBuilder ();
+			try {
+				var exc = (Exception) GetGCHandleTarget (exception_gchandle);
+
+				int counter = 0;
+				do {
+					PrintException (exc, counter > 0, str);
+					exc = exc.InnerException;
+				} while (counter < 10 && exc != null);
+			} catch (Exception exception) {
+				str.Append ($"Failed to print exception: {exception}");
+			}
+
+			return Marshal.StringToHGlobalAuto (str.ToString ());
 		}
 
 		static unsafe Assembly GetEntryAssembly ()
@@ -769,6 +819,14 @@ namespace ObjCRuntime {
 		static IntPtr TypeGetFullName (IntPtr type) 
 		{	
 			return Marshal.StringToHGlobalAuto (((Type) GetGCHandleTarget (type)).FullName);
+		}
+
+		static IntPtr GetObjectTypeFullName (IntPtr gchandle)
+		{
+			var obj = GetGCHandleTarget (gchandle);
+			if (obj == null)
+				return IntPtr.Zero;
+			return Marshal.StringToHGlobalAuto (obj.GetType ().FullName);
 		}
 
 		static IntPtr LookupManagedTypeName (IntPtr klass)
@@ -1546,6 +1604,7 @@ namespace ObjCRuntime {
 			throw new ArgumentException (string.Format ("'{0}' is an unknown protocol", type.FullName));
 		}
 
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		internal static bool IsUserType (IntPtr self)
 		{
 			var cls = Class.object_getClass (self);
@@ -1557,8 +1616,8 @@ namespace ObjCRuntime {
 					if (idx >= 0)
 						return (map [idx].flags & MTTypeFlags.UserType) == MTTypeFlags.UserType;
 					// If using the partial static registrar, we need to continue
-					// If full static registrar, we can return false
-					if ((options->Flags & InitializationFlags.IsPartialStaticRegistrar) != InitializationFlags.IsPartialStaticRegistrar)
+					// If full static registrar, we can return false, as long as the dynamic registrar is not supported
+					if (!DynamicRegistrationSupported && (options->Flags & InitializationFlags.IsPartialStaticRegistrar) != InitializationFlags.IsPartialStaticRegistrar)
 						return false;
 				}
 			}
@@ -1850,6 +1909,24 @@ namespace ObjCRuntime {
 			}
 		}
 #endif
+
+		// Takes a GCHandle (as an IntPtr) for an exception, frees the GCHandle, and throws the exception.
+		// If the IntPtr does not represent a valid GCHandle, then the function just returns.
+		// This method must be public, because the generator can generate calls to it (thus third-party binding libraries may need it).
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		public static void ThrowException (IntPtr gchandle)
+		{
+			if (gchandle == IntPtr.Zero)
+				return;
+			var handle = GCHandle.FromIntPtr (gchandle);
+			var exc = handle.Target as Exception;
+			handle.Free ();
+
+			if (exc == null)
+				return;
+
+			throw exc;
+		}
 	}
 	
 	internal class IntPtrEqualityComparer : IEqualityComparer<IntPtr>

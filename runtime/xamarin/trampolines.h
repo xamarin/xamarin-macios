@@ -91,13 +91,14 @@ enum ArgumentSemantic /* Xcode 4.4 doesn't like this ': int' */ {
 //   `ptr` was passed, this value is also returned, otherwise newly allocated
 //   memory is returned (which must be freed with `xamarin_free`). If an
 //   exception occurs, 'ptr' is returned (and no memory allocated).
+//   If the return value is a MonoObject*, then it's a retained MonoObject*.
 // * xamarin_managed_to_id_func: the resulting Objective-C object.
 
 typedef void *	(*xamarin_id_to_managed_func) (id value, void *ptr, MonoClass *managedType, void *context, GCHandle *exception_gchandle);
 typedef id		(*xamarin_managed_to_id_func) (MonoObject *value, void *context, GCHandle *exception_gchandle);
 
 id              xamarin_generate_conversion_to_native (MonoObject *value, MonoType *inputType, MonoType *outputType, MonoMethod *method, void *context, GCHandle *exception_gchandle);
-void *          xamarin_generate_conversion_to_managed (id value, MonoType *inputType, MonoType *outputType, MonoMethod *method, GCHandle *exception_gchandle, void *context, /*SList*/ void **free_list);
+void *          xamarin_generate_conversion_to_managed (id value, MonoType *inputType, MonoType *outputType, MonoMethod *method, GCHandle *exception_gchandle, void *context, /*SList*/ void **free_list, /*SList*/ void **release_list_ptr);
 NSNumber *      xamarin_convert_managed_to_nsnumber (MonoObject *value, MonoClass *managedType, MonoMethod *method, void *context, GCHandle *exception_gchandle);
 NSValue *       xamarin_convert_managed_to_nsvalue (MonoObject *value, MonoClass *managedType, MonoMethod *method, void *context, GCHandle *exception_gchandle);
 NSString *      xamarin_convert_managed_to_nsstring (MonoObject *value, MonoType *managedType, MonoType *nativeType, MonoMethod *method, GCHandle *exception_gchandle);

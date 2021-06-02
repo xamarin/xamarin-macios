@@ -162,6 +162,18 @@ namespace Xamarin.Linker.Steps
 					addPInvokeSymbol = true;
 					break;
 
+				case "libSystem.Globalization.Native":
+				case "System.Globalization.Native":
+#if NET
+					// https://github.com/xamarin/xamarin-macios/issues/11392
+					if (DerivedLinkContext.App.Platform == ApplePlatform.MacCatalyst) {
+						Driver.Log (4, "Did not add native reference to {0} in {1} referenced by {2} in {3}.", pinfo.EntryPoint, pinfo.Module.Name, method.FullName, method.Module.Name);
+						break;
+					}
+#endif
+					addPInvokeSymbol = true;
+					break;
+
 				default:
 					Driver.Log (4, "Did not add native reference to {0} in {1} referenced by {2} in {3}.", pinfo.EntryPoint, pinfo.Module.Name, method.FullName, method.Module.Name);
 					break;

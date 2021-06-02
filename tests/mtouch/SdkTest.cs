@@ -12,19 +12,20 @@ using NUnit.Framework;
 using Xamarin.Tests;
 
 namespace Xamarin.Linker {
-
-	public abstract class BaseProfile {
-
-		protected abstract bool IsSdk (string assemblyName);
-	}
-
 	public class ProfilePoker : MobileProfile {
 
 		static ProfilePoker p = new ProfilePoker ();
 
+		public override string ProductAssembly => throw new NotImplementedException ();
+
 		public static bool IsWellKnownSdk (string assemblyName)
 		{
 			return p.IsSdk (assemblyName);
+		}
+
+		protected override bool IsProduct (string assemblyName)
+		{
+			throw new NotImplementedException ();
 		}
 	}
 

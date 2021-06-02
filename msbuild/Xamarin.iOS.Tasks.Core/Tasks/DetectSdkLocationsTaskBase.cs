@@ -15,7 +15,6 @@ namespace Xamarin.iOS.Tasks
 		public override bool Execute ()
 		{
 			AppleSdkSettings.Init ();
-			Sdks.Reload ();
 
 			TargetArchitecture architectures;
 			if (string.IsNullOrEmpty (TargetArchitectures) || !Enum.TryParse (TargetArchitectures, out architectures))

@@ -1,7 +1,6 @@
 
 using System;
-using IKVM.Reflection;
-using Type = IKVM.Reflection.Type;
+using System.Reflection;
 
 public class TypeManager {
 	BindingTouch BindingTouch;

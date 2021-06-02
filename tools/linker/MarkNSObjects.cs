@@ -85,6 +85,7 @@ namespace Xamarin.Linker.Steps {
 					continue;
 
 				// not optimal if "Link all" is used as the override might be removed later
+				// this may miss some overrides with the .NET6 linker (https://github.com/xamarin/xamarin-macios/issues/11449)
 				if (!IsOverridenInUserCode (method))
 					continue;
 

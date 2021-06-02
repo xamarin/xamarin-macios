@@ -2,9 +2,7 @@
 // Copyright Microsoft Corp.
 using System;
 using System.Collections.Generic;
-using IKVM.Reflection;
-using Type = IKVM.Reflection.Type;
-
+using System.Reflection;
 using Foundation;
 using ObjCRuntime;
 
@@ -86,7 +84,7 @@ public partial class Generator {
 		print ("public {0} (NSCoder coder) : base (NSObjectFlag.Empty)", type_name);
 		print ("{");
 		indent++;
-		print ("if (coder == null)");
+		print ("if (coder is null)");
 		indent++;
 		print ("throw new ArgumentNullException (nameof (coder));");
 		indent--;
@@ -361,7 +359,7 @@ public partial class Generator {
 			indent--;
 			break;
 		case "CIVector[]":
-			print ("if (value == null) {");
+			print ("if (value is null) {");
 			indent++;
 			print ($"SetHandle (\"{propertyName}\", IntPtr.Zero);");
 			indent--;

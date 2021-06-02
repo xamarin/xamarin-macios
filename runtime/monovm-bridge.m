@@ -89,6 +89,11 @@ xamarin_bridge_initialize ()
 	mono_install_assembly_preload_hook (xamarin_assembly_preload_hook, NULL);
 	DEBUG_LAUNCH_TIME_PRINT ("\tJIT init time");
 }
+
+void
+xamarin_bridge_shutdown ()
+{
+}
 #endif // !LEGACY_XAMARIN_MAC
 
 static MonoClass *
@@ -146,6 +151,16 @@ xamarin_bridge_register_product_assembly (GCHandle* exception_gchandle)
 	xamarin_mono_object_release (&entry_assembly);
 }
 
+MonoMethod *
+xamarin_bridge_get_mono_method (MonoReflectionMethod *method)
+{
+	// COOP: Reads managed memory, needs to be in UNSAFE mode
+	MONO_ASSERT_GC_UNSAFE;
+
+	PublicMonoReflectionMethod *rm = (PublicMonoReflectionMethod *) method;
+	return rm->method;
+}
+
 MonoClass *
 xamarin_get_inativeobject_class ()
 {
@@ -162,20 +177,20 @@ xamarin_get_nsobject_class ()
 	return nsobject_class;
 }
 
-MonoClass *
-xamarin_get_nsvalue_class ()
+MonoType *
+xamarin_get_nsvalue_type ()
 {
 	if (nsvalue_class == NULL)
 		xamarin_assertion_message ("Internal consistency error, please file a bug (https://github.com/xamarin/xamarin-macios/issues/new). Additional data: can't get the %s class because it's been linked away.\n", "NSValue");
-	return nsvalue_class;
+	return mono_class_get_type (nsvalue_class);
 }
 
-MonoClass *
-xamarin_get_nsnumber_class ()
+MonoType *
+xamarin_get_nsnumber_type ()
 {
 	if (nsnumber_class == NULL)
 		xamarin_assertion_message ("Internal consistency error, please file a bug (https://github.com/xamarin/xamarin-macios/issues/new). Additional data: can't get the %s class because it's been linked away.\n", "NSNumber");
-	return nsnumber_class;
+	return mono_class_get_type (nsnumber_class);
 }
 
 MonoClass *
@@ -274,6 +289,107 @@ xamarin_install_nsautoreleasepool_hooks ()
 	mono_profiler_install_thread (thread_start, thread_end);
 }
 
+void
+xamarin_bridge_free_mono_signature (MonoMethodSignature **psig)
+{
+	// nothing to free here
+	*psig = NULL;
+}
+
+bool
+xamarin_is_class_nsobject (MonoClass *cls)
+{
+	// COOP: Reading managed data, must be in UNSAFE mode
+	MONO_ASSERT_GC_UNSAFE;
+
+	return mono_class_is_subclass_of (cls, xamarin_get_nsobject_class (), false);
+}
+
+bool
+xamarin_is_class_inativeobject (MonoClass *cls)
+{
+	// COOP: Reading managed data, must be in UNSAFE mode
+	MONO_ASSERT_GC_UNSAFE;
+
+	return mono_class_is_subclass_of (cls, xamarin_get_inativeobject_class (), true);
+}
+
+bool
+xamarin_is_class_array (MonoClass *cls)
+{
+	// COOP: Reading managed data, must be in UNSAFE mode
+	MONO_ASSERT_GC_UNSAFE;
+
+	return mono_class_is_subclass_of (cls, mono_get_array_class (), false);
+}
+
+bool
+xamarin_is_class_nsnumber (MonoClass *cls)
+{
+	// COOP: Reading managed data, must be in UNSAFE mode
+	MONO_ASSERT_GC_UNSAFE;
+
+	if (nsnumber_class == NULL)
+		return false;
+
+	return mono_class_is_subclass_of (cls, nsnumber_class, false);
+}
+
+bool
+xamarin_is_class_nsvalue (MonoClass *cls)
+{
+	// COOP: Reading managed data, must be in UNSAFE mode
+	MONO_ASSERT_GC_UNSAFE;
+
+	if (nsvalue_class == NULL)
+		return false;
+
+	return mono_class_is_subclass_of (cls, nsvalue_class, false);
+}
+
+bool
+xamarin_is_class_nsstring (MonoClass *cls)
+{
+	// COOP: Reading managed data, must be in UNSAFE mode
+	MONO_ASSERT_GC_UNSAFE;
+
+	MonoClass *nsstring_class = xamarin_get_nsstring_class ();
+	if (nsstring_class == NULL)
+		return false;
+
+	return mono_class_is_subclass_of (cls, nsstring_class, false);
+}
+
+bool
+xamarin_is_class_intptr (MonoClass *cls)
+{
+	return cls == mono_get_intptr_class ();
+}
+
+bool
+xamarin_is_class_string (MonoClass *cls)
+{
+	return cls == mono_get_string_class ();
+}
+
+MonoException *
+xamarin_create_system_invalid_cast_exception (const char *message)
+{
+	return (MonoException *) mono_exception_from_name_msg (mono_get_corlib (), "System", "InvalidCastException", message);
+}
+
+MonoException *
+xamarin_create_system_exception (const char *message)
+{
+	return (MonoException *) mono_exception_from_name_msg (mono_get_corlib (), "System", "Exception", message);
+}
+
+MonoException *
+xamarin_create_system_entry_point_not_found_exception (const char *entrypoint)
+{
+	return (MonoException *) mono_exception_from_name_msg (mono_get_corlib (), "System", "EntryPointNotFoundException", entrypoint);
+}
+
 #if DOTNET
 
 bool
@@ -288,6 +404,97 @@ xamarin_bridge_vm_initialize (int propertyCount, const char **propertyKeys, cons
 	return rv == 0;
 }
 
+// We have a P/Invoke to xamarin_mono_object_retain in managed code, but the
+// corresponding native method only really exists when using CoreCLR. However,
+// the P/Invoke might not always be linked away (if the linker isn't enabled
+// for instance), in which case we must still have a native function. So
+// provide an empty implementation of xamarin_mono_object_retain (since it
+// doesn't have to do anything when using MonoVM). We still keep the #define
+// that does nothing, so that all the native code that calls
+// xamarin_mono_object_retain, will completely disappear when using MonoVM.
+#undef xamarin_mono_object_retain
+extern "C" {
+	void xamarin_mono_object_retain (MonoObject *mobj);
+}
+void
+xamarin_mono_object_retain (MonoObject *mobj)
+{
+	// Nothing to do here
+}
+
+#if defined (TRACK_MONOOBJECTS)
+// This function is needed for the corresponding managed P/Invoke to not make
+// the native linker fail due to an unresolved symbol. This method should
+// never end up being called (it'll be linked away by the native linker if the
+// managed linker removes the P/Invoke, and never called from managed code
+// otherwise).
+void
+xamarin_bridge_log_monoobject (MonoObject *mobj, const char *stacktrace)
+{
+	xamarin_assertion_message ("%s is not available on MonoVM", __func__);
+}
+#endif // defined (TRACK_MONOOBJECTS)
+
 #endif // DOTNET
+
+/*
+ * ToggleRef support
+ */
+// #define DEBUG_TOGGLEREF 1
+
+static void
+gc_register_toggleref (MonoObject *obj, id self, bool isCustomType)
+{
+	// COOP: This is an icall, at entry we're in unsafe mode. Managed memory is accessed, so we stay in unsafe mode.
+	MONO_ASSERT_GC_UNSAFE;
+
+#ifdef DEBUG_TOGGLEREF
+	id handle = xamarin_get_nsobject_handle (obj);
+
+	PRINT ("**Registering object %p handle %p RC %d flags: %i isCustomType: %i",
+		obj,
+		handle,
+		(int) (handle ? [handle retainCount] : 0),
+		xamarin_get_nsobject_flags (obj),
+		isCustomType
+		);
+#endif
+	mono_gc_toggleref_add (obj, TRUE);
+
+	// Make sure the GCHandle we have is a weak one for custom types.
+	if (isCustomType) {
+		MONO_ENTER_GC_SAFE;
+		xamarin_switch_gchandle (self, true);
+		MONO_EXIT_GC_SAFE;
+	}
+}
+
+static MonoToggleRefStatus
+gc_toggleref_callback (MonoObject *object)
+{
+	// COOP: this is a callback called by the GC, so I assume the mode here doesn't matter
+	MonoToggleRefStatus res;
+	uint8_t flags = xamarin_get_nsobject_flags (object);
+
+	res = xamarin_gc_toggleref_callback (flags, NULL, xamarin_get_nsobject_handle, object);
+
+	return res;
+}
+
+static void
+gc_event_callback (MonoProfiler *prof, MonoGCEvent event, int generation)
+{
+	// COOP: this is a callback called by the GC, I believe the mode here doesn't matter.
+	xamarin_gc_event (event);
+}
+
+void
+xamarin_enable_new_refcount ()
+{
+	mono_gc_toggleref_register_callback (gc_toggleref_callback);
+
+	xamarin_add_internal_call ("Foundation.NSObject::RegisterToggleRef", (const void *) gc_register_toggleref);
+	mono_profiler_install_gc (gc_event_callback, NULL);
+}
 
 #endif // !CORECLR_RUNTIME

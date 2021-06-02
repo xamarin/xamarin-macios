@@ -167,6 +167,8 @@ bool			xamarin_is_class_nsnumber (MonoClass *cls);
 bool			xamarin_is_class_nsvalue (MonoClass *cls);
 bool			xamarin_is_class_nsstring (MonoClass *cls);
 bool			xamarin_is_class_nullable (MonoClass *cls, MonoClass **element_type, GCHandle *exception_gchandle);
+bool			xamarin_is_class_intptr (MonoClass *cls);
+bool			xamarin_is_class_string (MonoClass *cls);
 MonoClass *		xamarin_get_nullable_type (MonoClass *cls, GCHandle *exception_gchandle);
 MonoType *		xamarin_get_parameter_type (MonoMethod *managed_method, int index);
 MonoObject *	xamarin_get_nsobject_with_type_for_ptr (id self, bool owns, MonoType* type, GCHandle *exception_gchandle);
@@ -199,6 +201,7 @@ uint32_t		xamarin_find_protocol_wrapper_type (uint32_t token_ref);
 void			xamarin_release_block_on_main_thread (void *obj);
 void			xamarin_bridge_setup (); // this is called very early, before parsing the command line arguments
 void			xamarin_bridge_initialize (); // this is called a bit later, after parsing the command line arguments.
+void			xamarin_bridge_shutdown (); // this is called just before returning from xamarin_main
 unsigned char *	xamarin_load_aot_data (MonoAssembly *assembly, int size, gpointer user_data, void **out_handle);
 void			xamarin_free_aot_data (MonoAssembly *assembly, int size, gpointer user_data, void *handle);
 MonoAssembly*	xamarin_assembly_preload_hook (MonoAssemblyName *aname, char **assemblies_path, void* user_data);
@@ -208,8 +211,11 @@ bool			xamarin_bridge_vm_initialize (int propertyCount, const char **propertyKey
 void*			xamarin_pinvoke_override (const char *libraryName, const char *entrypointName);
 void			xamarin_bridge_call_runtime_initialize (struct InitializationOptions* options, GCHandle* exception_gchandle);
 void			xamarin_bridge_register_product_assembly (GCHandle* exception_gchandle);
+MonoMethod *	xamarin_bridge_get_mono_method (MonoReflectionMethod *method);
+void			xamarin_bridge_free_mono_signature (MonoMethodSignature **signature);
 bool			xamarin_register_monoassembly (MonoAssembly *assembly, GCHandle *exception_gchandle);
 void			xamarin_install_nsautoreleasepool_hooks ();
+void			xamarin_enable_new_refcount ();
 
 MonoObject *	xamarin_new_nsobject (id self, MonoClass *klass, GCHandle *exception_gchandle);
 bool			xamarin_has_managed_ref (id self);
@@ -224,6 +230,7 @@ bool			xamarin_set_gchandle_with_flags_safe (id self, GCHandle gchandle, enum Xa
 void			xamarin_create_gchandle (id self, void *managed_object, enum XamarinGCHandleFlags flags, bool force_weak);
 void            xamarin_release_managed_ref (id self, bool user_type);
 void			xamarin_notify_dealloc (id self, GCHandle gchandle);
+void			xamarin_release_static_dictionaries ();
 
 int				xamarin_main (int argc, char *argv[], enum XamarinLaunchMode launch_mode);
 
@@ -237,20 +244,21 @@ void			xamarin_check_objc_type (id obj, Class expected_class, SEL sel, id self, 
 
 void			xamarin_set_gc_pump_enabled (bool value);
 
-typedef void  	(*XamarinUnhandledExceptionFunc)         (MonoObject *exc, const char *type_name, const char *message, const char *trace);
-void          	xamarin_install_unhandled_exception_hook (XamarinUnhandledExceptionFunc func);
 void			xamarin_process_nsexception (NSException *exc);
-void			xamarin_process_nsexception_using_mode (NSException *ns_exception, bool throwManagedAsDefault);
+void			xamarin_process_nsexception_using_mode (NSException *ns_exception, bool throwManagedAsDefault, GCHandle *output_exception);
 void			xamarin_process_managed_exception (MonoObject *exc);
 void			xamarin_process_managed_exception_gchandle (GCHandle gchandle);
 void			xamarin_throw_product_exception (int code, const char *message);
 GCHandle		xamarin_create_product_exception (int code, const char *message);
 GCHandle		xamarin_create_product_exception_with_inner_exception (int code, GCHandle inner_exception_gchandle /* will be freed */, const char *message);
+MonoException *	xamarin_create_system_exception (const char *message);
+MonoException *	xamarin_create_system_invalid_cast_exception (const char *message);
+MonoException *	xamarin_create_system_entry_point_not_found_exception (const char *entrypoint);
 NSString *		xamarin_print_all_exceptions (GCHandle handle);
 
 id				xamarin_invoke_objc_method_implementation (id self, SEL sel, IMP xamarin_impl);
-MonoClass *		xamarin_get_nsnumber_class ();
-MonoClass *		xamarin_get_nsvalue_class ();
+MonoType *		xamarin_get_nsnumber_type ();
+MonoType *		xamarin_get_nsvalue_type ();
 MonoClass *		xamarin_get_inativeobject_class ();
 MonoClass *		xamarin_get_nsobject_class ();
 MonoClass *		xamarin_get_nsstring_class ();
@@ -281,6 +289,11 @@ MonoObject *	xamarin_gchandle_get_target (GCHandle handle);
 void			xamarin_gchandle_free (GCHandle handle);
 MonoObject *	xamarin_gchandle_unwrap (GCHandle handle); // Will get the target and free the GCHandle
 
+typedef id (*xamarin_get_handle_func) (MonoObject *info);
+MonoToggleRefStatus	xamarin_gc_toggleref_callback (uint8_t flags, id handle, xamarin_get_handle_func get_handle, MonoObject *info);
+void				xamarin_gc_event (MonoGCEvent event);
+
+void			xamarin_bridge_log_monoobject (MonoObject *obj, const char *stacktrace);
 /*
  * In MonoVM MonoObjects are tracked in memory/the stack directly by the GC, but that doesn't
  * work for CoreCLR, so we make it ref-counted. All code must use the functions below to retain/release
@@ -291,11 +304,15 @@ MonoObject *	xamarin_gchandle_unwrap (GCHandle handle); // Will get the target a
  */
 #if defined(CORECLR_RUNTIME)
 void			xamarin_mono_object_retain (MonoObject *mobj);
-void			xamarin_mono_object_release (MonoObject **mobj);
+// Use C++ linking to be able to use method overloading, so that callers don't have to cast their variables to 'MonoObject**' (which improves type safety a lot).
+extern "C++" void	xamarin_mono_object_release (MonoObject **mobj);
+extern "C++" void	xamarin_mono_object_release (MonoString **mobj);
+void			xamarin_mono_object_release_at_process_exit (MonoObject *mobj);
 #else
 // Nothing to do here.
 #define			xamarin_mono_object_retain(x)
 #define			xamarin_mono_object_release(x) do { *x = NULL; } while (0);
+#define			xamarin_mono_object_release_at_process_exit(x)
 #endif
 
 
@@ -391,10 +408,14 @@ public:
 
 #endif /* !TARGET_OS_WATCH */
 
+#if defined(CORECLR_RUNTIME)
+// this is not needed for CoreCLR
+#define MONO_THREAD_ATTACH
+#define MONO_THREAD_DETACH
 // Once we have one mono clone again the TARGET_OS_WATCH
 // condition should be removed (DYNAMIC_MONO_RUNTIME should still
 // be here though).
-#if TARGET_OS_WATCH && !defined (DYNAMIC_MONO_RUNTIME)
+#elif TARGET_OS_WATCH && !defined (DYNAMIC_MONO_RUNTIME)
 #define MONO_THREAD_ATTACH \
 	do { \
 		gpointer __thread_dummy; \

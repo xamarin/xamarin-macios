@@ -10,6 +10,8 @@ using Xamarin.Localization.MSBuild;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Xml.Linq;
+using Xamarin.Tests;
 
 namespace Xamarin.iOS.Tasks {
 	[TestFixture]
@@ -30,7 +32,8 @@ namespace Xamarin.iOS.Tasks {
 		[TestCase ("zh-TW", "時發生錯誤: 未知的映像格式。")]
 		public void AllSupportedTranslations (string culture, string errorMessage)
 		{
-			CultureInfo originalCulture = Thread.CurrentThread.CurrentUICulture;
+			CultureInfo originalUICulture = Thread.CurrentThread.CurrentUICulture;
+			CultureInfo originalCulture = Thread.CurrentThread.CurrentCulture;
 			CultureInfo newCulture;
 			try {
 				newCulture = new CultureInfo (culture);
@@ -41,9 +44,10 @@ namespace Xamarin.iOS.Tasks {
 				Assert.IsFalse (task.Execute (), "Execute failure");
 				Assert.AreEqual (1, Engine.Logger.ErrorEvents.Count, "ErrorCount");
 				bool isTranslated = Engine.Logger.ErrorEvents[0].Message.Contains (errorMessage);
-				Assert.IsTrue (isTranslated, culture + ": is not supported correctly. ");
+				Assert.IsTrue (isTranslated, $"Should contain \"{errorMessage}\", but instead has value: \"{Engine.Logger.ErrorEvents[0].Message}\"");
 			} finally {
-				Thread.CurrentThread.CurrentUICulture = originalCulture;
+				Thread.CurrentThread.CurrentUICulture = originalUICulture;
+				Thread.CurrentThread.CurrentCulture = originalCulture;
 			}
 		}
 
@@ -64,7 +68,8 @@ namespace Xamarin.iOS.Tasks {
 		{
 			// insert which error code you'd like to test
 			string errorCode = "E0007";
-			CultureInfo originalCulture = Thread.CurrentThread.CurrentUICulture;
+			CultureInfo originalUICulture = Thread.CurrentThread.CurrentUICulture;
+			CultureInfo originalCulture = Thread.CurrentThread.CurrentCulture;
 
 			try {
 				Assert.IsFalse (string.IsNullOrEmpty (errorCode), "Error code is null or empty");
@@ -73,9 +78,10 @@ namespace Xamarin.iOS.Tasks {
 
 				Assert.AreNotEqual (englishError, newCultureError, $"\"{errorCode}\" is not translated in {culture}.");
 			} catch (NullReferenceException){
-				Assert.IsFalse (true, $"Error code \"{errorCode}\" was not found");
+				Assert.Fail ($"Error code \"{errorCode}\" was not found");
 			} finally {
-				Thread.CurrentThread.CurrentUICulture = originalCulture;
+				Thread.CurrentThread.CurrentUICulture = originalUICulture;
+				Thread.CurrentThread.CurrentCulture = originalCulture;
 			}
 		}
 
@@ -118,7 +124,8 @@ namespace Xamarin.iOS.Tasks {
 
 			string fullCulturePath = $"{Directory.GetCurrentDirectory ()}/TaskTests/LocalizationIgnore/{culture}-Translations.ignore";
 			string shortCulturePath = $"xamarin-macios/tests/msbuild/Xamarin.MacDev.Tasks.Tests/TaskTests/LocalizationIgnore/{culture}-Translations.ignore";
-			CultureInfo originalCulture = Thread.CurrentThread.CurrentUICulture;
+			CultureInfo originalUICulture = Thread.CurrentThread.CurrentUICulture;
+			CultureInfo originalCulture = Thread.CurrentThread.CurrentCulture;
 
 			cultureIgnoreList = ReadFile (fullCulturePath);
 
@@ -139,7 +146,8 @@ namespace Xamarin.iOS.Tasks {
 					} else if (englishError == newCultureError)
 						errorList.Append ($"{errorCode} ");
 				} finally {
-					Thread.CurrentThread.CurrentUICulture = originalCulture;
+					Thread.CurrentThread.CurrentUICulture = originalUICulture;
+					Thread.CurrentThread.CurrentCulture = originalCulture;
 				}
 			}
 
@@ -153,6 +161,28 @@ namespace Xamarin.iOS.Tasks {
 			if (!File.Exists (path))
 				return Array.Empty<string> ();
 			return File.ReadAllLines (path).Where (line => !line.StartsWith ("#", StringComparison.Ordinal) && line != string.Empty).ToList ();
+		}
+
+		readonly string [] ignoreList = {
+			"ResourceManager",
+			"Culture",
+		};
+
+		[Test]
+		public void UpdatedResources ()
+		{
+			var resxPath = Path.Combine (Configuration.RootPath, "msbuild", "Xamarin.Localization.MSBuild", "MSBStrings.resx");
+			var xml = XDocument.Load (resxPath);
+			var resxNames = xml.Root.Descendants ().Where (n => n.Name == "data").Select (n => n.Attribute ("name").Value);
+			var resxHashSet = new HashSet<string> (resxNames);
+			var resourceNames = typeof (MSBStrings).GetProperties ().Select (s => s.Name);
+			var resourceHashSet = new HashSet<string> (resourceNames);
+
+			var errorsNotInResources = string.Join (" ", resxHashSet.Where (n => !resourceHashSet.Contains (n) && !ignoreList.Contains (n)));
+			var errorsNotInResx = string.Join (" ", resourceHashSet.Where (n => !resxHashSet.Contains (n) && !ignoreList.Contains (n)));
+
+			Assert.IsEmpty (errorsNotInResources, $"The following error(s) were found in MSBStrings.resx but not through the MSBStrings resource. Try to recompile the msbuild project and then the test project\n{errorsNotInResources}");
+			Assert.IsEmpty (errorsNotInResx, $"The following error(s) were found in the MSBStrings resource but not in MSBStrings.resx. Try to recompile the msbuild project and then the test project\n{errorsNotInResx}");
 		}
 	}
 }

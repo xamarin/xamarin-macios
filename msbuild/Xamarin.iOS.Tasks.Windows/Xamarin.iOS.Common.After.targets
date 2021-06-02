@@ -25,7 +25,7 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 
 	<Target Name="EnsureMacConnection" 
 		DependsOnTargets="_SayHello" 
-		BeforeTargets="_CleanDebugSymbols;_CleanAppBundle;_DetectAppManifest;_DetectSdkLocations;_GenerateAppBundleName;_GenerateAppExBundleName" />
+		BeforeTargets="_CleanDebugSymbols;_CleanAppBundle;_DetectAppManifest;_DetectSdkLocations;_GenerateBundleName" />
 	
 	<PropertyGroup>
 		<CreateAppBundleDependsOn>
@@ -358,6 +358,7 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 				ReferenceAssemblyPaths="@(ReferencePath)"
 				RootAssemblyNames="@(TrimmerRootAssembly)"
 				TrimMode="$(TrimMode)"
+				DefaultAction="$(TrimmerDefaultAction)"
 				RemoveSymbols="$(TrimmerRemoveSymbols)"
 				FeatureSettings="@(_TrimmerFeatureSettings)"
 				CustomData="@(_TrimmerCustomData)"
@@ -374,6 +375,7 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 				TreatWarningsAsErrors="$(ILLinkTreatWarningsAsErrors)"
 				WarningsAsErrors="$(WarningsAsErrors)"
 				WarningsNotAsErrors="$(WarningsNotAsErrors)"
+				SingleWarn="$(TrimmerSingleWarn)"
 
 				CustomSteps="@(_TrimmerCustomSteps)"
 				RootDescriptorFiles="@(TrimmerRootDescriptor)"

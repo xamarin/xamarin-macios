@@ -37,6 +37,29 @@ steps:
     gci env: | format-table -autosize -wrap
   displayName: 'Dump Environment'
 
+- bash: |
+    ioreg -l | grep -e Manufacturer -e 'Vendor Name'
+  displayName: 'Dump Hardware'
+
+- bash: |
+    if [[ $(ioreg -l | grep -e 'VMware' | wc -l) -ne 0 ]]; then
+      echo "Using VMware virtualization."
+      echo "##vso[task.setvariable variable=VM_VENDOR]VMware"
+    fi
+
+    if [[ $(ioreg -l | grep -e 'VirtualBox' | wc -l) -ne 0 ]]; then
+      echo "Using VirtualBox virtualization."
+      echo "##vso[task.setvariable variable=VM_VENDOR]VirtualBox"
+    fi
+
+    
+    if [[ $(ioreg -l | grep -e 'Parallels' | wc -l) -ne 0 ]]; then
+      echo "Using Parallels virtualization."
+      echo "##vso[task.setvariable variable=VM_VENDOR]Parallels"
+    fi
+
+  displayName: 'Set VM Vendor'
+
 - bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/clean-bot.sh
   displayName: 'Clean bot'
   env:
@@ -134,6 +157,8 @@ steps:
     ls -Rla $(Build.SourcesDirectory)/artifacts
     $(Build.SourcesDirectory)/artifacts/mac-test-package/test-dependencies.sh
   displayName: Install dependencies.
+  env:
+    IGNORE_DOTNET: 1  # Not needed for the tests.
 
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\GitHub.psm1 
@@ -141,11 +166,13 @@ steps:
     Write-Host "Found tests"
     $testsPath = "$(Build.SourcesDirectory)/artifacts/mac-test-package/tests"
     Write-Host "Tests path is $testsPath"
-    Get-ChildItem -Recurse $testsPath
+
+    # print enviroment
+    dir env:
 
     [System.Collections.Generic.List[string]]$failures = @()
 
-    $macTest = @("dontlink", "apitest", "introspection", "linksdk", "linkall", "xammac_tests")
+    $macTest = @("dontlink", "introspection", "linksdk", "linkall", "xammac_tests")
     foreach ($t in $macTest) {
       $testName = "exec-mac-$t"
       Write-Host "Execution test $testName"

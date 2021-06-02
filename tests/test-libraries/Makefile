@@ -1,6 +1,8 @@
 TOP=../..
 include $(TOP)/Make.config
 
+SUBDIRS += custom-type-assembly
+
 # without this many compiler warnings about unused functions and variables
 # in system headers show up.
 export CCACHE_CPP2=1
@@ -84,14 +86,14 @@ COMMON_DYLIB_ARGS=-g -dynamiclib -gdwarf-2 -fms-extensions libframework.m -o $$@
 .libs/$(1)/libtest.x86.dylib: ARCH=i386
 .libs/$(1)/libtest.%.dylib: libframework.m | .libs/$(1)
 	$$(call Q_2,CC,    [$(1)]) $$(XCODE_CC) $$(COMMON_DYLIB_ARGS) -arch $$(if $$(ARCH),$$(ARCH),$$*) $(5) $$($(2)_$$(shell echo $$* | tr a-z A-Z)_OBJC_CFLAGS)
-	$$(Q) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/install_name_tool -id @rpath/XTest.framework/XTest $$@
+	$$(Q) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/install_name_tool -id @rpath/libtest.dylib $$@
 
 ## The following arm64_32 rule is required for this to work with newer make versions, otherwise a rule in mk/rules.mk is chosen instead.
 ## The problem is that 'arm64_32' is longer than 'libtest', the former is a stem in the rule just above, while the latter is a rule in mk/rules.mk,
 ## and in newer make versions make will choose the rule that matches the shorter stem.
 .libs/$(1)/libtest.arm64_32.dylib: libframework.m | .libs/$(1)
 	$$(call Q_2,CC,    [$(1)]) $$(XCODE_CC) $$(COMMON_DYLIB_ARGS) -arch arm64_32 $(5) $$($(2)_$$(shell echo $$* | tr a-z A-Z)_OBJC_CFLAGS)
-	$$(Q) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/install_name_tool -id @rpath/XTest.framework/XTest $$@
+	$$(Q) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/install_name_tool -id @rpath/libtest.dylib $$@
 
 .libs/$(1)/libtest.dylib: $$(foreach arch,$(3),.libs/$(1)/libtest.$$(arch).dylib)
 	$$(call Q_2,LIPO   [$(1)]) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo $$^ -create -output $$@
@@ -99,6 +101,7 @@ COMMON_DYLIB_ARGS=-g -dynamiclib -gdwarf-2 -fms-extensions libframework.m -o $$@
 # XTest is a framework where the binary code is a (fat) dynamic library
 .libs/$(1)/XTest.framework/XTest: .libs/$(1)/libtest.dylib | .libs/$(1)/XTest.framework
 	$$(Q) $(CP) $$^ $$@
+	$$(Q) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/install_name_tool -id @rpath/XTest.framework/XTest $$@
 
 .libs/$(1)/XTest.framework/Info.plist: XTest-Info.plist | .libs/$(1)/XTest.framework
 	$$(Q) $(CP) $$^ $$@
@@ -135,13 +138,13 @@ $(eval $(call Template,watchsimulator,WATCHSIMULATOR,x86 x86_64,WatchSimulator,-
 $(eval $(call Template,watchos,WATCHOS,armv7k arm64_32,WatchOS,-mwatchos-version-min=2.0 -fembed-bitcode -isysroot $(DEVICEWATCH_SDK)))
 endif
 ifdef INCLUDE_MAC
-$(eval $(call Template,macos,MACOS,x86_64,MacOSX,-mmacosx-version-min=$(MIN_OSX_VERSION_FOR_MAC) -isysroot $(XCODE_DEVELOPER_ROOT)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$(OSX_SDK_VERSION).sdk))
+$(eval $(call Template,macos,MACOS,x86_64 arm64,MacOSX,-mmacosx-version-min=$(MIN_OSX_VERSION_FOR_MAC) -isysroot $(XCODE_DEVELOPER_ROOT)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$(OSX_SDK_VERSION).sdk))
 endif
 ifdef INCLUDE_MACCATALYST
 $(eval $(call Template,maccatalyst,MACCATALYST,x86_64 arm64,MacCatalyst,$(MACCATALYST_COMMON_CFLAGS)))
 endif
 
-.libs/ios-fat .libs/tvos-fat .libs/watchos-fat .libs/maccatalyst-fat:
+.libs/ios-fat .libs/tvos-fat .libs/watchos-fat .libs/maccatalyst-fat .libs/macos-fat:
 	$(Q) mkdir -p $@
 
 define LibTemplate
@@ -157,11 +160,21 @@ $(eval $(call LibTemplate,armv7+7s,.libs/iphoneos/libtest.armv7.o,.libs/iphoneos
 $(eval $(call LibTemplate,armv7+x86,.libs/iphoneos/libtest.armv7.o,.libs/iphonesimulator/libtest.x86.o,ios-fat,IOS))
 $(eval $(call LibTemplate,armv7s+x86,.libs/iphoneos/libtest.armv7s.o,.libs/iphonesimulator/libtest.x86.o,ios-fat,IOS))
 
+ifdef INCLUDE_TVOS
 $(eval $(call LibTemplate,arm64+x86_64,.libs/tvos/libtest.arm64.o,.libs/tvsimulator/libtest.x86_64.o,tvos-fat,TVOS))
+endif
 
+ifdef INCLUDE_WATCH
 $(eval $(call LibTemplate,armv7k+x86,.libs/watchos/libtest.armv7k.o,.libs/watchsimulator/libtest.x86.o,watchos-fat,WATCHOS))
+endif
 
+ifdef INCLUDE_MACCATALYST
 $(eval $(call LibTemplate,x86_64+arm64,.libs/maccatalyst/libtest.x86_64.o,.libs/maccatalyst/libtest.arm64.o,maccatalyst-fat,MACCATALYST))
+endif
+
+ifdef INCLUDE_MAC
+$(eval $(call LibTemplate,x86_64+arm64,.libs/macos/libtest.x86_64.o,.libs/macos/libtest.arm64.o,macos-fat,MACOS))
+endif
 
 define FatFrameworkTemplate
 .libs/$(1)/XStaticObjectTest.framework/XStaticObjectTest: .libs/$(2)/XStaticObjectTest.framework/XStaticObjectTest .libs/$(3)/XStaticObjectTest.framework/XStaticObjectTest | .libs/$(1)
@@ -191,10 +204,14 @@ endif
 .libs/$(1)/libtest2.a: .libs/$(2)/libtest2.a .libs/$(3)/libtest2.a | .libs/$(1)
 	$(Q) lipo -create -output $$@ $$^
 
+.libs/$(1)/libtest.dylib: .libs/$(2)/libtest.dylib .libs/$(3)/libtest.dylib | .libs/$(1)
+	$(Q) lipo -create -output $$@ $$^
+
 $(3)_TARGETS += \
 	.libs/$(1)/XTest.framework/XTest .libs/$(1)/XTest.framework/Info.plist \
 	.libs/$(1)/XStaticObjectTest.framework/XStaticObjectTest \
 	.libs/$(1)/XStaticArTest.framework/XStaticArTest \
+	.libs/$(1)/libtest.dylib \
 	.libs/$(1)/libtest.a \
 	.libs/$(1)/libtest2.a \
 
@@ -202,11 +219,28 @@ all-local:: $$($(3)_TARGETS)
 endef
 
 $(eval $(call FatFrameworkTemplate,ios-fat,iphoneos,iphonesimulator))
+ifdef INCLUDE_TVOS
 $(eval $(call FatFrameworkTemplate,tvos-fat,tvos,tvsimulator))
+endif
+ifdef INCLUDE_WATCH
 $(eval $(call FatFrameworkTemplate,watchos-fat,watchos,watchsimulator))
+endif
+ifdef INCLUDE_MACCATALYST
 $(eval $(call FatFrameworkTemplate,maccatalyst-fat,maccatalyst,maccatalyst))
+endif
+ifdef INCLUDE_MAC
+$(eval $(call FatFrameworkTemplate,macos-fat,macos,macos))
+endif
 
-XCPLATFORMS=iphoneos iphonesimulator tvos tvsimulator watchos watchsimulator
+ifdef INCLUDE_IOS
+XCPLATFORMS+= iphoneos iphonesimulator
+endif
+ifdef INCLUDE_TVOS
+XCPLATFORMS+= tvos tvsimulator
+endif
+ifdef INCLUDE_WATCH
+XCPLATFORMS+= watchos watchsimulator
+endif
 ifdef INCLUDE_MAC
 XCPLATFORMS+= macos
 endif

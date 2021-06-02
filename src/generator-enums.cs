@@ -2,12 +2,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using IKVM.Reflection;
-using Type = IKVM.Reflection.Type;
+using System.Reflection;
 using Foundation;
 using ObjCRuntime;
-using System.IO;
 
 public partial class Generator {
 
@@ -119,7 +118,7 @@ public partial class Generator {
 			print ("public static NSString? GetDomain (this {0} self)", type.Name);
 			print ("{");
 			indent++;
-			print ("if (_domain == null)");
+			print ("if (_domain is null)");
 			indent++;
 			print ("_domain = Dlfcn.GetStringConstant (Libraries.{0}.Handle, \"{1}\");", library_name, error.ErrorDomain);
 			indent--;
@@ -192,7 +191,7 @@ public partial class Generator {
 			print ("public static {0} GetValue (NSString{1} constant)", type.Name, nullable ? "?" : "");
 			print ("{");
 			indent++;
-			print ("if (constant == null)");
+			print ("if (constant is null)");
 			indent++;
 			// if we do not have a enum value that maps to a null field then we throw
 			if (!nullable)

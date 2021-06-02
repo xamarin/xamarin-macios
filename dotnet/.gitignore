@@ -1,6 +1,6 @@
 global.json
 tmpdir
-Microsoft.NET.Workload.*/LICENSE
+Microsoft.NET.Sdk.*/LICENSE
 WorkloadManifest.json
 nupkgs
 Microsoft.*.Sdk/targets/Microsoft.*.Sdk.SupportedTargetPlatforms.props

@@ -451,6 +451,7 @@ monotouch_start_debugging ()
 			LOG (PRODUCT ": Not connecting to the IDE, debug has been disabled\n");
 		}
 	
+#if !defined (CORECLR_RUNTIME)
 		char *trace = getenv ("MONO_TRACE");
 		if (trace && *trace) {
 			if (!strncmp (trace, "--trace=", 8))
@@ -460,6 +461,7 @@ monotouch_start_debugging ()
 			mono_jit_set_trace_options (trace);
 			MONO_EXIT_GC_UNSAFE;
 		}
+#endif // !defined (CORECLR_RUNTIME)
 	}
 }
 
@@ -723,6 +725,7 @@ void monotouch_configure_debugging ()
 	pthread_mutex_unlock (&mutex);
 }
 
+#if !defined (CORECLR_RUNTIME)
 static void sdb_connect (const char *address)
 {
 	gboolean shaked;
@@ -746,6 +749,7 @@ static void sdb_close2 (void)
 {
 	shutdown (sdb_fd, SHUT_RDWR);
 }
+#endif // !defined (CORECLR_RUNTIME)
 
 static gboolean send_uninterrupted (int fd, const void *buf, size_t len)
 {
@@ -773,6 +777,7 @@ static ssize_t recv_uninterrupted (int fd, void *buf, size_t len)
 	return total;
 }
 
+#if !defined (CORECLR_RUNTIME)
 static gboolean sdb_send (void *buf, size_t len)
 {
 	gboolean rv;
@@ -803,6 +808,7 @@ static ssize_t sdb_recv (void *buf, size_t len)
 
 	return rv;
 }
+#endif // !defined (CORECLR_RUNTIME)
 
 #if TARGET_OS_WATCH && !TARGET_OS_SIMULATOR
 
@@ -1236,6 +1242,7 @@ monotouch_load_debugger ()
 	
 	// main thread only 
 	if (sdb_fd != -1) {
+#if !defined (CORECLR_RUNTIME)
 		DebuggerTransport transport;
 		transport.name = "custom_transport";
 		transport.connect = sdb_connect;
@@ -1249,6 +1256,9 @@ monotouch_load_debugger ()
 		mono_debugger_agent_parse_options ("transport=custom_transport,address=dummy,embedding=1");
 
 		LOG (PRODUCT ": Debugger loaded with custom transport (fd: %i)\n", sdb_fd);
+#else
+		LOG (PRODUCT ": Debugger not loaded (debugger loading not implemented for CoreCLR).\n");
+#endif
 	} else {
 		LOG (PRODUCT ": Debugger not loaded (disabled).\n");
 	}
@@ -1263,9 +1273,13 @@ monotouch_load_profiler ()
 	// TODO: make this generic enough for other profilers to work too
 	// Main thread only
 	if (profiler_description != NULL) {
+#if !defined (CORECLR_RUNTIME)
 		mono_profiler_load (profiler_description);
 
 		LOG (PRODUCT ": Profiler loaded: %s\n", profiler_description);
+#else
+		LOG (PRODUCT ": Profiler not loaded (profiler loading not implemented for CoreCLR): %s\n", profiler_description);
+#endif
 		free (profiler_description);
 		profiler_description = NULL;
 	} else {
