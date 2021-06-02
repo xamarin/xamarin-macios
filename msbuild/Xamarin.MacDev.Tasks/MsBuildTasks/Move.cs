@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Build.Framework;
 using Xamarin.Messaging.Build.Client;
@@ -9,7 +10,7 @@ namespace Microsoft.Build.Tasks
 	{
 		public override bool Execute ()
 		{
-			if (!string.IsNullOrEmpty (SessionId))
+			if (Environment.OSVersion.Platform == PlatformID.Win32NT && !string.IsNullOrEmpty (SessionId))
 				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
 
 			return base.Execute ();

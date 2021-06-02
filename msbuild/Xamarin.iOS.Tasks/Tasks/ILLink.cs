@@ -1,4 +1,5 @@
-﻿using Xamarin.Messaging.Build.Client;
+﻿using System;
+using Xamarin.Messaging.Build.Client;
 using ILLink.Tasks;
 
 namespace Xamarin.iOS.Tasks
@@ -7,7 +8,7 @@ namespace Xamarin.iOS.Tasks
 	{
 		public override bool Execute ()
 		{
-			if (!string.IsNullOrEmpty (SessionId))
+			if (Environment.OSVersion.Platform == PlatformID.Win32NT && !string.IsNullOrEmpty (SessionId))
 				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
 
 			return base.Execute ();
@@ -15,7 +16,7 @@ namespace Xamarin.iOS.Tasks
 
 		public override void Cancel ()
 		{
-			if (!string.IsNullOrEmpty (SessionId))
+			if (Environment.OSVersion.Platform == PlatformID.Win32NT && !string.IsNullOrEmpty (SessionId))
 				BuildConnection.CancelAsync (SessionId, BuildEngine4).Wait ();
 			else
 				base.Cancel ();

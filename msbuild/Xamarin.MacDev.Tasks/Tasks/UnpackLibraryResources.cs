@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using System.Collections.Generic;
 
 using Mono.Cecil;
@@ -15,7 +15,7 @@ namespace Xamarin.MacDev.Tasks
 		{
 			bool result;
 
-			if (!string.IsNullOrEmpty (SessionId)) {
+			if (ShouldExecuteRemotely ()) {
 				result = new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
 
 				if (result && BundleResourcesWithLogicalNames != null) {
@@ -37,7 +37,7 @@ namespace Xamarin.MacDev.Tasks
 
 		public void Cancel ()
 		{
-			if (!string.IsNullOrEmpty (SessionId))
+			if (ShouldExecuteRemotely ())
 				BuildConnection.CancelAsync (SessionId, BuildEngine4).Wait ();
 		}
 

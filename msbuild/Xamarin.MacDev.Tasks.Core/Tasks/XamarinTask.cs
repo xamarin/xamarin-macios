@@ -127,6 +127,8 @@ namespace Xamarin.MacDev.Tasks {
 
 			return rv;
 		}
+
+		public bool ShouldExecuteRemotely () => Environment.OSVersion.Platform == PlatformID.Win32NT && !string.IsNullOrEmpty(SessionId);
 	}
 }
 

@@ -1,4 +1,5 @@
-﻿using Xamarin.MacDev.Tasks;
+﻿using System;
+using Xamarin.MacDev.Tasks;
 
 namespace Xamarin.iOS.Tasks
 {
@@ -6,7 +7,7 @@ namespace Xamarin.iOS.Tasks
 	{
 		public override bool Execute ()
 		{
-			if (!string.IsNullOrEmpty (SessionId)) {
+			if (Environment.OSVersion.Platform == PlatformID.Win32NT && !string.IsNullOrEmpty (SessionId)) {
 				foreach (var bundleResource in this.BundleResources) {
 					var logicalName = bundleResource.GetMetadata ("LogicalName");
 
