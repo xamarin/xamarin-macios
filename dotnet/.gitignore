@@ -1,3 +1,4 @@
+NuGet.config
 global.json
 tmpdir
 Workloads/Microsoft.NET.Sdk.*/LICENSE
