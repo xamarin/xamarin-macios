@@ -148,6 +148,14 @@ partial class TestRuntime
 #endif
 	}
 
+	public static void AssertNotSimulator ()
+	{
+#if !__MACOS__
+		if (ObjCRuntime.Runtime.Arch == Arch.SIMULATOR)
+			NUnit.Framework.Assert.Ignore ("This test does not work in the simulator.");
+#endif
+	}
+
 	public static bool IsVM => 
 		!string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("VM_VENDOR"));
 
@@ -1154,6 +1162,16 @@ partial class TestRuntime
 #endif
 	}
 	
+	public static byte GetFlags (NSObject obj)
+	{
+#if NET
+		const string fieldName = "actual_flags";
+#else
+		const string fieldName = "flags";
+#endif
+		return (byte) typeof (NSObject).GetField (fieldName, BindingFlags.Instance | BindingFlags.GetField | BindingFlags.NonPublic).GetValue (obj);
+	}
+
 	// Determine if linkall was enabled by checking if an unused class in this assembly is still here.
 	static bool? link_all;
 	public static bool IsLinkAll {
@@ -1172,6 +1190,15 @@ partial class TestRuntime
 #else
 			return false;
 #endif
+		}
+	}
+
+	// There's no official API yet for distinguishing between CoreCLR and MonoVM (https://github.com/dotnet/runtime/issues/49481)
+	// (checking for the Mono.Runtime type doesn't work, because the BCL is the same, so there's never a Mono.Runtime type).
+	// However, the System.__Canon type seems to be CoreCLR-only.
+	public static bool IsCoreCLR {
+		get {
+			return !(Type.GetType ("System.__Canon") is null);
 		}
 	}
 }

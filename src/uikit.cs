@@ -2435,7 +2435,7 @@ namespace UIKit {
 		void OpenUrl (NSUrl url, UIApplicationOpenUrlOptions options, [NullAllowed] Action<bool> completion);
 
 		[Export ("canOpenURL:")]
-		[PreSnippet ("if (url == null) return false;")] // null not really allowed (but it's a behaviour change with known bug reports)
+		[PreSnippet ("if (url is null) return false;")] // null not really allowed (but it's a behaviour change with known bug reports)
 		bool CanOpenUrl ([NullAllowed] NSUrl url);
 		
 		[Export ("sendEvent:")]
@@ -19954,7 +19954,7 @@ namespace UIKit {
 
 		Type SceneType {
 			[Wrap ("Class.Lookup (SceneClass)")] get;
-			[Wrap ("SceneClass = value == null ? null : new Class (value)")] set;
+			[Wrap ("SceneClass = value is null ? null : new Class (value)")] set;
 		}
 
 		[Advice ("You can use 'DelegateType' with a 'Type' instead.")]
@@ -19963,7 +19963,7 @@ namespace UIKit {
 
 		Type DelegateType {
 			[Wrap ("Class.Lookup (DelegateClass)")] get;
-			[Wrap ("DelegateClass = value == null ? null : new Class (value)")] set;
+			[Wrap ("DelegateClass = value is null ? null : new Class (value)")] set;
 		}
 
 		[NullAllowed, Export ("storyboard", ArgumentSemantic.Strong)]

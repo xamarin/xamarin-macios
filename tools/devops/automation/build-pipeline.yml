@@ -171,14 +171,17 @@ trigger:
     - refs/heads/locfiles/*
   paths:
     exclude:
+    - .github
     - docs
     - CODEOWNERS
     - ISSUE_TEMPLATE.md
     - LICENSE
     - NOTICE.txt
-    - README.md
     - SECURITY.MD
+    - README.md
     - src/README.md
+    - tools/mtouch/README.md
+    - msbuild/Xamarin.Localization.MSBuild/README.md
 
 pr:
   autoCancel: true
@@ -190,14 +193,17 @@ pr:
     - release/*
   paths:
     exclude:
+    - .github
     - docs
     - CODEOWNERS
     - ISSUE_TEMPLATE.md
     - LICENSE
     - NOTICE.txt
-    - README.md
     - SECURITY.MD
+    - README.md
     - src/README.md
+    - tools/mtouch/README.md
+    - msbuild/Xamarin.Localization.MSBuild/README.md
 
 schedules:
 

@@ -9,9 +9,11 @@
 #if defined (CORECLR_RUNTIME)
 
 #include <inttypes.h>
+#include <pthread.h>
 
 #include "product.h"
 #include "runtime-internal.h"
+#include "slinked-list.h"
 #include "xamarin/xamarin.h"
 #include "xamarin/coreclr-bridge.h"
 
@@ -19,6 +21,8 @@
 
 unsigned int coreclr_domainId = 0;
 void *coreclr_handle = NULL;
+pthread_mutex_t monoobject_lock = PTHREAD_MUTEX_INITIALIZER;
+SList *release_at_exit = NULL; // A list of MonoObject*s to be released at process exit
 
 #if defined (TRACK_MONOOBJECTS)
 
@@ -30,12 +34,10 @@ void *coreclr_handle = NULL;
 // MONOOBJECT_TRACKING_WITH_STACKTRACES environment variable.
 
 #include <execinfo.h>
-#include <pthread.h>
 
 static int _Atomic monoobject_created = 0;
 static int _Atomic monoobject_destroyed = 0;
 static CFMutableDictionaryRef monoobject_dict = NULL;
-static pthread_mutex_t monoobject_lock = PTHREAD_MUTEX_INITIALIZER;
 
 struct monoobject_tracked_entry {
 	char *managed;
@@ -113,7 +115,9 @@ xamarin_bridge_dump_monoobjects ()
 			for (unsigned int i = 0; i < items_to_show; i++) {
 				MonoObject *obj = keys [i];
 				struct monoobject_tracked_entry *value = (struct monoobject_tracked_entry *) values [i];
-				fprintf (stderr, "Object %i/%i %p RC: %i\n", i + 1, (int) length, obj, (int) obj->reference_count);
+				char *fullname = xamarin_get_object_type_fullname (obj->gchandle);
+				fprintf (stderr, "Object %i/%i %p RC: %i Type: %s\n", i + 1, (int) length, obj, (int) obj->reference_count, fullname);
+				xamarin_free (fullname);
 				if (value->managed && *value->managed)
 					fprintf (stderr, "\tManaged stack trace:\n%s\n", value->managed);
 				if (value->native == NULL && value->frames > 0)
@@ -146,6 +150,66 @@ monoobject_dict_free_value (CFAllocatorRef allocator, const void *value)
 
 #endif // defined (TRACK_MONOOBJECTS)
 
+/*
+ * Toggle-ref support for CoreCLR is a bit different than for MonoVM. It goes like this:
+ *
+ * 1) We have to opt-in for the required GC support by calling
+ *    ObjectiveCMarshal.Initialize (in managed code) at startup. This happens
+ *    in Runtime.InitializeCoreCLRBridge (in Runtime.CoreCLR.cs).
+ *
+ * 2) Types that can be toggled, must have the [ObjectiveCTrackedType]
+ *    attribute (on any subclass). We put this attribute on NSObject.
+ *
+ * 3) We have to call ObjectiveCMarshal.CreateReferenceTrackingHandle when an
+ *    object is toggled. This callback returns a GCHandle for the managed
+ *    object, and a pointer to native memory (size: 2 pointers) where we can
+ *    store whatever we want. We store the native Handle, and the Flags
+ *    property. Unfortunately this means duplicating information, and we have
+ *    to make sure they're in sync. It didn't see a sane way around this
+ *    though, because we need the Handle and the Flags somewhere accessible
+ *    from native code during the GC (so we can't store them in managed
+ *    memory), while at the same time we don't want to create an additional
+ *    native block of memory for every NSObject, nor use some complex logic to
+ *    support either a managed or a native storage. With the current solution
+ *    we're only using additional native memory for toggled objects.
+ *    Additionally, updates have to flow:
+ *
+ *    a) From managed to native for Handle and Flags, so we update the native
+ *       memory (if it's there) when the Handle or Flags properties are set.
+ *    b) From native to managed for a single flag value
+ *       (NSObjectFlagsInFinalizerQueue), which we fetch in managed code in
+ *       the Flags getter.
+ *
+ * 4) The CoreCLR GC will invoke a callback we installed when calling
+ *    ObjectiveCMarshal.Initialize to check if that toggled managed object can
+ *    be collected or not. This callback is executed during the GC, which
+ *    means it's very limited what we can do safely: but we can read and write
+ *    to the memory given to us when the managed object was toggled, which is
+ *    why we store the Handle and the Flags property - that's what we need to
+ *    know to determine whether the managed object can be collected or not.
+ *
+ * 5) When the managed object is finalized, the GC will invoke another
+ *    callback (xamarin_coreclr_reference_tracking_tracked_object_entered_finalization)
+ *    to let us know, and we'll set the corresponding flag in the flags
+ *
+ * 6) Finally, the GCHandle we got in step 3) is freed when the managed peer
+ *    is freed.
+ *
+ * Caveat: we don't support the server GC (because it uses multiple threads,
+ * and thus may call xamarin_coreclr_reference_tracking_begin_end_callback
+ * from multiple threads for the same garbage collection, which we don't
+ * support right now - but it may be possible to implement by using a
+ * different lock in xamarin_gc_event).
+ *
+ * Ref: https://github.com/dotnet/runtime/issues/44659
+ * Ref: https://github.com/dotnet/designs/blob/1bb5844c165195e2f633cb1dbe042c4b92aefc4d/accepted/2021/objectivec-interop.md
+ */
+
+struct TrackedObjectInfo {
+	id handle;
+	enum NSObjectFlags flags;
+};
+
 void
 xamarin_bridge_setup ()
 {
@@ -171,9 +235,114 @@ xamarin_bridge_initialize ()
 void
 xamarin_bridge_shutdown ()
 {
+	SList *list;
+
+	// Free our list of MonoObject*s to free at process exist.
+	// No need to keep the lock locked while we traverse the list, the only thing we need to protect
+	// are reads and writes to the 'release_at_exit' variable, so let's do just that.
+	pthread_mutex_lock (&monoobject_lock);
+	list = release_at_exit;
+	release_at_exit = NULL;
+	pthread_mutex_unlock (&monoobject_lock);
+
+	while (list) {
+		xamarin_mono_object_release ((MonoObject **) &list->data);
+		list = list->next;
+	}
+	s_list_free (list);
+
 #if defined (TRACK_MONOOBJECTS)
 	xamarin_bridge_dump_monoobjects ();
 #endif
+}
+
+static bool reference_tracking_end = false;
+
+// This callback will be called once before the GC starts calling xamarin_coreclr_reference_tracking_is_referenced_callback,
+// and once the GC is done. We keep track of which case we're in in the 'reference_tracking_end' variable, and raise the
+// corresponding GC event. It will only be called once for each GC, both the begin and the end on the same thread.
+void
+xamarin_coreclr_reference_tracking_begin_end_callback ()
+{
+	LOG_CORECLR (stderr, "%s () reference_tracking_end: %i\n", __func__, reference_tracking_end);
+	if (reference_tracking_end) {
+		xamarin_gc_event (MONO_GC_EVENT_POST_START_WORLD);
+	} else {
+		xamarin_gc_event (MONO_GC_EVENT_PRE_STOP_WORLD);
+	}
+	reference_tracking_end = !reference_tracking_end;
+}
+
+// This callback is called by the GC to check whether a given managed object
+// can be collected or not. The single 'ptr' argument is the native memory
+// returned by the managed call to
+// ObjectiveCMarshal.CreateReferenceTrackingHandle, and this memory can be
+// accessed while the GC is running. In here we store the native Handle for
+// the managed object, and any flags, both of which we need to know in this
+// method to determine whether the corresponding managed object can be
+// collected or not.
+int
+xamarin_coreclr_reference_tracking_is_referenced_callback (void* ptr)
+{
+	// This is a callback called by the GC, so there's not much we can do here safely.
+	// Most importantly we can't call managed code, nor access managed memory.
+	// But we can access the native memory given to us when the object was toggled
+	// (and which is passed as the 'ptr' argument), so let's get the data we need from there.
+	int rv = 0;
+	struct TrackedObjectInfo *info = (struct TrackedObjectInfo *) ptr;
+	enum NSObjectFlags flags = info->flags;
+	id handle = info->handle;
+	MonoToggleRefStatus res;
+
+	res = xamarin_gc_toggleref_callback (flags, handle, NULL, NULL);
+
+	switch (res) {
+	case MONO_TOGGLE_REF_DROP:
+		// There's no equivalent to DROP in CoreCLR, so just treat it as weak.
+	case MONO_TOGGLE_REF_WEAK:
+		rv = 0;
+		break;
+	case MONO_TOGGLE_REF_STRONG:
+		rv = 1;
+		break;
+	default:
+		LOG_CORECLR (stderr, "%s (%p -> handle: %p flags: %i): INVALID toggle ref value: %i\n", __func__, ptr, handle, flags, res);
+		break;
+	}
+
+	LOG_CORECLR (stderr, "%s (%p -> handle: %p flags: %i) => %i (res: %i)\n", __func__, ptr, handle, flags, rv, res);
+
+	return rv;
+}
+
+// This callback is called when an object is queued for finalization. The
+// single 'ptr' argument is the native memory returned by the managed call to
+// ObjectiveCMarshal.CreateReferenceTrackingHandle, and this memory can be
+// accessed while the GC is running (which it is when this method is called).
+// In here we set the NSObjectFlagsInFinalizerQueue flag, which managed code
+// (the NSObject.flags property) will fetch.
+void
+xamarin_coreclr_reference_tracking_tracked_object_entered_finalization (void* ptr)
+{
+	struct TrackedObjectInfo *info = (struct TrackedObjectInfo *) ptr;
+	info->flags = (enum NSObjectFlags) (info->flags | NSObjectFlagsInFinalizerQueue);
+	LOG_CORECLR (stderr, "%s (%p) flags: %i\n", __func__, ptr, (int) info->flags);
+}
+
+void
+xamarin_coreclr_unhandled_exception_handler (void *context)
+{
+	// 'context' is the GCHandle returned by the managed Runtime.UnhandledExceptionPropagationHandler function.
+	GCHandle exception_gchandle = (GCHandle) context;
+
+	LOG_CORECLR (stderr, "%s (%p)\n", __func__, context);
+
+	// xamarin_process_managed_exception_gchandle will free the GCHandle
+	xamarin_process_managed_exception_gchandle (exception_gchandle);
+
+	// The call to xamarin_process_managed_exception_gchandle should either abort or throw an Objective-C exception,
+	// and in neither case should we end up here, so just assert.
+	xamarin_assertion_message ("Failed to process unhandled managed exception.");
 }
 
 void
@@ -206,8 +375,7 @@ xamarin_bridge_vm_initialize (int propertyCount, const char **propertyKeys, cons
 void
 xamarin_install_nsautoreleasepool_hooks ()
 {
-	// https://github.com/xamarin/xamarin-macios/issues/11256
-	fprintf (stderr, "TODO: add support for wrapping all threads with NSAutoreleasePools.\n");
+	// No need to do anything here for CoreCLR.
 }
 
 void
@@ -317,6 +485,14 @@ xamarin_mono_object_release (MonoObject **mobj_ref)
 	}
 
 	*mobj_ref = NULL;
+}
+
+void
+xamarin_mono_object_release_at_process_exit (MonoObject *mobj)
+{
+	pthread_mutex_lock (&monoobject_lock);
+	release_at_exit = s_list_prepend (release_at_exit, mobj);
+	pthread_mutex_unlock (&monoobject_lock);
 }
 
 /* Implementation of the Mono Embedding API */
@@ -629,6 +805,7 @@ xamarin_bridge_free_mono_signature (MonoMethodSignature **psig)
 	if (sig == NULL)
 		return;
 
+	xamarin_mono_object_release (&sig->method);
 	for (int i = 0; i < sig->parameter_count; i++) {
 		xamarin_mono_object_release (&sig->parameters [i]);
 	}

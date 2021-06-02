@@ -165,7 +165,7 @@ namespace CoreGraphics
 #if !COREBUILD
 		public static bool TryParse (NSDictionary dictionaryRepresentation, out <#= type.Name #> <#= type.ArgName #>)
 		{
-			if (dictionaryRepresentation == null){
+			if (dictionaryRepresentation is null) {
 			   	<#= type.ArgName #> = Empty;
 				return false;
 			}
@@ -597,7 +597,7 @@ namespace CoreGraphics
 #if !COREBUILD
 		public static bool TryParse (NSDictionary dictionaryRepresentation, out CGRect rect)
 		{
-			if (dictionaryRepresentation == null){
+			if (dictionaryRepresentation is null) {
 			   	rect = Empty;
 				return false;
 			}

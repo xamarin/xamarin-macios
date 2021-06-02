@@ -77,7 +77,10 @@ namespace MonoTouchFixtures.HealthKit {
 					if (!TestRuntime.CheckXcodeVersion (12, TestRuntime.MinorXcode12APIMismatch))
 						continue;
 					break;
-
+				case HKQuantityTypeIdentifier.AppleMoveTime:
+					if (!TestRuntime.CheckXcodeVersion (12, 5))
+						continue;
+					break;
 				}
 
 				try {

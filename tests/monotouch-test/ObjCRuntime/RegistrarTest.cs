@@ -433,9 +433,6 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 
 		[Test]
-#if NET
-		[Ignore ("Ignored on CoreCLR for now due to missing support for marshalling exceptions")]
-#endif
 		public void TestGeneric ()
 		{
 			var g1 = new GenericTestClass<string> ();
@@ -1233,6 +1230,31 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 		void ThrowsICEIfDebug (TestDelegate code, string message, bool execute_release_mode = true)
 		{
+#if NET
+			if (TestRuntime.IsCoreCLR) {
+				if (execute_release_mode) {
+					// In CoreCLR will either throw an ArgumentException:
+					//     <System.ArgumentException: Object of type 'Foundation.NSObject' cannot be converted to type 'Foundation.NSSet'.
+					// or a RuntimeException:
+					//     <ObjCRuntime.RuntimeException: Failed to marshal the value at index 0.
+					var noException = false;
+					try {
+						code ();
+						noException = true;
+					} catch (ArgumentException) {
+						// OK
+					} catch (RuntimeException) {
+						// OK
+					} catch (Exception e) {
+						Assert.Fail ($"Unexpectedly failed with exception of type {e.GetType ()} - expected either ArgumentException or RuntimeException: {message}");
+					}
+					if (noException)
+						Assert.Fail ($"Unexpectedly no exception occured: {message}");
+				}
+				return;
+			}
+#endif
+
 // The type checks have been disabled for now.
 //#if DEBUG
 //			Assert.Throws<InvalidCastException> (code, message);
@@ -2011,9 +2033,6 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 
-#if __MACCATALYST__
-		[Ignore ("https://github.com/dotnet/runtime/issues/47407")] // The GC doesn't collect objects with finalizers
-#endif
 		[Test]
 		public void BlockCollection ()
 		{
@@ -2151,10 +2170,13 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void CustomUserTypeWithDynamicallyLoadedAssembly ()
 		{
+			if (!global::Xamarin.Tests.Configuration.TryGetRootPath (out var rootPath))
+				Assert.Ignore ("This test must be executed a source checkout.");
+
 #if NET
-			var customTypeAssemblyPath = global::System.IO.Path.Combine (global::Xamarin.Tests.Configuration.RootPath, "tests", "test-libraries", "custom-type-assembly", ".libs", "dotnet", "macos", "custom-type-assembly.dll");
+			var customTypeAssemblyPath = global::System.IO.Path.Combine (rootPath, "tests", "test-libraries", "custom-type-assembly", ".libs", "dotnet", "macos", "custom-type-assembly.dll");
 #else
-			var customTypeAssemblyPath = global::System.IO.Path.Combine (global::Xamarin.Tests.Configuration.RootPath, "tests", "test-libraries", "custom-type-assembly", ".libs", "macos", "custom-type-assembly.dll");
+			var customTypeAssemblyPath = global::System.IO.Path.Combine (rootPath, "tests", "test-libraries", "custom-type-assembly", ".libs", "macos", "custom-type-assembly.dll");
 #endif
 			Assert.That (customTypeAssemblyPath, Does.Exist, "existence");
 
