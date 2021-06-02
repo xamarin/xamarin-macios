@@ -240,10 +240,12 @@ namespace CoreGraphics {
 
 		public override bool Equals(object o)
 		{
-			if (! (o is CGAffineTransform))
+			if (o is CGAffineTransform transform) {
+				return (xx == transform.xx && xy == transform.xy &&
+					yx == transform.yx && yy == transform.yy &&
+					x0 == transform.x0 && y0 == transform.y0);
+			} else
 				return false;
-			else
-				return (this == (CGAffineTransform) o);
 		}
 
 		public override int GetHashCode()
