@@ -489,6 +489,34 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			obj.Dispose ();
 		}
 
+		[Test]
+		public void NSAutoreleasePoolInThread ()
+		{
+			var count = 10;
+			var threads = new Thread [count];
+			var obj = new NSObject ();
+
+			for (int i = 0; i < count; i++) {
+				threads [i] = new Thread ((v) => {
+					obj.DangerousRetain ().DangerousAutorelease ();
+				}) {
+					Name = $"NSAutoreleasePoolInThread #{i}",
+					IsBackground = true,
+				};
+				threads [i].Start ();
+			}
+
+			for (var i = 0; i < count; i++) {
+				Assert.IsTrue (threads [i].Join (TimeSpan.FromSeconds (1)), $"Thread #{i}");
+			}
+
+			// Strangely enough there seems to be a race condition here, not all threads will necessarily
+			// have completed the autorelease by this point. Some should have though, so assert that the object
+			// was released on at least half the threads.
+			Assert.That ((int) obj.RetainCount, Is.LessThan (count / 2), "RC");
+
+			obj.Dispose ();
+		}
 
 		class ResurrectedObjectsDisposedTestClass : NSObject {
 			[Export ("invokeMe:wait:")]
