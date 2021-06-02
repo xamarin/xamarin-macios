@@ -75,7 +75,14 @@ namespace MonoTouchFixtures {
 		{
 			var vc = new AsyncController (action, imageToShow);
 			var bckp = window.RootViewController;
-			window.RootViewController = vc;
+			var navigation = bckp as UINavigationController;
+
+			if (navigation != null) {
+				navigation.PushViewController (vc, false);
+			} else {
+				window.RootViewController = vc;
+			}
+
 			try {
 				do {
 					if (timeout < DateTime.Now)
@@ -83,7 +90,11 @@ namespace MonoTouchFixtures {
 					NSRunLoop.Main.RunUntil (NSDate.Now.AddSeconds (0.1));
 				} while (!check_completed ());
 			} finally {
-				window.RootViewController = bckp;
+				if (navigation != null) {
+					navigation.PopViewController (false);
+				} else {
+					window.RootViewController = bckp;
+				}
 			}
 
 			return true;
