@@ -6,6 +6,10 @@ using System.Reflection;
 using System.Resources;
 using System.Text;
 using System.Collections.Generic;
+using System.IO;
+using System.Xml.Linq;
+using System.Linq;
+using Xamarin.Bundler;
 
 namespace Xamarin.Tests
 {
@@ -58,10 +62,11 @@ namespace Xamarin.Tests
 			return resourceManager.GetString (errorCode, cultureInfo);
 		}
 
-		List<string> IgnoredProperties = new List<string> () {
+		readonly string [] ignoredProperties = {
 			"ResourceManager",
 			"Culture",
 			"_default",
+			"default",
 		};
 
 		[TestCase ("cs-CZ")]
@@ -85,14 +90,10 @@ namespace Xamarin.Tests
 			var originalUICulture = Thread.CurrentThread.CurrentUICulture;
 			var originalCulture = Thread.CurrentThread.CurrentCulture;
 
-			// since the Xamarin.Bundler.Errors type is inaccessible, we go through MachO to access it
-			var errorsAssembly = typeof (MachO).Assembly.GetType ("Xamarin.Bundler.Errors");
-			var props = errorsAssembly.GetProperties (BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Static);
-
-			foreach (var errorCodeInfo in props) {
+			foreach (var errorCodeInfo in typeof (Errors).GetProperties ()) {
 				try {
 					var errorCode = errorCodeInfo.Name;
-					if (IgnoredProperties.Contains(errorCode))
+					if (ignoredProperties.Contains(errorCode))
 						continue;
 					string englishError = TranslateError ("en-US", errorCode);
 					string newCultureError = TranslateError (culture, errorCode);
@@ -106,6 +107,23 @@ namespace Xamarin.Tests
 			}
 			Assert.IsEmpty (errorList.ToString (), $"The following errors were not translated:");
 		}
+
+		[Test]
+		public void UpdatedResources ()
+		{
+			var resxPath = Path.Combine (Configuration.RootPath, "tools", "mtouch", "Errors.resx");
+			var xml = XDocument.Load (resxPath);
+			var resxNames = xml.Root.Descendants ().Where (n => n.Name == "data").Select (n => n.Attribute ("name").Value);
+			var resxHashSet = new HashSet<string> (resxNames);
+
+			var resourceNames = typeof (Errors).GetProperties ().Select (s => s.Name);
+			var resourceHashSet = new HashSet<string> (resourceNames);
+
+			var errorsNotInResources = string.Join (" ", resxHashSet.Where (n => !resourceHashSet.Contains (n) && !ignoredProperties.Contains (n)));
+			var errorsNotInResx = string.Join (" ", resourceHashSet.Where (n => !resxHashSet.Contains (n) && !ignoredProperties.Contains (n)));
+
+			Assert.IsEmpty (errorsNotInResources, $"The following error(s) were found in Errors.resx but not through the mtouch resources. Try to recompile the mtouch project and then the test project\n{errorsNotInResources}");
+			Assert.IsEmpty (errorsNotInResx, $"The following error(s) were found in the mtouch resources but not in Errors.resx. Try to recompile the mtouch project and then the test project\n{errorsNotInResx}");
+		}
 	}
 }
-

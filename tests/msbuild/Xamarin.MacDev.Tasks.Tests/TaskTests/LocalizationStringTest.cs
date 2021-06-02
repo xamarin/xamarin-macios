@@ -10,6 +10,8 @@ using Xamarin.Localization.MSBuild;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Xml.Linq;
+using Xamarin.Tests;
 
 namespace Xamarin.iOS.Tasks {
 	[TestFixture]
@@ -159,6 +161,28 @@ namespace Xamarin.iOS.Tasks {
 			if (!File.Exists (path))
 				return Array.Empty<string> ();
 			return File.ReadAllLines (path).Where (line => !line.StartsWith ("#", StringComparison.Ordinal) && line != string.Empty).ToList ();
+		}
+
+		readonly string [] ignoreList = {
+			"ResourceManager",
+			"Culture",
+		};
+
+		[Test]
+		public void UpdatedResources ()
+		{
+			var resxPath = Path.Combine (Configuration.RootPath, "msbuild", "Xamarin.Localization.MSBuild", "MSBStrings.resx");
+			var xml = XDocument.Load (resxPath);
+			var resxNames = xml.Root.Descendants ().Where (n => n.Name == "data").Select (n => n.Attribute ("name").Value);
+			var resxHashSet = new HashSet<string> (resxNames);
+			var resourceNames = typeof (MSBStrings).GetProperties ().Select (s => s.Name);
+			var resourceHashSet = new HashSet<string> (resourceNames);
+
+			var errorsNotInResources = string.Join (" ", resxHashSet.Where (n => !resourceHashSet.Contains (n) && !ignoreList.Contains (n)));
+			var errorsNotInResx = string.Join (" ", resourceHashSet.Where (n => !resxHashSet.Contains (n) && !ignoreList.Contains (n)));
+
+			Assert.IsEmpty (errorsNotInResources, $"The following error(s) were found in MSBStrings.resx but not through the MSBStrings resource. Try to recompile the msbuild project and then the test project\n{errorsNotInResources}");
+			Assert.IsEmpty (errorsNotInResx, $"The following error(s) were found in the MSBStrings resource but not in MSBStrings.resx. Try to recompile the msbuild project and then the test project\n{errorsNotInResx}");
 		}
 	}
 }
