@@ -1,6 +1,12 @@
 name: Clean PR macios.ci data
 
 on:
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'PR number to clean'
+        required: true
+
   pull_request:
     types: [closed]
 
@@ -16,11 +22,12 @@ jobs:
     steps:
 
     - uses: actions/checkout@v2
-      name: checkout
+      name: 'Checkout xamarin-macios'
       with:
         path: xamarin-macios
 
     - uses: actions/checkout@v2
+      name: 'Checkout macios.ci'
       with:
         repository: 'xamarin/macios.ci'
         token: ${{ secrets.SERVICEACCOUNT_PAT }}
