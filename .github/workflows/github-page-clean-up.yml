@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       pr_number:
-        description: 'PR number ot clean'
+        description: 'PR number to clean'
         required: true
 
   pull_request:
