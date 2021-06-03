@@ -489,6 +489,34 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			obj.Dispose ();
 		}
 
+		[Test]
+		public void NSAutoreleasePoolInThread ()
+		{
+			var count = 10;
+			var threads = new Thread [count];
+			var obj = new NSObject ();
+
+			for (int i = 0; i < count; i++) {
+				threads [i] = new Thread ((v) => {
+					obj.DangerousRetain ().DangerousAutorelease ();
+				}) {
+					Name = $"NSAutoreleasePoolInThread #{i}",
+					IsBackground = true,
+				};
+				threads [i].Start ();
+			}
+
+			for (var i = 0; i < count; i++) {
+				Assert.IsTrue (threads [i].Join (TimeSpan.FromSeconds (1)), $"Thread #{i}");
+			}
+
+			// Strangely enough there seems to be a race condition here, not all threads will necessarily
+			// have completed the autorelease by this point. Some should have though, so assert that the object
+			// was released on at least half the threads.
+			Assert.That ((int) obj.RetainCount, Is.LessThan (count / 2), "RC");
+
+			obj.Dispose ();
+		}
 
 		class ResurrectedObjectsDisposedTestClass : NSObject {
 			[Export ("invokeMe:wait:")]
@@ -622,11 +650,21 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				}
 			} catch (RuntimeException re) {
 				Assert.AreEqual (8029, re.Code, "Code");
-				Assert.AreEqual (@"Unable to marshal the array parameter #1 whose managed type is 'System.Int32[]' to managed.
+				string expectedExceptionMessage;
+				if (TestRuntime.IsCoreCLR) {
+					expectedExceptionMessage = @"Unable to marshal the array parameter #1 whose managed type is 'System.Int32[]' to managed.
+Additional information:
+	Selector: setIntArray:
+	Method: System.Void MonoTouchFixtures.ObjCRuntime.RuntimeTest+Dummy.SetIntArray (System.Int32[])
+";
+				} else {
+					expectedExceptionMessage = @"Unable to marshal the array parameter #1 whose managed type is 'System.Int32[]' to managed.
 Additional information:
 	Selector: setIntArray:
 	Method: MonoTouchFixtures.ObjCRuntime.RuntimeTest/Dummy:SetIntArray (int[])
-", re.Message, "Message");
+";
+				}
+				Assert.AreEqual (expectedExceptionMessage, re.Message, "Message");
 				var inner = (RuntimeException)re.InnerException;
 				Assert.AreEqual (8031, inner.Code, "Inner Code");
 				Assert.AreEqual ("Unable to convert from an NSArray to a managed array of System.Int32.", inner.Message, "Inner Message");
@@ -641,11 +679,21 @@ Additional information:
 				Assert.Fail ("An exception should have been thrown");
 			} catch (RuntimeException re) {
 				Assert.AreEqual (8033, re.Code, "Code");
-				Assert.AreEqual (@"Unable to marshal the return value of type 'System.Int32[]' to Objective-C.
+				string expectedExceptionMessage;
+				if (TestRuntime.IsCoreCLR) {
+					expectedExceptionMessage = @"Unable to marshal the return value of type 'System.Int32[]' to Objective-C.
+Additional information:
+	Selector: intArray
+	Method: System.Int32[] MonoTouchFixtures.ObjCRuntime.RuntimeTest+Dummy.GetIntArray ()
+";
+				} else {
+					expectedExceptionMessage = @"Unable to marshal the return value of type 'System.Int32[]' to Objective-C.
 Additional information:
 	Selector: intArray
 	Method: MonoTouchFixtures.ObjCRuntime.RuntimeTest/Dummy:GetIntArray ()
-", re.Message, "Message");
+";
+				}
+				Assert.AreEqual (expectedExceptionMessage, re.Message, "Message");
 				var inner = (RuntimeException) re.InnerException;
 				Assert.AreEqual (8032, inner.Code, "Inner Code");
 				Assert.AreEqual ("Unable to convert from a managed array of System.Int32 to an NSArray.", inner.Message, "Inner Message");
@@ -703,6 +751,100 @@ Additional information:
 				Assert.AreEqual (date.Handle, str.Handle, "Same native pointer");
 				date.Dispose ();
 				date = null;
+			}
+		}
+
+		[Test]
+		public void ToggleRef_NonToggledObjectsShouldBeCollected ()
+		{
+			// This test verifies that toggleable objects that aren't toggled aren't kept alive.
+			// We create a number of managed NSFileManager instance, get a native reference to each of them,
+			// and then we verify that the managed instance is collected.
+			var counter = 100;
+			var handles = new GCHandle [counter];
+			var pointers = new IntPtr [counter];
+
+			var t = new Thread (() =>
+			{
+				for (var i = 0; i < counter; i++) {
+					var obj = new NSFileManager ();
+					// do not toggle
+					obj.DangerousRetain (); // obtain a native reference
+					handles [i] = GCHandle.Alloc (obj, GCHandleType.Weak);
+					pointers [i] = obj.Handle;
+				}
+			}) {
+				IsBackground = true,
+				Name = "ToggleRef_NonToggledObjectsShouldBeCollected",
+			};
+			t.Start ();
+			Assert.IsTrue (t.Join (TimeSpan.FromSeconds (10)), "Background thread completion");
+
+			var checkForCollectedManagedObjects = new Func<bool> (() =>
+			{
+				GC.Collect ();
+				GC.WaitForPendingFinalizers ();
+				for (var i = 0; i < counter; i++) {
+					if (handles [i].Target == null)
+						return true;
+				}
+				return false;
+			});
+
+			// Iterate over the runloop in case something has to happen on the main thread for the objects to be collected.
+			TestRuntime.RunAsync (TimeSpan.FromSeconds (5), () => { }, checkForCollectedManagedObjects);
+
+			Assert.IsTrue (checkForCollectedManagedObjects (), "Any collected objects");
+
+			for (var i = 0; i < counter; i++) {
+				var obj = Runtime.GetNSObject (pointers [i]);
+				Assert.IsNotNull (obj, $"Object #{i} couldn't be resurrected");
+				obj.DangerousRelease (); // release the native reference
+				obj.Dispose ();
+				handles [i].Free ();
+			}
+		}
+
+		[Test]
+		public void ToggleRef_ToggledObjectsShouldNotBeCollected ()
+		{
+			// This test verifies that toggleable objects that are toggled are kept alive while the native peer is alive.
+			// We create a number of managed NSFileManager instance, get a native reference to each of them,
+			// and then we verify that the managed instance won't be collected.
+			//
+			// NSFileManager instances are toggled when the [Weak]Delegate property is set.
+			var del = new NSFileManagerDelegate ();
+			var counter = 100;
+			var handles = new GCHandle [counter];
+			var t = new Thread (() =>
+			{
+				for (var i = 0; i < counter; i++) {
+					var obj = new NSFileManager ();
+					obj.Delegate = del; // toggle
+					obj.DangerousRetain (); // obtain a native reference
+					handles [i] = GCHandle.Alloc (obj, GCHandleType.Weak);
+				}
+			}) {
+				IsBackground = true,
+				Name = "ToggleRef_ToggledObjectsShouldNotBeCollected",
+			};
+			t.Start ();
+			Assert.IsTrue (t.Join (TimeSpan.FromSeconds (10)), "Background thread completion");
+
+			TestRuntime.RunAsync (TimeSpan.FromSeconds (2), () => { }, () =>
+			{
+				// Iterate over the runloop a bit to make sure we're just not collecting because objects are queued on for things to happen on the main thread
+				GC.Collect ();
+				GC.WaitForPendingFinalizers ();
+				return false;
+			});
+
+			for (var i = 0; i < counter; i++) {
+				var obj = (NSFileManager) handles [i].Target;
+				Assert.IsNotNull (obj, $"Object #{i} was unexpectedly collected.");
+				obj.DangerousRelease (); // release the native reference
+				obj.Dispose ();
+				handles [i].Free ();
 			}
 		}
 	}

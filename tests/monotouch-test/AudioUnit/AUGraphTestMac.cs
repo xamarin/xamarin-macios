@@ -54,6 +54,8 @@ namespace Xamarin.Mac.Tests
 		[Test]
 		public void DoTest ()
 		{
+			TestRuntime.AssertNotVirtualMachine ();
+
 			SetupAUGraph ();
 
 			// One of these has to be commented out depending on old\new build

@@ -188,3 +188,14 @@ For example, to build an API for all of iOS but only 64-bit OS X (Xamarin.Mac):
 ...
 #endif
 ```
+
+
+## Source Localization ##
+Coming soon!
+
+See [Localization Wiki][Localization-wiki] for more details on our localization process
+
+or the [OneLocBuild Wiki][OneLocBuild-wiki] for information on OneLocBuild.
+
+[Localization-wiki]: https://github.com/xamarin/maccore/wiki/Localization
+[OneLocBuild-wiki]: https://ceapex.visualstudio.com/CEINTL/_wiki/wikis/CEINTL.wiki/107/Localization-with-OneLocBuild-Task

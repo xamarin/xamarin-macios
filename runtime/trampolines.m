@@ -103,6 +103,7 @@ xamarin_marshal_return_value_impl (MonoType *mtype, const char *type, MonoObject
 				xamarin_mono_object_release (&original_type);
 				MonoType *r_type = mono_class_get_type (r_klass);
 				returnValue = xamarin_generate_conversion_to_native (retval, r_type, original_tp, method, (void *) INVALID_TOKEN_REF, exception_gchandle);
+				xamarin_mono_object_release (&original_tp);
 				xamarin_mono_object_release (&r_type);
 			} else if (xamarin_is_class_string (r_klass)) {
 				returnValue = xamarin_string_to_nsstring ((MonoString *) retval, retain);
@@ -1462,9 +1463,11 @@ xamarin_get_nsnumber_converter (MonoClass *managedType, MonoMethod *method, bool
 	} else if (!strcmp (fullname, "System.nfloat")) {
 		func = to_managed ? (void *) xamarin_nsnumber_to_nfloat : (void *) xamarin_nfloat_to_nsnumber;
 	} else if (mono_class_is_enum (managedType)) {
-		MonoClass *baseClass = mono_class_from_mono_type (mono_class_enum_basetype (managedType));
+		MonoType *baseType = mono_class_enum_basetype (managedType);
+		MonoClass *baseClass = mono_class_from_mono_type (baseType);
 		func = xamarin_get_nsnumber_converter (baseClass, method, to_managed, exception_gchandle);
 		xamarin_mono_object_release (&baseClass);
+		xamarin_mono_object_release (&baseType);
 	} else {
 		MonoType *nsnumberType = xamarin_get_nsnumber_type ();
 		*exception_gchandle = xamarin_create_bindas_exception (mtype, nsnumberType, method);

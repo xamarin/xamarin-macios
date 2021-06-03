@@ -492,7 +492,7 @@ namespace MapKit {
 		void Register ([NullAllowed] Class viewClass, string identifier);
 
 		[TV (11,0)][iOS (11,0)][Mac (10,13)]
-		[Wrap ("Register (viewType == null ? null : new Class (viewType), identifier)")]
+		[Wrap ("Register (viewType is null ? null : new Class (viewType), identifier)")]
 		void Register ([NullAllowed] Type viewType, string identifier);
 
 		[Export ("selectAnnotation:animated:")]

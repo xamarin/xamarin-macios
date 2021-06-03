@@ -167,7 +167,7 @@ namespace Introspection {
 		
 		bool GetIsDirectBinding (NSObject obj)
 		{
-			int flags = (byte) typeof (NSObject).GetField ("flags", BindingFlags.Instance | BindingFlags.GetField | BindingFlags.NonPublic).GetValue (obj);
+			int flags = TestRuntime.GetFlags (obj);
 			return (flags & 4) == 4;
 		}
 

@@ -6,7 +6,9 @@ using System.Data;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+#if !NET // https://github.com/xamarin/xamarin-macios/issues/11710
 using System.Json;
+#endif
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
@@ -623,6 +625,7 @@ namespace LinkSdk {
 			Assert.NotNull (getInstance (), "Location");
 		}
 		
+#if !NET // https://github.com/xamarin/xamarin-macios/issues/11710
 		[Test]
 		[Culture ("en")]
 		public void Json_Parse_4415 ()
@@ -635,6 +638,7 @@ namespace LinkSdk {
 			f *= 10;
 			Assert.AreNotEqual (f, (float) v, "non-equal");
 		}
+#endif // !NET
 		
 		[Test]
 		[Culture ("en")]

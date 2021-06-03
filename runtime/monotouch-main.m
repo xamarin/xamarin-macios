@@ -495,6 +495,8 @@ xamarin_main (int argc, char *argv[], enum XamarinLaunchMode launch_mode)
 
 	xamarin_mono_object_release (&assembly);
 	
+	xamarin_release_static_dictionaries ();
+
 	xamarin_bridge_shutdown ();
 
 	return rv;

@@ -16,6 +16,7 @@ steps:
 
 - checkout: macios.ci 
   clean: true
+  lfs: true
 
 # downlod ALL artifacts
 - download: macios 

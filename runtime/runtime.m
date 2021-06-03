@@ -153,6 +153,10 @@ struct InitializationOptions {
 	void *xamarin_objc_msgsend_super;
 	void *xamarin_objc_msgsend_stret;
 	void *xamarin_objc_msgsend_super_stret;
+	void *unhandled_exception_handler;
+	void *reference_tracking_begin_end_callback;
+	void *reference_tracking_is_referenced_callback;
+	void *reference_tracking_tracked_object_entered_finalization;
 #endif
 };
 
@@ -1270,6 +1274,10 @@ xamarin_initialize ()
 	options.xamarin_objc_msgsend_stret = (void *) xamarin_dyn_objc_msgSend_stret;
 	options.xamarin_objc_msgsend_super_stret = (void *) xamarin_dyn_objc_msgSendSuper_stret;
 #endif // !defined(__aarch64__)
+	options.unhandled_exception_handler = (void *) &xamarin_coreclr_unhandled_exception_handler;
+	options.reference_tracking_begin_end_callback = (void *) &xamarin_coreclr_reference_tracking_begin_end_callback;
+	options.reference_tracking_is_referenced_callback = (void *) &xamarin_coreclr_reference_tracking_is_referenced_callback;
+	options.reference_tracking_tracked_object_entered_finalization = (void *) &xamarin_coreclr_reference_tracking_tracked_object_entered_finalization;
 #endif // defined(CORECLR_RUNTIME)
 
 	xamarin_bridge_call_runtime_initialize (&options, &exception_gchandle);
@@ -2060,6 +2068,22 @@ xamarin_get_block_for_delegate (MonoMethod *method, MonoObject *delegate, const 
 	id rv = xamarin_create_delegate_proxy (reflection_method, delegate, signature, token_ref, exception_gchandle);
 	xamarin_mono_object_release (&reflection_method);
 	return rv;
+}
+
+void
+xamarin_release_static_dictionaries ()
+{
+#if defined (CORECLR_RUNTIME)
+	// Release static dictionaries of cached objects. If we end up trying to
+	// add objects to these dictionaries after this point (on a background
+	// thread), the dictionaries will be re-created (and leak) - which
+	// shouldn't be a problem, because at this point the process is about to
+	// exit anyway.
+	pthread_mutex_lock (&wrapper_hash_lock);
+	xamarin_mono_object_release (&block_wrapper_queue);
+	xamarin_mono_object_release (&xamarin_wrapper_hash);
+	pthread_mutex_unlock (&wrapper_hash_lock);
+#endif
 }
 
 void

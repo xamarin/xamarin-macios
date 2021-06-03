@@ -22,5 +22,8 @@
 		<_XamarinSdkRoot Condition="'$(_XamarinSdkRoot)' == ''">$(_XamarinSdkRootDirectory)</_XamarinSdkRoot>
 		<!-- _XamarinSdkRootOnMac this should be passed to tasks that need to access the Xamarin Sdk dir on the Mac, this value will be overriden from Windows -->
 		<_XamarinSdkRootOnMac>$(_XamarinSdkRoot)</_XamarinSdkRootOnMac>
+
+		<!-- We don't need any dependency files -->
+		<GenerateDependencyFile Condition="'$(GenerateDependencyFile)' == ''">false</GenerateDependencyFile>
 	</PropertyGroup>
 </Project>
