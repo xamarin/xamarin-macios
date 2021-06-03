@@ -30,7 +30,7 @@ jobs:
       name: 'Checkout macios.ci'
       with:
         repository: 'xamarin/macios.ci'
-        token: ${{ secrets.SERVICEACCOUNT_PAT }}
+        token: $
         path: macios.ci
         lfs: true
         ref: main
