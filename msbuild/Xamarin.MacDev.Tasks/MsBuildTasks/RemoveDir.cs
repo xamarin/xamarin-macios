@@ -1,5 +1,3 @@
-using System;
-using Xamarin.MacDev.Tasks;
 using Xamarin.Messaging.Build.Client;
 
 namespace Microsoft.Build.Tasks
@@ -12,7 +10,7 @@ namespace Microsoft.Build.Tasks
 		{
 			var result = base.Execute ();
 
-			if (Environment.OSVersion.Platform != PlatformID.Win32NT || string.IsNullOrEmpty (SessionId)) {
+			if (!this.ShouldExecuteRemotely (SessionId)) {
 				return result;
 			}
 
