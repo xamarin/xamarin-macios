@@ -17,11 +17,13 @@ jobs:
 
     - uses: actions/checkout@v2
       name: checkout
+      with:
+        path: xamarin-macios
 
     - uses: actions/checkout@v2
       with:
         repository: 'xamarin/macios.ci'
-        token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ secrets.SERVICEACCOUNT_PAT }}
         path: macios.ci
         lfs: true
         ref: main
