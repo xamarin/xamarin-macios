@@ -1,4 +1,4 @@
-﻿using System;
+using Microsoft.Build.Tasks;
 using Xamarin.MacDev.Tasks;
 
 namespace Xamarin.iOS.Tasks
@@ -7,7 +7,7 @@ namespace Xamarin.iOS.Tasks
 	{
 		public override bool Execute ()
 		{
-			if (Environment.OSVersion.Platform == PlatformID.Win32NT && !string.IsNullOrEmpty (SessionId)) {
+			if (this.ShouldExecuteRemotely (SessionId)) {
 				foreach (var bundleResource in this.BundleResources) {
 					var logicalName = bundleResource.GetMetadata ("LogicalName");
 

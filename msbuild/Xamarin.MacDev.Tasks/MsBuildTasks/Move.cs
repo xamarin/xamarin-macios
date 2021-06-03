@@ -1,4 +1,3 @@
-﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Build.Framework;
@@ -10,7 +9,7 @@ namespace Microsoft.Build.Tasks
 	{
 		public override bool Execute ()
 		{
-			if (Environment.OSVersion.Platform == PlatformID.Win32NT && !string.IsNullOrEmpty (SessionId))
+			if (this.ShouldExecuteRemotely (SessionId))
 				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
 
 			return base.Execute ();
