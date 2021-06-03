@@ -342,8 +342,8 @@ $(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(eval $(call CreateMsi,$(platfor
 
 export DOTNETSDK_WORKLOAD_MANIFEST_ROOTS:=$(abspath ./Workloads)
 
-.stamp-install-workloads: Makefile NuGet.config $(WORKLOAD_TARGETS) $(RUNTIME_PACKS) $(REF_PACKS) $(SDK_PACKS) $(TEMPLATE_PACKS) $(WORKLOAD_PACKS)
-	$(Q) $(DOTNET6) workload install --skip-manifest-update \
+.stamp-install-workloads: Makefile Workloads/NuGet.config $(WORKLOAD_TARGETS) $(RUNTIME_PACKS) $(REF_PACKS) $(SDK_PACKS) $(TEMPLATE_PACKS) $(WORKLOAD_PACKS)
+	$(Q) cd Workloads && $(DOTNET6) workload install --skip-manifest-update \
 		microsoft-net-runtime-ios microsoft-net-runtime-tvos \
 		$(foreach platform,$(DOTNET_PLATFORMS),microsoft-$(shell echo $(platform) | tr A-Z a-z)-sdk-full)
 	$(Q) touch $@
@@ -379,7 +379,7 @@ global.json: $(TOP)/global6.json
 $(TOP)/tests/dotnet/NuGet.config:
 	$(Q) $(MAKE) -C $(TOP)/tests/dotnet NuGet.config
 
-NuGet.config: $(TOP)/tests/dotnet/NuGet.config
+Workloads/NuGet.config: $(TOP)/tests/dotnet/NuGet.config
 	$(Q) $(CP) $< $@
 
 clean-local::
