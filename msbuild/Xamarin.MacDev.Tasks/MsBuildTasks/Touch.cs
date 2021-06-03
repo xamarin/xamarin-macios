@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Build.Framework;
-using Xamarin.MacDev.Tasks;
 using Xamarin.Messaging.Build.Client;
 
 namespace Microsoft.Build.Tasks
@@ -12,7 +11,7 @@ namespace Microsoft.Build.Tasks
 		{
 			bool result;
 
-			if (!string.IsNullOrEmpty (SessionId))
+			if (this.ShouldExecuteRemotely (SessionId))
 				result = new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
 			else
 				result = base.Execute ();

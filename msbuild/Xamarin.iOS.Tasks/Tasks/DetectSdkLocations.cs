@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Microsoft.Build.Framework;
 using Xamarin.Messaging.Build.Client;
 
@@ -10,7 +10,7 @@ namespace Xamarin.iOS.Tasks
 
 		public override bool Execute ()
 		{
-			if (string.IsNullOrEmpty (SessionId))
+			if (!ShouldExecuteRemotely())
 				return base.Execute ();
 
 			// The new targets do not support the "default" value for the MtouchSdkVersion
@@ -23,7 +23,7 @@ namespace Xamarin.iOS.Tasks
 
 		public void Cancel ()
 		{
-			if (!string.IsNullOrEmpty (SessionId))
+			if (ShouldExecuteRemotely ())
 				BuildConnection.CancelAsync (SessionId, BuildEngine4).Wait ();
 		}
 	}

@@ -1,4 +1,4 @@
-﻿using Xamarin.Messaging.Build.Client;
+using Xamarin.Messaging.Build.Client;
 
 namespace Microsoft.Build.Tasks
 {
@@ -6,7 +6,7 @@ namespace Microsoft.Build.Tasks
 	{
 		public override bool Execute ()
 		{
-			if (string.IsNullOrEmpty (SessionId))
+			if (!this.ShouldExecuteRemotely (SessionId))
 				return base.Execute ();
 
 			var taskRunner = new TaskRunner (SessionId, BuildEngine4);

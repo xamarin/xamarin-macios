@@ -1,6 +1,6 @@
 using System;
 
-using Microsoft.Build.Framework;
+using Microsoft.Build.Tasks;
 using Microsoft.Build.Utilities;
 
 using Xamarin.Localization.MSBuild;
@@ -72,6 +72,8 @@ namespace Xamarin.MacDev.Tasks {
 				}
 			}
 		}
+
+		public bool ShouldExecuteRemotely () => this.ShouldExecuteRemotely (SessionId);
 	}
 }
 
