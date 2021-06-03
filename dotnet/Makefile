@@ -376,8 +376,10 @@ endif
 global.json: $(TOP)/global6.json
 	$(CP) $< $@
 
-NuGet.config: $(TOP)/tests/dotnet/NuGet.config
+$(TOP)/tests/dotnet/NuGet.config:
 	$(Q) $(MAKE) -C $(TOP)/tests/dotnet NuGet.config
+
+NuGet.config: $(TOP)/tests/dotnet/NuGet.config
 	$(Q) $(CP) $< $@
 
 clean-local::
