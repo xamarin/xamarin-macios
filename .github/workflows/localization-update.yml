@@ -15,7 +15,7 @@ jobs:
     - uses: repo-sync/pull-request@v2
       name: pull-request
       with:
-        destination_branch: "main"
+        destination_branch: "AutomatingLocalizationGHATest"
         # this title is used in 'localization_branch_sync.yml' so change in both files if necessary
         pr_title: "[Localization] Pulling New Localization Translations"
         pr_body: "Automated PR. Bring new translated changes in the lcl files for OneLocBuild to create translated resx files."
