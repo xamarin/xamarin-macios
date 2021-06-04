@@ -146,7 +146,7 @@ namespace CoreFoundation {
 		}
 
 		// to be used when an API like CF*Get* returns a CFString
-		internal static string FetchString (IntPtr handle)
+		public static string FromHandle (IntPtr handle)
 		{
 			if (handle == IntPtr.Zero)
 				return null;
@@ -173,9 +173,9 @@ namespace CoreFoundation {
 		}
 
 		// to be used when an API like CF*Copy* returns a CFString
-		internal static string FetchString (IntPtr handle, bool releaseHandle)
+		internal static string FromHandle (IntPtr handle, bool releaseHandle)
 		{
-			var s = FetchString (handle);
+			var s = FromHandle (handle);
 			if (releaseHandle && (handle != IntPtr.Zero))
 				CFObject.CFRelease (handle);
 			return s;
@@ -184,7 +184,7 @@ namespace CoreFoundation {
 		public static implicit operator string (CFString x)
 		{
 			if (x.str == null)
-				x.str = FetchString (x.Handle);
+				x.str = FromHandle (x.Handle);
 			
 			return x.str;
 		}
@@ -219,7 +219,7 @@ namespace CoreFoundation {
 		{
 			if (str != null)
 				return str;
-			return FetchString (Handle);
+			return FromHandle (Handle);
 		}
 #endif // !COREBUILD
 	}

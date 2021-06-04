@@ -147,7 +147,7 @@ namespace CoreFoundation {
 		public string GetStringValue (string key)
 		{
 			using (var str = new CFString (key)) {
-				return CFString.FetchString (CFDictionaryGetValue (Handle, str.Handle));
+				return CFString.FromHandle (CFDictionaryGetValue (Handle, str.Handle));
 			}
 		}
 

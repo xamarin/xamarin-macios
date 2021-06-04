@@ -141,7 +141,7 @@ namespace Security {
 		public static string CreateSharedWebCredentialPassword ()
 		{
 			var handle = SecCreateSharedWebCredentialPassword ();
-			var str = NSString.FromHandle (handle);
+			var str = CFString.FromHandle (handle);
 			NSObject.DangerousRelease (handle);
 			return str;
 		}

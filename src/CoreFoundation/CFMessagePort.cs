@@ -85,7 +85,7 @@ namespace CoreFoundation {
 		public string Name {
 			get {
 				Check ();
-				return NSString.FromHandle (CFMessagePortGetName (handle));
+				return CFString.FromHandle (CFMessagePortGetName (handle));
 			}
 			set {
 				Check ();

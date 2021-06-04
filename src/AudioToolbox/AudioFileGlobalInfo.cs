@@ -80,7 +80,7 @@ namespace AudioToolbox {
 			if (AudioFileGetGlobalInfo (AudioFileGlobalProperty.FileTypeName, sizeof (AudioFileType), ref fileType, ref size, out ptr) != 0)
 				return null;
 
-			return CFString.FetchString (ptr);
+			return CFString.FromHandle (ptr);
 		}
 
 		public static AudioFormatType[] GetAvailableFormats (AudioFileType fileType)
@@ -126,7 +126,7 @@ namespace AudioToolbox {
 				if (AudioFileGetGlobalInfo (AudioFileGlobalProperty.AllExtensions, 0, IntPtr.Zero, ref size, out ptr) != 0)
 					return null;
 				
-				return NSArray.ArrayFromHandleFunc (ptr, l => CFString.FetchString (l));
+				return NSArray.ArrayFromHandleFunc (ptr, l => CFString.FromHandle (l));
 			}
 		}
 
@@ -137,7 +137,7 @@ namespace AudioToolbox {
 				if (AudioFileGetGlobalInfo (AudioFileGlobalProperty.AllUTIs, 0, IntPtr.Zero, ref size, out ptr) != 0)
 					return null;
 				
-				return NSArray.ArrayFromHandleFunc (ptr, l => CFString.FetchString (l));
+				return NSArray.ArrayFromHandleFunc (ptr, l => CFString.FromHandle (l));
 			}
 		}
 
@@ -148,7 +148,7 @@ namespace AudioToolbox {
 				if (AudioFileGetGlobalInfo (AudioFileGlobalProperty.AllMIMETypes, 0, IntPtr.Zero, ref size, out ptr) != 0)
 					return null;
 				
-				return NSArray.ArrayFromHandleFunc (ptr, l => CFString.FetchString (l));
+				return NSArray.ArrayFromHandleFunc (ptr, l => CFString.FromHandle (l));
 			}
 		}
 
@@ -179,7 +179,7 @@ namespace AudioToolbox {
 			if (AudioFileGetGlobalInfo (AudioFileGlobalProperty.ExtensionsForType, sizeof (AudioFileType), ref fileType, ref size, out ptr) != 0)
 				return null;
 				
-			return NSArray.ArrayFromHandleFunc (ptr, l => CFString.FetchString (l));
+			return NSArray.ArrayFromHandleFunc (ptr, l => CFString.FromHandle (l));
 		}
 
 		public static string[] GetUTIs (AudioFileType fileType)
@@ -189,7 +189,7 @@ namespace AudioToolbox {
 			if (AudioFileGetGlobalInfo (AudioFileGlobalProperty.UTIsForType, sizeof (AudioFileType), ref fileType, ref size, out ptr) != 0)
 				return null;
 				
-			return NSArray.ArrayFromHandleFunc (ptr, l => CFString.FetchString (l));
+			return NSArray.ArrayFromHandleFunc (ptr, l => CFString.FromHandle (l));
 		}
 
 		public static string[] GetMIMETypes (AudioFileType fileType)
@@ -199,7 +199,7 @@ namespace AudioToolbox {
 			if (AudioFileGetGlobalInfo (AudioFileGlobalProperty.MIMETypesForType, sizeof (AudioFileType), ref fileType, ref size, out ptr) != 0)
 				return null;
 				
-			return NSArray.ArrayFromHandleFunc (ptr, l => CFString.FetchString (l));
+			return NSArray.ArrayFromHandleFunc (ptr, l => CFString.FromHandle (l));
 		}
 
 /*

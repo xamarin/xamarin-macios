@@ -108,6 +108,7 @@
 //
 using System;
 using System.Diagnostics;
+using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 using CoreGraphics;
@@ -282,7 +283,7 @@ namespace CoreImage {
 		// Calls the selName selector for cases where we do not have an instance created
 		static internal string GetFilterName (IntPtr filterHandle)
 		{
-			return NSString.FromHandle (ObjCRuntime.Messaging.IntPtr_objc_msgSend (filterHandle, Selector.GetHandle ("name")));
+			return CFString.FromHandle (ObjCRuntime.Messaging.IntPtr_objc_msgSend (filterHandle, Selector.GetHandle ("name")));
 		}
 
 		// TODO could be generated too

@@ -142,7 +142,7 @@ namespace CoreGraphics {
 
 		public string PostScriptName {
 			get {
-				return CFString.FetchString (CGFontCopyPostScriptName (handle), releaseHandle: true);
+				return CFString.FromHandle (CGFontCopyPostScriptName (handle), releaseHandle: true);
 			}
 		}
 		
@@ -151,7 +151,7 @@ namespace CoreGraphics {
 
 		public string FullName {
 			get {
-				return CFString.FetchString (CGFontCopyFullName (handle), releaseHandle: true);
+				return CFString.FromHandle (CGFontCopyFullName (handle), releaseHandle: true);
 			}
 		}
 		
@@ -256,7 +256,7 @@ namespace CoreGraphics {
 
 		public string GlyphNameForGlyph (ushort glyph)
 		{
-			return CFString.FetchString (CGFontCopyGlyphNameForGlyph (handle, glyph), releaseHandle: true);
+			return CFString.FromHandle (CGFontCopyGlyphNameForGlyph (handle, glyph), releaseHandle: true);
 		}
 		
 		//[DllImport (Constants.CoreGraphicsLibrary)]

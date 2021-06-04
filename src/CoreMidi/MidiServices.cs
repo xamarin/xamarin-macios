@@ -367,7 +367,7 @@ namespace CoreMidi {
 			
 			code = MIDIObjectGetStringProperty (handle, property, out val);
 			if (code == 0){
-				var ret = NSString.FromHandle (val);
+				var ret = CFString.FromHandle (val);
 				if (val != IntPtr.Zero)
 					CFObject.CFRelease (val);
 				return ret;
@@ -643,7 +643,7 @@ namespace CoreMidi {
 				if (epc != null){
 					var data = (MidiObjectPropertyChangeNotification) Marshal.PtrToStructure (message, typeof (MidiObjectPropertyChangeNotification));
 					epc (client, new ObjectPropertyChangedEventArgs (
-						     MidiObjectFromType (data.ObjectType, data.ObjectHandle), NSString.FromHandle (data.PropertyName)));
+						     MidiObjectFromType (data.ObjectType, data.ObjectHandle), CFString.FromHandle (data.PropertyName)));
 				}
 				break;
 			case MidiNotificationMessageId.ThruConnectionsChanged:

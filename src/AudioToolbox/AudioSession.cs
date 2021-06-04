@@ -436,7 +436,7 @@ namespace AudioToolbox {
 		[Deprecated (PlatformName.iOS, 5, 0, message : "Use 'InputRoute' or 'OutputRoute' instead.")]
 		static public string AudioRoute {
 			get {
-				return CFString.FetchString (GetIntPtr (AudioSessionProperty.AudioRoute));
+				return CFString.FromHandle (GetIntPtr (AudioSessionProperty.AudioRoute));
 			}
 		}
 
@@ -461,7 +461,7 @@ namespace AudioToolbox {
 				for (int i = 0; i < res.Length; ++i) {
 					var dict = array.GetValue (i);
 					var n = new NSNumber (CFDictionary.GetValue (dict, id.Handle));
-					var desc = CFString.FetchString (CFDictionary.GetValue (dict, description.Handle));
+					var desc = CFString.FromHandle (CFDictionary.GetValue (dict, description.Handle));
 
 					res [i] = new AccessoryInfo ((int) n, desc);
 					id.Dispose ();
