@@ -8,27 +8,33 @@ on:
 jobs:
   delete_branch:
     name: 'Delete Localization branch'
-    uses: dawidd6/action-delete-branch@v3
-    # We want to do the sync if we merged the pull request, the author was 'github-actions', and it has the correct title
-    if: ${{ github.event.pull_request.merged == true && github.event.pull_request.user.login == 'github-actions' && github.event.pull_request.title == '[Localization] Pulling New Localization Translations' }}
-    with:
-      github_token: ${{ secrets.GITHUB_TOKEN }}
-      branches: AutomatingLocalizationGHATest2
+    steps:
+    - uses: dawidd6/action-delete-branch@v3
+      name: 'delete'
+      # We want to do the sync if we merged the pull request, the author was 'github-actions', and it has the correct title
+      if: ${{ github.event.pull_request.merged == true && github.event.pull_request.user.login == 'github-actions' && github.event.pull_request.title == '[Localization] Pulling New Localization Translations' }}
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branches: AutomatingLocalizationGHATest2
 
   checkout_localization_branch:
     name: 'Checkout the Localization branch'
     needs: delete_branch
     if: ${{ github.event.pull_request.merged == true && github.event.pull_request.user.login == 'github-actions' && github.event.pull_request.title == '[Localization] Pulling New Localization Translations' }}
-    uses: actions/checkout@v2
-    with:
-      repository: ${{ github.repository }}
-      ref: 'AutomatingLocalizationGHATest2'
+    steps:
+    - uses: actions/checkout@v2
+      name: 'checkout'
+      with:
+        repository: ${{ github.repository }}
+        ref: 'AutomatingLocalizationGHATest2'
 
   push_to_localization_branch:
     name: 'Push to Localization branch'
     needs: checkout_localization_branch
     if: ${{ github.event.pull_request.merged == true && github.event.pull_request.user.login == 'github-actions' && github.event.pull_request.title == '[Localization] Pulling New Localization Translations' }}
-    uses: ad-m/github-push-action@master
-    with:
-      github_token: ${{ secrets.GITHUB_TOKEN }}
-      branch: 'AutomatingLocalizationGHATest2'
+    steps:
+    - uses: ad-m/github-push-action@master
+      name: push
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: 'AutomatingLocalizationGHATest2'
