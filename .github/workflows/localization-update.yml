@@ -15,8 +15,8 @@ jobs:
     - uses: repo-sync/pull-request@v2
       name: pull-request
       with:
-        destination_branch: "main"
-        pr_title: "[Localization] Pulling New Localization Translations"
+        destination_branch: "AutomatingLocalizationGHATest"
+        pr_title: "[Localization] Pulling New Localization Translations $GITHUB_RUN_ID"
         pr_body: "Automated PR. Bring new translated changes in the lcl files for OneLocBuild to create translated resx files."
         pr_label: "not-notes-worthy"
         pr_milestone: "Future"
