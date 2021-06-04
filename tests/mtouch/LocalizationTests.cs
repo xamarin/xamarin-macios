@@ -15,6 +15,7 @@ namespace Xamarin.Tests
 {
 	// THIS IS A TEST TO SEE IF THIS TEXT APPEARS
 	// INSIDE AutomatingLocalizationGHATest2
+	// try again 
 	[TestFixture]
 	public class LocalizationTests
 	{
