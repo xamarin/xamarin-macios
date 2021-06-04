@@ -6,6 +6,7 @@ using Xamarin.MacDev.Tasks;
 
 namespace Xamarin.iOS.Tasks
 {
+	// after changing the GHA in main
 	[TestFixture]
 	public class GetBundleNameTaskTests : TestBase
 	{
