@@ -29,7 +29,6 @@ jobs:
       run: |
         echo "${{ github.event.pull_request.merged == true && github.event.pull_request.user.login == 'github-actions[bot]' && contains(github.event.pull_request.labels.*.names, 'localization_bot') }}"
 
-
   delete_branch:
     name: 'Delete Localization branch'
     runs-on: ubuntu-latest
