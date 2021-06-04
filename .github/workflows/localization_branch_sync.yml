@@ -1,0 +1,32 @@
+name: Sync Localization Branch
+on:
+  pull_request:
+    branches:
+      - 'main'
+    types: [closed]
+
+jobs:
+  delete_branch:
+    name: 'Delete Localization branch'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: dawidd6/action-delete-branch@v3
+      name: 'delete'
+      if: ${{ github.event.pull_request.merged == true && github.event.pull_request.user.login == 'github-actions[bot]' && contains(github.event.pull_request.labels.*.names, 'localization_bot') }}
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branches: Localization
+        soft_fail: true
+
+  recreate_localization_branch:
+    name: 'Create the Localization branch'
+    runs-on: ubuntu-latest
+    needs: delete_branch
+    steps:
+    - uses: peterjgrainger/action-create-branch@v2.0.1
+      name: 'create branch'
+      if: ${{ github.event.pull_request.merged == true && github.event.pull_request.user.login == 'github-actions[bot]' && contains(github.event.pull_request.labels.*.names, 'localization_bot') }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        branch: 'Localization'
