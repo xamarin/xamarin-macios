@@ -7,6 +7,7 @@ using NUnit.Framework;
 
 namespace Xamarin.iOS.Tasks
 {
+	// adding this comment as a test
 	class CustomBTouchTask : BTouch
 	{
 		public string GetCommandLineCommands ()

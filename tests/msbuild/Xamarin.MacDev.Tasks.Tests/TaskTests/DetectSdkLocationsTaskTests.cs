@@ -5,6 +5,7 @@ using NUnit.Framework;
 
 namespace Xamarin.iOS.Tasks
 {
+	// Trying with the changed name
 	[TestFixture]
 	public class DetectSdkLocationsTaskTests : TestBase
 	{
