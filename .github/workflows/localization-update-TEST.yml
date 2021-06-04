@@ -1,4 +1,4 @@
-name: Get Localization Translations
+name: Get Localization Translations TEST
 on:
   push:
     branches:
