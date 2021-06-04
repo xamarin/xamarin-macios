@@ -8,6 +8,7 @@ on:
 jobs:
   delete_branch:
     name: 'Delete Localization branch'
+    runs-on: ubuntu-latest
     steps:
     - uses: dawidd6/action-delete-branch@v3
       name: 'delete'
@@ -19,6 +20,7 @@ jobs:
 
   checkout_localization_branch:
     name: 'Checkout the Localization branch'
+    runs-on: ubuntu-latest
     needs: delete_branch
     if: ${{ github.event.pull_request.merged == true && github.event.pull_request.user.login == 'github-actions' && github.event.pull_request.title == '[Localization] Pulling New Localization Translations' }}
     steps:
@@ -30,6 +32,7 @@ jobs:
 
   push_to_localization_branch:
     name: 'Push to Localization branch'
+    runs-on: ubuntu-latest
     needs: checkout_localization_branch
     if: ${{ github.event.pull_request.merged == true && github.event.pull_request.user.login == 'github-actions' && github.event.pull_request.title == '[Localization] Pulling New Localization Translations' }}
     steps:
