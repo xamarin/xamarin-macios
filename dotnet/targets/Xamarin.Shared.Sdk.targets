@@ -460,7 +460,7 @@
 			<_AppBundleFrameworksDir Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'">$(MSBuildProjectDirectory)$(_AppBundlePath)\Frameworks\</_AppBundleFrameworksDir>
 			<_AppBundleFrameworksDir Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">$(MSBuildProjectDirectory)$(_AppBundlePath)\Contents\Frameworks\</_AppBundleFrameworksDir>
 
-			<_AOTCompiler>$(_MonoRuntimePackPath)native/cross/$(RuntimeIdentifier)/mono-aot-cross</_AOTCompiler>
+			<_AOTCompiler>$(MonoAotCrossCompilerPath)</_AOTCompiler>
 			<_AOTInputDirectory>$(_IntermediateNativeLibraryDir)aot-input/</_AOTInputDirectory>
 			<_AOTOutputDirectory>$(_IntermediateNativeLibraryDir)aot-output/</_AOTOutputDirectory>
 
@@ -512,6 +512,8 @@
 			DependsOnTargets="_ComputeVariables"
 			Inputs="@(_AssembliesToAOT)"
 			Outputs="@(_AssembliesToAOT -> '$(_AOTOutputDirectory)%(Arch)\%(Filename)%(Extension).o')">
+
+		<Error Text="The AOT compiler '$(_AOTCompiler)' does not exist." Condition="!Exists ($(_AOTCompiler))" />
 
 		<AOTCompile
 			SessionId="$(BuildSessionId)"

@@ -1,0 +1,5 @@
+<Project>
+	<Import Project="Sdk.props" Sdk="Microsoft.tvOS.Sdk" Condition="'$(TargetPlatformIdentifier)' == 'tvOS'" />
+
+	<Import Project="Sdk.props" Sdk="Microsoft.NETCore.App.Runtime.AOT.Cross.tvos-arm64" Condition="'$(TargetPlatformIdentifier)' == 'tvOS' And '$(RuntimeIdentifier)' == 'tvos-arm64'" />
+</Project>
