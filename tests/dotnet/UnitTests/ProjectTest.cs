@@ -52,6 +52,7 @@ namespace Xamarin.Tests {
 		}
 
 		[Test]
+		[TestCase ("iossimulator-x86")]
 		[TestCase ("iossimulator-x64")]
 		[TestCase ("ios-arm64")]
 		public void BuildMySingleView (string runtimeIdentifier)
