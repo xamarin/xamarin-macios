@@ -1,4 +1,3 @@
-using Xamarin.MacDev.Tasks;
 using Xamarin.Messaging.Build.Client;
 
 namespace Microsoft.Build.Tasks
@@ -11,7 +10,7 @@ namespace Microsoft.Build.Tasks
 		{
 			var result = base.Execute ();
 
-			if (string.IsNullOrEmpty (SessionId)) {
+			if (!this.ShouldExecuteRemotely (SessionId)) {
 				return result;
 			}
 

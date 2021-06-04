@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.Build.Framework;
@@ -12,7 +12,7 @@ namespace Xamarin.MacDev.Tasks
 
 		public override bool Execute ()
 		{
-			if (!string.IsNullOrEmpty (SessionId)) {
+			if (ShouldExecuteRemotely ()) {
 				outputPath = Path.GetDirectoryName (OutputFile);
 
 				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;

@@ -9,7 +9,7 @@ namespace Xamarin.MacDev.Tasks
 	{
 		public override bool Execute ()
 		{
-			if (!string.IsNullOrEmpty (SessionId)) {
+			if (ShouldExecuteRemotely ()) {
 				var taskRunner = new TaskRunner (SessionId, BuildEngine4);
 
 				taskRunner.FixReferencedItems (SourceFiles);
@@ -22,7 +22,7 @@ namespace Xamarin.MacDev.Tasks
 
 		public void Cancel ()
 		{
-			if (!string.IsNullOrEmpty (SessionId))
+			if (ShouldExecuteRemotely ())
 				BuildConnection.CancelAsync (SessionId, BuildEngine4).Wait ();
 		}
 
