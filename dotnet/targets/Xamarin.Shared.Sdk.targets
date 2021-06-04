@@ -363,14 +363,15 @@
 			<!--
 				post-output steps
 			-->
-			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" Type="Xamarin.Linker.RegistrarStep" />
-			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" Type="Xamarin.GenerateMainStep" />
-			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" Type="Xamarin.GenerateReferencesStep" />
-			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" Type="Xamarin.GatherFrameworksStep" />
-			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" Type="Xamarin.Linker.ComputeNativeBuildFlagsStep" />
-			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" Type="Xamarin.Linker.ComputeAOTArguments" />
+			<!-- TODO: remove AfterStep="OutputStep" from the post-output steps once we get the fix from https://github.com/mono/linker/pull/2082 -->
+			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" AfterStep="OutputStep" Type="Xamarin.Linker.RegistrarStep" />
+			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" AfterStep="OutputStep" Type="Xamarin.GenerateMainStep" />
+			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" AfterStep="OutputStep" Type="Xamarin.GenerateReferencesStep" />
+			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" AfterStep="OutputStep" Type="Xamarin.GatherFrameworksStep" />
+			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" AfterStep="OutputStep" Type="Xamarin.Linker.ComputeNativeBuildFlagsStep" />
+			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" AfterStep="OutputStep" Type="Xamarin.Linker.ComputeAOTArguments" />
 			<!-- Must be the last step. -->
-			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" Type="Xamarin.Linker.DoneStep" />
+			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" AfterStep="OutputStep" Type="Xamarin.Linker.DoneStep" />
 
 			<!-- _BundlerXmlDefinitions comes from any -xml arguments to mtouch/mmp -->
 			<TrimmerRootDescriptor Include="@(_BundlerXmlDefinitions)" />
