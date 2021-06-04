@@ -8,7 +8,7 @@ namespace Microsoft.Build.Tasks
 		{
 			var result = base.Execute ();
 
-			if (string.IsNullOrEmpty (SessionId)) {
+			if (!this.ShouldExecuteRemotely (SessionId)) {
 				return result;
 			}
 

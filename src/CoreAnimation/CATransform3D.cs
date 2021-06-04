@@ -30,10 +30,7 @@ namespace CoreAnimation {
 		static CATransform3D ()
 		{
 			Identity = new CATransform3D ();
-			Identity.m11 = 1f;
-			Identity.m22 = 1f;
-			Identity.m33 = 1f;
-			Identity.m44 = 1f;
+			Identity.m11 = Identity.m22 = Identity.m33 = Identity.m44 = 1f;
 		}
 		
 		[DllImport(Constants.QuartzLibrary)]

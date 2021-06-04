@@ -11,7 +11,7 @@ namespace Microsoft.Build.Tasks
 		{
 			var result = base.Execute ();
 
-			if (!string.IsNullOrEmpty (SessionId))
+			if (this.ShouldExecuteRemotely (SessionId))
 				result = new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
 
 			return result;

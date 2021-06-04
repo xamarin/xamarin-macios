@@ -1,3 +1,0 @@
-<Project>
-	<Import Project="Sdk.props" Sdk="Microsoft.tvOS.Sdk" Condition="'$(TargetPlatformIdentifier)' == 'tvOS'" />
-</Project>

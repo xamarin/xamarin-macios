@@ -50,10 +50,10 @@ report:
 
 COMMON_ARGS=/p:Platform=iPhone /p:Configuration=Release
 build-oldnet:
-	$(SYSTEM_MSBUILD) $(XBUILD_VERBOSITY) size-comparison/MySingleView/oldnet/MySingleView.csproj $(COMMON_ARGS) /bl:$@.binlog
+	$(SYSTEM_MSBUILD) $(XBUILD_VERBOSITY) size-comparison/MySingleView/oldnet/MySingleView.csproj $(COMMON_ARGS) /bl:$@.binlog $(MSBUILD_VERBOSITY)
 
 build-dotnet: $(TARGETS)
-	$(DOTNET6) build size-comparison/MySingleView/dotnet/MySingleView.csproj --runtime ios-arm64 $(COMMON_ARGS) /bl:$@.binlog
+	$(DOTNET6) build size-comparison/MySingleView/dotnet/MySingleView.csproj --runtime ios-arm64 $(COMMON_ARGS) /bl:$@.binlog $(MSBUILD_VERBOSITY)
 
 run-dotnet: $(TARGETS)
 	$(DOTNET6) build -t:Run size-comparison/MySingleView/dotnet/MySingleView.csproj --runtime ios-arm64 $(COMMON_ARGS)

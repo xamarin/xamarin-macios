@@ -15,7 +15,7 @@ namespace Microsoft.Build.Tasks
 
 		public override bool Execute ()
 		{
-			if (string.IsNullOrEmpty (SessionId))
+			if (!this.ShouldExecuteRemotely (SessionId))
 				return base.Execute ();
 
 			if (string.IsNullOrEmpty (ServerPassword))
@@ -60,7 +60,7 @@ namespace Microsoft.Build.Tasks
 
 		public override void Cancel ()
 		{
-			if (!string.IsNullOrEmpty (SessionId))
+			if (this.ShouldExecuteRemotely (SessionId))
 				BuildConnection.CancelAsync (SessionId, BuildEngine4).Wait ();
 
 			base.Cancel ();

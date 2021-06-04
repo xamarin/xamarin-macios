@@ -404,6 +404,7 @@
 			<!-- Add all the framework files to ResolvedFileToPublish -->
 			<ResolvedFileToPublish Include="@(_FrameworkFilesToPublish)">
 				<RelativePath>%(_FrameworkFilesToPublish._FrameworkPath)\%(_FrameworkFilesToPublish._FrameworkRelativePath)</RelativePath>
+				<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 			</ResolvedFileToPublish>
 		</ItemGroup>
 	</Target>
@@ -418,7 +419,9 @@
 			</_DynamicLibraryToPublish>
 
 			<!-- Add all the dynamic libraries to ResolvedFileToPublish -->
-			<ResolvedFileToPublish Include="@(_DynamicLibraryToPublish)" />
+			<ResolvedFileToPublish Include="@(_DynamicLibraryToPublish)">
+				<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+			</ResolvedFileToPublish>
 		</ItemGroup>
 	</Target>
 
@@ -509,7 +512,7 @@
 			<_AppBundleFrameworksDir Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'">$(MSBuildProjectDirectory)$(_AppBundlePath)\Frameworks\</_AppBundleFrameworksDir>
 			<_AppBundleFrameworksDir Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">$(MSBuildProjectDirectory)$(_AppBundlePath)\Contents\Frameworks\</_AppBundleFrameworksDir>
 
-			<_AOTCompiler>$(_MonoRuntimePackPath)native/cross/$(RuntimeIdentifier)/mono-aot-cross</_AOTCompiler>
+			<_AOTCompiler>$(MonoAotCrossCompilerPath)</_AOTCompiler>
 			<_AOTInputDirectory>$(_IntermediateNativeLibraryDir)aot-input/</_AOTInputDirectory>
 			<_AOTOutputDirectory>$(_IntermediateNativeLibraryDir)aot-output/</_AOTOutputDirectory>
 
@@ -562,6 +565,8 @@
 			Inputs="@(_AssembliesToAOT)"
 			Outputs="@(_AssembliesToAOT -> '$(_AOTOutputDirectory)%(Arch)\%(Filename)%(Extension).o')">
 
+		<Error Text="The AOT compiler '$(_AOTCompiler)' does not exist." Condition="!Exists ($(_AOTCompiler))" />
+
 		<AOTCompile
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
@@ -597,6 +602,7 @@
 			<!-- copy the aotdata files to the .app -->
 			<ResolvedFileToPublish Include="%(_AssembliesToAOT.AOTData)" >
 				<RelativePath>$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)$(PublishDir),$(_NativeExecutablePublishDir)))\%(_AssembliesToAOT.Filename).aotdata.%(_AssembliesToAOT.Arch)</RelativePath>
+				<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 			</ResolvedFileToPublish>
 		</ItemGroup>
 	</Target>
@@ -766,9 +772,10 @@
 
 		<ItemGroup>
 			<!-- Copy the executable from the intermediate directory to the .app -->
-			<ResolvedFileToPublish
-				Include="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName)"
-				RelativePath="$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)$(PublishDir),$(_NativeExecutablePublishDir)))\$(_NativeExecutableName)"/>
+			<ResolvedFileToPublish Include="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName)">
+				<RelativePath>$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)$(PublishDir),$(_NativeExecutablePublishDir)))\$(_NativeExecutableName)</RelativePath>
+				<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+			</ResolvedFileToPublish>
 		</ItemGroup>
 	</Target>
 
