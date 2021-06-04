@@ -126,10 +126,6 @@ endif
 
 BundledNETCorePlatformsPackageVersion.txt: .stamp-download-dotnet-packages
 
-.stamp-install-workloads: .stamp-download-dotnet-packages
-	$(Q_GEN) cd package-download && $(DOTNET6) workload install microsoft-net-runtime-ios microsoft-net-runtime-tvos
-	$(Q) touch $@
-
 package-download/global.json: $(TOP)/global6.json Makefile
 	$(Q) $(CP) $< $@
 
@@ -146,7 +142,6 @@ endif
 DOTNET_DOWNLOADS = \
 	downloads/$(basename $(basename $(DOTNET6_TARBALL_NAME))) \
 	.stamp-download-dotnet-packages \
-	.stamp-install-workloads \
 
 dotnet: $(DOTNET_DOWNLOADS)
 ifdef ENABLE_DOTNET
