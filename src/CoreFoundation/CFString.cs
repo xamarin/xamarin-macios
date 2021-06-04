@@ -173,7 +173,7 @@ namespace CoreFoundation {
 		}
 
 		// to be used when an API like CF*Copy* returns a CFString
-		internal static string FromHandle (IntPtr handle, bool releaseHandle)
+		public static string FromHandle (IntPtr handle, bool releaseHandle)
 		{
 			var s = FromHandle (handle);
 			if (releaseHandle && (handle != IntPtr.Zero))
