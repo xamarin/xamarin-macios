@@ -51,6 +51,7 @@ jobs:
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         branches: AutomatingLocalizationGHATest2
+        soft-fail: true
 
   recreate_localization_branch:
     name: 'Create the Localization branch'
