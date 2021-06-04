@@ -9,6 +9,9 @@ jobs:
   print_info:
     name: 'Print Information'
     runs-on: ubuntu-latest
+    env:
+      # We want to do the sync if we merged the pull request, the author was 'github-actions', and it has the correct label
+      FROM_LEGO: ${{ github.event.pull_request.merged == true && github.event.pull_request.user.login == 'github-actions[bot]' }} # && contains(github.event.pull_request.labels.*.names, 'localization_bot') }}
     steps:
     - name: "Get Pull Request Status"
       run: |
@@ -34,6 +37,9 @@ jobs:
     - name: "login is correct"
       run: |
         echo "${{ github.event.pull_request.user.login == 'github-actions[bot]' }}"
+    - name: "Can we access the variable?"
+      run: |
+        echo "${{ env.FROM_LEGO == true }}"
 
   delete_branch:
     name: 'Delete Localization branch'
@@ -44,7 +50,7 @@ jobs:
     steps:
     - uses: dawidd6/action-delete-branch@v3
       name: 'delete'
-      if: ${{ env.FROM_LEGO == true }}
+      if: ${{ github.event.pull_request.merged == true && github.event.pull_request.user.login == 'github-actions[bot]' }} # && contains(github.event.pull_request.labels.*.names, 'localization_bot') }}
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         branches: AutomatingLocalizationGHATest2
@@ -58,7 +64,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       name: 'checkout'
-      if: ${{ env.FROM_LEGO == true }}
+      if: ${{ github.event.pull_request.merged == true && github.event.pull_request.user.login == 'github-actions[bot]' }} # && contains(github.event.pull_request.labels.*.names, 'localization_bot') }}
       with:
         repository: ${{ github.repository }}
         ref: 'AutomatingLocalizationGHATest2'
@@ -72,7 +78,7 @@ jobs:
     steps:
     - uses: ad-m/github-push-action@master
       name: push
-      if: ${{ env.FROM_LEGO == true }}
+      if: ${{ github.event.pull_request.merged == true && github.event.pull_request.user.login == 'github-actions[bot]' }} # && contains(github.event.pull_request.labels.*.names, 'localization_bot') }}
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         branch: 'AutomatingLocalizationGHATest2'
