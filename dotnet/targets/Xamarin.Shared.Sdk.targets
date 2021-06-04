@@ -763,7 +763,7 @@
 				Condition="'$(_PlatformName)' != 'macOS' And '$(InvariantGlobalization)' != 'true' And '%(Filename)%(Extension)' == 'icudt.dat'" />
 
 			<!-- Remove the libxamarin-*.dylib files we don't want -->
-			<ResolvedFileToPublish Remove="@(ResolvedFileToPublish)" Condition="'%(Extension)' == '.dylib' And '%(Filename)%(Extension)' != '$(_LibXamarinName)' And $([System.String]::new('%(Filename)').StartsWith('libxamarin-dotnet-'))" />
+			<ResolvedFileToPublish Remove="@(ResolvedFileToPublish)" Condition="'%(Extension)' == '.dylib' And '%(Filename)%(Extension)' != '$(_LibXamarinName)' And $([System.String]::new('%(Filename)').StartsWith('libxamarin-dotnet-', StringComparison.Ordinal))" />
 		</ItemGroup>
 	</Target>
 
