@@ -12,7 +12,7 @@ namespace PerfTest {
 
 	[Register ("StringClass")]
 	class StringClass : NSObject {
-			public override string Description => "constant";
+		public override string Description => "constant";
 	}
 
 	public class TollFreeString {
