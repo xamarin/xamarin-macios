@@ -34,7 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       # We want to do the sync if we merged the pull request, the author was 'github-actions', and it has the correct label
-      FROM_LEGO: ${{ github.event.pull_request.merged == true && github.event.pull_request.user.login == 'github-actions[bot]' && contains(github.event.pull_request.labels.*.names, 'localization_bot') }}
+      FROM_LEGO: ${{ github.event.pull_request.merged == true && github.event.pull_request.user.login == 'github-actions[bot]' }} # && contains(github.event.pull_request.labels.*.names, 'localization_bot') }}
     steps:
     - uses: dawidd6/action-delete-branch@v3
       name: 'delete'
@@ -48,7 +48,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: delete_branch
     env:
-      FROM_LEGO: ${{ github.event.pull_request.merged == true && github.event.pull_request.user.login == 'github-actions' && contains(github.event.pull_request.labels.*.names, 'localization_bot') }}
+      FROM_LEGO: ${{ github.event.pull_request.merged == true && github.event.pull_request.user.login == 'github-actions[bot]' }} # && contains(github.event.pull_request.labels.*.names, 'localization_bot') }}
     steps:
     - uses: actions/checkout@v2
       name: 'checkout'
@@ -62,7 +62,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: checkout_localization_branch
     env:
-      FROM_LEGO: ${{ github.event.pull_request.merged == true && github.event.pull_request.user.login == 'github-actions' && contains(github.event.pull_request.labels.*.names, 'localization_bot') }}
+      FROM_LEGO: ${{ github.event.pull_request.merged == true && github.event.pull_request.user.login == 'github-actions[bot]' }} # && contains(github.event.pull_request.labels.*.names, 'localization_bot') }}
     steps:
     - uses: ad-m/github-push-action@master
       name: push
