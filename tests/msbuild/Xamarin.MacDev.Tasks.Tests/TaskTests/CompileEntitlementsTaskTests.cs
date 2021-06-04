@@ -6,6 +6,7 @@ using Xamarin.MacDev;
 
 namespace Xamarin.iOS.Tasks
 {
+	// This is for a test as well
 	class CustomCompileEntitlements : CompileEntitlements
 	{
 		protected override MobileProvision GetMobileProvision (MobileProvisionPlatform platform, string uuid)
