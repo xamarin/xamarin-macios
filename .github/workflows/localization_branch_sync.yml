@@ -25,9 +25,15 @@ jobs:
     - name: "Get if using Localization-bot label"
       run: |
         echo "${{ contains(github.event.pull_request.labels.*.names, 'localization_bot') }}"
-    - name: "FROM_LEGO"
+    - name: "new FROM_LEGO"
       run: |
-        echo "${{ github.event.pull_request.merged == true && github.event.pull_request.user.login == 'github-actions[bot]' && contains(github.event.pull_request.labels.*.names, 'localization_bot') }}"
+        echo "${{ github.event.pull_request.merged == true && github.event.pull_request.user.login == 'github-actions[bot]' }}"
+    - name: "Merged is true"
+      run: |
+        echo "${{ github.event.pull_request.merged == true  }}"
+    - name: "login is correct"
+      run: |
+        echo "${{ github.event.pull_request.user.login == 'github-actions[bot]' }}"
 
   delete_branch:
     name: 'Delete Localization branch'
