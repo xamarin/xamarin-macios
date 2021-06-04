@@ -22,10 +22,10 @@ using System.Text;
 
 using Foundation;
 using ObjCRuntime;
-using Xamarin.Utils;
 using Xamarin.Bundler;
 
 #if MTOUCH || MMP || BUNDLER
+using Xamarin.Utils;
 using TAssembly=Mono.Cecil.AssemblyDefinition;
 using TType=Mono.Cecil.TypeReference;
 using TMethod=Mono.Cecil.MethodDefinition;
@@ -437,7 +437,7 @@ namespace Registrar {
 						throw new InvalidOperationException ();
 					var attrib = CategoryAttribute;
 					var name = attrib.Name ?? Registrar.GetTypeFullName (Type);
-					return StringUtils.SanitizeObjectiveCName (name);
+					return SanitizeObjectiveCName (name);
 				}
 			}
 
@@ -447,7 +447,7 @@ namespace Registrar {
 						throw new InvalidOperationException ();
 					var attrib = Registrar.GetProtocolAttribute (Type);
 					var name = attrib.Name ?? Registrar.GetTypeFullName (Type);
-					return StringUtils.SanitizeObjectiveCName (name);
+					return SanitizeObjectiveCName (name);
 				}
 			}
 
@@ -2600,7 +2600,7 @@ namespace Registrar {
 			}
 			if (name == null)
 				name = GetTypeFullName (type);
-			return StringUtils.SanitizeObjectiveCName (name);
+			return SanitizeObjectiveCName (name);
 		}
 
 		protected string GetExportedTypeName (TType type)
