@@ -6,6 +6,7 @@ using Microsoft.Build.Utilities;
 using NUnit.Framework;
 
 namespace Xamarin.iOS.Tasks {
+	// lets fire the lego one #3
 	[TestFixture]
 	public class CollectITunesArtworkTaskTests : TestBase {
 		string AppPath => Path.GetDirectoryName (GetType ().Assembly.Location);
