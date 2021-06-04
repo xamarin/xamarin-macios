@@ -26,10 +26,10 @@ jobs:
     needs: delete_branch
     env:
       FROM_LEGO: ${{ github.event.pull_request.merged == true && github.event.pull_request.user.login == 'github-actions' && contains(github.event.pull_request.labels.*.names, 'localization_bot') }}
-    if: ${{ env.FROM_LEGO == true }}
     steps:
     - uses: actions/checkout@v2
       name: 'checkout'
+      if: ${{ env.FROM_LEGO == true }}
       with:
         repository: ${{ github.repository }}
         ref: 'AutomatingLocalizationGHATest2'
@@ -40,10 +40,10 @@ jobs:
     needs: checkout_localization_branch
     env:
       FROM_LEGO: ${{ github.event.pull_request.merged == true && github.event.pull_request.user.login == 'github-actions' && contains(github.event.pull_request.labels.*.names, 'localization_bot') }}
-    if: ${{ env.FROM_LEGO == true }}
     steps:
     - uses: ad-m/github-push-action@master
       name: push
+      if: ${{ env.FROM_LEGO == true }}
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         branch: 'AutomatingLocalizationGHATest2'
