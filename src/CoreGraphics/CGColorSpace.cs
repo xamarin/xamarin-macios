@@ -516,7 +516,7 @@ namespace CoreGraphics {
 #endif
 		public string Name {
 			get {
-				return CFString.FetchString (CGColorSpaceCopyName (handle), true);
+				return CFString.FromHandle (CGColorSpaceCopyName (handle), true);
 			}
 		}
 

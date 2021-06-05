@@ -30,7 +30,7 @@ namespace MediaAccessibility {
 
 			var result = MAImageCaptioningCopyCaption (url.Handle, out var e);
 			error = e == IntPtr.Zero ? null : new NSError (e);
-			return CFString.FetchString (result, releaseHandle: true);
+			return CFString.FromHandle (result, releaseHandle: true);
 		}
 
 		[DllImport (Constants.MediaAccessibilityLibrary)]
@@ -58,7 +58,7 @@ namespace MediaAccessibility {
 
 		static public string GetMetadataTagPath ()
 		{
-			return CFString.FetchString (MAImageCaptioningCopyMetadataTagPath (), releaseHandle: true);
+			return CFString.FromHandle (MAImageCaptioningCopyMetadataTagPath (), releaseHandle: true);
 		}
 	}
 }

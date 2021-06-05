@@ -8,6 +8,7 @@
 //
 using System;
 using System.Runtime.InteropServices;
+using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
@@ -332,7 +333,7 @@ namespace CoreMedia {
 
 		public string Description {
 			get {
-				return NSString.FromHandle (CMTimeCopyDescription (IntPtr.Zero, this));
+				return CFString.FromHandle (CMTimeCopyDescription (IntPtr.Zero, this));
 			}
 		}
 		

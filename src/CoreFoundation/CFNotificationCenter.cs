@@ -206,7 +206,7 @@ namespace CoreFoundation {
 			else
 				return;
 
-			center.notification (NSString.FromHandle (name), userInfo == IntPtr.Zero ? null : Runtime.GetNSObject<NSDictionary> (userInfo));
+			center.notification (CFString.FromHandle (name), userInfo == IntPtr.Zero ? null : Runtime.GetNSObject<NSDictionary> (userInfo));
 		}
 
 		public void PostNotification(string notification, INativeObject objectToObserve, NSDictionary userInfo = null, bool deliverImmediately = false, bool postOnAllSessions = false) 

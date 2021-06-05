@@ -27,6 +27,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
+using CoreFoundation;
 using ObjCRuntime;
 
 namespace Foundation {
@@ -258,7 +259,7 @@ namespace Foundation {
 			string [] ret = new string [c];
 
 			for (nuint i = 0; i < c; i++)
-				ret [i] = NSString.FromHandle (GetAtIndex (handle, i));
+				ret [i] = CFString.FromHandle (GetAtIndex (handle, i));
 			return ret;
 		}
 
