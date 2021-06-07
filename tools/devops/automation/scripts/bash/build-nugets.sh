@@ -11,7 +11,7 @@ if test -z "$MACCORE_TOP"; then
     exit 1
 fi
 
-cd $XAM_TOP
+cd "$XAM_TOP"
 
 DOTNET_NUPKG_DIR=$(make -C tools/devops print-abspath-variable VARIABLE=DOTNET_NUPKG_DIR | grep "^DOTNET_NUPKG_DIR=" | sed -e 's/^DOTNET_NUPKG_DIR=//')
 
@@ -27,20 +27,25 @@ cp -c "$DOTNET_PKG_DIR"/*.msi ../package/
 MACCORE_HASH=$(cd "$MACCORE_TOP" && git log -1 --pretty=%h)
 
 if nuget list -source https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-eng/nuget/v3/index.json -AllVersions -Prerelease Microsoft.DotNet.Mlaunch | grep $MACCORE_HASH; then
-    echo "Mlaunch revision $MACCORE_TOP is already published as nupkg"
+    echo "Mlaunch revision $MACCORE_HASH is already published as nupkg"
     exit 0
 fi
 
 # Package mlaunch as .nupkg
-echo "Packaging mlaunch revision $MACCORE_TOP as nupkg..."
+echo "Packaging mlaunch revision $MACCORE_HASH as nupkg..."
 
 MLAUNCH_WORK_DIR="$DOTNET_NUPKG_DIR/mlaunch-staging"
-mkdir "$MLAUNCH_WORK_DIR"
+rm -rf "$MLAUNCH_WORK_DIR/mlaunch"
+mkdir -p "$MLAUNCH_WORK_DIR/mlaunch/bin"
+mkdir -p "$MLAUNCH_WORK_DIR/mlaunch/lib/mlaunch"
 
 DOTNET6=$(make -C tools/devops print-abspath-variable VARIABLE=DOTNET6 | grep "^DOTNET6=" | sed -e 's/^DOTNET6=//')
-echo ".NET 6 SDK is at $DOTNET6" # TODO Remove
 
-cp -rv "$MACCORE_TOP/tools/mlaunch/Xamarin.Hosting/Xamarin.Launcher/bin/Debug/mlaunch.app" "$MLAUNCH_WORK_DIR"
-cp -v "$XAM_TOP/tools/mlaunch/Microsoft.DotNet.Mlaunch.csproj" "$MLAUNCH_WORK_DIR"
+cp -r "$MACCORE_TOP/tools/mlaunch/Xamarin.Hosting/Xamarin.Launcher/bin/Debug/mlaunch.app" "$MLAUNCH_WORK_DIR/mlaunch/lib/mlaunch"
+cp "$XAM_TOP/tools/mlaunch/Microsoft.DotNet.Mlaunch.csproj" "$MLAUNCH_WORK_DIR"
+cp "$XAM_TOP/global6.json" "$MLAUNCH_WORK_DIR/global.json"
 
-"$DOTNET6" pack "$MLAUNCH_WORK_DIR/Microsoft.DotNet.Mlaunch.csproj" --version-suffix "$MACCORE_HASH"
+cd "$MLAUNCH_WORK_DIR"
+"$DOTNET6" pack --version-suffix "$MACCORE_HASH"
+
+cd "$XAM_TOP"

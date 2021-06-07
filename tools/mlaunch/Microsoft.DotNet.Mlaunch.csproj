@@ -9,6 +9,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Content Include="mlaunch.app\**\*" PackagePath="mlaunch.app\" />
+		<Content Include="mlaunch\**\*" PackagePath="mlaunch\" />
 	</ItemGroup>
 </Project>
