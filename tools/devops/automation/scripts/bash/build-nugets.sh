@@ -24,6 +24,7 @@ make -C dotnet package -j
 cp -c "$DOTNET_PKG_DIR"/*.pkg ../package/
 cp -c "$DOTNET_PKG_DIR"/*.msi ../package/
 
+# Down from here we publish mlaunch as .nupkg
 MACCORE_HASH=$(cd "$MACCORE_TOP" && git log -1 --pretty=%h)
 
 if nuget list -source https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-eng/nuget/v3/index.json -AllVersions -Prerelease Microsoft.DotNet.Mlaunch | grep $MACCORE_HASH; then
@@ -42,10 +43,15 @@ DOTNET6=$(make -C tools/devops print-abspath-variable VARIABLE=DOTNET6 | grep "^
 IOS_DESTDIR=$(make -C tools/devops print-abspath-variable VARIABLE=IOS_DESTDIR | grep "^IOS_DESTDIR=" | sed -e 's/^IOS_DESTDIR=//')
 MONOTOUCH_PREFIX=$(make -C tools/devops print-abspath-variable VARIABLE=MONOTOUCH_PREFIX | grep "^MONOTOUCH_PREFIX=" | sed -e 's/^MONOTOUCH_PREFIX=//')
 
+# Copy mlaunch to staging area
 cp -r "$MACCORE_TOP/tools/mlaunch/Xamarin.Hosting/Xamarin.Launcher/bin/Debug/mlaunch.app" "$MLAUNCH_WORK_DIR/mlaunch/lib/mlaunch"
-cp "$XAM_TOP/tools/mlaunch/Microsoft.DotNet.Mlaunch.csproj" "$MLAUNCH_WORK_DIR"
-cp "$XAM_TOP/global6.json" "$MLAUNCH_WORK_DIR/global.json"
 cp "$IOS_DESTDIR$MONOTOUCH_PREFIX/bin/mlaunch" "$MLAUNCH_WORK_DIR/mlaunch/bin"
+
+# Add the .csproj we will use to create the .nupkg
+cp "$XAM_TOP/tools/mlaunch/Microsoft.DotNet.Mlaunch.csproj" "$MLAUNCH_WORK_DIR"
+
+# We need to override global.json to use .NET 6.0
+cp "$XAM_TOP/global6.json" "$MLAUNCH_WORK_DIR/global.json"
 
 cd "$MLAUNCH_WORK_DIR"
 "$DOTNET6" pack --version-suffix "$MACCORE_HASH"
