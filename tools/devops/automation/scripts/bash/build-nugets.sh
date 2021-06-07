@@ -24,21 +24,21 @@ make -C dotnet package -j
 cp -c "$DOTNET_PKG_DIR"/*.pkg ../package/
 cp -c "$DOTNET_PKG_DIR"/*.msi ../package/
 
+MACCORE_HASH=$(shell cd "$MACCORE_TOP" && git log -1 --pretty=%h)
+
+if nuget list -source https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-eng/nuget/v3/index.json -AllVersions -Prerelease Microsoft.DotNet.Mlaunch | grep $MACCORE_HASH; then
+    echo "Mlaunch revision $MACCORE_TOP is already published as nupkg"
+    exit 0
+fi
+
 # Package mlaunch as .nupkg
-echo "Packaging mlaunch..."
-env
+echo "Packaging mlaunch revision $MACCORE_TOP as nupkg..."
 
 MLAUNCH_WORK_DIR="$DOTNET_NUPKG_DIR/mlaunch-staging"
-
 mkdir "$MLAUNCH_WORK_DIR"
 
 DOTNET6=$(make -C tools/devops print-abspath-variable VARIABLE=DOTNET6 | grep "^DOTNET6=" | sed -e 's/^DOTNET6=//')
-
 echo ".NET 6 SDK is at $DOTNET6" # TODO Remove
-
-MACCORE_HASH:=$(shell cd "$MACCORE_TOP" && git log -1 --pretty=%h)
-
-echo "&&&&& MACCORE_HASH is $MACCORE_HASH"
 
 cp -rv "$MACCORE_TOP/tools/mlaunch/Xamarin.Hosting/Xamarin.Launcher/bin/Debug/mlaunch.app" "$MLAUNCH_WORK_DIR"
 cp -v "$XAM_TOP/tools/mlaunch/Microsoft.DotNet.Mlaunch.csproj" "$MLAUNCH_WORK_DIR"
