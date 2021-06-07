@@ -169,7 +169,7 @@ steps:
 # only execute it on failure setting the variable later pass as part of the parameters
 - pwsh: |
     Write-Host "##vso[task.setvariable variable=provisioningSuccess;]False"
-  name: 'Set provisioning as failure'
+  displayName: 'Set provisioning as failure'
   condition: failed()
 
 - template: run-tests.yml 
