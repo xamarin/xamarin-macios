@@ -49,3 +49,6 @@ cd "$MLAUNCH_WORK_DIR"
 "$DOTNET6" pack --version-suffix "$MACCORE_HASH"
 
 cd "$XAM_TOP"
+
+# TODO - Remove
+cp "$MLAUNCH_WORK_DIR"/*.nupkg ../mlaunch

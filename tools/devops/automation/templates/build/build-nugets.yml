@@ -13,7 +13,6 @@ steps:
     $(Build.SourcesDirectory)/xamarin-macios/dotnet/package/Microsoft.iOS.Ref/package.csproj
     -bl:$(Build.ArtifactStagingDirectory)/build-binlogs/generate-bar-manifest.binlog
   displayName: Generate and Upload Build Asset Registry Manifest
-  continueOnError: false # TODO: Remove this line
   condition: and(succeeded(), contains(variables['configuration.BuildNugets'], 'True'))
 
 - task: PublishPipelineArtifact@1
@@ -21,6 +20,14 @@ steps:
   inputs:
     targetPath: $(Build.ArtifactStagingDirectory)/build-binlogs
     artifactName: build-binlogs
+  condition: and(succeededOrFailed(), contains(variables['configuration.BuildNugets'], 'True'))
+
+# TODO - Remove
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Artifact: mlaunch'
+  inputs:
+    targetPath: $(Build.SourcesDirectory)/mlaunch/*.nupkg
+    artifactName: Microsoft.DotNet.Mlaunch.nupkg
   condition: and(succeededOrFailed(), contains(variables['configuration.BuildNugets'], 'True'))
 
 # do not publish on pull requets
