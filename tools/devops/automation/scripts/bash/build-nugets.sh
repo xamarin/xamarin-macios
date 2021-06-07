@@ -24,7 +24,7 @@ make -C dotnet package -j
 cp -c "$DOTNET_PKG_DIR"/*.pkg ../package/
 cp -c "$DOTNET_PKG_DIR"/*.msi ../package/
 
-MACCORE_HASH=$(shell cd "$MACCORE_TOP" && git log -1 --pretty=%h)
+MACCORE_HASH=$(cd "$MACCORE_TOP" && git log -1 --pretty=%h)
 
 if nuget list -source https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-eng/nuget/v3/index.json -AllVersions -Prerelease Microsoft.DotNet.Mlaunch | grep $MACCORE_HASH; then
     echo "Mlaunch revision $MACCORE_TOP is already published as nupkg"
