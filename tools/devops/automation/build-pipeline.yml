@@ -218,16 +218,16 @@ schedules:
 
 stages:
 
-- stage: governance_checks
-  displayName: 'Governance Checks'
-  dependsOn: []
-  jobs:
-    - job: governance
-      displayName: 'Governance Checks'
-      pool:
-        vmImage: windows-latest
-      steps:
-      - template: templates/governance-checks.yml
+# - stage: governance_checks
+#   displayName: 'Governance Checks'
+#   dependsOn: []
+#   jobs:
+#     - job: governance
+#       displayName: 'Governance Checks'
+#       pool:
+#         vmImage: windows-latest
+#       steps:
+#       - template: templates/governance-checks.yml
 
 - stage: build_packages
   displayName: 'Build'
@@ -243,49 +243,49 @@ stages:
         xqaCertPass: $(xqa--certificates--password)
         enableDotnet: ${{ parameters.enableDotnet }}
 
-- ${{ if eq(parameters.runDeviceTests, true) }}:
-  - ${{ if and(ne(variables['Build.Reason'], 'Schedule'), or(eq(variables['Build.Reason'], 'IndividualCI'), eq(variables['Build.Reason'], 'Manual'))) }}:
-    - ${{ each config in parameters.deviceTestsConfigurations }}:
-      - template: templates/devices/stage.yml
-        parameters:
-          devicePrefix: ${{ config['devicePrefix'] }} 
-          execute: ${{ config['execute'] }} 
-          stageName: ${{ config['stageName'] }} 
-          displayName: ${{ config['displayName'] }} 
-          iOSDevicePool: ${{ config['iOSDevicePool'] }} 
-          useXamarinStorage: ${{ config['useXamarinStorage'] }} 
-          testsLabels: ${{ config['testsLabels'] }} 
-          statusContext: ${{ config['statusContext'] }} 
-          iOSDeviceDemand: ${{ config['iOSDeviceDemand'] }} 
-          vsdropsPrefix: ${{ variables.vsdropsPrefix }}
-          keyringPass: $(xma-password)
-          gitHubToken: ${{ variables['GitHub.Token'] }}
-          xqaCertPass: $(xqa--certificates--password)
+# - ${{ if eq(parameters.runDeviceTests, true) }}:
+#   - ${{ if and(ne(variables['Build.Reason'], 'Schedule'), or(eq(variables['Build.Reason'], 'IndividualCI'), eq(variables['Build.Reason'], 'Manual'))) }}:
+#     - ${{ each config in parameters.deviceTestsConfigurations }}:
+#       - template: templates/devices/stage.yml
+#         parameters:
+#           devicePrefix: ${{ config['devicePrefix'] }} 
+#           execute: ${{ config['execute'] }} 
+#           stageName: ${{ config['stageName'] }} 
+#           displayName: ${{ config['displayName'] }} 
+#           iOSDevicePool: ${{ config['iOSDevicePool'] }} 
+#           useXamarinStorage: ${{ config['useXamarinStorage'] }} 
+#           testsLabels: ${{ config['testsLabels'] }} 
+#           statusContext: ${{ config['statusContext'] }} 
+#           iOSDeviceDemand: ${{ config['iOSDeviceDemand'] }} 
+#           vsdropsPrefix: ${{ variables.vsdropsPrefix }}
+#           keyringPass: $(xma-password)
+#           gitHubToken: ${{ variables['GitHub.Token'] }}
+#           xqaCertPass: $(xqa--certificates--password)
 
-    - ${{ each config in parameters.macTestsConfigurations }}:
-      - template: templates/mac/stage.yml
-        parameters:
-          stageName: ${{ config['stageName'] }}
-          displayName: ${{ config['displayName'] }}
-          macPool: ${{ config['macPool'] }}
-          osVersion: ${{ config['osVersion'] }}
-          statusContext: ${{ config['statusContext'] }}
-          keyringPass: $(xma-password)
-          checkDemands: ${{ config['checkDemands'] }}
+#     - ${{ each config in parameters.macTestsConfigurations }}:
+#       - template: templates/mac/stage.yml
+#         parameters:
+#           stageName: ${{ config['stageName'] }}
+#           displayName: ${{ config['displayName'] }}
+#           macPool: ${{ config['macPool'] }}
+#           osVersion: ${{ config['osVersion'] }}
+#           statusContext: ${{ config['statusContext'] }}
+#           keyringPass: $(xma-password)
+#           checkDemands: ${{ config['checkDemands'] }}
 
-- ${{ if eq(parameters.runSamples, true) }}:
-  # TODO: Not the real step
-  - stage: sample_testing
-    displayName: 'Sample testing'
-    dependsOn:
-    - build_packages
-    condition: and(succeeded(), contains (stageDependencies.build_packages.build.outputs['configuration.RunSampleTests'], 'True'))
-    jobs:
-    - job: sample_testing
-      pool:
-        vmImage: ubuntu-latest
-      steps:
-        # TODO: do parse labels
-        - bash: |
-            echo "Samples!"
-          displayName: 'Sample testing'
+# - ${{ if eq(parameters.runSamples, true) }}:
+#   # TODO: Not the real step
+#   - stage: sample_testing
+#     displayName: 'Sample testing'
+#     dependsOn:
+#     - build_packages
+#     condition: and(succeeded(), contains (stageDependencies.build_packages.build.outputs['configuration.RunSampleTests'], 'True'))
+#     jobs:
+#     - job: sample_testing
+#       pool:
+#         vmImage: ubuntu-latest
+#       steps:
+#         # TODO: do parse labels
+#         - bash: |
+#             echo "Samples!"
+#           displayName: 'Sample testing'

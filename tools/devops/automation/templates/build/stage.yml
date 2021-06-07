@@ -107,90 +107,90 @@ jobs:
       xqaCertPass: ${{ parameters.xqaCertPass }}
       enableDotnet: ${{ parameters.enableDotnet }}
 
-- job: upload_azure_blob
-  displayName: 'Upload packages to Azure'
-  timeoutInMinutes: 1000
-  dependsOn:
-  - configure
-  - build # can start as soon as the packages are available
-  condition: and(succeeded(), contains (dependencies.build.outputs['configuration.BuildPkgs'], 'True')) # only run when we do have pkgs
+# - job: upload_azure_blob
+#   displayName: 'Upload packages to Azure'
+#   timeoutInMinutes: 1000
+#   dependsOn:
+#   - configure
+#   - build # can start as soon as the packages are available
+#   condition: and(succeeded(), contains (dependencies.build.outputs['configuration.BuildPkgs'], 'True')) # only run when we do have pkgs
 
-  variables:
-    Parameters.outputStorageUri: ''
-    NUGETS_PUBLISHED: $[ dependencies.build.outputs['nugetPublishing.NUGETS_PUBLISHED'] ]
-    SKIP_NUGETS: $[ dependencies.configure.outputs['labels.skip-nugets'] ]
+#   variables:
+#     Parameters.outputStorageUri: ''
+#     NUGETS_PUBLISHED: $[ dependencies.build.outputs['nugetPublishing.NUGETS_PUBLISHED'] ]
+#     SKIP_NUGETS: $[ dependencies.configure.outputs['labels.skip-nugets'] ]
 
-  pool:
-    vmImage: 'windows-latest'
-    workspace:
-      clean: all
-  steps:
-  - template: upload-azure.yml
-    parameters:
-      enableDotnet: ${{ parameters.enableDotnet }}
+#   pool:
+#     vmImage: 'windows-latest'
+#     workspace:
+#       clean: all
+#   steps:
+#   - template: upload-azure.yml
+#     parameters:
+#       enableDotnet: ${{ parameters.enableDotnet }}
 
-- job: upload_vsdrops
-  displayName: 'Upload test results to VSDrops'
-  timeoutInMinutes: 1000
-  dependsOn: build # can start as soon as the tests are done
-  condition: and(succeededOrFailed() , contains (dependencies.build.outputs['runTests.TESTS_RAN'], 'True')) # only run when we did run the tests
+# - job: upload_vsdrops
+#   displayName: 'Upload test results to VSDrops'
+#   timeoutInMinutes: 1000
+#   dependsOn: build # can start as soon as the tests are done
+#   condition: and(succeededOrFailed() , contains (dependencies.build.outputs['runTests.TESTS_RAN'], 'True')) # only run when we did run the tests
 
-  variables:
-    API_GENERATOR_DIFF_BUILT: $[ dependencies.build.outputs['apiGeneratorDiff.API_GENERATOR_BUILT'] ]
+#   variables:
+#     API_GENERATOR_DIFF_BUILT: $[ dependencies.build.outputs['apiGeneratorDiff.API_GENERATOR_BUILT'] ]
 
-  pool:
-    vmImage: 'windows-latest'
-    workspace:
-      clean: all
-  steps:
-  - template: upload-vsdrops.yml
-    parameters:
-      devicePrefix: sim
-      runTests: ${{ parameters.runTests }}
+#   pool:
+#     vmImage: 'windows-latest'
+#     workspace:
+#       clean: all
+#   steps:
+#   - template: upload-vsdrops.yml
+#     parameters:
+#       devicePrefix: sim
+#       runTests: ${{ parameters.runTests }}
 
-- job: upload_vsts_tests
-  displayName: 'Upload xml to vsts'
-  timeoutInMinutes: 1000
-  dependsOn:  build # can start as soon as the tests are done
-  condition: and(succeededOrFailed(), contains(dependencies.build.outputs['runTests.TESTS_RAN'], 'True')) # only run when we did run the tests
+# - job: upload_vsts_tests
+#   displayName: 'Upload xml to vsts'
+#   timeoutInMinutes: 1000
+#   dependsOn:  build # can start as soon as the tests are done
+#   condition: and(succeededOrFailed(), contains(dependencies.build.outputs['runTests.TESTS_RAN'], 'True')) # only run when we did run the tests
 
-  pool:
-    vmImage: 'windows-latest'
-    workspace:
-      clean: all
-  steps:
-  - template: ../common/upload-vsts-tests.yml
-    parameters:
-      devicePrefix: sim
+#   pool:
+#     vmImage: 'windows-latest'
+#     workspace:
+#       clean: all
+#   steps:
+#   - template: ../common/upload-vsts-tests.yml
+#     parameters:
+#       devicePrefix: sim
 
-- job: publish_html
-  displayName: 'Publish Html report in VSDrops'
-  timeoutInMinutes: 1000
-  dependsOn: # has to wait for the tests to be done AND the data to be uploaded
-  - configure
-  - build
-  - upload_azure_blob
-  - upload_vsdrops
-  - upload_vsts_tests
-  condition: succeededOrFailed()
-  variables:
-    # Define the variable FOO from the previous job
-    # Note the use of single quotes!
-    BUILD_PACKAGE: $[ dependencies.configure.outputs['labels.build-package'] ]
-    TESTS_BOT: $[ dependencies.build.outputs['runTests.TESTS_BOT'] ]
-    TESTS_JOBSTATUS: $[ dependencies.build.outputs['runTests.TESTS_JOBSTATUS'] ]
-    APIDIFF_MESSAGE: $[ dependencies.build.outputs['apidiff.APIDIFF_MESSAGE'] ]
-    APIDIFF_BUILT: $[ dependencies.build.outputs['apidiff.APIDIFF_BUILT'] ]
-    API_GENERATOR_DIFF_BUILT: $[ dependencies.build.outputs['apiGeneratorDiff.API_GENERATOR_BUILT'] ]
-    PR_ID: $[ dependencies.configure.outputs['labels.pr-number'] ]
-  pool:
-    vmImage: 'windows-latest'
-    workspace:
-      clean: all
-  steps:
-  - template: publish-html.yml
-    parameters:
-      statusContext: "Build"
-      runTests: ${{ parameters.runTests }}
-      vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
-      devicePrefix: sim
+# - job: publish_html
+#   displayName: 'Publish Html report in VSDrops'
+#   timeoutInMinutes: 1000
+#   dependsOn: # has to wait for the tests to be done AND the data to be uploaded
+#   - configure
+#   - build
+#   - upload_azure_blob
+#   - upload_vsdrops
+#   - upload_vsts_tests
+#   condition: succeededOrFailed()
+#   variables:
+#     # Define the variable FOO from the previous job
+#     # Note the use of single quotes!
+#     BUILD_PACKAGE: $[ dependencies.configure.outputs['labels.build-package'] ]
+#     TESTS_BOT: $[ dependencies.build.outputs['runTests.TESTS_BOT'] ]
+#     TESTS_JOBSTATUS: $[ dependencies.build.outputs['runTests.TESTS_JOBSTATUS'] ]
+#     APIDIFF_MESSAGE: $[ dependencies.build.outputs['apidiff.APIDIFF_MESSAGE'] ]
+#     APIDIFF_BUILT: $[ dependencies.build.outputs['apidiff.APIDIFF_BUILT'] ]
+#     API_GENERATOR_DIFF_BUILT: $[ dependencies.build.outputs['apiGeneratorDiff.API_GENERATOR_BUILT'] ]
+#     PR_ID: $[ dependencies.configure.outputs['labels.pr-number'] ]
+#   pool:
+#     vmImage: 'windows-latest'
+#     workspace:
+#       clean: all
+#   steps:
+#   - template: publish-html.yml
+#     parameters:
+#       statusContext: "Build"
+#       runTests: ${{ parameters.runTests }}
+#       vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
+#       devicePrefix: sim
