@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<!-- Suppresses the warnings about the package not having assemblies in lib/*/.dll.-->
+		<NoPackageAnalysis>true</NoPackageAnalysis>
+		<VersionPrefix>1.0.0</VersionPrefix>
+		<VersionSuffix>dev</VersionSuffix>
+		<PackageOutputPath>$([MSBuild]::NormalizeDirectory('$(MSBuildThisFileDirectory)'))</PackageOutputPath>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Content Include="mlaunch.app\**\*" PackagePath="mlaunch.app\" />
+	</ItemGroup>
+</Project>
