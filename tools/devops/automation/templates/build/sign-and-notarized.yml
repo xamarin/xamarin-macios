@@ -9,6 +9,9 @@ parameters:
   type: boolean
   default: false
 
+- name: keyringPass
+  type: string
+
 steps:
 
 - bash: |
@@ -130,7 +133,7 @@ steps:
     echo "$PACKAGES" | xargs python $(Build.SourcesDirectory)/release-scripts/sign_and_notarize.py --no_notarization -a "$APP_ID" -i "$INSTALL_ID" -u "$APPLE_ACCOUNT" -p "$APPLE_PASS" -t "$TEAM_ID" -d $(Build.SourcesDirectory)/package/notarized -e "$MAC_ENTITLEMENTS" -k "$KEYCHAIN"
     ls -R $(Build.SourcesDirectory)/package
   env:
-    PRODUCTSIGN_KEYCHAIN_PASSWORD: $(OSX_KEYCHAIN_PASS)
+    PRODUCTSIGN_KEYCHAIN_PASSWORD: ${{ parameters.keyringPass }}
     MAC_ENTITLEMENTS: $(Build.SourcesDirectory)/xamarin-macios/mac-entitlements.plist
     APP_ID: $(XamarinAppId)
     INSTALL_ID: $(XamarinAppId)
