@@ -6,6 +6,11 @@ if test -z "$XAM_TOP"; then
     exit 1
 fi
 
+if test -z "$MACCORE_TOP"; then
+    echo "Variable MACCORE_TOP is missing."
+    exit 1
+fi
+
 cd $XAM_TOP
 
 DOTNET_NUPKG_DIR=$(make -C tools/devops print-abspath-variable VARIABLE=DOTNET_NUPKG_DIR | grep "^DOTNET_NUPKG_DIR=" | sed -e 's/^DOTNET_NUPKG_DIR=//')
@@ -31,11 +36,11 @@ DOTNET6=$(make -C tools/devops print-abspath-variable VARIABLE=DOTNET6 | grep "^
 
 echo ".NET 6 SDK is at $DOTNET6" # TODO Remove
 
-MACCORE_HASH:=$(shell cd "$XAM_TOP/../maccore" && git log -1 --pretty=%h)
+MACCORE_HASH:=$(shell cd "$MACCORE_TOP" && git log -1 --pretty=%h)
 
 echo "&&&&& MACCORE_HASH is $MACCORE_HASH"
 
-cp -rv '../maccore/tools/mlaunch/Xamarin.Hosting/Xamarin.Launcher/bin/Debug/mlaunch.app' "$MLAUNCH_WORK_DIR"
+cp -rv "$MACCORE_TOP/tools/mlaunch/Xamarin.Hosting/Xamarin.Launcher/bin/Debug/mlaunch.app" "$MLAUNCH_WORK_DIR"
 cp -v "$XAM_TOP/tools/mlaunch/Microsoft.DotNet.Mlaunch.csproj" "$MLAUNCH_WORK_DIR"
 
 "$DOTNET6" pack "$MLAUNCH_WORK_DIR/Microsoft.DotNet.Mlaunch.csproj" --version-suffix "$MACCORE_HASH"
