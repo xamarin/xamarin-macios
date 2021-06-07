@@ -18,3 +18,11 @@ DOTNET_PKG_DIR=$(make -C tools/devops print-abspath-variable VARIABLE=DOTNET_PKG
 make -C dotnet package -j
 cp -c "$DOTNET_PKG_DIR"/*.pkg ../package/
 cp -c "$DOTNET_PKG_DIR"/*.msi ../package/
+
+# Package mlaunch as .nupkg
+dotnet --info
+mkdir ../mlaunch-package
+cd ../maccore/tools/mlaunch
+find . # list all files so we know what's up
+cd $XAM_TOP
+# cp -rv ../maccore ../mlaunch-package
