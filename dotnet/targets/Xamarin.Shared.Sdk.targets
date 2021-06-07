@@ -264,6 +264,8 @@
 			</_CustomLinkerOptions>
 			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) --custom-data "LinkerOptionsFile=$(_CustomLinkerOptionsFile)"</_ExtraTrimmerArgs>
 
+			<_ExtraTrimmerArgs Condition="'$(_SdkIsSimulator)' != 'true' And '$(_PlatformName)' != 'macOS'">$(_ExtraTrimmerArgs) --feature ObjCRuntime.Runtime.DeviceSupport true</_ExtraTrimmerArgs>
+
 			<!-- TrimMode specifies what the linker will do with framework assemblies -->
 			<TrimMode Condition="'$(_LinkMode)' == 'None'">copy</TrimMode> <!-- Don't use 'copyused', because that might still end up saving some assemblies, and if that's the platform assembly, it may break the partial static registrar -->
 			<TrimMode Condition="'$(_LinkMode)' == 'SdkOnly' Or '$(_LinkMode)' == 'Full'">link</TrimMode>
