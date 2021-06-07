@@ -488,6 +488,9 @@ namespace Xamarin.Tests {
 			}
 			if (!string.IsNullOrEmpty (assets_path))
 				Assert.That (assets_path, Does.Exist, "Assets.car");
+
+			var libxamarin = Directory.GetFileSystemEntries (app_directory, "libxamarin*dylib", SearchOption.AllDirectories);
+			Assert.That (libxamarin, Has.Length.LessThanOrEqualTo (1), $"No more than one libxamarin should be present, but found {libxamarin.Length}:\n\t{string.Join ("\n\t", libxamarin)}");
 		}
 
 		IEnumerable<string> FilterToAssembly (IEnumerable<string> lines, string assemblyName)
