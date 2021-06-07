@@ -14,6 +14,8 @@ fi
 cd "$XAM_TOP"
 
 DOTNET_NUPKG_DIR=$(make -C tools/devops print-abspath-variable VARIABLE=DOTNET_NUPKG_DIR | grep "^DOTNET_NUPKG_DIR=" | sed -e 's/^DOTNET_NUPKG_DIR=//')
+IOS_DESTDIR=$(make -C tools/devops print-abspath-variable VARIABLE=IOS_DESTDIR | grep "^IOS_DESTDIR=" | sed -e 's/^IOS_DESTDIR=//')
+MONOTOUCH_PREFIX=$(make -C tools/devops print-abspath-variable VARIABLE=MONOTOUCH_PREFIX | grep "^MONOTOUCH_PREFIX=" | sed -e 's/^MONOTOUCH_PREFIX=//')
 
 mkdir -p ../package/
 rm -f ../package/*.nupkg
@@ -36,7 +38,6 @@ echo "Packaging mlaunch revision $MACCORE_HASH as nupkg..."
 
 MLAUNCH_WORK_DIR="$DOTNET_NUPKG_DIR/mlaunch-staging"
 rm -rf "$MLAUNCH_WORK_DIR/mlaunch"
-mkdir -p "$MLAUNCH_WORK_DIR/mlaunch/bin"
 mkdir -p "$MLAUNCH_WORK_DIR/mlaunch/lib/mlaunch"
 
 DOTNET6=$(make -C tools/devops print-abspath-variable VARIABLE=DOTNET6 | grep "^DOTNET6=" | sed -e 's/^DOTNET6=//')
@@ -44,6 +45,7 @@ DOTNET6=$(make -C tools/devops print-abspath-variable VARIABLE=DOTNET6 | grep "^
 cp -r "$MACCORE_TOP/tools/mlaunch/Xamarin.Hosting/Xamarin.Launcher/bin/Debug/mlaunch.app" "$MLAUNCH_WORK_DIR/mlaunch/lib/mlaunch"
 cp "$XAM_TOP/tools/mlaunch/Microsoft.DotNet.Mlaunch.csproj" "$MLAUNCH_WORK_DIR"
 cp "$XAM_TOP/global6.json" "$MLAUNCH_WORK_DIR/global.json"
+cp -r "$IOS_DESTDIR$MONOTOUCH_PREFIX/bin" "$MLAUNCH_WORK_DIR/mlaunch"
 
 cd "$MLAUNCH_WORK_DIR"
 "$DOTNET6" pack --version-suffix "$MACCORE_HASH"
@@ -51,4 +53,7 @@ cd "$MLAUNCH_WORK_DIR"
 cd "$XAM_TOP"
 
 # TODO - Remove
-cp "$MLAUNCH_WORK_DIR"/*.nupkg ../mlaunch
+mkdir ../mlaunch
+cp "$MLAUNCH_WORK_DIR"/*.nupkg ../mlaunch/
+
+stat $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/mlaunch
