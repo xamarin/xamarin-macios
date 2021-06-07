@@ -26,7 +26,7 @@ steps:
 - task: PublishPipelineArtifact@1
   displayName: 'Publish Artifact: mlaunch'
   inputs:
-    targetPath: $(Build.SourcesDirectory)/mlaunch/*.nupkg
+    targetPath: $(Build.SourcesDirectory)/mlaunch
     artifactName: Microsoft.DotNet.Mlaunch.nupkg
   condition: and(succeededOrFailed(), contains(variables['configuration.BuildNugets'], 'True'))
 
