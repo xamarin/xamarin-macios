@@ -173,6 +173,5 @@ steps:
   condition: failed()
 
 - template: run-tests.yml 
-  condition: succeededOrFailed()
   parameters: 
     botProvisioningSuccess:  ne(variables['provisioningSuccess'], 'False')
