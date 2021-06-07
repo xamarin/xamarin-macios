@@ -252,7 +252,7 @@ namespace Foundation {
 			if (!Dictionary.TryGetValue (key, out value))
 				return null;
 			
-			return CFString.FetchString (value.Handle);
+			return CFString.FromHandle (value.Handle);
 		}
 
 		protected string? GetStringValue (string key)
@@ -261,7 +261,7 @@ namespace Foundation {
 				throw new ArgumentNullException ("key");
 
 			using (var str = new CFString (key)) {
-				return CFString.FetchString (CFDictionary.GetValue (Dictionary.Handle, str.Handle));
+				return CFString.FromHandle (CFDictionary.GetValue (Dictionary.Handle, str.Handle));
 			}
 		}
 

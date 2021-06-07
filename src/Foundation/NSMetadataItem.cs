@@ -7,6 +7,7 @@
 //   Miguel de Icaza
 //
 using System;
+using CoreFoundation;
 using ObjCRuntime;
 
 namespace Foundation {
@@ -216,7 +217,7 @@ namespace Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string Title {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.TitleKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.TitleKey));
 			}
 		}
 
@@ -265,14 +266,14 @@ namespace Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string Comment {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.CommentKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.CommentKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string Copyright {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.CopyrightKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.CopyrightKey));
 			}
 		}
 
@@ -321,7 +322,7 @@ namespace Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string Version {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.VersionKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.VersionKey));
 			}
 		}
 
@@ -349,7 +350,7 @@ namespace Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string ColorSpace {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.ColorSpaceKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.ColorSpaceKey));
 			}
 		}
 
@@ -377,14 +378,14 @@ namespace Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string AcquisitionMake {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.AcquisitionMakeKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.AcquisitionMakeKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string AcquisitionModel {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.AcquisitionModelKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.AcquisitionModelKey));
 			}
 		}
 
@@ -426,7 +427,7 @@ namespace Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string ProfileName {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.ProfileNameKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.ProfileNameKey));
 			}
 		}
 
@@ -461,14 +462,14 @@ namespace Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string ExifVersion {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.ExifVersionKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.ExifVersionKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string CameraOwner {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.CameraOwnerKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.CameraOwnerKey));
 			}
 		}
 
@@ -482,14 +483,14 @@ namespace Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string LensModel {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.LensModelKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.LensModelKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string ExifGpsVersion {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.ExifGpsVersionKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.ExifGpsVersionKey));
 			}
 		}
 
@@ -545,21 +546,21 @@ namespace Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string NamedLocation {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.NamedLocationKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.NamedLocationKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string GpsStatus {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.GpsStatusKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.GpsStatusKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string GpsMeasureMode {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.GpsMeasureModeKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.GpsMeasureModeKey));
 			}
 		}
 
@@ -573,7 +574,7 @@ namespace Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string GpsMapDatum {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.GpsMapDatumKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.GpsMapDatumKey));
 			}
 		}
 
@@ -608,14 +609,14 @@ namespace Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string GpsProcessingMethod {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.GpsProcessingMethodKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.GpsProcessingMethodKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string GpsAreaInformation {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.GpsAreaInformationKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.GpsAreaInformationKey));
 			}
 		}
 
@@ -678,14 +679,14 @@ namespace Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string DeliveryType {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.DeliveryTypeKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.DeliveryTypeKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string Album {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.AlbumKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.AlbumKey));
 			}
 		}
 
@@ -706,7 +707,7 @@ namespace Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string MeteringMode {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.MeteringModeKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.MeteringModeKey));
 			}
 		}
 
@@ -727,56 +728,56 @@ namespace Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string ExposureProgram {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.ExposureProgramKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.ExposureProgramKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string ExposureTimeString {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.ExposureTimeStringKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.ExposureTimeStringKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string Headline {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.HeadlineKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.HeadlineKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string Instructions {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.InstructionsKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.InstructionsKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string City {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.CityKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.CityKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string StateOrProvince {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.StateOrProvinceKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.StateOrProvinceKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string Country {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.CountryKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.CountryKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string TextContent {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.TextContentKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.TextContentKey));
 			}
 		}
 
@@ -804,35 +805,35 @@ namespace Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string KeySignature {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.KeySignatureKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.KeySignatureKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string TimeSignature {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.TimeSignatureKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.TimeSignatureKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string AudioEncodingApplication {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.AudioEncodingApplicationKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.AudioEncodingApplicationKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string Composer {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.ComposerKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.ComposerKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string Lyricist {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.LyricistKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.LyricistKey));
 			}
 		}
 
@@ -853,7 +854,7 @@ namespace Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string MusicalGenre {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.MusicalGenreKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.MusicalGenreKey));
 			}
 		}
 
@@ -887,7 +888,7 @@ namespace Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string Rights {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.RightsKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.RightsKey));
 			}
 		}
 
@@ -929,14 +930,14 @@ namespace Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string Description {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.DescriptionKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.DescriptionKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string Identifier {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.IdentifierKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.IdentifierKey));
 			}
 		}
 
@@ -971,14 +972,14 @@ namespace Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string SecurityMethod {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.SecurityMethodKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.SecurityMethodKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string Creator {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.CreatorKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.CreatorKey));
 			}
 		}
 
@@ -1027,7 +1028,7 @@ namespace Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string Kind {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.KindKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.KindKey));
 			}
 		}
 
@@ -1041,7 +1042,7 @@ namespace Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string FinderComment {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.FinderCommentKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.FinderCommentKey));
 			}
 		}
 
@@ -1055,21 +1056,21 @@ namespace Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string AppleLoopsRoot {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.AppleLoopsRootKeyKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.AppleLoopsRootKeyKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string AppleLoopsKeyFilterType {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.AppleLoopsKeyFilterTypeKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.AppleLoopsKeyFilterTypeKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string AppleLoopsLoopMode {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.AppleLoopsLoopModeKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.AppleLoopsLoopModeKey));
 			}
 		}
 
@@ -1083,49 +1084,49 @@ namespace Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string MusicalInstrumentCategory {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.MusicalInstrumentCategoryKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.MusicalInstrumentCategoryKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string MusicalInstrumentName {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.MusicalInstrumentNameKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.MusicalInstrumentNameKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string CFBundleIdentifier {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.CFBundleIdentifierKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.CFBundleIdentifierKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string Information {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.InformationKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.InformationKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string Director {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.DirectorKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.DirectorKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string Producer {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.ProducerKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.ProducerKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string Genre {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.GenreKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.GenreKey));
 			}
 		}
 
@@ -1139,14 +1140,14 @@ namespace Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string OriginalFormat {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.OriginalFormatKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.OriginalFormatKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string OriginalSource {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.OriginalSourceKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.OriginalSourceKey));
 			}
 		}
 
@@ -1195,7 +1196,7 @@ namespace Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string ExecutablePlatform {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.ExecutablePlatformKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.ExecutablePlatformKey));
 			}
 		}
 

@@ -307,7 +307,7 @@ namespace AudioUnit
 			get {
 				IntPtr r;
 				if (AudioComponentCopyName (handle, out r) == 0)
-					return CFString.FetchString (r);
+					return CFString.FromHandle (r);
 				return null;
 			}
 		}

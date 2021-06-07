@@ -236,7 +236,7 @@ namespace ImageIO {
 		
 		public string TypeIdentifier {
 			get {
-				return NSString.FromHandle (CGImageSourceGetType (handle));
+				return CFString.FromHandle (CGImageSourceGetType (handle));
 			}
 		}
 

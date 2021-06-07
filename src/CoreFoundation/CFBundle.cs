@@ -432,7 +432,7 @@ namespace CoreFoundation {
 			using (CFString cfKey = new CFString (key),
 					cfValue = new CFString (defaultValue),
 					cfTable = new CFString (tableName)) {
-				return CFString.FetchString (CFBundleCopyLocalizedString (handle, cfKey.Handle, cfValue.Handle, cfTable.Handle), releaseHandle: true);
+				return CFString.FromHandle (CFBundleCopyLocalizedString (handle, cfKey.Handle, cfValue.Handle, cfTable.Handle), releaseHandle: true);
 			}
 		}
 
@@ -461,7 +461,7 @@ namespace CoreFoundation {
 			using (var cfArray = new CFArray (CFBundleCopyLocalizationsForPreferences (cfLocalArray.Handle, cfPrefArray.Handle), true)) {
 				var cultureInfo = new string [cfArray.Count];
 				for (int index = 0; index < cfArray.Count; index ++) {
-					cultureInfo [index] = CFString.FetchString (cfArray.GetValue (index));
+					cultureInfo [index] = CFString.FromHandle (cfArray.GetValue (index));
 				}
 				return cultureInfo;
 			}
@@ -477,7 +477,7 @@ namespace CoreFoundation {
 			using (var cfArray = new CFArray (CFBundleCopyLocalizationsForURL (bundle.Handle), true)) {
 				var cultureInfo = new string [cfArray.Count];
 				for (int index = 0; index < cfArray.Count; index++) {
-					cultureInfo [index] = CFString.FetchString (cfArray.GetValue (index));
+					cultureInfo [index] = CFString.FromHandle (cfArray.GetValue (index));
 				}
 				return cultureInfo;
 			}
@@ -499,7 +499,7 @@ namespace CoreFoundation {
 			using (var cfArray = new CFArray (CFBundleCopyPreferredLocalizationsFromArray (cfLocArray.Handle), true)) {
 				var cultureInfo = new string [cfArray.Count];
 				for (int index = 0; index < cfArray.Count; index++) {
-					cultureInfo [index] = CFString.FetchString (cfArray.GetValue (index));
+					cultureInfo [index] = CFString.FromHandle (cfArray.GetValue (index));
 				}
 				return cultureInfo;
 			}
@@ -518,14 +518,14 @@ namespace CoreFoundation {
 		extern static /* CFString */ IntPtr CFBundleGetDevelopmentRegion (IntPtr bundle );
 		
 		public string DevelopmentRegion {
-			get { return CFString.FetchString (CFBundleGetDevelopmentRegion (handle)); }
+			get { return CFString.FromHandle (CFBundleGetDevelopmentRegion (handle)); }
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /* CFString */ IntPtr CFBundleGetIdentifier (IntPtr bundle);
 		
 		public string Identifier {
-			get { return CFString.FetchString (CFBundleGetIdentifier (handle)); }
+			get { return CFString.FromHandle (CFBundleGetIdentifier (handle)); }
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]

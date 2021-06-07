@@ -235,14 +235,14 @@ namespace AudioUnit
 			info.Type = type;
 
 			if ((native.Flags & AudioUnitParameterFlag.HasCFNameString) != 0) {
-				info.Name = CFString.FetchString (native.NameString);
+				info.Name = CFString.FromHandle (native.NameString);
 
 				if ((native.Flags & AudioUnitParameterFlag.CFNameRelease) != 0)
 					CFObject.CFRelease (native.NameString);
 			}
 
 			if (native.Unit == AudioUnitParameterUnit.CustomUnit) {
-				info.UnitName = CFString.FetchString (native.UnitName);
+				info.UnitName = CFString.FromHandle (native.UnitName);
 			}
 
 			return info;

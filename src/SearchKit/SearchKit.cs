@@ -202,7 +202,7 @@ namespace SearchKit
 				var n = SKDocumentGetName (handle);
 				if (n == IntPtr.Zero)
 					return null;
-				return NSString.FromHandle (n);
+				return CFString.FromHandle (n);
 			}
 		}
 
@@ -226,7 +226,7 @@ namespace SearchKit
 				var s = SKDocumentGetSchemeName (handle);
 				if (s == IntPtr.Zero)
 					return null;
-				return NSString.FromHandle (s);
+				return CFString.FromHandle (s);
 			}
 		}
 	}
@@ -687,22 +687,22 @@ namespace SearchKit
 
 		public string GetSentence (nint idx)
 		{
-			return CFString.FetchString (SKSummaryCopySentenceAtIndex (handle, idx), releaseHandle: true);
+			return CFString.FromHandle (SKSummaryCopySentenceAtIndex (handle, idx), releaseHandle: true);
 		}
 
 		public string GetParagraph (nint idx)
 		{
-			return CFString.FetchString (SKSummaryCopyParagraphAtIndex (handle, idx), releaseHandle: true);
+			return CFString.FromHandle (SKSummaryCopyParagraphAtIndex (handle, idx), releaseHandle: true);
 		}
 
 		public string GetSentenceSummary (nint maxSentences)
 		{
-			return CFString.FetchString (SKSummaryCopySentenceSummaryString (handle, maxSentences), releaseHandle: true);
+			return CFString.FromHandle (SKSummaryCopySentenceSummaryString (handle, maxSentences), releaseHandle: true);
 		}
 
 		public string GetParagraphSummary (nint maxParagraphs)
 		{
-			return CFString.FetchString (SKSummaryCopyParagraphSummaryString (handle, maxParagraphs), releaseHandle: true);
+			return CFString.FromHandle (SKSummaryCopyParagraphSummaryString (handle, maxParagraphs), releaseHandle: true);
 		}
 		
 	}
