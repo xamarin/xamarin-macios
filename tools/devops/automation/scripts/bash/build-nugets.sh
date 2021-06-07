@@ -45,7 +45,7 @@ MONOTOUCH_PREFIX=$(make -C tools/devops print-abspath-variable VARIABLE=MONOTOUC
 cp -r "$MACCORE_TOP/tools/mlaunch/Xamarin.Hosting/Xamarin.Launcher/bin/Debug/mlaunch.app" "$MLAUNCH_WORK_DIR/mlaunch/lib/mlaunch"
 cp "$XAM_TOP/tools/mlaunch/Microsoft.DotNet.Mlaunch.csproj" "$MLAUNCH_WORK_DIR"
 cp "$XAM_TOP/global6.json" "$MLAUNCH_WORK_DIR/global.json"
-cp -rv "$IOS_DESTDIR$MONOTOUCH_PREFIX/bin" "$MLAUNCH_WORK_DIR/mlaunch"
+cp "$IOS_DESTDIR$MONOTOUCH_PREFIX/bin/mlaunch" "$MLAUNCH_WORK_DIR/mlaunch/bin"
 
 cd "$MLAUNCH_WORK_DIR"
 "$DOTNET6" pack --version-suffix "$MACCORE_HASH"
