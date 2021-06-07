@@ -9,6 +9,9 @@ parameters:
   type: boolean
   default: false
 
+- name: keyringPass
+  type: string
+
 steps:
 
 - bash: |

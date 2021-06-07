@@ -332,6 +332,7 @@ steps:
   - template: sign-and-notarized.yml
     parameters:
       enableDotnet: ${{ parameters.enableDotnet }}
+      keyringPass: ${{ parameters.keyringPass }}
 
 - template: generate-workspace-info.yml@templates
   parameters:
