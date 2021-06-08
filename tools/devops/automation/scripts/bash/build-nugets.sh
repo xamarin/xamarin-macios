@@ -36,7 +36,7 @@ fi
 echo "Packaging mlaunch revision $MACCORE_HASH as nupkg..."
 
 MLAUNCH_WORK_DIR="$DOTNET_NUPKG_DIR/mlaunch-staging"
-rm -rf "$MLAUNCH_WORK_DIR/mlaunch"
+rm -rf "$MLAUNCH_WORK_DIR"
 mkdir -p "$MLAUNCH_WORK_DIR/mlaunch/bin"
 mkdir -p "$MLAUNCH_WORK_DIR/mlaunch/lib/mlaunch"
 
@@ -54,11 +54,11 @@ cp "$XAM_TOP/tools/mlaunch/Microsoft.DotNet.Mlaunch.csproj" "$MLAUNCH_WORK_DIR"
 # We need to override global.json to use .NET 6.0
 cp "$XAM_TOP/global6.json" "$MLAUNCH_WORK_DIR/global.json"
 
+# We have to build from within the dir to respect the global.json
 cd "$MLAUNCH_WORK_DIR"
 "$DOTNET6" pack --version-suffix "$MACCORE_HASH"
 
+# We store mlaunch NuGet in [build work root]/mlaunch
 cd "$XAM_TOP"
-
-# TODO - Remove
 mkdir ../mlaunch
 cp "$MLAUNCH_WORK_DIR"/*.nupkg ../mlaunch/
