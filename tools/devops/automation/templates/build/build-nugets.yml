@@ -33,7 +33,7 @@ steps:
 # do not publish on pull requets
 - ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
   - task: NuGetCommand@2
-    displayName: 'Publish Nugets'
+    displayName: 'Publish Nugets to xamarin-impl'
     inputs:
       command: push
       packagesToPush: $(Build.SourcesDirectory)/package/*.nupkg
@@ -41,6 +41,17 @@ steps:
       publishFeedCredentials: xamarin-impl public feed
     condition: and(succeeded(), eq(variables['configuration.BuildNugets'], 'True'))
     continueOnError: true # should not stop the build since is not official just yet.
+
+# TODO Move under the if above
+- task: NuGetCommand@2
+  displayName: 'Publish Nugets to dotnet-eng'
+  inputs:
+    command: push
+    packagesToPush: $(Build.SourcesDirectory)/mlaunch/*.nupkg
+    nuGetFeedType: external
+    publishFeedCredentials: Dotnet arcade public feed
+  condition: and(succeeded(), eq(variables['configuration.BuildNugets'], 'True'))
+  continueOnError: true # should not stop the build since is not official just yet.
 
 # Only executed when the publshing of the nugets failed.
 - bash: |
