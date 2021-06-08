@@ -52,11 +52,18 @@ namespace Xamarin.iOS.Tasks
 			if (NativeReferences == null)
 				yield break;
 
-			foreach (var nativeRef in NativeReferences
-				.Where (x => Directory.Exists (x.ItemSpec))
-				.Select (x => x.ItemSpec))
-				foreach (var item in GetItemsFromNativeReference (nativeRef))
-					yield return item;
+			foreach (var nativeRef in NativeReferences) {
+				var path = nativeRef.ItemSpec;
+				// look for frameworks, if the library is part of one then bring all related files
+				var dir = Path.GetDirectoryName (path);
+				if ((Path.GetExtension (dir) == ".framework") && Directory.Exists (dir)) {
+					foreach (var item in GetItemsFromNativeReference (dir)) {
+						// don't return the native library itself (it's the original input, not something additional)
+						if (item.ItemSpec != path)
+							yield return item;
+					}
+				}
+			}
 		}
 
 		public override void Cancel ()
