@@ -205,7 +205,7 @@ namespace VideoToolbox {
 
 			// The caller must CFRelease the returned supported properties and encoder ID.
 			var ret = new VTSupportedEncoderProperties {
-				EncoderId = CFString.FetchString (encoderIdPtr, releaseHandle:true),
+				EncoderId = CFString.FromHandle (encoderIdPtr, releaseHandle:true),
 				SupportedProperties = Runtime.GetNSObject<NSDictionary> (supportedPropertiesPtr, owns: true)
 			};
 			return ret;

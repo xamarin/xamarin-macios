@@ -151,7 +151,7 @@ namespace Security {
 				if (handle == IntPtr.Zero)
 					throw new ObjectDisposedException ("SecCertificate");
 				
-				return CFString.FetchString (SecCertificateCopySubjectSummary (handle), releaseHandle: true);
+				return CFString.FromHandle (SecCertificateCopySubjectSummary (handle), releaseHandle: true);
 			}
 		}
 
@@ -306,7 +306,7 @@ namespace Security {
 		{
 			IntPtr cn;
 			if (SecCertificateCopyCommonName (handle, out cn) == 0)
-				return CFString.FetchString (cn, releaseHandle: true);
+				return CFString.FromHandle (cn, releaseHandle: true);
 			return null;
 		}
 

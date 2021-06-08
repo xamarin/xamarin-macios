@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
+using CoreFoundation;
 using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
@@ -143,7 +144,7 @@ namespace AppKit
 				subroleHandle = subrole.Handle;
 
 			IntPtr handle = NSAccessibilityRoleDescription (role.Handle, subroleHandle);
-			return NSString.FromHandle (handle);
+			return CFString.FromHandle (handle);
 		}
 
 		[DllImport (Constants.AppKitLibrary)]
@@ -155,7 +156,7 @@ namespace AppKit
 				throw new ArgumentNullException ("element");
 
 			IntPtr handle = NSAccessibilityRoleDescriptionForUIElement (element.Handle);
-			return NSString.FromHandle (handle);
+			return CFString.FromHandle (handle);
 		}
 
 		[DllImport (Constants.AppKitLibrary)]
@@ -167,7 +168,7 @@ namespace AppKit
 				throw new ArgumentNullException ("action");
 
 			IntPtr handle = NSAccessibilityActionDescription (action.Handle);
-			return NSString.FromHandle (handle);
+			return CFString.FromHandle (handle);
 		}
 
 		[DllImport (Constants.AppKitLibrary)]

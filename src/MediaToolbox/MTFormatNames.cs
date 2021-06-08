@@ -23,7 +23,7 @@ namespace MediaToolbox {
 #endif
 		static public string GetLocalizedName (this CMMediaType mediaType)
 		{
-			return CFString.FetchString (MTCopyLocalizedNameForMediaType (mediaType), releaseHandle: true);
+			return CFString.FromHandle (MTCopyLocalizedNameForMediaType (mediaType), releaseHandle: true);
 		}
 
 #if !NET
@@ -38,7 +38,7 @@ namespace MediaToolbox {
 #endif
 		static public string GetLocalizedName (this CMMediaType mediaType, uint mediaSubType)
 		{
-			return CFString.FetchString (MTCopyLocalizedNameForMediaSubType (mediaType, mediaSubType), releaseHandle: true);
+			return CFString.FromHandle (MTCopyLocalizedNameForMediaSubType (mediaType, mediaSubType), releaseHandle: true);
 		}
 	}
 }

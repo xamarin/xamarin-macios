@@ -951,7 +951,7 @@ namespace AudioToolbox {
 
 		public string CurrentDevice {
 			get {
-				return CFString.FetchString ((IntPtr) GetInt (AudioQueueProperty.CurrentDevice));
+				return CFString.FromHandle ((IntPtr) GetInt (AudioQueueProperty.CurrentDevice));
 			}
 
 			set {

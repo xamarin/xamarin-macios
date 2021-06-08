@@ -80,7 +80,7 @@ namespace MobileCoreServices {
 			var a = NSString.CreateNative (tagClass);
 			var b = NSString.CreateNative (tag);
 			var c = NSString.CreateNative (conformingToUti);
-			var ret = NSString.FromHandle (UTTypeCreatePreferredIdentifierForTag (a, b, c));
+			var ret = CFString.FromHandle (UTTypeCreatePreferredIdentifierForTag (a, b, c));
 			NSString.ReleaseNative (a);
 			NSString.ReleaseNative (b);
 			NSString.ReleaseNative (c);
@@ -158,7 +158,7 @@ namespace MobileCoreServices {
 				throw new ArgumentNullException ("uti");
 
 			var a = NSString.CreateNative (uti);
-			var ret = NSString.FromHandle (UTTypeCopyDescription (a));
+			var ret = CFString.FromHandle (UTTypeCopyDescription (a));
 			NSString.ReleaseNative (a);
 			return ret;
 		}
@@ -175,7 +175,7 @@ namespace MobileCoreServices {
 
 			var a = NSString.CreateNative (uti);
 			var b = NSString.CreateNative (tagClass);
-			var ret = NSString.FromHandle (UTTypeCopyPreferredTagWithClass (a, b));
+			var ret = CFString.FromHandle (UTTypeCopyPreferredTagWithClass (a, b));
 			NSString.ReleaseNative (a);
 			NSString.ReleaseNative (b);
 			return ret;

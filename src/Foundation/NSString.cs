@@ -164,11 +164,13 @@ namespace Foundation {
 			return new NSString (str);
 		}
 
+		[Obsolete ("Use of 'CFString.FromHandle' offers better performance.")]
 		public static string FromHandle (IntPtr usrhandle)
 		{
 			return FromHandle (usrhandle, false);
 		}
 
+		[Obsolete ("Use of 'CFString.FromHandle' offers better performance.")]
 		public static string FromHandle (IntPtr handle, bool owns)
 		{
 			if (handle == IntPtr.Zero)

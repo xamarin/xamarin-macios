@@ -91,11 +91,11 @@ namespace CoreFoundation {
 				throw new ArgumentNullException (nameof (cfErrorHandle));
 
 			var e = new CFException (
-					CFString.FetchString (CFErrorCopyDescription (cfErrorHandle), releaseHandle: true),
+					CFString.FromHandle (CFErrorCopyDescription (cfErrorHandle), releaseHandle: true),
 					(NSString) Runtime.GetNSObject (CFErrorGetDomain (cfErrorHandle)),
 					CFErrorGetCode (cfErrorHandle),
-					CFString.FetchString (CFErrorCopyFailureReason (cfErrorHandle), releaseHandle: true),
-					CFString.FetchString (CFErrorCopyRecoverySuggestion (cfErrorHandle), releaseHandle: true));
+					CFString.FromHandle (CFErrorCopyFailureReason (cfErrorHandle), releaseHandle: true),
+					CFString.FromHandle (CFErrorCopyRecoverySuggestion (cfErrorHandle), releaseHandle: true));
 
 			var cfUserInfo = CFErrorCopyUserInfo (cfErrorHandle);
 			if (cfUserInfo != IntPtr.Zero) {

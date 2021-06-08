@@ -34,7 +34,7 @@
   <PropertyGroup Condition=" '$(TargetArchitectures)' == '' And '$(_PlatformName)' == 'iOS' ">
     <TargetArchitectures Condition=" $(RuntimeIdentifier.EndsWith('-arm64')) Or $(RuntimeIdentifier.Contains('-arm64-')) ">ARM64</TargetArchitectures>
     <TargetArchitectures Condition=" $(RuntimeIdentifier.EndsWith('-x64')) Or $(RuntimeIdentifier.Contains('-x64-')) ">x86_64</TargetArchitectures>
-    <TargetArchitectures Condition=" $(RuntimeIdentifier.EndsWith('-x84')) Or $(RuntimeIdentifier.Contains('-x86-')) ">i386</TargetArchitectures>
+    <TargetArchitectures Condition=" $(RuntimeIdentifier.EndsWith('-x86')) Or $(RuntimeIdentifier.Contains('-x86-')) ">i386</TargetArchitectures>
     <TargetArchitectures Condition=" $(RuntimeIdentifier.EndsWith('-arm')) Or $(RuntimeIdentifier.Contains('-arm-')) ">ARMv7</TargetArchitectures>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(TargetArchitectures)' == '' And '$(_PlatformName)' == 'tvOS' ">
@@ -42,7 +42,7 @@
     <TargetArchitectures Condition=" $(RuntimeIdentifier.EndsWith('-x64')) Or $(RuntimeIdentifier.Contains('-x64-')) ">x86_64</TargetArchitectures>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(TargetArchitectures)' == '' And '$(_PlatformName)' == 'watchOS' ">
-    <TargetArchitectures Condition=" $(RuntimeIdentifier.EndsWith('-x84')) Or $(RuntimeIdentifier.Contains('-x86-')) ">i386</TargetArchitectures>
+    <TargetArchitectures Condition=" $(RuntimeIdentifier.EndsWith('-x86')) Or $(RuntimeIdentifier.Contains('-x86-')) ">i386</TargetArchitectures>
     <TargetArchitectures Condition=" $(RuntimeIdentifier.EndsWith('-arm')) Or $(RuntimeIdentifier.Contains('-arm-')) ">ARM64_32</TargetArchitectures>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(TargetArchitectures)' == '' And '$(_PlatformName)' == 'macOS' ">

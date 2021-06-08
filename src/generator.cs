@@ -1748,7 +1748,7 @@ public partial class Generator : IMemberGatherer {
 			}
 			if (pi.ParameterType == TypeManager.System_String){
 				pars.AppendFormat ("IntPtr {0}", safe_name);
-				invoke.AppendFormat ("NSString.FromHandle ({0})", safe_name);
+				invoke.AppendFormat ("CFString.FromHandle ({0})", safe_name);
 				continue;
 			}
 
@@ -2877,7 +2877,7 @@ public partial class Generator : IMemberGatherer {
 									enumTypeStr + ") num.Int32Value;\n\t}}\n}})";
 								setter = "SetArrayValue<" + enumTypeStr + "> ({0}, value)";
 							} else if (elementType == TypeManager.System_String){
-								getter = "GetArray<string> ({0}, (ptr)=>NSString.FromHandle (ptr))";
+								getter = "GetArray<string> ({0}, (ptr) => CFString.FromHandle (ptr))";
 								setter = "SetArrayValue ({0}, value)";
 							} else {
 								throw new BindingException (1033, true, pi.PropertyType, dictType, pi.Name);
@@ -3079,7 +3079,7 @@ public partial class Generator : IMemberGatherer {
 					else if (fullname == "CoreGraphics.CGRect")
 						print (GenerateNSValue ("CGRectValue"));
 					else if (is_system_string)
-						print ("return NSString.FromHandle (value);");
+						print ("return CFString.FromHandle (value);");
 					else if (propertyType == TypeManager.NSString)
 						print ("return new NSString (value);");
 					else if (propertyType == TypeManager.System_String_Array){
@@ -3818,7 +3818,7 @@ public partial class Generator : IMemberGatherer {
 			cast_a = " Runtime.GetINativeObject<" + mi.ReturnType.Name + "> (";
 			cast_b = ", false)";
 		} else if (mai.Type == TypeManager.System_String && !mai.PlainString){
-			cast_a = "NSString.FromHandle (";
+			cast_a = "CFString.FromHandle (";
 			cast_b = ")";
 		} else if (mi.ReturnType.IsSubclassOf (TypeManager.System_Delegate)){
 			cast_a = "";
@@ -4291,7 +4291,7 @@ public partial class Generator : IMemberGatherer {
 				if (isString) {
 					if (!pi.IsOut)
 						by_ref_processing.AppendFormat ("if ({0}Value != {0}OriginalValue)\n\t", pi.Name.GetSafeParamName ());
-					by_ref_processing.AppendFormat ("{0} = NSString.FromHandle ({0}Value);\n", pi.Name.GetSafeParamName ());
+					by_ref_processing.AppendFormat ("{0} = CFString.FromHandle ({0}Value);\n", pi.Name.GetSafeParamName ());
 				} else if (isArray) {
 					if (!pi.IsOut)
 						by_ref_processing.AppendFormat ("if ({0}Value != ({0}ArrayValue is null ? IntPtr.Zero : {0}ArrayValue.Handle))\n\t", pi.Name.GetSafeParamName ());

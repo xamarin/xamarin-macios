@@ -1763,7 +1763,7 @@ namespace CoreText {
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontCopyPostScriptName (IntPtr font);
 		public string PostScriptName {
-			get { return CFString.FetchString (CTFontCopyPostScriptName (handle), releaseHandle: true); }
+			get { return CFString.FromHandle (CTFontCopyPostScriptName (handle), releaseHandle: true); }
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
@@ -1771,7 +1771,7 @@ namespace CoreText {
 			/* CTFontRef __nonnull */ IntPtr font);
 		
 		public string FamilyName {
-			get { return CFString.FetchString (CTFontCopyFamilyName (handle), releaseHandle: true); }
+			get { return CFString.FromHandle (CTFontCopyFamilyName (handle), releaseHandle: true); }
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
@@ -1779,7 +1779,7 @@ namespace CoreText {
 			/* CTFontRef __nonnull */ IntPtr font);
 		
 		public string FullName {
-			get { return CFString.FetchString (CTFontCopyFullName (handle), releaseHandle: true); }
+			get { return CFString.FromHandle (CTFontCopyFullName (handle), releaseHandle: true); }
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
@@ -1787,14 +1787,14 @@ namespace CoreText {
 			/* CTFontRef __nonnull */ IntPtr font);
 		
 		public string DisplayName {
-			get { return CFString.FetchString (CTFontCopyDisplayName (handle), releaseHandle: true); }
+			get { return CFString.FromHandle (CTFontCopyDisplayName (handle), releaseHandle: true); }
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontCopyName (IntPtr font, IntPtr nameKey);
 		public string GetName (CTFontNameKey nameKey)
 		{
-			return CFString.FetchString (CTFontCopyName (handle, CTFontNameKeyId.ToId (nameKey).Handle), releaseHandle: true);
+			return CFString.FromHandle (CTFontCopyName (handle, CTFontNameKeyId.ToId (nameKey).Handle), releaseHandle: true);
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
@@ -1809,8 +1809,8 @@ namespace CoreText {
 		public string GetLocalizedName (CTFontNameKey nameKey, out string actualLanguage)
 		{
 			IntPtr actual;
-			var ret = CFString.FetchString (CTFontCopyLocalizedName (handle, CTFontNameKeyId.ToId (nameKey).Handle, out actual), releaseHandle: true);
-			actualLanguage = CFString.FetchString (actual, releaseHandle: true);
+			var ret = CFString.FromHandle (CTFontCopyLocalizedName (handle, CTFontNameKeyId.ToId (nameKey).Handle, out actual), releaseHandle: true);
+			actualLanguage = CFString.FromHandle (actual, releaseHandle: true);
 			return ret;
 		}
 #endregion
@@ -1841,7 +1841,7 @@ namespace CoreText {
 			var cfArrayRef = CTFontCopySupportedLanguages (handle);
 			if (cfArrayRef == IntPtr.Zero)
 				return Array.Empty<string> ();
-			var languages = NSArray.ArrayFromHandle<string> (cfArrayRef, CFString.FetchString);
+			var languages = NSArray.ArrayFromHandle<string> (cfArrayRef, CFString.FromHandle);
 			CFObject.CFRelease (cfArrayRef);
 			return languages;
 		}
@@ -1871,7 +1871,7 @@ namespace CoreText {
 		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
 		public string GetGlyphName (CGGlyph glyph)
 		{
-			return CFString.FetchString (CTFontCopyNameForGlyph (handle, glyph), releaseHandle: true);
+			return CFString.FromHandle (CTFontCopyNameForGlyph (handle, glyph), releaseHandle: true);
 		}
 
 		static void AssertCount (nint count)

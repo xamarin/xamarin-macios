@@ -23,7 +23,7 @@ namespace MLCompute {
 
 		public static string GetDebugDescription (this MLCActivationType self)
 		{
-			return CFString.FetchString (MLCActivationTypeDebugDescription (self));
+			return CFString.FromHandle (MLCActivationTypeDebugDescription (self));
 		}
 	}
 
@@ -42,7 +42,7 @@ namespace MLCompute {
 
 		public static string GetDebugDescription (this MLCArithmeticOperation self)
 		{
-			return CFString.FetchString (MLCArithmeticOperationDebugDescription (self));
+			return CFString.FromHandle (MLCArithmeticOperationDebugDescription (self));
 		}
 	}
 
@@ -61,7 +61,7 @@ namespace MLCompute {
 
 		public static string GetDebugDescription (this MLCPaddingPolicy self)
 		{
-			return CFString.FetchString (MLCPaddingPolicyDebugDescription (self));
+			return CFString.FromHandle (MLCPaddingPolicyDebugDescription (self));
 		}
 	}
 
@@ -80,7 +80,7 @@ namespace MLCompute {
 
 		public static string GetDebugDescription (this MLCLossType self)
 		{
-			return CFString.FetchString (MLCLossTypeDebugDescription (self));
+			return CFString.FromHandle (MLCLossTypeDebugDescription (self));
 		}
 	}
 
@@ -99,7 +99,7 @@ namespace MLCompute {
 
 		public static string GetDebugDescription (this MLCReductionType self)
 		{
-			return CFString.FetchString (MLCReductionTypeDebugDescription (self));
+			return CFString.FromHandle (MLCReductionTypeDebugDescription (self));
 		}
 	}
 
@@ -118,7 +118,7 @@ namespace MLCompute {
 
 		public static string GetDebugDescription (this MLCPaddingType self)
 		{
-			return CFString.FetchString (MLCPaddingTypeDebugDescription (self));
+			return CFString.FromHandle (MLCPaddingTypeDebugDescription (self));
 		}
 	}
 
@@ -137,7 +137,7 @@ namespace MLCompute {
 
 		public static string GetDebugDescription (this MLCConvolutionType self)
 		{
-			return CFString.FetchString (MLCConvolutionTypeDebugDescription (self));
+			return CFString.FromHandle (MLCConvolutionTypeDebugDescription (self));
 		}
 	}
 
@@ -156,7 +156,7 @@ namespace MLCompute {
 
 		public static string GetDebugDescription (this MLCPoolingType self)
 		{
-			return CFString.FetchString (MLCPoolingTypeDebugDescription (self));
+			return CFString.FromHandle (MLCPoolingTypeDebugDescription (self));
 		}
 	}
 
@@ -175,7 +175,7 @@ namespace MLCompute {
 
 		public static string GetDebugDescription (this MLCSoftmaxOperation self)
 		{
-			return CFString.FetchString (MLCSoftmaxOperationDebugDescription (self));
+			return CFString.FromHandle (MLCSoftmaxOperationDebugDescription (self));
 		}
 	}
 
@@ -194,7 +194,7 @@ namespace MLCompute {
 
 		public static string GetDebugDescription (this MLCSampleMode self)
 		{
-			return CFString.FetchString (MLCSampleModeDebugDescription (self));
+			return CFString.FromHandle (MLCSampleModeDebugDescription (self));
 		}
 	}
 
@@ -213,7 +213,7 @@ namespace MLCompute {
 
 		public static string GetDebugDescription (this MLCLstmResultMode self)
 		{
-			return CFString.FetchString (MLCLSTMResultModeDebugDescription (self));
+			return CFString.FromHandle (MLCLSTMResultModeDebugDescription (self));
 		}
 	}
 
@@ -232,7 +232,7 @@ namespace MLCompute {
 
 		public static string GetDebugDescription (this MLCComparisonOperation self)
 		{
-			return CFString.FetchString (MLCComparisonOperationDebugDescription (self));
+			return CFString.FromHandle (MLCComparisonOperationDebugDescription (self));
 		}
 	}
 }

@@ -663,60 +663,8 @@
 		</ItemGroup>
 	</Target>
 
-	<PropertyGroup>
-		<_UpdateDynamicLibraryIdDependsOn>
-			_ComputeVariables;
-			_ParseBundlerArguments;
-		</_UpdateDynamicLibraryIdDependsOn>
-	</PropertyGroup>
-
-	<!-- The .dylibs shipped with mono comes with the original identity:
-
-	$ otool -l ~/.nuget/packages/microsoft.netcore.app.runtime.ios-x64/5.0.0-*/runtimes/ios-x64/native/libSystem.IO.Compression.Native.dylib | grep LC_ID_DYLIB -A 2
-          cmd LC_ID_DYLIB
-      cmdsize 184
-         name /Users/runner/runners/2.165.2/work/1/s/artifacts/obj/native/netcoreapp5.0-iOS-Release-x64/System.IO.Compression.Native/libSystem.IO.Compression.Native.dylib (offset 24)
-
-	This doesn't work after linking with these libraries, so this must be fixed to be @executable_path/. Eventually mono will ship dylibs we don't have to fix (https://github.com/dotnet/runtime/issues/34637).
-	-->
-	<Target
-		Name="_UpdateDynamicLibraryId"
-		DependsOnTargets="$(_UpdateDynamicLibraryIdDependsOn)"
-		Inputs="@(_MonoLibraryFix)"
-		Outputs="@(_MonoLibraryFix.TargetPath)"
-		Condition=" '$(_PlatformName)' != 'macOS'">
-
-		<PropertyGroup>
-			<_ExecutablePathPrefix Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'">@executable_path/</_ExecutablePathPrefix>
-			<_ExecutablePathPrefix Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">@executable_path/../$(_CustomBundleName)/</_ExecutablePathPrefix>
-		</PropertyGroup>
-
-		<!-- install_name_tool modifies the file in-place, so copy it first to a temporary directory before we fix it -->
-		<Copy
-			Condition="'$(IsMacEnabled)' == 'true'"
-			SessionId="$(BuildSessionId)"
-			SourceFiles="%(_MonoLibraryFix.FullPath)"
-			DestinationFolder="$(_IntermediateNativeLibraryDir)"
-		/>
-		<Exec
-			Condition="'$(IsMacEnabled)' == 'true'"
-			SessionId="$(BuildSessionId)"
-			Command="xcrun install_name_tool -id $(_ExecutablePathPrefix)%(_MonoLibraryFix.Filename)%(_MonoLibraryFix.Extension) %(_MonoLibraryFix.TargetPath)"
-			EnvironmentVariables="DEVELOPER_DIR=$(_SdkDevPath)"
-		/>
-
-		<!-- Update our item groups -->
-		<ItemGroup Condition="'$(IsMacEnabled)' == 'true'">
-			<_MonoLibraryFixed Include="@(_MonoLibraryFix -> '%(TargetPath)')" />
-			<ResolvedFileToPublish Remove="@(_MonoLibraryFix)" />
-			<ResolvedFileToPublish Include="@(_MonoLibraryFixed)" />
-			<_MonoLibrary Remove="@(_MonoLibraryFix)" />
-			<_MonoLibrary Include="@(_MonoLibraryFixed)" />
-		</ItemGroup>
-	</Target>
-
 	<Target Name="_LinkNativeExecutable"
-			DependsOnTargets="_DetectSdkLocations;_ComputeTargetArchitectures;_GenerateBundleName;_CompileNativeExecutable;_CompileAppManifest;_UpdateDynamicLibraryId"
+			DependsOnTargets="_DetectSdkLocations;_ComputeTargetArchitectures;_GenerateBundleName;_CompileNativeExecutable;_CompileAppManifest"
 			Inputs="@(_NativeExecutableObjectFiles)"
 			Outputs="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName)"
 		>
@@ -820,6 +768,9 @@
 				Update="@(ResolvedFileToPublish)"
 				RelativePath="$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)$(PublishDir),$(_AssemblyPublishDir)))\%(Filename)%(Extension)"
 				Condition="'$(_PlatformName)' != 'macOS' And '$(InvariantGlobalization)' != 'true' And '%(Filename)%(Extension)' == 'icudt.dat'" />
+
+			<!-- Remove the libxamarin-*.dylib files we don't want -->
+			<ResolvedFileToPublish Remove="@(ResolvedFileToPublish)" Condition="'%(Extension)' == '.dylib' And '%(Filename)%(Extension)' != '$(_LibXamarinName)' And $([System.String]::new('%(Filename)').StartsWith('libxamarin-dotnet', StringComparison.Ordinal))" />
 		</ItemGroup>
 	</Target>
 

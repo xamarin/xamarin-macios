@@ -66,7 +66,7 @@ namespace MediaAccessibility {
 			using (var langs = new CFArray (MACaptionAppearanceCopySelectedLanguages ((int) domain), owns: true)) {
 				var languages = new string [langs.Count];
 				for (int i = 0; i < langs.Count; i++) {
-					languages[i] = CFString.FetchString (langs.GetValue (i));
+					languages[i] = CFString.FromHandle (langs.GetValue (i));
 				}
 				return languages;
 			}
