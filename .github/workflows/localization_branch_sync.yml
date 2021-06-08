@@ -5,6 +5,10 @@ on:
       - 'main'
     types: [closed]
 
+concurrency: 
+  group: 'Localization-Sync'
+  cancel-in-progress: false
+
 jobs:
   Replace Localization Branch:
     name: 'Replace Localization Branch'
