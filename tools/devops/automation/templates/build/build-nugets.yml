@@ -49,7 +49,7 @@ steps:
     command: push
     packagesToPush: $(Build.SourcesDirectory)/mlaunch/*.nupkg
     nuGetFeedType: external
-    publishFeedCredentials: Dotnet arcade public feed
+    publishFeedCredentials: dotnet-eng
   condition: and(succeeded(), eq(variables['configuration.BuildNugets'], 'True'))
   continueOnError: true # should not stop the build since is not official just yet.
 
