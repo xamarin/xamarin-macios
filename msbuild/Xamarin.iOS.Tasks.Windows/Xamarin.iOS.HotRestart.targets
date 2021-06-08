@@ -63,7 +63,7 @@
 	<!-- Gets the list of assemblies that may contain frameworks -->
 	<Target Name="_CollectHotRestartFrameworkAssemblies" Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsHotRestartBuild)' == 'true'">
 		<ItemGroup>
-			<AssembliesWithFrameworks Condition="'%(Extension)' == '.dll'" Include="@(ReferenceCopyHotRestartPaths)" Exclude="@(ReferenceSatellitePaths)"/>
+			<AssembliesWithFrameworks Condition="'%(Extension)' == '.dll'" Include="@(ReferenceCopyLocalPaths)" Exclude="@(ReferenceSatellitePaths)"/>
 		</ItemGroup>
 	</Target>
 
@@ -163,7 +163,9 @@
 			<_FilesToHotRestartContent Include="@(_FilesToHotRestartContent -> '%(RootDir)%(Directory)%(Filename).pdb')"
 													 Condition="Exists('%(RootDir)%(Directory)%(Filename).pdb')" />
 
-			<_FilesToHotRestartContent Include="@(ReferenceCopyHotRestartPaths -> Distinct())" Condition="Exists('$(HotRestartAppBundlePath)\%(Filename)%(Extension)') == 'false'"/>
+			<!-- TODO: We stopped filtering assemblies until we fix the net6 build -->
+			<!-- <_FilesToHotRestartContent Include="@(ReferenceCopyLocalPaths -> Distinct())" Condition="Exists('$(HotRestartAppBundlePath)\%(Filename)%(Extension)') == 'false'"/> -->
+			<_FilesToHotRestartContent Include="@(ReferenceCopyLocalPaths -> Distinct())"/>
 		</ItemGroup>
 	</Target>
 
@@ -257,6 +259,9 @@
 		<MakeDir Directories="@(_FilesToHotRestartContent -> '$(HotRestartContentStampDir)%(DestinationSubDirectory)')"/>
 		
 		<Touch AlwaysCreate="true" Files="@(_FilesToHotRestartContent -> '$(HotRestartContentStampDir)%(DestinationSubDirectory)%(FileName)%(Extension).stamp')" />
+		<Touch AlwaysCreate="true" Files="@(_FilesToHotRestartContent -> '$(HotRestartContentStampDir)$(AssemblyName).hotrestartapp.stamp')" />
+		<Touch AlwaysCreate="true" Files="@(_FilesToHotRestartContent -> '$(HotRestartContentDir)$(AssemblyName).hotrestartapp')" />
+		<Touch AlwaysCreate="true" Files="@(_FilesToHotRestartContent -> '$(HotRestartAppContentDir)$(AssemblyName).hotrestartapp')" />
 	</Target>
 
 	<Target Name="_CopyFrameworksToHotRestartBundle"
