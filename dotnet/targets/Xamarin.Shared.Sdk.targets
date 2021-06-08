@@ -349,6 +349,7 @@
 			<!-- Add all the framework files to ResolvedFileToPublish -->
 			<ResolvedFileToPublish Include="@(_FrameworkFilesToPublish)">
 				<RelativePath>%(_FrameworkFilesToPublish._FrameworkPath)\%(_FrameworkFilesToPublish._FrameworkRelativePath)</RelativePath>
+				<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 			</ResolvedFileToPublish>
 		</ItemGroup>
 	</Target>
@@ -363,7 +364,9 @@
 			</_DynamicLibraryToPublish>
 
 			<!-- Add all the dynamic libraries to ResolvedFileToPublish -->
-			<ResolvedFileToPublish Include="@(_DynamicLibraryToPublish)" />
+			<ResolvedFileToPublish Include="@(_DynamicLibraryToPublish)">
+				<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+			</ResolvedFileToPublish>
 		</ItemGroup>
 	</Target>
 
@@ -544,6 +547,7 @@
 			<!-- copy the aotdata files to the .app -->
 			<ResolvedFileToPublish Include="%(_AssembliesToAOT.AOTData)" >
 				<RelativePath>$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)$(PublishDir),$(_NativeExecutablePublishDir)))\%(_AssembliesToAOT.Filename).aotdata.%(_AssembliesToAOT.Arch)</RelativePath>
+				<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 			</ResolvedFileToPublish>
 		</ItemGroup>
 	</Target>
@@ -713,9 +717,10 @@
 
 		<ItemGroup>
 			<!-- Copy the executable from the intermediate directory to the .app -->
-			<ResolvedFileToPublish
-				Include="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName)"
-				RelativePath="$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)$(PublishDir),$(_NativeExecutablePublishDir)))\$(_NativeExecutableName)"/>
+			<ResolvedFileToPublish Include="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName)">
+				<RelativePath>$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)$(PublishDir),$(_NativeExecutablePublishDir)))\$(_NativeExecutableName)</RelativePath>
+				<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+			</ResolvedFileToPublish>
 		</ItemGroup>
 	</Target>
 
