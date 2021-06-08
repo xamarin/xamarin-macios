@@ -6,8 +6,8 @@ on:
     types: [closed]
 
 jobs:
-  delete_branch:
-    name: 'Delete Localization branch'
+  Replace Localization Branch:
+    name: 'Replace Localization Branch'
     runs-on: ubuntu-latest
     steps:
     - uses: dawidd6/action-delete-branch@v3
@@ -18,15 +18,14 @@ jobs:
         branches: Localization
         soft_fail: true
 
-  recreate_localization_branch:
-    name: 'Create the Localization branch'
-    runs-on: ubuntu-latest
-    needs: delete_branch
-    steps:
     - uses: peterjgrainger/action-create-branch@v2.0.1
-      name: 'create branch'
+      name: 'Create Localization Branch'
       if: ${{ github.event.pull_request.merged == true && github.event.pull_request.user.login == 'github-actions[bot]' && contains(github.event.pull_request.labels.*.names, 'localization_bot') }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         branch: 'Localization'
+
+    - name: 'Check for Fork'
+      run: echo "Action cannot be executed on forks"
+      if: ${{ secrets.GITHUB_TOKEN == "" }}
