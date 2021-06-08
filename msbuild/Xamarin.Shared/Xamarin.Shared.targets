@@ -1388,12 +1388,18 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 	<Target Name="_PrepareDebugSymbolGeneration" Condition="('$(_PlatformName)' == 'macOS') Or ('$(ComputedPlatform)' == 'iPhone' And '$(IsWatchApp)' == 'false')" DependsOnTargets="_CompileToNative;_ParseBundlerArguments"
 			Inputs="$(_NativeExecutable)" Outputs="$(DeviceSpecificOutputPath)dsym.items">
+
+		<!-- For App Extensions, we delay running dsymutil & strip until it has been copied into the main app bundle... -->
+		<!-- This needs to be executed in a task (and not here inside the target) so the execution always occur on the mac, even when the build is done from Windows -->
+		<GetFullPath SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" RelativePath="$(_MtouchSymbolsList)">
+			<Output TaskParameter="FullPath" PropertyName="_SymbolsListFullPath" />
+		</GetFullPath>
+
 		<!-- For App Extensions, we delay running dsymutil & strip until it has been copied into the main app bundle... -->
 		<PropertyGroup>
 			<!-- [System.IO.Path]::GetFileName() is safe to use -->
 			<_NativeExecutableFileName>$([System.IO.Path]::GetFileName('$(_NativeExecutable)'))</_NativeExecutableFileName>
 			<_AppBundleFileName>$([System.IO.Path]::GetFileName('$(AppBundleDir)'))</_AppBundleFileName>
-			<_SymbolsListFullPath>$([System.IO.Path]::GetFullPath('$(_MtouchSymbolsList)'))</_SymbolsListFullPath>
 		</PropertyGroup>
 
 		<ItemGroup>
