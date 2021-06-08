@@ -37,6 +37,7 @@ echo "Packaging mlaunch revision $MACCORE_HASH as nupkg..."
 
 MLAUNCH_WORK_DIR="$DOTNET_NUPKG_DIR/mlaunch-staging"
 rm -rf "$MLAUNCH_WORK_DIR/mlaunch"
+mkdir -p "$MLAUNCH_WORK_DIR/mlaunch/bin"
 mkdir -p "$MLAUNCH_WORK_DIR/mlaunch/lib/mlaunch"
 
 DOTNET6=$(make -C tools/devops print-abspath-variable VARIABLE=DOTNET6 | grep "^DOTNET6=" | sed -e 's/^DOTNET6=//')
@@ -45,7 +46,7 @@ MONOTOUCH_PREFIX=$(make -C tools/devops print-abspath-variable VARIABLE=MONOTOUC
 
 # Copy mlaunch to staging area
 cp -r "$MACCORE_TOP/tools/mlaunch/Xamarin.Hosting/Xamarin.Launcher/bin/Debug/mlaunch.app" "$MLAUNCH_WORK_DIR/mlaunch/lib/mlaunch"
-cp "$IOS_DESTDIR$MONOTOUCH_PREFIX/bin/mlaunch" "$MLAUNCH_WORK_DIR/mlaunch/bin"
+cp "$IOS_DESTDIR$MONOTOUCH_PREFIX/bin/mlaunch" "$MLAUNCH_WORK_DIR/mlaunch/bin/"
 
 # Add the .csproj we will use to create the .nupkg
 cp "$XAM_TOP/tools/mlaunch/Microsoft.DotNet.Mlaunch.csproj" "$MLAUNCH_WORK_DIR"
