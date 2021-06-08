@@ -1,4 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
+
+	<!-- This file is used to pack the already-built mlaunch as a .nupkg -->
+
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
 		<!-- Suppresses the warnings about the package not having assemblies in lib/*/.dll.-->
