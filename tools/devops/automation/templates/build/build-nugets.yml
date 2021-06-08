@@ -22,14 +22,6 @@ steps:
     artifactName: build-binlogs
   condition: and(succeededOrFailed(), contains(variables['configuration.BuildNugets'], 'True'))
 
-# TODO - Remove
-- task: PublishPipelineArtifact@1
-  displayName: 'Publish Artifact: mlaunch'
-  inputs:
-    targetPath: $(Build.SourcesDirectory)/mlaunch
-    artifactName: Microsoft.DotNet.Mlaunch.nupkg
-  condition: and(succeededOrFailed(), contains(variables['configuration.BuildNugets'], 'True'))
-
 # do not publish on pull requets
 - ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
   - task: NuGetCommand@2
@@ -42,16 +34,15 @@ steps:
     condition: and(succeeded(), eq(variables['configuration.BuildNugets'], 'True'))
     continueOnError: true # should not stop the build since is not official just yet.
 
-# TODO Move under the if above
-- task: NuGetCommand@2
-  displayName: 'Publish Nugets to dotnet-eng'
-  inputs:
-    command: push
-    packagesToPush: $(Build.SourcesDirectory)/mlaunch/*.nupkg
-    nuGetFeedType: external
-    publishFeedCredentials: dotnet-eng
-  condition: and(succeeded(), eq(variables['configuration.BuildNugets'], 'True'))
-  continueOnError: true # should not stop the build since is not official just yet.
+  - task: NuGetCommand@2
+    displayName: 'Publish Nugets to dotnet-eng'
+    inputs:
+      command: push
+      packagesToPush: $(Build.SourcesDirectory)/mlaunch/*.nupkg
+      nuGetFeedType: external
+      publishFeedCredentials: dotnet-eng
+    condition: and(succeeded(), eq(variables['configuration.BuildNugets'], 'True'))
+    continueOnError: true # should not stop the build since is not official just yet.
 
 # Only executed when the publshing of the nugets failed.
 - bash: |
