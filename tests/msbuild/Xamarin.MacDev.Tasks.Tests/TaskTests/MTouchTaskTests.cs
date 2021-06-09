@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 using Microsoft.Build.Utilities;
 
@@ -9,7 +10,7 @@ using Xamarin.MacDev;
 
 namespace Xamarin.iOS.Tasks
 {
-	class CustomMTouchTask : MTouchTaskBase
+	class CustomMTouchTask : MTouch
 	{
 		public CustomMTouchTask ()
 		{
@@ -296,6 +297,54 @@ namespace Xamarin.iOS.Tasks
 
 				Assert.IsTrue (Task.ResponseFile.Contains ("/usr/foo/System.Collections.dll"));
 			}
+		}
+
+		[Test]
+		public void NativeReference_None ()
+		{
+			// non-framework native references do not have to copy anything else (back to Windows)
+
+			Task.NativeReferences = null;
+			var items = Task.GetAdditionalItemsToBeCopied ().ToArray ();
+			Assert.That (items.Count (), Is.EqualTo (0), "null");
+
+			Task.NativeReferences = new TaskItem [] { };
+			items = Task.GetAdditionalItemsToBeCopied ().ToArray ();
+			Assert.That (items.Count (), Is.EqualTo (0), "none");
+
+			var temp = Cache.CreateTemporaryDirectory ();
+			var native_lib = Path.Combine (temp, "libFoo");
+			File.WriteAllText (native_lib, "fake lib");
+			Task.NativeReferences = new [] { new TaskItem (native_lib) };
+			items = Task.GetAdditionalItemsToBeCopied ().ToArray ();
+			Assert.That (items.Count (), Is.EqualTo (0), "non-framework path");
+		}
+
+		[Test]
+		public void NativeReference_Framework ()
+		{
+			var temp = Cache.CreateTemporaryDirectory ();
+			var fx = Path.Combine (temp, "project", "Universal.xcframework", "macos-arm64_x86_64", "Universal.framework");
+			Directory.CreateDirectory (fx);
+
+			var native_lib = Path.Combine (fx, "Universal");
+			File.WriteAllText (native_lib, "fake lib");
+
+			// other files
+			File.WriteAllText (Path.Combine (fx, "Info.plist"), "fake info.plist");
+			var headers = Path.Combine (fx, "Headers");
+			Directory.CreateDirectory (headers);
+			File.WriteAllText (Path.Combine (headers, "Universal.h"), "fake headers");
+			var signature = Path.Combine (fx, "_CodeSignature");
+			Directory.CreateDirectory (signature);
+			File.WriteAllText (Path.Combine (signature, "CodeResources"), "fake resources");
+
+			// a native reference to a framework needs to bring (all of) the framework files (back to Windows)
+
+			Task.NativeReferences = new [] { new TaskItem (native_lib) };
+			var items = Task.GetAdditionalItemsToBeCopied ().ToArray ();
+			// 3 additional files (as we do not duplicate the TaskItem for the native library itself)
+			Assert.That (items.Count (), Is.EqualTo (3), "framework files");
 		}
 
 		class TempSdk : IDisposable
