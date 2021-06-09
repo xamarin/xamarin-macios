@@ -53,5 +53,24 @@ namespace Xamarin.Utils
 				return "Unknown";
 			}
 		}
+
+		public static string ToTargetPlatformIdentifier (this ApplePlatform @this)
+		{
+			switch (@this) {
+			case ApplePlatform.iOS:
+				return "Xamarin.iOS";
+			case ApplePlatform.MacOSX:
+				return "Xamarin.Mac";
+			case ApplePlatform.WatchOS:
+				return "Xamarin.WatchOS";
+			case ApplePlatform.TVOS:
+				return "Xamarin.TVOS";
+			case ApplePlatform.MacCatalyst:
+				return "Xamarin.MacCatalyst";
+			default:
+				return "Unknown";
+			}
+
+		}
 	}
 }

@@ -666,6 +666,13 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		/>
 	</Target>
 
+	<PropertyGroup Condition="'$(UsingAppleNETSdk)' != 'true'">
+		<CreateAppBundleDependsOn>
+			$(CreateAppBundleDependsOn);
+			_CopyStaticRegistrarReferenceToAppBundle;
+		</CreateAppBundleDependsOn>
+	</PropertyGroup>
+
 	<Target Name="_CreateAppBundle" Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsAppDistribution)' != 'true'" DependsOnTargets="$(CreateAppBundleDependsOn)" />
 
 	<Target Name="_ComputePkgInfoPath" DependsOnTargets="_GenerateBundleName">
@@ -1549,6 +1556,20 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 				<BuildServerPath>..\..\$(BuildAppName)\$(BuildSessionId)\$(AppBundleDir)</BuildServerPath>
 			</_AppExtensionBundlePath>
 		</ItemGroup>
+	</Target>
+
+	<Target Name="_CopyStaticRegistrarReferenceToAppBundle"
+		Inputs="@(StaticRegistrarReference)"
+		Outputs="$(_AppContentsPath)\%(StaticRegistrarReference.Link)"
+		Condition="'$(UsingAppleNETSdk)' != 'true'"
+		DependsOnTargets="_GenerateBundleName"
+		>
+		<Copy
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true' And '%(StaticRegistrarReference.Link)' != ''"
+			SourceFiles="@(StaticRegistrarReference)"
+			DestinationFolder="@(StaticRegistrarReference -> '$(_AppContentsPath)\%(Link)')"
+		/>
 	</Target>
 
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Shared.ObjCBinding.targets" Condition="'$(IsBindingProject)' == 'true'" />

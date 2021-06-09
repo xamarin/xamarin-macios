@@ -184,6 +184,7 @@
 			_ComputeLinkerArguments;
 			_ComputeFrameworkFilesToPublish;
 			_ComputeDynamicLibrariesToPublish;
+			_ComputeStaticRegistrarReferencesToPublish;
 			ComputeFilesToPublish;
 			_LoadLinkerOutput;
 			_CompileNativeExecutable;
@@ -369,6 +370,18 @@
 			<!-- Add all the dynamic libraries to ResolvedFileToPublish -->
 			<ResolvedFileToPublish Include="@(_DynamicLibraryToPublish)">
 				<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+			</ResolvedFileToPublish>
+		</ItemGroup>
+	</Target>
+
+	<Target Name="_ComputeStaticRegistrarReferencesToPublish" DependsOnTargets="_GenerateBundleName">
+		<ItemGroup>
+			<!-- Add any assemblies listed in StaticRegistrarReference to ResolvedFileToPublish, and make sure these assemblies are passed to the linker (that way the static registrar will process them) -->
+			<ResolvedFileToPublish Include="@(StaticRegistrarReference)" Condition="'%(StaticRegistrarReference.Link)' != ''">
+				<RelativePath>$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)$(PublishDir),$(_AppContentsPath)\%(StaticRegistrarReference.Link)\%(Filename)%(Extension))</RelativePath>
+				<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+				<PostprocessAssembly>true</PostprocessAssembly>
+				<TrimMode>copy</TrimMode>
 			</ResolvedFileToPublish>
 		</ItemGroup>
 	</Target>

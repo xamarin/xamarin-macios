@@ -124,6 +124,7 @@ namespace Xamarin.Bundler {
 		public List<string> References = new List<string> ();
 		public List<Application> SharedCodeApps = new List<Application> (); // List of appexes we're sharing code with.
 		public string RegistrarOutputLibrary;
+		public List<string> StaticRegistrarReferences;
 
 		public BuildTarget BuildTarget;
 
@@ -148,6 +149,13 @@ namespace Xamarin.Bundler {
 		// In the case of a framework, each framework may contain the native code for multiple assemblies.
 		// This variable does not apply to macOS (if assemblies are AOT-compiled, the AOT compiler will output a .dylib next to the assembly and there's nothing extra for us)
 		Dictionary<string, Tuple<AssemblyBuildTarget, string>> assembly_build_targets = new Dictionary<string, Tuple<AssemblyBuildTarget, string>> ();
+
+		public void AddStaticRegistrarReference (string path)
+		{
+			if (StaticRegistrarReferences == null)
+				StaticRegistrarReferences = new List<string> ();
+			StaticRegistrarReferences.Add (path);
+		}
 
 		public string ContentDirectory {
 			get {

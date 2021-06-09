@@ -87,6 +87,10 @@ namespace Xamarin.Tests
 				coreFiles.Add ("Xamarin.TVOS.dll");
 				if (Config == "Debug")
 					coreFiles.Add ("Xamarin.TVOS.pdb");
+			} else if (TargetFrameworkIdentifier == "Xamarin.Mac") {
+				coreFiles.Add ("Xamarin.Mac.dll");
+				if (Config == "Debug")
+					coreFiles.Add ("Xamarin.Mac.pdb");
 			} else {
 				coreFiles.Add ("Xamarin.iOS.dll");
 				if (Config == "Debug")

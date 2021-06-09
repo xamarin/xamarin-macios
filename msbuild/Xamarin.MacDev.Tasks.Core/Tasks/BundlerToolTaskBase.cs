@@ -65,6 +65,8 @@ namespace Xamarin.MacDev.Tasks {
 		[Required]
 		public string SdkVersion { get; set; }
 
+		public ITaskItem [] StaticRegistrarReference { get; set; }
+
 		public int Verbosity { get; set; }
 
 		[Required]
@@ -112,6 +114,12 @@ namespace Xamarin.MacDev.Tasks {
 				args.AddLine ("--profiling");
 
 			args.AddQuotedLine ($"--sdkroot={SdkRoot}");
+
+			if (StaticRegistrarReference?.Length > 0) {
+				foreach (var srr in StaticRegistrarReference) {
+					args.AddQuotedLine ($"--static-registrar-reference={Path.GetFullPath (srr.ItemSpec)}");
+				}
+			}
 
 			args.AddQuotedLine ($"--targetver={MinimumOSVersion}");
 

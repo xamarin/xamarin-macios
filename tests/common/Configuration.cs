@@ -870,6 +870,85 @@ namespace Xamarin.Tests
 				throw new ArgumentOutOfRangeException ($"Unknown platform: {platform}");
 			}
 		}
+
+		// Retrieve projects from tests/common/TestProjects/<project>/[dotnet|legacy]/<platform>/<project>.csproj
+		public static string GetCommonProjectPath (string project, bool isDotNet, string subdir = null, ApplePlatform? platform = null)
+		{
+			var project_dir = Path.Combine (Configuration.SourceRoot, "tests", "common", "TestProjects", project, isDotNet ? "dotnet" : "legacy");
+			if (!string.IsNullOrEmpty (subdir))
+				project_dir = Path.Combine (project_dir, subdir);
+
+			if (platform.HasValue)
+				project_dir = Path.Combine (project_dir, platform.Value.AsString ());
+
+			var project_path = Path.Combine (project_dir, project + ".csproj");
+			if (!File.Exists (project_path))
+				project_path = Path.ChangeExtension (project_path, "sln");
+
+			if (!File.Exists (project_path))
+				throw new FileNotFoundException ($"Could not find the project or solution {project} - {project_path} does not exist.");
+
+			return project_path;
+		}
+
+
+		// Executes the given desktop executable and asserts that:
+		// a) The exit code is 0
+		// b) The environment variable MAGIC_WORD is printed to stdout or stderr.
+		static void ExecuteWithMagicWordAndAssert (string executable)
+		{
+			var magicWord = Guid.NewGuid ().ToString ();
+			var env = new Dictionary<string, string> { { "MAGIC_WORD", magicWord } };
+
+			var output = new StringBuilder ();
+			var rv = Execution.RunWithStringBuildersAsync (executable, Array.Empty<string> (), environment: env, standardOutput: output, standardError: output, timeout: TimeSpan.FromSeconds (15)).Result;
+			Assert.That (output.ToString (), Does.Contain (magicWord), "Contains magic word");
+			Assert.AreEqual (0, rv.ExitCode, "ExitCode");
+		}
+
+		// Executes the given app bundle for the given project (that must already have been built) and asserts that:
+		// a) The exit code is 0
+		// b) The environment variable MAGIC_WORD is printed to stdout or stderr.
+		// Note: This has not been implemented for mobile platforms yet
+		public static void ExecuteWithMagicWordAndAssert (string projectPath, ApplePlatform platform,  bool isDotNetProject, string runtimeIdentifier = null, string projectConfiguration = "Debug", string projectPlatform = null)
+		{
+			// Verify that there's an executable
+			var appName = Path.GetFileNameWithoutExtension (projectPath);
+			var appPath = Path.Combine (Path.GetDirectoryName (projectPath), "bin");
+			if (!string.IsNullOrEmpty (projectPlatform))
+				appPath = Path.Combine (appPath, projectPlatform);
+			appPath = Path.Combine (appPath, projectConfiguration);
+			if (isDotNetProject)
+				appPath = Path.Combine (appPath, platform.ToFramework (), runtimeIdentifier);
+			appPath = Path.Combine (appPath, appName + ".app");
+			string appExecutable;
+			switch (platform) {
+			case ApplePlatform.MacOSX:
+			case ApplePlatform.MacCatalyst:
+				appExecutable = Path.Combine (appPath, "Contents", "MacOS", appName);
+				break;
+			case ApplePlatform.iOS:
+			case ApplePlatform.TVOS:
+			case ApplePlatform.WatchOS:
+				appExecutable = Path.Combine (appPath, appName);
+				break;
+			default:
+				throw new NotImplementedException ($"Unknown platform: {platform}");
+			}
+
+			Assert.That (appExecutable, Does.Exist, "There is an executable");
+
+			// Run it
+			switch (platform) {
+			case ApplePlatform.MacOSX:
+			case ApplePlatform.MacCatalyst:
+				ExecuteWithMagicWordAndAssert (appExecutable);
+				break;
+			default:
+				// not implemented how to run in the simulator / on device
+				break;
+			}
+		}
 	}
 }
 
