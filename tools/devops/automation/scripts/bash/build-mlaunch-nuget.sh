@@ -33,7 +33,7 @@ mkdir -p "$MLAUNCH_WORK_DIR/mlaunch/lib/mlaunch"
 DOTNET6=$(make -C tools/devops print-abspath-variable VARIABLE=DOTNET6 | grep "^DOTNET6=" | sed -e 's/^DOTNET6=//')
 IOS_DESTDIR=$(make -C tools/devops print-abspath-variable VARIABLE=IOS_DESTDIR | grep "^IOS_DESTDIR=" | sed -e 's/^IOS_DESTDIR=//')
 MONOTOUCH_PREFIX=$(make -C tools/devops print-abspath-variable VARIABLE=MONOTOUCH_PREFIX | grep "^MONOTOUCH_PREFIX=" | sed -e 's/^MONOTOUCH_PREFIX=//')
-XCODE_VERSION=$(make -C tools/devops print-abspath-variable VARIABLE=XCODE_VERSION | grep "^XCODE_VERSION=" | sed -e 's/^XCODE_VERSION=//')
+XCODE_VERSION=$(grep XCODE_VERSION="$XAM_TOP/Make.config" | sed 's/.*=//')
 
 # Copy mlaunch to staging area
 cp -c -r "$MACCORE_TOP/tools/mlaunch/Xamarin.Hosting/Xamarin.Launcher/bin/Debug/mlaunch.app" "$MLAUNCH_WORK_DIR/mlaunch/lib/mlaunch"
