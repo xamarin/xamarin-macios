@@ -5,7 +5,7 @@ using Microsoft.Build.Utilities;
 
 using Xamarin.MacDev.Tasks;
 
-namespace Xamarin.iOS.Tasks
+namespace Xamarin.MacDev.Tasks
 {
 	public abstract class GetFullPathTaskBase : XamarinTask
 	{
