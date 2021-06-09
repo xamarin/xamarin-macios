@@ -7,6 +7,9 @@
     <type fullname="Foundation.FieldAttribute">
       <attribute internal="RemoveAttributeInstances" />
     </type>
+    <type fullname="Foundation.NotImplementedAttribute">
+      <attribute internal="RemoveAttributeInstances" />
+    </type>
 
     <!-- double-check when applied -->
     <type fullname="Foundation.PreserveAttribute">
@@ -21,9 +24,6 @@
       <attribute internal="RemoveAttributeInstances" />
     </type>
     <type fullname="ObjCRuntime.DesignatedInitializerAttribute">
-      <attribute internal="RemoveAttributeInstances" />
-    </type>
-    <type fullname="ObjCRuntime.NotImplementedAttribute">
       <attribute internal="RemoveAttributeInstances" />
     </type>
     <type fullname="ObjCRuntime.RequiresSuperAttribute">
