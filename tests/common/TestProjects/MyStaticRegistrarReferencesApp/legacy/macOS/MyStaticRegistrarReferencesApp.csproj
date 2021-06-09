@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>MyStaticRegistrarReferencesApp</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkIdentifier>Xamarin.Mac</TargetFrameworkIdentifier>
+    <MonoBundlingExtraArgs>--registrar:static --link_flags=-Wl,../../../../../test-libraries/.libs/macos/libtest.a</MonoBundlingExtraArgs>
+    <OutputPath>bin\$(Configuration)</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Xamarin.Mac" />
+  </ItemGroup>
+  <ItemGroup>
+    <StaticRegistrarReference Include="../../../../../bindings-test/macOS/bin/Debug/bindings-test.dll" Link="." />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Info.plist" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="../../AppDelegate.cs" />
+  </ItemGroup>
+  <Target Name="BuildTestLibraries" BeforeTargets="BeforeBuild">
+    <MSBuild Projects="../../../../../bindings-test/macOS/bindings-test.csproj" Targets="Restore;Build" />
+  </Target>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
+</Project>

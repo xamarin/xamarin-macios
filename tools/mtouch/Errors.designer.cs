@@ -3926,6 +3926,15 @@ namespace Xamarin.Bundler {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The assembly &apos;{0}&apos; passed as an additional assembly to be processed by the static registrar has already been registered and will be ignored..
+        /// </summary>
+        public static string MX4186 {
+            get {
+                return ResourceManager.GetString("MX4186", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The native linker failed to execute: {0}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
         /// 		.
         /// </summary>

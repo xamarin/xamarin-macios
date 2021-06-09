@@ -1878,6 +1878,11 @@
 		</value>
 	</data>
 
+	<data name="MX4186" xml:space="preserve">
+		<value>The assembly '{0}' passed as an additional assembly to be processed by the static registrar has already been registered and will be ignored.</value>
+		<comment>This is a warning</comment>
+	</data>
+
 	<data name="MT5101" xml:space="preserve">
 		<value>Missing '{0}' compiler. Please install Xcode 'Command-Line Tools' component
 		</value>

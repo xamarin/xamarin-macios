@@ -56,6 +56,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 
 	<PropertyGroup>
 		<CreateAppBundleDependsOn Condition="'$(UsingAppleNETSdk)' != 'true'">
+			$(CreateAppBundleDependsOn);
 			_DetectSigningIdentity;
 			_CopyResourcesToBundle;
 			_SmeltMetal;
@@ -237,6 +238,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			AotMode="$(AOTMode)"
 			HybridAOT="$(HybridAOT)"
 			ExplicitAotAssemblies="$(ExplicitAotAssemblies)"
+			StaticRegistrarReference="@(StaticRegistrarReference)"
 			StandardOutputImportance="High"
 			XamarinSdkRoot="$(_XamarinSdkRoot)"
 			>
