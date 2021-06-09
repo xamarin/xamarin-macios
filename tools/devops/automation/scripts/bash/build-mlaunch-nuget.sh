@@ -33,6 +33,7 @@ mkdir -p "$MLAUNCH_WORK_DIR/mlaunch/lib/mlaunch"
 DOTNET6=$(make -C tools/devops print-abspath-variable VARIABLE=DOTNET6 | grep "^DOTNET6=" | sed -e 's/^DOTNET6=//')
 IOS_DESTDIR=$(make -C tools/devops print-abspath-variable VARIABLE=IOS_DESTDIR | grep "^IOS_DESTDIR=" | sed -e 's/^IOS_DESTDIR=//')
 MONOTOUCH_PREFIX=$(make -C tools/devops print-abspath-variable VARIABLE=MONOTOUCH_PREFIX | grep "^MONOTOUCH_PREFIX=" | sed -e 's/^MONOTOUCH_PREFIX=//')
+XCODE_VERSION=$(make -C tools/devops print-abspath-variable VARIABLE=XCODE_VERSION | grep "^XCODE_VERSION=" | sed -e 's/^XCODE_VERSION=//')
 
 # Copy mlaunch to staging area
 cp -c -r "$MACCORE_TOP/tools/mlaunch/Xamarin.Hosting/Xamarin.Launcher/bin/Debug/mlaunch.app" "$MLAUNCH_WORK_DIR/mlaunch/lib/mlaunch"
@@ -44,11 +45,9 @@ cp -c "$XAM_TOP/tools/mlaunch/Microsoft.DotNet.Mlaunch.csproj" "$MLAUNCH_WORK_DI
 # We need to override global.json to use .NET 6.0
 cp -c "$XAM_TOP/global6.json" "$MLAUNCH_WORK_DIR/global.json"
 
-version=$("$MLAUNCH_WORK_DIR/mlaunch/bin/mlaunch" --version | cut -d " " -f 2)
-
 # We have to build from within the dir to respect the global.json
 cd "$MLAUNCH_WORK_DIR"
-"$DOTNET6" pack --version-suffix "$MACCORE_HASH" /p:VersionPrefix=$version
+"$DOTNET6" pack --version-suffix "$MACCORE_HASH" /p:VersionPrefix=$XCODE_VERSION
 
 # We store mlaunch NuGet in [build work root]/mlaunch
 cd "$XAM_TOP"
