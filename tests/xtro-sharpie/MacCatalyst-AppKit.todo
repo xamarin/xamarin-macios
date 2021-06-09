@@ -7947,7 +7947,6 @@
 !missing-selector! NSWindow::isVisible not bound
 !missing-selector! NSWindow::isZoomable not bound
 !missing-selector! NSWindow::isZoomed not bound
-!missing-selector! NSWindow::keyDown: not bound
 !missing-selector! NSWindow::keyViewSelectionDirection not bound
 !missing-selector! NSWindow::layoutIfNeeded not bound
 !missing-selector! NSWindow::level not bound
