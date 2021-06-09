@@ -23,7 +23,9 @@ fi
 # Package mlaunch as .nupkg
 echo "Packaging mlaunch revision $MACCORE_HASH as nupkg..."
 
+DOTNET_NUPKG_DIR=$(make -C tools/devops print-abspath-variable VARIABLE=DOTNET_NUPKG_DIR | grep "^DOTNET_NUPKG_DIR=" | sed -e 's/^DOTNET_NUPKG_DIR=//')
 MLAUNCH_WORK_DIR="$DOTNET_NUPKG_DIR/mlaunch-staging"
+
 rm -rf "$MLAUNCH_WORK_DIR"
 mkdir -p "$MLAUNCH_WORK_DIR/mlaunch/bin"
 mkdir -p "$MLAUNCH_WORK_DIR/mlaunch/lib/mlaunch"
