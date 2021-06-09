@@ -9,6 +9,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 using Mono.Cecil;
 using Mono.Linker.Steps;
@@ -34,30 +35,82 @@ namespace MonoTouch.Tuner {
 
 		Profile Profile => new Profile (Configuration);
 
-		Dictionary<AssemblyDefinition, bool> _transitivelyReferencesProduct = new Dictionary<AssemblyDefinition, bool> ();
-		bool TransitivelyReferencesProduct (AssemblyDefinition assembly)
+		// Get the set of assemblies transitively referenced from the input assembly,
+		// along with the reversed references for each assembly that's part of the
+		// transitively referenced set.
+		Dictionary<AssemblyDefinition, HashSet<AssemblyDefinition>> GetReverseReferenceGraph (AssemblyDefinition start)
 		{
-			if (_transitivelyReferencesProduct.TryGetValue (assembly, out bool result))
+			var references = new Dictionary<AssemblyDefinition, HashSet<AssemblyDefinition>> {
+				{ start, new HashSet<AssemblyDefinition> () }
+			};
+			var toProcess = new Queue<AssemblyDefinition> ();
+			toProcess.Enqueue (start);
+			while (toProcess.TryDequeue (out var assembly)) {
+				foreach (var reference in assembly.MainModule.AssemblyReferences) {
+					var resolvedReference = Configuration.Context.GetLoadedAssembly (reference.Name);
+					if (resolvedReference == null)
+						continue;
+
+					if (!references.TryGetValue (resolvedReference, out var referrers)) {
+						referrers = new HashSet<AssemblyDefinition> ();
+						references.Add (resolvedReference, referrers);
+						toProcess.Enqueue (resolvedReference);
+					}
+
+					referrers.Add (assembly);
+				}
+			}
+			return references;
+		}
+
+		Dictionary<AssemblyDefinition, bool> _transitivelyReferencesProduct = new Dictionary<AssemblyDefinition, bool> ();
+		bool TransitivelyReferencesProduct (AssemblyDefinition start)
+		{
+			if (_transitivelyReferencesProduct.TryGetValue (start, out bool result))
 				return result;
 
-			if (Profile.IsProductAssembly (assembly)) {
-				_transitivelyReferencesProduct.Add (assembly, true);
-				return true;
-			}
+			// A depth-first search is insufficient because there are reference cycles, so we
+			// get the set of transitive references, and do a reverse BFS.
+			var references = GetReverseReferenceGraph (start);
+			var referencesProductToProcess = new Queue<AssemblyDefinition> ();
 
-			foreach (var reference in assembly.MainModule.AssemblyReferences) {
-				var resolvedReference = Configuration.Context.GetLoadedAssembly (reference.Name);
-				if (resolvedReference == null)
+			// We start the BFS from the product assembly or any references which are already known
+			// to reference the product assembly.
+			foreach (var reference in references.Keys) {
+				if (_transitivelyReferencesProduct.TryGetValue (reference, out bool referencesProduct)) {
+					if (referencesProduct)
+						referencesProductToProcess.Enqueue (reference);
 					continue;
+				}
 
-				if (TransitivelyReferencesProduct (resolvedReference)) {
-					_transitivelyReferencesProduct.Add (assembly, true);
-					return true;
+				if (Profile.IsProductAssembly (reference)) {
+					_transitivelyReferencesProduct.Add (reference, true);
+					referencesProductToProcess.Enqueue (reference);
 				}
 			}
 
-			_transitivelyReferencesProduct.Add (assembly, false);
-			return false;
+			// Scan the reverse references to find out which referencing assemblies
+			// are reachable from the product assembly (that is, transitively reference it).
+			while (referencesProductToProcess.TryDequeue (out var assembly)) {
+				foreach (var referrer in references[assembly]) {
+					if (_transitivelyReferencesProduct.TryGetValue (referrer, out bool referencesProduct)) {
+						Debug.Assert (referencesProduct);
+						// Any which were already determined to reference the product assembly
+						// don't need to be scanned again.
+						continue;
+					}
+
+					_transitivelyReferencesProduct.Add (referrer, true);
+					referencesProductToProcess.Enqueue (referrer);
+				}
+			}
+
+			// Any remaining references that we didn't discover during the search
+			// don't reference the product.
+			foreach (var reference in references.Keys)
+				_transitivelyReferencesProduct.TryAdd (reference, false);
+
+			return _transitivelyReferencesProduct[start];
 		}
 
 		protected override void TryProcessAssembly (AssemblyDefinition assembly)
