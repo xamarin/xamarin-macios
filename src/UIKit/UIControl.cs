@@ -47,10 +47,12 @@ namespace UIKit {
 	}
 	
 	public partial class UIControl {
-		static ConditionalWeakTable<UIControl,Dictionary<EventHandler, Dictionary<UIControlEvent, UIControlEventProxy>>> allTargets = new
-			ConditionalWeakTable<UIControl,Dictionary<EventHandler, Dictionary<UIControlEvent, UIControlEventProxy>>> ();
+		static ConditionalWeakTable<UIControl,Dictionary<EventHandler, Dictionary<UIControlEvent, UIControlEventProxy>>> allTargets;
 		public void AddTarget (EventHandler notification, UIControlEvent events)
 		{
+			if (allTargets == null)
+				allTargets = new ();
+
 			var targets = allTargets.GetValue (this, k =>
 			{
 				MarkDirty ();
