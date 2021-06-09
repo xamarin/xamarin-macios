@@ -198,3 +198,6 @@
 !missing-type! ITLibMediaItemVideoInfo not bound
 !missing-type! ITLibPlaylist not bound
 !missing-type! ITLibrary not bound
+## appended from unclassified file
+!missing-field! ITLibPlaylistPropertyPrimary not bound
+!missing-selector! ITLibPlaylist::isPrimary not bound

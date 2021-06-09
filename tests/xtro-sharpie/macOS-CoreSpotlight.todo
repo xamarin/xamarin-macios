@@ -1,0 +1,4 @@
+!missing-selector! CSImportExtension::updateAttributes:forFileAtURL:error: not bound
+!missing-selector! CSSearchableItemAttributeSet::darkThumbnailURL not bound
+!missing-selector! CSSearchableItemAttributeSet::setDarkThumbnailURL: not bound
+!missing-type! CSImportExtension not bound
