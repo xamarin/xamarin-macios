@@ -35,54 +35,52 @@ namespace MonoTouch.Tuner {
 
 		Profile Profile => new Profile (Configuration);
 
-		// Get the set of assemblies transitively referenced from the input assembly,
-		// along with the reversed references for each assembly that's part of the
-		// transitively referenced set.
-		Dictionary<AssemblyDefinition, HashSet<AssemblyDefinition>> GetReverseReferenceGraph (AssemblyDefinition start)
+		// Get the reverse mapping from assemblies to assemblies which reference them directly.
+		Dictionary<AssemblyDefinition, HashSet<AssemblyDefinition>> _reversedReferences;
+		Dictionary<AssemblyDefinition, HashSet<AssemblyDefinition>> GetReversedReferences ()
 		{
-			var references = new Dictionary<AssemblyDefinition, HashSet<AssemblyDefinition>> {
-				{ start, new HashSet<AssemblyDefinition> () }
-			};
-			var toProcess = new Queue<AssemblyDefinition> ();
-			toProcess.Enqueue (start);
-			while (toProcess.TryDequeue (out var assembly)) {
+			if (_reversedReferences != null)
+				return _reversedReferences;
+
+			_reversedReferences = new Dictionary<AssemblyDefinition, HashSet<AssemblyDefinition>> ();
+			foreach (var assembly in Configuration.Assemblies) {
+				if (!_reversedReferences.ContainsKey (assembly))
+					_reversedReferences.Add (assembly, new HashSet<AssemblyDefinition> ());
+
 				foreach (var reference in assembly.MainModule.AssemblyReferences) {
 					var resolvedReference = Configuration.Context.GetLoadedAssembly (reference.Name);
 					if (resolvedReference == null)
 						continue;
 
-					if (!references.TryGetValue (resolvedReference, out var referrers)) {
+					if (!_reversedReferences.TryGetValue (resolvedReference, out var referrers)) {
 						referrers = new HashSet<AssemblyDefinition> ();
-						references.Add (resolvedReference, referrers);
-						toProcess.Enqueue (resolvedReference);
+						_reversedReferences.Add (resolvedReference, referrers);
 					}
 
 					referrers.Add (assembly);
 				}
 			}
-			return references;
+			return _reversedReferences;
 		}
 
-		Dictionary<AssemblyDefinition, bool> _transitivelyReferencesProduct = new Dictionary<AssemblyDefinition, bool> ();
-		bool TransitivelyReferencesProduct (AssemblyDefinition start)
+		Dictionary<AssemblyDefinition, bool> _transitivelyReferencesProduct;
+		bool TransitivelyReferencesProduct (AssemblyDefinition assembly)
 		{
-			if (_transitivelyReferencesProduct.TryGetValue (start, out bool result))
-				return result;
+			if (_transitivelyReferencesProduct != null) {
+				Debug.Assert (_transitivelyReferencesProduct.ContainsKey (assembly));
+				return _transitivelyReferencesProduct.TryGetValue (assembly, out bool result) && result;
+			}
+
+			_transitivelyReferencesProduct = new Dictionary<AssemblyDefinition, bool> ();
 
 			// A depth-first search is insufficient because there are reference cycles, so we
 			// get the set of transitive references, and do a reverse BFS.
-			var references = GetReverseReferenceGraph (start);
+			var reversedReferences = GetReversedReferences ();
+			Debug.Assert (reversedReferences.ContainsKey (assembly));
 			var referencesProductToProcess = new Queue<AssemblyDefinition> ();
 
-			// We start the BFS from the product assembly or any references which are already known
-			// to reference the product assembly.
-			foreach (var reference in references.Keys) {
-				if (_transitivelyReferencesProduct.TryGetValue (reference, out bool referencesProduct)) {
-					if (referencesProduct)
-						referencesProductToProcess.Enqueue (reference);
-					continue;
-				}
-
+			// We start the BFS from the product assembly.
+			foreach (var reference in reversedReferences.Keys) {
 				if (Profile.IsProductAssembly (reference)) {
 					_transitivelyReferencesProduct.Add (reference, true);
 					referencesProductToProcess.Enqueue (reference);
@@ -90,9 +88,9 @@ namespace MonoTouch.Tuner {
 			}
 
 			// Scan the reverse references to find out which referencing assemblies
-			// are reachable from the product assembly (that is, transitively reference it).
-			while (referencesProductToProcess.TryDequeue (out var assembly)) {
-				foreach (var referrer in references[assembly]) {
+			// are reachable from the product assembly (that is, transitively reference the product).
+			while (referencesProductToProcess.TryDequeue (out var reference)) {
+				foreach (var referrer in reversedReferences[reference]) {
 					if (_transitivelyReferencesProduct.TryGetValue (referrer, out bool referencesProduct)) {
 						Debug.Assert (referencesProduct);
 						// Any which were already determined to reference the product assembly
@@ -106,11 +104,11 @@ namespace MonoTouch.Tuner {
 			}
 
 			// Any remaining references that we didn't discover during the search
-			// don't reference the product.
-			foreach (var reference in references.Keys)
+			// don't reference the product assembly.
+			foreach (var reference in reversedReferences.Keys)
 				_transitivelyReferencesProduct.TryAdd (reference, false);
 
-			return _transitivelyReferencesProduct[start];
+			return _transitivelyReferencesProduct[assembly];
 		}
 
 		protected override void TryProcessAssembly (AssemblyDefinition assembly)
@@ -174,11 +172,11 @@ namespace MonoTouch.Tuner {
 			// bonus: we cache, for every type, whether or not it inherits from NSObject (very useful later)
 			if (!IsNSObject (type))
 				return;
-			
+
 			// if not, it's a user type, the IsDirectBinding check is required by all ancestors
 			SetIsDirectBindingValue (type);
 		}
-		
+
 		// called once for each 'type' so it's a nice place to cache the result
 		// and ensure later steps re-use the same, pre-computed, result
 		bool IsNSObject (TypeDefinition type)
@@ -210,7 +208,7 @@ namespace MonoTouch.Tuner {
 			}
 			return rv;
 		}
-		
+
 		void SetIsDirectBindingValue (TypeDefinition type)
 		{
 			if (isdirectbinding_value.ContainsKey (type))
