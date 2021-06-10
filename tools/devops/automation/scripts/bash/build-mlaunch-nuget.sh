@@ -45,7 +45,7 @@ cp -c -r "$MACCORE_TOP/tools/mlaunch/Xamarin.Hosting/Xamarin.Launcher/bin/Debug/
 cp -c "$IOS_DESTDIR$MONOTOUCH_PREFIX/bin/mlaunch" "$MLAUNCH_WORK_DIR/mlaunch/bin/"
 
 # Add the .csproj we will use to create the .nupkg
-cp -c -r "$XAM_TOP/tools/mlaunch/nupkg/*" "$MLAUNCH_WORK_DIR"
+cp -c -r "$XAM_TOP"/tools/mlaunch/nupkg/* "$MLAUNCH_WORK_DIR"
 
 # We need to override global.json to use .NET 6.0
 cp -c "$XAM_TOP/global6.json" "$MLAUNCH_WORK_DIR/global.json"
