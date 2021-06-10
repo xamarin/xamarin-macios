@@ -33,24 +33,22 @@ namespace ObjCRuntime {
 		internal const string Release = "release";
 		internal const string Retain = "retain";
 		internal const string Autorelease = "autorelease";
-		internal const string Dealloc = "dealloc";
-		internal const string DoesNotRecognizeSelector = "doesNotRecognizeSelector:";
 		internal const string PerformSelectorOnMainThreadWithObjectWaitUntilDone = "performSelectorOnMainThread:withObject:waitUntilDone:";
-		internal const string PerformSelectorInBackground = "performSelectorInBackground:withObject:";
+#if MONOMAC
+		internal const string DoesNotRecognizeSelector = "doesNotRecognizeSelector:";
 		internal const string PerformSelectorWithObjectAfterDelay = "performSelector:withObject:afterDelay:";
+#endif
 
 		IntPtr handle;
 		string name;
 
-		public Selector (IntPtr sel)
-			: this (sel, true)
-		{
-		}
 
-		internal unsafe Selector (IntPtr sel, bool check)
+		internal Selector () {}
+
+		public Selector (IntPtr sel)
 		{
-			if (check && !sel_isMapped (sel))
-				throw new ArgumentException ("sel is not a selector handle.");
+			if (!sel_isMapped (sel))
+				ObjCRuntime.ThrowHelper.ThrowArgumentException ("sel", "Not a selector handle.");
 
 			this.handle = sel;
 			name = GetName (sel);
@@ -75,12 +73,13 @@ namespace ObjCRuntime {
 		}
 
 		public static bool operator== (Selector left, Selector right) {
-			if (((object)left) == null)
-				return (((object)right) == null);
-			if (((object)right) == null)
+			if (left is null)
+				return (right is null);
+			if (right is null)
 				return false;
 
 			// note: there's a sel_isEqual function but it's safe to compare pointers
+			// ref: https://opensource.apple.com/source/objc4/objc4-551.1/runtime/objc-sel.mm.auto.html
 			return left.handle == right.handle;
 		}
 
@@ -112,7 +111,7 @@ namespace ObjCRuntime {
 			if (!sel_isMapped (sel))
 				return null;
 			// create the selector without duplicating the sel_isMapped check
-			return new Selector (sel, false);
+			return new Selector () { handle = sel, name = GetName (sel) };
 		}
 
 		public static Selector Register (IntPtr handle)
