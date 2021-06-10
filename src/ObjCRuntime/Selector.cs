@@ -48,7 +48,7 @@ namespace ObjCRuntime {
 		public Selector (IntPtr sel)
 		{
 			if (!sel_isMapped (sel))
-				ObjCRuntime.ThrowHelper.ThrowArgumentException ("sel", "Not a selector handle.");
+				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (sel), "Not a selector handle.");
 
 			this.handle = sel;
 			name = GetName (sel);
