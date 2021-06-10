@@ -9,9 +9,13 @@
 		<VersionPrefix>1.0.0</VersionPrefix>
 		<VersionSuffix>dev</VersionSuffix>
 		<PackageOutputPath>$([MSBuild]::NormalizeDirectory('$(MSBuildThisFileDirectory)'))</PackageOutputPath>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<Content Include="mlaunch\**\*" PackagePath="mlaunch\" />
+		<Content Include="README.md" PackagePath="\" />
+		<Content Include="build\Microsoft.DotNet.Mlaunch.props" PackagePath="build\" />
+		<Content Include="build\Microsoft.DotNet.Mlaunch.targets" PackagePath="build\" />
 	</ItemGroup>
 </Project>
