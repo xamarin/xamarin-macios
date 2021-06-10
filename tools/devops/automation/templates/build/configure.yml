@@ -159,11 +159,12 @@ steps:
 - powershell: |
     git config user.email "valco@microsoft.com"
     git config user.name "vs-mobiletools-engineering-service2"
-    git checkout -b Localization origin/Localization
-    git merge origin/main
+    git branch -d Localization
+    git push origin --delete Localization
+    git checkout -b Localization
     git push origin Localization
-  displayName: "Sync Localization branch with main"
-  condition: and(succeeded(), in(variables['build.reason'], 'Schedule', 'Manual'), eq(variables.isMain, 'True'))
+  displayName: "Create a new Localization branch from main"
+  condition: and(succeeded(), in(variables['build.reason'], 'Schedule'), eq(variables.isMain, 'True'))
 
 - task: OneLocBuild@2
   condition: and(succeeded(), eq(variables.isMain, 'True'))
@@ -173,7 +174,7 @@ steps:
   inputs:
     locProj: '$(Build.SourcesDirectory)\Localize\LocProject.json'
     outDir: '$(Build.ArtifactStagingDirectory)'
-    isCreatePrSelected: eq(variables.isSchedule, 'True')
+    isCreatePrSelected: eq(variables.isScheduled, 'True')
     packageSourceAuth: patAuth
     patVariable: '$(OneLocBuild--PAT)'
     isAutoCompletePrSelected: false

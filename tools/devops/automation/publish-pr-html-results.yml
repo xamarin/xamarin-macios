@@ -22,9 +22,6 @@ resources:
   pipelines:
   - pipeline: macios
     source: xamarin-macios
-    trigger:
-      stages:
-      - build_packages
 
 variables:
 - group: xamops-azdev-secrets
