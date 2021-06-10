@@ -18,11 +18,24 @@ steps:
   clean: true
   lfs: true
 
+# do not trust clean workspace
+- pwsh: |
+    $downloadsPath = Join-Path $(PIPELINE.WORKSPACE) "macios"
+    Write-Host "Removing data in path $downloadsPath"
+    if (Test-Path -Path $downloadsPath) { # true if path exists and a dir
+      rm -Rf "$downloadsPath/*"
+    }
+  displayName: 'Clean download dir'
+
 # downlod ALL artifacts
 - download: macios 
 
 - pwsh: |
     $configFile = Join-Path $(PIPELINE.WORKSPACE) "macios" "build-configuration" "configuration.json"
+    if (-not (Test-Path -Path $configFile -PathType Leaf)) {
+      Write-Host "Configuration file is missing!"
+      exit 1
+    }
     Get-Content $configFile | Write-Host
     $config = Get-Content $configFile | ConvertFrom-Json
     # export variables to be present in the othe steps
