@@ -1,7 +1,7 @@
 Microsoft.DotNet.Mlaunch
 ------------------------
 
-mlaunch is a closed source tool used to interact with Apple simulators and devices.
+mlaunch is a closed source internal tool used to interact with Apple simulators and devices.
 
 Inside of this NuGet, you can find a MacOS app. The tool itself is a self-contained (includes the mono runtime) .NET command line application.
 
