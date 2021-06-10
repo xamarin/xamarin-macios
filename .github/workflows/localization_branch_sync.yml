@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: 'Check for Fork'
-      run: echo "Action cannot be executed on forks"
+      run: echo "Action cannot be executed on forks" && exit 1
       if: ${{ secrets.GITHUB_TOKEN == "" }}
 
     - uses: dawidd6/action-delete-branch@v3
