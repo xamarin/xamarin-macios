@@ -53,6 +53,7 @@ cp -c "$XAM_TOP/global6.json" "$MLAUNCH_WORK_DIR/global.json"
 # Version calculation
 XCODE_VERSION=$(grep XCODE_VERSION= "$XAM_TOP/Make.config" | sed 's/.*=//')
 
+# Build number is in the format yyyymmdd.r e.g. 20210610.4
 BUILD_NUMBER_YY=${BUILD_NUMBER:2:2}
 BUILD_NUMBER_MM=${BUILD_NUMBER:4:2}
 BUILD_NUMBER_DD=${BUILD_NUMBER:6:2}
@@ -62,7 +63,7 @@ VERSION="$(expr $BUILD_NUMBER_YY \* 1000 + $BUILD_NUMBER_MM \* 50 + $BUILD_NUMBE
 
 # We have to build from within the dir to respect the global.json
 cd "$MLAUNCH_WORK_DIR"
-"$DOTNET6" pack --version-suffix "$VERSION\_$MACCORE_HASH" /p:VersionPrefix=$XCODE_VERSION
+"$DOTNET6" pack --version-suffix "${VERSION}_${MACCORE_HASH}" /p:VersionPrefix=$XCODE_VERSION
 
 # We store mlaunch NuGet in [build work root]/mlaunch
 cd "$XAM_TOP"
