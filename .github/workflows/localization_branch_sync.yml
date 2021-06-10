@@ -10,10 +10,14 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  Replace Localization Branch:
+  replaceLocalizationBranch:
     name: 'Replace Localization Branch'
     runs-on: ubuntu-latest
     steps:
+    - name: 'Check for Fork'
+      run: echo "Action cannot be executed on forks"
+      if: ${{ secrets.GITHUB_TOKEN == "" }}
+
     - uses: dawidd6/action-delete-branch@v3
       name: 'delete'
       if: ${{ github.event.pull_request.merged == true && github.event.pull_request.user.login == 'github-actions[bot]' && contains(github.event.pull_request.labels.*.names, 'localization_bot') }}
@@ -29,7 +33,3 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         branch: 'Localization'
-
-    - name: 'Check for Fork'
-      run: echo "Action cannot be executed on forks"
-      if: ${{ secrets.GITHUB_TOKEN == "" }}
