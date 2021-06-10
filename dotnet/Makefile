@@ -15,6 +15,7 @@ $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(platform)_NUGET_VERSION_NO_METAD
 
 define DefineTargets
 $(1)_NUGET_TARGETS = \
+	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/data/UnixFilePermissions.xml \
 	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/Sdk/AutoImport.props \
 	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/Sdk/Sdk.props \
 	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Microsoft.$(1).Sdk.SupportedTargetPlatforms.props \
@@ -43,6 +44,7 @@ DIRECTORIES += \
 	$(DOTNET_NUPKG_DIR) \
 	$(DOTNET_PKG_DIR) \
 	$(DOTNET_FEED_DIR) \
+	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/data) \
 	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/Sdk) \
 	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/targets) \
 	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Templates) \
@@ -62,7 +64,7 @@ $(DIRECTORIES):
 
 CURRENT_HASH_LONG:=$(shell git log -1 --pretty=%H)
 
-$(DOTNET_DESTDIR)/Microsoft.%: Microsoft.% | $(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/Sdk $(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/targets $(DOTNET_DESTDIR)/Microsoft.$(platform).Templates) \
+$(DOTNET_DESTDIR)/Microsoft.%: Microsoft.% | $(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/data $(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/Sdk $(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/targets $(DOTNET_DESTDIR)/Microsoft.$(platform).Templates) \
 		$(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Windows.Sdk/Sdk $(DOTNET_DESTDIR)/Microsoft.$(platform).Windows.Sdk/targets)
 	$(Q) $(CP) $< $@
 
@@ -141,7 +143,7 @@ define CreateNuGetTemplate
 nupkgs/$(1)$(4).$(2)+$(NUGET_BUILD_METADATA).nupkg: $(TEMPLATED_FILES) $(WORKLOAD_TARGETS) $(3) package/$(1)/package.csproj $(wildcard package/*.csproj) $(wildcard $(DOTNET_DESTDIR)/$(1)/* $(DOTNET_DESTDIR)/$(1)/*/* $(DOTNET_DESTDIR)/$(1)/*/*/* $(DOTNET_DESTDIR)/$(1)/*/*/*/*) global.json
 	@# Delete any versions of the nuget we're building
 	$$(Q) rm -f nupkgs/$(1).*.nupkg
-	$$(Q_PACK) $(DOTNET6) pack package/$(1)/package.csproj -p:VersionBand=$(DOTNET6_VERSION_BAND) --output "$$(dir $$@)" $(DOTNET_PACK_VERBOSITY)
+	$$(Q_PACK) $(DOTNET6) pack package/$(1)/package.csproj -p:VersionBand=$(DOTNET6_VERSION_BAND) --output "$$(dir $$@)" $(DOTNET_PACK_VERBOSITY) "/bl:$$@.binlog"
 	@# Nuget pack doesn't add the metadata to the filename, but we want that, so rename nuget to contain the full name
 	$$(Q) mv "nupkgs/$(1)$(4).$(2).nupkg" "$$@"
 	@# Clean the local feed
@@ -154,7 +156,7 @@ define CreateWindowsNuGetTemplate
 nupkgs/$(1).$(2)+$(NUGET_BUILD_METADATA).nupkg: $(3) $(WORKLOAD_TARGETS) package/$(1)/package.csproj $(wildcard package/*.csproj) $(wildcard $(DOTNET_DESTDIR)/$(1)/* $(DOTNET_DESTDIR)/$(1)/*/* $(DOTNET_DESTDIR)/$(1)/*/*/* $(DOTNET_DESTDIR)/$(1)/*/*/*/*) global.json
 	@# Delete any versions of the nuget we're building
 	$$(Q) rm -f nupkgs/$(1).*.nupkg
-	$$(Q_PACK) $(DOTNET6) pack package/$(1)/package.csproj --output "$$(dir $$@)" $(DOTNET_PACK_VERBOSITY)
+	$$(Q_PACK) $(DOTNET6) pack package/$(1)/package.csproj --output "$$(dir $$@)" $(DOTNET_PACK_VERBOSITY) "/bl:$$@.binlog"
 	@# Nuget pack doesn't add the metadata to the filename, but we want that, so rename nuget to contain the full name
 	$$(Q) mv "nupkgs/$(1).$(2).nupkg" "$$@"
 	@# Clean the local feed
