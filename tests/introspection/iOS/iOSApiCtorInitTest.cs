@@ -233,10 +233,14 @@ namespace Introspection {
 				// the device .ctor ends up calling `initWithBuffer:offset:` and crash on older (non 4k AppleTV devices)
 				// MPSPredicate.mm:102: failed assertion `[MPSPredicate initWithBuffer:offset:] device: Apple A8 GPU does not support predication.'
 				return ((Runtime.Arch == Arch.DEVICE) && (UIScreen.MainScreen.NativeBounds.Width <= 1920));
+			case "NSMetadataQuery":
+				// hangs on xcode 13 beta 1 on simulator
+				if (TestRuntime.CheckXcodeVersion (13, 0))
+					return true;
+				break;
 #endif
-			default:
-				return base.Skip (type);
 			}
+			return base.Skip (type);
 		}
 
 		static List<NSObject> do_not_dispose = new List<NSObject> ();
