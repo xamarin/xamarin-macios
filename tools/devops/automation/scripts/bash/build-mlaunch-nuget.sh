@@ -2,12 +2,18 @@
 
 # env var should have been defined by the CI
 if test -z "$XAM_TOP"; then
-    echo "Variable XAM_TOP is missing."
+    echo "Variable XAM_TOP is missing"
     exit 1
 fi
 
 if test -z "$MACCORE_TOP"; then
-    echo "Variable MACCORE_TOP is missing."
+    echo "Variable MACCORE_TOP is missing"
+    exit 1
+fi
+
+BUILD_NUMBER=$1
+if test -z "$BUILD_NUMBER"; then
+    echo "Please supply build number as the first argument"
     exit 1
 fi
 
@@ -33,7 +39,6 @@ mkdir -p "$MLAUNCH_WORK_DIR/mlaunch/lib/mlaunch"
 DOTNET6=$(make -C tools/devops print-abspath-variable VARIABLE=DOTNET6 | grep "^DOTNET6=" | sed -e 's/^DOTNET6=//')
 IOS_DESTDIR=$(make -C tools/devops print-abspath-variable VARIABLE=IOS_DESTDIR | grep "^IOS_DESTDIR=" | sed -e 's/^IOS_DESTDIR=//')
 MONOTOUCH_PREFIX=$(make -C tools/devops print-abspath-variable VARIABLE=MONOTOUCH_PREFIX | grep "^MONOTOUCH_PREFIX=" | sed -e 's/^MONOTOUCH_PREFIX=//')
-XCODE_VERSION=$(grep XCODE_VERSION= "$XAM_TOP/Make.config" | sed 's/.*=//')
 
 # Copy mlaunch to staging area
 cp -c -r "$MACCORE_TOP/tools/mlaunch/Xamarin.Hosting/Xamarin.Launcher/bin/Debug/mlaunch.app" "$MLAUNCH_WORK_DIR/mlaunch/lib/mlaunch"
@@ -45,9 +50,19 @@ cp -c "$XAM_TOP/tools/mlaunch/Microsoft.DotNet.Mlaunch.csproj" "$MLAUNCH_WORK_DI
 # We need to override global.json to use .NET 6.0
 cp -c "$XAM_TOP/global6.json" "$MLAUNCH_WORK_DIR/global.json"
 
+# Version calculation
+XCODE_VERSION=$(grep XCODE_VERSION= "$XAM_TOP/Make.config" | sed 's/.*=//')
+
+BUILD_NUMBER_YY=${BUILD_NUMBER:2:2}
+BUILD_NUMBER_MM=${BUILD_NUMBER:4:2}
+BUILD_NUMBER_DD=${BUILD_NUMBER:6:2}
+BUILD_NUMBER_R=${BUILD_NUMBER:9}
+
+VERSION="$(expr $BUILD_NUMBER_YY \* 1000 + $BUILD_NUMBER_MM \* 50 + $BUILD_NUMBER_DD).$BUILD_NUMBER_R"
+
 # We have to build from within the dir to respect the global.json
 cd "$MLAUNCH_WORK_DIR"
-"$DOTNET6" pack --version-suffix "$MACCORE_HASH" /p:VersionPrefix=$XCODE_VERSION
+"$DOTNET6" pack --version-suffix "$VERSION\_$MACCORE_HASH" /p:VersionPrefix=$XCODE_VERSION
 
 # We store mlaunch NuGet in [build work root]/mlaunch
 cd "$XAM_TOP"
