@@ -63,7 +63,7 @@ VERSION="$(expr $BUILD_NUMBER_YY \* 1000 + $BUILD_NUMBER_MM \* 50 + $BUILD_NUMBE
 
 # We have to build from within the dir to respect the global.json
 cd "$MLAUNCH_WORK_DIR"
-"$DOTNET6" pack --version-suffix "${VERSION}_${MACCORE_HASH}" /p:VersionPrefix=$XCODE_VERSION
+"$DOTNET6" pack --version-suffix "$VERSION-$MACCORE_HASH" /p:VersionPrefix=$XCODE_VERSION
 
 # We store mlaunch NuGet in [build work root]/mlaunch
 cd "$XAM_TOP"
