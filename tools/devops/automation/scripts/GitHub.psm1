@@ -152,19 +152,14 @@ function Set-GitHubStatus {
     }
 
     $requestContext = $Context
-    # before we set a status, we are going to check if it is present and a success, if it is a success, do not
-    # re-set it. The reason for this is that statuses are linked to the hash of a commit. A commit hash can be in two
-    # different branches. If a hash had a success we will not set the status and we will create a warning and a new context
-    # Why only on success, well we do want to support rebuilds, in any non-success case we want to step over
+    # Check if the status was already set, if it was we will override yet print a message for the user to know this action was done.
     $presentStatuses = Invoke-Request -Request { Invoke-RestMethod -Uri $url -Headers $headers -Method "GET" -ContentType 'application/json' }
 
     # try to find the status with the same context and make a decision, this is not a dict but an array :/ 
     foreach ($s in $presentStatuses) {
         # we found a status from a previous build that was a success, we do not want to step on it
         if (($s.context -eq $Context) -and ($s.state -eq "success")) {
-            Write-Host "WARNING: Not setting status for $Context because it was already set as a success, using '$Context $Env:BUILD_SOURCEBRANCHNAME' instead."
-            # modify the context to include the branch name in the status
-            $requestContext = "$Context $Env:BUILD_SOURCEBRANCHNAME"
+            Write-Host "WARNING: Found status for $Context because it was already set as a success, overriding result."
         }
     }
 
@@ -558,6 +553,20 @@ function New-GitHubSummaryComment {
         }
     } else {
         Write-Host "Artifacts were not provided."
+    }
+
+    if (Test-Path $TestSummaryPath -PathType Leaf) { # if present we did get results and add the links, else skip
+        $githubPagePrefix = "https://xamarin.github.io/macios.ci"
+        if (-not [string]::IsNullOrEmpty($Env:PR_ID)) {
+            $githubPagePrefix = "$githubPagePrefix/pr/PR$Env:PR_ID/$Env:BUILD_BUILDID"
+            $sb.AppendLine("# GitHub pages")
+            $sb.AppendLine()
+            $sb.AppendLine("Results can be found in the following github pages (it might take some time to publish):")
+            $sb.AppendLine()
+            $sb.AppendLine("* [Test results]($githubPagePrefix/HtmlReport-sim/tests/vsdrops_index.html)")
+            $sb.AppendLine("* [API diff ]($githubPagePrefix/HtmlReport-sim/api-diff/api-diff.html)")
+            $sb.AppendLine("* [API & Generator diff]($githubPagePrefix/apicomparison/api-diff.html)")
+        }
     }
 
     $headerLinks = $sb.ToString()
