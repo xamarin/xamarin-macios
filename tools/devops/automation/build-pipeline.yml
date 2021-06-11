@@ -271,6 +271,13 @@ stages:
           keyringPass: $(pass--lab--mac--builder--keychain)
           checkDemands: ${{ config['checkDemands'] }}
 
+    - template: templates/windows/stage.yml
+      parameters:
+        stageName: windows-integration
+        displayName: 'Windows Integration Tests'
+        pool: 'VSEng-Xamarin-Mac-Devices' # currently ignored until the VS team provides a real one
+        statusContext: 'Windows Integration Tests'
+
 - ${{ if eq(parameters.runSamples, true) }}:
   # TODO: Not the real step
   - stage: sample_testing
