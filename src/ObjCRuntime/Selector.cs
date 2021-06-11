@@ -42,9 +42,6 @@ namespace ObjCRuntime {
 		IntPtr handle;
 		string name;
 
-
-		internal Selector () {}
-
 		public Selector (IntPtr sel)
 		{
 			if (!sel_isMapped (sel))
@@ -52,6 +49,14 @@ namespace ObjCRuntime {
 
 			this.handle = sel;
 			name = GetName (sel);
+		}
+
+		// this .ctor is required, like for any INativeObject implementation
+		// even if selectors are not disposable
+		internal Selector (IntPtr handle, bool /* unused */ owns)
+		{
+			this.handle = handle;
+			name = GetName (handle);
 		}
 
 		public Selector (string name)
@@ -111,7 +116,7 @@ namespace ObjCRuntime {
 			if (!sel_isMapped (sel))
 				return null;
 			// create the selector without duplicating the sel_isMapped check
-			return new Selector () { handle = sel, name = GetName (sel) };
+			return new Selector (sel, false);
 		}
 
 		public static Selector Register (IntPtr handle)
