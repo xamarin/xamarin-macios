@@ -84,27 +84,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		</_CodesignAppBundleDependsOn>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(UsingAppleNETSdk)' != 'true'">
-		<CleanDependsOn>
-			$(CleanDependsOn);
-			_CleanAppBundle;
-			_CleanIntermediateToolOutput;
-		</CleanDependsOn>
-	</PropertyGroup>
-
-	<Target Name="_CleanAppBundle" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_GenerateBundleName">
-		<RemoveDir Directories="$(_AppBundlePath)" />
-	</Target>
-
-	<Target Name="_CleanIntermediateToolOutput">
-		<RemoveDir Directories="$(IntermediateOutputPath)actool" />
-		<RemoveDir Directories="$(IntermediateOutputPath)ibtool" />
-		<RemoveDir Directories="$(IntermediateOutputPath)metal" />
-		<RemoveDir Directories="$(IntermediateOutputPath)scntool" />
-		<RemoveDir Directories="$(IntermediateOutputPath)TextureAtlas" />
-		<RemoveDir Directories="$(IntermediateOutputPath)" />
-	</Target>
-
 	<Target Name="_CodesignAppBundle" Condition="'$(_RequireCodeSigning)'" DependsOnTargets="$(_CodesignAppBundleDependsOn)">
 		<Codesign
 			Condition="'$(IsMacEnabled)' == 'true'"
