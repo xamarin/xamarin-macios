@@ -351,6 +351,18 @@ namespace Introspection {
 					break;
 				}
 				break;
+			case "MTLCommandBufferDescriptor":
+				switch (name) {
+				case "errorOptions":
+				case "setErrorOptions:":
+				case "retainedReferences":
+				case "setRetainedReferences:":
+					// iOS 15 sim fails, API added in 14.0
+					if (TestRuntime.CheckXcodeVersion (13, 0))
+						return true;
+					break;
+				}
+				break;
 #if __TVOS__ || __MACCATALYST__
 			// broken with Xcode 12 beta 1
 			case "CKDiscoveredUserInfo":

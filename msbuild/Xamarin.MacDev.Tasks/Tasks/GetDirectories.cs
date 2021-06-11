@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Build.Framework;
 using Xamarin.Messaging.Build.Client;
 
-namespace Xamarin.iOS.Tasks
+namespace Xamarin.MacDev.Tasks
 {
 	public class GetDirectories : GetDirectoriesTaskBase, ITaskCallback, ICancelableTask
 	{
@@ -28,3 +28,4 @@ namespace Xamarin.iOS.Tasks
 		}
 	}
 }
+

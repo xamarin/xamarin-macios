@@ -1,0 +1,2 @@
+!deprecated-attribute-missing! SFSpeechRecognitionRequest::interactionIdentifier missing a [Deprecated] attribute
+!deprecated-attribute-missing! SFSpeechRecognitionRequest::setInteractionIdentifier: missing a [Deprecated] attribute

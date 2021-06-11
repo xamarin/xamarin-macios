@@ -59,6 +59,8 @@ namespace MonoTouchFixtures.Security {
 #endif
 		public void AddQueryRemove_Identity ()
 		{
+			if (TestRuntime.CheckXcodeVersion (13, 0))
+				Assert.Ignore ("code == errSecInternal (-26276)");
 			using (SecRecord rec = new SecRecord (SecKind.Identity))
 			using (var id = IdentityTest.GetIdentity ()) {
 				rec.SetValueRef (id);
