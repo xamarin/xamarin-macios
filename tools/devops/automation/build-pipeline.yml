@@ -273,7 +273,7 @@ stages:
 
     - template: templates/windows/stage.yml
       parameters:
-        stageName: windows-integration
+        stageName: windows_integration
         displayName: 'Windows Integration Tests'
         pool: 'VSEng-Xamarin-Mac-Devices' # currently ignored until the VS team provides a real one
         statusContext: 'Windows Integration Tests'
