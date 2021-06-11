@@ -1,0 +1,3 @@
+!missing-enum-value! CNErrorCode native value CNErrorCodeChangeHistoryInvalidFetchRequest = 605 not bound
+!missing-selector! CNSaveRequest::setTransactionAuthor: not bound
+!missing-selector! CNSaveRequest::transactionAuthor not bound

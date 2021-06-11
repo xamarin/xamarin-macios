@@ -242,7 +242,11 @@ namespace MonoTouchFixtures.CoreGraphics {
 				}
 				using (var provider = new CGDataProvider (icc)) {
 					using (var cs = CGColorSpace.CreateIccData (provider)) {
-						TestICC (cs);
+						// broke? with Xcode 13 beta 1 (iOS, tvOS, watchOS)
+						if (TestRuntime.CheckXcodeVersion (13, 0))
+							Assert.Null (cs, "null colorspace");
+						else
+							TestICC (cs);
 					}
 				}
 			}

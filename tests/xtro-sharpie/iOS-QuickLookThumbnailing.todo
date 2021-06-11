@@ -1,0 +1,3 @@
+!missing-selector! QLThumbnailReply::extensionBadge not bound
+!missing-selector! QLThumbnailReply::setExtensionBadge: not bound
+!missing-selector! QLThumbnailRepresentation::contentRect not bound

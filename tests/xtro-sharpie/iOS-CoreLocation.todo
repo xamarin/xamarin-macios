@@ -1,0 +1,5 @@
+!missing-enum! CLLocationPushServiceError not bound
+!missing-field! CLLocationPushServiceErrorDomain not bound
+!missing-protocol! CLLocationPushServiceExtension not bound
+!missing-selector! CLLocationManager::startMonitoringLocationPushesWithCompletion: not bound
+!missing-selector! CLLocationManager::stopMonitoringLocationPushes not bound

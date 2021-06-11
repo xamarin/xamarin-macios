@@ -2,3 +2,9 @@
 !missing-selector! CLLocationManager::disallowDeferredLocationUpdates not bound
 !missing-selector! CLLocationManager::startRangingBeaconsInRegion: not bound
 !missing-selector! CLLocationManager::stopRangingBeaconsInRegion: not bound
+## appended from unclassified file
+!missing-enum! CLLocationPushServiceError not bound
+!missing-field! CLLocationPushServiceErrorDomain not bound
+!missing-protocol! CLLocationPushServiceExtension not bound
+!missing-selector! CLLocationManager::startMonitoringLocationPushesWithCompletion: not bound
+!missing-selector! CLLocationManager::stopMonitoringLocationPushes not bound

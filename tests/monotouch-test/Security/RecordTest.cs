@@ -321,6 +321,9 @@ namespace MonoTouchFixtures.Security {
 #endif
 		public void IdentityRecordTest ()
 		{
+			if (TestRuntime.CheckXcodeVersion (13, 0))
+				Assert.Ignore ("code == errSecInternal (-26276)");
+
 			using (var identity = IdentityTest.GetIdentity ())
 			using (var rec = new SecRecord (identity)) {
 				SecStatusCode code = SecKeyChain.Add (rec);
