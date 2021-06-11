@@ -53,6 +53,7 @@ namespace ObjCRuntime {
 
 		// this .ctor is required, like for any INativeObject implementation
 		// even if selectors are not disposable
+		[Preserve (Conditional = true)]
 		internal Selector (IntPtr handle, bool /* unused */ owns)
 		{
 			this.handle = handle;
