@@ -2212,6 +2212,18 @@ namespace Registrar {
 				header.WriteLine ("#import <CoreImage/CoreImage.h>");
 				header.WriteLine ("#import <CoreImage/CIFilterBuiltins.h>");
 				return;
+			case "iAd":
+				if (App.SdkVersion.Major >= 13) {
+					// most of the framework has been obliterated from the headers
+					header.WriteLine ("@class ADBannerView;");
+					header.WriteLine ("@class ADInterstitialAd;");
+					header.WriteLine ("@protocol ADBannerViewDelegate <NSObject>");
+					header.WriteLine ("@end");
+					header.WriteLine ("@protocol ADInterstitialAdDelegate <NSObject>");
+					header.WriteLine ("@end");
+					return;
+				}
+				goto default;
 			default:
 				h = string.Format ("<{0}/{0}.h>", ns);
 				break;

@@ -535,4 +535,38 @@ namespace AVFoundation {
 		}
 	}
 #endif
+
+#if !XAMCORE_4_0
+	// "compatibility shim" in xcode 12.5 were removed in xcode 13
+	public partial class AVPlayerInterstitialEventController {
+
+		[Obsolete ("Use 'GetInterstitialEventController' instead.")]
+		public static AVPlayerInterstitialEventController GetPlayerInterstitialEventController (AVPlayer primaryPlayer)
+		{
+			return GetInterstitialEventController (primaryPlayer);
+		}
+
+		[Obsolete ("Use 'Events' instead.")]
+		public virtual AVPlayerInterstitialEvent[] InterstitialEvents {
+			get { return Events; }
+			set { Events = value; }
+		}
+	}
+
+	public partial class AVPlayerInterstitialEvent {
+
+		[Obsolete ("Use 'TemplateItems' instead.")]
+		public virtual AVPlayerItem[] InterstitialTemplateItems {
+			get { return TemplateItems; }
+		}
+	}
+
+	public partial class AVPlayerInterstitialEventObserver {
+
+		[Obsolete ("Use 'Events' instead.")]
+		public virtual AVPlayerInterstitialEvent[] InterstitialEvents {
+			get { return Events; }
+		}
+	}
+#endif
 }

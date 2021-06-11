@@ -38,3 +38,7 @@
 !missing-type! OSLogMessageComponent not bound
 !missing-type! OSLogPosition not bound
 !missing-type! OSLogStore not bound
+## appended from unclassified file
+!missing-enum! OSLogStoreScope not bound
+!missing-selector! +OSLogStore::storeWithScope:error: not bound
+!missing-selector! OSLogStore::init not bound

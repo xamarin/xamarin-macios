@@ -50,3 +50,8 @@
 !missing-pinvoke! CVOpenGLTextureIsFlipped is not bound
 !missing-pinvoke! CVOpenGLTextureRelease is not bound
 !missing-pinvoke! CVOpenGLTextureRetain is not bound
+## appended from unclassified file
+!missing-field! kCVImageBufferAmbientViewingEnvironmentKey not bound
+!missing-field! kCVImageBufferRegionOfInterestKey not bound
+!missing-pinvoke! CVIsCompressedPixelFormatAvailable is not bound
+!missing-pinvoke! CVPixelBufferCopyCreationAttributes is not bound

@@ -128,3 +128,8 @@
 !missing-selector! NSFileProviderManager::runTestingOperations:error: not bound
 !missing-selector! NSFileProviderRequest::domainVersion not bound
 !missing-type! NSFileProviderDomainVersion not bound
+## appended from unclassified file
+!missing-enum! NSFileProviderDomainRemovalMode not bound
+!missing-protocol! NSFileProviderUserInteractionSuppressing not bound
+!missing-protocol-member! NSFileProviderItem::typeAndCreator not found
+!missing-selector! +NSFileProviderManager::removeDomain:mode:completionHandler: not bound

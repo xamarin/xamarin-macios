@@ -1,0 +1,12 @@
+!unknown-field! ADBannerContentSizeIdentifierLandscape bound
+!unknown-field! ADBannerContentSizeIdentifierPortrait bound
+!unknown-field! ADErrorDomain bound
+!unknown-native-enum! ADAdType bound
+!unknown-native-enum! ADError bound
+!unknown-native-enum! ADInterstitialPresentationPolicy bound
+!unknown-pinvoke! ADClampedBannerSize bound
+!unknown-protocol! ADBannerViewDelegate bound
+!unknown-protocol! ADInterstitialAdDelegate bound
+!unknown-type! ADBannerView bound
+!unknown-type! ADInterstitialAd bound
+!unknown-type! ADInterstitialAdPresentationViewController bound

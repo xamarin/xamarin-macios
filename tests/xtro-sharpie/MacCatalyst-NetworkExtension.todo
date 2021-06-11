@@ -78,3 +78,16 @@
 !missing-type! NETransparentProxyManager not bound
 !missing-type! NETransparentProxyNetworkSettings not bound
 !missing-type! NETransparentProxyProvider not bound
+## appended from unclassified file
+!missing-enum! NEHotspotNetworkSecurityType not bound
+!missing-selector! NEAppPushManager::matchPrivateLTENetworks not bound
+!missing-selector! NEAppPushManager::setMatchPrivateLTENetworks: not bound
+!missing-selector! NEAppPushProvider::start not bound
+!missing-selector! NEHotspotNetwork::securityType not bound
+!missing-selector! NEPrivateLTENetwork::mobileCountryCode not bound
+!missing-selector! NEPrivateLTENetwork::mobileNetworkCode not bound
+!missing-selector! NEPrivateLTENetwork::setMobileCountryCode: not bound
+!missing-selector! NEPrivateLTENetwork::setMobileNetworkCode: not bound
+!missing-selector! NEPrivateLTENetwork::setTrackingAreaCode: not bound
+!missing-selector! NEPrivateLTENetwork::trackingAreaCode not bound
+!missing-type! NEPrivateLTENetwork not bound
