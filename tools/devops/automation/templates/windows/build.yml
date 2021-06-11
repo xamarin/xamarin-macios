@@ -13,3 +13,24 @@ steps:
 - pwsh : |
     gci env: | format-table -autosize -wrap
   displayName: 'Dump Environment'
+
+- task: ChocolateyToolInstaller@1
+  displayName: 'Install Chocolatey'
+
+- pwsh: |
+    Write-Host "Installing dependecies"
+    choco install 7zip.install --pre
+  displayName: 'Install Dependencies'
+
+- task: DownloadPipelineArtifact@2
+  displayName: Download Windows tests
+  inputs:
+    patterns: '**/dotnet-test-package.7z'
+    allowFailedBuilds: true
+    path: $(Build.SourcesDirectory)/artifacts/tmp
+
+- pwsh: |
+    ls -Rla $(Build.SourcesDirectory)/artifacts/tmp
+    7z x $(Build.SourcesDirectory)/artifacts/tmp/dotnet-test-package/mac-test-package.7z -o$(Build.SourcesDirectory)/artifacts/ -bb1
+    ls -Rla $(Build.SourcesDirectory)/artifacts/dotnet-test-package
+  displayName: Expand tests.

@@ -393,6 +393,21 @@ steps:
 - bash: |
     set -x
     set -e
+
+    make -C $(Build.SourcesDirectory)/xamarin-macios/tests dotnet-test-package
+  displayName: 'Package Windows tests'
+  continueOnError: true # not a terrible blocking issue
+
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Windows tests'
+  inputs:
+    targetPath: $(Build.SourcesDirectory)/xamarin-macios/tests/dotnet-test-package.7z
+    artifactName: dotnet-test-package
+  continueOnError: true
+
+- bash: |
+    set -x
+    set -e
     echo "Running tests on $AGENT_NAME"
     echo "##vso[task.setvariable variable=TESTS_BOT;isOutput=true]$AGENT_NAME"
 
