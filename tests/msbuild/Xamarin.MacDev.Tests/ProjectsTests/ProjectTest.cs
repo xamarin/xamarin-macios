@@ -4,6 +4,7 @@ using System.Linq;
 using NUnit.Framework;
 
 using Xamarin.Tests;
+using Xamarin.Utils;
 
 namespace Xamarin.iOS.Tasks
 {
@@ -37,8 +38,8 @@ namespace Xamarin.iOS.Tasks
 				Assert.IsFalse (Directory.Exists (AppBundlePath + ".mSYM"), "App bundle .mSYM exists after cleanup: {0} ", AppBundlePath + ".mSYM");
 
 				var baseDir = Path.GetDirectoryName (csproj);
-				var objDir = Path.Combine (baseDir, "obj", Platform, Config);
-				var binDir = Path.Combine (baseDir, "bin", Platform, Config);
+				var objDir = MonoTouchProject.ProjectObjPath;
+				var binDir = MonoTouchProject.ProjectBinPath;
 
 				if (Directory.Exists (objDir)) {
 					var paths = Directory.EnumerateFiles (objDir, "*.*", SearchOption.AllDirectories)
@@ -64,15 +65,38 @@ namespace Xamarin.iOS.Tasks
 			TestFilesDoNotExist (AppBundlePath, UnexpectedAppFiles);
 
 			if (Mode != ExecutionMode.DotNet) {
-				var coreFiles = GetCoreAppFiles (appName.Replace (" ", "") + ".exe", appName.Replace (" ", ""));
+				var coreFiles = GetCoreAppFiles (Path.GetFileNameWithoutExtension (mtouchPaths.AppBundlePath) + ".exe", Path.GetFileNameWithoutExtension (mtouchPaths.AppBundlePath));
+				string assemblyBundlePath;
+				string frameworksBundlePath;
+				string executableBundlePath;
+
+				switch (ApplePlatform) {
+				case ApplePlatform.iOS:
+				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
+					assemblyBundlePath = AppBundlePath;
+					frameworksBundlePath = AppBundlePath;
+					executableBundlePath = AppBundlePath;
+					break;
+				case ApplePlatform.MacOSX:
+				case ApplePlatform.MacCatalyst:
+					assemblyBundlePath = Path.Combine (AppBundlePath, "Contents", "MonoBundle");
+					frameworksBundlePath = Path.Combine (AppBundlePath, "Contents");
+					executableBundlePath = Path.Combine (AppBundlePath, "Contents", "MacOS");
+					break;
+				default:
+					throw new InvalidOperationException ($"Unknown platform: {ApplePlatform}");
+				}
+
 				var baseDirs = new string [] {
-				Path.Combine (AppBundlePath, ".monotouch-32"),
-				Path.Combine (AppBundlePath, ".monotouch-64"),
-				AppBundlePath,
-				Path.Combine (AppBundlePath, "Frameworks", "Xamarin.Sdk.framework", "MonoBundle", ".monotouch-32"),
-				Path.Combine (AppBundlePath, "Frameworks", "Xamarin.Sdk.framework", "MonoBundle", ".monotouch-64"),
-				Path.Combine (AppBundlePath, "Frameworks", "Xamarin.Sdk.framework", "MonoBundle"),
-			};
+					Path.Combine (assemblyBundlePath, ".monotouch-32"),
+					Path.Combine (assemblyBundlePath, ".monotouch-64"),
+					assemblyBundlePath,
+					Path.Combine (frameworksBundlePath, "Frameworks", "Xamarin.Sdk.framework", "MonoBundle", ".monotouch-32"),
+					Path.Combine (frameworksBundlePath, "Frameworks", "Xamarin.Sdk.framework", "MonoBundle", ".monotouch-64"),
+					Path.Combine (frameworksBundlePath, "Frameworks", "Xamarin.Sdk.framework", "MonoBundle"),
+					executableBundlePath,
+				};
 				TestFilesExists (baseDirs, coreFiles);
 			}
 
@@ -85,6 +109,16 @@ namespace Xamarin.iOS.Tasks
 			}
 
 			return mtouchPaths;
+		}
+
+		protected void BuildCommonProject (string name)
+		{
+			BuildProject (Configuration.GetCommonProjectPath (name, isDotNet: false, platform: ApplePlatform));
+		}
+
+		protected void ExecuteProject ()
+		{
+			Configuration.ExecuteWithMagicWordAndAssert (MonoTouchProject.ProjectCSProjPath, ApplePlatform, isDotNetProject: false, projectConfiguration: Config, projectPlatform: Platform);
 		}
 	}
 }

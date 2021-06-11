@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net6.0-macos</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <MonoBundlingExtraArgs>--registrar:static --link_flags=-Wl,../../../../../test-libraries/.libs/macos/libtest.a</MonoBundlingExtraArgs>
+    <RuntimeIdentifier>osx-x64</RuntimeIdentifier>
+  </PropertyGroup>
+  <ItemGroup>
+    <StaticRegistrarReference Include="../../../../../bindings-test/dotnet/macOS/bin/Debug/net6.0-macos/bindings-test.dll" Link="." />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Info.plist" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="../../AppDelegate.cs" />
+  </ItemGroup>
+  <Target Name="BuildTestLibraries" BeforeTargets="BeforeBuild">
+    <Exec Command="make build -C ../../../../../bindings-test/dotnet/macOS" />
+  </Target>
+</Project>

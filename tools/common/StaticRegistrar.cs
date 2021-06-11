@@ -4778,14 +4778,33 @@ namespace Registrar {
 			if (Target?.CachedLink == true)
 				throw ErrorHelper.CreateError (99, Errors.MX0099, "the static registrar should not execute unless the linker also executed (or was disabled). A potential workaround is to pass '-f' as an additional " + Driver.NAME + " argument to force a full build");
 
-			this.input_assemblies = assemblies;
+			var exceptions = new List<Exception> ();
+			var inputAssemblies = new List<AssemblyDefinition> ();
+			inputAssemblies.AddRange (assemblies);
 
-			foreach (var assembly in assemblies) {
+			if (App.StaticRegistrarReferences != null) {
+				if (App.LinkMode != LinkMode.None)
+					throw ErrorHelper.CreateError (4187, Errors.MX4187 /* "Can't add additional references for the static registrar when the managed linker is enabled." */);
+				foreach (var srr in App.StaticRegistrarReferences) {
+					var asm = Resolver.Load (srr);
+					if (inputAssemblies.Contains (asm)) {
+						ErrorHelper.CreateWarning (4186, Errors.MX4186 /* "The assembly '{0}' passed as an additional assembly to be processed by the static registrar has already been registered and will be ignored." */, srr);
+						continue;
+					}
+					inputAssemblies.Add (asm);
+				}
+			}
+
+			this.input_assemblies = inputAssemblies;
+
+			foreach (var assembly in input_assemblies) {
 				Driver.Log (3, "Generating static registrar for {0}", assembly.Name);
 				RegisterAssembly (assembly);
 			}
 
 			Generate (header_path, source_path);
+
+			ErrorHelper.ThrowIfErrors (exceptions);
 		}
 
 		void Generate (string header_path, string source_path)

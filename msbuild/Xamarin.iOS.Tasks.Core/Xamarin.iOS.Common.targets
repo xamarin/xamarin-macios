@@ -128,6 +128,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 	<PropertyGroup Condition="'$(_UsingXamarinSdk)' != 'true'">
 		<CreateAppBundleDependsOn>
+			$(CreateAppBundleDependsOn);
 			_DetectAppManifest;
 			_DetectSigningIdentity;
 			_CopyResourcesToBundle;
@@ -364,6 +365,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			AppExtensionReferences="@(_ResolvedAppExtensionReferences)"
 			ArchiveSymbols="$(MonoSymbolArchive)"
 			Verbosity="$(MtouchVerbosity)"
+			StaticRegistrarReference="@(StaticRegistrarReference)"
 			StandardOutputImportance="High"
 			XamarinSdkRoot="$(_XamarinSdkRoot)"
 			>

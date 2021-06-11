@@ -235,6 +235,9 @@ namespace Xamarin.Bundler {
 				},
 				true /* this is an internal option */
 			);
+			options.Add ("static-registrar-reference:", "Adds an assembly to be processed by the static registrar.", v => {
+				app.AddStaticRegistrarReference (v);
+			});
 			options.Add ("warn-on-type-ref=", "Warn if any of the comma-separated types is referenced by assemblies - both before and after linking.", v => {
 				app.WarnOnTypeRef.AddRange (v.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries));
 			});

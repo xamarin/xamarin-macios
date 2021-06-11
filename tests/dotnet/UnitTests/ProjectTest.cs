@@ -19,7 +19,8 @@ namespace Xamarin.Tests {
 			{ "MonoBundlingExtraArgs", "-v" },
 		};
 
-		string GetProjectPath (string project, string subdir = null)
+		// Retrieve projects from tests/dotnet/<project>/[<platform>/]<project>.csproj
+		string GetProjectPath (string project, string subdir = null, ApplePlatform? platform = null)
 		{
 			var project_dir = Path.Combine (Configuration.SourceRoot, "tests", "dotnet", project);
 			if (!string.IsNullOrEmpty (subdir))
@@ -33,6 +34,12 @@ namespace Xamarin.Tests {
 				throw new FileNotFoundException ($"Could not find the project or solution {project}");
 
 			return project_path;
+		}
+
+		// Retrieve projects from tests/common/TestProjects/<project>/dotnet/<platform>/<project>.csproj
+		string GetCommonProjectPath (string project, string subdir = null, ApplePlatform? platform = null)
+		{
+			return Configuration.GetCommonProjectPath (project, isDotNet: true, subdir: subdir, platform: platform);
 		}
 
 		void Clean (string project_path)

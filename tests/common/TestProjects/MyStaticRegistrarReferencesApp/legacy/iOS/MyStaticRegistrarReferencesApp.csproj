@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">iPhoneSimulator</Platform>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>MyStaticRegistrarReferencesApp</AssemblyName>
+    <TargetFrameworkIdentifier>Xamarin.iOS</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v1.0</TargetFrameworkVersion>
+    <MtouchExtraArgs>--registrar:static --gcc_flags=-Wl,../../../../../test-libraries/.libs/ios-fat/libtest.a</MtouchExtraArgs>
+    <OutputPath>bin\$(Configuration)</OutputPath>
+    <MtouchArch Condition="'$(Platform)' == 'iPhoneSimulator'">x86_64</MtouchArch>
+    <MtouchArch Condition="'$(Platform)' == 'iPhone'">ARM64</MtouchArch>
+    <MtouchLink>None</MtouchLink>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Xamarin.iOS" />
+  </ItemGroup>
+  <ItemGroup>
+    <StaticRegistrarReference Include="../../../../../bindings-test/iOS/bin/Debug/bindings-test.dll" Link="." />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Info.plist" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="../../AppDelegate.cs" />
+  </ItemGroup>
+  <Target Name="BuildTestLibraries" BeforeTargets="BeforeBuild">
+    <MSBuild Projects="../../../../../bindings-test/iOS/bindings-test.csproj" Targets="Restore;Build" Properties="OutputPath=bin/Debug" />
+  </Target>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
+</Project>

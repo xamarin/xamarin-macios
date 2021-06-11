@@ -189,6 +189,7 @@
 			_ResolveAppExtensionReferences;
 			_ExtendAppExtensionReferences;
 			_ComputeLinkerArguments;
+			_ComputeStaticRegistrarReferencesToPublish;
 			ComputeFilesToPublish;
 			_LoadLinkerOutput;
 			_CompileNativeExecutable;
@@ -332,6 +333,18 @@
 
 		<!-- Create the file with our custom linker options -->
 		<WriteLinesToFile SessionId="$(BuildSessionId)" File="$(_CustomLinkerOptionsFile)" Lines="$(_CustomLinkerOptions)" Overwrite="true" />
+	</Target>
+
+	<Target Name="_ComputeStaticRegistrarReferencesToPublish" DependsOnTargets="_GenerateBundleName">
+		<ItemGroup>
+			<!-- Add any assemblies listed in StaticRegistrarReference to ResolvedFileToPublish, and make sure these assemblies are passed to the linker (that way the static registrar will process them) -->
+			<ResolvedFileToPublish Include="@(StaticRegistrarReference)" Condition="'%(StaticRegistrarReference.Link)' != ''">
+				<RelativePath>$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)$(PublishDir),$(_AppContentsPath)\%(StaticRegistrarReference.Link)\%(Filename)%(Extension))</RelativePath>
+				<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+				<PostprocessAssembly>true</PostprocessAssembly>
+				<TrimMode>copy</TrimMode>
+			</ResolvedFileToPublish>
+		</ItemGroup>
 	</Target>
 
 	<Target Name="_LoadLinkerOutput">
