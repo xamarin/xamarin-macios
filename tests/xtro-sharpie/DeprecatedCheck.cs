@@ -147,8 +147,12 @@ namespace Extrospection
 
 		void VisitItem (NamedDecl decl, VisitKind visitKind)
 		{
-			if (visitKind == VisitKind.Enter && AttributeHelpers.FindObjcDeprecated (decl.Attrs, out VersionTuple version))
-				ObjCDeprecatedItems[decl.Name] = version;
+			if (visitKind == VisitKind.Enter && AttributeHelpers.FindObjcDeprecated (decl.Attrs, out VersionTuple version)) {
+				// `(anonymous)` has a null name
+				var name = decl.Name;
+				if (name is not null)
+					ObjCDeprecatedItems[name] = version;
+			}
 		}
 
 		public override void VisitObjCMethodDecl (ObjCMethodDecl decl, VisitKind visitKind)

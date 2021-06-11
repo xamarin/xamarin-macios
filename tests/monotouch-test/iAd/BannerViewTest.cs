@@ -28,6 +28,8 @@ namespace MonoTouchFixtures.iAd {
 		[Test]
 		public void GetClampedBannerSize ()
 		{
+			if (TestRuntime.CheckXcodeVersion (13,0))
+				Assert.Ignore ("Most of iAd API were removed in Xcode 13 beta 1");
 			var size = new CGSize (2.0, 2.0);
 			var result = ADBannerView.GetClampedBannerSize (size);
 			Assert.IsFalse (result.IsEmpty);

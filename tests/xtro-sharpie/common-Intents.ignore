@@ -7,8 +7,6 @@
 !incorrect-protocol-member! INSpeakable::vocabularyIdentifier is REQUIRED and should be abstract
 
 ## new types that has deprecated members (likely to be removed from headers at some point)
-!missing-selector! +INCallRecordTypeOptionsResolutionResult::confirmationRequiredWithValueToConfirm: not bound
-!missing-selector! +INCallRecordTypeOptionsResolutionResult::successWithResolvedValue: not bound
 !missing-selector! +INAccountTypeResolutionResult::confirmationRequiredWithValueToConfirm: not bound
 !missing-selector! +INAccountTypeResolutionResult::successWithResolvedValue: not bound
 

@@ -1,0 +1,58 @@
+!deprecated-attribute-missing! MTLComputePipelineDescriptor::insertLibraries missing a [Deprecated] attribute
+!deprecated-attribute-missing! MTLComputePipelineDescriptor::setInsertLibraries: missing a [Deprecated] attribute
+!missing-enum-value! MTLCommandBufferError native value MTLCommandBufferErrorStackOverflow = 12 not bound
+!missing-enum-value! MTLDataType native value MTLDataTypeLong = 81 not bound
+!missing-enum-value! MTLDataType native value MTLDataTypeLong2 = 82 not bound
+!missing-enum-value! MTLDataType native value MTLDataTypeLong3 = 83 not bound
+!missing-enum-value! MTLDataType native value MTLDataTypeLong4 = 84 not bound
+!missing-enum-value! MTLDataType native value MTLDataTypeULong = 85 not bound
+!missing-enum-value! MTLDataType native value MTLDataTypeULong2 = 86 not bound
+!missing-enum-value! MTLDataType native value MTLDataTypeULong3 = 87 not bound
+!missing-enum-value! MTLDataType native value MTLDataTypeULong4 = 88 not bound
+!missing-enum-value! MTLLanguageVersion native value MTLLanguageVersion2_4 = 131076 not bound
+!missing-enum-value! MTLRenderStages native value MTLRenderStageTile = 4 not bound
+!missing-protocol! MTLFunctionStitchingAttribute not bound
+!missing-protocol! MTLFunctionStitchingNode not bound
+!missing-protocol-member! MTLBinaryArchive::addFunctionWithDescriptor:library:error: not found
+!missing-protocol-member! MTLDevice::newLibraryWithDescriptor:error: not found
+!missing-protocol-member! MTLDevice::supportsRenderDynamicLibraries not found
+!missing-selector! MTLComputePipelineDescriptor::preloadedLibraries not bound
+!missing-selector! MTLComputePipelineDescriptor::setPreloadedLibraries: not bound
+!missing-selector! MTLFunctionDescriptor::binaryArchives not bound
+!missing-selector! MTLFunctionDescriptor::setBinaryArchives: not bound
+!missing-selector! MTLFunctionStitchingFunctionNode::arguments not bound
+!missing-selector! MTLFunctionStitchingFunctionNode::controlDependencies not bound
+!missing-selector! MTLFunctionStitchingFunctionNode::initWithName:arguments:controlDependencies: not bound
+!missing-selector! MTLFunctionStitchingFunctionNode::name not bound
+!missing-selector! MTLFunctionStitchingFunctionNode::setArguments: not bound
+!missing-selector! MTLFunctionStitchingFunctionNode::setControlDependencies: not bound
+!missing-selector! MTLFunctionStitchingFunctionNode::setName: not bound
+!missing-selector! MTLFunctionStitchingGraph::attributes not bound
+!missing-selector! MTLFunctionStitchingGraph::functionName not bound
+!missing-selector! MTLFunctionStitchingGraph::initWithFunctionName:nodes:outputNode:attributes: not bound
+!missing-selector! MTLFunctionStitchingGraph::nodes not bound
+!missing-selector! MTLFunctionStitchingGraph::outputNode not bound
+!missing-selector! MTLFunctionStitchingGraph::setAttributes: not bound
+!missing-selector! MTLFunctionStitchingGraph::setFunctionName: not bound
+!missing-selector! MTLFunctionStitchingGraph::setNodes: not bound
+!missing-selector! MTLFunctionStitchingGraph::setOutputNode: not bound
+!missing-selector! MTLFunctionStitchingInputNode::argumentIndex not bound
+!missing-selector! MTLFunctionStitchingInputNode::initWithArgumentIndex: not bound
+!missing-selector! MTLFunctionStitchingInputNode::setArgumentIndex: not bound
+!missing-selector! MTLLinkedFunctions::privateFunctions not bound
+!missing-selector! MTLLinkedFunctions::setPrivateFunctions: not bound
+!missing-selector! MTLRenderPipelineDescriptor::fragmentPreloadedLibraries not bound
+!missing-selector! MTLRenderPipelineDescriptor::setFragmentPreloadedLibraries: not bound
+!missing-selector! MTLRenderPipelineDescriptor::setVertexPreloadedLibraries: not bound
+!missing-selector! MTLRenderPipelineDescriptor::vertexPreloadedLibraries not bound
+!missing-selector! MTLStitchedLibraryDescriptor::functionGraphs not bound
+!missing-selector! MTLStitchedLibraryDescriptor::functions not bound
+!missing-selector! MTLStitchedLibraryDescriptor::setFunctionGraphs: not bound
+!missing-selector! MTLStitchedLibraryDescriptor::setFunctions: not bound
+!missing-selector! MTLTileRenderPipelineDescriptor::preloadedLibraries not bound
+!missing-selector! MTLTileRenderPipelineDescriptor::setPreloadedLibraries: not bound
+!missing-type! MTLFunctionStitchingAttributeAlwaysInline not bound
+!missing-type! MTLFunctionStitchingFunctionNode not bound
+!missing-type! MTLFunctionStitchingGraph not bound
+!missing-type! MTLFunctionStitchingInputNode not bound
+!missing-type! MTLStitchedLibraryDescriptor not bound

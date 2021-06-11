@@ -146,11 +146,11 @@ namespace Xamarin.MMP.Tests
 			File.WriteAllText (f ("foo.c"), "int Answer () { return 42; }");
 			File.WriteAllText (f ("Info.plist"), PListText);
 
-			TI.RunAndAssert ($"clang", "-m32", "-c", "-o", $"{f ("foo_32.o")}", $"{f ("foo.c")}");
-			TI.RunAndAssert ($"clang", "-m64", "-c", "-o", $"{f ("foo_64.o")}", $"{f ("foo.c")}");
-			TI.RunAndAssert ($"clang", "-m32", "-dynamiclib", "-o", $"{f ("foo_32.dylib")}", $"{f ("foo_32.o")}");
-			TI.RunAndAssert ($"clang", "-m64", "-dynamiclib", "-o", $"{f ("foo_64.dylib")}", $"{f ("foo_64.o")}");
-			TI.RunAndAssert ($"lipo", "-create", $"{f ("foo_32.dylib")}", $"{f ("foo_64.dylib")}", "-output", $"{f ("Foo")}");
+			TI.RunAndAssert ($"clang", "-arch", "arm64", "-c", "-o", $"{f ("foo_arm64.o")}", $"{f ("foo.c")}");
+			TI.RunAndAssert ($"clang", "-arch", "x86_64", "-c", "-o", $"{f ("foo_x86-64.o")}", $"{f ("foo.c")}");
+			TI.RunAndAssert ($"clang", "-arch", "arm64", "-dynamiclib", "-o", $"{f ("foo_arm64.dylib")}", $"{f ("foo_arm64.o")}");
+			TI.RunAndAssert ($"clang", "-arch", "x86_64", "-dynamiclib", "-o", $"{f ("foo_x86-64.dylib")}", $"{f ("foo_x86-64.o")}");
+			TI.RunAndAssert ($"lipo", "-create", $"{f ("foo_arm64.dylib")}", $"{f ("foo_x86-64.dylib")}", "-output", $"{f ("Foo")}");
 			TI.RunAndAssert ($"install_name_tool", "-id", "@rpath/Foo.framework/Foo", $"{f ("Foo")}");
 			TI.RunAndAssert ($"mkdir", "-p", $"{f ("Foo.framework/Versions/A/Resources")}");
 			TI.RunAndAssert ($"cp", $"{f ("Foo")}", $"{f ("Foo.framework/Versions/A/Foo")}");

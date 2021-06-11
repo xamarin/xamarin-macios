@@ -1,0 +1,4 @@
+!deprecated-attribute-missing! CFStreamCreatePairWithPeerSocketSignature missing a [Deprecated] attribute
+!deprecated-attribute-missing! CFStreamCreatePairWithSocket missing a [Deprecated] attribute
+!deprecated-attribute-missing! CFStreamCreatePairWithSocketToCFHost missing a [Deprecated] attribute
+!deprecated-attribute-missing! CFStreamCreatePairWithSocketToHost missing a [Deprecated] attribute

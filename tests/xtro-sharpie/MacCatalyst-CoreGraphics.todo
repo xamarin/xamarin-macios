@@ -252,3 +252,8 @@
 !missing-pinvoke! CGWindowListCreateImageFromArray is not bound
 !missing-pinvoke! CGWindowServerCFMachPort is not bound
 !missing-pinvoke! CGWindowServerCreateServerPort is not bound
+## appended from unclassified file
+!missing-field! kCGColorSpaceExtendedRange not bound
+!missing-pinvoke! CGColorSpaceCreateWithColorSyncProfile is not bound
+!missing-pinvoke! CGConvertColorDataWithFormat is not bound
+!missing-pinvoke! CGErrorSetCallback is not bound

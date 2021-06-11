@@ -4,3 +4,7 @@
 !missing-selector! SCNMaterialProperty::borderColor not bound
 !missing-selector! SCNMaterialProperty::setBorderColor: not bound
 !missing-selector! SCNRenderer::render not bound
+## appended from unclassified file
+!missing-protocol-member! SCNAnimatable::removeAllAnimationsWithBlendOutDuration: not found
+!missing-selector! SCNParticleSystem::setWritesToDepthBuffer: not bound
+!missing-selector! SCNParticleSystem::writesToDepthBuffer not bound
