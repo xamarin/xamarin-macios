@@ -524,10 +524,14 @@
 			<_RuntimeConfigReservedProperties Include="ICU_DAT_FILE_PATH" />
 		</ItemGroup>
 		<RuntimeConfigParserTask
+			Condition="'$(GenerateRuntimeConfigurationFiles)' == 'true'"
 			RuntimeConfigFile="$(ProjectRuntimeConfigFilePath)"
 			OutputFile="$(_ParsedRuntimeConfigFilePath)"
-			RuntimeConfigReservedProperties="@(_RuntimeConfigReservedProperties)">
+			RuntimeConfigReservedProperties="@(_RuntimeConfigReservedProperties)"
+			>
 		</RuntimeConfigParserTask>
+
+		<Warning Condition="'$(GenerateRuntimeConfigurationFiles)' != 'true'" Text="Some features may not work correctly, because the generation of the runtime configure file (*.runtimeconfig.json) has been disabled." />
 	</Target>
 
 	<Target Name="_AOTCompile"
