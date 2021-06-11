@@ -31,6 +31,6 @@ steps:
 
 - pwsh: |
     ls -Rla $(Build.SourcesDirectory)/artifacts/tmp
-    7z x $(Build.SourcesDirectory)/artifacts/tmp/dotnet-test-package/mac-test-package.7z -o$(Build.SourcesDirectory)/artifacts/ -bb1
+    7z x $(Build.SourcesDirectory)/artifacts/tmp/dotnet-test-package/dotnet-test-package.7z -o$(Build.SourcesDirectory)/artifacts/ -bb1
     ls -Rla $(Build.SourcesDirectory)/artifacts/dotnet-test-package
   displayName: Expand tests.
