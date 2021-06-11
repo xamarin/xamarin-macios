@@ -56,7 +56,6 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.DetectSdkLocations" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.DetectSigningIdentity" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.FindWatchOS2AppBundle" AssemblyFile="$(_TaskAssemblyName)" />
-	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.GetDirectories" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.GetFiles" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.GetFullPath" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.GetMlaunchArguments" AssemblyFile="$(_TaskAssemblyName)" />
@@ -113,6 +112,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.EmbedProvisionProfile" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.FindItemWithLogicalName" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.GenerateBundleName" AssemblyFile="$(_TaskAssemblyName)" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.GetDirectories" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.GetMinimumOSVersion" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.GetNativeExecutableName" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.GetPropertyListValue" AssemblyFile="$(_TaskAssemblyName)" />
@@ -177,13 +177,68 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<PropertyGroup>
 		<CleanDependsOn>
 			$(CleanDependsOn);
-			_CleanBindingResourcePackage
+			_CleanAppBundle;
+			_CleanBindingResourcePackage;
+			_CleanDebugSymbols;
+			_CleanDeviceSpecificOutput;
+			_CleanIntermediateToolOutput;
+			_CleanITunesArtwork;
 		</CleanDependsOn>
 	</PropertyGroup>
+
+	<Target Name="_CleanAppBundle" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_GenerateBundleName">
+		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(_AppBundlePath)" />
+		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="$(DeviceSpecificOutputPath)bundler.stamp" />
+	</Target>
+
 	<Target Name="_CleanBindingResourcePackage">
 		<RemoveDir Directories="$(BindingResourcePath);" />  
 	</Target>
-	
+
+	<Target Name="_CleanDebugSymbols" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_GenerateBundleName">
+		<GetDirectories SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Path="$(DeviceSpecificOutputPath)" Pattern="*.dSYM">
+			<Output TaskParameter="Directories" ItemName="_DebugSymbolDir" />
+		</GetDirectories>
+
+		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(AppBundleDir).mSYM;@(_DebugSymbolDir)" />
+		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '$(IsAppExtension)' == 'false'" Files="$(DeviceSpecificOutputPath)*.bcsymbolmap" />
+		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '$(IsAppExtension)' == 'true' Or '$(_PlatformName)' == 'macOS'" Files="$(DeviceSpecificOutputPath)dsym.items" />
+	</Target>
+
+	<Target Name="_CleanITunesArtwork" Condition="'$(_CanArchive)' == 'true'" DependsOnTargets="_ComputeTargetArchitectures">
+		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="$(DeviceSpecificOutputPath)iTunesMetadata.plist;$(DeviceSpecificOutputPath)iTunesArtwork@2x;$(DeviceSpecificOutputPath)iTunesArtwork" />
+	</Target>
+
+	<Target Name="_CleanDeviceSpecificOutput" Condition="'$(_CanOutputAppBundle)' == 'true'">
+		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(IntermediateOutputPath)device-builds;$(OutputPath)device-builds" />
+	</Target>
+
+	<Target Name="_CleanIntermediateToolOutput" DependsOnTargets="_ComputeTargetArchitectures">
+		<RemoveDir SessionId="$(BuildSessionId)" 
+			Condition="'$(IsMacEnabled)' == 'true'" 
+			Directories="$(DeviceSpecificIntermediateOutputPath)actool;
+					$(DeviceSpecificIntermediateOutputPath)assetpacks;
+					$(DeviceSpecificIntermediateOutputPath)codesign;
+					$(DeviceSpecificIntermediateOutputPath)coremlc;
+					$(DeviceSpecificIntermediateOutputPath)ibtool;
+					$(DeviceSpecificIntermediateOutputPath)ibtool-link;
+					$(DeviceSpecificIntermediateOutputPath)ibtool-manifests;
+					$(DeviceSpecificIntermediateOutputPath)ipa;
+					$(DeviceSpecificIntermediateOutputPath)metal;
+					$(DeviceSpecificIntermediateOutputPath)optimized;
+					$(DeviceSpecificIntermediateOutputPath)scntool;
+					$(DeviceSpecificIntermediateOutputPath)TextureAtlas;
+					$(DeviceSpecificIntermediateOutputPath)mtouch-cache;
+					$(DeviceSpecificIntermediateOutputPath)" />
+
+		<ItemGroup>
+			<_IpaPackageFile Include="$(DeviceSpecificOutputPath)*.ipa" />
+		</ItemGroup>
+
+		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '$(IsAppExtension)' == 'true'" Files="$(DeviceSpecificOutputPath)codesign.items" />
+		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="@(_IpaPackageFile)" />
+	</Target>
+
 	<Target Name="_AddExtraReferences" BeforeTargets="ResolveAssemblyReferences" Condition="'$(DisableExtraReferences)' != 'true' And '$(_UsingXamarinSdk)' != 'true'">
 		<ItemGroup>
 			<!-- https://github.com/mono/mono/issues/13483 -->

@@ -88,11 +88,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			$(CleanDependsOn);
 			_ComputeTargetArchitectures;
 			_CleanUploaded;
-			_CleanAppBundle;
-			_CleanDebugSymbols;
-			_CleanITunesArtwork;
-			_CleanDeviceSpecificOutput;
-			_CleanIntermediateToolOutput;
 		</CleanDependsOn>
 	</PropertyGroup>
 
@@ -231,57 +226,8 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	
 	<Target Name="CreateIpa" Condition="'$(_CanArchive)' == 'true'" DependsOnTargets="$(CreateIpaDependsOn)" />
 
-	<Target Name="_CleanAppBundle" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_GenerateBundleName">
-		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(_AppBundlePath)" />
-		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="$(DeviceSpecificOutputPath)bundler.stamp" />
-	</Target>
-
 	<Target Name="_CleanUploaded" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_ComputeTargetArchitectures">
 		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="$(DeviceSpecificOutputPath).uploaded" />
-	</Target>
-
-	<Target Name="_CleanDebugSymbols" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_GenerateBundleName">
-		<GetDirectories SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Path="$(DeviceSpecificOutputPath)" Pattern="*.dSYM">
-			<Output TaskParameter="Directories" ItemName="_DebugSymbolDir" />
-		</GetDirectories>
-
-		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(AppBundleDir).mSYM;@(_DebugSymbolDir)" />
-		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '$(IsAppExtension)' == 'false'" Files="$(DeviceSpecificOutputPath)*.bcsymbolmap" />
-		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '$(IsAppExtension)' == 'true'" Files="$(DeviceSpecificOutputPath)dsym.items" />
-	</Target>
-
-	<Target Name="_CleanITunesArtwork" Condition="'$(_CanArchive)' == 'true'" DependsOnTargets="_ComputeTargetArchitectures">
-		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="$(DeviceSpecificOutputPath)iTunesMetadata.plist;$(DeviceSpecificOutputPath)iTunesArtwork@2x;$(DeviceSpecificOutputPath)iTunesArtwork" />
-	</Target>
-
-	<Target Name="_CleanDeviceSpecificOutput" Condition="'$(_CanOutputAppBundle)' == 'true'">
-		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(IntermediateOutputPath)device-builds;$(OutputPath)device-builds" />
-	</Target>
-
-	<Target Name="_CleanIntermediateToolOutput" DependsOnTargets="_ComputeTargetArchitectures">
-		<RemoveDir SessionId="$(BuildSessionId)" 
-			Condition="'$(IsMacEnabled)' == 'true'" 
-			Directories="$(DeviceSpecificIntermediateOutputPath)actool;
-					$(DeviceSpecificIntermediateOutputPath)assetpacks;
-					$(DeviceSpecificIntermediateOutputPath)codesign;
-					$(DeviceSpecificIntermediateOutputPath)coremlc;
-					$(DeviceSpecificIntermediateOutputPath)ibtool;
-					$(DeviceSpecificIntermediateOutputPath)ibtool-link;
-					$(DeviceSpecificIntermediateOutputPath)ibtool-manifests;
-					$(DeviceSpecificIntermediateOutputPath)ipa;
-					$(DeviceSpecificIntermediateOutputPath)metal;
-					$(DeviceSpecificIntermediateOutputPath)optimized;
-					$(DeviceSpecificIntermediateOutputPath)scntool;
-					$(DeviceSpecificIntermediateOutputPath)TextureAtlas;
-					$(DeviceSpecificIntermediateOutputPath)mtouch-cache;
-					$(DeviceSpecificIntermediateOutputPath)" />
-
-		<ItemGroup>
-			<_IpaPackageFile Include="$(DeviceSpecificOutputPath)*.ipa" />
-		</ItemGroup>
-
-		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '$(IsAppExtension)' == 'true'" Files="$(DeviceSpecificOutputPath)codesign.items" />
-		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="@(_IpaPackageFile)" />
 	</Target>
 
 	<Target Name="_CreateAssetPackManifest" DependsOnTargets="_CopyResourcesToBundle">
