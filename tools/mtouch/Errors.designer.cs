@@ -2153,6 +2153,18 @@ namespace Xamarin.Bundler {
             }
         }
         
+        internal static string MX4186 {
+            get {
+                return ResourceManager.GetString("MX4186", resourceCulture);
+            }
+        }
+        
+        internal static string MX4187 {
+            get {
+                return ResourceManager.GetString("MX4187", resourceCulture);
+            }
+        }
+        
         internal static string MT5101 {
             get {
                 return ResourceManager.GetString("MT5101", resourceCulture);
@@ -2342,24 +2354,6 @@ namespace Xamarin.Bundler {
         internal static string MT5302 {
             get {
                 return ResourceManager.GetString("MT5302", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The assembly &apos;{0}&apos; passed as an additional assembly to be processed by the static registrar has already been registered and will be ignored..
-        /// </summary>
-        public static string MX4186 {
-            get {
-                return ResourceManager.GetString("MX4186", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Can&apos;t add additional references for the static registrar when the managed linker is enabled..
-        /// </summary>
-        public static string MX4187 {
-            get {
-                return ResourceManager.GetString("MX4187", resourceCulture);
             }
         }
         

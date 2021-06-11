@@ -2717,6 +2717,16 @@
 		</target>
         <note></note>
       </trans-unit>
+      <trans-unit id="MX4186">
+        <source>The assembly '{0}' passed as an additional assembly to be processed by the static registrar has already been registered and will be ignored.</source>
+        <target state="new">The assembly '{0}' passed as an additional assembly to be processed by the static registrar has already been registered and will be ignored.</target>
+        <note>This is a warning</note>
+      </trans-unit>
+      <trans-unit id="MX4187">
+        <source>Can't add additional references for the static registrar when the managed linker is enabled.</source>
+        <target state="new">Can't add additional references for the static registrar when the managed linker is enabled.</target>
+        <note />
+      </trans-unit>
       <trans-unit id="MX5222">
         <source>The native linker failed to execute: {0}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new
  		</source>
