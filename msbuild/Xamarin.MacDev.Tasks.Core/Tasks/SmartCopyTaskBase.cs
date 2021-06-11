@@ -123,34 +123,50 @@ namespace Xamarin.MacDev.Tasks
 			return !Log.HasLoggedErrors;
 		}
 
-		[DllImport ("libc")]
-		static extern int stat (string file_name, out Stat buf);
+		[DllImport ("/usr/lib/libc.dylib", EntryPoint = "stat$INODE64")]
+		static extern int stat_x64 (string file_name, out Stat buf);
+
+		[DllImport ("/usr/lib/libc.dylib", EntryPoint = "stat")]
+		static extern int stat_arm64 (string file_name, out Stat buf);
+
+		static int stat (string path, out Stat buf)
+		{
+			if (RuntimeInformation.ProcessArchitecture == Architecture.Arm64) {
+				return stat_arm64 (path, out buf);
+			} else {
+				return stat_x64 (path, out buf);
+			}
+		}
 
 		[DllImport ("libc")]
 		static extern int chmod (string path, FilePermissions mode);
 
+		/* when _DARWIN_FEATURE_64_BIT_INODE is defined */
 		struct Stat {
-			public int st_dev;
-			public uint st_ino;
+			public uint st_dev;
 			public FilePermissions st_mode;
 			public ushort st_nlink;
+			public ulong st_ino;
 			public uint st_uid;
 			public uint st_gid;
-			public int st_rdev;
-			long st_atime;
-			long st_atimensec;
-			long st_mtime;
-			long st_mtimensec;
-			long st_ctime;
-			long st_ctimensec;
-			public long st_size;
-			public long st_blocks;
-			public int st_blksize;
+			public uint st_rdev;
+			public timespec st_atimespec;
+			public timespec st_mtimespec;
+			public timespec st_ctimespec;
+			public timespec st_birthtimespec;
+			public ulong st_size;
+			public ulong st_blocks;
+			public uint st_blksize;
 			public uint st_flags;
 			public uint st_gen;
-			public int st_lspare;
-			public long st_qspare_1;
-			public long st_qspare_2;
+			public uint st_lspare;
+			public ulong st_qspare_1;
+			public ulong st_qspare_2;
+		}
+
+		struct timespec {
+			public IntPtr tv_sec;
+			public IntPtr tv_nsec;
 		}
 
 		[Flags]
