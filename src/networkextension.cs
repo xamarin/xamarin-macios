@@ -1686,7 +1686,12 @@ namespace NetworkExtension {
 		NWEndpoint LocalEndpoint { get; }
 
 		[Export ("socketFamily")]
-		int SocketFamily { get; set; }
+		int SocketFamily {
+			get;
+#if !XAMCORE_4_0
+			[NotImplemented] set;
+#endif
+		}
 
 		[Export ("socketType")]
 		int SocketType {
