@@ -108,7 +108,6 @@ namespace Introspection {
 			case "GKPolygonObstacle":
 			case "GKComponent":
 			case "GKGraphNode":
-			case "WKPreferences":
 			case "WKUserContentController":
 			case "WKProcessPool":
 			case "WKWebViewConfiguration":
@@ -201,6 +200,14 @@ namespace Introspection {
 				}
 				break;
 #endif
+			case "WKPreferences":
+				switch (selectorName) {
+				case "encodeWithCoder:": // from iOS 10
+					return true;
+				case "textInteractionEnabled": // xcode 13 renamed this to `isTextInteractionEnabled` but does not respond to the old one
+					return true;
+				}
+				break;
 			}
 			// This ctors needs to be manually bound
 			switch (type.Name) {

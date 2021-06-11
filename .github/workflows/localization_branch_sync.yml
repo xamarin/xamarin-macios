@@ -16,7 +16,11 @@ jobs:
     steps:
     - name: 'Check for Fork'
       run: echo "Action cannot be executed on forks" && exit 1
+<<<<<<< HEAD
       if: ${{ github.event.pull_request.head.repo.full_name != github.repository  }}
+=======
+      if: ${{ secrets.GITHUB_TOKEN == "" }}
+>>>>>>> xamarin/main
 
     - uses: dawidd6/action-delete-branch@v3
       name: 'delete'

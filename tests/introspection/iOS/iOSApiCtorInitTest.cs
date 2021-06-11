@@ -234,9 +234,15 @@ namespace Introspection {
 				// MPSPredicate.mm:102: failed assertion `[MPSPredicate initWithBuffer:offset:] device: Apple A8 GPU does not support predication.'
 				return ((Runtime.Arch == Arch.DEVICE) && (UIScreen.MainScreen.NativeBounds.Width <= 1920));
 #endif
-			default:
-				return base.Skip (type);
+#if __TVOS__ || __WATCHOS__
+			case "NSMetadataQuery":
+				// hangs on xcode 13 beta 1 on simulator
+				if (TestRuntime.CheckXcodeVersion (13, 0))
+					return true;
+				break;
+#endif
 			}
+			return base.Skip (type);
 		}
 
 		static List<NSObject> do_not_dispose = new List<NSObject> ();

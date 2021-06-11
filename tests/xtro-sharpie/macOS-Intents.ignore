@@ -51,16 +51,10 @@
 !unknown-field! INPersonRelationshipPartner bound
 !unknown-field! INPersonRelationshipSister bound
 !unknown-field! INPersonRelationshipSpouse bound
-!unknown-native-enum! INCallRecordType bound
 !unknown-protocol! INSearchCallHistoryIntentHandling bound
 !unknown-protocol! INSearchForMessagesIntentHandling bound
-!unknown-protocol! INSendMessageIntentHandling bound
 !unknown-protocol! INStartAudioCallIntentHandling bound
 !unknown-protocol! INStartVideoCallIntentHandling bound
-!unknown-type! INCallDestinationTypeResolutionResult bound
-!unknown-type! INCallRecord bound
-!unknown-type! INCallRecordTypeOptionsResolutionResult bound
-!unknown-type! INCallRecordTypeResolutionResult bound
 !unknown-type! INDateComponentsRangeResolutionResult bound
 !unknown-type! INMessage bound
 !unknown-type! INMessageAttributeOptionsResolutionResult bound
@@ -70,9 +64,6 @@
 !unknown-type! INSearchCallHistoryIntentResponse bound
 !unknown-type! INSearchForMessagesIntent bound
 !unknown-type! INSearchForMessagesIntentResponse bound
-!unknown-type! INSendMessageIntent bound
-!unknown-type! INSendMessageIntentResponse bound
-!unknown-type! INSendMessageRecipientResolutionResult bound
 !unknown-type! INSpeakableStringResolutionResult bound
 !unknown-type! INStartAudioCallIntent bound
 !unknown-type! INStartAudioCallIntentResponse bound
