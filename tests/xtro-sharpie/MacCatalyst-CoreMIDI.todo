@@ -11,3 +11,5 @@
 !missing-pinvoke! MIDISetupGetCurrent is not bound
 !missing-pinvoke! MIDISetupInstall is not bound
 !missing-pinvoke! MIDISetupToData is not bound
+## appended from unclassified file
+!missing-enum-value! MidiMessageType native value kMIDIMessageTypeUnknownF = 15 not bound

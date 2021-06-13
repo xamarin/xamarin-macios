@@ -514,3 +514,16 @@
 !missing-type! MPSSVGFDenoiser not bound
 !missing-type! MPSTemporalAA not bound
 !wrong-base-type! MPSTriangleAccelerationStructure expected MPSPolygonAccelerationStructure actual MPSAccelerationStructure
+## appended from unclassified file
+!missing-enum-value! MPSDataType native value MPSDataTypeAlternateEncodingBit = 2147483648 not bound
+!missing-enum-value! MPSDataType native value MPSDataTypeBool = 2147483656 not bound
+!missing-enum-value! MPSIntersectionDataType native value MPSIntersectionDataTypeDistancePrimitiveIndexBufferIndex = 5 not bound
+!missing-enum-value! MPSIntersectionDataType native value MPSIntersectionDataTypeDistancePrimitiveIndexBufferIndexCoordinates = 6 not bound
+!missing-enum-value! MPSIntersectionDataType native value MPSIntersectionDataTypeDistancePrimitiveIndexBufferIndexInstanceIndex = 7 not bound
+!missing-enum-value! MPSIntersectionDataType native value MPSIntersectionDataTypeDistancePrimitiveIndexBufferIndexInstanceIndexCoordinates = 8 not bound
+!missing-selector! MPSNNReduceBinary::primaryOffset not bound
+!missing-selector! MPSNNReduceBinary::secondaryOffset not bound
+!missing-selector! MPSNNReduceBinary::setPrimaryOffset: not bound
+!missing-selector! MPSNNReduceBinary::setSecondaryOffset: not bound
+!missing-selector! MPSNNReduceUnary::offset not bound
+!missing-selector! MPSNNReduceUnary::setOffset: not bound

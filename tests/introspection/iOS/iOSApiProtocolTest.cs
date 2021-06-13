@@ -435,6 +435,10 @@ namespace Introspection {
 				case "CPListImageRowItem": // conformance not in headers
 				case "CPListItem": // conformance not in headers
 					return true;
+				// Xcode 13
+				case "ARDepthData":
+				case "NSMergePolicy":
+					return true;
 				}
 				break;
 			case "NSSecureCoding":
@@ -668,6 +672,10 @@ namespace Introspection {
 				case "CPTextButton": // conformance not in headers
 				case "CPListImageRowItem": // conformance not in headers
 					return true;
+				// Xcode 13
+				case "ARDepthData":
+				case "NSMergePolicy":
+					return true;
 				}
 				break;
 			case "NSCopying":
@@ -743,6 +751,12 @@ namespace Introspection {
 				case "EKSource":
 					return true;
 #endif
+				// Xcode 13
+				case "NSEntityMapping":
+				case "NSMappingModel":
+				case "NSMergePolicy":
+				case "NSPropertyMapping":
+					return true;
 				}
 				break;
 			case "NSMutableCopying":
@@ -772,6 +786,10 @@ namespace Introspection {
 				case "EKStructuredLocation":
 					return true;
 #endif
+				// Xcode 13
+				case "NSMergePolicy":
+				case "UNNotificationSettings":
+					return true;
 				}
 				break;
 			case "UIAccessibilityIdentification":

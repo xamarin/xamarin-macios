@@ -216,3 +216,7 @@
 !missing-pinvoke! SessionGetInfo is not bound
 !missing-pinvoke! sec_protocol_options_get_enable_encrypted_client_hello is not bound
 !missing-pinvoke! sec_protocol_options_set_enable_encrypted_client_hello is not bound
+## appended from unclassified file
+!missing-pinvoke! sec_protocol_options_get_quic_use_legacy_codepoint is not bound
+!missing-pinvoke! sec_protocol_options_set_quic_use_legacy_codepoint is not bound
+!missing-pinvoke! SecTrustCopyCertificateChain is not bound

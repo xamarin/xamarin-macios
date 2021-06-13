@@ -305,7 +305,7 @@ namespace WebKit
 		[Mac (11,3)][iOS (14,5)]
 		[MacCatalyst (14,5)]
 		[Export ("textInteractionEnabled")]
-		bool TextInteractionEnabled { get; set; }
+		bool TextInteractionEnabled { /* changed in xcode 13.0 beta [Bind ("isTextInteractionEnabled")] */ get; set; }
 	}
 
 	[iOS (8,0), Mac (10,10)] // Not defined in 32-bit
@@ -878,34 +878,36 @@ namespace WebKit
 		[Export ("printOperationWithPrintInfo:")]
 		NSPrintOperation GetPrintOperation (NSPrintInfo printInfo);
 
-		[Mac (11,3)][iOS (14,5)]
-		[MacCatalyst (14,5)]
-		[Export ("closeAllMediaPresentations")]
-		void CloseAllMediaPresentations ();
+		// Apple renamed those API since Xcode 12.5
 
-		[Mac (11,3)][iOS (14,5)]
-		[MacCatalyst (14,5)]
-		[Async]
-		[Export ("pauseAllMediaPlayback:")]
-		void PauseAllMediaPlayback ([NullAllowed] Action completionHandler);
+		// [Mac (11,3)][iOS (14,5)]
+		// [MacCatalyst (14,5)]
+		// [Export ("closeAllMediaPresentations")]
+		// void CloseAllMediaPresentations ();
 
-		[Mac (11,3)][iOS (14,5)]
-		[MacCatalyst (14,5)]
-		[Async]
-		[Export ("suspendAllMediaPlayback:")]
-		void SuspendAllMediaPlayback ([NullAllowed] Action completionHandler);
+		// [Mac (11,3)][iOS (14,5)]
+		// [MacCatalyst (14,5)]
+		// [Async]
+		// [Export ("pauseAllMediaPlayback:")]
+		// void PauseAllMediaPlayback ([NullAllowed] Action completionHandler);
 
-		[Mac (11,3)][iOS (14,5)]
-		[MacCatalyst (14,5)]
-		[Async]
-		[Export ("resumeAllMediaPlayback:")]
-		void ResumeAllMediaPlayback ([NullAllowed] Action completionHandler);
+		// [Mac (11,3)][iOS (14,5)]
+		// [MacCatalyst (14,5)]
+		// [Async]
+		// [Export ("suspendAllMediaPlayback:")]
+		// void SuspendAllMediaPlayback ([NullAllowed] Action completionHandler);
 
-		[Mac (11,3)][iOS (14,5)]
-		[MacCatalyst (14,5)]
-		[Async]
-		[Export ("requestMediaPlaybackState:")]
-		void RequestMediaPlaybackState (Action<WKMediaPlaybackState> completionHandler);
+		// [Mac (11,3)][iOS (14,5)]
+		// [MacCatalyst (14,5)]
+		// [Async]
+		// [Export ("resumeAllMediaPlayback:")]
+		// void ResumeAllMediaPlayback ([NullAllowed] Action completionHandler);
+
+		// [Mac (11,3)][iOS (14,5)]
+		// [MacCatalyst (14,5)]
+		// [Async]
+		// [Export ("requestMediaPlaybackState:")]
+		// void RequestMediaPlaybackState (Action<WKMediaPlaybackState> completionHandler);
 
 		[Mac (11,3)][iOS (14,5)]
 		[MacCatalyst (14,5)]

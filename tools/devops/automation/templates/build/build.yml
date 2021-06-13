@@ -95,7 +95,7 @@ steps:
 - bash: |
     security set-key-partition-list -S apple-tool:,apple: -s -k $OSX_KEYCHAIN_PASS login.keychain
   env:
-    OSX_KEYCHAIN_PASS: $(OSX_KEYCHAIN_PASS)
+    OSX_KEYCHAIN_PASS: ${{ parameters.keyringPass }}
   displayName: 'Remove security UI-prompt (http://stackoverflow.com/a/40039594/183422)'
   condition: succeededOrFailed() # we do not care about the previous process cleanup
 
@@ -105,7 +105,7 @@ steps:
     DeveloperIdInstaller: $(developer-id-installer)
     IphoneDeveloper: $(iphone-developer)
     MacDeveloper: $(mac-developer)
-    HostedMacKeychainPassword: $(OSX_KEYCHAIN_PASS)
+    HostedMacKeychainPassword: ${{ parameters.keyringPass }}
 
 - task: xamops.azdevex.provisionator-task.provisionator@2
   displayName: 'Provision Brew components'
@@ -332,6 +332,7 @@ steps:
   - template: sign-and-notarized.yml
     parameters:
       enableDotnet: ${{ parameters.enableDotnet }}
+      keyringPass: ${{ parameters.keyringPass }}
 
 - template: generate-workspace-info.yml@templates
   parameters:
@@ -479,10 +480,28 @@ steps:
 # this will always be executed, is the default condition in the template
 - template: uninstall-certificates/v1.yml@templates
   parameters:
-    HostedMacKeychainPassword: $(OSX_KEYCHAIN_PASS)
+    HostedMacKeychainPassword: ${{ parameters.keyringPass }}
 
 - pwsh: |
     # should we need sudo, no, but someone did something wrong in the images..
     sudo rm -Rf "$HOME/.git-credentials"
   displayName: 'Remove git creds store'
   condition: always()
+
+# Copy all the binlogs to a separate directory, keeping directory structure.
+- script: |
+    set -x
+    mkdir -p $(Build.ArtifactStagingDirectory)/all-binlogs
+    rsync -av --prune-empty-dirs --include '*/' --include '*.binlog' --exclude '*' $(Build.SourcesDirectory)/xamarin-macios $(Build.ArtifactStagingDirectory)/all-binlogs
+  displayName: Copy all binlogs
+  continueOnError: true
+  condition: succeededOrFailed()
+
+# Publish all the binlogs we collected in the previous step
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Artifact: All binlogs'
+  inputs:
+    targetPath: $(Build.ArtifactStagingDirectory)/all-binlogs
+    artifactName: all-binlogs
+  continueOnError: true
+  condition: succeededOrFailed()
