@@ -31,7 +31,7 @@ namespace MonoTouch.Tuner {
 
 #if NET
 		protected override string Name { get; } = "CoreTypeMap";
-		protected override int ErrorCode { get; } = 2381;
+		protected override int ErrorCode { get; } = 2390;
 
 		Profile Profile => new Profile (Configuration);
 
