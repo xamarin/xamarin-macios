@@ -335,14 +335,6 @@
 				IMarkHandlers which run during Mark
 			-->
 			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" Condition="'$(_LinkMode)' != 'None'" Type="Xamarin.Linker.Steps.PreserveBlockCodeHandler" />
-			<!--
-				We need to run the ApplyPreserveAttribute step even if we're only linking sdk assemblies, because even
-				though we know that sdk assemblies will never have Preserve attributes, user assemblies may have
-				[assembly: LinkSafe] attributes, which means we treat them as sdk assemblies and those may have
-				Preserve attributes.
-				ApplyPreserveAttribute no longer runs on all assemblies. [assembly: Preserve (typeof (SomeAttribute))] will
-				no longer give SomeAttribute "Preserve" semantics.
-			-->
 			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" Condition="'$(_LinkMode)' != 'None'" Type="Xamarin.Linker.OptimizeGeneratedCodeHandler" />
 			<!-- MarkDispatcher substeps will run for all marked assemblies. -->
 			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" Condition="'$(_LinkMode)' != 'None'" Type="Xamarin.Linker.Steps.MarkDispatcher" />

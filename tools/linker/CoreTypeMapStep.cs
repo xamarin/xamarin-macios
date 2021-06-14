@@ -172,11 +172,11 @@ namespace MonoTouch.Tuner {
 			// bonus: we cache, for every type, whether or not it inherits from NSObject (very useful later)
 			if (!IsNSObject (type))
 				return;
-
+			
 			// if not, it's a user type, the IsDirectBinding check is required by all ancestors
 			SetIsDirectBindingValue (type);
 		}
-
+		
 		// called once for each 'type' so it's a nice place to cache the result
 		// and ensure later steps re-use the same, pre-computed, result
 		bool IsNSObject (TypeDefinition type)
@@ -208,7 +208,7 @@ namespace MonoTouch.Tuner {
 			}
 			return rv;
 		}
-
+		
 		void SetIsDirectBindingValue (TypeDefinition type)
 		{
 			if (isdirectbinding_value.ContainsKey (type))
