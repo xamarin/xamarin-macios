@@ -363,7 +363,7 @@
 		<ItemGroup>
 			<!-- Support a 'CopyToAppBundle' metadata that can be set to 'false' to avoid copying a framework to the app bundle -->
 			<_DynamicLibraryToPublish Include="@(_FileNativeReference)" Condition="'%(_FileNativeReference.Kind)' == 'Dynamic' And '%(_FileNativeReference.CopyToAppBundle)' != 'false'">
-				<RelativePath>$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)\$(PublishDir),$(_AppBundleFrameworksDir)))\$(_DylibRelativePath)%(Filename)%(Extension)</RelativePath>
+				<RelativePath>$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)\$(PublishDir),$(_AppBundlePath)))\$(_DylibRelativePath)%(Filename)%(Extension)</RelativePath>
 				<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 			</_DynamicLibraryToPublish>
 
