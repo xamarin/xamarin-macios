@@ -68,7 +68,6 @@ using UIKit;
 using System;
 using System.ComponentModel;
 
-#if MONOMAC
 // In Apple headers, this is a typedef to a pointer to a private struct
 using NSAppleEventManagerSuspensionID = System.IntPtr;
 // These two are both four char codes i.e. defined on a uint with constant like 'xxxx'
@@ -77,10 +76,24 @@ using OSType = System.UInt32;
 // typedef double NSTimeInterval;
 using NSTimeInterval = System.Double;
 
+#if MONOMAC
 // dummy usings to make code compile without having the actual types available (for [NoMac] to work)
 using NSDirectionalEdgeInsets = Foundation.NSObject;
 using UIEdgeInsets = Foundation.NSObject;
 using UIOffset = Foundation.NSObject;
+using UIPreferredPresentationStyle = Foundation.NSObject;
+#endif
+
+#if IOS && !__MACCATALYST__
+using NSAppleEventSendOptions = Foundation.NSObject;
+using NSBezierPath = Foundation.NSObject;
+using NSImage = Foundation.NSObject;
+#endif
+
+#if TVOS
+using NSAppleEventSendOptions = Foundation.NSObject;
+using NSBezierPath = Foundation.NSObject;
+using NSImage = Foundation.NSObject;
 #endif
 
 #if WATCH
@@ -88,6 +101,9 @@ using UIOffset = Foundation.NSObject;
 using CMTime = Foundation.NSObject;
 using CMTimeMapping = Foundation.NSObject;
 using CMTimeRange = Foundation.NSObject;
+using NSAppleEventSendOptions = Foundation.NSObject;
+using NSBezierPath = Foundation.NSObject;
+using NSImage = Foundation.NSObject;
 #endif
 
 #if WATCH
@@ -98,6 +114,12 @@ using CoreImage;
 
 #if !IOS
 using APActivationPayload = Foundation.NSObject;
+#endif
+
+#if __MACCATALYST__
+using NSAppleEventSendOptions = Foundation.NSObject;
+using NSBezierPath = Foundation.NSObject;
+using NSImage = Foundation.NSObject;
 #endif
 
 namespace Foundation {
@@ -120,10 +142,8 @@ namespace Foundation
 	delegate void NSItemProviderLoadHandler ([BlockCallback] NSItemProviderCompletionHandler completionHandler, Class expectedValueClass, NSDictionary options);
 	delegate void EnumerateDatesCallback (NSDate date, bool exactMatch, ref bool stop);
 	delegate void EnumerateIndexSetCallback (nuint idx, ref bool stop);
-#if MONOMAC
 	delegate void CloudKitRegistrationPreparationAction ([BlockCallback] CloudKitRegistrationPreparationHandler handler);
 	delegate void CloudKitRegistrationPreparationHandler (CKShare share, CKContainer container, NSError error);
-#endif
 
 	interface NSArray<TValue> : NSArray {}
 
@@ -1098,11 +1118,7 @@ namespace Foundation
 		[Export ("getObjectValue:forString:errorDescription:")]
 		bool GetObjectValue (out NSObject obj, string str, out string error);
 	}
-	
-#if !MONOMAC
 
-	// Already exists in MonoMac: from from foundation-desktop?
-	
 	[BaseType (typeof (NSCharacterSet))]
 	interface NSMutableCharacterSet {
 		[Export ("addCharactersInRange:")]
@@ -1112,10 +1128,18 @@ namespace Foundation
 		void RemoveCharacters (NSRange aRange);
 		
 		[Export ("addCharactersInString:")]
+#if MONOMAC && !XAMCORE_4_0
+		void AddCharacters (string str);
+#else
 		void AddCharacters (NSString str);
+#endif
 		
 		[Export ("removeCharactersInString:")]
+#if MONOMAC && !XAMCORE_4_0
+		void RemoveCharacters (string str);
+#else
 		void RemoveCharacters (NSString str);
+#endif
 		
 		[Export ("formUnionWithCharacterSet:")]
 		void UnionWith (NSCharacterSet otherSet);
@@ -1142,6 +1166,7 @@ namespace Foundation
 		[Static, Export ("characterSetWithCharactersInString:")]
 		NSCharacterSet FromString (string aString);
 
+		[return: NullAllowed]
 		[Mac(10,10)][iOS(8,0)]
 		[Static, Export ("characterSetWithContentsOfFile:")]
 		NSCharacterSet FromFile (string path);
@@ -1202,7 +1227,6 @@ namespace Foundation
 		[Static, Export ("whitespaceCharacterSet")]
 		NSCharacterSet Whitespaces {get;}
 	}
-#endif
 	
 	[BaseType (typeof (NSObject))]
 	interface NSCoder {
@@ -10113,24 +10137,35 @@ namespace Foundation
 		[Field ("NSItemProviderErrorDomain")]
 		NSString ErrorDomain { get; }
 
-#if MONOMAC
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 		[Export ("sourceFrame")]
 		CGRect SourceFrame { get; }
 
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 		[Export ("containerFrame")]
 		CGRect ContainerFrame { get; }
 
+		[NoWatch, NoTV]
+		[iOS (11,0)]
+		[MacCatalyst (13, 0)]
 		[Export ("preferredPresentationSize")]
-		CGSize PreferredPresentationSize { get; }
+		CGSize PreferredPresentationSize {
+			get;
+#if !MONOMAC
+			set;
+#endif
+		}
 
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 		[Mac (10,12)] // [Async] handled by NSItemProvider.cs for backwards compat reasons
 		[Export ("registerCloudKitShareWithPreparationHandler:")]
 		void RegisterCloudKitShare (CloudKitRegistrationPreparationAction preparationHandler);
 
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 		[Mac (10,12)]
 		[Export ("registerCloudKitShare:container:")]
 		void RegisterCloudKitShare (CKShare share, CKContainer container);
-#endif
+
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		[Export ("registerDataRepresentationForTypeIdentifier:visibility:loadHandler:")]
 		void RegisterDataRepresentation (string typeIdentifier, NSItemProviderRepresentationVisibility visibility, RegisterDataRepresentationLoadHandler loadHandler);
@@ -10191,24 +10226,22 @@ namespace Foundation
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		[Async, Export ("loadObjectOfClass:completionHandler:")]
 		NSProgress LoadObject (Class aClass, Action<INSItemProviderReading, NSError> completionHandler);
-#if !MONOMAC
+
 		// NSItemProvider_UIKitAdditions category
 
 		[NoWatch, NoTV]
+		[NoMac]
 		[iOS (11,0)]
+		[MacCatalyst (13, 0)]
 		[NullAllowed, Export ("teamData", ArgumentSemantic.Copy)]
 		NSData TeamData { get; set; }
 
 		[NoWatch, NoTV]
+		[NoMac]
 		[iOS (11,0)]
-		[Export ("preferredPresentationSize", ArgumentSemantic.Assign)]
-		CGSize PreferredPresentationSize { get; set; }
-
-		[NoWatch, NoTV]
-		[iOS (11,0)]
+		[MacCatalyst (13, 0)]
 		[Export ("preferredPresentationStyle", ArgumentSemantic.Assign)]
 		UIPreferredPresentationStyle PreferredPresentationStyle { get; set; }
-#endif // !MONOMAC
 	}
     
 	delegate NSProgress RegisterFileRepresentationLoadHandler ([BlockCallback] RegisterFileRepresentationCompletionHandler completionHandler);
@@ -13870,7 +13903,9 @@ namespace Foundation
 		[Export ("createCommandInstance")]
 		IntPtr CreateCommandInstancePtr ();
 	}
+#endif // MONOMAC
 
+	[NoiOS, NoTV, NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DesignatedDefaultCtor]
 	interface NSAffineTransform : NSSecureCoding, NSCopying {
@@ -13921,9 +13956,8 @@ namespace Foundation
 	}
 
 	[Deprecated (PlatformName.MacOSX, 10, 13, message : "Use 'NSXpcConnection' instead.")]
-	[Deprecated (PlatformName.iOS, 11, 0, message : "Use 'NSXpcConnection' instead.")]
-	[Deprecated (PlatformName.WatchOS, 2, 0, message : "Use 'NSXpcConnection' instead.")]
-	[Deprecated (PlatformName.TvOS, 11, 0, message : "Use 'NSXpcConnection' instead.")]
+	[NoMacCatalyst]
+	[NoiOS, NoTV, NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSConnection {
@@ -14028,9 +14062,8 @@ namespace Foundation
 	}
 
 	[Deprecated (PlatformName.MacOSX, 10, 13, message : "Use 'NSXpcConnection' instead.")]
-	[Deprecated (PlatformName.iOS, 11, 0, message : "Use 'NSXpcConnection' instead.")]
-	[Deprecated (PlatformName.WatchOS, 2, 0, message : "Use 'NSXpcConnection' instead.")]
-	[Deprecated (PlatformName.TvOS, 11, 0, message : "Use 'NSXpcConnection' instead.")]
+	[NoMacCatalyst]
+	[NoiOS, NoTV, NoWatch]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -14055,9 +14088,8 @@ namespace Foundation
 	}
 
 	[Deprecated (PlatformName.MacOSX, 10, 13, message : "Use 'NSXpcConnection' instead.")]
-	[Deprecated (PlatformName.iOS, 11, 0, message : "Use 'NSXpcConnection' instead.")]
-	[Deprecated (PlatformName.WatchOS, 2, 0, message : "Use 'NSXpcConnection' instead.")]
-	[Deprecated (PlatformName.TvOS, 11, 0, message : "Use 'NSXpcConnection' instead.")]
+	[NoMacCatalyst]
+	[NoiOS, NoTV, NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSDistantObjectRequest {
@@ -14074,9 +14106,8 @@ namespace Foundation
 		void Reply ([NullAllowed] NSException exception);
 	}
 
-	[Deprecated (PlatformName.TvOS, 11, 0)]
-	[Deprecated (PlatformName.WatchOS, 4, 0)]
-	[Deprecated (PlatformName.iOS, 11, 0)]
+	[NoMacCatalyst]
+	[NoiOS, NoTV, NoWatch]
 	[Deprecated (PlatformName.MacOSX, 10, 13)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -14096,35 +14127,9 @@ namespace Foundation
 		[Export ("removePortForName:")]
 		bool RemovePort (string portName);
 	}
-	
-	// FAK Left off until I understand how to do structs
-	//struct NSAffineTransformStruct {
-	//	public float M11, M12, M21, M22;
-	//	public float tX, tY;
-	//}
 
-	[BaseType (typeof (NSCharacterSet))]
-	interface NSMutableCharacterSet {
-		[Export ("removeCharactersInRange:")]
-		void RemoveCharacters (NSRange aRange);
-
-		[Export ("addCharactersInString:")]
-		void AddCharacters (string aString);
-
-		[Export ("removeCharactersInString:")]
-		void RemoveCharacters (string aString);
-
-		[Export ("formUnionWithCharacterSet:")]
-		void UnionWith (NSCharacterSet otherSet);
-
-		[Export ("formIntersectionWithCharacterSet:")]
-		void IntersectWith (NSCharacterSet otherSet);
-
-		[Export ("invert")]
-		void Invert ();
-
-	}
-
+	[NoiOS, NoTV, NoWatch]
+	[MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject))]
 	interface NSAppleEventDescriptor : NSSecureCoding, NSCopying {
 		[Static]
@@ -14326,6 +14331,7 @@ namespace Foundation
 		double DoubleValue { get; }
 
 		[Mac (10,11)]
+		[NoMacCatalyst]
 		[Export ("sendEventWithOptions:timeout:error:")]
 		[return: NullAllowed]
 		NSAppleEventDescriptor SendEvent (NSAppleEventSendOptions sendOptions, double timeoutInSeconds, [NullAllowed] out NSError error);
@@ -14343,6 +14349,8 @@ namespace Foundation
 		NSUrl FileURLValue { get; }
 	}
 
+	[NoiOS, NoTV, NoWatch]
+	[MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject))]
 	interface NSAppleEventManager {
 		[Static]
@@ -14355,9 +14363,11 @@ namespace Foundation
 		[Export ("removeEventHandlerForEventClass:andEventID:")]
 		void RemoveEventHandler (AEEventClass eventClass, AEEventID eventID);
 
+		[NullAllowed]
 		[Export ("currentAppleEvent")]
 		NSAppleEventDescriptor CurrentAppleEvent { get; }
 
+		[NullAllowed]
 		[Export ("currentReplyAppleEvent")]
 		NSAppleEventDescriptor CurrentReplyAppleEvent { get; }
 
@@ -14378,9 +14388,12 @@ namespace Foundation
 
 	}
 
+	[NoiOS, NoTV, NoWatch]
+	[MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject))]
 	[DesignatedDefaultCtor]
 	interface NSTask {
+		[NoMacCatalyst]
 		[Deprecated (PlatformName.MacOSX, 10,15)]
 		[Export ("launch")]
 		void Launch ();
@@ -14406,26 +14419,34 @@ namespace Foundation
 		NSTask LaunchFromPath (string path, string[] arguments);
 
 		//Detected properties
+		[NullAllowed]
 		[Deprecated (PlatformName.MacOSX, 10,15)]
+		[NoMacCatalyst]
 		[Export ("launchPath")]
 		string LaunchPath { get; set; }
 
+		[NullAllowed]
 		[Export ("arguments")]
 		string [] Arguments { get; set; }
 
+		[NullAllowed]
 		[Export ("environment", ArgumentSemantic.Copy)]
 		NSDictionary Environment { get; set; }
 
+		[NoMacCatalyst]
 		[Deprecated (PlatformName.MacOSX, 10,15)]
 		[Export ("currentDirectoryPath")]
 		string CurrentDirectoryPath { get; set; }
 
+		[NullAllowed]
 		[Export ("standardInput", ArgumentSemantic.Retain)]
 		NSObject StandardInput { get; set; }
 
+		[NullAllowed]
 		[Export ("standardOutput", ArgumentSemantic.Retain)]
 		NSObject StandardOutput { get; set; }
 
+		[NullAllowed]
 		[Export ("standardError", ArgumentSemantic.Retain)]
 		NSObject StandardError { get; set; }
 
@@ -14438,10 +14459,11 @@ namespace Foundation
 		[Export ("terminationStatus")]
 		int TerminationStatus { get; } /* int, not NSInteger */
 
+		[NoMacCatalyst]
 		[Export ("terminationReason")]
 		NSTaskTerminationReason TerminationReason { get; }
 
-#if !XAMCORE_4_0
+#if !XAMCORE_4_0 && MONOMAC
 		[Field ("NSTaskDidTerminateNotification")]
 		NSString NSTaskDidTerminateNotification { get; }
 #endif
@@ -14451,6 +14473,7 @@ namespace Foundation
 		NSString DidTerminateNotification { get; }
 	}
 
+	[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[DesignatedDefaultCtor]
 	[Advice ("'NSUserNotification' usages should be replaced with 'UserNotifications' framework.")]
@@ -14532,6 +14555,7 @@ namespace Foundation
 		NSUserNotificationAction AdditionalActivationAction { get; }
 	}
 
+	[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 	[Mac (10,10)]
 	[BaseType (typeof(NSObject))]
 	[Advice ("'NSUserNotification' usages should be replaced with 'UserNotifications' framework.")]
@@ -14548,6 +14572,7 @@ namespace Foundation
 		string Title { get; }
 	}
 	
+	[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 	[BaseType (typeof (NSObject),
 	           Delegates=new string [] {"WeakDelegate"},
 	Events=new Type [] { typeof (NSUserNotificationCenterDelegate) })]
@@ -14587,6 +14612,7 @@ namespace Foundation
 		void RemoveAllDeliveredNotifications ();
 	}
 	
+	[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -14603,6 +14629,7 @@ namespace Foundation
 		bool ShouldPresentNotification (NSUserNotificationCenter center, NSUserNotification notification);
 	}
 
+	[NoiOS, NoTV, NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSAppleScript : NSCopying {
@@ -14642,7 +14669,6 @@ namespace Foundation
 		[Export ("richTextSource", ArgumentSemantic.Retain)]
 		NSAttributedString RichTextSource { get; }
 	}
-#endif // MONOMAC
 
 	[iOS (10,0)][TV (10,0)][Watch (3,0)][Mac (10,12)]
 	[BaseType (typeof (NSFormatter), Name = "NSISO8601DateFormatter")]
