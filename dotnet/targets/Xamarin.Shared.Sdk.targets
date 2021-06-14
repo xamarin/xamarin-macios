@@ -502,7 +502,7 @@
 			<_AppBundleFrameworksDir Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'">$(MSBuildProjectDirectory)\$(_AppBundlePath)\Frameworks\</_AppBundleFrameworksDir>
 			<_AppBundleFrameworksDir Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">$(MSBuildProjectDirectory)\$(_AppBundlePath)\Contents\Frameworks\</_AppBundleFrameworksDir>
 
-			<_AOTCompiler>$(MonoAotCrossCompilerPath)</_AOTCompiler>
+			<_AOTCompiler>@(MonoAotCrossCompiler->WithMetadataValue("RuntimeIdentifier", "$(RuntimeIdentifier)"))</_AOTCompiler>
 			<_AOTInputDirectory>$(_IntermediateNativeLibraryDir)aot-input/</_AOTInputDirectory>
 			<_AOTOutputDirectory>$(_IntermediateNativeLibraryDir)aot-output/</_AOTOutputDirectory>
 
