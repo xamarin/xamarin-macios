@@ -430,19 +430,6 @@ namespace CloudKit {
 		[NullAllowed]
 		[Export ("userRecordID", ArgumentSemantic.Copy)]
 		CKRecordID UserRecordId { get; }
-
-		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'DisplayContact.GivenName'.")]
-		[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'DisplayContact.GivenName'.")]
-		[NullAllowed]
-		[Export ("firstName", ArgumentSemantic.Copy)]
-		string FirstName { get; }
-
-		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'DisplayContact.FamilyName'.")]
-		[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'DisplayContact.FamilyName'.")]
-		[NullAllowed]
-		[Export ("lastName", ArgumentSemantic.Copy)]
-		string LastName { get; }
-
 	}
 
 	// CKError.h Fields

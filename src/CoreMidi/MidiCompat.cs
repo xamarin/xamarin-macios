@@ -13,6 +13,12 @@ namespace CoreMidi {
 	public partial class MidiCISession {
 
 		[Obsolete ("Always throws 'NotSupportedException' (not a public API).")]
+		public MidiCISession (uint entity, Action handler)
+		{
+			throw new NotSupportedException ();
+		}
+
+		[Obsolete ("Always throws 'NotSupportedException' (not a public API).")]
 		public virtual void GetProperty (NSData inquiry, byte channel, MidiCIPropertyResponseHandler handler)
 			=> throw new NotSupportedException ();
 
