@@ -87,6 +87,11 @@ namespace LinkPresentation {
 		[Export ("startFetchingMetadataForURL:completionHandler:")]
 		void StartFetchingMetadata (NSUrl url, Action<LPLinkMetadata, NSError> completionHandler);
 
+		[Async]
+		[Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("startFetchingMetadataForRequest:completionHandler:")]
+		void StartFetchingMetadata (NSUrlRequest request, Action<LPLinkMetadata, NSError> completionHandler);
+
 		[Export ("cancel")]
 		void Cancel ();
 
