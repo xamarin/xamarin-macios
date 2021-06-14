@@ -790,6 +790,18 @@
 		</ItemGroup>
 	</Target>
 
+	<Target Name="_ValidateRuntimeIdentifier"
+		Condition="'$(RuntimeIdentifier)' != '' And '$(_RuntimeIdentifierValidation)' != 'false'"
+		BeforeTargets="Restore;Build;ResolvedFrameworkReference;ResolveRuntimePackAssets;ProcessFrameworkReferences">
+		<PropertyGroup>
+			<_IsInvalidRuntimeIdentifier Condition="'$(_PlatformName)' == 'iOS' And '$(RuntimeIdentifier)' != 'iossimulator-x64' And '$(RuntimeIdentifier)' != 'iossimulator-x86' And '$(RuntimeIdentifier)' != 'ios-arm64' And '$(RuntimeIdentifier)' != 'ios-arm' ">true</_IsInvalidRuntimeIdentifier>
+			<_IsInvalidRuntimeIdentifier Condition="'$(_PlatformName)' == 'tvOS' And '$(RuntimeIdentifier)' != 'tvossimulator-x64' And '$(RuntimeIdentifier)' != 'tvos-arm64'">true</_IsInvalidRuntimeIdentifier>
+			<_IsInvalidRuntimeIdentifier Condition="'$(_PlatformName)' == 'macOS' And '$(RuntimeIdentifier)' != 'osx-x64' And '$(RuntimeIdentifier)' != 'osx-arm64'">true</_IsInvalidRuntimeIdentifier>
+			<_IsInvalidRuntimeIdentifier Condition="'$(_PlatformName)' == 'MacCatalyst' And '$(RuntimeIdentifier)' != 'maccatalyst-x64' And '$(RuntimeIdentifier)' != 'maccatalyst-arm64'">true</_IsInvalidRuntimeIdentifier>
+		</PropertyGroup>
+		<Error Condition="'$(_IsInvalidRuntimeIdentifier)' == 'true'" Text="The RuntimeIdentifier '$(RuntimeIdentifier)' is invalid." />
+	</Target>
+
 	<!-- Install & Run -->
 
 	<PropertyGroup>

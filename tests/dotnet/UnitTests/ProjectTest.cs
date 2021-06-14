@@ -52,6 +52,7 @@ namespace Xamarin.Tests {
 		}
 
 		[Test]
+		[TestCase (null)]
 		[TestCase ("iossimulator-x86")]
 		[TestCase ("iossimulator-x64")]
 		[TestCase ("ios-arm64")]
@@ -63,7 +64,11 @@ namespace Xamarin.Tests {
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 			Clean (project_path);
 			var properties = new Dictionary<string, string> (verbosity);
-			properties ["RuntimeIdentifier"] = runtimeIdentifier;
+			if (!string.IsNullOrEmpty (runtimeIdentifier)) {
+				properties ["RuntimeIdentifier"] = runtimeIdentifier;
+			} else {
+				runtimeIdentifier = "iossimulator-x64"; // default RID for iOS projects. We set it here to make the rest of the test know where to expect files to be.
+			}
 			var result = DotNet.AssertBuild (project_path, properties);
 			AssertThatLinkerExecuted (result);
 			var appPath = Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", "net6.0-ios", runtimeIdentifier, "MySingleView.app");
@@ -77,6 +82,7 @@ namespace Xamarin.Tests {
 		}
 
 		[Test]
+		[TestCase (null)]
 		[TestCase ("osx-x64")]
 		[TestCase ("osx-arm64")]
 		public void BuildMyCocoaApp (string runtimeIdentifier)
@@ -86,13 +92,18 @@ namespace Xamarin.Tests {
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 			Clean (project_path);
 			var properties = new Dictionary<string, string> (verbosity);
-			properties ["RuntimeIdentifier"] = runtimeIdentifier;
+			if (!string.IsNullOrEmpty (runtimeIdentifier)) {
+				properties ["RuntimeIdentifier"] = runtimeIdentifier;
+			} else {
+				runtimeIdentifier = "osx-x64"; // default RID for macOS projects. We set it here to make the rest of the test know where to expect files to be.
+			}
 			var result = DotNet.AssertBuild (project_path, properties);
 			AssertThatLinkerExecuted (result);
 			AssertAppContents (platform, Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", "net6.0-macos", runtimeIdentifier, "MyCocoaApp.app"));
 		}
 
 		[Test]
+		[TestCase (null)]
 		[TestCase ("tvossimulator-x64")]
 		[TestCase ("tvos-arm64")]
 		public void BuildMyTVApp (string runtimeIdentifier)
@@ -102,7 +113,11 @@ namespace Xamarin.Tests {
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 			Clean (project_path);
 			var properties = new Dictionary<string, string> (verbosity);
-			properties ["RuntimeIdentifier"] = runtimeIdentifier;
+			if (!string.IsNullOrEmpty (runtimeIdentifier)) {
+				properties ["RuntimeIdentifier"] = runtimeIdentifier;
+			} else {
+				runtimeIdentifier = "tvossimulator-x64"; // default RID for tvOS projects. We set it here to make the rest of the test know where to expect files to be.
+			}
 			var result = DotNet.AssertBuild (project_path, properties);
 			AssertThatLinkerExecuted (result);
 			AssertAppContents (platform, Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", "net6.0-tvos", runtimeIdentifier, "MyTVApp.app"));
@@ -120,6 +135,7 @@ namespace Xamarin.Tests {
 		}
 
 		[Test]
+		[TestCase (null)]
 		[TestCase ("maccatalyst-x64")]
 		[TestCase ("maccatalyst-arm64")]
 		public void BuildMyCatalystApp (string runtimeIdentifier)
@@ -129,7 +145,11 @@ namespace Xamarin.Tests {
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 			Clean (project_path);
 			var properties = new Dictionary<string, string> (verbosity);
-			properties ["RuntimeIdentifier"] = runtimeIdentifier;
+			if (!string.IsNullOrEmpty (runtimeIdentifier)) {
+				properties ["RuntimeIdentifier"] = runtimeIdentifier;
+			} else {
+				runtimeIdentifier = "maccatalyst-x64"; // default RID for Mac Catalyst projects. We set it here to make the rest of the test know where to expect files to be.
+			}
 			var result = DotNet.AssertBuild (project_path, properties);
 			AssertThatLinkerExecuted (result);
 			var appPath = Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", "net6.0-maccatalyst", runtimeIdentifier, "MyCatalystApp.app");
@@ -426,6 +446,39 @@ namespace Xamarin.Tests {
 				Assert.That (appExecutable, Does.Exist, "There is an executable");
 				ExecuteWithMagicWordAndAssert (appExecutable);
 			}
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.iOS, "ios-x64")] // valid RID in a previous preview (and common mistake)
+		[TestCase (ApplePlatform.iOS, "iossimulator-x84")] // it's x86, not x84
+		[TestCase (ApplePlatform.iOS, "iossimulator-arm64")] // we don't support this yet
+		[TestCase (ApplePlatform.iOS, "helloworld")] // random text
+		[TestCase (ApplePlatform.iOS, "osx-x64")] // valid RID for another platform
+		[TestCase (ApplePlatform.TVOS, "tvos-x64")] // valid RID in a previous preview (and common mistake)
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-x46")] // it's x64, not x46
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm64")] // we don't support this yet
+		[TestCase (ApplePlatform.TVOS, "helloworld")] // random text
+		[TestCase (ApplePlatform.TVOS, "osx-x64")] // valid RID for another platform
+		[TestCase (ApplePlatform.MacOSX, "osx-x46")] // it's x64, not x46
+		[TestCase (ApplePlatform.MacOSX, "macos-arm64")] // it's osx, not macos
+		[TestCase (ApplePlatform.MacOSX, "helloworld")] // random text
+		[TestCase (ApplePlatform.MacOSX, "ios-arm64")] // valid RID for another platform
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x46")] // it's x64, not x46
+		[TestCase (ApplePlatform.MacCatalyst, "helloworld")] // random text
+		[TestCase (ApplePlatform.MacCatalyst, "osx-x64")] // valid RID for another platform
+		public void InvalidRuntimeIdentifier (ApplePlatform platform, string runtimeIdentifier)
+		{
+			var project = "MySimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var project_path = GetProjectPath (project, platform: platform);
+			Clean (project_path);
+			var properties = new Dictionary<string, string> (verbosity);
+			properties ["RuntimeIdentifier"] = runtimeIdentifier;
+			var rv = DotNet.AssertBuildFailure (project_path, properties);
+			var errors = BinLog.GetBuildMessages (rv.BinLogPath).Where (v => v.Type == BuildLogEventType.Error).ToArray ();
+			Assert.AreEqual (1, errors.Length, "Error count");
+			Assert.AreEqual ($"The RuntimeIdentifier '{runtimeIdentifier}' is invalid.", errors [0].Message, "Error message");
 		}
 
 		void ExecuteWithMagicWordAndAssert (string executable)
