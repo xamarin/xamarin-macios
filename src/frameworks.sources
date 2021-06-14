@@ -2204,6 +2204,7 @@ TVOS_FRAMEWORKS =           \
 
 MACCATALYST_FRAMEWORKS = \
 	$(COMMON_FRAMEWORKS) \
+	AppKit \
 	AVKit \
 	Accounts \
 	AdServices \
