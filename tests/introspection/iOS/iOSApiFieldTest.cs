@@ -60,9 +60,8 @@ namespace Introspection {
 				return Runtime.Arch == Arch.SIMULATOR && !TestRuntime.CheckXcodeVersion (9, 0);
 			case "iAd":
 				// largely removed in xcode 13, including ADClient.ErrorDomain
-				if (TestRuntime.CheckXcodeVersion (13, 0))
-					return true;
-				break;
+				// since using this code leads to rejections it's totally removed (so no version check)
+				return true;
 			}
 
 			switch (p.Name) {
