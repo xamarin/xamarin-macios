@@ -58,7 +58,11 @@ namespace Introspection {
 			case "IOSurface":
 				// Available in the simulator starting with iOS 11
 				return Runtime.Arch == Arch.SIMULATOR && !TestRuntime.CheckXcodeVersion (9, 0);
-
+			case "iAd":
+				// largely removed in xcode 13, including ADClient.ErrorDomain
+				if (TestRuntime.CheckXcodeVersion (13, 0))
+					return true;
+				break;
 			}
 
 			switch (p.Name) {
