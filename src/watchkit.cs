@@ -1266,6 +1266,10 @@ namespace WatchKit {
 		[Watch (4,0)]
 		[Export ("setTaskCompletedWithSnapshot:")]
 		void SetTaskCompleted (bool refreshSnapshot);
+
+		[Watch (8,0)]
+		[NullAllowed, Export ("expirationHandler", ArgumentSemantic.Strong)]
+		Action ExpirationHandler { get; set; }
 	}
 
 	[Watch (3,0)][NoiOS]
