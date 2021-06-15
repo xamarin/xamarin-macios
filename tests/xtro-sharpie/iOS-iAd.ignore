@@ -1,12 +1,50 @@
-## API changed, fixed in XAMCORE_4_0 not to cause an API break
-!incorrect-protocol-member! ADInterstitialAdDelegate::interstitialAdActionDidFinish: is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! ADInterstitialAdDelegate::interstitialAdActionShouldBegin:willLeaveApplication: is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! ADInterstitialAdDelegate::interstitialAdDidLoad: is OPTIONAL and should NOT be abstract
+## removed in Xcode 13 beta 1
+## however the API existed (as obsolete mostly) in xcode12.5 - even if they are already rejected
 
-## Deprecated in iOS 4.2 - removed from XAMCORE_3_0
-!unknown-field! ADBannerContentSizeIdentifier320x50 bound
-!unknown-field! ADBannerContentSizeIdentifier480x32 bound
-
-## static members in category -> bound manually
+!missing-field! ADBannerContentSizeIdentifierLandscape not bound
+!missing-field! ADBannerContentSizeIdentifierPortrait not bound
+!missing-field! ADErrorDomain not bound
+!missing-pinvoke! ADClampedBannerSize is not bound
+!missing-protocol! ADBannerViewDelegate not bound
+!missing-protocol! ADInterstitialAdDelegate not bound
+!missing-selector! +ADBannerView::sizeFromBannerContentSizeIdentifier: not bound
 !missing-selector! +AVPlayerViewController::preparePrerollAds not bound
 !missing-selector! +UIViewController::prepareInterstitialAds not bound
+!missing-selector! ADBannerView::adType not bound
+!missing-selector! ADBannerView::advertisingSection not bound
+!missing-selector! ADBannerView::cancelBannerViewAction not bound
+!missing-selector! ADBannerView::currentContentSizeIdentifier not bound
+!missing-selector! ADBannerView::delegate not bound
+!missing-selector! ADBannerView::initWithAdType: not bound
+!missing-selector! ADBannerView::isBannerLoaded not bound
+!missing-selector! ADBannerView::isBannerViewActionInProgress not bound
+!missing-selector! ADBannerView::requiredContentSizeIdentifiers not bound
+!missing-selector! ADBannerView::setAdvertisingSection: not bound
+!missing-selector! ADBannerView::setCurrentContentSizeIdentifier: not bound
+!missing-selector! ADBannerView::setDelegate: not bound
+!missing-selector! ADBannerView::setRequiredContentSizeIdentifiers: not bound
+!missing-selector! ADClient::determineAppInstallationAttributionWithCompletionHandler: not bound
+!missing-selector! ADClient::lookupAdConversionDetails: not bound
+!missing-selector! ADInterstitialAd::cancelAction not bound
+!missing-selector! ADInterstitialAd::delegate not bound
+!missing-selector! ADInterstitialAd::isActionInProgress not bound
+!missing-selector! ADInterstitialAd::isLoaded not bound
+!missing-selector! ADInterstitialAd::presentFromViewController: not bound
+!missing-selector! ADInterstitialAd::presentInView: not bound
+!missing-selector! ADInterstitialAd::setDelegate: not bound
+!missing-selector! ADInterstitialAdPresentationViewController::initForInterstitialAd: not bound
+!missing-selector! ADInterstitialAdPresentationViewController::shouldTestVisibilityAtPoint: not bound
+!missing-selector! AVPlayerViewController::cancelPreroll not bound
+!missing-selector! AVPlayerViewController::playPrerollAdWithCompletionHandler: not bound
+!missing-selector! UIViewController::canDisplayBannerAds not bound
+!missing-selector! UIViewController::interstitialPresentationPolicy not bound
+!missing-selector! UIViewController::isDisplayingBannerAd not bound
+!missing-selector! UIViewController::isPresentingFullScreenAd not bound
+!missing-selector! UIViewController::originalContentView not bound
+!missing-selector! UIViewController::requestInterstitialAdPresentation not bound
+!missing-selector! UIViewController::setCanDisplayBannerAds: not bound
+!missing-selector! UIViewController::setInterstitialPresentationPolicy: not bound
+!missing-selector! UIViewController::shouldPresentInterstitialAd not bound
+!missing-type! ADBannerView not bound
+!missing-type! ADInterstitialAd not bound
+!missing-type! ADInterstitialAdPresentationViewController not bound

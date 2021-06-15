@@ -934,7 +934,7 @@ IAD_API_SOURCES = \
 	iAd/iAd.cs \
 
 IAD_SOURCES = \
-	iAd/ADBannerView.cs \
+	iAd/ADCompat.cs \
 
 # ImageCaptureKit
 IMAGECAPTURECORE_API_SOURCES = \
