@@ -317,11 +317,55 @@
 			<!-- Mark our entry assembly as a root assembly. -->
 			<TrimmerRootAssembly Include="@(ResolvedFileToPublish)" Condition="'%(ResolvedFileToPublish.Filename)' == '$(AssemblyName)' And '%(ResolvedFileToPublish.Extension)' == '.dll'" />
 
-			<!-- add a custom step which inserts any other steps we need -->
-			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)">
-				<BeforeStep>MarkStep</BeforeStep>
-				<Type>Xamarin.SetupStep</Type>
-			</_TrimmerCustomSteps>
+			<!--
+				pre-mark custom steps
+			-->
+			<!-- TODO: reverse the pre-mark steps once we get the fix from https://github.com/mono/linker/pull/2082 -->
+			<!-- TODO: these steps should probably run after mark. -->
+			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" BeforeStep="MarkStep" Condition="'$(_LinkMode)' != 'None'" Type="Xamarin.Linker.Steps.PreMarkDispatcher" />
+			<!-- The final decision to remove/keep the dynamic registrar must be done before the linking step -->
+			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" BeforeStep="MarkStep" Type="MonoTouch.Tuner.RegistrarRemovalTrackingStep" />
+			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" BeforeStep="MarkStep" Type="MonoTouch.Tuner.CoreTypeMapStep" />
+			<!-- Load the list of assemblies loaded by the linker. -->
+			<!-- This would not be needed if LinkContext.GetAssemblies () was exposed to us. -->
+			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" BeforeStep="MarkStep" Type="Xamarin.Linker.CollectAssembliesStep" />
+			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" BeforeStep="MarkStep" Type="Xamarin.SetupStep" />
+
+			<!--
+				IMarkHandlers which run during Mark
+			-->
+			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" Condition="'$(_LinkMode)' != 'None'" Type="Xamarin.Linker.Steps.PreserveBlockCodeHandler" />
+			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" Condition="'$(_LinkMode)' != 'None'" Type="Xamarin.Linker.OptimizeGeneratedCodeHandler" />
+			<!-- MarkDispatcher substeps will run for all marked assemblies. -->
+			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" Condition="'$(_LinkMode)' != 'None'" Type="Xamarin.Linker.Steps.MarkDispatcher" />
+			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" Condition="'$(_LinkMode)' != 'None'" Type="Xamarin.Linker.Steps.PreserveSmartEnumConversionsHandler" />
+
+			<!--
+				post-sweep custom steps
+			-->
+			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" AfterStep="SweepStep" Condition="'$(_LinkMode)' != 'None'" Type="Xamarin.Linker.Steps.PostSweepDispatcher" />
+
+			<!--
+				pre-output custom steps
+			-->
+			<!-- TODO: reverse the pre-output steps once we get the fix from https://github.com/mono/linker/pull/2082 -->
+			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" BeforeStep="OutputStep" Type="Xamarin.Linker.Steps.PreOutputDispatcher" />
+			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" BeforeStep="OutputStep" Type="Xamarin.Linker.ExtractBindingLibrariesStep" />
+			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" BeforeStep="OutputStep" Type="Xamarin.Linker.LoadNonSkippedAssembliesStep" />
+			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" BeforeStep="OutputStep" Type="Xamarin.Linker.Steps.ListExportedSymbols" />
+
+			<!--
+				post-output steps
+			-->
+			<!-- TODO: remove AfterStep="OutputStep" from the post-output steps once we get the fix from https://github.com/mono/linker/pull/2082 -->
+			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" AfterStep="OutputStep" Type="Xamarin.Linker.RegistrarStep" />
+			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" AfterStep="OutputStep" Type="Xamarin.GenerateMainStep" />
+			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" AfterStep="OutputStep" Type="Xamarin.GenerateReferencesStep" />
+			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" AfterStep="OutputStep" Type="Xamarin.GatherFrameworksStep" />
+			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" AfterStep="OutputStep" Type="Xamarin.Linker.ComputeNativeBuildFlagsStep" />
+			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" AfterStep="OutputStep" Type="Xamarin.Linker.ComputeAOTArguments" />
+			<!-- Must be the last step. -->
+			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" AfterStep="OutputStep" Type="Xamarin.Linker.DoneStep" />
 
 			<!-- _BundlerXmlDefinitions comes from any -xml arguments to mtouch/mmp -->
 			<TrimmerRootDescriptor Include="@(_BundlerXmlDefinitions)" />
