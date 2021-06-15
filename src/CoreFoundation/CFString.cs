@@ -62,8 +62,9 @@ namespace CoreFoundation {
 		}
 
 		public CFRange (int loc, int len)
-			: this ((long) loc, (long) len)
 		{
+			this.loc = loc;
+			this.len = len;
 		}
 
 		public CFRange (long l, long len)
