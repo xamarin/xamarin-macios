@@ -126,3 +126,7 @@
 !missing-selector! VNStatefulRequest::requestFrameAnalysisSpacing not bound
 !missing-selector! VNVideoProcessor::addRequest:withProcessingOptions:error: not bound
 !missing-selector! VNVideoProcessor::analyzeWithTimeRange:error: not bound
+
+## removed in xcode 13 and rejected by app store
+!missing-selector! VNImageHomographicAlignmentObservation::setWarpTransform: not bound
+!missing-selector! VNImageTranslationAlignmentObservation::setAlignmentTransform: not bound
