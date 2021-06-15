@@ -27256,46 +27256,6 @@ namespace AppKit {
 
 	interface INSCollectionLayoutEnvironment { }
 
-	delegate NSCollectionLayoutGroupCustomItem[] NSCollectionLayoutGroupCustomItemProvider (INSCollectionLayoutEnvironment layout);
-
-	[Mac (10,15)]
-	[BaseType (typeof (NSCollectionLayoutItem))]
-	[DisableDefaultCtor]
-	interface NSCollectionLayoutGroup : NSCopying
-	{
-		[Static]
-		[Export ("horizontalGroupWithLayoutSize:subitem:count:")]
-		NSCollectionLayoutGroup CreateHorizontalGroup (NSCollectionLayoutSize layoutSize, NSCollectionLayoutItem subitem, nint count);
-
-		[Static]
-		[Export ("horizontalGroupWithLayoutSize:subitems:")]
-		NSCollectionLayoutGroup CreateHorizontalGroup (NSCollectionLayoutSize layoutSize, NSCollectionLayoutItem[] subitems);
-
-		[Static]
-		[Export ("verticalGroupWithLayoutSize:subitem:count:")]
-		NSCollectionLayoutGroup CreateVerticalGroup (NSCollectionLayoutSize layoutSize, NSCollectionLayoutItem subitem, nint count);
-
-		[Static]
-		[Export ("verticalGroupWithLayoutSize:subitems:")]
-		NSCollectionLayoutGroup CreateVerticalGroup (NSCollectionLayoutSize layoutSize, NSCollectionLayoutItem[] subitems);
-
-		[Static]
-		[Export ("customGroupWithLayoutSize:itemProvider:")]
-		NSCollectionLayoutGroup CreateCustomGroup (NSCollectionLayoutSize layoutSize, NSCollectionLayoutGroupCustomItemProvider itemProvider);
-
-		[Export ("supplementaryItems", ArgumentSemantic.Copy)]
-		NSCollectionLayoutSupplementaryItem[] SupplementaryItems { get; set; }
-
-		[NullAllowed, Export ("interItemSpacing", ArgumentSemantic.Copy)]
-		NSCollectionLayoutSpacing InterItemSpacing { get; set; }
-
-		[Export ("subitems")]
-		NSCollectionLayoutItem[] Subitems { get; }
-
-		[Export ("visualDescription")]
-		string VisualDescription { get; }
-	}
-
 	[Mac (10,15)]
 	[BaseType (typeof (NSToolbarItem))]
 	interface NSMenuToolbarItem

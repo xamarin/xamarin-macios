@@ -1543,4 +1543,66 @@ namespace UIKit {
 		[Export ("lineBreakStrategy", ArgumentSemantic.Assign)]
 		NSLineBreakStrategy LineBreakStrategy { get; set; }
 	}
+
+	[NoWatch, TV (13,0), iOS (13,0)]
+	delegate NSCollectionLayoutGroupCustomItem [] NSCollectionLayoutGroupCustomItemProvider (INSCollectionLayoutEnvironment layoutEnvironment);
+
+	[NoWatch, TV (13,0), iOS (13,0)]
+	[BaseType (typeof (NSCollectionLayoutItem))]
+	[DisableDefaultCtor]
+	interface NSCollectionLayoutGroup : NSCopying {
+
+		[Static]
+		[Export ("horizontalGroupWithLayoutSize:subitem:count:")]
+#if MONOMAC && !XAMCORE_4_0
+		NSCollectionLayoutGroup CreateHorizontalGroup (NSCollectionLayoutSize layoutSize, NSCollectionLayoutItem subitem, nint count);
+#else
+		NSCollectionLayoutGroup CreateHorizontal (NSCollectionLayoutSize layoutSize, NSCollectionLayoutItem subitem, nint count);
+#endif
+
+		[Static]
+		[Export ("horizontalGroupWithLayoutSize:subitems:")]
+#if MONOMAC && !XAMCORE_4_0
+		NSCollectionLayoutGroup CreateHorizontalGroup (NSCollectionLayoutSize layoutSize, NSCollectionLayoutItem [] subitems);
+#else
+		NSCollectionLayoutGroup CreateHorizontal (NSCollectionLayoutSize layoutSize, params NSCollectionLayoutItem [] subitems);
+#endif
+
+		[Static]
+		[Export ("verticalGroupWithLayoutSize:subitem:count:")]
+#if MONOMAC && !XAMCORE_4_0
+		NSCollectionLayoutGroup CreateVerticalGroup (NSCollectionLayoutSize layoutSize, NSCollectionLayoutItem subitem, nint count);
+#else
+		NSCollectionLayoutGroup CreateVertical (NSCollectionLayoutSize layoutSize, NSCollectionLayoutItem subitem, nint count);
+#endif
+
+		[Static]
+		[Export ("verticalGroupWithLayoutSize:subitems:")]
+#if MONOMAC && !XAMCORE_4_0
+		NSCollectionLayoutGroup CreateVerticalGroup (NSCollectionLayoutSize layoutSize, NSCollectionLayoutItem [] subitems);
+#else
+		NSCollectionLayoutGroup CreateVertical (NSCollectionLayoutSize layoutSize, params NSCollectionLayoutItem [] subitems);
+#endif
+
+		[Static]
+		[Export ("customGroupWithLayoutSize:itemProvider:")]
+#if MONOMAC && !XAMCORE_4_0
+		NSCollectionLayoutGroup CreateCustomGroup (NSCollectionLayoutSize layoutSize, NSCollectionLayoutGroupCustomItemProvider itemProvider);
+#else
+		NSCollectionLayoutGroup CreateCustom (NSCollectionLayoutSize layoutSize, NSCollectionLayoutGroupCustomItemProvider itemProvider);
+#endif
+
+		[Export ("supplementaryItems", ArgumentSemantic.Copy)]
+		NSCollectionLayoutSupplementaryItem [] SupplementaryItems { get; set; }
+
+		[NullAllowed, Export ("interItemSpacing", ArgumentSemantic.Copy)]
+		NSCollectionLayoutSpacing InterItemSpacing { get; set; }
+
+		[Export ("subitems")]
+		NSCollectionLayoutItem [] Subitems { get; }
+
+		[Export ("visualDescription")]
+		string VisualDescription { get; }
+	}
+
 }

@@ -20306,47 +20306,6 @@ namespace UIKit {
 	}
 
 	[NoWatch, TV (13,0), iOS (13,0)]
-	delegate NSCollectionLayoutGroupCustomItem [] NSCollectionLayoutGroupCustomItemProvider (INSCollectionLayoutEnvironment layoutEnvironment);
-
-	[NoWatch, TV (13,0), iOS (13,0)]
-	[BaseType (typeof (NSCollectionLayoutItem))]
-	[DisableDefaultCtor]
-	interface NSCollectionLayoutGroup : NSCopying {
-
-		[Static]
-		[Export ("horizontalGroupWithLayoutSize:subitem:count:")]
-		NSCollectionLayoutGroup CreateHorizontal (NSCollectionLayoutSize layoutSize, NSCollectionLayoutItem subitem, nint count);
-
-		[Static]
-		[Export ("horizontalGroupWithLayoutSize:subitems:")]
-		NSCollectionLayoutGroup CreateHorizontal (NSCollectionLayoutSize layoutSize, params NSCollectionLayoutItem [] subitems);
-
-		[Static]
-		[Export ("verticalGroupWithLayoutSize:subitem:count:")]
-		NSCollectionLayoutGroup CreateVertical (NSCollectionLayoutSize layoutSize, NSCollectionLayoutItem subitem, nint count);
-
-		[Static]
-		[Export ("verticalGroupWithLayoutSize:subitems:")]
-		NSCollectionLayoutGroup CreateVertical (NSCollectionLayoutSize layoutSize, params NSCollectionLayoutItem [] subitems);
-
-		[Static]
-		[Export ("customGroupWithLayoutSize:itemProvider:")]
-		NSCollectionLayoutGroup CreateCustom (NSCollectionLayoutSize layoutSize, NSCollectionLayoutGroupCustomItemProvider itemProvider);
-
-		[Export ("supplementaryItems", ArgumentSemantic.Copy)]
-		NSCollectionLayoutSupplementaryItem [] SupplementaryItems { get; set; }
-
-		[NullAllowed, Export ("interItemSpacing", ArgumentSemantic.Copy)]
-		NSCollectionLayoutSpacing InterItemSpacing { get; set; }
-
-		[Export ("subitems")]
-		NSCollectionLayoutItem [] Subitems { get; }
-
-		[Export ("visualDescription")]
-		string VisualDescription { get; }
-	}
-
-	[NoWatch, TV (13,0), iOS (13,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSCollectionLayoutDimension : NSCopying {
