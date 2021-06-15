@@ -23,9 +23,6 @@ namespace LinkSdk {
 	[Preserve (AllMembers = true)]
 	public class CryptoTest {
 		
-#if NET
-		[Ignore ("https://github.com/dotnet/runtime/issues/36897")]
-#endif
 		[Test]
 		public void AesCreate ()
 		{
@@ -33,14 +30,16 @@ namespace LinkSdk {
 			// located inside System.Core.dll - IOW the linker needs to be aware of this
 			Aes aes = Aes.Create ();
 			Assert.NotNull (aes, "Aes");
-			Assert.True (aes.GetType ().Assembly.FullName.StartsWith ("System.Core, ", StringComparison.Ordinal), "System.Core");
+#if NET
+			const string prefix = "System.Security.Cryptography.Algorithms, ";
+#else
+			const string prefix = "System.Core, ";
+#endif
+			Assert.True (aes.GetType ().Assembly.FullName.StartsWith (prefix, StringComparison.Ordinal), prefix);
 		}
 
 		static int trust_validation_callback;
 
-#if NET
-		[Ignore ("System.EntryPointNotFoundException: AppleCryptoNative_SecKeychainItemCopyKeychain")] // https://github.com/dotnet/runtime/issues/36897
-#endif
 		[Test]
 		public void TrustUsingNewCallback ()
 		{
@@ -70,9 +69,6 @@ namespace LinkSdk {
 			}
 		}
 
-#if NET
-		[Ignore ("System.EntryPointNotFoundException: AppleCryptoNative_SecKeychainItemCopyKeychain")] // https://github.com/dotnet/runtime/issues/36897
-#endif
 		[Test]
 		public void SSL_IP_5706 ()
 		{
@@ -97,9 +93,6 @@ namespace LinkSdk {
 
 		static int sne_validation_callback;
 
-#if NET
-		[Ignore ("System.EntryPointNotFoundException: AppleCryptoNative_SecKeychainItemCopyKeychain")] // https://github.com/dotnet/runtime/issues/36897
-#endif
 		[Test]
 		public void TLS1_ServerNameExtension ()
 		{
@@ -145,14 +138,21 @@ namespace LinkSdk {
 			}
 		}
 
-#if NET
-		[Ignore ("System.EntryPointNotFoundException: AppleCryptoNative_SecKeychainCreate")] // https://github.com/dotnet/runtime/issues/36897
-#endif
 		[Test]
 		public void Chain ()
 		{
 			X509Store store = new X509Store ("Trust");
-			store.Open (OpenFlags.ReadWrite);
+			try {
+				store.Open (OpenFlags.ReadWrite);
+			}
+			catch (CryptographicException) {
+#if NET
+				// System.PlatformNotSupportedException from Internal.Cryptography.Pal.StorePal.FromSystemStore
+				Assert.Ignore ("Not support by PAL");
+#else
+				Assert.Fail ("X509Store.Add");
+#endif
+			}
 			
 			string certString = "MIIDGjCCAgKgAwIBAgICApowDQYJKoZIhvcNAQEFBQAwLjELMAkGA1UEBhMCQ1oxDjAMBgNVBAoTBVJlYmV4MQ8wDQYDVQQDEwZUZXN0Q0EwHhcNMDAwMTAxMDAwMDAwWhcNNDkxMjMxMDAwMDAwWjAuMQswCQYDVQQGEwJDWjEOMAwGA1UEChMFUmViZXgxDzANBgNVBAMTBlRlc3RDQTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMgeRAcaNLTFaaBhFx8RDJ8b9K655dNUXmO11mbImDbPq4qVeZXDgAjnzPov8iBscwfqBvBpF38LsxBIPA2i1d0RMsQruOhJHttA9I0enElUXXj63sOEVNMSQeg1IMyvNeEotag+Gcx6SF+HYnariublETaZGzwAOD2SM49mfqUyfkgeTjdO6qp8xnoEr7dS5pEBHDg70byj/JEeZd3gFea9TiOXhbCrI89dKeWYBeoHFYhhkaSB7q9EOaUEzKo/BQ6PBHFu6odfGkOjXuwfPkY/wUy9U4uj75LmdhzvJf6ifsJS9BQZF4//JcUYSxiyzpxDYqSbTF3g9w5Ds2LOAscCAwEAAaNCMEAwDgYDVR0PAQH/BAQDAgB/MA8GA1UdEwEB/wQFMAMBAf8wHQYDVR0OBBYEFD1v20tPgvHTEK/0eLO09j0rL2qXMA0GCSqGSIb3DQEBBQUAA4IBAQAZIjcdR3EZiFJ67gfCnPBrxVgFNvaRAMCYEYYIGDCAUeB4bLTu9dvun9KFhgVNqjgx+xTTpx9d/5mAZx5W3YAG6faQPCaHccLefB1M1hVPmo8md2uw1a44RHU9LlM0V5Lw8xTKRkQiZz3Ysu0sY27RvLrTptbbfkE4Rp9qAMguZT9cFrgPAzh+0zuo8NNj9Jz7/SSa83yIFmflCsHYSuNyKIy2iaX9TCVbTrwJmRIB65gqtTb6AKtFGIPzsb6nayHvgGHFchrFovcNrvRpE71F38oVG+eCjT23JfiIZim+yJLppSf56167u8etDcQ39j2b9kzWlHIVkVM0REpsKF7S";
 			X509Certificate2 rootCert = new X509Certificate2 (Convert.FromBase64String (certString));
@@ -229,9 +229,6 @@ namespace LinkSdk {
 			0x43, 0x45, 0x52, 0x54, 0x49, 0x46, 0x49, 0x43, 0x41, 0x54, 0x45, 0x2D, 0x2D, 0x2D, 0x2D, 0x2D, 0x0D, 0x0A, };
 
 
-#if NET
-		[Ignore ("System.EntryPointNotFoundException : AppleCryptoNative_SecCopyErrorMessageString")] // https://github.com/dotnet/runtime/issues/36897
-#endif
 		[Test]
 		public void Sha256 ()
 		{

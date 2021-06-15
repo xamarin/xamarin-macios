@@ -340,9 +340,6 @@ namespace MonoTouchFixtures.Security {
 
 #if !MONOMAC // Works different on Mac
 		[Test]
-#if NET
-		[Ignore ("System.EntryPointNotFoundException: AppleCryptoNative_X509ImportCertificate")] // https://github.com/dotnet/runtime/issues/36897
-#endif
 		public void SecRecordRecordTest ()
 		{
 			using (var cert = new X509Certificate (CertificateTest.mail_google_com))
@@ -361,9 +358,6 @@ namespace MonoTouchFixtures.Security {
 		}
 
 		[Test]
-#if NET
-		[Ignore ("System.EntryPointNotFoundException: AppleCryptoNative_SecKeychainCreate")] // https://github.com/dotnet/runtime/issues/36897
-#endif
 		public void KeyRecordTest ()
 		{
 			using (var cert = new X509Certificate2 (ImportExportTest.farscape_pfx, "farscape"))

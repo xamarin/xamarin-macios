@@ -32,9 +32,6 @@ namespace MonoTouchFixtures.Security {
 	[TestFixture]
 	// we want the test to be availble if we use the linker
 	[Preserve (AllMembers = true)]
-#if NET
-	[Ignore ("System.EntryPointNotFoundException: AppleCryptoNative_X509ImportCertificate")] // https://github.com/dotnet/runtime/issues/36897
-#endif
 	public class TrustTest {
 
 		[DllImport (Constants.CoreFoundationLibrary)]
