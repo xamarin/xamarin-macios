@@ -217,9 +217,9 @@ namespace CoreFoundation {
 		
 		public override string ToString ()
 		{
-			if (str != null)
-				return str;
-			return FromHandle (Handle);
+			if (str is null)
+				str = FromHandle (Handle);
+			return str;
 		}
 #endif // !COREBUILD
 	}
