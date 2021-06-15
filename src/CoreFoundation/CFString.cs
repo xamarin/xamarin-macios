@@ -62,8 +62,9 @@ namespace CoreFoundation {
 		}
 
 		public CFRange (int loc, int len)
-			: this ((long) loc, (long) len)
 		{
+			this.loc = loc;
+			this.len = len;
 		}
 
 		public CFRange (long l, long len)
@@ -217,9 +218,9 @@ namespace CoreFoundation {
 		
 		public override string ToString ()
 		{
-			if (str != null)
-				return str;
-			return FromHandle (Handle);
+			if (str is null)
+				str = FromHandle (Handle);
+			return str;
 		}
 #endif // !COREBUILD
 	}

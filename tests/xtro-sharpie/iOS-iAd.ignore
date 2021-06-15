@@ -1,3 +1,5 @@
-## Deprecated in iOS 4.2 - removed from XAMCORE_3_0
-!unknown-field! ADBannerContentSizeIdentifier320x50 bound
-!unknown-field! ADBannerContentSizeIdentifier480x32 bound
+## removed in Xcode 13 beta 1
+## enums kept for binary compatibility
+!unknown-native-enum! ADAdType bound
+!unknown-native-enum! ADError bound
+!unknown-native-enum! ADInterstitialPresentationPolicy bound
