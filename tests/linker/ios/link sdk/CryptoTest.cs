@@ -70,6 +70,9 @@ namespace LinkSdk {
 		}
 
 		[Test]
+#if NET
+		[Ignore ("Crash https://github.com/dotnet/runtime/issues/54239")]
+#endif
 		public void SSL_IP_5706 ()
 		{
 #if __WATCHOS__

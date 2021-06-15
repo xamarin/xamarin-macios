@@ -349,7 +349,10 @@ namespace MonoTouchFixtures.Security {
 
 				var ret = rec.GetCertificate ();
 				Assert.That (ret.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
+#if !NET
+				// dotnet PAL layer does not return the same instance
 				Assert.That (ret.Handle, Is.EqualTo (cert.Handle), "Same Handle");
+#endif
 				Assert.That (cert.ToString (true), Is.EqualTo (ret.ToX509Certificate ().ToString (true)), "X509Certificate");
 
 				Assert.Throws<InvalidOperationException> (() => rec.GetKey (), "GetKey should throw");

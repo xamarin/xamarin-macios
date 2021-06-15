@@ -552,7 +552,10 @@ namespace MonoTouchFixtures.Security {
 				Assert.That (cert.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
 				Assert.That (CFGetRetainCount (cert.Handle), Is.EqualTo ((nint) 1), "RetainCount");
 				using (var sc = new SecCertificate (cert)) {
+#if !NET
+					// dotnet PAL layer does not return the same instance
 					Assert.That (sc.Handle, Is.EqualTo (cert.Handle), "Same Handle");
+#endif
 					CheckMailGoogleCom (sc, 2);
 					Assert.That (cert.ToString (true), Is.EqualTo (sc.ToX509Certificate ().ToString (true)), "X509Certificate");
 				}
