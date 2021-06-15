@@ -158,8 +158,8 @@ namespace CloudKit {
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'DisplayContact.FamilyName'.")]
 		[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'DisplayContact.FamilyName'.")]
-		[Obsoleted (PlatformName.MacOSX, 12, 0, message : "Use 'DisplayContact.GivenName'.")]
-		[Obsoleted (PlatformName.iOS, 15, 0, message : "Use 'DisplayContact.GivenName'.")]
+		[Obsoleted (PlatformName.MacOSX, 12, 0, message : "Use 'DisplayContact.FamilyName'.")]
+		[Obsoleted (PlatformName.iOS, 15, 0, message : "Use 'DisplayContact.FamilyName'.")]
 #endif
 		public virtual string LastName {
 			get { return null; }
