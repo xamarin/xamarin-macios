@@ -36,14 +36,19 @@ using NSWindow=System.Object;
 using NSTextContainer=System.Object;
 using NSTextStorage=System.Object;
 #endif // WATCH
+#else
+using UICollectionLayoutListConfiguration=System.Object;
+using UIContentInsetsReference=System.Object;
 #endif // !MONOMAC
 
 #if MONOMAC
 using TextAlignment=AppKit.NSTextAlignment;
 using LineBreakMode=AppKit.NSLineBreakMode;
+using CollectionLayoutSectionOrthogonalScrollingBehavior=AppKit.NSCollectionLayoutSectionOrthogonalScrollingBehavior;
 #else
 using TextAlignment=UIKit.UITextAlignment;
 using LineBreakMode=UIKit.UILineBreakMode;
+using CollectionLayoutSectionOrthogonalScrollingBehavior=UIKit.UICollectionLayoutSectionOrthogonalScrollingBehavior;
 #endif
 
 #if MONOMAC
@@ -1603,6 +1608,55 @@ namespace UIKit {
 
 		[Export ("visualDescription")]
 		string VisualDescription { get; }
+	}
+
+	[NoWatch, TV (13,0), iOS (13,0)]
+	delegate void NSCollectionLayoutSectionVisibleItemsInvalidationHandler (INSCollectionLayoutVisibleItem [] visibleItems, CGPoint contentOffset, INSCollectionLayoutEnvironment layoutEnvironment);
+
+	[Mac (10,15)]
+	[NoWatch, TV (13,0), iOS (13,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface NSCollectionLayoutSection : NSCopying {
+
+		[Static]
+		[Export ("sectionWithGroup:")]
+		NSCollectionLayoutSection Create (NSCollectionLayoutGroup group);
+
+		[Export ("contentInsets", ArgumentSemantic.Assign)]
+		NSDirectionalEdgeInsets ContentInsets { get; set; }
+
+		[Export ("interGroupSpacing")]
+		nfloat InterGroupSpacing { get; set; }
+
+		[NoMac]
+		[MacCatalyst (14,0)]
+		[TV (14,0), iOS (14,0)]
+		[Export ("contentInsetsReference", ArgumentSemantic.Assign)]
+		UIContentInsetsReference ContentInsetsReference { get; set; }
+
+		[Export ("orthogonalScrollingBehavior", ArgumentSemantic.Assign)]
+		CollectionLayoutSectionOrthogonalScrollingBehavior OrthogonalScrollingBehavior { get; set; }
+
+		[Export ("boundarySupplementaryItems", ArgumentSemantic.Copy)]
+		NSCollectionLayoutBoundarySupplementaryItem [] BoundarySupplementaryItems { get; set; }
+
+		[Export ("supplementariesFollowContentInsets")]
+		bool SupplementariesFollowContentInsets { get; set; }
+
+		[NullAllowed, Export ("visibleItemsInvalidationHandler", ArgumentSemantic.Copy)]
+		NSCollectionLayoutSectionVisibleItemsInvalidationHandler VisibleItemsInvalidationHandler { get; set; }
+
+		[Export ("decorationItems", ArgumentSemantic.Copy)]
+		NSCollectionLayoutDecorationItem [] DecorationItems { get; set; }
+
+		// NSCollectionLayoutSection (UICollectionLayoutListSection) category
+		[NoMac]
+		[MacCatalyst (14,0)]
+		[TV (14,0), iOS (14,0)]
+		[Static]
+		[Export ("sectionWithListConfiguration:layoutEnvironment:")]
+		NSCollectionLayoutSection GetSection (UICollectionLayoutListConfiguration listConfiguration, INSCollectionLayoutEnvironment layoutEnvironment);
 	}
 
 }

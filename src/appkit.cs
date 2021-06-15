@@ -27314,39 +27314,6 @@ namespace AppKit {
 
 	interface INSCollectionLayoutVisibleItem { }
 
-	delegate void NSCollectionLayoutSectionVisibleItemsInvalidationHandler (INSCollectionLayoutVisibleItem[] items, CGPoint point, INSCollectionLayoutEnvironment layout);
-
-	[Mac (10,15)]
-	[BaseType (typeof (NSObject))]
-	[DisableDefaultCtor]
-	interface NSCollectionLayoutSection : NSCopying
-	{
-		[Static]
-		[Export ("sectionWithGroup:")]
-		NSCollectionLayoutSection Create (NSCollectionLayoutGroup group);
-
-		[Export ("contentInsets", ArgumentSemantic.Assign)]
-		NSDirectionalEdgeInsets ContentInsets { get; set; }
-
-		[Export ("interGroupSpacing")]
-		nfloat InterGroupSpacing { get; set; }
-
-		[Export ("orthogonalScrollingBehavior", ArgumentSemantic.Assign)]
-		NSCollectionLayoutSectionOrthogonalScrollingBehavior OrthogonalScrollingBehavior { get; set; }
-
-		[Export ("boundarySupplementaryItems", ArgumentSemantic.Copy)]
-		NSCollectionLayoutBoundarySupplementaryItem[] BoundarySupplementaryItems { get; set; }
-
-		[Export ("supplementariesFollowContentInsets")]
-		bool SupplementariesFollowContentInsets { get; set; }
-
-		[NullAllowed, Export ("visibleItemsInvalidationHandler", ArgumentSemantic.Copy)]
-		NSCollectionLayoutSectionVisibleItemsInvalidationHandler VisibleItemsInvalidationHandler { get; set; }
-
-		[Export ("decorationItems", ArgumentSemantic.Copy)]
-		NSCollectionLayoutDecorationItem[] DecorationItems { get; set; }
-	}
-
 	delegate NSCollectionLayoutSection NSCollectionViewCompositionalLayoutSectionProvider (nint section, INSCollectionLayoutEnvironment layout);
 
 	[Mac (10,15)]

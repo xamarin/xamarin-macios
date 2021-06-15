@@ -20216,50 +20216,6 @@ namespace UIKit {
 	}
 
 	[NoWatch, TV (13,0), iOS (13,0)]
-	delegate void NSCollectionLayoutSectionVisibleItemsInvalidationHandler (INSCollectionLayoutVisibleItem [] visibleItems, CGPoint contentOffset, INSCollectionLayoutEnvironment layoutEnvironment);
-
-	[NoWatch, TV (13,0), iOS (13,0)]
-	[BaseType (typeof (NSObject))]
-	[DisableDefaultCtor]
-	interface NSCollectionLayoutSection : NSCopying {
-
-		[Static]
-		[Export ("sectionWithGroup:")]
-		NSCollectionLayoutSection Create (NSCollectionLayoutGroup group);
-
-		[Export ("contentInsets", ArgumentSemantic.Assign)]
-		NSDirectionalEdgeInsets ContentInsets { get; set; }
-
-		[Export ("interGroupSpacing")]
-		nfloat InterGroupSpacing { get; set; }
-
-		[TV (14,0), iOS (14,0)]
-		[Export ("contentInsetsReference", ArgumentSemantic.Assign)]
-		UIContentInsetsReference ContentInsetsReference { get; set; }
-
-		[Export ("orthogonalScrollingBehavior", ArgumentSemantic.Assign)]
-		UICollectionLayoutSectionOrthogonalScrollingBehavior OrthogonalScrollingBehavior { get; set; }
-
-		[Export ("boundarySupplementaryItems", ArgumentSemantic.Copy)]
-		NSCollectionLayoutBoundarySupplementaryItem [] BoundarySupplementaryItems { get; set; }
-
-		[Export ("supplementariesFollowContentInsets")]
-		bool SupplementariesFollowContentInsets { get; set; }
-
-		[NullAllowed, Export ("visibleItemsInvalidationHandler", ArgumentSemantic.Copy)]
-		NSCollectionLayoutSectionVisibleItemsInvalidationHandler VisibleItemsInvalidationHandler { get; set; }
-
-		[Export ("decorationItems", ArgumentSemantic.Copy)]
-		NSCollectionLayoutDecorationItem [] DecorationItems { get; set; }
-
-		// NSCollectionLayoutSection (UICollectionLayoutListSection) category
-		[TV (14,0), iOS (14,0)]
-		[Static]
-		[Export ("sectionWithListConfiguration:layoutEnvironment:")]
-		NSCollectionLayoutSection GetSection (UICollectionLayoutListConfiguration listConfiguration, INSCollectionLayoutEnvironment layoutEnvironment);
-	}
-
-	[NoWatch, TV (13,0), iOS (13,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSCollectionLayoutItem : NSCopying {
