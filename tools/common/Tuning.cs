@@ -127,13 +127,8 @@ namespace MonoMac.Tuner {
 			case "LinkerSafeAttribute":
 				return true; // namespace is not important
 			case "AssemblyMetadataAttribute":
-				if (!attribute.HasConstructorArguments)
-					return false;
-				if (at.Namespace != "System.Reflection")
-					return false;
-				if (attribute.ConstructorArguments [0].Value as string != "IsTrimmable")
-					return false;
-				return (attribute.ConstructorArguments [1].Value.ToString ().ToLowerInvariant () == "true");
+				// this is only true for net6+ and can depends on other features not available on the legacy linker
+				return false;
 			}
 			return false;
 		}
