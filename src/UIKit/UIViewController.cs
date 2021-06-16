@@ -14,7 +14,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Foundation; 
-#if HAS_IAD
+#if HAS_IAD && !XAMCORE_4_0
 using iAd;
 #endif
 using ObjCRuntime;
@@ -62,14 +62,14 @@ namespace UIKit {
 				yield return uiv;
 		}
 
-#if HAS_IAD
+#if HAS_IAD && !XAMCORE_4_0
 		// This is a [Category] -> C# extension method (see adlib.cs) but it targets on static selector
 		// the resulting syntax does not look good in user code so we provide a better looking API
 		// https://trello.com/c/iQpXOxCd/227-category-and-static-methods-selectors
 		// note: we cannot reuse the same method name - as it would break compilation of existing apps
+		[Obsoleted (PlatformName.iOS, 15,0, PlatformArchitecture.None, Constants.iAdRemoved)]
 		static public void PrepareForInterstitialAds ()
 		{
-			(null as UIViewController).PrepareInterstitialAds ();
 		}
 #endif
 	}

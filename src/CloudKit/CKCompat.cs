@@ -3,6 +3,7 @@
 #if !COREBUILD
 
 using System;
+using System.Runtime.Versioning;
 using System.Threading.Tasks;
 
 #if MONOMAC || IOS
@@ -137,6 +138,32 @@ namespace CloudKit {
 		[iOS (9,0)][Mac (10,11)]
 		[Obsolete ("Empty stub (not public API).")]
 		public virtual CNContact DisplayContact { get; }
+
+#if NET
+		[UnsupportedOSPlatform ("ios15.0")]
+		[UnsupportedOSPlatform ("macos12.0")]
+#else
+		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'DisplayContact.GivenName'.")]
+		[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'DisplayContact.GivenName'.")]
+		[Obsoleted (PlatformName.MacOSX, 12, 0, message : "Use 'DisplayContact.GivenName'.")]
+		[Obsoleted (PlatformName.iOS, 15, 0, message : "Use 'DisplayContact.GivenName'.")]
+#endif
+		public virtual string FirstName {
+			get { return null; }
+		}
+
+#if NET
+		[UnsupportedOSPlatform ("ios15.0")]
+		[UnsupportedOSPlatform ("macos12.0")]
+#else
+		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'DisplayContact.FamilyName'.")]
+		[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'DisplayContact.FamilyName'.")]
+		[Obsoleted (PlatformName.MacOSX, 12, 0, message : "Use 'DisplayContact.FamilyName'.")]
+		[Obsoleted (PlatformName.iOS, 15, 0, message : "Use 'DisplayContact.FamilyName'.")]
+#endif
+		public virtual string LastName {
+			get { return null; }
+		}
 	}
 #endif
 

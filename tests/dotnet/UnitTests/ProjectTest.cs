@@ -55,6 +55,7 @@ namespace Xamarin.Tests {
 		[TestCase ("iossimulator-x86")]
 		[TestCase ("iossimulator-x64")]
 		[TestCase ("ios-arm64")]
+		[TestCase ("ios-arm")]
 		public void BuildMySingleView (string runtimeIdentifier)
 		{
 			var platform = ApplePlatform.iOS;
@@ -442,14 +443,14 @@ namespace Xamarin.Tests {
 		{
 			var output = BinLog.PrintToString (result.BinLogPath);
 			Assert.That (output, Does.Contain ("Building target \"_RunILLink\" completely."), "Linker did not executed as expected.");
-			Assert.That (output, Does.Contain ("Pipeline Steps:"), "Custom steps did not run as expected.");
+			Assert.That (output, Does.Contain ("LinkerConfiguration:"), "Custom steps did not run as expected.");
 		}
 
 		void AssertThatLinkerDidNotExecute (ExecutionResult result)
 		{
 			var output = BinLog.PrintToString (result.BinLogPath);
 			Assert.That (output, Does.Not.Contain ("Building target \"_RunILLink\" completely."), "Linker did not executed as expected.");
-			Assert.That (output, Does.Not.Contain ("Pipeline Steps:"), "Custom steps did not run as expected.");
+			Assert.That (output, Does.Not.Contain ("LinkerConfiguration:"), "Custom steps did not run as expected.");
 		}
 
 		void AssertAppContents (ApplePlatform platform, string app_directory)

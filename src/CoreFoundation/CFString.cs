@@ -62,8 +62,9 @@ namespace CoreFoundation {
 		}
 
 		public CFRange (int loc, int len)
-			: this ((long) loc, (long) len)
 		{
+			this.loc = loc;
+			this.len = len;
 		}
 
 		public CFRange (long l, long len)
@@ -114,14 +115,20 @@ namespace CoreFoundation {
 		[DllImport (Constants.CoreFoundationLibrary, CharSet=CharSet.Unicode)]
 		extern static IntPtr CFStringGetCharacters (IntPtr handle, CFRange range, IntPtr buffer);
 
-		internal static IntPtr LowLevelCreate (string str)
+		public static IntPtr CreateNative (string value)
 		{
-			if (str == null)
+			if (value is null)
 				return IntPtr.Zero;
 			
-			return CFStringCreateWithCharacters (IntPtr.Zero, str, str.Length);
+			return CFStringCreateWithCharacters (IntPtr.Zero, value, value.Length);
 		}
-		
+
+		public static void ReleaseNative (IntPtr handle)
+		{
+			if (handle != IntPtr.Zero)
+				CFObject.CFRelease (handle);
+		}
+
 		public CFString (string str)
 		{
 			if (str == null)
@@ -217,9 +224,9 @@ namespace CoreFoundation {
 		
 		public override string ToString ()
 		{
-			if (str != null)
-				return str;
-			return FromHandle (Handle);
+			if (str is null)
+				str = FromHandle (Handle);
+			return str;
 		}
 #endif // !COREBUILD
 	}

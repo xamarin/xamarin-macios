@@ -108,10 +108,11 @@ endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call SupportedTargetPlatforms,$(platform))))
 
 define WorkloadTargets
-Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.json: targets/WorkloadManifest.$(1).template.json Makefile $(TOP)/Make.config.inc $(TOP)/.git/HEAD $(TOP)/.git/index
+Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.json: targets/WorkloadManifest.$(1).template.json Makefile $(TOP)/Make.config.inc $(TOP)/.git/HEAD $(TOP)/.git/index Makefile
 	$$(Q) rm -f $$@.tmp
 	$$(Q_GEN) sed \
 		-e "s/@VERSION@/$3/g" \
+		-e "s/@BUNDLED_NETCORE_PLATFORMS_PACKAGE_VERSION@/$(BUNDLED_NETCORE_PLATFORMS_PACKAGE_VERSION)/g" \
 		-e "s/@PLATFORM_LOWERCASE@/$2/g" \
 		-e "s/@PLATFORM@/$1/g" \
 		$$< > $$@.tmp
