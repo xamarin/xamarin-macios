@@ -4056,7 +4056,7 @@ public partial class Generator : IMemberGatherer {
 	public string GenerateMarshalString (bool probe_null, bool must_copy)
 	{
 		if (must_copy){
-			return "var ns{0} = NSString.CreateNative ({1});\n";
+			return "var ns{0} = CFString.CreateNative ({1});\n";
 		}
 		return
 			"ObjCRuntime.NSStringStruct _s{0}; Console.WriteLine (\"" + CurrentMethod + ": Marshalling: {{1}}\", {1}); \n" +
@@ -4069,7 +4069,7 @@ public partial class Generator : IMemberGatherer {
 	public string GenerateDisposeString (bool probe_null, bool must_copy)
 	{
 		if (must_copy){
-			return "NSString.ReleaseNative (ns{0});\n";
+			return "CFString.ReleaseNative (ns{0});\n";
 		} else 
 			return "if (_s{0}.Flags != 0x010007d1) throw new Exception (\"String was retained, not copied\");";
 	}
