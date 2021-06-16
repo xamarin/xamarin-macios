@@ -240,6 +240,10 @@
 		</PropertyGroup>
 	</Target>
 
+	<Target Name="_WarnRuntimeIdentifiersClash" Condition="'$(_RuntimeIdentifiersClashMessage)' != ''">
+		<Warning Text="$(_RuntimeIdentifiersClashMessage)" />
+	</Target>
+
 	<!-- If we have multiple runtime identifiers, then we need to run an inner build for each of them -->
 	<Target Name="_BuildRidSpecificAppBundle"
 		DependsOnTargets="Build"

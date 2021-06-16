@@ -53,6 +53,12 @@
     <IntermediateOutputPath>$(IntermediateOutputPath)$(RuntimeIdentifier)\</IntermediateOutputPath>
     <OutputPath>$(OutputPath)$(RuntimeIdentifier)\</OutputPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(RuntimeIdentifiers)' != '' And '$(RuntimeIdentifier)' != '' ">
+    <!-- Check if both RuntimeIdentifier and RuntimeIdentifiers are set, in which case we clear RuntimeIdentifier -->
+    <!-- Also set a variable that says if this happens, so that we can show a warning later -->
+    <_RuntimeIdentifiersClashMessage>Both RuntimeIdentifier and RuntimeIdentifiers are set. The value for RuntimeIdentifier will be ignored.</_RuntimeIdentifiersClashMessage>
+    <!-- Clear RuntimeIdentifier -->
+    <RuntimeIdentifier />
   </PropertyGroup>
   <!-- This is a variation of https://github.com/dotnet/sdk/blob/873d79d861cbd001488414b9875e53acbeaed890/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.RuntimeIdentifierInference.targets#L68-L96 -->
   <!-- This doesn't cover every single possibility (in particular it does not handle ARMv7s, either as a thin or fat option, and the same for ARMv7k), but that can be done by passing /p:TargetArchitectures=ARMv7s to msbuild -->
