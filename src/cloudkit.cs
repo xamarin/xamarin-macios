@@ -93,6 +93,7 @@ namespace CloudKit {
 		[Deprecated (PlatformName.WatchOS, 8, 0, message: "Use 'HierarchicalRootRecordId' instead.")]
 		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'HierarchicalRootRecordId' instead.")]
 		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'HierarchicalRootRecordId' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use 'HierarchicalRootRecordId' instead.")]
 		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'HierarchicalRootRecordId' instead.")]
 		[Export ("rootRecordID", ArgumentSemantic.Copy)]
 		CKRecordID RootRecordID { get; }
@@ -636,6 +637,7 @@ namespace CloudKit {
 		[Deprecated (PlatformName.WatchOS, 8, 0, message: "Use 'RecordWasChangedHandler' instead.")]
 		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'RecordWasChangedHandler' instead.")]
 		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'RecordWasChangedHandler' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use 'RecordWasChangedHandler' instead.")]
 		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'RecordWasChangedHandler' instead.")]
 		[NullAllowed, Export ("recordChangedBlock", ArgumentSemantic.Copy)]
 		Action<CKRecord> RecordChanged { get; set; }
@@ -935,6 +937,7 @@ namespace CloudKit {
 		[Deprecated (PlatformName.WatchOS, 8, 0, message: "Use 'PerRecordResultHandler' instead.")]
 		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'PerRecordResultHandler' instead.")]
 		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'PerRecordResultHandler' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use 'PerRecordResultHandler' instead.")]
 		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'PerRecordResultHandler' instead.")]
 		[NullAllowed] // by default this property is null
 		[Export ("perRecordCompletionBlock", ArgumentSemantic.Copy)]
@@ -1396,6 +1399,7 @@ namespace CloudKit {
 		[Deprecated (PlatformName.WatchOS, 8, 0, message: "Use 'RecordMatchedHandler' instead.")]
 		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'RecordMatchedHandler' instead.")]
 		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'RecordMatchedHandler' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use 'RecordMatchedHandler' instead.")]
 		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'RecordMatchedHandler' instead.")]
 		[NullAllowed] // by default this property is null
 		[Export ("recordFetchedBlock", ArgumentSemantic.Copy)]
@@ -1905,6 +1909,7 @@ namespace CloudKit {
 		[Deprecated (PlatformName.WatchOS, 8, 0, message: "Use 'PerShareParticipantCompletionHandler' instead.")]
 		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'PerShareParticipantCompletionHandler' instead.")]
 		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'PerShareParticipantCompletionHandler' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use 'PerShareParticipantCompletionHandler' instead.")]
 		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'PerShareParticipantCompletionHandler' instead.")]
 		[NullAllowed, Export ("shareParticipantFetchedBlock", ArgumentSemantic.Copy)]
 		Action<CKShareParticipant> Fetched { get; set; }

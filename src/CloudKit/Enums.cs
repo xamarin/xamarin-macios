@@ -84,7 +84,6 @@ namespace CloudKit
 		ParticipantMayNeedVerification = 33,
 		ResponseLost = 34,
 		AssetNotAvailable = 35,
-		[Mac(12,0), iOS(15,0), TV(15,0), MacCatalyst (15,0)]
 		TemporarilyUnavailable = 36,
 	}
 
