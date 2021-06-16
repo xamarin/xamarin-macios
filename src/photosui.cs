@@ -528,7 +528,7 @@ namespace PhotosUI {
 		[Export ("preferredAssetRepresentationMode", ArgumentSemantic.Assign)]
 		PHPickerConfigurationAssetRepresentationMode PreferredAssetRepresentationMode { get; set; }
 
-		[NoWatch, NoTV, NoMac, iOS (15, 0), MacCatalyst (15,0)]
+		[iOS (15,0), MacCatalyst (15,0)]
 		[Export ("selection", ArgumentSemantic.Assign)]
 		PHPickerConfigurationSelection Selection { get; set; }
 
