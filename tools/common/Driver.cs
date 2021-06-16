@@ -31,7 +31,13 @@ namespace Xamarin.Bundler {
 		public static bool IsUnifiedFullSystemFramework { get { return TargetFramework == TargetFramework.Xamarin_Mac_4_5_System; } }
 		public static bool IsUnifiedMobile { get { return TargetFramework == TargetFramework.Xamarin_Mac_2_0_Mobile; } }
 
+#if MMP
+		// We know that Xamarin.Mac apps won't compile unless the developer is using Xcode 12+: https://github.com/xamarin/xamarin-macios/issues/11937, so just set that as the min Xcode version.
+		static Version min_xcode_version = new Version (12, 0);
+#else
 		static Version min_xcode_version = new Version (6, 0);
+#endif
+
 #if !NET
 		public static int Main (string [] args)
 		{
