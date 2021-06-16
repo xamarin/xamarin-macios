@@ -534,6 +534,7 @@ namespace Introspection {
 							case "ARParticipantAnchor":
 							case "ARPlaneAnchor":
 							case "ARReferenceObject":
+							case "ARSkeletonDefinition": // iOS15 / device only
 							case "ARWorldMap":
 								return;
 							}
