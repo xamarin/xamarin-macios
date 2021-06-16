@@ -50,17 +50,15 @@ namespace MonoTests.System.Net.Http
 #if !__WATCHOS__
 		[TestCase (typeof (HttpClientHandler))]
 		[TestCase (typeof (CFNetworkHandler))]
+#if NET
+		[TestCase (typeof (SocketsHttpHandler))]
+#endif
 #endif
 		[TestCase (typeof (NSUrlSessionHandler))]
 		public void DnsFailure (Type handlerType)
 		{
 			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
 			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
-
-#if NET
-			if (handlerType == typeof (HttpClientHandler))
-				Assert.Ignore ("https://github.com/dotnet/runtime/issues/49201");
-#endif
 
 			PrintHandlerToTest ();
 
