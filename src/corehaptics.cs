@@ -349,6 +349,10 @@ namespace CoreHaptics {
 
 		[Field ("CHHapticPatternKeyParameterCurveControlPoints")]
 		NSString ParameterCurveControlPointsKey { get; }
+
+		[TV (15,0), NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Field ("CHHapticPatternKeyEventWaveformUseVolumeEnvelope")]
+		NSString EventWaveformUseVolumeEnvelopeKey { get; }
 	}
 
 	[Mac (10,15), iOS (13,0), TV (14, 0)]
@@ -373,6 +377,8 @@ namespace CoreHaptics {
 		NSObject WeakParameterCurve { get; set; }
 		[Export ("ParameterCurveControlPointsKey")]
 		NSObject WeakParameterCurveControlPoints { get; set; }
+		[Advice ("The default value is true.")]
+		bool EventWaveformUseVolumeEnvelope { get; set; }
 	}
 
 	[Mac (10,15), iOS (13,0), TV (14, 0)]
@@ -403,4 +409,20 @@ namespace CoreHaptics {
 		[return: NullAllowed]
 		CHHapticPatternDefinition Export ([NullAllowed] out NSError outError);
 	}
+
+	[Static]
+	[Internal]
+	[Mac (12,0), iOS (15,0), TV (15,0), MacCatalyst (15,0), NoWatch]
+	partial interface CHHapticAudioResourceKeys {
+		[Field ("CHHapticAudioResourceKeyUseVolumeEnvelope")]
+		NSString UseVolumeEnvelopeKey { get; }
+	}
+
+	[Mac (12,0), iOS (15,0), TV (15,0), MacCatalyst (15,0), NoWatch]
+	[StrongDictionary ("CHHapticAudioResourceKeys")]
+	partial interface CHHapticAudioResourceDefinition {
+		[Advice ("The default value is true.")]
+		bool UseVolumeEnvelope { get; set; }
+	}
+
 }
