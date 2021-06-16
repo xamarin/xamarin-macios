@@ -191,6 +191,9 @@ namespace Xamarin.Linker {
 				case "Registrar":
 					Application.ParseRegistrar (value);
 					break;
+				case "RuntimeConfigurationFile":
+					Application.RuntimeConfigurationFile = value;
+					break;
 				case "SdkDevPath":
 					Driver.SdkRoot = value;
 					break;
@@ -302,6 +305,7 @@ namespace Xamarin.Linker {
 				Console.WriteLine ($"    Platform: {Platform}");
 				Console.WriteLine ($"    PlatformAssembly: {PlatformAssembly}.dll");
 				Console.WriteLine ($"    Registrar: {Application.Registrar} (Options: {Application.RegistrarOptions})");
+				Console.WriteLine ($"    RuntimeConfigurationFile: {Application.RuntimeConfigurationFile}");
 				Console.WriteLine ($"    SdkDevPath: {Driver.SdkRoot}");
 				Console.WriteLine ($"    SdkRootDirectory: {SdkRootDirectory}");
 				Console.WriteLine ($"    SdkVersion: {SdkVersion}");

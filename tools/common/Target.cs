@@ -816,6 +816,9 @@ namespace Xamarin.Bundler {
 			foreach (var kvp in app.EnvironmentVariables)
 				sw.WriteLine ("\tsetenv (\"{0}\", \"{1}\", 1);", kvp.Key.Replace ("\"", "\\\""), kvp.Value.Replace ("\"", "\\\""));
 			sw.WriteLine ("\txamarin_supports_dynamic_registration = {0};", app.DynamicRegistrationSupported ? "TRUE" : "FALSE");
+#if NET
+			sw.WriteLine ("\txamarin_runtime_configuration_name = {0};", string.IsNullOrEmpty (app.RuntimeConfigurationFile) ? "NULL" : $"\"{app.RuntimeConfigurationFile}\"");
+#endif
 			sw.WriteLine ("}");
 			sw.WriteLine ();
 			sw.Write ("int ");
