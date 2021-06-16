@@ -53,8 +53,12 @@ namespace LinkSdk {
 				ServicePointManager.ServerCertificateValidationCallback = delegate (object sender, X509Certificate cert, X509Chain chain, SslPolicyErrors errors) {
 					Assert.That (errors, Is.EqualTo (SslPolicyErrors.None), "certificateProblem");
 					X509Certificate2 c2 = new X509Certificate2 (cert.GetRawCertData ());
+#if NET
+					Assert.True (chain.Build (c2), "Build");
+#else
 					Assert.False (chain.Build (c2), "Build");
 					Assert.AreSame (c2, chain.ChainElements [0].Certificate, "ChainElements");
+#endif
 					trust_validation_callback++;
 					return true;
 				};
@@ -113,8 +117,12 @@ namespace LinkSdk {
 				ServicePointManager.ServerCertificateValidationCallback = delegate (object sender, X509Certificate cert, X509Chain chain, SslPolicyErrors errors) {
 					Assert.That (errors, Is.EqualTo (SslPolicyErrors.None), "certificateProblem");
 					X509Certificate2 c2 = new X509Certificate2 (cert.GetRawCertData ());
+#if NET
+					Assert.True (chain.Build (c2), "Build");
+#else
 					Assert.False (chain.Build (c2), "Build");
 					Assert.AreSame (c2, chain.ChainElements [0].Certificate, "ChainElements");
+#endif
 					sne_validation_callback++;
 					return true;
 				};
