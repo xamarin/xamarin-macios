@@ -1,0 +1,7 @@
+# Added and deprecated in the same release.
+!missing-selector! WKWebView::loadSimulatedRequest:withResponse:responseData: not bound
+!missing-selector! WKWebView::loadSimulatedRequest:withResponseHTMLString: not bound
+
+# rdar added since it is breaking the AI: https://github.com/xamarin/maccore/issues/2460
+# ignore until later betas to see if Apple fixes it, issue: https://github.com/xamarin/xamarin-macios/issues/11955 
+!missing-selector! WKPreferences::isTextInteractionEnabled not bound
