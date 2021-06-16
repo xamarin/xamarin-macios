@@ -115,14 +115,20 @@ namespace CoreFoundation {
 		[DllImport (Constants.CoreFoundationLibrary, CharSet=CharSet.Unicode)]
 		extern static IntPtr CFStringGetCharacters (IntPtr handle, CFRange range, IntPtr buffer);
 
-		internal static IntPtr LowLevelCreate (string str)
+		public static IntPtr CreateNative (string value)
 		{
-			if (str == null)
+			if (value is null)
 				return IntPtr.Zero;
 			
-			return CFStringCreateWithCharacters (IntPtr.Zero, str, str.Length);
+			return CFStringCreateWithCharacters (IntPtr.Zero, value, value.Length);
 		}
-		
+
+		public static void ReleaseNative (IntPtr handle)
+		{
+			if (handle != IntPtr.Zero)
+				CFObject.CFRelease (handle);
+		}
+
 		public CFString (string str)
 		{
 			if (str == null)
