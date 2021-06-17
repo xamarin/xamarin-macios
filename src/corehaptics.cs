@@ -378,6 +378,7 @@ namespace CoreHaptics {
 		[Export ("ParameterCurveControlPointsKey")]
 		NSObject WeakParameterCurveControlPoints { get; set; }
 		[Advice ("The default value is true.")]
+		[TV (15,0), NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		bool EventWaveformUseVolumeEnvelope { get; set; }
 	}
 
