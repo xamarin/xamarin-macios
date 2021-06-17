@@ -159,10 +159,20 @@ namespace CoreFoundation {
 
 		#region Stream Constructors
 
+		[Deprecated (PlatformName.WatchOS, 8, 0, message: Constants.UseNetworkInstead)]
+		[Deprecated (PlatformName.TvOS, 15, 0, message: Constants.UseNetworkInstead)]
+		[Deprecated (PlatformName.iOS, 15, 0, message: Constants.UseNetworkInstead)]
+		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: Constants.UseNetworkInstead)]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: Constants.UseNetworkInstead)]
 		[DllImport (Constants.CoreFoundationLibrary)]
 		internal extern static void CFStreamCreatePairWithSocket (/* CFAllocatorRef */ IntPtr allocator, CFSocketNativeHandle sock,
 			/* CFReadStreamRef* */ out IntPtr readStream, /* CFWriteStreamRef* */ out IntPtr writeStream);
 
+		[Deprecated (PlatformName.WatchOS, 8, 0, message: Constants.UseNetworkInstead)]
+		[Deprecated (PlatformName.TvOS, 15, 0, message: Constants.UseNetworkInstead)]
+		[Deprecated (PlatformName.iOS, 15, 0, message: Constants.UseNetworkInstead)]
+		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: Constants.UseNetworkInstead)]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: Constants.UseNetworkInstead)]
 		public static void CreatePairWithSocket (CFSocket socket, out CFReadStream readStream,
 		                                         out CFWriteStream writeStream)
 		{
@@ -175,11 +185,21 @@ namespace CoreFoundation {
 			writeStream = new CFWriteStream (write);
 		}
 
+		[Deprecated (PlatformName.WatchOS, 8, 0, message: Constants.UseNetworkInstead)]
+		[Deprecated (PlatformName.TvOS, 15, 0, message: Constants.UseNetworkInstead)]
+		[Deprecated (PlatformName.iOS, 15, 0, message: Constants.UseNetworkInstead)]
+		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: Constants.UseNetworkInstead)]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: Constants.UseNetworkInstead)]
 		[DllImport (Constants.CFNetworkLibrary)]
 		internal extern static void CFStreamCreatePairWithPeerSocketSignature (/* CFAllocatorRef */ IntPtr allocator, 
 			/* CFSocketSignature* */ ref CFSocketSignature sig, 
 			/* CFReadStreamRef* */ out IntPtr readStream, /* CFWriteStreamRef* */ out IntPtr writeStream);
 
+		[Deprecated (PlatformName.WatchOS, 8, 0, message: Constants.UseNetworkInstead)]
+		[Deprecated (PlatformName.TvOS, 15, 0, message: Constants.UseNetworkInstead)]
+		[Deprecated (PlatformName.iOS, 15, 0, message: Constants.UseNetworkInstead)]
+		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: Constants.UseNetworkInstead)]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: Constants.UseNetworkInstead)]
 		public static void CreatePairWithPeerSocketSignature (AddressFamily family, SocketType type,
 		                                                      ProtocolType proto, IPEndPoint endpoint,
 		                                                      out CFReadStream readStream,
@@ -196,6 +216,11 @@ namespace CoreFoundation {
 
 #if !WATCH
 		// CFSocketStream.h in CFNetwork.framework (not CoreFoundation)
+		[Deprecated (PlatformName.WatchOS, 8, 0, message: Constants.UseNetworkInstead)]
+		[Deprecated (PlatformName.TvOS, 15, 0, message: Constants.UseNetworkInstead)]
+		[Deprecated (PlatformName.iOS, 15, 0, message: Constants.UseNetworkInstead)]
+		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: Constants.UseNetworkInstead)]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: Constants.UseNetworkInstead)]
 		[DllImport (Constants.CFNetworkLibrary)]
 		internal extern static void CFStreamCreatePairWithSocketToCFHost (
 			/* CFAllocatorRef __nullable */ IntPtr allocator, 
@@ -222,6 +247,11 @@ namespace CoreFoundation {
 		}
 #endif
 
+		[Deprecated (PlatformName.WatchOS, 8, 0, message: Constants.UseNetworkInstead)]
+		[Deprecated (PlatformName.TvOS, 15, 0, message: Constants.UseNetworkInstead)]
+		[Deprecated (PlatformName.iOS, 15, 0, message: Constants.UseNetworkInstead)]
+		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: Constants.UseNetworkInstead)]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: Constants.UseNetworkInstead)]
 		[DllImport (Constants.CFNetworkLibrary)]
 		internal extern static void CFStreamCreatePairWithSocketToHost (/* CFAllocatorRef */ IntPtr allocator, 
 			/* CFStringRef */ IntPtr host, /* UInt32 */ int port,
