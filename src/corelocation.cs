@@ -442,11 +442,11 @@ namespace CoreLocation {
 		bool IsAuthorizedForWidgetUpdates { [Bind ("isAuthorizedForWidgetUpdates")] get; }
 
 		[Async]
-		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15, 0)]
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15, 0), MacCatalyst (15,0)]
 		[Export ("startMonitoringLocationPushesWithCompletion:")]
 		void StartMonitoringLocationPushes ([NullAllowed] Action<NSData, NSError> completion);
 
-		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15, 0)]
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15, 0), MacCatalyst (15,0)]
 		[Export ("stopMonitoringLocationPushes")]
 		void StopMonitoringLocationPushes ();
 
@@ -891,10 +891,8 @@ namespace CoreLocation {
 		NSNumber Minor { get; }
 	}
 
-	[Model]
 	[iOS (15,0), TV (15,0), MacCatalyst (15,0), Mac (12,0), Watch (8,0)]
 	[Protocol]
-	[BaseType (typeof(NSObject))]
 	interface CLLocationPushServiceExtension
 	{
 		[Abstract]
