@@ -21,11 +21,11 @@ namespace CFNetwork {
 namespace CoreServices {
 #endif
 
-	[Deprecated (PlatformName.WatchOS, 8, 0, message: "Use the new Network framework instead.")]
-	[Deprecated (PlatformName.TvOS, 15, 0, message: "Use the new Network framework instead.")]
- 	[Deprecated (PlatformName.iOS, 15, 0, message: "Use the new Network framework instead.")]
- 	[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use the new Network framework instead.")]
- 	[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use the new Network framework instead.")]
+	[Deprecated (PlatformName.WatchOS, 8, 0, message: Constants.UseNetworkInstead)]
+	[Deprecated (PlatformName.TvOS, 15, 0, message: Constants.UseNetworkInstead)]
+ 	[Deprecated (PlatformName.iOS, 15, 0, message: Constants.UseNetworkInstead)]
+ 	[Deprecated (PlatformName.MacCatalyst, 15, 0, message: Constants.UseNetworkInstead)]
+ 	[Deprecated (PlatformName.MacOSX, 12, 0, message: Constants.UseNetworkInstead)]
 	class CFHost : INativeObject, IDisposable {
 		internal IntPtr handle;
 

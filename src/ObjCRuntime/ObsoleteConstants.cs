@@ -9,6 +9,8 @@ namespace ObjCRuntime {
 
 		internal const string UseCallKitInstead = "Use the 'CallKit' API instead.";
 
+		internal const string UseNetworkInstead = "Use 'Network.framework' instead.";
+
 		internal const string WatchKitRemoved = "The WatchKit framework has been removed from iOS.";
 
 		internal const string UnavailableOniOS = "This type is not available on iOS.";
@@ -18,5 +20,6 @@ namespace ObjCRuntime {
 		internal const string MacOS32bitsUnavailable = "This framework is not available on 64bits macOS versions.";
 
 		internal const string iAdRemoved = "The iAd framework has been removed from iOS.";
+
 	}
 }

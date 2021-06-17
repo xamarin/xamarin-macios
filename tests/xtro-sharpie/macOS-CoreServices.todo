@@ -1,5 +1,3 @@
-!deprecated-attribute-missing! CFHostCreateWithAddress missing a [Deprecated] attribute
-!deprecated-attribute-missing! CFHostCreateWithName missing a [Deprecated] attribute
 !deprecated-attribute-missing! LSCopyAllRoleHandlersForContentType missing a [Deprecated] attribute
 !deprecated-attribute-missing! LSCopyApplicationURLsForBundleIdentifier missing a [Deprecated] attribute
 !deprecated-attribute-missing! LSCopyApplicationURLsForURL missing a [Deprecated] attribute
