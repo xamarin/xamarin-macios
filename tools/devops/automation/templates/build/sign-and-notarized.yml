@@ -98,7 +98,7 @@ steps:
   - pwsh : |
       # Get the list of files to sign
       $msiFiles = Get-ChildItem -Path $(Build.SourcesDirectory)/package/ -Filter "*.msi"
-      $nupgkFiles = Get-ChildItem -Path $(Build.SourcesDirectory)/package/ -Filter "*.nupkg"
+      $nupkgFiles = Get-ChildItem -Path $(Build.SourcesDirectory)/package/ -Filter "*.nupkg"
 
       # Add those files to an array
       $SignFiles = @()
