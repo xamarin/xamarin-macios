@@ -103,10 +103,12 @@ namespace VideoSubscriberAccount {
 	interface VSAccountManagerDelegate {
 
 		[Abstract]
+		[NoMac]
 		[Export ("accountManager:presentViewController:")]
 		void PresentViewController (VSAccountManager accountManager, UIViewController viewController);
 
 		[Abstract]
+		[NoMac]
 		[Export ("accountManager:dismissViewController:")]
 		void DismissViewController (VSAccountManager accountManager, UIViewController viewController);
 
