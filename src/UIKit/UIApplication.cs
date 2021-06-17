@@ -84,7 +84,7 @@ namespace UIKit {
 		public static void Main (string []? args)
 		{
 			Initialize ();
-			UIApplicationMain (args == null ? 0 : args.Length, args, IntPtr.Zero, IntPtr.Zero);
+			UIApplicationMain (args?.Length  ?? 0, args, IntPtr.Zero, IntPtr.Zero);
 		}
 #endif
 
