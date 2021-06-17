@@ -66,7 +66,7 @@ namespace UIKit {
 			var p = CFString.CreateNative (principalClassName);
 			var d = CFString.CreateNative (delegateClassName);
 			Initialize ();
-			UIApplicationMain (args == null ? 0 : args.Length, args, p, d);
+			UIApplicationMain (args?.Length ?? 0, args, p, d);
 			CFString.ReleaseNative (d);
 			CFString.ReleaseNative (p);
 		}
