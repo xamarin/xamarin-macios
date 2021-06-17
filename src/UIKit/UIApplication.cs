@@ -76,7 +76,7 @@ namespace UIKit {
 			var p = principalClass == null ? IntPtr.Zero : CFString.CreateNative (new Class (principalClass).Name);
 			var d = delegateClass == null ? IntPtr.Zero : CFString.CreateNative (new Class (delegateClass).Name);
 			Initialize ();
-			UIApplicationMain (args == null ? 0 : args.Length, args, p, d);
+			UIApplicationMain (args?.Length ?? 0, args, p, d);
 			CFString.ReleaseNative (d);
 			CFString.ReleaseNative (p);
 		}
@@ -84,7 +84,7 @@ namespace UIKit {
 		public static void Main (string []? args)
 		{
 			Initialize ();
-			UIApplicationMain (args?.Length  ?? 0, args, IntPtr.Zero, IntPtr.Zero);
+			UIApplicationMain (args?.Length ?? 0, args, IntPtr.Zero, IntPtr.Zero);
 		}
 #endif
 
