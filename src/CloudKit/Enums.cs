@@ -14,7 +14,9 @@ namespace CloudKit
 		CouldNotDetermine = 0,
 		Available = 1,
 		Restricted = 2,
-		NoAccount = 3
+		NoAccount = 3,
+		[Mac (12,0), iOS (15,0), TV (15,0), MacCatalyst (15,0)]
+		TemporarilyUnavailable = 4,
 	}
 
 	// NSUInteger -> CKContainer.h
@@ -82,6 +84,7 @@ namespace CloudKit
 		ParticipantMayNeedVerification = 33,
 		ResponseLost = 34,
 		AssetNotAvailable = 35,
+		TemporarilyUnavailable = 36,
 	}
 
 	// NSInteger -> CKModifyRecordsOperation.h
@@ -127,7 +130,11 @@ namespace CloudKit
 	public enum CKRecordZoneCapabilities : ulong {
 		FetchChanges = 1 << 0,
 		Atomic = 1 << 1,
-		[iOS (10,0), TV (10,0), Mac (10,12)] Sharing = 1 << 2,
+		[iOS (10,0), TV (10,0), Mac (10,12)]
+		Sharing = 1 << 2,
+		[Mac (12,0), iOS (15,0), TV (15,0)]
+		ZoneWideSharing = 1 << 3,
+
 	}
 
 	// NSUInteger -> CKReference.h
