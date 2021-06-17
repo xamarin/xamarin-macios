@@ -811,6 +811,7 @@ namespace CoreMotion {
 		void DidChangeAuthorization (CMFallDetectionManager fallDetectionManager);
 	}
 
+	[DisableDefaultCtor] // will crash
 	[Watch (8,0), NoTV, NoMac, iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof(CMLogItem))]
 	interface CMAbsoluteAltitudeData
