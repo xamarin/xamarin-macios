@@ -203,6 +203,11 @@ namespace CoreFoundation {
 			/* CFReadStreamRef __nullable * __nullable */ out IntPtr readStream,
 			/* CFWriteStreamRef __nullable * __nullable */ out IntPtr writeStream);
 
+		[Deprecated (PlatformName.WatchOS, 8, 0, message: "Use the new Network framework instead.")]
+		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use the new Network framework instead.")]
+		[Deprecated (PlatformName.iOS, 15, 0, message: "Use the new Network framework instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use the new Network framework instead.")]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use the new Network framework instead.")]
 		public static void CreatePairWithSocketToHost (IPEndPoint endpoint,
 		                                               out CFReadStream readStream,
 		                                               out CFWriteStream writeStream)
@@ -222,6 +227,11 @@ namespace CoreFoundation {
 			/* CFStringRef */ IntPtr host, /* UInt32 */ int port,
 			/* CFReadStreamRef* */ out IntPtr readStream, /* CFWriteStreamRef* */ out IntPtr writeStream);
 
+		[Deprecated (PlatformName.WatchOS, 8, 0, message: "Use the new Network framework instead.")]
+		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use the new Network framework instead.")]
+		[Deprecated (PlatformName.iOS, 15, 0, message: "Use the new Network framework instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use the new Network framework instead.")]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use the new Network framework instead.")]
 		public static void CreatePairWithSocketToHost (string host, int port,
 		                                               out CFReadStream readStream,
 		                                               out CFWriteStream writeStream)
