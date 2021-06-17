@@ -77,11 +77,11 @@ steps:
     Import-Module ./VSTS.psm1
     Import-Module ./GitHub.psm1
     if ( -not (Test-HDFreeSpace -Size 5)) {
-      Set-GitHubStatus -Status "error" -Description "Not enough free space in the host." -Context "macOS $Env:CONTEXT"
+      Set-GitHubStatus -Status "error" -Description "Not enough free space in the host." -Context "$Env:CONTEXT"
       New-GitHubComment -Header "Tests failed catastrophically on $Env:CONTEXT" -Emoji ":fire:" -Description "Not enough free space in the host."
       Stop-Pipeline
     } else {
-      Set-GitHubStatus -Status "pending" -Description "Tests on <macOS version XYZ> on VSTS have been started." -Context "macOS $Env:CONTEXT"
+      Set-GitHubStatus -Status "pending" -Description "Tests $Env:CONTEXT on VSTS have been started." -Context "$Env:CONTEXT"
     }
   env:
     BUILD_REVISION: $(Build.SourceVersion)
