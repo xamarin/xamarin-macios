@@ -11221,6 +11221,7 @@ namespace AVFoundation {
 
 		[iOS (14, 5), TV (14, 5), Mac (11, 3)]
 		[MacCatalyst (14,5)]
+		[Watch (8,0)]
 		[Field ("AVPlayerWaitingDuringInterstitialEventReason")]
 		NSString WaitingDuringInterstitialEventReason { get; }
 
