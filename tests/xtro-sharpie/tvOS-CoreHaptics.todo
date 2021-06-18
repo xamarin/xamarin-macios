@@ -1,5 +1,0 @@
-!missing-enum-value! CHHapticErrorCode native value CHHapticErrorCodeFileNotFound = -4851 not bound
-!missing-enum-value! CHHapticErrorCode native value CHHapticErrorCodeInsufficientPower = -4897 not bound
-!missing-enum-value! CHHapticErrorCode native value CHHapticErrorCodeInvalidEngineParameter = -4816 not bound
-!missing-field! CHHapticAudioResourceKeyUseVolumeEnvelope not bound
-!missing-field! CHHapticPatternKeyEventWaveformUseVolumeEnvelope not bound

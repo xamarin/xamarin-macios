@@ -123,6 +123,7 @@ namespace Xamarin.MacDev.Tasks {
 					var lib = Path.GetFullPath (libSpec.ItemSpec);
 					var libExtension = Path.GetExtension (lib).ToLowerInvariant ();
 					switch (libExtension) {
+					case "": // we can get static libraries without any extensions at all
 					case ".a":
 					case ".o":
 						var forceLoad = string.Equals (libSpec.GetMetadata ("ForceLoad"), "true", StringComparison.OrdinalIgnoreCase);
@@ -144,7 +145,7 @@ namespace Xamarin.MacDev.Tasks {
 						arguments.Add (Path.GetFileNameWithoutExtension (lib));
 						break;
 					default:
-						Log.LogError ($"Unknown library extension {libExtension} to link with for {lib}.");
+						Log.LogError ($"Unknown library extension '{libExtension}' to link with for {lib}.");
 						return false;
 					}
 				}
