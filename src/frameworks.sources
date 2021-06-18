@@ -2265,7 +2265,6 @@ MACCATALYST_FRAMEWORKS = \
 	UserNotifications \
 	UserNotificationsUI \
 	VideoToolbox \
-	VideoSubscriberAccount \
 	Vision \
 	WKWebKit \
 
