@@ -232,6 +232,11 @@ namespace Xamarin.MacDev.Tasks {
 			if (InputAppBundles.Length == 1) {
 				var sourceDirectory = Path.GetFullPath (InputAppBundles [0].ItemSpec);
 				var targetDirectory = Path.GetFullPath (OutputAppBundle);
+
+				// Make sure we have a trailing directory, so that UpdateDirectory copies the directory contents of the source directory.
+				if (sourceDirectory [sourceDirectory.Length - 1] != Path.DirectorySeparatorChar)
+					sourceDirectory += Path.DirectorySeparatorChar;
+
 				Log.LogMessage (MessageImportance.Low, $"Copying the single input directory {sourceDirectory} to {targetDirectory}");
 				FileCopier.UpdateDirectory (sourceDirectory, targetDirectory);
 				return !Log.HasLoggedErrors;
