@@ -202,7 +202,7 @@ namespace Xamarin.MacDev.Tasks {
 				} else if (Type == FileType.Symlink) {
 					Directory.CreateDirectory (Path.GetDirectoryName (outputFile));
 					var symlinkTarget = PathUtils.GetSymlinkTarget (FullPath);
-					if (PathUtils.IsSymlink (outputFile) && PathUtils.GetSymlinkTarget (outputFile) == symlinkTarget) {
+					if (File.Exists (outputFile) && PathUtils.IsSymlink (outputFile) && PathUtils.GetSymlinkTarget (outputFile) == symlinkTarget) {
 						Task.Log.LogMessage (MessageImportance.Low, "Target '{0}' is up-to-date", outputFile);
 					} else {
 						PathUtils.FileDelete (outputFile);
