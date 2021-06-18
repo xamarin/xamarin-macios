@@ -607,6 +607,11 @@ namespace CoreML {
 	[BaseType (typeof (NSObject))]
 	interface MLPredictionOptions {
 
+		[Deprecated (PlatformName.WatchOS, 8, 0, message: "Use 'MLModelConfiguration.ComputeUnits' instead.")]
+ 		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'MLModelConfiguration.ComputeUnits' instead.")]
+ 		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'MLModelConfiguration.ComputeUnits' instead.")]
+ 		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use 'MLModelConfiguration.ComputeUnits' instead.")]
+ 		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'MLModelConfiguration.ComputeUnits' instead.")]
 		[Export ("usesCPUOnly")]
 		bool UsesCpuOnly { get; set; }
 	}

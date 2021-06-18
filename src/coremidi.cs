@@ -287,9 +287,6 @@ namespace CoreMidi {
 	[DisableDefaultCtor]
 	interface MidiCISession
 	{
-		[Export ("initWithMIDIEntity:dataReadyHandler:")]
-		IntPtr Constructor (uint entity, Action handler);
-
 		[Export ("entity")]
 		uint Entity { get; }
 

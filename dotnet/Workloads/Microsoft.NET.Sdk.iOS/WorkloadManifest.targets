@@ -4,4 +4,14 @@
 
 	<Import Project="Sdk.props" Sdk="Microsoft.NETCore.App.Runtime.AOT.Cross.ios-arm" Condition="'$(TargetPlatformIdentifier)' == 'iOS' And '$(RuntimeIdentifier)' == 'ios-arm'" />
 	<Import Project="Sdk.props" Sdk="Microsoft.NETCore.App.Runtime.AOT.Cross.ios-arm64" Condition="'$(TargetPlatformIdentifier)' == 'iOS' And '$(RuntimeIdentifier)' == 'ios-arm64'" />
+
+	<Import Project="Sdk.props" Sdk="Microsoft.NET.Runtime.RuntimeConfigParser.Task" Condition="'$(TargetPlatformIdentifier)' == 'iOS'" />
+	<PropertyGroup Condition="'$(TargetPlatformIdentifier)' == 'iOS'">
+		<!-- Workaround for https://github.com/dotnet/runtime/issues/53811 -->
+		<RuntimeConfigParserTasksAssemblyPath>$([System.IO.Path]::GetDirectoryName($(RuntimeConfigParserTasksAssemblyPath)))/net6.0/$([System.IO.Path]::GetFileName($(RuntimeConfigParserTasksAssemblyPath)))</RuntimeConfigParserTasksAssemblyPath>
+	</PropertyGroup>
+
+	<ItemGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETCoreApp' and $([MSBuild]::VersionGreaterThanOrEquals($(TargetFrameworkVersion), '6.0')) ">
+		<SdkSupportedTargetPlatformIdentifier Include="ios" DisplayName="iOS" />
+	</ItemGroup>
 </Project>

@@ -14,7 +14,7 @@ namespace Xamarin.Tests {
 		public static string Executable {
 			get {
 				if (dotnet_executable == null) {
-					dotnet_executable = Configuration.EvaluateVariable ("DOTNET6");
+					dotnet_executable = Configuration.GetVariable ("DOTNET6", null);
 					if (string.IsNullOrEmpty (dotnet_executable))
 						throw new Exception ($"Could not find the dotnet executable.");
 					if (!File.Exists (dotnet_executable))
@@ -103,6 +103,8 @@ namespace Xamarin.Tests {
 						return false; // ICU data file only present on .NET
 					case "runtime-options.plist":
 						return false; // the .NET runtime will deal with selecting the http handler, no need for us to do anything
+					case "runtimeconfig.bin":
+						return false; // this file is present for .NET apps, but not legacy apps.
 					}
 
 					var components = v.Split ('/');

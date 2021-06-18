@@ -75,19 +75,21 @@ namespace LinkSdk {
 			}
 		}
 
-#if NET
-		[Ignore ("https://github.com/dotnet/runtime/issues/41355")]
-#endif
 		[Test]
-		public void LackOfCapget ()
+		public void PingSend ()
 		{
+			var p = new Ping ();
+#if __WATCHOS__
+			// no socket support
+			Assert.Throws<PlatformNotSupportedException> (delegate { p.Send ("localhost"); });
+#elif NET
+			// support was implemented with https://github.com/dotnet/runtime/pull/52240
+			var reply = p.Send ("localhost");
+			Assert.That (reply.Status, Is.EqualTo (IPStatus.Success), "Pong");
+#else
 			// OSX/iOS libc (libSystem.dylib) does not have a capget - which breaks dlsym=false (required for tvOS)
 			// iOS (tvOS/watchOS) does not support Process to run ping either so it ends up with a InvalidOperationException
 			// which is now "optimized" to reduce code size (and remove DllImport) until we implement ping (see: #964)
-			var p = new Ping ();
-#if __WATCHOS__
-			Assert.Throws<PlatformNotSupportedException> (delegate { p.Send ("localhost"); });
-#else
 			Assert.Throws<InvalidOperationException> (delegate { p.Send ("localhost"); });
 #endif
 		}

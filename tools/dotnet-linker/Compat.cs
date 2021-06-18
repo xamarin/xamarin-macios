@@ -15,6 +15,7 @@ using Xamarin.Utils;
 namespace Xamarin.Bundler {
 	public partial class Application {
 		public LinkerConfiguration Configuration { get; private set; }
+		public string RuntimeConfigurationFile { get; set; }
 
 		public Application (LinkerConfiguration configuration)
 		{

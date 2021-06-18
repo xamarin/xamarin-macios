@@ -79,6 +79,7 @@ enum MarshalObjectiveCExceptionMode xamarin_marshal_objectivec_exception_mode = 
 enum MarshalManagedExceptionMode xamarin_marshal_managed_exception_mode = MarshalManagedExceptionModeDefault;
 enum XamarinLaunchMode xamarin_launch_mode = XamarinLaunchModeApp;
 bool xamarin_supports_dynamic_registration = true;
+const char *xamarin_runtime_configuration_name = NULL;
 
 /* Callbacks */
 
@@ -2383,6 +2384,8 @@ void
 xamarin_vm_initialize ()
 {
 	char *pinvokeOverride = xamarin_strdup_printf ("%p", &xamarin_pinvoke_override);
+	// All the properties we pass here must also be listed in the _RuntimeConfigReservedProperties item group
+	// for the _CreateRuntimeConfiguration target in dotnet/targets/Xamarin.Shared.Sdk.targets.
 	const char *propertyKeys[] = {
 		"APP_PATHS",
 		"PINVOKE_OVERRIDE",

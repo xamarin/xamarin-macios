@@ -2,4 +2,14 @@
 	<Import Project="Sdk.props" Sdk="Microsoft.tvOS.Sdk" Condition="'$(TargetPlatformIdentifier)' == 'tvOS'" />
 
 	<Import Project="Sdk.props" Sdk="Microsoft.NETCore.App.Runtime.AOT.Cross.tvos-arm64" Condition="'$(TargetPlatformIdentifier)' == 'tvOS' And '$(RuntimeIdentifier)' == 'tvos-arm64'" />
+
+	<Import Project="Sdk.props" Sdk="Microsoft.NET.Runtime.RuntimeConfigParser.Task" Condition="'$(TargetPlatformIdentifier)' == 'tvOS'" />
+	<PropertyGroup Condition="'$(TargetPlatformIdentifier)' == 'tvOS'">
+		<!-- Workaround for https://github.com/dotnet/runtime/issues/53811 -->
+		<RuntimeConfigParserTasksAssemblyPath>$([System.IO.Path]::GetDirectoryName($(RuntimeConfigParserTasksAssemblyPath)))/net6.0/$([System.IO.Path]::GetFileName($(RuntimeConfigParserTasksAssemblyPath)))</RuntimeConfigParserTasksAssemblyPath>
+	</PropertyGroup>
+
+	<ItemGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETCoreApp' and $([MSBuild]::VersionGreaterThanOrEquals($(TargetFrameworkVersion), '6.0')) ">
+		<SdkSupportedTargetPlatformIdentifier Include="tvos" DisplayName="tvOS" />
+	</ItemGroup>
 </Project>

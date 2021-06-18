@@ -34,9 +34,6 @@ Usage: configure [options]
     --enable-dotnet         Enable building .NET 6 bits.
     --disable-dotnet        Disable building .NET 6 bits.
 
-    --enable-dotnet-windows         Enable building Windows .NET 6 bits. Building .NET 6 bits must be also enabled (--enable-dotnet).
-    --disable-dotnet-windows        Disable building Windows .NET 6 bits. 
-
     --enable-documentation  Enable building of API documentation
     --disable-documentation Disable building of API documentation.
 
@@ -134,11 +131,11 @@ while test "x$1" != x; do
         shift
         ;;
     --enable-dotnet-windows)
-        echo "ENABLE_DOTNET_WINDOWS=1" >> "$CONFIGURED_FILE"
+        echo "$1 is ignored. Use --enable-dotnet instead"
         shift
         ;;
     --disable-dotnet-windows)
-        echo "ENABLE_DOTNET_WINDOWS=" >> "$CONFIGURED_FILE"
+        echo "$1 is ignored. Use --disable-dotnet instead"
         shift
         ;;
     --enable-install-source)
