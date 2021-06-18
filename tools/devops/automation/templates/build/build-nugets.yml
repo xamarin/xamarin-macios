@@ -1,4 +1,4 @@
-# all steps that are required to build the nugets and publish them
+# all steps that are required to build the nugets
 
 steps:
 
@@ -27,32 +27,3 @@ steps:
     targetPath: $(Build.ArtifactStagingDirectory)/build-binlogs
     artifactName: build-binlogs
   condition: and(succeededOrFailed(), contains(variables['configuration.BuildNugets'], 'True'))
-
-# do not publish on pull requets
-- ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
-  - task: NuGetCommand@2
-    displayName: 'Publish Nugets to xamarin-impl'
-    inputs:
-      command: push
-      packagesToPush: $(Build.SourcesDirectory)/package/*.nupkg
-      nuGetFeedType: external
-      publishFeedCredentials: xamarin-impl public feed
-    condition: and(succeeded(), eq(variables['configuration.BuildNugets'], 'True'))
-    continueOnError: true # should not stop the build since is not official just yet.
-
-  - task: NuGetCommand@2
-    displayName: 'Publish Nugets to dotnet-eng'
-    inputs:
-      command: push
-      packagesToPush: $(Build.SourcesDirectory)/mlaunch/*.nupkg
-      nuGetFeedType: external
-      publishFeedCredentials: dotnet-eng
-    condition: and(succeeded(), eq(variables['configuration.BuildNugets'], 'True'))
-    continueOnError: true # should not stop the build since is not official just yet.
-
-# Only executed when the publshing of the nugets failed.
-- bash: |
-    echo "##vso[task.setvariable variable=NUGETS_PUBLISHED;isOutput=true]Failed"
-  name: nugetPublishing
-  displayName: 'Failed publishing nugets'
-  condition: failed()

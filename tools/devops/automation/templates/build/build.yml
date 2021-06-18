@@ -334,6 +334,10 @@ steps:
       enableDotnet: ${{ parameters.enableDotnet }}
       keyringPass: ${{ parameters.keyringPass }}
 
+# publish nugets (must be done after signing)
+- ${{ if eq(parameters.enableDotnet, true) }}:
+  - template: publish-nugets.yml
+
 - template: generate-workspace-info.yml@templates
   parameters:
     GitHubToken: $(GitHub.Token)
