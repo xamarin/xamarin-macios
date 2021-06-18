@@ -296,6 +296,7 @@ namespace VideoSubscriberAccount {
 
 	[TV (11,0)][iOS (11,0)]
 	[Mac (10,14)]
+	[NoMacCatalyst]
 	[Native]
 	public enum VSSubscriptionAccessLevel : long {
 		Unknown,
@@ -305,6 +306,7 @@ namespace VideoSubscriberAccount {
 
 	[TV (11,0)][iOS (11,0)]
 	[Mac (10,14)]
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface VSSubscription {
 		[NullAllowed] // null_resettable
