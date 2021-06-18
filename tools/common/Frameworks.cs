@@ -487,7 +487,6 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "Accessibility", "Accessibility", 7,0 },
 				{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 7,0 },
 
-				{ "CoreLocationUI", "CoreLocationUI", 8,0 },
 			};
 		}
 		return watch_frameworks;
