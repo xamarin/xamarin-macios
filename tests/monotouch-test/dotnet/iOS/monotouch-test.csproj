@@ -28,16 +28,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <LinkDescription Include="$(RootTestsDirectory)\monotouch-test\dotnet\extra-linker-defs.xml" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="Info.plist" />
     <None Include="..\..\Entitlements.plist" />
     <None Include="..\..\app.config" />
     <None Include="..\..\EmptyNib.xib" />
-
-    <LinkDescription Include="$(RootTestsDirectory)\monotouch-test\dotnet\extra-linker-defs.xml" />
   </ItemGroup>
 
   <ItemGroup>
