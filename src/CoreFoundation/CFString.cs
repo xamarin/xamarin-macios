@@ -38,6 +38,8 @@ using System.Runtime.InteropServices;
 using ObjCRuntime;
 using Foundation;
 
+#nullable enable
+
 namespace CoreFoundation {
 
 	[StructLayout (LayoutKind.Sequential)]
@@ -85,7 +87,13 @@ namespace CoreFoundation {
 		}
 	}
 
-	public static class CFObject {
+#if XAMCORE_4_0
+	// nothing is exposed publicly
+	internal
+#else
+	public
+#endif
+	static class CFObject {
 		[DllImport (Constants.CoreFoundationLibrary)]
 		internal extern static void CFRelease (IntPtr obj);
 
@@ -99,7 +107,7 @@ namespace CoreFoundation {
 #endif
 	{
 #if !COREBUILD
-		internal string str;
+		internal string? str;
 
 		protected CFString () {}
 
@@ -115,7 +123,7 @@ namespace CoreFoundation {
 		[DllImport (Constants.CoreFoundationLibrary, CharSet=CharSet.Unicode)]
 		extern static IntPtr CFStringGetCharacters (IntPtr handle, CFRange range, IntPtr buffer);
 
-		public static IntPtr CreateNative (string value)
+		public static IntPtr CreateNative (string? value)
 		{
 			if (value is null)
 				return IntPtr.Zero;
@@ -131,8 +139,8 @@ namespace CoreFoundation {
 
 		public CFString (string str)
 		{
-			if (str == null)
-				throw new ArgumentNullException ("str");
+			if (str is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (str));
 			
 			Handle = CFStringCreateWithCharacters (IntPtr.Zero, str, str.Length);
 			this.str = str;
@@ -153,7 +161,7 @@ namespace CoreFoundation {
 		}
 
 		// to be used when an API like CF*Get* returns a CFString
-		public static string FromHandle (IntPtr handle)
+		public static string? FromHandle (IntPtr handle)
 		{
 			if (handle == IntPtr.Zero)
 				return null;
@@ -180,7 +188,7 @@ namespace CoreFoundation {
 		}
 
 		// to be used when an API like CF*Copy* returns a CFString
-		public static string FromHandle (IntPtr handle, bool releaseHandle)
+		public static string? FromHandle (IntPtr handle, bool releaseHandle)
 		{
 			var s = FromHandle (handle);
 			if (releaseHandle && (handle != IntPtr.Zero))
@@ -188,7 +196,7 @@ namespace CoreFoundation {
 			return s;
 		}
 
-		public static implicit operator string (CFString x)
+		public static implicit operator string? (CFString x)
 		{
 			if (x.str == null)
 				x.str = FromHandle (x.Handle);
@@ -226,7 +234,7 @@ namespace CoreFoundation {
 		{
 			if (str is null)
 				str = FromHandle (Handle);
-			return str;
+			return str ?? base.ToString ()!;
 		}
 #endif // !COREBUILD
 	}
