@@ -36,6 +36,7 @@ run-unit-tests:
 all-local:: $(TARGETS)
 
 compare compare-size: $(TARGETS)
+	rm -rf packages
 	cd size-comparison && git clean -xfdq
 	time $(MAKE) build-oldnet
 	time $(MAKE) build-dotnet
