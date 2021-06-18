@@ -985,6 +985,19 @@ namespace CoreSpotlight {
 		[NullAllowed, Export ("supportsNavigation", ArgumentSemantic.Strong)]
 		NSNumber SupportsNavigation { get; set; }
 
+		[NoTV, NoMac, iOS (15,0), MacCatalyst (15,0)]
+		[Field ("CSActionIdentifier")]
+		NSString ActionIdentifier { get; }
+
+		[NoTV, NoMac, iOS (15,0), MacCatalyst (15,0)]
+		[Export ("actionIdentifiers", ArgumentSemantic.Copy)]
+		string[] ActionIdentifiers { get; set; }
+
+		[NullAllowed]
+		[NoTV, NoMac, iOS (15,0), MacCatalyst (15,0)]
+		[Export ("sharedItemContentType", ArgumentSemantic.Copy)]
+		UTType SharedItemContentType { get; set; }
+
 		// CSContainment
 
 		[NullAllowed, Export ("containerTitle")]
@@ -1030,6 +1043,10 @@ namespace CoreSpotlight {
 		[iOS (11, 0), NoTV]
 		[NullAllowed, Export ("rankingHint", ArgumentSemantic.Strong)]
 		NSNumber RankingHint { get; set; }
+		
+		[NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[NullAllowed, Export ("darkThumbnailURL", ArgumentSemantic.Strong)]
+		NSUrl DarkThumbnailUrl { get; set; }
 
 		// CSSearchableItemAttributeSet_CSItemProvider
 
@@ -1075,5 +1092,14 @@ namespace CoreSpotlight {
 		[Export ("cancel")]
 		void Cancel ();
 	}
+
+	[NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (NSObject))]
+	interface CSImportExtension : NSExtensionRequestHandling
+	{
+		[Export ("updateAttributes:forFileAtURL:error:")]
+		bool UpdateAttributes (CSSearchableItemAttributeSet attributes, NSUrl contentUrl, [NullAllowed] out NSError error);
+	}
+
 }
 
