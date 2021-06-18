@@ -415,6 +415,16 @@ namespace Introspection {
 				}
 				break;
 #endif
+#if __WATCHOS__
+			case "INUserContext":
+				switch (name) {
+				case "encodeWithCoder:":
+					if (!TestRuntime.CheckXcodeVersion (12, 0))
+						return true;
+					break;
+				}
+				break;
+#endif
 			break;
 		}
 
