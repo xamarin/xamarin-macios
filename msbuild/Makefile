@@ -473,7 +473,6 @@ MSBUILD_DIRECTORIES += $(DOTNET_DIRECTORIES)
 ifdef ENABLE_DOTNET
 MSBUILD_PRODUCTS += $(DOTNET_TARGETS)
 
-ifdef ENABLE_DOTNET_WINDOWS
 DOTNET_IOS_WINDOWS_OUTPUT_FILES = $(foreach dll,$(IOS_WINDOWS_TASK_ASSEMBLIES),$(dll).dll $(dll).pdb) Broker.zip Build.zip
 DOTNET_IOS_WINDOWS_FILES = $(IOS_WINDOWS_TARGETS) $(foreach file,$(DOTNET_IOS_WINDOWS_OUTPUT_FILES),Xamarin.iOS.Tasks.Windows/bin/$(CONFIG)/$(TARGETFRAMEWORK)/$(file))
 
@@ -483,7 +482,6 @@ DOTNET_IOS_WINDOWS_FILES = $(IOS_WINDOWS_TARGETS) $(foreach file,$(DOTNET_IOS_WI
 
 all-local:: .dotnet-windows
 dotnet:: .dotnet-windows
-endif
 endif
 
 ##

@@ -771,7 +771,7 @@ namespace Introspection {
 			case "MLSequence":
 				switch (selectorName) {
 				case "encodeWithCoder:":
-					if (!TestRuntime.CheckXcodeVersion (12, 0))
+					if (!TestRuntime.CheckXcodeVersion (12, TestRuntime.MinorXcode12APIMismatch))
 						return true;
 					break;
 				}

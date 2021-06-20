@@ -104,6 +104,7 @@ namespace Contacts {
 		ClientIdentifierCollision = 602,
 		ChangeHistoryExpired = 603,
 		ChangeHistoryInvalidAnchor = 604,
+		ChangeHistoryInvalidFetchRequest = 605,
 		VCardMalformed = 700,
 		VCardSummarizationError = 701,
 	}

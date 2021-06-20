@@ -567,7 +567,13 @@ namespace MLCompute {
 		MLCDevice Device { get; }
 
 		[Export ("optimizerData", ArgumentSemantic.Copy)]
-		MLCTensorData[] OptimizerData { get; set; }
+		MLCTensorData[] OptimizerData {
+			get;
+#if !XAMCORE_4_0
+			[NotImplemented]
+			set;
+#endif
+		}
 
 		[Export ("optimizerDeviceData", ArgumentSemantic.Copy)]
 		MLCTensorOptimizerDeviceData[] OptimizerDeviceData { get; }

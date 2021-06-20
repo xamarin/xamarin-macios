@@ -664,10 +664,9 @@ namespace PrintCore {
 			if (fileUrl == null)
 				throw new ArgumentNullException (nameof (fileUrl));
 				    
-			IntPtr mime = CFString.LowLevelCreate (mimeType);
+			IntPtr mime = CFString.CreateNative (mimeType);
 			var code = PMPrinterPrintWithFile (handle, settings.handle, pageFormat == null ? IntPtr.Zero : pageFormat.handle, mime, fileUrl.Handle);
-			if (mime != IntPtr.Zero)
-				CFObject.CFRelease (mime);
+			CFString.ReleaseNative (mime);
 			return code;
 		}
 
@@ -681,10 +680,9 @@ namespace PrintCore {
 			if (provider == null)
 				throw new ArgumentNullException (nameof (provider));
 				    
-			IntPtr mime = CFString.LowLevelCreate (mimeType);
+			IntPtr mime = CFString.CreateNative (mimeType);
 			var code = PMPrinterPrintWithProvider (handle, settings.handle, pageFormat == null ? IntPtr.Zero : pageFormat.handle, mime, provider.Handle);
-			if (mime != IntPtr.Zero)
-				CFObject.CFRelease (mime);
+			CFString.ReleaseNative (mime);
 			return code;
 		}
 

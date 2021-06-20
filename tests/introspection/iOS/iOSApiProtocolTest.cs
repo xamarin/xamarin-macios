@@ -437,6 +437,7 @@ namespace Introspection {
 					return true;
 				// Xcode 13
 				case "ARDepthData":
+				case "ARSkeletonDefinition": // device only
 				case "NSMergePolicy":
 					return true;
 				}
@@ -674,6 +675,7 @@ namespace Introspection {
 					return true;
 				// Xcode 13
 				case "ARDepthData":
+				case "ARSkeletonDefinition": // device only
 				case "NSMergePolicy":
 					return true;
 				}

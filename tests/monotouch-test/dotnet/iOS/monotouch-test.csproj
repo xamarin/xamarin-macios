@@ -17,7 +17,6 @@
     <DefineConstants Condition="'$(Platform)' != 'iPhoneSimulator'">$(DefineConstants);DEVICE</DefineConstants>
     <RootTestsDirectory>..\..\..</RootTestsDirectory>
     <MtouchLink>None</MtouchLink>
-    <MtouchExtraArgs>-xml=${ProjectDir}/../extra-linker-defs.xml</MtouchExtraArgs>
   </PropertyGroup>
 
   <ItemGroup>
