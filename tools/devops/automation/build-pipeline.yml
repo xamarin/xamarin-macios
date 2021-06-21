@@ -34,7 +34,7 @@ parameters:
 #
 # 1. We can create a template that expands.
 # 2. We can use the each keyword, which allow a loop
-# 3. yaml is a super set of json, therefore, it was json dictionaties
+# 3. yaml is a super set of json, therefore, it was json dictionaries
 #
 # the following parameters, define an array of dictionaries with the
 # data required by the templates. Do you want a new stage with 
