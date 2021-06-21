@@ -103,12 +103,20 @@ namespace VideoSubscriberAccount {
 	interface VSAccountManagerDelegate {
 
 		[Abstract]
+#if XAMCORE_4_0
 		[NoMac]
+#elif MONOMAC
+		[Obsoleted (PlatformName.MacOSX, 12,0, message: "Unavailable on macOS, will be removed in the future.")]
+#endif
 		[Export ("accountManager:presentViewController:")]
 		void PresentViewController (VSAccountManager accountManager, UIViewController viewController);
 
 		[Abstract]
+#if XAMCORE_4_0
 		[NoMac]
+#elif MONOMAC
+		[Obsoleted (PlatformName.MacOSX, 12,0, message: "Unavailable on macOS, will be removed in the future.")]
+#endif
 		[Export ("accountManager:dismissViewController:")]
 		void DismissViewController (VSAccountManager accountManager, UIViewController viewController);
 
