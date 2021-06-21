@@ -11,6 +11,9 @@ using System.Runtime.InteropServices;
 using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
+#if NET
+using System.Runtime.Versioning;
+#endif
 
 using CFDictionaryRef=System.IntPtr;
 using CVPixelBufferRef=System.IntPtr; 

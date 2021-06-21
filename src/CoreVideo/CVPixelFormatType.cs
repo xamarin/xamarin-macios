@@ -29,6 +29,9 @@
 using System;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
+#if NET
+using System.Runtime.Versioning;
+#endif
 
 #nullable enable
 
