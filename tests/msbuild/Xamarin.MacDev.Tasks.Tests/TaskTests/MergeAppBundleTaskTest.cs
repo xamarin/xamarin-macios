@@ -22,19 +22,33 @@ namespace Xamarin.MacDev.Tasks {
 				{ "MSBUILD_EXE_PATH", null }, // Comes from VSMac (when running tests from inside the IDE), and it confuses 'dotnet build', so remove it.
 			};
 
-			Assert.AreEqual (0, ExecutionHelper.Execute ("make",
-				new string [] { "-C", Path.Combine (Configuration.RootPath, "tests", "test-libraries"), "-j8" },
-				output: out var _,
-				working_directory: null,
-				timeout: TimeSpan.FromSeconds (30),
-				environment_variables: env));
+			RunMake (Path.Combine (Configuration.RootPath, "tests", "test-libraries"), environment: env);
+			RunMake (Path.Combine (Configuration.RootPath, "tests", "common", "TestProjects", "ComplexAssembly"), environment: env);
+		}
 
-			Assert.AreEqual (0, ExecutionHelper.Execute ("make",
-				new string [] { "-C", Path.Combine (Configuration.RootPath, "tests", "common", "TestProjects", "ComplexAssembly"), "-j8", "V=1" },
+		static void RunMake (string directory, Dictionary<string, string> environment =  null, int j = 8)
+		{
+			var arguments = new List<string> {
+				"-C",
+				directory,
+				$"-j{j}",
+				"V=1",
+			};
+			var rv = ExecutionHelper.Execute ("make",
+				arguments,
 				output: out var output,
 				working_directory: null,
 				timeout: TimeSpan.FromSeconds (30),
-				environment_variables: env));
+				environment_variables: environment);
+			if (rv != 0) {
+				var failure = $"'make {StringUtils.FormatArguments (StringUtils.QuoteForProcess (arguments))}' exited with exit code {rv}:";
+				var indented = "\t" + string.Join ("\n\t", output.ToString ().Split ('\n'));
+				Console.WriteLine (failure);
+				Console.WriteLine (indented);
+				// Only show the last 10 lines in the assert message, because otherwise the html reports can end up quite big.
+				var shortIndented = indented.Split ('\n').Reverse ().Take (10).Reverse ();
+				Assert.Fail (failure + "\n" + string.Join ("\n", shortIndented));
+			}
 		}
 
 		MergeAppBundles CreateTask (string outputBundle, params string[] inputBundles)
