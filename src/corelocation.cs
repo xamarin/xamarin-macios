@@ -46,6 +46,16 @@ namespace CoreLocation {
 		Far
 	}
 
+	[ErrorDomain ("CLLocationPushServiceErrorDomain")]
+	[iOS (15,0), TV (15,0), MacCatalyst (15,0), Mac (12,0), Watch (8,0)]
+	[Native]
+	public enum CLLocationPushServiceError : long {
+		Unknown = 0,
+		MissingPushExtension = 1,
+		MissingPushServerEnvironment = 2,
+		MissingEntitlement = 3,
+	}
+
 	[NoTV]
 	[Watch (6,0)]
 	[BaseType (typeof (NSObject))]
@@ -430,6 +440,15 @@ namespace CoreLocation {
 		[MacCatalyst (14,0)]
 		[Export ("authorizedForWidgetUpdates")]
 		bool IsAuthorizedForWidgetUpdates { [Bind ("isAuthorizedForWidgetUpdates")] get; }
+
+		[Async]
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15, 0), MacCatalyst (15,0)]
+		[Export ("startMonitoringLocationPushesWithCompletion:")]
+		void StartMonitoringLocationPushes ([NullAllowed] Action<NSData, NSError> completion);
+
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15, 0), MacCatalyst (15,0)]
+		[Export ("stopMonitoringLocationPushes")]
+		void StopMonitoringLocationPushes ();
 
 	}
 	
@@ -871,4 +890,17 @@ namespace CoreLocation {
 		[BindAs (typeof (short?))]
 		NSNumber Minor { get; }
 	}
+
+	[iOS (15,0), TV (15,0), MacCatalyst (15,0), Mac (12,0), Watch (8,0)]
+	[Protocol]
+	interface CLLocationPushServiceExtension
+	{
+		[Abstract]
+		[Export ("didReceiveLocationPushPayload:completion:")]
+		void DidReceiveLocationPushPayload (NSDictionary<NSString, NSObject> payload, Action completion);
+
+		[Export ("serviceExtensionWillTerminate")]
+		void ServiceExtensionWillTerminate ();
+	}
+
 }

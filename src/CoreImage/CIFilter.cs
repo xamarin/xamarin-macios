@@ -281,13 +281,13 @@ namespace CoreImage {
 #endif
 
 		// Calls the selName selector for cases where we do not have an instance created
-		static internal string GetFilterName (IntPtr filterHandle)
+		static internal string? GetFilterName (IntPtr filterHandle)
 		{
 			return CFString.FromHandle (ObjCRuntime.Messaging.IntPtr_objc_msgSend (filterHandle, Selector.GetHandle ("name")));
 		}
 
 		// TODO could be generated too
-		internal static CIFilter FromName (string filterName, IntPtr handle)
+		internal static CIFilter FromName (string? filterName, IntPtr handle)
 		{
 			switch (filterName){
 			case "CIAdditionCompositing":
