@@ -425,6 +425,10 @@ namespace PdfKit {
 
 		[Field ("PDFDocumentUserPasswordOption", "+PDFKit")]
 		NSString UserPasswordKey { get; }
+
+		[iOS (15,0), Mac (12,0), MacCatalyst (15,0)]
+		[Field ("PDFDocumentAccessPermissionsOption", "+PDFKit")]
+		NSString AccessPermissionsKey { get; }
 	}
 
 	[Mac (10,13)]
@@ -434,6 +438,7 @@ namespace PdfKit {
 
 		string OwnerPassword { get; set; }
 		string UserPassword { get; set; }
+		string AccessPermissions { get; set; }
 	}
 
 	[Mac (10,13)]
@@ -1178,10 +1183,6 @@ namespace PdfKit {
 		[iOS (15,0), Mac (12,0), MacCatalyst (15,0)]
 		[Field ("PDFDocumentPageIndexKey")]
 		NSString PageIndexKey { get; }
-
-		[iOS (15,0), Mac (12,0), MacCatalyst (15,0)]
-		[Field ("PDFDocumentAccessPermissionsOption")]
-		NSString AccessPermissionsOption { get; }
 
 		// - (instancetype)init NS_DESIGNATED_INITIALIZER;
 		[Export ("init")]
