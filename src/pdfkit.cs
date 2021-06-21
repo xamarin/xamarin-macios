@@ -438,6 +438,8 @@ namespace PdfKit {
 
 		string OwnerPassword { get; set; }
 		string UserPassword { get; set; }
+
+		[iOS (15,0), Mac (12,0), MacCatalyst (15,0)]
 		string AccessPermissions { get; set; }
 	}
 
