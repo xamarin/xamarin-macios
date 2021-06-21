@@ -1093,12 +1093,13 @@ namespace CoreSpotlight {
 		void Cancel ();
 	}
 
+	[Abstract]
 	[NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (NSObject))]
 	interface CSImportExtension : NSExtensionRequestHandling
 	{
 		[Export ("updateAttributes:forFileAtURL:error:")]
-		bool UpdateAttributes (CSSearchableItemAttributeSet attributes, NSUrl contentUrl, [NullAllowed] out NSError error);
+		bool Update (CSSearchableItemAttributeSet attributes, NSUrl contentUrl, [NullAllowed] out NSError error);
 	}
 
 }
