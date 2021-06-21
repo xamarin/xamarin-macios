@@ -592,6 +592,7 @@ namespace PhotosUI {
 		[Export ("presentLimitedLibraryPickerFromViewController:")]
 		void PresentLimitedLibraryPicker (UIViewController controller);
 
+		[Async]
 		[iOS (15,0), MacCatalyst (15,0)]
 		[Export ("presentLimitedLibraryPickerFromViewController:completionHandler:")]
 		void PresentLimitedLibraryPicker (UIViewController controller, Action<string[]> completionHandler);
