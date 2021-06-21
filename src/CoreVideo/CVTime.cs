@@ -30,6 +30,8 @@ using System.Runtime.InteropServices;
 using CoreFoundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace CoreVideo {
 
 	// CVBase.h

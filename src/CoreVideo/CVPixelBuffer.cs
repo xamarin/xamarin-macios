@@ -12,6 +12,11 @@ using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
 
+using CFDictionaryRef=System.IntPtr;
+using CVPixelBufferRef=System.IntPtr; 
+
+#nullable enable
+
 namespace CoreVideo {
 
 	[Watch (4,0)]
@@ -38,17 +43,17 @@ namespace CoreVideo {
 			/* CVPixelBufferRef __nullable * __nonnull */ out IntPtr pixelBufferOut);
 
 		public CVPixelBuffer (nint width, nint height, CVPixelFormatType pixelFormat)
-			: this (width, height, pixelFormat, (NSDictionary) null)
+			: this (width, height, pixelFormat, (NSDictionary?) null)
 		{
 		}
 
-		public CVPixelBuffer (nint width, nint height, CVPixelFormatType pixelFormatType, CVPixelBufferAttributes attributes)
+		public CVPixelBuffer (nint width, nint height, CVPixelFormatType pixelFormatType, CVPixelBufferAttributes? attributes)
 			: this (width, height, pixelFormatType, attributes == null ? null : attributes.Dictionary)
 		{
 		}
 
 		[Advice ("Use constructor with CVPixelBufferAttributes")]
-		CVPixelBuffer (nint width, nint height, CVPixelFormatType pixelFormatType, NSDictionary pixelBufferAttributes)
+		CVPixelBuffer (nint width, nint height, CVPixelFormatType pixelFormatType, NSDictionary? pixelBufferAttributes)
 		{
 			if (width <= 0)
 				throw new ArgumentOutOfRangeException ("width");
@@ -84,6 +89,32 @@ namespace CoreVideo {
 				throw new ArgumentException (ret.ToString ());
 			return Runtime.GetNSObject<NSDictionary> (resolvedDictionaryOut);
 		}
+
+#if NET
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")] 
+		[SupportedOSPlatform ("watchos8.0")] 
+#else
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0)]
+#endif
+		[DllImport (Constants.CoreVideoLibrary)]
+		static extern CFDictionaryRef CVPixelBufferCopyCreationAttributes (CVPixelBufferRef pixelBuffer);
+
+#if NET
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")] 
+		[SupportedOSPlatform ("watchos8.0")] 
+#else
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+#endif
+		public CVPixelBufferAttributes? GetPixelBufferCreationAttributes () {
+			var attrs = CVPixelBufferCopyCreationAttributes (handle);
+			return (attrs == IntPtr.Zero) ? null : new CVPixelBufferAttributes (new NSDictionary (attrs));
+		}
 #endif
 
 		/* CVPixelBufferCreateWithBytes */
@@ -114,13 +145,13 @@ namespace CoreVideo {
 			/* CFDictionaryRef CV_NULLABLE */ IntPtr pixelBufferAttributes,
 			/* CV_RETURNS_RETAINED_PARAMETER CVPixelBufferRef CV_NULLABLE * CV_NONNULL */ out IntPtr pixelBufferOut);// __OSX_AVAILABLE_STARTING(__MAC_10_4,__IPHONE_4_0);
 
-		public static CVPixelBuffer Create (nint width, nint height, CVPixelFormatType pixelFormatType, byte[] data, nint bytesPerRow, CVPixelBufferAttributes pixelBufferAttributes)
+		public static CVPixelBuffer? Create (nint width, nint height, CVPixelFormatType pixelFormatType, byte[] data, nint bytesPerRow, CVPixelBufferAttributes pixelBufferAttributes)
 		{
 			CVReturn status;
 			return Create (width, height, pixelFormatType, data, bytesPerRow, pixelBufferAttributes, out status);
 		}
 
-		public static CVPixelBuffer Create (nint width, nint height, CVPixelFormatType pixelFormatType, byte[] data, nint bytesPerRow, CVPixelBufferAttributes pixelBufferAttributes, out CVReturn status)
+		public static CVPixelBuffer? Create (nint width, nint height, CVPixelFormatType pixelFormatType, byte[] data, nint bytesPerRow, CVPixelBufferAttributes pixelBufferAttributes, out CVReturn status)
 		{
 			IntPtr handle;
 			GCHandle gchandle;
@@ -147,7 +178,7 @@ namespace CoreVideo {
 
 		class PlaneData
 		{
-			public GCHandle[] dataHandles;
+			public GCHandle[]? dataHandles;
 		}
 
 		delegate void CVPixelBufferReleasePlanarBytesCallback (
@@ -164,8 +195,10 @@ namespace CoreVideo {
 		{
 			GCHandle handle = GCHandle.FromIntPtr (releaseRefCon);
 			PlaneData data = (PlaneData) handle.Target;
-			for (int i = 0; i < data.dataHandles.Length; i++)
-				data.dataHandles[i].Free ();
+			if (data.dataHandles != null) {
+				for (int i = 0; i < data.dataHandles.Length; i++)
+					data.dataHandles[i].Free ();
+			}
 			handle.Free ();
 		}
 
@@ -187,13 +220,13 @@ namespace CoreVideo {
 			/* CFDictionaryRef CV_NULLABLE */ IntPtr pixelBufferAttributes,
 			/* CV_RETURNS_RETAINED_PARAMETER CVPixelBufferRef CV_NULLABLE * CV_NONNULL */ out IntPtr pixelBufferOut); // __OSX_AVAILABLE_STARTING(__MAC_10_4,__IPHONE_4_0);
 
-		public static CVPixelBuffer Create (nint width, nint height, CVPixelFormatType pixelFormatType, byte[][] planes, nint[] planeWidths, nint[] planeHeights, nint[] planeBytesPerRow, CVPixelBufferAttributes pixelBufferAttributes)
+		public static CVPixelBuffer? Create (nint width, nint height, CVPixelFormatType pixelFormatType, byte[][] planes, nint[] planeWidths, nint[] planeHeights, nint[] planeBytesPerRow, CVPixelBufferAttributes pixelBufferAttributes)
 		{
 			CVReturn status;
 			return Create (width, height, pixelFormatType, planes, planeWidths, planeHeights, planeBytesPerRow, pixelBufferAttributes, out status);
 		}
 
-		public static CVPixelBuffer Create (nint width, nint height, CVPixelFormatType pixelFormatType, byte[][] planes, nint[] planeWidths, nint[] planeHeights, nint[] planeBytesPerRow, CVPixelBufferAttributes pixelBufferAttributes, out CVReturn status)
+		public static CVPixelBuffer? Create (nint width, nint height, CVPixelFormatType pixelFormatType, byte[][] planes, nint[] planeWidths, nint[] planeHeights, nint[] planeBytesPerRow, CVPixelBufferAttributes pixelBufferAttributes, out CVReturn status)
 		{
 			IntPtr handle;
 			IntPtr[] addresses;
