@@ -153,7 +153,7 @@ namespace Xamarin.MacDev.Tasks {
 			var task = CreateTask (outputBundle, bundles);
 			Assert.IsFalse (task.Execute (), "Task execution");
 			Assert.AreEqual (1, Engine.Logger.ErrorEvents.Count, "Errors");
-			Assert.AreEqual ("Unknown merge file type: Other", Engine.Logger.ErrorEvents [0].Message, "Error message"); // FIXME: error
+			Assert.AreEqual ("Unable to merge the file 'Something.txt', it's different between the input app bundles.", Engine.Logger.ErrorEvents [0].Message, "Error message"); // FIXME: error
 		}
 
 		[Test]
@@ -205,7 +205,7 @@ namespace Xamarin.MacDev.Tasks {
 			var task = CreateTask (outputBundle, bundleA, bundleB);
 			Assert.IsFalse (task.Execute (), "Task execution");
 			Assert.AreEqual (1, Engine.Logger.ErrorEvents.Count, "Errors");
-			Assert.AreEqual ("Can't merge symlinks with different targets.", Engine.Logger.ErrorEvents [0].Message, "Error message"); // FIXME: error
+			Assert.AreEqual ("Can't merge the symlink 'B.txt', it has different targets.", Engine.Logger.ErrorEvents [0].Message, "Error message"); // FIXME: error
 		}
 
 		[Test]
