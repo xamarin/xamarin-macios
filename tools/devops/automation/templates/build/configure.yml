@@ -174,7 +174,10 @@ steps:
   inputs:
     locProj: '$(Build.SourcesDirectory)\Localize\LocProject.json'
     outDir: '$(Build.ArtifactStagingDirectory)'
-    isCreatePrSelected: eq(variables.isScheduled, 'True')
+    ${{ if eq(variables.isScheduled, 'True') }}:
+      isCreatePrSelected: true
+    ${{ if ne(variables.isScheduled, 'True') }}:
+      isCreatePrSelected: false
     packageSourceAuth: patAuth
     patVariable: '$(OneLocBuild--PAT)'
     isAutoCompletePrSelected: false
