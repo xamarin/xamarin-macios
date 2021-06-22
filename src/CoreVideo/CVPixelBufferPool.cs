@@ -161,7 +161,7 @@ namespace CoreVideo {
 		}
 
 		public CVPixelBufferPool (CVPixelBufferPoolSettings settings, CVPixelBufferAttributes pixelBufferAttributes)
-			: this (settings.GetDictionary () ?? new NSDictionary (), pixelBufferAttributes.GetDictionary () ?? new NSDictionary ())
+			: this (settings.GetDictionary ()!, pixelBufferAttributes.GetDictionary ()!)
 		{
 		}
 
