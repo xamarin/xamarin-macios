@@ -337,6 +337,7 @@
 			-->
 			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" Condition="'$(_LinkMode)' != 'None'" Type="Xamarin.Linker.Steps.PreserveBlockCodeHandler" />
 			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" Condition="'$(_LinkMode)' != 'None'" Type="Xamarin.Linker.OptimizeGeneratedCodeHandler" />
+			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" Condition="'$(_LinkMode)' != 'None'" Type="Xamarin.Linker.BackingFieldDelayHandler" />
 			<!-- MarkDispatcher substeps will run for all marked assemblies. -->
 			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" Condition="'$(_LinkMode)' != 'None'" Type="Xamarin.Linker.Steps.MarkDispatcher" />
 			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" Condition="'$(_LinkMode)' != 'None'" Type="Xamarin.Linker.Steps.PreserveSmartEnumConversionsHandler" />
