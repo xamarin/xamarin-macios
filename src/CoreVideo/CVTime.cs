@@ -45,7 +45,7 @@ namespace CoreVideo {
 		public int Flags { get { return (int) TimeFlags; } set { TimeFlags = (CVTimeFlags) value; }}
 
 #if !COREBUILD
-		public static CVTime? ZeroTime {
+		public static CVTime ZeroTime {
 			get {
 				return (CVTime) Marshal.PtrToStructure (Dlfcn.GetIndirect (Libraries.CoreVideo.Handle, "kCVZeroTime"), typeof (CVTime))!;
 			}

@@ -97,10 +97,10 @@ namespace CoreVideo {
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("tvos15.0")]
 		[SupportedOSPlatform ("macos12.0")]
-		[SupportedOSPlatform ("maccatalyst15.0")] 
+		[UnsupportedOSPlatform ("maccatalyst")] 
 		[UnsupportedOSPlatform ("watchos")]
 #else
-		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0)]
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), NoMacCatalyst]
 #endif
 		[DllImport (Constants.CoreVideoLibrary)]
 		static extern CFDictionaryRef CVPixelBufferCopyCreationAttributes (CVPixelBufferRef pixelBuffer);
@@ -109,10 +109,10 @@ namespace CoreVideo {
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("tvos15.0")]
 		[SupportedOSPlatform ("macos12.0")]
-		[SupportedOSPlatform ("maccatalyst15.0")] 
+		[UnsupportedOSPlatform ("maccatalyst")] 
 		[UnsupportedOSPlatform ("watchos")]
 #else
-		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), NoMacCatalyst]
 #endif
 		public CVPixelBufferAttributes? GetPixelBufferCreationAttributes () {
 			var attrs = CVPixelBufferCopyCreationAttributes (handle);
@@ -181,7 +181,7 @@ namespace CoreVideo {
 
 		class PlaneData
 		{
-			public GCHandle[]? dataHandles;
+			public GCHandle[] dataHandles = Array.Empty<GCHandle> ();
 		}
 
 		delegate void CVPixelBufferReleasePlanarBytesCallback (
@@ -197,11 +197,9 @@ namespace CoreVideo {
 		static void ReleasePlanarBytesCallback (IntPtr releaseRefCon, IntPtr dataPtr, nint dataSize, nint numberOfPlanes, IntPtr planeAddresses)
 		{
 			GCHandle handle = GCHandle.FromIntPtr (releaseRefCon);
-			PlaneData? data = handle.Target as PlaneData;
-			if (data?.dataHandles != null) {
-				for (int i = 0; i < data.dataHandles.Length; i++)
-					data.dataHandles[i].Free ();
-			}
+			PlaneData data = (PlaneData) handle.Target!;
+			for (int i = 0; i < data.dataHandles.Length; i++)
+				data.dataHandles[i].Free ();
 			handle.Free ();
 		}
 
