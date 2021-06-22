@@ -20,6 +20,7 @@ namespace Xamarin.MacDev.Tasks {
 		{
 			var env = new Dictionary<string, string> {
 				{ "MSBUILD_EXE_PATH", null }, // Comes from VSMac (when running tests from inside the IDE), and it confuses 'dotnet build', so remove it.
+				{ "MSBuildSDKsPath", null }, // Comes from MSBuild, and confuses 'dotnet build'
 			};
 
 			RunMake (Path.Combine (Configuration.RootPath, "tests", "test-libraries"), environment: env);
