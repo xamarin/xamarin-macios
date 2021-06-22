@@ -4,6 +4,6 @@
 
   <PropertyGroup>
     <RunCommand>open</RunCommand>
-    <RunArguments>$([MSBuild]::NormalizePath($(OutputPath)/$(AssemblyName).app))</RunArguments>
+    <RunArguments>$(TargetDir)/$(AssemblyName).app</RunArguments>
   </PropertyGroup>
 </Project>
