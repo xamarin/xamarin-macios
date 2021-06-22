@@ -183,6 +183,7 @@
 		<!-- outer build for multi-rid build -->
 		<BuildDependsOn Condition="'$(RuntimeIdentifiers)' != ''">
 			_RunRidSpecificBuild;
+			_CompileEntitlements;
 			_CreateMergedAppBundle;
 			Codesign;
 		</BuildDependsOn>
@@ -223,6 +224,7 @@
 
 		<!-- outer build for multi-rid build -->
 		<CreateAppBundleDependsOn Condition="'$(RuntimeIdentifiers)' != ''">
+			_CompileEntitlements;
 			_CreateMergedAppBundle;
 		</CreateAppBundleDependsOn>
 	</PropertyGroup>
