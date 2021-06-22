@@ -45,15 +45,15 @@ namespace CoreVideo {
 		public int Flags { get { return (int) TimeFlags; } set { TimeFlags = (CVTimeFlags) value; }}
 
 #if !COREBUILD
-		public static CVTime ZeroTime {
+		public static CVTime? ZeroTime {
 			get {
-				return (CVTime) Marshal.PtrToStructure (Dlfcn.GetIndirect (Libraries.CoreVideo.Handle, "kCVZeroTime"), typeof (CVTime));
+				return (CVTime) Marshal.PtrToStructure (Dlfcn.GetIndirect (Libraries.CoreVideo.Handle, "kCVZeroTime"), typeof (CVTime))!;
 			}
 		}
 
 		public static CVTime IndefiniteTime {
 			get {
-				return (CVTime) Marshal.PtrToStructure (Dlfcn.GetIndirect (Libraries.CoreVideo.Handle, "kCVIndefiniteTime"), typeof (CVTime));
+				return (CVTime) Marshal.PtrToStructure (Dlfcn.GetIndirect (Libraries.CoreVideo.Handle, "kCVIndefiniteTime"), typeof (CVTime))!;
 			}
 		}
 #endif

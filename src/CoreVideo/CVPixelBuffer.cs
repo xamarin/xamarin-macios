@@ -197,8 +197,8 @@ namespace CoreVideo {
 		static void ReleasePlanarBytesCallback (IntPtr releaseRefCon, IntPtr dataPtr, nint dataSize, nint numberOfPlanes, IntPtr planeAddresses)
 		{
 			GCHandle handle = GCHandle.FromIntPtr (releaseRefCon);
-			PlaneData data = (PlaneData) handle.Target;
-			if (data.dataHandles != null) {
+			PlaneData? data = handle.Target as PlaneData;
+			if (data?.dataHandles != null) {
 				for (int i = 0; i < data.dataHandles.Length; i++)
 					data.dataHandles[i].Free ();
 			}
