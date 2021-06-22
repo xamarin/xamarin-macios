@@ -3,8 +3,6 @@
 !missing-field! kCTFontManagerBundleIdentifier not bound
 !missing-field! kCTFontRegistrationUserInfoAttribute not bound
 !missing-pinvoke! CTFontCollectionCopyExclusionDescriptors is not bound
-!missing-pinvoke! CTFontCollectionCopyFontAttribute is not bound
-!missing-pinvoke! CTFontCollectionCopyFontAttributes is not bound
 !missing-pinvoke! CTFontCollectionCopyQueryDescriptors is not bound
 !missing-pinvoke! CTFontCollectionCreateMatchingFontDescriptorsForFamily is not bound
 !missing-pinvoke! CTFontCollectionCreateMutableCopy is not bound
