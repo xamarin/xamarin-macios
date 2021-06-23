@@ -63,19 +63,25 @@ namespace Xamarin.Linker {
 			method.Body = body;
 		}
 
-		public static void ReapplyDisposedFields (DerivedLinkContext context)
+		public static void ReapplyDisposedFields (DerivedLinkContext context, string operation)
 		{
 			// note: all methods in the dictionary are marked (since they were added from an IMarkHandler)
 			foreach ((var method, var body) in dispose) {
 				foreach (var ins in body.Instructions) {
 					switch (ins.OpCode.OperandType) {
-					// case OperandType.InlineTok:
 					case OperandType.InlineField:
 						var field = (ins.Operand as FieldReference)?.Resolve ();
 						if (!context.Annotations.IsMarked (field)) {
-							ins.OpCode = OpCodes.Nop; // stfld
-							ins.Previous.OpCode = OpCodes.Nop; // ldnull
-							ins.Previous.Previous.OpCode = OpCodes.Nop; // ldarg.0
+							var store_field = ins;
+							var load_null = ins.Previous;
+							var load_this = ins.Previous.Previous;
+							if (OptimizeGeneratedCodeHandler.ValidateInstruction (method, store_field, operation, Code.Stfld) &&
+								OptimizeGeneratedCodeHandler.ValidateInstruction (method, load_null, operation, Code.Ldnull) &&
+								OptimizeGeneratedCodeHandler.ValidateInstruction (method, load_this, operation, Code.Ldarg_0)) {
+								store_field.OpCode = OpCodes.Nop;
+								load_null.OpCode = OpCodes.Nop;
+								load_this.OpCode = OpCodes.Nop;
+							}
 						}
 						break;
 					}
@@ -93,7 +99,7 @@ namespace Xamarin.Linker {
 		public override void Initialize (LinkContext context)
 		{
 			base.Initialize (context);
-			BackingFieldDelayHandler.ReapplyDisposedFields (LinkContext);
+			BackingFieldDelayHandler.ReapplyDisposedFields (LinkContext, Name);
 		}
 	}
 }
