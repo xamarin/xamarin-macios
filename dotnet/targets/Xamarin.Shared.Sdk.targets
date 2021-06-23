@@ -257,7 +257,10 @@
 		Returns="@(_AssemblyPublishDirectory)"
 		>
 		<ItemGroup>
-			<_AssemblyPublishDirectory Include="$(MSBuildProjectDirectory)/$(_AppBundlePath)" RuntimeIdentifier="$(RuntimeIdentifier)" />
+			<_AssemblyPublishDirectory Include="$(MSBuildProjectDirectory)/$(_AppBundlePath)">
+				<RuntimeIdentifier>$(RuntimeIdentifier)</RuntimeIdentifier>
+				<TargetArchitectures>$(TargetArchitectures)</TargetArchitectures>
+			</_AssemblyPublishDirectory>
 		</ItemGroup>
 	</Target>
 
