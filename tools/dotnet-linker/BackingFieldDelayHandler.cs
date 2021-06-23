@@ -27,7 +27,7 @@ namespace Xamarin.Linker {
 	public class BackingFieldDelayHandler : ConfigurationAwareMarkHandler {
 
 		protected override string Name { get; } = "Backing Fields Optimizer";
-		protected override int ErrorCode { get; } = 2200;
+		protected override int ErrorCode { get; } = 2400;
 
 		public override void Initialize (LinkContext context, MarkContext markContext)
 		{
@@ -90,7 +90,7 @@ namespace Xamarin.Linker {
 	public class BackingFieldReintroductionSubStep : ExceptionalSubStep {
 		public override SubStepTargets Targets => SubStepTargets.Assembly;
 		protected override string Name => "Backing Field Reintroduction";
-		protected override int ErrorCode => 0;
+		protected override int ErrorCode { get; } = 2410;
 
 		public override void Initialize (LinkContext context)
 		{
