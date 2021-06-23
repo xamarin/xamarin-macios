@@ -65,10 +65,8 @@ namespace Xamarin.Linker {
 
 		public static void ReapplyDisposedFields (DerivedLinkContext context)
 		{
-			foreach (var kvp in dispose) {
-				var method = kvp.Key;
-				// note: all methods in the dictionary are marked
-				var body = kvp.Value;
+			// note: all methods in the dictionary are marked (since they were added from an IMarkHandler)
+			foreach ((var method, var body) in dispose) {
 				foreach (var ins in body.Instructions) {
 					switch (ins.OpCode.OperandType) {
 					// case OperandType.InlineTok:
