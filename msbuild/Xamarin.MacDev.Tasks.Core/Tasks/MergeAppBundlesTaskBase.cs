@@ -31,6 +31,10 @@ namespace Xamarin.MacDev.Tasks {
 		// that can be put in a RID-specific subdirectory.
 		public ITaskItem[] ArchitectureSpecificFiles { get; set; }
 
+		// This is a list of files (filename only, no path, will match any file with the given name in the app bundle)
+		// to ignore/skip.
+		public ITaskItem [] IgnoreFiles { get; set; }
+
 		// A list of the .app bundles to merge
 		[Required]
 		public ITaskItem [] InputAppBundles { get; set; }
@@ -321,6 +325,18 @@ namespace Xamarin.MacDev.Tasks {
 						map [file.RelativePath] = groupedList = new List<Entry> ();
 					}
 					groupedList.Add (file);
+				}
+			}
+
+			// Remove any ignored files
+			if (IgnoreFiles != null && IgnoreFiles.Length > 0) {
+				foreach (var spec in IgnoreFiles) {
+					var file = spec.ItemSpec;
+					if (map.Remove (file)) {
+						Log.LogMessage (MessageImportance.Low, "Ignored the file '{0}'", file);
+					} else {
+						Log.LogMessage (MessageImportance.Normal, "Asked to ignore the file '{0}', but no such file was found in any of the input app bundles.", file);
+					}
 				}
 			}
 
