@@ -1,7 +1,0 @@
-!missing-enum! PHPickerConfigurationSelection not bound
-!missing-protocol-member! PHLivePhotoViewDelegate::livePhotoView:canBeginPlaybackWithStyle: not found
-!missing-selector! PHPhotoLibrary::presentLimitedLibraryPickerFromViewController:completionHandler: not bound
-!missing-selector! PHPickerConfiguration::preselectedAssetIdentifiers not bound
-!missing-selector! PHPickerConfiguration::selection not bound
-!missing-selector! PHPickerConfiguration::setPreselectedAssetIdentifiers: not bound
-!missing-selector! PHPickerConfiguration::setSelection: not bound

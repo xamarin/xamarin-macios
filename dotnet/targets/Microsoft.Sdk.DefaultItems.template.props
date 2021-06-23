@@ -18,21 +18,21 @@
 -->
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<!-- Default plist file inclusion -->
-	<ItemGroup Condition="'$(TargetPlatformIdentifier)' == '@PLATFORM@' And '$(_EnableDefaultXamarinItems)' == 'true'">
+	<ItemGroup Condition="'$(EnableDefault@PLATFORM@Items)' == 'true'">
 		<None Include="*.plist">
 			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
 		</None>
 	</ItemGroup>
 
 	<!-- Default SceneKit assets inclusion -->
-	<ItemGroup Condition="'$(TargetPlatformIdentifier)' == '@PLATFORM@' And '$(_EnableDefaultXamarinItems)' == 'true'">
+	<ItemGroup Condition="'$(EnableDefault@PLATFORM@Items)' == 'true'">
 		<SceneKitAsset Include="**\*.scnassets\*" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" >
 			<IsDefaultItem>true</IsDefaultItem>
 		</SceneKitAsset>
 	</ItemGroup>
 
 	<!-- Default Asset Catalog file inclusion -->
-	<ItemGroup Condition="'$(TargetPlatformIdentifier)' == '@PLATFORM@' And '$(_EnableDefaultXamarinItems)' == 'true' ">
+	<ItemGroup Condition="'$(EnableDefault@PLATFORM@Items)' == 'true'">
 		<ImageAsset Include="**\*.xcassets\**\*.png;**\*.xcassets\*\*.jpg;**\*.xcassets\**\*.pdf;**\*.xcassets\**\*.json" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)">
 			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
 			<Visible>false</Visible>
@@ -41,7 +41,7 @@
 	</ItemGroup>
 
 	<!-- Default Storyboard file inclusion -->
-	<ItemGroup Condition="'$(TargetPlatformIdentifier)' == '@PLATFORM@' And '$(_EnableDefaultXamarinItems)' == 'true'">
+	<ItemGroup Condition="'$(EnableDefault@PLATFORM@Items)' == 'true'">
 		<InterfaceDefinition Include="**\*.storyboard;**\*.xib" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" >
 			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
 			<IsDefaultItem>true</IsDefaultItem>
@@ -49,7 +49,7 @@
 	</ItemGroup>
 
 	<!-- Default Atlas Texture file inclusion -->
-	<ItemGroup Condition="'$(TargetPlatformIdentifier)' == '@PLATFORM@' And '$(_EnableDefaultXamarinItems)' == 'true'">
+	<ItemGroup Condition="'$(EnableDefault@PLATFORM@Items)' == 'true'">
 		<AtlasTexture Include="**\*.atlas\*.png" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" >
 			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
 			<IsDefaultItem>true</IsDefaultItem>
@@ -57,7 +57,7 @@
 	</ItemGroup>
 
 	<!-- Default CoreMLModel inclusion -->
-	<ItemGroup Condition="'$(TargetPlatformIdentifier)' == '@PLATFORM@' And '$(_EnableDefaultXamarinItems)' == 'true' ">
+	<ItemGroup Condition="'$(EnableDefault@PLATFORM@Items)' == 'true'">
 		<CoreMLModel Include="**\*.mlmodel" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" >
 			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
 			<IsDefaultItem>true</IsDefaultItem>
@@ -65,7 +65,7 @@
 	</ItemGroup>
 
 	<!-- Default Metal inclusion -->
-	<ItemGroup Condition="'$(TargetPlatformIdentifier)' == '@PLATFORM@' And '$(_EnableDefaultXamarinItems)' == 'true' ">
+	<ItemGroup Condition="'$(EnableDefault@PLATFORM@Items)' == 'true'">
 		<Metal Include="**\*.metal" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" >
 			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
 			<IsDefaultItem>true</IsDefaultItem>
@@ -73,7 +73,7 @@
 	</ItemGroup>
 
 	<!-- Default SceneKit assets inclusion -->
-	<ItemGroup Condition="'$(TargetPlatformIdentifier)' == '@PLATFORM@' And '$(_EnableDefaultXamarinItems)' == 'true' ">
+	<ItemGroup Condition="'$(EnableDefault@PLATFORM@Items)' == 'true'">
 		<SceneKitAsset Include="**\*.scnassets\*" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" >
 			<IsDefaultItem>true</IsDefaultItem>
 		</SceneKitAsset>
