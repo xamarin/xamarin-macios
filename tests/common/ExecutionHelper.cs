@@ -78,7 +78,7 @@ namespace Xamarin.Tests
 			var rv = Execution.RunWithStringBuildersAsync (fileName, arguments, workingDirectory: workingDirectory, environment: environment_variables, standardOutput: stdout, standardError: stderr, timeout: timeout).Result;
 			timed_out = rv.TimedOut;
 			if (rv.TimedOut)
-				Console.WriteLine ($"Command '{fileName} {StringUtils.FormatArguments (arguments)}' didn't finish in {timeout.Value.TotalMilliseconds} minutes, and was killed.", timeout.Value.TotalMinutes);
+				Console.WriteLine ($"Command '{fileName} {StringUtils.FormatArguments (arguments)}' didn't finish in {timeout.Value.TotalMilliseconds} ms, and was killed.", timeout.Value.TotalMinutes);
 			return rv.ExitCode;
 		}
 
@@ -92,7 +92,7 @@ namespace Xamarin.Tests
 			var rv = Execution.RunWithCallbacksAsync (fileName, arguments, workingDirectory: workingDirectory, environment: environment_variables, standardOutput: stdout_callback, standardError: stderr_callback, timeout: timeout).Result;
 			timed_out = rv.TimedOut;
 			if (rv.TimedOut)
-				Console.WriteLine ($"Command '{fileName} {StringUtils.FormatArguments (arguments)}' didn't finish in {timeout.Value.TotalMilliseconds} minutes, and was killed.", timeout.Value.TotalMinutes);
+				Console.WriteLine ($"Command '{fileName} {StringUtils.FormatArguments (arguments)}' didn't finish in {timeout.Value.TotalMilliseconds} ms, and was killed.", timeout.Value.TotalMinutes);
 			return rv.ExitCode;
 		}
 
