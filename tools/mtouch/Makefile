@@ -169,6 +169,8 @@ SIMLAUNCHER_FRAMEWORKS =  \
 	-weak_framework NearbyInteraction \
 						\
 	-weak_framework AdServices	\
+						\
+	-weak_framework CoreLocationUI \
 
 # keep the above list of weak_framework
 # 1. grouped by iOS versions;

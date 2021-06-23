@@ -1,5 +1,0 @@
-!missing-enum! PDFAccessPermissions not bound
-!missing-field! PDFDocumentAccessPermissionsOption not bound
-!missing-field! PDFDocumentFoundSelectionKey not bound
-!missing-field! PDFDocumentPageIndexKey not bound
-!missing-selector! PDFDocument::accessPermissions not bound
