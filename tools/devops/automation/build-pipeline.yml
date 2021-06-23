@@ -114,7 +114,7 @@ resources:
   - repository: templates
     type: github
     name: xamarin/yaml-templates
-    ref: refs/heads/main
+    ref: refs/heads/pjc/nuget-convert-insert
     endpoint: xamarin
 
   - repository: maccore
@@ -160,6 +160,8 @@ variables:
   value: 'VSEng-Xamarin-RedmondMacBuildPool-iOS-Trusted'
 - name: CIBuildPoolUrl
   value: 'https://devdiv.visualstudio.com/_settings/agentpools?poolId=367&view=agents'
+- name: IsPRBuild
+  value: ${{ or(eq(variables['Build.Reason'], 'PullRequest'), and(eq(variables['Build.SourceBranchName'], 'merge'), or(eq(variables['Build.Reason'], 'Manual'), eq(variables['Build.Reason'], 'IndividualCI')))) }}
 
 trigger:
   branches:
@@ -294,3 +296,56 @@ stages:
         - bash: |
             echo "Samples!"
           displayName: 'Sample testing'
+
+# .NET 6 Release Prep and VS Insertion Stages
+- stage: prepare_release
+  displayName: Prepare Release
+  dependsOn: build_packages
+  condition: and(eq(dependencies.build_packages.result, 'Succeeded'), eq(variables['IsPRBuild'], 'False'), eq(parameters.enableDotnet, true))
+  jobs:
+  # Check - "xamarin-macios (Prepare Release Sign NuGets)"
+  - template: sign-artifacts/jobs/v2.yml@templates
+    parameters:
+      artifactName: package
+      signType: Real
+      usePipelineArtifactTasks: true
+
+  # Check - "xamarin-macios (Prepare Release Convert NuGet to MSI)"
+  - template: nuget-msi-convert/job/v1.yml@templates
+    parameters:
+      yamlResourceName: templates
+      dependsOn: signing
+      artifactName: nuget-signed
+      artifactPatterns: | # Include MacCatalyst, but not macOS packs?
+        !*macOS*
+      propsArtifactName: package
+      signType: Real
+
+  # Check - "xamarin-macios (Prepare Release Push NuGets)"
+  - job: push_signed_nugets
+    displayName: Push NuGets
+    dependsOn: signing
+    pool:
+      vmImage: macOS-10.15
+    steps:
+    - task: DownloadPipelineArtifact@2
+      inputs:
+        artifactName: nuget-signed
+        downloadPath: $(Build.SourcesDirectory)/package
+        patterns: |
+          *.nupkg
+
+    - task: NuGetCommand@2
+      displayName: Publish Nugets to xamarin-impl
+      inputs:
+        command: push
+        packagesToPush: $(Build.SourcesDirectory)/package/*.nupkg
+        nuGetFeedType: external
+        publishFeedCredentials: xamarin-impl public feed
+
+# Check - "xamarin-macios (VS Insertion Wait For Approval)"
+# Check - "xamarin-macios (VS Insertion Create VS Drop and Open PR)"
+- template: vs-insertion/stage/v1.yml@yaml
+  parameters:
+    dependsOn: prepare_release
+    condition: eq(variables['IsPRBuild'], 'False')

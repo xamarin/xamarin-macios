@@ -129,6 +129,18 @@ LOCAL_WORKLOAD_TARGETS += Workloads/Microsoft.NET.Sdk.$(1)/LICENSE
 endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call WorkloadTargets,$(platform),$(shell echo $(platform) | tr A-Z a-z),$($(platform)_NUGET_VERSION_NO_METADATA))))
 
+$(DOTNET_NUPKG_DIR)/xamarin-workload.props: Workloads/xamarin-workload.template.props
+	$$(Q) rm -f $$@.tmp
+	$$(Q_GEN) sed \
+		-e "s/@IOS_WORKLOAD_VERSION@/$(IOS_NUGET_VERSION).$(IOS_NUGET_COMMIT_DISTANCE)/g" \
+		-e "s/@MACCATALYST_WORKLOAD_VERSION@/$(MACCATALYST_NUGET_VERSION).$(MACCATALYST_NUGET_COMMIT_DISTANCE)/g" \
+		-e "s/@TVOS_WORKLOAD_VERSION@/$(TVOS_NUGET_VERSION).$(TVOS_NUGET_COMMIT_DISTANCE)/g" \
+		$$< > $$@.tmp
+	$$(Q) mv $$@.tmp $$@
+
+$(DOTNET_NUPKG_DIR)/SignList.xml: Workloads/SignList.xml
+	$$(Q) $(CP) $$< $$@
+
 TEMPLATED_FILES = \
 	$(foreach platform,$(DOTNET_PLATFORMS),Microsoft.$(platform).Sdk/targets/Microsoft.$(platform).Sdk.Versions.props) \
 	$(foreach platform,$(DOTNET_PLATFORMS),Microsoft.$(platform).Sdk/targets/Microsoft.$(platform).Sdk.SupportedTargetPlatforms.props) \
@@ -148,8 +160,6 @@ nupkgs/$(1)$(4).$(2)+$(NUGET_BUILD_METADATA).nupkg: $(TEMPLATED_FILES) $(WORKLOA
 	@# Delete any versions of the nuget we're building
 	$$(Q) rm -f nupkgs/$(1).*.nupkg
 	$$(Q_PACK) $(DOTNET6) pack package/$(1)/package.csproj -p:VersionBand=$(DOTNET6_VERSION_BAND) --output "$$(dir $$@)" $(DOTNET_PACK_VERBOSITY) "/bl:$$@.binlog"
-	@# Nuget pack doesn't add the metadata to the filename, but we want that, so rename nuget to contain the full name
-	$$(Q) mv "nupkgs/$(1)$(4).$(2).nupkg" "$$@"
 	@# Clean the local feed
 	$$(Q_NUGET_DEL) if test -d $(DOTNET_FEED_DIR)/$(shell echo $(1) | tr A-Z a-z)/$(2); then nuget delete $(1) $(2) -source $(abspath $(DOTNET_FEED_DIR)) -NonInteractive $(NUGET_VERBOSITY); fi
 	@# Add the nupkg to our local feed
@@ -161,8 +171,6 @@ nupkgs/$(1).$(2)+$(NUGET_BUILD_METADATA).nupkg: $(3) $(WORKLOAD_TARGETS) package
 	@# Delete any versions of the nuget we're building
 	$$(Q) rm -f nupkgs/$(1).*.nupkg
 	$$(Q_PACK) $(DOTNET6) pack package/$(1)/package.csproj --output "$$(dir $$@)" $(DOTNET_PACK_VERBOSITY) "/bl:$$@.binlog"
-	@# Nuget pack doesn't add the metadata to the filename, but we want that, so rename nuget to contain the full name
-	$$(Q) mv "nupkgs/$(1).$(2).nupkg" "$$@"
 	@# Clean the local feed
 	$$(Q_NUGET_DEL) if test -d $(DOTNET_FEED_DIR)/$(shell echo $(1) | tr A-Z a-z)/$(2); then nuget delete $(1) $(2) -source $(abspath $(DOTNET_FEED_DIR)) -NonInteractive $(NUGET_VERBOSITY); fi
 	@# Add the nupkg to our local feed
@@ -182,28 +190,28 @@ $(DOTNET_NUPKG_DIR)/%.nupkg: nupkgs/%.nupkg | $(DOTNET_NUPKG_DIR)
 	$(Q) $(CP) $< $@
 
 ifdef INCLUDE_IOS
-SDK_PACK_IOS_WINDOWS = $(DOTNET_NUPKG_DIR)/$(IOS_WINDOWS_NUGET).Sdk.$(IOS_WINDOWS_NUGET_VERSION_FULL).nupkg
+SDK_PACK_IOS_WINDOWS = $(DOTNET_NUPKG_DIR)/$(IOS_WINDOWS_NUGET).Sdk.$(IOS_WINDOWS_NUGET_VERSION_NO_METADATA).nupkg
 SDK_PACKS += $(SDK_PACK_IOS_WINDOWS)
 endif
 
 pack-ios-windows: $(SDK_PACK_IOS_WINDOWS)
 
 define PacksDefinitions
-RUNTIME_PACKS_$(1) = $$(foreach rid,$$(DOTNET_$(1)_RUNTIME_IDENTIFIERS),$(DOTNET_NUPKG_DIR)/$($(1)_NUGET).Runtime.$$(rid).$($(1)_NUGET_VERSION_FULL).nupkg)
+RUNTIME_PACKS_$(1) = $$(foreach rid,$$(DOTNET_$(1)_RUNTIME_IDENTIFIERS),$(DOTNET_NUPKG_DIR)/$($(1)_NUGET).Runtime.$$(rid).$($(1)_NUGET_VERSION_NO_METADATA).nupkg)
 RUNTIME_PACKS += $$(RUNTIME_PACKS_$(1))
-REF_PACKS_$(1) = $(DOTNET_NUPKG_DIR)/$($(1)_NUGET).Ref.$($(1)_NUGET_VERSION_FULL).nupkg
+REF_PACKS_$(1) = $(DOTNET_NUPKG_DIR)/$($(1)_NUGET).Ref.$($(1)_NUGET_VERSION_NO_METADATA).nupkg
 REF_PACKS += $$(REF_PACKS_$(1))
-SDK_PACKS_$(1) = $(DOTNET_NUPKG_DIR)/$($(1)_NUGET).Sdk.$($(1)_NUGET_VERSION_FULL).nupkg
+SDK_PACKS_$(1) = $(DOTNET_NUPKG_DIR)/$($(1)_NUGET).Sdk.$($(1)_NUGET_VERSION_NO_METADATA).nupkg
 SDK_PACKS += $$(SDK_PACKS_$(1))
-TEMPLATE_PACKS_$(1) = $(DOTNET_NUPKG_DIR)/$($(1)_NUGET).Templates.$($(1)_NUGET_VERSION_FULL).nupkg
+TEMPLATE_PACKS_$(1) = $(DOTNET_NUPKG_DIR)/$($(1)_NUGET).Templates.$($(1)_NUGET_VERSION_NO_METADATA).nupkg
 TEMPLATE_PACKS += $$(TEMPLATE_PACKS_$(1))
-WORKLOAD_PACKS_$(1) = $(DOTNET_NUPKG_DIR)/$(subst Microsoft.,Microsoft.NET.Sdk.,$($(1)_NUGET)).Manifest-$(DOTNET6_VERSION_BAND).$($(1)_NUGET_VERSION_FULL).nupkg
+WORKLOAD_PACKS_$(1) = $(DOTNET_NUPKG_DIR)/$(subst Microsoft.,Microsoft.NET.Sdk.,$($(1)_NUGET)).Manifest-$(DOTNET6_VERSION_BAND).$($(1)_NUGET_VERSION_NO_METADATA).nupkg
 WORKLOAD_PACKS += $$(WORKLOAD_PACKS_$(1))
 pack-$(shell echo $(1) | tr A-Z a-z): $$(RUNTIME_PACKS_$(1)) $$(REF_PACKS_$(1)) $$(SDK_PACKS_$(1)) $$(TEMPLATE_PACKS_$(1)) $$(WORKLOAD_PACKS_$(1))
 endef
 $(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(eval $(call PacksDefinitions,$(platform))))
 
-TARGETS += $(RUNTIME_PACKS) $(REF_PACKS) $(SDK_PACKS) $(TEMPLATE_PACKS) $(WORKLOAD_PACKS)
+TARGETS += $(RUNTIME_PACKS) $(REF_PACKS) $(SDK_PACKS) $(TEMPLATE_PACKS) $(WORKLOAD_PACKS) $(DOTNET_NUPKG_DIR)/xamarin-workload.props $(DOTNET_NUPKG_DIR)/SignList.xml
 
 define InstallWorkload
 # .NET comes with a workload for us, but we don't want that, we want our own. So delete the workload that comes with .NET.

@@ -1,0 +1,14 @@
+<Project>
+  <!-- Do not sign files that already have a signature -->
+  <!--ItemGroup>
+    <Skip Include="" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ThirdParty Include="" />
+  </ItemGroup-->
+
+  <ItemGroup>
+    <FirstParty Include="*.dll" />
+  </ItemGroup>
+</Project>
