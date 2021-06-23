@@ -188,6 +188,7 @@
 		<BuildDependsOn Condition="'$(RuntimeIdentifiers)' != ''">
 			_RunRidSpecificBuild;
 			_CompileEntitlements;
+			_CompileAppManifest;
 			_CreateMergedAppBundle;
 			Codesign;
 		</BuildDependsOn>
