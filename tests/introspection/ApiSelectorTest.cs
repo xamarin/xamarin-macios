@@ -72,16 +72,6 @@ namespace Introspection {
 					return true;
 				}
 				break;
-
-			case "CSImportExtension":
-				switch (selectorName) {
-				case "beginRequestWithExtensionContext:": 
-				case "updateAttributes:forFileAtURL:error:":
-					if (Runtime.Arch == Arch.SIMULATOR) // not available in the sim
-						return true;
-					break;
-				}
-				break;
 			case "MKCircle":
 			case "MKPolygon":
 			case "MKPolyline":
@@ -207,6 +197,15 @@ namespace Introspection {
 			switch (selectorName) {
 				case "supportsAppClipCodeTracking": // Only available on device
 					return Runtime.Arch == Arch.SIMULATOR;
+				}
+				break;
+			case "CSImportExtension":
+				switch (selectorName) {
+				case "beginRequestWithExtensionContext:": 
+				case "updateAttributes:forFileAtURL:error:":
+					if (Runtime.Arch == Arch.SIMULATOR) // not available in the sim
+						return true;
+					break;
 				}
 				break;
 #endif
