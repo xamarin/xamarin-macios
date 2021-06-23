@@ -2497,6 +2497,13 @@ xamarin_get_assembly_name_without_extension (const char *aname, char *name, size
 		name [len - 4] = 0; // strip off any extensions.
 }
 
+bool
+xamarin_locate_app_resource (const char *resource, char *path, size_t pathlen)
+{
+	const char *app_path = xamarin_get_bundle_path ();
+	return xamarin_locate_assembly_resource_for_root (app_path, NULL, resource, path, pathlen);
+}
+
 static bool
 xamarin_locate_assembly_resource_for_root (const char *root, const char *culture, const char *resource, char *path, size_t pathlen)
 {
