@@ -586,6 +586,8 @@ public class Frameworks : Dictionary <string, Framework>
 	{
 		if (catalyst_frameworks == null) {
 			catalyst_frameworks = CreateiOSFrameworks (false);
+			// not present in iOS but present in catalyst
+			catalyst_frameworks.Add ("CoreWlan", "CoreWLAN", 15, 0);
 
 			var min = new Version (13, 0);
 			var v14_2 = new Version (14, 2);

@@ -30,6 +30,7 @@ using System;
 
 namespace CoreWlan {
 
+	[MacCatalyst (15,0)]
 	[BaseType (typeof (NSObject))]
 	interface CWChannel : NSCoding, NSSecureCoding, NSCopying {
 		[Export ("channelNumber")]
@@ -45,6 +46,7 @@ namespace CoreWlan {
 		bool IsEqualToChannel (CWChannel channel);
 	}
 
+	[NoMacCatalyst]
 	[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_10)]
 	[BaseType (typeof (NSObject))]
 	interface CW8021XProfile : NSCoding, NSCopying {
@@ -83,32 +85,40 @@ namespace CoreWlan {
 		CW8021XProfile[] AllUser8021XProfiles { get; }
 	}
 
+	[MacCatalyst (15,0)]
 	[BaseType (typeof (NSObject))]
 	interface CWConfiguration : NSSecureCoding, NSMutableCopying {
+		[NoMacCatalyst]
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Export ("rememberedNetworks")]
 		NSSet RememberedNetworks { get; set; }
 
+		[NoMacCatalyst]
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Export ("preferredNetworks")]
 		CWWirelessProfile[] PreferredNetworks { get; set; }
 
+		[NoMacCatalyst]
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Export ("alwaysRememberNetworks")]
 		bool AlwaysRememberNetworks { get; set; }
 
+		[NoMacCatalyst]
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Export ("disconnectOnLogout")]
 		bool DisconnectOnLogout { get; set; }
 
+		[NoMacCatalyst]
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Export ("requireAdminForNetworkChange")]
 		bool RequireAdminForNetworkChange { get; set; }
 
+		[NoMacCatalyst]
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Export ("requireAdminForPowerChange")]
 		bool RequireAdminForPowerChange { get; set; }
 
+		[NoMacCatalyst]
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Export ("requireAdminForIBSSCreation")]
 		bool RequireAdminForIBSSCreation { get; set; }
@@ -138,10 +148,25 @@ namespace CoreWlan {
 		[Static]
 		[Export ("configuration")]
 		CWConfiguration Create ();
+
+		[Mac (10,7), MacCatalyst (15,0)]
+		[Static]
+		[Export ("configurationWithConfiguration:")]
+		CWConfiguration Create (CWConfiguration configuration);
 	}
 
+	[MacCatalyst (15, 0)]
 	[BaseType (typeof (CWConfiguration))]
 	interface CWMutableConfiguration {
+
+		[Mac (10, 7)]
+		[Export ("networkProfiles", ArgumentSemantic.Copy)]
+		NSOrderedSet<CWNetworkProfile> NetworkProfiles { get; set; }
+
+		[Mac (10, 7)]
+		[Export ("requireAdministratorForAssociation")]
+		bool RequireAdministratorForAssociation { get; set; }
+
 		[Export ("requireAdministratorForPower", ArgumentSemantic.Assign)]
 		bool RequireAdministratorForPower { get; set; }
 
@@ -153,159 +178,198 @@ namespace CoreWlan {
 		bool RememberJoinedNetworks { get; set; }
 	}
 
+	[MacCatalyst (15,0)]
 	[BaseType (typeof (NSObject))]
 	interface CWInterface {
+		[NoMacCatalyst]
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Export ("supportsWoW")]
 		bool SupportsWow { get; }
 
+		[NoMacCatalyst]
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Export ("supportsWEP")]
 		bool SupportsWep { get; }
 
+		[NoMacCatalyst]
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Export ("supportsAES_CCM")]
 		bool SupportsAesCcm { get; }
 
+		[NoMacCatalyst]
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Export ("supportsIBSS")]
 		bool SupportsIbss { get; }
 
+		[NoMacCatalyst]
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Export ("supportsTKIP")]
 		bool SupportsTkip { get; }
 
+		[NoMacCatalyst]
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Export ("supportsPMGT")]
 		bool SupportsPmgt { get; }
 
+		[NoMacCatalyst]
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Export ("supportsHostAP")]
 		bool SupportsHostAP { get; }
 
+		[NoMacCatalyst]
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Export ("supportsMonitorMode")]
 		bool SupportsMonitorMode { get; }
 
+		[NoMacCatalyst]
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Export ("supportsWPA")]
 		bool SupportsWpa { get; }
 
+		[NoMacCatalyst]
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Export ("supportsWPA2")]
 		bool SupportsWpa2 { get; }
 
+		[NoMacCatalyst]
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Export ("supportsWME")]
 		bool SupportsWme { get; }
 
+		[NoMacCatalyst]
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Export ("supportsShortGI40MHz")]
 		bool SupportsShortGI40MHz { get; }
 
+		[NoMacCatalyst]
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Export ("supportsShortGI20MHz")]
 		bool SupportsShortGI20MHz { get; }
 
+		[NoMacCatalyst]
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Export ("supportsTSN")]
 		bool SupportsTsn { get; }
 
+		[NoMacCatalyst]
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Export ("power")]
 		bool Power { get; }
 
+		[NoMacCatalyst]
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Export ("powerSave")]
 		bool PowerSave { get; }
 
+		[NoMacCatalyst]
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Export ("name")]
 		string Name { get; }
 
+		[NoMacCatalyst]
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Export ("supportedChannels")]
 		NSNumber[] SupportedChannels { get; }
 
+		[NoMacCatalyst]
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Export ("supportedPHYModes")]
 		NSNumber[] SupportedPhyModes { get; }
 
+		[NoMacCatalyst]
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Export ("channel")]
 		NSNumber Channel { get; }
 
+		[NoMacCatalyst]
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Export ("phyMode")]
 		NSNumber PhyMode { get; }
 
+		[NoMacCatalyst]
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Export ("bssidData")]
 		NSData BssidData { get; }
 
+		[NoMacCatalyst]
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Export ("rssi")]
 		NSNumber Rssi { get; }
 
+		[NoMacCatalyst]
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Export ("noise")]
 		NSNumber Noise { get; }
 
+		[NoMacCatalyst]
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Export ("txRate")]
 		NSNumber TxRate { get; }
 
+		[NoMacCatalyst]
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Export ("securityMode")]
 		NSNumber SecurityMode { get; }
 
+		[NoMacCatalyst]
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Export ("interfaceState")]
 		NSNumber InterfaceState { get; }
 
+		[NoMacCatalyst]
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Export ("opMode")]
 		NSNumber OpMode { get; }
 
+		[NoMacCatalyst]
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Export ("txPower")]
 		NSNumber TxPower { get; }
 
+		[NoMacCatalyst]
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Static]
 		[Export ("supportedInterfaces")]
 		string[] SupportedInterfaces { get; }
 
+		[NoMacCatalyst]
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Static]
 		[Export ("interface")]
 		CWInterface MainInterface { get; }
 
+		[NoMacCatalyst]
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Static]
 		[Export ("interfaceWithName:")]
 		CWInterface FromName ([NullAllowed]string name);
 
+		[NoMacCatalyst]
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Export ("isEqualToInterface:")]
 		bool IsEqualToInterface (CWInterface intface);
 
+		[NoMacCatalyst]
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Export ("setChannel:error:")]
 		bool SetChannel (nuint channel, out NSError error);
 
+		[NoMacCatalyst]
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Export ("scanForNetworksWithParameters:error:")]
 		CWNetwork[] ScanForNetworksWithParameters ([NullAllowed] NSDictionary parameters, out NSError error);
 
+		[NoMacCatalyst]
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Export ("associateToNetwork:parameters:error:")]
-		bool AssociateToNetwork (CWNetwork network, [NullAllowed] NSDictionary parameters, out NSError error);
+		bool AssociateToNetwork ([NullAllowed] CWNetwork network, [NullAllowed] NSDictionary parameters, out NSError error);
 
+		[NoMacCatalyst]
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Export ("enableIBSSWithParameters:error:")]
 		bool EnableIBSSWithParameters ([NullAllowed] NSDictionary parameters, out NSError error);
 
+		[NoMacCatalyst]
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Export ("commitConfiguration:error:")]
 		bool CommitConfiguration (CWConfiguration config, out NSError error);
@@ -313,25 +377,31 @@ namespace CoreWlan {
 		[Export ("powerOn", ArgumentSemantic.Assign)]
 		bool PowerOn { get; }
 		 
+		[NullAllowed]
 		[Export ("interfaceName", ArgumentSemantic.Copy)]
 		string InterfaceName { get; }
 		 
+		[NullAllowed]
 		[Export ("supportedWLANChannels")]
 		[Internal]
 		NSSet _SupportedWlanChannels { get; }
 
+		[NullAllowed]
 		[Export ("wlanChannel")]
 		CWChannel WlanChannel { get; }
 		 
 		[Export ("activePHYMode")]
 		CWPhyMode ActivePHYMode { get; }
 		 
+		[NullAllowed]
 		[Export ("ssid")]
 		string Ssid { get; }
 		 
+		[NullAllowed]
 		[Export ("ssidData")]
 		NSData SsidData { get; }
 		 
+		[NullAllowed]
 		[Export ("bssid")]
 		string Bssid { get; }
 		 
@@ -347,6 +417,7 @@ namespace CoreWlan {
 		[Export ("transmitRate")]
 		double TransmitRate { get; }
 		 
+		[NullAllowed]
 		[Export ("countryCode")]
 		string CountryCode { get; }
 		 
@@ -356,6 +427,7 @@ namespace CoreWlan {
 		[Export ("transmitPower")]
 		nint TransmitPower { get; }
 		 
+		[NullAllowed]
 		[Export ("hardwareAddress")]
 		string HardwareAddress { get; }
 		 
@@ -365,13 +437,16 @@ namespace CoreWlan {
 		[Export ("serviceActive")]
 		bool ServiceActive { get; }
 		 
+		[NullAllowed]
 		[Export ("cachedScanResults")]
 		[Internal]
 		NSSet _CachedScanResults { get; }
 		 
+		[NullAllowed]
 		[Export ("configuration")]
 		CWConfiguration Configuration { get; }
 		 
+		[NullAllowed]
 		[Static]
 		[Export ("interfaceNames")]
 		[Internal]
@@ -388,24 +463,26 @@ namespace CoreWlan {
 		bool SetWlanChannel (CWChannel channel, out NSError error);
 		 
 		[Export ("setPairwiseMasterKey:error:")]
-		bool SetPairwiseMasterKey (NSData key, out NSError error);
+		bool SetPairwiseMasterKey ([NullAllowed] NSData key, out NSError error);
 		 
 		[Export ("setWEPKey:flags:index:error:")]
-		bool SetWEPKey (NSData key, CWCipherKeyFlags flags, nint index, out NSError error);
+		bool SetWEPKey ([NullAllowed] NSData key, CWCipherKeyFlags flags, nint index, out NSError error);
 		 
+		[return: NullAllowed]
 		[Export ("scanForNetworksWithSSID:error:")]
 		[Internal]
 		NSSet _ScanForNetworksWithSsid ([NullAllowed] NSData ssid, out NSError error);
 		 
+		[return: NullAllowed]
 		[Export ("scanForNetworksWithName:error:")]
 		[Internal]
 		NSSet _ScanForNetworksWithName ([NullAllowed] string networkName, out NSError error);
 		 
 		[Export ("associateToNetwork:password:error:")]
-		bool AssociateToNetwork (CWNetwork network, string password, out NSError error);
+		bool AssociateToNetwork (CWNetwork network, [NullAllowed] string password, out NSError error);
 		 
 		[Export ("associateToEnterpriseNetwork:identity:username:password:error:")]
-		bool AssociateToEnterpriseNetwork (CWNetwork network, SecIdentity identity, string username, string password, out NSError error);
+		bool AssociateToEnterpriseNetwork (CWNetwork network, [NullAllowed] SecIdentity identity, [NullAllowed] string username, [NullAllowed]string password, out NSError error);
 		 
 		[Deprecated (PlatformName.MacOSX, 11,0)]
 		[Export ("startIBSSModeWithSSID:security:channel:password:error:")]
@@ -415,7 +492,7 @@ namespace CoreWlan {
 		void Disassociate ();
 		 
 		[Export ("commitConfiguration:authorization:error:")]
-		bool CommitConfiguration (CWConfiguration configuration, NSObject authorization, out NSError error);
+		bool CommitConfiguration (CWConfiguration configuration, [NullAllowed] NSObject authorization, out NSError error);
 
 		[Mac (10,13)]
 		[Export ("scanForNetworksWithSSID:includeHidden:error:")]
@@ -430,6 +507,7 @@ namespace CoreWlan {
 		NSSet _ScanForNetworksWithName ([NullAllowed] string networkName, bool includeHidden, [NullAllowed] out NSError error);
 	}
 
+	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_10)]
 	interface CWWirelessProfile : NSCoding, NSCopying {
@@ -454,50 +532,64 @@ namespace CoreWlan {
 		bool IsEqualToProfile (CWWirelessProfile profile);
 	}
 
+	[MacCatalyst (15,0)]
 	[BaseType (typeof (NSObject))]
 	interface CWNetwork : NSSecureCoding, NSCopying {
+		[NoMacCatalyst]
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
+		[NullAllowed]
 		[Export ("bssidData")]
 		NSData BssidData { get; }
 
+		[NoMacCatalyst]
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Export ("securityMode")]
 		NSNumber SecurityMode { get; }
 
+		[NoMacCatalyst]
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Export ("phyMode")]
 		NSNumber PhyMode { get; }
 
+		[NoMacCatalyst]
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Export ("channel")]
 		NSNumber Channel { get; }
 
+		[NoMacCatalyst]
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Export ("rssi")]
 		NSNumber Rssi { get; }
 
+		[NoMacCatalyst]
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Export ("noise")]
 		NSNumber Noise { get; }
 
+		[NoMacCatalyst]
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Export ("ieData")]
 		NSData IeData { get; }
 
+		[NoMacCatalyst]
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Export ("isIBSS")]
 		bool IsIBSS { get; }
 
+		[NoMacCatalyst]
 		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_9)]
 		[Export ("wirelessProfile")]
 		CWWirelessProfile WirelessProfile { get; }
 
+		[NullAllowed]
 		[Export ("ssid")]
 		string Ssid { get; }
 		 
+		[NullAllowed]
 		[Export ("ssidData")]
 		NSData SsidData { get; }
 		 
+		[NullAllowed]
 		[Export ("bssid")]
 		string Bssid { get; }
 
@@ -511,9 +603,11 @@ namespace CoreWlan {
 		[Export ("noiseMeasurement")]
 		nint NoiseMeasurement { get; }
 		 
+		[NullAllowed]
 		[Export ("informationElementData")]
 		NSData InformationElementData { get; }
 		 
+		[NullAllowed]
 		[Export ("countryCode")]
 		string CountryCode { get; }
 		 
@@ -533,9 +627,11 @@ namespace CoreWlan {
 		bool SupportsPhyMode (CWPhyMode phyMode);
 	}
 
+	[MacCatalyst (15,0)]
 	[BaseType (typeof (NSObject))]
 	interface CWNetworkProfile : NSCoding, NSSecureCoding, NSCopying, NSMutableCopying 
 	{
+		[NullAllowed]
 		[Export ("ssid", ArgumentSemantic.Copy)]
 		string Ssid { get; }
 
@@ -561,12 +657,21 @@ namespace CoreWlan {
 		bool IsEqualToNetworkProfile (CWNetworkProfile networkProfile);
 	}
 
+	[MacCatalyst (15,0)]
 	[BaseType (typeof (CWNetworkProfile))]
 	interface CWMutableNetworkProfile : NSCoding, NSSecureCoding, NSCopying, NSMutableCopying  
 	{
+		[NullAllowed]
+		[Mac (10, 7)]
+		[Export ("ssidData", ArgumentSemantic.Copy)]
+		NSData SsidData { get; set; }
+
+		[Mac (10, 7)]
+		[Export ("security", ArgumentSemantic.Assign)]
+		CWSecurity Security { get; set; }
 	}
 
-	[Mac (10,10)] 
+	[Mac (10,10), MacCatalyst (15,0)] 
 	[BaseType (typeof (NSObject))]
 	interface CWWiFiClient
 	{
@@ -575,14 +680,18 @@ namespace CoreWlan {
 		ICWEventDelegate Delegate { get; set; }
 		
 		[Export ("interface")]
+		[NullAllowed]
 		CWInterface MainInterface { get; }
 
+		[return: NullAllowed]
 		[Export ("interfaceWithName:")]
 		CWInterface FromName ([NullAllowed] string name);
 
 		[Export ("interfaces")]
+		[NullAllowed]
 		CWInterface[] Interfaces { get; }
 
+		[NullAllowed]
 		[Export ("interfaceNames")]
 		[Static]
 		string[] InterfaceNames { get; }
@@ -603,6 +712,7 @@ namespace CoreWlan {
 	
 	interface ICWEventDelegate { }
 	
+	[MacCatalyst (15,0)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
