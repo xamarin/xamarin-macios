@@ -1877,6 +1877,15 @@ namespace Xamarin.Localization.MSBuild {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to App bundle file #{0}: {1}.
+        /// </summary>
+        public static string E7080 {
+            get {
+                return ResourceManager.GetString("E7080", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid framework: {0}.
         /// </summary>
         public static string InvalidFramework {

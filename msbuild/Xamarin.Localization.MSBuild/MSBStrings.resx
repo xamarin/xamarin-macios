@@ -1287,4 +1287,13 @@
     <data name="E7079" xml:space="preserve">
         <value>Invalid app bundle: the file {0} has different types between the input app bundles.</value>
     </data>
+
+    <data name="E7080" xml:space="preserve">
+        <value>App bundle file #{0}: {1}</value>
+        <comment>
+            This error will be shown multiple times, listing the full path to the files causing E7076, E7077 and E7079.
+            {0}: a number indicating which input app bundle the file is from
+            {1}: the full path to the file in question
+        </comment>
+    </data>
 </root>

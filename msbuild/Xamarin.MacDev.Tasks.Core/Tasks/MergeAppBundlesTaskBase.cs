@@ -330,6 +330,7 @@ namespace Xamarin.MacDev.Tasks {
 				if (types.Count () > 1) {
 					// Files of different types.
 					Log.LogError (MSBStrings.E7079 /* Invalid app bundle: the file {0} has different types between the input app bundles. */, kvp.Value.First ().RelativePath);
+					ListFiles (kvp.Value);
 					return false;
 				}
 			}
@@ -374,14 +375,23 @@ namespace Xamarin.MacDev.Tasks {
 					break;
 				case FileType.Symlink:
 					Log.LogError (MSBStrings.E7076 /* Can't merge the symlink '{0}', it has different targets */, entries [0].RelativePath);
+					ListFiles (entries);
 					break;
 				default:
 					Log.LogError (MSBStrings.E7077 /* Unable to merge the file '{0}', it's different between the input app bundles. */, entries [0].RelativePath);
+					ListFiles (entries);
 					break;
 				}
 			}
 
 			return !Log.HasLoggedErrors;
+		}
+
+		void ListFiles (List<Entry> entries)
+		{
+			for (var i = 0; i < entries.Count; i++) {
+				Log.LogError (MSBStrings.E7080 /* App bundle file #{0}: {1} */, i + 1, entries [i].FullPath);
+			}
 		}
 
 		void MergeArchitectureSpecific (IList<Entry> inputs)
