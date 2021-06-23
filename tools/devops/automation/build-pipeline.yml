@@ -345,7 +345,7 @@ stages:
 
 # Check - "xamarin-macios (VS Insertion Wait For Approval)"
 # Check - "xamarin-macios (VS Insertion Create VS Drop and Open PR)"
-- template: vs-insertion/stage/v1.yml@yaml
+- template: vs-insertion/stage/v1.yml@templates
   parameters:
     dependsOn: prepare_release
     condition: eq(variables['IsPRBuild'], 'False')
