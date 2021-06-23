@@ -98,7 +98,6 @@ jobs:
   steps:
   - template: build.yml
     parameters:
-      isPR: $[eq(variables['IsPRBuild'], 'True')]
       runTests: ${{ parameters.runTests }}
       runDeviceTests: ${{ parameters.runDeviceTests }}
       vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
