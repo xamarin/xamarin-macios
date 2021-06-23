@@ -286,11 +286,12 @@
 			<_AssemblyPublishDirectories>
 				<SpecificSubDirectory>.xamarin/%(RuntimeIdentifier)</SpecificSubDirectory>
 			</_AssemblyPublishDirectories>
+			<_AssemblyPublishInputs Include="@(_AssemblyPublishDirectories -> '%(Identity)/**')" />
 		</ItemGroup>
 	</Target>
 
 	<Target Name="_CreateMergedAppBundle"
-		Inputs="@(_AssemblyPublishDirectories -> %(_AssemblyPublishDirectories.Identity)/**)"
+		Inputs="@(_AssemblyPublishInputs)"
 		Outputs="$(DeviceSpecificIntermediateOutputPath)$(_AppBundleName).mergestamp"
 		DependsOnTargets="_RunRidSpecificBuild"
 		>
