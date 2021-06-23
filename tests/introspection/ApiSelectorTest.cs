@@ -44,6 +44,10 @@ namespace Introspection {
 				if (ca is ModelAttribute)
 					return true;
 			}
+#if !MONOMAC
+			if (type.Namespace == "Chip" && Runtime.Arch == Arch.SIMULATOR) // namespace not present in sims as of Xcode13 beta 1
+				return true;
+#endif
 
 			switch (type.FullName) {
 			case "MetalPerformanceShaders.MPSCommandBuffer":

@@ -600,6 +600,11 @@ namespace Introspection {
 				if (Skip (t))
 					continue;
 
+#if !MONOMAC
+				if (t.Namespace == "Chip" && Runtime.Arch == Arch.SIMULATOR) // namespace not present in sims as of Xcode13 beta 1
+					continue;
+#endif
+
 				var klass = new Class (t);
 				if (klass.Handle == IntPtr.Zero) {
 					// This can often by caused by [Protocol] classes with no [Model] but having a [BaseType].

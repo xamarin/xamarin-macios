@@ -1923,6 +1923,7 @@ MAC_FRAMEWORKS =            \
 	AVKit                   \
 	BusinessChat            \
 	CallKit \
+	Chip                    \
 	CFNetwork               \
 	ClassKit                \
 	CloudKit                \
@@ -2023,6 +2024,7 @@ IOS_FRAMEWORKS =         \
 	BusinessChat \
 	CallKit \
 	CarPlay \
+	Chip \
 	CFNetwork \
 	ClassKit \
 	CloudKit \
