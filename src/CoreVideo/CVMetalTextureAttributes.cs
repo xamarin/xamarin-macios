@@ -11,6 +11,8 @@ using System;
 using Foundation;
 using Metal;
 
+#nullable enable
+
 namespace CoreVideo {
 	public partial class CVMetalTextureAttributes : DictionaryContainer {
 
