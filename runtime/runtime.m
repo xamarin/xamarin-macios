@@ -55,6 +55,9 @@ bool xamarin_init_mono_debug = false;
 #endif
 int xamarin_log_level = 0;
 const char *xamarin_executable_name = NULL;
+#if DOTNET
+const char *xamarin_icu_dat_file_name = NULL;
+#endif
 #if MONOMAC || TARGET_OS_MACCATALYST
 NSString * xamarin_custom_bundle_name = @"MonoBundle";
 #endif
@@ -2384,6 +2387,15 @@ void
 xamarin_vm_initialize ()
 {
 	char *pinvokeOverride = xamarin_strdup_printf ("%p", &xamarin_pinvoke_override);
+	char *icu_dat_file_path = NULL;
+
+	char path [1024];
+	if (!xamarin_locate_app_resource (xamarin_icu_dat_file_name, path, sizeof (path))) {
+		LOG (PRODUCT ": Could not locate the ICU data file '%s' in the app bundle.\n", xamarin_icu_dat_file_name);
+	} else {
+		icu_dat_file_path = path;
+	}
+
 	// All the properties we pass here must also be listed in the _RuntimeConfigReservedProperties item group
 	// for the _CreateRuntimeConfiguration target in dotnet/targets/Xamarin.Shared.Sdk.targets.
 	const char *propertyKeys[] = {
@@ -2394,7 +2406,7 @@ xamarin_vm_initialize ()
 	const char *propertyValues[] = {
 		xamarin_get_bundle_path (),
 		pinvokeOverride,
-		"icudt.dat",
+		icu_dat_file_path,
 	};
 	static_assert (sizeof (propertyKeys) == sizeof (propertyValues), "The number of keys and values must be the same.");
 
