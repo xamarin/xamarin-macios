@@ -56,7 +56,7 @@ namespace CoreFoundation {
 		}
 		
 		[DllImport (Constants.CoreFoundationLibrary, EntryPoint="CFArrayGetTypeID")]
-		public extern static /* CFTypeID */ nint GetTypeID ();
+		internal extern static /* CFTypeID */ nint GetTypeID ();
 
 		// pointer to a const struct (REALLY APPLE?)
 		static IntPtr kCFTypeArrayCallbacks_ptr_value;
@@ -69,12 +69,12 @@ namespace CoreFoundation {
 			}
 		}
 
-		public static CFArray FromIntPtrs (params IntPtr[] values)
+		internal static CFArray FromIntPtrs (params IntPtr[] values)
 		{
 			return new CFArray (Create (values), true);
 		}
 
-		public static CFArray FromNativeObjects (params INativeObject[] values)
+		internal static CFArray FromNativeObjects (params INativeObject[] values)
 		{
 			return new CFArray (Create (values), true);
 		}
