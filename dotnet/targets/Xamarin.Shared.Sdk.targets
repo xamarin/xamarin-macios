@@ -314,7 +314,7 @@
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
 			ArchitectureSpecificFiles="@(_ArchitectureSpecificFiles)"
-			IgnoreFiles="Info.plist"
+			IgnoreFiles="$(_AppBundleManifestRelativePath)Info.plist"
 			InputAppBundles="@(_AssemblyPublishDirectories)"
 			OutputAppBundle="$(MSBuildProjectDirectory)/$(_AppBundlePath)"
 			SdkDevPath="$(_SdkDevPath)"
