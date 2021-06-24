@@ -62,7 +62,7 @@
   </Target>
 
   <PropertyGroup Condition="'$(ComputedPlatform)' == '' And ('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS') ">
-    <ComputedPlatform Condition="$(RuntimeIdentifier.Contains('simulator'))">iPhoneSimulator</ComputedPlatform>
+    <ComputedPlatform Condition="$(RuntimeIdentifier.Contains('simulator')) Or $(RuntimeIdentifiers.Contains('simulator'))">iPhoneSimulator</ComputedPlatform>
     <ComputedPlatform Condition="'$(ComputedPlatform)' == ''">iPhone</ComputedPlatform>
   </PropertyGroup>
 
