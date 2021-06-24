@@ -220,8 +220,8 @@
 			_CopyAppExtensionsToBundle;
 		</CreateAppBundleDependsOn>
 
-		<!-- single-rid build (either plain single, or inner build for multi-rid build) -->
-		<CreateAppBundleDependsOn Condition="'$(_PlatformName)' != 'macOS' And '$(RuntimeIdentifiers)' == ''">
+		<!-- not inner build for multi-rid build (single-rid build or outer build for multi-rid build) -->
+		<CreateAppBundleDependsOn Condition="'$(_PlatformName)' != 'macOS' And '$(_IsMultiRidBuild)' != 'true'">
 			_CreateDebugSettings;
 			_CreateDebugConfiguration;
 			$(CreateAppBundleDependsOn);
