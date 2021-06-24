@@ -498,12 +498,11 @@ namespace Xamarin
 
 		public static bool IsMachOFile (string filename)
 		{
-			using (var fs = new FileStream (filename, FileMode.Open, FileAccess.Read, FileShare.Read)) {
+			using (var fs = File.OpenRead (filename)) {
 				if (fs.Length < 4)
 					return false;
 				using (var reader = new BinaryReader (fs)) {
 					var magic = reader.ReadUInt32 ();
-					reader.BaseStream.Position = 0;
 					switch (magic) {
 					case MH_MAGIC:
 					case MH_MAGIC_64:
@@ -610,7 +609,7 @@ namespace Xamarin
 
 		public static bool IsStaticLibrary (string filename, bool throw_if_error = false)
 		{
-			using (var fs = new FileStream (filename, FileMode.Open, FileAccess.Read, FileShare.Read)) {
+			using (var fs = File.OpenRead (filename)) {
 				using (var reader = new BinaryReader (fs)) {
 					return IsStaticLibrary (reader, throw_if_error);
 				}
