@@ -153,8 +153,10 @@ namespace Xamarin.MacDev.Tasks {
 			var outputBundle = Path.Combine (Cache.CreateTemporaryDirectory (), "Merged.app");
 			var task = CreateTask (outputBundle, bundles);
 			Assert.IsFalse (task.Execute (), "Task execution");
-			Assert.AreEqual (1, Engine.Logger.ErrorEvents.Count, "Errors");
-			Assert.AreEqual ("Unable to merge the file 'Something.txt', it's different between the input app bundles.", Engine.Logger.ErrorEvents [0].Message, "Error message"); // FIXME: error
+			Assert.AreEqual (3, Engine.Logger.ErrorEvents.Count, "Errors:\n\t" + string.Join ("\n\t", Engine.Logger.ErrorEvents.Select ((v) => v.Message).ToArray ()));
+			Assert.AreEqual ("Unable to merge the file 'Something.txt', it's different between the input app bundles.", Engine.Logger.ErrorEvents [0].Message, "Error message");
+			Assert.That (Engine.Logger.ErrorEvents [1].Message, Does.Match ("App bundle file #1: .*/MergeMe.app/Something.txt"), "Error message 2");
+			Assert.That (Engine.Logger.ErrorEvents [2].Message, Does.Match ("App bundle file #2: .*/MergeMe.app/Something.txt"), "Error message 3");
 		}
 
 		[Test]
@@ -205,8 +207,10 @@ namespace Xamarin.MacDev.Tasks {
 			var outputBundle = Path.Combine (Cache.CreateTemporaryDirectory (), "Merged.app");
 			var task = CreateTask (outputBundle, bundleA, bundleB);
 			Assert.IsFalse (task.Execute (), "Task execution");
-			Assert.AreEqual (1, Engine.Logger.ErrorEvents.Count, "Errors");
-			Assert.AreEqual ("Can't merge the symlink 'B.txt', it has different targets.", Engine.Logger.ErrorEvents [0].Message, "Error message"); // FIXME: error
+			Assert.AreEqual (3, Engine.Logger.ErrorEvents.Count, "Errors:\n\t" + string.Join ("\n\t", Engine.Logger.ErrorEvents.Select ((v) => v.Message).ToArray ()));
+			Assert.AreEqual ("Can't merge the symlink 'B.txt', it has different targets.", Engine.Logger.ErrorEvents [0].Message, "Error message");
+			Assert.That (Engine.Logger.ErrorEvents [1].Message, Does.Match ("App bundle file #1: .*/MergeMe.app/B.txt"), "Error message 2");
+			Assert.That (Engine.Logger.ErrorEvents [2].Message, Does.Match ("App bundle file #2: .*/MergeMe.app/B.txt"), "Error message 3");
 		}
 
 		[Test]
