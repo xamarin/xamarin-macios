@@ -10,7 +10,7 @@ namespace Xamarin.Bundler {
 
 		internal static string Prefix {
 			get {
-				return "MSB";
+				return Xamarin.MacDev.Tasks.LoggingExtensions.ErrorPrefix;
 			}
 		}
 
