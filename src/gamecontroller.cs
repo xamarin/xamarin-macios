@@ -2000,7 +2000,7 @@ namespace GameController {
 	delegate GCVirtualControllerElementConfiguration GCVirtualControllerElementUpdateBlock (GCVirtualControllerElementConfiguration configuration);
 
 	[NoTV, NoMac, NoWatch, iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof(NSObject))]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface GCVirtualController
 	{
@@ -2018,11 +2018,11 @@ namespace GameController {
 		GCController Controller { get; }
 
 		[Export ("changeElement:configuration:")]
-		void Change (string element, GCVirtualControllerElementUpdateBlock config);
+		void Change (string element, GCVirtualControllerElementUpdateBlock configuration);
 	}
 
 	[NoTV, NoMac, NoWatch, iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof(NSObject))]
+	[BaseType (typeof (NSObject))]
 	interface GCVirtualControllerConfiguration
 	{
 		[Export ("elements", ArgumentSemantic.Strong)]
@@ -2030,7 +2030,7 @@ namespace GameController {
 	}
 
 	[NoTV, NoMac, NoWatch, iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof(NSObject))]
+	[BaseType (typeof (NSObject))]
 	interface GCVirtualControllerElementConfiguration
 	{
 		[Export ("hidden")]
