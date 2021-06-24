@@ -235,7 +235,6 @@ stages:
   jobs:
     - template: templates/build/stage.yml
       parameters:
-        isPr: $(IsPRBuild)
         vsdropsPrefix: ${{ variables.vsdropsPrefix }}
         runTests: ${{ and(parameters.runTests, ne(variables['Build.Reason'], 'Schedule'))}}
         runDeviceTests: ${{ and(parameters.runDeviceTests, ne(variables['Build.Reason'], 'Schedule')) }}
