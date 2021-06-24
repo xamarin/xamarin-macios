@@ -98,6 +98,7 @@ jobs:
   steps:
   - template: build.yml
     parameters:
+      isPR: $(IsPRBuild)
       runTests: ${{ parameters.runTests }}
       runDeviceTests: ${{ parameters.runDeviceTests }}
       vsdropsPrefix: ${{ parameters.vsdropsPrefix }}

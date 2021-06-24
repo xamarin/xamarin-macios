@@ -7,6 +7,10 @@ parameters:
   type: boolean
   default: true
 
+- name: isPR
+  type: string
+  default: false
+
 - name: vsdropsPrefix
   type: string
 
@@ -324,7 +328,7 @@ steps:
   - template: build-nugets.yml
 
 # only sign an notarize in no PR executions
-- ${{ if eq(variables['IsPRBuild'], 'False') }}:
+- ${{ if eq(parameters.isPR, 'False') }}:
   - template: sign-and-notarized.yml
     parameters:
       enableDotnet: ${{ parameters.enableDotnet }}
