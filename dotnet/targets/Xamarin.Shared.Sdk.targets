@@ -629,6 +629,17 @@
 	</PropertyGroup>
 
 	<Target Name="_ComputeVariables" DependsOnTargets="$(_ComputeVariablesDependsOn)">
+		<PropertyGroup Condition="'$(_RunAotCompiler)' == ''">
+			<!-- Don't run the AOT compiler by default -->
+			<_RunAotCompiler>false</_RunAotCompiler>
+			<!-- We need it for device builds for mobile platforms -->
+			<_RunAotCompiler Condition="'$(_SdkIsSimulator)' != 'true' And '$(_PlatformName)' != 'macOS' And '$(_PlatformName)' != 'MacCatalyst'">true</_RunAotCompiler>
+			<!-- We need it if the interpreter is enabled, no matter where -->
+			<_RunAotCompiler Condition="'$(MtouchInterpreter)' != ''">true</_RunAotCompiler>
+			<!-- We need it for Mac Catalyst on arm64 -->
+			<_RunAotCompiler Condition="'$(RuntimeIdentifier)' == 'maccatalyst-arm64'">true</_RunAotCompiler>
+		</PropertyGroup>
+
 		<PropertyGroup>
 			<_IntermediateNativeLibraryDir>$(IntermediateOutputPath)nativelibraries/</_IntermediateNativeLibraryDir>
 			<_NativeExecutableName>$(_AppBundleName)</_NativeExecutableName>
@@ -641,11 +652,13 @@
 			<_AOTInputDirectory>$(_IntermediateNativeLibraryDir)aot-input/</_AOTInputDirectory>
 			<_AOTOutputDirectory>$(_IntermediateNativeLibraryDir)aot-output/</_AOTOutputDirectory>
 
+			<_LibMonoLinkMode Condition="'$(_LibMonoLinkMode)' == '' And '$(_RunAotCompiler)' == 'true'">static</_LibMonoLinkMode> <!-- https://github.com/dotnet/runtime/issues/55000 -->
 			<_LibMonoLinkMode Condition="'$(_LibMonoLinkMode)' == '' And ('$(ComputedPlatform)' != 'iPhone' Or '$(_PlatformName)' == 'macOS')">dylib</_LibMonoLinkMode>
 			<_LibMonoLinkMode Condition="'$(_LibMonoLinkMode)' == ''">static</_LibMonoLinkMode>
 			<_LibMonoExtension Condition="'$(_LibMonoLinkMode)' == 'dylib'">dylib</_LibMonoExtension>
 			<_LibMonoExtension Condition="'$(_LibMonoLinkMode)' == 'static'">a</_LibMonoExtension>
 
+			<_LibXamarinLinkMode Condition="'$(_LibXamarinLinkMode)' == '' And '$(_RunAotCompiler)' == 'true'">static</_LibXamarinLinkMode> <!-- https://github.com/dotnet/runtime/issues/55000 -->
 			<_LibXamarinLinkMode Condition="'$(_LibXamarinLinkMode)' == '' And '$(ComputedPlatform)' != 'iPhone' And '$(_PlatformName)' != 'macOS'">dylib</_LibXamarinLinkMode>
 			<_LibXamarinLinkMode Condition="'$(_LibXamarinLinkMode)' == ''">static</_LibXamarinLinkMode>
 			<_LibXamarinExtension Condition="'$(_LibXamarinLinkMode)' == 'dylib'">dylib</_LibXamarinExtension>
@@ -701,7 +714,7 @@
 	</Target>
 
 	<Target Name="_AOTCompile"
-			Condition="'$(_SdkIsSimulator)' != 'true' And '$(_PlatformName)' != 'macOS'"
+			Condition="'$(_RunAotCompiler)' == 'true'"
 			DependsOnTargets="_ComputeVariables"
 			Inputs="@(_AssembliesToAOT)"
 			Outputs="@(_AssembliesToAOT -> '$(_AOTOutputDirectory)%(Arch)\%(Filename)%(Extension).o')">
