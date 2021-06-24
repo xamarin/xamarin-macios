@@ -10,5 +10,6 @@
 
   <ItemGroup>
     <FirstParty Include="*.dll" />
+    <FirstParty Include="*.exe" />
   </ItemGroup>
 </Project>
