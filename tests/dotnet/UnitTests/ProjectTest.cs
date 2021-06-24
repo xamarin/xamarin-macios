@@ -436,6 +436,7 @@ namespace Xamarin.Tests {
 			Configuration.CopyDotNetSupportingFiles (Path.GetDirectoryName (Path.GetDirectoryName (project_path)));
 			Configuration.CopyDotNetSupportingFiles (Path.Combine (Configuration.SourceRoot, "tests", "bindings-test", "dotnet"));
 			Configuration.CopyDotNetSupportingFiles (Path.Combine (Configuration.SourceRoot, "tests", "bindings-test2", "dotnet"));
+			Configuration.CopyDotNetSupportingFiles (Path.Combine (Configuration.SourceRoot, "tests", "EmbeddedResources", "dotnet"));
 			Configuration.CopyDotNetSupportingFiles (Path.Combine (Configuration.SourceRoot, "tests", "fsharplibrary", "dotnet"));
 			Configuration.CopyDotNetSupportingFiles (Path.Combine (Configuration.SourceRoot, "external", "Touch.Unit", "Touch.Client", "dotnet"));
 			Clean (project_path);
