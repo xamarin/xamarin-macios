@@ -257,7 +257,7 @@
 		Returns="@(_AssemblyPublishDirectory)"
 		>
 		<ItemGroup>
-			<_AssemblyPublishDirectory Include="$(MSBuildProjectDirectory)/$(_AppBundlePath)">
+			<_AssemblyPublishDirectory Include="$(_AppBundlePath)">
 				<RuntimeIdentifier>$(RuntimeIdentifier)</RuntimeIdentifier>
 				<TargetArchitectures>$(TargetArchitectures)</TargetArchitectures>
 			</_AssemblyPublishDirectory>
@@ -316,7 +316,7 @@
 			ArchitectureSpecificFiles="@(_ArchitectureSpecificFiles)"
 			IgnoreFiles="$(_AppBundleManifestRelativePath)Info.plist"
 			InputAppBundles="@(_AssemblyPublishDirectories)"
-			OutputAppBundle="$(MSBuildProjectDirectory)/$(_AppBundlePath)"
+			OutputAppBundle="$(_AppBundlePath)"
 			SdkDevPath="$(_SdkDevPath)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 		/>
