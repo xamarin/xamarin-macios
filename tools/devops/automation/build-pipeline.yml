@@ -325,6 +325,8 @@ stages:
   - job: push_signed_nugets
     displayName: Push NuGets
     dependsOn: signing
+    variables:
+      skipNugetSecurityAnalysis: true
     pool:
       vmImage: macOS-10.15
     steps:
@@ -342,6 +344,7 @@ stages:
         packagesToPush: $(Build.SourcesDirectory)/package/*.nupkg
         nuGetFeedType: external
         publishFeedCredentials: xamarin-impl public feed
+      condition: false
 
 # Check - "xamarin-macios (VS Insertion Wait For Approval)"
 # Check - "xamarin-macios (VS Insertion Create VS Drop and Open PR)"
