@@ -11,6 +11,13 @@
       "type": "project"
     },
     "sourceName": "macOSApp1",
+    "sources": [
+      {
+        "source": "./",
+        "target": "./",
+        "copyOnly": "**/*.png"
+      }
+    ],
     "preferNameDirectory": true,
     "primaryOutputs": [
       { "path": "macOSApp1.csproj" }
