@@ -12,8 +12,8 @@ parameters:
 - name: keyringPass
   type: string
 
--name: condition
- default: eq(variables['IsPRBuild'], 'Schedule')
+- name: condition
+  default: eq(variables['IsPRBuild'], 'Schedule')
 
 steps:
 
