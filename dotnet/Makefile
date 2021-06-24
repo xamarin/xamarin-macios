@@ -130,16 +130,16 @@ endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call WorkloadTargets,$(platform),$(shell echo $(platform) | tr A-Z a-z),$($(platform)_NUGET_VERSION_NO_METADATA))))
 
 $(DOTNET_NUPKG_DIR)/xamarin-workload.props: Workloads/xamarin-workload.template.props
-	$$(Q) rm -f $$@.tmp
-	$$(Q_GEN) sed \
+	$(Q) rm -f $@.tmp
+	$(Q_GEN) sed \
 		-e "s/@IOS_WORKLOAD_VERSION@/$(IOS_NUGET_VERSION).$(IOS_NUGET_COMMIT_DISTANCE)/g" \
 		-e "s/@MACCATALYST_WORKLOAD_VERSION@/$(MACCATALYST_NUGET_VERSION).$(MACCATALYST_NUGET_COMMIT_DISTANCE)/g" \
 		-e "s/@TVOS_WORKLOAD_VERSION@/$(TVOS_NUGET_VERSION).$(TVOS_NUGET_COMMIT_DISTANCE)/g" \
-		$$< > $$@.tmp
-	$$(Q) mv $$@.tmp $$@
+		$< > $@.tmp
+	$(Q) mv $@.tmp $@
 
 $(DOTNET_NUPKG_DIR)/SignList.xml: Workloads/SignList.xml
-	$$(Q) $(CP) $$< $$@
+	$(Q) $(CP) $< $@
 
 TEMPLATED_FILES = \
 	$(foreach platform,$(DOTNET_PLATFORMS),Microsoft.$(platform).Sdk/targets/Microsoft.$(platform).Sdk.Versions.props) \
@@ -156,7 +156,7 @@ $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call NupkgDefinition,$(platform)
 
 # Create the nuget in a temporary directory (nupkgs/)
 define CreateNuGetTemplate
-nupkgs/$(1)$(4).$(2)+$(NUGET_BUILD_METADATA).nupkg: $(TEMPLATED_FILES) $(WORKLOAD_TARGETS) $(3) package/$(1)/package.csproj $(wildcard package/*.csproj) $(wildcard $(DOTNET_DESTDIR)/$(1)/* $(DOTNET_DESTDIR)/$(1)/*/* $(DOTNET_DESTDIR)/$(1)/*/*/* $(DOTNET_DESTDIR)/$(1)/*/*/*/*) global.json .stamp-workaround-for-maccore-issue-2427
+nupkgs/$(1)$(4).$(2).nupkg: $(TEMPLATED_FILES) $(WORKLOAD_TARGETS) $(3) package/$(1)/package.csproj $(wildcard package/*.csproj) $(wildcard $(DOTNET_DESTDIR)/$(1)/* $(DOTNET_DESTDIR)/$(1)/*/* $(DOTNET_DESTDIR)/$(1)/*/*/* $(DOTNET_DESTDIR)/$(1)/*/*/*/*) global.json .stamp-workaround-for-maccore-issue-2427
 	@# Delete any versions of the nuget we're building
 	$$(Q) rm -f nupkgs/$(1).*.nupkg
 	$$(Q_PACK) $(DOTNET6) pack package/$(1)/package.csproj -p:VersionBand=$(DOTNET6_VERSION_BAND) --output "$$(dir $$@)" $(DOTNET_PACK_VERBOSITY) "/bl:$$@.binlog"
@@ -167,7 +167,7 @@ nupkgs/$(1)$(4).$(2)+$(NUGET_BUILD_METADATA).nupkg: $(TEMPLATED_FILES) $(WORKLOA
 endef
 
 define CreateWindowsNuGetTemplate
-nupkgs/$(1).$(2)+$(NUGET_BUILD_METADATA).nupkg: $(3) $(WORKLOAD_TARGETS) package/$(1)/package.csproj $(wildcard package/*.csproj) $(wildcard $(DOTNET_DESTDIR)/$(1)/* $(DOTNET_DESTDIR)/$(1)/*/* $(DOTNET_DESTDIR)/$(1)/*/*/* $(DOTNET_DESTDIR)/$(1)/*/*/*/*) global.json .stamp-workaround-for-maccore-issue-2427
+nupkgs/$(1).$(2).nupkg: $(3) $(WORKLOAD_TARGETS) package/$(1)/package.csproj $(wildcard package/*.csproj) $(wildcard $(DOTNET_DESTDIR)/$(1)/* $(DOTNET_DESTDIR)/$(1)/*/* $(DOTNET_DESTDIR)/$(1)/*/*/* $(DOTNET_DESTDIR)/$(1)/*/*/*/*) global.json .stamp-workaround-for-maccore-issue-2427
 	@# Delete any versions of the nuget we're building
 	$$(Q) rm -f nupkgs/$(1).*.nupkg
 	$$(Q_PACK) $(DOTNET6) pack package/$(1)/package.csproj --output "$$(dir $$@)" $(DOTNET_PACK_VERBOSITY) "/bl:$$@.binlog"
