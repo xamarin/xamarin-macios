@@ -12,6 +12,10 @@ parameters:
   type: boolean
   default: true
 
+- name: isPR
+  type: string
+  default: false
+
 - name: keyringPass
   type: string
 
@@ -98,7 +102,7 @@ jobs:
   steps:
   - template: build.yml
     parameters:
-      isPR: $(IsPRBuild)
+      isPR: ${{ parameters.isPR }}
       runTests: ${{ parameters.runTests }}
       runDeviceTests: ${{ parameters.runDeviceTests }}
       vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
