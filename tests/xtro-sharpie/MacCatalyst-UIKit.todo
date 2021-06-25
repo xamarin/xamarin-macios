@@ -59,7 +59,6 @@
 !missing-field! UIFocusSoundIdentifierNone not bound
 !missing-field! UIKeyInputF1 not bound
 !missing-null-allowed! 'CoreAnimation.CADisplayLink UIKit.UIScreen::CreateDisplayLink(Foundation.NSObject,ObjCRuntime.Selector)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'CoreGraphics.CGRect UIKit.NSTextAttachmentContainer::GetAttachmentBounds(UIKit.NSTextContainer,CoreGraphics.CGRect,CoreGraphics.CGPoint,System.nuint)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'Foundation.NSArray Foundation.NSBundle::LoadNib(System.String,Foundation.NSObject,Foundation.NSDictionary)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSArray[] UIKit.UIPasteboard::PasteBoardTypesForSet(Foundation.NSIndexSet)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'Foundation.NSArray[] UIKit.UIPasteboard::PasteBoardTypesForSet(Foundation.NSIndexSet)' is missing an [NullAllowed] on return type
@@ -295,7 +294,6 @@
 !missing-null-allowed! 'UIKit.UIFontDescriptor UIKit.UIFontDescriptor::CreateWithTraits(UIKit.UIFontDescriptorSymbolicTraits)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIGestureRecognizer UIKit.UINavigationController::get_InteractivePopGestureRecognizer()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIGestureRecognizer[] UIKit.UITouch::get_GestureRecognizers()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'UIKit.UIImage UIKit.NSTextAttachmentContainer::GetImageForBounds(CoreGraphics.CGRect,UIKit.NSTextContainer,System.nuint)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIImage UIKit.UIActivity::get_Image()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIImage UIKit.UIActivityItemSource::GetThumbnailImageForActivity(UIKit.UIActivityViewController,Foundation.NSString,CoreGraphics.CGSize)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIImage UIKit.UIBarButtonItem::GetBackButtonBackgroundImage(UIKit.UIControlState,UIKit.UIBarMetrics)' is missing an [NullAllowed] on return type
