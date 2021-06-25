@@ -27,12 +27,11 @@ namespace Xamarin.MacDev.Tasks {
 			RunMake (Path.Combine (Configuration.RootPath, "tests", "common", "TestProjects", "ComplexAssembly"), environment: env);
 		}
 
-		static void RunMake (string directory, Dictionary<string, string> environment =  null, int j = 8)
+		static void RunMake (string directory, Dictionary<string, string> environment =  null)
 		{
 			var arguments = new List<string> {
 				"-C",
 				directory,
-				$"-j{j}",
 				"V=1",
 			};
 			var rv = ExecutionHelper.Execute ("make",
