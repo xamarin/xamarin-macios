@@ -32,6 +32,8 @@ using ObjCRuntime;
 using Foundation;
 using CoreGraphics;
 
+#nullable enable
+
 namespace CoreVideo {
 
 	// CVImageBuffer.h
@@ -93,7 +95,7 @@ namespace CoreVideo {
 		
 		[Deprecated (PlatformName.MacOSX, 10, 4)]
 		[Unavailable (PlatformName.iOS)]
-		public CGColorSpace ColorSpace {
+		public CGColorSpace? ColorSpace {
 			get {
 				var h = CVImageBufferGetColorSpace (handle);
 				return h == IntPtr.Zero ? null : new CGColorSpace (h);
@@ -105,7 +107,7 @@ namespace CoreVideo {
 #if IOS
 		[Obsolete ("This API is not available on this platform.")]
 #endif
-		public CGColorSpace ColorSpace {
+		public CGColorSpace? ColorSpace {
 			get {
 				return null;
 			}
@@ -116,7 +118,7 @@ namespace CoreVideo {
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static /* CGColorSpaceRef */ IntPtr CVImageBufferCreateColorSpaceFromAttachments (/* CFDictionaryRef */ IntPtr attachments);
 
-		public static CGColorSpace CreateFrom (NSDictionary attachments)
+		public static CGColorSpace? CreateFrom (NSDictionary attachments)
 		{
 			if (attachments == null)
 				throw new ArgumentNullException ("attachments");
@@ -132,7 +134,7 @@ namespace CoreVideo {
 		[iOS (11, 0), Mac (10, 13), TV (11, 0)]
 		public static int GetCodePoint (CVImageBufferYCbCrMatrix yCbCrMatrix)
 		{
-			return CVYCbCrMatrixGetIntegerCodePointForString (yCbCrMatrix.GetConstant ().Handle);
+			return CVYCbCrMatrixGetIntegerCodePointForString (yCbCrMatrix.GetConstant ()!.Handle);
 		}
 
 		[DllImport (Constants.CoreVideoLibrary)]
@@ -142,7 +144,7 @@ namespace CoreVideo {
 		[iOS (11, 0), Mac (10, 13), TV (11, 0)]
 		public static int GetCodePoint (CVImageBufferColorPrimaries color)
 		{
-			return CVColorPrimariesGetIntegerCodePointForString (color.GetConstant ().Handle);
+			return CVColorPrimariesGetIntegerCodePointForString (color.GetConstant ()!.Handle);
 		}
 
 		[DllImport (Constants.CoreVideoLibrary)]
@@ -152,7 +154,7 @@ namespace CoreVideo {
 		[iOS (11, 0), Mac (10, 13), TV (11, 0)]
 		public static int GetCodePoint (CVImageBufferTransferFunction function)
 		{
-			return CVTransferFunctionGetIntegerCodePointForString (function.GetConstant ().Handle);
+			return CVTransferFunctionGetIntegerCodePointForString (function.GetConstant ()!.Handle);
 		}
 
 		[DllImport (Constants.CoreVideoLibrary)]
