@@ -27203,17 +27203,6 @@ namespace AppKit {
 	}
 
 	[Mac (10,15)]
-	[Protocol]
-	interface NSCollectionLayoutEnvironment
-	{
-		[Abstract]
-		[Export ("container")]
-		INSCollectionLayoutContainer Container { get; }
-	}
-
-	interface INSCollectionLayoutEnvironment { }
-
-	[Mac (10,15)]
 	[BaseType (typeof (NSToolbarItem))]
 	interface NSMenuToolbarItem
 	{

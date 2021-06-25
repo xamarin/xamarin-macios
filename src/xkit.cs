@@ -35,10 +35,12 @@ using NSWindow=System.Object;
 #if WATCH
 using NSTextContainer=System.Object;
 using NSTextStorage=System.Object;
+using UITraitCollection = Foundation.NSObject;
 #endif // WATCH
 #else
 using UICollectionLayoutListConfiguration=System.Object;
 using UIContentInsetsReference=System.Object;
+using UITraitCollection=System.Object;
 #endif // !MONOMAC
 
 #if MONOMAC
@@ -1706,4 +1708,21 @@ namespace UIKit {
 		NSDirectionalEdgeInsets EffectiveContentInsets { get; }
 	}
 
+	interface INSCollectionLayoutEnvironment { }
+
+	[NoWatch, TV (13,0), iOS (13,0)]
+	[Mac (10,15)]
+	[MacCatalyst (13,0)]
+	[Protocol]
+	interface NSCollectionLayoutEnvironment {
+
+		[Abstract]
+		[Export ("container")]
+		INSCollectionLayoutContainer Container { get; }
+
+		[NoMac]
+		[Abstract]
+		[Export ("traitCollection")]
+		UITraitCollection TraitCollection { get; }
+	}
 }

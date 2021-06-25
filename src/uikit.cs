@@ -20437,21 +20437,6 @@ namespace UIKit {
 		bool IsFractionalOffset { get; }
 	}
 
-	interface INSCollectionLayoutEnvironment { }
-
-	[NoWatch, TV (13,0), iOS (13,0)]
-	[Protocol]
-	interface NSCollectionLayoutEnvironment {
-
-		[Abstract]
-		[Export ("container")]
-		INSCollectionLayoutContainer Container { get; }
-
-		[Abstract]
-		[Export ("traitCollection")]
-		UITraitCollection TraitCollection { get; }
-	}
-
 	interface INSCollectionLayoutVisibleItem { }
 
 	[NoWatch, TV (13,0), iOS (13,0)]
