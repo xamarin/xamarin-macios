@@ -2006,8 +2006,9 @@ namespace GameController {
 	{
 		[Static]
 		[Export ("virtualControllerWithConfiguration:")]
-		GCVirtualController CreateVirtualController (GCVirtualControllerConfiguration configuration);
+		GCVirtualController Create (GCVirtualControllerConfiguration configuration);
 
+		[Async]
 		[Export ("connectWithReply:")]
 		void Connect ([NullAllowed] Action<NSError> reply);
 
