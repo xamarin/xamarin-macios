@@ -2167,4 +2167,126 @@ namespace UIKit {
 		[Export ("textAttachmentWithImage:")]
 		NSTextAttachment Create (Image image);
 	}
+
+	[NoWatch]
+	[MacCatalyst (13,0)]
+	[iOS (7,0)]
+	[BaseType (typeof (NSMutableAttributedString), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NSTextStorageDelegate)})]
+	partial interface NSTextStorage : NSSecureCoding {
+#if MONOMAC && !XAMCORE_4_0
+		[Export ("initWithString:")]
+		IntPtr Constructor (string str);
+#endif
+
+		[Export ("layoutManagers")]
+#if MONOMAC || XAMCORE_4_0
+		NSLayoutManager [] LayoutManagers { get; }
+#else
+		NSObject [] LayoutManagers { get; }
+#endif
+
+		[Export ("addLayoutManager:")]
+		[PostGet ("LayoutManagers")]
+		void AddLayoutManager (NSLayoutManager aLayoutManager);
+
+		[Export ("removeLayoutManager:")]
+		[PostGet ("LayoutManagers")]
+		void RemoveLayoutManager (NSLayoutManager aLayoutManager);
+
+		[Export ("editedMask")]
+#if MONOMAC && !XAMCORE_4_0
+		NSTextStorageEditedFlags EditedMask {
+#else
+		NSTextStorageEditActions EditedMask {
+#endif
+			get;
+#if !XAMCORE_4_0 && !MONOMAC && !__MACCATALYST__
+			[NotImplemented] set;
+#endif
+		}
+
+		[Export ("editedRange")]
+		NSRange EditedRange {
+			get;
+#if !XAMCORE_3_0 && !MONOMAC && !__MACCATALYST__
+			[NotImplemented] set;
+#endif
+		}
+
+		[Export ("changeInLength")]
+		nint ChangeInLength {
+			get;
+#if !XAMCORE_3_0 && !MONOMAC && !__MACCATALYST__
+			[NotImplemented] set;
+#endif
+		}
+
+		[NullAllowed]
+		[Export ("delegate", ArgumentSemantic.Assign)]
+		NSObject WeakDelegate { get; set; }
+
+		[Wrap ("WeakDelegate")]
+		INSTextStorageDelegate Delegate { get; set; }
+
+		[Export ("edited:range:changeInLength:")]
+#if MONOMAC && !XAMCORE_4_0
+		void Edited (nuint editedMask, NSRange editedRange, nint delta);
+#else
+		void Edited (NSTextStorageEditActions editedMask, NSRange editedRange, nint delta);
+#endif
+
+		[Export ("processEditing")]
+		void ProcessEditing ();
+
+		[Export ("fixesAttributesLazily")]
+		bool FixesAttributesLazily { get; }
+
+		[Export ("invalidateAttributesInRange:")]
+		void InvalidateAttributes (NSRange range);
+
+		[Export ("ensureAttributesAreFixedInRange:")]
+		void EnsureAttributesAreFixed (NSRange range);
+
+		[iOS (7,0)]
+		[Notification, Field ("NSTextStorageWillProcessEditingNotification")]
+#if !MONOMAC || XAMCORE_4_0
+		[Internal]
+#endif
+		NSString WillProcessEditingNotification { get; }
+
+		[iOS (7,0)]
+		[Notification, Field ("NSTextStorageDidProcessEditingNotification")]
+#if !MONOMAC || XAMCORE_4_0
+		[Internal]
+#endif
+		NSString DidProcessEditingNotification { get; }
+	}
+
+	interface INSTextStorageDelegate {}
+
+	[NoWatch]
+	[MacCatalyst (13,0)]
+	[Model]
+	[BaseType (typeof (NSObject))]
+	[Protocol]
+	partial interface NSTextStorageDelegate {
+		[NoiOS][NoTV][NoMacCatalyst]
+		[Availability (Deprecated = Platform.Mac_10_11, Message = "Use WillProcessEditing instead.")]
+		[Export ("textStorageWillProcessEditing:")]
+		void TextStorageWillProcessEditing (NSNotification notification);
+
+		[NoiOS][NoTV][NoMacCatalyst]
+		[Availability (Deprecated = Platform.Mac_10_11, Message = "Use DidProcessEditing instead.")]
+		[Export ("textStorageDidProcessEditing:")]
+		void TextStorageDidProcessEditing (NSNotification notification);
+
+		[Mac (10,11)]
+		[Export ("textStorage:willProcessEditing:range:changeInLength:")][EventArgs ("NSTextStorage")]
+		void WillProcessEditing (NSTextStorage textStorage, NSTextStorageEditActions editedMask, NSRange editedRange, nint delta);
+
+		[Mac (10,11)]
+		[Export ("textStorage:didProcessEditing:range:changeInLength:")][EventArgs ("NSTextStorage")]
+		void DidProcessEditing (NSTextStorage textStorage, NSTextStorageEditActions editedMask, NSRange editedRange, nint delta);
+	}
+
 }

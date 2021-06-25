@@ -18320,79 +18320,6 @@ namespace AppKit {
 		CGRect GetLineFragmentRect (CGRect proposedRect, nuint characterIndex, NSWritingDirection baseWritingDirection, ref CGRect remainingRect);
 	}
 
-	[BaseType (typeof (NSMutableAttributedString), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NSTextStorageDelegate)})]
-	partial interface NSTextStorage {
-		[Export ("initWithString:")]
-		IntPtr Constructor (string str);
-
-		[Export ("addLayoutManager:")][PostGet ("LayoutManagers")]
-		void AddLayoutManager (NSLayoutManager obj);
-
-		[Export ("removeLayoutManager:")][PostGet ("LayoutManagers")]
-		void RemoveLayoutManager (NSLayoutManager obj);
-
-		[Export ("layoutManagers")]
-		NSLayoutManager [] LayoutManagers { get; }
-
-		[Export ("edited:range:changeInLength:")]
-		void Edited (nuint editedMask, NSRange range, nint delta);
-
-		[Export ("processEditing")]
-		void ProcessEditing ();
-
-		[Export ("invalidateAttributesInRange:")]
-		void InvalidateAttributes (NSRange range);
-
-		[Export ("ensureAttributesAreFixedInRange:")]
-		void EnsureAttributesAreFixed (NSRange range);
-
-		[Export ("fixesAttributesLazily")]
-		bool FixesAttributesLazily { get; }
-
-		[Export ("editedMask")]
-#if !XAMCORE_4_0
-		NSTextStorageEditedFlags EditedMask { get; }
-#else
-		NSTextStorageEditActions EditedMask { get; }
-#endif
-
-		[Export ("editedRange")]
-		NSRange EditedRange { get; }
-
-		[Export ("changeInLength")]
-		nint ChangeInLength { get; }
-
-		//Detected properties
-		[Export ("delegate", ArgumentSemantic.Assign)][NullAllowed]
-		NSObject WeakDelegate { get; set; }
-
-		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		NSTextStorageDelegate Delegate { get; set; }
-
-	}
-
-	[BaseType (typeof (NSObject))]
-	[Model]
-	[Protocol]
-	interface NSTextStorageDelegate {
-		[Availability (Deprecated = Platform.Mac_10_11, Message = "Use WillProcessEditing instead.")]
-		[Export ("textStorageWillProcessEditing:")]
-		void TextStorageWillProcessEditing (NSNotification notification);
-
-		[Availability (Deprecated = Platform.Mac_10_11, Message = "Use DidProcessEditing instead.")]
-		[Export ("textStorageDidProcessEditing:")]
-		void TextStorageDidProcessEditing (NSNotification notification);
-
-		[Mac (10,11)]
-		[Export ("textStorage:willProcessEditing:range:changeInLength:"), EventArgs ("NSTextStorage")]
-		void WillProcessEditing (NSTextStorage textStorage, NSTextStorageEditActions editedMask, NSRange editedRange, nint delta);
-
-		[Mac (10,11)]
-		[Export ("textStorage:didProcessEditing:range:changeInLength:"), EventArgs ("NSTextStorage")]
-		void DidProcessEditing (NSTextStorage textStorage, NSTextStorageEditActions editedMask, NSRange editedRange, nint delta);
-	}
-
 	[BaseType (typeof (NSObject))]
 	interface NSTextTab : NSSecureCoding, NSCopying {
 		[DesignatedInitializer]
@@ -23208,14 +23135,6 @@ namespace AppKit {
 	partial interface NSTextInputContext {
 		[Notification, Field ("NSTextInputContextKeyboardSelectionDidChangeNotification")]
 		NSString KeyboardSelectionDidChangeNotification { get; }
-	}
-
-	partial interface NSTextStorage {
-		[Notification, Field ("NSTextStorageWillProcessEditingNotification")]
-		NSString WillProcessEditingNotification { get; }
-
-		[Notification, Field ("NSTextStorageDidProcessEditingNotification")]
-		NSString DidProcessEditingNotification { get; }
 	}
 
 	partial interface NSToolbarItemEventArgs {
