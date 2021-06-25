@@ -683,17 +683,19 @@ namespace EventKit {
 		string ConferenceDetails { get; }
 	}
 
+	delegate void VirtualConferenceHandler (EKVirtualConferenceDescriptor virtualConferenceDescriptor, NSError error);
+
 	[Mac (12,0), iOS (15,0), Watch (8,0), MacCatalyst (15,0), NoTV]
 	[BaseType (typeof (NSObject))]
 	interface EKVirtualConferenceProvider : NSExtensionRequestHandling
 	{
 		[Async]
 		[Export ("fetchAvailableRoomTypesWithCompletionHandler:")]
-		void FetchAvailableRoomTypes (Action<NSArray<EKVirtualConferenceRoomTypeDescriptor>, NSError> completionHandler);
+		void FetchAvailableRoomTypes (VirtualConferenceHandler handler);
 
 		[Async]
 		[Export ("fetchVirtualConferenceForIdentifier:completionHandler:")]
-		void FetchVirtualConference (string identifier, Action<EKVirtualConferenceDescriptor, NSError> completionHandler);
+		void FetchVirtualConference (string identifier, VirtualConferenceHandler handler);
 	}
 
 	[Mac (12,0), iOS (15,0), Watch (8,0), MacCatalyst (15,0), NoTV]
