@@ -683,6 +683,7 @@ namespace EventKit {
 		string ConferenceDetails { get; }
 	}
 
+	delegate void VirtualConferenceRoomTypeHandler (NSArray<EKVirtualConferenceRoomTypeDescriptor> virtualConferenceRoomTypeDescriptor, NSError error);
 	delegate void VirtualConferenceHandler (EKVirtualConferenceDescriptor virtualConferenceDescriptor, NSError error);
 
 	[Mac (12,0), iOS (15,0), Watch (8,0), MacCatalyst (15,0), NoTV]
@@ -691,7 +692,7 @@ namespace EventKit {
 	{
 		[Async]
 		[Export ("fetchAvailableRoomTypesWithCompletionHandler:")]
-		void FetchAvailableRoomTypes (VirtualConferenceHandler handler);
+		void FetchAvailableRoomTypes (VirtualConferenceRoomTypeHandler handler);
 
 		[Async]
 		[Export ("fetchVirtualConferenceForIdentifier:completionHandler:")]
