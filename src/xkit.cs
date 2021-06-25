@@ -5,6 +5,9 @@ using System.Diagnostics;
 using System.ComponentModel;
 using Foundation;
 using ObjCRuntime;
+#if !WATCH
+using CoreAnimation;
+#endif
 using CoreGraphics;
 
 using CGGlyph=System.UInt16;
@@ -33,8 +36,10 @@ using NSTypesetterBehavior=System.Object;
 using NSView=System.Object;
 using NSWindow=System.Object;
 #if WATCH
+using CATransform3D=System.Object;
 using NSTextContainer=System.Object;
 using NSTextStorage=System.Object;
+using UIDynamicItem=System.Object;
 using UITraitCollection = Foundation.NSObject;
 #endif // WATCH
 #else
@@ -47,10 +52,12 @@ using UITraitCollection=System.Object;
 using TextAlignment=AppKit.NSTextAlignment;
 using LineBreakMode=AppKit.NSLineBreakMode;
 using CollectionLayoutSectionOrthogonalScrollingBehavior=AppKit.NSCollectionLayoutSectionOrthogonalScrollingBehavior;
+using CollectionElementCategory=AppKit.NSCollectionElementCategory;
 #else
 using TextAlignment=UIKit.UITextAlignment;
 using LineBreakMode=UIKit.UILineBreakMode;
 using CollectionLayoutSectionOrthogonalScrollingBehavior=UIKit.UICollectionLayoutSectionOrthogonalScrollingBehavior;
+using CollectionElementCategory=UIKit.UICollectionElementCategory;
 #endif
 
 #if MONOMAC
@@ -1725,4 +1732,69 @@ namespace UIKit {
 		[Export ("traitCollection")]
 		UITraitCollection TraitCollection { get; }
 	}
+
+	interface INSCollectionLayoutVisibleItem { }
+
+	[NoWatch, TV (13,0), iOS (13,0)]
+	[Mac (10,15)]
+	[MacCatalyst (13,0)]
+	[Protocol]
+	interface NSCollectionLayoutVisibleItem
+#if !MONOMAC && !WATCH
+	: UIDynamicItem
+#endif
+	{
+
+		[Abstract]
+		[Export ("alpha")]
+		nfloat Alpha { get; set; }
+
+		[Abstract]
+		[Export ("zIndex")]
+		nint ZIndex { get; set; }
+
+		[Abstract]
+		[Export ("hidden")]
+		bool Hidden { [Bind ("isHidden")] get; set; }
+
+#if MONOMAC
+		// Inherited from UIDynamicItem for !MONOMAC
+		[Abstract]
+		[Export ("center", ArgumentSemantic.Assign)]
+		CGPoint Center { get; set; }
+
+
+		[Abstract]
+		[Export ("bounds")]
+		CGRect Bounds { get; }
+#endif
+
+		[NoMac]
+		[Abstract]
+		[Export ("transform3D", ArgumentSemantic.Assign)]
+		CATransform3D Transform3D { get; set; }
+
+		[Abstract]
+		[Export ("name")]
+		string Name { get; }
+
+		[Abstract]
+		[Export ("indexPath")]
+		NSIndexPath IndexPath { get; }
+
+		[Abstract]
+		[Export ("frame")]
+		CGRect Frame { get; }
+
+		[Abstract]
+		[Export ("representedElementCategory")]
+		CollectionElementCategory RepresentedElementCategory {
+			get;
+		}
+
+		[Abstract]
+		[NullAllowed, Export ("representedElementKind")]
+		string RepresentedElementKind { get; }
+	}
+
 }

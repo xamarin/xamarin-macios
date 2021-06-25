@@ -27213,53 +27213,6 @@ namespace AppKit {
 		bool ShowsIndicator { get; set; }
 	}
 
-	[Mac (10,15)]
-	[Protocol]
-	interface NSCollectionLayoutVisibleItem
-	{
-		[Abstract]
-		[Export ("alpha")]
-		nfloat Alpha { get; set; }
-
-		[Abstract]
-		[Export ("zIndex")]
-		nint ZIndex { get; set; }
-
-		[Abstract]
-		[Export ("hidden")]
-		bool Hidden { [Bind ("isHidden")] get; set; }
-
-		[Abstract]
-		[Export ("center", ArgumentSemantic.Assign)]
-		CGPoint Center { get; set; }
-
-		[Abstract]
-		[Export ("name")]
-		string Name { get; }
-
-		[Abstract]
-		[Export ("indexPath")]
-		NSIndexPath IndexPath { get; }
-
-		[Abstract]
-		[Export ("frame")]
-		CGRect Frame { get; }
-
-		[Abstract]
-		[Export ("bounds")]
-		CGRect Bounds { get; }
-
-		[Abstract]
-		[Export ("representedElementCategory")]
-		NSCollectionElementCategory RepresentedElementCategory { get; }
-
-		[Abstract]
-		[NullAllowed, Export ("representedElementKind")]
-		string RepresentedElementKind { get; }
-	}
-
-	interface INSCollectionLayoutVisibleItem { }
-
 	delegate NSCollectionLayoutSection NSCollectionViewCompositionalLayoutSectionProvider (nint section, INSCollectionLayoutEnvironment layout);
 
 	[Mac (10,15)]

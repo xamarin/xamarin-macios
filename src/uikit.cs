@@ -20437,63 +20437,6 @@ namespace UIKit {
 		bool IsFractionalOffset { get; }
 	}
 
-	interface INSCollectionLayoutVisibleItem { }
-
-	[NoWatch, TV (13,0), iOS (13,0)]
-	[Protocol]
-	interface NSCollectionLayoutVisibleItem : UIDynamicItem {
-
-		[Abstract]
-		[Export ("alpha")]
-		nfloat Alpha { get; set; }
-
-		[Abstract]
-		[Export ("zIndex")]
-		nint ZIndex { get; set; }
-
-		[Abstract]
-		[Export ("hidden")]
-		bool Hidden { [Bind ("isHidden")] get; set; }
-
-		// Inherited from UIDynamicItem
-		// [Abstract]
-		// [Export ("center", ArgumentSemantic.Assign)]
-		// CGPoint Center { get; set; }
-
-		// [Abstract]
-		// [Export ("transform", ArgumentSemantic.Assign)]
-		// CGAffineTransform Transform { get; set; }
-
-		[Abstract]
-		[Export ("transform3D", ArgumentSemantic.Assign)]
-		CATransform3D Transform3D { get; set; }
-
-		[Abstract]
-		[Export ("name")]
-		string Name { get; }
-
-		[Abstract]
-		[Export ("indexPath")]
-		NSIndexPath IndexPath { get; }
-
-		[Abstract]
-		[Export ("frame")]
-		CGRect Frame { get; }
-
-		// Inherited from UIDynamicItem
-		// [Abstract]
-		// [Export ("bounds")]
-		// CGRect Bounds { get; }
-
-		[Abstract]
-		[Export ("representedElementCategory")]
-		UICollectionElementCategory RepresentedElementCategory { get; }
-
-		[Abstract]
-		[NullAllowed, Export ("representedElementKind")]
-		string RepresentedElementKind { get; }
-	}
-
 	[NoWatch, TV (13,0), iOS (13,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
