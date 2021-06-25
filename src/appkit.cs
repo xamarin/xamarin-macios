@@ -39,12 +39,22 @@ using CoreFoundation;
 using CoreImage;
 using CoreAnimation;
 using CoreData;
+#if !__MACCATALYST__
 using OpenGL;
+#endif
 using CoreVideo;
 using CloudKit;
 using UniformTypeIdentifiers;
+#if __MACCATALYST__
+using UIKit;
+#endif
 
 using CGGlyph = System.UInt16;
+#if __MACCATALYST__
+using CAOpenGLLayer = Foundation.NSObject;
+using CGLContext = Foundation.NSObject;
+using CGLPixelFormat = Foundation.NSObject;
+#endif
 
 namespace AppKit {
 	//[BaseType (typeof (NSObject))]
