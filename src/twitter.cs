@@ -19,6 +19,11 @@ namespace Twitter {
 	[Availability (Deprecated = Platform.iOS_6_0, Message = "Use the 'Social' framework.")]
 	[BaseType (typeof (NSObject))]
 	interface TWRequest {
+		
+		[Introduced (PlatformName.iOS, 6, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
+		[Deprecated (PlatformName.iOS, 15, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
+		[Introduced (PlatformName.MacOSX, 10, 8, message: "Use the non-Apple SDK relating to your account type instead.")]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
 		[NullAllowed] // by default this property is null
 		[Export ("account")]
 		ACAccount Account { get; set;  }

@@ -8,6 +8,10 @@ using Foundation;
 
 namespace Accounts {
 	
+	[Introduced (PlatformName.iOS, 6, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
+	[Deprecated (PlatformName.iOS, 15, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
+	[Introduced (PlatformName.MacOSX, 10, 8, message: "Use the non-Apple SDK relating to your account type instead.")]
+	[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
 	[BaseType (typeof (NSObject))]
 	interface ACAccount : NSSecureCoding {
 		[Export ("identifier", ArgumentSemantic.Weak)]
@@ -44,6 +48,10 @@ namespace Accounts {
 		string UserFullName { get; }
 	}
 
+	[Introduced (PlatformName.iOS, 6, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
+	[Deprecated (PlatformName.iOS, 15, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
+	[Introduced (PlatformName.MacOSX, 10, 8, message: "Use the non-Apple SDK relating to your account type instead.")]
+	[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
 	[BaseType (typeof (NSObject))]
 	interface ACAccountCredential : NSSecureCoding {
 		[Export ("initWithOAuthToken:tokenSecret:")]
@@ -61,6 +69,10 @@ namespace Accounts {
 	delegate void ACAccountStoreRemoveCompletionHandler (bool success, NSError error);
 	delegate void ACRequestCompletionHandler (bool granted, NSError error);
 	
+	[Introduced (PlatformName.iOS, 6, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
+	[Deprecated (PlatformName.iOS, 15, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
+	[Introduced (PlatformName.MacOSX, 10, 8, message: "Use the non-Apple SDK relating to your account type instead.")]
+	[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
 	[BaseType (typeof (NSObject))]
 	interface ACAccountStore {
 		[Export ("accounts", ArgumentSemantic.Weak)]
@@ -111,6 +123,10 @@ namespace Accounts {
 		void RemoveAccount (ACAccount account, ACAccountStoreRemoveCompletionHandler completionHandler);
 	}
 
+	[Introduced (PlatformName.iOS, 6, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
+	[Deprecated (PlatformName.iOS, 15, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
+	[Introduced (PlatformName.MacOSX, 10, 8, message: "Use the non-Apple SDK relating to your account type instead.")]
+	[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
 	[BaseType (typeof (NSObject))]
 	interface ACAccountType : NSSecureCoding {
 		[Export ("accountTypeDescription")]
