@@ -154,3 +154,8 @@
 !missing-type! MTLMotionKeyframeData not bound
 !missing-type! MTLRenderPipelineFunctionsDescriptor not bound
 !missing-type! MTLStitchedLibraryDescriptor not bound
+!missing-enum-value! MTLIntersectionFunctionSignature native value MTLIntersectionFunctionSignatureExtendedLimits = 32 not bound
+!missing-enum-value! MTLIntersectionFunctionSignature native value MTLIntersectionFunctionSignatureInstanceMotion = 8 not bound
+!missing-enum-value! MTLIntersectionFunctionSignature native value MTLIntersectionFunctionSignaturePrimitiveMotion = 16 not bound
+!missing-protocol-member! MTLDevice::newLibraryWithDescriptor:completionHandler: not found
+!missing-protocol-member! MTLDevice::supportsPrimitiveMotionBlur not found

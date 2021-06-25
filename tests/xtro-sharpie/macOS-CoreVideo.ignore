@@ -56,3 +56,5 @@
 !missing-pinvoke! CVMetalTextureGetCleanTexCoords is not bound
 !missing-pinvoke! CVMetalTextureGetTexture is not bound
 !missing-pinvoke! CVMetalTextureIsFlipped is not bound
+!missing-pinvoke! CVBufferCopyAttachment is not bound
+!missing-pinvoke! CVBufferCopyAttachments is not bound
