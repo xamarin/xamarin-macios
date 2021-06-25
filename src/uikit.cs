@@ -20437,29 +20437,6 @@ namespace UIKit {
 		bool IsFractionalOffset { get; }
 	}
 
-	interface INSCollectionLayoutContainer { }
-
-	[NoWatch, TV (13,0), iOS (13,0)]
-	[Protocol]
-	interface NSCollectionLayoutContainer {
-
-		[Abstract]
-		[Export ("contentSize")]
-		CGSize ContentSize { get; }
-
-		[Abstract]
-		[Export ("effectiveContentSize")]
-		CGSize EffectiveContentSize { get; }
-
-		[Abstract]
-		[Export ("contentInsets")]
-		NSDirectionalEdgeInsets ContentInsets { get; }
-
-		[Abstract]
-		[Export ("effectiveContentInsets")]
-		NSDirectionalEdgeInsets EffectiveContentInsets { get; }
-	}
-
 	interface INSCollectionLayoutEnvironment { }
 
 	[NoWatch, TV (13,0), iOS (13,0)]

@@ -27202,29 +27202,6 @@ namespace AppKit {
 		nint State { get; set; }
 	}
 
-	interface INSCollectionLayoutContainer { }
-
-	[Mac (10,15)]
-	[Protocol]
-	interface NSCollectionLayoutContainer
-	{
-		[Abstract]
-		[Export ("contentSize")]
-		CGSize ContentSize { get; }
-
-		[Abstract]
-		[Export ("effectiveContentSize")]
-		CGSize EffectiveContentSize { get; }
-
-		[Abstract]
-		[Export ("contentInsets")]
-		NSDirectionalEdgeInsets ContentInsets { get; }
-
-		[Abstract]
-		[Export ("effectiveContentInsets")]
-		NSDirectionalEdgeInsets EffectiveContentInsets { get; }
-	}
-
 	[Mac (10,15)]
 	[Protocol]
 	interface NSCollectionLayoutEnvironment
