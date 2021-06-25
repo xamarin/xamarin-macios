@@ -200,17 +200,21 @@ namespace EventKit {
 		EKAlarmProximity Proximity { get; set;  }
 
 #if MONOMAC
+		[NoMacCatalyst]
 		[Export ("type")]
 		EKAlarmType Type { get; }
 
+		[NoMacCatalyst]
 		[NullAllowed]
 		[Export ("emailAddress")]
 		string EmailAddress { get; set; }
 
+		[NoMacCatalyst]
 		[NullAllowed]
 		[Export ("soundName")]
 		string SoundName { get; set; }
 
+		[NoMacCatalyst]
 		[Deprecated (PlatformName.MacOSX, 10, 9)]
 		[NullAllowed]
 		[Export ("url", ArgumentSemantic.Copy)]
@@ -317,6 +321,7 @@ namespace EventKit {
 #if MONOMAC
 		[Availability (Deprecated = Platform.Mac_10_11, Message = "Replaced by 'BirthdayContactIdentifier'.")]
 		[NullAllowed]
+		[NoMacCatalyst]
 		[Export ("birthdayPersonUniqueID")]
 		string BirthdayPersonUniqueID { get; }
 #else
@@ -491,7 +496,7 @@ namespace EventKit {
 
 	[BaseType (typeof (NSObject))]
 	interface EKEventStore {
-		[NoiOS, Mac (10,11), NoWatch]
+		[NoiOS, Mac (10,11), NoWatch, NoMacCatalyst]
 		[Export ("initWithSources:")]
 		IntPtr Constructor (EKSource[] sources);
 
@@ -611,6 +616,7 @@ namespace EventKit {
 #if MONOMAC
 		[Deprecated (PlatformName.MacOSX, 10, 9)]
 		[Export ("initWithAccessToEntityTypes:")]
+		[NoMacCatalyst]
 		IntPtr Constructor (EKEntityMask accessToEntityTypes);
 #endif
 		[Mac (10,11), Watch (5,0), iOS (12,0)]
@@ -656,5 +662,69 @@ namespace EventKit {
 		[Export ("reminderWithEventStore:")]
 		[Static]
 		EKReminder Create (EKEventStore eventStore);	
+	}
+
+	[Mac (12,0), iOS (15,0), Watch (8,0), MacCatalyst (15,0), NoTV]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface EKVirtualConferenceDescriptor
+	{
+		[Export ("initWithTitle:URLDescriptors:conferenceDetails:")]
+		[DesignatedInitializer]
+		IntPtr Constructor ([NullAllowed] string title, EKVirtualConferenceURLDescriptor[] urlDescriptors, [NullAllowed] string conferenceDetails);
+
+		[NullAllowed, Export ("title")]
+		string Title { get; }
+
+		[Export ("URLDescriptors", ArgumentSemantic.Copy)]
+		EKVirtualConferenceURLDescriptor[] UrlDescriptors { get; }
+
+		[NullAllowed, Export ("conferenceDetails")]
+		string ConferenceDetails { get; }
+	}
+
+	[Mac (12,0), iOS (15,0), Watch (8,0), MacCatalyst (15,0), NoTV]
+	[BaseType (typeof (NSObject))]
+	interface EKVirtualConferenceProvider : NSExtensionRequestHandling
+	{
+		[Async]
+		[Export ("fetchAvailableRoomTypesWithCompletionHandler:")]
+		void FetchAvailableRoomTypes (Action<NSArray<EKVirtualConferenceRoomTypeDescriptor>, NSError> completionHandler);
+
+		[Async]
+		[Export ("fetchVirtualConferenceForIdentifier:completionHandler:")]
+		void FetchVirtualConference (string identifier, Action<EKVirtualConferenceDescriptor, NSError> completionHandler);
+	}
+
+	[Mac (12,0), iOS (15,0), Watch (8,0), MacCatalyst (15,0), NoTV]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface EKVirtualConferenceRoomTypeDescriptor
+	{
+		[Export ("initWithTitle:identifier:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string title, string identifier);
+
+		[Export ("title")]
+		string Title { get; }
+
+		[Export ("identifier")]
+		string Identifier { get; }
+	}
+
+	[Mac (12,0), iOS (15,0), Watch (8,0), MacCatalyst (15,0), NoTV]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface EKVirtualConferenceURLDescriptor
+	{
+		[Export ("initWithTitle:URL:")]
+		[DesignatedInitializer]
+		IntPtr Constructor ([NullAllowed] string title, NSUrl url);
+
+		[NullAllowed, Export ("title")]
+		string Title { get; }
+
+		[Export ("URL", ArgumentSemantic.Copy)]
+		NSUrl Url { get; }
 	}
 }
