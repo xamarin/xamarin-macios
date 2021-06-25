@@ -27173,26 +27173,6 @@ namespace AppKit {
 
 	[Mac (10,15)]
 	[BaseType (typeof (NSObject))]
-	[DisableDefaultCtor]
-	interface NSCollectionLayoutGroupCustomItem : NSCopying
-	{
-		[Static]
-		[Export ("customItemWithFrame:")]
-		NSCollectionLayoutGroupCustomItem Create (CGRect frame);
-
-		[Static]
-		[Export ("customItemWithFrame:zIndex:")]
-		NSCollectionLayoutGroupCustomItem Create (CGRect frame, nint zIndex);
-
-		[Export ("frame")]
-		CGRect Frame { get; }
-
-		[Export ("zIndex")]
-		nint ZIndex { get; }
-	}
-
-	[Mac (10,15)]
-	[BaseType (typeof (NSObject))]
 	interface NSCollectionViewCompositionalLayoutConfiguration : NSCopying
 	{
 		[Export ("scrollDirection", ArgumentSemantic.Assign)]

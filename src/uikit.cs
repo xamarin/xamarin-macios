@@ -20244,26 +20244,6 @@ namespace UIKit {
 	[NoWatch, TV (13,0), iOS (13,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface NSCollectionLayoutGroupCustomItem : NSCopying {
-
-		[Static]
-		[Export ("customItemWithFrame:")]
-		NSCollectionLayoutGroupCustomItem Create (CGRect frame);
-
-		[Static]
-		[Export ("customItemWithFrame:zIndex:")]
-		NSCollectionLayoutGroupCustomItem Create (CGRect frame, nint zIndex);
-
-		[Export ("frame")]
-		CGRect Frame { get; }
-
-		[Export ("zIndex")]
-		nint ZIndex { get; }
-	}
-
-	[NoWatch, TV (13,0), iOS (13,0)]
-	[BaseType (typeof (NSObject))]
-	[DisableDefaultCtor]
 	interface NSCollectionLayoutDimension : NSCopying {
 
 		[Static]
