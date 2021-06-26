@@ -16,6 +16,7 @@ using CoreGraphics;
 using Security;
 #if MONOMAC
 using AppKit;
+using UIColor=AppKit.NSColor;
 #else
 using UIKit;
 using NSPrintInfo = Foundation.NSObject;
@@ -573,6 +574,14 @@ namespace WebKit
 		[iOS (13,0)][NoMac]
 		[Export ("webView:contextMenuDidEndForElement:")]
 		void ContextMenuDidEnd (WKWebView webView, WKContextMenuElementInfo elementInfo);
+
+		[NoMac, iOS (14,5), MacCatalyst(14,5)]
+		[Export ("webView:requestDeviceOrientationAndMotionPermissionForOrigin:initiatedByFrame:decisionHandler:")]
+		void RequestDeviceOrientationAndMotionPermission (WKWebView webView, WKSecurityOrigin origin, WKFrameInfo frame, Action<WKPermissionDecision> decisionHandler);
+
+		[Mac (11,3), iOS (14,5), MacCatalyst(14,5)]
+		[Export ("webView:requestMediaCapturePermissionForOrigin:initiatedByFrame:type:decisionHandler:")]
+		void RequestMediaCapturePermission (WKWebView webView, WKSecurityOrigin origin, WKFrameInfo frame, WKMediaCaptureType type, Action<WKPermissionDecision> decisionHandler);
 	}
 
 	[iOS (8,0), Mac (10,10)] // Not defined in 32-bit
@@ -920,6 +929,65 @@ namespace WebKit
 		[Async]
 		[Export ("resumeDownloadFromResumeData:completionHandler:")]
 		void ResumeDownload (NSData resumeData, Action<WKDownload> completionHandler);
+
+		[Mac (11,3), iOS (14,5), MacCatalyst(14,5)]
+		[Export ("cameraCaptureState")]
+		WKMediaCaptureState CameraCaptureState { get; }
+
+		[Async]
+		[Mac (11,3), iOS (14,5), MacCatalyst(14,5)]
+		[Export ("closeAllMediaPresentationsWithCompletionHandler:")]
+		void CloseAllMediaPresentations ([NullAllowed] Action completionHandler);
+
+		[Mac (11,3), iOS (14,5), MacCatalyst(14,5)]
+		[NullAllowed, Export ("interactionState", ArgumentSemantic.Copy)]
+		NSObject InteractionState { get; set; }
+
+		[Mac (11,3), iOS (14,5), MacCatalyst(14,5)]
+		[Export ("loadFileRequest:allowingReadAccessToURL:")]
+		WKNavigation LoadFileRequest (NSUrlRequest request, NSUrl readAccessUrl);
+
+		[Mac (11,3), iOS (14,5), MacCatalyst(14,5)]
+		[Export ("loadSimulatedRequest:responseHTMLString:")]
+		WKNavigation LoadSimulatedRequest (NSUrlRequest request, string htmlString);
+
+		[Mac (11,3), iOS (14,5), MacCatalyst(14,5)]
+		[Export ("loadSimulatedRequest:response:responseData:")]
+		WKNavigation LoadSimulatedRequest (NSUrlRequest request, NSUrlResponse response, NSData data);
+
+		[Mac (11,3), iOS (14,5), MacCatalyst(14,5)]
+		[Export ("microphoneCaptureState")]
+		WKMediaCaptureState MicrophoneCaptureState { get; }
+
+		[Async]
+		[Mac (11,3), iOS (14,5), MacCatalyst(14,5)]
+		[Export ("pauseAllMediaPlaybackWithCompletionHandler:")]
+		void PauseAllMediaPlayback ([NullAllowed] Action completionHandler);
+
+		[Async]
+		[Mac (11,3), iOS (14,5), MacCatalyst(14,5)]
+		[Export ("requestMediaPlaybackStateWithCompletionHandler:")]
+		void RequestMediaPlaybackState (Action<WKMediaPlaybackState> completionHandler);
+
+		[Async]
+		[Mac (11,3), iOS (14,5), MacCatalyst(14,5)]
+		[Export ("setAllMediaPlaybackSuspended:completionHandler:")]
+		void SetAllMediaPlaybackSuspended (bool suspended, [NullAllowed] Action completionHandler);
+
+		[Async]
+		[Mac (11,3), iOS (14,5), MacCatalyst(14,5)]
+		[Export ("setCameraCaptureState:completionHandler:")]
+		void SetCameraCaptureState (WKMediaCaptureState state, [NullAllowed] Action completionHandler);
+
+		[Async]
+		[Mac (11,3), iOS (14,5), MacCatalyst(14,5)]
+		[Export ("setMicrophoneCaptureState:completionHandler:")]
+		void SetMicrophoneCaptureState (WKMediaCaptureState state, [NullAllowed] Action completionHandler);
+
+		[Mac(11,3), iOS (14, 5), MacCatalyst(14,5)]
+		[Export ("themeColor")]
+		[NullAllowed]
+		UIColor ThemeColor { get; }
 	}
 
 	delegate void WKJavascriptEvaluationResult (NSObject result, NSError error);
@@ -1008,6 +1076,10 @@ namespace WebKit
 		[iOS (14,0)]
 		[Export ("limitsNavigationsToAppBoundDomains")]
 		bool LimitsNavigationsToAppBoundDomains { get; set; }
+
+		[Mac (11,3), iOS (14,5), MacCatalyst(14,5)]
+		[Export ("upgradeKnownHostsToHTTPS")]
+		bool UpgradeKnownHostsToHttps { get; set; }
 	}
 
 	[iOS (8,0), Mac (10,10)] // Not defined in 32-bit
