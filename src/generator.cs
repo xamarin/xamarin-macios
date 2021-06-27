@@ -2745,8 +2745,12 @@ public partial class Generator : IMemberGatherer {
 				print ("static public readonly IntPtr Handle = Dlfcn.dlopen (null, 0);");
 			} else if (BindThirdPartyLibrary && library_path != null && IsNotSystemLibrary (library_name)) {
 				print ($"static public readonly IntPtr Handle = Dlfcn.dlopen (\"{library_path}\", 0);");
-			} else {
+			} else if (BindThirdPartyLibrary) {
 				print ("static public readonly IntPtr Handle = Dlfcn.dlopen (Constants.{0}Library, 0);", library_name);
+			} else {
+				// Skip the path check that our managed `dlopen` method does
+				// This is not required since the path is checked by `IsNotSystemLibrary`
+				print ("static public readonly IntPtr Handle = Dlfcn._dlopen (Constants.{0}Library, 0);", library_name);
 			}
 			indent--; print ("}");
 		}
@@ -4658,7 +4662,7 @@ public partial class Generator : IMemberGatherer {
 			print (sw, by_ref_processing.ToString ());
 		if (use_temp_return) {
 			if (AttributeManager.HasAttribute<ProxyAttribute> (AttributeManager.GetReturnTypeCustomAttributes (mi)))
-				print ("ret.SetAsProxy ();");
+				print ("ret.IsDirectBinding = true;");
 
 			if (mi.ReturnType.IsSubclassOf (TypeManager.System_Delegate)) {
 				print ("return global::ObjCRuntime.Trampolines.{0}.Create (ret)!;", trampoline_info.NativeInvokerName);

@@ -10,11 +10,6 @@
     <EnableDefaultwatchOSItems Condition=" '$(_PlatformName)' == 'watchOS' And '$(EnableDefaultwatchOSItems)' == '' ">$(EnableDefaultItems)</EnableDefaultwatchOSItems>
     <EnableDefaultmacOSItems Condition=" '$(_PlatformName)' == 'macOS' And '$(EnableDefaultmacOSItems)' == '' ">$(EnableDefaultItems)</EnableDefaultmacOSItems>
     <EnableDefaultMacCatalystItems Condition=" '$(_PlatformName)' == 'MacCatalyst' And '$(EnableDefaultMacCatalystItems)' == '' ">$(EnableDefaultItems)</EnableDefaultMacCatalystItems>
-    <_EnableDefaultXamarinItems Condition=" '$(_PlatformName)' == 'iOS' ">$(EnableDefaultiOSItems)</_EnableDefaultXamarinItems>
-    <_EnableDefaultXamarinItems Condition=" '$(_PlatformName)' == 'tvOS' ">$(EnableDefaulttvOSItems)</_EnableDefaultXamarinItems>
-    <_EnableDefaultXamarinItems Condition=" '$(_PlatformName)' == 'watchOS' ">$(EnableDefaultwatchOSItems)</_EnableDefaultXamarinItems>
-    <_EnableDefaultXamarinItems Condition=" '$(_PlatformName)' == 'macOS' ">$(EnableDefaultmacOSItems)</_EnableDefaultXamarinItems>
-    <_EnableDefaultXamarinItems Condition=" '$(_PlatformName)' == 'MacCatalyst' ">$(EnableDefaultMacCatalystItems)</_EnableDefaultXamarinItems>
 
     <!-- Don't include default Compile items for binding projects, because that would pick up ApiDefinition.cs and StructsAndEnums.cs -->
     <EnableDefaultCompileItems Condition=" '$(IsBindingProject)' == 'true' ">false</EnableDefaultCompileItems>

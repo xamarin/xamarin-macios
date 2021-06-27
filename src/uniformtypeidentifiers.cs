@@ -275,6 +275,10 @@ namespace UniformTypeIdentifiers {
 		[Field ("UTTypePHPScript")]
 		UTType PhpScript { get; }
 
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Field ("UTTypeMakefile")]
+		UTType Makefile { get; }
+
 		[Field ("UTTypeJSON")]
 		UTType Json { get; }
 

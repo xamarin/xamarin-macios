@@ -17,6 +17,8 @@ using CoreFoundation;
 using Foundation;
 using Metal;
 
+#nullable enable
+
 namespace CoreVideo {
 
 	[iOS (8,0)]
@@ -74,7 +76,7 @@ namespace CoreVideo {
 			throw new Exception ("Could not create the texture cache");
 		}
 
-		public static CVMetalTextureCache FromDevice (IMTLDevice metalDevice)
+		public static CVMetalTextureCache? FromDevice (IMTLDevice metalDevice)
 		{
 			if (metalDevice == null)
 				throw new ArgumentNullException ("metalDevice");
@@ -104,7 +106,7 @@ namespace CoreVideo {
 			throw new Exception ($"Could not create the texture cache, Reason: {err}.");
 		}
 
-		public static CVMetalTextureCache FromDevice (IMTLDevice metalDevice, CVMetalTextureAttributes textureAttributes, out CVReturn creationErr)
+		public static CVMetalTextureCache? FromDevice (IMTLDevice metalDevice, CVMetalTextureAttributes textureAttributes, out CVReturn creationErr)
 		{
 			if (metalDevice == null)
 				throw new ArgumentNullException (nameof (metalDevice));
@@ -119,13 +121,13 @@ namespace CoreVideo {
 			return null;
 		}
 
-		public static CVMetalTextureCache FromDevice (IMTLDevice metalDevice, CVMetalTextureAttributes textureAttributes)
+		public static CVMetalTextureCache? FromDevice (IMTLDevice metalDevice, CVMetalTextureAttributes textureAttributes)
 		{
 			CVReturn creationErr;
 			return FromDevice (metalDevice, textureAttributes, out creationErr);
 		}
 
-		public CVMetalTexture TextureFromImage (CVImageBuffer imageBuffer, MTLPixelFormat format, nint width, nint height, nint planeIndex, out CVReturn errorCode)
+		public CVMetalTexture? TextureFromImage (CVImageBuffer imageBuffer, MTLPixelFormat format, nint width, nint height, nint planeIndex, out CVReturn errorCode)
 		{
 			if (imageBuffer == null)
 				throw new ArgumentNullException ("imageBuffer");

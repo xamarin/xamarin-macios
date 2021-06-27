@@ -418,6 +418,8 @@ public class Frameworks : Dictionary <string, Framework>
 
 				{ "AdServices", "AdServices", 14,3 },
 
+				{ "CoreLocationUI", "CoreLocationUI", 15,0 },
+
 				// the above MUST be kept in sync with simlauncher
 				// see tools/mtouch/Makefile
 				// please also keep it sorted to ease comparison
@@ -484,6 +486,7 @@ public class Frameworks : Dictionary <string, Framework>
 
 				{ "Accessibility", "Accessibility", 7,0 },
 				{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 7,0 },
+
 			};
 		}
 		return watch_frameworks;
