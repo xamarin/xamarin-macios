@@ -88,7 +88,7 @@ namespace Chip {
 	delegate void ChipResponseHandler ([NullAllowed] NSError error, [NullAllowed] NSDictionary data);
 
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof(ChipCluster), Name="CHIPApplicationBasic")]
+	[BaseType (typeof (ChipCluster), Name="CHIPApplicationBasic")]
 	[DisableDefaultCtor]
 	interface ChipApplicationBasic
 	{
@@ -130,7 +130,7 @@ namespace Chip {
 	}
 
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof(ChipCluster), Name="CHIPBarrierControl")]
+	[BaseType (typeof (ChipCluster), Name="CHIPBarrierControl")]
 	[DisableDefaultCtor]
 	interface ChipBarrierControl
 	{
@@ -169,7 +169,7 @@ namespace Chip {
 	}
 
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof(ChipCluster), Name="CHIPBasic")]
+	[BaseType (typeof (ChipCluster), Name="CHIPBasic")]
 	[DisableDefaultCtor]
 	interface ChipBasic
 	{
@@ -290,7 +290,7 @@ namespace Chip {
 	}
 
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof(ChipCluster), Name="CHIPColorControl")]
+	[BaseType (typeof (ChipCluster), Name="CHIPColorControl")]
 	[DisableDefaultCtor]
 	interface ChipColorControl
 	{
@@ -653,7 +653,7 @@ namespace Chip {
 	}
 
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof(ChipCluster), Name="CHIPDescriptor")]
+	[BaseType (typeof (ChipCluster), Name="CHIPDescriptor")]
 	[DisableDefaultCtor]
 	interface ChipDescriptor
 	{
@@ -684,7 +684,7 @@ namespace Chip {
 	}
 
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof(ChipCluster), Name="CHIPDoorLock")]
+	[BaseType (typeof (ChipCluster), Name="CHIPDoorLock")]
 	[DisableDefaultCtor]
 	interface ChipDoorLock
 	{
@@ -811,7 +811,7 @@ namespace Chip {
 	}
 
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof(ChipCluster), Name="CHIPGeneralCommissioning")]
+	[BaseType (typeof (ChipCluster), Name="CHIPGeneralCommissioning")]
 	[DisableDefaultCtor]
 	interface ChipGeneralCommissioning
 	{
@@ -850,7 +850,7 @@ namespace Chip {
 	}
 
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof(ChipCluster), Name="CHIPGroupKeyManagement")]
+	[BaseType (typeof (ChipCluster), Name="CHIPGroupKeyManagement")]
 	[DisableDefaultCtor]
 	interface ChipGroupKeyManagement
 	{
@@ -873,7 +873,7 @@ namespace Chip {
 	}
 
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof(ChipCluster), Name="CHIPGroups")]
+	[BaseType (typeof (ChipCluster), Name="CHIPGroups")]
 	[DisableDefaultCtor]
 	interface ChipGroups
 	{
@@ -916,7 +916,7 @@ namespace Chip {
 	}
 
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof(ChipCluster), Name="CHIPIdentify")]
+	[BaseType (typeof (ChipCluster), Name="CHIPIdentify")]
 	[DisableDefaultCtor]
 	interface ChipIdentify
 	{
@@ -946,7 +946,7 @@ namespace Chip {
 	}
 
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof(ChipCluster), Name="CHIPLevelControl")]
+	[BaseType (typeof (ChipCluster), Name="CHIPLevelControl")]
 	[DisableDefaultCtor]
 	interface ChipLevelControl
 	{
@@ -1005,7 +1005,7 @@ namespace Chip {
 	}
 
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof(ChipCluster), Name="CHIPLowPower")]
+	[BaseType (typeof (ChipCluster), Name="CHIPLowPower")]
 	[DisableDefaultCtor]
 	interface ChipLowPower
 	{
@@ -1024,7 +1024,7 @@ namespace Chip {
 	}
 
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof(ChipCluster), Name="CHIPNetworkCommissioning")]
+	[BaseType (typeof (ChipCluster), Name="CHIPNetworkCommissioning")]
 	[DisableDefaultCtor]
 	interface ChipNetworkCommissioning
 	{
@@ -1075,7 +1075,7 @@ namespace Chip {
 	}
 
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof(ChipCluster), Name="CHIPOnOff")]
+	[BaseType (typeof (ChipCluster), Name="CHIPOnOff")]
 	[DisableDefaultCtor]
 	interface ChipOnOff
 	{
@@ -1114,7 +1114,7 @@ namespace Chip {
 	}
 
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof(ChipCluster), Name="CHIPOperationalCredentials")]
+	[BaseType (typeof (ChipCluster), Name="CHIPOperationalCredentials")]
 	[DisableDefaultCtor]
 	interface ChipOperationalCredentials
 	{
@@ -1149,7 +1149,7 @@ namespace Chip {
 	}
 
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof(ChipCluster), Name="CHIPPumpConfigurationAndControl")]
+	[BaseType (typeof (ChipCluster), Name="CHIPPumpConfigurationAndControl")]
 	[DisableDefaultCtor]
 	interface ChipPumpConfigurationAndControl
 	{
@@ -1204,7 +1204,7 @@ namespace Chip {
 	}
 
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof(ChipCluster), Name="CHIPScenes")]
+	[BaseType (typeof (ChipCluster), Name="CHIPScenes")]
 	[DisableDefaultCtor]
 	interface ChipScenes
 	{
@@ -1267,7 +1267,7 @@ namespace Chip {
 	}
 
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof(ChipCluster), Name="CHIPSwitch")]
+	[BaseType (typeof (ChipCluster), Name="CHIPSwitch")]
 	[DisableDefaultCtor]
 	interface ChipSwitch
 	{
@@ -1298,7 +1298,7 @@ namespace Chip {
 	}
 
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof(ChipCluster), Name="CHIPTemperatureMeasurement")]
+	[BaseType (typeof (ChipCluster), Name="CHIPTemperatureMeasurement")]
 	[DisableDefaultCtor]
 	interface ChipTemperatureMeasurement
 	{
@@ -1333,7 +1333,7 @@ namespace Chip {
 	}
 
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof(ChipCluster), Name="CHIPTestCluster")]
+	[BaseType (typeof (ChipCluster), Name="CHIPTestCluster")]
 	[DisableDefaultCtor]
 	interface ChipTestCluster
 	{
@@ -1491,7 +1491,7 @@ namespace Chip {
 	}
 
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof(ChipCluster), Name="CHIPThermostat")]
+	[BaseType (typeof (ChipCluster), Name="CHIPThermostat")]
 	[DisableDefaultCtor]
 	interface ChipThermostat
 	{
@@ -1569,7 +1569,7 @@ namespace Chip {
 	}
 
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof(NSObject), Name="CHIPOnboardingPayloadParser")]
+	[BaseType (typeof (NSObject), Name="CHIPOnboardingPayloadParser")]
 	[DisableDefaultCtor]
 	interface ChipOnboardingPayloadParser
 	{
@@ -1583,7 +1583,7 @@ namespace Chip {
 
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[Protocol, Model (AutoGeneratedName = true)]
-	[BaseType (typeof(NSObject), Name="CHIPDevicePairingDelegate")]
+	[BaseType (typeof (NSObject), Name="CHIPDevicePairingDelegate")]
 	interface ChipDevicePairingDelegate
 	{
 		[Export ("onStatusUpdate:")]
@@ -1600,7 +1600,7 @@ namespace Chip {
 	}
 
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof(NSObject), Name="CHIPDeviceController")]
+	[BaseType (typeof (NSObject), Name="CHIPDeviceController")]
 	[DisableDefaultCtor]
 	interface ChipDeviceController
 	{
@@ -1653,7 +1653,7 @@ namespace Chip {
 	}
 
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof(NSObject), Name="CHIPError")]
+	[BaseType (typeof (NSObject), Name="CHIPError")]
 	[DisableDefaultCtor]
 	interface ChipError
 	{
@@ -1668,7 +1668,7 @@ namespace Chip {
 	}
 
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof(NSObject), Name="CHIPManualSetupPayloadParser")]
+	[BaseType (typeof (NSObject), Name="CHIPManualSetupPayloadParser")]
 	[DisableDefaultCtor]
 	interface ChipManualSetupPayloadParser
 	{
@@ -1684,7 +1684,7 @@ namespace Chip {
 
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[Protocol, Model (AutoGeneratedName = true)]
-	[BaseType (typeof(NSObject), Name="CHIPPersistentStorageDelegate")]
+	[BaseType (typeof (NSObject), Name="CHIPPersistentStorageDelegate")]
 	interface ChipPersistentStorageDelegate
 	{
 		[Abstract]
@@ -1701,7 +1701,7 @@ namespace Chip {
 	}
 
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof(NSObject), Name="CHIPOptionalQRCodeInfo")]
+	[BaseType (typeof (NSObject), Name="CHIPOptionalQRCodeInfo")]
 	[DisableDefaultCtor]
 	interface ChipOptionalQRCodeInfo
 	{
@@ -1719,7 +1719,7 @@ namespace Chip {
 	}
 
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof(NSObject), Name="CHIPSetupPayload")]
+	[BaseType (typeof (NSObject), Name="CHIPSetupPayload")]
 	[DisableDefaultCtor]
 	interface ChipSetupPayload
 	{
@@ -1752,7 +1752,7 @@ namespace Chip {
 	}
 
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof(NSObject), Name="CHIPQRCodeSetupPayloadParser")]
+	[BaseType (typeof (NSObject), Name="CHIPQRCodeSetupPayloadParser")]
 	[DisableDefaultCtor]
 	interface ChipQRCodeSetupPayloadParser
 	{
