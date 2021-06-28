@@ -616,7 +616,6 @@ namespace EventKit {
 #if MONOMAC
 		[Deprecated (PlatformName.MacOSX, 10, 9)]
 		[Export ("initWithAccessToEntityTypes:")]
-		[NoMacCatalyst]
 		IntPtr Constructor (EKEntityMask accessToEntityTypes);
 #endif
 		[Mac (10,11), Watch (5,0), iOS (12,0)]
