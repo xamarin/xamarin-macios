@@ -267,7 +267,7 @@ namespace Chip {
 	}
 
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof(ChipCluster), Name="CHIPBinding")]
+	[BaseType (typeof (ChipCluster), Name="CHIPBinding")]
 	[DisableDefaultCtor]
 	interface ChipBinding
 	{
@@ -1043,11 +1043,11 @@ namespace Chip {
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("disableNetwork:breadcrumb:timeoutMs:responseHandler:")]
-		void DisableNetwork (NSData networkID, ulong breadcrumb, uint timeoutMs, ChipResponseHandler responseHandler);
+		void DisableNetwork (NSData networkId, ulong breadcrumb, uint timeoutMs, ChipResponseHandler responseHandler);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("enableNetwork:breadcrumb:timeoutMs:responseHandler:")]
-		void EnableNetwork (NSData networkID, ulong breadcrumb, uint timeoutMs, ChipResponseHandler responseHandler);
+		void EnableNetwork (NSData networkId, ulong breadcrumb, uint timeoutMs, ChipResponseHandler responseHandler);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("getLastNetworkCommissioningResult:responseHandler:")]
@@ -1055,7 +1055,7 @@ namespace Chip {
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("removeNetwork:breadcrumb:timeoutMs:responseHandler:")]
-		void RemoveNetwork (NSData networkID, ulong breadcrumb, uint timeoutMs, ChipResponseHandler responseHandler);
+		void RemoveNetwork (NSData networkId, ulong breadcrumb, uint timeoutMs, ChipResponseHandler responseHandler);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("scanNetworks:breadcrumb:timeoutMs:responseHandler:")]
@@ -1608,32 +1608,32 @@ namespace Chip {
 		bool IsRunning { get; }
 
 		[Export ("pairDevice:discriminator:setupPINCode:error:")]
-		bool PairDevice (ulong deviceID, ushort discriminator, uint setupPinCode, [NullAllowed] out NSError error);
+		bool PairDevice (ulong deviceId, ushort discriminator, uint setupPinCode, [NullAllowed] out NSError error);
 
 		[Export ("pairDevice:address:port:discriminator:setupPINCode:error:")]
-		bool PairDevice (ulong deviceID, string address, ushort port, ushort discriminator, uint setupPinCode, [NullAllowed] out NSError error);
+		bool PairDevice (ulong deviceId, string address, ushort port, ushort discriminator, uint setupPinCode, [NullAllowed] out NSError error);
 
 		[Export ("pairDeviceWithoutSecurity:address:port:error:")]
-		bool PairDeviceWithoutSecurity (ulong deviceID, string address, ushort port, [NullAllowed] out NSError error);
+		bool PairDeviceWithoutSecurity (ulong deviceId, string address, ushort port, [NullAllowed] out NSError error);
 
 		[Export ("pairDevice:onboardingPayload:onboardingPayloadType:error:")]
-		bool PairDevice (ulong deviceID, string onboardingPayload, ChipOnboardingPayloadType onboardingPayloadType, [NullAllowed] out NSError error);
+		bool PairDevice (ulong deviceId, string onboardingPayload, ChipOnboardingPayloadType onboardingPayloadType, [NullAllowed] out NSError error);
 
 		[Export ("setListenPort:")]
 		void SetListenPort (ushort port);
 
 		[Export ("unpairDevice:error:")]
-		bool UnpairDevice (ulong deviceID, [NullAllowed] out NSError error);
+		bool UnpairDevice (ulong deviceId, [NullAllowed] out NSError error);
 
 		[Export ("stopDevicePairing:error:")]
-		bool StopDevicePairing (ulong deviceID, [NullAllowed] out NSError error);
+		bool StopDevicePairing (ulong deviceId, [NullAllowed] out NSError error);
 
 		[Export ("updateDevice:fabricId:")]
-		void UpdateDevice (ulong deviceID, ulong fabricId);
+		void UpdateDevice (ulong deviceId, ulong fabricId);
 
 		[Export ("getPairedDevice:error:")]
 		[return: NullAllowed]
-		ChipDevice GetPairedDevice (ulong deviceID, [NullAllowed] out NSError error);
+		ChipDevice GetPairedDevice (ulong deviceId, [NullAllowed] out NSError error);
 
 		[Static]
 		[Export ("sharedController")]
