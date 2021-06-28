@@ -260,8 +260,6 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "UserNotificationsUI", "UserNotificationsUI", 11,0 },
 
 					{ "AdServices", "AdServices", 11,1 },
-
-					{ "Chip", "CHIP", 12, 0 },
 				};
 			}
 			return mac_frameworks;
@@ -491,8 +489,6 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "Accessibility", "Accessibility", 7,0 },
 				{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 7,0 },
 
-				{ "Chip", "CHIP", new Version (8, 0), NotAvailableInSimulator /* not headers in beta 1*/ },
-
 			};
 		}
 		return watch_frameworks;
@@ -581,8 +577,6 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "MLCompute", "MLCompute", new Version (14,0), NotAvailableInSimulator },
 					{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 14,0 },
 					{ "Intents", "Intents", 14,0 },
-
-					{ "Chip", "CHIP", new Version (15, 0), NotAvailableInSimulator /* not headers in beta 1*/ },
 				};
 			}
 			return tvos_frameworks;
