@@ -348,7 +348,7 @@ export DOTNETSDK_WORKLOAD_MANIFEST_ROOTS:=$(abspath ./Workloads)
 
 .stamp-install-workloads: Makefile Workloads/NuGet.config $(WORKLOAD_TARGETS) $(RUNTIME_PACKS) $(REF_PACKS) $(SDK_PACKS) $(TEMPLATE_PACKS) $(WORKLOAD_PACKS)
 	$(Q) cd Workloads && $(DOTNET6) workload install --skip-manifest-update \
-		microsoft-net-runtime-ios microsoft-net-runtime-tvos \
+		microsoft-net-runtime-ios microsoft-net-runtime-tvos microsoft-net-runtime-maccatalyst \
 		$(foreach platform,$(DOTNET_PLATFORMS),microsoft-$(shell echo $(platform) | tr A-Z a-z)-sdk-full)
 	$(Q) touch $@
 
