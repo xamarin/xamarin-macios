@@ -21,6 +21,8 @@ using CoreFoundation;
 using Foundation;
 using OpenGLES;
 
+#nullable enable
+
 namespace CoreVideo {
 
 	// CVOpenGLESTextureCache.h

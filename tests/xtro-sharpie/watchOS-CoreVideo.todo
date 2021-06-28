@@ -1,4 +1,0 @@
-!missing-field! kCVImageBufferAmbientViewingEnvironmentKey not bound
-!missing-field! kCVImageBufferRegionOfInterestKey not bound
-!missing-pinvoke! CVIsCompressedPixelFormatAvailable is not bound
-!missing-pinvoke! CVPixelBufferCopyCreationAttributes is not bound
