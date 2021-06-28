@@ -260,6 +260,8 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "UserNotificationsUI", "UserNotificationsUI", 11,0 },
 
 					{ "AdServices", "AdServices", 11,1 },
+
+					{ "Chip", "CHIP", 12, 0 },
 				};
 			}
 			return mac_frameworks;
