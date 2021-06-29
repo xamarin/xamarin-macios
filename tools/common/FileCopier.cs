@@ -198,6 +198,65 @@ namespace Xamarin.Bundler {
 			return false;
 		}
 		
+		// Checks if any of the source files have a time stamp later than any of the target files.
+		//
+		// If check_stamp is true, the function will use the timestamp of a "target".stamp file
+		// if it's later than the timestamp of the "target" file itself.
+		public static bool IsUptodate (IEnumerable<string> sources, IEnumerable<string> targets, bool check_stamp = true)
+		{
+#if MMP || MTOUCH  // msbuild does not have force
+			if (Driver.Force)
+				return false;
+#endif
+
+			DateTime max_source = DateTime.MinValue;
+			string max_s = null;
+
+			if (sources.Count () == 0 || targets.Count () == 0)
+				throw ErrorHelper.CreateError (1013, Errors.MT1013);
+
+			foreach (var s in sources) {
+				var sfi = new FileInfo (s);
+				if (!sfi.Exists) {
+					Log (3, "Prerequisite '{0}' does not exist.", s);
+					return false;
+				}
+
+				var st = sfi.LastWriteTimeUtc;
+				if (st > max_source) {
+					max_source = st;
+					max_s = s;
+				}
+			}
+
+
+			foreach (var t in targets) {
+				var tfi = new FileInfo (t);
+				if (!tfi.Exists) {
+					Log (3, "Target '{0}' does not exist.", t);
+					return false;
+				}
+
+				if (check_stamp) {
+					var tfi_stamp = new FileInfo (t + ".stamp");
+					if (tfi_stamp.Exists && tfi_stamp.LastWriteTimeUtc > tfi.LastWriteTimeUtc) {
+						Log (3, "Target '{0}' has a stamp file with newer timestamp ({1} > {2}), using the stamp file's timestamp", t, tfi_stamp.LastWriteTimeUtc, tfi.LastWriteTimeUtc);
+						tfi = tfi_stamp;
+					}
+				}
+
+				var lwt = tfi.LastWriteTimeUtc;
+				if (max_source > lwt) {
+					Log (3, "Prerequisite '{0}' is newer than target '{1}' ({2} vs {3}).", max_s, t, max_source, lwt);
+					return false;
+				}
+			}
+
+			Log (3, "Prerequisite(s) '{0}' are all older than the target(s) '{1}'.", string.Join ("', '", sources.ToArray ()), string.Join ("', '", targets.ToArray ()));
+
+			return true;
+		}
+
 		[DllImport ("/usr/lib/libSystem.dylib", SetLastError = true, EntryPoint = "strerror")]
 		static extern IntPtr _strerror (int errno);
 
