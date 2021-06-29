@@ -2,7 +2,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net6.0-tvos</TargetFramework>
-    <RuntimeIdentifier>tvossimulator-x64</RuntimeIdentifier>
     <OutputType>Exe</OutputType>
   </PropertyGroup>
 </Project>

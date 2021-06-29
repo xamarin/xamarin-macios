@@ -73,6 +73,12 @@ namespace Xamarin.Tests
 			return Execute (fileName, arguments, out var _, workingDirectory: working_directory, stdout: output, stderr: output, timeout: timeout);
 		}
 
+		public static int Execute (string fileName, IList<string> arguments, out StringBuilder output, string working_directory, Dictionary<string, string> environment_variables, TimeSpan? timeout = null)
+		{
+			output = new StringBuilder ();
+			return Execute (fileName, arguments, out var _, workingDirectory: working_directory, stdout: output, stderr: output, timeout: timeout, environment_variables: environment_variables);
+		}
+
 		public static int Execute (string fileName, IList<string> arguments, out bool timed_out, string workingDirectory = null, Dictionary<string, string> environment_variables = null, StringBuilder stdout = null, StringBuilder stderr = null, TimeSpan? timeout = null)
 		{
 			var rv = Execution.RunWithStringBuildersAsync (fileName, arguments, workingDirectory: workingDirectory, environment: environment_variables, standardOutput: stdout, standardError: stderr, timeout: timeout).Result;

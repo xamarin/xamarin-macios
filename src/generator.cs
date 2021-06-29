@@ -4662,7 +4662,7 @@ public partial class Generator : IMemberGatherer {
 			print (sw, by_ref_processing.ToString ());
 		if (use_temp_return) {
 			if (AttributeManager.HasAttribute<ProxyAttribute> (AttributeManager.GetReturnTypeCustomAttributes (mi)))
-				print ("ret.SetAsProxy ();");
+				print ("ret.IsDirectBinding = true;");
 
 			if (mi.ReturnType.IsSubclassOf (TypeManager.System_Delegate)) {
 				print ("return global::ObjCRuntime.Trampolines.{0}.Create (ret)!;", trampoline_info.NativeInvokerName);
