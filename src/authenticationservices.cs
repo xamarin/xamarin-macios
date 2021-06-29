@@ -640,7 +640,6 @@ namespace AuthenticationServices {
 
 		[Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
 		[Export ("privateKeys")]
-		// TODO - [Verify (StronglyTypedNSArray)]
 		NSObject[] PrivateKeys { get; }
 	}
 
@@ -1158,7 +1157,6 @@ namespace AuthenticationServices {
 		NSData HttpBody { get; set; }
 
 		[Export ("privateKeys", ArgumentSemantic.Assign)]
-		// TODO - [Verify (StronglyTypedNSArray)]
 		NSObject[] PrivateKeys { get; set; }
 	}
 
