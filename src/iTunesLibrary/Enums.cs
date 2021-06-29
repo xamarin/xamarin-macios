@@ -301,10 +301,15 @@ namespace iTunesLibrary {
 		AllItemsPlaylist,
 		[Field ("ITLibPlaylistPropertyDistinguisedKind")]
 		DistinguisedKind,
+		[Introduced (PlatformName.MacOSX, 10, 6, message: "Use 'ITLibPlaylistPropertyPrimary' instead.")]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'ITLibPlaylistPropertyPrimary' instead.")]
 		[Field ("ITLibPlaylistPropertyMaster")]
 		Master,
 		[Field ("ITLibPlaylistPropertyParentPersistentID")]
 		ParentPersistentId,
+		[Mac (12, 0)]
+		[Field ("ITLibPlaylistPropertyPrimary")]
+		Primary,
 		[Field ("ITLibPlaylistPropertyVisible")]
 		Visible,
 		[Field ("ITLibPlaylistPropertyItems")]
