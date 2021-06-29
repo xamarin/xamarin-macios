@@ -18,3 +18,4 @@
 !missing-selector! UNNotificationSettings::scheduledDeliverySetting not bound
 !missing-selector! UNNotificationSettings::timeSensitiveSetting not bound
 !missing-type! UNNotificationActionIcon not bound
+!missing-selector! UNNotificationSettings::directMessagesSetting not bound

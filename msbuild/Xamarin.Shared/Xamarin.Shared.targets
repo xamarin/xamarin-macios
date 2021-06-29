@@ -280,6 +280,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			_GenerateBundleName;
 			_DetectSigningIdentity;
 			_ComputeTargetFrameworkMoniker;
+			_ComputeTargetArchitectures;
 		</_CompileAppManifestDependsOn>
 	</PropertyGroup>
 
@@ -593,7 +594,14 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</CreateItem>
 	</Target>
 
-	<Target Name="_ComputeTargetArchitectures" DependsOnTargets="_ComputeTargetFrameworkMoniker">
+	<PropertyGroup>
+		<_ComputeTargetArchitecturesDependsOn>
+			$(_ComputeTargetArchitecturesDependsOn);
+			_ComputeTargetFrameworkMoniker;
+		</_ComputeTargetArchitecturesDependsOn>
+	</PropertyGroup>
+
+	<Target Name="_ComputeTargetArchitectures" DependsOnTargets="$(_ComputeTargetArchitecturesDependsOn)">
 		<!--
 			For now, this target is mostly for Xamarin.iOS, but in order to
 			use the same variables elsewhere, we have code for Xamarin.Mac

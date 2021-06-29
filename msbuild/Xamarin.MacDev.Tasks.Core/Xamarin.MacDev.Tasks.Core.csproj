@@ -5,6 +5,7 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
+    <DefineConstants>$(DefineConstants);MSBUILD_TASKS</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="System.Text.Json" Version="4.7.0" />
@@ -44,6 +45,21 @@
     </Compile>
     <Compile Include="..\..\tools\common\PListExtensions.cs">
       <Link>PListExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\tools\common\MachO.cs">
+      <Link>MachO.cs</Link>
+    </Compile>
+    <Compile Include="..\..\tools\common\error.cs">
+      <Link>error.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\ObjCRuntime\ErrorHelper.cs">
+      <Link>ErrorHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\ObjCRuntime\RuntimeException.cs">
+      <Link>external\RuntimeException.cs</Link>
+    </Compile>
+    <Compile Include="..\..\tools\common\FileUtils.cs">
+      <Link>external\FileUtils.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>
