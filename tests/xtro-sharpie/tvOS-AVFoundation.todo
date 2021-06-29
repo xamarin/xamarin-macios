@@ -5,7 +5,6 @@
 !deprecated-attribute-missing! AVPlayer::setMasterClock: missing a [Deprecated] attribute
 !missing-enum! AVDelegatingPlaybackCoordinatorRateChangeOptions not bound
 !missing-enum! AVDelegatingPlaybackCoordinatorSeekOptions not bound
-!missing-enum! AVEnvironmentalCondition not bound
 !missing-enum! AVPlayerAudiovisualBackgroundPlaybackPolicy not bound
 !missing-enum! AVSampleBufferRequestDirection not bound
 !missing-enum! AVSampleBufferRequestMode not bound
@@ -79,8 +78,6 @@
 !missing-selector! AVAssetVariantAudioAttributes::formatIDs not bound
 !missing-selector! AVAssetVariantAudioAttributes::renditionSpecificAttributesForMediaOption: not bound
 !missing-selector! AVAssetVariantAudioRenditionSpecificAttributes::channelCount not bound
-!missing-selector! AVAssetVariantQualifier::environmentalConditions not bound
-!missing-selector! AVAssetVariantQualifier::setEnvironmentalConditions: not bound
 !missing-selector! AVAssetVariantVideoAttributes::codecTypes not bound
 !missing-selector! AVAssetVariantVideoAttributes::nominalFrameRate not bound
 !missing-selector! AVAssetVariantVideoAttributes::presentationSize not bound
@@ -185,7 +182,10 @@
 !missing-type! AVDelegatingPlaybackCoordinatorPlayCommand not bound
 !missing-type! AVDelegatingPlaybackCoordinatorSeekCommand not bound
 !missing-type! AVPlaybackCoordinator not bound
-!missing-type! AVPlayerInterstitialEventMonitor not bound
 !missing-type! AVPlayerPlaybackCoordinator not bound
-!wrong-base-type! AVPlayerInterstitialEventController expected AVPlayerInterstitialEventMonitor actual AVPlayerInterstitialEventObserver
-!wrong-base-type! AVPlayerInterstitialEventObserver expected AVPlayerInterstitialEventMonitor actual NSObject
+!missing-enum! AVAudioRoutingArbitrationCategory not bound
+!missing-field! AVAudioSessionSpatialAudioEnabledKey not bound
+!missing-field! AVAudioSessionSpatialPlaybackCapabilitiesChangedNotification not bound
+!missing-selector! AVAudioSession::setSupportsMultichannelContent:error: not bound
+!missing-selector! AVAudioSession::supportsMultichannelContent not bound
+!missing-selector! AVAudioSessionPortDescription::isSpatialAudioEnabled not bound

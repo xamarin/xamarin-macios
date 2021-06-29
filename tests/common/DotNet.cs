@@ -49,8 +49,19 @@ namespace Xamarin.Tests {
 				args.Add (verb);
 				args.Add (project);
 				if (properties != null) {
-					foreach (var prop in properties)
-						args.Add ($"/p:{prop.Key}={prop.Value}");
+					foreach (var prop in properties) {
+						if (prop.Value.IndexOfAny (new char [] { ';' }) >= 0) {
+							// https://github.com/dotnet/msbuild/issues/471
+							// Escaping the semi colon like the issue suggests at one point doesn't work, because in
+							// that case MSBuild won't split the string into its parts for tasks that take a string[].
+							// This means that a task that takes a "string[] RuntimeIdentifiers" will get an array with
+							// a single element, where that single element is the whole RuntimeIdentifiers string.
+							// Example task: https://github.com/dotnet/sdk/blob/ffca47e9a36652da2e7041360f2201a2ba197194/src/Tasks/Microsoft.NET.Build.Tasks/ProcessFrameworkReferences.cs#L45
+							args.Add ($"/p:{prop.Key}=\"{prop.Value}\"");
+						} else {
+							args.Add ($"/p:{prop.Key}={prop.Value}");
+						}
+					}
 				}
 				var binlogPath = Path.Combine (Path.GetDirectoryName (project), $"log-{verb}-{DateTime.Now:yyyyMMdd_HHmmss}.binlog");
 				args.Add ($"/bl:{binlogPath}");
