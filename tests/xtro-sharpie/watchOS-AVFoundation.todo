@@ -88,6 +88,9 @@
 !missing-type! AVAssetVariantAudioRenditionSpecificAttributes not bound
 !missing-type! AVAssetVariantVideoAttributes not bound
 !missing-type! AVMetadataItemFilter not bound
-!missing-type! AVPlayerInterstitialEventMonitor not bound
-!wrong-base-type! AVPlayerInterstitialEventController expected AVPlayerInterstitialEventMonitor actual AVPlayerInterstitialEventObserver
-!wrong-base-type! AVPlayerInterstitialEventObserver expected AVPlayerInterstitialEventMonitor actual NSObject
+!missing-enum! AVAudioRoutingArbitrationCategory not bound
+!missing-field! AVAudioSessionSpatialAudioEnabledKey not bound
+!missing-field! AVAudioSessionSpatialPlaybackCapabilitiesChangedNotification not bound
+!missing-selector! AVAudioSession::setSupportsMultichannelContent:error: not bound
+!missing-selector! AVAudioSession::supportsMultichannelContent not bound
+!missing-selector! AVAudioSessionPortDescription::isSpatialAudioEnabled not bound

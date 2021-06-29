@@ -257,7 +257,7 @@ namespace Xamarin.Bundler
 				File.Delete (target);
 			if (!Directory.Exists (target_dir))
 				Directory.CreateDirectory (target_dir);
-			if (!Symlink (source, target))
+			if (!PathUtils.Symlink (source, target))
 				return false;
 
 			string sconfig = source + ".config";
@@ -265,14 +265,14 @@ namespace Xamarin.Bundler
 			if (File.Exists (tconfig))
 				File.Delete (tconfig);
 			if (File.Exists (sconfig))
-				Symlink (sconfig, tconfig);
+				PathUtils.Symlink (sconfig, tconfig);
 
 			string tdebug = target + ".mdb";
 			if (File.Exists (tdebug))
 				File.Delete (tdebug);
 			string sdebug = source + ".mdb";
 			if (File.Exists (sdebug))
-				Symlink (sdebug, tdebug);
+				PathUtils.Symlink (sdebug, tdebug);
 
 			string tpdb = Path.ChangeExtension (target, "pdb");
 			if (File.Exists (tpdb))
@@ -280,7 +280,7 @@ namespace Xamarin.Bundler
 
 			string spdb = Path.ChangeExtension (source, "pdb");
 			if (File.Exists (spdb))
-				Symlink (spdb, tpdb);
+				PathUtils.Symlink (spdb, tpdb);
 
 			return true;
 		}

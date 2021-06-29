@@ -8,3 +8,4 @@
 !missing-selector! MKAnnotationView::setRightCalloutOffset: not bound
 !missing-selector! MKMapView::setShowsZoomControls: not bound
 !missing-selector! MKMapView::showsZoomControls not bound
+!deprecated-attribute-missing! MKPinAnnotationView missing a [Deprecated] attribute

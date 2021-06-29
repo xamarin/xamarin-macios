@@ -18,3 +18,10 @@
 !missing-selector! UNNotificationSettings::scheduledDeliverySetting not bound
 !missing-selector! UNNotificationSettings::timeSensitiveSetting not bound
 !missing-type! UNNotificationActionIcon not bound
+!deprecated-attribute-missing! UNMutableNotificationContent::setSummaryArgument: missing a [Deprecated] attribute
+!deprecated-attribute-missing! UNMutableNotificationContent::setSummaryArgumentCount: missing a [Deprecated] attribute
+!deprecated-attribute-missing! UNMutableNotificationContent::summaryArgument missing a [Deprecated] attribute
+!deprecated-attribute-missing! UNMutableNotificationContent::summaryArgumentCount missing a [Deprecated] attribute
+!deprecated-attribute-missing! UNNotificationContent::summaryArgument missing a [Deprecated] attribute
+!deprecated-attribute-missing! UNNotificationContent::summaryArgumentCount missing a [Deprecated] attribute
+!missing-selector! UNNotificationSettings::directMessagesSetting not bound
