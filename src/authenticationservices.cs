@@ -382,6 +382,10 @@ namespace AuthenticationServices {
 
 		[Export ("authorizationController:didCompleteWithError:")]
 		void DidComplete (ASAuthorizationController controller, NSError error);
+
+		[TV (15,0), NoWatch, NoMac, NoiOS, NoMacCatalyst]
+		[Export ("authorizationController:didCompleteWithCustomMethod:")]
+		void DidComplete (ASAuthorizationController controller, NSString method);
 	}
 
 	interface IASAuthorizationControllerPresentationContextProviding { }
@@ -420,6 +424,10 @@ namespace AuthenticationServices {
 
 		[Export ("performRequests")]
 		void PerformRequests ();
+
+		[TV (15,0), NoWatch, NoMac, NoiOS, NoMacCatalyst]
+		[Export ("customAuthorizationMethods", ArgumentSemantic.Copy)]
+		NSString[] CustomAuthorizationMethods { get; set; }
 	}
 
 	interface IASAuthorizationCredential { }
@@ -437,6 +445,7 @@ namespace AuthenticationServices {
 		InvalidResponse = 1002,
 		NotHandled = 1003,
 		Failed = 1004,
+		NotInteractive = 1005,
 	}
 
 	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
@@ -543,6 +552,10 @@ namespace AuthenticationServices {
 		[Export ("completeWithError:")]
 		void Complete (NSError error);
 
+		[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("completeWithAuthorizationResult:")]
+		void Complete (ASAuthorizationProviderExtensionAuthorizationResult authorizationResult);
+
 		[Async]
 		[Export ("presentAuthorizationViewControllerWithCompletion:")]
 		void PresentAuthorizationViewController (Action<bool, NSError> completion);
@@ -623,6 +636,10 @@ namespace AuthenticationServices {
 
 		[NullAllowed, Export ("authenticatedResponse", ArgumentSemantic.Copy)]
 		NSHttpUrlResponse AuthenticatedResponse { get; }
+
+		[Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("privateKeys")]
+		NSObject[] PrivateKeys { get; }
 	}
 
 	[NoWatch, NoTV, Mac (10,15), iOS (13,0)]
@@ -651,6 +668,10 @@ namespace AuthenticationServices {
 
 		[Export ("authorizationOptions", ArgumentSemantic.Copy)]
 		NSUrlQueryItem[] AuthorizationOptions { get; set; }
+
+		[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("userInterfaceEnabled")]
+		bool UserInterfaceEnabled { [Bind ("isUserInterfaceEnabled")] get; set; }
 	}
 
 	[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
@@ -930,4 +951,342 @@ namespace AuthenticationServices {
 		void CancelRequest ();
 	}
 
+	[iOS (15,0), Mac (12,0), MacCatalyst (15,0), NoWatch, NoTV]
+	[Static]
+	interface ASAuthorizationPublicKeyCredentialAttestationKind
+	{
+		[Field ("ASAuthorizationPublicKeyCredentialAttestationKindNone")]
+		NSString None { get; }
+
+		[Field ("ASAuthorizationPublicKeyCredentialAttestationKindDirect")]
+		NSString Direct { get; }
+
+		[Field ("ASAuthorizationPublicKeyCredentialAttestationKindIndirect")]
+		NSString Indirect { get; }
+
+		[Field ("ASAuthorizationPublicKeyCredentialAttestationKindEnterprise")]
+		NSString Enterprise { get; }
+	}
+
+	[iOS (15,0), Mac (12,0), MacCatalyst (15,0), NoWatch, NoTV]
+	[Static]
+	interface ASAuthorizationPublicKeyCredentialUserVerificationPreference
+	{
+		[Field ("ASAuthorizationPublicKeyCredentialUserVerificationPreferencePreferred")]
+		NSString Preferred { get; }
+
+		[Field ("ASAuthorizationPublicKeyCredentialUserVerificationPreferenceRequired")]
+		NSString Required { get; }
+
+		[Field ("ASAuthorizationPublicKeyCredentialUserVerificationPreferenceDiscouraged")]
+		NSString Discouraged { get; }
+	}
+
+	[iOS (15,0), Mac (12,0), MacCatalyst (15,0), NoWatch, NoTV]
+	enum ASAuthorizationPublicKeyCredentialResidentKeyPreference {
+		[Field ("ASAuthorizationPublicKeyCredentialResidentKeyPreferenceDiscouraged")]
+		Discouraged,
+		[Field ("ASAuthorizationPublicKeyCredentialResidentKeyPreferencePreferred")]
+		Preferred,
+		[Field ("ASAuthorizationPublicKeyCredentialResidentKeyPreferenceRequired")]
+		Required,
+	}
+
+	[iOS (15,0), Mac (12,0), MacCatalyst (15,0), NoWatch, NoTV]
+	enum ASAuthorizationSecurityKeyPublicKeyCredentialDescriptorTransport {
+		[Field ("ASAuthorizationSecurityKeyPublicKeyCredentialDescriptorTransportUSB")]
+		Usb,
+		[Field ("ASAuthorizationSecurityKeyPublicKeyCredentialDescriptorTransportNFC")]
+		Nfc,
+		[Field ("ASAuthorizationSecurityKeyPublicKeyCredentialDescriptorTransportBluetooth")]
+		Bluetooth,
+	}
+
+	interface IASAuthorizationPublicKeyCredentialAssertion { }
+
+	[NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoTV]
+	[Protocol]
+	interface ASAuthorizationPublicKeyCredentialAssertion : ASPublicKeyCredential
+	{
+		[Abstract]
+		[Export ("rawAuthenticatorData", ArgumentSemantic.Copy)]
+		NSData RawAuthenticatorData { get; }
+
+		[Abstract]
+		[Export ("userID", ArgumentSemantic.Copy)]
+		NSData UserId { get; }
+
+		[Abstract]
+		[Export ("signature", ArgumentSemantic.Copy)]
+		NSData Signature { get; }
+	}
+
+	[NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoTV]
+	[BaseType (typeof (ASAuthorizationRequest))]
+	[DisableDefaultCtor]
+	interface ASAuthorizationPlatformPublicKeyCredentialAssertionRequest : ASAuthorizationPublicKeyCredentialAssertionRequest
+	{
+		[Sealed]
+		[Export ("allowedCredentials", ArgumentSemantic.Copy)]
+		ASAuthorizationPlatformPublicKeyCredentialDescriptor[] PlatformAllowedCredentials { get; set; }
+	}
+
+	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (ASAuthorizationRequest))]
+	[DisableDefaultCtor]
+	interface ASAuthorizationSecurityKeyPublicKeyCredentialAssertionRequest : ASAuthorizationPublicKeyCredentialAssertionRequest
+	{
+		[Sealed]
+		[Export ("allowedCredentials", ArgumentSemantic.Copy)]
+		ASAuthorizationSecurityKeyPublicKeyCredentialDescriptor[] SecurityAllowedCredentials { get; set; }
+	}
+
+	interface IASAuthorizationPublicKeyCredentialAssertionRequest { }
+
+	[NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoTV]
+	[Protocol]
+	interface ASAuthorizationPublicKeyCredentialAssertionRequest : NSSecureCoding, NSCopying
+	{
+		[Abstract]
+		[Export ("challenge", ArgumentSemantic.Copy)]
+		NSData Challenge { get; set; }
+
+		[Abstract]
+		[Export ("relyingPartyIdentifier")]
+		string RelyingPartyIdentifier { get; set; }
+
+		[Abstract]
+		[Export ("allowedCredentials", ArgumentSemantic.Copy)]
+		IASAuthorizationPublicKeyCredentialDescriptor[] AllowedCredentials { get; set; }
+
+		[Abstract]
+		[Export ("userVerificationPreference")]
+		NSString UserVerificationPreference { get; set; }
+	}
+
+	interface IASAuthorizationPublicKeyCredentialDescriptor { }
+
+	[NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoTV]
+	[Protocol]
+	interface ASAuthorizationPublicKeyCredentialDescriptor : NSSecureCoding, NSCopying
+	{
+		[Abstract]
+		[Export ("credentialID", ArgumentSemantic.Copy)]
+		NSData CredentialId { get; set; }
+	}
+
+	[NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoTV]
+	[Protocol]
+	interface ASAuthorizationPublicKeyCredentialRegistration : ASPublicKeyCredential
+	{
+		[Abstract]
+		[NullAllowed, Export ("rawAttestationObject", ArgumentSemantic.Copy)]
+		NSData RawAttestationObject { get; }
+	}
+
+	[NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoTV]
+	[Protocol]
+	interface ASAuthorizationPublicKeyCredentialRegistrationRequest : NSSecureCoding, NSCopying
+	{
+		[Abstract]
+		[Export ("relyingPartyIdentifier")]
+		string RelyingPartyIdentifier { get; }
+
+		[Abstract]
+		[Export ("userID", ArgumentSemantic.Copy)]
+		NSData UserId { get; set; }
+
+		[Abstract]
+		[Export ("name")]
+		string Name { get; set; }
+
+		[Abstract]
+		[NullAllowed, Export ("displayName")]
+		string DisplayName { get; set; }
+
+		[Abstract]
+		[Export ("challenge", ArgumentSemantic.Copy)]
+		NSData Challenge { get; set; }
+
+		[Abstract]
+		[Export ("userVerificationPreference")]
+		NSString UserVerificationPreference { get; set; }
+
+		[Abstract]
+		[Export ("attestationPreference")]
+		NSString AttestationPreference { get; set; }
+	}
+
+	[NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoTV]
+	[Protocol]
+	interface ASPublicKeyCredential : ASAuthorizationCredential
+	{
+		[Abstract]
+		[Export ("rawClientDataJSON", ArgumentSemantic.Copy)]
+		NSData RawClientDataJson { get; }
+
+		[Abstract]
+		[Export ("credentialID", ArgumentSemantic.Copy)]
+		NSData CredentialId { get; }
+	}
+
+	[NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoTV]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface ASAuthorizationPlatformPublicKeyCredentialDescriptor : ASAuthorizationPublicKeyCredentialDescriptor
+	{
+		[Export ("initWithCredentialID:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (NSData credentialId);
+	}
+
+	[NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoTV]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface ASAuthorizationPlatformPublicKeyCredentialProvider : ASAuthorizationProvider
+	{
+		[Export ("initWithRelyingPartyIdentifier:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string relyingPartyIdentifier);
+
+		[Export ("createCredentialRegistrationRequestWithChallenge:name:userID:")]
+		ASAuthorizationPlatformPublicKeyCredentialRegistrationRequest CreateCredentialRegistrationRequestWithChallenge (NSData challenge, string name, NSData userId);
+
+		[Export ("createCredentialAssertionRequestWithChallenge:")]
+		ASAuthorizationPlatformPublicKeyCredentialAssertionRequest CreateCredentialAssertionRequestWithChallenge (NSData challenge);
+
+		[Export ("relyingPartyIdentifier")]
+		string RelyingPartyIdentifier { get; }
+	}
+
+	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface ASAuthorizationProviderExtensionAuthorizationResult
+	{
+		[Export ("initWithHTTPAuthorizationHeaders:")]
+		IntPtr Constructor (NSDictionary<NSString, NSString> httpAuthorizationHeaders);
+
+		[Export ("initWithHTTPResponse:httpBody:")]
+		IntPtr Constructor (NSHttpUrlResponse httpResponse, [NullAllowed] NSData httpBody);
+
+		[NullAllowed, Export ("httpAuthorizationHeaders", ArgumentSemantic.Assign)]
+		NSDictionary<NSString, NSString> HttpAuthorizationHeaders { get; set; }
+
+		[NullAllowed, Export ("httpResponse", ArgumentSemantic.Copy)]
+		NSHttpUrlResponse HttpResponse { get; set; }
+
+		[NullAllowed, Export ("httpBody", ArgumentSemantic.Assign)]
+		NSData HttpBody { get; set; }
+
+		[Export ("privateKeys", ArgumentSemantic.Assign)]
+		NSObject[] PrivateKeys { get; set; }
+	}
+
+	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface ASAuthorizationPublicKeyCredentialParameters : NSSecureCoding, NSCopying
+	{
+		[Export ("initWithAlgorithm:")]
+		IntPtr Constructor (nint algorithm);
+
+		[Export ("algorithm")]
+		nint Algorithm { get; }
+	}
+
+	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface ASAuthorizationSecurityKeyPublicKeyCredentialDescriptor : ASAuthorizationPublicKeyCredentialDescriptor
+	{
+		[Export ("initWithCredentialID:transports:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (NSData credentialId, [BindAs (typeof (ASAuthorizationSecurityKeyPublicKeyCredentialDescriptorTransport[]))] NSString[] allowedTransports);
+
+		[Export ("transports", ArgumentSemantic.Assign)]
+		[BindAs (typeof (ASAuthorizationSecurityKeyPublicKeyCredentialDescriptorTransport[]))]
+		NSString[] Transports { get; set; }
+	}
+
+	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface ASAuthorizationSecurityKeyPublicKeyCredentialProvider : ASAuthorizationProvider
+	{
+		[Export ("initWithRelyingPartyIdentifier:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string relyingPartyIdentifier);
+
+		[Export ("createCredentialRegistrationRequestWithChallenge:displayName:name:userID:")]
+		ASAuthorizationSecurityKeyPublicKeyCredentialRegistrationRequest Create (NSData challenge, string displayName, string name, NSData userId);
+
+		[Export ("createCredentialAssertionRequestWithChallenge:")]
+		ASAuthorizationSecurityKeyPublicKeyCredentialAssertionRequest Create (NSData challenge);
+
+		[Export ("relyingPartyIdentifier")]
+		string RelyingPartyIdentifier { get; }
+	}
+
+	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (ASAuthorizationRequest))]
+	[DisableDefaultCtor]
+	interface ASAuthorizationSecurityKeyPublicKeyCredentialRegistrationRequest : ASAuthorizationPublicKeyCredentialRegistrationRequest
+	{
+		[Export ("credentialParameters", ArgumentSemantic.Copy)]
+		ASAuthorizationPublicKeyCredentialParameters[] CredentialParameters { get; set; }
+
+		[Export ("excludedCredentials", ArgumentSemantic.Copy)]
+		ASAuthorizationSecurityKeyPublicKeyCredentialDescriptor[] ExcludedCredentials { get; set; }
+
+		[Export ("residentKeyPreference")]
+		[BindAs (typeof (ASAuthorizationPublicKeyCredentialResidentKeyPreference))]
+		NSString ResidentKeyPreference { get; set; }
+	}
+
+	[TV (15,0), NoWatch, NoiOS, NoMac, NoMacCatalyst]
+	[Static]
+	interface ASAuthorizationCustomMethod
+	{
+		[Field ("ASAuthorizationCustomMethodVideoSubscriberAccount")]
+		NSString SubscriberAccount { get; }
+
+		[Field ("ASAuthorizationCustomMethodRestorePurchase")]
+		NSString RestorePurchase { get; }
+
+		[Field ("ASAuthorizationCustomMethodOther")]
+		NSString Other { get; }
+	}
+
+	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (NSObject))]
+	interface ASAuthorizationPlatformPublicKeyCredentialAssertion : ASAuthorizationPublicKeyCredentialAssertion
+	{
+	}
+
+	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (ASAuthorizationRequest))]
+	[DisableDefaultCtor]
+	interface ASAuthorizationPlatformPublicKeyCredentialRegistrationRequest : ASAuthorizationPublicKeyCredentialRegistrationRequest
+	{
+	}
+
+	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (NSObject))]
+	interface ASAuthorizationSecurityKeyPublicKeyCredentialAssertion : ASAuthorizationPublicKeyCredentialAssertion
+	{
+	}
+
+	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface ASAuthorizationSecurityKeyPublicKeyCredentialRegistration : ASAuthorizationPublicKeyCredentialRegistration
+	{
+	}
+
+	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (NSObject))]
+	interface ASAuthorizationPlatformPublicKeyCredentialRegistration : ASAuthorizationPublicKeyCredentialRegistration
+	{
+	}
 }
