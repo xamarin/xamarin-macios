@@ -645,55 +645,7 @@ namespace Xamarin.Bundler {
 		// if it's later than the timestamp of the "target" file itself.
 		public static bool IsUptodate (IEnumerable<string> sources, IEnumerable<string> targets, bool check_stamp = true)
 		{
-			if (Driver.Force)
-				return false;
-
-			DateTime max_source = DateTime.MinValue;
-			string max_s = null;
-
-			if (sources.Count () == 0 || targets.Count () == 0)
-				throw ErrorHelper.CreateError (1013, Errors.MT1013);
-
-			foreach (var s in sources) {
-				var sfi = new FileInfo (s);
-				if (!sfi.Exists) {
-					Driver.Log (3, "Prerequisite '{0}' does not exist.", s);
-					return false;
-				}
-
-				var st = sfi.LastWriteTimeUtc;
-				if (st > max_source) {
-					max_source = st;
-					max_s = s;
-				}
-			}
-
-
-			foreach (var t in targets) {
-				var tfi = new FileInfo (t);
-				if (!tfi.Exists) {
-					Driver.Log (3, "Target '{0}' does not exist.", t);
-					return false;
-				}
-
-				if (check_stamp) {
-					var tfi_stamp = new FileInfo (t + ".stamp");
-					if (tfi_stamp.Exists && tfi_stamp.LastWriteTimeUtc > tfi.LastWriteTimeUtc) {
-						Driver.Log (3, "Target '{0}' has a stamp file with newer timestamp ({1} > {2}), using the stamp file's timestamp", t, tfi_stamp.LastWriteTimeUtc, tfi.LastWriteTimeUtc);
-						tfi = tfi_stamp;
-					}
-				}
-
-				var lwt = tfi.LastWriteTimeUtc;
-				if (max_source > lwt) {
-					Driver.Log (3, "Prerequisite '{0}' is newer than target '{1}' ({2} vs {3}).", max_s, t, max_source, lwt);
-					return false;
-				}
-			}
-
-			Driver.Log (3, "Prerequisite(s) '{0}' are all older than the target(s) '{1}'.", string.Join ("', '", sources.ToArray ()), string.Join ("', '", targets.ToArray ()));
-
-			return true;
+			return FileCopier.IsUptodate (sources, targets, check_stamp);
 		}
 		
 		public static void UpdateDirectory (string source, string target)
