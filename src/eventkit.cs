@@ -200,21 +200,17 @@ namespace EventKit {
 		EKAlarmProximity Proximity { get; set;  }
 
 #if MONOMAC
-		[NoMacCatalyst]
 		[Export ("type")]
 		EKAlarmType Type { get; }
 
-		[NoMacCatalyst]
 		[NullAllowed]
 		[Export ("emailAddress")]
 		string EmailAddress { get; set; }
 
-		[NoMacCatalyst]
 		[NullAllowed]
 		[Export ("soundName")]
 		string SoundName { get; set; }
 
-		[NoMacCatalyst]
 		[Deprecated (PlatformName.MacOSX, 10, 9)]
 		[NullAllowed]
 		[Export ("url", ArgumentSemantic.Copy)]
@@ -321,7 +317,6 @@ namespace EventKit {
 #if MONOMAC
 		[Availability (Deprecated = Platform.Mac_10_11, Message = "Replaced by 'BirthdayContactIdentifier'.")]
 		[NullAllowed]
-		[NoMacCatalyst]
 		[Export ("birthdayPersonUniqueID")]
 		string BirthdayPersonUniqueID { get; }
 #else
