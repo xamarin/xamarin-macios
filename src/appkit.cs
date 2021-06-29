@@ -26573,38 +26573,9 @@ namespace AppKit {
 		Momentary = 2,
 	}
 
+	[NoWatch, TV (13,0), iOS (13,0)]
 	[Mac (10,15)]
-	[BaseType (typeof(NSObject))]
-	[DisableDefaultCtor]
-	interface NSCollectionLayoutAnchor : NSCopying, INSCopying
-	{
-		[Static]
-		[Export ("layoutAnchorWithEdges:")]
-		NSCollectionLayoutAnchor Create (NSDirectionalRectEdge edges);
-
-		[Static]
-		[Export ("layoutAnchorWithEdges:absoluteOffset:"), Internal]
-		NSCollectionLayoutAnchor _LayoutAnchorWithEdgesAbsoluteOffset (NSDirectionalRectEdge edges, CGPoint absoluteOffset);
-
-		[Static]
-		[Export ("layoutAnchorWithEdges:fractionalOffset:"), Internal]
-		NSCollectionLayoutAnchor _LayoutAnchorWithEdgesFractionalOffset (NSDirectionalRectEdge edges, CGPoint fractionalOffset);
-
-		[Export ("edges")]
-		NSDirectionalRectEdge Edges { get; }
-
-		[Export ("offset")]
-		CGPoint Offset { get; }
-
-		[Export ("isAbsoluteOffset")]
-		bool IsAbsoluteOffset { get; }
-
-		[Export ("isFractionalOffset")]
-		bool IsFractionalOffset { get; }
-	}
-
-	[Mac (10,15)]
-	[BaseType (typeof(NSObject))]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSCollectionLayoutDimension : NSCopying, INSCopying
 	{

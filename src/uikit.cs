@@ -20113,36 +20113,6 @@ namespace UIKit {
 	[NoWatch, TV (13,0), iOS (13,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface NSCollectionLayoutAnchor : NSCopying {
-
-		[Static]
-		[Export ("layoutAnchorWithEdges:")]
-		NSCollectionLayoutAnchor Create (NSDirectionalRectEdge edges);
-
-		[Static]
-		[Export ("layoutAnchorWithEdges:absoluteOffset:")]
-		NSCollectionLayoutAnchor CreateFromAbsoluteOffset (NSDirectionalRectEdge edges, CGPoint absoluteOffset);
-
-		[Static]
-		[Export ("layoutAnchorWithEdges:fractionalOffset:")]
-		NSCollectionLayoutAnchor CreateFromFractionalOffset (NSDirectionalRectEdge edges, CGPoint fractionalOffset);
-
-		[Export ("edges")]
-		NSDirectionalRectEdge Edges { get; }
-
-		[Export ("offset")]
-		CGPoint Offset { get; }
-
-		[Export ("isAbsoluteOffset")]
-		bool IsAbsoluteOffset { get; }
-
-		[Export ("isFractionalOffset")]
-		bool IsFractionalOffset { get; }
-	}
-
-	[NoWatch, TV (13,0), iOS (13,0)]
-	[BaseType (typeof (NSObject))]
-	[DisableDefaultCtor]
 	interface UICommandAlternate : NSCopying, NSSecureCoding {
 
 		[Export ("title")]

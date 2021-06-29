@@ -2289,4 +2289,35 @@ namespace UIKit {
 		void DidProcessEditing (NSTextStorage textStorage, NSTextStorageEditActions editedMask, NSRange editedRange, nint delta);
 	}
 
+	[NoWatch, TV (13,0), iOS (13,0)]
+	[Mac (10,15)]
+	[MacCatalyst (13, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface NSCollectionLayoutAnchor : NSCopying, INSCopying
+	{
+		[Static]
+		[Export ("layoutAnchorWithEdges:")]
+		NSCollectionLayoutAnchor Create (NSDirectionalRectEdge edges);
+
+		[Static]
+		[Export ("layoutAnchorWithEdges:absoluteOffset:")]
+		NSCollectionLayoutAnchor CreateFromAbsoluteOffset (NSDirectionalRectEdge edges, CGPoint absoluteOffset);
+
+		[Static]
+		[Export ("layoutAnchorWithEdges:fractionalOffset:")]
+		NSCollectionLayoutAnchor CreateFromFractionalOffset (NSDirectionalRectEdge edges, CGPoint fractionalOffset);
+
+		[Export ("edges")]
+		NSDirectionalRectEdge Edges { get; }
+
+		[Export ("offset")]
+		CGPoint Offset { get; }
+
+		[Export ("isAbsoluteOffset")]
+		bool IsAbsoluteOffset { get; }
+
+		[Export ("isFractionalOffset")]
+		bool IsFractionalOffset { get; }
+	}
 }
