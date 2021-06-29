@@ -307,6 +307,11 @@ namespace iTunesLibrary {
 		[Export ("name")]
 		string Name { get; }
 
+		[Introduced (PlatformName.MacOSX, 10, 6, message: "Use 'isPrimary' instead.")]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'isPrimary' instead.")]
+		[Export ("master")]
+		bool Master { [Bind ("isMaster")] get; }
+
 		[Mac (12,0)]
 		[Export ("primary")]
 		bool Primary { [Bind ("isPrimary")] get; }
@@ -328,11 +333,6 @@ namespace iTunesLibrary {
 
 		[Export ("kind", ArgumentSemantic.Assign)]
 		ITLibPlaylistKind Kind { get; }
-
-		[Introduced (PlatformName.MacOSX, 10, 6, message: "Use 'isPrimary' instead.")]
-		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'isPrimary' instead.")]
-		[Export ("master")]
-		bool Master { [Bind ("isMaster")] get; }
 	}
 
 	[Mac (10,14)]
