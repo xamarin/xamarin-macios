@@ -146,44 +146,7 @@ public class Cache {
 			return false;
 		}
 
-		var ab = new byte[2048];
-		var bb = new byte[2048];
-		
-		do {
-			int ar = astream.Read (ab, 0, ab.Length);
-			int br = bstream.Read (bb, 0, bb.Length);
-
-			if (ar != br) {
-				Driver.Log (6, " > streams are considered different because their lengths do not match.");
-				return false;
-			}
-
-			if (ar == 0)
-				return true;
-
-			fixed (byte *aptr = ab, bptr = bb) {
-				long *l1 = (long *) aptr;
-				long *l2 = (long *) bptr;
-				int len = ar;
-				// Compare one long at a time.
-				for (int i = 0; i < len / 8; i++) {
-					if (l1 [i] != l2 [i]) {
-						Driver.Log (6, " > streams differ at index {0}-{1}", i, i + 8);
-						return false;
-					}
-				}
-				// Compare any remaining bytes.
-				int mod = len % 8;
-				if (mod > 0) {
-					for (int i = len - mod; i < len; i++) {
-						if (ab [i] != bb [i]) {						
-							Driver.Log (6, " > streams differ at byte index {0}", i);
-							return false;
-						}
-					}
-				}
-			}
-		} while (true);
+		return FileUtils.CompareStreams (astream, bstream);
 	}
 	
 	string GetArgumentsForCacheData (Application app)
