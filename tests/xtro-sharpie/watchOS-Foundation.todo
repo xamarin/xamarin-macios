@@ -132,3 +132,7 @@
 !missing-type! NSMorphology not bound
 !missing-type! NSMorphologyCustomPronoun not bound
 !missing-type! NSPresentationIntent not bound
+!missing-enum-value! NSUrlBookmarkCreationOptions native value NSURLBookmarkCreationWithoutImplicitSecurityScope = 536870912 not bound
+!missing-enum-value! NSUrlBookmarkResolutionOptions native value NSURLBookmarkResolutionWithoutImplicitStartAccessing = 32768 not bound
+!missing-selector! NSPersonNameComponentsFormatter::locale not bound
+!missing-selector! NSPersonNameComponentsFormatter::setLocale: not bound

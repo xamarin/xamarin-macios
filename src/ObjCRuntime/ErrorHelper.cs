@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using ProductException=ObjCRuntime.RuntimeException;
 #endif
 
-#if BUNDLER
+#if BUNDLER || MSBUILD_TASKS
 namespace Xamarin.Bundler {
 #else
 namespace ObjCRuntime {
