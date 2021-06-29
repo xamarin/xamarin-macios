@@ -133,3 +133,4 @@
 !missing-protocol! NSFileProviderUserInteractionSuppressing not bound
 !missing-protocol-member! NSFileProviderItem::typeAndCreator not found
 !missing-selector! +NSFileProviderManager::removeDomain:mode:completionHandler: not bound
+!missing-selector! NSFileProviderDomain::backingStoreIdentity not bound

@@ -73,3 +73,7 @@
 !missing-type! MEMessageSecurityInformation not bound
 !missing-type! MEMessageSigner not bound
 !missing-type! MEOutgoingMessageEncodingStatus not bound
+!missing-selector! MEEmailAddress::addressString not bound
+!missing-selector! MEEmailAddress::initWithRawString: not bound
+!missing-selector! MEEmailAddress::rawString not bound
+!missing-type! MEEmailAddress not bound

@@ -272,6 +272,7 @@ void			xamarin_get_assembly_name_without_extension (const char *aname, char *nam
 bool			xamarin_locate_assembly_resource_for_name (MonoAssemblyName *assembly_name, const char *resource, char *path, size_t pathlen);
 bool			xamarin_locate_assembly_resource_for_root (const char *root, const char *culture, const char *resource, char *path, size_t pathlen);
 bool			xamarin_locate_assembly_resource (const char *assembly_name, const char *culture, const char *resource, char *path, size_t pathlen);
+bool			xamarin_locate_app_resource (const char *resource, char *path, size_t pathlen);
 
 // this functions support NSLog/NSString-style format specifiers.
 void			xamarin_printf (const char *format, ...);

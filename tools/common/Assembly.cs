@@ -717,7 +717,7 @@ namespace Xamarin.Bundler {
 				if (!Application.IsUptodate (source, target) && (strip_assembly || !Cache.CompareAssemblies (source, target))) {
 					copied = true;
 					if (strip_assembly) {
-						Driver.FileDelete (target);
+						PathUtils.FileDelete (target);
 						Directory.CreateDirectory (Path.GetDirectoryName (target));
 						MonoTouch.Tuner.Stripper.Process (source, target);
 					} else {
