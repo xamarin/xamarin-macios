@@ -1649,7 +1649,7 @@ namespace Chip {
 		bool Startup ([NullAllowed] IChipPersistentStorageDelegate storageDelegate);
 
 		[Export ("shutdown")]
-		bool Shutdown();
+		bool Shutdown ();
 	}
 
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
@@ -1664,7 +1664,7 @@ namespace Chip {
 
 		[Static]
 		[Export ("errorToCHIPErrorCode:")]
-		int ToChipErrorCode (NSError errorCode);
+		int ConvertToChipErrorCode (NSError errorCode);
 	}
 
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
