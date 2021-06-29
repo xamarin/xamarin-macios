@@ -953,64 +953,49 @@ namespace AuthenticationServices {
 		void CancelRequest ();
 	}
 
-	[Static]
 	[iOS (15,0), Mac (12,0), MacCatalyst (15,0), NoWatch, NoTV]
-	[BaseType (typeof (NSObject))]
-	interface ASAuthorizationPublicKeyCredentialAttestationKind {
+	enum ASAuthorizationPublicKeyCredentialAttestationKind {
 		[Field ("ASAuthorizationPublicKeyCredentialAttestationKindNone")]
-		NSString None { get; }
-
+		None,
 		[Field ("ASAuthorizationPublicKeyCredentialAttestationKindDirect")]
-		NSString Direct { get; }
-
+		Direct,
 		[Field ("ASAuthorizationPublicKeyCredentialAttestationKindIndirect")]
-		NSString Indirect { get; }
-
+		Indirect,
 		[Field ("ASAuthorizationPublicKeyCredentialAttestationKindEnterprise")]
-		NSString Enterprise { get; }
+		Enterprise,
 	}
 
-	[Static]
 	[iOS (15,0), Mac (12,0), MacCatalyst (15,0), NoWatch, NoTV]
-	[BaseType (typeof (NSObject))]
-	interface ASAuthorizationPublicKeyCredentialUserVerificationPreference {
+	enum ASAuthorizationPublicKeyCredentialUserVerificationPreference {
 		[Field ("ASAuthorizationPublicKeyCredentialUserVerificationPreferencePreferred")]
-		NSString Preferred { get; }
-
+		Preferred,
 		[Field ("ASAuthorizationPublicKeyCredentialUserVerificationPreferenceRequired")]
-		NSString Required { get; }
-
+		Required,
 		[Field ("ASAuthorizationPublicKeyCredentialUserVerificationPreferenceDiscouraged")]
-		NSString Discouraged { get; }
+		Discouraged,
 	}
 
-	[Static]
 	[iOS (15,0), Mac (12,0), MacCatalyst (15,0), NoWatch, NoTV]
-	[BaseType (typeof (NSObject))]
-	interface ASAuthorizationPublicKeyCredentialResidentKeyPreference {
+	enum ASAuthorizationPublicKeyCredentialResidentKeyPreference {
 		[Field ("ASAuthorizationPublicKeyCredentialResidentKeyPreferenceDiscouraged")]
-		NSString Discouraged { get; }
-
+		Discouraged,
 		[Field ("ASAuthorizationPublicKeyCredentialResidentKeyPreferencePreferred")]
-		NSString Preferred { get; }
-
+		Preferred,
 		[Field ("ASAuthorizationPublicKeyCredentialResidentKeyPreferenceRequired")]
-		NSString Required { get; }
+		Required,
 	}
 
-	[Static]
 	[iOS (15,0), Mac (12,0), MacCatalyst (15,0), NoWatch, NoTV]
-	[BaseType (typeof (NSObject))]
-	interface ASAuthorizationSecurityKeyPublicKeyCredentialDescriptorTransport {
+	enum ASAuthorizationSecurityKeyPublicKeyCredentialDescriptorTransport {
 		[Field ("ASAuthorizationSecurityKeyPublicKeyCredentialDescriptorTransportUSB")]
-		NSString Usb { get; }
-
+		Usb,
 		[Field ("ASAuthorizationSecurityKeyPublicKeyCredentialDescriptorTransportNFC")]
-		NSString Nfc { get; }
-
+		Nfc,
 		[Field ("ASAuthorizationSecurityKeyPublicKeyCredentialDescriptorTransportBluetooth")]
-		NSString Bluetooth { get; }
+		Bluetooth,
 	}
+
+	interface IASAuthorizationPublicKeyCredentialAssertion { }
 
 	[NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoTV]
 	[Protocol]
@@ -1232,7 +1217,7 @@ namespace AuthenticationServices {
 	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (ASAuthorizationRequest))]
 	[DisableDefaultCtor]
-	interface ASAuthorizationSecurityKeyPublicKeyCredentialRegistrationRequest : ASAuthorizationPublicKeyCredentialRegistrationRequest
+	interface ASAuthorizationSecurityKeyPublicKeyCredentialRegistrationRequest : IASAuthorizationPublicKeyCredentialRegistrationRequest
 	{
 		[Export ("credentialParameters", ArgumentSemantic.Copy)]
 		ASAuthorizationPublicKeyCredentialParameters[] CredentialParameters { get; set; }
@@ -1246,49 +1231,44 @@ namespace AuthenticationServices {
 
 	[Static]
 	[TV (15,0), NoWatch, NoiOS, NoMac, NoMacCatalyst]
-	[BaseType (typeof (ASAuthorizationRequest))]
-	[DisableDefaultCtor]
-	interface ASAuthorizationCustomMethod
+	enum ASAuthorizationCustomMethod
 	{
-		[TV (15, 0), NoWatch, NoMac, NoiOS]
 		[Field ("ASAuthorizationCustomMethodVideoSubscriberAccount")]
-		NSString SubscriberAccount { get; }
-
-		[TV (15, 0), NoWatch, NoMac, NoiOS]
+		SubscriberAccount,
 		[Field ("ASAuthorizationCustomMethodRestorePurchase")]
-		NSString RestorePurchase { get; }
-
-		[TV (15, 0), NoWatch, NoMac, NoiOS]
+		RestorePurchase,
 		[Field ("ASAuthorizationCustomMethodOther")]
-		NSString Other { get; }
+		Other,
 	}
 
-	// [NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	// [BaseType (typeof (NSObject))]
-	// [DisableDefaultCtor]
-	// interface ASAuthorizationPlatformPublicKeyCredentialAssertion : ASAuthorizationPublicKeyCredentialAssertion
-	// {
-	// }
+	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (NSObject))]
+	interface ASAuthorizationPlatformPublicKeyCredentialAssertion : IASAuthorizationPublicKeyCredentialAssertion
+	{
+	}
 
-	// [NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	// [BaseType (typeof (ASAuthorizationRequest))]
-	// [DisableDefaultCtor]
-	// interface ASAuthorizationPlatformPublicKeyCredentialRegistrationRequest : ASAuthorizationPublicKeyCredentialRegistrationRequest
-	// {
-	// }
+	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (ASAuthorizationRequest))]
+	interface ASAuthorizationPlatformPublicKeyCredentialRegistrationRequest : IASAuthorizationPublicKeyCredentialRegistrationRequest
+	{
+	}
 
-	// [NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	// [BaseType (typeof (NSObject))]
-	// [DisableDefaultCtor]
-	// interface ASAuthorizationSecurityKeyPublicKeyCredentialAssertion : ASAuthorizationPublicKeyCredentialAssertion
-	// {
-	// }
+	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (NSObject))]
+	interface ASAuthorizationSecurityKeyPublicKeyCredentialAssertion : ASAuthorizationPublicKeyCredentialAssertion
+	{
+	}
 
-	// [NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	// [BaseType (typeof (NSObject))]
-	// [DisableDefaultCtor]
-	// interface ASAuthorizationSecurityKeyPublicKeyCredentialRegistration : ASAuthorizationPublicKeyCredentialRegistration
-	// {
-	// }
+	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface ASAuthorizationSecurityKeyPublicKeyCredentialRegistration : ASAuthorizationPublicKeyCredentialRegistration
+	{
+	}
 
+	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (NSObject))]
+	interface ASAuthorizationPlatformPublicKeyCredentialRegistration : ASAuthorizationPublicKeyCredentialRegistration
+	{
+	}
 }

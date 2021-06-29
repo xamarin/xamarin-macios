@@ -16,8 +16,9 @@ using ObjCRuntime;
 
 namespace AuthenticationServices {
 
+    // authenticationservices.cs contain the following attributes for this class
+    // [NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 	public static partial class PublicPrivateKeyAuthentication {
-		[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
         [DllImport ("__Internal")]
         static extern /* NSString[] */ IntPtr AllSupportedPublicKeyCredentialDescriptorTransports ();
 
