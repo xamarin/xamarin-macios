@@ -5112,28 +5112,6 @@ namespace AppKit {
 		NSObject Delegate { get; }  
 	}	
 
-	[Mac (10,11)]
-	[BaseType (typeof(NSObject))]
-	[DisableDefaultCtor] // - (instancetype)init NS_UNAVAILABLE;
-	interface NSDataAsset : NSCopying
-	{
-		[Export ("initWithName:")]
-		IntPtr Constructor (string name);
-
-		[Export ("initWithName:bundle:")]
-		[DesignatedInitializer]
-		IntPtr Constructor (string name, NSBundle bundle);
-
-		[Export ("name")]
-		string Name { get; }
-
-		[Export ("data", ArgumentSemantic.Copy)]
-		NSData Data { get; }
-
-		[Export ("typeIdentifier")] // Uniform Type Identifier
-		NSString TypeIdentifier { get; }
-	}
-
 	[BaseType (typeof (NSControl), Delegates=new string [] {"WeakDelegate"}, Events=new Type [] {typeof (NSDatePickerCellDelegate)})]
 	interface NSDatePicker {
 		[Export ("initWithFrame:")]

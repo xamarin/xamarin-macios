@@ -2558,4 +2558,27 @@ namespace UIKit {
 		string ElementKind { get; }
 	}
 
+	[iOS (9,0), Watch (2,0)]
+	[MacCatalyst (13,0)]
+	[Mac (10,11)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor] // - (instancetype)init NS_UNAVAILABLE;
+	interface NSDataAsset : NSCopying
+	{
+		[Export ("initWithName:")]
+		IntPtr Constructor (string name);
+
+		[Export ("initWithName:bundle:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string name, NSBundle bundle);
+
+		[Export ("name")]
+		string Name { get; }
+
+		[Export ("data", ArgumentSemantic.Copy)]
+		NSData Data { get; }
+
+		[Export ("typeIdentifier")] // Uniform Type Identifier
+		NSString TypeIdentifier { get; }
+	}
 }

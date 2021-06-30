@@ -19464,28 +19464,6 @@ namespace UIKit {
 	}
 #endif // !WATCH
 
-	[iOS (9,0), Watch (2,0)]
-	[BaseType (typeof (NSObject))]
-	[DisableDefaultCtor] // NSInvalidArgumentException Reason: -[NSDataAsset init]: unrecognized selector sent to instance 0x7f6c8cc0
-	interface NSDataAsset : NSCopying {
-
-		[Export ("initWithName:")]
-		IntPtr Constructor (string name);
-
-		[DesignatedInitializer]
-		[Export ("initWithName:bundle:")]
-		IntPtr Constructor (string name, NSBundle bundle);
-	
-		[Export ("name")]
-		string Name { get; }
-	
-		[Export ("data", ArgumentSemantic.Copy)]
-		NSData Data { get; }
-	
-		[Export ("typeIdentifier")]
-		NSString TypeIdentifier { get; }
-	}
-
 	[iOS (13,0), TV (13,0), NoWatch]
 	[BaseType (typeof (NSObject), Name = "UIOpenURLContext")]
 	[DisableDefaultCtor]
