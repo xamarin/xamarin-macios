@@ -2602,17 +2602,6 @@ namespace UIKit {
 		GroupPagingCentered,
 	}
 
-	[Flags, Watch (6,0), TV (13,0), iOS (13,0)]
-	[Native]
-	public enum NSDirectionalRectEdge : ulong {
-		None = 0x0,
-		Top = 1uL << 0,
-		Leading = 1uL << 1,
-		Bottom = 1uL << 2,
-		Trailing = 1uL << 3,
-		All = Top | Leading | Bottom | Trailing,
-	}
-
 	[Watch (6,0), TV (13,0), iOS (13,0)]
 	[Native]
 	public enum NSRectAlignment : long {

@@ -82,6 +82,19 @@ namespace UIKit {
 	delegate void NSTextLayoutEnumerateEnclosingRects (CGRect rect, ref bool stop);
 #endif
 
+	[Mac (10,15), Watch (6,0), TV (13,0), iOS (13,0), MacCatalyst (13,0)]
+	[Flags]
+	[Native]
+	public enum NSDirectionalRectEdge : ulong
+	{
+		None = 0x0,
+		Top = 1uL << 0,
+		Leading = 1uL << 1,
+		Bottom = 1uL << 2,
+		Trailing = 1uL << 3,
+		All = Top | Leading | Bottom | Trailing,
+	}
+
 	[NoWatch] // Header is not present in watchOS SDK.
 	[iOS (7,0)]
 	[DesignatedDefaultCtor]
