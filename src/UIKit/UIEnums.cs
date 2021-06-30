@@ -2502,20 +2502,6 @@ namespace UIKit {
 		GroupPagingCentered,
 	}
 
-	[Watch (6,0), TV (13,0), iOS (13,0)]
-	[Native]
-	public enum NSRectAlignment : long {
-		None = 0,
-		Top,
-		TopLeading,
-		Leading,
-		BottomLeading,
-		Bottom,
-		BottomTrailing,
-		Trailing,
-		TopTrailing,
-	}
-
 	[TV (13,0), NoWatch, iOS (13,0)]
 	[Native]
 	public enum UIAccessibilityContrast : long {

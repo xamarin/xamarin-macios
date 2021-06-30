@@ -26361,21 +26361,6 @@ namespace AppKit {
 
 	[Mac (10,15)]
 	[Native]
-	public enum NSRectAlignment : long
-	{
-		None = 0,
-		Top,
-		TopLeading,
-		Leading,
-		BottomLeading,
-		Bottom,
-		BottomTrailing,
-		Trailing,
-		TopTrailing,
-	}
-
-	[Mac (10,15)]
-	[Native]
 	public enum NSTextInputTraitType : long
 	{
 		Default,
