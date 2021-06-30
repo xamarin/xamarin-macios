@@ -307,7 +307,7 @@ namespace iTunesLibrary {
 		[Export ("name")]
 		string Name { get; }
 
-		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'isPrimary' instead.")]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'Primary' instead.")]
 		[Export ("master")]
 		bool Master { [Bind ("isMaster")] get; }
 
