@@ -1006,7 +1006,7 @@ namespace AuthenticationServices {
 
 		[Abstract]
 		[Export ("userID", ArgumentSemantic.Copy)]
-		NSData UserID { get; }
+		NSData UserId { get; }
 
 		[Abstract]
 		[Export ("signature", ArgumentSemantic.Copy)]
@@ -1044,7 +1044,7 @@ namespace AuthenticationServices {
 	{
 		[Abstract]
 		[Export ("credentialID", ArgumentSemantic.Copy)]
-		NSData CredentialID { get; set; }
+		NSData CredentialId { get; set; }
 	}
 
 	[NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoTV]
@@ -1066,7 +1066,7 @@ namespace AuthenticationServices {
 
 		[Abstract]
 		[Export ("userID", ArgumentSemantic.Copy)]
-		NSData UserID { get; set; }
+		NSData UserId { get; set; }
 
 		[Abstract]
 		[Export ("name")]
@@ -1114,7 +1114,7 @@ namespace AuthenticationServices {
 	{
 		[Export ("initWithCredentialID:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSData credentialID);
+		IntPtr Constructor (NSData credentialId);
 	}
 
 	[NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoTV]
@@ -1127,7 +1127,7 @@ namespace AuthenticationServices {
 		IntPtr Constructor (string relyingPartyIdentifier);
 
 		[Export ("createCredentialRegistrationRequestWithChallenge:name:userID:")]
-		ASAuthorizationPlatformPublicKeyCredentialRegistrationRequest CreateCredentialRegistrationRequestWithChallenge (NSData challenge, string name, NSData userID);
+		ASAuthorizationPlatformPublicKeyCredentialRegistrationRequest CreateCredentialRegistrationRequestWithChallenge (NSData challenge, string name, NSData userId);
 
 		[Export ("createCredentialAssertionRequestWithChallenge:")]
 		ASAuthorizationPlatformPublicKeyCredentialAssertionRequest CreateCredentialAssertionRequestWithChallenge (NSData challenge);
@@ -1187,7 +1187,7 @@ namespace AuthenticationServices {
 	{
 		[Export ("initWithCredentialID:transports:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSData credentialID, string[] allowedTransports);
+		IntPtr Constructor (NSData credentialId, string[] allowedTransports);
 
 		[Export ("transports", ArgumentSemantic.Assign)]
 		string[] Transports { get; set; }
@@ -1203,7 +1203,7 @@ namespace AuthenticationServices {
 		IntPtr Constructor (string relyingPartyIdentifier);
 
 		[Export ("createCredentialRegistrationRequestWithChallenge:displayName:name:userID:")]
-		ASAuthorizationSecurityKeyPublicKeyCredentialRegistrationRequest Create (NSData challenge, string displayName, string name, NSData userID);
+		ASAuthorizationSecurityKeyPublicKeyCredentialRegistrationRequest Create (NSData challenge, string displayName, string name, NSData userId);
 
 		[Export ("createCredentialAssertionRequestWithChallenge:")]
 		ASAuthorizationSecurityKeyPublicKeyCredentialAssertionRequest Create (NSData challenge);

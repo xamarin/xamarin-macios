@@ -22,7 +22,7 @@ namespace AuthenticationServices {
     // authenticationservices.cs contain the following attributes for this class
     // [NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 	public static partial class PublicPrivateKeyAuthentication {
-        [DllImport ("__Internal")]
+        [DllImport (Constants.AuthenticationServicesLibrary)]
         static extern /* NSString[] */ IntPtr AllSupportedPublicKeyCredentialDescriptorTransports ();
 
         public static NSString[] GetAllSupportedPublicKeyCredentialDescriptorTransports () {
