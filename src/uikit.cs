@@ -371,32 +371,6 @@ namespace UIKit {
 	}
 #endif // !WATCH
 
-	[iOS (7,0)]
-	[BaseType (typeof (NSObject))]
-	interface NSTextTab : NSCoding, NSCopying, NSSecureCoding {
-
-		[DesignatedInitializer]
-		[Export ("initWithTextAlignment:location:options:")]
-		[PostGet ("Options")]
-		IntPtr Constructor (UITextAlignment alignment, nfloat location, NSDictionary options);
-
-		[Export ("alignment")]
-		UITextAlignment Alignment { get; }
-
-		[Export ("location")]
-		nfloat Location { get; }
-
-		[Export ("options")]
-		NSDictionary Options { get; }
-
-		[Static]
-		[Export ("columnTerminatorsForLocale:")]
-		NSCharacterSet GetColumnTerminators ([NullAllowed] NSLocale locale);
-
-		[Field ("NSTabColumnTerminatorsAttributeName")]
-		NSString ColumnTerminatorsAttributeName { get; }
-	}
-
 #if !WATCH
 	[Protocol]
 	// no [Model] since it's not exposed in any API 

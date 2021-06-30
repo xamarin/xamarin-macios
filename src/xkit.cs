@@ -30,6 +30,7 @@ using NSTextAttachmentCell=System.Object;
 using NSTextBlock=System.Object;
 using NSTextList=System.Object;
 using NSTextTableBlock=System.Object;
+using NSTextTabType=System.Object;
 using NSTextStorageEditedFlags=System.Object;
 using NSTextView=System.Object;
 using NSTypesetter=System.Object;
@@ -2603,5 +2604,40 @@ namespace UIKit {
 		[Export ("shadowColor", ArgumentSemantic.Retain), NullAllowed]
 #endif
 		NSColor ShadowColor { get; set;  }
+	}
+
+	[iOS (7,0)]
+	[MacCatalyst (13,0)]
+	[BaseType (typeof (NSObject))]
+	interface NSTextTab : NSSecureCoding, NSCopying {
+		[DesignatedInitializer]
+		[Export ("initWithTextAlignment:location:options:")]
+		[PostGet ("Options")]
+		IntPtr Constructor (TextAlignment alignment, nfloat location, NSDictionary options);
+
+		[NoiOS][NoMacCatalyst][NoTV][NoWatch]
+		[Export ("initWithType:location:")]
+		IntPtr Constructor (NSTextTabType type, nfloat location);
+
+		[Export ("alignment")]
+		TextAlignment Alignment { get; }
+
+		[Export ("options")]
+		NSDictionary Options { get; }
+
+		[Export ("location")]
+		nfloat Location { get; }
+
+		[NoiOS][NoMacCatalyst][NoTV][NoWatch]
+		[Export ("tabStopType")]
+		NSTextTabType TabStopType { get; }
+
+		[Mac (10,11)]
+		[Static]
+		[Export ("columnTerminatorsForLocale:")]
+		NSCharacterSet GetColumnTerminators ([NullAllowed] NSLocale locale);
+
+		[Field ("NSTabColumnTerminatorsAttributeName")]
+		NSString ColumnTerminatorsAttributeName { get; }
 	}
 }

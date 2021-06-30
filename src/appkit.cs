@@ -18280,33 +18280,6 @@ namespace AppKit {
 		CGRect GetLineFragmentRect (CGRect proposedRect, nuint characterIndex, NSWritingDirection baseWritingDirection, ref CGRect remainingRect);
 	}
 
-	[BaseType (typeof (NSObject))]
-	interface NSTextTab : NSSecureCoding, NSCopying {
-		[DesignatedInitializer]
-		[Export ("initWithTextAlignment:location:options:")]
-		IntPtr Constructor (NSTextAlignment alignment, nfloat loc, NSDictionary options);
-
-		[Export ("alignment")]
-		NSTextAlignment Alignment { get; }
-
-		[Export ("options")]
-		NSDictionary Options { get; }
-
-		[Export ("initWithType:location:")]
-		IntPtr Constructor (NSTextTabType type, nfloat loc);
-
-		[Export ("location")]
-		nfloat Location { get; }
-
-		[Export ("tabStopType")]
-		NSTextTabType TabStopType { get; }
-
-		[Mac (10,11)]
-		[Static]
-		[Export ("columnTerminatorsForLocale:")]
-		NSCharacterSet GetColumnTerminators ([NullAllowed] NSLocale locale);
-	}
-
 	[Protocol]
 	interface NSTextInput
 	{
