@@ -2320,4 +2320,242 @@ namespace UIKit {
 		[Export ("isFractionalOffset")]
 		bool IsFractionalOffset { get; }
 	}
+
+	[NoWatch, TV (13,0), iOS (13,0)]
+	[Mac (10,15)]
+	[MacCatalyst (13, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface NSCollectionLayoutDimension : NSCopying
+	{
+		[Static]
+		[Export ("fractionalWidthDimension:")]
+#if MONOMAC && !XAMCORE_4_0
+		NSCollectionLayoutDimension CreateFractionalWidthDimension (nfloat fractionalWidth);
+#else
+		NSCollectionLayoutDimension CreateFractionalWidth (nfloat fractionalWidth);
+#endif
+
+		[Static]
+		[Export ("fractionalHeightDimension:")]
+#if MONOMAC && !XAMCORE_4_0
+		NSCollectionLayoutDimension CreateFractionalHeightDimension (nfloat fractionalHeight);
+#else
+		NSCollectionLayoutDimension CreateFractionalHeight (nfloat fractionalHeight);
+#endif
+
+		[Static]
+		[Export ("absoluteDimension:")]
+#if MONOMAC && !XAMCORE_4_0
+		NSCollectionLayoutDimension CreateAbsoluteDimension (nfloat absoluteDimension);
+#else
+		NSCollectionLayoutDimension CreateAbsolute (nfloat absoluteDimension);
+#endif
+
+		[Static]
+		[Export ("estimatedDimension:")]
+#if MONOMAC && !XAMCORE_4_0
+		NSCollectionLayoutDimension CreateEstimatedDimension (nfloat estimatedDimension);
+#else
+		NSCollectionLayoutDimension CreateEstimated (nfloat estimatedDimension);
+#endif
+
+		[Export ("isFractionalWidth")]
+		bool IsFractionalWidth { get; }
+
+		[Export ("isFractionalHeight")]
+		bool IsFractionalHeight { get; }
+
+		[Export ("isAbsolute")]
+		bool IsAbsolute { get; }
+
+		[Export ("isEstimated")]
+		bool IsEstimated { get; }
+
+		[Export ("dimension")]
+		nfloat Dimension { get; }
+	}
+
+
+	[NoWatch, TV (13,0), iOS (13,0)]
+	[MacCatalyst (13, 0)]
+	[Mac (10,15)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface NSCollectionLayoutSize : NSCopying
+	{
+		[Static]
+		[Export ("sizeWithWidthDimension:heightDimension:")]
+		NSCollectionLayoutSize Create (NSCollectionLayoutDimension width, NSCollectionLayoutDimension height);
+
+		[Export ("widthDimension")]
+		NSCollectionLayoutDimension WidthDimension { get; }
+
+		[Export ("heightDimension")]
+		NSCollectionLayoutDimension HeightDimension { get; }
+	}
+
+	[NoWatch, TV (13,0), iOS (13,0)]
+	[MacCatalyst (13, 0)]
+	[Mac (10,15)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface NSCollectionLayoutSpacing : NSCopying
+	{
+		[Static]
+		[Export ("flexibleSpacing:")]
+#if MONOMAC && !XAMCORE_4_0
+		NSCollectionLayoutSpacing CreateFlexibleSpacing (nfloat flexibleSpacing);
+#else
+		NSCollectionLayoutSpacing CreateFlexible (nfloat flexibleSpacing);
+#endif
+
+		[Static]
+		[Export ("fixedSpacing:")]
+#if MONOMAC && !XAMCORE_4_0
+		NSCollectionLayoutSpacing CreateFixedSpacing (nfloat fixedSpacing);
+#else
+		NSCollectionLayoutSpacing CreateFixed (nfloat fixedSpacing);
+#endif
+
+		[Export ("spacing")]
+		nfloat Spacing { get; }
+
+		[Export ("isFlexibleSpacing")]
+		bool IsFlexibleSpacing { get; }
+
+		[Export ("isFixedSpacing")]
+		bool IsFixedSpacing { get; }
+	}
+
+	[NoWatch, TV (13,0), iOS (13,0)]
+	[MacCatalyst (13, 0)]
+	[Mac (10,15)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface NSCollectionLayoutEdgeSpacing : NSCopying
+	{
+		[Static]
+		[Export ("spacingForLeading:top:trailing:bottom:")]
+#if MONOMAC && !XAMCORE_4_0
+		NSCollectionLayoutEdgeSpacing CreateSpacing ([NullAllowed] NSCollectionLayoutSpacing leading, [NullAllowed] NSCollectionLayoutSpacing top, [NullAllowed] NSCollectionLayoutSpacing trailing, [NullAllowed] NSCollectionLayoutSpacing bottom);
+#else
+		NSCollectionLayoutEdgeSpacing Create ([NullAllowed] NSCollectionLayoutSpacing leading, [NullAllowed] NSCollectionLayoutSpacing top, [NullAllowed] NSCollectionLayoutSpacing trailing, [NullAllowed] NSCollectionLayoutSpacing bottom);
+#endif
+
+		[NullAllowed, Export ("leading")]
+		NSCollectionLayoutSpacing Leading { get; }
+
+		[NullAllowed, Export ("top")]
+		NSCollectionLayoutSpacing Top { get; }
+
+		[NullAllowed, Export ("trailing")]
+		NSCollectionLayoutSpacing Trailing { get; }
+
+		[NullAllowed, Export ("bottom")]
+		NSCollectionLayoutSpacing Bottom { get; }
+	}
+
+	[NoWatch, TV (13,0), iOS (13,0)]
+	[MacCatalyst (13, 0)]
+	[Mac (10,15)]
+	[BaseType (typeof (NSCollectionLayoutItem))]
+	[DisableDefaultCtor]
+	interface NSCollectionLayoutSupplementaryItem : NSCopying
+	{
+		[Static]
+		[Export ("supplementaryItemWithLayoutSize:elementKind:containerAnchor:")]
+		NSCollectionLayoutSupplementaryItem Create (NSCollectionLayoutSize layoutSize, string elementKind, NSCollectionLayoutAnchor containerAnchor);
+
+		[Static]
+		[Export ("supplementaryItemWithLayoutSize:elementKind:containerAnchor:itemAnchor:")]
+		NSCollectionLayoutSupplementaryItem Create (NSCollectionLayoutSize layoutSize, string elementKind, NSCollectionLayoutAnchor containerAnchor, NSCollectionLayoutAnchor itemAnchor);
+
+		[Export ("zIndex")]
+		nint ZIndex { get; set; }
+
+		[Export ("elementKind")]
+		string ElementKind { get; }
+
+		[Export ("containerAnchor")]
+		NSCollectionLayoutAnchor ContainerAnchor { get; }
+
+		[NullAllowed, Export ("itemAnchor")]
+		NSCollectionLayoutAnchor ItemAnchor { get; }
+	}
+
+	[NoWatch, TV (13,0), iOS (13,0)]
+	[MacCatalyst (13, 0)]
+	[Mac (10,15)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface NSCollectionLayoutItem : NSCopying
+	{
+		[Static]
+		[Export ("itemWithLayoutSize:")]
+		NSCollectionLayoutItem Create (NSCollectionLayoutSize layoutSize);
+
+		[Static]
+		[Export ("itemWithLayoutSize:supplementaryItems:")]
+		NSCollectionLayoutItem Create (NSCollectionLayoutSize layoutSize, params NSCollectionLayoutSupplementaryItem[] supplementaryItems);
+
+		[Export ("contentInsets", ArgumentSemantic.Assign)]
+		NSDirectionalEdgeInsets ContentInsets { get; set; }
+
+		[NullAllowed, Export ("edgeSpacing", ArgumentSemantic.Copy)]
+		NSCollectionLayoutEdgeSpacing EdgeSpacing { get; set; }
+
+		[Export ("layoutSize")]
+		NSCollectionLayoutSize LayoutSize { get; }
+
+		[Export ("supplementaryItems")]
+		NSCollectionLayoutSupplementaryItem[] SupplementaryItems { get; }
+	}
+
+	[NoWatch, TV (13,0), iOS (13,0)]
+	[MacCatalyst (13, 0)]
+	[Mac (10,15)]
+	[BaseType (typeof (NSCollectionLayoutSupplementaryItem))]
+	[DisableDefaultCtor]
+	interface NSCollectionLayoutBoundarySupplementaryItem : NSCopying
+	{
+		[Static]
+		[Export ("boundarySupplementaryItemWithLayoutSize:elementKind:alignment:")]
+		NSCollectionLayoutBoundarySupplementaryItem Create (NSCollectionLayoutSize layoutSize, string elementKind, NSRectAlignment alignment);
+
+		[Static]
+		[Export ("boundarySupplementaryItemWithLayoutSize:elementKind:alignment:absoluteOffset:")]
+		NSCollectionLayoutBoundarySupplementaryItem Create (NSCollectionLayoutSize layoutSize, string elementKind, NSRectAlignment alignment, CGPoint absoluteOffset);
+
+		[Export ("extendsBoundary")]
+		bool ExtendsBoundary { get; set; }
+
+		[Export ("pinToVisibleBounds")]
+		bool PinToVisibleBounds { get; set; }
+
+		[Export ("alignment")]
+		NSRectAlignment Alignment { get; }
+
+		[Export ("offset")]
+		CGPoint Offset { get; }
+	}
+
+	[MacCatalyst (13, 0)]
+	[NoWatch, TV (13,0), iOS (13,0)]
+	[Mac (10,15)]
+	[BaseType (typeof (NSCollectionLayoutItem))]
+	[DisableDefaultCtor]
+	interface NSCollectionLayoutDecorationItem : NSCopying
+	{
+		[Static]
+		[Export ("backgroundDecorationItemWithElementKind:")]
+		NSCollectionLayoutDecorationItem Create (string elementKind);
+
+		[Export ("zIndex")]
+		nint ZIndex { get; set; }
+
+		[Export ("elementKind")]
+		string ElementKind { get; }
+	}
+
 }
