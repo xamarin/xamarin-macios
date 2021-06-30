@@ -9135,7 +9135,12 @@ namespace AppKit {
 		bool ContextHelpModeActive { [Bind ("isContextHelpModeActive")]get; set; }
 	}
 
-	[BaseType (typeof (NSObject), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] { typeof (NSImageDelegate)})]
+	[MacCatalyst (13,0)]
+	[BaseType (typeof (NSObject), Delegates=new string [] { "WeakDelegate" }
+#if !__MACCATALYST__
+		, Events=new Type [] { typeof (NSImageDelegate) }
+#endif
+	)]
 	[ThreadSafe]
 	partial interface NSImage : NSCopying, NSSecureCoding, NSPasteboardReading, NSPasteboardWriting {
 		[return: NullAllowed]
