@@ -397,20 +397,6 @@ namespace UIKit {
 		NSString ColumnTerminatorsAttributeName { get; }
 	}
 
-	[Watch (6,0)]
-	[BaseType (typeof (NSObject))]
-	[DesignatedDefaultCtor]
-	interface NSShadow : NSSecureCoding, NSCopying {
-		[Export ("shadowOffset", ArgumentSemantic.Assign)]
-		CGSize ShadowOffset { get; set; }
-		
-		[Export ("shadowBlurRadius", ArgumentSemantic.Assign)]
-		nfloat ShadowBlurRadius { get; set;  }
-
-		[Export ("shadowColor", ArgumentSemantic.Retain), NullAllowed]
-		UIColor ShadowColor { get; set;  }
-	}
-
 #if !WATCH
 	[Protocol]
 	// no [Model] since it's not exposed in any API 

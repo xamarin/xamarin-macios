@@ -14616,24 +14616,6 @@ namespace AppKit {
 		string AutosaveName { get; set; }
 	}
 
-	[DesignatedDefaultCtor]
-	[BaseType (typeof (NSObject))]
-	interface NSShadow : NSSecureCoding, NSCopying {
-		[Export ("set")]
-		void Set ();
-
-		//Detected properties
-		[Export ("shadowOffset")]
-		CGSize ShadowOffset { get; set; }
-
-		[Export ("shadowBlurRadius")]
-		nfloat ShadowBlurRadius { get; set; }
-
-		[Export ("shadowColor", ArgumentSemantic.Copy)]
-		NSColor ShadowColor { get; set; }
-
-	}
-
 	[Static]
 	interface NSStringAttributeKey {
 		[Field ("NSFontAttributeName")]
