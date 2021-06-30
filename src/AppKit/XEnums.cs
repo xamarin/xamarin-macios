@@ -12,12 +12,6 @@ using ObjCRuntime;
 namespace AppKit {
 
 	[Native]
-	public enum NSTextLayoutOrientation : long {
-		Horizontal,
-		Vertical
-	}
-
-	[Native]
 	public enum NSPrintRenderingQuality : long {
 		Best,
 		Responsive

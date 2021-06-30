@@ -264,6 +264,15 @@ namespace UIKit {
 		TopTrailing,
 	}
 
+	// NSInteger -> NSLayoutManager.h
+	[Native]
+	[NoWatch]
+	[MacCatalyst (13,0)]
+	public enum NSTextLayoutOrientation : long {
+		Horizontal,
+		Vertical,
+	}
+
 	[NoWatch] // Header is not present in watchOS SDK.
 	[iOS (7,0)]
 	[DesignatedDefaultCtor]

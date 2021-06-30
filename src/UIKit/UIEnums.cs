@@ -1297,13 +1297,6 @@ namespace UIKit {
 		None, Push, Pop
 	}
 
-	// NSInteger -> NSLayoutManager.h
-	[Native]
-	[NoWatch]
-	public enum NSTextLayoutOrientation : long {
-		Horizontal, Vertical
-	}
-
 	// NSUInteger -> NSTextStorage.h
 	[Native]
 	[Flags]
