@@ -235,6 +235,18 @@ namespace UIKit {
 		GreaterThanOrEqual = 1,
 	}
 
+	[Watch (7,0), TV (14,0), iOS (14,0)]
+	[Mac (11,0)]
+	[MacCatalyst (13,0)]
+	[Flags]
+	[Native]
+	public enum NSLineBreakStrategy : ulong {
+		None = 0x0,
+		PushOut = 1uL << 0,
+		HangulWordPriority = 1uL << 1,
+		Standard = 0xffff,
+	}
+
 	[NoWatch] // Header is not present in watchOS SDK.
 	[iOS (7,0)]
 	[DesignatedDefaultCtor]

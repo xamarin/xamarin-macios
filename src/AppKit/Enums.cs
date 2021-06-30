@@ -3031,15 +3031,4 @@ namespace AppKit {
 		Medium = 2,
 		Large = 3,
 	}
-
-	[Mac (11,0)]
-	[Flags]
-	[Native]
-	public enum NSLineBreakStrategy : ulong
-	{
-		None = 0x0,
-		PushOut = 1uL << 0,
-		HangulWordPriority = 1uL << 1,
-		Standard = 0xffff,
-	}
 }
