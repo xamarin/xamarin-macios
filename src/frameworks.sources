@@ -225,7 +225,7 @@ AUDIOUNIT_SOURCES = \
 AUTHENTICATIONSERVICES_SOURCES = \
 	AuthenticationServices/ASAuthorization.cs \
 	AuthenticationServices/ASAuthorizationRequest.cs \
-	PublicPrivateKeyAuthentication.cs \
+	AuthenticationServices/PublicPrivateKeyAuthentication.cs \
 
 # AVFoundation
 

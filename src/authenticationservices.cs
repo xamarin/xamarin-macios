@@ -1101,7 +1101,7 @@ namespace AuthenticationServices {
 	[NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoTV]
 	[BaseType (typeof (ASAuthorizationRequest))]
 	[DisableDefaultCtor]
-	interface ASAuthorizationPlatformPublicKeyCredentialAssertionRequest : IASAuthorizationPublicKeyCredentialAssertionRequest
+	interface ASAuthorizationPlatformPublicKeyCredentialAssertionRequest : ASAuthorizationPublicKeyCredentialAssertionRequest
 	{
 		[Export ("allowedCredentials", ArgumentSemantic.Copy)]
 		ASAuthorizationPlatformPublicKeyCredentialDescriptor[] AllowedCredentials { get; set; }
@@ -1110,7 +1110,7 @@ namespace AuthenticationServices {
 	[NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoTV]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface ASAuthorizationPlatformPublicKeyCredentialDescriptor : IASAuthorizationPublicKeyCredentialDescriptor
+	interface ASAuthorizationPlatformPublicKeyCredentialDescriptor : ASAuthorizationPublicKeyCredentialDescriptor
 	{
 		[Export ("initWithCredentialID:")]
 		[DesignatedInitializer]
@@ -1174,7 +1174,7 @@ namespace AuthenticationServices {
 
 	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (ASAuthorizationRequest))]
-	interface ASAuthorizationSecurityKeyPublicKeyCredentialAssertionRequest : IASAuthorizationPublicKeyCredentialAssertionRequest
+	interface ASAuthorizationSecurityKeyPublicKeyCredentialAssertionRequest : ASAuthorizationPublicKeyCredentialAssertionRequest
 	{
 		[Export ("allowedCredentials", ArgumentSemantic.Copy)]
 		ASAuthorizationSecurityKeyPublicKeyCredentialDescriptor[] AllowedCredentials { get; set; }
@@ -1183,7 +1183,7 @@ namespace AuthenticationServices {
 	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface ASAuthorizationSecurityKeyPublicKeyCredentialDescriptor : IASAuthorizationPublicKeyCredentialDescriptor
+	interface ASAuthorizationSecurityKeyPublicKeyCredentialDescriptor : ASAuthorizationPublicKeyCredentialDescriptor
 	{
 		[Export ("initWithCredentialID:transports:")]
 		[DesignatedInitializer]
@@ -1215,7 +1215,7 @@ namespace AuthenticationServices {
 	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (ASAuthorizationRequest))]
 	[DisableDefaultCtor]
-	interface ASAuthorizationSecurityKeyPublicKeyCredentialRegistrationRequest : IASAuthorizationPublicKeyCredentialRegistrationRequest
+	interface ASAuthorizationSecurityKeyPublicKeyCredentialRegistrationRequest : ASAuthorizationPublicKeyCredentialRegistrationRequest
 	{
 		[Export ("credentialParameters", ArgumentSemantic.Copy)]
 		ASAuthorizationPublicKeyCredentialParameters[] CredentialParameters { get; set; }
@@ -1241,13 +1241,13 @@ namespace AuthenticationServices {
 
 	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (NSObject))]
-	interface ASAuthorizationPlatformPublicKeyCredentialAssertion : IASAuthorizationPublicKeyCredentialAssertion
+	interface ASAuthorizationPlatformPublicKeyCredentialAssertion : ASAuthorizationPublicKeyCredentialAssertion
 	{
 	}
 
 	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (ASAuthorizationRequest))]
-	interface ASAuthorizationPlatformPublicKeyCredentialRegistrationRequest : IASAuthorizationPublicKeyCredentialRegistrationRequest
+	interface ASAuthorizationPlatformPublicKeyCredentialRegistrationRequest : ASAuthorizationPublicKeyCredentialRegistrationRequest
 	{
 	}
 
