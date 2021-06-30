@@ -54,6 +54,10 @@ using CGGlyph = System.UInt16;
 using CAOpenGLLayer = Foundation.NSObject;
 using CGLContext = Foundation.NSObject;
 using CGLPixelFormat = Foundation.NSObject;
+using Color = UIKit.UIColor;
+using NSColorList = Foundation.NSObject;
+#else
+using Color = AppKit.NSColor;
 #endif
 
 namespace AppKit {
@@ -9287,7 +9291,7 @@ namespace AppKit {
 		bool SetName ([NullAllowed] string aString);
 
 		[Export ("backgroundColor", ArgumentSemantic.Copy)]
-		NSColor BackgroundColor { get; set; }
+		Color BackgroundColor { get; set; }
 
 		[Export ("usesEPSOnResolutionMismatch")]
 		bool UsesEpsOnResolutionMismatch { get; set; }
@@ -25460,7 +25464,7 @@ namespace AppKit {
 		NSColorPickerTouchBarItem CreateColorPicker (string identifier, NSImage image);
 
 		[Export ("color", ArgumentSemantic.Copy)]
-		NSColor Color { get; set; }
+		Color Color { get; set; }
 
 		[Export ("showsAlpha")]
 		bool ShowsAlpha { get; set; }
@@ -26303,7 +26307,7 @@ namespace AppKit {
 		NSImage Image { get; set; }
 
 		[NullAllowed, Export ("bezelColor", ArgumentSemantic.Copy)]
-		NSColor BezelColor { get; set; }
+		Color BezelColor { get; set; }
 
 		[NullAllowed, Export ("target", ArgumentSemantic.Weak)]
 		NSObject Target { get; set; }
@@ -26402,7 +26406,7 @@ namespace AppKit {
 		nint SelectedIndex { get; set; }
 
 		[NullAllowed, Export ("selectionColor", ArgumentSemantic.Copy)]
-		NSColor SelectionColor { get; set; }
+		Color SelectionColor { get; set; }
 
 		[Export ("selectionMode", ArgumentSemantic.Assign)]
 		NSPickerTouchBarItemSelectionMode SelectionMode { get; set; }
