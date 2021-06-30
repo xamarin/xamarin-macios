@@ -2766,16 +2766,6 @@ namespace AppKit {
 		NoHover = 1 << 3
 	}
 
-	[Mac (10,11)]
-	[Native]
-	public enum NSGlyphProperty : long
-	{
-		Null = (1 << 0),
-		ControlCharacter = (1 << 1),
-		Elastic = (1 << 2),
-		NonBaseCharacter = (1 << 3)
-	}
-
 	[Flags]
 	[Mac (10,12)]
 	[Native]

@@ -125,6 +125,18 @@ namespace UIKit {
 		All = Top | Leading | Bottom | Trailing,
 	}
 
+	// NSInteger -> NSLayoutManager.h
+	[NoWatch]
+	[Mac (10,11)]
+	[MacCatalyst (13,0)]
+	[Native]
+	public enum NSGlyphProperty : long {
+		Null = (1 << 0),
+		ControlCharacter = (1 << 1),
+		Elastic = (1 << 2),
+		NonBaseCharacter = (1 << 3),
+	}
+
 	[NoWatch] // Header is not present in watchOS SDK.
 	[iOS (7,0)]
 	[DesignatedDefaultCtor]

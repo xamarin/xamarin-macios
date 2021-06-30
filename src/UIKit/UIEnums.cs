@@ -1496,16 +1496,6 @@ namespace UIKit {
 		Instantaneous
 	}
 
-	// NSInteger -> NSLayoutManager.h
-	[Native]
-	[NoWatch]
-	public enum NSGlyphProperty : long {
-		Null = (1 << 0),
-		ControlCharacter = (1 << 1),
-		Elastic = (1 << 2),
-		NonBaseCharacter = (1 << 3)
-	}
-
 	// NSInteger -> UITabBar.h
 	[Native]
 	[NoWatch]
