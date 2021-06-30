@@ -1177,15 +1177,6 @@ namespace UIKit {
 		Document
 	}
 
-	// NSInteger -> UITextInput.h
-	[Native]
-	[NoWatch]
-	public enum NSLayoutRelation : long {
-		LessThanOrEqual = -1,
-		Equal = 0,
-		GreaterThanOrEqual = 1
-	}
-
 	// float (and not even a CGFloat) -> NSLayoutConstraint.h
 	// the API were fixed (a long time ago to use `float`) and the enum
 	// values can still be used (and useful) since they will be casted

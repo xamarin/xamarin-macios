@@ -2422,13 +2422,6 @@ namespace AppKit {
 	}
 
 	[Native]
-	public enum NSLayoutRelation : long {
-		LessThanOrEqual = -1,
-		Equal = 0,
-		GreaterThanOrEqual = 1
-	}
-
-	[Native]
 	public enum NSLayoutConstraintOrientation : long {
 		Horizontal, Vertical
 	}

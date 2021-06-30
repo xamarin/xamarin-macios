@@ -225,6 +225,16 @@ namespace UIKit {
 		DirectionMask = 0x3 << 16,
 	}
 
+	// NSInteger -> UITextInput.h
+	[Native]
+	[NoWatch]
+	[MacCatalyst (13,0)]
+	public enum NSLayoutRelation : long {
+		LessThanOrEqual = -1,
+		Equal = 0,
+		GreaterThanOrEqual = 1,
+	}
+
 	[NoWatch] // Header is not present in watchOS SDK.
 	[iOS (7,0)]
 	[DesignatedDefaultCtor]
