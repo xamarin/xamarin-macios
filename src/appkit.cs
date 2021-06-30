@@ -8769,7 +8769,7 @@ namespace AppKit {
 		nint RunModal (string [] types);
 	}
 
-#if !XAMCORE_4_0
+#if !XAMCORE_4_0 && !__MACCATALYST__
 	// This class doesn't show up in any documentation
 	[BaseType (typeof (NSOpenPanel))]
 	[DisableDefaultCtor] // should not be created by (only returned to) user code
@@ -12729,7 +12729,7 @@ namespace AppKit {
 		
 	}
 
-#if !XAMCORE_4_0
+#if !XAMCORE_4_0 && !__MACCATALYST__
 	// This class doesn't show up in any documentation.
 	[BaseType (typeof (NSSavePanel))]
 	[DisableDefaultCtor] // should not be created by (only returned to) user code
