@@ -2306,13 +2306,6 @@ namespace UIKit {
 		Black,
 	}
 
-	[Mac (10,15), iOS (13,0), TV (13,0)]
-	[Native]
-	public enum NSTextScalingType : long {
-		Standard = 0,
-		iOS,
-	}
-
 	[iOS (13,0), TV (13,0), NoWatch]
 	[Native]
 	public enum UISceneActivationState : long {

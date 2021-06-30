@@ -264,6 +264,15 @@ namespace UIKit {
 		TopTrailing,
 	}
 
+	[Mac (10,15), iOS (13,0), TV (13,0)]
+	[MacCatalyst (13,0)]
+	[Native]
+	public enum NSTextScalingType : long
+	{
+		Standard = 0,
+		iOS,
+	}
+
 	// NSInteger -> NSLayoutManager.h
 	[Native]
 	[NoWatch]
