@@ -779,12 +779,12 @@ namespace Xamarin.Bundler {
 #else
 				var addDllMap = true;
 #endif
+				string mono_native_lib;
+				if (app.LibMonoNativeLinkMode == AssemblyBuildTarget.StaticObject)
+					mono_native_lib = "__Internal";
+				else
+					mono_native_lib = app.GetLibNativeName () + ".dylib";
 				if (addDllMap) {
-					string mono_native_lib;
-					if (app.LibMonoNativeLinkMode == AssemblyBuildTarget.StaticObject)
-						mono_native_lib = "__Internal";
-					else
-						mono_native_lib = app.GetLibNativeName () + ".dylib";
 					sw.WriteLine ();
 #if NET
 					sw.WriteLine ($"\tmono_dllmap_insert (NULL, \"libSystem.Native\", NULL, \"{mono_native_lib}\", NULL);");
@@ -796,6 +796,8 @@ namespace Xamarin.Bundler {
 					sw.WriteLine ($"\tmono_dllmap_insert (NULL, \"System.Net.Security.Native\", NULL, \"{mono_native_lib}\", NULL);");
 #endif
 					sw.WriteLine ();
+				} else {
+					sw.WriteLine ($"\txamarin_mono_native_lib_name = \"{mono_native_lib}\";");
 				}
 			}
 

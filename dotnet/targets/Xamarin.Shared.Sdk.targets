@@ -369,6 +369,8 @@
 				InvariantGlobalization=$(InvariantGlobalization)
 				ItemsDirectory=$(_LinkerItemsDirectory)
 				IsSimulatorBuild=$(_SdkIsSimulator)
+				LibMonoLinkMode=$(_LibMonoLinkMode)
+				LibXamarinLinkMode=$(_LibXamarinLinkMode)
 				LinkMode=$(_LinkMode)
 				MarshalManagedExceptionMode=$(_MarshalManagedExceptionMode)
 				MarshalObjectiveCExceptionMode=$(_MarshalObjectiveCExceptionMode)

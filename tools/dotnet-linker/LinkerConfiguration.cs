@@ -16,6 +16,8 @@ using ObjCRuntime;
 
 namespace Xamarin.Linker {
 	public class LinkerConfiguration {
+		string LinkerFile;
+
 		public List<Abi> Abis;
 		public string AOTOutputDirectory;
 		public string CacheDirectory { get; private set; }
@@ -72,6 +74,8 @@ namespace Xamarin.Linker {
 		{
 			if (!File.Exists (linker_file))
 				throw new FileNotFoundException ($"The custom linker file {linker_file} does not exist.");
+
+			LinkerFile = linker_file;
 
 			Profile = new BaseProfile (this);
 			DerivedLinkContext = new DerivedLinkContext { LinkerConfiguration = this, };
@@ -139,6 +143,12 @@ namespace Xamarin.Linker {
 					break;
 				case "IsSimulatorBuild":
 					IsSimulatorBuild = string.Equals ("true", value, StringComparison.OrdinalIgnoreCase);
+					break;
+				case "LibMonoLinkMode":
+					Application.LibMonoLinkMode = ParseLinkMode (value, key);
+					break;
+				case "LibXamarinLinkMode":
+					Application.LibXamarinLinkMode = ParseLinkMode (value, key);
 					break;
 				case "LinkMode":
 					if (!Enum.TryParse<LinkMode> (value, true, out var lm))
@@ -282,6 +292,17 @@ namespace Xamarin.Linker {
 
 			Application.InitializeCommon ();
 			Application.Initialize ();
+		}
+
+		AssemblyBuildTarget ParseLinkMode (string value, string variableName)
+		{
+			if (string.Equals (value, "dylib", StringComparison.OrdinalIgnoreCase)) {
+				return AssemblyBuildTarget.DynamicLibrary;
+			} else if (string.Equals (value, "static", StringComparison.OrdinalIgnoreCase)) {
+				return AssemblyBuildTarget.StaticObject;
+			}
+
+			throw new InvalidOperationException ($"Invalid {variableName} '{value}' in {LinkerFile}");
 		}
 
 		public void Write ()
