@@ -665,7 +665,7 @@ namespace EventKit {
 	{
 		[Export ("initWithTitle:URLDescriptors:conferenceDetails:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] string title, EKVirtualConferenceURLDescriptor[] urlDescriptors, [NullAllowed] string conferenceDetails);
+		IntPtr Constructor ([NullAllowed] string title, EKVirtualConferenceUrlDescriptor[] urlDescriptors, [NullAllowed] string conferenceDetails);
 
 		[NullAllowed, Export ("title")]
 		string Title { get; }
@@ -710,9 +710,9 @@ namespace EventKit {
 	}
 
 	[Mac (12,0), iOS (15,0), Watch (8,0), MacCatalyst (15,0), NoTV]
-	[BaseType (typeof (NSObject))]
+	[BaseType (typeof (NSObject), Name = "EKVirtualConferenceURLDescriptor")]
 	[DisableDefaultCtor]
-	interface EKVirtualConferenceURLDescriptor
+	interface EKVirtualConferenceUrlDescriptor
 	{
 		[Export ("initWithTitle:URL:")]
 		[DesignatedInitializer]
