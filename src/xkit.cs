@@ -82,6 +82,36 @@ namespace UIKit {
 	delegate void NSTextLayoutEnumerateEnclosingRects (CGRect rect, ref bool stop);
 #endif
 
+	// NSInteger -> NSLayoutManager.h
+	[Native]
+	[Flags]
+	[NoWatch]
+	[Mac (10,11)]
+	[MacCatalyst (13,0)]
+	public enum NSControlCharacterAction : long {
+		ZeroAdvancement = (1 << 0),
+		Whitespace = (1 << 1),
+		HorizontalTab = (1 << 2),
+		LineBreak = (1 << 3),
+		ParagraphBreak = (1 << 4),
+		ContainerBreak = (1 << 5),
+
+#if !XAMCORE_4_0 && !__MACCATALYST__ && !MONOMAC
+		[Obsolete ("Use 'ZeroAdvancement' instead.")]
+		ZeroAdvancementAction = ZeroAdvancement,
+		[Obsolete ("Use 'Whitespace' instead.")]
+		WhitespaceAction = Whitespace,
+		[Obsolete ("Use 'HorizontalTab' instead.")]
+		HorizontalTabAction = HorizontalTab,
+		[Obsolete ("Use 'LineBreak' instead.")]
+		LineBreakAction = LineBreak,
+		[Obsolete ("Use 'ParagraphBreak' instead.")]
+		ParagraphBreakAction = ParagraphBreak,
+		[Obsolete ("Use 'ContainerBreak' instead.")]
+		ContainerBreakAction = ContainerBreak,
+#endif
+	}
+
 	[Mac (10,15), Watch (6,0), TV (13,0), iOS (13,0), MacCatalyst (13,0)]
 	[Flags]
 	[Native]

@@ -1505,18 +1505,6 @@ namespace UIKit {
 		Elastic = (1 << 2),
 		NonBaseCharacter = (1 << 3)
 	}
-	
-	// NSInteger -> NSLayoutManager.h
-	[Native]
-	[NoWatch]
-	public enum NSControlCharacterAction : long {
-		ZeroAdvancementAction = (1 << 0),
-		WhitespaceAction = (1 << 1),
-		HorizontalTabAction = (1 << 2),
-		LineBreakAction = (1 << 3),
-		ParagraphBreakAction = (1 << 4),
-		ContainerBreakAction = (1 << 5)
-	}
 
 	// NSInteger -> UITabBar.h
 	[Native]

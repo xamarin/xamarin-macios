@@ -2777,19 +2777,6 @@ namespace AppKit {
 	}
 
 	[Flags]
-	[Mac (10,11)]
-	[Native]
-	public enum NSControlCharacterAction : long
-	{
-		ZeroAdvancement = (1 << 0),
-		Whitespace = (1 << 1),
-		HorizontalTab = (1 << 2),
-		LineBreak = (1 << 3),
-		ParagraphBreak = (1 << 4),
-		ContainerBreak = (1 << 5)
-	}
-
-	[Flags]
 	[Mac (10,12)]
 	[Native]
 	public enum NSWindowListOptions : long {
