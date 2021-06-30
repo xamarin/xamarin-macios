@@ -173,6 +173,7 @@ namespace AppKit {
 		
 	}
 
+	[MacCatalyst (13, 0)]
 	[Native]
 	public enum NSRectEdge : ulong {
 		MinXEdge, MinYEdge, MaxXEdge, MaxYEdge
@@ -1580,12 +1581,13 @@ namespace AppKit {
 		WritingPromised = 1 << 9
 	}
 
-
+	[MacCatalyst (13, 0)]
 	[Native]
 	public enum NSToolbarDisplayMode : ulong {
 		Default, IconAndLabel, Icon, Label
 	}
 
+	[MacCatalyst (13, 0)]
 	[Native]
 	public enum NSToolbarSizeMode : ulong {
 		Default, Regular, Small
