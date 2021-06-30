@@ -2429,51 +2429,6 @@ namespace AppKit {
 	}
 
 	[Native]
-	public enum NSLayoutAttribute : long {
-		NoAttribute = 0,
-		Left = 1,
-		Right,
-		Top,
-		Bottom,
-		Leading,
-		Trailing,
-		Width,
-		Height,
-		CenterX,
-		CenterY,
-		Baseline,
-		[Mac (10,11)] LastBaseline = Baseline,
-		[Mac (10,11)] FirstBaseline,
-	}
-
-	[Flags]
-	[Native]
-	public enum NSLayoutFormatOptions : ulong {
-		None = 0,
-
-		AlignAllLeft = (1 << (int)NSLayoutAttribute.Left),
-		AlignAllRight = (1 << (int)NSLayoutAttribute.Right),
-		AlignAllTop = (1 << (int)NSLayoutAttribute.Top),
-		AlignAllBottom = (1 << (int)NSLayoutAttribute.Bottom),
-		AlignAllLeading = (1 << (int)NSLayoutAttribute.Leading),
-		AlignAllTrailing = (1 << (int)NSLayoutAttribute.Trailing),
-		AlignAllCenterX = (1 << (int)NSLayoutAttribute.CenterX),
-		AlignAllCenterY = (1 << (int)NSLayoutAttribute.CenterY),
-		AlignAllBaseline = (1 << (int)NSLayoutAttribute.Baseline),
-		[Mac (10,11)] AlignAllLastBaseline = (int)AlignAllBaseline,
-		[Mac (10,11)] AlignAllFirstBaseline = (1 << (int)NSLayoutAttribute.FirstBaseline),
-		AlignmentMask = 0xFFFF,
-		
-		/* choose only one of these three
-		 */
-		DirectionLeadingToTrailing = 0 << 16, // default
-		DirectionLeftToRight = 1 << 16,
-		DirectionRightToLeft = 2 << 16,
-		
-		DirectionMask = 0x3 << 16,
-	}
-
-	[Native]
 	public enum NSLayoutConstraintOrientation : long {
 		Horizontal, Vertical
 	}
