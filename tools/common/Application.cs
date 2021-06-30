@@ -182,8 +182,12 @@ namespace Xamarin.Bundler {
 		}
 
 		// How Mono should be embedded into the app.
+		AssemblyBuildTarget? libmono_link_mode;
 		public AssemblyBuildTarget LibMonoLinkMode {
 			get {
+				if (libmono_link_mode.HasValue)
+					return libmono_link_mode.Value;
+
 				if (Platform == ApplePlatform.MacOSX) {
 					// This property was implemented for iOS, but might be re-used for macOS if desired after testing to verify it works as expected.
 					throw ErrorHelper.CreateError (99, Errors.MX0099, "LibMonoLinkMode isn't a valid operation for macOS apps.");
@@ -199,11 +203,18 @@ namespace Xamarin.Bundler {
 					return AssemblyBuildTarget.StaticObject;
 				}
 			}
+			set {
+				libmono_link_mode = value;
+			}
 		}
 
 		// How libxamarin should be embedded into the app.
+		AssemblyBuildTarget? libxamarin_link_mode;
 		public AssemblyBuildTarget LibXamarinLinkMode {
 			get {
+				if (libxamarin_link_mode.HasValue)
+					return libxamarin_link_mode.Value;
+
 				if (Platform == ApplePlatform.MacOSX) {
 					// This property was implemented for iOS, but might be re-used for macOS if desired after testing to verify it works as expected.
 					throw ErrorHelper.CreateError (99, Errors.MX0099, "LibXamarinLinkMode isn't a valid operation for macOS apps.");
@@ -219,14 +230,25 @@ namespace Xamarin.Bundler {
 					return AssemblyBuildTarget.StaticObject;
 				}
 			}
+			set {
+				libxamarin_link_mode = value;
+			}
 		}
 
 		// How the generated libpinvoke library should be linked into the app.
 		public AssemblyBuildTarget LibPInvokesLinkMode => LibXamarinLinkMode;
 		// How the profiler library should be linked into the app.
 		public AssemblyBuildTarget LibProfilerLinkMode => OnlyStaticLibraries ? AssemblyBuildTarget.StaticObject : AssemblyBuildTarget.DynamicLibrary;
+
 		// How the libmononative library should be linked into the app.
-		public AssemblyBuildTarget LibMonoNativeLinkMode => HasDynamicLibraries ? AssemblyBuildTarget.DynamicLibrary : AssemblyBuildTarget.StaticObject;
+		public AssemblyBuildTarget LibMonoNativeLinkMode {
+			get {
+				// if there's a specific way libmono is being linked, use the same way.
+				if (libmono_link_mode.HasValue)
+					return libmono_link_mode.Value;
+				return HasDynamicLibraries ? AssemblyBuildTarget.DynamicLibrary: AssemblyBuildTarget.StaticObject;
+			}
+		}
 
 		// If all assemblies are compiled into static libraries.
 		public bool OnlyStaticLibraries {
