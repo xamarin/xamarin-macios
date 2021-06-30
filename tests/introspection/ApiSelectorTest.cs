@@ -199,6 +199,15 @@ namespace Introspection {
 					return Runtime.Arch == Arch.SIMULATOR;
 				}
 				break;
+			case "CSImportExtension":
+				switch (selectorName) {
+				case "beginRequestWithExtensionContext:": 
+				case "updateAttributes:forFileAtURL:error:":
+					if (Runtime.Arch == Arch.SIMULATOR) // not available in the sim
+						return true;
+					break;
+				}
+				break;
 #endif
 			case "WKPreferences":
 				switch (selectorName) {
@@ -771,7 +780,7 @@ namespace Introspection {
 			case "MLSequence":
 				switch (selectorName) {
 				case "encodeWithCoder:":
-					if (!TestRuntime.CheckXcodeVersion (12, 0))
+					if (!TestRuntime.CheckXcodeVersion (12, TestRuntime.MinorXcode12APIMismatch))
 						return true;
 					break;
 				}

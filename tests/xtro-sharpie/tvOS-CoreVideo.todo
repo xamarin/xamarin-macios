@@ -1,4 +1,4 @@
-!missing-field! kCVImageBufferAmbientViewingEnvironmentKey not bound
-!missing-field! kCVImageBufferRegionOfInterestKey not bound
-!missing-pinvoke! CVIsCompressedPixelFormatAvailable is not bound
-!missing-pinvoke! CVPixelBufferCopyCreationAttributes is not bound
+!deprecated-attribute-missing! CVBufferGetAttachment missing a [Deprecated] attribute
+!deprecated-attribute-missing! CVBufferGetAttachments missing a [Deprecated] attribute
+!missing-pinvoke! CVBufferCopyAttachment is not bound
+!missing-pinvoke! CVBufferCopyAttachments is not bound

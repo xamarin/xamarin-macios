@@ -34,7 +34,7 @@ parameters:
 #
 # 1. We can create a template that expands.
 # 2. We can use the each keyword, which allow a loop
-# 3. yaml is a super set of json, therefore, it was jsond dictionaties
+# 3. yaml is a super set of json, therefore, it was json dictionaries
 #
 # the following parameters, define an array of dictionaries with the
 # data required by the templates. Do you want a new stage with 
@@ -207,7 +207,7 @@ schedules:
 
 # the translations team wants a green build, we can do that on sundays even if 
 # the code did not change and without the device tests.
-- cron: "0 12 * * 0"
+- cron: "0 18 * * 1-5,0"
   displayName: Weekly Translations build (Sunday @ noon)
   branches:
     include:

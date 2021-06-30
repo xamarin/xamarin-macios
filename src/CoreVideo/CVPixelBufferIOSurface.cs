@@ -13,6 +13,8 @@ using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace CoreVideo {
 	public partial class CVPixelBuffer : CVImageBuffer {
 
@@ -23,7 +25,7 @@ namespace CoreVideo {
 		);
 
 		[iOS (11,0), Mac (10,13), TV (11,0), NoWatch]
-		public IOSurface.IOSurface GetIOSurface ()
+		public IOSurface.IOSurface? GetIOSurface ()
 		{
 			if (Handle == IntPtr.Zero)
 				throw new ObjectDisposedException ("CVPixelBuffer");
@@ -45,7 +47,7 @@ namespace CoreVideo {
 		);
 
 		[iOS (11,0), Mac (10,13), TV (11,0), NoWatch]
-		public static CVPixelBuffer Create (IOSurface.IOSurface surface, out CVReturn result, CVPixelBufferAttributes pixelBufferAttributes = null)
+		public static CVPixelBuffer? Create (IOSurface.IOSurface surface, out CVReturn result, CVPixelBufferAttributes? pixelBufferAttributes = null)
 		{
 			if (surface == null)
 				throw new ArgumentNullException (nameof (surface));
@@ -65,7 +67,7 @@ namespace CoreVideo {
 		}
 
 		[iOS (11,0), Mac (10,13), TV (11,0), NoWatch]
-		public static CVPixelBuffer Create (IOSurface.IOSurface surface, CVPixelBufferAttributes pixelBufferAttributes = null)
+		public static CVPixelBuffer? Create (IOSurface.IOSurface surface, CVPixelBufferAttributes? pixelBufferAttributes = null)
 		{
 			CVReturn result;
 			return Create (surface, out result, pixelBufferAttributes);

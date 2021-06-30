@@ -1,0 +1,2 @@
+## This type is deprecated in iOS 13 and does not support MacCatalyst 
+!missing-type! PHEditingExtensionContext not bound

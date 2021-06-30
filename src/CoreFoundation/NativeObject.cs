@@ -13,6 +13,8 @@ using System.Runtime.InteropServices;
 using ObjCRuntime;
 using Foundation;
 
+#nullable enable
+
 namespace CoreFoundation {
 	//
 	// The NativeObject class is intended to be a base class for many CoreFoundation

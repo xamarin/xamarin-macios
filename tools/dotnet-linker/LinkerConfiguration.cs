@@ -21,6 +21,7 @@ namespace Xamarin.Linker {
 		public string CacheDirectory { get; private set; }
 		public Version DeploymentTarget { get; private set; }
 		public HashSet<string> FrameworkAssemblies { get; private set; } = new HashSet<string> ();
+		public string GlobalizationDataFile { get; private set; }
 		public string IntermediateLinkDir { get; private set; }
 		public bool InvariantGlobalization { get; private set; }
 		public string ItemsDirectory { get; private set; }
@@ -191,6 +192,9 @@ namespace Xamarin.Linker {
 				case "Registrar":
 					Application.ParseRegistrar (value);
 					break;
+				case "RuntimeConfigurationFile":
+					Application.RuntimeConfigurationFile = value;
+					break;
 				case "SdkDevPath":
 					Driver.SdkRoot = value;
 					break;
@@ -228,6 +232,9 @@ namespace Xamarin.Linker {
 					if (!Enum.TryParse<XamarinRuntime> (value, out var rv))
 						throw new InvalidOperationException ($"Invalid XamarinRuntime '{value}' in {linker_file}");
 					Application.XamarinRuntime = rv;
+					break;
+				case "GlobalizationDataFile":
+					GlobalizationDataFile = value;
 					break;
 				case "InvariantGlobalization":
 					InvariantGlobalization = string.Equals ("true", value, StringComparison.OrdinalIgnoreCase);
@@ -302,6 +309,7 @@ namespace Xamarin.Linker {
 				Console.WriteLine ($"    Platform: {Platform}");
 				Console.WriteLine ($"    PlatformAssembly: {PlatformAssembly}.dll");
 				Console.WriteLine ($"    Registrar: {Application.Registrar} (Options: {Application.RegistrarOptions})");
+				Console.WriteLine ($"    RuntimeConfigurationFile: {Application.RuntimeConfigurationFile}");
 				Console.WriteLine ($"    SdkDevPath: {Driver.SdkRoot}");
 				Console.WriteLine ($"    SdkRootDirectory: {SdkRootDirectory}");
 				Console.WriteLine ($"    SdkVersion: {SdkVersion}");

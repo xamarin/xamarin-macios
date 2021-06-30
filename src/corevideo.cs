@@ -261,6 +261,14 @@ namespace CoreVideo {
 		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
 		[Field ("kCVImageBufferAlphaChannelModeKey")]
 		NSString AlphaChannelModeKey { get; }
+
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Field ("kCVImageBufferRegionOfInterestKey")]
+		NSString RegionOfInterestKey { get; }
+
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Field ("kCVImageBufferAmbientViewingEnvironmentKey")]
+		NSString AmbientViewingEnvironmentKey { get; }
 	}
 
 	[Watch (4,0)]
@@ -428,58 +436,47 @@ namespace CoreVideo {
 		[Field ("kCVPixelBufferMetalCompatibilityKey")]
 		NSString MetalCompatibilityKey { get; }
 
-#if MONOMAC
-		[Mac (10,11)]
+		[NoiOS, NoTV, NoWatch, Mac (10,11), MacCatalyst (15,0)]
 		[Field ("kCVPixelBufferOpenGLTextureCacheCompatibilityKey")]
 		NSString OpenGLTextureCacheCompatibilityKey { get; }
-#endif
-		[Unavailable (PlatformName.MacCatalyst), Advice ("This API is not available when using MacCatalyst.")]
-		[NoWatch, NoTV, NoMac, iOS (14, 0)]
+
+		[NoWatch, NoTV, Mac (12,0), iOS (14, 0), MacCatalyst (15,0)]
 		[Field ("kCVPixelBufferProResRAWKey_BlackLevel")]
 		NSString ProResRawKey_BlackLevel { get; }
 
-		[Unavailable (PlatformName.MacCatalyst), Advice ("This API is not available when using MacCatalyst.")]
-		[NoWatch, NoTV, NoMac, iOS (14, 0)]
+		[NoWatch, NoTV, Mac (12,0), iOS (14, 0), MacCatalyst (15,0)]
 		[Field ("kCVPixelBufferProResRAWKey_ColorMatrix")]
 		NSString ProResRawKey_ColorMatrix { get; }
 
-		[Unavailable (PlatformName.MacCatalyst), Advice ("This API is not available when using MacCatalyst.")]
-		[NoWatch, NoTV, NoMac, iOS (14, 0)]
+		[NoWatch, NoTV, Mac (12,0), iOS (14, 0), MacCatalyst (15,0)]
 		[Field ("kCVPixelBufferProResRAWKey_GainFactor")]
 		NSString ProResRawKey_GainFactor { get; }
 
-		[Unavailable (PlatformName.MacCatalyst), Advice ("This API is not available when using MacCatalyst.")]
-		[NoWatch, NoTV, NoMac, iOS (14, 0)]
+		[NoWatch, NoTV, Mac(12,0), iOS (14, 0), MacCatalyst (15,0)]
 		[Field ("kCVPixelBufferProResRAWKey_RecommendedCrop")]
 		NSString ProResRawKey_RecommendedCrop { get; }
 
-		[Unavailable (PlatformName.MacCatalyst), Advice ("This API is not available when using MacCatalyst.")]
-		[NoWatch, NoTV, NoMac, iOS (14, 0)]
+		[NoWatch, NoTV, Mac (12,0), iOS (14, 0), MacCatalyst (15,0)]
 		[Field ("kCVPixelBufferProResRAWKey_SenselSitingOffsets")]
 		NSString ProResRawKey_SenselSitingOffsets { get; }
 
-		[Unavailable (PlatformName.MacCatalyst), Advice ("This API is not available when using MacCatalyst.")]
-		[NoWatch, NoTV, NoMac, iOS (14, 0)]
+		[NoWatch, NoTV, Mac (12,0), iOS (14, 0), MacCatalyst (15,0)]
 		[Field ("kCVPixelBufferProResRAWKey_WhiteBalanceBlueFactor")]
 		NSString ProResRawKey_WhiteBalanceBlueFactor { get; }
 
-		[Unavailable (PlatformName.MacCatalyst), Advice ("This API is not available when using MacCatalyst.")]
-		[NoWatch, NoTV, NoMac, iOS (14, 0)]
+		[NoWatch, NoTV, Mac (12,0), iOS (14, 0), MacCatalyst (15,0)]
 		[Field ("kCVPixelBufferProResRAWKey_WhiteBalanceCCT")]
 		NSString ProResRawKey_WhiteBalanceCct { get; }
 
-		[Unavailable (PlatformName.MacCatalyst), Advice ("This API is not available when using MacCatalyst.")]
-		[NoWatch, NoTV, NoMac, iOS (14, 0)]
+		[NoWatch, NoTV, Mac (12,0), iOS (14, 0), MacCatalyst (15,0)]
 		[Field ("kCVPixelBufferProResRAWKey_WhiteBalanceRedFactor")]
 		NSString ProResRawKey_WhiteBalanceRedFactor { get; }
 
-		[Unavailable (PlatformName.MacCatalyst), Advice ("This API is not available when using MacCatalyst.")]
-		[NoWatch, NoTV, NoMac, iOS (14, 0)]
+		[NoWatch, NoTV, Mac (12,0), iOS (14, 0), MacCatalyst (15,0)]
 		[Field ("kCVPixelBufferProResRAWKey_WhiteLevel")]
 		NSString ProResRawKey_WhiteLevel { get; }
 
-		[Unavailable (PlatformName.MacCatalyst), Advice ("This API is not available when using MacCatalyst.")]
-		[NoWatch, NoTV, NoMac, iOS (14, 0)]
+		[NoWatch, NoTV, Mac (12,0), iOS (14, 0), MacCatalyst (15,0)]
 		[Field ("kCVPixelBufferVersatileBayerKey_BayerPattern")]
 		NSString VersatileBayerKey_BayerPattern { get; }
 	}

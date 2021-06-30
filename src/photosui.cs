@@ -24,9 +24,8 @@ namespace PhotosUI {
 	[NoTV]
 	[iOS (8, 0)]
 	[Mac (10, 13)]
+	[MacCatalyst (14,0)]
 	[Protocol]
-	[Unavailable (PlatformName.MacCatalyst)]
-	[Advice ("This API is not available when using UIKit on macOS.")]
 #if !XAMCORE_4_0 && !TVOS && !MONOMAC
 	// According to documentation you're supposed to implement this protocol in a UIViewController subclass,
 	// which means a model (which does not inherit from UIViewController) is not useful.
@@ -126,6 +125,10 @@ namespace PhotosUI {
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface PHLivePhotoViewDelegate {
+		[TV (15,0), iOS (15,0), MacCatalyst (15,0), Mac (12,0)]
+		[Export ("livePhotoView:canBeginPlaybackWithStyle:")]
+		bool CanBeginPlayback (PHLivePhotoView livePhotoView, PHLivePhotoViewPlaybackStyle playbackStyle);
+
 		[Export ("livePhotoView:willBeginPlaybackWithStyle:")]
 		void WillBeginPlayback (PHLivePhotoView livePhotoView, PHLivePhotoViewPlaybackStyle playbackStyle);
 
@@ -525,6 +528,10 @@ namespace PhotosUI {
 		[Export ("preferredAssetRepresentationMode", ArgumentSemantic.Assign)]
 		PHPickerConfigurationAssetRepresentationMode PreferredAssetRepresentationMode { get; set; }
 
+		[iOS (15,0), MacCatalyst (15,0)]
+		[Export ("selection", ArgumentSemantic.Assign)]
+		PHPickerConfigurationSelection Selection { get; set; }
+
 		[Export ("selectionLimit")]
 		nint SelectionLimit { get; set; }
 
@@ -533,6 +540,10 @@ namespace PhotosUI {
 
 		[Export ("initWithPhotoLibrary:")]
 		IntPtr Constructor (PHPhotoLibrary photoLibrary);
+
+		[iOS (15,0), MacCatalyst (15,0)]
+		[Export ("preselectedAssetIdentifiers", ArgumentSemantic.Copy)]
+		string[] PreselectedAssetIdentifiers { get; set; }
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (14,0)]
@@ -580,5 +591,18 @@ namespace PhotosUI {
 	{
 		[Export ("presentLimitedLibraryPickerFromViewController:")]
 		void PresentLimitedLibraryPicker (UIViewController controller);
+
+		[Async]
+		[iOS (15,0), MacCatalyst (15,0)]
+		[Export ("presentLimitedLibraryPickerFromViewController:completionHandler:")]
+		void PresentLimitedLibraryPicker (UIViewController controller, Action<string[]> completionHandler);
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (15,0), MacCatalyst (15,0)]
+	[Native]
+	public enum PHPickerConfigurationSelection : long
+	{
+		Default = 0,
+		Ordered = 1,
 	}
 }

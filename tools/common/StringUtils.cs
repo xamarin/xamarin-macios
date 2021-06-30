@@ -84,7 +84,6 @@ namespace Xamarin.Utils {
 			foreach (var c in f) {
 				if (c == '"') {
 					s.Append ('\\');
-					s.Append (c).Append (c);
 				} else if (c == '\\') {
 					s.Append (c);
 				}

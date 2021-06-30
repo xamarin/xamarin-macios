@@ -50,6 +50,16 @@ namespace Introspection {
 		/// <param name="property">Property to be tested</param>
 		protected virtual bool Skip (PropertyInfo property)
 		{
+			switch (property.DeclaringType.Name) {
+				case "AVPlayerInterstitialEventObserver":
+					switch (property.Name) { // deprecated
+						case "CurrentEventDidChangeNotification":
+						case "EventsDidChangeNotification":
+							return true;
+						default:
+							return false;
+					}
+			}
 			return SkipDueToAttribute (property);
 		}
 
@@ -116,7 +126,7 @@ namespace Introspection {
 					// looking for properties with getters only
 					if (p.CanWrite || !p.CanRead)
 						continue;
-					if (SkipDueToAttribute (p))
+					if (Skip (p) || SkipDueToAttribute (p))
 						continue;
 
 					properties.Add (p);

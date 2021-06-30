@@ -1,14 +1,17 @@
 {
 	"version": "@VERSION@",
 	"workloads": {
-		"microsoft-@PLATFORM_LOWERCASE@-sdk-full": {
-			"description": "Microsoft @PLATFORM@ SDK",
+		"@PLATFORM_LOWERCASE@": {
+			"description": "Microsoft @PLATFORM@ SDK for .NET",
 			"packs": [
 				"Microsoft.@PLATFORM@.Sdk",
 				"Microsoft.@PLATFORM@.Windows.Sdk",
 				"Microsoft.@PLATFORM@.Ref",
-				"Microsoft.@PLATFORM@.Templates",
+				"Microsoft.@PLATFORM@.Templates"
 			],
+			"extends": [
+				"microsoft-net-runtime-ios"
+			]
 		}
 	},
 	"packs": {

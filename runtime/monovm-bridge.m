@@ -12,6 +12,8 @@
 
 #include <TargetConditionals.h>
 #include <pthread.h>
+#include <sys/mman.h>
+#include <sys/stat.h>
 
 #if !DOTNET && TARGET_OS_OSX
 #define LEGACY_XAMARIN_MAC 1
@@ -392,10 +394,46 @@ xamarin_create_system_entry_point_not_found_exception (const char *entrypoint)
 
 #if DOTNET
 
+static void
+xamarin_runtime_config_cleanup (MonovmRuntimeConfigArguments *args, void *user_data)
+{
+	free ((char *) args->runtimeconfig.name.path);
+	free (args);
+}
+
+static void
+xamarin_initialize_runtime_config ()
+{
+	if (xamarin_runtime_configuration_name == NULL) {
+		LOG (PRODUCT ": No runtime config file provided at build time.\n");
+		return;
+	}
+
+	char path [1024];
+	if (!xamarin_locate_app_resource (xamarin_runtime_configuration_name, path, sizeof (path))) {
+		LOG (PRODUCT ": Could not locate the runtime config file '%s' in the app bundle.\n", xamarin_runtime_configuration_name);
+		return;
+	}
+
+	MonovmRuntimeConfigArguments *args = (MonovmRuntimeConfigArguments *) calloc (sizeof (MonovmRuntimeConfigArguments), 1);
+	args->kind = 0; // Path of runtimeconfig.blob
+	args->runtimeconfig.name.path = strdup (path);
+
+	int rv = monovm_runtimeconfig_initialize (args, xamarin_runtime_config_cleanup, NULL);
+	if (rv != 0) {
+		LOG_MONOVM (PRODUCT ": Failed to load the runtime config file %s: %i\n", path, rv);
+		return;
+	}
+
+	LOG_MONOVM (PRODUCT ": Loaded the runtime config file %s\n", path);
+}
+
 bool
 xamarin_bridge_vm_initialize (int propertyCount, const char **propertyKeys, const char **propertyValues)
 {
 	int rv;
+
+	xamarin_initialize_runtime_config ();
 
 	rv = monovm_initialize (propertyCount, propertyKeys, propertyValues);
 

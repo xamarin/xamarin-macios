@@ -656,7 +656,6 @@ CORETELEPHONY_CORE_SOURCES = \
 
 COREVIDEO_API_SOURCES = \
 	CoreVideo/CVEnums.cs \
-	CoreVideo/CVPixelFormatType.cs \
 
 COREVIDEO_CORE_SOURCES = \
 	CoreVideo/CoreVideo.cs \
@@ -665,6 +664,7 @@ COREVIDEO_CORE_SOURCES = \
 	CoreVideo/CVPixelBuffer.cs \
 	CoreVideo/CVPixelBufferAttributes.cs \
 	CoreVideo/CVPixelBufferPool.cs \
+	CoreVideo/CVPixelFormatType.cs \
 
 COREVIDEO_SOURCES = \
 	CoreVideo/CVDisplayLink.cs \
@@ -939,7 +939,7 @@ IAD_API_SOURCES = \
 	iAd/iAd.cs \
 
 IAD_SOURCES = \
-	iAd/ADBannerView.cs \
+	iAd/ADCompat.cs \
 
 # ImageCaptureKit
 IMAGECAPTURECORE_API_SOURCES = \
@@ -2034,6 +2034,7 @@ IOS_FRAMEWORKS =         \
 	CoreHaptics \
 	CoreImage \
 	CoreLocation \
+	CoreLocationUI \
 	CoreMIDI \
 	CoreMotion \
 	CoreNFC \
@@ -2265,7 +2266,6 @@ MACCATALYST_FRAMEWORKS = \
 	UserNotifications \
 	UserNotificationsUI \
 	VideoToolbox \
-	VideoSubscriberAccount \
 	Vision \
 	WKWebKit \
 

@@ -88,7 +88,7 @@ using VideoToolbox;
 using WatchConnectivity;
 using WatchKit;
 using WebKit;
-using iAd;
+
 namespace Test {
 	[Protocol] interface C1 : IMFMailComposeViewControllerDelegate {}
 	[Protocol] interface C2 : IGKTurnBasedEventListener {}
@@ -380,12 +380,10 @@ namespace Test {
 	[Protocol] interface C288 : IMPMediaPickerControllerDelegate {}
 	[Protocol] interface C289 : INSUrlSessionDownloadDelegate {}
 	[Protocol] interface C290 : IMPMediaPlayback {}
-	[Protocol] interface C291 : IADBannerViewDelegate {}
 	[Protocol] interface C292 : INSUrlSessionStreamDelegate {}
 	[Protocol] interface C293 : IGKFriendRequestComposeViewControllerDelegate {}
 	[Protocol] interface C294 : IGKGameCenterControllerDelegate {}
 	[Protocol] interface C295 : INSUrlProtocolClient {}
-	[Protocol] interface C296 : IADInterstitialAdDelegate {}
 	[Protocol] interface C297 : INSUrlSessionTaskDelegate {}
 	[Protocol] interface C298 : IGKAchievementViewControllerDelegate {}
 	[Protocol] interface C299 : IGKTurnBasedEventHandlerDelegate {}
@@ -742,12 +740,10 @@ namespace Test {
 	[Protocol] [BaseType (typeof (NSObject))] interface M288 : IMPMediaPickerControllerDelegate {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M289 : INSUrlSessionDownloadDelegate {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M290 : IMPMediaPlayback {}
-	[Protocol] [BaseType (typeof (NSObject))] interface M291 : IADBannerViewDelegate {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M292 : INSUrlSessionStreamDelegate {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M293 : IGKFriendRequestComposeViewControllerDelegate {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M294 : IGKGameCenterControllerDelegate {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M295 : INSUrlProtocolClient {}
-	[Protocol] [BaseType (typeof (NSObject))] interface M296 : IADInterstitialAdDelegate {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M297 : INSUrlSessionTaskDelegate {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M298 : IGKAchievementViewControllerDelegate {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M299 : IGKTurnBasedEventHandlerDelegate {}
