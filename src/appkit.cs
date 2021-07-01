@@ -9821,26 +9821,6 @@ namespace AppKit {
 		[Export ("drawInRect:")]
 		void DrawInRect (CGRect rect);
 	}
-		
-	[ThreadSafe]
-	[Category, BaseType (typeof (NSString))]
-	interface NSExtendedStringDrawing {
-		[Mac (10,11)]
-		[Export ("drawWithRect:options:attributes:context:")]
-		void WeakDrawString (CGRect rect, NSStringDrawingOptions options, [NullAllowed] NSDictionary attributes, [NullAllowed] NSStringDrawingContext context);
-
-		[Mac (10,11)]
-		[Wrap ("WeakDrawString (This, rect, options, attributes.GetDictionary (), context)")]
-		void DrawString (CGRect rect, NSStringDrawingOptions options, [NullAllowed] NSStringAttributes attributes, [NullAllowed] NSStringDrawingContext context);
-
-		[Mac (10,11)]
-		[Export ("boundingRectWithSize:options:attributes:context:")]
-		CGRect WeakGetBoundingRect (CGSize size, NSStringDrawingOptions options, [NullAllowed] NSDictionary attributes, [NullAllowed] NSStringDrawingContext context);
-
-		[Mac (10,11)]
-		[Wrap ("WeakGetBoundingRect (This, size, options, attributes.GetDictionary (), context)")]
-		CGRect GetBoundingRect (CGSize size, NSStringDrawingOptions options, [NullAllowed] NSStringAttributes attributes, [NullAllowed] NSStringDrawingContext context);
-	}
 
 	// @interface NSExtendedStringDrawing (NSAttributedString)
 	[ThreadSafe]

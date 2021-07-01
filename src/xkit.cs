@@ -57,6 +57,7 @@ using TextAlignment=AppKit.NSTextAlignment;
 using LineBreakMode=AppKit.NSLineBreakMode;
 using CollectionLayoutSectionOrthogonalScrollingBehavior=AppKit.NSCollectionLayoutSectionOrthogonalScrollingBehavior;
 using CollectionElementCategory=AppKit.NSCollectionElementCategory;
+using StringAttributes=AppKit.NSStringAttributes;
 #else
 using BezierPath=UIKit.UIBezierPath;
 using Image=UIKit.UIImage;
@@ -64,6 +65,7 @@ using TextAlignment=UIKit.UITextAlignment;
 using LineBreakMode=UIKit.UILineBreakMode;
 using CollectionLayoutSectionOrthogonalScrollingBehavior=UIKit.UICollectionLayoutSectionOrthogonalScrollingBehavior;
 using CollectionElementCategory=UIKit.UICollectionElementCategory;
+using StringAttributes=UIKit.UIStringAttributes;
 #endif
 
 #if MONOMAC
@@ -2737,5 +2739,29 @@ namespace UIKit {
 		[Availability (Deprecated = Platform.Mac_10_11, Message = "Use Size instead.")]
 		[Export ("containerSize")]
 		CGSize ContainerSize { get; set; }
+	}
+
+	[ThreadSafe]
+	[Category, BaseType (typeof (NSString))]
+	interface NSExtendedStringDrawing {
+		[iOS (7,0)]
+		[Mac (10,11)]
+		[Export ("drawWithRect:options:attributes:context:")]
+		void WeakDrawString (CGRect rect, NSStringDrawingOptions options, [NullAllowed] NSDictionary attributes, [NullAllowed] NSStringDrawingContext context);
+
+		[iOS (7,0)]
+		[Mac (10,11)]
+		[Wrap ("WeakDrawString (This, rect, options, attributes.GetDictionary (), context)")]
+		void DrawString (CGRect rect, NSStringDrawingOptions options, StringAttributes attributes, [NullAllowed] NSStringDrawingContext context);
+
+		[iOS (7,0)]
+		[Mac (10,11)]
+		[Export ("boundingRectWithSize:options:attributes:context:")]
+		CGRect WeakGetBoundingRect (CGSize size, NSStringDrawingOptions options, [NullAllowed] NSDictionary attributes, [NullAllowed] NSStringDrawingContext context);
+
+		[iOS (7,0)]
+		[Mac (10,11)]
+		[Wrap ("WeakGetBoundingRect (This, size, options, attributes.GetDictionary (), context)")]
+		CGRect GetBoundingRect (CGSize size, NSStringDrawingOptions options, StringAttributes attributes, [NullAllowed] NSStringDrawingContext context);
 	}
 }
