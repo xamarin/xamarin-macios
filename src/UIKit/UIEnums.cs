@@ -1297,15 +1297,6 @@ namespace UIKit {
 		None, Push, Pop
 	}
 
-	// NSUInteger -> NSTextStorage.h
-	[Native]
-	[Flags]
-	[NoWatch]
-	public enum NSTextStorageEditActions : ulong {
-		Attributes = 1,
-		Characters = 2
-	}
-
 	// NSInteger -> UIActivity.h
 	[Native]
 	[NoTV][NoWatch]

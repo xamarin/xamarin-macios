@@ -282,6 +282,16 @@ namespace UIKit {
 		Vertical,
 	}
 
+	// NSUInteger -> NSTextStorage.h
+	[Mac (10,11)]
+	[Native]
+	[Flags]
+	[NoWatch]
+	public enum NSTextStorageEditActions : ulong {
+		Attributes = 1,
+		Characters = 2,
+	}
+
 	[NoWatch] // Header is not present in watchOS SDK.
 	[iOS (7,0)]
 	[DesignatedDefaultCtor]
