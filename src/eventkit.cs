@@ -671,7 +671,7 @@ namespace EventKit {
 		string Title { get; }
 
 		[Export ("URLDescriptors", ArgumentSemantic.Copy)]
-		EKVirtualConferenceURLDescriptor[] UrlDescriptors { get; }
+		EKVirtualConferenceUrlDescriptor[] UrlDescriptors { get; }
 
 		[NullAllowed, Export ("conferenceDetails")]
 		string ConferenceDetails { get; }
