@@ -371,54 +371,6 @@ namespace UIKit {
 	}
 #endif // !WATCH
 
-#if !WATCH
-	[iOS (7,0)]
-	[BaseType (typeof (NSObject))]
-	partial interface NSTextContainer : NSTextLayoutOrientationProvider, NSSecureCoding {
-		[DesignatedInitializer]
-		[Export ("initWithSize:")]
-		IntPtr Constructor (CGSize size);
-
-		[NullAllowed] // by default this property is null
-		[Export ("layoutManager", ArgumentSemantic.Assign)]
-		NSLayoutManager LayoutManager { get; set; }
-
-		[Export ("size")]
-		CGSize Size { get; set; }
-
-		[NullAllowed] // by default this property is null
-		[Export ("exclusionPaths", ArgumentSemantic.Copy)]
-		UIBezierPath [] ExclusionPaths { get; set; }
-
-		[Export ("lineBreakMode")]
-		UILineBreakMode LineBreakMode { get; set; }
-
-		[Export ("lineFragmentPadding")]
-		nfloat LineFragmentPadding { get; set; }
-
-		[Export ("maximumNumberOfLines")]
-		nuint MaximumNumberOfLines { get; set; }
-
-		[Export ("lineFragmentRectForProposedRect:atIndex:writingDirection:remainingRect:")]
-		CGRect GetLineFragmentRect (CGRect proposedRect, nuint characterIndex, NSWritingDirection baseWritingDirection, out CGRect remainingRect);
-
-		[Export ("widthTracksTextView")]
-		bool WidthTracksTextView { get; set; }
-
-		[Export ("heightTracksTextView")]
-		bool HeightTracksTextView { get; set; }
-
-		[iOS (9,0)]
-		[Export ("replaceLayoutManager:")]
-		void ReplaceLayoutManager (NSLayoutManager newLayoutManager);
-
-		[iOS (9,0)]
-		[Export ("simpleRectangularTextContainer")]
-		bool IsSimpleRectangularTextContainer { [Bind ("isSimpleRectangularTextContainer")] get; }
-		
-	}
-#endif // !WATCH
-
 	[Category]
 	[BaseType (typeof (NSCoder))]
 	interface NSCoder_UIGeometryKeyedCoding {

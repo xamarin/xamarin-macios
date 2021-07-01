@@ -636,7 +636,6 @@
 !missing-protocol-conformance! NSText should conform to NSChangeSpelling
 !missing-protocol-conformance! NSText should conform to NSIgnoreMisspelledWords
 !missing-protocol-conformance! NSTextAttachmentCell should conform to NSTextAttachmentCell
-!missing-protocol-conformance! NSTextContainer should conform to NSTextLayoutOrientationProvider
 !missing-protocol-conformance! NSTitlebarAccessoryViewController should conform to NSAnimatablePropertyContainer
 !missing-protocol-conformance! NSView should conform to NSAnimatablePropertyContainer
 !missing-protocol-conformance! NSWindow should conform to NSAnimatablePropertyContainer
@@ -2112,7 +2111,6 @@
 !missing-null-allowed! 'System.Void AppKit.NSTextBlock::set_BackgroundColor(AppKit.NSColor)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSTextBlock::SetBorderColor(AppKit.NSColor)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSTextBlock::SetBorderColor(AppKit.NSColor,AppKit.NSRectEdge)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void AppKit.NSTextContainer::set_LayoutManager(AppKit.NSLayoutManager)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSTextContainer::set_TextView(AppKit.NSTextView)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSTextField::SelectText(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSTextField::set_BackgroundColor(AppKit.NSColor)' is missing an [NullAllowed] on parameter #0
