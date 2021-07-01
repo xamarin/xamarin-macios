@@ -1979,6 +1979,7 @@ MAC_FRAMEWORKS =            \
 	PassKit                 \
 	PdfKit                  \
 	PencilKit               \
+	Phase                   \
 	Photos                  \
 	PhotosUI				\
 	PrintCore		\
@@ -2087,6 +2088,7 @@ IOS_FRAMEWORKS =         \
 	PassKit \
 	PdfKit \
 	PencilKit \
+	Phase \
 	Photos \
 	PhotosUI \
 	PushKit \
@@ -2180,6 +2182,7 @@ TVOS_FRAMEWORKS =           \
 	ModelIO                 \
 	MultipeerConnectivity   \
 	OpenGLES                \
+	Phase                   \
 	Photos                  \
 	PhotosUI                \
 	ReplayKit               \
@@ -2253,6 +2256,7 @@ MACCATALYST_FRAMEWORKS = \
 	PassKit \
 	PdfKit \
 	PencilKit \
+	Phase \
 	Photos \
 	PhotosUI \
 	PushKit \

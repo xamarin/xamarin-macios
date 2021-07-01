@@ -1,0 +1,22 @@
+# unsupported due to ExtVector:
+!missing-selector! +PHASEObject::forward not bound
+!missing-selector! +PHASEObject::right not bound
+!missing-selector! +PHASEObject::up not bound
+!missing-selector! PHASEObject::setTransform: not bound
+!missing-selector! PHASEObject::setWorldTransform: not bound
+!missing-selector! PHASEObject::transform not bound
+!missing-selector! PHASEObject::worldTransform not bound
+!missing-selector! PHASEEnvelopeSegment::endPoint not bound
+!missing-selector! PHASEEnvelopeSegment::initWithEndPoint:curveType: not bound
+!missing-selector! PHASEEnvelopeSegment::setEndPoint: not bound
+!missing-selector! PHASEEnvelope::initWithStartPoint:segments: not bound
+!missing-selector! PHASEEnvelope::startPoint not bound
+
+# Added and deprecated in the same version
+!missing-type! PHASEGeneratorParameters not bound
+!missing-selector! PHASEGeneratorParameters::gain not bound
+!missing-selector! PHASEGeneratorParameters::rate not bound
+!missing-selector! PHASEGeneratorParameters::setGain: not bound
+!missing-selector! PHASEGeneratorParameters::setRate: not bound
+!missing-selector! PHASECardioidDirectivityModelParameters::init not bound
+!missing-selector! PHASECardioidDirectivityModelParameters::subbands not bound
