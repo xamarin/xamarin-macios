@@ -32,6 +32,7 @@ namespace Introspection {
 		protected override bool Skip (Type type)
 		{
 			switch (type.Namespace) {
+			case "Chip":
 			case "MetalKit":
 			case "MonoTouch.MetalKit":
 			case "MetalPerformanceShaders":
