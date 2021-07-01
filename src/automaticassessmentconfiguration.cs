@@ -112,6 +112,10 @@ namespace AutomaticAssessmentConfiguration {
 		[Export ("configuration", ArgumentSemantic.Copy)]
 		AEAssessmentConfiguration Configuration { get; }
 
+		[Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("updateToConfiguration:")]
+		void Update (AEAssessmentConfiguration configuration);
+
 		[Export ("begin")]
 		void Begin ();
 
