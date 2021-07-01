@@ -2640,4 +2640,20 @@ namespace UIKit {
 		[Field ("NSTabColumnTerminatorsAttributeName")]
 		NSString ColumnTerminatorsAttributeName { get; }
 	}
+
+	[NoWatch]
+	[MacCatalyst (13,0)]
+	[Protocol]
+	// no [Model] since it's not exposed in any API
+	// only NSTextContainer conforms to it but it's only queried by iOS itself
+	interface NSTextLayoutOrientationProvider {
+		[Abstract]
+		[Export ("layoutOrientation")]
+		NSTextLayoutOrientation LayoutOrientation {
+			get;
+#if !XAMCORE_3_0 && !MONOMAC
+			[NotImplemented] set;
+#endif
+		}
+	}
 }

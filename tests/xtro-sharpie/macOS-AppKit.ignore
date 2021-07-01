@@ -622,7 +622,6 @@
 !missing-protocol! NSInputServerMouseTracker not bound
 !missing-protocol! NSInputServiceProvider not bound
 !missing-protocol! NSTextAttachmentCell not bound
-!missing-protocol! NSTextLayoutOrientationProvider not bound
 !missing-protocol! NSUserInterfaceItemSearching not bound
 !missing-protocol-conformance! NSCollectionViewItem should conform to NSCollectionViewElement
 !missing-protocol-conformance! NSColorPicker should conform to NSColorPickingDefault
@@ -638,7 +637,6 @@
 !missing-protocol-conformance! NSText should conform to NSIgnoreMisspelledWords
 !missing-protocol-conformance! NSTextAttachmentCell should conform to NSTextAttachmentCell
 !missing-protocol-conformance! NSTextContainer should conform to NSTextLayoutOrientationProvider
-!missing-protocol-conformance! NSTextView should conform to NSTextLayoutOrientationProvider
 !missing-protocol-conformance! NSTitlebarAccessoryViewController should conform to NSAnimatablePropertyContainer
 !missing-protocol-conformance! NSView should conform to NSAnimatablePropertyContainer
 !missing-protocol-conformance! NSWindow should conform to NSAnimatablePropertyContainer

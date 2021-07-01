@@ -372,21 +372,6 @@ namespace UIKit {
 #endif // !WATCH
 
 #if !WATCH
-	[Protocol]
-	// no [Model] since it's not exposed in any API 
-	// only NSTextContainer conforms to it but it's only queried by iOS itself
-	interface NSTextLayoutOrientationProvider {
-
-		[Abstract]
-		[Export ("layoutOrientation")]
-		NSTextLayoutOrientation LayoutOrientation {
-			get;
-#if !XAMCORE_3_0
-			[NotImplemented] set;
-#endif
-		}
-	}
-
 	[iOS (7,0)]
 	[BaseType (typeof (NSObject))]
 	partial interface NSTextContainer : NSTextLayoutOrientationProvider, NSSecureCoding {
