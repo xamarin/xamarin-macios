@@ -11253,8 +11253,8 @@ namespace AppKit {
 		[Obsolete ("It will never be called.")]
 		NSObject InitWithPasteboardPropertyList (NSObject propertyList, string type);
 #else
-		FIXME: (compiler error to not forget)
-		FIXME: figure out how to bind constructors in protocols.
+#error		FIXME: (compiler error to not forget)
+#error		FIXME: figure out how to bind constructors in protocols.
 #endif
 	}
 	
