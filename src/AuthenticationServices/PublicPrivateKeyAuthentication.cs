@@ -25,6 +25,7 @@ namespace AuthenticationServices {
         [DllImport (Constants.AuthenticationServicesLibrary)]
         static extern /* NSString[] */ IntPtr AllSupportedPublicKeyCredentialDescriptorTransports ();
 
+        // TODO - looks like this type should be NSArrary[ASAuthorizationSecurityKeyPublicKeyCredentialDescriptorTransport]
         public static NSString[] GetAllSupportedPublicKeyCredentialDescriptorTransports () {
             return NSArray.ArrayFromHandle<NSString> (AllSupportedPublicKeyCredentialDescriptorTransports ());
         }

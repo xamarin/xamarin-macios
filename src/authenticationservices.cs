@@ -385,7 +385,8 @@ namespace AuthenticationServices {
 
 		[TV (15,0), NoWatch, NoMac, NoiOS, NoMacCatalyst]
 		[Export ("authorizationController:didCompleteWithCustomMethod:")]
-		void DidComplete (ASAuthorizationController controller, string method);
+		// void DidComplete (ASAuthorizationController controller, [BindAs (typeof (ASAuthorizationCustomMethod))] NSString method);
+		void DidComplete (ASAuthorizationController controller, NSString method);
 	}
 
 	interface IASAuthorizationControllerPresentationContextProviding { }
@@ -427,7 +428,8 @@ namespace AuthenticationServices {
 
 		[TV (15, 0), NoWatch, NoMac, NoiOS, NoMacCatalyst]
 		[Export ("customAuthorizationMethods", ArgumentSemantic.Copy)]
-		string[] CustomAuthorizationMethods { get; set; }
+		[BindAs (typeof (ASAuthorizationCustomMethod[]))]
+		NSString[] CustomAuthorizationMethods { get; set; }
 	}
 
 	interface IASAuthorizationCredential { }
@@ -1013,6 +1015,25 @@ namespace AuthenticationServices {
 		NSData Signature { get; }
 	}
 
+	[NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoTV]
+	[BaseType (typeof (ASAuthorizationRequest))]
+	[DisableDefaultCtor]
+	interface ASAuthorizationPlatformPublicKeyCredentialAssertionRequest : ASAuthorizationPublicKeyCredentialAssertionRequest
+	{
+		[Sealed]
+		[Export ("allowedCredentials", ArgumentSemantic.Copy)]
+		ASAuthorizationPlatformPublicKeyCredentialDescriptor[] PlatformAllowedCredentials { get; set; }
+	}
+
+	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (ASAuthorizationRequest))]
+	interface ASAuthorizationSecurityKeyPublicKeyCredentialAssertionRequest : ASAuthorizationPublicKeyCredentialAssertionRequest
+	{
+		[Sealed]
+		[Export ("allowedCredentials", ArgumentSemantic.Copy)]
+		ASAuthorizationSecurityKeyPublicKeyCredentialDescriptor[] SecurityAllowedCredentials { get; set; }
+	}
+
 	interface IASAuthorizationPublicKeyCredentialAssertionRequest { }
 
 	[NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoTV]
@@ -1033,6 +1054,8 @@ namespace AuthenticationServices {
 
 		[Abstract]
 		[Export ("userVerificationPreference")]
+		// Cannot bind inside a protocol
+		// [BindAs (typeof (ASAuthorizationPublicKeyCredentialUserVerificationPreference))]
 		string UserVerificationPreference { get; set; }
 	}
 
@@ -1082,10 +1105,14 @@ namespace AuthenticationServices {
 
 		[Abstract]
 		[Export ("userVerificationPreference")]
+		// Cannot BindAs inside protocol
+		// [BindAs (typeof (ASAuthorizationPublicKeyCredentialUserVerificationPreference))]
 		string UserVerificationPreference { get; set; }
 
 		[Abstract]
 		[Export ("attestationPreference")]
+		// Cannot BindAs inside protocol
+		// [BindAs (typeof (ASAuthorizationPublicKeyCredentialAttestationKind))] 
 		string AttestationPreference { get; set; }
 	}
 
@@ -1096,15 +1123,6 @@ namespace AuthenticationServices {
 		[Abstract]
 		[Export ("rawClientDataJSON", ArgumentSemantic.Copy)]
 		NSData RawClientDataJson { get; }
-	}
-
-	[NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoTV]
-	[BaseType (typeof (ASAuthorizationRequest))]
-	[DisableDefaultCtor]
-	interface ASAuthorizationPlatformPublicKeyCredentialAssertionRequest : ASAuthorizationPublicKeyCredentialAssertionRequest
-	{
-		[Export ("allowedCredentials", ArgumentSemantic.Copy)]
-		ASAuthorizationPlatformPublicKeyCredentialDescriptor[] AllowedCredentials { get; set; }
 	}
 
 	[NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoTV]
@@ -1173,24 +1191,17 @@ namespace AuthenticationServices {
 	}
 
 	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof (ASAuthorizationRequest))]
-	interface ASAuthorizationSecurityKeyPublicKeyCredentialAssertionRequest : ASAuthorizationPublicKeyCredentialAssertionRequest
-	{
-		[Export ("allowedCredentials", ArgumentSemantic.Copy)]
-		ASAuthorizationSecurityKeyPublicKeyCredentialDescriptor[] AllowedCredentials { get; set; }
-	}
-
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface ASAuthorizationSecurityKeyPublicKeyCredentialDescriptor : ASAuthorizationPublicKeyCredentialDescriptor
 	{
 		[Export ("initWithCredentialID:transports:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSData credentialId, string[] allowedTransports);
+		IntPtr Constructor (NSData credentialId, [BindAs (typeof (ASAuthorizationSecurityKeyPublicKeyCredentialDescriptorTransport[]))] NSString[] allowedTransports);
 
 		[Export ("transports", ArgumentSemantic.Assign)]
-		string[] Transports { get; set; }
+		[BindAs (typeof (ASAuthorizationSecurityKeyPublicKeyCredentialDescriptorTransport[]))]
+		NSString[] Transports { get; set; }
 	}
 
 	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
@@ -1224,10 +1235,10 @@ namespace AuthenticationServices {
 		ASAuthorizationSecurityKeyPublicKeyCredentialDescriptor[] ExcludedCredentials { get; set; }
 
 		[Export ("residentKeyPreference")]
-		string ResidentKeyPreference { get; set; }
+		[BindAs (typeof (ASAuthorizationPublicKeyCredentialResidentKeyPreference))]
+		NSString ResidentKeyPreference { get; set; }
 	}
 
-	[Static]
 	[TV (15,0), NoWatch, NoiOS, NoMac, NoMacCatalyst]
 	enum ASAuthorizationCustomMethod
 	{

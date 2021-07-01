@@ -13,3 +13,9 @@
 !missing-field! ASAuthorizationCustomMethodVideoSubscriberAccount not bound
 !missing-selector! ASAuthorizationController::customAuthorizationMethods not bound
 !missing-selector! ASAuthorizationController::setCustomAuthorizationMethods: not bound
+
+## Created enums inside authenticationServices
+!unknown-type! ASAuthorizationPublicKeyCredentialAttestationKind bound
+!unknown-type! ASAuthorizationPublicKeyCredentialResidentKeyPreference bound
+!unknown-type! ASAuthorizationPublicKeyCredentialUserVerificationPreference bound
+!unknown-type! ASAuthorizationSecurityKeyPublicKeyCredentialDescriptorTransport bound
