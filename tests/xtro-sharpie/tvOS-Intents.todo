@@ -1,4 +1,4 @@
 ## appended from unclassified file
-!missing-selector! INInteraction::donationMetadata not bound
-!missing-selector! INInteraction::setDonationMetadata: not bound
 !missing-type! INIntentDonationMetadata not bound
+!missing-selector! INIntent::donationMetadata not bound
+!missing-selector! INIntent::setDonationMetadata: not bound

@@ -260,6 +260,8 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "UserNotificationsUI", "UserNotificationsUI", 11,0 },
 
 					{ "AdServices", "AdServices", 11,1 },
+
+					{ "Chip", "CHIP", 12, 0 },
 				};
 			}
 			return mac_frameworks;
@@ -420,6 +422,8 @@ public class Frameworks : Dictionary <string, Framework>
 
 				{ "CoreLocationUI", "CoreLocationUI", 15,0 },
 
+				{ "Chip", "CHIP", new Version (15, 0), NotAvailableInSimulator /* no headers in beta 2 */ }
+
 				// the above MUST be kept in sync with simlauncher
 				// see tools/mtouch/Makefile
 				// please also keep it sorted to ease comparison
@@ -486,6 +490,8 @@ public class Frameworks : Dictionary <string, Framework>
 
 				{ "Accessibility", "Accessibility", 7,0 },
 				{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 7,0 },
+
+				{ "Chip", "CHIP", new Version (8, 0), NotAvailableInSimulator /* no headers in beta 2 */ },
 
 			};
 		}
@@ -575,6 +581,8 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "MLCompute", "MLCompute", new Version (14,0), NotAvailableInSimulator },
 					{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 14,0 },
 					{ "Intents", "Intents", 14,0 },
+
+					{ "Chip", "CHIP", new Version (15, 0), NotAvailableInSimulator /* no headers in beta 2 */ },
 				};
 			}
 			return tvos_frameworks;

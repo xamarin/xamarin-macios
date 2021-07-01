@@ -409,10 +409,9 @@ xamarin_initialize_runtime_config ()
 		return;
 	}
 
-	const char *app_path = xamarin_get_bundle_path ();
 	char path [1024];
-	if (!xamarin_locate_assembly_resource_for_root (app_path, NULL, xamarin_runtime_configuration_name, path, sizeof (path))) {
-		LOG (PRODUCT ": Could not locate the runtime config file '%s' in the app bundle: %s\n", xamarin_runtime_configuration_name, app_path);
+	if (!xamarin_locate_app_resource (xamarin_runtime_configuration_name, path, sizeof (path))) {
+		LOG (PRODUCT ": Could not locate the runtime config file '%s' in the app bundle.\n", xamarin_runtime_configuration_name);
 		return;
 	}
 
