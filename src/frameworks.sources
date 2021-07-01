@@ -79,7 +79,6 @@ ADSUPPORT_SOURCES = \
 APPKIT_CORE_SOURCES = \
 	AppKit/Defs.cs \
 	AppKit/Enums.cs \
-	AppKit/XEnums.cs \
 	AppKit/NSAccessibility.cs \
 	XKit/Types.cs \
 	XKit/XKitCompat.cs \
