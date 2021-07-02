@@ -658,9 +658,6 @@ namespace LinkSdk {
 			Assert.NotNull (NetworkInterface.GetAllNetworkInterfaces ());
 		}
 		
-#if NET
-		[Ignore ("System.EntryPointNotFoundException: AppleCryptoNative_SecKeychainItemCopyKeychain")] // https://github.com/dotnet/runtime/issues/36897
-#endif
 		[Test]
 		public void WebClient_SSL_Leak ()
 		{

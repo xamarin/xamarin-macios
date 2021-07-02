@@ -222,6 +222,7 @@ namespace Xamarin.Bundler {
 						case "Metal":
 						case "MetalKit":
 						case "MetalPerformanceShaders":
+						case "CHIP":
 							// some frameworks do not exists on simulators and will result in linker errors if we include them
 							if (App.IsSimulatorBuild)
 								continue;
@@ -816,6 +817,9 @@ namespace Xamarin.Bundler {
 			foreach (var kvp in app.EnvironmentVariables)
 				sw.WriteLine ("\tsetenv (\"{0}\", \"{1}\", 1);", kvp.Key.Replace ("\"", "\\\""), kvp.Value.Replace ("\"", "\\\""));
 			sw.WriteLine ("\txamarin_supports_dynamic_registration = {0};", app.DynamicRegistrationSupported ? "TRUE" : "FALSE");
+#if NET
+			sw.WriteLine ("\txamarin_runtime_configuration_name = {0};", string.IsNullOrEmpty (app.RuntimeConfigurationFile) ? "NULL" : $"\"{app.RuntimeConfigurationFile}\"");
+#endif
 			sw.WriteLine ("}");
 			sw.WriteLine ();
 			sw.Write ("int ");

@@ -11221,6 +11221,7 @@ namespace AVFoundation {
 
 		[iOS (14, 5), TV (14, 5), Mac (11, 3)]
 		[MacCatalyst (14,5)]
+		[Watch (8,0)]
 		[Field ("AVPlayerWaitingDuringInterstitialEventReason")]
 		NSString WaitingDuringInterstitialEventReason { get; }
 
@@ -12472,21 +12473,25 @@ namespace AVFoundation {
 	[DisableDefaultCtor]
 	interface AVPlayerInterstitialEvent
 	{
-		[Static]
-		[Export ("interstitialEventWithPrimaryItem:time:templateItems:restrictions:resumptionOffset:")]
-		AVPlayerInterstitialEvent GetInterstitialEvent (AVPlayerItem primaryItem, CMTime time, AVPlayerItem[] templateItems, AVPlayerInterstitialEventRestrictions restrictions, CMTime resumptionOffset);
+		// Apple changed the API signature ?!?
+		// [Static]
+		// [Export ("interstitialEventWithPrimaryItem:time:templateItems:restrictions:resumptionOffset:")]
+		// AVPlayerInterstitialEvent GetInterstitialEvent (AVPlayerItem primaryItem, CMTime time, AVPlayerItem[] templateItems, AVPlayerInterstitialEventRestrictions restrictions, CMTime resumptionOffset);
 
-		[Static]
-		[Export ("playerInterstitialEventWithPrimaryItem:time:interstitialTemplateItems:restrictions:resumptionOffset:")]
-		AVPlayerInterstitialEvent GetPlayerInterstitialEvent (AVPlayerItem primaryItem, CMTime time, AVPlayerItem[] interstitialTemplateItems, AVPlayerInterstitialEventRestrictions restrictions, CMTime resumptionOffset);
+		// Apple changed the API signature ?!?
+		// [Static]
+		// [Export ("playerInterstitialEventWithPrimaryItem:time:interstitialTemplateItems:restrictions:resumptionOffset:")]
+		// AVPlayerInterstitialEvent GetPlayerInterstitialEvent (AVPlayerItem primaryItem, CMTime time, AVPlayerItem[] interstitialTemplateItems, AVPlayerInterstitialEventRestrictions restrictions, CMTime resumptionOffset);
 
-		[Static]
-		[Export ("interstitialEventWithPrimaryItem:date:templateItems:restrictions:resumptionOffset:")]
-		AVPlayerInterstitialEvent GetInterstitialEvent (AVPlayerItem primaryItem, NSDate date, AVPlayerItem[] templateItems, AVPlayerInterstitialEventRestrictions restrictions, CMTime resumptionOffset);
+		// Apple changed the API signature ?!?
+		// [Static]
+		// [Export ("interstitialEventWithPrimaryItem:date:templateItems:restrictions:resumptionOffset:")]
+		// AVPlayerInterstitialEvent GetInterstitialEvent (AVPlayerItem primaryItem, NSDate date, AVPlayerItem[] templateItems, AVPlayerInterstitialEventRestrictions restrictions, CMTime resumptionOffset);
 
-		[Static]
-		[Export ("playerInterstitialEventWithPrimaryItem:date:interstitialTemplateItems:restrictions:resumptionOffset:")]
-		AVPlayerInterstitialEvent GetPlayerInterstitialEvent (AVPlayerItem primaryItem, NSDate date, AVPlayerItem[] interstitialTemplateItems, AVPlayerInterstitialEventRestrictions restrictions, CMTime resumptionOffset);
+		// Apple changed the API signature ?!?
+		// [Static]
+		// [Export ("playerInterstitialEventWithPrimaryItem:date:interstitialTemplateItems:restrictions:resumptionOffset:")]
+		// AVPlayerInterstitialEvent GetPlayerInterstitialEvent (AVPlayerItem primaryItem, NSDate date, AVPlayerItem[] interstitialTemplateItems, AVPlayerInterstitialEventRestrictions restrictions, CMTime resumptionOffset);
 
 		[NullAllowed, Export ("primaryItem", ArgumentSemantic.Weak)]
 		AVPlayerItem PrimaryItem { get; }
@@ -12500,9 +12505,6 @@ namespace AVFoundation {
 		[Export ("templateItems")]
 		AVPlayerItem[] TemplateItems { get; }
 
-		[Export ("interstitialTemplateItems")]
-		AVPlayerItem[] InterstitialTemplateItems { get; }
-
 		[Export ("restrictions")]
 		AVPlayerInterstitialEventRestrictions Restrictions { get; }
 
@@ -12511,71 +12513,28 @@ namespace AVFoundation {
 	}
 
 	[DisableDefaultCtor]
-	[TV (14,5), Mac (11,3), iOS (14,5)]
-	[MacCatalyst (14,5)]
-	[Watch (7,4)]
-	[BaseType (typeof(NSObject))]
-	interface AVPlayerInterstitialEventObserver
-	{
-		[Static]
-		[Export ("interstitialEventObserverWithPrimaryPlayer:")]
-		AVPlayerInterstitialEventObserver GetInterstitialEventObserver (AVPlayer primaryPlayer);
-
-		[Static]
-		[Export ("playerInterstitialEventObserverWithPrimaryPlayer:")]
-		AVPlayerInterstitialEventObserver GetPlayerInterstitialEventObserver (AVPlayer primaryPlayer);
-
-		[Export ("initWithPrimaryPlayer:")]
-		[DesignatedInitializer]
-		IntPtr Constructor (AVPlayer primaryPlayer);
-
-		[NullAllowed, Export ("primaryPlayer", ArgumentSemantic.Weak)]
-		AVPlayer PrimaryPlayer { get; }
-
-		[NullAllowed, Export ("interstitialPlayer", ArgumentSemantic.Weak)]
-		AVQueuePlayer InterstitialPlayer { get; }
-
-		[Export ("events")]
-		AVPlayerInterstitialEvent[] Events { get; }
-
-		[Export ("interstitialEvents")]
-		AVPlayerInterstitialEvent[] InterstitialEvents { get; }
-
-		[NullAllowed, Export ("currentEvent")]
-		AVPlayerInterstitialEvent CurrentEvent { get; }
-
-		[Field ("AVPlayerInterstitialEventObserverEventsDidChangeNotification")]
-		[Notification]
-		NSString EventsDidChangeNotification { get; }
-
-		[Field ("AVPlayerInterstitialEventObserverCurrentEventDidChangeNotification")]
-		[Notification]
-		NSString CurrentEventDidChangeNotification { get; }
+	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0)]
+	[BaseType (typeof (NSObject))]
+	interface AVPlayerInterstitialEventMonitor {
+		// TODO: Bind the actual members
 	}
 
 	[DisableDefaultCtor]
 	[TV (14,5), Mac (11,3), iOS (14,5)]
 	[MacCatalyst (14,5)]
 	[Watch (7,4)]
-	[BaseType (typeof(AVPlayerInterstitialEventObserver))]
+	[BaseType (typeof (AVPlayerInterstitialEventMonitor))]
 	interface AVPlayerInterstitialEventController
 	{
 		[Static]
 		[Export ("interstitialEventControllerWithPrimaryPlayer:")]
 		AVPlayerInterstitialEventController GetInterstitialEventController (AVPlayer primaryPlayer);
 
-		[Static]
-		[Export ("playerInterstitialEventControllerWithPrimaryPlayer:")]
-		AVPlayerInterstitialEventController GetPlayerInterstitialEventController (AVPlayer primaryPlayer);
-
 		[Export ("initWithPrimaryPlayer:")]
 		IntPtr Constructor (AVPlayer primaryPlayer);
 
 		[NullAllowed, Export ("events", ArgumentSemantic.Copy)]
 		AVPlayerInterstitialEvent[] Events { get; set; }
-
-		[NullAllowed, Export ("interstitialEvents", ArgumentSemantic.Copy)]
-		AVPlayerInterstitialEvent[] InterstitialEvents { get; set; }
 
 		[Export ("cancelCurrentEventWithResumptionOffset:")]
 		void CancelCurrentEvent (CMTime resumptionOffset);

@@ -9,6 +9,9 @@ parameters:
   type: boolean
   default: false
 
+- name: keyringPass
+  type: string
+
 steps:
 
 - bash: |
@@ -122,6 +125,37 @@ steps:
       dotnet $Env:MBSIGN_APPFOLDER/ddsignfiles.dll /filelist:$(Build.ArtifactStagingDirectory)/MsiFiles2Notarize.json
     displayName: 'Sign .msi'
 
+- ${{ if eq(parameters.enableDotnet, true) }}:
+  - pwsh : |
+      # Get the list of files to sign
+      $nupkgFiles = Get-ChildItem -Path $(Build.SourcesDirectory)/package/ -Filter "*.nupkg"
+
+      # Add those files to an array
+      $SignFiles = @()
+      foreach($nupkg in $nupkgFiles) {
+          Write-Host "$($nupkg.FullName)"
+          $SignFiles += @{ "SrcPath"="$($nupkg.FullName)"}
+      }
+
+      Write-Host "$nupkgFiles"
+
+      # array of dicts
+      $SignFileRecord = @(
+        @{
+          "Certs" = "401405";
+          "SignFileList" = $SignFiles;
+        }
+      )
+
+      $SignFileList = @{
+          "SignFileRecordList" = $SignFileRecord
+      }
+
+      # Write the json to a file
+      ConvertTo-Json -InputObject $SignFileList -Depth 5 | Out-File -FilePath $(Build.ArtifactStagingDirectory)/NupkgFiles2Notarize.json -Force
+      dotnet $Env:MBSIGN_APPFOLDER/ddsignfiles.dll /filelist:$(Build.ArtifactStagingDirectory)/NupkgFiles2Notarize.json
+    displayName: 'Sign .nupkg'
+
 - bash: |
     security unlock-keychain -p $PRODUCTSIGN_KEYCHAIN_PASSWORD builder.keychain
     PACKAGES="$IOS_PKG $MAC_PKG $IOS_DOTNET_PKG $TVOS_DOTNET_PKG $WATCHOS_DOTNET_PKG $MACOS_DOTNET_PKG $MACCATALYST_DOTNET_PKG"
@@ -130,7 +164,7 @@ steps:
     echo "$PACKAGES" | xargs python $(Build.SourcesDirectory)/release-scripts/sign_and_notarize.py --no_notarization -a "$APP_ID" -i "$INSTALL_ID" -u "$APPLE_ACCOUNT" -p "$APPLE_PASS" -t "$TEAM_ID" -d $(Build.SourcesDirectory)/package/notarized -e "$MAC_ENTITLEMENTS" -k "$KEYCHAIN"
     ls -R $(Build.SourcesDirectory)/package
   env:
-    PRODUCTSIGN_KEYCHAIN_PASSWORD: $(OSX_KEYCHAIN_PASS)
+    PRODUCTSIGN_KEYCHAIN_PASSWORD: ${{ parameters.keyringPass }}
     MAC_ENTITLEMENTS: $(Build.SourcesDirectory)/xamarin-macios/mac-entitlements.plist
     APP_ID: $(XamarinAppId)
     INSTALL_ID: $(XamarinAppId)

@@ -35,9 +35,6 @@ namespace MonoTouchFixtures.Foundation {
 		}
 
 		[Test]
-#if NET
-		[Ignore ("System.EntryPointNotFoundException: AppleCryptoNative_X509ImportCertificate")] // https://github.com/dotnet/runtime/issues/36897
-#endif
 		public void Ctor_Trust ()
 		{
 			using (var trust = GetTrust ())
@@ -57,9 +54,6 @@ namespace MonoTouchFixtures.Foundation {
 		}
 
 		[Test]
-#if NET
-		[Ignore ("System.EntryPointNotFoundException: AppleCryptoNative_X509ImportCertificate")] // https://github.com/dotnet/runtime/issues/36897
-#endif
 		public void FromTrust ()
 		{
 			using (var trust = GetTrust ())

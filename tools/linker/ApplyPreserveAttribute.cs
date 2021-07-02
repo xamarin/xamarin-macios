@@ -17,6 +17,10 @@ namespace Xamarin.Linker.Steps {
 		HashSet<TypeDefinition> preserve_synonyms;
 #endif
 
+		// We need to run the ApplyPreserveAttribute step even if we're only linking sdk assemblies, because even
+		// though we know that sdk assemblies will never have Preserve attributes, user assemblies may have
+		// [assembly: LinkSafe] attributes, which means we treat them as sdk assemblies and those may have
+		// Preserve attributes.
 		public override bool IsActiveFor (AssemblyDefinition assembly)
 		{
 			return Annotations.GetAction (assembly) == AssemblyAction.Link;

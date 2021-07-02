@@ -112,6 +112,7 @@ namespace CoreHaptics {
 		InvalidPatternData = -4813,
 		InvalidPatternDictionary = -4814,
 		InvalidAudioSession = -4815,
+		InvalidEngineParameter = -4816,
 		InvalidParameterType = -4820,
 		InvalidEventType = -4821,
 		InvalidEventTime = -4822,
@@ -121,6 +122,8 @@ namespace CoreHaptics {
 		BadEventEntry = -4830,
 		BadParameterEntry = -4831,
 		InvalidTime = -4840,
+		FileNotFound = -4851,
+		InsufficientPower = -4897,
 		UnknownError = -4898,
 		MemoryError = -4899,
 	}

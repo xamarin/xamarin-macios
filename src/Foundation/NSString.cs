@@ -82,6 +82,7 @@ namespace Foundation {
 			}
 		}
 
+		[Obsolete ("Use of 'CFString.CreateNative' offers better performance.")]
 		public static IntPtr CreateNative (string str)
 		{
 			return CreateNative (str, false);

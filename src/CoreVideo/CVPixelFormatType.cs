@@ -27,7 +27,13 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 using System;
+using System.Runtime.InteropServices;
 using ObjCRuntime;
+#if NET
+using System.Runtime.Versioning;
+#endif
+
+#nullable enable
 
 namespace CoreVideo {
 
@@ -121,4 +127,32 @@ namespace CoreVideo {
 		// iOS 14.2
 		CV64RgbaLE = 0x6C363472,
 	}
+
+#if !COREBUILD
+	public static class CVPixelFormatTypeExtensions {
+
+#if NET
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), NoMacCatalyst]
+#endif
+		[DllImport (Constants.CoreVideoLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
+		static extern bool CVIsCompressedPixelFormatAvailable (uint pixelFormatType);
+
+#if NET
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), NoMacCatalyst]
+#endif
+		public static bool IsCompressedPixelFormatAvailable (this CVPixelFormatType type)
+			=> CVIsCompressedPixelFormatAvailable ((uint) type); 
+	}
+#endif
 }

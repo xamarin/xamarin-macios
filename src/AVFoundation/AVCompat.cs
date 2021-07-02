@@ -535,4 +535,82 @@ namespace AVFoundation {
 		}
 	}
 #endif
+
+#if !XAMCORE_4_0
+	// "compatibility shim" in xcode 12.5 were removed in xcode 13
+	public partial class AVPlayerInterstitialEventController {
+
+		[Obsolete ("Use 'GetInterstitialEventController' instead.")]
+		public static AVPlayerInterstitialEventController GetPlayerInterstitialEventController (AVPlayer primaryPlayer)
+		{
+			return GetInterstitialEventController (primaryPlayer);
+		}
+
+		[Obsolete ("Use 'Events' instead.")]
+		public virtual AVPlayerInterstitialEvent[] InterstitialEvents {
+			get { return Events; }
+			set { Events = value; }
+		}
+	}
+
+	public partial class AVPlayerInterstitialEvent {
+
+		[Obsolete ("Use 'TemplateItems' instead.")]
+		public virtual AVPlayerItem[] InterstitialTemplateItems {
+			get { return TemplateItems; }
+		}
+	}
+
+	#nullable enable
+	[Obsolete ("Removed in Xcode 13.")]
+	[Deprecated (PlatformName.TvOS, 15,0, PlatformArchitecture.All)]
+	[Deprecated (PlatformName.MacOSX, 12,0, PlatformArchitecture.All)]
+	[Deprecated (PlatformName.iOS, 15,0, PlatformArchitecture.All)]
+	[Deprecated (PlatformName.MacCatalyst, 15,0, PlatformArchitecture.All)]
+	[Deprecated (PlatformName.WatchOS, 8,0, PlatformArchitecture.All)]
+	public partial class AVPlayerInterstitialEventObserver : NSObject {
+		
+		public virtual AVPlayerInterstitialEvent[] InterstitialEvents => throw new NotImplementedException ();
+
+		public override IntPtr ClassHandle => throw new NotImplementedException ();
+
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		protected AVPlayerInterstitialEventObserver (NSObjectFlag t) : base (t) => throw new NotImplementedException ();
+
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		protected internal AVPlayerInterstitialEventObserver (IntPtr handle) : base (handle) => throw new NotImplementedException ();
+
+		[DesignatedInitializer]
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public AVPlayerInterstitialEventObserver (AVPlayer primaryPlayer) : base (NSObjectFlag.Empty) => throw new NotImplementedException ();
+		
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public virtual AVPlayerInterstitialEvent? CurrentEvent => throw new NotImplementedException ();
+
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public virtual AVPlayerInterstitialEvent[] Events => throw new NotImplementedException ();
+
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public virtual AVQueuePlayer? InterstitialPlayer => throw new NotImplementedException ();
+
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public virtual AVPlayer? PrimaryPlayer => throw new NotImplementedException ();
+
+		public static NSString CurrentEventDidChangeNotification => throw new NotImplementedException ();
+		public static NSString EventsDidChangeNotification => throw new NotImplementedException ();
+
+		//
+		// Notifications
+		//
+		public static partial class Notifications {
+			public static NSObject ObserveCurrentEventDidChange (EventHandler<NSNotificationEventArgs> handler) => throw new NotImplementedException ();
+			public static NSObject ObserveCurrentEventDidChange (NSObject objectToObserve, EventHandler<NSNotificationEventArgs> handler) => throw new NotImplementedException ();
+			public static NSObject ObserveEventsDidChange (EventHandler<NSNotificationEventArgs> handler) => throw new NotImplementedException ();
+			public static NSObject ObserveEventsDidChange (NSObject objectToObserve, EventHandler<NSNotificationEventArgs> handler) => throw new NotImplementedException ();
+		}
+	} /* class AVPlayerInterstitialEventObserver */
+	#nullable disable
+#endif
 }

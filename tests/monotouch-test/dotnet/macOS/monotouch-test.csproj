@@ -2,7 +2,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net6.0-macos</TargetFramework>
-    <RuntimeIdentifier>osx-x64</RuntimeIdentifier>
     <OutputType>Exe</OutputType>
     <DefineConstants>NET</DefineConstants>
     <LangVersion>latest</LangVersion>
@@ -33,8 +32,6 @@
     <None Include="..\..\Entitlements.plist" />
     <None Include="..\..\app.config" />
     <None Include="..\..\EmptyNib.xib" />
-
-    <LinkDescription Include="$(RootTestsDirectory)\monotouch-test\dotnet\extra-linker-defs.xml" />
   </ItemGroup>
 
   <ItemGroup>

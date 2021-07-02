@@ -299,26 +299,6 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 		</Copy>
 	</Target>
 
-	<PropertyGroup>
-		<_UpdateDynamicLibraryIdDependsOn>
-			$(_UpdateDynamicLibraryIdDependsOn);
-			CopyDynamicLibrariesToMac;
-		</_UpdateDynamicLibraryIdDependsOn>
-	</PropertyGroup>
-
-	<Target Name="CopyDynamicLibrariesToMac" Condition="'$(_PlatformName)' != 'macOS'">
-		<ItemGroup>
-			<_MonoLibraryFixToMac Include="%(_MonoLibraryFix.FullPath)">
-				<TargetPath>%(FullPath)</TargetPath>
-			</_MonoLibraryFixToMac>
-		</ItemGroup>
-
-		<CopyFilesToBuildServer 
-			Condition="'$(IsMacEnabled)' == 'true'" 
-			SessionId="$(BuildSessionId)" 
-			Files="@(_MonoLibraryFixToMac)" />
-	</Target>
-
 	<Target Name="_UpdateDebugType" BeforeTargets="CoreCompile">
 		<PropertyGroup>
 			<DebugType Condition="'$(DebugType)' == 'full'">portable</DebugType>

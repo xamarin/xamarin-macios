@@ -30,15 +30,13 @@ TARGETS += \
 	../bgen/NuGet.config \
 	../bgen/global.json \
 
-# Example TEST_FILTER:
-#    TEST_FILTER="--filter FullyQualifiedName~BuildMyCocoaApp"
-# Docs: https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-test#filter-option-details
 run-unit-tests:
-	cd UnitTests && $(DOTNET) test DotNetUnitTests.csproj $(TEST_FILTER)
+	$(MAKE) -C UnitTests $@
 
 all-local:: $(TARGETS)
 
 compare compare-size: $(TARGETS)
+	rm -rf packages
 	cd size-comparison && git clean -xfdq
 	time $(MAKE) build-oldnet
 	time $(MAKE) build-dotnet

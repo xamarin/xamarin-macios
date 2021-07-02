@@ -113,6 +113,10 @@ namespace ClassKit {
 
 		[Field ("CLSErrorUnderlyingErrorsKey")]
 		NSString UnderlyingErrorsKey { get; }
+
+		[Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Field ("CLSErrorSuccessfulObjectsKey")]
+		NSString SuccessfulObjectsKey { get; }
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]

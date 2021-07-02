@@ -49,20 +49,20 @@ namespace ObjCRuntime {
 	static partial class Libraries {
 #if !COREBUILD
 		static public class System {
-			static public readonly IntPtr Handle = Dlfcn.dlopen (Constants.libSystemLibrary, 0);
+			static public readonly IntPtr Handle = Dlfcn._dlopen (Constants.libSystemLibrary, 0);
 		}
 		static public class LibC {
-			static public readonly IntPtr Handle = Dlfcn.dlopen (Constants.libcLibrary, 0);
+			static public readonly IntPtr Handle = Dlfcn._dlopen (Constants.libcLibrary, 0);
 		}
 #if HAS_OPENGLES
 		static public class OpenGLES
 		{
-			static public readonly IntPtr Handle = Dlfcn.dlopen (Constants.OpenGLESLibrary, 0);
+			static public readonly IntPtr Handle = Dlfcn._dlopen (Constants.OpenGLESLibrary, 0);
 		}
 #endif
 #if !WATCH
 		static public class AudioToolbox {
-			static public readonly IntPtr Handle = Dlfcn.dlopen (Constants.AudioToolboxLibrary, 0);
+			static public readonly IntPtr Handle = Dlfcn._dlopen (Constants.AudioToolboxLibrary, 0);
 		}
 #endif
 #endif
@@ -98,10 +98,18 @@ namespace ObjCRuntime {
 
 		public static IntPtr dlopen (string path, int mode)
 		{
-			return dlopen (path, mode, true);
+			return dlopen (path, mode, showWarning: true);
 		}
 
 		static bool warningShown;
+		// the linker can eliminate the body of this method (and the above static variable) on release builds
+		static void WarnOnce ()
+		{
+			if (!warningShown)
+				Runtime.NSLog ("You are using dlopen without a full path, retrying by prepending /usr/lib");
+			warningShown = true;
+		}
+
 		internal static IntPtr dlopen (string path, int mode, bool showWarning)
 		{
 			var x = _dlopen (path, mode);
@@ -112,14 +120,9 @@ namespace ObjCRuntime {
 			// In iOS >= 9, this fails with:
 			// "no cache image with name (<top>)"
 			if (path.IndexOf ('/') == -1){
-				if (!warningShown && showWarning) {
-					Runtime.NSLog ("You are using dlopen without a full path, retrying by prepending /usr/lib");
-					warningShown = true;
-				}
-				
-				x = _dlopen ("/usr/lib/" + path, mode);
-				if (x != IntPtr.Zero)
-					return x;
+				if (showWarning)
+					WarnOnce ();
+				return dlopen ("/usr/lib/" + path, mode, false);
 			}
 			return IntPtr.Zero;
 		}

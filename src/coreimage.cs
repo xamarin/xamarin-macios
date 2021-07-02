@@ -9259,5 +9259,117 @@ namespace CoreImage {
 	[BaseType (typeof (CIFilter))]
 	interface CIColorThresholdOtsu : CIColorThresholdOtsuProtocol {
 	}
+
+	[CoreImageFilter]
+	[iOS (15,0)]
+	[TV (15,0)]
+	[Mac (12,0)]
+	[MacCatalyst (15,0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIConvolutionRGB3X3 : CIFilterProtocol {
+
+		[CoreImageFilterProperty ("inputWeights")]
+		CIVector Weights { get; set; }
+
+		[CoreImageFilterProperty ("inputBias")]
+		float Bias { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (15,0)]
+	[TV (15,0)]
+	[Mac (12,0)]
+	[MacCatalyst (15,0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIConvolutionRGB5X5 : CIFilterProtocol {
+
+		[CoreImageFilterProperty ("inputWeights")]
+		CIVector Weights { get; set; }
+
+		[CoreImageFilterProperty ("inputBias")]
+		float Bias { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (15,0)]
+	[TV (15,0)]
+	[Mac (12,0)]
+	[MacCatalyst (15,0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIConvolutionRGB7X7 : CIFilterProtocol {
+
+		[CoreImageFilterProperty ("inputWeights")]
+		CIVector Weights { get; set; }
+
+		[CoreImageFilterProperty ("inputBias")]
+		float Bias { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (15,0)]
+	[TV (15,0)]
+	[Mac (12,0)]
+	[MacCatalyst (15,0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIConvolutionRGB9Horizontal : CIFilterProtocol {
+
+		[CoreImageFilterProperty ("inputWeights")]
+		CIVector Weights { get; set; }
+
+		[CoreImageFilterProperty ("inputBias")]
+		float Bias { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (15,0)]
+	[TV (15,0)]
+	[Mac (12,0)]
+	[MacCatalyst (15,0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIConvolutionRGB9Vertical : CIFilterProtocol {
+
+		[CoreImageFilterProperty ("inputWeights")]
+		CIVector Weights { get; set; }
+
+		[CoreImageFilterProperty ("inputBias")]
+		float Bias { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (15,0)]
+	[TV (15,0)]
+	[Mac (12,0)]
+	[MacCatalyst (15,0)]
+	[BaseType (typeof (CIFilter))]
+	interface CILinearLightBlendMode : CIFilterProtocol {
+
+		[CoreImageFilterProperty ("inputBackgroundImage")]
+		CIImage BackgroundImage { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (15,0)]
+	[TV (15,0)]
+	[Mac (12,0)]
+	[MacCatalyst (15,0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIPersonSegmentation : CIFilterProtocol {
+
+		[CoreImageFilterProperty ("inputQualityLevel")]
+		// 0 == accurate, 1 == balanced, 2 == fast
+		int QualityLevel { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (15,0)]
+	[TV (15,0)]
+	[Mac (12,0)]
+	[MacCatalyst (15,0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIVividLightBlendMode : CIFilterProtocol {
+
+		[CoreImageFilterProperty ("inputBackgroundImage")]
+		CIImage BackgroundImage { get; set; }
+	}
 #endregion
 }

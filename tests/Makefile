@@ -288,6 +288,14 @@ mac-test-package.zip:
 	@echo Not enabled
 endif
 
+ifdef INCLUDE_DOTNET
+dotnet-test-package.7z:
+	./package-dotnet-tests.sh
+else
+dotnet-test-package.7z:
+	@echo Not enabled
+endif
+
 #XI
 ifdef INCLUDE_IOS
 wrench-mtouch:

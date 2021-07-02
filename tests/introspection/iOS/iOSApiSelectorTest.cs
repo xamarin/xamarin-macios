@@ -48,6 +48,7 @@ namespace Introspection {
 				if ((Runtime.Arch == Arch.SIMULATOR) && !TestRuntime.CheckXcodeVersion (7, 0))
 					return true;
 				break;
+			case "Chip":
 			case "MetalKit":
 			case "MonoTouch.MetalKit":
 			case "MetalPerformanceShaders":
@@ -351,6 +352,18 @@ namespace Introspection {
 					break;
 				}
 				break;
+			case "MTLCommandBufferDescriptor":
+				switch (name) {
+				case "errorOptions":
+				case "setErrorOptions:":
+				case "retainedReferences":
+				case "setRetainedReferences:":
+					// iOS 15 sim fails, API added in 14.0
+					if (TestRuntime.CheckXcodeVersion (13, 0))
+						return true;
+					break;
+				}
+				break;
 #if __TVOS__ || __MACCATALYST__
 			// broken with Xcode 12 beta 1
 			case "CKDiscoveredUserInfo":
@@ -398,6 +411,16 @@ namespace Introspection {
 				switch (name) {
 				case "isTracked":
 					if (!TestRuntime.CheckXcodeVersion (10,0))
+						return true;
+					break;
+				}
+				break;
+#endif
+#if __WATCHOS__
+			case "INUserContext":
+				switch (name) {
+				case "encodeWithCoder:":
+					if (!TestRuntime.CheckXcodeVersion (12, 0))
 						return true;
 					break;
 				}

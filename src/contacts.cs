@@ -2270,6 +2270,10 @@ namespace Contacts {
 
 		[Export ("removeMember:fromGroup:")]
 		void RemoveMember (CNContact contact, CNGroup group);
+
+		[Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[NullAllowed, Export ("transactionAuthor")]
+		string TransactionAuthor { get; set; }
 	}
 #endif // !WATCH
 

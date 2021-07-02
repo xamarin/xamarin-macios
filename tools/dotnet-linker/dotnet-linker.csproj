@@ -67,6 +67,9 @@
     <Compile Include="..\common\FileCopier.cs">
       <Link>external\tools\common\FileCopier.cs</Link>
     </Compile>
+    <Compile Include="..\common\FileUtils.cs">
+      <Link>external\tools\common\FileUtils.cs</Link>
+    </Compile>
     <Compile Include="..\common\LinkMode.cs">
       <Link>external\tools\common\LinkMode.cs</Link>
     </Compile>
@@ -88,6 +91,9 @@
     <Compile Include="..\common\PInvokeWrapperGenerator.cs">
       <Link>external\tools\common\PInvokeWrapperGenerator.cs</Link>
     </Compile>
+    <Compile Include="..\common\PathUtils.cs">
+      <Link>external\tools\common\PathUtils.cs</Link>
+    </Compile>
     <Compile Include="..\common\PListExtensions.cs">
       <Link>external\tools\common\PListExtensions.cs</Link>
     </Compile>
@@ -105,6 +111,9 @@
     </Compile>
     <Compile Include="..\linker\CoreOptimizeGeneratedCode.cs">
       <Link>external\tools\linker\CoreOptimizeGeneratedCode.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\CoreTypeMapStep.cs">
+      <Link>external\tools\linker\CoreTypeMapStep.cs</Link>
     </Compile>
     <Compile Include="..\..\src\ObjCRuntime\Registrar.cs">
       <Link>external\src\ObjCRuntime\Registrar.cs</Link>

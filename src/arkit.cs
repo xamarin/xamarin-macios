@@ -190,6 +190,8 @@ namespace ARKit {
 		HorizontalPlane,
 		VerticalPlane,
 		AnyPlane,
+		[iOS (15,0)]
+		GeoTracking,
 	}
 
 	[iOS (13,0)]

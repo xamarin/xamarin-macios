@@ -1748,7 +1748,7 @@ public partial class Generator : IMemberGatherer {
 			}
 			if (pi.ParameterType == TypeManager.System_String){
 				pars.AppendFormat ("IntPtr {0}", safe_name);
-				invoke.AppendFormat ("CFString.FromHandle ({0})", safe_name);
+				invoke.AppendFormat ("CFString.FromHandle ({0})!", safe_name);
 				continue;
 			}
 
@@ -2745,8 +2745,12 @@ public partial class Generator : IMemberGatherer {
 				print ("static public readonly IntPtr Handle = Dlfcn.dlopen (null, 0);");
 			} else if (BindThirdPartyLibrary && library_path != null && IsNotSystemLibrary (library_name)) {
 				print ($"static public readonly IntPtr Handle = Dlfcn.dlopen (\"{library_path}\", 0);");
-			} else {
+			} else if (BindThirdPartyLibrary) {
 				print ("static public readonly IntPtr Handle = Dlfcn.dlopen (Constants.{0}Library, 0);", library_name);
+			} else {
+				// Skip the path check that our managed `dlopen` method does
+				// This is not required since the path is checked by `IsNotSystemLibrary`
+				print ("static public readonly IntPtr Handle = Dlfcn._dlopen (Constants.{0}Library, 0);", library_name);
 			}
 			indent--; print ("}");
 		}
@@ -2877,7 +2881,7 @@ public partial class Generator : IMemberGatherer {
 									enumTypeStr + ") num.Int32Value;\n\t}}\n}})";
 								setter = "SetArrayValue<" + enumTypeStr + "> ({0}, value)";
 							} else if (elementType == TypeManager.System_String){
-								getter = "GetArray<string> ({0}, (ptr) => CFString.FromHandle (ptr))";
+								getter = "GetArray<string> ({0}, (ptr) => CFString.FromHandle (ptr)!)";
 								setter = "SetArrayValue ({0}, value)";
 							} else {
 								throw new BindingException (1033, true, pi.PropertyType, dictType, pi.Name);
@@ -3079,7 +3083,7 @@ public partial class Generator : IMemberGatherer {
 					else if (fullname == "CoreGraphics.CGRect")
 						print (GenerateNSValue ("CGRectValue"));
 					else if (is_system_string)
-						print ("return CFString.FromHandle (value);");
+						print ("return CFString.FromHandle (value)!;");
 					else if (propertyType == TypeManager.NSString)
 						print ("return new NSString (value);");
 					else if (propertyType == TypeManager.System_String_Array){
@@ -3819,7 +3823,7 @@ public partial class Generator : IMemberGatherer {
 			cast_b = ", false)";
 		} else if (mai.Type == TypeManager.System_String && !mai.PlainString){
 			cast_a = "CFString.FromHandle (";
-			cast_b = ")";
+			cast_b = ")!";
 		} else if (mi.ReturnType.IsSubclassOf (TypeManager.System_Delegate)){
 			cast_a = "";
 			cast_b = "";
@@ -4056,7 +4060,7 @@ public partial class Generator : IMemberGatherer {
 	public string GenerateMarshalString (bool probe_null, bool must_copy)
 	{
 		if (must_copy){
-			return "var ns{0} = NSString.CreateNative ({1});\n";
+			return "var ns{0} = CFString.CreateNative ({1});\n";
 		}
 		return
 			"ObjCRuntime.NSStringStruct _s{0}; Console.WriteLine (\"" + CurrentMethod + ": Marshalling: {{1}}\", {1}); \n" +
@@ -4069,7 +4073,7 @@ public partial class Generator : IMemberGatherer {
 	public string GenerateDisposeString (bool probe_null, bool must_copy)
 	{
 		if (must_copy){
-			return "NSString.ReleaseNative (ns{0});\n";
+			return "CFString.ReleaseNative (ns{0});\n";
 		} else 
 			return "if (_s{0}.Flags != 0x010007d1) throw new Exception (\"String was retained, not copied\");";
 	}
@@ -4291,7 +4295,7 @@ public partial class Generator : IMemberGatherer {
 				if (isString) {
 					if (!pi.IsOut)
 						by_ref_processing.AppendFormat ("if ({0}Value != {0}OriginalValue)\n\t", pi.Name.GetSafeParamName ());
-					by_ref_processing.AppendFormat ("{0} = CFString.FromHandle ({0}Value);\n", pi.Name.GetSafeParamName ());
+					by_ref_processing.AppendFormat ("{0} = CFString.FromHandle ({0}Value)!;\n", pi.Name.GetSafeParamName ());
 				} else if (isArray) {
 					if (!pi.IsOut)
 						by_ref_processing.AppendFormat ("if ({0}Value != ({0}ArrayValue is null ? IntPtr.Zero : {0}ArrayValue.Handle))\n\t", pi.Name.GetSafeParamName ());
@@ -4658,7 +4662,7 @@ public partial class Generator : IMemberGatherer {
 			print (sw, by_ref_processing.ToString ());
 		if (use_temp_return) {
 			if (AttributeManager.HasAttribute<ProxyAttribute> (AttributeManager.GetReturnTypeCustomAttributes (mi)))
-				print ("ret.SetAsProxy ();");
+				print ("ret.IsDirectBinding = true;");
 
 			if (mi.ReturnType.IsSubclassOf (TypeManager.System_Delegate)) {
 				print ("return global::ObjCRuntime.Trampolines.{0}.Create (ret)!;", trampoline_info.NativeInvokerName);

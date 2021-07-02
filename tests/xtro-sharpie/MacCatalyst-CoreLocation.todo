@@ -1,4 +1,0 @@
-!missing-selector! CLLocationManager::allowDeferredLocationUpdatesUntilTraveled:timeout: not bound
-!missing-selector! CLLocationManager::disallowDeferredLocationUpdates not bound
-!missing-selector! CLLocationManager::startRangingBeaconsInRegion: not bound
-!missing-selector! CLLocationManager::stopRangingBeaconsInRegion: not bound

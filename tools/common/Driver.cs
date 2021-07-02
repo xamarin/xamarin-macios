@@ -31,7 +31,13 @@ namespace Xamarin.Bundler {
 		public static bool IsUnifiedFullSystemFramework { get { return TargetFramework == TargetFramework.Xamarin_Mac_4_5_System; } }
 		public static bool IsUnifiedMobile { get { return TargetFramework == TargetFramework.Xamarin_Mac_2_0_Mobile; } }
 
+#if MMP
+		// We know that Xamarin.Mac apps won't compile unless the developer is using Xcode 12+: https://github.com/xamarin/xamarin-macios/issues/11937, so just set that as the min Xcode version.
+		static Version min_xcode_version = new Version (12, 0);
+#else
 		static Version min_xcode_version = new Version (6, 0);
+#endif
+
 #if !NET
 		public static int Main (string [] args)
 		{
@@ -1239,64 +1245,6 @@ namespace Xamarin.Bundler {
 			if (rv == null)
 				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, app.ProductName);
 			return rv;
-		}
-
-		[DllImport (Constants.libSystemLibrary)]
-		static extern int symlink (string path1, string path2);
-
-		public static bool Symlink (string path1, string path2)
-		{
-			return symlink (path1, path2) == 0;
-		}
-
-		[DllImport (Constants.libSystemLibrary)]
-		static extern int unlink (string pathname);
-
-		public static void FileDelete (string file)
-		{
-			// File.Delete can't always delete symlinks (in particular if the symlink points to a file that doesn't exist).
-			unlink (file);
-			// ignore any errors.
-		}
-
-		struct timespec {
-			public IntPtr tv_sec;
-			public IntPtr tv_nsec;
-		}
-
-		struct stat { /* when _DARWIN_FEATURE_64_BIT_INODE is defined */
-			public uint st_dev;
-			public ushort st_mode;
-			public ushort st_nlink;
-			public ulong st_ino;
-			public uint st_uid;
-			public uint st_gid;
-			public uint st_rdev;
-			public timespec st_atimespec;
-			public timespec st_mtimespec;
-			public timespec st_ctimespec;
-			public timespec st_birthtimespec;
-			public ulong st_size;
-			public ulong st_blocks;
-			public uint st_blksize;
-			public uint st_flags;
-			public uint st_gen;
-			public uint st_lspare;
-			public ulong st_qspare_1;
-			public ulong st_qspare_2;
-		}
-
-		[DllImport (Constants.libSystemLibrary, EntryPoint = "lstat$INODE64", SetLastError = true)]
-		static extern int lstat (string path, out stat buf);
-
-		public static bool IsSymlink (string file)
-		{
-			stat buf;
-			var rv = lstat (file, out buf);
-			if (rv != 0)
-				throw new Exception (string.Format ("Could not lstat '{0}': {1}", file, Marshal.GetLastWin32Error ()));
-			const int S_IFLNK = 40960;
-			return (buf.st_mode & S_IFLNK) == S_IFLNK;
 		}
 	}
 }

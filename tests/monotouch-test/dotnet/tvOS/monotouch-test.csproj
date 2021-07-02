@@ -2,7 +2,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net6.0-tvos</TargetFramework>
-    <RuntimeIdentifier>tvossimulator-x64</RuntimeIdentifier>
     <OutputType>Exe</OutputType>
     <DefineConstants>NET;XAMCORE_3_0</DefineConstants>
     <LangVersion>latest</LangVersion>
@@ -17,7 +16,6 @@
     <DefineConstants Condition="'$(Platform)' != 'iPhoneSimulator'">$(DefineConstants);DEVICE</DefineConstants>
     <RootTestsDirectory>..\..\..</RootTestsDirectory>
     <MtouchLink>None</MtouchLink>
-    <MtouchExtraArgs>-xml=${ProjectDir}/../extra-linker-defs.xml</MtouchExtraArgs>
   </PropertyGroup>
 
   <ItemGroup>
