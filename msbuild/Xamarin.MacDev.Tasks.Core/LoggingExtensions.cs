@@ -6,7 +6,7 @@ namespace Xamarin.MacDev.Tasks
 	public static class LoggingExtensions
 	{
 		const MessageImportance TaskPropertyImportance = MessageImportance.Normal;
-		static readonly string ErrorPrefix;
+		internal static readonly string ErrorPrefix;
 
 		static LoggingExtensions ()
 		{

@@ -1,6 +1,0 @@
-!missing-selector! RPScreenRecorder::init not bound
-## appended from unclassified file
-!missing-enum-value! RPRecordingError native value RPRecordingErrorExportClipToURLInProgress = -5836 not bound
-!missing-selector! RPScreenRecorder::exportClipToURL:duration:completionHandler: not bound
-!missing-selector! RPScreenRecorder::startClipBufferingWithCompletionHandler: not bound
-!missing-selector! RPScreenRecorder::stopClipBufferingWithCompletionHandler: not bound

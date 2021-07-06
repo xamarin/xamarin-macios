@@ -1925,6 +1925,7 @@ MAC_FRAMEWORKS =            \
 	BusinessChat            \
 	CallKit \
 	CFNetwork               \
+	Chip                    \
 	ClassKit                \
 	CloudKit                \
 	Contacts                \
@@ -2025,6 +2026,7 @@ IOS_FRAMEWORKS =         \
 	CallKit \
 	CarPlay \
 	CFNetwork \
+	Chip \
 	ClassKit \
 	CloudKit \
 	Contacts \
@@ -2114,6 +2116,7 @@ IOS_FRAMEWORKS =         \
 
 WATCHOS_FRAMEWORKS =        \
 	$(COMMON_FRAMEWORKS)    \
+	Chip                    \
 	ClockKit                \
 	CloudKit                \
 	Contacts                \
@@ -2146,6 +2149,7 @@ TVOS_FRAMEWORKS =           \
 	AudioUnit               \
 	BackgroundTasks         \
 	CFNetwork               \
+	Chip                    \
 	CloudKit                \
 	CoreAnimation           \
 	CoreGraphics            \

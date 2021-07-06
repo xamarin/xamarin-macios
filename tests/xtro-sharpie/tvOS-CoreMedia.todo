@@ -25,3 +25,4 @@
 !unknown-pinvoke! CMTimebaseCreateWithMasterTimebase bound
 !unknown-pinvoke! CMTimebaseSetMasterClock bound
 !unknown-pinvoke! CMTimebaseSetMasterTimebase bound
+!missing-field! kCMSampleAttachmentKey_CryptorSubsampleAuxiliaryData not bound

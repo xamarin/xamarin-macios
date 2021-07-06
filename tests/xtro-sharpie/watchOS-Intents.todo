@@ -30,8 +30,6 @@
 !missing-selector! INFocusStatusCenter::authorizationStatus not bound
 !missing-selector! INFocusStatusCenter::focusStatus not bound
 !missing-selector! INFocusStatusCenter::requestAuthorizationWithCompletionHandler: not bound
-!missing-selector! INInteraction::donationMetadata not bound
-!missing-selector! INInteraction::setDonationMetadata: not bound
 !missing-selector! INPerson::initWithPersonHandle:nameComponents:displayName:image:contactIdentifier:customIdentifier:isMe:suggestionType: not bound
 !missing-selector! INRelevantShortcut::setWidgetKind: not bound
 !missing-selector! INRelevantShortcut::widgetKind not bound
@@ -50,3 +48,12 @@
 !missing-type! INSendMessageIntentDonationMetadata not bound
 !missing-type! INShareFocusStatusIntent not bound
 !missing-type! INShareFocusStatusIntentResponse not bound
+!deprecated-attribute-missing! INGetVisualCodeIntent missing a [Deprecated] attribute
+!deprecated-attribute-missing! INGetVisualCodeIntentResponse missing a [Deprecated] attribute
+!deprecated-attribute-missing! INVisualCodeTypeResolutionResult missing a [Deprecated] attribute
+!missing-selector! INIntent::donationMetadata not bound
+!missing-selector! INIntent::setDonationMetadata: not bound
+!missing-selector! INSendMessageIntentDonationMetadata::isReplyToCurrentUser not bound
+!missing-selector! INSendMessageIntentDonationMetadata::notifyRecipientAnyway not bound
+!missing-selector! INSendMessageIntentDonationMetadata::setNotifyRecipientAnyway: not bound
+!missing-selector! INSendMessageIntentDonationMetadata::setReplyToCurrentUser: not bound

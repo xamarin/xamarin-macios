@@ -38,7 +38,6 @@
 !missing-selector! PKRecurringPaymentSummaryItem::setStartDate: not bound
 !missing-selector! PKRecurringPaymentSummaryItem::startDate not bound
 !missing-selector! PKShareablePassMetadata::accountHash not bound
-!missing-selector! PKShareablePassMetadata::initWithProvisioningCredentialIdentifier:sharingInstanceIdentifier:passThumbnailImage:ownerDisplayName:localizedDescription:accountHash:templateIdentifier:relyingPartyIdentifier: not bound
 !missing-selector! PKShareablePassMetadata::relyingPartyIdentifier not bound
 !missing-selector! PKShareablePassMetadata::templateIdentifier not bound
 !missing-selector! PKShippingMethod::dateComponentsRange not bound
@@ -59,3 +58,5 @@
 !missing-type! PKStoredValuePassBalance not bound
 !missing-type! PKStoredValuePassProperties not bound
 !wrong-base-type! PKTransitPassProperties expected PKStoredValuePassProperties actual NSObject
+!missing-selector! PKShareablePassMetadata::initWithProvisioningCredentialIdentifier:sharingInstanceIdentifier:passThumbnailImage:ownerDisplayName:localizedDescription:accountHash:templateIdentifier:relyingPartyIdentifier:requiresUnifiedAccessCapableDevice: not bound
+!missing-selector! PKShareablePassMetadata::requiresUnifiedAccessCapableDevice not bound
