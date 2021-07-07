@@ -4,6 +4,16 @@
     <TargetName>Microsoft.NET.Sdk.MaciOS.Workload</TargetName>
   </PropertyGroup>
   <ItemGroup>
+    <!-- Shorten package names to avoid long path caching issues in Visual Studio -->
+    <ShortNames Include="microsoft.ios;Microsoft.iOS">
+      <Replacement>iOS</Replacement>
+    </ShortNames>
+    <ShortNames Include="microsoft.maccatalyst;Microsoft.MacCatalyst">
+      <Replacement>MacCat</Replacement>
+    </ShortNames>
+    <ShortNames Include="microsoft.tvos;Microsoft.tvOS">
+      <Replacement>tvOS</Replacement>
+    </ShortNames>
     <ComponentResources Include="ios" Category=".NET" Title=".NET iOS Workload" Description="Microsoft iOS SDK for .NET"/>
     <ComponentVersions Include="ios" Version="@IOS_WORKLOAD_VERSION@" />
     <ComponentResources Include="maccatalyst" Category=".NET" Title=".NET MacCatalyst Workload" Description="Microsoft MacCatalyst SDK for .NET "/>
