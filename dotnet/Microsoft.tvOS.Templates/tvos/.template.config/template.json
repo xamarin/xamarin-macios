@@ -11,6 +11,13 @@
     "type": "project"
   },
   "sourceName": "tvOSApp1",
+  "sources": [
+    {
+      "source": "./",
+      "target": "./",
+      "copyOnly": "**/*.png"
+    }
+  ],
   "preferNameDirectory": true,
   "primaryOutputs": [
     { "path": "tvOSApp1.csproj" }

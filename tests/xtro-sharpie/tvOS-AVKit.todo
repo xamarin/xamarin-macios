@@ -22,3 +22,5 @@
 !missing-selector! AVPlayerViewController::transportBarCustomMenuItems not bound
 !missing-selector! AVPlayerViewController::transportBarIncludesTitleView not bound
 !missing-type! AVPictureInPictureControllerContentSource not bound
+!missing-selector! AVPlayerViewController::infoViewActions not bound
+!missing-selector! AVPlayerViewController::setInfoViewActions: not bound

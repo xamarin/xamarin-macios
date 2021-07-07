@@ -1,2 +1,19 @@
 # It's in the documentation and headers, but throws a "+[EKCalendar calendarWithEventStore:]: unrecognized selector" exception at runtime
 !missing-selector! +EKCalendar::calendarWithEventStore: not bound
+
+# This is only used as an output in a manual binding so it doesn't need the availability
+!missing-enum! EKAlarmType not bound
+
+# These say the class supports MacCatalyst, but the selectors individually do not
+!missing-selector! EKEventStore::initWithSources: not bound
+!missing-selector! EKAlarm::emailAddress not bound
+!missing-selector! EKAlarm::setEmailAddress: not bound
+!missing-selector! EKAlarm::setSoundName: not bound
+!missing-selector! EKAlarm::setUrl: not bound
+!missing-selector! EKAlarm::soundName not bound
+!missing-selector! EKAlarm::type not bound
+!missing-selector! EKAlarm::url not bound
+
+# These two are deprecated
+!missing-selector! EKEvent::birthdayPersonUniqueID not bound
+!missing-selector! EKEventStore::initWithAccessToEntityTypes: not bound
