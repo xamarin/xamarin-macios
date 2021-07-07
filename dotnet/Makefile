@@ -129,12 +129,10 @@ LOCAL_WORKLOAD_TARGETS += Workloads/Microsoft.NET.Sdk.$(1)/LICENSE
 endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call WorkloadTargets,$(platform),$(shell echo $(platform) | tr A-Z a-z),$($(platform)_NUGET_VERSION_NO_METADATA))))
 
-$(DOTNET_NUPKG_DIR)/xamarin-workload.props: Workloads/xamarin-workload.template.props
+$(DOTNET_NUPKG_DIR)/vs-workload.props: Workloads/vs-workload.template.props
 	$(Q) rm -f $@.tmp
 	$(Q_GEN) sed \
-		-e "s/@IOS_WORKLOAD_VERSION@/$(IOS_NUGET_VERSION).$(IOS_NUGET_COMMIT_DISTANCE)/g" \
-		-e "s/@MACCATALYST_WORKLOAD_VERSION@/$(MACCATALYST_NUGET_VERSION).$(MACCATALYST_NUGET_COMMIT_DISTANCE)/g" \
-		-e "s/@TVOS_WORKLOAD_VERSION@/$(TVOS_NUGET_VERSION).$(TVOS_NUGET_COMMIT_DISTANCE)/g" \
+		$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),-e "s/@$(platform)_WORKLOAD_VERSION@/$($(platform)_NUGET_VERSION).$($(platform)_NUGET_COMMIT_DISTANCE)/g") \
 		$< > $@.tmp
 	$(Q) mv $@.tmp $@
 
@@ -211,7 +209,7 @@ pack-$(shell echo $(1) | tr A-Z a-z): $$(RUNTIME_PACKS_$(1)) $$(REF_PACKS_$(1)) 
 endef
 $(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(eval $(call PacksDefinitions,$(platform))))
 
-TARGETS += $(RUNTIME_PACKS) $(REF_PACKS) $(SDK_PACKS) $(TEMPLATE_PACKS) $(WORKLOAD_PACKS) $(DOTNET_NUPKG_DIR)/xamarin-workload.props $(DOTNET_NUPKG_DIR)/SignList.xml
+TARGETS += $(RUNTIME_PACKS) $(REF_PACKS) $(SDK_PACKS) $(TEMPLATE_PACKS) $(WORKLOAD_PACKS) $(DOTNET_NUPKG_DIR)/vs-workload.props $(DOTNET_NUPKG_DIR)/SignList.xml
 
 define InstallWorkload
 # .NET comes with a workload for us, but we don't want that, we want our own. So delete the workload that comes with .NET.

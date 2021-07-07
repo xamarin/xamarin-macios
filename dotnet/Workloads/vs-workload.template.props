@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <PropertyGroup>
+    <TargetName>Microsoft.NET.Sdk.MaciOS.Workload</TargetName>
+  </PropertyGroup>
+  <ItemGroup>
+    <ComponentResources Include="ios" Category=".NET" Title=".NET iOS Workload" Description="Microsoft iOS SDK for .NET"/>
+    <ComponentVersions Include="ios" Version="@IOS_WORKLOAD_VERSION@" />
+    <ComponentResources Include="maccatalyst" Category=".NET" Title=".NET MacCatalyst Workload" Description="Microsoft MacCatalyst SDK for .NET "/>
+    <ComponentVersions Include="maccatalyst" Version="@MACCATALYST_WORKLOAD_VERSION@" />
+    <ComponentResources Include="tvos" Category=".NET" Title=".NET tvOS Workload" Description="Microsoft tvOS SDK for .NET"/>
+    <ComponentVersions Include="tvos" Version="@TVOS_WORKLOAD_VERSION@" />
+  </ItemGroup>
+</Project>
