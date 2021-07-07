@@ -356,7 +356,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Security\openssl_crt.der">
-        <LogicalName>monotouchtest.Security.openssl_crt.der</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -394,7 +393,7 @@
     <Exec Command="xcrun -sdk $(_SmeltingSdk) metal -c @(CustomMetalSmeltingInput) -o $(IntermediateOutputPath)\fragmentShader.air $(_SmeltingMinOS)" EnvironmentVariables="DEVELOPER_DIR=$(_SdkDevPath)" />
     <Exec Command="xcrun -sdk $(_SmeltingSdk) metallib $(IntermediateOutputPath)\fragmentShader.air -o $(AppBundleDir)\fragmentShader.metallib" EnvironmentVariables="DEVELOPER_DIR=$(_SdkDevPath)" />
   </Target>
-  <Target Name="BeforeBuild" Inputs="@(GeneratedTestInput)" Outputs="@(GeneratedTestOutput)" DependsOnTargets="CustomMetalSmelting" >
+  <Target Name="BeforeBuild" Inputs="@(GeneratedTestInput)" Outputs="@(GeneratedTestOutput)" DependsOnTargets="CustomMetalSmelting">
     <Exec Command="make -j8 -C $(TestLibrariesDirectory)" />
   </Target>
 </Project>

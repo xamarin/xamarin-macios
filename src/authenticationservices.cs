@@ -1027,6 +1027,7 @@ namespace AuthenticationServices {
 
 	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (ASAuthorizationRequest))]
+	[DisableDefaultCtor]
 	interface ASAuthorizationSecurityKeyPublicKeyCredentialAssertionRequest : ASAuthorizationPublicKeyCredentialAssertionRequest
 	{
 		[Sealed]
@@ -1258,6 +1259,7 @@ namespace AuthenticationServices {
 
 	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (ASAuthorizationRequest))]
+	[DisableDefaultCtor]
 	interface ASAuthorizationPlatformPublicKeyCredentialRegistrationRequest : ASAuthorizationPublicKeyCredentialRegistrationRequest
 	{
 	}
