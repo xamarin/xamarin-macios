@@ -7,9 +7,6 @@
 				"Microsoft.@PLATFORM@.Sdk",
 				"Microsoft.@PLATFORM@.Ref",
 				"Microsoft.@PLATFORM@.Templates"
-			],
-			"extends": [
-				"microsoft-net-runtime-tvos"
 			]
 		}
 	},
