@@ -25,10 +25,7 @@
 !missing-selector! GKFriendRequestComposeViewControllerGKFriendRequestComposeViewController::setMessage: not bound
 !missing-type! GKFriendRequestComposeViewController not bound
 
-# set for XAMCORE_4_0
-!incorrect-protocol-member! GKMatchmakerViewControllerDelegate::matchmakerViewController:didFindPlayers: is OPTIONAL and should NOT be abstract
-
-# deprecated
+# Deprecated
 !incorrect-protocol-member! GKMatchmakerViewControllerDelegate::matchmakerViewController:didFindPlayers: is OPTIONAL and should NOT be abstract
 !incorrect-protocol-member! GKTurnBasedMatchmakerViewControllerDelegate::turnBasedMatchmakerViewController:didFindMatch: is OPTIONAL and should NOT be abstract
 !incorrect-protocol-member! GKTurnBasedMatchmakerViewControllerDelegate::turnBasedMatchmakerViewController:playerQuitForMatch: is OPTIONAL and should NOT be abstract
