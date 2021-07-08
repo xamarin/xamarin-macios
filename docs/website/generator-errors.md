@@ -261,6 +261,8 @@ interface CICustomFilter  {
 }
 ```
 
+### <a name='BI1120'/>BI1120: Unsupported platform string: *. Platform strings should contain the version of the platform supported. Examples are: maccatalyst15.0, mac10.9, ios8.0, tvos15.0
+
 If the property is inlined from a protocol then the `[Export]` value, prefixed with `input`, will be used by default. You can override this with by adding the `[CoreImageFilterProperty]` attribute (e.g. for `output*` keys).
 
 # BI11xx: warnings

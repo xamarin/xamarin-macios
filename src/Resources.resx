@@ -584,4 +584,8 @@
 	<data name="BI1119" xml:space="preserve">
 		<value>Internal error: found the same type ({0}) in multiple assemblies ({1} and {2}). Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.</value>
 	</data>
+
+	<data name="BI1120" xml:space="preserve">
+    <value>BI1120: Unsupported platform string. Platform strings should contain the version of the platform supported. Examples are: maccatalyst15.0, mac10.9, ios8.0, tvos15.0</value>
+	</data>
 </root>
