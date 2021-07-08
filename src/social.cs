@@ -60,6 +60,8 @@ namespace Social {
 		[Export ("requestForServiceType:requestMethod:URL:parameters:")]
 		SLRequest Create (NSString serviceType, SLRequestMethod requestMethod, NSUrl url, [NullAllowed] NSDictionary parameters);
 
+		[Deprecated (PlatformName.iOS, 15, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
 		[Export ("account", ArgumentSemantic.Retain), NullAllowed]
 		ACAccount Account { get; set;  }
 
