@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 
@@ -169,6 +170,17 @@ namespace Extrospection {
 			}
 		}
 
+		static void NoEmptyTodo ()
+		{
+			foreach (var file in Directory.GetFiles (directory, "*.todo")) {
+				if (!IsIncluded (file))
+					continue;
+				if (!(File.ReadLines(file).Count() > 0)) {
+					Log ($"?empty-todo? File '{Path.GetFileName (file)}' is empty. Empty todo files should be removed.");
+				}
+			}
+		}
+
 		static string directory;
 		static Dictionary<string, List<string>> commons = new Dictionary<string, List<string>> ();
 		static int count;
@@ -300,6 +312,9 @@ namespace Extrospection {
 
 			// entries in .todo should be found in .raw files - else it's likely fixed (and out of date)
 			NoFixedTodo ();
+
+			// empty files should be removed
+			NoEmptyTodo ();
 
 			if (count == 0)
 				Console.WriteLine ("Sanity check passed");
