@@ -34,6 +34,10 @@ namespace MonoTouchFixtures.AuthenticationServices {
 		public void GetAllSupportedPublicKeyCredentialDescriptorTransports ()
 		{
 			var value = PublicPrivateKeyAuthentication.GetAllSupportedPublicKeyCredentialDescriptorTransports ();
+
+			//Expected: some item equal to< < usb >, < nfc >, < ble > >
+			//But was: < Usb, Nfc, Bluetooth >
+
 			Assert.Contains (PublicPrivateKeyAuthentication.GetAllSupportedPublicKeyCredentialDescriptorTransports (), transports, "The three transports are not supported as expected");
 		}
 	}
