@@ -1474,7 +1474,6 @@ namespace GameKit {
 		[Abstract]
 #endif
 		[NoTV]
-		[MacCatalyst (13,0)]
 		[Deprecated (PlatformName.iOS, 8, 0, message : "Use 'DidFindHostedPlayers' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'DidFindHostedPlayers' instead.")]
 		[Export ("matchmakerViewController:didFindPlayers:"), EventArgs ("GKPlayers")]
