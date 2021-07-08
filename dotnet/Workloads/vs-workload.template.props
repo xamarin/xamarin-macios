@@ -6,13 +6,16 @@
   <ItemGroup>
     <!-- Shorten package names to avoid long path caching issues in Visual Studio -->
     <ShortNames Include="microsoft.ios;Microsoft.iOS">
-      <Replacement>iOS</Replacement>
+      <Replacement>XI</Replacement>
     </ShortNames>
     <ShortNames Include="microsoft.maccatalyst;Microsoft.MacCatalyst">
-      <Replacement>MacCat</Replacement>
+      <Replacement>XMC</Replacement>
     </ShortNames>
-    <ShortNames Include="microsoft.tvos;Microsoft.tvOS">
-      <Replacement>tvOS</Replacement>
+    <ShortNames Include="microsoft.ios.runtime;Microsoft.iOS.Runtime">
+      <Replacement>XIRT</Replacement>
+    </ShortNames>
+    <ShortNames Include="microsoft.maccatalyst.runtime;Microsoft.MacCatalyst.Runtime">
+      <Replacement>XMCRT</Replacement>
     </ShortNames>
     <ComponentResources Include="ios" Category=".NET" Title=".NET iOS Workload" Description="Microsoft iOS SDK for .NET"/>
     <ComponentVersions Include="ios" Version="@IOS_WORKLOAD_VERSION@" />

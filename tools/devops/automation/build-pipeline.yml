@@ -262,8 +262,11 @@ stages:
       yamlResourceName: templates
       dependsOn: signing
       artifactName: nuget-signed
-      artifactPatterns: | # Include MacCatalyst, but not macOS packs?
-        !*macOS*
+      artifactPatterns: |
+        Microsoft.NET.iOS.Manifest*.nupkg
+        Microsoft.NET.MacCatalyst.Manifest*.nupkg
+        Microsoft.iOS*.nupkg
+        Microsoft.MacCatalyst*.nupkg
       propsArtifactName: package
       signType: Real
 
