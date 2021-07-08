@@ -263,8 +263,8 @@ stages:
       dependsOn: signing
       artifactName: nuget-signed
       artifactPatterns: |
-        Microsoft.NET.iOS.Manifest*.nupkg
-        Microsoft.NET.MacCatalyst.Manifest*.nupkg
+        Microsoft.NET.Sdk.iOS.Manifest*.nupkg
+        Microsoft.NET.Sdk.MacCatalyst.Manifest*.nupkg
         Microsoft.iOS*.nupkg
         Microsoft.MacCatalyst*.nupkg
       propsArtifactName: package
