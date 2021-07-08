@@ -2,7 +2,7 @@
 // NSUrlSessionHandler.cs:
 //
 // Authors:
-//     Paul Betts <paul@paulbetts.org>
+//     Ani Betts <anais@anaisbetts.org>
 //     Nick Berardi <nick@nickberardi.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining
