@@ -1901,13 +1901,15 @@ namespace HomeKit {
 		IntPtr Constructor (NSUuid uuid, string name);
 	}
 
+	delegate void FetchRoomCompletion (NSArray<HMChipServiceRoom> rooms, NSError error); 
+
 	[iOS (15,0), Watch (8,0), TV (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (NSObject), Name = "HMCHIPServiceRequestHandler")]
 	interface HMChipServiceRequestHandler : NSExtensionRequestHandling
 	{
 		[Async]
 		[Export ("fetchRoomsInHome:completion:")]
-		void FetchRooms (HMChipServiceHome home, Action<NSArray<HMChipServiceRoom>, NSError> completion);
+		void FetchRooms (HMChipServiceHome home, FetchRoomCompletion completion);
 
 		[Async]
 		[Export ("pairAccessoryInHome:onboardingPayload:completion:")]
