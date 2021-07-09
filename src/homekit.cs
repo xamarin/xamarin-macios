@@ -1874,7 +1874,7 @@ namespace HomeKit {
 
 	}
 
-	delegate void HMErrorBlock ([NullAllowed] NSError error);
+	delegate void HMErrorHandler ([NullAllowed] NSError error);
 
 	[iOS (15,0), Watch (8,0), TV (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (NSObject))]
@@ -1882,7 +1882,7 @@ namespace HomeKit {
 	{
 		[Async]
 		[Export ("addAndSetUpAccessoriesForTopology:completionHandler:")]
-		void AddAndSetUpAccessories (HMChipServiceTopology topology, HMErrorBlock completion);
+		void AddAndSetUpAccessories (HMChipServiceTopology topology, HMErrorHandler completion);
 	}
 
 	[iOS (15,0), Watch (8,0), TV (15,0), MacCatalyst (15,0)]
@@ -1901,7 +1901,7 @@ namespace HomeKit {
 		IntPtr Constructor (NSUuid uuid, string name);
 	}
 
-	delegate void FetchRoomCompletion (NSArray<HMChipServiceRoom> rooms, NSError error); 
+	delegate void FetchRoomHandler (NSArray<HMChipServiceRoom> rooms, NSError error); 
 
 	[iOS (15,0), Watch (8,0), TV (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (NSObject), Name = "HMCHIPServiceRequestHandler")]
@@ -1909,7 +1909,7 @@ namespace HomeKit {
 	{
 		[Async]
 		[Export ("fetchRoomsInHome:completion:")]
-		void FetchRooms (HMChipServiceHome home, FetchRoomCompletion completion);
+		void FetchRooms (HMChipServiceHome home, FetchRoomHandler completion);
 
 		[Async]
 		[Export ("pairAccessoryInHome:onboardingPayload:completion:")]
