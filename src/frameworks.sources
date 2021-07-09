@@ -30,6 +30,11 @@
 ACCELERATE_SOURCES = \
 	Accelerate/vImageTypes.cs \
 
+# Accessibility
+
+ACCESSIBILITY_SOURCES = \
+	Accessibility/AXHearingUtilities.cs \
+
 # Accounts
 
 ACCOUNTS_API_SOURCES = \
