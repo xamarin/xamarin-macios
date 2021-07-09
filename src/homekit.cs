@@ -1874,5 +1874,76 @@ namespace HomeKit {
 
 	}
 
+	delegate void HMErrorBlock ([NullAllowed] NSError error);
+
+	[iOS (15,0), Watch (8,0), TV (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (NSObject))]
+	interface HMAccessorySetupManager
+	{
+		[Async]
+		[Export ("addAndSetUpAccessoriesForTopology:completionHandler:")]
+		void AddAndSetUpAccessories (HMChipServiceTopology topology, HMErrorBlock completion);
+	}
+
+	[iOS (15,0), Watch (8,0), TV (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (NSObject), Name = "HMCHIPServiceHome")]
+	[DisableDefaultCtor]
+	interface HMChipServiceHome : NSCopying, NSSecureCoding
+	{
+		[Export ("uuid", ArgumentSemantic.Strong)]
+		NSUuid Uuid { get; }
+
+		[Export ("name", ArgumentSemantic.Strong)]
+		string Name { get; }
+
+		[Export ("initWithUUID:name:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (NSUuid uuid, string name);
+	}
+
+	[iOS (15,0), Watch (8,0), TV (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (NSObject), Name = "HMCHIPServiceRequestHandler")]
+	interface HMChipServiceRequestHandler : NSExtensionRequestHandling
+	{
+		[Async]
+		[Export ("fetchRoomsInHome:completion:")]
+		void FetchRooms (HMChipServiceHome home, Action<NSArray<HMChipServiceRoom>, NSError> completion);
+
+		[Async]
+		[Export ("pairAccessoryInHome:onboardingPayload:completion:")]
+		void PairAccessory (HMChipServiceHome home, string onboardingPayload, Action<NSError> completion);
+
+		[Async]
+		[Export ("configureAccessoryWithName:room:completion:")]
+		void ConfigureAccessory (string accessoryName, HMChipServiceRoom accessoryRoom, Action<NSError> completion);
+	}
+
+	[iOS (15,0), Watch (8,0), TV (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (NSObject), Name = "HMCHIPServiceRoom")]
+	[DisableDefaultCtor]
+	interface HMChipServiceRoom : NSCopying, NSSecureCoding
+	{
+		[Export ("uuid", ArgumentSemantic.Strong)]
+		NSUuid Uuid { get; }
+
+		[Export ("name", ArgumentSemantic.Strong)]
+		string Name { get; }
+
+		[Export ("initWithUUID:name:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (NSUuid uuid, string name);
+	}
+
+	[iOS (15,0), Watch (8,0), TV (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (NSObject), Name = "HMCHIPServiceTopology")]
+	[DisableDefaultCtor]
+	interface HMChipServiceTopology : NSCopying, NSSecureCoding
+	{
+		[Export ("initWithHomes:")]
+		IntPtr Constructor (HMChipServiceHome[] homes);
+
+		[Export ("homes", ArgumentSemantic.Copy)]
+		HMChipServiceHome[] Homes { get; }
+	}
 
 }
