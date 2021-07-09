@@ -228,5 +228,13 @@ namespace IOSurface {
 		[iOS (11,0)][Mac (10,13)]
 		[Internal, Export ("setPurgeable:oldState:")]
 		int _SetPurgeable (IOSurfacePurgeabilityState newState, IntPtr oldStatePtr);
+
+		[Watch (4,0), TV (11,0), Mac (10,6), iOS (11,0), MacCatalyst (13,0)]
+		[Field ("kIOSurfaceColorSpace")]
+		NSString kIOSurfaceColorSpace { get; }
+
+		[Watch (4,0), TV (11,0), Mac (10,6), iOS (11,0), MacCatalyst (13,0)]
+		[Field ("kIOSurfaceICCProfile")]
+		NSString kIOSurfaceICCProfile { get; }
 	}
 }
