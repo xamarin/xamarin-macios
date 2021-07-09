@@ -861,12 +861,11 @@ namespace GameKit {
 		[NoWatch, NoTV, NoMac, iOS (15,0), NoMacCatalyst]
 		[Export ("presentFriendRequestCreatorFromViewController:error:")]
 		bool PresentFriendRequestCreator (UIViewController viewController, [NullAllowed] out NSError error);
-#endif
 
-#if MONOMAC
+#else
 		[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
 		[Export ("presentFriendRequestCreatorFromWindow:error:")]
-		bool PresentFriendRequestCreatorFromWindow ([NullAllowed] NSWindow window, [NullAllowed] out NSError error);
+		bool PresentFriendRequestCreator ([NullAllowed] NSWindow window, [NullAllowed] out NSError error);
 #endif
 
 		[iOS (7,0)][Mac (10,10)] // Mismarked in header, 17613142
