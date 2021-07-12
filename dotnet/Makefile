@@ -133,6 +133,8 @@ $(DOTNET_NUPKG_DIR)/vs-workload.props: Workloads/vs-workload.template.props
 	$(Q) rm -f $@.tmp
 	$(Q_GEN) sed \
 		$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),-e "s/@$(platform)_WORKLOAD_VERSION@/$($(platform)_NUGET_VERSION).$($(platform)_NUGET_COMMIT_DISTANCE)/g") \
+		-e "s/@PACK_VERSION_LONG@/$(IOS_NUGET_VERSION)-$(NUGET_PRERELEASE_IDENTIFIER)$(IOS_NUGET_COMMIT_DISTANCE)/g" \
+		-e "s/@PACK_VERSION_SHORT@/$(IOS_NUGET_VERSION).$(IOS_NUGET_COMMIT_DISTANCE)/g" \
 		$< > $@.tmp
 	$(Q) mv $@.tmp $@
 
