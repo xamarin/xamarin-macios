@@ -48,7 +48,5 @@
 		<SelfContained>true</SelfContained>
 		<_RuntimeIdentifierUsesAppHost>false</_RuntimeIdentifierUsesAppHost>
 		<UseAppHost>false</UseAppHost>
-		<IntermediateOutputPath>$(IntermediateOutputPath)$(RuntimeIdentifier)\</IntermediateOutputPath>
-		<OutputPath>$(OutputPath)$(RuntimeIdentifier)\</OutputPath>
 	</PropertyGroup>
 </Project>
