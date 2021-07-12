@@ -741,7 +741,7 @@
 
 			<!-- copy the aotdata files to the .app -->
 			<ResolvedFileToPublish Include="%(_AssembliesToAOT.AOTData)" >
-				<RelativePath>$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)\$(PublishDir),$(_NativeExecutablePublishDir)))\%(_AssembliesToAOT.Filename).aotdata.%(_AssembliesToAOT.Arch)</RelativePath>
+				<RelativePath>$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)\$(PublishDir),$(_AssemblyPublishDir)))\%(_AssembliesToAOT.Filename).aotdata.%(_AssembliesToAOT.Arch)</RelativePath>
 				<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 			</ResolvedFileToPublish>
 		</ItemGroup>
