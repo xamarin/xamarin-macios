@@ -115,7 +115,7 @@ namespace HomeKit {
 		TimedOutWaitingForAccessory = 100,
 		AccessoryCommunicationFailure = 101,
 		FailedToJoinNetwork = 102,
-		[TV (15,0), iOS (15,0), MacCatalyst (15,0), Watch (8,0)]
+		// iOS 15
 		AccessoryIsSuspended = 103,
 	}
 
