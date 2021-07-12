@@ -671,11 +671,6 @@
 							'%(ResolvedFileToPublish.NuGetPackageId)' == '$(_MonoNugetPackageId)'
 							"
 			/>
-
-			<!-- These are mono libraries whose id needs to be fixed -->
-			<_MonoLibraryFix Include="@(_MonoLibrary)" Condition="'%(_MonoLibrary.Extension)' == '.dylib'">
-				<TargetPath>$(_IntermediateNativeLibraryDir)%(Filename)%(Extension)</TargetPath>
-			</_MonoLibraryFix>
 		</ItemGroup>
 	</Target>
 
