@@ -144,7 +144,6 @@ namespace GameKit {
 		FriendListDescriptionMissing = 100,
 		FriendListRestricted = 101,
 		FriendListDenied = 102,
-		[iOS (15,0), Mac (12,0), MacCatalyst (15,0), Watch (8,0), TV (15,0)]
 		FriendRequestNotAvailable = 103,
 	}
 
