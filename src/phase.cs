@@ -343,6 +343,13 @@ namespace Phase {
 	[DisableDefaultCtor]
 	interface PhaseMappedMetaParameterDefinition
 	{
+		[Export ("initWithValue:identifier:")]
+		IntPtr Constructor (double value, string identifier);
+
+		[Export ("initWithValue:minimum:maximum:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (double value, double minimum, double maximum);
+
 		[Export ("initWithInputMetaParameterDefinition:envelope:identifier:")]
 		IntPtr Constructor (PhaseNumberMetaParameterDefinition inputMetaParameterDefinition, PhaseEnvelope envelope, string identifier);
 
@@ -776,6 +783,7 @@ namespace Phase {
 
 	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (PhaseAsset), Name="PHASESoundEventNodeAsset")]
+	[DisableDefaultCtor]
 	interface PhaseSoundEventNodeAsset {}
 
 	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
@@ -847,6 +855,7 @@ namespace Phase {
 
 	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (NSObject), Name="PHASEDirectivityModelParameters")]
+	[DisableDefaultCtor]
 	interface PhaseDirectivityModelParameters {}
 
 	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
@@ -1229,6 +1238,10 @@ namespace Phase {
 	[DisableDefaultCtor]
 	interface PhaseOccluder
 	{
+		[Export ("initWithEngine:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (PhaseEngine engine);
+
 		[Export ("initWithEngine:shapes:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (PhaseEngine engine, PhaseShape[] shapes);
