@@ -17,6 +17,7 @@ using ObjCRuntime;
 using UIKit;
 #else
 using AppKit;
+using UIImage = AppKit.NSImage;
 #endif
 
 namespace SafariServices {
@@ -59,9 +60,6 @@ namespace SafariServices {
 		[Static, Export ("supportsURL:")]
 		// Apple says it's __nonnull so let's be safe and maintain compatibility with our current behaviour
 		[PreSnippet ("if (url is null) return false;")]
-#if !XAMCORE_4_0
-		bool SupportsUrl (NSUrl url);
-#else
 		bool SupportsUrl ([NullAllowed] NSUrl url);
 #endif
 
@@ -163,7 +161,8 @@ namespace SafariServices {
 		[Export ("barCollapsingEnabled")]
 		bool BarCollapsingEnabled { get; set; }
 
-		[iOS (15,0), MacCatalyst (15,0)]
+		[NullAllowed]
+		[iOS (15,0), MacCatalyst (15,0), NoMac, NoTV, NoWatch]
 		[Export ("activityButton", ArgumentSemantic.Copy)]
 		SFSafariViewControllerActivityButton ActivityButton { get; set; }
 	}
@@ -471,17 +470,15 @@ namespace SafariServices {
 #endif
 
 	[Static]
-	[iOS (15,0), Mac (11,0), MacCatalyst (15,0)]
+	[iOS (15,0), Mac (11,0), MacCatalyst (15,0), NoTV, NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SFExtension {
 		[Field ("SFExtensionMessageKey")]
-		NSString SFExtensionMessageKey { get; }
+		NSString MessageKey { get; }
 	}
 
-
-#if !MONOMAC
-	[iOS (15,0)]
+	[iOS (15,0), MacCatalyst (15,0), NoMac, NoTV, NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SFSafariViewControllerActivityButton : NSCopying, NSSecureCoding
@@ -496,13 +493,11 @@ namespace SafariServices {
 		[NullAllowed, Export ("extensionIdentifier")]
 		string ExtensionIdentifier { get; }
 	}
-#endif
 
-	[iOS (15,0), MacCatalyst (15,0)]
+	[iOS (15,0), MacCatalyst (15,0), NoMac, NoTV, NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	/* conformance not in docs, but intro requires it */
-	interface SFSafariViewControllerPrewarmingToken : NSCoding
+	interface SFSafariViewControllerPrewarmingToken
 	{
 		[Export ("invalidate")]
 		void Invalidate ();
