@@ -1,0 +1,9 @@
+## !extra-null-allowed! 'System.Boolean SafariServices.SSReadingList::SupportsUrl(Foundation.NSUrl)' has a extraneous [NullAllowed] on parameter #0
+
+
+## SFSafariViewControllerActivityButton's constructor uses UIImage 
+## which is not supported in MacCatalyst
+!missing-type! SFSafariViewControllerActivityButton not bound
+!missing-selector! SFSafariViewControllerActivityButton::extensionIdentifier not bound
+!missing-selector! SFSafariViewControllerActivityButton::initWithTemplateImage:extensionIdentifier: not bound
+!missing-selector! SFSafariViewControllerActivityButton::templateImage not bound

@@ -59,7 +59,11 @@ namespace SafariServices {
 		[Static, Export ("supportsURL:")]
 		// Apple says it's __nonnull so let's be safe and maintain compatibility with our current behaviour
 		[PreSnippet ("if (url is null) return false;")]
+#if !XAMCORE_4_0
+		bool SupportsUrl (NSUrl url);
+#else
 		bool SupportsUrl ([NullAllowed] NSUrl url);
+#endif
 
 		[Export ("addReadingListItemWithURL:title:previewText:error:")]
 		bool Add (NSUrl url, [NullAllowed] string title, [NullAllowed] string previewText, out NSError error);
@@ -116,6 +120,11 @@ namespace SafariServices {
 		[iOS (11,0)]
 		[Export ("dismissButtonStyle", ArgumentSemantic.Assign)]
 		SFSafariViewControllerDismissButtonStyle DismissButtonStyle { get; set; }
+
+		[iOS (15,0), MacCatalyst (15,0)]
+		[Static]
+		[Export ("prewarmConnectionsToURLs:")]
+		SFSafariViewControllerPrewarmingToken PrewarmConnections (NSUrl[] Urls);
 	}
 
 	[iOS (9,0)]
@@ -153,6 +162,10 @@ namespace SafariServices {
 
 		[Export ("barCollapsingEnabled")]
 		bool BarCollapsingEnabled { get; set; }
+
+		[iOS (15,0), MacCatalyst (15,0)]
+		[Export ("activityButton", ArgumentSemantic.Copy)]
+		SFSafariViewControllerActivityButton ActivityButton { get; set; }
 	}
 
 	[iOS (11,0)]
@@ -456,4 +469,42 @@ namespace SafariServices {
 		bool Enabled { [Bind ("isEnabled")] get; set; }
 	}
 #endif
+
+	[Static]
+	[iOS (15,0), Mac (11,0), MacCatalyst (15,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface SFExtension {
+		[Field ("SFExtensionMessageKey")]
+		NSString SFExtensionMessageKey { get; }
+	}
+
+
+#if !MONOMAC
+	[iOS (15,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface SFSafariViewControllerActivityButton : NSCopying, NSSecureCoding
+	{
+		[Export ("initWithTemplateImage:extensionIdentifier:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (UIImage templateImage, string extensionIdentifier);
+
+		[NullAllowed, Export ("templateImage", ArgumentSemantic.Copy)]
+		UIImage TemplateImage { get; }
+
+		[NullAllowed, Export ("extensionIdentifier")]
+		string ExtensionIdentifier { get; }
+	}
+#endif
+
+	[iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	/* conformance not in docs, but intro requires it */
+	interface SFSafariViewControllerPrewarmingToken : NSCoding
+	{
+		[Export ("invalidate")]
+		void Invalidate ();
+	}
 }
