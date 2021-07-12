@@ -28,9 +28,9 @@ namespace Phase {
 	[Mac (12,0), NoWatch, TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[Native]
 	public enum PhaseSpatializationMode : long {
-		utomatic = 0,
-		lwaysUseBinaural = 1,
-		lwaysUseChannelBased = 2,
+		Automatic = 0,
+		AlwaysUseBinaural = 1,
+		AlwaysUseChannelBased = 2,
 	}
 
 	[Mac (12,0), NoWatch, TV (15,0), iOS (15,0), MacCatalyst (15,0)]
@@ -180,7 +180,7 @@ namespace Phase {
 	[Mac (12,0), NoWatch, TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[Native]
 	public enum PhasePushStreamCompletionCallbackType : long {
-		PushStreamCompletionDataRendered = 0,
+		DataRendered = 0,
 	}
 
 	[Mac (12,0), NoWatch, TV (15,0), iOS (15,0), MacCatalyst (15,0)]
@@ -664,7 +664,7 @@ namespace Phase {
 	}
 
 	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof(PhaseSoundEventNodeDefinition), Name="PHASESwitchNodeDefinition")]
+	[BaseType (typeof (PhaseSoundEventNodeDefinition), Name="PHASESwitchNodeDefinition")]
 	[DisableDefaultCtor]
 	interface PhaseSwitchNodeDefinition
 	{
@@ -1009,13 +1009,13 @@ namespace Phase {
 		void Activate ();
 
 		[Export ("activateWithTimeToTargetOverride:")]
-		void ActivateWithTimeToTargetOverride (double timeToTargetOverride);
+		void Activate (double timeToTargetOverride);
 
 		[Export ("deactivate")]
 		void Deactivate ();
 
 		[Export ("deactivateWithTimeToResetOverride:")]
-		void DeactivateWithTimeToResetOverride (double timeToResetOverride);
+		void Deactivate (double timeToResetOverride);
 	}
 
 	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
@@ -1097,8 +1097,9 @@ namespace Phase {
 		[Export ("startAndReturnError:")]
 		bool Start ([NullAllowed] out NSError error);
 
+		[Async]
 		[Export ("seekToTime:completionBlock:")]
-		bool SeekToTime (double time, [NullAllowed] Action<PhaseSoundEventSeekHandlerReason> completionBlock);
+		bool Seek (double time, [NullAllowed] Action<PhaseSoundEventSeekHandlerReason> completionHandler);
 
 		[Export ("pause")]
 		void Pause ();
