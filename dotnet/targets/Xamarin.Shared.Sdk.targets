@@ -677,7 +677,6 @@
 	<!-- App bundle creation tasks -->
 
 	<Target Name="_CreateRuntimeConfiguration"
-		Condition="'$(UseMonoRuntime)' != 'false'"
 		Inputs="$(ProjectRuntimeConfigFilePath)"
 		Outputs="$(_ParsedRuntimeConfigFilePath)"
 		DependsOnTargets="GenerateBuildRuntimeConfigurationFiles;_ComputePublishLocation"
