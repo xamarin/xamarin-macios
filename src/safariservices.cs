@@ -61,7 +61,6 @@ namespace SafariServices {
 		// Apple says it's __nonnull so let's be safe and maintain compatibility with our current behaviour
 		[PreSnippet ("if (url is null) return false;")]
 		bool SupportsUrl ([NullAllowed] NSUrl url);
-#endif
 
 		[Export ("addReadingListItemWithURL:title:previewText:error:")]
 		bool Add (NSUrl url, [NullAllowed] string title, [NullAllowed] string previewText, out NSError error);
