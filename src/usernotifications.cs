@@ -181,27 +181,27 @@ namespace UserNotifications {
 	[MacCatalyst (15,0), NoiOS, NoMac, NoWatch, NoTV]
 	enum UNNotificationInterruptionReason {
 		[Field ("UNNotificationInterruptionReasonAccountSecurity")]
-		NSString AccountSecurity,
+		AccountSecurity,
 		[Field ("UNNotificationInterruptionReasonHealthAndWellness")]
-		NSString HealthAndWellness,
+		HealthAndWellness,
 		[Field ("UNNotificationInterruptionReasonLocalSafety")]
-		NSString LocalSafety,
+		LocalSafety,
 		[Field ("UNNotificationInterruptionReasonHomeSecurity")]
-		NSString HomeSecurity,
+		HomeSecurity,
 		[Field ("UNNotificationInterruptionReasonOrderPickup")]
-		NSString OrderPickup,
+		OrderPickup,
 		[Field ("UNNotificationInterruptionReasonPackageDelivery")]
-		NSString PackageDelivery,
+		PackageDelivery,
 		[Field ("UNNotificationInterruptionReasonTransportationDeparting")]
-		NSString TransportationDeparting,
+		TransportationDeparting,
 		[Field ("UNNotificationInterruptionReasonSchedule")]
-		NSString Schedule,
+		Schedule,
 		[Field ("UNNotificationInterruptionReasonTimeExpired")]
-		NSString TimeExpired,
+		TimeExpired,
 		[Field ("UNNotificationInterruptionReasonApprovalRequest")]
-		NSString ApprovalRequest,
+		ApprovalRequest,
 		[Field ("UNNotificationInterruptionReasonUrgentMessage")]
-		NSString UrgentMessage,
+		UrgentMessage,
 	}
 
 	[iOS (10, 0)]
