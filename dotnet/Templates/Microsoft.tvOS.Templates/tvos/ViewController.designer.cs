@@ -4,11 +4,11 @@
 // Manual changes to this file may not be handled correctly.
 //
 
-namespace tvOSApp1 {
-	[Register ("ViewController")]
-	partial class ViewController {
-		void ReleaseDesignerOutlets ()
-		{
-		}
+namespace tvOSApp1;
+
+[Register ("ViewController")]
+partial class ViewController {
+	void ReleaseDesignerOutlets ()
+	{
 	}
 }
