@@ -1,0 +1,7 @@
+## Deprecated
+!missing-selector! UNMutableNotificationContent::setSummaryArgument: not bound
+!missing-selector! UNMutableNotificationContent::setSummaryArgumentCount: not bound
+!missing-selector! UNMutableNotificationContent::summaryArgument not bound
+!missing-selector! UNMutableNotificationContent::summaryArgumentCount not bound
+!missing-selector! UNNotificationContent::summaryArgument not bound
+!missing-selector! UNNotificationContent::summaryArgumentCount not bound
