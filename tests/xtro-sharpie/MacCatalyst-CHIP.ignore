@@ -1,11 +1,10 @@
+# framework is missing in Xcode13 beta 1
 !missing-enum! CHIPErrorCode not bound
 !missing-enum! CHIPOnboardingPayloadType not bound
 !missing-enum! CHIPOptionalQRCodeInfoType not bound
 !missing-enum! CHIPPairingStatus not bound
 !missing-enum! CHIPRendezvousInformationFlags not bound
 !missing-field! CHIPErrorDomain not bound
-!missing-field! CHIPVersionNumber not bound
-!missing-field! CHIPVersionString not bound
 !missing-protocol! CHIPDevicePairingDelegate not bound
 !missing-protocol! CHIPPersistentStorageDelegate not bound
 !missing-selector! +CHIPDeviceController::sharedController not bound

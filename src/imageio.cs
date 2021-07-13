@@ -1243,6 +1243,10 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyImageCount")]
 		NSString ImageCount { get; }
 
+		[Mac (12, 0), iOS (15, 0), TV (15,0), MacCatalyst (15,0), Watch (8,0)]
+		[Field ("kCGImagePropertyImageIndex")]
+		NSString ImageIndex { get; }
+
 		[Mac (10, 13), iOS (11,0), TV (11,0), Watch (4,0)]
 		[Field ("kCGImagePropertyWidth")]
 		NSString Width { get; }
@@ -2051,6 +2055,50 @@ namespace ImageIO {
 		[MacCatalyst (14,1)]
 		[Field ("kCGImagePropertyTGACompression")]
 		NSString TgaCompression { get; }
+
+		[Mac (12, 0), iOS (15, 0), TV (15,0), MacCatalyst (15,0), Watch (8,0)]
+		[Field ("kCGImagePropertyGroupImageIndexLeft")]
+		NSString GroupImageIndexLeft { get; }
+
+		[Mac (12, 0), iOS (15, 0), TV (15,0), MacCatalyst (15,0), Watch (8,0)]
+		[Field ("kCGImagePropertyGroupImageIndexRight")]
+		NSString GroupImageIndexRight { get; }
+
+		[Mac (12, 0), iOS (15, 0), TV (15,0), MacCatalyst (15,0), Watch (8,0)]
+		[Field ("kCGImagePropertyGroupImageIsAlternateImage")]
+		NSString GroupImageIsAlternateImage { get; }
+
+		[Mac (12, 0), iOS (15, 0), TV (15,0), MacCatalyst (15,0), Watch (8,0)]
+		[Field ("kCGImagePropertyGroupImageIsLeftImage")]
+		NSString GroupImageIsLeftImage { get; }
+
+		[Mac (12, 0), iOS (15, 0), TV (15,0), MacCatalyst (15,0), Watch (8,0)]
+		[Field ("kCGImagePropertyGroupImageIsRightImage")]
+		NSString GroupImageIsRightImage { get; }
+
+		[Mac (12, 0), iOS (15, 0), TV (15,0), MacCatalyst (15,0), Watch (8,0)]
+		[Field ("kCGImagePropertyGroupImagesAlternate")]
+		NSString GroupImagesAlternate { get; }
+
+		[Mac (12, 0), iOS (15, 0), TV (15,0), MacCatalyst (15,0), Watch (8,0)]
+		[Field ("kCGImagePropertyGroupIndex")]
+		NSString GroupIndex { get; }
+
+		[Mac (12, 0), iOS (15, 0), TV (15,0), MacCatalyst (15,0), Watch (8,0)]
+		[Field ("kCGImagePropertyGroups")]
+		NSString Groups { get; }
+
+		[Mac (12, 0), iOS (15, 0), TV (15,0), MacCatalyst (15,0), Watch (8,0)]
+		[Field ("kCGImagePropertyGroupType")]
+		NSString GroupType { get; }
+
+		[Mac (12, 0), iOS (15, 0), TV (15,0), MacCatalyst (15,0), Watch (8,0)]
+		[Field ("kCGImagePropertyGroupTypeStereoPair")]
+		NSString GroupTypeStereoPair { get; }
+
+		[Mac (12, 0), iOS (15, 0), TV (15,0), MacCatalyst (15,0), Watch (8,0)]
+		[Field ("kCGImagePropertyGroupTypeAlternate")]
+		NSString GroupTypeAlternate { get; }
 	}
 
 	[iOS (7,0)]

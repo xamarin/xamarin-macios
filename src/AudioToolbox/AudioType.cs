@@ -470,6 +470,8 @@ namespace AudioToolbox {
 		HoaAcn14               = (2 << 16) | 14,
 		HoaAcn15               = (2 << 16) | 15,
 		HoaAcn65024            = (2 << 16) | 65024,
+		HoaSn3d	               = HoaAcn0,
+		HoaN3d                 = (3 << 16),
 	}
 
 #if !COREBUILD
