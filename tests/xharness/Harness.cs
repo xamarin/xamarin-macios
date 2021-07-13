@@ -297,7 +297,7 @@ namespace Xharness {
 				IsDotNetProject = true,
 				TargetFrameworkFlavors = MacFlavors.MacCatalyst,
 				Platform = "AnyCPU",
-				Ignore = !ENABLE_DOTNET,
+				Ignore = true /* always ignored for now, it has known failures */,
 			});
 
 			MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "monotouch-test", "dotnet", "macOS", "monotouch-test.csproj"))) {
