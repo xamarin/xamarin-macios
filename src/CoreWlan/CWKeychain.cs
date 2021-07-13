@@ -40,13 +40,12 @@ namespace CoreWlan {
 #else
 		[Mac (10,9)]
 #endif
-		public static bool FindWiFiEAPIdentity (CWKeychainDomain domain, NSData ssid, out SecIdentity? identity)
+		public static bool TryFindWiFiEAPIdentity (CWKeychainDomain domain, NSData ssid, out SecIdentity? identity)
 		{
 			identity = null;
 			IntPtr outPtr = IntPtr.Zero;
 			var result = CWKeychainCopyWiFiEAPIdentity (domain, ssid.GetHandle (), out outPtr);
-			if (result == 0)
-			{
+			if (result == 0) {
 				identity = new SecIdentity (outPtr, true);
 			}
 
@@ -106,10 +105,10 @@ namespace CoreWlan {
 			NSStringRef passwordPtr = IntPtr.Zero;
 			var result = CWKeychainFindWiFiEAPUsernameAndPassword (domain, ssid.GetHandle (), out usernamePtr, out passwordPtr);
 			if (usernamePtr != IntPtr.Zero) {
-				username = Runtime.GetNSObject<NSString> (usernamePtr, true);
+				username = Runtime.GetNSObject<NSString> (usernamePtr, false);
 			}
 			if (passwordPtr != IntPtr.Zero) {
-				password= Runtime.GetNSObject<NSString> (passwordPtr, true);
+				password = Runtime.GetNSObject<NSString> (passwordPtr, false);
 			}
 			return result == 0;
 		}
@@ -133,7 +132,7 @@ namespace CoreWlan {
 			NSStringRef passwordPtr = IntPtr.Zero;
 			var result = CWKeychainFindWiFiPassword (domain, ssid.GetHandle (), out passwordPtr);
 			if (passwordPtr != IntPtr.Zero) {
-				password= Runtime.GetNSObject<NSString> (passwordPtr, true);
+				password = Runtime.GetNSObject<NSString> (passwordPtr, false);
 			}
 			return result == 0;
 		}

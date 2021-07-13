@@ -149,7 +149,7 @@ namespace CoreWlan {
 		[Export ("configuration")]
 		CWConfiguration Create ();
 
-		[Mac (10,7), MacCatalyst (15,0)]
+		[MacCatalyst (15,0)]
 		[Static]
 		[Export ("configurationWithConfiguration:")]
 		CWConfiguration Create (CWConfiguration configuration);
