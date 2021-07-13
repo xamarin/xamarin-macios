@@ -1318,6 +1318,23 @@ xamarin_initialize ()
 	MONO_EXIT_GC_UNSAFE;
 }
 
+static char *x_app_bundle_path = NULL;
+const char *
+xamarin_get_app_bundle_path ()
+{
+	if (x_app_bundle_path != NULL)
+		return x_app_bundle_path;
+
+	NSBundle *main_bundle = [NSBundle mainBundle];
+
+	if (main_bundle == NULL)
+		xamarin_assertion_message ("Could not find the main bundle in the app ([NSBundle mainBundle] returned nil)");
+
+	x_app_bundle_path = strdup ([[[main_bundle bundlePath] stringByStandardizingPath] UTF8String]);
+
+	return x_app_bundle_path;
+}
+
 static char *x_bundle_path = NULL;
 const char *
 xamarin_get_bundle_path ()
