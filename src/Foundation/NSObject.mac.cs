@@ -113,10 +113,6 @@ namespace Foundation {
 		[Obsolete ("Use PlatformAssembly for easier code sharing across platforms.")]
 		public static readonly Assembly MonoMacAssembly = typeof (NSObject).Assembly;
 #endif
-
-		internal void SetAsProxy () {
-			IsDirectBinding = true;
-		}
 #endif // !COREBUILD
 	}
 }

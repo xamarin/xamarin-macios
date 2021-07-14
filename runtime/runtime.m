@@ -55,6 +55,9 @@ bool xamarin_init_mono_debug = false;
 #endif
 int xamarin_log_level = 0;
 const char *xamarin_executable_name = NULL;
+#if DOTNET
+const char *xamarin_icu_dat_file_name = NULL;
+#endif
 #if MONOMAC || TARGET_OS_MACCATALYST
 NSString * xamarin_custom_bundle_name = @"MonoBundle";
 #endif
@@ -1315,6 +1318,23 @@ xamarin_initialize ()
 	MONO_EXIT_GC_UNSAFE;
 }
 
+static char *x_app_bundle_path = NULL;
+const char *
+xamarin_get_app_bundle_path ()
+{
+	if (x_app_bundle_path != NULL)
+		return x_app_bundle_path;
+
+	NSBundle *main_bundle = [NSBundle mainBundle];
+
+	if (main_bundle == NULL)
+		xamarin_assertion_message ("Could not find the main bundle in the app ([NSBundle mainBundle] returned nil)");
+
+	x_app_bundle_path = strdup ([[[main_bundle bundlePath] stringByStandardizingPath] UTF8String]);
+
+	return x_app_bundle_path;
+}
+
 static char *x_bundle_path = NULL;
 const char *
 xamarin_get_bundle_path ()
@@ -2384,6 +2404,15 @@ void
 xamarin_vm_initialize ()
 {
 	char *pinvokeOverride = xamarin_strdup_printf ("%p", &xamarin_pinvoke_override);
+	char *icu_dat_file_path = NULL;
+
+	char path [1024];
+	if (!xamarin_locate_app_resource (xamarin_icu_dat_file_name, path, sizeof (path))) {
+		LOG (PRODUCT ": Could not locate the ICU data file '%s' in the app bundle.\n", xamarin_icu_dat_file_name);
+	} else {
+		icu_dat_file_path = path;
+	}
+
 	// All the properties we pass here must also be listed in the _RuntimeConfigReservedProperties item group
 	// for the _CreateRuntimeConfiguration target in dotnet/targets/Xamarin.Shared.Sdk.targets.
 	const char *propertyKeys[] = {
@@ -2394,7 +2423,7 @@ xamarin_vm_initialize ()
 	const char *propertyValues[] = {
 		xamarin_get_bundle_path (),
 		pinvokeOverride,
-		"icudt.dat",
+		icu_dat_file_path,
 	};
 	static_assert (sizeof (propertyKeys) == sizeof (propertyValues), "The number of keys and values must be the same.");
 
@@ -2428,10 +2457,18 @@ xamarin_pinvoke_override (const char *libraryName, const char *entrypointName)
 			} else if (!strcmp (entrypointName, "objc_msgSendSuper_stret")) {
 				symbol = (void *) &xamarin_dyn_objc_msgSendSuper_stret;
 #endif // !defined (__arm64__)
+			} else {
+				return NULL;
 			}
 		}
 #endif // defined (__i386__) || defined (__x86_64__) || defined (__arm64__)
 #endif // !defined (CORECLR_RUNTIME)
+	} else {
+		return NULL;
+	}
+
+	if (symbol == NULL) {
+		LOG (PRODUCT ": Unable to resolve P/Invoke '%s' in the library '%s'", entrypointName, libraryName);
 	}
 
 	return symbol;
@@ -2478,7 +2515,7 @@ xamarin_vprintf (const char *format, va_list args)
  *
  * The platform assembly (Xamarin.[iOS|TVOS|WatchOS].dll) and any assemblies
  * the platform assembly references (mscorlib.dll, System.dll) may be in a
- * pointer-size subdirectory (ARCH_SUBDIR).
+ * pointer-size subdirectory (ARCH_SUBDIR), or an RID-specific subdirectory.
  * 
  * AOT data files will have an arch-specific infix.
  */
@@ -2495,6 +2532,13 @@ xamarin_get_assembly_name_without_extension (const char *aname, char *name, size
 	const char *ext = name + (len - 4);
 	if (!strncmp (".exe", ext, 4) || !strncmp (".dll", ext, 4))
 		name [len - 4] = 0; // strip off any extensions.
+}
+
+bool
+xamarin_locate_app_resource (const char *resource, char *path, size_t pathlen)
+{
+	const char *app_path = xamarin_get_bundle_path ();
+	return xamarin_locate_assembly_resource_for_root (app_path, NULL, resource, path, pathlen);
 }
 
 static bool
@@ -2535,6 +2579,16 @@ xamarin_locate_assembly_resource_for_root (const char *root, const char *culture
 		return true;
 	}
 #endif // !MONOMAC
+
+#if DOTNET
+	// RID-specific subdirectory
+	if (snprintf (path, pathlen, "%s/.xamarin/%s/%s", root, RUNTIMEIDENTIFIER, resource) < 0) {
+		LOG (PRODUCT ": Failed to construct path for resource: %s (5): %s", resource, strerror (errno));
+		return false;
+	} else if (xamarin_file_exists (path)) {
+		return true;
+	}
+#endif
 
 	// just the file, no extensions, etc.
 	if (snprintf (path, pathlen, "%s/%s", root, resource) < 0) {

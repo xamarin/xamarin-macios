@@ -30,6 +30,11 @@
 ACCELERATE_SOURCES = \
 	Accelerate/vImageTypes.cs \
 
+# Accessibility
+
+ACCESSIBILITY_SOURCES = \
+	Accessibility/AXHearingUtilities.cs \
+
 # Accounts
 
 ACCOUNTS_API_SOURCES = \
@@ -656,7 +661,6 @@ CORETELEPHONY_CORE_SOURCES = \
 
 COREVIDEO_API_SOURCES = \
 	CoreVideo/CVEnums.cs \
-	CoreVideo/CVPixelFormatType.cs \
 
 COREVIDEO_CORE_SOURCES = \
 	CoreVideo/CoreVideo.cs \
@@ -665,6 +669,7 @@ COREVIDEO_CORE_SOURCES = \
 	CoreVideo/CVPixelBuffer.cs \
 	CoreVideo/CVPixelBufferAttributes.cs \
 	CoreVideo/CVPixelBufferPool.cs \
+	CoreVideo/CVPixelFormatType.cs \
 
 COREVIDEO_SOURCES = \
 	CoreVideo/CVDisplayLink.cs \
@@ -1925,6 +1930,7 @@ MAC_FRAMEWORKS =            \
 	BusinessChat            \
 	CallKit \
 	CFNetwork               \
+	Chip                    \
 	ClassKit                \
 	CloudKit                \
 	Contacts                \
@@ -2025,6 +2031,7 @@ IOS_FRAMEWORKS =         \
 	CallKit \
 	CarPlay \
 	CFNetwork \
+	Chip \
 	ClassKit \
 	CloudKit \
 	Contacts \
@@ -2114,6 +2121,7 @@ IOS_FRAMEWORKS =         \
 
 WATCHOS_FRAMEWORKS =        \
 	$(COMMON_FRAMEWORKS)    \
+	Chip                    \
 	ClockKit                \
 	CloudKit                \
 	Contacts                \
@@ -2146,6 +2154,7 @@ TVOS_FRAMEWORKS =           \
 	AudioUnit               \
 	BackgroundTasks         \
 	CFNetwork               \
+	Chip                    \
 	CloudKit                \
 	CoreAnimation           \
 	CoreGraphics            \
@@ -2268,7 +2277,6 @@ MACCATALYST_FRAMEWORKS = \
 	UserNotifications \
 	UserNotificationsUI \
 	VideoToolbox \
-	VideoSubscriberAccount \
 	Vision \
 	WKWebKit \
 
