@@ -159,11 +159,9 @@ namespace CoreWlan {
 	[BaseType (typeof (CWConfiguration))]
 	interface CWMutableConfiguration {
 
-		[Mac (10, 7)]
 		[Export ("networkProfiles", ArgumentSemantic.Copy)]
 		NSOrderedSet<CWNetworkProfile> NetworkProfiles { get; set; }
 
-		[Mac (10, 7)]
 		[Export ("requireAdministratorForAssociation")]
 		bool RequireAdministratorForAssociation { get; set; }
 
@@ -662,11 +660,9 @@ namespace CoreWlan {
 	interface CWMutableNetworkProfile : NSCoding, NSSecureCoding, NSCopying, NSMutableCopying  
 	{
 		[NullAllowed]
-		[Mac (10, 7)]
 		[Export ("ssidData", ArgumentSemantic.Copy)]
 		NSData SsidData { get; set; }
 
-		[Mac (10, 7)]
 		[Export ("security", ArgumentSemantic.Assign)]
 		CWSecurity Security { get; set; }
 	}

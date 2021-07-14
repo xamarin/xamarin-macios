@@ -1,12 +1,3 @@
-//
-// Unit tests for CVPixelBuffer
-//
-// Authors:
-//	Rolf Bjarne Kvinge <rolf@xamarin.com>
-//
-// Copyright 2016 Xamarin Inc. All rights reserved.
-//
-
 #if !__WATCHOS__
 
 using System;
@@ -38,8 +29,8 @@ namespace MonoTouchFixtures.CoreWlan {
 		}
 
 		[Test]
-		public void FindWiFiEAPIdentityMissingTest ()
-			=> Assert.False (CWKeychain.FindWiFiEAPIdentity (domain, ssid, out var secIdentity));
+		public void TryFindWiFiEAPIdentityMissingTest ()
+			=> Assert.False (CWKeychain.TryFindWiFiEAPIdentity (domain, ssid, out var secIdentity));
 
 		[Test]
 		public void TryDeleteWiFiEAPUsernameAndPasswordMissingTest ()
@@ -83,3 +74,4 @@ namespace MonoTouchFixtures.CoreWlan {
 	}
 }
 #endif
+
