@@ -6,7 +6,7 @@ namespace iOSApp1 {
 	public class SceneDelegate : UIResponder, IUIWindowSceneDelegate {
 
 		[Export ("window")]
-		public UIWindow Window { get; set; }
+		public UIWindow? Window { get; set; }
 
 		[Export ("scene:willConnectToSession:options:")]
 		public void WillConnect (UIScene scene, UISceneSession session, UISceneConnectionOptions connectionOptions)
