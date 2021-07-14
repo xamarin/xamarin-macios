@@ -146,7 +146,7 @@ namespace Xamarin.Linker.Steps
 				case "System.Security.Cryptography.Native.Apple":
 #if NET
 					// https://github.com/dotnet/runtime/issues/47533
-					if (DerivedLinkContext.App.Platform != ApplePlatform.MacOSX) {
+					if (DerivedLinkContext.App.Platform != ApplePlatform.MacOSX && DerivedLinkContext.App.Platform != ApplePlatform.MacCatalyst) {
 						Driver.Log (4, "Did not add native reference to {0} in {1} referenced by {2} in {3}.", pinfo.EntryPoint, pinfo.Module.Name, method.FullName, method.Module.Name);
 						break;
 					}
