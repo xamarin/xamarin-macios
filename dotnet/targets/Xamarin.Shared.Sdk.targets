@@ -383,6 +383,7 @@
 				SdkVersion=$(_SdkVersion)
 				TargetArchitectures=$(TargetArchitectures)
 				TargetFramework=$(_ComputedTargetFrameworkMoniker)
+				UseLlvm=$(MtouchUseLlvm)
 				Verbosity=$(_BundlerVerbosity)
 				XamarinRuntime=$(_XamarinRuntime)
 			</_CustomLinkerOptions>
