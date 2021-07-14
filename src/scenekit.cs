@@ -160,6 +160,12 @@ namespace SceneKit {
 		[Export ("removeAllAnimations")]
 		void RemoveAllAnimations ();
 
+		[Introduced (PlatformName.MacCatalyst, 15, 0)]
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0)]
+		[Abstract]
+		[Export ("removeAllAnimationsWithBlendOutDuration:")]
+		void RemoveAllAnimationsWithBlendOutDuration (nfloat duration);
+
 		[Abstract]
 		[Export ("removeAnimationForKey:")]
 		void RemoveAnimation (NSString key);
@@ -3991,6 +3997,11 @@ namespace SceneKit {
 		[Wrap ("WeakShaderModifiers")]
 		SCNShaderModifiers ShaderModifiers { get; set; }
 
+		[Mac (12,0), iOS (15,0), TV (15,0), Watch (8,0)]
+		[NullAllowed] // by default this property is null
+		[Export ("minimumLanguageVersion", ArgumentSemantic.Retain)]
+		NSNumber MinimumLanguageVersion { get; set; }
+
 		[NoWatch]
 		[NullAllowed] // by default this property is null
 		[Export ("program", ArgumentSemantic.Retain)]
@@ -4864,6 +4875,11 @@ namespace SceneKit {
 
 		[Export ("fresnelExponent")]
 		nfloat FresnelExponent { get; set; }
+
+		[Introduced (PlatformName.MacCatalyst, 15, 0)]
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0)]
+		[Export ("writesToDepthBuffer")]
+		bool WritesToDepthBuffer { get; set; }
 
 		[Export ("propertyControllers", ArgumentSemantic.Copy), NullAllowed]
 		NSDictionary WeakPropertyControllers { get; set; }
