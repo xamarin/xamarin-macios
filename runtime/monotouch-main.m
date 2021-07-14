@@ -270,8 +270,11 @@ xamarin_main (int argc, char *argv[], enum XamarinLaunchMode launch_mode)
 
 	MonoAssembly *assembly;
 	GCHandle exception_gchandle = NULL;
-	const char *c_bundle_path = xamarin_get_bundle_path ();
 
+	// For legacy Xamarin.Mac, we used to chdir to $appdir/Contents/Resources (I'm not sure where this comes from, earliest commit I could find was this: https://github.com/xamarin/maccore/commit/20045dd7f85cb038cea673a9281bb6131711069c)
+	// For mobile platforms, we chdir to $appdir
+	// In .NET, we always chdir to $appdir, so that we're consistent
+	const char *c_bundle_path = xamarin_get_app_bundle_path ();
 	chdir (c_bundle_path);
 
 	setenv ("DYLD_BIND_AT_LAUNCH", "1", 1);
