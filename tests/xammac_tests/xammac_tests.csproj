@@ -268,7 +268,6 @@
   <ItemGroup>
     <Folder Include="EmbeddedResources\" />
 	<Folder Include="..\monotouch-test\BundleResourceResources\Base.lproj\" />
-	<Folder Include="CoreWlan\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\bindings-test\macOS\bindings-test.csproj">

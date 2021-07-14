@@ -1,4 +1,4 @@
-#if !__WATCHOS__
+#if MONOMAC
 
 using System;
 using System.Drawing;
