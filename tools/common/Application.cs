@@ -1620,8 +1620,10 @@ namespace Xamarin.Bundler {
 				return !Profile.IsSdkAssembly (Path.GetFileNameWithoutExtension (assembly));
 			case ApplePlatform.TVOS:
 			case ApplePlatform.WatchOS:
-			case ApplePlatform.MacCatalyst:
 				return false;
+			case ApplePlatform.MacCatalyst:
+				// We can't emit a direct call to the P/Invoke with the AOT compiler: https://github.com/dotnet/runtime/issues/55733
+				return IsAOTCompiled (assembly);
 			default:
 				throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
 			}
