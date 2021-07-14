@@ -437,12 +437,12 @@ namespace UserNotifications {
 		NSDictionary UserInfo { get; }
 
 		[NoWatch, NoTV, iOS (12, 0)]
-		[Deprecated (PlatformName.iOS, 15, 0, message: "summaryArgument is ignored")]
+		[Deprecated (PlatformName.iOS, 15, 0, message: "The property 'summaryArgument' is ignored.")]
 		[Export ("summaryArgument")]
 		string SummaryArgument { get; }
 
 		[NoWatch, NoTV, iOS (12, 0)]
-		[Deprecated (PlatformName.iOS, 15, 0, message: "summaryArgumentCount is ignored")]
+		[Deprecated (PlatformName.iOS, 15, 0, message: "The property 'summaryArgumentCount' is ignored.")]
 		[Export ("summaryArgumentCount")]
 		nuint SummaryArgumentCount { get; }
 
@@ -516,12 +516,12 @@ namespace UserNotifications {
 		NSDictionary UserInfo { get; set; }
 
 		[NoWatch, NoTV, iOS (12, 0)]
-		[Deprecated (PlatformName.iOS, 15, 0, message: "summaryArgument is ignored")]
+		[Deprecated (PlatformName.iOS, 15, 0, message: "The property 'summaryArgument' is ignored.")]
 		[Export ("summaryArgument")]
 		string SummaryArgument { get; set; }
 
 		[NoWatch, NoTV, iOS (12, 0)]
-		[Deprecated (PlatformName.iOS, 15, 0, message: "summaryArgumentCount is ignored")]
+		[Deprecated (PlatformName.iOS, 15, 0, message: "The property 'summaryArgumentCount' is ignored.")]
 		[Export ("summaryArgumentCount")]
 		nuint SummaryArgumentCount { get; set; }
 
