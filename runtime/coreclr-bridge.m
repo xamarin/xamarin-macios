@@ -727,18 +727,18 @@ mono_jit_exec (MonoDomain * domain, MonoAssembly * assembly, int argc, const cha
 {
 	unsigned int exitCode = 0;
 
-	char *assemblyName = xamarin_bridge_get_assembly_name (assembly->gchandle);
+	char *assemblyPath = xamarin_bridge_get_assembly_location (assembly->gchandle);
 
-	LOG_CORECLR (stderr, "mono_jit_exec (%p, %p, %i, %p) => EXECUTING %s\n", domain, assembly, argc, argv, assemblyName);
+	LOG_CORECLR (stderr, "mono_jit_exec (%p, %p, %i, %p) => EXECUTING %s\n", domain, assembly, argc, argv, assemblyPath);
 	for (int i = 0; i < argc; i++) {
 		LOG_CORECLR (stderr, "    Argument #%i: %s\n", i + 1, argv [i]);
 	}
 
-	int rv = coreclr_execute_assembly (coreclr_handle, coreclr_domainId, argc, argv, assemblyName, &exitCode);
+	int rv = coreclr_execute_assembly (coreclr_handle, coreclr_domainId, argc, argv, assemblyPath, &exitCode);
 
-	LOG_CORECLR (stderr, "mono_jit_exec (%p, %p, %i, %p) => EXECUTING %s rv: %i exitCode: %i\n", domain, assembly, argc, argv, assemblyName, rv, exitCode);
+	LOG_CORECLR (stderr, "mono_jit_exec (%p, %p, %i, %p) => EXECUTING %s rv: %i exitCode: %i\n", domain, assembly, argc, argv, assemblyPath, rv, exitCode);
 
-	xamarin_free (assemblyName);
+	xamarin_free (assemblyPath);
 
 	if (rv != 0)
 		xamarin_assertion_message ("mono_jit_exec failed: %i\n", rv);

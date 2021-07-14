@@ -1318,6 +1318,23 @@ xamarin_initialize ()
 	MONO_EXIT_GC_UNSAFE;
 }
 
+static char *x_app_bundle_path = NULL;
+const char *
+xamarin_get_app_bundle_path ()
+{
+	if (x_app_bundle_path != NULL)
+		return x_app_bundle_path;
+
+	NSBundle *main_bundle = [NSBundle mainBundle];
+
+	if (main_bundle == NULL)
+		xamarin_assertion_message ("Could not find the main bundle in the app ([NSBundle mainBundle] returned nil)");
+
+	x_app_bundle_path = strdup ([[[main_bundle bundlePath] stringByStandardizingPath] UTF8String]);
+
+	return x_app_bundle_path;
+}
+
 static char *x_bundle_path = NULL;
 const char *
 xamarin_get_bundle_path ()
@@ -2440,10 +2457,18 @@ xamarin_pinvoke_override (const char *libraryName, const char *entrypointName)
 			} else if (!strcmp (entrypointName, "objc_msgSendSuper_stret")) {
 				symbol = (void *) &xamarin_dyn_objc_msgSendSuper_stret;
 #endif // !defined (__arm64__)
+			} else {
+				return NULL;
 			}
 		}
 #endif // defined (__i386__) || defined (__x86_64__) || defined (__arm64__)
 #endif // !defined (CORECLR_RUNTIME)
+	} else {
+		return NULL;
+	}
+
+	if (symbol == NULL) {
+		LOG (PRODUCT ": Unable to resolve P/Invoke '%s' in the library '%s'", entrypointName, libraryName);
 	}
 
 	return symbol;

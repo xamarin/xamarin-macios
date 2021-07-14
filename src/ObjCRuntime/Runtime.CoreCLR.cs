@@ -407,6 +407,12 @@ namespace ObjCRuntime {
 			return Marshal.StringToHGlobalAuto (Path.GetFileName (asm.Location));
 		}
 
+		static IntPtr GetAssemblyLocation (IntPtr gchandle)
+		{
+			var asm = (Assembly) GetGCHandleTarget (gchandle);
+			return Marshal.StringToHGlobalAuto (asm.Location);
+		}
+
 		static void SetFlagsForNSObject (IntPtr gchandle, byte flags)
 		{
 			var obj = (NSObject) GetGCHandleTarget (gchandle);
