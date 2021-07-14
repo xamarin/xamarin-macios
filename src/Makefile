@@ -1076,9 +1076,9 @@ $(TVOS_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in $(TOP)/Make.con
 	$(Q) rm -f $@.tmp
 	$(Q) touch $@
 
-$(TVOS_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml: $(TOP)/src/ILLink.LinkAttributes.xml.in
+$(TVOS_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml: ILLink.LinkAttributes.tvos.xml
 	$(Q) mkdir -p $(TVOS_DOTNET_BUILD_DIR)
-	$(call Q_PROF_GEN,tvos) sed < $< > $@ 's|@PRODUCT_NAME@|Xamarin.TVOS|g;'
+	$(Q) $(CP) $< $@
 
 $(TVOS_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml: $(TOP)/src/ILLink.Substitutions.tvos.xml
 	$(Q) $(CP) $< $@
