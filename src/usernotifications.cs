@@ -452,16 +452,20 @@ namespace UserNotifications {
 		[NullAllowed, Export ("targetContentIdentifier")]
 		string TargetContentIdentifier { get; [NotImplemented] set; }
 
-		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0)]
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("contentByUpdatingWithProvider:error:")]
 		[return: NullAllowed]
-		UNNotificationContent ContentByUpdatingWithProvider (UNNotificationContentProviding provider, [NullAllowed] out NSError outError);
+		UNNotificationContent ContentByUpdatingWithProvider (IUNNotificationContentProviding provider, [NullAllowed] out NSError outError);
 
-		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0)]
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("interruptionLevel", ArgumentSemantic.Assign)]
 		UNNotificationInterruptionLevel InterruptionLevel { get; }
 
-		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0)]
+		[NoWatch, NoTV, NoMac, NoiOS, MacCatalyst (15,0)]
+		[Export ("interruptionReason")]
+		string InterruptionReason { get; }
+
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("relevanceScore")]
 		double RelevanceScore { get; }
 	}
@@ -912,16 +916,17 @@ namespace UserNotifications {
 	{
 		[Static]
 		[Export ("iconWithTemplateImageName:")]
-		UNNotificationActionIcon Create (string templateImageName);
+		UNNotificationActionIcon CreateFromTemplate (string ImageName);
 
 		[Static]
 		[Export ("iconWithSystemImageName:")]
-		UNNotificationActionIcon Create (string systemImageName);
+		UNNotificationActionIcon CreateFromSystem (string ImageName);
 	}
+
+	interface IUNNotificationContentProviding {}
 
 	[iOS (15,0), Mac (12,0), MacCatalyst (15,0), TV (15,0), Watch (8,0)]
 	[Protocol]
-	[BaseType (typeof (NSObject))]
 	interface UNNotificationContentProviding
 	{
 	}
