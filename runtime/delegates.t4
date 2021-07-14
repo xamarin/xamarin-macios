@@ -383,6 +383,13 @@
 			OnlyCoreCLR = true,
 		},
 
+		new XDelegate ("char *", "IntPtr", "xamarin_bridge_get_assembly_location",
+			"GCHandle", "IntPtr", "gchandle"
+		) {
+			WrappedManagedFunction = "GetAssemblyLocation",
+			OnlyCoreCLR = true,
+		},
+
 		new XDelegate ("MonoObject *", "MonoObject *", "xamarin_bridge_create_exception",
 			"enum XamarinExceptionTypes", "Runtime.ExceptionType", "type",
 			"const char *", "IntPtr", "arg0"
