@@ -705,7 +705,7 @@
 			Condition="'$(_SdkIsSimulator)' != 'true' And '$(_PlatformName)' != 'macOS'"
 			DependsOnTargets="_ComputeVariables"
 			Inputs="@(_AssembliesToAOT)"
-			Outputs="@(_AssembliesToAOT -> '$(_AOTOutputDirectory)%(Arch)\%(Filename)%(Extension).o')">
+			Outputs="@(_AssembliesToAOT -> '%(ObjectFile)');@(_AssembliesToAOT -> '%(LLVMFile)');">
 
 		<Error Text="The AOT compiler '$(_AOTCompiler)' does not exist." Condition="!Exists ($(_AOTCompiler))" />
 
@@ -733,12 +733,11 @@
 			SdkRoot="$(_SdkRoot)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 		>
-			<Output TaskParameter="ObjectFiles" ItemName="_AOTObjectFiles" />
 		</CompileNativeCode>
 
 		<ItemGroup Condition="'$(IsMacEnabled)' == 'true'">
 			<!-- Add the AOT-compiled output to the main executable -->
-			<_XamarinMainLibraries Include="@(_AOTObjectFiles)" />
+			<_XamarinMainLibraries Include="@(_AssembliesToAOT -> '%(ObjectFile)')" />
 
 			<!-- copy the aotdata files to the .app -->
 			<ResolvedFileToPublish Include="%(_AssembliesToAOT.AOTData)" >
