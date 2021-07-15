@@ -39,7 +39,7 @@ namespace Xamarin.Linker {
 					var llvmFile = string.Empty;
 					if ((abi & Abi.LLVM) == Abi.LLVM)
 						throw ErrorHelper.CreateError (99, $"Support for LLVM hasn't been implemented yet.");
-					app.GetAotArguments (asm.FullPath, abi, outputDirectory, aotAssembly, llvmFile, aotData, out var processArguments, out var aotArguments);
+					app.GetAotArguments (asm.FullPath, abi, outputDirectory, aotAssembly, llvmFile, aotData, out var processArguments, out var aotArguments, Path.GetDirectoryName (Configuration.AOTCompiler));
 					item.Metadata.Add ("Arguments", StringUtils.FormatArguments (aotArguments));
 					item.Metadata.Add ("ProcessArguments", StringUtils.FormatArguments (processArguments));
 					item.Metadata.Add ("Abi", abiString);

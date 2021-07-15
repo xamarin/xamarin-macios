@@ -356,6 +356,7 @@
 
 			<_CustomLinkerOptions>
 				AssemblyName=$(AssemblyName).dll
+				AOTCompiler=$(_AOTCompiler)
 				AOTOutputDirectory=$(_AOTOutputDirectory)
 				CacheDirectory=$(_LinkerCacheDirectory)
 				Debug=$(_BundlerDebug)
