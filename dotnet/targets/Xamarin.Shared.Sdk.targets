@@ -721,7 +721,6 @@
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 		>
 			<Output TaskParameter="AssemblyFiles" ItemName="_AOTAssemblyFiles" />
-			<Output TaskParameter="AOTData" ItemName="_AOTData" />
 		</AOTCompile>
 
 		<CompileNativeCode
