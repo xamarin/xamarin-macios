@@ -34,9 +34,6 @@ namespace Xamarin.MacDev.Tasks {
 #region Output
 		[Output]
 		public ITaskItem[] AssemblyFiles { get; set; }
-
-		[Output]
-		public ITaskItem[] AOTData { get; set; }
 #endregion
 
 		public override bool Execute ()
@@ -64,7 +61,6 @@ namespace Xamarin.MacDev.Tasks {
 			Directory.CreateDirectory (OutputDirectory);
 
 			var aotAssemblyFiles = new List<ITaskItem> ();
-			var aotDataFiles = new List<ITaskItem> ();
 			var processes = new Task<Execution> [Assemblies.Length];
 			var objectFiles = new List<ITaskItem> ();
 
@@ -85,7 +81,6 @@ namespace Xamarin.MacDev.Tasks {
 				aotAssemblyItem.SetMetadata ("Arguments", "-Xlinker -rpath -Xlinker @executable_path/ -Qunused-arguments -x assembler -D DEBUG");
 				aotAssemblyItem.SetMetadata ("Arch", arch);
 				aotAssemblyFiles.Add (aotAssemblyItem);
-				aotDataFiles.Add (new TaskItem (aotData));
 
 				var arguments = new List<string> ();
 				if (!StringUtils.TryParseArguments (aotArguments, out var parsedArguments, out var ex)) {
@@ -111,7 +106,6 @@ namespace Xamarin.MacDev.Tasks {
 
 			System.Threading.Tasks.Task.WaitAll (processes);
 
-			AOTData = aotDataFiles.ToArray ();
 			AssemblyFiles = aotAssemblyFiles.ToArray ();
 
 			return !Log.HasLoggedErrors;
