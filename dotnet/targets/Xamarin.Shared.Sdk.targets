@@ -738,6 +738,7 @@
 		<ItemGroup Condition="'$(IsMacEnabled)' == 'true'">
 			<!-- Add the AOT-compiled output to the main executable -->
 			<_XamarinMainLibraries Include="@(_AssembliesToAOT -> '%(ObjectFile)')" />
+			<_XamarinMainLibraries Include="@(_AssembliesToAOT -> '%(LLVMFile)')" />
 
 			<!-- copy the aotdata files to the .app -->
 			<ResolvedFileToPublish Include="%(_AssembliesToAOT.AOTData)" >
