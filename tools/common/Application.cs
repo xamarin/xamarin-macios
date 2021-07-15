@@ -1408,7 +1408,7 @@ namespace Xamarin.Bundler {
 			return processArguments;
 		}
 
-		public void GetAotArguments (string filename, Abi abi, string outputDir, string outputFile, string llvmOutputFile, string dataFile, out List<string> processArguments, out List<string> aotArguments)
+		public void GetAotArguments (string filename, Abi abi, string outputDir, string outputFile, string llvmOutputFile, string dataFile, out List<string> processArguments, out List<string> aotArguments, string llvm_path = null)
 		{
 			string fname = Path.GetFileName (filename);
 			processArguments = new List<string> ();
@@ -1472,8 +1472,13 @@ namespace Xamarin.Bundler {
 				aotArguments.Add ($"msym-dir={msymdir}");
 			}
 
-			if (enable_llvm)
-				aotArguments.Add ($"llvm-path={Driver.GetFrameworkCurrentDirectory (app)}/LLVM/bin/");
+			if (enable_llvm) {
+				if (!string.IsNullOrEmpty (llvm_path)) {
+					aotArguments.Add ($"llvm-path={llvm_path}");
+				} else {
+					aotArguments.Add ($"llvm-path={Driver.GetFrameworkCurrentDirectory (app)}/LLVM/bin/");
+				}
+			}
 
 			aotArguments.Add ($"outfile={outputFile}");
 			if (enable_llvm)

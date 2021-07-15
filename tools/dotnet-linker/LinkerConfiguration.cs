@@ -17,6 +17,7 @@ using ObjCRuntime;
 namespace Xamarin.Linker {
 	public class LinkerConfiguration {
 		public List<Abi> Abis;
+		public string AOTCompiler;
 		public string AOTOutputDirectory;
 		public string CacheDirectory { get; private set; }
 		public Version DeploymentTarget { get; private set; }
@@ -103,6 +104,9 @@ namespace Xamarin.Linker {
 				case "AssemblyName":
 					// This is the AssemblyName MSBuild property for the main project (which is also the root/entry assembly)
 					Application.RootAssemblies.Add (value);
+					break;
+				case "AOTCompiler":
+					AOTCompiler = value;
 					break;
 				case "AOTOutputDirectory":
 					AOTOutputDirectory = value;
