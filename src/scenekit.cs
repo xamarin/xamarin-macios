@@ -160,9 +160,10 @@ namespace SceneKit {
 		[Export ("removeAllAnimations")]
 		void RemoveAllAnimations ();
 
-		[Introduced (PlatformName.MacCatalyst, 15, 0)]
-		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0)]
+#if XAMCORE_4_0
 		[Abstract]
+#endif
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("removeAllAnimationsWithBlendOutDuration:")]
 		void RemoveAllAnimationsWithBlendOutDuration (nfloat duration);
 

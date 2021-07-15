@@ -3,3 +3,6 @@
 !missing-selector! SCNMaterialProperty::borderColor not bound
 !missing-selector! SCNMaterialProperty::setBorderColor: not bound
 !missing-selector! SCNRenderer::render not bound
+
+# adding abstract member to an existing type would be a breaking change
+!incorrect-protocol-member! SCNAnimatable::removeAllAnimationsWithBlendOutDuration: is REQUIRED and should be abstract
