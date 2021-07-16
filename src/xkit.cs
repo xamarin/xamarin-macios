@@ -35,15 +35,22 @@ using NSWindow=System.Object;
 #if WATCH
 using NSTextContainer=System.Object;
 using NSTextStorage=System.Object;
+using UITraitCollection = Foundation.NSObject;
 #endif // WATCH
+#else
+using UICollectionLayoutListConfiguration=System.Object;
+using UIContentInsetsReference=System.Object;
+using UITraitCollection=System.Object;
 #endif // !MONOMAC
 
 #if MONOMAC
 using TextAlignment=AppKit.NSTextAlignment;
 using LineBreakMode=AppKit.NSLineBreakMode;
+using CollectionLayoutSectionOrthogonalScrollingBehavior=AppKit.NSCollectionLayoutSectionOrthogonalScrollingBehavior;
 #else
 using TextAlignment=UIKit.UITextAlignment;
 using LineBreakMode=UIKit.UILineBreakMode;
+using CollectionLayoutSectionOrthogonalScrollingBehavior=UIKit.UICollectionLayoutSectionOrthogonalScrollingBehavior;
 #endif
 
 #if MONOMAC
@@ -1542,5 +1549,180 @@ namespace UIKit {
 		[Override]
 		[Export ("lineBreakStrategy", ArgumentSemantic.Assign)]
 		NSLineBreakStrategy LineBreakStrategy { get; set; }
+	}
+
+	[NoWatch, TV (13,0), iOS (13,0)]
+	delegate NSCollectionLayoutGroupCustomItem [] NSCollectionLayoutGroupCustomItemProvider (INSCollectionLayoutEnvironment layoutEnvironment);
+
+	[NoWatch, TV (13,0), iOS (13,0)]
+	[BaseType (typeof (NSCollectionLayoutItem))]
+	[DisableDefaultCtor]
+	interface NSCollectionLayoutGroup : NSCopying {
+
+		[Static]
+		[Export ("horizontalGroupWithLayoutSize:subitem:count:")]
+#if MONOMAC && !XAMCORE_4_0
+		NSCollectionLayoutGroup CreateHorizontalGroup (NSCollectionLayoutSize layoutSize, NSCollectionLayoutItem subitem, nint count);
+#else
+		NSCollectionLayoutGroup CreateHorizontal (NSCollectionLayoutSize layoutSize, NSCollectionLayoutItem subitem, nint count);
+#endif
+
+		[Static]
+		[Export ("horizontalGroupWithLayoutSize:subitems:")]
+#if MONOMAC && !XAMCORE_4_0
+		NSCollectionLayoutGroup CreateHorizontalGroup (NSCollectionLayoutSize layoutSize, NSCollectionLayoutItem [] subitems);
+#else
+		NSCollectionLayoutGroup CreateHorizontal (NSCollectionLayoutSize layoutSize, params NSCollectionLayoutItem [] subitems);
+#endif
+
+		[Static]
+		[Export ("verticalGroupWithLayoutSize:subitem:count:")]
+#if MONOMAC && !XAMCORE_4_0
+		NSCollectionLayoutGroup CreateVerticalGroup (NSCollectionLayoutSize layoutSize, NSCollectionLayoutItem subitem, nint count);
+#else
+		NSCollectionLayoutGroup CreateVertical (NSCollectionLayoutSize layoutSize, NSCollectionLayoutItem subitem, nint count);
+#endif
+
+		[Static]
+		[Export ("verticalGroupWithLayoutSize:subitems:")]
+#if MONOMAC && !XAMCORE_4_0
+		NSCollectionLayoutGroup CreateVerticalGroup (NSCollectionLayoutSize layoutSize, NSCollectionLayoutItem [] subitems);
+#else
+		NSCollectionLayoutGroup CreateVertical (NSCollectionLayoutSize layoutSize, params NSCollectionLayoutItem [] subitems);
+#endif
+
+		[Static]
+		[Export ("customGroupWithLayoutSize:itemProvider:")]
+#if MONOMAC && !XAMCORE_4_0
+		NSCollectionLayoutGroup CreateCustomGroup (NSCollectionLayoutSize layoutSize, NSCollectionLayoutGroupCustomItemProvider itemProvider);
+#else
+		NSCollectionLayoutGroup CreateCustom (NSCollectionLayoutSize layoutSize, NSCollectionLayoutGroupCustomItemProvider itemProvider);
+#endif
+
+		[Export ("supplementaryItems", ArgumentSemantic.Copy)]
+		NSCollectionLayoutSupplementaryItem [] SupplementaryItems { get; set; }
+
+		[NullAllowed, Export ("interItemSpacing", ArgumentSemantic.Copy)]
+		NSCollectionLayoutSpacing InterItemSpacing { get; set; }
+
+		[Export ("subitems")]
+		NSCollectionLayoutItem [] Subitems { get; }
+
+		[Export ("visualDescription")]
+		string VisualDescription { get; }
+	}
+
+	[NoWatch, TV (13,0), iOS (13,0)]
+	delegate void NSCollectionLayoutSectionVisibleItemsInvalidationHandler (INSCollectionLayoutVisibleItem [] visibleItems, CGPoint contentOffset, INSCollectionLayoutEnvironment layoutEnvironment);
+
+	[Mac (10,15)]
+	[NoWatch, TV (13,0), iOS (13,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface NSCollectionLayoutSection : NSCopying {
+
+		[Static]
+		[Export ("sectionWithGroup:")]
+		NSCollectionLayoutSection Create (NSCollectionLayoutGroup group);
+
+		[Export ("contentInsets", ArgumentSemantic.Assign)]
+		NSDirectionalEdgeInsets ContentInsets { get; set; }
+
+		[Export ("interGroupSpacing")]
+		nfloat InterGroupSpacing { get; set; }
+
+		[NoMac]
+		[MacCatalyst (14,0)]
+		[TV (14,0), iOS (14,0)]
+		[Export ("contentInsetsReference", ArgumentSemantic.Assign)]
+		UIContentInsetsReference ContentInsetsReference { get; set; }
+
+		[Export ("orthogonalScrollingBehavior", ArgumentSemantic.Assign)]
+		CollectionLayoutSectionOrthogonalScrollingBehavior OrthogonalScrollingBehavior { get; set; }
+
+		[Export ("boundarySupplementaryItems", ArgumentSemantic.Copy)]
+		NSCollectionLayoutBoundarySupplementaryItem [] BoundarySupplementaryItems { get; set; }
+
+		[Export ("supplementariesFollowContentInsets")]
+		bool SupplementariesFollowContentInsets { get; set; }
+
+		[NullAllowed, Export ("visibleItemsInvalidationHandler", ArgumentSemantic.Copy)]
+		NSCollectionLayoutSectionVisibleItemsInvalidationHandler VisibleItemsInvalidationHandler { get; set; }
+
+		[Export ("decorationItems", ArgumentSemantic.Copy)]
+		NSCollectionLayoutDecorationItem [] DecorationItems { get; set; }
+
+		// NSCollectionLayoutSection (UICollectionLayoutListSection) category
+		[NoMac]
+		[MacCatalyst (14,0)]
+		[TV (14,0), iOS (14,0)]
+		[Static]
+		[Export ("sectionWithListConfiguration:layoutEnvironment:")]
+		NSCollectionLayoutSection GetSection (UICollectionLayoutListConfiguration listConfiguration, INSCollectionLayoutEnvironment layoutEnvironment);
+	}
+
+	[NoWatch, TV (13,0), iOS (13,0)]
+	[Mac (10,15)]
+	[MacCatalyst (13,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface NSCollectionLayoutGroupCustomItem : NSCopying
+	{
+		[Static]
+		[Export ("customItemWithFrame:")]
+		NSCollectionLayoutGroupCustomItem Create (CGRect frame);
+
+		[Static]
+		[Export ("customItemWithFrame:zIndex:")]
+		NSCollectionLayoutGroupCustomItem Create (CGRect frame, nint zIndex);
+
+		[Export ("frame")]
+		CGRect Frame { get; }
+
+		[Export ("zIndex")]
+		nint ZIndex { get; }
+	}
+
+	interface INSCollectionLayoutContainer { }
+
+	[NoWatch, TV (13,0), iOS (13,0)]
+	[Mac (10,15)]
+	[MacCatalyst (13,0)]
+	[Protocol]
+	interface NSCollectionLayoutContainer
+	{
+		[Abstract]
+		[Export ("contentSize")]
+		CGSize ContentSize { get; }
+
+		[Abstract]
+		[Export ("effectiveContentSize")]
+		CGSize EffectiveContentSize { get; }
+
+		[Abstract]
+		[Export ("contentInsets")]
+		NSDirectionalEdgeInsets ContentInsets { get; }
+
+		[Abstract]
+		[Export ("effectiveContentInsets")]
+		NSDirectionalEdgeInsets EffectiveContentInsets { get; }
+	}
+
+	interface INSCollectionLayoutEnvironment { }
+
+	[NoWatch, TV (13,0), iOS (13,0)]
+	[Mac (10,15)]
+	[MacCatalyst (13,0)]
+	[Protocol]
+	interface NSCollectionLayoutEnvironment {
+
+		[Abstract]
+		[Export ("container")]
+		INSCollectionLayoutContainer Container { get; }
+
+		[NoMac]
+		[Abstract]
+		[Export ("traitCollection")]
+		UITraitCollection TraitCollection { get; }
 	}
 }

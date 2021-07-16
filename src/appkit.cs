@@ -27173,26 +27173,6 @@ namespace AppKit {
 
 	[Mac (10,15)]
 	[BaseType (typeof (NSObject))]
-	[DisableDefaultCtor]
-	interface NSCollectionLayoutGroupCustomItem : NSCopying
-	{
-		[Static]
-		[Export ("customItemWithFrame:")]
-		NSCollectionLayoutGroupCustomItem Create (CGRect frame);
-
-		[Static]
-		[Export ("customItemWithFrame:zIndex:")]
-		NSCollectionLayoutGroupCustomItem Create (CGRect frame, nint zIndex);
-
-		[Export ("frame")]
-		CGRect Frame { get; }
-
-		[Export ("zIndex")]
-		nint ZIndex { get; }
-	}
-
-	[Mac (10,15)]
-	[BaseType (typeof (NSObject))]
 	interface NSCollectionViewCompositionalLayoutConfiguration : NSCopying
 	{
 		[Export ("scrollDirection", ArgumentSemantic.Assign)]
@@ -27220,80 +27200,6 @@ namespace AppKit {
 	{
 		[Export ("state")]
 		nint State { get; set; }
-	}
-
-	interface INSCollectionLayoutContainer { }
-
-	[Mac (10,15)]
-	[Protocol]
-	interface NSCollectionLayoutContainer
-	{
-		[Abstract]
-		[Export ("contentSize")]
-		CGSize ContentSize { get; }
-
-		[Abstract]
-		[Export ("effectiveContentSize")]
-		CGSize EffectiveContentSize { get; }
-
-		[Abstract]
-		[Export ("contentInsets")]
-		NSDirectionalEdgeInsets ContentInsets { get; }
-
-		[Abstract]
-		[Export ("effectiveContentInsets")]
-		NSDirectionalEdgeInsets EffectiveContentInsets { get; }
-	}
-
-	[Mac (10,15)]
-	[Protocol]
-	interface NSCollectionLayoutEnvironment
-	{
-		[Abstract]
-		[Export ("container")]
-		INSCollectionLayoutContainer Container { get; }
-	}
-
-	interface INSCollectionLayoutEnvironment { }
-
-	delegate NSCollectionLayoutGroupCustomItem[] NSCollectionLayoutGroupCustomItemProvider (INSCollectionLayoutEnvironment layout);
-
-	[Mac (10,15)]
-	[BaseType (typeof (NSCollectionLayoutItem))]
-	[DisableDefaultCtor]
-	interface NSCollectionLayoutGroup : NSCopying
-	{
-		[Static]
-		[Export ("horizontalGroupWithLayoutSize:subitem:count:")]
-		NSCollectionLayoutGroup CreateHorizontalGroup (NSCollectionLayoutSize layoutSize, NSCollectionLayoutItem subitem, nint count);
-
-		[Static]
-		[Export ("horizontalGroupWithLayoutSize:subitems:")]
-		NSCollectionLayoutGroup CreateHorizontalGroup (NSCollectionLayoutSize layoutSize, NSCollectionLayoutItem[] subitems);
-
-		[Static]
-		[Export ("verticalGroupWithLayoutSize:subitem:count:")]
-		NSCollectionLayoutGroup CreateVerticalGroup (NSCollectionLayoutSize layoutSize, NSCollectionLayoutItem subitem, nint count);
-
-		[Static]
-		[Export ("verticalGroupWithLayoutSize:subitems:")]
-		NSCollectionLayoutGroup CreateVerticalGroup (NSCollectionLayoutSize layoutSize, NSCollectionLayoutItem[] subitems);
-
-		[Static]
-		[Export ("customGroupWithLayoutSize:itemProvider:")]
-		NSCollectionLayoutGroup CreateCustomGroup (NSCollectionLayoutSize layoutSize, NSCollectionLayoutGroupCustomItemProvider itemProvider);
-
-		[Export ("supplementaryItems", ArgumentSemantic.Copy)]
-		NSCollectionLayoutSupplementaryItem[] SupplementaryItems { get; set; }
-
-		[NullAllowed, Export ("interItemSpacing", ArgumentSemantic.Copy)]
-		NSCollectionLayoutSpacing InterItemSpacing { get; set; }
-
-		[Export ("subitems")]
-		NSCollectionLayoutItem[] Subitems { get; }
-
-		[Export ("visualDescription")]
-		string VisualDescription { get; }
 	}
 
 	[Mac (10,15)]
@@ -27353,39 +27259,6 @@ namespace AppKit {
 	}
 
 	interface INSCollectionLayoutVisibleItem { }
-
-	delegate void NSCollectionLayoutSectionVisibleItemsInvalidationHandler (INSCollectionLayoutVisibleItem[] items, CGPoint point, INSCollectionLayoutEnvironment layout);
-
-	[Mac (10,15)]
-	[BaseType (typeof (NSObject))]
-	[DisableDefaultCtor]
-	interface NSCollectionLayoutSection : NSCopying
-	{
-		[Static]
-		[Export ("sectionWithGroup:")]
-		NSCollectionLayoutSection Create (NSCollectionLayoutGroup group);
-
-		[Export ("contentInsets", ArgumentSemantic.Assign)]
-		NSDirectionalEdgeInsets ContentInsets { get; set; }
-
-		[Export ("interGroupSpacing")]
-		nfloat InterGroupSpacing { get; set; }
-
-		[Export ("orthogonalScrollingBehavior", ArgumentSemantic.Assign)]
-		NSCollectionLayoutSectionOrthogonalScrollingBehavior OrthogonalScrollingBehavior { get; set; }
-
-		[Export ("boundarySupplementaryItems", ArgumentSemantic.Copy)]
-		NSCollectionLayoutBoundarySupplementaryItem[] BoundarySupplementaryItems { get; set; }
-
-		[Export ("supplementariesFollowContentInsets")]
-		bool SupplementariesFollowContentInsets { get; set; }
-
-		[NullAllowed, Export ("visibleItemsInvalidationHandler", ArgumentSemantic.Copy)]
-		NSCollectionLayoutSectionVisibleItemsInvalidationHandler VisibleItemsInvalidationHandler { get; set; }
-
-		[Export ("decorationItems", ArgumentSemantic.Copy)]
-		NSCollectionLayoutDecorationItem[] DecorationItems { get; set; }
-	}
 
 	delegate NSCollectionLayoutSection NSCollectionViewCompositionalLayoutSectionProvider (nint section, INSCollectionLayoutEnvironment layout);
 
