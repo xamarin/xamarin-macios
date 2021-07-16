@@ -18,7 +18,6 @@
     <CodesignEntitlements Condition="'$(Platform)' == 'iPhoneSimulator'">$(MonoTouchTestDirectory)\Entitlements.plist</CodesignEntitlements>
 
     <DefineConstants Condition="'$(Configuration)' == 'Debug'">$(DefineConstants);DEBUG</DefineConstants>
-    <DefineConstants Condition="'$(Platform)' == 'iPhoneSimulator'">$(DefineConstants);DYNAMIC_REGISTRAR</DefineConstants>
     <DefineConstants Condition="'$(Platform)' == 'iPhone'">$(DefineConstants);DEVICE</DefineConstants>
   </PropertyGroup>
 

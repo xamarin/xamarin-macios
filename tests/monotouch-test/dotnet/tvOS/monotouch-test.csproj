@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net6.0-tvos</TargetFramework>
     <DefineConstants>$(DefineConstants);XAMCORE_3_0</DefineConstants>
+    <DefineConstants Condition="'$(Platform)' == 'iPhoneSimulator'">$(DefineConstants);DYNAMIC_REGISTRAR</DefineConstants> <!-- this can't be in shared.csproj, because xharness needs to remove the DYNAMIC_REGISTRAR define for certain test cases -->
     <AssetTargetFallback>xamarintvos10;$(AssetTargetFallback)</AssetTargetFallback>
     <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)\..\..\..'))</RootTestsDirectory> <!-- this can't be in shared.csproj, because xharness won't see it there -->
     <AssemblyName>monotouchtest</AssemblyName> <!-- this can't be in shared.csproj, because xharness won't see it there -->
