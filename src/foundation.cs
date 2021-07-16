@@ -14224,6 +14224,7 @@ namespace Foundation
 		[Export ("typeCodeValue")]
 		OSType TypeCodeValue { get; }
 
+		[NullAllowed]
 		[Export ("stringValue")]
 		string StringValue { get; }
 
@@ -14242,6 +14243,7 @@ namespace Foundation
 		[Export ("setParamDescriptor:forKeyword:")]
 		void SetParamDescriptorforKeyword (NSAppleEventDescriptor descriptor, AEKeyword keyword);
 
+		[return: NullAllowed]
 		[Export ("paramDescriptorForKeyword:")]
 		NSAppleEventDescriptor ParamDescriptorForKeyword (AEKeyword keyword);
 
@@ -14251,6 +14253,7 @@ namespace Foundation
 		[Export ("setAttributeDescriptor:forKeyword:")]
 		void SetAttributeDescriptorforKeyword (NSAppleEventDescriptor descriptor, AEKeyword keyword);
 
+		[return: NullAllowed]
 		[Export ("attributeDescriptorForKeyword:")]
 		NSAppleEventDescriptor AttributeDescriptorForKeyword (AEKeyword keyword);
 
@@ -14260,6 +14263,7 @@ namespace Foundation
 		[Export ("insertDescriptor:atIndex:")]
 		void InsertDescriptoratIndex (NSAppleEventDescriptor descriptor, nint index);
 
+		[return: NullAllowed]
 		[Export ("descriptorAtIndex:")]
 		NSAppleEventDescriptor DescriptorAtIndex (nint index);
 
@@ -14269,6 +14273,7 @@ namespace Foundation
 		[Export ("setDescriptor:forKeyword:")]
 		void SetDescriptorforKeyword (NSAppleEventDescriptor descriptor, AEKeyword keyword);
 
+		[return: NullAllowed]
 		[Export ("descriptorForKeyword:")]
 		NSAppleEventDescriptor DescriptorForKeyword (AEKeyword keyword);
 
@@ -14613,6 +14618,7 @@ namespace Foundation
 		IntPtr Constructor (string source);
 
 		// @property (readonly, copy) NSString * source;
+		[NullAllowed]
 		[Export ("source")]
 		string Source { get; }
 
