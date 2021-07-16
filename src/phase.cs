@@ -5,6 +5,10 @@ using ModelIO;
 using ObjCRuntime;
 
 using Quaternion = global::OpenTK.Quaternion;
+using Vector2d = global::OpenTK.Vector2d;
+using Vector3 = global::OpenTK.Vector3;
+using NMatrix4 = global::OpenTK.NMatrix4;
+
 
 using System;
 
@@ -244,13 +248,15 @@ namespace Phase {
 	[BaseType (typeof (NSObject), Name="PHASEEnvelopeSegment")]
 	interface PhaseEnvelopeSegment
 	{
-/*
 		[Export ("initWithEndPoint:curveType:")]
-		IntPtr Constructor ([unsupported ExtVector: double __attribute__((ext_vector_type(2)))] endPoint, PhaseCurveType curveType);
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		IntPtr Constructor (Vector2d endPoint, PhaseCurveType curveType);
 
-		[Export ("endPoint", ArgumentSemantic.Assign)]
-		[unsupported ExtVector: double __attribute__((ext_vector_type(2)))] EndPoint { get; set; }
-*/
+		[Export ("endPoint", ArgumentSemantic.Assign)]	
+		Vector2d EndPoint { 
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
+		}
 
 		[Export ("curveType", ArgumentSemantic.Assign)]
 		PhaseCurveType CurveType { get; set; }
@@ -262,15 +268,18 @@ namespace Phase {
 	[DisableDefaultCtor]
 	interface PhaseEnvelope
 	{
-		//[Export ("initWithStartPoint:segments:")]
-		//[DesignatedInitializer]
-		//IntPtr Constructor ([unsupported ExtVector: double __attribute__((ext_vector_type(2)))] startPoint, PhaseEnvelopeSegment[] segments);
+		[Export ("initWithStartPoint:segments:")]
+		[DesignatedInitializer]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		IntPtr Constructor (Vector2d startPoint, PhaseEnvelopeSegment[] segments);
 
 		[Export ("evaluateForValue:")]
 		double Evaluate (double x);
 
-		//[Export ("startPoint")]
-		//[unsupported ExtVector: double __attribute__((ext_vector_type(2)))] StartPoint { get; }
+		[Export ("startPoint")]	
+		Vector2d StartPoint { 
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
+		}
 
 		[Export ("segments", ArgumentSemantic.Copy)]
 		PhaseEnvelopeSegment[] Segments { get; }
@@ -1051,25 +1060,35 @@ namespace Phase {
 		[Export ("children", ArgumentSemantic.Copy)]
 		PhaseObject[] Children { get; }
 
-/*
 		[Static]
 		[Export ("right")]
-		[unsupported ExtVector: float __attribute__((ext_vector_type(3)))] Right { get; }
+ 		Vector3 Right { 
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
+		}
 
 		[Static]
 		[Export ("up")]
-		[unsupported ExtVector: float __attribute__((ext_vector_type(3)))] Up { get; }
+		Vector3 Up { 
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
+		}
 
 		[Static]
 		[Export ("forward")]
-		[unsupported ExtVector: float __attribute__((ext_vector_type(3)))] Forward { get; }
+		Vector3 Forward { 
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
+		}
 
 		[Export ("transform", ArgumentSemantic.Assign)]
-		simd_float4x4 Transform { get; set; }
+		NMatrix4 Transform {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
+		}
 
 		[Export ("worldTransform", ArgumentSemantic.Assign)]
-		simd_float4x4 WorldTransform { get; set; }
-*/
+		NMatrix4 WorldTransform {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
+		}
 	}
 
 	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
