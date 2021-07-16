@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net6.0-ios</TargetFramework>
     <AssetTargetFallback>xamarinios10;$(AssetTargetFallback)</AssetTargetFallback>
-    <RootTestsDirectory>..\..\..</RootTestsDirectory> <!-- this can't be in shared.csproj, because xharness won't see it there -->
+    <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)\..\..\..'))</RootTestsDirectory> <!-- this can't be in shared.csproj, because xharness won't see it there -->
     <AssemblyName>monotouchtest</AssemblyName> <!-- this can't be in shared.csproj, because xharness won't see it there -->
   </PropertyGroup>
 

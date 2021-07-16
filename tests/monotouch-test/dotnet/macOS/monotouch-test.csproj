@@ -4,7 +4,7 @@
     <TargetFramework>net6.0-macos</TargetFramework>
     <DefineConstants>$(DefineConstants);MONOMAC;XAMMAC_TESTS</DefineConstants>
     <DefineConstants Condition="'$(Configuration)' == 'Debug'">$(DefineConstants);DYNAMIC_REGISTRAR</DefineConstants>
-    <RootTestsDirectory>..\..\..</RootTestsDirectory> <!-- this can't be in shared.csproj, because xharness won't see it there -->
+    <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)\..\..\..'))</RootTestsDirectory> <!-- this can't be in shared.csproj, because xharness won't see it there -->
     <AssemblyName>monotouchtest</AssemblyName> <!-- this can't be in shared.csproj, because xharness won't see it there -->
   </PropertyGroup>
 
