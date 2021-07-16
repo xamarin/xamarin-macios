@@ -136,6 +136,15 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<!-- PackagingExtraArgs: any extra arguments passed to the productbuild tool when creating packages (.pkg). Applicable to macOS and Mac Catalyst -->
 		<!-- ProductDefinition: the product definition template (plist) used when creating the product definition to pass to the product build tool when creating packages (.pkg). Applicable to mcOS and Mac Catalyst -->
 
+		<!-- _RequireProvisioningProfile -->
+		<!-- Default: false -->
+		<!-- macOS: true if a provisioning profile is used -->
+		<!-- iOS/tvOS/watchOS: true if building for device or if a custom entitlements file is used -->
+		<!-- Mac Catalyst: true if a provisioning profile is used -->
+		<_RequireProvisioningProfile Condition="'$(_RequireProvisioningProfile)' == '' And '$(_PlatformName)' == 'macOS' And '$(CodesignProvision)' != ''">true</_RequireProvisioningProfile>
+		<_RequireProvisioningProfile Condition="'$(_RequireProvisioningProfile)' == '' And ('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS') And ('$(ComputedPlatform)' == 'iPhone' Or '$(CodesignEntitlements)' != '')">true</_RequireProvisioningProfile>
+		<_RequireProvisioningProfile Condition="'$(_RequireProvisioningProfile)' == '' And '$(_PlatformName)' == 'MacCatalyst' And '$(CodesignProvision)' != ''">true</_RequireProvisioningProfile>
+		<_RequireProvisioningProfile Condition="'$(_RequireProvisioningProfile)' == ''">false</_RequireProvisioningProfile>
 
 		<!-- SpecifiedCodeSigningKey -->
 		<!-- Xamarin.Mac projects use 'CodeSigningKey', and Xamarin.iOS projects use 'CodesignKey'. -->
