@@ -47,7 +47,6 @@ Copyright (C) 2013-2014 Xamarin. All rights reserved.
 		<CodesignEntitlements Condition="'$(CodesignEntitlements)' == ''"></CodesignEntitlements>
 		<CodesignExtraArgs Condition="'$(CodesignExtraArgs)' == ''"></CodesignExtraArgs>
 		<HttpClientHandler Condition="'$(HttpClientHandler)' == ''">HttpClientHandler</HttpClientHandler>
-		<EnablePackageSigning Condition="'$(EnablePackageSigning)' == ''">false</EnablePackageSigning>
 		<PackageSigningKey Condition="'$(PackageSigningKey)' == ''"></PackageSigningKey>
 		<ProductDefinition Condition="'$(ProductDefinition)' == ''"></ProductDefinition>
 		<PackagingExtraArgs Condition="'$(PackagingExtraArgs)' == ''"></PackagingExtraArgs>
