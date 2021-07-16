@@ -152,6 +152,7 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 	</PropertyGroup>
 
 	<PropertyGroup>
+		<ArchiveOnBuild Condition="'$(ArchiveOnBuild)' == ''">false</ArchiveOnBuild>
 		<_CanOutputAppBundle>false</_CanOutputAppBundle>
 		<_CanOutputAppBundle Condition="'$(OutputType)' == 'Exe' Or '$(IsAppExtension)' == 'true' Or '$(IsWatchApp)' == 'true'">true</_CanOutputAppBundle>
 

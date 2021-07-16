@@ -56,7 +56,6 @@ Copyright (C) 2013-2014 Xamarin. All rights reserved.
 		<IsAppExtension Condition="'$(IsAppExtension)' == ''">False</IsAppExtension>
 		<EnableSGenConc Condition="'$(EnableSGenConc)' == ''">false</EnableSGenConc>
 		<AotScope Condition="'$(AotScope)' == ''">None</AotScope>
-		<ArchiveOnBuild Condition="'$(ArchiveOnBuild)' == ''">False</ArchiveOnBuild>
 		<Profiling Condition="'$(MtouchProfiling)' == ''">False</Profiling>
 	</PropertyGroup>
 

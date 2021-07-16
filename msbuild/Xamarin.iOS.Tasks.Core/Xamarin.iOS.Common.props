@@ -36,7 +36,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<IsWatchExtension Condition="'$(IsWatchExtension)' == ''">False</IsWatchExtension>
 		<IsWatchApp Condition="'$(IsWatchApp)' == ''">False</IsWatchApp>
 		<IpaIncludeArtwork Condition="'$(IpaIncludeArtwork)' == ''">False</IpaIncludeArtwork>
-		<ArchiveOnBuild Condition="'$(ArchiveOnBuild)' == ''">False</ArchiveOnBuild>
 		<BuildIpa Condition="'$(BuildIpa)' == ''">False</BuildIpa>
 		<BuildSessionId></BuildSessionId>
 
