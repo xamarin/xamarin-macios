@@ -130,8 +130,10 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<_RequireCodeSigning Condition="'$(_PlatformName)' == 'macOS' And '$(IsAppExtension)' == 'true'">true</_RequireCodeSigning> <!-- But extensions must be signed, so make sure they are -->
 
 		<!-- SpecifiedCodeSigningKey -->
-		<_SpecifiedCodesignKey Condition="'$(_PlatformName)' == 'macOS'">$(CodeSigningKey)</_SpecifiedCodesignKey> <!-- Xamarin.Mac projects use 'CodeSigningKey' -->
-		<_SpecifiedCodesignKey Condition="'$(_PlatformName)' != 'macOS'">$(CodesignKey)</_SpecifiedCodesignKey> <!-- Xamarin.iOS projects use 'CodesignKey' -->
+		<!-- Xamarin.Mac projects use 'CodeSigningKey', and Xamarin.iOS projects use 'CodesignKey'. -->
+		<!-- Here we accept both, and we'll recommend using 'CodesignKey' for all platforms going forward -->
+		<_SpecifiedCodesignKey Condition="'$(_SpecifiedCodesignKey)' == ''">$(CodeSigningKey)</_SpecifiedCodesignKey>
+		<_SpecifiedCodesignKey Condition="'$(_SpecifiedCodesignKey)' == ''">$(CodesignKey)</_SpecifiedCodesignKey>
 
 		<!-- If we should create a .pkg or not (only relevant for macOS / Mac Catalyst) -->
 		<!-- The equivalent property for the other platforms is 'BuildIpa' -->
