@@ -152,6 +152,9 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 	</PropertyGroup>
 
 	<PropertyGroup>
+		<_CanOutputAppBundle>false</_CanOutputAppBundle>
+		<_CanOutputAppBundle Condition="'$(OutputType)' == 'Exe' Or '$(IsAppExtension)' == 'true' Or '$(IsWatchApp)' == 'true'">true</_CanOutputAppBundle>
+
 		<!-- We can archive: -->
 		<!-- macOS and Mac Catalyst: executable projects which aren't app extensions -->
 		<!-- iOS, tvOS and watchOS: executable projects built for device which aren't app extensions nor watch apps -->

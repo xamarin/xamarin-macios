@@ -34,9 +34,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Shared.targets" />			
 
 	<PropertyGroup>
-		<_CanOutputAppBundle>False</_CanOutputAppBundle>
-		<_CanOutputAppBundle Condition="'$(OutputType)' == 'Exe' Or '$(IsAppExtension)' == 'true' Or '$(IsWatchApp)' == 'true'">True</_CanOutputAppBundle>
-
 		<_CanDeployToDeviceOrSimulator>False</_CanDeployToDeviceOrSimulator>
 		<_CanDeployToDeviceOrSimulator Condition="('$(OutputType)' == 'Exe' Or '$(IsAppExtension)' == 'true') And '$(IsWatchApp)' == 'false'">True</_CanDeployToDeviceOrSimulator>
 
