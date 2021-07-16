@@ -128,6 +128,14 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<_RequireCodeSigning Condition="'$(_PlatformName)' == 'macOS' And '$(_RequireCodeSigning)' == ''">false</_RequireCodeSigning> <!-- Xamarin.Mac projects: disable by default -->
 		<_CodeSigningKey Condition="'$(_PlatformName)' == 'macOS' And '$(IsAppExtension)' == 'true' And '$(_CodeSigningKey)' == '' And '$(_RequireCodeSigning)' == 'false'">-</_CodeSigningKey> <!-- Set _CodeSigningKey to '-' if we're an extension where code signing is not requested -->
 		<_RequireCodeSigning Condition="'$(_PlatformName)' == 'macOS' And '$(IsAppExtension)' == 'true'">true</_RequireCodeSigning> <!-- But extensions must be signed, so make sure they are -->
+		<!-- Other variables that are used in code signing / packaging, but that are by default empty (so no need for any logic): -->
+		<!-- CodesignProvision: the name of the provisioning profile to use when signing the bundle -->
+		<!-- CodesignEntitlements: the path to the Entitlements.plist to use when signing the bundle -->
+		<!-- CodesignExtraArgs: any extra arguments to pass to 'codesign' -->
+		<!-- PackageSigningKey: the certificate used to sign packages (.pkg). Applicable to macOS and Mac Catalyst -->
+		<!-- PackagingExtraArgs: any extra arguments passed to the productbuild tool when creating packages (.pkg). Applicable to macOS and Mac Catalyst -->
+		<!-- ProductDefinition: the product definition template (plist) used when creating the product definition to pass to the product build tool when creating packages (.pkg). Applicable to mcOS and Mac Catalyst -->
+
 
 		<!-- SpecifiedCodeSigningKey -->
 		<!-- Xamarin.Mac projects use 'CodeSigningKey', and Xamarin.iOS projects use 'CodesignKey'. -->
