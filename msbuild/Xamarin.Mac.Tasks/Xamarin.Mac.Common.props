@@ -53,7 +53,6 @@ Copyright (C) 2013-2014 Xamarin. All rights reserved.
 		<PackagingExtraArgs Condition="'$(PackagingExtraArgs)' == ''"></PackagingExtraArgs>
 		<I18n Condition="'$(I18n)' == ''"></I18n>
 		<IncludeMonoRuntime Condition="'$(IncludeMonoRuntime)' == ''">true</IncludeMonoRuntime>
-		<EnableSGenConc Condition="'$(EnableSGenConc)' == ''">false</EnableSGenConc>
 		<AotScope Condition="'$(AotScope)' == ''">None</AotScope>
 		<Profiling Condition="'$(MtouchProfiling)' == ''">False</Profiling>
 	</PropertyGroup>

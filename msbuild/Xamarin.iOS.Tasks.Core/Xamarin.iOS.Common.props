@@ -29,7 +29,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<MtouchEnableBitcode Condition="'$(MtouchEnableBitcode)' == ''">False</MtouchEnableBitcode>
 		<MtouchUseThumb Condition="'$(MtouchUseThumb)' == ''">False</MtouchUseThumb>
 		<MtouchProjectDirectory>$(MSBuildProjectDirectory)</MtouchProjectDirectory>
-		<MtouchEnableSGenConc Condition="'$(MtouchEnableSGenConc)' == ''">False</MtouchEnableSGenConc>
 		<MtouchVerbosity Condition="$(MtouchVerbosity) == ''">2</MtouchVerbosity>
 
 		<IsWatchExtension Condition="'$(IsWatchExtension)' == ''">False</IsWatchExtension>
