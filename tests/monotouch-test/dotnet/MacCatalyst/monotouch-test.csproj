@@ -13,4 +13,9 @@
   </ItemGroup>
 
   <Import Project="$(RootTestsDirectory)/monotouch-test/dotnet/shared.csproj" />
+
+  <PropertyGroup>
+    <!-- This must be after the place where xharness injects the RuntimeIdentifier property -->
+    <DefineConstants Condition="'$(RuntimeIdentifier)' == 'maccatalyst-arm64'">$(DefineConstants);AOT</DefineConstants>
+  </PropertyGroup>
 </Project>
