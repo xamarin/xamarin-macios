@@ -1862,22 +1862,12 @@ namespace ObjCRuntime {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		static bool GetIsARM64CallingConvention ()
 		{
-#if MONOMAC
+			if (IntPtr.Size != 8)
+				return false;
+
 			unsafe {
 				return NXGetLocalArchInfo ()->Name.StartsWith ("arm64");
 			}
-#elif __IOS__ || __TVOS__
-			return IntPtr.Size == 8 && Arch == Arch.DEVICE;
-#elif __WATCHOS__
-			if (Arch != Arch.DEVICE)
-				return false;
-			unsafe {
-				// We're assuming Apple will only release arm64-based watch cpus from now on (i.e. only non-arm64 cpu is armv7k).
-				return NXGetLocalArchInfo ()->Name != "armv7k";
-			}
-#else
-#error Unknown platform
-#endif
 		}
 
 		// Get the GCHandle from the IntPtr value and get the wrapped object.

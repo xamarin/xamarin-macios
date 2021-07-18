@@ -30,6 +30,11 @@
 ACCELERATE_SOURCES = \
 	Accelerate/vImageTypes.cs \
 
+# Accessibility
+
+ACCESSIBILITY_SOURCES = \
+	Accessibility/AXHearingUtilities.cs \
+
 # Accounts
 
 ACCOUNTS_API_SOURCES = \
@@ -1613,7 +1618,6 @@ UIKIT_CORE_SOURCES = \
 
 UIKIT_SOURCES = \
 	UIKit/Compat.cs \
-	UIKit/NSLayoutConstraint.cs \
 	UIKit/NSLayoutManager.cs \
 	AppKit/NSLayoutManager.cs \
 	UIKit/UIAccessibility.cs \
