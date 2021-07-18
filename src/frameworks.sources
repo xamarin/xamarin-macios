@@ -1618,7 +1618,6 @@ UIKIT_CORE_SOURCES = \
 
 UIKIT_SOURCES = \
 	UIKit/Compat.cs \
-	UIKit/NSLayoutConstraint.cs \
 	UIKit/NSLayoutManager.cs \
 	AppKit/NSLayoutManager.cs \
 	UIKit/UIAccessibility.cs \

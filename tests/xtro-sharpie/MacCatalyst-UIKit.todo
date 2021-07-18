@@ -98,7 +98,6 @@
 !missing-null-allowed! 'Foundation.NSIndexPath[] UIKit.UITableView::get_IndexPathsForSelectedRows()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSIndexSet UIKit.UIPasteboard::ItemSetWithPasteboardTypes(System.String[])' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSNumber[] UIKit.UIImagePickerController::AvailableCaptureModesForCameraDevice(UIKit.UIImagePickerControllerCameraDevice)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSObject UIKit.NSLayoutConstraint::get_SecondItem()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject UIKit.UIActivityItemProvider::get_PlaceholderItem()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject UIKit.UIActivityItemSource::GetItemForActivity(UIKit.UIActivityViewController,Foundation.NSString)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject UIKit.UIDocument::ContentsForType(System.String,Foundation.NSError&)' is missing an [NullAllowed] on return type
@@ -144,7 +143,6 @@
 !missing-null-allowed! 'System.nint UIKit.UIActionSheet::AddButton(System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.nint UIKit.UIApplication::BeginBackgroundTask(System.String,System.Action)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.nint UIKit.UIApplication::BeginBackgroundTask(System.String,System.Action)' is missing an [NullAllowed] on parameter #1
-!missing-null-allowed! 'System.String UIKit.NSIdentifier::GetIdentifier(UIKit.NSLayoutConstraint)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.String UIKit.UIActionSheet::ButtonTitle(System.nint)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.String UIKit.UIActivity::get_Title()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.String UIKit.UIAlertAction::get_Title()' is missing an [NullAllowed] on return type
