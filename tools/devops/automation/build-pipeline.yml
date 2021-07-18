@@ -8,7 +8,7 @@
 parameters:
 - name: runTests
   type: boolean
-  default: false
+  default: true
 
 - name: runDeviceTests
   type: boolean
