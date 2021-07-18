@@ -42,11 +42,11 @@ namespace MonoTouchFixtures.CoreWlan {
 
 		[Test]
 		public void TryFindWiFiEAPUsernameAndPasswordMissingTest ()
-			=> Assert.False (CWKeychain.TryFindWiFiEAPUsernameAndPassword (domain, ssid, out var username, out var password));
+			=> Assert.False (CWKeychain.TryFindWiFiEAPUsernameAndPassword (domain, ssid, out string username, out string password));
 
 		[Test]
 		public void TryFindWiFiPasswordMissingTest ()
-			=> Assert.False (CWKeychain.TryFindWiFiPassword (domain, ssid, out var password));
+			=> Assert.False (CWKeychain.TryFindWiFiPassword (domain, ssid, out string password));
 
 		[Test]
 		public void TrySetWiFiEAPIdentityTest ()
