@@ -13,7 +13,7 @@ parameters:
   type: string
 
 - name: condition
-  default: eq(variables['IsPRBuild'], 'False')
+  default: and(succeeded(), eq(variables['IsPRBuild'], 'False'))
 
 steps:
 
