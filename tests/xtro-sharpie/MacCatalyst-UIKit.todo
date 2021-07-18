@@ -195,7 +195,6 @@
 !missing-null-allowed! 'System.Boolean UIKit.UITraitCollection::Contains(UIKit.UITraitCollection)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Boolean UIKit.UIViewController::ShouldPerformSegue(System.String,Foundation.NSObject)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Double UIKit.UIViewControllerAnimatedTransitioning::TransitionDuration(UIKit.IUIViewControllerContextTransitioning)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.String UIKit.NSIdentifier::GetIdentifier(UIKit.NSLayoutConstraint)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.String UIKit.UIActionSheet::ButtonTitle(System.nint)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.String UIKit.UIActivity::get_Title()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.String UIKit.UIAlertAction::get_Title()' is missing an [NullAllowed] on return type
