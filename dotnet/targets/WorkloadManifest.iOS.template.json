@@ -8,6 +8,9 @@
 				"Microsoft.@PLATFORM@.Windows.Sdk",
 				"Microsoft.@PLATFORM@.Ref",
 				"Microsoft.@PLATFORM@.Templates"
+			],
+			"extends": [
+				"microsoft-net-runtime-ios"
 			]
 		}
 	},
