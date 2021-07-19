@@ -18,7 +18,6 @@
     <CodesignEntitlements Condition="'$(Platform)' == 'iPhoneSimulator'">$(MonoTouchTestDirectory)\Entitlements.plist</CodesignEntitlements>
 
     <DefineConstants Condition="'$(Configuration)' == 'Debug'">$(DefineConstants);DEBUG</DefineConstants>
-    <DefineConstants Condition="'$(Platform)' == 'iPhone'">$(DefineConstants);DEVICE</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
@@ -197,6 +196,12 @@
   <Target Name="BuildTestLibraries" Inputs="@(GeneratedTestInput)" Outputs="@(GeneratedTestOutput)" BeforeTargets="BeforeBuild" >
     <Exec Command="make -j8 -C $(TestLibrariesDirectory)" />
     <Exec Command="make -j8 -C $(TestLibrariesDirectory)/custom-type-assembly build-assembly" />
+  </Target>
+
+  <Target Name="ComputeDefineConstants" BeforeTargets="BeforeBuild">
+    <PropertyGroup>
+      <DefineConstants Condition="'$(ComputedPlatform)' == 'iPhone'">$(DefineConstants);AOT</DefineConstants>
+    </PropertyGroup>
   </Target>
 
   <Import Project="$(RootTestsDirectory)\nunit.framework.targets" />
