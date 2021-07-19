@@ -177,33 +177,6 @@ namespace UserNotifications {
 		TimeSensitive,
 	}
 
-
-	[MacCatalyst (15,0), NoiOS, NoMac, NoWatch, NoTV]
-	enum UNNotificationInterruptionReason {
-		[Field ("UNNotificationInterruptionReasonAccountSecurity")]
-		AccountSecurity,
-		[Field ("UNNotificationInterruptionReasonHealthAndWellness")]
-		HealthAndWellness,
-		[Field ("UNNotificationInterruptionReasonLocalSafety")]
-		LocalSafety,
-		[Field ("UNNotificationInterruptionReasonHomeSecurity")]
-		HomeSecurity,
-		[Field ("UNNotificationInterruptionReasonOrderPickup")]
-		OrderPickup,
-		[Field ("UNNotificationInterruptionReasonPackageDelivery")]
-		PackageDelivery,
-		[Field ("UNNotificationInterruptionReasonTransportationDeparting")]
-		TransportationDeparting,
-		[Field ("UNNotificationInterruptionReasonSchedule")]
-		Schedule,
-		[Field ("UNNotificationInterruptionReasonTimeExpired")]
-		TimeExpired,
-		[Field ("UNNotificationInterruptionReasonApprovalRequest")]
-		ApprovalRequest,
-		[Field ("UNNotificationInterruptionReasonUrgentMessage")]
-		UrgentMessage,
-	}
-
 	[iOS (10, 0)]
 	[TV (10, 0)]
 	[Watch (3, 0)]
@@ -437,12 +410,12 @@ namespace UserNotifications {
 		NSDictionary UserInfo { get; }
 
 		[NoWatch, NoTV, iOS (12, 0)]
-		[Deprecated (PlatformName.iOS, 15, 0, message: "The property 'summaryArgument' is ignored.")]
+		[Deprecated (PlatformName.iOS, 15, 0, message: "This property is ignored.")]
 		[Export ("summaryArgument")]
 		string SummaryArgument { get; }
 
 		[NoWatch, NoTV, iOS (12, 0)]
-		[Deprecated (PlatformName.iOS, 15, 0, message: "The property 'summaryArgumentCount' is ignored.")]
+		[Deprecated (PlatformName.iOS, 15, 0, message: "This property is ignored.")]
 		[Export ("summaryArgumentCount")]
 		nuint SummaryArgumentCount { get; }
 
@@ -455,15 +428,11 @@ namespace UserNotifications {
 		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("contentByUpdatingWithProvider:error:")]
 		[return: NullAllowed]
-		UNNotificationContent ContentByUpdatingWithProvider (IUNNotificationContentProviding provider, [NullAllowed] out NSError outError);
+		UNNotificationContent Update (IUNNotificationContentProviding fromProvider, [NullAllowed] out NSError outError);
 
 		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("interruptionLevel", ArgumentSemantic.Assign)]
 		UNNotificationInterruptionLevel InterruptionLevel { get; }
-
-		[NoWatch, NoTV, NoMac, NoiOS, MacCatalyst (15,0)]
-		[Export ("interruptionReason")]
-		string InterruptionReason { get; }
 
 		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("relevanceScore")]
@@ -516,12 +485,12 @@ namespace UserNotifications {
 		NSDictionary UserInfo { get; set; }
 
 		[NoWatch, NoTV, iOS (12, 0)]
-		[Deprecated (PlatformName.iOS, 15, 0, message: "The property 'summaryArgument' is ignored.")]
+		[Deprecated (PlatformName.iOS, 15, 0, message: "This property is ignored.")]
 		[Export ("summaryArgument")]
 		string SummaryArgument { get; set; }
 
 		[NoWatch, NoTV, iOS (12, 0)]
-		[Deprecated (PlatformName.iOS, 15, 0, message: "The property 'summaryArgumentCount' is ignored.")]
+		[Deprecated (PlatformName.iOS, 15, 0, message: "This property is ignored.")]
 		[Export ("summaryArgumentCount")]
 		nuint SummaryArgumentCount { get; set; }
 
@@ -538,11 +507,6 @@ namespace UserNotifications {
 		[iOS (15,0), Mac (12,0), MacCatalyst (15,0), TV (15,0), Watch (8,0)]
 		[Export ("relevanceScore")]
 		double RelevanceScore { get; set; }
-
-		[NoWatch, NoTV, NoMac, NoiOS, MacCatalyst (15,0)]
-		[BindAs (typeof (UNNotificationInterruptionReason))]
-		[Export ("interruptionReason")]
-		NSString InterruptionReason { get; set; }
 	}
 
 	[iOS (10, 0)]
