@@ -2105,9 +2105,9 @@ namespace UIKit {
 		[Export ("imageForBounds:textContainer:characterIndex:")]
 		[return: NullAllowed]
 #if MONOMAC && !XAMCORE_4_0
-		NSImage GetImage (CGRect imageBounds, [NullAllowed] NSTextContainer textContainer, nuint charIndex);
+		Image GetImage (CGRect imageBounds, [NullAllowed] NSTextContainer textContainer, nuint charIndex);
 #else
-		UIImage GetImageForBounds (CGRect bounds, [NullAllowed] NSTextContainer textContainer, nuint characterIndex);
+		Image GetImageForBounds (CGRect bounds, [NullAllowed] NSTextContainer textContainer, nuint characterIndex);
 #endif
 
 		[Abstract]
