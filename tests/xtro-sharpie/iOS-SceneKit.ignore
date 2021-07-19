@@ -1,2 +1,0 @@
-# adding abstract member to an existing type would be a breaking change
-!incorrect-protocol-member! SCNAnimatable::removeAllAnimationsWithBlendOutDuration: is REQUIRED and should be abstract
