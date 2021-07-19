@@ -1995,6 +1995,26 @@ namespace GameController {
 
 		[Field ("GCInputDirectionalCardinalDpad")]
 		CardinalDpad,
+
+		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
+		[Field ("GCInputDirectionalCenterButton")]
+		CenterButton,
+
+		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
+		[Field ("GCInputDirectionalTouchSurfaceButton")]
+		TouchSurfaceButton,
+	}
+
+	[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
+	enum GCInputMicroGamepad {
+		[Field ("GCInputMicroGamepadDpad")]
+		Dpad,
+
+		[Field ("GCInputMicroGamepadButtonA")]
+		ButtonA,
+
+		[Field ("GCInputMicroGamepadButtonX")]
+		ButtonX,
 	}
 
 	delegate GCVirtualControllerElementConfiguration GCVirtualControllerElementUpdateBlock (GCVirtualControllerElementConfiguration configuration);
@@ -2008,8 +2028,12 @@ namespace GameController {
 		[Export ("virtualControllerWithConfiguration:")]
 		GCVirtualController Create (GCVirtualControllerConfiguration configuration);
 
+		[Export ("initWithConfiguration:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (GCVirtualControllerConfiguration configuration);
+
 		[Async]
-		[Export ("connectWithReply:")]
+		[Export ("connectWithReplyHandler:")]
 		void Connect ([NullAllowed] Action<NSError> reply);
 
 		[Export ("disconnect")]
@@ -2018,7 +2042,7 @@ namespace GameController {
 		[NullAllowed, Export ("controller", ArgumentSemantic.Weak)]
 		GCController Controller { get; }
 
-		[Export ("changeElement:configuration:")]
+		[Export ("updateConfigurationForElement:configuration:")]
 		void Change (string element, GCVirtualControllerElementUpdateBlock configuration);
 	}
 
@@ -2035,12 +2059,12 @@ namespace GameController {
 	interface GCVirtualControllerElementConfiguration
 	{
 		[Export ("hidden")]
-		bool Hidden { get; set; }
+		bool Hidden { [Bind ("isHidden")] get; set; }
 
 		[NullAllowed, Export ("path", ArgumentSemantic.Strong)]
 		BezierPath Path { get; set; }
 
-		[Export ("touchpad")]
-		bool Touchpad { get; set; }
+		[Export ("actsAsTouchpad")]
+		bool ActsAsTouchpad { get; set; }
 	}
 }
