@@ -8,7 +8,6 @@ parameters:
   default: build_packages
 
 stages:
-# .NET 6 Release Prep and VS Insertion Stages
 - stage: prepare_release
   displayName: Prepare Release
   dependsOn: ${{ parameters.dependsOn }}

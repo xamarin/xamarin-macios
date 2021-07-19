@@ -243,6 +243,7 @@ stages:
         xqaCertPass: $(xqa--certificates--password)
         enableDotnet: ${{ parameters.enableDotnet }}
 
+# .NET 6 Release Prep and VS Insertion Stages
 - template: templates/release/vs-insertion-prep.yml
 
 # Test stages
