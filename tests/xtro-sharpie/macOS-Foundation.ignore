@@ -784,10 +784,6 @@
 !missing-selector! NSXMLNode::init not bound
 
 # Initial result from new rule missing-null-allowed
-!missing-null-allowed! 'Foundation.NSAppleEventDescriptor Foundation.NSAppleEventDescriptor::AttributeDescriptorForKeyword(System.UInt32)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSAppleEventDescriptor Foundation.NSAppleEventDescriptor::DescriptorAtIndex(System.nint)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSAppleEventDescriptor Foundation.NSAppleEventDescriptor::DescriptorForKeyword(System.UInt32)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSAppleEventDescriptor Foundation.NSAppleEventDescriptor::ParamDescriptorForKeyword(System.UInt32)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSAppleEventDescriptor Foundation.NSAppleEventManager::get_CurrentAppleEvent()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSAppleEventDescriptor Foundation.NSAppleEventManager::get_CurrentReplyAppleEvent()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSAppleEventDescriptor Foundation.NSScriptCommand::get_AppleEvent()' is missing an [NullAllowed] on return type
@@ -823,8 +819,6 @@
 !missing-null-allowed! 'System.Boolean Foundation.NSConnection::RegisterName(System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Boolean Foundation.NSConnection::RegisterName(System.String,Foundation.NSPortNameServer)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Boolean Foundation.NSNetService::SetTxtRecordData(Foundation.NSData)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.String Foundation.NSAppleEventDescriptor::get_StringValue()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String Foundation.NSAppleScript::get_Source()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.String Foundation.NSCalendarDate::GetDescription(Foundation.NSLocale)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.String Foundation.NSCalendarDate::GetDescription(System.String,Foundation.NSObject)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.String Foundation.NSHost::get__Address()' is missing an [NullAllowed] on return type
