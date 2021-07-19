@@ -880,11 +880,11 @@ namespace UserNotifications {
 	{
 		[Static]
 		[Export ("iconWithTemplateImageName:")]
-		UNNotificationActionIcon CreateFromTemplate (string ImageName);
+		UNNotificationActionIcon CreateFromTemplate (string imageName);
 
 		[Static]
 		[Export ("iconWithSystemImageName:")]
-		UNNotificationActionIcon CreateFromSystem (string ImageName);
+		UNNotificationActionIcon CreateFromSystem (string imageName);
 	}
 
 	interface IUNNotificationContentProviding {}

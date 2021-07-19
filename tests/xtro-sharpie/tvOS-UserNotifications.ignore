@@ -1,4 +1,4 @@
-## Deprecated
+# both added and deprecated in Xcode 13 beta 2
 !missing-selector! UNMutableNotificationContent::setSummaryArgument: not bound
 !missing-selector! UNMutableNotificationContent::setSummaryArgumentCount: not bound
 !missing-selector! UNMutableNotificationContent::summaryArgument not bound
