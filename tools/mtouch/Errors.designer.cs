@@ -4059,5 +4059,14 @@ namespace Xamarin.Bundler {
                 return ResourceManager.GetString("MX8040", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to create an instance of the type {0}..
+        /// </summary>
+        public static string MX8041 {
+            get {
+                return ResourceManager.GetString("MX8041", resourceCulture);
+            }
+        }
     }
 }

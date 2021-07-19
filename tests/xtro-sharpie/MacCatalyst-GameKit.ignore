@@ -24,3 +24,12 @@
 !missing-selector! GKFriendRequestComposeViewControllerGKFriendRequestComposeViewController::setComposeViewDelegate: not bound
 !missing-selector! GKFriendRequestComposeViewControllerGKFriendRequestComposeViewController::setMessage: not bound
 !missing-type! GKFriendRequestComposeViewController not bound
+
+# Deprecated
+!incorrect-protocol-member! GKMatchmakerViewControllerDelegate::matchmakerViewController:didFindPlayers: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! GKTurnBasedMatchmakerViewControllerDelegate::turnBasedMatchmakerViewController:didFindMatch: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! GKTurnBasedMatchmakerViewControllerDelegate::turnBasedMatchmakerViewController:playerQuitForMatch: is OPTIONAL and should NOT be abstract
+
+# Are only available for TvOS
+!missing-selector! GKAccessPoint::isFocused not bound
+!missing-selector! GKAccessPoint::setFocused: not bound

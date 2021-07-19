@@ -1,3 +1,5 @@
 !missing-selector! LAAuthenticationView::context not bound
+!missing-selector! LAAuthenticationView::controlSize not bound
 !missing-selector! LAAuthenticationView::initWithContext: not bound
+!missing-selector! LAAuthenticationView::initWithContext:controlSize: not bound
 !missing-type! LAAuthenticationView not bound

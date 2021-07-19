@@ -1,5 +1,0 @@
-!missing-pinvoke! IOSurfaceCreateXPCObject is not bound
-!missing-pinvoke! IOSurfaceLookupFromXPCObject is not bound
-## appended from unclassified file
-!missing-field! kIOSurfaceColorSpace not bound
-!missing-field! kIOSurfaceICCProfile not bound
