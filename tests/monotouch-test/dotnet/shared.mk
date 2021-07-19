@@ -1,5 +1,6 @@
 TOP=../../../..
 include $(TOP)/Make.config
+include $(TOP)/mk/colors.mk
 
 prepare:
 	$(Q) $(MAKE) -C $(TOP)/tests/dotnet copy-dotnet-config

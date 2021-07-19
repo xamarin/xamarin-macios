@@ -15,7 +15,7 @@ clean-local::
 	rm -f *.tmp
 	rm -rf *os*.pch*
 
-bin/Debug/xtro-sharpie.exe xtro-report/bin/Debug/xtro-report.exe build:
+bin/Debug/xtro-sharpie.exe xtro-report/bin/Debug/xtro-report.exe build: $(wildcard *.cs)
 	$(Q) $(SYSTEM_XIBUILD) -t -- /Library/Frameworks/Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe restore xtro-sharpie.sln
 	$(Q_BUILD) $(SYSTEM_MSBUILD) $(MSBUILD_VERBOSITY) xtro-sharpie.sln
 
