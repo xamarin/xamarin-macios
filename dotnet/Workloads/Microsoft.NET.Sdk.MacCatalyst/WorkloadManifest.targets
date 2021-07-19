@@ -1,12 +1,6 @@
 <Project>
 	<Import Project="Sdk.props" Sdk="Microsoft.MacCatalyst.Sdk" Condition="'$(TargetPlatformIdentifier)' == 'MacCatalyst'" />
 
-	<Import Project="Sdk.props" Sdk="Microsoft.NET.Runtime.RuntimeConfigParser.Task" Condition="'$(TargetPlatformIdentifier)' == 'MacCatalyst'" />
-	<PropertyGroup Condition="'$(TargetPlatformIdentifier)' == 'MacCatalyst'">
-		<!-- Workaround for https://github.com/dotnet/runtime/issues/53811 -->
-		<RuntimeConfigParserTasksAssemblyPath>$([System.IO.Path]::GetDirectoryName($(RuntimeConfigParserTasksAssemblyPath)))/net6.0/$([System.IO.Path]::GetFileName($(RuntimeConfigParserTasksAssemblyPath)))</RuntimeConfigParserTasksAssemblyPath>
-	</PropertyGroup>
-
 	<ItemGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETCoreApp' and $([MSBuild]::VersionGreaterThanOrEquals($(TargetFrameworkVersion), '6.0')) ">
 		<SdkSupportedTargetPlatformIdentifier Include="maccatalyst" DisplayName="Mac Catalyst" />
 	</ItemGroup>

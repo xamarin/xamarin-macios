@@ -138,6 +138,7 @@ namespace Introspection
 			"Cda", // acronym: Clinical Document Architecture
 			"Cdrom",
 			"Celu", // Continuously Differentiable Exponential Linear Unit (ML)
+			"Chip", // framework name
 			"Cfa", // acronym: Color Filter Array
 			"Celp", // MPEG4ObjectID
 			"Characterteristic",
@@ -1062,9 +1063,10 @@ namespace Introspection
 					break;
 #endif
 #if !__MACOS__
+				case "ChipLibrary":
 				case "MediaSetupLibrary":
 				case "MLComputeLibrary":
-					// Xcode 12 beta 2 does not ship this framework/headers for the simulators
+					// Xcode 12 beta 2 does not ship these framework/headers for the simulators
 					if (Runtime.Arch == Arch.DEVICE)
 						Assert.True (CheckLibrary (s), fi.Name);
 					break;

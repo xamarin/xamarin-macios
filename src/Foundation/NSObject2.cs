@@ -36,6 +36,7 @@ using System.Runtime.InteropServices.ObjectiveC;
 
 using ObjCRuntime;
 #if !COREBUILD
+using Xamarin.Bundler;
 #if MONOTOUCH
 using UIKit;
 #if !WATCH
@@ -200,10 +201,14 @@ namespace Foundation {
 		{
 			// This function is called from native code before any constructors have executed.
 			var type = (Type) Runtime.GetGCHandleTarget (type_gchandle);
-			var obj = (NSObject) RuntimeHelpers.GetUninitializedObject (type);
-			obj.handle = handle;
-			obj.flags = flags;
-			return Runtime.AllocGCHandle (obj);
+			try {
+				var obj = (NSObject) RuntimeHelpers.GetUninitializedObject (type);
+				obj.handle = handle;
+				obj.flags = flags;
+				return Runtime.AllocGCHandle (obj);
+			} catch (Exception e) {
+				throw ErrorHelper.CreateError (8041, e, Errors.MX8041 /* Unable to create an instance of the type {0} */, type.FullName);
+			}
 		}
 
 		IntPtr GetSuper ()

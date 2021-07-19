@@ -1,0 +1,3 @@
+## These are no longer supported on Mac
+!extra-protocol-member! unexpected selector VSAccountManagerDelegate::accountManager:dismissViewController: found
+!extra-protocol-member! unexpected selector VSAccountManagerDelegate::accountManager:presentViewController: found
