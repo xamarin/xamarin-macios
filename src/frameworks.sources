@@ -689,6 +689,7 @@ COREWLAN_API_SOURCES = \
 COREWLAN_SOURCES = \
 	CoreWlan/CWConfiguration.cs \
 	CoreWlan/CWInterface.cs \
+	CoreWlan/CWKeychain.cs \
 
 # EventKit
 
@@ -1618,7 +1619,6 @@ UIKIT_CORE_SOURCES = \
 
 UIKIT_SOURCES = \
 	UIKit/Compat.cs \
-	UIKit/NSLayoutConstraint.cs \
 	UIKit/NSLayoutManager.cs \
 	AppKit/NSLayoutManager.cs \
 	UIKit/UIAccessibility.cs \
@@ -2228,6 +2228,7 @@ MACCATALYST_FRAMEWORKS = \
 	CoreMotion \
 	CoreSpotlight \
 	CoreText \
+	CoreWlan \
 	DeviceCheck \
 	EventKit \
 	ExternalAccessory \
