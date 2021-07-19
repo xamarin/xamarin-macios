@@ -154,6 +154,30 @@ namespace ImageKit {
 
 		[Export ("mode", ArgumentSemantic.Assign)]
 		IKCameraDeviceViewDisplayMode Mode { get; set; }
+
+		[Mac (12,0)]
+		[Export ("setCustomActionControl:")]
+		void SetCustomActionControl (NSSegmentedControl control);
+
+		[Mac (12,0)]
+		[Export ("setCustomDeleteControl:")]
+		void SetCustomDelete (NSSegmentedControl control);
+
+		[Mac (12,0)]
+		[Export ("setCustomIconSizeSlider:")]
+		void SetCustomIconSizeSlider (NSSlider slider);
+
+		[Mac (12,0)]
+		[Export ("setCustomModeControl:")]
+		void SetCustomModeControl (NSSegmentedControl control);
+
+		[Mac (12,0)]
+		[Export ("setCustomRotateControl:")]
+		void SetCustomRotateControl (NSSegmentedControl control);
+
+		[Mac (12,0)]
+		[Export ("setShowStatusInfoAsWindowSubtitle:")]
+		void SetShowStatusInfoAsWindowSubtitle (bool value);
 	}
 
 	[BaseType (typeof (NSObject))]
