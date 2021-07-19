@@ -1,9 +1,0 @@
-!missing-enum-value! GKError native value GKErrorFriendRequestNotAvailable = 103 not bound
-!missing-enum-value! GKGameCenterViewControllerState native value GKGameCenterViewControllerStateLocalPlayerFriendsList = 5 not bound
-!missing-enum-value! GKMatchmakingMode native value GKMatchmakingModeInviteOnly = 3 not bound
-!missing-selector! GKLocalPlayer::isPresentingFriendRequestViewController not bound
-!missing-selector! GKLocalPlayer::presentFriendRequestCreatorFromWindow:error: not bound
-!missing-selector! GKMatchmakerViewController::canStartWithMinimumPlayers not bound
-!missing-selector! GKMatchmakerViewController::setCanStartWithMinimumPlayers: not bound
-!missing-selector! GKTurnBasedMatchmakerViewControllerGKTurnBasedMatchmakerViewController::matchmakingMode not bound
-!missing-selector! GKTurnBasedMatchmakerViewControllerGKTurnBasedMatchmakerViewController::setMatchmakingMode: not bound

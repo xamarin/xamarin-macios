@@ -1,0 +1,5 @@
+!missing-field! GCInputDirectionalCenterButton not bound
+!missing-field! GCInputDirectionalTouchSurfaceButton not bound
+!missing-field! GCInputMicroGamepadButtonA not bound
+!missing-field! GCInputMicroGamepadButtonX not bound
+!missing-field! GCInputMicroGamepadDpad not bound

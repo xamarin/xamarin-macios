@@ -36,6 +36,31 @@ namespace Xamarin.Tests {
 			return rv;
 		}
 
+		public static ExecutionResult AssertNew (string outputDirectory, string template)
+		{
+			Directory.CreateDirectory (outputDirectory);
+
+			var args = new List<string> ();
+			args.Add ("new");
+			args.Add (template);
+
+			var env = new Dictionary<string, string> ();
+			env ["MSBuildSDKsPath"] = null;
+			env ["MSBUILD_EXE_PATH"] = null;
+			var output = new StringBuilder ();
+			var rv = Execution.RunWithStringBuildersAsync (Executable, args, env, output, output, Console.Out, workingDirectory: outputDirectory, timeout: TimeSpan.FromMinutes (10)).Result;
+			if (rv.ExitCode != 0) {
+				Console.WriteLine ($"'{Executable} {StringUtils.FormatArguments (args)}' failed with exit code {rv.ExitCode}.");
+				Console.WriteLine (output);
+				Assert.AreEqual (0, rv.ExitCode, $"Exit code: {Executable} {StringUtils.FormatArguments (args)}");
+			}
+			return new ExecutionResult {
+				StandardOutput = output,
+				StandardError = output,
+				ExitCode = rv.ExitCode,
+			};
+		}
+
 		public static ExecutionResult Execute (string verb, string project, Dictionary<string, string> properties, bool assert_success = true)
 		{
 			if (!File.Exists (project))
