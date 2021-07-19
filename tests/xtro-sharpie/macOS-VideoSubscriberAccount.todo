@@ -1,2 +1,0 @@
-!extra-protocol-member! unexpected selector VSAccountManagerDelegate::accountManager:dismissViewController: found
-!extra-protocol-member! unexpected selector VSAccountManagerDelegate::accountManager:presentViewController: found

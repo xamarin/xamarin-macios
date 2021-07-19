@@ -847,5 +847,15 @@ Additional information:
 				handles [i].Free ();
 			}
 		}
+
+		[Test]
+		public void CurrentDirectory ()
+		{
+#if NET || !MONOMAC
+			Assert.AreEqual (Environment.CurrentDirectory, NSBundle.MainBundle.BundlePath, "Current directory at launch");
+#else
+			Assert.AreEqual (Environment.CurrentDirectory, NSBundle.MainBundle.ResourcePath, "Current directory at launch");
+#endif
+		}
 	}
 }

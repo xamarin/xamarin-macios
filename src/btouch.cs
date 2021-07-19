@@ -24,6 +24,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.IO;
 using System.Linq;
@@ -63,7 +66,7 @@ public class BindingTouch {
 	}
 
 	public TargetFramework TargetFramework {
-		get { return target_framework.Value; }
+		get { return target_framework!.Value; }
 	}
 
 	public static string ToolName {
@@ -200,9 +203,9 @@ public class BindingTouch {
 	{
 		bool show_help = false;
 		bool zero_copy = false;
-		string basedir = null;
-		string tmpdir = null;
-		string ns = null;
+		string? basedir = null;
+		string? tmpdir = null;
+		string? ns = null;
 		bool delete_temp = true, debug = false;
 		bool unsafef = true;
 		bool external = false;
@@ -216,7 +219,7 @@ public class BindingTouch {
 		var core_sources = new List<string> ();
 		var extra_sources = new List<string> ();
 		var defines = new List<string> ();
-		string generate_file_list = null;
+		string? generate_file_list = null;
 		bool process_enums = false;
 		string compiler = "/Library/Frameworks/Mono.framework/Versions/Current/bin/csc";
 

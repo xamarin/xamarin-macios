@@ -31,6 +31,8 @@ using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
 
+#nullable enable
+
 namespace CoreVideo {
 
 	[Watch (4,0)]

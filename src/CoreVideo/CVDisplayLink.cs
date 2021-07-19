@@ -32,6 +32,8 @@ using ObjCRuntime;
 using Foundation;
 using OpenGL;
 
+#nullable enable
+
 namespace CoreVideo {
 	public class CVDisplayLink : INativeObject, IDisposable {
 		IntPtr handle;

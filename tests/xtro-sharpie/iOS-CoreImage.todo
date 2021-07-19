@@ -15,6 +15,7 @@
 !missing-selector! +CIFilter::linearLightBlendModeFilter not bound
 !missing-selector! +CIFilter::personSegmentationFilter not bound
 !missing-selector! +CIFilter::vividLightBlendModeFilter not bound
+!missing-selector! +CIKernel::kernelsWithMetalString:error: not bound
 !missing-selector! +CIRAWFilter::filterWithCVPixelBuffer:properties: not bound
 !missing-selector! +CIRAWFilter::filterWithImageData:identifierHint: not bound
 !missing-selector! +CIRAWFilter::filterWithImageURL: not bound

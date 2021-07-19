@@ -18,6 +18,8 @@ using CoreFoundation;
 using Foundation;
 using Metal;
 
+#nullable enable
+
 namespace CoreVideo {
 
 	[iOS (8,0)]

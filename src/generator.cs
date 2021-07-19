@@ -2745,8 +2745,12 @@ public partial class Generator : IMemberGatherer {
 				print ("static public readonly IntPtr Handle = Dlfcn.dlopen (null, 0);");
 			} else if (BindThirdPartyLibrary && library_path != null && IsNotSystemLibrary (library_name)) {
 				print ($"static public readonly IntPtr Handle = Dlfcn.dlopen (\"{library_path}\", 0);");
-			} else {
+			} else if (BindThirdPartyLibrary) {
 				print ("static public readonly IntPtr Handle = Dlfcn.dlopen (Constants.{0}Library, 0);", library_name);
+			} else {
+				// Skip the path check that our managed `dlopen` method does
+				// This is not required since the path is checked by `IsNotSystemLibrary`
+				print ("static public readonly IntPtr Handle = Dlfcn._dlopen (Constants.{0}Library, 0);", library_name);
 			}
 			indent--; print ("}");
 		}
@@ -3968,35 +3972,38 @@ public partial class Generator : IMemberGatherer {
 
 		if (need_multi_path) {
 			if (is_stret_multi) {
-				print ("if (Runtime.Arch == Arch.DEVICE) {");
-				indent++;
-				if (BindingTouch.CurrentPlatform == PlatformName.WatchOS) {
-					print ("if (global::ObjCRuntime.Runtime.IsARM64CallingConvention) {");
-				} else {
-					print ("if (IntPtr.Size == 8) {");
-
-				}
+				// First check for arm64
+				print ("if (global::ObjCRuntime.Runtime.IsARM64CallingConvention) {");
 				indent++;
 				GenerateInvoke (false, supercall, mi, minfo, selector, args [index64], assign_to_temp, category_type, false, EnumMode.Bit64);
 				indent--;
-				print ("} else {");
+				// If we're not arm64, but we're 64-bit, then we're x86_64
+				print ("} else if (IntPtr.Size == 8) {");
+				indent++;
+				GenerateInvoke (x64_stret, supercall, mi, minfo, selector, args[index64], assign_to_temp, category_type, aligned && x64_stret, EnumMode.Bit64);
+				indent--;
+				// if we're not 64-bit, but we're on device, then we're 32-bit arm
+				print ("} else if (Runtime.Arch == Arch.DEVICE) {");
 				indent++;
 				GenerateInvoke (arm_stret, supercall, mi, minfo, selector, args [0], assign_to_temp, category_type, aligned && arm_stret, EnumMode.Bit32);
 				indent--;
-				print ("}");
+				// if we're none of the above, we're x86
+				print ("} else {");
+				indent++;
+				GenerateInvoke (x86_stret, supercall, mi, minfo, selector, args[0], assign_to_temp, category_type, aligned && x86_stret, EnumMode.Bit32);
 				indent--;
-				print ("} else if (IntPtr.Size == 8) {");
+				print ("}");
 			} else {
 				print ("if (IntPtr.Size == 8) {");
+				indent++;
+				GenerateInvoke (x64_stret, supercall, mi, minfo, selector, args[index64], assign_to_temp, category_type, aligned && x64_stret, EnumMode.Bit64);
+				indent--;
+				print ("} else {");
+				indent++;
+				GenerateInvoke (x86_stret, supercall, mi, minfo, selector, args[0], assign_to_temp, category_type, aligned && x86_stret, EnumMode.Bit32);
+				indent--;
+				print ("}");
 			}
-			indent++;
-			GenerateInvoke (x64_stret, supercall, mi, minfo, selector, args[index64], assign_to_temp, category_type, aligned && x64_stret, EnumMode.Bit64);
-			indent--;
-			print ("} else {");
-			indent++;
-			GenerateInvoke (x86_stret, supercall, mi, minfo, selector, args[0], assign_to_temp, category_type, aligned && x86_stret, EnumMode.Bit32);
-			indent--;
-			print ("}");
 		} else {
 			GenerateInvoke (false, supercall, mi, minfo, selector, args[0], assign_to_temp, category_type, false);
 		}
@@ -4658,7 +4665,7 @@ public partial class Generator : IMemberGatherer {
 			print (sw, by_ref_processing.ToString ());
 		if (use_temp_return) {
 			if (AttributeManager.HasAttribute<ProxyAttribute> (AttributeManager.GetReturnTypeCustomAttributes (mi)))
-				print ("ret.SetAsProxy ();");
+				print ("ret.IsDirectBinding = true;");
 
 			if (mi.ReturnType.IsSubclassOf (TypeManager.System_Delegate)) {
 				print ("return global::ObjCRuntime.Trampolines.{0}.Create (ret)!;", trampoline_info.NativeInvokerName);
