@@ -19749,7 +19749,7 @@ namespace UIKit {
 
 	[iOS (13,0), TV (13,0), NoWatch]
 	[BaseType (typeof (NSObject))]
-	interface UISceneActivationRequestOptions {
+	interface UISceneActivationRequestOptions : NSCopying {
 
 		[NullAllowed, Export ("requestingScene", ArgumentSemantic.Strong)]
 		UIScene RequestingScene { get; set; }
