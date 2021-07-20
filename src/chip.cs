@@ -1140,7 +1140,7 @@ namespace Chip {
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("opCSRRequest:responseHandler:")]
-		void OpCsRrequest (NSData csrNonce, ChipResponseHandler responseHandler);
+		void OpCsrRequest (NSData csrNonce, ChipResponseHandler responseHandler);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("removeAllFabrics:")]
