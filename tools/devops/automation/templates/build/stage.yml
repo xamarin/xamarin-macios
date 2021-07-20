@@ -98,7 +98,6 @@ jobs:
   steps:
   - template: build.yml
     parameters:
-      isPR: ${{ or(eq(variables['Build.Reason'], 'PullRequest'), and(eq(variables['Build.SourceBranchName'], 'merge'), or(eq(variables['Build.Reason'], 'Manual'), eq(variables['Build.Reason'], 'IndividualCI')))) }}
       runTests: ${{ parameters.runTests }}
       runDeviceTests: ${{ parameters.runDeviceTests }}
       vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
