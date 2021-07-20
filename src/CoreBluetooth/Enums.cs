@@ -180,7 +180,7 @@ namespace CoreBluetooth {
 		Connected = 1,
 	}
 
-	[Flags, iOS (13,0), TV (13,0), Watch (6,0), NoMac]
+	[Flags, iOS (13,0), TV (13,0), Watch (6,0), Mac (12,0)]
 	[Native]
 	public enum CBCentralManagerFeature : ulong {
 		ExtendedScanAndConnect = 1uL << 0,
