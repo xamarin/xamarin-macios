@@ -321,7 +321,7 @@ namespace Xamarin.Tests
 			try {
 				rootPath = RootPath;
 				return true;
-			} catch (Exception e) {
+			} catch {
 				rootPath = null;
 				return false;
 			}
