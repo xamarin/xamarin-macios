@@ -160,8 +160,6 @@ variables:
   value: 'VSEng-Xamarin-RedmondMacBuildPool-iOS-Trusted'
 - name: CIBuildPoolUrl
   value: 'https://devdiv.visualstudio.com/_settings/agentpools?poolId=367&view=agents'
-- name: IsPRBuild
-  value: ${{ or(eq(variables['Build.Reason'], 'PullRequest'), and(eq(variables['Build.SourceBranchName'], 'merge'), or(eq(variables['Build.Reason'], 'Manual'), eq(variables['Build.Reason'], 'IndividualCI')))) }}
 
 trigger:
   branches:
@@ -243,10 +241,6 @@ stages:
         xqaCertPass: $(xqa--certificates--password)
         enableDotnet: ${{ parameters.enableDotnet }}
 
-# .NET 6 Release Prep and VS Insertion Stages
-- template: templates/release/vs-insertion-prep.yml
-
-# Test stages
 - ${{ if eq(parameters.runDeviceTests, true) }}:
   - ${{ if and(ne(variables['Build.Reason'], 'Schedule'), or(eq(variables['Build.Reason'], 'IndividualCI'), eq(variables['Build.Reason'], 'Manual'))) }}:
     - ${{ each config in parameters.deviceTestsConfigurations }}:
