@@ -2,7 +2,7 @@
 	"version": "@VERSION@",
 	"workloads": {
 		"@PLATFORM_LOWERCASE@": {
-			"description": ".NET SDK Workload for building @PLATFORM@ applications.",
+			"description": "Microsoft @PLATFORM@ SDK for .NET",
 			"packs": [
 				"Microsoft.@PLATFORM@.Sdk",
 				"Microsoft.@PLATFORM@.Ref",
