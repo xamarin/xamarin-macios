@@ -2043,7 +2043,7 @@ namespace GameController {
 		GCController Controller { get; }
 
 		[Export ("updateConfigurationForElement:configuration:")]
-		void Change (string element, GCVirtualControllerElementUpdateBlock configuration);
+		void UpdateConfiguration (string element, GCVirtualControllerElementUpdateBlock configuration);
 	}
 
 	[NoTV, NoMac, NoWatch, iOS (15,0), MacCatalyst (15,0)]
