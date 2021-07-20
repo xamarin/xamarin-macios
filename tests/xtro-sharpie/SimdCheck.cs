@@ -43,7 +43,7 @@ namespace Extrospection
 			{ "vector_uint2", new NativeSimdInfo { Managed = "Vector2i", }},
 			{ "vector_uint3", new NativeSimdInfo { Managed = "Vector3i", }},
 			{ "vector_uint4", new NativeSimdInfo { Managed = "Vector4i", }},
-			// simd_floatX is typedefed to vector_doubleX
+			// simd_dobleX is typedefed to vector_doubleX
 			{ "simd_double2", new NativeSimdInfo { Managed = "Vector2d" }},
 			// simd_floatX is typedefed to vector_floatX
 			{ "simd_float2", new NativeSimdInfo { Managed = "Vector2" }},
