@@ -183,7 +183,8 @@ namespace Phase {
 
 	[Mac (12,0), NoWatch, TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[Native]
-	public enum PhasePushStreamCompletionCallbackType : long {
+	public enum PhasePushStreamCompletionCallbackCondition : long
+	{
 		DataRendered = 0,
 	}
 
@@ -204,20 +205,7 @@ namespace Phase {
 		Concrete = 1833132914,
 		GypsumBoard = 1833400688,
 		Drywall = 1833202295,
-		DoorWoodLight = 1833195340,
-		DoorWoodHeavy = 1833195336,
-		DoorSoundproof = 1833202544,
-		WindowSinglePane = 1834447728,
-		WindowDoublePane = 1834443888,
-	}
-
-	[Mac (12,0), NoWatch, TV (15,0), iOS (15,0), MacCatalyst (15,0)]
-	[Flags]
-	[Native]
-	public enum PhaseSpatialPipelineOptions : ulong {
-		DirectPathTransmission = 1uL << 0,
-		EarlyReflections = 1uL << 1,
-		LateReverb = 1uL << 2,
+		Wood = 1834448228,
 	}
 
 	[Mac (12,0), NoWatch, TV (15,0), iOS (15,0), MacCatalyst (15,0)]
@@ -229,6 +217,17 @@ namespace Phase {
 		[Field ("PHASESpatialCategoryLateReverb")]
 		LateReverb,
 	}
+
+	[Mac (12,0), NoWatch, TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[Flags]
+	[Native]
+	public enum PhaseSpatialPipelineFlags : ulong
+	{
+		DirectPathTransmission = 1uL << 0,
+		EarlyReflections = 1uL << 1,
+		LateReverb = 1uL << 2,
+	}
+
 
 	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (NSObject), Name="PHASENumericPair")]
@@ -751,14 +750,14 @@ namespace Phase {
 
 		[Async]
 		[Export ("scheduleBuffer:completionCallbackType:completionHandler:")]
-		void ScheduleBuffer (AVAudioPcmBuffer buffer, PhasePushStreamCompletionCallbackType completionCallbackType, Action<PhasePushStreamCompletionCallbackType> completionHandler);
+		void ScheduleBuffer (AVAudioPcmBuffer buffer, PhasePushStreamCompletionCallbackCondition completionCallbackCondition, Action<PhasePushStreamCompletionCallbackCondition> completionHandler);
 
 		[Export ("scheduleBuffer:atTime:options:")]
 		void ScheduleBuffer (AVAudioPcmBuffer buffer, [NullAllowed] AVAudioTime when, PhasePushStreamBufferOptions options);
 
 		[Async]
 		[Export ("scheduleBuffer:atTime:options:completionCallbackType:completionHandler:")]
-		void ScheduleBuffer (AVAudioPcmBuffer buffer, [NullAllowed] AVAudioTime when, PhasePushStreamBufferOptions options, PhasePushStreamCompletionCallbackType completionCallbackType, Action<PhasePushStreamCompletionCallbackType> completionHandler);
+		void ScheduleBuffer (AVAudioPcmBuffer buffer, [NullAllowed] AVAudioTime when, PhasePushStreamBufferOptions options, PhasePushStreamCompletionCallbackCondition completionCallbackCondition, Action<PhasePushStreamCompletionCallbackCondition> completionHandler);
 	}
 
 	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
@@ -807,6 +806,10 @@ namespace Phase {
 		[Export ("registerSoundEventAssetWithRootNode:identifier:error:")]
 		[return: NullAllowed]
 		PhaseSoundEventNodeAsset RegisterSoundEventAsset (PhaseSoundEventNodeDefinition rootNode, [NullAllowed] string identifier, [NullAllowed] out NSError error);
+
+		[Async]
+		[Export ("unregisterAssetWithIdentifier:completion:")]
+		void UnregisterAssetWithIdentifier (string identifier, [NullAllowed] Action<bool> handler);
 
 		[Export ("registerSoundAssetAtURL:identifier:assetType:channelLayout:normalizationMode:error:")]
 		[return: NullAllowed]
@@ -1103,21 +1106,21 @@ namespace Phase {
 		IntPtr Constructor (PhaseEngine engine, string assetIdentifier, [NullAllowed] out NSError error);
 
 		[Async]
-		[Export ("prepareWithCompletionBlock:")]
-		void Prepare (Action<PhaseSoundEventPrepareHandlerReason> completionBlock);
+		[Export ("prepareWithCompletion:")]
+		void Prepare ([NullAllowed] Action<PhaseSoundEventPrepareHandlerReason> completionBlock);
 
 		[Export ("prepareAndReturnError:")]
 		bool Prepare ([NullAllowed] out NSError error);
 
 		[Async]
-		[Export ("startWithCompletionBlock:")]
-		bool Start (Action<PhaseSoundEventStartHandlerReason> completionBlock);
+		[Export ("startWithCompletion:")]
+		bool Start ([NullAllowed] Action<PhaseSoundEventStartHandlerReason> completionBlock);
 
 		[Export ("startAndReturnError:")]
 		bool Start ([NullAllowed] out NSError error);
 
 		[Async]
-		[Export ("seekToTime:completionBlock:")]
+		[Export ("seekToTime:completion:")]
 		bool Seek (double time, [NullAllowed] Action<PhaseSoundEventSeekHandlerReason> completionHandler);
 
 		[Export ("pause")]
@@ -1306,12 +1309,13 @@ namespace Phase {
 	[DisableDefaultCtor]
 	interface PhaseSpatialPipeline
 	{
-		[Export ("initWithOptions:")]
+		[Export ("initWithFlags:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (PhaseSpatialPipelineOptions options);
+		IntPtr Constructor (PhaseSpatialPipelineFlags flags);
 
-		[Export ("options")]
-		PhaseSpatialPipelineOptions Options { get; }
+		// @property (readonly, nonatomic) PHASESpatialPipelineFlags flags;
+		[Export ("flags")]
+		PhaseSpatialPipelineFlags Flags { get; }
 
 		[Export ("entries", ArgumentSemantic.Copy)]
 		NSDictionary<NSString, PhaseSpatialPipelineEntry> Entries { get; }
