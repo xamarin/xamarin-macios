@@ -12,9 +12,6 @@ parameters:
 - name: keyringPass
   type: string
 
-- name: condition
-  default: and(succeeded(), eq(variables['IsPRBuild'], 'False'))
-
 steps:
 
 - bash: |
@@ -85,7 +82,7 @@ steps:
       echo "Microsoft.MacCatalyst package found at $MACCATALYST_DOTNET_PKG"
     fi
   displayName: 'Retrieve packages to sign'
-  condition: and(${{ parameters.condition }}, contains(variables['configuration.BuildPkgs'], 'True'))
+  condition: and(succeeded(), contains(variables['configuration.BuildPkgs'], 'True'))
   timeoutInMinutes: 180
 
 - task: MicroBuildSigningPlugin@3
@@ -96,8 +93,7 @@ steps:
     zipSources: false  # we do not use the feature and makes the installation to last 10/12 mins instead of < 1 min
   env:
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
-  condition: ${{ parameters.condition }}
-
+ 
 - ${{ if eq(parameters.enableDotnet, true) }}:
   - pwsh : |
       # Get the list of files to sign
@@ -128,7 +124,37 @@ steps:
       ConvertTo-Json -InputObject $SignFileList -Depth 5 | Out-File -FilePath $(Build.ArtifactStagingDirectory)/MsiFiles2Notarize.json -Force
       dotnet $Env:MBSIGN_APPFOLDER/ddsignfiles.dll /filelist:$(Build.ArtifactStagingDirectory)/MsiFiles2Notarize.json
     displayName: 'Sign .msi'
-    condition: ${{ parameters.condition }}
+
+- ${{ if eq(parameters.enableDotnet, true) }}:
+  - pwsh : |
+      # Get the list of files to sign
+      $nupkgFiles = Get-ChildItem -Path $(Build.SourcesDirectory)/package/ -Filter "*.nupkg"
+
+      # Add those files to an array
+      $SignFiles = @()
+      foreach($nupkg in $nupkgFiles) {
+          Write-Host "$($nupkg.FullName)"
+          $SignFiles += @{ "SrcPath"="$($nupkg.FullName)"}
+      }
+
+      Write-Host "$nupkgFiles"
+
+      # array of dicts
+      $SignFileRecord = @(
+        @{
+          "Certs" = "401405";
+          "SignFileList" = $SignFiles;
+        }
+      )
+
+      $SignFileList = @{
+          "SignFileRecordList" = $SignFileRecord
+      }
+
+      # Write the json to a file
+      ConvertTo-Json -InputObject $SignFileList -Depth 5 | Out-File -FilePath $(Build.ArtifactStagingDirectory)/NupkgFiles2Notarize.json -Force
+      dotnet $Env:MBSIGN_APPFOLDER/ddsignfiles.dll /filelist:$(Build.ArtifactStagingDirectory)/NupkgFiles2Notarize.json
+    displayName: 'Sign .nupkg'
 
 - bash: |
     security unlock-keychain -p $PRODUCTSIGN_KEYCHAIN_PASSWORD builder.keychain
@@ -149,7 +175,6 @@ steps:
   name: notarize
   displayName: 'Signing Release Build'
   timeoutInMinutes: 90
-  condition: ${{ parameters.condition }}
 
 - task: ms-vseng.MicroBuildTasks.30666190-6959-11e5-9f96-f56098202fef.MicroBuildSigningPlugin@3
   displayName: 'Install Notarizing Plugin'
@@ -163,7 +188,6 @@ steps:
 
 - pwsh: $(Build.SourcesDirectory)/release-scripts/notarize.ps1 -FolderForApps $(Build.SourcesDirectory)/package/notarized
   displayName: 'ESRP notarizing packages'
-  condition: ${{ parameters.condition }}
 
 - pwsh: |
     $notarizedRoot = Join-Path $(Build.SourcesDirectory) package notarized
@@ -172,4 +196,3 @@ steps:
        pkgutil --check-signature "$($_.FullName)"
     }
   displayName: 'Verify ESRP notarization'
-  condition: ${{ parameters.condition }}
