@@ -2235,6 +2235,7 @@ MACCATALYST_FRAMEWORKS = \
 	FileProvider \
 	GameController \
 	GameplayKit \
+	HomeKit \
 	IdentityLookup \
 	ImageIO \
 	Intents \
