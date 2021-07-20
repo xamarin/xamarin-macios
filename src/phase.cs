@@ -69,7 +69,7 @@ namespace Phase {
 		NotFound = 1346925665,
 		BadData = 1346925666,
 		InvalidInstance = 1346925667,
-		APIMisuse = 1346925668,
+		ApiMisuse = 1346925668,
 		SystemNotInitialized = 1346925669,
 		OutOfMemory = 1346925670,
 	}
