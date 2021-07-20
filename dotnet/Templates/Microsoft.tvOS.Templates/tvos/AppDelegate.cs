@@ -4,7 +4,7 @@ using UIKit;
 namespace tvOSApp1 {
 	[Register ("AppDelegate")]
 	public class AppDelegate : UIApplicationDelegate {
-		public override UIWindow Window {
+		public override UIWindow? Window {
 			get;
 			set;
 		}

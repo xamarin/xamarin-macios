@@ -1254,7 +1254,7 @@ xamarin_initialize ()
 	}
 
 	options.size = sizeof (options);
-#if MONOTOUCH && (defined(__i386__) || defined (__x86_64__))
+#if TARGET_OS_SIMULATOR
 	options.flags = (enum InitializationFlags) (options.flags | InitializationFlagsIsSimulator);
 #endif
 
