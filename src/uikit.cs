@@ -412,56 +412,6 @@ namespace UIKit {
 	}
 
 #if !WATCH
-	[Model]
-	[Protocol]
-	[BaseType (typeof (NSObject))]
-	partial interface NSTextAttachmentContainer {
-		[Abstract]
-		[Export ("imageForBounds:textContainer:characterIndex:")]
-		UIImage GetImageForBounds (CGRect bounds, [NullAllowed] NSTextContainer textContainer, nuint characterIndex);
-
-		[Abstract]
-		[Export ("attachmentBoundsForTextContainer:proposedLineFragment:glyphPosition:characterIndex:")]
-		CGRect GetAttachmentBounds (NSTextContainer textContainer, CGRect proposedLineFragment, CGPoint glyphPosition, nuint characterIndex);
-	}
-
-	[iOS (7,0)]
-	[BaseType (typeof (NSObject))]
-	partial interface NSTextAttachment : NSTextAttachmentContainer, NSSecureCoding
-#if !WATCH
-	, UIAccessibilityContentSizeCategoryImageAdjusting
-#endif // !WATCH
-	{
-		[DesignatedInitializer]
-		[Export ("initWithData:ofType:")]
-		[PostGet ("Contents")]
-		IntPtr Constructor ([NullAllowed] NSData contentData, [NullAllowed] string uti);
-
-		[NullAllowed] // by default this property is null
-		[Export ("contents", ArgumentSemantic.Retain)]
-		NSData Contents { get; set; }
-
-		[NullAllowed] // by default this property is null
-		[Export ("fileType", ArgumentSemantic.Retain)]
-		string FileType { get; set; }
-
-		[NullAllowed] // by default this property is null
-		[Export ("image", ArgumentSemantic.Retain)]
-		UIImage Image { get; set; }
-
-		[Export ("bounds")]
-		CGRect Bounds { get; set; }
-
-		[NullAllowed] // by default this property is null
-		[Export ("fileWrapper", ArgumentSemantic.Retain)]
-		NSFileWrapper FileWrapper { get; set; }
-
-		[Watch (6,0), TV (13,0), iOS (13,0)]
-		[Static]
-		[Export ("textAttachmentWithImage:")]
-		NSTextAttachment Create (UIImage image);
-	}
-
 	[Protocol]
 	// no [Model] since it's not exposed in any API 
 	// only NSTextContainer conforms to it but it's only queried by iOS itself
