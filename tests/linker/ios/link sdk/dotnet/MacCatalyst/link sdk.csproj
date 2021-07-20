@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net6.0-tvos</TargetFramework>
-    <AssetTargetFallback>xamarintvos10;$(AssetTargetFallback)</AssetTargetFallback>
+    <TargetFramework>net6.0-maccatalyst</TargetFramework>
+    <AssetTargetFallback>xamarinios10;$(AssetTargetFallback)</AssetTargetFallback>
     <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)\..\..\..\..\..'))</RootTestsDirectory> <!-- this can't be in shared.csproj, because xharness won't see it there -->
   </PropertyGroup>
 
-  <Import Project="$(RootTestsDirectory)/linker/ios/dont link/dotnet/shared.csproj" />
-
   <ItemGroup>
-    <PackageReference Include="MonoTouch.Dialog" Version="2.0.0-pre1" />
+    <!-- this empty item group is here for xharness -->
   </ItemGroup>
+
+  <Import Project="$(RootTestsDirectory)/linker/ios/link sdk/dotnet/shared.csproj" />
 </Project>
