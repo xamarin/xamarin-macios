@@ -159,6 +159,7 @@ steps:
     zipSources: false  # we do not use the feature and makes the installation to last 10/12 mins instead of < 1 min
   env:
       SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+  condition: ${{ parameters.condition }}
 
 - pwsh: $(Build.SourcesDirectory)/release-scripts/notarize.ps1 -FolderForApps $(Build.SourcesDirectory)/package/notarized
   displayName: 'ESRP notarizing packages'
