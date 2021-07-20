@@ -936,7 +936,7 @@ namespace LinkSdk {
 			// and the simulator is more lax
 #if NET
 			// ProgramFiles is different on .NET: https://github.com/dotnet/runtime/pull/41959#discussion_r485069017
-			path = TestFolder (Environment.SpecialFolder.ProgramFiles, readOnly: device, exists: false);
+			path = TestFolder (Environment.SpecialFolder.ProgramFiles, readOnly: device, exists: null /* may or may not exist */);
 			var applicationsPath = NSSearchPath.GetDirectories (NSSearchPathDirectory.ApplicationDirectory, NSSearchPathDomain.All, true).FirstOrDefault ();
 			Assert.That (path, Is.EqualTo (applicationsPath), "path - ProgramFiles");
 #else
