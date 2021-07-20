@@ -3,5 +3,6 @@
     <TargetFramework>net6.0-macos</TargetFramework>
     <RootNamespace Condition="'$(name)' != '$(name{-VALUE-FORMS-}safe_namespace)'">macOSApp1</RootNamespace>
     <OutputType>Exe</OutputType>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 </Project>

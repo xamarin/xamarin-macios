@@ -38,53 +38,25 @@ using CFIndex = System.nint;
 using CFArrayRef = System.IntPtr;
 using CFAllocatorRef = System.IntPtr;
 
+#nullable enable
+
 namespace CoreFoundation {
 	
-	partial class CFArray : INativeObject, IDisposable {
-
-		internal IntPtr handle;
+	public partial class CFArray : NativeObject {
 
 		internal CFArray (IntPtr handle)
-			: this (handle, false)
+			: base (handle, false)
 		{
 		}
 
 		[Preserve (Conditional = true)]
 		internal CFArray (IntPtr handle, bool owns)
+			: base (handle, owns)
 		{
-			if (handle == IntPtr.Zero)
-				throw new ArgumentNullException ("handle");
-
-			this.handle = handle;
-			if (!owns)
-				CFObject.CFRetain (handle);
 		}
 		
-		public IntPtr Handle {
-			get {return handle;}
-		}
-
 		[DllImport (Constants.CoreFoundationLibrary, EntryPoint="CFArrayGetTypeID")]
-		public extern static /* CFTypeID */ nint GetTypeID ();
-
-		~CFArray ()
-		{
-			Dispose (false);
-		}
-		
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		protected virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero){
-				CFObject.CFRelease (handle);
-				handle = IntPtr.Zero;
-			}
-		}
+		internal extern static /* CFTypeID */ nint GetTypeID ();
 
 		// pointer to a const struct (REALLY APPLE?)
 		static IntPtr kCFTypeArrayCallbacks_ptr_value;
@@ -97,18 +69,18 @@ namespace CoreFoundation {
 			}
 		}
 
-		public static CFArray FromIntPtrs (params IntPtr[] values)
+		internal static CFArray FromIntPtrs (params IntPtr[] values)
 		{
 			return new CFArray (Create (values), true);
 		}
 
-		public static CFArray FromNativeObjects (params INativeObject[] values)
+		internal static CFArray FromNativeObjects (params INativeObject[] values)
 		{
 			return new CFArray (Create (values), true);
 		}
 
 		public nint Count {
-			get {return CFArrayGetCount (handle);}
+			get { return CFArrayGetCount (GetCheckedHandle ()); }
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
@@ -119,13 +91,13 @@ namespace CoreFoundation {
 
 		public IntPtr GetValue (nint index)
 		{
-			return CFArrayGetValueAtIndex (handle, index);
+			return CFArrayGetValueAtIndex (GetCheckedHandle (), index);
 		}
 
-		public static unsafe IntPtr Create (params IntPtr[] values)
+		internal static unsafe IntPtr Create (params IntPtr[] values)
 		{
-			if (values == null)
-				throw new ArgumentNullException ("values");
+			if (values is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (values));
 			fixed (IntPtr* pv = values) {
 				return CFArrayCreate (IntPtr.Zero, 
 						(IntPtr) pv,
@@ -134,10 +106,10 @@ namespace CoreFoundation {
 			}
 		}
 
-		public static IntPtr Create (params INativeObject[] values)
+		internal static IntPtr Create (params INativeObject[] values)
 		{
-			if (values == null)
-				throw new ArgumentNullException ("values");
+			if (values is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (values));
 			IntPtr[] _values = new IntPtr [values.Length];
 			for (int i = 0; i < _values.Length; ++i)
 				_values [i] = values [i].Handle;
@@ -147,7 +119,7 @@ namespace CoreFoundation {
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /* CFIndex */ nint CFArrayGetCount (/* CFArrayRef */ IntPtr theArray);
 
-		public static nint GetCount (IntPtr array)
+		internal static nint GetCount (IntPtr array)
 		{
 			return CFArrayGetCount (array);
 		}
@@ -155,7 +127,7 @@ namespace CoreFoundation {
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static CFArrayRef CFArrayCreateCopy (CFAllocatorRef allocator, CFArrayRef theArray);
 
-		public CFArray Clone () => new CFArray (CFArrayCreateCopy (IntPtr.Zero, this.Handle), true);
+		internal CFArray Clone () => new CFArray (CFArrayCreateCopy (IntPtr.Zero, GetCheckedHandle ()), true);
 	}
 }
 

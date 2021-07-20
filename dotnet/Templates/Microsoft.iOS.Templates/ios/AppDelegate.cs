@@ -4,7 +4,7 @@ using UIKit;
 namespace iOSApp1 {
 	[Register ("AppDelegate")]
 	public class AppDelegate : UIApplicationDelegate {
-		public override UIWindow Window {
+		public override UIWindow? Window {
 			get;
 			set;
 		}
@@ -16,7 +16,7 @@ namespace iOSApp1 {
 
 			// create a UIViewController with a single UILabel
 			var vc = new UIViewController ();
-			vc.View.AddSubview (new UILabel (Window.Frame) {
+			vc.View!.AddSubview (new UILabel (Window!.Frame) {
 				BackgroundColor = UIColor.White,
 				TextAlignment = UITextAlignment.Center,
 				Text = "Hello, iOS!"

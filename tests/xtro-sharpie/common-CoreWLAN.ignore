@@ -1,0 +1,33 @@
+# Types removed in 10.10
+!unknown-type! CW8021XProfile bound
+!unknown-type! CWWirelessProfile bound
+
+# It's named `CWErr` in the header file 
+!unknown-native-enum! CWStatus bound
+!missing-enum! CWErr not bound
+
+# removed in Xcode 12 - marked as deprecated in bindings
+!extra-enum-value! Managed value 9 for CWEventType.VirtualInterfaceStateChanged not found in native headers
+!extra-enum-value! Managed value 10 for CWEventType.RangingReportEvent not found in native headers
+
+# deprecated
+!missing-pinvoke! CWKeychainCopyEAPIdentity is not bound
+!missing-pinvoke! CWKeychainCopyPassword is not bound
+!missing-pinvoke! CWKeychainCopyEAPUsernameAndPassword is not bound
+!missing-pinvoke! CWKeychainDeleteEAPUsernameAndPassword is not bound
+!missing-pinvoke! CWKeychainDeletePassword is not bound
+!missing-pinvoke! CWKeychainSetEAPIdentity is not bound
+!missing-pinvoke! CWKeychainSetEAPUsernameAndPassword is not bound
+!missing-pinvoke! CWKeychainSetPassword is not bound
+!missing-field! CWBSSIDDidChangeNotification not bound
+!missing-field! CWCountryCodeDidChangeNotification not bound
+!missing-field! CWLinkDidChangeNotification not bound
+!missing-field! CWLinkQualityDidChangeNotification not bound
+!missing-field! CWLinkQualityNotificationRSSIKey not bound
+!missing-field! CWLinkQualityNotificationTransmitRateKey not bound
+!missing-field! CWModeDidChangeNotification not bound
+!missing-field! CWPowerDidChangeNotification not bound
+!missing-field! CWScanCacheDidUpdateNotification not bound
+!missing-field! CWSSIDDidChangeNotification not bound
+
+!missing-pinvoke! CWMergeNetworks is not bound

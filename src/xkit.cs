@@ -5,6 +5,9 @@ using System.Diagnostics;
 using System.ComponentModel;
 using Foundation;
 using ObjCRuntime;
+#if !WATCH
+using CoreAnimation;
+#endif
 using CoreGraphics;
 
 using CGGlyph=System.UInt16;
@@ -23,6 +26,7 @@ using NSGlyphStorageOptions=System.Object;
 using NSImageScaling=System.Object;
 using NSRulerMarker=System.Object;
 using NSRulerView=System.Object;
+using NSTextAttachmentCell=System.Object;
 using NSTextBlock=System.Object;
 using NSTextList=System.Object;
 using NSTextTableBlock=System.Object;
@@ -33,8 +37,10 @@ using NSTypesetterBehavior=System.Object;
 using NSView=System.Object;
 using NSWindow=System.Object;
 #if WATCH
+using CATransform3D=System.Object;
 using NSTextContainer=System.Object;
 using NSTextStorage=System.Object;
+using UIDynamicItem=System.Object;
 using UITraitCollection = Foundation.NSObject;
 #endif // WATCH
 #else
@@ -44,13 +50,17 @@ using UITraitCollection=System.Object;
 #endif // !MONOMAC
 
 #if MONOMAC
+using Image=AppKit.NSImage;
 using TextAlignment=AppKit.NSTextAlignment;
 using LineBreakMode=AppKit.NSLineBreakMode;
 using CollectionLayoutSectionOrthogonalScrollingBehavior=AppKit.NSCollectionLayoutSectionOrthogonalScrollingBehavior;
+using CollectionElementCategory=AppKit.NSCollectionElementCategory;
 #else
+using Image=UIKit.UIImage;
 using TextAlignment=UIKit.UITextAlignment;
 using LineBreakMode=UIKit.UILineBreakMode;
 using CollectionLayoutSectionOrthogonalScrollingBehavior=UIKit.UICollectionLayoutSectionOrthogonalScrollingBehavior;
+using CollectionElementCategory=UIKit.UICollectionElementCategory;
 #endif
 
 #if MONOMAC
@@ -1724,5 +1734,437 @@ namespace UIKit {
 		[Abstract]
 		[Export ("traitCollection")]
 		UITraitCollection TraitCollection { get; }
+	}
+
+	interface INSCollectionLayoutVisibleItem { }
+
+	[NoWatch, TV (13,0), iOS (13,0)]
+	[Mac (10,15)]
+	[MacCatalyst (13,0)]
+	[Protocol]
+	interface NSCollectionLayoutVisibleItem
+#if !MONOMAC && !WATCH
+	: UIDynamicItem
+#endif
+	{
+
+		[Abstract]
+		[Export ("alpha")]
+		nfloat Alpha { get; set; }
+
+		[Abstract]
+		[Export ("zIndex")]
+		nint ZIndex { get; set; }
+
+		[Abstract]
+		[Export ("hidden")]
+		bool Hidden { [Bind ("isHidden")] get; set; }
+
+#if MONOMAC
+		// Inherited from UIDynamicItem for !MONOMAC
+		[Abstract]
+		[Export ("center", ArgumentSemantic.Assign)]
+		CGPoint Center { get; set; }
+
+
+		[Abstract]
+		[Export ("bounds")]
+		CGRect Bounds { get; }
+#endif
+
+		[NoMac]
+		[Abstract]
+		[Export ("transform3D", ArgumentSemantic.Assign)]
+		CATransform3D Transform3D { get; set; }
+
+		[Abstract]
+		[Export ("name")]
+		string Name { get; }
+
+		[Abstract]
+		[Export ("indexPath")]
+		NSIndexPath IndexPath { get; }
+
+		[Abstract]
+		[Export ("frame")]
+		CGRect Frame { get; }
+
+		[Abstract]
+		[Export ("representedElementCategory")]
+		CollectionElementCategory RepresentedElementCategory {
+			get;
+		}
+
+		[Abstract]
+		[NullAllowed, Export ("representedElementKind")]
+		string RepresentedElementKind { get; }
+	}
+
+	[NoWatch]
+	[iOS (9,0)]
+	[Mac (10,11)]
+	[MacCatalyst (13,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor] // Handle is nil
+	interface NSLayoutAnchor<AnchorType> : NSCopying, NSCoding
+	{
+		[Export ("constraintEqualToAnchor:")]
+#if MONOMAC && !XAMCORE_4_0
+		NSLayoutConstraint ConstraintEqualToAnchor (NSLayoutAnchor<AnchorType> anchor);
+#else
+		NSLayoutConstraint ConstraintEqualTo (NSLayoutAnchor<AnchorType> anchor);
+#endif
+
+		[Export ("constraintGreaterThanOrEqualToAnchor:")]
+#if MONOMAC && !XAMCORE_4_0
+		NSLayoutConstraint ConstraintGreaterThanOrEqualToAnchor (NSLayoutAnchor<AnchorType> anchor);
+#else
+		NSLayoutConstraint ConstraintGreaterThanOrEqualTo (NSLayoutAnchor<AnchorType> anchor);
+#endif
+
+		[Export ("constraintLessThanOrEqualToAnchor:")]
+#if MONOMAC && !XAMCORE_4_0
+		NSLayoutConstraint ConstraintLessThanOrEqualToAnchor (NSLayoutAnchor<AnchorType> anchor);
+#else
+		NSLayoutConstraint ConstraintLessThanOrEqualTo (NSLayoutAnchor<AnchorType> anchor);
+#endif
+
+		[Export ("constraintEqualToAnchor:constant:")]
+#if MONOMAC && !XAMCORE_4_0
+		NSLayoutConstraint ConstraintEqualToAnchor (NSLayoutAnchor<AnchorType> anchor, nfloat constant);
+#else
+		NSLayoutConstraint ConstraintEqualTo (NSLayoutAnchor<AnchorType> anchor, nfloat constant);
+#endif
+
+		[Export ("constraintGreaterThanOrEqualToAnchor:constant:")]
+#if MONOMAC && !XAMCORE_4_0
+		NSLayoutConstraint ConstraintGreaterThanOrEqualToAnchor (NSLayoutAnchor<AnchorType> anchor, nfloat constant);
+#else
+		NSLayoutConstraint ConstraintGreaterThanOrEqualTo (NSLayoutAnchor<AnchorType> anchor, nfloat constant);
+#endif
+
+		[Export ("constraintLessThanOrEqualToAnchor:constant:")]
+#if MONOMAC && !XAMCORE_4_0
+		NSLayoutConstraint ConstraintLessThanOrEqualToAnchor (NSLayoutAnchor<AnchorType> anchor, nfloat constant);
+#else
+		NSLayoutConstraint ConstraintLessThanOrEqualTo (NSLayoutAnchor<AnchorType> anchor, nfloat constant);
+#endif
+
+		[NoiOS][NoMacCatalyst][NoTV][NoWatch]
+		[Mac (10, 12)]
+		[Export ("name")]
+		string Name { get; }
+
+		[NoiOS][NoMacCatalyst][NoTV][NoWatch]
+		[Mac (10, 12)]
+		[NullAllowed, Export ("item", ArgumentSemantic.Weak)]
+		NSObject Item { get; }
+
+		[NoiOS][NoMacCatalyst][NoTV][NoWatch]
+		[Mac (10, 12)]
+		[Export ("hasAmbiguousLayout")]
+		bool HasAmbiguousLayout { get; }
+
+		[NoiOS][NoMacCatalyst][NoTV][NoWatch]
+		[Mac (10, 12)]
+		[Export ("constraintsAffectingLayout")]
+		NSLayoutConstraint[] ConstraintsAffectingLayout { get; }
+	}
+
+	[NoWatch]
+	[iOS (9,0)]
+	[TV (10,0)]
+	[Mac (10,11)]
+	[MacCatalyst (13,0)]
+	[BaseType (typeof(NSLayoutAnchor<NSLayoutXAxisAnchor>))]
+	[DisableDefaultCtor] // Handle is nil
+	interface NSLayoutXAxisAnchor
+	{
+		[iOS (10,0)]
+		[Mac (10,12)]
+		[Export ("anchorWithOffsetToAnchor:")]
+#if MONOMAC && !XAMCORE_4_0
+		NSLayoutDimension GetAnchorWithOffset (NSLayoutXAxisAnchor otherAnchor);
+#else
+		NSLayoutDimension CreateAnchorWithOffset (NSLayoutXAxisAnchor otherAnchor);
+#endif
+
+		[TV (11,0), iOS (11,0)]
+		[Mac (11,0)]
+		[Export ("constraintEqualToSystemSpacingAfterAnchor:multiplier:")]
+		NSLayoutConstraint ConstraintEqualToSystemSpacingAfterAnchor (NSLayoutXAxisAnchor anchor, nfloat multiplier);
+
+		[TV (11,0), iOS (11,0)]
+		[Mac (11,0)]
+		[Export ("constraintGreaterThanOrEqualToSystemSpacingAfterAnchor:multiplier:")]
+		NSLayoutConstraint ConstraintGreaterThanOrEqualToSystemSpacingAfterAnchor (NSLayoutXAxisAnchor anchor, nfloat multiplier);
+
+		[TV (11,0), iOS (11,0)]
+		[Mac (11,0)]
+		[Export ("constraintLessThanOrEqualToSystemSpacingAfterAnchor:multiplier:")]
+		NSLayoutConstraint ConstraintLessThanOrEqualToSystemSpacingAfterAnchor (NSLayoutXAxisAnchor anchor, nfloat multiplier);
+	}
+
+	[NoWatch]
+	[iOS (9,0)]
+	[TV (10,0)]
+	[Mac (10,11)]
+	[MacCatalyst (13,0)]
+	[BaseType (typeof(NSLayoutAnchor<NSLayoutYAxisAnchor>))]
+	[DisableDefaultCtor] // Handle is nil
+	interface NSLayoutYAxisAnchor
+	{
+		[iOS (10,0)]
+		[Mac (10,12)]
+		[Export ("anchorWithOffsetToAnchor:")]
+#if MONOMAC && !XAMCORE_4_0
+		NSLayoutDimension GetAnchorWithOffset (NSLayoutYAxisAnchor otherAnchor);
+#else
+		NSLayoutDimension CreateAnchorWithOffset (NSLayoutYAxisAnchor otherAnchor);
+#endif
+
+		[TV (11,0), iOS (11,0)]
+		[Mac (11,0)]
+		[Export ("constraintEqualToSystemSpacingBelowAnchor:multiplier:")]
+		NSLayoutConstraint ConstraintEqualToSystemSpacingBelowAnchor (NSLayoutYAxisAnchor anchor, nfloat multiplier);
+
+		[TV (11,0), iOS (11,0)]
+		[Mac (11,0)]
+		[Export ("constraintGreaterThanOrEqualToSystemSpacingBelowAnchor:multiplier:")]
+		NSLayoutConstraint ConstraintGreaterThanOrEqualToSystemSpacingBelowAnchor (NSLayoutYAxisAnchor anchor, nfloat multiplier);
+
+		[TV (11,0), iOS (11,0)]
+		[Mac (11,0)]
+		[Export ("constraintLessThanOrEqualToSystemSpacingBelowAnchor:multiplier:")]
+		NSLayoutConstraint ConstraintLessThanOrEqualToSystemSpacingBelowAnchor (NSLayoutYAxisAnchor anchor, nfloat multiplier);
+	}
+
+	[NoWatch]
+	[iOS (9,0)]
+	[Mac (10,11)]
+	[BaseType (typeof(NSLayoutAnchor<NSLayoutDimension>))]
+	[DisableDefaultCtor] // Handle is nil
+	interface NSLayoutDimension
+	{
+		[Export ("constraintEqualToConstant:")]
+#if MONOMAC && !XAMCORE_4_0
+		NSLayoutConstraint ConstraintEqualToConstant (nfloat constant);
+#else
+		NSLayoutConstraint ConstraintEqualTo (nfloat constant);
+#endif
+
+		[Export ("constraintGreaterThanOrEqualToConstant:")]
+#if MONOMAC && !XAMCORE_4_0
+		NSLayoutConstraint ConstraintGreaterThanOrEqualToConstant (nfloat constant);
+#else
+		NSLayoutConstraint ConstraintGreaterThanOrEqualTo (nfloat constant);
+#endif
+
+		[Export ("constraintLessThanOrEqualToConstant:")]
+#if MONOMAC && !XAMCORE_4_0
+		NSLayoutConstraint ConstraintLessThanOrEqualToConstant (nfloat constant);
+#else
+		NSLayoutConstraint ConstraintLessThanOrEqualTo (nfloat constant);
+#endif
+
+		[Export ("constraintEqualToAnchor:multiplier:")]
+#if MONOMAC && !XAMCORE_4_0
+		NSLayoutConstraint ConstraintEqualToAnchor (NSLayoutDimension anchor, nfloat multiplier);
+#else
+		NSLayoutConstraint ConstraintEqualTo (NSLayoutDimension anchor, nfloat multiplier);
+#endif
+
+		[Export ("constraintGreaterThanOrEqualToAnchor:multiplier:")]
+#if MONOMAC && !XAMCORE_4_0
+		NSLayoutConstraint ConstraintGreaterThanOrEqualToAnchor (NSLayoutDimension anchor, nfloat multiplier);
+#else
+		NSLayoutConstraint ConstraintGreaterThanOrEqualTo (NSLayoutDimension anchor, nfloat multiplier);
+#endif
+
+		[Export ("constraintLessThanOrEqualToAnchor:multiplier:")]
+#if MONOMAC && !XAMCORE_4_0
+		NSLayoutConstraint ConstraintLessThanOrEqualToAnchor (NSLayoutDimension anchor, nfloat multiplier);
+#else
+		NSLayoutConstraint ConstraintLessThanOrEqualTo (NSLayoutDimension anchor, nfloat multiplier);
+#endif
+
+		[Export ("constraintEqualToAnchor:multiplier:constant:")]
+#if MONOMAC && !XAMCORE_4_0
+		NSLayoutConstraint ConstraintEqualToAnchor (NSLayoutDimension anchor, nfloat multiplier, nfloat constant);
+#else
+		NSLayoutConstraint ConstraintEqualTo (NSLayoutDimension anchor, nfloat multiplier, nfloat constant);
+#endif
+
+		[Export ("constraintGreaterThanOrEqualToAnchor:multiplier:constant:")]
+#if MONOMAC && !XAMCORE_4_0
+		NSLayoutConstraint ConstraintGreaterThanOrEqualToAnchor (NSLayoutDimension anchor, nfloat multiplier, nfloat constant);
+#else
+		NSLayoutConstraint ConstraintGreaterThanOrEqualTo (NSLayoutDimension anchor, nfloat multiplier, nfloat constant);
+#endif
+
+		[Export ("constraintLessThanOrEqualToAnchor:multiplier:constant:")]
+#if MONOMAC && !XAMCORE_4_0
+		NSLayoutConstraint ConstraintLessThanOrEqualToAnchor (NSLayoutDimension anchor, nfloat multiplier, nfloat constant);
+#else
+		NSLayoutConstraint ConstraintLessThanOrEqualTo (NSLayoutDimension anchor, nfloat multiplier, nfloat constant);
+#endif
+	}
+
+	[NoWatch]
+	[MacCatalyst (13,0)]
+	[BaseType (typeof (NSObject))]
+	interface NSLayoutConstraint
+#if MONOMAC
+		: NSAnimatablePropertyContainer
+#endif
+{
+		[Static]
+		[Export ("constraintsWithVisualFormat:options:metrics:views:")]
+		NSLayoutConstraint [] FromVisualFormat (string format, NSLayoutFormatOptions formatOptions, [NullAllowed] NSDictionary metrics, NSDictionary views);
+
+		[Static]
+		[Export ("constraintWithItem:attribute:relatedBy:toItem:attribute:multiplier:constant:")]
+		NSLayoutConstraint Create (INativeObject view1, NSLayoutAttribute attribute1, NSLayoutRelation relation, [NullAllowed] INativeObject view2, NSLayoutAttribute attribute2, nfloat multiplier, nfloat constant);
+
+		[Export ("priority")]
+		float Priority { get; set;  } // Returns a float, not nfloat.
+
+		[Export ("shouldBeArchived")]
+		bool ShouldBeArchived { get; set;  }
+
+		[NullAllowed, Export ("firstItem", ArgumentSemantic.Assign)]
+		NSObject FirstItem { get;  }
+
+		[Export ("firstAttribute")]
+		NSLayoutAttribute FirstAttribute { get;  }
+
+		[Export ("relation")]
+		NSLayoutRelation Relation { get;  }
+
+		[Export ("secondItem", ArgumentSemantic.Assign)]
+		[NullAllowed]
+		NSObject SecondItem { get;  }
+
+		[Export ("secondAttribute")]
+		NSLayoutAttribute SecondAttribute { get;  }
+
+		[Export ("multiplier")]
+		nfloat Multiplier { get;  }
+
+		[Export ("constant")]
+		nfloat Constant { get; set;  }
+
+		[iOS (8,0)]
+		[Mac (10,10)]
+		[Export ("active")]
+		bool Active { [Bind ("isActive")] get; set; }
+
+		[iOS (8,0)]
+		[Mac (10,10)]
+		[Static, Export ("activateConstraints:")]
+		void ActivateConstraints (NSLayoutConstraint [] constraints);
+
+		[iOS (8,0)]
+		[Mac (10,10)]
+		[Static, Export ("deactivateConstraints:")]
+		void DeactivateConstraints (NSLayoutConstraint [] constraints);
+
+		[Mac (10, 12)]
+		[iOS (10,0), TV (10,0)]
+		[Export ("firstAnchor", ArgumentSemantic.Copy)]
+#if MONOMAC && !XAMCORE_4_0
+		NSLayoutAnchor<NSObject> FirstAnchor { get; }
+#else
+		[Internal]
+		IntPtr _FirstAnchor<AnchorType> ();
+#endif
+
+		[Mac (10, 12)]
+		[iOS (10,0), TV (10,0)]
+		[Export ("secondAnchor", ArgumentSemantic.Copy)]
+#if MONOMAC && !XAMCORE_4_0
+		[NullAllowed]
+		NSLayoutAnchor<NSObject> SecondAnchor { get; }
+#else
+		[Internal]
+		IntPtr _SecondAnchor<AnchorType> ();
+#endif
+
+		[NullAllowed, Export ("identifier")]
+		string Identifier { get; set; }
+	}
+
+	[NoWatch]
+	[Mac (10,11)]
+	[MacCatalyst (13,0)]
+	[Model]
+	[Protocol]
+	[BaseType (typeof (NSObject))]
+	partial interface NSTextAttachmentContainer {
+		[Abstract]
+		[Export ("imageForBounds:textContainer:characterIndex:")]
+		[return: NullAllowed]
+#if MONOMAC && !XAMCORE_4_0
+		Image GetImage (CGRect imageBounds, [NullAllowed] NSTextContainer textContainer, nuint charIndex);
+#else
+		Image GetImageForBounds (CGRect bounds, [NullAllowed] NSTextContainer textContainer, nuint characterIndex);
+#endif
+
+		[Abstract]
+		[Export ("attachmentBoundsForTextContainer:proposedLineFragment:glyphPosition:characterIndex:")]
+		CGRect GetAttachmentBounds ([NullAllowed] NSTextContainer textContainer, CGRect proposedLineFragment, CGPoint glyphPosition, nuint characterIndex);
+	}
+
+	[iOS (7,0)]
+	[NoWatch]
+	[MacCatalyst (13,0)]
+	[BaseType (typeof (NSObject))]
+	partial interface NSTextAttachment : NSTextAttachmentContainer, NSSecureCoding
+#if !WATCH && !MONOMAC
+	, UIAccessibilityContentSizeCategoryImageAdjusting
+#endif // !WATCH
+	{
+		[NoiOS][NoTV][NoMacCatalyst]
+		[Export ("initWithFileWrapper:")]
+		IntPtr Constructor (NSFileWrapper fileWrapper);
+
+		[Mac (10,11)]
+		[DesignatedInitializer]
+		[Export ("initWithData:ofType:")]
+		[PostGet ("Contents")]
+		IntPtr Constructor ([NullAllowed] NSData contentData, [NullAllowed] string uti);
+
+		[Mac (10,11)]
+		[NullAllowed]
+		[Export ("contents", ArgumentSemantic.Retain)]
+		NSData Contents { get; set; }
+
+		[Mac (10,11)]
+		[NullAllowed]
+		[Export ("fileType", ArgumentSemantic.Retain)]
+		string FileType { get; set; }
+
+		[Mac (10,11)]
+		[NullAllowed]
+		[Export ("image", ArgumentSemantic.Retain)]
+		Image Image { get; set; }
+
+		[Mac (10,11)]
+		[Export ("bounds")]
+		CGRect Bounds { get; set; }
+
+		[NullAllowed]
+		[Export ("fileWrapper", ArgumentSemantic.Retain)]
+		NSFileWrapper FileWrapper { get; set; }
+
+		[NoiOS][NoTV][NoMacCatalyst]
+		[Export ("attachmentCell", ArgumentSemantic.Retain)]
+		NSTextAttachmentCell AttachmentCell { get; set; }
+
+		[NoMac]
+		[Watch (6,0), TV (13,0), iOS (13,0)]
+		[Static]
+		[Export ("textAttachmentWithImage:")]
+		NSTextAttachment Create (Image image);
 	}
 }
