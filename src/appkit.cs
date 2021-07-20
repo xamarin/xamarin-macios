@@ -17672,55 +17672,6 @@ namespace AppKit {
 		NSTextAttachment Attachment { get; set; }
 	}
 
-	[BaseType (typeof (NSObject))]
-	interface NSTextAttachment : NSCoding, NSSecureCoding {
-		[Export ("initWithFileWrapper:")]
-		IntPtr Constructor (NSFileWrapper fileWrapper);
-
-		[Mac (10,11)]
-		[Export ("initWithData:ofType:")]
-		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] NSData contentData, [NullAllowed] string uti);
-
-		//Detected properties
-		[Export ("fileWrapper", ArgumentSemantic.Retain)]
-		NSFileWrapper FileWrapper { get; set; }
-
-		[Export ("attachmentCell", ArgumentSemantic.Retain)]
-		NSTextAttachmentCell AttachmentCell { get; set; }
-
-		[Mac (10,11)] // 32-bit gives: [FAIL] Selector not found for AppKit.NSTextAttachment : contents
-		[NullAllowed, Export ("contents", ArgumentSemantic.Copy)]
-		NSData Contents { get; set; }
-
-		[Mac (10,11)]
-		[NullAllowed, Export ("fileType")]
-		string FileType { get; set; }
-
-		[Mac (10,11)] // 32-bit gives: [FAIL] Selector not found for AppKit.NSTextAttachment : image
-		[NullAllowed, Export ("image", ArgumentSemantic.Strong)]
-		NSImage Image { get; set; }
-
-		[Mac (10,11)] // 32-bit gives: [FAIL] Selector not found for AppKit.NSTextAttachment : bounds
-		[Export ("bounds", ArgumentSemantic.Assign)]
-		CGRect Bounds { get; set; }
-	}
-
-	[Mac (10,11)]
-	[Protocol, Model]
-	[BaseType (typeof(NSObject))]
-	interface NSTextAttachmentContainer
-	{
-		[Abstract]
-		[Export ("imageForBounds:textContainer:characterIndex:")]
-		[return: NullAllowed]
-		NSImage GetImage (CGRect imageBounds, [NullAllowed] NSTextContainer textContainer, nuint charIndex);
-
-		[Abstract]
-		[Export ("attachmentBoundsForTextContainer:proposedLineFragment:glyphPosition:characterIndex:")]
-		CGRect GetAttachmentBounds ([NullAllowed] NSTextContainer textContainer, CGRect lineFrag, CGPoint position, nuint charIndex);
-	}
-
 	[DesignatedDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface NSTextBlock : NSCoding, NSCopying, NSSecureCoding {
