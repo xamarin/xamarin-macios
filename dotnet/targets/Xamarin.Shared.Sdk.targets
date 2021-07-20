@@ -133,6 +133,7 @@
 		<StartupHookSupport Condition="'$(StartupHookSupport)' == ''">false</StartupHookSupport>
 		<UseSystemResourceKeys Condition="'$(UseSystemResourceKeys)' == ''">true</UseSystemResourceKeys>
 		<UseNativeHttpHandler Condition="'$(_PlatformName)' != 'macOS' And '$(UseNativeHttpHandler)' == ''">true</UseNativeHttpHandler>
+		<AutoreleasePoolSupport Condition="'$(AutoreleasePoolSupport)' == ''">true</AutoreleasePoolSupport>
 
 		<!-- We don't need to generate reference assemblies for apps or app extensions -->
 		<ProduceReferenceAssembly Condition="'$(ProduceReferenceAssembly)' == '' And ('$(OutputType)' == 'Exe' Or '$(IsAppExtension)' == 'true')">false</ProduceReferenceAssembly>
@@ -671,18 +672,12 @@
 							'%(ResolvedFileToPublish.NuGetPackageId)' == '$(_MonoNugetPackageId)'
 							"
 			/>
-
-			<!-- These are mono libraries whose id needs to be fixed -->
-			<_MonoLibraryFix Include="@(_MonoLibrary)" Condition="'%(_MonoLibrary.Extension)' == '.dylib'">
-				<TargetPath>$(_IntermediateNativeLibraryDir)%(Filename)%(Extension)</TargetPath>
-			</_MonoLibraryFix>
 		</ItemGroup>
 	</Target>
 
 	<!-- App bundle creation tasks -->
 
 	<Target Name="_CreateRuntimeConfiguration"
-		Condition="'$(UseMonoRuntime)' != 'false'"
 		Inputs="$(ProjectRuntimeConfigFilePath)"
 		Outputs="$(_ParsedRuntimeConfigFilePath)"
 		DependsOnTargets="GenerateBuildRuntimeConfigurationFiles;_ComputePublishLocation"
@@ -746,7 +741,7 @@
 
 			<!-- copy the aotdata files to the .app -->
 			<ResolvedFileToPublish Include="%(_AssembliesToAOT.AOTData)" >
-				<RelativePath>$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)\$(PublishDir),$(_NativeExecutablePublishDir)))\%(_AssembliesToAOT.Filename).aotdata.%(_AssembliesToAOT.Arch)</RelativePath>
+				<RelativePath>$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)\$(PublishDir),$(_AssemblyPublishDir)))\%(_AssembliesToAOT.Filename).aotdata.%(_AssembliesToAOT.Arch)</RelativePath>
 				<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 			</ResolvedFileToPublish>
 		</ItemGroup>
@@ -917,6 +912,27 @@
 
 			<!-- Remove the libxamarin-*.dylib files we don't want -->
 			<ResolvedFileToPublish Remove="@(ResolvedFileToPublish)" Condition="'%(Extension)' == '.dylib' And '%(Filename)%(Extension)' != '$(_LibXamarinName)' And $([System.String]::new('%(Filename)').StartsWith('libxamarin-dotnet', StringComparison.Ordinal))" />
+
+			<!-- Remove the runtime dylibs if we're linking the runtime statically -->
+			<ResolvedFileToPublish
+				Remove="@(ResolvedFileToPublish)"
+				Condition=" '$(_LibMonoExtension)' != 'dylib' And
+				            '%(ResolvedFileToPublish.AssetType)' == 'native' And
+				            '%(ResolvedFileToPublish.RuntimeIdentifier)' == '$(RuntimeIdentifier)' And
+				            '%(ResolvedFileToPublish.Extension)' == '.dylib' And
+				            '%(ResolvedFileToPublish.NuGetPackageId)' == '$(_MonoNugetPackageId)'
+				            "
+			/>
+
+			<!-- There's no need to ship .a files -->
+			<ResolvedFileToPublish
+				Remove="@(ResolvedFileToPublish)"
+				Condition=" '%(ResolvedFileToPublish.AssetType)' == 'native' And
+				            '%(ResolvedFileToPublish.RuntimeIdentifier)' == '$(RuntimeIdentifier)' And
+				            '%(ResolvedFileToPublish.Extension)' == '.a' And
+				            '%(ResolvedFileToPublish.NuGetPackageId)' == '$(_MonoNugetPackageId)'
+				            "
+			/>
 		</ItemGroup>
 	</Target>
 

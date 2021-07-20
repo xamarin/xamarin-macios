@@ -42,8 +42,12 @@ namespace ObjCRuntime {
 
 		unsafe static void InitializePlatform (InitializationOptions* options)
 		{
+#if __MACCATALYST__
+			Arch = Arch.SIMULATOR;
+#else
 			if (options->IsSimulator)
 				Arch = Arch.SIMULATOR;
+#endif
 
 			UIApplication.Initialize ();
 		}

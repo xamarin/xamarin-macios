@@ -240,7 +240,7 @@ namespace Xharness.Jenkins {
 						if (!string.IsNullOrEmpty (xammac_arch))
 							clone.Xml.SetNode ("XamMacArch", xammac_arch, task.ProjectPlatform, configuration);
 						if (!string.IsNullOrEmpty (runtime_identifer))
-							clone.Xml.SetNode ("RuntimeIdentifier", runtime_identifer);
+							clone.Xml.SetTopLevelPropertyGroupValue ("RuntimeIdentifier", runtime_identifer);
 						clone.Xml.Save (clone.Path);
 					});
 

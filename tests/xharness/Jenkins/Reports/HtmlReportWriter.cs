@@ -405,8 +405,12 @@ namespace Xharness.Jenkins.Reports {
 									candidates = (runTest as RunSimulatorTask)?.Candidates;
 								if (candidates != null) {
 									writer.WriteLine ($"Candidate devices:<br />");
-									foreach (var candidate in candidates)
-										writer.WriteLine ($"&nbsp;&nbsp;&nbsp;&nbsp;{candidate.Name} (Version: {candidate.OSVersion})<br />");
+									try {
+										foreach (var candidate in candidates)
+											writer.WriteLine ($"&nbsp;&nbsp;&nbsp;&nbsp;{candidate.Name} (Version: {candidate.OSVersion})<br />");
+									} catch (Exception e) {
+										writer.WriteLine ($"&nbsp;&nbsp;&nbsp;&nbsp;Failed to list candidates: {e}");
+									}
 								}
 								writer.WriteLine ($"Build duration: {runTest.BuildTask.Duration} <br />");
 							}
