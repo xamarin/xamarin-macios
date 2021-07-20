@@ -1,3 +1,0 @@
-!deprecated-attribute-missing! ITLibPlaylist::isMaster missing a [Deprecated] attribute
-!missing-field! ITLibPlaylistPropertyPrimary not bound
-!missing-selector! ITLibPlaylist::isPrimary not bound

@@ -5,8 +5,17 @@ using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
 using System;
+#if NET
+using System.Runtime.Versioning;
+#endif
 
 namespace CoreWlan {
+
+#if NET
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+	[MacCatalyst (15,0)]
+#endif
 	[Native]
 	[ErrorDomain ("CWErrorDomain")] // enum named `CWErr` in headers
 	public enum CWStatus : long {
@@ -46,6 +55,11 @@ namespace CoreWlan {
 		Status = -3931,
 	}
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+	[MacCatalyst (15,0)]
+#endif
 	[Native]
 	public enum CWPhyMode : ulong {
 		None = 0,
@@ -54,8 +68,14 @@ namespace CoreWlan {
 		G = 3,
 		N = 4,
 		AC = 5,
+		AX = 6,
 	}
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+	[MacCatalyst (15,0)]
+#endif
 	[Native]
 	public enum CWInterfaceMode : ulong {
 		None = 0,
@@ -64,6 +84,11 @@ namespace CoreWlan {
 		HostAP = 3,
 	}
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+	[MacCatalyst (15,0)]
+#endif
 	[Native]
 	public enum CWSecurity : ulong {
 		None = 0,
@@ -94,6 +119,11 @@ namespace CoreWlan {
 		WEP104 = 2,
 	}
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+	[MacCatalyst (15,0)]
+#endif
 	[Native]
 	public enum CWChannelWidth : ulong {
 		Unknown = 0,
@@ -103,6 +133,11 @@ namespace CoreWlan {
 		OneHundredSixtyMHz = 4,
 	}
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+	[MacCatalyst (15,0)]
+#endif
 	[Native]
 	public enum CWChannelBand : ulong {
 		Unknown = 0,
@@ -110,6 +145,11 @@ namespace CoreWlan {
 		FiveGHz = 2,
 	}
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+	[MacCatalyst (15,0)]
+#endif
 	[Native]
 	public enum CWCipherKeyFlags : ulong {
 		None = 0,
@@ -119,6 +159,11 @@ namespace CoreWlan {
 		Rx = 1 << 4,
 	}
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+	[MacCatalyst (15,0)]
+#endif
 	[Native]
 	public enum CWKeychainDomain : ulong {
 		None = 0,
@@ -126,6 +171,11 @@ namespace CoreWlan {
 		System = 2,
 	}
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+	[MacCatalyst (15,0)]
+#endif
 	[Native]
 	public enum CWEventType : long {
 		None = 0,

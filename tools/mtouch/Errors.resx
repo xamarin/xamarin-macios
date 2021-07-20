@@ -2141,4 +2141,8 @@
 		<value>Invalid type encoding for parameter.</value>
 	</data>
 
+	<data name="MX8041" xml:space="preserve">
+		<value>Unable to create an instance of the type {0}.</value>
+	</data>
+
 </root>

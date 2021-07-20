@@ -637,7 +637,6 @@
 !missing-protocol-conformance! NSTableView should conform to NSTextViewDelegate
 !missing-protocol-conformance! NSText should conform to NSChangeSpelling
 !missing-protocol-conformance! NSText should conform to NSIgnoreMisspelledWords
-!missing-protocol-conformance! NSTextAttachment should conform to NSTextAttachmentContainer
 !missing-protocol-conformance! NSTextAttachmentCell should conform to NSTextAttachmentCell
 !missing-protocol-conformance! NSTextContainer should conform to NSTextLayoutOrientationProvider
 !missing-protocol-conformance! NSTextView should conform to NSTextLayoutOrientationProvider
@@ -1583,8 +1582,6 @@
 !missing-null-allowed! 'Foundation.NSObject AppKit.NSEvent::AddGlobalMonitorForEventsMatchingMask(AppKit.NSEventMask,AppKit.GlobalEventHandler)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject AppKit.NSEvent::AddLocalMonitorForEventsMatchingMask(AppKit.NSEventMask,AppKit.LocalEventHandler)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject AppKit.NSFontDescriptor::ObjectForKey(System.String)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSObject AppKit.NSLayoutConstraint::get_FirstItem()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSObject AppKit.NSLayoutConstraint::get_SecondItem()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject AppKit.NSLayoutManager::GetTemporaryAttribute(Foundation.NSString,System.nuint,System.IntPtr)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject AppKit.NSLayoutManager::GetTemporaryAttribute(Foundation.NSString,System.nuint,System.IntPtr,Foundation.NSRange)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject AppKit.NSMatrix::SelectTextAtRowColumn(System.nint,System.nint)' is missing an [NullAllowed] on return type
@@ -2115,7 +2112,6 @@
 !missing-null-allowed! 'System.Void AppKit.NSText::Unscript(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSTextAttachment::.ctor(Foundation.NSFileWrapper)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSTextAttachment::set_AttachmentCell(AppKit.NSTextAttachmentCell)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void AppKit.NSTextAttachment::set_FileWrapper(Foundation.NSFileWrapper)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSTextBlock::set_BackgroundColor(AppKit.NSColor)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSTextBlock::SetBorderColor(AppKit.NSColor)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSTextBlock::SetBorderColor(AppKit.NSColor,AppKit.NSRectEdge)' is missing an [NullAllowed] on parameter #0

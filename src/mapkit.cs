@@ -167,7 +167,7 @@ namespace MapKit {
 		[NullAllowed]
 		UIView DetailCalloutAccessoryView { get; set; }
 
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 		[Export ("leftCalloutOffset")]
 		CGPoint LeftCalloutOffset { get; set; }
 
@@ -637,7 +637,7 @@ namespace MapKit {
 		[Mac (10,11), iOS(9,0)]
 		bool ShowsTraffic { get; set; }
 
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 		[Export ("showsZoomControls")]
 		bool ShowsZoomControls { get; set; }
 #endif
@@ -769,12 +769,15 @@ namespace MapKit {
 		[Export ("mapViewDidChangeVisibleRegion:")]
 		void DidChangeVisibleRegion (MKMapView mapView);
 	}
-		
+
 	[BaseType (typeof (MKAnnotationView))]
 	// crash on Dispose when created from 'init'
 	[DisableDefaultCtor]
 	[TV (9,2)]
 	[Mac (10,9)]
+	[Deprecated (PlatformName.MacOSX, 12, 0)]
+	[Deprecated (PlatformName.iOS, 15, 0)]
+	[Deprecated (PlatformName.TvOS, 15, 0)]	
 	interface MKPinAnnotationView {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);

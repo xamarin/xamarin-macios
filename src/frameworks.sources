@@ -30,6 +30,11 @@
 ACCELERATE_SOURCES = \
 	Accelerate/vImageTypes.cs \
 
+# Accessibility
+
+ACCESSIBILITY_SOURCES = \
+	Accessibility/AXHearingUtilities.cs \
+
 # Accounts
 
 ACCOUNTS_API_SOURCES = \
@@ -684,6 +689,7 @@ COREWLAN_API_SOURCES = \
 COREWLAN_SOURCES = \
 	CoreWlan/CWConfiguration.cs \
 	CoreWlan/CWInterface.cs \
+	CoreWlan/CWKeychain.cs \
 
 # EventKit
 
@@ -1613,7 +1619,6 @@ UIKIT_CORE_SOURCES = \
 
 UIKIT_SOURCES = \
 	UIKit/Compat.cs \
-	UIKit/NSLayoutConstraint.cs \
 	UIKit/NSLayoutManager.cs \
 	AppKit/NSLayoutManager.cs \
 	UIKit/UIAccessibility.cs \
@@ -1924,6 +1929,7 @@ MAC_FRAMEWORKS =            \
 	BusinessChat            \
 	CallKit \
 	CFNetwork               \
+	Chip                    \
 	ClassKit                \
 	CloudKit                \
 	Contacts                \
@@ -2024,6 +2030,7 @@ IOS_FRAMEWORKS =         \
 	CallKit \
 	CarPlay \
 	CFNetwork \
+	Chip \
 	ClassKit \
 	CloudKit \
 	Contacts \
@@ -2113,6 +2120,7 @@ IOS_FRAMEWORKS =         \
 
 WATCHOS_FRAMEWORKS =        \
 	$(COMMON_FRAMEWORKS)    \
+	Chip                    \
 	ClockKit                \
 	CloudKit                \
 	Contacts                \
@@ -2145,6 +2153,7 @@ TVOS_FRAMEWORKS =           \
 	AudioUnit               \
 	BackgroundTasks         \
 	CFNetwork               \
+	Chip                    \
 	CloudKit                \
 	CoreAnimation           \
 	CoreGraphics            \
@@ -2219,6 +2228,7 @@ MACCATALYST_FRAMEWORKS = \
 	CoreMotion \
 	CoreSpotlight \
 	CoreText \
+	CoreWlan \
 	DeviceCheck \
 	EventKit \
 	ExternalAccessory \
