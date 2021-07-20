@@ -1621,13 +1621,13 @@ namespace Chip {
 		void OnStatusUpdate (ChipPairingStatus status);
 
 		[Export ("onPairingComplete:")]
-		void OnPairingComplete (NSError error);
+		void OnPairingComplete ([NullAllowed] NSError error);
 
 		[Export ("onPairingDeleted:")]
-		void OnPairingDeleted (NSError error);
+		void OnPairingDeleted ([NullAllowed] NSError error);
 
 		[Export ("onAddressUpdated:")]
-		void OnAddressUpdated (NSError error);
+		void OnAddressUpdated ([NullAllowed] NSError error);
 	}
 
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
@@ -1720,6 +1720,7 @@ namespace Chip {
 	{
 		[Abstract]
 		[Export ("CHIPGetKeyValue:")]
+		[return: NullAllowed]
 		string GetValue (string key);
 
 		[Abstract]
@@ -2239,7 +2240,7 @@ namespace Chip {
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("configureAttributeMeasuredValueWithMinInterval:maxInterval:change:responseHandler:")]
-		void ConfigureAttributeMeasuredValueWithMinInterval (ushort minInterval, ushort maxInterval, ushort change, ChipResponseHandler responseHandler);
+		void ConfigureAttributeMeasuredValue (ushort minInterval, ushort maxInterval, ushort change, ChipResponseHandler responseHandler);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("reportAttributeMeasuredValueWithResponseHandler:")]
@@ -2397,31 +2398,31 @@ namespace Chip {
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("windowCoveringDownClose:")]
-		void WindowCoveringDownClose (ChipResponseHandler responseHandler);
+		void DownClose (ChipResponseHandler responseHandler);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("windowCoveringGoToLiftPercentage:responseHandler:")]
-		void WindowCoveringGoToLiftPercentage (byte percentageLiftValue, ChipResponseHandler responseHandler);
+		void GoToLiftPercentage (byte percentageLiftValue, ChipResponseHandler responseHandler);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("windowCoveringGoToLiftValue:responseHandler:")]
-		void WindowCoveringGoToLiftValue (ushort liftValue, ChipResponseHandler responseHandler);
+		void GoToLiftValue (ushort liftValue, ChipResponseHandler responseHandler);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("windowCoveringGoToTiltPercentage:responseHandler:")]
-		void WindowCoveringGoToTiltPercentage (byte percentageTiltValue, ChipResponseHandler responseHandler);
+		void GoToTiltPercentage (byte percentageTiltValue, ChipResponseHandler responseHandler);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("windowCoveringGoToTiltValue:responseHandler:")]
-		void WindowCoveringGoToTiltValue (ushort tiltValue, ChipResponseHandler responseHandler);
+		void GoToTiltValue (ushort tiltValue, ChipResponseHandler responseHandler);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("windowCoveringStop:")]
-		void WindowCoveringStop (ChipResponseHandler responseHandler);
+		void Stop (ChipResponseHandler responseHandler);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("windowCoveringUpOpen:")]
-		void WindowCoveringUpOpen (ChipResponseHandler responseHandler);
+		void UpOpen (ChipResponseHandler responseHandler);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeWindowCoveringTypeWithResponseHandler:")]
