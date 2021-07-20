@@ -121,7 +121,7 @@ namespace SafariServices {
 		[iOS (15,0), MacCatalyst (15,0)]
 		[Static]
 		[Export ("prewarmConnectionsToURLs:")]
-		SFSafariViewControllerPrewarmingToken PrewarmConnections (NSUrl[] Urls);
+		SFSafariViewControllerPrewarmingToken PrewarmConnections (NSUrl[] urls);
 	}
 
 	[iOS (9,0)]
@@ -470,7 +470,6 @@ namespace SafariServices {
 
 	[Static]
 	[iOS (15,0), Mac (11,0), MacCatalyst (15,0), NoTV, NoWatch]
-	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SFExtension {
 		[Field ("SFExtensionMessageKey")]
