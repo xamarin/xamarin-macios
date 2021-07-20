@@ -142,7 +142,6 @@
 
 # Initial result from new rule missing-null-allowed
 !missing-null-allowed! 'CoreAnimation.CADisplayLink UIKit.UIScreen::CreateDisplayLink(Foundation.NSObject,ObjCRuntime.Selector)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'CoreGraphics.CGRect UIKit.NSTextAttachmentContainer::GetAttachmentBounds(UIKit.NSTextContainer,CoreGraphics.CGRect,CoreGraphics.CGPoint,System.nuint)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'Foundation.NSArray Foundation.NSBundle::LoadNib(System.String,Foundation.NSObject,Foundation.NSDictionary)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSAttributedString UIKit.UIButton::get_CurrentAttributedTitle()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSAttributedString UIKit.UIButton::GetAttributedTitle(UIKit.UIControlState)' is missing an [NullAllowed] on return type
@@ -306,7 +305,6 @@
 !missing-null-allowed! 'UIKit.UIDynamicAnimator UIKit.UIDynamicBehavior::get_DynamicAnimator()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIFontDescriptor UIKit.UIFontDescriptor::CreateWithTraits(UIKit.UIFontDescriptorSymbolicTraits)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIGestureRecognizer[] UIKit.UITouch::get_GestureRecognizers()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'UIKit.UIImage UIKit.NSTextAttachmentContainer::GetImageForBounds(CoreGraphics.CGRect,UIKit.NSTextContainer,System.nuint)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIImage UIKit.UIBarButtonItem::GetBackgroundImage(UIKit.UIControlState,UIKit.UIBarButtonItemStyle,UIKit.UIBarMetrics)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIImage UIKit.UIBarButtonItem::GetBackgroundImage(UIKit.UIControlState,UIKit.UIBarMetrics)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIImage UIKit.UIButton::BackgroundImageForState(UIKit.UIControlState)' is missing an [NullAllowed] on return type

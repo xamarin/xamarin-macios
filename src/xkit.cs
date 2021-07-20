@@ -26,6 +26,7 @@ using NSGlyphStorageOptions=System.Object;
 using NSImageScaling=System.Object;
 using NSRulerMarker=System.Object;
 using NSRulerView=System.Object;
+using NSTextAttachmentCell=System.Object;
 using NSTextBlock=System.Object;
 using NSTextList=System.Object;
 using NSTextTableBlock=System.Object;
@@ -49,11 +50,13 @@ using UITraitCollection=System.Object;
 #endif // !MONOMAC
 
 #if MONOMAC
+using Image=AppKit.NSImage;
 using TextAlignment=AppKit.NSTextAlignment;
 using LineBreakMode=AppKit.NSLineBreakMode;
 using CollectionLayoutSectionOrthogonalScrollingBehavior=AppKit.NSCollectionLayoutSectionOrthogonalScrollingBehavior;
 using CollectionElementCategory=AppKit.NSCollectionElementCategory;
 #else
+using Image=UIKit.UIImage;
 using TextAlignment=UIKit.UITextAlignment;
 using LineBreakMode=UIKit.UILineBreakMode;
 using CollectionLayoutSectionOrthogonalScrollingBehavior=UIKit.UICollectionLayoutSectionOrthogonalScrollingBehavior;
@@ -2089,5 +2092,79 @@ namespace UIKit {
 
 		[NullAllowed, Export ("identifier")]
 		string Identifier { get; set; }
+	}
+
+	[NoWatch]
+	[Mac (10,11)]
+	[MacCatalyst (13,0)]
+	[Model]
+	[Protocol]
+	[BaseType (typeof (NSObject))]
+	partial interface NSTextAttachmentContainer {
+		[Abstract]
+		[Export ("imageForBounds:textContainer:characterIndex:")]
+		[return: NullAllowed]
+#if MONOMAC && !XAMCORE_4_0
+		Image GetImage (CGRect imageBounds, [NullAllowed] NSTextContainer textContainer, nuint charIndex);
+#else
+		Image GetImageForBounds (CGRect bounds, [NullAllowed] NSTextContainer textContainer, nuint characterIndex);
+#endif
+
+		[Abstract]
+		[Export ("attachmentBoundsForTextContainer:proposedLineFragment:glyphPosition:characterIndex:")]
+		CGRect GetAttachmentBounds ([NullAllowed] NSTextContainer textContainer, CGRect proposedLineFragment, CGPoint glyphPosition, nuint characterIndex);
+	}
+
+	[iOS (7,0)]
+	[NoWatch]
+	[MacCatalyst (13,0)]
+	[BaseType (typeof (NSObject))]
+	partial interface NSTextAttachment : NSTextAttachmentContainer, NSSecureCoding
+#if !WATCH && !MONOMAC
+	, UIAccessibilityContentSizeCategoryImageAdjusting
+#endif // !WATCH
+	{
+		[NoiOS][NoTV][NoMacCatalyst]
+		[Export ("initWithFileWrapper:")]
+		IntPtr Constructor (NSFileWrapper fileWrapper);
+
+		[Mac (10,11)]
+		[DesignatedInitializer]
+		[Export ("initWithData:ofType:")]
+		[PostGet ("Contents")]
+		IntPtr Constructor ([NullAllowed] NSData contentData, [NullAllowed] string uti);
+
+		[Mac (10,11)]
+		[NullAllowed]
+		[Export ("contents", ArgumentSemantic.Retain)]
+		NSData Contents { get; set; }
+
+		[Mac (10,11)]
+		[NullAllowed]
+		[Export ("fileType", ArgumentSemantic.Retain)]
+		string FileType { get; set; }
+
+		[Mac (10,11)]
+		[NullAllowed]
+		[Export ("image", ArgumentSemantic.Retain)]
+		Image Image { get; set; }
+
+		[Mac (10,11)]
+		[Export ("bounds")]
+		CGRect Bounds { get; set; }
+
+		[NullAllowed]
+		[Export ("fileWrapper", ArgumentSemantic.Retain)]
+		NSFileWrapper FileWrapper { get; set; }
+
+		[NoiOS][NoTV][NoMacCatalyst]
+		[Export ("attachmentCell", ArgumentSemantic.Retain)]
+		NSTextAttachmentCell AttachmentCell { get; set; }
+
+		[NoMac]
+		[Watch (6,0), TV (13,0), iOS (13,0)]
+		[Static]
+		[Export ("textAttachmentWithImage:")]
+		NSTextAttachment Create (Image image);
 	}
 }
