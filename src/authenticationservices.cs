@@ -1124,6 +1124,10 @@ namespace AuthenticationServices {
 		[Abstract]
 		[Export ("rawClientDataJSON", ArgumentSemantic.Copy)]
 		NSData RawClientDataJson { get; }
+
+		[Abstract]
+		[Export ("credentialID", ArgumentSemantic.Copy)]
+		NSData CredentialID { get; }
 	}
 
 	[NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoTV]
