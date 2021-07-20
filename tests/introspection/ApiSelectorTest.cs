@@ -122,8 +122,6 @@ namespace Introspection {
 			// iOS 10 beta 2
 			case "GKBehavior":
 			case "MDLTransform":
-			// UISceneActivationRequestOptions started conforming to NSCopying oin Xcode 13
-			case "UISceneActivationRequestOptions":
 				switch (selectorName) {
 				case "copyWithZone:":
 					return true;

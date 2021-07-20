@@ -457,6 +457,10 @@ namespace CoreMotion {
 		[Export ("isAbsoluteAltitudeAvailable")]
 		bool IsAbsoluteAltitudeAvailable { get; }
 
+		[Watch (8,0), NoTV, NoMac, iOS (15, 0), MacCatalyst (15,0)]
+		[Export ("absoluteAltitudeUpdateInterval")]
+		double AbsoluteAltitudeUpdateInterval { get; set; }
+
 		[Watch (8,0), NoTV, NoMac, iOS (15,0), MacCatalyst (15,0)]
 		[Export ("startAbsoluteAltitudeUpdatesToQueue:withHandler:")]
 		void StartAbsoluteAltitudeUpdates (NSOperationQueue queue, Action<CMAbsoluteAltitudeData, NSError> handler);

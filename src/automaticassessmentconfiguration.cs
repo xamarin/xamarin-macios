@@ -164,6 +164,12 @@ namespace AutomaticAssessmentConfiguration {
 
 		[Export ("requiresSignatureValidation")]
 		bool RequiresSignatureValidation { get; set; }
+
+		[Export ("initWithBundleIdentifier:")]
+		IntPtr Constructor (string bundleIdentifier);
+
+		[Export ("initWithBundleIdentifier:teamIdentifier:")]
+		IntPtr Constructor (string bundleIdentifier, [NullAllowed] string teamIdentifier);
 	}
 
 	[Mac (12,0), iOS (15,0), MacCatalyst (15,0)]

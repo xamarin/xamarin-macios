@@ -1,20 +1,14 @@
+## appended from unclassified file
 !deprecated-attribute-missing! INAppendToNoteIntent missing a [Deprecated] attribute
 !deprecated-attribute-missing! INAppendToNoteIntentResponse missing a [Deprecated] attribute
-!deprecated-attribute-missing! INCarAirCirculationModeResolutionResult missing a [Deprecated] attribute
-!deprecated-attribute-missing! INCarAudioSourceResolutionResult missing a [Deprecated] attribute
-!deprecated-attribute-missing! INCarDefrosterResolutionResult missing a [Deprecated] attribute
-!deprecated-attribute-missing! INCarSeatResolutionResult missing a [Deprecated] attribute
 !deprecated-attribute-missing! INCreateTaskListIntent missing a [Deprecated] attribute
 !deprecated-attribute-missing! INCreateTaskListIntentResponse missing a [Deprecated] attribute
 !deprecated-attribute-missing! INDeleteTasksIntent missing a [Deprecated] attribute
 !deprecated-attribute-missing! INDeleteTasksIntentResponse missing a [Deprecated] attribute
 !deprecated-attribute-missing! INDeleteTasksTaskListResolutionResult missing a [Deprecated] attribute
 !deprecated-attribute-missing! INDeleteTasksTaskResolutionResult missing a [Deprecated] attribute
-!deprecated-attribute-missing! INGetVisualCodeIntent missing a [Deprecated] attribute
-!deprecated-attribute-missing! INGetVisualCodeIntentResponse missing a [Deprecated] attribute
 !deprecated-attribute-missing! INPayBillIntent missing a [Deprecated] attribute
 !deprecated-attribute-missing! INPayBillIntentResponse missing a [Deprecated] attribute
-!deprecated-attribute-missing! INRadioTypeResolutionResult missing a [Deprecated] attribute
 !deprecated-attribute-missing! INSaveProfileInCarIntent missing a [Deprecated] attribute
 !deprecated-attribute-missing! INSaveProfileInCarIntentResponse missing a [Deprecated] attribute
 !deprecated-attribute-missing! INSearchCallHistoryIntent missing a [Deprecated] attribute
@@ -31,15 +25,12 @@
 !deprecated-attribute-missing! INSetDefrosterSettingsInCarIntentResponse missing a [Deprecated] attribute
 !deprecated-attribute-missing! INSetProfileInCarIntent missing a [Deprecated] attribute
 !deprecated-attribute-missing! INSetProfileInCarIntentResponse missing a [Deprecated] attribute
-!deprecated-attribute-missing! INSetRadioStationIntent missing a [Deprecated] attribute
-!deprecated-attribute-missing! INSetRadioStationIntentResponse missing a [Deprecated] attribute
 !deprecated-attribute-missing! INSetSeatSettingsInCarIntent missing a [Deprecated] attribute
 !deprecated-attribute-missing! INSetSeatSettingsInCarIntentResponse missing a [Deprecated] attribute
 !deprecated-attribute-missing! INStartPhotoPlaybackIntent missing a [Deprecated] attribute
 !deprecated-attribute-missing! INStartPhotoPlaybackIntentResponse missing a [Deprecated] attribute
 !deprecated-attribute-missing! INTransferMoneyIntent missing a [Deprecated] attribute
 !deprecated-attribute-missing! INTransferMoneyIntentResponse missing a [Deprecated] attribute
-!deprecated-attribute-missing! INVisualCodeTypeResolutionResult missing a [Deprecated] attribute
 !missing-enum! INFocusStatusAuthorizationStatus not bound
 !missing-enum! INShareFocusStatusIntentResponseCode not bound
 !missing-protocol! INShareFocusStatusIntentHandling not bound
@@ -51,20 +42,14 @@
 !missing-selector! INFocusStatusCenter::authorizationStatus not bound
 !missing-selector! INFocusStatusCenter::focusStatus not bound
 !missing-selector! INFocusStatusCenter::requestAuthorizationWithCompletionHandler: not bound
-!missing-selector! INIntent::donationMetadata not bound
-!missing-selector! INIntent::setDonationMetadata: not bound
 !missing-selector! INPerson::initWithPersonHandle:nameComponents:displayName:image:contactIdentifier:customIdentifier:isMe:suggestionType: not bound
 !missing-selector! INRelevantShortcut::setWidgetKind: not bound
 !missing-selector! INRelevantShortcut::widgetKind not bound
 !missing-selector! INSendMessageIntentDonationMetadata::init not bound
-!missing-selector! INSendMessageIntentDonationMetadata::isReplyToCurrentUser not bound
 !missing-selector! INSendMessageIntentDonationMetadata::mentionsCurrentUser not bound
-!missing-selector! INSendMessageIntentDonationMetadata::notifyRecipientAnyway not bound
 !missing-selector! INSendMessageIntentDonationMetadata::recipientCount not bound
 !missing-selector! INSendMessageIntentDonationMetadata::setMentionsCurrentUser: not bound
-!missing-selector! INSendMessageIntentDonationMetadata::setNotifyRecipientAnyway: not bound
 !missing-selector! INSendMessageIntentDonationMetadata::setRecipientCount: not bound
-!missing-selector! INSendMessageIntentDonationMetadata::setReplyToCurrentUser: not bound
 !missing-selector! INShareFocusStatusIntent::focusStatus not bound
 !missing-selector! INShareFocusStatusIntent::initWithFocusStatus: not bound
 !missing-selector! INShareFocusStatusIntentResponse::code not bound
@@ -75,4 +60,12 @@
 !missing-type! INSendMessageIntentDonationMetadata not bound
 !missing-type! INShareFocusStatusIntent not bound
 !missing-type! INShareFocusStatusIntentResponse not bound
-## appended from unclassified file
+!deprecated-attribute-missing! INGetVisualCodeIntent missing a [Deprecated] attribute
+!deprecated-attribute-missing! INGetVisualCodeIntentResponse missing a [Deprecated] attribute
+!deprecated-attribute-missing! INVisualCodeTypeResolutionResult missing a [Deprecated] attribute
+!missing-selector! INIntent::donationMetadata not bound
+!missing-selector! INIntent::setDonationMetadata: not bound
+!missing-selector! INSendMessageIntentDonationMetadata::isReplyToCurrentUser not bound
+!missing-selector! INSendMessageIntentDonationMetadata::notifyRecipientAnyway not bound
+!missing-selector! INSendMessageIntentDonationMetadata::setNotifyRecipientAnyway: not bound
+!missing-selector! INSendMessageIntentDonationMetadata::setReplyToCurrentUser: not bound

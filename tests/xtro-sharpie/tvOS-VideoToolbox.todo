@@ -8,4 +8,3 @@
 !missing-field! kVTProfileLevel_H264_ConstrainedBaseline_AutoLevel not bound
 !missing-field! kVTProfileLevel_H264_ConstrainedHigh_AutoLevel not bound
 !missing-field! kVTSampleAttachmentKey_RequireLTRAcknowledgementToken not bound
-!missing-field! kVTVideoEncoderListOption_IncludeStandardDefinitionDVEncoders not bound

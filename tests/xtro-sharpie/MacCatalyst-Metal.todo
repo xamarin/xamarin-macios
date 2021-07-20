@@ -93,34 +93,13 @@
 !incorrect-protocol-member! MTLTexture::allowGPUOptimizedContents is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLTexture::isShareable is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLTexture::newSharedTextureHandle is REQUIRED and should be abstract
-!missing-enum! MTLAccelerationStructureInstanceDescriptorType not bound
 !missing-enum! MTLDeviceLocation not bound
-!missing-enum! MTLMotionBorderMode not bound
-!missing-enum-value! MTLAccelerationStructureUsage native value MTLAccelerationStructureUsageExtendedLimits = 4 not bound
-!missing-enum-value! MTLCommandBufferError native value MTLCommandBufferErrorStackOverflow = 12 not bound
-!missing-enum-value! MTLDataType native value MTLDataTypeLong = 81 not bound
-!missing-enum-value! MTLDataType native value MTLDataTypeLong2 = 82 not bound
-!missing-enum-value! MTLDataType native value MTLDataTypeLong3 = 83 not bound
-!missing-enum-value! MTLDataType native value MTLDataTypeLong4 = 84 not bound
-!missing-enum-value! MTLDataType native value MTLDataTypeULong = 85 not bound
-!missing-enum-value! MTLDataType native value MTLDataTypeULong2 = 86 not bound
-!missing-enum-value! MTLDataType native value MTLDataTypeULong3 = 87 not bound
-!missing-enum-value! MTLDataType native value MTLDataTypeULong4 = 88 not bound
-!missing-enum-value! MTLIntersectionFunctionSignature native value MTLIntersectionFunctionSignatureExtendedLimits = 32 not bound
-!missing-enum-value! MTLIntersectionFunctionSignature native value MTLIntersectionFunctionSignatureInstanceMotion = 8 not bound
-!missing-enum-value! MTLIntersectionFunctionSignature native value MTLIntersectionFunctionSignaturePrimitiveMotion = 16 not bound
-!missing-enum-value! MTLLanguageVersion native value MTLLanguageVersion2_4 = 131076 not bound
-!missing-enum-value! MTLRenderStages native value MTLRenderStageTile = 4 not bound
 !missing-field! MTLDeviceRemovalRequestedNotification not bound
 !missing-field! MTLDeviceWasAddedNotification not bound
 !missing-field! MTLDeviceWasRemovedNotification not bound
 !missing-pinvoke! MTLCopyAllDevices is not bound
 !missing-pinvoke! MTLCopyAllDevicesWithObserver is not bound
 !missing-pinvoke! MTLRemoveDeviceObserver is not bound
-!missing-protocol! MTLFunctionStitchingAttribute not bound
-!missing-protocol! MTLFunctionStitchingNode not bound
-!missing-protocol-member! MTLAccelerationStructureCommandEncoder::writeCompactedAccelerationStructureSize:toBuffer:offset:sizeDataType: not found
-!missing-protocol-member! MTLBinaryArchive::addFunctionWithDescriptor:library:error: not found
 !missing-protocol-member! MTLBlitCommandEncoder::getTextureAccessCounters:region:mipLevel:slice:resetCounters:countersBuffer:countersBufferOffset: not found
 !missing-protocol-member! MTLBlitCommandEncoder::resetTextureAccessCounters:region:mipLevel:slice: not found
 !missing-protocol-member! MTLBlitCommandEncoder::synchronizeResource: not found
@@ -135,19 +114,61 @@
 !missing-protocol-member! MTLDevice::location not found
 !missing-protocol-member! MTLDevice::locationNumber not found
 !missing-protocol-member! MTLDevice::maxTransferRate not found
-!missing-protocol-member! MTLDevice::newLibraryWithStitchedDescriptor:completionHandler: not found
-!missing-protocol-member! MTLDevice::newLibraryWithStitchedDescriptor:error: not found
 !missing-protocol-member! MTLDevice::peerCount not found
 !missing-protocol-member! MTLDevice::peerGroupID not found
 !missing-protocol-member! MTLDevice::peerIndex not found
 !missing-protocol-member! MTLDevice::recommendedMaxWorkingSetSize not found
 !missing-protocol-member! MTLDevice::supportsBCTextureCompression not found
-!missing-protocol-member! MTLDevice::supportsFunctionPointersFromRender not found
-!missing-protocol-member! MTLDevice::supportsPrimitiveMotionBlur not found
-!missing-protocol-member! MTLDevice::supportsRaytracingFromRender not found
-!missing-protocol-member! MTLDevice::supportsRenderDynamicLibraries not found
 !missing-protocol-member! MTLRenderCommandEncoder::memoryBarrierWithResources:count:afterStages:beforeStages: not found
 !missing-protocol-member! MTLRenderCommandEncoder::memoryBarrierWithScope:afterStages:beforeStages: not found
+!missing-protocol-member! MTLRenderCommandEncoder::textureBarrier not found
+!missing-protocol-member! MTLTexture::firstMipmapInTail not found
+!missing-protocol-member! MTLTexture::isSparse not found
+!missing-protocol-member! MTLTexture::newRemoteTextureViewForDevice: not found
+!missing-protocol-member! MTLTexture::remoteStorageTexture not found
+!missing-protocol-member! MTLTexture::tailSizeInBytes not found
+!missing-selector! MTLCaptureManager::init not bound
+!missing-selector! MTLHeapDescriptor::hazardTrackingMode not bound
+!missing-selector! MTLHeapDescriptor::resourceOptions not bound
+!missing-selector! MTLHeapDescriptor::setHazardTrackingMode: not bound
+!missing-selector! MTLHeapDescriptor::setResourceOptions: not bound
+!missing-selector! MTLHeapDescriptor::setType: not bound
+!missing-selector! MTLHeapDescriptor::type not bound
+!missing-selector! MTLRasterizationRateLayerDescriptor::horizontal not bound
+!missing-selector! MTLRasterizationRateLayerDescriptor::horizontalSampleStorage not bound
+!missing-selector! MTLRasterizationRateLayerDescriptor::init not bound
+!missing-selector! MTLRasterizationRateLayerDescriptor::sampleCount not bound
+!missing-selector! MTLRasterizationRateLayerDescriptor::vertical not bound
+!missing-selector! MTLRasterizationRateLayerDescriptor::verticalSampleStorage not bound
+!missing-selector! MTLRasterizationRateMapDescriptor::label not bound
+!missing-selector! MTLRasterizationRateMapDescriptor::layerCount not bound
+!missing-selector! MTLRasterizationRateMapDescriptor::layers not bound
+!missing-selector! MTLRasterizationRateMapDescriptor::screenSize not bound
+!missing-selector! MTLRasterizationRateMapDescriptor::setLabel: not bound
+!missing-selector! MTLRasterizationRateMapDescriptor::setScreenSize: not bound
+## appended from unclassified file
+!missing-enum! MTLAccelerationStructureInstanceDescriptorType not bound
+!missing-enum! MTLMotionBorderMode not bound
+!missing-enum-value! MTLAccelerationStructureUsage native value MTLAccelerationStructureUsageExtendedLimits = 4 not bound
+!missing-enum-value! MTLCommandBufferError native value MTLCommandBufferErrorStackOverflow = 12 not bound
+!missing-enum-value! MTLDataType native value MTLDataTypeLong = 81 not bound
+!missing-enum-value! MTLDataType native value MTLDataTypeLong2 = 82 not bound
+!missing-enum-value! MTLDataType native value MTLDataTypeLong3 = 83 not bound
+!missing-enum-value! MTLDataType native value MTLDataTypeLong4 = 84 not bound
+!missing-enum-value! MTLDataType native value MTLDataTypeULong = 85 not bound
+!missing-enum-value! MTLDataType native value MTLDataTypeULong2 = 86 not bound
+!missing-enum-value! MTLDataType native value MTLDataTypeULong3 = 87 not bound
+!missing-enum-value! MTLDataType native value MTLDataTypeULong4 = 88 not bound
+!missing-enum-value! MTLLanguageVersion native value MTLLanguageVersion2_4 = 131076 not bound
+!missing-enum-value! MTLRenderStages native value MTLRenderStageTile = 4 not bound
+!missing-protocol! MTLFunctionStitchingAttribute not bound
+!missing-protocol! MTLFunctionStitchingNode not bound
+!missing-protocol-member! MTLAccelerationStructureCommandEncoder::writeCompactedAccelerationStructureSize:toBuffer:offset:sizeDataType: not found
+!missing-protocol-member! MTLBinaryArchive::addFunctionWithDescriptor:library:error: not found
+!missing-protocol-member! MTLDevice::newLibraryWithDescriptor:error: not found
+!missing-protocol-member! MTLDevice::supportsFunctionPointersFromRender not found
+!missing-protocol-member! MTLDevice::supportsRaytracingFromRender not found
+!missing-protocol-member! MTLDevice::supportsRenderDynamicLibraries not found
 !missing-protocol-member! MTLRenderCommandEncoder::setFragmentAccelerationStructure:atBufferIndex: not found
 !missing-protocol-member! MTLRenderCommandEncoder::setFragmentIntersectionFunctionTable:atBufferIndex: not found
 !missing-protocol-member! MTLRenderCommandEncoder::setFragmentIntersectionFunctionTables:withBufferRange: not found
@@ -163,16 +184,10 @@
 !missing-protocol-member! MTLRenderCommandEncoder::setVertexIntersectionFunctionTables:withBufferRange: not found
 !missing-protocol-member! MTLRenderCommandEncoder::setVertexVisibleFunctionTable:atBufferIndex: not found
 !missing-protocol-member! MTLRenderCommandEncoder::setVertexVisibleFunctionTables:withBufferRange: not found
-!missing-protocol-member! MTLRenderCommandEncoder::textureBarrier not found
 !missing-protocol-member! MTLRenderPipelineState::functionHandleWithFunction:stage: not found
 !missing-protocol-member! MTLRenderPipelineState::newIntersectionFunctionTableWithDescriptor:stage: not found
 !missing-protocol-member! MTLRenderPipelineState::newRenderPipelineStateWithAdditionalBinaryFunctions:error: not found
 !missing-protocol-member! MTLRenderPipelineState::newVisibleFunctionTableWithDescriptor:stage: not found
-!missing-protocol-member! MTLTexture::firstMipmapInTail not found
-!missing-protocol-member! MTLTexture::isSparse not found
-!missing-protocol-member! MTLTexture::newRemoteTextureViewForDevice: not found
-!missing-protocol-member! MTLTexture::remoteStorageTexture not found
-!missing-protocol-member! MTLTexture::tailSizeInBytes not found
 !missing-selector! +MTLAccelerationStructureMotionBoundingBoxGeometryDescriptor::descriptor not bound
 !missing-selector! +MTLAccelerationStructureMotionTriangleGeometryDescriptor::descriptor not bound
 !missing-selector! +MTLMotionKeyframeData::data not bound
@@ -196,7 +211,6 @@
 !missing-selector! MTLAccelerationStructureMotionTriangleGeometryDescriptor::triangleCount not bound
 !missing-selector! MTLAccelerationStructureMotionTriangleGeometryDescriptor::vertexBuffers not bound
 !missing-selector! MTLAccelerationStructureMotionTriangleGeometryDescriptor::vertexStride not bound
-!missing-selector! MTLCaptureManager::init not bound
 !missing-selector! MTLComputePipelineDescriptor::preloadedLibraries not bound
 !missing-selector! MTLComputePipelineDescriptor::setPreloadedLibraries: not bound
 !missing-selector! MTLFunctionDescriptor::binaryArchives not bound
@@ -220,12 +234,6 @@
 !missing-selector! MTLFunctionStitchingInputNode::argumentIndex not bound
 !missing-selector! MTLFunctionStitchingInputNode::initWithArgumentIndex: not bound
 !missing-selector! MTLFunctionStitchingInputNode::setArgumentIndex: not bound
-!missing-selector! MTLHeapDescriptor::hazardTrackingMode not bound
-!missing-selector! MTLHeapDescriptor::resourceOptions not bound
-!missing-selector! MTLHeapDescriptor::setHazardTrackingMode: not bound
-!missing-selector! MTLHeapDescriptor::setResourceOptions: not bound
-!missing-selector! MTLHeapDescriptor::setType: not bound
-!missing-selector! MTLHeapDescriptor::type not bound
 !missing-selector! MTLInstanceAccelerationStructureDescriptor::instanceDescriptorType not bound
 !missing-selector! MTLInstanceAccelerationStructureDescriptor::motionTransformBuffer not bound
 !missing-selector! MTLInstanceAccelerationStructureDescriptor::motionTransformBufferOffset not bound
@@ -250,20 +258,8 @@
 !missing-selector! MTLPrimitiveAccelerationStructureDescriptor::setMotionKeyframeCount: not bound
 !missing-selector! MTLPrimitiveAccelerationStructureDescriptor::setMotionStartBorderMode: not bound
 !missing-selector! MTLPrimitiveAccelerationStructureDescriptor::setMotionStartTime: not bound
-!missing-selector! MTLRasterizationRateLayerDescriptor::horizontal not bound
-!missing-selector! MTLRasterizationRateLayerDescriptor::horizontalSampleStorage not bound
-!missing-selector! MTLRasterizationRateLayerDescriptor::init not bound
 !missing-selector! MTLRasterizationRateLayerDescriptor::maxSampleCount not bound
-!missing-selector! MTLRasterizationRateLayerDescriptor::sampleCount not bound
-!missing-selector! MTLRasterizationRateLayerDescriptor::vertical not bound
-!missing-selector! MTLRasterizationRateLayerDescriptor::verticalSampleStorage not bound
 !missing-selector! MTLRasterizationRateLayerDescriptorMTLRasterizationRateLayerDescriptor::setSampleCount: not bound
-!missing-selector! MTLRasterizationRateMapDescriptor::label not bound
-!missing-selector! MTLRasterizationRateMapDescriptor::layerCount not bound
-!missing-selector! MTLRasterizationRateMapDescriptor::layers not bound
-!missing-selector! MTLRasterizationRateMapDescriptor::screenSize not bound
-!missing-selector! MTLRasterizationRateMapDescriptor::setLabel: not bound
-!missing-selector! MTLRasterizationRateMapDescriptor::setScreenSize: not bound
 !missing-selector! MTLRenderPipelineDescriptor::fragmentLinkedFunctions not bound
 !missing-selector! MTLRenderPipelineDescriptor::fragmentPreloadedLibraries not bound
 !missing-selector! MTLRenderPipelineDescriptor::maxFragmentCallStackDepth not bound
@@ -307,4 +303,8 @@
 !missing-type! MTLMotionKeyframeData not bound
 !missing-type! MTLRenderPipelineFunctionsDescriptor not bound
 !missing-type! MTLStitchedLibraryDescriptor not bound
-## appended from unclassified file
+!missing-enum-value! MTLIntersectionFunctionSignature native value MTLIntersectionFunctionSignatureExtendedLimits = 32 not bound
+!missing-enum-value! MTLIntersectionFunctionSignature native value MTLIntersectionFunctionSignatureInstanceMotion = 8 not bound
+!missing-enum-value! MTLIntersectionFunctionSignature native value MTLIntersectionFunctionSignaturePrimitiveMotion = 16 not bound
+!missing-protocol-member! MTLDevice::newLibraryWithDescriptor:completionHandler: not found
+!missing-protocol-member! MTLDevice::supportsPrimitiveMotionBlur not found
