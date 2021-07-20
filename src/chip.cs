@@ -1140,7 +1140,7 @@ namespace Chip {
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("opCSRRequest:responseHandler:")]
-		void OpCSRRequest (NSData cSRNonce, ChipResponseHandler responseHandler);
+		void OpCsRrequest (NSData csrNonce, ChipResponseHandler responseHandler);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("removeAllFabrics:")]
@@ -1815,7 +1815,7 @@ namespace Chip {
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("login:setupPIN:responseHandler:")]
-		void Login (string tempAccountIdentifier, string setupPIN, ChipResponseHandler  responseHandler);
+		void Login (string tempAccountIdentifier, string setupPin, ChipResponseHandler  responseHandler);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeClusterRevisionWithResponseHandler:")]
