@@ -1,0 +1,3 @@
+# deprecated but present on macOS
+!missing-selector! +CWInterface::interface not bound
+!missing-selector! +CWInterface::interfaceWithName: not bound

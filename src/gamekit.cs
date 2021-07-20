@@ -26,6 +26,7 @@ using UIViewController = AppKit.NSViewController;
 #else
 using UIKit;
 using NSViewController = Foundation.NSObject;
+using NSWindow = Foundation.NSObject;
 #endif
 
 namespace GameKit {
@@ -853,6 +854,18 @@ namespace GameKit {
 		Action<NSViewController, NSError> AuthenticateHandler { get; set; }
 #endif
 
+		[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("isPresentingFriendRequestViewController")]
+		bool IsPresentingFriendRequestViewController { get; }
+
+		[NoWatch, NoTV, NoMac, iOS (15,0), NoMacCatalyst]
+		[Export ("presentFriendRequestCreatorFromViewController:error:")]
+		bool PresentFriendRequestCreator (UIViewController viewController, [NullAllowed] out NSError error);
+
+		[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
+		[Export ("presentFriendRequestCreatorFromWindow:error:")]
+		bool PresentFriendRequestCreator ([NullAllowed] NSWindow window, [NullAllowed] out NSError error);
+
 		[iOS (7,0)][Mac (10,10)] // Mismarked in header, 17613142
 		[Export ("loadDefaultLeaderboardIdentifierWithCompletionHandler:")]
 		[Async]
@@ -1429,6 +1442,10 @@ namespace GameKit {
 		[TV (14,0), Mac (11,0), iOS (14,0)]
 		[Export ("matchmakingMode", ArgumentSemantic.Assign)]
 		GKMatchmakingMode MatchmakingMode { get; set; }
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("canStartWithMinimumPlayers")]
+		bool CanStartWithMinimumPlayers { get; set; }
 	}
 
 	[NoWatch]
@@ -2081,6 +2098,10 @@ namespace GameKit {
 
 		[Export ("showExistingMatches", ArgumentSemantic.Assign)]
 		bool ShowExistingMatches { get; set;  }
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("matchmakingMode", ArgumentSemantic.Assign)]
+		GKMatchmakingMode MatchmakingMode { get; set; }
 
 		[Export ("initWithMatchRequest:")]
 		IntPtr Constructor (GKMatchRequest request);
