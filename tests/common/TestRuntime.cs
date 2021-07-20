@@ -991,7 +991,7 @@ partial class TestRuntime
 		// Microphone requires a hardened runtime entitlement for Mac Catalyst: com.apple.security.device.microphonee,
 		// so just ignore these tests for now.
 		NUnit.Framework.Assert.Ignore ("Requires a hardened runtime entitlement: com.apple.security.device.microphone");
-#else
+#endif // __MACCATALYST__
 
 		if (AVCaptureDevice.GetAuthorizationStatus (mediaTypeToken) == AVAuthorizationStatus.NotDetermined) {
 			if (IgnoreTestThatRequiresSystemPermissions ())
