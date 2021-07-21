@@ -754,6 +754,8 @@ namespace Introspection {
 					return true;
 #endif
 				// Xcode 13
+				case "PHCloudIdentifier":
+				case "PHCloudIdentifierMapping":
 				case "NSEntityMapping":
 				case "NSMappingModel":
 				case "NSMergePolicy":

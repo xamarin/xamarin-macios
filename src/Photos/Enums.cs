@@ -182,6 +182,8 @@ namespace Photos
 		SmartAlbumLongExposures = 215,
 		[iOS (13,0)][TV(13,0)][Mac (10,15)]
 		SmartAlbumUnableToUpload = 216,
+		[iOS (15,0), TV (15,0), Mac (12,0)]
+		SmartAlbumRAW = 217,
 
 
 		Any           = Int64.MaxValue
@@ -356,7 +358,9 @@ namespace Photos
 	[Native]
 	[ErrorDomain ("PHLivePhotoEditingErrorDomain")]
 	public enum PHLivePhotoEditingError : long {
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'InternalError' instead.")]
 		Unknown,
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'UserCancelled' instead.")]
 		Aborted,
 	}
 
@@ -378,12 +382,35 @@ namespace Photos
 	[TV (13,0), Mac (10,15), iOS (13,0)]
 	[Native]
 	public enum PHPhotosError : long {
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'InternalError' instead.")]
 		Invalid = -1,
+		InternalError = -1,
 		UserCancelled = 3072,
 		LibraryVolumeOffline = 3114,
 		RelinquishingLibraryBundleToWriter = 3142,
 		SwitchingSystemPhotoLibrary = 3143,
+		[TV (14,0), Mac (11,0), iOS (14,0)]
 		NetworkAccessRequired = 3164,
+		[TV (15,0), Mac (12,0), iOS (15,0)]
+		IdentifierNotFound = 3201,
+		[TV (15,0), Mac (12,0), iOS (15,0)]
+		MultipleIdentifiersFound = 3202,
+		[TV (15,0), Mac (12,0), iOS (15,0)]
+		ChangeNotSupported = 3300,
+		[TV (15,0), Mac (12,0), iOS (15,0)]
+		OperationInterrupted = 3301,
+		[TV (15,0), Mac (12,0), iOS (15,0)]
+		InvalidResource = 3302,
+		[TV (15,0), Mac (12,0), iOS (15,0)]
+		MissingResource = 3303,
+		[TV (15,0), Mac (12,0), iOS (15,0)]
+		NotEnoughSpace = 3305,
+		[TV (15,0), Mac (12,0), iOS (15,0)]
+		RequestNotSupportedForAsset = 3306,
+		[TV (15,0), Mac (12,0), iOS (15,0)]
+		AccessRestricted = 3310,
+		[TV (15,0), Mac (12,0), iOS (15,0)]
+		AccessUserDenied = 3311,
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
