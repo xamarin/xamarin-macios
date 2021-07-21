@@ -503,7 +503,6 @@
 !missing-field! NSSpellCheckerDidChangeAutomaticDashSubstitutionNotification not bound
 !missing-field! NSSpellCheckerDidChangeAutomaticQuoteSubstitutionNotification not bound
 !missing-field! NSSubjectDocumentAttribute not bound
-!missing-field! NSTabColumnTerminatorsAttributeName not bound
 !missing-field! NSTargetBinding not bound
 !missing-field! NSTextColorBinding not bound
 !missing-field! NSTextEffectLetterpressStyle not bound
