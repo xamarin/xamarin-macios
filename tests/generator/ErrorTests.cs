@@ -54,6 +54,22 @@ namespace GeneratorTests
 			bgen.AssertError (1036, "The last parameter in the method 'NS.Foo.Method' must be a delegate (it's 'System.String').");
 		}
 
+		// just returned when compiling for NET
+#if NET
+		[Test]
+		[TestCase (Profile.iOS)]
+		public void BI1120 (Profile profile)
+		{
+			var bgen = new BGenTool ();
+			bgen.Profile = profile;
+			bgen.Defines = BGenTool.GetDefaultDefines (profile);
+			bgen.ApiDefinitions.Add (Path.Combine (Configuration.SourceRoot, "tests", "generator", "bi1120.cs"));
+			bgen.CreateTemporaryBinding ();
+			bgen.AssertExecuteError ("build");
+			bgen.AssertError (1120, "Unsupported platform string. Platform strings should contain the version of the platform supported. Examples are: maccatalyst15.0, mac10.9, ios8.0, tvos15.0");
+		}
+#endif
+
 		[Test]
 #if !NET
 		[TestCase (Profile.macOSFull)]

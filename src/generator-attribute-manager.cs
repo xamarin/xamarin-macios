@@ -342,6 +342,8 @@ public class AttributeManager
 		if (arg.Length > len) {
 			if (!Version.TryParse (arg [len..], out version))
 				throw new BindingException (1047, arg);
+		} else { // we did not find a version number
+			throw new BindingException (1120, arg);
 		}
 		return (name, version);
 	}
