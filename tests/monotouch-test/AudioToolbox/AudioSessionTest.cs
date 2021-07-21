@@ -18,6 +18,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 		
 		public AudioSessionTest ()
 		{
+			TestRuntime.RequestMicrophonePermission ();
 			AudioSession.Initialize ();
 		}
 		
