@@ -83,7 +83,7 @@ namespace VideoToolbox {
 			if (cmSampleBufferPtr == IntPtr.Zero) {
 				func (sourceFrame, status, infoFlags, null);
 			} else {
-				using (var sampleBuffer = new CMSampleBuffer (cmSampleBufferPtr, owns: owns))
+				using (var sampleBuffer = new CMSampleBuffer (cmSampleBufferPtr, owns: false))
 					func (sourceFrame, status, infoFlags, sampleBuffer);
 			}
 		}
