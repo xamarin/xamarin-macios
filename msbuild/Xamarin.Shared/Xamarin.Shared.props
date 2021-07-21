@@ -192,6 +192,8 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		     DeviceSpecificOutputPath. -->
 		<DeviceSpecificOutputPath>$(OutputPath)</DeviceSpecificOutputPath>
 		<DeviceSpecificOutputPath Condition="$([System.IO.Path]::IsPathRooted('$(DeviceSpecificOutputPath)')) == 'true'">$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)','$(OutputPath)'))</DeviceSpecificOutputPath>
+		<!-- We assume elsewhere that DeviceSpecificOutputPath has a trailing slash, so make sure that's always the case -->
+		<DeviceSpecificOutputPath>$([MSBuild]::EnsureTrailingSlash('$(DeviceSpecificOutputPath)'))</DeviceSpecificOutputPath>
 
 		<!-- OptimizePNGs:
 			default to false if a binding project (both XI and XM)
