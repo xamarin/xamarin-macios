@@ -1765,9 +1765,6 @@ namespace Chip {
 		[Export ("commissioningFlow", ArgumentSemantic.Assign)]
 		ChipCommissioningFlow CommissioningFlow { get; set; }
 
-		[Export ("requiresCustomFlow")]
-		bool RequiresCustomFlow { get; set; }
-
 		[Export ("rendezvousInformation", ArgumentSemantic.Assign)]
 		ChipRendezvousInformationFlags RendezvousInformation { get; set; }
 
