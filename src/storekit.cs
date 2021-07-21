@@ -660,7 +660,7 @@ namespace StoreKit {
 		[Field ("SKStoreProductParameterAdNetworkVersion")]
 		NSString AdNetworkVersion { get; }
 		
-		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[Mac (12, 0), iOS (15, 0), TV (15, 0), MacCatalyst (15, 0)]
 		[Field ("SKStoreProductParameterCustomProductPageIdentifier")]
 		NSString CustomProductPageIdentifier { get; }
 	}
@@ -778,7 +778,7 @@ namespace StoreKit {
 		[Static]
 		[Async]
 		[Export ("requestAuthorization:")]
-		void RequestAuthorization (Action<SKCloudServiceAuthorizationStatus> completionHandler);
+		void RequestAuthorization (Action<SKCloudServiceAuthorizationStatus> handler);
 
 		[Async]
 		[Export ("requestStorefrontIdentifierWithCompletionHandler:")]
@@ -1088,7 +1088,7 @@ namespace StoreKit {
 		[iOS (15, 0), MacCatalyst (15, 0)]
 		[NullAllowed]
 		[Export ("latestReleaseID", ArgumentSemantic.Retain)]
-		string LatestReleaseID { get; set; }
+		string LatestReleaseId { get; set; }
 
 		[Export ("position", ArgumentSemantic.Assign)]
 		SKOverlayPosition Position { get; set; }
@@ -1127,7 +1127,7 @@ namespace StoreKit {
 		[iOS (15, 0), MacCatalyst (15, 0)]
 		[NullAllowed]
 		[Export ("latestReleaseID", ArgumentSemantic.Retain)]
-		string LatestReleaseID { get; set; }
+		string LatestReleaseId { get; set; }
 
 		[Export ("position", ArgumentSemantic.Assign)]
 		SKOverlayPosition Position { get; set; }
