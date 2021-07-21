@@ -58,8 +58,6 @@ namespace Chip {
 		Custom = 2,
 		Invalid = 3,
 	}
-
-
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[Native]
 	public enum ChipOptionalQRCodeInfoType : ulong {
@@ -1816,11 +1814,11 @@ namespace Chip {
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("login:setupPIN:responseHandler:")]
-		void Login (string tempAccountIdentifier, string setupPin, ChipResponseHandler  responseHandler);
+		void Login (string tempAccountIdentifier, string setupPin, ChipResponseHandler responseHandler);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeClusterRevisionWithResponseHandler:")]
-		void ReadAttributeClusterRevision (ChipResponseHandler  responseHandler);
+		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
