@@ -30,6 +30,7 @@ using NSTextAttachmentCell=System.Object;
 using NSTextBlock=System.Object;
 using NSTextList=System.Object;
 using NSTextTableBlock=System.Object;
+using NSTextTabType=System.Object;
 using NSTextStorageEditedFlags=System.Object;
 using NSTextView=System.Object;
 using NSTypesetter=System.Object;
@@ -50,17 +51,21 @@ using UITraitCollection=System.Object;
 #endif // !MONOMAC
 
 #if MONOMAC
+using BezierPath=AppKit.NSBezierPath;
 using Image=AppKit.NSImage;
 using TextAlignment=AppKit.NSTextAlignment;
 using LineBreakMode=AppKit.NSLineBreakMode;
 using CollectionLayoutSectionOrthogonalScrollingBehavior=AppKit.NSCollectionLayoutSectionOrthogonalScrollingBehavior;
 using CollectionElementCategory=AppKit.NSCollectionElementCategory;
+using StringAttributes=AppKit.NSStringAttributes;
 #else
+using BezierPath=UIKit.UIBezierPath;
 using Image=UIKit.UIImage;
 using TextAlignment=UIKit.UITextAlignment;
 using LineBreakMode=UIKit.UILineBreakMode;
 using CollectionLayoutSectionOrthogonalScrollingBehavior=UIKit.UICollectionLayoutSectionOrthogonalScrollingBehavior;
 using CollectionElementCategory=UIKit.UICollectionElementCategory;
+using StringAttributes=UIKit.UIStringAttributes;
 #endif
 
 #if MONOMAC
@@ -2166,5 +2171,597 @@ namespace UIKit {
 		[Static]
 		[Export ("textAttachmentWithImage:")]
 		NSTextAttachment Create (Image image);
+	}
+
+	[NoWatch]
+	[MacCatalyst (13,0)]
+	[iOS (7,0)]
+	[BaseType (typeof (NSMutableAttributedString), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NSTextStorageDelegate)})]
+	partial interface NSTextStorage : NSSecureCoding {
+#if MONOMAC && !XAMCORE_4_0
+		[Export ("initWithString:")]
+		IntPtr Constructor (string str);
+#endif
+
+		[Export ("layoutManagers")]
+#if MONOMAC || XAMCORE_4_0
+		NSLayoutManager [] LayoutManagers { get; }
+#else
+		NSObject [] LayoutManagers { get; }
+#endif
+
+		[Export ("addLayoutManager:")]
+		[PostGet ("LayoutManagers")]
+		void AddLayoutManager (NSLayoutManager aLayoutManager);
+
+		[Export ("removeLayoutManager:")]
+		[PostGet ("LayoutManagers")]
+		void RemoveLayoutManager (NSLayoutManager aLayoutManager);
+
+		[Export ("editedMask")]
+#if MONOMAC && !XAMCORE_4_0
+		NSTextStorageEditedFlags EditedMask {
+#else
+		NSTextStorageEditActions EditedMask {
+#endif
+			get;
+#if !XAMCORE_4_0 && !MONOMAC && !__MACCATALYST__
+			[NotImplemented] set;
+#endif
+		}
+
+		[Export ("editedRange")]
+		NSRange EditedRange {
+			get;
+#if !XAMCORE_3_0 && !MONOMAC && !__MACCATALYST__
+			[NotImplemented] set;
+#endif
+		}
+
+		[Export ("changeInLength")]
+		nint ChangeInLength {
+			get;
+#if !XAMCORE_3_0 && !MONOMAC && !__MACCATALYST__
+			[NotImplemented] set;
+#endif
+		}
+
+		[NullAllowed]
+		[Export ("delegate", ArgumentSemantic.Assign)]
+		NSObject WeakDelegate { get; set; }
+
+		[Wrap ("WeakDelegate")]
+		INSTextStorageDelegate Delegate { get; set; }
+
+		[Export ("edited:range:changeInLength:")]
+#if MONOMAC && !XAMCORE_4_0
+		void Edited (nuint editedMask, NSRange editedRange, nint delta);
+#else
+		void Edited (NSTextStorageEditActions editedMask, NSRange editedRange, nint delta);
+#endif
+
+		[Export ("processEditing")]
+		void ProcessEditing ();
+
+		[Export ("fixesAttributesLazily")]
+		bool FixesAttributesLazily { get; }
+
+		[Export ("invalidateAttributesInRange:")]
+		void InvalidateAttributes (NSRange range);
+
+		[Export ("ensureAttributesAreFixedInRange:")]
+		void EnsureAttributesAreFixed (NSRange range);
+
+		[iOS (7,0)]
+		[Notification, Field ("NSTextStorageWillProcessEditingNotification")]
+#if !MONOMAC || XAMCORE_4_0
+		[Internal]
+#endif
+		NSString WillProcessEditingNotification { get; }
+
+		[iOS (7,0)]
+		[Notification, Field ("NSTextStorageDidProcessEditingNotification")]
+#if !MONOMAC || XAMCORE_4_0
+		[Internal]
+#endif
+		NSString DidProcessEditingNotification { get; }
+	}
+
+	interface INSTextStorageDelegate {}
+
+	[NoWatch]
+	[MacCatalyst (13,0)]
+	[Model]
+	[BaseType (typeof (NSObject))]
+	[Protocol]
+	partial interface NSTextStorageDelegate {
+		[NoiOS][NoTV][NoMacCatalyst]
+		[Availability (Deprecated = Platform.Mac_10_11, Message = "Use WillProcessEditing instead.")]
+		[Export ("textStorageWillProcessEditing:")]
+		void TextStorageWillProcessEditing (NSNotification notification);
+
+		[NoiOS][NoTV][NoMacCatalyst]
+		[Availability (Deprecated = Platform.Mac_10_11, Message = "Use DidProcessEditing instead.")]
+		[Export ("textStorageDidProcessEditing:")]
+		void TextStorageDidProcessEditing (NSNotification notification);
+
+		[Mac (10,11)]
+		[Export ("textStorage:willProcessEditing:range:changeInLength:")][EventArgs ("NSTextStorage")]
+		void WillProcessEditing (NSTextStorage textStorage, NSTextStorageEditActions editedMask, NSRange editedRange, nint delta);
+
+		[Mac (10,11)]
+		[Export ("textStorage:didProcessEditing:range:changeInLength:")][EventArgs ("NSTextStorage")]
+		void DidProcessEditing (NSTextStorage textStorage, NSTextStorageEditActions editedMask, NSRange editedRange, nint delta);
+	}
+
+	[NoWatch, TV (13,0), iOS (13,0)]
+	[Mac (10,15)]
+	[MacCatalyst (13, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface NSCollectionLayoutAnchor : NSCopying, INSCopying
+	{
+		[Static]
+		[Export ("layoutAnchorWithEdges:")]
+		NSCollectionLayoutAnchor Create (NSDirectionalRectEdge edges);
+
+		[Static]
+		[Export ("layoutAnchorWithEdges:absoluteOffset:")]
+		NSCollectionLayoutAnchor CreateFromAbsoluteOffset (NSDirectionalRectEdge edges, CGPoint absoluteOffset);
+
+		[Static]
+		[Export ("layoutAnchorWithEdges:fractionalOffset:")]
+		NSCollectionLayoutAnchor CreateFromFractionalOffset (NSDirectionalRectEdge edges, CGPoint fractionalOffset);
+
+		[Export ("edges")]
+		NSDirectionalRectEdge Edges { get; }
+
+		[Export ("offset")]
+		CGPoint Offset { get; }
+
+		[Export ("isAbsoluteOffset")]
+		bool IsAbsoluteOffset { get; }
+
+		[Export ("isFractionalOffset")]
+		bool IsFractionalOffset { get; }
+	}
+
+	[NoWatch, TV (13,0), iOS (13,0)]
+	[Mac (10,15)]
+	[MacCatalyst (13, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface NSCollectionLayoutDimension : NSCopying
+	{
+		[Static]
+		[Export ("fractionalWidthDimension:")]
+#if MONOMAC && !XAMCORE_4_0
+		NSCollectionLayoutDimension CreateFractionalWidthDimension (nfloat fractionalWidth);
+#else
+		NSCollectionLayoutDimension CreateFractionalWidth (nfloat fractionalWidth);
+#endif
+
+		[Static]
+		[Export ("fractionalHeightDimension:")]
+#if MONOMAC && !XAMCORE_4_0
+		NSCollectionLayoutDimension CreateFractionalHeightDimension (nfloat fractionalHeight);
+#else
+		NSCollectionLayoutDimension CreateFractionalHeight (nfloat fractionalHeight);
+#endif
+
+		[Static]
+		[Export ("absoluteDimension:")]
+#if MONOMAC && !XAMCORE_4_0
+		NSCollectionLayoutDimension CreateAbsoluteDimension (nfloat absoluteDimension);
+#else
+		NSCollectionLayoutDimension CreateAbsolute (nfloat absoluteDimension);
+#endif
+
+		[Static]
+		[Export ("estimatedDimension:")]
+#if MONOMAC && !XAMCORE_4_0
+		NSCollectionLayoutDimension CreateEstimatedDimension (nfloat estimatedDimension);
+#else
+		NSCollectionLayoutDimension CreateEstimated (nfloat estimatedDimension);
+#endif
+
+		[Export ("isFractionalWidth")]
+		bool IsFractionalWidth { get; }
+
+		[Export ("isFractionalHeight")]
+		bool IsFractionalHeight { get; }
+
+		[Export ("isAbsolute")]
+		bool IsAbsolute { get; }
+
+		[Export ("isEstimated")]
+		bool IsEstimated { get; }
+
+		[Export ("dimension")]
+		nfloat Dimension { get; }
+	}
+
+
+	[NoWatch, TV (13,0), iOS (13,0)]
+	[MacCatalyst (13, 0)]
+	[Mac (10,15)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface NSCollectionLayoutSize : NSCopying
+	{
+		[Static]
+		[Export ("sizeWithWidthDimension:heightDimension:")]
+		NSCollectionLayoutSize Create (NSCollectionLayoutDimension width, NSCollectionLayoutDimension height);
+
+		[Export ("widthDimension")]
+		NSCollectionLayoutDimension WidthDimension { get; }
+
+		[Export ("heightDimension")]
+		NSCollectionLayoutDimension HeightDimension { get; }
+	}
+
+	[NoWatch, TV (13,0), iOS (13,0)]
+	[MacCatalyst (13, 0)]
+	[Mac (10,15)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface NSCollectionLayoutSpacing : NSCopying
+	{
+		[Static]
+		[Export ("flexibleSpacing:")]
+#if MONOMAC && !XAMCORE_4_0
+		NSCollectionLayoutSpacing CreateFlexibleSpacing (nfloat flexibleSpacing);
+#else
+		NSCollectionLayoutSpacing CreateFlexible (nfloat flexibleSpacing);
+#endif
+
+		[Static]
+		[Export ("fixedSpacing:")]
+#if MONOMAC && !XAMCORE_4_0
+		NSCollectionLayoutSpacing CreateFixedSpacing (nfloat fixedSpacing);
+#else
+		NSCollectionLayoutSpacing CreateFixed (nfloat fixedSpacing);
+#endif
+
+		[Export ("spacing")]
+		nfloat Spacing { get; }
+
+		[Export ("isFlexibleSpacing")]
+		bool IsFlexibleSpacing { get; }
+
+		[Export ("isFixedSpacing")]
+		bool IsFixedSpacing { get; }
+	}
+
+	[NoWatch, TV (13,0), iOS (13,0)]
+	[MacCatalyst (13, 0)]
+	[Mac (10,15)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface NSCollectionLayoutEdgeSpacing : NSCopying
+	{
+		[Static]
+		[Export ("spacingForLeading:top:trailing:bottom:")]
+#if MONOMAC && !XAMCORE_4_0
+		NSCollectionLayoutEdgeSpacing CreateSpacing ([NullAllowed] NSCollectionLayoutSpacing leading, [NullAllowed] NSCollectionLayoutSpacing top, [NullAllowed] NSCollectionLayoutSpacing trailing, [NullAllowed] NSCollectionLayoutSpacing bottom);
+#else
+		NSCollectionLayoutEdgeSpacing Create ([NullAllowed] NSCollectionLayoutSpacing leading, [NullAllowed] NSCollectionLayoutSpacing top, [NullAllowed] NSCollectionLayoutSpacing trailing, [NullAllowed] NSCollectionLayoutSpacing bottom);
+#endif
+
+		[NullAllowed, Export ("leading")]
+		NSCollectionLayoutSpacing Leading { get; }
+
+		[NullAllowed, Export ("top")]
+		NSCollectionLayoutSpacing Top { get; }
+
+		[NullAllowed, Export ("trailing")]
+		NSCollectionLayoutSpacing Trailing { get; }
+
+		[NullAllowed, Export ("bottom")]
+		NSCollectionLayoutSpacing Bottom { get; }
+	}
+
+	[NoWatch, TV (13,0), iOS (13,0)]
+	[MacCatalyst (13, 0)]
+	[Mac (10,15)]
+	[BaseType (typeof (NSCollectionLayoutItem))]
+	[DisableDefaultCtor]
+	interface NSCollectionLayoutSupplementaryItem : NSCopying
+	{
+		[Static]
+		[Export ("supplementaryItemWithLayoutSize:elementKind:containerAnchor:")]
+		NSCollectionLayoutSupplementaryItem Create (NSCollectionLayoutSize layoutSize, string elementKind, NSCollectionLayoutAnchor containerAnchor);
+
+		[Static]
+		[Export ("supplementaryItemWithLayoutSize:elementKind:containerAnchor:itemAnchor:")]
+		NSCollectionLayoutSupplementaryItem Create (NSCollectionLayoutSize layoutSize, string elementKind, NSCollectionLayoutAnchor containerAnchor, NSCollectionLayoutAnchor itemAnchor);
+
+		[Export ("zIndex")]
+		nint ZIndex { get; set; }
+
+		[Export ("elementKind")]
+		string ElementKind { get; }
+
+		[Export ("containerAnchor")]
+		NSCollectionLayoutAnchor ContainerAnchor { get; }
+
+		[NullAllowed, Export ("itemAnchor")]
+		NSCollectionLayoutAnchor ItemAnchor { get; }
+	}
+
+	[NoWatch, TV (13,0), iOS (13,0)]
+	[MacCatalyst (13, 0)]
+	[Mac (10,15)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface NSCollectionLayoutItem : NSCopying
+	{
+		[Static]
+		[Export ("itemWithLayoutSize:")]
+		NSCollectionLayoutItem Create (NSCollectionLayoutSize layoutSize);
+
+		[Static]
+		[Export ("itemWithLayoutSize:supplementaryItems:")]
+		NSCollectionLayoutItem Create (NSCollectionLayoutSize layoutSize, params NSCollectionLayoutSupplementaryItem[] supplementaryItems);
+
+		[Export ("contentInsets", ArgumentSemantic.Assign)]
+		NSDirectionalEdgeInsets ContentInsets { get; set; }
+
+		[NullAllowed, Export ("edgeSpacing", ArgumentSemantic.Copy)]
+		NSCollectionLayoutEdgeSpacing EdgeSpacing { get; set; }
+
+		[Export ("layoutSize")]
+		NSCollectionLayoutSize LayoutSize { get; }
+
+		[Export ("supplementaryItems")]
+		NSCollectionLayoutSupplementaryItem[] SupplementaryItems { get; }
+	}
+
+	[NoWatch, TV (13,0), iOS (13,0)]
+	[MacCatalyst (13, 0)]
+	[Mac (10,15)]
+	[BaseType (typeof (NSCollectionLayoutSupplementaryItem))]
+	[DisableDefaultCtor]
+	interface NSCollectionLayoutBoundarySupplementaryItem : NSCopying
+	{
+		[Static]
+		[Export ("boundarySupplementaryItemWithLayoutSize:elementKind:alignment:")]
+		NSCollectionLayoutBoundarySupplementaryItem Create (NSCollectionLayoutSize layoutSize, string elementKind, NSRectAlignment alignment);
+
+		[Static]
+		[Export ("boundarySupplementaryItemWithLayoutSize:elementKind:alignment:absoluteOffset:")]
+		NSCollectionLayoutBoundarySupplementaryItem Create (NSCollectionLayoutSize layoutSize, string elementKind, NSRectAlignment alignment, CGPoint absoluteOffset);
+
+		[Export ("extendsBoundary")]
+		bool ExtendsBoundary { get; set; }
+
+		[Export ("pinToVisibleBounds")]
+		bool PinToVisibleBounds { get; set; }
+
+		[Export ("alignment")]
+		NSRectAlignment Alignment { get; }
+
+		[Export ("offset")]
+		CGPoint Offset { get; }
+	}
+
+	[MacCatalyst (13, 0)]
+	[NoWatch, TV (13,0), iOS (13,0)]
+	[Mac (10,15)]
+	[BaseType (typeof (NSCollectionLayoutItem))]
+	[DisableDefaultCtor]
+	interface NSCollectionLayoutDecorationItem : NSCopying
+	{
+		[Static]
+		[Export ("backgroundDecorationItemWithElementKind:")]
+		NSCollectionLayoutDecorationItem Create (string elementKind);
+
+		[Export ("zIndex")]
+		nint ZIndex { get; set; }
+
+		[Export ("elementKind")]
+		string ElementKind { get; }
+	}
+
+	[iOS (9,0), Watch (2,0)]
+	[MacCatalyst (13,0)]
+	[Mac (10,11)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor] // - (instancetype)init NS_UNAVAILABLE;
+	interface NSDataAsset : NSCopying
+	{
+		[Export ("initWithName:")]
+		IntPtr Constructor (string name);
+
+		[Export ("initWithName:bundle:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string name, NSBundle bundle);
+
+		[Export ("name")]
+		string Name { get; }
+
+		[Export ("data", ArgumentSemantic.Copy)]
+		NSData Data { get; }
+
+		[Export ("typeIdentifier")] // Uniform Type Identifier
+		NSString TypeIdentifier { get; }
+	}
+
+	[MacCatalyst (13,0)]
+	[Watch (6,0)]
+	[BaseType (typeof (NSObject))]
+	[DesignatedDefaultCtor]
+	interface NSShadow : NSSecureCoding, NSCopying {
+		[NoiOS][NoMacCatalyst][NoTV][NoWatch]
+		[Export ("set")]
+		void Set ();
+
+		[Export ("shadowOffset", ArgumentSemantic.Assign)]
+		CGSize ShadowOffset { get; set; }
+
+		[Export ("shadowBlurRadius", ArgumentSemantic.Assign)]
+		nfloat ShadowBlurRadius { get; set;  }
+
+#if MONOMAC
+		[Export ("shadowColor", ArgumentSemantic.Copy)]
+#else
+		[Export ("shadowColor", ArgumentSemantic.Retain), NullAllowed]
+#endif
+		NSColor ShadowColor { get; set;  }
+	}
+
+	[iOS (7,0)]
+	[MacCatalyst (13,0)]
+	[BaseType (typeof (NSObject))]
+	interface NSTextTab : NSSecureCoding, NSCopying {
+		[DesignatedInitializer]
+		[Export ("initWithTextAlignment:location:options:")]
+		[PostGet ("Options")]
+		IntPtr Constructor (TextAlignment alignment, nfloat location, NSDictionary options);
+
+		[NoiOS][NoMacCatalyst][NoTV][NoWatch]
+		[Export ("initWithType:location:")]
+		IntPtr Constructor (NSTextTabType type, nfloat location);
+
+		[Export ("alignment")]
+		TextAlignment Alignment { get; }
+
+		[Export ("options")]
+		NSDictionary Options { get; }
+
+		[Export ("location")]
+		nfloat Location { get; }
+
+		[NoiOS][NoMacCatalyst][NoTV][NoWatch]
+		[Export ("tabStopType")]
+		NSTextTabType TabStopType { get; }
+
+		[Mac (10,11)]
+		[Static]
+		[Export ("columnTerminatorsForLocale:")]
+		NSCharacterSet GetColumnTerminators ([NullAllowed] NSLocale locale);
+
+		[Field ("NSTabColumnTerminatorsAttributeName")]
+		NSString ColumnTerminatorsAttributeName { get; }
+	}
+
+	[NoWatch]
+	[MacCatalyst (13,0)]
+	[Protocol]
+	// no [Model] since it's not exposed in any API
+	// only NSTextContainer conforms to it but it's only queried by iOS itself
+	interface NSTextLayoutOrientationProvider {
+		[Abstract]
+		[Export ("layoutOrientation")]
+		NSTextLayoutOrientation LayoutOrientation {
+			get;
+#if !XAMCORE_3_0 && !MONOMAC
+			[NotImplemented] set;
+#endif
+		}
+	}
+
+	[NoWatch]
+	[iOS (7,0)]
+	[BaseType (typeof (NSObject))]
+	partial interface NSTextContainer : NSTextLayoutOrientationProvider, NSSecureCoding {
+		[NoMac]
+		[DesignatedInitializer]
+		[Export ("initWithSize:")]
+		IntPtr Constructor (CGSize size);
+
+		[NoiOS][NoMacCatalyst][NoTV]
+		[Export ("initWithContainerSize:"), Internal]
+		[Sealed]
+		IntPtr InitWithContainerSize (CGSize size);
+
+		[NoiOS][NoMacCatalyst][NoTV]
+		[Mac (10,11)]
+		[Export ("initWithSize:"), Internal]
+		[Sealed]
+		IntPtr InitWithSize (CGSize size);
+
+		[NullAllowed] // by default this property is null
+		[Export ("layoutManager", ArgumentSemantic.Assign)]
+		NSLayoutManager LayoutManager { get; set; }
+
+		[Mac (10,11)]
+		[Export ("size")]
+		CGSize Size { get; set; }
+
+		[Mac (10,11)]
+		[Export ("exclusionPaths", ArgumentSemantic.Copy)]
+		BezierPath [] ExclusionPaths { get; set; }
+
+		[Mac (10,11)]
+		[Export ("lineBreakMode")]
+		LineBreakMode LineBreakMode { get; set; }
+
+		[Export ("lineFragmentPadding")]
+		nfloat LineFragmentPadding { get; set; }
+
+		[Mac (10,11)]
+		[Export ("maximumNumberOfLines")]
+		nuint MaximumNumberOfLines { get; set; }
+
+		[Mac (10,11)]
+		[Export ("lineFragmentRectForProposedRect:atIndex:writingDirection:remainingRect:")]
+#if MONOMAC && !XAMCORE_4_0
+		CGRect GetLineFragmentRect (CGRect proposedRect, nuint characterIndex, NSWritingDirection baseWritingDirection, ref CGRect remainingRect);
+#else
+		CGRect GetLineFragmentRect (CGRect proposedRect, nuint characterIndex, NSWritingDirection baseWritingDirection, out CGRect remainingRect);
+#endif
+
+		[Export ("widthTracksTextView")]
+		bool WidthTracksTextView { get; set; }
+
+		[Export ("heightTracksTextView")]
+		bool HeightTracksTextView { get; set; }
+
+		[iOS (9,0)]
+		[Export ("replaceLayoutManager:")]
+		void ReplaceLayoutManager (NSLayoutManager newLayoutManager);
+
+		[iOS (9,0)]
+		[Export ("simpleRectangularTextContainer")]
+		bool IsSimpleRectangularTextContainer { [Bind ("isSimpleRectangularTextContainer")] get; }
+
+		[NoiOS][NoMacCatalyst][NoTV]
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
+		[Export ("containsPoint:")]
+		bool ContainsPoint (CGPoint point);
+
+		[NoiOS][NoMacCatalyst][NoTV]
+		[Export ("textView", ArgumentSemantic.Weak)]
+		NSTextView TextView { get; set; }
+
+		[NoiOS][NoMacCatalyst][NoTV]
+		[Availability (Deprecated = Platform.Mac_10_11, Message = "Use Size instead.")]
+		[Export ("containerSize")]
+		CGSize ContainerSize { get; set; }
+	}
+
+	[ThreadSafe]
+	[Category, BaseType (typeof (NSString))]
+	interface NSExtendedStringDrawing {
+		[iOS (7,0)]
+		[Mac (10,11)]
+		[Export ("drawWithRect:options:attributes:context:")]
+		void WeakDrawString (CGRect rect, NSStringDrawingOptions options, [NullAllowed] NSDictionary attributes, [NullAllowed] NSStringDrawingContext context);
+
+		[iOS (7,0)]
+		[Mac (10,11)]
+		[Wrap ("WeakDrawString (This, rect, options, attributes.GetDictionary (), context)")]
+		void DrawString (CGRect rect, NSStringDrawingOptions options, StringAttributes attributes, [NullAllowed] NSStringDrawingContext context);
+
+		[iOS (7,0)]
+		[Mac (10,11)]
+		[Export ("boundingRectWithSize:options:attributes:context:")]
+		CGRect WeakGetBoundingRect (CGSize size, NSStringDrawingOptions options, [NullAllowed] NSDictionary attributes, [NullAllowed] NSStringDrawingContext context);
+
+		[iOS (7,0)]
+		[Mac (10,11)]
+		[Wrap ("WeakGetBoundingRect (This, size, options, attributes.GetDictionary (), context)")]
+		CGRect GetBoundingRect (CGSize size, NSStringDrawingOptions options, StringAttributes attributes, [NullAllowed] NSStringDrawingContext context);
 	}
 }

@@ -3143,11 +3143,14 @@ public partial class Generator : IMemberGatherer {
 	
 	// this attribute allows the linker to be more clever in removing unused code in bindings - without risking breaking user code
 	// only generate those for monotouch now since we can ensure they will be linked away before reaching the devices
-	public void GeneratedCode (StreamWriter sw, int tabs)
+	public void GeneratedCode (StreamWriter sw, int tabs, bool optimizable = true)
 	{
 		for (int i=0; i < tabs; i++)
 			sw.Write ('\t');
-		sw.WriteLine ("[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]");
+		sw.Write ("[BindingImpl (BindingImplOptions.GeneratedCode");
+		if (optimizable)
+			sw.Write (" | BindingImplOptions.Optimizable");
+		 sw.WriteLine (")]");
 	}
 
 	static void WriteIsDirectBindingCondition (StreamWriter sw, ref int tabs, bool? is_direct_binding, string is_direct_binding_value, Func<string> trueCode, Func<string> falseCode)
@@ -3184,9 +3187,9 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 	
-	public void print_generated_code ()
+	public void print_generated_code (bool optimizable = true)
 	{
-		GeneratedCode (sw, indent);
+		GeneratedCode (sw, indent, optimizable);
 	}
 
 	public void print (string format)
@@ -7422,7 +7425,7 @@ public partial class Generator : IMemberGatherer {
 			if (!is_static_class){
 				var disposeAttr = AttributeManager.GetCustomAttributes<DisposeAttribute> (type);
 				if (disposeAttr.Length > 0 || instance_fields_to_clear_on_dispose.Count > 0){
-					print_generated_code ();
+					print_generated_code (optimizable: disposeAttr.Length == 0);
 					print ("protected override void Dispose (bool disposing)");
 					print ("{");
 					indent++;

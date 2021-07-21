@@ -60,7 +60,10 @@ namespace LinkAll {
 	// we want the tests to be available because we use the linker
 	[Preserve (AllMembers = true)]
 	public class LinkAllRegressionTest {
-#if __IOS__
+#if __MACCATALYST__
+		public const string NamespacePrefix = "";
+		public const string AssemblyName = "Xamarin.MacCatalyst";
+#elif __IOS__
 		public const string NamespacePrefix = "";
 		public const string AssemblyName = "Xamarin.iOS";
 #elif __TVOS__
@@ -211,7 +214,8 @@ namespace LinkAll {
 		{
 #if !__WATCHOS__
 			// for (future) nunit[lite] platform detection - if this test fails then platform detection won't work
-			Assert.NotNull (Helper.GetType (NamespacePrefix + "UIKit.UIApplicationDelegate, " + AssemblyName), "UIApplicationDelegate");
+			var typename = NamespacePrefix + "UIKit.UIApplicationDelegate, " + AssemblyName;
+			Assert.NotNull (Helper.GetType (typename), typename);
 #endif
 #if NET
 			Assert.Null (Helper.GetType ("Mono.Runtime"), "Mono.Runtime");
