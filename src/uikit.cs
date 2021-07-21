@@ -371,69 +371,6 @@ namespace UIKit {
 	}
 #endif // !WATCH
 
-#if !WATCH
-	[Protocol]
-	// no [Model] since it's not exposed in any API 
-	// only NSTextContainer conforms to it but it's only queried by iOS itself
-	interface NSTextLayoutOrientationProvider {
-
-		[Abstract]
-		[Export ("layoutOrientation")]
-		NSTextLayoutOrientation LayoutOrientation {
-			get;
-#if !XAMCORE_3_0
-			[NotImplemented] set;
-#endif
-		}
-	}
-
-	[iOS (7,0)]
-	[BaseType (typeof (NSObject))]
-	partial interface NSTextContainer : NSTextLayoutOrientationProvider, NSSecureCoding {
-		[DesignatedInitializer]
-		[Export ("initWithSize:")]
-		IntPtr Constructor (CGSize size);
-
-		[NullAllowed] // by default this property is null
-		[Export ("layoutManager", ArgumentSemantic.Assign)]
-		NSLayoutManager LayoutManager { get; set; }
-
-		[Export ("size")]
-		CGSize Size { get; set; }
-
-		[NullAllowed] // by default this property is null
-		[Export ("exclusionPaths", ArgumentSemantic.Copy)]
-		UIBezierPath [] ExclusionPaths { get; set; }
-
-		[Export ("lineBreakMode")]
-		UILineBreakMode LineBreakMode { get; set; }
-
-		[Export ("lineFragmentPadding")]
-		nfloat LineFragmentPadding { get; set; }
-
-		[Export ("maximumNumberOfLines")]
-		nuint MaximumNumberOfLines { get; set; }
-
-		[Export ("lineFragmentRectForProposedRect:atIndex:writingDirection:remainingRect:")]
-		CGRect GetLineFragmentRect (CGRect proposedRect, nuint characterIndex, NSWritingDirection baseWritingDirection, out CGRect remainingRect);
-
-		[Export ("widthTracksTextView")]
-		bool WidthTracksTextView { get; set; }
-
-		[Export ("heightTracksTextView")]
-		bool HeightTracksTextView { get; set; }
-
-		[iOS (9,0)]
-		[Export ("replaceLayoutManager:")]
-		void ReplaceLayoutManager (NSLayoutManager newLayoutManager);
-
-		[iOS (9,0)]
-		[Export ("simpleRectangularTextContainer")]
-		bool IsSimpleRectangularTextContainer { [Bind ("isSimpleRectangularTextContainer")] get; }
-		
-	}
-#endif // !WATCH
-
 	[Category]
 	[BaseType (typeof (NSCoder))]
 	interface NSCoder_UIGeometryKeyedCoding {
@@ -16905,25 +16842,6 @@ namespace UIKit {
 		[iOS (7,0)]
 		[Wrap ("WeakDrawString (This, rect, attributes.GetDictionary ())")]
 		void DrawString (CGRect rect, UIStringAttributes attributes);
-	}
-
-	[Category, BaseType (typeof (NSString))]
-	interface NSExtendedStringDrawing {
-		[iOS (7,0)]
-		[Export ("drawWithRect:options:attributes:context:")]
-		void WeakDrawString (CGRect rect, NSStringDrawingOptions options, [NullAllowed] NSDictionary attributes, [NullAllowed] NSStringDrawingContext context);
-
-		[iOS (7,0)]
-		[Wrap ("WeakDrawString (This, rect, options, attributes.GetDictionary (), context)")]
-		void DrawString (CGRect rect, NSStringDrawingOptions options, UIStringAttributes attributes, [NullAllowed] NSStringDrawingContext context);
-		
-		[iOS (7,0)]
-		[Export ("boundingRectWithSize:options:attributes:context:")]
-		CGRect WeakGetBoundingRect (CGSize size, NSStringDrawingOptions options, [NullAllowed] NSDictionary attributes, [NullAllowed] NSStringDrawingContext context);
-
-		[iOS (7,0)]
-		[Wrap ("WeakGetBoundingRect (This, size, options, attributes.GetDictionary (), context)")]
-		CGRect GetBoundingRect (CGSize size, NSStringDrawingOptions options, UIStringAttributes attributes, [NullAllowed] NSStringDrawingContext context);
 	}
 
 #if !WATCH

@@ -51,17 +51,21 @@ using UITraitCollection=System.Object;
 #endif // !MONOMAC
 
 #if MONOMAC
+using BezierPath=AppKit.NSBezierPath;
 using Image=AppKit.NSImage;
 using TextAlignment=AppKit.NSTextAlignment;
 using LineBreakMode=AppKit.NSLineBreakMode;
 using CollectionLayoutSectionOrthogonalScrollingBehavior=AppKit.NSCollectionLayoutSectionOrthogonalScrollingBehavior;
 using CollectionElementCategory=AppKit.NSCollectionElementCategory;
+using StringAttributes=AppKit.NSStringAttributes;
 #else
+using BezierPath=UIKit.UIBezierPath;
 using Image=UIKit.UIImage;
 using TextAlignment=UIKit.UITextAlignment;
 using LineBreakMode=UIKit.UILineBreakMode;
 using CollectionLayoutSectionOrthogonalScrollingBehavior=UIKit.UICollectionLayoutSectionOrthogonalScrollingBehavior;
 using CollectionElementCategory=UIKit.UICollectionElementCategory;
+using StringAttributes=UIKit.UIStringAttributes;
 #endif
 
 #if MONOMAC
@@ -2639,5 +2643,125 @@ namespace UIKit {
 
 		[Field ("NSTabColumnTerminatorsAttributeName")]
 		NSString ColumnTerminatorsAttributeName { get; }
+	}
+
+	[NoWatch]
+	[MacCatalyst (13,0)]
+	[Protocol]
+	// no [Model] since it's not exposed in any API
+	// only NSTextContainer conforms to it but it's only queried by iOS itself
+	interface NSTextLayoutOrientationProvider {
+		[Abstract]
+		[Export ("layoutOrientation")]
+		NSTextLayoutOrientation LayoutOrientation {
+			get;
+#if !XAMCORE_3_0 && !MONOMAC
+			[NotImplemented] set;
+#endif
+		}
+	}
+
+	[NoWatch]
+	[iOS (7,0)]
+	[BaseType (typeof (NSObject))]
+	partial interface NSTextContainer : NSTextLayoutOrientationProvider, NSSecureCoding {
+		[NoMac]
+		[DesignatedInitializer]
+		[Export ("initWithSize:")]
+		IntPtr Constructor (CGSize size);
+
+		[NoiOS][NoMacCatalyst][NoTV]
+		[Export ("initWithContainerSize:"), Internal]
+		[Sealed]
+		IntPtr InitWithContainerSize (CGSize size);
+
+		[NoiOS][NoMacCatalyst][NoTV]
+		[Mac (10,11)]
+		[Export ("initWithSize:"), Internal]
+		[Sealed]
+		IntPtr InitWithSize (CGSize size);
+
+		[NullAllowed] // by default this property is null
+		[Export ("layoutManager", ArgumentSemantic.Assign)]
+		NSLayoutManager LayoutManager { get; set; }
+
+		[Mac (10,11)]
+		[Export ("size")]
+		CGSize Size { get; set; }
+
+		[Mac (10,11)]
+		[Export ("exclusionPaths", ArgumentSemantic.Copy)]
+		BezierPath [] ExclusionPaths { get; set; }
+
+		[Mac (10,11)]
+		[Export ("lineBreakMode")]
+		LineBreakMode LineBreakMode { get; set; }
+
+		[Export ("lineFragmentPadding")]
+		nfloat LineFragmentPadding { get; set; }
+
+		[Mac (10,11)]
+		[Export ("maximumNumberOfLines")]
+		nuint MaximumNumberOfLines { get; set; }
+
+		[Mac (10,11)]
+		[Export ("lineFragmentRectForProposedRect:atIndex:writingDirection:remainingRect:")]
+#if MONOMAC && !XAMCORE_4_0
+		CGRect GetLineFragmentRect (CGRect proposedRect, nuint characterIndex, NSWritingDirection baseWritingDirection, ref CGRect remainingRect);
+#else
+		CGRect GetLineFragmentRect (CGRect proposedRect, nuint characterIndex, NSWritingDirection baseWritingDirection, out CGRect remainingRect);
+#endif
+
+		[Export ("widthTracksTextView")]
+		bool WidthTracksTextView { get; set; }
+
+		[Export ("heightTracksTextView")]
+		bool HeightTracksTextView { get; set; }
+
+		[iOS (9,0)]
+		[Export ("replaceLayoutManager:")]
+		void ReplaceLayoutManager (NSLayoutManager newLayoutManager);
+
+		[iOS (9,0)]
+		[Export ("simpleRectangularTextContainer")]
+		bool IsSimpleRectangularTextContainer { [Bind ("isSimpleRectangularTextContainer")] get; }
+
+		[NoiOS][NoMacCatalyst][NoTV]
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
+		[Export ("containsPoint:")]
+		bool ContainsPoint (CGPoint point);
+
+		[NoiOS][NoMacCatalyst][NoTV]
+		[Export ("textView", ArgumentSemantic.Weak)]
+		NSTextView TextView { get; set; }
+
+		[NoiOS][NoMacCatalyst][NoTV]
+		[Availability (Deprecated = Platform.Mac_10_11, Message = "Use Size instead.")]
+		[Export ("containerSize")]
+		CGSize ContainerSize { get; set; }
+	}
+
+	[ThreadSafe]
+	[Category, BaseType (typeof (NSString))]
+	interface NSExtendedStringDrawing {
+		[iOS (7,0)]
+		[Mac (10,11)]
+		[Export ("drawWithRect:options:attributes:context:")]
+		void WeakDrawString (CGRect rect, NSStringDrawingOptions options, [NullAllowed] NSDictionary attributes, [NullAllowed] NSStringDrawingContext context);
+
+		[iOS (7,0)]
+		[Mac (10,11)]
+		[Wrap ("WeakDrawString (This, rect, options, attributes.GetDictionary (), context)")]
+		void DrawString (CGRect rect, NSStringDrawingOptions options, StringAttributes attributes, [NullAllowed] NSStringDrawingContext context);
+
+		[iOS (7,0)]
+		[Mac (10,11)]
+		[Export ("boundingRectWithSize:options:attributes:context:")]
+		CGRect WeakGetBoundingRect (CGSize size, NSStringDrawingOptions options, [NullAllowed] NSDictionary attributes, [NullAllowed] NSStringDrawingContext context);
+
+		[iOS (7,0)]
+		[Mac (10,11)]
+		[Wrap ("WeakGetBoundingRect (This, size, options, attributes.GetDictionary (), context)")]
+		CGRect GetBoundingRect (CGSize size, NSStringDrawingOptions options, StringAttributes attributes, [NullAllowed] NSStringDrawingContext context);
 	}
 }

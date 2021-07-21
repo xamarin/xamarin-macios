@@ -9821,26 +9821,6 @@ namespace AppKit {
 		[Export ("drawInRect:")]
 		void DrawInRect (CGRect rect);
 	}
-		
-	[ThreadSafe]
-	[Category, BaseType (typeof (NSString))]
-	interface NSExtendedStringDrawing {
-		[Mac (10,11)]
-		[Export ("drawWithRect:options:attributes:context:")]
-		void WeakDrawString (CGRect rect, NSStringDrawingOptions options, [NullAllowed] NSDictionary attributes, [NullAllowed] NSStringDrawingContext context);
-
-		[Mac (10,11)]
-		[Wrap ("WeakDrawString (This, rect, options, attributes.GetDictionary (), context)")]
-		void DrawString (CGRect rect, NSStringDrawingOptions options, [NullAllowed] NSStringAttributes attributes, [NullAllowed] NSStringDrawingContext context);
-
-		[Mac (10,11)]
-		[Export ("boundingRectWithSize:options:attributes:context:")]
-		CGRect WeakGetBoundingRect (CGSize size, NSStringDrawingOptions options, [NullAllowed] NSDictionary attributes, [NullAllowed] NSStringDrawingContext context);
-
-		[Mac (10,11)]
-		[Wrap ("WeakGetBoundingRect (This, size, options, attributes.GetDictionary (), context)")]
-		CGRect GetBoundingRect (CGSize size, NSStringDrawingOptions options, [NullAllowed] NSStringAttributes attributes, [NullAllowed] NSStringDrawingContext context);
-	}
 
 	// @interface NSExtendedStringDrawing (NSAttributedString)
 	[ThreadSafe]
@@ -18213,73 +18193,6 @@ namespace AppKit {
 		bool HidesEmptyCells { get; set; }
 	}
 
-	[BaseType (typeof (NSObject))]
-	partial interface NSTextContainer : NSSecureCoding {
-		[Export ("initWithContainerSize:"), Internal]
-		[Sealed]
-		IntPtr InitWithContainerSize (CGSize size);
-
-		[Mac (10,11)]
-		[Export ("initWithSize:"), Internal]
-		[Sealed]
-		IntPtr InitWithSize (CGSize size);
-
-		[Export ("replaceLayoutManager:")]
-		void ReplaceLayoutManager (NSLayoutManager newLayoutManager);
-
-		// FIXME: Binding
-		//[Export ("lineFragmentRectForProposedRect:sweepDirection:movementDirection:remainingRect:")]
-		//CGRect LineFragmentRect (CGRect proposedRect, NSLineSweepDirection sweepDirection, NSLineMovementDirection movementDirection, NSRectPointer remainingRect);
-
-		[Export ("isSimpleRectangularTextContainer")]
-		bool IsSimpleRectangularTextContainer { get; }
-
-		[Deprecated (PlatformName.MacOSX, 10, 11)]
-		[Export ("containsPoint:")]
-		bool ContainsPoint (CGPoint point);
-
-		//Detected properties
-		[Export ("layoutManager")]
-		NSLayoutManager LayoutManager { get; set; }
-
-		[Export ("textView", ArgumentSemantic.Weak)]
-		NSTextView TextView { get; set; }
-
-		[Export ("widthTracksTextView")]
-		bool WidthTracksTextView { get; set; }
-
-		[Export ("heightTracksTextView")]
-		bool HeightTracksTextView { get; set; }
-
-		[Availability (Deprecated = Platform.Mac_10_11, Message = "Use Size instead.")]
-		[Export ("containerSize")]
-		CGSize ContainerSize { get; set; }
-
-		[Export ("lineFragmentPadding")]
-		nfloat LineFragmentPadding { get; set; }
-
-		[Mac (10,11)]
-		[Export ("size", ArgumentSemantic.Assign)]
-		CGSize Size { get; set; }
-
-		[Mac (10,11)]
-		[Export ("exclusionPaths", ArgumentSemantic.Copy)]
-		// [Verify (StronglyTypedNSArray)]
-		NSBezierPath[] ExclusionPaths { get; set; }
-
-		[Mac (10,11)]
-		[Export ("lineBreakMode", ArgumentSemantic.Assign)]
-		NSLineBreakMode LineBreakMode { get; set; }
-
-		[Mac (10,11)]
-		[Export ("maximumNumberOfLines", ArgumentSemantic.Assign)]
-		nuint MaximumNumberOfLines { get; set; }
-
-		[Mac (10,11)]
-		[Export ("lineFragmentRectForProposedRect:atIndex:writingDirection:remainingRect:")]
-		CGRect GetLineFragmentRect (CGRect proposedRect, nuint characterIndex, NSWritingDirection baseWritingDirection, ref CGRect remainingRect);
-	}
-
 	[Protocol]
 	interface NSTextInput
 	{
@@ -22095,12 +22008,6 @@ namespace AppKit {
 		[Export ("reopenDocumentForURL:withContentsOfURL:display:completionHandler:")]
 		void ReopenDocumentForUrl ([NullAllowed] NSUrl url, NSUrl contentsUrl,
 			bool displayDocument, OpenDocumentCompletionHandler completionHandler);
-	}
-
-	[Model]
-	interface NSTextLayoutOrientationProvider {
-		[Export ("layoutOrientation")]
-		NSTextLayoutOrientation LayoutOrientation { get; }
 	}
 
 	partial interface NSLayoutManager {
