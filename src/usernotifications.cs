@@ -659,15 +659,15 @@ namespace UserNotifications {
 		[Export ("announcementSetting")]
 		UNNotificationSetting AnnouncementSetting { get; }
 
-		[iOS (15,0), Mac (12,0), MacCatalyst (15,0), Watch (8,0)]
+		[iOS (15,0), Mac (12,0), MacCatalyst (15,0), Watch (8,0), TV (15,0)]
 		[Export ("timeSensitiveSetting")]
 		UNNotificationSetting TimeSensitiveSetting { get; }
 
-		[iOS (15,0), Mac (12,0), MacCatalyst (15,0), Watch (8,0)]
+		[iOS (15,0), Mac (12,0), MacCatalyst (15,0), Watch (8,0), TV (15,0)]
 		[Export ("scheduledDeliverySetting")]
 		UNNotificationSetting ScheduledDeliverySetting { get; }
 
-		[iOS (15,0), Mac (12,0), MacCatalyst (15,0), Watch (8,0)]
+		[iOS (15,0), Mac (12,0), MacCatalyst (15,0), Watch (8,0), TV (15,0)]
 		[Export ("directMessagesSetting")]
 		UNNotificationSetting DirectMessagesSetting { get; }
 	}
