@@ -39,6 +39,9 @@ namespace MetalKit {
 #endif
 	interface MTKView : NSCoding, CALayerDelegate {
 
+		[Export ("init")]
+		IntPtr Constructor ();
+
 		[Export ("initWithFrame:device:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (CGRect frameRect, [NullAllowed] IMTLDevice device);
