@@ -63,7 +63,7 @@ strip-dotnet:
 
 # this target will copy NuGet.config and global.json to the directories that need it for their .NET build to work correctly.
 copy-dotnet-config: $(TARGETS)
-	$(Q) for dir in $(shell ls -d $(abspath $(TOP)/tests/*/dotnet)); do \
-		$(CP) -c NuGet.config global.json $$dir; \
+	$(Q) for dir in $(abspath $(TOP))/tests/*/dotnet $(abspath $(TOP))/tests/linker/*/*/dotnet; do \
+		$(CP) -c NuGet.config global.json "$$dir"; \
 	done
 	$(Q) $(CP) -c NuGet.config global.json $(TOP)/external/Touch.Unit/Touch.Client/dotnet
