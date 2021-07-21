@@ -80,7 +80,7 @@ namespace StoreKit {
 		[Export ("timeRemaining")]
 		double TimeRemaining { get;  }
 
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 		[return: NullAllowed]
 		[Export ("contentURLForProductID:")]
 		[Static]
@@ -659,6 +659,10 @@ namespace StoreKit {
 		[MacCatalyst (14,0)]
 		[Field ("SKStoreProductParameterAdNetworkVersion")]
 		NSString AdNetworkVersion { get; }
+		
+		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[Field ("SKStoreProductParameterCustomProductPageIdentifier")]
+		NSString CustomProductPageIdentifier { get; }
 	}
 
 #if !MONOMAC
@@ -774,7 +778,7 @@ namespace StoreKit {
 		[Static]
 		[Async]
 		[Export ("requestAuthorization:")]
-		void RequestAuthorization (Action<SKCloudServiceAuthorizationStatus> handler);
+		void RequestAuthorization (Action<SKCloudServiceAuthorizationStatus> completionHandler);
 
 		[Async]
 		[Export ("requestStorefrontIdentifierWithCompletionHandler:")]
@@ -1076,6 +1080,16 @@ namespace StoreKit {
 		[NullAllowed, Export ("providerToken", ArgumentSemantic.Retain)]
 		string ProviderToken { get; set; }
 
+		[iOS (15, 0), MacCatalyst (15, 0)]
+		[NullAllowed]
+		[Export ("customProductPageIdentifier", ArgumentSemantic.Retain)]
+		string CustomProductPageIdentifier { get; set; }
+
+		[iOS (15, 0), MacCatalyst (15, 0)]
+		[NullAllowed]
+		[Export ("latestReleaseID", ArgumentSemantic.Retain)]
+		string LatestReleaseID { get; set; }
+
 		[Export ("position", ArgumentSemantic.Assign)]
 		SKOverlayPosition Position { get; set; }
 
@@ -1104,6 +1118,16 @@ namespace StoreKit {
 
 		[NullAllowed, Export ("providerToken", ArgumentSemantic.Retain)]
 		string ProviderToken { get; set; }
+
+		[iOS (15, 0), MacCatalyst (15, 0)]
+		[NullAllowed]
+		[Export ("customProductPageIdentifier", ArgumentSemantic.Retain)]
+		string CustomProductPageIdentifier { get; set; }
+
+		[iOS (15, 0), MacCatalyst (15, 0)]
+		[NullAllowed]
+		[Export ("latestReleaseID", ArgumentSemantic.Retain)]
+		string LatestReleaseID { get; set; }
 
 		[Export ("position", ArgumentSemantic.Assign)]
 		SKOverlayPosition Position { get; set; }
