@@ -1,5 +1,0 @@
-!missing-protocol-member! SCNAnimatable::removeAllAnimationsWithBlendOutDuration: not found
-!missing-selector! SCNParticleSystem::setWritesToDepthBuffer: not bound
-!missing-selector! SCNParticleSystem::writesToDepthBuffer not bound
-!missing-protocol-member! SCNShadable::minimumLanguageVersion not found
-!missing-protocol-member! SCNShadable::setMinimumLanguageVersion: not found

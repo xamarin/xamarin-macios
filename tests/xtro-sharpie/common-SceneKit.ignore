@@ -2,6 +2,7 @@
 ## we cannot add abstract members to existing SCNSceneRenderer or SCNAnimatable protocols (breaking changes)
 !incorrect-protocol-member! SCNAnimatable::addAnimationPlayer:forKey: is REQUIRED and should be abstract
 !incorrect-protocol-member! SCNAnimatable::animationPlayerForKey: is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNAnimatable::removeAllAnimationsWithBlendOutDuration: is REQUIRED and should be abstract
 !incorrect-protocol-member! SCNAnimatable::removeAnimationForKey:blendOutDuration: is REQUIRED and should be abstract
 !incorrect-protocol-member! SCNAnimatable::setSpeed:forAnimationKey: is REQUIRED and should be abstract
 !incorrect-protocol-member! SCNSceneRenderer::audioEngine is REQUIRED and should be abstract
