@@ -117,7 +117,7 @@ namespace CoreImage {
 			var ret = new CIFilter [count];
 			for (nuint i = 0; i < count; i++){
 				IntPtr filterHandle = filters.ValueAt (i);
-				string filterName = CIFilter.GetFilterName (filterHandle);
+				string? filterName = CIFilter.GetFilterName (filterHandle);
 									 
 				ret [i] = CIFilter.FromName (filterName, filterHandle);
 			}

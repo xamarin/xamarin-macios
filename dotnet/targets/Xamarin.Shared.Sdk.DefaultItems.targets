@@ -10,11 +10,6 @@
     <EnableDefaultwatchOSItems Condition=" '$(_PlatformName)' == 'watchOS' And '$(EnableDefaultwatchOSItems)' == '' ">$(EnableDefaultItems)</EnableDefaultwatchOSItems>
     <EnableDefaultmacOSItems Condition=" '$(_PlatformName)' == 'macOS' And '$(EnableDefaultmacOSItems)' == '' ">$(EnableDefaultItems)</EnableDefaultmacOSItems>
     <EnableDefaultMacCatalystItems Condition=" '$(_PlatformName)' == 'MacCatalyst' And '$(EnableDefaultMacCatalystItems)' == '' ">$(EnableDefaultItems)</EnableDefaultMacCatalystItems>
-    <_EnableDefaultXamarinItems Condition=" '$(_PlatformName)' == 'iOS' ">$(EnableDefaultiOSItems)</_EnableDefaultXamarinItems>
-    <_EnableDefaultXamarinItems Condition=" '$(_PlatformName)' == 'tvOS' ">$(EnableDefaulttvOSItems)</_EnableDefaultXamarinItems>
-    <_EnableDefaultXamarinItems Condition=" '$(_PlatformName)' == 'watchOS' ">$(EnableDefaultwatchOSItems)</_EnableDefaultXamarinItems>
-    <_EnableDefaultXamarinItems Condition=" '$(_PlatformName)' == 'macOS' ">$(EnableDefaultmacOSItems)</_EnableDefaultXamarinItems>
-    <_EnableDefaultXamarinItems Condition=" '$(_PlatformName)' == 'MacCatalyst' ">$(EnableDefaultMacCatalystItems)</_EnableDefaultXamarinItems>
 
     <!-- Don't include default Compile items for binding projects, because that would pick up ApiDefinition.cs and StructsAndEnums.cs -->
     <EnableDefaultCompileItems Condition=" '$(IsBindingProject)' == 'true' ">false</EnableDefaultCompileItems>
@@ -29,33 +24,45 @@
     <TargetArchitectures Condition=" '$(_PlatformName)' != 'macOS' And '$(MtouchArch)' != '' ">$(MtouchArch)</TargetArchitectures>
   </PropertyGroup>
   <!-- If the old-style variables aren't set, figure it out using RuntimeIdentifier. -->
-  <!-- This is a variation of https://github.com/dotnet/sdk/blob/873d79d861cbd001488414b9875e53acbeaed890/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.RuntimeIdentifierInference.targets#L68-L96 -->
-  <!-- This doesn't cover every single possibility (in particular it does not handle ARMv7s, either as a thin or fat option, and the same for ARMv7k), but that can be done by passing /p:TargetArchitectures=ARMv7s to msbuild -->
-  <PropertyGroup Condition=" '$(TargetArchitectures)' == '' And '$(_PlatformName)' == 'iOS' ">
-    <TargetArchitectures Condition=" $(RuntimeIdentifier.EndsWith('-arm64')) Or $(RuntimeIdentifier.Contains('-arm64-')) ">ARM64</TargetArchitectures>
-    <TargetArchitectures Condition=" $(RuntimeIdentifier.EndsWith('-x64')) Or $(RuntimeIdentifier.Contains('-x64-')) ">x86_64</TargetArchitectures>
-    <TargetArchitectures Condition=" $(RuntimeIdentifier.EndsWith('-x86')) Or $(RuntimeIdentifier.Contains('-x86-')) ">i386</TargetArchitectures>
-    <TargetArchitectures Condition=" $(RuntimeIdentifier.EndsWith('-arm')) Or $(RuntimeIdentifier.Contains('-arm-')) ">ARMv7</TargetArchitectures>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(TargetArchitectures)' == '' And '$(_PlatformName)' == 'tvOS' ">
-    <TargetArchitectures Condition=" $(RuntimeIdentifier.EndsWith('-arm64')) Or $(RuntimeIdentifier.Contains('-arm64-')) ">ARM64</TargetArchitectures>
-    <TargetArchitectures Condition=" $(RuntimeIdentifier.EndsWith('-x64')) Or $(RuntimeIdentifier.Contains('-x64-')) ">x86_64</TargetArchitectures>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(TargetArchitectures)' == '' And '$(_PlatformName)' == 'watchOS' ">
-    <TargetArchitectures Condition=" $(RuntimeIdentifier.EndsWith('-x86')) Or $(RuntimeIdentifier.Contains('-x86-')) ">i386</TargetArchitectures>
-    <TargetArchitectures Condition=" $(RuntimeIdentifier.EndsWith('-arm')) Or $(RuntimeIdentifier.Contains('-arm-')) ">ARM64_32</TargetArchitectures>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(TargetArchitectures)' == '' And '$(_PlatformName)' == 'macOS' ">
-    <TargetArchitectures Condition=" '$(RuntimeIdentifier)' == 'osx-x64' ">x86_64</TargetArchitectures>
-    <TargetArchitectures Condition=" '$(RuntimeIdentifier)' == 'osx-arm64' ">ARM64</TargetArchitectures>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(TargetArchitectures)' == '' And '$(_PlatformName)' == 'MacCatalyst' ">
-    <TargetArchitectures Condition=" '$(RuntimeIdentifier)' == 'maccatalyst-x64' ">x86_64</TargetArchitectures>
-    <TargetArchitectures Condition=" '$(RuntimeIdentifier)' == 'maccatalyst-arm64' ">ARM64</TargetArchitectures>
+  <PropertyGroup Condition="'$(RuntimeIdentifiers)' != '' And '$(RuntimeIdentifier)' != '' ">
+    <!-- Check if both RuntimeIdentifier and RuntimeIdentifiers are set, in which case we clear RuntimeIdentifier -->
+    <!-- Also set a variable that says if this happens, so that we can show a warning later -->
+    <_RuntimeIdentifiersClashMessage>Both RuntimeIdentifier and RuntimeIdentifiers are set. The value for RuntimeIdentifier will be ignored.</_RuntimeIdentifiersClashMessage>
+    <!-- Clear RuntimeIdentifier -->
+    <RuntimeIdentifier />
   </PropertyGroup>
 
+  <PropertyGroup>
+    <_ComputeTargetArchitecturesDependsOn>
+      $(_ComputeTargetArchitecturesDependsOn);
+      _MapRuntimeIdentifierToTargetArchitecture
+    </_ComputeTargetArchitecturesDependsOn>
+  </PropertyGroup>
+
+  <!-- Map RuntimeIdentifier(s) to TargetArchitectures, which is what our old targets and tasks expect -->
+  <!-- This doesn't cover every single possibility (in particular it does not handle ARMv7s, either as a thin or fat option, and the same for ARMv7k), but that can be done by passing /p:TargetArchitectures=ARMv7s to msbuild -->
+  <Target Name="_MapRuntimeIdentifierToTargetArchitecture" Condition="'$(TargetArchitectures)' == ''">
+    <ItemGroup>
+        <!-- Convert RuntimeIdentifiers (a property) to an item group -->
+        <_RuntimeIdentifierWithTargetArchitecture Include="$(RuntimeIdentifiers);$(RuntimeIdentifier)" />
+        <!-- map the runtime identifier to a target architecture -->
+        <_RuntimeIdentifierWithTargetArchitecture Update="@(_RuntimeIdentifierWithTargetArchitecture)">
+            <TargetArchitecture Condition=" $([System.String]::Copy('%(Identity)').EndsWith('-arm64')) ">ARM64</TargetArchitecture>
+            <TargetArchitecture Condition=" $([System.String]::Copy('%(Identity)').EndsWith('-arm')) ">ARMv7</TargetArchitecture>
+            <TargetArchitecture Condition=" $([System.String]::Copy('%(Identity)').EndsWith('-x64')) ">x86_64</TargetArchitecture>
+            <TargetArchitecture Condition=" $([System.String]::Copy('%(Identity)').EndsWith('-x86')) ">i386</TargetArchitecture>
+        </_RuntimeIdentifierWithTargetArchitecture>
+        <_RuntimeIdentifiersWithoutTargetArchitecture Include="@(_RuntimeIdentifierWithTargetArchitecture)" Condition="'%(_RuntimeIdentifierWithTargetArchitecture.TargetArchitecture)' == ''" />
+    </ItemGroup>
+    <Error Condition="@(_RuntimeIdentifiersWithoutTargetArchitecture->Count()) != 0" Text="Unable to map the following RuntimeIdentifier values to a target architecture: @(_RuntimeIdentifiersWithoutTargetArchitecture)" />
+    <!-- Map the item group of runtime identifiers into the TargetArchitectures property -->
+    <PropertyGroup>
+      <TargetArchitectures>@(_RuntimeIdentifierWithTargetArchitecture -> '%(TargetArchitecture)', ', ')</TargetArchitectures>
+    </PropertyGroup>
+  </Target>
+
   <PropertyGroup Condition="'$(ComputedPlatform)' == '' And ('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS') ">
-    <ComputedPlatform Condition="$(TargetArchitectures.Contains('i386')) Or $(TargetArchitectures.Contains('x86_64'))">iPhoneSimulator</ComputedPlatform>
+    <ComputedPlatform Condition="$(RuntimeIdentifier.Contains('simulator')) Or $(RuntimeIdentifiers.Contains('simulator'))">iPhoneSimulator</ComputedPlatform>
     <ComputedPlatform Condition="'$(ComputedPlatform)' == ''">iPhone</ComputedPlatform>
   </PropertyGroup>
 

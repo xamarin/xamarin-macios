@@ -1,0 +1,2 @@
+# RPScreenRecorder does not have this constructor
+!missing-selector! RPScreenRecorder::init not bound

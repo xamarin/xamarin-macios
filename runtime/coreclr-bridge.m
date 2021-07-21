@@ -8,6 +8,7 @@
 
 #if defined (CORECLR_RUNTIME)
 
+#include <sys/stat.h>
 #include <inttypes.h>
 #include <pthread.h>
 
@@ -351,23 +352,147 @@ xamarin_enable_new_refcount ()
 	// Nothing to do here.
 }
 
+/**
+ * xamarin_bridge_decode_value:
+ * 
+ * This implementation is a slightly modified copy (to make it compile) of mono_metadata_decode_value
+ * https://github.com/dotnet/runtime/blob/08a7b2382799082eedb94d70fca6c66eb75f2872/src/mono/mono/metadata/metadata.c#L1525
+ */
+guint32
+xamarin_bridge_decode_value (const char *_ptr, const char **rptr)
+{
+	const unsigned char *ptr = (const unsigned char *) _ptr;
+	unsigned char b = *ptr;
+	guint32 len;
+	
+	if ((b & 0x80) == 0){
+		len = b;
+		++ptr;
+	} else if ((b & 0x40) == 0){
+		len = (guint32) ((b & 0x3f) << 8 | ptr [1]);
+		ptr += 2;
+	} else {
+		len = (guint32) (((b & 0x1f) << 24) |
+			(ptr [1] << 16) |
+			(ptr [2] << 8) |
+			ptr [3]);
+		ptr += 4;
+	}
+	if (rptr)
+		*rptr = (char*)ptr;
+	
+	return len;
+}
+
+static char *
+xamarin_read_config_string (const char **buf)
+{
+		guint32 configLength = xamarin_bridge_decode_value (*buf, buf);
+		char *value = strndup (*buf, configLength);
+		*buf = *buf + configLength;
+		return value;
+}
+
+static void *
+xamarin_mmap_runtime_config_file (size_t *length)
+{
+	if (xamarin_runtime_configuration_name == NULL) {
+		LOG (PRODUCT ": No runtime config file provided at build time.\n");
+		return NULL;
+	}
+
+	char path [1024];
+	if (!xamarin_locate_app_resource (xamarin_runtime_configuration_name, path, sizeof (path))) {
+		LOG (PRODUCT ": Could not locate the runtime config file '%s' in the app bundle.\n", xamarin_runtime_configuration_name);
+		return NULL;
+	}
+	
+	int fd = open (path, O_RDONLY);
+	if (fd == -1) {
+		LOG (PRODUCT ": Could not open the runtime config file '%s' in the app bundle: %s\n", path, strerror (errno));
+		return NULL;
+	}
+
+	struct stat stat_buf = { 0 };
+	if (fstat (fd, &stat_buf) == -1) {
+		LOG (PRODUCT ": Could not stat the runtime config file '%s' in the app bundle: %s\n", path, strerror (errno));
+		close (fd);
+		return NULL;
+	}
+
+	*length = (size_t) stat_buf.st_size;
+	void *buffer = mmap (NULL, *length, PROT_READ, MAP_PRIVATE, fd, 0);
+	close (fd);
+	return buffer;
+}
+
+// Input: the property keys + values passed to xamarin_bridge_vm_initialize
+// Output: newly allocated arrays of property keys + values that include those passed to xamarin_bridge_vm_initialize together with those in the runtimeconfig.bin file
+// Caller must free the allocated arrays + their elements
+void
+xamarin_bridge_compute_properties (int inputCount, const char **inputKeys, const char **inputValues, int* outputCount, const char ***outputKeys, const char ***outputValues)
+{
+	size_t fd_len = 0;
+	const char *buf = (const char *) xamarin_mmap_runtime_config_file (&fd_len);
+	int runtimeConfigCount = 0;
+
+	if (buf != NULL)
+		runtimeConfigCount = (int) xamarin_bridge_decode_value (buf, &buf);
+
+	// Allocate the output arrays
+	*outputCount = inputCount + runtimeConfigCount;
+	*outputKeys = (const char **) calloc ((size_t) *outputCount, sizeof (char *));
+	*outputValues = (const char **) calloc ((size_t) *outputCount, sizeof (char *));
+
+	// Read the runtimeconfig properties
+	// https://github.com/dotnet/runtime/blob/57bfe474518ab5b7cfe6bf7424a79ce3af9d6657/docs/design/mono/mobile-runtimeconfig-json.md#the-encoded-runtimeconfig-format
+	for (int i = 0; i < runtimeConfigCount; i++) {
+		char *key = xamarin_read_config_string (&buf);
+		char *value = xamarin_read_config_string (&buf);
+		(*outputKeys) [i] = key;
+		(*outputValues) [i] = value;
+	}
+
+	// Copy the input properties
+	for (int i = 0; i < inputCount; i++) {
+		(*outputKeys) [i + runtimeConfigCount] = strdup (inputKeys [i]);
+		(*outputValues) [i + runtimeConfigCount] = strdup (inputValues [i]);
+	}
+
+	if (buf != NULL)
+		munmap ((void *) buf, fd_len);
+}
+
 bool
 xamarin_bridge_vm_initialize (int propertyCount, const char **propertyKeys, const char **propertyValues)
 {
 	int rv;
 
+	int combinedPropertyCount = 0;
+	const char **combinedPropertyKeys = NULL;
+	const char **combinedPropertyValues = NULL;
+
+	xamarin_bridge_compute_properties (propertyCount, propertyKeys, propertyValues, &combinedPropertyCount, &combinedPropertyKeys, &combinedPropertyValues);
+
 	const char *executablePath = [[[[NSBundle mainBundle] executableURL] path] UTF8String];
 	rv = coreclr_initialize (
 		executablePath,
 		xamarin_executable_name,
-		propertyCount,
-		propertyKeys,
-		propertyValues,
+		combinedPropertyCount,
+		combinedPropertyKeys,
+		combinedPropertyValues,
 		&coreclr_handle,
 		&coreclr_domainId
 		);
 
-	LOG_CORECLR (stderr, "xamarin_vm_initialize (%i, %p, %p): rv: %i domainId: %i handle: %p\n", propertyCount, propertyKeys, propertyValues, rv, coreclr_domainId, coreclr_handle);
+	for (int i = 0; i < combinedPropertyCount; i++) {
+		free ((void *) combinedPropertyKeys [i]);
+		free ((void *) combinedPropertyValues [i]);
+	}
+	free ((void *) combinedPropertyKeys);
+	free ((void *) combinedPropertyValues);
+
+	LOG_CORECLR (stderr, "xamarin_vm_initialize (%i, %p, %p): rv: %i domainId: %i handle: %p\n", combinedPropertyCount, combinedPropertyKeys, combinedPropertyValues, rv, coreclr_domainId, coreclr_handle);
 
 	return rv == 0;
 }
@@ -602,18 +727,18 @@ mono_jit_exec (MonoDomain * domain, MonoAssembly * assembly, int argc, const cha
 {
 	unsigned int exitCode = 0;
 
-	char *assemblyName = xamarin_bridge_get_assembly_name (assembly->gchandle);
+	char *assemblyPath = xamarin_bridge_get_assembly_location (assembly->gchandle);
 
-	LOG_CORECLR (stderr, "mono_jit_exec (%p, %p, %i, %p) => EXECUTING %s\n", domain, assembly, argc, argv, assemblyName);
+	LOG_CORECLR (stderr, "mono_jit_exec (%p, %p, %i, %p) => EXECUTING %s\n", domain, assembly, argc, argv, assemblyPath);
 	for (int i = 0; i < argc; i++) {
 		LOG_CORECLR (stderr, "    Argument #%i: %s\n", i + 1, argv [i]);
 	}
 
-	int rv = coreclr_execute_assembly (coreclr_handle, coreclr_domainId, argc, argv, assemblyName, &exitCode);
+	int rv = coreclr_execute_assembly (coreclr_handle, coreclr_domainId, argc, argv, assemblyPath, &exitCode);
 
-	LOG_CORECLR (stderr, "mono_jit_exec (%p, %p, %i, %p) => EXECUTING %s rv: %i exitCode: %i\n", domain, assembly, argc, argv, assemblyName, rv, exitCode);
+	LOG_CORECLR (stderr, "mono_jit_exec (%p, %p, %i, %p) => EXECUTING %s rv: %i exitCode: %i\n", domain, assembly, argc, argv, assemblyPath, rv, exitCode);
 
-	xamarin_free (assemblyName);
+	xamarin_free (assemblyPath);
 
 	if (rv != 0)
 		xamarin_assertion_message ("mono_jit_exec failed: %i\n", rv);

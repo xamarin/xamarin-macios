@@ -31,6 +31,8 @@ using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace CoreVideo {
 
 	// uint32_t -> CVBuffer.h

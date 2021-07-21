@@ -13,7 +13,10 @@ using System;
 using System.Threading;
 using ObjCRuntime;
 using System.Runtime.InteropServices;
+using CoreFoundation;
 using Foundation;
+
+#nullable enable
 
 namespace UIKit {
 	public class UIKitThreadAccessException : Exception {
@@ -34,7 +37,7 @@ namespace UIKit {
 	: UIResponder
 #endif
 	{
-		static Thread mainThread;
+		static Thread? mainThread;
 		public static bool CheckForIllegalCrossThreadCalls = true;
 		public static bool CheckForEventAndDelegateMismatches = true;
 
@@ -42,7 +45,7 @@ namespace UIKit {
 		// We link with __Internal here so that this function is interposable from third-party native libraries.
 		// See: https://github.com/xamarin/MicrosoftInTune/issues/3 for an example.
 		[DllImport (/*Constants.UIKitLibrary*/ "__Internal")]
-		extern static int UIApplicationMain (int argc, /* char[]* */ string [] argv, /* NSString* */ IntPtr principalClassName, /* NSString* */ IntPtr delegateClassName);
+		extern static int UIApplicationMain (int argc, /* char[]* */ string []? argv, /* NSString* */ IntPtr principalClassName, /* NSString* */ IntPtr delegateClassName);
 #endif
 
 		// called from NSExtension.Initialize (so other, future stuff, can be added if needed)
@@ -57,33 +60,31 @@ namespace UIKit {
 		}
 		
 #if !WATCH
-		public static void Main (string [] args, string principalClassName, string delegateClassName)
+		[Obsolete ("Use the overload with 'Type' instead of 'String' parameters for type safety.")]
+		public static void Main (string []? args, string? principalClassName, string? delegateClassName)
 		{
-			var p = NSString.CreateNative (principalClassName);
-			var d = NSString.CreateNative (delegateClassName);
-			try {
-				Main (args, p, d);
-			} finally {
-				// it just looks nicer to release them
-				NSString.ReleaseNative (d);
-				NSString.ReleaseNative (p);
-			}
+			var p = CFString.CreateNative (principalClassName);
+			var d = CFString.CreateNative (delegateClassName);
+			Initialize ();
+			UIApplicationMain (args?.Length ?? 0, args, p, d);
+			CFString.ReleaseNative (d);
+			CFString.ReleaseNative (p);
 		}
 		
-		public static void Main (string [] args, Type principalClass, Type delegateClass)
+		public static void Main (string []? args, Type? principalClass, Type? delegateClass)
 		{
-			Main (args, principalClass == null ? null : new Class (principalClass).Name, delegateClass == null ? null : new Class (delegateClass).Name);
+			var p = principalClass == null ? IntPtr.Zero : CFString.CreateNative (new Class (principalClass).Name);
+			var d = delegateClass == null ? IntPtr.Zero : CFString.CreateNative (new Class (delegateClass).Name);
+			Initialize ();
+			UIApplicationMain (args?.Length ?? 0, args, p, d);
+			CFString.ReleaseNative (d);
+			CFString.ReleaseNative (p);
 		}
 
-		public static void Main (string [] args)
-		{
-			Main (args, IntPtr.Zero, IntPtr.Zero);
-		}
-
-		static void Main (string [] args, IntPtr principal, IntPtr @delegate)
+		public static void Main (string []? args)
 		{
 			Initialize ();
-			UIApplicationMain (args.Length, args, principal, @delegate);
+			UIApplicationMain (args?.Length ?? 0, args, IntPtr.Zero, IntPtr.Zero);
 		}
 #endif
 
@@ -101,7 +102,7 @@ namespace UIKit {
 				throw new InvalidOperationException (string.Format("Event registration is overwriting existing delegate. Either just use events or your own delegate: {0} {1}", del.GetType (), expectedType));
 		}
 
-		internal static void EnsureDelegateAssignIsNotOverwritingInternalDelegate (object currentDelegateValue, object newDelegateValue, Type internalDelegateType)
+		internal static void EnsureDelegateAssignIsNotOverwritingInternalDelegate (object? currentDelegateValue, object? newDelegateValue, Type internalDelegateType)
 		{
 			if (UIApplication.CheckForEventAndDelegateMismatches && currentDelegateValue != null && newDelegateValue != null
 				&& currentDelegateValue.GetType().IsAssignableFrom (internalDelegateType)

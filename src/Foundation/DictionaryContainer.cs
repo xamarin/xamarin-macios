@@ -342,7 +342,7 @@ namespace Foundation {
 		protected void SetArrayValue (NSString key, INativeObject[]? values)
 		{
 			if (NullCheckAndRemoveKey (key, values == null))
-				CFMutableDictionary.SetValue (Dictionary.Handle, key!.Handle, CFArray.FromNativeObjects (values).Handle);
+				CFMutableDictionary.SetValue (Dictionary.Handle, key!.Handle, CFArray.FromNativeObjects (values!).Handle);
 		}
 
 		#region Sets CFBoolean value

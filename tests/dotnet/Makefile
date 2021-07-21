@@ -30,15 +30,13 @@ TARGETS += \
 	../bgen/NuGet.config \
 	../bgen/global.json \
 
-# Example TEST_FILTER:
-#    TEST_FILTER="--filter FullyQualifiedName~BuildMyCocoaApp"
-# Docs: https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-test#filter-option-details
 run-unit-tests:
-	cd UnitTests && $(DOTNET) test DotNetUnitTests.csproj $(TEST_FILTER)
+	$(MAKE) -C UnitTests $@
 
 all-local:: $(TARGETS)
 
 compare compare-size: $(TARGETS)
+	rm -rf packages
 	cd size-comparison && git clean -xfdq
 	time $(MAKE) build-oldnet
 	time $(MAKE) build-dotnet
@@ -65,7 +63,7 @@ strip-dotnet:
 
 # this target will copy NuGet.config and global.json to the directories that need it for their .NET build to work correctly.
 copy-dotnet-config: $(TARGETS)
-	$(Q) for dir in $(shell ls -d $(abspath $(TOP)/tests/*/dotnet)); do \
-		$(CP) -c NuGet.config global.json $$dir; \
+	$(Q) for dir in $(abspath $(TOP))/tests/*/dotnet $(abspath $(TOP))/tests/linker/*/*/dotnet; do \
+		$(CP) -c NuGet.config global.json "$$dir"; \
 	done
 	$(Q) $(CP) -c NuGet.config global.json $(TOP)/external/Touch.Unit/Touch.Client/dotnet

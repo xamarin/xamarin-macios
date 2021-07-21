@@ -14,7 +14,7 @@ namespace Xamarin.Tests {
 		public static string Executable {
 			get {
 				if (dotnet_executable == null) {
-					dotnet_executable = Configuration.EvaluateVariable ("DOTNET6");
+					dotnet_executable = Configuration.GetVariable ("DOTNET6", null);
 					if (string.IsNullOrEmpty (dotnet_executable))
 						throw new Exception ($"Could not find the dotnet executable.");
 					if (!File.Exists (dotnet_executable))
@@ -36,6 +36,31 @@ namespace Xamarin.Tests {
 			return rv;
 		}
 
+		public static ExecutionResult AssertNew (string outputDirectory, string template)
+		{
+			Directory.CreateDirectory (outputDirectory);
+
+			var args = new List<string> ();
+			args.Add ("new");
+			args.Add (template);
+
+			var env = new Dictionary<string, string> ();
+			env ["MSBuildSDKsPath"] = null;
+			env ["MSBUILD_EXE_PATH"] = null;
+			var output = new StringBuilder ();
+			var rv = Execution.RunWithStringBuildersAsync (Executable, args, env, output, output, Console.Out, workingDirectory: outputDirectory, timeout: TimeSpan.FromMinutes (10)).Result;
+			if (rv.ExitCode != 0) {
+				Console.WriteLine ($"'{Executable} {StringUtils.FormatArguments (args)}' failed with exit code {rv.ExitCode}.");
+				Console.WriteLine (output);
+				Assert.AreEqual (0, rv.ExitCode, $"Exit code: {Executable} {StringUtils.FormatArguments (args)}");
+			}
+			return new ExecutionResult {
+				StandardOutput = output,
+				StandardError = output,
+				ExitCode = rv.ExitCode,
+			};
+		}
+
 		public static ExecutionResult Execute (string verb, string project, Dictionary<string, string> properties, bool assert_success = true)
 		{
 			if (!File.Exists (project))
@@ -49,8 +74,19 @@ namespace Xamarin.Tests {
 				args.Add (verb);
 				args.Add (project);
 				if (properties != null) {
-					foreach (var prop in properties)
-						args.Add ($"/p:{prop.Key}={prop.Value}");
+					foreach (var prop in properties) {
+						if (prop.Value.IndexOfAny (new char [] { ';' }) >= 0) {
+							// https://github.com/dotnet/msbuild/issues/471
+							// Escaping the semi colon like the issue suggests at one point doesn't work, because in
+							// that case MSBuild won't split the string into its parts for tasks that take a string[].
+							// This means that a task that takes a "string[] RuntimeIdentifiers" will get an array with
+							// a single element, where that single element is the whole RuntimeIdentifiers string.
+							// Example task: https://github.com/dotnet/sdk/blob/ffca47e9a36652da2e7041360f2201a2ba197194/src/Tasks/Microsoft.NET.Build.Tasks/ProcessFrameworkReferences.cs#L45
+							args.Add ($"/p:{prop.Key}=\"{prop.Value}\"");
+						} else {
+							args.Add ($"/p:{prop.Key}={prop.Value}");
+						}
+					}
 				}
 				var binlogPath = Path.Combine (Path.GetDirectoryName (project), $"log-{verb}-{DateTime.Now:yyyyMMdd_HHmmss}.binlog");
 				args.Add ($"/bl:{binlogPath}");
@@ -103,6 +139,8 @@ namespace Xamarin.Tests {
 						return false; // ICU data file only present on .NET
 					case "runtime-options.plist":
 						return false; // the .NET runtime will deal with selecting the http handler, no need for us to do anything
+					case "runtimeconfig.bin":
+						return false; // this file is present for .NET apps, but not legacy apps.
 					}
 
 					var components = v.Split ('/');

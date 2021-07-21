@@ -89,7 +89,6 @@
 !extra-null-allowed! 'System.IntPtr Foundation.NSAttributedString::InitWithFileURL(Foundation.NSUrl,Foundation.NSDictionary,Foundation.NSDictionary&,Foundation.NSError&)' has a extraneous [NullAllowed] on parameter #1
 !extra-null-allowed! 'System.IntPtr Foundation.NSAttributedString::InitWithURL(Foundation.NSUrl,Foundation.NSDictionary,Foundation.NSDictionary&,Foundation.NSError&)' has a extraneous [NullAllowed] on parameter #1
 !extra-null-allowed! 'System.Void Foundation.NSAttributedString::.ctor(Foundation.NSData,Foundation.NSDictionary,Foundation.NSDictionary&,Foundation.NSError&)' has a extraneous [NullAllowed] on parameter #1
-!extra-null-allowed! 'System.Void UIKit.NSTextContainer::set_ExclusionPaths(UIKit.UIBezierPath[])' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'System.Void UIKit.UIAccessibilityCustomAction::.ctor(Foundation.NSAttributedString,UIKit.UIAccessibilityCustomActionHandler)' has a extraneous [NullAllowed] on parameter #1
 !extra-null-allowed! 'System.Void UIKit.UIAccessibilityCustomAction::.ctor(System.String,UIKit.UIAccessibilityCustomActionHandler)' has a extraneous [NullAllowed] on parameter #1
 !extra-null-allowed! 'System.Void UIKit.UIAccessibilityCustomAction::set_Name(System.String)' has a extraneous [NullAllowed] on parameter #0
@@ -128,7 +127,6 @@
 
 # Initial result from new rule missing-null-allowed
 !missing-null-allowed! 'CoreAnimation.CADisplayLink UIKit.UIScreen::CreateDisplayLink(Foundation.NSObject,ObjCRuntime.Selector)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'CoreGraphics.CGRect UIKit.NSTextAttachmentContainer::GetAttachmentBounds(UIKit.NSTextContainer,CoreGraphics.CGRect,CoreGraphics.CGPoint,System.nuint)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'Foundation.NSArray Foundation.NSBundle::LoadNib(System.String,Foundation.NSObject,Foundation.NSDictionary)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSArray[] UIKit.UIPasteboard::PasteBoardTypesForSet(Foundation.NSIndexSet)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'Foundation.NSArray[] UIKit.UIPasteboard::PasteBoardTypesForSet(Foundation.NSIndexSet)' is missing an [NullAllowed] on return type
@@ -167,7 +165,6 @@
 !missing-null-allowed! 'Foundation.NSIndexPath[] UIKit.UITableView::get_IndexPathsForSelectedRows()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSIndexSet UIKit.UIPasteboard::ItemSetWithPasteboardTypes(System.String[])' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSNumber[] UIKit.UIImagePickerController::AvailableCaptureModesForCameraDevice(UIKit.UIImagePickerControllerCameraDevice)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSObject UIKit.NSLayoutConstraint::get_SecondItem()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject UIKit.UIActivityItemProvider::get_PlaceholderItem()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject UIKit.UIActivityItemSource::GetItemForActivity(UIKit.UIActivityViewController,Foundation.NSString)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject UIKit.UIDocument::ContentsForType(System.String,Foundation.NSError&)' is missing an [NullAllowed] on return type
@@ -215,7 +212,6 @@
 !missing-null-allowed! 'System.nint UIKit.UIActionSheet::AddButton(System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.nint UIKit.UIApplication::BeginBackgroundTask(System.String,System.Action)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.nint UIKit.UIApplication::BeginBackgroundTask(System.String,System.Action)' is missing an [NullAllowed] on parameter #1
-!missing-null-allowed! 'System.String UIKit.NSIdentifier::GetIdentifier(UIKit.NSLayoutConstraint)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.String UIKit.UIActionSheet::ButtonTitle(System.nint)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.String UIKit.UIActivity::get_Title()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.String UIKit.UIAlertAction::get_Title()' is missing an [NullAllowed] on return type
@@ -369,7 +365,6 @@
 !missing-null-allowed! 'UIKit.UIFontDescriptor UIKit.UIFontDescriptor::CreateWithTraits(UIKit.UIFontDescriptorSymbolicTraits)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIGestureRecognizer UIKit.UINavigationController::get_InteractivePopGestureRecognizer()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIGestureRecognizer[] UIKit.UITouch::get_GestureRecognizers()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'UIKit.UIImage UIKit.NSTextAttachmentContainer::GetImageForBounds(CoreGraphics.CGRect,UIKit.NSTextContainer,System.nuint)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIImage UIKit.UIActivity::get_Image()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIImage UIKit.UIActivityItemSource::GetThumbnailImageForActivity(UIKit.UIActivityViewController,Foundation.NSString,CoreGraphics.CGSize)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIImage UIKit.UIBarButtonItem::GetBackButtonBackgroundImage(UIKit.UIControlState,UIKit.UIBarMetrics)' is missing an [NullAllowed] on return type

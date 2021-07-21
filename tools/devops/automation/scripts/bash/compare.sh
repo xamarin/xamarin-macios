@@ -75,7 +75,7 @@ cp -R ./tools/comparison/generator-diff "$API_COMPARISON"
 
 if ! grep "href=" "$API_COMPARISON/api-diff.html" >/dev/null 2>&1; then
 	printf ":white_check_mark: [API Diff (from PR only)](%s) (no change)" "$API_URL" >> "$WORKSPACE/api-diff-comments.md"
-elif perl -0777 -pe 's/<script type="text\/javascript">.*?<.script>/script removed/gs' "$API_COMPARISON/*.html" | grep data-is-breaking; then
+elif perl -0777 -pe 's/<script type="text\/javascript">.*?<.script>/script removed/gs' "$API_COMPARISON"/*.html | grep data-is-breaking; then
 	printf ":warning: [API Diff (from PR only)](%s) (:fire: breaking changes :fire:)" "$API_URL" >> "$WORKSPACE/api-diff-comments.md"
 else
 	printf ":information_source: [API Diff (from PR only)](%s) (please review changes)" "$API_URL" >> "$WORKSPACE/api-diff-comments.md"

@@ -534,6 +534,7 @@ namespace Introspection {
 							case "ARParticipantAnchor":
 							case "ARPlaneAnchor":
 							case "ARReferenceObject":
+							case "ARSkeletonDefinition": // iOS15 / device only
 							case "ARWorldMap":
 								return;
 							}
@@ -604,6 +605,8 @@ namespace Introspection {
 					// This can often by caused by [Protocol] classes with no [Model] but having a [BaseType].
 					// Either have both a Model and BaseType or neither
 					switch (t.Name) {
+					case "AVPlayerInterstitialEventMonitor": // deprecated
+						continue;
 #if !MONOMAC
 					case "MTLCaptureManager":
 					case "NEHotspotConfiguration":

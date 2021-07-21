@@ -230,12 +230,6 @@ namespace Introspection {
 			case "SecIdentity": // hangs with xcode12.5 beta 2 while loading p12 file
 			case "SecIdentity2": // same (dupe logic)
 				return true;
-#if NET
-			case "SecTrust": // System.EntryPointNotFoundException : AppleCryptoNative_X509ImportCertificate
-			case "SecTrust2": // System.EntryPointNotFoundException : AppleCryptoNative_X509ImportCertificate
-				// Filed here: https://github.com/dotnet/runtime/issues/36897
-				return true;
-#endif
 			default:
  				return false;
 			}
@@ -252,6 +246,8 @@ namespace Introspection {
 			switch (t.Name) {
 			case "CFAllocator":
 				return CFAllocator.SystemDefault;
+			case "CFArray":
+				return Runtime.GetINativeObject<CFArray> (new NSArray ().Handle, false);
 			case "CFBundle":
 				var bundles = CFBundle.GetAll ();
 				if (bundles.Length > 0)

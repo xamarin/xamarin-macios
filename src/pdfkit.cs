@@ -317,6 +317,20 @@ namespace PdfKit {
 		Push,
 	}
 
+	[Native]
+	[iOS (15,0), Mac (12,0), MacCatalyst (15,0)]
+	public enum PdfAccessPermissions : ulong
+	{
+		LowQualityPrinting = (1uL << 0),
+		HighQualityPrinting = (1uL << 1),
+		DocumentChanges = (1uL << 2),
+		DocumentAssembly = (1uL << 3),
+		ContentCopying = (1uL << 4),
+		ContentAccessibility = (1uL << 5),
+		Commenting = (1uL << 6),
+		FormFieldEntry = (1uL << 7),
+	}
+
 	[Mac (10,13)]
 	[iOS (11,0)]
 	[Static]
@@ -411,6 +425,10 @@ namespace PdfKit {
 
 		[Field ("PDFDocumentUserPasswordOption", "+PDFKit")]
 		NSString UserPasswordKey { get; }
+
+		[iOS (15,0), Mac (12,0), MacCatalyst (15,0)]
+		[Field ("PDFDocumentAccessPermissionsOption", "+PDFKit")]
+		NSString AccessPermissionsKey { get; }
 	}
 
 	[Mac (10,13)]
@@ -420,6 +438,9 @@ namespace PdfKit {
 
 		string OwnerPassword { get; set; }
 		string UserPassword { get; set; }
+
+		[iOS (15,0), Mac (12,0), MacCatalyst (15,0)]
+		string AccessPermissions { get; set; }
 	}
 
 	[Mac (10,13)]
@@ -1157,6 +1178,14 @@ namespace PdfKit {
 		[Notification]
 		NSString DidEndPageWriteNotification { get; }
 
+		[iOS (15,0), Mac (12,0), MacCatalyst (15,0)]
+		[Field ("PDFDocumentFoundSelectionKey")]
+		NSString FoundSelectionKey { get; }
+
+		[iOS (15,0), Mac (12,0), MacCatalyst (15,0)]
+		[Field ("PDFDocumentPageIndexKey")]
+		NSString PageIndexKey { get; }
+
 		// - (instancetype)init NS_DESIGNATED_INITIALIZER;
 		[Export ("init")]
 		[DesignatedInitializer]
@@ -1182,6 +1211,10 @@ namespace PdfKit {
 		[Export ("documentAttributes", ArgumentSemantic.Copy)]
 		[NullAllowed]
 		NSDictionary DocumentAttributes { get; set; }
+
+		[iOS (15,0), Mac (12,0), MacCatalyst (15,0)]
+		[Export ("accessPermissions")]
+		PdfAccessPermissions AccessPermissions { get; }
 
 		[Wrap ("new PdfDocumentAttributes (DocumentAttributes)")]
 		PdfDocumentAttributes GetDocumentAttributes ();

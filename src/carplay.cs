@@ -164,6 +164,23 @@ namespace CarPlay {
 		Confirm,
 	}
 
+	[NoWatch, NoTV, NoMac, iOS (15,0)]
+	[Native]
+	public enum CPAssistantCellPosition : long
+	{
+		Top = 0,
+		Bottom,
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (15,0)]
+	[Native]
+	public enum CPAssistantCellVisibility : long
+	{
+		Off = 0,
+		WhileLimitedUIActive,
+		Always,
+	}
+
 	[NoWatch, NoTV, NoMac, iOS (12,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -273,6 +290,18 @@ namespace CarPlay {
 
 		[Export ("title")]
 		string Title { get; }
+
+		[iOS (15,0)]
+		[Export ("updateGridButtons:")]
+		void UpdateGridButtons (CPGridButton[] gridButtons);
+
+		[iOS (15,0)]
+		[Export ("updateTitle:")]
+		void UpdateTitle (string title);
+
+		[iOS (15,0)]
+		[Field ("CPGridTemplateMaximumItems")]
+		nuint MaximumItems { get; }
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (12,0)]
@@ -503,6 +532,10 @@ namespace CarPlay {
 		[NullAllowed, iOS (14, 0)]
 		[Export ("handler", ArgumentSemantic.Copy)]
 		new CPSelectableListItemHandler Handler { get; set; }
+
+		[iOS (15, 0)]
+		[Export ("enabled")]
+		bool Enabled { [Bind ("isEnabled")] get; set; }
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (12,0)]
@@ -515,6 +548,10 @@ namespace CarPlay {
 
 		[Export ("initWithItems:")]
 		IntPtr Constructor (CPListItem [] items);
+
+		[iOS (15,0)]
+		[Export ("initWithItems:header:headerSubtitle:headerImage:headerButton:sectionIndexTitle:")]
+		IntPtr Constructor (ICPListTemplateItem[] items, string header, [NullAllowed] string headerSubtitle, [NullAllowed] UIImage headerImage, [NullAllowed] CPButton headerButton, [NullAllowed] string sectionIndexTitle);
 
 		[NullAllowed, Export ("header")]
 		string Header { get; }
@@ -532,6 +569,25 @@ namespace CarPlay {
 		[iOS (14,0)]
 		[Export ("itemAtIndex:")]
 		ICPListTemplateItem GetItem (nuint index);
+
+		[iOS (15, 0)]
+		[NullAllowed]
+		[Export ("headerSubtitle")]
+		string HeaderSubtitle { get; }
+
+		[iOS (15, 0)]
+		[NullAllowed]
+		[Export ("headerImage", ArgumentSemantic.Copy)]
+		UIImage HeaderImage { get; }
+
+		[iOS (15, 0)]
+		[NullAllowed]
+		[Export ("headerButton", ArgumentSemantic.Copy)]
+		CPButton HeaderButton { get; }
+
+		[iOS (15, 0)]
+		[Field ("CPMaximumListSectionImageSize")]
+		CGSize MaximumImageSize { get; }
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (12,0)]
@@ -541,6 +597,10 @@ namespace CarPlay {
 
 		[Export ("initWithTitle:sections:")]
 		IntPtr Constructor ([NullAllowed] string title, CPListSection[] sections);
+
+		[iOS (15,0)]
+		[Export ("initWithTitle:sections:assistantCellVisibility:assistantCellPosition:")]
+		IntPtr Constructor ([NullAllowed] string title, CPListSection[] sections, CPAssistantCellVisibility visibility, CPAssistantCellPosition position);
 
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'CPListItem.Handler' instead.")]
 		[Wrap ("WeakDelegate")]
@@ -590,6 +650,14 @@ namespace CarPlay {
 		[iOS (14, 0)]
 		[Export ("emptyViewSubtitleVariants", ArgumentSemantic.Copy)]
 		string[] EmptyViewSubtitleVariants { get; set; }
+
+		[iOS (15, 0)]
+		[Export ("assistantCellVisibility", ArgumentSemantic.Assign)]
+		CPAssistantCellVisibility AssistantCellVisibility { get; set; }
+
+		[iOS (15, 0)]
+		[Export ("assistantCellPosition", ArgumentSemantic.Assign)]
+		CPAssistantCellPosition AssistantCellPosition { get; set; }
 	}
 
 	interface ICPListTemplateDelegate { }
@@ -1450,6 +1518,10 @@ namespace CarPlay {
 
 		[NullAllowed, Export ("userInfo", ArgumentSemantic.Strong)]
 		new NSObject UserInfo { get; set; }
+
+		[iOS (15, 0)]
+		[Export ("enabled")]
+		bool Enabled { [Bind ("isEnabled")] get; set; }
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (14,0)]
@@ -1519,6 +1591,10 @@ namespace CarPlay {
 
 		[NullAllowed, Export ("userInfo", ArgumentSemantic.Strong)]
 		new NSObject UserInfo { get; set; }
+
+		[iOS (15, 0)]
+		[Export ("enabled")]
+		bool Enabled { [Bind ("isEnabled")] get; set; }
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (14,0)]
@@ -1806,6 +1882,13 @@ namespace CarPlay {
 		[Abstract]
 		[NullAllowed, Export ("userInfo", ArgumentSemantic.Strong)]
 		NSObject UserInfo { get; set; }
+
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[iOS (15, 0)]
+		[Export ("enabled")]
+		bool Enabled { [Bind ("isEnabled")] get; set; }
 	}
 
 	interface ICPSelectableListItem { }

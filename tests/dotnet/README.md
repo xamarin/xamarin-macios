@@ -20,3 +20,7 @@ Add this option inside the `Release|iPhone` configuration of `size-comparison/My
 
 If you want to compare (trimmed) size you can manually call `mono-cil-strip`
 on each assembly inside the app bundle.
+
+`make strip-dotnet` will remove the IL from the dotnet app version.
+However this is done after the code signature so it will not be possible
+to deploy and execute the app afterward. Use for binary analysis only!

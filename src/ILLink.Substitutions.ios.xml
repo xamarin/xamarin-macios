@@ -1,5 +1,8 @@
 <linker>
   <assembly fullname="Xamarin.iOS">
+    <type fullname="ObjCRuntime.Dlfcn">
+      <method signature="System.Void WarnOnce()" body="stub" feature="System.Diagnostics.Debugger.IsSupported" featurevalue="false" />
+    </type>
     <type fullname="ObjCRuntime.Runtime">
       <method signature="System.Boolean get_IsCoreCLR()" body="stub" value="false" />
       <method signature="System.Void RegisterEntryAssembly(System.Reflection.Assembly)" body="stub" feature="ObjCRuntime.Runtime.DeviceSupport" featurevalue="false" />

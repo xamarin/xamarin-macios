@@ -18,7 +18,11 @@ namespace ObjCRuntime {
 #endif
 	class RuntimeOptions
 	{
+#if NET
+		const string SocketsHandlerValue = "SocketsHttpHandler";
+#else
 		const string HttpClientHandlerValue = "HttpClientHandler";
+#endif
 		const string CFNetworkHandlerValue = "CFNetworkHandler";
 		const string NSUrlSessionHandlerValue = "NSUrlSessionHandler";
 
@@ -40,9 +44,17 @@ namespace ObjCRuntime {
 			switch (value) {
 			// default
 			case null:
+#if NET
+				return NSUrlSessionHandlerValue;
+#else
 				return (app.Platform == Utils.ApplePlatform.WatchOS) ? NSUrlSessionHandlerValue : HttpClientHandlerValue;
+#endif
 			case CFNetworkHandlerValue:
+#if NET
+			case SocketsHandlerValue:
+#else
 			case HttpClientHandlerValue:
+#endif
 				if (app.Platform == Utils.ApplePlatform.WatchOS) {
 					ErrorHelper.Warning (2015, Errors.MT2015, value);
 					return NSUrlSessionHandlerValue;
@@ -87,7 +99,11 @@ namespace ObjCRuntime {
 			} else if (app.Platform == Utils.ApplePlatform.WatchOS) {
 				handler = NSUrlSessionHandlerValue;
 			} else {
+#if NET
+				handler = NSUrlSessionHandlerValue;
+#else
 				handler = HttpClientHandlerValue;
+#endif
 			}
 			TypeDefinition type;
 			switch (handler) {
@@ -102,6 +118,11 @@ namespace ObjCRuntime {
 				type = platformModule.GetType ("Foundation", "NSUrlSessionHandler");
 				break;
 #else
+#if NET
+			case SocketsHandlerValue:
+				type = httpModule.GetType ("System.Net.Http", "SocketsHttpHandler");
+				break;
+#else
 			case HttpClientHandlerValue:
 				if (app.Platform == Utils.ApplePlatform.WatchOS) {
 					ErrorHelper.Warning (2015, Errors.MT2015, handler);
@@ -110,6 +131,7 @@ namespace ObjCRuntime {
 					type = httpModule.GetType ("System.Net.Http", "HttpClientHandler");
 				}
 				break;
+#endif
 			case CFNetworkHandlerValue:
 				if (app.Platform == Utils.ApplePlatform.WatchOS) {
 					ErrorHelper.Warning (2015, Errors.MT2015, handler);
@@ -155,7 +177,18 @@ namespace ObjCRuntime {
 			var options = RuntimeOptions.Read ();
 			// all types will be present as this is executed only when the linker is not enabled
 			var handler_name = options?.http_message_handler;
-#if __WATCHOS__
+#if NET
+			switch (handler_name) {
+			case CFNetworkHandlerValue:
+				return new CFNetworkHandler ();
+			case SocketsHandlerValue:
+				return new SocketsHttpHandler ();
+			default:
+				if (handler_name != null && handler_name != NSUrlSessionHandlerValue)
+					Runtime.NSLog ($"{handler_name} is not a valid HttpMessageHandler, defaulting to System.Net.Http.NSUrlSessionHandlerValue");
+				return new NSUrlSessionHandler ();
+			}
+#elif __WATCHOS__
 			if (handler_name != null && handler_name != NSUrlSessionHandlerValue)
 				Runtime.NSLog ($"{handler_name} is not a valid HttpMessageHandler, defaulting to NSUrlSessionHandler");
 			return new NSUrlSessionHandler ();

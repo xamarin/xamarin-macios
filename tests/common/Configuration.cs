@@ -187,7 +187,7 @@ namespace Xamarin.Tests
 			}
 		}
 
-		static string GetVariable (string variable, string @default)
+		internal static string GetVariable (string variable, string @default)
 		{
 			var result = Environment.GetEnvironmentVariable (variable);
 			if (string.IsNullOrEmpty (result))
@@ -305,11 +305,13 @@ namespace Xamarin.Tests
 				var path = Path.Combine (dir, ".git");
 				while (!Directory.Exists (path) && path.Length > 3) {
 					dir = Path.GetDirectoryName (dir);
+					if (dir == null)
+						throw new Exception ($"Could not find the xamarin-macios repo given the test assembly directory {TestAssemblyDirectory}");
 					path = Path.Combine (dir, ".git");
 				}
 				path = Path.GetDirectoryName (path);
 				if (!Directory.Exists (path))
-					throw new Exception ("Could not find the xamarin-macios repo");
+					throw new Exception ($"Could not find the xamarin-macios repo given the test assembly directory {TestAssemblyDirectory}");
 				return path;
 			}
 		}
@@ -319,7 +321,7 @@ namespace Xamarin.Tests
 			try {
 				rootPath = RootPath;
 				return true;
-			} catch (Exception e) {
+			} catch {
 				rootPath = null;
 				return false;
 			}

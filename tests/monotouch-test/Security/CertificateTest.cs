@@ -542,9 +542,6 @@ namespace MonoTouchFixtures.Security {
 		}
 
 		[Test]
-#if NET
-		[Ignore ("System.EntryPointNotFoundException: AppleCryptoNative_X509ImportCertificate")] // https://github.com/dotnet/runtime/issues/36897
-#endif
 		public void MailX1 ()
 		{
 			using (var cert = new X509Certificate (mail_google_com)) {
@@ -555,8 +552,13 @@ namespace MonoTouchFixtures.Security {
 				Assert.That (cert.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
 				Assert.That (CFGetRetainCount (cert.Handle), Is.EqualTo ((nint) 1), "RetainCount");
 				using (var sc = new SecCertificate (cert)) {
+#if NET
+					// dotnet PAL layer does not return the same instance
+					CheckMailGoogleCom (sc, 1); // so the new one is RC == 1
+#else
 					Assert.That (sc.Handle, Is.EqualTo (cert.Handle), "Same Handle");
-					CheckMailGoogleCom (sc, 2);
+					CheckMailGoogleCom (sc, 2); // same handle means another reference was added
+#endif
 					Assert.That (cert.ToString (true), Is.EqualTo (sc.ToX509Certificate ().ToString (true)), "X509Certificate");
 				}
 			}

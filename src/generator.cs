@@ -1748,7 +1748,7 @@ public partial class Generator : IMemberGatherer {
 			}
 			if (pi.ParameterType == TypeManager.System_String){
 				pars.AppendFormat ("IntPtr {0}", safe_name);
-				invoke.AppendFormat ("CFString.FromHandle ({0})", safe_name);
+				invoke.AppendFormat ("CFString.FromHandle ({0})!", safe_name);
 				continue;
 			}
 
@@ -2745,8 +2745,12 @@ public partial class Generator : IMemberGatherer {
 				print ("static public readonly IntPtr Handle = Dlfcn.dlopen (null, 0);");
 			} else if (BindThirdPartyLibrary && library_path != null && IsNotSystemLibrary (library_name)) {
 				print ($"static public readonly IntPtr Handle = Dlfcn.dlopen (\"{library_path}\", 0);");
-			} else {
+			} else if (BindThirdPartyLibrary) {
 				print ("static public readonly IntPtr Handle = Dlfcn.dlopen (Constants.{0}Library, 0);", library_name);
+			} else {
+				// Skip the path check that our managed `dlopen` method does
+				// This is not required since the path is checked by `IsNotSystemLibrary`
+				print ("static public readonly IntPtr Handle = Dlfcn._dlopen (Constants.{0}Library, 0);", library_name);
 			}
 			indent--; print ("}");
 		}
@@ -2877,7 +2881,7 @@ public partial class Generator : IMemberGatherer {
 									enumTypeStr + ") num.Int32Value;\n\t}}\n}})";
 								setter = "SetArrayValue<" + enumTypeStr + "> ({0}, value)";
 							} else if (elementType == TypeManager.System_String){
-								getter = "GetArray<string> ({0}, (ptr) => CFString.FromHandle (ptr))";
+								getter = "GetArray<string> ({0}, (ptr) => CFString.FromHandle (ptr)!)";
 								setter = "SetArrayValue ({0}, value)";
 							} else {
 								throw new BindingException (1033, true, pi.PropertyType, dictType, pi.Name);
@@ -3079,7 +3083,7 @@ public partial class Generator : IMemberGatherer {
 					else if (fullname == "CoreGraphics.CGRect")
 						print (GenerateNSValue ("CGRectValue"));
 					else if (is_system_string)
-						print ("return CFString.FromHandle (value);");
+						print ("return CFString.FromHandle (value)!;");
 					else if (propertyType == TypeManager.NSString)
 						print ("return new NSString (value);");
 					else if (propertyType == TypeManager.System_String_Array){
@@ -3139,11 +3143,14 @@ public partial class Generator : IMemberGatherer {
 	
 	// this attribute allows the linker to be more clever in removing unused code in bindings - without risking breaking user code
 	// only generate those for monotouch now since we can ensure they will be linked away before reaching the devices
-	public void GeneratedCode (StreamWriter sw, int tabs)
+	public void GeneratedCode (StreamWriter sw, int tabs, bool optimizable = true)
 	{
 		for (int i=0; i < tabs; i++)
 			sw.Write ('\t');
-		sw.WriteLine ("[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]");
+		sw.Write ("[BindingImpl (BindingImplOptions.GeneratedCode");
+		if (optimizable)
+			sw.Write (" | BindingImplOptions.Optimizable");
+		 sw.WriteLine (")]");
 	}
 
 	static void WriteIsDirectBindingCondition (StreamWriter sw, ref int tabs, bool? is_direct_binding, string is_direct_binding_value, Func<string> trueCode, Func<string> falseCode)
@@ -3180,9 +3187,9 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 	
-	public void print_generated_code ()
+	public void print_generated_code (bool optimizable = true)
 	{
-		GeneratedCode (sw, indent);
+		GeneratedCode (sw, indent, optimizable);
 	}
 
 	public void print (string format)
@@ -3819,7 +3826,7 @@ public partial class Generator : IMemberGatherer {
 			cast_b = ", false)";
 		} else if (mai.Type == TypeManager.System_String && !mai.PlainString){
 			cast_a = "CFString.FromHandle (";
-			cast_b = ")";
+			cast_b = ")!";
 		} else if (mi.ReturnType.IsSubclassOf (TypeManager.System_Delegate)){
 			cast_a = "";
 			cast_b = "";
@@ -3968,35 +3975,38 @@ public partial class Generator : IMemberGatherer {
 
 		if (need_multi_path) {
 			if (is_stret_multi) {
-				print ("if (Runtime.Arch == Arch.DEVICE) {");
-				indent++;
-				if (BindingTouch.CurrentPlatform == PlatformName.WatchOS) {
-					print ("if (global::ObjCRuntime.Runtime.IsARM64CallingConvention) {");
-				} else {
-					print ("if (IntPtr.Size == 8) {");
-
-				}
+				// First check for arm64
+				print ("if (global::ObjCRuntime.Runtime.IsARM64CallingConvention) {");
 				indent++;
 				GenerateInvoke (false, supercall, mi, minfo, selector, args [index64], assign_to_temp, category_type, false, EnumMode.Bit64);
 				indent--;
-				print ("} else {");
+				// If we're not arm64, but we're 64-bit, then we're x86_64
+				print ("} else if (IntPtr.Size == 8) {");
+				indent++;
+				GenerateInvoke (x64_stret, supercall, mi, minfo, selector, args[index64], assign_to_temp, category_type, aligned && x64_stret, EnumMode.Bit64);
+				indent--;
+				// if we're not 64-bit, but we're on device, then we're 32-bit arm
+				print ("} else if (Runtime.Arch == Arch.DEVICE) {");
 				indent++;
 				GenerateInvoke (arm_stret, supercall, mi, minfo, selector, args [0], assign_to_temp, category_type, aligned && arm_stret, EnumMode.Bit32);
 				indent--;
-				print ("}");
+				// if we're none of the above, we're x86
+				print ("} else {");
+				indent++;
+				GenerateInvoke (x86_stret, supercall, mi, minfo, selector, args[0], assign_to_temp, category_type, aligned && x86_stret, EnumMode.Bit32);
 				indent--;
-				print ("} else if (IntPtr.Size == 8) {");
+				print ("}");
 			} else {
 				print ("if (IntPtr.Size == 8) {");
+				indent++;
+				GenerateInvoke (x64_stret, supercall, mi, minfo, selector, args[index64], assign_to_temp, category_type, aligned && x64_stret, EnumMode.Bit64);
+				indent--;
+				print ("} else {");
+				indent++;
+				GenerateInvoke (x86_stret, supercall, mi, minfo, selector, args[0], assign_to_temp, category_type, aligned && x86_stret, EnumMode.Bit32);
+				indent--;
+				print ("}");
 			}
-			indent++;
-			GenerateInvoke (x64_stret, supercall, mi, minfo, selector, args[index64], assign_to_temp, category_type, aligned && x64_stret, EnumMode.Bit64);
-			indent--;
-			print ("} else {");
-			indent++;
-			GenerateInvoke (x86_stret, supercall, mi, minfo, selector, args[0], assign_to_temp, category_type, aligned && x86_stret, EnumMode.Bit32);
-			indent--;
-			print ("}");
 		} else {
 			GenerateInvoke (false, supercall, mi, minfo, selector, args[0], assign_to_temp, category_type, false);
 		}
@@ -4056,7 +4066,7 @@ public partial class Generator : IMemberGatherer {
 	public string GenerateMarshalString (bool probe_null, bool must_copy)
 	{
 		if (must_copy){
-			return "var ns{0} = NSString.CreateNative ({1});\n";
+			return "var ns{0} = CFString.CreateNative ({1});\n";
 		}
 		return
 			"ObjCRuntime.NSStringStruct _s{0}; Console.WriteLine (\"" + CurrentMethod + ": Marshalling: {{1}}\", {1}); \n" +
@@ -4069,7 +4079,7 @@ public partial class Generator : IMemberGatherer {
 	public string GenerateDisposeString (bool probe_null, bool must_copy)
 	{
 		if (must_copy){
-			return "NSString.ReleaseNative (ns{0});\n";
+			return "CFString.ReleaseNative (ns{0});\n";
 		} else 
 			return "if (_s{0}.Flags != 0x010007d1) throw new Exception (\"String was retained, not copied\");";
 	}
@@ -4291,7 +4301,7 @@ public partial class Generator : IMemberGatherer {
 				if (isString) {
 					if (!pi.IsOut)
 						by_ref_processing.AppendFormat ("if ({0}Value != {0}OriginalValue)\n\t", pi.Name.GetSafeParamName ());
-					by_ref_processing.AppendFormat ("{0} = CFString.FromHandle ({0}Value);\n", pi.Name.GetSafeParamName ());
+					by_ref_processing.AppendFormat ("{0} = CFString.FromHandle ({0}Value)!;\n", pi.Name.GetSafeParamName ());
 				} else if (isArray) {
 					if (!pi.IsOut)
 						by_ref_processing.AppendFormat ("if ({0}Value != ({0}ArrayValue is null ? IntPtr.Zero : {0}ArrayValue.Handle))\n\t", pi.Name.GetSafeParamName ());
@@ -4658,7 +4668,7 @@ public partial class Generator : IMemberGatherer {
 			print (sw, by_ref_processing.ToString ());
 		if (use_temp_return) {
 			if (AttributeManager.HasAttribute<ProxyAttribute> (AttributeManager.GetReturnTypeCustomAttributes (mi)))
-				print ("ret.SetAsProxy ();");
+				print ("ret.IsDirectBinding = true;");
 
 			if (mi.ReturnType.IsSubclassOf (TypeManager.System_Delegate)) {
 				print ("return global::ObjCRuntime.Trampolines.{0}.Create (ret)!;", trampoline_info.NativeInvokerName);
@@ -7415,7 +7425,7 @@ public partial class Generator : IMemberGatherer {
 			if (!is_static_class){
 				var disposeAttr = AttributeManager.GetCustomAttributes<DisposeAttribute> (type);
 				if (disposeAttr.Length > 0 || instance_fields_to_clear_on_dispose.Count > 0){
-					print_generated_code ();
+					print_generated_code (optimizable: disposeAttr.Length == 0);
 					print ("protected override void Dispose (bool disposing)");
 					print ("{");
 					indent++;

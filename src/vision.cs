@@ -1707,7 +1707,13 @@ namespace Vision {
 	interface VNImageTranslationAlignmentObservation {
 
 		[Export ("alignmentTransform", ArgumentSemantic.Assign)]
-		CGAffineTransform AlignmentTransform { get; set; }
+		CGAffineTransform AlignmentTransform {
+			get;
+#if !XAMCORE_4_0
+			[NotImplemented]
+			set;
+#endif
+		}
 	}
 
 	[TV (11,0), Mac (10,13), iOS (11,0)]
@@ -1719,8 +1725,10 @@ namespace Vision {
 		Matrix3 WarpTransform {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 			get;
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+#if !XAMCORE_4_0
+			[NotImplemented]
 			set;
+#endif
 		}
 	}
 

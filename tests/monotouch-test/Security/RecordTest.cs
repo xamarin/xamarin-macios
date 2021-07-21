@@ -321,6 +321,9 @@ namespace MonoTouchFixtures.Security {
 #endif
 		public void IdentityRecordTest ()
 		{
+			if (TestRuntime.CheckXcodeVersion (13, 0))
+				Assert.Ignore ("code == errSecInternal (-26276)");
+
 			using (var identity = IdentityTest.GetIdentity ())
 			using (var rec = new SecRecord (identity)) {
 				SecStatusCode code = SecKeyChain.Add (rec);
@@ -337,9 +340,6 @@ namespace MonoTouchFixtures.Security {
 
 #if !MONOMAC // Works different on Mac
 		[Test]
-#if NET
-		[Ignore ("System.EntryPointNotFoundException: AppleCryptoNative_X509ImportCertificate")] // https://github.com/dotnet/runtime/issues/36897
-#endif
 		public void SecRecordRecordTest ()
 		{
 			using (var cert = new X509Certificate (CertificateTest.mail_google_com))
@@ -349,7 +349,10 @@ namespace MonoTouchFixtures.Security {
 
 				var ret = rec.GetCertificate ();
 				Assert.That (ret.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
+#if !NET
+				// dotnet PAL layer does not return the same instance
 				Assert.That (ret.Handle, Is.EqualTo (cert.Handle), "Same Handle");
+#endif
 				Assert.That (cert.ToString (true), Is.EqualTo (ret.ToX509Certificate ().ToString (true)), "X509Certificate");
 
 				Assert.Throws<InvalidOperationException> (() => rec.GetKey (), "GetKey should throw");
@@ -358,9 +361,6 @@ namespace MonoTouchFixtures.Security {
 		}
 
 		[Test]
-#if NET
-		[Ignore ("System.EntryPointNotFoundException: AppleCryptoNative_SecKeychainCreate")] // https://github.com/dotnet/runtime/issues/36897
-#endif
 		public void KeyRecordTest ()
 		{
 			using (var cert = new X509Certificate2 (ImportExportTest.farscape_pfx, "farscape"))

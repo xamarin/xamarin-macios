@@ -858,6 +858,14 @@
 			Mode = DotNetMode.OnlyDotNet,
 		},
 
+		new Export ("int", "monovm_runtimeconfig_initialize",
+			"MonovmRuntimeConfigArguments *", "arg",
+			"MonovmRuntimeConfigArgumentsCleanup", "cleanup_fn",
+			"void *", "user_data"
+		) {
+			Mode = DotNetMode.OnlyDotNet,
+		},
+
 		#endregion
 	};
 #><#+

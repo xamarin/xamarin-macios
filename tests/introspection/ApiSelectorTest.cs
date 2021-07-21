@@ -108,7 +108,6 @@ namespace Introspection {
 			case "GKPolygonObstacle":
 			case "GKComponent":
 			case "GKGraphNode":
-			case "WKPreferences":
 			case "WKUserContentController":
 			case "WKProcessPool":
 			case "WKWebViewConfiguration":
@@ -123,6 +122,8 @@ namespace Introspection {
 			// iOS 10 beta 2
 			case "GKBehavior":
 			case "MDLTransform":
+			// UISceneActivationRequestOptions started conforming to NSCopying oin Xcode 13
+			case "UISceneActivationRequestOptions":
 				switch (selectorName) {
 				case "copyWithZone:":
 					return true;
@@ -200,7 +201,24 @@ namespace Introspection {
 					return Runtime.Arch == Arch.SIMULATOR;
 				}
 				break;
+			case "CSImportExtension":
+				switch (selectorName) {
+				case "beginRequestWithExtensionContext:": 
+				case "updateAttributes:forFileAtURL:error:":
+					if (Runtime.Arch == Arch.SIMULATOR) // not available in the sim
+						return true;
+					break;
+				}
+				break;
 #endif
+			case "WKPreferences":
+				switch (selectorName) {
+				case "encodeWithCoder:": // from iOS 10
+					return true;
+				case "textInteractionEnabled": // xcode 13 renamed this to `isTextInteractionEnabled` but does not respond to the old one
+					return true;
+				}
+				break;
 			}
 			// This ctors needs to be manually bound
 			switch (type.Name) {
@@ -764,7 +782,7 @@ namespace Introspection {
 			case "MLSequence":
 				switch (selectorName) {
 				case "encodeWithCoder:":
-					if (!TestRuntime.CheckXcodeVersion (12, 0))
+					if (!TestRuntime.CheckXcodeVersion (12, TestRuntime.MinorXcode12APIMismatch))
 						return true;
 					break;
 				}
