@@ -14,6 +14,9 @@ namespace LinkSdk {
 
 		[Test]
 		[SetCulture ("cs-CZ")]
+#if NET && __MACCATALYST__
+		[Ignore ("No globalization data yet for Mac Catalyst - https://github.com/xamarin/xamarin-macios/issues/11392")]
+#endif
 		public void CzechDictComparer ()
 		{
 			DictComparer ();
@@ -21,6 +24,9 @@ namespace LinkSdk {
 
 		[Test]
 		[SetCulture ("en-US")]
+#if NET && __MACCATALYST__
+		[Ignore ("No globalization data yet for Mac Catalyst - https://github.com/xamarin/xamarin-macios/issues/11392")]
+#endif
 		public void EnglishDictComparer ()
 		{
 			DictComparer ();

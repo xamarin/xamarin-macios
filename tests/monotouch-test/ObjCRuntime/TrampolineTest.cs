@@ -637,7 +637,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		
 		static float ParseString (string str)
 		{
-			return float.Parse (str, new CultureInfo ("en-US").NumberFormat);
+			return float.Parse (str, CultureInfo.InvariantCulture.NumberFormat);
 		}
 		
 		[Export ("testCGRect")]

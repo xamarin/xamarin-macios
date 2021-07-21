@@ -370,6 +370,11 @@ namespace MonoTests.System.Net.Http
 				Assert.Ignore ("Fails on macOS 10.10: https://github.com/xamarin/maccore/issues/1645");
 #endif
 
+#if NET
+			if (handlerType == typeof (HttpClientHandler))
+				Assert.Ignore ("https://github.com/dotnet/runtime/issues/55986");
+#endif
+
 			bool validationCbWasExecuted = false;
 			bool customValidationCbWasExecuted = false;
 			bool invalidServicePointManagerCbWasExcuted = false;
