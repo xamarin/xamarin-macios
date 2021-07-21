@@ -463,6 +463,9 @@ namespace LinkSdk {
 #endif // !__WATCHOS__ && !__MACCATALYST__
 		
 		[Test]
+#if NET && __MACCATALYST__
+		[Ignore ("No globalization data yet for Mac Catalyst - https://github.com/xamarin/xamarin-macios/issues/11392")]
+#endif
 		public void XElement_3137 ()
 		{
 			CultureInfo current = Thread.CurrentThread.CurrentCulture;
