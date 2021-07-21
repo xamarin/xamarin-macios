@@ -104,16 +104,26 @@ namespace LinkAll.Attributes {
 		[Test]
 		public void Runtime_RegisterEntryAssembly ()
 		{
-#if NET
-			if (Runtime.Arch == Arch.DEVICE)
-				Assert.Ignore ("https://github.com/xamarin/xamarin-macios/issues/10457");
-#endif
-
 			var klass = Type.GetType ("ObjCRuntime.Runtime, " + AssemblyName);
 			Assert.NotNull (klass, "Runtime");
 			// RegisterEntryAssembly is only needed for the simulator (not on devices) so it's only preserved for sim builds
 			var method = klass.GetMethod ("RegisterEntryAssembly", BindingFlags.NonPublic | BindingFlags.Static, null, new [] { typeof (Assembly) }, null);
+#if NET
+			// with ILLink this becomes a stub (on devices) so the method still exists but is empty
+			Assert.NotNull (method, "RegisterEntryAssembly");
+			var mb = method.GetMethodBody ();
+			Assert.NotNull (method, "GetMethodBody");
+			var il = mb.GetILAsByteArray ();
+			if (Runtime.Arch == Arch.DEVICE) {
+				// empty means a `ret` instruction (and that's true even if IL is stripped)
+				Assert.That (il.Length, Is.EqualTo (1), "il == 1");
+			} else {
+				// means some stuff in addition to the `ret` instruction
+				Assert.That (il.Length, Is.GreaterThan (1), "il > 1");
+			}
+#else
 			Assert.That (method == null, Is.EqualTo (Runtime.Arch == Arch.DEVICE), "RegisterEntryAssembly");
+#endif
 		}
 
 		[Test]
