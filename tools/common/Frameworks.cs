@@ -631,7 +631,6 @@ public class Frameworks : Dictionary <string, Framework>
 				case "HealthKitUI":
 				case "iAd":
 				case "IdentityLookupUI":
-				case "HomeKit":
 				case "Messages":
 				case "MessageUI":
 				case "VisionKit":
