@@ -151,8 +151,7 @@ namespace Photos
 		[Field ("PHLocalIdentifierNotFound")]
 		NSString LocalIdentifierNotFound { get; }
 
-		[MacCatalyst (15,0)]
-		[TV (15, 0), Mac (12, 0), iOS (15, 0)]
+		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
 		[NullAllowed, Export ("adjustmentFormatIdentifier")]
 		string AdjustmentFormatIdentifier { get; }
 	}
@@ -1169,8 +1168,7 @@ namespace Photos
 		[Export ("unregisterAvailabilityObserver:")]
 		void Unregister (IPHPhotoLibraryAvailabilityObserver observer);
 
-		[MacCatalyst (15,0)]
-		[TV (15,0), Mac (12,0), iOS (15,0)]
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Field ("PHLocalIdentifiersErrorKey")]
 		NSString PHLocalIdentifiersErrorKey { get; }
 	}
@@ -1446,8 +1444,7 @@ namespace Photos
 		IntPtr Constructor (string stringValue);
 	}
 
-	[MacCatalyst (15,0)]
-	[TV (15,0), Mac (12,0), iOS (15,0)]
+	[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface PHCloudIdentifierMapping
@@ -1459,8 +1456,7 @@ namespace Photos
 		NSError Error { get; }
 	}
 
-	[MacCatalyst (15,0)]
-	[TV (15,0), Mac (12,0), iOS (15,0)]
+	[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface PHLocalIdentifierMapping
