@@ -103,18 +103,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		</Codesign>
 	</Target>
 
-	<Target Name="_CodesignVerify" Condition="'$(_RequireCodeSigning)'" DependsOnTargets="_CodesignAppBundle">
-		<CodesignVerify
-			Condition="'$(IsMacEnabled)' == 'true'"
-			SessionId="$(BuildSessionId)"
-			ToolExe="$(CodesignExe)"
-			ToolPath="$(CodesignPath)"
-			CodesignAllocate="$(_CodesignAllocate)"
-			Resource="$(AppBundleDir)"
-		>
-		</CodesignVerify>
-	</Target>
-
 	<Target Name="_CompileTextureAtlases" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_CoreCompileTextureAtlases" />
 
 	<Target Name="_CoreCompileTextureAtlases">
