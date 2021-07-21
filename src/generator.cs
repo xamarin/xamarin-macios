@@ -4034,7 +4034,18 @@ public partial class Generator : IMemberGatherer {
 			print (l);
 		}
 	}
-	
+
+	bool IsOptimizable (MemberInfo method)
+	{
+		var optimizable = true;
+		var snippets = AttributeManager.GetCustomAttributes<SnippetAttribute> (method);
+		if (snippets.Length > 0) {
+			foreach (SnippetAttribute snippet in snippets)
+				optimizable &= snippet.Optimizable;
+		}
+		return optimizable;
+	}
+
 	[Flags]
 	public enum BodyOption {
 		None = 0x0,
@@ -4956,7 +4967,7 @@ public partial class Generator : IMemberGatherer {
 			}
 		}
 
-		print_generated_code ();
+		print_generated_code (optimizable: IsOptimizable (pi));
 		PrintPropertyAttributes (pi, minfo.type);
 
 		PrintAttributes (pi, preserve:true, advice:true, bindAs:true);
@@ -5511,7 +5522,7 @@ public partial class Generator : IMemberGatherer {
 		var mod = minfo.GetVisibility ();
 
 		var is_abstract = minfo.is_abstract;
-		print_generated_code ();
+		print_generated_code (optimizable: IsOptimizable (minfo.mi));
 		print ("{0} {1}{2}{3}",
 		       mod,
 		       minfo.GetModifiers (),
@@ -7423,15 +7434,23 @@ public partial class Generator : IMemberGatherer {
 			// Do we need a dispose method?
 			//
 			if (!is_static_class){
-				var disposeAttr = AttributeManager.GetCustomAttributes<DisposeAttribute> (type);
-				if (disposeAttr.Length > 0 || instance_fields_to_clear_on_dispose.Count > 0){
-					print_generated_code (optimizable: disposeAttr.Length == 0);
+				var attrs = AttributeManager.GetCustomAttributes<DisposeAttribute> (type);
+				// historical note: unlike many attributes our `DisposeAttribute` has `AllowMultiple=true`
+				var has_dispose_attributes = attrs.Length > 0;
+				if (has_dispose_attributes || (instance_fields_to_clear_on_dispose.Count > 0)) {
+					bool optimizable = true;
+					if (has_dispose_attributes) {
+						// if every attribute opt-in to be optimizable then we'll allow it at the method level
+						foreach (var da in attrs)
+							optimizable &= da.Optimizable;
+					}
+					print_generated_code (optimizable: optimizable);
 					print ("protected override void Dispose (bool disposing)");
 					print ("{");
 					indent++;
-					if (disposeAttr.Length > 0){
-						var snippet = disposeAttr [0];
-						Inject (snippet);
+					if (has_dispose_attributes) {
+						foreach (var da in attrs)
+							Inject (da);
 					}
 					
 					print ("base.Dispose (disposing);");

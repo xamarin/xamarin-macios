@@ -5050,7 +5050,7 @@ namespace Foundation
 	}
 	
 	[BaseType (typeof(NSObject))]
-	[Dispose ("if (disposing) { Invalidate (); } ")]
+	[Dispose ("if (disposing) { Invalidate (); } ", Optimizable = true)]
 	// init returns NIL
 	[DisableDefaultCtor]
 	interface NSTimer {
@@ -5086,6 +5086,8 @@ namespace Foundation
 		[Export ("fireDate", ArgumentSemantic.Copy)]
 		NSDate FireDate { get; set; }
 
+		// Note: preserving this member allows us to re-enable the `Optimizable` binding flag
+		[Preserve (Conditional = true)]
 		[Export ("invalidate")]
 		void Invalidate ();
 

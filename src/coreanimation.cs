@@ -186,7 +186,7 @@ namespace CoreAnimation {
 	}
 
 	[BaseType (typeof (NSObject))]
-	[Dispose ("OnDispose ();")]
+	[Dispose ("OnDispose ();", Optimizable = true)]
 	interface CALayer : CAMediaTiming, NSSecureCoding {
 		[Export ("layer")][Static]
 		CALayer Create ();
