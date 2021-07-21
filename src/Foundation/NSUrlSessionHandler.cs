@@ -487,7 +487,7 @@ namespace Foundation {
 			var nsrequest = await CreateRequest (request).ConfigureAwait(false);
 			var dataTask = session.CreateDataTask (nsrequest);
 
-			var tcs = new TaskCompletionSource<HttpResponseMessage> ();
+			var tcs = new TaskCompletionSource<HttpResponseMessage> (TaskCreationOptions.RunContinuationsAsynchronously);
 
 			lock (inflightRequestsLock) {
 #if !MONOMAC  && !__WATCHOS__
@@ -689,21 +689,10 @@ namespace Foundation {
 			void SetResponse (InflightData inflight)
 			{
 				lock (inflight.Lock) {
-					if (inflight.ResponseSent)
-						return;
-
 					if (inflight.CancellationTokenSource.Token.IsCancellationRequested)
 						return;
 
-					if (inflight.CompletionSource.Task.IsCompleted)
-						return;
-
-					var httpResponse = inflight.Response;
-
-					inflight.ResponseSent = true;
-
-					// EVIL HACK: having TrySetResult inline was blocking the request from completing
-					Task.Run (() => inflight.CompletionSource.TrySetResult (httpResponse));
+					inflight.CompletionSource.TrySetResult (inflight.Response);
 				}
 			}
 
@@ -845,7 +834,6 @@ namespace Foundation {
 			public HttpResponseMessage Response { get; set; }
 
 			public Exception Exception { get; set; }
-			public bool ResponseSent { get; set; }
 			public bool Errored { get; set; }
 			public bool Disposed { get; set; }
 			public bool Completed { get; set; }
