@@ -1984,6 +1984,7 @@ MAC_FRAMEWORKS =            \
 	PassKit                 \
 	PdfKit                  \
 	PencilKit               \
+	Phase                   \
 	Photos                  \
 	PhotosUI				\
 	PrintCore		\
@@ -2092,6 +2093,7 @@ IOS_FRAMEWORKS =         \
 	PassKit \
 	PdfKit \
 	PencilKit \
+	Phase \
 	Photos \
 	PhotosUI \
 	PushKit \
@@ -2259,6 +2261,7 @@ MACCATALYST_FRAMEWORKS = \
 	PassKit \
 	PdfKit \
 	PencilKit \
+	Phase \
 	Photos \
 	PhotosUI \
 	PushKit \

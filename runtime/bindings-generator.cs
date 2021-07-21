@@ -2694,6 +2694,33 @@ namespace Xamarin.BindingMethods.Generator
 				}
 			);
 
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (IntPtr, Quaternion)",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.IntPtr },
+						new ParameterData { TypeData = Types.QuatF }
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (IntPtr, Quaternion, IntPtr)",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.IntPtr },
+						new ParameterData { TypeData = Types.QuatF },
+						new ParameterData { TypeData = Types.IntPtr }
+					},
+				}
+			);
+
 			// We must expand functions with native types to their actual type as well.
 			for (int i = data.Count - 1; i >= 0; i--) {
 				if (!data [i].HasNativeType)

@@ -2165,6 +2165,9 @@ namespace Registrar {
 			case "QuickLookUI":
 				h = "<Quartz/Quartz.h>";
 				break;
+			case "Phase":
+				h = "<PHASE/PHASE.h>";
+				break;
 			case "PdfKit":
 				h = App.Platform == ApplePlatform.MacOSX ? "<Quartz/Quartz.h>" : "<PDFKit/PDFKit.h>";
 				break;
