@@ -1,9 +1,12 @@
 # deprecated and not used by catalyst
 !missing-enum! PHLivePhotoEditingErrorCode not bound
 !missing-field! PHLivePhotoEditingErrorDomain not bound
+!missing-field! PHLocalIdentifierNotFound not bound
 !missing-selector! +PHAsset::fetchAssetsWithALAssetURLs:options: not bound
 !missing-selector! +PHCloudIdentifier::notFoundIdentifier not bound
 !missing-selector! PHAsset::isSyncFailureHidden not bound
+!missing-selector! PHPhotoLibrary::cloudIdentifiersForLocalIdentifiers: not bound
+!missing-selector! PHPhotoLibrary::localIdentifiersForPHPhotoLibrary: not bound
 
 # apis not available on catalyst
 !missing-selector! PHProject::hasProjectPreview not bound

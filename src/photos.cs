@@ -146,7 +146,7 @@ namespace Photos
 		[Export ("playbackStyle", ArgumentSemantic.Assign)]
 		PHAssetPlaybackStyle PlaybackStyle { get; }
 
-		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'PHPhotosErrorIdentifierNotFound' instead.")]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'PHPhotosError.IdentifierNotFound' instead.")]
 		[NoTV][NoiOS]
 		[Field ("PHLocalIdentifierNotFound")]
 		NSString LocalIdentifierNotFound { get; }
@@ -1170,32 +1170,35 @@ namespace Photos
 
 		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Field ("PHLocalIdentifiersErrorKey")]
-		NSString PHLocalIdentifiersErrorKey { get; }
+		NSString LocalIdentifiersErrorKey { get; }
 	}
 
 	[Mac (10,13)]
+	[TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[Category]
-	[Advice ("This API is not available when using UIKit on macOS.")]
 	[BaseType (typeof (PHPhotoLibrary))]
 	interface PHPhotoLibrary_CloudIdentifiers {
 
-		[TV (15,0), Mac (12,0), iOS (15,0)]
+		[Mac (12,0)]
 		[Export ("localIdentifierMappingsForCloudIdentifiers:")]
 		NSDictionary<PHCloudIdentifier, PHLocalIdentifierMapping> LocalIdentifierMappingsForCloudIdentifiers (PHCloudIdentifier[] cloudIdentifiers);
 
-		[TV (15,0), Mac (12,0), iOS (15,0)]
+		[Mac (12,0)]
 		[Export ("cloudIdentifierMappingsForLocalIdentifiers:")]
 		NSDictionary<NSString, PHCloudIdentifierMapping> CloudIdentifierMappingsForLocalIdentifiers (string[] localIdentifiers);
 
+		[NoTV][NoiOS][NoMacCatalyst]
 		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'localIdentifierMappingsForCloudIdentifiers:' instead.")]
 		[Export ("localIdentifiersForCloudIdentifiers:")]
 		string[] GetLocalIdentifiers (PHCloudIdentifier[] cloudIdentifiers);
 
+		[NoTV][NoiOS][NoMacCatalyst]
 		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'cloudIdentifierMappingsForCloudIdentifiers:' instead.")]
 		[Export ("cloudIdentifiersForLocalIdentifiers:")]
 		PHCloudIdentifier[] GetCloudIdentifiers (string[] localIdentifiers);
 
-		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'PHPhotosErrorIdentifierNotFound' instead.")]
+		[NoTV][NoiOS][NoMacCatalyst]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'PHPhotosError.IdentifierNotFound' instead.")]
 		[Field ("PHLocalIdentifierNotFound")]
 		NSString LocalIdentifierNotFound { get; }
 	}
@@ -1426,12 +1429,11 @@ namespace Photos
 	[Mac (10,13)]
 	[TV (15,0)]
 	[iOS (15,0)]
-	[Advice ("This API is not available when using UIKit on macOS.")]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface PHCloudIdentifier : NSSecureCoding {
 
-		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'PHPhotosErrorIdentifierNotFound' instead.")]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'PHPhotosError.IdentifierNotFound' instead.")]
 		[NoTV, NoiOS]
 		[Static]
 		[Export ("notFoundIdentifier")]
