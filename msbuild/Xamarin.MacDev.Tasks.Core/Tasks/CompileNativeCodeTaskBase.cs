@@ -21,9 +21,6 @@ namespace Xamarin.MacDev.Tasks {
 		[Required]
 		public string MinimumOSVersion { get; set; }
 
-		[Output]
-		public ITaskItem [] ObjectFiles { get; set; }
-
 		[Required]
 		public string SdkDevPath { get; set; }
 
@@ -37,10 +34,6 @@ namespace Xamarin.MacDev.Tasks {
 		public override bool Execute ()
 		{
 			var processes = new Task<Execution> [CompileInfo.Length];
-			var objectFiles = new List<ITaskItem> ();
-
-			if (ObjectFiles != null)
-				objectFiles.AddRange (ObjectFiles);
 
 			for (var i = 0; i < CompileInfo.Length; i++) {
 				var info = CompileInfo [i];
@@ -99,7 +92,6 @@ namespace Xamarin.MacDev.Tasks {
 				outputFile = Path.GetFullPath (outputFile);
 				arguments.Add ("-o");
 				arguments.Add (outputFile);
-				objectFiles.Add (new TaskItem (outputFile));
 
 				arguments.Add ("-c");
 				arguments.Add (src);
@@ -108,8 +100,6 @@ namespace Xamarin.MacDev.Tasks {
 			}
 
 			System.Threading.Tasks.Task.WaitAll (processes);
-
-			ObjectFiles = objectFiles.ToArray ();
 
 			return !Log.HasLoggedErrors;
 		}
