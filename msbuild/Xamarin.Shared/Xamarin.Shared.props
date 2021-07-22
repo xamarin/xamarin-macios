@@ -132,6 +132,10 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<!-- SpecifiedCodeSigningKey -->
 		<_SpecifiedCodesignKey Condition="'$(_PlatformName)' == 'macOS'">$(CodeSigningKey)</_SpecifiedCodesignKey> <!-- Xamarin.Mac projects use 'CodeSigningKey' -->
 		<_SpecifiedCodesignKey Condition="'$(_PlatformName)' != 'macOS'">$(CodesignKey)</_SpecifiedCodesignKey> <!-- Xamarin.iOS projects use 'CodesignKey' -->
+
+		<!-- If we should create a .pkg or not (only relevant for macOS / Mac Catalyst) -->
+		<!-- The equivalent property for the other platforms is 'BuildIpa' -->
+		<CreatePackage Condition="'$(CreatePackage)' == ''">false</CreatePackage>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(UsingAppleNETSdk)' != 'true'">

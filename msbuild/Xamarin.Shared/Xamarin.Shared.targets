@@ -1621,6 +1621,37 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</ItemGroup>
 	</Target>
 
+	<Target Name="_CompileProductDefinition" Condition="$(CreatePackage)" DependsOnTargets="_DetectAppManifest;_ComputeTargetArchitectures">
+		<CompileProductDefinition
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			AppManifest="$(_AppManifest)"
+			OutputDirectory="$(IntermediateOutputPath)"
+			ProductDefinition="$(ProductDefinition)"
+			TargetArchitectures="$(TargetArchitectures)"
+		>
+			<Output TaskParameter="CompiledProductDefinition" PropertyName="_CompiledProductDefinition" />
+		</CompileProductDefinition>
+	</Target>
+
+	<Target Name="_CreateInstaller" Condition="$(CreatePackage)" DependsOnTargets="Codesign;_CompileProductDefinition">
+		<CreateInstallerPackage
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			AppBundleDir="$(AppBundleDir)"
+			AppManifest="$(_AppManifest)"
+			EnablePackageSigning="$(EnablePackageSigning)"
+			MainAssembly="$(TargetPath)"
+			Name="$(AssemblyName)"
+			OutputDirectory="$(TargetDir)"
+			PackageSigningKey="$(PackageSigningKey)"
+			PackagingExtraArgs="$(PackagingExtraArgs)"
+			ProductDefinition="$(_CompiledProductDefinition)"
+			ProjectPath="$(MSBuildProjectFullPath)"
+		>
+		</CreateInstallerPackage>
+	</Target>
+
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Shared.ObjCBinding.targets" Condition="'$(IsBindingProject)' == 'true'" />
 
 	<!-- Xamarin.ImplicitFacade.targets will detect if we need to add an implicit reference to netstandard.dll -->
