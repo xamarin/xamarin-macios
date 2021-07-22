@@ -12,7 +12,6 @@ namespace MonoTouchFixtures.AVFoundation {
 
 		void Compare (NSString constant, AVMediaTypes value)
 		{
-			TestRuntime.RequestCameraPermission (constant, true);
 			Assert.That (AVCaptureDevice.GetDefaultDevice (constant), Is.EqualTo (AVCaptureDevice.GetDefaultDevice (value)), value.ToString ());
 #if !XAMCORE_4_0
 			Assert.That (AVCaptureDevice.GetDefaultDevice (constant), Is.EqualTo (AVCaptureDevice.DefaultDeviceWithMediaType ((string) constant)), value.ToString () + ".compat");
@@ -22,6 +21,9 @@ namespace MonoTouchFixtures.AVFoundation {
 		[Test]
 		public void CompareConstantEnum ()
 		{
+			TestRuntime.RequestCameraPermission (AVMediaType.Audio, true);
+			TestRuntime.RequestCameraPermission (AVMediaType.Video, true);
+
 			Compare (AVMediaType.Audio, AVMediaTypes.Audio);
 			Compare (AVMediaType.ClosedCaption, AVMediaTypes.ClosedCaption);
 			Compare (AVMediaType.Metadata, AVMediaTypes.Metadata);
