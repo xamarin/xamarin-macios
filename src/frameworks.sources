@@ -1371,6 +1371,7 @@ PASSKIT_API_SOURCES = \
 	PassKit/PKEnums.cs \
 	
 PASSKIT_SOURCES = \
+	PassKit/PKCompat.cs	\
 	PassKit/PKPaymentRequest.cs	\
 
 # PencilKit
