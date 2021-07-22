@@ -385,7 +385,6 @@ namespace AuthenticationServices {
 
 		[TV (15,0), NoWatch, NoMac, NoiOS, NoMacCatalyst]
 		[Export ("authorizationController:didCompleteWithCustomMethod:")]
-		// void DidComplete (ASAuthorizationController controller, [BindAs (typeof (ASAuthorizationCustomMethod))] NSString method);
 		void DidComplete (ASAuthorizationController controller, NSString method);
 	}
 
@@ -428,7 +427,6 @@ namespace AuthenticationServices {
 
 		[TV (15, 0), NoWatch, NoMac, NoiOS, NoMacCatalyst]
 		[Export ("customAuthorizationMethods", ArgumentSemantic.Copy)]
-		[BindAs (typeof (ASAuthorizationCustomMethod[]))]
 		NSString[] CustomAuthorizationMethods { get; set; }
 	}
 
@@ -955,25 +953,32 @@ namespace AuthenticationServices {
 	}
 
 	[iOS (15,0), Mac (12,0), MacCatalyst (15,0), NoWatch, NoTV]
-	enum ASAuthorizationPublicKeyCredentialAttestationKind {
+	interface ASAuthorizationPublicKeyCredentialAttestationKind
+	{
 		[Field ("ASAuthorizationPublicKeyCredentialAttestationKindNone")]
-		None,
+		NSString None { get; }
+
 		[Field ("ASAuthorizationPublicKeyCredentialAttestationKindDirect")]
-		Direct,
+		NSString Direct { get; }
+
 		[Field ("ASAuthorizationPublicKeyCredentialAttestationKindIndirect")]
-		Indirect,
+		NSString Indirect { get; }
+
 		[Field ("ASAuthorizationPublicKeyCredentialAttestationKindEnterprise")]
-		Enterprise,
+		NSString Enterprise { get; }
 	}
 
 	[iOS (15,0), Mac (12,0), MacCatalyst (15,0), NoWatch, NoTV]
-	enum ASAuthorizationPublicKeyCredentialUserVerificationPreference {
+	interface ASAuthorizationPublicKeyCredentialUserVerificationPreference
+	{
 		[Field ("ASAuthorizationPublicKeyCredentialUserVerificationPreferencePreferred")]
-		Preferred,
+		NSString Preferred { get; }
+
 		[Field ("ASAuthorizationPublicKeyCredentialUserVerificationPreferenceRequired")]
-		Required,
+		NSString Required { get; }
+
 		[Field ("ASAuthorizationPublicKeyCredentialUserVerificationPreferenceDiscouraged")]
-		Discouraged,
+		NSString Discouraged { get; }
 	}
 
 	[iOS (15,0), Mac (12,0), MacCatalyst (15,0), NoWatch, NoTV]
@@ -1055,9 +1060,7 @@ namespace AuthenticationServices {
 
 		[Abstract]
 		[Export ("userVerificationPreference")]
-		// Cannot bind inside a protocol
-		// [BindAs (typeof (ASAuthorizationPublicKeyCredentialUserVerificationPreference))]
-		string UserVerificationPreference { get; set; }
+		NSString UserVerificationPreference { get; set; }
 	}
 
 	interface IASAuthorizationPublicKeyCredentialDescriptor { }
@@ -1106,15 +1109,11 @@ namespace AuthenticationServices {
 
 		[Abstract]
 		[Export ("userVerificationPreference")]
-		// Cannot BindAs inside protocol
-		// [BindAs (typeof (ASAuthorizationPublicKeyCredentialUserVerificationPreference))]
-		string UserVerificationPreference { get; set; }
+		NSString UserVerificationPreference { get; set; }
 
 		[Abstract]
 		[Export ("attestationPreference")]
-		// Cannot BindAs inside protocol
-		// [BindAs (typeof (ASAuthorizationPublicKeyCredentialAttestationKind))] 
-		string AttestationPreference { get; set; }
+		NSString AttestationPreference { get; set; }
 	}
 
 	[NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoTV]
@@ -1245,14 +1244,16 @@ namespace AuthenticationServices {
 	}
 
 	[TV (15,0), NoWatch, NoiOS, NoMac, NoMacCatalyst]
-	enum ASAuthorizationCustomMethod
+	interface ASAuthorizationCustomMethod
 	{
 		[Field ("ASAuthorizationCustomMethodVideoSubscriberAccount")]
-		SubscriberAccount,
+		NSString SubscriberAccount { get; }
+
 		[Field ("ASAuthorizationCustomMethodRestorePurchase")]
-		RestorePurchase,
+		NSString RestorePurchase { get; }
+
 		[Field ("ASAuthorizationCustomMethodOther")]
-		Other,
+		NSString Other { get; }
 	}
 
 	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
