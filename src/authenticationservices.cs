@@ -953,6 +953,7 @@ namespace AuthenticationServices {
 	}
 
 	[iOS (15,0), Mac (12,0), MacCatalyst (15,0), NoWatch, NoTV]
+	[Static]
 	interface ASAuthorizationPublicKeyCredentialAttestationKind
 	{
 		[Field ("ASAuthorizationPublicKeyCredentialAttestationKindNone")]
@@ -969,6 +970,7 @@ namespace AuthenticationServices {
 	}
 
 	[iOS (15,0), Mac (12,0), MacCatalyst (15,0), NoWatch, NoTV]
+	[Static]
 	interface ASAuthorizationPublicKeyCredentialUserVerificationPreference
 	{
 		[Field ("ASAuthorizationPublicKeyCredentialUserVerificationPreferencePreferred")]
@@ -1244,6 +1246,7 @@ namespace AuthenticationServices {
 	}
 
 	[TV (15,0), NoWatch, NoiOS, NoMac, NoMacCatalyst]
+	[Static]
 	interface ASAuthorizationCustomMethod
 	{
 		[Field ("ASAuthorizationCustomMethodVideoSubscriberAccount")]
