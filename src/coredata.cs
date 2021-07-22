@@ -1673,11 +1673,11 @@ namespace CoreData
 	{
 
 		[Notification]
-		[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Field ("NSCoreDataCoreSpotlightDelegateIndexDidUpdateNotification")]
 		NSString IndexDidUpdateNotification { get; }
 
-		[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("initForStoreWithDescription:coordinator:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (NSPersistentStoreDescription description, NSPersistentStoreCoordinator psc);
@@ -1716,8 +1716,8 @@ namespace CoreData
 		[Export ("startSpotlightIndexing")]
 		void StartSpotlightIndexing ();
 
-		[NoWatch, NoTV, Mac (12,0), iOS (15,0)]
-		[Export ("stopSpotlightIndexing"), MacCatalyst (15,0)]
+		[NoWatch, NoTV, Mac (12,0), iOS (15,0),MacCatalyst (15,0)]
+		[Export ("stopSpotlightIndexing")] 
 		void StopSpotlightIndexing ();
 	}
 #endif 
@@ -2673,19 +2673,19 @@ namespace CoreData
 		NSExpression DerivationExpression { get; set; }
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 	delegate void NSPersistentCloudKitContainerShareManagedObjectsHandler (NSSet<NSManagedObjectID> sharedObjectIds, CKShare share, CKContainer container, NSError error);
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 	delegate void NSPersistentCloudKitContainerFetchParticipantsMatchingLookupInfosHandler (NSArray<CKShareParticipant> fetchedParticipants, NSError error);
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 	delegate void NSPersistentCloudKitContainerPersistUpdatedShareHandler (CKShare persistedShare, NSError error);
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 	delegate void NSPersistentCloudKitContainerPurgeObjectsAndRecordsInZoneHandler (CKRecordZoneID purgedZoneId, NSError error);
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 	delegate void NSPersistentCloudKitContainerAcceptShareInvitationsHandler (NSArray<CKShareMetadata> acceptedShareMetadatas, NSError error);
 
 	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
