@@ -440,6 +440,7 @@ namespace Introspection {
 				case "ARDepthData":
 				case "ARSkeletonDefinition": // device only
 				case "NSMergePolicy":
+				case "SNTimeDurationConstraint": // Conformance not in headers
 					return true;
 				}
 				break;
@@ -678,6 +679,7 @@ namespace Introspection {
 				case "ARDepthData":
 				case "ARSkeletonDefinition": // device only
 				case "NSMergePolicy":
+				case "SNTimeDurationConstraint": // Conformance not in headers
 					return true;
 				}
 				break;
@@ -759,6 +761,7 @@ namespace Introspection {
 				case "NSMappingModel":
 				case "NSMergePolicy":
 				case "NSPropertyMapping":
+				case "SNTimeDurationConstraint": // Conformance not in headers"
 					return true;
 				}
 				break;
