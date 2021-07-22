@@ -105,6 +105,12 @@ namespace MonoTouchFixtures.HealthKit {
 					if (!TestRuntime.CheckXcodeVersion (12, 3))
 						continue;
 					break;
+				case HKCategoryTypeIdentifier.DateOfEarliestDataUsedForEstimate:
+				case HKCategoryTypeIdentifier.AppleWalkingSteadiness:
+				case HKCategoryTypeIdentifier.NumberOfAlcoholicBeverages:
+					if (!TestRuntime.CheckXcodeVersion (13, 0))
+						continue;
+					break;
 				default:
 					if (!TestRuntime.CheckXcodeVersion (7, 0))
 						continue;
