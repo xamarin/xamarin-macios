@@ -445,7 +445,6 @@ namespace AuthenticationServices {
 		InvalidResponse = 1002,
 		NotHandled = 1003,
 		Failed = 1004,
-		[iOS (15,0), Mac (12,0), MacCatalyst (15,0), NoTV, NoWatch]
 		NotInteractive = 1005,
 	}
 
