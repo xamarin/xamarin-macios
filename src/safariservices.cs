@@ -495,7 +495,7 @@ namespace SafariServices {
 	[iOS (15,0), MacCatalyst (15,0), NoMac, NoTV, NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface SFSafariViewControllerPrewarmingToken : NSCoding, NSSecureCoding
+	interface SFSafariViewControllerPrewarmingToken /* Privately conforms to NSCoding and NSSecureCoding */
 	{
 		[Export ("invalidate")]
 		void Invalidate ();
