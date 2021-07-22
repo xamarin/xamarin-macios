@@ -1423,15 +1423,6 @@ namespace AppKit {
 	}
 #endif
 
-	[Mac (10,11)]
-	[Native]
-	[Flags]
-	public enum NSTextStorageEditActions : ulong
-	{
-		Attributes = (1 << 0),
-		Characters = (1 << 1)
-	}
-
 	[Native]
 	public enum NSPrinterTableStatus : ulong {
 		Ok, NotFound, Error

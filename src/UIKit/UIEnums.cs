@@ -1297,22 +1297,6 @@ namespace UIKit {
 		None, Push, Pop
 	}
 
-	// NSInteger -> NSLayoutManager.h
-	[Native]
-	[NoWatch]
-	public enum NSTextLayoutOrientation : long {
-		Horizontal, Vertical
-	}
-
-	// NSUInteger -> NSTextStorage.h
-	[Native]
-	[Flags]
-	[NoWatch]
-	public enum NSTextStorageEditActions : ulong {
-		Attributes = 1,
-		Characters = 2
-	}
-
 	// NSInteger -> UIActivity.h
 	[Native]
 	[NoTV][NoWatch]
@@ -2311,13 +2295,6 @@ namespace UIKit {
 		Bold,
 		Heavy,
 		Black,
-	}
-
-	[Mac (10,15), iOS (13,0), TV (13,0)]
-	[Native]
-	public enum NSTextScalingType : long {
-		Standard = 0,
-		iOS,
 	}
 
 	[iOS (13,0), TV (13,0), NoWatch]
