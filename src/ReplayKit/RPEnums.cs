@@ -53,6 +53,7 @@ namespace ReplayKit {
 		FailedToStartCaptureStack = -5833,
 		InvalidParameter = -5834,
 		FilePermissions = -5835,
+		ExportClipToUrlInProgress = -5836,
 	}
 
 	[NoiOS]

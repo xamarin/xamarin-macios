@@ -60,6 +60,7 @@ namespace Speech {
 		[Export ("contextualStrings", ArgumentSemantic.Copy)]
 		string [] ContextualStrings { get; set; }
 
+		[Deprecated (PlatformName.iOS, 15, 0)]
 		[NullAllowed, Export ("interactionIdentifier")]
 		string InteractionIdentifier { get; set; }
 
@@ -259,11 +260,13 @@ namespace Speech {
 
 		[iOS (13, 0)]
 		[Export ("speakingRate")]
+		[Deprecated (PlatformName.iOS, 14, 5)]
 		[Advice ("Use 'SpeakingRate' from 'SFSpeechRecognitionMetadata' instead.")]
 		double SpeakingRate { get; }
 
 		[iOS (13, 0)]
 		[Export ("averagePauseDuration")]
+		[Deprecated (PlatformName.iOS, 14, 5)]
 		[Advice ("Use 'AveragePauseDuration' from 'SFSpeechRecognitionMetadata' instead.")]
 		double AveragePauseDuration { get; }
 	}
@@ -292,6 +295,7 @@ namespace Speech {
 
 		[iOS (13, 0)]
 		[NullAllowed, Export ("voiceAnalytics")]
+		[Deprecated (PlatformName.iOS, 14, 5)]
 		[Advice ("Use 'VoiceAnalytics' from 'SFSpeechRecognitionMetadata' instead.")]
 		SFVoiceAnalytics VoiceAnalytics { get; }
 	}

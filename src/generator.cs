@@ -3143,11 +3143,14 @@ public partial class Generator : IMemberGatherer {
 	
 	// this attribute allows the linker to be more clever in removing unused code in bindings - without risking breaking user code
 	// only generate those for monotouch now since we can ensure they will be linked away before reaching the devices
-	public void GeneratedCode (StreamWriter sw, int tabs)
+	public void GeneratedCode (StreamWriter sw, int tabs, bool optimizable = true)
 	{
 		for (int i=0; i < tabs; i++)
 			sw.Write ('\t');
-		sw.WriteLine ("[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]");
+		sw.Write ("[BindingImpl (BindingImplOptions.GeneratedCode");
+		if (optimizable)
+			sw.Write (" | BindingImplOptions.Optimizable");
+		 sw.WriteLine (")]");
 	}
 
 	static void WriteIsDirectBindingCondition (StreamWriter sw, ref int tabs, bool? is_direct_binding, string is_direct_binding_value, Func<string> trueCode, Func<string> falseCode)
@@ -3184,9 +3187,9 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 	
-	public void print_generated_code ()
+	public void print_generated_code (bool optimizable = true)
 	{
-		GeneratedCode (sw, indent);
+		GeneratedCode (sw, indent, optimizable);
 	}
 
 	public void print (string format)
@@ -3972,35 +3975,38 @@ public partial class Generator : IMemberGatherer {
 
 		if (need_multi_path) {
 			if (is_stret_multi) {
-				print ("if (Runtime.Arch == Arch.DEVICE) {");
-				indent++;
-				if (BindingTouch.CurrentPlatform == PlatformName.WatchOS) {
-					print ("if (global::ObjCRuntime.Runtime.IsARM64CallingConvention) {");
-				} else {
-					print ("if (IntPtr.Size == 8) {");
-
-				}
+				// First check for arm64
+				print ("if (global::ObjCRuntime.Runtime.IsARM64CallingConvention) {");
 				indent++;
 				GenerateInvoke (false, supercall, mi, minfo, selector, args [index64], assign_to_temp, category_type, false, EnumMode.Bit64);
 				indent--;
-				print ("} else {");
+				// If we're not arm64, but we're 64-bit, then we're x86_64
+				print ("} else if (IntPtr.Size == 8) {");
+				indent++;
+				GenerateInvoke (x64_stret, supercall, mi, minfo, selector, args[index64], assign_to_temp, category_type, aligned && x64_stret, EnumMode.Bit64);
+				indent--;
+				// if we're not 64-bit, but we're on device, then we're 32-bit arm
+				print ("} else if (Runtime.Arch == Arch.DEVICE) {");
 				indent++;
 				GenerateInvoke (arm_stret, supercall, mi, minfo, selector, args [0], assign_to_temp, category_type, aligned && arm_stret, EnumMode.Bit32);
 				indent--;
-				print ("}");
+				// if we're none of the above, we're x86
+				print ("} else {");
+				indent++;
+				GenerateInvoke (x86_stret, supercall, mi, minfo, selector, args[0], assign_to_temp, category_type, aligned && x86_stret, EnumMode.Bit32);
 				indent--;
-				print ("} else if (IntPtr.Size == 8) {");
+				print ("}");
 			} else {
 				print ("if (IntPtr.Size == 8) {");
+				indent++;
+				GenerateInvoke (x64_stret, supercall, mi, minfo, selector, args[index64], assign_to_temp, category_type, aligned && x64_stret, EnumMode.Bit64);
+				indent--;
+				print ("} else {");
+				indent++;
+				GenerateInvoke (x86_stret, supercall, mi, minfo, selector, args[0], assign_to_temp, category_type, aligned && x86_stret, EnumMode.Bit32);
+				indent--;
+				print ("}");
 			}
-			indent++;
-			GenerateInvoke (x64_stret, supercall, mi, minfo, selector, args[index64], assign_to_temp, category_type, aligned && x64_stret, EnumMode.Bit64);
-			indent--;
-			print ("} else {");
-			indent++;
-			GenerateInvoke (x86_stret, supercall, mi, minfo, selector, args[0], assign_to_temp, category_type, aligned && x86_stret, EnumMode.Bit32);
-			indent--;
-			print ("}");
 		} else {
 			GenerateInvoke (false, supercall, mi, minfo, selector, args[0], assign_to_temp, category_type, false);
 		}
@@ -4662,7 +4668,7 @@ public partial class Generator : IMemberGatherer {
 			print (sw, by_ref_processing.ToString ());
 		if (use_temp_return) {
 			if (AttributeManager.HasAttribute<ProxyAttribute> (AttributeManager.GetReturnTypeCustomAttributes (mi)))
-				print ("ret.SetAsProxy ();");
+				print ("ret.IsDirectBinding = true;");
 
 			if (mi.ReturnType.IsSubclassOf (TypeManager.System_Delegate)) {
 				print ("return global::ObjCRuntime.Trampolines.{0}.Create (ret)!;", trampoline_info.NativeInvokerName);
@@ -7419,7 +7425,7 @@ public partial class Generator : IMemberGatherer {
 			if (!is_static_class){
 				var disposeAttr = AttributeManager.GetCustomAttributes<DisposeAttribute> (type);
 				if (disposeAttr.Length > 0 || instance_fields_to_clear_on_dispose.Count > 0){
-					print_generated_code ();
+					print_generated_code (optimizable: disposeAttr.Length == 0);
 					print ("protected override void Dispose (bool disposing)");
 					print ("{");
 					indent++;

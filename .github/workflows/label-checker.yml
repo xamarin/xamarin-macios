@@ -17,7 +17,7 @@ jobs:
     - run: exit 0
       name: 'Monojenkins PR'
       # always happy if monojenkins
-      if: github.actor == 'vs-mobiletools-engineering-service2'
+      if: github.actor == 'vs-mobiletools-engineering-service2' || github.actor == 'github-actions[bot]'
 
     - run: exit 1
       name: 'User PR with no labels'
