@@ -246,6 +246,8 @@ namespace Introspection {
 			switch (t.Name) {
 			case "CFAllocator":
 				return CFAllocator.SystemDefault;
+			case "CFArray":
+				return Runtime.GetINativeObject<CFArray> (new NSArray ().Handle, false);
 			case "CFBundle":
 				var bundles = CFBundle.GetAll ();
 				if (bundles.Length > 0)

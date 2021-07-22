@@ -69,7 +69,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 
-#if !DEVICE && !MONOMAC // some of these tests cause the AOT compiler to assert
+#if !DEVICE && !MONOMAC && !AOT // some of these tests cause the AOT compiler to assert
 		// No MonoPInvokeCallback
 		static void InvalidTrampoline1 () { }
 
@@ -98,7 +98,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 			Assert.Throws<ArgumentNullException> (() => block.SetupBlock (null, userDelegate), "null trampoline");
 
-#if !DEVICE && !MONOMAC
+#if !DEVICE && !MONOMAC && !AOT
 			if (Runtime.Arch == Arch.SIMULATOR) {
 				// These checks only occur in the simulator
 				Assert.Throws<ArgumentException> (() => block.SetupBlock ((Action) InvalidBlockTrampolines, userDelegate), "instance trampoline");

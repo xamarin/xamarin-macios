@@ -133,6 +133,7 @@
 		<StartupHookSupport Condition="'$(StartupHookSupport)' == ''">false</StartupHookSupport>
 		<UseSystemResourceKeys Condition="'$(UseSystemResourceKeys)' == ''">true</UseSystemResourceKeys>
 		<UseNativeHttpHandler Condition="'$(_PlatformName)' != 'macOS' And '$(UseNativeHttpHandler)' == ''">true</UseNativeHttpHandler>
+		<AutoreleasePoolSupport Condition="'$(AutoreleasePoolSupport)' == ''">true</AutoreleasePoolSupport>
 
 		<!-- We don't need to generate reference assemblies for apps or app extensions -->
 		<ProduceReferenceAssembly Condition="'$(ProduceReferenceAssembly)' == '' And ('$(OutputType)' == 'Exe' Or '$(IsAppExtension)' == 'true')">false</ProduceReferenceAssembly>
@@ -458,6 +459,7 @@
 			-->
 			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" Condition="'$(_LinkMode)' != 'None'" Type="Xamarin.Linker.Steps.PreserveBlockCodeHandler" />
 			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" Condition="'$(_LinkMode)' != 'None'" Type="Xamarin.Linker.OptimizeGeneratedCodeHandler" />
+			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" Condition="'$(_LinkMode)' != 'None'" Type="Xamarin.Linker.BackingFieldDelayHandler" />
 			<!-- MarkDispatcher substeps will run for all marked assemblies. -->
 			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" Condition="'$(_LinkMode)' != 'None'" Type="Xamarin.Linker.Steps.MarkDispatcher" />
 			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" Condition="'$(_LinkMode)' != 'None'" Type="Xamarin.Linker.Steps.PreserveSmartEnumConversionsHandler" />
@@ -677,7 +679,6 @@
 	<!-- App bundle creation tasks -->
 
 	<Target Name="_CreateRuntimeConfiguration"
-		Condition="'$(UseMonoRuntime)' != 'false'"
 		Inputs="$(ProjectRuntimeConfigFilePath)"
 		Outputs="$(_ParsedRuntimeConfigFilePath)"
 		DependsOnTargets="GenerateBuildRuntimeConfigurationFiles;_ComputePublishLocation"

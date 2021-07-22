@@ -17,8 +17,8 @@ namespace AppKit {
 		public static NSCollectionLayoutAnchor Create (NSDirectionalRectEdge edges, NSCollectionLayoutAnchorOffsetType offsetType, CGPoint offset) =>
 		    offsetType switch
 		    {
-			    NSCollectionLayoutAnchorOffsetType.Absolute   => _LayoutAnchorWithEdgesAbsoluteOffset (edges, offset),
-			    NSCollectionLayoutAnchorOffsetType.Fractional => _LayoutAnchorWithEdgesFractionalOffset (edges, offset),
+			    NSCollectionLayoutAnchorOffsetType.Absolute   => CreateFromAbsoluteOffset (edges, offset),
+			    NSCollectionLayoutAnchorOffsetType.Fractional => CreateFromFractionalOffset (edges, offset),
 			    _                                             => throw new ArgumentException (message: "Invalid enum value", paramName: nameof (offsetType)),
 		    };
 	}
