@@ -26341,18 +26341,6 @@ namespace AppKit {
 		GroupPagingCentered,
 	}
 
-	[Flags, Mac (10,15)]
-	[Native]
-	public enum NSDirectionalRectEdge : ulong
-	{
-		None = 0x0,
-		Top = 1uL << 0,
-		Leading = 1uL << 1,
-		Bottom = 1uL << 2,
-		Trailing = 1uL << 3,
-		All = Top | Leading | Bottom | Trailing,
-	}
-
 	[Mac (10,15)]
 	[Native]
 	public enum NSPickerTouchBarItemControlRepresentation : long
@@ -26369,21 +26357,6 @@ namespace AppKit {
 		SelectOne = 0,
 		SelectAny = 1,
 		Momentary = 2,
-	}
-
-	[Mac (10,15)]
-	[Native]
-	public enum NSRectAlignment : long
-	{
-		None = 0,
-		Top,
-		TopLeading,
-		Leading,
-		BottomLeading,
-		Bottom,
-		BottomTrailing,
-		Trailing,
-		TopTrailing,
 	}
 
 	[Mac (10,15)]
