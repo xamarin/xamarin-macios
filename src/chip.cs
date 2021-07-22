@@ -52,6 +52,14 @@ namespace Chip {
 
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[Native]
+	public enum ChipCommissioningFlow : ulong {
+		Standard = 0,
+		UserActionRequired = 1,
+		Custom = 2,
+		Invalid = 3,
+	}
+	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[Native]
 	public enum ChipOptionalQRCodeInfoType : ulong {
 		Unknown,
 		String,
@@ -68,6 +76,7 @@ namespace Chip {
 		bool OpenPairingWindow (nuint duration, [NullAllowed] out NSError error);
 
 		[Export ("openPairingWindowWithPIN:discriminator:setupPIN:error:")]
+		[return: NullAllowed]
 		string OpenPairingWindow (nuint duration, nuint discriminator, nuint setupPin, [NullAllowed] out NSError error);
 
 		[Export ("isActive")]
@@ -1124,6 +1133,14 @@ namespace Chip {
 		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("addOpCert:iCACertificate:iPKValue:caseAdminNode:adminVendorId:responseHandler:")]
+		void AddOpCert (NSData noc, NSData iCACertificate, NSData iPKValue, ulong caseAdminNode, ushort adminVendorId, ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("opCSRRequest:responseHandler:")]
+		void OpCsrRequest (NSData csrNonce, ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("removeAllFabrics:")]
 		void RemoveAllFabrics (ChipResponseHandler responseHandler);
 
@@ -1354,6 +1371,10 @@ namespace Chip {
 		void TestSpecific (ChipResponseHandler responseHandler);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("testUnknownCommand:")]
+		void TestUnknownCommand (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeBooleanWithResponseHandler:")]
 		void ReadAttributeBoolean (ChipResponseHandler responseHandler);
 
@@ -1486,6 +1507,14 @@ namespace Chip {
 		void ReadAttributeListInt8u (ChipResponseHandler responseHandler);
 
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeListOctetStringWithResponseHandler:")]
+		void ReadAttributeListOctetString (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeListStructOctetStringWithResponseHandler:")]
+		void ReadAttributeListStructOctetString (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeClusterRevisionWithResponseHandler:")]
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
@@ -1590,13 +1619,13 @@ namespace Chip {
 		void OnStatusUpdate (ChipPairingStatus status);
 
 		[Export ("onPairingComplete:")]
-		void OnPairingComplete (NSError error);
+		void OnPairingComplete ([NullAllowed] NSError error);
 
 		[Export ("onPairingDeleted:")]
-		void OnPairingDeleted (NSError error);
+		void OnPairingDeleted ([NullAllowed] NSError error);
 
 		[Export ("onAddressUpdated:")]
-		void OnAddressUpdated (NSError error);
+		void OnAddressUpdated ([NullAllowed] NSError error);
 	}
 
 	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
@@ -1689,6 +1718,7 @@ namespace Chip {
 	{
 		[Abstract]
 		[Export ("CHIPGetKeyValue:")]
+		[return: NullAllowed]
 		string GetValue (string key);
 
 		[Abstract]
@@ -1732,6 +1762,9 @@ namespace Chip {
 		[Export ("productID", ArgumentSemantic.Strong)]
 		NSNumber ProductId { get; set; }
 
+		[Export ("commissioningFlow", ArgumentSemantic.Assign)]
+		ChipCommissioningFlow CommissioningFlow { get; set; }
+
 		[Export ("requiresCustomFlow")]
 		bool RequiresCustomFlow { get; set; }
 
@@ -1748,6 +1781,7 @@ namespace Chip {
 		string SerialNumber { get; set; }
 
 		[Export ("getAllOptionalVendorData:")]
+		[return: NullAllowed]
 		ChipOptionalQRCodeInfo[] GetAllOptionalVendorData ([NullAllowed] out NSError error);
 	}
 
@@ -1763,5 +1797,707 @@ namespace Chip {
 		[return: NullAllowed]
 		ChipSetupPayload PopulatePayload ([NullAllowed] out NSError error);
 	}
+
+	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (ChipCluster), Name="CHIPAccountLogin")]
+	[DisableDefaultCtor]
+	interface ChipAccountLogin
+	{
+
+		[Export ("initWithDevice:endpoint:queue:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("getSetupPIN:responseHandler:")]
+		void GetSetupPin (string tempAccountIdentifier, ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("login:setupPIN:responseHandler:")]
+		void Login (string tempAccountIdentifier, string setupPin, ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeClusterRevisionWithResponseHandler:")]
+		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
+	}
+
+	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (ChipCluster), Name="CHIPApplicationLauncher")]
+	[DisableDefaultCtor]
+	interface ChipApplicationLauncher
+	{
+
+		[Export ("initWithDevice:endpoint:queue:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("launchApp:catalogVendorId:applicationId:responseHandler:")]
+		void LaunchApp (string data, ushort catalogVendorId, string applicationId, ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeApplicationLauncherListWithResponseHandler:")]
+		void ReadAttributeApplicationLauncherList (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeClusterRevisionWithResponseHandler:")]
+		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
+	}
+
+	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (ChipCluster), Name="CHIPAudioOutput")]
+	[DisableDefaultCtor]
+	interface ChipAudioOutput
+	{
+
+		[Export ("initWithDevice:endpoint:queue:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("renameOutput:name:responseHandler:")]
+		void RenameOutput (byte index, string name, ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("selectOutput:responseHandler:")]
+		void SelectOutput (byte index, ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeAudioOutputListWithResponseHandler:")]
+		void ReadAttributeAudioOutputList (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeClusterRevisionWithResponseHandler:")]
+		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
+	}
+
+	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (ChipCluster), Name="CHIPBinaryInputBasic")]
+	[DisableDefaultCtor]
+	interface ChipBinaryInputBasic
+	{
+
+		[Export ("initWithDevice:endpoint:queue:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeOutOfServiceWithResponseHandler:")]
+		void ReadAttributeOutOfService (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("writeAttributeOutOfServiceWithValue:responseHandler:")]
+		void WriteAttributeOutOfService (byte value, ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributePresentValueWithResponseHandler:")]
+		void ReadAttributePresentValue (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("writeAttributePresentValueWithValue:responseHandler:")]
+		void WriteAttributePresentValue (byte value, ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("configureAttributePresentValueWithMinInterval:maxInterval:responseHandler:")]
+		void ConfigureAttributePresentValue (ushort minInterval, ushort maxInterval, ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("reportAttributePresentValueWithResponseHandler:")]
+		void ReportAttributePresentValue (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeStatusFlagsWithResponseHandler:")]
+		void ReadAttributeStatusFlags (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("configureAttributeStatusFlagsWithMinInterval:maxInterval:responseHandler:")]
+		void ConfigureAttributeStatusFlags (ushort minInterval, ushort maxInterval, ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("reportAttributeStatusFlagsWithResponseHandler:")]
+		void ReportAttributeStatusFlags (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeClusterRevisionWithResponseHandler:")]
+		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
+	}
+
+	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (ChipCluster), Name="CHIPBridgedDeviceBasic")]
+	[DisableDefaultCtor]
+	interface ChipBridgedDeviceBasic
+	{
+
+		[Export ("initWithDevice:endpoint:queue:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeVendorNameWithResponseHandler:")]
+		void ReadAttributeVendorName (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeVendorIDWithResponseHandler:")]
+		void ReadAttributeVendorId (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeProductNameWithResponseHandler:")]
+		void ReadAttributeProductName (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeUserLabelWithResponseHandler:")]
+		void ReadAttributeUserLabel (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("writeAttributeUserLabelWithValue:responseHandler:")]
+		void WriteAttributeUserLabel (string value, ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeHardwareVersionWithResponseHandler:")]
+		void ReadAttributeHardwareVersion (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeHardwareVersionStringWithResponseHandler:")]
+		void ReadAttributeHardwareVersionString (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeSoftwareVersionWithResponseHandler:")]
+		void ReadAttributeSoftwareVersion (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeSoftwareVersionStringWithResponseHandler:")]
+		void ReadAttributeSoftwareVersionString (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeManufacturingDateWithResponseHandler:")]
+		void ReadAttributeManufacturingDate (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributePartNumberWithResponseHandler:")]
+		void ReadAttributePartNumber (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeProductURLWithResponseHandler:")]
+		void ReadAttributeProductUrl (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeProductLabelWithResponseHandler:")]
+		void ReadAttributeProductLabel (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeSerialNumberWithResponseHandler:")]
+		void ReadAttributeSerialNumber (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeReachableWithResponseHandler:")]
+		void ReadAttributeReachable (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeClusterRevisionWithResponseHandler:")]
+		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
+	}
+
+	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (ChipCluster), Name="CHIPContentLaunch")]
+	[DisableDefaultCtor]
+	interface ChipContentLaunch
+	{
+
+		[Export ("initWithDevice:endpoint:queue:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("launchContent:data:responseHandler:")]
+		void LaunchContent (byte autoPlay, string data, ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("launchURL:displayString:responseHandler:")]
+		void LaunchUrl (string contentUrl, string displayString, ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeAcceptsHeaderListWithResponseHandler:")]
+		void ReadAttributeAcceptsHeaderList (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeSupportedStreamingTypesWithResponseHandler:")]
+		void ReadAttributeSupportedStreamingTypes (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeClusterRevisionWithResponseHandler:")]
+		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
+	}
+
+	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (ChipCluster), Name="CHIPEthernetNetworkDiagnostics")]
+	[DisableDefaultCtor]
+	interface ChipEthernetNetworkDiagnostics
+	{
+
+		[Export ("initWithDevice:endpoint:queue:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("resetCounts:")]
+		void ResetCounts (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributePacketRxCountWithResponseHandler:")]
+		void ReadAttributePacketRxCount (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributePacketTxCountWithResponseHandler:")]
+		void ReadAttributePacketTxCount (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeTxErrCountWithResponseHandler:")]
+		void ReadAttributeTxErrCount (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeCollisionCountWithResponseHandler:")]
+		void ReadAttributeCollisionCount (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeOverrunCountWithResponseHandler:")]
+		void ReadAttributeOverrunCount (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeClusterRevisionWithResponseHandler:")]
+		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
+	}
+
+	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (ChipCluster), Name="CHIPFixedLabel")]
+	[DisableDefaultCtor]
+	interface ChipFixedLabel
+	{
+
+		[Export ("initWithDevice:endpoint:queue:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeLabelListWithResponseHandler:")]
+		void ReadAttributeLabelList (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeClusterRevisionWithResponseHandler:")]
+		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
+	}
+
+	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (ChipCluster), Name="CHIPGeneralDiagnostics")]
+	[DisableDefaultCtor]
+	interface ChipGeneralDiagnostics
+	{
+
+		[Export ("initWithDevice:endpoint:queue:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeNetworkInterfacesWithResponseHandler:")]
+		void ReadAttributeNetworkInterfaces (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeRebootCountWithResponseHandler:")]
+		void ReadAttributeRebootCount (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeClusterRevisionWithResponseHandler:")]
+		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
+	}
+
+	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (ChipCluster), Name="CHIPKeypadInput")]
+	[DisableDefaultCtor]
+	interface ChipKeypadInput
+	{
+
+		[Export ("initWithDevice:endpoint:queue:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("sendKey:responseHandler:")]
+		void SendKey (byte keyCode, ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeClusterRevisionWithResponseHandler:")]
+		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
+	}
+
+	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (ChipCluster), Name="CHIPMediaInput")]
+	[DisableDefaultCtor]
+	interface ChipMediaInput
+	{
+
+		[Export ("initWithDevice:endpoint:queue:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("hideInputStatus:")]
+		void HideInputStatus (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("renameInput:name:responseHandler:")]
+		void RenameInput (byte index, string name, ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("selectInput:responseHandler:")]
+		void SelectInput (byte index, ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("showInputStatus:")]
+		void ShowInputStatus (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeMediaInputListWithResponseHandler:")]
+		void ReadAttributeMediaInputList (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeClusterRevisionWithResponseHandler:")]
+		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
+	}
+
+	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (ChipCluster), Name="CHIPMediaPlayback")]
+	[DisableDefaultCtor]
+	interface ChipMediaPlayback
+	{
+
+		[Export ("initWithDevice:endpoint:queue:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("mediaFastForward:")]
+		void FastForward (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("mediaNext:")]
+		void Next (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("mediaPause:")]
+		void Pause (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("mediaPlay:")]
+		void Play (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("mediaPrevious:")]
+		void Previous (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("mediaRewind:")]
+		void Rewind (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("mediaSkipBackward:responseHandler:")]
+		void SkipBackward (ulong deltaPositionMilliseconds, ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("mediaSkipForward:responseHandler:")]
+		void SkipForward (ulong deltaPositionMilliseconds, ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("mediaSkipSeek:responseHandler:")]
+		void SkipSeek (ulong position, ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("mediaStartOver:")]
+		void StartOver (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("mediaStop:")]
+		void Stop (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeClusterRevisionWithResponseHandler:")]
+		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
+	}
+
+	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (ChipCluster), Name="CHIPRelativeHumidityMeasurement")]
+	[DisableDefaultCtor]
+	interface ChipRelativeHumidityMeasurement
+	{
+
+		[Export ("initWithDevice:endpoint:queue:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeMeasuredValueWithResponseHandler:")]
+		void ReadAttributeMeasuredValue (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("configureAttributeMeasuredValueWithMinInterval:maxInterval:change:responseHandler:")]
+		void ConfigureAttributeMeasuredValue (ushort minInterval, ushort maxInterval, ushort change, ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("reportAttributeMeasuredValueWithResponseHandler:")]
+		void ReportAttributeMeasuredValue (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeMinMeasuredValueWithResponseHandler:")]
+		void ReadAttributeMinMeasuredValue (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeMaxMeasuredValueWithResponseHandler:")]
+		void ReadAttributeMaxMeasuredValue (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeClusterRevisionWithResponseHandler:")]
+		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
+	}
+
+	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (ChipCluster), Name="CHIPSoftwareDiagnostics")]
+	[DisableDefaultCtor]
+	interface ChipSoftwareDiagnostics
+	{
+
+		[Export ("initWithDevice:endpoint:queue:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("resetWatermarks:")]
+		void ResetWatermarks (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeCurrentHeapHighWatermarkWithResponseHandler:")]
+		void ReadAttributeCurrentHeapHighWatermark (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeClusterRevisionWithResponseHandler:")]
+		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
+	}
+
+	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (ChipCluster), Name="CHIPTargetNavigator")]
+	[DisableDefaultCtor]
+	interface ChipTargetNavigator
+	{
+
+		[Export ("initWithDevice:endpoint:queue:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("navigateTarget:data:responseHandler:")]
+		void NavigateTarget (byte target, string data, ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeTargetNavigatorListWithResponseHandler:")]
+		void ReadAttributeTargetNavigatorList (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeClusterRevisionWithResponseHandler:")]
+		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
+	}
+
+	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (ChipCluster), Name="CHIPTrustedRootCertificates")]
+	[DisableDefaultCtor]
+	interface ChipTrustedRootCertificates
+	{
+
+		[Export ("initWithDevice:endpoint:queue:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("addTrustedRootCertificate:responseHandler:")]
+		void AddTrustedRootCertificate (NSData rootCertificate, ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("removeTrustedRootCertificate:responseHandler:")]
+		void RemoveTrustedRootCertificate (NSData trustedRootIdentifier, ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeClusterRevisionWithResponseHandler:")]
+		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
+	}
+
+	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (ChipCluster), Name="CHIPTvChannel")]
+	[DisableDefaultCtor]
+	interface ChipTvChannel
+	{
+
+		[Export ("initWithDevice:endpoint:queue:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("changeChannel:responseHandler:")]
+		void ChangeChannel (string match, ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("changeChannelByNumber:minorNumber:responseHandler:")]
+		void ChangeChannelByNumber (ushort majorNumber, ushort minorNumber, ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("skipChannel:responseHandler:")]
+		void SkipChannel (ushort count, ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeTvChannelListWithResponseHandler:")]
+		void ReadAttributeTvChannelList (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeTvChannelLineupWithResponseHandler:")]
+		void ReadAttributeTvChannelLineup (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeCurrentTvChannelWithResponseHandler:")]
+		void ReadAttributeCurrentTvChannel (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeClusterRevisionWithResponseHandler:")]
+		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
+	}
+
+	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (ChipCluster), Name="CHIPWakeOnLan")]
+	[DisableDefaultCtor]
+	interface ChipWakeOnLan
+	{
+
+		[Export ("initWithDevice:endpoint:queue:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeWakeOnLanMacAddressWithResponseHandler:")]
+		void ReadAttributeWakeOnLanMacAddress(ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeClusterRevisionWithResponseHandler:")]
+		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
+	}
+
+	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (ChipCluster), Name="CHIPWindowCovering")]
+	[DisableDefaultCtor]
+	interface ChipWindowCovering
+	{
+
+		[Export ("initWithDevice:endpoint:queue:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("windowCoveringDownClose:")]
+		void DownClose (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("windowCoveringGoToLiftPercentage:responseHandler:")]
+		void GoToLiftPercentage (byte percentageLiftValue, ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("windowCoveringGoToLiftValue:responseHandler:")]
+		void GoToLiftValue (ushort liftValue, ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("windowCoveringGoToTiltPercentage:responseHandler:")]
+		void GoToTiltPercentage (byte percentageTiltValue, ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("windowCoveringGoToTiltValue:responseHandler:")]
+		void GoToTiltValue (ushort tiltValue, ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("windowCoveringStop:")]
+		void Stop (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("windowCoveringUpOpen:")]
+		void UpOpen (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeWindowCoveringTypeWithResponseHandler:")]
+		void ReadAttributeWindowCoveringType (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("configureAttributeWindowCoveringTypeWithMinInterval:maxInterval:responseHandler:")]
+		void ConfigureAttributeWindowCoveringType (ushort minInterval, ushort maxInterval, ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("reportAttributeWindowCoveringTypeWithResponseHandler:")]
+		void ReportAttributeWindowCoveringType (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeCurrentPositionLiftWithResponseHandler:")]
+		void ReadAttributeCurrentPositionLift (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("configureAttributeCurrentPositionLiftWithMinInterval:maxInterval:change:responseHandler:")]
+		void ConfigureAttributeCurrentPositionLift (ushort minInterval, ushort maxInterval, ushort change, ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("reportAttributeCurrentPositionLiftWithResponseHandler:")]
+		void ReportAttributeCurrentPositionLift (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeCurrentPositionTiltWithResponseHandler:")]
+		void ReadAttributeCurrentPositionTilt (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("configureAttributeCurrentPositionTiltWithMinInterval:maxInterval:change:responseHandler:")]
+		void ConfigureAttributeCurrentPositionTilt (ushort minInterval, ushort maxInterval, ushort change, ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("reportAttributeCurrentPositionTiltWithResponseHandler:")]
+		void ReportAttributeCurrentPositionTilt (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeConfigStatusWithResponseHandler:")]
+		void ReadAttributeConfigStatus (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("configureAttributeConfigStatusWithMinInterval:maxInterval:responseHandler:")]
+		void ConfigureAttributeConfigStatus (ushort minInterval, ushort maxInterval, ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("reportAttributeConfigStatusWithResponseHandler:")]
+		void ReportAttributeConfigStatus (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeInstalledOpenLimitLiftWithResponseHandler:")]
+		void ReadAttributeInstalledOpenLimitLift (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeInstalledClosedLimitLiftWithResponseHandler:")]
+		void ReadAttributeInstalledClosedLimitLift (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeInstalledOpenLimitTiltWithResponseHandler:")]
+		void ReadAttributeInstalledOpenLimitTilt (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeInstalledClosedLimitTiltWithResponseHandler:")]
+		void ReadAttributeInstalledClosedLimitTilt (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeModeWithResponseHandler:")]
+		void ReadAttributeMode (ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("writeAttributeModeWithValue:responseHandler:")]
+		void WriteAttributeMode (byte value, ChipResponseHandler responseHandler);
+
+		[Async (ResultTypeName = "ChipReadAttributeResult")]
+		[Export ("readAttributeClusterRevisionWithResponseHandler:")]
+		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
+	}
+
 
 }
