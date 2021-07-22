@@ -1,0 +1,248 @@
+using System;
+using CoreGraphics;
+using Foundation;
+using ObjCRuntime;
+using AVFoundation;
+
+namespace ShazamKit {
+
+	[Native]
+	[iOS (15,0), Mac (12,0), Watch (8,0), TV (15,0), MacCatalyst (15,0)]
+	[ErrorDomain ("SHErrorDomain")]
+	public enum SHErrorCode : long
+	{
+		InvalidAudioFormat = 100,
+		AudioDiscontinuity = 101,
+		SignatureInvalid = 200,
+		SignatureDurationInvalid = 201,
+		MatchAttemptFailed = 202,
+		CustomCatalogInvalid = 300,
+		CustomCatalogInvalidURL = 301,
+		MediaLibrarySyncFailed = 400
+	}
+
+	[iOS (15,0), Mac (12,0), Watch (8,0), TV (15,0), MacCatalyst (15,0)]
+	[Static]
+	enum SHMediaItemProperty
+	{
+		[Field ("SHMediaItemShazamID")]
+		ShazamID,
+		[Field ("SHMediaItemTitle")]
+		Title,
+		[Field ("SHMediaItemSubtitle")]
+		Subtitle,
+		[Field ("SHMediaItemArtist")]
+		Artist,
+		[Field ("SHMediaItemWebURL")]
+		WebURL,
+		[Field ("SHMediaItemAppleMusicID")]
+		AppleMusicID,
+		[Field ("SHMediaItemAppleMusicURL")]
+		AppleMusicURL,
+		[Field ("SHMediaItemArtworkURL")]
+		ArtworkURL,
+		[Field ("SHMediaItemVideoURL")]
+		VideoURL,
+		[Field ("SHMediaItemExplicitContent")]
+		ExplicitContent,
+		[Field ("SHMediaItemGenres")]
+		Genres,
+		[Field ("SHMediaItemISRC")]
+		Isrc,
+	}
+
+	[iOS (15,0), Mac (12,0), Watch (8,0), TV (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface SHCatalog
+	{
+		[Export ("minimumQuerySignatureDuration")]
+		double MinimumQuerySignatureDuration { get; }
+
+		[Export ("maximumQuerySignatureDuration")]
+		double MaximumQuerySignatureDuration { get; }
+	}
+
+	[iOS (15,0), Mac (12,0), Watch (8,0), TV (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (SHCatalog))]
+	interface SHCustomCatalog
+	{
+		[Export ("addReferenceSignature:representingMediaItems:error:")]
+		bool Add (SHSignature signature, SHMediaItem[] mediaItems, [NullAllowed] out NSError error);
+
+		[Export ("addCustomCatalogFromURL:error:")]
+		bool Add (NSUrl url, [NullAllowed] out NSError error);
+
+		[Export ("writeToURL:error:")]
+		bool WriteL (NSUrl url, [NullAllowed] out NSError error);
+
+		[Unavailable (PlatformName.Swift)]
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0)]
+		[Static]
+		[Export ("new")]
+		SHCustomCatalog New ();
+	}
+
+	[iOS (15,0), Mac (12,0), Watch (8,0), TV (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface SHMatch : NSSecureCoding
+	{
+		[Export ("mediaItems", ArgumentSemantic.Strong)]
+		SHMatchedMediaItem[] MediaItems { get; }
+
+		[Export ("querySignature", ArgumentSemantic.Strong)]
+		SHSignature QuerySignature { get; }
+	}
+
+	[iOS (15,0), Mac (12,0), Watch (8,0), TV (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (SHMediaItem))]
+	interface SHMatchedMediaItem : NSSecureCoding
+	{
+		[Export ("frequencySkew")]
+		float FrequencySkew { get; }
+
+		[Export ("matchOffset")]
+		double MatchOffset { get; }
+
+		[Export ("predictedCurrentMatchOffset")]
+		double PredictedCurrentMatchOffset { get; }
+	}
+
+	[iOS (15,0), Mac (12,0), Watch (8,0), TV (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface SHMediaItem : NSSecureCoding, NSCopying
+	{
+		[NullAllowed, Export ("shazamID")]
+		string ShazamId { get; }
+
+		[NullAllowed, Export ("title")]
+		string Title { get; }
+
+		[NullAllowed, Export ("subtitle")]
+		string Subtitle { get; }
+
+		[NullAllowed, Export ("artist")]
+		string Artist { get; }
+
+		[Export ("genres", ArgumentSemantic.Strong)]
+		string[] Genres { get; }
+
+		[NullAllowed, Export ("appleMusicID")]
+		string AppleMusicId { get; }
+
+		[NullAllowed, Export ("appleMusicURL", ArgumentSemantic.Strong)]
+		NSUrl AppleMusicUrl { get; }
+
+		[NullAllowed, Export ("webURL", ArgumentSemantic.Strong)]
+		NSUrl WebUrl { get; }
+
+		[NullAllowed, Export ("artworkURL", ArgumentSemantic.Strong)]
+		NSUrl ArtworkUrl { get; }
+
+		[NullAllowed, Export ("videoURL", ArgumentSemantic.Strong)]
+		NSUrl VideoUrl { get; }
+
+		[Export ("explicitContent")]
+		bool ExplicitContent { get; }
+
+		[NullAllowed, Export ("isrc")]
+		string Isrc { get; }
+
+		[Static]
+		[Export ("mediaItemWithProperties:")]
+		SHMediaItem MediaItem (NSDictionary<NSString, NSObject> properties);
+
+		[Static]
+		[Export ("fetchMediaItemWithShazamID:completionHandler:")]
+		void FetchMediaItem (string shazamID, Action<SHMediaItem, NSError> completionHandler);
+
+		[Unavailable (PlatformName.Swift)]
+		[Export ("valueForProperty:")]
+		NSObject Value (string property);
+
+		[Export ("objectForKeyedSubscript:")]
+		NSObject ObjectForKeyedSubscript (string key);
+	}
+
+	[iOS (15,0), Mac (12,0), Watch (8,0), TV (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface SHMediaLibrary
+	{
+		[Static]
+		[Export ("defaultLibrary", ArgumentSemantic.Strong)]
+		SHMediaLibrary DefaultLibrary { get; }
+
+		[Export ("addMediaItems:completionHandler:")]
+		void Add (SHMediaItem[] mediaItems, Action<NSError> completionHandler);
+	}
+
+	[iOS (15,0), Mac (12,0), Watch (8,0), TV (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (NSObject))]
+	interface SHSession
+	{
+		[Export ("catalog", ArgumentSemantic.Strong)]
+		SHCatalog Catalog { get; }
+
+		[Wrap ("WeakDelegate")]
+		[NullAllowed]
+		SHSessionDelegate Delegate { get; set; }
+
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
+		NSObject WeakDelegate { get; set; }
+
+		[Export ("initWithCatalog:")]
+		IntPtr Constructor (SHCatalog catalog);
+
+		[Export ("matchStreamingBuffer:atTime:")]
+		void MatchStreamingBuffer (AVAudioPcmBuffer buffer, [NullAllowed] AVAudioTime time);
+
+		[Export ("matchSignature:")]
+		void Match (SHSignature signature);
+	}
+
+	[iOS (15,0), Mac (12,0), Watch (8,0), TV (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (NSObject))]
+	interface SHSignature : NSSecureCoding, NSCopying
+	{
+		[Export ("initWithDataRepresentation:error:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (NSData dataRepresentation, [NullAllowed] out NSError error);
+
+		[Export ("duration")]
+		double Duration { get; }
+
+		[Export ("dataRepresentation", ArgumentSemantic.Strong)]
+		NSData DataRepresentation { get; }
+
+		[Static]
+		[Export ("signatureWithDataRepresentation:error:")]
+		[return: NullAllowed]
+		SHSignature GetSignature (NSData dataRepresentation, [NullAllowed] out NSError error);
+	}
+
+	[iOS (15,0), Mac (12,0), Watch (8,0), TV (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (NSObject))]
+	interface SHSignatureGenerator
+	{
+		[Export ("appendBuffer:atTime:error:")]
+		bool Append (AVAudioPcmBuffer buffer, [NullAllowed] AVAudioTime time, [NullAllowed] out NSError error);
+
+		[Export ("signature")]
+		SHSignature Signature { get; }
+	}
+
+	[iOS (15,0), Mac (12,0), Watch (8,0), TV (15,0), MacCatalyst (15,0)]
+	[Protocol, Model (AutoGeneratedName = true)]
+	[BaseType (typeof (NSObject))]
+	interface SHSessionDelegate
+	{
+		[Export ("session:didFindMatch:")]
+		void DidFindMatch (SHSession session, SHMatch match);
+
+		[Export ("session:didNotFindMatchForSignature:error:")]
+		void DidNotFindMatch (SHSession session, SHSignature signature, [NullAllowed] NSError error);
+	}
+}
