@@ -1,4 +1,4 @@
-namespace iOSLib1 {
-	public class Class1 {
-	}
+namespace iOSLib1;
+
+public class Class1 {
 }
