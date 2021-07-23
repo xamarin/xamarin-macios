@@ -425,7 +425,7 @@ namespace AuthenticationServices {
 		[Export ("performRequests")]
 		void PerformRequests ();
 
-		[TV (15, 0), NoWatch, NoMac, NoiOS, NoMacCatalyst]
+		[TV (15,0), NoWatch, NoMac, NoiOS, NoMacCatalyst]
 		[Export ("customAuthorizationMethods", ArgumentSemantic.Copy)]
 		NSString[] CustomAuthorizationMethods { get; set; }
 	}
@@ -637,7 +637,7 @@ namespace AuthenticationServices {
 		[NullAllowed, Export ("authenticatedResponse", ArgumentSemantic.Copy)]
 		NSHttpUrlResponse AuthenticatedResponse { get; }
 
-		[Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
+		[Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("privateKeys")]
 		NSObject[] PrivateKeys { get; }
 	}
@@ -669,7 +669,7 @@ namespace AuthenticationServices {
 		[Export ("authorizationOptions", ArgumentSemantic.Copy)]
 		NSUrlQueryItem[] AuthorizationOptions { get; set; }
 
-		[NoWatch, NoTV, Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
+		[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("userInterfaceEnabled")]
 		bool UserInterfaceEnabled { [Bind ("isUserInterfaceEnabled")] get; set; }
 	}
