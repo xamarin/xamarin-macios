@@ -118,40 +118,50 @@ namespace ShazamKit {
 	[DisableDefaultCtor]
 	interface SHMediaItem : NSSecureCoding, NSCopying
 	{
-		[NullAllowed, Export ("shazamID")]
+		[NullAllowed]
+		[Export ("shazamID")]
 		string ShazamId { get; }
 
-		[NullAllowed, Export ("title")]
+		[NullAllowed]
+		[Export ("title")]
 		string Title { get; }
 
-		[NullAllowed, Export ("subtitle")]
+		[NullAllowed]
+		[Export ("subtitle")]
 		string Subtitle { get; }
 
-		[NullAllowed, Export ("artist")]
+		[NullAllowed]
+		[Export ("artist")]
 		string Artist { get; }
 
 		[Export ("genres", ArgumentSemantic.Strong)]
 		string[] Genres { get; }
 
-		[NullAllowed, Export ("appleMusicID")]
+		[NullAllowed]
+		[Export ("appleMusicID")]
 		string AppleMusicId { get; }
 
-		[NullAllowed, Export ("appleMusicURL", ArgumentSemantic.Strong)]
+		[NullAllowed]
+		[Export ("appleMusicURL", ArgumentSemantic.Strong)]
 		NSUrl AppleMusicUrl { get; }
 
-		[NullAllowed, Export ("webURL", ArgumentSemantic.Strong)]
+		[NullAllowed]
+		[Export ("webURL", ArgumentSemantic.Strong)]
 		NSUrl WebUrl { get; }
 
-		[NullAllowed, Export ("artworkURL", ArgumentSemantic.Strong)]
+		[NullAllowed]
+		[Export ("artworkURL", ArgumentSemantic.Strong)]
 		NSUrl ArtworkUrl { get; }
 
-		[NullAllowed, Export ("videoURL", ArgumentSemantic.Strong)]
+		[NullAllowed]
+		[Export ("videoURL", ArgumentSemantic.Strong)]
 		NSUrl VideoUrl { get; }
 
 		[Export ("explicitContent")]
 		bool ExplicitContent { get; }
 
-		[NullAllowed, Export ("isrc")]
+		[NullAllowed]
+		[Export ("isrc")]
 		string Isrc { get; }
 
 		[Export ("mediaItemWithProperties:")]
