@@ -645,6 +645,49 @@ namespace GeneratorTests
 		[Test]
 		public void GHIssue9065_Sealed () => BuildFile (Profile.iOS, nowarnings: true, "ghissue9065.cs");
 
+		// looking for [BindingImpl (BindingImplOptions.Optimizable)]
+		bool IsOptimizable (MethodDefinition method)
+		{
+			const int Optimizable = 0x2; // BindingImplOptions flag
+
+			if (!method.HasCustomAttributes)
+				return false;
+
+			foreach (var ca in method.CustomAttributes) {
+				if (ca.AttributeType.Name != "BindingImplAttribute")
+					continue;
+				foreach (var a in ca.ConstructorArguments)
+					return (((int) a.Value & Optimizable) == Optimizable);
+			}
+			return false;
+		}
+
+		[Test]
+		public void DisposeAttributeOptimizable ()
+		{
+			var bgen = BuildFile (Profile.iOS, "tests/dispose-attribute.cs");
+
+			// processing custom attributes (like its properties) will call Resolve so we must be able to find the platform assembly to run this test
+			var platform_dll = Path.Combine (Configuration.SdkRootXI, "lib/mono/Xamarin.iOS/Xamarin.iOS.dll");
+			var resolver = bgen.ApiAssembly.MainModule.AssemblyResolver as BaseAssemblyResolver;
+			resolver.AddSearchDirectory (Path.Combine (Configuration.SdkRootXI, "lib/mono/Xamarin.iOS/"));
+
+			// [Dispose] is, by default, not optimizable
+			var with_dispose = bgen.ApiAssembly.MainModule.GetType ("NS", "WithDispose").Methods.First ((v) => v.Name == "Dispose");
+			Assert.NotNull (with_dispose, "WithDispose");
+			Assert.That (IsOptimizable (with_dispose), Is.False, "WithDispose/Optimizable");
+
+			// [Dispose] can opt-in being optimizable
+			var with_dispose_optin = bgen.ApiAssembly.MainModule.GetType ("NS", "WithDisposeOptInOptimizable").Methods.First ((v) => v.Name == "Dispose");
+			Assert.NotNull (with_dispose_optin, "WithDisposeOptInOptimizable");
+			Assert.That (IsOptimizable (with_dispose_optin), Is.True, "WithDisposeOptInOptimizable/Optimizable");
+
+			// Without a [Dispose] attribute the generated method is optimizable
+			var without_dispose = bgen.ApiAssembly.MainModule.GetType ("NS", "WithoutDispose").Methods.First ((v) => v.Name == "Dispose");
+			Assert.NotNull (without_dispose, "WitoutDispose");
+			Assert.That (IsOptimizable (without_dispose), Is.True, "WitoutDispose/Optimizable");
+		}
+
 		BGenTool BuildFile (Profile profile, params string [] filenames)
 		{
 			return BuildFile (profile, true, false, filenames);
