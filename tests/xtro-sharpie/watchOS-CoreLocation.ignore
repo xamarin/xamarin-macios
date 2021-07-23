@@ -1,0 +1,3 @@
+## only marked with ios(15.0) but (as of xcode 13 b3) lacks annotations that it's not available on other platforms
+!missing-selector! CLLocationManager::startMonitoringLocationPushesWithCompletion: not bound
+!missing-selector! CLLocationManager::stopMonitoringLocationPushes not bound
