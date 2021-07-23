@@ -12,9 +12,6 @@
 				"Microsoft.@PLATFORM@.Runtime.iossimulator-x86",
 				"Microsoft.@PLATFORM@.Runtime.iossimulator-x64",
 				"Microsoft.@PLATFORM@.Templates"
-			],
-			"extends": [
-				"microsoft-net-runtime-ios"
 			]
 		}
 	},
