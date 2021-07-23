@@ -18,6 +18,7 @@ namespace Xharness.Jenkins {
 		public bool? Ignored;
 		public bool EnableSGenConc;
 		public bool UseThumb;
+		public bool UseLlvm;
 		public bool? UseMonoRuntime;
 		public MonoNativeLinkMode MonoNativeLinkMode;
 		public IEnumerable<IDevice> Candidates;

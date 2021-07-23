@@ -1,5 +1,3 @@
-using Foundation;
-using UIKit;
 
 namespace iOSApp1 {
 	[Register ("Controller1")]

@@ -987,6 +987,12 @@ partial class TestRuntime
 #if !MONOMAC && !__TVOS__ && !__WATCHOS__
 	public static void RequestCameraPermission (NSString mediaTypeToken, bool assert_granted = false)
 	{
+#if __MACCATALYST__
+		// Microphone requires a hardened runtime entitlement for Mac Catalyst: com.apple.security.device.microphonee,
+		// so just ignore these tests for now.
+		NUnit.Framework.Assert.Ignore ("Requires a hardened runtime entitlement: com.apple.security.device.microphone");
+#endif // __MACCATALYST__
+
 		if (AVCaptureDevice.GetAuthorizationStatus (mediaTypeToken) == AVAuthorizationStatus.NotDetermined) {
 			if (IgnoreTestThatRequiresSystemPermissions ())
 				NUnit.Framework.Assert.Ignore ("This test would show a dialog to ask for permission to access the camera.");
@@ -1077,6 +1083,10 @@ partial class TestRuntime
 		// tvOS doesn't have a (developer-accessible) microphone, but it seems to have API that requires developers 
 		// to request microphone access on other platforms (which means that it makes sense to both run those tests
 		// on tvOS (because the API's there) and to request microphone access (because that's required on other platforms).
+#elif __MACCATALYST__
+		// Microphone requires a hardened runtime entitlement for Mac Catalyst: com.apple.security.device.microphonee,
+		// so just ignore these tests for now.
+		NUnit.Framework.Assert.Ignore ("Requires a hardened runtime entitlement: com.apple.security.device.microphone");
 #else
 		if (!CheckXcodeVersion (6, 0))
 			return; // The API to check/request permission isn't available in earlier versions, the dialog will just pop up.
