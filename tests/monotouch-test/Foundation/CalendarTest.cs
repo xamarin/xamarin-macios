@@ -421,8 +421,10 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			var cal = new NSCalendar (NSCalendarType.Gregorian);
 			var date = new DateTime (year, month, day, 0, 0, 0, DateTimeKind.Utc);
-			var ordinality = cal.Ordinality (smaller, larger, (NSDate) date);
-			Assert.AreEqual (ordinality, (nuint) expected);
+			var dt = (NSDate) date;
+			var ordinality = cal.Ordinality (smaller, larger, dt);
+			Console.WriteLine ($"TestOrdinality ({year}, {month}, {day}, {smaller}, {larger}, {expected}) Ticks: {date.Ticks} NSDate: {dt} Ordinality: {ordinality}");
+			Assert.AreEqual ((nuint) expected, ordinality, $"Ticks: {date.Ticks} Kind: {date.Kind} NSDate: {dt}");
 		}
 
 		[TestCase (2010, 1, 11, NSCalendarUnit.Day, 86400.0)]
