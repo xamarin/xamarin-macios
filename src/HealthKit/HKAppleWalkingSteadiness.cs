@@ -35,13 +35,13 @@ namespace HealthKit {
 		static extern HKQuantityRef HKAppleWalkingSteadinessMinimumQuantityForClassification (nint classification);
 
 		public static HKQuantity GetMinimumQuantity (HKAppleWalkingSteadinessClassification classification)
-			=> Runtime.GetNSObject<HKQuantity> (HKAppleWalkingSteadinessMinimumQuantityForClassification ((nint) (long) classification), true); 
+			=> Runtime.GetNSObject<HKQuantity> (HKAppleWalkingSteadinessMinimumQuantityForClassification ((nint) (long) classification), false); 
 
 		[DllImport (Constants.HealthKitLibrary)]
 		static extern HKQuantityRef HKAppleWalkingSteadinessMaximumQuantityForClassification (nint classification);
 
 		public static HKQuantity GetMaximumQuantity (HKAppleWalkingSteadinessClassification classification)
-			=> Runtime.GetNSObject<HKQuantity> (HKAppleWalkingSteadinessMaximumQuantityForClassification ((nint) (long) classification), true); 
+			=> Runtime.GetNSObject<HKQuantity> (HKAppleWalkingSteadinessMaximumQuantityForClassification ((nint) (long) classification), false); 
 	}
 
 }

@@ -999,6 +999,10 @@ namespace HealthKit {
 		[Watch (7, 2), iOS (14, 3)]
 		[Field ("HKMetadataKeyLowCardioFitnessEventThreshold")]
 		NSString LowCardioFitnessEventThreshold { get; }
+
+		[Watch (8, 0), iOS (15, 0)]
+		[Field ("HKMetadataKeyDateOfEarliestDataUsedForEstimate")]
+		NSString DateOfEarliestDataUsedForEstimate { get;} 
 	}
 
 	[Watch (2,0)]
@@ -1975,6 +1979,14 @@ namespace HealthKit {
 		[Watch (7,4)][iOS (14,5)]
 		[Field ("HKQuantityTypeIdentifierAppleMoveTime")]
 		AppleMoveTime,
+
+		[Watch (8, 0), iOS (15, 0)]
+		[Field ("HKQuantityTypeIdentifierAppleWalkingSteadiness")]
+		AppleWalkingSteadiness,
+
+		[Watch (8, 0), iOS (15, 0)]
+		[Field ("HKQuantityTypeIdentifierNumberOfAlcoholicBeverages")]
+		NumberOfAlcoholicBeverages,
 	}
 
 	[Watch (2,0)]
@@ -2235,7 +2247,6 @@ namespace HealthKit {
 		[Field ("HKCategoryTypeIdentifierLowCardioFitnessEvent")]
 		LowCardioFitnessEvent,
 
-
 		[Watch (8, 0), iOS (15, 0)]
 		[Field ("HKCategoryTypeIdentifierAppleWalkingSteadinessEvent")]
 		AppleWalkingSteadinessEvent,
@@ -2247,18 +2258,6 @@ namespace HealthKit {
 		[Watch (8, 0), iOS (15, 0)]
 		[Field ("HKCategoryTypeIdentifierProgesteroneTestResult")]
 		ProgesteroneTestResult,
-
-		[Watch (8, 0), iOS (15, 0)]
-		[Field ("HKMetadataKeyDateOfEarliestDataUsedForEstimate")]
-		DateOfEarliestDataUsedForEstimate,
-
-		[Watch (8, 0), iOS (15, 0)]
-		[Field ("HKQuantityTypeIdentifierAppleWalkingSteadiness")]
-		AppleWalkingSteadiness,
-
-		[Watch (8, 0), iOS (15, 0)]
-		[Field ("HKQuantityTypeIdentifierNumberOfAlcoholicBeverages")]
-		NumberOfAlcoholicBeverages,
 	}
 
 	[Watch (2,0)]
@@ -3690,7 +3689,7 @@ namespace HealthKit {
 		string[] ItemNames { get; }
 
 		[Export ("JWSRepresentation", ArgumentSemantic.Copy)]
-		NSData JWSRepresentation { get; }
+		NSData JwsRepresentation { get; }
 	}
 
 	delegate void HKVerifiableClinicalRecordQueryResultHandler (HKVerifiableClinicalRecordQuery query, NSArray<HKVerifiableClinicalRecord> records, NSError error);
