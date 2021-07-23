@@ -37,9 +37,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<_CanOutputAppBundle>False</_CanOutputAppBundle>
 		<_CanOutputAppBundle Condition="'$(OutputType)' == 'Exe' Or '$(IsAppExtension)' == 'true' Or '$(IsWatchApp)' == 'true'">True</_CanOutputAppBundle>
 
-		<_CanArchive>False</_CanArchive>
-		<_CanArchive Condition="'$(OutputType)' == 'Exe' And '$(ComputedPlatform)' == 'iPhone' And '$(IsAppExtension)' == 'false' And '$(IsWatchApp)' == 'false'">True</_CanArchive>
-
 		<_CanDeployToDeviceOrSimulator>False</_CanDeployToDeviceOrSimulator>
 		<_CanDeployToDeviceOrSimulator Condition="('$(OutputType)' == 'Exe' Or '$(IsAppExtension)' == 'true') And '$(IsWatchApp)' == 'false'">True</_CanDeployToDeviceOrSimulator>
 
@@ -185,10 +182,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			_PackageOnDemandResources;
 			_ZipIpa
 		</CreateIpaDependsOn>
-
-		<ArchiveDependsOn>
-			_CoreArchive
-		</ArchiveDependsOn>
 	</PropertyGroup>
 
 	<Target Name="ValidateAppStoreBundle" DependsOnTargets="_DetectSdkLocations;_ComputeTargetFrameworkMoniker">
@@ -212,8 +205,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			SdkDevPath="$(_SdkDevPath)"
 		/>
 	</Target>
-
-	<Target Name="Archive" Condition="'$(_CanArchive)' == 'true'" DependsOnTargets="$(ArchiveDependsOn)" />
 
 	<Target Name="_BeforeCreateIpaForDistribution" Condition="'$(IsAppDistribution)' == 'true'" DependsOnTargets="$(_BeforeCreateIpaForDistributionDependsOn)" />
 	
@@ -1050,34 +1041,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			>
 			<Output TaskParameter="OutputFile" ItemName="FileWrites" />
 		</Zip>
-	</Target>
-
-	<Target Name="_CoreArchive" Condition="'$(ArchiveOnBuild)' == 'true'" DependsOnTargets="Codesign">
-		<CollectITunesSourceFiles
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '@(_ITunesSourceFile)' == ''"
-			OutputPath="$(DeviceSpecificOutputPath)"
-			>
-			<Output TaskParameter="ITunesSourceFiles" PropertyName="_ITunesSourceFile"/>
-		</CollectITunesSourceFiles>
-
-		<Archive
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			AppBundleDir="$(AppBundleDir)"
-			AppExtensionReferences="@(_ResolvedAppExtensionReferences)"
-			InsightsApiKey="$(XamarinInsightsApiKey)"
-			ITunesSourceFiles="@(_ITunesSourceFile)"
-			OutputPath="$(DeviceSpecificOutputPath)"
-			ProjectName="$(MSBuildProjectName)"
-			ProjectGuid="$(ProjectGuid)"
-			ProjectTypeGuids="$(ProjectTypeGuids)"
-			SolutionPath="$(SolutionPath)"
-			SigningKey="$(_CodeSigningKey)"
-			WatchAppReferences="@(_ResolvedWatchAppReferences)"
-			>
-			<Output TaskParameter="ArchiveDir" PropertyName="ArchiveDir"/>
-		</Archive>
 	</Target>
 
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets"
