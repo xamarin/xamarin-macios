@@ -1,5 +1,3 @@
-﻿using AppKit;
-using Foundation;
 
 namespace macOSApp1 {
 	[Register ("AppDelegate")]

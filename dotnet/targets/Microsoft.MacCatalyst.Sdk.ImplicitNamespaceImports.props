@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	This file contains implicit namespace imports
+
+	*** WARNING ***
+
+	This file is imported by AutoImport.props, and will be imported by all
+	projects using Microsoft.NET.Sdk.  All Item includes in this file *MUST*
+	be hidden behind a TargetPlatformIdentifier based condition.
+
+	This file can also not define any properties. However, due to the
+	order MSBuild evaluates properties, it's possible to use properties
+	defined in our .targets files in conditions in ItemGroups in this
+	file.
+
+	*** WARNING ***
+
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<!-- There's a master switch, DisableImplicitNamespaceImports, which, if set, will prevent all implicit namespace imports - this is done automatically, we don't have to check DisableImplicitNamespaceImports here -->
+	<ItemGroup Condition="'$(TargetPlatformIdentifier)' == 'MacCatalyst' And '$(DisableImplicitNamespaceImports_MacCatalyst)' != 'true'">
+		<Import Include="CoreGraphics" />
+		<Import Include="Foundation" />
+		<Import Include="UIKit" />
+	</ItemGroup>
+</Project>
