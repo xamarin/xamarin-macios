@@ -857,15 +857,14 @@ namespace Foundation  {
 	}
 #endif
 
-#if !MONOMAC || !XAMCORE_3_0
+	// There's an AppKit.NSWritingDirection, which is deprecated.
+	// There's also an UIKit.UITextWritingDirection, which is deprecated too.
+	// This is the enum we should be using.
+	// See https://github.com/xamarin/xamarin-macios/issues/6573
 	[Native]
-#if MONOMAC
-	[Obsolete ("Use NSWritingDirection in AppKit instead.")]
-#endif
 	public enum NSWritingDirection : long {
 		Natural = -1, LeftToRight = 0, RightToLeft = 1,
 	}
-#endif // !MONOMAC || !XAMCORE_3_0
 
 	[Flags]
 	[Native]
