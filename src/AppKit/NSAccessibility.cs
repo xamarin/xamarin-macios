@@ -18,58 +18,6 @@ using ObjCRuntime;
 
 namespace AppKit
 {
-	[Mac (10,10)]
-	[Native]
-	public enum NSAccessibilityOrientation : long
-	{
-		Unknown = 0,
-		Vertical = 1,
-		Horizontal = 2
-	}
-
-	[Mac (10,10)]
-	[Native]
-	public enum NSAccessibilitySortDirection : long
-	{
-		Unknown = 0,
-		Ascending = 1,
-		Descending = 2
-	}
-
-	[Mac (10,10)]
-	[Native]
-	public enum NSAccessibilityRulerMarkerType : long
-	{
-		Unknown = 0,
-		TabStopLeft = 1,
-		TabStopRight = 2,
-		TabStopCenter = 3,
-		TabStopDecimal = 4,
-		IndentHead = 5,
-		IndentTail = 6,
-		IndentFirstLine = 7
-	}
-
-	[Mac (10,10)]
-	[Native]
-	public enum NSAccessibilityUnits : long
-	{
-		Unknown = 0,
-		Inches = 1,
-		Centimeters = 2,
-		Points = 3,
-		Picas = 4
-	}
-
-	[Mac (10,9)]
-	[Native]
-	public enum NSAccessibilityPriorityLevel : long
-	{
-		Low = 10,
-		Medium = 50,
-		High = 90
-	}
-
 	[Mac (10,10)] // protocol added in 10.10
 	public partial interface INSAccessibility {}
 
