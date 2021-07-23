@@ -36,7 +36,7 @@ namespace Xamarin.MacDev.Tasks {
 		public ITaskItem[] AssemblyFiles { get; set; }
 
 		[Output]
-		public ITaskItem[] AOTData { get; set; }
+		public ITaskItem[] FileWrites { get; set; }
 #endregion
 
 		public override bool Execute ()
@@ -64,9 +64,7 @@ namespace Xamarin.MacDev.Tasks {
 			Directory.CreateDirectory (OutputDirectory);
 
 			var aotAssemblyFiles = new List<ITaskItem> ();
-			var aotDataFiles = new List<ITaskItem> ();
 			var processes = new Task<Execution> [Assemblies.Length];
-			var objectFiles = new List<ITaskItem> ();
 
 			var environment = new Dictionary<string, string> {
 				{ "MONO_PATH", Path.GetFullPath (InputDirectory) },
@@ -85,7 +83,6 @@ namespace Xamarin.MacDev.Tasks {
 				aotAssemblyItem.SetMetadata ("Arguments", "-Xlinker -rpath -Xlinker @executable_path/ -Qunused-arguments -x assembler -D DEBUG");
 				aotAssemblyItem.SetMetadata ("Arch", arch);
 				aotAssemblyFiles.Add (aotAssemblyItem);
-				aotDataFiles.Add (new TaskItem (aotData));
 
 				var arguments = new List<string> ();
 				if (!StringUtils.TryParseArguments (aotArguments, out var parsedArguments, out var ex)) {
@@ -111,8 +108,13 @@ namespace Xamarin.MacDev.Tasks {
 
 			System.Threading.Tasks.Task.WaitAll (processes);
 
-			AOTData = aotDataFiles.ToArray ();
 			AssemblyFiles = aotAssemblyFiles.ToArray ();
+
+			// For Windows support it's necessary to have the files we're going to create as an Output parameter, so that the files are
+			// created on the windows side too, which makes the Inputs/Outputs logic work properly when working from Windows.
+			var objectFiles = Assemblies.Select (v => v.GetMetadata ("ObjectFile")).Where (v => !string.IsNullOrEmpty (v));
+			var llvmFiles = Assemblies.Select (v => v.GetMetadata ("LLVMFile")).Where (v => !string.IsNullOrEmpty (v));
+			FileWrites = objectFiles.Union (llvmFiles).Select (v => new TaskItem (v)).ToArray ();
 
 			return !Log.HasLoggedErrors;
 

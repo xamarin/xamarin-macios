@@ -1,5 +1,3 @@
-﻿using Foundation;
-using UIKit;
 
 namespace tvOSApp1 {
 	[Register ("AppDelegate")]

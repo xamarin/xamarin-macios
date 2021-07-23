@@ -1,5 +1,3 @@
-﻿using System;
-using UIKit;
 
 namespace tvOSApp1 {
 	public partial class ViewController : UIViewController {
