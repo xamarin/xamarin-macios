@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for HKCategoryTypeIdentifier
 //
 // Authors:
@@ -103,12 +103,6 @@ namespace MonoTouchFixtures.HealthKit {
 				case HKCategoryTypeIdentifier.Contraceptive:
 				case HKCategoryTypeIdentifier.LowCardioFitnessEvent:
 					if (!TestRuntime.CheckXcodeVersion (12, 3))
-						continue;
-					break;
-				case HKCategoryTypeIdentifier.DateOfEarliestDataUsedForEstimate:
-				case HKCategoryTypeIdentifier.AppleWalkingSteadiness:
-				case HKCategoryTypeIdentifier.NumberOfAlcoholicBeverages:
-					if (!TestRuntime.CheckXcodeVersion (13, 0))
 						continue;
 					break;
 				default:
