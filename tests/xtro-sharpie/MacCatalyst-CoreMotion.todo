@@ -1,0 +1,4 @@
+## not available on Catalyst (tested with macOS 12 b3)
+!missing-selector! +CMAltimeter::isAbsoluteAltitudeAvailable not bound
+!missing-selector! CMAltimeter::startAbsoluteAltitudeUpdatesToQueue:withHandler: not bound
+!missing-selector! CMAltimeter::stopAbsoluteAltitudeUpdates not bound
