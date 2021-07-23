@@ -85,11 +85,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<_IsContainerApp>false</_IsContainerApp>
-		<_IsContainerApp Condition="$(IsAppExtension) == 'false' And '$(IsWatchApp)' == 'false'">true</_IsContainerApp>
-	</PropertyGroup>
-
-	<PropertyGroup>
 		<OptimizePngImagesDependsOn>
 			_CollectPngImages;
 			_CoreOptimizePngImages;
