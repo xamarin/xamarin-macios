@@ -21,6 +21,9 @@ namespace MonoTouchFixtures.AVFoundation {
 		[Test]
 		public void CompareConstantEnum ()
 		{
+			TestRuntime.RequestCameraPermission (AVMediaType.Audio, true);
+			TestRuntime.RequestCameraPermission (AVMediaType.Video, true);
+
 			Compare (AVMediaType.Audio, AVMediaTypes.Audio);
 			Compare (AVMediaType.ClosedCaption, AVMediaTypes.ClosedCaption);
 			Compare (AVMediaType.Metadata, AVMediaTypes.Metadata);

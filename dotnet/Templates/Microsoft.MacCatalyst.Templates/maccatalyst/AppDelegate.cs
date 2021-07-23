@@ -1,5 +1,3 @@
-﻿using Foundation;
-using UIKit;
 
 namespace MacCatalystApp1 {
 	[Register ("AppDelegate")]

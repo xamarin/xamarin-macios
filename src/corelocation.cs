@@ -442,11 +442,13 @@ namespace CoreLocation {
 		bool IsAuthorizedForWidgetUpdates { [Bind ("isAuthorizedForWidgetUpdates")] get; }
 
 		[Async]
-		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15, 0), MacCatalyst (15,0)]
+		[NoWatch, NoTV, NoMac, NoMacCatalyst]
+		[iOS (15,0)]
 		[Export ("startMonitoringLocationPushesWithCompletion:")]
 		void StartMonitoringLocationPushes ([NullAllowed] Action<NSData, NSError> completion);
 
-		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15, 0), MacCatalyst (15,0)]
+		[NoWatch, NoTV, NoMac, NoMacCatalyst]
+		[iOS (15,0)]
 		[Export ("stopMonitoringLocationPushes")]
 		void StopMonitoringLocationPushes ();
 
