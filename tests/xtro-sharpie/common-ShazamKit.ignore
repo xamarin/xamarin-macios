@@ -1,0 +1,5 @@
+# Intro says these selectors should not be Static
+!missing-selector! +SHMediaItem::fetchMediaItemWithShazamID:completionHandler: not bound
+!missing-selector! +SHMediaItem::mediaItemWithProperties: not bound
+!missing-selector! +SHMediaLibrary::defaultLibrary not bound
+!missing-selector! +SHSignature::signatureWithDataRepresentation:error: not bound
