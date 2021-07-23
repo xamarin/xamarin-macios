@@ -1,2 +1,0 @@
-## not annotated by itself but it maps to presentFriendRequestCreatorFromViewController which is not available on Catalyst
-!missing-selector! GKLocalPlayer::isPresentingFriendRequestViewController not bound
