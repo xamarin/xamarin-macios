@@ -382,8 +382,8 @@ namespace Photos
 	[TV (13,0), Mac (10,15), iOS (13,0)]
 	[Native]
 	public enum PHPhotosError : long {
-		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'InternalError' instead.")]
 #if !XAMCORE_4_0
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'InternalError' instead.")]
 		Invalid = -1,
 #endif
 		InternalError = -1,

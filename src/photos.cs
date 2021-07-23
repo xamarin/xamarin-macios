@@ -151,7 +151,7 @@ namespace Photos
 		[Field ("PHLocalIdentifierNotFound")]
 		NSString LocalIdentifierNotFound { get; }
 
-		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[NullAllowed, Export ("adjustmentFormatIdentifier")]
 		string AdjustmentFormatIdentifier { get; }
 	}
@@ -1447,7 +1447,7 @@ namespace Photos
 	}
 
 	[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof(NSObject))]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface PHCloudIdentifierMapping
 	{
@@ -1459,7 +1459,7 @@ namespace Photos
 	}
 
 	[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof(NSObject))]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface PHLocalIdentifierMapping
 	{
