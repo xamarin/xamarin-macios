@@ -12,14 +12,7 @@ using AVFoundation;
 using CoreML;
 using Foundation;
 using ObjCRuntime;
-
-// TODO: Remove when CoreMedia is enabled on watchOS
-#if WATCH
-using CMTimeRange = Foundation.NSObject;
-using CMTime = Foundation.NSObject;
-#else
 using CoreMedia;
-#endif
 
 namespace SoundAnalysis {
 
@@ -34,7 +27,7 @@ namespace SoundAnalysis {
 		InvalidFile,
 	}
 
-	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0)]
+	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 	[Native]
 	public enum SNTimeDurationConstraintType : long
 	{
