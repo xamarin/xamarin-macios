@@ -1283,6 +1283,7 @@ namespace AppKit {
 		AsKeyedArchive = 4
 	}
 
+#if !XAMCORE_4_0 && MONOMAC // Use the one in Foundation instead, only keep this in macOS until XAMCORE_4_0.
 	[Native]
 	public enum NSUnderlineStyle : long {
 		None                = 0x00,
@@ -1296,6 +1297,7 @@ namespace AppKit {
 		PatternDashDotDot 	= 0x0400,
 		ByWord 				= 0x8000
 	}
+#endif
 
 	// Convenience enum, untyped in ObjC
 	public enum NSUnderlinePattern : int {
