@@ -26,7 +26,7 @@ namespace ShazamKit {
 	enum SHMediaItemProperty
 	{
 		[Field ("SHMediaItemShazamID")]
-		ShazamID,
+		ShazamId,
 		[Field ("SHMediaItemTitle")]
 		Title,
 		[Field ("SHMediaItemSubtitle")]
@@ -34,15 +34,15 @@ namespace ShazamKit {
 		[Field ("SHMediaItemArtist")]
 		Artist,
 		[Field ("SHMediaItemWebURL")]
-		WebURL,
+		WebUrl,
 		[Field ("SHMediaItemAppleMusicID")]
-		AppleMusicID,
+		AppleMusicId,
 		[Field ("SHMediaItemAppleMusicURL")]
-		AppleMusicURL,
+		AppleMusicUrl,
 		[Field ("SHMediaItemArtworkURL")]
-		ArtworkURL,
+		ArtworkUrl,
 		[Field ("SHMediaItemVideoURL")]
-		VideoURL,
+		VideoUrl,
 		[Field ("SHMediaItemExplicitContent")]
 		ExplicitContent,
 		[Field ("SHMediaItemGenres")]
@@ -78,12 +78,12 @@ namespace ShazamKit {
 		bool Add (NSUrl url, [NullAllowed] out NSError error);
 
 		[Export ("writeToURL:error:")]
-		bool WriteL (NSUrl url, [NullAllowed] out NSError error);
+		bool Write (NSUrl url, [NullAllowed] out NSError error);
 
 		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0)]
 		[Export ("new")]
 		[return: Release]
-		SHCustomCatalog New ();
+		SHCustomCatalog Create ();
 	}
 
 	[iOS (15,0), Mac (12,0), Watch (8,0), TV (15,0), MacCatalyst (15,0)]
@@ -100,6 +100,7 @@ namespace ShazamKit {
 
 	[iOS (15,0), Mac (12,0), Watch (8,0), TV (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (SHMediaItem))]
+	[DisableDefaultCtor]
 	interface SHMatchedMediaItem : NSSecureCoding
 	{
 		[Export ("frequencySkew")]
@@ -158,13 +159,13 @@ namespace ShazamKit {
 
 		[Async]
 		[Export ("fetchMediaItemWithShazamID:completionHandler:")]
-		void FetchMediaItem (string shazamID, Action<SHMediaItem, NSError> completionHandler);
+		void FetchMediaItem (string shazamId, Action<SHMediaItem, NSError> completionHandler);
 
 		[Export ("valueForProperty:")]
-		NSObject Value (string property);
+		NSObject GetValue (string property);
 
 		[Export ("objectForKeyedSubscript:")]
-		NSObject ObjectForKeyedSubscript (string key);
+		NSObject GetObject (string key);
 	}
 
 	[iOS (15,0), Mac (12,0), Watch (8,0), TV (15,0), MacCatalyst (15,0)]
@@ -182,6 +183,7 @@ namespace ShazamKit {
 
 	[iOS (15,0), Mac (12,0), Watch (8,0), TV (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
 	interface SHSession
 	{
 		[Export ("catalog", ArgumentSemantic.Strong)]
@@ -206,6 +208,7 @@ namespace ShazamKit {
 
 	[iOS (15,0), Mac (12,0), Watch (8,0), TV (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
 	interface SHSignature : NSSecureCoding, NSCopying
 	{
 		[Export ("initWithDataRepresentation:error:")]
