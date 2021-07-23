@@ -420,7 +420,7 @@ namespace MonoTouchFixtures.Foundation {
 		public void TestOrdinality (int year, int month, int day, NSCalendarUnit smaller, NSCalendarUnit larger, int expected)
 		{
 			var cal = new NSCalendar (NSCalendarType.Gregorian);
-			var date = new DateTime (year, month, day, 0, 0, 0, DateTimeKind.Local);
+			var date = new DateTime (year, month, day, 0, 0, 0, DateTimeKind.Utc);
 			var ordinality = cal.Ordinality (smaller, larger, (NSDate) date);
 			Assert.AreEqual (ordinality, (nuint) expected);
 		}
