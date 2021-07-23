@@ -1423,15 +1423,6 @@ namespace AppKit {
 	}
 #endif
 
-	[Mac (10,11)]
-	[Native]
-	[Flags]
-	public enum NSTextStorageEditActions : ulong
-	{
-		Attributes = (1 << 0),
-		Characters = (1 << 1)
-	}
-
 	[Native]
 	public enum NSPrinterTableStatus : ulong {
 		Ok, NotFound, Error
@@ -2105,15 +2096,6 @@ namespace AppKit {
 		Bottom
 	}
 
-#if !XAMCORE_4_0
-	public static class NSFileTypeForHFSTypeCode
-	{
-		public static readonly string ComputerIcon = "root";
-		public static readonly string DesktopIcon = "desk";
-		public static readonly string FinderIcon = "FNDR";
-	}
-#endif
-
 	// FileType 4cc values to use with NSFileTypeForHFSTypeCode.
 	public enum HfsTypeCode : uint
 	{
@@ -2422,58 +2404,6 @@ namespace AppKit {
 	}
 
 	[Native]
-	public enum NSLayoutRelation : long {
-		LessThanOrEqual = -1,
-		Equal = 0,
-		GreaterThanOrEqual = 1
-	}
-
-	[Native]
-	public enum NSLayoutAttribute : long {
-		NoAttribute = 0,
-		Left = 1,
-		Right,
-		Top,
-		Bottom,
-		Leading,
-		Trailing,
-		Width,
-		Height,
-		CenterX,
-		CenterY,
-		Baseline,
-		[Mac (10,11)] LastBaseline = Baseline,
-		[Mac (10,11)] FirstBaseline,
-	}
-
-	[Flags]
-	[Native]
-	public enum NSLayoutFormatOptions : ulong {
-		None = 0,
-
-		AlignAllLeft = (1 << (int)NSLayoutAttribute.Left),
-		AlignAllRight = (1 << (int)NSLayoutAttribute.Right),
-		AlignAllTop = (1 << (int)NSLayoutAttribute.Top),
-		AlignAllBottom = (1 << (int)NSLayoutAttribute.Bottom),
-		AlignAllLeading = (1 << (int)NSLayoutAttribute.Leading),
-		AlignAllTrailing = (1 << (int)NSLayoutAttribute.Trailing),
-		AlignAllCenterX = (1 << (int)NSLayoutAttribute.CenterX),
-		AlignAllCenterY = (1 << (int)NSLayoutAttribute.CenterY),
-		AlignAllBaseline = (1 << (int)NSLayoutAttribute.Baseline),
-		[Mac (10,11)] AlignAllLastBaseline = (int)AlignAllBaseline,
-		[Mac (10,11)] AlignAllFirstBaseline = (1 << (int)NSLayoutAttribute.FirstBaseline),
-		AlignmentMask = 0xFFFF,
-		
-		/* choose only one of these three
-		 */
-		DirectionLeadingToTrailing = 0 << 16, // default
-		DirectionLeftToRight = 1 << 16,
-		DirectionRightToLeft = 2 << 16,
-		
-		DirectionMask = 0x3 << 16,
-	}
-
-	[Native]
 	public enum NSLayoutConstraintOrientation : long {
 		Horizontal, Vertical
 	}
@@ -2764,29 +2694,6 @@ namespace AppKit {
 		Enabled = 1 << 0,
 		ContinuousActivation = 1 << 1,
 		NoHover = 1 << 3
-	}
-
-	[Mac (10,11)]
-	[Native]
-	public enum NSGlyphProperty : long
-	{
-		Null = (1 << 0),
-		ControlCharacter = (1 << 1),
-		Elastic = (1 << 2),
-		NonBaseCharacter = (1 << 3)
-	}
-
-	[Flags]
-	[Mac (10,11)]
-	[Native]
-	public enum NSControlCharacterAction : long
-	{
-		ZeroAdvancement = (1 << 0),
-		Whitespace = (1 << 1),
-		HorizontalTab = (1 << 2),
-		LineBreak = (1 << 3),
-		ParagraphBreak = (1 << 4),
-		ContainerBreak = (1 << 5)
 	}
 
 	[Flags]
@@ -3105,16 +3012,5 @@ namespace AppKit {
 		Small = 1,
 		Medium = 2,
 		Large = 3,
-	}
-
-	[Mac (11,0)]
-	[Flags]
-	[Native]
-	public enum NSLineBreakStrategy : ulong
-	{
-		None = 0x0,
-		PushOut = 1uL << 0,
-		HangulWordPriority = 1uL << 1,
-		Standard = 0xffff,
 	}
 }
