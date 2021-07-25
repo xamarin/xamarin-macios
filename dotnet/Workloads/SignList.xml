@@ -1,0 +1,25 @@
+<Project>
+  <!-- Do not sign files that already have a signature -->
+  <ItemGroup>
+    <Skip Include="Mono.Options.dll" />
+    <Skip Include="System.Reflection.MetadataLoadContext.dll" />
+  </ItemGroup>
+
+  <!--ItemGroup>
+    <ThirdParty Include="" />
+  </ItemGroup-->
+
+  <ItemGroup>
+    <FirstParty Include="bgen.dll" />
+    <FirstParty Include="dotnet-linker.dll" />
+    <FirstParty Include="Xamarin.*.dll" />
+    <!-- mlaunch.app MonoBundle content-->
+    <FirstParty Include="mlaunch.exe" />
+    <FirstParty Include="Mono.Security.dll" />
+    <FirstParty Include="mscorlib.dll" />
+    <FirstParty Include="System.Core.dll" />
+    <FirstParty Include="System.dll" />
+    <FirstParty Include="System.Numerics.dll" />
+    <FirstParty Include="System.Xml.dll" />
+  </ItemGroup>
+</Project>

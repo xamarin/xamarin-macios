@@ -76,10 +76,12 @@ ADSUPPORT_SOURCES = \
 
 # AppKit
 
-APPKIT_CORE_SOURCES = \
-	AppKit/Defs.cs \
+APPKIT_API_SOURCES = \
 	AppKit/Enums.cs \
 	AppKit/XEnums.cs \
+
+APPKIT_CORE_SOURCES = \
+	AppKit/Defs.cs \
 	AppKit/NSAccessibility.cs \
 	XKit/Types.cs \
 	XKit/XKitCompat.cs \
@@ -689,6 +691,7 @@ COREWLAN_API_SOURCES = \
 COREWLAN_SOURCES = \
 	CoreWlan/CWConfiguration.cs \
 	CoreWlan/CWInterface.cs \
+	CoreWlan/CWKeychain.cs \
 
 # EventKit
 
@@ -1370,6 +1373,7 @@ PASSKIT_API_SOURCES = \
 	PassKit/PKEnums.cs \
 	
 PASSKIT_SOURCES = \
+	PassKit/PKCompat.cs	\
 	PassKit/PKPaymentRequest.cs	\
 
 # PencilKit
@@ -2227,6 +2231,7 @@ MACCATALYST_FRAMEWORKS = \
 	CoreMotion \
 	CoreSpotlight \
 	CoreText \
+	CoreWlan \
 	DeviceCheck \
 	EventKit \
 	ExternalAccessory \

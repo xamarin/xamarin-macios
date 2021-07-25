@@ -440,6 +440,7 @@ namespace Introspection {
 				case "ARDepthData":
 				case "ARSkeletonDefinition": // device only
 				case "NSMergePolicy":
+				case "SRTextInputSession": // conformance not in headers
 					return true;
 				}
 				break;
@@ -678,6 +679,7 @@ namespace Introspection {
 				case "ARDepthData":
 				case "ARSkeletonDefinition": // device only
 				case "NSMergePolicy":
+				case "SRTextInputSession": // conformance not in headers
 					return true;
 				}
 				break;
