@@ -19,7 +19,7 @@ parameters:
 - name: osVersion
   type: string
 
-- name: checkDemands
+- name: checkOS
   type: boolean
   default: true
 
@@ -40,10 +40,12 @@ stages:
 
     pool:
       name: ${{ parameters.macPool }}
-      ${{ if eq(parameters.checkDemands, true) }}:
-        demands: 
-        - Agent.OS -equals Darwin
+      demands: 
+      - Agent.OS -equals Darwin
+      ${{ if eq(parameters.checkOS, true) }}:
         - Agent.OSVersion -equals ${{ parameters.osVersion }}
+      ${{ if eq(parameters.isARM, true) }}:
+        - macOS.Architecture -equals arm64
 
     steps:
     - template: build.yml

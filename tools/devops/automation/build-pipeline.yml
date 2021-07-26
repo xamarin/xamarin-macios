@@ -86,7 +86,8 @@ parameters:
       macPool: 'VSEng-Xamarin-RedmondMacBuildPool-iOS-Trusted',
       osVersion: '10.15',
       statusContext: 'Mac Catalina (10.15)',
-      checkDemands: true
+      checkOS: true,
+      isARM: false
     },
     {
       stageName: 'mac_10_14',
@@ -94,7 +95,8 @@ parameters:
       macPool: 'Hosted Mac Internal Mojave',
       osVersion: '10.14',
       statusContext: 'Mac Mojave (10.14)',
-      checkDemands: false
+      checkOS: false,
+      isARM: false
     },
     {
       stageName: 'mac_10_13',
@@ -102,7 +104,17 @@ parameters:
       macPool: 'Hosted Mac Internal',
       osVersion: '10.13',
       statusContext: 'Mac High Sierra (10.13)',
-      checkDemands: false
+      checkOS: false,
+      isARM: false
+    },
+    {
+      stageName: 'mac_11_5_m1',
+      displayName: 'M1 - Mac Big Sur (11.5)',
+      macPool: 'VSEng-VSMac-Xamarin-Shared-Trusted',
+      osVersion: '11.5',
+      statusContext: 'M1 - Mac Big Sur (11.5)',
+      checkOS: false,
+      isARM: true
     }]
 
 resources:
@@ -275,7 +287,8 @@ stages:
           osVersion: ${{ config['osVersion'] }}
           statusContext: ${{ config['statusContext'] }}
           keyringPass: $(pass--lab--mac--builder--keychain)
-          checkDemands: ${{ config['checkDemands'] }}
+          checkOS: ${{ config['checkOS'] }}
+          isARM: ${{ config['isARM'] }}
 
     - template: templates/windows/stage.yml
       parameters:
