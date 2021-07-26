@@ -1,7 +1,7 @@
-﻿using Microsoft.Build.Framework;
+using Microsoft.Build.Framework;
 using Xamarin.Messaging.Build.Client;
 
-namespace Xamarin.iOS.Tasks
+namespace Xamarin.MacDev.Tasks
 {
 	public class Archive : ArchiveTaskBase, ICancelableTask
 	{
@@ -20,3 +20,4 @@ namespace Xamarin.iOS.Tasks
 		}
 	}
 }
+

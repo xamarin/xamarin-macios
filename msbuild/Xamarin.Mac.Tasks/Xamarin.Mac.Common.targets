@@ -29,9 +29,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		<_CanOutputAppBundle>False</_CanOutputAppBundle>
 		<_CanOutputAppBundle Condition="'$(OutputType)' == 'Exe' Or '$(IsAppExtension)' == 'true'">true</_CanOutputAppBundle>
 
-		<_CanArchive>False</_CanArchive>
-		<_CanArchive Condition="'$(OutputType)' == 'Exe'">true</_CanArchive>
-
 		<_RequireProvisioningProfile>False</_RequireProvisioningProfile>
 		<_RequireProvisioningProfile Condition="'$(CodesignProvision)' != ''">True</_RequireProvisioningProfile>
 
@@ -220,33 +217,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 	</Target>
 
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.msbuild.targets" />
-
-	<PropertyGroup>
-		<ArchiveDependsOn>
-			_CoreArchive
-		</ArchiveDependsOn>
-	</PropertyGroup>
-	
-	<Target Name="Archive" Condition="'$(_CanArchive)' == 'true'" DependsOnTargets="$(ArchiveDependsOn)" />
-	
-	<Target Name="_CoreArchive" Condition="'$(ArchiveOnBuild)' == 'true'" DependsOnTargets="$(Codesign)">
-		<Error Text="Code signing must be enabled to create an Xcode archive." Condition="'$(_CodeSigningKey)' == ''" />
-
-		<Archive
-			SessionId="$(BuildSessionId)"
-			AppBundleDir="$(AppBundleDir)"
-			InsightsApiKey="$(XamarinInsightsApiKey)"
-			SigningKey="$(_CodeSigningKey)"
-			ProjectName="$(MSBuildProjectName)"
-			ProjectGuid="$(ProjectGuid)"
-			ProjectTypeGuids="$(ProjectTypeGuids)"
-			OutputPath="$(OutputPath)"
-			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
-			CustomBundleName="$(_CustomBundleName)"
-			>
-			<Output TaskParameter="ArchiveDir" PropertyName="ArchiveDir" />
-		</Archive>
-	</Target>
 
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets')"/>
