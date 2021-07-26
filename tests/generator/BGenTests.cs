@@ -688,6 +688,42 @@ namespace GeneratorTests
 			Assert.That (IsOptimizable (without_dispose), Is.True, "WitoutDispose/Optimizable");
 		}
 
+		[Test]
+		public void SnippetAttributesOptimizable ()
+		{
+			var bgen = BuildFile (Profile.iOS, "tests/snippet-attributes.cs");
+
+			// processing custom attributes (like its properties) will call Resolve so we must be able to find the platform assembly to run this test
+			var platform_dll = Path.Combine (Configuration.SdkRootXI, "lib/mono/Xamarin.iOS/Xamarin.iOS.dll");
+			var resolver = bgen.ApiAssembly.MainModule.AssemblyResolver as BaseAssemblyResolver;
+			resolver.AddSearchDirectory (Path.Combine (Configuration.SdkRootXI, "lib/mono/Xamarin.iOS/"));
+
+			// [SnippetAttribute] subclasses are, by default, not optimizable
+			var not_opt = bgen.ApiAssembly.MainModule.GetType ("NS", "NotOptimizable");
+			Assert.NotNull (not_opt, "NotOptimizable");
+			var pre_not_opt = not_opt.Methods.First ((v) => v.Name == "Pre");
+			Assert.That (IsOptimizable (pre_not_opt), Is.False, "NotOptimizable/Pre");
+			var prologue_not_opt = not_opt.Methods.First ((v) => v.Name == "Prologue");
+			Assert.That (IsOptimizable (prologue_not_opt), Is.False, "NotOptimizable/Prologue");
+			var post_not_opt = not_opt.Methods.First ((v) => v.Name == "Post");
+			Assert.That (IsOptimizable (post_not_opt), Is.False, "NotOptimizable/Post");
+
+			// [SnippetAttribute] subclasses can opt-in being optimizable
+			var optin_opt = bgen.ApiAssembly.MainModule.GetType ("NS", "OptInOptimizable");
+			Assert.NotNull (optin_opt, "OptInOptimizable");
+			var pre_optin_opt = optin_opt.Methods.First ((v) => v.Name == "Pre");
+			Assert.That (IsOptimizable (pre_optin_opt), Is.True, "OptInOptimizable/Pre");
+			var prologue_optin_opt = optin_opt.Methods.First ((v) => v.Name == "Prologue");
+			Assert.That (IsOptimizable (prologue_optin_opt), Is.True, "OptInOptimizable/Prologue");
+			var post_optin_opt = optin_opt.Methods.First ((v) => v.Name == "Post");
+			Assert.That (IsOptimizable (post_optin_opt), Is.True, "OptInOptimizable/Post");
+
+			// Without a [SnippetAttribute] subclass attribute the generated method is optimizable
+			var nothing = bgen.ApiAssembly.MainModule.GetType ("NS", "NoSnippet").Methods.First ((v) => v.Name == "Nothing");
+			Assert.NotNull (nothing, "NoSnippet");
+			Assert.That (IsOptimizable (nothing), Is.True, "Nothing/Optimizable");
+		}
+
 		BGenTool BuildFile (Profile profile, params string [] filenames)
 		{
 			return BuildFile (profile, true, false, filenames);
