@@ -423,7 +423,9 @@ namespace MonoTouchFixtures.Foundation {
 			var date = new DateTime (year, month, day, 0, 0, 0, DateTimeKind.Utc);
 			var dt = (NSDate) date;
 			var ordinality = cal.Ordinality (smaller, larger, dt);
-			Console.WriteLine ($"TestOrdinality ({year}, {month}, {day}, {smaller}, {larger}, {expected}) Ticks: {date.Ticks} NSDate: {dt} Ordinality: {ordinality}");
+			Console.WriteLine ($"TestOrdinality ({year}, {month}, {day}, {smaller}, {larger}, {expected}) Ticks: {date.Ticks} NSDate: {dt} Ordinality: {ordinality} Calendar: {cal} TimeZone: {cal.TimeZone} Locale: {cal.Locale}={cal.Locale?.LocaleIdentifier}={cal.Locale?.Identifier}={cal.Locale?.CountryCode}");
+			cal.TimeZone = NSTimeZone.FromName ("America/Los_Angeles");
+			Console.WriteLine ($"TestOrdinality ({year}, {month}, {day}, {smaller}, {larger}, {expected}) Ticks: {date.Ticks} NSDate: {dt} Ordinality: {ordinality} Calendar: {cal} TimeZone: {cal.TimeZone} Locale: {cal.Locale}={cal.Locale?.LocaleIdentifier}={cal.Locale?.Identifier}={cal.Locale?.CountryCode}");
 			Assert.AreEqual ((nuint) expected, ordinality, $"Ticks: {date.Ticks} Kind: {date.Kind} NSDate: {dt}");
 		}
 
