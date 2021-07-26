@@ -1155,7 +1155,7 @@ namespace UIKit {
 	// Not hard deprecating now but until XAMCORE_4_0 happens or we can
 	// properly fix all the API using this.
 	// see: https://github.com/xamarin/xamarin-macios/issues/6573
-	// Use Foundation.NSWritingDirection instead.
+	// [Obsolete ("Use NSWritingDirection in Foundation instead.")]
 	[Native]
 	[NoWatch]
 	public enum UITextWritingDirection : long {
