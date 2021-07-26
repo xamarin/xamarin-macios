@@ -83,6 +83,8 @@ namespace Xharness.Jenkins {
 						}
 						yield return new TestData { Variation = "Release (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = false, Profiling = false, Undefines = "FULL_AOT_RUNTIME", Ignored = ignore };
 					}
+					if (test.TestProject.IsDotNetProject)
+						yield return new TestData { Variation = "Release (LLVM)", Debug = false, UseLlvm = true, Ignored = ignore };
 					break;
 				case  string name when name.StartsWith ("mscorlib", StringComparison.Ordinal):
 					if (supports_debug)
@@ -182,6 +184,7 @@ namespace Xharness.Jenkins {
 					var use_mono_runtime = test_data.UseMonoRuntime;
 					var xammac_arch = test_data.XamMacArch;
 					var runtime_identifer = test_data.RuntimeIdentifier;
+					var use_llvm = test_data.UseLlvm;
 
 					if (task.TestProject.IsDotNetProject)
 						variation += " [dotnet]";
@@ -232,6 +235,8 @@ namespace Xharness.Jenkins {
 							clone.Xml.SetNode ("MtouchEnableSGenConc", "true", task.ProjectPlatform, configuration);
 						if (test_data.UseThumb) // no need to check the platform, already done at the data iterator
 							clone.Xml.SetNode ("MtouchUseThumb", "true", task.ProjectPlatform, configuration);
+						if (use_llvm)
+							clone.Xml.SetTopLevelPropertyGroupValue ("MtouchUseLlvm", "true");
 
 						if (!debug && !isMac)
 							clone.Xml.SetMtouchUseLlvm (true, task.ProjectPlatform, configuration);

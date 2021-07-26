@@ -14638,6 +14638,7 @@ namespace Foundation
 		[Export ("executeAppleEvent:error:")]
 		NSAppleEventDescriptor ExecuteAppleEvent (NSAppleEventDescriptor eventDescriptor, out NSDictionary errorInfo);
 
+		[NullAllowed]
 		[Export ("richTextSource", ArgumentSemantic.Retain)]
 		NSAttributedString RichTextSource { get; }
 	}
