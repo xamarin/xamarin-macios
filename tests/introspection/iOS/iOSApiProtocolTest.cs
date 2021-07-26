@@ -441,6 +441,7 @@ namespace Introspection {
 				case "ARSkeletonDefinition": // device only
 				case "NSMergePolicy":
 				case "SFSafariViewControllerPrewarmingToken": // conformance not in headers
+				case "SRTextInputSession": // conformance not in headers
 					return true;
 				}
 				break;
@@ -680,6 +681,7 @@ namespace Introspection {
 				case "ARSkeletonDefinition": // device only
 				case "NSMergePolicy":
 				case "SFSafariViewControllerPrewarmingToken": // conformance not in headers
+				case "SRTextInputSession": // conformance not in headers
 					return true;
 				}
 				break;

@@ -9124,6 +9124,7 @@ namespace AppKit {
 	[BaseType (typeof (NSObject), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] { typeof (NSImageDelegate)})]
 	[ThreadSafe]
 	partial interface NSImage : NSCopying, NSSecureCoding, NSPasteboardReading, NSPasteboardWriting {
+		[return: NullAllowed]
 		[Static]
 		[Export ("imageNamed:")]
 		NSImage ImageNamed (string name);
@@ -9179,6 +9180,7 @@ namespace AppKit {
 		[Export ("recache")]
 		void Recache ();
 
+		[return: NullAllowed]
 		[Export ("TIFFRepresentation")]
 		NSData AsTiff ();
 
@@ -9247,6 +9249,7 @@ namespace AppKit {
 		[Export ("cancelIncrementalLoad")]
 		void CancelIncrementalLoad ();
 
+		[NullAllowed]
 		[Export ("accessibilityDescription")]
 		string AccessibilityDescription	 { get; set; }
 
@@ -9266,11 +9269,12 @@ namespace AppKit {
 		[Export ("size")]
 		CGSize Size { get; set; }
 
+		[return: NullAllowed]
 		[Export ("name"), Internal]
 		string GetName ();
 
 		[Export ("setName:"), Internal]
-		bool SetName (string aString);
+		bool SetName ([NullAllowed] string aString);
 
 		[Export ("backgroundColor", ArgumentSemantic.Copy)]
 		NSColor BackgroundColor { get; set; }
@@ -13656,6 +13660,7 @@ namespace AppKit {
 		[NullAllowed, Export ("action", ArgumentSemantic.Assign)]
 		Selector Action { get; set; }
 
+		[NullAllowed]
 		[Export ("customizationLabel")]
 		string CustomizationLabel { get; set; }
 
@@ -17300,6 +17305,7 @@ namespace AppKit {
 		new void DidSelect (NSTabView tabView, NSTabViewItem item);
 
 		// 'new' since it's inlined from NSToolbarViewDelegate as this instance needs [RequiresSuper]
+		[return: NullAllowed]
 		[RequiresSuper]
 		[Export ("toolbar:itemForItemIdentifier:willBeInsertedIntoToolbar:"), DelegateName ("NSToolbarWillInsert")]
 		new NSToolbarItem WillInsertItem (NSToolbar toolbar, string itemIdentifier, bool willBeInserted);
@@ -19036,7 +19042,7 @@ namespace AppKit {
 		void RemoveItem (nint index);
 
 		[Export ("runCustomizationPalette:")]
-		void RunCustomizationPalette (NSObject sender);
+		void RunCustomizationPalette ([NullAllowed] NSObject sender);
 
 		[Export ("customizationPaletteIsRunning")]
 		bool IsCustomizationPaletteRunning { get; }
@@ -19047,6 +19053,7 @@ namespace AppKit {
 		[Export ("items")]
 		NSToolbarItem [] Items { get; }
 
+		[NullAllowed]
 		[Export ("visibleItems")]
 		NSToolbarItem [] VisibleItems { get; }
 
@@ -19135,6 +19142,7 @@ namespace AppKit {
 	[BaseType (typeof (NSObject))]
 	[Model, Protocol]
 	interface NSToolbarDelegate {
+		[return: NullAllowed]
 		[Export ("toolbar:itemForItemIdentifier:willBeInsertedIntoToolbar:"), DelegateName ("NSToolbarWillInsert"), DefaultValue (null)]
 		NSToolbarItem WillInsertItem (NSToolbar toolbar, string itemIdentifier, bool willBeInserted);
 
@@ -19181,6 +19189,7 @@ namespace AppKit {
 		[Export ("itemIdentifier")]
 		string Identifier { get; }
 
+		[NullAllowed]
 		[Export ("toolbar")]
 		NSToolbar Toolbar { get; }
 
@@ -19356,6 +19365,7 @@ namespace AppKit {
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		INSTouchBarDelegate Delegate { get; set; }
 
+		[return: NullAllowed]
 		[Export ("itemForIdentifier:")]
 		NSTouchBarItem GetItemForIdentifier (string identifier);
 
@@ -25464,6 +25474,7 @@ namespace AppKit {
 		[Export ("setCandidates:forSelectedRange:inString:")]
 		void SetCandidates (NSObject[] candidates, NSRange selectedRange, [NullAllowed] string originalString);
 
+		[NullAllowed]
 		[Export ("customizationLabel")]
 		string CustomizationLabel { get; set; }
 	}
@@ -25532,6 +25543,7 @@ namespace AppKit {
 		[Export ("colorList", ArgumentSemantic.Strong)]
 		NSColorList ColorList { get; set; }
 
+		[NullAllowed]
 		[Export ("customizationLabel")]
 		string CustomizationLabel { get; set; }
 
@@ -25564,6 +25576,7 @@ namespace AppKit {
 		[Export ("viewController", ArgumentSemantic.Strong)]
 		NSViewController ViewController { get; set; }
 
+		[NullAllowed]
 		[Export ("customizationLabel")]
 		string CustomizationLabel { get; set; }
 	}
@@ -25597,6 +25610,7 @@ namespace AppKit {
 		[Export ("groupTouchBar", ArgumentSemantic.Strong)]
 		NSTouchBar GroupTouchBar { get; set; }
 
+		[NullAllowed]
 		[Export ("customizationLabel")]
 		string CustomizationLabel { get; set; }
 
@@ -25643,6 +25657,7 @@ namespace AppKit {
 		[Export ("popoverTouchBar", ArgumentSemantic.Strong)]
 		NSTouchBar PopoverTouchBar { get; set; }
 
+		[NullAllowed]
 		[Export ("customizationLabel")]
 		string CustomizationLabel { get; set; }
 
@@ -26374,6 +26389,7 @@ namespace AppKit {
 		[Export ("enabled")]
 		bool Enabled { [Bind ("isEnabled")] get; set; }
 
+		[NullAllowed]
 		[Export ("customizationLabel")]
 		string CustomizationLabel { get; set; }
 	}
@@ -26498,6 +26514,7 @@ namespace AppKit {
 		[Export ("isEnabledAtIndex:")]
 		bool GetEnabled (nint index);
 
+		[NullAllowed]
 		[Export ("customizationLabel", ArgumentSemantic.Copy)]
 		string CustomizationLabel { get; set; }
 	}
@@ -26598,6 +26615,7 @@ namespace AppKit {
 		[NullAllowed, Export ("action", ArgumentSemantic.Assign)]
 		Selector Action { get; set; }
 
+		[NullAllowed]
 		[Export ("customizationLabel")]
 		string CustomizationLabel { get; set; }
 	}
