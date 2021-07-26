@@ -1568,7 +1568,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 		<CollectITunesSourceFiles
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '@(_ITunesSourceFile)' == ''"
+			Condition="'$(IsMacEnabled)' == 'true' And '@(_ITunesSourceFile)' == '' And '$(_PlatformName)' != 'macOS' And '$(_PlatformName)' != 'MacCatalyst'"
 			OutputPath="$(DeviceSpecificOutputPath)"
 			>
 			<Output TaskParameter="ITunesSourceFiles" PropertyName="_ITunesSourceFile"/>
