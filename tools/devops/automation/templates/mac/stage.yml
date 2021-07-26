@@ -17,7 +17,6 @@ parameters:
   type: string
 
 - name: demands
-  type: string
   default: []
 
 stages:
