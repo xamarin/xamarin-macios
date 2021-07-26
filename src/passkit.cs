@@ -350,6 +350,7 @@ namespace PassKit {
 	[Mac (11,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (UIViewController), Delegates=new string []{"Delegate"}, Events=new Type [] {typeof(PKPaymentAuthorizationViewControllerDelegate)})]
+	[DisableDefaultCtor]
 	interface PKPaymentAuthorizationViewController {
 		[DesignatedInitializer]
 		[Export ("initWithPaymentRequest:")]

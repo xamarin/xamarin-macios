@@ -1349,7 +1349,7 @@ xamarin_get_bundle_path ()
 	if (main_bundle == NULL)
 		xamarin_assertion_message ("Could not find the main bundle in the app ([NSBundle mainBundle] returned nil)");
 
-#if MONOMAC
+#if TARGET_OS_MACCATALYST || TARGET_OS_OSX
 	if (xamarin_launch_mode == XamarinLaunchModeEmbedded) {
 		bundle_path = [[[NSBundle bundleForClass: [XamarinAssociatedObject class]] bundlePath] stringByAppendingPathComponent: @"Versions/Current"];
 	} else {

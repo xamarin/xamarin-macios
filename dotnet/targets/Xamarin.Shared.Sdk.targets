@@ -133,6 +133,7 @@
 		<StartupHookSupport Condition="'$(StartupHookSupport)' == ''">false</StartupHookSupport>
 		<UseSystemResourceKeys Condition="'$(UseSystemResourceKeys)' == ''">true</UseSystemResourceKeys>
 		<UseNativeHttpHandler Condition="'$(_PlatformName)' != 'macOS' And '$(UseNativeHttpHandler)' == ''">true</UseNativeHttpHandler>
+		<AutoreleasePoolSupport Condition="'$(AutoreleasePoolSupport)' == ''">true</AutoreleasePoolSupport>
 
 		<!-- We don't need to generate reference assemblies for apps or app extensions -->
 		<ProduceReferenceAssembly Condition="'$(ProduceReferenceAssembly)' == '' And ('$(OutputType)' == 'Exe' Or '$(IsAppExtension)' == 'true')">false</ProduceReferenceAssembly>
@@ -356,6 +357,7 @@
 
 			<_CustomLinkerOptions>
 				AssemblyName=$(AssemblyName).dll
+				AOTCompiler=$(_AOTCompiler)
 				AOTOutputDirectory=$(_AOTOutputDirectory)
 				CacheDirectory=$(_LinkerCacheDirectory)
 				Debug=$(_BundlerDebug)
@@ -382,6 +384,7 @@
 				SdkVersion=$(_SdkVersion)
 				TargetArchitectures=$(TargetArchitectures)
 				TargetFramework=$(_ComputedTargetFrameworkMoniker)
+				UseLlvm=$(MtouchUseLlvm)
 				Verbosity=$(_BundlerVerbosity)
 				XamarinRuntime=$(_XamarinRuntime)
 			</_CustomLinkerOptions>
@@ -458,6 +461,7 @@
 			-->
 			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" Condition="'$(_LinkMode)' != 'None'" Type="Xamarin.Linker.Steps.PreserveBlockCodeHandler" />
 			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" Condition="'$(_LinkMode)' != 'None'" Type="Xamarin.Linker.OptimizeGeneratedCodeHandler" />
+			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" Condition="'$(_LinkMode)' != 'None'" Type="Xamarin.Linker.BackingFieldDelayHandler" />
 			<!-- MarkDispatcher substeps will run for all marked assemblies. -->
 			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" Condition="'$(_LinkMode)' != 'None'" Type="Xamarin.Linker.Steps.MarkDispatcher" />
 			<_TrimmerCustomSteps Include="$(_AdditionalTaskAssembly)" Condition="'$(_LinkMode)' != 'None'" Type="Xamarin.Linker.Steps.PreserveSmartEnumConversionsHandler" />
@@ -702,7 +706,7 @@
 			Condition="'$(_SdkIsSimulator)' != 'true' And '$(_PlatformName)' != 'macOS'"
 			DependsOnTargets="_ComputeVariables"
 			Inputs="@(_AssembliesToAOT)"
-			Outputs="@(_AssembliesToAOT -> '$(_AOTOutputDirectory)%(Arch)\%(Filename)%(Extension).o')">
+			Outputs="@(_AssembliesToAOT -> '%(ObjectFile)');@(_AssembliesToAOT -> '%(LLVMFile)');">
 
 		<Error Text="The AOT compiler '$(_AOTCompiler)' does not exist." Condition="!Exists ($(_AOTCompiler))" />
 
@@ -718,7 +722,7 @@
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 		>
 			<Output TaskParameter="AssemblyFiles" ItemName="_AOTAssemblyFiles" />
-			<Output TaskParameter="AOTData" ItemName="_AOTData" />
+			<Output TaskParameter="FileWrites" ItemName="FileWrites" />
 		</AOTCompile>
 
 		<CompileNativeCode
@@ -731,12 +735,12 @@
 			SdkRoot="$(_SdkRoot)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 		>
-			<Output TaskParameter="ObjectFiles" ItemName="_AOTObjectFiles" />
 		</CompileNativeCode>
 
 		<ItemGroup Condition="'$(IsMacEnabled)' == 'true'">
 			<!-- Add the AOT-compiled output to the main executable -->
-			<_XamarinMainLibraries Include="@(_AOTObjectFiles)" />
+			<_XamarinMainLibraries Include="@(_AssembliesToAOT -> '%(ObjectFile)')" />
+			<_XamarinMainLibraries Include="@(_AssembliesToAOT -> '%(LLVMFile)')" />
 
 			<!-- copy the aotdata files to the .app -->
 			<ResolvedFileToPublish Include="%(_AssembliesToAOT.AOTData)" >

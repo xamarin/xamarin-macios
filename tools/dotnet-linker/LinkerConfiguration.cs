@@ -17,6 +17,7 @@ using ObjCRuntime;
 namespace Xamarin.Linker {
 	public class LinkerConfiguration {
 		public List<Abi> Abis;
+		public string AOTCompiler;
 		public string AOTOutputDirectory;
 		public string CacheDirectory { get; private set; }
 		public Version DeploymentTarget { get; private set; }
@@ -79,6 +80,7 @@ namespace Xamarin.Linker {
 			Target = new Target (Application);
 			CompilerFlags = new CompilerFlags (Target);
 
+			var use_llvm = false;
 			var lines = File.ReadAllLines (linker_file);
 			var significantLines = new List<string> (); // This is the input the cache uses to verify if the cache is still valid
 			for (var i = 0; i < lines.Length; i++) {
@@ -102,6 +104,9 @@ namespace Xamarin.Linker {
 				case "AssemblyName":
 					// This is the AssemblyName MSBuild property for the main project (which is also the root/entry assembly)
 					Application.RootAssemblies.Add (value);
+					break;
+				case "AOTCompiler":
+					AOTCompiler = value;
 					break;
 				case "AOTOutputDirectory":
 					AOTOutputDirectory = value;
@@ -223,6 +228,9 @@ namespace Xamarin.Linker {
 						throw new InvalidOperationException ($"Invalid TargetFramework '{value}' in {linker_file}");
 					Driver.TargetFramework = TargetFramework.Parse (value);
 					break;
+				case "UseLlvm":
+					use_llvm = string.Equals ("true", value, StringComparison.OrdinalIgnoreCase);
+					break;
 				case "Verbosity":
 					if (!int.TryParse (value, out var verbosity))
 						throw new InvalidOperationException ($"Invalid Verbosity '{value}' in {linker_file}");
@@ -251,6 +259,12 @@ namespace Xamarin.Linker {
 				var messages = new List<ProductException> ();
 				Application.Optimizations.Parse (Application.Platform, user_optimize_flags, messages);
 				ErrorHelper.Show (messages);
+			}
+
+			if (use_llvm) {
+				for (var i = 0; i < Abis.Count; i++) {
+					Abis [i] |= Abi.LLVM;
+				}
 			}
 
 			Application.CreateCache (significantLines.ToArray ());
@@ -314,6 +328,7 @@ namespace Xamarin.Linker {
 				Console.WriteLine ($"    SdkRootDirectory: {SdkRootDirectory}");
 				Console.WriteLine ($"    SdkVersion: {SdkVersion}");
 				Console.WriteLine ($"    UseInterpreter: {Application.UseInterpreter}");
+				Console.WriteLine ($"    UseLlvm: {Application.IsLLVM}");
 				Console.WriteLine ($"    Verbosity: {Verbosity}");
 				Console.WriteLine ($"    XamarinRuntime: {Application.XamarinRuntime}");
 			}

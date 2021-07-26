@@ -576,6 +576,9 @@ namespace ImageIO {
 		NSString PNGSoftware { get; }
 		[Field ("kCGImagePropertyPNGTitle")]
 		NSString PNGTitle { get; }
+		[Mac (12, 0), iOS (15, 0), TV (15,0), MacCatalyst (15,0), Watch (8,0)]
+		[Field ("kCGImagePropertyPNGPixelsAspectRatio")]
+		NSString PNGPixelsAspectRatio { get; }
 
 		[iOS (9,0)][Mac (10,11)]
 		[Field ("kCGImagePropertyPNGCompressionFilter")]

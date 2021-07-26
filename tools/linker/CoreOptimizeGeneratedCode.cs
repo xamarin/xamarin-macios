@@ -218,7 +218,7 @@ namespace Xamarin.Linker {
 			ins.Operand = null;
 		}
 
-		protected static bool ValidateInstruction (MethodDefinition caller, Instruction ins, string operation, Code expected)
+		internal static bool ValidateInstruction (MethodDefinition caller, Instruction ins, string operation, Code expected)
 		{
 			if (ins.OpCode.Code != expected) {
 				Driver.Log (1, "Could not {0} in {1} at offset {2}, expected {3} got {4}", operation, caller, ins.Offset, expected, ins);
@@ -228,7 +228,7 @@ namespace Xamarin.Linker {
 			return true;
 		}
 
-		protected static bool ValidateInstruction (MethodDefinition caller, Instruction ins, string operation, params Code [] expected)
+		internal static bool ValidateInstruction (MethodDefinition caller, Instruction ins, string operation, params Code [] expected)
 		{
 			foreach (var code in expected) {
 				if (ins.OpCode.Code == code)
