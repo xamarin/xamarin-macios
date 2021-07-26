@@ -781,7 +781,7 @@ namespace Xamarin.Bundler {
 				var addDllMap = true;
 #endif
 				string mono_native_lib;
-				if (app.LibMonoNativeLinkMode == AssemblyBuildTarget.StaticObject)
+				if (app.LibMonoNativeLinkMode == AssemblyBuildTarget.StaticObject || Driver.IsDotNet)
 					mono_native_lib = "__Internal";
 				else
 					mono_native_lib = app.GetLibNativeName () + ".dylib";
