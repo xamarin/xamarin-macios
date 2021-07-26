@@ -19,14 +19,14 @@ using ObjCRuntime;
 
 namespace AuthenticationServices {
 
-    [NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 	public static class PublicPrivateKeyAuthentication {
-        [DllImport (Constants.AuthenticationServicesLibrary)]
-        static extern /* NSString[] */ IntPtr ASAuthorizationAllSupportedPublicKeyCredentialDescriptorTransports ();
+		[DllImport (Constants.AuthenticationServicesLibrary)]
+		static extern /* NSString[] */ IntPtr ASAuthorizationAllSupportedPublicKeyCredentialDescriptorTransports ();
 
-        public static /* ASAuthorizationSecurityKeyPublicKeyCredentialDescriptorTransport[] */ NSString[] GetAllSupportedPublicKeyCredentialDescriptorTransports () {
-            return NSArray.ArrayFromHandle<NSString> (ASAuthorizationAllSupportedPublicKeyCredentialDescriptorTransports ());
-        }
+		public static /* ASAuthorizationSecurityKeyPublicKeyCredentialDescriptorTransport[] */ NSString[] GetAllSupportedPublicKeyCredentialDescriptorTransports () {
+			return NSArray.ArrayFromHandle<NSString> (ASAuthorizationAllSupportedPublicKeyCredentialDescriptorTransports ());
+		}
 	}
 }
 

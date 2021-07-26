@@ -7,6 +7,7 @@
 using System;
 using Foundation;
 using ObjCRuntime;
+using Security;
 #if MONOMAC
 using AppKit;
 using UIControl = AppKit.NSControl;
@@ -669,7 +670,7 @@ namespace AuthenticationServices {
 		[Export ("authorizationOptions", ArgumentSemantic.Copy)]
 		NSUrlQueryItem[] AuthorizationOptions { get; set; }
 
-		[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("userInterfaceEnabled")]
 		bool UserInterfaceEnabled { [Bind ("isUserInterfaceEnabled")] get; set; }
 	}
@@ -1026,6 +1027,7 @@ namespace AuthenticationServices {
 	[DisableDefaultCtor]
 	interface ASAuthorizationPlatformPublicKeyCredentialAssertionRequest : ASAuthorizationPublicKeyCredentialAssertionRequest
 	{
+		/* issues when overriding this property */
 		[Sealed]
 		[Export ("allowedCredentials", ArgumentSemantic.Copy)]
 		ASAuthorizationPlatformPublicKeyCredentialDescriptor[] PlatformAllowedCredentials { get; set; }
@@ -1036,6 +1038,7 @@ namespace AuthenticationServices {
 	[DisableDefaultCtor]
 	interface ASAuthorizationSecurityKeyPublicKeyCredentialAssertionRequest : ASAuthorizationPublicKeyCredentialAssertionRequest
 	{
+		/* issues when overriding this property */
 		[Sealed]
 		[Export ("allowedCredentials", ArgumentSemantic.Copy)]
 		ASAuthorizationSecurityKeyPublicKeyCredentialDescriptor[] SecurityAllowedCredentials { get; set; }
@@ -1150,10 +1153,10 @@ namespace AuthenticationServices {
 		IntPtr Constructor (string relyingPartyIdentifier);
 
 		[Export ("createCredentialRegistrationRequestWithChallenge:name:userID:")]
-		ASAuthorizationPlatformPublicKeyCredentialRegistrationRequest CreateCredentialRegistrationRequestWithChallenge (NSData challenge, string name, NSData userId);
+		ASAuthorizationPlatformPublicKeyCredentialRegistrationRequest CreateCredentialRegistrationRequest (NSData challenge, string name, NSData userId);
 
 		[Export ("createCredentialAssertionRequestWithChallenge:")]
-		ASAuthorizationPlatformPublicKeyCredentialAssertionRequest CreateCredentialAssertionRequestWithChallenge (NSData challenge);
+		ASAuthorizationPlatformPublicKeyCredentialAssertionRequest CreateCredentialAssertionRequest (NSData challenge);
 
 		[Export ("relyingPartyIdentifier")]
 		string RelyingPartyIdentifier { get; }
