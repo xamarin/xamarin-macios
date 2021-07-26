@@ -423,6 +423,10 @@ namespace MonoTouchFixtures.Foundation {
 			var date = new DateTime (year, month, day, 0, 0, 0, DateTimeKind.Utc);
 			var dt = (NSDate) date;
 			Console.WriteLine ($"TestOrdinality ({year}, {month}, {day}, {smaller}, {larger}, {expected}) Ticks: {date.Ticks} NSDate: {dt} Ordinality: {cal.Ordinality (smaller, larger, dt)} Calendar: {cal} TimeZone: {cal.TimeZone} Locale: {cal.Locale}={cal.Locale?.LocaleIdentifier}={cal.Locale?.Identifier}={cal.Locale?.CountryCode}");
+			cal.TimeZone = NSTimeZone.FromName ("Europe/Madrid");
+			Console.WriteLine ($"TestOrdinality ({year}, {month}, {day}, {smaller}, {larger}, {expected}) Ticks: {date.Ticks} NSDate: {dt} Ordinality: {cal.Ordinality (smaller, larger, dt)} Calendar: {cal} TimeZone: {cal.TimeZone} Locale: {cal.Locale}={cal.Locale?.LocaleIdentifier}={cal.Locale?.Identifier}={cal.Locale?.CountryCode}");
+			cal.TimeZone = NSTimeZone.FromName ("America/New_York");
+			Console.WriteLine ($"TestOrdinality ({year}, {month}, {day}, {smaller}, {larger}, {expected}) Ticks: {date.Ticks} NSDate: {dt} Ordinality: {cal.Ordinality (smaller, larger, dt)} Calendar: {cal} TimeZone: {cal.TimeZone} Locale: {cal.Locale}={cal.Locale?.LocaleIdentifier}={cal.Locale?.Identifier}={cal.Locale?.CountryCode}");
 			cal.TimeZone = NSTimeZone.FromName ("America/Los_Angeles");
 			Console.WriteLine ($"TestOrdinality ({year}, {month}, {day}, {smaller}, {larger}, {expected}) Ticks: {date.Ticks} NSDate: {dt} Ordinality: {cal.Ordinality (smaller, larger, dt)} Calendar: {cal} TimeZone: {cal.TimeZone} Locale: {cal.Locale}={cal.Locale?.LocaleIdentifier}={cal.Locale?.Identifier}={cal.Locale?.CountryCode}");
 			Assert.AreEqual ((nuint) expected, cal.Ordinality (smaller, larger, dt), $"Ticks: {date.Ticks} Kind: {date.Kind} NSDate: {dt}");
