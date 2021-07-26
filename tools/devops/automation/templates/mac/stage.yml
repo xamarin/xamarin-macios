@@ -23,6 +23,10 @@ parameters:
   type: boolean
   default: true
 
+- name: isARM
+  type: boolean
+  default: false
+
 stages:
 - stage: ${{ parameters.stageName }}
   displayName: ${{ parameters.displayName }}
