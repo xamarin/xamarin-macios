@@ -181,9 +181,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		</Touch>
 	</Target>
 
-	<!-- dummy target so that we can call 'CreateIpa' from platform-agnostic code -->
-	<Target Name="CreateIpa" />
-
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.msbuild.targets" />
 
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets"
