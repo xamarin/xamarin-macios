@@ -631,6 +631,17 @@ namespace GeneratorTests
 		public void StrongDictsNativeEnums () => BuildFile (Profile.iOS, "strong-dict-native-enum.cs");
 
 		[Test]
+		public void IgnoreUnavailableProtocol ()
+		{
+			var bgen = BuildFile (Profile.iOS, "tests/ignore-unavailable-protocol.cs");
+			var myClass = bgen.ApiAssembly.MainModule.GetType ("NS", "MyClass");
+			var myProtocol = bgen.ApiAssembly.MainModule.GetType ("NS", "IMyProtocol");
+			var myClassInterfaces = myClass.Interfaces.Select (v => v.InterfaceType.Name).ToArray ();
+			Assert.That (myClassInterfaces, Does.Not.Contain ("IMyProtocol"), "IMyProtocol");
+			Assert.IsNull (myProtocol, "MyProtocol null");
+		}
+
+		[Test]
 		public void VSTS970507 ()
 		{
 			BuildFile (Profile.iOS, "tests/vsts-970507.cs");
