@@ -31,8 +31,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<MtouchProjectDirectory>$(MSBuildProjectDirectory)</MtouchProjectDirectory>
 		<MtouchVerbosity Condition="$(MtouchVerbosity) == ''">2</MtouchVerbosity>
 
-		<IsWatchExtension Condition="'$(IsWatchExtension)' == ''">False</IsWatchExtension>
-		<IsWatchApp Condition="'$(IsWatchApp)' == ''">False</IsWatchApp>
 		<IpaIncludeArtwork Condition="'$(IpaIncludeArtwork)' == ''">False</IpaIncludeArtwork>
 		<BuildIpa Condition="'$(BuildIpa)' == ''">False</BuildIpa>
 		<BuildSessionId></BuildSessionId>

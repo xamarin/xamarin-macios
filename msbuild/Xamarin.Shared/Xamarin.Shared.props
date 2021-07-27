@@ -190,6 +190,8 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 	<PropertyGroup>
 		<ArchiveOnBuild Condition="'$(ArchiveOnBuild)' == ''">false</ArchiveOnBuild>
 		<IsAppExtension Condition="'$(IsAppExtension)' == ''">false</IsAppExtension>
+		<IsWatchExtension Condition="'$(IsWatchExtension)' == ''">false</IsWatchExtension>
+		<IsWatchApp Condition="'$(IsWatchApp)' == ''">false</IsWatchApp>
 
 		<!-- Xamarin.iOS projects use MtouchEnableSGenConc, and Xamarin.Mac projects use EnableSGenConc -->
 		<!-- Going forward we're sticking with EnableSGenConc, but we'll accept MtouchEnableSGenConc if it's set -->
