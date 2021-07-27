@@ -584,7 +584,6 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "Intents", "Intents", 14,0 },
 
 					{ "Chip", "CHIP", new Version (15, 0), NotAvailableInSimulator /* no headers in beta 2 */ },
-					{ "Phase", "PHASE", new Version (15,0), NotAvailableInSimulator /* no headers in beta 2 */ },
 				};
 			}
 			return tvos_frameworks;

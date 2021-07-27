@@ -14,14 +14,14 @@ using System;
 
 namespace Phase {
 
-	[Mac (12,0), NoWatch, TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[Mac (12,0), NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
 	[Native]
 	public enum PhaseUpdateMode : long {
 		Automatic = 0,
 		Manual = 1,
 	}
 
-	[Mac (12,0), NoWatch, TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[Mac (12,0), NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
 	[Native]
 	public enum PhaseRenderingState : long {
 		Stopped = 0,
@@ -29,7 +29,7 @@ namespace Phase {
 		Paused = 2,
 	}
 
-	[Mac (12,0), NoWatch, TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[Mac (12,0), NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
 	[Native]
 	public enum PhaseSpatializationMode : long {
 		Automatic = 0,
@@ -37,7 +37,7 @@ namespace Phase {
 		AlwaysUseChannelBased = 2,
 	}
 
-	[Mac (12,0), NoWatch, TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[Mac (12,0), NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
 	[Native]
 	public enum PhaseReverbPreset : long {
 		None = 1917742958,
@@ -55,14 +55,14 @@ namespace Phase {
 		Cathedral = 1917023336,
 	}
 
-	[Mac (12,0), NoWatch, TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[Mac (12,0), NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
 	[Native]
 	[ErrorDomain ("PHASEErrorDomain")]
 	public enum PhaseError : long {
 		InitializeFailed = 1346913633,
 	}
 
-	[Mac (12,0), NoWatch, TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[Mac (12,0), NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
 	[Native]
 	[ErrorDomain ("PHASESoundEventErrorDomain")]
 	public enum PhaseSoundEventError : long {
@@ -74,7 +74,7 @@ namespace Phase {
 		OutOfMemory = 1346925670,
 	}
 
-	[Mac (12,0), NoWatch, TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[Mac (12,0), NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
 	[Native]
 	[ErrorDomain ("PHASEAssetErrorDomain")]
 	public enum PhaseAssetError : long {
@@ -86,7 +86,7 @@ namespace Phase {
 		MemoryAllocation = 1346920806,
 	}
 
-	[Mac (12,0), NoWatch, TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[Mac (12,0), NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
 	[Native]
 	public enum PhaseSoundEventPrepareHandlerReason : long {
 		Error = 0,
@@ -94,7 +94,7 @@ namespace Phase {
 		Terminated = 2,
 	}
 
-	[Mac (12,0), NoWatch, TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[Mac (12,0), NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
 	[Native]
 	public enum PhaseSoundEventStartHandlerReason : long {
 		Error = 0,
@@ -102,7 +102,7 @@ namespace Phase {
 		Terminated = 2,
 	}
 
-	[Mac (12,0), NoWatch, TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[Mac (12,0), NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
 	[Native]
 	public enum PhaseSoundEventSeekHandlerReason : long {
 		Error = 0,
@@ -110,7 +110,7 @@ namespace Phase {
 		SeekSuccessful = 2,
 	}
 
-	[Mac (12,0), NoWatch, TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[Mac (12,0), NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
 	[Native]
 	public enum PhaseSoundEventPrepareState : long {
 		NotStarted = 0,
@@ -118,14 +118,14 @@ namespace Phase {
 		Prepared = 2,
 	}
 
-	[Mac (12,0), NoWatch, TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[Mac (12,0), NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
 	[Native]
 	public enum PhaseAssetType : long {
 		Resident = 0,
 		Streamed = 1,
 	}
 
-	[Mac (12,0), NoWatch, TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[Mac (12,0), NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
 	[Native]
 	public enum PhaseCurveType : long {
 		Linear = 1668435054,
@@ -139,7 +139,7 @@ namespace Phase {
 		InverseSigmoid = 1668434247,
 	}
 
-	[Mac (12,0), NoWatch, TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[Mac (12,0), NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
 	[Native]
 	public enum PhaseCullOption : long {
 		Terminate = 0,
@@ -149,21 +149,21 @@ namespace Phase {
 		DoNotCull = 4,
 	}
 
-	[Mac (12,0), NoWatch, TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[Mac (12,0), NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
 	[Native]
 	public enum PhasePlaybackMode : long {
 		OneShot = 0,
 		Looping = 1,
 	}
 
-	[Mac (12,0), NoWatch, TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[Mac (12,0), NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
 	[Native]
 	public enum PhaseNormalizationMode : long {
 		None = 0,
 		Dynamic = 1,
 	}
 
-	[Mac (12,0), NoWatch, TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[Mac (12,0), NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
 	[Native]
 	public enum PhaseCalibrationMode : long {
 		None = 0,
@@ -171,7 +171,7 @@ namespace Phase {
 		AbsoluteSpl = 2,
 	}
 
-	[Mac (12,0), NoWatch, TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[Mac (12,0), NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
 	[Flags]
 	[Native]
 	public enum PhasePushStreamBufferOptions : ulong {
@@ -181,21 +181,21 @@ namespace Phase {
 		InterruptsAtLoop = 1uL << 3,
 	}
 
-	[Mac (12,0), NoWatch, TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[Mac (12,0), NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
 	[Native]
 	public enum PhasePushStreamCompletionCallbackCondition : long
 	{
 		DataRendered = 0,
 	}
 
-	[Mac (12,0), NoWatch, TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[Mac (12,0), NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
 	[Native]
 	public enum PhaseMediumPreset : long {
 		Default = 1835287654,
 		RoomAir = 1835291201,
 	}
 
-	[Mac (12,0), NoWatch, TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[Mac (12,0), NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
 	[Native]
 	public enum PhaseMaterialPreset : long {
 		Default = 1833198950,
@@ -208,7 +208,7 @@ namespace Phase {
 		Wood = 1834448228,
 	}
 
-	[Mac (12,0), NoWatch, TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[Mac (12,0), NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
 	public enum PhaseSpatialCategory {
 		[Field ("PHASESpatialCategoryDirectPathTransmission")]
 		DirectPathTransmission,
@@ -218,7 +218,7 @@ namespace Phase {
 		LateReverb,
 	}
 
-	[Mac (12,0), NoWatch, TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[Mac (12,0), NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
 	[Flags]
 	[Native]
 	public enum PhaseSpatialPipelineFlags : ulong
@@ -668,7 +668,7 @@ namespace Phase {
 		void AddRangeForInputValuesAbove (double value, double fullGainAtValue, PhaseCurveType fadeCurveType, PhaseSoundEventNodeDefinition subtree);
 
 		[Export ("addRangeWithEnvelope:subtree:")]
-		void AddRangeWithEnvelope (PhaseEnvelope envelope, PhaseSoundEventNodeDefinition subtree);
+		void AddRange (PhaseEnvelope envelope, PhaseSoundEventNodeDefinition subtree);
 	}
 
 	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
@@ -809,7 +809,7 @@ namespace Phase {
 
 		[Async]
 		[Export ("unregisterAssetWithIdentifier:completion:")]
-		void UnregisterAssetWithIdentifier (string identifier, [NullAllowed] Action<bool> handler);
+		void UnregisterAsset (string identifier, [NullAllowed] Action<bool> handler);
 
 		[Export ("registerSoundAssetAtURL:identifier:assetType:channelLayout:normalizationMode:error:")]
 		[return: NullAllowed]
