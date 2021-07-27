@@ -55,23 +55,6 @@ namespace Xamarin.Linker {
 				}
 			}
 			Configuration.WriteOutputForMSBuild ("_BindingLibraryFrameworks", frameworks);
-
-			// Tell MSBuild about any additional linker flags we found
-			var linkerFlags = new List<MSBuildItem> ();
-			foreach (var asm in Configuration.Target.Assemblies) {
-				if (asm.LinkerFlags == null)
-					continue;
-				foreach (var arg in asm.LinkerFlags) {
-					var item = new MSBuildItem {
-						Include = arg,
-						Metadata = new Dictionary<string, string> {
-							{ "Assembly", asm.Identity },
-						},
-					};
-					linkerFlags.Add (item);
-				}
-			}
-			Configuration.WriteOutputForMSBuild ("_BindingLibraryLinkerFlags", linkerFlags);
 		}
 	}
 }

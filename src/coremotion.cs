@@ -452,16 +452,19 @@ namespace CoreMotion {
 		[Export ("authorizationStatus")]
 		CMAuthorizationStatus AuthorizationStatus { get; }
 
-		[Watch (8,0), NoTV, NoMac, iOS (15,0), MacCatalyst (15,0)]
+		[Watch (8,0), NoTV, NoMac, iOS (15,0)]
+		[NoMacCatalyst]
 		[Static]
 		[Export ("isAbsoluteAltitudeAvailable")]
 		bool IsAbsoluteAltitudeAvailable { get; }
 
-		[Watch (8,0), NoTV, NoMac, iOS (15,0), MacCatalyst (15,0)]
+		[Watch (8,0), NoTV, NoMac, iOS (15,0)]
+		[NoMacCatalyst]
 		[Export ("startAbsoluteAltitudeUpdatesToQueue:withHandler:")]
 		void StartAbsoluteAltitudeUpdates (NSOperationQueue queue, Action<CMAbsoluteAltitudeData, NSError> handler);
 
-		[Watch (8,0), NoTV, NoMac, iOS (15,0), MacCatalyst (15,0)]
+		[Watch (8,0), NoTV, NoMac, iOS (15,0)]
+		[NoMacCatalyst]
 		[Export ("stopAbsoluteAltitudeUpdates")]
 		void StopAbsoluteAltitudeUpdates ();
 	}
