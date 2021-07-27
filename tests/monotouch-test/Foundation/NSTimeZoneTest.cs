@@ -40,7 +40,7 @@ namespace MonoTouchFixtures.Foundation {
 
 		[Test]
 #if NET && __MACCATALYST__
-		[Ignore ("https://github.com/dotnet/runtime/issues/55941")]
+		[Ignore ("No globalization data yet for Mac Catalyst - https://github.com/xamarin/xamarin-macios/issues/11392")]
 #endif
 		public void All_28300 ()
 		{
