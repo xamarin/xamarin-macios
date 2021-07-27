@@ -16,6 +16,9 @@ namespace GeneratorTests
 	[Parallelizable (ParallelScope.All)]
 	public class BGenTests
 	{
+		// Removing the following variable might make running the unit tests in VSMac fail.
+		static Type variable_to_keep_reference_to_system_runtime_compilerservices_unsafe_assembly = typeof (System.Runtime.CompilerServices.Unsafe);
+
 		[Test]
 #if !NET
 		[TestCase (Profile.macOSFull)]
