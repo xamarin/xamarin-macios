@@ -148,6 +148,8 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 	<PropertyGroup Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">
 		<!-- macOS and Mac Catalyst projects use the 'EnableCodeSigning' variable to enable code signing -->
 		<_RequireCodeSigning Condition="'$(_RequireCodeSigning)' == ''">$(EnableCodeSigning)</_RequireCodeSigning>
+		<!-- Signing must be enabled when archiving -->
+		<_RequireCodeSigning Condition="'$(_RequireCodeSigning)' == '' And '$(ArchiveOnBuild)' == 'true'">true</_RequireCodeSigning>
 		<!-- Extensions must be signed, so make sure they are -->
 		<_RequireCodeSigning Condition="'$(_RequireCodeSigning)' == '' And '$(IsAppExtension)' == 'true'">true</_RequireCodeSigning>
 		<!-- Otherwise code signing is disabled by default -->
