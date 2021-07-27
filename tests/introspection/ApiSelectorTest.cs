@@ -122,6 +122,8 @@ namespace Introspection {
 			// iOS 10 beta 2
 			case "GKBehavior":
 			case "MDLTransform":
+			// UISceneActivationRequestOptions started conforming to NSCopying oin Xcode 13
+			case "UISceneActivationRequestOptions":
 				switch (selectorName) {
 				case "copyWithZone:":
 					return true;
@@ -809,6 +811,18 @@ namespace Introspection {
 				switch (selectorName) {
 				case "copyWithZone:":
 					if (!TestRuntime.CheckXcodeVersion (10, 0))
+						return true;
+					break;
+				}
+				break;
+			case "MTLCommandBufferDescriptor":
+				switch (selectorName) {
+				case "errorOptions":
+				case "setErrorOptions:":
+				case "retainedReferences":
+				case "setRetainedReferences:":
+					// iOS 15 sim (and macOS 12) fails, API added in 14.0
+					if (TestRuntime.CheckXcodeVersion (13, 0))
 						return true;
 					break;
 				}

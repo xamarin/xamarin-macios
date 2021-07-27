@@ -122,6 +122,32 @@ namespace SensorKit {
 		Right,
 	}
 
+	[NoWatch, NoTV, NoMac, iOS (15,0), MacCatalyst (15,0)]
+	[Native]
+	public enum SRKeyboardMetricsSentimentCategory : long
+	{
+		Absolutist,
+		Down,
+		Death,
+		Anxiety,
+		Anger,
+		Health,
+		Positive,
+		Sad,
+		LowEnergy,
+		Confused,
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (15,0), MacCatalyst (15,0)]
+	[Native]
+	public enum SRTextInputSessionType : long
+	{
+		Keyboard = 1,
+		ThirdPartyKeyboard,
+		Pencil,
+		Dictation,
+	}
+
 	[NoWatch, NoTV, NoMac]
 	[iOS (14,0)]
 	[MacCatalyst (14,0)]
@@ -243,6 +269,14 @@ namespace SensorKit {
 
 		[Export ("usageTime")]
 		double /* NSTimeInterval */ UsageTime { get; }
+
+		[iOS (15,0), MacCatalyst (15,0)]
+		[Export ("reportApplicationIdentifier")]
+		string ReportApplicationIdentifier { get; }
+
+		[iOS (15,0), MacCatalyst (15,0)]
+		[Export ("textInputSessions", ArgumentSemantic.Copy)]
+		SRTextInputSession[] TextInputSessions { get; }
 	}
 
 	[NoWatch, NoTV, NoMac]
@@ -375,6 +409,10 @@ namespace SensorKit {
 
 		[Export ("height")]
 		NSMeasurement<NSUnitLength> Height { get; }
+
+		[iOS (15,0), MacCatalyst (15,0)]
+		[Export ("inputModes", ArgumentSemantic.Copy)]
+		string[] InputModes { get; }
 
 		// SRKeyboardMetrics_ScalarMetrics
 
@@ -573,6 +611,36 @@ namespace SensorKit {
 
 		[Export ("deleteToDeletes", ArgumentSemantic.Strong)]
 		SRKeyboardProbabilityMetric<NSUnitDuration>[] DeleteToDeletes { get; }
+
+		[iOS (15,0), MacCatalyst (15,0)]
+		[Export ("pathTypingSpeed")]
+		double PathTypingSpeed { get; }
+
+		[iOS (15,0), MacCatalyst (15,0)]
+		[Export ("totalPathPauses")]
+		nint TotalPathPauses { get; }
+
+		[iOS (15,0), MacCatalyst (15,0)]
+		[Export ("totalPauses")]
+		nint TotalPauses { get; }
+
+		[iOS (15,0), MacCatalyst (15,0)]
+		[Export ("totalTypingEpisodes")]
+		nint TotalTypingEpisodes { get; }
+
+		[iOS (15,0), MacCatalyst (15,0)]
+		[Export ("typingSpeed")]
+		double TypingSpeed { get; }
+
+		// SRKeyboardMetrics_SentimentCounts
+
+		[iOS (15,0), MacCatalyst (15,0)]
+		[Export ("wordCountForSentimentCategory:")]
+		nint WordCount (SRKeyboardMetricsSentimentCategory category);
+
+		[iOS (15,0), MacCatalyst (15,0)]
+		[Export ("emojiCountForSentimentCategory:")]
+		nint EmojiCount (SRKeyboardMetricsSentimentCategory category);
 	}
 
 	[NoWatch, NoTV, NoMac]
@@ -708,6 +776,14 @@ namespace SensorKit {
 
 		[Field ("SRSensorKeyboardMetrics")]
 		KeyboardMetrics,
+
+		[iOS (15,0), MacCatalyst (15,0)]
+		[Field ("SRSensorSiriSpeechMetrics")]
+		SiriSpeechMetrics,
+
+		[iOS (15,0), MacCatalyst (15,0)]
+		[Field ("SRSensorTelephonySpeechMetrics")]
+		TelephonySpeechMetrics,
 	}
 
 	[NoWatch, NoTV, NoMac]
@@ -820,5 +896,16 @@ namespace SensorKit {
 		[return: NullAllowed]
 		[Export ("sr_sensorForDeletionRecordsFromSensor")]
 		NSString _GetSensorForDeletionRecordsFromSensor ();
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (NSObject))]
+	interface SRTextInputSession /* privately conforms to NSCoding and NSSecureCoding */
+	{
+		[Export ("duration")]
+		double Duration { get; }
+
+		[Export ("sessionType")]
+		SRTextInputSessionType SessionType { get; }
 	}
 }
