@@ -2,8 +2,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net6.0-ios</TargetFramework>
-    <RuntimeIdentifier>iossimulator-x64</RuntimeIdentifier>
-    <OutputType>Exe</OutputType>
-    <MtouchInterpreter>all</MtouchInterpreter>
   </PropertyGroup>
+  <Import Project="../shared.csproj" />
 </Project>
