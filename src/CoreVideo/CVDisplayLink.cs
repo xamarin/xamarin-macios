@@ -92,7 +92,7 @@ namespace CoreVideo {
 			return new CVDisplayLink (handle, true);
 		}
 
-		[Mac (10,4)]
+		[Mac (12,0)]
 		[DllImport (Constants.CoreVideoLibrary)]
 		static extern int CVDisplayLinkCreateWithOpenGLDisplayMask (uint mask, out IntPtr displayLinkOut);
 
@@ -240,13 +240,14 @@ namespace CoreVideo {
 		static CVReturn OutputCallback (IntPtr displayLink, ref CVTimeStamp inNow, ref CVTimeStamp inOutputTime, CVOptionFlags flagsIn, ref CVOptionFlags flagsOut, IntPtr displayLinkContext)
 		{
 			GCHandle callbackHandle = GCHandle.FromIntPtr (displayLinkContext);
-			DisplayLinkOutputCallback func = (DisplayLinkOutputCallback) callbackHandle.Target;
+			DisplayLinkOutputCallback func = (DisplayLinkOutputCallback) callbackHandle.Target!;
 			CVDisplayLink delegateDisplayLink = new CVDisplayLink(displayLink, false);
 			return func (delegateDisplayLink, ref inNow, ref inOutputTime, flagsIn, ref flagsOut);
 		}
 	  
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static CVReturn CVDisplayLinkSetOutputCallback (IntPtr displayLink, CVDisplayLinkOutputCallback function, IntPtr userInfo);
+
 		public CVReturn SetOutputCallback (DisplayLinkOutputCallback callback)
 		{
 			callbackHandle = GCHandle.Alloc (callback);
@@ -255,11 +256,27 @@ namespace CoreVideo {
 			return ret;
 		}
 
-		[Mac (12,0)]
+		[Mac (12,0), NoiOS, NoTV]
 		[DllImport (Constants.CoreVideoLibrary)]
 		static extern nuint CVDisplayLinkGetTypeID ();
+
+		[Mac (12,0), NoiOS, NoTV]
 		public static nuint GetTypeId ()
 			=> CVDisplayLinkGetTypeID ();
+
+		[Mac (12,0), NoiOS, NoTV]
+		[DllImport (Constants.CoreVideoLibrary)]
+		static extern int CVDisplayLinkTranslateTime (IntPtr displayLink, CVTimeStamp inTime, out CVTimeStamp outTime);
+
+		[Mac (12,0), NoiOS, NoTV]
+		public bool TryTranslateTime (CVTimeStamp inTime, out CVTimeStamp? outTime)
+		{
+			outTime = null;
+			if (CVDisplayLinkTranslateTime (this.Handle, inTime, out var translated) == 0) {
+				outTime = translated;
+			}
+			return outTime != null;
+		}
 	}
 }
 

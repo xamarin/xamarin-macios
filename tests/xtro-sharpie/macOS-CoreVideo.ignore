@@ -42,3 +42,6 @@
 # deprecated
 !missing-field! kCVImageBufferTransferFunction_EBU_3213 not bound
 !missing-field! kCVImageBufferTransferFunction_SMPTE_C not bound
+
+# not clear if it is a relacement for CVDisplayLinkSetOutputCallback or not 
+!missing-pinvoke! CVDisplayLinkSetOutputHandler is not bound
