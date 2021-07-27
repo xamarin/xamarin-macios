@@ -1452,7 +1452,7 @@ namespace HealthKit {
 		NSPredicate GetPredicateForElectrocardiograms (HKElectrocardiogramSymptomsStatus symptomsStatus);
 
 		// @interface HKVerifiableClinicalRecordPredicates (HKQuery)
-		[iOS (15,0), Watch (8,0)]
+		[iOS (15,0), NoWatch]
 		[Static]
 		[Export ("predicateForVerifiableClinicalRecordsWithRelevantDateWithinDateInterval:")]
 		NSPredicate GetPredicateForVerifiableClinicalRecords (NSDateInterval dateInterval);
