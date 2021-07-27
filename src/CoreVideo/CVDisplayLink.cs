@@ -60,40 +60,48 @@ namespace CoreVideo {
 
 		[Mac (12,0)]
 		[DllImport (Constants.CoreVideoLibrary)]
-		static extern int CVDisplayLinkCreateWithCGDisplay (uint displayId, out IntPtr displayLink);
+		static extern CVReturn CVDisplayLinkCreateWithCGDisplay (uint displayId, out IntPtr displayLink);
+
+		[Mac (12,0)]
+		public static CVDisplayLink? FromDisplayId (uint displayId, out CVReturn error)
+		{
+			error = CVDisplayLinkCreateWithCGDisplay (displayId, out IntPtr handle);
+			if (error != 0)
+				return null;
+
+			return new CVDisplayLink (handle, true);
+		}
 
 		[Mac (12,0)]
 		public static CVDisplayLink? FromDisplayId (uint displayId)
-		{
-			var result = CVDisplayLinkCreateWithCGDisplay (displayId, out IntPtr handle);
-			if (result != 0)
-				return null;
-
-			return new CVDisplayLink (handle, true);
-		}
+			=> FromDisplayId (displayId, out var _);
 
 		[Mac (12,0)]
 		[DllImport (Constants.CoreVideoLibrary)]
-		unsafe static extern int CVDisplayLinkCreateWithCGDisplays (uint* displayArray, nint count, out IntPtr displayLink);
+		unsafe static extern CVReturn CVDisplayLinkCreateWithCGDisplays (uint* displayArray, nint count, out IntPtr displayLink);
 
 		[Mac (12,0)]
-		public static CVDisplayLink? FromDisplayIds (uint[] displayIds)
+		public static CVDisplayLink? FromDisplayIds (uint[] displayIds, out CVReturn error)
 		{
 			if (displayIds == null)
 				throw new ArgumentNullException (nameof (displayIds));
-			int result = 0;
+			error = 0;
 			IntPtr handle = IntPtr.Zero;
 			unsafe {
 				fixed (uint *displaysHandle = displayIds) {
-					result = CVDisplayLinkCreateWithCGDisplays (displaysHandle, displayIds.Length, out handle);
+					error = CVDisplayLinkCreateWithCGDisplays (displaysHandle, displayIds.Length, out handle);
 				}
 			}
 
-			if (result != 0)
+			if (error != 0)
 				return null;
 
 			return new CVDisplayLink (handle, true);
 		}
+
+		[Mac (12,0)]
+		public static CVDisplayLink? FromDisplayIds (uint[] displayIds)
+			=> FromDisplayIds (displayIds, out var _);
 
 		[Mac (12,0)]
 		[DllImport (Constants.CoreVideoLibrary)]
