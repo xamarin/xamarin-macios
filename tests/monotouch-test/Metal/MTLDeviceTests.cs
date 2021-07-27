@@ -63,6 +63,9 @@ namespace MonoTouchFixtures.Metal {
 		}
 
 		[Test]
+#if __MACCATALYST__
+		[Ignore ("This test requires a few test fixes that hasn't been backported to the release/6.0.1xx-preview7 branch - and won't be, since they're not necessary.")]
+#endif
 		public void ReturnReleaseTest ()
 		{
 			// This test tries to exercise all the Metal API that has a
