@@ -422,7 +422,8 @@ public class Frameworks : Dictionary <string, Framework>
 
 				{ "CoreLocationUI", "CoreLocationUI", 15,0 },
 
-				{ "Chip", "CHIP", new Version (15, 0), NotAvailableInSimulator /* no headers in beta 2 */ }
+				{ "Chip", "CHIP", new Version (15, 0), NotAvailableInSimulator /* no headers in beta 2 */ },
+				{ "DataDetection", "DataDetection", 15,0 },
 
 				// the above MUST be kept in sync with simlauncher
 				// see tools/mtouch/Makefile

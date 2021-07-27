@@ -1,3 +1,4 @@
+# framework not present
 !missing-selector! DDDetectedValue::matchedRange not bound
 !missing-selector! DDDetectedValue::matchedString not bound
 !missing-selector! DDDetectedValueCalendarEvent::endDate not bound
