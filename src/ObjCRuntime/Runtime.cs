@@ -281,8 +281,7 @@ namespace ObjCRuntime {
 #endif
 			InitializePlatform (options);
 
-#if !XAMMAC_SYSTEM_MONO && !NET_TODO
-			// NET_TODO: https://github.com/dotnet/runtime/issues/32543
+#if !XAMMAC_SYSTEM_MONO && !NET
 			UseAutoreleasePoolInThreadPool = true;
 #endif
 			IsARM64CallingConvention = GetIsARM64CallingConvention (); // Can only be done after Runtime.Arch is set (i.e. InitializePlatform has been called).
@@ -301,8 +300,19 @@ namespace ObjCRuntime {
 #endif
 		}
 
-#if !XAMMAC_SYSTEM_MONO && !NET_TODO
-		// NET_TODO: https://github.com/dotnet/runtime/issues/32543
+#if !XAMMAC_SYSTEM_MONO
+#if NET
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[Obsolete ("Use the 'AutoreleasePoolSupport' MSBuild property instead: https://docs.microsoft.com/en-us/dotnet/core/run-time-config/threading#autoreleasepool-for-managed-threads")]
+		public static bool UseAutoreleasePoolInThreadPool {
+			get {
+				return AppContext.TryGetSwitch ("System.Threading.Thread.EnableAutoreleasePool", out var enabled) && enabled;
+			}
+			set {
+				throw new PlatformNotSupportedException ("Use the 'AutoreleasePoolSupport' MSBuild property instead: https://docs.microsoft.com/en-us/dotnet/core/run-time-config/threading#autoreleasepool-for-managed-threads");
+			}
+		}
+#else
 		static bool has_autoreleasepool_in_thread_pool;
 		public static bool UseAutoreleasePoolInThreadPool {
 			get {
@@ -319,6 +329,7 @@ namespace ObjCRuntime {
 			using (var pool = new NSAutoreleasePool ())
 				return callback ();
 		}
+#endif // NET
 #endif
 
 #if MONOMAC
