@@ -9,6 +9,9 @@
 				"Microsoft.@PLATFORM@.Runtime.maccatalyst-arm64",
 				"Microsoft.@PLATFORM@.Runtime.maccatalyst-x64",
 				"Microsoft.@PLATFORM@.Templates"
+			],
+			"extends": [ 
+				"microsoft-net-runtime-maccatalyst"
 			]
 		}
 	},
