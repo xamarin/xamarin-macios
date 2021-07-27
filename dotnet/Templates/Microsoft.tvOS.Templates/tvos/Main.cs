@@ -1,5 +1,3 @@
-using UIKit;
-
 using tvOSApp1;
 
 // This is the main entry point of the application.
