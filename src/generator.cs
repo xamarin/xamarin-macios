@@ -3143,11 +3143,14 @@ public partial class Generator : IMemberGatherer {
 	
 	// this attribute allows the linker to be more clever in removing unused code in bindings - without risking breaking user code
 	// only generate those for monotouch now since we can ensure they will be linked away before reaching the devices
-	public void GeneratedCode (StreamWriter sw, int tabs)
+	public void GeneratedCode (StreamWriter sw, int tabs, bool optimizable = true)
 	{
 		for (int i=0; i < tabs; i++)
 			sw.Write ('\t');
-		sw.WriteLine ("[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]");
+		sw.Write ("[BindingImpl (BindingImplOptions.GeneratedCode");
+		if (optimizable)
+			sw.Write (" | BindingImplOptions.Optimizable");
+		 sw.WriteLine (")]");
 	}
 
 	static void WriteIsDirectBindingCondition (StreamWriter sw, ref int tabs, bool? is_direct_binding, string is_direct_binding_value, Func<string> trueCode, Func<string> falseCode)
@@ -3184,9 +3187,9 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 	
-	public void print_generated_code ()
+	public void print_generated_code (bool optimizable = true)
 	{
-		GeneratedCode (sw, indent);
+		GeneratedCode (sw, indent, optimizable);
 	}
 
 	public void print (string format)
@@ -4031,7 +4034,18 @@ public partial class Generator : IMemberGatherer {
 			print (l);
 		}
 	}
-	
+
+	bool IsOptimizable (MemberInfo method)
+	{
+		var optimizable = true;
+		var snippets = AttributeManager.GetCustomAttributes<SnippetAttribute> (method);
+		if (snippets.Length > 0) {
+			foreach (SnippetAttribute snippet in snippets)
+				optimizable &= snippet.Optimizable;
+		}
+		return optimizable;
+	}
+
 	[Flags]
 	public enum BodyOption {
 		None = 0x0,
@@ -4953,7 +4967,7 @@ public partial class Generator : IMemberGatherer {
 			}
 		}
 
-		print_generated_code ();
+		print_generated_code (optimizable: IsOptimizable (pi));
 		PrintPropertyAttributes (pi, minfo.type);
 
 		PrintAttributes (pi, preserve:true, advice:true, bindAs:true);
@@ -5508,7 +5522,7 @@ public partial class Generator : IMemberGatherer {
 		var mod = minfo.GetVisibility ();
 
 		var is_abstract = minfo.is_abstract;
-		print_generated_code ();
+		print_generated_code (optimizable: IsOptimizable (minfo.mi));
 		print ("{0} {1}{2}{3}",
 		       mod,
 		       minfo.GetModifiers (),
@@ -7420,15 +7434,19 @@ public partial class Generator : IMemberGatherer {
 			// Do we need a dispose method?
 			//
 			if (!is_static_class){
-				var disposeAttr = AttributeManager.GetCustomAttributes<DisposeAttribute> (type);
-				if (disposeAttr.Length > 0 || instance_fields_to_clear_on_dispose.Count > 0){
-					print_generated_code ();
+				var attrs = AttributeManager.GetCustomAttributes<DisposeAttribute> (type);
+				// historical note: unlike many attributes our `DisposeAttribute` has `AllowMultiple=true`
+				var has_dispose_attributes = attrs.Length > 0;
+				if (has_dispose_attributes || (instance_fields_to_clear_on_dispose.Count > 0)) {
+					// if there'a any [Dispose] attribute then they all must opt-in in order for the generated Dispose method to be optimizable
+					bool optimizable = !has_dispose_attributes || IsOptimizable (type);
+					print_generated_code (optimizable: optimizable);
 					print ("protected override void Dispose (bool disposing)");
 					print ("{");
 					indent++;
-					if (disposeAttr.Length > 0){
-						var snippet = disposeAttr [0];
-						Inject (snippet);
+					if (has_dispose_attributes) {
+						foreach (var da in attrs)
+							Inject (da);
 					}
 					
 					print ("base.Dispose (disposing);");

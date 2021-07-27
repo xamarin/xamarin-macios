@@ -103,6 +103,8 @@ namespace CoreAnimation {
 			}
 		}
 
+		// Note: preserving this member allows us to re-enable the `Optimizable` binding flag
+		[Preserve (Conditional = true)]
 		void OnDispose ()
 		{
 			if (calayerdelegate != null) {
