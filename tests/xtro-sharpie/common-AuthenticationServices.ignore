@@ -1,0 +1,3 @@
+# xtro did not pick up on this enum
+!unknown-native-enum! ASCOSEAlgorithmIdentifier bound
+!unknown-native-enum! ASCOSEEllipticCurveIdentifier bound

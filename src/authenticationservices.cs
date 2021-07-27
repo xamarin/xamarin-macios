@@ -1003,6 +1003,18 @@ namespace AuthenticationServices {
 		Bluetooth,
 	}
 
+	[Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoWatch, NoTV]
+	[Native]
+	enum ASCOSEAlgorithmIdentifier : long {
+		Es256 = -7,
+	}
+
+	[Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoWatch, NoTV]
+	[Native]
+	enum ASCOSEEllipticCurveIdentifier : long {
+		P256 = 1,
+	}
+
 	interface IASAuthorizationPublicKeyCredentialAssertion { }
 
 	[NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoTV]
@@ -1192,10 +1204,10 @@ namespace AuthenticationServices {
 	interface ASAuthorizationPublicKeyCredentialParameters : NSSecureCoding, NSCopying
 	{
 		[Export ("initWithAlgorithm:")]
-		IntPtr Constructor (nint algorithm);
+		IntPtr Constructor (ASCOSEAlgorithmIdentifier algorithm);
 
 		[Export ("algorithm")]
-		nint Algorithm { get; }
+		ASCOSEAlgorithmIdentifier Algorithm { get; }
 	}
 
 	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
