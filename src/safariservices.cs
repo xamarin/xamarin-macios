@@ -17,6 +17,7 @@ using ObjCRuntime;
 using UIKit;
 #else
 using AppKit;
+using UIImage = AppKit.NSImage;
 #endif
 
 namespace SafariServices {
@@ -116,6 +117,11 @@ namespace SafariServices {
 		[iOS (11,0)]
 		[Export ("dismissButtonStyle", ArgumentSemantic.Assign)]
 		SFSafariViewControllerDismissButtonStyle DismissButtonStyle { get; set; }
+
+		[iOS (15,0), MacCatalyst (15,0)]
+		[Static]
+		[Export ("prewarmConnectionsToURLs:")]
+		SFSafariViewControllerPrewarmingToken PrewarmConnections (NSUrl[] urls);
 	}
 
 	[iOS (9,0)]
@@ -153,6 +159,11 @@ namespace SafariServices {
 
 		[Export ("barCollapsingEnabled")]
 		bool BarCollapsingEnabled { get; set; }
+
+		[NullAllowed]
+		[iOS (15,0), MacCatalyst (15,0), NoMac, NoTV, NoWatch]
+		[Export ("activityButton", ArgumentSemantic.Copy)]
+		SFSafariViewControllerActivityButton ActivityButton { get; set; }
 	}
 
 	[iOS (11,0)]
@@ -456,4 +467,37 @@ namespace SafariServices {
 		bool Enabled { [Bind ("isEnabled")] get; set; }
 	}
 #endif
+
+	[Static]
+	[iOS (15,0), Mac (11,0), MacCatalyst (15,0), NoTV, NoWatch]
+	[DisableDefaultCtor]
+	interface SFExtension {
+		[Field ("SFExtensionMessageKey")]
+		NSString MessageKey { get; }
+	}
+
+	[iOS (15,0), MacCatalyst (15,0), NoMac, NoTV, NoWatch]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface SFSafariViewControllerActivityButton : NSCopying, NSSecureCoding
+	{
+		[Export ("initWithTemplateImage:extensionIdentifier:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (UIImage templateImage, string extensionIdentifier);
+
+		[NullAllowed, Export ("templateImage", ArgumentSemantic.Copy)]
+		UIImage TemplateImage { get; }
+
+		[NullAllowed, Export ("extensionIdentifier")]
+		string ExtensionIdentifier { get; }
+	}
+
+	[iOS (15,0), MacCatalyst (15,0), NoMac, NoTV, NoWatch]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface SFSafariViewControllerPrewarmingToken /* Privately conforms to NSCoding and NSSecureCoding */
+	{
+		[Export ("invalidate")]
+		void Invalidate ();
+	}
 }
