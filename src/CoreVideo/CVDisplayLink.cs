@@ -26,6 +26,7 @@
 #if MONOMAC
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
 using ObjCRuntime;
@@ -62,11 +63,11 @@ namespace CoreVideo {
 		static extern int CVDisplayLinkCreateWithCGDisplay (uint displayId, out IntPtr displayLink);
 
 		[Mac (12,0)]
-		public static CVDisplayLink FromDisplayId (uint displayId)
+		public static CVDisplayLink? FromDisplayId (uint displayId)
 		{
 			var result = CVDisplayLinkCreateWithCGDisplay (displayId, out IntPtr handle);
 			if (result != 0)
-				throw new Exception ($"Could not create display link for display {displayId}.");
+				return null;
 
 			return new CVDisplayLink (handle, true);
 		}
@@ -76,8 +77,10 @@ namespace CoreVideo {
 		unsafe static extern int CVDisplayLinkCreateWithCGDisplays (uint* displayArray, nint count, out IntPtr displayLink);
 
 		[Mac (12,0)]
-		public static CVDisplayLink FromDisplayIds (uint[] displayIds)
+		public static CVDisplayLink? FromDisplayIds (uint[] displayIds)
 		{
+			if (displayIds == null)
+				throw new ArgumentNullException (nameof (displayIds));
 			int result = 0;
 			IntPtr handle = IntPtr.Zero;
 			unsafe {
@@ -87,7 +90,7 @@ namespace CoreVideo {
 			}
 
 			if (result != 0)
-				throw new Exception ("Could not create display link for the given displays.");
+				return null;
 
 			return new CVDisplayLink (handle, true);
 		}
@@ -269,14 +272,13 @@ namespace CoreVideo {
 		static extern int CVDisplayLinkTranslateTime (IntPtr displayLink, CVTimeStamp inTime, ref CVTimeStamp outTime);
 
 		[Mac (12,0), NoiOS, NoTV]
-		public bool TryTranslateTime (CVTimeStamp inTime, out CVTimeStamp? outTime)
+		public bool TryTranslateTime (CVTimeStamp inTime, [NotNullWhen (true)] out CVTimeStamp outTime)
 		{
-			outTime = null;
-			var translated = new CVTimeStamp() { Version = 0 };
-			if (CVDisplayLinkTranslateTime (this.Handle, inTime, ref translated) == 0) {
-				outTime = translated;
+			outTime = new CVTimeStamp() { Version = 0 };
+			if (CVDisplayLinkTranslateTime (this.Handle, inTime, ref outTime) == 0) {
+				return true;
 			}
-			return outTime != null;
+			return false;
 		}
 	}
 }
