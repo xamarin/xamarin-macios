@@ -819,10 +819,6 @@ namespace Phase {
 		[return: NullAllowed]
 		PhaseSoundAsset RegisterSoundAsset (NSData data, [NullAllowed] string identifier, AVAudioFormat format, PhaseNormalizationMode normalizationMode, [NullAllowed] out NSError error);
 
-		[Async]
-		[Export ("unregisterAssetWithIdentifier:completionBlock:")]
-		void UnregisterAsset (string identifier, [NullAllowed] Action<bool> completionBlock);
-
 		[Export ("assetForIdentifier:")]
 		[return: NullAllowed]
 		PhaseAsset GetAsset (string identifier);
