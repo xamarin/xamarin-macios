@@ -266,13 +266,14 @@ namespace CoreVideo {
 
 		[Mac (12,0), NoiOS, NoTV]
 		[DllImport (Constants.CoreVideoLibrary)]
-		static extern int CVDisplayLinkTranslateTime (IntPtr displayLink, CVTimeStamp inTime, out CVTimeStamp outTime);
+		static extern int CVDisplayLinkTranslateTime (IntPtr displayLink, CVTimeStamp inTime, ref CVTimeStamp outTime);
 
 		[Mac (12,0), NoiOS, NoTV]
 		public bool TryTranslateTime (CVTimeStamp inTime, out CVTimeStamp? outTime)
 		{
 			outTime = null;
-			if (CVDisplayLinkTranslateTime (this.Handle, inTime, out var translated) == 0) {
+			var translated = new CVTimeStamp() { Version = 0 };
+			if (CVDisplayLinkTranslateTime (this.Handle, inTime, ref translated) == 0) {
 				outTime = translated;
 			}
 			return outTime != null;
