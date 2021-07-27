@@ -439,7 +439,9 @@ namespace Introspection {
 				// Xcode 13
 				case "ARDepthData":
 				case "ARSkeletonDefinition": // device only
+				case "ARVideoFormat": // device only
 				case "NSMergePolicy":
+				case "SFSafariViewControllerPrewarmingToken": // conformance not in headers
 				case "SRTextInputSession": // conformance not in headers
 					return true;
 				}
@@ -678,7 +680,9 @@ namespace Introspection {
 				// Xcode 13
 				case "ARDepthData":
 				case "ARSkeletonDefinition": // device only
+				case "ARVideoFormat": // device only
 				case "NSMergePolicy":
+				case "SFSafariViewControllerPrewarmingToken": // conformance not in headers
 				case "SRTextInputSession": // conformance not in headers
 					return true;
 				}

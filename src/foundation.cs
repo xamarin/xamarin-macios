@@ -473,7 +473,7 @@ namespace Foundation
 		[Mac (10,15), iOS (13,0)]
 		[Static]
 		[Export ("loadFromHTMLWithRequest:options:completionHandler:")]
-		[PreSnippet ("GC.KeepAlive (WebKit.WKContentMode.Recommended); // no-op to ensure WebKit.framework is loaded into memory")]
+		[PreSnippet ("GC.KeepAlive (WebKit.WKContentMode.Recommended); // no-op to ensure WebKit.framework is loaded into memory", Optimizable = true)]
 		[Async (ResultTypeName = "NSLoadFromHtmlResult")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		void LoadFromHtml (NSUrlRequest request, NSDictionary options, NSAttributedStringCompletionHandler completionHandler);
@@ -489,7 +489,7 @@ namespace Foundation
 		[Mac (10,15), iOS (13,0)]
 		[Static]
 		[Export ("loadFromHTMLWithFileURL:options:completionHandler:")]
-		[PreSnippet ("GC.KeepAlive (WebKit.WKContentMode.Recommended); // no-op to ensure WebKit.framework is loaded into memory")]
+		[PreSnippet ("GC.KeepAlive (WebKit.WKContentMode.Recommended); // no-op to ensure WebKit.framework is loaded into memory", Optimizable = true)]
 		[Async (ResultTypeName = "NSLoadFromHtmlResult")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		void LoadFromHtml (NSUrl fileUrl, NSDictionary options, NSAttributedStringCompletionHandler completionHandler);
@@ -505,7 +505,7 @@ namespace Foundation
 		[Mac (10,15), iOS (13,0)]
 		[Static]
 		[Export ("loadFromHTMLWithString:options:completionHandler:")]
-		[PreSnippet ("GC.KeepAlive (WebKit.WKContentMode.Recommended); // no-op to ensure WebKit.framework is loaded into memory")]
+		[PreSnippet ("GC.KeepAlive (WebKit.WKContentMode.Recommended); // no-op to ensure WebKit.framework is loaded into memory", Optimizable = true)]
 		[Async (ResultTypeName = "NSLoadFromHtmlResult")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		void LoadFromHtml (string @string, NSDictionary options, NSAttributedStringCompletionHandler completionHandler);
@@ -521,7 +521,7 @@ namespace Foundation
 		[Mac (10,15), iOS (13,0)]
 		[Static]
 		[Export ("loadFromHTMLWithData:options:completionHandler:")]
-		[PreSnippet ("GC.KeepAlive (WebKit.WKContentMode.Recommended); // no-op to ensure WebKit.framework is loaded into memory")]
+		[PreSnippet ("GC.KeepAlive (WebKit.WKContentMode.Recommended); // no-op to ensure WebKit.framework is loaded into memory", Optimizable = true)]
 		[Async (ResultTypeName = "NSLoadFromHtmlResult")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		void LoadFromHtml (NSData data, NSDictionary options, NSAttributedStringCompletionHandler completionHandler);
@@ -3634,11 +3634,11 @@ namespace Foundation
 	[BaseType (typeof (NSData))]
 	interface NSMutableData {
 		[Static, Export ("dataWithCapacity:")] [Autorelease]
-		[PreSnippet ("if (capacity < 0 || capacity > nint.MaxValue) throw new ArgumentOutOfRangeException ();")]
+		[PreSnippet ("if (capacity < 0 || capacity > nint.MaxValue) throw new ArgumentOutOfRangeException ();", Optimizable = true)]
 		NSMutableData FromCapacity (nint capacity);
 
 		[Static, Export ("dataWithLength:")] [Autorelease]
-		[PreSnippet ("if (length < 0 || length > nint.MaxValue) throw new ArgumentOutOfRangeException ();")]
+		[PreSnippet ("if (length < 0 || length > nint.MaxValue) throw new ArgumentOutOfRangeException ();", Optimizable = true)]
 		NSMutableData FromLength (nint length);
 		
 		[Static, Export ("data")] [Autorelease]
@@ -3648,7 +3648,7 @@ namespace Foundation
 		IntPtr MutableBytes { get; }
 
 		[Export ("initWithCapacity:")]
-		[PreSnippet ("if (capacity > (ulong) nint.MaxValue) throw new ArgumentOutOfRangeException ();")]
+		[PreSnippet ("if (capacity > (ulong) nint.MaxValue) throw new ArgumentOutOfRangeException ();", Optimizable = true)]
 		IntPtr Constructor (nuint capacity);
 
 		[Export ("appendData:")]
@@ -5050,7 +5050,7 @@ namespace Foundation
 	}
 	
 	[BaseType (typeof(NSObject))]
-	[Dispose ("if (disposing) { Invalidate (); } ")]
+	[Dispose ("if (disposing) { Invalidate (); } ", Optimizable = true)]
 	// init returns NIL
 	[DisableDefaultCtor]
 	interface NSTimer {
@@ -5086,6 +5086,8 @@ namespace Foundation
 		[Export ("fireDate", ArgumentSemantic.Copy)]
 		NSDate FireDate { get; set; }
 
+		// Note: preserving this member allows us to re-enable the `Optimizable` binding flag
+		[Preserve (Conditional = true)]
 		[Export ("invalidate")]
 		void Invalidate ();
 
@@ -5402,9 +5404,9 @@ namespace Foundation
 			// in turns, means that the Intents.framework is loaded into memory and this makes the
 			// selectors (getter and setter) work at runtime. Other selectors do not need it.
 			// reference: https://github.com/xamarin/xamarin-macios/issues/4894
-			[PreSnippet ("GC.KeepAlive (Intents.INCallCapabilityOptions.AudioCall); // no-op to ensure Intents.framework is loaded into memory")]
+			[PreSnippet ("GC.KeepAlive (Intents.INCallCapabilityOptions.AudioCall); // no-op to ensure Intents.framework is loaded into memory", Optimizable = true)]
 			get;
-			[PreSnippet ("GC.KeepAlive (Intents.INCallCapabilityOptions.AudioCall); // no-op to ensure Intents.framework is loaded into memory")]
+			[PreSnippet ("GC.KeepAlive (Intents.INCallCapabilityOptions.AudioCall); // no-op to ensure Intents.framework is loaded into memory", Optimizable = true)]
 			set;
 		}
 
@@ -8481,11 +8483,11 @@ namespace Foundation
 		[Export ("initWithCapacity:")]
 		IntPtr Constructor (nint capacity);
 
-		[PreSnippet ("Check (index);")]
+		[PreSnippet ("Check (index);", Optimizable = true)]
 		[Export ("insertString:atIndex:")]
 		void Insert (NSString str, nint index);
 
-		[PreSnippet ("Check (range);")]
+		[PreSnippet ("Check (range);", Optimizable = true)]
 		[Export ("deleteCharactersInRange:")]
 		void DeleteCharacters (NSRange range);
 
@@ -8495,7 +8497,7 @@ namespace Foundation
 		[Export ("setString:")]
 		void SetString (NSString str);
 
-		[PreSnippet ("Check (range);")]
+		[PreSnippet ("Check (range);", Optimizable = true)]
 		[Export ("replaceOccurrencesOfString:withString:options:range:")]
 		nuint ReplaceOcurrences (NSString target, NSString replacement, NSStringCompareOptions options, NSRange range);
 
@@ -8840,12 +8842,12 @@ namespace Foundation
 		[Export ("methodForSelector:")]
 		IntPtr GetMethodForSelector (Selector sel);
 
-		[PreSnippet ("if (!(this is INSCopying)) throw new InvalidOperationException (\"Type does not conform to NSCopying\");")]
+		[PreSnippet ("if (!(this is INSCopying)) throw new InvalidOperationException (\"Type does not conform to NSCopying\");", Optimizable = true)]
 		[Export ("copy")]
 		[return: Release ()]
 		NSObject Copy ();
 
-		[PreSnippet ("if (!(this is INSMutableCopying)) throw new InvalidOperationException (\"Type does not conform to NSMutableCopying\");")]
+		[PreSnippet ("if (!(this is INSMutableCopying)) throw new InvalidOperationException (\"Type does not conform to NSMutableCopying\");", Optimizable = true)]
 		[Export ("mutableCopy")]
 		[return: Release ()]
 		NSObject MutableCopy ();
@@ -10637,7 +10639,7 @@ namespace Foundation
 		NSNotificationCenter DefaultCenter { get; }
 	
 		[Export ("addObserver:selector:name:object:")]
-		[PostSnippet ("AddObserverToList (observer, aName, anObject);")]
+		[PostSnippet ("AddObserverToList (observer, aName, anObject);", Optimizable = true)]
 		void AddObserver (NSObject observer, Selector aSelector, [NullAllowed] NSString aName, [NullAllowed] NSObject anObject);
 	
 		[Export ("postNotification:")]
@@ -10650,11 +10652,11 @@ namespace Foundation
 		void PostNotificationName (string aName, [NullAllowed] NSObject anObject, [NullAllowed] NSDictionary aUserInfo);
 	
 		[Export ("removeObserver:")]
-		[PostSnippet ("RemoveObserversFromList (observer, null, null);")]
+		[PostSnippet ("RemoveObserversFromList (observer, null, null);", Optimizable = true)]
 		void RemoveObserver (NSObject observer);
 	
 		[Export ("removeObserver:name:object:")]
-		[PostSnippet ("RemoveObserversFromList (observer, aName, anObject);")]
+		[PostSnippet ("RemoveObserversFromList (observer, aName, anObject);", Optimizable = true)]
 		void RemoveObserver (NSObject observer, [NullAllowed] string aName, [NullAllowed] NSObject anObject);
 
 		[Export ("addObserverForName:object:queue:usingBlock:")]
@@ -14638,6 +14640,7 @@ namespace Foundation
 		[Export ("executeAppleEvent:error:")]
 		NSAppleEventDescriptor ExecuteAppleEvent (NSAppleEventDescriptor eventDescriptor, out NSDictionary errorInfo);
 
+		[NullAllowed]
 		[Export ("richTextSource", ArgumentSemantic.Retain)]
 		NSAttributedString RichTextSource { get; }
 	}

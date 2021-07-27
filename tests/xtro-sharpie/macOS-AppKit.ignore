@@ -1338,7 +1338,6 @@
 !missing-null-allowed! 'AppKit.NSImage AppKit.NSBrowserCell::get_BranchImage()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSImage AppKit.NSBrowserCell::get_HighlightedBranchImage()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSImage AppKit.NSDraggingInfo::get_DraggedImage()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'AppKit.NSImage AppKit.NSImage::ImageNamed(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSImage AppKit.NSImageDelegate::ImageDidNotDraw(Foundation.NSObject,CoreGraphics.CGRect)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSImage AppKit.NSRunningApplication::get_Icon()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSImage AppKit.NSSegmentedCell::GetImageForSegment(System.nint)' is missing an [NullAllowed] on return type
@@ -1438,12 +1437,7 @@
 !missing-null-allowed! 'AppKit.NSTextStorage AppKit.NSTextView::get_TextStorage()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSTextTab AppKit.NSTypesetter::GetTextTab(System.nfloat,AppKit.NSWritingDirection,System.nfloat)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSTextView AppKit.NSCell::FieldEditorForView(AppKit.NSView)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'AppKit.NSToolbar AppKit.NSToolbarItem::get_Toolbar()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'AppKit.NSToolbarItem AppKit.NSTabViewController::WillInsertItem(AppKit.NSToolbar,System.String,System.Boolean)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'AppKit.NSToolbarItem AppKit.NSToolbarDelegate::WillInsertItem(AppKit.NSToolbar,System.String,System.Boolean)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'AppKit.NSToolbarItem[] AppKit.NSToolbar::get_VisibleItems()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSTouchBar AppKit.NSResponder_NSTouchBarProvider::MakeTouchBar(AppKit.NSResponder)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'AppKit.NSTouchBarItem AppKit.NSTouchBar::GetItemForIdentifier(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSTrackingArea AppKit.NSEvent::get_TrackingArea()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSTreeNode AppKit.NSTreeNode::DescendantNode(Foundation.NSIndexPath)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'AppKit.NSTreeNode AppKit.NSTreeNode::FromRepresentedObject(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
@@ -1510,7 +1504,6 @@
 !missing-null-allowed! 'Foundation.NSArray[] AppKit.NSFontManager::AvailableMembersOfFontFamily(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSAttributedString AppKit.NSHelpManager::Context(Foundation.NSObject)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSAttributedString AppKit.NSTextInputClient::GetAttributedSubstring(Foundation.NSRange,Foundation.NSRange&)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSAttributedString Foundation.NSAppleScript::get_RichTextSource()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSAttributedString Foundation.NSBundle::GetContextHelp(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSBundle AppKit.NSViewController::get_NibBundle()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSData AppKit.NSBitmapImageRep::get_TiffRepresentation()' is missing an [NullAllowed] on return type
@@ -1520,7 +1513,6 @@
 !missing-null-allowed! 'Foundation.NSData AppKit.NSBitmapImageRep::TiffRepresentationUsingCompressionFactor(AppKit.NSTiffCompression,System.Single)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSData AppKit.NSColorSpace::get_ICCProfileData()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSData AppKit.NSDocument::GetAsData(System.String,Foundation.NSError&)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSData AppKit.NSImage::AsTiff()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSData AppKit.NSImage::AsTiff(AppKit.NSTiffCompression,System.Single)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSData AppKit.NSPasteboard::GetDataForType(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSData AppKit.NSPasteboardItem::GetDataForType(System.String)' is missing an [NullAllowed] on return type
@@ -1658,7 +1650,6 @@
 !missing-null-allowed! 'System.Boolean AppKit.NSControlTextEditingDelegate::DidFailToFormatString(AppKit.NSControl,System.String,System.String)' is missing an [NullAllowed] on parameter #2
 !missing-null-allowed! 'System.Boolean AppKit.NSControlTextEditingDelegate::IsValidObject(AppKit.NSControl,Foundation.NSObject)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Boolean AppKit.NSDocumentController::ReopenDocument(Foundation.NSUrl,Foundation.NSUrl,Foundation.NSError&)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Boolean AppKit.NSImage::SetName(System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Boolean AppKit.NSMatrix::AcceptsFirstMouse(AppKit.NSEvent)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Boolean AppKit.NSOutlineView::IsItemExpanded(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Boolean AppKit.NSPasteboard::SetDataForType(Foundation.NSData,System.String)' is missing an [NullAllowed] on parameter #0
@@ -1723,7 +1714,6 @@
 !missing-null-allowed! 'System.String AppKit.NSFontDescriptor::get_PostscriptName()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.String AppKit.NSFontManager::LocalizedNameForFamily(System.String,System.String)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.String AppKit.NSGlyphInfo::get_GlyphName()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String AppKit.NSImage::GetName()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.String AppKit.NSOpenSavePanelDelegate::UserEnteredFilename(AppKit.NSSavePanel,System.String,System.Boolean)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.String AppKit.NSOutlineViewDelegate::GetSelectString(AppKit.NSOutlineView,AppKit.NSTableColumn,Foundation.NSObject)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.String AppKit.NSPasteboard::GetAvailableTypeFromArray(System.String[])' is missing an [NullAllowed] on return type
@@ -1825,8 +1815,6 @@
 !missing-null-allowed! 'System.Void AppKit.NSButtonCell::set_BackgroundColor(AppKit.NSColor)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSButtonCell::set_Sound(AppKit.NSSound)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSButtonCell::set_Title(System.String)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void AppKit.NSButtonTouchBarItem::set_CustomizationLabel(System.String)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void AppKit.NSCandidateListTouchBarItem::set_CustomizationLabel(System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSCell::.ctor(AppKit.NSImage)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSCell::PerformClick(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSCell::set_ControlView(AppKit.NSView)' is missing an [NullAllowed] on parameter #0
@@ -1849,7 +1837,6 @@
 !missing-null-allowed! 'System.Void AppKit.NSCollectionViewItem::set_TextField(AppKit.NSTextField)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSColorPicker::ViewSizeChanged(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSColorPickerTouchBarItem::set_ColorList(AppKit.NSColorList)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void AppKit.NSColorPickerTouchBarItem::set_CustomizationLabel(System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSColorWell::TakeColorFrom(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSComboBox::Select(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSComboBoxCell::Select(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
@@ -1867,7 +1854,6 @@
 !missing-null-allowed! 'System.Void AppKit.NSControlTextEditingDelegate::DidFailToValidatePartialString(AppKit.NSControl,System.String,System.String)' is missing an [NullAllowed] on parameter #2
 !missing-null-allowed! 'System.Void AppKit.NSCursor::.ctor(AppKit.NSImage,AppKit.NSColor,AppKit.NSColor,CoreGraphics.CGPoint)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Void AppKit.NSCursor::.ctor(AppKit.NSImage,AppKit.NSColor,AppKit.NSColor,CoreGraphics.CGPoint)' is missing an [NullAllowed] on parameter #2
-!missing-null-allowed! 'System.Void AppKit.NSCustomTouchBarItem::set_CustomizationLabel(System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSCustomTouchBarItem::set_ViewController(AppKit.NSViewController)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSDatePicker::set_Calendar(Foundation.NSCalendar)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSDatePicker::set_Locale(Foundation.NSLocale)' is missing an [NullAllowed] on parameter #0
@@ -1922,10 +1908,8 @@
 !missing-null-allowed! 'System.Void AppKit.NSFormCell::set_PlaceholderAttributedString(Foundation.NSAttributedString)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSFormCell::set_PlaceholderString(System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSGestureRecognizer::set_Action(ObjCRuntime.Selector)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void AppKit.NSGroupTouchBarItem::set_CustomizationLabel(System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSHelpManager::FindString(System.String,System.String)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Void AppKit.NSHelpManager::OpenHelpAnchor(System.String,System.String)' is missing an [NullAllowed] on parameter #1
-!missing-null-allowed! 'System.Void AppKit.NSImage::set_AccessibilityDescription(System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSLayoutManagerDelegate::LayoutCompleted(AppKit.NSLayoutManager,AppKit.NSTextContainer,System.Boolean)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Void AppKit.NSLevelIndicator::set_CriticalFillColor(AppKit.NSColor)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSLevelIndicator::set_FillColor(AppKit.NSColor)' is missing an [NullAllowed] on parameter #0
@@ -1981,10 +1965,8 @@
 !missing-null-allowed! 'System.Void AppKit.NSPathControl::set_PlaceholderString(System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSPathControl::set_Url(Foundation.NSUrl)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSPathControlItem::set_Image(AppKit.NSImage)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void AppKit.NSPickerTouchBarItem::set_CustomizationLabel(System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSPopover::PerformClose(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSPopover::set_ContentViewController(AppKit.NSViewController)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void AppKit.NSPopoverTouchBarItem::set_CustomizationLabel(System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSPopUpButtonCell::SelectItem(AppKit.NSMenuItem)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSPopUpButtonCell::SetTitle(System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSPrintInfo::set_PaperName(System.String)' is missing an [NullAllowed] on parameter #0
@@ -2040,7 +2022,6 @@
 !missing-null-allowed! 'System.Void AppKit.NSSharingService::set_Recipients(Foundation.NSObject[])' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSSharingService::set_Subject(System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSSharingServicePickerDelegate::DidChooseSharingService(AppKit.NSSharingServicePicker,AppKit.NSSharingService)' is missing an [NullAllowed] on parameter #1
-!missing-null-allowed! 'System.Void AppKit.NSSliderTouchBarItem::set_CustomizationLabel(System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSSound::set_PlaybackDeviceID(System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSSpeechRecognizer::set_Commands(System.String[])' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSSpeechRecognizer::set_DisplayedCommandsTitle(System.String)' is missing an [NullAllowed] on parameter #0
@@ -2053,7 +2034,6 @@
 !missing-null-allowed! 'System.Void AppKit.NSStatusItem::set_DoubleAction(ObjCRuntime.Selector)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSStatusItem::set_Image(AppKit.NSImage)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSStatusItem::set_Title(System.String)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void AppKit.NSStepperTouchBarItem::set_CustomizationLabel(System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSTableCellView::set_ImageView(AppKit.NSImageView)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSTableCellView::set_TextField(AppKit.NSTextField)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSTableColumn::set_TableView(AppKit.NSTableView)' is missing an [NullAllowed] on parameter #0
@@ -2168,7 +2148,6 @@
 !missing-null-allowed! 'System.Void AppKit.NSTextView::UseStandardLigatures(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSTextView_SharingService::OrderFrontSharingServicePicker(AppKit.NSTextView,Foundation.NSObject)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Void AppKit.NSTokenField::set_CharacterSet(Foundation.NSCharacterSet)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void AppKit.NSToolbar::RunCustomizationPalette(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSToolbarItem::set_MenuFormRepresentation(AppKit.NSMenuItem)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSToolbarItem::set_View(AppKit.NSView)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSTreeController::Add(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
