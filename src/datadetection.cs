@@ -20,6 +20,7 @@ namespace DataDetection {
 
 	[iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (DDDetectedValue))]
+	[DisableDefaultCtor]
 	interface DDDetectedValueLink
 	{
 		[Export ("URL")]
@@ -28,6 +29,7 @@ namespace DataDetection {
 
 	[iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (DDDetectedValue))]
+	[DisableDefaultCtor]
 	interface DDDetectedValuePhoneNumber
 	{
 		[Export ("phoneNumber")]
@@ -39,6 +41,7 @@ namespace DataDetection {
 
 	[iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (DDDetectedValue))]
+	[DisableDefaultCtor]
 	interface DDDetectedValueEmailAddress
 	{
 		[Export ("emailAddress")]
@@ -50,6 +53,7 @@ namespace DataDetection {
 
 	[iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (DDDetectedValue))]
+	[DisableDefaultCtor]
 	interface DDDetectedValuePostalAddress
 	{
 		[NullAllowed, Export ("street")]
@@ -70,6 +74,7 @@ namespace DataDetection {
 
 	[iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (DDDetectedValue))]
+	[DisableDefaultCtor]
 	interface DDDetectedValueCalendarEvent
 	{
 		[Export ("allDay")]
@@ -90,6 +95,7 @@ namespace DataDetection {
 
 	[iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (DDDetectedValue))]
+	[DisableDefaultCtor]
 	interface DDDetectedValueShipmentTrackingNumber
 	{
 		[Export ("carrier")]
@@ -101,6 +107,7 @@ namespace DataDetection {
 
 	[iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (DDDetectedValue))]
+	[DisableDefaultCtor]
 	interface DDDetectedValueFlightNumber
 	{
 		[Export ("airline")]
@@ -112,6 +119,7 @@ namespace DataDetection {
 
 	[iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (DDDetectedValue))]
+	[DisableDefaultCtor]
 	interface DDDetectedValueMoneyAmount
 	{
 		[Export ("currency")]
