@@ -243,8 +243,9 @@ stages:
         xqaCertPass: $(xqa--certificates--password)
         enableDotnet: ${{ parameters.enableDotnet }}
 
-# .NET 6 Release Prep and VS Insertion Stages
-- template: templates/release/vs-insertion-prep.yml
+# .NET 6 Release Prep and VS Insertion Stages, only execute them when the build reason is not a PR or a schedule build fro OneLoc
+- ${{ if and(ne(variables['Build.Reason'], 'Schedule'), or(eq(variables['Build.Reason'], 'IndividualCI'), eq(variables['Build.Reason'], 'Manual'))) }}:
+  - template: templates/release/vs-insertion-prep.yml
 
 # Test stages
 - ${{ if eq(parameters.runDeviceTests, true) }}:
