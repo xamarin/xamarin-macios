@@ -497,7 +497,7 @@ namespace CoreVideo {
 	[NoWatch]
 	[Partial]
 	interface CVMetalTextureCache {
-		[NoMac]
+		[Mac (12,0)]
 		[Internal]
 		[Field ("kCVMetalTextureCacheMaximumTextureAgeKey")]
 		IntPtr MaxTextureAge { get; }

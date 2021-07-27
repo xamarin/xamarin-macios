@@ -57,6 +57,54 @@ namespace CoreVideo {
 			this.handle = handle;
 		}
 
+		[Mac (12,0)]
+		[DllImport (Constants.CoreVideoLibrary)]
+		static extern int CVDisplayLinkCreateWithCGDisplay (uint displayId, out IntPtr displayLink);
+
+		[Mac (12,0)]
+		public static CVDisplayLink FromDisplayId (uint displayId)
+		{
+			var result = CVDisplayLinkCreateWithCGDisplay (displayId, out IntPtr handle);
+			if (result != 0)
+				throw new Exception ($"Could not create display link for display {displayId}.");
+
+			return new CVDisplayLink (handle, true);
+		}
+
+		[Mac (12,0)]
+		[DllImport (Constants.CoreVideoLibrary)]
+		unsafe static extern int CVDisplayLinkCreateWithCGDisplays (uint* displayArray, nint count, out IntPtr displayLink);
+
+		[Mac (12,0)]
+		public static CVDisplayLink FromDisplayIds (uint[] displayIds)
+		{
+			int result = 0;
+			IntPtr handle = IntPtr.Zero;
+			unsafe {
+				fixed (uint *displaysHandle = displayIds) {
+					result = CVDisplayLinkCreateWithCGDisplays (displaysHandle, displayIds.Length, out handle);
+				}
+			}
+
+			if (result != 0)
+				throw new Exception ("Could not create display link for the given displays.");
+
+			return new CVDisplayLink (handle, true);
+		}
+
+		[Mac (10,4)]
+		[DllImport (Constants.CoreVideoLibrary)]
+		static extern int CVDisplayLinkCreateWithOpenGLDisplayMask (uint mask, out IntPtr displayLinkOut);
+
+		[Mac (12,0)]
+		public static CVDisplayLink FromOpenGLMask (uint mask)
+		{
+			var result = CVDisplayLinkCreateWithOpenGLDisplayMask (mask, out IntPtr handle);
+			if (result != 0)
+				throw new Exception ($"Could not create display link for the given mask '{mask}'.");
+			return new CVDisplayLink (handle, true);
+		}
+
 		~CVDisplayLink ()
 		{
 			Dispose (false);
@@ -206,6 +254,12 @@ namespace CoreVideo {
 				
 			return ret;
 		}
+
+		[Mac (12,0)]
+		[DllImport (Constants.CoreVideoLibrary)]
+		static extern nuint CVDisplayLinkGetTypeID ();
+		public static nuint GetTypeId ()
+			=> CVDisplayLinkGetTypeID ();
 	}
 }
 
