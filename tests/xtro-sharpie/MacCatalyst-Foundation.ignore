@@ -9,3 +9,8 @@
 !missing-selector! NSTask::launchPath not bound
 !missing-selector! NSTask::setCurrentDirectoryPath: not bound
 !missing-selector! NSTask::setLaunchPath: not bound
+
+# these enums are in the headers, but not documented to be supported on Mac Catalyst, so ignore them until proven that we need them
+!missing-enum! NSAppleEventSendOptions not bound
+!missing-enum! NSTaskTerminationReason not bound
+!missing-enum! NSUserNotificationActivationType not bound
