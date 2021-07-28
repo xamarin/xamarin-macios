@@ -9124,6 +9124,7 @@ namespace AppKit {
 	[BaseType (typeof (NSObject), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] { typeof (NSImageDelegate)})]
 	[ThreadSafe]
 	partial interface NSImage : NSCopying, NSSecureCoding, NSPasteboardReading, NSPasteboardWriting {
+		[return: NullAllowed]
 		[Static]
 		[Export ("imageNamed:")]
 		NSImage ImageNamed (string name);
@@ -9179,6 +9180,7 @@ namespace AppKit {
 		[Export ("recache")]
 		void Recache ();
 
+		[return: NullAllowed]
 		[Export ("TIFFRepresentation")]
 		NSData AsTiff ();
 
@@ -9247,6 +9249,7 @@ namespace AppKit {
 		[Export ("cancelIncrementalLoad")]
 		void CancelIncrementalLoad ();
 
+		[NullAllowed]
 		[Export ("accessibilityDescription")]
 		string AccessibilityDescription	 { get; set; }
 
@@ -9266,11 +9269,12 @@ namespace AppKit {
 		[Export ("size")]
 		CGSize Size { get; set; }
 
+		[return: NullAllowed]
 		[Export ("name"), Internal]
 		string GetName ();
 
 		[Export ("setName:"), Internal]
-		bool SetName (string aString);
+		bool SetName ([NullAllowed] string aString);
 
 		[Export ("backgroundColor", ArgumentSemantic.Copy)]
 		NSColor BackgroundColor { get; set; }
@@ -13656,6 +13660,7 @@ namespace AppKit {
 		[NullAllowed, Export ("action", ArgumentSemantic.Assign)]
 		Selector Action { get; set; }
 
+		[NullAllowed]
 		[Export ("customizationLabel")]
 		string CustomizationLabel { get; set; }
 
@@ -15098,16 +15103,16 @@ namespace AppKit {
 		void WillRemoveSubview ([NullAllowed] NSView subview);
 
 		[Export ("removeFromSuperview")]
-		[PreSnippet ("var mySuper = Superview;")]
-		[PostSnippet ("if (mySuper != null) {\n\t#pragma warning disable 168\n\tvar flush = mySuper.Subviews;\n#pragma warning restore 168\n\t}")]
+		[PreSnippet ("var mySuper = Superview;", Optimizable = true)]
+		[PostSnippet ("if (mySuper != null) {\n\t#pragma warning disable 168\n\tvar flush = mySuper.Subviews;\n#pragma warning restore 168\n\t}", Optimizable = true)]
 		void RemoveFromSuperview ();
 
 		[Export ("replaceSubview:with:")][PostGet ("Subviews")]
 		void ReplaceSubviewWith (NSView oldView, NSView newView);
 
 		[Export ("removeFromSuperviewWithoutNeedingDisplay")]
-		[PreSnippet ("var mySuper = Superview;")]
-		[PostSnippet ("if (mySuper != null) {\n\t#pragma warning disable 168\n\tvar flush = mySuper.Subviews;\n#pragma warning restore 168\n\t}")]
+		[PreSnippet ("var mySuper = Superview;", Optimizable = true)]
+		[PostSnippet ("if (mySuper != null) {\n\t#pragma warning disable 168\n\tvar flush = mySuper.Subviews;\n#pragma warning restore 168\n\t}", Optimizable = true)]
 		void RemoveFromSuperviewWithoutNeedingDisplay ();
 
 		[Export ("resizeSubviewsWithOldSize:")]
@@ -17300,6 +17305,7 @@ namespace AppKit {
 		new void DidSelect (NSTabView tabView, NSTabViewItem item);
 
 		// 'new' since it's inlined from NSToolbarViewDelegate as this instance needs [RequiresSuper]
+		[return: NullAllowed]
 		[RequiresSuper]
 		[Export ("toolbar:itemForItemIdentifier:willBeInsertedIntoToolbar:"), DelegateName ("NSToolbarWillInsert")]
 		new NSToolbarItem WillInsertItem (NSToolbar toolbar, string itemIdentifier, bool willBeInserted);
@@ -19036,7 +19042,7 @@ namespace AppKit {
 		void RemoveItem (nint index);
 
 		[Export ("runCustomizationPalette:")]
-		void RunCustomizationPalette (NSObject sender);
+		void RunCustomizationPalette ([NullAllowed] NSObject sender);
 
 		[Export ("customizationPaletteIsRunning")]
 		bool IsCustomizationPaletteRunning { get; }
@@ -19047,6 +19053,7 @@ namespace AppKit {
 		[Export ("items")]
 		NSToolbarItem [] Items { get; }
 
+		[NullAllowed]
 		[Export ("visibleItems")]
 		NSToolbarItem [] VisibleItems { get; }
 
@@ -19135,6 +19142,7 @@ namespace AppKit {
 	[BaseType (typeof (NSObject))]
 	[Model, Protocol]
 	interface NSToolbarDelegate {
+		[return: NullAllowed]
 		[Export ("toolbar:itemForItemIdentifier:willBeInsertedIntoToolbar:"), DelegateName ("NSToolbarWillInsert"), DefaultValue (null)]
 		NSToolbarItem WillInsertItem (NSToolbar toolbar, string itemIdentifier, bool willBeInserted);
 
@@ -19181,6 +19189,7 @@ namespace AppKit {
 		[Export ("itemIdentifier")]
 		string Identifier { get; }
 
+		[NullAllowed]
 		[Export ("toolbar")]
 		NSToolbar Toolbar { get; }
 
@@ -19356,6 +19365,7 @@ namespace AppKit {
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		INSTouchBarDelegate Delegate { get; set; }
 
+		[return: NullAllowed]
 		[Export ("itemForIdentifier:")]
 		NSTouchBarItem GetItemForIdentifier (string identifier);
 
@@ -19660,16 +19670,16 @@ namespace AppKit {
 		CGRect ContentRectFor (CGRect frameRect);
 
 		[Export ("init")]
-		[PostSnippet ("if (!DisableReleasedWhenClosedInConstructor) { ReleasedWhenClosed = false; }")]
+		[PostSnippet ("if (!DisableReleasedWhenClosedInConstructor) { ReleasedWhenClosed = false; }", Optimizable = true)]
 		IntPtr Constructor ();
 
 		[DesignatedInitializer]
 		[Export ("initWithContentRect:styleMask:backing:defer:")]
-		[PostSnippet ("if (!DisableReleasedWhenClosedInConstructor) { ReleasedWhenClosed = false; }")]
+		[PostSnippet ("if (!DisableReleasedWhenClosedInConstructor) { ReleasedWhenClosed = false; }", Optimizable = true)]
 		IntPtr Constructor (CGRect contentRect, NSWindowStyle aStyle, NSBackingStore bufferingType, bool deferCreation);
 	
 		[Export ("initWithContentRect:styleMask:backing:defer:screen:")]
-		[PostSnippet ("if (!DisableReleasedWhenClosedInConstructor) { ReleasedWhenClosed = false; }")]
+		[PostSnippet ("if (!DisableReleasedWhenClosedInConstructor) { ReleasedWhenClosed = false; }", Optimizable = true)]
 		IntPtr Constructor (CGRect contentRect, NSWindowStyle aStyle, NSBackingStore bufferingType, bool deferCreation, NSScreen  screen);
 	
 		[Export ("title")]
@@ -20308,91 +20318,121 @@ namespace AppKit {
 		[Export ("animationBehavior")]
 		NSWindowAnimationBehavior AnimationBehavior { get; set; }
 
-#if !MONOMAC
 		//
 		// Fields
 		//
+
 		[Field ("NSWindowDidBecomeKeyNotification")]
+		[Notification]
 		NSString DidBecomeKeyNotification { get; }
 
 		[Field ("NSWindowDidBecomeMainNotification")]
+		[Notification]
 		NSString DidBecomeMainNotification { get; }
 
 		[Field ("NSWindowDidChangeScreenNotification")]
+		[Notification]
 		NSString DidChangeScreenNotification { get; }
 
 		[Field ("NSWindowDidDeminiaturizeNotification")]
+		[Notification]
 		NSString DidDeminiaturizeNotification { get; }
 
 		[Field ("NSWindowDidExposeNotification")]
+		[Notification (typeof (NSWindowExposeEventArgs))]
 		NSString DidExposeNotification { get; }
 
 		[Field ("NSWindowDidMiniaturizeNotification")]
+		[Notification]
 		NSString DidMiniaturizeNotification { get; }
 
 		[Field ("NSWindowDidMoveNotification")]
+		[Notification]
 		NSString DidMoveNotification { get; }
 
 		[Field ("NSWindowDidResignKeyNotification")]
+		[Notification]
 		NSString DidResignKeyNotification { get; }
 
 		[Field ("NSWindowDidResignMainNotification")]
+		[Notification]
 		NSString DidResignMainNotification { get; }
 
 		[Field ("NSWindowDidResizeNotification")]
+		[Notification]
 		NSString DidResizeNotification { get; }
 
 		[Field ("NSWindowDidUpdateNotification")]
+		[Notification]
 		NSString DidUpdateNotification { get; }
 
 		[Field ("NSWindowWillCloseNotification")]
+		[Notification]
 		NSString WillCloseNotification { get; }
 
 		[Field ("NSWindowWillMiniaturizeNotification")]
+		[Notification]
 		NSString WillMiniaturizeNotification { get; }
 
 		[Field ("NSWindowWillMoveNotification")]
+		[Notification]
 		NSString WillMoveNotification { get; }
 
 		[Field ("NSWindowWillBeginSheetNotification")]
+		[Notification]
 		NSString WillBeginSheetNotification { get; }
 
 		[Field ("NSWindowDidEndSheetNotification")]
+		[Notification]
 		NSString DidEndSheetNotification { get; }
 
 		[Field ("NSWindowDidChangeScreenProfileNotification")]
+		[Notification]
 		NSString DidChangeScreenProfileNotification { get; }
 
 		[Field ("NSWindowWillStartLiveResizeNotification")]
+		[Notification]
 		NSString WillStartLiveResizeNotification { get; }
 
 		[Field ("NSWindowDidEndLiveResizeNotification")]
+		[Notification]
 		NSString DidEndLiveResizeNotification { get; }
 
 		[Field ("NSWindowWillEnterFullScreenNotification")]
+		[Notification]
 		NSString WillEnterFullScreenNotification { get; }
 
 		[Field ("NSWindowDidEnterFullScreenNotification")]
+		[Notification]
 		NSString DidEnterFullScreenNotification { get; }
 
 		[Field ("NSWindowWillExitFullScreenNotification")]
+		[Notification]
 		NSString WillExitFullScreenNotification { get; }
 
 		[Field ("NSWindowDidExitFullScreenNotification")]
+		[Notification]
 		NSString DidExitFullScreenNotification { get; }
 
 		[Field ("NSWindowWillEnterVersionBrowserNotification")]
+		[Notification]
 		NSString WillEnterVersionBrowserNotification { get; }
 
 		[Field ("NSWindowDidEnterVersionBrowserNotification")]
+		[Notification]
 		NSString DidEnterVersionBrowserNotification { get; }
 
 		[Field ("NSWindowWillExitVersionBrowserNotification")]
+		[Notification]
 		NSString WillExitVersionBrowserNotification { get; }
 
 		[Field ("NSWindowDidExitVersionBrowserNotification")]
+		[Notification]
 		NSString DidExitVersionBrowserNotification { get; }
-#endif
+
+		[Field ("NSWindowDidChangeBackingPropertiesNotification")]
+		[Notification (typeof (NSWindowBackingPropertiesEventArgs))]
+		NSString DidChangeBackingPropertiesNotification { get; }
 
 		// 10.10
 		[Mac (10,10)]
@@ -22127,121 +22167,6 @@ namespace AppKit {
 	}
 
 	partial interface NSWindow {
-		//
-		// Fields + Notifications
-		//
-		[Field ("NSWindowDidBecomeKeyNotification")]
-		[Notification]
-		NSString DidBecomeKeyNotification { get; }
-
-		[Field ("NSWindowDidBecomeMainNotification")]
-		[Notification]
-		NSString DidBecomeMainNotification { get; }
-
-		[Field ("NSWindowDidChangeScreenNotification")]
-		[Notification]
-		NSString DidChangeScreenNotification { get; }
-
-		[Field ("NSWindowDidDeminiaturizeNotification")]
-		[Notification]
-		NSString DidDeminiaturizeNotification { get; }
-
-		[Field ("NSWindowDidExposeNotification")]
-		[Notification (typeof (NSWindowExposeEventArgs))]
-		NSString DidExposeNotification { get; }
-
-		[Field ("NSWindowDidMiniaturizeNotification")]
-		[Notification]
-		NSString DidMiniaturizeNotification { get; }
-
-		[Field ("NSWindowDidMoveNotification")]
-		[Notification]
-		NSString DidMoveNotification { get; }
-
-		[Field ("NSWindowDidResignKeyNotification")]
-		[Notification]
-		NSString DidResignKeyNotification { get; }
-
-		[Field ("NSWindowDidResignMainNotification")]
-		[Notification]
-		NSString DidResignMainNotification { get; }
-
-		[Field ("NSWindowDidResizeNotification")]
-		[Notification]
-		NSString DidResizeNotification { get; }
-
-		[Field ("NSWindowDidUpdateNotification")]
-		[Notification]
-		NSString DidUpdateNotification { get; }
-
-		[Field ("NSWindowWillCloseNotification")]
-		[Notification]
-		NSString WillCloseNotification { get; }
-
-		[Field ("NSWindowWillMiniaturizeNotification")]
-		[Notification]
-		NSString WillMiniaturizeNotification { get; }
-
-		[Field ("NSWindowWillMoveNotification")]
-		[Notification]
-		NSString WillMoveNotification { get; }
-
-		[Field ("NSWindowWillBeginSheetNotification")]
-		[Notification]
-		NSString WillBeginSheetNotification { get; }
-
-		[Field ("NSWindowDidEndSheetNotification")]
-		[Notification]
-		NSString DidEndSheetNotification { get; }
-
-		[Field ("NSWindowDidChangeScreenProfileNotification")]
-		[Notification]
-		NSString DidChangeScreenProfileNotification { get; }
-
-		[Field ("NSWindowWillStartLiveResizeNotification")]
-		[Notification]
-		NSString WillStartLiveResizeNotification { get; }
-
-		[Field ("NSWindowDidEndLiveResizeNotification")]
-		[Notification]
-		NSString DidEndLiveResizeNotification { get; }
-
-		[Field ("NSWindowWillEnterFullScreenNotification")]
-		[Notification]
-		NSString WillEnterFullScreenNotification { get; }
-
-		[Field ("NSWindowDidEnterFullScreenNotification")]
-		[Notification]
-		NSString DidEnterFullScreenNotification { get; }
-
-		[Field ("NSWindowWillExitFullScreenNotification")]
-		[Notification]
-		NSString WillExitFullScreenNotification { get; }
-
-		[Field ("NSWindowDidExitFullScreenNotification")]
-		[Notification]
-		NSString DidExitFullScreenNotification { get; }
-
-		[Field ("NSWindowWillEnterVersionBrowserNotification")]
-		[Notification]
-		NSString WillEnterVersionBrowserNotification { get; }
-
-		[Field ("NSWindowDidEnterVersionBrowserNotification")]
-		[Notification]
-		NSString DidEnterVersionBrowserNotification { get; }
-
-		[Field ("NSWindowWillExitVersionBrowserNotification")]
-		[Notification]
-		NSString WillExitVersionBrowserNotification { get; }
-
-		[Field ("NSWindowDidExitVersionBrowserNotification")]
-		[Notification]
-		NSString DidExitVersionBrowserNotification { get; }
-
-		[Field ("NSWindowDidChangeBackingPropertiesNotification")]
-		[Notification (typeof (NSWindowBackingPropertiesEventArgs))]
-		NSString DidChangeBackingPropertiesNotification { get; }
-
 		[Mac (10, 12)]
 		[Static]
 		[Export ("allowsAutomaticWindowTabbing")]
@@ -25464,6 +25389,7 @@ namespace AppKit {
 		[Export ("setCandidates:forSelectedRange:inString:")]
 		void SetCandidates (NSObject[] candidates, NSRange selectedRange, [NullAllowed] string originalString);
 
+		[NullAllowed]
 		[Export ("customizationLabel")]
 		string CustomizationLabel { get; set; }
 	}
@@ -25532,6 +25458,7 @@ namespace AppKit {
 		[Export ("colorList", ArgumentSemantic.Strong)]
 		NSColorList ColorList { get; set; }
 
+		[NullAllowed]
 		[Export ("customizationLabel")]
 		string CustomizationLabel { get; set; }
 
@@ -25564,6 +25491,7 @@ namespace AppKit {
 		[Export ("viewController", ArgumentSemantic.Strong)]
 		NSViewController ViewController { get; set; }
 
+		[NullAllowed]
 		[Export ("customizationLabel")]
 		string CustomizationLabel { get; set; }
 	}
@@ -25597,6 +25525,7 @@ namespace AppKit {
 		[Export ("groupTouchBar", ArgumentSemantic.Strong)]
 		NSTouchBar GroupTouchBar { get; set; }
 
+		[NullAllowed]
 		[Export ("customizationLabel")]
 		string CustomizationLabel { get; set; }
 
@@ -25643,6 +25572,7 @@ namespace AppKit {
 		[Export ("popoverTouchBar", ArgumentSemantic.Strong)]
 		NSTouchBar PopoverTouchBar { get; set; }
 
+		[NullAllowed]
 		[Export ("customizationLabel")]
 		string CustomizationLabel { get; set; }
 
@@ -26374,6 +26304,7 @@ namespace AppKit {
 		[Export ("enabled")]
 		bool Enabled { [Bind ("isEnabled")] get; set; }
 
+		[NullAllowed]
 		[Export ("customizationLabel")]
 		string CustomizationLabel { get; set; }
 	}
@@ -26498,6 +26429,7 @@ namespace AppKit {
 		[Export ("isEnabledAtIndex:")]
 		bool GetEnabled (nint index);
 
+		[NullAllowed]
 		[Export ("customizationLabel", ArgumentSemantic.Copy)]
 		string CustomizationLabel { get; set; }
 	}
@@ -26598,6 +26530,7 @@ namespace AppKit {
 		[NullAllowed, Export ("action", ArgumentSemantic.Assign)]
 		Selector Action { get; set; }
 
+		[NullAllowed]
 		[Export ("customizationLabel")]
 		string CustomizationLabel { get; set; }
 	}

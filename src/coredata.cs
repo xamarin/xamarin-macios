@@ -232,6 +232,10 @@ namespace CoreData
 		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
 		[Export ("preservesValueInHistoryOnDeletion")]
 		bool PreservesValueInHistoryOnDeletion { get; set; }
+
+		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
+		[Export ("allowsCloudEncryption")]
+		bool AllowsCloudEncryption { get; set; }
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -1667,14 +1671,26 @@ namespace CoreData
 	[DisableDefaultCtor] // NSInternalInconsistencyException Reason: NSCoreDataCoreSpotlightDelegate requires the use of the initializer initForStoreWithDescription:model: 
 	interface NSCoreDataCoreSpotlightDelegate
 	{
+
+		[Notification]
+		[Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Field ("NSCoreDataCoreSpotlightDelegateIndexDidUpdateNotification")]
+		NSString IndexDidUpdateNotification { get; }
+
+		[Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("initForStoreWithDescription:coordinator:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (NSPersistentStoreDescription description, NSPersistentStoreCoordinator psc);
+
 		[Export ("domainIdentifier")]
 		string DomainIdentifier { get; }
 
 		[NullAllowed, Export ("indexName")]
 		string IndexName { get; }
 
+		[Deprecated (PlatformName.iOS, 15,0, message: "Use the constructor that takes a NSPersistentStoreCoordinator instead.")]
+		[Deprecated (PlatformName.MacOSX, 12,0, message: "Use the constructor that takes a NSPersistentStoreCoordinator instead.")]
 		[Export ("initForStoreWithDescription:model:")]
-		[DesignatedInitializer]
 		IntPtr Constructor (NSPersistentStoreDescription description, NSManagedObjectModel model);
 
 		[Export ("attributeSetForObject:")]
@@ -1686,6 +1702,23 @@ namespace CoreData
 
 		[Export ("searchableIndex:reindexSearchableItemsWithIdentifiers:acknowledgementHandler:")]
 		void ReindexSearchableItems (CSSearchableIndex searchableIndex, string[] identifiers, Action acknowledgementHandler);
+
+		[Async]
+		[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("deleteSpotlightIndexWithCompletionHandler:")]
+		void DeleteSpotlightIndex (Action<NSError> completionHandler);
+
+		[NoWatch, NoTV, Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
+		[Export ("indexingEnabled")]
+		bool IndexingEnabled { [Bind ("isIndexingEnabled")] get; }
+
+		[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("startSpotlightIndexing")]
+		void StartSpotlightIndexing ();
+
+		[NoWatch, NoTV, Mac (12,0), iOS (15,0),MacCatalyst (15,0)]
+		[Export ("stopSpotlightIndexing")] 
+		void StopSpotlightIndexing ();
 	}
 #endif 
 
@@ -2640,6 +2673,21 @@ namespace CoreData
 		NSExpression DerivationExpression { get; set; }
 	}
 
+	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	delegate void NSPersistentCloudKitContainerShareManagedObjectsHandler (NSSet<NSManagedObjectID> sharedObjectIds, CKShare share, CKContainer container, NSError error);
+
+	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	delegate void NSPersistentCloudKitContainerFetchParticipantsMatchingLookupInfosHandler (NSArray<CKShareParticipant> fetchedParticipants, NSError error);
+
+	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	delegate void NSPersistentCloudKitContainerPersistUpdatedShareHandler (CKShare persistedShare, NSError error);
+
+	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	delegate void NSPersistentCloudKitContainerPurgeObjectsAndRecordsInZoneHandler (CKRecordZoneID purgedZoneId, NSError error);
+
+	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	delegate void NSPersistentCloudKitContainerAcceptShareInvitationsHandler (NSArray<CKShareMetadata> acceptedShareMetadatas, NSError error);
+
 	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 	[BaseType (typeof(NSPersistentContainer))]
 	[DisableDefaultCtor]
@@ -2677,6 +2725,43 @@ namespace CoreData
 		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
 		[Export ("canModifyManagedObjectsInStore:")]
 		bool CanModifyManagedObjects (NSPersistentStore store);
+
+		// NSPersistentCloudKitContainer_Sharing
+		[Async (ResultTypeName = "NSPersistentCloudKitContainerAcceptShareInvitationsResult")]
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("acceptShareInvitationsFromMetadata:intoPersistentStore:completion:")]
+		void AcceptShareInvitations (CKShareMetadata[] metadata, NSPersistentStore persistentStore, [NullAllowed] NSPersistentCloudKitContainerAcceptShareInvitationsHandler handler);
+
+		[Async (ResultTypeName = "NSPersistentCloudKitContainerPurgeObjectsAndRecordsInZone")]
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("purgeObjectsAndRecordsInZoneWithID:inPersistentStore:completion:")]
+		void PurgeObjectsAndRecordsInZone (CKRecordZoneID zoneId, [NullAllowed] NSPersistentStore persistentStore, [NullAllowed] NSPersistentCloudKitContainerPurgeObjectsAndRecordsInZoneHandler handler); 
+
+		[Async (ResultTypeName = "NSPersistentCloudKitContainerPersistUpdatedShareResult")]
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("persistUpdatedShare:inPersistentStore:completion:")]
+		void PersistUpdatedShare (CKShare share, NSPersistentStore persistentStore, [NullAllowed] NSPersistentCloudKitContainerPersistUpdatedShareHandler handler);
+
+		[Async (ResultTypeName = "NSPersistentCloudKitContainerFetchParticipantsMatchingLookupInfosResult")]
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("fetchParticipantsMatchingLookupInfos:intoPersistentStore:completion:")]
+		void FetchParticipantsMatchingLookupInfos (CKUserIdentityLookupInfo[] lookupInfos, NSPersistentStore persistentStore, NSPersistentCloudKitContainerFetchParticipantsMatchingLookupInfosHandler handler); 
+
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("fetchSharesMatchingObjectIDs:error:")]
+		[return: NullAllowed]
+		NSDictionary<NSManagedObjectID, CKShare> FetchSharesMatchingObjectIds (NSManagedObjectID[] objectIDs, [NullAllowed] out NSError error);
+
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("fetchSharesInPersistentStore:error:")]
+		[return: NullAllowed]
+		CKShare[] FetchSharesInPersistentStore ([NullAllowed] NSPersistentStore persistentStore, [NullAllowed] out NSError error);
+
+		[Async (ResultTypeName = "NSPersistentCloudKitContainerShareManagedObjectsResult")]
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("shareManagedObjects:toShare:completion:")]
+		void ShareManagedObjects (NSManagedObject[] managedObjects, [NullAllowed] CKShare share, NSPersistentCloudKitContainerShareManagedObjectsHandler handler);
+
 	}
 
 	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]

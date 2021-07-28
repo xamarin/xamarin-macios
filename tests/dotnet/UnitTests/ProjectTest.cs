@@ -566,8 +566,8 @@ namespace Xamarin.Tests {
 		}
 
 		[Test]
-		[TestCase (ApplePlatform.MacOSX, "osx-arm64")]
 		[TestCase (ApplePlatform.MacOSX, "osx-x64")]
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64")]
 		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64")]
 		public void BuildCoreCLR (ApplePlatform platform, string runtimeIdentifiers)
 		{
@@ -577,11 +577,14 @@ namespace Xamarin.Tests {
 			var project_path = GetProjectPath (project, platform: platform);
 			Clean (project_path);
 			var properties = new Dictionary<string, string> (verbosity);
-			properties ["RuntimeIdentifiers"] = runtimeIdentifiers;
+			var multiRid = runtimeIdentifiers.IndexOf (';') >= 0 ? "RuntimeIdentifiers" : "RuntimeIdentifier";
+			properties [multiRid] = runtimeIdentifiers;
 			properties ["UseMonoRuntime"] = "false";
-			var result = DotNet.AssertBuild (project_path, properties);
-			AssertThatLinkerExecuted (result);
-			var appPath = Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", platform.ToFramework (), $"{project}.app");
+			var rv = DotNet.AssertBuild (project_path, properties);
+
+			AssertThatLinkerExecuted (rv);
+			var appPathRuntimeIdentifier = runtimeIdentifiers.IndexOf (';') >= 0 ? "" : runtimeIdentifiers;
+			var appPath = Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", platform.ToFramework (), appPathRuntimeIdentifier, project + ".app");
 			var infoPlistPath = GetInfoPListPath (platform, appPath);
 			Assert.That (infoPlistPath, Does.Exist, "Info.plist");
 			var infoPlist = PDictionary.FromFile (infoPlistPath);
@@ -594,6 +597,9 @@ namespace Xamarin.Tests {
 			Assert.That (appExecutable, Does.Exist, "There is an executable");
 			if (!(runtimeIdentifiers == "osx-arm64" && RuntimeInformation.ProcessArchitecture == Architecture.Arm64))
 				ExecuteWithMagicWordAndAssert (appExecutable);
+
+			var createdump = Path.Combine (appPath, "Contents", "MonoBundle", "createdump");
+			Assert.That (createdump, Does.Exist, "createdump existence");
 		}
 
 		void ExecuteWithMagicWordAndAssert (string executable)
