@@ -1,4 +1,7 @@
 !deprecated-attribute-missing! CVBufferGetAttachment missing a [Deprecated] attribute
 !deprecated-attribute-missing! CVBufferGetAttachments missing a [Deprecated] attribute
+!missing-field! kCVPixelBufferProResRAWKey_MetadataExtension not bound
 !missing-pinvoke! CVBufferCopyAttachment is not bound
 !missing-pinvoke! CVBufferCopyAttachments is not bound
+!missing-pinvoke! CVBufferHasAttachment is not bound
+## appended from unclassified file
