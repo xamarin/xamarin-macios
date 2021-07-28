@@ -106,6 +106,7 @@ oldXcodes=(
 	"/Applications/Xcode_12.5.0-rc.app"
 	"/Applications/Xcode_13.0.0-beta.app"
 	"/Applications/Xcode_13.0.0-beta2.app"
+	"/Applications/Xcode_13.0.0-beta3.app"
 )
 
 # remove wrongly added .xip files under /Applications, confuses provisionator and 
