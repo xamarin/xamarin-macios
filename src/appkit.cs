@@ -15103,16 +15103,16 @@ namespace AppKit {
 		void WillRemoveSubview ([NullAllowed] NSView subview);
 
 		[Export ("removeFromSuperview")]
-		[PreSnippet ("var mySuper = Superview;")]
-		[PostSnippet ("if (mySuper != null) {\n\t#pragma warning disable 168\n\tvar flush = mySuper.Subviews;\n#pragma warning restore 168\n\t}")]
+		[PreSnippet ("var mySuper = Superview;", Optimizable = true)]
+		[PostSnippet ("if (mySuper != null) {\n\t#pragma warning disable 168\n\tvar flush = mySuper.Subviews;\n#pragma warning restore 168\n\t}", Optimizable = true)]
 		void RemoveFromSuperview ();
 
 		[Export ("replaceSubview:with:")][PostGet ("Subviews")]
 		void ReplaceSubviewWith (NSView oldView, NSView newView);
 
 		[Export ("removeFromSuperviewWithoutNeedingDisplay")]
-		[PreSnippet ("var mySuper = Superview;")]
-		[PostSnippet ("if (mySuper != null) {\n\t#pragma warning disable 168\n\tvar flush = mySuper.Subviews;\n#pragma warning restore 168\n\t}")]
+		[PreSnippet ("var mySuper = Superview;", Optimizable = true)]
+		[PostSnippet ("if (mySuper != null) {\n\t#pragma warning disable 168\n\tvar flush = mySuper.Subviews;\n#pragma warning restore 168\n\t}", Optimizable = true)]
 		void RemoveFromSuperviewWithoutNeedingDisplay ();
 
 		[Export ("resizeSubviewsWithOldSize:")]
@@ -19670,16 +19670,16 @@ namespace AppKit {
 		CGRect ContentRectFor (CGRect frameRect);
 
 		[Export ("init")]
-		[PostSnippet ("if (!DisableReleasedWhenClosedInConstructor) { ReleasedWhenClosed = false; }")]
+		[PostSnippet ("if (!DisableReleasedWhenClosedInConstructor) { ReleasedWhenClosed = false; }", Optimizable = true)]
 		IntPtr Constructor ();
 
 		[DesignatedInitializer]
 		[Export ("initWithContentRect:styleMask:backing:defer:")]
-		[PostSnippet ("if (!DisableReleasedWhenClosedInConstructor) { ReleasedWhenClosed = false; }")]
+		[PostSnippet ("if (!DisableReleasedWhenClosedInConstructor) { ReleasedWhenClosed = false; }", Optimizable = true)]
 		IntPtr Constructor (CGRect contentRect, NSWindowStyle aStyle, NSBackingStore bufferingType, bool deferCreation);
 	
 		[Export ("initWithContentRect:styleMask:backing:defer:screen:")]
-		[PostSnippet ("if (!DisableReleasedWhenClosedInConstructor) { ReleasedWhenClosed = false; }")]
+		[PostSnippet ("if (!DisableReleasedWhenClosedInConstructor) { ReleasedWhenClosed = false; }", Optimizable = true)]
 		IntPtr Constructor (CGRect contentRect, NSWindowStyle aStyle, NSBackingStore bufferingType, bool deferCreation, NSScreen  screen);
 	
 		[Export ("title")]

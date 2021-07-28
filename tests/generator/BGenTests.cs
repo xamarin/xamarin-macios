@@ -16,6 +16,9 @@ namespace GeneratorTests
 	[Parallelizable (ParallelScope.All)]
 	public class BGenTests
 	{
+		// Removing the following variable might make running the unit tests in VSMac fail.
+		static Type variable_to_keep_reference_to_system_runtime_compilerservices_unsafe_assembly = typeof (System.Runtime.CompilerServices.Unsafe);
+
 		[Test]
 #if !NET
 		[TestCase (Profile.macOSFull)]
@@ -644,6 +647,85 @@ namespace GeneratorTests
 
 		[Test]
 		public void GHIssue9065_Sealed () => BuildFile (Profile.iOS, nowarnings: true, "ghissue9065.cs");
+
+		// looking for [BindingImpl (BindingImplOptions.Optimizable)]
+		bool IsOptimizable (MethodDefinition method)
+		{
+			const int Optimizable = 0x2; // BindingImplOptions flag
+
+			if (!method.HasCustomAttributes)
+				return false;
+
+			foreach (var ca in method.CustomAttributes) {
+				if (ca.AttributeType.Name != "BindingImplAttribute")
+					continue;
+				foreach (var a in ca.ConstructorArguments)
+					return (((int) a.Value & Optimizable) == Optimizable);
+			}
+			return false;
+		}
+
+		[Test]
+		public void DisposeAttributeOptimizable ()
+		{
+			var bgen = BuildFile (Profile.iOS, "tests/dispose-attribute.cs");
+
+			// processing custom attributes (like its properties) will call Resolve so we must be able to find the platform assembly to run this test
+			var platform_dll = Path.Combine (Configuration.SdkRootXI, "lib/mono/Xamarin.iOS/Xamarin.iOS.dll");
+			var resolver = bgen.ApiAssembly.MainModule.AssemblyResolver as BaseAssemblyResolver;
+			resolver.AddSearchDirectory (Path.Combine (Configuration.SdkRootXI, "lib/mono/Xamarin.iOS/"));
+
+			// [Dispose] is, by default, not optimizable
+			var with_dispose = bgen.ApiAssembly.MainModule.GetType ("NS", "WithDispose").Methods.First ((v) => v.Name == "Dispose");
+			Assert.NotNull (with_dispose, "WithDispose");
+			Assert.That (IsOptimizable (with_dispose), Is.False, "WithDispose/Optimizable");
+
+			// [Dispose] can opt-in being optimizable
+			var with_dispose_optin = bgen.ApiAssembly.MainModule.GetType ("NS", "WithDisposeOptInOptimizable").Methods.First ((v) => v.Name == "Dispose");
+			Assert.NotNull (with_dispose_optin, "WithDisposeOptInOptimizable");
+			Assert.That (IsOptimizable (with_dispose_optin), Is.True, "WithDisposeOptInOptimizable/Optimizable");
+
+			// Without a [Dispose] attribute the generated method is optimizable
+			var without_dispose = bgen.ApiAssembly.MainModule.GetType ("NS", "WithoutDispose").Methods.First ((v) => v.Name == "Dispose");
+			Assert.NotNull (without_dispose, "WitoutDispose");
+			Assert.That (IsOptimizable (without_dispose), Is.True, "WitoutDispose/Optimizable");
+		}
+
+		[Test]
+		public void SnippetAttributesOptimizable ()
+		{
+			var bgen = BuildFile (Profile.iOS, "tests/snippet-attributes.cs");
+
+			// processing custom attributes (like its properties) will call Resolve so we must be able to find the platform assembly to run this test
+			var platform_dll = Path.Combine (Configuration.SdkRootXI, "lib/mono/Xamarin.iOS/Xamarin.iOS.dll");
+			var resolver = bgen.ApiAssembly.MainModule.AssemblyResolver as BaseAssemblyResolver;
+			resolver.AddSearchDirectory (Path.Combine (Configuration.SdkRootXI, "lib/mono/Xamarin.iOS/"));
+
+			// [SnippetAttribute] subclasses are, by default, not optimizable
+			var not_opt = bgen.ApiAssembly.MainModule.GetType ("NS", "NotOptimizable");
+			Assert.NotNull (not_opt, "NotOptimizable");
+			var pre_not_opt = not_opt.Methods.First ((v) => v.Name == "Pre");
+			Assert.That (IsOptimizable (pre_not_opt), Is.False, "NotOptimizable/Pre");
+			var prologue_not_opt = not_opt.Methods.First ((v) => v.Name == "Prologue");
+			Assert.That (IsOptimizable (prologue_not_opt), Is.False, "NotOptimizable/Prologue");
+			var post_not_opt = not_opt.Methods.First ((v) => v.Name == "Post");
+			Assert.That (IsOptimizable (post_not_opt), Is.False, "NotOptimizable/Post");
+
+			// [SnippetAttribute] subclasses can opt-in being optimizable
+			var optin_opt = bgen.ApiAssembly.MainModule.GetType ("NS", "OptInOptimizable");
+			Assert.NotNull (optin_opt, "OptInOptimizable");
+			var pre_optin_opt = optin_opt.Methods.First ((v) => v.Name == "Pre");
+			Assert.That (IsOptimizable (pre_optin_opt), Is.True, "OptInOptimizable/Pre");
+			var prologue_optin_opt = optin_opt.Methods.First ((v) => v.Name == "Prologue");
+			Assert.That (IsOptimizable (prologue_optin_opt), Is.True, "OptInOptimizable/Prologue");
+			var post_optin_opt = optin_opt.Methods.First ((v) => v.Name == "Post");
+			Assert.That (IsOptimizable (post_optin_opt), Is.True, "OptInOptimizable/Post");
+
+			// Without a [SnippetAttribute] subclass attribute the generated method is optimizable
+			var nothing = bgen.ApiAssembly.MainModule.GetType ("NS", "NoSnippet").Methods.First ((v) => v.Name == "Nothing");
+			Assert.NotNull (nothing, "NoSnippet");
+			Assert.That (IsOptimizable (nothing), Is.True, "Nothing/Optimizable");
+		}
 
 		BGenTool BuildFile (Profile profile, params string [] filenames)
 		{
