@@ -328,9 +328,7 @@ void			xamarin_mono_object_release_at_process_exit (MonoObject *mobj);
  */
 MonoAssembly * xamarin_open_assembly (const char *name);
 
-#if defined(__arm__) || defined(__aarch64__)
 void mono_aot_register_module (void *aot_info);
-#endif
 
 typedef void (*xamarin_register_module_callback) ();
 typedef void (*xamarin_register_assemblies_callback) ();

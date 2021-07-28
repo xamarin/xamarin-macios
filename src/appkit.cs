@@ -15103,16 +15103,16 @@ namespace AppKit {
 		void WillRemoveSubview ([NullAllowed] NSView subview);
 
 		[Export ("removeFromSuperview")]
-		[PreSnippet ("var mySuper = Superview;")]
-		[PostSnippet ("if (mySuper != null) {\n\t#pragma warning disable 168\n\tvar flush = mySuper.Subviews;\n#pragma warning restore 168\n\t}")]
+		[PreSnippet ("var mySuper = Superview;", Optimizable = true)]
+		[PostSnippet ("if (mySuper != null) {\n\t#pragma warning disable 168\n\tvar flush = mySuper.Subviews;\n#pragma warning restore 168\n\t}", Optimizable = true)]
 		void RemoveFromSuperview ();
 
 		[Export ("replaceSubview:with:")][PostGet ("Subviews")]
 		void ReplaceSubviewWith (NSView oldView, NSView newView);
 
 		[Export ("removeFromSuperviewWithoutNeedingDisplay")]
-		[PreSnippet ("var mySuper = Superview;")]
-		[PostSnippet ("if (mySuper != null) {\n\t#pragma warning disable 168\n\tvar flush = mySuper.Subviews;\n#pragma warning restore 168\n\t}")]
+		[PreSnippet ("var mySuper = Superview;", Optimizable = true)]
+		[PostSnippet ("if (mySuper != null) {\n\t#pragma warning disable 168\n\tvar flush = mySuper.Subviews;\n#pragma warning restore 168\n\t}", Optimizable = true)]
 		void RemoveFromSuperviewWithoutNeedingDisplay ();
 
 		[Export ("resizeSubviewsWithOldSize:")]
@@ -19670,16 +19670,16 @@ namespace AppKit {
 		CGRect ContentRectFor (CGRect frameRect);
 
 		[Export ("init")]
-		[PostSnippet ("if (!DisableReleasedWhenClosedInConstructor) { ReleasedWhenClosed = false; }")]
+		[PostSnippet ("if (!DisableReleasedWhenClosedInConstructor) { ReleasedWhenClosed = false; }", Optimizable = true)]
 		IntPtr Constructor ();
 
 		[DesignatedInitializer]
 		[Export ("initWithContentRect:styleMask:backing:defer:")]
-		[PostSnippet ("if (!DisableReleasedWhenClosedInConstructor) { ReleasedWhenClosed = false; }")]
+		[PostSnippet ("if (!DisableReleasedWhenClosedInConstructor) { ReleasedWhenClosed = false; }", Optimizable = true)]
 		IntPtr Constructor (CGRect contentRect, NSWindowStyle aStyle, NSBackingStore bufferingType, bool deferCreation);
 	
 		[Export ("initWithContentRect:styleMask:backing:defer:screen:")]
-		[PostSnippet ("if (!DisableReleasedWhenClosedInConstructor) { ReleasedWhenClosed = false; }")]
+		[PostSnippet ("if (!DisableReleasedWhenClosedInConstructor) { ReleasedWhenClosed = false; }", Optimizable = true)]
 		IntPtr Constructor (CGRect contentRect, NSWindowStyle aStyle, NSBackingStore bufferingType, bool deferCreation, NSScreen  screen);
 	
 		[Export ("title")]
@@ -20318,91 +20318,121 @@ namespace AppKit {
 		[Export ("animationBehavior")]
 		NSWindowAnimationBehavior AnimationBehavior { get; set; }
 
-#if !MONOMAC
 		//
 		// Fields
 		//
+
 		[Field ("NSWindowDidBecomeKeyNotification")]
+		[Notification]
 		NSString DidBecomeKeyNotification { get; }
 
 		[Field ("NSWindowDidBecomeMainNotification")]
+		[Notification]
 		NSString DidBecomeMainNotification { get; }
 
 		[Field ("NSWindowDidChangeScreenNotification")]
+		[Notification]
 		NSString DidChangeScreenNotification { get; }
 
 		[Field ("NSWindowDidDeminiaturizeNotification")]
+		[Notification]
 		NSString DidDeminiaturizeNotification { get; }
 
 		[Field ("NSWindowDidExposeNotification")]
+		[Notification (typeof (NSWindowExposeEventArgs))]
 		NSString DidExposeNotification { get; }
 
 		[Field ("NSWindowDidMiniaturizeNotification")]
+		[Notification]
 		NSString DidMiniaturizeNotification { get; }
 
 		[Field ("NSWindowDidMoveNotification")]
+		[Notification]
 		NSString DidMoveNotification { get; }
 
 		[Field ("NSWindowDidResignKeyNotification")]
+		[Notification]
 		NSString DidResignKeyNotification { get; }
 
 		[Field ("NSWindowDidResignMainNotification")]
+		[Notification]
 		NSString DidResignMainNotification { get; }
 
 		[Field ("NSWindowDidResizeNotification")]
+		[Notification]
 		NSString DidResizeNotification { get; }
 
 		[Field ("NSWindowDidUpdateNotification")]
+		[Notification]
 		NSString DidUpdateNotification { get; }
 
 		[Field ("NSWindowWillCloseNotification")]
+		[Notification]
 		NSString WillCloseNotification { get; }
 
 		[Field ("NSWindowWillMiniaturizeNotification")]
+		[Notification]
 		NSString WillMiniaturizeNotification { get; }
 
 		[Field ("NSWindowWillMoveNotification")]
+		[Notification]
 		NSString WillMoveNotification { get; }
 
 		[Field ("NSWindowWillBeginSheetNotification")]
+		[Notification]
 		NSString WillBeginSheetNotification { get; }
 
 		[Field ("NSWindowDidEndSheetNotification")]
+		[Notification]
 		NSString DidEndSheetNotification { get; }
 
 		[Field ("NSWindowDidChangeScreenProfileNotification")]
+		[Notification]
 		NSString DidChangeScreenProfileNotification { get; }
 
 		[Field ("NSWindowWillStartLiveResizeNotification")]
+		[Notification]
 		NSString WillStartLiveResizeNotification { get; }
 
 		[Field ("NSWindowDidEndLiveResizeNotification")]
+		[Notification]
 		NSString DidEndLiveResizeNotification { get; }
 
 		[Field ("NSWindowWillEnterFullScreenNotification")]
+		[Notification]
 		NSString WillEnterFullScreenNotification { get; }
 
 		[Field ("NSWindowDidEnterFullScreenNotification")]
+		[Notification]
 		NSString DidEnterFullScreenNotification { get; }
 
 		[Field ("NSWindowWillExitFullScreenNotification")]
+		[Notification]
 		NSString WillExitFullScreenNotification { get; }
 
 		[Field ("NSWindowDidExitFullScreenNotification")]
+		[Notification]
 		NSString DidExitFullScreenNotification { get; }
 
 		[Field ("NSWindowWillEnterVersionBrowserNotification")]
+		[Notification]
 		NSString WillEnterVersionBrowserNotification { get; }
 
 		[Field ("NSWindowDidEnterVersionBrowserNotification")]
+		[Notification]
 		NSString DidEnterVersionBrowserNotification { get; }
 
 		[Field ("NSWindowWillExitVersionBrowserNotification")]
+		[Notification]
 		NSString WillExitVersionBrowserNotification { get; }
 
 		[Field ("NSWindowDidExitVersionBrowserNotification")]
+		[Notification]
 		NSString DidExitVersionBrowserNotification { get; }
-#endif
+
+		[Field ("NSWindowDidChangeBackingPropertiesNotification")]
+		[Notification (typeof (NSWindowBackingPropertiesEventArgs))]
+		NSString DidChangeBackingPropertiesNotification { get; }
 
 		// 10.10
 		[Mac (10,10)]
@@ -22137,121 +22167,6 @@ namespace AppKit {
 	}
 
 	partial interface NSWindow {
-		//
-		// Fields + Notifications
-		//
-		[Field ("NSWindowDidBecomeKeyNotification")]
-		[Notification]
-		NSString DidBecomeKeyNotification { get; }
-
-		[Field ("NSWindowDidBecomeMainNotification")]
-		[Notification]
-		NSString DidBecomeMainNotification { get; }
-
-		[Field ("NSWindowDidChangeScreenNotification")]
-		[Notification]
-		NSString DidChangeScreenNotification { get; }
-
-		[Field ("NSWindowDidDeminiaturizeNotification")]
-		[Notification]
-		NSString DidDeminiaturizeNotification { get; }
-
-		[Field ("NSWindowDidExposeNotification")]
-		[Notification (typeof (NSWindowExposeEventArgs))]
-		NSString DidExposeNotification { get; }
-
-		[Field ("NSWindowDidMiniaturizeNotification")]
-		[Notification]
-		NSString DidMiniaturizeNotification { get; }
-
-		[Field ("NSWindowDidMoveNotification")]
-		[Notification]
-		NSString DidMoveNotification { get; }
-
-		[Field ("NSWindowDidResignKeyNotification")]
-		[Notification]
-		NSString DidResignKeyNotification { get; }
-
-		[Field ("NSWindowDidResignMainNotification")]
-		[Notification]
-		NSString DidResignMainNotification { get; }
-
-		[Field ("NSWindowDidResizeNotification")]
-		[Notification]
-		NSString DidResizeNotification { get; }
-
-		[Field ("NSWindowDidUpdateNotification")]
-		[Notification]
-		NSString DidUpdateNotification { get; }
-
-		[Field ("NSWindowWillCloseNotification")]
-		[Notification]
-		NSString WillCloseNotification { get; }
-
-		[Field ("NSWindowWillMiniaturizeNotification")]
-		[Notification]
-		NSString WillMiniaturizeNotification { get; }
-
-		[Field ("NSWindowWillMoveNotification")]
-		[Notification]
-		NSString WillMoveNotification { get; }
-
-		[Field ("NSWindowWillBeginSheetNotification")]
-		[Notification]
-		NSString WillBeginSheetNotification { get; }
-
-		[Field ("NSWindowDidEndSheetNotification")]
-		[Notification]
-		NSString DidEndSheetNotification { get; }
-
-		[Field ("NSWindowDidChangeScreenProfileNotification")]
-		[Notification]
-		NSString DidChangeScreenProfileNotification { get; }
-
-		[Field ("NSWindowWillStartLiveResizeNotification")]
-		[Notification]
-		NSString WillStartLiveResizeNotification { get; }
-
-		[Field ("NSWindowDidEndLiveResizeNotification")]
-		[Notification]
-		NSString DidEndLiveResizeNotification { get; }
-
-		[Field ("NSWindowWillEnterFullScreenNotification")]
-		[Notification]
-		NSString WillEnterFullScreenNotification { get; }
-
-		[Field ("NSWindowDidEnterFullScreenNotification")]
-		[Notification]
-		NSString DidEnterFullScreenNotification { get; }
-
-		[Field ("NSWindowWillExitFullScreenNotification")]
-		[Notification]
-		NSString WillExitFullScreenNotification { get; }
-
-		[Field ("NSWindowDidExitFullScreenNotification")]
-		[Notification]
-		NSString DidExitFullScreenNotification { get; }
-
-		[Field ("NSWindowWillEnterVersionBrowserNotification")]
-		[Notification]
-		NSString WillEnterVersionBrowserNotification { get; }
-
-		[Field ("NSWindowDidEnterVersionBrowserNotification")]
-		[Notification]
-		NSString DidEnterVersionBrowserNotification { get; }
-
-		[Field ("NSWindowWillExitVersionBrowserNotification")]
-		[Notification]
-		NSString WillExitVersionBrowserNotification { get; }
-
-		[Field ("NSWindowDidExitVersionBrowserNotification")]
-		[Notification]
-		NSString DidExitVersionBrowserNotification { get; }
-
-		[Field ("NSWindowDidChangeBackingPropertiesNotification")]
-		[Notification (typeof (NSWindowBackingPropertiesEventArgs))]
-		NSString DidChangeBackingPropertiesNotification { get; }
-
 		[Mac (10, 12)]
 		[Static]
 		[Export ("allowsAutomaticWindowTabbing")]
