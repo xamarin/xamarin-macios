@@ -2,3 +2,10 @@
 ## but this protocol member expose that type... we cannot remove the 
 ## protocol itself since it's subclassed
 !missing-protocol-member! NSPortDelegate::handlePortMessage: not found
+
+# deprecated API
+!missing-selector! NSTask::currentDirectoryPath not bound
+!missing-selector! NSTask::launch not bound
+!missing-selector! NSTask::launchPath not bound
+!missing-selector! NSTask::setCurrentDirectoryPath: not bound
+!missing-selector! NSTask::setLaunchPath: not bound

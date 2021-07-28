@@ -1015,28 +1015,28 @@
         <value>Plik wymagań produktu pakietu zawiera architekturę ({0}), która jest niezgodna z architekturą docelową ({1})</value>
     </data>
   <data name="E7073" xml:space="preserve">
-        <value>At least one app bundle must be specified.</value>
+        <value>Należy określić co najmniej jeden pakiet aplikacji.</value>
     </data>
   <data name="E7074" xml:space="preserve">
-        <value>The app bundle {0} does not exist.</value>
+        <value>Pakiet aplikacji {0} nie istnieje.</value>
     </data>
   <data name="E7075" xml:space="preserve">
-        <value>No 'SpecificSubDirectory' metadata was provided for the app bundle {0}.</value>
+        <value>Nie podano metadanych „SpecificSubDirectory” dla pakietu aplikacji {0}.</value>
     </data>
   <data name="E7076" xml:space="preserve">
-        <value>Can't merge the symlink '{0}', it has different targets.</value>
+        <value>Nie można scalić linku symlink „{0}”, ma on różne cele.</value>
     </data>
   <data name="E7077" xml:space="preserve">
-        <value>Unable to merge the file '{0}', it's different between the input app bundles.</value>
+        <value>Nie można scalić pliku „{0}”. Różni się on między wejściowymi pakietami aplikacji.</value>
     </data>
   <data name="E7078" xml:space="preserve">
-        <value>Invalid app bundle: the Mach-O file {0} has dependent files.</value>
+        <value>Nieprawidłowy pakiet aplikacji: plik Mach-O {0} zawiera pliki zależne.</value>
     </data>
   <data name="E7079" xml:space="preserve">
-        <value>Invalid app bundle: the file {0} has different types between the input app bundles.</value>
+        <value>Nieprawidłowy pakiet aplikacji: plik {0} ma różne typy między wejściowymi pakietami aplikacji.</value>
     </data>
   <data name="E7080" xml:space="preserve">
-        <value>App bundle file #{0}: {1}</value>
+        <value>Plik pakietu aplikacji #{0}: {1}</value>
         <comment>
             This error will be shown multiple times, listing the full path to the files causing E7076, E7077 and E7079.
             {0}: a number indicating which input app bundle the file is from
