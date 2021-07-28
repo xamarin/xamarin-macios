@@ -568,7 +568,7 @@ namespace Xamarin.Tests {
 		[Test]
 		[TestCase (ApplePlatform.MacOSX, "osx-x64")]
 		[TestCase (ApplePlatform.MacOSX, "osx-arm64")]
-		// [TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64")] // https://github.com/xamarin/xamarin-macios/issues/12265
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64")]
 		public void BuildCoreCLR (ApplePlatform platform, string runtimeIdentifiers)
 		{
 			var project = "MySimpleApp";
