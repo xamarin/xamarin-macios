@@ -303,7 +303,7 @@ namespace ObjCRuntime {
 #if !XAMMAC_SYSTEM_MONO
 #if NET
 		[EditorBrowsable (EditorBrowsableState.Never)]
-		[Obsolete ("Use the 'AutoreleasePoolSupport' MSBuild property instead: https://docs.microsoft.com/en-us/dotnet/core/run-time-config/threading#autoreleasepool-for-managed-threads")]
+		[Obsolete ("Use the 'AutoreleasePoolSupport' MSBuild property instead: https://docs.microsoft.com/en-us/dotnet/core/run-time-config/threading#autoreleasepool-for-managed-threads.")]
 		public static bool UseAutoreleasePoolInThreadPool {
 			get {
 				return AppContext.TryGetSwitch ("System.Threading.Thread.EnableAutoreleasePool", out var enabled) && enabled;
