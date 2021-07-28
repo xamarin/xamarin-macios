@@ -1015,28 +1015,28 @@
         <value>패키지 제품 요구 사항 파일에 대상 아키텍처({1})와 일치하지 않는 아키텍처({0})가 포함되어 있습니다.</value>
     </data>
   <data name="E7073" xml:space="preserve">
-        <value>At least one app bundle must be specified.</value>
+        <value>하나 이상의 앱 번들을 지정해야 합니다.</value>
     </data>
   <data name="E7074" xml:space="preserve">
-        <value>The app bundle {0} does not exist.</value>
+        <value>앱 번들 {0}이(가) 없습니다.</value>
     </data>
   <data name="E7075" xml:space="preserve">
-        <value>No 'SpecificSubDirectory' metadata was provided for the app bundle {0}.</value>
+        <value>앱 번들 {0}에 대해 'SpecificSubDirectory' 메타데이터가 제공되지 않았습니다.</value>
     </data>
   <data name="E7076" xml:space="preserve">
-        <value>Can't merge the symlink '{0}', it has different targets.</value>
+        <value>symlink '{0}'을(를) 병합할 수 없습니다. 대상이 다릅니다.</value>
     </data>
   <data name="E7077" xml:space="preserve">
-        <value>Unable to merge the file '{0}', it's different between the input app bundles.</value>
+        <value>'{0}' 파일을 병합할 수 없습니다. 입력 앱 번들 간에 다릅니다.</value>
     </data>
   <data name="E7078" xml:space="preserve">
-        <value>Invalid app bundle: the Mach-O file {0} has dependent files.</value>
+        <value>잘못된 앱 번들: Mach-O {0} 파일에 종속 파일이 있습니다.</value>
     </data>
   <data name="E7079" xml:space="preserve">
-        <value>Invalid app bundle: the file {0} has different types between the input app bundles.</value>
+        <value>잘못된 앱 번들: 파일 {0}의 입력 앱 번들 간에 형식이 다릅니다.</value>
     </data>
   <data name="E7080" xml:space="preserve">
-        <value>App bundle file #{0}: {1}</value>
+        <value>앱 번들 파일 #{0}: {1}</value>
         <comment>
             This error will be shown multiple times, listing the full path to the files causing E7076, E7077 and E7079.
             {0}: a number indicating which input app bundle the file is from
