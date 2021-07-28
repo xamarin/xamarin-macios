@@ -93,16 +93,6 @@ namespace Xamarin.iOS.Tasks {
 			return (string) propertyInfo.GetValue (null, null);
 		}
 
-		IList<string> commonIgnoreList = null;
-		static string shortCommonPath = "xamarin-macios/tests/msbuild/Xamarin.MacDev.Tasks.Tests/TaskTests/LocalizationIgnore/common-Translations.ignore";
-
-		IList<string> ReadFile (string path)
-		{
-			if (!File.Exists (path))
-				return Array.Empty<string> ();
-			return File.ReadAllLines (path).Where (line => !line.StartsWith ("#", StringComparison.Ordinal) && line != string.Empty).ToList ();
-		}
-
 		readonly string [] ignoreList = {
 			"ResourceManager",
 			"Culture",
