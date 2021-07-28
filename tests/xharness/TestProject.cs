@@ -98,6 +98,11 @@ namespace Xharness {
 			var original_name = System.IO.Path.GetFileName (original_path);
 			doc.ResolveAllPaths (original_path, rootDirectory);
 
+			// Replace RootTestsDirectory with a constant value, so that any relative paths don't end up wrong.
+			var rootTestsDirectoryNode = doc.SelectSingleNode ("/Project/PropertyGroup/RootTestsDirectory");
+			if (rootTestsDirectoryNode != null)
+				rootTestsDirectoryNode.InnerText = rootDirectory;
+
 			if (doc.IsDotNetProject ()) {
 				if (test.ProjectPlatform == "iPhone") {
 					switch (test.Platform) {

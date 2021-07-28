@@ -385,14 +385,19 @@ namespace LinkSdk {
 			Assert.That (model.Handle, Is.Not.EqualTo (IntPtr.Zero), "NSManagedObjectModel");
 			model.Entities = new NSEntityDescription[1] { entity };
 			model.SetEntities (model.Entities, String.Empty);
-			
-			NSUrl url = new NSUrl ("test.sqlite", false);
 
-			// from http://bugzilla.xamarin.com/show_bug.cgi?id=2000
-			NSError error;
-			var c = new NSPersistentStoreCoordinator (model);
-			c.AddPersistentStoreWithType (NSPersistentStoreCoordinator.SQLiteStoreType, null, url, null, out error);
-			Assert.True (Runtime.Arch == Arch.SIMULATOR ? error == null : error.Code == 512, "error");
+			var sqlitePath = Path.Combine (NSFileManager.TemporaryDirectory, "test.sqlite");
+			NSUrl url =  NSUrl.FromFilename (sqlitePath);
+
+			try {
+				// from http://bugzilla.xamarin.com/show_bug.cgi?id=2000
+				NSError error;
+				var c = new NSPersistentStoreCoordinator (model);
+				c.AddPersistentStoreWithType (NSPersistentStoreCoordinator.SQLiteStoreType, null, url, null, out error);
+				Assert.IsNull (error, "error");
+			} finally {
+				File.Delete (sqlitePath);
+			}
 		}
 		
 		[Test]
@@ -651,10 +656,6 @@ namespace LinkSdk {
 		[Test]
 		public void NetworkInterface_4631 ()
 		{
-#if NET
-			if (Runtime.Arch == Arch.DEVICE)
-				Assert.Ignore ("https://github.com/dotnet/runtime/issues/47120");
-#endif
 			Assert.NotNull (NetworkInterface.GetAllNetworkInterfaces ());
 		}
 		
@@ -931,7 +932,7 @@ namespace LinkSdk {
 			// and the simulator is more lax
 #if NET
 			// ProgramFiles is different on .NET: https://github.com/dotnet/runtime/pull/41959#discussion_r485069017
-			path = TestFolder (Environment.SpecialFolder.ProgramFiles, readOnly: device, exists: false);
+			path = TestFolder (Environment.SpecialFolder.ProgramFiles, readOnly: device, exists: null /* may or may not exist */);
 			var applicationsPath = NSSearchPath.GetDirectories (NSSearchPathDirectory.ApplicationDirectory, NSSearchPathDomain.All, true).FirstOrDefault ();
 			Assert.That (path, Is.EqualTo (applicationsPath), "path - ProgramFiles");
 #else

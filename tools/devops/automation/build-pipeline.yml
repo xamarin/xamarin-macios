@@ -84,25 +84,39 @@ parameters:
       stageName: 'mac_10_15',
       displayName: 'Mac Catalina (10.15)',
       macPool: 'VSEng-Xamarin-RedmondMacBuildPool-iOS-Trusted',
-      osVersion: '10.15',
       statusContext: 'Mac Catalina (10.15)',
-      checkDemands: true
+      demands: [
+        "Agent.OS -equals Darwin",
+        "Agent.OSVersion -equals '10.15'"
+      ]
     },
     {
       stageName: 'mac_10_14',
       displayName: 'Mac Mojave (10.14)',
       macPool: 'Hosted Mac Internal Mojave',
-      osVersion: '10.14',
       statusContext: 'Mac Mojave (10.14)',
-      checkDemands: false
+      demands: [
+        "Agent.OS -equals Darwin",
+      ]
     },
     {
       stageName: 'mac_10_13',
       displayName: 'Mac High Sierra (10.13)',
       macPool: 'Hosted Mac Internal',
-      osVersion: '10.13',
       statusContext: 'Mac High Sierra (10.13)',
-      checkDemands: false
+      demands: [
+        "Agent.OS -equals Darwin",
+      ]
+    },
+    {
+      stageName: 'mac_11_5_m1',
+      displayName: 'M1 - Mac Big Sur (11.5)',
+      macPool: 'VSEng-VSMac-Xamarin-Shared-Trusted',
+      statusContext: 'M1 - Mac Big Sur (11.5)',
+      demands: [
+        "Agent.OS -equals Darwin",
+        "macOS.Architecture -equals arm64"
+      ]
     }]
 
 resources:
@@ -160,6 +174,8 @@ variables:
   value: 'VSEng-Xamarin-RedmondMacBuildPool-iOS-Trusted'
 - name: CIBuildPoolUrl
   value: 'https://devdiv.visualstudio.com/_settings/agentpools?poolId=367&view=agents'
+- name: IsPRBuild
+  value: ${{ or(eq(variables['Build.Reason'], 'PullRequest'), and(eq(variables['Build.SourceBranchName'], 'merge'), or(eq(variables['Build.Reason'], 'Manual'), eq(variables['Build.Reason'], 'IndividualCI')))) }}
 
 trigger:
   branches:
@@ -207,7 +223,7 @@ schedules:
 
 # the translations team wants a green build, we can do that on sundays even if 
 # the code did not change and without the device tests.
-- cron: "0 18 * * 1-5,0"
+- cron: "0 12 * * 0"
   displayName: Weekly Translations build (Sunday @ noon)
   branches:
     include:
@@ -241,6 +257,11 @@ stages:
         xqaCertPass: $(xqa--certificates--password)
         enableDotnet: ${{ parameters.enableDotnet }}
 
+# .NET 6 Release Prep and VS Insertion Stages, only execute them when the build reason is not a PR or a schedule build from OneLoc
+- ${{ if and(ne(variables['Build.Reason'], 'Schedule'), or(eq(variables['Build.Reason'], 'IndividualCI'), eq(variables['Build.Reason'], 'Manual'))) }}:
+  - template: templates/release/vs-insertion-prep.yml
+
+# Test stages
 - ${{ if eq(parameters.runDeviceTests, true) }}:
   - ${{ if and(ne(variables['Build.Reason'], 'Schedule'), or(eq(variables['Build.Reason'], 'IndividualCI'), eq(variables['Build.Reason'], 'Manual'))) }}:
     - ${{ each config in parameters.deviceTestsConfigurations }}:
@@ -266,10 +287,9 @@ stages:
           stageName: ${{ config['stageName'] }}
           displayName: ${{ config['displayName'] }}
           macPool: ${{ config['macPool'] }}
-          osVersion: ${{ config['osVersion'] }}
           statusContext: ${{ config['statusContext'] }}
           keyringPass: $(pass--lab--mac--builder--keychain)
-          checkDemands: ${{ config['checkDemands'] }}
+          demands: ${{ config['demands'] }}
 
     - template: templates/windows/stage.yml
       parameters:

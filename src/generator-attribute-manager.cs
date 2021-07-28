@@ -131,6 +131,8 @@ public class AttributeManager
 			return typeof (OverrideAttribute);
 		case "PostGetAttribute":
 			return typeof (PostGetAttribute);
+		case "PrologueSnippetAttribute":
+			return typeof (PrologueSnippetAttribute);
 		case "PostSnippetAttribute":
 			return typeof (PostSnippetAttribute);
 		case "PreSnippetAttribute":

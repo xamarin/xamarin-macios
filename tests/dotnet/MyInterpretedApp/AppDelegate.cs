@@ -3,7 +3,7 @@ using System;
 using Foundation;
 using UIKit;
 
-namespace MySingleView
+namespace MyInterpretedApp
 {
 	public partial class AppDelegate : UIApplicationDelegate
 	{
@@ -15,7 +15,7 @@ namespace MySingleView
 
 			var dvc = new UIViewController ();
 			var button = new UIButton (window.Bounds);
-			button.SetTitle ("net6!", UIControlState.Normal);
+			button.SetTitle ($"Execution mode: {Application.GetExecutionMode ()}", UIControlState.Normal);
 			dvc.Add (button);
 
 			window.RootViewController = dvc;

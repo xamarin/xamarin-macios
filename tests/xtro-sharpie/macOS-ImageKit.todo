@@ -1,6 +1,0 @@
-!missing-selector! IKCameraDeviceView::setCustomActionControl: not bound
-!missing-selector! IKCameraDeviceView::setCustomDeleteControl: not bound
-!missing-selector! IKCameraDeviceView::setCustomIconSizeSlider: not bound
-!missing-selector! IKCameraDeviceView::setCustomModeControl: not bound
-!missing-selector! IKCameraDeviceView::setCustomRotateControl: not bound
-!missing-selector! IKCameraDeviceView::setShowStatusInfoAsWindowSubtitle: not bound

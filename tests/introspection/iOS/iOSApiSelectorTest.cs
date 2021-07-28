@@ -48,6 +48,7 @@ namespace Introspection {
 				if ((Runtime.Arch == Arch.SIMULATOR) && !TestRuntime.CheckXcodeVersion (7, 0))
 					return true;
 				break;
+			case "Chip":
 			case "MetalKit":
 			case "MonoTouch.MetalKit":
 			case "MetalPerformanceShaders":
@@ -347,18 +348,6 @@ namespace Introspection {
 				case "setDelegate:":
 				case "view":
 					if (TestRuntime.CheckXcodeVersion (10, 2))
-						return true;
-					break;
-				}
-				break;
-			case "MTLCommandBufferDescriptor":
-				switch (name) {
-				case "errorOptions":
-				case "setErrorOptions:":
-				case "retainedReferences":
-				case "setRetainedReferences:":
-					// iOS 15 sim fails, API added in 14.0
-					if (TestRuntime.CheckXcodeVersion (13, 0))
 						return true;
 					break;
 				}

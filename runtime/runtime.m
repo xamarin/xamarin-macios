@@ -83,6 +83,7 @@ enum MarshalManagedExceptionMode xamarin_marshal_managed_exception_mode = Marsha
 enum XamarinLaunchMode xamarin_launch_mode = XamarinLaunchModeApp;
 bool xamarin_supports_dynamic_registration = true;
 const char *xamarin_runtime_configuration_name = NULL;
+const char *xamarin_mono_native_lib_name = "__Internal";
 
 /* Callbacks */
 
@@ -1254,7 +1255,7 @@ xamarin_initialize ()
 	}
 
 	options.size = sizeof (options);
-#if MONOTOUCH && (defined(__i386__) || defined (__x86_64__))
+#if TARGET_OS_SIMULATOR
 	options.flags = (enum InitializationFlags) (options.flags | InitializationFlagsIsSimulator);
 #endif
 
@@ -1318,6 +1319,23 @@ xamarin_initialize ()
 	MONO_EXIT_GC_UNSAFE;
 }
 
+static char *x_app_bundle_path = NULL;
+const char *
+xamarin_get_app_bundle_path ()
+{
+	if (x_app_bundle_path != NULL)
+		return x_app_bundle_path;
+
+	NSBundle *main_bundle = [NSBundle mainBundle];
+
+	if (main_bundle == NULL)
+		xamarin_assertion_message ("Could not find the main bundle in the app ([NSBundle mainBundle] returned nil)");
+
+	x_app_bundle_path = strdup ([[[main_bundle bundlePath] stringByStandardizingPath] UTF8String]);
+
+	return x_app_bundle_path;
+}
+
 static char *x_bundle_path = NULL;
 const char *
 xamarin_get_bundle_path ()
@@ -1332,7 +1350,7 @@ xamarin_get_bundle_path ()
 	if (main_bundle == NULL)
 		xamarin_assertion_message ("Could not find the main bundle in the app ([NSBundle mainBundle] returned nil)");
 
-#if MONOMAC
+#if TARGET_OS_MACCATALYST || TARGET_OS_OSX
 	if (xamarin_launch_mode == XamarinLaunchModeEmbedded) {
 		bundle_path = [[[NSBundle bundleForClass: [XamarinAssociatedObject class]] bundlePath] stringByAppendingPathComponent: @"Versions/Current"];
 	} else {
@@ -2424,8 +2442,25 @@ xamarin_pinvoke_override (const char *libraryName, const char *entrypointName)
 
 	void* symbol = NULL;
 
+#if TARGET_OS_MACCATALYST
+	static void *monoNativeLibrary = NULL;
+#endif
+
 	if (!strcmp (libraryName, "__Internal")) {
 		symbol = dlsym (RTLD_DEFAULT, entrypointName);
+#if TARGET_OS_MACCATALYST
+	} else if (!strcmp (libraryName, "libSystem.Native") ||
+	           !strcmp (libraryName, "libSystem.Security.Cryptography.Native.Apple") ||
+	           !strcmp (libraryName, "libSystem.Net.Security.Native")) {
+		if (monoNativeLibrary == NULL) {
+			if (xamarin_mono_native_lib_name == NULL || !strcmp (xamarin_mono_native_lib_name, "__Internal")) {
+				monoNativeLibrary = RTLD_DEFAULT;
+			} else {
+				monoNativeLibrary = dlopen (xamarin_mono_native_lib_name, RTLD_LAZY);
+			}
+		}
+		symbol = dlsym (monoNativeLibrary, entrypointName);
+#endif // TARGET_OS_MACCATALYST
 #if !defined (CORECLR_RUNTIME) // we're intercepting objc_msgSend calls using the managed System.Runtime.InteropServices.ObjectiveC.Bridge.SetMessageSendCallback instead.
 #if defined (__i386__) || defined (__x86_64__) || defined (__arm64__)
 	} else if (!strcmp (libraryName, "/usr/lib/libobjc.dylib")) {
@@ -2440,10 +2475,18 @@ xamarin_pinvoke_override (const char *libraryName, const char *entrypointName)
 			} else if (!strcmp (entrypointName, "objc_msgSendSuper_stret")) {
 				symbol = (void *) &xamarin_dyn_objc_msgSendSuper_stret;
 #endif // !defined (__arm64__)
+			} else {
+				return NULL;
 			}
 		}
 #endif // defined (__i386__) || defined (__x86_64__) || defined (__arm64__)
 #endif // !defined (CORECLR_RUNTIME)
+	} else {
+		return NULL;
+	}
+
+	if (symbol == NULL) {
+		LOG (PRODUCT ": Unable to resolve P/Invoke '%s' in the library '%s'", entrypointName, libraryName);
 	}
 
 	return symbol;
