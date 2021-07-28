@@ -13,7 +13,7 @@ namespace MySimpleApp
 
 			Console.WriteLine (Environment.GetEnvironmentVariable ("MAGIC_WORD"));
 
-			return 0;
+			return args.Length;
 		}
 	}
 }
