@@ -20,7 +20,7 @@ namespace Xamarin.Messaging.Build {
 			var dotnetPath = Path.Combine (MessagingContext.GetXmaPath (), "SDKs", "dotnet", "dotnet");
 
 			//In case the XMA dotnet has not been installed yet
-			if(!File.Exists(dotnetPath)) {
+			if (!File.Exists (dotnetPath)) {
 				dotnetPath = "/usr/local/share/dotnet/dotnet";
 			}
 
