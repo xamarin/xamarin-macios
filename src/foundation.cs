@@ -48,9 +48,9 @@ using Contacts;
 #endif
 #if !WATCH
 using CoreAnimation;
-using CoreMedia;
 using CoreSpotlight;
 #endif
+using CoreMedia;
 using SceneKit;
 using Security;
 #if IOS || MONOMAC
@@ -81,13 +81,6 @@ using NSTimeInterval = System.Double;
 using NSDirectionalEdgeInsets = Foundation.NSObject;
 using UIEdgeInsets = Foundation.NSObject;
 using UIOffset = Foundation.NSObject;
-#endif
-
-#if WATCH
-// dummy usings to make code compile without having the actual types available (for [NoWatch] to work)
-using CMTime = Foundation.NSObject;
-using CMTimeMapping = Foundation.NSObject;
-using CMTimeRange = Foundation.NSObject;
 #endif
 
 #if WATCH
