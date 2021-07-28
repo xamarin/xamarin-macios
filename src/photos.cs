@@ -146,6 +146,7 @@ namespace Photos
 		[Export ("playbackStyle", ArgumentSemantic.Assign)]
 		PHAssetPlaybackStyle PlaybackStyle { get; }
 
+		[NoMacCatalyst]
 		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'PHPhotosError.IdentifierNotFound' instead.")]
 		[NoTV][NoiOS]
 		[Field ("PHLocalIdentifierNotFound")]
@@ -1181,11 +1182,11 @@ namespace Photos
 
 		[Mac (12,0)]
 		[Export ("localIdentifierMappingsForCloudIdentifiers:")]
-		NSDictionary<PHCloudIdentifier, PHLocalIdentifierMapping> LocalIdentifierMappingsForCloudIdentifiers (PHCloudIdentifier[] cloudIdentifiers);
+		NSDictionary<PHCloudIdentifier, PHLocalIdentifierMapping> GetLocalIdentifierMappings (PHCloudIdentifier[] cloudIdentifiers);
 
 		[Mac (12,0)]
 		[Export ("cloudIdentifierMappingsForLocalIdentifiers:")]
-		NSDictionary<NSString, PHCloudIdentifierMapping> CloudIdentifierMappingsForLocalIdentifiers (string[] localIdentifiers);
+		NSDictionary<NSString, PHCloudIdentifierMapping> GetCloudIdentifierMappings (string[] localIdentifiers);
 
 		[NoTV][NoiOS][NoMacCatalyst]
 		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'localIdentifierMappingsForCloudIdentifiers:' instead.")]
@@ -1434,7 +1435,7 @@ namespace Photos
 	interface PHCloudIdentifier : NSSecureCoding {
 
 		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'PHPhotosError.IdentifierNotFound' instead.")]
-		[NoTV, NoiOS]
+		[NoTV, NoiOS, NoMacCatalyst]
 		[Static]
 		[Export ("notFoundIdentifier")]
 		PHCloudIdentifier NotFoundIdentifier { get; }

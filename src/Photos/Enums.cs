@@ -182,7 +182,7 @@ namespace Photos
 		SmartAlbumLongExposures = 215,
 		[iOS (13,0)][TV(13,0)][Mac (10,15)]
 		SmartAlbumUnableToUpload = 216,
-		[iOS (15,0), TV (15,0), Mac (12,0)]
+		[iOS (15,0), TV (15,0), Mac (12,0), MacCatalyst (15,0)]
 		SmartAlbumRAW = 217,
 
 
@@ -353,6 +353,7 @@ namespace Photos
 		Auxiliary = 3,
 	}
 
+	[NoMacCatalyst]
 	[Mac (10,12)]
 	[NoiOS][NoTV]
 	[Native]
