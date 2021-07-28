@@ -63,6 +63,9 @@ namespace MonoTouchFixtures.Metal {
 		}
 
 		[Test]
+#if __MACCATALYST__
+		[Ignore ("This test requires a few test fixes that hasn't been backported to the release/6.0.1xx-preview7 branch - and won't be, since they're not necessary.")]
+#endif
 		public void ReturnReleaseTest ()
 		{
 			// This test tries to exercise all the Metal API that has a
@@ -97,7 +100,7 @@ namespace MonoTouchFixtures.Metal {
 			string metallib_path = Path.Combine (NSBundle.MainBundle.ResourcePath, "default.metallib");
 			string fragmentshader_path = Path.Combine (NSBundle.MainBundle.ResourcePath, "fragmentShader.metallib");
 
-#if !__MACOS__
+#if !__MACOS__ && !__MACCATALYST__
 			if (Runtime.Arch == Arch.SIMULATOR)
 				Assert.Ignore ("Metal isn't available in the simulator");
 #endif
@@ -339,14 +342,16 @@ namespace MonoTouchFixtures.Metal {
 				}
 			}
 
-			using (var library = device.CreateLibrary (fragmentshader_path, out var error))
-			using (var func = library.CreateFunction ("fragmentShader2")) {
-				using (var enc = func.CreateArgumentEncoder (0)) {
-					Assert.IsNotNull (enc, "MTLFunction.CreateArgumentEncoder (nuint): NonNull");
-				}
-				using (var enc = func.CreateArgumentEncoder (0, out var reflection)) {
-					Assert.IsNotNull (enc, "MTLFunction.CreateArgumentEncoder (nuint, MTLArgument): NonNull");
-					Assert.IsNotNull (reflection, "MTLFunction.CreateArgumentEncoder (nuint, MTLArgument): NonNull reflection");
+			using (var library = device.CreateLibrary (fragmentshader_path, out var error)) {
+				Assert.IsNull (error, "MTLFunction.CreateArgumentEncoder: library creation failure");
+				using (var func = library.CreateFunction ("fragmentShader2")) {
+					using (var enc = func.CreateArgumentEncoder (0)) {
+						Assert.IsNotNull (enc, "MTLFunction.CreateArgumentEncoder (nuint): NonNull");
+					}
+					using (var enc = func.CreateArgumentEncoder (0, out var reflection)) {
+						Assert.IsNotNull (enc, "MTLFunction.CreateArgumentEncoder (nuint, MTLArgument): NonNull");
+						Assert.IsNotNull (reflection, "MTLFunction.CreateArgumentEncoder (nuint, MTLArgument): NonNull reflection");
+					}
 				}
 			}
 
@@ -378,7 +383,7 @@ namespace MonoTouchFixtures.Metal {
 
 			using (var hd = new MTLHeapDescriptor ()) {
 				hd.CpuCacheMode = MTLCpuCacheMode.DefaultCache;
-#if __MACOS__
+#if __MACOS__ || __MACCATALYST__
 				hd.StorageMode = MTLStorageMode.Private;
 #else
 				hd.StorageMode = MTLStorageMode.Shared;
@@ -388,7 +393,7 @@ namespace MonoTouchFixtures.Metal {
 					hd.Size = sa.Size;
 
 					using (var heap = device.CreateHeap (hd)) {
-#if __MACOS__
+#if __MACOS__ || __MACCATALYST__
 						txt.StorageMode = MTLStorageMode.Private;
 #endif
 						using (var texture = heap.CreateTexture (txt)) {
