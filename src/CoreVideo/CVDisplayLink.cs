@@ -63,7 +63,7 @@ namespace CoreVideo {
 		static extern CVReturn CVDisplayLinkCreateWithCGDisplay (uint displayId, out IntPtr displayLink);
 
 		[Mac (12,0)]
-		public static CVDisplayLink? FromDisplayId (uint displayId, out CVReturn error)
+		public static CVDisplayLink? CreateFromDisplayId (uint displayId, out CVReturn error)
 		{
 			error = CVDisplayLinkCreateWithCGDisplay (displayId, out IntPtr handle);
 			if (error != 0)
@@ -73,25 +73,21 @@ namespace CoreVideo {
 		}
 
 		[Mac (12,0)]
-		public static CVDisplayLink? FromDisplayId (uint displayId)
+		public static CVDisplayLink? CreateFromDisplayId (uint displayId)
 			=> FromDisplayId (displayId, out var _);
 
 		[Mac (12,0)]
 		[DllImport (Constants.CoreVideoLibrary)]
-		unsafe static extern CVReturn CVDisplayLinkCreateWithCGDisplays (uint* displayArray, nint count, out IntPtr displayLink);
+		static extern CVReturn CVDisplayLinkCreateWithCGDisplays (uint[] displayArray, nint count, out IntPtr displayLink);
 
 		[Mac (12,0)]
-		public static CVDisplayLink? FromDisplayIds (uint[] displayIds, out CVReturn error)
+		public static CVDisplayLink? CreateFromDisplayIds (uint[] displayIds, out CVReturn error)
 		{
 			if (displayIds == null)
 				throw new ArgumentNullException (nameof (displayIds));
 			error = 0;
 			IntPtr handle = IntPtr.Zero;
-			unsafe {
-				fixed (uint *displaysHandle = displayIds) {
-					error = CVDisplayLinkCreateWithCGDisplays (displaysHandle, displayIds.Length, out handle);
-				}
-			}
+			error = CVDisplayLinkCreateWithCGDisplays (displayIds, displayIds.Length, out handle);
 
 			if (error != 0)
 				return null;
@@ -100,7 +96,7 @@ namespace CoreVideo {
 		}
 
 		[Mac (12,0)]
-		public static CVDisplayLink? FromDisplayIds (uint[] displayIds)
+		public static CVDisplayLink? CreateFromDisplayIds (uint[] displayIds)
 			=> FromDisplayIds (displayIds, out var _);
 
 		[Mac (12,0)]
@@ -108,7 +104,7 @@ namespace CoreVideo {
 		static extern int CVDisplayLinkCreateWithOpenGLDisplayMask (uint mask, out IntPtr displayLinkOut);
 
 		[Mac (12,0)]
-		public static CVDisplayLink FromOpenGLMask (uint mask)
+		public static CVDisplayLink CreateFromOpenGLMask (uint mask)
 		{
 			var result = CVDisplayLinkCreateWithOpenGLDisplayMask (mask, out IntPtr handle);
 			if (result != 0)
@@ -282,7 +278,7 @@ namespace CoreVideo {
 		[Mac (12,0), NoiOS, NoTV]
 		public bool TryTranslateTime (CVTimeStamp inTime, [NotNullWhen (true)] out CVTimeStamp outTime)
 		{
-			outTime = new CVTimeStamp() { Version = 0 };
+			outTime = default (CVTimeStamp);
 			if (CVDisplayLinkTranslateTime (this.Handle, inTime, ref outTime) == 0) {
 				return true;
 			}
@@ -292,4 +288,3 @@ namespace CoreVideo {
 }
 
 #endif // MONOMAC
-
