@@ -39,9 +39,6 @@ namespace MonoTouchFixtures.Foundation {
 		}
 
 		[Test]
-#if NET && __MACCATALYST__
-		[Ignore ("No globalization data yet for Mac Catalyst - https://github.com/xamarin/xamarin-macios/issues/11392")]
-#endif
 		public void All_28300 ()
 		{
 			foreach (var name in NSTimeZone.KnownTimeZoneNames) {
