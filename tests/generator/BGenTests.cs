@@ -16,6 +16,9 @@ namespace GeneratorTests
 	[Parallelizable (ParallelScope.All)]
 	public class BGenTests
 	{
+		// Removing the following variable might make running the unit tests in VSMac fail.
+		static Type variable_to_keep_reference_to_system_runtime_compilerservices_unsafe_assembly = typeof (System.Runtime.CompilerServices.Unsafe);
+
 		[Test]
 #if !NET
 		[TestCase (Profile.macOSFull)]
@@ -629,6 +632,17 @@ namespace GeneratorTests
 
 		[Test]
 		public void StrongDictsNativeEnums () => BuildFile (Profile.iOS, "strong-dict-native-enum.cs");
+
+		[Test]
+		public void IgnoreUnavailableProtocol ()
+		{
+			var bgen = BuildFile (Profile.iOS, "tests/ignore-unavailable-protocol.cs");
+			var myClass = bgen.ApiAssembly.MainModule.GetType ("NS", "MyClass");
+			var myProtocol = bgen.ApiAssembly.MainModule.GetType ("NS", "IMyProtocol");
+			var myClassInterfaces = myClass.Interfaces.Select (v => v.InterfaceType.Name).ToArray ();
+			Assert.That (myClassInterfaces, Does.Not.Contain ("IMyProtocol"), "IMyProtocol");
+			Assert.IsNull (myProtocol, "MyProtocol null");
+		}
 
 		[Test]
 		public void VSTS970507 ()

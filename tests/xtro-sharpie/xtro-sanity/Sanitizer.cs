@@ -177,6 +177,10 @@ namespace Extrospection {
 					foreach (var failure in failures)
 						sanitized.Remove (failure);
 					File.WriteAllLines (file, sanitized);
+					// since we are in AUTO_SANITIZE, if the file is empty, remove it.
+					if (sanitized.Count == 0) {
+						File.Delete (file);
+					}
 				}
 			}
 		}
