@@ -362,6 +362,7 @@
 				@(_BundlerDlsym -> 'Dlsym=%(Identity)')
 				Debug=$(_BundlerDebug)
 				DeploymentTarget=$(_MinimumOSVersion)
+				EnableSGenConc=$(EnableSGenConc)
 				@(_BundlerEnvironmentVariables -> 'EnvironmentVariable=%(Identity)=%(Value)')
 				@(_XamarinFrameworkAssemblies -> 'FrameworkAssembly=%(Filename)')
 				GlobalizationDataFile=$(_GlobalizationDataFile)
