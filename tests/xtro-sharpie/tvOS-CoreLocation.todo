@@ -1,7 +1,0 @@
-!missing-selector! CLLocation::ellipsoidalAltitude not bound
-!missing-selector! CLLocation::initWithCoordinate:altitude:horizontalAccuracy:verticalAccuracy:course:courseAccuracy:speed:speedAccuracy:timestamp:sourceInfo: not bound
-!missing-selector! CLLocation::sourceInformation not bound
-!missing-selector! CLLocationSourceInformation::initWithSoftwareSimulationState:andExternalAccessoryState: not bound
-!missing-selector! CLLocationSourceInformation::isProducedByAccessory not bound
-!missing-selector! CLLocationSourceInformation::isSimulatedBySoftware not bound
-!missing-type! CLLocationSourceInformation not bound
