@@ -1,3 +1,4 @@
+#if !__MACCATALYST__
 using System;
 using System.Runtime.InteropServices;
 using CoreFoundation;
@@ -194,3 +195,4 @@ namespace AppKit {
 		}
 	}
 }
+#endif // !__MACCATALYST__

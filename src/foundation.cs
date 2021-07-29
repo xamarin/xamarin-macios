@@ -13910,6 +13910,7 @@ namespace Foundation
 	[NoiOS, NoTV, NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DesignatedDefaultCtor]
+	[MacCatalyst (13, 0)]
 	interface NSAffineTransform : NSSecureCoding, NSCopying {
 		[Export ("initWithTransform:")]
 		IntPtr Constructor (NSAffineTransform transform);
@@ -13944,6 +13945,7 @@ namespace Foundation
 		[Export ("transformSize:")]
 		CGSize TransformSize (CGSize aSize);
 		
+		[NoMacCatalyst]
 		[Export ("transformBezierPath:")]
 		NSBezierPath TransformBezierPath (NSBezierPath path);
 
@@ -14632,6 +14634,7 @@ namespace Foundation
 	}
 
 	[NoiOS, NoTV, NoWatch]
+	[MacCatalyst (13, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSAppleScript : NSCopying {

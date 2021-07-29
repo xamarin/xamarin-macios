@@ -27,6 +27,8 @@
 // NSString keys to an enum value for better API. An 'Unknown' value
 // exists on these enums for when a key cannot be mapped.
 
+#if !__MACCATALYST__
+
 using Foundation;
 
 namespace AppKit
@@ -82,3 +84,4 @@ namespace AppKit
 		}
 	}
 }
+#endif // !__MACCATALYST__
