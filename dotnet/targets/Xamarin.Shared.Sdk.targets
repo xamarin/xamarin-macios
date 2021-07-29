@@ -171,6 +171,9 @@
 			$(BuildDependsOn);
 			_CreateAppBundle;
 			Codesign;
+			CreateIpa;
+			_CreateInstaller;
+			Archive;
 		</BuildDependsOn>
 
 		<!-- inner build for multi-rid build -->
@@ -191,6 +194,9 @@
 			_CompileAppManifest;
 			_CreateMergedAppBundle;
 			Codesign;
+			CreateIpa;
+			_CreateInstaller;
+			Archive;
 		</BuildDependsOn>
 
 		<!-- We re-use ComputeFilesToPublish & CopyFilesToPublishDirectory to copy files to the .app -->
@@ -232,12 +238,6 @@
 			_CompileEntitlements;
 			_CreateMergedAppBundle;
 		</CreateAppBundleDependsOn>
-	</PropertyGroup>
-
-	<!-- Linker -->
-	<PropertyGroup>
-		<_AdditionalTaskAssemblyDirectory>$(_XamarinSdkRootDirectory)tools/dotnet-linker/</_AdditionalTaskAssemblyDirectory>
-		<_AdditionalTaskAssembly>$(_AdditionalTaskAssemblyDirectory)dotnet-linker.dll</_AdditionalTaskAssembly>
 	</PropertyGroup>
 
 	<!-- PublishTrimmed must be calculated as part of a target because IsMacEnabled on Windows will be set after connecting to the Mac -->
@@ -431,6 +431,10 @@
 
 			<!-- We always want the linker to process debug symbols, even when building in Release mode, because the AOT compiler uses the managed debug symbols to output DWARF debugging symbols -->
 			<TrimmerRemoveSymbols Condition="'$(TrimmerRemoveSymbols)' == ''">false</TrimmerRemoveSymbols>
+
+			<!-- Linker -->
+			<_AdditionalTaskAssemblyDirectory>$(_XamarinSdkRootDirectoryOnMac)tools/dotnet-linker/</_AdditionalTaskAssemblyDirectory>
+			<_AdditionalTaskAssembly>$(_AdditionalTaskAssemblyDirectory)dotnet-linker.dll</_AdditionalTaskAssembly>
 		</PropertyGroup>
 
 		<ItemGroup>
@@ -705,6 +709,7 @@
 			<_RuntimeConfigReservedProperties Include="APP_PATHS" />
 			<_RuntimeConfigReservedProperties Include="PINVOKE_OVERRIDE" />
 			<_RuntimeConfigReservedProperties Include="ICU_DAT_FILE_PATH" />
+			<_RuntimeConfigReservedProperties Include="TRUSTED_PLATFORM_ASSEMBLIES" />
 		</ItemGroup>
 		<RuntimeConfigParserTask
 			Condition="'$(GenerateRuntimeConfigurationFiles)' == 'true'"
