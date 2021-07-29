@@ -182,11 +182,18 @@ namespace FileProvider {
 		OlderExtensionVersionRunning = -2003,
 		NewerExtensionVersionFound = -2004,
 		CannotSynchronize = -2005,
-#if MONOMAC
 		NonEvictableChildren = -2006,
 		UnsyncedEdits = -2007,
 		NonEvictable = -2008,
-#endif
+	}
+
+	[Unavailable (PlatformName.MacCatalyst)]
+	[NoiOS, Mac (12,0), NoMacCatalyst]
+	[Native, Advice ("This API is not available when using UIKit on macOS.")]
+	public enum NSFileProviderDomainRemovalMode : long {
+		RemoveAll = 0,
+		PreserveDirtyUserData = 1,
+		PreserveDownloadedUserData = 2,
 	}
 
 	[iOS (11,0)]
@@ -203,7 +210,7 @@ namespace FileProvider {
 		[Field ("NSFileProviderErrorNonExistentItemIdentifierKey")]
 		NSString NonExistentItemIdentifierKey { get; }
 
-		[NoiOS]
+		[iOS (15,0)]
 		[Field ("NSFileProviderErrorItemKey")]
 		NSString ItemKey { get; }
 	}
@@ -330,6 +337,11 @@ namespace FileProvider {
 		[Notification]
 		[Field ("NSFileProviderDomainDidChange")]
 		NSString DidChange { get; }
+
+		[NoWatch, NoTV, NoiOS, Mac (12, 0), NoMacCatalyst]
+		[Advice ("This API is not available when using UIKit on macOS.")]
+		[NullAllowed, Export ("backingStoreIdentity")]
+		NSData BackingStoreIdentity { get; }
 	}
 
 	interface INSFileProviderEnumerationObserver { }
@@ -542,6 +554,13 @@ namespace FileProvider {
 		[NoiOS]
 		[NullAllowed, Export ("symlinkTargetPath")]
 		string SymlinkTargetPath { get; }
+
+#if MONOMAC
+		[NoiOS, Mac (12, 0), NoMacCatalyst]
+		[Advice ("This API is not available when using UIKit on macOS.")]
+		[Export ("typeAndCreator")]
+		NSFileProviderTypeAndCreator TypeAndCreator { get; }
+#endif
 	}
 
 	[iOS (11,0)]
@@ -716,6 +735,12 @@ namespace FileProvider {
 		[return: NullAllowed]
 		NSDictionary<INSFileProviderTestingOperation, NSError> GetRunTestingOperations (INSFileProviderTestingOperation[] operations, [NullAllowed] out NSError error);
 
+		[NoiOS, Mac (12,0), NoMacCatalyst]
+		[Async (ResultTypeName = "NSFileProviderRemoveDomainResult")]
+		[Static]
+		[Export ("removeDomain:mode:completionHandler:")]
+		void RemoveDomain (NSFileProviderDomain domain, NSFileProviderDomainRemovalMode mode, Action<NSUrl, NSError> completionHandler);
+
 	}
 
 	interface INSFileProviderPendingSetEnumerator { }
@@ -815,6 +840,8 @@ namespace FileProvider {
 		ContentModificationDate = 1uL << 7,
 		FileSystemFlags = 1uL << 8,
 		ExtendedAttributes = 1uL << 9,
+		[Mac (12,0)
+		TypeAndCreator = 1uL << 10,
 	}
 
 	[Mac (11,0)]
@@ -826,9 +853,8 @@ namespace FileProvider {
 		Temporary = 1,
 	}
 
-	[Mac (11,0)]
+	[iOS (15,0), Mac (11,0)]
 	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using Catalyst on macOS.")]
-	[NoiOS]
 	[Native][Flags]
 	enum NSFileProviderFileSystemFlags : ulong
 	{
@@ -1003,8 +1029,7 @@ namespace FileProvider {
 	}
 
 	[Advice ("This API is not available when using UIKit on macOS.")]
-	[Unavailable (PlatformName.MacCatalyst)]
-	[NoWatch, NoTV, NoiOS, Mac (11,3)]
+	[NoWatch, NoTV, iOS (15,0), Mac (12,0), NoMacCatalyst]
 	[Flags]
 	[Native]
 	public enum NSFileProviderDomainTestingModes : ulong {
@@ -1263,4 +1288,19 @@ namespace FileProvider {
 		[Export ("renamedItem")]
 		INSFileProviderItem RenamedItem { get; }
 	}
+
+	[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
+	[Protocol, Advice ("This API is not available when using UIKit on macOS.")]
+	[BaseType (typeof (NSObject))]
+	interface NSFileProviderUserInteractionSuppressing
+	{
+		[Abstract]
+		[Export ("setInteractionSuppressed:forIdentifier:")]
+		void SetInteractionSuppressed (bool suppression, string suppressionIdentifier);
+
+		[Abstract]
+		[Export ("isInteractionSuppressedForIdentifier:")]
+		bool IsInteractionSuppressed (string suppressionIdentifier);
+	}
+
 }
