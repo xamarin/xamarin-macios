@@ -12,7 +12,7 @@
     <MtouchExtraArgs>--registrar:dynamic</MtouchExtraArgs>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Xamarin.iOS.HotRestart.Application" Version="1.1.0" />
+    <PackageReference Include="Xamarin.iOS.HotRestart.Application" Version="1.1.2" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\HotRestart-LaunchIcon-568h%402x.png" />
