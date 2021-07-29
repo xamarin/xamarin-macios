@@ -174,6 +174,8 @@ namespace PassKit {
 		Contribute = 14,
 		[iOS (14,0)]
 		Tip = 15,
+		[Mac (12,0), iOS (15,0), Watch (8,0)]
+		Continue = 16,
 	}
 
 	[Mac (11,0)]
@@ -221,17 +223,8 @@ namespace PassKit {
 		Debit,
 		Credit,
 		Prepaid,
-		Store
-	}
-
-	[Mac (11,0)]
-	[Watch (3,0)]
-	[iOS (9,0)]
-	[Native]
-	public enum PKPaymentSummaryItemType : ulong
-	{
-		Final,
-		Pending
+		Store,
+		EMoney,
 	}
 
 	[NoWatch]
@@ -252,6 +245,8 @@ namespace PassKit {
 		ShippingContactInvalid = 1,
 		BillingContactInvalid,
 		ShippingAddressUnserviceable,
+		CouponCodeInvalid,
+		CouponCodeExpired,
 	}
 
 	[iOS (12,0)]

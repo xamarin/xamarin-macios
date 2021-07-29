@@ -207,6 +207,11 @@ namespace PassKit {
 		[Watch (6,2), iOS (13,4)]
 		[Export ("signData:withSecureElementPass:completion:")]
 		void SignData (NSData signData, PKSecureElementPass secureElementPass, PKPassLibrarySignDataCompletionHandler completion);
+
+		[Async (ResultTypeName = "PKServiceProviderDataCompletionResult")]
+		[Watch (8,0), iOS (15,0), Mac (12,0), MacCatalyst (15,0)]
+		[Export ("serviceProviderDataForSecureElementPass:completion:")]
+		void ServiceProviderData (PKSecureElementPass secureElementPass, Action<NSData, NSError> completion);
 	}
 
 	[Static]
@@ -345,6 +350,11 @@ namespace PassKit {
 		[Export ("paymentAuthorizationViewController:didRequestMerchantSessionUpdate:")]
 		[EventArgs ("PKPaymentRequestMerchantSessionUpdate")]
 		void DidRequestMerchantSessionUpdate (PKPaymentAuthorizationViewController controller, Action<PKPaymentRequestMerchantSessionUpdate> updateHandler);
+
+		[NoWatch, Mac (12,0), iOS (15,0)]
+		[Export ("paymentAuthorizationViewController:didChangeCouponCode:handler:")]
+		[EventArgs ("PKPaymentRequestCouponCodeUpdate")]
+		void DidChangeCouponCode (PKPaymentAuthorizationViewController controller, string couponCode, Action<PKPaymentRequestCouponCodeUpdate> completion);
 	}
 
 	[Mac (11,0)]
@@ -415,6 +425,11 @@ namespace PassKit {
 		[NullAllowed] // by default this property is null
 		[Export ("detail")]
 		string Detail { get; set; }
+
+		[Watch (8,0), iOS (15,0), Mac (12,0), MacCatalyst (15,0)]
+		[NullAllowed]
+		[Export ("dateComponentsRange", ArgumentSemantic.Copy)]
+		PKDateComponentsRange DateComponentsRange { get; set; }
 	}
 
 	[Watch (3,0)]
@@ -444,6 +459,19 @@ namespace PassKit {
 		[NullAllowed] // by default this property is null
 		[Export ("currencyCode")]
 		string CurrencyCode { get; set; }
+
+		[NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("supportsCouponCode")]
+		bool SupportsCouponCode { get; set; }
+
+		[NullAllowed]
+		[NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("couponCode")]
+		string CouponCode { get; set; }
+
+		[Watch (8,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("shippingContactEditingMode", ArgumentSemantic.Assign)]
+		PKShippingContactEditingMode ShippingContactEditingMode { get; set; }
 
 		[NoMac]
 		[Deprecated (PlatformName.WatchOS, 4,0, message: "Use 'RequiredBillingContactFields' instead.")]
@@ -547,6 +575,16 @@ namespace PassKit {
 		[Static]
 		[Export ("paymentShippingAddressUnserviceableErrorWithLocalizedDescription:")]
 		NSError CreatePaymentShippingAddressUnserviceableError ([NullAllowed] string localizedDescription);
+
+		[NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Static]
+		[Export ("paymentCouponCodeInvalidErrorWithLocalizedDescription:")]
+		NSError CouponCodeInvalidError ([NullAllowed] string localizedDescription);
+
+		[NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Static]
+		[Export ("paymentCouponCodeExpiredErrorWithLocalizedDescription:")]
+		NSError CouponCodeExpiredError ([NullAllowed] string localizedDescription);
 	}
 
 	[Mac  (11,0)]
@@ -1139,7 +1177,11 @@ namespace PassKit {
 		[MacCatalyst (14,0)]
 		[Export ("paymentAuthorizationController:didRequestMerchantSessionUpdate:")]
 		void DidRequestMerchantSessionUpdate (PKPaymentAuthorizationController controller, Action<PKPaymentRequestMerchantSessionUpdate> handler);
-	
+
+		[NoWatch, Mac (12,0), iOS (15,0)]
+		[Export ("paymentAuthorizationController:didChangeCouponCode:handler:")]
+		void DidChangeCouponCode (PKPaymentAuthorizationController controller, string couponCode, Action<PKPaymentRequestCouponCodeUpdate> completion);
+
 		[Watch (7,0)][iOS (14,0)]
 		[MacCatalyst (14,0)]
 		[Export ("presentationWindowForPaymentAuthorizationController:")]
@@ -1170,27 +1212,29 @@ namespace PassKit {
 
 	[Mac (11,0)]
 	[Watch (4,3), iOS (11,3)]
-	[BaseType (typeof (NSObject))]
+	[BaseType (typeof (PKStoredValuePassProperties))]
 	[DisableDefaultCtor]
 	interface PKTransitPassProperties {
 
-		[Static]
-		[Export ("passPropertiesForPass:")]
-		[return: NullAllowed]
-		PKTransitPassProperties GetPassProperties (PKPass pass);
-
+		[Deprecated (PlatformName.iOS, 15, 0)]
+		[Deprecated (PlatformName.WatchOS, 8, 0)]
+		[Deprecated (PlatformName.MacOSX, 12, 0)]
 		[Export ("transitBalance", ArgumentSemantic.Copy)]
 		NSDecimalNumber TransitBalance { get; }
 
+		[Deprecated (PlatformName.iOS, 15, 0)]
+		[Deprecated (PlatformName.WatchOS, 8, 0)]
+		[Deprecated (PlatformName.MacOSX, 12, 0)]
 		[Export ("transitBalanceCurrencyCode")]
 		string TransitBalanceCurrencyCode { get; }
 
 		[Export ("inStation")]
 		bool InStation { [Bind ("isInStation")] get; }
 
-		[Deprecated (PlatformName.iOS, 14,5, message: "Use 'Blocked' instead.")]
-		[Deprecated (PlatformName.MacCatalyst, 14,5, message: "Use 'Blocked' instead.")]
-		[Deprecated (PlatformName.WatchOS, 7,4, message: "Use 'Blocked' instead.")]
+		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'Blocked' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use 'Blocked' instead.")]
+		[Deprecated (PlatformName.WatchOS, 8, 0, message: "Use 'Blocked' instead.")]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'Blocked' instead.")]
 		[Export ("blacklisted")]
 		bool Blacklisted { [Bind ("isBlacklisted")] get; }
 
@@ -1241,8 +1285,8 @@ namespace PassKit {
 		bool GreenCarTicketUsed { [Bind ("isGreenCarTicketUsed")] get; }
 
 		[Export ("blacklisted")]
-		[Deprecated (PlatformName.iOS, 14,5, message: "Use 'Blocked' instead.")] // exists in base class
-		[Deprecated (PlatformName.WatchOS, 7,4, message: "Use 'Blocked' instead.")]
+		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'Blocked' instead.")] // exists in base class
+		[Deprecated (PlatformName.WatchOS, 8, 0, message: "Use 'Blocked' instead.")]
 		bool Blacklisted { [Bind ("isBlacklisted")] get; }
 	}
 
@@ -1277,6 +1321,10 @@ namespace PassKit {
 
 		[Export ("paymentSummaryItems", ArgumentSemantic.Copy)]
 		PKPaymentSummaryItem[] PaymentSummaryItems { get; set; }
+
+		[Watch (8,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("shippingMethods", ArgumentSemantic.Copy)]
+		PKShippingMethod[] ShippingMethods { get; set; }
 	}
 
 	[Mac (11,0)]
@@ -1568,6 +1616,10 @@ namespace PassKit {
 		[Export ("initWithProvisioningCredentialIdentifier:cardConfigurationIdentifier:sharingInstanceIdentifier:passThumbnailImage:ownerDisplayName:localizedDescription:")]
 		IntPtr Constructor (string credentialIdentifier, string cardConfigurationIdentifier, string sharingInstanceIdentifier, CGImage passThumbnailImage, string ownerDisplayName, string localizedDescription);
 
+		[Watch (8,0), iOS (15,0), Mac (12,0), MacCatalyst (15,0)]
+		[Export ("initWithProvisioningCredentialIdentifier:sharingInstanceIdentifier:passThumbnailImage:ownerDisplayName:localizedDescription:accountHash:templateIdentifier:relyingPartyIdentifier:requiresUnifiedAccessCapableDevice:")]
+		IntPtr Constructor (string credentialIdentifier, string sharingInstanceIdentifier, CGImage passThumbnailImage, string ownerDisplayName, string localizedDescription, string accountHash, string templateIdentifier, string relyingPartyIdentifier, bool requiresUnifiedAccessCapableDevice);
+
 		[Export ("credentialIdentifier", ArgumentSemantic.Strong)]
 		string CredentialIdentifier { get; }
 
@@ -1585,6 +1637,22 @@ namespace PassKit {
 
 		[Export ("ownerDisplayName", ArgumentSemantic.Strong)]
 		string OwnerDisplayName { get; }
+
+		[Watch (8,0), iOS (15,0), Mac (12,0), MacCatalyst (15,0)]
+		[Export ("accountHash", ArgumentSemantic.Strong)]
+		string AccountHash { get; }
+
+		[Watch (8,0), iOS (15,0), Mac (12,0), MacCatalyst (15,0)]
+		[Export ("templateIdentifier", ArgumentSemantic.Strong)]
+		string TemplateIdentifier { get; }
+
+		[Watch (8,0), iOS (15,0), Mac (12,0), MacCatalyst (15,0)]
+		[Export ("relyingPartyIdentifier", ArgumentSemantic.Strong)]
+		string RelyingPartyIdentifier { get; }
+
+		[iOS (15,0), Mac (12,0), MacCatalyst (15,0)]
+		[Export ("requiresUnifiedAccessCapableDevice")]
+		bool RequiresUnifiedAccessCapableDevice { get; }
 	}
 
 	[NoWatch, NoTV]
@@ -1857,6 +1925,23 @@ namespace PassKit {
 		PKPaymentMerchantSession Session { get; set; }
 	}
 
+	[NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof(PKPaymentRequestUpdate))]
+	[DisableDefaultCtor]
+	interface PKPaymentRequestCouponCodeUpdate
+	{
+		[Export ("initWithPaymentSummaryItems:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (PKPaymentSummaryItem[] paymentSummaryItems);
+
+		[Export ("initWithErrors:paymentSummaryItems:shippingMethods:")]
+		[DesignatedInitializer]
+		IntPtr Constructor ([NullAllowed] NSError[] errors, PKPaymentSummaryItem[] paymentSummaryItems, PKShippingMethod[] shippingMethods);
+
+		[NullAllowed, Export ("errors", ArgumentSemantic.Copy)]
+		NSError[] Errors { get; set; }
+	}
+
 	[Watch (7,0)][Mac (11,0)][iOS (14,0)]
 	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
@@ -1871,5 +1956,114 @@ namespace PassKit {
 		None = 0,
 		Nfc = 1 << 0,
 		Bluetooth = 1 << 1,
+	}
+
+	[Watch (8,0), iOS (15,0), Mac (12,0), MacCatalyst (15,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface PKDateComponentsRange : NSCopying, NSSecureCoding
+	{
+		[Export ("initWithStartDateComponents:endDateComponents:")]
+		[return: NullAllowed]
+		IntPtr Constructor (NSDateComponents startDateComponents, NSDateComponents endDateComponents);
+
+		[Export ("startDateComponents", ArgumentSemantic.Copy)]
+		NSDateComponents StartDateComponents { get; }
+
+		[Export ("endDateComponents", ArgumentSemantic.Copy)]
+		NSDateComponents EndDateComponents { get; }
+	}
+
+	[Watch (8,0), iOS (15,0), Mac (12,0), MacCatalyst (15,0)]
+	[BaseType (typeof(PKPaymentSummaryItem))]
+	[DisableDefaultCtor]
+	interface PKDeferredPaymentSummaryItem
+	{
+		[Export ("deferredDate", ArgumentSemantic.Copy)]
+		NSDate DeferredDate { get; set; }
+	}
+
+	[Watch (8,0), Mac (12,0), iOS (15,0)]
+	[Native]
+	public enum PKShippingContactEditingMode : ulong
+	{
+		Enabled = 1,
+		StorePickup,
+	}
+
+	[Watch (3,0), iOS (9,0)]
+	[Native]
+	public enum PKPaymentSummaryItemType : ulong
+	{
+		Final,
+		Pending,
+	}
+
+	[Watch (8,0), iOS (15,0), Mac (12,0), MacCatalyst (15,0)]
+	[BaseType (typeof(PKPaymentSummaryItem))]
+	[DisableDefaultCtor]
+	interface PKRecurringPaymentSummaryItem
+	{
+		[NullAllowed, Export ("startDate", ArgumentSemantic.Copy)]
+		NSDate StartDate { get; set; }
+
+		[Export ("intervalUnit", ArgumentSemantic.Assign)]
+		NSCalendarUnit IntervalUnit { get; set; }
+
+		[Export ("intervalCount")]
+		nint IntervalCount { get; set; }
+
+		[NullAllowed, Export ("endDate", ArgumentSemantic.Copy)]
+		NSDate EndDate { get; set; }
+	}
+
+	[Watch (8,0), iOS (15,0), Mac (12,0), MacCatalyst (15,0)]
+	public enum PKStoredValuePassBalanceType : ulong
+	{
+		[Field ("PKStoredValuePassBalanceTypeCash")]
+		Cash,
+		[Field ("PKStoredValuePassBalanceTypeLoyaltyPoints")]
+		LoyaltyPoints,
+	}
+
+	[Watch (8,0), iOS (15,0), Mac (12,0), MacCatalyst (15,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface PKStoredValuePassBalance
+	{
+		[Export ("amount", ArgumentSemantic.Strong)]
+		NSDecimalNumber Amount { get; }
+
+		[NullAllowed, Export ("currencyCode")]
+		string CurrencyCode { get; }
+
+		[Export ("balanceType")]
+		string BalanceType { get; }
+
+		[NullAllowed, Export ("expiryDate", ArgumentSemantic.Strong)]
+		NSDate ExpiryDate { get; }
+
+		[Export ("isEqualToBalance:")]
+		bool IsEqualToBalance (PKStoredValuePassBalance balance);
+	}
+
+	[Watch (8,0), iOS (15,0), Mac (12,0), MacCatalyst (15,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface PKStoredValuePassProperties
+	{
+		[Static]
+		[Export ("passPropertiesForPass:")]
+		[return: NullAllowed]
+		PKStoredValuePassProperties PassPropertiesForPass (PKPass pass);
+
+		[Export ("blocked")]
+		bool Blocked { [Bind ("isBlocked")] get; }
+
+		[NullAllowed, Export ("expirationDate", ArgumentSemantic.Copy)]
+		NSDate ExpirationDate { get; }
+
+		[Export ("balances", ArgumentSemantic.Copy)]
+		PKStoredValuePassBalance[] Balances { get; }
 	}
 }

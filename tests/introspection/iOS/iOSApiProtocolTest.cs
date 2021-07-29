@@ -440,6 +440,11 @@ namespace Introspection {
 				case "ARDepthData":
 				case "ARSkeletonDefinition": // device only
 				case "NSMergePolicy":
+				case "PKDeferredPaymentSummaryItem":
+				case "PKPaymentRequestCouponCodeUpdate":
+				case "PKRecurringPaymentSummaryItem":
+				case "PKStoredValuePassBalance":
+				case "PKStoredValuePassProperties":
 					return true;
 				}
 				break;
@@ -678,6 +683,11 @@ namespace Introspection {
 				case "ARDepthData":
 				case "ARSkeletonDefinition": // device only
 				case "NSMergePolicy":
+				case "PKDeferredPaymentSummaryItem":
+				case "PKPaymentRequestCouponCodeUpdate":
+				case "PKRecurringPaymentSummaryItem":
+				case "PKStoredValuePassBalance":
+				case "PKStoredValuePassProperties":
 					return true;
 				}
 				break;
@@ -759,6 +769,9 @@ namespace Introspection {
 				case "NSMappingModel":
 				case "NSMergePolicy":
 				case "NSPropertyMapping":
+				case "PKDeferredPaymentSummaryItem":
+				case "PKRecurringPaymentSummaryItem":
+				case "PKStoredValuePassProperties":
 					return true;
 				}
 				break;
