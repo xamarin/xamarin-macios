@@ -8,7 +8,7 @@
 //
 //
 
-#if IOS || TVOS
+#if !__WATCHOS__
 
 using System;
 using System.Runtime.InteropServices;
@@ -21,7 +21,7 @@ using Metal;
 
 namespace CoreVideo {
 
-	[iOS (8,0)]
+	[iOS (8,0), Mac (12,0), MacCatalyst (13,0)]
 	public partial class CVMetalTextureCache : INativeObject, IDisposable {
 		internal IntPtr handle;
 
@@ -171,4 +171,4 @@ namespace CoreVideo {
 	}
 }
 
-#endif // IOS || TVOS
+#endif // __WATCHOS__

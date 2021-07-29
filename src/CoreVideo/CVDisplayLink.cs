@@ -26,6 +26,7 @@
 #if MONOMAC
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
 using ObjCRuntime;
@@ -56,6 +57,64 @@ namespace CoreVideo {
 
 			this.handle = handle;
 		}
+
+		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
+		[DllImport (Constants.CoreVideoLibrary)]
+		static extern CVReturn CVDisplayLinkCreateWithCGDisplay (uint displayId, out IntPtr displayLink);
+
+		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
+		public static CVDisplayLink? CreateFromDisplayId (uint displayId, out CVReturn error)
+		{
+			error = CVDisplayLinkCreateWithCGDisplay (displayId, out IntPtr handle);
+			if (error != 0)
+				return null;
+
+			return new CVDisplayLink (handle, true);
+		}
+
+		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
+		public static CVDisplayLink? CreateFromDisplayId (uint displayId)
+			=> CreateFromDisplayId (displayId, out var _);
+
+		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
+		[DllImport (Constants.CoreVideoLibrary)]
+		static extern CVReturn CVDisplayLinkCreateWithCGDisplays (uint[] displayArray, nint count, out IntPtr displayLink);
+
+		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
+		public static CVDisplayLink? CreateFromDisplayIds (uint[] displayIds, out CVReturn error)
+		{
+			if (displayIds == null)
+				throw new ArgumentNullException (nameof (displayIds));
+			error = 0;
+			IntPtr handle = IntPtr.Zero;
+			error = CVDisplayLinkCreateWithCGDisplays (displayIds, displayIds.Length, out handle);
+
+			if (error != 0)
+				return null;
+
+			return new CVDisplayLink (handle, true);
+		}
+
+		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
+		public static CVDisplayLink? CreateFromDisplayIds (uint[] displayIds)
+			=> CreateFromDisplayIds (displayIds, out var _);
+
+		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
+		[DllImport (Constants.CoreVideoLibrary)]
+		static extern CVReturn CVDisplayLinkCreateWithOpenGLDisplayMask (uint mask, out IntPtr displayLinkOut);
+
+		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
+		public static CVDisplayLink? CreateFromOpenGLMask (uint mask, out CVReturn error)
+		{
+			error = CVDisplayLinkCreateWithOpenGLDisplayMask (mask, out IntPtr handle);
+			if (error != 0)
+				return null;
+			return new CVDisplayLink (handle, true);
+		}
+
+		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
+		public static CVDisplayLink? CreateFromOpenGLMask (uint mask)
+			=> CreateFromOpenGLMask (mask, out var _);
 
 		~CVDisplayLink ()
 		{
@@ -192,13 +251,14 @@ namespace CoreVideo {
 		static CVReturn OutputCallback (IntPtr displayLink, ref CVTimeStamp inNow, ref CVTimeStamp inOutputTime, CVOptionFlags flagsIn, ref CVOptionFlags flagsOut, IntPtr displayLinkContext)
 		{
 			GCHandle callbackHandle = GCHandle.FromIntPtr (displayLinkContext);
-			DisplayLinkOutputCallback func = (DisplayLinkOutputCallback) callbackHandle.Target;
+			DisplayLinkOutputCallback func = (DisplayLinkOutputCallback) callbackHandle.Target!;
 			CVDisplayLink delegateDisplayLink = new CVDisplayLink(displayLink, false);
 			return func (delegateDisplayLink, ref inNow, ref inOutputTime, flagsIn, ref flagsOut);
 		}
 	  
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static CVReturn CVDisplayLinkSetOutputCallback (IntPtr displayLink, CVDisplayLinkOutputCallback function, IntPtr userInfo);
+
 		public CVReturn SetOutputCallback (DisplayLinkOutputCallback callback)
 		{
 			callbackHandle = GCHandle.Alloc (callback);
@@ -206,8 +266,29 @@ namespace CoreVideo {
 				
 			return ret;
 		}
+
+		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
+		[DllImport (Constants.CoreVideoLibrary)]
+		static extern nuint CVDisplayLinkGetTypeID ();
+
+		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
+		public static nuint GetTypeId ()
+			=> CVDisplayLinkGetTypeID ();
+
+		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
+		[DllImport (Constants.CoreVideoLibrary)]
+		static extern int CVDisplayLinkTranslateTime (IntPtr displayLink, CVTimeStamp inTime, ref CVTimeStamp outTime);
+
+		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
+		public bool TryTranslateTime (CVTimeStamp inTime, [NotNullWhen (true)] out CVTimeStamp outTime)
+		{
+			outTime = default (CVTimeStamp);
+			if (CVDisplayLinkTranslateTime (this.Handle, inTime, ref outTime) == 0) {
+				return true;
+			}
+			return false;
+		}
 	}
 }
 
 #endif // MONOMAC
-
