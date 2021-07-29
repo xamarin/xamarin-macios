@@ -14135,7 +14135,6 @@ namespace Foundation
 	[NoiOS, NoTV, NoWatch]
 	[MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject))]
-	[MacCatalyst (15, 0)]
 	interface NSAppleEventDescriptor : NSSecureCoding, NSCopying {
 		[Static]
 		[Export ("nullDescriptor")]
