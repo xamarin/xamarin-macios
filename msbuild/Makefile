@@ -488,12 +488,12 @@ DOTNET_IOS_WINDOWS_MOBILEDEVICE_TOOLS_X64 = $(foreach file,$(IOS_WINDOWS_MOBILED
 
 # Ensures Xamarin.iOS.Tasks.Windows is built and copies the output files to the Sdk Windows pack
 .dotnet-windows:
-	mkdir -p $(DOTNET_DESTDIR)/$(IOS_WINDOWS_NUGET).Sdk/tools/msbuild/iOS
-	cp -p $(DOTNET_IOS_WINDOWS_FILES) $(DOTNET_DESTDIR)/$(IOS_WINDOWS_NUGET).Sdk/tools/msbuild/iOS/
-	mkdir -p $(DOTNET_DESTDIR)/$(IOS_WINDOWS_NUGET).Sdk/tools/msbuild/iOS/imobiledevice-x86
-	cp -p $(DOTNET_IOS_WINDOWS_MOBILEDEVICE_TOOLS_X86) $(DOTNET_DESTDIR)/$(IOS_WINDOWS_NUGET).Sdk/tools/msbuild/iOS/imobiledevice-x86/
-	mkdir -p $(DOTNET_DESTDIR)/$(IOS_WINDOWS_NUGET).Sdk/tools/msbuild/iOS/imobiledevice-x64
-	cp -p $(DOTNET_IOS_WINDOWS_MOBILEDEVICE_TOOLS_X64) $(DOTNET_DESTDIR)/$(IOS_WINDOWS_NUGET).Sdk/tools/msbuild/iOS/imobiledevice-x64/
+	$(Q) mkdir -p $(DOTNET_DESTDIR)/$(IOS_WINDOWS_NUGET).Sdk/tools/msbuild/iOS
+	$(Q) $(CP) $(DOTNET_IOS_WINDOWS_FILES) $(DOTNET_DESTDIR)/$(IOS_WINDOWS_NUGET).Sdk/tools/msbuild/iOS/
+	$(Q) mkdir -p $(DOTNET_DESTDIR)/$(IOS_WINDOWS_NUGET).Sdk/tools/msbuild/iOS/imobiledevice-x86
+	$(Q) $(CP) $(DOTNET_IOS_WINDOWS_MOBILEDEVICE_TOOLS_X86) $(DOTNET_DESTDIR)/$(IOS_WINDOWS_NUGET).Sdk/tools/msbuild/iOS/imobiledevice-x86/
+	$(Q) mkdir -p $(DOTNET_DESTDIR)/$(IOS_WINDOWS_NUGET).Sdk/tools/msbuild/iOS/imobiledevice-x64
+	$(Q) $(CP) $(DOTNET_IOS_WINDOWS_MOBILEDEVICE_TOOLS_X64) $(DOTNET_DESTDIR)/$(IOS_WINDOWS_NUGET).Sdk/tools/msbuild/iOS/imobiledevice-x64/
 
 all-local:: .build-stamp .dotnet-windows
 dotnet:: .build-stamp .dotnet-windows
