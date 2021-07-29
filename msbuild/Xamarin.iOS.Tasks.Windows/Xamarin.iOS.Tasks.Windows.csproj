@@ -63,6 +63,7 @@
       </ReferencePath>
       <ReferenceToPreserve Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.Diagnostics.Tracer'" />
       <ReferenceToPreserve Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.Security.Cryptography.ProtectedData'" />
+      <ReferenceToPreserve Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.Security.Cryptography.Pkcs'" />
     </ItemGroup>
   </Target>
 </Project>
