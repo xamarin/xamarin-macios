@@ -210,6 +210,14 @@ namespace Introspection {
 					break;
 				}
 				break;
+			case "HKQuery":
+				switch (selectorName) {
+				case "predicateForVerifiableClinicalRecordsWithRelevantDateWithinDateInterval:": // not available in the sim
+					if (Runtime.Arch == Arch.SIMULATOR) // not available in the sim
+						return true;
+					break;
+				}
+				break;
 #endif
 			case "WKPreferences":
 				switch (selectorName) {
