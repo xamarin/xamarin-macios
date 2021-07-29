@@ -57,9 +57,8 @@ xamarin_bridge_setup ()
 void
 xamarin_bridge_initialize ()
 {
-#if defined (__arm__) || defined(__aarch64__)
-	xamarin_register_modules ();
-#endif
+	if (xamarin_register_modules != NULL)
+		xamarin_register_modules ();
 	DEBUG_LAUNCH_TIME_PRINT ("\tAOT register time");
 
 #ifdef DEBUG

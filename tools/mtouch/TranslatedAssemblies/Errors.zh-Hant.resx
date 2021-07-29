@@ -1726,4 +1726,7 @@
   <data name="MX8040" xml:space="preserve">
 		<value>參數的類型編碼無效。</value>
 	</data>
+  <data name="MX8041" xml:space="preserve">
+		<value>Unable to create an instance of the type {0}.</value>
+	</data>
 </root>

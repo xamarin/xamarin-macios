@@ -13,5 +13,4 @@
 !missing-selector! NSXPCInterface::setInterface:forSelector:argumentIndex:ofReply: not bound
 
 # Initial result from new rule missing-null-allowed
-!missing-null-allowed! 'Foundation.NSCharacterSet Foundation.NSMutableCharacterSet::FromFile(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSExpression Foundation.NSExpression::FromFunction(Foundation.NSExpressionCallbackHandler,Foundation.NSExpression[])' is missing an [NullAllowed] on parameter #1

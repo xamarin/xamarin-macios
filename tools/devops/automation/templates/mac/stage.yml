@@ -16,12 +16,9 @@ parameters:
 - name: keyringPass
   type: string
 
-- name: osVersion
-  type: string
-
-- name: checkDemands
-  type: boolean
-  default: true
+- name: demands
+  type: object
+  default: []
 
 stages:
 - stage: ${{ parameters.stageName }}
@@ -40,10 +37,7 @@ stages:
 
     pool:
       name: ${{ parameters.macPool }}
-      ${{ if eq(parameters.checkDemands, true) }}:
-        demands: 
-        - Agent.OS -equals Darwin
-        - Agent.OSVersion -equals ${{ parameters.osVersion }}
+      demands: ${{ parameters.demands }}
 
     steps:
     - template: build.yml

@@ -4034,7 +4034,18 @@ public partial class Generator : IMemberGatherer {
 			print (l);
 		}
 	}
-	
+
+	bool IsOptimizable (MemberInfo method)
+	{
+		var optimizable = true;
+		var snippets = AttributeManager.GetCustomAttributes<SnippetAttribute> (method);
+		if (snippets.Length > 0) {
+			foreach (SnippetAttribute snippet in snippets)
+				optimizable &= snippet.Optimizable;
+		}
+		return optimizable;
+	}
+
 	[Flags]
 	public enum BodyOption {
 		None = 0x0,
@@ -4731,6 +4742,9 @@ public partial class Generator : IMemberGatherer {
 		foreach (var method in source.GatherMethods (BindingFlags.Public | BindingFlags.Instance, this))
 			yield return method;
 		foreach (var parent in source.GetInterfaces ()){
+			// skip interfaces that aren't available on the current platform
+			if (parent.IsUnavailable (this))
+				continue;
 			// skip case where the interface implemented comes from an already built assembly (e.g. monotouch.dll)
 			// e.g. Dispose won't have an [Export] since it's present to satisfy System.IDisposable
 			if (parent.FullName != "System.IDisposable") {
@@ -4746,6 +4760,9 @@ public partial class Generator : IMemberGatherer {
 		foreach (var prop in source.GatherProperties (this))
 			yield return prop;
 		foreach (var parent in source.GetInterfaces ()){
+			// skip interfaces that aren't available on the current platform
+			if (parent.IsUnavailable (this))
+				continue;
 			// skip case where the interface implemented comes from an already built assembly (e.g. monotouch.dll)
 			// e.g. the Handle property won't have an [Export] since it's present to satisfyINativeObject
 			if (parent.Name != "INativeObject") {
@@ -4956,7 +4973,7 @@ public partial class Generator : IMemberGatherer {
 			}
 		}
 
-		print_generated_code ();
+		print_generated_code (optimizable: IsOptimizable (pi));
 		PrintPropertyAttributes (pi, minfo.type);
 
 		PrintAttributes (pi, preserve:true, advice:true, bindAs:true);
@@ -5511,7 +5528,7 @@ public partial class Generator : IMemberGatherer {
 		var mod = minfo.GetVisibility ();
 
 		var is_abstract = minfo.is_abstract;
-		print_generated_code ();
+		print_generated_code (optimizable: IsOptimizable (minfo.mi));
 		print ("{0} {1}{2}{3}",
 		       mod,
 		       minfo.GetModifiers (),
@@ -6511,6 +6528,10 @@ public partial class Generator : IMemberGatherer {
 					continue;
 				}
 
+				// skip protocols that aren't available on the current platform
+				if (protocolType.IsUnavailable (this))
+					continue;
+
 				// A protocol this class implements. We need to implement the corresponding interface for the protocol.
 				string pname = protocolType.Name;
 				// the extra 'I' is only required for the bindings being built, if it comes from something already
@@ -7423,15 +7444,19 @@ public partial class Generator : IMemberGatherer {
 			// Do we need a dispose method?
 			//
 			if (!is_static_class){
-				var disposeAttr = AttributeManager.GetCustomAttributes<DisposeAttribute> (type);
-				if (disposeAttr.Length > 0 || instance_fields_to_clear_on_dispose.Count > 0){
-					print_generated_code (optimizable: disposeAttr.Length == 0);
+				var attrs = AttributeManager.GetCustomAttributes<DisposeAttribute> (type);
+				// historical note: unlike many attributes our `DisposeAttribute` has `AllowMultiple=true`
+				var has_dispose_attributes = attrs.Length > 0;
+				if (has_dispose_attributes || (instance_fields_to_clear_on_dispose.Count > 0)) {
+					// if there'a any [Dispose] attribute then they all must opt-in in order for the generated Dispose method to be optimizable
+					bool optimizable = !has_dispose_attributes || IsOptimizable (type);
+					print_generated_code (optimizable: optimizable);
 					print ("protected override void Dispose (bool disposing)");
 					print ("{");
 					indent++;
-					if (disposeAttr.Length > 0){
-						var snippet = disposeAttr [0];
-						Inject (snippet);
+					if (has_dispose_attributes) {
+						foreach (var da in attrs)
+							Inject (da);
 					}
 					
 					print ("base.Dispose (disposing);");
