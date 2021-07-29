@@ -47,18 +47,18 @@ public class BindingTouch {
 	public PlatformName CurrentPlatform;
 	public bool BindThirdPartyLibrary = true;
 	public bool skipSystemDrawing;
-	public string outfile;
+	public string? outfile;
 
-	string baselibdll;
-	string attributedll;
+	string? baselibdll;
+	string? attributedll;
 
 	List<string> libs = new List<string> ();
 	List<string> references = new List<string> ();
 
-	public MetadataLoadContext universe;
+	public MetadataLoadContext? universe;
 	public TypeManager TypeManager = new TypeManager ();
-	public Frameworks Frameworks;
-	public AttributeManager AttributeManager;
+	public Frameworks? Frameworks;
+	public AttributeManager? AttributeManager;
 
 	readonly Dictionary<System.Type, Type> ikvm_type_lookup = new Dictionary<System.Type, Type> ();
 	internal Dictionary<System.Type, Type> IKVMTypeLookup {
@@ -98,7 +98,7 @@ public class BindingTouch {
 	string GetAttributeLibraryPath ()
 	{
 		if (!string.IsNullOrEmpty (attributedll))
-			return attributedll;
+			return attributedll!;
 
 		switch (CurrentPlatform) {
 		case PlatformName.iOS:
