@@ -705,6 +705,7 @@
 			<_RuntimeConfigReservedProperties Include="APP_PATHS" />
 			<_RuntimeConfigReservedProperties Include="PINVOKE_OVERRIDE" />
 			<_RuntimeConfigReservedProperties Include="ICU_DAT_FILE_PATH" />
+			<_RuntimeConfigReservedProperties Include="TRUSTED_PLATFORM_ASSEMBLIES" />
 		</ItemGroup>
 		<RuntimeConfigParserTask
 			Condition="'$(GenerateRuntimeConfigurationFiles)' == 'true'"
