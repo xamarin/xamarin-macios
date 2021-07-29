@@ -75,7 +75,6 @@ namespace Xamarin.iOS.HotRestart.Tasks
 			return true;
 		}
 
-		// TODO: Remove this once it's moved to the SDK
 		bool IsFrameworkItem(ITaskItem item)
 		{
 			return (bool.TryParse(item.GetMetadata("FrameworkFile"), out var isFrameworkFile) && isFrameworkFile) ||

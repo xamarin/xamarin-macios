@@ -476,7 +476,6 @@ MSBUILD_DIRECTORIES += $(DOTNET_DIRECTORIES)
 ifdef ENABLE_DOTNET
 MSBUILD_PRODUCTS += $(DOTNET_TARGETS)
 
-ifdef ENABLE_DOTNET_WINDOWS
 DOTNET_IOS_WINDOWS_OUTPUT_FILES =                                \
 	$(foreach dll,$(IOS_WINDOWS_TASK_ASSEMBLIES),$(dll).*)       \
 	$(foreach dll,$(IOS_WINDOWS_DEPENDENCIES),$(dll).*)          \
