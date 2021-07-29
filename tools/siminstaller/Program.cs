@@ -125,11 +125,6 @@ namespace xsiminstaller {
 			xcodeVersion = xcodeVersion.Insert (xcodeVersion.Length - 2, ".");
 			xcodeVersion = xcodeVersion.Insert (xcodeVersion.Length - 1, ".");
 			var url = $"https://devimages-cdn.apple.com/downloads/xcode/simulators/index-{xcodeVersion}-{xcodeUuid}.dvtdownloadableindex";
-			if (xcodeVersion == "13.0.0") {
-				// force the url to be the xcode12.5 since simulators are not yet present with the beta1
-				// issue: https://github.com/xamarin/xamarin-macios/issues/11881
-				url = "https://devimages-cdn.apple.com/downloads/xcode/simulators/index-12.5.0-F56A1938-53DE-493D-9D64-87EE6C415E4D.dvtdownloadableindex";
-			} 
 			var uri = new Uri (url);
 			var tmpfile = Path.Combine (TempDirectory, Path.GetFileName (uri.LocalPath));
 			if (!File.Exists (tmpfile)) {

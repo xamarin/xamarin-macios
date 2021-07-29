@@ -1,3 +1,4 @@
+#if !__MACCATALYST__
 using System;
 using Foundation;
 
@@ -58,3 +59,4 @@ namespace AppKit {
 #endif
 	}
 }
+#endif // !__MACCATALYST__

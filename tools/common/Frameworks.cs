@@ -652,6 +652,9 @@ public class Frameworks : Dictionary <string, Framework>
 					break;
 				}
 			}
+
+			// Add frameworks that are not in iOS
+			catalyst_frameworks.Add ("AppKit", 13, 0);
 		}
 		return catalyst_frameworks;
 	}
