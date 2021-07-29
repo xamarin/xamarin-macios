@@ -31,7 +31,7 @@ namespace AuthenticationServices {
 			if (nsStringArray == null)
 				return null;
 
-			ASAuthorizationSecurityKeyPublicKeyCredentialDescriptorTransport[]? asArray = new ASAuthorizationSecurityKeyPublicKeyCredentialDescriptorTransport[nsStringArray.Count ()];
+			ASAuthorizationSecurityKeyPublicKeyCredentialDescriptorTransport[] asArray = new ASAuthorizationSecurityKeyPublicKeyCredentialDescriptorTransport[nsStringArray.Count ()];
 			for (var i = 0; i < nsStringArray.Count (); i++) {
 				switch (nsStringArray[i].Description){
 					case "usb":

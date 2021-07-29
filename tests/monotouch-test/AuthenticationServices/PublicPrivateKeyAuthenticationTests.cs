@@ -37,7 +37,7 @@ namespace MonoTouchFixtures.AuthenticationServices {
 				if (transport == ASAuthorizationSecurityKeyPublicKeyCredentialDescriptorTransport.Usb)
 					usbCounter++;
 			}
-			Assert.LessOrEqual (usbCounter, 1, "There were multiple usb transports found. Add any new transports to src/AuthenticationServices/PublicPrivateKeyAuthentication.cs");
+			Assert.LessOrEqual (usbCounter, 1, "There were multiple usb transports found. Add any new transports to GetAllSupportedPublicKeyCredentialDescriptorTransports inside src/AuthenticationServices/PublicPrivateKeyAuthentication.cs");
 		}
 	}
 }

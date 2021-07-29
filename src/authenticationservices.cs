@@ -1005,14 +1005,14 @@ namespace AuthenticationServices {
 
 	[Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoWatch, NoTV]
 	[Native]
-	enum ASCOSEAlgorithmIdentifier : long {
+	enum ASCoseAlgorithmIdentifier : long {
 		Es256 = -7,
 	}
 
 	// Introduced in Xcode13 Beta3 but not used anywhere
 	// [Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoWatch, NoTV]
 	// [Native]
-	// enum ASCOSEEllipticCurveIdentifier : long {
+	// enum AscoseEllipticCurveIdentifier : long {
 	// 	P256 = 1,
 	// }
 
@@ -1205,10 +1205,10 @@ namespace AuthenticationServices {
 	interface ASAuthorizationPublicKeyCredentialParameters : NSSecureCoding, NSCopying
 	{
 		[Export ("initWithAlgorithm:")]
-		IntPtr Constructor (ASCOSEAlgorithmIdentifier algorithm);
+		IntPtr Constructor (ASCoseAlgorithmIdentifier algorithm);
 
 		[Export ("algorithm")]
-		ASCOSEAlgorithmIdentifier Algorithm { get; }
+		ASCoseAlgorithmIdentifier Algorithm { get; }
 	}
 
 	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
