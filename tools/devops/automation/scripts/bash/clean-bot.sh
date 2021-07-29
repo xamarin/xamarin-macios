@@ -113,9 +113,17 @@ oldXcodes=(
 # are not needed and wrong
 sudo rm -Rf /Applications/*.xip
 
+# pick the current selected xcode to make sure we do not remove it.
+XCODE_SELECT=$(xcode-select -p)
+
 for oldXcode in "${oldXcodes[@]}"; do
+	if [ "$XCODE_SELECT" != "$oldXcode/Contents/Developer" ]; then
     sudo rm -Rf "$oldXcode"
+	else
+		echo "Not removing $oldXcode because is the currently selected one."
+	fi
 done
+
 
 
 # Print disk status after cleaning
