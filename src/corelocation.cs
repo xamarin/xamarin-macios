@@ -136,7 +136,7 @@ namespace CoreLocation {
 
 		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("initWithCoordinate:altitude:horizontalAccuracy:verticalAccuracy:course:courseAccuracy:speed:speedAccuracy:timestamp:sourceInfo:")]
-		IntPtr Constructor (CLLocationCoordinate2D coordinate, double altitude, double hAccuracy, double vAccuracy, double course, double courseAccuracy, double speed, double speedAccuracy, NSDate timestamp, CLLocationSourceInformation sourceInfo);
+		IntPtr Constructor (CLLocationCoordinate2D coordinate, double altitude, double horizontalAccuracy, double verticalAccuracy, double course, double courseAccuracy, double speed, double speedAccuracy, NSDate timestamp, CLLocationSourceInformation sourceInfo);
 
 		// Apple keep changing the 'introduction' of this field (5.0->8.0->5.0) but it was not available in 6.1
 		// nor in 7.0 - but it works on my iPad3 running iOS 7.1
