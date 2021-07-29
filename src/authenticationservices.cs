@@ -1006,7 +1006,7 @@ namespace AuthenticationServices {
 	[Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoWatch, NoTV]
 	[Native]
 	enum ASCoseAlgorithmIdentifier : long {
-		Es256 = -7,
+		ES256 = -7,
 	}
 
 	// Introduced in Xcode13 Beta3 but not used anywhere
