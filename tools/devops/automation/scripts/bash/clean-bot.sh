@@ -118,7 +118,7 @@ XCODE_SELECT=$(xcode-select -p)
 
 for oldXcode in "${oldXcodes[@]}"; do
 	if [ "$XCODE_SELECT" != "$oldXcode/Contents/Developer" ]; then
-    sudo rm -Rf "$oldXcode"
+		sudo rm -Rf "$oldXcode"
 	else
 		echo "Not removing $oldXcode because is the currently selected one."
 	fi
