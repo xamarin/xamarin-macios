@@ -840,7 +840,7 @@ namespace FileProvider {
 		ContentModificationDate = 1uL << 7,
 		FileSystemFlags = 1uL << 8,
 		ExtendedAttributes = 1uL << 9,
-		[Mac (12,0)
+		[Mac (12,0)]
 		TypeAndCreator = 1uL << 10,
 	}
 
