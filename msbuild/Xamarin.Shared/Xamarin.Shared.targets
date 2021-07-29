@@ -37,7 +37,6 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.ACTool" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.ALToolUpload" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.ALToolValidate" AssemblyFile="$(_TaskAssemblyName)" />
-	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.Archive" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.BTouch" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.CodesignVerify" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.CollectAssetPacks" AssemblyFile="$(_TaskAssemblyName)" />
@@ -76,7 +75,6 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 	<!-- Xamarin.Mac-specific tasks. Some of these are duplicated with the Xamarin.iOS ones above, and should eventually be re-namespaced to be in Xamarin.MacDev -->
 	<UsingTask Condition="'$(_PlatformName)' == 'macOS'" TaskName="Xamarin.Mac.Tasks.ACTool" AssemblyFile="$(_TaskAssemblyName)" />
-	<UsingTask Condition="'$(_PlatformName)' == 'macOS'" TaskName="Xamarin.Mac.Tasks.Archive" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' == 'macOS'" TaskName="Xamarin.Mac.Tasks.BTouch" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' == 'macOS'" TaskName="Xamarin.Mac.Tasks.CodesignVerify" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' == 'macOS'" TaskName="Xamarin.Mac.Tasks.CompileAppManifest" AssemblyFile="$(_TaskAssemblyName)" />
@@ -95,6 +93,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<UsingTask Condition="'$(_PlatformName)' == 'macOS'" TaskName="Xamarin.Mac.Tasks.TextureAtlas" AssemblyFile="$(_TaskAssemblyName)" />
 
 	<!-- Tasks shared between Xamarin.iOS and Xamarin.Mac -->
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.Archive" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.ArTool" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.AOTCompile" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.Codesign" AssemblyFile="$(_TaskAssemblyName)" />
@@ -1016,6 +1015,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			NoDSymUtil="$(_NoDSymUtil)"
 			>
 			<Output TaskParameter="CustomBundleName" PropertyName="_CustomBundleName" />
+			<Output TaskParameter="DlSym" ItemName="_BundlerDlsym" />
 			<Output TaskParameter="EnvironmentVariables" ItemName="_BundlerEnvironmentVariables" />
 			<Output TaskParameter="MarshalManagedExceptionMode" PropertyName="_MarshalManagedExceptionMode" />
 			<Output TaskParameter="MarshalObjectiveCExceptionMode" PropertyName="_MarshalObjectiveCExceptionMode" />
@@ -1555,6 +1555,46 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</SpotlightIndexer>
 	</Target>
 
+	<PropertyGroup>
+		<ArchiveDependsOn>
+			_CoreArchive
+		</ArchiveDependsOn>
+	</PropertyGroup>
+
+	<Target Name="Archive" Condition="'$(_CanArchive)' == 'true'" DependsOnTargets="$(ArchiveDependsOn)" />
+
+	<Target Name="_CoreArchive" Condition="'$(ArchiveOnBuild)' == 'true'" DependsOnTargets="Codesign">
+		<Error Text="Code signing must be enabled to create an Xcode archive." Condition="'$(_CodeSigningKey)' == '' And '$(_PlatformName)' != 'macOS' And '$(_PlatformName)' != 'MacCatalyst'" />
+
+		<CollectITunesSourceFiles
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true' And '@(_ITunesSourceFile)' == '' And '$(_PlatformName)' != 'macOS' And '$(_PlatformName)' != 'MacCatalyst'"
+			OutputPath="$(DeviceSpecificOutputPath)"
+			>
+			<Output TaskParameter="ITunesSourceFiles" PropertyName="_ITunesSourceFile"/>
+		</CollectITunesSourceFiles>
+
+		<Archive
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			AppBundleDir="$(AppBundleDir)"
+			AppExtensionReferences="@(_ResolvedAppExtensionReferences)"
+			CustomBundleName="$(_CustomBundleName)"
+			InsightsApiKey="$(XamarinInsightsApiKey)"
+			ITunesSourceFiles="@(_ITunesSourceFile)"
+			OutputPath="$(DeviceSpecificOutputPath)"
+			ProjectGuid="$(ProjectGuid)"
+			ProjectName="$(MSBuildProjectName)"
+			ProjectTypeGuids="$(ProjectTypeGuids)"
+			SigningKey="$(_CodeSigningKey)"
+			SolutionPath="$(SolutionPath)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+			WatchAppReferences="@(_ResolvedWatchAppReferences)"
+			>
+			<Output TaskParameter="ArchiveDir" PropertyName="ArchiveDir"/>
+		</Archive>
+	</Target>
+
 	<Target Name="_GenerateBundleName" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_ComputeTargetArchitectures;_ParseBundlerArguments">
 		<PropertyGroup Condition="'$(AppBundleDir)' == ''">
 			<AppBundleDir Condition="'$(IsAppDistribution)' != 'true'">$(DeviceSpecificOutputPath)$(_AppBundleName)$(AppBundleExtension)</AppBundleDir>
@@ -1580,6 +1620,54 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			</_AppExtensionBundlePath>
 		</ItemGroup>
 	</Target>
+
+	<Target Name="_CompileProductDefinition" Condition="$(CreatePackage)" DependsOnTargets="_DetectAppManifest;_ComputeTargetArchitectures">
+		<CompileProductDefinition
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			AppManifest="$(_AppManifest)"
+			OutputDirectory="$(IntermediateOutputPath)"
+			ProductDefinition="$(ProductDefinition)"
+			TargetArchitectures="$(TargetArchitectures)"
+		>
+			<Output TaskParameter="CompiledProductDefinition" PropertyName="_CompiledProductDefinition" />
+		</CompileProductDefinition>
+	</Target>
+
+	<Target Name="_CreateInstaller" Condition="$(CreatePackage)" DependsOnTargets="Codesign;_CompileProductDefinition">
+		<CreateInstallerPackage
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			AppBundleDir="$(AppBundleDir)"
+			AppManifest="$(_AppManifest)"
+			EnablePackageSigning="$(EnablePackageSigning)"
+			MainAssembly="$(TargetPath)"
+			Name="$(AssemblyName)"
+			OutputDirectory="$(TargetDir)"
+			PackageSigningKey="$(PackageSigningKey)"
+			PackagingExtraArgs="$(PackagingExtraArgs)"
+			ProductDefinition="$(_CompiledProductDefinition)"
+			ProjectPath="$(MSBuildProjectFullPath)"
+		>
+		</CreateInstallerPackage>
+	</Target>
+
+	<PropertyGroup>
+		<!-- Extensibility point for VS Publishing Workflow -->
+		<_BeforeCreateIpaForDistributionDependsOn />
+
+		<CreateIpaDependsOn>
+			_BeforeCreateIpaForDistribution;
+			_CompileEntitlements;
+			_CoreCreateIpa;
+			_PackageOnDemandResources;
+			_ZipIpa
+		</CreateIpaDependsOn>
+	</PropertyGroup>
+
+	<Target Name="_BeforeCreateIpaForDistribution" Condition="'$(IsAppDistribution)' == 'true'" DependsOnTargets="$(_BeforeCreateIpaForDistributionDependsOn)" />
+
+	<Target Name="CreateIpa" Condition="'$(_CanArchive)' == 'true' And '$(_PlatformName)' != 'macOS' And '$(_PlatformName)' != 'MacCatalyst'" DependsOnTargets="$(CreateIpaDependsOn)" />
 
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Shared.ObjCBinding.targets" Condition="'$(IsBindingProject)' == 'true'" />
 
