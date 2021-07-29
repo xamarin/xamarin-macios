@@ -729,6 +729,12 @@ mono_jit_exec (MonoDomain * domain, MonoAssembly * assembly, int argc, const cha
 
 	char *assemblyPath = xamarin_bridge_get_assembly_location (assembly->gchandle);
 
+	if (argc > 0) {
+		// The first argument is to the native executable, which we don't want to pass on to native code.
+		argc--;
+		argv = &argv [1];
+	}
+
 	LOG_CORECLR (stderr, "mono_jit_exec (%p, %p, %i, %p) => EXECUTING %s\n", domain, assembly, argc, argv, assemblyPath);
 	for (int i = 0; i < argc; i++) {
 		LOG_CORECLR (stderr, "    Argument #%i: %s\n", i + 1, argv [i]);

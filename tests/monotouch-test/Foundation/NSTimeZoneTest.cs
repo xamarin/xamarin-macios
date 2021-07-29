@@ -39,9 +39,6 @@ namespace MonoTouchFixtures.Foundation {
 		}
 
 		[Test]
-#if NET && __MACCATALYST__
-		[Ignore ("https://github.com/dotnet/runtime/issues/55941")]
-#endif
 		public void All_28300 ()
 		{
 			foreach (var name in NSTimeZone.KnownTimeZoneNames) {
