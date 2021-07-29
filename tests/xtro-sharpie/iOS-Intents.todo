@@ -1,5 +1,9 @@
 !deprecated-attribute-missing! INAppendToNoteIntent missing a [Deprecated] attribute
 !deprecated-attribute-missing! INAppendToNoteIntentResponse missing a [Deprecated] attribute
+!deprecated-attribute-missing! INBillDetails missing a [Deprecated] attribute
+!deprecated-attribute-missing! INBillPayee missing a [Deprecated] attribute
+!deprecated-attribute-missing! INBillPayeeResolutionResult missing a [Deprecated] attribute
+!deprecated-attribute-missing! INBillTypeResolutionResult missing a [Deprecated] attribute
 !deprecated-attribute-missing! INCarAirCirculationModeResolutionResult missing a [Deprecated] attribute
 !deprecated-attribute-missing! INCarAudioSourceResolutionResult missing a [Deprecated] attribute
 !deprecated-attribute-missing! INCarDefrosterResolutionResult missing a [Deprecated] attribute
@@ -75,4 +79,5 @@
 !missing-type! INSendMessageIntentDonationMetadata not bound
 !missing-type! INShareFocusStatusIntent not bound
 !missing-type! INShareFocusStatusIntentResponse not bound
+## appended from unclassified file
 ## appended from unclassified file

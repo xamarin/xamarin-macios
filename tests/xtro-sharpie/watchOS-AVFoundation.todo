@@ -84,6 +84,7 @@
 !missing-selector! AVPlayerInterstitialEventMonitor::initWithPrimaryPlayer: not bound
 !missing-selector! AVPlayerInterstitialEventMonitor::interstitialPlayer not bound
 !missing-selector! AVPlayerInterstitialEventMonitor::primaryPlayer not bound
+!missing-selector! AVPlayerItem::copy not bound
 !missing-selector! AVPlayerItem::preferredPeakBitRateForExpensiveNetworks not bound
 !missing-selector! AVPlayerItem::setPreferredPeakBitRateForExpensiveNetworks: not bound
 !missing-selector! AVURLAsset::findCompatibleTrackForCompositionTrack:completionHandler: not bound

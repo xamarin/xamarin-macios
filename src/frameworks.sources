@@ -729,6 +729,7 @@ FINDERSYNC_CORE_SOURCES = \
 FOUNDATION_API_SOURCES = \
 	Foundation/Enum.cs \
 	Foundation/Enums.cs \
+	Foundation/EnumDesktop.cs \
 
 FOUNDATION_CORE_SOURCES = \
 	Foundation/AdviceAttribute.cs \
@@ -759,7 +760,6 @@ FOUNDATION_CORE_SOURCES = \
 	Foundation/RegisterAttribute.cs \
 	Foundation/NSObject.iOS.cs \
 	Foundation/NSAttributedString.iOS.cs \
-	Foundation/EnumDesktop.cs \
 	Foundation/NSObject.mac.cs \
 	Foundation/NSDateComponents.cs \
 	Foundation/XpcInterfaceAttribute.cs \
@@ -919,6 +919,7 @@ HEALTHKIT_API_SOURCES = \
 
 HEALTHKIT_SOURCES = \
 	HealthKit/EnumsCompat.cs \
+	HealthKit/HKAppleWalkingSteadiness.cs \
 	HealthKit/HKAnchoredObjectQuery.cs \
 	HealthKit/HKObjectType.cs \
 	HealthKit/HKObsolete.cs \
@@ -2204,6 +2205,7 @@ TVOS_FRAMEWORKS =           \
 
 MACCATALYST_FRAMEWORKS = \
 	$(COMMON_FRAMEWORKS) \
+	AppKit \
 	AVKit \
 	Accounts \
 	AdServices \

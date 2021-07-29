@@ -1015,6 +1015,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			NoDSymUtil="$(_NoDSymUtil)"
 			>
 			<Output TaskParameter="CustomBundleName" PropertyName="_CustomBundleName" />
+			<Output TaskParameter="DlSym" ItemName="_BundlerDlsym" />
 			<Output TaskParameter="EnvironmentVariables" ItemName="_BundlerEnvironmentVariables" />
 			<Output TaskParameter="MarshalManagedExceptionMode" PropertyName="_MarshalManagedExceptionMode" />
 			<Output TaskParameter="MarshalObjectiveCExceptionMode" PropertyName="_MarshalObjectiveCExceptionMode" />
@@ -1567,7 +1568,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 		<CollectITunesSourceFiles
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '@(_ITunesSourceFile)' == ''"
+			Condition="'$(IsMacEnabled)' == 'true' And '@(_ITunesSourceFile)' == '' And '$(_PlatformName)' != 'macOS' And '$(_PlatformName)' != 'MacCatalyst'"
 			OutputPath="$(DeviceSpecificOutputPath)"
 			>
 			<Output TaskParameter="ITunesSourceFiles" PropertyName="_ITunesSourceFile"/>
@@ -1619,6 +1620,54 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			</_AppExtensionBundlePath>
 		</ItemGroup>
 	</Target>
+
+	<Target Name="_CompileProductDefinition" Condition="$(CreatePackage)" DependsOnTargets="_DetectAppManifest;_ComputeTargetArchitectures">
+		<CompileProductDefinition
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			AppManifest="$(_AppManifest)"
+			OutputDirectory="$(IntermediateOutputPath)"
+			ProductDefinition="$(ProductDefinition)"
+			TargetArchitectures="$(TargetArchitectures)"
+		>
+			<Output TaskParameter="CompiledProductDefinition" PropertyName="_CompiledProductDefinition" />
+		</CompileProductDefinition>
+	</Target>
+
+	<Target Name="_CreateInstaller" Condition="$(CreatePackage)" DependsOnTargets="Codesign;_CompileProductDefinition">
+		<CreateInstallerPackage
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			AppBundleDir="$(AppBundleDir)"
+			AppManifest="$(_AppManifest)"
+			EnablePackageSigning="$(EnablePackageSigning)"
+			MainAssembly="$(TargetPath)"
+			Name="$(AssemblyName)"
+			OutputDirectory="$(TargetDir)"
+			PackageSigningKey="$(PackageSigningKey)"
+			PackagingExtraArgs="$(PackagingExtraArgs)"
+			ProductDefinition="$(_CompiledProductDefinition)"
+			ProjectPath="$(MSBuildProjectFullPath)"
+		>
+		</CreateInstallerPackage>
+	</Target>
+
+	<PropertyGroup>
+		<!-- Extensibility point for VS Publishing Workflow -->
+		<_BeforeCreateIpaForDistributionDependsOn />
+
+		<CreateIpaDependsOn>
+			_BeforeCreateIpaForDistribution;
+			_CompileEntitlements;
+			_CoreCreateIpa;
+			_PackageOnDemandResources;
+			_ZipIpa
+		</CreateIpaDependsOn>
+	</PropertyGroup>
+
+	<Target Name="_BeforeCreateIpaForDistribution" Condition="'$(IsAppDistribution)' == 'true'" DependsOnTargets="$(_BeforeCreateIpaForDistributionDependsOn)" />
+
+	<Target Name="CreateIpa" Condition="'$(_CanArchive)' == 'true' And '$(_PlatformName)' != 'macOS' And '$(_PlatformName)' != 'MacCatalyst'" DependsOnTargets="$(CreateIpaDependsOn)" />
 
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Shared.ObjCBinding.targets" Condition="'$(IsBindingProject)' == 'true'" />
 
