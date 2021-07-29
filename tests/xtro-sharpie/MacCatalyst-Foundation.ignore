@@ -14,3 +14,9 @@
 !missing-enum! NSAppleEventSendOptions not bound
 !missing-enum! NSTaskTerminationReason not bound
 !missing-enum! NSUserNotificationActivationType not bound
+
+# unsorted
+!missing-enum! NSInsertionPosition not bound
+!missing-enum! NSRelativePosition not bound
+!missing-enum! NSSaveOptions not bound
+!missing-enum! NSTestComparisonOperation not bound
