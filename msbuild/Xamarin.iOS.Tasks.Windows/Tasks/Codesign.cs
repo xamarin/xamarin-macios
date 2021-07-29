@@ -8,8 +8,7 @@ using Xamarin.iOS.Tasks.Windows.Properties;
 using Xamarin.iOS.Windows;
 
 namespace Xamarin.iOS.HotRestart.Tasks {
-	public class Codesign : Task, ICancelableTask
-	{
+	public class Codesign : Task, ICancelableTask {
 		CancellationTokenSource cancellationSource;
 
 		#region Inputs
@@ -28,7 +27,7 @@ namespace Xamarin.iOS.HotRestart.Tasks {
 
 		#endregion
 
-		public override bool Execute()
+		public override bool Execute ()
 		{
 			try {
 				var hotRestartClient = new HotRestartClient ();
@@ -54,7 +53,7 @@ namespace Xamarin.iOS.HotRestart.Tasks {
 			return !Log.HasLoggedErrors;
 		}
 
-		public void Cancel() => cancellationSource?.Cancel();
+		public void Cancel () => cancellationSource?.Cancel ();
 
 		string GetFullExceptionMesage (Exception ex)
 		{

@@ -4,10 +4,8 @@ using System.IO;
 using System.IO.Compression;
 using Xamarin.iOS.Windows;
 
-namespace Xamarin.iOS.HotRestart.Tasks
-{
-	public class PrepareAppBundle : Task
-	{
+namespace Xamarin.iOS.HotRestart.Tasks {
+	public class PrepareAppBundle : Task {
 		#region Inputs
 
 		[Required]
@@ -28,18 +26,17 @@ namespace Xamarin.iOS.HotRestart.Tasks
 
 		#endregion
 
-		public override bool Execute()
+		public override bool Execute ()
 		{
-			AppBundlePath = HotRestartContext.Default.GetAppBundlePath(AppBundleName, SessionId.Substring (0, 8));
+			AppBundlePath = HotRestartContext.Default.GetAppBundlePath (AppBundleName, SessionId.Substring (0, 8));
 
-			if (!Directory.Exists(AppBundlePath) && ShouldExtract)
-			{
-				var preBuiltAppBundlePath = Path.Combine(
-					Path.GetDirectoryName(typeof(PrepareAppBundle).Assembly.Location),
+			if (!Directory.Exists (AppBundlePath) && ShouldExtract) {
+				var preBuiltAppBundlePath = Path.Combine (
+					Path.GetDirectoryName (typeof (PrepareAppBundle).Assembly.Location),
 					"Xamarin.PreBuilt.iOS.app.zip");
 
-				ZipFile.ExtractToDirectory(preBuiltAppBundlePath, AppBundlePath);
-				File.WriteAllText(Path.Combine(AppBundlePath, "Extracted"), string.Empty);
+				ZipFile.ExtractToDirectory (preBuiltAppBundlePath, AppBundlePath);
+				File.WriteAllText (Path.Combine (AppBundlePath, "Extracted"), string.Empty);
 			}
 
 			return true;
