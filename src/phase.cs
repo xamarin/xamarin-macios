@@ -191,19 +191,16 @@ namespace Phase {
 	[Mac (12,0), NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
 	[Native]
 	public enum PhaseMediumPreset : long {
-		Default = 1835287654,
-		RoomAir = 1835291201,
+		PresetAir = 1835286898,
 	}
 
 	[Mac (12,0), NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
 	[Native]
 	public enum PhaseMaterialPreset : long {
-		Default = 1833198950,
 		Cardboard = 1833136740,
 		Glass = 1833397363,
 		Brickwork = 1833071211,
 		Concrete = 1833132914,
-		GypsumBoard = 1833400688,
 		Drywall = 1833202295,
 		Wood = 1834448228,
 	}
