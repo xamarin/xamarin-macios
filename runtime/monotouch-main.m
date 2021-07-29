@@ -426,12 +426,9 @@ xamarin_main (int argc, char *argv[], enum XamarinLaunchMode launch_mode)
 	xamarin_initialize ();
 	DEBUG_LAUNCH_TIME_PRINT ("\tmonotouch init time");
 
-#if defined (__arm__) || defined(__aarch64__)
-	xamarin_register_assemblies ();
-	assembly = xamarin_open_and_register (xamarin_executable_name, &exception_gchandle);
-	if (exception_gchandle != NULL)
-		xamarin_process_managed_exception_gchandle (exception_gchandle);
-#else
+	if (xamarin_register_assemblies != NULL)
+		xamarin_register_assemblies ();
+
 	if (xamarin_executable_name) {
 		assembly = xamarin_open_and_register (xamarin_executable_name, &exception_gchandle);
 		if (exception_gchandle != NULL)
@@ -455,7 +452,6 @@ xamarin_main (int argc, char *argv[], enum XamarinLaunchMode launch_mode)
 		if (exception_gchandle != NULL)
 			xamarin_process_managed_exception_gchandle (exception_gchandle);
 	}
-#endif
 
 	DEBUG_LAUNCH_TIME_PRINT ("\tAssembly register time");
 

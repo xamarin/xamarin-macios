@@ -1015,28 +1015,28 @@
         <value>パッケージの製品要件ファイルに、ターゲット アーキテクチャ ({1}) と一致しないアーキテクチャ ({0}) が含まれています</value>
     </data>
   <data name="E7073" xml:space="preserve">
-        <value>At least one app bundle must be specified.</value>
+        <value>少なくとも 1 つのアプリ バンドルを指定する必要があります。</value>
     </data>
   <data name="E7074" xml:space="preserve">
-        <value>The app bundle {0} does not exist.</value>
+        <value>アプリ バンドル {0} が存在しません。</value>
     </data>
   <data name="E7075" xml:space="preserve">
-        <value>No 'SpecificSubDirectory' metadata was provided for the app bundle {0}.</value>
+        <value>アプリ バンドル {0} に対して、'SpecificSubDirectory' メタデータが指定されていません。</value>
     </data>
   <data name="E7076" xml:space="preserve">
-        <value>Can't merge the symlink '{0}', it has different targets.</value>
+        <value>シンボリックリンク '{0}' をマージできません。ターゲットが異なります。</value>
     </data>
   <data name="E7077" xml:space="preserve">
-        <value>Unable to merge the file '{0}', it's different between the input app bundles.</value>
+        <value>ファイル '{0}' をマージできません。入力アプリ バンドル間で異なります。</value>
     </data>
   <data name="E7078" xml:space="preserve">
-        <value>Invalid app bundle: the Mach-O file {0} has dependent files.</value>
+        <value>無効なアプリ バンドル: Mach-O ファイル {0} に依存ファイルがあります。</value>
     </data>
   <data name="E7079" xml:space="preserve">
-        <value>Invalid app bundle: the file {0} has different types between the input app bundles.</value>
+        <value>無効なアプリ バンドル: ファイル {0} の入力アプリ バンドル間の種類が異なります。</value>
     </data>
   <data name="E7080" xml:space="preserve">
-        <value>App bundle file #{0}: {1}</value>
+        <value>アプリ バンドル ファイル #{0}: {1}</value>
         <comment>
             This error will be shown multiple times, listing the full path to the files causing E7076, E7077 and E7079.
             {0}: a number indicating which input app bundle the file is from

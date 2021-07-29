@@ -109,6 +109,7 @@ extern enum MarshalManagedExceptionMode xamarin_marshal_managed_exception_mode;
 extern enum XamarinLaunchMode xamarin_launch_mode;
 extern bool xamarin_supports_dynamic_registration;
 extern const char *xamarin_runtime_configuration_name;
+extern const char *xamarin_mono_native_lib_name;
 
 typedef void (*xamarin_setup_callback) ();
 typedef int (*xamarin_extension_main_callback) (int argc, char** argv);

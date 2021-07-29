@@ -186,7 +186,7 @@ namespace CoreAnimation {
 	}
 
 	[BaseType (typeof (NSObject))]
-	[Dispose ("OnDispose ();")]
+	[Dispose ("OnDispose ();", Optimizable = true)]
 	interface CALayer : CAMediaTiming, NSSecureCoding {
 		[Export ("layer")][Static]
 		CALayer Create ();
@@ -432,7 +432,7 @@ namespace CoreAnimation {
 		string Name { get; set; }
 
 		[Export ("delegate", ArgumentSemantic.Weak)][NullAllowed]
-		NSObject WeakDelegate { get; [PostSnippet (@"SetCALayerDelegate (value as CALayerDelegate);")] set; }
+		NSObject WeakDelegate { get; [PostSnippet (@"SetCALayerDelegate (value as CALayerDelegate);", Optimizable = true)] set; }
 
 		[Wrap ("WeakDelegate")]
 		[Protocolize]

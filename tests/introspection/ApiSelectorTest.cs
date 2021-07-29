@@ -823,6 +823,18 @@ namespace Introspection {
 					break;
 				}
 				break;
+			case "MTLCommandBufferDescriptor":
+				switch (selectorName) {
+				case "errorOptions":
+				case "setErrorOptions:":
+				case "retainedReferences":
+				case "setRetainedReferences:":
+					// iOS 15 sim (and macOS 12) fails, API added in 14.0
+					if (TestRuntime.CheckXcodeVersion (13, 0))
+						return true;
+					break;
+				}
+				break;
 			}
 
 			// old binding mistake
