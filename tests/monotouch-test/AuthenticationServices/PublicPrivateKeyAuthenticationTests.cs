@@ -27,7 +27,17 @@ namespace MonoTouchFixtures.AuthenticationServices {
 		[Test]
 		public void GetAllSupportedPublicKeyCredentialDescriptorTransports ()
 		{
+			var transports = PublicPrivateKeyAuthentication.GetAllSupportedPublicKeyCredentialDescriptorTransports ();
 			Assert.IsNotNull (PublicPrivateKeyAuthentication.GetAllSupportedPublicKeyCredentialDescriptorTransports (), "The transports should not be null");
+
+			// since there is no default enum value, make sure there is not
+			// more than one ASAuthorizationSecurityKeyPublicKeyCredentialDescriptorTransport.Usb
+			var usbCounter = 0;
+			foreach (var transport in transports) {
+				if (transport == ASAuthorizationSecurityKeyPublicKeyCredentialDescriptorTransport.Usb)
+					usbCounter++;
+			}
+			Assert.LessOrEqual (usbCounter, 1, "There were multiple usb transports found. Add any new transports to src/AuthenticationServices/PublicPrivateKeyAuthentication.cs");
 		}
 	}
 }

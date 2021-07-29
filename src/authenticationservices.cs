@@ -1009,11 +1009,12 @@ namespace AuthenticationServices {
 		Es256 = -7,
 	}
 
-	[Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoWatch, NoTV]
-	[Native]
-	enum ASCOSEEllipticCurveIdentifier : long {
-		P256 = 1,
-	}
+	// Introduced in Xcode13 Beta3 but not used anywhere
+	// [Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoWatch, NoTV]
+	// [Native]
+	// enum ASCOSEEllipticCurveIdentifier : long {
+	// 	P256 = 1,
+	// }
 
 	interface IASAuthorizationPublicKeyCredentialAssertion { }
 
