@@ -127,6 +127,9 @@ namespace Introspection {
 				case "HMCharacteristicMetadata":
 				case "HMAccessoryCategory":
 					return true;
+				// Xcode 13
+				case "HKVerifiableClinicalRecord":
+					return true;
 				}
 				break;
 			case "NSMutableCopying":

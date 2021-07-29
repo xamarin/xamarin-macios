@@ -32,7 +32,10 @@ using Foundation;
 namespace AppKit
 {
 	[Register ("__monomac_internal_ActionDispatcher")]
-	internal class ActionDispatcher : NSObject, INSMenuValidation // INSMenuValidation needed for using the Activated method of NSMenuItems if you want to be able to validate
+	internal class ActionDispatcher : NSObject
+#if !__MACCATALYST__
+		, INSMenuValidation // INSMenuValidation needed for using the Activated method of NSMenuItems if you want to be able to validate
+#endif
 	{
 		const string skey = "__monomac_internal_ActionDispatcher_activated:";
 		const string dkey = "__monomac_internal_ActionDispatcher_doubleActivated:";
@@ -40,7 +43,9 @@ namespace AppKit
 		public static Selector DoubleAction = new Selector (dkey);
 		public EventHandler Activated;
 		public EventHandler DoubleActivated;
+#if !__MACCATALYST__
 		public Func<NSMenuItem, bool> ValidateMenuItemFunc;
+#endif // !__MACCATALYST__
 
 		[Preserve, Export (skey)]
 		public void OnActivated (NSObject sender)
@@ -105,6 +110,7 @@ namespace AppKit
 			ctarget.DoubleActivated -= doubleHandler;
 		}
 
+#if !__MACCATALYST__
 		public bool ValidateMenuItem (NSMenuItem menuItem)
 		{
 			if (ValidateMenuItemFunc != null)
@@ -112,6 +118,7 @@ namespace AppKit
 
 			return true;
 		}
+#endif // !__MACCATALYST__
 
 		[Preserve]
 		public bool WorksWhenModal {

@@ -854,7 +854,8 @@ namespace GameKit {
 		Action<NSViewController, NSError> AuthenticateHandler { get; set; }
 #endif
 
-		[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[NoWatch, NoTV, Mac (12,0), iOS (15,0)]
+		[NoMacCatalyst]
 		[Export ("isPresentingFriendRequestViewController")]
 		bool IsPresentingFriendRequestViewController { get; }
 

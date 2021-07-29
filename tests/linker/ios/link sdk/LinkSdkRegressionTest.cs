@@ -656,10 +656,6 @@ namespace LinkSdk {
 		[Test]
 		public void NetworkInterface_4631 ()
 		{
-#if NET
-			if (Runtime.Arch == Arch.DEVICE)
-				Assert.Ignore ("https://github.com/dotnet/runtime/issues/47120");
-#endif
 			Assert.NotNull (NetworkInterface.GetAllNetworkInterfaces ());
 		}
 		

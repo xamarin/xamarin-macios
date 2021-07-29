@@ -82,6 +82,216 @@ namespace UIKit {
 	delegate void NSTextLayoutEnumerateEnclosingRects (CGRect rect, ref bool stop);
 #endif
 
+	// NSInteger -> NSLayoutManager.h
+	[Native]
+	[Flags]
+	[NoWatch]
+	[Mac (10,11)]
+	[MacCatalyst (13,0)]
+	public enum NSControlCharacterAction : long {
+		ZeroAdvancement = (1 << 0),
+		Whitespace = (1 << 1),
+		HorizontalTab = (1 << 2),
+		LineBreak = (1 << 3),
+		ParagraphBreak = (1 << 4),
+		ContainerBreak = (1 << 5),
+
+#if !XAMCORE_4_0 && !__MACCATALYST__ && !MONOMAC
+		[Obsolete ("Use 'ZeroAdvancement' instead.")]
+		ZeroAdvancementAction = ZeroAdvancement,
+		[Obsolete ("Use 'Whitespace' instead.")]
+		WhitespaceAction = Whitespace,
+		[Obsolete ("Use 'HorizontalTab' instead.")]
+		HorizontalTabAction = HorizontalTab,
+		[Obsolete ("Use 'LineBreak' instead.")]
+		LineBreakAction = LineBreak,
+		[Obsolete ("Use 'ParagraphBreak' instead.")]
+		ParagraphBreakAction = ParagraphBreak,
+		[Obsolete ("Use 'ContainerBreak' instead.")]
+		ContainerBreakAction = ContainerBreak,
+#endif
+	}
+
+	[Mac (10,15), Watch (6,0), TV (13,0), iOS (13,0), MacCatalyst (13,0)]
+	[Flags]
+	[Native]
+	public enum NSDirectionalRectEdge : ulong
+	{
+		None = 0x0,
+		Top = 1uL << 0,
+		Leading = 1uL << 1,
+		Bottom = 1uL << 2,
+		Trailing = 1uL << 3,
+		All = Top | Leading | Bottom | Trailing,
+	}
+
+	// NSInteger -> NSLayoutManager.h
+	[NoWatch]
+	[Mac (10,11)]
+	[MacCatalyst (13,0)]
+	[Native]
+	public enum NSGlyphProperty : long {
+		Null = (1 << 0),
+		ControlCharacter = (1 << 1),
+		Elastic = (1 << 2),
+		NonBaseCharacter = (1 << 3),
+	}
+
+	// NSInteger -> NSLayoutConstraint.h
+	[Native]
+	[NoWatch]
+	[MacCatalyst (13,0)]
+	public enum NSLayoutAttribute : long {
+		NoAttribute = 0,
+		Left = 1,
+		Right,
+		Top,
+		Bottom,
+		Leading,
+		Trailing,
+		Width,
+		Height,
+		CenterX,
+		CenterY,
+		Baseline,
+		[Mac (10,11)]
+		LastBaseline = Baseline,
+		[Mac (10,11)]
+		FirstBaseline,
+
+		[NoMac]
+		[iOS (8,0)]
+		LeftMargin,
+		[NoMac]
+		[iOS (8,0)]
+		RightMargin,
+		[NoMac]
+		[iOS (8,0)]
+		TopMargin,
+		[NoMac]
+		[iOS (8,0)]
+		BottomMargin,
+		[NoMac]
+		[iOS (8,0)]
+		LeadingMargin,
+		[NoMac]
+		[iOS (8,0)]
+		TrailingMargin,
+		[NoMac]
+		[iOS (8,0)]
+		CenterXWithinMargins,
+		[NoMac]
+		[iOS (8,0)]
+		CenterYWithinMargins,
+	}
+
+	// NSUInteger -> NSLayoutConstraint.h
+	[Native]
+	[Flags]
+	[NoWatch]
+	[MacCatalyst (13,0)]
+	public enum NSLayoutFormatOptions : ulong {
+		None = 0,
+
+		AlignAllLeft = (1 << (int) NSLayoutAttribute.Left),
+		AlignAllRight = (1 << (int) NSLayoutAttribute.Right),
+		AlignAllTop = (1 << (int) NSLayoutAttribute.Top),
+		AlignAllBottom = (1 << (int) NSLayoutAttribute.Bottom),
+		AlignAllLeading = (1 << (int) NSLayoutAttribute.Leading),
+		AlignAllTrailing = (1 << (int) NSLayoutAttribute.Trailing),
+		AlignAllCenterX = (1 << (int) NSLayoutAttribute.CenterX),
+		AlignAllCenterY = (1 << (int) NSLayoutAttribute.CenterY),
+		AlignAllBaseline = (1 << (int) NSLayoutAttribute.Baseline),
+		[Mac (10,11)]
+		AlignAllLastBaseline = (1 << (int) NSLayoutAttribute.LastBaseline),
+		[Mac (10,11)]
+		AlignAllFirstBaseline = (1 << (int) NSLayoutAttribute.FirstBaseline),
+
+		AlignmentMask = 0xFFFF,
+
+		/* choose only one of these three
+		 */
+		DirectionLeadingToTrailing = 0 << 16, // default
+		DirectionLeftToRight = 1 << 16,
+		DirectionRightToLeft = 2 << 16,
+
+		[NoMac]
+		SpacingEdgeToEdge = 0 << 19,
+		[NoMac]
+		SpacingBaselineToBaseline = 1 << 19,
+		[NoMac]
+		SpacingMask = 1 << 19,
+
+		DirectionMask = 0x3 << 16,
+	}
+
+	// NSInteger -> UITextInput.h
+	[Native]
+	[NoWatch]
+	[MacCatalyst (13,0)]
+	public enum NSLayoutRelation : long {
+		LessThanOrEqual = -1,
+		Equal = 0,
+		GreaterThanOrEqual = 1,
+	}
+
+	[Watch (7,0), TV (14,0), iOS (14,0)]
+	[Mac (11,0)]
+	[MacCatalyst (13,0)]
+	[Flags]
+	[Native]
+	public enum NSLineBreakStrategy : ulong {
+		None = 0x0,
+		PushOut = 1uL << 0,
+		HangulWordPriority = 1uL << 1,
+		Standard = 0xffff,
+	}
+
+	[Watch (6,0), TV (13,0), iOS (13,0)]
+	[Mac (10,15)]
+	[MacCatalyst (13,0)]
+	[Native]
+	public enum NSRectAlignment : long
+	{
+		None = 0,
+		Top,
+		TopLeading,
+		Leading,
+		BottomLeading,
+		Bottom,
+		BottomTrailing,
+		Trailing,
+		TopTrailing,
+	}
+
+	[Mac (10,15), iOS (13,0), TV (13,0)]
+	[MacCatalyst (13,0)]
+	[Native]
+	public enum NSTextScalingType : long
+	{
+		Standard = 0,
+		iOS,
+	}
+
+	// NSInteger -> NSLayoutManager.h
+	[Native]
+	[NoWatch]
+	[MacCatalyst (13,0)]
+	public enum NSTextLayoutOrientation : long {
+		Horizontal,
+		Vertical,
+	}
+
+	// NSUInteger -> NSTextStorage.h
+	[Mac (10,11)]
+	[Native]
+	[Flags]
+	[NoWatch]
+	public enum NSTextStorageEditActions : ulong {
+		Attributes = 1,
+		Characters = 2,
+	}
+
 	[NoWatch] // Header is not present in watchOS SDK.
 	[iOS (7,0)]
 	[DesignatedDefaultCtor]
