@@ -1015,28 +1015,28 @@
         <value>Le fichier d'exigences de produit de package contient des architectures ({0}) qui ne correspondent pas aux architectures cibles ({1})</value>
     </data>
   <data name="E7073" xml:space="preserve">
-        <value>At least one app bundle must be specified.</value>
+        <value>Au moins un ensemble d'applications doit être spécifié.</value>
     </data>
   <data name="E7074" xml:space="preserve">
-        <value>The app bundle {0} does not exist.</value>
+        <value>L’ensemble d'applications {0} n’existe pas.</value>
     </data>
   <data name="E7075" xml:space="preserve">
-        <value>No 'SpecificSubDirectory' metadata was provided for the app bundle {0}.</value>
+        <value>Aucune métadonnée « SpecificSubDirectory » n’a été fournie pour l’ensemble d'applications {0}.</value>
     </data>
   <data name="E7076" xml:space="preserve">
-        <value>Can't merge the symlink '{0}', it has different targets.</value>
+        <value>Impossible de fusionner le lien symbolique '{0}', il a des cibles différentes.</value>
     </data>
   <data name="E7077" xml:space="preserve">
-        <value>Unable to merge the file '{0}', it's different between the input app bundles.</value>
+        <value>Impossible de fusionner le fichier '{0}', car il est différent entre les packages d’application d’entrée.</value>
     </data>
   <data name="E7078" xml:space="preserve">
-        <value>Invalid app bundle: the Mach-O file {0} has dependent files.</value>
+        <value>L’ensemble d'applications non valide : le fichier Mach-O {0} a des fichiers dépendants.</value>
     </data>
   <data name="E7079" xml:space="preserve">
-        <value>Invalid app bundle: the file {0} has different types between the input app bundles.</value>
+        <value>L’ensemble d'applications non valide : le fichier {0} a des types différents entre les offres d’applications d’entrée.</value>
     </data>
   <data name="E7080" xml:space="preserve">
-        <value>App bundle file #{0}: {1}</value>
+        <value>Fichier d’ensemble d'applications #{0} : {1}</value>
         <comment>
             This error will be shown multiple times, listing the full path to the files causing E7076, E7077 and E7079.
             {0}: a number indicating which input app bundle the file is from

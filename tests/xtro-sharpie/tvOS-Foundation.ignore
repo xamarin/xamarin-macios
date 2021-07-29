@@ -15,7 +15,6 @@
 !missing-selector! NSXPCInterface::setInterface:forSelector:argumentIndex:ofReply: not bound
 
 # Initial result from new rule missing-null-allowed
-!missing-null-allowed! 'Foundation.NSCharacterSet Foundation.NSMutableCharacterSet::FromFile(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSData Foundation.NSNetService::GetTxtRecordData()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSData Foundation.NSUbiquitousKeyValueStore::GetData(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSData[] Foundation.NSNetService::get_Addresses()' is missing an [NullAllowed] on return type

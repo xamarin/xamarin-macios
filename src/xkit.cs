@@ -264,6 +264,34 @@ namespace UIKit {
 		TopTrailing,
 	}
 
+	[Mac (10,15), iOS (13,0), TV (13,0)]
+	[MacCatalyst (13,0)]
+	[Native]
+	public enum NSTextScalingType : long
+	{
+		Standard = 0,
+		iOS,
+	}
+
+	// NSInteger -> NSLayoutManager.h
+	[Native]
+	[NoWatch]
+	[MacCatalyst (13,0)]
+	public enum NSTextLayoutOrientation : long {
+		Horizontal,
+		Vertical,
+	}
+
+	// NSUInteger -> NSTextStorage.h
+	[Mac (10,11)]
+	[Native]
+	[Flags]
+	[NoWatch]
+	public enum NSTextStorageEditActions : ulong {
+		Attributes = 1,
+		Characters = 2,
+	}
+
 	[NoWatch] // Header is not present in watchOS SDK.
 	[iOS (7,0)]
 	[DesignatedDefaultCtor]

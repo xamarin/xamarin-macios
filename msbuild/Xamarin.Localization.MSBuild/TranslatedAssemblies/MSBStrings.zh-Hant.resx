@@ -1015,28 +1015,28 @@
         <value>套件產品需求檔案包含與目標結構 ({1}) 不符合的結構 ({0})</value>
     </data>
   <data name="E7073" xml:space="preserve">
-        <value>At least one app bundle must be specified.</value>
+        <value>至少必須指定一個應用程式套件組合。</value>
     </data>
   <data name="E7074" xml:space="preserve">
-        <value>The app bundle {0} does not exist.</value>
+        <value>應用程式套件組合 {0} 不存在。</value>
     </data>
   <data name="E7075" xml:space="preserve">
-        <value>No 'SpecificSubDirectory' metadata was provided for the app bundle {0}.</value>
+        <value>未替應用程式套件組合 {0} 提供 'SpecificSubDirectory' 中繼資料。</value>
     </data>
   <data name="E7076" xml:space="preserve">
-        <value>Can't merge the symlink '{0}', it has different targets.</value>
+        <value>無法合併符號連結 '{0}'，其具有不同的目標。</value>
     </data>
   <data name="E7077" xml:space="preserve">
-        <value>Unable to merge the file '{0}', it's different between the input app bundles.</value>
+        <value>無法合併檔案 '{0}'，其在輸入應用程式套件組合之間不相同。</value>
     </data>
   <data name="E7078" xml:space="preserve">
-        <value>Invalid app bundle: the Mach-O file {0} has dependent files.</value>
+        <value>應用程式套件組合無效: Mach-O 檔案 {0} 包含相依檔案。</value>
     </data>
   <data name="E7079" xml:space="preserve">
-        <value>Invalid app bundle: the file {0} has different types between the input app bundles.</value>
+        <value>應用程式套件組合無效: 在輸入應用程式套件組合之間，檔案 {0} 包含不同的類型。</value>
     </data>
   <data name="E7080" xml:space="preserve">
-        <value>App bundle file #{0}: {1}</value>
+        <value>應用程式套件組合檔案 #{0}: {1}</value>
         <comment>
             This error will be shown multiple times, listing the full path to the files causing E7076, E7077 and E7079.
             {0}: a number indicating which input app bundle the file is from
