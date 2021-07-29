@@ -1,3 +1,4 @@
+#if !__MACCATALYST__ // there's a version in UIKit, use that one instead
 using System;
 using CoreGraphics;
 using ObjCRuntime;
@@ -33,4 +34,4 @@ namespace AppKit
 		}
 	}
 }
-
+#endif // !__MACCATALYST__

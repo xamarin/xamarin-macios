@@ -1,3 +1,4 @@
+#if !__MACCATALYST__
 using System;
 using System.ComponentModel;
 
@@ -50,3 +51,4 @@ namespace AppKit {
 	}
 #endif
 }
+#endif // !__MACCATALYST__

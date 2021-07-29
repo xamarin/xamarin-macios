@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 
 using Mono.Cecil;
@@ -14,43 +15,7 @@ using Xamarin.MacDev;
 
 namespace Xamarin.Tests {
 	[TestFixture]
-	public class DotNetProjectTest {
-		Dictionary<string, string> verbosity = new Dictionary<string, string> {
-			{ "MtouchExtraArgs", "-v" },
-			{ "MonoBundlingExtraArgs", "-v" },
-		};
-
-		string GetProjectPath (string project, string subdir = null, ApplePlatform? platform = null)
-		{
-			var project_dir = Path.Combine (Configuration.SourceRoot, "tests", "dotnet", project);
-			if (!string.IsNullOrEmpty (subdir))
-				project_dir = Path.Combine (project_dir, subdir);
-
-			if (platform.HasValue)
-				project_dir = Path.Combine (project_dir, platform.Value.AsString ());
-
-			var project_path = Path.Combine (project_dir, project + ".csproj");
-			if (!File.Exists (project_path))
-				project_path = Path.ChangeExtension (project_path, "sln");
-
-			if (!File.Exists (project_path))
-				throw new FileNotFoundException ($"Could not find the project or solution {project} - {project_path} does not exist.");
-
-			return project_path;
-		}
-
-		void Clean (string project_path)
-		{
-			var dirs = Directory.GetDirectories (Path.GetDirectoryName (project_path), "*", SearchOption.AllDirectories);
-			dirs = dirs.OrderBy (v => v.Length).Reverse ().ToArray (); // If we have nested directories, make sure to delete the nested one first
-			foreach (var dir in dirs) {
-				var name = Path.GetFileName (dir);
-				if (name != "bin" && name != "obj")
-					continue;
-				Directory.Delete (dir, true);
-			}
-		}
-
+	public class DotNetProjectTest : TestBaseClass {
 		[Test]
 		[TestCase (null)]
 		[TestCase ("iossimulator-x86")]
@@ -581,8 +546,22 @@ namespace Xamarin.Tests {
 			properties ["UseMonoRuntime"] = "false";
 			var rv = DotNet.AssertBuild (project_path, properties);
 
+			AssertThatLinkerExecuted (rv);
 			var appPathRuntimeIdentifier = runtimeIdentifiers.IndexOf (';') >= 0 ? "" : runtimeIdentifiers;
-			var appPath = Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", "net6.0-macos", appPathRuntimeIdentifier, project + ".app");
+			var appPath = Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", platform.ToFramework (), appPathRuntimeIdentifier, project + ".app");
+			var infoPlistPath = GetInfoPListPath (platform, appPath);
+			Assert.That (infoPlistPath, Does.Exist, "Info.plist");
+			var infoPlist = PDictionary.FromFile (infoPlistPath);
+			Assert.AreEqual ("com.xamarin.mysimpleapp", infoPlist.GetString ("CFBundleIdentifier").Value, "CFBundleIdentifier");
+			Assert.AreEqual ("MySimpleApp", infoPlist.GetString ("CFBundleDisplayName").Value, "CFBundleDisplayName");
+			Assert.AreEqual ("3.14", infoPlist.GetString ("CFBundleVersion").Value, "CFBundleVersion");
+			Assert.AreEqual ("3.14", infoPlist.GetString ("CFBundleShortVersionString").Value, "CFBundleShortVersionString");
+
+			var appExecutable = Path.Combine (appPath, "Contents", "MacOS", Path.GetFileNameWithoutExtension (project_path));
+			Assert.That (appExecutable, Does.Exist, "There is an executable");
+			if (!(runtimeIdentifiers == "osx-arm64" && RuntimeInformation.ProcessArchitecture == Architecture.X64))
+				ExecuteWithMagicWordAndAssert (appExecutable);
+
 			var createdump = Path.Combine (appPath, "Contents", "MonoBundle", "createdump");
 			Assert.That (createdump, Does.Exist, "createdump existence");
 		}
