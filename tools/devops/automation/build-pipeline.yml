@@ -183,7 +183,6 @@ trigger:
     - '*'
     exclude:
     - refs/heads/locfiles/*
-    - refs/heads/net6-hr
   paths:
     exclude:
     - .github
