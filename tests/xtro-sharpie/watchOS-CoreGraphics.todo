@@ -1,4 +1,6 @@
 !missing-field! kCGColorSpaceExtendedRange not bound
 !missing-pinvoke! CGColorSpaceCreateWithColorSyncProfile is not bound
+!missing-pinvoke! CGColorSpaceIsHLGBased is not bound
+!missing-pinvoke! CGColorSpaceIsPQBased is not bound
 !missing-pinvoke! CGConvertColorDataWithFormat is not bound
 !missing-pinvoke! CGErrorSetCallback is not bound
