@@ -119,7 +119,7 @@ steps:
       echo "Using Xcode in path $XCODE_SELECT"
     else
       echo "Setting Xcode to point to the default location."
-      xcode-select -s "/Appliations/Xcode.app/Contents/Developer"
+      xcode-select -s "/Applications/Xcode.app/Contents/Developer"
     fi
   displayName: 'Ensure Xcode is selected.'
 
