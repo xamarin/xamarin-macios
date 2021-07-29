@@ -171,6 +171,9 @@
 			$(BuildDependsOn);
 			_CreateAppBundle;
 			Codesign;
+			CreateIpa;
+			_CreateInstaller;
+			Archive;
 		</BuildDependsOn>
 
 		<!-- inner build for multi-rid build -->
@@ -191,6 +194,9 @@
 			_CompileAppManifest;
 			_CreateMergedAppBundle;
 			Codesign;
+			CreateIpa;
+			_CreateInstaller;
+			Archive;
 		</BuildDependsOn>
 
 		<!-- We re-use ComputeFilesToPublish & CopyFilesToPublishDirectory to copy files to the .app -->
