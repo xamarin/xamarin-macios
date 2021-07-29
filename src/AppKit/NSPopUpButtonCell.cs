@@ -1,3 +1,4 @@
+#if !__MACCATALYST__
 using System;
 
 namespace AppKit {
@@ -15,3 +16,4 @@ namespace AppKit {
 		}
 	}
 }
+#endif // !__MACCATALYST__

@@ -1,3 +1,4 @@
+#if !__MACCATALYST__
 using System;
 using Foundation;
 using ObjCRuntime;
@@ -24,3 +25,4 @@ namespace AppKit {
 #endif
 	}
 }
+#endif // !__MACCATALYST__
