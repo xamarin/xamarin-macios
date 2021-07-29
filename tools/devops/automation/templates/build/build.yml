@@ -116,7 +116,7 @@ steps:
 - bash: |
     XCODE_SELECT=$(xcode-select -p)
     if [[ -d $XCODE_SELECT ]]; then
-      ehco "Using Xcode in path $XCODE_SELECT"
+      echo "Using Xcode in path $XCODE_SELECT"
     else
       echo "Setting Xcode to point to the default location."
       xcode-select -s "/Appliations/Xcode.app/Contents/Developer"
