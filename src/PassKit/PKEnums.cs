@@ -227,6 +227,16 @@ namespace PassKit {
 		EMoney,
 	}
 
+	[Mac (11,0)]
+	[Watch (3,0)]
+	[iOS (9,0)]
+	[Native]
+	public enum PKPaymentSummaryItemType : ulong
+	{
+		Final,
+		Pending
+	}
+
 	[NoWatch]
 	[NoMac] // under `#if TARGET_OS_IOS`
 	[iOS (9,0)]
