@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using Microsoft.Build.Utilities;
@@ -16,8 +17,15 @@ namespace Xamarin.Messaging.Build {
 		{
 			this.serializer = serializer;
 
+			var dotnetPath = Path.Combine (MessagingContext.GetXmaPath (), "SDKs", "dotnet", "dotnet");
+
+			//In case the XMA dotnet has not been installed yet
+			if (!File.Exists (dotnetPath)) {
+				dotnetPath = "/usr/local/share/dotnet/dotnet";
+			}
+
 			// TODO: Needed by the ILLinkTask, we need to add support for doing this from Windows
-			Environment.SetEnvironmentVariable ("DOTNET_HOST_PATH", "/usr/local/share/dotnet/dotnet");
+			Environment.SetEnvironmentVariable ("DOTNET_HOST_PATH", dotnetPath);
 		}
 
 		internal IEnumerable<Type> Tasks => tasks.AsReadOnly ();

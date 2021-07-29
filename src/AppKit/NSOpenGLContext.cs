@@ -1,3 +1,4 @@
+#if !__MACCATALYST__
 using System;
 #if !NO_SYSTEM_DRAWING
 using System.Drawing;
@@ -98,3 +99,4 @@ namespace AppKit {
 		}
 	}
 }
+#endif // !__MACCATALYST__

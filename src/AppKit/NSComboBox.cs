@@ -1,3 +1,4 @@
+#if !__MACCATALYST__
 using System;
 using Foundation;
 using CoreGraphics;
@@ -18,3 +19,4 @@ namespace AppKit {
 		}
 	}
 }
+#endif // !__MACCATALYST__
