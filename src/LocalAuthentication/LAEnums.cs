@@ -53,7 +53,6 @@ namespace LocalAuthentication {
 		BiometryDisconnected = -13,
 		InvalidDimension     = -14,
 
-
 		BiometryNotAvailable = TouchIDNotAvailable,
 		BiometryNotEnrolled = TouchIDNotEnrolled,
 		BiometryLockout = TouchIDLockout,
