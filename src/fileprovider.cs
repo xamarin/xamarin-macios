@@ -187,9 +187,8 @@ namespace FileProvider {
 		NonEvictable = -2008,
 	}
 
-	[Unavailable (PlatformName.MacCatalyst)]
 	[NoiOS, Mac (12,0), NoMacCatalyst]
-	[Native, Advice ("This API is not available when using UIKit on macOS.")]
+	[Native]
 	public enum NSFileProviderDomainRemovalMode : long {
 		RemoveAll = 0,
 		PreserveDirtyUserData = 1,
@@ -339,7 +338,6 @@ namespace FileProvider {
 		NSString DidChange { get; }
 
 		[NoWatch, NoTV, NoiOS, Mac (12, 0), NoMacCatalyst]
-		[Advice ("This API is not available when using UIKit on macOS.")]
 		[NullAllowed, Export ("backingStoreIdentity")]
 		NSData BackingStoreIdentity { get; }
 	}
@@ -557,7 +555,6 @@ namespace FileProvider {
 
 #if MONOMAC
 		[NoiOS, Mac (12, 0), NoMacCatalyst]
-		[Advice ("This API is not available when using UIKit on macOS.")]
 		[Export ("typeAndCreator")]
 		NSFileProviderTypeAndCreator TypeAndCreator { get; }
 #endif
@@ -1028,7 +1025,6 @@ namespace FileProvider {
 		NSDictionary UserInfo { get; }
 	}
 
-	[Advice ("This API is not available when using UIKit on macOS.")]
 	[NoWatch, NoTV, iOS (15,0), Mac (12,0), NoMacCatalyst]
 	[Flags]
 	[Native]
@@ -1290,8 +1286,7 @@ namespace FileProvider {
 	}
 
 	[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
-	[Protocol, Advice ("This API is not available when using UIKit on macOS.")]
-	[BaseType (typeof (NSObject))]
+	[Protocol]
 	interface NSFileProviderUserInteractionSuppressing
 	{
 		[Abstract]
