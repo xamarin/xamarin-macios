@@ -351,7 +351,7 @@ namespace PassKit {
 		[EventArgs ("PKPaymentRequestMerchantSessionUpdate")]
 		void DidRequestMerchantSessionUpdate (PKPaymentAuthorizationViewController controller, Action<PKPaymentRequestMerchantSessionUpdate> updateHandler);
 
-		[NoWatch, Mac (12,0), iOS (15,0)]
+		[NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("paymentAuthorizationViewController:didChangeCouponCode:handler:")]
 		[EventArgs ("PKPaymentRequestCouponCodeUpdate")]
 		void DidChangeCouponCode (PKPaymentAuthorizationViewController controller, string couponCode, Action<PKPaymentRequestCouponCodeUpdate> completion);
@@ -1993,7 +1993,7 @@ namespace PassKit {
 		NSDate DeferredDate { get; set; }
 	}
 
-	[Watch (8,0), Mac (12,0), iOS (15,0)]
+	[Watch (8,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 	[Native]
 	public enum PKShippingContactEditingMode : ulong
 	{
