@@ -26,7 +26,7 @@ namespace MonoTouchFixtures.Foundation {
 			var now = DateTime.UtcNow;
 			NSDateComponents comps;
 
-			cal.TimeZone = NSTimeZone.FromName ("Europe/Madrid");
+			cal.TimeZone = NSTimeZone.FromName ("UTC");
 			comps = cal.Components (NSCalendarUnit.Year | NSCalendarUnit.Month | NSCalendarUnit.Day, (NSDate) now);
 			Assert.AreEqual ((nint) now.Year, comps.Year, "a year");
 			Assert.AreEqual ((nint) now.Month, comps.Month, "a month");
