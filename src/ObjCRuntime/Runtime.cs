@@ -1712,6 +1712,20 @@ namespace ObjCRuntime {
 		{
 			NSLog (string.Format (format, args));
 		}
+
+		internal static string ToFourCCString (uint value)
+		{
+			return ToFourCCString (unchecked((int) value));
+		}
+
+		internal static string ToFourCCString (int value)
+		{
+			return new string (new char [] {
+				(char) (byte) (value >> 24),
+				(char) (byte) (value >> 16),
+				(char) (byte) (value >> 8),
+				(char) (byte) value });
+		}
 #endif // !COREBUILD
 
 		static int MajorVersion = -1;
