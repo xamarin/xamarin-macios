@@ -74,13 +74,13 @@ namespace MonoTouchFixtures.SystemConfiguration {
 				return;
 
 			Assert.AreEqual (StatusCode.OK, status, "Status");
-			// To get a non-null dictionary back, starting in iOS 12, we must (https://developer.apple.com/documentation/systemconfiguration/1614126-cncopycurrentnetworkinfo)
-			// * Use core location, and request (and get) authorization to use location information
-			// * Add the 'com.apple.developer.networking.wifi-info' entitlement
-			// We're not using custom entitlements when building for device, which means that we can't make this work at the moment.
-			// So just assert that we get null if running on iOS 12+.
-			// Also assert that we get null in all other cases as well, since we link with the iOS 13+ SDK.
-			Assert.IsNull (dict, "Dictionary");
+			// It's quite complex to figure out whether we should get a dictionary back or not.
+			// References:
+			// * https://github.com/xamarin/xamarin-macios/commit/24331f35dd67d19f3ed9aca7b8b21827ce0823c0
+			// * https://github.com/xamarin/xamarin-macios/issues/11504
+			// * https://github.com/xamarin/xamarin-macios/issues/12278
+			// * https://developer.apple.com/documentation/systemconfiguration/1614126-cncopycurrentnetworkinfo
+			// So don't assert anything about the dictionary.
 #endif
 		}
 
