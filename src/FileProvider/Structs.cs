@@ -10,8 +10,15 @@ namespace FileProvider {
 	public struct NSFileProviderTypeAndCreator
 	{
 		public uint Type;
-
 		public uint Creator;
+
+#if !COREBUILD
+		public string GetTypeAsFourCC ()
+			=> Runtime.ToFourCCString (Type);
+
+		public string GetCreatorAsFourCC()
+			=> Runtime.ToFourCCString (Creator);
+#endif
 	}
 
 }
