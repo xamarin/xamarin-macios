@@ -1727,6 +1727,6 @@
 		<value>参数的类型编码无效。</value>
 	</data>
   <data name="MX8041" xml:space="preserve">
-		<value>Unable to create an instance of the type {0}.</value>
+		<value>无法创建类型 {0} 的实例。</value>
 	</data>
 </root>
