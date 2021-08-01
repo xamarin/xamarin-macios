@@ -16,6 +16,8 @@ using ObjCRuntime;
 
 namespace Xamarin.Linker {
 	public class LinkerConfiguration {
+		string LinkerFile;
+
 		public List<Abi> Abis;
 		public string AOTCompiler;
 		public string AOTOutputDirectory;
@@ -74,6 +76,8 @@ namespace Xamarin.Linker {
 			if (!File.Exists (linker_file))
 				throw new FileNotFoundException ($"The custom linker file {linker_file} does not exist.");
 
+			LinkerFile = linker_file;
+
 			Profile = new BaseProfile (this);
 			DerivedLinkContext = new DerivedLinkContext { LinkerConfiguration = this, };
 			Application = new Application (this);
@@ -122,6 +126,12 @@ namespace Xamarin.Linker {
 						throw new InvalidOperationException ($"Unable to parse the {key} value: {value} in {linker_file}");
 					DeploymentTarget = deployment_target;
 					break;
+				case "Dlsym":
+					Application.ParseDlsymOptions (value);
+					break;
+				case "EnableSGenConc":
+					Application.EnableSGenConc = string.Equals (value, "true", StringComparison.OrdinalIgnoreCase);
+					break;
 				case "EnvironmentVariable":
 					var separators = new char [] { ':', '=' };
 					var equals = value.IndexOfAny (separators);
@@ -144,6 +154,12 @@ namespace Xamarin.Linker {
 					break;
 				case "IsSimulatorBuild":
 					IsSimulatorBuild = string.Equals ("true", value, StringComparison.OrdinalIgnoreCase);
+					break;
+				case "LibMonoLinkMode":
+					Application.LibMonoLinkMode = ParseLinkMode (value, key);
+					break;
+				case "LibXamarinLinkMode":
+					Application.LibXamarinLinkMode = ParseLinkMode (value, key);
 					break;
 				case "LinkMode":
 					if (!Enum.TryParse<LinkMode> (value, true, out var lm))
@@ -298,6 +314,17 @@ namespace Xamarin.Linker {
 			Application.Initialize ();
 		}
 
+		AssemblyBuildTarget ParseLinkMode (string value, string variableName)
+		{
+			if (string.Equals (value, "dylib", StringComparison.OrdinalIgnoreCase)) {
+				return AssemblyBuildTarget.DynamicLibrary;
+			} else if (string.Equals (value, "static", StringComparison.OrdinalIgnoreCase)) {
+				return AssemblyBuildTarget.StaticObject;
+			}
+
+			throw new InvalidOperationException ($"Invalid {variableName} '{value}' in {LinkerFile}");
+		}
+
 		public void Write ()
 		{
 			if (Verbosity > 0) {
@@ -307,7 +334,9 @@ namespace Xamarin.Linker {
 				Console.WriteLine ($"    AssemblyName: {Application.AssemblyName}");
 				Console.WriteLine ($"    CacheDirectory: {CacheDirectory}");
 				Console.WriteLine ($"    Debug: {Application.EnableDebug}");
+				Console.WriteLine ($"    Dlsym: {Application.DlsymOptions} {(Application.DlsymAssemblies != null ? string.Join (" ", Application.DlsymAssemblies.Select (v => (v.Item2 ? "+" : "-") + v.Item1)) : string.Empty)}");
 				Console.WriteLine ($"    DeploymentTarget: {DeploymentTarget}");
+				Console.WriteLine ($"    EnableSGenConc {Application.EnableSGenConc}");
 				Console.WriteLine ($"    IntermediateLinkDir: {IntermediateLinkDir}");
 				Console.WriteLine ($"    InterpretedAssemblies: {string.Join (", ", Application.InterpretedAssemblies)}");
 				Console.WriteLine ($"    ItemsDirectory: {ItemsDirectory}");

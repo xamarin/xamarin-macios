@@ -1,3 +1,4 @@
+#if !__MACCATALYST__
 using System;
 using System.Collections.Generic;
 
@@ -41,3 +42,4 @@ namespace AppKit {
 		}
 	}
 }
+#endif // !__MACCATALYST__

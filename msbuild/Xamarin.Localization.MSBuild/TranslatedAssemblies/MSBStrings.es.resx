@@ -1015,28 +1015,28 @@
         <value>El archivo de requisito del producto del paquete contiene arquitecturas ({0}) que no coincide con las arquitecturas de destino ({1})</value>
     </data>
   <data name="E7073" xml:space="preserve">
-        <value>At least one app bundle must be specified.</value>
+        <value>Debe especificarse al menos un lote de aplicaciones.</value>
     </data>
   <data name="E7074" xml:space="preserve">
-        <value>The app bundle {0} does not exist.</value>
+        <value>El lote de aplicaciones {0} no existe.</value>
     </data>
   <data name="E7075" xml:space="preserve">
-        <value>No 'SpecificSubDirectory' metadata was provided for the app bundle {0}.</value>
+        <value>No se proporcionó ningún metadato "SpecificSubDirectory" para el lote de aplicaciones {0}.</value>
     </data>
   <data name="E7076" xml:space="preserve">
-        <value>Can't merge the symlink '{0}', it has different targets.</value>
+        <value>No se puede combinar el symlink "{0}", tiene destinos diferentes.</value>
     </data>
   <data name="E7077" xml:space="preserve">
-        <value>Unable to merge the file '{0}', it's different between the input app bundles.</value>
+        <value>No se puede combinar el archivo "{0}", es diferente entre los lotes de aplicaciones de entrada.</value>
     </data>
   <data name="E7078" xml:space="preserve">
-        <value>Invalid app bundle: the Mach-O file {0} has dependent files.</value>
+        <value>Lote de aplicaciones no válido: el archivo Mach-O {0} tiene archivos dependientes.</value>
     </data>
   <data name="E7079" xml:space="preserve">
-        <value>Invalid app bundle: the file {0} has different types between the input app bundles.</value>
+        <value>Lote de aplicaciones no válido: el archivo {0} tiene tipos diferentes entre los lotes de aplicaciones de entrada.</value>
     </data>
   <data name="E7080" xml:space="preserve">
-        <value>App bundle file #{0}: {1}</value>
+        <value>Archivo de lote de aplicaciones n.º {0}: {1}</value>
         <comment>
             This error will be shown multiple times, listing the full path to the files causing E7076, E7077 and E7079.
             {0}: a number indicating which input app bundle the file is from

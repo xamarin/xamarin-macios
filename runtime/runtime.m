@@ -83,6 +83,7 @@ enum MarshalManagedExceptionMode xamarin_marshal_managed_exception_mode = Marsha
 enum XamarinLaunchMode xamarin_launch_mode = XamarinLaunchModeApp;
 bool xamarin_supports_dynamic_registration = true;
 const char *xamarin_runtime_configuration_name = NULL;
+const char *xamarin_mono_native_lib_name = "__Internal";
 
 /* Callbacks */
 
@@ -2400,6 +2401,55 @@ xamarin_insert_dllmap ()
 #endif // !DOTNET
 
 #if DOTNET
+
+// List all the assemblies that we can find in the app bundle in:
+// - The bundle directory
+// - The runtimeidentifier-specific subdirectory
+// Caller must free the return value using xamarin_free.
+char *
+xamarin_compute_trusted_platform_assemblies ()
+{
+	const char *bundle_path = xamarin_get_bundle_path ();
+
+	NSMutableArray<NSString *> *files = [NSMutableArray array];
+	NSMutableArray<NSString *> *directories = [NSMutableArray array];
+	[directories addObject: [NSString stringWithUTF8String: bundle_path]];
+	[directories addObject: [NSString stringWithFormat: @"%s/.xamarin/%s", bundle_path, RUNTIMEIDENTIFIER]];
+
+	NSFileManager *manager = [NSFileManager defaultManager];
+	for (NSString *dir in directories) {
+		NSDirectoryEnumerator *enumerator = [manager enumeratorAtURL:[NSURL fileURLWithPath: dir]
+		                                  includingPropertiesForKeys:@[NSURLNameKey, NSURLIsDirectoryKey]
+		                                                     options:NSDirectoryEnumerationSkipsSubdirectoryDescendants
+		                                                     errorHandler:nil];
+		for (NSURL *file in enumerator) {
+			// skip subdirectories
+			NSNumber *isDirectory = nil;
+			if (![file getResourceValue:&isDirectory forKey:NSURLIsDirectoryKey error:nil] || [isDirectory boolValue])
+				continue;
+
+			NSString *name = nil;
+			if (![file getResourceValue:&name forKey:NSURLNameKey error:nil])
+				continue;
+
+			if ([name length] < 4)
+				continue;
+
+			// We want dlls and exes
+			if ([name compare: @".dll" options: NSCaseInsensitiveSearch range: NSMakeRange ([name length] - 4, 4)] == NSOrderedSame) {
+				[files addObject: [dir stringByAppendingPathComponent: name]];
+			} else if ([name compare: @".exe" options: NSCaseInsensitiveSearch range: NSMakeRange ([name length] - 4, 4)] == NSOrderedSame) {
+				[files addObject: [dir stringByAppendingPathComponent: name]];
+			}
+		}
+	}
+
+	// Join them all together with a colon separating them
+	NSString *joined = [files componentsJoinedByString: @":"];
+	char *rv = xamarin_strdup_printf ("%s", [joined UTF8String]);
+	return rv;
+}
+
 void
 xamarin_vm_initialize ()
 {
@@ -2413,23 +2463,29 @@ xamarin_vm_initialize ()
 		icu_dat_file_path = path;
 	}
 
+	char *trusted_platform_assemblies = xamarin_compute_trusted_platform_assemblies ();
+
 	// All the properties we pass here must also be listed in the _RuntimeConfigReservedProperties item group
 	// for the _CreateRuntimeConfiguration target in dotnet/targets/Xamarin.Shared.Sdk.targets.
 	const char *propertyKeys[] = {
 		"APP_PATHS",
 		"PINVOKE_OVERRIDE",
 		"ICU_DAT_FILE_PATH",
+		"TRUSTED_PLATFORM_ASSEMBLIES",
 	};
 	const char *propertyValues[] = {
 		xamarin_get_bundle_path (),
 		pinvokeOverride,
 		icu_dat_file_path,
+		trusted_platform_assemblies,
 	};
 	static_assert (sizeof (propertyKeys) == sizeof (propertyValues), "The number of keys and values must be the same.");
 
 	int propertyCount = sizeof (propertyValues) / sizeof (propertyValues [0]);
 	bool rv = xamarin_bridge_vm_initialize (propertyCount, propertyKeys, propertyValues);
 	xamarin_free (pinvokeOverride);
+
+	xamarin_free (trusted_platform_assemblies);
 
 	if (!rv)
 		xamarin_assertion_message ("Failed to initialize the VM");
@@ -2441,8 +2497,25 @@ xamarin_pinvoke_override (const char *libraryName, const char *entrypointName)
 
 	void* symbol = NULL;
 
+#if TARGET_OS_MACCATALYST
+	static void *monoNativeLibrary = NULL;
+#endif
+
 	if (!strcmp (libraryName, "__Internal")) {
 		symbol = dlsym (RTLD_DEFAULT, entrypointName);
+#if TARGET_OS_MACCATALYST
+	} else if (!strcmp (libraryName, "libSystem.Native") ||
+	           !strcmp (libraryName, "libSystem.Security.Cryptography.Native.Apple") ||
+	           !strcmp (libraryName, "libSystem.Net.Security.Native")) {
+		if (monoNativeLibrary == NULL) {
+			if (xamarin_mono_native_lib_name == NULL || !strcmp (xamarin_mono_native_lib_name, "__Internal")) {
+				monoNativeLibrary = RTLD_DEFAULT;
+			} else {
+				monoNativeLibrary = dlopen (xamarin_mono_native_lib_name, RTLD_LAZY);
+			}
+		}
+		symbol = dlsym (monoNativeLibrary, entrypointName);
+#endif // TARGET_OS_MACCATALYST
 #if !defined (CORECLR_RUNTIME) // we're intercepting objc_msgSend calls using the managed System.Runtime.InteropServices.ObjectiveC.Bridge.SetMessageSendCallback instead.
 #if defined (__i386__) || defined (__x86_64__) || defined (__arm64__)
 	} else if (!strcmp (libraryName, "/usr/lib/libobjc.dylib")) {

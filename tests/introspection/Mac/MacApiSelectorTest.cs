@@ -1290,10 +1290,6 @@ namespace Introspection {
 			case "initWithDuration:animationCurve:":
 				return true;
 #endif
-			// NSImage
-			case "initWithDataIgnoringOrientation:":
-				var mi = m as MethodInfo;
-				return mi != null && !mi.IsPublic && mi.ReturnType.Name == "IntPtr";
 			default:
 				return base.SkipInit (selector, m);
 			}
