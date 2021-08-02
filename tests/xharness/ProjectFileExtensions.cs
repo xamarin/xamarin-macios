@@ -106,37 +106,37 @@ namespace Xharness {
 				"HintPath",
 				"RootTestsDirectory",
 			};
-			var attributes_with_paths = new string [] []
+			var attributes_with_paths = new []
 			{
-				new string [] { "None", "Include" },
-				new string [] { "Compile", "Include" },
-				new string [] { "Compile", "Exclude" },
-				new string [] { "ProjectReference", "Include" },
-				new string [] { "InterfaceDefinition", "Include" },
-				new string [] { "BundleResource", "Include" },
-				new string [] { "EmbeddedResource", "Include" },
-				new string [] { "ImageAsset", "Include" },
-				new string [] { "GeneratedTestInput", "Include" },
-				new string [] { "GeneratedTestOutput", "Include" },
-				new string [] { "TestLibrariesInput", "Include" },
-				new string [] { "TestLibrariesOutput", "Include" },
-				new string [] { "Content", "Include" },
-				new string [] { "ObjcBindingApiDefinition", "Include" },
-				new string [] { "ObjcBindingCoreSource", "Include" },
-				new string [] { "ObjcBindingNativeLibrary", "Include" },
-				new string [] { "ObjcBindingNativeFramework", "Include" },
-				new string [] { "Import", "Project" },
-				new string [] { "FilesToCopy", "Include" },
-				new string [] { "FilesToCopyFoo", "Include" },
-				new string [] { "FilesToCopyFooBar", "Include" },
-				new string [] { "FilesToCopyEncryptedXml", "Include" },
-				new string [] { "FilesToCopyCryptographyPkcs", "Include" },
-				new string [] { "FilesToCopyResources", "Include" },
-				new string [] { "FilesToCopyXMLFiles", "Include" },
-				new string [] { "FilesToCopyChannels", "Include" },
-				new string [] { "CustomMetalSmeltingInput", "Include" },
-				new string [] { "Metal", "Include" },
-				new string [] { "NativeReference", "Include" },
+				new { Element = "None", Attribute = "Include", SkipLogicalName = false, },
+				new { Element = "Compile", Attribute = "Include", SkipLogicalName = false, },
+				new { Element = "Compile", Attribute = "Exclude", SkipLogicalName = false, },
+				new { Element = "ProjectReference", Attribute = "Include", SkipLogicalName = true, },
+				new { Element = "InterfaceDefinition", Attribute = "Include", SkipLogicalName = false, },
+				new { Element = "BundleResource", Attribute = "Include", SkipLogicalName = false, },
+				new { Element = "EmbeddedResource", Attribute = "Include", SkipLogicalName = false, },
+				new { Element = "ImageAsset", Attribute = "Include", SkipLogicalName = false, },
+				new { Element = "GeneratedTestInput", Attribute = "Include", SkipLogicalName = false, },
+				new { Element = "GeneratedTestOutput", Attribute = "Include", SkipLogicalName = false, },
+				new { Element = "TestLibrariesInput", Attribute = "Include", SkipLogicalName = false, },
+				new { Element = "TestLibrariesOutput", Attribute = "Include", SkipLogicalName = false, },
+				new { Element = "Content", Attribute = "Include", SkipLogicalName = false, },
+				new { Element = "ObjcBindingApiDefinition", Attribute = "Include", SkipLogicalName = false, },
+				new { Element = "ObjcBindingCoreSource", Attribute = "Include", SkipLogicalName = false, },
+				new { Element = "ObjcBindingNativeLibrary", Attribute = "Include", SkipLogicalName = false, },
+				new { Element = "ObjcBindingNativeFramework", Attribute = "Include", SkipLogicalName = false, },
+				new { Element = "Import", Attribute = "Project", SkipLogicalName = true, },
+				new { Element = "FilesToCopy", Attribute = "Include", SkipLogicalName = false, },
+				new { Element = "FilesToCopyFoo", Attribute = "Include", SkipLogicalName = false, },
+				new { Element = "FilesToCopyFooBar", Attribute = "Include", SkipLogicalName = false, },
+				new { Element = "FilesToCopyEncryptedXml", Attribute = "Include", SkipLogicalName = false, },
+				new { Element = "FilesToCopyCryptographyPkcs", Attribute = "Include", SkipLogicalName = false, },
+				new { Element = "FilesToCopyResources", Attribute = "Include", SkipLogicalName = false, },
+				new { Element = "FilesToCopyXMLFiles", Attribute = "Include", SkipLogicalName = false, },
+				new { Element = "FilesToCopyChannels", Attribute = "Include", SkipLogicalName = false, },
+				new { Element = "CustomMetalSmeltingInput", Attribute = "Include", SkipLogicalName = false, },
+				new { Element = "Metal", Attribute = "Include", SkipLogicalName = false, },
+				new { Element = "NativeReference", Attribute = "Include", SkipLogicalName = false, },
 			};
 			var nodes_with_variables = new string []
 			{
@@ -178,36 +178,35 @@ namespace Xharness {
 			}
 
 			foreach (var kvp in attributes_with_paths) {
-				var element = kvp [0];
-				var attrib = kvp [1];
+				var element = kvp.Element;
+				var attrib = kvp.Attribute;
+				var skipLogicalName = kvp.SkipLogicalName;
 				var nodes = csproj.SelectElementNodes (element);
 				foreach (XmlNode node in nodes) {
 					var a = node.Attributes [attrib];
 					if (a == null)
 						continue;
 
-					// entries after index 2 is a list of values to filter the attribute value against.
-					var found = kvp.Length == 2;
-					var skipLogicalName = element == "Import" || element == "ProjectReference";
-
 					// Fix any default LogicalName values (but don't change existing ones).
-					var ln = node.SelectElementNodes ("LogicalName")?.SingleOrDefault ();
-					var links = node.SelectElementNodes ("Link");
-					if (!skipLogicalName && ln == null && !links.Any ()) {
-						ln = csproj.CreateElement ("LogicalName", csproj.GetNamespace ());
-						node.AppendChild (ln);
+					if (!skipLogicalName) {
+						var ln = node.SelectElementNodes ("LogicalName")?.SingleOrDefault ();
+						var links = node.SelectElementNodes ("Link");
+						if (ln == null && !links.Any ()) {
+							ln = csproj.CreateElement ("LogicalName", csproj.GetNamespace ());
+							node.AppendChild (ln);
 
-						string logicalName = a.Value;
-						switch (element) {
-						case "BundleResource":
-							if (logicalName.StartsWith ("Resources\\", StringComparison.Ordinal))
-								logicalName = logicalName.Substring ("Resources\\".Length);
+							string logicalName = a.Value;
+							switch (element) {
+							case "BundleResource":
+								if (logicalName.StartsWith ("Resources\\", StringComparison.Ordinal))
+									logicalName = logicalName.Substring ("Resources\\".Length);
 
-							break;
-						default:
-							break;
+								break;
+							default:
+								break;
+							}
+							ln.InnerText = logicalName;
 						}
-						ln.InnerText = logicalName;
 					}
 
 					a.Value = convert (a.Value);
