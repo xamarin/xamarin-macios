@@ -2721,6 +2721,43 @@ namespace Xamarin.BindingMethods.Generator
 				}
 			);
 
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (Vector2D, IntPtr)",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.Vector2d},
+						new ParameterData { TypeData = Types.IntPtr }
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (Vector2D, int)",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.Vector2d },
+						new ParameterData { TypeData = Types.NInt }
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // void func (Vector2D)",
+					Prefix = "simd__",
+					Variants = Variants.msgSend | Variants.msgSendSuper,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.Vector2d },
+					},
+				}
+			);
+
 			// We must expand functions with native types to their actual type as well.
 			for (int i = data.Count - 1; i >= 0; i--) {
 				if (!data [i].HasNativeType)
