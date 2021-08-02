@@ -8,7 +8,9 @@
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\..\..\product.snk</AssemblyOriginatorKeyFile>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <AssemblyName>monotouchtest</AssemblyName>
 
+    <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\..\..'))</RootTestsDirectory>
     <TestLibrariesDirectory>$(RootTestsDirectory)\test-libraries</TestLibrariesDirectory>
     <MonoTouchTestDirectory>$(RootTestsDirectory)\monotouch-test</MonoTouchTestDirectory>
 
@@ -18,6 +20,7 @@
     <CodesignEntitlements Condition="'$(Platform)' == 'iPhoneSimulator'">$(MonoTouchTestDirectory)\Entitlements.plist</CodesignEntitlements>
 
     <DefineConstants Condition="'$(Configuration)' == 'Debug'">$(DefineConstants);DEBUG</DefineConstants>
+    <DefineConstants Condition="'$(Configuration)' == 'Debug' Or '$(Platform)' == 'iPhoneSimulator'">$(DefineConstants);DYNAMIC_REGISTRAR</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>

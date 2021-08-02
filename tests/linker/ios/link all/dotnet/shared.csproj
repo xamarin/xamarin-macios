@@ -9,6 +9,7 @@
     <MtouchLink>Full</MtouchLink>
     <MtouchExtraArgs>--optimize=all,-remove-dynamic-registrar,-force-rejected-types-removal</MtouchExtraArgs>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\..\..'))</RootTestsDirectory>
     <ThisTestDirectory>$(RootTestsDirectory)\linker\ios\link all</ThisTestDirectory>
   </PropertyGroup>
 

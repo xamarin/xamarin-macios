@@ -3,9 +3,9 @@
   <PropertyGroup>
     <TargetFramework>net6.0-ios</TargetFramework>
     <AssetTargetFallback>xamarinios10;$(AssetTargetFallback)</AssetTargetFallback>
-    <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)\..\..\..\..\..'))</RootTestsDirectory> <!-- this can't be in shared.csproj, because xharness won't see it there -->
   </PropertyGroup>
 
+  <!-- Imports of the form '$(RootTestsDirectory)/.*/dotnet/shared.csproj' will be processed by xharness -->
   <Import Project="$(RootTestsDirectory)/linker/ios/link all/dotnet/shared.csproj" />
 
   <ItemGroup>
