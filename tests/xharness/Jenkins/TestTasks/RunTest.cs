@@ -82,7 +82,7 @@ namespace Xharness.Jenkins.TestTasks {
 							stderrReader: logReader,
 							jargon: xmlResultJargon);
 					} catch (Exception e) {
-						testTask.FailureMessage += $" (failed to parse the logs: {e.Message}";
+						testTask.FailureMessage += $" (failed to parse the logs: {e.Message})";
 					}
 				}
 			} else {
