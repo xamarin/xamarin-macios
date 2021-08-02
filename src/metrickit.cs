@@ -87,7 +87,7 @@ namespace MetricKit {
 		MXUnitAveragePixelLuminance Apl { get; }
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (13,0)]
+	[NoWatch, NoTV, Mac (12,0), iOS (13,0)]
 	[BaseType (typeof(NSObject))]
 	interface MXHistogramBucket<UnitType> : NSSecureCoding
 		where UnitType : NSUnit {
@@ -101,7 +101,7 @@ namespace MetricKit {
 		nuint BucketCount { get; }
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (13,0)]
+	[NoWatch, NoTV, Mac (12,0), iOS (13,0)]
 	[BaseType (typeof(NSObject))]
 	interface MXHistogram<UnitType> : NSSecureCoding
 		where UnitType : NSUnit {
@@ -119,7 +119,7 @@ namespace MetricKit {
 		MXHistogram<MXUnitSignalBars> HistogrammedCellularConditionTime { get; }
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (13,0)]
+	[NoWatch, NoTV, Mac (12,0), iOS (13,0)]
 	[BaseType (typeof(NSObject))]
 	interface MXMetaData : NSSecureCoding {
 		[Export ("regionFormat", ArgumentSemantic.Strong)]
@@ -137,6 +137,7 @@ namespace MetricKit {
 		[Export ("JSONRepresentation")]
 		NSData JsonRepresentation { get; }
 
+#if !MONOMAC
 		[Internal]
 		[Deprecated (PlatformName.iOS, 14,0)]
 		[Export ("DictionaryRepresentation")]
@@ -147,6 +148,10 @@ namespace MetricKit {
 		[MacCatalyst (14,0)]
 		[Export ("dictionaryRepresentation")]
 		NSDictionary _DictionaryRepresentation14 { get; }
+#else 
+		[Export ("dictionaryRepresentation")]
+		NSDictionary DictionaryRepresentation { get; }
+#endif
 
 		[iOS (14,0)]
 		[MacCatalyst (14,0)]
@@ -232,7 +237,7 @@ namespace MetricKit {
 		NSMeasurement<NSUnitInformationStorage> CumulativeLogicalWrites { get; }
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (13,0)]
+	[NoWatch, NoTV, Mac (12,0), iOS (13,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface MXAverage<UnitType> : NSSecureCoding
@@ -278,6 +283,11 @@ namespace MetricKit {
 
 		[NullAllowed, Export ("cumulativeLogicalWrites", ArgumentSemantic.Strong)]
 		NSMeasurement<NSUnitInformationStorage> CumulativeLogicalWrites { get; }
+
+		[NullAllowed]
+		[NoWatch, NoTV, NoMac, iOS (15,0)]
+		[Export ("cumulativeHitchTimeRatio", ArgumentSemantic.Strong)]
+		NSMeasurement<NSUnit> CumulativeHitchTimeRatio { get; }
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (13,0)]
@@ -311,39 +321,51 @@ namespace MetricKit {
 		[Export ("timeStampEnd", ArgumentSemantic.Strong)]
 		NSDate TimeStampEnd { get; }
 
+		[NoMac]
 		[NullAllowed, Export ("cpuMetrics", ArgumentSemantic.Strong)]
 		MXCpuMetric CpuMetrics { get; }
 
+		[NoMac]
 		[NullAllowed, Export ("gpuMetrics", ArgumentSemantic.Strong)]
 		MXGpuMetric GpuMetrics { get; }
 
+		[NoMac]
 		[NullAllowed, Export ("cellularConditionMetrics", ArgumentSemantic.Strong)]
 		MXCellularConditionMetric CellularConditionMetrics { get; }
 
+		[NoMac]
 		[NullAllowed, Export ("applicationTimeMetrics", ArgumentSemantic.Strong)]
 		MXAppRunTimeMetric ApplicationTimeMetrics { get; }
 
+		[NoMac]
 		[NullAllowed, Export ("locationActivityMetrics", ArgumentSemantic.Strong)]
 		MXLocationActivityMetric LocationActivityMetrics { get; }
 
+		[NoMac]
 		[NullAllowed, Export ("networkTransferMetrics", ArgumentSemantic.Strong)]
 		MXNetworkTransferMetric NetworkTransferMetrics { get; }
 
+		[NoMac]
 		[NullAllowed, Export ("applicationLaunchMetrics", ArgumentSemantic.Strong)]
 		MXAppLaunchMetric ApplicationLaunchMetrics { get; }
 
+		[NoMac]
 		[NullAllowed, Export ("applicationResponsivenessMetrics", ArgumentSemantic.Strong)]
 		MXAppResponsivenessMetric ApplicationResponsivenessMetrics { get; }
 
+		[NoMac]
 		[NullAllowed, Export ("diskIOMetrics", ArgumentSemantic.Strong)]
 		MXDiskIOMetric DiskIOMetrics { get; }
 
+		[NoMac]
 		[NullAllowed, Export ("memoryMetrics", ArgumentSemantic.Strong)]
 		MXMemoryMetric MemoryMetrics { get; }
 
+		[NoMac]
 		[NullAllowed, Export ("displayMetrics", ArgumentSemantic.Strong)]
 		MXDisplayMetric DisplayMetrics { get; }
 
+		[NoMac]
 		[NullAllowed, Export ("signpostMetrics", ArgumentSemantic.Strong)]
 		MXSignpostMetric[] SignpostMetrics { get; }
 
@@ -352,7 +374,7 @@ namespace MetricKit {
 
 		[Export ("JSONRepresentation")]
 		NSData JsonRepresentation { get; }
-
+#if !MONOMAC
 		[Internal]
 		[Deprecated (PlatformName.iOS, 14,0)]
 		[Export ("DictionaryRepresentation")]
@@ -363,24 +385,29 @@ namespace MetricKit {
 		[MacCatalyst (14,0)]
 		[Export ("dictionaryRepresentation")]
 		NSDictionary _DictionaryRepresentation14 { get; }
+#else
+		[Export ("dictionaryRepresentation")]
+		NSDictionary DictionaryRepresentation { get; }
+#endif
 
-		[iOS (14,0)]
+		[NoMac, iOS (14,0)]
 		[MacCatalyst (14,0)]
 		[NullAllowed]
 		[Export ("animationMetrics", ArgumentSemantic.Strong)]
 		MXAnimationMetric AnimationMetrics { get; }
 
-		[iOS (14,0)]
+		[NoMac, iOS (14,0)]
 		[MacCatalyst (14,0)]
 		[NullAllowed]
 		[Export ("applicationExitMetrics", ArgumentSemantic.Strong)]
 		MXAppExitMetric ApplicationExitMetrics { get; }
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (13,0)]
+	[NoWatch, NoTV, Mac (12,0), iOS (13,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface MXMetricManager {
+		[NoMac]
 		[Export ("pastPayloads", ArgumentSemantic.Strong)]
 		MXMetricPayload[] PastPayloads { get; }
 
@@ -407,10 +434,13 @@ namespace MetricKit {
 
 	interface IMXMetricManagerSubscriber { }
 
-	[NoWatch, NoTV, NoMac, iOS (13,0)]
+	[NoWatch, NoTV, Mac (12,0), iOS (13,0)]
 	[Protocol]
 	interface MXMetricManagerSubscriber {
+#if !XAMCORE_4
 		[Abstract]
+#endif
+		[NoMac]
 		[Export ("didReceiveMetricPayloads:")]
 		void DidReceiveMetricPayloads (MXMetricPayload[] payloads);
 
@@ -508,7 +538,7 @@ namespace MetricKit {
 		nuint CumulativeAppWatchdogExitCount { get; }
 	}
 
-	[NoWatch, NoTV, NoMac]
+	[NoWatch, NoTV, Mac (12,0)]
 	[iOS (14,0)]
 	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
@@ -519,7 +549,7 @@ namespace MetricKit {
 		NSData JsonRepresentation { get; }
 	}
 
-	[NoWatch, NoTV, NoMac]
+	[NoWatch, NoTV, Mac (12,0)]
 	[iOS (14,0)]
 	[MacCatalyst (14,0)]
 	[BaseType (typeof (MXDiagnostic), Name = "MXCPUExceptionDiagnostic")]
@@ -536,7 +566,7 @@ namespace MetricKit {
 		NSMeasurement<NSUnitDuration> TotalSampledTime { get; }
 	}
 
-	[NoWatch, NoTV, NoMac]
+	[NoWatch, NoTV, Mac (12,0)]
 	[iOS (14,0)]
 	[MacCatalyst (14,0)]
 	[BaseType (typeof (MXDiagnostic))]
@@ -568,7 +598,7 @@ namespace MetricKit {
 		NSNumber Signal { get; }
 	}
 
-	[NoWatch, NoTV, NoMac]
+	[NoWatch, NoTV, Mac (12,0)]
 	[iOS (14,0)]
 	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
@@ -588,7 +618,7 @@ namespace MetricKit {
 		NSDictionary DictionaryRepresentation { get; }
 	}
 
-	[NoWatch, NoTV, NoMac]
+	[NoWatch, NoTV, Mac (12,0)]
 	[iOS (14,0)]
 	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
@@ -620,7 +650,7 @@ namespace MetricKit {
 		NSDictionary DictionaryRepresentation { get; }
 	}
 
-	[NoWatch, NoTV, NoMac]
+	[NoWatch, NoTV, Mac (12,0)]
 	[iOS (14,0)]
 	[MacCatalyst (14,0)]
 	[BaseType (typeof (MXDiagnostic))]
@@ -634,7 +664,7 @@ namespace MetricKit {
 		NSMeasurement<NSUnitInformationStorage> TotalWritesCaused { get; }
 	}
 
-	[NoWatch, NoTV, NoMac]
+	[NoWatch, NoTV, Mac (12,0)]
 	[iOS (14,0)]
 	[MacCatalyst (14,0)]
 	[BaseType (typeof (MXDiagnostic))]
