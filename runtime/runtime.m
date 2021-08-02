@@ -2450,6 +2450,39 @@ xamarin_compute_trusted_platform_assemblies ()
 	return rv;
 }
 
+char *
+xamarin_compute_native_dll_search_directories ()
+{
+	const char *bundle_path = xamarin_get_bundle_path ();
+
+	NSMutableArray<NSString *> *directories = [NSMutableArray array];
+
+	// Native libraries might be in the app bundle
+	[directories addObject: [NSString stringWithUTF8String: bundle_path]];
+	// They won't be in the runtimeidentifier-specific directory (because they get lipo'ed into a fat file instead)
+	// However, might also be in the Resources/lib directory
+	[directories addObject: [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: @"lib"]];
+
+	// Missing:
+	// * The parent app bundle if launched from an app extension. This requires adding app extension tests, which we currently don't have.
+
+	// Remove the ones that don't exist
+	NSFileManager *manager = [NSFileManager defaultManager];
+	for (int i = (int) [directories count] - 1; i >= 0; i--) {
+		NSString *dir = [directories objectAtIndex: (NSUInteger) i];
+		BOOL isDirectory;
+		if ([manager fileExistsAtPath: dir isDirectory: &isDirectory] && isDirectory)
+			continue;
+
+		[directories removeObjectAtIndex: (NSUInteger) i];
+	}
+
+	// Join them all together with a colon separating them
+	NSString *joined = [directories componentsJoinedByString: @":"];
+	char *rv = xamarin_strdup_printf ("%s", [joined UTF8String]);
+	return rv;
+}
+
 void
 xamarin_vm_initialize ()
 {
@@ -2464,6 +2497,7 @@ xamarin_vm_initialize ()
 	}
 
 	char *trusted_platform_assemblies = xamarin_compute_trusted_platform_assemblies ();
+	char *native_dll_search_directories = xamarin_compute_native_dll_search_directories ();
 
 	// All the properties we pass here must also be listed in the _RuntimeConfigReservedProperties item group
 	// for the _CreateRuntimeConfiguration target in dotnet/targets/Xamarin.Shared.Sdk.targets.
@@ -2472,12 +2506,14 @@ xamarin_vm_initialize ()
 		"PINVOKE_OVERRIDE",
 		"ICU_DAT_FILE_PATH",
 		"TRUSTED_PLATFORM_ASSEMBLIES",
+		"NATIVE_DLL_SEARCH_DIRECTORIES",
 	};
 	const char *propertyValues[] = {
 		xamarin_get_bundle_path (),
 		pinvokeOverride,
 		icu_dat_file_path,
 		trusted_platform_assemblies,
+		native_dll_search_directories,
 	};
 	static_assert (sizeof (propertyKeys) == sizeof (propertyValues), "The number of keys and values must be the same.");
 
@@ -2486,6 +2522,7 @@ xamarin_vm_initialize ()
 	xamarin_free (pinvokeOverride);
 
 	xamarin_free (trusted_platform_assemblies);
+	xamarin_free (native_dll_search_directories);
 
 	if (!rv)
 		xamarin_assertion_message ("Failed to initialize the VM");
