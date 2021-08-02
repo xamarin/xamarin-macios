@@ -716,6 +716,9 @@ EXTERNALACCESSORY_API_SOURCES = \
 
 # FileProvider
 
+FILEPROVIDER_CORE_SOURCES = \
+	FileProvider/Structs.cs \
+
 FILEPROVIDER_SOURCES = \
 	FileProvider/Compat.cs \
 
@@ -919,6 +922,7 @@ HEALTHKIT_API_SOURCES = \
 
 HEALTHKIT_SOURCES = \
 	HealthKit/EnumsCompat.cs \
+	HealthKit/HKAppleWalkingSteadiness.cs \
 	HealthKit/HKAnchoredObjectQuery.cs \
 	HealthKit/HKObjectType.cs \
 	HealthKit/HKObsolete.cs \
@@ -2204,6 +2208,7 @@ TVOS_FRAMEWORKS =           \
 
 MACCATALYST_FRAMEWORKS = \
 	$(COMMON_FRAMEWORKS) \
+	AppKit \
 	AVKit \
 	Accounts \
 	AdServices \

@@ -1727,4 +1727,7 @@
   <data name="MX8040" xml:space="preserve">
 		<value>パラメーターのタイプ エンコードが無効です。</value>
 	</data>
+  <data name="MX8041" xml:space="preserve">
+		<value>型 {0} のインスタンスを作成できません。</value>
+	</data>
 </root>

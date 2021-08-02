@@ -26,12 +26,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets')"/>
 
 	<PropertyGroup>
-		<_CanOutputAppBundle>False</_CanOutputAppBundle>
-		<_CanOutputAppBundle Condition="'$(OutputType)' == 'Exe' Or '$(IsAppExtension)' == 'true'">true</_CanOutputAppBundle>
-
-		<_RequireProvisioningProfile>False</_RequireProvisioningProfile>
-		<_RequireProvisioningProfile Condition="'$(CodesignProvision)' != ''">True</_RequireProvisioningProfile>
-
 		<_PreparedResourceRules></_PreparedResourceRules>
 		<_AppBundleName>$(AssemblyName)</_AppBundleName>
 	</PropertyGroup>
@@ -118,35 +112,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			<Output TaskParameter="BundleResources" ItemName="FileWrites" />
 			<Output TaskParameter="BundleResources" ItemName="_BundleResourceWithLogicalName" />
 		</TextureAtlas>
-	</Target>
-
-	<Target Name="_CompileProductDefinition" Condition="$(CreatePackage)" DependsOnTargets="_DetectAppManifest;_ComputeTargetArchitectures">
-		<CompileProductDefinition
-			Condition="'$(IsMacEnabled)' == 'true'"
-			SessionId="$(BuildSessionId)"
-			ProductDefinition="$(ProductDefinition)"
-			OutputDirectory = "$(IntermediateOutputPath)"
-			TargetArchitectures = "$(TargetArchitectures)"
-			AppManifest = "$(_AppManifest)">
-			<Output TaskParameter="CompiledProductDefinition" PropertyName="_CompiledProductDefinition" />
-		</CompileProductDefinition>
-	</Target>
-
-	<Target Name="_CreateInstaller" Condition="$(CreatePackage)" DependsOnTargets="Codesign;_CompileProductDefinition">
-		<CreateInstallerPackage
-			Condition="'$(IsMacEnabled)' == 'true'"
-			SessionId="$(BuildSessionId)"
-			OutputDirectory = "$(TargetDir)"
-			Name = "$(AssemblyName)"
-			AppManifest="$(_AppManifest)"
-			ProjectPath= "$(MSBuildProjectFullPath)"
-			AppBundleDir= "$(AppBundleDir)"
-			MainAssembly= "$(TargetPath)"
-			EnablePackageSigning = "$(EnablePackageSigning)"
-			ProductDefinition = "$(_CompiledProductDefinition)"
-			PackageSigningKey = "$(PackageSigningKey)"
-			PackagingExtraArgs = "$(PackagingExtraArgs)">
-		</CreateInstallerPackage>
 	</Target>
 
 	<PropertyGroup>

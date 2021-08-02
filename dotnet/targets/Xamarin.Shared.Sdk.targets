@@ -128,8 +128,7 @@
 		<EnableUnsafeUTF7Encoding Condition="'$(EnableUnsafeUTF7Encoding)' == ''">false</EnableUnsafeUTF7Encoding>
 		<EventSourceSupport Condition="'$(EventSourceSupport)' == ''">false</EventSourceSupport>
 		<HttpActivityPropagationSupport Condition="'$(HttpActivityPropagationSupport)' == ''">false</HttpActivityPropagationSupport>
-		<!-- native bits for ICU are not ready for Catalyst - https://github.com/xamarin/xamarin-macios/issues/11392 -->
-		<InvariantGlobalization Condition="'$(_PlatformName)' == 'MacCatalyst' And '$(InvariantGlobalization)' == ''">true</InvariantGlobalization>
+		<InvariantGlobalization Condition="'$(InvariantGlobalization)' == ''">false</InvariantGlobalization>
 		<StartupHookSupport Condition="'$(StartupHookSupport)' == ''">false</StartupHookSupport>
 		<UseSystemResourceKeys Condition="'$(UseSystemResourceKeys)' == ''">true</UseSystemResourceKeys>
 		<UseNativeHttpHandler Condition="'$(_PlatformName)' != 'macOS' And '$(UseNativeHttpHandler)' == ''">true</UseNativeHttpHandler>
@@ -172,6 +171,9 @@
 			$(BuildDependsOn);
 			_CreateAppBundle;
 			Codesign;
+			CreateIpa;
+			_CreateInstaller;
+			Archive;
 		</BuildDependsOn>
 
 		<!-- inner build for multi-rid build -->
@@ -192,6 +194,9 @@
 			_CompileAppManifest;
 			_CreateMergedAppBundle;
 			Codesign;
+			CreateIpa;
+			_CreateInstaller;
+			Archive;
 		</BuildDependsOn>
 
 		<!-- We re-use ComputeFilesToPublish & CopyFilesToPublishDirectory to copy files to the .app -->
@@ -233,12 +238,6 @@
 			_CompileEntitlements;
 			_CreateMergedAppBundle;
 		</CreateAppBundleDependsOn>
-	</PropertyGroup>
-
-	<!-- Linker -->
-	<PropertyGroup>
-		<_AdditionalTaskAssemblyDirectory>$(_XamarinSdkRootDirectory)tools/dotnet-linker/</_AdditionalTaskAssemblyDirectory>
-		<_AdditionalTaskAssembly>$(_AdditionalTaskAssemblyDirectory)dotnet-linker.dll</_AdditionalTaskAssembly>
 	</PropertyGroup>
 
 	<!-- PublishTrimmed must be calculated as part of a target because IsMacEnabled on Windows will be set after connecting to the Mac -->
@@ -363,6 +362,7 @@
 				@(_BundlerDlsym -> 'Dlsym=%(Identity)')
 				Debug=$(_BundlerDebug)
 				DeploymentTarget=$(_MinimumOSVersion)
+				EnableSGenConc=$(EnableSGenConc)
 				@(_BundlerEnvironmentVariables -> 'EnvironmentVariable=%(Identity)=%(Value)')
 				@(_XamarinFrameworkAssemblies -> 'FrameworkAssembly=%(Filename)')
 				GlobalizationDataFile=$(_GlobalizationDataFile)
@@ -432,6 +432,10 @@
 
 			<!-- We always want the linker to process debug symbols, even when building in Release mode, because the AOT compiler uses the managed debug symbols to output DWARF debugging symbols -->
 			<TrimmerRemoveSymbols Condition="'$(TrimmerRemoveSymbols)' == ''">false</TrimmerRemoveSymbols>
+
+			<!-- Linker -->
+			<_AdditionalTaskAssemblyDirectory>$(_XamarinSdkRootDirectoryOnMac)tools/dotnet-linker/</_AdditionalTaskAssemblyDirectory>
+			<_AdditionalTaskAssembly>$(_AdditionalTaskAssemblyDirectory)dotnet-linker.dll</_AdditionalTaskAssembly>
 		</PropertyGroup>
 
 		<ItemGroup>
@@ -706,6 +710,8 @@
 			<_RuntimeConfigReservedProperties Include="APP_PATHS" />
 			<_RuntimeConfigReservedProperties Include="PINVOKE_OVERRIDE" />
 			<_RuntimeConfigReservedProperties Include="ICU_DAT_FILE_PATH" />
+			<_RuntimeConfigReservedProperties Include="TRUSTED_PLATFORM_ASSEMBLIES" />
+			<_RuntimeConfigReservedProperties Include="NATIVE_DLL_SEARCH_DIRECTORIES" />
 		</ItemGroup>
 		<RuntimeConfigParserTask
 			Condition="'$(GenerateRuntimeConfigurationFiles)' == 'true'"
@@ -888,9 +894,9 @@
 
 	<Target Name="_ComputeDefaultLinkMode" DependsOnTargets="_DetectSdkLocations">
 		<PropertyGroup>
-			<_DefaultLinkMode Condition="'$(_PlatformName)' == 'macOS'">None</_DefaultLinkMode> <!-- Linking is off by default for macOS apps -->
-			<_DefaultLinkMode Condition="'$(_PlatformName)' != 'macOS' And '$(_SdkIsSimulator)' == 'true'">None</_DefaultLinkMode> <!-- Linking is off by default in the simulator -->
-			<_DefaultLinkMode Condition="'$(_PlatformName)' != 'macOS' And '$(_SdkIsSimulator)' != 'true'">SdkOnly</_DefaultLinkMode> <!-- Linking is SdkOnly for iOS/tvOS/watchOS apps on device -->
+			<_DefaultLinkMode Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">None</_DefaultLinkMode> <!-- Linking is off by default for macOS and Mac Catalyst apps -->
+			<_DefaultLinkMode Condition="'$(_PlatformName)' != 'macOS' And '$(_PlatformName)' != 'MacCatalyst' And '$(_SdkIsSimulator)' == 'true'">None</_DefaultLinkMode> <!-- Linking is off by default in the simulator -->
+			<_DefaultLinkMode Condition="'$(_PlatformName)' != 'macOS' And '$(_PlatformName)' != 'MacCatalyst' And '$(_SdkIsSimulator)' != 'true'">SdkOnly</_DefaultLinkMode> <!-- Linking is SdkOnly for iOS/tvOS/watchOS apps on device -->
 		</PropertyGroup>
 	</Target>
 	<PropertyGroup>
