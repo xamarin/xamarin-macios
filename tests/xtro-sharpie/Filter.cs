@@ -71,7 +71,6 @@ namespace Extrospection {
 			case "ruby":
 			case "ScreenSaver":
 			case "Scripting":
-			case "ScriptingBridge":
 			case "SearchKit":
 			case "SecurityFoundation": // bugzilla
 			case "SecurityHI":
