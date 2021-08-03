@@ -10,6 +10,7 @@ using Phase;
 using OpenTK;
 using NUnit.Framework;
 using AVFoundation;
+using AudioToolbox;
 
 #nullable enable
 
@@ -24,7 +25,7 @@ namespace MonoTouchFixtures.Phase
 		[SetUp]
 		public void Setup ()
 		{
-			TestRuntime.AssertXcodeVersion (15, 0);
+			TestRuntime.AssertXcodeVersion (13, 0);
 			// not supported in simulator
 			TestRuntime.AssertDevice ();
 		}
@@ -33,7 +34,23 @@ namespace MonoTouchFixtures.Phase
 		public void TestConstructor ()
 		{
 			var orientation = new Quaternion (1, 2, 1, 1);
-			using (var layout = new AVAudioChannelLayout ())
+			var audioChannelLayout = new AudioChannelLayout { 
+				Tag = (int) AudioChannelLayoutTag.UseChannelDescriptions,
+				Bitmap = 0,
+				Channels = new AudioChannelDescription [] {
+					new AudioChannelDescription { 
+						Flags = AudioChannelFlags.AllOff,
+						Label = AudioChannelLabel.Discrete_4,
+						Coords = new float [] { 0, 0, 0}, 
+					},
+					new AudioChannelDescription {
+						Flags = AudioChannelFlags.AllOff,
+						Label = AudioChannelLabel.Discrete_5,
+						Coords = new float [] { 0, 0, 0}, 
+					}
+				}
+			};
+			using (var layout = new AVAudioChannelLayout (audioChannelLayout))
 			using (var mixer = new PhaseAmbientMixerDefinition (layout, orientation)) {
 				Assert.AreEqual (orientation, mixer.Orientation);
 			}

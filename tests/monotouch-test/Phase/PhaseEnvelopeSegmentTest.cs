@@ -24,7 +24,7 @@ namespace MonoTouchFixtures.Phase
 		[SetUp]
 		public void Setup ()
 		{
-			TestRuntime.AssertXcodeVersion (15, 0);
+			TestRuntime.AssertXcodeVersion (13, 0);
 			// not supported in simulator
 			TestRuntime.AssertDevice ();
 		}
