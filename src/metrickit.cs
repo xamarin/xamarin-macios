@@ -321,51 +321,39 @@ namespace MetricKit {
 		[Export ("timeStampEnd", ArgumentSemantic.Strong)]
 		NSDate TimeStampEnd { get; }
 
-		[NoMac]
 		[NullAllowed, Export ("cpuMetrics", ArgumentSemantic.Strong)]
 		MXCpuMetric CpuMetrics { get; }
 
-		[NoMac]
 		[NullAllowed, Export ("gpuMetrics", ArgumentSemantic.Strong)]
 		MXGpuMetric GpuMetrics { get; }
 
-		[NoMac]
 		[NullAllowed, Export ("cellularConditionMetrics", ArgumentSemantic.Strong)]
 		MXCellularConditionMetric CellularConditionMetrics { get; }
 
-		[NoMac]
 		[NullAllowed, Export ("applicationTimeMetrics", ArgumentSemantic.Strong)]
 		MXAppRunTimeMetric ApplicationTimeMetrics { get; }
 
-		[NoMac]
 		[NullAllowed, Export ("locationActivityMetrics", ArgumentSemantic.Strong)]
 		MXLocationActivityMetric LocationActivityMetrics { get; }
 
-		[NoMac]
 		[NullAllowed, Export ("networkTransferMetrics", ArgumentSemantic.Strong)]
 		MXNetworkTransferMetric NetworkTransferMetrics { get; }
 
-		[NoMac]
 		[NullAllowed, Export ("applicationLaunchMetrics", ArgumentSemantic.Strong)]
 		MXAppLaunchMetric ApplicationLaunchMetrics { get; }
 
-		[NoMac]
 		[NullAllowed, Export ("applicationResponsivenessMetrics", ArgumentSemantic.Strong)]
 		MXAppResponsivenessMetric ApplicationResponsivenessMetrics { get; }
 
-		[NoMac]
 		[NullAllowed, Export ("diskIOMetrics", ArgumentSemantic.Strong)]
 		MXDiskIOMetric DiskIOMetrics { get; }
 
-		[NoMac]
 		[NullAllowed, Export ("memoryMetrics", ArgumentSemantic.Strong)]
 		MXMemoryMetric MemoryMetrics { get; }
 
-		[NoMac]
 		[NullAllowed, Export ("displayMetrics", ArgumentSemantic.Strong)]
 		MXDisplayMetric DisplayMetrics { get; }
 
-		[NoMac]
 		[NullAllowed, Export ("signpostMetrics", ArgumentSemantic.Strong)]
 		MXSignpostMetric[] SignpostMetrics { get; }
 
@@ -374,7 +362,7 @@ namespace MetricKit {
 
 		[Export ("JSONRepresentation")]
 		NSData JsonRepresentation { get; }
-#if !MONOMAC
+
 		[Internal]
 		[Deprecated (PlatformName.iOS, 14,0)]
 		[Export ("DictionaryRepresentation")]
@@ -385,18 +373,14 @@ namespace MetricKit {
 		[MacCatalyst (14,0)]
 		[Export ("dictionaryRepresentation")]
 		NSDictionary _DictionaryRepresentation14 { get; }
-#else
-		[Export ("dictionaryRepresentation")]
-		NSDictionary DictionaryRepresentation { get; }
-#endif
 
-		[NoMac, iOS (14,0)]
+		[iOS (14,0)]
 		[MacCatalyst (14,0)]
 		[NullAllowed]
 		[Export ("animationMetrics", ArgumentSemantic.Strong)]
 		MXAnimationMetric AnimationMetrics { get; }
 
-		[NoMac, iOS (14,0)]
+		[iOS (14,0)]
 		[MacCatalyst (14,0)]
 		[NullAllowed]
 		[Export ("applicationExitMetrics", ArgumentSemantic.Strong)]
