@@ -77,5 +77,21 @@ namespace Xamarin.Tests {
 				Directory.Delete (dir, true);
 			}
 		}
+
+		protected string GetInfoPListPath (ApplePlatform platform, string app_directory)
+		{
+			switch (platform) {
+			case ApplePlatform.iOS:
+			case ApplePlatform.TVOS:
+			case ApplePlatform.WatchOS:
+				return Path.Combine (app_directory, "Info.plist");
+			case ApplePlatform.MacOSX:
+			case ApplePlatform.MacCatalyst:
+				return Path.Combine (app_directory, "Contents", "Info.plist");
+			default:
+				throw new NotImplementedException ($"Unknown platform: {platform}");
+			}
+		}
+
 	}
 }
