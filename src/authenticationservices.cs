@@ -640,8 +640,7 @@ namespace AuthenticationServices {
 
 		[Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("privateKeys")]
-		/* Should be type of SecKey[] - https://github.com/xamarin/maccore/issues/2482 */
-		NSObject[] PrivateKeys { get; }
+		SecKey[] PrivateKeys { get; }
 	}
 
 	[NoWatch, NoTV, Mac (10,15), iOS (13,0)]
@@ -1197,8 +1196,7 @@ namespace AuthenticationServices {
 		NSData HttpBody { get; set; }
 
 		[Export ("privateKeys", ArgumentSemantic.Assign)]
-		/* Should be type of SecKey[] - https://github.com/xamarin/maccore/issues/2482 */
-		NSObject[] PrivateKeys { get; set; }
+		SecKey[] PrivateKeys { get; set; }
 	}
 
 	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
