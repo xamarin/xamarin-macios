@@ -443,6 +443,8 @@ namespace Introspection {
 				case "NSMergePolicy":
 				case "SFSafariViewControllerPrewarmingToken": // conformance not in headers
 				case "SRTextInputSession": // conformance not in headers
+				case "QLPreviewReply": // conformance not in headers
+				case "QLPreviewReplyAttachment": // conformance not in headers
 					return true;
 				}
 				break;
@@ -684,6 +686,8 @@ namespace Introspection {
 				case "NSMergePolicy":
 				case "SFSafariViewControllerPrewarmingToken": // conformance not in headers
 				case "SRTextInputSession": // conformance not in headers
+				case "QLPreviewReply": // conformance not in headers
+				case "QLPreviewReplyAttachment": // conformance not in headers
 					return true;
 				}
 				break;

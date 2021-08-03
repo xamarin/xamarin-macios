@@ -38,6 +38,7 @@ using UIKit;
 #endif
 using System;
 using System.ComponentModel;
+using UniformTypeIdentifiers;
 
 namespace QuickLook {
 #if !MONOMAC
@@ -170,6 +171,88 @@ namespace QuickLook {
 #endif
 	}
 
+	delegate bool QLPreviewReplyDrawingHandler (CGContext context, QLPreviewReply reply, out NSError error);
+	delegate NSData QLPreviewReplyDataCreationHandler (QLPreviewReply reply, out NSError error);
+	delegate CGPDFDocument QLPreviewReply_UIDocumentCreationHandler (QLPreviewReply reply, out NSError error);
+
+	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof(NSObject))]
+	interface QLPreviewReply
+	{
+		[Export ("stringEncoding")]
+		nuint StringEncoding { get; set; }
+
+		[Export ("attachments", ArgumentSemantic.Copy)]
+		NSDictionary<NSString, QLPreviewReplyAttachment> Attachments { get; set; }
+
+		[Export ("title")]
+		string Title { get; set; }
+
+		[Export ("initWithContextSize:isBitmap:drawingBlock:")]
+		IntPtr Constructor (CGSize contextSize, bool isBitmap, QLPreviewReplyDrawingHandler drawingHandler);
+
+		[Export ("initWithFileURL:")]
+		IntPtr Constructor (NSUrl fileURL);
+
+		[Export ("initWithDataOfContentType:contentSize:dataCreationBlock:")]
+		IntPtr Constructor (UTType contentType, CGSize contentSize, QLPreviewReplyDataCreationHandler dataCreationHandler);
+
+		// QLPreviewReply_UI
+		[Export ("initForPDFWithPageSize:documentCreationBlock:")]
+		IntPtr Constructor (CGSize defaultPageSize, QLPreviewReply_UIDocumentCreationHandler documentCreationHandler);
+	}
+
+	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof(NSObject))]
+	interface QLPreviewReplyAttachment
+	{
+		[Export ("data")]
+		NSData Data { get; }
+
+		[Export ("contentType")]
+		UTType ContentType { get; }
+
+		[Export ("initWithData:contentType:")]
+		IntPtr Constructor (NSData data, UTType contentType);
+	}
+
+	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof(NSObject))]
+	interface QLFilePreviewRequest
+	{
+		[Export ("fileURL")]
+		NSUrl FileURL { get; }
+	}
+
+	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof(NSObject))]
+	interface QLPreviewProvider : NSExtensionRequestHandling
+	{
+	}
+
+	[iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof(NSObject))]
+	interface QLPreviewSceneOptions
+	{
+		[Export ("initialPreviewIndex")]
+		nint InitialPreviewIndex { get; set; }
+	}
+
+	// TODO: BaseType UIWindowSceneActivationConfiguration must first be implemented in UIKit
+	// [iOS (15,0), NoMacCatalyst]
+	// [Advice ("This API is not available when using UIKit on macOS.")]
+	// [BaseType (typeof(UIWindowSceneActivationConfiguration))]
+	// interface QLPreviewSceneActivationConfiguration
+	// {
+	// 	[Export ("initWithItemsAtURLs:options:")]
+	// 	[DesignatedInitializer]
+	// 	IntPtr Constructor (NSUrl[] urls, [NullAllowed] QLPreviewSceneOptions options);
+
+	// 	[Export ("initWithUserActivity:")]
+	// 	[DesignatedInitializer]
+	// 	IntPtr Constructor (NSUserActivity userActivity);
+	// }
+
 	[iOS (11,0)]
 	[Protocol]
 	interface QLPreviewingController {
@@ -178,6 +261,10 @@ namespace QuickLook {
 
 		[Export ("preparePreviewOfFileAtURL:completionHandler:")]
 		void PreparePreviewOfFile (NSUrl url, Action<NSError> handler);
+
+		[iOS (15,0), Mac (12,0), MacCatalyst (15,0)]
+		[Export ("providePreviewForFileRequest:completionHandler:")]
+		void ProvidePreview (QLFilePreviewRequest request, Action<QLPreviewReply, NSError> handler);
 	}
 #else
 	[Static]

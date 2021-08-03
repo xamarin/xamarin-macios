@@ -1727,7 +1727,11 @@ public partial class Generator : IMemberGatherer {
 					convert.Append ($"var {refname} = Runtime.GetINativeObject<{RenderType (nt)}> ({safe_name}, false);");
 					pars.Append ($"ref IntPtr {safe_name}");
 					postConvert.Append ($"{safe_name} = {refname} is null ? IntPtr.Zero : {refname}.Handle;");
-					invoke.Append ($"ref {refname}");
+					if (pi.IsOut)
+						invoke.Append ("out ");
+					else
+						invoke.Append ("ref ");
+					invoke.Append (refname);
 					continue;
 				}
 			} else if (IsNativeEnum (pi.ParameterType)) {
