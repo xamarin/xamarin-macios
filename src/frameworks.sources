@@ -716,6 +716,9 @@ EXTERNALACCESSORY_API_SOURCES = \
 
 # FileProvider
 
+FILEPROVIDER_CORE_SOURCES = \
+	FileProvider/Structs.cs \
+
 FILEPROVIDER_SOURCES = \
 	FileProvider/Compat.cs \
 

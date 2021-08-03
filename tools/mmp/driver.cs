@@ -1096,7 +1096,7 @@ namespace Xamarin.Bundler {
 			var options = new LinkerOptions {
 				MainAssembly = BuildTarget.Resolver.GetAssembly (App.References [App.References.Count - 1]),
 				OutputDirectory = mmp_dir,
-				LinkSymbols = App.EnableDebug,
+				LinkSymbols = App.PackageManagedDebugSymbols,
 				LinkMode = App.LinkMode,
 				Resolver = resolver,
 				SkippedAssemblies = App.LinkSkipped,
