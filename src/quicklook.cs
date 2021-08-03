@@ -239,8 +239,7 @@ namespace QuickLook {
 	}
 
 	// TODO: BaseType UIWindowSceneActivationConfiguration must first be implemented in UIKit
-	// [iOS (15,0), NoMacCatalyst]
-	// [Advice ("This API is not available when using UIKit on macOS.")]
+	// [iOS (15,0), MacCatalyst (15,0)]
 	// [BaseType (typeof(UIWindowSceneActivationConfiguration))]
 	// interface QLPreviewSceneActivationConfiguration
 	// {
