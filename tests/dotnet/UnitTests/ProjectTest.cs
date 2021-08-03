@@ -530,6 +530,30 @@ namespace Xamarin.Tests {
 		}
 
 		[Test]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
+		public void FilesInAppBundle (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			var project = "MySimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			Clean (project_path);
+
+			var properties = new Dictionary<string, string> (verbosity);
+			SetRuntimeIdentifiers (properties, runtimeIdentifiers);
+
+			// Build
+			DotNet.AssertBuild (project_path, properties);
+
+			// Simulate a crash dump
+			var crashDump = Path.Combine (appPath, "mono_crash.mem.123456.something.blob");
+			File.WriteAllText (crashDump, "A crash dump");
+
+			// Build again
+			DotNet.AssertBuild (project_path, properties);
+		}
+
+		[Test]
 		[TestCase (ApplePlatform.MacOSX, "osx-x64")]
 		[TestCase (ApplePlatform.MacOSX, "osx-arm64")]
 		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64")]

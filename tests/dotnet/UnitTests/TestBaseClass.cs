@@ -11,6 +11,7 @@ using NUnit.Framework;
 using Xamarin.Utils;
 using Xamarin.Tests;
 using Xamarin.MacDev;
+using Xamarin.Utils;
 
 namespace Xamarin.Tests {
 	[TestFixture]
@@ -19,6 +20,25 @@ namespace Xamarin.Tests {
 			{ "MtouchExtraArgs", "-v" },
 			{ "MonoBundlingExtraArgs", "-v" },
 		};
+
+		protected void SetRuntimeIdentifiers (Dictionary<string, string> properties, string runtimeIdentifiers)
+		{
+			var multiRid = runtimeIdentifiers.IndexOf (';') >= 0 ? "RuntimeIdentifiers" : "RuntimeIdentifier";
+			properties [multiRid] = runtimeIdentifiers;
+		}
+
+		protected string GetProjectPath (string project, string runtimeIdentifiers, ApplePlatform platform, out string appPath, string subdir = null)
+		{
+			return GetProjectPath (project, null, runtimeIdentifiers, platform, out appPath);
+		}
+
+		protected string GetProjectPath (string project, string subdir, string runtimeIdentifiers, ApplePlatform platform, out string appPath)
+		{
+			var rv = GetProjectPath (project, subdir, platform);
+			var appPathRuntimeIdentifier = runtimeIdentifiers.IndexOf (';') >= 0 ? "" : runtimeIdentifiers;
+			appPath = Path.Combine (Path.GetDirectoryName (rv), "bin", "Debug", platform.ToFramework (), appPathRuntimeIdentifier, project + ".app");
+			return rv;
+		}
 
 		protected string GetProjectPath (string project, string subdir = null, ApplePlatform? platform = null)
 		{
