@@ -189,7 +189,7 @@ namespace SoundAnalysis {
 	interface SNTimeDurationConstraint /* privately conforms to NSCoding, NSCopying, and NSSecureCoding */
 	{
 		[Export ("initWithEnumeratedDurations:")]
-		IntPtr Constructor (NSValue[] enumeratedDurations);
+		IntPtr Constructor ([BindAs (typeof (CMTime[]))] NSValue[] enumeratedDurations);
 
 		[Export ("initWithDurationRange:")]
 		IntPtr Constructor (CMTimeRange durationRange);
@@ -197,6 +197,7 @@ namespace SoundAnalysis {
 		[Export ("type", ArgumentSemantic.Assign)]
 		SNTimeDurationConstraintType Type { get; }
 
+		[return: BindAs (typeof (CMTime[]))]
 		[Export ("enumeratedDurations", ArgumentSemantic.Strong)]
 		NSValue[] EnumeratedDurations { get; }
 
