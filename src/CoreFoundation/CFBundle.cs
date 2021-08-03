@@ -565,15 +565,6 @@ namespace CoreFoundation {
 		
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static void CFBundleGetPackageInfo (IntPtr bundle, out uint packageType, out uint packageCreator);
-		
-		static string FourCCToString (uint code)
-		{
-			return new string (new char [] { 
-				(char) (byte) (code >> 24), 
-				(char) (byte) (code >> 16), 
-				(char) (byte) (code >> 8), 
-				(char) (byte) code});
-		}
 
 		public PackageInfo Info {
 			get {
@@ -581,7 +572,7 @@ namespace CoreFoundation {
 				uint creator = 0;
 				
 				CFBundleGetPackageInfo (handle, out type, out creator);
-				var creatorStr = FourCCToString (creator);
+				var creatorStr = Runtime.ToFourCCString (creator);
 				switch (type) {
 				case 1095782476: // ""APPL
 					return new PackageInfo (CFBundle.PackageType.Application, creatorStr);

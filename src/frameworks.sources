@@ -717,6 +717,9 @@ EXTERNALACCESSORY_API_SOURCES = \
 
 # FileProvider
 
+FILEPROVIDER_CORE_SOURCES = \
+	FileProvider/Structs.cs \
+
 FILEPROVIDER_SOURCES = \
 	FileProvider/Compat.cs \
 
@@ -2241,6 +2244,7 @@ MACCATALYST_FRAMEWORKS = \
 	FileProvider \
 	GameController \
 	GameplayKit \
+	HomeKit \
 	IdentityLookup \
 	ImageIO \
 	Intents \

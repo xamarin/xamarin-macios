@@ -508,7 +508,7 @@ namespace ObjCRuntime {
 		{
 			if (isInnerException)
 				sb.AppendLine (" --- inner exception ---");
-			sb.AppendLine ($"{exc.Message} ({exc.GetType ().FullName})");
+			sb.Append (exc.Message).Append (" (").Append (exc.GetType ().FullName).AppendLine (")");
 			var trace = exc.StackTrace;
 			if (!string.IsNullOrEmpty (trace))
 				sb.AppendLine (trace);
@@ -526,7 +526,7 @@ namespace ObjCRuntime {
 					exc = exc.InnerException;
 				} while (counter < 10 && exc != null);
 			} catch (Exception exception) {
-				str.Append ($"Failed to print exception: {exception}");
+				str.Append ("Failed to print exception: ").Append (exception);
 			}
 
 			return Marshal.StringToHGlobalAuto (str.ToString ());
@@ -1711,6 +1711,20 @@ namespace ObjCRuntime {
 		internal static void NSLog (string format, params object[] args)
 		{
 			NSLog (string.Format (format, args));
+		}
+
+		internal static string ToFourCCString (uint value)
+		{
+			return ToFourCCString (unchecked((int) value));
+		}
+
+		internal static string ToFourCCString (int value)
+		{
+			return new string (new char [] {
+				(char) (byte) (value >> 24),
+				(char) (byte) (value >> 16),
+				(char) (byte) (value >> 8),
+				(char) (byte) value });
 		}
 #endif // !COREBUILD
 

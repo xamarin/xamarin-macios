@@ -48,9 +48,9 @@ using Contacts;
 #endif
 #if !WATCH
 using CoreAnimation;
-using CoreMedia;
 using CoreSpotlight;
 #endif
+using CoreMedia;
 using SceneKit;
 using Security;
 #if IOS || MONOMAC
@@ -98,9 +98,6 @@ using NSImage = Foundation.NSObject;
 
 #if WATCH
 // dummy usings to make code compile without having the actual types available (for [NoWatch] to work)
-using CMTime = Foundation.NSObject;
-using CMTimeMapping = Foundation.NSObject;
-using CMTimeRange = Foundation.NSObject;
 using NSAppleEventSendOptions = Foundation.NSObject;
 using NSBezierPath = Foundation.NSObject;
 using NSImage = Foundation.NSObject;
