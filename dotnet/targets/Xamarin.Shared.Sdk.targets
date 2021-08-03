@@ -362,6 +362,7 @@
 				@(_BundlerDlsym -> 'Dlsym=%(Identity)')
 				Debug=$(_BundlerDebug)
 				DeploymentTarget=$(_MinimumOSVersion)
+				EnableSGenConc=$(EnableSGenConc)
 				@(_BundlerEnvironmentVariables -> 'EnvironmentVariable=%(Identity)=%(Value)')
 				@(_XamarinFrameworkAssemblies -> 'FrameworkAssembly=%(Filename)')
 				GlobalizationDataFile=$(_GlobalizationDataFile)
@@ -710,6 +711,7 @@
 			<_RuntimeConfigReservedProperties Include="PINVOKE_OVERRIDE" />
 			<_RuntimeConfigReservedProperties Include="ICU_DAT_FILE_PATH" />
 			<_RuntimeConfigReservedProperties Include="TRUSTED_PLATFORM_ASSEMBLIES" />
+			<_RuntimeConfigReservedProperties Include="NATIVE_DLL_SEARCH_DIRECTORIES" />
 		</ItemGroup>
 		<RuntimeConfigParserTask
 			Condition="'$(GenerateRuntimeConfigurationFiles)' == 'true'"
