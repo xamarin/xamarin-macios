@@ -370,6 +370,11 @@ namespace MonoTests.System.Net.Http
 				Assert.Ignore ("Fails on macOS 10.10: https://github.com/xamarin/maccore/issues/1645");
 #endif
 
+#if NET
+			if (handlerType == typeof (HttpClientHandler))
+				Assert.Ignore ("https://github.com/dotnet/runtime/issues/55986");
+#endif
+
 			bool validationCbWasExecuted = false;
 			bool customValidationCbWasExecuted = false;
 			bool invalidServicePointManagerCbWasExcuted = false;
@@ -421,13 +426,13 @@ namespace MonoTests.System.Net.Http
 				Assert.Inconclusive ("Request timedout.");
 			} else {
 				// the ServicePointManager.ServerCertificateValidationCallback will never be executed.
-				Assert.False(invalidServicePointManagerCbWasExcuted);
-				Assert.True(validationCbWasExecuted);
+				Assert.False (invalidServicePointManagerCbWasExcuted, "Invalid SPM executed");
+				Assert.True (validationCbWasExecuted, "Validation Callback called");
 				// assert the exception type
 				Assert.IsNotNull (ex, (result == null)? "Expected exception is missing and got no result" : $"Expected exception but got {result.Content.ReadAsStringAsync ().Result}");
-				Assert.IsInstanceOf (typeof (HttpRequestException), ex);
-				Assert.IsNotNull (ex.InnerException);
-				Assert.IsInstanceOf (expectedExceptionType, ex.InnerException);
+				Assert.IsInstanceOf (typeof (HttpRequestException), ex, "Exception type");
+				Assert.IsNotNull (ex.InnerException, "InnerException");
+				Assert.IsInstanceOf (expectedExceptionType, ex.InnerException, "InnerException type");
 			}
 		}
 

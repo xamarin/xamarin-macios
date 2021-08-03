@@ -848,11 +848,14 @@ Additional information:
 		[Test]
 		public void CurrentDirectory ()
 		{
+			var expectedDirectory = (string) ((NSString) Environment.CurrentDirectory).ResolveSymlinksInPath ();
+
 #if NET || !MONOMAC
-			Assert.AreEqual (Environment.CurrentDirectory, NSBundle.MainBundle.BundlePath, "Current directory at launch");
+			var actualDirectory = (string) ((NSString) NSBundle.MainBundle.BundlePath).ResolveSymlinksInPath ();
 #else
-			Assert.AreEqual (Environment.CurrentDirectory, NSBundle.MainBundle.ResourcePath, "Current directory at launch");
+			var actualDirectory = (string) ((NSString) NSBundle.MainBundle.ResourcePath).ResolveSymlinksInPath ();
 #endif
+			Assert.AreEqual (expectedDirectory, actualDirectory, "Current directory at launch");
 		}
 	}
 }

@@ -631,7 +631,6 @@ public class Frameworks : Dictionary <string, Framework>
 				case "HealthKitUI":
 				case "iAd":
 				case "IdentityLookupUI":
-				case "HomeKit":
 				case "Messages":
 				case "MessageUI":
 				case "VisionKit":
@@ -647,6 +646,9 @@ public class Frameworks : Dictionary <string, Framework>
 					break;
 				}
 			}
+
+			// Add frameworks that are not in iOS
+			catalyst_frameworks.Add ("AppKit", 13, 0);
 		}
 		return catalyst_frameworks;
 	}

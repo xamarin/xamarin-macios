@@ -6,6 +6,8 @@
 			"packs": [
 				"Microsoft.@PLATFORM@.Sdk",
 				"Microsoft.@PLATFORM@.Ref",
+				"Microsoft.@PLATFORM@.Runtime.tvos-arm64",
+				"Microsoft.@PLATFORM@.Runtime.tvossimulator-x64",
 				"Microsoft.@PLATFORM@.Templates"
 			],
 			"extends": [
@@ -19,6 +21,14 @@
 			"version": "@VERSION@"
 		},
 		"Microsoft.@PLATFORM@.Ref": {
+			"kind": "framework",
+			"version": "@VERSION@"
+		},
+		"Microsoft.@PLATFORM@.Runtime.tvos-arm64": {
+			"kind": "framework",
+			"version": "@VERSION@"
+		},
+		"Microsoft.@PLATFORM@.Runtime.tvossimulator-x64": {
 			"kind": "framework",
 			"version": "@VERSION@"
 		},

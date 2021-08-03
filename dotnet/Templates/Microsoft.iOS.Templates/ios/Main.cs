@@ -1,5 +1,3 @@
-using UIKit;
-
 using iOSApp1;
 
 // This is the main entry point of the application.

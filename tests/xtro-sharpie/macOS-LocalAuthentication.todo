@@ -1,3 +1,0 @@
-!missing-enum-value! LAStatus native value LAErrorInvalidDimensions = -14 not bound
-!missing-selector! LAContext::maxBiometryFailures not bound
-!missing-selector! LAContext::setMaxBiometryFailures: not bound
