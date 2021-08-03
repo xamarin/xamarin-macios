@@ -508,7 +508,7 @@ namespace ObjCRuntime {
 		{
 			if (isInnerException)
 				sb.AppendLine (" --- inner exception ---");
-			sb.AppendLine ($"{exc.Message} ({exc.GetType ().FullName})");
+			sb.Append (exc.Message).Append (" (").Append (exc.GetType ().FullName).AppendLine (")");
 			var trace = exc.StackTrace;
 			if (!string.IsNullOrEmpty (trace))
 				sb.AppendLine (trace);
@@ -526,7 +526,7 @@ namespace ObjCRuntime {
 					exc = exc.InnerException;
 				} while (counter < 10 && exc != null);
 			} catch (Exception exception) {
-				str.Append ($"Failed to print exception: {exception}");
+				str.Append ("Failed to print exception: ").Append (exception);
 			}
 
 			return Marshal.StringToHGlobalAuto (str.ToString ());
