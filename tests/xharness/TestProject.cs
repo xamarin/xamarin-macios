@@ -108,7 +108,7 @@ namespace Xharness {
 					continue;
 
 				var project = node.Attributes ["Project"].Value;
-				if (!Regex.IsMatch (project, "[$][(]RootTestsDirectory[)]/.*/dotnet/shared.csproj"))
+				if (project != "../shared.csproj")
 					continue;
 
 				if (TestPlatform == TestPlatform.None)

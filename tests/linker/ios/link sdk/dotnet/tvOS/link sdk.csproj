@@ -2,13 +2,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net6.0-tvos</TargetFramework>
-    <AssetTargetFallback>xamarintvos10;$(AssetTargetFallback)</AssetTargetFallback>
   </PropertyGroup>
 
-  <!-- Imports of the form '$(RootTestsDirectory)/.*/dotnet/shared.csproj' will be processed by xharness -->
-  <Import Project="$(RootTestsDirectory)/linker/ios/link sdk/dotnet/shared.csproj" />
+  <!-- Imports of the form '../shared.csproj' will be inlined by xharness -->
+  <Import Project="../shared.csproj" />
 
   <ItemGroup>
-    <PackageReference Include="MonoTouch.Dialog" Version="2.0.0-pre1" />
+    <!-- this empty item group is here for xharness -->
   </ItemGroup>
 </Project>

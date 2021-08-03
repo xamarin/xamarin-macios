@@ -13,6 +13,8 @@
     <ThisTestDirectory>$(RootTestsDirectory)\linker\ios\link sdk</ThisTestDirectory>
   </PropertyGroup>
 
+  <Import Project="$(RootTestsDirectory)/common/shared-dotnet.csproj" />
+
   <ItemGroup>
     <Reference Include="support">
       <HintPath>$(ThisTestDirectory)/support.dll</HintPath>

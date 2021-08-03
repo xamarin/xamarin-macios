@@ -2,14 +2,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net6.0-maccatalyst</TargetFramework>
-    <AssetTargetFallback>xamarinios10;$(AssetTargetFallback)</AssetTargetFallback>
   </PropertyGroup>
+
+  <!-- Imports of the form '../shared.csproj' will be inlined by xharness -->
+  <Import Project="../shared.csproj" />
 
   <ItemGroup>
     <!-- this empty item group is here for xharness -->
   </ItemGroup>
-
-  <!-- Imports of the form '$(RootTestsDirectory)/.*/dotnet/shared.csproj' will be processed by xharness -->
-  <Import Project="$(RootTestsDirectory)/linker/ios/dont link/dotnet/shared.csproj" />
-
 </Project>

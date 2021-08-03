@@ -13,6 +13,8 @@
     <ThisTestDirectory>$(RootTestsDirectory)\linker\ios\link all</ThisTestDirectory>
   </PropertyGroup>
 
+  <Import Project="$(RootTestsDirectory)/common/shared-dotnet.csproj" />
+
   <!-- We use configurations like Debug64 and Release64, which doesn't work with the default logic we and .NET have -->
   <PropertyGroup Condition="$(Configuration.Contains('Debug'))">
     <MtouchDebug>true</MtouchDebug>

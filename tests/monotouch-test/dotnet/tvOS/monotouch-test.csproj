@@ -2,14 +2,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net6.0-tvos</TargetFramework>
-    <DefineConstants>$(DefineConstants);XAMCORE_3_0</DefineConstants>
-    <AssetTargetFallback>xamarintvos10;$(AssetTargetFallback)</AssetTargetFallback>
+    <DefineConstants Condition="'$(Platform)' == 'iPhoneSimulator'">$(DefineConstants);DYNAMIC_REGISTRAR</DefineConstants>
   </PropertyGroup>
 
-  <!-- Imports of the form '$(RootTestsDirectory)/.*/dotnet/shared.csproj' will be processed by xharness -->
-  <Import Project="$(RootTestsDirectory)/monotouch-test/dotnet/shared.csproj" />
+  <!-- Imports of the form '../shared.csproj' will be processed by xharness -->
+  <Import Project="../shared.csproj" />
 
   <ItemGroup>
-    <PackageReference Include="MonoTouch.Dialog" Version="2.0.0-pre1" />
+    <!-- this empty item group is here for xharness -->
   </ItemGroup>
 </Project>

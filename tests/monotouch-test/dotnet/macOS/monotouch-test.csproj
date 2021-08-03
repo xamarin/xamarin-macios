@@ -2,11 +2,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net6.0-macos</TargetFramework>
-    <DefineConstants>$(DefineConstants);MONOMAC;XAMMAC_TESTS</DefineConstants>
+    <DefineConstants>$(DefineConstants);XAMMAC_TESTS</DefineConstants>
+    <DefineConstants Condition="'$(Configuration)' == 'Debug'">$(DefineConstants);DYNAMIC_REGISTRAR</DefineConstants>
   </PropertyGroup>
 
-  <!-- Imports of the form '$(RootTestsDirectory)/.*/dotnet/shared.csproj' will be processed by xharness -->
-  <Import Project="$(RootTestsDirectory)/monotouch-test/dotnet/shared.csproj" />
+  <!-- Imports of the form '../shared.csproj' will be inlined by xharness -->
+  <Import Project="../shared.csproj" />
 
   <ItemGroup>
     <Compile Include="..\..\..\common\Configuration.cs">
