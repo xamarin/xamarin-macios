@@ -285,7 +285,7 @@ namespace MetricKit {
 		NSMeasurement<NSUnitInformationStorage> CumulativeLogicalWrites { get; }
 
 		[NullAllowed]
-		[NoWatch, NoTV, NoMac, iOS (15,0)]
+		[NoWatch, NoTV, NoMac, iOS (15,0), NoMacCatalyst]
 		[Export ("cumulativeHitchTimeRatio", ArgumentSemantic.Strong)]
 		NSMeasurement<NSUnit> CumulativeHitchTimeRatio { get; }
 	}
