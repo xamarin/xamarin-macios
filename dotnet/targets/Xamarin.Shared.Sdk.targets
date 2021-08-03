@@ -331,7 +331,7 @@
 		</Touch>
 	</Target>
 
-	<Target Name="_ComputeMonoComponents" Condition="'$(_LibMonoLinkMode)' == 'static'" BeforeTargets="_MonoSelectRuntimeComponents" DependsOnTargets="_ComputeVariables">
+	<Target Name="_ComputeMonoComponents" Condition="'$(UseMonoRuntime)' == 'true' And '$(_LibMonoLinkMode)' == 'static'" BeforeTargets="_MonoSelectRuntimeComponents" DependsOnTargets="_ComputeVariables">
 		<!-- https://github.com/dotnet/runtime/blob/main/docs/design/mono/components.md -->
 		<ItemGroup>
 			<_MonoComponent Include="hot_reload" Condition="'$(MtouchInterpreter)' == 'true'" />
@@ -340,7 +340,7 @@
 		</ItemGroup>
 	</Target>
 
-	<Target Name="_ComputeMonoLibraries" DependsOnTargets="_ComputeMonoComponents;_MonoSelectRuntimeComponents">
+	<Target Name="_ComputeMonoLibraries" Condition="'$(UseMonoRuntime)' == 'true'" DependsOnTargets="_ComputeMonoComponents;_MonoSelectRuntimeComponents">
 		<!-- We only include any mono components when linking with mono statically. The components are already included in the dynamic versions of Mono (both the dylib and the framework) -->
 		<ItemGroup Condition="'$(_LibMonoLinkMode)' == 'static'">
 			<!-- Remove files mono told us not to link with -->
@@ -938,7 +938,7 @@
 		</_ComputeLinkModeDependsOn>
 	</PropertyGroup>
 
-	<Target Name="_ComputePublishLocation" DependsOnTargets="_GenerateBundleName;_ParseBundlerArguments;_MonoSelectRuntimeComponents">
+	<Target Name="_ComputePublishLocation" DependsOnTargets="_GenerateBundleName;_ParseBundlerArguments;_ComputeMonoLibraries">
 		<PropertyGroup>
 			<_AssemblyPublishDir Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'">$(MSBuildProjectDirectory)\$(_AppBundlePath)\</_AssemblyPublishDir>
 			<_AssemblyPublishDir Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">$(MSBuildProjectDirectory)\$(_AppBundlePath)\Contents\$(_CustomBundleName)\</_AssemblyPublishDir>
