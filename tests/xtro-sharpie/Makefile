@@ -77,6 +77,7 @@ $(XCAT_PCH): .stamp-check-sharpie
 	-exclude RealityKit \
 	-exclude SecurityInterface \
 	-exclude Virtualization \
+	-i HomeKit/HomeKit.h \
 
 
 ios-$(IOS_SDK_VERSION).g.cs: $(XIOS_PCH)

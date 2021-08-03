@@ -1,0 +1,42 @@
+# Only supported in iOS 8
+!missing-protocol! HMAccessoryBrowserDelegate not bound
+
+# Only supported in iOS 8
+!missing-type! HMAccessoryBrowser not bound
+!missing-selector! HMAccessoryBrowser::delegate not bound
+!missing-selector! HMAccessoryBrowser::discoveredAccessories not bound
+!missing-selector! HMAccessoryBrowser::setDelegate: not bound
+!missing-selector! HMAccessoryBrowser::startSearchingForNewAccessories not bound
+!missing-selector! HMAccessoryBrowser::stopSearchingForNewAccessories not bound
+
+# Only supported in iOS 11.3
+!missing-type! HMAccessorySetupPayload not bound
+!missing-selector! HMAccessorySetupPayload::initWithURL: not bound
+!missing-selector! HMAccessorySetupPayload::initWithURL:ownershipToken: not bound
+!missing-selector! HMHome::addAndSetupAccessoriesWithPayload:completionHandler: not bound
+
+
+# Only supported in iOS 13
+!missing-type! HMAccessoryOwnershipToken not bound
+!missing-selector! HMAccessoryOwnershipToken::initWithData: not bound
+
+# Only supported in iOS 13
+!missing-type! HMAddAccessoryRequest not bound
+!missing-selector! HMAddAccessoryRequest::accessoryCategory not bound
+!missing-selector! HMAddAccessoryRequest::accessoryName not bound
+!missing-selector! HMAddAccessoryRequest::home not bound
+!missing-selector! HMAddAccessoryRequest::payloadWithOwnershipToken: not bound
+!missing-selector! HMAddAccessoryRequest::payloadWithURL:ownershipToken: not bound
+!missing-selector! HMAddAccessoryRequest::requiresOwnershipToken not bound
+!missing-selector! HMAddAccessoryRequest::requiresSetupPayloadURL not bound
+
+# Webdocs say it is supported in MacCatalyst 13, but the parameter type HMAddAccessoryRequest
+# is only supported in iOS 13
+!missing-protocol-member! HMHomeManagerDelegate::homeManager:didReceiveAddAccessoryRequest: not found
+
+# Only supported in iOS 15
+!missing-type! HMAccessorySetupManager not bound
+!missing-selector! HMAccessorySetupManager::addAndSetUpAccessoriesForTopology:completionHandler: not bound
+
+# Deprecated
+!missing-selector! HMHome::removeUser:completionHandler: not bound
