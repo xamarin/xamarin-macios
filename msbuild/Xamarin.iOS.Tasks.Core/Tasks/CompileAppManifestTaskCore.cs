@@ -143,10 +143,6 @@ namespace Xamarin.iOS.Tasks
 					SetAppTransportSecurity (plist);
 			}
 
-			// Remove any Xamarin Studio specific keys
-			plist.Remove (ManifestKeys.XSLaunchImageAssets);
-			plist.Remove (ManifestKeys.XSAppIconAssets);
-
 			SetRequiredArchitectures (plist);
 
 			if (IsIOS)

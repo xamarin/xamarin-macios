@@ -108,7 +108,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<PropertyGroup Condition="'$(UsingAppleNETSdk)' != 'true'">
 		<CreateAppBundleDependsOn>
 			$(CreateAppBundleDependsOn);
-			_DetectAppManifest;
 			_DetectSigningIdentity;
 			_CopyResourcesToBundle;
 			_CreateAssetPackManifest;
@@ -118,7 +117,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			_CompileCoreMLModels;
 			_PrepareResourceRules;
 			_CompileEntitlements;
-			_CompileAppManifest;
+			_WriteAppManifest;
 			_GetNativeExecutableName;
 			_ParseBundlerArguments;
 			_CompileToNative;
@@ -227,9 +226,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<_CompileITunesMetadataDependsOn>
 			$(_CompileITunesMetadataDependsOn);
 			_DetectSdkLocations;
-			_DetectAppManifest;
 			_GenerateBundleName;
-			_CompileAppManifest;
 			_ReadAppManifest;
 		</_CompileITunesMetadataDependsOn>
 	</PropertyGroup>
@@ -274,12 +271,11 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<_CompileToNativeDependsOn>
 			_ComputeLinkMode;
 			_ComputeTargetFrameworkMoniker;
-			_DetectAppManifest;
 			_DetectSdkLocations;
 			_GenerateBundleName;
 			_DetectSigningIdentity;
 			_CompileEntitlements;
-			_CompileAppManifest;
+			_WriteAppManifest;
 			_ResolveAppExtensionReferences;
 			_ExtendAppExtensionReferences;
 			_GetNativeExecutableName;
@@ -484,7 +480,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<PropertyGroup>
 		<_CompileTextureAtlasesDependsOn>
 			$(_CompileTextureAtlasesDependsOn);
-			_DetectAppManifest;
 			_DetectSdkLocations;
 			_BeforeCompileTextureAtlases;
 			_ReadCoreCompileTextureAtlases;

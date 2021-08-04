@@ -196,7 +196,9 @@
 		<BuildDependsOn Condition="'$(RuntimeIdentifiers)' != ''">
 			_RunRidSpecificBuild;
 			_CompileEntitlements;
-			_CompileAppManifest;
+			_DetectAppManifest;
+			_ReadAppManifest;
+			_WriteAppManifest;
 			_CreateMergedAppBundle;
 			Codesign;
 			CreateIpa;
@@ -209,7 +211,6 @@
 		<!-- single-rid build (either plain single, or inner build for multi-rid build) -->
 		<CreateAppBundleDependsOn Condition="'$(RuntimeIdentifiers)' == ''">
 			$(CreateAppBundleDependsOn);
-			_DetectAppManifest;
 			_CopyResourcesToBundle;
 			_CompileCoreMLModels;
 			_CreatePkgInfo;
@@ -217,7 +218,9 @@
 			_ForgeMetal;
 			_TemperMetal;
 			_CompileEntitlements;
-			_CompileAppManifest;
+			_DetectAppManifest;
+			_ReadAppManifest;
+			_WriteAppManifest;
 			_ResolveAppExtensionReferences;
 			_ExtendAppExtensionReferences;
 			_ComputeLinkerArguments;
@@ -369,6 +372,9 @@
 			_CreateRuntimeConfiguration;
 			_ComputeMonoLibraries;
 			_FindAotCompiler;
+			_DetectAppManifest;
+			_ReadAppManifest;
+			_WriteAppManifest;
 		</_ComputeLinkerArgumentsDependsOn>
 	</PropertyGroup>
 
@@ -809,6 +815,9 @@
 			$(_AOTCompileDependsOn);
 			_ComputeVariables;
 			_FindAotCompiler;
+			_DetectAppManifest;
+			_ReadAppManifest;
+			_WriteAppManifest;
 		</_AOTCompileDependsOn>
 	</PropertyGroup>
 	<Target Name="_AOTCompile"
@@ -894,7 +903,9 @@
 			_DetectSdkLocations;
 			_ComputeTargetArchitectures;
 			_GenerateBundleName;
+			_DetectAppManifest;
 			_ReadAppManifest;
+			_WriteAppManifest;
 			_ComputeNativeExecutableInputs;
 			_AOTCompile;
 		</_CompileNativeExecutableDependsOn>
@@ -931,7 +942,9 @@
 			_DetectSdkLocations;
 			_ComputeTargetArchitectures;
 			_GenerateBundleName;
-			_CompileAppManifest;
+			_DetectAppManifest;
+			_ReadAppManifest;
+			_WriteAppManifest;
 			_CompileNativeExecutable;
 		</_LinkNativeExecutableDependsOn>
 	</PropertyGroup>
