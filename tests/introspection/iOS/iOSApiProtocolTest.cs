@@ -441,6 +441,7 @@ namespace Introspection {
 				case "ARSkeletonDefinition": // device only
 				case "ARVideoFormat": // device only
 				case "NSMergePolicy":
+				case "SNTimeDurationConstraint": // Conformance not in headers
 				case "PKDeferredPaymentSummaryItem":
 				case "PKPaymentRequestCouponCodeUpdate":
 				case "PKRecurringPaymentSummaryItem":
@@ -687,6 +688,7 @@ namespace Introspection {
 				case "ARSkeletonDefinition": // device only
 				case "ARVideoFormat": // device only
 				case "NSMergePolicy":
+				case "SNTimeDurationConstraint": // Conformance not in headers
 				case "PKDeferredPaymentSummaryItem":
 				case "PKPaymentRequestCouponCodeUpdate":
 				case "PKRecurringPaymentSummaryItem":
@@ -777,6 +779,7 @@ namespace Introspection {
 				case "NSMappingModel":
 				case "NSMergePolicy":
 				case "NSPropertyMapping":
+				case "SNTimeDurationConstraint": // Conformance not in headers"
 				case "PKDeferredPaymentSummaryItem":
 				case "PKRecurringPaymentSummaryItem":
 				case "PKStoredValuePassProperties":
