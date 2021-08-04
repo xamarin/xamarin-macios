@@ -12,14 +12,19 @@
 !missing-enum-value! MTLDataType native value MTLDataTypeULong2 = 86 not bound
 !missing-enum-value! MTLDataType native value MTLDataTypeULong3 = 87 not bound
 !missing-enum-value! MTLDataType native value MTLDataTypeULong4 = 88 not bound
+!missing-enum-value! MTLIntersectionFunctionSignature native value MTLIntersectionFunctionSignatureExtendedLimits = 32 not bound
+!missing-enum-value! MTLIntersectionFunctionSignature native value MTLIntersectionFunctionSignatureInstanceMotion = 8 not bound
+!missing-enum-value! MTLIntersectionFunctionSignature native value MTLIntersectionFunctionSignaturePrimitiveMotion = 16 not bound
 !missing-enum-value! MTLLanguageVersion native value MTLLanguageVersion2_4 = 131076 not bound
 !missing-enum-value! MTLRenderStages native value MTLRenderStageTile = 4 not bound
 !missing-protocol! MTLFunctionStitchingAttribute not bound
 !missing-protocol! MTLFunctionStitchingNode not bound
 !missing-protocol-member! MTLAccelerationStructureCommandEncoder::writeCompactedAccelerationStructureSize:toBuffer:offset:sizeDataType: not found
 !missing-protocol-member! MTLBinaryArchive::addFunctionWithDescriptor:library:error: not found
-!missing-protocol-member! MTLDevice::newLibraryWithDescriptor:error: not found
+!missing-protocol-member! MTLDevice::newLibraryWithStitchedDescriptor:completionHandler: not found
+!missing-protocol-member! MTLDevice::newLibraryWithStitchedDescriptor:error: not found
 !missing-protocol-member! MTLDevice::supportsFunctionPointersFromRender not found
+!missing-protocol-member! MTLDevice::supportsPrimitiveMotionBlur not found
 !missing-protocol-member! MTLDevice::supportsRaytracingFromRender not found
 !missing-protocol-member! MTLDevice::supportsRenderDynamicLibraries not found
 !missing-protocol-member! MTLRenderCommandEncoder::setFragmentAccelerationStructure:atBufferIndex: not found

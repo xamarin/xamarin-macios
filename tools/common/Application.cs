@@ -89,6 +89,7 @@ namespace Xamarin.Bundler {
 		public bool IsExtension;
 		public ApplePlatform Platform { get { return Driver.TargetFramework.Platform; } }
 
+		public List<string> MonoLibraries = new List<string> ();
 		public List<string> InterpretedAssemblies = new List<string> ();
 
 		// EnableMSym: only implemented for Xamarin.iOS
@@ -182,8 +183,12 @@ namespace Xamarin.Bundler {
 		}
 
 		// How Mono should be embedded into the app.
+		AssemblyBuildTarget? libmono_link_mode;
 		public AssemblyBuildTarget LibMonoLinkMode {
 			get {
+				if (libmono_link_mode.HasValue)
+					return libmono_link_mode.Value;
+
 				if (Platform == ApplePlatform.MacOSX) {
 					// This property was implemented for iOS, but might be re-used for macOS if desired after testing to verify it works as expected.
 					throw ErrorHelper.CreateError (99, Errors.MX0099, "LibMonoLinkMode isn't a valid operation for macOS apps.");
@@ -199,11 +204,18 @@ namespace Xamarin.Bundler {
 					return AssemblyBuildTarget.StaticObject;
 				}
 			}
+			set {
+				libmono_link_mode = value;
+			}
 		}
 
 		// How libxamarin should be embedded into the app.
+		AssemblyBuildTarget? libxamarin_link_mode;
 		public AssemblyBuildTarget LibXamarinLinkMode {
 			get {
+				if (libxamarin_link_mode.HasValue)
+					return libxamarin_link_mode.Value;
+
 				if (Platform == ApplePlatform.MacOSX) {
 					// This property was implemented for iOS, but might be re-used for macOS if desired after testing to verify it works as expected.
 					throw ErrorHelper.CreateError (99, Errors.MX0099, "LibXamarinLinkMode isn't a valid operation for macOS apps.");
@@ -219,14 +231,25 @@ namespace Xamarin.Bundler {
 					return AssemblyBuildTarget.StaticObject;
 				}
 			}
+			set {
+				libxamarin_link_mode = value;
+			}
 		}
 
 		// How the generated libpinvoke library should be linked into the app.
 		public AssemblyBuildTarget LibPInvokesLinkMode => LibXamarinLinkMode;
 		// How the profiler library should be linked into the app.
 		public AssemblyBuildTarget LibProfilerLinkMode => OnlyStaticLibraries ? AssemblyBuildTarget.StaticObject : AssemblyBuildTarget.DynamicLibrary;
+
 		// How the libmononative library should be linked into the app.
-		public AssemblyBuildTarget LibMonoNativeLinkMode => HasDynamicLibraries ? AssemblyBuildTarget.DynamicLibrary : AssemblyBuildTarget.StaticObject;
+		public AssemblyBuildTarget LibMonoNativeLinkMode {
+			get {
+				// if there's a specific way libmono is being linked, use the same way.
+				if (libmono_link_mode.HasValue)
+					return libmono_link_mode.Value;
+				return HasDynamicLibraries ? AssemblyBuildTarget.DynamicLibrary: AssemblyBuildTarget.StaticObject;
+			}
+		}
 
 		// If all assemblies are compiled into static libraries.
 		public bool OnlyStaticLibraries {
@@ -645,55 +668,7 @@ namespace Xamarin.Bundler {
 		// if it's later than the timestamp of the "target" file itself.
 		public static bool IsUptodate (IEnumerable<string> sources, IEnumerable<string> targets, bool check_stamp = true)
 		{
-			if (Driver.Force)
-				return false;
-
-			DateTime max_source = DateTime.MinValue;
-			string max_s = null;
-
-			if (sources.Count () == 0 || targets.Count () == 0)
-				throw ErrorHelper.CreateError (1013, Errors.MT1013);
-
-			foreach (var s in sources) {
-				var sfi = new FileInfo (s);
-				if (!sfi.Exists) {
-					Driver.Log (3, "Prerequisite '{0}' does not exist.", s);
-					return false;
-				}
-
-				var st = sfi.LastWriteTimeUtc;
-				if (st > max_source) {
-					max_source = st;
-					max_s = s;
-				}
-			}
-
-
-			foreach (var t in targets) {
-				var tfi = new FileInfo (t);
-				if (!tfi.Exists) {
-					Driver.Log (3, "Target '{0}' does not exist.", t);
-					return false;
-				}
-
-				if (check_stamp) {
-					var tfi_stamp = new FileInfo (t + ".stamp");
-					if (tfi_stamp.Exists && tfi_stamp.LastWriteTimeUtc > tfi.LastWriteTimeUtc) {
-						Driver.Log (3, "Target '{0}' has a stamp file with newer timestamp ({1} > {2}), using the stamp file's timestamp", t, tfi_stamp.LastWriteTimeUtc, tfi.LastWriteTimeUtc);
-						tfi = tfi_stamp;
-					}
-				}
-
-				var lwt = tfi.LastWriteTimeUtc;
-				if (max_source > lwt) {
-					Driver.Log (3, "Prerequisite '{0}' is newer than target '{1}' ({2} vs {3}).", max_s, t, max_source, lwt);
-					return false;
-				}
-			}
-
-			Driver.Log (3, "Prerequisite(s) '{0}' are all older than the target(s) '{1}'.", string.Join ("', '", sources.ToArray ()), string.Join ("', '", targets.ToArray ()));
-
-			return true;
+			return FileCopier.IsUptodate (sources, targets, check_stamp);
 		}
 		
 		public static void UpdateDirectory (string source, string target)
@@ -1398,8 +1373,10 @@ namespace Xamarin.Bundler {
 			if (Platform == ApplePlatform.MacOSX)
 				throw ErrorHelper.CreateError (99, Errors.MX0099, "IsInterpreted isn't a valid operation for macOS apps.");
 
+#if !NET
 			if (IsSimulatorBuild)
 				return false;
+#endif
 
 			// IsAOTCompiled and IsInterpreted are not opposites: mscorlib.dll can be both.
 			if (!UseInterpreter)
@@ -1429,15 +1406,18 @@ namespace Xamarin.Bundler {
 		public bool IsAOTCompiled (string assembly)
 		{
 #if NET
-			if (Platform == ApplePlatform.MacOSX || Platform == ApplePlatform.MacCatalyst)
+			if (Platform == ApplePlatform.MacOSX)
 				return false; // AOT on .NET for macOS hasn't been implemented yet.
 #else	
 			if (Platform == ApplePlatform.MacOSX)
 				throw ErrorHelper.CreateError (99, Errors.MX0099, "IsAOTCompiled isn't a valid operation for macOS apps.");
 #endif
+			if (!UseInterpreter) {
+				if (Platform == ApplePlatform.MacCatalyst)
+					return IsArchEnabled (Abi.ARM64);
 
-			if (!UseInterpreter)
-				return true;
+				return IsDeviceBuild;
+			}
 
 			// IsAOTCompiled and IsInterpreted are not opposites: mscorlib.dll can be both:
 			// - mscorlib will always be processed by the AOT compiler to generate required wrapper functions for the interpreter to work
@@ -1456,7 +1436,7 @@ namespace Xamarin.Bundler {
 			return processArguments;
 		}
 
-		public void GetAotArguments (string filename, Abi abi, string outputDir, string outputFile, string llvmOutputFile, string dataFile, out List<string> processArguments, out List<string> aotArguments)
+		public void GetAotArguments (string filename, Abi abi, string outputDir, string outputFile, string llvmOutputFile, string dataFile, out List<string> processArguments, out List<string> aotArguments, string llvm_path = null)
 		{
 			string fname = Path.GetFileName (filename);
 			processArguments = new List<string> ();
@@ -1520,8 +1500,13 @@ namespace Xamarin.Bundler {
 				aotArguments.Add ($"msym-dir={msymdir}");
 			}
 
-			if (enable_llvm)
-				aotArguments.Add ($"llvm-path={Driver.GetFrameworkCurrentDirectory (app)}/LLVM/bin/");
+			if (enable_llvm) {
+				if (!string.IsNullOrEmpty (llvm_path)) {
+					aotArguments.Add ($"llvm-path={llvm_path}");
+				} else {
+					aotArguments.Add ($"llvm-path={Driver.GetFrameworkCurrentDirectory (app)}/LLVM/bin/");
+				}
+			}
 
 			aotArguments.Add ($"outfile={outputFile}");
 			if (enable_llvm)
@@ -1636,8 +1621,10 @@ namespace Xamarin.Bundler {
 				return !Profile.IsSdkAssembly (Path.GetFileNameWithoutExtension (assembly));
 			case ApplePlatform.TVOS:
 			case ApplePlatform.WatchOS:
-			case ApplePlatform.MacCatalyst:
 				return false;
+			case ApplePlatform.MacCatalyst:
+				// We can't emit a direct call to the P/Invoke with the AOT compiler: https://github.com/dotnet/runtime/issues/55733
+				return IsAOTCompiled (assembly);
 			default:
 				throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
 			}

@@ -1,3 +1,0 @@
-!missing-protocol-member! SCNAnimatable::removeAllAnimationsWithBlendOutDuration: not found
-!missing-selector! SCNParticleSystem::setWritesToDepthBuffer: not bound
-!missing-selector! SCNParticleSystem::writesToDepthBuffer not bound

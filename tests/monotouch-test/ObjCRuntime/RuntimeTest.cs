@@ -456,9 +456,6 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 
 		[Test]
-#if NET
-		[Ignore ("https://github.com/dotnet/runtime/issues/32543")]
-#endif
 		public void NSAutoreleasePoolInThreadPool ()
 		{
 			var count = 100;
@@ -846,6 +843,19 @@ Additional information:
 				obj.Dispose ();
 				handles [i].Free ();
 			}
+		}
+
+		[Test]
+		public void CurrentDirectory ()
+		{
+			var expectedDirectory = (string) ((NSString) Environment.CurrentDirectory).ResolveSymlinksInPath ();
+
+#if NET || !MONOMAC
+			var actualDirectory = (string) ((NSString) NSBundle.MainBundle.BundlePath).ResolveSymlinksInPath ();
+#else
+			var actualDirectory = (string) ((NSString) NSBundle.MainBundle.ResourcePath).ResolveSymlinksInPath ();
+#endif
+			Assert.AreEqual (expectedDirectory, actualDirectory, "Current directory at launch");
 		}
 	}
 }

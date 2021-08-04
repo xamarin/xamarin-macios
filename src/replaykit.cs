@@ -136,6 +136,21 @@ namespace ReplayKit {
 		[Async]
 		[Export ("stopRecordingWithOutputURL:completionHandler:")]
 		void StopRecording (NSUrl url, [NullAllowed] Action<NSError> completionHandler);
+
+		[Async]
+		[NoTV, NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("exportClipToURL:duration:completionHandler:")]
+		void ExportClip (NSUrl url, double duration, [NullAllowed] Action<NSError> completionHandler);
+
+		[Async]
+		[NoTV, NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("startClipBufferingWithCompletionHandler:")]
+		void StartClipBuffering ([NullAllowed] Action<NSError> completionHandler);
+
+		[Async]
+		[NoTV, NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("stopClipBufferingWithCompletionHandler:")]
+		void StopClipBuffering ([NullAllowed] Action<NSError> completionHandler);
 	}
 
 	interface IRPScreenRecorderDelegate { }

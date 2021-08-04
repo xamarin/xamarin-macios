@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
 using Microsoft.DotNet.XHarness.Common.Execution;
@@ -67,6 +68,7 @@ namespace Xharness {
 			rv.MTouchExtraArgs = MTouchExtraArgs;
 			rv.TimeoutMultiplier = TimeoutMultiplier;
 			rv.Ignore = Ignore;
+			rv.TestPlatform = TestPlatform;
 			return rv;
 		}
 
@@ -95,8 +97,51 @@ namespace Xharness {
 			XmlDocument doc;
 			doc = new XmlDocument ();
 			doc.LoadWithoutNetworkAccess (original_path);
-			var original_name = System.IO.Path.GetFileName (original_path);
-			doc.ResolveAllPaths (original_path, rootDirectory);
+
+			var variableSubstitution = new Dictionary<string, string> ();
+			variableSubstitution.Add ("RootTestsDirectory", rootDirectory);
+
+			// Find Import nodes that point to a shared code file, load that shared file and inject it here.
+			var nodes = doc.SelectNodes ("//*[local-name() = 'Import']");
+			foreach (XmlNode node in nodes) {
+				if (node == null)
+					continue;
+
+				var project = node.Attributes ["Project"].Value;
+				if (project != "../shared.csproj")
+					continue;
+
+				if (TestPlatform == TestPlatform.None)
+					throw new InvalidOperationException  ($"The project ?{original_path}' did not set the TestPlatform property.");
+
+				var sharedProjectPath = System.IO.Path.Combine (System.IO.Path.GetDirectoryName (original_path), project);
+				// Check for variables that won't work correctly if the shared code is moved to a different file
+				var xml = File.ReadAllText (sharedProjectPath);
+				if (xml.Contains ("$(MSBuildThis"))
+					throw new InvalidOperationException ($"Can't use MSBuildThis* variables in shared MSBuild test code.");
+
+				var import = new XmlDocument ();
+				import.LoadXmlWithoutNetworkAccess (xml);
+				var importNodes = import.SelectSingleNode ("/Project").ChildNodes;
+				var previousNode = node;
+				foreach (XmlNode importNode in importNodes) {
+					var importedNode = doc.ImportNode (importNode, true);
+					previousNode.ParentNode.InsertAfter (importedNode, previousNode);
+					previousNode = importedNode;
+				}
+				node.ParentNode.RemoveChild (node);
+
+				variableSubstitution.Add ("_PlatformName", TestPlatform.ToPlatformName ());
+				variableSubstitution = doc.CollectAndEvaluateTopLevelProperties (variableSubstitution);
+			}
+
+			lock (typeof (TestProject))
+				doc.ResolveAllPaths (original_path, variableSubstitution);
+
+			// Replace RootTestsDirectory with a constant value, so that any relative paths don't end up wrong.
+			var rootTestsDirectoryNode = doc.SelectSingleNode ("/Project/PropertyGroup/RootTestsDirectory");
+			if (rootTestsDirectoryNode != null)
+				rootTestsDirectoryNode.InnerText = rootDirectory;
 
 			if (doc.IsDotNetProject ()) {
 				if (test.ProjectPlatform == "iPhone") {

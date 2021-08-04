@@ -16,11 +16,15 @@ using ObjCRuntime;
 
 namespace Xamarin.Linker {
 	public class LinkerConfiguration {
+		string LinkerFile;
+
 		public List<Abi> Abis;
+		public string AOTCompiler;
 		public string AOTOutputDirectory;
 		public string CacheDirectory { get; private set; }
 		public Version DeploymentTarget { get; private set; }
 		public HashSet<string> FrameworkAssemblies { get; private set; } = new HashSet<string> ();
+		public string GlobalizationDataFile { get; private set; }
 		public string IntermediateLinkDir { get; private set; }
 		public bool InvariantGlobalization { get; private set; }
 		public string ItemsDirectory { get; private set; }
@@ -72,12 +76,15 @@ namespace Xamarin.Linker {
 			if (!File.Exists (linker_file))
 				throw new FileNotFoundException ($"The custom linker file {linker_file} does not exist.");
 
+			LinkerFile = linker_file;
+
 			Profile = new BaseProfile (this);
 			DerivedLinkContext = new DerivedLinkContext { LinkerConfiguration = this, };
 			Application = new Application (this);
 			Target = new Target (Application);
 			CompilerFlags = new CompilerFlags (Target);
 
+			var use_llvm = false;
 			var lines = File.ReadAllLines (linker_file);
 			var significantLines = new List<string> (); // This is the input the cache uses to verify if the cache is still valid
 			for (var i = 0; i < lines.Length; i++) {
@@ -102,6 +109,9 @@ namespace Xamarin.Linker {
 					// This is the AssemblyName MSBuild property for the main project (which is also the root/entry assembly)
 					Application.RootAssemblies.Add (value);
 					break;
+				case "AOTCompiler":
+					AOTCompiler = value;
+					break;
 				case "AOTOutputDirectory":
 					AOTOutputDirectory = value;
 					break;
@@ -115,6 +125,12 @@ namespace Xamarin.Linker {
 					if (!Version.TryParse (value, out var deployment_target))
 						throw new InvalidOperationException ($"Unable to parse the {key} value: {value} in {linker_file}");
 					DeploymentTarget = deployment_target;
+					break;
+				case "Dlsym":
+					Application.ParseDlsymOptions (value);
+					break;
+				case "EnableSGenConc":
+					Application.EnableSGenConc = string.Equals (value, "true", StringComparison.OrdinalIgnoreCase);
 					break;
 				case "EnvironmentVariable":
 					var separators = new char [] { ':', '=' };
@@ -139,6 +155,12 @@ namespace Xamarin.Linker {
 				case "IsSimulatorBuild":
 					IsSimulatorBuild = string.Equals ("true", value, StringComparison.OrdinalIgnoreCase);
 					break;
+				case "LibMonoLinkMode":
+					Application.LibMonoLinkMode = ParseLinkMode (value, key);
+					break;
+				case "LibXamarinLinkMode":
+					Application.LibXamarinLinkMode = ParseLinkMode (value, key);
+					break;
 				case "LinkMode":
 					if (!Enum.TryParse<LinkMode> (value, true, out var lm))
 						throw new InvalidOperationException ($"Unable to parse the {key} value: {value} in {linker_file}");
@@ -157,6 +179,9 @@ namespace Xamarin.Linker {
 							throw new InvalidOperationException ($"Unable to parse the {key} value: {value} in {linker_file}");
 						Application.MarshalObjectiveCExceptions = mode;
 					}
+					break;
+				case "MonoLibrary":
+					Application.MonoLibraries.Add (value);
 					break;
 				case "Optimize":
 					user_optimize_flags = value;
@@ -222,6 +247,9 @@ namespace Xamarin.Linker {
 						throw new InvalidOperationException ($"Invalid TargetFramework '{value}' in {linker_file}");
 					Driver.TargetFramework = TargetFramework.Parse (value);
 					break;
+				case "UseLlvm":
+					use_llvm = string.Equals ("true", value, StringComparison.OrdinalIgnoreCase);
+					break;
 				case "Verbosity":
 					if (!int.TryParse (value, out var verbosity))
 						throw new InvalidOperationException ($"Invalid Verbosity '{value}' in {linker_file}");
@@ -231,6 +259,9 @@ namespace Xamarin.Linker {
 					if (!Enum.TryParse<XamarinRuntime> (value, out var rv))
 						throw new InvalidOperationException ($"Invalid XamarinRuntime '{value}' in {linker_file}");
 					Application.XamarinRuntime = rv;
+					break;
+				case "GlobalizationDataFile":
+					GlobalizationDataFile = value;
 					break;
 				case "InvariantGlobalization":
 					InvariantGlobalization = string.Equals ("true", value, StringComparison.OrdinalIgnoreCase);
@@ -247,6 +278,12 @@ namespace Xamarin.Linker {
 				var messages = new List<ProductException> ();
 				Application.Optimizations.Parse (Application.Platform, user_optimize_flags, messages);
 				ErrorHelper.Show (messages);
+			}
+
+			if (use_llvm) {
+				for (var i = 0; i < Abis.Count; i++) {
+					Abis [i] |= Abi.LLVM;
+				}
 			}
 
 			Application.CreateCache (significantLines.ToArray ());
@@ -280,6 +317,19 @@ namespace Xamarin.Linker {
 			Application.Initialize ();
 		}
 
+		AssemblyBuildTarget ParseLinkMode (string value, string variableName)
+		{
+			if (string.Equals (value, "dylib", StringComparison.OrdinalIgnoreCase)) {
+				return AssemblyBuildTarget.DynamicLibrary;
+			} else if (string.Equals (value, "static", StringComparison.OrdinalIgnoreCase)) {
+				return AssemblyBuildTarget.StaticObject;
+			} else if (string.Equals (value, "framework", StringComparison.OrdinalIgnoreCase)) {
+				return AssemblyBuildTarget.Framework;
+			}
+
+			throw new InvalidOperationException ($"Invalid {variableName} '{value}' in {LinkerFile}");
+		}
+
 		public void Write ()
 		{
 			if (Verbosity > 0) {
@@ -289,7 +339,9 @@ namespace Xamarin.Linker {
 				Console.WriteLine ($"    AssemblyName: {Application.AssemblyName}");
 				Console.WriteLine ($"    CacheDirectory: {CacheDirectory}");
 				Console.WriteLine ($"    Debug: {Application.EnableDebug}");
+				Console.WriteLine ($"    Dlsym: {Application.DlsymOptions} {(Application.DlsymAssemblies != null ? string.Join (" ", Application.DlsymAssemblies.Select (v => (v.Item2 ? "+" : "-") + v.Item1)) : string.Empty)}");
 				Console.WriteLine ($"    DeploymentTarget: {DeploymentTarget}");
+				Console.WriteLine ($"    EnableSGenConc {Application.EnableSGenConc}");
 				Console.WriteLine ($"    IntermediateLinkDir: {IntermediateLinkDir}");
 				Console.WriteLine ($"    InterpretedAssemblies: {string.Join (", ", Application.InterpretedAssemblies)}");
 				Console.WriteLine ($"    ItemsDirectory: {ItemsDirectory}");
@@ -300,6 +352,9 @@ namespace Xamarin.Linker {
 				Console.WriteLine ($"    LinkMode: {LinkMode}");
 				Console.WriteLine ($"    MarshalManagedExceptions: {Application.MarshalManagedExceptions} (IsDefault: {Application.IsDefaultMarshalManagedExceptionMode})");
 				Console.WriteLine ($"    MarshalObjectiveCExceptions: {Application.MarshalObjectiveCExceptions}");
+				Console.WriteLine ($"    {Application.MonoLibraries.Count} mono libraries:");
+				foreach (var lib in Application.MonoLibraries.OrderBy (v => v))
+					Console.WriteLine ($"        {lib}");
 				Console.WriteLine ($"    Optimize: {user_optimize_flags} => {Application.Optimizations}");
 				Console.WriteLine ($"    PartialStaticRegistrarLibrary: {PartialStaticRegistrarLibrary}");
 				Console.WriteLine ($"    Platform: {Platform}");
@@ -310,6 +365,7 @@ namespace Xamarin.Linker {
 				Console.WriteLine ($"    SdkRootDirectory: {SdkRootDirectory}");
 				Console.WriteLine ($"    SdkVersion: {SdkVersion}");
 				Console.WriteLine ($"    UseInterpreter: {Application.UseInterpreter}");
+				Console.WriteLine ($"    UseLlvm: {Application.IsLLVM}");
 				Console.WriteLine ($"    Verbosity: {Verbosity}");
 				Console.WriteLine ($"    XamarinRuntime: {Application.XamarinRuntime}");
 			}

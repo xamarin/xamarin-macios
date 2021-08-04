@@ -24,6 +24,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.IO;
 using System.Linq;
@@ -44,18 +47,18 @@ public class BindingTouch {
 	public PlatformName CurrentPlatform;
 	public bool BindThirdPartyLibrary = true;
 	public bool skipSystemDrawing;
-	public string outfile;
+	public string? outfile;
 
-	string baselibdll;
-	string attributedll;
+	string? baselibdll;
+	string? attributedll;
 
 	List<string> libs = new List<string> ();
 	List<string> references = new List<string> ();
 
-	public MetadataLoadContext universe;
+	public MetadataLoadContext? universe;
 	public TypeManager TypeManager = new TypeManager ();
-	public Frameworks Frameworks;
-	public AttributeManager AttributeManager;
+	public Frameworks? Frameworks;
+	public AttributeManager? AttributeManager;
 
 	readonly Dictionary<System.Type, Type> ikvm_type_lookup = new Dictionary<System.Type, Type> ();
 	internal Dictionary<System.Type, Type> IKVMTypeLookup {
@@ -63,7 +66,7 @@ public class BindingTouch {
 	}
 
 	public TargetFramework TargetFramework {
-		get { return target_framework.Value; }
+		get { return target_framework!.Value; }
 	}
 
 	public static string ToolName {
@@ -95,7 +98,7 @@ public class BindingTouch {
 	string GetAttributeLibraryPath ()
 	{
 		if (!string.IsNullOrEmpty (attributedll))
-			return attributedll;
+			return attributedll!;
 
 		switch (CurrentPlatform) {
 		case PlatformName.iOS:
@@ -200,9 +203,9 @@ public class BindingTouch {
 	{
 		bool show_help = false;
 		bool zero_copy = false;
-		string basedir = null;
-		string tmpdir = null;
-		string ns = null;
+		string? basedir = null;
+		string? tmpdir = null;
+		string? ns = null;
 		bool delete_temp = true, debug = false;
 		bool unsafef = true;
 		bool external = false;
@@ -216,7 +219,7 @@ public class BindingTouch {
 		var core_sources = new List<string> ();
 		var extra_sources = new List<string> ();
 		var defines = new List<string> ();
-		string generate_file_list = null;
+		string? generate_file_list = null;
 		bool process_enums = false;
 		string compiler = "/Library/Frameworks/Mono.framework/Versions/Current/bin/csc";
 

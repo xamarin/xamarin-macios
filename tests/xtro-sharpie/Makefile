@@ -15,7 +15,7 @@ clean-local::
 	rm -f *.tmp
 	rm -rf *os*.pch*
 
-bin/Debug/xtro-sharpie.exe xtro-report/bin/Debug/xtro-report.exe build:
+bin/Debug/xtro-sharpie.exe xtro-report/bin/Debug/xtro-report.exe build: $(wildcard *.cs)
 	$(Q) $(SYSTEM_XIBUILD) -t -- /Library/Frameworks/Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe restore xtro-sharpie.sln
 	$(Q_BUILD) $(SYSTEM_MSBUILD) $(MSBUILD_VERBOSITY) xtro-sharpie.sln
 
@@ -77,6 +77,7 @@ $(XCAT_PCH): .stamp-check-sharpie
 	-exclude RealityKit \
 	-exclude SecurityInterface \
 	-exclude Virtualization \
+	-i HomeKit/HomeKit.h \
 
 
 ios-$(IOS_SDK_VERSION).g.cs: $(XIOS_PCH)
@@ -194,3 +195,6 @@ remove-empty-files:
 unclassified2todo:
 	$(SYSTEM_CSC) -features:strict Filter.cs u2todo/u2todo.cs
 	$(MONO) u2todo.exe
+	@for filename in $(git status -s | cut -c4- | grep .todo); do \
+		sort -o "$filename" "$filename"; \
+	done

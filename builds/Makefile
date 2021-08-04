@@ -27,7 +27,6 @@ DOWNLOADS = \
 	downloads/$(MONO_IOS_FILENAME) \
 	downloads/$(MONO_MAC_FILENAME) \
 	downloads/$(MONO_MACCATALYST_FILENAME) \
-	downloads/$(DOTNET6_TARBALL_NAME) \
 
 # This target downloads the mono archives, there's one for Xamarin.iOS and one for Xamarin.Mac.
 # If doing many clean builds, it's possible to copy the downloaded zip file to ~/Library/Caches/xamarin-macios
@@ -65,16 +64,6 @@ downloads/%: downloads/%.7z
 	$(Q) mv $@.tmp $@
 	$(Q) echo "Unzipped $*."
 
-downloads/%: downloads/%.tar.gz
-	$(Q) echo "Untarring $*..."
-	$(Q) rm -Rf $@.tmp
-	$(Q) mkdir -p $@.tmp
-	$(Q) tar xf $< -C $@.tmp
-	$(Q) xattr -s -d -r com.apple.quarantine $@.tmp
-	$(Q) find $@.tmp -exec touch {} +
-	$(Q) mv $@.tmp $@
-	$(Q) echo "Untarred $*."
-
 downloads/%: downloads/%.nupkg
 	$(Q) echo "Unzipping $*..."
 	$(Q) rm -Rf $@.tmp
@@ -83,9 +72,21 @@ downloads/%: downloads/%.nupkg
 	$(Q) mv $@.tmp $@
 	$(Q) echo "Unzipped $*."
 
+downloads/$(basename $(basename $(DOTNET6_TARBALL_NAME))): dotnet-install.sh
+	$(Q) echo "Downloading and installing .NET $(DOTNET6_VERSION) into $@..."
+	$(Q) ./dotnet-install.sh --install-dir "$@.tmp" --version "$(DOTNET6_VERSION)" --architecture x64 --no-path
+	$(Q) rm -Rf "$@"
+	$(Q) mv "$@.tmp" "$@"
+	$(Q) echo "Downloaded and installed .NET $(DOTNET6_VERSION) into $@."
+
+dotnet-install.sh: Makefile
+	$(Q) curl --retry 20 --retry-delay 2 --connect-timeout 15 -S -L $(if $(V),-v,-s) https://dot.net/v1/dotnet-install.sh --output $@.tmp
+	$(Q) chmod +x $@.tmp
+	$(Q) mv $@.tmp $@
+
 # Fix the BCL assemblies we get for Mac Catalyst
 fix-maccatalyst-assembly/bin/Debug/fix-maccatalyst-assembly.exe: $(wildcard fix-maccatalyst-assembly/*.cs*) Makefile
-	$(Q) $(SYSTEM_MSBUILD) /r fix-maccatalyst-assembly/fix-maccatalyst-assembly.csproj $(MSBUILD_VERBOSITY)
+	$(Q) $(SYSTEM_MSBUILD) "/bl:$@.binlog" /r fix-maccatalyst-assembly/fix-maccatalyst-assembly.csproj $(MSBUILD_VERBOSITY)
 
 define FixMacCatalystAssembly
 $(MONO_MACCATALYST_SDK_DESTDIR)/maccat-bcl/monotouch/$(1).dll: .stamp-$(MONO_BUILD_MODE)

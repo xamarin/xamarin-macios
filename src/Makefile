@@ -1076,9 +1076,9 @@ $(TVOS_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in $(TOP)/Make.con
 	$(Q) rm -f $@.tmp
 	$(Q) touch $@
 
-$(TVOS_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml: $(TOP)/src/ILLink.LinkAttributes.xml.in
+$(TVOS_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml: ILLink.LinkAttributes.tvos.xml
 	$(Q) mkdir -p $(TVOS_DOTNET_BUILD_DIR)
-	$(call Q_PROF_GEN,tvos) sed < $< > $@ 's|@PRODUCT_NAME@|Xamarin.TVOS|g;'
+	$(Q) $(CP) $< $@
 
 $(TVOS_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml: $(TOP)/src/ILLink.Substitutions.tvos.xml
 	$(Q) $(CP) $< $@
@@ -1403,7 +1403,7 @@ $(PROJECT_DIR)/MonoTouch.NUnitLite.maccatalyst.csproj: MonoTouch.NUnitLite.macca
 GENERATE_TYPE_FORWARDERS=generate-type-forwarders/bin/Debug/generate-type-forwarders.exe
 
 $(GENERATE_TYPE_FORWARDERS): $(wildcard generate-type-forwarders/*.cs*) Makefile
-	$(Q) $(SYSTEM_MSBUILD) /r generate-type-forwarders/generate-type-forwarders.csproj $(MSBUILD_VERBOSITY)
+	$(Q) $(SYSTEM_MSBUILD) "/bl:$@.binlog" /r generate-type-forwarders/generate-type-forwarders.csproj $(MSBUILD_VERBOSITY)
 
 $(MACCATALYST_BUILD_DIR)/reference/Xamarin.iOS.cs: $(MACCATALYST_BUILD_DIR)/reference/Xamarin.MacCatalyst.dll $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll Makefile $(GENERATE_TYPE_FORWARDERS)
 	$(Q) mono $(GENERATE_TYPE_FORWARDERS) $(abspath $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll) $(abspath $(MACCATALYST_BUILD_DIR)/reference/Xamarin.MacCatalyst.dll) $(abspath $@.tmp) $(MIN_MACCATALYST_SDK_VERSION)
@@ -1604,7 +1604,7 @@ $(DOTNET_COMPILER): Makefile $(TOP)/Make.config | $(DOTNET_BUILD_DIR)
 GENERATE_FRAMEWORKS_CONSTANTS=generate-frameworks-constants/bin/Debug/generate-frameworks-constants.exe
 
 $(GENERATE_FRAMEWORKS_CONSTANTS): $(wildcard generate-frameworks-constants/*.cs*) $(TOP)/tools/common/Frameworks.cs Makefile
-	$(Q) $(SYSTEM_MSBUILD) /r generate-frameworks-constants/generate-frameworks-constants.csproj $(MSBUILD_VERBOSITY)
+	$(Q) $(SYSTEM_MSBUILD) "/bl:$@.binlog" /r generate-frameworks-constants/generate-frameworks-constants.csproj $(MSBUILD_VERBOSITY)
 
 # This rule means: generate a Constants.<platform>.generated.cs for the frameworks in the variable <PLATFORM>_FRAMEWORKS
 $(BUILD_DIR)/Constants.%.generated.cs: Makefile $(GENERATE_FRAMEWORKS_CONSTANTS) | $(BUILD_DIR)

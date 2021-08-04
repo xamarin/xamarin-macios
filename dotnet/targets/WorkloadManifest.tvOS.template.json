@@ -1,16 +1,18 @@
 {
 	"version": "@VERSION@",
 	"workloads": {
-		"microsoft-@PLATFORM_LOWERCASE@-sdk-full": {
-			"description": "Microsoft @PLATFORM@ SDK",
+		"@PLATFORM_LOWERCASE@": {
+			"description": ".NET SDK Workload for building @PLATFORM@ applications.",
 			"packs": [
 				"Microsoft.@PLATFORM@.Sdk",
 				"Microsoft.@PLATFORM@.Ref",
+				"Microsoft.@PLATFORM@.Runtime.tvos-arm64",
+				"Microsoft.@PLATFORM@.Runtime.tvossimulator-x64",
 				"Microsoft.@PLATFORM@.Templates"
 			],
 			"extends": [
-				"microsoft-net-runtime-tvos",
-			],
+				"microsoft-net-runtime-tvos"
+			]
 		}
 	},
 	"packs": {
@@ -19,6 +21,14 @@
 			"version": "@VERSION@"
 		},
 		"Microsoft.@PLATFORM@.Ref": {
+			"kind": "framework",
+			"version": "@VERSION@"
+		},
+		"Microsoft.@PLATFORM@.Runtime.tvos-arm64": {
+			"kind": "framework",
+			"version": "@VERSION@"
+		},
+		"Microsoft.@PLATFORM@.Runtime.tvossimulator-x64": {
 			"kind": "framework",
 			"version": "@VERSION@"
 		},

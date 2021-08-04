@@ -55,6 +55,9 @@ bool xamarin_init_mono_debug = false;
 #endif
 int xamarin_log_level = 0;
 const char *xamarin_executable_name = NULL;
+#if DOTNET
+const char *xamarin_icu_dat_file_name = NULL;
+#endif
 #if MONOMAC || TARGET_OS_MACCATALYST
 NSString * xamarin_custom_bundle_name = @"MonoBundle";
 #endif
@@ -80,6 +83,11 @@ enum MarshalManagedExceptionMode xamarin_marshal_managed_exception_mode = Marsha
 enum XamarinLaunchMode xamarin_launch_mode = XamarinLaunchModeApp;
 bool xamarin_supports_dynamic_registration = true;
 const char *xamarin_runtime_configuration_name = NULL;
+
+#if DOTNET
+enum XamarinNativeLinkMode xamarin_libmono_native_link_mode = XamarinNativeLinkModeStaticObject;
+const char **xamarin_runtime_libraries = NULL;
+#endif
 
 /* Callbacks */
 
@@ -1251,7 +1259,7 @@ xamarin_initialize ()
 	}
 
 	options.size = sizeof (options);
-#if MONOTOUCH && (defined(__i386__) || defined (__x86_64__))
+#if TARGET_OS_SIMULATOR
 	options.flags = (enum InitializationFlags) (options.flags | InitializationFlagsIsSimulator);
 #endif
 
@@ -1315,6 +1323,23 @@ xamarin_initialize ()
 	MONO_EXIT_GC_UNSAFE;
 }
 
+static char *x_app_bundle_path = NULL;
+const char *
+xamarin_get_app_bundle_path ()
+{
+	if (x_app_bundle_path != NULL)
+		return x_app_bundle_path;
+
+	NSBundle *main_bundle = [NSBundle mainBundle];
+
+	if (main_bundle == NULL)
+		xamarin_assertion_message ("Could not find the main bundle in the app ([NSBundle mainBundle] returned nil)");
+
+	x_app_bundle_path = strdup ([[[main_bundle bundlePath] stringByStandardizingPath] UTF8String]);
+
+	return x_app_bundle_path;
+}
+
 static char *x_bundle_path = NULL;
 const char *
 xamarin_get_bundle_path ()
@@ -1329,7 +1354,7 @@ xamarin_get_bundle_path ()
 	if (main_bundle == NULL)
 		xamarin_assertion_message ("Could not find the main bundle in the app ([NSBundle mainBundle] returned nil)");
 
-#if MONOMAC
+#if TARGET_OS_MACCATALYST || TARGET_OS_OSX
 	if (xamarin_launch_mode == XamarinLaunchModeEmbedded) {
 		bundle_path = [[[NSBundle bundleForClass: [XamarinAssociatedObject class]] bundlePath] stringByAppendingPathComponent: @"Versions/Current"];
 	} else {
@@ -2380,21 +2405,119 @@ xamarin_insert_dllmap ()
 #endif // !DOTNET
 
 #if DOTNET
+
+// List all the assemblies that we can find in the app bundle in:
+// - The bundle directory
+// - The runtimeidentifier-specific subdirectory
+// Caller must free the return value using xamarin_free.
+char *
+xamarin_compute_trusted_platform_assemblies ()
+{
+	const char *bundle_path = xamarin_get_bundle_path ();
+
+	NSMutableArray<NSString *> *files = [NSMutableArray array];
+	NSMutableArray<NSString *> *directories = [NSMutableArray array];
+	[directories addObject: [NSString stringWithUTF8String: bundle_path]];
+	[directories addObject: [NSString stringWithFormat: @"%s/.xamarin/%s", bundle_path, RUNTIMEIDENTIFIER]];
+
+	NSFileManager *manager = [NSFileManager defaultManager];
+	for (NSString *dir in directories) {
+		NSDirectoryEnumerator *enumerator = [manager enumeratorAtURL:[NSURL fileURLWithPath: dir]
+		                                  includingPropertiesForKeys:@[NSURLNameKey, NSURLIsDirectoryKey]
+		                                                     options:NSDirectoryEnumerationSkipsSubdirectoryDescendants
+		                                                     errorHandler:nil];
+		for (NSURL *file in enumerator) {
+			// skip subdirectories
+			NSNumber *isDirectory = nil;
+			if (![file getResourceValue:&isDirectory forKey:NSURLIsDirectoryKey error:nil] || [isDirectory boolValue])
+				continue;
+
+			NSString *name = nil;
+			if (![file getResourceValue:&name forKey:NSURLNameKey error:nil])
+				continue;
+
+			if ([name length] < 4)
+				continue;
+
+			// We want dlls and exes
+			if ([name compare: @".dll" options: NSCaseInsensitiveSearch range: NSMakeRange ([name length] - 4, 4)] == NSOrderedSame) {
+				[files addObject: [dir stringByAppendingPathComponent: name]];
+			} else if ([name compare: @".exe" options: NSCaseInsensitiveSearch range: NSMakeRange ([name length] - 4, 4)] == NSOrderedSame) {
+				[files addObject: [dir stringByAppendingPathComponent: name]];
+			}
+		}
+	}
+
+	// Join them all together with a colon separating them
+	NSString *joined = [files componentsJoinedByString: @":"];
+	char *rv = xamarin_strdup_printf ("%s", [joined UTF8String]);
+	return rv;
+}
+
+char *
+xamarin_compute_native_dll_search_directories ()
+{
+	const char *bundle_path = xamarin_get_bundle_path ();
+
+	NSMutableArray<NSString *> *directories = [NSMutableArray array];
+
+	// Native libraries might be in the app bundle
+	[directories addObject: [NSString stringWithUTF8String: bundle_path]];
+	// They won't be in the runtimeidentifier-specific directory (because they get lipo'ed into a fat file instead)
+	// However, might also be in the Resources/lib directory
+	[directories addObject: [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: @"lib"]];
+
+	// Missing:
+	// * The parent app bundle if launched from an app extension. This requires adding app extension tests, which we currently don't have.
+
+	// Remove the ones that don't exist
+	NSFileManager *manager = [NSFileManager defaultManager];
+	for (int i = (int) [directories count] - 1; i >= 0; i--) {
+		NSString *dir = [directories objectAtIndex: (NSUInteger) i];
+		BOOL isDirectory;
+		if ([manager fileExistsAtPath: dir isDirectory: &isDirectory] && isDirectory)
+			continue;
+
+		[directories removeObjectAtIndex: (NSUInteger) i];
+	}
+
+	// Join them all together with a colon separating them
+	NSString *joined = [directories componentsJoinedByString: @":"];
+	char *rv = xamarin_strdup_printf ("%s", [joined UTF8String]);
+	return rv;
+}
+
 void
 xamarin_vm_initialize ()
 {
 	char *pinvokeOverride = xamarin_strdup_printf ("%p", &xamarin_pinvoke_override);
+	char *icu_dat_file_path = NULL;
+
+	char path [1024];
+	if (!xamarin_locate_app_resource (xamarin_icu_dat_file_name, path, sizeof (path))) {
+		LOG (PRODUCT ": Could not locate the ICU data file '%s' in the app bundle.\n", xamarin_icu_dat_file_name);
+	} else {
+		icu_dat_file_path = path;
+	}
+
+	char *trusted_platform_assemblies = xamarin_compute_trusted_platform_assemblies ();
+	char *native_dll_search_directories = xamarin_compute_native_dll_search_directories ();
+
 	// All the properties we pass here must also be listed in the _RuntimeConfigReservedProperties item group
 	// for the _CreateRuntimeConfiguration target in dotnet/targets/Xamarin.Shared.Sdk.targets.
 	const char *propertyKeys[] = {
 		"APP_PATHS",
 		"PINVOKE_OVERRIDE",
 		"ICU_DAT_FILE_PATH",
+		"TRUSTED_PLATFORM_ASSEMBLIES",
+		"NATIVE_DLL_SEARCH_DIRECTORIES",
 	};
 	const char *propertyValues[] = {
 		xamarin_get_bundle_path (),
 		pinvokeOverride,
-		"icudt.dat",
+		icu_dat_file_path,
+		trusted_platform_assemblies,
+		native_dll_search_directories,
 	};
 	static_assert (sizeof (propertyKeys) == sizeof (propertyValues), "The number of keys and values must be the same.");
 
@@ -2402,8 +2525,25 @@ xamarin_vm_initialize ()
 	bool rv = xamarin_bridge_vm_initialize (propertyCount, propertyKeys, propertyValues);
 	xamarin_free (pinvokeOverride);
 
+	xamarin_free (trusted_platform_assemblies);
+	xamarin_free (native_dll_search_directories);
+
 	if (!rv)
 		xamarin_assertion_message ("Failed to initialize the VM");
+}
+
+static bool
+xamarin_is_native_library (const char *libraryName)
+{
+	if (xamarin_runtime_libraries == NULL)
+		return false;
+
+	for (int i = 0; xamarin_runtime_libraries [i] != NULL; i++) {
+		if (!strcmp (xamarin_runtime_libraries [i], libraryName))
+			return true;
+	}
+
+	return false;
 }
 
 void*
@@ -2428,10 +2568,33 @@ xamarin_pinvoke_override (const char *libraryName, const char *entrypointName)
 			} else if (!strcmp (entrypointName, "objc_msgSendSuper_stret")) {
 				symbol = (void *) &xamarin_dyn_objc_msgSendSuper_stret;
 #endif // !defined (__arm64__)
+			} else {
+				return NULL;
 			}
 		}
 #endif // defined (__i386__) || defined (__x86_64__) || defined (__arm64__)
 #endif // !defined (CORECLR_RUNTIME)
+	} else if (xamarin_is_native_library (libraryName)) {
+		switch (xamarin_libmono_native_link_mode) {
+		case XamarinNativeLinkModeStaticObject:
+			// lookup the symbol in loaded memory, like __Internal does.
+			symbol = dlsym (RTLD_DEFAULT, entrypointName);
+			break;
+		case XamarinNativeLinkModeDynamicLibrary:
+			// if we're not linking statically, then don't do anything at all, let mono handle whatever needs to be done
+			return NULL;
+		case XamarinNativeLinkModeFramework:
+		default:
+			// handle this as "DynamicLibrary" for now - do nothing.
+			LOG (PRODUCT ": Unhandled libmono link mode: %i when looking up %s in %s", xamarin_libmono_native_link_mode, entrypointName, libraryName);
+			return NULL;
+		}
+	} else {
+		return NULL;
+	}
+
+	if (symbol == NULL) {
+		LOG (PRODUCT ": Unable to resolve P/Invoke '%s' in the library '%s'", entrypointName, libraryName);
 	}
 
 	return symbol;
@@ -2478,7 +2641,7 @@ xamarin_vprintf (const char *format, va_list args)
  *
  * The platform assembly (Xamarin.[iOS|TVOS|WatchOS].dll) and any assemblies
  * the platform assembly references (mscorlib.dll, System.dll) may be in a
- * pointer-size subdirectory (ARCH_SUBDIR).
+ * pointer-size subdirectory (ARCH_SUBDIR), or an RID-specific subdirectory.
  * 
  * AOT data files will have an arch-specific infix.
  */
@@ -2495,6 +2658,13 @@ xamarin_get_assembly_name_without_extension (const char *aname, char *name, size
 	const char *ext = name + (len - 4);
 	if (!strncmp (".exe", ext, 4) || !strncmp (".dll", ext, 4))
 		name [len - 4] = 0; // strip off any extensions.
+}
+
+bool
+xamarin_locate_app_resource (const char *resource, char *path, size_t pathlen)
+{
+	const char *app_path = xamarin_get_bundle_path ();
+	return xamarin_locate_assembly_resource_for_root (app_path, NULL, resource, path, pathlen);
 }
 
 static bool
@@ -2535,6 +2705,16 @@ xamarin_locate_assembly_resource_for_root (const char *root, const char *culture
 		return true;
 	}
 #endif // !MONOMAC
+
+#if DOTNET
+	// RID-specific subdirectory
+	if (snprintf (path, pathlen, "%s/.xamarin/%s/%s", root, RUNTIMEIDENTIFIER, resource) < 0) {
+		LOG (PRODUCT ": Failed to construct path for resource: %s (5): %s", resource, strerror (errno));
+		return false;
+	} else if (xamarin_file_exists (path)) {
+		return true;
+	}
+#endif
 
 	// just the file, no extensions, etc.
 	if (snprintf (path, pathlen, "%s/%s", root, resource) < 0) {

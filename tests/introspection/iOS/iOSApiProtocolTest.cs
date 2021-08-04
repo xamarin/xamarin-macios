@@ -32,6 +32,7 @@ namespace Introspection {
 		protected override bool Skip (Type type)
 		{
 			switch (type.Namespace) {
+			case "Chip":
 			case "MetalKit":
 			case "MonoTouch.MetalKit":
 			case "MetalPerformanceShaders":
@@ -438,7 +439,16 @@ namespace Introspection {
 				// Xcode 13
 				case "ARDepthData":
 				case "ARSkeletonDefinition": // device only
+				case "ARVideoFormat": // device only
 				case "NSMergePolicy":
+				case "SNTimeDurationConstraint": // Conformance not in headers
+				case "PKDeferredPaymentSummaryItem":
+				case "PKPaymentRequestCouponCodeUpdate":
+				case "PKRecurringPaymentSummaryItem":
+				case "PKStoredValuePassBalance":
+				case "PKStoredValuePassProperties":
+				case "SFSafariViewControllerPrewarmingToken": // conformance not in headers
+				case "SRTextInputSession": // conformance not in headers
 					return true;
 				}
 				break;
@@ -676,7 +686,16 @@ namespace Introspection {
 				// Xcode 13
 				case "ARDepthData":
 				case "ARSkeletonDefinition": // device only
+				case "ARVideoFormat": // device only
 				case "NSMergePolicy":
+				case "SNTimeDurationConstraint": // Conformance not in headers
+				case "PKDeferredPaymentSummaryItem":
+				case "PKPaymentRequestCouponCodeUpdate":
+				case "PKRecurringPaymentSummaryItem":
+				case "PKStoredValuePassBalance":
+				case "PKStoredValuePassProperties":
+				case "SFSafariViewControllerPrewarmingToken": // conformance not in headers
+				case "SRTextInputSession": // conformance not in headers
 					return true;
 				}
 				break;
@@ -754,10 +773,16 @@ namespace Introspection {
 					return true;
 #endif
 				// Xcode 13
+				case "PHCloudIdentifier":
+				case "PHCloudIdentifierMapping":
 				case "NSEntityMapping":
 				case "NSMappingModel":
 				case "NSMergePolicy":
 				case "NSPropertyMapping":
+				case "SNTimeDurationConstraint": // Conformance not in headers"
+				case "PKDeferredPaymentSummaryItem":
+				case "PKRecurringPaymentSummaryItem":
+				case "PKStoredValuePassProperties":
 					return true;
 				}
 				break;

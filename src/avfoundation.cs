@@ -12412,7 +12412,7 @@ namespace AVFoundation {
 		IntPtr Constructor (AVQueuePlayer player, AVPlayerItem itemToLoop, CMTimeRange loopRange);
 
 #if !XAMCORE_4_0 // This API got introduced in Xcode 8.0 binding but is not currently present nor in Xcode 8.3 or Xcode 9.0 needs research
-		[PostSnippet ("loopingEnabled = false;")]
+		[PostSnippet ("loopingEnabled = false;", Optimizable = true)]
 #endif
 		[Export ("disableLooping")]
 		void DisableLooping ();
@@ -12513,51 +12513,17 @@ namespace AVFoundation {
 	}
 
 	[DisableDefaultCtor]
-	[TV (14,5), Mac (11,3), iOS (14,5)]
-	[MacCatalyst (14,5)]
-	[Watch (7,4)]
-	[BaseType (typeof(NSObject))]
-	interface AVPlayerInterstitialEventObserver
-	{
-		[Static]
-		[Export ("interstitialEventObserverWithPrimaryPlayer:")]
-		AVPlayerInterstitialEventObserver GetInterstitialEventObserver (AVPlayer primaryPlayer);
-
-		// Apple changed/broke API compatibility
-		// [Static]
-		// [Export ("playerInterstitialEventObserverWithPrimaryPlayer:")]
-		// AVPlayerInterstitialEventObserver GetPlayerInterstitialEventObserver (AVPlayer primaryPlayer);
-
-		[Export ("initWithPrimaryPlayer:")]
-		[DesignatedInitializer]
-		IntPtr Constructor (AVPlayer primaryPlayer);
-
-		[NullAllowed, Export ("primaryPlayer", ArgumentSemantic.Weak)]
-		AVPlayer PrimaryPlayer { get; }
-
-		[NullAllowed, Export ("interstitialPlayer", ArgumentSemantic.Weak)]
-		AVQueuePlayer InterstitialPlayer { get; }
-
-		[Export ("events")]
-		AVPlayerInterstitialEvent[] Events { get; }
-
-		[NullAllowed, Export ("currentEvent")]
-		AVPlayerInterstitialEvent CurrentEvent { get; }
-
-		[Field ("AVPlayerInterstitialEventObserverEventsDidChangeNotification")]
-		[Notification]
-		NSString EventsDidChangeNotification { get; }
-
-		[Field ("AVPlayerInterstitialEventObserverCurrentEventDidChangeNotification")]
-		[Notification]
-		NSString CurrentEventDidChangeNotification { get; }
+	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0)]
+	[BaseType (typeof (NSObject))]
+	interface AVPlayerInterstitialEventMonitor {
+		// TODO: Bind the actual members
 	}
 
 	[DisableDefaultCtor]
 	[TV (14,5), Mac (11,3), iOS (14,5)]
 	[MacCatalyst (14,5)]
 	[Watch (7,4)]
-	[BaseType (typeof(AVPlayerInterstitialEventObserver))]
+	[BaseType (typeof (AVPlayerInterstitialEventMonitor))]
 	interface AVPlayerInterstitialEventController
 	{
 		[Static]

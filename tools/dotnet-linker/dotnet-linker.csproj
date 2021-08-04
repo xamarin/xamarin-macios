@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.ILLink" Version="$(MicrosoftNETILLinkTasksPackageVersion)" />
+    <PackageReference Include="Mono.Cecil" Version="0.11.4" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\common\ApplePlatform.cs">
@@ -67,6 +68,9 @@
     <Compile Include="..\common\FileCopier.cs">
       <Link>external\tools\common\FileCopier.cs</Link>
     </Compile>
+    <Compile Include="..\common\FileUtils.cs">
+      <Link>external\tools\common\FileUtils.cs</Link>
+    </Compile>
     <Compile Include="..\common\LinkMode.cs">
       <Link>external\tools\common\LinkMode.cs</Link>
     </Compile>
@@ -87,6 +91,9 @@
     </Compile>
     <Compile Include="..\common\PInvokeWrapperGenerator.cs">
       <Link>external\tools\common\PInvokeWrapperGenerator.cs</Link>
+    </Compile>
+    <Compile Include="..\common\PathUtils.cs">
+      <Link>external\tools\common\PathUtils.cs</Link>
     </Compile>
     <Compile Include="..\common\PListExtensions.cs">
       <Link>external\tools\common\PListExtensions.cs</Link>

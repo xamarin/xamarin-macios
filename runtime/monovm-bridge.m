@@ -57,9 +57,8 @@ xamarin_bridge_setup ()
 void
 xamarin_bridge_initialize ()
 {
-#if defined (__arm__) || defined(__aarch64__)
-	xamarin_register_modules ();
-#endif
+	if (xamarin_register_modules != NULL)
+		xamarin_register_modules ();
 	DEBUG_LAUNCH_TIME_PRINT ("\tAOT register time");
 
 #ifdef DEBUG
@@ -409,10 +408,9 @@ xamarin_initialize_runtime_config ()
 		return;
 	}
 
-	const char *app_path = xamarin_get_bundle_path ();
 	char path [1024];
-	if (!xamarin_locate_assembly_resource_for_root (app_path, NULL, xamarin_runtime_configuration_name, path, sizeof (path))) {
-		LOG (PRODUCT ": Could not locate the runtime config file '%s' in the app bundle: %s\n", xamarin_runtime_configuration_name, app_path);
+	if (!xamarin_locate_app_resource (xamarin_runtime_configuration_name, path, sizeof (path))) {
+		LOG (PRODUCT ": Could not locate the runtime config file '%s' in the app bundle.\n", xamarin_runtime_configuration_name);
 		return;
 	}
 

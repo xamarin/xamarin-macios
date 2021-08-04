@@ -3,7 +3,7 @@
 //
 // Authors:
 //   Aaron Bockover (abock@xamarin.com)
-//   TJ Lambert (t-anlamb@microsoft.com)
+//   TJ Lambert (antlambe@microsoft.com)
 //   Whitney Schmidt (whschm@microsoft.com)
 //
 // Copyright 2013, 2015 Xamarin Inc.
@@ -19,9 +19,11 @@ using OpenTK;
 using AppKit;
 using UIViewController = AppKit.NSViewController;
 using CHHapticEngine = Foundation.NSObject;
+using BezierPath = AppKit.NSBezierPath;
 #else
 using CoreHaptics;
 using UIKit;
+using BezierPath = UIKit.UIBezierPath;
 #endif
 
 namespace GameController {
@@ -963,6 +965,14 @@ namespace GameController {
 
 		[Export ("setStateFromPhysicalInput:")]
 		void SetState (GCPhysicalInputProfile physicalInput);
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("allTouchpads", ArgumentSemantic.Strong)]
+		NSSet<GCControllerTouchpad> AllTouchpads { get; }
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("touchpads", ArgumentSemantic.Strong)]
+		NSDictionary<NSString, GCControllerTouchpad> Touchpads { get; }
 	}
 
 	[TV (14, 0), Mac (11, 0), iOS (14, 0)]
@@ -1266,6 +1276,38 @@ namespace GameController {
 
 		[Field ("GCKeyF12")]
 		NSString F12 { get; }
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Field ("GCKeyF13")]
+		NSString F13 { get; }
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Field ("GCKeyF14")]
+		NSString F14 { get; }
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Field ("GCKeyF15")]
+		NSString F15 { get; }
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Field ("GCKeyF16")]
+		NSString F16 { get; }
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Field ("GCKeyF17")]
+		NSString F17 { get; }
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Field ("GCKeyF18")]
+		NSString F18 { get; }
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Field ("GCKeyF19")]
+		NSString F19 { get; }
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Field ("GCKeyF20")]
+		NSString F20 { get; }
 
 		[Field ("GCKeyPrintScreen")]
 		NSString PrintScreen { get; }
@@ -1651,6 +1693,38 @@ namespace GameController {
 		[Field ("GCKeyCodeF12")]
 		nint F12 { get; }
 
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Field ("GCKeyCodeF13")]
+		nint F13 { get; }
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Field ("GCKeyCodeF14")]
+		nint F14 { get; }
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Field ("GCKeyCodeF15")]
+		nint F15 { get; }
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Field ("GCKeyCodeF16")]
+		nint F16 { get; }
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Field ("GCKeyCodeF17")]
+		nint F17 { get; }
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Field ("GCKeyCodeF18")]
+		nint F18 { get; }
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Field ("GCKeyCodeF19")]
+		nint F19 { get; }
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Field ("GCKeyCodeF20")]
+		nint F20 { get; }
+
 		[Field ("GCKeyCodePrintScreen")]
 		nint PrintScreen { get; }
 
@@ -1921,5 +1995,76 @@ namespace GameController {
 
 		[Field ("GCInputDirectionalCardinalDpad")]
 		CardinalDpad,
+
+		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
+		[Field ("GCInputDirectionalCenterButton")]
+		CenterButton,
+
+		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
+		[Field ("GCInputDirectionalTouchSurfaceButton")]
+		TouchSurfaceButton,
+	}
+
+	[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
+	enum GCInputMicroGamepad {
+		[Field ("GCInputMicroGamepadDpad")]
+		Dpad,
+
+		[Field ("GCInputMicroGamepadButtonA")]
+		ButtonA,
+
+		[Field ("GCInputMicroGamepadButtonX")]
+		ButtonX,
+	}
+
+	delegate GCVirtualControllerElementConfiguration GCVirtualControllerElementUpdateBlock (GCVirtualControllerElementConfiguration configuration);
+
+	[NoTV, NoMac, NoWatch, iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface GCVirtualController
+	{
+		[Static]
+		[Export ("virtualControllerWithConfiguration:")]
+		GCVirtualController Create (GCVirtualControllerConfiguration configuration);
+
+		[Export ("initWithConfiguration:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (GCVirtualControllerConfiguration configuration);
+
+		[Async]
+		[Export ("connectWithReplyHandler:")]
+		void Connect ([NullAllowed] Action<NSError> reply);
+
+		[Export ("disconnect")]
+		void Disconnect ();
+
+		[NullAllowed, Export ("controller", ArgumentSemantic.Weak)]
+		GCController Controller { get; }
+
+		[Export ("updateConfigurationForElement:configuration:")]
+		void UpdateConfiguration (string element, GCVirtualControllerElementUpdateBlock configuration);
+	}
+
+	[NoTV, NoMac, NoWatch, iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (NSObject))]
+	interface GCVirtualControllerConfiguration
+	{
+		[Export ("elements", ArgumentSemantic.Strong)]
+		NSSet<NSString> Elements { get; set; }
+	}
+
+	[NoTV, NoMac, NoWatch, iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (NSObject))]
+	interface GCVirtualControllerElementConfiguration
+	{
+		[Export ("hidden")]
+		bool Hidden { [Bind ("isHidden")] get; set; }
+
+		[NullAllowed, Export ("path", ArgumentSemantic.Strong)]
+		BezierPath Path { get; set; }
+
+		[Export ("actsAsTouchpad")]
+		bool ActsAsTouchpad { get; set; }
 	}
 }

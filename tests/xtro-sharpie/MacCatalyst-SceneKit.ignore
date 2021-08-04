@@ -1,0 +1,5 @@
+# deprecated or not used on catalyst
+!missing-protocol-member! SCNProgramDelegate::programIsOpaque: not found
+!missing-selector! SCNMaterialProperty::borderColor not bound
+!missing-selector! SCNMaterialProperty::setBorderColor: not bound
+!missing-selector! SCNRenderer::render not bound

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <DefineConstants>NET;$(DefineConstants)</DefineConstants>
+    <LangVersion>latest</LangVersion>
+    <RootNamespace>linksdk</RootNamespace>
+    <AssemblyName>link sdk</AssemblyName>
+    <MtouchLink>SdkOnly</MtouchLink>
+    <MtouchExtraArgs>-disable-thread-check "--dlsym:-link sdk" -gcc_flags="-UhoItsB0rken"</MtouchExtraArgs>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\..\..'))</RootTestsDirectory>
+    <ThisTestDirectory>$(RootTestsDirectory)\linker\ios\link sdk</ThisTestDirectory>
+  </PropertyGroup>
+
+  <Import Project="$(RootTestsDirectory)/common/shared-dotnet.csproj" />
+
+  <ItemGroup>
+    <Reference Include="support">
+      <HintPath>$(ThisTestDirectory)/support.dll</HintPath>
+    </Reference>
+
+    <PackageReference Include="NUnitLite" Version="3.12.0" />
+    <PackageReference Include="MonoTouch.Dialog" Version="2.0.0-pre1" />
+    <ProjectReference Include="$(RootTestsDirectory)\..\external\Touch.Unit\Touch.Client\dotnet\$(_PlatformName)\Touch.Client-$(_PlatformName).dotnet.csproj" />
+    <!-- MonoTouch.Dialog references System.Json, which isn't shipped with .NET5, so reference the NuGet instead -->
+    <PackageReference Include="System.Json" Version="4.7.1" />
+    <ProjectReference Include="$(RootTestsDirectory)\BundledResources\dotnet\$(_PlatformName)\BundledResources.csproj" />
+    <ProjectReference Include="$(RootTestsDirectory)\bindings-test\dotnet\$(_PlatformName)\bindings-test.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Info.plist" />
+    <LinkDescription Include="$(RootTestsDirectory)\linker\ios\link sdk\dotnet\extra-linker-defs.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="$(ThisTestDirectory)\Main.cs" />
+    <Compile Include="$(ThisTestDirectory)\AppDelegate.cs" />
+    <Compile Include="$(ThisTestDirectory)\LinkSdkRegressionTest.cs" />
+    <Compile Include="$(ThisTestDirectory)\Bug1820Test.cs" />
+    <Compile Include="$(ThisTestDirectory)\Bug2096Test.cs" />
+    <Compile Include="$(ThisTestDirectory)\..\..\BaseOptimizeGeneratedCodeTest.cs" />
+    <Compile Include="$(ThisTestDirectory)\OptimizeGeneratedCodeTest.cs" />
+    <Compile Include="$(ThisTestDirectory)\AotBugs.cs" />
+    <Compile Include="$(ThisTestDirectory)\CryptoTest.cs" />
+    <Compile Include="$(ThisTestDirectory)\TaskTest.cs" />
+    <Compile Include="$(ThisTestDirectory)\LinkExtraDefsTest.cs" />
+    <Compile Include="$(ThisTestDirectory)\PclTest.cs" />
+    <Compile Include="$(ThisTestDirectory)\AsyncTest.cs" />
+    <Compile Include="$(ThisTestDirectory)\DataContractTest.cs" />
+    <Compile Include="$(ThisTestDirectory)\CalendarTest.cs" />
+    <Compile Include="$(ThisTestDirectory)\DllImportTest.cs" />
+    <Compile Include="$(ThisTestDirectory)\LocaleTest.cs" />
+    <Compile Include="$(ThisTestDirectory)\ReflectionTest.cs" />
+    <Compile Include="$(ThisTestDirectory)\HttpClientHandlerTest.cs" />
+    <Compile Include="$(ThisTestDirectory)\CanaryTest.cs" />
+    <Compile Include="$(ThisTestDirectory)\..\..\..\common\TestRuntime.cs">
+        <Link>TestRuntime.cs</Link>
+    </Compile>
+    <Compile Include="$(ThisTestDirectory)\..\..\ILReader.cs">
+      <Link>ILReader.cs</Link>
+    </Compile>
+    <Compile Include="$(ThisTestDirectory)\..\..\CommonLinkSdkTest.cs">
+      <Link>CommonLinkSdkTest.cs</Link>
+    </Compile>
+    <Compile Include="$(ThisTestDirectory)\..\..\CommonLinkAnyTest.cs">
+      <Link>CommonLinkAnyTest.cs</Link>
+    </Compile>
+    <Compile Include="$(ThisTestDirectory)\BitcodeTest.cs" />
+    <Compile Include="$(ThisTestDirectory)\..\..\..\monotouch-test\System.Net.Http\NetworkResources.cs">
+      <Link>NetworkResources.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <InterfaceDefinition Include="$(ThisTestDirectory)\LaunchScreen.storyboard" />
+  </ItemGroup>
+  <ItemGroup>
+    <ImageAsset Include="$(ThisTestDirectory)\Assets.xcassets\AppIcons.appiconset\Contents.json" />
+    <ImageAsset Include="$(ThisTestDirectory)\Assets.xcassets\AppIcons.appiconset\Icon-app-60%403x.png" />
+    <ImageAsset Include="$(ThisTestDirectory)\Assets.xcassets\AppIcons.appiconset\icon-app-57.png" />
+    <ImageAsset Include="$(ThisTestDirectory)\Assets.xcassets\AppIcons.appiconset\icon-app-57%402x.png" />
+    <ImageAsset Include="$(ThisTestDirectory)\Assets.xcassets\AppIcons.appiconset\icon-app-60%402x.png" />
+    <ImageAsset Include="$(ThisTestDirectory)\Assets.xcassets\AppIcons.appiconset\icon-app-72.png" />
+    <ImageAsset Include="$(ThisTestDirectory)\Assets.xcassets\AppIcons.appiconset\icon-app-72%402x.png" />
+    <ImageAsset Include="$(ThisTestDirectory)\Assets.xcassets\AppIcons.appiconset\icon-app-76.png" />
+    <ImageAsset Include="$(ThisTestDirectory)\Assets.xcassets\AppIcons.appiconset\icon-app-76%402x.png" />
+    <ImageAsset Include="$(ThisTestDirectory)\Assets.xcassets\AppIcons.appiconset\icon-app-83.5%402x.png" />
+  </ItemGroup>
+</Project>

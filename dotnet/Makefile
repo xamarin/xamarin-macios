@@ -18,6 +18,7 @@ $(1)_NUGET_TARGETS = \
 	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/data/UnixFilePermissions.xml \
 	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/Sdk/AutoImport.props \
 	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/Sdk/Sdk.props \
+	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Microsoft.$(1).Sdk.ImplicitNamespaceImports.props \
 	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Microsoft.$(1).Sdk.SupportedTargetPlatforms.props \
 	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Microsoft.$(1).Sdk.DefaultItems.props \
 	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Microsoft.$(1).Sdk.props \
@@ -129,6 +130,18 @@ LOCAL_WORKLOAD_TARGETS += Workloads/Microsoft.NET.Sdk.$(1)/LICENSE
 endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call WorkloadTargets,$(platform),$(shell echo $(platform) | tr A-Z a-z),$($(platform)_NUGET_VERSION_NO_METADATA))))
 
+$(DOTNET_NUPKG_DIR)/vs-workload.props: Workloads/vs-workload.template.props
+	$(Q) rm -f $@.tmp
+	$(Q_GEN) sed \
+		$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),-e "s/@$(platform)_WORKLOAD_VERSION@/$($(platform)_NUGET_VERSION).$($(platform)_NUGET_COMMIT_DISTANCE)/g") \
+		-e "s/@PACK_VERSION_LONG@/$(IOS_NUGET_VERSION_NO_METADATA)/g" \
+		-e "s/@PACK_VERSION_SHORT@/$(IOS_NUGET_VERSION).$(IOS_NUGET_COMMIT_DISTANCE)/g" \
+		$< > $@.tmp
+	$(Q) mv $@.tmp $@
+
+$(DOTNET_NUPKG_DIR)/SignList.xml: Workloads/SignList.xml
+	$(Q) $(CP) $< $@
+
 TEMPLATED_FILES = \
 	$(foreach platform,$(DOTNET_PLATFORMS),Microsoft.$(platform).Sdk/targets/Microsoft.$(platform).Sdk.Versions.props) \
 	$(foreach platform,$(DOTNET_PLATFORMS),Microsoft.$(platform).Sdk/targets/Microsoft.$(platform).Sdk.SupportedTargetPlatforms.props) \
@@ -144,12 +157,10 @@ $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call NupkgDefinition,$(platform)
 
 # Create the nuget in a temporary directory (nupkgs/)
 define CreateNuGetTemplate
-nupkgs/$(1)$(4).$(2)+$(NUGET_BUILD_METADATA).nupkg: $(TEMPLATED_FILES) $(WORKLOAD_TARGETS) $(3) package/$(1)/package.csproj $(wildcard package/*.csproj) $(wildcard $(DOTNET_DESTDIR)/$(1)/* $(DOTNET_DESTDIR)/$(1)/*/* $(DOTNET_DESTDIR)/$(1)/*/*/* $(DOTNET_DESTDIR)/$(1)/*/*/*/*) global.json .stamp-workaround-for-maccore-issue-2427
+nupkgs/$(1)$(4).$(2).nupkg: $(TEMPLATED_FILES) $(WORKLOAD_TARGETS) $(3) package/$(1)/package.csproj $(wildcard package/*.csproj) $(wildcard $(DOTNET_DESTDIR)/$(1)/* $(DOTNET_DESTDIR)/$(1)/*/* $(DOTNET_DESTDIR)/$(1)/*/*/* $(DOTNET_DESTDIR)/$(1)/*/*/*/*) global.json .stamp-workaround-for-maccore-issue-2427
 	@# Delete any versions of the nuget we're building
 	$$(Q) rm -f nupkgs/$(1).*.nupkg
 	$$(Q_PACK) $(DOTNET6) pack package/$(1)/package.csproj -p:VersionBand=$(DOTNET6_VERSION_BAND) --output "$$(dir $$@)" $(DOTNET_PACK_VERBOSITY) "/bl:$$@.binlog"
-	@# Nuget pack doesn't add the metadata to the filename, but we want that, so rename nuget to contain the full name
-	$$(Q) mv "nupkgs/$(1)$(4).$(2).nupkg" "$$@"
 	@# Clean the local feed
 	$$(Q_NUGET_DEL) if test -d $(DOTNET_FEED_DIR)/$(shell echo $(1) | tr A-Z a-z)/$(2); then nuget delete $(1) $(2) -source $(abspath $(DOTNET_FEED_DIR)) -NonInteractive $(NUGET_VERBOSITY); fi
 	@# Add the nupkg to our local feed
@@ -157,12 +168,10 @@ nupkgs/$(1)$(4).$(2)+$(NUGET_BUILD_METADATA).nupkg: $(TEMPLATED_FILES) $(WORKLOA
 endef
 
 define CreateWindowsNuGetTemplate
-nupkgs/$(1).$(2)+$(NUGET_BUILD_METADATA).nupkg: $(3) $(WORKLOAD_TARGETS) package/$(1)/package.csproj $(wildcard package/*.csproj) $(wildcard $(DOTNET_DESTDIR)/$(1)/* $(DOTNET_DESTDIR)/$(1)/*/* $(DOTNET_DESTDIR)/$(1)/*/*/* $(DOTNET_DESTDIR)/$(1)/*/*/*/*) global.json .stamp-workaround-for-maccore-issue-2427
+nupkgs/$(1).$(2).nupkg: $(3) $(WORKLOAD_TARGETS) package/$(1)/package.csproj $(wildcard package/*.csproj) $(wildcard $(DOTNET_DESTDIR)/$(1)/* $(DOTNET_DESTDIR)/$(1)/*/* $(DOTNET_DESTDIR)/$(1)/*/*/* $(DOTNET_DESTDIR)/$(1)/*/*/*/*) global.json .stamp-workaround-for-maccore-issue-2427
 	@# Delete any versions of the nuget we're building
 	$$(Q) rm -f nupkgs/$(1).*.nupkg
 	$$(Q_PACK) $(DOTNET6) pack package/$(1)/package.csproj --output "$$(dir $$@)" $(DOTNET_PACK_VERBOSITY) "/bl:$$@.binlog"
-	@# Nuget pack doesn't add the metadata to the filename, but we want that, so rename nuget to contain the full name
-	$$(Q) mv "nupkgs/$(1).$(2).nupkg" "$$@"
 	@# Clean the local feed
 	$$(Q_NUGET_DEL) if test -d $(DOTNET_FEED_DIR)/$(shell echo $(1) | tr A-Z a-z)/$(2); then nuget delete $(1) $(2) -source $(abspath $(DOTNET_FEED_DIR)) -NonInteractive $(NUGET_VERBOSITY); fi
 	@# Add the nupkg to our local feed
@@ -182,28 +191,28 @@ $(DOTNET_NUPKG_DIR)/%.nupkg: nupkgs/%.nupkg | $(DOTNET_NUPKG_DIR)
 	$(Q) $(CP) $< $@
 
 ifdef INCLUDE_IOS
-SDK_PACK_IOS_WINDOWS = $(DOTNET_NUPKG_DIR)/$(IOS_WINDOWS_NUGET).Sdk.$(IOS_WINDOWS_NUGET_VERSION_FULL).nupkg
+SDK_PACK_IOS_WINDOWS = $(DOTNET_NUPKG_DIR)/$(IOS_WINDOWS_NUGET).Sdk.$(IOS_WINDOWS_NUGET_VERSION_NO_METADATA).nupkg
 SDK_PACKS += $(SDK_PACK_IOS_WINDOWS)
 endif
 
 pack-ios-windows: $(SDK_PACK_IOS_WINDOWS)
 
 define PacksDefinitions
-RUNTIME_PACKS_$(1) = $$(foreach rid,$$(DOTNET_$(1)_RUNTIME_IDENTIFIERS),$(DOTNET_NUPKG_DIR)/$($(1)_NUGET).Runtime.$$(rid).$($(1)_NUGET_VERSION_FULL).nupkg)
+RUNTIME_PACKS_$(1) = $$(foreach rid,$$(DOTNET_$(1)_RUNTIME_IDENTIFIERS),$(DOTNET_NUPKG_DIR)/$($(1)_NUGET).Runtime.$$(rid).$($(1)_NUGET_VERSION_NO_METADATA).nupkg)
 RUNTIME_PACKS += $$(RUNTIME_PACKS_$(1))
-REF_PACKS_$(1) = $(DOTNET_NUPKG_DIR)/$($(1)_NUGET).Ref.$($(1)_NUGET_VERSION_FULL).nupkg
+REF_PACKS_$(1) = $(DOTNET_NUPKG_DIR)/$($(1)_NUGET).Ref.$($(1)_NUGET_VERSION_NO_METADATA).nupkg
 REF_PACKS += $$(REF_PACKS_$(1))
-SDK_PACKS_$(1) = $(DOTNET_NUPKG_DIR)/$($(1)_NUGET).Sdk.$($(1)_NUGET_VERSION_FULL).nupkg
+SDK_PACKS_$(1) = $(DOTNET_NUPKG_DIR)/$($(1)_NUGET).Sdk.$($(1)_NUGET_VERSION_NO_METADATA).nupkg
 SDK_PACKS += $$(SDK_PACKS_$(1))
-TEMPLATE_PACKS_$(1) = $(DOTNET_NUPKG_DIR)/$($(1)_NUGET).Templates.$($(1)_NUGET_VERSION_FULL).nupkg
+TEMPLATE_PACKS_$(1) = $(DOTNET_NUPKG_DIR)/$($(1)_NUGET).Templates.$($(1)_NUGET_VERSION_NO_METADATA).nupkg
 TEMPLATE_PACKS += $$(TEMPLATE_PACKS_$(1))
-WORKLOAD_PACKS_$(1) = $(DOTNET_NUPKG_DIR)/$(subst Microsoft.,Microsoft.NET.Sdk.,$($(1)_NUGET)).Manifest-$(DOTNET6_VERSION_BAND).$($(1)_NUGET_VERSION_FULL).nupkg
+WORKLOAD_PACKS_$(1) = $(DOTNET_NUPKG_DIR)/$(subst Microsoft.,Microsoft.NET.Sdk.,$($(1)_NUGET)).Manifest-$(DOTNET6_VERSION_BAND).$($(1)_NUGET_VERSION_NO_METADATA).nupkg
 WORKLOAD_PACKS += $$(WORKLOAD_PACKS_$(1))
 pack-$(shell echo $(1) | tr A-Z a-z): $$(RUNTIME_PACKS_$(1)) $$(REF_PACKS_$(1)) $$(SDK_PACKS_$(1)) $$(TEMPLATE_PACKS_$(1)) $$(WORKLOAD_PACKS_$(1))
 endef
 $(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(eval $(call PacksDefinitions,$(platform))))
 
-TARGETS += $(RUNTIME_PACKS) $(REF_PACKS) $(SDK_PACKS) $(TEMPLATE_PACKS) $(WORKLOAD_PACKS)
+TARGETS += $(RUNTIME_PACKS) $(REF_PACKS) $(SDK_PACKS) $(TEMPLATE_PACKS) $(WORKLOAD_PACKS) $(DOTNET_NUPKG_DIR)/vs-workload.props $(DOTNET_NUPKG_DIR)/SignList.xml
 
 define InstallWorkload
 # .NET comes with a workload for us, but we don't want that, we want our own. So delete the workload that comes with .NET.
@@ -347,9 +356,10 @@ $(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(eval $(call CreateMsi,$(platfor
 export DOTNETSDK_WORKLOAD_MANIFEST_ROOTS:=$(abspath ./Workloads)
 
 .stamp-install-workloads: Makefile Workloads/NuGet.config $(WORKLOAD_TARGETS) $(RUNTIME_PACKS) $(REF_PACKS) $(SDK_PACKS) $(TEMPLATE_PACKS) $(WORKLOAD_PACKS)
+	@# The microsoft.net.sdk.maui workload has a reference to the microsoft-ios-sdk-full workload, which has been renamed, so 'dotnet workload install' fails. Just remove the maui workload, we don't need it here.
+	$(Q) rm -Rf $(DOTNET6_DIR)/sdk-manifests/6.0.100/microsoft.net.sdk.maui
 	$(Q) cd Workloads && $(DOTNET6) workload install --skip-manifest-update \
-		microsoft-net-runtime-ios microsoft-net-runtime-tvos \
-		$(foreach platform,$(DOTNET_PLATFORMS),microsoft-$(shell echo $(platform) | tr A-Z a-z)-sdk-full)
+		$(foreach platform,$(DOTNET_PLATFORMS),$(shell echo $(platform) | tr A-Z a-z))
 	$(Q) touch $@
 
 TARGETS += .stamp-install-workloads

@@ -1096,7 +1096,7 @@ namespace Xamarin.Bundler {
 			var options = new LinkerOptions {
 				MainAssembly = BuildTarget.Resolver.GetAssembly (App.References [App.References.Count - 1]),
 				OutputDirectory = mmp_dir,
-				LinkSymbols = App.EnableDebug,
+				LinkSymbols = App.PackageManagedDebugSymbols,
 				LinkMode = App.LinkMode,
 				Resolver = resolver,
 				SkippedAssemblies = App.LinkSkipped,
@@ -1395,7 +1395,7 @@ namespace Xamarin.Bundler {
 		{
 			string cd = Environment.CurrentDirectory;
 			Environment.CurrentDirectory = directory;
-			symlink (Path.GetFileName (real), "./" + Path.GetFileName (link));
+			PathUtils.Symlink (Path.GetFileName (real), "./" + Path.GetFileName (link));
 			Environment.CurrentDirectory = cd;
 		}
 
@@ -1439,10 +1439,7 @@ namespace Xamarin.Bundler {
 		// Mono.Unix can't create symlinks to relative paths, it insists on the target to a full path before creating the symlink.
 		static void CreateSymlink (string file, string target)
 		{
-			unlink (file); // Delete any existing symlinks.
-			var rv = symlink (target, file);
-			if (rv != 0)
-				throw ErrorHelper.CreateError (1034, Errors.MM1034, file, target, Marshal.GetLastWin32Error());
+			PathUtils.CreateSymlink (file, target);
 		}
 
 		static void CreateDirectoryIfNeeded (string dir) {

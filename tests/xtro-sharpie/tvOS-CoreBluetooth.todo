@@ -1,3 +1,0 @@
-!missing-null-allowed! 'CoreBluetooth.CBCharacteristic CoreBluetooth.CBDescriptor::get_Characteristic()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'CoreBluetooth.CBPeripheral CoreBluetooth.CBService::get_Peripheral()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'CoreBluetooth.CBService CoreBluetooth.CBCharacteristic::get_Service()' is missing an [NullAllowed] on return type
