@@ -110,6 +110,7 @@ namespace MLCompute {
 		Cpu = 0,
 		Gpu = 1,
 		Any = 2,
+		[iOS (15,0), TV (15,0), Mac (12,0), MacCatalyst (15,0)]
 		Ane  = 3, // Apple neural engine
 		// Count, // must be last, not available in swift
 	}
@@ -123,6 +124,7 @@ namespace MLCompute {
 		Synchronous = 0x2,
 		Profiling = 0x4,
 		ForwardForInference = 0x8,
+		[iOS (15,0), TV (15,0), Mac (12,0), MacCatalyst (15,0)]
 		PerLayerProfiling = 0x10,
 	}
 
@@ -237,7 +239,7 @@ namespace MLCompute {
 		LogSoftmax = 1,
 	}
 
-	[iOS (15,0), TV (15,0), Mac (12,0), NoWatch]
+	[iOS (15,0), TV (15,0), Mac (12,0), NoWatch, MacCatalyst (15,0)]
 	public enum MLCGradientClippingType {
 		Value = 0,
 		Norm = 1,
@@ -596,7 +598,7 @@ namespace MLCompute {
 		[return: NullAllowed]
 		MLCDevice GetDevice (IMTLDevice[] gpus);
 
-		[TV (15,0), Mac (12,0), iOS (15,0)]
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Static]
 		[Export ("aneDevice")]
 		[return: NullAllowed]
@@ -765,7 +767,7 @@ namespace MLCompute {
 		[Static]
 		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("tensorWithShape:randomInitializerType:dataType:")]
-		MLCTensor Create (NSNumber[] shape, MLCRandomInitializerType randomInitializerType, MLCDataType dataType);
+		MLCTensor Create ([BindAs (typeof (nint[]))] NSNumber[] shape, MLCRandomInitializerType randomInitializerType, MLCDataType dataType);
 	}
 
 	[iOS (14,0)][TV (14,0)][Mac (11,0)]
@@ -2378,11 +2380,12 @@ namespace MLCompute {
 
 	[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
 	interface MLCPlatform {
 		
 		[Static]
 		[Export ("setRNGSeedTo:")]
-		void SetRngSeedTo ([BindAs (typeof (nuint))] NSNumber seed);
+		void SetRngSeed ([BindAs (typeof (nuint))] NSNumber seed);
 
 		[return: BindAs (typeof (nuint)), NullAllowed]
 		[Static]
@@ -2390,7 +2393,7 @@ namespace MLCompute {
 		NSNumber GetRngSeed ();
 	}
 
-	[TV (15,0), Mac (12,0), iOS (15,0)]
+	[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (MLCOptimizer))]
 	[DisableDefaultCtor]
 	interface MLCAdamWOptimizer : NSCopying
@@ -2416,7 +2419,7 @@ namespace MLCompute {
 
 		[Static]
 		[Export ("optimizerWithDescriptor:beta1:beta2:epsilon:usesAMSGrad:timeStep:")]
-		MLCAdamWOptimizer GetOptimizer (MLCOptimizerDescriptor optimizerDescriptor, float beta1, float beta2, float epsilon, bool usesAMSGrad, nuint timeStep);
+		MLCAdamWOptimizer GetOptimizer (MLCOptimizerDescriptor optimizerDescriptor, float beta1, float beta2, float epsilon, bool usesAmsGrad, nuint timeStep);
 	}
 
 }
