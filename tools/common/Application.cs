@@ -1465,7 +1465,8 @@ namespace Xamarin.Bundler {
 			aotArguments.Add ($"data-outfile={dataFile}");
 			aotArguments.Add ("static");
 			aotArguments.Add ("asmonly");
-			aotArguments.Add ("direct-icalls");
+			if (app.LibMonoLinkMode == AssemblyBuildTarget.StaticObject)
+				aotArguments.Add ("direct-icalls");
 			aotArguments.AddRange (app.AotArguments);
 			if (llvm_only)
 				aotArguments.Add ("llvmonly");
