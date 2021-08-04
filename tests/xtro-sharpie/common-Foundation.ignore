@@ -1216,8 +1216,6 @@
 !missing-null-allowed! 'ObjCRuntime.Class Foundation.NSBundle::ClassNamed(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'ObjCRuntime.Class Foundation.NSBundle::get_PrincipalClass()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'ObjCRuntime.Class Foundation.NSKeyedUnarchiverDelegate::CannotDecodeClass(Foundation.NSKeyedUnarchiver,System.String,System.String[])' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'ObjCRuntime.Selector Foundation.NSComparisonPredicate::get_CustomSelector()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'ObjCRuntime.Selector Foundation.NSSortDescriptor::get_Selector()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.Boolean Foundation.NSFileManager::CreateFile(System.String,Foundation.NSData,Foundation.NSDictionary)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Boolean Foundation.NSPredicate::EvaluateWithObject(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Boolean Foundation.NSPredicate::EvaluateWithObject(Foundation.NSObject,Foundation.NSDictionary)' is missing an [NullAllowed] on parameter #0

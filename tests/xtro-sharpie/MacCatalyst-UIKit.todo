@@ -158,7 +158,6 @@
 !missing-null-allowed! 'Foundation.NSObject UIKit.UIManagedDocument::AdditionalContent(Foundation.NSUrl,Foundation.NSError&)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject UIKit.UIPasteboard::GetValue(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject UIKit.UIResponder::GetTargetForAction(ObjCRuntime.Selector,Foundation.NSObject)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSObject UIKit.UIStoryboardUnwindSegueSource::get_Sender()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject[] UIKit.UICollisionBehavior::get_BoundaryIdentifiers()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSProgress UIKit.UIDocument::get_Progress()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSSet UIKit.UIEvent::TouchesForGestureRecognizer(UIKit.UIGestureRecognizer)' is missing an [NullAllowed] on return type

@@ -711,7 +711,6 @@
 !missing-null-allowed! 'Foundation.NSObject AppKit.NSComboBox::get_SelectedValue()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject AppKit.NSComboBoxCell::get_SelectedValue()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject AppKit.NSComboBoxDataSource::ObjectValueForItem(AppKit.NSComboBox,System.nint)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSObject AppKit.NSCustomImageRep::get_Delegate()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject AppKit.NSDockTile::get_Owner()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject AppKit.NSDocumentController::MakeDocument(Foundation.NSUrl,Foundation.NSUrl,System.String,Foundation.NSError&)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject AppKit.NSDocumentController::MakeDocument(Foundation.NSUrl,System.String,Foundation.NSError&)' is missing an [NullAllowed] on return type
@@ -791,7 +790,6 @@
 !missing-null-allowed! 'ObjCRuntime.Class AppKit.NSImageRep::ImageRepClassForPasteboardType(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'ObjCRuntime.Class AppKit.NSImageRep::ImageRepClassForType(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'ObjCRuntime.Class Foundation.NSObject::BindingValueClass(System.String)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'ObjCRuntime.Selector AppKit.NSCustomImageRep::get_DrawSelector()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'OpenGL.CGLContext AppKit.NSOpenGLContext::get_CGLContext()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'OpenGL.CGLPixelFormat AppKit.NSOpenGLPixelFormat::get_CGLPixelFormat()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.Boolean AppKit.NSBrowser::IsLeafItem(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
@@ -956,7 +954,6 @@
 !missing-null-allowed! 'System.Void AppKit.NSBrowser::EditItemAtIndexPath(Foundation.NSIndexPath,AppKit.NSEvent,System.Boolean)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Void AppKit.NSBrowser::SelectAll(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSBrowser::set_CellPrototype(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void AppKit.NSBrowser::set_DoubleAction(ObjCRuntime.Selector)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSBrowserCell::set_AlternateImage(AppKit.NSImage)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSBrowserCell::set_Image(AppKit.NSImage)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSBrowserDelegate::SetObjectValue(AppKit.NSBrowser,Foundation.NSObject,Foundation.NSObject)' is missing an [NullAllowed] on parameter #1
@@ -1060,7 +1057,6 @@
 !missing-null-allowed! 'System.Void AppKit.NSFormCell::.ctor(System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSFormCell::set_PlaceholderAttributedString(Foundation.NSAttributedString)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSFormCell::set_PlaceholderString(System.String)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void AppKit.NSGestureRecognizer::set_Action(ObjCRuntime.Selector)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSHelpManager::FindString(System.String,System.String)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Void AppKit.NSHelpManager::OpenHelpAnchor(System.String,System.String)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Void AppKit.NSLayoutManagerDelegate::LayoutCompleted(AppKit.NSLayoutManager,AppKit.NSTextContainer,System.Boolean)' is missing an [NullAllowed] on parameter #1
@@ -1070,7 +1066,6 @@
 !missing-null-allowed! 'System.Void AppKit.NSMatrix::SelectAll(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSMatrix::SelectText(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSMatrix::set_CellBackgroundColor(AppKit.NSColor)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void AppKit.NSMatrix::set_DoubleAction(ObjCRuntime.Selector)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSMatrix::set_KeyCell(Foundation.NSObject)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSMatrix::set_Prototype(AppKit.NSCell)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSMenu::set_Font(AppKit.NSFont)' is missing an [NullAllowed] on parameter #0
@@ -1105,7 +1100,6 @@
 !missing-null-allowed! 'System.Void AppKit.NSPasteboardItemDataProvider::ProvideDataForType(AppKit.NSPasteboard,AppKit.NSPasteboardItem,System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSPathCell::set_AllowedTypes(System.String[])' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSPathCell::set_BackgroundColor(AppKit.NSColor)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void AppKit.NSPathCell::set_DoubleAction(ObjCRuntime.Selector)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSPathCell::set_PlaceholderAttributedString(Foundation.NSAttributedString)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSPathCell::set_PlaceholderString(System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSPathCell::set_Url(Foundation.NSUrl)' is missing an [NullAllowed] on parameter #0
@@ -1113,7 +1107,6 @@
 !missing-null-allowed! 'System.Void AppKit.NSPathComponentCell::set_Image(AppKit.NSImage)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSPathComponentCell::set_Url(Foundation.NSUrl)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSPathControl::set_AllowedTypes(Foundation.NSString[])' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void AppKit.NSPathControl::set_DoubleAction(ObjCRuntime.Selector)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSPathControl::set_PlaceholderAttributedString(Foundation.NSAttributedString)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSPathControl::set_PlaceholderString(System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSPathControl::set_Url(Foundation.NSUrl)' is missing an [NullAllowed] on parameter #0
@@ -1184,7 +1177,6 @@
 !missing-null-allowed! 'System.Void AppKit.NSStatusItem::set_AlternateImage(AppKit.NSImage)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSStatusItem::set_AttributedTitle(Foundation.NSAttributedString)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSStatusItem::set_AutosaveName(System.String)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void AppKit.NSStatusItem::set_DoubleAction(ObjCRuntime.Selector)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSStatusItem::set_Image(AppKit.NSImage)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSStatusItem::set_Title(System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSTableCellView::set_ImageView(AppKit.NSImageView)' is missing an [NullAllowed] on parameter #0
@@ -1193,7 +1185,6 @@
 !missing-null-allowed! 'System.Void AppKit.NSTableHeaderView::set_TableView(AppKit.NSTableView)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSTableView::set_AutosaveName(System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSTableView::set_CornerView(AppKit.NSView)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void AppKit.NSTableView::set_DoubleAction(ObjCRuntime.Selector)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSTableView::set_HighlightedTableColumn(AppKit.NSTableColumn)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSTableViewDataSource::SetObjectValue(AppKit.NSTableView,Foundation.NSObject,AppKit.NSTableColumn,System.nint)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Void AppKit.NSTableViewDataSource::SetObjectValue(AppKit.NSTableView,Foundation.NSObject,AppKit.NSTableColumn,System.nint)' is missing an [NullAllowed] on parameter #2

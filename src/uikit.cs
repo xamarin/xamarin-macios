@@ -15973,6 +15973,7 @@ namespace UIKit {
 		[Export ("unwindAction")]
 		Selector UnwindAction { get; }
 
+		[NullAllowed]
 		[Export ("sender")]
 		NSObject Sender { get; }
 	}
