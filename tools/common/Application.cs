@@ -72,7 +72,7 @@ namespace Xamarin.Bundler {
 		public HashSet<string> IgnoredSymbols = new HashSet<string> ();
 
 		// The AOT arguments are currently not used for macOS, but they could eventually be used there as well (there's no mmp option to set these yet).
-		public string AotArguments = "static,asmonly,direct-icalls,";
+		public List<string> AotArguments = new List<string> ();
 		public List<string> AotOtherArguments = null;
 
 		public DlsymOptions DlsymOptions;
@@ -1463,7 +1463,10 @@ namespace Xamarin.Bundler {
 			aotArguments = new List<string> ();
 			aotArguments.Add ($"--aot=mtriple={(enable_thumb ? arch.Replace ("arm", "thumb") : arch)}-ios");
 			aotArguments.Add ($"data-outfile={dataFile}");
-			aotArguments.AddRange (app.AotArguments.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries));
+			aotArguments.Add ("static");
+			aotArguments.Add ("asmonly");
+			aotArguments.Add ("direct-icalls");
+			aotArguments.AddRange (app.AotArguments);
 			if (llvm_only)
 				aotArguments.Add ("llvmonly");
 			else if (interp) {
