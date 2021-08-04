@@ -114,7 +114,7 @@ namespace Xharness {
 				if (TestPlatform == TestPlatform.None)
 					throw new InvalidOperationException  ($"The project ?{original_path}' did not set the TestPlatform property.");
 
-				var sharedProjectPath = project.Replace ("$(RootTestsDirectory)", rootDirectory);
+				var sharedProjectPath = System.IO.Path.Combine (System.IO.Path.GetDirectoryName (original_path), project);
 				// Check for variables that won't work correctly if the shared code is moved to a different file
 				var xml = File.ReadAllText (sharedProjectPath);
 				if (xml.Contains ("$(MSBuildThis"))
