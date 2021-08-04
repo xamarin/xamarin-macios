@@ -1980,6 +1980,7 @@ MAC_FRAMEWORKS =            \
 	Metal                   \
 	MetalKit                \
 	MetalPerformanceShaders \
+	MetricKit               \
 	MLCompute               \
 	MobileCoreServices      \
 	ModelIO                 \
