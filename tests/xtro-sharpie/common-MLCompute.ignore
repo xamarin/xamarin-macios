@@ -8,3 +8,5 @@
 !missing-enum-value! MLCPoolingType native value MLCPoolingTypeCount = 4 not bound
 !missing-enum-value! MLCRandomInitializerType native value MLCRandomInitializerTypeCount = 4 not bound
 !missing-enum-value! MLCReductionType native value MLCReductionTypeCount = 10 not bound
+!missing-enum-value! MLCDeviceType native value MLCDeviceTypeCount = 4 not bound
+!missing-enum-value! MLCDataType native value MLCDataTypeCount = 10 not bound

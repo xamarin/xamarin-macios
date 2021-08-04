@@ -235,4 +235,23 @@ namespace MLCompute {
 			return CFString.FromHandle (MLCComparisonOperationDebugDescription (self));
 		}
 	}
+
+#if NET
+	[SupportedOSPlatform ("ios15.0")]
+	[SupportedOSPlatform ("tvos15.0")]
+	[SupportedOSPlatform ("macos12.0")]
+#else
+	[NoWatch]
+	[TV (15,0), Mac (12,0), iOS (15,0)]
+#endif
+	public static class MLCGradientClippingTypeExtensions {
+
+		[DllImport (Constants.MLComputeLibrary)]
+		static extern /* NSString */ IntPtr MLCGradientClippingTypeDebugDescription (MLCGradientClippingType gradientClippingType);
+
+		public static string GetDebugDescription (this MLCGradientClippingType self)
+		{
+			return CFString.FromHandle (MLCGradientClippingTypeDebugDescription (self));
+		}
+	}
 }
