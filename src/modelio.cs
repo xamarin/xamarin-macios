@@ -227,11 +227,19 @@ namespace ModelIO {
 		[Export ("objectAtIndex:")]
 		MDLObject GetObject (nuint index);
 
+		[Deprecated (PlatformName.iOS, 15, 0, message: "Use the 'Originals' instead.")]
+		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use the 'Originals' instead.")]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use the 'Originals' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use the 'Originals' instead.")]
 		[iOS (10,0)]
 		[Mac (10,12)]
 		[TV (10,0)]
 		[Export ("masters", ArgumentSemantic.Retain)]
 		IMDLObjectContainerComponent Masters { get; set; }
+
+		[iOS (15,0), Mac (12,0), TV (15,0), MacCatalyst (15,0)]
+		[Export ("originals", ArgumentSemantic.Retain)]
+		IMDLObjectContainerComponent Originals { get; set; }
 
 		[TV (11,0), Mac (10,13), iOS (11,0)]
 		[Export ("animations", ArgumentSemantic.Retain)]
