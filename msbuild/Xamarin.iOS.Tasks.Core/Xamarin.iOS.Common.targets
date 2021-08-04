@@ -223,8 +223,19 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</_CompileAppManifestDependsOn>
 	</PropertyGroup>
 
+	<PropertyGroup>
+		<_CompileITunesMetadataDependsOn>
+			$(_CompileITunesMetadataDependsOn);
+			_DetectSdkLocations;
+			_DetectAppManifest;
+			_GenerateBundleName;
+			_CompileAppManifest;
+			_ReadAppManifest;
+		</_CompileITunesMetadataDependsOn>
+	</PropertyGroup>
+
 	<Target Name="_CompileITunesMetadata" Condition="'$(ComputedPlatform)' == 'iPhone' And '$(IsAppExtension)' == 'false' And '$(IsWatchApp)' == 'false'"
-		DependsOnTargets="_DetectSdkLocations;_DetectAppManifest;_GenerateBundleName;_CompileAppManifest;_ReadAppManifest"
+		DependsOnTargets="$(_CompileITunesMetadataDependsOn)"
 		Inputs="@(ITunesMetadata)"
 		Outputs="$(DeviceSPecificOutputPath)iTunesMetadata.plist" >
 		<CompileITunesMetadata
@@ -470,7 +481,18 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</CreateItem>
 	</Target>
 
-	<Target Name="_CompileTextureAtlases" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_BeforeCompileTextureAtlases;_ReadCoreCompileTextureAtlases;_CoreCompileTextureAtlases" />
+	<PropertyGroup>
+		<_CompileTextureAtlasesDependsOn>
+			$(_CompileTextureAtlasesDependsOn);
+			_DetectAppManifest;
+			_DetectSdkLocations;
+			_BeforeCompileTextureAtlases;
+			_ReadCoreCompileTextureAtlases;
+			_CoreCompileTextureAtlases;
+		</_CompileTextureAtlasesDependsOn>
+	</PropertyGroup>
+
+	<Target Name="_CompileTextureAtlases" DependsOnTargets="$(_CompileTextureAtlasesDependsOn)" />
 
 	<Target Name="_BeforeCompileTextureAtlases"
 		Inputs="@(AtlasTexture)"

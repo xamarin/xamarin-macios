@@ -95,7 +95,16 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		</Codesign>
 	</Target>
 
-	<Target Name="_CompileTextureAtlases" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_CoreCompileTextureAtlases" />
+	<PropertyGroup>
+		<_CompileTextureAtlasesDependsOn>
+			$(_CompileTextureAtlasesDependsOn);
+			_DetectAppManifest;
+			_DetectSdkLocations;
+			_CoreCompileTextureAtlases;
+		</_CompileTextureAtlasesDependsOn>
+	</PropertyGroup>
+
+	<Target Name="_CompileTextureAtlases" DependsOnTargets="$(_CompileTextureAtlasesDependsOn)" />
 
 	<Target Name="_CoreCompileTextureAtlases">
 		<TextureAtlas

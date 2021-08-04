@@ -489,10 +489,22 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</ReadItemsFromFile>
 	</Target>
 
+	<PropertyGroup>
+		<_CoreCompileImageAssetsDependsOn>
+			$(_CoreCompileImageAssets);
+			_DetectAppManifest;
+			_ReadAppManifest;
+			_DetectSdkLocations;
+			_BeforeCoreCompileImageAssets;
+			_DetectSigningIdentity;
+			_ComputeTargetFrameworkMoniker;
+		</_CoreCompileImageAssetsDependsOn>
+	</PropertyGroup>
+
 	<Target Name="_CoreCompileImageAssets"
 		Inputs="@(ImageAsset);$(_AppManifest)"
 		Outputs="$(_ACTool_PartialAppManifestCache);$(_ACTool_BundleResourceCache)"
-		DependsOnTargets="_DetectAppManifest;_ReadAppManifest;_DetectSdkLocations;_BeforeCoreCompileImageAssets;_DetectSigningIdentity;_ComputeTargetFrameworkMoniker">
+		DependsOnTargets="$(_CoreCompileImageAssetsDependsOn)">
 
 		<ACTool
 			SessionId="$(BuildSessionId)"
@@ -758,10 +770,19 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</ReadItemsFromFile>
 	</Target>
 
+	<PropertyGroup>
+		<_CoreCompileCoreMLModelsDependsOn>
+			$(_CoreCompileCoreMLModelsDependsOn);
+			_DetectAppManifest;
+			_DetectSdkLocations;
+			_BeforeCompileCoreMLModels;
+		</_CoreCompileCoreMLModelsDependsOn>
+	</PropertyGroup>
+
 	<Target Name="_CoreCompileCoreMLModels" 
 		Inputs="@(CoreMLModel);$(_AppManifest)"
 		Outputs="$(_CoreMLModel_PartialAppManifestCache);$(_CoreMLModel_BundleResourceCache)"
-		DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_BeforeCompileCoreMLModels">
+		DependsOnTargets="$(_CoreCompileCoreMLModelsDependsOn)">
 
 		<CoreMLCompiler
 			SessionId="$(BuildSessionId)"
@@ -790,7 +811,15 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</ItemGroup>
 	</Target>
 
-	<Target Name="_SmeltMetal" Condition="'$(_CanOutputAppBundle)' == 'true' And '@(Metal)' != ''" DependsOnTargets="_DetectSdkLocations;_ComputeTargetFrameworkMoniker;_ReadAppManifest">
+	<PropertyGroup>
+		<_SmeltMetalDependsOn>
+			_DetectSdkLocations;
+			_ComputeTargetFrameworkMoniker;
+			_ReadAppManifest;
+		</_SmeltMetalDependsOn>
+	</PropertyGroup>
+
+	<Target Name="_SmeltMetal" Condition="'$(_CanOutputAppBundle)' == 'true' And '@(Metal)' != ''" DependsOnTargets="$(_SmeltMetalDependsOn)">
 		<Metal
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true' and '%(Metal.Identity)' != ''"
@@ -954,7 +983,17 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</ItemGroup>
 	</Target>
 
-	<Target Name="_DetectSigningIdentity" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_ComputeTargetFrameworkMoniker;_GenerateBundleName">
+	<PropertyGroup>
+		<_DetectSigningIdentityDependsOn>
+			$(_DetectSigningIdentityDependsOn);
+			_DetectAppManifest;
+			_DetectSdkLocations;
+			_ComputeTargetFrameworkMoniker;
+			_GenerateBundleName;
+		</_DetectSigningIdentityDependsOn>
+	</PropertyGroup>
+
+	<Target Name="_DetectSigningIdentity" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="$(_DetectSigningIdentityDependsOn)">
 		<DetectSigningIdentity
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
