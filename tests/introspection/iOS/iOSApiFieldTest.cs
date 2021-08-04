@@ -51,6 +51,7 @@ namespace Introspection {
 				if (Class.GetHandle ("NFCNDEFReaderSession") == IntPtr.Zero)
 					return true;
 				break;
+			case "Phase":
 			case "DeviceCheck": // Only available on device
 				if (Runtime.Arch == Arch.SIMULATOR)
 					return true;
