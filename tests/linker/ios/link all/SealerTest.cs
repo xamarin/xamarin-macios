@@ -75,7 +75,7 @@ namespace Linker.Sealer {
 			// but it can be optimized / sealed as nothing else is (or can) overrides it
 			Assert.True (a.IsFinal, "A");
 			Assert.True (b.IsFinal, "B");
-			Assert.True (c.IsFinal, "C");
+			Assert.False (c.IsFinal, "C"); // devirtualized
 #endif
 		}
 
