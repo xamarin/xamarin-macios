@@ -33,7 +33,7 @@ namespace Xamarin.iOS.Tasks
 			Task = CreateTask<CompileAppManifest> ();
 
 			Task.AppBundleName = appBundleName;
-			Task.AppManifestBundleDirectory = Path.Combine (Cache.CreateTemporaryDirectory (), "AppBundlePath");
+			Task.CompiledAppManifest = Path.Combine (Cache.CreateTemporaryDirectory (), "AppBundlePath", "Info.plist");
 			Task.AssemblyName = assemblyName;
 			Task.AppManifest = CreateTempFile ("foo.plist");
 			Task.BundleIdentifier = bundleIdentifier;
@@ -53,7 +53,7 @@ namespace Xamarin.iOS.Tasks
 			ConfigureTask ();
 
 			Task.Execute ();
-			CompiledPlist = PDictionary.FromFile (Task.CompiledAppManifest.ItemSpec);
+			CompiledPlist = PDictionary.FromFile (Task.CompiledAppManifest);
 		}
 
 		#region General tests
@@ -69,7 +69,7 @@ namespace Xamarin.iOS.Tasks
 		{
 			Assert.IsTrue (Task.Execute (), "#1");
 			Assert.IsNotNull (Task.CompiledAppManifest, "#2");
-			Assert.IsTrue (File.Exists (Task.CompiledAppManifest.ItemSpec), "#3");
+			Assert.IsTrue (File.Exists (Task.CompiledAppManifest), "#3");
 		}
 
 		[Test]
