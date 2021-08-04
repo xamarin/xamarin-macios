@@ -227,10 +227,10 @@ namespace ModelIO {
 		[Export ("objectAtIndex:")]
 		MDLObject GetObject (nuint index);
 
-		[Deprecated (PlatformName.iOS, 15, 0, message: "Use the 'Originals' instead.")]
-		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use the 'Originals' instead.")]
-		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use the 'Originals' instead.")]
-		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use the 'Originals' instead.")]
+		[Deprecated (PlatformName.iOS, 15, 0, message: "Use the 'Originals' property instead.")]
+		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use the 'Originals' property instead.")]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use the 'Originals' property instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use the 'Originals' property instead.")]
 		[iOS (10,0)]
 		[Mac (10,12)]
 		[TV (10,0)]
