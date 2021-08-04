@@ -26,6 +26,8 @@ using System;
 using System.Runtime.InteropServices;
 using Foundation;
 
+#nullable enable
+
 namespace ObjCRuntime {
 	public partial class Selector : IEquatable<Selector>, INativeObject {
 		internal const string Alloc = "alloc";
@@ -89,12 +91,14 @@ namespace ObjCRuntime {
 			return left.handle == right.handle;
 		}
 
-		public override bool Equals (object right) {
+		public override bool Equals (object? right)
+		{
 			return Equals (right as Selector);
 		}
 
-		public bool Equals (Selector right) {
-			if (right == null)
+		public bool Equals (Selector? right)
+		{
+			if (right is null)
 				return false;
 
 			return handle == right.handle;
@@ -107,12 +111,12 @@ namespace ObjCRuntime {
 
 		internal static string GetName (IntPtr handle)
 		{
-			return Marshal.PtrToStringAuto (sel_getName (handle));
+			return Marshal.PtrToStringAuto (sel_getName (handle))!;
 		}
 
 		// return null, instead of throwing, if an invalid pointer is used (e.g. IntPtr.Zero)
 		// so this looks better in the debugger watch when no selector is assigned (ref: #10876)
-		public static Selector FromHandle (IntPtr sel)
+		public static Selector? FromHandle (IntPtr sel)
 		{
 			if (!sel_isMapped (sel))
 				return null;

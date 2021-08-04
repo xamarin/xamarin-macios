@@ -744,6 +744,16 @@ namespace Xamarin.Bundler {
 				sw.WriteLine ("extern \"C\" { void mono_sgen_mono_ilgen_init (void); }");
 			}
 
+#if NET
+			if (app.MonoNativeMode != MonoNativeMode.None) {
+				sw.WriteLine ("static const char *xamarin_runtime_libraries_array[] = {");
+				foreach (var lib in app.MonoLibraries)
+					sw.WriteLine ($"\t\"{Path.GetFileName (lib)}\",");
+				sw.WriteLine ($"\tNULL");
+				sw.WriteLine ("};");
+			}
+#endif
+
 			sw.WriteLine ("void xamarin_setup_impl ()");
 			sw.WriteLine ("{");
 
@@ -774,33 +784,26 @@ namespace Xamarin.Bundler {
 
 			if (app.MonoNativeMode != MonoNativeMode.None) {
 #if NET
-				// Mono doesn't support dllmaps for Mac Catalyst / macOS in .NET for now:
-				// macOS: https://github.com/dotnet/runtime/issues/43204
-				// Mac Catalyst: https://github.com/dotnet/runtime/issues/48110
-				var addDllMap = App.Platform != ApplePlatform.MacCatalyst && app.Platform != ApplePlatform.MacOSX;
+				// Mono doesn't support dllmaps for Mac Catalyst / macOS in .NET, so we're using an alternative:
+				// the PINVOKE_OVERRIDE runtime option. Since we have to use it for Mac Catalyst + macOS, let's
+				// just use it everywhere to simplify code. This means that at runtime we need to know how we
+				// linked to mono, so store that in the xamarin_libmono_native_link_mode variable.
+				// Ref: https://github.com/dotnet/runtime/issues/43204 (macOS) https://github.com/dotnet/runtime/issues/48110 (Mac Catalyst)
+				sw.WriteLine ($"\txamarin_libmono_native_link_mode = XamarinNativeLinkMode{app.LibMonoNativeLinkMode};");
+				sw.WriteLine ($"\txamarin_runtime_libraries = xamarin_runtime_libraries_array;");
 #else
-				var addDllMap = true;
-#endif
 				string mono_native_lib;
-				if (app.LibMonoNativeLinkMode == AssemblyBuildTarget.StaticObject || Driver.IsDotNet)
+				if (app.LibMonoNativeLinkMode == AssemblyBuildTarget.StaticObject) {
 					mono_native_lib = "__Internal";
-				else
-					mono_native_lib = app.GetLibNativeName () + ".dylib";
-				if (addDllMap) {
-					sw.WriteLine ();
-#if NET
-					sw.WriteLine ($"\tmono_dllmap_insert (NULL, \"libSystem.Native\", NULL, \"{mono_native_lib}\", NULL);");
-					sw.WriteLine ($"\tmono_dllmap_insert (NULL, \"libSystem.Security.Cryptography.Native.Apple\", NULL, \"{mono_native_lib}\", NULL);");
-					sw.WriteLine ($"\tmono_dllmap_insert (NULL, \"libSystem.Net.Security.Native\", NULL, \"{mono_native_lib}\", NULL);");
-#else
-					sw.WriteLine ($"\tmono_dllmap_insert (NULL, \"System.Native\", NULL, \"{mono_native_lib}\", NULL);");
-					sw.WriteLine ($"\tmono_dllmap_insert (NULL, \"System.Security.Cryptography.Native.Apple\", NULL, \"{mono_native_lib}\", NULL);");
-					sw.WriteLine ($"\tmono_dllmap_insert (NULL, \"System.Net.Security.Native\", NULL, \"{mono_native_lib}\", NULL);");
-#endif
-					sw.WriteLine ();
 				} else {
-					sw.WriteLine ($"\txamarin_mono_native_lib_name = \"{mono_native_lib}\";");
+					mono_native_lib = app.GetLibNativeName () + ".dylib";
 				}
+				sw.WriteLine ();
+				sw.WriteLine ($"\tmono_dllmap_insert (NULL, \"System.Native\", NULL, \"{mono_native_lib}\", NULL);");
+				sw.WriteLine ($"\tmono_dllmap_insert (NULL, \"System.Security.Cryptography.Native.Apple\", NULL, \"{mono_native_lib}\", NULL);");
+				sw.WriteLine ($"\tmono_dllmap_insert (NULL, \"System.Net.Security.Native\", NULL, \"{mono_native_lib}\", NULL);");
+				sw.WriteLine ();
+#endif
 			}
 
 			if (app.EnableDebug)

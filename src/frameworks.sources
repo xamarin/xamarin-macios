@@ -232,6 +232,7 @@ AUDIOUNIT_SOURCES = \
 AUTHENTICATIONSERVICES_SOURCES = \
 	AuthenticationServices/ASAuthorization.cs \
 	AuthenticationServices/ASAuthorizationRequest.cs \
+	AuthenticationServices/PublicPrivateKeyAuthentication.cs \
 
 # AVFoundation
 
@@ -1979,6 +1980,7 @@ MAC_FRAMEWORKS =            \
 	Metal                   \
 	MetalKit                \
 	MetalPerformanceShaders \
+	MetricKit               \
 	MLCompute               \
 	MobileCoreServices      \
 	ModelIO                 \
@@ -2245,6 +2247,7 @@ MACCATALYST_FRAMEWORKS = \
 	FileProvider \
 	GameController \
 	GameplayKit \
+	HomeKit \
 	IdentityLookup \
 	ImageIO \
 	Intents \

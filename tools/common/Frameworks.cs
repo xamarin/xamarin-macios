@@ -262,6 +262,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "AdServices", "AdServices", 11,1 },
 
 					{ "Chip", "CHIP", 12, 0 },
+					{ "MetricKit", 12, 0 },
 					{ "Phase", "PHASE", 12, 0 },
 				};
 			}
@@ -632,7 +633,6 @@ public class Frameworks : Dictionary <string, Framework>
 				case "HealthKitUI":
 				case "iAd":
 				case "IdentityLookupUI":
-				case "HomeKit":
 				case "Messages":
 				case "MessageUI":
 				case "VisionKit":
