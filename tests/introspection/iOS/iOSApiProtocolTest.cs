@@ -441,12 +441,6 @@ namespace Introspection {
 				case "ARSkeletonDefinition": // device only
 				case "ARVideoFormat": // device only
 				case "NSMergePolicy":
-				case "SNTimeDurationConstraint": // Conformance not in headers
-				case "PKDeferredPaymentSummaryItem":
-				case "PKPaymentRequestCouponCodeUpdate":
-				case "PKRecurringPaymentSummaryItem":
-				case "PKStoredValuePassBalance":
-				case "PKStoredValuePassProperties":
 				case "SFSafariViewControllerPrewarmingToken": // conformance not in headers
 				case "SRTextInputSession": // conformance not in headers
 					return true;
@@ -688,12 +682,6 @@ namespace Introspection {
 				case "ARSkeletonDefinition": // device only
 				case "ARVideoFormat": // device only
 				case "NSMergePolicy":
-				case "SNTimeDurationConstraint": // Conformance not in headers
-				case "PKDeferredPaymentSummaryItem":
-				case "PKPaymentRequestCouponCodeUpdate":
-				case "PKRecurringPaymentSummaryItem":
-				case "PKStoredValuePassBalance":
-				case "PKStoredValuePassProperties":
 				case "SFSafariViewControllerPrewarmingToken": // conformance not in headers
 				case "SRTextInputSession": // conformance not in headers
 					return true;
@@ -779,10 +767,6 @@ namespace Introspection {
 				case "NSMappingModel":
 				case "NSMergePolicy":
 				case "NSPropertyMapping":
-				case "SNTimeDurationConstraint": // Conformance not in headers"
-				case "PKDeferredPaymentSummaryItem":
-				case "PKRecurringPaymentSummaryItem":
-				case "PKStoredValuePassProperties":
 					return true;
 				}
 				break;
