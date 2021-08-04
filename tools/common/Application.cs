@@ -89,6 +89,7 @@ namespace Xamarin.Bundler {
 		public bool IsExtension;
 		public ApplePlatform Platform { get { return Driver.TargetFramework.Platform; } }
 
+		public List<string> MonoLibraries = new List<string> ();
 		public List<string> InterpretedAssemblies = new List<string> ();
 
 		// EnableMSym: only implemented for Xamarin.iOS

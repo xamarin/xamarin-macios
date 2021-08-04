@@ -331,7 +331,40 @@
 		</Touch>
 	</Target>
 
-	<Target Name="_ComputeLinkerArguments" DependsOnTargets="_ComputeLinkMode;_ComputeFrameworkVariables;_ComputeFrameworkAssemblies;ComputeResolvedFilesToPublishList;_ParseBundlerArguments;_ComputeVariables;_CreateRuntimeConfiguration">
+	<Target Name="_ComputeMonoComponents" Condition="'$(UseMonoRuntime)' == 'true' And '$(_LibMonoLinkMode)' == 'static'" BeforeTargets="_MonoSelectRuntimeComponents" DependsOnTargets="_ComputeVariables">
+		<!-- https://github.com/dotnet/runtime/blob/main/docs/design/mono/components.md -->
+		<ItemGroup>
+			<_MonoComponent Include="hot_reload" Condition="'$(MtouchInterpreter)' == 'true'" />
+			<_MonoComponent Include="debugger" Condition="'$(_BundlerDebug)' == 'true'" />
+			<_MonoComponent Include="diagnostics_tracing" Condition="'$(_BundlerDebug)' == 'true'" />
+		</ItemGroup>
+	</Target>
+
+	<Target Name="_ComputeMonoLibraries" Condition="'$(UseMonoRuntime)' == 'true'" DependsOnTargets="_ComputeMonoComponents;_MonoSelectRuntimeComponents">
+		<!-- We only include any mono components when linking with mono statically. The components are already included in the dynamic versions of Mono (both the dylib and the framework) -->
+		<ItemGroup Condition="'$(_LibMonoLinkMode)' == 'static'">
+			<!-- Remove files mono told us not to link with -->
+			<_MonoLibrary Remove="@(_MonoRuntimeComponentDontLink -> '$(_MonoRuntimePackPath)/native/%(Identity)')" />
+
+			<!-- Add files mono told us to link with -->
+			<_MonoLibrary Include="@(_MonoRuntimeComponentLink -> '$(_MonoRuntimePackPath)/native/%(Identity)')" />
+		</ItemGroup>
+	</Target>
+
+	<PropertyGroup>
+		<_ComputeLinkerArgumentsDependsOn>
+			_ComputeLinkMode;
+			_ComputeFrameworkVariables;
+			_ComputeFrameworkAssemblies;
+			ComputeResolvedFilesToPublishList;
+			_ParseBundlerArguments;
+			_ComputeVariables;
+			_CreateRuntimeConfiguration;
+			_ComputeMonoLibraries;
+		</_ComputeLinkerArgumentsDependsOn>
+	</PropertyGroup>
+
+	<Target Name="_ComputeLinkerArguments" DependsOnTargets="$(_ComputeLinkerArgumentsDependsOn)">
 		<!-- Validate the linker mode -->
 		<Error Text="Invalid link mode: '$(_LinkMode)'. Valid link modes are: 'None', 'SdkOnly' and 'Full'" Condition="'$(_LinkMode)' != 'None' And '$(_LinkMode)' != 'SdkOnly' And '$(_LinkMode)' != 'Full'" />
 
@@ -376,6 +409,7 @@
 				LinkMode=$(_LinkMode)
 				MarshalManagedExceptionMode=$(_MarshalManagedExceptionMode)
 				MarshalObjectiveCExceptionMode=$(_MarshalObjectiveCExceptionMode)
+				@(_MonoLibrary -> 'MonoLibrary=%(Identity)')
 				Optimize=$(_BundlerOptimize)
 				PartialStaticRegistrarLibrary=$(_LibPartialStaticRegistrar)
 				Platform=$(_PlatformName)
@@ -836,9 +870,7 @@
 		<ItemGroup>
 			<_XamarinMainLibraries Include="$(_XamarinNativeLibraryDirectory)/$(_LibXamarinName)" />
 			<!-- Link with the libraries shipped with the mono runtime pack -->
-			<_XamarinMainLibraries Include="@(_MonoLibrary)" Condition="'$(_PlatformName)' != 'macOS'" />
-			<!-- But don't link with any dylibs on macOS, because they might have library initializers which may fail - instead delay any failures until whatever feature they provide is needed -->
-			<_XamarinMainLibraries Include="@(_MonoLibrary)" Condition="'$(_PlatformName)' == 'macOS' And ('%(_MonoLibrary.Extension)' == '.a' Or '%(_MonoLibrary.Filename)' == 'libcoreclr')" />
+			<_XamarinMainLibraries Include="@(_MonoLibrary)" />
 			<!-- Link with static libraries from NativeReference items ((xc)frameworks are handled in the _ComputeFrameworkFilesToPublish target, and dynamic libraries are handled in the _ComputeDynamicLibrariesToPublish target) -->
 			<_XamarinMainLibraries Include="@(_FileNativeReference)" />
 
@@ -906,7 +938,7 @@
 		</_ComputeLinkModeDependsOn>
 	</PropertyGroup>
 
-	<Target Name="_ComputePublishLocation" DependsOnTargets="_GenerateBundleName;_ParseBundlerArguments">
+	<Target Name="_ComputePublishLocation" DependsOnTargets="_GenerateBundleName;_ParseBundlerArguments;_ComputeMonoLibraries">
 		<PropertyGroup>
 			<_AssemblyPublishDir Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'">$(MSBuildProjectDirectory)\$(_AppBundlePath)\</_AssemblyPublishDir>
 			<_AssemblyPublishDir Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">$(MSBuildProjectDirectory)\$(_AppBundlePath)\Contents\$(_CustomBundleName)\</_AssemblyPublishDir>
@@ -973,6 +1005,14 @@
 				            "
 			/>
 
+			<!-- Remove any dylibs Mono told us not to link with -->
+			<ResolvedFileToPublish
+				Remove="@(_MonoRuntimeComponentDontLink -> '$(_MonoRuntimePackPath)/native/%(Identity)')"
+				Condition=" '%(ResolvedFileToPublish.AssetType)' == 'native' And
+				            '%(ResolvedFileToPublish.RuntimeIdentifier)' == '$(RuntimeIdentifier)' And
+				            '%(ResolvedFileToPublish.NuGetPackageId)' == '$(_MonoNugetPackageId)'
+				            "
+			/>
 		</ItemGroup>
 	</Target>
 
