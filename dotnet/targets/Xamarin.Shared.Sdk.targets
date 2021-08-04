@@ -549,7 +549,7 @@
 			<!-- Support a 'CopyToAppBundle' metadata that can be set to 'false' to avoid copying a framework to the app bundle -->
 			<_FrameworkFilesToPublish Include="%(_FrameworkNativeReference.RootDir)%(_FrameworkNativeReference.Directory)/**/*" Condition="'%(_FrameworkNativeReference.Kind)' == 'Framework' And '%(_FrameworkNativeReference.CopyToAppBundle)' != 'false'">
 				<_FrameworkIdentity>%(RootDir)%(Directory)</_FrameworkIdentity>
-				<_FrameworkPath>$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)\$(PublishDir),$(_AppBundleFrameworksDir)))\%(Filename).framework</_FrameworkPath>
+				<_FrameworkPath>$(_AppBundleFrameworksDir)\%(Filename).framework</_FrameworkPath>
 				<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 			</_FrameworkFilesToPublish>
 
@@ -571,7 +571,7 @@
 		<ItemGroup>
 			<!-- Support a 'CopyToAppBundle' metadata that can be set to 'false' to avoid copying a framework to the app bundle -->
 			<_DynamicLibraryToPublish Include="@(_FileNativeReference)" Condition="'%(_FileNativeReference.Kind)' == 'Dynamic' And '%(_FileNativeReference.CopyToAppBundle)' != 'false'">
-				<RelativePath>$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)\$(PublishDir),$(_DylibPublishDir)))\%(Filename)%(Extension)</RelativePath>
+				<RelativePath>$(_DylibPublishDir)\%(Filename)%(Extension)</RelativePath>
 				<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 			</_DynamicLibraryToPublish>
 
@@ -684,12 +684,19 @@
 		</PropertyGroup>
 
 		<PropertyGroup>
+			<!-- Compute the absolute path to the publish directory. We only use this to compute the relative path of app bundle path relative to the publish directory -->
+			<!-- Take into account that 'PublishDir' may or may not be an absolute path to begin with -->
+			<_AbsolutePublishDir>$(PublishDir)</_AbsolutePublishDir>
+			<_AbsolutePublishDir Condition="!$([System.IO.Path]::IsPathRooted ('$(_AbsolutePublishDir)'))">$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\$(PublishDir)'))</_AbsolutePublishDir>
+			<!-- Compute the relative path of the app bundle relative to the publish directory. The _AppBundlePath is relative to the project directory, so to compute this we need to have both app bundle path and the publish directory as absolute paths first. -->
+			<_RelativeAppBundlePath>$([MSBuild]::MakeRelative($(_AbsolutePublishDir),$(MSBuildProjectDirectory)/$(_AppBundlePath)))</_RelativeAppBundlePath>
+
 			<_IntermediateNativeLibraryDir>$(IntermediateOutputPath)nativelibraries/</_IntermediateNativeLibraryDir>
 			<_NativeExecutableName>$(_AppBundleName)</_NativeExecutableName>
-			<_NativeExecutablePublishDir Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'">$(MSBuildProjectDirectory)\$(_AppBundlePath)\</_NativeExecutablePublishDir>
-			<_NativeExecutablePublishDir Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">$(MSBuildProjectDirectory)\$(_AppBundlePath)\Contents\MacOS\</_NativeExecutablePublishDir>
-			<_AppBundleFrameworksDir Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'">$(MSBuildProjectDirectory)\$(_AppBundlePath)\Frameworks\</_AppBundleFrameworksDir>
-			<_AppBundleFrameworksDir Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">$(MSBuildProjectDirectory)\$(_AppBundlePath)\Contents\Frameworks\</_AppBundleFrameworksDir>
+			<_NativeExecutablePublishDir Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'">$(_RelativeAppBundlePath)\</_NativeExecutablePublishDir>
+			<_NativeExecutablePublishDir Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">$(_RelativeAppBundlePath)\Contents\MacOS\</_NativeExecutablePublishDir>
+			<_AppBundleFrameworksDir Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'">$(_RelativeAppBundlePath)\Frameworks\</_AppBundleFrameworksDir>
+			<_AppBundleFrameworksDir Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">$(_RelativeAppBundlePath)\Contents\Frameworks\</_AppBundleFrameworksDir>
 
 			<_AOTCompiler>@(MonoAotCrossCompiler->WithMetadataValue("RuntimeIdentifier", "$(RuntimeIdentifier)"))</_AOTCompiler>
 			<_AOTInputDirectory>$(_IntermediateNativeLibraryDir)aot-input/</_AOTInputDirectory>
@@ -800,7 +807,7 @@
 
 			<!-- copy the aotdata files to the .app -->
 			<ResolvedFileToPublish Include="%(_AssembliesToAOT.AOTData)" >
-				<RelativePath>$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)\$(PublishDir),$(_AssemblyPublishDir)))\%(_AssembliesToAOT.Filename).aotdata.%(_AssembliesToAOT.Arch)</RelativePath>
+				<RelativePath>$(_AssemblyPublishDir)\%(_AssembliesToAOT.Filename).aotdata.%(_AssembliesToAOT.Arch)</RelativePath>
 				<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 			</ResolvedFileToPublish>
 		</ItemGroup>
@@ -918,7 +925,7 @@
 		<ItemGroup>
 			<!-- Copy the executable from the intermediate directory to the .app -->
 			<ResolvedFileToPublish Include="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName)">
-				<RelativePath>$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)\$(PublishDir),$(_NativeExecutablePublishDir)))\$(_NativeExecutableName)</RelativePath>
+				<RelativePath>$(_NativeExecutablePublishDir)\$(_NativeExecutableName)</RelativePath>
 				<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 			</ResolvedFileToPublish>
 		</ItemGroup>
@@ -940,31 +947,32 @@
 
 	<Target Name="_ComputePublishLocation" DependsOnTargets="_GenerateBundleName;_ParseBundlerArguments;_ComputeMonoLibraries">
 		<PropertyGroup>
-			<_AssemblyPublishDir Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'">$(MSBuildProjectDirectory)\$(_AppBundlePath)\</_AssemblyPublishDir>
-			<_AssemblyPublishDir Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">$(MSBuildProjectDirectory)\$(_AppBundlePath)\Contents\$(_CustomBundleName)\</_AssemblyPublishDir>
-			<_DylibPublishDir Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'">$(MSBuildProjectDirectory)\$(_AppBundlePath)\</_DylibPublishDir>
-			<_DylibPublishDir Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">$(MSBuildProjectDirectory)\$(_AppBundlePath)\Contents\$(_CustomBundleName)\</_DylibPublishDir>
-			<_ParsedRuntimeConfigFilePath Condition="'$(_ParsedRuntimeConfigFilePath)' == ''">$(_AssemblyPublishDir)\$(_RuntimeConfigurationFile)</_ParsedRuntimeConfigFilePath>
+			<_AssemblyPublishDir Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'">$(_RelativeAppBundlePath)\</_AssemblyPublishDir>
+			<_AssemblyPublishDir Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">$(_RelativeAppBundlePath)\Contents\$(_CustomBundleName)\</_AssemblyPublishDir>
+			<_DylibPublishDir Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'">$(_RelativeAppBundlePath)\</_DylibPublishDir>
+			<_DylibPublishDir Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">$(_RelativeAppBundlePath)\Contents\$(_CustomBundleName)\</_DylibPublishDir>
+			<!-- _ParsedRuntimeConfigFilePath must be relative to the project directory, since it's not copied to the publish directory by the the CopyFilesToPublishDirectory targets -->
+			<_ParsedRuntimeConfigFilePath Condition="'$(_ParsedRuntimeConfigFilePath)' == ''">$([MSBuild]::MakeRelative($(MSBuildProjectDirectory),$(_AbsolutePublishDir)\$(_AssemblyPublishDir)\$(_RuntimeConfigurationFile)))</_ParsedRuntimeConfigFilePath>
 		</PropertyGroup>
 		<ItemGroup>
 			<!-- include .dll, .exe and, for debugging only, .pdb files inside the .app -->
 			<ResolvedFileToPublish
 				Update="@(ResolvedFileToPublish)"
-				RelativePath="$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)\$(PublishDir),$(_AssemblyPublishDir)))\%(ResolvedFileToPublish.DestinationSubDirectory)\%(Filename)%(Extension)"
+				RelativePath="$(_AssemblyPublishDir)\%(ResolvedFileToPublish.DestinationSubDirectory)\%(Filename)%(Extension)"
 				Condition="'%(Extension)' == '.dll' Or ('$(_BundlerDebug)' == 'true' And '%(Extension)' == '.pdb') Or '%(Extension)' == '.exe'" />
 			<!-- Copy the app.config file to the app bundle -->
 			<ResolvedFileToPublish
 				Update="@(ResolvedFileToPublish)"
-				RelativePath="$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)\$(PublishDir),$(_AssemblyPublishDir)))\%(ResolvedFileToPublish.DestinationSubDirectory)\%(ResolvedFileToPublish.TargetPath)"
+				RelativePath="$(_AssemblyPublishDir)\%(ResolvedFileToPublish.DestinationSubDirectory)\%(ResolvedFileToPublish.TargetPath)"
 				Condition="'$(AppConfig)' != '' And '%(ResolvedFileToPublish.OriginalItemSpec)' == '$(AppConfig)' And '%(ResolvedFileToPublish.Link)' == 'app.config' And '%(ResolvedFileToPublish.TargetPath)' != ''" />
 			<!-- .dylib are never needed (nor allowed) for fully AOT'ed applications FIXME https://github.com/xamarin/xamarin-macios/issues/11145 -->
 			<ResolvedFileToPublish
 				Update="@(ResolvedFileToPublish)"
-				RelativePath="$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)\$(PublishDir),$(_DylibPublishDir)))\%(Filename)%(Extension)"
+				RelativePath="$(_DylibPublishDir)\%(Filename)%(Extension)"
 				Condition="('$(_SdkIsSimulator)' != 'false' Or '$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst') And '%(Extension)' == '.dylib'" />
 			<ResolvedFileToPublish
 				Update="@(ResolvedFileToPublish)"
-				RelativePath="$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)\$(PublishDir),$(_AssemblyPublishDir)))\%(Filename)%(Extension)"
+				RelativePath="$(_AssemblyPublishDir)\%(Filename)%(Extension)"
 				Condition="'$(_PlatformName)' != 'macOS' And '$(InvariantGlobalization)' != 'true' And '%(Filename)%(Extension)' == '$(_GlobalizationDataFile)'" />
 
 			<!-- Remove the libxamarin-*.dylib files we don't want -->
@@ -995,7 +1003,7 @@
 			<!-- Ref: https://github.com/xamarin/xamarin-macios/issues/11432 -->
 			<ResolvedFileToPublish
 				Update="@(ResolvedFileToPublish)"
-				RelativePath="$([MSBuild]::MakeRelative($(MSBuildProjectDirectory)\$(PublishDir),$(_DylibPublishDir)))\%(Filename)%(Extension)"
+				RelativePath="$(_DylibPublishDir)\%(Filename)%(Extension)"
 				Condition=" '$(UseMonoRuntime)' == 'false' And
 				            '%(ResolvedFileToPublish.Filename)' == 'createdump' And
 				            '%(ResolvedFileToPublish.Extension)' == '' And
