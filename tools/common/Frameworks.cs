@@ -263,6 +263,7 @@ public class Frameworks : Dictionary <string, Framework>
 
 					{ "Chip", "CHIP", 12, 0 },
 					{ "ShazamKit", "ShazamKit", 12,0 },
+					{ "MetricKit", 12, 0 },
 				};
 			}
 			return mac_frameworks;
@@ -636,7 +637,6 @@ public class Frameworks : Dictionary <string, Framework>
 				case "HealthKitUI":
 				case "iAd":
 				case "IdentityLookupUI":
-				case "HomeKit":
 				case "Messages":
 				case "MessageUI":
 				case "VisionKit":
@@ -652,6 +652,9 @@ public class Frameworks : Dictionary <string, Framework>
 					break;
 				}
 			}
+
+			// Add frameworks that are not in iOS
+			catalyst_frameworks.Add ("AppKit", 13, 0);
 		}
 		return catalyst_frameworks;
 	}

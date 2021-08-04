@@ -76,10 +76,12 @@ ADSUPPORT_SOURCES = \
 
 # AppKit
 
-APPKIT_CORE_SOURCES = \
-	AppKit/Defs.cs \
+APPKIT_API_SOURCES = \
 	AppKit/Enums.cs \
 	AppKit/XEnums.cs \
+
+APPKIT_CORE_SOURCES = \
+	AppKit/Defs.cs \
 	AppKit/NSAccessibility.cs \
 	XKit/Types.cs \
 	XKit/XKitCompat.cs \
@@ -230,6 +232,7 @@ AUDIOUNIT_SOURCES = \
 AUTHENTICATIONSERVICES_SOURCES = \
 	AuthenticationServices/ASAuthorization.cs \
 	AuthenticationServices/ASAuthorizationRequest.cs \
+	AuthenticationServices/PublicPrivateKeyAuthentication.cs \
 
 # AVFoundation
 
@@ -714,6 +717,9 @@ EXTERNALACCESSORY_API_SOURCES = \
 
 # FileProvider
 
+FILEPROVIDER_CORE_SOURCES = \
+	FileProvider/Structs.cs \
+
 FILEPROVIDER_SOURCES = \
 	FileProvider/Compat.cs \
 
@@ -727,6 +733,7 @@ FINDERSYNC_CORE_SOURCES = \
 FOUNDATION_API_SOURCES = \
 	Foundation/Enum.cs \
 	Foundation/Enums.cs \
+	Foundation/EnumDesktop.cs \
 
 FOUNDATION_CORE_SOURCES = \
 	Foundation/AdviceAttribute.cs \
@@ -757,7 +764,6 @@ FOUNDATION_CORE_SOURCES = \
 	Foundation/RegisterAttribute.cs \
 	Foundation/NSObject.iOS.cs \
 	Foundation/NSAttributedString.iOS.cs \
-	Foundation/EnumDesktop.cs \
 	Foundation/NSObject.mac.cs \
 	Foundation/NSDateComponents.cs \
 	Foundation/XpcInterfaceAttribute.cs \
@@ -917,6 +923,7 @@ HEALTHKIT_API_SOURCES = \
 
 HEALTHKIT_SOURCES = \
 	HealthKit/EnumsCompat.cs \
+	HealthKit/HKAppleWalkingSteadiness.cs \
 	HealthKit/HKAnchoredObjectQuery.cs \
 	HealthKit/HKObjectType.cs \
 	HealthKit/HKObsolete.cs \
@@ -1371,6 +1378,7 @@ PASSKIT_API_SOURCES = \
 	PassKit/PKEnums.cs \
 	
 PASSKIT_SOURCES = \
+	PassKit/PKCompat.cs	\
 	PassKit/PKPaymentRequest.cs	\
 
 # PencilKit
@@ -1973,6 +1981,7 @@ MAC_FRAMEWORKS =            \
 	Metal                   \
 	MetalKit                \
 	MetalPerformanceShaders \
+	MetricKit               \
 	MLCompute               \
 	MobileCoreServices      \
 	ModelIO                 \
@@ -2202,6 +2211,7 @@ TVOS_FRAMEWORKS =           \
 
 MACCATALYST_FRAMEWORKS = \
 	$(COMMON_FRAMEWORKS) \
+	AppKit \
 	AVKit \
 	Accounts \
 	AdServices \
@@ -2236,6 +2246,7 @@ MACCATALYST_FRAMEWORKS = \
 	FileProvider \
 	GameController \
 	GameplayKit \
+	HomeKit \
 	IdentityLookup \
 	ImageIO \
 	Intents \

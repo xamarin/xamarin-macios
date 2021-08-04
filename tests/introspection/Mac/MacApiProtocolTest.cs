@@ -116,6 +116,16 @@ namespace Introspection {
 				case "CXCallUpdate": // Conformance not in headers
 				case "CXProviderConfiguration": // Conformance not in headers
 					return true;
+				// xcode 13 / macOS 12
+				case "OSLogEntry":
+				case "OSLogEntryActivity":
+				case "OSLogEntryBoundary":
+				case "OSLogEntryLog":
+				case "OSLogEntrySignpost":
+				case "OSLogMessageComponent":
+				case "NSImageSymbolConfiguration":
+				case "NSMergePolicy":
+					return true;
 				default:
 					// CIFilter started implementing NSSecureCoding in 10.11
 					if (!Mac.CheckSystemVersion (10, 11) && (type == typeof(CIFilter) || type.IsSubclassOf (typeof(CIFilter))))
@@ -144,6 +154,13 @@ namespace Introspection {
 				// Xcode 12.5
 				case "CXCall": // Conformance not in headers
 					return true;
+				// xcode 13 / macOS 12
+				case "PHCloudIdentifier":
+				case "NSMergePolicy":
+				case "NSEntityMapping":
+				case "NSMappingModel":
+				case "NSPropertyMapping":
+					return true;
 				}
 				break;
 			case "NSMutableCopying":
@@ -159,6 +176,10 @@ namespace Introspection {
 				case "EKRecurrenceRule": // Not declared in header file
 				case "EKReminder": // Not declared in header file
 				case "INPerson": // Not declared in header file
+					return true;
+				// xcode 13 / macOS 12
+				case "NSMergePolicy":
+				case "UNNotificationSettings":
 					return true;
 				}
 				break;
@@ -207,6 +228,16 @@ namespace Introspection {
 				case "CXCall": // Conformance not in headers
 				case "CXCallUpdate": // Conformance not in headers
 				case "CXProviderConfiguration": // Conformance not in headers
+					return true;
+				// xcode 13 / macOS 12
+				case "OSLogEntry":
+				case "OSLogEntryActivity":
+				case "OSLogEntryBoundary":
+				case "OSLogEntryLog":
+				case "OSLogEntrySignpost":
+				case "OSLogMessageComponent":
+				case "NSImageSymbolConfiguration":
+				case "NSMergePolicy":
 					return true;
 				}
 				break;

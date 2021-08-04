@@ -26,6 +26,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#if !__MACCATALYST__ // Mac Catalyst doesn't have NSAlert
+
 using System;
 using System.Collections.Generic;
 
@@ -110,3 +112,4 @@ namespace AppKit
 		}
 	}
 }
+#endif // __MACCATALYST__

@@ -77,6 +77,7 @@ $(XCAT_PCH): .stamp-check-sharpie
 	-exclude RealityKit \
 	-exclude SecurityInterface \
 	-exclude Virtualization \
+	-i HomeKit/HomeKit.h \
 
 
 ios-$(IOS_SDK_VERSION).g.cs: $(XIOS_PCH)
@@ -194,3 +195,6 @@ remove-empty-files:
 unclassified2todo:
 	$(SYSTEM_CSC) -features:strict Filter.cs u2todo/u2todo.cs
 	$(MONO) u2todo.exe
+	@for filename in $(git status -s | cut -c4- | grep .todo); do \
+		sort -o "$filename" "$filename"; \
+	done

@@ -170,7 +170,6 @@
 !missing-null-allowed! 'Foundation.NSIndexPath[] UIKit.UITableView::get_IndexPathsForSelectedRows()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject UIKit.UIFontDescriptor::GetObject(Foundation.NSString)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject UIKit.UIResponder::GetTargetForAction(ObjCRuntime.Selector,Foundation.NSObject)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSObject UIKit.UIStoryboardUnwindSegueSource::get_Sender()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject[] UIKit.UICollisionBehavior::get_BoundaryIdentifiers()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSSet UIKit.UIEvent::get_AllTouches()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSSet UIKit.UIEvent::TouchesForGestureRecognizer(UIKit.UIGestureRecognizer)' is missing an [NullAllowed] on return type

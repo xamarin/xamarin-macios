@@ -1,5 +1,5 @@
 # YAML pipeline for post build operations. 
-# This pipeline will trigger automatically after successful completion of the `build_packages` stage against the specified branches.
+# This pipeline will trigger automatically after successful completion of the `prepare_release` stage against the specified branches.
 
 trigger: none
 pr: none
@@ -13,7 +13,7 @@ resources:
       - main
       - release/*
       stages:
-      - build_packages
+      - prepare_release
 
 jobs:
 - job: post_build

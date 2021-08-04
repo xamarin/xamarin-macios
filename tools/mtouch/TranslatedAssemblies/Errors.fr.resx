@@ -1726,4 +1726,7 @@
   <data name="MX8040" xml:space="preserve">
 		<value>Encodage de type non valide pour le paramètre.</value>
 	</data>
+  <data name="MX8041" xml:space="preserve">
+		<value>Impossible de créer une instance du type {0}.</value>
+	</data>
 </root>

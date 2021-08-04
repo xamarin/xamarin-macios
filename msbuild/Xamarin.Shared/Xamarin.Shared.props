@@ -115,23 +115,63 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<_SdkVersion Condition="'$(_PlatformName)' == 'macOS'">$(MacOSXSdkVersion)</_SdkVersion>
 		<_SdkVersion Condition="'$(_PlatformName)' != 'macOS'">$(MtouchSdkVersion)</_SdkVersion>
 
-		<!-- RequireCodeSigning -->
-		<!-- iOS/watchOS/tvOS is simple: device builds require code signing, simulator builds do not. This is a big lie, for some simulator builds need to be signed, but the _DetectCodeSigning task handles those cases. -->
-		<_RequireCodeSigning Condition="'$(_PlatformName)' != 'macOS' And '$(_RequireCodeSigning)' == ''">false</_RequireCodeSigning> <!-- Xamarin.iOS builds are not signed by default -->
-		<_RequireCodeSigning Condition="'$(_PlatformName)' != 'macOS' And '$(ComputedPlatform)' == 'iPhone'">true</_RequireCodeSigning> <!-- except that device builds must be signed -->
-		<!-- macOS is a bit more complicated:
-			* 'EnableCodeSigning' specifies whether the app is signed or not, and this defaults to false if it's not set.
-			* Extensions are special, because they must be signed. However, due to historical reasons, extension projects will have set EnableCodeSigning=false. So we do the following:
-			    * If we're an extension, and code signing is disabled: enable code signing, set the code signing key (_CodeSigningKey) to '-', and pass this value to the _DetectCodeSigning task.
-		-->
-		<_RequireCodeSigning Condition="'$(_PlatformName)' == 'macOS' And '$(_RequireCodeSigning)' == ''">$(EnableCodeSigning)</_RequireCodeSigning> <!-- Xamarin.Mac projects use the 'EnableCodeSigning' variable to enable code signing -->
-		<_RequireCodeSigning Condition="'$(_PlatformName)' == 'macOS' And '$(_RequireCodeSigning)' == ''">false</_RequireCodeSigning> <!-- Xamarin.Mac projects: disable by default -->
-		<_CodeSigningKey Condition="'$(_PlatformName)' == 'macOS' And '$(IsAppExtension)' == 'true' And '$(_CodeSigningKey)' == '' And '$(_RequireCodeSigning)' == 'false'">-</_CodeSigningKey> <!-- Set _CodeSigningKey to '-' if we're an extension where code signing is not requested -->
-		<_RequireCodeSigning Condition="'$(_PlatformName)' == 'macOS' And '$(IsAppExtension)' == 'true'">true</_RequireCodeSigning> <!-- But extensions must be signed, so make sure they are -->
+		<!-- Other variables that are used in code signing / packaging, but that are by default empty (so no need for any logic): -->
+		<!-- CodesignProvision: the name of the provisioning profile to use when signing the bundle -->
+		<!-- CodesignEntitlements: the path to the Entitlements.plist to use when signing the bundle -->
+		<!-- CodesignExtraArgs: any extra arguments to pass to 'codesign' -->
+		<!-- PackageSigningKey: the certificate used to sign packages (.pkg). Applicable to macOS and Mac Catalyst -->
+		<!-- PackagingExtraArgs: any extra arguments passed to the productbuild tool when creating packages (.pkg). Applicable to macOS and Mac Catalyst -->
+		<!-- ProductDefinition: the product definition template (plist) used when creating the product definition to pass to the product build tool when creating packages (.pkg). Applicable to mcOS and Mac Catalyst -->
 
+		<!-- _RequireProvisioningProfile -->
+		<!-- Default: false -->
+		<!-- macOS: true if a provisioning profile is used -->
+		<!-- iOS/tvOS/watchOS: true if building for device or if a custom entitlements file is used -->
+		<!-- Mac Catalyst: true if a provisioning profile is used -->
+		<_RequireProvisioningProfile Condition="'$(_RequireProvisioningProfile)' == '' And '$(_PlatformName)' == 'macOS' And '$(CodesignProvision)' != ''">true</_RequireProvisioningProfile>
+		<_RequireProvisioningProfile Condition="'$(_RequireProvisioningProfile)' == '' And ('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS') And ('$(ComputedPlatform)' == 'iPhone' Or '$(CodesignEntitlements)' != '')">true</_RequireProvisioningProfile>
+		<_RequireProvisioningProfile Condition="'$(_RequireProvisioningProfile)' == '' And '$(_PlatformName)' == 'MacCatalyst' And '$(CodesignProvision)' != ''">true</_RequireProvisioningProfile>
+		<_RequireProvisioningProfile Condition="'$(_RequireProvisioningProfile)' == ''">false</_RequireProvisioningProfile>
+	</PropertyGroup>
+
+	<!-- RequireCodeSigning -->
+	<!-- iOS/watchOS/tvOS is simple: device builds require code signing, simulator builds do not. This is a big lie, for some simulator builds need to be signed, but the _DetectCodeSigning task handles those cases. -->
+	<PropertyGroup Condition="'$(_PlatformName)' != 'macOS' And '$(_PlatformName)' != 'MacCatalyst'">
+		<_RequireCodeSigning Condition="'$(_RequireCodeSigning)' == ''">false</_RequireCodeSigning> <!-- Xamarin.iOS builds are not signed by default -->
+		<_RequireCodeSigning Condition="'$(ComputedPlatform)' == 'iPhone'">true</_RequireCodeSigning> <!-- except that device builds must be signed -->
+	</PropertyGroup>
+	<!-- macOS is a bit more complicated:
+		* 'EnableCodeSigning' specifies whether the app is signed or not, and this defaults to false if it's not set.
+		* Extensions are special, because they must be signed. However, due to historical reasons, extension projects will have set EnableCodeSigning=false. So we do the following:
+		    * If we're an extension, and code signing is disabled: enable code signing, set the code signing key (_CodeSigningKey) to '-', and pass this value to the _DetectCodeSigning task.
+	-->
+	<PropertyGroup Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">
+		<!-- macOS and Mac Catalyst projects use the 'EnableCodeSigning' variable to enable code signing -->
+		<_RequireCodeSigning Condition="'$(_RequireCodeSigning)' == ''">$(EnableCodeSigning)</_RequireCodeSigning>
+		<!-- Signing must be enabled when archiving -->
+		<_RequireCodeSigning Condition="'$(_RequireCodeSigning)' == '' And '$(ArchiveOnBuild)' == 'true'">true</_RequireCodeSigning>
+		<!-- Extensions must be signed, so make sure they are -->
+		<_RequireCodeSigning Condition="'$(_RequireCodeSigning)' == '' And '$(IsAppExtension)' == 'true'">true</_RequireCodeSigning>
+		<!-- Otherwise code signing is disabled by default -->
+		<_RequireCodeSigning Condition="'$(_RequireCodeSigning)' == ''">false</_RequireCodeSigning>
+
+		<!-- Set _CodeSigningKey to '-' if we're an extension where code signing is not requested -->
+		<_CodeSigningKey Condition="'$(IsAppExtension)' == 'true' And '$(_CodeSigningKey)' == '' And '$(_RequireCodeSigning)' == 'false'">-</_CodeSigningKey>
+	</PropertyGroup>
+
+	<PropertyGroup>
 		<!-- SpecifiedCodeSigningKey -->
-		<_SpecifiedCodesignKey Condition="'$(_PlatformName)' == 'macOS'">$(CodeSigningKey)</_SpecifiedCodesignKey> <!-- Xamarin.Mac projects use 'CodeSigningKey' -->
-		<_SpecifiedCodesignKey Condition="'$(_PlatformName)' != 'macOS'">$(CodesignKey)</_SpecifiedCodesignKey> <!-- Xamarin.iOS projects use 'CodesignKey' -->
+		<!-- Xamarin.Mac projects use 'CodeSigningKey', and Xamarin.iOS projects use 'CodesignKey'. -->
+		<!-- Here we accept both, and we'll recommend using 'CodesignKey' for all platforms going forward -->
+		<_SpecifiedCodesignKey Condition="'$(_SpecifiedCodesignKey)' == ''">$(CodeSigningKey)</_SpecifiedCodesignKey>
+		<_SpecifiedCodesignKey Condition="'$(_SpecifiedCodesignKey)' == ''">$(CodesignKey)</_SpecifiedCodesignKey>
+
+		<!-- If we should create a .pkg or not (only relevant for macOS / Mac Catalyst) -->
+		<!-- The equivalent property for the other platforms is 'BuildIpa' -->
+		<CreatePackage Condition="'$(CreatePackage)' == ''">false</CreatePackage>
+
+		<!-- If the .pkg should be signed or not. Applicable to macOS and Mac Catalyst. Defaults to false. -->
+		<EnablePackageSigning Condition="'$(EnablePackageSigning)' == ''">false</EnablePackageSigning>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(UsingAppleNETSdk)' != 'true'">
@@ -148,6 +188,27 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 	</PropertyGroup>
 
 	<PropertyGroup>
+		<ArchiveOnBuild Condition="'$(ArchiveOnBuild)' == ''">false</ArchiveOnBuild>
+		<IsAppExtension Condition="'$(IsAppExtension)' == ''">false</IsAppExtension>
+		<IsWatchExtension Condition="'$(IsWatchExtension)' == ''">false</IsWatchExtension>
+		<IsWatchApp Condition="'$(IsWatchApp)' == ''">false</IsWatchApp>
+
+		<!-- Xamarin.iOS projects use MtouchEnableSGenConc, and Xamarin.Mac projects use EnableSGenConc -->
+		<!-- Going forward we're sticking with EnableSGenConc, but we'll accept MtouchEnableSGenConc if it's set -->
+		<!-- If both are set, EnableSGenConc takes precedence -->
+		<EnableSGenConc Condition="'$(EnableSGenConc)' == ''">$(MtouchEnableSGenConc)</EnableSGenConc>
+		<EnableSGenConc Condition="'$(EnableSGenConc)' == ''">false</EnableSGenConc>
+
+		<_CanOutputAppBundle>false</_CanOutputAppBundle>
+		<_CanOutputAppBundle Condition="'$(OutputType)' == 'Exe' Or '$(IsAppExtension)' == 'true' Or '$(IsWatchApp)' == 'true'">true</_CanOutputAppBundle>
+
+		<!-- We can archive: -->
+		<!-- macOS and Mac Catalyst: executable projects which aren't app extensions -->
+		<!-- iOS, tvOS and watchOS: executable projects built for device which aren't app extensions nor watch apps -->
+		<_CanArchive>false</_CanArchive>
+		<_CanArchive Condition="('$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst') And '$(OutputType)' == 'Exe' And '$(IsAppExtension)' == 'false'">true</_CanArchive>
+		<_CanArchive Condition="('$(_PlatformName)' == 'iOS'  Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS') And '$(OutputType)' == 'Exe' And '$(ComputedPlatform)' == 'iPhone' And '$(IsAppExtension)' == 'false' And '$(IsWatchApp)' == 'false'">true</_CanArchive>
+
 		<!-- Debug -->
 		<!-- Xamarin.Mac: use MmpDebug -->
 		<_BundlerDebug Condition="'$(_BundlerDebug)' == '' And '$(_PlatformName)' == 'macOS'">$(MmpDebug)</_BundlerDebug>
@@ -192,6 +253,8 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		     DeviceSpecificOutputPath. -->
 		<DeviceSpecificOutputPath>$(OutputPath)</DeviceSpecificOutputPath>
 		<DeviceSpecificOutputPath Condition="$([System.IO.Path]::IsPathRooted('$(DeviceSpecificOutputPath)')) == 'true'">$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)','$(OutputPath)'))</DeviceSpecificOutputPath>
+		<!-- We assume elsewhere that DeviceSpecificOutputPath has a trailing slash, so make sure that's always the case -->
+		<DeviceSpecificOutputPath>$([MSBuild]::EnsureTrailingSlash('$(DeviceSpecificOutputPath)'))</DeviceSpecificOutputPath>
 
 		<!-- OptimizePNGs:
 			default to false if a binding project (both XI and XM)

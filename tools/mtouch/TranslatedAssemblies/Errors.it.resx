@@ -1726,4 +1726,7 @@
   <data name="MX8040" xml:space="preserve">
 		<value>Tipo di codifica non valido per il parametro.</value>
 	</data>
+  <data name="MX8041" xml:space="preserve">
+		<value>Impossibile creare un'istanza del tipo di {0}.</value>
+	</data>
 </root>

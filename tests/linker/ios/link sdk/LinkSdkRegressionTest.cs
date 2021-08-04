@@ -468,9 +468,6 @@ namespace LinkSdk {
 #endif // !__WATCHOS__ && !__MACCATALYST__
 		
 		[Test]
-#if NET && __MACCATALYST__
-		[Ignore ("No globalization data yet for Mac Catalyst - https://github.com/xamarin/xamarin-macios/issues/11392")]
-#endif
 		public void XElement_3137 ()
 		{
 			CultureInfo current = Thread.CurrentThread.CurrentCulture;
@@ -659,10 +656,6 @@ namespace LinkSdk {
 		[Test]
 		public void NetworkInterface_4631 ()
 		{
-#if NET
-			if (Runtime.Arch == Arch.DEVICE)
-				Assert.Ignore ("https://github.com/dotnet/runtime/issues/47120");
-#endif
 			Assert.NotNull (NetworkInterface.GetAllNetworkInterfaces ());
 		}
 		

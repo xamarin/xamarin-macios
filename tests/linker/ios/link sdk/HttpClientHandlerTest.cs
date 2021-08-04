@@ -20,7 +20,7 @@ namespace LinkSdk.Net.Http {
 		{
 			using (var handler = new HttpClientHandler ()) {
 				Assert.True (handler.AllowAutoRedirect, "AllowAutoRedirect");
-#if NET && !__MACCATALYST__ // https://github.com/dotnet/runtime/issues/55986
+#if NET // https://github.com/dotnet/runtime/issues/55986
 				Assert.Null (handler.CookieContainer, "CookieContainer");
 #else
 				Assert.NotNull (handler.CookieContainer, "CookieContainer");

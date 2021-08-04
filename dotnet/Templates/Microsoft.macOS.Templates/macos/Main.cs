@@ -1,5 +1,3 @@
-using AppKit;
-
 using macOSApp1;
 
 // This is the main entry point of the application.
