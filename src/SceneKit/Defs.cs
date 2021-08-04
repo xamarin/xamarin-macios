@@ -283,7 +283,7 @@ namespace SceneKit {
 		None,
 		Multisampling2X,
 		Multisampling4X,
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 		Multisampling8X,
 		Multisampling16X,
 #endif
