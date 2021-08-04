@@ -80,6 +80,7 @@ bool xamarin_is_gc_coop = false;
 #endif
 enum MarshalObjectiveCExceptionMode xamarin_marshal_objectivec_exception_mode = MarshalObjectiveCExceptionModeDefault;
 enum MarshalManagedExceptionMode xamarin_marshal_managed_exception_mode = MarshalManagedExceptionModeDefault;
+enum XamarinTriState xamarin_log_exceptions = XamarinTriStateNone;
 enum XamarinLaunchMode xamarin_launch_mode = XamarinLaunchModeApp;
 bool xamarin_supports_dynamic_registration = true;
 const char *xamarin_runtime_configuration_name = NULL;
@@ -2153,6 +2154,34 @@ xamarin_skip_encoding_flags (const char *encoding)
 	}
 }
 
+bool
+xamarin_log_marshalled_exceptions ()
+{
+	if (xamarin_log_exceptions == XamarinTriStateNone) {
+		const char *var = getenv ("XAMARIN_LOG_MARSHALLED_EXCEPTIONS");
+		xamarin_log_exceptions = (var && *var) ? XamarinTriStateEnabled : XamarinTriStateDisabled;
+	}
+	return xamarin_log_exceptions == XamarinTriStateEnabled;
+}
+
+void
+xamarin_log_managed_exception (GCHandle handle, MarshalManagedExceptionMode mode)
+{
+	if (!xamarin_log_marshalled_exceptions ())
+		return;
+
+	NSLog (@PRODUCT ": Processing managed exception for exception marshalling (mode: %i):\n%@", mode, xamarin_print_all_exceptions (handle));
+}
+
+void
+xamarin_log_objectivec_exception (NSException *exception, MarshalObjectiveCExceptionMode mode)
+{
+	if (!xamarin_log_marshalled_exceptions ())
+		return;
+
+	NSLog (@PRODUCT ": Processing Objective-C exception for exception marshalling (mode: %i):\n%@", mode, [exception debugDescription]);
+}
+
 void
 xamarin_process_nsexception (NSException *ns_exception)
 {
@@ -2178,6 +2207,8 @@ xamarin_process_nsexception_using_mode (NSException *ns_exception, bool throwMan
 	if (mode == MarshalObjectiveCExceptionModeDefault)
 		mode = xamarin_is_gc_coop ? MarshalObjectiveCExceptionModeThrowManagedException : MarshalObjectiveCExceptionModeUnwindManagedCode;
 	
+	xamarin_log_objectivec_exception (ns_exception, mode);
+
 	switch (mode) {
 	case MarshalObjectiveCExceptionModeUnwindManagedCode:
 		if (xamarin_is_gc_coop)
@@ -2250,6 +2281,8 @@ xamarin_process_managed_exception (MonoObject *exception)
 		mode = xamarin_is_gc_coop ? MarshalManagedExceptionModeThrowObjectiveCException : MarshalManagedExceptionModeUnwindNativeCode;
 #endif
 	}
+
+	xamarin_log_managed_exception (handle, mode);
 
 	switch (mode) {
 #if !defined (CORECLR_RUNTIME) // CoreCLR won't unwind through native frames, so we'll have to abort (in the default case statement)
