@@ -102,6 +102,11 @@ namespace Xamarin.Tests
 			return GetBuildMessages (path).Where (v => v.Type == BuildLogEventType.Warning);
 		}
 
+		public static IEnumerable<BuildLogEvent> GetBuildLogErrors (string path)
+		{
+			return GetBuildMessages (path).Where (v => v.Type == BuildLogEventType.Error);
+		}
+
 		public static IEnumerable<BuildLogEvent> GetBuildMessages (string path)
 		{
 			var reader = new BinLogReader ();

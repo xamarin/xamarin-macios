@@ -167,7 +167,7 @@ namespace Introspection {
 		}
 
 		[Test]
-#if NET || __MACCATALYST__
+#if NET
 		[Ignore ("Requires attributes update - see status in https://github.com/xamarin/xamarin-macios/issues/10834")]
 #endif
 		public void Introduced ()

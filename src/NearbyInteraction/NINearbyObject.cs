@@ -15,7 +15,7 @@ using Foundation;
 using ObjCRuntime;
 using Vector3 = global::OpenTK.Vector3;
 
-#if __IOS__
+#if __IOS__ || WATCH
 namespace NearbyInteraction {
     partial class NINearbyObject
     {
@@ -38,4 +38,4 @@ namespace NearbyInteraction {
     }
 
 }
-#endif //__IOS__
+#endif
