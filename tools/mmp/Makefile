@@ -16,7 +16,7 @@ LOCAL_MMP_COMMAND=$(SYSTEM_MONO) --debug $(LOCAL_MMP)
 -include mmp.csproj.inc
 
 $(MMP_DIR)/mmp.exe: $(mmp_dependencies)
-	$(Q_GEN) $(SYSTEM_MSBUILD) $(TOP)/Xamarin.Mac.sln "/t:mmp" $(XBUILD_VERBOSITY) /p:Configuration=$(MMP_CONF)
+	$(Q_GEN) $(SYSTEM_MSBUILD) "/bl:$@.binlog" $(TOP)/Xamarin.Mac.sln "/t:mmp" $(XBUILD_VERBOSITY) /p:Configuration=$(MMP_CONF)
 
 MMP_TARGETS_DOTNET = \
 	$(DOTNET_DESTDIR)/Microsoft.macOS.Runtime.osx-x64/runtimes/osx-x64/native/Microsoft.macOS.registrar.a \
