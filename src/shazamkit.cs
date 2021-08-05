@@ -80,6 +80,7 @@ namespace ShazamKit {
 		[Export ("writeToURL:error:")]
 		bool Write (NSUrl url, [NullAllowed] out NSError error);
 
+		[Static]
 		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0)]
 		[Export ("new")]
 		[return: Release]
@@ -164,10 +165,12 @@ namespace ShazamKit {
 		[Export ("isrc")]
 		string Isrc { get; }
 
+		[Static]
 		[Export ("mediaItemWithProperties:")]
 		SHMediaItem MediaItem (NSDictionary<NSString, NSObject> properties);
 
 		[Async]
+		[Static]
 		[Export ("fetchMediaItemWithShazamID:completionHandler:")]
 		void FetchMediaItem (string shazamId, Action<SHMediaItem, NSError> completionHandler);
 
@@ -183,6 +186,7 @@ namespace ShazamKit {
 	[DisableDefaultCtor]
 	interface SHMediaLibrary
 	{
+		[Static]
 		[Export ("defaultLibrary", ArgumentSemantic.Strong)]
 		SHMediaLibrary DefaultLibrary { get; }
 
@@ -231,6 +235,7 @@ namespace ShazamKit {
 		[Export ("dataRepresentation", ArgumentSemantic.Strong)]
 		NSData DataRepresentation { get; }
 
+		[Static]
 		[Export ("signatureWithDataRepresentation:error:")]
 		[return: NullAllowed]
 		SHSignature GetSignature (NSData dataRepresentation, [NullAllowed] out NSError error);

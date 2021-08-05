@@ -840,6 +840,35 @@ namespace Introspection {
 				if (selectorName == "waitUntilExit")
 					return true;
 				break;
+			case "SHCustomCatalog":
+				// ShazamKit has some issues running on simulator
+				switch (selectorName) {
+				case "new":
+					return true;
+				}
+				break;
+			case "SHMediaItem":
+				// ShazamKit has some issues running on simulator
+				switch (selectorName) {
+				case "fetchMediaItemWithShazamID:completionHandler:":
+				case "mediaItemWithProperties:":
+					return true;
+				}
+				break;
+			case "SHMediaLibrary":
+				// ShazamKit has some issues running on simulator
+				switch (selectorName) {
+				case "defaultLibrary":
+					return true;
+				}
+				break;
+			case "SHSignature":
+				// ShazamKit has some issues running on simulator
+				switch (selectorName) {
+				case "signatureWithDataRepresentation:error:":
+					return true;
+				}
+				break;
 			}
 
 			// old binding mistake
