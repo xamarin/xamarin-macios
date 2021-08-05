@@ -167,7 +167,7 @@ namespace ShazamKit {
 
 		[Static]
 		[Export ("mediaItemWithProperties:")]
-		SHMediaItem MediaItem (NSDictionary<NSString, NSObject> properties);
+		SHMediaItem Create (NSDictionary<NSString, NSObject> properties);
 
 		[Async]
 		[Static]
@@ -214,7 +214,7 @@ namespace ShazamKit {
 		IntPtr Constructor (SHCatalog catalog);
 
 		[Export ("matchStreamingBuffer:atTime:")]
-		void MatchStreamingBuffer (AVAudioPcmBuffer buffer, [NullAllowed] AVAudioTime time);
+		void Match (AVAudioPcmBuffer buffer, [NullAllowed] AVAudioTime time);
 
 		[Export ("matchSignature:")]
 		void Match (SHSignature signature);
