@@ -231,7 +231,8 @@ namespace QuickLook {
 	{
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (15,0), MacCatalyst (15,0)]
+	[NoWatch][NoTV][NoMac] // availability not mentioned in the header files
+	[iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof(NSObject))]
 	interface QLPreviewSceneOptions
 	{
