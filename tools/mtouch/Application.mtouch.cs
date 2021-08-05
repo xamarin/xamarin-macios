@@ -510,7 +510,7 @@ namespace Xamarin.Bundler {
 				// All arguments to the AOT compiler must be identical
 				var allAotArguments = string.Join (",", AotArguments);
 				var allAppexAotArguments = string.Join (",", appex.AotArguments);
-				if (AotArguments != appex.AotArguments) {
+				if (allAotArguments != allAppexAotArguments) {
 					ErrorHelper.Warning (113, Errors.MT0113, appex.Name, String.Format (Errors.MT0113_d, allAotArguments, allAppexAotArguments));
 					continue;
 				}
