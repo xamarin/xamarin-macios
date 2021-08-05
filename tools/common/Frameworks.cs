@@ -495,6 +495,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 7,0 },
 
 				{ "Chip", "CHIP", new Version (8, 0), NotAvailableInSimulator /* no headers in beta 2 */ },
+				{ "NearbyInteraction", "NearbyInteraction", 8,0 },
 			};
 		}
 		return watch_frameworks;
