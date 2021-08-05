@@ -1845,6 +1845,7 @@ namespace AppKit {
 		void EditItemAtIndexPath (NSIndexPath indexPath, NSEvent theEvent, bool select);
 
 		//Detected properties
+		[NullAllowed]
 		[Export ("doubleAction")]
 		Selector DoubleAction { get; set; }
 
@@ -5186,9 +5187,11 @@ namespace AppKit {
 		[Export ("initWithDrawSelector:delegate:")]
 		IntPtr Constructor (Selector drawSelectorMethod, NSObject delegateObject);
 
+		[NullAllowed]
 		[Export ("drawSelector")]
 		Selector DrawSelector { get; }
 		
+		[NullAllowed]
 		[Export ("delegate", ArgumentSemantic.Assign)]  
 		NSObject Delegate { get; }  
 	}	
@@ -7901,6 +7904,7 @@ namespace AppKit {
 		[Export ("target", ArgumentSemantic.Weak), NullAllowed]
 		NSObject Target { get; set; }
 
+		[NullAllowed]
 		[Export ("action")]
 		Selector Action { get; set; }
 
@@ -10541,6 +10545,7 @@ namespace AppKit {
 		[Export ("drawsBackground")]
 		bool DrawsBackground { get; set; }
 
+		[NullAllowed]
 		[Export ("doubleAction")]
 		Selector DoubleAction { get; set; }
 
@@ -11291,6 +11296,7 @@ namespace AppKit {
 		[Export ("mouseExited:withFrame:inView:")]
 		void MouseExited (NSEvent evt, CGRect frame, NSView view);
 
+		[NullAllowed]
 		[Export ("doubleAction")]
 		Selector DoubleAction { get; set; }
 
@@ -11348,6 +11354,7 @@ namespace AppKit {
 		[Export ("setDraggingSourceOperationMask:forLocal:")]
 		void SetDraggingSource (NSDragOperation operationMask, bool isLocal);
 
+		[NullAllowed]
 		[Export ("doubleAction")]
 		Selector DoubleAction { get; set; }
 
@@ -14793,6 +14800,7 @@ namespace AppKit {
 
 		//Detected properties
 		[Availability (Deprecated = Platform.Mac_10_10, Message = "Soft-deprecation, forwards message to button, but will be gone in the future.")]
+		[NullAllowed]
 		[Export ("doubleAction")]
 		Selector DoubleAction { get; set; }
 
@@ -16949,6 +16957,7 @@ namespace AppKit {
 		[Export ("rowHeight")]
 		nfloat RowHeight { get; set; }
 	
+		[NullAllowed]
 		[Export ("doubleAction")]
 		Selector DoubleAction { get; set; }
 	

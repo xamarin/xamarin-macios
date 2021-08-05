@@ -1727,6 +1727,6 @@
 		<value>參數的類型編碼無效。</value>
 	</data>
   <data name="MX8041" xml:space="preserve">
-		<value>Unable to create an instance of the type {0}.</value>
+		<value>無法建立 {0} 類型的執行個體。</value>
 	</data>
 </root>

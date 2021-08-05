@@ -835,6 +835,11 @@ namespace Introspection {
 					break;
 				}
 				break;
+			case "NSTask":
+				// category, NSTask won't respond -> @interface NSTask (NSTaskConveniences)
+				if (selectorName == "waitUntilExit")
+					return true;
+				break;
 			}
 
 			// old binding mistake
@@ -1063,6 +1068,10 @@ namespace Introspection {
 			case "initWithDataIgnoringOrientation:":
 				var mi = m as MethodInfo;
 				return mi != null && !mi.IsPublic && mi.ReturnType.Name == "IntPtr";
+			// NSAppleEventDescriptor
+			case "initListDescriptor":
+			case "initRecordDescriptor":
+				return true;
 			default:
 				return false;
 			}

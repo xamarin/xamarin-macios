@@ -155,11 +155,6 @@ namespace Introspection {
 				// compat.
 				return true;
 #endif
-			case "waitUntilExit":
-				// category, NSTask won't respond -> @interface NSTask (NSTaskConveniences)
-				if (type.Name == "NSTask")
-					return true;
-				break;
 			case "readInBackgroundAndNotifyForModes:":
 			case "readInBackgroundAndNotify":
 			case "readToEndOfFileInBackgroundAndNotifyForModes:":
@@ -1283,9 +1278,6 @@ namespace Introspection {
 			// QTMovie
 			case "movieWithTimeRange:error:":
 			case "initWithQuickTimeMedia:error:":
-			// NSAppleEventDescriptor
-			case "initListDescriptor":
-			case "initRecordDescriptor":
 			// NSAnimation
 			case "initWithDuration:animationCurve:":
 				return true;
