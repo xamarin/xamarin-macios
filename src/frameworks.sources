@@ -2145,6 +2145,7 @@ WATCHOS_FRAMEWORKS =        \
 	MapKit                  \
 	MediaPlayer             \
 	MobileCoreServices      \
+	NearbyInteraction       \
 	PassKit                 \
 	PushKit			\
 	Security                \
