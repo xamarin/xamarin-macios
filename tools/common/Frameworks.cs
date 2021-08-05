@@ -262,6 +262,8 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "AdServices", "AdServices", 11,1 },
 
 					{ "Chip", "CHIP", 12, 0 },
+					{ "MetricKit", 12, 0 },
+					{ "Phase", "PHASE", 12, 0 },
 				};
 			}
 			return mac_frameworks;
@@ -424,6 +426,7 @@ public class Frameworks : Dictionary <string, Framework>
 
 				{ "Chip", "CHIP", new Version (15, 0), NotAvailableInSimulator /* no headers in beta 2 */ },
 				{ "DataDetection", "DataDetection", 15,0 },
+				{ "Phase", "PHASE", new Version (15,0), NotAvailableInSimulator /* no headers in beta 2 */ },
 
 				// the above MUST be kept in sync with simlauncher
 				// see tools/mtouch/Makefile
@@ -493,7 +496,6 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 7,0 },
 
 				{ "Chip", "CHIP", new Version (8, 0), NotAvailableInSimulator /* no headers in beta 2 */ },
-
 			};
 		}
 		return watch_frameworks;
@@ -632,7 +634,6 @@ public class Frameworks : Dictionary <string, Framework>
 				case "HealthKitUI":
 				case "iAd":
 				case "IdentityLookupUI":
-				case "HomeKit":
 				case "Messages":
 				case "MessageUI":
 				case "VisionKit":
@@ -648,6 +649,9 @@ public class Frameworks : Dictionary <string, Framework>
 					break;
 				}
 			}
+
+			// Add frameworks that are not in iOS
+			catalyst_frameworks.Add ("AppKit", 13, 0);
 		}
 		return catalyst_frameworks;
 	}

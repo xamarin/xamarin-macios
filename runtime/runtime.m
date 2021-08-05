@@ -83,7 +83,11 @@ enum MarshalManagedExceptionMode xamarin_marshal_managed_exception_mode = Marsha
 enum XamarinLaunchMode xamarin_launch_mode = XamarinLaunchModeApp;
 bool xamarin_supports_dynamic_registration = true;
 const char *xamarin_runtime_configuration_name = NULL;
-const char *xamarin_mono_native_lib_name = "__Internal";
+
+#if DOTNET
+enum XamarinNativeLinkMode xamarin_libmono_native_link_mode = XamarinNativeLinkModeStaticObject;
+const char **xamarin_runtime_libraries = NULL;
+#endif
 
 /* Callbacks */
 
@@ -2401,6 +2405,88 @@ xamarin_insert_dllmap ()
 #endif // !DOTNET
 
 #if DOTNET
+
+// List all the assemblies that we can find in the app bundle in:
+// - The bundle directory
+// - The runtimeidentifier-specific subdirectory
+// Caller must free the return value using xamarin_free.
+char *
+xamarin_compute_trusted_platform_assemblies ()
+{
+	const char *bundle_path = xamarin_get_bundle_path ();
+
+	NSMutableArray<NSString *> *files = [NSMutableArray array];
+	NSMutableArray<NSString *> *directories = [NSMutableArray array];
+	[directories addObject: [NSString stringWithUTF8String: bundle_path]];
+	[directories addObject: [NSString stringWithFormat: @"%s/.xamarin/%s", bundle_path, RUNTIMEIDENTIFIER]];
+
+	NSFileManager *manager = [NSFileManager defaultManager];
+	for (NSString *dir in directories) {
+		NSDirectoryEnumerator *enumerator = [manager enumeratorAtURL:[NSURL fileURLWithPath: dir]
+		                                  includingPropertiesForKeys:@[NSURLNameKey, NSURLIsDirectoryKey]
+		                                                     options:NSDirectoryEnumerationSkipsSubdirectoryDescendants
+		                                                     errorHandler:nil];
+		for (NSURL *file in enumerator) {
+			// skip subdirectories
+			NSNumber *isDirectory = nil;
+			if (![file getResourceValue:&isDirectory forKey:NSURLIsDirectoryKey error:nil] || [isDirectory boolValue])
+				continue;
+
+			NSString *name = nil;
+			if (![file getResourceValue:&name forKey:NSURLNameKey error:nil])
+				continue;
+
+			if ([name length] < 4)
+				continue;
+
+			// We want dlls and exes
+			if ([name compare: @".dll" options: NSCaseInsensitiveSearch range: NSMakeRange ([name length] - 4, 4)] == NSOrderedSame) {
+				[files addObject: [dir stringByAppendingPathComponent: name]];
+			} else if ([name compare: @".exe" options: NSCaseInsensitiveSearch range: NSMakeRange ([name length] - 4, 4)] == NSOrderedSame) {
+				[files addObject: [dir stringByAppendingPathComponent: name]];
+			}
+		}
+	}
+
+	// Join them all together with a colon separating them
+	NSString *joined = [files componentsJoinedByString: @":"];
+	char *rv = xamarin_strdup_printf ("%s", [joined UTF8String]);
+	return rv;
+}
+
+char *
+xamarin_compute_native_dll_search_directories ()
+{
+	const char *bundle_path = xamarin_get_bundle_path ();
+
+	NSMutableArray<NSString *> *directories = [NSMutableArray array];
+
+	// Native libraries might be in the app bundle
+	[directories addObject: [NSString stringWithUTF8String: bundle_path]];
+	// They won't be in the runtimeidentifier-specific directory (because they get lipo'ed into a fat file instead)
+	// However, might also be in the Resources/lib directory
+	[directories addObject: [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: @"lib"]];
+
+	// Missing:
+	// * The parent app bundle if launched from an app extension. This requires adding app extension tests, which we currently don't have.
+
+	// Remove the ones that don't exist
+	NSFileManager *manager = [NSFileManager defaultManager];
+	for (int i = (int) [directories count] - 1; i >= 0; i--) {
+		NSString *dir = [directories objectAtIndex: (NSUInteger) i];
+		BOOL isDirectory;
+		if ([manager fileExistsAtPath: dir isDirectory: &isDirectory] && isDirectory)
+			continue;
+
+		[directories removeObjectAtIndex: (NSUInteger) i];
+	}
+
+	// Join them all together with a colon separating them
+	NSString *joined = [directories componentsJoinedByString: @":"];
+	char *rv = xamarin_strdup_printf ("%s", [joined UTF8String]);
+	return rv;
+}
+
 void
 xamarin_vm_initialize ()
 {
@@ -2414,17 +2500,24 @@ xamarin_vm_initialize ()
 		icu_dat_file_path = path;
 	}
 
+	char *trusted_platform_assemblies = xamarin_compute_trusted_platform_assemblies ();
+	char *native_dll_search_directories = xamarin_compute_native_dll_search_directories ();
+
 	// All the properties we pass here must also be listed in the _RuntimeConfigReservedProperties item group
 	// for the _CreateRuntimeConfiguration target in dotnet/targets/Xamarin.Shared.Sdk.targets.
 	const char *propertyKeys[] = {
 		"APP_PATHS",
 		"PINVOKE_OVERRIDE",
 		"ICU_DAT_FILE_PATH",
+		"TRUSTED_PLATFORM_ASSEMBLIES",
+		"NATIVE_DLL_SEARCH_DIRECTORIES",
 	};
 	const char *propertyValues[] = {
 		xamarin_get_bundle_path (),
 		pinvokeOverride,
 		icu_dat_file_path,
+		trusted_platform_assemblies,
+		native_dll_search_directories,
 	};
 	static_assert (sizeof (propertyKeys) == sizeof (propertyValues), "The number of keys and values must be the same.");
 
@@ -2432,8 +2525,25 @@ xamarin_vm_initialize ()
 	bool rv = xamarin_bridge_vm_initialize (propertyCount, propertyKeys, propertyValues);
 	xamarin_free (pinvokeOverride);
 
+	xamarin_free (trusted_platform_assemblies);
+	xamarin_free (native_dll_search_directories);
+
 	if (!rv)
 		xamarin_assertion_message ("Failed to initialize the VM");
+}
+
+static bool
+xamarin_is_native_library (const char *libraryName)
+{
+	if (xamarin_runtime_libraries == NULL)
+		return false;
+
+	for (int i = 0; xamarin_runtime_libraries [i] != NULL; i++) {
+		if (!strcmp (xamarin_runtime_libraries [i], libraryName))
+			return true;
+	}
+
+	return false;
 }
 
 void*
@@ -2442,25 +2552,8 @@ xamarin_pinvoke_override (const char *libraryName, const char *entrypointName)
 
 	void* symbol = NULL;
 
-#if TARGET_OS_MACCATALYST
-	static void *monoNativeLibrary = NULL;
-#endif
-
 	if (!strcmp (libraryName, "__Internal")) {
 		symbol = dlsym (RTLD_DEFAULT, entrypointName);
-#if TARGET_OS_MACCATALYST
-	} else if (!strcmp (libraryName, "libSystem.Native") ||
-	           !strcmp (libraryName, "libSystem.Security.Cryptography.Native.Apple") ||
-	           !strcmp (libraryName, "libSystem.Net.Security.Native")) {
-		if (monoNativeLibrary == NULL) {
-			if (xamarin_mono_native_lib_name == NULL || !strcmp (xamarin_mono_native_lib_name, "__Internal")) {
-				monoNativeLibrary = RTLD_DEFAULT;
-			} else {
-				monoNativeLibrary = dlopen (xamarin_mono_native_lib_name, RTLD_LAZY);
-			}
-		}
-		symbol = dlsym (monoNativeLibrary, entrypointName);
-#endif // TARGET_OS_MACCATALYST
 #if !defined (CORECLR_RUNTIME) // we're intercepting objc_msgSend calls using the managed System.Runtime.InteropServices.ObjectiveC.Bridge.SetMessageSendCallback instead.
 #if defined (__i386__) || defined (__x86_64__) || defined (__arm64__)
 	} else if (!strcmp (libraryName, "/usr/lib/libobjc.dylib")) {
@@ -2481,6 +2574,21 @@ xamarin_pinvoke_override (const char *libraryName, const char *entrypointName)
 		}
 #endif // defined (__i386__) || defined (__x86_64__) || defined (__arm64__)
 #endif // !defined (CORECLR_RUNTIME)
+	} else if (xamarin_is_native_library (libraryName)) {
+		switch (xamarin_libmono_native_link_mode) {
+		case XamarinNativeLinkModeStaticObject:
+			// lookup the symbol in loaded memory, like __Internal does.
+			symbol = dlsym (RTLD_DEFAULT, entrypointName);
+			break;
+		case XamarinNativeLinkModeDynamicLibrary:
+			// if we're not linking statically, then don't do anything at all, let mono handle whatever needs to be done
+			return NULL;
+		case XamarinNativeLinkModeFramework:
+		default:
+			// handle this as "DynamicLibrary" for now - do nothing.
+			LOG (PRODUCT ": Unhandled libmono link mode: %i when looking up %s in %s", xamarin_libmono_native_link_mode, entrypointName, libraryName);
+			return NULL;
+		}
 	} else {
 		return NULL;
 	}

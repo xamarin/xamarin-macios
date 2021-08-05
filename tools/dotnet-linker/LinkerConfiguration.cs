@@ -129,6 +129,9 @@ namespace Xamarin.Linker {
 				case "Dlsym":
 					Application.ParseDlsymOptions (value);
 					break;
+				case "EnableSGenConc":
+					Application.EnableSGenConc = string.Equals (value, "true", StringComparison.OrdinalIgnoreCase);
+					break;
 				case "EnvironmentVariable":
 					var separators = new char [] { ':', '=' };
 					var equals = value.IndexOfAny (separators);
@@ -176,6 +179,9 @@ namespace Xamarin.Linker {
 							throw new InvalidOperationException ($"Unable to parse the {key} value: {value} in {linker_file}");
 						Application.MarshalObjectiveCExceptions = mode;
 					}
+					break;
+				case "MonoLibrary":
+					Application.MonoLibraries.Add (value);
 					break;
 				case "Optimize":
 					user_optimize_flags = value;
@@ -317,6 +323,8 @@ namespace Xamarin.Linker {
 				return AssemblyBuildTarget.DynamicLibrary;
 			} else if (string.Equals (value, "static", StringComparison.OrdinalIgnoreCase)) {
 				return AssemblyBuildTarget.StaticObject;
+			} else if (string.Equals (value, "framework", StringComparison.OrdinalIgnoreCase)) {
+				return AssemblyBuildTarget.Framework;
 			}
 
 			throw new InvalidOperationException ($"Invalid {variableName} '{value}' in {LinkerFile}");
@@ -333,6 +341,7 @@ namespace Xamarin.Linker {
 				Console.WriteLine ($"    Debug: {Application.EnableDebug}");
 				Console.WriteLine ($"    Dlsym: {Application.DlsymOptions} {(Application.DlsymAssemblies != null ? string.Join (" ", Application.DlsymAssemblies.Select (v => (v.Item2 ? "+" : "-") + v.Item1)) : string.Empty)}");
 				Console.WriteLine ($"    DeploymentTarget: {DeploymentTarget}");
+				Console.WriteLine ($"    EnableSGenConc {Application.EnableSGenConc}");
 				Console.WriteLine ($"    IntermediateLinkDir: {IntermediateLinkDir}");
 				Console.WriteLine ($"    InterpretedAssemblies: {string.Join (", ", Application.InterpretedAssemblies)}");
 				Console.WriteLine ($"    ItemsDirectory: {ItemsDirectory}");
@@ -343,6 +352,9 @@ namespace Xamarin.Linker {
 				Console.WriteLine ($"    LinkMode: {LinkMode}");
 				Console.WriteLine ($"    MarshalManagedExceptions: {Application.MarshalManagedExceptions} (IsDefault: {Application.IsDefaultMarshalManagedExceptionMode})");
 				Console.WriteLine ($"    MarshalObjectiveCExceptions: {Application.MarshalObjectiveCExceptions}");
+				Console.WriteLine ($"    {Application.MonoLibraries.Count} mono libraries:");
+				foreach (var lib in Application.MonoLibraries.OrderBy (v => v))
+					Console.WriteLine ($"        {lib}");
 				Console.WriteLine ($"    Optimize: {user_optimize_flags} => {Application.Optimizations}");
 				Console.WriteLine ($"    PartialStaticRegistrarLibrary: {PartialStaticRegistrarLibrary}");
 				Console.WriteLine ($"    Platform: {Platform}");

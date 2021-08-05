@@ -2224,7 +2224,7 @@ public partial class Generator : IMemberGatherer {
 		GeneratedTypes = new GeneratedTypes (this);
 
 		marshal_types.Add (new MarshalType (TypeManager.NSObject, create: "Runtime.GetNSObject ("));
-		marshal_types.Add (new MarshalType (TypeManager.Selector, create: "Selector.FromHandle ("));
+		marshal_types.Add (new MarshalType (TypeManager.Selector, create: "Selector.FromHandle (", closingCreate: ")!"));
 		marshal_types.Add (new MarshalType (TypeManager.BlockLiteral, "BlockLiteral", "{0}", "THIS_IS_BROKEN"));
 		if (TypeManager.MusicSequence != null)
 			marshal_types.Add (new MarshalType (TypeManager.MusicSequence, create: "global::AudioToolbox.MusicSequence.Lookup ("));
@@ -4742,6 +4742,9 @@ public partial class Generator : IMemberGatherer {
 		foreach (var method in source.GatherMethods (BindingFlags.Public | BindingFlags.Instance, this))
 			yield return method;
 		foreach (var parent in source.GetInterfaces ()){
+			// skip interfaces that aren't available on the current platform
+			if (parent.IsUnavailable (this))
+				continue;
 			// skip case where the interface implemented comes from an already built assembly (e.g. monotouch.dll)
 			// e.g. Dispose won't have an [Export] since it's present to satisfy System.IDisposable
 			if (parent.FullName != "System.IDisposable") {
@@ -4757,6 +4760,9 @@ public partial class Generator : IMemberGatherer {
 		foreach (var prop in source.GatherProperties (this))
 			yield return prop;
 		foreach (var parent in source.GetInterfaces ()){
+			// skip interfaces that aren't available on the current platform
+			if (parent.IsUnavailable (this))
+				continue;
 			// skip case where the interface implemented comes from an already built assembly (e.g. monotouch.dll)
 			// e.g. the Handle property won't have an [Export] since it's present to satisfyINativeObject
 			if (parent.Name != "INativeObject") {
@@ -6521,6 +6527,10 @@ public partial class Generator : IMemberGatherer {
 							ErrorHelper.Warning (1111, protocolType, type, nonInterfaceName);
 					continue;
 				}
+
+				// skip protocols that aren't available on the current platform
+				if (protocolType.IsUnavailable (this))
+					continue;
 
 				// A protocol this class implements. We need to implement the corresponding interface for the protocol.
 				string pname = protocolType.Name;
