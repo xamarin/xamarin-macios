@@ -203,6 +203,7 @@
 		<!-- ComputeFilesToPublish will run ILLink -->
 		<!-- single-rid build (either plain single, or inner build for multi-rid build) -->
 		<CreateAppBundleDependsOn Condition="'$(RuntimeIdentifiers)' == ''">
+			$(CreateAppBundleDependsOn);
 			_DetectAppManifest;
 			_CopyResourcesToBundle;
 			_CompileCoreMLModels;
@@ -235,6 +236,7 @@
 
 		<!-- outer build for multi-rid build -->
 		<CreateAppBundleDependsOn Condition="'$(RuntimeIdentifiers)' != ''">
+			$(CreateAppBundleDependsOn);
 			_CompileEntitlements;
 			_CreateMergedAppBundle;
 		</CreateAppBundleDependsOn>
