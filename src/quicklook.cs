@@ -173,7 +173,7 @@ namespace QuickLook {
 
 	delegate bool QLPreviewReplyDrawingHandler (CGContext context, QLPreviewReply reply, out NSError error);
 	delegate NSData QLPreviewReplyDataCreationHandler (QLPreviewReply reply, out NSError error);
-	delegate CGPDFDocument QLPreviewReply_UIDocumentCreationHandler (QLPreviewReply reply, out NSError error);
+	delegate CGPDFDocument QLPreviewReplyUIDocumentCreationHandler (QLPreviewReply reply, out NSError error);
 
 	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof(NSObject))]
@@ -192,14 +192,14 @@ namespace QuickLook {
 		IntPtr Constructor (CGSize contextSize, bool isBitmap, QLPreviewReplyDrawingHandler drawingHandler);
 
 		[Export ("initWithFileURL:")]
-		IntPtr Constructor (NSUrl fileURL);
+		IntPtr Constructor (NSUrl fileUrl);
 
 		[Export ("initWithDataOfContentType:contentSize:dataCreationBlock:")]
 		IntPtr Constructor (UTType contentType, CGSize contentSize, QLPreviewReplyDataCreationHandler dataCreationHandler);
 
 		// QLPreviewReply_UI
 		[Export ("initForPDFWithPageSize:documentCreationBlock:")]
-		IntPtr Constructor (CGSize defaultPageSize, QLPreviewReply_UIDocumentCreationHandler documentCreationHandler);
+		IntPtr Constructor (CGSize defaultPageSize, QLPreviewReplyUIDocumentCreationHandler documentCreationHandler);
 	}
 
 	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
@@ -221,16 +221,17 @@ namespace QuickLook {
 	interface QLFilePreviewRequest
 	{
 		[Export ("fileURL")]
-		NSUrl FileURL { get; }
+		NSUrl FileUrl { get; }
 	}
 
 	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[DisableDefaultCtor]
 	[BaseType (typeof(NSObject))]
 	interface QLPreviewProvider : NSExtensionRequestHandling
 	{
 	}
 
-	[iOS (15,0), MacCatalyst (15,0)]
+	[NoWatch, NoTV, NoMac, iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof(NSObject))]
 	interface QLPreviewSceneOptions
 	{
