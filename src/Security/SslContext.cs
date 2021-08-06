@@ -679,7 +679,7 @@ namespace Security {
 			error = SSLCopyALPNProtocols (Handle, ref protocols);
 			if (protocols == IntPtr.Zero)
 				return Array.Empty<string> ();
-			var result = NSArray.StringArrayFromHandle (protocols);
+			var result = CFArray.StringArrayFromHandle (protocols);
 			CFObject.CFRelease (protocols);
 			return result;
 		}
