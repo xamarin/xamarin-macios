@@ -430,11 +430,11 @@ MAC_WARNINGS_TO_FIX := 114,108
 # 4014 is "The statement is not awaited and execution of current method continues before the call is completed. Consider using `await' operator or calling `Wait' method"
 MAC_WARNINGS_TO_FIX := $(MAC_WARNINGS_TO_FIX),4014
 
-MAC_COMMON_DEFINES = -define:MONOMAC
+MAC_COMMON_DEFINES = -define:MONOMAC -d:__MACOS__
 MAC_full_ARGS = -define:NO_SYSTEM_DRAWING -define:XAMMAC_SYSTEM_MONO
 MAC_mobile_ARGS = 
 MAC_BOOTSTRAP_DEFINES = $(MAC_COMMON_DEFINES),COREBUILD
-MAC_GENERATED_DEFINES = -d:MONOMAC
+MAC_GENERATED_DEFINES = -d:MONOMAC -d:__MACOS__
 
 MAC_CORE_DEFINES = $(MAC_BOOTSTRAP_DEFINES)
 MAC_CORE_WARNINGS_TO_FIX = -nowarn:3021,612,618,1635

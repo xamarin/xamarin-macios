@@ -56,7 +56,6 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[iOS (10, 0)]
@@ -172,7 +171,6 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[NoTV]
@@ -373,7 +371,6 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[iOS (10, 0)]
@@ -635,7 +632,6 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[iOS (10, 0)]
@@ -660,7 +656,6 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[iOS (10, 0)]
@@ -698,7 +693,6 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[iOS (10, 0)]
@@ -856,7 +850,6 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'INStartCallIntentResponseCode' instead.")]
@@ -901,7 +894,6 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'INStartCallIntentResponseCode' instead.")]
@@ -1223,7 +1215,6 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[Watch (3,2), NoTV, iOS (10,0)]
@@ -1237,7 +1228,6 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[Watch (4,0), NoTV, iOS (11,0)]
@@ -1255,7 +1245,6 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[Watch (3,2), NoTV, iOS (10,0)]
@@ -1338,7 +1327,6 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[Watch (4,0), NoTV, iOS (11,0)]
@@ -1461,7 +1449,6 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[Watch (4,0), NoTV, iOS (11,0)]
@@ -2216,7 +2203,6 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[iOS (10, 2)]
@@ -2527,7 +2513,6 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[iOS (10, 0)]
@@ -3011,7 +2996,6 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[iOS (10, 0)]
@@ -4050,7 +4034,6 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[iOS (10, 0)]
@@ -4112,7 +4095,6 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[iOS (10, 0)]
@@ -5664,7 +5646,6 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[iOS (10, 0)]
@@ -5716,7 +5697,6 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[iOS (10, 0)]
@@ -5762,7 +5742,6 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[iOS (10, 0)]
@@ -5787,7 +5766,6 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[iOS (10, 0)]
@@ -5882,7 +5860,6 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[iOS (10, 0)]
@@ -5930,7 +5907,6 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[iOS (10, 0)]
@@ -6049,7 +6025,6 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[iOS (10, 0)]
@@ -6117,7 +6092,6 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[iOS (10, 0)]
@@ -6171,7 +6145,6 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[iOS (10, 0)]
@@ -6957,7 +6930,6 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[iOS (10, 0)]
@@ -7013,7 +6985,6 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'INStartCallIntent' instead.")]
@@ -7046,7 +7017,6 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'INStartCallIntentHandling' instead.")]
@@ -7081,7 +7051,6 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'INStartCallIntentResponse' instead.")]
@@ -7195,7 +7164,6 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'INStartCallIntent' instead.")]
@@ -7244,7 +7212,6 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'INStartCallIntentResponse' instead.")]
@@ -8924,7 +8891,6 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[Watch (4,0), NoTV, iOS (11,0)]
@@ -8974,7 +8940,6 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[Watch (4,0), iOS (11,0), NoTV]
@@ -9060,7 +9025,6 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[Watch (4,0), NoTV, iOS (11,0)]
@@ -9628,7 +9592,6 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[Watch (4,0), iOS (11,0), NoTV]
@@ -9666,7 +9629,6 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[Watch (4,0), NoTV, iOS (11,0)]
@@ -9987,7 +9949,6 @@ namespace Intents {
 #if XAMCORE_4_0
 	[NoMac]
 #elif MONOMAC
-	[Obsolete ("Unavailable on macOS, will be removed in the future.")]
 	[Obsoleted (PlatformName.MacOSX, 10,0, message: "Unavailable on macOS, will be removed in the future.")]
 #endif
 	[Watch (4,0), NoTV, iOS (11,0)]
