@@ -30,6 +30,8 @@
 
 #if !NET
 #define NATIVE_APPLE_CERTIFICATE
+#else 
+using System.Runtime.Versioning;
 #endif
 
 using System;
@@ -551,19 +553,53 @@ namespace Security {
 		[DllImport (Constants.SecurityLibrary, EntryPoint="SecKeyGetTypeID")]
 		public extern static nint GetTypeID ();
 		
+#if !NET
 		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'SecKeyCreateRandomKey' instead.")]
 		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'SecKeyCreateRandomKey' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use 'SecKeyCreateRandomKey' instead.")]
 		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'SecKeyCreateRandomKey' instead.")] 
 		[Deprecated (PlatformName.WatchOS, 8, 0, message:  "Use 'SecKeyCreateRandomKey' instead.")]
+#else
+		[UnsupportedOSPlatform ("macos12.0")]
+		[UnsupportedOSPlatform ("ios15.0")]
+		[UnsupportedOSPlatform ("tvos15.0")]
+		[UnsupportedOSPlatform ("maccatalyst15.0")]
+#if __MACCATALYST__
+		[Obsolete ("Starting with maccatalyst15.0 API removed, please use 'SecKeyCreateRandomKey' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios15.0 API removed, please use 'SecKeyCreateRandomKey' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos15.0 API removed, please use 'SecKeyCreateRandomKey' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+		[Obsolete ("Starting with macos12.0 API removed, please use 'SecKeyCreateRandomKey' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static SecStatusCode SecKeyGeneratePair (IntPtr dictHandle, out IntPtr pubKey, out IntPtr privKey);
 
 		// TODO: pull all the TypeRefs needed for the NSDictionary
 		
+#if !NET
 		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'CreateRandomKey' instead.")]
 		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'CreateRandomKey' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use 'CreateRandomKey' instead.")]
 		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'CreateRandomKey' instead.")] 
 		[Deprecated (PlatformName.WatchOS, 8, 0, message:  "Use 'CreateRandomKey' instead.")]
+#else
+		[UnsupportedOSPlatform ("macos12.0")]
+		[UnsupportedOSPlatform ("ios15.0")]
+		[UnsupportedOSPlatform ("tvos15.0")]
+		[UnsupportedOSPlatform ("maccatalyst15.0")]
+#if __MACCATALYST__
+		[Obsolete ("Starting with maccatalyst15.0 API removed, please use 'CreateRandomKey' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios15.0 API removed, please use 'CreateRandomKey' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos15.0 API removed, please use 'CreateRandomKey' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+		[Obsolete ("Starting with macos12.0 API removed, please use 'CreateRandomKey' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		public static SecStatusCode GenerateKeyPair (NSDictionary parameters, out SecKey publicKey, out SecKey privateKey)
 		{
 			if (parameters == null)
@@ -633,15 +669,43 @@ namespace Security {
 			}
 		}
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'SecKeyCreateSignature' instead.")]
-		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'SecKeyCreateSignature' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use 'SecKeyCreateSignature' instead.")]
+		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'SecKeyCreateSignature' instead.")] 
 		[Deprecated (PlatformName.WatchOS, 8, 0, message: "Use 'SecKeyCreateSignature' instead.")]
+#else
+		[UnsupportedOSPlatform ("ios15.0")]
+		[UnsupportedOSPlatform ("tvos15.0")]
+		[UnsupportedOSPlatform ("maccatalyst15.0")]
+#if __MACCATALYST__
+		[Obsolete ("Starting with maccatalyst15.0 API removed, please use 'SecKeyCreateSignature' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios15.0 API removed, please use 'SecKeyCreateSignature' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos15.0 API removed, please use 'SecKeyCreateSignature' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static SecStatusCode SecKeyRawSign (IntPtr handle, SecPadding padding, IntPtr dataToSign, nint dataToSignLen, IntPtr sig, ref nint sigLen);
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'CreateSignature' instead.")]
-		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'CreateSignature' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use 'CreateSignature' instead.")]
+		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'CreateSignature' instead.")] 
 		[Deprecated (PlatformName.WatchOS, 8, 0, message: "Use 'CreateSignature' instead.")]
+#else
+		[UnsupportedOSPlatform ("ios15.0")]
+		[UnsupportedOSPlatform ("tvos15.0")]
+		[UnsupportedOSPlatform ("maccatalyst15.0")]
+#if __MACCATALYST__
+		[Obsolete ("Starting with maccatalyst15.0 API removed, please use 'CreateSignature' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios15.0 API removed, please use 'CreateSignature' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos15.0 API removed, please use 'CreateSignature' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		public SecStatusCode RawSign (SecPadding padding, IntPtr dataToSign, int dataToSignLen, out byte [] result)
 		{
 			if (handle == IntPtr.Zero)
@@ -675,15 +739,43 @@ namespace Security {
 			return status;
 		}
 		
+#if !NET
 		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'SecKeyVerifySignature' instead.")]
-		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'SecKeyVerifySignature' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use 'SecKeyVerifySignature' instead.")]
+		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'SecKeyVerifySignature' instead.")] 
 		[Deprecated (PlatformName.WatchOS, 8, 0, message: "Use 'SecKeyVerifySignature' instead.")]
+#else
+		[UnsupportedOSPlatform ("ios15.0")]
+		[UnsupportedOSPlatform ("tvos15.0")]
+		[UnsupportedOSPlatform ("maccatalyst15.0")]
+#if __MACCATALYST__
+		[Obsolete ("Starting with maccatalyst15.0 API removed, please use 'SecKeyVerifySignature' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios15.0 API removed, please use 'SecKeyVerifySignature' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos15.0 API removed, please use 'SecKeyVerifySignature' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static SecStatusCode SecKeyRawVerify (IntPtr handle, SecPadding padding, IntPtr signedData, nint signedLen, IntPtr sign, nint signLen);
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'VerifySignature' instead.")]
-		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'VerifySignature' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use 'VerifySignature' instead.")]
+		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'VerifySignature' instead.")] 
 		[Deprecated (PlatformName.WatchOS, 8, 0, message: "Use 'VerifySignature' instead.")]
+#else
+		[UnsupportedOSPlatform ("ios15.0")]
+		[UnsupportedOSPlatform ("tvos15.0")]
+		[UnsupportedOSPlatform ("maccatalyst15.0")]
+#if __MACCATALYST__
+		[Obsolete ("Starting with maccatalyst15.0 API removed, please use 'VerifySignature' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios15.0 API removed, please use 'VerifySignature' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos15.0 API removed, please use 'VerifySignature' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		public unsafe SecStatusCode RawVerify (SecPadding padding, IntPtr signedData, int signedDataLen, IntPtr signature, int signatureLen)
 		{
 			if (handle == IntPtr.Zero)
@@ -714,15 +806,43 @@ namespace Security {
 			}
 		}
 		
+#if !NET
 		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'SecKeyCreateEncryptedData' instead.")]
 		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'SecKeyCreateEncryptedData' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use 'SecKeyCreateEncryptedData' instead.")]
 		[Deprecated (PlatformName.WatchOS, 8, 0, message: "Use 'SecKeyCreateEncryptedData' instead.")]
+#else
+		[UnsupportedOSPlatform ("ios15.0")]
+		[UnsupportedOSPlatform ("tvos15.0")]
+		[UnsupportedOSPlatform ("maccatalyst15.0")]
+#if __MACCATALYST__
+		[Obsolete ("Starting with maccatalyst15.0 API removed, please use 'SecKeyCreateEncryptedData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios15.0 API removed, please use 'SecKeyCreateEncryptedData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos15.0 API removed, please use 'SecKeyCreateEncryptedData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static SecStatusCode SecKeyEncrypt (IntPtr handle, SecPadding padding, IntPtr plainText, nint plainTextLen, IntPtr cipherText, ref nint cipherTextLengh);
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'CreateEncryptedData' instead.")]
 		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'CreateEncryptedData' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use 'CreateEncryptedData' instead.")]
 		[Deprecated (PlatformName.WatchOS, 8, 0, message: "Use 'CreateEncryptedData' instead.")]
+#else
+		[UnsupportedOSPlatform ("ios15.0")]
+		[UnsupportedOSPlatform ("tvos15.0")]
+		[UnsupportedOSPlatform ("maccatalyst15.0")]
+#if __MACCATALYST__
+		[Obsolete ("Starting with maccatalyst15.0 API removed, please use 'CreateEncryptedData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios15.0 API removed, please use 'CreateEncryptedData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos15.0 API removed, please use 'CreateEncryptedData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		public unsafe SecStatusCode Encrypt (SecPadding padding, IntPtr plainText, nint plainTextLen, IntPtr cipherText, ref nint cipherTextLen)
 		{
 			if (handle == IntPtr.Zero)
@@ -755,15 +875,43 @@ namespace Security {
 			return Encrypt (padding, plainText, cipherText);
 		}
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'SecKeyCreateDecryptedData' instead.")]
 		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'SecKeyCreateDecryptedData' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use 'SecKeyCreateDecryptedData' instead.")]
 		[Deprecated (PlatformName.WatchOS, 8, 0, message: "Use 'SecKeyCreateDecryptedData' instead.")]
+#else
+		[UnsupportedOSPlatform ("ios15.0")]
+		[UnsupportedOSPlatform ("tvos15.0")]
+		[UnsupportedOSPlatform ("maccatalyst15.0")]
+#if __MACCATALYST__
+		[Obsolete ("Starting with maccatalyst15.0 API removed, please use 'SecKeyCreateDecryptedData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios15.0 API removed, please use 'SecKeyCreateDecryptedData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos15.0 API removed, please use 'SecKeyCreateDecryptedData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static SecStatusCode SecKeyDecrypt (IntPtr handle, SecPadding padding, IntPtr cipherTextLen, nint cipherLen, IntPtr plainText, ref nint plainTextLen);
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'CreateDecryptedData' instead.")]
 		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'CreateDecryptedData' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use 'CreateDecryptedData' instead.")]
 		[Deprecated (PlatformName.WatchOS, 8, 0, message: "Use 'CreateDecryptedData' instead.")]
+#else
+		[UnsupportedOSPlatform ("ios15.0")]
+		[UnsupportedOSPlatform ("tvos15.0")]
+		[UnsupportedOSPlatform ("maccatalyst15.0")]
+#if __MACCATALYST__
+		[Obsolete ("Starting with maccatalyst15.0 API removed, please use 'CreateDecryptedData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios15.0 API removed, please use 'CreateDecryptedData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos15.0 API removed, please use 'CreateDecryptedData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		public unsafe SecStatusCode Decrypt (SecPadding padding, IntPtr cipherText, nint cipherTextLen, IntPtr plainText, ref nint plainTextLen)
 		{
 			if (handle == IntPtr.Zero)
