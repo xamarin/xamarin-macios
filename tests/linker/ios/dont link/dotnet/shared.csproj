@@ -25,7 +25,6 @@
     <None Include="Info.plist" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="$(ThisTestDirectory)\Main.cs" />
     <Compile Include="$(ThisTestDirectory)\AppDelegate.cs" />
     <Compile Include="$(ThisTestDirectory)\DontLinkRegressionTests.cs" />
     <Compile Include="$(ThisTestDirectory)\TableViewSourceTest.cs" />
