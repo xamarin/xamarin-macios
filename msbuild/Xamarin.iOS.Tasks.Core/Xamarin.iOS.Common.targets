@@ -789,7 +789,11 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			>
 			<Output TaskParameter="Entries" ItemName="_MonoCrashDumpsInAppBundle" />
 		</GetFileSystemEntries>
-		<Delete Condition="'$(IsMacEnabled)' == 'true'" Files="@(_MonoCrashDumpsInAppBundle)" />
+		<Delete
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			Files="@(_MonoCrashDumpsInAppBundle)"
+		/>
 
 		<Codesign
 			SessionId="$(BuildSessionId)"
