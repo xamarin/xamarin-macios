@@ -1743,7 +1743,7 @@ public partial class Generator : IMemberGatherer {
 		
 			if (pi.ParameterType == TypeManager.System_String_Array){
 				pars.AppendFormat ("IntPtr {0}", safe_name);
-				invoke.AppendFormat ("NSArray.StringArrayFromHandle ({0})", safe_name);
+				invoke.AppendFormat ("CFArray.StringArrayFromHandle ({0})!", safe_name);
 				continue;
 			}
 			if (pi.ParameterType == TypeManager.System_String){
@@ -3087,7 +3087,7 @@ public partial class Generator : IMemberGatherer {
 					else if (propertyType == TypeManager.NSString)
 						print ("return new NSString (value);");
 					else if (propertyType == TypeManager.System_String_Array){
-						print ("return NSArray.StringArrayFromHandle (value);");
+						print ("return CFArray.StringArrayFromHandle (value)!;");
 					} else {
 						Type underlying = propertyType.IsEnum ? TypeManager.GetUnderlyingEnumType (propertyType) : propertyType;
 						string cast = propertyType.IsEnum ? "(" + propertyType.FullName + ") " : "";
@@ -3845,8 +3845,8 @@ public partial class Generator : IMemberGatherer {
 				cast_b += $"NSArray.ArrayFromHandleFunc <{FormatType (bindAsT.DeclaringType, bindAsT)}> (retvalarrtmp, {GetFromBindAsWrapper (minfo, out suffix)})" + suffix;
 				cast_b += "))";
 			} else if (etype == TypeManager.System_String) {
-				cast_a = "NSArray.StringArrayFromHandle (";
-				cast_b = ")";
+				cast_a = "CFArray.StringArrayFromHandle (";
+				cast_b = ")!";
 			} else if (minfo != null && minfo.protocolize) {
 				cast_a = "NSArray.ArrayFromHandle<global::" + etype.Namespace + ".I" + etype.Name + ">(";
 				cast_b = ")";
@@ -4320,7 +4320,7 @@ public partial class Generator : IMemberGatherer {
 					if (isArrayOfNSObject || isArrayOfINativeObjectSubclass) {
 						by_ref_processing.AppendFormat ("{0} = NSArray.ArrayFromHandle<{1}> ({0}Value);\n", pi.Name.GetSafeParamName (), RenderType (elementType.GetElementType ()));
 					} else if (isArrayOfString) {
-						by_ref_processing.AppendFormat ("{0} = NSArray.StringArrayFromHandle ({0}Value);\n", pi.Name.GetSafeParamName ());
+						by_ref_processing.AppendFormat ("{0} = CFArray.StringArrayFromHandle ({0}Value)!;\n", pi.Name.GetSafeParamName ());
 					} else {
 						throw ErrorHelper.CreateError (88, mai.Type, mi);
 					}

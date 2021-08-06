@@ -250,6 +250,7 @@ namespace Foundation {
 	#endif
 		}
 			
+		[Obsolete ("Use of 'CFArray.StringArrayFromHandle' offers better performance.")]
 		static public string [] StringArrayFromHandle (IntPtr handle)
 		{
 			if (handle == IntPtr.Zero)
