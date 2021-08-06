@@ -28,6 +28,10 @@ namespace frameworktest
 		//
 		public override bool FinishedLaunching (UIApplication app, NSDictionary options)
 		{
+#if __MACCATALYST__
+			// Debug spew to track down https://github.com/xamarin/maccore/issues/2414
+			Console.WriteLine ("AppDelegate.FinishedLaunching");
+#endif
 			// create a new window instance based on the screen size
 			window = new UIWindow (UIScreen.MainScreen.Bounds);
 			runner = new TouchRunner (window);
