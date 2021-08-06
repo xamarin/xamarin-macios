@@ -232,6 +232,7 @@ namespace Xharness {
 				var prPath = pr.Replace ('\\', '/');
 				if (!allProjectReferences.TryGetValue (prPath, out var tp)) {
 					tp = new TestProject (pr.Replace ('\\', '/'));
+					tp.TestPlatform = TestPlatform;
 					await tp.CreateCopyAsync (log, processManager, test, rootDirectory, allProjectReferences);
 					allProjectReferences.Add (prPath, tp);
 				}
