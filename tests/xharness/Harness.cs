@@ -357,6 +357,24 @@ namespace Xharness {
 				MacTestProjects.Add (macTestProject);
 			}
 
+			MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "fsharp", "dotnet", "macOS", "fsharp.fsproj"))) {
+				Name = "fsharp",
+				IsDotNetProject = true,
+				TargetFrameworkFlavors = MacFlavors.DotNet,
+				Platform = "AnyCPU",
+				Ignore = !ENABLE_DOTNET,
+				TestPlatform = TestPlatform.Mac,
+			});
+
+			MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "fsharp", "dotnet", "MacCatalyst", "fsharp.fsproj"))) {
+				Name = "fsharp",
+				IsDotNetProject = true,
+				TargetFrameworkFlavors = MacFlavors.MacCatalyst,
+				Platform = "AnyCPU",
+				Ignore = !ENABLE_DOTNET,
+				TestPlatform = TestPlatform.MacCatalyst,
+			});
+
 			var monoImportTestFactory = new BCLTestImportTargetFactory (this);
 			MacTestProjects.AddRange (monoImportTestFactory.GetMacBclTargets ());
 
@@ -481,6 +499,10 @@ namespace Xharness {
 			});
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "link sdk", "dotnet", "iOS", "link sdk.csproj"))) { Configurations = new string [] { "Debug", "Release" }, IsDotNetProject = true, SkipiOSVariation = false, SkiptvOSVariation = true, SkipwatchOSVariation = true, SkipTodayExtensionVariation = true, SkipDeviceVariations = false, SkipiOS32Variation = true, SkipMacCatalystVariation = true, TestPlatform = TestPlatform.iOS_Unified, });
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "link sdk", "dotnet", "tvOS", "link sdk.csproj"))) { Configurations = new string [] { "Debug", "Release" }, IsDotNetProject = true, SkipiOSVariation = true, SkiptvOSVariation = true, SkipwatchOSVariation = true, SkipTodayExtensionVariation = true, SkipDeviceVariations = false, SkipiOS32Variation = true, GenerateVariations = false, TestPlatform = TestPlatform.tvOS, });
+
+			// fsharp
+			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "fsharp", "dotnet", "iOS", "fsharp.fsproj"))) { Name = "fsharp", IsDotNetProject = true, SkipiOSVariation = false, SkiptvOSVariation = true, SkipwatchOSVariation = true, SkipTodayExtensionVariation = true, SkipDeviceVariations = false, SkipiOS32Variation = true, SkipMacCatalystVariation = true, TestPlatform = TestPlatform.iOS_Unified, });
+			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "fsharp", "dotnet", "tvOS", "fsharp.fsproj"))) { Name = "fsharp", IsDotNetProject = true, SkipiOSVariation = true, SkiptvOSVariation = true, SkipwatchOSVariation = true, SkipTodayExtensionVariation = true, SkipDeviceVariations = false, SkipiOS32Variation = true, GenerateVariations = false, TestPlatform = TestPlatform.tvOS, });
 
 			foreach (var flavor in new MonoNativeFlavor [] { MonoNativeFlavor.Compat, MonoNativeFlavor.Unified }) {
 				var monoNativeInfo = new MonoNativeInfo (DevicePlatform.iOS, flavor, RootDirectory, Log);

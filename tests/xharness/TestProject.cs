@@ -108,7 +108,7 @@ namespace Xharness {
 					continue;
 
 				var project = node.Attributes ["Project"].Value;
-				if (project != "../shared.csproj")
+				if (project != "../shared.csproj" && project != "../shared.fsproj")
 					continue;
 
 				if (TestPlatform == TestPlatform.None)
