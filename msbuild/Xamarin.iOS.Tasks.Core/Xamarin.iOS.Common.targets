@@ -778,9 +778,16 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</PropertyGroup>
 
 		<!-- Delete any crash dumps in the app bundle that might exist. Ref: https://github.com/xamarin/xamarin-macios/issues/12320 -->
-		<ItemGroup>
-			<_MonoCrashDumpsInAppBundle Include="$(AppBundleDir)/mono_crash.mem.*" />
-		</ItemGroup>
+		<!-- Use a task to collect the files, so that we get the correct behavior on Windows -->
+		<GetFileSystemEntries
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			DirectoryPath="$(AppBundleDir)"
+			Pattern="mono_crash.mem.*"
+			Recursive="false"
+			>
+			<Output TaskParameter="Entries" ItemName="_MonoCrashDumpsInAppBundle" />
+		</GetFileSystemEntries>
 		<Delete Condition="'$(IsMacEnabled)' == 'true'" Files="@(_MonoCrashDumpsInAppBundle)" />
 
 		<Codesign
