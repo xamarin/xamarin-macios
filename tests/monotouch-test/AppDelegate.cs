@@ -60,6 +60,14 @@ namespace MonoTouchFixtures {
 			return true;
 		}
 
+		static void Main (string[] args)
+		{
+			// Make sure we have at least one reference to the bindings project so that mcs doesn't strip the reference to it.
+			GC.KeepAlive (typeof(Bindings.Test.UltimateMachine));
+
+			UIApplication.Main (args, null, typeof (AppDelegate));
+		}
+
 		public static void PresentModalViewController (UIViewController vc, double duration)
 		{
 			var bckp = window.RootViewController;

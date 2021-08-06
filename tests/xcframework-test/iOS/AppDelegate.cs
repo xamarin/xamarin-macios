@@ -42,6 +42,11 @@ namespace frameworktest
 
 			return true;
 		}
+
+		static void Main (string[] args)
+		{
+			UIApplication.Main (args, null, typeof (AppDelegate));
+		}
 	}
 }
 #endif // !__WATCHOS__

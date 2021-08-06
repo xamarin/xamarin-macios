@@ -21,7 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\iOS\Main.cs" />
     <Compile Include="..\..\iOS\AppDelegate.cs" />
     <Compile Include="..\..\iOS\iOSApiCtorInitTest.cs" />
     <Compile Include="..\..\iOS\iOSApiFieldTest.cs" />
