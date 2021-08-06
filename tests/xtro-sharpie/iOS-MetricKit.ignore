@@ -1,0 +1,2 @@
+# Added for xamcore 4.0
+!incorrect-protocol-member! MXMetricManagerSubscriber::didReceiveMetricPayloads: is OPTIONAL and should NOT be abstract

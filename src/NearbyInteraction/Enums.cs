@@ -13,7 +13,7 @@ using System;
 
 namespace NearbyInteraction {
 
-    [NoWatch, NoTV, NoMac, iOS (14,0)]
+    [Watch (8,0), NoTV, NoMac, iOS (14,0)]
     [ErrorDomain ("NIErrorDomain")]
     [Native]
     public enum NIErrorCode : long
@@ -26,7 +26,7 @@ namespace NearbyInteraction {
         UserDidNotAllow = -5884,
     }
 
-    [NoWatch, NoTV, NoMac, iOS (14,0)]
+    [Watch (8,0), NoTV, NoMac, iOS (14,0)]
     [Native]
     public enum NINearbyObjectRemovalReason : long
     {

@@ -180,6 +180,9 @@ namespace Xamarin.Linker {
 						Application.MarshalObjectiveCExceptions = mode;
 					}
 					break;
+				case "MonoLibrary":
+					Application.MonoLibraries.Add (value);
+					break;
 				case "Optimize":
 					user_optimize_flags = value;
 					break;
@@ -320,6 +323,8 @@ namespace Xamarin.Linker {
 				return AssemblyBuildTarget.DynamicLibrary;
 			} else if (string.Equals (value, "static", StringComparison.OrdinalIgnoreCase)) {
 				return AssemblyBuildTarget.StaticObject;
+			} else if (string.Equals (value, "framework", StringComparison.OrdinalIgnoreCase)) {
+				return AssemblyBuildTarget.Framework;
 			}
 
 			throw new InvalidOperationException ($"Invalid {variableName} '{value}' in {LinkerFile}");
@@ -347,6 +352,9 @@ namespace Xamarin.Linker {
 				Console.WriteLine ($"    LinkMode: {LinkMode}");
 				Console.WriteLine ($"    MarshalManagedExceptions: {Application.MarshalManagedExceptions} (IsDefault: {Application.IsDefaultMarshalManagedExceptionMode})");
 				Console.WriteLine ($"    MarshalObjectiveCExceptions: {Application.MarshalObjectiveCExceptions}");
+				Console.WriteLine ($"    {Application.MonoLibraries.Count} mono libraries:");
+				foreach (var lib in Application.MonoLibraries.OrderBy (v => v))
+					Console.WriteLine ($"        {lib}");
 				Console.WriteLine ($"    Optimize: {user_optimize_flags} => {Application.Optimizations}");
 				Console.WriteLine ($"    PartialStaticRegistrarLibrary: {PartialStaticRegistrarLibrary}");
 				Console.WriteLine ($"    Platform: {Platform}");

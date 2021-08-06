@@ -1386,6 +1386,7 @@ namespace Foundation
 		[Export ("rightExpression")]
 		NSExpression RightExpression { get; }
 
+		[NullAllowed]
 		[Export ("customSelector")]
 		Selector CustomSelector { get; }
 
@@ -5036,6 +5037,7 @@ namespace Foundation
 		[Export ("ascending")]
 		bool Ascending { get; }
 
+		[NullAllowed]
 		[Export ("selector")]
 		Selector Selector { get; }
 

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This file is not processed by xharness, and contains logic shared by all our test suites -->
+<Project>
+	<!-- Logic for iOS -->
+	<PropertyGroup Condition="$(TargetFramework.EndsWith('-ios'))">
+		<AssetTargetFallback>xamarinios10;$(AssetTargetFallback)</AssetTargetFallback>
+	</PropertyGroup>
+	<ItemGroup Condition="'$(_PlatformName)' == 'iOS'">
+		<PackageReference Include="MonoTouch.Dialog" Version="2.0.0-pre1" />
+	</ItemGroup>
+
+	<!-- Logic for tvOS -->
+	<PropertyGroup Condition="$(TargetFramework.EndsWith('-tvos'))">
+		<DefineConstants>$(DefineConstants);XAMCORE_3_0</DefineConstants>
+		<AssetTargetFallback>xamarintvos10;$(AssetTargetFallback)</AssetTargetFallback>
+	</PropertyGroup>
+	<ItemGroup Condition="$(TargetFramework.EndsWith('-tvos'))">
+		<PackageReference Include="MonoTouch.Dialog" Version="2.0.0-pre1" />
+	</ItemGroup>
+
+	<!-- Logic for macOS -->
+	<PropertyGroup Condition="$(TargetFramework.EndsWith('-macos'))">
+		<DefineConstants>$(DefineConstants);MONOMAC</DefineConstants>
+	</PropertyGroup>
+
+	<!-- Logic for Mac Catalyst -->
+	<PropertyGroup Condition="$(TargetFramework.EndsWith('-maccatalyst'))">
+		<AssetTargetFallback>xamarinios10;$(AssetTargetFallback)</AssetTargetFallback>
+	</PropertyGroup>
+
+	<!-- Logic for all test suites -->
+</Project>

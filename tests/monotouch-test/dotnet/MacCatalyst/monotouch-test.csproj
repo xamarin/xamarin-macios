@@ -2,17 +2,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net6.0-maccatalyst</TargetFramework>
-    <DefineConstants Condition="'$(Configuration)' == 'Debug'">$(DefineConstants);DYNAMIC_REGISTRAR</DefineConstants> <!-- this can't be in shared.csproj, because xharness needs to remove the DYNAMIC_REGISTRAR define for certain test cases -->
-    <AssetTargetFallback>xamarinios10;$(AssetTargetFallback)</AssetTargetFallback>
-    <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)\..\..\..'))</RootTestsDirectory> <!-- this can't be in shared.csproj, because xharness won't see it there -->
-    <AssemblyName>monotouchtest</AssemblyName> <!-- this can't be in shared.csproj, because xharness won't see it there -->
+    <DefineConstants Condition="'$(Configuration)' == 'Debug'">$(DefineConstants);DYNAMIC_REGISTRAR</DefineConstants>
   </PropertyGroup>
+
+  <!-- Imports of the form '../shared.csproj' will be inlined by xharness -->
+  <Import Project="../shared.csproj" />
 
   <ItemGroup>
     <!-- this empty item group is here for xharness -->
   </ItemGroup>
-
-  <Import Project="$(RootTestsDirectory)/monotouch-test/dotnet/shared.csproj" />
 
   <PropertyGroup>
     <!-- This must be after the place where xharness injects the RuntimeIdentifier property -->

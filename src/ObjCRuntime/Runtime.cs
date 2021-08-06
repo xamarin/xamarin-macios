@@ -508,7 +508,7 @@ namespace ObjCRuntime {
 		{
 			if (isInnerException)
 				sb.AppendLine (" --- inner exception ---");
-			sb.AppendLine ($"{exc.Message} ({exc.GetType ().FullName})");
+			sb.Append (exc.Message).Append (" (").Append (exc.GetType ().FullName).AppendLine (")");
 			var trace = exc.StackTrace;
 			if (!string.IsNullOrEmpty (trace))
 				sb.AppendLine (trace);
@@ -526,7 +526,7 @@ namespace ObjCRuntime {
 					exc = exc.InnerException;
 				} while (counter < 10 && exc != null);
 			} catch (Exception exception) {
-				str.Append ($"Failed to print exception: {exception}");
+				str.Append ("Failed to print exception: ").Append (exception);
 			}
 
 			return Marshal.StringToHGlobalAuto (str.ToString ());
@@ -560,8 +560,8 @@ namespace ObjCRuntime {
 		// This method will register all assemblies referenced by the entry assembly.
 		// For XM it will also register all assemblies loaded in the current appdomain.
 		//
-		// NOTE: the (XI) linker remove this method for device builds (RemoveCode.cs) and as such cannot be renamed
-		// without updating mtouch
+		// NOTE: the linker will remove this method when the dynamic registrar has been optimized away (RemoveCode.cs)
+		// and as such cannot be renamed without updating the linker
 		internal static void RegisterEntryAssembly (Assembly entry_assembly)
 		{
 			var assemblies = new List<Assembly> ();

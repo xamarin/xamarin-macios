@@ -3,7 +3,6 @@
 open System
 open System.Reflection
 
-open UIKit
 open Foundation
 
 open NUnit.Framework

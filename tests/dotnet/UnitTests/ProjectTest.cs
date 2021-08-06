@@ -590,6 +590,32 @@ namespace Xamarin.Tests {
 			Assert.That (createdump, Does.Exist, "createdump existence");
 		}
 
+		[Test]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
+		public void AbsoluteOutputPath (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			var project = "MySimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var outputPath = Cache.CreateTemporaryDirectory ();
+			var project_path = GetProjectPath (project, platform: platform);
+			Clean (project_path);
+			var properties = new Dictionary<string, string> (verbosity);
+			var multiRid = runtimeIdentifiers.IndexOf (';') >= 0 ? "RuntimeIdentifiers" : "RuntimeIdentifier";
+			properties [multiRid] = runtimeIdentifiers;
+			properties ["OutputPath"] = outputPath + "/";
+			var rv = DotNet.AssertBuild (project_path, properties);
+
+			AssertThatLinkerExecuted (rv);
+
+			var appPathRuntimeIdentifier = runtimeIdentifiers.IndexOf (';') >= 0 ? "" : runtimeIdentifiers;
+			var appPath = Path.Combine (outputPath, project + ".app");
+			var appExecutable = Path.Combine (appPath, "Contents", "MacOS", Path.GetFileNameWithoutExtension (project_path));
+			Assert.That (appExecutable, Does.Exist, "There is an executable");
+			if (!(runtimeIdentifiers == "osx-arm64" && RuntimeInformation.ProcessArchitecture == Architecture.X64))
+				ExecuteWithMagicWordAndAssert (appExecutable);
+		}
+
 		void ExecuteWithMagicWordAndAssert (string executable)
 		{
 			var magicWord = Guid.NewGuid ().ToString ();
