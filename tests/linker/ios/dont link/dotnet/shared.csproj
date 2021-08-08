@@ -7,8 +7,11 @@
     <RootNamespace>dontlink</RootNamespace>
     <AssemblyName>dont link</AssemblyName>
     <MtouchLink>None</MtouchLink>
+    <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\..\..'))</RootTestsDirectory>
     <ThisTestDirectory>$(RootTestsDirectory)\linker\ios\dont link</ThisTestDirectory>
   </PropertyGroup>
+
+  <Import Project="$(RootTestsDirectory)/common/shared-dotnet.csproj" />
 
   <ItemGroup>
     <PackageReference Include="NUnitLite" Version="3.12.0" />
@@ -22,7 +25,6 @@
     <None Include="Info.plist" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="$(ThisTestDirectory)\Main.cs" />
     <Compile Include="$(ThisTestDirectory)\AppDelegate.cs" />
     <Compile Include="$(ThisTestDirectory)\DontLinkRegressionTests.cs" />
     <Compile Include="$(ThisTestDirectory)\TableViewSourceTest.cs" />

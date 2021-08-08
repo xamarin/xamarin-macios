@@ -1,4 +1,3 @@
-#if IOS
 using System;
 
 using CoreFoundation;
@@ -9,11 +8,10 @@ namespace MetricKit {
 
 	public partial class MXMetricManager {
 
-		public static OSLog MakeLogHandle (NSString category)
+		public static CoreFoundation.OSLog MakeLogHandle (NSString category)
 		{
 			var ptr = _MakeLogHandle (category);
-			return new OSLog (ptr, owns: true);
+			return new CoreFoundation.OSLog (ptr, owns: true);
 		}
 	}
 }
-#endif

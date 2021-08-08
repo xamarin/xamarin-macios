@@ -324,7 +324,7 @@ namespace Security {
 			string[] results = null;
 			IntPtr emails;
 			if (SecCertificateCopyEmailAddresses (handle, out emails) == 0) {
-				results = NSArray.StringArrayFromHandle (emails);
+				results = CFArray.StringArrayFromHandle (emails);
 				if (emails != IntPtr.Zero)
 					CFObject.CFRelease (emails);
 			}
@@ -530,7 +530,6 @@ namespace Security {
 		}
 	}
 
-#if !COREBUILD
 	public partial class SecKey : INativeObject, IDisposable {
 		internal IntPtr handle;
 		
@@ -548,6 +547,7 @@ namespace Security {
 				CFObject.CFRetain (handle);
 		}
 
+#if !COREBUILD
 		[DllImport (Constants.SecurityLibrary, EntryPoint="SecKeyGetTypeID")]
 		public extern static nint GetTypeID ();
 		
@@ -1038,6 +1038,7 @@ namespace Security {
 			return GetKeyExchangeResult (algorithm, publicKey, parameters?.Dictionary, out error);
 		}
 
+#endif
 		~SecKey ()
 		{
 			Dispose (false);
@@ -1063,5 +1064,4 @@ namespace Security {
 			}
 		}
 	}
-#endif
 }

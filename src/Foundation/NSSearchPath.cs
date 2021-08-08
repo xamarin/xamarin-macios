@@ -29,6 +29,7 @@
 using System;
 using System.Runtime.InteropServices;
 
+using CoreFoundation;
 using ObjCRuntime;
 
 namespace Foundation
@@ -37,7 +38,7 @@ namespace Foundation
 	{
 		public static string[] GetDirectories (NSSearchPathDirectory directory, NSSearchPathDomain domainMask, bool expandTilde = true)
 		{
-			return NSArray.StringArrayFromHandle (NSSearchPathForDirectoriesInDomains ((nuint)(ulong)directory, (nuint)(ulong)domainMask, expandTilde));
+			return CFArray.StringArrayFromHandle (NSSearchPathForDirectoriesInDomains ((nuint)(ulong)directory, (nuint)(ulong)domainMask, expandTilde));
 		}
 
 		[DllImport (Constants.FoundationLibrary)]

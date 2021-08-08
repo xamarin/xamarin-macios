@@ -210,7 +210,7 @@ namespace Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string [] Keywords {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.KeywordsKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.KeywordsKey));
 			}
 		}
 
@@ -224,28 +224,28 @@ namespace Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string [] Authors {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.AuthorsKey)); 
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.AuthorsKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string [] Editors {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.EditorsKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.EditorsKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string [] Participants {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.ParticipantsKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.ParticipantsKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string [] Projects {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.ProjectsKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.ProjectsKey));
 			}
 		}
 
@@ -259,7 +259,7 @@ namespace Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string [] WhereFroms {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.WhereFromsKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.WhereFromsKey));
 			}
 		}
 
@@ -315,7 +315,7 @@ namespace Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string [] ContactKeywords {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.ContactKeywordsKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.ContactKeywordsKey));
 			}
 		}
 
@@ -406,7 +406,7 @@ namespace Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string [] LayerNames {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.LayerNamesKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.LayerNamesKey));
 			}
 		}
 
@@ -637,14 +637,14 @@ namespace Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string [] Codecs {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.CodecsKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.CodecsKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string [] MediaTypes {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.MediaTypesKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.MediaTypesKey));
 			}
 		}
 
@@ -875,13 +875,14 @@ namespace Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string [] Organizations {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.OrganizationsKey));			}
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.OrganizationsKey));
+			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string [] Languages {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.LanguagesKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.LanguagesKey));
 			}
 		}
 
@@ -895,21 +896,21 @@ namespace Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string [] Publishers {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.PublishersKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.PublishersKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string [] Contributors {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.ContributorsKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.ContributorsKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string [] Coverage {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.CoverageKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.CoverageKey));
 			}
 		}
 
@@ -944,7 +945,7 @@ namespace Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string [] Audiences {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.AudiencesKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.AudiencesKey));
 			}
 		}
 
@@ -986,7 +987,7 @@ namespace Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string [] EncodingApplications {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.EncodingApplicationsKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.EncodingApplicationsKey));
 			}
 		}
 
@@ -1007,21 +1008,21 @@ namespace Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string [] PhoneNumbers {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.PhoneNumbersKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.PhoneNumbersKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string [] EmailAddresses {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.EmailAddressesKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.EmailAddressesKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string [] InstantMessageAddresses {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.InstantMessageAddressesKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.InstantMessageAddressesKey));
 			}
 		}
 
@@ -1035,7 +1036,7 @@ namespace Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string [] Recipients {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.RecipientsKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.RecipientsKey));
 			}
 		}
 
@@ -1049,7 +1050,7 @@ namespace Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string [] Fonts {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.FontsKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.FontsKey));
 			}
 		}
 
@@ -1077,7 +1078,7 @@ namespace Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string [] AppleLoopDescriptors {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.AppleLoopDescriptorsKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.AppleLoopDescriptorsKey));
 			}
 		}
 
@@ -1133,7 +1134,7 @@ namespace Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string [] Performers {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.PerformersKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.PerformersKey));
 			}
 		}
 
@@ -1154,28 +1155,28 @@ namespace Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string [] AuthorEmailAddresses {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.AuthorEmailAddressesKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.AuthorEmailAddressesKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string [] RecipientEmailAddresses {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.RecipientEmailAddressesKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.RecipientEmailAddressesKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string [] AuthorAddresses {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.AuthorAddressesKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.AuthorAddressesKey));
 			}
 		}
 
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string [] RecipientAddresses {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.RecipientAddressesKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.RecipientAddressesKey));
 			}
 		}
 
@@ -1189,7 +1190,7 @@ namespace Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string [] ExecutableArchitectures {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.ExecutableArchitecturesKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.ExecutableArchitecturesKey));
 			}
 		}
 
@@ -1203,7 +1204,7 @@ namespace Foundation {
 		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
 		public string [] ApplicationCategories {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.ApplicationCategoriesKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.ApplicationCategoriesKey));
 			}
 		}
 

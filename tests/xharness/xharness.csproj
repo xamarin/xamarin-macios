@@ -178,6 +178,10 @@
     <Compile Include="TestTargetExtensions.cs" />
     <Compile Include="XmlDocumentExtensions.cs" />
     <Compile Include="Targets\MacCatalystTarget.cs" />
+    <Compile Include="ProjectFileExtensions.cs" />
+    <Compile Include="..\..\tools\common\StringUtils.cs">
+      <Link>StringUtils.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\tools\common\SdkVersions.cs">

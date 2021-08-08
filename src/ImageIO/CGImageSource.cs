@@ -124,7 +124,7 @@ namespace ImageIO {
 		public static string [] TypeIdentifiers {
 			get {
 				var handle = CGImageSourceCopyTypeIdentifiers ();
-				var array = NSArray.StringArrayFromHandle (handle);
+				var array = CFArray.StringArrayFromHandle (handle);
 				CFObject.CFRelease (handle);
 				return array;
 			}

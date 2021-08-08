@@ -10,6 +10,7 @@
 using ObjCRuntime;
 using Foundation;
 using CoreGraphics;
+using CoreFoundation;
 using CoreLocation;
 using UIKit;
 using MediaPlayer;
@@ -59,10 +60,10 @@ namespace AssetsLibrary {
 			}
 		}
 
-		public string [] Representations {
+		public string[] Representations {
 			get {
 				var k = ValueForProperty (_PropertyRepresentations);
-				return NSArray.StringArrayFromHandle (k.Handle);
+				return CFArray.StringArrayFromHandle (k.Handle)!;
 			}
 		}
 
