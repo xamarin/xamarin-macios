@@ -1727,6 +1727,6 @@
 		<value>Nieprawidłowe kodowanie typu dla parametru.</value>
 	</data>
   <data name="MX8041" xml:space="preserve">
-		<value>Unable to create an instance of the type {0}.</value>
+		<value>Nie można utworzyć wystąpienia typu {0}.</value>
 	</data>
 </root>
