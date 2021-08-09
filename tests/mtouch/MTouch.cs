@@ -1386,7 +1386,7 @@ public class B : A {}
 					app.WarnAsError = new int [] { 113 };
 					app.AotArguments = "dwarfdebug"; // doesn't matter exactly what, just that it's different from the extension.
 					app.AssertExecuteFailure (MTouchAction.BuildDev, "build app");
-					app.AssertError (113, "Native code sharing has been disabled for the extension 'testServiceExtension' because the arguments to the AOT compiler are different between the container app (dwarfdebug,static,asmonly,direct-icalls,) and the extension (static,asmonly,direct-icalls,).");
+					app.AssertError (113, "Native code sharing has been disabled for the extension 'testServiceExtension' because the arguments to the AOT compiler are different between the container app (dwarfdebug) and the extension ().");
 				}
 			}
 		}
