@@ -5,6 +5,7 @@ using AppKit;
 
 using System;
 using System.ComponentModel;
+using UniformTypeIdentifiers;
 
 namespace QuickLookUI {
 
