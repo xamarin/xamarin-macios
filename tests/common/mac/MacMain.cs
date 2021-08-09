@@ -20,7 +20,7 @@ namespace Xamarin.Mac.Tests {
 				// Wait for 3 seconds
 				Thread.Sleep (3000);
 				// If we're still here, then something went wrong. Let's exit.
-				Console.WriteLine ($"The process didn't exist within 3s of returning from Main. Assuming something is deadlocked, and will now exit immediately and forcefully (with exit code {exit_code}).");
+				Console.WriteLine ($"The process didn't exit within 3s of returning from Main. Assuming something is deadlocked, and will now exit immediately and forcefully (with exit code {exit_code}).");
 				_exit (exit_code);
 			}) {
 				Name = "Exit monitor",
