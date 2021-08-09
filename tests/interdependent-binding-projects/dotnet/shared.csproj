@@ -34,5 +34,6 @@
 
   <ItemGroup>
     <Compile Include="$(ThisTestDirectory)\Main.cs" />
+    <Compile Include="$(RootTestsDirectory)\common\mac\MacMain.cs" Condition="$(TargetFramework.EndsWith('-macos'))" Link="MacMain.cs" />
   </ItemGroup>
 </Project>
