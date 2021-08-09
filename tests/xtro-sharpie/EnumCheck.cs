@@ -25,6 +25,9 @@ namespace Extrospection {
 			if (type.IsObsolete ())
 				return;
 
+			if (AttributeHelpers.HasAnyObsoleted (type))
+				return;
+
 			var name = type.Name;
 			// e.g. WatchKit.WKErrorCode and WebKit.WKErrorCode :-(
 			if (!enums.TryGetValue (name, out var td))
