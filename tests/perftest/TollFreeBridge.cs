@@ -89,5 +89,36 @@ namespace PerfTest {
 			var p = CFString.CreateNative (value);
 			CFString.ReleaseNative (p);
 		}
+
+		public IEnumerable<object []> ArraysOfStrings ()
+		{
+			yield return new object [] { "empty", new NSArray () };
+			yield return new object [] { "few", NSArray.FromStrings ("Bonjour", "Québec", "汉语 漢語", "I'm feeling 🤪 tonight.") };
+			yield return new object [] { "mutable", new NSMutableArray<NSString> (new NSString ("Québec"), new NSString ("汉语 漢語")) };
+			var large = new NSMutableArray ();
+			for (int i = 0; i < 4096; i++)
+				large.Add (new NSString (new string ('#', i) ));
+			yield return new object [] { "large_mutable", large };
+		}
+
+		/*
+		 * Measure time required to create a managed `string[]` array from a native one using `CFArray.StringArrayFromHandle`
+		 */
+		[Benchmark]
+		[ArgumentsSource (nameof (ArraysOfStrings))]
+		public void CFArray_StringArrayFromHandle (string name, NSArray value)
+		{
+			CFArray.StringArrayFromHandle (value.Handle);
+		}
+
+		/*
+		 * Measure time required to create a managed `string[]` array from a native one using `CFArray.StringArrayFromHandle`
+		 */
+		[Benchmark]
+		[ArgumentsSource (nameof (ArraysOfStrings))]
+		public void NSArray_StringArrayFromHandle (string name, NSArray value)
+		{
+			NSArray.StringArrayFromHandle (value.Handle);
+		}
     }
 }

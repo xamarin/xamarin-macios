@@ -71,7 +71,7 @@ namespace AudioUnit
 				var array = GetNativeValue<NSArray> (userClientK);
 				if (array == null )
 					return null;
-				return NSArray.StringArrayFromHandle (array.Handle);
+				return CFArray.StringArrayFromHandle (array.Handle);
 			} 
 			set {
 				if (value == null)
@@ -86,7 +86,7 @@ namespace AudioUnit
 				var array = GetNativeValue<NSArray> (globalNameK);
 				if (array == null)
 					return null;
-				return NSArray.StringArrayFromHandle (array.Handle);
+				return CFArray.StringArrayFromHandle (array.Handle);
 			} 
 			set {
 				if (value == null)
@@ -212,7 +212,7 @@ namespace AudioUnit
 				var array = GetNativeValue<NSArray> (tagsK);
 				if (array == null)
 					return null;
-				return NSArray.StringArrayFromHandle (array.Handle);
+				return CFArray.StringArrayFromHandle (array.Handle);
 			} 
 			set {
 				if (value == null)
