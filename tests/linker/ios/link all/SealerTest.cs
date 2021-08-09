@@ -36,6 +36,17 @@ namespace Linker.Sealer {
 	[Preserve (AllMembers = true)]
 	public class SealerTest {
 
+#if NET
+		[SetUp]
+		public void SetUp ()
+		{
+			// XML serialization mechanism is controlled by RuntimeFeature.IsDynamicCodeSupported
+			// which will be true for simulator / JIT builds
+			// so the optimization is disabled unless AOT is used
+			TestRuntime.AssertDevice ();
+		}
+#endif
+
 		[Test]
 		public void Sealed ()
 		{
