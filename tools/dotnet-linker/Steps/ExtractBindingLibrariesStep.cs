@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Xamarin.Linker {
 
@@ -55,6 +56,47 @@ namespace Xamarin.Linker {
 				}
 			}
 			Configuration.WriteOutputForMSBuild ("_BindingLibraryFrameworks", frameworks);
+
+			var frameworkFilesToPublish = new List<MSBuildItem> ();
+			foreach (var asm in Configuration.Target.Assemblies) {
+				var fwks = new HashSet<string> ();
+				fwks.UnionWith (asm.Frameworks);
+				fwks.UnionWith (asm.WeakFrameworks);
+
+				// Only keep frameworks that point to a location on disk
+				fwks.RemoveWhere (v => !v.EndsWith (".framework", StringComparison.Ordinal));
+
+				foreach (var fwk in fwks) {
+					foreach (var file in Directory.GetFiles (fwk, "*", SearchOption.AllDirectories)) {
+						var item = new MSBuildItem {
+							Include = file,
+							Metadata = new Dictionary<string, string> {
+								{ "_FrameworkIdentity", fwk },
+								{ "_FrameworkPath", Path.Combine (Configuration.RelativeAppBundlePath, Configuration.Application.RelativeFrameworksPath, Path.GetFileName (fwk)) },
+							},
+						};
+						frameworkFilesToPublish.Add (item);
+					}
+				}
+			}
+			Configuration.WriteOutputForMSBuild ("_FrameworkFilesToPublish", frameworkFilesToPublish);
+
+			var dynamicLibraryToPublish = new List<MSBuildItem> ();
+			foreach (var asm in Configuration.Target.Assemblies) {
+				foreach (var arg in asm.LinkWith) {
+					if (!arg.EndsWith (".dylib", StringComparison.OrdinalIgnoreCase))
+						continue;
+
+					var item = new MSBuildItem {
+						Include = arg,
+						Metadata = new Dictionary<string, string> {
+							{ "RelativePath", Path.Combine (Configuration.RelativeAppBundlePath, Configuration.Application.RelativeDylibPublishPath, Path.GetFileName (arg)) },
+						},
+					};
+					dynamicLibraryToPublish.Add (item);
+				}
+			}
+			Configuration.WriteOutputForMSBuild ("_DynamicLibraryToPublish", dynamicLibraryToPublish);
 		}
 	}
 }
