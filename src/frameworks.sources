@@ -1972,6 +1972,7 @@ MAC_FRAMEWORKS =            \
 	JavaScriptCore          \
 	LinkPresentation        \
 	LocalAuthentication     \
+	MailKit                 \
 	MapKit                  \
 	MediaAccessibility      \
 	MediaLibrary 		\
@@ -2256,6 +2257,7 @@ MACCATALYST_FRAMEWORKS = \
 	JavaScriptCore \
 	LinkPresentation \
 	LocalAuthentication \
+	MailKit \
 	MapKit \
 	MediaAccessibility \
 	MediaPlayer \
