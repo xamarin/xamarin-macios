@@ -49,6 +49,34 @@ namespace MonoTouchFixtures.Foundation {
 			}
 		}
 
+		// https://github.com/xamarin/maccore/issues/2443
+		// This is a test almost identical to Bug17793, except that it's purely a timer test (it doesn't call "Func").
+		[Test]
+		public void Bug2443 ()
+		{
+			var evt = new CountdownEvent (2);
+
+			NSTimer timer = null;
+
+			using (timer = NSTimer.CreateRepeatingTimer (0.1f, delegate {
+				if (evt.Signal ())
+					timer.Invalidate ();
+			})) {
+
+				var thread = new Thread (() => {
+					NSRunLoop.Current.AddTimer (timer, NSRunLoopMode.Default);
+					NSRunLoop.Current.RunUntil (NSRunLoopMode.Default, NSDate.Now.AddSeconds (5));
+				})
+				{
+					IsBackground = true,
+				};
+				thread.Start ();
+
+				Assert.IsTrue (evt.Wait (TimeSpan.FromSeconds (5)), "Not signalled twice in 5s");
+				thread.Join ();
+			}
+		}
+
 		void Func (double m00, double m01, double m02, double m03, double m10, double m11, double m12)
 		{
 		}
