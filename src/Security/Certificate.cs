@@ -324,7 +324,7 @@ namespace Security {
 			string[] results = null;
 			IntPtr emails;
 			if (SecCertificateCopyEmailAddresses (handle, out emails) == 0) {
-				results = NSArray.StringArrayFromHandle (emails);
+				results = CFArray.StringArrayFromHandle (emails);
 				if (emails != IntPtr.Zero)
 					CFObject.CFRelease (emails);
 			}

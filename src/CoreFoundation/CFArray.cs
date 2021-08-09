@@ -128,6 +128,20 @@ namespace CoreFoundation {
 		extern static CFArrayRef CFArrayCreateCopy (CFAllocatorRef allocator, CFArrayRef theArray);
 
 		internal CFArray Clone () => new CFArray (CFArrayCreateCopy (IntPtr.Zero, GetCheckedHandle ()), true);
+
+		// identical signature to NSArray API
+		static public string?[]? StringArrayFromHandle (IntPtr handle)
+		{
+			if (handle == IntPtr.Zero)
+				return null;
+
+			var c = CFArrayGetCount (handle);
+			string?[] ret = new string [c];
+
+			for (nint i = 0; i < c; i++)
+				ret [i] = CFString.FromHandle (CFArrayGetValueAtIndex (handle, i));
+			return ret;
+		}
 	}
 }
 

@@ -170,7 +170,6 @@
     <None Include="extra-linker-defs.xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
     <Compile Include="LinkSdkRegressionTest.cs" />
     <Compile Include="Bug1820Test.cs" />

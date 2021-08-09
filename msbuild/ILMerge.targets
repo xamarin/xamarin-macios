@@ -84,6 +84,10 @@
     <Delete Files="$(IntermediateOutputPath)ilrepack.txt" Condition="'$(ExitCode)' != '0'" />
     <Touch AlwaysCreate="true" Files="$(IntermediateOutputPath)ilrepack.txt" Condition="'$(ExitCode)' == '0'" />
     <Error Text="$(ILRepackOutput)" Condition="'$(ExitCode)' != '0' And '$(ContinueOnError)' != 'true'" />
-    <Delete Files="@(MergedAssemblies -&gt; '$(MSBuildProjectDirectory)\$(OutputPath)%(Filename)%(Extension)')" Condition="Exists('$(MSBuildProjectDirectory)\$(OutputPath)%(Filename)%(Extension)')" />
+    <ItemGroup>
+      <MergedAssembliesToRemove Include="@(MergedAssemblies)" />
+      <MergedAssembliesToRemove Remove="@(ReferenceToPreserve)" />
+    </ItemGroup>
+    <Delete Files="@(MergedAssembliesToRemove -&gt; '$(MSBuildProjectDirectory)\$(OutputPath)%(Filename)%(Extension)')" Condition="Exists('$(MSBuildProjectDirectory)\$(OutputPath)%(Filename)%(Extension)')" />
   </Target>
 </Project>

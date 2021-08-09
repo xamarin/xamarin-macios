@@ -159,7 +159,7 @@ namespace PrintCore {
 				return code;
 			}
 
-			printerList = NSArray.StringArrayFromHandle (array);
+			printerList = CFArray.StringArrayFromHandle (array);
 			CFObject.CFRelease (array);
 			if (printerHandle != IntPtr.Zero){
 				// Now get the printer, we do not own it, so retain.
@@ -617,7 +617,7 @@ namespace PrintCore {
 				mimeTypes = null;
 				return code;
 			}
-			mimeTypes = NSArray.StringArrayFromHandle (m);
+			mimeTypes = CFArray.StringArrayFromHandle (m);
 			return PMStatusCode.Ok;
 		}
 

@@ -34,7 +34,6 @@
     <LinkDescription Include="$(RootTestsDirectory)\linker\ios\link sdk\dotnet\extra-linker-defs.xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="$(ThisTestDirectory)\Main.cs" />
     <Compile Include="$(ThisTestDirectory)\AppDelegate.cs" />
     <Compile Include="$(ThisTestDirectory)\LinkSdkRegressionTest.cs" />
     <Compile Include="$(ThisTestDirectory)\Bug1820Test.cs" />

@@ -90,6 +90,12 @@ enum XamarinNativeLinkMode : int {
 	XamarinNativeLinkModeFramework,
 };
 
+enum XamarinTriState : int {
+	XamarinTriStateNone,
+	XamarinTriStateEnabled,
+	XamarinTriStateDisabled,
+};
+
 extern bool mono_use_llvm; // this is defined inside mono
 
 #if DEBUG

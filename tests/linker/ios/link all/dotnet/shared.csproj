@@ -39,7 +39,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="$(ThisTestDirectory)\Main.cs" />
     <Compile Include="$(ThisTestDirectory)\AppDelegate.cs" />
     <Compile Include="$(ThisTestDirectory)\LinkAllTest.cs" />
     <Compile Include="$(ThisTestDirectory)\ClassLayoutTest.cs" />
