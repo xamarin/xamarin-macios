@@ -14,7 +14,7 @@ type MainClass =
     static member ThreadMonitor(obj : System.Object) =
         let exit_code = obj :?> int
         Thread.Sleep (3000)
-        Console.WriteLine ($"The process didn't exist within 3s of returning from Main. Assuming something is deadlocked, and will now exit immediately and forcefully (with exit code {exit_code}).")
+        Console.WriteLine ($"The process didn't exit within 3s of returning from Main. Assuming something is deadlocked, and will now exit immediately and forcefully (with exit code {exit_code}).")
         PInvokes._exit (exit_code)
 
     static member asyncMainTask (args: string[]) : Async<int> =

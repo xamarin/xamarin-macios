@@ -24,6 +24,7 @@
 using System;
 using System.Runtime.InteropServices;
 
+using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
@@ -218,7 +219,7 @@ namespace CoreServices
 			if (contentType == null)
 				throw new ArgumentNullException (nameof (contentType));
 
-			return NSArray.StringArrayFromHandle (
+			return CFArray.StringArrayFromHandle (
 				LSCopyAllRoleHandlersForContentType (new NSString (contentType).Handle, roles)
 			);
 		}
@@ -266,7 +267,7 @@ namespace CoreServices
 			if (urlScheme == null)
 				throw new ArgumentNullException (nameof (urlScheme));
 
-			return NSArray.StringArrayFromHandle (
+			return CFArray.StringArrayFromHandle (
 				LSCopyAllHandlersForURLScheme (new NSString (urlScheme).Handle)
 			);
 		}

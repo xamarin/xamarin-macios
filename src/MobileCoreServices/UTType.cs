@@ -100,7 +100,7 @@ namespace MobileCoreServices {
 			var a = NSString.CreateNative (tagClass);
 			var b = NSString.CreateNative (tag);
 			var c = NSString.CreateNative (conformingToUti);
-			var ret = NSArray.StringArrayFromHandle (UTTypeCreateAllIdentifiersForTag (a, b, c));
+			var ret = CFArray.StringArrayFromHandle (UTTypeCreateAllIdentifiersForTag (a, b, c));
 			NSString.ReleaseNative (a);
 			NSString.ReleaseNative (b);
 			NSString.ReleaseNative (c);
@@ -125,7 +125,7 @@ namespace MobileCoreServices {
 
 			var a = NSString.CreateNative (uti);
 			var b = NSString.CreateNative (tagClass);
-			var ret = NSArray.StringArrayFromHandle (UTTypeCopyAllTagsWithClass (a, b));
+			var ret = CFArray.StringArrayFromHandle (UTTypeCopyAllTagsWithClass (a, b));
 			NSString.ReleaseNative (a);
 			NSString.ReleaseNative (b);
 			return ret;
