@@ -81,6 +81,7 @@ namespace ShazamKit {
 		bool Write (NSUrl url, [NullAllowed] out NSError error);
 
 		[Static]
+		[Unavailable (PlatformName.Swift)]
 		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0)]
 		[Export ("new")]
 		[return: Release]
