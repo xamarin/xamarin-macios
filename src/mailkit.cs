@@ -3,6 +3,7 @@ using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
 using AVFoundation;
+using AppKit;
 
 namespace MailKit {
 	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (12,0)]
@@ -38,10 +39,6 @@ namespace MailKit {
 		Sending = 2,
 	}
 
-	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (12, 0)]
-	[Field ("MEComposeSessionErrorDomain"), Advice ("'MEComposeSessionErrorDomain' is not available in UIKit on macOS.")]
-	NSString MEComposeSessionErrorDomain { get; }
-
 	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (12,0)]
 	[Advice ("'MEMessage' is not available in UIKit on macOS.")]
 	[BaseType (typeof (NSObject))]
@@ -73,9 +70,11 @@ namespace MailKit {
 		MEEmailAddress[] AllRecipientAddresses { get; }
 
 		[Export ("dateSent", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		NSDate DateSent { get; }
 
 		[Export ("dateReceived", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		NSDate DateReceived { get; }
 
 		[NullAllowed, Export ("headers", ArgumentSemantic.Copy)]
@@ -362,7 +361,7 @@ namespace MailKit {
 		MEContentBlocker HandlerForContentBlocker { get; }
 
 		[Export ("handlerForMessageSecurity")]
-		MEMessageSecurityHandler HandlerForMessageSecurity { get; }
+		IMEMessageSecurityHandler HandlerForMessageSecurity { get; }
 	}
 
 	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (12,0)]
@@ -403,6 +402,8 @@ namespace MailKit {
 		void EncodeMessage (MEMessage message, bool shouldSign, bool shouldEncrypt, Action<MEMessageEncodingResult> completionHandler);
 	}
 
+	interface IMEMessageSecurityHandler {}
+
 	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (12,0)]
 	[Protocol, Advice ("'MEMessageSecurityHandler' is not available in UIKit on macOS.")]
 	interface MEMessageSecurityHandler : MEMessageEncoder, MEMessageDecoder
@@ -413,4 +414,10 @@ namespace MailKit {
 		MEExtensionViewController ExtensionViewController (MEMessageSigner[] messageSigners);
 	}
 
+	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (12,0)]
+	[DisableDefaultCtor]
+	[BaseType (typeof (NSViewController))]
+	interface MEExtensionViewController
+	{
+	}
 }
