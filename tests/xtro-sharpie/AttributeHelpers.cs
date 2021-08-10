@@ -104,6 +104,19 @@ namespace Extrospection
 			return false;
 		}
 
+		public static bool HasAnyObsoleted (ICustomAttributeProvider item)
+		{
+			if (Skip (item))
+				return false;
+
+			foreach (var attribute in item.CustomAttributes) {
+				if (AttributeHelpers.HasObsoleted (attribute, Helpers.Platform))
+					return true;
+			}
+
+			return false;
+		}
+
 		static Platforms[] GetRelatedPlatforms ()
 		{
 			// TV and Watch also implictly accept iOS

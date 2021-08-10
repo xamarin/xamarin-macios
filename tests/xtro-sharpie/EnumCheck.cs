@@ -10,6 +10,7 @@ namespace Extrospection {
 	class EnumCheck : BaseVisitor {
 
 		Dictionary<string,TypeDefinition> enums = new Dictionary<string, TypeDefinition> (StringComparer.InvariantCultureIgnoreCase);
+		Dictionary<string,TypeDefinition> obsoleted_enums = new Dictionary<string,TypeDefinition> ();
 		Dictionary<long, FieldDefinition> managed_signed_values = new Dictionary<long, FieldDefinition> ();
 		Dictionary<ulong, FieldDefinition> managed_unsigned_values = new Dictionary<ulong, FieldDefinition> ();
 		Dictionary<long, string> native_signed_values = new Dictionary<long, string> ();
@@ -21,11 +22,19 @@ namespace Extrospection {
 			if (!type.IsEnum || type.IsNested)
 				return;
 			
-			// exclude obsolete enums, presumably we already know there's something wrong with them if they've been obsoleted.
-			if (type.IsObsolete ())
-				return;
-
 			var name = type.Name;
+
+			// exclude obsolete enums, presumably we already know there's something wrong with them if they've been obsoleted.
+			if (type.IsObsolete ()) {
+				obsoleted_enums [name] = type;
+				return;
+			}
+
+			if (AttributeHelpers.HasAnyObsoleted (type)) {
+				obsoleted_enums [name] = type;
+				return;
+			}
+
 			// e.g. WatchKit.WKErrorCode and WebKit.WKErrorCode :-(
 			if (!enums.TryGetValue (name, out var td))
 				enums.Add (name, type);
@@ -62,6 +71,11 @@ namespace Extrospection {
 				return;
 			
 			var mname = Helpers.GetManagedName (name);
+
+			// If our enum is obsoleted, then don't process it.
+			if (obsoleted_enums.ContainsKey (mname))
+				return;
+
 			if (!enums.TryGetValue (mname, out var type)) {
 				Log.On (framework).Add ($"!missing-enum! {name} not bound");
 				return;
@@ -296,6 +310,8 @@ namespace Extrospection {
 			// e.g. a typo in the name
 			foreach (var extra in enums) {
 				var t = extra.Value;
+				if (obsoleted_enums.ContainsKey (t.Name))
+					continue;
 				if (!IsNative (t))
 					continue;
 				var framework = Helpers.GetFramework (t);
