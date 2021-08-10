@@ -1,4 +1,4 @@
-﻿//
+//
 // Intents bindings
 //
 // Authors:

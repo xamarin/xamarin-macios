@@ -45,4 +45,3 @@ namespace Metal {
 	}
 }
 #endif
-

@@ -1,4 +1,4 @@
-﻿﻿//
+//
 // FileProvider C# bindings
 //
 // Authors:

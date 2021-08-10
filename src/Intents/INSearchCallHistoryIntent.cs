@@ -1,4 +1,4 @@
-﻿//
+//
 // INSearchCallHistoryIntent.cs
 //
 // Authors:

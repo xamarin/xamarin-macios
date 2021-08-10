@@ -1,4 +1,4 @@
-﻿// 
+// 
 // VTMultiPassStorage.cs: VideoToolbox VTMultiPassStorage class
 //
 // Authors:
@@ -117,4 +117,3 @@ namespace VideoToolbox {
 		}
 	}
 }
-

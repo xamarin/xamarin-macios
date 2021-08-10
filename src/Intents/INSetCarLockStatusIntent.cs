@@ -1,4 +1,4 @@
-﻿//
+//
 // INSetCarLockStatusIntent.cs
 //
 // Authors:

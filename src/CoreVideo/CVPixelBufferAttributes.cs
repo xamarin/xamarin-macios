@@ -214,4 +214,3 @@ namespace CoreVideo {
 #endif
 	}
 }
-

@@ -157,5 +157,3 @@ namespace CoreAnimation {
 		}
 	}
 }
-
-

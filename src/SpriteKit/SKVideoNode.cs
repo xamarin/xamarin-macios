@@ -1,4 +1,4 @@
-﻿//
+//
 // SKVideoNode.cs: extensions to SKVideoNode
 //
 // Authors:

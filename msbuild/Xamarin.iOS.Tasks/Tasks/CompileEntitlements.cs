@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Xamarin.MacDev.Tasks;
@@ -43,4 +43,3 @@ namespace Xamarin.iOS.Tasks {
 		}
 	}
 }
-

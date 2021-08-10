@@ -1,4 +1,4 @@
-﻿#if __IOS__ || MONOMAC
+#if __IOS__ || MONOMAC
 
 using System;
 using System.IO;

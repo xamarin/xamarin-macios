@@ -1,4 +1,4 @@
-﻿//
+//
 // INRelativeSettingResolutionResult.cs
 //
 // Authors:

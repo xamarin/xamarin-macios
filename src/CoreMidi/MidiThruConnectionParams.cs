@@ -1,4 +1,4 @@
-﻿// 
+// 
 // MidiThruConnectionParams.cs: A C# wrapper around MidiThruConnectionParamsStruct
 //
 // Authors: Alex Soto (alex.soto@xamarin.com)
@@ -356,4 +356,3 @@ namespace CoreMidi {
 	}
 #endif // !COREBUILD
 }
-
