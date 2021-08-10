@@ -8,7 +8,7 @@
     <AssemblyName>mmp</AssemblyName>
     <RootNamespace>mmp</RootNamespace>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>True</DebugSymbols>

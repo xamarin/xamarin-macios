@@ -388,7 +388,7 @@ namespace Xamarin.Bundler
 			var os = new OptionSet () {
 			{ "dot:", "Generate a dot file to visualize the build tree.", v => dotfile = v ?? string.Empty },
 			{ "aot=", "Arguments to the static compiler",
-				v => app.AotArguments = v + (v.EndsWith (",", StringComparison.Ordinal) ? String.Empty : ",") + app.AotArguments
+				v => app.AotArguments.AddRange (v.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
 			},
 			{ "aot-options=", "Non AOT arguments to the static compiler",
 				v => {

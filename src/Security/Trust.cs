@@ -34,6 +34,9 @@ using System.Security.Cryptography.X509Certificates;
 using ObjCRuntime;
 using CoreFoundation;
 using Foundation;
+#if NET
+using System.Runtime.Versioning;
+#endif
 
 namespace Security {
 	public partial class SecTrust : INativeObject, IDisposable {
@@ -159,9 +162,52 @@ namespace Security {
 			}
 		}
 
+#if !NET
+		[Deprecated (PlatformName.MacOSX, 12, 0)]
+		[Deprecated (PlatformName.iOS, 15, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 15, 0)]
+		[Deprecated (PlatformName.WatchOS, 8, 0)]
+		[Deprecated (PlatformName.TvOS, 15, 0)]
+#else
+		[UnsupportedOSPlatform ("macos12.0")]
+		[UnsupportedOSPlatform ("ios15.0")]
+		[UnsupportedOSPlatform ("tvos15.0")]
+		[UnsupportedOSPlatform ("maccatalyst15.0")]
+#if __MACCATALYST__
+		[Obsolete ("Starting with maccatalyst15.0 API removed, please do not use.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios15.0 API removed, please do not use.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos15.0 API removed, please do not use.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+		[Obsolete ("Starting with macos12.0 API removed, please do not use.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static IntPtr /* SecCertificateRef */ SecTrustGetCertificateAtIndex (IntPtr /* SecTrustRef */ trust, nint /* CFIndex */ ix);
 
+
+#if !NET
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use the 'GetCertificateChain' method instead.")]
+		[Deprecated (PlatformName.iOS, 15, 0, message: "Use the 'GetCertificateChain' method instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use the 'GetCertificateChain' method instead.")]
+		[Deprecated (PlatformName.WatchOS, 8, 0, message: "Use the 'GetCertificateChain' method instead.")]
+		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use the 'GetCertificateChain' method instead.")]
+#else
+		[UnsupportedOSPlatform ("macos12.0")]
+		[UnsupportedOSPlatform ("ios15.0")]
+		[UnsupportedOSPlatform ("tvos15.0")]
+		[UnsupportedOSPlatform ("maccatalyst15.0")]
+#if __MACCATALYST__
+		[Obsolete ("Starting with maccatalyst15.0 use 'GetCertificateChain' method instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios15.0 please use 'GetCertificateChain' method instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos15.0 please use 'GetCertificateChain' method instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+		[Obsolete ("Starting with macos12.0 please use 'GetCertificateChain' method instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		public SecCertificate this [nint index] {
 			get {
 				if (handle == IntPtr.Zero)
@@ -172,6 +218,28 @@ namespace Security {
 				return new SecCertificate (SecTrustGetCertificateAtIndex (handle, index));
 			}
 		}
+
+#if NET
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+#else
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+#endif
+		[DllImport (Constants.SecurityLibrary)]
+		static extern /* CFArrayRef */ IntPtr SecTrustCopyCertificateChain (/* SecTrustRef */ IntPtr trust);
+
+#if NET
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+#else
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+#endif
+		public SecCertificate[] GetCertificateChain ()
+			=> NSArray.ArrayFromHandle<SecCertificate> (SecTrustCopyCertificateChain (handle));
 
 		[Deprecated (PlatformName.iOS, 14,0)]
 		[Deprecated (PlatformName.MacOSX, 11,0)]
