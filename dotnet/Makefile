@@ -142,6 +142,9 @@ $(DOTNET_NUPKG_DIR)/vs-workload.props: Workloads/vs-workload.template.props
 $(DOTNET_NUPKG_DIR)/SignList.xml: Workloads/SignList.xml
 	$(Q) $(CP) $< $@
 
+$(DOTNET_NUPKG_DIR)/SignList.targets: Workloads/SignList.targets
+	$(Q) $(CP) $< $@
+
 TEMPLATED_FILES = \
 	$(foreach platform,$(DOTNET_PLATFORMS),Microsoft.$(platform).Sdk/targets/Microsoft.$(platform).Sdk.Versions.props) \
 	$(foreach platform,$(DOTNET_PLATFORMS),Microsoft.$(platform).Sdk/targets/Microsoft.$(platform).Sdk.SupportedTargetPlatforms.props) \
@@ -212,7 +215,7 @@ pack-$(shell echo $(1) | tr A-Z a-z): $$(RUNTIME_PACKS_$(1)) $$(REF_PACKS_$(1)) 
 endef
 $(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(eval $(call PacksDefinitions,$(platform))))
 
-TARGETS += $(RUNTIME_PACKS) $(REF_PACKS) $(SDK_PACKS) $(TEMPLATE_PACKS) $(WORKLOAD_PACKS) $(DOTNET_NUPKG_DIR)/vs-workload.props $(DOTNET_NUPKG_DIR)/SignList.xml
+TARGETS += $(RUNTIME_PACKS) $(REF_PACKS) $(SDK_PACKS) $(TEMPLATE_PACKS) $(WORKLOAD_PACKS) $(DOTNET_NUPKG_DIR)/vs-workload.props $(DOTNET_NUPKG_DIR)/SignList.xml $(DOTNET_NUPKG_DIR)/SignList.targets
 
 define InstallWorkload
 # .NET comes with a workload for us, but we don't want that, we want our own. So delete the workload that comes with .NET.
