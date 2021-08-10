@@ -464,6 +464,10 @@ namespace Introspection {
 				}
 			case "SecAccessControl":
 				return new SecAccessControl (SecAccessible.WhenPasscodeSetThisDeviceOnly);
+#if __MACCATALYST__
+			case "Authorization":
+				return Authorization.Create (AuthorizationFlags.Defaults);
+#endif
 			default:
 				throw new InvalidOperationException (string.Format ("Could not create the new instance for type {0}.", t.Name));
 			}
