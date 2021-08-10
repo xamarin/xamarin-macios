@@ -1,3 +1,4 @@
+# ignored in macOS too
 !missing-field! kSCBondStatusDeviceAggregationStatus not bound
 !missing-field! kSCBondStatusDeviceCollecting not bound
 !missing-field! kSCBondStatusDeviceDistributing not bound
@@ -27,16 +28,16 @@
 !missing-field! kSCEntNetDNS not bound
 !missing-field! kSCEntNetEthernet not bound
 !missing-field! kSCEntNetFireWire not bound
-!missing-field! kSCEntNetInterface not bound
 !missing-field! kSCEntNetIPSec not bound
 !missing-field! kSCEntNetIPv4 not bound
 !missing-field! kSCEntNetIPv6 not bound
+!missing-field! kSCEntNetInterface not bound
 !missing-field! kSCEntNetL2TP not bound
 !missing-field! kSCEntNetLink not bound
 !missing-field! kSCEntNetModem not bound
 !missing-field! kSCEntNetPPP not bound
-!missing-field! kSCEntNetPPPoE not bound
 !missing-field! kSCEntNetPPPSerial not bound
+!missing-field! kSCEntNetPPPoE not bound
 !missing-field! kSCEntNetPPTP not bound
 !missing-field! kSCEntNetProxies not bound
 !missing-field! kSCEntNetSMB not bound
@@ -87,15 +88,9 @@
 !missing-field! kSCPropNetDNSSortList not bound
 !missing-field! kSCPropNetDNSSupplementalMatchDomains not bound
 !missing-field! kSCPropNetDNSSupplementalMatchOrders not bound
+!missing-field! kSCPropNetEthernetMTU not bound
 !missing-field! kSCPropNetEthernetMediaOptions not bound
 !missing-field! kSCPropNetEthernetMediaSubType not bound
-!missing-field! kSCPropNetEthernetMTU not bound
-!missing-field! kSCPropNetInterfaceDeviceName not bound
-!missing-field! kSCPropNetInterfaceHardware not bound
-!missing-field! kSCPropNetInterfaces not bound
-!missing-field! kSCPropNetInterfaceSubType not bound
-!missing-field! kSCPropNetInterfaceSupportsModemOnHold not bound
-!missing-field! kSCPropNetInterfaceType not bound
 !missing-field! kSCPropNetIPSecAuthenticationMethod not bound
 !missing-field! kSCPropNetIPSecConnectTime not bound
 !missing-field! kSCPropNetIPSecLocalCertificate not bound
@@ -112,8 +107,8 @@
 !missing-field! kSCPropNetIPv4Addresses not bound
 !missing-field! kSCPropNetIPv4BroadcastAddresses not bound
 !missing-field! kSCPropNetIPv4ConfigMethod not bound
-!missing-field! kSCPropNetIPv4DestAddresses not bound
 !missing-field! kSCPropNetIPv4DHCPClientID not bound
+!missing-field! kSCPropNetIPv4DestAddresses not bound
 !missing-field! kSCPropNetIPv4Router not bound
 !missing-field! kSCPropNetIPv4SubnetMasks not bound
 !missing-field! kSCPropNetIPv6Addresses not bound
@@ -122,6 +117,12 @@
 !missing-field! kSCPropNetIPv6Flags not bound
 !missing-field! kSCPropNetIPv6PrefixLength not bound
 !missing-field! kSCPropNetIPv6Router not bound
+!missing-field! kSCPropNetInterfaceDeviceName not bound
+!missing-field! kSCPropNetInterfaceHardware not bound
+!missing-field! kSCPropNetInterfaceSubType not bound
+!missing-field! kSCPropNetInterfaceSupportsModemOnHold not bound
+!missing-field! kSCPropNetInterfaceType not bound
+!missing-field! kSCPropNetInterfaces not bound
 !missing-field! kSCPropNetL2TPIPSecSharedSecret not bound
 !missing-field! kSCPropNetL2TPIPSecSharedSecretEncryption not bound
 !missing-field! kSCPropNetL2TPTransport not bound
@@ -129,9 +130,9 @@
 !missing-field! kSCPropNetLinkDetaching not bound
 !missing-field! kSCPropNetLocalHostName not bound
 !missing-field! kSCPropNetModemAccessPointName not bound
+!missing-field! kSCPropNetModemConnectSpeed not bound
 !missing-field! kSCPropNetModemConnectionPersonality not bound
 !missing-field! kSCPropNetModemConnectionScript not bound
-!missing-field! kSCPropNetModemConnectSpeed not bound
 !missing-field! kSCPropNetModemDataCompression not bound
 !missing-field! kSCPropNetModemDeviceContextID not bound
 !missing-field! kSCPropNetModemDeviceModel not bound
@@ -176,11 +177,10 @@
 !missing-field! kSCPropNetPPPDisconnectOnLogout not bound
 !missing-field! kSCPropNetPPPDisconnectOnSleep not bound
 !missing-field! kSCPropNetPPPDisconnectTime not bound
-!missing-field! kSCPropNetPPPIdleReminder not bound
-!missing-field! kSCPropNetPPPIdleReminderTimer not bound
 !missing-field! kSCPropNetPPPIPCPCompressionVJ not bound
 !missing-field! kSCPropNetPPPIPCPUsePeerDNS not bound
-!missing-field! kSCPropNetPPPLastCause not bound
+!missing-field! kSCPropNetPPPIdleReminder not bound
+!missing-field! kSCPropNetPPPIdleReminderTimer not bound
 !missing-field! kSCPropNetPPPLCPCompressionACField not bound
 !missing-field! kSCPropNetPPPLCPCompressionPField not bound
 !missing-field! kSCPropNetPPPLCPEchoEnabled not bound
@@ -190,6 +190,7 @@
 !missing-field! kSCPropNetPPPLCPMTU not bound
 !missing-field! kSCPropNetPPPLCPReceiveACCM not bound
 !missing-field! kSCPropNetPPPLCPTransmitACCM not bound
+!missing-field! kSCPropNetPPPLastCause not bound
 !missing-field! kSCPropNetPPPLogfile not bound
 !missing-field! kSCPropNetPPPOverridePrimary not bound
 !missing-field! kSCPropNetPPPPlugins not bound
@@ -223,12 +224,12 @@
 !missing-field! kSCPropNetProxiesSOCKSEnable not bound
 !missing-field! kSCPropNetProxiesSOCKSPort not bound
 !missing-field! kSCPropNetProxiesSOCKSProxy not bound
-!missing-field! kSCPropNetServiceOrder not bound
 !missing-field! kSCPropNetSMBNetBIOSName not bound
 !missing-field! kSCPropNetSMBNetBIOSNodeType not bound
 !missing-field! kSCPropNetSMBNetBIOSScope not bound
 !missing-field! kSCPropNetSMBWINSAddresses not bound
 !missing-field! kSCPropNetSMBWorkgroup not bound
+!missing-field! kSCPropNetServiceOrder not bound
 !missing-field! kSCPropSystemComputerName not bound
 !missing-field! kSCPropSystemComputerNameEncoding not bound
 !missing-field! kSCPropUserDefinedName not bound
@@ -244,15 +245,6 @@
 !missing-field! kSCValNetAirPortJoinModeRanked not bound
 !missing-field! kSCValNetAirPortJoinModeRecent not bound
 !missing-field! kSCValNetAirPortJoinModeStrongest not bound
-!missing-field! kSCValNetInterfaceSubTypeL2TP not bound
-!missing-field! kSCValNetInterfaceSubTypePPPoE not bound
-!missing-field! kSCValNetInterfaceSubTypePPPSerial not bound
-!missing-field! kSCValNetInterfaceSubTypePPTP not bound
-!missing-field! kSCValNetInterfaceType6to4 not bound
-!missing-field! kSCValNetInterfaceTypeEthernet not bound
-!missing-field! kSCValNetInterfaceTypeFireWire not bound
-!missing-field! kSCValNetInterfaceTypeIPSec not bound
-!missing-field! kSCValNetInterfaceTypePPP not bound
 !missing-field! kSCValNetIPSecAuthenticationMethodCertificate not bound
 !missing-field! kSCValNetIPSecAuthenticationMethodHybrid not bound
 !missing-field! kSCValNetIPSecAuthenticationMethodSharedSecret not bound
@@ -272,6 +264,15 @@
 !missing-field! kSCValNetIPv6ConfigMethodLinkLocal not bound
 !missing-field! kSCValNetIPv6ConfigMethodManual not bound
 !missing-field! kSCValNetIPv6ConfigMethodRouterAdvertisement not bound
+!missing-field! kSCValNetInterfaceSubTypeL2TP not bound
+!missing-field! kSCValNetInterfaceSubTypePPPSerial not bound
+!missing-field! kSCValNetInterfaceSubTypePPPoE not bound
+!missing-field! kSCValNetInterfaceSubTypePPTP not bound
+!missing-field! kSCValNetInterfaceType6to4 not bound
+!missing-field! kSCValNetInterfaceTypeEthernet not bound
+!missing-field! kSCValNetInterfaceTypeFireWire not bound
+!missing-field! kSCValNetInterfaceTypeIPSec not bound
+!missing-field! kSCValNetInterfaceTypePPP not bound
 !missing-field! kSCValNetL2TPIPSecSharedSecretEncryptionKeychain not bound
 !missing-field! kSCValNetL2TPTransportIP not bound
 !missing-field! kSCValNetL2TPTransportIPSec not bound
@@ -357,10 +358,10 @@
 !missing-pinvoke! SCNetworkConnectionStop is not bound
 !missing-pinvoke! SCNetworkConnectionUnscheduleFromRunLoop is not bound
 !missing-pinvoke! SCNetworkInterfaceCopyAll is not bound
+!missing-pinvoke! SCNetworkInterfaceCopyMTU is not bound
 !missing-pinvoke! SCNetworkInterfaceCopyMediaOptions is not bound
 !missing-pinvoke! SCNetworkInterfaceCopyMediaSubTypeOptions is not bound
 !missing-pinvoke! SCNetworkInterfaceCopyMediaSubTypes is not bound
-!missing-pinvoke! SCNetworkInterfaceCopyMTU is not bound
 !missing-pinvoke! SCNetworkInterfaceCreateWithInterface is not bound
 !missing-pinvoke! SCNetworkInterfaceForceConfigurationRefresh is not bound
 !missing-pinvoke! SCNetworkInterfaceGetBSDName is not bound
@@ -376,8 +377,8 @@
 !missing-pinvoke! SCNetworkInterfaceRefreshConfiguration is not bound
 !missing-pinvoke! SCNetworkInterfaceSetConfiguration is not bound
 !missing-pinvoke! SCNetworkInterfaceSetExtendedConfiguration is not bound
-!missing-pinvoke! SCNetworkInterfaceSetMediaOptions is not bound
 !missing-pinvoke! SCNetworkInterfaceSetMTU is not bound
+!missing-pinvoke! SCNetworkInterfaceSetMediaOptions is not bound
 !missing-pinvoke! SCNetworkProtocolGetConfiguration is not bound
 !missing-pinvoke! SCNetworkProtocolGetEnabled is not bound
 !missing-pinvoke! SCNetworkProtocolGetProtocolType is not bound

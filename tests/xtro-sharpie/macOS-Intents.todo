@@ -1,13 +1,7 @@
 ## appended from unclassified file
 !missing-enum! INCallAudioRoute not bound
-!missing-enum! INCallCapability not bound
-!missing-enum! INCallCapabilityOptions not bound
-!missing-enum! INCallDestinationType not bound
-!missing-enum! INCallRecordTypeOptions not bound
 !missing-enum! INFocusStatusAuthorizationStatus not bound
 !missing-enum! INOutgoingMessageType not bound
-!missing-enum! INSendMessageIntentResponseCode not bound
-!missing-enum! INSendMessageRecipientUnsupportedReason not bound
 !missing-enum! INShareFocusStatusIntentResponseCode not bound
 !missing-enum! INStartCallCallRecordToCallBackUnsupportedReason not bound
 !missing-protocol! INShareFocusStatusIntentHandling not bound
