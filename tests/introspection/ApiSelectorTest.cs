@@ -840,12 +840,14 @@ namespace Introspection {
 				if (selectorName == "waitUntilExit")
 					return true;
 				break;
+#if !__MACOS__
 			case "SHCustomCatalog":
 				switch (selectorName) {
 				case "new":
 					// This selector does not exist in the simulator
 					if (Runtime.Arch == Arch.SIMULATOR)
 						return true;
+					break;
 				}
 				break;
 			case "SHMediaItem":
@@ -855,6 +857,7 @@ namespace Introspection {
 					// This selector does not exist in the simulator
 					if (Runtime.Arch == Arch.SIMULATOR)
 						return true;
+					break;
 				}
 				break;
 			case "SHMediaLibrary":
@@ -863,6 +866,7 @@ namespace Introspection {
 					// This selector does not exist in the simulator
 					if (Runtime.Arch == Arch.SIMULATOR)
 						return true;
+					break;
 				}
 				break;
 			case "SHSignature":
@@ -871,9 +875,11 @@ namespace Introspection {
 					// This selector does not exist in the simulator
 					if (Runtime.Arch == Arch.SIMULATOR)
 						return true;
+					break;
 				}
 				break;
 			}
+#endif
 
 			// old binding mistake
 			return (selectorName == "initWithCoder:");
