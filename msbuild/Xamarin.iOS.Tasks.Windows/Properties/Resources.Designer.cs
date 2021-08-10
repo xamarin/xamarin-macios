@@ -64,35 +64,5 @@ namespace Xamarin.iOS.Tasks.Windows.Properties {
                 return ResourceManager.GetString("LocalUnzip_Unzipping", resourceCulture);
             }
         }
-        
-        internal static string CollectDynamicFrameworks_InvalidFramework {
-            get {
-                return ResourceManager.GetString("CollectDynamicFrameworks_InvalidFramework", resourceCulture);
-            }
-        }
-        
-        internal static string LocalCodesign_MissingPasswordFile {
-            get {
-                return ResourceManager.GetString("LocalCodesign_MissingPasswordFile", resourceCulture);
-            }
-        }
-        
-        internal static string LocalCodesign_MissingTerminal {
-            get {
-                return ResourceManager.GetString("LocalCodesign_MissingTerminal", resourceCulture);
-            }
-        }
-        
-        internal static string LocalCodesign_ToolArguments {
-            get {
-                return ResourceManager.GetString("LocalCodesign_ToolArguments", resourceCulture);
-            }
-        }
-        
-        internal static string CompileAppManifest_MissinInfoPList {
-            get {
-                return ResourceManager.GetString("CompileAppManifest_MissinInfoPList", resourceCulture);
-            }
-        }
     }
 }
