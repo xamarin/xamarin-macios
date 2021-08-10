@@ -466,6 +466,9 @@
 			-->
 			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) --disable-opt unusedtypechecks</_ExtraTrimmerArgs>
 
+			<!-- If a release build and the app is not extensible (no interpreter or JIT/code-loading for macOS) then the sealer optimization can be used -->
+			<_ExtraTrimmerArgs Condition="'$(_BundlerDebug)' != 'true' And '$(MtouchInterpreter)' == '' And '$(_RunAotCompiler)' == 'true' And '$(_PlatformName)' != 'macOS'">$(_ExtraTrimmerArgs) --enable-opt sealer</_ExtraTrimmerArgs>
+
 			<!-- We always want the linker to process debug symbols, even when building in Release mode, because the AOT compiler uses the managed debug symbols to output DWARF debugging symbols -->
 			<TrimmerRemoveSymbols Condition="'$(TrimmerRemoveSymbols)' == ''">false</TrimmerRemoveSymbols>
 
