@@ -215,7 +215,7 @@ namespace OSLog {
 	[DisableDefaultCtor] // init was added only on macos 12
 	interface OSLogStore {
 
-		[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
+		[NoWatch, NoTV, NoiOS, Mac (12,0), MacCatalyst (15,0)]
 		[Export ("init")]
 		IntPtr Constructor ();
 		
