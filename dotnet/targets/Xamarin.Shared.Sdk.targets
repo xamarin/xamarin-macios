@@ -149,6 +149,9 @@
 	<!-- Default item includes (globs and implicit references) -->
 	<Import Project="Xamarin.Shared.Sdk.DefaultItems.targets" />
 
+	<!-- dotnet publish -->
+	<Import Project="Xamarin.Shared.Sdk.Publish.targets" />
+
 	<!-- This is a hack until we get the TFM values for real from the .NET build logic -->
 	<PropertyGroup>
 		<_TargetFrameworkPlatform Condition="'$(_PlatformName)' == 'iOS'">ios</_TargetFrameworkPlatform>

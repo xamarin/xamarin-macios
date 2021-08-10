@@ -44,6 +44,9 @@ namespace Xamarin.MacDev.Tasks
 
 		public string PackagingExtraArgs { get ; set; }
 
+		// both input and output
+		[Output]
+		public string PkgPackagePath { get; set; }
 		#endregion
 
 		string GetProjectVersion ()
@@ -109,9 +112,13 @@ namespace Xamarin.MacDev.Tasks
 				}
 			}
 
-			string projectVersion = GetProjectVersion ();
-			string target = string.Format ("{0}{1}.pkg", Name, String.IsNullOrEmpty (projectVersion) ? "" : "-" + projectVersion);
-			args.AddQuoted (Path.Combine (OutputDirectory, target));
+			if (string.IsNullOrEmpty (PkgPackagePath)) {
+				string projectVersion = GetProjectVersion ();
+				string target = string.Format ("{0}{1}.pkg", Name, String.IsNullOrEmpty (projectVersion) ? "" : "-" + projectVersion);
+				PkgPackagePath = Path.Combine (OutputDirectory, target);
+			}
+			args.AddQuoted (PkgPackagePath);
+
 			return args.ToString ();
 		}
 

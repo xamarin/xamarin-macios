@@ -1647,9 +1647,11 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			OutputDirectory="$(TargetDir)"
 			PackageSigningKey="$(PackageSigningKey)"
 			PackagingExtraArgs="$(PackagingExtraArgs)"
+			PkgPackagePath="$(PkgPackagePath)"
 			ProductDefinition="$(_CompiledProductDefinition)"
 			ProjectPath="$(MSBuildProjectFullPath)"
 		>
+			<Output TaskParameter="PkgPackagePath" PropertyName="PkgPackagePath" />
 		</CreateInstallerPackage>
 	</Target>
 

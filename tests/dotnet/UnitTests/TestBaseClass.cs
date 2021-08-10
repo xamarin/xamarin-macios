@@ -11,7 +11,6 @@ using NUnit.Framework;
 using Xamarin.Utils;
 using Xamarin.Tests;
 using Xamarin.MacDev;
-using Xamarin.Utils;
 
 namespace Xamarin.Tests {
 	[TestFixture]
@@ -20,6 +19,14 @@ namespace Xamarin.Tests {
 			{ "MtouchExtraArgs", "-v" },
 			{ "MonoBundlingExtraArgs", "-v" },
 		};
+
+		protected Dictionary<string, string> GetDefaultProperties (string? runtimeIdentifiers)
+		{
+			var rv = new Dictionary<string, string> (verbosity);
+			if (!string.IsNullOrEmpty (runtimeIdentifiers))
+				SetRuntimeIdentifiers (rv, runtimeIdentifiers);
+			return rv;
+		}
 
 		protected void SetRuntimeIdentifiers (Dictionary<string, string> properties, string runtimeIdentifiers)
 		{
