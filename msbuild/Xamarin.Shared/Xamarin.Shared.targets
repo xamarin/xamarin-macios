@@ -1170,6 +1170,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			Resources="@(_Frameworks)"
 			SigningKey="$(_FrameworkCodeSigningKey)"
 			ExtraArgs="$(CodesignExtraArgs)"
+			UseSecureTimestamp="$(UseHardenedRuntime)"
 			>
 		</Codesign>
 
