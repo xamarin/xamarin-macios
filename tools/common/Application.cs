@@ -1656,5 +1656,21 @@ namespace Xamarin.Bundler {
 			}
 		}
 
+		public bool VerifyDynamicFramework (string framework_path)
+		{
+			var framework_filename = Path.Combine (framework_path, Path.GetFileNameWithoutExtension (framework_path));
+			var dynamic = false;
+
+			try {
+				dynamic = MachO.IsDynamicFramework (framework_filename);
+			} catch (Exception e) {
+				throw ErrorHelper.CreateError (140, e, Errors.MT0140, framework_filename);
+			}
+
+			if (!dynamic)
+				Driver.Log (1, "The framework {0} is a framework of static libraries, and will not be copied to the app.", framework_path);
+
+			return dynamic;
+		}
 	}
 }

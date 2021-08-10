@@ -67,6 +67,9 @@ namespace Xamarin.Linker {
 				fwks.RemoveWhere (v => !v.EndsWith (".framework", StringComparison.Ordinal));
 
 				foreach (var fwk in fwks) {
+					if (!Configuration.Application.VerifyDynamicFramework (fwk))
+						continue;
+
 					foreach (var file in Directory.GetFiles (fwk, "*", SearchOption.AllDirectories)) {
 						var item = new MSBuildItem {
 							Include = file,

@@ -1153,16 +1153,7 @@ namespace Xamarin.Bundler {
 					if (info.DylibToFramework)
 						throw ErrorHelper.CreateError (99, Errors.MX0099, $"'can't convert frameworks to frameworks: {files.First()}'");
 					var framework_src = files.First ();
-					var framework_filename = Path.Combine (framework_src, Path.GetFileNameWithoutExtension (framework_src));
-					var dynamic = false;
-					try {
-						dynamic = MachO.IsDynamicFramework (framework_filename);
-					} catch (Exception e) {
-						throw ErrorHelper.CreateError (140, e, Errors.MT0140, framework_filename);
-					}
-					if (!dynamic) {
-						Driver.Log (1, "The framework {0} is a framework of static libraries, and will not be copied to the app.", framework_src);
-					} else {
+					if (VerifyDynamicFramework (framework_src)) {
 						var macho_file = Path.Combine (targetPath, Path.GetFileNameWithoutExtension (framework_src));
 						var macho_info = new FileInfo (macho_file);
 						var macho_last_write_time = macho_info.LastWriteTimeUtc; // this returns a date in the 17th century if the file doesn't exist.
