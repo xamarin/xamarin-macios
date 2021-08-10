@@ -219,7 +219,7 @@ namespace OSLog {
 		[Export ("init")]
 		IntPtr Constructor ();
 		
-		[NoWatch, NoTV, NoiOS, NoMacCatalyst]
+		[NoWatch, NoTV, NoiOS, MacCatalyst (15,0)]
 		[Static]
 		[Export ("localStoreAndReturnError:")]
 		[return: NullAllowed]
