@@ -3,11 +3,23 @@
   <ItemGroup>
     <Skip Include="Mono.Options.dll" />
     <Skip Include="System.Reflection.MetadataLoadContext.dll" />
+    <Skip Include="Microsoft.Win32.Registry.dll" />
+    <Skip Include="System.Buffers.dll" />
+    <Skip Include="System.Memory.dll" />
+    <Skip Include="System.Numerics.Vectors.dll" />
+    <Skip Include="System.Runtime.CompilerServices.Unsafe.dll" />
+    <Skip Include="System.Security.AccessControl.dll" />
+    <Skip Include="System.Security.Cryptography.Pkcs.dll" />
+    <Skip Include="System.Security.Cryptography.ProtectedData.dll" />
+    <Skip Include="System.Security.Principal.Windows.dll" />
+    <Skip Include="ws2_32.dll" />
   </ItemGroup>
 
-  <!--ItemGroup>
-    <ThirdParty Include="" />
-  </ItemGroup-->
+  <ItemGroup>
+    <ThirdParty Include="BouncyCastle.Crypto.dll" />
+    <ThirdParty Include="imobiledevice*\*.dll" />
+    <ThirdParty Include="imobiledevice*\*.exe" />
+  </ItemGroup>
 
   <ItemGroup>
     <FirstParty Include="bgen.dll" />
@@ -21,5 +33,8 @@
     <FirstParty Include="System.dll" />
     <FirstParty Include="System.Numerics.dll" />
     <FirstParty Include="System.Xml.dll" />
+    <!-- Microsoft.iOS.Windows.Sdk content -->
+    <FirstParty Include="iSign.Core.dll" />
+    <FirstParty Include="System.Diagnostics.Tracer.dll" />
   </ItemGroup>
 </Project>
