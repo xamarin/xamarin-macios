@@ -151,7 +151,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
     <Compile Include="DontLinkRegressionTests.cs" />
     <Compile Include="TableViewSourceTest.cs" />

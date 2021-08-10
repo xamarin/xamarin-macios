@@ -1726,4 +1726,7 @@
   <data name="MX8040" xml:space="preserve">
 		<value>Parametrenin tür kodlaması geçersiz.</value>
 	</data>
+  <data name="MX8041" xml:space="preserve">
+		<value>{0} türünde örnek oluşturulamıyor.</value>
+	</data>
 </root>

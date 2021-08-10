@@ -6,6 +6,7 @@
 //
 // Copyright 2016 Xamarin Inc. (http://xamarin.com)
 
+#if !__MACCATALYST__
 
 using System;
 using System.Collections.Generic;
@@ -181,3 +182,4 @@ namespace AppKit
 #endif
 	}
 }
+#endif // !__MACCATALYST__

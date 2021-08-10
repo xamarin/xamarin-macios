@@ -34,17 +34,8 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Shared.targets" />			
 
 	<PropertyGroup>
-		<_CanOutputAppBundle>False</_CanOutputAppBundle>
-		<_CanOutputAppBundle Condition="'$(OutputType)' == 'Exe' Or '$(IsAppExtension)' == 'true' Or '$(IsWatchApp)' == 'true'">True</_CanOutputAppBundle>
-
-		<_CanArchive>False</_CanArchive>
-		<_CanArchive Condition="'$(OutputType)' == 'Exe' And '$(ComputedPlatform)' == 'iPhone' And '$(IsAppExtension)' == 'false' And '$(IsWatchApp)' == 'false'">True</_CanArchive>
-
 		<_CanDeployToDeviceOrSimulator>False</_CanDeployToDeviceOrSimulator>
 		<_CanDeployToDeviceOrSimulator Condition="('$(OutputType)' == 'Exe' Or '$(IsAppExtension)' == 'true') And '$(IsWatchApp)' == 'false'">True</_CanDeployToDeviceOrSimulator>
-
-		<_RequireProvisioningProfile>False</_RequireProvisioningProfile>
-		<_RequireProvisioningProfile Condition="'$(ComputedPlatform)' == 'iPhone' Or '$(CodesignEntitlements)' != ''">True</_RequireProvisioningProfile>
 
 		<_PreparedResourceRules></_PreparedResourceRules>
 		<_AppBundleName>$(AssemblyName)</_AppBundleName>
@@ -85,11 +76,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<_IsContainerApp>false</_IsContainerApp>
-		<_IsContainerApp Condition="$(IsAppExtension) == 'false' And '$(IsWatchApp)' == 'false'">true</_IsContainerApp>
-	</PropertyGroup>
-
-	<PropertyGroup>
 		<OptimizePngImagesDependsOn>
 			_CollectPngImages;
 			_CoreOptimizePngImages;
@@ -121,6 +107,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 	<PropertyGroup Condition="'$(UsingAppleNETSdk)' != 'true'">
 		<CreateAppBundleDependsOn>
+			$(CreateAppBundleDependsOn);
 			_DetectAppManifest;
 			_DetectSigningIdentity;
 			_CopyResourcesToBundle;
@@ -174,23 +161,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</CodesignDependsOn>
 	</PropertyGroup>
 
-	<PropertyGroup>
-		<!-- Extensibility point for VS Publishing Workflow -->
-		<_BeforeCreateIpaForDistributionDependsOn />
-		
-		<CreateIpaDependsOn>
-			_BeforeCreateIpaForDistribution;
-			_CompileEntitlements;
-			_CoreCreateIpa;
-			_PackageOnDemandResources;
-			_ZipIpa
-		</CreateIpaDependsOn>
-
-		<ArchiveDependsOn>
-			_CoreArchive
-		</ArchiveDependsOn>
-	</PropertyGroup>
-
 	<Target Name="ValidateAppStoreBundle" DependsOnTargets="_DetectSdkLocations;_ComputeTargetFrameworkMoniker">
 		<ALToolValidate
 			SessionId="$(BuildSessionId)"
@@ -212,12 +182,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			SdkDevPath="$(_SdkDevPath)"
 		/>
 	</Target>
-
-	<Target Name="Archive" Condition="'$(_CanArchive)' == 'true'" DependsOnTargets="$(ArchiveDependsOn)" />
-
-	<Target Name="_BeforeCreateIpaForDistribution" Condition="'$(IsAppDistribution)' == 'true'" DependsOnTargets="$(_BeforeCreateIpaForDistributionDependsOn)" />
-	
-	<Target Name="CreateIpa" Condition="'$(_CanArchive)' == 'true'" DependsOnTargets="$(CreateIpaDependsOn)" />
 
 	<Target Name="_CleanUploaded" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_ComputeTargetArchitectures">
 		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="$(DeviceSpecificOutputPath).uploaded" />
@@ -352,7 +316,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			UseFloat32="$(MtouchFloat32)"
 			UseThumb="$(MtouchUseThumb)"
 			EnableBitcode="$(MtouchEnableBitcode)"
-			EnableSGenConc="$(MtouchEnableSGenConc)"
+			EnableSGenConc="$(EnableSGenConc)"
 			Interpreter="$(MtouchInterpreter)"
 			AppExtensionReferences="@(_ResolvedAppExtensionReferences)"
 			ArchiveSymbols="$(MonoSymbolArchive)"
@@ -814,6 +778,23 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			<_CodesignDisableTimestamp Condition="'$(_SdkIsSimulator)' == 'true' Or '$(_BundlerDebug)' == 'true'">True</_CodesignDisableTimestamp>
 		</PropertyGroup>
 
+		<!-- Delete any crash dumps in the app bundle that might exist. Ref: https://github.com/xamarin/xamarin-macios/issues/12320 -->
+		<!-- Use a task to collect the files, so that we get the correct behavior on Windows -->
+		<GetFileSystemEntries
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			DirectoryPath="$(AppBundleDir)"
+			Pattern="mono_crash.mem.*"
+			Recursive="false"
+			>
+			<Output TaskParameter="Entries" ItemName="_MonoCrashDumpsInAppBundle" />
+		</GetFileSystemEntries>
+		<Delete
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			Files="@(_MonoCrashDumpsInAppBundle)"
+		/>
+
 		<Codesign
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
@@ -1050,34 +1031,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			>
 			<Output TaskParameter="OutputFile" ItemName="FileWrites" />
 		</Zip>
-	</Target>
-
-	<Target Name="_CoreArchive" Condition="'$(ArchiveOnBuild)' == 'true'" DependsOnTargets="Codesign">
-		<CollectITunesSourceFiles
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '@(_ITunesSourceFile)' == ''"
-			OutputPath="$(DeviceSpecificOutputPath)"
-			>
-			<Output TaskParameter="ITunesSourceFiles" PropertyName="_ITunesSourceFile"/>
-		</CollectITunesSourceFiles>
-
-		<Archive
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			AppBundleDir="$(AppBundleDir)"
-			AppExtensionReferences="@(_ResolvedAppExtensionReferences)"
-			InsightsApiKey="$(XamarinInsightsApiKey)"
-			ITunesSourceFiles="@(_ITunesSourceFile)"
-			OutputPath="$(DeviceSpecificOutputPath)"
-			ProjectName="$(MSBuildProjectName)"
-			ProjectGuid="$(ProjectGuid)"
-			ProjectTypeGuids="$(ProjectTypeGuids)"
-			SolutionPath="$(SolutionPath)"
-			SigningKey="$(_CodeSigningKey)"
-			WatchAppReferences="@(_ResolvedWatchAppReferences)"
-			>
-			<Output TaskParameter="ArchiveDir" PropertyName="ArchiveDir"/>
-		</Archive>
 	</Target>
 
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets"

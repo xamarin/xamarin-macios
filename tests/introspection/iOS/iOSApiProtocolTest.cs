@@ -39,6 +39,7 @@ namespace Introspection {
 			case "MonoTouch.MetalPerformanceShaders":
 			case "MLCompute":
 			case "MediaSetup":
+			case "Phase":
 				if (Runtime.Arch == Arch.SIMULATOR)
 					return true;
 				break;
@@ -439,7 +440,12 @@ namespace Introspection {
 				// Xcode 13
 				case "ARDepthData":
 				case "ARSkeletonDefinition": // device only
+				case "ARVideoFormat": // device only
 				case "NSMergePolicy":
+				case "SFSafariViewControllerPrewarmingToken": // conformance not in headers
+				case "SRTextInputSession": // conformance not in headers
+				case "QLPreviewReply": // conformance not in headers
+				case "QLPreviewReplyAttachment": // conformance not in headers
 					return true;
 				}
 				break;
@@ -677,7 +683,12 @@ namespace Introspection {
 				// Xcode 13
 				case "ARDepthData":
 				case "ARSkeletonDefinition": // device only
+				case "ARVideoFormat": // device only
 				case "NSMergePolicy":
+				case "SFSafariViewControllerPrewarmingToken": // conformance not in headers
+				case "SRTextInputSession": // conformance not in headers
+				case "QLPreviewReply": // conformance not in headers
+				case "QLPreviewReplyAttachment": // conformance not in headers
 					return true;
 				}
 				break;
@@ -755,6 +766,8 @@ namespace Introspection {
 					return true;
 #endif
 				// Xcode 13
+				case "PHCloudIdentifier":
+				case "PHCloudIdentifierMapping":
 				case "NSEntityMapping":
 				case "NSMappingModel":
 				case "NSMergePolicy":

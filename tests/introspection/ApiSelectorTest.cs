@@ -210,6 +210,14 @@ namespace Introspection {
 					break;
 				}
 				break;
+			case "HKQuery":
+				switch (selectorName) {
+				case "predicateForVerifiableClinicalRecordsWithRelevantDateWithinDateInterval:": // not available in the sim
+					if (Runtime.Arch == Arch.SIMULATOR) // not available in the sim
+						return true;
+					break;
+				}
+				break;
 #endif
 			case "WKPreferences":
 				switch (selectorName) {
@@ -815,6 +823,23 @@ namespace Introspection {
 					break;
 				}
 				break;
+			case "MTLCommandBufferDescriptor":
+				switch (selectorName) {
+				case "errorOptions":
+				case "setErrorOptions:":
+				case "retainedReferences":
+				case "setRetainedReferences:":
+					// iOS 15 sim (and macOS 12) fails, API added in 14.0
+					if (TestRuntime.CheckXcodeVersion (13, 0))
+						return true;
+					break;
+				}
+				break;
+			case "NSTask":
+				// category, NSTask won't respond -> @interface NSTask (NSTaskConveniences)
+				if (selectorName == "waitUntilExit")
+					return true;
+				break;
 			}
 
 			// old binding mistake
@@ -1039,8 +1064,14 @@ namespace Introspection {
 			case "initWithCenter:diameter:":
 			case "initWithCenter:radius:":
 			case "initWithR:theta:":
+			// NSImage
+			case "initWithDataIgnoringOrientation:":
 				var mi = m as MethodInfo;
 				return mi != null && !mi.IsPublic && mi.ReturnType.Name == "IntPtr";
+			// NSAppleEventDescriptor
+			case "initListDescriptor":
+			case "initRecordDescriptor":
+				return true;
 			default:
 				return false;
 			}

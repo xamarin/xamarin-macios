@@ -321,16 +321,7 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 			<!-- Include Debug symbols as input so those are copied to the server -->
 			<_ILLinkDebugSymbols Include="@(_DebugSymbolsIntermediatePath)" Condition="'$(_DebugSymbolsProduced)'=='true'" />
 		</ItemGroup>
-
-		<ItemGroup>
-			<!-- Replace the custom steps using the remote file paths for those -->
-			<_TrimmerCustomSteps Remove="$(_AdditionalTaskAssembly)" />
-			<_TrimmerCustomSteps Include="$([System.String]::Copy('$(_AdditionalTaskAssembly)').Replace('$(NetCoreRoot)', '$(_DotNetRootRemoteDirectory)'))">
-				<BeforeStep>MarkStep</BeforeStep>
-				<Type>Xamarin.SetupStep</Type>
-			</_TrimmerCustomSteps>
-		</ItemGroup>
-
+		
 		<Delete SessionId="$(BuildSessionId)" Files="@(_LinkedResolvedFileToPublishCandidate)" />
 		<Xamarin.iOS.Tasks.ILLink 
 				SessionId="$(BuildSessionId)"

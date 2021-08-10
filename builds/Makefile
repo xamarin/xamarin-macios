@@ -86,7 +86,7 @@ dotnet-install.sh: Makefile
 
 # Fix the BCL assemblies we get for Mac Catalyst
 fix-maccatalyst-assembly/bin/Debug/fix-maccatalyst-assembly.exe: $(wildcard fix-maccatalyst-assembly/*.cs*) Makefile
-	$(Q) $(SYSTEM_MSBUILD) /r fix-maccatalyst-assembly/fix-maccatalyst-assembly.csproj $(MSBUILD_VERBOSITY)
+	$(Q) $(SYSTEM_MSBUILD) "/bl:$@.binlog" /r fix-maccatalyst-assembly/fix-maccatalyst-assembly.csproj $(MSBUILD_VERBOSITY)
 
 define FixMacCatalystAssembly
 $(MONO_MACCATALYST_SDK_DESTDIR)/maccat-bcl/monotouch/$(1).dll: .stamp-$(MONO_BUILD_MODE)
