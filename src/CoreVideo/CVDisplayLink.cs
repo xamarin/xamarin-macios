@@ -58,11 +58,11 @@ namespace CoreVideo {
 			this.handle = handle;
 		}
 
-		[Mac (12,0)]
+		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
 		[DllImport (Constants.CoreVideoLibrary)]
 		static extern CVReturn CVDisplayLinkCreateWithCGDisplay (uint displayId, out IntPtr displayLink);
 
-		[Mac (12,0)]
+		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
 		public static CVDisplayLink? CreateFromDisplayId (uint displayId, out CVReturn error)
 		{
 			error = CVDisplayLinkCreateWithCGDisplay (displayId, out IntPtr handle);
@@ -72,15 +72,15 @@ namespace CoreVideo {
 			return new CVDisplayLink (handle, true);
 		}
 
-		[Mac (12,0)]
+		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
 		public static CVDisplayLink? CreateFromDisplayId (uint displayId)
-			=> FromDisplayId (displayId, out var _);
+			=> CreateFromDisplayId (displayId, out var _);
 
-		[Mac (12,0)]
+		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
 		[DllImport (Constants.CoreVideoLibrary)]
 		static extern CVReturn CVDisplayLinkCreateWithCGDisplays (uint[] displayArray, nint count, out IntPtr displayLink);
 
-		[Mac (12,0)]
+		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
 		public static CVDisplayLink? CreateFromDisplayIds (uint[] displayIds, out CVReturn error)
 		{
 			if (displayIds == null)
@@ -95,22 +95,26 @@ namespace CoreVideo {
 			return new CVDisplayLink (handle, true);
 		}
 
-		[Mac (12,0)]
+		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
 		public static CVDisplayLink? CreateFromDisplayIds (uint[] displayIds)
-			=> FromDisplayIds (displayIds, out var _);
+			=> CreateFromDisplayIds (displayIds, out var _);
 
-		[Mac (12,0)]
+		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
 		[DllImport (Constants.CoreVideoLibrary)]
-		static extern int CVDisplayLinkCreateWithOpenGLDisplayMask (uint mask, out IntPtr displayLinkOut);
+		static extern CVReturn CVDisplayLinkCreateWithOpenGLDisplayMask (uint mask, out IntPtr displayLinkOut);
 
-		[Mac (12,0)]
-		public static CVDisplayLink CreateFromOpenGLMask (uint mask)
+		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
+		public static CVDisplayLink? CreateFromOpenGLMask (uint mask, out CVReturn error)
 		{
-			var result = CVDisplayLinkCreateWithOpenGLDisplayMask (mask, out IntPtr handle);
-			if (result != 0)
-				throw new Exception ($"Could not create display link for the given mask '{mask}'.");
+			error = CVDisplayLinkCreateWithOpenGLDisplayMask (mask, out IntPtr handle);
+			if (error != 0)
+				return null;
 			return new CVDisplayLink (handle, true);
 		}
+
+		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
+		public static CVDisplayLink? CreateFromOpenGLMask (uint mask)
+			=> CreateFromOpenGLMask (mask, out var _);
 
 		~CVDisplayLink ()
 		{
@@ -254,7 +258,6 @@ namespace CoreVideo {
 	  
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static CVReturn CVDisplayLinkSetOutputCallback (IntPtr displayLink, CVDisplayLinkOutputCallback function, IntPtr userInfo);
-
 		public CVReturn SetOutputCallback (DisplayLinkOutputCallback callback)
 		{
 			callbackHandle = GCHandle.Alloc (callback);
@@ -263,19 +266,19 @@ namespace CoreVideo {
 			return ret;
 		}
 
-		[Mac (12,0), NoiOS, NoTV]
+		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
 		[DllImport (Constants.CoreVideoLibrary)]
 		static extern nuint CVDisplayLinkGetTypeID ();
 
-		[Mac (12,0), NoiOS, NoTV]
+		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
 		public static nuint GetTypeId ()
 			=> CVDisplayLinkGetTypeID ();
 
-		[Mac (12,0), NoiOS, NoTV]
+		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
 		[DllImport (Constants.CoreVideoLibrary)]
 		static extern int CVDisplayLinkTranslateTime (IntPtr displayLink, CVTimeStamp inTime, ref CVTimeStamp outTime);
 
-		[Mac (12,0), NoiOS, NoTV]
+		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
 		public bool TryTranslateTime (CVTimeStamp inTime, [NotNullWhen (true)] out CVTimeStamp outTime)
 		{
 			outTime = default (CVTimeStamp);

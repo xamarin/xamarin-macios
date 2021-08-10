@@ -118,13 +118,14 @@ namespace CoreVideo {
 		[Deprecated (PlatformName.MacOSX, 12, 0)]
 		[Deprecated (PlatformName.iOS, 15, 0)]
 		[Deprecated (PlatformName.TvOS, 15, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 		[Deprecated (PlatformName.WatchOS, 8, 0)]
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static /* CFTypeRef */ IntPtr CVBufferGetAttachment (/* CVBufferRef */ IntPtr buffer, /* CFStringRef */ IntPtr key, out CVAttachmentMode attachmentMode);
 
 		// The new method is the same as the old one but changing the ownership from Get to Copy, so we will use the new version if possible since the
 		// older method has been deprecatd.
-		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0)]
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static /* CFTypeRef */ IntPtr CVBufferCopyAttachment (/* CVBufferRef */ IntPtr buffer, /* CFStringRef */ IntPtr key, out CVAttachmentMode attachmentMode);
 
@@ -158,11 +159,12 @@ namespace CoreVideo {
 		[Deprecated (PlatformName.MacOSX, 12, 0)]
 		[Deprecated (PlatformName.iOS, 15, 0)]
 		[Deprecated (PlatformName.TvOS, 15, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 		[Deprecated (PlatformName.WatchOS, 8, 0)]
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static /* CFDictionaryRef */ IntPtr CVBufferGetAttachments (/* CVBufferRef */ IntPtr buffer, CVAttachmentMode attachmentMode);
 
-		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0)]
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static /* CFDictionaryRef */ IntPtr CVBufferCopyAttachments (/* CVBufferRef */ IntPtr buffer, CVAttachmentMode attachmentMode);
 
@@ -220,6 +222,20 @@ namespace CoreVideo {
 				throw new ArgumentNullException ("theAttachments");
 			CVBufferSetAttachments (handle, theAttachments.Handle, attachmentMode);
 		}
+
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[DllImport (Constants.CoreVideoLibrary)]
+		[return: MarshalAs(UnmanagedType.U1)]
+		static extern bool CVBufferHasAttachment (/* CVBufferRef */ IntPtr buffer, /* CFStringRef */ IntPtr key);
+
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		public bool HasAttachment (NSString key)
+		{
+			if (key == null)
+				throw new ArgumentNullException (nameof (key));
+			return CVBufferHasAttachment (handle, key.Handle);
+		}
+
 #endif // !COREBUILD
 	}
 }
