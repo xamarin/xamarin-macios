@@ -25,14 +25,23 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 
 using ObjCRuntime;
 using Foundation;
 using System;
 using System.Runtime.InteropServices;
+#if NET
+using System.Runtime.Versioning;
+#endif
 
 namespace Security {
+
+#if NET
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+	[MacCatalyst (15,0)]
+#endif
 	// Untyped enum in ObjC
 	public enum AuthorizationStatus {
 		Success                 = 0,
@@ -52,6 +61,11 @@ namespace Security {
 		BadAddress              = -60033,
 	}
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+	[MacCatalyst (15,0)]
+#endif
 	// typedef UInt32 AuthorizationFlags;
 	[Flags]
 	public enum AuthorizationFlags : int {
@@ -68,18 +82,33 @@ namespace Security {
 	// For ease of use, we let the user pass the AuthorizationParameters, and we
 	// create the structure for them with the proper data
 	//
+#if NET
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+	[MacCatalyst (15,0)]
+#endif
 	public class AuthorizationParameters {
 		public string PathToSystemPrivilegeTool;
 		public string Prompt;
 		public string IconPath;
 	}
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+	[MacCatalyst (15,0)]
+#endif
 	public class AuthorizationEnvironment {
 		public string Username;
 		public string Password;
 		public bool   AddToSharedCredentialPool;
 	}
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+	[MacCatalyst (15,0)]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	struct AuthorizationItem {
 		public IntPtr /* AuthorizationString = const char * */ name;
@@ -88,11 +117,21 @@ namespace Security {
 		public int /* UInt32 */ flags;  // zero
 	}
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+	[MacCatalyst (15,0)]
+#endif
 	unsafe struct AuthorizationItemSet {
 		public int /* UInt32 */ count;
 		public AuthorizationItem * /* AuthorizationItem* */ ptrToAuthorization;
 	}
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+	[MacCatalyst (15,0)]
+#endif
 	public unsafe class Authorization : INativeObject, IDisposable {
 		IntPtr handle;
 
