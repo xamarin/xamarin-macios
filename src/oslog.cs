@@ -230,7 +230,7 @@ namespace OSLog {
 		[return: NullAllowed]
 		OSLogStore CreateStore (NSUrl url, [NullAllowed] out NSError error);
 
-		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0)]
+		[Mac (12,0)]
 		[Static]
 		[Export ("storeWithScope:error:")]
 		[return: NullAllowed]
