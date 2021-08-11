@@ -128,7 +128,7 @@ resources:
   - repository: templates
     type: github
     name: xamarin/yaml-templates
-    ref: refs/heads/main
+    ref: refs/heads/pjc/signlist-targets
     endpoint: xamarin
 
   - repository: maccore
