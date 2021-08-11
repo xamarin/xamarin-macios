@@ -38,7 +38,6 @@ stages:
   - job: push_signed_nugets
     displayName: Push NuGets
     dependsOn: signing
-    condition: false
     variables:
       skipNugetSecurityAnalysis: true
     pool:
