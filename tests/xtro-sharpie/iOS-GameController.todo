@@ -1,0 +1,6 @@
+!missing-field! GCInputButtonShare not bound
+!missing-field! GCInputMicroGamepadButtonMenu not bound
+!missing-selector! GCPhysicalInputProfile::hasRemappedElements not bound
+!missing-selector! GCPhysicalInputProfile::mappedElementAliasForPhysicalInputName: not bound
+!missing-selector! GCPhysicalInputProfile::mappedPhysicalInputNamesForElementAlias: not bound
+!missing-selector! GCXboxGamepad::buttonShare not bound

@@ -751,6 +751,7 @@ namespace Introspection {
 				case "HKDiscreteQuantitySample": // Conformance not in headers
 				case "HKAudiogramSample": // Conformance not in headers
 				case "UIImage": // only complains on tvOS beta 6
+				case "HMAccessoryOwnershipToken":
 					return true;
 				// Xcode 12 beta 2
 				case "HKElectrocardiogram": // Conformance not in headers
