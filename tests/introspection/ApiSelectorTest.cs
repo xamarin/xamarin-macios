@@ -878,8 +878,8 @@ namespace Introspection {
 					break;
 				}
 				break;
-			}
 #endif
+			}
 
 			// old binding mistake
 			return (selectorName == "initWithCoder:");

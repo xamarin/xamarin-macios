@@ -197,7 +197,6 @@ namespace ShazamKit {
 
 	[iOS (15,0), Mac (12,0), Watch (8,0), TV (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (NSObject))]
-	[DisableDefaultCtor]
 	interface SHSession
 	{
 		[Export ("catalog", ArgumentSemantic.Strong)]
