@@ -1,4 +1,4 @@
-﻿using AppKit;
+using AppKit;
 using FinderSync;
 using Foundation;
 using Social;

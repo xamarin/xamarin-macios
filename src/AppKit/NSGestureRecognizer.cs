@@ -1,4 +1,4 @@
-﻿// 
+// 
 // NSGestureRecognizer: Implements some helper methods for NSGestureRecognizer
 //
 // Authors:

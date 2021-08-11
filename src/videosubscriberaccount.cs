@@ -363,4 +363,3 @@ namespace VideoSubscriberAccount {
 		string Identifier { get; }
 	}
 }
-

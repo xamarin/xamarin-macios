@@ -1917,6 +1917,7 @@ COMMON_FRAMEWORKS =         \
 	GameKit                 \
 	NaturalLanguage         \
 	Network                 \
+	OSLog                   \
 	SceneKit                \
 	ShazamKit               \
 	SoundAnalysis 			\
@@ -1990,7 +1991,6 @@ MAC_FRAMEWORKS =            \
 	NetworkExtension        \
 	NotificationCenter 	\
 	OpenGL                  \
-	OSLog                   \
 	PassKit                 \
 	PdfKit                  \
 	PencilKit               \

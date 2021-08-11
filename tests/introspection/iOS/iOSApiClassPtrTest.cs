@@ -1,4 +1,4 @@
-﻿//
+//
 // Test fixture for class_ptr introspection tests
 //
 // Authors:
@@ -38,4 +38,3 @@ namespace Introspection {
 		}
 	}
 }
-

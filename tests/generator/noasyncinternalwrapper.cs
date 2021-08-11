@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 using Foundation;
 using ObjCRuntime;
@@ -17,4 +17,3 @@ namespace NoAsyncInternalWrapperTests {
 		void OptionalMethod (int arg1, Action<NSError> err);	
 	}
 }
-

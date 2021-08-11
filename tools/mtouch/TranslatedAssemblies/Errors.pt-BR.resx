@@ -1727,6 +1727,6 @@
 		<value>Codificação de tipo inválida para o parâmetro.</value>
 	</data>
   <data name="MX8041" xml:space="preserve">
-		<value>Unable to create an instance of the type {0}.</value>
+		<value>Não foi possível criar uma instância do tipo {0}.</value>
 	</data>
 </root>

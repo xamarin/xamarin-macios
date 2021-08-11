@@ -1,4 +1,4 @@
-﻿// 
+// 
 // VTFrameSilo.cs: VideoToolbox VTFrameSilo class
 //
 // Authors:
@@ -166,4 +166,3 @@ namespace VideoToolbox {
 		}
 	}
 }
-

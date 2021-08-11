@@ -168,14 +168,36 @@ namespace Xamarin.Bundler {
 
 		public string FrameworksDirectory {
 			get {
+				return Path.Combine (AppDirectory, RelativeFrameworksPath);
+			}
+		}
+
+		public string RelativeFrameworksPath {
+			get {
 				switch (Platform) {
 				case ApplePlatform.iOS:
 				case ApplePlatform.TVOS:
 				case ApplePlatform.WatchOS:
-					return Path.Combine (AppDirectory, "Frameworks");
+					return "Frameworks";
 				case ApplePlatform.MacOSX:
 				case ApplePlatform.MacCatalyst:
-					return Path.Combine (AppDirectory, "Contents", "Frameworks");
+					return Path.Combine ("Contents", "Frameworks");
+				default:
+					throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
+				}
+			}
+		}
+
+		public string RelativeDylibPublishPath {
+			get {
+				switch (Platform) {
+				case ApplePlatform.iOS:
+				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
+					return string.Empty;
+				case ApplePlatform.MacOSX:
+				case ApplePlatform.MacCatalyst:
+					return Path.Combine ("Contents", CustomBundleName);
 				default:
 					throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
 				}
@@ -1634,5 +1656,21 @@ namespace Xamarin.Bundler {
 			}
 		}
 
+		public bool VerifyDynamicFramework (string framework_path)
+		{
+			var framework_filename = Path.Combine (framework_path, Path.GetFileNameWithoutExtension (framework_path));
+			var dynamic = false;
+
+			try {
+				dynamic = MachO.IsDynamicFramework (framework_filename);
+			} catch (Exception e) {
+				throw ErrorHelper.CreateError (140, e, Errors.MT0140, framework_filename);
+			}
+
+			if (!dynamic)
+				Driver.Log (1, "The framework {0} is a framework of static libraries, and will not be copied to the app.", framework_path);
+
+			return dynamic;
+		}
 	}
 }

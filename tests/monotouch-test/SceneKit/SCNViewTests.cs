@@ -1,4 +1,4 @@
-﻿//
+//
 // SCNViewTests.cs
 //
 // Authors:

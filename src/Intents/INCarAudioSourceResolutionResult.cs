@@ -1,4 +1,4 @@
-﻿//
+//
 // INCarAudioSourceResolutionResult.cs
 //
 // Authors:

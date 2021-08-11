@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for ARSkeleton2D
 //
 // Authors:

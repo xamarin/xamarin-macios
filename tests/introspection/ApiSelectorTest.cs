@@ -277,6 +277,15 @@ namespace Introspection {
 					return true;
 				}
 				break;
+
+			case "OSLogMessageComponent":
+				switch (selectorName) {
+				case "encodeWithCoder:":
+					if (!TestRuntime.CheckXcodeVersion (13, 0))
+						return true;
+					break;
+				}
+				break;
 			// Conform to SKWarpable
 			case "SKEffectNode":
 			case "SKSpriteNode":

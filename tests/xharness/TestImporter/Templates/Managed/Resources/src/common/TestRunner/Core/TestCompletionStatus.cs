@@ -1,4 +1,4 @@
-﻿namespace Xamarin.iOS.UnitTests
+namespace Xamarin.iOS.UnitTests
 {
 	public enum TestCompletionStatus
 	{

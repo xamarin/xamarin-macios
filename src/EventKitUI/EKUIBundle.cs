@@ -1,4 +1,4 @@
-﻿//
+//
 // EventKitUIBundle C# bindings
 //
 // Authors:

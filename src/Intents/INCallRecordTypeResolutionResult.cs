@@ -1,4 +1,4 @@
-﻿//
+//
 // INCallRecordTypeResolutionResult.cs
 //
 // Authors:

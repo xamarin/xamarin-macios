@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for CGColor
 //
 // Authors:
@@ -124,4 +124,3 @@ namespace MonoTouchFixtures.CoreGraphics {
 		}
 	}
 }
-

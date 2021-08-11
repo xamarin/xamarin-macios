@@ -1,4 +1,4 @@
-﻿//
+//
 // MAImageCaptioning Unit Tests
 //
 // Authors:

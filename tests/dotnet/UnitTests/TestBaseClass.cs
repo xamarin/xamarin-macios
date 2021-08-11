@@ -20,6 +20,33 @@ namespace Xamarin.Tests {
 			{ "MonoBundlingExtraArgs", "-v" },
 		};
 
+		protected Dictionary<string, string> GetDefaultProperties (string? runtimeIdentifiers)
+		{
+			var rv = new Dictionary<string, string> (verbosity);
+			if (!string.IsNullOrEmpty (runtimeIdentifiers))
+				SetRuntimeIdentifiers (rv, runtimeIdentifiers);
+			return rv;
+		}
+
+		protected void SetRuntimeIdentifiers (Dictionary<string, string> properties, string runtimeIdentifiers)
+		{
+			var multiRid = runtimeIdentifiers.IndexOf (';') >= 0 ? "RuntimeIdentifiers" : "RuntimeIdentifier";
+			properties [multiRid] = runtimeIdentifiers;
+		}
+
+		protected string GetProjectPath (string project, string runtimeIdentifiers, ApplePlatform platform, out string appPath, string subdir = null)
+		{
+			return GetProjectPath (project, null, runtimeIdentifiers, platform, out appPath);
+		}
+
+		protected string GetProjectPath (string project, string subdir, string runtimeIdentifiers, ApplePlatform platform, out string appPath)
+		{
+			var rv = GetProjectPath (project, subdir, platform);
+			var appPathRuntimeIdentifier = runtimeIdentifiers.IndexOf (';') >= 0 ? "" : runtimeIdentifiers;
+			appPath = Path.Combine (Path.GetDirectoryName (rv), "bin", "Debug", platform.ToFramework (), appPathRuntimeIdentifier, project + ".app");
+			return rv;
+		}
+
 		protected string GetProjectPath (string project, string subdir = null, ApplePlatform? platform = null)
 		{
 			var project_dir = Path.Combine (Configuration.SourceRoot, "tests", "dotnet", project);

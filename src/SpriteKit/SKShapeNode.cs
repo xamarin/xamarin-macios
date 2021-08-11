@@ -1,4 +1,4 @@
-﻿//
+//
 // SKShapeNode.cs: extensions to SKShapeNode
 //
 // Authors:

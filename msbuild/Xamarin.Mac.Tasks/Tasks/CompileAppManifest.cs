@@ -1,4 +1,4 @@
-﻿//
+//
 // CompileAppManifestTask.cs
 //
 // Author:
