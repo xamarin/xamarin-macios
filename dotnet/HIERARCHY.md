@@ -52,6 +52,8 @@ Files are imported in the following order:
     * targets/Microsoft._platform_.Sdk.targets: contains logic specific to _platform_.
     * targets/Xamarin.Shared.Sdk.DefaultItems.targets: contains logic to enable the
       default behavior we want.
+    * targets/Xamarin.Shared.Sdk.Publish.targets: contains logic to publish the
+      app bundle.
     * targets/Xamarin.Shared.Sdk.targets: all of the build logic shared between all
       platforms.
 
