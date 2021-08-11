@@ -105,8 +105,7 @@ namespace IntentsUI {
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		NSObject WeakDelegate { get; set; }
 
-		[Unavailable (PlatformName.MacCatalyst)]
-		[Advice ("This API is not available when using UIKit on macOS.")]
+		[NoMacCatalyst]
 		[Export ("initWithShortcut:")]
 		IntPtr Constructor (INShortcut shortcut);
 	}
@@ -139,8 +138,7 @@ namespace IntentsUI {
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		NSObject WeakDelegate { get; set; }
 
-		[Unavailable (PlatformName.MacCatalyst)]
-		[Advice ("This API is not available when using UIKit on macOS.")]
+		[NoMacCatalyst]
 		[Export ("initWithVoiceShortcut:")]
 		IntPtr Constructor (INVoiceShortcut voiceShortcut);
 	}
