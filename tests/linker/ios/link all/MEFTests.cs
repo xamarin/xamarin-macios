@@ -80,4 +80,3 @@ namespace LinkAll.Mef {
 	}
 }
 #endif // !NET
-

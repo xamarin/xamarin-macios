@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 
 using ObjCRuntime;
@@ -13,4 +13,3 @@ namespace Foo.BindingBugs
 		void DoSomething (NSObject @object, int index);
 	}
 }
-

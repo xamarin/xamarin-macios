@@ -1105,4 +1105,3 @@ namespace CoreSpotlight {
 	}
 
 }
-

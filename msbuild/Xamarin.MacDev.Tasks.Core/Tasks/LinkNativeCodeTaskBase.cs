@@ -156,11 +156,6 @@ namespace Xamarin.MacDev.Tasks {
 				arguments.Add (DylibRPath ?? "@executable_path");
 			}
 
-			if (hasEmbeddedFrameworks) {
-				arguments.Add ("-rpath");
-				arguments.Add (FrameworkRPath ?? "@executable_path/Frameworks");
-			}
-
 			if (Frameworks != null) {
 				foreach (var fw in Frameworks) {
 					var is_weak = fw.GetMetadata ("IsWeak") == "true";
@@ -170,10 +165,16 @@ namespace Xamarin.MacDev.Tasks {
 						arguments.Add ("-F");
 						arguments.Add (Path.GetDirectoryName (Path.GetFullPath (framework)));
 						framework = Path.GetFileNameWithoutExtension (framework);
+						hasEmbeddedFrameworks = true;
 					}
 					arguments.Add (is_weak ? "-weak_framework" : "-framework");
 					arguments.Add (framework);
 				}
+			}
+
+			if (hasEmbeddedFrameworks) {
+				arguments.Add ("-rpath");
+				arguments.Add (FrameworkRPath ?? "@executable_path/Frameworks");
 			}
 
 			if (ObjectFiles != null)
@@ -227,4 +228,3 @@ namespace Xamarin.MacDev.Tasks {
 		}
 	}
 }
-

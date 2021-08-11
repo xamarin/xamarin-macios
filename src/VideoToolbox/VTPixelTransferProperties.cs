@@ -1,4 +1,4 @@
-﻿// 
+// 
 // VTPixelTransferProperties.cs: Strongly Typed dictionary for VTPixelTransferPropertyKeys 
 //
 // Authors: Alex Soto (alex.soto@xamarin.com)

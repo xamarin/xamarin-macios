@@ -25,4 +25,3 @@ namespace Network {
 		public NWUdpMetadata () : this (nw_udp_create_metadata (), owns: true) {}
 	}
 }
-

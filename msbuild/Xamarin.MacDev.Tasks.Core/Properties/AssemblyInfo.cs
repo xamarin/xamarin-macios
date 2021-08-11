@@ -1,4 +1,4 @@
-﻿//
+//
 // AssemblyInfo.cs
 //
 // Author: Jeffrey Stedfast <jeff@xamarin.com>
@@ -51,4 +51,3 @@ using System.Runtime.CompilerServices;
 //[assembly: AssemblyKeyFile("")]
 
 [assembly: InternalsVisibleTo ("Xamarin.MacDev.Tasks.Tests")]
-

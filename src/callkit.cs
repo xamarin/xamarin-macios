@@ -1,4 +1,4 @@
-﻿//
+//
 // CallKit bindings
 //
 // Authors:

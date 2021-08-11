@@ -1,4 +1,4 @@
-﻿// Copyright 2015 Xamarin Inc.
+// Copyright 2015 Xamarin Inc.
 
 #if !WATCHOS
 

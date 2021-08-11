@@ -1,4 +1,4 @@
-﻿//
+//
 // DeviceCheck C# bindings
 //
 // Authors:

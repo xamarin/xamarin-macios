@@ -1,4 +1,4 @@
-﻿//
+//
 // MonoNativeTests.cs
 //
 // Author:
