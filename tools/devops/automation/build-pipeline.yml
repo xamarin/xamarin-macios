@@ -12,7 +12,7 @@ parameters:
 
 - name: runDeviceTests
   type: boolean
-  default: true
+  default: false
 
 - name: runSamples
   type: boolean
