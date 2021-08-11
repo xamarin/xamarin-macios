@@ -2058,6 +2058,7 @@ IOS_FRAMEWORKS =         \
 	CoreSpotlight \
 	CoreTelephony \
 	CoreText \
+	DataDetection \
 	DeviceCheck \
 	EventKit \
 	EventKitUI \
