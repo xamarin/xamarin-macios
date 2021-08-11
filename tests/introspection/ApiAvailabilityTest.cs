@@ -1,4 +1,4 @@
-﻿//
+//
 // Availability tests for introspection
 //
 // Authors:

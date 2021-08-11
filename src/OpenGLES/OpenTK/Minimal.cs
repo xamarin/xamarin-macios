@@ -1,4 +1,4 @@
-﻿#define IPHONE
+#define IPHONE
 
 using System;
 using System.Collections.Generic;

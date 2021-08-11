@@ -1,4 +1,4 @@
-﻿//
+//
 // MPSStateBatch.cs
 //
 // Authors:

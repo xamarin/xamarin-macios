@@ -1,4 +1,4 @@
-﻿// Copyright 2013 Xamarin Inc. All rights reserved.
+// Copyright 2013 Xamarin Inc. All rights reserved.
 
 using System;
 using System.Collections.Generic;

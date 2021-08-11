@@ -1,4 +1,4 @@
-﻿//
+//
 // GKCompositeBehavior.cs: Implements some nicer methods for GKCompositeBehavior
 //
 // Authors:

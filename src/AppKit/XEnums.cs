@@ -83,4 +83,3 @@ namespace AppKit {
 		Grammar = 0x2
 	}
 }
-

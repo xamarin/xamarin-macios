@@ -1,4 +1,4 @@
-﻿// 
+// 
 // AVPlayerLayer.cs: AVPlayerLayer class
 //
 // Authors:

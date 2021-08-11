@@ -1,4 +1,4 @@
-﻿#if HAS_ARKIT
+#if HAS_ARKIT
 
 using System;
 using System.Runtime.InteropServices;

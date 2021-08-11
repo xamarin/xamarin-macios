@@ -1,4 +1,4 @@
-﻿//
+//
 // MDLObject Unit Tests
 //
 // Authors:

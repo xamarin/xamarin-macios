@@ -1,4 +1,4 @@
-﻿namespace fsharp
+namespace fsharp
 
 open System
 open System.Reflection

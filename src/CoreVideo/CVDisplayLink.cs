@@ -210,4 +210,3 @@ namespace CoreVideo {
 }
 
 #endif // MONOMAC
-

@@ -1,4 +1,4 @@
-﻿﻿//
+//
 // INSpeakableString.cs
 //
 // Authors:
