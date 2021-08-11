@@ -258,8 +258,10 @@ namespace LinkSdk.Aot {
 		public void Continuation_2337 ()
 		{
 			InnerTestB<string> ();
+#if !__MACOS__
 			if (Runtime.Arch == Arch.SIMULATOR)
 				Assert.Inconclusive ("only fails on devices");
+#endif
 		}
 		
 		// https://bugzilla.xamarin.com/show_bug.cgi?id=3902
@@ -323,10 +325,12 @@ namespace LinkSdk.Aot {
 			// query is ok
 			foreach (var result in results)
 				Assert.NotNull (result);
+#if !__MACOS__
 			// accessing elements throws with:
 			// Attempting to JIT compile method 'System.Linq.Enumerable:<ToLookup`2>m__5A<MonoTouchFixtures.AotBugsTest/Section, int> (MonoTouchFixtures.AotBugsTest/Section)' while running with --aot-only.
 			if (Runtime.Arch == Arch.SIMULATOR)
 				Assert.Inconclusive ("only fails on devices");
+#endif
 		}
 
 		[Test]
@@ -376,8 +380,10 @@ namespace LinkSdk.Aot {
 			OverrideGeneric g = new OverrideGeneric ();
 			// Attempting to JIT compile method 'MonoTouchFixtures.AotBugsTest/OverrideGeneric:MakeCollectionOfInputs<double> (double,double,double)' while running with --aot-only.
 			g.MakeCollectionOfInputs<double> (1.0, 2.0, 3.0);
+#if !__MACOS__
 			if (Runtime.Arch == Arch.SIMULATOR)
 				Assert.Inconclusive ("only fails on devices");
+#endif
 		}
 		
 		public sealed class NewDictionary<TKey, TValue> {
@@ -401,8 +407,10 @@ namespace LinkSdk.Aot {
 		{
 			// Attempting to JIT compile method 'MonoTouchFixtures.AotBugsTest/NewDictionary`2<string, string>:ForEach<System.Collections.Generic.KeyValuePair`2<string, string>> (System.Collections.Generic.IEnumerable`1<System.Collections.Generic.KeyValuePair`2<string, string>>,System.Action`1<System.Collections.Generic.KeyValuePair`2<string, string>>)' while running with --aot-only.
 			new NewDictionary<string, string> (null);
+#if !__MACOS__
 			if (Runtime.Arch == Arch.SIMULATOR)
 				Assert.Inconclusive ("only fails on devices");
+#endif
 		}
 		
 		public class Enumbers<T> {
