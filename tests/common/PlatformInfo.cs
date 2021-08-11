@@ -160,6 +160,8 @@ namespace Xamarin.Tests
 				// FIXME - temporary, while older attributes co-exists (in manual bindings)
 				if (ca is AvailabilityBaseAttribute old)
 					list.Add (old);
+				if (ca is ObsoleteAttribute)
+					return false;
 			}
 			return list.IsAvailable (targetPlatform);
 #else
