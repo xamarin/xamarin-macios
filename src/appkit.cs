@@ -17551,11 +17551,12 @@ namespace AppKit {
 		[Export ("tabView", ArgumentSemantic.Strong)]
 		NSTabView TabView { get; set; }
 
-//		[FAIL] Selector not found for AppKit.NSTabViewController : segmentedControl
-//		[FAIL] Selector not found for AppKit.NSTabViewController : setSegmentedControl:
-		[Availability (Obsoleted = Platform.Mac_10_11)] // Test failures on El Capitan
+#if !XAMCORE_4_0 && MONOMAC
+		// This property does not exist in any stable header - it was probably added in a beta and then removed.
+		[Unavailable (PlatformName.MacOSX)]
 		[Export ("segmentedControl", ArgumentSemantic.Strong)]
 		NSSegmentedControl SegmentedControl { get; set; }
+#endif
 
 		[Export ("transitionOptions")]
 		NSViewControllerTransitionOptions TransitionOptions { get; set; }
