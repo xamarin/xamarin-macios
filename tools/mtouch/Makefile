@@ -171,6 +171,7 @@ SIMLAUNCHER_FRAMEWORKS =  \
 	-weak_framework AdServices	\
 						\
 	-weak_framework CoreLocationUI \
+	-weak_framework OSLog \
 
 # keep the above list of weak_framework
 # 1. grouped by iOS versions;
