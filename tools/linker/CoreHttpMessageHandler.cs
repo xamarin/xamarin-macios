@@ -1,4 +1,4 @@
-﻿// Copyright 2015-2017 Xamarin Inc. All rights reserved.
+// Copyright 2015-2017 Xamarin Inc. All rights reserved.
 
 using System;
 using System.Linq;

@@ -1,4 +1,4 @@
-﻿//
+//
 // VNFaceLandmarkRegion2D.cs
 //
 // Authors:

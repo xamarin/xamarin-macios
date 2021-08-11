@@ -8,6 +8,7 @@
 //
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using Foundation;
 #if MONOMAC
@@ -47,7 +48,7 @@ namespace MonoTouchFixtures.Foundation {
 			Assert.That (value, Is.TypeOf (typeof (NSNumber)), "NSNumber");
 			Assert.That ((int) (value as NSNumber), Is.EqualTo (0), "0");
 			
-			string filename = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.Personal), "DoNotBackupMe-NSUrl");
+			string filename = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.Personal), $"DoNotBackupMe-NSUrl-{Process.GetCurrentProcess ().Id}");
 			try {
 				File.WriteAllText (filename, "not worth a bit");
 				using (NSUrl url = NSUrl.FromFilename (filename)) {

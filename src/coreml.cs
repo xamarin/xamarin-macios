@@ -1,4 +1,4 @@
-﻿//
+//
 // CoreML C# bindings
 //
 // Authors:

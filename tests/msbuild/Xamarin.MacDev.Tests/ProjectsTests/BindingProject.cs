@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+using NUnit.Framework;
 using System.IO;
 using Xamarin.Tests;
 
@@ -33,4 +33,3 @@ namespace Xamarin.iOS.Tasks
 		}
 	}
 }
-

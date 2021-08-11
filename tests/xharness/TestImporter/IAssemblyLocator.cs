@@ -1,4 +1,4 @@
-﻿namespace Xharness.TestImporter {
+namespace Xharness.TestImporter {
 
 	// interface that will help locate the test assemblies that are used to create the apps. This way, we can
 	// point to a specific location from which the asseblies well be referenced. The idea is to allow to download

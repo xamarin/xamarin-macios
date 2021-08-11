@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Foundation;
 using ObjCRuntime;
 using Security;
@@ -80,4 +80,3 @@ namespace monotouchtest
 		}
 	}
 }
-

@@ -1,4 +1,4 @@
-﻿//
+//
 // INPaymentStatusResolutionResult.cs
 //
 // Authors:
