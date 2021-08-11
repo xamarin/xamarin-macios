@@ -262,9 +262,9 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "AdServices", "AdServices", 11,1 },
 
 					{ "Chip", "CHIP", 12, 0 },
-					{ "ShazamKit", "ShazamKit", 12,0 },
 					{ "MetricKit", 12, 0 },
 					{ "Phase", "PHASE", 12, 0 },
+					{ "ShazamKit", "ShazamKit", 12,0 },
 				};
 			}
 			return mac_frameworks;
@@ -498,9 +498,9 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 7,0 },
 
 				{ "Chip", "CHIP", new Version (8, 0), NotAvailableInSimulator /* no headers in beta 2 */ },
-				{ "ShazamKit", "ShazamKit", 8,0 },
 				{ "NearbyInteraction", "NearbyInteraction", 8,0 },
 				{ "OSLog", "OSLog", 8,0 },
+				{ "ShazamKit", "ShazamKit", 8,0 },
 			};
 		}
 		return watch_frameworks;
