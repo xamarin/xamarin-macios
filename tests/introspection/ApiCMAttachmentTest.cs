@@ -229,6 +229,7 @@ namespace Introspection {
 				return true;
 			case "SecIdentity": // hangs with xcode12.5 beta 2 while loading p12 file
 			case "SecIdentity2": // same (dupe logic)
+			case "Authorization":
 				return true;
 			default:
  				return false;
@@ -466,7 +467,7 @@ namespace Introspection {
 				return new SecAccessControl (SecAccessible.WhenPasscodeSetThisDeviceOnly);
 #if __MACCATALYST__
 			case "Authorization":
-				return Authorization.Create (AuthorizationFlags.Defaults);
+				return Security.Authorization.Create (AuthorizationFlags.Defaults);
 #endif
 			default:
 				throw new InvalidOperationException (string.Format ("Could not create the new instance for type {0}.", t.Name));
