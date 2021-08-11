@@ -2257,7 +2257,6 @@ MACCATALYST_FRAMEWORKS = \
 	JavaScriptCore \
 	LinkPresentation \
 	LocalAuthentication \
-	MailKit \
 	MapKit \
 	MediaAccessibility \
 	MediaPlayer \

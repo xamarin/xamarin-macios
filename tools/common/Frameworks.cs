@@ -262,9 +262,9 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "AdServices", "AdServices", 11,1 },
 
 					{ "Chip", "CHIP", 12, 0 },
+					{ "MailKit", "MailKit", 12, 0 },
 					{ "MetricKit", 12, 0 },
 					{ "Phase", "PHASE", 12, 0 },
-					{ "MailKit", "MailKit", 12, 0 },
 				};
 			}
 			return mac_frameworks;

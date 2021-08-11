@@ -7,7 +7,7 @@ using AppKit;
 
 namespace MailKit {
 	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (12,0)]
-	[Native, Advice ("'MEComposeSessionErrorCode' is not available in UIKit on macOS.")]
+	[Native]
 	[ErrorDomain ("MEComposeSessionErrorDomain")]
 	public enum MEComposeSessionErrorCode : long
 	{
@@ -17,7 +17,7 @@ namespace MailKit {
 	}
 
 	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (12,0)]
-	[Native, Advice ("'MEMessageActionMessageColor' is not available in UIKit on macOS.")]
+	[Native]
 	public enum MEMessageActionMessageColor : long
 	{
 		None,
@@ -31,7 +31,7 @@ namespace MailKit {
 	}
 
 	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (12,0)]
-	[Native, Advice ("'MEMessageState' is not available in UIKit on macOS.")]
+	[Native]
 	public enum MEMessageState : long
 	{
 		Received = 0,
@@ -40,7 +40,6 @@ namespace MailKit {
 	}
 
 	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (12,0)]
-	[Advice ("'MEMessage' is not available in UIKit on macOS.")]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MEMessage : NSSecureCoding
@@ -85,7 +84,6 @@ namespace MailKit {
 	}
 
 	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (12,0)]
-	[Advice ("'MEMessageAction' is not available in UIKit on macOS.")]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MEMessageAction : NSSecureCoding
@@ -124,7 +122,6 @@ namespace MailKit {
 	}
 
 	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (12,0)]
-	[Advice ("'MEMessageActionDecision' is not available in UIKit on macOS.")]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MEMessageActionDecision : NSSecureCoding
@@ -139,7 +136,6 @@ namespace MailKit {
 	}
 
 	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (12,0)]
-	[Advice ("'MEMessageEncodingResult' is not available in UIKit on macOS.")]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MEMessageEncodingResult : NSSecureCoding
@@ -159,7 +155,6 @@ namespace MailKit {
 	}
 
 	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (12,0)]
-	[Advice ("'MEMessageSecurityInformation' is not available in UIKit on macOS.")]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MEMessageSecurityInformation : NSSecureCoding
@@ -181,7 +176,6 @@ namespace MailKit {
 	}
 
 	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (12,0)]
-	[Advice ("'MEMessageSigner' is not available in UIKit on macOS.")]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MEMessageSigner : NSSecureCoding
@@ -200,7 +194,6 @@ namespace MailKit {
 	}
 
 	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (12,0)]
-	[Advice ("'MEOutgoingMessageEncodingStatus' is not available in UIKit on macOS.")]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MEOutgoingMessageEncodingStatus : NSSecureCoding
@@ -222,22 +215,21 @@ namespace MailKit {
 	}
 
 	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (12,0)]
-	[Advice ("'MEAddressAnnotation' is not available in UIKit on macOS.")]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MEAddressAnnotation : NSSecureCoding
 	{
 		[Static]
 		[Export ("errorWithLocalizedDescription:")]
-		MEAddressAnnotation AnnotateError (string localizedDescription);
+		MEAddressAnnotation CreateErrorAnnotation (string localizedDescription);
 
 		[Static]
 		[Export ("warningWithLocalizedDescription:")]
-		MEAddressAnnotation AnnotateWarning (string localizedDescription);
+		MEAddressAnnotation CreateWarningAnnotation (string localizedDescription);
 
 		[Static]
 		[Export ("successWithLocalizedDescription:")]
-		MEAddressAnnotation AnnotateSuccess (string localizedDescription);
+		MEAddressAnnotation CreateSuccessAnnotation (string localizedDescription);
 	}
 
 	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (12,0)]
@@ -247,7 +239,7 @@ namespace MailKit {
 	interface MEComposeSession : NSSecureCoding
 	{
 		[Export ("sessionID", ArgumentSemantic.Strong)]
-		NSUuid SessionID { get; }
+		NSUuid SessionId { get; }
 
 		[Export ("mailMessage", ArgumentSemantic.Strong)]
 		MEMessage MailMessage { get; }
@@ -257,7 +249,6 @@ namespace MailKit {
 	}
 
 	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (12,0)]
-	[Advice ("'MEDecodedMessage' is not available in UIKit on macOS.")]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MEDecodedMessage : NSSecureCoding
@@ -273,7 +264,6 @@ namespace MailKit {
 	}
 
 	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (12,0)]
-	[Advice ("'MEEncodedOutgoingMessage' is not available in UIKit on macOS.")]
 	[BaseType (typeof (NSObject))]
 	interface MEEncodedOutgoingMessage : NSSecureCoding
 	{
@@ -305,11 +295,10 @@ namespace MailKit {
 		string AddressString { get; }
 	}
 
-	delegate void SessionHandler (NSDictionary<MEEmailAddress, MEAddressAnnotation> sessionDictionary);
+	interface IMEComposeSessionHandler {}
 
 	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (12,0)]
-	[Protocol, Advice ("'MEComposeSessionHandler' is not available in UIKit on macOS.")]
-	[BaseType (typeof (NSObject))]
+	[Protocol]
 	interface MEComposeSessionHandler
 	{
 		[Abstract]
@@ -324,11 +313,9 @@ namespace MailKit {
 		[Export ("viewControllerForSession:")]
 		MEExtensionViewController GetViewController (MEComposeSession session);
 
-		[Async]
 		[Export ("session:annotateAddressesWithCompletionHandler:")]
-		void AnnotateAddress (MEComposeSession session, SessionHandler completionHandler);
+		void AnnotateAddress (MEComposeSession session, Action<NSDictionary<MEEmailAddress, MEAddressAnnotation>> completionHandler);
 
-		[Async]
 		[Export ("session:canSendMessageWithCompletionHandler:")]
 		void AllowMessageSend (MEComposeSession session, Action<NSError> completionHandler);
 
@@ -336,9 +323,10 @@ namespace MailKit {
 		NSDictionary<NSString, NSArray<NSString>> GetAdditionalHeaders (MEComposeSession session);
 	}
 
+	interface IMEContentBlocker {}
+
 	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (12,0)]
-	[Protocol, Advice ("'MEContentBlocker' is not available in UIKit on macOS.")]
-	[BaseType (typeof (NSObject))]
+	[Protocol]
 	interface MEContentBlocker
 	{
 		[Abstract]
@@ -347,39 +335,38 @@ namespace MailKit {
 	}
 
 	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (12,0)]
-	[Protocol, Advice ("'MEExtension' is not available in UIKit on macOS.")]
-	[BaseType (typeof (NSObject))]
+	[Protocol]
 	interface MEExtension
 	{
 		[Export ("handlerForComposeSession:")]
-		MEComposeSessionHandler HandlerForComposeSession (MEComposeSession session);
+		IMEComposeSessionHandler GetHandlerForComposeSession (MEComposeSession session);
 
 		[Export ("handlerForMessageActions")]
-		MEMessageActionHandler HandlerForMessageActions { get; }
+		IMEMessageActionHandler HandlerForMessageActions { get; }
 
 		[Export ("handlerForContentBlocker")]
-		MEContentBlocker HandlerForContentBlocker { get; }
+		IMEContentBlocker HandlerForContentBlocker { get; }
 
 		[Export ("handlerForMessageSecurity")]
 		IMEMessageSecurityHandler HandlerForMessageSecurity { get; }
 	}
 
+	interface IMEMessageActionHandler {}
+
 	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (12,0)]
-	[Protocol, Advice ("'MEMessageActionHandler' is not available in UIKit on macOS.")]
-	[BaseType (typeof (NSObject))]
+	[Protocol]
 	interface MEMessageActionHandler
 	{
 		[Abstract]
 		[Export ("decideActionForMessage:completionHandler:")]
-		void CompletionHandler (MEMessage message, Action<MEMessageActionDecision> completionHandler);
+		void DecideAction (MEMessage message, Action<MEMessageActionDecision> completionHandler);
 
 		[Export ("requiredHeaders", ArgumentSemantic.Copy)]
 		string[] RequiredHeaders { get; }
 	}
 
 	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (12,0)]
-	[Protocol, Advice ("'MEMessageDecoder' is not available in UIKit on macOS.")]
-	[BaseType (typeof (NSObject))]
+	[Protocol]
 	interface MEMessageDecoder
 	{
 		[Abstract]
@@ -389,8 +376,7 @@ namespace MailKit {
 	}
 
 	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (12,0)]
-	[Protocol, Advice ("'MEMessageEncoder' is not available in UIKit on macOS.")]
-	[BaseType (typeof (NSObject))]
+	[Protocol]
 	interface MEMessageEncoder
 	{
 		[Abstract]
@@ -405,19 +391,23 @@ namespace MailKit {
 	interface IMEMessageSecurityHandler {}
 
 	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (12,0)]
-	[Protocol, Advice ("'MEMessageSecurityHandler' is not available in UIKit on macOS.")]
+	[Protocol]
 	interface MEMessageSecurityHandler : MEMessageEncoder, MEMessageDecoder
 	{
 		[Abstract]
 		[Export ("extensionViewControllerForMessageSigners:")]
 		[return: NullAllowed]
-		MEExtensionViewController ExtensionViewController (MEMessageSigner[] messageSigners);
+		MEExtensionViewController GetExtensionViewController (MEMessageSigner[] messageSigners);
 	}
 
 	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (12,0)]
-	[DisableDefaultCtor]
+	[DefaultCtorVisibility (Visibility.Protected)]
 	[BaseType (typeof (NSViewController))]
 	interface MEExtensionViewController
 	{
+		[DesignatedInitializer]
+		[Protected]
+		[Export ("initWithNibName:bundle:")]
+		IntPtr Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
 	}
 }
