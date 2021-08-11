@@ -1,4 +1,4 @@
-﻿//
+//
 // INSaveProfileInCarIntent Extensions
 //
 // Authors:

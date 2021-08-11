@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corp
+// Copyright (c) Microsoft Corp
 
 using System;
 using Microsoft.Build.Framework;

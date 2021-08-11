@@ -1,4 +1,4 @@
-﻿//
+//
 // GKObstacleGraph.cs: Implements Generic variant of GKObstacleGraph
 //
 // Authors:

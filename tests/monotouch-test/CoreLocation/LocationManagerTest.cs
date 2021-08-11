@@ -1,4 +1,4 @@
-﻿// Copyright 2019 Microsoft Corporation
+// Copyright 2019 Microsoft Corporation
 
 #if __IOS__
 

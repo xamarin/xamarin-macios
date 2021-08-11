@@ -1,4 +1,4 @@
-﻿#if !WATCH
+#if !WATCH
 
 using System;
 using System.Runtime.InteropServices;

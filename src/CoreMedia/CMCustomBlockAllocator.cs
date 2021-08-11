@@ -1,4 +1,4 @@
-﻿// 
+// 
 // CMCustomBlockAllocator.cs: Custom allocator for CMBlockBuffer apis 
 //
 // Authors:
@@ -115,4 +115,3 @@ namespace CoreMedia {
 		}
 	}
 }
-

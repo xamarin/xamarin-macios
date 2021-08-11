@@ -1,4 +1,4 @@
-﻿namespace Xamarin.MacDev.Tasks {
+namespace Xamarin.MacDev.Tasks {
 	public class CompileProductDefinition : CompileProductDefinitionTaskBase {
 	}
 }

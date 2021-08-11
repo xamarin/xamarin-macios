@@ -1,4 +1,4 @@
-﻿//
+//
 // INIntentResolutionResult Generic variant
 //
 // Authors:

@@ -1,4 +1,4 @@
-﻿//
+//
 // GKPath.cs: Implements some nicer methods for GKPath
 //
 // Authors:

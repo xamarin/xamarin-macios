@@ -76,4 +76,3 @@ namespace CoreGraphics {
 }
 
 #endif // !MONOMAC && !WATCH
-
