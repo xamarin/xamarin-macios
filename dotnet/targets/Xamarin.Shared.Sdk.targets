@@ -239,7 +239,7 @@
 			_LinkNativeExecutable;
 			_ComputePublishLocation;
 			CopyFilesToPublishDirectory;
-			_CopyFrameworksToBundle;
+			_CopyDirectoriesToBundle;
 			_CopyAppExtensionsToBundle;
 		</CreateAppBundleDependsOn>
 
@@ -631,27 +631,26 @@
 		</FilterStaticFrameworks>
 
 		<ItemGroup>
-			<_FrameworkToPublish Remove="@(_FrameworkToPublish)" />
-			<_FrameworkToPublish Include="@(_FilteredFrameworkToPublish)" />
+			<_DirectoriesToPublish Include="@(_FilteredFrameworkToPublish)" />
 		</ItemGroup>
 	</Target>
 
-	<Target Name="_CopyFrameworksToBundle"
+	<Target Name="_CopyDirectoriesToBundle"
 		DependsOnTargets="_ComputeFrameworkFilesToPublish"
-		Inputs="@(_FrameworkToPublish)"
-		Outputs="@(_FrameworkToPublish -> '%(TargetDirectory)%(Filename)')"
+		Inputs="@(_DirectoriesToPublish)"
+		Outputs="@(_DirectoriesToPublish -> '%(TargetDirectory)/%(Filename)')"
 		>
-		<!-- We specifically do *not* use the publishing logic in .NET to (ResolvedFileToPublish) copy frameworks to the app bundle, because symlinks aren't handled correctly.
+		<!-- We specifically do *not* use the publishing logic in .NET to (ResolvedFileToPublish) copy whole directories to the app bundle, because symlinks aren't handled correctly.
 			 In particular, MSBuild can't handle symlinks to directories: https://github.com/dotnet/msbuild/issues/6821.
-			 So we have a custom item group (_FrameworkToPublish), which we copy ourselves.
+			 So we have a custom item group (_DirectoriesToPublish), which we copy ourselves.
 		-->
 		<Ditto
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
 			ToolExe="$(DittoExe)"
 			ToolPath="$(DittoPath)"
-			Source="%(_FrameworkToPublish.SourceDirectory)"
-			Destination="%(_FrameworkToPublish.TargetDirectory)"
+			Source="%(_DirectoriesToPublish.SourceDirectory)"
+			Destination="%(_DirectoriesToPublish.TargetDirectory)"
 		/>
 	</Target>
 
