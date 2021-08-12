@@ -849,45 +849,6 @@ namespace Introspection {
 				if (selectorName == "waitUntilExit")
 					return true;
 				break;
-#if !__MACOS__
-			case "SHCustomCatalog":
-				switch (selectorName) {
-				case "new":
-					// This selector does not exist in the simulator
-					if (Runtime.Arch == Arch.SIMULATOR)
-						return true;
-					break;
-				}
-				break;
-			case "SHMediaItem":
-				switch (selectorName) {
-				case "fetchMediaItemWithShazamID:completionHandler:":
-				case "mediaItemWithProperties:":
-					// This selector does not exist in the simulator
-					if (Runtime.Arch == Arch.SIMULATOR)
-						return true;
-					break;
-				}
-				break;
-			case "SHMediaLibrary":
-				switch (selectorName) {
-				case "defaultLibrary":
-					// This selector does not exist in the simulator
-					if (Runtime.Arch == Arch.SIMULATOR)
-						return true;
-					break;
-				}
-				break;
-			case "SHSignature":
-				switch (selectorName) {
-				case "signatureWithDataRepresentation:error:":
-					// This selector does not exist in the simulator
-					if (Runtime.Arch == Arch.SIMULATOR)
-						return true;
-					break;
-				}
-				break;
-#endif
 			}
 
 			// old binding mistake
