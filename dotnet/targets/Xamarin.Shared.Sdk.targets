@@ -1300,9 +1300,24 @@
 
 			<!-- apple frameworks are not copied to the app bundle by using the built-in .NET logic of ResolvedFileToPublish due to symlinks -->
 			<_FrameworkNativeReference Include="@(ResolvedFileToPublish -> '%(Identity)/%(Filename)')" Condition="'%(ResolvedFileToPublish.PublishFolderType)' == 'AppleFramework' And '%(Extension)' == '.framework'" Kind="Framework" />
+			<!-- collect all the xcframeworks -->
+			<_UnresolvedXCFrameworks Include="@(ResolvedFileToPublish)" Condition="'%(ResolvedFileToPublish.PublishFolderType)' == 'AppleFramework' And '%(Extension)' == '.xcframework'" />
 			<!-- remove them all from the built-in .NET publish logic -->
 			<ResolvedFileToPublish Remove="@(ResolvedFileToPublish)" Condition="'%(ResolvedFileToPublish.PublishFolderType)' == 'AppleFramework'" />
 		</ItemGroup>
+
+		<!-- resolve any .xcframeworks and binding resource packages -->
+		<ResolveNativeReferences
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			Architectures="$(TargetArchitectures)"
+			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
+			NativeReferences="@(_UnresolvedXCFrameworks)"
+			SdkIsSimulator="$(_SdkIsSimulator)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+			>
+			<Output TaskParameter="NativeFrameworks" ItemName="_FrameworkNativeReference" />
+		</ResolveNativeReferences>
 	</Target>
 
 	<Target Name="_DecompressAppleBindingResourcePackages"
