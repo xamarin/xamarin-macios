@@ -1290,6 +1290,14 @@
 			<Output TaskParameter="UpdatedResolvedFileToPublish" ItemName="_UpdatedResolvedFileToPublish" />
 		</ComputeBundleLocation>
 
+		<ItemGroup>
+			<!-- Remove everything we've decided not to publish -->
+			<_UpdatedResolvedFileToPublish Remove="@(ResolvedFileToPublish)" Condition="'%(_UpdatedResolvedFileToPublish.PublishFolderType)' == 'None'" />
+
+			<!-- Re-populate ResolvedFileToPublish -->
+			<ResolvedFileToPublish Remove="@(ResolvedFileToPublish)" />
+			<ResolvedFileToPublish Include="@(_UpdatedResolvedFileToPublish)" />
+		</ItemGroup>
 	</Target>
 
 	<Target Name="_DecompressAppleBindingResourcePackages"
