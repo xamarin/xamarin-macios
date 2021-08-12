@@ -22,6 +22,7 @@ namespace Xamarin.MacDev.Tasks
 		protected bool Link { get; set; }
 		IList<string> prefixes;
 		string toolExe;
+		PDictionary plist;
 
 		#region Inputs
 
@@ -76,6 +77,24 @@ namespace Xamarin.MacDev.Tasks
 
 		#endregion
 
+		bool loadedAppManifest;
+		protected PDictionary GetAppManifest ()
+		{
+			if (!loadedAppManifest) {
+				if (AppManifest != null) {
+					try {
+						plist = PDictionary.FromFile (AppManifest.ItemSpec);
+					} catch (Exception ex) {
+						Log.LogError (null, null, null, AppManifest.ItemSpec, 0, 0, 0, 0, "{0}", ex.Message);
+						return null;
+					}
+				}
+				loadedAppManifest = true;
+			}
+
+			return plist;
+		}
+
 		protected abstract string DefaultBinDir {
 			get;
 		}
@@ -113,7 +132,12 @@ namespace Xamarin.MacDev.Tasks
 			return id.Value == "com.apple.watchkit";
 		}
 
-		protected IEnumerable<string> GetTargetDevices (PDictionary plist)
+		protected IEnumerable<string> GetTargetDevices ()
+		{
+			return GetTargetDevices (GetAppManifest ());
+		}
+
+		IEnumerable<string> GetTargetDevices (PDictionary plist)
 		{
 			var devices = IPhoneDeviceType.NotSet;
 			bool watch = false;
