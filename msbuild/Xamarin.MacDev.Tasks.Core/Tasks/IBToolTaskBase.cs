@@ -40,7 +40,11 @@ namespace Xamarin.MacDev.Tasks
 			get { return "ibtool"; }
 		}
 
-		protected abstract bool AutoActivateCustomFonts { get; }
+		protected bool AutoActivateCustomFonts {
+			get {
+				return Platform != ApplePlatform.MacOSX;
+			}
+		}
 
 		protected override bool UseCompilationDirectory {
 			get { return AppleSdkSettings.XcodeVersion >= new Version (6, 3); }
