@@ -214,5 +214,30 @@ namespace Xamarin.Tests {
 
 			return csproj;
 		}
+
+		protected void ExecuteWithMagicWordAndAssert (ApplePlatform platform, string runtimeIdentifiers, string executable)
+		{
+			if (!CanExecute (platform, runtimeIdentifiers))
+				return;
+
+			ExecuteWithMagicWordAndAssert (executable);
+		}
+
+		protected void ExecuteWithMagicWordAndAssert (string executable)
+		{
+			if (!File.Exists (executable))
+				throw new FileNotFoundException ($"The executable '{executable}' does not exists.");
+
+			var magicWord = Guid.NewGuid ().ToString ();
+			var env = new Dictionary<string, string?> {
+				{ "MAGIC_WORD", magicWord },
+				{ "DYLD_FALLBACK_LIBRARY_PATH", null }, // VSMac might set this, which may cause tests to crash.
+			};
+
+			var output = new StringBuilder ();
+			var rv = Execution.RunWithStringBuildersAsync (executable, Array.Empty<string> (), environment: env, standardOutput: output, standardError: output, timeout: TimeSpan.FromSeconds (15)).Result;
+			Assert.That (output.ToString (), Does.Contain (magicWord), "Contains magic word");
+			Assert.AreEqual (0, rv.ExitCode, "ExitCode");
+		}
 	}
 }
