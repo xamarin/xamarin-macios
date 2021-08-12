@@ -602,6 +602,7 @@
 	<PropertyGroup>
 		<_ComputeFrameworkFilesToPublishDependsOn>
 			$(_ComputeFrameworkFilesToPublishDependsOn);
+			_DecompressAppleFrameworks;
 			_ExpandNativeReferences;
 			_ComputeVariables;
 			_LoadLinkerOutput;
@@ -841,6 +842,7 @@
 			<_RelativeAppBundlePath>$([MSBuild]::MakeRelative($(_AbsolutePublishDir),$(MSBuildProjectDirectory)/$(_AppBundlePath)))</_RelativeAppBundlePath>
 
 			<_IntermediateNativeLibraryDir>$(IntermediateOutputPath)nativelibraries/</_IntermediateNativeLibraryDir>
+			<_IntermediateFrameworksDir>$(DeviceSpecificIntermediateOutputPath)frameworks</_IntermediateFrameworksDir>
 			<_NativeExecutableName>$(_AppBundleName)</_NativeExecutableName>
 			<_NativeExecutablePublishDir Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'">$(_RelativeAppBundlePath)\</_NativeExecutablePublishDir>
 			<_NativeExecutablePublishDir Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">$(_RelativeAppBundlePath)\Contents\MacOS\</_NativeExecutablePublishDir>
@@ -1233,6 +1235,52 @@
 				            "
 			/>
 		</ItemGroup>
+
+	<Target Name="_DecompressAppleFrameworks"
+		Inputs="@(_CompressedAppleFrameworks)"
+		Outputs="@(_CompressedAppleFrameworks -> '$(_IntermediateFrameworksDir)/%(Filename)%(Extension).stamp')"
+		DependsOnTargets="_ComputePublishLocation;_ComputeVariables"
+		BeforeTargets="_ExpandNativeReferences"
+		>
+
+		<Ditto
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			AdditionalArguments="-x -k"
+			Source="%(_CompressedAppleFrameworks.Identity)"
+			Destination="$(_IntermediateFrameworksDir)/%(Filename)%(Extension)"
+			>
+		</Ditto>
+
+		<ItemGroup>
+			<!-- include any normal frameworks directly in _FrameworkNativeReference. -->
+			<_DecompressedFramework Include="$([System.IO.Directory]::GetDirectories('$(_IntermediateFrameworksDir)/%(_CompressedAppleFrameworks.Filename)%(_CompressedAppleFrameworks.Extension)','*.framework'))" />
+			<_FrameworkNativeReference Include="@(_DecompressedFramework -> '%(Identity)/%(Filename)')" Kind="Framework" />
+			<!-- .xcframeworks need to be resolved to a platform-specific .framework-->
+			<_DecompressedXCFramework Include="$([System.IO.Directory]::GetDirectories('$(_IntermediateFrameworksDir)/%(_CompressedAppleFrameworks.Filename)%(_CompressedAppleFrameworks.Extension)','*.xcframework'))" />
+		</ItemGroup>
+
+		<!-- resolve the .xcframeworks -->
+		<ResolveNativeReferences
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			Architectures="$(TargetArchitectures)"
+			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
+			NativeReferences="@(_DecompressedXCFramework)"
+			SdkIsSimulator="$(_SdkIsSimulator)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+			>
+			<Output TaskParameter="NativeFrameworks" ItemName="_FrameworkNativeReference" />
+		</ResolveNativeReferences>
+
+		<Touch
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			AlwaysCreate="true"
+			Files="@(_CompressedAppleFrameworks -> '$(_IntermediateFrameworksDir)/%(Filename)%(Extension).stamp')"
+			>
+			<Output TaskParameter="TouchedFiles" ItemName="FileWrites" />
+		</Touch>
 	</Target>
 
 	<Target Name="_ValidateRuntimeIdentifier"
