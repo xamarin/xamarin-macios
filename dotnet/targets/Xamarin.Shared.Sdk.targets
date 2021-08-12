@@ -1304,6 +1304,10 @@
 			<_UnresolvedXCFrameworks Include="@(ResolvedFileToPublish)" Condition="'%(ResolvedFileToPublish.PublishFolderType)' == 'AppleFramework' And '%(Extension)' == '.xcframework'" />
 			<!-- remove them all from the built-in .NET publish logic -->
 			<ResolvedFileToPublish Remove="@(ResolvedFileToPublish)" Condition="'%(ResolvedFileToPublish.PublishFolderType)' == 'AppleFramework'" />
+
+			<!-- compressed frameworks are uncompressed, but the compressed file is not copied to the app bundle -->
+			<_CompressedAppleFrameworks Include="@(ResolvedFileToPublish)" Condition="'%(ResolvedFileToPublish.PublishFolderType)' == 'CompressedAppleFramework'" />
+			<ResolvedFileToPublish Remove="@(_CompressedAppleFrameworks)" />
 		</ItemGroup>
 
 		<!-- resolve any .xcframeworks and binding resource packages -->
