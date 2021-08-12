@@ -1333,6 +1333,12 @@
 			<_ResolvedFileToPublish_DynamicLibrary Include="@(ResolvedFileToPublish)" Condition="'%(ResolvedFileToPublish.PublishFolderType)' == 'DynamicLibrary'" />
 			<_FileNativeReference Include="@(_ResolvedFileToPublish_DynamicLibrary)" Kind="Dynamic" />
 			<ResolvedFileToPublish Remove="@(_ResolvedFileToPublish_DynamicLibrary)" />
+
+			<!-- we link with the contents of binding resource packages, but the packages themselves aren't copied to the app bundle, so remove them here -->
+			<_AppleBindingResourcePackage Include="@(ResolvedFileToPublish)" Condition="'%(ResolvedFileToPublish.PublishFolderType)' == 'AppleBindingResourcePackage'" />
+			<_CompressedAppleBindingResourcePackage Include="@(ResolvedFileToPublish)" Condition="'%(ResolvedFileToPublish.PublishFolderType)' == 'CompressedAppleBindingResourcePackage'" />
+			<ResolvedFileToPublish Remove="@(_AppleBindingResourcePackage)" />
+			<ResolvedFileToPublish Remove="@(_CompressedAppleBindingResourcePackage)" />
 		</ItemGroup>
 
 		<!-- resolve any .xcframeworks and binding resource packages -->
@@ -1340,6 +1346,7 @@
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
 			Architectures="$(TargetArchitectures)"
+			BindingResourcePackages="@(_AppleBindingResourcePackage)"
 			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
 			NativeReferences="@(_UnresolvedXCFrameworks)"
 			SdkIsSimulator="$(_SdkIsSimulator)"
