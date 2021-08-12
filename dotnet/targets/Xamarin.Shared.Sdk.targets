@@ -1237,6 +1237,24 @@
 				            "
 			/>
 		</ItemGroup>
+
+		<ComputeBundleLocation
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			AssemblyDirectory="$(_AppContentsRelativePath)"
+			BundleResource="@(BundleResource)"
+			Content="@(Content)"
+			EmbeddedResource="@(EmbeddedResource)"
+			FrameworksDirectory="$(_AppFrameworksRelativePath)"
+			PlugInsDirectory="$(_AppPlugInsRelativePath)"
+			ProjectDir="$(MSBuildProjectDirectory)"
+			ResolvedFileToPublish="@(ResolvedFileToPublish)"
+			ResourceDirectory="$(_AppResourcesRelativePath)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+		>
+			<Output TaskParameter="UpdatedResolvedFileToPublish" ItemName="_UpdatedResolvedFileToPublish" />
+		</ComputeBundleLocation>
+
 	</Target>
 
 	<Target Name="_DecompressAppleBindingResourcePackages"
