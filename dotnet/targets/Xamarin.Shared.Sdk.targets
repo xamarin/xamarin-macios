@@ -1319,6 +1319,10 @@
 			<_DirectoriesToPublish Include="@(_PlugIns)" />
 			<!-- Finally remove from ResolvedFileToPublish -->
 			<ResolvedFileToPublish Remove="@(_PlugIns)" />
+
+			<!-- compressed plugins are uncompressed, but the compressed file is not copied to the app bundle -->
+			<_CompressedPlugIns Include="@(ResolvedFileToPublish)" Condition="'%(ResolvedFileToPublish.PublishFolderType)' == 'CompressedPlugIns'" />
+			<ResolvedFileToPublish Remove="@(_CompressedPlugIns)" />
 		</ItemGroup>
 
 		<!-- resolve any .xcframeworks and binding resource packages -->
