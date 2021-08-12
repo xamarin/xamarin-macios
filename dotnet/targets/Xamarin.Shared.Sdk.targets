@@ -770,6 +770,7 @@
 			<_PackageIdInfix Condition="'$(UseMonoRuntime)' == 'true'">Mono.</_PackageIdInfix>
 
 			<_MonoNugetPackageId>Microsoft.NETCore.App.Runtime.$(_PackageIdInfix)$(RuntimeIdentifier)</_MonoNugetPackageId>
+			<_XamarinNugetPackageId>Microsoft.$(_PlatformName).Runtime.$(RuntimeIdentifier)</_XamarinNugetPackageId>
 		</PropertyGroup>
 		<ItemGroup>
 			<!-- Look in the ResolvedFrameworkReference for our Microsoft.* package. This should only find a single package. -->
@@ -1222,12 +1223,21 @@
 			/>
 
 			<!-- There's no need to ship .a files -->
+			<!-- We need to remove these from ResolvedFileToPublish before calling ComputeBundleLocation, because we don't want to link with all of these static libraries -->
 			<ResolvedFileToPublish
 				Remove="@(ResolvedFileToPublish)"
 				Condition=" '%(ResolvedFileToPublish.AssetType)' == 'native' And
 				            '%(ResolvedFileToPublish.RuntimeIdentifier)' == '$(RuntimeIdentifier)' And
 				            '%(ResolvedFileToPublish.Extension)' == '.a' And
 				            '%(ResolvedFileToPublish.NuGetPackageId)' == '$(_MonoNugetPackageId)'
+				            "
+			/>
+			<ResolvedFileToPublish
+				Remove="@(ResolvedFileToPublish)"
+				Condition=" '%(ResolvedFileToPublish.AssetType)' == 'native' And
+				            '%(ResolvedFileToPublish.RuntimeIdentifier)' == '$(RuntimeIdentifier)' And
+				            '%(ResolvedFileToPublish.Extension)' == '.a' And
+				            '%(ResolvedFileToPublish.NuGetPackageId)' == '$(_XamarinNugetPackageId)'
 				            "
 			/>
 
