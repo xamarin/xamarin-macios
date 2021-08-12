@@ -1339,6 +1339,9 @@
 			<_CompressedAppleBindingResourcePackage Include="@(ResolvedFileToPublish)" Condition="'%(ResolvedFileToPublish.PublishFolderType)' == 'CompressedAppleBindingResourcePackage'" />
 			<ResolvedFileToPublish Remove="@(_AppleBindingResourcePackage)" />
 			<ResolvedFileToPublish Remove="@(_CompressedAppleBindingResourcePackage)" />
+
+			<!-- Rewrite the relative path so that everything ends up in the app bundle -->
+			<ResolvedFileToPublish RelativePath="$(_RelativeAppBundlePath)\%(RelativePath)" />
 		</ItemGroup>
 
 		<!-- resolve any .xcframeworks and binding resource packages -->
