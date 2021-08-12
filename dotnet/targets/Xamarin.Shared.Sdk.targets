@@ -1185,10 +1185,27 @@
 				Update="@(ResolvedFileToPublish)"
 				RelativePath="$(_DylibPublishDir)\%(Filename)%(Extension)"
 				Condition="('$(_SdkIsSimulator)' != 'false' Or '$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst') And '%(Extension)' == '.dylib'" />
+
+			<!-- Don't publish any icu*dat file (by setting PublishFolderType = None) -->
+			<ResolvedFileToPublish
+				Update="@(ResolvedFileToPublish)"
+				Condition=" '%(ResolvedFileToPublish.Extension)' == '.dat' And
+				             $([System.String]::new('%(ResolvedFileToPublish.Filename)').StartsWith('icudt')) And
+				            '%(ResolvedFileToPublish.NuGetPackageId)' == '$(_MonoNugetPackageId)'
+				            "
+				PublishFolderType="None"
+			/>
+			<!-- add back the one we want (if any) - macOS is using CoreCLR, so that's not handled here -  by setting PublishFolderType = Assembly (so that it's next to where we store the assemblies, which is where we're currently looking for it at runtime) -->
 			<ResolvedFileToPublish
 				Update="@(ResolvedFileToPublish)"
 				RelativePath="$(_AssemblyPublishDir)\%(Filename)%(Extension)"
-				Condition="'$(_PlatformName)' != 'macOS' And '$(InvariantGlobalization)' != 'true' And '%(Filename)%(Extension)' == '$(_GlobalizationDataFile)'" />
+				Condition=" '$(_PlatformName)' != 'macOS' And
+				            '$(InvariantGlobalization)' != 'true' And
+				            '%(ResolvedFileToPublish.Filename)%(ResolvedFileToPublish.Extension)' == '$(_GlobalizationDataFile)' And
+				            '%(ResolvedFileToPublish.NuGetPackageId)' == '$(_MonoNugetPackageId)'
+				            "
+				PublishFolderType="Assembly"
+			/>
 
 			<!-- Remove the libxamarin-*.dylib files we don't want -->
 			<ResolvedFileToPublish Remove="@(ResolvedFileToPublish)" Condition="'%(Extension)' == '.dylib' And '%(Filename)%(Extension)' != '$(_LibXamarinName)' And $([System.String]::new('%(Filename)').StartsWith('libxamarin-dotnet', StringComparison.Ordinal))" />
