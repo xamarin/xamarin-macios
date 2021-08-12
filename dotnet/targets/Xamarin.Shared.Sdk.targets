@@ -1245,7 +1245,6 @@
 			<!-- Ref: https://github.com/xamarin/xamarin-macios/issues/11432 -->
 			<ResolvedFileToPublish
 				Update="@(ResolvedFileToPublish)"
-				RelativePath="$(_DylibPublishDir)\%(Filename)%(Extension)"
 				Condition=" '$(UseMonoRuntime)' == 'false' And
 				            '%(ResolvedFileToPublish.Filename)' == 'createdump' And
 				            '%(ResolvedFileToPublish.Extension)' == '' And
@@ -1253,6 +1252,7 @@
 				            '%(ResolvedFileToPublish.RuntimeIdentifier)' == '$(RuntimeIdentifier)' And
 				            '%(ResolvedFileToPublish.NuGetPackageId)' == '$(_MonoNugetPackageId)'
 				            "
+				PublishFolderType="Assembly"
 			/>
 
 			<!-- Remove any dylibs Mono told us not to link with -->
