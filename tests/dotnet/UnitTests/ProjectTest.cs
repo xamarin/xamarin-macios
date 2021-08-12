@@ -616,10 +616,39 @@ namespace Xamarin.Tests {
 				ExecuteWithMagicWordAndAssert (appExecutable);
 		}
 
+		[Test]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
+		[TestCase (ApplePlatform.MacOSX, "osx-x64")]
+		public void SimpleAppWithOldReferences (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			var project = "SimpleAppWithOldReferences";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			Clean (project_path);
+
+			DotNet.AssertBuild (project_path, GetDefaultProperties (runtimeIdentifiers));
+
+			var appExecutable = Path.Combine (appPath, "Contents", "MacOS", Path.GetFileNameWithoutExtension (project_path));
+			Assert.That (appExecutable, Does.Exist, "There is an executable");
+			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
+		}
+
+		void ExecuteWithMagicWordAndAssert (ApplePlatform platform, string runtimeIdentifiers, string executable)
+		{
+			if (!CanExecute (platform, runtimeIdentifiers))
+				return;
+
+			ExecuteWithMagicWordAndAssert (executable);
+		}
+
 		void ExecuteWithMagicWordAndAssert (string executable)
 		{
 			var magicWord = Guid.NewGuid ().ToString ();
-			var env = new Dictionary<string, string> { { "MAGIC_WORD", magicWord } };
+			var env = new Dictionary<string, string> {
+				{ "MAGIC_WORD", magicWord },
+				{ "DYLD_FALLBACK_LIBRARY_PATH", null }, // VSMac might set this, which may cause tests to crash.
+			};
 
 			var output = new StringBuilder ();
 			var rv = Execution.RunWithStringBuildersAsync (executable, Array.Empty<string> (), environment: env, standardOutput: output, standardError: output, timeout: TimeSpan.FromSeconds (15)).Result;
