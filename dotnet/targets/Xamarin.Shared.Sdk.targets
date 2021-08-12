@@ -1153,7 +1153,10 @@
 		</_ComputeLinkModeDependsOn>
 	</PropertyGroup>
 
-	<Target Name="_ComputePublishLocation" DependsOnTargets="_GenerateBundleName;_ParseBundlerArguments;_ComputeMonoLibraries">
+	<Target Name="_ComputePublishLocation"
+		DependsOnTargets="_GenerateBundleName;_ParseBundlerArguments;_ComputeMonoLibraries"
+		Condition="'$(_CanOutputAppBundle)' == 'true'"
+		>
 		<PropertyGroup>
 			<_AssemblyPublishDir Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'">$(_RelativeAppBundlePath)\</_AssemblyPublishDir>
 			<_AssemblyPublishDir Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">$(_RelativeAppBundlePath)\Contents\$(_CustomBundleName)\</_AssemblyPublishDir>
