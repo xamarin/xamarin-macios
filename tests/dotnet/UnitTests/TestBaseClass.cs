@@ -126,6 +126,36 @@ namespace Xamarin.Tests {
 			}
 		}
 
+		protected string GetRelativeResourcesDirectory (ApplePlatform platform)
+		{
+			switch (platform) {
+			case ApplePlatform.iOS:
+			case ApplePlatform.TVOS:
+			case ApplePlatform.WatchOS:
+				return "Resources";
+			case ApplePlatform.MacOSX:
+			case ApplePlatform.MacCatalyst:
+				return Path.Combine ("Contents", "Resources");
+			default:
+				throw new ArgumentOutOfRangeException ($"Unknown platform: {platform}");
+			}
+		}
+
+		protected string GetRelativeAssemblyDirectory (ApplePlatform platform)
+		{
+			switch (platform) {
+			case ApplePlatform.iOS:
+			case ApplePlatform.TVOS:
+			case ApplePlatform.WatchOS:
+				return string.Empty;
+			case ApplePlatform.MacOSX:
+			case ApplePlatform.MacCatalyst:
+				return Path.Combine ("Contents", "MonoBundle");
+			default:
+				throw new NotImplementedException ($"Unknown platform: {platform}");
+			}
+		}
+
 		protected string GetInfoPListPath (ApplePlatform platform, string app_directory)
 		{
 			switch (platform) {

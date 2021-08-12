@@ -635,7 +635,7 @@ namespace Xamarin.Tests
 			return GetBaseLibraryName (targetFramework.Platform);
 		}
 
-		static string GetBaseLibraryName (ApplePlatform platform)
+		public static string GetBaseLibraryName (ApplePlatform platform)
 		{
 			switch (platform) {
 			case ApplePlatform.iOS:
