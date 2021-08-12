@@ -17553,7 +17553,7 @@ namespace AppKit {
 
 #if !XAMCORE_4_0 && MONOMAC
 		// This property does not exist in any stable header - it was probably added in a beta and then removed.
-		[Unavailable (PlatformName.MacOSX)]
+		[Obsoleted (PlatformName.MacOSX, 10, 10, message: "Do not use; this API was removed.")]
 		[Export ("segmentedControl", ArgumentSemantic.Strong)]
 		NSSegmentedControl SegmentedControl { get; set; }
 #endif
