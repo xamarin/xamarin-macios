@@ -1297,6 +1297,11 @@
 			<!-- Re-populate ResolvedFileToPublish -->
 			<ResolvedFileToPublish Remove="@(ResolvedFileToPublish)" />
 			<ResolvedFileToPublish Include="@(_UpdatedResolvedFileToPublish)" />
+
+			<!-- apple frameworks are not copied to the app bundle by using the built-in .NET logic of ResolvedFileToPublish due to symlinks -->
+			<_FrameworkNativeReference Include="@(ResolvedFileToPublish -> '%(Identity)/%(Filename)')" Condition="'%(ResolvedFileToPublish.PublishFolderType)' == 'AppleFramework' And '%(Extension)' == '.framework'" Kind="Framework" />
+			<!-- remove them all from the built-in .NET publish logic -->
+			<ResolvedFileToPublish Remove="@(ResolvedFileToPublish)" Condition="'%(ResolvedFileToPublish.PublishFolderType)' == 'AppleFramework'" />
 		</ItemGroup>
 	</Target>
 
