@@ -637,7 +637,7 @@
 	</Target>
 
 	<Target Name="_CopyDirectoriesToBundle"
-		DependsOnTargets="_ComputeFrameworkFilesToPublish"
+		DependsOnTargets="_DecompressPlugIns;_ComputeFrameworkFilesToPublish"
 		Inputs="@(_DirectoriesToPublish)"
 		Outputs="@(_DirectoriesToPublish -> '%(TargetDirectory)/%(Filename)')"
 		>
@@ -843,6 +843,7 @@
 
 			<_IntermediateNativeLibraryDir>$(IntermediateOutputPath)nativelibraries/</_IntermediateNativeLibraryDir>
 			<_IntermediateFrameworksDir>$(DeviceSpecificIntermediateOutputPath)frameworks</_IntermediateFrameworksDir>
+			<_IntermediateDecompressionDir>$(DeviceSpecificIntermediateOutputPath)decompressed</_IntermediateDecompressionDir>
 			<_NativeExecutableName>$(_AppBundleName)</_NativeExecutableName>
 			<_NativeExecutablePublishDir Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'">$(_RelativeAppBundlePath)\</_NativeExecutablePublishDir>
 			<_NativeExecutablePublishDir Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">$(_RelativeAppBundlePath)\Contents\MacOS\</_NativeExecutablePublishDir>
@@ -1235,6 +1236,46 @@
 				            "
 			/>
 		</ItemGroup>
+
+	<Target Name="_DecompressPlugIns"
+		Inputs="@(_CompressedPlugIns)"
+		DependsOnTargets="_ComputePublishLocation;_ComputeVariables"
+		Outputs="@(_CompressedPlugIns -> '$(_IntermediateDecompressionDir)/%(Filename)%(Extension).stamp')"
+		>
+
+		<Ditto
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			AdditionalArguments="-x -k"
+			Source="%(_CompressedPlugIns.Identity)"
+			Destination="$(_IntermediateDecompressionDir)/%(Filename)%(Extension)"
+			>
+		</Ditto>
+
+		<ItemGroup>
+			<!-- Set TargetDirectory and SourceDirectory for all directories we have to publish -->
+			<_DecompressedPlugIns Include="@(_CompressedPlugIns -> '$(_IntermediateDecompressionDir)/%(Filename)%(Extension)')" />
+		</ItemGroup>
+		<ItemGroup>
+			<_DecompressedPlugIns Update="@(_DecompressedPlugIns)">
+				<TargetDirectory>$(_RelativePublishDir)$(_RelativeAppBundlePath)$(_AppPlugInsRelativePath)</TargetDirectory>
+				<SourceDirectory>$(_IntermediateDecompressionDir)/%(Filename)%(Extension)</SourceDirectory>
+			</_DecompressedPlugIns>
+		</ItemGroup>
+
+		<Touch
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			AlwaysCreate="true"
+			Files="@(_CompressedPlugIns -> '$(_IntermediateDecompressionDir)/%(Filename)%(Extension).stamp')"
+			>
+			<Output TaskParameter="TouchedFiles" ItemName="FileWrites" />
+		</Touch>
+
+		<ItemGroup>
+			<_DirectoriesToPublish Include="@(_DecompressedPlugIns)" />
+		</ItemGroup>
+	</Target>
 
 	<Target Name="_DecompressAppleFrameworks"
 		Inputs="@(_CompressedAppleFrameworks)"
