@@ -1323,6 +1323,11 @@
 			<!-- compressed plugins are uncompressed, but the compressed file is not copied to the app bundle -->
 			<_CompressedPlugIns Include="@(ResolvedFileToPublish)" Condition="'%(ResolvedFileToPublish.PublishFolderType)' == 'CompressedPlugIns'" />
 			<ResolvedFileToPublish Remove="@(_CompressedPlugIns)" />
+
+			<!-- we link with static libraries, but we don't copy them to the app bundle -->
+			<_ResolvedFileToPublish_StaticLibrary Include="@(ResolvedFileToPublish)" Condition="'%(ResolvedFileToPublish.PublishFolderType)' == 'StaticLibrary'" />
+			<_FileNativeReference Include="@(_ResolvedFileToPublish_StaticLibrary)" Kind="Static" />
+			<ResolvedFileToPublish Remove="@(_ResolvedFileToPublish_StaticLibrary)" />
 		</ItemGroup>
 
 		<!-- resolve any .xcframeworks and binding resource packages -->
