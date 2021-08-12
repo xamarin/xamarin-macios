@@ -7,6 +7,12 @@ SUBDIRS += custom-type-assembly
 # in system headers show up.
 export CCACHE_CPP2=1
 
+ifeq ($(V),)
+ZIP=zip --symlinks --quiet
+else
+ZIP=zip --symlinks
+endif
+
 GENERATED_FILES = \
 	libtest.structs.h \
 	libtest.decompile.m \
@@ -326,6 +332,32 @@ ifdef INCLUDE_MACCATALYST
 XCPLATFORMS+= maccatalyst
 endif
 
+define ZippedFrameworkTemplate
+.libs/$(1)/XTest.framework.zip: $$($(2)_TARGETS)
+	$$(Q_ZIP) cd .libs/$(1) && $(ZIP) -r XTest.framework.zip XTest.framework
+
+ZIPPED_TARGETS += .libs/$(1)/XTest.framework.zip
+endef
+
+ifdef INCLUDE_IOS
+$(eval $(call ZippedFrameworkTemplate,ios-fat,IPHONESIMULATOR))
+endif
+ifdef INCLUDE_TVOS
+$(eval $(call ZippedFrameworkTemplate,tvos-fat,TVSIMULATOR))
+endif
+ifdef INCLUDE_WATCH
+$(eval $(call ZippedFrameworkTemplate,watchos-fat,WATCHSIMULATOR))
+endif
+ifdef INCLUDE_MACCATALYST
+$(eval $(call ZippedFrameworkTemplate,maccatalyst-fat,MACCATALYST))
+endif
+ifdef INCLUDE_MAC
+$(eval $(call ZippedFrameworkTemplate,macos-fat,MACOS))
+endif
+
+all-local:: $(ZIPPED_TARGETS)
+zip: $(ZIPPED_TARGETS)
+
 XTEST_XCFRAMEWORKS += $(foreach platform,$(XCPLATFORMS),.libs/$(platform)/XTest.framework)
 XTEST_XCTARGETS += \
 	$(foreach platform,$(XCPLATFORMS),.libs/$(platform)/XTest.framework.stamp) \
@@ -351,6 +383,11 @@ LIBTEST2_XCFRAMEWORKS += $(foreach platform,$(XCPLATFORMS),.libs/$(platform)/lib
 	$(Q_GEN) $(XCODE_DEVELOPER_ROOT)/usr/bin/xcodebuild -quiet -create-xcframework $(foreach lib,$(LIBTEST2_XCFRAMEWORKS),-library $(lib)) -output $@
 
 all-local:: .libs/libtest2.xcframework
+
+.libs/XTest.xcframework.zip: .libs/XTest.xcframework
+	$(Q_ZIP) cd .libs && $(ZIP) -r "$(notdir $@)" "$(notdir $<)"
+
+all-local:: .libs/XTest.xcframework.zip
 
 # Xamarin.Mac
 
