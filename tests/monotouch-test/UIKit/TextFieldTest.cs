@@ -61,7 +61,7 @@ namespace MonoTouchFixtures.UIKit {
 				tf.TypingAttributes = new NSDictionary ();
 				
 				if (TestRuntime.CheckXcodeVersion (13, 0)) {
-						Assert.That (tf.TypingAttributes, Is.Empty, "empty");
+						Assert.That (tf.TypingAttributes, Is.Not.Empty, "empty");
 				} else if (TestRuntime.CheckXcodeVersion (11, 0)) {
 					if (TestRuntime.CheckXcodeVersion (11, 4))
 						Assert.That (tf.TypingAttributes, Is.Not.Empty, "not empty"); // iOS 13.4 returns contents
