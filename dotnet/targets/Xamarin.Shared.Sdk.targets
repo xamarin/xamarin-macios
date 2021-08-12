@@ -1328,6 +1328,11 @@
 			<_ResolvedFileToPublish_StaticLibrary Include="@(ResolvedFileToPublish)" Condition="'%(ResolvedFileToPublish.PublishFolderType)' == 'StaticLibrary'" />
 			<_FileNativeReference Include="@(_ResolvedFileToPublish_StaticLibrary)" Kind="Static" />
 			<ResolvedFileToPublish Remove="@(_ResolvedFileToPublish_StaticLibrary)" />
+
+			<!-- we link with dynamic libraries, and we copy them to the app bundle (the copying part is handled in _ComputeDynamicLibrariesToPublish) -->
+			<_ResolvedFileToPublish_DynamicLibrary Include="@(ResolvedFileToPublish)" Condition="'%(ResolvedFileToPublish.PublishFolderType)' == 'DynamicLibrary'" />
+			<_FileNativeReference Include="@(_ResolvedFileToPublish_DynamicLibrary)" Kind="Dynamic" />
+			<ResolvedFileToPublish Remove="@(_ResolvedFileToPublish_DynamicLibrary)" />
 		</ItemGroup>
 
 		<!-- resolve any .xcframeworks and binding resource packages -->
