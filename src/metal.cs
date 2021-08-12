@@ -877,18 +877,16 @@ namespace Metal {
 #if XAMCORE_4_0
 		[Abstract]
 #endif
-		[Unavailable (PlatformName.MacCatalyst)]
 		[Mac (11,0), NoTV, iOS (13,0)]
-		[Advice ("This API is not available when using UIKit on macOS.")]
+		[NoMacCatalyst]
 		[Export ("getTextureAccessCounters:region:mipLevel:slice:resetCounters:countersBuffer:countersBufferOffset:")]
 		void GetTextureAccessCounters (IMTLTexture texture, MTLRegion region, nuint mipLevel, nuint slice, bool resetCounters, IMTLBuffer countersBuffer, nuint countersBufferOffset);
 
 #if XAMCORE_4_0
 		[Abstract]
 #endif
-		[Unavailable (PlatformName.MacCatalyst)]
 		[Mac (11,0), NoTV, iOS (13,0)]
-		[Advice ("This API is not available when using UIKit on macOS.")]
+		[NoMacCatalyst]
 		[Export ("resetTextureAccessCounters:region:mipLevel:slice:")]
 		void ResetTextureAccessCounters (IMTLTexture texture, MTLRegion region, nuint mipLevel, nuint slice);
 
@@ -1385,7 +1383,6 @@ namespace Metal {
 #endif
 		[Introduced (PlatformName.MacCatalyst, 14, 0)]
 		[Mac (11,0), NoTV, iOS (13,0)]
-		[Advice ("This API is not available when using UIKit on macOS.")]
 		[Export ("sparseTileSizeWithTextureType:pixelFormat:sampleCount:")]
 		MTLSize GetSparseTileSize (MTLTextureType textureType, MTLPixelFormat pixelFormat, nuint sampleCount);
 
@@ -1834,27 +1831,24 @@ namespace Metal {
 #if XAMCORE_4_0
 		[Abstract]
 #endif
-		[Unavailable (PlatformName.MacCatalyst)]
+		[NoMacCatalyst]
 		[Mac (11,0), NoTV, iOS (13, 0)]
-		[Advice ("This API is not available when using UIKit on macOS.")]
 		[Export ("firstMipmapInTail")]
 		nuint FirstMipmapInTail { get; }
 
 #if XAMCORE_4_0
 		[Abstract]
 #endif
-		[Unavailable (PlatformName.MacCatalyst)]
 		[Mac (11,0), NoTV, iOS (13, 0)]
-		[Advice ("This API is not available when using UIKit on macOS.")]
+		[NoMacCatalyst]
 		[Export ("tailSizeInBytes")]
 		nuint TailSizeInBytes { get; }
 
 #if XAMCORE_4_0
 		[Abstract]
 #endif
-		[Unavailable (PlatformName.MacCatalyst)]
 		[Mac (11,0), NoTV, iOS (13, 0)]
-		[Advice ("This API is not available when using UIKit on macOS.")]
+		[NoMacCatalyst]
 		[Export ("isSparse")]
 		bool IsSparse { get; }
 
@@ -3454,9 +3448,8 @@ namespace Metal {
 		nuint RenderTargetHeight { get; set; }
 
 /* Selectors reported missing by instrospection: https://github.com/xamarin/maccore/issues/1978
-		[Unavailable (PlatformName.MacCatalyst)]
 		[NoMac, NoTV, iOS (13, 0)]
-		[Advice ("This API is not available when using UIKit on macOS.")]
+		[NoMacCatalyst]
 		[Export ("maxVertexAmplificationCount")]
 		nuint MaxVertexAmplificationCount { get; set; }
 */

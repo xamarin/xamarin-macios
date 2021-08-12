@@ -16,9 +16,6 @@ namespace Linker.Shared.Reflection {
 		{
 		}
 
-#if NET
-		[Ignore ("Metadata reduction not implemented yet: https://github.com/xamarin/xamarin-macios/issues/9612")]
-#endif
 		[Test]
 		public void ParameterInfoName ()
 		{
@@ -28,7 +25,8 @@ namespace Linker.Shared.Reflection {
 
 			var mi = this.GetType ().GetMethod ("MethodWithParameters");
 			var p = mi.GetParameters ();
-#if DEBUG
+#if DEBUG && !NET
+			// dotnet has adopted (and adapted) the metadata reducer and runs it on it's own conditions
 			var optimized = false;
 #else
 			var optimized = TestRuntime.IsLinkAll;

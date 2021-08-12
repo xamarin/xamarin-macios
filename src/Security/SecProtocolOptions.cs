@@ -47,7 +47,7 @@ namespace Security {
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'AddTlsCipherSuite (TlsCipherSuite)' instead.")]
 		[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'AddTlsCipherSuite (TlsCipherSuite)' instead.")]
 		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'AddTlsCipherSuite (TlsCipherSuite)' instead.")]
-		[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
+		[Unavailable (PlatformName.MacCatalyst)]
 		public void AddTlsCipherSuite (SslCipherSuite cipherSuite) => sec_protocol_options_add_tls_ciphersuite (GetCheckedHandle (), cipherSuite);
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
@@ -88,7 +88,7 @@ namespace Security {
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'SetTlsMinVersion (TlsProtocolVersion)' instead.")]
 		[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'SetTlsMinVersion (TlsProtocolVersion)' instead.")]
 		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'SetTlsMinVersion (TlsProtocolVersion)' instead.")]
-		[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
+		[Unavailable (PlatformName.MacCatalyst)]
 		public void SetTlsMinVersion (SslProtocol protocol) => sec_protocol_options_set_tls_min_version (GetCheckedHandle (), protocol);
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
@@ -109,7 +109,7 @@ namespace Security {
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'SetTlsMaxVersion (TlsProtocolVersion)' instead.")]
 		[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'SetTlsMaxVersion (TlsProtocolVersion)' instead.")]
 		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'SetTlsMaxVersion (TlsProtocolVersion)' instead.")]
-		[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
+		[Unavailable (PlatformName.MacCatalyst)]
 		public void SetTlsMaxVersion (SslProtocol protocol) => sec_protocol_options_set_tls_max_version (GetCheckedHandle (), protocol);
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
