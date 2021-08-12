@@ -337,6 +337,16 @@ namespace Xharness {
 				TestPlatform = TestPlatform.MacCatalyst,
 			});
 
+			MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "link all", "dotnet", "macOS", "link all.csproj"))) {
+				Name = "link all",
+				IsDotNetProject = true,
+				TargetFrameworkFlavors = MacFlavors.DotNet,
+				Platform = "AnyCPU",
+				Ignore = !ENABLE_DOTNET,
+				TestPlatform = TestPlatform.Mac,
+				Configurations = new string [] { "Debug", "Release" },
+			});
+
 			MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "link all", "dotnet", "MacCatalyst", "link all.csproj"))) {
 				Name = "link all",
 				IsDotNetProject = true,
@@ -344,6 +354,7 @@ namespace Xharness {
 				Platform = "AnyCPU",
 				Ignore = !ENABLE_DOTNET,
 				TestPlatform = TestPlatform.MacCatalyst,
+				Configurations = new string [] { "Debug", "Release" },
 			});
 
 			MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "link sdk", "dotnet", "MacCatalyst", "link sdk.csproj"))) {
