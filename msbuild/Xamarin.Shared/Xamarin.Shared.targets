@@ -380,10 +380,19 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</ReadItemsFromFile>
 	</Target>
 
+	<PropertyGroup>
+		<_CoreCompileInterfaceDefinitionsDependsOn>
+			_BeforeCoreCompileInterfaceDefinitions;
+			_GetMinimumOSVersion;
+			_DetectSigningIdentity;
+			_ComputeTargetFrameworkMoniker;
+		</_CoreCompileInterfaceDefinitionsDependsOn>
+	</PropertyGroup>
+
 	<Target Name="_CoreCompileInterfaceDefinitions"
 		Inputs="@(InterfaceDefinition)"
 		Outputs="$(_IBToolCache)"
-		DependsOnTargets="_BeforeCoreCompileInterfaceDefinitions;_GetMinimumOSVersion;_DetectSigningIdentity">
+		DependsOnTargets="$(_CoreCompileInterfaceDefinitionsDependsOn)">
 
 		<IBTool
 			SessionId="$(BuildSessionId)"
@@ -405,7 +414,9 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			SdkUsrPath="$(_SdkUsrPath)"
 			SdkRoot="$(_SdkRoot)"
 			SdkPlatform="$(_SdkPlatform)"
-			SdkVersion="$(_SdkVersion)">
+			SdkVersion="$(_SdkVersion)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+			>
 			<Output TaskParameter="BundleResources" ItemName="_BundleResourceWithLogicalName" />
 
 			<!-- Local items to be persisted to items files -->
