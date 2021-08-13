@@ -21,6 +21,13 @@ namespace Xamarin.Linker.Steps {
 					break;
 				}
 				break;
+			case "ObjCRuntime":
+				switch (attr_type.Name) {
+				case "BindingImplAttribute":
+					store = true;
+					break;
+				}
+				break;
 			}
 
 			if (store)
