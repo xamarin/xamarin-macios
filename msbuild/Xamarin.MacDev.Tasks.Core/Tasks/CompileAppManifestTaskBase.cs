@@ -35,6 +35,7 @@ namespace Xamarin.MacDev.Tasks
 		public string BundleIdentifier { get; set; }
 
 		[Required]
+		[Output] // This is required to create an empty file on Windows for the Input/Outputs check.
 		public string CompiledAppManifest { get; set; }
 
 		[Required]
