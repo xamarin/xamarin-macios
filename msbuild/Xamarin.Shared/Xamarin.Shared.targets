@@ -336,9 +336,15 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			SdkVersion="$(_SdkVersion)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			>
+			<Output TaskParameter="CLKComplicationGroup" PropertyName="_CLKComplicationGroup" />
 			<Output TaskParameter="CFBundleDisplayName" PropertyName="_CFBundleDisplayName" />
 			<Output TaskParameter="CFBundleVersion" PropertyName="_CFBundleVersion" />
 			<Output TaskParameter="MinimumOSVersion" PropertyName="_MinimumOSVersion" />
+			<Output TaskParameter="NSExtensionPointIdentifier" PropertyName="_NSExtensionPointIdentifier" />
+			<Output TaskParameter="UIDeviceFamily" PropertyName="_UIDeviceFamily" />
+			<Output TaskParameter="WKWatchKitApp" PropertyName="_WKWatchKitApp" />
+			<Output TaskParameter="XSAppIconAssets" PropertyName="_XSAppIconAssets" />
+			<Output TaskParameter="XSLaunchImageAssets" PropertyName="_XSLaunchImageAssets" />
 		</ReadAppManifest>
 	</Target>
 
@@ -421,12 +427,13 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			Condition="'$(IsMacEnabled)' == 'true'"
 			ToolExe="$(IBToolExe)"
 			ToolPath="$(IBToolPath)"
-			AppManifest="$(_AppManifest)"
 			BundleIdentifier="$(_BundleIdentifier)"
+			CLKComplicationGroup="$(_CLKComplicationGroup)"
 			EnableOnDemandResources="$(EnableOnDemandResources)"
 			InterfaceDefinitions="@(InterfaceDefinition)"
 			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
 			MinimumOSVersion="$(_MinimumOSVersion)"
+			NSExtensionPointIdentifier="$(_NSExtensionPointIdentifier)"
 			IsWatchApp="$(IsWatchApp)"
 			IsWatch2App="$(IsWatch2App)"
 			ProjectDir="$(MSBuildProjectDirectory)"
@@ -438,6 +445,10 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			SdkPlatform="$(_SdkPlatform)"
 			SdkVersion="$(_SdkVersion)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+			UIDeviceFamily="$(_UIDeviceFamily)"
+			WKWatchKitApp="$(_WKWatchKitApp)"
+			XSAppIconAssets="$(_XSAppIconAssets)"
+			XSLaunchImageAssets="$(_XSLaunchImageAssets)"
 			>
 			<Output TaskParameter="BundleResources" ItemName="_BundleResourceWithLogicalName" />
 
@@ -488,13 +499,14 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			Condition="'$(IsMacEnabled)' == 'true' And '@(ImageAsset)' != ''"
 			ToolExe="$(ACToolExe)"
 			ToolPath="$(ACToolPath)"
-			AppManifest="$(_AppManifest)"
 			BundleIdentifier="$(_BundleIdentifier)"
+			CLKComplicationGroup="$(_CLKComplicationGroup)"
 			DeviceModel="$(TargetDeviceModel)"
 			DeviceOSVersion="$(TargetDeviceOSVersion)"
 			EnableOnDemandResources="$(EnableOnDemandResources)"
 			ImageAssets="@(ImageAsset)"
 			MinimumOSVersion="$(_MinimumOSVersion)"
+			NSExtensionPointIdentifier="$(_NSExtensionPointIdentifier)"
 			OptimizePNGs="$(OptimizePNGs)"
 			OutputPath="$(DeviceSpecificOutputPath)"
 			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
@@ -507,6 +519,10 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			SdkPlatform="$(_SdkPlatform)"
 			SdkVersion="$(_SdkVersion)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+			UIDeviceFamily="$(_UIDeviceFamily)"
+			WKWatchKitApp="$(_WKWatchKitApp)"
+			XSAppIconAssets="$(_XSAppIconAssets)"
+			XSLaunchImageAssets="$(_XSLaunchImageAssets)"
 			>
 			<Output TaskParameter="PartialAppManifest" ItemName="PartialAppManifest" />
 			<Output TaskParameter="BundleResources" ItemName="_BundleResourceWithLogicalName" />

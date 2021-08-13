@@ -15,6 +15,9 @@ namespace Xamarin.MacDev.Tasks {
 		public string? SdkVersion { get; set; }
 
 		[Output]
+		public string? CLKComplicationGroup { get; set; }
+
+		[Output]
 		public string? CFBundleDisplayName { get; set; }
 
 		[Output]
@@ -22,6 +25,21 @@ namespace Xamarin.MacDev.Tasks {
 
 		[Output]
 		public string? MinimumOSVersion { get; set; }
+
+		[Output]
+		public string? NSExtensionPointIdentifier { get; set; }
+
+		[Output]
+		public string? UIDeviceFamily { get; set; }
+
+		[Output]
+		public bool WKWatchKitApp { get; set; }
+
+		[Output]
+		public string? XSAppIconAssets { get; set; }
+
+		[Output]
+		public string? XSLaunchImageAssets { get; set; }
 
 		public override bool Execute ()
 		{
@@ -55,6 +73,12 @@ namespace Xamarin.MacDev.Tasks {
 
 			CFBundleDisplayName = plist?.GetCFBundleDisplayName ();
 			CFBundleVersion = plist?.GetCFBundleVersion ();
+			CLKComplicationGroup = plist?.Get<PString> (ManifestKeys.CLKComplicationGroup)?.Value;
+			NSExtensionPointIdentifier = plist?.GetNSExtensionPointIdentifier ();
+			UIDeviceFamily = plist?.GetUIDeviceFamily ().ToString ();
+			WKWatchKitApp = plist?.GetWKWatchKitApp () == true;
+			XSAppIconAssets = plist?.Get<PString> (ManifestKeys.XSAppIconAssets)?.Value;
+			XSLaunchImageAssets = plist?.Get<PString> (ManifestKeys.XSLaunchImageAssets)?.Value;
 
 			return true;
 		}
