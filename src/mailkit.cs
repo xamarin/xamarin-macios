@@ -131,8 +131,12 @@ namespace MailKit {
 		MEMessageActionDecision InvokeAgainWithBody { get; }
 
 		[Static]
-		[Export ("applyAction:")]
+		[Export ("decisionApplyingAction:")]
 		MEMessageActionDecision Apply (MEMessageAction action);
+
+		[Static]
+		[Export ("decisionApplyingActions:")]
+		MEMessageActionDecision Apply (MEMessageAction[] actions);
 	}
 
 	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (12,0)]
@@ -162,6 +166,9 @@ namespace MailKit {
 		[Export ("initWithSigners:isEncrypted:signingError:encryptionError:")]
 		IntPtr Constructor (MEMessageSigner[] signers, bool isEncrypted, [NullAllowed] NSError signingError, [NullAllowed] NSError encryptionError);
 
+		[Export ("initWithSigners:isEncrypted:signingError:encryptionError:shouldBlockRemoteContent:localizedRemoteContentBlockingReason:")]
+		IntPtr Constructor (MEMessageSigner[] signers, bool isEncrypted, [NullAllowed] NSError signingError, [NullAllowed] NSError encryptionError, bool shouldBlockRemoteContent, [NullAllowed] string localizedRemoteContentBlockingReason);
+
 		[Export ("signers", ArgumentSemantic.Strong)]
 		MEMessageSigner[] Signers { get; }
 
@@ -173,6 +180,12 @@ namespace MailKit {
 
 		[NullAllowed, Export ("encryptionError", ArgumentSemantic.Strong)]
 		NSError EncryptionError { get; }
+
+		[NullAllowed, Export ("localizedRemoteContentBlockingReason", ArgumentSemantic.Strong)]
+		string LocalizedRemoteContentBlockingReason { get; }
+
+		[Export ("shouldBlockRemoteContent")]
+		bool ShouldBlockRemoteContent { get; }
 	}
 
 	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (12,0)]
@@ -409,5 +422,15 @@ namespace MailKit {
 		[Protected]
 		[Export ("initWithNibName:bundle:")]
 		IntPtr Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
+	}
+
+	[NoWatch, NoTV, NoMacCatalyst, NoiOS, Mac (12,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MEExtensionManager
+	{
+		[Static]
+		[Export ("reloadContentBlockerWithIdentifier:completionHandler:")]
+		void ReloadContentBlocker (string identifier, [NullAllowed] Action<NSError> completionHandler);
 	}
 }

@@ -25,8 +25,9 @@
 !missing-selector! +MEMessageAction::unflagAction not bound
 
 !missing-type! MEMessageActionDecision not bound
-!missing-selector! +MEMessageActionDecision::applyAction: not bound
 !missing-selector! +MEMessageActionDecision::invokeAgainWithBody not bound
+!missing-selector! +MEMessageActionDecision::decisionApplyingAction: not bound
+!missing-selector! +MEMessageActionDecision::decisionApplyingActions: not bound
 
 !missing-type! MEMessageEncodingResult not bound
 !missing-selector! MEMessageEncodingResult::encodedMessage not bound
@@ -40,6 +41,9 @@
 !missing-selector! MEMessageSecurityInformation::isEncrypted not bound
 !missing-selector! MEMessageSecurityInformation::signers not bound
 !missing-selector! MEMessageSecurityInformation::signingError not bound
+!missing-selector! MEMessageSecurityInformation::initWithSigners:isEncrypted:signingError:encryptionError:shouldBlockRemoteContent:localizedRemoteContentBlockingReason: not bound
+!missing-selector! MEMessageSecurityInformation::localizedRemoteContentBlockingReason not bound
+!missing-selector! MEMessageSecurityInformation::shouldBlockRemoteContent not bound
 
 !missing-type! MEMessageSigner not bound
 !missing-selector! MEMessageSigner::context not bound
@@ -92,3 +96,6 @@
 !missing-protocol! MEMessageDecoder not bound
 !missing-protocol! MEMessageEncoder not bound
 !missing-protocol! MEMessageSecurityHandler not bound
+
+!missing-type! MEExtensionManager not bound
+!missing-selector! +MEExtensionManager::reloadContentBlockerWithIdentifier:completionHandler: not bound
