@@ -120,5 +120,25 @@ namespace PerfTest {
 		{
 			NSArray.StringArrayFromHandle (value.Handle);
 		}
-    }
+
+		/*
+		 * Measure time required to create a managed `NSObject[]` array from a native one using `CFArray.ArrayFromHandle`
+		 */
+		[Benchmark]
+		[ArgumentsSource (nameof (ArraysOfStrings))]
+		public void CFArray_ArrayFromHandle (string name, NSArray value)
+		{
+			CFArray.ArrayFromHandle<NSString> (value.Handle);
+		}
+
+		/*
+		 * Measure time required to create a managed `NSObject[]` array from a native one using `CFArray.ArrayFromHandle`
+		 */
+		[Benchmark]
+		[ArgumentsSource (nameof (ArraysOfStrings))]
+		public void NSArray_ArrayFromHandle (string name, NSArray value)
+		{
+			NSArray.ArrayFromHandle<NSString> (value.Handle);
+		}
+	}
 }

@@ -4,3 +4,5 @@
 !missing-pinvoke! CGColorSpaceIsPQBased is not bound
 !missing-pinvoke! CGConvertColorDataWithFormat is not bound
 !missing-pinvoke! CGErrorSetCallback is not bound
+!missing-field! kCGColorSpaceLinearDisplayP3 not bound
+!missing-field! kCGColorSpaceLinearITUR_2020 not bound

@@ -2,3 +2,5 @@
 !missing-enum! CMAttitudeReferenceFrame not bound
 !missing-enum! CMFallDetectionEventUserResolution not bound
 !missing-enum! CMMotionActivityConfidence not bound
+
+## available in headers but results in a compilation error
