@@ -160,6 +160,7 @@ namespace Introspection {
 				case "NSEntityMapping":
 				case "NSMappingModel":
 				case "NSPropertyMapping":
+				case "HMAccessoryOwnershipToken":
 					return true;
 				}
 				break;

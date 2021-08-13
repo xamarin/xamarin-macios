@@ -114,7 +114,8 @@ namespace StoreKit {
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (14,0)]
-	[Native, Advice ("This API is not available when using UIKit on macOS.")]
+	[MacCatalyst (14,0)]
+	[Native]
 	public enum SKOverlayPosition : long {
 		SKOverlayPositionBottom = 0,
 		Raised = 1,
