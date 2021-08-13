@@ -46,7 +46,7 @@ namespace MonoTouchFixtures.UIKit {
 					Assert.IsNull (tf.SelectedTextRange, "SelectedTextRange");
 				}
 				if (TestRuntime.CheckXcodeVersion (13, 0)) {
-					Assert.That (tf.TypingAttributes, Is.Empty, "default 13.0");
+					Assert.That (tf.TypingAttributes, Is.Not.Empty, "default 13.0");
 				} else if (TestRuntime.CheckXcodeVersion (11, 0)) {
 					if (TestRuntime.CheckXcodeVersion (11, 4))
 						Assert.That (tf.TypingAttributes, Is.Not.Empty, "default 11.4"); // iOS 13.4 returns contents
