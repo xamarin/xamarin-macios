@@ -123,6 +123,9 @@ namespace Xamarin.MacDev.Tasks
 			PDictionary extension;
 			PString id;
 
+			if (plist == null)
+				return false;
+
 			if (!plist.TryGetValue ("NSExtension", out extension))
 				return false;
 
@@ -134,34 +137,31 @@ namespace Xamarin.MacDev.Tasks
 
 		protected IEnumerable<string> GetTargetDevices ()
 		{
-			return GetTargetDevices (GetAppManifest ());
+			var plist = GetAppManifest ();
+			var devices = plist?.GetUIDeviceFamily () ?? IPhoneDeviceType.NotSet;
+			var watch = plist?.GetWKWatchKitApp () == true;
+			var watchExtension = IsWatchExtension (plist);
+			return GetTargetDevices (devices, watch, watchExtension);
 		}
 
-		IEnumerable<string> GetTargetDevices (PDictionary plist)
+		IEnumerable<string> GetTargetDevices (IPhoneDeviceType devices, bool watch, bool watchExtension)
 		{
-			var devices = IPhoneDeviceType.NotSet;
-			bool watch = false;
-
 			if (Platform == ApplePlatform.MacOSX)
 				yield break;
 
-			if (plist != null) {
-				if (!(watch = plist.GetWKWatchKitApp ())) {
-					// the project is either a normal iOS project or an extension
-					if ((devices = plist.GetUIDeviceFamily ()) == IPhoneDeviceType.NotSet) {
-						// library projects and extension projects will not have this key, but
-						// we'll want them to work for both iPhones and iPads if the
-						// xib or storyboard supports them
-						devices = IPhoneDeviceType.IPhoneAndIPad;
-					}
-
-					// if the project is a watch extension, we'll also want to include watch support
-					watch = IsWatchExtension (plist);
-				} else {
-					// the project is a WatchApp, only include watch support
+			if (!watch) {
+				// the project is either a normal iOS project or an extension
+				if (devices == IPhoneDeviceType.NotSet) {
+					// library projects and extension projects will not have this key, but
+					// we'll want them to work for both iPhones and iPads if the
+					// xib or storyboard supports them
+					devices = IPhoneDeviceType.IPhoneAndIPad;
 				}
+
+				// if the project is a watch extension, we'll also want to include watch support
+				watch = watchExtension;
 			} else {
-				devices = IPhoneDeviceType.IPhoneAndIPad;
+				// the project is a WatchApp, only include watch support
 			}
 
 			if ((devices & IPhoneDeviceType.IPhone) != 0)
