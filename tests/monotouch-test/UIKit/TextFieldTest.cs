@@ -46,7 +46,11 @@ namespace MonoTouchFixtures.UIKit {
 					Assert.IsNull (tf.SelectedTextRange, "SelectedTextRange");
 				}
 				if (TestRuntime.CheckXcodeVersion (13, 0)) {
+#if !__TVOS__ 
+					Assert.That (tf.TypingAttributes, Is.Empty, "default 13.0");
+#else
 					Assert.That (tf.TypingAttributes, Is.Not.Empty, "default 13.0");
+#endif
 				} else if (TestRuntime.CheckXcodeVersion (11, 0)) {
 					if (TestRuntime.CheckXcodeVersion (11, 4))
 						Assert.That (tf.TypingAttributes, Is.Not.Empty, "default 11.4"); // iOS 13.4 returns contents
@@ -58,7 +62,12 @@ namespace MonoTouchFixtures.UIKit {
 				// ^ calling TypingAttributes does not crash like UITextView does, it simply returns null
 				tf.TypingAttributes = new NSDictionary ();
 				if (TestRuntime.CheckXcodeVersion (13, 0)) {
-					Assert.That (tf.TypingAttributes, Is.Empty, "empty");
+#if !__TVOS__
+					Assert.That (tf.TypingAttributes, Is.Empty, "empty 13.0");
+#else
+					Assert.That (tf.TypingAttributes, Is.Not.Empty, "empty 13.0");
+#endif
+
 				} else if (TestRuntime.CheckXcodeVersion (11, 0)) {
 					if (TestRuntime.CheckXcodeVersion (11, 4))
 						Assert.That (tf.TypingAttributes, Is.Not.Empty, "not empty 11.4"); // iOS 13.4 returns contents
