@@ -336,6 +336,8 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			SdkVersion="$(_SdkVersion)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			>
+			<Output TaskParameter="CFBundleDisplayName" PropertyName="_CFBundleDisplayName" />
+			<Output TaskParameter="CFBundleVersion" PropertyName="_CFBundleVersion" />
 			<Output TaskParameter="MinimumOSVersion" PropertyName="_MinimumOSVersion" />
 		</ReadAppManifest>
 	</Target>

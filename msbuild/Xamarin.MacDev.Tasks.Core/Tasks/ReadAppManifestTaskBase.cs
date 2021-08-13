@@ -15,6 +15,12 @@ namespace Xamarin.MacDev.Tasks {
 		public string? SdkVersion { get; set; }
 
 		[Output]
+		public string? CFBundleDisplayName { get; set; }
+
+		[Output]
+		public string? CFBundleVersion { get; set; }
+
+		[Output]
 		public string? MinimumOSVersion { get; set; }
 
 		public override bool Execute ()
@@ -46,6 +52,9 @@ namespace Xamarin.MacDev.Tasks {
 					Log.LogError (MSBStrings.E0187, MinimumOSVersion);
 				MinimumOSVersion = convertedVersion;
 			}
+
+			CFBundleDisplayName = plist?.GetCFBundleDisplayName ();
+			CFBundleVersion = plist?.GetCFBundleVersion ();
 
 			return true;
 		}
