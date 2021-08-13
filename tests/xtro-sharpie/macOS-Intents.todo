@@ -86,3 +86,6 @@
 !missing-selector! INSendMessageIntentDonationMetadata::notifyRecipientAnyway not bound
 !missing-selector! INSendMessageIntentDonationMetadata::setNotifyRecipientAnyway: not bound
 !missing-selector! INSendMessageIntentDonationMetadata::setReplyToCurrentUser: not bound
+!missing-selector! INPerson::initWithPersonHandle:nameComponents:displayName:image:contactIdentifier:customIdentifier:isContactSuggestion:suggestionType: not bound
+!missing-selector! INPerson::isContactSuggestion not bound
+!unknown-type! INTemperatureResolutionResult bound
