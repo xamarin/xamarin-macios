@@ -5,7 +5,6 @@
 !missing-pinvoke! MusicDeviceMIDIEventList is not bound
 !missing-selector! AUAudioUnit::AudioUnitMIDIProtocol not bound
 !missing-selector! AUAudioUnit::hostMIDIProtocol not bound
-!missing-selector! AUAudioUnit::MIDIEventListOutputNames not bound
 !missing-selector! AUAudioUnit::MIDIOutputEventListBlock not bound
 !missing-selector! AUAudioUnit::scheduleMIDIEventListBlock not bound
 !missing-selector! AUAudioUnit::setHostMIDIProtocol: not bound
