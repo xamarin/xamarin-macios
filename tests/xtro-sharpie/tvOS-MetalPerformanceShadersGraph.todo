@@ -397,3 +397,24 @@
 !missing-type! MPSGraphVariableOp not bound
 ## appended from unclassified file
 ## appended from unclassified file
+!missing-selector! MPSGraph::broadcastTensor:toShape:name: not bound
+!missing-selector! MPSGraph::broadcastTensor:toShapeTensor:name: not bound
+!missing-selector! MPSGraph::castTensor:toType:name: not bound
+!missing-selector! MPSGraph::convolution2DDataGradientWithIncomingGradientTensor:weightsTensor:outputShapeTensor:forwardConvolutionDescriptor:name: not bound
+!missing-selector! MPSGraph::convolution2DWeightsGradientWithIncomingGradientTensor:sourceTensor:outputShapeTensor:forwardConvolutionDescriptor:name: not bound
+!missing-selector! MPSGraph::convolutionTranspose2DDataGradientWithIncomingGradientTensor:weightsTensor:outputShapeTensor:forwardConvolutionDescriptor:name: not bound
+!missing-selector! MPSGraph::convolutionTranspose2DWeightsGradientWithIncomingGradientTensor:sourceTensor:outputShapeTensor:forwardConvolutionDescriptor:name: not bound
+!missing-selector! MPSGraph::convolutionTranspose2DWithSourceTensor:weightsTensor:outputShapeTensor:descriptor:name: not bound
+!missing-selector! MPSGraph::leakyReLUGradientWithIncomingGradient:sourceTensor:alphaTensor:name: not bound
+!missing-selector! MPSGraph::leakyReLUWithTensor:alpha:name: not bound
+!missing-selector! MPSGraph::leakyReLUWithTensor:alphaTensor:name: not bound
+!missing-selector! MPSGraph::reshapeTensor:withShapeTensor:name: not bound
+!missing-selector! MPSGraph::resizeTensor:sizeTensor:mode:centerResult:alignCorners:layout:name: not bound
+!missing-selector! MPSGraph::scatterNDWithDataTensor:updatesTensor:indicesTensor:batchDimensions:mode:name: not bound
+!missing-selector! MPSGraph::scatterWithDataTensor:updatesTensor:indicesTensor:axis:mode:name: not bound
+!missing-selector! MPSGraph::scatterWithUpdatesTensor:indicesTensor:shape:axis:mode:name: not bound
+!missing-selector! MPSGraph::shapeOfTensor:name: not bound
+!missing-selector! MPSGraph::topKWithGradientTensor:source:k:name: not bound
+!missing-selector! MPSGraph::topKWithGradientTensor:source:kTensor:name: not bound
+!missing-selector! MPSGraph::topKWithSourceTensor:k:name: not bound
+!missing-selector! MPSGraph::topKWithSourceTensor:kTensor:name: not bound
