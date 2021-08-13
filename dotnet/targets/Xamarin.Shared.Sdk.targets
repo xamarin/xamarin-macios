@@ -149,6 +149,9 @@
 	<!-- Default item includes (globs and implicit references) -->
 	<Import Project="Xamarin.Shared.Sdk.DefaultItems.targets" />
 
+	<!-- dotnet publish -->
+	<Import Project="Xamarin.Shared.Sdk.Publish.targets" />
+
 	<!-- This is a hack until we get the TFM values for real from the .NET build logic -->
 	<PropertyGroup>
 		<_TargetFrameworkPlatform Condition="'$(_PlatformName)' == 'iOS'">ios</_TargetFrameworkPlatform>
@@ -346,10 +349,10 @@
 		<!-- We only include any mono components when linking with mono statically. The components are already included in the dynamic versions of Mono (both the dylib and the framework) -->
 		<ItemGroup Condition="'$(_LibMonoLinkMode)' == 'static'">
 			<!-- Remove files mono told us not to link with -->
-			<_MonoLibrary Remove="@(_MonoRuntimeComponentDontLink -> '$(_MonoRuntimePackPath)/native/%(Identity)')" />
+			<_MonoLibrary Remove="@(_MonoRuntimeComponentDontLink -> '$(_MonoRuntimePackPath)native/%(Identity)')" />
 
 			<!-- Add files mono told us to link with -->
-			<_MonoLibrary Include="@(_MonoRuntimeComponentLink -> '$(_MonoRuntimePackPath)/native/%(Identity)')" />
+			<_MonoLibrary Include="@(_MonoRuntimeComponentLink -> '$(_MonoRuntimePackPath)native/%(Identity)')" />
 		</ItemGroup>
 	</Target>
 
@@ -416,6 +419,7 @@
 				PartialStaticRegistrarLibrary=$(_LibPartialStaticRegistrar)
 				Platform=$(_PlatformName)
 				PlatformAssembly=$(_PlatformAssemblyName).dll
+				RelativeAppBundlePath=$(_RelativeAppBundlePath)
 				Registrar=$(_BundlerRegistrar)
 				RuntimeConfigurationFile=$(_RuntimeConfigurationFile)
 				SdkDevPath=$(_SdkDevPath)
@@ -465,6 +469,9 @@
 
 			-->
 			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) --disable-opt unusedtypechecks</_ExtraTrimmerArgs>
+
+			<!-- If a release build and the app is not extensible (no interpreter or JIT/code-loading for macOS) then the sealer optimization can be used -->
+			<_ExtraTrimmerArgs Condition="'$(_BundlerDebug)' != 'true' And '$(MtouchInterpreter)' == '' And '$(_RunAotCompiler)' == 'true' And '$(_PlatformName)' != 'macOS'">$(_ExtraTrimmerArgs) --enable-opt sealer</_ExtraTrimmerArgs>
 
 			<!-- We always want the linker to process debug symbols, even when building in Release mode, because the AOT compiler uses the managed debug symbols to output DWARF debugging symbols -->
 			<TrimmerRemoveSymbols Condition="'$(TrimmerRemoveSymbols)' == ''">false</TrimmerRemoveSymbols>
@@ -545,7 +552,7 @@
 	</Target>
 
 	<!-- Look in the NativeReference items for frameworks that need to be added to the app bundle, and add all those frameworks to ResolvedFileToPublish (as separate files) -->
-	<Target Name="_ComputeFrameworkFilesToPublish" DependsOnTargets="_ExpandNativeReferences;_ComputeVariables">
+	<Target Name="_ComputeFrameworkFilesToPublish" DependsOnTargets="_ExpandNativeReferences;_ComputeVariables;_LoadLinkerOutput">
 		<ItemGroup>
 			<!-- Expand each framework (which are directories) into all the files in the framework -->
 			<!-- Support a 'CopyToAppBundle' metadata that can be set to 'false' to avoid copying a framework to the app bundle -->
@@ -569,7 +576,7 @@
 	</Target>
 
 	<!-- Look in the NativeReference items for dylibs that need to be added to the app bundle, and add all those frameworks to ResolvedFileToPublish (as separate files) -->
-	<Target Name="_ComputeDynamicLibrariesToPublish" DependsOnTargets="_ExpandNativeReferences;_ComputeVariables">
+	<Target Name="_ComputeDynamicLibrariesToPublish" DependsOnTargets="_ExpandNativeReferences;_ComputeVariables;_LoadLinkerOutput">
 		<ItemGroup>
 			<!-- Support a 'CopyToAppBundle' metadata that can be set to 'false' to avoid copying a framework to the app bundle -->
 			<_DynamicLibraryToPublish Include="@(_FileNativeReference)" Condition="'%(_FileNativeReference.Kind)' == 'Dynamic' And '%(_FileNativeReference.CopyToAppBundle)' != 'false'">
@@ -584,7 +591,7 @@
 		</ItemGroup>
 	</Target>
 
-	<Target Name="_LoadLinkerOutput">
+	<Target Name="_LoadLinkerOutput" DependsOnTargets="ComputeFilesToPublish">
 		<!-- Load _MainFile -->
 		<ReadItemsFromFile SessionId="$(BuildSessionId)" File="$(_LinkerItemsDirectory)/_MainFile.items" Condition="Exists('$(_LinkerItemsDirectory)/_MainFile.items')">
 			<Output TaskParameter="Items" ItemName="_MainFile" />
@@ -624,6 +631,14 @@
 		<!-- Load _AssembliesToAOT -->
 		<ReadItemsFromFile SessionId="$(BuildSessionId)" File="$(_LinkerItemsDirectory)/_AssembliesToAOT.items" Condition="Exists('$(_LinkerItemsDirectory)/_AssembliesToAOT.items')">
 			<Output TaskParameter="Items" ItemName="_AssembliesToAOT" />
+		</ReadItemsFromFile>
+		<!-- Load _FrameworkFilesToPublish -->
+		<ReadItemsFromFile SessionId="$(BuildSessionId)" File="$(_LinkerItemsDirectory)/_FrameworkFilesToPublish.items" Condition="Exists('$(_LinkerItemsDirectory)/_FrameworkFilesToPublish.items')">
+			<Output TaskParameter="Items" ItemName="_FrameworkFilesToPublish" />
+		</ReadItemsFromFile>
+		<!-- Load _DynamicLibraryToPublish -->
+		<ReadItemsFromFile SessionId="$(BuildSessionId)" File="$(_LinkerItemsDirectory)/_DynamicLibraryToPublish.items" Condition="Exists('$(_LinkerItemsDirectory)/_DynamicLibraryToPublish.items')">
+			<Output TaskParameter="Items" ItemName="_DynamicLibraryToPublish" />
 		</ReadItemsFromFile>
 	</Target>
 

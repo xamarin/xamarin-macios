@@ -7,4 +7,3 @@ namespace Xamarin.Tests {
 		DotNet,
 	}
 }
-

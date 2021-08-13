@@ -133,4 +133,3 @@ namespace CoreFoundation {
 		static extern IntPtr CFErrorGetDomain (IntPtr err);
 	}
 }
-

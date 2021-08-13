@@ -1,4 +1,4 @@
-﻿//
+//
 // MPSImageBatch.cs
 //
 // Authors:

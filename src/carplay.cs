@@ -598,10 +598,6 @@ namespace CarPlay {
 		[Export ("initWithTitle:sections:")]
 		IntPtr Constructor ([NullAllowed] string title, CPListSection[] sections);
 
-		[iOS (15,0)]
-		[Export ("initWithTitle:sections:assistantCellVisibility:assistantCellPosition:")]
-		IntPtr Constructor ([NullAllowed] string title, CPListSection[] sections, CPAssistantCellVisibility visibility, CPAssistantCellPosition position);
-
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'CPListItem.Handler' instead.")]
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
@@ -650,14 +646,6 @@ namespace CarPlay {
 		[iOS (14, 0)]
 		[Export ("emptyViewSubtitleVariants", ArgumentSemantic.Copy)]
 		string[] EmptyViewSubtitleVariants { get; set; }
-
-		[iOS (15, 0)]
-		[Export ("assistantCellVisibility", ArgumentSemantic.Assign)]
-		CPAssistantCellVisibility AssistantCellVisibility { get; set; }
-
-		[iOS (15, 0)]
-		[Export ("assistantCellPosition", ArgumentSemantic.Assign)]
-		CPAssistantCellPosition AssistantCellPosition { get; set; }
 	}
 
 	interface ICPListTemplateDelegate { }

@@ -1,4 +1,4 @@
-﻿// Unit test for AVAudioFormat
+// Unit test for AVAudioFormat
 // Authors: 
 // 		Whitney Schmidt (whschm@microsoft.com)
 // Copyright 2020 Microsoft Corp.

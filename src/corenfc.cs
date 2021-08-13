@@ -1,4 +1,4 @@
-﻿//
+//
 // CoreNFC C# bindings
 //
 // Authors:

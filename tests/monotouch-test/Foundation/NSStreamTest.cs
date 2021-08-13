@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using NUnit.Framework;
 using System.Text;
 using System.Net;
@@ -133,4 +133,3 @@ namespace MonoTouchFixtures.Foundation {
 #endif // !__WATCHOS__
 	}
 }
-

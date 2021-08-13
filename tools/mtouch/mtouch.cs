@@ -1,4 +1,4 @@
-﻿//
+//
 // mtouch.cs: A tool to generate the necessary code to boot a Mono
 // application on the iPhone
 //

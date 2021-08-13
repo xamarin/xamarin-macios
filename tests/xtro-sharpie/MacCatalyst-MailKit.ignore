@@ -1,5 +1,6 @@
 # Web Docs show these are not available on MacCatalyst
 !missing-type! MEMessage not bound
+
 !missing-selector! MEMessage::allRecipientAddresses not bound
 !missing-selector! MEMessage::bccAddresses not bound
 !missing-selector! MEMessage::ccAddresses not bound

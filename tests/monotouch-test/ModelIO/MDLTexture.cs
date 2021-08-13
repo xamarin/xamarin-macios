@@ -1,4 +1,4 @@
-﻿//
+//
 // MDLTexture Unit Tests
 //
 // Authors:

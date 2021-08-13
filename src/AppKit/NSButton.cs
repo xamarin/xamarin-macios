@@ -89,4 +89,3 @@ namespace AppKit {
 	}
 }
 #endif // !__MACCATALYST__
-

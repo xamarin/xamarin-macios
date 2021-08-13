@@ -1,4 +1,4 @@
-﻿//
+//
 // Test the existing of p/invoked symbols
 //
 // Authors:

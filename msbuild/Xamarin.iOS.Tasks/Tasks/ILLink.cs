@@ -1,4 +1,4 @@
-﻿using ILLink.Tasks;
+using ILLink.Tasks;
 using Microsoft.Build.Tasks;
 using Xamarin.Messaging.Build.Client;
 

@@ -1,4 +1,4 @@
-﻿// 
+// 
 // AVAssetDownloadTask.cs: AVAssetDownloadTask class
 //
 // Authors:
@@ -35,4 +35,3 @@ namespace AVFoundation {
 	}
 #endif
 }
-

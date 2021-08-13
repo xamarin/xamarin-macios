@@ -331,6 +331,11 @@ namespace Introspection {
 				case "HKAudiogramSensitivityPoint": // Conformance not in headers
 				case "HMAccessoryOwnershipToken": // Conformance not in headers
 				case "HMAddAccessoryRequest": // Conformance not in headers
+				case "OSLogEntry":
+				case "OSLogEntryActivity":
+				case "OSLogEntryBoundary":
+				case "OSLogEntryLog":
+				case "OSLogEntrySignpost":
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
@@ -576,6 +581,11 @@ namespace Introspection {
 				case "HKAudiogramSensitivityPoint":  // Conformance not in headers
 				case "HMAccessoryOwnershipToken":  // Conformance not in headers
 				case "HMAddAccessoryRequest":  // Conformance not in headers
+				case "OSLogEntry":
+				case "OSLogEntryActivity":
+				case "OSLogEntryBoundary":
+				case "OSLogEntryLog":
+				case "OSLogEntrySignpost":
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
@@ -751,6 +761,7 @@ namespace Introspection {
 				case "HKDiscreteQuantitySample": // Conformance not in headers
 				case "HKAudiogramSample": // Conformance not in headers
 				case "UIImage": // only complains on tvOS beta 6
+				case "HMAccessoryOwnershipToken":
 					return true;
 				// Xcode 12 beta 2
 				case "HKElectrocardiogram": // Conformance not in headers

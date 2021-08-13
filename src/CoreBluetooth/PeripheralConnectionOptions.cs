@@ -96,4 +96,3 @@ namespace CoreBluetooth {
 #endif
 	}
 }
-

@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for NSOrderedSet
 //
 // Authors:
@@ -174,4 +174,3 @@ namespace MonoTouchFixtures.Foundation {
 		}
 	}
 }
-

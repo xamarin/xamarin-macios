@@ -25,6 +25,7 @@
 #if !__MACCATALYST__
 
 using System;
+using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -36,7 +37,14 @@ namespace AppKit {
 	public partial class NSApplication : NSResponder {
 		public static bool CheckForIllegalCrossThreadCalls = true;
 		public static bool CheckForEventAndDelegateMismatches = true;
+
+#if !(XAMCORE_4_0 && NET)
+#if NET
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[Obsolete ("This field is ignored (treated as if always true).")]
+#endif
 		public static bool IgnoreMissingAssembliesDuringRegistration = false;
+#endif
 
 		private static Thread mainThread;
 

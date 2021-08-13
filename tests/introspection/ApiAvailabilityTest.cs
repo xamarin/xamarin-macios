@@ -1,4 +1,4 @@
-﻿//
+//
 // Availability tests for introspection
 //
 // Authors:
@@ -393,9 +393,7 @@ namespace Introspection {
 		}
 
 		[Test]
-#if IOS || TVOS || __MACCATALYST__
 		[Ignore ("work in progress")]
-#endif
 		public void LegacyAttributes ()
 		{
 			//LogProgress = true;
