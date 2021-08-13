@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 
 using Mono.Cecil;
@@ -75,6 +76,30 @@ namespace Xamarin.Tests {
 				if (name != "bin" && name != "obj")
 					continue;
 				Directory.Delete (dir, true);
+			}
+		}
+
+		protected bool CanExecute (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			switch (platform) {
+			case ApplePlatform.iOS:
+			case ApplePlatform.TVOS:
+			case ApplePlatform.WatchOS:
+				return false;
+			case ApplePlatform.MacOSX:
+			case ApplePlatform.MacCatalyst:
+				// If we're targetting x64, then we can execute everywhere
+				if (runtimeIdentifiers.Contains ("-x64", StringComparison.Ordinal))
+					return true;
+
+				// If we're not targeting x64, and we're executing on x64, then we're out of luck
+				if (RuntimeInformation.ProcessArchitecture == Architecture.X64)
+					return false;
+
+				// Otherwise we can still execute.
+				return true;
+			default:
+				throw new ArgumentOutOfRangeException ($"Unknown platform: {platform}");
 			}
 		}
 
