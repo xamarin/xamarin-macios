@@ -1,9 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
 <Project>
 	<PropertyGroup>
 		<SignAssembly>true</SignAssembly>
 		<GenerateTailCalls>true</GenerateTailCalls>
 
-		<RootTestsDirectory>$(MSBuildThisFileDirectory)\..\..</RootTestsDirectory>
+		<RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\..\..'))</RootTestsDirectory>
 		<FSharpLibraryDirectory>$(RootTestsDirectory)\fsharplibrary</FSharpLibraryDirectory>
 
 		<AssemblyOriginatorKeyFile>$(RootTestsDirectory)\..\product.snk</AssemblyOriginatorKeyFile>
