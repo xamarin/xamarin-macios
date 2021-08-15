@@ -63,7 +63,7 @@
     <Reference Include="Clang">
       <HintPath>\Library\Frameworks\ObjectiveSharpie.framework\Versions\Current\Clang.dll</HintPath>
     </Reference>
-    <PackageReference Include="Mono.Cecil" Version="0.11.1" />
+    <PackageReference Include="Mono.Cecil" Version="0.11.4" />
     <PackageReference Include="System.ValueTuple" Version="4.4.0" />
     <Reference Include="mscorlib" />
   </ItemGroup>

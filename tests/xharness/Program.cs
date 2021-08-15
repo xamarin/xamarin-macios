@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Mono.Options;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 using Microsoft.DotNet.XHarness.iOS.Shared.XmlResults;

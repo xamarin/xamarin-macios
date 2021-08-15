@@ -39,4 +39,3 @@ namespace MonoTouchFixtures.HealthKit {
 }
 
 #endif // HAS_HEALTHKIT
-

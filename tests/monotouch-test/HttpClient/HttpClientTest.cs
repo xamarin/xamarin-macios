@@ -1,4 +1,4 @@
-﻿#if !__WATCHOS__
+#if !__WATCHOS__
 using System;
 using System.Net.Http;
 using System.Reflection;
@@ -117,4 +117,3 @@ namespace MonoTouchFixtures.HttpClientTests
 	}
 }
 #endif
-

@@ -611,7 +611,7 @@ namespace ObjCRuntime {
 					// that's more important for XI because device builds don't go thru this step
 					// and we can end up with simulator-only failures - bug #29211
 					NSLog ("Could not find `{0}` referenced by assembly `{1}`.", fefe.FileName, assembly.FullName);
-#if MONOMAC
+#if MONOMAC && !NET
 					if (!NSApplication.IgnoreMissingAssembliesDuringRegistration)
 						throw;
 #endif

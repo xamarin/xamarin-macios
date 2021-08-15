@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 
 namespace Xharness.Jenkins.TestTasks {

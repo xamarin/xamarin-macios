@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 using Foundation;
 using AppKit;
@@ -67,4 +67,3 @@ namespace Protobuf_Test
 		}
 	}
 }
-

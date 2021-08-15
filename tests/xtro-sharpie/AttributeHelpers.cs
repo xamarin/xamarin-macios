@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Clang;
@@ -101,6 +101,19 @@ namespace Extrospection
 				if (platforms.Any (x => AttributeHelpers.HasDeprecated (attribute, x)) || platforms.Any (x => AttributeHelpers.HasObsoleted (attribute, x)))
 					return true;
 			}
+			return false;
+		}
+
+		public static bool HasAnyObsoleted (ICustomAttributeProvider item)
+		{
+			if (Skip (item))
+				return false;
+
+			foreach (var attribute in item.CustomAttributes) {
+				if (AttributeHelpers.HasObsoleted (attribute, Helpers.Platform))
+					return true;
+			}
+
 			return false;
 		}
 

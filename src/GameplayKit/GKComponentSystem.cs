@@ -1,4 +1,4 @@
-﻿//
+//
 // GKComponentSystem.cs: Implements some nicer methods for GKComponentSystem
 //
 // Authors:

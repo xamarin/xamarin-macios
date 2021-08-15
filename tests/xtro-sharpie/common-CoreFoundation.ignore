@@ -127,7 +127,6 @@
 !missing-field! kCFLocaleScriptCode not bound
 !missing-field! kCFLocaleUsesMetricSystem not bound
 !missing-field! kCFLocaleVariantCode not bound
-!missing-field! kCFNull not bound
 !missing-field! kCFNumberFormatterAlwaysShowDecimalSeparator not bound
 !missing-field! kCFNumberFormatterCurrencyCode not bound
 !missing-field! kCFNumberFormatterCurrencyDecimalSeparator not bound

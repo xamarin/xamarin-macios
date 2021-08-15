@@ -3,6 +3,8 @@
 using System;
 using System.Collections.Generic;
 
+#nullable enable
+
 namespace ObjCRuntime {
 	public class RuntimeException : Exception {
 		public RuntimeException (string message, params object[] args)
@@ -11,7 +13,7 @@ namespace ObjCRuntime {
 		}
 
 		public RuntimeException (int code, string message, params object[] args) : 
-			this (code, false, message, args)
+			this (code, false, null, message, args)
 		{
 		}
 		
@@ -20,7 +22,7 @@ namespace ObjCRuntime {
 		{
 		}
 		
-		public RuntimeException (int code, bool error, Exception innerException, string message, params object[] args) : 
+		public RuntimeException (int code, bool error, Exception? innerException, string message, params object[] args) :
 			base (String.Format (message, args), innerException)
 		{
 			Code = code;

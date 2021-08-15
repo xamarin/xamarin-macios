@@ -696,4 +696,3 @@ namespace CFNetwork {
 		#endregion
 	}
 }
-

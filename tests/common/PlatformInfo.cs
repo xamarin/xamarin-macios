@@ -152,11 +152,16 @@ namespace Xamarin.Tests
 #if NET
 			var list = new List<AvailabilityBaseAttribute> ();
 			foreach (var ca in attributeProvider.GetCustomAttributes (true)) {
-				if (ca is OSPlatformAttribute aa)
-					list.Add (aa.Convert ());
+				if (ca is OSPlatformAttribute aa) {
+					var converted = aa.Convert ();
+					if (converted is not null)
+						list.Add (converted);
+				}
 				// FIXME - temporary, while older attributes co-exists (in manual bindings)
 				if (ca is AvailabilityBaseAttribute old)
 					list.Add (old);
+				if (ca is ObsoleteAttribute)
+					return false;
 			}
 			return list.IsAvailable (targetPlatform);
 #else

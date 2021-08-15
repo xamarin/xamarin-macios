@@ -1,4 +1,4 @@
-﻿// 
+// 
 // CIKernel.cs: CoreImgage CIKernel class
 //
 // Authors:
@@ -47,4 +47,3 @@ namespace CoreImage {
 	}
 	#endif
 }
-

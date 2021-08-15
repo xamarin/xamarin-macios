@@ -1,4 +1,4 @@
-﻿// 
+// 
 // VTDecompressionSession.cs: VideoTools Decompression Session class 
 //
 // Authors:
@@ -366,4 +366,3 @@ namespace VideoToolbox {
 		}
 	}
 }
-

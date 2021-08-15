@@ -132,4 +132,3 @@ namespace Xamarin.MacDev.Tasks {
 		public bool ShouldExecuteRemotely () => this.ShouldExecuteRemotely (SessionId);
 	}
 }
-

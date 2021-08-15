@@ -1,4 +1,4 @@
-﻿// 
+// 
 // MidiThruConnection.cs
 //
 // Authors: Alex Soto (alex.soto@xamarin.com)
@@ -165,4 +165,3 @@ namespace CoreMidi {
 	}
 #endif // !COREBUILD
 }
-

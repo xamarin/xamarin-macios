@@ -1,4 +1,4 @@
-﻿//
+//
 // VNUtils.cs
 //
 // Authors:
