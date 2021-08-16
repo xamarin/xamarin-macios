@@ -36,7 +36,7 @@ namespace Xamarin.MacDev.Tasks
 
 		[Required]
 		[Output] // This is required to create an empty file on Windows for the Input/Outputs check.
-		public string CompiledAppManifest { get; set; }
+		public ITaskItem CompiledAppManifest { get; set; }
 
 		[Required]
 		public bool Debug { get; set; }
@@ -126,7 +126,7 @@ namespace Xamarin.MacDev.Tasks
 			// Merge with any partial plists...
 			MergePartialPlistTemplates (plist);
 
-			plist.Save (CompiledAppManifest, true, true);
+			plist.Save (CompiledAppManifest.ItemSpec, true, true);
 
 			return !Log.HasLoggedErrors;
 		}
