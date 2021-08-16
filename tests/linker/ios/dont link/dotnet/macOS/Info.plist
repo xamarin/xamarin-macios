@@ -3,11 +3,11 @@
 <plist version="1.0">
 	<dict>
 		<key>CFBundleDisplayName</key>
-		<string>InterdependentBindingProject</string>
+		<string>DontLinkTest</string>
 		<key>CFBundleIdentifier</key>
-		<string>com.xamarin.dotnet.interdependentbindingprojects</string>
+		<string>com.xamarin.dontlink</string>
 		<key>CFBundleName</key>
-		<string>InterdependentBindingProject</string>
+		<string>DontLinkTest</string>
 		<key>LSMinimumSystemVersion</key>
 		<string>10.14</string>
 	</dict>
