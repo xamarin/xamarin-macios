@@ -36,8 +36,11 @@ namespace MonoTouchFixtures.Foundation {
 			})) {
 
 				var thread = new Thread (() => {
+					Console.WriteLine ("Thread started");
 					NSRunLoop.Current.AddTimer (timer, NSRunLoopMode.Default);
+					Console.WriteLine ("Thread timer added");
 					NSRunLoop.Current.RunUntil (NSRunLoopMode.Default, NSDate.Now.AddSeconds (5));
+					Console.WriteLine ("Thread ended");
 				})
 				{
 					IsBackground = true,
