@@ -10,9 +10,6 @@ using Mono.Tuner;
 using Xamarin.Bundler;
 
 using MonoTouch.Tuner;
-#if MONOMAC
-using MonoMac.Tuner;
-#endif
 #if NET
 using Mono.Linker.Steps;
 #endif
@@ -811,26 +808,18 @@ namespace Xamarin.Linker {
 
 		void ProcessEnsureUIThread (MethodDefinition caller, Instruction ins)
 		{
-#if MONOMAC
-			const string operation = "remove calls to NSApplication::EnsureUIThread";
-#else
-			const string operation = "remove calls to UIApplication::EnsureUIThread";
-#endif
-
 			if (Optimizations.RemoveUIThreadChecks != true)
 				return;
 
 			// Verify we're checking the right get_EnsureUIThread call
+			var declaringTypeNamespace = LinkContext.App.Platform == Utils.ApplePlatform.MacOSX ? Namespaces.AppKit : Namespaces.UIKit;
+			var declaringTypeName = LinkContext.App.Platform == Utils.ApplePlatform.MacOSX ? "NSApplication" : "UIApplication";
 			var mr = ins.Operand as MethodReference;
-#if MONOMAC
-			if (!mr.DeclaringType.Is (Namespaces.AppKit, "NSApplication"))
+			if (!mr.DeclaringType.Is (declaringTypeNamespace, declaringTypeName))
 				return;
-#else
-			if (!mr.DeclaringType.Is (Namespaces.UIKit, "UIApplication"))
-				return;
-#endif
 
 			// Verify a few assumptions before doing anything
+			string operation = $"remove calls to {declaringTypeName}::EnsureUIThread";
 			if (!ValidateInstruction (caller, ins, operation, Code.Call))
 				return;
 
