@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,11 +36,16 @@ namespace Xamarin.MacDev.Tasks
 		{
 			var document = XDocument.Load (this.File.ItemSpec);
 
-			this.Items = document.Root
+			var items = document.Root
 				.Elements (ItemGroupElementName)
 				.SelectMany (element => element.Elements ())
 				.Select (element => this.CreateItemFromElement (element))
-				.ToArray ();
+				.ToList ();
+
+			if (Items != null)
+				items.AddRange (Items);
+
+			Items = items.ToArray ();
 
 			return true;
 		}

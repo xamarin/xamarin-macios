@@ -1760,7 +1760,7 @@ public partial class Generator : IMemberGatherer {
 				Type et = pi.ParameterType.GetElementType ();
 				if (IsWrappedType (et)){
 					pars.AppendFormat ("IntPtr {0}", safe_name);
-					invoke.AppendFormat ("NSArray.ArrayFromHandle<{0}> ({1})", FormatType (null, et), safe_name);
+					invoke.AppendFormat ("CFArray.ArrayFromHandle<{0}> ({1})!", FormatType (null, et), safe_name);
 					continue;
 				}
 			}
@@ -2708,7 +2708,7 @@ public partial class Generator : IMemberGatherer {
 			if (by_ref_processing.Length > 0)
 				print (sw, by_ref_processing.ToString ());
 			if (use_temp_return)
-				print ("return ret;");
+				print ("return ret!;");
 			indent--; print ("}");
 			indent--;
 			print ("}} /* class {0} */", ti.NativeInvokerName);
@@ -3067,7 +3067,7 @@ public partial class Generator : IMemberGatherer {
 					var fullname = propertyType.FullName;
 
 					if (is_property_array_wrapped_type) {
-						print ("return NSArray.ArrayFromHandle<{0}> (value);", RenderType (et));
+						print ("return CFArray.ArrayFromHandle<{0}> (value)!;", RenderType (et));
 					} else if (is_property_wrapped_type) {
 						print ("return Runtime.GetNSObject<{0}> (value);", RenderType (propertyType));
 					} else if (propertyType == TypeManager.System_Double)
@@ -3852,16 +3852,16 @@ public partial class Generator : IMemberGatherer {
 				cast_a = "CFArray.StringArrayFromHandle (";
 				cast_b = ")!";
 			} else if (minfo != null && minfo.protocolize) {
-				cast_a = "NSArray.ArrayFromHandle<global::" + etype.Namespace + ".I" + etype.Name + ">(";
-				cast_b = ")";
+				cast_a = "CFArray.ArrayFromHandle<global::" + etype.Namespace + ".I" + etype.Name + ">(";
+				cast_b = ")!";
 			} else if (etype == TypeManager.Selector) {
 				exceptions.Add (ErrorHelper.CreateError (1066, mai.Type.FullName, mi.DeclaringType.FullName, mi.Name));
 			} else {
 				if (NamespaceManager.NamespacesThatConflictWithTypes.Contains (etype.Namespace))
-					cast_a = "NSArray.ArrayFromHandle<global::" + etype + ">(";
+					cast_a = "CFArray.ArrayFromHandle<global::" + etype + ">(";
 				else
-					cast_a = "NSArray.ArrayFromHandle<" + FormatType (mi.DeclaringType, etype) + ">(";
-				cast_b = ")";
+					cast_a = "CFArray.ArrayFromHandle<" + FormatType (mi.DeclaringType, etype) + ">(";
+				cast_b = ")!";
 			}
 		}
 	}
@@ -4322,7 +4322,7 @@ public partial class Generator : IMemberGatherer {
 						by_ref_processing.AppendFormat ("if ({0}Value != ({0}ArrayValue is null ? IntPtr.Zero : {0}ArrayValue.Handle))\n\t", pi.Name.GetSafeParamName ());
 
 					if (isArrayOfNSObject || isArrayOfINativeObjectSubclass) {
-						by_ref_processing.AppendFormat ("{0} = NSArray.ArrayFromHandle<{1}> ({0}Value);\n", pi.Name.GetSafeParamName (), RenderType (elementType.GetElementType ()));
+						by_ref_processing.AppendFormat ("{0} = CFArray.ArrayFromHandle<{1}> ({0}Value)!;\n", pi.Name.GetSafeParamName (), RenderType (elementType.GetElementType ()));
 					} else if (isArrayOfString) {
 						by_ref_processing.AppendFormat ("{0} = CFArray.StringArrayFromHandle ({0}Value)!;\n", pi.Name.GetSafeParamName ());
 					} else {

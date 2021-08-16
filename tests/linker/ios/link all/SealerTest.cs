@@ -1,4 +1,4 @@
-﻿// Copyright 2016 Xamarin Inc. All rights reserved.
+// Copyright 2016 Xamarin Inc. All rights reserved.
 
 using System;
 using Foundation;
@@ -36,9 +36,17 @@ namespace Linker.Sealer {
 	[Preserve (AllMembers = true)]
 	public class SealerTest {
 
-#if !DEBUG && NET
-		[Ignore ("https://github.com/xamarin/xamarin-macios/issues/9573")]
+#if NET
+		[SetUp]
+		public void SetUp ()
+		{
+			// XML serialization mechanism is controlled by RuntimeFeature.IsDynamicCodeSupported
+			// which will be true for simulator / JIT builds
+			// so the optimization is disabled unless AOT is used
+			TestRuntime.AssertDevice ();
+		}
 #endif
+
 		[Test]
 		public void Sealed ()
 		{
@@ -62,9 +70,6 @@ namespace Linker.Sealer {
 #endif
 		}
 
-#if !DEBUG && NET
-		[Ignore ("https://github.com/xamarin/xamarin-macios/issues/9573")]
-#endif
 		[Test]
 		public void Final ()
 		{
@@ -81,13 +86,10 @@ namespace Linker.Sealer {
 			// but it can be optimized / sealed as nothing else is (or can) overrides it
 			Assert.True (a.IsFinal, "A");
 			Assert.True (b.IsFinal, "B");
-			Assert.True (c.IsFinal, "C");
+			Assert.False (c.IsFinal, "C"); // devirtualized
 #endif
 		}
 
-#if !DEBUG && NET
-		[Ignore ("https://github.com/xamarin/xamarin-macios/issues/9573")]
-#endif
 		[Test]
 		public void Virtual ()
 		{

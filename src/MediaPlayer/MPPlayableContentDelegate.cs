@@ -1,4 +1,4 @@
-﻿#if !XAMCORE_3_0 && !MONOMAC
+#if !XAMCORE_3_0 && !MONOMAC
 
 using System;
 using System.Threading.Tasks;

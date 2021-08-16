@@ -34,7 +34,6 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<UsingTask TaskName="Microsoft.Build.Tasks.WriteLinesToFile" AssemblyFile="$(_TaskAssemblyName)" />
 
 	<!-- Xamarin.iOS-specific tasks. Some of these are duplicated with the Xamarin.Mac ones below, and should eventually be re-namespaced to be in Xamarin.MacDev -->
-	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.ACTool" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.ALToolUpload" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.ALToolValidate" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.BTouch" AssemblyFile="$(_TaskAssemblyName)" />
@@ -57,7 +56,6 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.FindWatchOS2AppBundle" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.GetFiles" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.GetMlaunchArguments" AssemblyFile="$(_TaskAssemblyName)" />
-	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.IBTool" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.Metal" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.MetalLib" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.MTouch" AssemblyFile="$(_TaskAssemblyName)" />
@@ -74,7 +72,6 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.WriteAssetPackManifest" AssemblyFile="$(_TaskAssemblyName)" />
 
 	<!-- Xamarin.Mac-specific tasks. Some of these are duplicated with the Xamarin.iOS ones above, and should eventually be re-namespaced to be in Xamarin.MacDev -->
-	<UsingTask Condition="'$(_PlatformName)' == 'macOS'" TaskName="Xamarin.Mac.Tasks.ACTool" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' == 'macOS'" TaskName="Xamarin.Mac.Tasks.BTouch" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' == 'macOS'" TaskName="Xamarin.Mac.Tasks.CodesignVerify" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' == 'macOS'" TaskName="Xamarin.Mac.Tasks.CompileAppManifest" AssemblyFile="$(_TaskAssemblyName)" />
@@ -84,7 +81,6 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<UsingTask Condition="'$(_PlatformName)' == 'macOS'" TaskName="Xamarin.Mac.Tasks.CreateEmbeddedResources" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' == 'macOS'" TaskName="Xamarin.Mac.Tasks.DetectSdkLocations" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' == 'macOS'" TaskName="Xamarin.Mac.Tasks.DetectSigningIdentity" AssemblyFile="$(_TaskAssemblyName)" />
-	<UsingTask Condition="'$(_PlatformName)' == 'macOS'" TaskName="Xamarin.Mac.Tasks.IBTool" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' == 'macOS'" TaskName="Xamarin.Mac.Tasks.Metal" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' == 'macOS'" TaskName="Xamarin.Mac.Tasks.MetalLib" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' == 'macOS'" TaskName="Xamarin.Mac.Tasks.Mmp" AssemblyFile="$(_TaskAssemblyName)" />
@@ -93,6 +89,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<UsingTask Condition="'$(_PlatformName)' == 'macOS'" TaskName="Xamarin.Mac.Tasks.TextureAtlas" AssemblyFile="$(_TaskAssemblyName)" />
 
 	<!-- Tasks shared between Xamarin.iOS and Xamarin.Mac -->
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.ACTool" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.Archive" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.ArTool" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.AOTCompile" AssemblyFile="$(_TaskAssemblyName)" />
@@ -111,10 +108,12 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.FindItemWithLogicalName" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.GenerateBundleName" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.GetDirectories" AssemblyFile="$(_TaskAssemblyName)" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.GetFileSystemEntries" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.GetFullPath" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.GetMinimumOSVersion" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.GetNativeExecutableName" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.GetPropertyListValue" AssemblyFile="$(_TaskAssemblyName)" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.IBTool" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.PackLibraryResources" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.ParseBundlerArguments" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.PrepareResourceRules" AssemblyFile="$(_TaskAssemblyName)" />
@@ -285,7 +284,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 	<Target Name="_CompileAppManifest"
 		DependsOnTargets="$(_CompileAppManifestDependsOn)"
-		Inputs="$(_AppManifest);@(_PartialAppManifest)"
+		Inputs="$(_AppManifest);@(PartialAppManifest)"
 		Outputs="$(_AppBundlePath)$(_AppBundleManifestRelativePath)Info.plist" >
 		<CompileAppManifest
 			SessionId="$(BuildSessionId)"
@@ -306,7 +305,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			IsWatchExtension="$(IsWatchExtension)"
 			IsXPCService="$(IsXPCService)"
 			MinimumOSVersion="$(_MinimumOSVersion)"
-			PartialAppManifests="@(_PartialAppManifest)"
+			PartialAppManifests="@(PartialAppManifest)"
 			ResourceRules="$(_PreparedResourceRules)"
 			TargetArchitectures="$(TargetArchitectures)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
@@ -380,10 +379,19 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</ReadItemsFromFile>
 	</Target>
 
+	<PropertyGroup>
+		<_CoreCompileInterfaceDefinitionsDependsOn>
+			_BeforeCoreCompileInterfaceDefinitions;
+			_GetMinimumOSVersion;
+			_DetectSigningIdentity;
+			_ComputeTargetFrameworkMoniker;
+		</_CoreCompileInterfaceDefinitionsDependsOn>
+	</PropertyGroup>
+
 	<Target Name="_CoreCompileInterfaceDefinitions"
 		Inputs="@(InterfaceDefinition)"
 		Outputs="$(_IBToolCache)"
-		DependsOnTargets="_BeforeCoreCompileInterfaceDefinitions;_GetMinimumOSVersion;_DetectSigningIdentity">
+		DependsOnTargets="$(_CoreCompileInterfaceDefinitionsDependsOn)">
 
 		<IBTool
 			SessionId="$(BuildSessionId)"
@@ -405,7 +413,9 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			SdkUsrPath="$(_SdkUsrPath)"
 			SdkRoot="$(_SdkRoot)"
 			SdkPlatform="$(_SdkPlatform)"
-			SdkVersion="$(_SdkVersion)">
+			SdkVersion="$(_SdkVersion)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+			>
 			<Output TaskParameter="BundleResources" ItemName="_BundleResourceWithLogicalName" />
 
 			<!-- Local items to be persisted to items files -->
@@ -438,7 +448,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<!-- If _BeforeCoreCompileImageAssets did not delete the generated items lists from _CoreCompileImageAsset, then we read them
 		     since that target won't run and we need the output items that are cached in those files, which includes full metadata -->
 		<ReadItemsFromFile File="$(_ACTool_PartialAppManifestCache)" Condition="Exists('$(_ACTool_PartialAppManifestCache)')">
-			<Output TaskParameter="Items" ItemName="_PartialAppManifest" />
+			<Output TaskParameter="Items" ItemName="PartialAppManifest" />
 		</ReadItemsFromFile>
 		<ReadItemsFromFile File="$(_ACTool_BundleResourceCache)" Condition="Exists('$(_ACTool_BundleResourceCache)')">
 			<Output TaskParameter="Items" ItemName="_BundleResourceWithLogicalName" />
@@ -475,7 +485,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			SdkVersion="$(_SdkVersion)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			>
-			<Output TaskParameter="PartialAppManifest" ItemName="_PartialAppManifest" />
+			<Output TaskParameter="PartialAppManifest" ItemName="PartialAppManifest" />
 			<Output TaskParameter="BundleResources" ItemName="_BundleResourceWithLogicalName" />
 
 			<!-- Local items to be persisted to items files -->
@@ -484,7 +494,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</ACTool>
 
 		<!-- Cache the generated outputs items for incremental build support -->
-		<WriteItemsToFile Items="@(_ACTool_PartialAppManifest)" ItemName="_PartialAppManifest" File="$(_ACTool_PartialAppManifestCache)" Overwrite="true" IncludeMetadata="true" />
+		<WriteItemsToFile Items="@(_ACTool_PartialAppManifest)" ItemName="PartialAppManifest" File="$(_ACTool_PartialAppManifestCache)" Overwrite="true" IncludeMetadata="true" />
 		<WriteItemsToFile Items="@(_ACTool_BundleResources)" ItemName="_BundleResourceWithLogicalName" File="$(_ACTool_BundleResourceCache)" Overwrite="true" IncludeMetadata="true" />
 		<ItemGroup>
 			<FileWrites Include="$(_ACTool_PartialAppManifestCache);$(_ACTool_BundleResourceCache)" />
@@ -702,7 +712,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<!-- If _BeforeCompileCoreMLModels did not delete the generated items lists from _CoreCompileCoreMLModels, then we read them
 		     since that target won't run and we need the output items that are cached in those files, which includes full metadata -->
 		<ReadItemsFromFile File="$(_CoreMLModel_PartialAppManifestCache)" Condition="Exists('$(_CoreMLModel_PartialAppManifestCache)')">
-			<Output TaskParameter="Items" ItemName="_PartialAppManifest" />
+			<Output TaskParameter="Items" ItemName="PartialAppManifest" />
 		</ReadItemsFromFile>
 		<ReadItemsFromFile File="$(_CoreMLModel_BundleResourceCache)" Condition="Exists('$(_CoreMLModel_BundleResourceCache)')">
 			<Output TaskParameter="Items" ItemName="_BundleResourceWithLogicalName" />
@@ -726,7 +736,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			ResourcePrefix="$(_ResourcePrefix)"
 			SdkDevPath="$(_SdkDevPath)">
 			<Output TaskParameter="BundleResources" ItemName="_BundleResourceWithLogicalName" />
-			<Output TaskParameter="PartialAppManifests" ItemName="_PartialAppManifest" />
+			<Output TaskParameter="PartialAppManifests" ItemName="PartialAppManifest" />
 
 			<!-- Local items to be persisted to items files -->
 			<Output TaskParameter="PartialAppManifests" ItemName="_CoreMLModel_PartialAppManifest" />
@@ -734,7 +744,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</CoreMLCompiler>
 
 		<!-- Cache the generated outputs items for incremental build support -->
-		<WriteItemsToFile Items="@(_CoreMLModel_PartialAppManifest)" ItemName="_PartialAppManifest" File="$(_CoreMLModel_PartialAppManifestCache)" Overwrite="true" IncludeMetadata="true" />
+		<WriteItemsToFile Items="@(_CoreMLModel_PartialAppManifest)" ItemName="PartialAppManifest" File="$(_CoreMLModel_PartialAppManifestCache)" Overwrite="true" IncludeMetadata="true" />
 		<WriteItemsToFile Items="@(_CoreMLModel_BundleResources)" ItemName="_BundleResourceWithLogicalName" File="$(_CoreMLModel_BundleResourceCache)" Overwrite="true" IncludeMetadata="true" />
 		<ItemGroup>
 			<FileWrites Include="$(_CoreMLModel_PartialAppManifestCache);$(_CoreMLModel_BundleResourceCache)" />
@@ -1169,6 +1179,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			Resources="@(_Frameworks)"
 			SigningKey="$(_FrameworkCodeSigningKey)"
 			ExtraArgs="$(CodesignExtraArgs)"
+			UseSecureTimestamp="$(UseHardenedRuntime)"
 			>
 		</Codesign>
 
@@ -1646,9 +1657,11 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			OutputDirectory="$(TargetDir)"
 			PackageSigningKey="$(PackageSigningKey)"
 			PackagingExtraArgs="$(PackagingExtraArgs)"
+			PkgPackagePath="$(PkgPackagePath)"
 			ProductDefinition="$(_CompiledProductDefinition)"
 			ProjectPath="$(MSBuildProjectFullPath)"
 		>
+			<Output TaskParameter="PkgPackagePath" PropertyName="PkgPackagePath" />
 		</CreateInstallerPackage>
 	</Target>
 

@@ -2535,7 +2535,7 @@ namespace UIKit {
 		UIApplicationShortcutIcon FromSystemImageName (string systemImageName);
 
 #if IOS // This is inside ContactsUI.framework
-		[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
+		[NoMacCatalyst]
 		[Static, Export ("iconWithContact:")]
 		UIApplicationShortcutIcon FromContact (CNContact contact);
 #endif // IOS
@@ -15329,8 +15329,7 @@ namespace UIKit {
 		IUIViewControllerTransitionCoordinator GetTransitionCoordinator ();
 	}
 
-	[Unavailable (PlatformName.MacCatalyst)]
-	[Advice ("This API is not available when using UIKit on macOS.")]
+	[NoMacCatalyst]
 	[NoTV]
 	[Deprecated (PlatformName.iOS, 12, 0, message: "No longer supported; please adopt 'WKWebView'.")]
 	[BaseType (typeof (UIView), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] {typeof(UIWebViewDelegate)})]
@@ -15434,8 +15433,7 @@ namespace UIKit {
 		bool AllowsLinkPreview { get; set; }
 	}
 
-	[Unavailable (PlatformName.MacCatalyst)]
-	[Advice ("This API is not available when using UIKit on macOS.")]
+	[NoMacCatalyst]
 	[NoTV]
 	[Deprecated (PlatformName.iOS, 12, 0, message: "No longer supported; please adopt 'WKWebView' APIs.")]
 	[BaseType (typeof (NSObject))]

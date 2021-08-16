@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+using NUnit.Framework;
 using Xamarin.MacDev;
 
 namespace Xamarin.iOS.Tasks
@@ -20,4 +20,3 @@ namespace Xamarin.iOS.Tasks
 		}
 	}
 }
-

@@ -1,4 +1,4 @@
-﻿using NUnitLite;
+using NUnitLite;
 
 namespace mononativetests
 {

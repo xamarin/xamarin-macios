@@ -138,7 +138,6 @@ namespace AudioUnit
 #endif
 		[Mac (10,15)]
 		[Unavailable (PlatformName.MacCatalyst)]
-		[Advice ("This API is not available when using UIKit on macOS.")]
 		Reverb2=0x72766232, // 'rvb2'
 		NBandEq=0x6e626571, // 'nbeq'
 	}

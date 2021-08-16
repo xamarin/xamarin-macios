@@ -1,4 +1,4 @@
-﻿//
+//
 // XamMacArch.cs
 //
 // Author:

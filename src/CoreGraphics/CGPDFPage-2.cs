@@ -107,4 +107,3 @@ namespace CoreGraphics {
 #endif // !COREBUILD
 	}
 }
-

@@ -1,4 +1,4 @@
-﻿// Copyright 2017 Microsoft Inc. All rights reserved.
+// Copyright 2017 Microsoft Inc. All rights reserved.
 
 #if !__WATCHOS__
 

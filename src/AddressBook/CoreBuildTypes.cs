@@ -25,4 +25,3 @@ namespace AddressBook {
 	}
 }
 #endif
-

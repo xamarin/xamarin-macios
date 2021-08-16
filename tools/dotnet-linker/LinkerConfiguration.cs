@@ -33,6 +33,7 @@ namespace Xamarin.Linker {
 		public string PartialStaticRegistrarLibrary { get; set; }
 		public ApplePlatform Platform { get; private set; }
 		public string PlatformAssembly { get; private set; }
+		public string RelativeAppBundlePath { get; private set; }
 		public Version SdkVersion { get; private set; }
 		public string SdkRootDirectory { get; private set; }
 		public int Verbosity => Driver.Verbosity;
@@ -213,6 +214,9 @@ namespace Xamarin.Linker {
 				case "PlatformAssembly":
 					PlatformAssembly = Path.GetFileNameWithoutExtension (value);
 					break;
+				case "RelativeAppBundlePath":
+					RelativeAppBundlePath = value;
+					break;
 				case "Registrar":
 					Application.ParseRegistrar (value);
 					break;
@@ -359,6 +363,7 @@ namespace Xamarin.Linker {
 				Console.WriteLine ($"    PartialStaticRegistrarLibrary: {PartialStaticRegistrarLibrary}");
 				Console.WriteLine ($"    Platform: {Platform}");
 				Console.WriteLine ($"    PlatformAssembly: {PlatformAssembly}.dll");
+				Console.WriteLine ($"    RelativeAppBundlePath: {RelativeAppBundlePath}");
 				Console.WriteLine ($"    Registrar: {Application.Registrar} (Options: {Application.RegistrarOptions})");
 				Console.WriteLine ($"    RuntimeConfigurationFile: {Application.RuntimeConfigurationFile}");
 				Console.WriteLine ($"    SdkDevPath: {Driver.SdkRoot}");

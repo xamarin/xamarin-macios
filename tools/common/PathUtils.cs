@@ -187,8 +187,20 @@ namespace Xamarin.Utils
 			public ulong st_qspare_2;
 		}
 
-		[DllImport ("/usr/lib/libSystem.dylib", EntryPoint = "lstat$INODE64", SetLastError = true)]
-		static extern int lstat (string path, out stat buf);
+		[DllImport ("/usr/lib/libc.dylib", EntryPoint = "lstat$INODE64", SetLastError = true)]
+		static extern int lstat_x64 (string file_name, out stat buf);
+
+		[DllImport ("/usr/lib/libc.dylib", EntryPoint = "lstat", SetLastError = true)]
+		static extern int lstat_arm64 (string file_name, out stat buf);
+
+		static int lstat (string path, out stat buf)
+		{
+			if (RuntimeInformation.ProcessArchitecture == Architecture.Arm64) {
+				return lstat_arm64 (path, out buf);
+			} else {
+				return lstat_x64 (path, out buf);
+			}
+		}
 
 		public static bool IsSymlink (string file)
 		{
@@ -201,4 +213,3 @@ namespace Xamarin.Utils
 		}
 	}
 }
-
