@@ -95,3 +95,4 @@
 !missing-type! AVAssetVariantVideoAttributes not bound
 !missing-type! AVMetadataItemFilter not bound
 ## appended from unclassified file
+!missing-field! AVSampleBufferAudioRendererOutputConfigurationDidChangeNotification not bound

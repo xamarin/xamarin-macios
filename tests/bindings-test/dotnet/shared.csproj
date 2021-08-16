@@ -7,10 +7,12 @@
     <LangVersion>latest</LangVersion>
     <IsBindingProject>true</IsBindingProject>
 
-    <RootTestsDirectory>$(MSBuildThisFileDirectory)\..\..</RootTestsDirectory>
+    <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\..\..'))</RootTestsDirectory>
     <BindingsTestDirectory>$(RootTestsDirectory)\bindings-test</BindingsTestDirectory>
     <TestLibrariesDirectory>$(RootTestsDirectory)\test-libraries</TestLibrariesDirectory>
   </PropertyGroup>
+
+  <Import Project="$(RootTestsDirectory)/common/shared-dotnet.csproj" />
 
   <ItemGroup>
     <PackageReference Include="NUnitLite" Version="3.12.0" />

@@ -9,6 +9,7 @@ using Microsoft.Build.Utilities;
 using NUnit.Framework;
 
 using Xamarin.MacDev;
+using Xamarin.MacDev.Tasks;
 using Xamarin.Tests;
 using Xamarin.Utils;
 
@@ -58,6 +59,7 @@ namespace Xamarin.iOS.Tasks
 			task.SdkUsrPath = usr;
 			task.SdkBinPath = bin;
 			task.SdkRoot = root;
+			task.TargetFrameworkMoniker = "Xamarin.iOS,v1.0";
 			return task;
 		}
 
