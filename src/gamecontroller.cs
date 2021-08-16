@@ -973,6 +973,18 @@ namespace GameController {
 		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("touchpads", ArgumentSemantic.Strong)]
 		NSDictionary<NSString, GCControllerTouchpad> Touchpads { get; }
+
+		[iOS (15,0), Mac (12,0), TV (15,0), MacCatalyst (15,0)]
+		[Export ("hasRemappedElements")]
+		bool HasRemappedElements { get; }
+
+		[iOS (15,0), Mac (12,0), TV (15,0), MacCatalyst (15,0)]
+		[Export ("mappedElementAliasForPhysicalInputName:")]
+		string GetMappedElementAlias (string inputName);
+
+		[iOS (15,0), Mac (12,0), TV (15,0), MacCatalyst (15,0)]
+		[Export ("mappedPhysicalInputNamesForElementAlias:")]
+		NSSet<NSString> GetMappedPhysicalInputNames (string elementAlias);
 	}
 
 	[TV (14, 0), Mac (11, 0), iOS (14, 0)]
@@ -1054,6 +1066,14 @@ namespace GameController {
 
 		[Field ("GCInputDualShockTouchpadButton")]
 		NSString DualShockTouchpadButton { get; }
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Field ("GCInputButtonShare")]
+		NSString ButtonShare { get; }
+
+		[iOS (15,0), Mac (12,0), TV (15,0), MacCatalyst (15,0)]
+		[Field ("GCInputMicroGamepadButtonMenu")]
+		NSString MicroGamepadButtonMenu { get; }
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
@@ -1072,6 +1092,10 @@ namespace GameController {
 
 		[NullAllowed, Export ("paddleButton4")]
 		GCControllerButtonInput PaddleButton4 { get; }
+
+		[iOS (15,0), Mac (12,0), TV (15,0), MacCatalyst (15,0)]
+		[NullAllowed, Export ("buttonShare")]
+		GCControllerButtonInput ButtonShare { get; }
 	}
 
 	[Static]
