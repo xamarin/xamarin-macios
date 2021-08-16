@@ -328,7 +328,7 @@ namespace AVFoundation {
 	}
 #endif
 
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 
 	[Mac (10,15)]
 	[StructLayout (LayoutKind.Sequential)]
@@ -338,6 +338,73 @@ namespace AVFoundation {
 
 		public nint PacketRefreshCount;
 	}
+#endif
+
+#if MONOMAC
+
+#if !NET
+	[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
+#else
+	[UnsupportedOSPlatform ("ios"), UnsupportedOSPlatform ("tvos"), UnsupportedOSPlatform ("maccatalyst"), SupportedOSPlatform ("macos12.0")]
+#endif
+	[Native]
+	public enum AVCaptionUnitsType : long {
+		Unspecified = 0,
+		Cells,
+		Percent,
+	}
+
+#if !NET
+	[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
+#else
+	[UnsupportedOSPlatform ("ios"), UnsupportedOSPlatform ("tvos"), UnsupportedOSPlatform ("maccatalyst"), SupportedOSPlatform ("macos12.0")]
+#endif
+	[StructLayout (LayoutKind.Sequential)]
+	public struct AVCaptionDimension {
+		public nfloat Value;
+		public AVCaptionUnitsType Units;
+
+		[DllImport (Constants.AVFoundationLibrary)]
+		static extern AVCaptionDimension AVCaptionDimensionMake (nfloat dimension, AVCaptionUnitsType units);
+
+		public static AVCaptionDimension Create (nfloat dimension, AVCaptionUnitsType units)
+			=> AVCaptionDimensionMake  (dimension, units);
+	}
+
+#if !NET
+	[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
+#else
+	[UnsupportedOSPlatform ("ios"), UnsupportedOSPlatform ("tvos"), UnsupportedOSPlatform ("maccatalyst"), SupportedOSPlatform ("macos12.0")]
+#endif
+	[StructLayout (LayoutKind.Sequential)]
+	public struct AVCaptionPoint {
+		public AVCaptionDimension X;
+		public AVCaptionDimension Y;
+
+		[DllImport (Constants.AVFoundationLibrary)]
+		static extern AVCaptionPoint AVCaptionPointMake (AVCaptionDimension x, AVCaptionDimension y);
+
+		public static AVCaptionPoint Create (AVCaptionDimension x, AVCaptionDimension y)
+			=> AVCaptionPointMake (x,y);
+	}
+
+#if !NET
+	[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
+#else
+	[UnsupportedOSPlatform ("ios"), UnsupportedOSPlatform ("tvos"), UnsupportedOSPlatform ("maccatalyst"), SupportedOSPlatform ("macos12.0")]
+#endif
+	[StructLayout (LayoutKind.Sequential)]
+	public struct AVCaptionSize {
+		public AVCaptionDimension Width;
+		public AVCaptionDimension Height;
+
+		[DllImport (Constants.AVFoundationLibrary)]
+		static extern AVCaptionSize AVCaptionSizeMake (AVCaptionDimension width, AVCaptionDimension height);
+
+		public static AVCaptionSize Create (AVCaptionDimension width, AVCaptionDimension height)
+			=> AVCaptionSizeMake (width, height);
+	}
+
 #endif
 
 }

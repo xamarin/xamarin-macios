@@ -255,6 +255,10 @@ namespace Introspection {
 				// Xcode 12.5
 				case "GCDualSenseGamepad":
 				// Xcode 13
+				case "AVAssetDownloadConfiguration":
+				case "AVAssetDownloadContentConfiguration":
+				case "AVAssetVariant":
+				case "AVAssetVariantQualifier":
 				case "PKDeferredPaymentSummaryItem":
 				case "PKPaymentRequestCouponCodeUpdate":
 				case "PKRecurringPaymentSummaryItem":
@@ -379,6 +383,10 @@ namespace Introspection {
 				// Xcode 12.5
 				case "GCDualSenseGamepad":
 				// xcode 13
+				case "AVAssetDownloadConfiguration":
+				case "AVAssetDownloadContentConfiguration":
+				case "AVAssetVariant":
+				case "AVAssetVariantQualifier":
 				case "PKDeferredPaymentSummaryItem":
 				case "PKPaymentRequestCouponCodeUpdate":
 				case "PKRecurringPaymentSummaryItem":

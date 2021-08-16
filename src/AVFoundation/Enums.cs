@@ -238,6 +238,8 @@ namespace AVFoundation {
 		IncorrectlyConfigured = -11875,
 		SegmentStartedWithNonSyncSample = -11876,
 		RosettaNotInstalled = -11877,
+		OperationCancelled = -11878,
+		RequestCancelled = -11879,
 	}
 
 	[Watch (6,0)]
@@ -303,17 +305,23 @@ namespace AVFoundation {
 		Succeeded, Failed, Cancelled
 	}
 
-#if !XAMCORE_3_0 || MONOMAC
-	[Unavailable (PlatformName.MacCatalyst)]
-	[NoTV]
+#if !XAMCORE_3_0 || MONOMAC || __MACCATALYST__
+#if !NET
+	[NoTV, MacCatalyst (15,0)]
+#else
+	[UnsupportedOSPlatform ("tvos"), SupportedOSPlatform ("ios"), SupportedOSPlatform ("macos"), SupportedOSPlatform ("maccatalyst15.0")]
+#endif
 	[Native]
 	// NSInteger - AVCaptureDevice.h
 	public enum AVCaptureDeviceTransportControlsPlaybackMode : long {
 		NotPlaying, Playing
 	}
 
-	[Unavailable (PlatformName.MacCatalyst)]
-	[NoTV, NoWatch]
+#if !NET
+	[NoTV, NoWatch, MacCatalyst (15,0)]
+#else
+	[UnsupportedOSPlatform ("tvos"), SupportedOSPlatform ("ios"), SupportedOSPlatform ("macos"), SupportedOSPlatform ("maccatalyst15.0")]
+#endif
 	[Native]
 	// NSInteger - AVCaptureSession.h
 	public enum AVVideoFieldMode : long {
@@ -714,8 +722,11 @@ namespace AVFoundation {
 		NotPossible,
 	}
 
-	[NoiOS][NoTV][NoWatch]
-	[Mac (10,10)]
+#if !NET
+	[iOS (15,0), TV (15,0), Watch (8,0), Mac (10,10), MacCatalyst (15,0)]
+#else
+	[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos10.10"), SupportedOSPlatform ("maccatalyst15.0")]
+#endif
 	[Native]
 	public enum AVSampleBufferRequestDirection : long {
 		Forward = 1,
@@ -723,13 +734,20 @@ namespace AVFoundation {
 		Reverse = -1,
 	}
 
-	[NoiOS][NoTV][NoWatch]
-	[Mac (10,10)]
+#if !NET
+	[iOS (15,0), TV (15,0), Watch (8,0), Mac (10,10), MacCatalyst (15,0)]
+#else
+	[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos10.10"), SupportedOSPlatform ("maccatalyst15.0")]
+#endif
 	[Native]
 	public enum AVSampleBufferRequestMode : long {
 		Immediate,
 		Scheduled,
+#if !NET
 		[Mac (10,15)]
+#else
+		[SupportedOSPlatform ("macos10.15")]
+#endif
 		Opportunistic = 2,
 	}
 
@@ -1000,7 +1018,11 @@ namespace AVFoundation {
 		EncodedPixels = 2,
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (11, 0)]
+#if !NET
+	[NoWatch, NoTV, Mac (12,0), iOS (11,0)]
+#else
+	[UnsupportedOSPlatform ("tvos"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("ios11.0")]
+#endif
 	public enum AVAssetDownloadedAssetEvictionPriority {
 		[Field ("AVAssetDownloadedAssetEvictionPriorityDefault")]
 		Default = 0,
@@ -1018,7 +1040,11 @@ namespace AVFoundation {
 		BeforeMainMediaDataNotInterleaved = 1,
 	}
 
-	[TV (11, 0), NoWatch, Mac (10, 13), iOS (11, 0)]
+#if !NET
+	[TV (11,0), NoWatch, Mac (10,13), iOS (11,0), MacCatalyst (15,0)]
+#else
+	[SupportedOSPlatform ("ios11.0"), SupportedOSPlatform ("tvos11.0"), SupportedOSPlatform ("macos10.13"), SupportedOSPlatform ("maccatalyst15.0")]
+#endif
 	public enum AVVideoCodecType {
 		[Field ("AVVideoCodecTypeH264")]
 		H264 = 0,
@@ -1177,7 +1203,11 @@ namespace AVFoundation {
 	}
 
 	[Native]
-	[NoTV, NoWatch, Mac (11, 0), NoiOS]
+#if !NET
+	[TV (15,0), Watch (8,0), Mac (11,0), iOS (15,0), MacCatalyst (15,0)]
+#else
+	[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos11.0"), SupportedOSPlatform ("maccatalyst15.0")]
+#endif
 	public enum AVAudioRoutingArbitrationCategory : long {
 		Playback = 0,
 		PlayAndRecord = 1,
@@ -1192,4 +1222,240 @@ namespace AVFoundation {
 		AuthorizationTokenData,
 	}
 #endif
+
+#if !NET
+	[TV (15,0), Mac (12,0), iOS (15,0), Watch (8,0), MacCatalyst (15,0)]
+#else
+	[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
+#endif
+	[Flags]
+	[Native]
+	public enum AVDelegatingPlaybackCoordinatorRateChangeOptions : ulong {
+		PlayImmediately = (1uL << 0),
+	}
+
+#if !NET
+	[TV (15,0), Mac (12,0), iOS (15,0), Watch (8,0), MacCatalyst (15,0)]
+#else
+	[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
+#endif
+	[Flags]
+	[Native]
+	public enum AVDelegatingPlaybackCoordinatorSeekOptions : ulong {
+		ResumeImmediately = (1uL << 0),
+	}
+
+#if !NET
+	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+#else
+	[UnsupportedOSPlatform ("tvos"), SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
+#endif
+	[Native]
+	public enum AVCaptureMicrophoneMode : long {
+		Standard = 0,
+		WideSpectrum = 1,
+		VoiceIsolation = 2,
+	}
+
+#if !NET
+	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+#else
+	[UnsupportedOSPlatform ("tvos"), SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
+#endif
+	[Native]
+	public enum AVCaptureSystemUserInterface : long {
+		VideoEffects = 1,
+		MicrophoneModes = 2,
+	}
+
+#if !NET
+	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+#else
+	[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
+#endif
+	[Native]
+	public enum AVPlayerAudiovisualBackgroundPlaybackPolicy : long {
+		Automatic = 1,
+		Pauses = 2,
+		ContinuesIfPossible = 3,
+	}
+
+#if !NET
+	[TV (15,0), NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+#else
+	[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
+#endif
+	public enum AVCoordinatedPlaybackSuspensionReason {
+
+		[Field ("AVCoordinatedPlaybackSuspensionReasonAudioSessionInterrupted")]
+		AudioSessionInterrupted,
+
+		[Field ("AVCoordinatedPlaybackSuspensionReasonStallRecovery")]
+		StallRecovery,
+
+		[Field ("AVCoordinatedPlaybackSuspensionReasonPlayingInterstitial")]
+		PlayingInterstitial,
+
+		[Field ("AVCoordinatedPlaybackSuspensionReasonCoordinatedPlaybackNotPossible")]
+		CoordinatedPlaybackNotPossible,
+
+		[Field ("AVCoordinatedPlaybackSuspensionReasonUserActionRequired")]
+		UserActionRequired,
+
+		[Field ("AVCoordinatedPlaybackSuspensionReasonUserIsChangingCurrentTime")]
+		UserIsChangingCurrentTime,
+	}
+
+#if !NET
+	[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
+#else
+	[UnsupportedOSPlatform ("ios"), UnsupportedOSPlatform ("tvos"), UnsupportedOSPlatform ("maccatalyst"), SupportedOSPlatform ("macos12.0")]
+#endif
+	[Native]
+	public enum AVCaptionAnimation : long	{
+		None = 0,
+		CharacterReveal = 1,
+	}
+
+#if !NET
+	[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
+#else
+	[UnsupportedOSPlatform ("ios"), UnsupportedOSPlatform ("tvos"), UnsupportedOSPlatform ("maccatalyst"), SupportedOSPlatform ("macos12.0")]
+#endif
+	[Native]
+	public enum AVCaptionFontWeight : long {
+		Unknown = 0,
+		Normal = 1,
+		Bold = 2,
+	}
+
+#if !NET
+	[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst] 
+#else
+	[UnsupportedOSPlatform ("ios"), UnsupportedOSPlatform ("tvos"), UnsupportedOSPlatform ("maccatalyst"), SupportedOSPlatform ("macos12.0")]
+#endif
+	[Native]
+	public enum AVCaptionFontStyle : long {
+		Unknown = 0,
+		Normal = 1,
+		Italic = 2,
+	}
+
+#if !NET
+	[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
+#else
+	[UnsupportedOSPlatform ("ios"), UnsupportedOSPlatform ("tvos"), UnsupportedOSPlatform ("maccatalyst"), SupportedOSPlatform ("macos12.0")]
+#endif
+	[Flags]
+	[Native]
+	public enum AVCaptionDecoration : ulong 	{
+		None = 0x0,
+		Underline = 1uL << 0,
+		LineThrough = 1uL << 1,
+		Overline = 1uL << 2,
+	}
+
+#if !NET
+		[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
+#else
+		[UnsupportedOSPlatform ("ios"), UnsupportedOSPlatform ("tvos"), UnsupportedOSPlatform ("maccatalyst"), SupportedOSPlatform ("macos12.0")]
+#endif
+	[Native]
+	public enum AVCaptionTextCombine : long {
+		All = -1,
+		None = 0,
+		OneDigit = 1,
+		TwoDigits = 2,
+		ThreeDigits = 3,
+		FourDigits = 4,
+	}
+
+#if !NET
+		[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
+#else
+		[UnsupportedOSPlatform ("ios"), UnsupportedOSPlatform ("tvos"), UnsupportedOSPlatform ("maccatalyst"), SupportedOSPlatform ("macos12.0")]
+#endif
+	[Native]
+	public enum AVCaptionTextAlignment : long {
+		Start = 0,
+		End = 1,
+		Center = 2,
+		Left = 3,
+		Right = 4,
+	}
+
+#if !NET
+	[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
+#else
+	[UnsupportedOSPlatform ("ios"), UnsupportedOSPlatform ("tvos"), UnsupportedOSPlatform ("maccatalyst"), SupportedOSPlatform ("macos12.0")]
+#endif
+	[Native]
+	public enum AVCaptionRegionWritingMode : long
+	{
+		LeftToRightAndTopToBottom = 0,
+		TopToBottomAndRightToLeft = 2
+	}
+
+#if !NET
+	[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
+#else
+	[UnsupportedOSPlatform ("ios"), UnsupportedOSPlatform ("tvos"), UnsupportedOSPlatform ("maccatalyst"), SupportedOSPlatform ("macos12.0")]
+#endif
+	[Native]
+	public enum AVCaptionRegionScroll : long {
+		None = 0,
+		RollUp = 1,
+	}
+
+#if !NET
+	[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
+#else
+	[UnsupportedOSPlatform ("ios"), UnsupportedOSPlatform ("tvos"), SupportedOSPlatform ("macos12.0"), UnsupportedOSPlatform ("maccatalyst")]
+#endif
+	[Native]
+	public enum AVCaptionRegionDisplayAlignment : long {
+		Before = 0,
+		Center = 1,
+		After = 2,
+	}
+
+#if !NET
+	[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
+#else
+	[UnsupportedOSPlatform ("ios"), UnsupportedOSPlatform ("tvos"), UnsupportedOSPlatform ("maccatalyst"), SupportedOSPlatform ("macos12.0")]
+#endif
+	[Native]
+	public enum AVCaptionRubyPosition : long
+	{
+		Before = 0,
+		After = 1,
+	}
+
+#if !NET
+	[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
+#else
+	[UnsupportedOSPlatform ("ios"), UnsupportedOSPlatform ("tvos"), UnsupportedOSPlatform ("maccatalyst"), SupportedOSPlatform ("macos12.0")]
+#endif
+	[Native]
+	public enum AVCaptionRubyAlignment : long {
+		Start = 0,
+		Center = 1,
+		DistributeSpaceBetween = 2,
+		DistributeSpaceAround = 3,
+	}
+
+#if !NET
+	[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
+#else
+	[UnsupportedOSPlatform ("ios"), UnsupportedOSPlatform ("tvos"), UnsupportedOSPlatform ("maccatalyst"), SupportedOSPlatform ("macos12.0")]
+#endif
+	[Native]
+	public enum AVCaptionConversionValidatorStatus : long
+	{
+		Unknown = 0,
+		Validating = 1,
+		Completed = 2,
+		Stopped = 3,
+	}
+
 }

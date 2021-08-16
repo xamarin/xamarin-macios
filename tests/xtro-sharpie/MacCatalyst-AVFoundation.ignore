@@ -2,3 +2,33 @@
 !missing-selector! AVAssetDownloadTask::destinationURL not bound
 ## Unavailable
 !missing-field! AVCaptureSessionPresetiFrame960x540 not bound
+!missing-selector! AVAssetReaderOutputCaptionAdaptor::captionsNotPresentInPreviousGroupsInCaptionGroup: not bound
+!missing-selector! AVAssetReaderOutputCaptionAdaptor::nextCaptionGroup not bound
+!missing-selector! AVAssetWriterInputCaptionAdaptor::appendCaption: not bound
+!missing-selector! AVAssetWriterInputCaptionAdaptor::appendCaptionGroup: not bound
+!missing-selector! AVAsset::preferredDisplayCriteria not bound
+!missing-selector! +AVAssetReaderOutputCaptionAdaptor::assetReaderOutputCaptionAdaptorWithAssetReaderTrackOutput: not bound
+!missing-selector! AVAssetReaderOutputCaptionAdaptor::assetReaderTrackOutput not bound
+!missing-selector! AVAssetReaderOutputCaptionAdaptor::initWithAssetReaderTrackOutput: not bound
+!missing-selector! AVAssetReaderOutputCaptionAdaptor::setValidationDelegate: not bound
+!missing-type! AVAssetReaderOutputCaptionAdaptor not bound
+
+# delegate is not present and will result in a compilation error
+!missing-protocol! AVCaptureFileOutputDelegate not bound
+!missing-selector! AVCaptureFileOutput::delegate not bound
+!missing-selector! AVCaptureFileOutput::setDelegate: not bound
+!missing-selector! AVAssetReaderOutputCaptionAdaptor::validationDelegate not bound
+!missing-protocol! AVAssetReaderCaptionValidationHandling not bound
+
+# added and deprecated 
+!missing-field! AVFragmentedMovieTrackTotalSampleDataLengthDidChangeNotification not bound
+!missing-selector! AVAudioUnitComponent::componentURL not bound
+!missing-field! AVVideoCodecAppleProRes4444 not bound
+!missing-field! AVVideoCodecAppleProRes422 not bound
+
+# not possible with the generator but added INSFastEnumeration for whenever is supported.
+!missing-protocol-conformance! AVCaptureSynchronizedDataCollection should conform to NSFastEnumeration
+
+# ignored in mac os too
+!missing-field! AVVideoDecompressionPropertiesKey not bound
+!missing-protocol-conformance! AVSampleBufferDisplayLayer should conform to AVQueuedSampleBufferRendering (defined in 'AVSampleBufferDisplayLayerQueueManagement' category)
