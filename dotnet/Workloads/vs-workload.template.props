@@ -2,6 +2,7 @@
 <Project>
   <PropertyGroup>
     <TargetName>Microsoft.NET.Sdk.MaciOS.Workload</TargetName>
+    <ManifestBuildVersion>@IOS_WORKLOAD_VERSION@</ManifestBuildVersion>
   </PropertyGroup>
   <ItemGroup>
     <!-- Shorten package names to avoid long path caching issues in Visual Studio -->
