@@ -980,7 +980,7 @@ namespace GameController {
 
 		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("mappedElementAliasForPhysicalInputName:")]
-		string GetMappedElementAlias (string inputName);
+		string GetMappedElementAlias (string physicalInputName);
 
 		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("mappedPhysicalInputNamesForElementAlias:")]
