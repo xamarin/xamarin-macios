@@ -392,7 +392,7 @@ namespace AudioUnit
 #endif
 		public static uint GetCurrentInputDevice ()
 		{
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 			// We need to replace AudioHardwareGetProperty since it has been deprecated since OS X 10.6 and iOS 2.0
 			// Replacing with the following implementation recommended in the following doc
 			// See Listing 4  New - Getting the default input device.
@@ -864,7 +864,7 @@ namespace AudioUnit
 		[DllImport (Constants.AudioUnitLibrary)]
 		static extern AudioUnitStatus AudioUnitScheduleParameters (IntPtr inUnit, AudioUnitParameterEvent inParameterEvent, uint inNumParamEvents);
 
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 		[DllImport (Constants.AudioUnitLibrary)]
 		static extern int AudioObjectGetPropertyData (
 			uint inObjectID,
