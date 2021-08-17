@@ -769,6 +769,8 @@
 			<_RuntimeConfigReservedProperties Include="ICU_DAT_FILE_PATH" />
 			<_RuntimeConfigReservedProperties Include="TRUSTED_PLATFORM_ASSEMBLIES" />
 			<_RuntimeConfigReservedProperties Include="NATIVE_DLL_SEARCH_DIRECTORIES" />
+			<_RuntimeConfigReservedProperties Include="RUNTIME_IDENTIFIER" />
+			<_RuntimeConfigReservedProperties Include="APP_CONTEXT_BASE_DIRECTORY" />
 		</ItemGroup>
 		<RuntimeConfigParserTask
 			Condition="'$(GenerateRuntimeConfigurationFiles)' == 'true'"
