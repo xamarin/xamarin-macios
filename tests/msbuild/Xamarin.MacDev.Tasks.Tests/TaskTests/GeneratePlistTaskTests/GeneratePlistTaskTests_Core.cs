@@ -2,6 +2,8 @@ using System.IO;
 
 using NUnit.Framework;
 
+using Microsoft.Build.Utilities;
+
 using Xamarin.MacDev;
 using System.Linq;
 
@@ -33,7 +35,7 @@ namespace Xamarin.iOS.Tasks
 			Task = CreateTask<CompileAppManifest> ();
 
 			Task.AppBundleName = appBundleName;
-			Task.AppManifestBundleDirectory = Path.Combine (Cache.CreateTemporaryDirectory (), "AppBundlePath");
+			Task.CompiledAppManifest = new TaskItem (Path.Combine (Cache.CreateTemporaryDirectory (), "AppBundlePath", "Info.plist"));
 			Task.AssemblyName = assemblyName;
 			Task.AppManifest = CreateTempFile ("foo.plist");
 			Task.BundleIdentifier = bundleIdentifier;
@@ -68,7 +70,7 @@ namespace Xamarin.iOS.Tasks
 		public void NormalPlist ()
 		{
 			Assert.IsTrue (Task.Execute (), "#1");
-			Assert.IsNotNull (Task.CompiledAppManifest, "#2");
+			Assert.IsNotNull (Task.CompiledAppManifest?.ItemSpec, "#2");
 			Assert.IsTrue (File.Exists (Task.CompiledAppManifest.ItemSpec), "#3");
 		}
 

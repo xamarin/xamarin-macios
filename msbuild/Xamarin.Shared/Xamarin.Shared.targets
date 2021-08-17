@@ -285,7 +285,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<Target Name="_CompileAppManifest"
 		DependsOnTargets="$(_CompileAppManifestDependsOn)"
 		Inputs="$(_AppManifest);@(PartialAppManifest)"
-		Outputs="$(_AppBundlePath)$(_AppBundleManifestRelativePath)Info.plist" >
+		Outputs="$(_AppBundleManifest)" >
 		<CompileAppManifest
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
@@ -294,9 +294,9 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			ApplicationVersion="$(ApplicationVersion)"
 			AppBundleName="$(_AppBundleName)"
 			AppManifest="$(_AppManifest)"
-			AppManifestBundleDirectory="$(_AppBundlePath)$(_AppBundleManifestRelativePath)"
 			AssemblyName="$(AssemblyName)"
 			BundleIdentifier="$(_BundleIdentifier)"
+			CompiledAppManifest="$(_AppBundleManifest)"
 			Debug="$(_BundlerDebug)"
 			DefaultSdkVersion="$(_SdkVersion)"
 			GenerateApplicationManifest="$(GenerateApplicationManifest)"
@@ -796,7 +796,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</MetalLib>
 	</Target>
 
-	<Target Name="_DetectAppManifest">
+	<Target Name="_DetectAppManifest" DependsOnTargets="_GenerateBundleName">
 		<!--
 			This targets runs for Library projects as well, so that Library
 			projects can specify an Info.plist with MinimumOSVersion to pass
@@ -830,7 +830,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</FindItemWithLogicalName>
 		<Error Condition="'$(_AppManifest)' == '' And '$(_CanOutputAppBundle)' == 'true'" Text="Info.plist not found."/>
 		<PropertyGroup>
-			<_AppBundleManifestPath>$(_AppBundlePath)$(_AppBundleManifestRelativePath)$(_AppManifest)</_AppBundleManifestPath>
+			<_AppBundleManifest>$(_AppBundlePath)$(_AppBundleManifestRelativePath)Info.plist</_AppBundleManifest>
 		</PropertyGroup>
 	</Target>
 
@@ -1367,7 +1367,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<GetNativeExecutableName
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
-			AppManifest="$(_AppBundlePath)$(_AppBundleManifestRelativePath)Info.plist"
+			AppManifest="$(_AppBundleManifest)"
 			>
 			<Output TaskParameter="ExecutableName" PropertyName="_ExecutableName" />
 		</GetNativeExecutableName>
