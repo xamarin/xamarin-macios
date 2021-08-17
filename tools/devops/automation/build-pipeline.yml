@@ -8,7 +8,7 @@
 parameters:
 - name: runTests
   type: boolean
-  default: true
+  default: false
 
 - name: runDeviceTests
   type: boolean
@@ -128,7 +128,7 @@ resources:
   - repository: templates
     type: github
     name: xamarin/yaml-templates
-    ref: refs/heads/main
+    ref: refs/heads/pjc/vs-symbol-archive
     endpoint: xamarin
 
   - repository: maccore
