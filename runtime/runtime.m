@@ -2604,6 +2604,8 @@ xamarin_pinvoke_override (const char *libraryName, const char *entrypointName)
 			} else {
 				return NULL;
 			}
+		} else {
+			return NULL;
 		}
 #endif // defined (__i386__) || defined (__x86_64__) || defined (__arm64__)
 #endif // !defined (CORECLR_RUNTIME)

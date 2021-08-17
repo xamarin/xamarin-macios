@@ -7,7 +7,7 @@
     <RootNamespace>dontlink</RootNamespace>
     <AssemblyName>dont link</AssemblyName>
     <MtouchLink>None</MtouchLink>
-    <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\..\..'))</RootTestsDirectory>
+    <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\..\..\..\..'))</RootTestsDirectory>
     <ThisTestDirectory>$(RootTestsDirectory)\linker\ios\dont link</ThisTestDirectory>
   </PropertyGroup>
 
@@ -24,9 +24,19 @@
   <ItemGroup>
     <None Include="Info.plist" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="$(ThisTestDirectory)\Main.cs" />
+
+  <ItemGroup Condition="$(TargetFramework.EndsWith('-macos'))">
+    <Compile Include="$(RootTestsDirectory)\common\mac\MacMain.cs" Condition="$(TargetFramework.EndsWith('-macos'))" Link="MacMain.cs" />
+    <Compile Include="$(RootTestsDirectory)\common\mac\TestRuntime.macos.cs">
+      <Link>TestRuntime.macos.cs</Link>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup Condition="!$(TargetFramework.EndsWith('-macos'))">
     <Compile Include="$(ThisTestDirectory)\AppDelegate.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Include="$(ThisTestDirectory)\DontLinkRegressionTests.cs" />
     <Compile Include="$(ThisTestDirectory)\TableViewSourceTest.cs" />
     <Compile Include="$(ThisTestDirectory)\CalendarTest.cs" />

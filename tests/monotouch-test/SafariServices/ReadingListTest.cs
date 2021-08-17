@@ -26,6 +26,7 @@ namespace MonoTouchFixtures.SafariServices {
 		string local_file = Path.Combine (NSBundle.MainBundle.ResourcePath, "Hand.wav");
 
 		[Test]
+		[Ignore ("This test adds two entries every time it's executed to the global reading list in Safari. For people who use their reading lists this becomes slightly annoying.")]
 		public void DefaultReadingList ()
 		{
 			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);

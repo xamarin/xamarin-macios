@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for AVUtilities.h helpers
 //
 // Authors:

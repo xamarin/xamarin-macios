@@ -58,7 +58,7 @@ namespace CoreVideo {
 		}
 #endif
 
-		public override bool Equals (object other)
+		public override bool Equals (object? other)
 		{
 			if (!(other is CVTime))
 				return false;

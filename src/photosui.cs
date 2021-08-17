@@ -477,8 +477,7 @@ namespace PhotosUI {
 	[iOS (8,0)]
 	[NoMac][NoTV]
 	[DisableDefaultCtor]
-	[Unavailable (PlatformName.MacCatalyst)]
-	[Advice ("This API is not available when using UIKit on macOS.")]
+	[NoMacCatalyst]
 	[Deprecated (PlatformName.iOS, 13, 0)]
 	[BaseType (typeof (NSExtensionContext))]
 	interface PHEditingExtensionContext

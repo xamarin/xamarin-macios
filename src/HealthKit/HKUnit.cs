@@ -7,4 +7,3 @@ namespace HealthKit
 		public const double MolarMassBloodGlucose = 180.15588000005408;
 	}
 }
-

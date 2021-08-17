@@ -1,4 +1,4 @@
-﻿//
+//
 // PlatformFramework.cs
 //
 // Author: Jeffrey Stedfast <jeff@xamarin.com>

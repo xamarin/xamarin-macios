@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for VTCompressionSession
 //
 // Authors:
@@ -148,4 +148,3 @@ namespace MonoTouchFixtures.VideoToolbox {
 }
 
 #endif // !__WATCHOS__
-

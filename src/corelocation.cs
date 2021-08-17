@@ -331,13 +331,13 @@ namespace CoreLocation {
 
 		[NoWatch][NoTV][NoMac]
 		[Deprecated (PlatformName.iOS, 13,0, message: "Not used anymore. Call will not have any effect.")]
-		[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
+		[NoMacCatalyst]
 		[Export ("allowDeferredLocationUpdatesUntilTraveled:timeout:")]
 		void AllowDeferredLocationUpdatesUntil (double distance, double timeout);
 
 		[NoWatch][NoTV][NoMac]
 		[Deprecated (PlatformName.iOS, 13,0, message: "Not used anymore. Call will not have any effect.")]
-		[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
+		[NoMacCatalyst]
 		[Export ("disallowDeferredLocationUpdates")]
 		void DisallowDeferredLocationUpdates ();
 
@@ -373,7 +373,7 @@ namespace CoreLocation {
 		void RequestState (CLRegion region);
 
 		[NoWatch][NoTV][NoMac]
-		[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
+		[NoMacCatalyst]
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'StartRangingBeacons(CLBeaconIdentityConstraint)' instead.")]
 		[iOS (7,0), Export ("startRangingBeaconsInRegion:")]
 		void StartRangingBeacons (CLBeaconRegion region);
@@ -383,7 +383,7 @@ namespace CoreLocation {
 		void StartRangingBeacons (CLBeaconIdentityConstraint constraint);
 
 		[NoWatch][NoTV][NoMac]
-		[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
+		[NoMacCatalyst]
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'StopRangingBeacons(CLBeaconIdentityConstraint)' instead.")]
 		[iOS (7,0), Export ("stopRangingBeaconsInRegion:")]
 		void StopRangingBeacons (CLBeaconRegion region);

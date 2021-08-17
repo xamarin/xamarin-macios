@@ -1,4 +1,4 @@
-﻿//
+//
 // GKPolygonObstacle.cs: Implements some nicer methods for GKPolygonObstacle
 //
 // Authors:

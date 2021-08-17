@@ -128,6 +128,45 @@ namespace CoreFoundation {
 		extern static CFArrayRef CFArrayCreateCopy (CFAllocatorRef allocator, CFArrayRef theArray);
 
 		internal CFArray Clone () => new CFArray (CFArrayCreateCopy (IntPtr.Zero, GetCheckedHandle ()), true);
+
+		// identical signature to NSArray API
+		static public string?[]? StringArrayFromHandle (IntPtr handle)
+		{
+			if (handle == IntPtr.Zero)
+				return null;
+
+			var c = CFArrayGetCount (handle);
+			string?[] ret = new string [c];
+
+			for (nint i = 0; i < c; i++)
+				ret [i] = CFString.FromHandle (CFArrayGetValueAtIndex (handle, i));
+			return ret;
+		}
+
+		static T? UnsafeGetItem<T> (IntPtr handle, nint index) where T : class, INativeObject
+		{
+			var val = CFArrayGetValueAtIndex (handle, index);
+			// Native code could return a CFArray with kCFNull inside its elements
+			// and they should be valid for things like T : NSDate so we handle
+			// them as just null values inside the array
+			if (val == CFNullHandle)
+				return null;
+
+			return Runtime.GetINativeObject<T> (val, false);
+		}
+
+		// identical signature to NSArray API
+		static public T?[]? ArrayFromHandle<T> (IntPtr handle) where T : class, INativeObject
+		{
+			if (handle == IntPtr.Zero)
+				return null;
+
+			var c = CFArrayGetCount (handle);
+			T?[] ret = new T [c];
+
+			for (nint i = 0; i < c; i++)
+				ret [i] = UnsafeGetItem<T> (handle, i);
+			return ret;
+		}
 	}
 }
-

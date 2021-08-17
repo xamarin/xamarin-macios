@@ -1,4 +1,4 @@
-﻿//
+//
 // INRelativeReferenceResolutionResult.cs
 //
 // Authors:

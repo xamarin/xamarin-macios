@@ -108,17 +108,17 @@ namespace Xharness {
 					continue;
 
 				var project = node.Attributes ["Project"].Value;
-				if (project != "../shared.csproj")
+				if (project != "../shared.csproj" && project != "../shared.fsproj")
 					continue;
 
 				if (TestPlatform == TestPlatform.None)
-					throw new InvalidOperationException  ($"The project ?{original_path}' did not set the TestPlatform property.");
+					throw new InvalidOperationException  ($"The project '{original_path}' did not set the TestPlatform property.");
 
 				var sharedProjectPath = System.IO.Path.Combine (System.IO.Path.GetDirectoryName (original_path), project);
 				// Check for variables that won't work correctly if the shared code is moved to a different file
 				var xml = File.ReadAllText (sharedProjectPath);
 				if (xml.Contains ("$(MSBuildThis"))
-					throw new InvalidOperationException ($"Can't use MSBuildThis* variables in shared MSBuild test code.");
+					throw new InvalidOperationException ($"Can't use MSBuildThis* variables in shared MSBuild test code: {sharedProjectPath}");
 
 				var import = new XmlDocument ();
 				import.LoadXmlWithoutNetworkAccess (xml);
@@ -232,6 +232,7 @@ namespace Xharness {
 				var prPath = pr.Replace ('\\', '/');
 				if (!allProjectReferences.TryGetValue (prPath, out var tp)) {
 					tp = new TestProject (pr.Replace ('\\', '/'));
+					tp.TestPlatform = TestPlatform;
 					await tp.CreateCopyAsync (log, processManager, test, rootDirectory, allProjectReferences);
 					allProjectReferences.Add (prPath, tp);
 				}
@@ -250,4 +251,3 @@ namespace Xharness {
 	}
 
 }
-

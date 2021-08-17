@@ -259,3 +259,5 @@
 !missing-pinvoke! CGWindowServerCFMachPort is not bound
 !missing-pinvoke! CGWindowServerCreateServerPort is not bound
 ## appended from unclassified file
+!missing-field! kCGColorSpaceLinearDisplayP3 not bound
+!missing-field! kCGColorSpaceLinearITUR_2020 not bound

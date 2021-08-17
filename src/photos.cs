@@ -131,10 +131,9 @@ namespace Photos
 
 		[Deprecated (PlatformName.TvOS, 11,0)]
 		[Deprecated (PlatformName.iOS, 11,0)]
-		[Unavailable (PlatformName.MacCatalyst)]
 		[NoMac]
 		[Static]
-		[Advice ("This API is not available when using UIKit on macOS.")]
+		[NoMacCatalyst]
 		[Export ("fetchAssetsWithALAssetURLs:options:")]
 		PHFetchResult FetchAssets (NSUrl[] assetUrls, [NullAllowed] PHFetchOptions options);
 
@@ -1385,8 +1384,7 @@ namespace Photos
 
 	[Mac (10,13)]
 	[NoiOS][NoTV]
-	[Unavailable (PlatformName.MacCatalyst)]
-	[Advice ("This API is not available when using UIKit on macOS.")]
+	[NoMacCatalyst]
 	[BaseType (typeof (PHAssetCollection))]
 	interface PHProject {
 
@@ -1401,7 +1399,7 @@ namespace Photos
 	[Mac (10,13)]
 	[Unavailable (PlatformName.MacCatalyst)]
 	[NoiOS][NoTV]
-	[Advice ("This API is not available when using UIKit on macOS.")]
+	[NoMacCatalyst]
 	[BaseType (typeof (PHChangeRequest))]
 	interface PHProjectChangeRequest {
 

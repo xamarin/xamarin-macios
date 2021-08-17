@@ -1,4 +1,4 @@
-﻿//
+//
 // SearchKit.cs: simple bindings for Searchkit
 //
 // Copyright 2015 Xamarin Inc
@@ -707,4 +707,3 @@ namespace SearchKit
 		
 	}
 }
-

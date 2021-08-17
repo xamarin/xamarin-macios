@@ -374,3 +374,4 @@
 !missing-type! AVSampleBufferRequest not bound
 !missing-type! AVSampleCursor not bound
 ## appended from unclassified file
+!missing-field! AVSampleBufferAudioRendererOutputConfigurationDidChangeNotification not bound

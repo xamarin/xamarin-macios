@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Xamarin.Messaging.Client;
 using System.Threading.Tasks;
 using Xamarin.MacDev;

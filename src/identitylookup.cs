@@ -1,4 +1,4 @@
-﻿//
+//
 // IdentityLookup C# bindings
 //
 // Authors:

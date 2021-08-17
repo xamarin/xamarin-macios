@@ -1,4 +1,4 @@
-﻿//
+//
 // MDLAssert Unit Tests
 //
 // Authors:

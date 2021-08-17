@@ -72,7 +72,7 @@ namespace Xamarin.Bundler {
 		public HashSet<string> IgnoredSymbols = new HashSet<string> ();
 
 		// The AOT arguments are currently not used for macOS, but they could eventually be used there as well (there's no mmp option to set these yet).
-		public string AotArguments = "static,asmonly,direct-icalls,";
+		public List<string> AotArguments = new List<string> ();
 		public List<string> AotOtherArguments = null;
 
 		public DlsymOptions DlsymOptions;
@@ -168,14 +168,36 @@ namespace Xamarin.Bundler {
 
 		public string FrameworksDirectory {
 			get {
+				return Path.Combine (AppDirectory, RelativeFrameworksPath);
+			}
+		}
+
+		public string RelativeFrameworksPath {
+			get {
 				switch (Platform) {
 				case ApplePlatform.iOS:
 				case ApplePlatform.TVOS:
 				case ApplePlatform.WatchOS:
-					return Path.Combine (AppDirectory, "Frameworks");
+					return "Frameworks";
 				case ApplePlatform.MacOSX:
 				case ApplePlatform.MacCatalyst:
-					return Path.Combine (AppDirectory, "Contents", "Frameworks");
+					return Path.Combine ("Contents", "Frameworks");
+				default:
+					throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
+				}
+			}
+		}
+
+		public string RelativeDylibPublishPath {
+			get {
+				switch (Platform) {
+				case ApplePlatform.iOS:
+				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
+					return string.Empty;
+				case ApplePlatform.MacOSX:
+				case ApplePlatform.MacCatalyst:
+					return Path.Combine ("Contents", CustomBundleName);
 				default:
 					throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
 				}
@@ -1463,7 +1485,11 @@ namespace Xamarin.Bundler {
 			aotArguments = new List<string> ();
 			aotArguments.Add ($"--aot=mtriple={(enable_thumb ? arch.Replace ("arm", "thumb") : arch)}-ios");
 			aotArguments.Add ($"data-outfile={dataFile}");
-			aotArguments.AddRange (app.AotArguments.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries));
+			aotArguments.Add ("static");
+			aotArguments.Add ("asmonly");
+			if (app.LibMonoLinkMode == AssemblyBuildTarget.StaticObject)
+				aotArguments.Add ("direct-icalls");
+			aotArguments.AddRange (app.AotArguments);
 			if (llvm_only)
 				aotArguments.Add ("llvmonly");
 			else if (interp) {
@@ -1630,5 +1656,21 @@ namespace Xamarin.Bundler {
 			}
 		}
 
+		public bool VerifyDynamicFramework (string framework_path)
+		{
+			var framework_filename = Path.Combine (framework_path, Path.GetFileNameWithoutExtension (framework_path));
+			var dynamic = false;
+
+			try {
+				dynamic = MachO.IsDynamicFramework (framework_filename);
+			} catch (Exception e) {
+				throw ErrorHelper.CreateError (140, e, Errors.MT0140, framework_filename);
+			}
+
+			if (!dynamic)
+				Driver.Log (1, "The framework {0} is a framework of static libraries, and will not be copied to the app.", framework_path);
+
+			return dynamic;
+		}
 	}
 }

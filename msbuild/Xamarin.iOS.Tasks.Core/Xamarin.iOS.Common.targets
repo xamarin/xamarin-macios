@@ -778,6 +778,23 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			<_CodesignDisableTimestamp Condition="'$(_SdkIsSimulator)' == 'true' Or '$(_BundlerDebug)' == 'true'">True</_CodesignDisableTimestamp>
 		</PropertyGroup>
 
+		<!-- Delete any crash dumps in the app bundle that might exist. Ref: https://github.com/xamarin/xamarin-macios/issues/12320 -->
+		<!-- Use a task to collect the files, so that we get the correct behavior on Windows -->
+		<GetFileSystemEntries
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			DirectoryPath="$(AppBundleDir)"
+			Pattern="mono_crash.mem.*"
+			Recursive="false"
+			>
+			<Output TaskParameter="Entries" ItemName="_MonoCrashDumpsInAppBundle" />
+		</GetFileSystemEntries>
+		<Delete
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			Files="@(_MonoCrashDumpsInAppBundle)"
+		/>
+
 		<Codesign
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
@@ -866,8 +883,8 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 		<PropertyGroup>
 			<!-- Calculate IpaPackageDir and IpaPackageName based on IpaPackagePath, if defined. -->
-			<IpaPackageDir Condition="'$(IpaPackagePath)' != ''">$([System.Path]::GetDirectoryName('$(IpaPackagePath)'))</IpaPackageDir>
-			<IpaPackageName Condition="'$(IpaPackagePath)' != ''">$([System.Path]::GetFileName('$(IpaPackagePath)'))</IpaPackageName>
+			<IpaPackageDir Condition="'$(IpaPackagePath)' != ''">$([System.IO.Path]::GetDirectoryName('$(IpaPackagePath)'))</IpaPackageDir>
+			<IpaPackageName Condition="'$(IpaPackagePath)' != ''">$([System.IO.Path]::GetFileName('$(IpaPackagePath)'))</IpaPackageName>
 
 			<!-- Calculate an IPA package directory path if not already defined by the developer. -->
 			<!--<IpaPackageDir Condition="'$(IpaPackageDir)' == ''">$([System.Environment]::GetEnvironmentVariable('IPA_PACKAGE_DIR'))</IpaPackageDir>-->

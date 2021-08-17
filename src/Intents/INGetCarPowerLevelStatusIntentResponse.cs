@@ -1,4 +1,4 @@
-﻿// INGetCarPowerLevelStatusIntentResponse.cs
+// INGetCarPowerLevelStatusIntentResponse.cs
 //
 // Authors:
 //	Alex Soto  <alexsoto@microsoft.com>

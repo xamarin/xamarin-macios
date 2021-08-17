@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 using Foundation;
 using ObjCRuntime;
@@ -20,4 +20,3 @@ namespace NoAsyncWarningCS0219Test {
 		string BarString2 (int arg1, Action<NSError, NSObject> err);
 	}
 }
-

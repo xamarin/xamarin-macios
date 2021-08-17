@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for CFNotificationCenter
 //
 // Authors:
@@ -144,4 +144,3 @@ namespace MonoTouchFixtures.CoreFoundation
 		}
 	}
 }
-

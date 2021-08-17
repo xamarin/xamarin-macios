@@ -1,4 +1,4 @@
-﻿//
+//
 // GKPrimitives.cs
 //
 // Authors:
