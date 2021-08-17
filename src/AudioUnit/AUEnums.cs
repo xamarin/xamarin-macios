@@ -187,7 +187,9 @@ namespace AudioUnit
 		TranslateUIDToBox = 1969841250, // 'uidb'
 		ClockDeviceList = 1668049699, //'clk#'
 		TranslateUidToClockDevice = 1969841251, // 'uidc',
+		[Obsolete ("Use the 'ProcessIsMain' element instead.")]
 		ProcessIsMaster = 1835103092, // 'mast'
+		ProcessIsMain = 1835100526, // 'main'
 		IsInitingOrExiting = 1768845172, // 'inot'
 		UserIDChanged = 1702193508, // 'euid'
 		ProcessIsAudible = 1886221684, // 'pmut'
@@ -200,6 +202,7 @@ namespace AudioUnit
 		ActualSampleRate = 1634955892,// 'asrt',
 		ClockDevice = 1634755428, // 'apcd',
 		IOThreadOSWorkgroup = 1869838183, // 'oswg'
+		ProcessMute = 1634758765, // 'appm'
 	}
 
 	public enum AudioObjectPropertyScope : uint
@@ -212,7 +215,9 @@ namespace AudioUnit
 
 	public enum AudioObjectPropertyElement : uint
 	{
+		[Obsolete ("Use the 'Main' element instead.")]
 		Master = 0, // 0
+		Main = 0, // 0
 	}
 #endif // !XAMCORE_3_0 || MONOMAC
 
