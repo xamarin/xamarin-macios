@@ -1928,6 +1928,7 @@ namespace CarPlay {
 
 	[NoWatch, NoTV, NoMac, iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
 	interface CPAssistantCellConfiguration : NSSecureCoding
 	{
 		[Export ("initWithPosition:visibility:assistantAction:")]
