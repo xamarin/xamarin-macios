@@ -118,7 +118,7 @@ namespace VideoToolbox {
 #else
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos")]
-		[SupportedOSPlatform ("maccatalyst1515.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
 		[UnsupportedOSPlatform ("macos")]
 #endif
 		public bool SupportsMultiPass { get; private set; }
