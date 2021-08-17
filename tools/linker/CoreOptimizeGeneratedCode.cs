@@ -819,7 +819,7 @@ namespace Xamarin.Linker {
 				return;
 
 			// Verify a few assumptions before doing anything
-			string operation = $"remove calls to {declaringTypeName}::EnsureUIThread";
+			const string operation = "remove calls to [NS|UI]Application::EnsureUIThread";
 			if (!ValidateInstruction (caller, ins, operation, Code.Call))
 				return;
 
