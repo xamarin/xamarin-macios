@@ -1026,6 +1026,15 @@ namespace PassKit {
 		[MacCatalyst (14,5)]
 		[Field ("PKPaymentNetworkMir")]
 		NSString Mir { get; }
+
+		[NoWatch, NoMac, iOS (15,0), NoMacCatalyst]
+		[Field ("PKPaymentNetworkNanaco")]
+		NSString Nanaco { get; }
+
+		[NoWatch, NoMac, iOS (15,0), NoMacCatalyst]
+		[Field ("PKPaymentNetworkWaon")]
+		NSString Waon { get; }
+
 	}
 
 #if !WATCH
