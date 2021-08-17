@@ -265,6 +265,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "MailKit", "MailKit", 12, 0 },
 					{ "MetricKit", 12, 0 },
 					{ "Phase", "PHASE", 12, 0 },
+					{ "ShazamKit", "ShazamKit", 12,0 },
 				};
 			}
 			return mac_frameworks;
@@ -428,6 +429,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "Chip", "CHIP", new Version (15, 0), NotAvailableInSimulator /* no headers in beta 2 */ },
 				{ "Phase", "PHASE", new Version (15,0), NotAvailableInSimulator /* no headers in beta 2 */ },
 				{ "OSLog", "OSLog", 15,0 },
+				{ "ShazamKit", "ShazamKit", new Version (15,0), NotAvailableInSimulator},
 
 				// the above MUST be kept in sync with simlauncher
 				// see tools/mtouch/Makefile
@@ -499,6 +501,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "Chip", "CHIP", new Version (8, 0), NotAvailableInSimulator /* no headers in beta 2 */ },
 				{ "NearbyInteraction", "NearbyInteraction", 8,0 },
 				{ "OSLog", "OSLog", 8,0 },
+				{ "ShazamKit", "ShazamKit", new Version (8, 0), NotAvailableInSimulator},
 			};
 		}
 		return watch_frameworks;
@@ -590,6 +593,7 @@ public class Frameworks : Dictionary <string, Framework>
 
 					{ "Chip", "CHIP", new Version (15, 0), NotAvailableInSimulator /* no headers in beta 2 */ },
 					{ "OSLog", "OSLog", 15,0 },
+					{ "ShazamKit", "ShazamKit", new Version (15, 0), NotAvailableInSimulator},
 				};
 			}
 			return tvos_frameworks;

@@ -1919,6 +1919,7 @@ COMMON_FRAMEWORKS =         \
 	Network                 \
 	OSLog                   \
 	SceneKit                \
+	ShazamKit               \
 	SoundAnalysis 			\
 	SpriteKit               \
 	StoreKit				\
