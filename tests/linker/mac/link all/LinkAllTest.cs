@@ -29,7 +29,7 @@ namespace LinkAllTests
 		public void Calendars ()
 		{
 			Check ("GregorianCalendar", true);
-#if __MACOS__ // I'm not sure if this is the expected behavior for macOS, or if it's a bug somewhere.
+#if NET && __MACOS__ // I'm not sure if this is the expected behavior for macOS, or if it's a bug somewhere.
 			Check ("UmAlQuraCalendar", true);
 			Check ("HijriCalendar", true);
 			Check ("ThaiBuddhistCalendar", true);
