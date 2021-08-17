@@ -214,6 +214,22 @@ namespace VideoToolbox {
 		[MacCatalyst (14,5)]
 		[Field ("kVTVideoEncoderSpecification_EnableLowLatencyRateControl")]
 		NSString EnableLowLatencyRateControl { get; }
+
+		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
+		[Field ("kVTCompressionPropertyKey_BaseLayerBitRateFraction")]
+		NSString BaseLayerBitRateFraction { get; }
+
+		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
+		[Field ("kVTCompressionPropertyKey_EnableLTR")]
+		NSString  EnableLtr { get; }
+
+		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
+		[Field ("kVTCompressionPropertyKey_MaxAllowedFrameQP")]
+		NSString MaxAllowedFrameQP { get; }
+
+		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
+		[Field ("kVTCompressionPropertyKey_SupportsBaseFrameQP")]
+		NSString SupportsBaseFrameQP { get; }
 	}
 
 	[Mac (10,15), iOS (13,0), TV (13,0)]
@@ -485,6 +501,14 @@ namespace VideoToolbox {
 		[Mac (10,9)]
 		NSString H264_High_AutoLevel { get; }
 
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Field ("kVTProfileLevel_H264_ConstrainedBaseline_AutoLevel")]
+		NSString H264_ConstrainedBaseline_AutoLevel { get; }
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Field ("kVTProfileLevel_H264_ConstrainedHigh_AutoLevel")]
+		NSString H264_ConstrainedHigh_AutoLevel { get; }
+
 		// MP4V
 
 		[Field ("kVTProfileLevel_MP4V_Simple_L0")]
@@ -608,6 +632,22 @@ namespace VideoToolbox {
 
 		[Field ("kVTEncodeFrameOptionKey_ForceKeyFrame")]
 		NSString ForceKeyFrame { get; } 
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Field ("kVTEncodeFrameOptionKey_AcknowledgedLTRTokens")]
+		NSString AcknowledgedLTRTokens { get; }
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Field ("kVTEncodeFrameOptionKey_BaseFrameQP")]
+		NSString BaseFrameQP { get; }
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Field ("kVTEncodeFrameOptionKey_ForceLTRRefresh")]
+		NSString ForceLTRRefresh { get; }
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Field ("kVTSampleAttachmentKey_RequireLTRAcknowledgementToken")]
+		NSString RequireLTRAcknowledgementToken { get; }
 	}
 
 	[iOS (8,0), TV (10,2)]
@@ -1003,6 +1043,14 @@ namespace VideoToolbox {
 		[MacCatalyst (14,2)]
 		[Field ("kVTVideoEncoderList_SupportsFrameReordering")]
 		NSString SupportsFrameReordering { get; }
+
+		[NoTV, NoMac, NoiOS, MacCatalyst (15,0)]
+		[Field ("kVTVideoEncoderList_SupportsMultiPass")]
+		NSString SupportsMultiPass { get; }
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Field ("kVTVideoEncoderListOption_IncludeStandardDefinitionDVEncoders")]
+		NSString IncludeStandardDefinitionDVEncoders { get; }
 
 		// VTVideoEncoder.cs should be updated when new constants are added here
 		// some are missing https://github.com/xamarin/xamarin-macios/issues/9904
