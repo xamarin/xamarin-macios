@@ -70,7 +70,7 @@ namespace LinkAll.Serialization.DataContract {
 		[Test]
 		public void Flags ()
 		{
-#if NET
+#if NET && !__MACOS__
 			if (Runtime.Arch == Arch.DEVICE)
 				Assert.Ignore ("https://github.com/dotnet/runtime/issues/47114");
 #endif
