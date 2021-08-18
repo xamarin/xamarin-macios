@@ -22,7 +22,7 @@ using Metal;
 
 namespace CoreVideo {
 
-	[iOS (8,0), Mac (12,0)]
+	[iOS (8,0), Mac (12,0), MacCatalyst (13,0)]
 	public class CVMetalTexture : INativeObject, IDisposable {
 
 		internal IntPtr handle;

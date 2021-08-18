@@ -101,16 +101,20 @@ namespace CoreVideo {
 
 		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
 		[DllImport (Constants.CoreVideoLibrary)]
-		static extern int CVDisplayLinkCreateWithOpenGLDisplayMask (uint mask, out IntPtr displayLinkOut);
+		static extern CVReturn CVDisplayLinkCreateWithOpenGLDisplayMask (uint mask, out IntPtr displayLinkOut);
 
 		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
-		public static CVDisplayLink CreateFromOpenGLMask (uint mask)
+		public static CVDisplayLink? CreateFromOpenGLMask (uint mask, out CVReturn error)
 		{
-			var result = CVDisplayLinkCreateWithOpenGLDisplayMask (mask, out IntPtr handle);
-			if (result != 0)
-				throw new Exception ($"Could not create display link for the given mask '{mask}'.");
+			error = CVDisplayLinkCreateWithOpenGLDisplayMask (mask, out IntPtr handle);
+			if (error != 0)
+				return null;
 			return new CVDisplayLink (handle, true);
 		}
+
+		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
+		public static CVDisplayLink? CreateFromOpenGLMask (uint mask)
+			=> CreateFromOpenGLMask (mask, out var _);
 
 		~CVDisplayLink ()
 		{
@@ -254,7 +258,6 @@ namespace CoreVideo {
 	  
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static CVReturn CVDisplayLinkSetOutputCallback (IntPtr displayLink, CVDisplayLinkOutputCallback function, IntPtr userInfo);
-
 		public CVReturn SetOutputCallback (DisplayLinkOutputCallback callback)
 		{
 			callbackHandle = GCHandle.Alloc (callback);
