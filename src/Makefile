@@ -497,6 +497,9 @@ $(MACOS_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml: $(TOP)/src/ILLink.LinkAttri
 	$(Q) mkdir -p $(MACOS_DOTNET_BUILD_DIR)
 	$(call Q_PROF_GEN,mac) sed < $< > $@ 's|@PRODUCT_NAME@|$(MAC_PRODUCT)|g;'
 
+$(MACOS_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml: $(TOP)/src/ILLink.Substitutions.macOS.xml | $(MACOS_DOTNET_BUILD_DIR)
+	$(Q) $(CP) $< $@
+
 # We can't pass the --target-framework values as parameters to the templates, because the commas interfere with Make's parameter parsing.
 xm_full_profile=--target-framework=Xamarin.Mac,Version=v4.5,Profile=Full
 xm_mobile_profile=--target-framework=Xamarin.Mac,Version=v2.0,Profile=Mobile
@@ -604,7 +607,7 @@ $(MACOS_DOTNET_BUILD_DIR)/macos.rsp: Makefile Makefile.generator frameworks.sour
 		@$(BUILD_DIR)/mac-defines.rsp \
 		> $@
 
-$(MACOS_DOTNET_BUILD_DIR)/64/Xamarin.Mac%dll $(MACOS_DOTNET_BUILD_DIR)/64/Xamarin.Mac%pdb $(MACOS_DOTNET_BUILD_DIR)/ref/Xamarin.Mac%dll: $(MACOS_DOTNET_BUILD_DIR)/macos-generated-sources $(MAC_SOURCES) $(MAC_CFNETWORK_SOURCES) $(SN_KEY) $(MACOS_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml | $(MACOS_DOTNET_BUILD_DIR)/64 $(MACOS_DOTNET_BUILD_DIR)/ref
+$(MACOS_DOTNET_BUILD_DIR)/64/Xamarin.Mac%dll $(MACOS_DOTNET_BUILD_DIR)/64/Xamarin.Mac%pdb $(MACOS_DOTNET_BUILD_DIR)/ref/Xamarin.Mac%dll: $(MACOS_DOTNET_BUILD_DIR)/macos-generated-sources $(MAC_SOURCES) $(MAC_CFNETWORK_SOURCES) $(SN_KEY) $(MACOS_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml $(MACOS_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml | $(MACOS_DOTNET_BUILD_DIR)/64 $(MACOS_DOTNET_BUILD_DIR)/ref
 	$(Q_DOTNET_BUILD) \
 		$(DOTNET6_CSC) $(DOTNET_FLAGS) -out:$(MACOS_DOTNET_BUILD_DIR)/64/Xamarin.Mac.dll -optimize \
 		-publicsign -keyfile:$(SN_KEY) \
@@ -617,6 +620,7 @@ $(MACOS_DOTNET_BUILD_DIR)/64/Xamarin.Mac%dll $(MACOS_DOTNET_BUILD_DIR)/64/Xamari
 		$(MAC_SOURCES) \
 		@$(BUILD_DIR)/mac-defines.rsp \
 		-res:$(MACOS_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml \
+		-res:$(MACOS_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml \
 		@$<
 
 DOTNET_TARGETS += \
@@ -1290,6 +1294,9 @@ $(MACCATALYST_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml: $(TOP)/src/ILLink.Lin
 	$(Q) mkdir -p $(MACCATALYST_DOTNET_BUILD_DIR)
 	$(call Q_PROF_GEN,maccatalyst) sed < $< > $@ 's|@PRODUCT_NAME@|Xamarin.MacCatalyst|g;'
 
+$(MACCATALYST_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml: $(TOP)/src/ILLink.Substitutions.MacCatalyst.xml | $(MACCATALYST_DOTNET_BUILD_DIR)
+	$(Q) $(CP) $< $@
+
 $(MACCATALYST_BUILD_DIR)/maccatalyst/core.dll: $(MACCATALYST_CORE_SOURCES) frameworks.sources Makefile $(BUILD_DIR)/maccatalyst-defines.rsp | $(MACCATALYST_BUILD_DIR)/maccatalyst
 	@mkdir -p $(MACCATALYST_BUILD_DIR)/maccatalyst
 	$(call Q_PROF_CSC,maccatalyst) $(TV_CSC) -nologo -out:$@ -target:library -debug -unsafe \
@@ -1351,7 +1358,7 @@ $(MACCATALYST_DOTNET_BUILD_DIR)/maccatalyst.rsp: Makefile Makefile.generator fra
 		@$(BUILD_DIR)/maccatalyst-defines.rsp \
 		> $@
 
-$(MACCATALYST_DOTNET_BUILD_DIR)/64/Xamarin.MacCatalyst%dll $(MACCATALYST_DOTNET_BUILD_DIR)/64/Xamarin.MacCatalyst%pdb $(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.MacCatalyst%dll: $(MACCATALYST_DOTNET_BUILD_DIR)/maccatalyst-generated-sources $(MACCATALYST_SOURCES) $(PRODUCT_KEY_PATH) $(MACCATALYST_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml | $(MACCATALYST_DOTNET_BUILD_DIR)/64 $(MACCATALYST_DOTNET_BUILD_DIR)/ref
+$(MACCATALYST_DOTNET_BUILD_DIR)/64/Xamarin.MacCatalyst%dll $(MACCATALYST_DOTNET_BUILD_DIR)/64/Xamarin.MacCatalyst%pdb $(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.MacCatalyst%dll: $(MACCATALYST_DOTNET_BUILD_DIR)/maccatalyst-generated-sources $(MACCATALYST_SOURCES) $(PRODUCT_KEY_PATH) $(MACCATALYST_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml $(MACCATALYST_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml | $(MACCATALYST_DOTNET_BUILD_DIR)/64 $(MACCATALYST_DOTNET_BUILD_DIR)/ref
 	$(Q_DOTNET_GEN) \
 		$(DOTNET6_CSC) $(DOTNET_FLAGS) -out:$(MACCATALYST_DOTNET_BUILD_DIR)/64/Xamarin.MacCatalyst.dll -optimize \
 		-publicsign -keyfile:$(PRODUCT_KEY_PATH) \
@@ -1364,6 +1371,7 @@ $(MACCATALYST_DOTNET_BUILD_DIR)/64/Xamarin.MacCatalyst%dll $(MACCATALYST_DOTNET_
 		$(MACCATALYST_SOURCES) \
 		@$(BUILD_DIR)/maccatalyst-defines.rsp \
 		-res:$(MACCATALYST_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml \
+		-res:$(MACCATALYST_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml \
 		@$<
 
 $(MACCATALYST_BUILD_DIR)/maccatalyst-64/Xamarin.MacCatalyst%dll $(MACCATALYST_BUILD_DIR)/maccatalyst-64/Xamarin.MacCatalyst%pdb: $(MACCATALYST_SOURCES) $(MACCATALYST_BUILD_DIR)/maccatalyst/generated_sources $(PRODUCT_KEY_PATH) | $(MACCATALYST_BUILD_DIR)/maccatalyst-64
