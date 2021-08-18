@@ -66,6 +66,7 @@ namespace Xamarin.Tests {
 
 		[Test]
 		[TestCaseSource (nameof (Templates))]
+		[Ignore ("https://github.com/xamarin/xamarin-macios/issues/12457")]
 		public void CreateAndBuildTemplate (string platform, string template)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
