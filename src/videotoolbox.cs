@@ -221,7 +221,7 @@ namespace VideoToolbox {
 
 		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
 		[Field ("kVTCompressionPropertyKey_EnableLTR")]
-		NSString  EnableLtr { get; }
+		NSString EnableLtr { get; }
 
 		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
 		[Field ("kVTCompressionPropertyKey_MaxAllowedFrameQP")]
@@ -635,7 +635,7 @@ namespace VideoToolbox {
 
 		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Field ("kVTEncodeFrameOptionKey_AcknowledgedLTRTokens")]
-		NSString AcknowledgedLTRTokens { get; }
+		NSString AcknowledgedLtrTokens { get; }
 
 		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Field ("kVTEncodeFrameOptionKey_BaseFrameQP")]
@@ -643,11 +643,11 @@ namespace VideoToolbox {
 
 		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Field ("kVTEncodeFrameOptionKey_ForceLTRRefresh")]
-		NSString ForceLTRRefresh { get; }
+		NSString ForceLtrRefresh { get; }
 
 		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Field ("kVTSampleAttachmentKey_RequireLTRAcknowledgementToken")]
-		NSString RequireLTRAcknowledgementToken { get; }
+		NSString RequireLtrAcknowledgementToken { get; }
 	}
 
 	[iOS (8,0), TV (10,2)]
