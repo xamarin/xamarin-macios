@@ -479,6 +479,10 @@ namespace CoreVideo {
 		[NoWatch, NoTV, Mac (12,0), iOS (14, 0), MacCatalyst (15,0)]
 		[Field ("kCVPixelBufferVersatileBayerKey_BayerPattern")]
 		NSString VersatileBayerKey_BayerPattern { get; }
+
+		[NoWatch, NoTV, Mac (12,0), iOS (15,0)]
+		[Field ("kCVPixelBufferProResRAWKey_MetadataExtension")]
+		NSString MetadataExtension { get; }
 	}
 
 	[Partial]
