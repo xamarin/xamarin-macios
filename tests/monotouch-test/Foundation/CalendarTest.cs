@@ -23,15 +23,16 @@ namespace MonoTouchFixtures.Foundation {
 		public void DateComponentsTest ()
 		{
 			var cal = new NSCalendar (NSCalendarType.Gregorian);
-			var now = DateTime.Now;
+			var now = DateTime.UtcNow;
 			NSDateComponents comps;
 
+			cal.TimeZone = NSTimeZone.FromName ("UTC");
 			comps = cal.Components (NSCalendarUnit.Year | NSCalendarUnit.Month | NSCalendarUnit.Day, (NSDate) now);
 			Assert.AreEqual ((nint) now.Year, comps.Year, "a year");
 			Assert.AreEqual ((nint) now.Month, comps.Month, "a month");
 			Assert.AreEqual ((nint) now.Day, comps.Day, "a day");
 
-			var dayCompare = now.ToUniversalTime ();
+			var dayCompare = now;
 			comps = cal.Components (NSCalendarUnit.Hour, (NSDate) dayCompare.AddHours (-1), (NSDate) dayCompare, NSDateComponentsWrappingBehavior.None);
 			Assert.AreEqual ((nint) 1, comps.Hour, "b hour");
 		}
@@ -420,9 +421,10 @@ namespace MonoTouchFixtures.Foundation {
 		public void TestOrdinality (int year, int month, int day, NSCalendarUnit smaller, NSCalendarUnit larger, int expected)
 		{
 			var cal = new NSCalendar (NSCalendarType.Gregorian);
-			var date = new DateTime (year, month, day, 0, 0, 0, DateTimeKind.Local);
-			var ordinality = cal.Ordinality (smaller, larger, (NSDate) date);
-			Assert.AreEqual (ordinality, (nuint) expected);
+			var date = new DateTime (year, month, day, 0, 0, 0, DateTimeKind.Utc);
+			var dt = (NSDate) date;
+			cal.TimeZone = NSTimeZone.FromName ("Europe/Madrid");
+			Assert.AreEqual ((nuint) expected, cal.Ordinality (smaller, larger, dt), $"Ordinality");
 		}
 
 		[TestCase (2010, 1, 11, NSCalendarUnit.Day, 86400.0)]

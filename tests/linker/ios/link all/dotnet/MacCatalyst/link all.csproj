@@ -2,13 +2,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net6.0-maccatalyst</TargetFramework>
-    <AssetTargetFallback>xamarinios10;$(AssetTargetFallback)</AssetTargetFallback>
-    <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)\..\..\..\..\..'))</RootTestsDirectory> <!-- this can't be in shared.csproj, because xharness won't see it there -->
   </PropertyGroup>
+
+  <!-- Imports of the form '../shared.csproj' will be inlined by xharness -->
+  <Import Project="../shared.csproj" />
 
   <ItemGroup>
     <!-- this empty item group is here for xharness -->
   </ItemGroup>
-
-  <Import Project="$(RootTestsDirectory)/linker/ios/link all/dotnet/shared.csproj" />
 </Project>

@@ -1,4 +1,4 @@
-﻿//
+//
 // The rule reports
 //
 // !incorrect-designated-initializer!

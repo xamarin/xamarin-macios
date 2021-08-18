@@ -1,4 +1,4 @@
-﻿//
+//
 // Test fixture for class_ptr introspection tests
 //
 // Authors:
@@ -19,6 +19,17 @@ namespace Introspection {
 
 		protected override bool Skip (Type type)
 		{
+			switch (type.Namespace) {
+			case "Phase": // missing in the sim
+				if (Runtime.Arch == Arch.SIMULATOR)
+					return true;
+				break;
+			case "ShazamKit": // missing in the sim
+				if (Runtime.Arch == Arch.SIMULATOR)
+					return true;
+				break;
+			}
+
 			// While the following types are categories and contains a class_ptr
 			// they are not used at all as extensions since they are just used to expose 
 			// static properties.
@@ -31,4 +42,3 @@ namespace Introspection {
 		}
 	}
 }
-

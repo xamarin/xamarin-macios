@@ -1,11 +1,10 @@
 !missing-enum! WKMediaCaptureState not bound
 !missing-enum! WKMediaCaptureType not bound
 !missing-enum! WKPermissionDecision not bound
-!missing-protocol-member! WKUIDelegate::webView:requestDeviceOrientationAndMotionPermissionForOrigin:initiatedByFrame:decisionHandler: not found
 !missing-protocol-member! WKUIDelegate::webView:requestMediaCapturePermissionForOrigin:initiatedByFrame:type:decisionHandler: not found
 !missing-selector! WKPreferences::isTextInteractionEnabled not bound
 !missing-selector! WKWebView::cameraCaptureState not bound
-!missing-selector! WKWebView::closeAllMediaPresentations: not bound
+!missing-selector! WKWebView::closeAllMediaPresentations not bound
 !missing-selector! WKWebView::closeAllMediaPresentationsWithCompletionHandler: not bound
 !missing-selector! WKWebView::interactionState not bound
 !missing-selector! WKWebView::loadFileRequest:allowingReadAccessToURL: not bound
@@ -29,3 +28,4 @@
 !missing-selector! WKWebView::underPageBackgroundColor not bound
 !missing-selector! WKWebViewConfiguration::setUpgradeKnownHostsToHTTPS: not bound
 !missing-selector! WKWebViewConfiguration::upgradeKnownHostsToHTTPS not bound
+## appended from unclassified file

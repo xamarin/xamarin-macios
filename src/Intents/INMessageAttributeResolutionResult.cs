@@ -1,4 +1,4 @@
-﻿//
+//
 // INMessageAttributeResolutionResult.cs
 //
 // Authors:

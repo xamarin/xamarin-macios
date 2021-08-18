@@ -1,4 +1,4 @@
-﻿namespace fsharp
+namespace fsharp
 
 #if !__WATCHOS__
 open System

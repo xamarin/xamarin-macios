@@ -72,7 +72,7 @@ namespace Xamarin.Bundler {
 		public HashSet<string> IgnoredSymbols = new HashSet<string> ();
 
 		// The AOT arguments are currently not used for macOS, but they could eventually be used there as well (there's no mmp option to set these yet).
-		public string AotArguments = "static,asmonly,direct-icalls,";
+		public List<string> AotArguments = new List<string> ();
 		public List<string> AotOtherArguments = null;
 
 		public DlsymOptions DlsymOptions;
@@ -89,6 +89,7 @@ namespace Xamarin.Bundler {
 		public bool IsExtension;
 		public ApplePlatform Platform { get { return Driver.TargetFramework.Platform; } }
 
+		public List<string> MonoLibraries = new List<string> ();
 		public List<string> InterpretedAssemblies = new List<string> ();
 
 		// EnableMSym: only implemented for Xamarin.iOS
@@ -167,14 +168,36 @@ namespace Xamarin.Bundler {
 
 		public string FrameworksDirectory {
 			get {
+				return Path.Combine (AppDirectory, RelativeFrameworksPath);
+			}
+		}
+
+		public string RelativeFrameworksPath {
+			get {
 				switch (Platform) {
 				case ApplePlatform.iOS:
 				case ApplePlatform.TVOS:
 				case ApplePlatform.WatchOS:
-					return Path.Combine (AppDirectory, "Frameworks");
+					return "Frameworks";
 				case ApplePlatform.MacOSX:
 				case ApplePlatform.MacCatalyst:
-					return Path.Combine (AppDirectory, "Contents", "Frameworks");
+					return Path.Combine ("Contents", "Frameworks");
+				default:
+					throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
+				}
+			}
+		}
+
+		public string RelativeDylibPublishPath {
+			get {
+				switch (Platform) {
+				case ApplePlatform.iOS:
+				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
+					return string.Empty;
+				case ApplePlatform.MacOSX:
+				case ApplePlatform.MacCatalyst:
+					return Path.Combine ("Contents", CustomBundleName);
 				default:
 					throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
 				}
@@ -182,8 +205,12 @@ namespace Xamarin.Bundler {
 		}
 
 		// How Mono should be embedded into the app.
+		AssemblyBuildTarget? libmono_link_mode;
 		public AssemblyBuildTarget LibMonoLinkMode {
 			get {
+				if (libmono_link_mode.HasValue)
+					return libmono_link_mode.Value;
+
 				if (Platform == ApplePlatform.MacOSX) {
 					// This property was implemented for iOS, but might be re-used for macOS if desired after testing to verify it works as expected.
 					throw ErrorHelper.CreateError (99, Errors.MX0099, "LibMonoLinkMode isn't a valid operation for macOS apps.");
@@ -199,11 +226,18 @@ namespace Xamarin.Bundler {
 					return AssemblyBuildTarget.StaticObject;
 				}
 			}
+			set {
+				libmono_link_mode = value;
+			}
 		}
 
 		// How libxamarin should be embedded into the app.
+		AssemblyBuildTarget? libxamarin_link_mode;
 		public AssemblyBuildTarget LibXamarinLinkMode {
 			get {
+				if (libxamarin_link_mode.HasValue)
+					return libxamarin_link_mode.Value;
+
 				if (Platform == ApplePlatform.MacOSX) {
 					// This property was implemented for iOS, but might be re-used for macOS if desired after testing to verify it works as expected.
 					throw ErrorHelper.CreateError (99, Errors.MX0099, "LibXamarinLinkMode isn't a valid operation for macOS apps.");
@@ -219,14 +253,25 @@ namespace Xamarin.Bundler {
 					return AssemblyBuildTarget.StaticObject;
 				}
 			}
+			set {
+				libxamarin_link_mode = value;
+			}
 		}
 
 		// How the generated libpinvoke library should be linked into the app.
 		public AssemblyBuildTarget LibPInvokesLinkMode => LibXamarinLinkMode;
 		// How the profiler library should be linked into the app.
 		public AssemblyBuildTarget LibProfilerLinkMode => OnlyStaticLibraries ? AssemblyBuildTarget.StaticObject : AssemblyBuildTarget.DynamicLibrary;
+
 		// How the libmononative library should be linked into the app.
-		public AssemblyBuildTarget LibMonoNativeLinkMode => HasDynamicLibraries ? AssemblyBuildTarget.DynamicLibrary : AssemblyBuildTarget.StaticObject;
+		public AssemblyBuildTarget LibMonoNativeLinkMode {
+			get {
+				// if there's a specific way libmono is being linked, use the same way.
+				if (libmono_link_mode.HasValue)
+					return libmono_link_mode.Value;
+				return HasDynamicLibraries ? AssemblyBuildTarget.DynamicLibrary: AssemblyBuildTarget.StaticObject;
+			}
+		}
 
 		// If all assemblies are compiled into static libraries.
 		public bool OnlyStaticLibraries {
@@ -1350,8 +1395,10 @@ namespace Xamarin.Bundler {
 			if (Platform == ApplePlatform.MacOSX)
 				throw ErrorHelper.CreateError (99, Errors.MX0099, "IsInterpreted isn't a valid operation for macOS apps.");
 
+#if !NET
 			if (IsSimulatorBuild)
 				return false;
+#endif
 
 			// IsAOTCompiled and IsInterpreted are not opposites: mscorlib.dll can be both.
 			if (!UseInterpreter)
@@ -1381,15 +1428,18 @@ namespace Xamarin.Bundler {
 		public bool IsAOTCompiled (string assembly)
 		{
 #if NET
-			if (Platform == ApplePlatform.MacOSX || Platform == ApplePlatform.MacCatalyst)
+			if (Platform == ApplePlatform.MacOSX)
 				return false; // AOT on .NET for macOS hasn't been implemented yet.
 #else	
 			if (Platform == ApplePlatform.MacOSX)
 				throw ErrorHelper.CreateError (99, Errors.MX0099, "IsAOTCompiled isn't a valid operation for macOS apps.");
 #endif
+			if (!UseInterpreter) {
+				if (Platform == ApplePlatform.MacCatalyst)
+					return IsArchEnabled (Abi.ARM64);
 
-			if (!UseInterpreter)
-				return true;
+				return IsDeviceBuild;
+			}
 
 			// IsAOTCompiled and IsInterpreted are not opposites: mscorlib.dll can be both:
 			// - mscorlib will always be processed by the AOT compiler to generate required wrapper functions for the interpreter to work
@@ -1435,7 +1485,11 @@ namespace Xamarin.Bundler {
 			aotArguments = new List<string> ();
 			aotArguments.Add ($"--aot=mtriple={(enable_thumb ? arch.Replace ("arm", "thumb") : arch)}-ios");
 			aotArguments.Add ($"data-outfile={dataFile}");
-			aotArguments.AddRange (app.AotArguments.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries));
+			aotArguments.Add ("static");
+			aotArguments.Add ("asmonly");
+			if (app.LibMonoLinkMode == AssemblyBuildTarget.StaticObject)
+				aotArguments.Add ("direct-icalls");
+			aotArguments.AddRange (app.AotArguments);
 			if (llvm_only)
 				aotArguments.Add ("llvmonly");
 			else if (interp) {
@@ -1593,12 +1647,30 @@ namespace Xamarin.Bundler {
 				return !Profile.IsSdkAssembly (Path.GetFileNameWithoutExtension (assembly));
 			case ApplePlatform.TVOS:
 			case ApplePlatform.WatchOS:
-			case ApplePlatform.MacCatalyst:
 				return false;
+			case ApplePlatform.MacCatalyst:
+				// We can't emit a direct call to the P/Invoke with the AOT compiler: https://github.com/dotnet/runtime/issues/55733
+				return IsAOTCompiled (assembly);
 			default:
 				throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
 			}
 		}
 
+		public bool VerifyDynamicFramework (string framework_path)
+		{
+			var framework_filename = Path.Combine (framework_path, Path.GetFileNameWithoutExtension (framework_path));
+			var dynamic = false;
+
+			try {
+				dynamic = MachO.IsDynamicFramework (framework_filename);
+			} catch (Exception e) {
+				throw ErrorHelper.CreateError (140, e, Errors.MT0140, framework_filename);
+			}
+
+			if (!dynamic)
+				Driver.Log (1, "The framework {0} is a framework of static libraries, and will not be copied to the app.", framework_path);
+
+			return dynamic;
+		}
 	}
 }

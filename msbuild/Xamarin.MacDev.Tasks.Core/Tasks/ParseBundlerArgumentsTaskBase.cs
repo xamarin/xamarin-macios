@@ -8,6 +8,9 @@ namespace Xamarin.MacDev.Tasks {
 		public string ExtraArgs { get; set; }
 
 		[Output]
+		public ITaskItem [] DlSym { get; set; }
+
+		[Output]
 		public ITaskItem[] EnvironmentVariables { get; set; }
 
 		[Output]
@@ -49,6 +52,7 @@ namespace Xamarin.MacDev.Tasks {
 				var args = CommandLineArgumentBuilder.Parse (ExtraArgs);
 				List<string> xml = null;
 				var envVariables = new List<ITaskItem> ();
+				var dlsyms = new List<ITaskItem> ();
 
 				for (int i = 0; i < args.Length; i++) {
 					var arg = args [i];
@@ -83,6 +87,9 @@ namespace Xamarin.MacDev.Tasks {
 						// in that case we do want to run the SymbolStrip target, so we
 						// do not set the MtouchNoSymbolStrip property to 'true' in that case.
 						NoSymbolStrip = string.IsNullOrEmpty (value) ? "true" : "false";
+						break;
+					case "dlsym":
+						dlsyms.Add (new TaskItem (string.IsNullOrEmpty (value) ? "true" : value));
 						break;
 					case "dsym":
 						NoDSymUtil = ParseBool (value) ? "false" : "true";
@@ -124,6 +131,7 @@ namespace Xamarin.MacDev.Tasks {
 						xml.Add (value);
 						break;
 					default:
+						Log.LogMessage (MessageImportance.Low, "Skipping unknown argument '{0}' with value '{1}'", name, value);
 						break;
 					}
 				}
@@ -143,6 +151,11 @@ namespace Xamarin.MacDev.Tasks {
 					EnvironmentVariables = envVariables.ToArray ();
 				}
 
+				if (dlsyms.Count > 0) {
+					if (DlSym != null)
+						dlsyms.AddRange (DlSym);
+					DlSym = dlsyms.ToArray ();
+				}
 			}
 
 			return !Log.HasLoggedErrors;
@@ -174,4 +187,3 @@ namespace Xamarin.MacDev.Tasks {
 		}
 	}
 }
-

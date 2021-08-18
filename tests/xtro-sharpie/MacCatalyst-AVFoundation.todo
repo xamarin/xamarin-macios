@@ -1,3 +1,5 @@
+!deprecated-attribute-missing! AVAssetResourceLoadingRequest::persistentContentKeyFromKeyVendorResponse:options:error: missing a [Deprecated] attribute
+!deprecated-attribute-missing! AVAssetResourceLoadingRequest::streamingContentKeyRequestDataForApp:contentIdentifier:options:error: missing a [Deprecated] attribute
 !deprecated-attribute-missing! AVPlayer::masterClock missing a [Deprecated] attribute
 !deprecated-attribute-missing! AVPlayer::setMasterClock: missing a [Deprecated] attribute
 !missing-enum! AVAudioRoutingArbitrationCategory not bound
@@ -289,6 +291,7 @@
 !missing-selector! AVPlayerInterstitialEventMonitor::initWithPrimaryPlayer: not bound
 !missing-selector! AVPlayerInterstitialEventMonitor::interstitialPlayer not bound
 !missing-selector! AVPlayerInterstitialEventMonitor::primaryPlayer not bound
+!missing-selector! AVPlayerItem::copy not bound
 !missing-selector! AVPlayerItem::preferredMaximumResolutionForExpensiveNetworks not bound
 !missing-selector! AVPlayerItem::preferredPeakBitRateForExpensiveNetworks not bound
 !missing-selector! AVPlayerItem::setPreferredMaximumResolutionForExpensiveNetworks: not bound
@@ -371,3 +374,4 @@
 !missing-type! AVSampleBufferRequest not bound
 !missing-type! AVSampleCursor not bound
 ## appended from unclassified file
+!missing-field! AVSampleBufferAudioRendererOutputConfigurationDidChangeNotification not bound

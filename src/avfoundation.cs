@@ -10993,7 +10993,7 @@ namespace AVFoundation {
 		bool MultiCamSupported { [Bind ("isMultiCamSupported")] get; }
 
 		[NoWatch, NoTV, NoMac, iOS (13, 0)]
-		[Advice ("This API is not available when using UIKit on macOS.")]
+		[MacCatalyst (14,0)]
 		[Export ("globalToneMappingSupported")]
 		bool GlobalToneMappingSupported { [Bind ("isGlobalToneMappingSupported")] get; }
 
@@ -12412,7 +12412,7 @@ namespace AVFoundation {
 		IntPtr Constructor (AVQueuePlayer player, AVPlayerItem itemToLoop, CMTimeRange loopRange);
 
 #if !XAMCORE_4_0 // This API got introduced in Xcode 8.0 binding but is not currently present nor in Xcode 8.3 or Xcode 9.0 needs research
-		[PostSnippet ("loopingEnabled = false;")]
+		[PostSnippet ("loopingEnabled = false;", Optimizable = true)]
 #endif
 		[Export ("disableLooping")]
 		void DisableLooping ();
@@ -12917,9 +12917,8 @@ namespace AVFoundation {
 		[Export ("paused")]
 		bool Paused { [Bind ("isPaused")] get; }
 
-		[Unavailable (PlatformName.MacCatalyst)]
 		[Watch (6,0), TV (13,0), NoMac, iOS (13,0)]
-		[Advice ("This API is not available when using UIKit on macOS.")]
+		[NoMacCatalyst]
 		[Export ("usesApplicationAudioSession")]
 		bool UsesApplicationAudioSession { get; set; }
 

@@ -1,4 +1,4 @@
-﻿//
+//
 // MDLMaterialProperty Unit Tests
 //
 // Authors:

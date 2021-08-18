@@ -53,6 +53,7 @@ namespace Introspection {
 			case "MonoTouch.MetalKit":
 			case "MetalPerformanceShaders":
 			case "MonoTouch.MetalPerformanceShaders":
+			case "Phase":
 				if (Runtime.Arch == Arch.SIMULATOR)
 					return true;
 				break;
@@ -79,6 +80,11 @@ namespace Introspection {
 					return true;
 				break;
 #endif // HAS_WATCHCONNECTIVITY
+			case "ShazamKit":
+				// ShazamKit is not fully supported in the simulator
+				if (Runtime.Arch == Arch.SIMULATOR)
+					return true;
+				break;
 			}
 
 			switch (type.Name) {
@@ -348,18 +354,6 @@ namespace Introspection {
 				case "setDelegate:":
 				case "view":
 					if (TestRuntime.CheckXcodeVersion (10, 2))
-						return true;
-					break;
-				}
-				break;
-			case "MTLCommandBufferDescriptor":
-				switch (name) {
-				case "errorOptions":
-				case "setErrorOptions:":
-				case "retainedReferences":
-				case "setRetainedReferences:":
-					// iOS 15 sim fails, API added in 14.0
-					if (TestRuntime.CheckXcodeVersion (13, 0))
 						return true;
 					break;
 				}

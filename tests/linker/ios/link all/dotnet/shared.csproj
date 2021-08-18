@@ -7,10 +7,16 @@
     <RootNamespace>linkall</RootNamespace>
     <AssemblyName>link all</AssemblyName>
     <MtouchLink>Full</MtouchLink>
+    <LinkMode>$(MtouchLink)</LinkMode>
     <MtouchExtraArgs>--optimize=all,-remove-dynamic-registrar,-force-rejected-types-removal</MtouchExtraArgs>
+    <MtouchExtraArgs Condition="$(Configuration.Contains('Debug'))">$(MtouchExtraArgs) --optimize=-remove-uithread-checks</MtouchExtraArgs>
+    <MonoBundlingExtraArgs>$(MtouchExtraArgs)</MonoBundlingExtraArgs>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\..\..\..\..'))</RootTestsDirectory>
     <ThisTestDirectory>$(RootTestsDirectory)\linker\ios\link all</ThisTestDirectory>
   </PropertyGroup>
+
+  <Import Project="$(RootTestsDirectory)/common/shared-dotnet.csproj" />
 
   <!-- We use configurations like Debug64 and Release64, which doesn't work with the default logic we and .NET have -->
   <PropertyGroup Condition="$(Configuration.Contains('Debug'))">
@@ -35,9 +41,19 @@
     <None Include="Info.plist" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Compile Include="$(ThisTestDirectory)\Main.cs" />
+  <ItemGroup Condition="$(TargetFramework.EndsWith('-macos'))">
+    <Compile Include="$(RootTestsDirectory)\common\mac\MacMain.cs" Condition="$(TargetFramework.EndsWith('-macos'))" Link="MacMain.cs" />
+    <Compile Include="$(RootTestsDirectory)\common\mac\TestRuntime.macos.cs">
+      <Link>TestRuntime.macos.cs</Link>
+    </Compile>
+    <Compile Include="$(ThisTestDirectory)\..\..\mac\link all\LinkAllTest.cs" />
+  </ItemGroup>
+
+  <ItemGroup Condition="!$(TargetFramework.EndsWith('-macos'))">
     <Compile Include="$(ThisTestDirectory)\AppDelegate.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Include="$(ThisTestDirectory)\LinkAllTest.cs" />
     <Compile Include="$(ThisTestDirectory)\ClassLayoutTest.cs" />
     <Compile Include="$(ThisTestDirectory)\StructLayoutTest.cs" />

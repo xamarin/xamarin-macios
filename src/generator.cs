@@ -1727,7 +1727,11 @@ public partial class Generator : IMemberGatherer {
 					convert.Append ($"var {refname} = Runtime.GetINativeObject<{RenderType (nt)}> ({safe_name}, false);");
 					pars.Append ($"ref IntPtr {safe_name}");
 					postConvert.Append ($"{safe_name} = {refname} is null ? IntPtr.Zero : {refname}.Handle;");
-					invoke.Append ($"ref {refname}");
+					if (pi.IsOut)
+						invoke.Append ("out ");
+					else
+						invoke.Append ("ref ");
+					invoke.Append (refname);
 					continue;
 				}
 			} else if (IsNativeEnum (pi.ParameterType)) {
@@ -1743,7 +1747,7 @@ public partial class Generator : IMemberGatherer {
 		
 			if (pi.ParameterType == TypeManager.System_String_Array){
 				pars.AppendFormat ("IntPtr {0}", safe_name);
-				invoke.AppendFormat ("NSArray.StringArrayFromHandle ({0})", safe_name);
+				invoke.AppendFormat ("CFArray.StringArrayFromHandle ({0})!", safe_name);
 				continue;
 			}
 			if (pi.ParameterType == TypeManager.System_String){
@@ -1756,7 +1760,7 @@ public partial class Generator : IMemberGatherer {
 				Type et = pi.ParameterType.GetElementType ();
 				if (IsWrappedType (et)){
 					pars.AppendFormat ("IntPtr {0}", safe_name);
-					invoke.AppendFormat ("NSArray.ArrayFromHandle<{0}> ({1})", FormatType (null, et), safe_name);
+					invoke.AppendFormat ("CFArray.ArrayFromHandle<{0}> ({1})!", FormatType (null, et), safe_name);
 					continue;
 				}
 			}
@@ -2224,7 +2228,7 @@ public partial class Generator : IMemberGatherer {
 		GeneratedTypes = new GeneratedTypes (this);
 
 		marshal_types.Add (new MarshalType (TypeManager.NSObject, create: "Runtime.GetNSObject ("));
-		marshal_types.Add (new MarshalType (TypeManager.Selector, create: "Selector.FromHandle ("));
+		marshal_types.Add (new MarshalType (TypeManager.Selector, create: "Selector.FromHandle (", closingCreate: ")!"));
 		marshal_types.Add (new MarshalType (TypeManager.BlockLiteral, "BlockLiteral", "{0}", "THIS_IS_BROKEN"));
 		if (TypeManager.MusicSequence != null)
 			marshal_types.Add (new MarshalType (TypeManager.MusicSequence, create: "global::AudioToolbox.MusicSequence.Lookup ("));
@@ -2704,7 +2708,7 @@ public partial class Generator : IMemberGatherer {
 			if (by_ref_processing.Length > 0)
 				print (sw, by_ref_processing.ToString ());
 			if (use_temp_return)
-				print ("return ret;");
+				print ("return ret!;");
 			indent--; print ("}");
 			indent--;
 			print ("}} /* class {0} */", ti.NativeInvokerName);
@@ -3063,7 +3067,7 @@ public partial class Generator : IMemberGatherer {
 					var fullname = propertyType.FullName;
 
 					if (is_property_array_wrapped_type) {
-						print ("return NSArray.ArrayFromHandle<{0}> (value);", RenderType (et));
+						print ("return CFArray.ArrayFromHandle<{0}> (value)!;", RenderType (et));
 					} else if (is_property_wrapped_type) {
 						print ("return Runtime.GetNSObject<{0}> (value);", RenderType (propertyType));
 					} else if (propertyType == TypeManager.System_Double)
@@ -3087,7 +3091,7 @@ public partial class Generator : IMemberGatherer {
 					else if (propertyType == TypeManager.NSString)
 						print ("return new NSString (value);");
 					else if (propertyType == TypeManager.System_String_Array){
-						print ("return NSArray.StringArrayFromHandle (value);");
+						print ("return CFArray.StringArrayFromHandle (value)!;");
 					} else {
 						Type underlying = propertyType.IsEnum ? TypeManager.GetUnderlyingEnumType (propertyType) : propertyType;
 						string cast = propertyType.IsEnum ? "(" + propertyType.FullName + ") " : "";
@@ -3845,19 +3849,19 @@ public partial class Generator : IMemberGatherer {
 				cast_b += $"NSArray.ArrayFromHandleFunc <{FormatType (bindAsT.DeclaringType, bindAsT)}> (retvalarrtmp, {GetFromBindAsWrapper (minfo, out suffix)})" + suffix;
 				cast_b += "))";
 			} else if (etype == TypeManager.System_String) {
-				cast_a = "NSArray.StringArrayFromHandle (";
-				cast_b = ")";
+				cast_a = "CFArray.StringArrayFromHandle (";
+				cast_b = ")!";
 			} else if (minfo != null && minfo.protocolize) {
-				cast_a = "NSArray.ArrayFromHandle<global::" + etype.Namespace + ".I" + etype.Name + ">(";
-				cast_b = ")";
+				cast_a = "CFArray.ArrayFromHandle<global::" + etype.Namespace + ".I" + etype.Name + ">(";
+				cast_b = ")!";
 			} else if (etype == TypeManager.Selector) {
 				exceptions.Add (ErrorHelper.CreateError (1066, mai.Type.FullName, mi.DeclaringType.FullName, mi.Name));
 			} else {
 				if (NamespaceManager.NamespacesThatConflictWithTypes.Contains (etype.Namespace))
-					cast_a = "NSArray.ArrayFromHandle<global::" + etype + ">(";
+					cast_a = "CFArray.ArrayFromHandle<global::" + etype + ">(";
 				else
-					cast_a = "NSArray.ArrayFromHandle<" + FormatType (mi.DeclaringType, etype) + ">(";
-				cast_b = ")";
+					cast_a = "CFArray.ArrayFromHandle<" + FormatType (mi.DeclaringType, etype) + ">(";
+				cast_b = ")!";
 			}
 		}
 	}
@@ -4034,7 +4038,18 @@ public partial class Generator : IMemberGatherer {
 			print (l);
 		}
 	}
-	
+
+	bool IsOptimizable (MemberInfo method)
+	{
+		var optimizable = true;
+		var snippets = AttributeManager.GetCustomAttributes<SnippetAttribute> (method);
+		if (snippets.Length > 0) {
+			foreach (SnippetAttribute snippet in snippets)
+				optimizable &= snippet.Optimizable;
+		}
+		return optimizable;
+	}
+
 	[Flags]
 	public enum BodyOption {
 		None = 0x0,
@@ -4307,9 +4322,9 @@ public partial class Generator : IMemberGatherer {
 						by_ref_processing.AppendFormat ("if ({0}Value != ({0}ArrayValue is null ? IntPtr.Zero : {0}ArrayValue.Handle))\n\t", pi.Name.GetSafeParamName ());
 
 					if (isArrayOfNSObject || isArrayOfINativeObjectSubclass) {
-						by_ref_processing.AppendFormat ("{0} = NSArray.ArrayFromHandle<{1}> ({0}Value);\n", pi.Name.GetSafeParamName (), RenderType (elementType.GetElementType ()));
+						by_ref_processing.AppendFormat ("{0} = CFArray.ArrayFromHandle<{1}> ({0}Value)!;\n", pi.Name.GetSafeParamName (), RenderType (elementType.GetElementType ()));
 					} else if (isArrayOfString) {
-						by_ref_processing.AppendFormat ("{0} = NSArray.StringArrayFromHandle ({0}Value);\n", pi.Name.GetSafeParamName ());
+						by_ref_processing.AppendFormat ("{0} = CFArray.StringArrayFromHandle ({0}Value)!;\n", pi.Name.GetSafeParamName ());
 					} else {
 						throw ErrorHelper.CreateError (88, mai.Type, mi);
 					}
@@ -4731,6 +4746,9 @@ public partial class Generator : IMemberGatherer {
 		foreach (var method in source.GatherMethods (BindingFlags.Public | BindingFlags.Instance, this))
 			yield return method;
 		foreach (var parent in source.GetInterfaces ()){
+			// skip interfaces that aren't available on the current platform
+			if (parent.IsUnavailable (this))
+				continue;
 			// skip case where the interface implemented comes from an already built assembly (e.g. monotouch.dll)
 			// e.g. Dispose won't have an [Export] since it's present to satisfy System.IDisposable
 			if (parent.FullName != "System.IDisposable") {
@@ -4746,6 +4764,9 @@ public partial class Generator : IMemberGatherer {
 		foreach (var prop in source.GatherProperties (this))
 			yield return prop;
 		foreach (var parent in source.GetInterfaces ()){
+			// skip interfaces that aren't available on the current platform
+			if (parent.IsUnavailable (this))
+				continue;
 			// skip case where the interface implemented comes from an already built assembly (e.g. monotouch.dll)
 			// e.g. the Handle property won't have an [Export] since it's present to satisfyINativeObject
 			if (parent.Name != "INativeObject") {
@@ -4956,7 +4977,7 @@ public partial class Generator : IMemberGatherer {
 			}
 		}
 
-		print_generated_code ();
+		print_generated_code (optimizable: IsOptimizable (pi));
 		PrintPropertyAttributes (pi, minfo.type);
 
 		PrintAttributes (pi, preserve:true, advice:true, bindAs:true);
@@ -5511,7 +5532,7 @@ public partial class Generator : IMemberGatherer {
 		var mod = minfo.GetVisibility ();
 
 		var is_abstract = minfo.is_abstract;
-		print_generated_code ();
+		print_generated_code (optimizable: IsOptimizable (minfo.mi));
 		print ("{0} {1}{2}{3}",
 		       mod,
 		       minfo.GetModifiers (),
@@ -6511,6 +6532,10 @@ public partial class Generator : IMemberGatherer {
 					continue;
 				}
 
+				// skip protocols that aren't available on the current platform
+				if (protocolType.IsUnavailable (this))
+					continue;
+
 				// A protocol this class implements. We need to implement the corresponding interface for the protocol.
 				string pname = protocolType.Name;
 				// the extra 'I' is only required for the bindings being built, if it comes from something already
@@ -7423,15 +7448,19 @@ public partial class Generator : IMemberGatherer {
 			// Do we need a dispose method?
 			//
 			if (!is_static_class){
-				var disposeAttr = AttributeManager.GetCustomAttributes<DisposeAttribute> (type);
-				if (disposeAttr.Length > 0 || instance_fields_to_clear_on_dispose.Count > 0){
-					print_generated_code (optimizable: disposeAttr.Length == 0);
+				var attrs = AttributeManager.GetCustomAttributes<DisposeAttribute> (type);
+				// historical note: unlike many attributes our `DisposeAttribute` has `AllowMultiple=true`
+				var has_dispose_attributes = attrs.Length > 0;
+				if (has_dispose_attributes || (instance_fields_to_clear_on_dispose.Count > 0)) {
+					// if there'a any [Dispose] attribute then they all must opt-in in order for the generated Dispose method to be optimizable
+					bool optimizable = !has_dispose_attributes || IsOptimizable (type);
+					print_generated_code (optimizable: optimizable);
 					print ("protected override void Dispose (bool disposing)");
 					print ("{");
 					indent++;
-					if (disposeAttr.Length > 0){
-						var snippet = disposeAttr [0];
-						Inject (snippet);
+					if (has_dispose_attributes) {
+						foreach (var da in attrs)
+							Inject (da);
 					}
 					
 					print ("base.Dispose (disposing);");

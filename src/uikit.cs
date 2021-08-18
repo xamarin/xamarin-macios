@@ -2035,7 +2035,7 @@ namespace UIKit {
 		void OpenUrl (NSUrl url, UIApplicationOpenUrlOptions options, [NullAllowed] Action<bool> completion);
 
 		[Export ("canOpenURL:")]
-		[PreSnippet ("if (url is null) return false;")] // null not really allowed (but it's a behaviour change with known bug reports)
+		[PreSnippet ("if (url is null) return false;", Optimizable = true)] // null not really allowed (but it's a behaviour change with known bug reports)
 		bool CanOpenUrl ([NullAllowed] NSUrl url);
 		
 		[Export ("sendEvent:")]
@@ -2535,7 +2535,7 @@ namespace UIKit {
 		UIApplicationShortcutIcon FromSystemImageName (string systemImageName);
 
 #if IOS // This is inside ContactsUI.framework
-		[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
+		[NoMacCatalyst]
 		[Static, Export ("iconWithContact:")]
 		UIApplicationShortcutIcon FromContact (CNContact contact);
 #endif // IOS
@@ -5562,7 +5562,7 @@ namespace UIKit {
 
 #if !WATCH
 	[BaseType (typeof(NSObject), Delegates=new string [] {"WeakDelegate"}, Events=new Type[] {typeof (UIGestureRecognizerDelegate)})]
-	[Dispose ("OnDispose ();")]
+	[Dispose ("OnDispose ();", Optimizable = true)]
 	interface UIGestureRecognizer {
 		[DesignatedInitializer]
 		[Export ("initWithTarget:action:")]
@@ -13243,7 +13243,7 @@ namespace UIKit {
 		[Export ("typingAttributes", ArgumentSemantic.Copy)]
 		NSDictionary TypingAttributes {
 			// this avoids a crash (see unit tests) and behave like UITextField does (return null)
-			[PreSnippet ("if (SelectedRange.Length == 0) return null;")]
+			[PreSnippet ("if (SelectedRange.Length == 0) return null;", Optimizable = true)]
 			get;
 			set;
 		}
@@ -15329,8 +15329,7 @@ namespace UIKit {
 		IUIViewControllerTransitionCoordinator GetTransitionCoordinator ();
 	}
 
-	[Unavailable (PlatformName.MacCatalyst)]
-	[Advice ("This API is not available when using UIKit on macOS.")]
+	[NoMacCatalyst]
 	[NoTV]
 	[Deprecated (PlatformName.iOS, 12, 0, message: "No longer supported; please adopt 'WKWebView'.")]
 	[BaseType (typeof (UIView), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] {typeof(UIWebViewDelegate)})]
@@ -15434,8 +15433,7 @@ namespace UIKit {
 		bool AllowsLinkPreview { get; set; }
 	}
 
-	[Unavailable (PlatformName.MacCatalyst)]
-	[Advice ("This API is not available when using UIKit on macOS.")]
+	[NoMacCatalyst]
 	[NoTV]
 	[Deprecated (PlatformName.iOS, 12, 0, message: "No longer supported; please adopt 'WKWebView' APIs.")]
 	[BaseType (typeof (NSObject))]
@@ -15973,6 +15971,7 @@ namespace UIKit {
 		[Export ("unwindAction")]
 		Selector UnwindAction { get; }
 
+		[NullAllowed]
 		[Export ("sender")]
 		NSObject Sender { get; }
 	}

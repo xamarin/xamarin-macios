@@ -1,4 +1,4 @@
-﻿// 
+// 
 // VTCompressionProperties.cs: Strongly Typed dictionary for VTCompressionPropertyKeys 
 //
 // Authors: Alex Soto (alex.soto@xamarin.com)
@@ -509,4 +509,3 @@ namespace VideoToolbox {
 
 	}
 }
-

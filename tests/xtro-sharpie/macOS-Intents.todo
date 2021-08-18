@@ -1,13 +1,7 @@
 ## appended from unclassified file
 !missing-enum! INCallAudioRoute not bound
-!missing-enum! INCallCapability not bound
-!missing-enum! INCallCapabilityOptions not bound
-!missing-enum! INCallDestinationType not bound
-!missing-enum! INCallRecordTypeOptions not bound
 !missing-enum! INFocusStatusAuthorizationStatus not bound
 !missing-enum! INOutgoingMessageType not bound
-!missing-enum! INSendMessageIntentResponseCode not bound
-!missing-enum! INSendMessageRecipientUnsupportedReason not bound
 !missing-enum! INShareFocusStatusIntentResponseCode not bound
 !missing-enum! INStartCallCallRecordToCallBackUnsupportedReason not bound
 !missing-protocol! INShareFocusStatusIntentHandling not bound
@@ -92,3 +86,6 @@
 !missing-selector! INSendMessageIntentDonationMetadata::notifyRecipientAnyway not bound
 !missing-selector! INSendMessageIntentDonationMetadata::setNotifyRecipientAnyway: not bound
 !missing-selector! INSendMessageIntentDonationMetadata::setReplyToCurrentUser: not bound
+!missing-selector! INPerson::initWithPersonHandle:nameComponents:displayName:image:contactIdentifier:customIdentifier:isContactSuggestion:suggestionType: not bound
+!missing-selector! INPerson::isContactSuggestion not bound
+!unknown-type! INTemperatureResolutionResult bound

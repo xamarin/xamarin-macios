@@ -1,4 +1,4 @@
-﻿//
+//
 // MLMultiArray.cs
 //
 // Authors:

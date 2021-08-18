@@ -1,5 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 using Mono.Cecil;
 using Mono.Linker;
@@ -124,62 +126,40 @@ namespace Xamarin.Linker.Steps
 					}
 				}
 
+#if NET
+				// Create a list of all the dynamic libraries from Mono that we'll link with
+				// We add 4 different variations for each library:
+				// * with and without a "lib" prefix
+				// * with and without the ".dylib" extension
+				var app = LinkerConfiguration.GetInstance (Context).Application;
+				var dynamicMonoLibraries = app.MonoLibraries.
+					Where (v => v.EndsWith (".dylib", StringComparison.OrdinalIgnoreCase)).
+					Select (v => Path.GetFileNameWithoutExtension (v)).
+					Select (v => v.StartsWith ("lib", StringComparison.OrdinalIgnoreCase) ? v.Substring (3) : v).ToHashSet ();
+				dynamicMonoLibraries.UnionWith (dynamicMonoLibraries.Select (v => "lib" + v).ToArray ());
+				dynamicMonoLibraries.UnionWith (dynamicMonoLibraries.Select (v => v + ".dylib").ToArray ());
+				// If the P/Invoke points to any of those libraries, then we add it as a P/Invoke symbol.
+				if (dynamicMonoLibraries.Contains (pinfo.Module.Name))
+					addPInvokeSymbol = true;
+#endif
+
 				switch (pinfo.Module.Name) {
 				case "__Internal":
 					Driver.Log (4, "Adding native reference to {0} in {1} because it's referenced by {2} in {3}.", pinfo.EntryPoint, pinfo.Module.Name, method.FullName, method.Module.Name);
 					DerivedLinkContext.RequiredSymbols.AddFunction (pinfo.EntryPoint).AddMember (method);
 					break;
 
-				case "libSystem.Net.Security.Native":
+#if !NET
 				case "System.Net.Security.Native":
-#if NET
-					// tvOS does not ship with System.Net.Security.Native due to https://github.com/dotnet/runtime/issues/45535
-					if (DerivedLinkContext.App.Platform == ApplePlatform.TVOS) {
-						Driver.Log (4, "Did not add native reference to {0} in {1} referenced by {2} in {3}.", pinfo.EntryPoint, pinfo.Module.Name, method.FullName, method.Module.Name);
-						break;
-					}
-#endif
-					addPInvokeSymbol = true;
-					break;
-
-				case "libSystem.Security.Cryptography.Native.Apple":
 				case "System.Security.Cryptography.Native.Apple":
-#if NET
-					// https://github.com/dotnet/runtime/issues/47533
-					if (DerivedLinkContext.App.Platform != ApplePlatform.MacOSX) {
-						Driver.Log (4, "Did not add native reference to {0} in {1} referenced by {2} in {3}.", pinfo.EntryPoint, pinfo.Module.Name, method.FullName, method.Module.Name);
-						break;
-					}
-#endif
-					addPInvokeSymbol = true;
-					break;
-
-				case "libSystem.Native":
 				case "System.Native":
-#if NET
-					// https://github.com/dotnet/runtime/issues/47533
-					if (DerivedLinkContext.App.Platform != ApplePlatform.MacOSX && pinfo.EntryPoint == "SystemNative_ConfigureTerminalForChildProcess") {
-						Driver.Log (4, "Did not add native reference to {0} in {1} referenced by {2} in {3}.", pinfo.EntryPoint, pinfo.Module.Name, method.FullName, method.Module.Name);
-						break;
-					}
-#endif
 					addPInvokeSymbol = true;
 					break;
-
-				case "libSystem.Globalization.Native":
-				case "System.Globalization.Native":
-#if NET
-					// https://github.com/xamarin/xamarin-macios/issues/11392
-					if (DerivedLinkContext.App.Platform == ApplePlatform.MacCatalyst) {
-						Driver.Log (4, "Did not add native reference to {0} in {1} referenced by {2} in {3}.", pinfo.EntryPoint, pinfo.Module.Name, method.FullName, method.Module.Name);
-						break;
-					}
 #endif
-					addPInvokeSymbol = true;
-					break;
 
 				default:
-					Driver.Log (4, "Did not add native reference to {0} in {1} referenced by {2} in {3}.", pinfo.EntryPoint, pinfo.Module.Name, method.FullName, method.Module.Name);
+					if (!addPInvokeSymbol)
+						Driver.Log (4, "Did not add native reference to {0} in {1} referenced by {2} in {3}.", pinfo.EntryPoint, pinfo.Module.Name, method.FullName, method.Module.Name);
 					break;
 				}
 

@@ -2,8 +2,12 @@ TOP=../../..
 
 include $(TOP)/Make.config
 
-build:
-	$(DOTNET6) build /bl *.csproj $(MSBUILD_VERBOSITY)
+%-ios:
+	$(MAKE) -C iOS $@
 
-run:
-	$(DOTNET6) build /bl *.csproj $(MSBUILD_VERBOSITY) -t:Run
+%-tvos:
+	$(MAKE) -C tvOS $@
+
+%-maccatalyst %-maccat:
+	$(MAKE) -C MacCatalyst $@
+

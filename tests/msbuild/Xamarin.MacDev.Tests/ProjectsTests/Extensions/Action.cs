@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+using NUnit.Framework;
 
 namespace Xamarin.iOS.Tasks {
 	[TestFixture ("iPhone")]
@@ -16,4 +16,3 @@ namespace Xamarin.iOS.Tasks {
 		}
 	}
 }
-

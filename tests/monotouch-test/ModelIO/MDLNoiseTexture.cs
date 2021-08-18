@@ -1,4 +1,4 @@
-﻿//
+//
 // MDLNoiseTexture Unit Tests
 //
 // Authors:

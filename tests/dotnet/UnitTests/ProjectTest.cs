@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 
 using Mono.Cecil;
@@ -14,43 +15,7 @@ using Xamarin.MacDev;
 
 namespace Xamarin.Tests {
 	[TestFixture]
-	public class DotNetProjectTest {
-		Dictionary<string, string> verbosity = new Dictionary<string, string> {
-			{ "MtouchExtraArgs", "-v" },
-			{ "MonoBundlingExtraArgs", "-v" },
-		};
-
-		string GetProjectPath (string project, string subdir = null, ApplePlatform? platform = null)
-		{
-			var project_dir = Path.Combine (Configuration.SourceRoot, "tests", "dotnet", project);
-			if (!string.IsNullOrEmpty (subdir))
-				project_dir = Path.Combine (project_dir, subdir);
-
-			if (platform.HasValue)
-				project_dir = Path.Combine (project_dir, platform.Value.AsString ());
-
-			var project_path = Path.Combine (project_dir, project + ".csproj");
-			if (!File.Exists (project_path))
-				project_path = Path.ChangeExtension (project_path, "sln");
-
-			if (!File.Exists (project_path))
-				throw new FileNotFoundException ($"Could not find the project or solution {project} - {project_path} does not exist.");
-
-			return project_path;
-		}
-
-		void Clean (string project_path)
-		{
-			var dirs = Directory.GetDirectories (Path.GetDirectoryName (project_path), "*", SearchOption.AllDirectories);
-			dirs = dirs.OrderBy (v => v.Length).Reverse ().ToArray (); // If we have nested directories, make sure to delete the nested one first
-			foreach (var dir in dirs) {
-				var name = Path.GetFileName (dir);
-				if (name != "bin" && name != "obj")
-					continue;
-				Directory.Delete (dir, true);
-			}
-		}
-
+	public class DotNetProjectTest : TestBaseClass {
 		[Test]
 		[TestCase (null)]
 		[TestCase ("iossimulator-x86")]
@@ -564,10 +529,126 @@ namespace Xamarin.Tests {
 			Assert.AreEqual ($"The RuntimeIdentifier '{runtimeIdentifier}' is invalid.", errors [0].Message, "Error message");
 		}
 
+		[Test]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
+		public void FilesInAppBundle (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			var project = "MySimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			Clean (project_path);
+
+			var properties = new Dictionary<string, string> (verbosity);
+			SetRuntimeIdentifiers (properties, runtimeIdentifiers);
+
+			// Build
+			DotNet.AssertBuild (project_path, properties);
+
+			// Simulate a crash dump
+			var crashDump = Path.Combine (appPath, "mono_crash.mem.123456.something.blob");
+			File.WriteAllText (crashDump, "A crash dump");
+
+			// Build again
+			DotNet.AssertBuild (project_path, properties);
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.MacOSX, "osx-x64")]
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64")]
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64")]
+		public void BuildCoreCLR (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			var project = "MySimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var project_path = GetProjectPath (project, platform: platform);
+			Clean (project_path);
+			var properties = new Dictionary<string, string> (verbosity);
+			var multiRid = runtimeIdentifiers.IndexOf (';') >= 0 ? "RuntimeIdentifiers" : "RuntimeIdentifier";
+			properties [multiRid] = runtimeIdentifiers;
+			properties ["UseMonoRuntime"] = "false";
+			var rv = DotNet.AssertBuild (project_path, properties);
+
+			AssertThatLinkerExecuted (rv);
+			var appPathRuntimeIdentifier = runtimeIdentifiers.IndexOf (';') >= 0 ? "" : runtimeIdentifiers;
+			var appPath = Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", platform.ToFramework (), appPathRuntimeIdentifier, project + ".app");
+			var infoPlistPath = GetInfoPListPath (platform, appPath);
+			Assert.That (infoPlistPath, Does.Exist, "Info.plist");
+			var infoPlist = PDictionary.FromFile (infoPlistPath);
+			Assert.AreEqual ("com.xamarin.mysimpleapp", infoPlist.GetString ("CFBundleIdentifier").Value, "CFBundleIdentifier");
+			Assert.AreEqual ("MySimpleApp", infoPlist.GetString ("CFBundleDisplayName").Value, "CFBundleDisplayName");
+			Assert.AreEqual ("3.14", infoPlist.GetString ("CFBundleVersion").Value, "CFBundleVersion");
+			Assert.AreEqual ("3.14", infoPlist.GetString ("CFBundleShortVersionString").Value, "CFBundleShortVersionString");
+
+			var appExecutable = Path.Combine (appPath, "Contents", "MacOS", Path.GetFileNameWithoutExtension (project_path));
+			Assert.That (appExecutable, Does.Exist, "There is an executable");
+			if (!(runtimeIdentifiers == "osx-arm64" && RuntimeInformation.ProcessArchitecture == Architecture.X64))
+				ExecuteWithMagicWordAndAssert (appExecutable);
+
+			var createdump = Path.Combine (appPath, "Contents", "MonoBundle", "createdump");
+			Assert.That (createdump, Does.Exist, "createdump existence");
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
+		public void AbsoluteOutputPath (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			var project = "MySimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var outputPath = Cache.CreateTemporaryDirectory ();
+			var project_path = GetProjectPath (project, platform: platform);
+			Clean (project_path);
+			var properties = new Dictionary<string, string> (verbosity);
+			var multiRid = runtimeIdentifiers.IndexOf (';') >= 0 ? "RuntimeIdentifiers" : "RuntimeIdentifier";
+			properties [multiRid] = runtimeIdentifiers;
+			properties ["OutputPath"] = outputPath + "/";
+			var rv = DotNet.AssertBuild (project_path, properties);
+
+			AssertThatLinkerExecuted (rv);
+
+			var appPathRuntimeIdentifier = runtimeIdentifiers.IndexOf (';') >= 0 ? "" : runtimeIdentifiers;
+			var appPath = Path.Combine (outputPath, project + ".app");
+			var appExecutable = Path.Combine (appPath, "Contents", "MacOS", Path.GetFileNameWithoutExtension (project_path));
+			Assert.That (appExecutable, Does.Exist, "There is an executable");
+			if (!(runtimeIdentifiers == "osx-arm64" && RuntimeInformation.ProcessArchitecture == Architecture.X64))
+				ExecuteWithMagicWordAndAssert (appExecutable);
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
+		[TestCase (ApplePlatform.MacOSX, "osx-x64")]
+		public void SimpleAppWithOldReferences (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			var project = "SimpleAppWithOldReferences";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			Clean (project_path);
+
+			DotNet.AssertBuild (project_path, GetDefaultProperties (runtimeIdentifiers));
+
+			var appExecutable = Path.Combine (appPath, "Contents", "MacOS", Path.GetFileNameWithoutExtension (project_path));
+			Assert.That (appExecutable, Does.Exist, "There is an executable");
+			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
+		}
+
+		void ExecuteWithMagicWordAndAssert (ApplePlatform platform, string runtimeIdentifiers, string executable)
+		{
+			if (!CanExecute (platform, runtimeIdentifiers))
+				return;
+
+			ExecuteWithMagicWordAndAssert (executable);
+		}
+
 		void ExecuteWithMagicWordAndAssert (string executable)
 		{
 			var magicWord = Guid.NewGuid ().ToString ();
-			var env = new Dictionary<string, string> { { "MAGIC_WORD", magicWord } };
+			var env = new Dictionary<string, string> {
+				{ "MAGIC_WORD", magicWord },
+				{ "DYLD_FALLBACK_LIBRARY_PATH", null }, // VSMac might set this, which may cause tests to crash.
+			};
 
 			var output = new StringBuilder ();
 			var rv = Execution.RunWithStringBuildersAsync (executable, Array.Empty<string> (), environment: env, standardOutput: output, standardError: output, timeout: TimeSpan.FromSeconds (15)).Result;
@@ -587,21 +668,6 @@ namespace Xamarin.Tests {
 			var output = BinLog.PrintToString (result.BinLogPath);
 			Assert.That (output, Does.Not.Contain ("Building target \"_RunILLink\" completely."), "Linker did not executed as expected.");
 			Assert.That (output, Does.Not.Contain ("LinkerConfiguration:"), "Custom steps did not run as expected.");
-		}
-
-		string GetInfoPListPath (ApplePlatform platform, string app_directory)
-		{
-			switch (platform) {
-			case ApplePlatform.iOS:
-			case ApplePlatform.TVOS:
-			case ApplePlatform.WatchOS:
-				return Path.Combine (app_directory, "Info.plist");
-			case ApplePlatform.MacOSX:
-			case ApplePlatform.MacCatalyst:
-				return Path.Combine (app_directory, "Contents", "Info.plist");
-			default:
-				throw new NotImplementedException ($"Unknown platform: {platform}");
-			}
 		}
 
 		void AssertAppContents (ApplePlatform platform, string app_directory)

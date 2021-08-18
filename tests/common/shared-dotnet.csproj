@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This file is not processed by xharness, and contains logic shared by all our test suites -->
+<Project>
+	<!-- NativeLibName: the platform-specific subdirectory of tests/test-libraries/.libs where to get libraries with all the relevant architectures -->
+
+	<!-- Logic for iOS -->
+	<PropertyGroup Condition="$(TargetFramework.EndsWith('-ios'))">
+		<AssetTargetFallback>xamarinios10;$(AssetTargetFallback)</AssetTargetFallback>
+		<NativeLibName>ios-fat</NativeLibName>
+	</PropertyGroup>
+	<ItemGroup Condition="'$(_PlatformName)' == 'iOS'">
+		<PackageReference Include="MonoTouch.Dialog" Version="2.0.0-pre1" />
+	</ItemGroup>
+
+	<!-- Logic for tvOS -->
+	<PropertyGroup Condition="$(TargetFramework.EndsWith('-tvos'))">
+		<DefineConstants>$(DefineConstants);XAMCORE_3_0</DefineConstants>
+		<AssetTargetFallback>xamarintvos10;$(AssetTargetFallback)</AssetTargetFallback>
+		<NativeLibName>tvos-fat</NativeLibName>
+	</PropertyGroup>
+	<ItemGroup Condition="$(TargetFramework.EndsWith('-tvos'))">
+		<PackageReference Include="MonoTouch.Dialog" Version="2.0.0-pre1" />
+	</ItemGroup>
+
+	<!-- Logic for macOS -->
+	<PropertyGroup Condition="$(TargetFramework.EndsWith('-macos'))">
+		<DefineConstants>$(DefineConstants);MONOMAC</DefineConstants>
+		<NativeLibName>macos-fat</NativeLibName>
+	</PropertyGroup>
+
+	<!-- Logic for Mac Catalyst -->
+	<PropertyGroup Condition="$(TargetFramework.EndsWith('-maccatalyst'))">
+		<AssetTargetFallback>xamarinios10;$(AssetTargetFallback)</AssetTargetFallback>
+		<NativeLibName>maccatalyst-fat</NativeLibName>
+	</PropertyGroup>
+
+	<!-- Logic for all test suites -->
+</Project>

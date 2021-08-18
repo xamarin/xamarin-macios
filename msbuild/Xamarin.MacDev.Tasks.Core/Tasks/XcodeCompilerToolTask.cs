@@ -13,6 +13,7 @@ using Microsoft.Build.Utilities;
 using Xamarin.Localization.MSBuild;
 
 using Xamarin.MacDev;
+using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks
 {
@@ -21,6 +22,7 @@ namespace Xamarin.MacDev.Tasks
 		protected bool Link { get; set; }
 		IList<string> prefixes;
 		string toolExe;
+		PDictionary plist;
 
 		#region Inputs
 
@@ -75,6 +77,24 @@ namespace Xamarin.MacDev.Tasks
 
 		#endregion
 
+		bool loadedAppManifest;
+		protected PDictionary GetAppManifest ()
+		{
+			if (!loadedAppManifest) {
+				if (AppManifest != null) {
+					try {
+						plist = PDictionary.FromFile (AppManifest.ItemSpec);
+					} catch (Exception ex) {
+						Log.LogError (null, null, null, AppManifest.ItemSpec, 0, 0, 0, 0, "{0}", ex.Message);
+						return null;
+					}
+				}
+				loadedAppManifest = true;
+			}
+
+			return plist;
+		}
+
 		protected abstract string DefaultBinDir {
 			get;
 		}
@@ -98,8 +118,61 @@ namespace Xamarin.MacDev.Tasks
 			get { return false; }
 		}
 
-		protected virtual IEnumerable<string> GetTargetDevices (PDictionary plist)
+		protected static bool IsWatchExtension (PDictionary plist)
 		{
+			PDictionary extension;
+			PString id;
+
+			if (!plist.TryGetValue ("NSExtension", out extension))
+				return false;
+
+			if (!extension.TryGetValue ("NSExtensionPointIdentifier", out id))
+				return false;
+
+			return id.Value == "com.apple.watchkit";
+		}
+
+		protected IEnumerable<string> GetTargetDevices ()
+		{
+			return GetTargetDevices (GetAppManifest ());
+		}
+
+		IEnumerable<string> GetTargetDevices (PDictionary plist)
+		{
+			var devices = IPhoneDeviceType.NotSet;
+			bool watch = false;
+
+			if (Platform == ApplePlatform.MacOSX)
+				yield break;
+
+			if (plist != null) {
+				if (!(watch = plist.GetWKWatchKitApp ())) {
+					// the project is either a normal iOS project or an extension
+					if ((devices = plist.GetUIDeviceFamily ()) == IPhoneDeviceType.NotSet) {
+						// library projects and extension projects will not have this key, but
+						// we'll want them to work for both iPhones and iPads if the
+						// xib or storyboard supports them
+						devices = IPhoneDeviceType.IPhoneAndIPad;
+					}
+
+					// if the project is a watch extension, we'll also want to include watch support
+					watch = IsWatchExtension (plist);
+				} else {
+					// the project is a WatchApp, only include watch support
+				}
+			} else {
+				devices = IPhoneDeviceType.IPhoneAndIPad;
+			}
+
+			if ((devices & IPhoneDeviceType.IPhone) != 0)
+				yield return "iphone";
+
+			if ((devices & IPhoneDeviceType.IPad) != 0)
+				yield return "ipad";
+
+			if (watch)
+				yield return "watch";
+
 			yield break;
 		}
 

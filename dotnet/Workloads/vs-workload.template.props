@@ -2,15 +2,19 @@
 <Project>
   <PropertyGroup>
     <TargetName>Microsoft.NET.Sdk.MaciOS.Workload</TargetName>
+    <ManifestBuildVersion>@IOS_WORKLOAD_VERSION@</ManifestBuildVersion>
   </PropertyGroup>
   <ItemGroup>
     <!-- Shorten package names to avoid long path caching issues in Visual Studio -->
     <ShortNames Include="@PACK_VERSION_LONG@">
       <Replacement>@PACK_VERSION_SHORT@</Replacement>
     </ShortNames>
-    <ComponentResources Include="ios" Category=".NET" Title=".NET SDK for iOS" Description=".NET SDK Workload for building iOS applications."/>
-    <ComponentVersions Include="ios" Version="@IOS_WORKLOAD_VERSION@" />
-    <ComponentResources Include="maccatalyst" Category=".NET" Title=".NET SDK for Mac Catalyst" Description=".NET SDK Workload for building macOS applications with Mac Catalyst."/>
-    <ComponentVersions Include="maccatalyst" Version="@MACCATALYST_WORKLOAD_VERSION@" />
+    <ShortNames Include="Microsoft.MacCatalyst.Runtime.maccatalyst">
+      <Replacement>Microsoft.MacCatalyst.Runtime</Replacement>
+    </ShortNames>
+    <ComponentResources Include="ios" Version="@IOS_WORKLOAD_VERSION@" Category=".NET" Title=".NET SDK for iOS" Description=".NET SDK Workload for building iOS applications."/>
+    <ComponentResources Include="maccatalyst" Version="@MACCATALYST_WORKLOAD_VERSION@" Category=".NET" Title=".NET SDK for Mac Catalyst" Description=".NET SDK Workload for building macOS applications with Mac Catalyst."/>
+    <WorkloadPackages Include="$(NuGetPackagePath)\Microsoft.NET.Sdk.iOS.Manifest*.nupkg" Version="@IOS_WORKLOAD_VERSION@" />
+    <WorkloadPackages Include="$(NuGetPackagePath)\Microsoft.NET.Sdk.MacCatalyst.Manifest*.nupkg" Version="@MACCATALYST_WORKLOAD_VERSION@" />
   </ItemGroup>
 </Project>

@@ -30,6 +30,13 @@ namespace CoreFoundation {
 	}
 
 	[Partial]
+	interface CFArray {
+
+		[Internal][Field ("kCFNull")]
+		IntPtr /* CFNullRef */ CFNullHandle { get; }
+	}
+
+	[Partial]
 	[Internal]
 	interface CFBoolean {
 		[Internal]

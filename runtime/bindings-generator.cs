@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -2691,6 +2691,70 @@ namespace Xamarin.BindingMethods.Generator
 						new ParameterData { TypeData = Types.NVector3 },
 						new ParameterData { TypeData = Types.IntPtr }
 					}
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (IntPtr, Quaternion)",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.IntPtr },
+						new ParameterData { TypeData = Types.QuatF }
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (IntPtr, Quaternion, IntPtr)",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.IntPtr },
+						new ParameterData { TypeData = Types.QuatF },
+						new ParameterData { TypeData = Types.IntPtr }
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (Vector2D, IntPtr)",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.Vector2d},
+						new ParameterData { TypeData = Types.IntPtr }
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (Vector2D, int)",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.Vector2d },
+						new ParameterData { TypeData = Types.NInt }
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // void func (Vector2D)",
+					Prefix = "simd__",
+					Variants = Variants.msgSend | Variants.msgSendSuper,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.Vector2d },
+					},
 				}
 			);
 

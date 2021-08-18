@@ -1726,4 +1726,7 @@
   <data name="MX8040" xml:space="preserve">
 		<value>Tipo de codificación no válido para el parámetro.</value>
 	</data>
+  <data name="MX8041" xml:space="preserve">
+		<value>No se puede crear una instancia de tipo {0}.</value>
+	</data>
 </root>

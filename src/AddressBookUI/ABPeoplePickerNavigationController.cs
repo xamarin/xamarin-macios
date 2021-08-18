@@ -256,4 +256,3 @@ namespace AddressBookUI {
 		}
 	}
 }
-

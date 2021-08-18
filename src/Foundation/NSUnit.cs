@@ -1,4 +1,4 @@
-﻿﻿// 
+// 
 // NSUnit.cs
 //
 // Authors:

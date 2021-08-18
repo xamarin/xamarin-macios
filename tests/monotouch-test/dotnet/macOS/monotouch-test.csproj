@@ -2,13 +2,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net6.0-macos</TargetFramework>
-    <DefineConstants>$(DefineConstants);MONOMAC;XAMMAC_TESTS</DefineConstants>
-    <DefineConstants Condition="'$(Configuration)' == 'Debug'">$(DefineConstants);DYNAMIC_REGISTRAR</DefineConstants> <!-- this can't be in shared.csproj, because xharness needs to remove the DYNAMIC_REGISTRAR define for certain test cases -->
-    <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)\..\..\..'))</RootTestsDirectory> <!-- this can't be in shared.csproj, because xharness won't see it there -->
-    <AssemblyName>monotouchtest</AssemblyName> <!-- this can't be in shared.csproj, because xharness won't see it there -->
+    <DefineConstants>$(DefineConstants);XAMMAC_TESTS</DefineConstants>
+    <DefineConstants Condition="'$(Configuration)' == 'Debug'">$(DefineConstants);DYNAMIC_REGISTRAR</DefineConstants>
   </PropertyGroup>
 
-  <Import Project="$(RootTestsDirectory)/monotouch-test/dotnet/shared.csproj" />
+  <!-- Imports of the form '../shared.csproj' will be inlined by xharness -->
+  <Import Project="../shared.csproj" />
 
   <ItemGroup>
     <Compile Include="..\..\..\common\Configuration.cs">

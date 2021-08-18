@@ -1726,4 +1726,7 @@
   <data name="MX8040" xml:space="preserve">
 		<value>매개 변수에 대한 형식 인코딩이 잘못되었습니다.</value>
 	</data>
+  <data name="MX8041" xml:space="preserve">
+		<value>{0} 형식의 인스턴스를 만들 수 없습니다.</value>
+	</data>
 </root>

@@ -1,4 +1,4 @@
-﻿namespace Xamarin.Bundler {
+namespace Xamarin.Bundler {
 	public enum DlsymOptions {
 		Default,
 		All,
