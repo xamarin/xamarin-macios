@@ -5,6 +5,8 @@ using System.Linq;
 
 using Microsoft.Build.Framework;
 
+using Xamarin.Localization.MSBuild;
+
 namespace Xamarin.MacDev.Tasks {
 	public abstract class FindAotCompilerTaskBase : XamarinTask {
 		[Required]
@@ -31,7 +33,8 @@ namespace Xamarin.MacDev.Tasks {
 				AotCompiler = ComputeAotCompilerPath ();
 			}
 
-			Log.LogMessage (MessageImportance.Low, "Computed AOT compiler path: {0}", AotCompiler);
+			if (File.Exists (AotCompiler))
+				Log.LogError (MSBStrings.E7081 /*"The AOT compiler '{0}' does not exist." */, AotCompiler);
 
 			return !Log.HasLoggedErrors;
 		}

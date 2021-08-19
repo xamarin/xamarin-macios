@@ -794,8 +794,6 @@
 		>
 			<Output TaskParameter="AotCompiler" PropertyName="_AOTCompiler" />
 		</FindAotCompiler>
-
-		<Error Text="The AOT compiler '$(_AOTCompiler)' does not exist." Condition="!Exists ($(_AOTCompiler))" />
 	</Target>
 
 	<Target Name="_AOTCompile"
