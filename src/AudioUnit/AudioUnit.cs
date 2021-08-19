@@ -392,9 +392,9 @@ namespace AudioUnit
 		[Obsolete ("This API is not available on iOS.")]
 #endif
 #if NET
-    [SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("maccatalyst15.0")]
 #else
-    [MacCatalyst (15,0)]
+	[MacCatalyst (15,0)]
 #endif
 		public static uint GetCurrentInputDevice ()
 		{
