@@ -358,8 +358,6 @@ MSI_TARGETS += $(DOTNET_PKG_DIR)/Microsoft.NET.Workload.$1.$2.msi
 endef
 $(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(eval $(call CreateMsi,$(platform),$($(platform)_NUGET_VERSION_NO_METADATA))))
 
-export DOTNETSDK_WORKLOAD_MANIFEST_ROOTS:=$(abspath ./Workloads)
-
 .stamp-install-workloads: Makefile $(WORKLOAD_TARGETS) $(RUNTIME_PACKS) $(REF_PACKS) $(SDK_PACKS) $(TEMPLATE_PACKS) $(WORKLOAD_PACKS)
 	$(Q) $(DOTNET6) workload install --skip-manifest-update \
 		--source https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet6/nuget/v3/index.json \
