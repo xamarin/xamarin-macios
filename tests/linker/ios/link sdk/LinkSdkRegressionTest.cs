@@ -42,7 +42,9 @@ using ObjCRuntime;
 #if !__TVOS__
 using MapKit;
 #endif
-#if !__MACOS__
+#if __MACOS__
+using AppKit;
+#else
 using UIKit;
 #endif
 #if !__WATCHOS__ && !__MACCATALYST__ && !__MACOS__

@@ -6,7 +6,6 @@ include $(TOP)/Make.config
 # and to put any extracted packages in the 'packages' directory (to not clutter up ~/.nuget/packages)
 NuGet.config: $(TOP)/NuGet.config Makefile
 	$(Q) $(CP) $< $@.tmp
-	$(Q) nuget sources add -Name local-dotnet-feed -Source $(abspath $(DOTNET_FEED_DIR)) -ConfigFile $@.tmp
 ifdef CUSTOM_DOTNET
 	$(Q) nuget sources add -Name dev-runtime-feed -Source $(abspath $(DOTNET_RUNTIME_PATH)/artifacts/packages/Release/Shipping) -ConfigFile $@.tmp
 endif

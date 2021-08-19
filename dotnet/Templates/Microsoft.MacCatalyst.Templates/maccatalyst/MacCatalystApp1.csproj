@@ -5,5 +5,6 @@
     <RootNamespace Condition="'$(name)' != '$(name{-VALUE-FORMS-}safe_namespace)'">MacCatalystApp1</RootNamespace>
     <OutputType>Exe</OutputType>
     <Nullable>enable</Nullable>
+    <ImplicitUsings>true</ImplicitUsings>
   </PropertyGroup>
 </Project>
