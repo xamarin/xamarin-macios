@@ -24,5 +24,5 @@ cp VSCode/* "~/Library/Application Support/Code/User/snippets"
 
 ### Already have snippets
 
-You are al setup, you just need to merge the contents of the file VSCode/csharp.json with the file in "~/Library/Application Support/Code/User/snippets" 
+You are all setup, you just need to merge the contents of the file VSCode/csharp.json with the file in "~/Library/Application Support/Code/User/snippets" 
 
