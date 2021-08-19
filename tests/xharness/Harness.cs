@@ -275,6 +275,8 @@ namespace Xharness {
 				new { ProjectPath = "xcframework-test", IsFSharp = false, Configurations = noConfigurations, },
 			};
 
+			// If .NET is not enabled, then ignore, otherwise leave undecided for other code to determine.
+			bool? dotnetIgnored = ENABLE_DOTNET ? null : (bool?) true;
 			foreach (var projectInfo in projects) {
 				var projectPath = projectInfo.ProjectPath;
 				var projectName = Path.GetFileName (projectPath);
@@ -291,7 +293,7 @@ namespace Xharness {
 					SkipiOS32Variation = true,
 					SkipMacCatalystVariation = true,
 					TestPlatform = TestPlatform.iOS_Unified,
-					Ignore = !ENABLE_DOTNET,
+					Ignore = dotnetIgnored,
 					Configurations = projectInfo.Configurations,
 				});
 
@@ -306,7 +308,7 @@ namespace Xharness {
 					SkipiOS32Variation = true,
 					GenerateVariations = false,
 					TestPlatform = TestPlatform.tvOS,
-					Ignore = !ENABLE_DOTNET,
+					Ignore = dotnetIgnored,
 					Configurations = projectInfo.Configurations,
 				});
 
@@ -315,7 +317,7 @@ namespace Xharness {
 					IsDotNetProject = true,
 					TargetFrameworkFlavors = MacFlavors.DotNet,
 					Platform = "AnyCPU",
-					Ignore = !ENABLE_DOTNET,
+					Ignore = dotnetIgnored,
 					TestPlatform = TestPlatform.Mac,
 					Configurations = projectInfo.Configurations,
 				});
@@ -325,7 +327,7 @@ namespace Xharness {
 					IsDotNetProject = true,
 					TargetFrameworkFlavors = MacFlavors.MacCatalyst,
 					Platform = "AnyCPU",
-					Ignore = !ENABLE_DOTNET,
+					Ignore = dotnetIgnored,
 					TestPlatform = TestPlatform.MacCatalyst,
 					Configurations = projectInfo.Configurations,
 				});
