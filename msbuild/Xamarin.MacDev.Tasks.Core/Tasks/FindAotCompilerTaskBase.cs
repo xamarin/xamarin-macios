@@ -7,12 +7,12 @@ using Microsoft.Build.Framework;
 
 namespace Xamarin.MacDev.Tasks {
 	public abstract class FindAotCompilerTaskBase : XamarinTask {
-		[Required]		
+		[Required]
 		public ITaskItem[] MonoAotCrossCompiler { get; set; }
-		
+
 		[Required]
 		public string RuntimeIdentifier { get; set; }
-		
+
 		[Output]
 		public string AotCompiler { get; set; }
 
