@@ -24,7 +24,7 @@ namespace Xamarin.MacDev.Tasks {
 				var aotCompilerItem = MonoAotCrossCompiler.SingleOrDefault (v => v.GetMetadata ("RuntimeIdentifier") == RuntimeIdentifier);
 
 				if (aotCompilerItem == null) {
-					Log.LogWarning ("Unable to find the AOT compiler for the RuntimeIdentifier '{0}'", RuntimeIdentifier);
+					Log.LogMessage (MessageImportance.Low, "Unable to find the AOT compiler for the RuntimeIdentifier '{0}' in the MonoAotCrossCompiler item group", RuntimeIdentifier);
 					AotCompiler = ComputeAotCompilerPath ();
 				} else {
 					AotCompiler = aotCompilerItem.ItemSpec;
