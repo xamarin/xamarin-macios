@@ -368,6 +368,16 @@ namespace Xharness {
 				Configurations = new string [] { "Debug", "Release" },
 			});
 
+			MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "link sdk", "dotnet", "macOS", "link sdk.csproj"))) {
+				Name = "link sdk",
+				IsDotNetProject = true,
+				TargetFrameworkFlavors = MacFlavors.DotNet,
+				Platform = "AnyCPU",
+				Ignore = !ENABLE_DOTNET,
+				TestPlatform = TestPlatform.Mac,
+				Configurations = new string [] { "Debug", "Release" },
+			});
+
 			MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "link sdk", "dotnet", "MacCatalyst", "link sdk.csproj"))) {
 				Name = "link sdk",
 				IsDotNetProject = true,
@@ -375,6 +385,7 @@ namespace Xharness {
 				Platform = "AnyCPU",
 				Ignore = !ENABLE_DOTNET,
 				TestPlatform = TestPlatform.MacCatalyst,
+				Configurations = new string [] { "Debug", "Release" },
 			});
 
 			foreach (var flavor in new MonoNativeFlavor [] { MonoNativeFlavor.Compat, MonoNativeFlavor.Unified }) {

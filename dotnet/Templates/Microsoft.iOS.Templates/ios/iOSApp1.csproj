@@ -4,5 +4,6 @@
     <RootNamespace Condition="'$(name)' != '$(name{-VALUE-FORMS-}safe_namespace)'">iOSApp1</RootNamespace>
     <OutputType>Exe</OutputType>
     <Nullable>enable</Nullable>
+    <ImplicitUsings>true</ImplicitUsings>
   </PropertyGroup>
 </Project>
