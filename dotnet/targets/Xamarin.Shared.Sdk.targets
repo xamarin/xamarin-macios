@@ -678,8 +678,16 @@
 		</ItemGroup>
 	</Target>
 
+	<Target Name="_VerifyValidRuntime">
+		<Error Text="Only CoreCLR is supported on macOS. Set 'UseMonoRuntime=false' to use CoreCLR." Condition="'$(_PlatformName)' == 'macOS' And '$(UseMonoRuntime)' != 'false'" />
+	</Target>
+
 	<PropertyGroup>
-		<_ComputeVariablesDependsOn>_GenerateBundleName;_ComputeFrameworkVariables</_ComputeVariablesDependsOn>
+		<_ComputeVariablesDependsOn>
+			_VerifyValidRuntime;
+			_GenerateBundleName;
+			_ComputeFrameworkVariables;
+		</_ComputeVariablesDependsOn>
 		<!--
 			Don't execute ComputeResolvedFileToPublishList if we're in the
 			outer build of a multi-rid build, because there's nothing to
