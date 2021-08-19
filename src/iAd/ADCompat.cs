@@ -289,22 +289,50 @@ namespace iAd {
 	// some of this API is still provided
 	public partial class ADClient : NSObject {
 
-		[Obsoleted (PlatformName.iOS, 15, 0, PlatformArchitecture.None, Constants.iAdRemoved)]
+#if !NET
+		[Deprecated (PlatformName.iOS, 15, 0, message: "The iAd framework has been removed from iOS")]
+#else
+		[UnsupportedOSPlatform ("ios15.0")]
+#if IOS
+		[Obsolete ("Starting with ios15.0 The iAd framework has been removed from iOS", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		public static NSString? ErrorDomain {
 			get { return default (NSString); }
 		}
 
-		[Obsoleted (PlatformName.iOS, 15, 0, PlatformArchitecture.None, Constants.iAdRemoved)]
+#if !NET
+		[Deprecated (PlatformName.iOS, 15, 0, message: "The iAd framework has been removed from iOS")]
+#else
+		[UnsupportedOSPlatform ("ios15.0")]
+#if IOS
+		[Obsolete ("Starting with ios15.0 The iAd framework has been removed from iOS", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		public virtual void DetermineAppInstallationAttribution (AttributedToiAdCompletionHandler completionHandler)
 		{
 		}
 
-		[Obsoleted (PlatformName.iOS, 15, 0, PlatformArchitecture.None, Constants.iAdRemoved)]
+#if !NET
+		[Deprecated (PlatformName.iOS, 15, 0, message: "The iAd framework has been removed from iOS")]
+#else
+		[UnsupportedOSPlatform ("ios15.0")]
+#if IOS
+		[Obsolete ("Starting with ios15.0 The iAd framework has been removed from iOS", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		public virtual void LookupAdConversionDetails (ADConversionDetails onCompleted)
 		{
 		}
 
-		[Obsoleted (PlatformName.iOS, 15, 0, PlatformArchitecture.None, Constants.iAdRemoved)]
+#if !NET
+		[Deprecated (PlatformName.iOS, 15, 0, message: "The iAd framework has been removed from iOS")]
+#else
+		[UnsupportedOSPlatform ("ios15.0")]
+#if IOS
+		[Obsolete ("Starting with ios15.0 The iAd framework has been removed from iOS", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		public virtual Task<ADClientConversionDetailsResult>? LookupAdConversionDetailsAsync()
 		{
 			return default (Task<ADClientConversionDetailsResult>);
@@ -601,7 +629,11 @@ namespace iAd {
 #endif
 	public static class IAdPreroll {
 
-		[Introduced (PlatformName.iOS, 8, 0, PlatformArchitecture.All, null)]
+		#if !NET
+				[iOS (8,0)]
+		#else
+				[SupportedOSPlatform ("ios8.0")]
+		#endif
 		public static void CancelPreroll (this MPMoviePlayerController This)
 		{
 		}
