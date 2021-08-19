@@ -55,9 +55,7 @@
 	"Import needed dlls for versioning.": {
 		"prefix": "netcore_versioning",
 		"body": [
-		  "#if NET",
-		  "using System.Runtime.Versioning;",
-		  "#endif"
+		  "using System.Runtime.Versioning;"
 		],
 		"description": "Import needed dlls for versioning."
 	},
