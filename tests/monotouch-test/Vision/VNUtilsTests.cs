@@ -32,28 +32,28 @@ namespace MonoTouchFixtures.Vision {
         public void GetImagePointTest ()
         {
             var imagePoint = VNUtils.GetImagePoint (new CGPoint(0, 0), 1, 1, new CGRect(0, 0, 1, 1));
-            Assert.NotNull (imagePoint, $"VNImagePointForNormalizedPointUsingRegionOfInterest is not null");
+            Assert.That (imagePoint , Is.Not.EqualTo (CGPoint.Empty), "VNImagePointForNormalizedPointUsingRegionOfInterest is not empty");
         }
 
         [Test]
         public void GetNormalizedPointTest ()
         {
             var normalizedPoint = VNUtils.GetNormalizedPoint (new CGPoint(0, 0), 1, 1, new CGRect(0, 0, 1, 1));
-            Assert.NotNull (normalizedPoint, $"VNNormalizedPointForImagePointUsingRegionOfInterest is not null");
+            Assert.That (imagePoint , Is.Not.EqualTo (CGPoint.Empty), "VNNormalizedPointForImagePointUsingRegionOfInterest is not empty");
         }
 
         [Test]
         public void GetImageRectTest ()
         {
             var normalizedPoint = VNUtils.GetImageRect (new CGRect(0, 0, 1, 1), 1, 1, new CGRect(0, 0, 1, 1));
-            Assert.NotNull (normalizedPoint, $"VNImageRectForNormalizedRectUsingRegionOfInterest is not null");
+            Assert.That (imagePoint , Is.Not.EqualTo (CGPoint.Empty), "VNImageRectForNormalizedRectUsingRegionOfInterest is not empty");
         }
 
         [Test]
         public void GetNormalizedRectTest ()
         {
             var normalizedPoint = VNUtils.GetImageRect (new CGRect(0, 0, 1, 1), 1, 1, new CGRect(0, 0, 1, 1));
-            Assert.NotNull (normalizedPoint, $"VNNormalizedRectForImageRectUsingRegionOfInterest is not null");
+            Assert.That (imagePoint , Is.Not.EqualTo (CGPoint.Empty), "VNNormalizedRectForImageRectUsingRegionOfInterest is not empty");
         }
     }
 }

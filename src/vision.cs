@@ -125,26 +125,26 @@ namespace Vision {
 
 		[iOS (15,0), Mac (12,0), TV (15,0), MacCatalyst (15,0)]
 		[Field ("VNBarcodeSymbologyGS1DataBar")]
-		Gs1DataBar,
+		GS1DataBar,
 
 		[iOS (15,0), Mac (12,0), TV (15,0), MacCatalyst (15,0)]
 		[Field ("VNBarcodeSymbologyGS1DataBarExpanded")]
-		Gs1DataBarExpanded,
+		GS1DataBarExpanded,
 
 		[iOS (15,0), Mac (12,0), TV (15,0), MacCatalyst (15,0)]
 		[Field ("VNBarcodeSymbologyGS1DataBarLimited")]
-		Gs1DataBarLimited,
+		GS1DataBarLimited,
 
 		[iOS (15,0), Mac (12,0), TV (15,0), MacCatalyst (15,0)]
 		[Field ("VNBarcodeSymbologyMicroPDF417")]
-		MicroPDF417,
+		MicroPdf417,
 
 		[iOS (15,0), Mac (12,0), TV (15,0), MacCatalyst (15,0)]
 		[Field ("VNBarcodeSymbologyMicroQR")]
 		MicroQR,
 	}
 
-	[TV (15,0), Mac (12,0), iOS (15,0)]
+	[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 	[Native]
 	public enum VNChirality : long
 	{
@@ -168,7 +168,7 @@ namespace Vision {
 		One = 1,
 	}
 
-	[TV (12,0), Mac (10,14), iOS (12,0)]
+	[TV (12,0), Mac (10,14), iOS (12,0), MacCatalyst (15,0)]
 	[Native]
 	enum VNDetectBarcodesRequestRevision : ulong {
 		Unspecified = 0,
@@ -187,7 +187,7 @@ namespace Vision {
 		Three = 3,
 	}
 
-	[TV (12,0), Mac (10,14), iOS (12,0)]
+	[TV (12,0), Mac (10,14), iOS (12,0), MacCatalyst (15,0)]
 	[Native]
 	enum VNDetectFaceRectanglesRequestRevision : ulong {
 		Unspecified = 0,
@@ -303,7 +303,7 @@ namespace Vision {
 		One = 1,
 	}
 
-	[TV (15,0), Mac (12,0), iOS (15,0)]
+	[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 	[Native]
 	enum VNDetectDocumentSegmentationRequestRevision : ulong {
 		One = 1,
@@ -331,6 +331,7 @@ namespace Vision {
 	enum VNDetectHumanRectanglesRequestRevision : ulong {
 		Unspecified = 0,
 		One = 1,
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		Two = 2,
 	}
 
@@ -360,6 +361,7 @@ namespace Vision {
 	enum VNRecognizeAnimalsRequestRevision : ulong {
 		Unspecified = 0,
 		One = 1,
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		Two = 2,
 	}
 
@@ -437,7 +439,7 @@ namespace Vision {
 		One = 1,
 	}
 
-	[TV (15,0), Mac (12,0), iOS (15,0)]
+	[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 	[Native]
 	enum VNGeneratePersonSegmentationRequestRevision : ulong {
 		One = 1,
@@ -642,6 +644,7 @@ namespace Vision {
 		All,
 	}
 
+	[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 	[Native]
 	public enum VNGeneratePersonSegmentationRequestQualityLevel : ulong
 	{
@@ -652,6 +655,7 @@ namespace Vision {
 
 	[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof(VNDetectedObjectObservation))]
+	[DisableDefaultCtor]
 	interface VNHumanObservation
 	{
 		[NullAllowed]
@@ -741,27 +745,34 @@ namespace Vision {
 		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
 
-		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'GetSupportedSymbologiesAndReturnError' instead.")]
-		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'GetSupportedSymbologiesAndReturnError' instead.")]
-		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'GetSupportedSymbologiesAndReturnError' instead.")]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'GetSupportedSymbologies' instead.")]
+		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'GetSupportedSymbologies' instead.")]
+		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'GetSupportedSymbologies' instead.")]
 		[Static]
 		[Protected]
-		[Export ("supportedSymbologies", ArgumentSemantic.Copy)]
+		[Export ("supportedSymbologiesAndReturnError:", ArgumentSemantic.Copy)]
 		NSString [] WeakSupportedSymbologies { get; }
 
+		[Static]
 		[Wrap ("VNBarcodeSymbologyExtensions.GetValues (WeakSupportedSymbologies)")]
 		VNBarcodeSymbology [] SupportedSymbologies { get; }
 
+		[Static]
 		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-		[Export ("supportedSymbologiesAndReturnError:")]
+		[Export ("supportedSymbologies:")]
 		[return: NullAllowed]
-		string[] GetSupportedSymbologiesAndReturnError ([NullAllowed] out NSError error);
-		// using NSString instead of string here
+		NSString [] GetWeakSupportedSymbologies ([NullAllowed] out NSError error);
+
+		[Static]
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Wrap ("VNBarcodeSymbologyExtensions.GetValues (GetWeakSupportedSymbologies)")]
+		VNBarcodeSymbology [] GetSupportedSymbologies ([NullAllowed] out NSError error);
 
 		[Protected]
 		[Export ("symbologies", ArgumentSemantic.Copy)]
 		NSString [] WeakSymbologies { get; set; }
 
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
 		VNBarcodeObservation[] Results { get; }
 
@@ -812,6 +823,7 @@ namespace Vision {
 		[Export ("constellation", ArgumentSemantic.Assign)]
 		VNRequestFaceLandmarksConstellation Constellation { get; set; }
 
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
 		VNFaceObservation[] Results { get; }
 
@@ -853,6 +865,7 @@ namespace Vision {
 		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
 
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
 		VNFaceObservation[] Results { get; }
 
@@ -894,6 +907,7 @@ namespace Vision {
 		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
 
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
 		VNHorizonObservation[] Results { get; }
 
@@ -953,6 +967,7 @@ namespace Vision {
 		[Export ("maximumObservations")]
 		nuint MaximumObservations { get; set; }
 
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
 		VNRectangleObservation[] Results { get; }
 
@@ -997,6 +1012,7 @@ namespace Vision {
 		[Export ("reportCharacterBoxes")]
 		bool ReportCharacterBoxes { get; set; }
 
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
 		VNTextObservation[] Results { get; }
 
@@ -1257,6 +1273,7 @@ namespace Vision {
 	[BaseType (typeof (VNImageRegistrationRequest))]
 	interface VNTranslationalImageRegistrationRequest {
 
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
 		VNImageTranslationAlignmentObservation[] Results { get; }
 
@@ -1408,6 +1425,7 @@ namespace Vision {
 	[BaseType (typeof (VNImageRegistrationRequest))]
 	interface VNHomographicImageRegistrationRequest {
 
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
 		VNImageHomographicAlignmentObservation[] Results { get; }
 
@@ -1843,6 +1861,10 @@ namespace Vision {
 		Matrix3 WarpTransform {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 			get;
+#if !XAMCORE_4_0
+			[NotImplemented]
+			set;
+#endif
 		}
 	}
 
@@ -2379,9 +2401,9 @@ namespace Vision {
 		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
 
-		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'GetSupportedIdentifiersAndReturnError' instead.")]
-		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'GetSupportedIdentifiersAndReturnError' instead.")]
-		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'GetSupportedIdentifiersAndReturnError' instead.")]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'GetSupportedIdentifiers' instead.")]
+		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'GetSupportedIdentifiers' instead.")]
+		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'GetSupportedIdentifiers' instead.")]
 		[Static]
 		[Export ("knownClassificationsForRevision:error:")]
 		[return: NullAllowed]
@@ -2390,8 +2412,9 @@ namespace Vision {
 		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("supportedIdentifiersAndReturnError:")]
 		[return: NullAllowed]
-		string[] GetSupportedIdentifiersAndReturnError ([NullAllowed] out NSError error);
+		NSString[] GetSupportedIdentifiers ([NullAllowed] out NSError error);
 
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
 		VNClassificationObservation[] Results { get; }
 
@@ -2428,6 +2451,7 @@ namespace Vision {
 		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
 
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
 		VNFaceObservation[] Results { get; }
 
@@ -2468,6 +2492,7 @@ namespace Vision {
 		[Export ("upperBodyOnly")]
 		bool UpperBodyOnly { get; set; }
 
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
 		VNHumanObservation[] Results { get; }
 
@@ -2504,6 +2529,7 @@ namespace Vision {
 		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
 
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
 		VNRecognizedTextObservation[] Results { get; }
 
@@ -2543,6 +2569,7 @@ namespace Vision {
 		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
 
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
 		VNFeaturePrintObservation[] Results { get; }
 
@@ -2579,6 +2606,7 @@ namespace Vision {
 		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
 
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
 		VNSaliencyImageObservation[] Results { get; }
 
@@ -2682,9 +2710,9 @@ namespace Vision {
 	[DisableDefaultCtor]
 	interface VNRecognizeAnimalsRequest {
 
-		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'GetSupportedIdentifiersAndReturnError' instead.")]
-		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'GetSupportedIdentifiersAndReturnError' instead.")]
-		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'GetSupportedIdentifiersAndReturnError' instead.")]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'GetSupportedIdentifiers' instead.")]
+		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'GetSupportedIdentifiers' instead.")]
+		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'GetSupportedIdentifiers' instead.")]
 		[Static]
 		[Export ("knownAnimalIdentifiersForRevision:error:")]
 		[return: NullAllowed]
@@ -2694,12 +2722,14 @@ namespace Vision {
 		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("supportedIdentifiersAndReturnError:")]
 		[return: NullAllowed]
-		string[] GetSupportedIdentifiersAndReturnError ([NullAllowed] out NSError error);
+		[return: BindAs (typeof (VNAnimalIdentifier []))]
+		NSString [] GetSupportedIdentifiers ([NullAllowed] out NSError error);
 
 		[Export ("initWithCompletionHandler:")]
 		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
 
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
 		VNRecognizedObjectObservation[] Results { get; }
 
@@ -2732,9 +2762,9 @@ namespace Vision {
 	[DisableDefaultCtor]
 	interface VNRecognizeTextRequest : VNRequestProgressProviding {
 
-		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'GetSupportedRecognitionLanguagesAndReturnError' instead.")]
-		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'GetSupportedRecognitionLanguagesAndReturnError' instead.")]
-		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'GetSupportedRecognitionLanguagesAndReturnError' instead.")]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'GetSupportedRecognitionLanguages' instead.")]
+		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'GetSupportedRecognitionLanguages' instead.")]
+		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'GetSupportedRecognitionLanguages' instead.")]
 		[Static]
 		[Export ("supportedRecognitionLanguagesForTextRecognitionLevel:revision:error:")]
 		[return: NullAllowed]
@@ -2743,7 +2773,7 @@ namespace Vision {
 		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("supportedRecognitionLanguagesAndReturnError:")]
 		[return: NullAllowed]
-		string[] GetSupportedRecognitionLanguagesAndReturnError ([NullAllowed] out NSError error);
+		NSString[] GetSupportedRecognitionLanguages ([NullAllowed] out NSError error);
 
 		[Export ("recognitionLanguages", ArgumentSemantic.Copy)]
 		string [] RecognitionLanguages { get; set; }
@@ -2764,6 +2794,7 @@ namespace Vision {
 		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
 
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
 		VNRecognizedTextObservation[] Results { get; }
 
@@ -2831,6 +2862,7 @@ namespace Vision {
 		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
 
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
 		VNContoursObservation[] Results { get; }
 
@@ -3289,6 +3321,7 @@ namespace Vision {
 		[Export ("outputPixelFormat")]
 		CVPixelFormatType OutputPixelFormat { get; set; }
 
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
 		VNPixelBufferObservation[] Results { get; }
 
