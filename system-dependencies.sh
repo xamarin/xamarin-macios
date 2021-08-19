@@ -790,7 +790,7 @@ function check_checkout_dir () {
 	for special in documents downloads desktop; do
 		path=$(osascript -e "set result to POSIX path of (path to $special folder as string)")
 		if [[ $PWD == $path* ]]; then
-			fail "Your checkout is under $path which is a special path. This can result in problems runnign the tests."
+			fail "Your checkout is under $path which is a special path. This can result in problems running the tests."
 		fi
 	done
 	ok "Checkout will not result in test problems."
