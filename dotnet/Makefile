@@ -213,13 +213,11 @@ TARGETS += $(RUNTIME_PACKS) $(REF_PACKS) $(SDK_PACKS) $(TEMPLATE_PACKS) $(WORKLO
 define InstallWorkload
 # .NET comes with a workload for us, but we don't want that, we want our own. So delete the workload that comes with .NET.
 .stamp-workload-replace-$1-$(DOTNET6_VERSION):
-	$(Q) echo "Removing existing workload shipped with .NET $(DOTNET6_VERSION): $(DOTNET_MANIFESTS_PATH)/Microsoft.NET.Workload.$1"
-	$(Q) rm -Rf $(DOTNET_MANIFESTS_PATH)/Microsoft.NET.Workload.$1
-	$(Q) echo "Removing existing workload shipped with .NET $(DOTNET6_VERSION): $(DOTNET_MANIFESTS_PATH)/Microsoft.NET.Sdk.$1"
-	$(Q) rm -Rf $(DOTNET_MANIFESTS_PATH)/Microsoft.NET.Sdk.$1
+	$(Q) echo "Removing existing workload shipped with .NET $(DOTNET6_VERSION): $(DOTNET_MANIFESTS_PATH)/microsoft.net.sdk.$1"
+	$(Q) rm -Rf $(DOTNET_MANIFESTS_PATH)/microsoft.net.sdk.$3
 	$(Q) touch $$@
 
-$(DOTNET_MANIFESTS_PATH)/Microsoft.NET.Sdk.$1: .stamp-workload-replace-$1-$(DOTNET6_VERSION) | $(DOTNET_MANIFESTS_PATH)
+$(DOTNET_MANIFESTS_PATH)/microsoft.net.sdk.$3: .stamp-workload-replace-$1-$(DOTNET6_VERSION) | $(DOTNET_MANIFESTS_PATH)
 	$$(Q_LN) ln -Fhs $$(abspath Workloads/Microsoft.NET.Sdk.$1) $$(abspath $$@)
 
 $(DOTNET_PACKS_PATH)/Microsoft.$1.Sdk/$2: | $(DOTNET_PACKS_PATH)/Microsoft.$1.Sdk
@@ -233,11 +231,11 @@ $(DOTNET_TEMPLATE_PACKS_PATH)/Microsoft.$1.Templates.$(2).nupkg: $(TEMPLATE_PACK
 
 WORKLOAD_TARGETS += \
 	$(DOTNET_TEMPLATE_PACKS_PATH)/Microsoft.$1.Templates.$(2).nupkg \
-	$(DOTNET_MANIFESTS_PATH)/Microsoft.NET.Sdk.$1 \
+	$(DOTNET_MANIFESTS_PATH)/microsoft.net.sdk.$3 \
 	$(DOTNET_PACKS_PATH)/Microsoft.$1.Sdk/$2 \
 	$(DOTNET_PACKS_PATH)/Microsoft.$1.Ref/$2
 endef
-$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call InstallWorkload,$(platform),$($(platform)_NUGET_VERSION_NO_METADATA))))
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call InstallWorkload,$(platform),$($(platform)_NUGET_VERSION_NO_METADATA),$(shell echo $(platform) | tr A-Z a-z))))
 
 define InstallRuntimeWorkload
 $(DOTNET_PACKS_PATH)/Microsoft.$1.Runtime.$2/$3: | $(DOTNET_PACKS_PATH)/Microsoft.$1.Runtime.$2
