@@ -70,5 +70,6 @@ stages:
       Microsoft.NET.Sdk.MacCatalyst.Manifest*.nupkg
       Microsoft.iOS*.nupkg
       Microsoft.MacCatalyst*.nupkg
+    symbolConversionFilters: '*mlaunch.app*'
     createVSPR: false
     condition: eq(variables.IsPRBuild, 'False')
