@@ -12,7 +12,7 @@ You can find the snippets for csharp in the VSCode directory. There are two poss
 
 ### New to snippets 
 
-In order to be able to use snippets you need to enable tab completion on vscode, do yo so ny following the instructions 
+In order to be able to use snippets you need to enable tab completion on vscode, you do so by following the instructions 
 you can find in the [vscode documentation](https://code.visualstudio.com/docs/editor/userdefinedsnippets).
 
 Copy the snippets file
