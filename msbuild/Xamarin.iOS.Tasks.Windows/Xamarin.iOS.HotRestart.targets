@@ -184,11 +184,16 @@
 		Inputs="$(CodesignEntitlements);$(_ProvisioningProfilePath);$(HotRestartAppBundlePath)\Extracted"
 		Outputs="$(HotRestartSignedAppDir)archived-expanded-entitlements.xcent;$(HotRestartSignedAppDir)Extracted">
 
+		<PropertyGroup>
+			<_HotRestartEntitlementsFile>$(CodesignEntitlements)</_HotRestartEntitlementsFile>
+			<_HotRestartEntitlementsFile Condition="'$(_HotRestartEntitlementsFile)'== ''">$(HotRestartAppBundlePath)\archived-expanded-entitlements.xcent</_HotRestartEntitlementsFile>
+		</PropertyGroup>
+
 		<CompileEntitlements
 			AppBundleDir="$(HotRestartAppBundlePath)"
 			AppIdentifier="$(_AppIdentifier)"
 			BundleIdentifier="$(_BundleIdentifier)"
-			Entitlements="$(CodesignEntitlements)"
+			Entitlements="$(_HotRestartEntitlementsFile)"
 			CompiledEntitlements="$(DeviceSpecificIntermediateOutputPath)Entitlements.xcent"
 			IsAppExtension="$(IsAppExtension)"
 			ProvisioningProfile="$(_ProvisioningProfileId)"
