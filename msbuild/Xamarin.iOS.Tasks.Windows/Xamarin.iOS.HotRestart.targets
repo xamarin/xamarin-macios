@@ -176,7 +176,8 @@
 
 		<HotRestart.Tasks.CompileAppManifest
 			AppBundlePath="$(HotRestartAppBundlePath)"
-			AppManifestPath="$(_AppManifest)" />
+			AppManifestPath="$(_AppManifest)" 
+			ApplicationTitle="$(ApplicationTitle)"/>
 	</Target>
 
 	<Target Name="_CompileHotRestartEntitlements"
