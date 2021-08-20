@@ -76,6 +76,7 @@ namespace Xamarin.Tests {
 		public void BuildPackageTest (ApplePlatform platform, string runtimeIdentifiers)
 		{
 			var project = "MySimpleApp";
+			var projectVersion = "3.14";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
@@ -85,7 +86,7 @@ namespace Xamarin.Tests {
 
 			DotNet.AssertBuild (project_path, properties);
 
-			var pkgPath = Path.Combine (appPath, "..", $"{project}.pkg");
+			var pkgPath = Path.Combine (appPath, "..", $"{project}-{projectVersion}.pkg");
 			Assert.That (pkgPath, Does.Exist, "pkg creation");
 		}
 
