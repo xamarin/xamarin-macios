@@ -786,7 +786,7 @@ function check_osx_version () {
 }
 
 function check_checkout_dir () {
-	# use apple script to get the possibily translated special folders and check that we are not a subdir
+	# use apple script to get the possibly translated special folders and check that we are not a subdir
 	for special in documents downloads desktop; do
 		path=$(osascript -e "set result to POSIX path of (path to $special folder as string)")
 		if [[ $PWD == $path* ]]; then
