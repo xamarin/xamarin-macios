@@ -793,7 +793,7 @@ function check_checkout_dir () {
 			fail "Your checkout is under $path which is a special path. This can result in problems running the tests."
 		fi
 	done
-	ok "Checkout will not result in test problems."
+	ok "Checkout location will not result in test problems."
 }
 
 
