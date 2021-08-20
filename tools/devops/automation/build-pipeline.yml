@@ -128,7 +128,7 @@ resources:
   - repository: templates
     type: github
     name: xamarin/yaml-templates
-    ref: refs/heads/main
+    ref: refs/heads/dev/bond/provisionator-cache    # UNDONE: TEST: DO NOT MERGE TO MAIN. Agent-Cleanser test
     endpoint: xamarin
 
   - repository: maccore
