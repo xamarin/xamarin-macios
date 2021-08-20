@@ -615,7 +615,11 @@ namespace UIKit {
 	// note: __TVOS_PROHIBITED -> because it uses NSLineBreakMode (but we need this because we don't expose the later)
 	//
 	// NSInteger -> UIStringDrawing.h
+#if __MACCATALYST__
+	[Native (ConvertToNative = "UITextAlignmentExtensions.ToNative", ConvertToManaged = "UITextAlignmentExtensions.ToManaged")]
+#else
 	[Native]
+#endif
 	public enum UITextAlignment : long {
 		Left,
 		Center,
@@ -1230,7 +1234,11 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIImage.h
+#if __MACCATALYST__
+	[Native (ConvertToNative = "UIImageResizingModeExtensions.ToNative", ConvertToManaged = "UIImageResizingModeExtensions.ToManaged")]
+#else
 	[Native]
+#endif
 	public enum UIImageResizingMode : long {
 		Tile, Stretch
 	}

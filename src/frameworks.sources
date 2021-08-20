@@ -113,6 +113,7 @@ APPKIT_SOURCES = \
 	AppKit/NSPasteboard.cs \
 	AppKit/NSSharingServiceDelegate.cs \
 	AppKit/NSDocument.cs \
+	AppKit/NSEnumsExtensions.cs \
 	AppKit/NSEvent.cs \
 	AppKit/NSFont.cs \
 	AppKit/NSGestureRecognizer.cs \

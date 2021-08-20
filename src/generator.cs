@@ -2104,8 +2104,13 @@ public partial class Generator : IMemberGatherer {
 			throw new BindingException (1029, enumType);
 		}
 
-		preExpression = "(" + renderedEnumType + ") (" + RenderType (underlyingEnumType) + ") ";
-		postExpression = string.Empty;
+		if (!string.IsNullOrEmpty (attrib.ConvertToManaged)) {
+			preExpression = attrib.ConvertToManaged + " (";
+			postExpression = ")";
+		} else {
+			preExpression = "(" + renderedEnumType + ") (" + RenderType (underlyingEnumType) + ") ";
+			postExpression = string.Empty;
+		}
 
 		// Check if we got UInt32.MaxValue, which should probably be UInt64.MaxValue (if the enum
 		// in question actually has that value at least). Same goes for Int32.MinValue/Int64.MinValue.
@@ -2152,8 +2157,13 @@ public partial class Generator : IMemberGatherer {
 			throw new BindingException (1029, enumType);
 		}
 
-		preExpression = "(" + nativeType + ") (" + RenderType (underlyingEnumType) + ") ";
-		postExpression = string.Empty;
+		if (!string.IsNullOrEmpty (attrib.ConvertToNative)) {
+			preExpression = attrib.ConvertToNative + " (";
+			postExpression = ")";
+		} else {
+			preExpression = "(" + nativeType + ") (" + RenderType (underlyingEnumType) + ") ";
+			postExpression = string.Empty;
+		}
 
 		return true;
 	}
