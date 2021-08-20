@@ -188,13 +188,17 @@ namespace AudioUnit
 		ClockDeviceList = 1668049699, //'clk#'
 		TranslateUidToClockDevice = 1969841251, // 'uidc',
 		[Deprecated (PlatformName.iOS, 15,0, message : "Use the 'ProcessIsMain' element instead.")]
-		[Deprecated (PlatformName.TvOS, 15,0, message : "Use the 'ProcessIsMain' element instead.")]
-		[Deprecated (PlatformName.WatchOS, 8,0, message : "Use the 'ProcessIsMain' element instead.")]
 		[Deprecated (PlatformName.MacCatalyst, 15,0, message : "Use the 'ProcessIsMain' element instead.")]
 		[Deprecated (PlatformName.MacOSX, 12,0, message : "Use the 'ProcessIsMain' element instead.")]
 		[Obsolete ("Use the 'ProcessIsMain' element instead.")]
 		ProcessIsMaster = 1835103092, // 'mast'
-		// ProcessIsMain - added Xcode13 Beta 1
+#if !NET
+		[iOS (15,0), MacCatalyst (15,0), Mac (12,0)]
+#else
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+#endif
 		ProcessIsMain = 1835100526, // 'main'
 		IsInitingOrExiting = 1768845172, // 'inot'
 		UserIDChanged = 1702193508, // 'euid'
@@ -209,10 +213,9 @@ namespace AudioUnit
 		ClockDevice = 1634755428, // 'apcd',
 		IOThreadOSWorkgroup = 1869838183, // 'oswg'
 #if !NET
-		[iOS (15,0), TV (15,0), MacCatalyst (15,0), Mac (12,0), Watch (8,0)]
+		[iOS (15,0), MacCatalyst (15,0), Mac (12,0)]
 #else
 		[SupportedOSPlatform ("ios15.0")]
-		[SupportedOSPlatform ("tvos15.0")]
 		[SupportedOSPlatform ("maccatalyst15.0")]
 		[SupportedOSPlatform ("macos12.0")]
 #endif
