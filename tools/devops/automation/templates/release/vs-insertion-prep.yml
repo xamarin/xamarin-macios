@@ -51,12 +51,27 @@ stages:
           *.nupkg
 
     - task: NuGetCommand@2
-      displayName: Publish Nugets to xamarin-impl
+      displayName: Publish Nugets to dotnet6
       inputs:
         command: push
         packagesToPush: $(Build.SourcesDirectory)/package/*.nupkg
         nuGetFeedType: external
-        publishFeedCredentials: xamarin-impl public feed
+        publishFeedCredentials: dnceng-dotnet6
+
+    - task: DownloadPipelineArtifact@2
+      inputs:
+        artifactName: vs-msi-nugets
+        downloadPath: $(Build.SourcesDirectory)/vs-msi-nugets
+        patterns: |
+          *.nupkg
+
+    - task: NuGetCommand@2
+      displayName: Publish Nugets to dotnet6
+      inputs:
+        command: push
+        packagesToPush: $(Build.SourcesDirectory)/vs-msi-nugets/*.nupkg
+        nuGetFeedType: external
+        publishFeedCredentials: dnceng-dotnet6
 
 # Check - "xamarin-macios (VS Insertion Wait For Approval)"
 # Check - "xamarin-macios (VS Insertion Create VS Drop and Open PR)"
