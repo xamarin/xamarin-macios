@@ -48,7 +48,7 @@ Copyright (C) 2013-2014 Xamarin. All rights reserved.
 		<IncludeMonoRuntime Condition="'$(IncludeMonoRuntime)' == ''">true</IncludeMonoRuntime>
 		<AotScope Condition="'$(AotScope)' == ''">None</AotScope>
 		<Profiling Condition="'$(Profiling)' == '' And '$(MtouchProfiling)' != ''">$(MtouchProfiling)</Profiling>
-		<Profiling Condition="'$(Profiling)' == ''">$(False)</Profiling>
+		<Profiling Condition="'$(Profiling)' == ''">False</Profiling>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(TargetFrameworkName)' == 'Full'">
