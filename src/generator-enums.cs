@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using Foundation;
 using ObjCRuntime;
 
@@ -50,10 +51,33 @@ public partial class Generator {
 
 		var native = AttributeManager.GetCustomAttribute<NativeAttribute> (type);
 		if (native != null) {
-			if (String.IsNullOrEmpty (native.NativeName))
-				print ("[Native]");
-			else
-				print ("[Native (\"{0}\")]", native.NativeName);
+			var sb = new StringBuilder ();
+			sb.Append ("[Native");
+			var hasNativeName = !string.IsNullOrEmpty (native.NativeName);
+			var hasConvertToManaged = !string.IsNullOrEmpty (native.ConvertToManaged);
+			var hasConvertToNative = !string.IsNullOrEmpty (native.ConvertToNative);
+			if (hasNativeName || hasConvertToManaged || hasConvertToNative ) {
+				sb.Append (" (");
+				if (hasNativeName)
+					sb.Append ('"').Append (native.NativeName).Append ('"');
+				if (hasConvertToManaged) {
+					if (hasNativeName)
+						sb.Append (", ");
+					sb.Append ("ConvertToManaged = \"");
+					sb.Append (native.ConvertToManaged);
+					sb.Append ('"');
+				}
+				if (hasConvertToNative) {
+					if (hasNativeName || hasConvertToManaged)
+						sb.Append (", ");
+					sb.Append ("ConvertToNative = \"");
+					sb.Append (native.ConvertToNative);
+					sb.Append ('"');
+				}
+				sb.Append (")");
+			}
+			sb.Append ("]");
+			print (sb.ToString ());
 		}
 		CopyObsolete (type);
 

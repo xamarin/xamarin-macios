@@ -85,6 +85,7 @@ namespace HomeKit {
 
 		[iOS (13,0), NoWatch, NoTV, NoMac]
 		[NoMacCatalyst]
+		[Deprecated (PlatformName.iOS, 15, 0, message: "This method is no longer supported.")]
 		[Export("homeManager:didReceiveAddAccessoryRequest:"), EventArgs ("HMHomeManagerAddAccessoryRequest")]
 		void DidReceiveAddAccessoryRequest (HMHomeManager manager, HMAddAccessoryRequest request);
 		
@@ -1738,6 +1739,7 @@ namespace HomeKit {
 
 	[iOS (13,0), NoWatch, NoMac, NoTV]
 	[NoMacCatalyst]
+	[Deprecated (PlatformName.iOS, 15, 0, message: "This class is no longer supported.")]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface HMAddAccessoryRequest {

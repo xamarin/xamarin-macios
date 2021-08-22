@@ -7,9 +7,11 @@
     <RootNamespace>linksdk</RootNamespace>
     <AssemblyName>link sdk</AssemblyName>
     <MtouchLink>SdkOnly</MtouchLink>
+    <LinkMode>$(MtouchLink)</LinkMode>
     <MtouchExtraArgs>-disable-thread-check "--dlsym:-link sdk" -gcc_flags="-UhoItsB0rken"</MtouchExtraArgs>
+    <MonoBundlingExtraArgs>$(MtouchExtraArgs)</MonoBundlingExtraArgs>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\..\..'))</RootTestsDirectory>
+    <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\..\..\..\..'))</RootTestsDirectory>
     <ThisTestDirectory>$(RootTestsDirectory)\linker\ios\link sdk</ThisTestDirectory>
   </PropertyGroup>
 
@@ -21,7 +23,6 @@
     </Reference>
 
     <PackageReference Include="NUnitLite" Version="3.12.0" />
-    <PackageReference Include="MonoTouch.Dialog" Version="2.0.0-pre1" />
     <ProjectReference Include="$(RootTestsDirectory)\..\external\Touch.Unit\Touch.Client\dotnet\$(_PlatformName)\Touch.Client-$(_PlatformName).dotnet.csproj" />
     <!-- MonoTouch.Dialog references System.Json, which isn't shipped with .NET5, so reference the NuGet instead -->
     <PackageReference Include="System.Json" Version="4.7.1" />
@@ -33,8 +34,20 @@
     <None Include="Info.plist" />
     <LinkDescription Include="$(RootTestsDirectory)\linker\ios\link sdk\dotnet\extra-linker-defs.xml" />
   </ItemGroup>
-  <ItemGroup>
+
+  <ItemGroup Condition="$(TargetFramework.EndsWith('-macos'))">
+    <Compile Include="$(RootTestsDirectory)\common\mac\MacMain.cs" Condition="$(TargetFramework.EndsWith('-macos'))" Link="MacMain.cs" />
+    <Compile Include="$(RootTestsDirectory)\common\mac\TestRuntime.macos.cs">
+      <Link>TestRuntime.macos.cs</Link>
+    </Compile>
+    <Compile Include="$(ThisTestDirectory)\..\..\mac\link sdk\LinkSdkTest.cs" />
+  </ItemGroup>
+
+  <ItemGroup Condition="!$(TargetFramework.EndsWith('-macos'))">
     <Compile Include="$(ThisTestDirectory)\AppDelegate.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Include="$(ThisTestDirectory)\LinkSdkRegressionTest.cs" />
     <Compile Include="$(ThisTestDirectory)\Bug1820Test.cs" />
     <Compile Include="$(ThisTestDirectory)\Bug2096Test.cs" />

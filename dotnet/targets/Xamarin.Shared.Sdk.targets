@@ -7,6 +7,7 @@
 	</PropertyGroup>
 
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CompileNativeCode" AssemblyFile="$(_XamarinTaskAssembly)" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.FindAotCompiler" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.LinkNativeCode" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.SymbolStrip" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.MergeAppBundles" AssemblyFile="$(_XamarinTaskAssembly)" />
@@ -130,7 +131,8 @@
 		<HttpActivityPropagationSupport Condition="'$(HttpActivityPropagationSupport)' == ''">false</HttpActivityPropagationSupport>
 		<InvariantGlobalization Condition="'$(InvariantGlobalization)' == ''">false</InvariantGlobalization>
 		<StartupHookSupport Condition="'$(StartupHookSupport)' == ''">false</StartupHookSupport>
-		<UseSystemResourceKeys Condition="'$(UseSystemResourceKeys)' == ''">true</UseSystemResourceKeys>
+		<UseSystemResourceKeys Condition="'$(UseSystemResourceKeys)' == '' And '$(_BundlerDebug)' != 'true'">true</UseSystemResourceKeys>
+		<UseSystemResourceKeys Condition="'$(UseSystemResourceKeys)' == '' And '$(_BundlerDebug)' == 'true'">false</UseSystemResourceKeys>
 		<UseNativeHttpHandler Condition="'$(_PlatformName)' != 'macOS' And '$(UseNativeHttpHandler)' == ''">true</UseNativeHttpHandler>
 		<AutoreleasePoolSupport Condition="'$(AutoreleasePoolSupport)' == ''">true</AutoreleasePoolSupport>
 
@@ -366,6 +368,7 @@
 			_ComputeVariables;
 			_CreateRuntimeConfiguration;
 			_ComputeMonoLibraries;
+			_FindAotCompiler;
 		</_ComputeLinkerArgumentsDependsOn>
 	</PropertyGroup>
 
@@ -677,8 +680,16 @@
 		</ItemGroup>
 	</Target>
 
+	<Target Name="_VerifyValidRuntime">
+		<Error Text="Only CoreCLR is supported on macOS. Set 'UseMonoRuntime=false' to use CoreCLR." Condition="'$(_PlatformName)' == 'macOS' And '$(UseMonoRuntime)' != 'false'" />
+	</Target>
+
 	<PropertyGroup>
-		<_ComputeVariablesDependsOn>_GenerateBundleName;_ComputeFrameworkVariables</_ComputeVariablesDependsOn>
+		<_ComputeVariablesDependsOn>
+			_VerifyValidRuntime;
+			_GenerateBundleName;
+			_ComputeFrameworkVariables;
+		</_ComputeVariablesDependsOn>
 		<!--
 			Don't execute ComputeResolvedFileToPublishList if we're in the
 			outer build of a multi-rid build, because there's nothing to
@@ -715,7 +726,6 @@
 			<_AppBundleFrameworksDir Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'">$(_RelativeAppBundlePath)\Frameworks\</_AppBundleFrameworksDir>
 			<_AppBundleFrameworksDir Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">$(_RelativeAppBundlePath)\Contents\Frameworks\</_AppBundleFrameworksDir>
 
-			<_AOTCompiler>@(MonoAotCrossCompiler->WithMetadataValue("RuntimeIdentifier", "$(RuntimeIdentifier)"))</_AOTCompiler>
 			<_AOTInputDirectory>$(_IntermediateNativeLibraryDir)aot-input/</_AOTInputDirectory>
 			<_AOTOutputDirectory>$(_IntermediateNativeLibraryDir)aot-output/</_AOTOutputDirectory>
 
@@ -768,6 +778,8 @@
 			<_RuntimeConfigReservedProperties Include="ICU_DAT_FILE_PATH" />
 			<_RuntimeConfigReservedProperties Include="TRUSTED_PLATFORM_ASSEMBLIES" />
 			<_RuntimeConfigReservedProperties Include="NATIVE_DLL_SEARCH_DIRECTORIES" />
+			<_RuntimeConfigReservedProperties Include="RUNTIME_IDENTIFIER" />
+			<_RuntimeConfigReservedProperties Include="APP_CONTEXT_BASE_DIRECTORY" />
 		</ItemGroup>
 		<RuntimeConfigParserTask
 			Condition="'$(GenerateRuntimeConfigurationFiles)' == 'true'"
@@ -780,13 +792,23 @@
 		<Warning Condition="'$(GenerateRuntimeConfigurationFiles)' != 'true'" Text="Some features may not work correctly, because the generation of the runtime configure file (*.runtimeconfig.json) has been disabled." />
 	</Target>
 
+	<Target Name="_FindAotCompiler" DependsOnTargets="_ComputeVariables">
+		<FindAotCompiler
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true' And '$(_RunAotCompiler)' == 'true'"
+			MonoAotCrossCompiler="@(MonoAotCrossCompiler)"
+			RuntimeIdentifier="$(RuntimeIdentifier)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+		>
+			<Output TaskParameter="AotCompiler" PropertyName="_AOTCompiler" />
+		</FindAotCompiler>
+	</Target>
+
 	<Target Name="_AOTCompile"
 			Condition="'$(_RunAotCompiler)' == 'true'"
-			DependsOnTargets="_ComputeVariables"
+			DependsOnTargets="_ComputeVariables;_FindAotCompiler"
 			Inputs="@(_AssembliesToAOT)"
 			Outputs="@(_AssembliesToAOT -> '%(ObjectFile)');@(_AssembliesToAOT -> '%(LLVMFile)');">
-
-		<Error Text="The AOT compiler '$(_AOTCompiler)' does not exist." Condition="!Exists ($(_AOTCompiler))" />
 
 		<AOTCompile
 			SessionId="$(BuildSessionId)"
@@ -860,7 +882,7 @@
 	</Target>
 
 	<Target Name="_CompileNativeExecutable"
-		DependsOnTargets="_DetectSdkLocations;_ComputeTargetArchitectures;_GenerateBundleName;_GetMinimumOSVersion;_ComputeNativeExecutableInputs;_AOTCompile;"
+		DependsOnTargets="_DetectSdkLocations;_ComputeTargetArchitectures;_GenerateBundleName;_ReadAppManifest;_ComputeNativeExecutableInputs;_AOTCompile;"
 		Inputs="@(_CompileNativeExecutableFile)"
 		Outputs="@(_CompileNativeExecutableFile -> '%(OutputFile)')"
 		>
@@ -1061,7 +1083,7 @@
 		<GetMlaunchArguments
 			SessionId="$(BuildSessionId)"
 			AppBundlePath="$(_AppBundlePath)"
-			AppManifestPath="$(_AppBundlePath)$(_AppBundleManifestRelativePath)Info.plist"
+			AppManifestPath="$(_AppBundleManifest)"
 			DeviceName="$(_DeviceName)"
 			InstallApp="$(_AppBundlePath)"
 			MlaunchPath="$(_MlaunchPath)"
@@ -1088,7 +1110,7 @@
 		<GetMlaunchArguments
 			SessionId="$(BuildSessionId)"
 			AppBundlePath="$(_AppBundlePath)"
-			AppManifestPath="$(_AppBundlePath)$(_AppBundleManifestRelativePath)Info.plist"
+			AppManifestPath="$(_AppBundleManifest)"
 			CaptureOutput="$(_MlaunchCaptureOutput)"
 			DeviceName="$(_DeviceName)"
 			LaunchApp="$(_AppBundlePath)"

@@ -29,13 +29,14 @@ namespace Xamarin.MacDev.Tasks
 		public string AppManifest { get; set; }
 
 		[Required]
-		public string AppManifestBundleDirectory { get; set; }
-
-		[Required]
 		public string AssemblyName { get; set; }
 
 		[Required]
 		public string BundleIdentifier { get; set; }
+
+		[Required]
+		[Output] // This is required to create an empty file on Windows for the Input/Outputs check.
+		public ITaskItem CompiledAppManifest { get; set; }
 
 		[Required]
 		public bool Debug { get; set; }
@@ -71,13 +72,6 @@ namespace Xamarin.MacDev.Tasks
 		public bool SdkIsSimulator { get; set; }
 
 		public string TargetArchitectures { get; set; }
-		#endregion
-
-		#region Outputs
-
-		[Output]
-		public ITaskItem CompiledAppManifest { get; set; }
-
 		#endregion
 
 		protected TargetArchitecture architectures;
@@ -132,7 +126,6 @@ namespace Xamarin.MacDev.Tasks
 			// Merge with any partial plists...
 			MergePartialPlistTemplates (plist);
 
-			CompiledAppManifest = new TaskItem (Path.Combine (AppManifestBundleDirectory, "Info.plist"));
 			plist.Save (CompiledAppManifest.ItemSpec, true, true);
 
 			return !Log.HasLoggedErrors;
