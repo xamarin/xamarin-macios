@@ -8,7 +8,5 @@
 		<string>com.xamarin.framework-test</string>
 		<key>CFBundleName</key>
 		<string>framework-test</string>
-		<key>LSMinimumSystemVersion</key>
-		<string>10.15</string>
 	</dict>
 </plist>

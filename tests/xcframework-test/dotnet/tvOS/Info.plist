@@ -8,7 +8,5 @@
 		<string>com.xamarin.xcframework-test</string>
 		<key>CFBundleName</key>
 		<string>xcframework-test</string>
-		<key>MinimumOSVersion</key>
-		<string>10.0</string>
 	</dict>
 </plist>
