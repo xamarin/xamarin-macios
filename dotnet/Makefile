@@ -55,6 +55,7 @@ DIRECTORIES += \
 	$(DOTNET_TEMPLATE_PACKS_PATH) \
 	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_PACKS_PATH)/Microsoft.$(platform).Sdk) \
 	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_PACKS_PATH)/Microsoft.$(platform).Ref) \
+	$(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(DOTNET_PACKS_PATH)/Microsoft.$(platform).Runtime.$(rid))) \
 	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_TEMPLATE_PACKS_PATH)/Microsoft.$(platform).Templates) \
 	$(TMP_PKG_DIR) \
 	$(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Windows.Sdk/Sdk) \
@@ -237,6 +238,15 @@ WORKLOAD_TARGETS += \
 	$(DOTNET_PACKS_PATH)/Microsoft.$1.Ref/$2
 endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call InstallWorkload,$(platform),$($(platform)_NUGET_VERSION_NO_METADATA))))
+
+define InstallRuntimeWorkload
+$(DOTNET_PACKS_PATH)/Microsoft.$1.Runtime.$2/$3: | $(DOTNET_PACKS_PATH)/Microsoft.$1.Runtime.$2
+	$$(Q_LN) ln -Fhs $$(abspath $(DOTNET_DESTDIR)/Microsoft.$1.Runtime.$2) $$(abspath $$@)
+
+WORKLOAD_TARGETS += \
+	$(DOTNET_PACKS_PATH)/Microsoft.$1.Runtime.$2/$3
+endef
+$(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(eval $(call InstallRuntimeWorkload,$(platform),$(rid),$($(platform)_NUGET_VERSION_NO_METADATA)))))
 
 # We create four packages: one for the workload, one for the sdk package, one for the ref package, and one for templates
 # and then bundle them into a single pkg for distribution (named Microsoft.<platform>.Bundle.<version>.pkg).
