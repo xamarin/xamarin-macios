@@ -72,6 +72,8 @@ namespace Xamarin.MacDev.Tasks
 		public string SdkVersion { get; set; }
 
 		public string TargetArchitectures { get; set; }
+
+		public bool Validate { get; set; }
 		#endregion
 
 		protected TargetArchitecture architectures;

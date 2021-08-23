@@ -286,6 +286,9 @@ namespace Xamarin.iOS.Tasks
 
 		void Validation (PDictionary plist)
 		{
+			if (!Validate)
+				return;
+
 			var supportsIPhone = (supportedDevices & IPhoneDeviceType.IPhone) != 0
 			                     || supportedDevices == IPhoneDeviceType.NotSet;
 			var supportsIPad = (supportedDevices & IPhoneDeviceType.IPad) != 0;

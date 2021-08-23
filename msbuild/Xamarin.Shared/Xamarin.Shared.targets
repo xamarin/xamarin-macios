@@ -337,6 +337,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			SdkIsSimulator="$(_SdkIsSimulator)"
 			SdkVersion="$(_SdkVersion)"
 			DebugIPAddresses="$(_DebugIPAddresses)"
+			Validate="$(_CreateAppManifest)"
 			>
 		</CompileAppManifest>
 	</Target>
