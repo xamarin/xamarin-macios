@@ -76,20 +76,17 @@ namespace Xamarin.Tests {
 		public void BuildPackageTest (ApplePlatform platform, string runtimeIdentifiers)
 		{
 			var project = "MySimpleApp";
+			var projectVersion = "3.14";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 
-			var project_path = GetProjectPath (project, platform: platform);
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
 			Clean (project_path);
-			var properties = new Dictionary<string, string> (verbosity);
-			var multiRid = runtimeIdentifiers.IndexOf (';') >= 0 ? "RuntimeIdentifiers" : "RuntimeIdentifier";
-			if (!string.IsNullOrEmpty (runtimeIdentifiers))
-				properties [multiRid] = runtimeIdentifiers;
+			var properties = GetDefaultProperties (runtimeIdentifiers);
 			properties ["CreatePackage"] = "true";
 
 			DotNet.AssertBuild (project_path, properties);
 
-			var appPath = Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", platform.ToFramework (), runtimeIdentifiers.IndexOf (';') >= 0 ? string.Empty : runtimeIdentifiers, $"{project}.app");
-			var pkgPath = Path.Combine (appPath, "..", $"{project}.pkg");
+			var pkgPath = Path.Combine (appPath, "..", $"{project}-{projectVersion}.pkg");
 			Assert.That (pkgPath, Does.Exist, "pkg creation");
 		}
 
