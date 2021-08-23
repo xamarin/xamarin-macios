@@ -1483,7 +1483,11 @@ namespace Xamarin.Bundler {
 			if (app.AotOtherArguments != null)
 				processArguments.AddRange (app.AotOtherArguments);
 			aotArguments = new List<string> ();
-			aotArguments.Add ($"--aot=mtriple={(enable_thumb ? arch.Replace ("arm", "thumb") : arch)}-ios");
+			if (Platform == ApplePlatform.MacCatalyst) {
+				aotArguments.Add ($"--aot=mtriple={arch}-apple-ios{DeploymentTarget}-macabi");
+			} else {
+				aotArguments.Add ($"--aot=mtriple={(enable_thumb ? arch.Replace ("arm", "thumb") : arch)}-ios");
+			}
 			aotArguments.Add ($"data-outfile={dataFile}");
 			aotArguments.Add ("static");
 			aotArguments.Add ("asmonly");
