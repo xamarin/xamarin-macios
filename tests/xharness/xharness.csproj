@@ -36,6 +36,9 @@
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'Default' ">
     <StartAction>Project</StartAction>
     <StartArguments>--verbose --jenkins:server --autoconf --rootdir ..</StartArguments>
+    <EnvironmentVariables>
+      <Variable name="PR_ID" value="12469" />
+    </EnvironmentVariables>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'Run Jenkins tests' ">
     <StartAction>Project</StartAction>
