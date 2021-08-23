@@ -224,13 +224,15 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	</PropertyGroup>
 
 	<Target Name="_CompileITunesMetadata" Condition="'$(ComputedPlatform)' == 'iPhone' And '$(IsAppExtension)' == 'false' And '$(IsWatchApp)' == 'false'"
-		DependsOnTargets="_DetectSdkLocations;_DetectAppManifest;_GenerateBundleName;_CompileAppManifest"
-		Inputs="$(_AppManifest);@(ITunesMetadata)"
+		DependsOnTargets="_DetectSdkLocations;_DetectAppManifest;_GenerateBundleName;_CompileAppManifest;_ReadAppManifest"
+		Inputs="@(ITunesMetadata)"
 		Outputs="$(DeviceSPecificOutputPath)iTunesMetadata.plist" >
 		<CompileITunesMetadata
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
-			AppBundleDir="$(AppBundleDir)"
+			CFBundleIdentifier="$(_BundleIdentifier)"
+			CFBundleVersion="$(_CFBundleVersion)"
+			CFBundleDisplayName="$(_CFBundleDisplayName)"
 			ITunesMetadata="@(ITunesMetadata)"
 			OutputPath="$(DeviceSpecificOutputPath)iTunesMetadata.plist"
 		/>

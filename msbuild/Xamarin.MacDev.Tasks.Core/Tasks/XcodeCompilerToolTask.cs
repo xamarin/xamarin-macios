@@ -26,8 +26,6 @@ namespace Xamarin.MacDev.Tasks
 
 		#region Inputs
 
-		public ITaskItem AppManifest { get; set; }
-
 		public string BundleIdentifier { get; set; }
 
 		[Required]
@@ -77,22 +75,28 @@ namespace Xamarin.MacDev.Tasks
 
 		#endregion
 
-		bool loadedAppManifest;
-		protected PDictionary GetAppManifest ()
-		{
-			if (!loadedAppManifest) {
-				if (AppManifest != null) {
-					try {
-						plist = PDictionary.FromFile (AppManifest.ItemSpec);
-					} catch (Exception ex) {
-						Log.LogError (null, null, null, AppManifest.ItemSpec, 0, 0, 0, 0, "{0}", ex.Message);
-						return null;
-					}
-				}
-				loadedAppManifest = true;
-			}
+		#region Inputs from the app manifest
 
-			return plist;
+		public string CLKComplicationGroup { get; set; }
+
+		public string NSExtensionPointIdentifier { get; set; }
+
+		public string UIDeviceFamily { get; set; }
+
+		public bool WKWatchKitApp { get; set; }
+
+		public string XSAppIconAssets { get; set; }
+
+		public string XSLaunchImageAssets { get; set; }
+
+		#endregion
+
+		public IPhoneDeviceType ParsedUIDeviceFamily {
+			get {
+				if (!string.IsNullOrEmpty (UIDeviceFamily))
+					return (IPhoneDeviceType) Enum.Parse (typeof (IPhoneDeviceType), UIDeviceFamily);
+				return IPhoneDeviceType.NotSet;
+			}
 		}
 
 		protected abstract string DefaultBinDir {
@@ -118,30 +122,15 @@ namespace Xamarin.MacDev.Tasks
 			get { return false; }
 		}
 
-		protected static bool IsWatchExtension (PDictionary plist)
-		{
-			PDictionary extension;
-			PString id;
-
-			if (plist == null)
-				return false;
-
-			if (!plist.TryGetValue ("NSExtension", out extension))
-				return false;
-
-			if (!extension.TryGetValue ("NSExtensionPointIdentifier", out id))
-				return false;
-
-			return id.Value == "com.apple.watchkit";
+		protected bool IsWatchExtension {
+			get {
+				return NSExtensionPointIdentifier == "com.apple.watchkit";
+			}
 		}
 
 		protected IEnumerable<string> GetTargetDevices ()
 		{
-			var plist = GetAppManifest ();
-			var devices = plist?.GetUIDeviceFamily () ?? IPhoneDeviceType.NotSet;
-			var watch = plist?.GetWKWatchKitApp () == true;
-			var watchExtension = IsWatchExtension (plist);
-			return GetTargetDevices (devices, watch, watchExtension);
+			return GetTargetDevices (ParsedUIDeviceFamily, WKWatchKitApp, IsWatchExtension);
 		}
 
 		IEnumerable<string> GetTargetDevices (IPhoneDeviceType devices, bool watch, bool watchExtension)
