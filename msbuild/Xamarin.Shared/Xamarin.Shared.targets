@@ -960,7 +960,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			Items="@(Content)">
 			<Output TaskParameter="Item" PropertyName="_AppManifest" />
 		</FindItemWithLogicalName>
-		<Error Condition="'$(_AppManifest)' == '' And '$(_CanOutputAppBundle)' == 'true'" Text="Info.plist not found."/>
+		<Error Condition="'$(_AppManifest)' == '' And '$(_CanOutputAppBundle)' == 'true' And '$(UsingAppleNETSdk)' != 'true'" Text="Info.plist not found."/>
 		<PropertyGroup>
 			<_AppBundleManifest>$(_AppBundlePath)$(_AppBundleManifestRelativePath)Info.plist</_AppBundleManifest>
 			<!-- We should only write out a compiled app manifest if we're creating an app bundle -->

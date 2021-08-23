@@ -12,7 +12,6 @@
 
 	<ItemGroup>
 		<Compile Include="../*.cs" />
-		<None Include="Info.plist" />
 		<Reference Include="../dotnet45assembly/dotnet45assembly.dll" />
 	</ItemGroup>
 

@@ -16,8 +16,5 @@
 
 	<ItemGroup>
 		<Compile Include="../*.cs" />
-		<None Include="../Info.plist">
-			<Link>Info.plist</Link>
-		</None>
 	</ItemGroup>
 </Project>
