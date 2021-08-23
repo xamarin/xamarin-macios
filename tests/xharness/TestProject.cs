@@ -8,6 +8,7 @@ using System.Xml;
 using Microsoft.DotNet.XHarness.Common.Execution;
 using Microsoft.DotNet.XHarness.Common.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
+using Xamarin;
 using Xharness.Jenkins.TestTasks;
 
 namespace Xharness {
@@ -87,7 +88,7 @@ namespace Xharness {
 
 		async Task CreateCopyAsync (ILog log, IProcessManager processManager, ITestTask test, string rootDirectory, Dictionary<string, TestProject> allProjectReferences)
 		{
-			var directory = DirectoryUtilities.CreateTemporaryDirectory (test?.TestName ?? System.IO.Path.GetFileNameWithoutExtension (Path));
+			var directory = Cache.CreateTemporaryDirectory (test?.TestName ?? System.IO.Path.GetFileNameWithoutExtension (Path));
 			Directory.CreateDirectory (directory);
 			var original_path = Path;
 			Path = System.IO.Path.Combine (directory, System.IO.Path.GetFileName (Path));
