@@ -145,6 +145,18 @@ namespace Xamarin.MacDev.Tasks
 		{
 			var minimumOSVersionInManifest = plist?.Get<PString> (PlatformFrameworkHelper.GetMinimumOSVersionKey (Platform))?.Value;
 			string minimumOSVersion;
+
+			if (Platform == ApplePlatform.MacCatalyst && string.IsNullOrEmpty (minimumOSVersionInManifest)) {
+				// If there was no value for the macOS min version key, then check the iOS min version key.
+				var minimumiOSVersionInManifest = plist?.Get<PString> (ManifestKeys.MinimumOSVersion)?.Value;
+				if (!string.IsNullOrEmpty (minimumiOSVersionInManifest)) {
+					// Convert to the macOS version
+					if (!MacCatalystSupport.TryGetMacOSVersion (Sdks.GetAppleSdk (Platform).GetSdkPath (SdkVersion, false), minimumiOSVersionInManifest, out var convertedVersion))
+						Log.LogError (MSBStrings.E0188, minimumiOSVersionInManifest);
+					minimumOSVersionInManifest = convertedVersion;
+				}
+			}
+
 			if (string.IsNullOrEmpty (minimumOSVersionInManifest)) {
 				minimumOSVersion = SdkVersion;
 			} else if (!IAppleSdkVersion_Extensions.TryParse (minimumOSVersionInManifest, out var _)) {
@@ -152,13 +164,6 @@ namespace Xamarin.MacDev.Tasks
 				return false;
 			} else {
 				minimumOSVersion = minimumOSVersionInManifest;
-			}
-
-			if (Platform == ApplePlatform.MacCatalyst) {
-				// Convert the min macOS version to the min iOS version, which the rest of our tooling expects.
-				if (!MacCatalystSupport.TryGetiOSVersion (Sdks.GetAppleSdk (Platform).GetSdkPath (SdkVersion, false), minimumOSVersion, out var convertedVersion))
-					Log.LogError (MSBStrings.E0187, minimumOSVersion);
-				minimumOSVersion = convertedVersion;
 			}
 
 			// Write out our value
