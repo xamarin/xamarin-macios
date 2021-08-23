@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
+
 using Microsoft.DotNet.XHarness.Common.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
@@ -234,34 +236,37 @@ namespace Xharness.Jenkins.Reports {
 </li>
 ");
 					if (previous_test_runs == null) {
-						var sb = new StringBuilder ();
-						var previous = Directory.GetDirectories (Path.GetDirectoryName (jenkins.LogDirectory)).
-								Select ((v) => Path.Combine (v, "index.html")).
-									Where (File.Exists);
-						if (previous.Any ()) {
-							sb.AppendLine ("\t<li>Previous test runs");
-							sb.AppendLine ("\t\t<ul>");
-							foreach (var prev in previous.OrderBy ((v) => v).Reverse ()) {
-								var dir = Path.GetFileName (Path.GetDirectoryName (prev));
-								var ts = dir;
-								var description = File.ReadAllLines (prev).Where ((v) => v.StartsWith ("<h2", StringComparison.Ordinal)).FirstOrDefault ();
-								if (description != null) {
-									description = description.Substring (description.IndexOf ('>') + 1); // <h2 ...>
-									description = description.Substring (description.IndexOf ('>') + 1); // <span id= ...>
+						previous_test_runs = "\t<li>Previous test runs\t\t<ul>Loading ...</ul></li>";
+						ThreadPool.QueueUserWorkItem ((v) => {
+							var sb = new StringBuilder ();
+							var previous = Directory.GetDirectories (Path.GetDirectoryName (jenkins.LogDirectory)).
+									Select ((v) => Path.Combine (v, "index.html")).
+										Where (File.Exists);
+							if (previous.Any ()) {
+								sb.AppendLine ("\t<li>Previous test runs");
+								sb.AppendLine ("\t\t<ul>");
+								foreach (var prev in previous.OrderBy ((v) => v).Reverse ()) {
+									var dir = Path.GetFileName (Path.GetDirectoryName (prev));
+									var ts = dir;
+									var description = File.ReadAllLines (prev).Where ((v) => v.StartsWith ("<h2", StringComparison.Ordinal)).FirstOrDefault ();
+									if (description != null) {
+										description = description.Substring (description.IndexOf ('>') + 1); // <h2 ...>
+										description = description.Substring (description.IndexOf ('>') + 1); // <span id= ...>
 
-									var h2end = description.LastIndexOf ("</h2>", StringComparison.Ordinal);
-									if (h2end > -1)
-										description = description.Substring (0, h2end);
-									description = description.Substring (0, description.LastIndexOf ('<'));
-								} else {
-									description = "<unknown state>";
+										var h2end = description.LastIndexOf ("</h2>", StringComparison.Ordinal);
+										if (h2end > -1)
+											description = description.Substring (0, h2end);
+										description = description.Substring (0, description.LastIndexOf ('<'));
+									} else {
+										description = "<unknown state>";
+									}
+									sb.AppendLine ($"\t\t\t<li class=\"adminitem\"><a href='/{dir}/index.html'>{ts}: {description}</a></li>");
 								}
-								sb.AppendLine ($"\t\t\t<li class=\"adminitem\"><a href='/{dir}/index.html'>{ts}: {description}</a></li>");
+								sb.AppendLine ("\t\t</ul>");
+								sb.AppendLine ("\t</li>");
 							}
-							sb.AppendLine ("\t\t</ul>");
-							sb.AppendLine ("\t</li>");
-						}
-						previous_test_runs = sb.ToString ();
+							previous_test_runs = sb.ToString ();
+						});
 					}
 					if (!string.IsNullOrEmpty (previous_test_runs))
 						writer.Write (previous_test_runs);
