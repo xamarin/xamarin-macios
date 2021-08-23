@@ -750,7 +750,7 @@ namespace Vision {
 		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'GetSupportedSymbologies' instead.")]
 		[Static]
 		[Protected]
-		[Export ("supportedSymbologiesAndReturnError:", ArgumentSemantic.Copy)]
+		[Export ("supportedSymbologies", ArgumentSemantic.Copy)]
 		NSString [] WeakSupportedSymbologies { get; }
 
 		[Static]
@@ -758,14 +758,15 @@ namespace Vision {
 		VNBarcodeSymbology [] SupportedSymbologies { get; }
 
 		[Static]
+		[Protected]
 		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-		[Export ("supportedSymbologies:")]
+		[Export ("supportedSymbologiesAndReturnError:")]
 		[return: NullAllowed]
 		NSString [] GetWeakSupportedSymbologies ([NullAllowed] out NSError error);
 
 		[Static]
 		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-		[Wrap ("VNBarcodeSymbologyExtensions.GetValues (GetWeakSupportedSymbologies)")]
+		[Wrap ("VNBarcodeSymbologyExtensions.GetValues (GetWeakSupportedSymbologies (out error))")]
 		VNBarcodeSymbology [] GetSupportedSymbologies ([NullAllowed] out NSError error);
 
 		[Protected]
