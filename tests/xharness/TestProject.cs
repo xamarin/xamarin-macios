@@ -135,8 +135,7 @@ namespace Xharness {
 				variableSubstitution = doc.CollectAndEvaluateTopLevelProperties (variableSubstitution);
 			}
 
-			lock (typeof (TestProject))
-				doc.ResolveAllPaths (original_path, variableSubstitution);
+			doc.ResolveAllPaths (original_path, variableSubstitution);
 
 			// Replace RootTestsDirectory with a constant value, so that any relative paths don't end up wrong.
 			var rootTestsDirectoryNode = doc.SelectSingleNode ("/Project/PropertyGroup/RootTestsDirectory");
