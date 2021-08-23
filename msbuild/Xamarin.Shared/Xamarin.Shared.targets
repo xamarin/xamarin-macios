@@ -336,6 +336,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			SdkPlatform="$(_SdkPlatform)"
 			SdkIsSimulator="$(_SdkIsSimulator)"
 			SdkVersion="$(_SdkVersion)"
+			SupportedOSPlatformVersion="$(SupportedOSPlatformVersion)"
 			DebugIPAddresses="$(_DebugIPAddresses)"
 			Validate="$(_CreateAppManifest)"
 			>

@@ -71,6 +71,8 @@ namespace Xamarin.MacDev.Tasks
 		[Required]
 		public string SdkVersion { get; set; }
 
+		public string SupportedOSPlatformVersion { get; set; }
+
 		public string TargetArchitectures { get; set; }
 
 		public bool Validate { get; set; }
@@ -143,8 +145,20 @@ namespace Xamarin.MacDev.Tasks
 
 		bool SetMinimumOSVersion (PDictionary plist)
 		{
-			var minimumOSVersionInManifest = plist?.Get<PString> (PlatformFrameworkHelper.GetMinimumOSVersionKey (Platform))?.Value;
+			var minimumVersionKey = PlatformFrameworkHelper.GetMinimumOSVersionKey (Platform);
+			var minimumOSVersionInManifest = plist?.Get<PString> (minimumVersionKey)?.Value;
+			string convertedSupportedOSPlatformVersion;
 			string minimumOSVersion;
+
+			if (Platform == ApplePlatform.MacCatalyst && !string.IsNullOrEmpty (SupportedOSPlatformVersion)) {
+				// SupportedOSPlatformVersion is the iOS version for Mac Catalyst.
+				// But we need to store the macOS version in the app manifest, so convert it to the macOS version here.
+				if (!MacCatalystSupport.TryGetMacOSVersion (Sdks.GetAppleSdk (Platform).GetSdkPath (SdkVersion, false), SupportedOSPlatformVersion, out var convertedVersion))
+					Log.LogError (MSBStrings.E0188, SupportedOSPlatformVersion);
+				convertedSupportedOSPlatformVersion = convertedVersion;
+			} else {
+				convertedSupportedOSPlatformVersion = SupportedOSPlatformVersion;
+			}
 
 			if (Platform == ApplePlatform.MacCatalyst && string.IsNullOrEmpty (minimumOSVersionInManifest)) {
 				// If there was no value for the macOS min version key, then check the iOS min version key.
@@ -158,16 +172,25 @@ namespace Xamarin.MacDev.Tasks
 			}
 
 			if (string.IsNullOrEmpty (minimumOSVersionInManifest)) {
-				minimumOSVersion = SdkVersion;
+				// Nothing is specified in the Info.plist - use SupportedOSPlatformVersion, and if that's not set, then use the sdkVersion
+				if (!string.IsNullOrEmpty (convertedSupportedOSPlatformVersion)) {
+					minimumOSVersion = convertedSupportedOSPlatformVersion;
+				} else {
+					minimumOSVersion = SdkVersion;
+				}
 			} else if (!IAppleSdkVersion_Extensions.TryParse (minimumOSVersionInManifest, out var _)) {
 				Log.LogError (null, null, null, AppManifest, 0, 0, 0, 0, MSBStrings.E0011, minimumOSVersionInManifest);
+				return false;
+			} else if (!string.IsNullOrEmpty (convertedSupportedOSPlatformVersion) && convertedSupportedOSPlatformVersion != minimumOSVersionInManifest) {
+				// SupportedOSPlatformVersion and the value in the Info.plist are not the same. This is an error.
+				Log.LogError (null, null, null, AppManifest, 0, 0, 0, 0, "The {0} value in the Info.plist ({1}) does not match the SupportedOSPlatformVersion value in the project file ({2}).", minimumVersionKey, minimumOSVersionInManifest, SupportedOSPlatformVersion); // FIXME: add tests + translated string.
 				return false;
 			} else {
 				minimumOSVersion = minimumOSVersionInManifest;
 			}
 
 			// Write out our value
-			plist [PlatformFrameworkHelper.GetMinimumOSVersionKey (Platform)] = minimumOSVersion;
+			plist [minimumVersionKey] = minimumOSVersion;
 
 			return true;
 		}
