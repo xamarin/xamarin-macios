@@ -31,29 +31,29 @@ namespace MonoTouchFixtures.Vision {
         [Test]
         public void GetImagePointTest ()
         {
-            var imagePoint = VNUtils.GetImagePoint (new CGPoint(0, 0), 1, 1, new CGRect(0, 0, 1, 1));
-            Assert.That (imagePoint , Is.Not.EqualTo (CGPoint.Empty), "VNImagePointForNormalizedPointUsingRegionOfInterest is not empty");
+            var imagePoint = VNUtils.GetImagePoint (new CGPoint(2, 345), 6, 78, new CGRect(90, 12, 34, 56));
+            Assert.That (imagePoint, Is.Not.EqualTo (CGPoint.Empty), "VNImagePointForNormalizedPointUsingRegionOfInterest is not empty");
         }
 
         [Test]
         public void GetNormalizedPointTest ()
         {
-            var normalizedPoint = VNUtils.GetNormalizedPoint (new CGPoint(0, 0), 1, 1, new CGRect(0, 0, 1, 1));
-            Assert.That (imagePoint , Is.Not.EqualTo (CGPoint.Empty), "VNNormalizedPointForImagePointUsingRegionOfInterest is not empty");
+            var normalizedPoint = VNUtils.GetNormalizedPoint (new CGPoint(2, 345), 6, 78, new CGRect(90, 12, 34, 56));
+            Assert.That (normalizedPoint, Is.Not.EqualTo (CGPoint.Empty), "VNNormalizedPointForImagePointUsingRegionOfInterest is not empty");
         }
 
         [Test]
         public void GetImageRectTest ()
         {
-            var normalizedPoint = VNUtils.GetImageRect (new CGRect(0, 0, 1, 1), 1, 1, new CGRect(0, 0, 1, 1));
-            Assert.That (imagePoint , Is.Not.EqualTo (CGPoint.Empty), "VNImageRectForNormalizedRectUsingRegionOfInterest is not empty");
+            var imageRect = VNUtils.GetImageRect (new CGRect(2, 34, 5, 67), 8, 90, new CGRect(123, 4, 56, 7));
+            Assert.That (imageRect, Is.Not.EqualTo (CGRect.Empty), "VNImageRectForNormalizedRectUsingRegionOfInterest is not empty");
         }
 
         [Test]
         public void GetNormalizedRectTest ()
         {
-            var normalizedPoint = VNUtils.GetImageRect (new CGRect(0, 0, 1, 1), 1, 1, new CGRect(0, 0, 1, 1));
-            Assert.That (imagePoint , Is.Not.EqualTo (CGPoint.Empty), "VNNormalizedRectForImageRectUsingRegionOfInterest is not empty");
+            var normalizedRect = VNUtils.GetImageRect (new CGRect(2, 34, 5, 67), 8, 90, new CGRect(123, 4, 56, 7));
+            Assert.That (normalizedRect, Is.Not.EqualTo (CGRect.Empty), "VNNormalizedRectForImageRectUsingRegionOfInterest is not empty");
         }
     }
 }
