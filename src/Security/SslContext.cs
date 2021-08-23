@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using System.Text;
 
 using CoreFoundation;
@@ -19,10 +20,23 @@ using Foundation;
 using ObjCRuntime;
 
 namespace Security {
-	[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'Network.framework' instead.")]
-	[Deprecated (PlatformName.iOS, 13,0, message: "Use 'Network.framework' instead.")]
-	[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'Network.framework' instead.")]
-	[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'Network.framework' instead.")]
+	#if !NET
+			[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'Network.framework' instead.")]
+			[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'Network.framework' instead.")] 
+			[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'Network.framework' instead.")]
+			[Deprecated (PlatformName.WatchOS, 6, 0, message:  "Use 'Network.framework' instead.")]
+	#else
+			[UnsupportedOSPlatform ("ios13.0")]
+			[UnsupportedOSPlatform ("tvos13.0")]
+			[UnsupportedOSPlatform ("macos10.15")]
+	#if IOS
+			[Obsolete ("Starting with ios13.0 Use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+	#elif TVOS
+			[Obsolete ("Starting with tvos13.0 Use 'Network.framework' instead.' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+	#elif MONOMAC
+			[Obsolete ("Starting with macos10.15 Use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+	#endif
+	#endif
 	public class SslContext : INativeObject, IDisposable {
 
 		SslConnection connection;
@@ -498,12 +512,32 @@ namespace Security {
 		}
 
 		[DllImport (Constants.SecurityLibrary)]
+#if !NET
 		[Deprecated (PlatformName.iOS, 9, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 11)]
+#else
+		[UnsupportedOSPlatform ("ios9.0")]
+		[UnsupportedOSPlatform ("macos10.11")]
+#if IOS
+		[Obsolete ("Starting with ios9.0 ", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+		[Obsolete ("Starting with macos10.11 ", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		extern unsafe static /* OSStatus */ SslStatus SSLSetEncryptionCertificate (/* SSLContextRef */ IntPtr context, /* CFArrayRef */ IntPtr certRefs);
 
-		[Deprecated (PlatformName.iOS, 9, 0, message : "Export ciphers are not available anymore.")]
-		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Export ciphers are not available anymore.")]
+#if !NET
+		[Deprecated (PlatformName.iOS, 9, 0, message: "Export ciphers are not available anymore.")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Export ciphers are not available anymore.")]
+#else
+		[UnsupportedOSPlatform ("ios9.0")]
+		[UnsupportedOSPlatform ("macos10.11")]
+#if IOS
+		[Obsolete ("Starting with ios9.0 Export ciphers are not available anymore.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+		[Obsolete ("Starting with macos10.11 Export ciphers are not available anymore.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		public SslStatus SetEncryptionCertificate (SecIdentity identify, IEnumerable<SecCertificate> certificates)
 		{
 			using (var array = Bundle (identify, certificates)) {
@@ -535,9 +569,25 @@ namespace Security {
 		// TODO: Headers say /* Deprecated, does nothing */ but we are not completly sure about it since there is no deprecation macro
 		// Plus they added new members to SslSessionStrengthPolicy enum opened radar://23379052 https://trello.com/c/NbdTLVD3
 		// Xcode 8 beta 1: the P/Invoke was removed completely.
+
+#if !NET
 		[Unavailable (PlatformName.iOS, message : "'SetSessionStrengthPolicy' is not available anymore.")]
 		[Unavailable (PlatformName.MacOSX, message : "'SetSessionStrengthPolicy' is not available anymore.")]
-		[Obsolete ("'SetSessionStrengthPolicy' is not available anymore.")]
+#else
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("macos")]
+#endif
+#if NET
+#if __MACCATALYST__
+		[Obsolete ("Starting with maccatalyst 'SetSessionStrengthPolicy' is not available anymore.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios 'SetSessionStrengthPolicy' is not available anymore.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos 'SetSessionStrengthPolicy' is not available anymore.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+		[Obsolete ("Starting with macos 'SetSessionStrengthPolicy' is not available anymore.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		public SslStatus SetSessionStrengthPolicy (SslSessionStrengthPolicy policyStrength)
 		{
 			Runtime.NSLog ("SetSessionStrengthPolicy is not available anymore.");
@@ -546,17 +596,21 @@ namespace Security {
 #endif
 
 #if !NET
-		[iOS (10,0)][Mac (10,12)]
-		[TV (10,0)]
-		[Watch (3,0)]
+		[iOS (10,0), TV (10,0), Mac (10,12), Watch (3,0)]
+#else
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("macos10.12")]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern int SSLSetSessionConfig (IntPtr /* SSLContextRef* */ context, IntPtr /* CFStringRef* */ config);
 
 #if !NET
-		[iOS (10,0)][Mac (10,12)]
-		[TV (10,0)]
-		[Watch (3,0)]
+		[iOS (10,0), TV (10,0), Mac (10,12), Watch (3,0)]
+#else
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("macos10.12")]
 #endif
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		public int SetSessionConfig (NSString config)
@@ -568,8 +622,11 @@ namespace Security {
 		}
 
 #if !NET
-		[iOS (10,0)][Mac (10,12)]
-		[TV (10,0)]
+		[iOS (10,0), Mac (10,12), TV (10,0)]
+#else
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("macos10.12")]
 #endif
 		public int SetSessionConfig (SslSessionConfig config)
 		{
@@ -577,17 +634,21 @@ namespace Security {
 		}
 
 #if !NET
-		[iOS (10,0)][Mac (10,12)]
-		[Watch (3,0)]
-		[TV (10,0)]
+		[iOS (10,0), Mac (10,12), Watch (3,0), TV (10,0)]
+#else
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("macos10.12")]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern int SSLReHandshake (IntPtr /* SSLContextRef* */ context);
 
 #if !NET
-		[iOS (10,0)][Mac (10,12)]
-		[Watch (3,0)]
-		[TV (10,0)]
+		[iOS (10,0), Mac (10,12), Watch (3,0), TV (10,0)]
+#else
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("macos10.12")]
 #endif
 		public int ReHandshake ()
 		{
@@ -595,19 +656,28 @@ namespace Security {
 		}
 
 #if !NET
-		[iOS (9,0)][Mac (10,11)]
+		[iOS (9,0), Mac (10,11)]
+#else
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos10.11")]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* OSStatus */ SslStatus SSLCopyRequestedPeerName (IntPtr /* SSLContextRef* */ context, byte[] /* char* */ peerName, ref nuint /* size_t */ peerNameLen);
 
 #if !NET
-		[iOS (9,0)][Mac (10,11)]
+		[iOS (9,0), Mac (10,11)]
+#else
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos10.11")]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* OSStatus */ SslStatus SSLCopyRequestedPeerNameLength (IntPtr /* SSLContextRef* */ context, ref nuint /* size_t */ peerNameLen);
 
 #if !NET
-		[iOS (9,0)][Mac (10,11)]
+		[iOS (9,0), Mac (10,11)]
+#else
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("macos10.11")]
 #endif
 		public string GetRequestedPeerName ()
 		{
@@ -621,31 +691,67 @@ namespace Security {
 			return result;
 		}
 
-		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+#if !NET
+		[iOS (11,0), TV (11,0), Mac (10,13), Watch (4,0)]
+#else
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* OSStatus */ int SSLSetSessionTicketsEnabled (IntPtr /* SSLContextRef */ context, [MarshalAs (UnmanagedType.I1)] bool /* Boolean */ enabled);
 
-		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+#if !NET
+		[iOS (11,0), TV (11,0), Mac (10,13), Watch (4,0)]
+#else
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+#endif
 		public int SetSessionTickets (bool enabled)
 		{
 			return SSLSetSessionTicketsEnabled (Handle, enabled);
 		}
 
-		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+#if !NET
+		[iOS (11,0), TV (11,0), Mac (10,13), Watch (4,0)]
+#else
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* OSStatus */ int SSLSetError (IntPtr /* SSLContextRef */ context, SecStatusCode /* OSStatus */ status);
 
-		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+#if !NET
+		[iOS (11,0), TV (11,0), Mac (10,13), Watch (4,0)]
+#else
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+#endif
 		public int SetError (SecStatusCode status)
 		{
 			return SSLSetError (Handle, status);
 		}
 
-		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+#if !NET
+		[iOS (11,0), TV (11,0), Mac (10,13), Watch (4,0)]
+#else
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* OSStatus */ int SSLSetOCSPResponse (IntPtr /* SSLContextRef */ context, IntPtr /* CFDataRef __nonnull */ response);
 
-		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+#if !NET
+		[iOS (11,0), TV (11,0), Mac (10,13), Watch (4,0)]
+#else
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+#endif
 		public int SetOcspResponse (NSData response)
 		{
 			if (response == null)
@@ -653,26 +759,47 @@ namespace Security {
 			return SSLSetOCSPResponse (Handle, response.Handle);
 		}
 
-		[iOS (11,0)][TV (11,0)][Watch (4,0)]
-		[Mac (10,13,4)]
+#if !NET
+		[iOS (11,0), TV (11,0), Mac (10,13,4), Watch (4,0)]
+#else
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("macos10.13.4")]
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* OSStatus */ int SSLSetALPNProtocols (IntPtr /* SSLContextRef */ context, IntPtr /* CFArrayRef */ protocols);
 
-		[iOS (11,0)][TV (11,0)][Watch (4,0)]
-		[Mac (10,13,4)]
+#if !NET
+		[iOS (11,0), TV (11,0), Mac (10,13,4), Watch (4,0)]
+#else
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("macos10.13.4")]
+#endif
 		public int SetAlpnProtocols (string[] protocols)
 		{
 			using (var array = NSArray.FromStrings (protocols))
 				return SSLSetALPNProtocols (Handle, array.Handle);
 		}
 
-		[iOS (11,0)][TV (11,0)][Watch (4,0)]
-		[Mac (10,13,4)]
+#if !NET
+		[iOS (11,0), TV (11,0), Mac (10,13,4), Watch (4,0)]
+#else
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("macos10.13.4")]
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* OSStatus */ int SSLCopyALPNProtocols (IntPtr /* SSLContextRef */ context, ref IntPtr /* CFArrayRef* */ protocols);
 
-		[iOS (11,0)][TV (11,0)][Watch (4,0)]
-		[Mac (10,13,4)]
+#if !NET
+		[iOS (11,0), TV (11,0), Mac (10,13,4), Watch (4,0)]
+#else
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("macos10.13.4")]
+#endif
+
 		public string[] GetAlpnProtocols (out int error)
 		{
 			IntPtr protocols = IntPtr.Zero; // must be null, CFArray allocated by SSLCopyALPNProtocols
@@ -684,8 +811,13 @@ namespace Security {
 			return result;
 		}
 
-		[iOS (11,0)][TV (11,0)][Watch (4,0)]
-		[Mac (10,13,4)]
+#if !NET
+		[iOS (11,0), TV (11,0), Mac (10,13,4), Watch (4,0)]
+#else
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("macos10.13.4")]
+#endif
 		public string[] GetAlpnProtocols ()
 		{
 			int error;
