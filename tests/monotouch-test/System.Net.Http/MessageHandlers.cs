@@ -252,6 +252,9 @@ namespace MonoTests.System.Net.Http
 				}
 			}, () => completed);
 
+			if (!completed)
+				TestRuntime.IgnoreInCI ("Transient network failure - ignore in CI");
+			Assert.IsTrue (completed, "Network request completed");
 			Assert.IsNull (ex, "Exception");
 			Assert.IsNotNull (nativeSetCookieResult, "Native set-cookies result");
 			Assert.IsNotNull (nativeCookieResult, "Native cookies result");
@@ -295,6 +298,9 @@ namespace MonoTests.System.Net.Http
 				}
 			}, () => completed);
 
+			if (!completed)
+				TestRuntime.IgnoreInCI ("Transient network failure - ignore in CI");
+			Assert.IsTrue (completed, "Network request completed");
 			Assert.IsNull (ex, "Exception");
 			Assert.IsNotNull (nativeSetCookieResult, "Native set-cookies result");
 			Assert.IsNotNull (nativeCookieResult, "Native cookies result");
