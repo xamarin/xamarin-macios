@@ -1659,11 +1659,11 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</ItemGroup>
 	</Target>
 
-	<Target Name="_CompileProductDefinition" Condition="$(CreatePackage)" DependsOnTargets="_DetectAppManifest;_ComputeTargetArchitectures">
+	<Target Name="_CompileProductDefinition" Condition="$(CreatePackage)" DependsOnTargets="_CompileAppManifest;_ComputeTargetArchitectures">
 		<CompileProductDefinition
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
-			AppManifest="$(_AppManifest)"
+			AppManifest="$(_AppBundleManifest)"
 			OutputDirectory="$(IntermediateOutputPath)"
 			ProductDefinition="$(ProductDefinition)"
 			TargetArchitectures="$(TargetArchitectures)"
@@ -1672,12 +1672,12 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</CompileProductDefinition>
 	</Target>
 
-	<Target Name="_CreateInstaller" Condition="$(CreatePackage)" DependsOnTargets="Codesign;_CompileProductDefinition">
+	<Target Name="_CreateInstaller" Condition="$(CreatePackage)" DependsOnTargets="Codesign;_CompileProductDefinition;_CompileAppManifest">
 		<CreateInstallerPackage
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
 			AppBundleDir="$(AppBundleDir)"
-			AppManifest="$(_AppManifest)"
+			AppManifest="$(_AppBundleManifest)"
 			EnablePackageSigning="$(EnablePackageSigning)"
 			MainAssembly="$(TargetPath)"
 			Name="$(AssemblyName)"
