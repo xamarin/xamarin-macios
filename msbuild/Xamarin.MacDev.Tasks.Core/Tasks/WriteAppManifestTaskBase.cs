@@ -5,10 +5,8 @@ using System.IO;
 using System.Linq;
 
 using Microsoft.Build.Framework;
-using Microsoft.Build.Utilities;
 
 using Xamarin.Localization.MSBuild;
-using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks
 {
@@ -36,7 +34,7 @@ namespace Xamarin.MacDev.Tasks
 				return false;
 			}
 
-			if (AppManifests.Length >1)
+			if (AppManifests.Length > 1)
 				CompileAppManifestTaskBase.MergePartialPLists (this, plist, AppManifests.Skip (1));
 
 			// Remove any IDE specific keys we don't want in the final app manifest.
