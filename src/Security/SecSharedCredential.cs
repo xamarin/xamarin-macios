@@ -65,13 +65,13 @@ namespace Security {
 		}
 
 		[DllImport (Constants.SecurityLibrary)]
-		#if !NET
-				[Deprecated (PlatformName.iOS, 14,0)]
-				[Deprecated (PlatformName.MacOSX, 11,0)]
-		#else
-				[UnsupportedOSPlatform ("ios14.0")]
-				[UnsupportedOSPlatform ("macos11.0")]
-		#endif
+#if !NET
+		[Deprecated (PlatformName.iOS, 14,0)]
+		[Deprecated (PlatformName.MacOSX, 11,0)]
+#else
+		[UnsupportedOSPlatform ("ios14.0")]
+		[UnsupportedOSPlatform ("macos11.0")]
+#endif
 		extern static void SecRequestSharedWebCredential ( IntPtr /* CFStringRef */ fqdn, IntPtr /* CFStringRef */ account,
 			IntPtr /* void (^completionHandler)( CFArrayRef credentials, CFErrorRef error) */ completionHandler);
 

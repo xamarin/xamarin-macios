@@ -19,11 +19,11 @@ using dispatch_queue_t=System.IntPtr;
 
 namespace Security {
 #if !NET
-		[TV (12,0), Mac (10,14), iOS (12,0), Watch (5,0)]
+	[TV (12,0), Mac (10,14), iOS (12,0), Watch (5,0)]
 #else
-		[SupportedOSPlatform ("ios12.0")]
-		[SupportedOSPlatform ("tvos12.0")]
-		[SupportedOSPlatform ("macos10.14")]
+	[SupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("tvos12.0")]
+	[SupportedOSPlatform ("macos10.14")]
 #endif
 	public class SecProtocolMetadata : NativeObject {
 		internal SecProtocolMetadata (IntPtr handle) : base (handle, false) {}
@@ -141,10 +141,10 @@ namespace Security {
 		extern static SslCipherSuite sec_protocol_metadata_get_negotiated_ciphersuite (IntPtr handle);
 
 #if !NET
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'NegotiatedTlsCipherSuite' instead.")]
-		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'NegotiatedTlsCipherSuite' instead.")] 
-		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'NegotiatedTlsCipherSuite' instead.")]
-		[Deprecated (PlatformName.WatchOS, 6, 0, message:  "Use 'NegotiatedTlsCipherSuite' instead.")]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'NegotiatedTlsCipherSuite' instead.")]
+		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'NegotiatedTlsCipherSuite' instead.")]
+		[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'NegotiatedTlsCipherSuite' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'NegotiatedTlsCipherSuite' instead.")]
 #else
 		[UnsupportedOSPlatform ("ios13.0")]
 		[UnsupportedOSPlatform ("tvos13.0")]
