@@ -32,7 +32,7 @@ namespace ThreadNetwork {
 
 		[Async]
 		[Export ("retrieveCredentialsForExtendedPANID:completion:")]
-		void RetrieveCredentialsForExtendedPanid (NSData extendedPanid, Action<THCredentials, NSError> completion);
+		void RetrieveCredentialsForExtendedPanId (NSData extendedPanId, Action<THCredentials, NSError> completion);
 	}
 
 	[iOS (15,0)]
