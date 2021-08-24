@@ -356,10 +356,13 @@ namespace Xharness.Jenkins {
 			}
 		}
 
-		void PrintTests (IEnumerable<ITestTask> tests)
+		void PrintTests (IEnumerable<ITestTask> tests, int indent = 0)
 		{
-			foreach (Xharness.Jenkins.TestTasks.TestTasks test in tests) {
-				MainLog.WriteLine ($"{test.TestName} Mode: {test.Mode} Variation: {test.Variation} ExecutionResult: {test.ExecutionResult}");
+			foreach (Xharness.Jenkins.TestTasks.TestTasks test in tests.OrderBy (test => $"{test.TestName} Mode: {test.Mode} Variation: {test.Variation} ExecutionResult: {test.ExecutionResult}")) {
+				MainLog.WriteLine ($"{new string (' ', indent * 4)}{test.TestName} Mode: {test.Mode} Variation: {test.Variation} ExecutionResult: {test.ExecutionResult}");
+				if (test is AggregatedRunSimulatorTask aggregated) {
+					PrintTests (aggregated.Tasks, indent + 1);
+				}
 			}
 		}
 
