@@ -36,16 +36,12 @@ namespace Security {
 
 #if !NET
 		[iOS (7,0)]
-#else
-		[SupportedOSPlatform ("ios7.0")]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static SecStatusCode /* OSStatus */ SecTrustCopyPolicies (IntPtr /* SecTrustRef */ trust, ref IntPtr /* CFArrayRef* */ policies);
 
 #if !NET
 		[iOS (7,0)]
-#else
-		[SupportedOSPlatform ("ios7.0")]
 #endif
 		public SecPolicy[] GetPolicies ()
 		{
@@ -93,28 +89,19 @@ namespace Security {
 		}
 
 #if !NET
-		[iOS (7,0), Mac (10,9)]
-#else
-		[SupportedOSPlatform ("ios7.0")]
-		[SupportedOSPlatform ("macos10.9")]
+		[iOS (7,0)][Mac (10,9)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static SecStatusCode /* OSStatus */ SecTrustGetNetworkFetchAllowed (IntPtr /* SecTrustRef */ trust, [MarshalAs (UnmanagedType.I1)] out bool /* Boolean* */ allowFetch);
 
 #if !NET
-		[iOS (7,0), Mac (10,9)]
-#else
-		[SupportedOSPlatform ("ios7.0")]
-		[SupportedOSPlatform ("macos10.9")]
+		[iOS (7,0)][Mac (10,9)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static SecStatusCode /* OSStatus */ SecTrustSetNetworkFetchAllowed (IntPtr /* SecTrustRef */ trust, [MarshalAs (UnmanagedType.I1)] bool /* Boolean */ allowFetch);
 
 #if !NET
-		[iOS (7,0), Mac (10,9)]
-#else
-		[SupportedOSPlatform ("ios7.0")]
-		[SupportedOSPlatform ("macos10.9")]
+		[iOS (7,0)][Mac (10,9)]
 #endif
 		public bool NetworkFetchAllowed {
 			get {
@@ -133,16 +120,12 @@ namespace Security {
 
 #if !NET
 		[iOS (7,0)]
-#else
-		[SupportedOSPlatform ("ios7.0")]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static SecStatusCode /* OSStatus */ SecTrustCopyCustomAnchorCertificates (IntPtr /* SecTrustRef */ trust, out IntPtr /* CFArrayRef* */ anchors);
 
 #if !NET
 		[iOS (7,0)]
-#else
-		[SupportedOSPlatform ("ios7.0")]
 #endif
 		public SecCertificate[] GetCustomAnchorCertificates  ()
 		{
@@ -155,14 +138,12 @@ namespace Security {
 
 #if !NET
 		[iOS (7,0)]
-#else
-		[SupportedOSPlatform ("ios7.0")]
 #endif
 #if !NET
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.")]
-		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.")]
-		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.")]
-		[Deprecated (PlatformName.WatchOS, 6, 0, message:  "Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.")]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.")]
+		[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.")]
+		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.")]
 #else
 		[UnsupportedOSPlatform ("ios13.0")]
 		[UnsupportedOSPlatform ("tvos13.0")]
@@ -193,14 +174,12 @@ namespace Security {
 
 #if !NET
 		[iOS (7,0)]
-#else
-		[SupportedOSPlatform ("ios7.0")]
 #endif
 #if !NET
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.")]
-		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.")] 
-		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.")]
-		[Deprecated (PlatformName.WatchOS, 6, 0, message:  "Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.")]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.")]
+		[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.")]
+		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.")]
 #else
 		[UnsupportedOSPlatform ("ios13.0")]
 		[UnsupportedOSPlatform ("tvos13.0")]
@@ -234,7 +213,7 @@ namespace Security {
 		}
 
 #if !NET
-		[iOS (13,0), TV (13,0), Mac (10,15), Watch (6,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 #else
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
@@ -258,7 +237,7 @@ namespace Security {
 		}
 
 #if !NET
-		[iOS (13,0), TV (13,0), Mac (10,15), Watch (6,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 #else
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
@@ -285,16 +264,12 @@ namespace Security {
 
 #if !NET
 		[iOS (7,0)]
-#else
-		[SupportedOSPlatform ("ios7.0")]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static SecStatusCode /* OSStatus */ SecTrustGetTrustResult (IntPtr /* SecTrustRef */ trust, out SecTrustResult /* SecTrustResultType */ result);
 
 #if !NET
 		[iOS (7,0)]
-#else
-		[SupportedOSPlatform ("ios7.0")]
 #endif
 		public SecTrustResult GetTrustResult ()
 		{
@@ -306,7 +281,7 @@ namespace Security {
 		}
 
 #if !NET
-		[iOS (12,0), TV (12,0), Mac (10,14), Watch (5,0)]
+		[Watch (5,0)][TV (12,0)][Mac (10,14)][iOS (12,0)]
 #else
 		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("tvos12.0")]
@@ -317,7 +292,7 @@ namespace Security {
 		static extern bool SecTrustEvaluateWithError (/* SecTrustRef */ IntPtr trust, out /* CFErrorRef** */ IntPtr error);
 
 #if !NET
-		[iOS (12,0), TV (12,0), Mac (10,14), Watch (5,0)]
+		[Watch (5,0)][TV (12,0)][Mac (10,14)][iOS (12,0)]
 #else
 		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("tvos12.0")]
@@ -331,19 +306,13 @@ namespace Security {
 		}
 
 #if !NET
-		[iOS (7,0), Mac (10,9)]
-#else
-		[SupportedOSPlatform ("ios7.0")]
-		[SupportedOSPlatform ("macos10.9")]
+		[iOS (7,0)][Mac (10,9)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static IntPtr /* CFDictionaryRef */ SecTrustCopyResult (IntPtr /* SecTrustRef */ trust);
 
 #if !NET
-		[iOS (7,0), Mac (10,9)]
-#else
-		[SupportedOSPlatform ("ios7.0")]
-		[SupportedOSPlatform ("macos10.9")]
+		[iOS (7,0)][Mac (10,9)]
 #endif
 		public NSDictionary GetResult ()
 		{
@@ -351,10 +320,7 @@ namespace Security {
 		}
 
 #if !NET
-		[iOS (7,0), Mac (10,9)]
-#else
-		[SupportedOSPlatform ("ios7.0")]
-		[SupportedOSPlatform ("macos10.9")]
+		[iOS (7,0)][Mac (10,9)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static SecStatusCode /* OSStatus */ SecTrustSetOCSPResponse (IntPtr /* SecTrustRef */ trust, IntPtr /* CFTypeRef */ responseData);
@@ -362,8 +328,6 @@ namespace Security {
 		// the API accept the handle for a single policy or an array of them
 #if !NET
 		[Mac (10,9)]
-#else
-		[SupportedOSPlatform ("macos10.9")]
 #endif
 		void SetOCSPResponse (IntPtr ocsp)
 		{
@@ -374,8 +338,6 @@ namespace Security {
 
 #if !NET
 		[iOS (7,0)]
-#else
-		[SupportedOSPlatform ("ios7.0")]
 #endif
 		public void SetOCSPResponse (NSData ocspResponse)
 		{
@@ -387,8 +349,6 @@ namespace Security {
 
 #if !NET
 		[iOS (7,0)]
-#else
-		[SupportedOSPlatform ("ios7.0")]
 #endif
 		public void SetOCSPResponse (IEnumerable<NSData> ocspResponses)
 		{
@@ -401,8 +361,6 @@ namespace Security {
 
 #if !NET
 		[iOS (7,0)]
-#else
-		[SupportedOSPlatform ("ios7.0")]
 #endif
 		public void SetOCSPResponse (NSArray ocspResponses)
 		{
@@ -413,7 +371,10 @@ namespace Security {
 		}
 
 #if !NET
-		[iOS (12,1,1), TV (12,1,1), Mac (10,14,2), Watch (5,1,1)]
+		[iOS (12,1,1)]
+		[Watch (5,1,1)]
+		[TV (12,1,1)]
+		[Mac (10,14,2)]
 #else
 		[SupportedOSPlatform ("ios12.1.1")]
 		[SupportedOSPlatform ("tvos12.1.1")]
@@ -423,7 +384,10 @@ namespace Security {
 		static extern SecStatusCode /* OSStatus */ SecTrustSetSignedCertificateTimestamps (/* SecTrustRef* */ IntPtr trust, /* CFArrayRef* */ IntPtr sctArray);
 
 #if !NET
-		[iOS (12,1,1), TV (12,1,1), Mac (10,14,2), Watch (5,1,1)]
+		[iOS (12,1,1)]
+		[Watch (5,1,1)]
+		[TV (12,1,1)]
+		[Mac (10,14,2)]
 #else
 		[SupportedOSPlatform ("ios12.1.1")]
 		[SupportedOSPlatform ("tvos12.1.1")]
@@ -439,7 +403,10 @@ namespace Security {
 		}
 
 #if !NET
-		[iOS (12,1,1), TV (12,1,1), Mac (10,14,2), Watch (5,1,1)]
+		[iOS (12,1,1)]
+		[Watch (5,1,1)]
+		[TV (12,1,1)]
+		[Mac (10,14,2)]
 #else
 		[SupportedOSPlatform ("ios12.1.1")]
 		[SupportedOSPlatform ("tvos12.1.1")]

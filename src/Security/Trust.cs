@@ -129,10 +129,10 @@ namespace Security {
 		}
 
 #if !NET
-		[Deprecated (PlatformName.iOS, 12, 1)]
-		[Deprecated (PlatformName.TvOS, 12, 1)]
-		[Deprecated (PlatformName.MacOSX, 10, 14, 1)]
-		[Deprecated (PlatformName.WatchOS, 5, 1)]
+		[Deprecated (PlatformName.iOS, 12,1)]
+		[Deprecated (PlatformName.TvOS, 12,1)]
+		[Deprecated (PlatformName.WatchOS, 5,1)]
+		[Deprecated (PlatformName.MacOSX, 10,14,1)]
 #else
 		[UnsupportedOSPlatform ("ios12.1")]
 		[UnsupportedOSPlatform ("tvos12.1")]
@@ -149,10 +149,10 @@ namespace Security {
 		extern static SecStatusCode /* OSStatus */ SecTrustEvaluate (IntPtr /* SecTrustRef */ trust, out /* SecTrustResultType */ SecTrustResult result);
 
 #if !NET
-		[Deprecated (PlatformName.iOS, 12, 1, message: "Use 'SecTrust.Evaluate (out NSError)' instead.")]
-		[Deprecated (PlatformName.TvOS, 12, 1, message: "Use 'SecTrust.Evaluate (out NSError)' instead.")]
-		[Deprecated (PlatformName.MacOSX, 10, 14, 1, message: "Use 'SecTrust.Evaluate (out NSError)' instead.")]
-		[Deprecated (PlatformName.WatchOS, 5, 1, message:  "Use 'SecTrust.Evaluate (out NSError)' instead.")]
+		[Deprecated (PlatformName.iOS, 12, 1, message : "Use 'SecTrust.Evaluate (out NSError)' instead.")]
+		[Deprecated (PlatformName.TvOS, 12, 1, message : "Use 'SecTrust.Evaluate (out NSError)' instead.")]
+		[Deprecated (PlatformName.WatchOS, 5, 1, message : "Use 'SecTrust.Evaluate (out NSError)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, 1, message : "Use 'SecTrust.Evaluate (out NSError)' instead.")]
 #else
 		[UnsupportedOSPlatform ("ios12.1")]
 		[UnsupportedOSPlatform ("tvos12.1")]
@@ -268,30 +268,23 @@ namespace Security {
 			=> NSArray.ArrayFromHandle<SecCertificate> (SecTrustCopyCertificateChain (handle));
 
 #if !NET
-		[Deprecated (PlatformName.iOS, 14, 0)]
-		[Deprecated (PlatformName.TvOS, 14, 0)]
-		[Deprecated (PlatformName.MacOSX, 11, 0)]
-		[Deprecated (PlatformName.WatchOS, 7, 0)]
+		[Deprecated (PlatformName.iOS, 14,0)]
+		[Deprecated (PlatformName.MacOSX, 11,0)]
+		[Deprecated (PlatformName.TvOS, 14,0)]
+		[Deprecated (PlatformName.WatchOS, 7,0)]
 #else
 		[UnsupportedOSPlatform ("ios14.0")]
 		[UnsupportedOSPlatform ("tvos14.0")]
 		[UnsupportedOSPlatform ("macos11.0")]
-#if IOS
-		[Obsolete ("Starting with ios14.0 ", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif TVOS
-		[Obsolete ("Starting with tvos14.0 ' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif MONOMAC
-		[Obsolete ("Starting with macos11.0 ", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static IntPtr /* SecKeyRef */ SecTrustCopyPublicKey (IntPtr /* SecTrustRef */ trust);
 
 #if !NET
-		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'GetKey' instead.")]
-		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use 'GetKey' instead.")]
-		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use 'GetKey' instead.")]
-		[Deprecated (PlatformName.WatchOS, 7, 0, message: "Use 'GetKey' instead.")]
+		[Deprecated (PlatformName.iOS, 14,0, message: "Use 'GetKey' instead.")]
+		[Deprecated (PlatformName.MacOSX, 11,0, message: "Use 'GetKey' instead.")]
+		[Deprecated (PlatformName.TvOS, 14,0, message: "Use 'GetKey' instead.")]
+		[Deprecated (PlatformName.WatchOS, 7,0, message: "Use 'GetKey' instead.")]
 #else
 		[UnsupportedOSPlatform ("ios14.0")]
 		[UnsupportedOSPlatform ("tvos14.0")]
@@ -313,7 +306,11 @@ namespace Security {
 		}
 
 #if !NET
-		[iOS (14,0), TV (14,0), MacCatalyst (14,0), Mac (11,0), Watch (7,0)]
+		[iOS (14,0)]
+		[TV (14,0)]
+		[Watch (7,0)]
+		[Mac (11,0)]
+		[MacCatalyst (14,0)]
 #else
 		[SupportedOSPlatform ("ios14.0")]
 		[SupportedOSPlatform ("tvos14.0")]
@@ -324,7 +321,11 @@ namespace Security {
 		extern static IntPtr /* SecKeyRef */ SecTrustCopyKey (IntPtr /* SecTrustRef */ trust);
 
 #if !NET
-		[iOS (14,0), TV (14,0), MacCatalyst (14,0), Mac (11,0), Watch (7,0)]
+		[iOS (14,0)]
+		[TV (14,0)]
+		[Watch (7,0)]
+		[Mac (11,0)]
+		[MacCatalyst (14,0)]
 #else
 		[SupportedOSPlatform ("ios14.0")]
 		[SupportedOSPlatform ("tvos14.0")]
@@ -341,16 +342,12 @@ namespace Security {
 
 #if !NET
 		[Mac (10,9)]
-#else
-		[SupportedOSPlatform ("macos10.9")]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static IntPtr /* CFDataRef */ SecTrustCopyExceptions (IntPtr /* SecTrustRef */ trust);
 
 #if !NET
 		[Mac (10,9)]
-#else
-		[SupportedOSPlatform ("macos10.9")]
 #endif
 		public NSData GetExceptions ()
 		{
@@ -362,8 +359,6 @@ namespace Security {
 
 #if !NET
 		[Mac (10,9)]
-#else
-		[SupportedOSPlatform ("macos10.9")]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		[return: MarshalAs (UnmanagedType.U1)]
@@ -371,8 +366,6 @@ namespace Security {
 
 #if !NET
 		[Mac (10,9)]
-#else
-		[SupportedOSPlatform ("macos10.9")]
 #endif
 		public bool SetExceptions (NSData data)
 		{

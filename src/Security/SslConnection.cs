@@ -22,20 +22,20 @@ namespace Security {
 	delegate SslStatus SslWriteFunc (IntPtr connection, IntPtr data, /* size_t* */ ref nint dataLength);
 
 #if !NET
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'Network.framework' instead.")]
-		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'Network.framework' instead.")] 
-		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'Network.framework' instead.")]
-		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'Network.framework' instead.")]
+	[Deprecated (PlatformName.MacOSX, 10,15, message: Constants.UseNetworkInstead)]
+	[Deprecated (PlatformName.iOS, 13,0, message: Constants.UseNetworkInstead)]
+	[Deprecated (PlatformName.TvOS, 13,0, message: Constants.UseNetworkInstead)]
+	[Deprecated (PlatformName.WatchOS, 6,0, message: Constants.UseNetworkInstead)]
 #else
-		[UnsupportedOSPlatform ("ios13.0")]
-		[UnsupportedOSPlatform ("tvos13.0")]
-		[UnsupportedOSPlatform ("macos10.15")]
+	[UnsupportedOSPlatform ("ios13.0")]
+	[UnsupportedOSPlatform ("tvos13.0")]
+	[UnsupportedOSPlatform ("macos10.15")]
 #if IOS
-		[Obsolete ("Starting with ios13.0 Use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+	[Obsolete ("Starting with ios13.0 Use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif TVOS
-		[Obsolete ("Starting with tvos13.0 Use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+	[Obsolete ("Starting with tvos13.0 Use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif MONOMAC
-		[Obsolete ("Starting with macos10.15 Use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+	[Obsolete ("Starting with macos10.15 Use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 	public abstract class SslConnection : IDisposable {
