@@ -141,11 +141,11 @@ namespace Security {
 		extern static int /* OSStatus = int */ AuthorizationCreate (AuthorizationItemSet *rights, AuthorizationItemSet *environment, AuthorizationFlags flags, out IntPtr auth);
 
 #if !NET
-		[Deprecated (PlatformName.MacOSX, 10, 7)]
+		[Deprecated (PlatformName.MacOSX, 10,7)]
 #else
 		[UnsupportedOSPlatform ("macos10.7")]
 #if MONOMAC
-		[Obsolete ("Starting with macos10.7 ", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with macos10.7 Use the Service Management framework or the launchd-launched helper tool instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 		[DllImport (Constants.SecurityLibrary)]
@@ -160,11 +160,11 @@ namespace Security {
 		}
 
 #if !NET
-		[Deprecated (PlatformName.MacOSX, 10, 7)]
+		[Deprecated (PlatformName.MacOSX, 10,7)]
 #else
 		[UnsupportedOSPlatform ("macos10.7")]
 #if MONOMAC
-		[Obsolete ("Starting with macos10.7 ", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with macos10.7 Use the Service Management framework or the launchd-launched helper tool instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 		public int ExecuteWithPrivileges (string pathToTool, AuthorizationFlags flags, string [] args)
