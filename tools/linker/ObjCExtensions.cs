@@ -73,6 +73,7 @@ namespace Xamarin.Linker {
 		public const string Social = nameof (Social);
 		public const string SpriteKit = nameof (SpriteKit);
 		public const string StoreKit = nameof (StoreKit);
+		public const string ThreadNetwork = nameof (ThreadNetwork);
 		public const string UIKit = nameof (UIKit);
 		public const string VideoSubscriberAccount = nameof (VideoSubscriberAccount);
 		public const string VideoToolbox = nameof (VideoToolbox);
