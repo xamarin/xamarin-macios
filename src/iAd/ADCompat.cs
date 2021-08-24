@@ -290,11 +290,11 @@ namespace iAd {
 	public partial class ADClient : NSObject {
 
 #if !NET
-		[Deprecated (PlatformName.iOS, 15, 0, message: "The iAd framework has been removed from iOS")]
+		[Obsoleted (PlatformName.iOS, 15, 0, PlatformArchitecture.None, Constants.iAdRemoved)]
 #else
 		[UnsupportedOSPlatform ("ios15.0")]
 #if IOS
-		[Obsoleted (PlatformName.iOS, 15, 0, PlatformArchitecture.None, Constants.iAdRemoved)]
+		[Obsolete ("Starting with ios15.0 The iAd framework has been removed from iOS", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 		public static NSString? ErrorDomain {
@@ -302,7 +302,7 @@ namespace iAd {
 		}
 
 #if !NET
-		[Deprecated (PlatformName.iOS, 15, 0, message: "The iAd framework has been removed from iOS")]
+		[Obsoleted (PlatformName.iOS, 15, 0, PlatformArchitecture.None, Constants.iAdRemoved)]
 #else
 		[UnsupportedOSPlatform ("ios15.0")]
 #if IOS
@@ -314,7 +314,7 @@ namespace iAd {
 		}
 
 #if !NET
-		[Deprecated (PlatformName.iOS, 15, 0, message: "The iAd framework has been removed from iOS")]
+		[Obsoleted (PlatformName.iOS, 15, 0, PlatformArchitecture.None, Constants.iAdRemoved)]
 #else
 		[UnsupportedOSPlatform ("ios15.0")]
 #if IOS
@@ -326,7 +326,7 @@ namespace iAd {
 		}
 
 #if !NET
-		[Deprecated (PlatformName.iOS, 15, 0, message: "The iAd framework has been removed from iOS")]
+		[Obsoleted (PlatformName.iOS, 15, 0, PlatformArchitecture.None, Constants.iAdRemoved)]
 #else
 		[UnsupportedOSPlatform ("ios15.0")]
 #if IOS
@@ -630,9 +630,7 @@ namespace iAd {
 	public static class IAdPreroll {
 
 #if !NET
-		[iOS (8,0)]
-#else
-		[SupportedOSPlatform ("ios8.0")]
+		[Introduced (PlatformName.iOS, 8, 0, PlatformArchitecture.All, null)]
 #endif
 		public static void CancelPreroll (this MPMoviePlayerController This)
 		{
