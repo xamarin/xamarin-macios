@@ -20,16 +20,12 @@ namespace Security {
 
 #if !NET
 		[iOS (7,0)]
-#else
-		[SupportedOSPlatform ("ios7.0")]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static IntPtr /* __nullable CFDictionaryRef */ SecPolicyCopyProperties (IntPtr /* SecPolicyRef */ policyRef);
 
 #if !NET
 		[iOS (7,0)]
-#else
-		[SupportedOSPlatform ("ios7.0")]
 #endif
 		public NSDictionary GetProperties ()
 		{
@@ -39,18 +35,12 @@ namespace Security {
 
 #if !NET
 		[Mac (10,9)]
-#else
-		[SupportedOSPlatform ("macos10.9")]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static IntPtr /* __nullable SecPolicyRef */ SecPolicyCreateRevocation (/* CFOptionFlags */ nuint revocationFlags);
 
 #if !NET
-		[iOS (7,0)]
-		[Mac (10,9)]
-#else
-		[SupportedOSPlatform ("ios7.0")]
-		[SupportedOSPlatform ("macos10.9")]
+		[Mac (10,9)][iOS (7,0)]
 #endif
 		static public SecPolicy CreateRevocationPolicy (SecRevocation revocationFlags)
 		{
@@ -59,21 +49,13 @@ namespace Security {
 		}
 
 #if !NET
-		[iOS (7,0)]
-		[Mac (10,9)]
-#else
-		[SupportedOSPlatform ("ios7.0")]
-		[SupportedOSPlatform ("macos10.9")]
+		[Mac (10,9)][iOS (7,0)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static IntPtr /* __nullable SecPolicyRef */ SecPolicyCreateWithProperties (IntPtr /* CFTypeRef */ policyIdentifier, IntPtr /* CFDictionaryRef */ properties);
 
 #if !NET
-		[iOS (7,0)]
-		[Mac (10,9)]
-#else
-		[SupportedOSPlatform ("ios7.0")]
-		[SupportedOSPlatform ("macos10.9")]
+		[Mac (10,9)][iOS (7,0)]
 #endif
 		static public SecPolicy CreatePolicy (NSString policyIdentifier, NSDictionary properties)
 		{

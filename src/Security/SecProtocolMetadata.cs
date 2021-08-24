@@ -19,7 +19,7 @@ using dispatch_queue_t=System.IntPtr;
 
 namespace Security {
 #if !NET
-		[iOS (12,0), TV (12,0), Mac (10,14), Watch (5,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0), Watch (5,0)]
 #else
 		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("tvos12.0")]
@@ -44,10 +44,10 @@ namespace Security {
 		public DispatchData PeerPublicKey => CreateDispatchData (sec_protocol_metadata_copy_peer_public_key (GetCheckedHandle ()));
 
 #if !NET
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'NegotiatedTlsProtocolVersion' instead.")]
-		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'NegotiatedTlsProtocolVersion' instead.")] 
-		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'NegotiatedTlsProtocolVersion' instead.")]
-		[Deprecated (PlatformName.WatchOS, 6, 0, message:  "Use 'NegotiatedTlsProtocolVersion' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'NegotiatedTlsProtocolVersion' instead.")]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'NegotiatedTlsProtocolVersion' instead.")]
+		[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'NegotiatedTlsProtocolVersion' instead.")]
+		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'NegotiatedTlsProtocolVersion' instead.")]
 #else
 		[UnsupportedOSPlatform ("ios13.0")]
 		[UnsupportedOSPlatform ("tvos13.0")]
@@ -64,10 +64,10 @@ namespace Security {
 		extern static SslProtocol sec_protocol_metadata_get_negotiated_protocol_version (IntPtr handle);
 
 #if !NET
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'NegotiatedTlsProtocolVersion' instead.")]
-		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'NegotiatedTlsProtocolVersion' instead.")] 
-		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'NegotiatedTlsProtocolVersion' instead.")]
-		[Deprecated (PlatformName.WatchOS, 6, 0, message:  "Use 'NegotiatedTlsProtocolVersion' instead.")]
+		[Deprecated(PlatformName.MacOSX, 10, 15, message: "Use 'NegotiatedTlsProtocolVersion' instead.")]
+		[Deprecated(PlatformName.iOS, 13, 0, message: "Use 'NegotiatedTlsProtocolVersion' instead.")]
+		[Deprecated(PlatformName.WatchOS, 6, 0, message: "Use 'NegotiatedTlsProtocolVersion' instead.")]
+		[Deprecated(PlatformName.TvOS, 13, 0, message: "Use 'NegotiatedTlsProtocolVersion' instead.")]
 #else
 		[UnsupportedOSPlatform ("ios13.0")]
 		[UnsupportedOSPlatform ("tvos13.0")]
@@ -83,7 +83,7 @@ namespace Security {
 		public SslProtocol NegotiatedProtocolVersion => sec_protocol_metadata_get_negotiated_protocol_version (GetCheckedHandle ());
 
 #if !NET
-		[iOS (13,0), TV (13,0), Mac (10,15), Watch (6,0)]
+		[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
 #else
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
@@ -93,7 +93,7 @@ namespace Security {
 		static extern TlsProtocolVersion sec_protocol_metadata_get_negotiated_tls_protocol_version (IntPtr handle);
 
 #if !NET
-		[iOS (13,0), TV (13,0), Mac (10,15), Watch (6,0)]
+		[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
 #else
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
@@ -102,7 +102,7 @@ namespace Security {
 		public TlsProtocolVersion NegotiatedTlsProtocolVersion => sec_protocol_metadata_get_negotiated_tls_protocol_version (GetCheckedHandle ());
 
 #if !NET
-		[iOS (13,0), TV (13,0), Mac (10,15), Watch (6,0)]
+		[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
 #else
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
@@ -112,7 +112,7 @@ namespace Security {
 		static extern TlsCipherSuite sec_protocol_metadata_get_negotiated_tls_ciphersuite (IntPtr handle);
 
 #if !NET
-		[iOS (13,0), TV (13,0), Mac (10,15), Watch (6,0)]
+		[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
 #else
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
@@ -121,10 +121,10 @@ namespace Security {
 		public TlsCipherSuite NegotiatedTlsCipherSuite => sec_protocol_metadata_get_negotiated_tls_ciphersuite (GetCheckedHandle ());
 
 #if !NET
-		[Deprecated (PlatformName.iOS, 13, 0)]
-		[Deprecated (PlatformName.TvOS, 13, 0)] 
-		[Deprecated (PlatformName.MacOSX, 10, 15)]
-		[Deprecated (PlatformName.WatchOS, 6, 0)]
+		[Deprecated (PlatformName.iOS, 13,0)]
+		[Deprecated (PlatformName.TvOS, 13,0)]
+		[Deprecated (PlatformName.WatchOS, 6,0)]
+		[Deprecated (PlatformName.MacOSX, 10,15)]
 #else
 		[UnsupportedOSPlatform ("ios13.0")]
 		[UnsupportedOSPlatform ("tvos13.0")]
@@ -360,7 +360,7 @@ namespace Security {
 		}
 
 #if !NET
-		[iOS (13,0), TV (13,0), Mac (10,15), Watch (6,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 #else
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
@@ -370,7 +370,7 @@ namespace Security {
 		static extern /* const char* */ IntPtr sec_protocol_metadata_get_server_name (IntPtr /* sec_protocol_metadata_t */ handle);
 
 #if !NET
-		[iOS (13,0), TV (13,0), Mac (10,15), Watch (6,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 #else
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
@@ -379,7 +379,7 @@ namespace Security {
 		public string ServerName => Marshal.PtrToStringAnsi (sec_protocol_metadata_get_server_name (GetCheckedHandle ()));
 
 #if !NET
-		[iOS (13,0), TV (13,0), Mac (10,15), Watch (6,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 #else
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
@@ -403,7 +403,7 @@ namespace Security {
 		}
 
 #if !NET
-		[iOS (13,0), TV (13,0), Mac (10,15), Watch (6,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 #else
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]

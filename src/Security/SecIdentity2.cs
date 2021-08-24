@@ -22,7 +22,7 @@ using CoreFoundation;
 namespace Security {
 
 #if !NET
-	[iOS (12,0), TV (12,0), Mac (10,14), Watch (5,0)]
+	[TV (12,0), Mac (10,14), iOS (12,0), Watch (5,0)]
 #else
 	[SupportedOSPlatform ("ios12.0")]
 	[SupportedOSPlatform ("tvos12.0")]
@@ -78,7 +78,7 @@ namespace Security {
 		}
 
 #if !NET
-		[iOS (13,0), TV (13,0), Mac (10,15), Watch (6,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 #else
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
@@ -100,7 +100,7 @@ namespace Security {
 		}
 
 #if !NET
-		[iOS (13,0), TV (13,0), Mac (10,15), Watch (6,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 #else
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]

@@ -21,7 +21,7 @@ using sec_identity_t=System.IntPtr;
 namespace Security {
 
 #if !NET
-		[iOS (12,0), TV (12,0), Mac (10,14), Watch (5,0)]
+		[TV (12,0), Mac (10,14), iOS (12,0), Watch (5,0)]
 #else
 		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("tvos12.0")]
@@ -44,10 +44,10 @@ namespace Security {
 		}
 
 #if !NET
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AddTlsCipherSuite (TlsCipherSuite)' instead.")]
-		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'AddTlsCipherSuite (TlsCipherSuite)' instead.")] 
-		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'AddTlsCipherSuite (TlsCipherSuite)' instead.")]
-		[Deprecated (PlatformName.WatchOS, 6, 0, message:  "Use 'AddTlsCipherSuite (TlsCipherSuite)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'AddTlsCipherSuite (TlsCipherSuite)' instead.")]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'AddTlsCipherSuite (TlsCipherSuite)' instead.")]
+		[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'AddTlsCipherSuite (TlsCipherSuite)' instead.")]
+		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'AddTlsCipherSuite (TlsCipherSuite)' instead.")]
 #else
 		[UnsupportedOSPlatform ("ios13.0")]
 		[UnsupportedOSPlatform ("tvos13.0")]
@@ -64,11 +64,11 @@ namespace Security {
 		static extern void sec_protocol_options_add_tls_ciphersuite (sec_protocol_options_t handle, SslCipherSuite cipherSuite);
 
 #if !NET
+		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'AddTlsCipherSuite (TlsCipherSuite)' instead.")]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'AddTlsCipherSuite (TlsCipherSuite)' instead.")]
+		[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'AddTlsCipherSuite (TlsCipherSuite)' instead.")]
+		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'AddTlsCipherSuite (TlsCipherSuite)' instead.")]
 		[Unavailable (PlatformName.MacCatalyst)]
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AddTlsCipherSuite (TlsCipherSuite)' instead.")]
-		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'AddTlsCipherSuite (TlsCipherSuite)' instead.")] 
-		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'AddTlsCipherSuite (TlsCipherSuite)' instead.")]
-		[Deprecated (PlatformName.WatchOS, 6, 0, message:  "Use 'AddTlsCipherSuite (TlsCipherSuite)' instead.")]
 #else
 		[UnsupportedOSPlatform ("ios13.0")]
 		[UnsupportedOSPlatform ("tvos13.0")]
@@ -85,7 +85,7 @@ namespace Security {
 		public void AddTlsCipherSuite (SslCipherSuite cipherSuite) => sec_protocol_options_add_tls_ciphersuite (GetCheckedHandle (), cipherSuite);
 
 #if !NET
-		[iOS (13,0), TV (13,0), Mac (10,15), Watch (6,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 #else
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
@@ -95,7 +95,7 @@ namespace Security {
 		static extern void sec_protocol_options_append_tls_ciphersuite (sec_protocol_options_t options, TlsCipherSuite ciphersuite);
 
 #if !NET
-		[iOS (13,0), TV (13,0), Mac (10,15), Watch (6,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 #else
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
@@ -104,10 +104,10 @@ namespace Security {
 		public void AddTlsCipherSuite (TlsCipherSuite cipherSuite) => sec_protocol_options_append_tls_ciphersuite (GetCheckedHandle (), cipherSuite);
 
 #if !NET
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AddTlsCipherSuiteGroup (TlsCipherSuiteGroup)' instead.")]
-		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'AddTlsCipherSuiteGroup (TlsCipherSuiteGroup)' instead.")] 
-		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'AddTlsCipherSuiteGroup (TlsCipherSuiteGroup)' instead.")]
-		[Deprecated (PlatformName.WatchOS, 6, 0, message:  "Use 'AddTlsCipherSuiteGroup (TlsCipherSuiteGroup)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'AddTlsCipherSuiteGroup (TlsCipherSuiteGroup)' instead.")]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'AddTlsCipherSuiteGroup (TlsCipherSuiteGroup)' instead.")]
+		[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'AddTlsCipherSuiteGroup (TlsCipherSuiteGroup)' instead.")]
+		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'AddTlsCipherSuiteGroup (TlsCipherSuiteGroup)' instead.")]
 #else
 		[UnsupportedOSPlatform ("ios13.0")]
 		[UnsupportedOSPlatform ("tvos13.0")]
@@ -124,10 +124,10 @@ namespace Security {
 		static extern void sec_protocol_options_add_tls_ciphersuite_group (sec_protocol_options_t handle, SslCipherSuiteGroup cipherSuiteGroup);
 
 #if !NET
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AddTlsCipherSuiteGroup (TlsCipherSuiteGroup)' instead.")]
-		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'AddTlsCipherSuiteGroup (TlsCipherSuiteGroup)' instead.")] 
-		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'AddTlsCipherSuiteGroup (TlsCipherSuiteGroup)' instead.")]
-		[Deprecated (PlatformName.WatchOS, 6, 0, message:  "Use 'AddTlsCipherSuiteGroup (TlsCipherSuiteGroup)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'AddTlsCipherSuiteGroup (TlsCipherSuiteGroup)' instead.")]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'AddTlsCipherSuiteGroup (TlsCipherSuiteGroup)' instead.")]
+		[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'AddTlsCipherSuiteGroup (TlsCipherSuiteGroup)' instead.")]
+		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'AddTlsCipherSuiteGroup (TlsCipherSuiteGroup)' instead.")]
 #else
 		[UnsupportedOSPlatform ("ios13.0")]
 		[UnsupportedOSPlatform ("tvos13.0")]
@@ -143,7 +143,7 @@ namespace Security {
 		public void AddTlsCipherSuiteGroup (SslCipherSuiteGroup cipherSuiteGroup) => sec_protocol_options_add_tls_ciphersuite_group (GetCheckedHandle (), cipherSuiteGroup);
 
 #if !NET
-		[iOS (13,0), TV (13,0), Mac (10,15), Watch (6,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 #else
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
@@ -153,7 +153,7 @@ namespace Security {
 		static extern void sec_protocol_options_append_tls_ciphersuite_group (sec_protocol_options_t options, TlsCipherSuiteGroup group);
 
 #if !NET
-		[iOS (13,0), TV (13,0), Mac (10,15), Watch (6,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 #else
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
@@ -162,10 +162,10 @@ namespace Security {
 		public void AddTlsCipherSuiteGroup (TlsCipherSuiteGroup cipherSuiteGroup) => sec_protocol_options_append_tls_ciphersuite_group (GetCheckedHandle (), cipherSuiteGroup);
 
 #if !NET
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'SetTlsMinVersion (TlsProtocolVersion)' instead.")]
-		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'SetTlsMinVersion (TlsProtocolVersion)' instead.")] 
-		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'SetTlsMinVersion (TlsProtocolVersion)' instead.")]
-		[Deprecated (PlatformName.WatchOS, 6, 0, message:  "Use 'SetTlsMinVersion (TlsProtocolVersion)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'SetTlsMinVersion (TlsProtocolVersion)' instead.")]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'SetTlsMinVersion (TlsProtocolVersion)' instead.")]
+		[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'SetTlsMinVersion (TlsProtocolVersion)' instead.")]
+		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'SetTlsMinVersion (TlsProtocolVersion)' instead.")]
 #else
 		[UnsupportedOSPlatform ("ios13.0")]
 		[UnsupportedOSPlatform ("tvos13.0")]
@@ -182,11 +182,11 @@ namespace Security {
 		static extern void sec_protocol_options_set_tls_min_version (sec_protocol_options_t handle, SslProtocol protocol);
 
 #if !NET
+		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'SetTlsMinVersion (TlsProtocolVersion)' instead.")]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'SetTlsMinVersion (TlsProtocolVersion)' instead.")]
+		[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'SetTlsMinVersion (TlsProtocolVersion)' instead.")]
+		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'SetTlsMinVersion (TlsProtocolVersion)' instead.")]
 		[Unavailable (PlatformName.MacCatalyst)]
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'SetTlsMinVersion (TlsProtocolVersion)' instead.")]
-		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'SetTlsMinVersion (TlsProtocolVersion)' instead.")] 
-		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'SetTlsMinVersion (TlsProtocolVersion)' instead.")]
-		[Deprecated (PlatformName.WatchOS, 6, 0, message:  "Use 'SetTlsMinVersion (TlsProtocolVersion)' instead.")]
 #else
 		[UnsupportedOSPlatform ("ios13.0")]
 		[UnsupportedOSPlatform ("tvos13.0")]
@@ -203,7 +203,7 @@ namespace Security {
 		public void SetTlsMinVersion (SslProtocol protocol) => sec_protocol_options_set_tls_min_version (GetCheckedHandle (), protocol);
 
 #if !NET
-		[iOS (13,0), TV (13,0), Mac (10,15), Watch (6,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 #else
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
@@ -213,7 +213,7 @@ namespace Security {
 		static extern void sec_protocol_options_set_min_tls_protocol_version (sec_protocol_options_t handle, TlsProtocolVersion version);
 
 #if !NET
-		[iOS (13,0), TV (13,0), Mac (10,15), Watch (6,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 #else
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
@@ -222,10 +222,10 @@ namespace Security {
 		public void SetTlsMinVersion (TlsProtocolVersion protocol) => sec_protocol_options_set_min_tls_protocol_version (GetCheckedHandle (), protocol);
 
 #if !NET
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'SetTlsMaxVersion (TlsProtocolVersion)' instead.")]
-		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'SetTlsMaxVersion (TlsProtocolVersion)' instead.")] 
-		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'SetTlsMaxVersion (TlsProtocolVersion)' instead.")]
-		[Deprecated (PlatformName.WatchOS, 6, 0, message:  "Use 'SetTlsMaxVersion (TlsProtocolVersion)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'SetTlsMaxVersion (TlsProtocolVersion)' instead.")]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'SetTlsMaxVersion (TlsProtocolVersion)' instead.")]
+		[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'SetTlsMaxVersion (TlsProtocolVersion)' instead.")]
+		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'SetTlsMaxVersion (TlsProtocolVersion)' instead.")]
 #else
 		[UnsupportedOSPlatform ("ios13.0")]
 		[UnsupportedOSPlatform ("tvos13.0")]
@@ -242,11 +242,11 @@ namespace Security {
 		static extern void sec_protocol_options_set_tls_max_version (sec_protocol_options_t handle, SslProtocol protocol);
 
 #if !NET
+		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'SetTlsMaxVersion (TlsProtocolVersion)' instead.")]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'SetTlsMaxVersion (TlsProtocolVersion)' instead.")]
+		[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'SetTlsMaxVersion (TlsProtocolVersion)' instead.")]
+		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'SetTlsMaxVersion (TlsProtocolVersion)' instead.")]
 		[Unavailable (PlatformName.MacCatalyst)]
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'SetTlsMaxVersion (TlsProtocolVersion)' instead.")]
-		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'SetTlsMaxVersion (TlsProtocolVersion)' instead.")] 
-		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'SetTlsMaxVersion (TlsProtocolVersion)' instead.")]
-		[Deprecated (PlatformName.WatchOS, 6, 0, message:  "Use 'SetTlsMaxVersion (TlsProtocolVersion)' instead.")]
 #else
 		[UnsupportedOSPlatform ("ios13.0")]
 		[UnsupportedOSPlatform ("tvos13.0")]
@@ -263,7 +263,7 @@ namespace Security {
 		public void SetTlsMaxVersion (SslProtocol protocol) => sec_protocol_options_set_tls_max_version (GetCheckedHandle (), protocol);
 
 #if !NET
-		[iOS (13,0), TV (13,0), Mac (10,15), Watch (6,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 #else
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
@@ -273,7 +273,7 @@ namespace Security {
 		static extern void sec_protocol_options_set_max_tls_protocol_version (sec_protocol_options_t handle, TlsProtocolVersion version);
 
 #if !NET
-		[iOS (13,0), TV (13,0), Mac (10,15), Watch (6,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 #else
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
@@ -283,7 +283,7 @@ namespace Security {
 
 
 #if !NET
-		[iOS (13,0), TV (13,0), Mac (10,15), Watch (6,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 #else
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
@@ -293,7 +293,7 @@ namespace Security {
 		static extern TlsProtocolVersion sec_protocol_options_get_default_min_dtls_protocol_version ();
 
 #if !NET
-		[iOS (13,0), TV (13,0), Mac (10,15), Watch (6,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 #else
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
@@ -302,7 +302,7 @@ namespace Security {
 		static public TlsProtocolVersion DefaultMinDtlsProtocolVersion => sec_protocol_options_get_default_min_dtls_protocol_version ();
 
 #if !NET
-		[iOS (13,0), TV (13,0), Mac (10,15), Watch (6,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 #else
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
@@ -312,7 +312,7 @@ namespace Security {
 		static extern TlsProtocolVersion sec_protocol_options_get_default_max_dtls_protocol_version ();
 
 #if !NET
-		[iOS (13,0), TV (13,0), Mac (10,15), Watch (6,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 #else
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
@@ -321,7 +321,7 @@ namespace Security {
 		static public TlsProtocolVersion DefaultMaxDtlsProtocolVersion => sec_protocol_options_get_default_max_dtls_protocol_version ();
 
 #if !NET
-		[iOS (13,0), TV (13,0), Mac (10,15), Watch (6,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 #else
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
@@ -331,7 +331,7 @@ namespace Security {
 		static extern TlsProtocolVersion sec_protocol_options_get_default_min_tls_protocol_version ();
 
 #if !NET
-		[iOS (13,0), TV (13,0), Mac (10,15), Watch (6,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 #else
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
@@ -340,7 +340,7 @@ namespace Security {
 		static public TlsProtocolVersion DefaultMinTlsProtocolVersion => sec_protocol_options_get_default_min_tls_protocol_version ();
 
 #if !NET
-		[iOS (13,0), TV (13,0), Mac (10,15), Watch (6,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 #else
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
@@ -350,7 +350,7 @@ namespace Security {
 		static extern TlsProtocolVersion sec_protocol_options_get_default_max_tls_protocol_version ();
 
 #if !NET
-		[iOS (13,0), TV (13,0), Mac (10,15), Watch (6,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 #else
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
@@ -379,10 +379,10 @@ namespace Security {
 		}
 
 #if !NET
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use non-DHE cipher suites instead.")]
-		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use non-DHE cipher suites instead.")] 
-		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use non-DHE cipher suites instead.")]
-		[Deprecated (PlatformName.WatchOS, 6, 0, message:  "Use non-DHE cipher suites instead.")]
+		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use non-DHE cipher suites instead.")]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use non-DHE cipher suites instead.")]
+		[Deprecated (PlatformName.WatchOS, 6,0, message: "Use non-DHE cipher suites instead.")]
+		[Deprecated (PlatformName.TvOS, 13,0, message: "Use non-DHE cipher suites instead.")]
 #else
 		[UnsupportedOSPlatform ("ios13.0")]
 		[UnsupportedOSPlatform ("tvos13.0")]
@@ -399,10 +399,10 @@ namespace Security {
 		static extern void sec_protocol_options_set_tls_diffie_hellman_parameters (IntPtr handle, IntPtr dispatchDataParameter);
 
 #if !NET
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use non-DHE cipher suites instead.")]
-		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use non-DHE cipher suites instead.")] 
-		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use non-DHE cipher suites instead.")]
-		[Deprecated (PlatformName.WatchOS, 6, 0, message:  "Use non-DHE cipher suites instead.")]
+		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use non-DHE cipher suites instead.")]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use non-DHE cipher suites instead.")]
+		[Deprecated (PlatformName.WatchOS, 6,0, message: "Use non-DHE cipher suites instead.")]
+		[Deprecated (PlatformName.TvOS, 13,0, message: "Use non-DHE cipher suites instead.")]
 #else
 		[UnsupportedOSPlatform ("ios13.0")]
 		[UnsupportedOSPlatform ("tvos13.0")]
@@ -491,7 +491,7 @@ namespace Security {
 		}
 
 #if !NET
-		[iOS (13,0), TV (13,0), Mac (10,15), Watch (6,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 #else
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
@@ -503,7 +503,7 @@ namespace Security {
 
 		// Equatable would be nice but would fail on earlier OS versions
 #if !NET
-		[iOS (13,0), TV (13,0), Mac (10,15), Watch (6,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 #else
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
@@ -517,7 +517,7 @@ namespace Security {
 		}
 
 #if !NET
-		[iOS (13,0), TV (13,0), Mac (10,15), Watch (6,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 #else
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
@@ -533,7 +533,7 @@ namespace Security {
 		}
 
 #if !NET
-		[iOS (13,0), TV (13,0), Mac (10,15), Watch (6,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 #else
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
@@ -543,7 +543,7 @@ namespace Security {
 		static extern void sec_protocol_options_set_tls_pre_shared_key_identity_hint (sec_protocol_options_t options, IntPtr /* dispatch_data */ psk_identity_hint);
 
 #if !NET
-		[iOS (13,0), TV (13,0), Mac (10,15), Watch (6,0)]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 #else
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
