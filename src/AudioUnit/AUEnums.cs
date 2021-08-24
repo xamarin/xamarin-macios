@@ -193,11 +193,12 @@ namespace AudioUnit
 		[Obsolete ("Use the 'ProcessIsMain' element instead.")]
 		ProcessIsMaster = 1835103092, // 'mast'
 #if !NET
-		[iOS (15,0), MacCatalyst (15,0), Mac (12,0)]
+		[iOS (15,0), MacCatalyst (15,0), Mac (12,0), NoTV, NoWatch]
 #else
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst15.0")]
 		[SupportedOSPlatform ("macos12.0")]
+		[UnsupportedOSPlatform ("tvos")]
 #endif
 		ProcessIsMain = 1835100526, // 'main'
 		IsInitingOrExiting = 1768845172, // 'inot'
@@ -213,11 +214,12 @@ namespace AudioUnit
 		ClockDevice = 1634755428, // 'apcd',
 		IOThreadOSWorkgroup = 1869838183, // 'oswg'
 #if !NET
-		[iOS (15,0), MacCatalyst (15,0), Mac (12,0)]
+		[iOS (15,0), MacCatalyst (15,0), Mac (12,0), NoTV, NoWatch]
 #else
 		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst15.0")]
 		[SupportedOSPlatform ("macos12.0")]
+		[UnsupportedOSPlatform ("tvos")]
 #endif
 		ProcessMute = 1634758765, // 'appm'
 	}
