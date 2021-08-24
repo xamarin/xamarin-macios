@@ -1,3 +1,5 @@
+#nullable enable
+
 using System;
 using System.IO;
 using System.Linq;
@@ -15,10 +17,10 @@ namespace Xamarin.MacDev.Tasks
 		#region Inputs
 
 		[Required]
-		public string AppBundleManifest { get; set; }
+		public string? AppBundleManifest { get; set; }
 
 		[Required]
-		public ITaskItem[] AppManifests { get; set; }
+		public ITaskItem[]? AppManifests { get; set; }
 
 		#endregion
 
@@ -26,7 +28,7 @@ namespace Xamarin.MacDev.Tasks
 		{
 			PDictionary plist;
 
-			var firstManifest = AppManifests [0].ItemSpec;
+			var firstManifest = AppManifests! [0].ItemSpec;
 			try {
 				plist = PDictionary.FromFile (firstManifest);
 			} catch (Exception ex) {

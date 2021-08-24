@@ -1,3 +1,5 @@
+#nullable enable
+
 using Microsoft.Build.Framework;
 using Xamarin.Messaging.Build.Client;
 
