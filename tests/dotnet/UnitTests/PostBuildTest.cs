@@ -9,6 +9,7 @@ using Xamarin.Utils;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Logging.StructuredLogger;
+using Mono.Cecil;
 
 namespace Xamarin.Tests {
 	[TestFixture]
@@ -66,6 +67,42 @@ namespace Xamarin.Tests {
 			var appPath = Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", platform.ToFramework (), runtimeIdentifiers.IndexOf (';') >= 0 ? string.Empty : runtimeIdentifiers, $"{project}.app");
 			var pkgPath = Path.Combine (appPath, "..", $"{project}.ipa");
 			Assert.That (pkgPath, Does.Exist, "pkg creation");
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.iOS, "ios-arm64", true)]
+		[TestCase (ApplePlatform.iOS, "ios-arm64", false)]
+		public void AssemblyStripping (ApplePlatform platform, string runtimeIdentifiers, bool shouldStrip)
+		{
+			var project = "MySimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var project_path = GetProjectPath (project, platform: platform);
+			Clean (project_path);
+			var properties = new Dictionary<string, string> (verbosity);
+			properties ["RuntimeIdentifier"] = runtimeIdentifiers;
+			if (!shouldStrip) {
+				properties ["EnableAssemblyILStripping"] = "false";
+			}
+
+			DotNet.AssertBuild (project_path, properties);
+
+			var appPath = Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", platform.ToFramework (), runtimeIdentifiers.IndexOf (';') >= 0 ? string.Empty : runtimeIdentifiers, $"{project}.app");
+
+			var assemblies = Directory.GetFiles(appPath, "*.dll");
+			var assembliesWithOnlyEmptyMethods = new List<String>();
+			foreach (var assembly in assemblies) {
+				ModuleDefinition definition = ModuleDefinition.ReadModule(assembly, new ReaderParameters { ReadingMode = ReadingMode.Deferred });
+
+				bool onlyHasEmptyMethods = definition.Assembly.MainModule.Types.All(t => 
+					t.Methods.Where(m => m.HasBody).All(m => m.Body.Instructions.Count == 1));
+				if (onlyHasEmptyMethods) {
+					assembliesWithOnlyEmptyMethods.Add (assembly);
+				}
+			}
+
+			// Some assemblies, such as Facades, will be completely empty even when not stripped
+			Assert.That(assemblies.Length == assembliesWithOnlyEmptyMethods.Count, Is.EqualTo(shouldStrip), $"Unexpected stripping status: of {assemblies.Length} assemblies {assembliesWithOnlyEmptyMethods.Count} were empty.");
 		}
 
 		[Test]

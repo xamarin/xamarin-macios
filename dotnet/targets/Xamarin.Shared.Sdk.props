@@ -51,4 +51,7 @@
 		<_RuntimeIdentifierUsesAppHost>false</_RuntimeIdentifierUsesAppHost>
 		<UseAppHost>false</UseAppHost>
 	</PropertyGroup>
+	<PropertyGroup>
+		<EnableAssemblyILStripping Condition="'$(EnableAssemblyILStripping)' == ''">true</EnableAssemblyILStripping>
+	</PropertyGroup>
 </Project>

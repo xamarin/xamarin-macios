@@ -224,6 +224,7 @@
 			_ComputeFrameworkFilesToPublish;
 			_ComputeDynamicLibrariesToPublish;
 			ComputeFilesToPublish;
+			_StripAssemblyIL;
 			_LoadLinkerOutput;
 			_CompileNativeExecutable;
 			_LinkNativeExecutable;
@@ -593,6 +594,26 @@
 			</ResolvedFileToPublish>
 		</ItemGroup>
 	</Target>
+
+	<Target Name="_StripAssemblyIL" Condition="'$(EnableAssemblyILStripping)' == 'true'" DependsOnTargets="ComputeFilesToPublish">
+		<PropertyGroup>
+			<_StrippedAssemblyDirectory>$(IntermediateOutputPath)\stripped</_StrippedAssemblyDirectory>
+		</PropertyGroup>
+		<MakeDir Directories="$(_StrippedAssemblyDirectory)" />
+		<ItemGroup>
+			<_AssembliesToBeStripped Include="@(ResolvedFileToPublish)" Condition=" $([System.String]::Copy('%(Identity)').EndsWith('dll')) ">
+				<OutputPath>$(_StrippedAssemblyDirectory)\%(Filename)%(Extension)</OutputPath>
+			</_AssembliesToBeStripped>
+			<_StrippedAssemblies Include="@(_AssembliesToBeStripped->'%(OutputPath)')" >
+			</_StrippedAssemblies>
+		</ItemGroup>
+		<ILStrip Assemblies="@(_AssembliesToBeStripped)" />
+		<ItemGroup>
+			<ResolvedFileToPublish Remove="@(_AssembliesToBeStripped)" />
+			<ResolvedFileToPublish Include="@(_StrippedAssemblies)" />
+		</ItemGroup>
+	</Target>
+
 
 	<Target Name="_LoadLinkerOutput" DependsOnTargets="ComputeFilesToPublish">
 		<!-- Load _MainFile -->
