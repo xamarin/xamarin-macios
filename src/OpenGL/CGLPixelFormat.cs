@@ -33,14 +33,14 @@ using Foundation;
 using System.Runtime.Versioning;
 
 namespace OpenGL {
-	#if !NET
-			[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' Framework instead.")]
-	#else
-			[UnsupportedOSPlatform ("macos10.14")]
-	#if MONOMAC
-			[Obsolete ("Starting with macos10.14 Use 'Metal' Framework instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-	#endif
-	#endif
+#if !NET
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' Framework instead.")]
+#else
+	[UnsupportedOSPlatform ("macos10.14")]
+#if MONOMAC
+	[Obsolete ("Starting with macos10.14 Use 'Metal' Framework instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 	public class CGLPixelFormat : INativeObject, IDisposable {
 		internal IntPtr handle;
 
