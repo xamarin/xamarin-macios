@@ -73,3 +73,12 @@
 !missing-pinvoke! AudioWorkIntervalCreate is not bound
 !missing-selector! AUAudioUnit::osWorkgroup not bound
 !missing-selector! AUAudioUnit::renderContextObserver not bound
+
+# ignored due to missing structs not yet implemented in CoreMidi
+!missing-pinvoke! MusicDeviceMIDIEventList is not bound
+!missing-selector! AUAudioUnit::MIDIOutputEventListBlock not bound
+!missing-selector! AUAudioUnit::setMIDIOutputEventListBlock: not bound
+!missing-selector! AUAudioUnit::scheduleMIDIEventListBlock not bound
+!missing-selector! AUAudioUnit::AudioUnitMIDIProtocol not bound
+!missing-selector! AUAudioUnit::hostMIDIProtocol not bound
+!missing-selector! AUAudioUnit::setHostMIDIProtocol: not bound

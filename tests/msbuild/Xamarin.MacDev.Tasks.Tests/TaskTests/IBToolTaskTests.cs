@@ -47,7 +47,6 @@ namespace Xamarin.iOS.Tasks
 				interfaceDefinitions.Add (new TaskItem (item));
 
 			var task = CreateTask<IBTool> ();
-			task.AppManifest = new TaskItem (Path.Combine (projectDir, "Info.plist"));
 			task.InterfaceDefinitions = interfaceDefinitions.ToArray ();
 			task.IntermediateOutputPath = intermediateOutputPath;
 			task.MinimumOSVersion = PDictionary.FromFile (Path.Combine (projectDir, "Info.plist")).GetMinimumOSVersion ();
