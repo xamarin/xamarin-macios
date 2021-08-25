@@ -4,6 +4,7 @@ using System;
 using System.Runtime.InteropServices;
 using Foundation;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 #if HAS_IAD && !XAMCORE_4_0
 using iAd;
 #endif
@@ -20,8 +21,13 @@ namespace MediaPlayer {
 		// note: we cannot reuse the same method name - as it would break compilation of existing apps
 #if !NET
 		[iOS (7,0)]
-#endif
 		[Obsoleted (PlatformName.iOS, 15,0, PlatformArchitecture.None, Constants.iAdRemoved)]
+#else
+		[UnsupportedOSPlatform ("ios15.0")]
+#if IOS
+		[Obsolete ("Starting with ios15.0 The iAd framework has been removed from iOS.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		static public void PrepareForPrerollAds ()
 		{
 		}
