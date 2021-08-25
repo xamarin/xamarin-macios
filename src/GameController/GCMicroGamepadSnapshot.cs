@@ -26,11 +26,11 @@ namespace GameController {
 	[UnsupportedOSPlatform ("tvos12.2")]
 	[UnsupportedOSPlatform ("macos10.14.4")]
 #if IOS
-	[Obsolete ("Starting with ios12.2 Use 'GCController.GetMicroGamepadController()' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+	[Obsolete ("Starting with ios12.2 use 'GCController.GetMicroGamepadController()' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif TVOS
-	[Obsolete ("Starting with tvos12.2 Use 'GCController.GetMicroGamepadController()' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+	[Obsolete ("Starting with tvos12.2 use 'GCController.GetMicroGamepadController()' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif MONOMAC
-	[Obsolete ("Starting with macos10.14.4 Use 'GCController.GetMicroGamepadController()' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+	[Obsolete ("Starting with macos10.14.4 use 'GCController.GetMicroGamepadController()' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 	public struct GCMicroGamepadSnapShotDataV100 {
@@ -57,11 +57,11 @@ namespace GameController {
 		[UnsupportedOSPlatform ("tvos13.0")]
 		[UnsupportedOSPlatform ("macos10.15")]
 #if IOS
-		[Obsolete ("Starting with ios13.0 Use 'GCController.GetMicroGamepadController()' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with ios13.0 use 'GCController.GetMicroGamepadController()' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif TVOS
-		[Obsolete ("Starting with tvos13.0 Use 'GCController.GetMicroGamepadController()' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with tvos13.0 use 'GCController.GetMicroGamepadController()' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif MONOMAC
-		[Obsolete ("Starting with macos10.15 Use 'GCController.GetMicroGamepadController()' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with macos10.15 use 'GCController.GetMicroGamepadController()' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 		[DllImport (Constants.GameControllerLibrary)]
@@ -86,11 +86,11 @@ namespace GameController {
 	[UnsupportedOSPlatform ("tvos13.0")]
 	[UnsupportedOSPlatform ("macos10.15")]
 #if IOS
-	[Obsolete ("Starting with ios13.0 Use 'GCController.GetMicroGamepadController()' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+	[Obsolete ("Starting with ios13.0 use 'GCController.GetMicroGamepadController()' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif TVOS
-	[Obsolete ("Starting with tvos13.0 Use 'GCController.GetMicroGamepadController()' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+	[Obsolete ("Starting with tvos13.0 use 'GCController.GetMicroGamepadController()' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif MONOMAC
-	[Obsolete ("Starting with macos10.15 Use 'GCController.GetMicroGamepadController()' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+	[Obsolete ("Starting with macos10.15 use 'GCController.GetMicroGamepadController()' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 	[StructLayout (LayoutKind.Sequential, Pack = 1)]
@@ -138,23 +138,23 @@ namespace GameController {
 	public partial class GCMicroGamepadSnapshot {
 
 		// GCGamepadSnapshot.h
-// #if !NET
-// 		// [Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'GCController.GetMicroGamepadController()' instead.")]
-// 		// [Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GCController.GetMicroGamepadController()' instead.")]
-// 		// [Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'GCController.GetMicroGamepadController()' instead.")]
-// #else
-// // Already provided by partial class in gamecontroller.cs
-// // 		[UnsupportedOSPlatform ("ios13.0")]
-// // 		[UnsupportedOSPlatform ("tvos13.0")]
-// // 		[UnsupportedOSPlatform ("macos10.15")]
-// #if IOS
-// 		[Obsolete ("Starting with ios13.0 Use 'GCController.GetMicroGamepadController()' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-// #elif TVOS
-// 		[Obsolete ("Starting with tvos13.0 Use 'GCController.GetMicroGamepadController()' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-// #elif MONOMAC
-// 		[Obsolete ("Starting with macos10.15 Use 'GCController.GetMicroGamepadController()' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-// #endif
-// #endif
+#if !NET
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'GCController.GetMicroGamepadController()' instead.")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GCController.GetMicroGamepadController()' instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'GCController.GetMicroGamepadController()' instead.")]
+#else
+// Already provided by partial class in gamecontroller.cs
+// 		[UnsupportedOSPlatform ("ios13.0")]
+// 		[UnsupportedOSPlatform ("tvos13.0")]
+// 		[UnsupportedOSPlatform ("macos10.15")]
+#if IOS
+		[Obsolete ("Starting with ios13.0 use 'GCController.GetMicroGamepadController()' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos13.0 use 'GCController.GetMicroGamepadController()' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+		[Obsolete ("Starting with macos10.15 use 'GCController.GetMicroGamepadController()' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		[DllImport (Constants.GameControllerLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool GCMicroGamepadSnapShotDataV100FromNSData (out GCMicroGamepadSnapShotDataV100 snapshotData, /* NSData */ IntPtr data);
@@ -168,11 +168,11 @@ namespace GameController {
 		[UnsupportedOSPlatform ("tvos12.2")]
 		[UnsupportedOSPlatform ("macos10.14.4")]
 #if IOS
-		[Obsolete ("Starting with ios12.2 Use 'TryGetSnapshotData (NSData, out GCMicroGamepadSnapshotData)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with ios12.2 use 'TryGetSnapshotData (NSData, out GCMicroGamepadSnapshotData)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif TVOS
-		[Obsolete ("Starting with tvos12.2 Use 'TryGetSnapshotData (NSData, out GCMicroGamepadSnapshotData)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with tvos12.2 use 'TryGetSnapshotData (NSData, out GCMicroGamepadSnapshotData)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif MONOMAC
-		[Obsolete ("Starting with macos10.14.4 Use 'TryGetSnapshotData (NSData, out GCMicroGamepadSnapshotData)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with macos10.14.4 use 'TryGetSnapshotData (NSData, out GCMicroGamepadSnapshotData)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 		public static bool TryGetSnapshotData (NSData data, out GCMicroGamepadSnapShotDataV100 snapshotData)
@@ -190,11 +190,11 @@ namespace GameController {
 // 		[UnsupportedOSPlatform ("tvos13.0")]
 // 		[UnsupportedOSPlatform ("macos10.15")]
 #if IOS
-		[Obsolete ("Starting with ios13.0 Use 'GCController.GetMicroGamepadController()' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with ios13.0 use 'GCController.GetMicroGamepadController()' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif TVOS
-		[Obsolete ("Starting with tvos13.0 Use 'GCController.GetMicroGamepadController()' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with tvos13.0 use 'GCController.GetMicroGamepadController()' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif MONOMAC
-		[Obsolete ("Starting with macos10.15 Use 'GCController.GetMicroGamepadController()' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with macos10.15 use 'GCController.GetMicroGamepadController()' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 		[DllImport (Constants.GameControllerLibrary)]
