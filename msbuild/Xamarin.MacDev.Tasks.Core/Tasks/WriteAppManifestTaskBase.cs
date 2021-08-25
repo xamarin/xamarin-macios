@@ -15,7 +15,8 @@ namespace Xamarin.MacDev.Tasks
 		#region Inputs
 
 		[Required]
-		public string? AppBundleManifest { get; set; }
+		[Output] // This is required so that the file is created on Windows in a remote build.
+		public ITaskItem? AppBundleManifest { get; set; }
 
 		[Required]
 		public ITaskItem[]? AppManifests { get; set; }
@@ -42,8 +43,9 @@ namespace Xamarin.MacDev.Tasks
 			plist.Remove (ManifestKeys.XSAppIconAssets);
 
 			// write the resulting app manifest
-			Directory.CreateDirectory (Path.GetDirectoryName (AppBundleManifest));
-			plist.Save (AppBundleManifest, true, true);
+			var appBundleManifestPath = AppBundleManifest!.ItemSpec;
+			Directory.CreateDirectory (Path.GetDirectoryName (appBundleManifestPath));
+			plist.Save (appBundleManifestPath, true, true);
 
 			return !Log.HasLoggedErrors;
 		}
