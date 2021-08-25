@@ -310,7 +310,7 @@ namespace AVFoundation {
 #if !NET
 	[NoTV, MacCatalyst (15,0)]
 #else
-	[UnsupportedOSPlatform ("tvos"), SupportedOSPlatform ("ios"), SupportedOSPlatform ("macos"), SupportedOSPlatform ("maccatalyst15.0")]
+	[UnsupportedOSPlatform ("tvos"), SupportedOSPlatform ("maccatalyst15.0")]
 #endif
 	[Native]
 	// NSInteger - AVCaptureDevice.h
@@ -321,7 +321,7 @@ namespace AVFoundation {
 #if !NET
 	[NoTV, NoWatch, MacCatalyst (15,0)]
 #else
-	[UnsupportedOSPlatform ("tvos"), SupportedOSPlatform ("ios"), SupportedOSPlatform ("macos"), SupportedOSPlatform ("maccatalyst15.0")]
+	[UnsupportedOSPlatform ("tvos"), SupportedOSPlatform ("maccatalyst15.0")]
 #endif
 	[Native]
 	// NSInteger - AVCaptureSession.h
