@@ -780,7 +780,7 @@ namespace Xharness {
 		int Jenkins ()
 		{
 			if (autoConf) {
-				//AutoConfigureDotNet ();
+				AutoConfigureDotNet ();
 				AutoConfigureIOS ();
 				AutoConfigureMac (false);
 			}
