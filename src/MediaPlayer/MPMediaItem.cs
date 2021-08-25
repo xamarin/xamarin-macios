@@ -266,7 +266,6 @@ namespace MediaPlayer {
 			}
 		}
 		
-
 #if !NET
 		[iOS (9,2)]
 #endif

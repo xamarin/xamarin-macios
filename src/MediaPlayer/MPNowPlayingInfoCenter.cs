@@ -18,7 +18,7 @@ using System.Runtime.Versioning;
 namespace MediaPlayer {
 
 #if !NET
-		[Mac (10,12,2)]
+	[Mac (10,12,2)]
 #endif
 	public class MPNowPlayingInfo {
 		public MPNowPlayingInfo ()
