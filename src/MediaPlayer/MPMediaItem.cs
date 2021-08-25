@@ -293,6 +293,7 @@ namespace MediaPlayer {
 				return (ValueForProperty (DateAddedProperty) as NSDate);
 			}
 		}
+
 #if !NET
 		[iOS (10,3)]
 #else
