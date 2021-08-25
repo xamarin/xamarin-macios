@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 #if !COREBUILD
 using OpenTK;
 #endif
-
+using System.Runtime.Versioning;
 using CoreGraphics;
 using ObjCRuntime;
 
