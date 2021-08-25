@@ -53,11 +53,11 @@ namespace Security {
 		[UnsupportedOSPlatform ("tvos13.0")]
 		[UnsupportedOSPlatform ("macos10.15")]
 #if IOS
-		[Obsolete ("Starting with ios13.0 Use 'AddTlsCipherSuite (TlsCipherSuite)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with ios13.0 use 'AddTlsCipherSuite (TlsCipherSuite)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif TVOS
-		[Obsolete ("Starting with tvos13.0 Use 'AddTlsCipherSuite (TlsCipherSuite)' instead.' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with tvos13.0 use 'AddTlsCipherSuite (TlsCipherSuite)' instead.' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif MONOMAC
-		[Obsolete ("Starting with macos10.15 Use 'AddTlsCipherSuite (TlsCipherSuite)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with macos10.15 use 'AddTlsCipherSuite (TlsCipherSuite)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 		[DllImport (Constants.SecurityLibrary)]
@@ -75,11 +75,11 @@ namespace Security {
 		[UnsupportedOSPlatform ("macos10.15")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #if IOS
-		[Obsolete ("Starting with ios13.0 Use 'AddTlsCipherSuite (TlsCipherSuite)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with ios13.0 use 'AddTlsCipherSuite (TlsCipherSuite)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif TVOS
-		[Obsolete ("Starting with tvos13.0 Use 'AddTlsCipherSuite (TlsCipherSuite)' instead.' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with tvos13.0 use 'AddTlsCipherSuite (TlsCipherSuite)' instead.' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif MONOMAC
-		[Obsolete ("Starting with macos10.15 Use 'AddTlsCipherSuite (TlsCipherSuite)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with macos10.15 use 'AddTlsCipherSuite (TlsCipherSuite)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 		public void AddTlsCipherSuite (SslCipherSuite cipherSuite) => sec_protocol_options_add_tls_ciphersuite (GetCheckedHandle (), cipherSuite);
@@ -113,11 +113,11 @@ namespace Security {
 		[UnsupportedOSPlatform ("tvos13.0")]
 		[UnsupportedOSPlatform ("macos10.15")]
 #if IOS
-		[Obsolete ("Starting with ios13.0 Use 'AddTlsCipherSuiteGroup (TlsCipherSuiteGroup)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with ios13.0 use 'AddTlsCipherSuiteGroup (TlsCipherSuiteGroup)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif TVOS
-		[Obsolete ("Starting with tvos13.0 Use 'AddTlsCipherSuiteGroup (TlsCipherSuiteGroup)' instead.' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with tvos13.0 use 'AddTlsCipherSuiteGroup (TlsCipherSuiteGroup)' instead.' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif MONOMAC
-		[Obsolete ("Starting with macos10.15 Use 'AddTlsCipherSuiteGroup (TlsCipherSuiteGroup)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with macos10.15 use 'AddTlsCipherSuiteGroup (TlsCipherSuiteGroup)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 		[DllImport (Constants.SecurityLibrary)]
@@ -133,11 +133,11 @@ namespace Security {
 		[UnsupportedOSPlatform ("tvos13.0")]
 		[UnsupportedOSPlatform ("macos10.15")]
 #if IOS
-		[Obsolete ("Starting with ios13.0 Use 'AddTlsCipherSuiteGroup (TlsCipherSuiteGroup)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with ios13.0 use 'AddTlsCipherSuiteGroup (TlsCipherSuiteGroup)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif TVOS
-		[Obsolete ("Starting with tvos13.0 Use 'AddTlsCipherSuiteGroup (TlsCipherSuiteGroup)' instead.' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with tvos13.0 use 'AddTlsCipherSuiteGroup (TlsCipherSuiteGroup)' instead.' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif MONOMAC
-		[Obsolete ("Starting with macos10.15 Use 'AddTlsCipherSuiteGroup (TlsCipherSuiteGroup)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with macos10.15 use 'AddTlsCipherSuiteGroup (TlsCipherSuiteGroup)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 		public void AddTlsCipherSuiteGroup (SslCipherSuiteGroup cipherSuiteGroup) => sec_protocol_options_add_tls_ciphersuite_group (GetCheckedHandle (), cipherSuiteGroup);
@@ -171,11 +171,11 @@ namespace Security {
 		[UnsupportedOSPlatform ("tvos13.0")]
 		[UnsupportedOSPlatform ("macos10.15")]
 #if IOS
-		[Obsolete ("Starting with ios13.0 Use 'SetTlsMinVersion (TlsProtocolVersion)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with ios13.0 use 'SetTlsMinVersion (TlsProtocolVersion)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif TVOS
-		[Obsolete ("Starting with tvos13.0 Use 'SetTlsMinVersion (TlsProtocolVersion)' instead.' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with tvos13.0 use 'SetTlsMinVersion (TlsProtocolVersion)' instead.' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif MONOMAC
-		[Obsolete ("Starting with macos10.15 Use 'SetTlsMinVersion (TlsProtocolVersion)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with macos10.15 use 'SetTlsMinVersion (TlsProtocolVersion)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 		[DllImport (Constants.SecurityLibrary)]
@@ -193,11 +193,11 @@ namespace Security {
 		[UnsupportedOSPlatform ("macos10.15")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #if IOS
-		[Obsolete ("Starting with ios13.0 Use 'SetTlsMinVersion (TlsProtocolVersion)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with ios13.0 use 'SetTlsMinVersion (TlsProtocolVersion)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif TVOS
-		[Obsolete ("Starting with tvos13.0 Use 'SetTlsMinVersion (TlsProtocolVersion)' instead.' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with tvos13.0 use 'SetTlsMinVersion (TlsProtocolVersion)' instead.' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif MONOMAC
-		[Obsolete ("Starting with macos10.15 Use 'SetTlsMinVersion (TlsProtocolVersion)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with macos10.15 use 'SetTlsMinVersion (TlsProtocolVersion)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 		public void SetTlsMinVersion (SslProtocol protocol) => sec_protocol_options_set_tls_min_version (GetCheckedHandle (), protocol);
@@ -231,11 +231,11 @@ namespace Security {
 		[UnsupportedOSPlatform ("tvos13.0")]
 		[UnsupportedOSPlatform ("macos10.15")]
 #if IOS
-		[Obsolete ("Starting with ios13.0 Use 'SetTlsMaxVersion (TlsProtocolVersion)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with ios13.0 use 'SetTlsMaxVersion (TlsProtocolVersion)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif TVOS
-		[Obsolete ("Starting with tvos13.0 Use 'SetTlsMaxVersion (TlsProtocolVersion)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with tvos13.0 use 'SetTlsMaxVersion (TlsProtocolVersion)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif MONOMAC
-		[Obsolete ("Starting with macos10.15 Use 'SetTlsMaxVersion (TlsProtocolVersion)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with macos10.15 use 'SetTlsMaxVersion (TlsProtocolVersion)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 		[DllImport (Constants.SecurityLibrary)]
@@ -253,11 +253,11 @@ namespace Security {
 		[UnsupportedOSPlatform ("macos10.15")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #if IOS
-		[Obsolete ("Starting with ios13.0 Use 'SetTlsMaxVersion (TlsProtocolVersion)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with ios13.0 use 'SetTlsMaxVersion (TlsProtocolVersion)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif TVOS
-		[Obsolete ("Starting with tvos13.0 Use 'SetTlsMaxVersion (TlsProtocolVersion)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with tvos13.0 use 'SetTlsMaxVersion (TlsProtocolVersion)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif MONOMAC
-		[Obsolete ("Starting with macos10.15 Use 'SetTlsMaxVersion (TlsProtocolVersion)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with macos10.15 use 'SetTlsMaxVersion (TlsProtocolVersion)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 		public void SetTlsMaxVersion (SslProtocol protocol) => sec_protocol_options_set_tls_max_version (GetCheckedHandle (), protocol);
@@ -388,11 +388,11 @@ namespace Security {
 		[UnsupportedOSPlatform ("tvos13.0")]
 		[UnsupportedOSPlatform ("macos10.15")]
 #if IOS
-		[Obsolete ("Starting with ios13.0 Use non-DHE cipher suites instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with ios13.0 use non-DHE cipher suites instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif TVOS
-		[Obsolete ("Starting with tvos13.0 Use non-DHE cipher suites instead.' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with tvos13.0 use non-DHE cipher suites instead.' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif MONOMAC
-		[Obsolete ("Starting with macos10.15 Use non-DHE cipher suites instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with macos10.15 use non-DHE cipher suites instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 		[DllImport (Constants.SecurityLibrary)]
@@ -408,11 +408,11 @@ namespace Security {
 		[UnsupportedOSPlatform ("tvos13.0")]
 		[UnsupportedOSPlatform ("macos10.15")]
 #if IOS
-		[Obsolete ("Starting with ios13.0 Use non-DHE cipher suites instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with ios13.0 use non-DHE cipher suites instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif TVOS
-		[Obsolete ("Starting with tvos13.0 Use non-DHE cipher suites instead.' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with tvos13.0 use non-DHE cipher suites instead.' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif MONOMAC
-		[Obsolete ("Starting with macos10.15 Use non-DHE cipher suites instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with macos10.15 use non-DHE cipher suites instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 		public void SetTlsDiffieHellmanParameters (DispatchData parameters)
