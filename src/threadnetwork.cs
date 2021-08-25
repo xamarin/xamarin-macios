@@ -44,7 +44,7 @@ namespace ThreadNetwork {
 		string NetworkName { get; }
 
 		[NullAllowed, Export ("extendedPANID")]
-		NSData ExtendedPanid { get; }
+		NSData ExtendedPanId { get; }
 
 		[NullAllowed, Export ("borderAgentID")]
 		NSData BorderAgentId { get; }
