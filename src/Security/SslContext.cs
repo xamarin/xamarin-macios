@@ -30,11 +30,11 @@ namespace Security {
 	[UnsupportedOSPlatform ("tvos13.0")]
 	[UnsupportedOSPlatform ("macos10.15")]
 #if IOS
-	[Obsolete ("Starting with ios13.0 Use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+	[Obsolete ("Starting with ios13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif TVOS
-	[Obsolete ("Starting with tvos13.0 Use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+	[Obsolete ("Starting with tvos13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif MONOMAC
-	[Obsolete ("Starting with macos10.15 Use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+	[Obsolete ("Starting with macos10.15 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 	public class SslContext : INativeObject, IDisposable {
@@ -513,15 +513,15 @@ namespace Security {
 
 		[DllImport (Constants.SecurityLibrary)]
 #if !NET
-		[Deprecated (PlatformName.iOS, 9, 0)]
+		[Deprecated (PlatformName.iOS, 9, 0, message: "The use of different RSA certificates for signing and encryption is no longer allowed.")]
 		[Deprecated (PlatformName.MacOSX, 10, 11)]
 #else
 		[UnsupportedOSPlatform ("ios9.0")]
 		[UnsupportedOSPlatform ("macos10.11")]
 #if IOS
-		[Obsolete ("Starting with ios9.0 ", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with ios9.0 the use of different RSA certificates for signing and encryption is no longer allowed.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif MONOMAC
-		[Obsolete ("Starting with macos10.11 ", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with macos10.11 the use of different RSA certificates for signing and encryption is no longer allowed.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 		extern unsafe static /* OSStatus */ SslStatus SSLSetEncryptionCertificate (/* SSLContextRef */ IntPtr context, /* CFArrayRef */ IntPtr certRefs);
@@ -533,9 +533,9 @@ namespace Security {
 		[UnsupportedOSPlatform ("ios9.0")]
 		[UnsupportedOSPlatform ("macos10.11")]
 #if IOS
-		[Obsolete ("Starting with ios9.0 Export ciphers are not available anymore.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with ios9.0 export ciphers are not available anymore.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif MONOMAC
-		[Obsolete ("Starting with macos10.11 Export ciphers are not available anymore.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with macos10.11 export ciphers are not available anymore.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 		public SslStatus SetEncryptionCertificate (SecIdentity identify, IEnumerable<SecCertificate> certificates)

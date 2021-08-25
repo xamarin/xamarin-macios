@@ -149,11 +149,11 @@ namespace Security {
 		[UnsupportedOSPlatform ("tvos13.0")]
 		[UnsupportedOSPlatform ("macos10.15")]
 #if IOS
-		[Obsolete ("Starting with ios13.0 Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with ios13.0 use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif TVOS
-		[Obsolete ("Starting with tvos13.0 Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with tvos13.0 use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif MONOMAC
-		[Obsolete ("Starting with macos10.15 Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with macos10.15 use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 		[DllImport (Constants.SecurityLibrary)]
@@ -185,11 +185,11 @@ namespace Security {
 		[UnsupportedOSPlatform ("tvos13.0")]
 		[UnsupportedOSPlatform ("macos10.15")]
 #if IOS
-		[Obsolete ("Starting with ios13.0 Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with ios13.0 use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif TVOS
-		[Obsolete ("Starting with tvos13.0 Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with tvos13.0 use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif MONOMAC
-		[Obsolete ("Starting with macos10.15 Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with macos10.15 use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 		// not always async (so suffix is removed)
