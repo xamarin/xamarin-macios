@@ -347,7 +347,6 @@
 !missing-pinvoke! CFArrayGetCountOfValue is not bound
 !missing-pinvoke! CFArrayGetFirstIndexOfValue is not bound
 !missing-pinvoke! CFArrayGetLastIndexOfValue is not bound
-!missing-pinvoke! CFArrayGetValues is not bound
 !missing-pinvoke! CFArrayInsertValueAtIndex is not bound
 !missing-pinvoke! CFArrayRemoveAllValues is not bound
 !missing-pinvoke! CFArrayRemoveValueAtIndex is not bound
