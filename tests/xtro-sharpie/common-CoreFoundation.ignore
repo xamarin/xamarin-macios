@@ -5,6 +5,8 @@
 !missing-field! kCFURLFileProtectionKey not bound
 !missing-field! kCFURLFileProtectionNone not bound
 !missing-field! kCFURLVolumeSupportsFileProtectionKey not bound
+!missing-field! kCFURLVolumeAvailableCapacityForImportantUsageKey not bound
+!missing-field! kCFURLVolumeAvailableCapacityForOpportunisticUsageKey not bound
 
 
 
@@ -981,6 +983,7 @@
 !unknown-pinvoke! dispatch_write bound
 !unknown-pinvoke! open bound
 !unknown-pinvoke! write bound
+!unknown-pinvoke! uname bound
 !missing-field! kCFStreamErrorDomainSOCKS not bound
 !missing-field! kCFStreamErrorDomainSSL not bound
 !missing-field! kCFStreamPropertyShouldCloseNativeSocket not bound
