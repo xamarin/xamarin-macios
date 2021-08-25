@@ -52,6 +52,10 @@ namespace Xharness.Jenkins.TestTasks {
 				return;
 			}
 
+			Harness.HarnessLog.WriteLine ($"Executing {executingTasks.Count ()} aggregated simulator tasks for {TestName} Mode: {Mode} Variation: {Variation} ExecutionResult: {ExecutionResult} ");
+			foreach (var test in executingTasks)
+				Harness.HarnessLog.WriteLine ($"    {test.TestName} Mode: {test.Mode} Variation: {test.Variation} ExecutionResult: {test.ExecutionResult}");
+
 			using (var desktop = await NotifyBlockingWaitAsync (ResourceManager.DesktopResource.AcquireExclusiveAsync ())) {
 				run_timer.Start ();
 
