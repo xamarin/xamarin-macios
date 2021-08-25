@@ -1,10 +1,13 @@
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using ObjCRuntime;
 
 namespace AudioUnit
 {
+#if !NET
 	[iOS (9,0), Mac(10,11)]
+#endif
 	public partial class AUParameter
 	{
 		public string GetString (float? value)
