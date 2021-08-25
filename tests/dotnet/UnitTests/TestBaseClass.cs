@@ -17,8 +17,7 @@ namespace Xamarin.Tests {
 	[TestFixture]
 	public abstract class TestBaseClass {
 		protected Dictionary<string, string> verbosity = new Dictionary<string, string> {
-			{ "MtouchExtraArgs", "-v" },
-			{ "MonoBundlingExtraArgs", "-v" },
+			{ "_BundlerVerbosity", "1" },
 		};
 
 		protected Dictionary<string, string> GetDefaultProperties (string? runtimeIdentifiers)
