@@ -415,6 +415,7 @@ namespace AudioUnit
 		[MacCatalyst (14,0)]
 #else
 		[UnsupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst14.0")]
 #endif
 		[DllImport(Constants.AudioUnitLibrary)]
 		static extern double AudioComponentGetLastActiveTime (IntPtr comp);
@@ -424,6 +425,7 @@ namespace AudioUnit
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'AudioUnit' instead.")]
 		[MacCatalyst (14,0)][Deprecated (PlatformName.MacCatalyst, 14,0, message: "Use 'AudioUnit' instead.")]
 #else
+		[SupportedOSPlatform ("maccatalyst14.0")]
 		[UnsupportedOSPlatform ("ios13.0")]
 		[UnsupportedOSPlatform ("maccatalyst14.0")]
 #if IOS
