@@ -25,7 +25,7 @@ namespace MediaPlayer {
 #else
 		[UnsupportedOSPlatform ("ios11.3")]
 #if IOS
-		[Obsolete ("Starting with ios11.3 Use 'MPVolumeView' to present volume controls.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with ios11.3 use 'MPVolumeView' to present volume controls.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 		[DllImport (Constants.MediaPlayerLibrary, EntryPoint="MPVolumeSettingsAlertShow")]
@@ -36,7 +36,7 @@ namespace MediaPlayer {
 #else
 		[UnsupportedOSPlatform ("ios11.3")]
 #if IOS
-		[Obsolete ("Starting with ios11.3 Use 'MPVolumeView' to present volume controls.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with ios11.3 use 'MPVolumeView' to present volume controls.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 		[DllImport (Constants.MediaPlayerLibrary, EntryPoint="MPVolumeSettingsAlertHide")]
@@ -48,7 +48,7 @@ namespace MediaPlayer {
 #else
 		[UnsupportedOSPlatform ("ios11.3")]
 #if IOS
-		[Obsolete ("Starting with ios11.3 Use 'MPVolumeView' to present volume controls.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with ios11.3 use 'MPVolumeView' to present volume controls.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 		[DllImport (Constants.MediaPlayerLibrary, EntryPoint="MPVolumeSettingsAlertIsVisible")]

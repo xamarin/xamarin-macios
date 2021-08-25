@@ -25,7 +25,7 @@ namespace MediaPlayer {
 #else
 		[UnsupportedOSPlatform ("ios15.0")]
 #if IOS
-		[Obsolete ("Starting with ios15.0 The iAd framework has been removed from iOS.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with ios15.0 the iAd framework has been removed from iOS.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 		static public void PrepareForPrerollAds ()
