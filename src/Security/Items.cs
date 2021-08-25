@@ -63,9 +63,9 @@ namespace Security {
 		[UnsupportedOSPlatform ("ios12.0")]
 		[UnsupportedOSPlatform ("macos10.14")]
 #if IOS
-		[Obsolete ("Starting with ios12.0 Use 'AfterFirstUnlock' or a better suited option instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with ios12.0 use 'AfterFirstUnlock' or a better suited option instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif MONOMAC
-		[Obsolete ("Starting with macos10.14 Use 'AfterFirstUnlock' or a better suited option instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with macos10.14 use 'AfterFirstUnlock' or a better suited option instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 		Always,
@@ -78,9 +78,9 @@ namespace Security {
 		[UnsupportedOSPlatform ("ios12.0")]
 		[UnsupportedOSPlatform ("macos10.14")]
 #if IOS
-		[Obsolete ("Starting with ios12.0 Use 'AfterFirstUnlock' or a better suited option instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with ios12.0 use 'AfterFirstUnlock' or a better suited option instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif MONOMAC
-		[Obsolete ("Starting with macos10.14 Use 'AfterFirstUnlock' or a better suited option instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with macos10.14 use 'AfterFirstUnlock' or a better suited option instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 		AlwaysThisDeviceOnly,
@@ -984,7 +984,7 @@ namespace Security {
 #else
 		[UnsupportedOSPlatform ("ios9.0")]
 #if IOS
-		[Obsolete ("Starting with ios9.0 Use 'AuthenticationUI' property instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with ios9.0 use 'AuthenticationUI' property instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 		public bool UseNoAuthenticationUI {

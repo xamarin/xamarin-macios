@@ -241,7 +241,7 @@ namespace Security {
 #else
 		[UnsupportedOSPlatform ("macos10.14")]
 #if MONOMAC
-		[Obsolete ("Starting with macos10.14 Use 'GetKey' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with macos10.14 use 'GetKey' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 		public NSData GetPublicKey ()
@@ -285,9 +285,9 @@ namespace Security {
 		[UnsupportedOSPlatform ("ios12.0")]
 		[UnsupportedOSPlatform ("tvos12.0")]
 #if IOS
-		[Obsolete ("Starting with ios12.0 Use 'SecCertificateCopyKey' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with ios12.0 use 'SecCertificateCopyKey' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif TVOS
-		[Obsolete ("Starting with tvos12.0 Use 'SecCertificateCopyKey' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with tvos12.0 use 'SecCertificateCopyKey' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 		[DllImport (Constants.SecurityLibrary)]
@@ -308,9 +308,9 @@ namespace Security {
 		[UnsupportedOSPlatform ("ios12.0")]
 		[UnsupportedOSPlatform ("tvos12.0")]
 #if IOS
-		[Obsolete ("Starting with ios12.0 Use 'GetKey' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with ios12.0 use 'GetKey' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif TVOS
-		[Obsolete ("Starting with tvos12.0 Use 'GetKey' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with tvos12.0 use 'GetKey' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 		public SecKey GetPublicKey ()
@@ -463,7 +463,7 @@ namespace Security {
 #else
 		[UnsupportedOSPlatform ("macos.10.13")]
 #if MONOMAC
-		[Obsolete ("Starting with macos.10.13 Use 'SecCertificateCopySerialNumberData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with macos.10.13 use 'SecCertificateCopySerialNumberData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 		static extern /* __nullable CFDataRef */ IntPtr SecCertificateCopySerialNumber (IntPtr /* SecCertificateRef */ certificate, IntPtr /* CFErrorRef * */ error);
@@ -483,11 +483,11 @@ namespace Security {
 		[UnsupportedOSPlatform ("tvos11.0")]
 		[UnsupportedOSPlatform ("macos10.13")]
 #if IOS
-		[Obsolete ("Starting with ios11.0 Use 'SecCertificateCopySerialNumberData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with ios11.0 use 'SecCertificateCopySerialNumberData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif TVOS
-		[Obsolete ("Starting with tvos11.0 Use 'SecCertificateCopySerialNumberData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with tvos11.0 use 'SecCertificateCopySerialNumberData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif MONOMAC
-		[Obsolete ("Starting with macos10.13 Use 'SecCertificateCopySerialNumberData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with macos10.13 use 'SecCertificateCopySerialNumberData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 		[DllImport (Constants.SecurityLibrary)]
@@ -508,11 +508,11 @@ namespace Security {
 		[UnsupportedOSPlatform ("tvos11.0")]
 		[UnsupportedOSPlatform ("macos10.13")]
 #if IOS
-		[Obsolete ("Starting with ios11.0 Use 'GetSerialNumber(out NSError)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with ios11.0 use 'GetSerialNumber(out NSError)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif TVOS
-		[Obsolete ("Starting with tvos11.0 Use 'GetSerialNumber(out NSError)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with tvos11.0 use 'GetSerialNumber(out NSError)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif MONOMAC
-		[Obsolete ("Starting with macos10.13 Use 'GetSerialNumber(out NSError)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with macos10.13 use 'GetSerialNumber(out NSError)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 		public NSData GetSerialNumber ()
