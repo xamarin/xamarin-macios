@@ -48,11 +48,6 @@ included by default (as `CoreMLModel` items).
 All \*.metal files anywhere in the project directory or any subdirectory are
 included by default (as `Metal` items).
 
-## SceneKit Assets
-
-All \*.scnassets directories anywhere in the project directory or any
-subdirectory are included by default (as `SceneKitAsset` items).
-
 ## Binding projects
 
 Default compilation includes is turned off for binding projects, because

@@ -286,7 +286,6 @@ public class MarshalInfo {
 	public bool PlainString;
 	public Type Type;
 	public bool IsOut;
-	public EnumMode EnumMode;
 
  	// This is set on a string parameter if the argument parameters are set to
  	// Copy.   This means that we can do fast string passing.
@@ -812,10 +811,6 @@ public class NamespaceManager
 	}
 }
 
-public enum EnumMode {
-	Compat, Bit32, Bit64, NativeBits
-}
-
 public partial class Frameworks {
 	HashSet<string> frameworks;
 	readonly PlatformName CurrentPlatform;
@@ -1057,8 +1052,8 @@ public partial class Generator : IMemberGatherer {
 	//
 	// Helpers
 	//
-	string MakeSig (MethodInfo mi, bool stret, bool aligned = false, EnumMode enum_mode = EnumMode.Compat ) { return MakeSig ("objc_msgSend", stret, mi, aligned, enum_mode); }
-	string MakeSuperSig (MethodInfo mi, bool stret, bool aligned = false, EnumMode enum_mode = EnumMode.Compat) { return MakeSig ("objc_msgSendSuper", stret, mi, aligned, enum_mode); }
+	string MakeSig (MethodInfo mi, bool stret, bool aligned = false ) { return MakeSig ("objc_msgSend", stret, mi, aligned); }
+	string MakeSuperSig (MethodInfo mi, bool stret, bool aligned = false) { return MakeSig ("objc_msgSendSuper", stret, mi, aligned); }
 
 	public IEnumerable<string> GeneratedFiles {
 		get {
@@ -1090,7 +1085,7 @@ public partial class Generator : IMemberGatherer {
 		return type.IsInterface;
 	}
 
-	public string PrimitiveType (Type t, bool formatted = false, EnumMode enum_mode = EnumMode.Compat)
+	public string PrimitiveType (Type t, bool formatted = false)
 	{
 		if (t == TypeManager.System_Void)
 			return "void";
@@ -1100,23 +1095,8 @@ public partial class Generator : IMemberGatherer {
 
 			t = TypeManager.GetUnderlyingEnumType (t);
 
-			if (AttributeManager.HasAttribute<NativeAttribute> (enumType)) {
-				if (t != TypeManager.System_Int64 && t != TypeManager.System_UInt64)
-					throw new BindingException (1026, true,
-					    enumType.FullName, "NativeAttribute");
-
-				if (enum_mode == EnumMode.Bit32) {
-					if (t == TypeManager.System_Int64) {
-						t = TypeManager.System_Int32;
-					} else if (t == TypeManager.System_UInt64) {
-						t = TypeManager.System_UInt32;
-					}
-				} else if (enum_mode == EnumMode.Bit64) {
-					// Nothing to do
-				} else {
-					throw new BindingException (1029, t.FullName);
-				}
-			}
+			if (IsNativeEnum (enumType, out var _, out var nativeType))
+				return nativeType;
 		}
 
 		if (t == TypeManager.System_Int32)
@@ -1166,7 +1146,7 @@ public partial class Generator : IMemberGatherer {
 			return "IntPtr";
 
 		if (mai.Type.IsEnum)
-			return PrimitiveType (mai.Type, formatted, mai.EnumMode);
+			return PrimitiveType (mai.Type, formatted);
 
 		if (IsWrappedType (mai.Type))
 			return mai.Type.IsByRef ? "ref IntPtr" : "IntPtr";
@@ -1638,9 +1618,9 @@ public partial class Generator : IMemberGatherer {
 		} else if (mi.ReturnType == TypeManager.System_String) {
 			returntype = "IntPtr";
 			returnformat = "return NSString.CreateNative ({0}, true);";
-		} else if (IsNativeEnum (mi.ReturnType)) {
-			returntype = "IntPtr";
-			returnformat = "return (IntPtr) {0};";
+		} else if (GetNativeEnumToNativeExpression (mi.ReturnType, out var preExpression, out var postExpression, out var nativeType)) {
+			returntype = nativeType;
+			returnformat = "return " + preExpression+ "{0}" + postExpression + ";";
 		} else {
 			returntype = FormatType (mi.DeclaringType, mi.ReturnType);
 		}
@@ -1734,10 +1714,9 @@ public partial class Generator : IMemberGatherer {
 					invoke.Append (refname);
 					continue;
 				}
-			} else if (IsNativeEnum (pi.ParameterType)) {
-				Type underlyingEnumType = TypeManager.GetUnderlyingEnumType (pi.ParameterType);
-				pars.AppendFormat ("{0} {1}", GetNativeEnumType (pi.ParameterType), safe_name);
-				invoke.AppendFormat ("({1}) ({2}) {0}", safe_name, FormatType (null, pi.ParameterType), FormatType (null, underlyingEnumType));
+			} else if (GetNativeEnumToManagedExpression (pi.ParameterType, out var preExpression, out var postExpression, out var nativeType)) {
+				pars.AppendFormat ("{0} {1}", nativeType, safe_name);
+				invoke.Append (preExpression).Append (safe_name).Append (postExpression);
 				continue;
 			} else if (pi.ParameterType.IsValueType){
 				pars.AppendFormat ("{0} {1}", FormatType (null, pi.ParameterType), safe_name);
@@ -1817,7 +1796,7 @@ public partial class Generator : IMemberGatherer {
 	// Returns the actual way in which the type t must be marshalled
 	// for example "UIView foo" is generated as  "foo.Handle"
 	//
-	public string MarshalParameter (MethodInfo mi, ParameterInfo pi, bool null_allowed_override, EnumMode enum_mode, PropertyInfo propInfo = null)
+	public string MarshalParameter (MethodInfo mi, ParameterInfo pi, bool null_allowed_override, PropertyInfo propInfo = null, bool castEnum = true)
 	{
 		if (pi.ParameterType.IsByRef && pi.ParameterType.GetElementType ().IsValueType == false){
 			return "ref " + pi.Name + "Value";
@@ -1832,13 +1811,13 @@ public partial class Generator : IMemberGatherer {
 
 		if (IsWrappedType (pi.ParameterType))
 			return safe_name + "__handle__";
-		
-		if (enum_mode != EnumMode.Compat && enum_mode != EnumMode.NativeBits && pi.ParameterType.IsEnum)
-			return "(" + PrimitiveType (pi.ParameterType, enum_mode: enum_mode) + ")" + safe_name;
 
-		if (enum_mode == EnumMode.NativeBits && IsNativeEnum (pi.ParameterType))
-			return "(" + GetNativeEnumType (pi.ParameterType) + ") (" + PrimitiveType (TypeManager.GetUnderlyingEnumType (pi.ParameterType)) + ") " + safe_name;
-		
+		if (GetNativeEnumToNativeExpression (pi.ParameterType, out var preExpression, out var postExpression, out var nativeType))
+			return preExpression + safe_name + postExpression;
+
+		if (castEnum && pi.ParameterType.IsEnum)
+			return "(" + PrimitiveType (pi.ParameterType) + ")" + safe_name;
+
 		if (IsNativeType (pi.ParameterType))
 			return safe_name;
 
@@ -1983,7 +1962,7 @@ public partial class Generator : IMemberGatherer {
 	//
 	// Makes the method name for a objcSend call
 	//
-	string MakeSig (string send, bool stret, MethodInfo mi, bool aligned, EnumMode enum_mode = EnumMode.Compat)
+	string MakeSig (string send, bool stret, MethodInfo mi, bool aligned)
 	{
 		var sb = new StringBuilder ();
 		var shouldMarshalNativeExceptions = ShouldMarshalNativeExceptions (mi);
@@ -1995,7 +1974,7 @@ public partial class Generator : IMemberGatherer {
 			sb.Append ("xamarin_");
 		
 		try {
-			sb.Append (ParameterGetMarshalType (new MarshalInfo (this, mi) { IsAligned = aligned, EnumMode = enum_mode } ));
+			sb.Append (ParameterGetMarshalType (new MarshalInfo (this, mi) { IsAligned = aligned } ));
 		} catch (BindingException ex) {
 			throw new BindingException (1078, ex.Error, ex, ex.Message, mi.Name);
 		}
@@ -2010,7 +1989,7 @@ public partial class Generator : IMemberGatherer {
 				continue;
 			sb.Append ("_");
 			try {
-				sb.Append (ParameterGetMarshalType (new MarshalInfo (this, mi, pi) { EnumMode = enum_mode }).Replace (' ', '_'));
+				sb.Append (ParameterGetMarshalType (new MarshalInfo (this, mi, pi)).Replace (' ', '_'));
 			} catch (BindingException ex) {
 				throw new BindingException (1079, ex.Error, ex, ex.Message, pi.Name.GetSafeParamName (), mi.DeclaringType, mi.Name);
 			}
@@ -2025,7 +2004,7 @@ public partial class Generator : IMemberGatherer {
 		return sb.ToString ();
 	}
 
-	void RegisterMethod (bool need_stret, MethodInfo mi, string method_name, bool aligned, EnumMode enum_mode = EnumMode.Compat)
+	void RegisterMethod (bool need_stret, MethodInfo mi, string method_name, bool aligned)
 	{
 		if (send_methods.ContainsKey (method_name))
 			return;
@@ -2041,7 +2020,7 @@ public partial class Generator : IMemberGatherer {
 			b.Append (", ");
 
 			try {
-				var parameterType = ParameterGetMarshalType (new MarshalInfo (this, mi, pi) { EnumMode = enum_mode }, true);
+				var parameterType = ParameterGetMarshalType (new MarshalInfo (this, mi, pi), true);
 				if (parameterType == "bool" || parameterType == "out bool" || parameterType == "ref bool")
 					b.Append ("[MarshalAs (UnmanagedType.I1)] ");
 				else if (parameterType == "char" || parameterType == "out char" || parameterType == "ref char")
@@ -2072,7 +2051,7 @@ public partial class Generator : IMemberGatherer {
 			print (m, "\t\t[DllImport (LIBOBJC_DYLIB, EntryPoint=\"{0}\")]", entry_point);
 		}
 
-		var returnType = need_stret ? "void" : ParameterGetMarshalType (new MarshalInfo (this, mi) { EnumMode = enum_mode }, true);
+		var returnType = need_stret ? "void" : ParameterGetMarshalType (new MarshalInfo (this, mi), true);
 		if (returnType == "bool")
 			print (m, "\t\t[return: MarshalAs (UnmanagedType.I1)]");
 		else if (returnType == "char")
@@ -2088,29 +2067,129 @@ public partial class Generator : IMemberGatherer {
 		return type.IsEnum && AttributeManager.HasAttribute<NativeAttribute> (type);
 	}
 
-	// nint or nuint
-	string GetNativeEnumType (Type type)
+	// Returns two strings that are used to convert from a native (nint/nuint) value to a managed ([Native]) enum value
+	// nativeType: nint/nuint
+	bool GetNativeEnumToManagedExpression (Type enumType, out string preExpression, out string postExpression, out string nativeType, StringBuilder postproc = null)
 	{
-		var underlyingEnumType = TypeManager.GetUnderlyingEnumType (type);
+		preExpression = null;
+		postExpression = null;
+		nativeType = null;
+
+		if (!enumType.IsEnum)
+			return false;
+
+		var attrib = AttributeManager.GetCustomAttribute<NativeAttribute> (enumType);
+		if (attrib is null)
+			return false;
+
+		var renderedEnumType = RenderType (enumType);
+		var underlyingEnumType = TypeManager.GetUnderlyingEnumType (enumType);
+		var underlyingTypeName = RenderType (underlyingEnumType);
+		string itype;
+		object maxValue;
+		Func<FieldInfo, bool> isMaxDefinedFunc;
+		Func<FieldInfo, bool> isMinDefinedFunc = null;
 		if (TypeManager.System_Int64 == underlyingEnumType) {
-			return "nint";
+			nativeType = "nint";
+			itype = "int";
+			maxValue = long.MaxValue;
+			isMaxDefinedFunc = (v) => (long) v.GetRawConstantValue () == long.MaxValue;
+			isMinDefinedFunc = (v) => (long) v.GetRawConstantValue () == long.MinValue;
 		} else if (TypeManager.System_UInt64 == underlyingEnumType) {
-			return "nuint";
+			nativeType = "nuint";
+			itype = "uint";
+			maxValue = ulong.MaxValue;
+			isMaxDefinedFunc = (v) => (ulong) v.GetRawConstantValue () == ulong.MaxValue;
 		} else {
-			throw new BindingException (1029, type);
+			throw new BindingException (1029, enumType);
 		}
+
+		if (!string.IsNullOrEmpty (attrib.ConvertToManaged)) {
+			preExpression = attrib.ConvertToManaged + " (";
+			postExpression = ")";
+		} else {
+			preExpression = "(" + renderedEnumType + ") (" + RenderType (underlyingEnumType) + ") ";
+			postExpression = string.Empty;
+		}
+
+		// Check if we got UInt32.MaxValue, which should probably be UInt64.MaxValue (if the enum
+		// in question actually has that value at least). Same goes for Int32.MinValue/Int64.MinValue.
+		// var isDefined = enumType.IsEnumDefined (maxValue);
+		var definedMaxField = enumType.GetFields ().Where (v => v.IsLiteral).FirstOrDefault (isMaxDefinedFunc);
+		if (definedMaxField != null) {
+			postproc.AppendLine ("#if ARCH_32");
+			postproc.AppendFormat ("if (({0}) ret == ({0}) {1}.MaxValue)\n", underlyingTypeName, itype);
+			postproc.AppendFormat ("\tret = {0}.{1}; // = {2}.MaxValue\n", renderedEnumType, definedMaxField.Name, underlyingTypeName);
+			if (underlyingEnumType == TypeManager.System_Int64) {
+				var definedMinField = enumType.GetFields ().Where (v => v.IsLiteral).FirstOrDefault (isMinDefinedFunc);
+				if (definedMinField != null) {
+					postproc.AppendFormat ("else if (({0}) ret == ({0}) {1}.MinValue)\n", underlyingTypeName, itype);
+					postproc.AppendFormat ("\tret = {0}.{1}; // = {2}.MinValue\n", renderedEnumType, definedMinField.Name, underlyingTypeName);
+				}
+			}
+			postproc.AppendLine ("#endif");
+		}
+
+		return true;
 	}
 
-	bool HasNativeEnumInSignature (MethodInfo mi)
+	// Returns two strings that are used to convert from a managed enum value to a native nint/nuint.
+	// nativeType: nint/nuint
+	bool GetNativeEnumToNativeExpression (Type enumType, out string preExpression, out string postExpression, out string nativeType)
 	{
-		if (IsNativeEnum (mi.ReturnType))
-			return true;
-		
-		foreach (var p in mi.GetParameters ())
-			if (IsNativeEnum (p.ParameterType))
-				return true;
+		preExpression = null;
+		postExpression = null;
+		nativeType = null;
 
-		return false;
+		if (!enumType.IsEnum)
+			return false;
+
+		var attrib = AttributeManager.GetCustomAttribute<NativeAttribute> (enumType);
+		if (attrib is null)
+			return false;
+
+		var underlyingEnumType = TypeManager.GetUnderlyingEnumType (enumType);
+		if (TypeManager.System_Int64 == underlyingEnumType) {
+			nativeType = "nint";
+		} else if (TypeManager.System_UInt64 == underlyingEnumType) {
+			nativeType = "nuint";
+		} else {
+			throw new BindingException (1029, enumType);
+		}
+
+		if (!string.IsNullOrEmpty (attrib.ConvertToNative)) {
+			preExpression = attrib.ConvertToNative + " (";
+			postExpression = ")";
+		} else {
+			preExpression = "(" + nativeType + ") (" + RenderType (underlyingEnumType) + ") ";
+			postExpression = string.Empty;
+		}
+
+		return true;
+	}
+
+	bool IsNativeEnum (Type enumType, out Type underlyingType, out string nativeType)
+	{
+		underlyingType = null;
+		nativeType = null;
+
+		if (!enumType.IsEnum)
+			return false;
+
+		var attrib = AttributeManager.GetCustomAttribute<NativeAttribute> (enumType);
+		if (attrib is null)
+			return false;
+
+		underlyingType = enumType.GetEnumUnderlyingType ();
+		if (underlyingType == TypeManager.System_Int64) {
+			nativeType = "nint";
+		} else if (underlyingType == TypeManager.System_UInt64) {
+			nativeType = "nuint";
+		} else {
+			throw new BindingException (1026, true, enumType.FullName, "NativeAttribute");
+		}
+
+		return true;
 	}
 
 	void DeclareInvoker (MethodInfo mi)
@@ -2119,25 +2198,17 @@ public partial class Generator : IMemberGatherer {
 			return;
 
 		try {
-			EnumMode[] modes;
-			if (HasNativeEnumInSignature (mi)) {
-				modes = new EnumMode[] { EnumMode.Bit32, EnumMode.Bit64 };
-			} else {
-				modes = new EnumMode[] { EnumMode.Bit32 };
-			}
-			foreach (var mode in modes) {
-				// arm64 never requires stret, so we'll always need the non-stret variants
-				RegisterMethod (false, mi, MakeSig (mi, false, enum_mode: mode), false, mode);
-				RegisterMethod (false, mi, MakeSuperSig (mi, false, enum_mode: mode), false, mode);
+			// arm64 never requires stret, so we'll always need the non-stret variants
+			RegisterMethod (false, mi, MakeSig (mi, false), false);
+			RegisterMethod (false, mi, MakeSuperSig (mi, false), false);
 
-				if (CheckNeedStret (mi)) {
-					RegisterMethod (true, mi, MakeSig (mi, true, enum_mode: mode), false, mode);
-					RegisterMethod (true, mi, MakeSuperSig (mi, true, enum_mode: mode), false, mode);
+			if (CheckNeedStret (mi)) {
+				RegisterMethod (true, mi, MakeSig (mi, true), false);
+				RegisterMethod (true, mi, MakeSuperSig (mi, true), false);
 
-					if (AttributeManager.HasAttribute<AlignAttribute> (mi)) {
-						RegisterMethod (true, mi, MakeSig (mi, true, true, mode), true, mode);
-						RegisterMethod (true, mi, MakeSuperSig (mi, true, true, mode), true, mode);
-					}
+				if (AttributeManager.HasAttribute<AlignAttribute> (mi)) {
+					RegisterMethod (true, mi, MakeSig (mi, true, true), true);
+					RegisterMethod (true, mi, MakeSuperSig (mi, true, true), true);
 				}
 			}
 		} catch (BindingException ex) {
@@ -2682,7 +2753,7 @@ public partial class Generator : IMemberGatherer {
 			StringBuilder args, convs, disposes, by_ref_processing, by_ref_init;
 			GenerateTypeLowering (mi,
 					      null_allowed_override: true,
-					      enum_mode: EnumMode.NativeBits,
+					      castEnum: false,
 					      args: out args,
 					      convs: out convs,
 					      disposes: out disposes,
@@ -3751,7 +3822,7 @@ public partial class Generator : IMemberGatherer {
 	// @cast_a: left side to generate
 	// @cast_b: right side to generate
 	//
-	void GetReturnsWrappers (MethodInfo mi, MemberInformation minfo, Type declaringType, out string cast_a, out string cast_b, EnumMode enum_mode = EnumMode.Compat, StringBuilder postproc = null)
+	void GetReturnsWrappers (MethodInfo mi, MemberInformation minfo, Type declaringType, out string cast_a, out string cast_b, StringBuilder postproc = null)
 	{
 		cast_a = cast_b = "";
 		if (mi.ReturnType == TypeManager.System_Void){
@@ -3761,21 +3832,9 @@ public partial class Generator : IMemberGatherer {
 		MarshalInfo mai = new MarshalInfo (this, mi);
 		MarshalType mt;
 
-		if (IsNativeEnum (mi.ReturnType) && enum_mode == EnumMode.Bit32) {
-			// Check if we got UInt32.MaxValue, which should probably be UInt64.MaxValue (if the enum
-			// in question actually has that value at least).
-			var type = TypeManager.GetUnderlyingEnumType (mi.ReturnType) == TypeManager.System_UInt64 ? "ulong" : "long";
-			var itype = type == "ulong" ? "uint" : "int";
-			var value = type == "ulong" ? (object) ulong.MaxValue : (object) long.MaxValue;
-			if (mi.ReturnType.IsEnumDefined (value)) {
-				postproc.AppendFormat ("if (({0}) ret == ({0}) {2}.MaxValue) ret = ({1}) {0}.MaxValue;", type, FormatType (mi.DeclaringType, mi.ReturnType), itype);
-				if (type == "long")
-					postproc.AppendFormat ("else if (({0}) ret == ({0}) {2}.MinValue) ret = ({1}) {0}.MinValue;", type, FormatType (mi.DeclaringType, mi.ReturnType), itype);
-			} else {
-				cast_a = "(" + FormatType (mi.DeclaringType, mi.ReturnType) + ") ";
-				cast_b = "";
-			}
-		} if (mi.ReturnType.IsEnum){
+		if (GetNativeEnumToManagedExpression (mi.ReturnType, out cast_a, out cast_b, out var _, postproc)) {
+			// we're done here
+		} else if (mi.ReturnType.IsEnum){
 			cast_a = "(" + FormatType (mi.DeclaringType, mi.ReturnType) + ") ";
 			cast_b = "";
 		} else if (LookupMarshal (mai.Type, out mt)){
@@ -3866,7 +3925,7 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 
-	void GenerateInvoke (bool stret, bool supercall, MethodInfo mi, MemberInformation minfo, string selector, string args, bool assign_to_temp, Type category_type, bool aligned, EnumMode enum_mode = EnumMode.Compat)
+	void GenerateInvoke (bool stret, bool supercall, MethodInfo mi, MemberInformation minfo, string selector, string args, bool assign_to_temp, Type category_type, bool aligned)
 	{
 		string target_name = (category_type == null && !minfo.is_extension_method) ? "this" : "This";
 		string handle = supercall ? ".SuperHandle" : ".Handle";
@@ -3895,7 +3954,7 @@ public partial class Generator : IMemberGatherer {
 			}
 		}
 		
-		string sig = supercall ? MakeSuperSig (mi, stret, aligned, enum_mode) : MakeSig (mi, stret, aligned, enum_mode);
+		string sig = supercall ? MakeSuperSig (mi, stret, aligned) : MakeSig (mi, stret, aligned);
 
 		sig = "global::" + ns.Messaging + "." + sig;
 
@@ -3927,7 +3986,7 @@ public partial class Generator : IMemberGatherer {
 			StringBuilder postproc = new StringBuilder ();
 
 			if (returns)
-				GetReturnsWrappers (mi, minfo, mi.DeclaringType, out cast_a, out cast_b, enum_mode, postproc);
+				GetReturnsWrappers (mi, minfo, mi.DeclaringType, out cast_a, out cast_b, postproc);
 			else if (mi.Name == "Constructor") {
 				cast_a = "InitializeHandle (";
 				cast_b = ", \"" + selector + "\")";
@@ -3951,22 +4010,20 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 	
-	void GenerateNewStyleInvoke (bool supercall, MethodInfo mi, MemberInformation minfo, string selector, string[] args, bool assign_to_temp, Type category_type)
+	void GenerateNewStyleInvoke (bool supercall, MethodInfo mi, MemberInformation minfo, string selector, string args, bool assign_to_temp, Type category_type)
 	{
 		var returnType = mi.ReturnType;
 		bool x64_stret = Stret.X86_64NeedStret (returnType, this);
-		bool dual_enum = HasNativeEnumInSignature (mi);
 		bool aligned = AttributeManager.HasAttribute<AlignAttribute> (mi);
-		int index64 = dual_enum ? 1 : 0;
 
 		if (CurrentPlatform == PlatformName.MacOSX) {
 			print ("if (global::ObjCRuntime.Runtime.IsARM64CallingConvention) {");
 			indent++;
-			GenerateInvoke (false, supercall, mi, minfo, selector, args [index64], assign_to_temp, category_type, false, EnumMode.Bit64);
+			GenerateInvoke (false, supercall, mi, minfo, selector, args, assign_to_temp, category_type, false);
 			indent--;
 			print ("} else {");
 			indent++;
-			GenerateInvoke (x64_stret, supercall, mi, minfo, selector, args[index64], assign_to_temp, category_type, aligned && x64_stret, EnumMode.Bit64);
+			GenerateInvoke (x64_stret, supercall, mi, minfo, selector, args, assign_to_temp, category_type, aligned && x64_stret);
 			indent--;
 			print ("}");
 			return;
@@ -3975,44 +4032,44 @@ public partial class Generator : IMemberGatherer {
 		bool arm_stret = Stret.ArmNeedStret (returnType, this);
 		bool x86_stret = Stret.X86NeedStret (returnType, this);
 		bool is_stret_multi = arm_stret || x86_stret || x64_stret;
-		bool need_multi_path = is_stret_multi || dual_enum;
+		bool need_multi_path = is_stret_multi;
 
 		if (need_multi_path) {
 			if (is_stret_multi) {
 				// First check for arm64
 				print ("if (global::ObjCRuntime.Runtime.IsARM64CallingConvention) {");
 				indent++;
-				GenerateInvoke (false, supercall, mi, minfo, selector, args [index64], assign_to_temp, category_type, false, EnumMode.Bit64);
+				GenerateInvoke (false, supercall, mi, minfo, selector, args, assign_to_temp, category_type, false);
 				indent--;
 				// If we're not arm64, but we're 64-bit, then we're x86_64
 				print ("} else if (IntPtr.Size == 8) {");
 				indent++;
-				GenerateInvoke (x64_stret, supercall, mi, minfo, selector, args[index64], assign_to_temp, category_type, aligned && x64_stret, EnumMode.Bit64);
+				GenerateInvoke (x64_stret, supercall, mi, minfo, selector, args, assign_to_temp, category_type, aligned && x64_stret);
 				indent--;
 				// if we're not 64-bit, but we're on device, then we're 32-bit arm
 				print ("} else if (Runtime.Arch == Arch.DEVICE) {");
 				indent++;
-				GenerateInvoke (arm_stret, supercall, mi, minfo, selector, args [0], assign_to_temp, category_type, aligned && arm_stret, EnumMode.Bit32);
+				GenerateInvoke (arm_stret, supercall, mi, minfo, selector, args, assign_to_temp, category_type, aligned && arm_stret);
 				indent--;
 				// if we're none of the above, we're x86
 				print ("} else {");
 				indent++;
-				GenerateInvoke (x86_stret, supercall, mi, minfo, selector, args[0], assign_to_temp, category_type, aligned && x86_stret, EnumMode.Bit32);
+				GenerateInvoke (x86_stret, supercall, mi, minfo, selector, args, assign_to_temp, category_type, aligned && x86_stret);
 				indent--;
 				print ("}");
 			} else {
 				print ("if (IntPtr.Size == 8) {");
 				indent++;
-				GenerateInvoke (x64_stret, supercall, mi, minfo, selector, args[index64], assign_to_temp, category_type, aligned && x64_stret, EnumMode.Bit64);
+				GenerateInvoke (x64_stret, supercall, mi, minfo, selector, args, assign_to_temp, category_type, aligned && x64_stret);
 				indent--;
 				print ("} else {");
 				indent++;
-				GenerateInvoke (x86_stret, supercall, mi, minfo, selector, args[0], assign_to_temp, category_type, aligned && x86_stret, EnumMode.Bit32);
+				GenerateInvoke (x86_stret, supercall, mi, minfo, selector, args, assign_to_temp, category_type, aligned && x86_stret);
 				indent--;
 				print ("}");
 			}
 		} else {
-			GenerateInvoke (false, supercall, mi, minfo, selector, args[0], assign_to_temp, category_type, false);
+			GenerateInvoke (false, supercall, mi, minfo, selector, args, assign_to_temp, category_type, false);
 		}
 	}
 
@@ -4171,7 +4228,7 @@ public partial class Generator : IMemberGatherer {
 	// @convs: conversions to perform before the invocation
 	// @disposes: dispose operations to perform after the invocation
 	// @by_ref_processing
-	void GenerateTypeLowering (MethodInfo mi, bool null_allowed_override, EnumMode enum_mode, out StringBuilder args, out StringBuilder convs, out StringBuilder disposes, out StringBuilder by_ref_processing, out StringBuilder by_ref_init, PropertyInfo propInfo = null)
+	void GenerateTypeLowering (MethodInfo mi, bool null_allowed_override, out StringBuilder args, out StringBuilder convs, out StringBuilder disposes, out StringBuilder by_ref_processing, out StringBuilder by_ref_init, PropertyInfo propInfo = null, bool castEnum = true)
 	{
 		args = new StringBuilder ();
 		convs = new StringBuilder ();
@@ -4185,7 +4242,7 @@ public partial class Generator : IMemberGatherer {
 			if (!IsTarget (pi)){
 				// Construct invocation
 				args.Append (", ");
-				args.Append (MarshalParameter (mi, pi, null_allowed_override, enum_mode, propInfo));
+				args.Append (MarshalParameter (mi, pi, null_allowed_override, propInfo, castEnum));
 
 				if (pi.ParameterType.IsByRef) {
 					var et = pi.ParameterType.GetElementType ();
@@ -4433,14 +4490,7 @@ public partial class Generator : IMemberGatherer {
 		var type = minfo.type;
 		var category_type = minfo.category_extension_type;
 		var is_appearance = minfo.is_appearance;
-		var dual_enum = HasNativeEnumInSignature (mi);
 		TrampolineInfo trampoline_info = null;
-		EnumMode[] enum_modes;
-		if (dual_enum) {
-			enum_modes = new EnumMode[] { EnumMode.Bit32, EnumMode.Bit64 };
-		} else {
-			enum_modes = new EnumMode[] { EnumMode.Bit32 };
-		}
 
 		CurrentMethod = String.Format ("{0}.{1}", type.Name, mi.Name);
 
@@ -4464,34 +4514,9 @@ public partial class Generator : IMemberGatherer {
 		// Collect all strings that can be fast-marshalled
 		List<string> stringParameters = CollectFastStringMarshalParameters (mi);
 
-		StringBuilder[] args2 = null, convs2 = null, disposes2 = null, by_ref_processing2 = null, by_ref_init2 = null;
-		args2 = new StringBuilder[enum_modes.Length];
-		convs2 = new StringBuilder[enum_modes.Length];
-		disposes2 = new StringBuilder[enum_modes.Length];
-		by_ref_processing2 = new StringBuilder[enum_modes.Length];
-		by_ref_init2 = new StringBuilder[enum_modes.Length];
-		for (int i = 0; i < enum_modes.Length; i++) {
-			GenerateTypeLowering (mi, null_allowed_override, enum_modes [i], out args2[i], out convs2[i], out disposes2[i], out by_ref_processing2[i], out by_ref_init2[i], propInfo);
-		}
+		GenerateTypeLowering (mi, null_allowed_override, out var args, out var convs, out var disposes, out var by_ref_processing, out var by_ref_init, propInfo);
 
-		// sanity check
-		if (enum_modes.Length > 1) {
-			bool sane = true;
-			sane &= convs2 [0].ToString () == convs2 [1].ToString ();
-			sane &= disposes2 [0].ToString () == disposes2 [1].ToString ();
-			sane &= by_ref_processing2 [0].ToString () == by_ref_processing2 [1].ToString ();
-			sane &= by_ref_init2 [0].ToString () == by_ref_init2 [1].ToString ();
-			if (!sane)
-				throw new BindingException (1028);
-		}
-
-		var convs = convs2 [0];
-		var disposes = disposes2 [0];
-		var by_ref_processing = by_ref_processing2 [0];
-		var by_ref_init = by_ref_init2 [0];
-		var argsArray = new string[args2.Length];
-		for (int i = 0; i < args2.Length; i++)
-			argsArray [i] = args2 [i].ToString ();
+		var argsArray = args.ToString ();
 
 		if (by_ref_init.Length > 0)
 			print (by_ref_init.ToString ());
@@ -7004,11 +7029,11 @@ public partial class Generator : IMemberGatherer {
 							print ("_{0} = Dlfcn.GetStringConstant (Libraries.{2}.Handle, \"{1}\");", field_pi.Name, fieldAttr.SymbolName, library_name);
 							indent--;
 							print ($"return {smartEnumTypeName}Extensions.GetValue (_{field_pi.Name});");
-						} else if (IsNativeEnum (field_pi.PropertyType)) {
+						} else if (GetNativeEnumToManagedExpression (field_pi.PropertyType, out var preExpression, out var postExpression, out var _)) {
 							if (btype == TypeManager.System_nint || btype == TypeManager.System_Int64)
-								print ($"return ({fieldTypeName}) (long) Dlfcn.GetNInt (Libraries.{library_name}.Handle, \"{fieldAttr.SymbolName}\");" );
+								print ($"return {preExpression}Dlfcn.GetNInt (Libraries.{library_name}.Handle, \"{fieldAttr.SymbolName}\"){postExpression};" );
 							else if (btype == TypeManager.System_nuint || btype == TypeManager.System_UInt64)
-								print ($"return ({fieldTypeName}) (ulong) Dlfcn.GetNUInt (Libraries.{library_name}.Handle, \"{fieldAttr.SymbolName}\");");
+								print ($"return {preExpression}Dlfcn.GetNUInt (Libraries.{library_name}.Handle, \"{fieldAttr.SymbolName}\"){postExpression};");
 							else
 								throw new BindingException (1014, true, fieldTypeName, FormatPropertyInfo (field_pi));
 						} else {
@@ -7070,11 +7095,11 @@ public partial class Generator : IMemberGatherer {
 							var btype = field_pi.PropertyType.GetEnumUnderlyingType ();
 							if (smartEnumTypeName != null)
 								print ($"Dlfcn.SetString (Libraries.{library_name}.Handle, \"{fieldAttr.SymbolName}\", value.GetConstant ());");
-							else if (IsNativeEnum (field_pi.PropertyType)) {
+							else if (GetNativeEnumToNativeExpression (field_pi.PropertyType, out var preExpression, out var postExpression, out var _)) {
 								if (btype == TypeManager.System_nint || (BindThirdPartyLibrary && btype == TypeManager.System_Int64))
-									print ($"Dlfcn.SetNInt (Libraries.{library_name}.Handle, \"{fieldAttr.SymbolName}\", (nint) (long) value);");
+									print ($"Dlfcn.SetNInt (Libraries.{library_name}.Handle, \"{fieldAttr.SymbolName}\", {preExpression}value{postExpression});");
 								else if (btype == TypeManager.System_nuint || (BindThirdPartyLibrary && btype == TypeManager.System_UInt64))
-									print ($"Dlfcn.SetNUInt (Libraries.{library_name}.Handle, \"{fieldAttr.SymbolName}\", (nuint) (ulong) value);");
+									print ($"Dlfcn.SetNUInt (Libraries.{library_name}.Handle, \"{fieldAttr.SymbolName}\", {preExpression}value{postExpression});");
 								else
 									throw new BindingException (1021, true, fieldTypeName, field_pi.DeclaringType.FullName, field_pi.Name);
 							} else {

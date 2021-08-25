@@ -1886,6 +1886,15 @@ namespace Xamarin.Localization.MSBuild {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The AOT compiler &apos;{0}&apos; does not exist..
+        /// </summary>
+        public static string E7081 {
+            get {
+                return ResourceManager.GetString("E7081", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid framework: {0}.
         /// </summary>
         public static string InvalidFramework {

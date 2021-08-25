@@ -1942,6 +1942,40 @@ namespace ObjCRuntime {
 
 			throw exc;
 		}
+
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		public static ulong ConvertNativeEnumValueToManaged (nuint value, bool targetTypeHasMaxValue)
+		{
+#if ARCH_32
+			// Check if we got UInt32.MaxValue, which should probably be UInt64.MaxValue
+			if (targetTypeHasMaxValue && value == nuint.MaxValue)
+				return ulong.MaxValue;
+#endif
+			return (ulong) value;
+		}
+
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		public static long ConvertNativeEnumValueToManaged (nint value, bool targetTypeHasMaxValue)
+		{
+#if ARCH_32
+			// Check if we got Int32.MaxValue, which should probably be Int64.MaxValue
+			if (targetTypeHasMaxValue && value == nint.MaxValue)
+				return long.MaxValue;
+#endif
+			return (long) value;
+		}
+
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		public static nint ConvertManagedEnumValueToNative (long value)
+		{
+			return (nint) value;
+		}
+
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		public static nuint ConvertManagedEnumValueToNative (ulong value)
+		{
+			return (nuint) value;
+		}
 	}
 	
 	internal class IntPtrEqualityComparer : IEqualityComparer<IntPtr>
