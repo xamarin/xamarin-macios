@@ -609,7 +609,7 @@ namespace CoreFoundation {
 		[Introduced (PlatformName.MacOSX, 11, 0)]
 		[MacCatalyst (15,0)]
 #else
-		[UnsupportedOSPlatform ("ios"), UnsupportedOSPlatform ("tvos"), SupportedOSPlatform ("macos11.0"), SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("macos11.0"), SupportedOSPlatform ("maccatalyst15.0")]
 #endif
 		[DllImport (Constants.CoreFoundationLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
@@ -635,7 +635,7 @@ namespace CoreFoundation {
 		[Introduced (PlatformName.MacOSX, 11, 0)]
 		[MacCatalyst (15,0)]
 #else
-		[UnsupportedOSPlatform ("ios"), UnsupportedOSPlatform ("tvos"), SupportedOSPlatform ("macos11.0"), SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("macos11.0"), SupportedOSPlatform ("maccatalyst15.0")]
 #endif
 		[DllImport (Constants.CoreFoundationLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
@@ -659,7 +659,7 @@ namespace CoreFoundation {
 		[Introduced (PlatformName.MacOSX, 11, 0)]
 		[MacCatalyst (15,0)]
 #else
-		[UnsupportedOSPlatform ("ios"), UnsupportedOSPlatform ("tvos"), SupportedOSPlatform ("macos11.0"), SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("macos11.0"), SupportedOSPlatform ("maccatalyst15.0")]
 #endif
 		[DllImport (Constants.CoreFoundationLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
