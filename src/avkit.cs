@@ -536,12 +536,12 @@ namespace AVKit {
 		[Export ("showsTimecodes")]
 		bool ShowsTimecodes { get; set; }
 
-		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
+		[Mac (12,0)]
 		[Wrap ("WeakDelegate")]
 		[Protocolize]
 		AVPlayerViewDelegate Delegate { get; set; }
 
-		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
+		[Mac (12,0)]
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		NSObject WeakDelegate { get; set; }
 	}
