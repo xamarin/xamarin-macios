@@ -430,6 +430,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "Phase", "PHASE", new Version (15,0), NotAvailableInSimulator /* no headers in beta 2 */ },
 				{ "OSLog", "OSLog", 15,0 },
 				{ "ShazamKit", "ShazamKit", new Version (15,0), NotAvailableInSimulator},
+				{ "ThreadNetwork", "ThreadNetwork", new Version (15,0), NotAvailableInSimulator},
 
 				// the above MUST be kept in sync with simlauncher
 				// see tools/mtouch/Makefile
