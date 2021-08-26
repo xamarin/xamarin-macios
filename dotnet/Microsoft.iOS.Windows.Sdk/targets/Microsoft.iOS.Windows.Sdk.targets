@@ -16,7 +16,7 @@
   -->
 
   <PropertyGroup Condition="'$(XamarinIOSDesignTimeTargetsPath)' == ''">
-    <XamarinIOSDesignTimeTargetsPath>$(MSBuildEXtensionsPath)\Microsoft\VisualStudio\Xamarin\iOS\Xamarin.iOS.DesignTime.targets</XamarinIOSDesignTimeTargetsPath>
+    <XamarinIOSDesignTimeTargetsPath>$(MSBuildExtensionsPath)\Microsoft\VisualStudio\Xamarin\iOS\Xamarin.iOS.DesignTime.targets</XamarinIOSDesignTimeTargetsPath>
   </PropertyGroup>
 
   <Import Project="$(XamarinIOSDesignTimeTargetsPath)" Condition="Exists('$(XamarinIOSDesignTimeTargetsPath)')" />
