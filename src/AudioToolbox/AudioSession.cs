@@ -33,6 +33,7 @@ using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
@@ -137,7 +138,11 @@ namespace AudioToolbox {
 			Dictionary = new NSDictionary (dictHandle);
 		}
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 7, 0)]
+#else
+		[UnsupportedOSPlatform ("ios7.0")]
+#endif
 		public AudioSessionRouteChangeReason Reason {
 			get {
 				using (var num = new NSNumber (Dictionary.LowlevelObjectForKey (route_change_key))){
@@ -163,7 +168,11 @@ namespace AudioToolbox {
 			}
 		}
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 7, 0)]
+#else
+		[UnsupportedOSPlatform ("ios7.0")]
+#endif
 		public AudioSessionInputRouteKind PreviousInputRoute {
 			get {
 				using (var array = Extract (previous_route_key, AudioSession.AudioRouteKey_Inputs))
@@ -171,7 +180,11 @@ namespace AudioToolbox {
 			}
 		}
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 7, 0)]
+#else
+		[UnsupportedOSPlatform ("ios7.0")]
+#endif
 		public AudioSessionOutputRouteKind [] PreviousOutputRoutes {
 			get {
 				using (var array = Extract (previous_route_key, AudioSession.AudioRouteKey_Outputs))
@@ -179,7 +192,11 @@ namespace AudioToolbox {
 			}
 		}
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 7, 0)]
+#else
+		[UnsupportedOSPlatform ("ios7.0")]
+#endif
 		public AudioSessionInputRouteKind CurrentInputRoute {
 			get {
 				using (var array = Extract (current_route_key, AudioSession.AudioRouteKey_Inputs))
@@ -187,7 +204,11 @@ namespace AudioToolbox {
 			}
 		}
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 7, 0)]
+#else
+		[UnsupportedOSPlatform ("ios7.0")]
+#endif
 		public AudioSessionOutputRouteKind [] CurrentOutputRoutes {
 			get {
 				using (var array = Extract (current_route_key, AudioSession.AudioRouteKey_Outputs))
@@ -196,7 +217,14 @@ namespace AudioToolbox {
 		}
 	}
 
+#if !NET
 	[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'AVAudioSession' instead.")]
+#else
+	[UnsupportedOSPlatform ("ios7.0")]
+#if IOS
+	[Obsolete ("Starting with ios7.0 use 'AVAudioSession' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 	public static class AudioSession {
 		static bool initialized;
 		public static event EventHandler Interrupted;
@@ -229,7 +257,9 @@ namespace AudioToolbox {
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static OSStatus AudioSessionInitialize(IntPtr cfRunLoop, IntPtr cfstr_runMode, InterruptionListener listener, IntPtr userData);
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 7, 0)]
+#endif
 		public static void Initialize ()
 		{
 			Initialize (null, null);
@@ -291,7 +321,9 @@ namespace AudioToolbox {
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static OSStatus AudioSessionSetActive ([MarshalAs (UnmanagedType.I1)] bool active);
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 7, 0)]
+#endif
 		public static void SetActive (bool active)
 		{
 			int k = AudioSessionSetActive (active);
@@ -302,7 +334,9 @@ namespace AudioToolbox {
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static AudioSessionErrors AudioSessionSetActiveWithFlags ([MarshalAs (UnmanagedType.I1)] bool active, AudioSessionActiveFlags inFlags);
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 7, 0)]
+#endif
 		public static AudioSessionErrors SetActive (bool active, AudioSessionActiveFlags flags)
 		{
 			return AudioSessionSetActiveWithFlags (active, flags);
@@ -396,7 +430,9 @@ namespace AudioToolbox {
 			}
 		}
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 7,0)]
+#endif
 		static public double PreferredHardwareSampleRate {
 			get {
 				return GetDouble (AudioSessionProperty.PreferredHardwareSampleRate);
@@ -406,7 +442,9 @@ namespace AudioToolbox {
 			}
 		}
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 7,0)]
+#endif
 		static public float PreferredHardwareIOBufferDuration {
 			get {
 				return GetFloat (AudioSessionProperty.PreferredHardwareIOBufferDuration);
@@ -416,7 +454,9 @@ namespace AudioToolbox {
 			}
 		}
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 7,0)]
+#endif
 		static public AudioSessionCategory Category {
 			get {
 				return (AudioSessionCategory) GetInt (AudioSessionProperty.AudioCategory);
@@ -426,28 +466,41 @@ namespace AudioToolbox {
 			}
 		}
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 7,0)]
+#endif
 		public static AudioSessionInterruptionType InterruptionType {
 			get {
 				return (AudioSessionInterruptionType) GetInt (AudioSessionProperty.InterruptionType);
 			}
 		}
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 5, 0, message : "Use 'InputRoute' or 'OutputRoute' instead.")]
+#else
+		[UnsupportedOSPlatform ("ios5.0")]
+#if IOS
+		[Obsolete ("Starting with ios5.0 use 'InputRoute' or 'OutputRoute' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		static public string AudioRoute {
 			get {
 				return CFString.FromHandle (GetIntPtr (AudioSessionProperty.AudioRoute));
 			}
 		}
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 7, 0)]
+#endif
 		static public AccessoryInfo[] InputSources {
 			get {
 				return ExtractAccessoryInfo (GetIntPtr (AudioSessionProperty.InputSources), InputSourceKey_ID, InputSourceKey_Description);
 			}
 		}
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 7, 0)]
+#endif
 		static public AccessoryInfo[] OutputDestinations {
 			get {
 				return ExtractAccessoryInfo (GetIntPtr (AudioSessionProperty.OutputDestinations), OutputDestinationKey_ID, OutputDestinationKey_Description);
@@ -492,7 +545,9 @@ namespace AudioToolbox {
 
 		*/
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 7, 0)]
+#endif
 		static internal AudioSessionInputRouteKind GetInputRoute (NSArray arr)
 		{
 			if (arr == null || arr.Count == 0)
@@ -523,7 +578,9 @@ namespace AudioToolbox {
 			}
 		}
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 7, 0)]
+#endif
 		static internal AudioSessionOutputRouteKind [] GetOutputRoutes (NSArray arr)
 		{
 			if (arr == null || arr.Count == 0)
@@ -567,14 +624,18 @@ namespace AudioToolbox {
 			return result;
 		}
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 7, 0)]
+#endif
 		static public AudioSessionInputRouteKind InputRoute {
 			get {
 				return GetInputRoute ((NSArray) AudioRouteDescription [AudioRouteKey_Inputs]);
 			}
 		}
-		
+
+#if !NET
 		[Deprecated (PlatformName.iOS, 7, 0)]
+#endif
 		static public AudioSessionOutputRouteKind [] OutputRoutes {
 			get {
 				return GetOutputRoutes ((NSArray) AudioRouteDescription [AudioRouteKey_Outputs]);
@@ -589,77 +650,99 @@ namespace AudioToolbox {
 			}
 		}
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 7,0)]
+#endif
 		static public double CurrentHardwareSampleRate {
 			get {
 				return GetDouble (AudioSessionProperty.CurrentHardwareSampleRate);
 			}
 		}
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 7,0)]
+#endif
 		static public int CurrentHardwareInputNumberChannels {
 			get {
 				return GetInt (AudioSessionProperty.CurrentHardwareInputNumberChannels);
 			}
 		}
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 7,0)]
+#endif
 		static public int CurrentHardwareOutputNumberChannels {
 			get {
 				return GetInt (AudioSessionProperty.CurrentHardwareOutputNumberChannels);
 			}
 		}
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 7,0)]
+#endif
 		static public float CurrentHardwareOutputVolume {
 			get {
 				return GetFloat (AudioSessionProperty.CurrentHardwareOutputVolume);
 			}
 		}
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 7,0)]
+#endif
 		static public float CurrentHardwareInputLatency {
 			get {
 				return GetFloat (AudioSessionProperty.CurrentHardwareInputLatency);
 			}
 		}
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 7,0)]
+#endif
 		static public float CurrentHardwareOutputLatency {
 			get {
 				return GetFloat (AudioSessionProperty.CurrentHardwareOutputLatency);
 			}
 		}
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 7,0)]
+#endif
 		static public float CurrentHardwareIOBufferDuration {
 			get {
 				return GetFloat (AudioSessionProperty.CurrentHardwareIOBufferDuration);
 			}
 		}
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 7,0)]
+#endif
 		static public bool OtherAudioIsPlaying {
 			get {
 				return GetInt (AudioSessionProperty.OtherAudioIsPlaying) != 0;
 			}
 		}
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 7,0)]
+#endif
 		static public AudioSessionRoutingOverride RoutingOverride {
 			set {
 				SetInt (AudioSessionProperty.OverrideAudioRoute, (int) value);
 			}
 		}
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 7,0)]
+#endif
 		static public bool AudioInputAvailable {
 			get {
 				return GetInt (AudioSessionProperty.AudioInputAvailable) != 0;
 			}
 		}
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 7,0)]
+#endif
 		static public bool AudioShouldDuck {
 			get {
 				return GetInt (AudioSessionProperty.OtherMixableAudioShouldDuck) != 0;
@@ -669,7 +752,9 @@ namespace AudioToolbox {
 			}
 		}
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 7,0)]
+#endif
 		static public bool OverrideCategoryMixWithOthers {
 			get {
 				return GetInt (AudioSessionProperty.OverrideCategoryMixWithOthers) != 0;
@@ -679,7 +764,9 @@ namespace AudioToolbox {
 			}
 		}
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 7,0)]
+#endif
 		static public bool OverrideCategoryDefaultToSpeaker {
 			get {
 				return GetInt (AudioSessionProperty.OverrideCategoryDefaultToSpeaker) != 0;
@@ -689,7 +776,9 @@ namespace AudioToolbox {
 			}
 		}
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 7,0)]
+#endif
 		static public bool OverrideCategoryEnableBluetoothInput {
 			get {
 				return GetInt (AudioSessionProperty.OverrideCategoryEnableBluetoothInput) != 0;
@@ -699,7 +788,9 @@ namespace AudioToolbox {
 			}
 		}
 		
+#if !NET
 		[Deprecated (PlatformName.iOS, 7,0)]
+#endif
 		static public AudioSessionMode Mode {
 			get {
 				return (AudioSessionMode) GetInt (AudioSessionProperty.Mode);
@@ -709,14 +800,18 @@ namespace AudioToolbox {
 			}
 		}
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 7,0)]
+#endif
 		static public bool InputGainAvailable {
 			get {
 				return GetInt (AudioSessionProperty.InputGainAvailable) != 0;
 			}
 		}
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 7,0)]
+#endif
 		static public float InputGainScalar {
 			get {
 				return GetFloat (AudioSessionProperty.InputGainScalar);
@@ -748,7 +843,9 @@ namespace AudioToolbox {
 
 		static Hashtable listeners;
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 7, 0)]
+#endif
 		public static AudioSessionErrors AddListener (AudioSessionProperty property, PropertyListener listener)
 		{
 			if (listener == null)
