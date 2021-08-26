@@ -12,9 +12,17 @@ using AddressBook;
 using Foundation;
 using UIKit;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 namespace AddressBookUI {
+#if !NET
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+#else
+	[UnsupportedOSPlatform ("ios9.0")]
+#if IOS
+	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 	public class ABPeoplePickerSelectPersonEventArgs : EventArgs {
 
 		public ABPeoplePickerSelectPersonEventArgs (ABPerson person)
@@ -27,7 +35,14 @@ namespace AddressBookUI {
 		public bool Continue {get; set;}
 	}
 
+#if !NET
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+#else
+	[UnsupportedOSPlatform ("ios9.0")]
+#if IOS
+	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 	public class ABPeoplePickerPerformActionEventArgs : ABPeoplePickerSelectPersonEventArgs {
 
 		public ABPeoplePickerPerformActionEventArgs (ABPerson person, ABPersonProperty property, int? identifier)
@@ -41,7 +56,14 @@ namespace AddressBookUI {
 		public int? Identifier {get; private set;}
 	}
 
+#if !NET
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+#else
+	[UnsupportedOSPlatform ("ios9.0")]
+#if IOS
+	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 	public class ABPeoplePickerSelectPerson2EventArgs : EventArgs {
 
 		public ABPeoplePickerSelectPerson2EventArgs (ABPerson person)
@@ -52,7 +74,14 @@ namespace AddressBookUI {
 		public ABPerson Person {get; private set;}
 	}
 
+#if !NET
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+#else
+	[UnsupportedOSPlatform ("ios9.0")]
+#if IOS
+	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 	public class ABPeoplePickerPerformAction2EventArgs : ABPeoplePickerSelectPerson2EventArgs {
 
 		public ABPeoplePickerPerformAction2EventArgs (ABPerson person, ABPersonProperty property, int? identifier)
@@ -137,7 +166,16 @@ namespace AddressBookUI {
 		}
 	}
 
-	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+	
+#if !NET
+		[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+#else
+		// unsupported in addressbookui.cs
+		// [UnsupportedOSPlatform ("ios9.0")]
+#if IOS
+		[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 	partial class ABPeoplePickerNavigationController {
 
 		DisplayedPropertiesCollection displayedProperties;
