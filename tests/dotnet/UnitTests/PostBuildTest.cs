@@ -80,12 +80,11 @@ namespace Xamarin.Tests {
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
 			Clean (project_path);
 			var properties = GetDefaultProperties (runtimeIdentifiers);
-			if (!shouldStrip) {
-				properties ["EnableAssemblyILStripping"] = "false";
-			}
+
+			// Force EnableAssemblyILStripping since we are building debug which never will by default
+			properties ["EnableAssemblyILStripping"] = shouldStrip ? "true" : "false";
 
 			DotNet.AssertBuild (project_path, properties);
-
 
 			var assemblies = Directory.GetFiles (appPath, "*.dll");
 			var assembliesWithOnlyEmptyMethods = new List<String>();

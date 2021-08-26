@@ -224,6 +224,7 @@
 			_ComputeFrameworkFilesToPublish;
 			_ComputeDynamicLibrariesToPublish;
 			ComputeFilesToPublish;
+			_ComputeStripAssemblyIL;
 			_StripAssemblyIL;
 			_LoadLinkerOutput;
 			_CompileNativeExecutable;
@@ -595,7 +596,20 @@
 		</ItemGroup>
 	</Target>
 
-	<Target Name="_StripAssemblyIL" Condition="'$(EnableAssemblyILStripping)' == 'true'" DependsOnTargets="ComputeFilesToPublish">
+	<Target Name="_ComputeStripAssemblyIL" Condition=" '$(EnableAssemblyILStripping)' == '' " DependsOnTargets="_ComputeVariables;ComputeFilesToPublish">
+		<PropertyGroup>
+			<!-- Don't strip IL by default -->
+			<EnableAssemblyILStripping>false</EnableAssemblyILStripping>
+
+			<!-- Strip if we are AOT and Release  -->
+			<EnableAssemblyILStripping Condition="'$(_RunAotCompiler)' == 'true' And '$(Configuration)' == 'Release'">true</EnableAssemblyILStripping>
+
+			<!-- Don't strip if we are running the interpreter  -->
+			<EnableAssemblyILStripping Condition="'$(MtouchInterpreter)' != ''">false</EnableAssemblyILStripping>
+		</PropertyGroup>
+	</Target>
+
+	<Target Name="_StripAssemblyIL" Condition="'$(EnableAssemblyILStripping)' == 'true'" DependsOnTargets="_ComputeStripAssemblyIL">
 		<PropertyGroup>
 			<_StrippedAssemblyDirectory>$(DeviceSpecificIntermediateOutputPath)\stripped</_StrippedAssemblyDirectory>
 		</PropertyGroup>

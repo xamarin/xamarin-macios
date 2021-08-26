@@ -35,6 +35,9 @@ namespace Xamarin.MacDev.Tasks {
 		public string Registrar { get; set; }
 
 		[Output]
+		public string NoStrip { get; set; }
+
+		[Output]
 		public int Verbosity { get; set; }
 
 		[Output]
@@ -47,6 +50,9 @@ namespace Xamarin.MacDev.Tasks {
 
 			if (string.IsNullOrEmpty (NoDSymUtil))
 				NoDSymUtil = "false";
+
+			if (string.IsNullOrEmpty (NoStrip))
+				NoStrip = "false";
 
 			if (!string.IsNullOrEmpty (ExtraArgs)) {
 				var args = CommandLineArgumentBuilder.Parse (ExtraArgs);
@@ -129,6 +135,10 @@ namespace Xamarin.MacDev.Tasks {
 						if (xml == null)
 							xml = new List<string> ();
 						xml.Add (value);
+						break;
+					case "nostrip":
+						// Output is EnableAssemblyILStripping so we enable if --nostring=false and disable if true
+						NoStrip = ParseBool (value) ? "false" : "true";
 						break;
 					default:
 						Log.LogMessage (MessageImportance.Low, "Skipping unknown argument '{0}' with value '{1}'", name, value);
