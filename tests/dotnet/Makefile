@@ -58,12 +58,6 @@ run-dotnet: $(TARGETS)
 run-dotnet-sim: $(TARGETS)
 	$(DOTNET6) build -t:Run size-comparison/MySingleView/dotnet/MySingleView.csproj /p:Configuration=Release --runtime iossimulator-x64 /p:Platform=iPhoneSimulator /bl:$@.binlog
 
-
-# this will break the signature, so app won't run anymore. Use it only to compare final size w/legacy
-# https://github.com/xamarin/xamarin-macios/issues/11445
-strip-dotnet:
-	$(foreach file, $(wildcard size-comparison/MySingleView/dotnet/bin/iPhone/Release/net6.0-ios/ios-arm64/MySingleView.app/*.dll), mono-cil-strip $(file) $(file);)
-
 # this target will copy NuGet.config and global.json to the directories that need it for their .NET build to work correctly.
 copy-dotnet-config: $(TARGETS)
 	$(Q) for dir in $(abspath $(TOP))/tests/*/dotnet $(abspath $(TOP))/tests/linker/*/*/dotnet; do \

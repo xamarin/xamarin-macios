@@ -134,7 +134,7 @@ namespace Xamarin.MacDev.Tasks {
 						xml.Add (value);
 						break;
 					case "nostrip":
-						// Output is EnableAssemblyILStripping so we enable if --nostring=false and disable if true
+						// Output is EnableAssemblyILStripping so we enable if --nostrip=false and disable if true
 						NoStrip = ParseBool (value) ? "false" : "true";
 						break;
 					default:
