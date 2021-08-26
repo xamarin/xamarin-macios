@@ -77,19 +77,17 @@ namespace Xamarin.Tests {
 			var project = "MySimpleApp";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 
-			var project_path = GetProjectPath (project, platform: platform);
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
 			Clean (project_path);
-			var properties = new Dictionary<string, string> (verbosity);
-			properties ["RuntimeIdentifier"] = runtimeIdentifiers;
+			var properties = GetDefaultProperties (runtimeIdentifiers);
 			if (!shouldStrip) {
 				properties ["EnableAssemblyILStripping"] = "false";
 			}
 
 			DotNet.AssertBuild (project_path, properties);
 
-			var appPath = Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", platform.ToFramework (), runtimeIdentifiers.IndexOf (';') >= 0 ? string.Empty : runtimeIdentifiers, $"{project}.app");
 
-			var assemblies = Directory.GetFiles(appPath, "*.dll");
+			var assemblies = Directory.GetFiles (appPath, "*.dll");
 			var assembliesWithOnlyEmptyMethods = new List<String>();
 			foreach (var assembly in assemblies) {
 				ModuleDefinition definition = ModuleDefinition.ReadModule(assembly, new ReaderParameters { ReadingMode = ReadingMode.Deferred });

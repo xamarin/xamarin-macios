@@ -597,11 +597,11 @@
 
 	<Target Name="_StripAssemblyIL" Condition="'$(EnableAssemblyILStripping)' == 'true'" DependsOnTargets="ComputeFilesToPublish">
 		<PropertyGroup>
-			<_StrippedAssemblyDirectory>$(IntermediateOutputPath)\stripped</_StrippedAssemblyDirectory>
+			<_StrippedAssemblyDirectory>$(DeviceSpecificIntermediateOutputPath)\stripped</_StrippedAssemblyDirectory>
 		</PropertyGroup>
 		<MakeDir Directories="$(_StrippedAssemblyDirectory)" />
 		<ItemGroup>
-			<_AssembliesToBeStripped Include="@(ResolvedFileToPublish)" Condition=" $([System.String]::Copy('%(Identity)').EndsWith('dll')) ">
+			<_AssembliesToBeStripped Include="@(ResolvedFileToPublish)" Condition="'%(Extension)' == '.dll'">
 				<OutputPath>$(_StrippedAssemblyDirectory)\%(Filename)%(Extension)</OutputPath>
 			</_AssembliesToBeStripped>
 			<_StrippedAssemblies Include="@(_AssembliesToBeStripped->'%(OutputPath)')" >
