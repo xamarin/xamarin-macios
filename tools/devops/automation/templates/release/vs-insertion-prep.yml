@@ -17,7 +17,7 @@ stages:
   - template: sign-artifacts/jobs/v2.yml@templates
     parameters:
       artifactName: package
-      signType: Test
+      signType: Real
       usePipelineArtifactTasks: true
 
   # Check - "xamarin-macios (Prepare Release Convert NuGet to MSI)"
@@ -32,13 +32,12 @@ stages:
         Microsoft.iOS*.nupkg
         Microsoft.MacCatalyst*.nupkg
       propsArtifactName: package
-      signType: Test
+      signType: Real
 
   # Check - "xamarin-macios (Prepare Release Push NuGets)"
   - job: push_signed_nugets
     displayName: Push NuGets
     dependsOn: signing
-    condition: false
     variables:
       skipNugetSecurityAnalysis: true
     pool:
@@ -86,5 +85,4 @@ stages:
       Microsoft.iOS*.nupkg
       Microsoft.MacCatalyst*.nupkg
     symbolConversionFilters: '*mlaunch.app*'
-    createVSPR: false
     condition: eq(variables.IsPRBuild, 'False')
