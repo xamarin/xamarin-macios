@@ -61,6 +61,10 @@ namespace Xharness.Jenkins.TestTasks {
 
 		public override TestExecutingResult ExecutionResult {
 			get {
+				// If we're ignored, then build result doesn't matter.
+				if (base.ExecutionResult == TestExecutingResult.Ignored)
+					return TestExecutingResult.Ignored;
+
 				// When building, the result is the build result.
 				if ((runTest.BuildResult & (TestExecutingResult.InProgress | TestExecutingResult.Waiting)) != 0)
 					return runTest.BuildResult & ~TestExecutingResult.InProgressMask | TestExecutingResult.Building;
