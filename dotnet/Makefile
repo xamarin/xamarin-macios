@@ -55,6 +55,7 @@ DIRECTORIES += \
 	$(DOTNET_TEMPLATE_PACKS_PATH) \
 	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_PACKS_PATH)/Microsoft.$(platform).Sdk) \
 	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_PACKS_PATH)/Microsoft.$(platform).Ref) \
+	$(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(DOTNET_PACKS_PATH)/Microsoft.$(platform).Runtime.$(rid))) \
 	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_TEMPLATE_PACKS_PATH)/Microsoft.$(platform).Templates) \
 	$(TMP_PKG_DIR) \
 	$(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Windows.Sdk/Sdk) \
@@ -212,13 +213,11 @@ TARGETS += $(RUNTIME_PACKS) $(REF_PACKS) $(SDK_PACKS) $(TEMPLATE_PACKS) $(WORKLO
 define InstallWorkload
 # .NET comes with a workload for us, but we don't want that, we want our own. So delete the workload that comes with .NET.
 .stamp-workload-replace-$1-$(DOTNET6_VERSION):
-	$(Q) echo "Removing existing workload shipped with .NET $(DOTNET6_VERSION): $(DOTNET_MANIFESTS_PATH)/Microsoft.NET.Workload.$1"
-	$(Q) rm -Rf $(DOTNET_MANIFESTS_PATH)/Microsoft.NET.Workload.$1
-	$(Q) echo "Removing existing workload shipped with .NET $(DOTNET6_VERSION): $(DOTNET_MANIFESTS_PATH)/Microsoft.NET.Sdk.$1"
-	$(Q) rm -Rf $(DOTNET_MANIFESTS_PATH)/Microsoft.NET.Sdk.$1
+	$(Q) echo "Removing existing workload shipped with .NET $(DOTNET6_VERSION): $(DOTNET_MANIFESTS_PATH)/microsoft.net.sdk.$1"
+	$(Q) rm -Rf $(DOTNET_MANIFESTS_PATH)/microsoft.net.sdk.$3
 	$(Q) touch $$@
 
-$(DOTNET_MANIFESTS_PATH)/Microsoft.NET.Sdk.$1: .stamp-workload-replace-$1-$(DOTNET6_VERSION) | $(DOTNET_MANIFESTS_PATH)
+$(DOTNET_MANIFESTS_PATH)/microsoft.net.sdk.$3: .stamp-workload-replace-$1-$(DOTNET6_VERSION) | $(DOTNET_MANIFESTS_PATH)
 	$$(Q_LN) ln -Fhs $$(abspath Workloads/Microsoft.NET.Sdk.$1) $$(abspath $$@)
 
 $(DOTNET_PACKS_PATH)/Microsoft.$1.Sdk/$2: | $(DOTNET_PACKS_PATH)/Microsoft.$1.Sdk
@@ -232,11 +231,20 @@ $(DOTNET_TEMPLATE_PACKS_PATH)/Microsoft.$1.Templates.$(2).nupkg: $(TEMPLATE_PACK
 
 WORKLOAD_TARGETS += \
 	$(DOTNET_TEMPLATE_PACKS_PATH)/Microsoft.$1.Templates.$(2).nupkg \
-	$(DOTNET_MANIFESTS_PATH)/Microsoft.NET.Sdk.$1 \
+	$(DOTNET_MANIFESTS_PATH)/microsoft.net.sdk.$3 \
 	$(DOTNET_PACKS_PATH)/Microsoft.$1.Sdk/$2 \
 	$(DOTNET_PACKS_PATH)/Microsoft.$1.Ref/$2
 endef
-$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call InstallWorkload,$(platform),$($(platform)_NUGET_VERSION_NO_METADATA))))
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call InstallWorkload,$(platform),$($(platform)_NUGET_VERSION_NO_METADATA),$(shell echo $(platform) | tr A-Z a-z))))
+
+define InstallRuntimeWorkload
+$(DOTNET_PACKS_PATH)/Microsoft.$1.Runtime.$2/$3: | $(DOTNET_PACKS_PATH)/Microsoft.$1.Runtime.$2
+	$$(Q_LN) ln -Fhs $$(abspath $(DOTNET_DESTDIR)/Microsoft.$1.Runtime.$2) $$(abspath $$@)
+
+WORKLOAD_TARGETS += \
+	$(DOTNET_PACKS_PATH)/Microsoft.$1.Runtime.$2/$3
+endef
+$(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(eval $(call InstallRuntimeWorkload,$(platform),$(rid),$($(platform)_NUGET_VERSION_NO_METADATA)))))
 
 # We create four packages: one for the workload, one for the sdk package, one for the ref package, and one for templates
 # and then bundle them into a single pkg for distribution (named Microsoft.<platform>.Bundle.<version>.pkg).
@@ -348,11 +356,7 @@ MSI_TARGETS += $(DOTNET_PKG_DIR)/Microsoft.NET.Workload.$1.$2.msi
 endef
 $(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(eval $(call CreateMsi,$(platform),$($(platform)_NUGET_VERSION_NO_METADATA))))
 
-export DOTNETSDK_WORKLOAD_MANIFEST_ROOTS:=$(abspath ./Workloads)
-
 .stamp-install-workloads: Makefile $(WORKLOAD_TARGETS) $(RUNTIME_PACKS) $(REF_PACKS) $(SDK_PACKS) $(TEMPLATE_PACKS) $(WORKLOAD_PACKS)
-	@# The microsoft.net.sdk.maui workload has a reference to the microsoft-ios-sdk-full workload, which has been renamed, so 'dotnet workload install' fails. Just remove the maui workload, we don't need it here.
-	$(Q) rm -Rf $(DOTNET6_DIR)/sdk-manifests/6.0.100/microsoft.net.sdk.maui
 	$(Q) $(DOTNET6) workload install --skip-manifest-update \
 		--source https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet6/nuget/v3/index.json \
 		--source $(DOTNET_NUPKG_DIR) --verbosity diag \
