@@ -3184,12 +3184,12 @@ namespace AVFoundation {
 		[Async]
 		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("loadChapterMetadataGroupsBestMatchingPreferredLanguages:completionHandler:")]
-		void LoadChapterMetadataGroups (string[] preferredLanguages, Action<NSArray<AVTimedMetadataGroup>, NSError> completionHandler);
+		void LoadChapterMetadataGroups (string[] bestMatchingPreferredLanguages, Action<NSArray<AVTimedMetadataGroup>, NSError> completionHandler);
 
 		[Async]
 		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("loadChapterMetadataGroupsWithTitleLocale:containingItemsWithCommonKeys:completionHandler:")]
-		void LoadChapterMetadataGroups (NSLocale locale, string[] commonKeys, Action<NSArray<AVTimedMetadataGroup>, NSError> completionHandler);
+		void LoadChapterMetadataGroups (NSLocale titleLocale, string[] commonKeys, Action<NSArray<AVTimedMetadataGroup>, NSError> completionHandler);
 
 		[Async]
 		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
@@ -3204,7 +3204,7 @@ namespace AVFoundation {
 		[Async]
 		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("loadTrackWithTrackID:completionHandler:")]
-		void LoadTrack (int trackID, Action<AVCompositionTrack, NSError> completionHandler);
+		void LoadTrack (int trackId, Action<AVCompositionTrack, NSError> completionHandler);
 
 		[Async]
 		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
@@ -3498,7 +3498,6 @@ namespace AVFoundation {
 	[BaseType (typeof(NSObject))]
 	interface AVSampleBufferAudioRenderer : AVQueuedSampleBufferRendering
 	{
-
 		[Export ("status")]
 		AVQueuedSampleBufferRenderingStatus Status { get; }
 
@@ -11403,7 +11402,7 @@ namespace AVFoundation {
 
 		[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
 		[Field ("AVPlayerWaitingForCoordinatedPlaybackReason")]
-		aitingForCoordinatedPlayback,
+		WaitingForCoordinatedPlayback,
 	}
 
 	[Watch (6,0)]
@@ -14905,7 +14904,7 @@ namespace AVFoundation {
 
 		[Export ("renditionSpecificAttributesForMediaOption:")]
 		[return: NullAllowed]
-		AVAssetVariantAudioRenditionSpecificAttributes RenditionSpecificAttributesForMediaOption (AVMediaSelectionOption mediaSelectionOption);
+		AVAssetVariantAudioRenditionSpecificAttributes GetRenditionSpecificAttributesForMediaOption (AVMediaSelectionOption mediaSelectionOption);
 	}
 
 	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
@@ -14941,7 +14940,7 @@ namespace AVFoundation {
 		[Internal]
 		[Static]
 		[Export ("predicateForPresentationHeight:operatorType:")]
-		NSPredicate PredicateForPresentationHeight (nfloat height, NSPredicateOperatorType operatorType);
+		NSPredicate GetPredicateForPresentationHeight (nfloat height, NSPredicateOperatorType operatorType);
 	}
 
 	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
@@ -15215,7 +15214,7 @@ namespace AVFoundation {
 		[NoMacCatalyst]
 		[Export ("nextCaptionGroup")]
 		[return: NullAllowed]
-		AVCaptionGroup NextCaptionGroup ();
+		AVCaptionGroup GetNextCaptionGroup ();
 
 		[NoMacCatalyst]
 		[Export ("captionsNotPresentInPreviousGroupsInCaptionGroup:")]
@@ -15400,19 +15399,19 @@ namespace AVFoundation {
 	{
 		[Static]
 		[Export ("appleITTTopRegion")]
-		AVCaptionRegion AppleITTTopRegion { get; }
+		AVCaptionRegion AppleiTTTopRegion { get; }
 
 		[Static]
 		[Export ("appleITTBottomRegion")]
-		AVCaptionRegion AppleITTBottomRegion { get; }
+		AVCaptionRegion AppleiTTBottomRegion { get; }
 
 		[Static]
 		[Export ("appleITTLeftRegion")]
-		AVCaptionRegion AppleITTLeftRegion { get; }
+		AVCaptionRegion AppleiTTLeftRegion { get; }
 
 		[Static]
 		[Export ("appleITTRightRegion")]
-		AVCaptionRegion AppleITTRightRegion { get; }
+		AVCaptionRegion AppleiTTRightRegion { get; }
 
 		[Static]
 		[Export ("subRipTextBottomRegion")]

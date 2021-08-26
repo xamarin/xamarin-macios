@@ -25,8 +25,6 @@
 ## https://github.com/xamarin/xamarin-macios/issues/3213 should be fixed before conformance to 'AVQueuedSampleBufferRendering' is restored.
 !missing-protocol-conformance! AVSampleBufferDisplayLayer should conform to AVQueuedSampleBufferRendering (defined in 'AVSampleBufferDisplayLayerQueueManagement' category)
 
-# Initial result from new rule missing-release-attribute-on-return-value
-
 # AVFoundation differs between IOS and macOS. Fields not availble in macOS 10.15.
 !missing-field! AVMetadataIdentifierQuickTimeMetadataAutoLivePhoto not bound
 !missing-field! AVMetadataIdentifierQuickTimeMetadataDetectedCatBody not bound

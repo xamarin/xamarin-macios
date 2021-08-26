@@ -362,13 +362,18 @@ namespace AVFoundation {
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVCaptionDimension {
 		public nfloat Value;
-		public AVCaptionUnitsType Units;
+		public nuint units;
+
+		public AVCaptionUnitsType Units {
+			get => (AVCaptionUnitsType) (long) units;
+			set => units = (nuint) (long) value;
+		}
 
 		[DllImport (Constants.AVFoundationLibrary)]
-		static extern AVCaptionDimension AVCaptionDimensionMake (nfloat dimension, AVCaptionUnitsType units);
+		static extern AVCaptionDimension AVCaptionDimensionMake (nfloat dimension, /* AVCaptionUnitsType */ nuint units);
 
 		public static AVCaptionDimension Create (nfloat dimension, AVCaptionUnitsType units)
-			=> AVCaptionDimensionMake  (dimension, units);
+			=> AVCaptionDimensionMake  (dimension, (nuint) (long)units);
 	}
 
 #if !NET

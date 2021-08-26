@@ -9,7 +9,5 @@
 !unknown-field! AVAssetDownloadTaskMediaSelectionKey bound
 !unknown-field! AVAssetDownloadTaskMinimumRequiredMediaBitrateKey bound
 
-# Initial result from new rule missing-release-attribute-on-return-value
-
 # not used on tvOS
 !missing-enum! AVAudioSessionInterruptionReason not bound

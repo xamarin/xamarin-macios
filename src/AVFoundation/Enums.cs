@@ -1349,7 +1349,7 @@ namespace AVFoundation {
 #endif
 	[Flags]
 	[Native]
-	public enum AVCaptionDecoration : ulong 	{
+	public enum AVCaptionDecoration : ulong {
 		None = 0x0,
 		Underline = 1uL << 0,
 		LineThrough = 1uL << 1,
@@ -1357,9 +1357,9 @@ namespace AVFoundation {
 	}
 
 #if !NET
-		[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
+	[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
 #else
-		[UnsupportedOSPlatform ("ios"), UnsupportedOSPlatform ("tvos"), UnsupportedOSPlatform ("maccatalyst"), SupportedOSPlatform ("macos12.0")]
+	[UnsupportedOSPlatform ("ios"), UnsupportedOSPlatform ("tvos"), UnsupportedOSPlatform ("maccatalyst"), SupportedOSPlatform ("macos12.0")]
 #endif
 	[Native]
 	public enum AVCaptionTextCombine : long {
@@ -1372,9 +1372,9 @@ namespace AVFoundation {
 	}
 
 #if !NET
-		[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
+	[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
 #else
-		[UnsupportedOSPlatform ("ios"), UnsupportedOSPlatform ("tvos"), UnsupportedOSPlatform ("maccatalyst"), SupportedOSPlatform ("macos12.0")]
+	[UnsupportedOSPlatform ("ios"), UnsupportedOSPlatform ("tvos"), UnsupportedOSPlatform ("maccatalyst"), SupportedOSPlatform ("macos12.0")]
 #endif
 	[Native]
 	public enum AVCaptionTextAlignment : long {
@@ -1394,7 +1394,7 @@ namespace AVFoundation {
 	public enum AVCaptionRegionWritingMode : long
 	{
 		LeftToRightAndTopToBottom = 0,
-		TopToBottomAndRightToLeft = 2
+		TopToBottomAndRightToLeft = 2,
 	}
 
 #if !NET
