@@ -289,22 +289,50 @@ namespace iAd {
 	// some of this API is still provided
 	public partial class ADClient : NSObject {
 
+#if !NET
 		[Obsoleted (PlatformName.iOS, 15, 0, PlatformArchitecture.None, Constants.iAdRemoved)]
+#else
+		[UnsupportedOSPlatform ("ios15.0")]
+#if IOS
+		[Obsolete ("Starting with ios15.0 The iAd framework has been removed from iOS", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		public static NSString? ErrorDomain {
 			get { return default (NSString); }
 		}
 
+#if !NET
 		[Obsoleted (PlatformName.iOS, 15, 0, PlatformArchitecture.None, Constants.iAdRemoved)]
+#else
+		[UnsupportedOSPlatform ("ios15.0")]
+#if IOS
+		[Obsolete ("Starting with ios15.0 The iAd framework has been removed from iOS", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		public virtual void DetermineAppInstallationAttribution (AttributedToiAdCompletionHandler completionHandler)
 		{
 		}
 
+#if !NET
 		[Obsoleted (PlatformName.iOS, 15, 0, PlatformArchitecture.None, Constants.iAdRemoved)]
+#else
+		[UnsupportedOSPlatform ("ios15.0")]
+#if IOS
+		[Obsolete ("Starting with ios15.0 The iAd framework has been removed from iOS", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		public virtual void LookupAdConversionDetails (ADConversionDetails onCompleted)
 		{
 		}
 
+#if !NET
 		[Obsoleted (PlatformName.iOS, 15, 0, PlatformArchitecture.None, Constants.iAdRemoved)]
+#else
+		[UnsupportedOSPlatform ("ios15.0")]
+#if IOS
+		[Obsolete ("Starting with ios15.0 The iAd framework has been removed from iOS", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		public virtual Task<ADClientConversionDetailsResult>? LookupAdConversionDetailsAsync()
 		{
 			return default (Task<ADClientConversionDetailsResult>);
@@ -601,7 +629,9 @@ namespace iAd {
 #endif
 	public static class IAdPreroll {
 
+#if !NET
 		[Introduced (PlatformName.iOS, 8, 0, PlatformArchitecture.All, null)]
+#endif
 		public static void CancelPreroll (this MPMoviePlayerController This)
 		{
 		}
