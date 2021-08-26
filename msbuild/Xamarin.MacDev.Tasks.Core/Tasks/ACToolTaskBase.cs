@@ -53,31 +53,20 @@ namespace Xamarin.MacDev.Tasks
 			get { return "actool"; }
 		}
 
-		static bool IsMessagesExtension (PDictionary plist)
-		{
-			PDictionary extension;
-			PString id;
-
-			if (!plist.TryGetValue ("NSExtension", out extension))
-				return false;
-
-			if (!extension.TryGetValue ("NSExtensionPointIdentifier", out id))
-				return false;
-
-			return id.Value == "com.apple.message-payload-provider";
+		bool IsMessagesExtension {
+			get {
+				return NSExtensionPointIdentifier == "com.apple.message-payload-provider";
+			}
 		}
 
 		protected override void AppendCommandLineArguments (IDictionary<string, string> environment, CommandLineArgumentBuilder args, ITaskItem[] items)
 		{
-			var plist = GetAppManifest ();
-			PString value = null;
-
 			var assetDirs = new HashSet<string> (items.Select (x => BundleResource.GetVirtualProjectPath (ProjectDir, x, !string.IsNullOrEmpty (SessionId))));
 
-			if (plist?.TryGetValue (ManifestKeys.XSAppIconAssets, out value) == true && !string.IsNullOrEmpty (value.Value)) {
-				int index = value.Value.IndexOf (".xcassets" + Path.DirectorySeparatorChar, StringComparison.Ordinal);
+			if (!string.IsNullOrEmpty (XSAppIconAssets)) {
+				int index = XSAppIconAssets.IndexOf (".xcassets" + Path.DirectorySeparatorChar, StringComparison.Ordinal);
 				string assetDir = null;
-				var rpath = value.Value;
+				var rpath = XSAppIconAssets;
 
 				if (index != -1)
 					assetDir = rpath.Substring (0, index + ".xcassets".Length);
@@ -95,15 +84,15 @@ namespace Xamarin.MacDev.Tasks
 					args.Add ("--app-icon");
 					args.AddQuoted (assetName);
 
-					if (IsMessagesExtension (plist))
+					if (IsMessagesExtension)
 						args.Add ("--product-type com.apple.product-type.app-extension.messages");
 				}
 			}
 
-			if (plist?.TryGetValue (ManifestKeys.XSLaunchImageAssets, out value) == true && !string.IsNullOrEmpty (value.Value)) {
-				int index = value.Value.IndexOf (".xcassets" + Path.DirectorySeparatorChar, StringComparison.Ordinal);
+			if (!string.IsNullOrEmpty (XSLaunchImageAssets)) {
+				int index = XSLaunchImageAssets.IndexOf (".xcassets" + Path.DirectorySeparatorChar, StringComparison.Ordinal);
 				string assetDir = null;
-				var rpath = value.Value;
+				var rpath = XSLaunchImageAssets;
 
 				if (index != -1)
 					assetDir = rpath.Substring (0, index + ".xcassets".Length);
@@ -123,8 +112,8 @@ namespace Xamarin.MacDev.Tasks
 				}
 			}
 
-			if (plist?.TryGetValue (ManifestKeys.CLKComplicationGroup, out value) == true && !string.IsNullOrEmpty (value.Value))
-				args.Add ("--complication", value);
+			if (!string.IsNullOrEmpty (CLKComplicationGroup))
+				args.Add ("--complication", CLKComplicationGroup);
 
 			if (OptimizePNGs)
 				args.Add ("--compress-pngs");
@@ -150,10 +139,8 @@ namespace Xamarin.MacDev.Tasks
 				args.Add ("uikit");
 			}				
 
-			if (plist != null) {
-				foreach (var targetDevice in GetTargetDevices ())
-					args.Add ("--target-device", targetDevice);
-			}
+			foreach (var targetDevice in GetTargetDevices ())
+				args.Add ("--target-device", targetDevice);
 
 			args.Add ("--minimum-deployment-target", MinimumOSVersion);
 
