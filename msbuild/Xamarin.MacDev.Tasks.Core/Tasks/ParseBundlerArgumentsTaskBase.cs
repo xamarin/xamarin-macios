@@ -51,9 +51,6 @@ namespace Xamarin.MacDev.Tasks {
 			if (string.IsNullOrEmpty (NoDSymUtil))
 				NoDSymUtil = "false";
 
-			if (string.IsNullOrEmpty (NoStrip))
-				NoStrip = "false";
-
 			if (!string.IsNullOrEmpty (ExtraArgs)) {
 				var args = CommandLineArgumentBuilder.Parse (ExtraArgs);
 				List<string> xml = null;
