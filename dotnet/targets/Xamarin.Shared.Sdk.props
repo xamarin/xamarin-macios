@@ -6,9 +6,6 @@
 	<!-- This contains the OS versions we support for target platform -->
 	<Import Project="Microsoft.$(_PlatformName).Sdk.SupportedTargetPlatforms.props" />
 
-	<!-- This contains support for implicit namespace imports -->
-	<Import Project="Microsoft.$(_PlatformName).Sdk.ImplicitNamespaceImports.props" />
-
 	<Import Project="Xamarin.Shared.Sdk.TargetFrameworkInference.props" />
 
 	<PropertyGroup>
