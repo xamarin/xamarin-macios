@@ -362,7 +362,7 @@ namespace AVFoundation {
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVCaptionDimension {
 		public nfloat Value;
-		public nuint units;
+		nuint units;
 
 		public AVCaptionUnitsType Units {
 			get => (AVCaptionUnitsType) (long) units;
@@ -373,7 +373,7 @@ namespace AVFoundation {
 		static extern AVCaptionDimension AVCaptionDimensionMake (nfloat dimension, /* AVCaptionUnitsType */ nuint units);
 
 		public static AVCaptionDimension Create (nfloat dimension, AVCaptionUnitsType units)
-			=> AVCaptionDimensionMake  (dimension, (nuint) (long)units);
+			=> AVCaptionDimensionMake (dimension, (nuint) (long)units);
 	}
 
 #if !NET

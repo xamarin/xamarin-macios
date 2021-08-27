@@ -15139,7 +15139,7 @@ namespace AVFoundation {
 		string[] SuspensionReasons { get; }
 
 		[Export ("beginSuspensionForReason:")]
-		AVCoordinatedPlaybackSuspension BeginSuspensionForReason (string suspensionReason);
+		AVCoordinatedPlaybackSuspension BeginSuspension (string suspensionReason);
 
 		[Export ("expectedItemTimeAtHostTime:")]
 		CMTime ExpectedItemTimeAtHostTime (CMTime hostClockTime);
@@ -15568,7 +15568,7 @@ namespace AVFoundation {
 		AVCaptionFormatConformer FromSettings (NSDictionary conversionSettings);
 
 		[Wrap ("FromSettings (conversionSettings.GetDictionary ()!)")]
-		AVCaptionFormatConformer FromSettings (AVCaptionSettings conversionSettings);
+		AVCaptionFormatConformer CreateFromSettings (AVCaptionSettings conversionSettings);
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("initWithConversionSettings:")]
