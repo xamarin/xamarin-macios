@@ -10,12 +10,12 @@ namespace HealthKit {
 	[Obsolete ("Use the 'HKQuantityTypeIdentifier' enum instead.")]
 	[Introduced (PlatformName.iOS, 8,0, PlatformArchitecture.All)]
 #else
-	[UnsupportedOSPlatform ("ios")]
+	// not 'UnsupportedOSPlatform for iOS since many members are introduced in
+	// different versions of iOS
 	[UnsupportedOSPlatform ("macos")]
 	[UnsupportedOSPlatform ("maccatalyst")]
 	[UnsupportedOSPlatform ("tvos")]
 	[Obsolete ("Use the 'HKQuantityTypeIdentifier' enum instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
 #endif
 	public unsafe static partial class HKQuantityTypeIdentifierKey  {
 		public static NSString ActiveEnergyBurned {
@@ -653,8 +653,8 @@ namespace HealthKit {
 	} /* class HKCategoryTypeIdentifierKey */
 
 #if !NET
-	[Introduced (PlatformName.iOS, 8,0, PlatformArchitecture.All)]
 	[Obsolete ("Use the 'HKCharacteristicTypeIdentifier' enum instead.")]
+	[Introduced (PlatformName.iOS, 8,0, PlatformArchitecture.All)]
 #else
 	[UnsupportedOSPlatform ("ios")]
 	[UnsupportedOSPlatform ("macos")]
@@ -710,7 +710,6 @@ namespace HealthKit {
 	[UnsupportedOSPlatform ("macos")]
 	[UnsupportedOSPlatform ("maccatalyst")]
 	[Obsolete ("Use the 'HKCorrelationType' enum instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
 #endif
 	public unsafe static partial class HKCorrelationTypeKey  {
 		public static NSString IdentifierBloodPressure {
