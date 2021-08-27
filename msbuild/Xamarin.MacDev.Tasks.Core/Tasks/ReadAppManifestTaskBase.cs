@@ -18,7 +18,13 @@ namespace Xamarin.MacDev.Tasks {
 		public string? CLKComplicationGroup { get; set; }
 
 		[Output]
+		public string? CFBundleExecutable { get; set; }
+
+		[Output]
 		public string? CFBundleDisplayName { get; set; }
+
+		[Output]
+		public string? CFBundleIdentifier { get; set; }
 
 		[Output]
 		public string? CFBundleVersion { get; set; }
@@ -54,33 +60,28 @@ namespace Xamarin.MacDev.Tasks {
 				}
 			}
 
-			var minimumOSVersionInManifest = plist?.Get<PString> (PlatformFrameworkHelper.GetMinimumOSVersionKey (Platform))?.Value;
-			if (string.IsNullOrEmpty (minimumOSVersionInManifest)) {
-				MinimumOSVersion = SdkVersion;
-			} else if (!IAppleSdkVersion_Extensions.TryParse (minimumOSVersionInManifest, out var _)) {
-				Log.LogError (null, null, null, AppManifest?.ItemSpec, 0, 0, 0, 0, MSBStrings.E0011, minimumOSVersionInManifest);
-				return false;
-			} else {
-				MinimumOSVersion = minimumOSVersionInManifest;
-			}
+			CFBundleExecutable = plist.GetCFBundleExecutable ();
+			CFBundleDisplayName = plist?.GetCFBundleDisplayName ();
+			CFBundleIdentifier = plist?.GetCFBundleIdentifier ();
+			CFBundleVersion = plist?.GetCFBundleVersion ();
+			CLKComplicationGroup = plist?.Get<PString> (ManifestKeys.CLKComplicationGroup)?.Value;
 
+			MinimumOSVersion = plist?.Get<PString> (PlatformFrameworkHelper.GetMinimumOSVersionKey (Platform))?.Value;
 			if (Platform == ApplePlatform.MacCatalyst) {
-				// Convert the min macOS version to the min iOS version, which the rest of our tooling expects.
+				// The minimum version in the Info.plist is the macOS version. However, the rest of our tooling
+				// expects the iOS version, so expose that.
 				if (!MacCatalystSupport.TryGetiOSVersion (Sdks.GetAppleSdk (Platform).GetSdkPath (SdkVersion, false), MinimumOSVersion, out var convertedVersion))
 					Log.LogError (MSBStrings.E0187, MinimumOSVersion);
 				MinimumOSVersion = convertedVersion;
 			}
 
-			CFBundleDisplayName = plist?.GetCFBundleDisplayName ();
-			CFBundleVersion = plist?.GetCFBundleVersion ();
-			CLKComplicationGroup = plist?.Get<PString> (ManifestKeys.CLKComplicationGroup)?.Value;
 			NSExtensionPointIdentifier = plist?.GetNSExtensionPointIdentifier ();
 			UIDeviceFamily = plist?.GetUIDeviceFamily ().ToString ();
 			WKWatchKitApp = plist?.GetWKWatchKitApp () == true;
 			XSAppIconAssets = plist?.Get<PString> (ManifestKeys.XSAppIconAssets)?.Value;
 			XSLaunchImageAssets = plist?.Get<PString> (ManifestKeys.XSLaunchImageAssets)?.Value;
 
-			return true;
+			return !Log.HasLoggedErrors;
 		}
 	}
 }
