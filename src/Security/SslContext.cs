@@ -580,15 +580,7 @@ namespace Security {
 #if !NET
 		[Obsolete ("'SetSessionStrengthPolicy' is not available anymore.")]
 #else
-#if __MACCATALYST__
-		[Obsolete ("Starting with maccatalyst 'SetSessionStrengthPolicy' is not available anymore.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios 'SetSessionStrengthPolicy' is not available anymore.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif TVOS
-		[Obsolete ("Starting with tvos 'SetSessionStrengthPolicy' is not available anymore.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif MONOMAC
-		[Obsolete ("Starting with macos 'SetSessionStrengthPolicy' is not available anymore.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[Obsolete ("'SetSessionStrengthPolicy' is not available anymore.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 		public SslStatus SetSessionStrengthPolicy (SslSessionStrengthPolicy policyStrength)
 		{
