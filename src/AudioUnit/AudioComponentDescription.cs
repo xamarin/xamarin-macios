@@ -211,7 +211,7 @@ namespace AudioUnit
 #else
 		[UnsupportedOSPlatform ("ios8.0")]
 #if MONOMAC
-		[Obsolete ("Starting with macos. use 'Spacial' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with ios8.0 use 'Spacial' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 		Embedded3D=0x3364656d, // '3dem'
