@@ -361,7 +361,9 @@ namespace AudioToolbox {
 		}
 	}
 
+#if !NET
 	[Watch (3,0)]
+#endif
 	[Flags]
 	public enum AudioChannelFlags : uint { // UInt32 in AudioPanningInfo -- AudioFormat.h
 		AllOff = 0,
@@ -1132,7 +1134,9 @@ namespace AudioToolbox {
 		TimeRunning = 1 << 1
 	}
 
+#if !NET
 	[Watch (3,0)]
+#endif
 	public enum MPEG4ObjectID { // long
 		AacMain = 1,
 		AacLc = 2,
