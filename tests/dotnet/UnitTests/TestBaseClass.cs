@@ -118,5 +118,22 @@ namespace Xamarin.Tests {
 			}
 		}
 
+		protected void AssertBundleAssembliesStripStatus (string appPath, bool shouldStrip)
+		{
+			var assemblies = Directory.GetFiles (appPath, "*.dll");
+			var assembliesWithOnlyEmptyMethods = new List<String> ();
+			foreach (var assembly in assemblies) {
+				ModuleDefinition definition = ModuleDefinition.ReadModule (assembly, new ReaderParameters { ReadingMode = ReadingMode.Deferred });
+
+				bool onlyHasEmptyMethods = definition.Assembly.MainModule.Types.All (t => 
+					t.Methods.Where (m => m.HasBody).All (m => m.Body.Instructions.Count == 1));
+				if (onlyHasEmptyMethods) {
+					assembliesWithOnlyEmptyMethods.Add (assembly);
+				}
+			}
+
+			// Some assemblies, such as Facades, will be completely empty even when not stripped
+			Assert.That (assemblies.Length == assembliesWithOnlyEmptyMethods.Count, Is.EqualTo (shouldStrip), $"Unexpected stripping status: of {assemblies.Length} assemblies {assembliesWithOnlyEmptyMethods.Count} were empty.");
+		}
 	}
 }

@@ -61,12 +61,15 @@ namespace Xamarin.Tests {
 			if (!string.IsNullOrEmpty (runtimeIdentifiers))
 				properties [multiRid] = runtimeIdentifiers;
 			properties ["BuildIpa"] = "true";
+			properties ["Configuration"] = "Release";
 
 			DotNet.AssertBuild (project_path, properties);
 
-			var appPath = Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", platform.ToFramework (), runtimeIdentifiers.IndexOf (';') >= 0 ? string.Empty : runtimeIdentifiers, $"{project}.app");
+			var appPath = Path.Combine (Path.GetDirectoryName (project_path), "bin", "Release", platform.ToFramework (), runtimeIdentifiers.IndexOf (';') >= 0 ? string.Empty : runtimeIdentifiers, $"{project}.app");
 			var pkgPath = Path.Combine (appPath, "..", $"{project}.ipa");
 			Assert.That (pkgPath, Does.Exist, "pkg creation");
+
+			AssertBundleAssembliesStripStatus (appPath, true);
 		}
 
 		[Test]
@@ -86,20 +89,7 @@ namespace Xamarin.Tests {
 
 			DotNet.AssertBuild (project_path, properties);
 
-			var assemblies = Directory.GetFiles (appPath, "*.dll");
-			var assembliesWithOnlyEmptyMethods = new List<String> ();
-			foreach (var assembly in assemblies) {
-				ModuleDefinition definition = ModuleDefinition.ReadModule (assembly, new ReaderParameters { ReadingMode = ReadingMode.Deferred });
-
-				bool onlyHasEmptyMethods = definition.Assembly.MainModule.Types.All (t => 
-					t.Methods.Where (m => m.HasBody).All (m => m.Body.Instructions.Count == 1));
-				if (onlyHasEmptyMethods) {
-					assembliesWithOnlyEmptyMethods.Add (assembly);
-				}
-			}
-
-			// Some assemblies, such as Facades, will be completely empty even when not stripped
-			Assert.That (assemblies.Length == assembliesWithOnlyEmptyMethods.Count, Is.EqualTo (shouldStrip), $"Unexpected stripping status: of {assemblies.Length} assemblies {assembliesWithOnlyEmptyMethods.Count} were empty.");
+			AssertBundleAssembliesStripStatus (appPath, shouldStrip);
 		}
 
 		[Test]
