@@ -37,7 +37,7 @@ stages:
   # Check - "xamarin-macios (Prepare Release Push NuGets)"
   - job: push_signed_nugets
     displayName: Push NuGets
-    dependsOn: signing
+    dependsOn: nuget_convert
     variables:
       skipNugetSecurityAnalysis: true
     pool:
