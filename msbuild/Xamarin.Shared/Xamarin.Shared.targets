@@ -1050,6 +1050,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			ExtraArgs="$(_BundlerArguments)"
 			NoSymbolStrip="$(_NoSymbolStrip)"
 			NoDSymUtil="$(_NoDSymUtil)"
+			Verbosity="$(_BundlerVerbosity)"
 			>
 			<Output TaskParameter="CustomBundleName" PropertyName="_CustomBundleName" />
 			<Output TaskParameter="DlSym" ItemName="_BundlerDlsym" />
