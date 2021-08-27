@@ -2119,6 +2119,7 @@ IOS_FRAMEWORKS =         \
 	Social \
 	Speech \
 	SystemConfiguration \
+	ThreadNetwork \
 	Twitter \
 	UIKit XKit \
 	UserNotifications \
