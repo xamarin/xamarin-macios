@@ -87,7 +87,7 @@ namespace Xamarin.Tests {
 			DotNet.AssertBuild (project_path, properties);
 
 			var assemblies = Directory.GetFiles (appPath, "*.dll");
-			var assembliesWithOnlyEmptyMethods = new List<String>();
+			var assembliesWithOnlyEmptyMethods = new List<String> ();
 			foreach (var assembly in assemblies) {
 				ModuleDefinition definition = ModuleDefinition.ReadModule(assembly, new ReaderParameters { ReadingMode = ReadingMode.Deferred });
 
