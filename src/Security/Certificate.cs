@@ -459,11 +459,11 @@ namespace Security {
 #if MONOMAC
 		[DllImport (Constants.SecurityLibrary)]
 #if !NET
-		[Deprecated (PlatformName.MacOSX, 10,13)]
+		[Deprecated (PlatformName.MacOSX, 10,13, message: "Use 'GetSerialNumber' instead.")]
 #else
 		[UnsupportedOSPlatform ("macos.10.13")]
 #if MONOMAC
-		[Obsolete ("Starting with macos.10.13 use 'SecCertificateCopySerialNumberData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with macos.10.13 use 'GetSerialNumber' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 		static extern /* __nullable CFDataRef */ IntPtr SecCertificateCopySerialNumber (IntPtr /* SecCertificateRef */ certificate, IntPtr /* CFErrorRef * */ error);
@@ -474,20 +474,20 @@ namespace Security {
 		[SupportedOSPlatform ("ios10.3")]
 #endif
 #if !NET
-		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'SecCertificateCopySerialNumberData' instead.")]
-		[Deprecated (PlatformName.MacOSX, 10,13, message: "Use 'SecCertificateCopySerialNumberData' instead.")]
-		[Deprecated (PlatformName.WatchOS, 4,0, message: "Use 'SecCertificateCopySerialNumberData' instead.")]
-		[Deprecated (PlatformName.TvOS, 11,0, message: "Use 'SecCertificateCopySerialNumberData' instead.")]
+		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'GetSerialNumber' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10,13, message: "Use 'GetSerialNumber' instead.")]
+		[Deprecated (PlatformName.WatchOS, 4,0, message: "Use 'GetSerialNumber' instead.")]
+		[Deprecated (PlatformName.TvOS, 11,0, message: "Use 'GetSerialNumber' instead.")]
 #else
 		[UnsupportedOSPlatform ("ios11.0")]
 		[UnsupportedOSPlatform ("tvos11.0")]
 		[UnsupportedOSPlatform ("macos10.13")]
 #if IOS
-		[Obsolete ("Starting with ios11.0 use 'SecCertificateCopySerialNumberData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with ios11.0 use 'GetSerialNumber' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif TVOS
-		[Obsolete ("Starting with tvos11.0 use 'SecCertificateCopySerialNumberData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with tvos11.0 use 'GetSerialNumber' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif MONOMAC
-		[Obsolete ("Starting with macos10.13 use 'SecCertificateCopySerialNumberData' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with macos10.13 use 'GetSerialNumber' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 		[DllImport (Constants.SecurityLibrary)]
