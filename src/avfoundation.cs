@@ -15571,7 +15571,7 @@ namespace AVFoundation {
 		[Export ("captionFormatConformerWithConversionSettings:")]
 		AVCaptionFormatConformer CreateFromSettings (NSDictionary conversionSettings);
 
-		[Wrap ("FromSettings (conversionSettings.GetDictionary ()!)")]
+		[Wrap ("CreateFromSettings (conversionSettings.GetDictionary ()!)")]
 		AVCaptionFormatConformer CreateFromSettings (AVCaptionSettings conversionSettings);
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
