@@ -333,7 +333,6 @@ namespace Xharness.Jenkins {
 					await simulator.KillEverything (MainLog);
 					await PopulateTasksAsync ();
 					Populating = false;
-					PrintTests (Tasks);
 				});
 				var preparations = new List<Task> ();
 				preparations.Add (populate);
@@ -353,16 +352,6 @@ namespace Xharness.Jenkins {
 				MainLog.WriteLine ("Unexpected exception: {0}", ex);
 				Console.WriteLine ("Unexpected exception: {0}", ex);
 				return 2;
-			}
-		}
-
-		void PrintTests (IEnumerable<ITestTask> tests, int indent = 0)
-		{
-			foreach (Xharness.Jenkins.TestTasks.TestTasks test in tests.OrderBy (test => $"{test.TestName} Mode: {test.Mode} Variation: {test.Variation} ExecutionResult: {test.ExecutionResult}")) {
-				MainLog.WriteLine ($"{new string (' ', indent * 4)}{test.TestName} Mode: {test.Mode} Variation: {test.Variation} ExecutionResult: {test.ExecutionResult}");
-				if (test is AggregatedRunSimulatorTask aggregated) {
-					PrintTests (aggregated.Tasks, indent + 1);
-				}
 			}
 		}
 

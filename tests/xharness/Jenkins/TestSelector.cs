@@ -338,35 +338,6 @@ namespace Xharness.Jenkins {
 				MainLog.WriteLine ("The .NET build is disabled, so any .NET tests will be disabled as well.");
 				jenkins.IncludeDotNet = false;
 			}
-
-			MainLog.WriteLine ($"IncludeAll={jenkins.IncludeAll}");
-			MainLog.WriteLine ($"IncludeBcl={jenkins.IncludeBcl}");
-			MainLog.WriteLine ($"IncludeMac={jenkins.IncludeMac}");
-			MainLog.WriteLine ($"IncludeiOS={jenkins.IncludeiOS}");
-			MainLog.WriteLine ($"IncludeiOS64={jenkins.IncludeiOS64}");
-			MainLog.WriteLine ($"IncludeiOS32={jenkins.IncludeiOS32}");
-			MainLog.WriteLine ($"IncludeiOSExtensions={jenkins.IncludeiOSExtensions}");
-			MainLog.WriteLine ($"ForceExtensionBuildOnly={jenkins.ForceExtensionBuildOnly}");
-			MainLog.WriteLine ($"IncludetvOS={jenkins.IncludetvOS}");
-			MainLog.WriteLine ($"IncludewatchOS={jenkins.IncludewatchOS}");
-			MainLog.WriteLine ($"IncludeMmpTest={jenkins.IncludeMmpTest}");
-			MainLog.WriteLine ($"IncludeMSBuild={jenkins.IncludeMSBuild}");
-			MainLog.WriteLine ($"IncludeMtouch={jenkins.IncludeMtouch}");
-			MainLog.WriteLine ($"IncludeBtouch={jenkins.IncludeBtouch}");
-			MainLog.WriteLine ($"IncludeMacBindingProject={jenkins.IncludeMacBindingProject}");
-			MainLog.WriteLine ($"IncludeSimulator={jenkins.IncludeSimulator}");
-			MainLog.WriteLine ($"IncludeOldSimulatorTests={jenkins.IncludeOldSimulatorTests}");
-			MainLog.WriteLine ($"IncludeDevice={jenkins.IncludeDevice}");
-			MainLog.WriteLine ($"IncludeXtro={jenkins.IncludeXtro}");
-			MainLog.WriteLine ($"IncludeCecil={jenkins.IncludeCecil}");
-			MainLog.WriteLine ($"IncludeDocs={jenkins.IncludeDocs}");
-			MainLog.WriteLine ($"IncludeBCLxUnit={jenkins.IncludeBCLxUnit}");
-			MainLog.WriteLine ($"IncludeBCLNUnit={jenkins.IncludeBCLNUnit}");
-			MainLog.WriteLine ($"IncludeMscorlib={jenkins.IncludeMscorlib}");
-			MainLog.WriteLine ($"IncludeNonMonotouch={jenkins.IncludeNonMonotouch}");
-			MainLog.WriteLine ($"IncludeMonotouch={jenkins.IncludeMonotouch}");
-			MainLog.WriteLine ($"IncludeDotNet={jenkins.IncludeDotNet}");
-			MainLog.WriteLine ($"IncludeMacCatalyst={jenkins.IncludeMacCatalyst}");
 		}
 	}
 }
