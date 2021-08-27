@@ -121,20 +121,20 @@ namespace Security {
 		public TlsCipherSuite NegotiatedTlsCipherSuite => sec_protocol_metadata_get_negotiated_tls_ciphersuite (GetCheckedHandle ());
 
 #if !NET
-		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'sec_protocol_metadata_get_negotiated_tls_ciphersuite' instead.")]
-		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'sec_protocol_metadata_get_negotiated_tls_ciphersuite' instead.")]
-		[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'sec_protocol_metadata_get_negotiated_tls_ciphersuite' instead.")]
-		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'sec_protocol_metadata_get_negotiated_tls_ciphersuite' instead.")]
+		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'NegotiatedTlsCipherSuite' instead.")]
+		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'NegotiatedTlsCipherSuite' instead.")]
+		[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'NegotiatedTlsCipherSuite' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'NegotiatedTlsCipherSuite' instead.")]
 #else
 		[UnsupportedOSPlatform ("ios13.0")]
 		[UnsupportedOSPlatform ("tvos13.0")]
 		[UnsupportedOSPlatform ("macos10.15")]
 #if IOS
-		[Obsolete ("Starting with ios13.0 use 'sec_protocol_metadata_get_negotiated_tls_ciphersuite' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with ios13.0 use 'NegotiatedTlsCipherSuite' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif TVOS
-		[Obsolete ("Starting with tvos13.0 use 'sec_protocol_metadata_get_negotiated_tls_ciphersuite' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with tvos13.0 use 'NegotiatedTlsCipherSuite' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif MONOMAC
-		[Obsolete ("Starting with macos10.15 use 'sec_protocol_metadata_get_negotiated_tls_ciphersuite' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with macos10.15 use 'NegotiatedTlsCipherSuite' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 		[DllImport (Constants.SecurityLibrary)]
