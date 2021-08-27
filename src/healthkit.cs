@@ -1003,6 +1003,10 @@ namespace HealthKit {
 		[Watch (8, 0), iOS (15, 0)]
 		[Field ("HKMetadataKeyDateOfEarliestDataUsedForEstimate")]
 		NSString DateOfEarliestDataUsedForEstimate { get;} 
+
+		[Watch (8, 0), iOS (15, 0)]
+		[Field ("HKMetadataKeyAlgorithmVersion")]
+		NSString AlgorithmVersion { get; }
 	}
 
 	[Watch (2,0)]

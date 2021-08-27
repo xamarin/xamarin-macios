@@ -128,6 +128,8 @@ namespace AudioUnit
 		Milliseconds		= 24,
 		Ratio				= 25,
 		CustomUnit			= 26,
+		[iOS (15,0), TV (15,0), Mac (12,0), MacCatalyst (15,0)]
+		MIDI2Controller	 	= 27,
 	}
 
 	[Flags]
@@ -268,8 +270,16 @@ namespace AudioUnit
 		ParametersForOverview = 57,
 		[iOS (10,0), Mac (10,12)]
 		SupportsMpe = 58,
+		[iOS (15,0), TV (15,0), Mac (12,0), MacCatalyst (15,0)]
+		LastRenderSampleTime = 61,
 		[iOS (14,5), TV (14,5), Mac (11,3)]
 		LoadedOutOfProcess = 62,
+		[iOS (15,0), TV (15,0), Mac (12,0), MacCatalyst (15,0)]
+		MIDIOutputEventListCallback = 63,
+		[iOS (15,0), TV (15,0), Mac (12,0), MacCatalyst (15,0)]
+		AudioUnitMIDIProtocol = 64,
+		[iOS (15,0), TV (15,0), Mac (12,0), MacCatalyst (15,0)]
+		HostMIDIProtocol = 65,
 
 #if MONOMAC
 		FastDispatch = 5,
@@ -342,6 +352,8 @@ namespace AudioUnit
 		BypassVoiceProcessing = 2100,
 		VoiceProcessingEnableAGC = 2101,
 		MuteOutput = 2104,
+		[iOS (15, 0), MacCatalyst (15, 0), NoMac, NoWatch, NoTV]
+		MutedSpeechActivityEventListener = 2106,
 
 		// AUNBandEQ unit
 		NumberOfBands = 2200,
@@ -549,7 +561,13 @@ namespace AudioUnit
 		DynamicsProcessorExpansionThreshold	= 3,
 		DynamicsProcessorAttackTime			= 4,
 		DynamicsProcessorReleaseTime 		= 5,
+		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'DynamicsProcessorOverallGain' instead.")]
+		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'DynamicsProcessorOverallGain' instead.")]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'DynamicsProcessorOverallGain' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use 'DynamicsProcessorOverallGain' instead.")]
 		DynamicsProcessorMasterGain			= 6,
+		[iOS (15,0), TV (15,0), Mac (12,0), MacCatalyst (15,0)]
+		DynamicsProcessorOverallGain		= 6,
 		DynamicsProcessorCompressionAmount 	= 1000,
 		DynamicsProcessorInputAmplitude		= 2000,
 		DynamicsProcessorOutputAmplitude 	= 3000,
@@ -839,6 +857,13 @@ namespace AudioUnit
 		Value = 0,
 		Touch = 1,
 		Release = 2,
+	}
+
+	[iOS (15,0), TV (15,0), Mac (12,0), MacCatalyst (15,0)]
+	public enum AUVoiceIOSpeechActivityEvent : uint
+	{
+		Started = 0,
+		Ended = 1,
 	}
 
 	public enum AudioUnitSubType : uint

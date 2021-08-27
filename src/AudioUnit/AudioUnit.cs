@@ -878,6 +878,11 @@ namespace AudioUnit
 		[DllImport (Constants.AudioUnitLibrary)]
 		static extern AudioUnitStatus MusicDeviceMIDIEvent (IntPtr /* MusicDeviceComponent = void* */ inUnit, uint /* UInt32 */ inStatus, uint /* UInt32 */ inData1, uint /* UInt32 */ inData2, uint /* UInt32 */ inOffsetSampleFrame);
 
+		// TODO: https://github.com/xamarin/xamarin-macios/issues/12489
+		// [TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		// [DllImport (Constants.AudioUnitLibrary)]
+		// static extern MusicDeviceMIDIEvent[] MusicDeviceMIDIEventList (IntPtr /* MusicDeviceComponent = void* */ inUnit, uint /* UInt32 */ inOffsetSampleFrame, MIDIEventList eventList);
+
 		[DllImport (Constants.AudioUnitLibrary)]
 		static extern AudioUnitStatus AudioUnitSetProperty (IntPtr inUnit, AudioUnitPropertyIDType inID, AudioUnitScopeType inScope, uint inElement,
 			ref AUScheduledAudioFileRegion.ScheduledAudioFileRegion inData, int inDataSize);
@@ -1055,6 +1060,8 @@ namespace AudioUnit
 		ParameterRamp = 2,
 		Midi = 8,
 		MidiSysEx = 9,
+		[iOS (15,0), TV (15,0), Mac (12,0), MacCatalyst (15,0)]
+		MidiEventList  = 10,
 	}
 
 	[StructLayout (LayoutKind.Sequential)]

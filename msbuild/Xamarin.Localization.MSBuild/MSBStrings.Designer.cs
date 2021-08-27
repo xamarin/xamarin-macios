@@ -1098,6 +1098,15 @@ namespace Xamarin.Localization.MSBuild {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not map the iOS version {0} to a corresponding macOS version.
+        /// </summary>
+        public static string E0188 {
+            get {
+                return ResourceManager.GetString("E0188", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not resolve host IPs for WiFi debugger settings.
         ///        .
         /// </summary>
@@ -1882,6 +1891,15 @@ namespace Xamarin.Localization.MSBuild {
         public static string E7080 {
             get {
                 return ResourceManager.GetString("E7080", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The AOT compiler &apos;{0}&apos; does not exist..
+        /// </summary>
+        public static string E7081 {
+            get {
+                return ResourceManager.GetString("E7081", resourceCulture);
             }
         }
         

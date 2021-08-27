@@ -12167,6 +12167,10 @@ namespace AVFoundation {
 		[Export ("copy")]
 		[return: Release]
 		NSObject Copy ();
+
+		[TV (15, 0), NoWatch, NoMac, NoiOS, NoMacCatalyst]
+		[Export ("translatesPlayerInterstitialEvents")]
+		bool TranslatesPlayerInterstitialEvents { get; set; }
 	}
 
 	[Watch (7,4), TV (14,5), Mac (11,3), iOS (14,5)]

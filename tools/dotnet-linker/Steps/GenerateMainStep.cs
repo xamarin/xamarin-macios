@@ -39,6 +39,8 @@ namespace Xamarin {
 				} else {
 					contents.AppendLine ($"\txamarin_icu_dat_file_name = \"{Configuration.GlobalizationDataFile}\";");
 				}
+				if (Configuration.Application.PackageManagedDebugSymbols && Configuration.Application.UseInterpreter)
+					contents.AppendLine ($"\tsetenv (\"DOTNET_MODIFIABLE_ASSEMBLIES\", \"debug\", 1);");
 				contents.AppendLine ("}");
 				contents.AppendLine ();
 
