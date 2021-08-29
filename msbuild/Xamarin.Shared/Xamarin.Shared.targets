@@ -110,7 +110,6 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.GetDirectories" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.GetFileSystemEntries" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.GetFullPath" AssemblyFile="$(_TaskAssemblyName)" />
-	<UsingTask TaskName="Xamarin.MacDev.Tasks.GetNativeExecutableName" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.GetPropertyListValue" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.IBTool" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.PackLibraryResources" AssemblyFile="$(_TaskAssemblyName)" />
@@ -124,6 +123,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.SpotlightIndexer" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.SymbolStrip" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.UnpackLibraryResources" AssemblyFile="$(_TaskAssemblyName)" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.WriteAppManifest" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.WriteItemsToFile" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.Zip" AssemblyFile="$(_TaskAssemblyName)" />
 
@@ -270,33 +270,58 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</CollectBundleResources>
 	</Target>
 
+	<!--
+
+	The process to create the final app manifest (aka Info.plist) is a bit convoluted.
+
+		1. The user can specify values in multiple ways:
+
+		    * An Info.plist in their project file (by using a `None` item with filename "Info.plist" or with a `Link` metadata with filename "Info.plist"). We figure this out in the DetectAppManifest target.
+		    * A partial plist in their project (using the `PartialAppManifest` item group)
+		    * Some MSBuild properties can also add values.
+
+		    The precedence is: MSBuild properties can be overridden by the Info.plist, which can be overridden by a partial plist.
+
+		2. In the `CompileAppManifest` target we get all the inputs from above, and compute a temporary app manifest, which is written to a temporary output file.
+
+		3. In the `ReadAppManifest` target, we read the temporary output file and outputs numerous MSBuild properties (most of then private)
+
+		4. We run some other tasks, that depend on the values from `ReadAppManifest`, and adds more entries that should be in the final app manifest. These are written to partial plists, and added to the _PostCompilePartialAppManifest item group.
+			* _CompileImageAssets
+			* _CompileCoreMLModels
+
+		5. In the `WriteAppManifest` target, we read the temporary output file from `ReadAppManifest` + any `_PartialAppManfiest` items and merge them all together to get the final Info.plist.
+
+	-->
+
 	<PropertyGroup>
 		<_CompileAppManifestDependsOn>
 			$(_CompileAppManifestDependsOn);
+			_DetectAppManifest;
 			_DetectSdkLocations;
-			_ReadAppManifest;
 			_GenerateBundleName;
-			_DetectSigningIdentity;
 			_ComputeTargetFrameworkMoniker;
 			_ComputeTargetArchitectures;
 		</_CompileAppManifestDependsOn>
 	</PropertyGroup>
 
+	<!-- This target has no inputs, because it must still be run if there are no input app manifests, to set default values -->
 	<Target Name="_CompileAppManifest"
 		DependsOnTargets="$(_CompileAppManifestDependsOn)"
-		Inputs="$(_AppManifest);@(PartialAppManifest)"
-		Outputs="$(_AppBundleManifest)" >
+		Outputs="$(_TemporaryAppManifest)"
+		>
+
 		<CompileAppManifest
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
 			AppleShortVersion="$(AppleShortVersion)"
+			ApplicationId="$(ApplicationId)"
 			ApplicationTitle="$(ApplicationTitle)"
 			ApplicationVersion="$(ApplicationVersion)"
 			AppBundleName="$(_AppBundleName)"
 			AppManifest="$(_AppManifest)"
 			AssemblyName="$(AssemblyName)"
-			BundleIdentifier="$(_BundleIdentifier)"
-			CompiledAppManifest="$(_AppBundleManifest)"
+			CompiledAppManifest="$(_TemporaryAppManifest)"
 			Debug="$(_BundlerDebug)"
 			DefaultSdkVersion="$(_SdkVersion)"
 			GenerateApplicationManifest="$(GenerateApplicationManifest)"
@@ -304,19 +329,17 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			IsWatchApp="$(IsWatchApp)"
 			IsWatchExtension="$(IsWatchExtension)"
 			IsXPCService="$(IsXPCService)"
-			MinimumOSVersion="$(_MinimumOSVersion)"
 			PartialAppManifests="@(PartialAppManifest)"
 			ResourceRules="$(_PreparedResourceRules)"
 			TargetArchitectures="$(TargetArchitectures)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			SdkPlatform="$(_SdkPlatform)"
 			SdkIsSimulator="$(_SdkIsSimulator)"
+			SdkVersion="$(_SdkVersion)"
 			DebugIPAddresses="$(_DebugIPAddresses)"
+			Validate="$(_CreateAppManifest)"
 			>
 		</CompileAppManifest>
-
-		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(AppBundleDir).dSYM" />
-		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="$(DeviceSpecificOutputPath)*.bcsymbolmap" />
 	</Target>
 
 	<PropertyGroup>
@@ -324,6 +347,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			$(_ReadAppManifestDependsOn);
 			_DetectAppManifest;
 			_DetectSdkLocations;
+			_CompileAppManifest;
 			_ComputeTargetFrameworkMoniker;
 		</_ReadAppManifestDependsOn>
 	</PropertyGroup>
@@ -332,13 +356,15 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<ReadAppManifest
 			Condition="'$(IsMacEnabled)' == 'true'"
 			SessionId="$(BuildSessionId)"
-			AppManifest="$(_AppManifest)"
+			AppManifest="$(_TemporaryAppManifest)"
 			SdkVersion="$(_SdkVersion)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			>
-			<Output TaskParameter="CLKComplicationGroup" PropertyName="_CLKComplicationGroup" />
+			<Output TaskParameter="CFBundleExecutable" PropertyName="_ExecutableName" />
 			<Output TaskParameter="CFBundleDisplayName" PropertyName="_CFBundleDisplayName" />
+			<Output TaskParameter="CFBundleIdentifier" PropertyName="_BundleIdentifier" />
 			<Output TaskParameter="CFBundleVersion" PropertyName="_CFBundleVersion" />
+			<Output TaskParameter="CLKComplicationGroup" PropertyName="_CLKComplicationGroup" />
 			<Output TaskParameter="MinimumOSVersion" PropertyName="_MinimumOSVersion" />
 			<Output TaskParameter="NSExtensionPointIdentifier" PropertyName="_NSExtensionPointIdentifier" />
 			<Output TaskParameter="UIDeviceFamily" PropertyName="_UIDeviceFamily" />
@@ -349,12 +375,41 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	</Target>
 
 	<PropertyGroup>
+		<_WriteAppManifestDependsOn>
+			_CompileAppManifest;
+			_CompileImageAssets;
+			_CompileCoreMLModels;
+		</_WriteAppManifestDependsOn>
+	</PropertyGroup>
+
+	<!-- This target will create the $(_AppBundleManifest) file - any task that takes $(_AppBundleManifest) must depend on this target -->
+	<Target Name="_WriteAppManifest"
+		Condition="'$(_CreateAppManifest)' == 'true'"
+		DependsOnTargets="$(_WriteAppManifestDependsOn)"
+		Inputs="@(_PostCompilePartialAppManifest);$(_TemporaryAppManifest)"
+		Outputs="$(_AppBundleManifest)"
+		>
+
+		<WriteAppManifest
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			AppBundleManifest="$(_AppBundleManifest)"
+			AppManifests="@(_PostCompilePartialAppManifest);$(_TemporaryAppManifest)"
+			>
+		</WriteAppManifest>
+
+		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(AppBundleDir).dSYM" />
+		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="$(DeviceSpecificOutputPath)*.bcsymbolmap" />
+	</Target>
+
+	<PropertyGroup>
 		<_CompileEntitlementsDependsOn>
 			$(_CompileEntitlementsDependsOn);
 			_DetectSdkLocations;
 			_GenerateBundleName;
 			_DetectSigningIdentity;
 			_ComputeTargetFrameworkMoniker;
+			_ReadAppManifest;
 		</_CompileEntitlementsDependsOn>
 	</PropertyGroup>
 
@@ -466,8 +521,10 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<Target Name="_CompileImageAssets" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_ComputeTargetArchitectures;_BeforeCoreCompileImageAssets;_ReadCompileImageAssets;_CoreCompileImageAssets" />
 
 	<Target Name="_BeforeCoreCompileImageAssets"
-		Inputs="@(ImageAsset);$(_AppManifest)"
-		Outputs="$(_ACTool_PartialAppManifestCache);$(_ACTool_BundleResourceCache)">
+		Inputs="@(ImageAsset);$(_TemporaryAppManifest)"
+		Outputs="$(_ACTool_PartialAppManifestCache);$(_ACTool_BundleResourceCache)"
+		DependsOnTargets="_ReadAppManifest"
+		>
 
 		<!-- If any ImageAsset or AppManifest is newer than the generated items list, we delete them so that the _CoreCompileImageAssets
 		     target runs again and updates those lists for the next run
@@ -482,17 +539,28 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<!-- If _BeforeCoreCompileImageAssets did not delete the generated items lists from _CoreCompileImageAsset, then we read them
 		     since that target won't run and we need the output items that are cached in those files, which includes full metadata -->
 		<ReadItemsFromFile File="$(_ACTool_PartialAppManifestCache)" Condition="Exists('$(_ACTool_PartialAppManifestCache)')">
-			<Output TaskParameter="Items" ItemName="PartialAppManifest" />
+			<Output TaskParameter="Items" ItemName="_PostCompilePartialAppManifest" />
 		</ReadItemsFromFile>
 		<ReadItemsFromFile File="$(_ACTool_BundleResourceCache)" Condition="Exists('$(_ACTool_BundleResourceCache)')">
 			<Output TaskParameter="Items" ItemName="_BundleResourceWithLogicalName" />
 		</ReadItemsFromFile>
 	</Target>
 
+	<PropertyGroup>
+		<_CoreCompileImageAssetsDependsOn>
+			$(_CoreCompileImageAssets);
+			_ReadAppManifest;
+			_DetectSdkLocations;
+			_BeforeCoreCompileImageAssets;
+			_DetectSigningIdentity;
+			_ComputeTargetFrameworkMoniker;
+		</_CoreCompileImageAssetsDependsOn>
+	</PropertyGroup>
+
 	<Target Name="_CoreCompileImageAssets"
-		Inputs="@(ImageAsset);$(_AppManifest)"
+		Inputs="@(ImageAsset);$(_TemporaryAppManifest)"
 		Outputs="$(_ACTool_PartialAppManifestCache);$(_ACTool_BundleResourceCache)"
-		DependsOnTargets="_DetectAppManifest;_ReadAppManifest;_DetectSdkLocations;_BeforeCoreCompileImageAssets;_DetectSigningIdentity;_ComputeTargetFrameworkMoniker">
+		DependsOnTargets="$(_CoreCompileImageAssetsDependsOn)">
 
 		<ACTool
 			SessionId="$(BuildSessionId)"
@@ -524,7 +592,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			XSAppIconAssets="$(_XSAppIconAssets)"
 			XSLaunchImageAssets="$(_XSLaunchImageAssets)"
 			>
-			<Output TaskParameter="PartialAppManifest" ItemName="PartialAppManifest" />
+			<Output TaskParameter="PartialAppManifest" ItemName="_PostCompilePartialAppManifest" />
 			<Output TaskParameter="BundleResources" ItemName="_BundleResourceWithLogicalName" />
 
 			<!-- Local items to be persisted to items files -->
@@ -533,7 +601,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</ACTool>
 
 		<!-- Cache the generated outputs items for incremental build support -->
-		<WriteItemsToFile Items="@(_ACTool_PartialAppManifest)" ItemName="PartialAppManifest" File="$(_ACTool_PartialAppManifestCache)" Overwrite="true" IncludeMetadata="true" />
+		<WriteItemsToFile Items="@(_ACTool_PartialAppManifest)" ItemName="_PostCompilePartialAppManifest" File="$(_ACTool_PartialAppManifestCache)" Overwrite="true" IncludeMetadata="true" />
 		<WriteItemsToFile Items="@(_ACTool_BundleResources)" ItemName="_BundleResourceWithLogicalName" File="$(_ACTool_BundleResourceCache)" Overwrite="true" IncludeMetadata="true" />
 		<ItemGroup>
 			<FileWrites Include="$(_ACTool_PartialAppManifestCache);$(_ACTool_BundleResourceCache)" />
@@ -696,7 +764,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	</Target>
 
 	<!-- TODO: check for duplicate items -->
-	<Target Name="_ComputeBundleResourceOutputPaths" DependsOnTargets="_CollectBundleResources;_GenerateBundleName;_DetectSigningIdentity">
+	<Target Name="_ComputeBundleResourceOutputPaths" DependsOnTargets="_CollectBundleResources;_GenerateBundleName;_DetectSigningIdentity;_ReadAppManifest">
 		<ComputeBundleResourceOutputPaths
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
@@ -738,7 +806,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<Target Name="_CompileCoreMLModels" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_ComputeTargetArchitectures;_BeforeCompileCoreMLModels;_ReadCompileCoreMLModels;_CoreCompileCoreMLModels" />
 
 	<Target Name="_BeforeCompileCoreMLModels"
-		Inputs="@(CoreMLModel);$(_AppManifest)"
+		Inputs="@(CoreMLModel);$(_TemporaryAppManifest)"
 		Outputs="$(_CoreMLModel_PartialAppManifestCache);$(_CoreMLModel_BundleResourceCache)">
 		<!-- If any CoreMLModel or AppManifest is newer than the generated items list, we delete them so that the _CoreCompileCoreMLModels
 		     target runs again and updates those lists for the next run
@@ -751,17 +819,26 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<!-- If _BeforeCompileCoreMLModels did not delete the generated items lists from _CoreCompileCoreMLModels, then we read them
 		     since that target won't run and we need the output items that are cached in those files, which includes full metadata -->
 		<ReadItemsFromFile File="$(_CoreMLModel_PartialAppManifestCache)" Condition="Exists('$(_CoreMLModel_PartialAppManifestCache)')">
-			<Output TaskParameter="Items" ItemName="PartialAppManifest" />
+			<Output TaskParameter="Items" ItemName="_PostCompilePartialAppManifest" />
 		</ReadItemsFromFile>
 		<ReadItemsFromFile File="$(_CoreMLModel_BundleResourceCache)" Condition="Exists('$(_CoreMLModel_BundleResourceCache)')">
 			<Output TaskParameter="Items" ItemName="_BundleResourceWithLogicalName" />
 		</ReadItemsFromFile>
 	</Target>
 
+	<PropertyGroup>
+		<_CoreCompileCoreMLModelsDependsOn>
+			$(_CoreCompileCoreMLModelsDependsOn);
+			_ReadAppManifest;
+			_DetectSdkLocations;
+			_BeforeCompileCoreMLModels;
+		</_CoreCompileCoreMLModelsDependsOn>
+	</PropertyGroup>
+
 	<Target Name="_CoreCompileCoreMLModels" 
-		Inputs="@(CoreMLModel);$(_AppManifest)"
+		Inputs="@(CoreMLModel);$(_TemporaryAppManifest)"
 		Outputs="$(_CoreMLModel_PartialAppManifestCache);$(_CoreMLModel_BundleResourceCache)"
-		DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_BeforeCompileCoreMLModels">
+		DependsOnTargets="$(_CoreCompileCoreMLModelsDependsOn)">
 
 		<CoreMLCompiler
 			SessionId="$(BuildSessionId)"
@@ -775,7 +852,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			ResourcePrefix="$(_ResourcePrefix)"
 			SdkDevPath="$(_SdkDevPath)">
 			<Output TaskParameter="BundleResources" ItemName="_BundleResourceWithLogicalName" />
-			<Output TaskParameter="PartialAppManifests" ItemName="PartialAppManifest" />
+			<Output TaskParameter="PartialAppManifests" ItemName="_PostCompilePartialAppManifest" />
 
 			<!-- Local items to be persisted to items files -->
 			<Output TaskParameter="PartialAppManifests" ItemName="_CoreMLModel_PartialAppManifest" />
@@ -783,14 +860,22 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</CoreMLCompiler>
 
 		<!-- Cache the generated outputs items for incremental build support -->
-		<WriteItemsToFile Items="@(_CoreMLModel_PartialAppManifest)" ItemName="PartialAppManifest" File="$(_CoreMLModel_PartialAppManifestCache)" Overwrite="true" IncludeMetadata="true" />
+		<WriteItemsToFile Items="@(_CoreMLModel_PartialAppManifest)" ItemName="_PostCompilePartialAppManifest" File="$(_CoreMLModel_PartialAppManifestCache)" Overwrite="true" IncludeMetadata="true" />
 		<WriteItemsToFile Items="@(_CoreMLModel_BundleResources)" ItemName="_BundleResourceWithLogicalName" File="$(_CoreMLModel_BundleResourceCache)" Overwrite="true" IncludeMetadata="true" />
 		<ItemGroup>
 			<FileWrites Include="$(_CoreMLModel_PartialAppManifestCache);$(_CoreMLModel_BundleResourceCache)" />
 		</ItemGroup>
 	</Target>
 
-	<Target Name="_SmeltMetal" Condition="'$(_CanOutputAppBundle)' == 'true' And '@(Metal)' != ''" DependsOnTargets="_DetectSdkLocations;_ComputeTargetFrameworkMoniker;_ReadAppManifest">
+	<PropertyGroup>
+		<_SmeltMetalDependsOn>
+			_DetectSdkLocations;
+			_ComputeTargetFrameworkMoniker;
+			_ReadAppManifest;
+		</_SmeltMetalDependsOn>
+	</PropertyGroup>
+
+	<Target Name="_SmeltMetal" Condition="'$(_CanOutputAppBundle)' == 'true' And '@(Metal)' != ''" DependsOnTargets="$(_SmeltMetalDependsOn)">
 		<Metal
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true' and '%(Metal.Identity)' != ''"
@@ -870,6 +955,9 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<Error Condition="'$(_AppManifest)' == '' And '$(_CanOutputAppBundle)' == 'true'" Text="Info.plist not found."/>
 		<PropertyGroup>
 			<_AppBundleManifest>$(_AppBundlePath)$(_AppBundleManifestRelativePath)Info.plist</_AppBundleManifest>
+			<!-- We should only write out a compiled app manifest if we're creating an app bundle -->
+			<_CreateAppManifest>$(_CanOutputAppBundle)</_CreateAppManifest>
+			<_TemporaryAppManifest>$(DeviceSpecificIntermediateOutputPath)AppManifest.plist</_TemporaryAppManifest>
 		</PropertyGroup>
 	</Target>
 
@@ -954,14 +1042,22 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</ItemGroup>
 	</Target>
 
-	<Target Name="_DetectSigningIdentity" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_ComputeTargetFrameworkMoniker;_GenerateBundleName">
+	<PropertyGroup>
+		<_DetectSigningIdentityDependsOn>
+			$(_DetectSigningIdentityDependsOn);
+			_DetectSdkLocations;
+			_ComputeTargetFrameworkMoniker;
+			_GenerateBundleName;
+			_ReadAppManifest;
+		</_DetectSigningIdentityDependsOn>
+	</PropertyGroup>
+
+	<Target Name="_DetectSigningIdentity" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="$(_DetectSigningIdentityDependsOn)">
 		<DetectSigningIdentity
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
-			ApplicationId="$(ApplicationId)"
 			AppBundleName="$(_AppBundleName)"
-			AppManifest="$(_AppManifest)"
-			GenerateApplicationManifest="$(GenerateApplicationManifest)"
+			BundleIdentifier="$(_BundleIdentifier)"
 			Keychain="$(CodesignKeychain)"
 			RequireCodeSigning="$(_RequireCodeSigning)"
 			RequireProvisioningProfile="$(_RequireProvisioningProfile)"
@@ -974,7 +1070,6 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			>
 
 			<Output TaskParameter="DetectedAppId" PropertyName="_AppIdentifier" />
-			<Output TaskParameter="DetectedBundleId" PropertyName="_BundleIdentifier" />
 			<Output TaskParameter="DetectedCodeSigningKey" PropertyName="_CodeSigningKey" />
 			<Output TaskParameter="DetectedCodesignAllocate" PropertyName="_CodesignAllocate" />
 			<Output TaskParameter="DetectedDistributionType" PropertyName="_DistributionType" />
@@ -1390,15 +1485,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		/>
 	</Target>
 
-	<Target Name="_GetNativeExecutableName" DependsOnTargets="_DetectAppManifest;_GenerateBundleName;_CompileAppManifest">
-		<GetNativeExecutableName
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			AppManifest="$(_AppBundleManifest)"
-			>
-			<Output TaskParameter="ExecutableName" PropertyName="_ExecutableName" />
-		</GetNativeExecutableName>
-
+	<Target Name="_GetNativeExecutableName" DependsOnTargets="_DetectAppManifest;_GenerateBundleName;_ReadAppManifest">
 		<PropertyGroup>
 			<_NativeExecutable Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'">$(_AppBundlePath)$(_ExecutableName)</_NativeExecutable>
 			<_NativeExecutable Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">$(_AppBundlePath)Contents\MacOS\$(_ExecutableName)</_NativeExecutable>
@@ -1659,11 +1746,11 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</ItemGroup>
 	</Target>
 
-	<Target Name="_CompileProductDefinition" Condition="$(CreatePackage)" DependsOnTargets="_DetectAppManifest;_ComputeTargetArchitectures">
+	<Target Name="_CompileProductDefinition" Condition="$(CreatePackage)" DependsOnTargets="_WriteAppManifest;_ComputeTargetArchitectures">
 		<CompileProductDefinition
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
-			AppManifest="$(_AppManifest)"
+			AppManifest="$(_AppBundleManifest)"
 			OutputDirectory="$(IntermediateOutputPath)"
 			ProductDefinition="$(ProductDefinition)"
 			TargetArchitectures="$(TargetArchitectures)"
@@ -1672,12 +1759,12 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</CompileProductDefinition>
 	</Target>
 
-	<Target Name="_CreateInstaller" Condition="$(CreatePackage)" DependsOnTargets="Codesign;_CompileProductDefinition">
+	<Target Name="_CreateInstaller" Condition="$(CreatePackage)" DependsOnTargets="Codesign;_CompileProductDefinition;_WriteAppManifest">
 		<CreateInstallerPackage
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
 			AppBundleDir="$(AppBundleDir)"
-			AppManifest="$(_AppManifest)"
+			AppManifest="$(_AppBundleManifest)"
 			EnablePackageSigning="$(EnablePackageSigning)"
 			MainAssembly="$(TargetPath)"
 			Name="$(AssemblyName)"

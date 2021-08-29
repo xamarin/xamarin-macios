@@ -40,6 +40,7 @@ namespace Introspection {
 			case "MLCompute":
 			case "MediaSetup":
 			case "Phase":
+			case "ThreadNetwork":
 				if (Runtime.Arch == Arch.SIMULATOR)
 					return true;
 				break;

@@ -132,6 +132,8 @@ namespace Xharness.Jenkins {
 							yield return new TestData { Variation = "Debug (static registrar)", MonoBundlingExtraArgs = "--registrar:static", Debug = true, Undefines = "DYNAMIC_REGISTRAR", Ignored = !jenkins.IncludeMac, };
 							yield return new TestData { Variation = "Debug (static registrar, ARM64)", MonoBundlingExtraArgs = "--registrar:static", Debug = true, Undefines = "DYNAMIC_REGISTRAR", Profiling = false, Ignored = !jenkins.IncludeMac || !mac_supports_arm64, RuntimeIdentifier = arm64_runtime_identifier, };
 						}
+						if (test.Platform == TestPlatform.MacCatalyst)
+							yield return new TestData { Variation = "Release (ARM64, LLVM)", Debug = false, UseLlvm = true, Ignored = !jenkins.IncludeMacCatalyst || !mac_supports_arm64, RuntimeIdentifier = arm64_runtime_identifier };
 					}
 					break;
 				case "xammac tests":
