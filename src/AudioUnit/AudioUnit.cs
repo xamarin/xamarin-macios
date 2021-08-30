@@ -39,6 +39,7 @@ using AudioToolbox;
 using ObjCRuntime;
 using CoreFoundation;
 using Foundation;
+using System.Runtime.Versioning;
 
 namespace AudioUnit
 {
@@ -391,9 +392,14 @@ namespace AudioUnit
 #if !MONOMAC
 		[Obsolete ("This API is not available on iOS.")]
 #endif
+#if NET
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[MacCatalyst (15,0)]
+#endif
 		public static uint GetCurrentInputDevice ()
 		{
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 			// We need to replace AudioHardwareGetProperty since it has been deprecated since OS X 10.6 and iOS 2.0
 			// Replacing with the following implementation recommended in the following doc
 			// See Listing 4  New - Getting the default input device.
@@ -404,7 +410,7 @@ namespace AudioUnit
 			var theAddress = new AudioObjectPropertyAddress (
 				AudioObjectPropertySelector.DefaultInputDevice,
 				AudioObjectPropertyScope.Global,
-				AudioObjectPropertyElement.Master);
+				AudioObjectPropertyElement.Main);
 			uint inQualifierDataSize = 0;
 			IntPtr inQualifierData = IntPtr.Zero;
 
@@ -895,7 +901,12 @@ namespace AudioUnit
 		[DllImport (Constants.AudioUnitLibrary)]
 		static extern AudioUnitStatus AudioUnitScheduleParameters (IntPtr inUnit, AudioUnitParameterEvent inParameterEvent, uint inNumParamEvents);
 
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
+#if !NET
+		[MacCatalyst (15,0)]
+#else
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#endif
 		[DllImport (Constants.AudioUnitLibrary)]
 		static extern int AudioObjectGetPropertyData (
 			uint inObjectID,
