@@ -11,14 +11,20 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 
 namespace Network {
 
+#if !NET
 	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Watch (6,0)]
+#else
+	[SupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("tvos12.0")]
+#endif
 	public class NWListener : NativeObject {
 		bool connectionHandlerWasSet = false;
 		object connectionHandlerLock = new object ();
