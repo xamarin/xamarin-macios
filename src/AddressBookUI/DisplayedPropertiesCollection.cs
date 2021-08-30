@@ -9,6 +9,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Versioning;
 
 using AddressBook;
 using Foundation;
@@ -18,7 +19,14 @@ namespace AddressBookUI {
 
 	delegate T ABFunc<T> ();
 
+#if !NET
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+#else
+	[UnsupportedOSPlatform ("ios9.0")]
+#if IOS
+	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 	public class DisplayedPropertiesCollection : ICollection<ABPersonProperty> {
 
 		ABFunc<NSNumber[]> g;
