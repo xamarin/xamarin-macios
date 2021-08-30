@@ -32,6 +32,7 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using CoreFoundation;
@@ -46,7 +47,12 @@ namespace AudioToolbox {
 		AIFF = 0x41494646, // AIFF
 		AIFC = 0x41494643, // AIFC
 		WAVE = 0x57415645, // WAVE
+#if !NET
 		[NoWatch, iOS (11,0), Mac(10,13), TV (11,0)]
+#else
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+#endif
 		RF64 = 0x52463634, // RF64
 		SoundDesigner2 = 0x53643266, // Sd2f
 		Next = 0x4e655854, // NeXT
@@ -62,9 +68,20 @@ namespace AudioToolbox {
 		ThreeGP = 0x33677070, // 3gpp
 		ThreeGP2 = 0x33677032, // 3gp2
 		AMR = 0x616d7266, // amrf
+#if !NET
 		[NoWatch, iOS (11,0), Mac(10,13), TV (11,0)]
+#else
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+#endif
 		FLAC =  0x666c6163, // flac
+#if !NET
 		[NoWatch, iOS (13,0), Mac(10,15), TV (13,0)]
+#else
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+#endif
 		LatmInLoas = 0x6c6f6173, // loas
 	}
 
@@ -214,7 +231,13 @@ namespace AudioToolbox {
 		}
 	}
 
+#if !NET
 	[NoWatch, iOS (13,0), Mac (10,15), TV (13,0)]
+#else
+	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("macos10.15")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioPacketRangeByteCountTranslation {
 		public long Packet;
@@ -222,21 +245,39 @@ namespace AudioToolbox {
 		public long ByteCountUpperBound;
 	}
 
+#if !NET
 	[NoWatch, iOS (13,0), Mac (10,15), TV (13,0)]
+#else
+	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("macos10.15")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioPacketRollDistanceTranslation {
 		public long Packet;
 		public long RollDistance;
 	}
 
+#if !NET
 	[NoWatch, iOS (13,0), Mac (10,15), TV (13,0)]
+#else
+	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("macos10.15")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioIndependentPacketTranslation {
 		public long Packet;
 		public long IndependentlyDecodablePacket;
 	}
 
+#if !NET
 	[NoWatch, iOS (13,0), Mac (10,15), TV (13,0)]
+#else
+	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("macos10.15")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioPacketDependencyInfoTranslation {
 		public long Packet;
