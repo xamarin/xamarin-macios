@@ -1062,7 +1062,6 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<Output TaskParameter="Registrar" PropertyName="_BundlerRegistrar" />
 			<Output TaskParameter="Verbosity" PropertyName="_BundlerVerbosity" />
 			<Output TaskParameter="XmlDefinitions" ItemName="_BundlerXmlDefinitions" />
-			<Input PropertyName="EnableAssemblyILStripping" />
 			<Output TaskParameter="NoStrip" PropertyName="EnableAssemblyILStripping" />
 		</ParseBundlerArguments>
 
