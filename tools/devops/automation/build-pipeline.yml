@@ -128,7 +128,7 @@ resources:
   - repository: templates
     type: github
     name: xamarin/yaml-templates
-    ref: refs/heads/main
+    ref: refs/heads/pjc/shorten-manifests
     endpoint: xamarin
 
   - repository: maccore
