@@ -8,7 +8,7 @@
 parameters:
 - name: runTests
   type: boolean
-  default: true
+  default: false
 
 - name: runDeviceTests
   type: boolean
@@ -258,7 +258,7 @@ stages:
         enableDotnet: ${{ parameters.enableDotnet }}
 
 # .NET 6 Release Prep and VS Insertion Stages, only execute them when the build comes from an official branch and is not a schedule build from OneLoc
-- ${{ if and(ne(variables['Build.Reason'], 'Schedule'), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), startsWith(variables['Build.SourceBranch'], 'refs/heads/release/'))) }}:
+- ${{ if and(ne(variables['Build.Reason'], 'Schedule'), or(eq(variables['Build.SourceBranch'], 'refs/heads/mattleibow/tvos-msi'), startsWith(variables['Build.SourceBranch'], 'refs/heads/release/'))) }}:
   - template: templates/release/vs-insertion-prep.yml
 
 # Test stages
