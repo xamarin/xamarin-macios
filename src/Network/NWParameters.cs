@@ -182,11 +182,19 @@ namespace Network {
 		}
 
 #if MONOMAC
+#if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10,15)]
+#else
+		[SupportedOSPlatform ("macos10.15")]
+#endif
 		[DllImport (Constants.NetworkLibrary)]
 		unsafe static extern IntPtr nw_parameters_create_custom_ip (byte custom_ip_protocol_number, BlockLiteral *configure_ip);
 
+#if !NET
 		[NoWatch, NoTV, NoiOS, Mac (10,15)]
+#else
+		[SupportedOSPlatform ("macos10.15")]
+#endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public unsafe static NWParameters CreateCustomIP (byte protocolNumber, Action<NWProtocolOptions>? configureCustomIP = null)
 		{

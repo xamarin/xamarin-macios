@@ -95,9 +95,9 @@ namespace Network {
 		static extern OS_nw_protocol_definition nw_protocol_copy_ws_definition ();
 
 #if !XAMCORE_4_0
-		[Obsolete ("Use 'CreateWebSocketDefinition' method instead.")]
 #if !NET
 		[TV (13,0), Mac (10,15), iOS (13,0)]
+		[Obsolete ("Use 'CreateWebSocketDefinition' method instead.")]
 #else
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
