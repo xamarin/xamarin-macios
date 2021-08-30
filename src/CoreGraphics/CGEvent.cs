@@ -8,10 +8,11 @@
  *    Miguel de Icaza
  */
 
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 #if !NO_SYSTEM_DRAWING
 using System.Drawing;
 #endif
@@ -20,6 +21,12 @@ using ObjCRuntime;
 using Foundation;
 
 namespace CoreGraphics {
+
+#if !NET
+		[MacCatalyst (15,0)]
+#else
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#endif
 	public sealed class CGEvent : IDisposable, INativeObject {
 		public delegate IntPtr CGEventTapCallback (IntPtr tapProxyEvent, CGEventType eventType, IntPtr eventRef, IntPtr userInfo);
 

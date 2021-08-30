@@ -29,6 +29,7 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using CoreFoundation;
 using ObjCRuntime;
@@ -83,6 +84,24 @@ namespace CoreGraphics {
 			if (propertyList == null)
 				throw new ArgumentNullException (nameof (propertyList));
 			this.handle = CGColorSpaceCreateWithPropertyList (propertyList.Handle);
+		}
+
+#if !NET
+		[Mac (12,0), iOS (15,0), TV (15,0), Watch (8,0), MacCatalyst (15,0)]
+#else
+		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
+#endif
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern IntPtr CGColorSpaceCreateWithColorSyncProfile (/*[NullAllowed] ColorSyncProfileRef */ IntPtr profile, /*[NullAllowed] CFDictionaryRef */ IntPtr options);
+
+#if !NET
+		[Mac (12,0), iOS (15,0), TV (15,0), Watch (8,0), MacCatalyst (15,0)]
+#else
+		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
+#endif
+		public CGColorSpace (IntPtr? profile, NSDictionary options)
+		{
+			this.handle = CGColorSpaceCreateWithColorSyncProfile (profile ?? IntPtr.Zero, options.GetHandle ());
 		}
 
 		[Preserve (Conditional=true)]
@@ -654,6 +673,39 @@ namespace CoreGraphics {
 		[iOS (14,1), TV (14,2), Watch (7,1), Mac (11,0)]
 		[MacCatalyst (14,0)]
 		public CGColorSpace CreateExtendedLinearized () => Runtime.GetINativeObject<CGColorSpace> (CGColorSpaceCreateExtendedLinearized (handle), owns: true);
+
+#if !NET
+		[Mac (12,0), iOS (15,0), TV (15,0), MacCatalyst (15,0), Watch (8,0)]
+#else
+		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
+#endif
+		[return: MarshalAs (UnmanagedType.I1)]
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern bool CGColorSpaceIsHLGBased (/* CGColorSpace */ IntPtr space);
+
+#if !NET
+		[Mac (12,0), iOS (15,0), TV (15,0), MacCatalyst (15,0), Watch (8,0)]
+#else
+		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
+#endif
+		public bool IsHlgBased => CGColorSpaceIsHLGBased (handle); 
+
+#if !NET
+		[Mac (12,0), iOS (15,0), TV (15,0), MacCatalyst (15,0), Watch (8,0)]
+#else
+		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
+#endif
+		[return: MarshalAs (UnmanagedType.I1)]
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern bool CGColorSpaceIsPQBased (/* CGColorSpace */ IntPtr space);
+
+#if !NET
+		[Mac (12,0), iOS (15,0), TV (15,0), MacCatalyst (15,0), Watch (8,0)]
+#else
+		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
+#endif
+		public bool IsPQBased => CGColorSpaceIsPQBased (handle);
+
 
 #endif // !COREBUILD
 	}

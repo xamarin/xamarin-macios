@@ -91,3 +91,5 @@
 !missing-pinvoke! CGRectOffset is not bound
 !missing-pinvoke! CGShadingGetTypeID is not bound
 !missing-pinvoke! CGSizeEqualToSize is not bound
+!missing-pinvoke! CGErrorSetCallback is not bound
+!missing-pinvoke! CGConvertColorDataWithFormat is not bound

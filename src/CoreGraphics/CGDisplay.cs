@@ -1,17 +1,29 @@
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using ObjCRuntime;
 using Foundation;
 
 namespace CoreGraphics
 {
+
+#if !NET
+		[MacCatalyst (15,0)]
+#else
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#endif
 	public enum CGCaptureOptions : uint
 	{
 		None = 0,
 		NoFill = 1 << 0
 	}
 
+#if !NET
+		[MacCatalyst (15,0)]
+#else
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#endif
 	public static class CGDisplay
 	{
 #if !COREBUILD
