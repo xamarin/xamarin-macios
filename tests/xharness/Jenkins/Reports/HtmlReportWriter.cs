@@ -471,7 +471,7 @@ namespace Xharness.Jenkins.Reports {
 								}
 								if (!exists) {
 									// Don't try to parse files that don't exist
-								} else if (log.Description == LogType.TestLog.ToString () || log.Description == LogType.ExecutionLog.ToString () || log.Description == LogType.ExecutionLog.ToString ()) {
+								} else if (log.Description == LogType.TestLog.ToString () || log.Description == LogType.ExecutionLog.ToString ()) {
 									string summary;
 									List<string> fails;
 									try {
@@ -484,6 +484,9 @@ namespace Xharness.Jenkins.Reports {
 													string? line = reader.ReadLine ()?.Trim ();
 													if (line == null)
 														continue;
+													// Skip any timestamps if the file is timestamped
+													if (log.Timestamp)
+														line = line.Substring ("HH:mm:ss.fffffff".Length).Trim ();
 													if (line.StartsWith ("Tests run:", StringComparison.Ordinal)) {
 														summary = line;
 													} else if (line.StartsWith ("[FAIL]", StringComparison.Ordinal)) {

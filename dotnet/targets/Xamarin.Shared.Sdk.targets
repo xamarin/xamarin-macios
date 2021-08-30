@@ -196,7 +196,9 @@
 		<BuildDependsOn Condition="'$(RuntimeIdentifiers)' != ''">
 			_RunRidSpecificBuild;
 			_CompileEntitlements;
-			_CompileAppManifest;
+			_DetectAppManifest;
+			_ReadAppManifest;
+			_WriteAppManifest;
 			_CreateMergedAppBundle;
 			Codesign;
 			CreateIpa;
@@ -209,7 +211,6 @@
 		<!-- single-rid build (either plain single, or inner build for multi-rid build) -->
 		<CreateAppBundleDependsOn Condition="'$(RuntimeIdentifiers)' == ''">
 			$(CreateAppBundleDependsOn);
-			_DetectAppManifest;
 			_CopyResourcesToBundle;
 			_CompileCoreMLModels;
 			_CreatePkgInfo;
@@ -217,7 +218,9 @@
 			_ForgeMetal;
 			_TemperMetal;
 			_CompileEntitlements;
-			_CompileAppManifest;
+			_DetectAppManifest;
+			_ReadAppManifest;
+			_WriteAppManifest;
 			_ResolveAppExtensionReferences;
 			_ExtendAppExtensionReferences;
 			_ComputeLinkerArguments;
@@ -369,6 +372,9 @@
 			_CreateRuntimeConfiguration;
 			_ComputeMonoLibraries;
 			_FindAotCompiler;
+			_DetectAppManifest;
+			_ReadAppManifest;
+			_WriteAppManifest;
 		</_ComputeLinkerArgumentsDependsOn>
 	</PropertyGroup>
 
@@ -804,9 +810,19 @@
 		</FindAotCompiler>
 	</Target>
 
+	<PropertyGroup>
+		<_AOTCompileDependsOn>
+			$(_AOTCompileDependsOn);
+			_ComputeVariables;
+			_FindAotCompiler;
+			_DetectAppManifest;
+			_ReadAppManifest;
+			_WriteAppManifest;
+		</_AOTCompileDependsOn>
+	</PropertyGroup>
 	<Target Name="_AOTCompile"
 			Condition="'$(_RunAotCompiler)' == 'true'"
-			DependsOnTargets="_ComputeVariables;_FindAotCompiler"
+			DependsOnTargets="$(_AOTCompileDependsOn)"
 			Inputs="@(_AssembliesToAOT)"
 			Outputs="@(_AssembliesToAOT -> '%(ObjectFile)');@(_AssembliesToAOT -> '%(LLVMFile)');">
 
@@ -881,8 +897,22 @@
 		</ItemGroup>
 	</Target>
 
+	<PropertyGroup>
+		<_CompileNativeExecutableDependsOn>
+			$(_CompileNativeExecutableDependsOn);
+			_DetectSdkLocations;
+			_ComputeTargetArchitectures;
+			_GenerateBundleName;
+			_DetectAppManifest;
+			_ReadAppManifest;
+			_WriteAppManifest;
+			_ComputeNativeExecutableInputs;
+			_AOTCompile;
+		</_CompileNativeExecutableDependsOn>
+	</PropertyGroup>
+
 	<Target Name="_CompileNativeExecutable"
-		DependsOnTargets="_DetectSdkLocations;_ComputeTargetArchitectures;_GenerateBundleName;_ReadAppManifest;_ComputeNativeExecutableInputs;_AOTCompile;"
+		DependsOnTargets="$(_CompileNativeExecutableDependsOn)"
 		Inputs="@(_CompileNativeExecutableFile)"
 		Outputs="@(_CompileNativeExecutableFile -> '%(OutputFile)')"
 		>
@@ -906,8 +936,21 @@
 		</ItemGroup>
 	</Target>
 
+	<PropertyGroup>
+		<_LinkNativeExecutableDependsOn>
+			$(_LinkNativeExecutableDependsOn);
+			_DetectSdkLocations;
+			_ComputeTargetArchitectures;
+			_GenerateBundleName;
+			_DetectAppManifest;
+			_ReadAppManifest;
+			_WriteAppManifest;
+			_CompileNativeExecutable;
+		</_LinkNativeExecutableDependsOn>
+	</PropertyGroup>
+
 	<Target Name="_LinkNativeExecutable"
-			DependsOnTargets="_DetectSdkLocations;_ComputeTargetArchitectures;_GenerateBundleName;_CompileNativeExecutable;_CompileAppManifest"
+			DependsOnTargets="$(_LinkNativeExecutableDependsOn)"
 			Inputs="@(_NativeExecutableObjectFiles)"
 			Outputs="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName)"
 		>

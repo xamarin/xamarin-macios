@@ -884,6 +884,10 @@
         <value>Could not map the macOS version {0} to a corresponding iOS version</value>
     </data>
 
+    <data name="E0188" xml:space="preserve">
+        <value>Could not map the iOS version {0} to a corresponding macOS version</value>
+    </data>
+
     <data name="E7001" xml:space="preserve">
         <value>Could not resolve host IPs for WiFi debugger settings.
         </value>
