@@ -74,10 +74,5 @@ stages:
   parameters:
     dependsOn: prepare_release
     symbolArtifactName: nuget-signed
-    symbolArtifactPatterns: |
-      Microsoft.NET.Sdk.iOS.Manifest*.nupkg
-      Microsoft.NET.Sdk.MacCatalyst.Manifest*.nupkg
-      Microsoft.iOS*.nupkg
-      Microsoft.MacCatalyst*.nupkg
     symbolConversionFilters: '*mlaunch.app*'
     condition: eq(variables.IsPRBuild, 'False')
