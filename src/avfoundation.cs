@@ -9205,10 +9205,6 @@ namespace AVFoundation {
 		[NoMac, iOS (13,0)]
 		[Export ("videoMinFrameDurationOverride", ArgumentSemantic.Assign)]
 		CMTime VideoMinFrameDurationOverride { get; set; }
-
-		[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-		[Export ("minimumFocusDistance")]
-		nint MinimumFocusDistance { get; }
 	}
 
 	[NoiOS, NoTV, NoWatch, MacCatalyst (15,0)]
