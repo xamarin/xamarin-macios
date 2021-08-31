@@ -58,7 +58,6 @@ namespace CoreText {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-		[UnsupportedOSPlatform ("macos")]
 #endif
 		Session = 3,
 #if !XAMCORE_4_0
@@ -68,7 +67,6 @@ namespace CoreText {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-		[UnsupportedOSPlatform ("macos")]
 #endif
 		User = Persistent,
 #endif
