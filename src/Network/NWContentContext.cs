@@ -11,6 +11,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
@@ -21,8 +22,13 @@ namespace Network {
 	// The content context, there are a few pre-configured content contexts for sending
 	// available as static properties on this class
 	//
+#if !NET
 	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Watch (6,0)]
+#else
+	[SupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("tvos12.0")]
+#endif
 	public class NWContentContext : NativeObject {
 		bool global;
 		public NWContentContext (IntPtr handle, bool owns) : base (handle, owns)

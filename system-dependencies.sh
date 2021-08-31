@@ -785,6 +785,18 @@ function check_osx_version () {
 	ok "Found OSX $ACTUAL_OSX_VERSION (at least $MIN_OSX_BUILD_VERSION is required)"
 }
 
+function check_checkout_dir () {
+	# use apple script to get the possibly translated special folders and check that we are not a subdir
+	for special in documents downloads desktop; do
+		path=$(osascript -e "set result to POSIX path of (path to $special folder as string)")
+		if [[ $PWD == $path* ]]; then
+			fail "Your checkout is under $path which is a special path. This can result in problems running the tests."
+		fi
+	done
+	ok "Checkout location will not result in test problems."
+}
+
+
 function install_cmake () {
 	if ! brew --version >& /dev/null; then
 		fail "Asked to install cmake, but brew is not installed."
@@ -1045,6 +1057,7 @@ function check_dotnet ()
 echo "Checking system..."
 
 check_osx_version
+check_checkout_dir
 check_xcode
 check_homebrew
 check_autotools

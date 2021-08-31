@@ -713,6 +713,9 @@
   <data name="E0187" xml:space="preserve">
         <value>無法將 macOS 版本 {0}　對應至相應的 iOS 版本</value>
     </data>
+  <data name="E0188" xml:space="preserve">
+        <value>Could not map the iOS version {0} to a corresponding macOS version</value>
+    </data>
   <data name="E7001" xml:space="preserve">
         <value>無法解析 WiFi 偵錯工具設定的主機 IP。
         </value>
@@ -1041,6 +1044,13 @@
             This error will be shown multiple times, listing the full path to the files causing E7076, E7077 and E7079.
             {0}: a number indicating which input app bundle the file is from
             {1}: the full path to the file in question
+        </comment>
+    </data>
+  <data name="E7081" xml:space="preserve">
+        <value>The AOT compiler '{0}' does not exist.</value>
+        <comment>
+            AOT: Ahead-Of-Time
+            {0}: the path to the compiler
         </comment>
     </data>
 </root>

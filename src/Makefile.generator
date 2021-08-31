@@ -29,6 +29,7 @@ $(DOTNET_DESTDIR)/%.Sdk/tools/bin/bgen: bgen/bgen.dotnet | $(DOTNET_DESTDIR)/%.S
 
 $(DOTNET_DESTDIR)/%.Sdk/tools/lib/Xamarin.Apple.BindingAttributes.dll: $(DOTNET_BUILD_DIR)/Xamarin.Apple.BindingAttributes.dll | $(DOTNET_DESTDIR)/%.Sdk/tools/lib
 	$(Q) $(CP) $< $@
+	$(Q) $(CP) $(<:.dll=.pdb) $(@:.dll=.pdb)
 
 DOTNET_TARGETS += \
 	$(DOTNET_BUILD_DIR)/bgen/bgen \

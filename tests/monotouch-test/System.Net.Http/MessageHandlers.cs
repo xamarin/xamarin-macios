@@ -9,6 +9,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Net;
 using System.Net.Http;
+#if NET
+using System.Net.Security;
+#endif
 using System.Linq;
 using System.IO;
 
@@ -120,6 +123,9 @@ namespace MonoTests.System.Net.Http
 				}
 			}, () => completed);
 
+			if (!completed)
+				TestRuntime.IgnoreInCI ("Transient network failure - ignore in CI");
+			Assert.IsTrue (completed, "Network request completed");
 			Assert.IsNull (ex, "Exception");
 			Assert.IsTrue (managedCookieResult, $"Failed to get managed cookies");
 			Assert.IsTrue (nativeCookieResult, $"Failed to get native cookies");
@@ -167,6 +173,9 @@ namespace MonoTests.System.Net.Http
 				}
 			}, () => completed);
 
+			if (!completed)
+				TestRuntime.IgnoreInCI ("Transient network failure - ignore in CI");
+			Assert.IsTrue (completed, "Network request completed");
 			Assert.IsNull (ex, "Exception");
 			Assert.IsNotNull (managedCookieResult, "Managed cookies result");
 			Assert.IsNotNull (nativeCookieResult, "Native cookies result");
@@ -201,6 +210,9 @@ namespace MonoTests.System.Net.Http
 				}
 			}, () => completed);
 
+			if (!completed)
+				TestRuntime.IgnoreInCI ("Transient network failure - ignore in CI");
+			Assert.IsTrue (completed, "Network request completed");
 			Assert.IsNull (ex, "Exception");
 			Assert.IsNotNull (nativeCookieResult, "Native cookies result");
 			var cookiesFromServer = cookieContainer.GetCookies (new Uri (url));
@@ -243,6 +255,9 @@ namespace MonoTests.System.Net.Http
 				}
 			}, () => completed);
 
+			if (!completed)
+				TestRuntime.IgnoreInCI ("Transient network failure - ignore in CI");
+			Assert.IsTrue (completed, "Network request completed");
 			Assert.IsNull (ex, "Exception");
 			Assert.IsNotNull (nativeSetCookieResult, "Native set-cookies result");
 			Assert.IsNotNull (nativeCookieResult, "Native cookies result");
@@ -286,6 +301,9 @@ namespace MonoTests.System.Net.Http
 				}
 			}, () => completed);
 
+			if (!completed)
+				TestRuntime.IgnoreInCI ("Transient network failure - ignore in CI");
+			Assert.IsTrue (completed, "Network request completed");
 			Assert.IsNull (ex, "Exception");
 			Assert.IsNotNull (nativeSetCookieResult, "Native set-cookies result");
 			Assert.IsNotNull (nativeCookieResult, "Native cookies result");
@@ -357,7 +375,12 @@ namespace MonoTests.System.Net.Http
 		}
 
 #if !__WATCHOS__
+#if !NET // By default HttpClientHandler redirects to a NSUrlSessionHandler, so no need to test that here.
 		[TestCase (typeof (HttpClientHandler))]
+#endif
+#endif
+#if NET
+		[TestCase (typeof (SocketsHttpHandler))]
 #endif
 		[TestCase (typeof (NSUrlSessionHandler))]
 		public void RejectSslCertificatesServicePointManager (Type handlerType)
@@ -368,11 +391,6 @@ namespace MonoTests.System.Net.Http
 #if __MACOS__
 			if (handlerType == typeof (NSUrlSessionHandler) && TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 10, 0) && !TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 11, 0))
 				Assert.Ignore ("Fails on macOS 10.10: https://github.com/xamarin/maccore/issues/1645");
-#endif
-
-#if NET
-			if (handlerType == typeof (HttpClientHandler))
-				Assert.Ignore ("https://github.com/dotnet/runtime/issues/55986");
 #endif
 
 			bool validationCbWasExecuted = false;
@@ -395,6 +413,20 @@ namespace MonoTests.System.Net.Http
 					invalidServicePointManagerCbWasExcuted = true;
 					return false;
 				};
+#if NET
+			} else if (handler is SocketsHttpHandler shh) {
+				expectedExceptionType = typeof (AuthenticationException);
+				var sslOptions = new SslClientAuthenticationOptions
+				{
+					// Leave certs unvalidated for debugging
+					RemoteCertificateValidationCallback = delegate {
+						validationCbWasExecuted = true;
+						// return false, since we want to test that the exception is raised
+						return false;
+					},
+				};
+				shh.SslOptions = sslOptions;
+#endif // NET
 			} else if (handler is NSUrlSessionHandler ns) {
 				expectedExceptionType = typeof (WebException);
 				ns.TrustOverride += (a,b) => {
@@ -534,6 +566,8 @@ namespace MonoTests.System.Net.Http
 			if (!done) { // timeouts happen in the bots due to dns issues, connection issues etc.. we do not want to fail
 				Assert.Inconclusive ("Request timedout.");
 			} else {
+				if (httpStatus == HttpStatusCode.BadGateway)
+					TestRuntime.IgnoreInCI ("Transient network failure - ignore in CI");
 				Assert.IsNull (ex, "Exception not null");
 				Assert.AreEqual (expectedStatus, httpStatus, "Status not ok");
 			}
@@ -572,6 +606,8 @@ namespace MonoTests.System.Net.Http
 			if (!done) { // timeouts happen in the bots due to dns issues, connection issues etc.. we do not want to fail
 				Assert.Inconclusive ("First request timedout.");
 			} else {
+				if (httpStatus == HttpStatusCode.BadGateway)
+					TestRuntime.IgnoreInCI ("Transient network failure - ignore in CI");
 				Assert.IsNull (ex, "First request exception not null");
 				Assert.AreEqual (HttpStatusCode.OK, httpStatus, "First status not ok");
 			}
@@ -601,6 +637,8 @@ namespace MonoTests.System.Net.Http
 			if (!done) { // timeouts happen in the bots due to dns issues, connection issues etc.. we do not want to fail
 				Assert.Inconclusive ("Second request timedout.");
 			} else {
+				if (httpStatus == HttpStatusCode.BadGateway)
+					TestRuntime.IgnoreInCI ("Transient network failure - ignore in CI");
 				Assert.IsNull (ex, "Second request exception not null");
 				Assert.AreEqual (HttpStatusCode.Unauthorized, httpStatus, "Second status not ok");
 			}
