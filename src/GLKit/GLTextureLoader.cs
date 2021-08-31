@@ -28,6 +28,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using Foundation;
 using CoreFoundation;
 using CoreGraphics;
@@ -150,9 +151,22 @@ namespace GLKit {
 		
 	}
 
+#if !NET
 	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
+#else
+	[UnsupportedOSPlatform ("ios12.0")]
+	[UnsupportedOSPlatform ("tvos12.0")]
+	[UnsupportedOSPlatform ("macos10.14")]
+#if IOS
+	[Obsolete ("Starting with ios12.0 use 'Metal' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+	[Obsolete ("Starting with tvos12.0 use 'Metal' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+	[Obsolete ("Starting with macos10.14 use 'Metal' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 	public class GLKTextureOperations : DictionaryContainer {
 		public GLKTextureOperations () : base (new NSMutableDictionary ()) {}
 
@@ -194,7 +208,9 @@ namespace GLKit {
 			}
 		}
 
+#if !NET
 		[iOS (7,0)]
+#endif
 		public bool? SRGB {
 			get {
 				return GetBoolValue (GLKTextureLoader.SRGB);
