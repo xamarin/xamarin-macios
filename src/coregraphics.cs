@@ -289,7 +289,7 @@ namespace CoreGraphics {
 
 		[Mac (12, 0), iOS (15, 0), TV (15,0), Watch (8,0), MacCatalyst (15,0)]
 		[Field ("kCGColorSpaceLinearITUR_2020")]
-		NSString LinearITUR_2020 { get; }
+		NSString LinearItur_2020 { get; }
 	}
 
 	[Partial]

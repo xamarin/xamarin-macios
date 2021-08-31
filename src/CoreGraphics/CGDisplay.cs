@@ -9,9 +9,9 @@ namespace CoreGraphics
 {
 
 #if !NET
-		[MacCatalyst (15,0)]
+	[MacCatalyst (15,0)]
 #else
-		[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("maccatalyst15.0")]
 #endif
 	public enum CGCaptureOptions : uint
 	{
@@ -20,9 +20,9 @@ namespace CoreGraphics
 	}
 
 #if !NET
-		[MacCatalyst (15,0)]
+	[MacCatalyst (15,0)]
 #else
-		[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("maccatalyst15.0")]
 #endif
 	public static class CGDisplay
 	{

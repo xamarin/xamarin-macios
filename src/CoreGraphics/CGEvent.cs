@@ -23,9 +23,9 @@ using Foundation;
 namespace CoreGraphics {
 
 #if !NET
-		[MacCatalyst (15,0)]
+	[MacCatalyst (15,0)]
 #else
-		[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("maccatalyst15.0")]
 #endif
 	public sealed class CGEvent : IDisposable, INativeObject {
 		public delegate IntPtr CGEventTapCallback (IntPtr tapProxyEvent, CGEventType eventType, IntPtr eventRef, IntPtr userInfo);

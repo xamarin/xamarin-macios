@@ -1,4 +1,4 @@
-# ignored in macOs too
+# ignored in macOS too
 !missing-enum! CGConfigureOption not bound
 !missing-enum! CGDisplayChangeSummaryFlags not bound
 !missing-enum! CGDisplayStreamFrameStatus not bound

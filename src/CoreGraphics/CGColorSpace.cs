@@ -86,24 +86,6 @@ namespace CoreGraphics {
 			this.handle = CGColorSpaceCreateWithPropertyList (propertyList.Handle);
 		}
 
-#if !NET
-		[Mac (12,0), iOS (15,0), TV (15,0), Watch (8,0), MacCatalyst (15,0)]
-#else
-		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
-#endif
-		[DllImport (Constants.CoreGraphicsLibrary)]
-		static extern IntPtr CGColorSpaceCreateWithColorSyncProfile (/*[NullAllowed] ColorSyncProfileRef */ IntPtr profile, /*[NullAllowed] CFDictionaryRef */ IntPtr options);
-
-#if !NET
-		[Mac (12,0), iOS (15,0), TV (15,0), Watch (8,0), MacCatalyst (15,0)]
-#else
-		[SupportedOSPlatform ("ios15.0"), SupportedOSPlatform ("tvos15.0"), SupportedOSPlatform ("macos12.0"), SupportedOSPlatform ("maccatalyst15.0")]
-#endif
-		public CGColorSpace (IntPtr? profile, NSDictionary options)
-		{
-			this.handle = CGColorSpaceCreateWithColorSyncProfile (profile ?? IntPtr.Zero, options.GetHandle ());
-		}
-
 		[Preserve (Conditional=true)]
 		internal CGColorSpace (IntPtr handle, bool owns)
 		{

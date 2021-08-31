@@ -7,6 +7,9 @@
 # There's an identical function that takes a C callback instead of a block, and which we've bound, which makes this function redundant since the managed API would be identical.
 !missing-pinvoke! CGPDFDictionaryApplyBlock is not bound
 
+# not yet sure how to bind this
+!missing-pinvoke! CGColorSpaceCreateWithColorSyncProfile is not bound
+
 ## unsorted
 
 !missing-enum! CGBitmapInfo not bound
