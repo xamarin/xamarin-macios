@@ -1,6 +1,7 @@
 using System;
 using ObjCRuntime;
 using Foundation;
+using System.Runtime.Versioning;
 
 namespace HomeKit {
 
@@ -36,7 +37,9 @@ namespace HomeKit {
 			}
 		}
 
+#if !NET
 		[iOS (9,3)][Watch (2,2)]
+#endif
 		public bool Hidden {
 			get {
 				foreach (var p in Properties) {

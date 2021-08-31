@@ -9,6 +9,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Net;
 using System.Net.Http;
+#if NET
+using System.Net.Security;
+#endif
 using System.Linq;
 using System.IO;
 
@@ -372,7 +375,12 @@ namespace MonoTests.System.Net.Http
 		}
 
 #if !__WATCHOS__
+#if !NET // By default HttpClientHandler redirects to a NSUrlSessionHandler, so no need to test that here.
 		[TestCase (typeof (HttpClientHandler))]
+#endif
+#endif
+#if NET
+		[TestCase (typeof (SocketsHttpHandler))]
 #endif
 		[TestCase (typeof (NSUrlSessionHandler))]
 		public void RejectSslCertificatesServicePointManager (Type handlerType)
@@ -383,11 +391,6 @@ namespace MonoTests.System.Net.Http
 #if __MACOS__
 			if (handlerType == typeof (NSUrlSessionHandler) && TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 10, 0) && !TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 11, 0))
 				Assert.Ignore ("Fails on macOS 10.10: https://github.com/xamarin/maccore/issues/1645");
-#endif
-
-#if NET
-			if (handlerType == typeof (HttpClientHandler))
-				Assert.Ignore ("https://github.com/dotnet/runtime/issues/55986");
 #endif
 
 			bool validationCbWasExecuted = false;
@@ -410,6 +413,20 @@ namespace MonoTests.System.Net.Http
 					invalidServicePointManagerCbWasExcuted = true;
 					return false;
 				};
+#if NET
+			} else if (handler is SocketsHttpHandler shh) {
+				expectedExceptionType = typeof (AuthenticationException);
+				var sslOptions = new SslClientAuthenticationOptions
+				{
+					// Leave certs unvalidated for debugging
+					RemoteCertificateValidationCallback = delegate {
+						validationCbWasExecuted = true;
+						// return false, since we want to test that the exception is raised
+						return false;
+					},
+				};
+				shh.SslOptions = sslOptions;
+#endif // NET
 			} else if (handler is NSUrlSessionHandler ns) {
 				expectedExceptionType = typeof (WebException);
 				ns.TrustOverride += (a,b) => {
