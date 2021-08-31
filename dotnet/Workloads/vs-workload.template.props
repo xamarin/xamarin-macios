@@ -9,6 +9,9 @@
     <ShortNames Include="@PACK_VERSION_LONG@">
       <Replacement>@PACK_VERSION_SHORT@</Replacement>
     </ShortNames>
+    <ShortNames Include="@MACOS_PACK_VERSION_LONG@">
+      <Replacement>@MACOS_PACK_VERSION_SHORT@</Replacement>
+    </ShortNames>
     <ShortNames Include="Microsoft.MacCatalyst.Runtime.maccatalyst">
       <Replacement>Microsoft.MacCatalyst.Runtime</Replacement>
     </ShortNames>
