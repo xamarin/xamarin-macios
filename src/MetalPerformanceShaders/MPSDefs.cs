@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using Foundation;
 using ObjCRuntime;
@@ -11,7 +12,9 @@ using OpenTK;
 namespace MetalPerformanceShaders {
 
 	// uses NSInteger
+#if !NET
 	[Mac (10, 13)]
+#endif
 	public struct MPSOffset {
 		public nint X;
 		public nint Y;
@@ -19,7 +22,9 @@ namespace MetalPerformanceShaders {
 	}
 
 	// really use double, not CGFloat
+#if !NET
 	[Mac (10, 13)]
+#endif
 	public struct MPSOrigin {
 		public double X;
 		public double Y;
@@ -27,7 +32,9 @@ namespace MetalPerformanceShaders {
 	}
 
 	// really use double, not CGFloat
+#if !NET
 	[Mac (10, 13)]
+#endif
 	public struct MPSSize {
 		public double Width;
 		public double Height;
@@ -35,20 +42,30 @@ namespace MetalPerformanceShaders {
 	}
 
 	// uses NSUInteger
+#if !NET
 	[iOS (13,0), TV (13,0), Mac (10,15)]
+#else
+	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("macos10.15")]
+#endif
 	public struct MPSDimensionSlice {
 		public nuint Start;
 		public nuint Length;
 	}
 
+#if !NET
 	[Mac (10, 13)]
+#endif
 	public struct MPSRegion {
 		public MPSOrigin Origin;
 		public MPSSize Size;
 	}
 
 	// really use double, not CGFloat
+#if !NET
 	[Mac (10, 13)]
+#endif
 	public struct MPSScaleTransform {
 		public double ScaleX;
 		public double ScaleY;
@@ -56,21 +73,33 @@ namespace MetalPerformanceShaders {
 		public double TranslateY;
 	}
 
+#if !NET
 	[iOS (11,3), TV (11,3), Mac (10,13,4)]
+#else
+	[SupportedOSPlatform ("ios11.3")]
+	[SupportedOSPlatform ("tvos11.3")]
+#endif
 	public struct MPSImageCoordinate {
 		public nuint X;
 		public nuint Y;
 		public nuint Channel;
 	}
 
+#if !NET
 	[iOS (11,3), TV (11,3), Mac (10,13,4)]
+#else
+	[SupportedOSPlatform ("ios11.3")]
+	[SupportedOSPlatform ("tvos11.3")]
+#endif
 	public struct MPSImageRegion {
 		public MPSImageCoordinate Offset;
 		public MPSImageCoordinate Size;
 	}
 
 	// MPSImageHistogram.h
+#if !NET
 	[Mac (10, 13)]
+#endif
 	[StructLayout (LayoutKind.Explicit)]
 	public struct MPSImageHistogramInfo {
 		[FieldOffset (0)]
@@ -92,7 +121,12 @@ namespace MetalPerformanceShaders {
 	public delegate NSObject MPSCopyAllocator (MPSKernel filter, NSObject commandBuffer, NSObject sourceTexture);
 	// https://trello.com/c/GqtNId1C/517-generator-our-block-delegates-needs-to-use-wrapper-for-protocols
 
+#if !NET
 	[TV (11, 0), Mac (10, 13), iOS (11, 0)]
+#else
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("tvos11.0")]
+#endif
 	public struct MPSMatrixCopyOffsets {
 		public uint SourceRowOffset;
 		public uint SourceColumnOffset;
@@ -100,19 +134,34 @@ namespace MetalPerformanceShaders {
 		public uint DestinationColumnOffset;
 	}
 
+#if !NET
 	[TV (11, 0), Mac (10, 13), iOS (11, 0)]
+#else
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("tvos11.0")]
+#endif
 	public struct MPSImageReadWriteParams {
 		public nuint FeatureChannelOffset;
 		public nuint NumberOfFeatureChannelsToReadWrite;
 	}
 
+#if !NET
 	[TV (11, 0), Mac (10, 13), iOS (11, 0)]
+#else
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("tvos11.0")]
+#endif
 	public struct MPSImageKeypointRangeInfo {
 		public nuint MaximumKeypoints;
 		public float MinimumThresholdValue;
 	}
 
+#if !NET
 	[TV (11, 3), iOS (11, 3), Mac (10, 13, 4)]
+#else
+	[SupportedOSPlatform ("ios11.3")]
+	[SupportedOSPlatform ("tvos11.3")]
+#endif
 	public struct MPSStateTextureInfo {
 		public nuint Width;
 		public nuint Height;
@@ -148,7 +197,12 @@ namespace MetalPerformanceShaders {
 #endif
 	}
 
+#if !NET
 	[TV (12, 0), Mac (10, 14), iOS (12, 0)]
+#else
+	[SupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("tvos12.0")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MPSAxisAlignedBoundingBox {
 		public Vector3 Min;
@@ -165,7 +219,12 @@ namespace MetalPerformanceShaders {
 		// MaxTextures = 128 or 32,
 	}
 
+#if !NET
 	[iOS (11,2), TV (11,2), Mac (10,13,2)]
+#else
+	[SupportedOSPlatform ("ios11.2")]
+	[SupportedOSPlatform ("tvos11.2")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MPSMatrixOffset
 	{
