@@ -125,7 +125,7 @@ namespace AudioUnit
 #if IOS
 		[Obsolete ("Starting with ios13.0 use 'AudioTypeConverter.NewTimePitch' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif TVOS
-		[Obsolete ("Starting with tvos13.0 use 'AudioTypeConverter.NewTimePitch' instead.'", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with tvos13.0 use 'AudioTypeConverter.NewTimePitch' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif // if !NET
 		AUiPodTime=0x6970746d, // 'iptm'
