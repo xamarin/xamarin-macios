@@ -55,13 +55,15 @@ namespace SceneKit {
 	partial class SCNMaterialProperty {
 #if !NET
 	[iOS (8, 0)]
-		[Deprecated (PlatformName.iOS, 10, 0)]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "This API has been totally removed on iOS.")]
 		[Deprecated (PlatformName.TvOS, 10, 0, message: "This API has been totally removed on tvOS.")]
 #else
 		[UnsupportedOSPlatform ("ios10.10")]
 		[UnsupportedOSPlatform ("tvos10.10")]
 #if TVOS
 		[Obsolete ("Starting with tvos10.10 this API has been totally removed on tvOS.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios10.10 this API has been totally removed on iOS.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 		public virtual NSObject? BorderColor { get; set; }
@@ -70,13 +72,15 @@ namespace SceneKit {
 	partial class SCNRenderer {
 #if !NET
 		[iOS (8, 0)]
-		[Deprecated (PlatformName.iOS, 9, 0)]
+		[Deprecated (PlatformName.iOS, 9, 0, message: "This API has been totally removed on iOS.")]
 		[Deprecated (PlatformName.TvOS, 10, 0, message: "This API has been totally removed on tvOS.")]
 #else
-		[UnsupportedOSPlatform ("ios10.10")]
+		[UnsupportedOSPlatform ("ios9.0")]
 		[UnsupportedOSPlatform ("tvos10.10")]
 #if TVOS
 		[Obsolete ("Starting with tvos10.10 this API has been totally removed on tvOS.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios9.0 this API has been totally removed on iOS.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 		public virtual void Render ()
