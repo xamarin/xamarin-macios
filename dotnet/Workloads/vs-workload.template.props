@@ -12,9 +12,6 @@
     <ShortNames Include="Microsoft.MacCatalyst.Runtime.maccatalyst">
       <Replacement>Microsoft.MacCatalyst.Runtime</Replacement>
     </ShortNames>
-    <ShortNames Include="Microsoft.NET.Sdk.MacCatalyst.Manifest">
-      <Replacement>Microsoft.MacCatalyst.Manifest</Replacement>
-    </ShortNames>
     <ComponentResources Include="ios" Version="@IOS_WORKLOAD_VERSION@" Category=".NET" Title=".NET SDK for iOS" Description=".NET SDK Workload for building iOS applications."/>
     <ComponentResources Include="maccatalyst" Version="@MACCATALYST_WORKLOAD_VERSION@" Category=".NET" Title=".NET SDK for Mac Catalyst" Description=".NET SDK Workload for building macOS applications with Mac Catalyst."/>
     <ComponentResources Include="macos" Version="@MACOS_WORKLOAD_VERSION@" Category=".NET" Title=".NET SDK for macOS" Description=".NET SDK Workload for building macOS applications."/>
