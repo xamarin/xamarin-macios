@@ -348,7 +348,11 @@ namespace Metal {
 	}
 #endif // COREBUILD
 #if MONOMAC
+#if !NET
 	[NoiOS, NoTV, NoWatch, Mac (10,14)]
+#else
+	[SupportedOSPlatform ("macos10.14")]
+#endif
 	public struct MTLIndirectCommandBufferExecutionRange
 	{
 		public uint Location;
