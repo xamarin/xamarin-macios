@@ -12,6 +12,10 @@ namespace FileProvider {
 #if !NET
 		[Obsolete ("This API was removed from macOS in Xcode 12.2 beta 2.")]
 #else
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
 		[Obsolete ("This API was removed from macOS in Xcode 12.2 beta 2.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 		public static Foundation.NSNumber GetFavoriteRank (this INSFileProviderItem This)
