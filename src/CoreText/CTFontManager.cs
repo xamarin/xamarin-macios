@@ -114,9 +114,7 @@ namespace CoreText {
 #else
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("macos10.6")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.6 API not available on iOS, it will always return false.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[Obsolete ("This API will always return false.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 		public static bool IsFontSupported (NSUrl url)
 		{
