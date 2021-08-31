@@ -17,7 +17,7 @@ using LocalAuthentication;
 namespace LocalAuthenticationEmbeddedUI {
     
     [NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (12,0)]
-    [BaseType (typeof(NSView))]
+    [BaseType (typeof (NSView))]
     interface LAAuthenticationView
     {
         [Export ("initWithFrame:")]
