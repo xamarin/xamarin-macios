@@ -17,7 +17,11 @@
     </ShortNames>
     <ComponentResources Include="ios" Version="@IOS_WORKLOAD_VERSION@" Category=".NET" Title=".NET SDK for iOS" Description=".NET SDK Workload for building iOS applications."/>
     <ComponentResources Include="maccatalyst" Version="@MACCATALYST_WORKLOAD_VERSION@" Category=".NET" Title=".NET SDK for Mac Catalyst" Description=".NET SDK Workload for building macOS applications with Mac Catalyst."/>
+    <ComponentResources Include="macos" Version="@MACOS_WORKLOAD_VERSION@" Category=".NET" Title=".NET SDK for macOS" Description=".NET SDK Workload for building macOS applications."/>
+    <ComponentResources Include="tvos" Version="@TVOS_WORKLOAD_VERSION@" Category=".NET" Title=".NET SDK for tvOS" Description=".NET SDK Workload for building tvOS applications."/>
     <WorkloadPackages Include="$(NuGetPackagePath)\Microsoft.NET.Sdk.iOS.Manifest*.nupkg" Version="@IOS_WORKLOAD_VERSION@" />
     <WorkloadPackages Include="$(NuGetPackagePath)\Microsoft.NET.Sdk.MacCatalyst.Manifest*.nupkg" Version="@MACCATALYST_WORKLOAD_VERSION@" />
+    <WorkloadPackages Include="$(NuGetPackagePath)\Microsoft.NET.Sdk.macOS.Manifest*.nupkg" Version="@MACOS_WORKLOAD_VERSION@" />
+    <WorkloadPackages Include="$(NuGetPackagePath)\Microsoft.NET.Sdk.tvOS.Manifest*.nupkg" Version="@TVOS_WORKLOAD_VERSION@" />
   </ItemGroup>
 </Project>
