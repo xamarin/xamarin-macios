@@ -58,12 +58,12 @@ namespace SceneKit {
 		[Deprecated (PlatformName.iOS, 10, 0, message: "This API has been totally removed on iOS.")]
 		[Deprecated (PlatformName.TvOS, 10, 0, message: "This API has been totally removed on tvOS.")]
 #else
-		[UnsupportedOSPlatform ("ios10.10")]
-		[UnsupportedOSPlatform ("tvos10.10")]
+		[UnsupportedOSPlatform ("ios10.0")]
+		[UnsupportedOSPlatform ("tvos10.0")]
 #if TVOS
-		[Obsolete ("Starting with tvos10.10 this API has been totally removed on tvOS.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with tvos10.0 this API has been totally removed on tvOS.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif IOS
-		[Obsolete ("Starting with ios10.10 this API has been totally removed on iOS.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with ios10.0 this API has been totally removed on iOS.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 		public virtual NSObject? BorderColor { get; set; }
@@ -76,9 +76,9 @@ namespace SceneKit {
 		[Deprecated (PlatformName.TvOS, 10, 0, message: "This API has been totally removed on tvOS.")]
 #else
 		[UnsupportedOSPlatform ("ios9.0")]
-		[UnsupportedOSPlatform ("tvos10.10")]
+		[UnsupportedOSPlatform ("tvos10.0")]
 #if TVOS
-		[Obsolete ("Starting with tvos10.10 this API has been totally removed on tvOS.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with tvos10.0 this API has been totally removed on tvOS.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif IOS
 		[Obsolete ("Starting with ios9.0 this API has been totally removed on iOS.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
