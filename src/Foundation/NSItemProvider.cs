@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using CloudKit;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 namespace Foundation 
 {
@@ -29,7 +30,12 @@ namespace Foundation
 		}
 #endif
 
+#if !NET
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+#else
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+#endif
 		public NSProgress LoadObject<T> (Action<T, NSError> completionHandler) where T: NSObject, INSItemProviderReading
 		{
 			return LoadObject (new Class (typeof (T)), (rv, err) =>
@@ -41,7 +47,12 @@ namespace Foundation
 			});
 		}
 
+#if !NET
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+#else
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+#endif
 		public Task<T> LoadObjectAsync<T> () where T: NSObject, INSItemProviderReading
 		{
 			var rv = LoadObjectAsync (new Class (typeof (T)));
