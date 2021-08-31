@@ -1,4 +1,4 @@
-﻿//
+//
 // CFMessagePort.cs: CFMessagePort is a wrapper around two native Mach ports with bidirectional communication support
 //
 // Authors:

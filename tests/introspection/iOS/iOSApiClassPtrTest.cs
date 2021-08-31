@@ -1,4 +1,4 @@
-﻿//
+//
 // Test fixture for class_ptr introspection tests
 //
 // Authors:
@@ -24,6 +24,10 @@ namespace Introspection {
 				if (Runtime.Arch == Arch.SIMULATOR)
 					return true;
 				break;
+			case "ShazamKit": // missing in the sim
+				if (Runtime.Arch == Arch.SIMULATOR)
+					return true;
+				break;
 			}
 
 			// While the following types are categories and contains a class_ptr
@@ -38,4 +42,3 @@ namespace Introspection {
 		}
 	}
 }
-

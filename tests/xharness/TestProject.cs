@@ -118,7 +118,7 @@ namespace Xharness {
 				// Check for variables that won't work correctly if the shared code is moved to a different file
 				var xml = File.ReadAllText (sharedProjectPath);
 				if (xml.Contains ("$(MSBuildThis"))
-					throw new InvalidOperationException ($"Can't use MSBuildThis* variables in shared MSBuild test code.");
+					throw new InvalidOperationException ($"Can't use MSBuildThis* variables in shared MSBuild test code: {sharedProjectPath}");
 
 				var import = new XmlDocument ();
 				import.LoadXmlWithoutNetworkAccess (xml);
@@ -251,4 +251,3 @@ namespace Xharness {
 	}
 
 }
-

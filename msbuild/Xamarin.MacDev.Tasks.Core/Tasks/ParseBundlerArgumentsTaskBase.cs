@@ -131,6 +131,7 @@ namespace Xamarin.MacDev.Tasks {
 						xml.Add (value);
 						break;
 					default:
+						Log.LogMessage (MessageImportance.Low, "Skipping unknown argument '{0}' with value '{1}'", name, value);
 						break;
 					}
 				}
@@ -186,4 +187,3 @@ namespace Xamarin.MacDev.Tasks {
 		}
 	}
 }
-

@@ -8,6 +8,7 @@
 //
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using Foundation;
@@ -109,7 +110,7 @@ namespace MonoTouchFixtures.Foundation {
 			
 			Assert.False (NSFileManager.GetSkipBackupAttribute (NSBundle.MainBundle.ExecutableUrl.ToString ()), "MainBundle");
 
-			string filename = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.Personal), "DoNotBackupMe-NSFileManager");
+			string filename = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.Personal), $"DoNotBackupMe-NSFileManager-{Process.GetCurrentProcess ().Id}");
 			try {
 				File.WriteAllText (filename, "not worth a bit");
 				

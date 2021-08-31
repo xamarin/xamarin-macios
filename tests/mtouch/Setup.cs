@@ -11,4 +11,3 @@ public class AssemblyInitialization {
 		ErrorHelper.Platform = ApplePlatform.iOS;
 	}
 }
-

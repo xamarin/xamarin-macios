@@ -1,4 +1,4 @@
-﻿using Foundation;
+using Foundation;
 
 class BUG33981_0 : NSObject {}
 class BUG33981_1 : NSObject {}

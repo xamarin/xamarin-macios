@@ -1,4 +1,4 @@
-﻿//
+//
 // MAAudibleMedia Unit Tests
 //
 // Authors:

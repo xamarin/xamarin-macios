@@ -1,4 +1,4 @@
-﻿// Tests to ensure consistency of our handlers across updates
+// Tests to ensure consistency of our handlers across updates
 //
 // Copyright 2016 Xamarin Inc.
 
@@ -20,14 +20,14 @@ namespace LinkSdk.Net.Http {
 		{
 			using (var handler = new HttpClientHandler ()) {
 				Assert.True (handler.AllowAutoRedirect, "AllowAutoRedirect");
-#if NET // https://github.com/dotnet/runtime/issues/55986
+#if NET && !__MACOS__// https://github.com/dotnet/runtime/issues/55986
 				Assert.Null (handler.CookieContainer, "CookieContainer");
 #else
 				Assert.NotNull (handler.CookieContainer, "CookieContainer");
 #endif
 				Assert.Null (handler.Credentials, "Credentials");
 				// (so far) not exposed in other, native handlers
-#if NET // https://github.com/dotnet/runtime/issues/55986
+#if NET && !__MACOS__ // https://github.com/dotnet/runtime/issues/55986
 				Assert.Throws<PlatformNotSupportedException> (() => GC.KeepAlive (handler.AutomaticDecompression), "AutomaticDecompression");
 				Assert.Throws<PlatformNotSupportedException> (() => GC.KeepAlive (handler.ClientCertificateOptions), "ClientCertificateOptions");
 				Assert.Throws<PlatformNotSupportedException> (() => GC.KeepAlive (handler.MaxAutomaticRedirections), "MaxAutomaticRedirections");
@@ -45,7 +45,7 @@ namespace LinkSdk.Net.Http {
 				Assert.True (handler.SupportsRedirectConfiguration, "SupportsRedirectConfiguration");
 				Assert.True (handler.UseCookies, "UseCookies");
 				Assert.False (handler.UseDefaultCredentials, "UseDefaultCredentials");
-#if NET // https://github.com/dotnet/runtime/issues/55986
+#if NET && !__MACOS__ // https://github.com/dotnet/runtime/issues/55986
 				Assert.Throws<PlatformNotSupportedException> (() => GC.KeepAlive (handler.UseProxy), "UseProxy");
 #else
 				Assert.True (handler.UseProxy, "UseProxy");

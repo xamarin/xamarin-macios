@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Microsoft.Build.Framework;
 using Xamarin.MacDev.Tasks;
 using Xamarin.Messaging.Build.Client;

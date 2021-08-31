@@ -97,5 +97,4 @@ namespace CoreVideo {
 	}
 }
 
-#endif // ! __WATCHOS__
-
+#endif // IOS || TVOS

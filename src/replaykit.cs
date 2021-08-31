@@ -1,4 +1,4 @@
-﻿//
+//
 // ReplayKit bindings
 //
 // Authors:

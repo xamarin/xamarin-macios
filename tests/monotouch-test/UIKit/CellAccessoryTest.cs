@@ -1,4 +1,4 @@
-﻿#if __IOS__ || __TVOS__
+#if __IOS__ || __TVOS__
 
 using System;
 using Foundation;

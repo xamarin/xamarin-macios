@@ -212,3 +212,4 @@
 !missing-type! AVPlaybackCoordinator not bound
 !missing-type! AVPlayerPlaybackCoordinator not bound
 ## appended from unclassified file
+!missing-field! AVSampleBufferAudioRendererOutputConfigurationDidChangeNotification not bound

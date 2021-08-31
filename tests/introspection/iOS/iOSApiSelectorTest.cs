@@ -80,6 +80,11 @@ namespace Introspection {
 					return true;
 				break;
 #endif // HAS_WATCHCONNECTIVITY
+			case "ShazamKit":
+				// ShazamKit is not fully supported in the simulator
+				if (Runtime.Arch == Arch.SIMULATOR)
+					return true;
+				break;
 			}
 
 			switch (type.Name) {

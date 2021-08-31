@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for CVPixelBuffer
 //
 // Authors:

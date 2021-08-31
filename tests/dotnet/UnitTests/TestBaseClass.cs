@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 
 using Mono.Cecil;
@@ -11,7 +12,6 @@ using NUnit.Framework;
 using Xamarin.Utils;
 using Xamarin.Tests;
 using Xamarin.MacDev;
-using Xamarin.Utils;
 
 namespace Xamarin.Tests {
 	[TestFixture]
@@ -20,6 +20,14 @@ namespace Xamarin.Tests {
 			{ "MtouchExtraArgs", "-v" },
 			{ "MonoBundlingExtraArgs", "-v" },
 		};
+
+		protected Dictionary<string, string> GetDefaultProperties (string? runtimeIdentifiers)
+		{
+			var rv = new Dictionary<string, string> (verbosity);
+			if (!string.IsNullOrEmpty (runtimeIdentifiers))
+				SetRuntimeIdentifiers (rv, runtimeIdentifiers);
+			return rv;
+		}
 
 		protected void SetRuntimeIdentifiers (Dictionary<string, string> properties, string runtimeIdentifiers)
 		{
@@ -70,5 +78,45 @@ namespace Xamarin.Tests {
 				Directory.Delete (dir, true);
 			}
 		}
+
+		protected bool CanExecute (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			switch (platform) {
+			case ApplePlatform.iOS:
+			case ApplePlatform.TVOS:
+			case ApplePlatform.WatchOS:
+				return false;
+			case ApplePlatform.MacOSX:
+			case ApplePlatform.MacCatalyst:
+				// If we're targetting x64, then we can execute everywhere
+				if (runtimeIdentifiers.Contains ("-x64", StringComparison.Ordinal))
+					return true;
+
+				// If we're not targeting x64, and we're executing on x64, then we're out of luck
+				if (RuntimeInformation.ProcessArchitecture == Architecture.X64)
+					return false;
+
+				// Otherwise we can still execute.
+				return true;
+			default:
+				throw new ArgumentOutOfRangeException ($"Unknown platform: {platform}");
+			}
+		}
+
+		protected string GetInfoPListPath (ApplePlatform platform, string app_directory)
+		{
+			switch (platform) {
+			case ApplePlatform.iOS:
+			case ApplePlatform.TVOS:
+			case ApplePlatform.WatchOS:
+				return Path.Combine (app_directory, "Info.plist");
+			case ApplePlatform.MacOSX:
+			case ApplePlatform.MacCatalyst:
+				return Path.Combine (app_directory, "Contents", "Info.plist");
+			default:
+				throw new NotImplementedException ($"Unknown platform: {platform}");
+			}
+		}
+
 	}
 }

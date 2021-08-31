@@ -164,7 +164,7 @@ namespace CarPlay {
 		Confirm,
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (15,0)]
+	[NoWatch, NoTV, NoMac, iOS (15,0), MacCatalyst (15,0)]
 	[Native]
 	public enum CPAssistantCellPosition : long
 	{
@@ -172,7 +172,7 @@ namespace CarPlay {
 		Bottom,
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (15,0)]
+	[NoWatch, NoTV, NoMac, iOS (15,0), MacCatalyst (15,0)]
 	[Native]
 	public enum CPAssistantCellVisibility : long
 	{
@@ -180,6 +180,15 @@ namespace CarPlay {
 		WhileLimitedUIActive,
 		Always,
 	}
+
+	[iOS (15,0), MacCatalyst (15,0), NoMac, NoTV, NoWatch]
+	[Native]
+	public enum CPAssistantCellActionType : long
+	{
+		PlayMedia = 0,
+		StartCall,
+	}
+
 
 	[NoWatch, NoTV, NoMac, iOS (12,0)]
 	[BaseType (typeof (NSObject))]
@@ -291,15 +300,15 @@ namespace CarPlay {
 		[Export ("title")]
 		string Title { get; }
 
-		[iOS (15,0)]
+		[iOS (15,0), MacCatalyst (15,0)]
 		[Export ("updateGridButtons:")]
 		void UpdateGridButtons (CPGridButton[] gridButtons);
 
-		[iOS (15,0)]
+		[iOS (15,0), MacCatalyst (15,0)]
 		[Export ("updateTitle:")]
 		void UpdateTitle (string title);
 
-		[iOS (15,0)]
+		[iOS (15,0), MacCatalyst (15,0)]
 		[Field ("CPGridTemplateMaximumItems")]
 		nuint MaximumItems { get; }
 	}
@@ -533,7 +542,7 @@ namespace CarPlay {
 		[Export ("handler", ArgumentSemantic.Copy)]
 		new CPSelectableListItemHandler Handler { get; set; }
 
-		[iOS (15, 0)]
+		[iOS (15, 0), MacCatalyst (15,0)]
 		[Export ("enabled")]
 		bool Enabled { [Bind ("isEnabled")] get; set; }
 	}
@@ -549,7 +558,7 @@ namespace CarPlay {
 		[Export ("initWithItems:")]
 		IntPtr Constructor (CPListItem [] items);
 
-		[iOS (15,0)]
+		[iOS (15,0), MacCatalyst (15,0)]
 		[Export ("initWithItems:header:headerSubtitle:headerImage:headerButton:sectionIndexTitle:")]
 		IntPtr Constructor (ICPListTemplateItem[] items, string header, [NullAllowed] string headerSubtitle, [NullAllowed] UIImage headerImage, [NullAllowed] CPButton headerButton, [NullAllowed] string sectionIndexTitle);
 
@@ -570,22 +579,22 @@ namespace CarPlay {
 		[Export ("itemAtIndex:")]
 		ICPListTemplateItem GetItem (nuint index);
 
-		[iOS (15, 0)]
+		[iOS (15, 0), MacCatalyst (15,0)]
 		[NullAllowed]
 		[Export ("headerSubtitle")]
 		string HeaderSubtitle { get; }
 
-		[iOS (15, 0)]
+		[iOS (15, 0), MacCatalyst (15,0)]
 		[NullAllowed]
 		[Export ("headerImage", ArgumentSemantic.Copy)]
-		UIImage HeaderImage { get; }
+		UIImage HeaderImage { get; set; }
 
-		[iOS (15, 0)]
+		[iOS (15, 0), MacCatalyst (15,0)]
 		[NullAllowed]
 		[Export ("headerButton", ArgumentSemantic.Copy)]
 		CPButton HeaderButton { get; }
 
-		[iOS (15, 0)]
+		[iOS (15, 0), MacCatalyst (15,0)]
 		[Field ("CPMaximumListSectionImageSize")]
 		CGSize MaximumImageSize { get; }
 	}
@@ -598,9 +607,9 @@ namespace CarPlay {
 		[Export ("initWithTitle:sections:")]
 		IntPtr Constructor ([NullAllowed] string title, CPListSection[] sections);
 
-		[iOS (15,0)]
-		[Export ("initWithTitle:sections:assistantCellVisibility:assistantCellPosition:")]
-		IntPtr Constructor ([NullAllowed] string title, CPListSection[] sections, CPAssistantCellVisibility visibility, CPAssistantCellPosition position);
+		[iOS (15,0), MacCatalyst (15,0)]
+		[Export ("initWithTitle:sections:assistantCellConfiguration:")]
+		IntPtr Constructor ([NullAllowed] string title, CPListSection[] sections, [NullAllowed] CPAssistantCellConfiguration assistantCellConfiguration);
 
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'CPListItem.Handler' instead.")]
 		[Wrap ("WeakDelegate")]
@@ -651,13 +660,10 @@ namespace CarPlay {
 		[Export ("emptyViewSubtitleVariants", ArgumentSemantic.Copy)]
 		string[] EmptyViewSubtitleVariants { get; set; }
 
-		[iOS (15, 0)]
-		[Export ("assistantCellVisibility", ArgumentSemantic.Assign)]
-		CPAssistantCellVisibility AssistantCellVisibility { get; set; }
-
-		[iOS (15, 0)]
-		[Export ("assistantCellPosition", ArgumentSemantic.Assign)]
-		CPAssistantCellPosition AssistantCellPosition { get; set; }
+		[NullAllowed]
+		[iOS (15, 0), MacCatalyst (15,0)]
+		[Export ("assistantCellConfiguration", ArgumentSemantic.Strong)]
+		CPAssistantCellConfiguration AssistantCellConfiguration { get; set; }
 	}
 
 	interface ICPListTemplateDelegate { }
@@ -1519,7 +1525,7 @@ namespace CarPlay {
 		[NullAllowed, Export ("userInfo", ArgumentSemantic.Strong)]
 		new NSObject UserInfo { get; set; }
 
-		[iOS (15, 0)]
+		[iOS (15, 0), MacCatalyst (15,0)]
 		[Export ("enabled")]
 		bool Enabled { [Bind ("isEnabled")] get; set; }
 	}
@@ -1592,7 +1598,7 @@ namespace CarPlay {
 		[NullAllowed, Export ("userInfo", ArgumentSemantic.Strong)]
 		new NSObject UserInfo { get; set; }
 
-		[iOS (15, 0)]
+		[iOS (15, 0), MacCatalyst (15,0)]
 		[Export ("enabled")]
 		bool Enabled { [Bind ("isEnabled")] get; set; }
 	}
@@ -1886,7 +1892,7 @@ namespace CarPlay {
 #if XAMCORE_4_0
 		[Abstract]
 #endif
-		[iOS (15, 0)]
+		[iOS (15, 0), MacCatalyst (15,0)]
 		[Export ("enabled")]
 		bool Enabled { [Bind ("isEnabled")] get; set; }
 	}
@@ -1919,4 +1925,23 @@ namespace CarPlay {
 		[NullAllowed, Export ("maximumRating")]
 		NSNumber MaximumRating { get; }
 	}
+
+	[NoWatch, NoTV, NoMac, iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface CPAssistantCellConfiguration : NSSecureCoding
+	{
+		[Export ("initWithPosition:visibility:assistantAction:")]
+		IntPtr Constructor (CPAssistantCellPosition position, CPAssistantCellVisibility visibility, CPAssistantCellActionType assistantAction);
+
+		[Export ("position")]
+		CPAssistantCellPosition Position { get; }
+
+		[Export ("visibility")]
+		CPAssistantCellVisibility Visibility { get; }
+
+		[Export ("assistantAction")]
+		CPAssistantCellActionType AssistantAction { get; }
+	}
+
 }

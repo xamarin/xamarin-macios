@@ -3,5 +3,11 @@
   <PropertyGroup>
     <TargetFramework>net6.0-tvos</TargetFramework>
   </PropertyGroup>
-  <Import Project="..\shared.targets" />
+
+  <!-- Imports of the form '../shared.fsproj' will be processed by xharness -->
+  <Import Project="../shared.fsproj" />
+
+  <ItemGroup>
+    <!-- this empty item group is here for xharness -->
+  </ItemGroup>
 </Project>

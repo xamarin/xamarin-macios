@@ -479,6 +479,10 @@ namespace CoreVideo {
 		[NoWatch, NoTV, Mac (12,0), iOS (14, 0), MacCatalyst (15,0)]
 		[Field ("kCVPixelBufferVersatileBayerKey_BayerPattern")]
 		NSString VersatileBayerKey_BayerPattern { get; }
+
+		[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Field ("kCVPixelBufferProResRAWKey_MetadataExtension")]
+		NSString MetadataExtension { get; }
 	}
 
 	[Partial]
@@ -502,7 +506,7 @@ namespace CoreVideo {
 		[Field ("kCVMetalTextureCacheMaximumTextureAgeKey")]
 		IntPtr MaxTextureAge { get; }
 
-		[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
+		[TV (13,0), NoWatch, iOS (13,0)]
 		[Field ("kCVMetalTextureStorageMode")]
 		NSString StorageMode { get; }
 	}

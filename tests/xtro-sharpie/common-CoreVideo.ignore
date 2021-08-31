@@ -47,7 +47,6 @@
 !missing-field! kCVPixelBufferIOSurfaceOpenGLESFBOCompatibilityKey not bound
 !missing-field! kCVPixelBufferIOSurfaceOpenGLESTextureCompatibilityKey not bound
 !missing-field! kCVPixelFormatOpenGLESCompatibility not bound
-!missing-field! kCVPixelBufferProResRAWKey_MetadataExtension not bound
 
 ## *GetTypeID are generally not bound
 !missing-pinvoke! CVMetalTextureCacheGetTypeID is not bound

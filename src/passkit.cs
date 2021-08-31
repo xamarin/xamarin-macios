@@ -243,14 +243,14 @@ namespace PassKit {
 		PKPaymentToken Token { get; }
 
 		[NoMac]
-		[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
+		[NoMacCatalyst]
 		[NoWatch]
 		[Export ("billingAddress", ArgumentSemantic.Assign)]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'BillingContact' instead.")]
 		ABRecord BillingAddress { get; }
 
 		[NoMac]
-		[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
+		[NoMacCatalyst]
 		[NoWatch]
 		[Export ("shippingAddress", ArgumentSemantic.Assign)]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "Use 'ShippingContact' instead.")]
@@ -307,7 +307,7 @@ namespace PassKit {
 		[EventArgs ("PKPaymentRequestShippingMethodUpdate")]
 		void DidSelectShippingMethod2 (PKPaymentAuthorizationViewController controller, PKShippingMethod shippingMethod, Action<PKPaymentRequestShippingMethodUpdate> completion);
 
-		[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
+		[NoMacCatalyst]
 		[Deprecated (PlatformName.iOS, 9, 0)]
 		[NoMac]
 		[Export ("paymentAuthorizationViewController:didSelectShippingAddress:completion:")]
@@ -481,7 +481,7 @@ namespace PassKit {
 		PKAddressField RequiredBillingAddressFields { get; set; }
 
 		[NoMac]
-		[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
+		[NoMacCatalyst]
 		[NoWatch]
 		[NullAllowed] // by default this property is null
 		[Export ("billingAddress", ArgumentSemantic.Assign)]
@@ -495,7 +495,7 @@ namespace PassKit {
 		PKAddressField RequiredShippingAddressFields { get; set; }
 
 		[NoMac]
-		[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
+		[NoMacCatalyst]
 		[NoWatch]
 		[NullAllowed] // by default this property is null
 		[Export ("shippingAddress", ArgumentSemantic.Assign)]
@@ -1026,6 +1026,15 @@ namespace PassKit {
 		[MacCatalyst (14,5)]
 		[Field ("PKPaymentNetworkMir")]
 		NSString Mir { get; }
+
+		[NoWatch, NoMac, iOS (15,0), NoMacCatalyst]
+		[Field ("PKPaymentNetworkNanaco")]
+		NSString Nanaco { get; }
+
+		[NoWatch, NoMac, iOS (15,0), NoMacCatalyst]
+		[Field ("PKPaymentNetworkWaon")]
+		NSString Waon { get; }
+
 	}
 
 #if !WATCH

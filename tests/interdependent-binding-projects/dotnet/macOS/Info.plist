@@ -7,7 +7,7 @@
 		<key>CFBundleIdentifier</key>
 		<string>com.xamarin.dotnet.interdependentbindingprojects</string>
 		<key>CFBundleName</key>
-		<string>CFBundleIdentifier</string>
+		<string>InterdependentBindingProject</string>
 		<key>LSMinimumSystemVersion</key>
 		<string>10.14</string>
 	</dict>
