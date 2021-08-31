@@ -11381,14 +11381,17 @@ namespace AVFoundation {
 		NSString RateDidChangeOriginatingParticipant { get; }
 	}
 
-	[iOS (10, 0), TV (10,0), Mac (10,12), MacCatalyst (15,0)]
+	[iOS (10, 0), TV (10,0), Mac (10,12), MacCatalyst (14,0)]
 	enum AVPlayerWaitingReason {
+		[MacCatalyst (15,0)]
 		[Field ("AVPlayerWaitingToMinimizeStallsReason")]
 		WaitingToMinimizeStalls,
 
+		[MacCatalyst (15,0)]
 		[Field ("AVPlayerWaitingWhileEvaluatingBufferingRateReason")]
 		WaitingWhileEvaluatingBufferingRate,
 
+		[MacCatalyst (15,0)]
 		[Field ("AVPlayerWaitingWithNoItemToPlayReason")]
 		WaitingWithNoItemToPlay,
 
@@ -15142,7 +15145,7 @@ namespace AVFoundation {
 		AVCoordinatedPlaybackSuspension BeginSuspension (string suspensionReason);
 
 		[Export ("expectedItemTimeAtHostTime:")]
-		CMTime ExpectedItemTimeAtHostTime (CMTime hostClockTime);
+		CMTime GetExpectedItemTime (CMTime hostClockTime);
 
 		// AVPlaybackCoordinator_AVCoordinatedPlaybackPolicies
 		[Export ("setParticipantLimit:forWaitingOutSuspensionsWithReason:")]
@@ -15218,7 +15221,7 @@ namespace AVFoundation {
 
 		[NoMacCatalyst]
 		[Export ("captionsNotPresentInPreviousGroupsInCaptionGroup:")]
-		AVCaption[] GetCaptionsNotPresent (AVCaptionGroup captionGroup);
+		AVCaption[] GetCaptionsNotPresentInPreviousGroups (AVCaptionGroup captionGroup);
 
 		// interface AVAssetReaderOutputCaptionAdaptor_AVAssetReaderCaptionValidation
 		[Wrap ("WeakValidationDelegate")]
@@ -15255,6 +15258,7 @@ namespace AVFoundation {
 
 	[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
 	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
 	interface AVCaptionGroup
 	{
 		[Export ("initWithCaptions:timeRange:")]
@@ -15399,19 +15403,19 @@ namespace AVFoundation {
 	{
 		[Static]
 		[Export ("appleITTTopRegion")]
-		AVCaptionRegion AppleiTTTopRegion { get; }
+		AVCaptionRegion AppleITTTopRegion { get; }
 
 		[Static]
 		[Export ("appleITTBottomRegion")]
-		AVCaptionRegion AppleiTTBottomRegion { get; }
+		AVCaptionRegion AppleITTBottomRegion { get; }
 
 		[Static]
 		[Export ("appleITTLeftRegion")]
-		AVCaptionRegion AppleiTTLeftRegion { get; }
+		AVCaptionRegion AppleITTLeftRegion { get; }
 
 		[Static]
 		[Export ("appleITTRightRegion")]
-		AVCaptionRegion AppleiTTRightRegion { get; }
+		AVCaptionRegion AppleITTRightRegion { get; }
 
 		[Static]
 		[Export ("subRipTextBottomRegion")]

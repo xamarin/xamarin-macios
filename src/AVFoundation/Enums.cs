@@ -1232,6 +1232,7 @@ namespace AVFoundation {
 	[Flags]
 	[Native]
 	public enum AVDelegatingPlaybackCoordinatorRateChangeOptions : ulong {
+		None = 0,
 		PlayImmediately = (1uL << 0),
 	}
 
@@ -1243,6 +1244,7 @@ namespace AVFoundation {
 	[Flags]
 	[Native]
 	public enum AVDelegatingPlaybackCoordinatorSeekOptions : ulong {
+		None = 0,
 		ResumeImmediately = (1uL << 0),
 	}
 
