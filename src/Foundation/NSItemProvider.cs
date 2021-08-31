@@ -65,7 +65,12 @@ namespace Foundation
 			});
 		}
 
+#if !NET
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+#else
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+#endif
 		public Task<T> LoadObjectAsync<T> (out NSProgress result) where T: NSObject, INSItemProviderReading
 		{
 			var rv = LoadObjectAsync (new Class (typeof (T)), out result);
