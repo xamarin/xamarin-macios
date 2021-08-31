@@ -9,9 +9,6 @@ namespace FileProvider {
 #if !NET
 	[NoiOS, NoMacCatalyst, Mac (12,0)]
 #else
-	[UnsupportedOSPlatform ("ios")]
-	[UnsupportedOSPlatform ("tvos")]
-	[UnsupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos12.0")]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
