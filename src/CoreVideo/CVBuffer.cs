@@ -27,6 +27,7 @@
 //
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
@@ -150,9 +151,9 @@ namespace CoreVideo {
 			if (key == null)
 				throw new ArgumentNullException ("key");
 			if (PlatformHelper.CheckSystemVersion (12, 0))
-				return Runtime.GetNSObject (CVBufferCopyAttachment (handle, key.Handle, out attachmentMode));
+				return Runtime.GetINativeObject<NSObject> (CVBufferCopyAttachment (handle, key.Handle, out attachmentMode), true);
 			else
-				return Runtime.GetNSObject (CVBufferGetAttachment (handle, key.Handle, out attachmentMode));
+				return Runtime.GetINativeObject<NSObject> (CVBufferGetAttachment (handle, key.Handle, out attachmentMode), false);
 		}
 #endif
 
@@ -177,8 +178,8 @@ namespace CoreVideo {
 #elif MONOMAC
 			if (PlatformHelper.CheckSystemVersion (12, 0))
 #endif
-				return (NSDictionary) Runtime.GetNSObject (CVBufferCopyAttachments (handle, attachmentMode));
-			return (NSDictionary) Runtime.GetNSObject (CVBufferGetAttachments (handle, attachmentMode));
+				return Runtime.GetINativeObject<NSDictionary> (CVBufferCopyAttachments (handle, attachmentMode), true);
+			return Runtime.GetINativeObject<NSDictionary> (CVBufferGetAttachments (handle, attachmentMode), false);
 		}
 
 		// There is some API that needs a more strongly typed version of a NSDictionary
@@ -232,7 +233,7 @@ namespace CoreVideo {
 		[SupportedOSPlatform ("macos12.0")]
 #endif
 		[DllImport (Constants.CoreVideoLibrary)]
-		[return: MarshalAs(UnmanagedType.U1)]
+		[return: MarshalAs (UnmanagedType.U1)]
 		static extern bool CVBufferHasAttachment (/* CVBufferRef */ IntPtr buffer, /* CFStringRef */ IntPtr key);
 
 #if !NET
