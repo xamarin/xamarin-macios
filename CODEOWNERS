@@ -14,14 +14,14 @@
 
 /mk @rolfbjarne
 
-/msbuild @emaf @rolfbjarne
+/msbuild @emaf @rolfbjarne @chamons
 
 /runtime @rolfbjarne
 
 /src/AddressBook @dalexsoto
 /src/addressbook.cs @dalexsoto
-/src/AppKit @dalexsoto
-/src/appkit.cs @dalexsoto
+/src/AppKit @chamons @dalexsoto
+/src/appkit.cs @chamons @dalexsoto
 /src/ARKit
 /src/arkit.cs
 /src/AudioToolbox @dalexsoto
@@ -78,9 +78,9 @@
 /src/eventkit.cs @dalexsoto @spouliot
 /src/ExternalAccessory @dalexsoto @spouliot
 /src/externalaccessory.cs @dalexsoto @spouliot
-/src/Foundation @spouliot @rolfbjarne
+/src/Foundation @spouliot @rolfbjarne @chamons
 /src/Foundation/NSUrl* @mandel-macaque
-/src/foundation.cs @spouliot @rolfbjarne
+/src/foundation.cs @spouliot @rolfbjarne @chamons
 /src/GameController @spouliot
 /src/gamecontroller.cs @spouliot
 /src/GameKit
@@ -100,10 +100,10 @@
 /src/identitylookupui.cs @dalexsoto
 /src/ituneslibrary.cs @mandel-macaque
 /src/iTunesLibrary @mandel-macaque
-/src/ImageIO @spouliot
-/src/imageio.cs @spouliot
-/src/ImageKit @spouliot
-/src/imagekit.cs @spouliot
+/src/ImageIO @spouliot @chamons
+/src/imageio.cs @spouliot @chamons
+/src/ImageKit @chamons
+/src/imagekit.cs @chamons
 /src/Intents @dalexsoto
 /src/intents.cs @dalexsoto
 /src/IntentsUI @dalexsoto
@@ -155,8 +155,8 @@
 /src/quicklook.cs @spouliot
 /src/ReplayKit @dalexsoto @spouliot
 /src/replaykit.cs @dalexsoto @spouliot
-/src/SafariServices @spouliot
-/src/safariservices.cs @spouliot
+/src/SafariServices @chamons @spouliot
+/src/safariservices.cs @chamons @spouliot
 /src/SceneKit @dalexsoto
 /src/scenekit.cs @dalexsoto
 /src/Security @dalexsoto @spouliot
@@ -184,22 +184,22 @@
 /src/watchconnectivity.cs @spouliot @rolfbjarne
 /src/WatchKit @spouliot @rolf
 /src/watchkit.cs @spouliot @rolf
-/src/WebKit @spouliot
-/src/webkit.cs @spouliot
+/src/WebKit @chamons
+/src/webkit.cs @chamons
 /src/WKWebKit @spouliot
 /src/wkwebkit.cs @spouliot
 
 /tests/xharness @rolfbjarne @mandel-macaque
 /tests/xtro-sharpie @spouliot
-/tests/mmptest @rolfbjarne 
-/tests/common/mac @rolfbjarne 
+/tests/mmptest @rolfbjarne @chamons
+/tests/common/mac @rolfbjarne @chamons
 /tests/bcl-tests @mandel-macaque
 
-/tools/common @rolfbjarne @spouliot
+/tools/common @rolfbjarne @chamons @spouliot
 /tools/common/StaticRegistrar.cs @rolfbjarne
 /tools/tools/devops/device-tests @mandel-macaque @whitneyschmidt
 /tools/linker @spouliot
-/tools/mmp @rolfbjarne 
+/tools/mmp @chamons
 /tools/mtouch @spouliot @rolfbjarne
 
 configure @rolfbjarne

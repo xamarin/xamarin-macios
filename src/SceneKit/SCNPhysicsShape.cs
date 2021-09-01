@@ -9,6 +9,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
@@ -96,8 +97,10 @@ namespace SceneKit
 		}
 	}
 
+#if !NET
 	[Mac (10, 10)]
 	[iOS (8, 0)]
+#endif
 	public class SCNPhysicsShapeOptions
 	{
 		public SCNPhysicsShapeType? ShapeType { get; set; }
