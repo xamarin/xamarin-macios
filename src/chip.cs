@@ -129,6 +129,7 @@ namespace Chip {
 		[Export ("readAttributeCatalogVendorIdWithResponseHandler:")]
 		void ReadAttributeCatalogVendorId (ChipResponseHandler responseHandler);
 
+		[NoMac] // fails on macOS 12 beta 6
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeApplicationSatusWithResponseHandler:")]
 		void ReadAttributeApplicationSatus (ChipResponseHandler responseHandler);
@@ -1132,6 +1133,7 @@ namespace Chip {
 		[DesignatedInitializer]
 		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
 
+		[NoMac] // fails on macOS 12 beta 6
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("addOpCert:iCACertificate:iPKValue:caseAdminNode:adminVendorId:responseHandler:")]
 		void AddOpCert (NSData noc, NSData iCACertificate, NSData iPKValue, ulong caseAdminNode, ushort adminVendorId, ChipResponseHandler responseHandler);
@@ -1636,6 +1638,7 @@ namespace Chip {
 		[Export ("isRunning")]
 		bool IsRunning { get; }
 
+		[NoMac] // fails on macOS 12 beta 6
 		[Export ("pairDevice:discriminator:setupPINCode:error:")]
 		bool PairDevice (ulong deviceId, ushort discriminator, uint setupPinCode, [NullAllowed] out NSError error);
 
@@ -1994,7 +1997,8 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
-	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[NoMac] // inside headers, without availability, but fails on macOS 12 beta 6
+	[Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (ChipCluster), Name="CHIPContentLaunch")]
 	[DisableDefaultCtor]
 	interface ChipContentLaunch
@@ -2202,6 +2206,7 @@ namespace Chip {
 		[Export ("mediaSkipForward:responseHandler:")]
 		void SkipForward (ulong deltaPositionMilliseconds, ChipResponseHandler responseHandler);
 
+		[NoMac] // fails on macOS 12 beta 6
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("mediaSkipSeek:responseHandler:")]
 		void SkipSeek (ulong position, ChipResponseHandler responseHandler);
@@ -2300,7 +2305,8 @@ namespace Chip {
 		void ReadAttributeClusterRevision (ChipResponseHandler responseHandler);
 	}
 
-	[Mac (12,0), Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+	[NoMac] // inside headers, without availability, but fails on macOS 12 beta 6
+	[Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (ChipCluster), Name="CHIPTrustedRootCertificates")]
 	[DisableDefaultCtor]
 	interface ChipTrustedRootCertificates
@@ -2391,42 +2397,52 @@ namespace Chip {
 		[DesignatedInitializer]
 		IntPtr Constructor (ChipDevice device, byte endpoint, DispatchQueue queue);
 
+		[NoMac] // fails on macOS 12 beta 6
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("windowCoveringDownClose:")]
 		void DownClose (ChipResponseHandler responseHandler);
 
+		[NoMac] // fails on macOS 12 beta 6
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("windowCoveringGoToLiftPercentage:responseHandler:")]
 		void GoToLiftPercentage (byte percentageLiftValue, ChipResponseHandler responseHandler);
 
+		[NoMac] // fails on macOS 12 beta 6
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("windowCoveringGoToLiftValue:responseHandler:")]
 		void GoToLiftValue (ushort liftValue, ChipResponseHandler responseHandler);
 
+		[NoMac] // fails on macOS 12 beta 6
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("windowCoveringGoToTiltPercentage:responseHandler:")]
 		void GoToTiltPercentage (byte percentageTiltValue, ChipResponseHandler responseHandler);
 
+		[NoMac] // fails on macOS 12 beta 6
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("windowCoveringGoToTiltValue:responseHandler:")]
 		void GoToTiltValue (ushort tiltValue, ChipResponseHandler responseHandler);
 
+		[NoMac] // fails on macOS 12 beta 6
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("windowCoveringStop:")]
 		void Stop (ChipResponseHandler responseHandler);
 
+		[NoMac] // fails on macOS 12 beta 6
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("windowCoveringUpOpen:")]
 		void UpOpen (ChipResponseHandler responseHandler);
 
+		[NoMac] // fails on macOS 12 beta 6
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("readAttributeWindowCoveringTypeWithResponseHandler:")]
 		void ReadAttributeWindowCoveringType (ChipResponseHandler responseHandler);
 
+		[NoMac] // fails on macOS 12 beta 6
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("configureAttributeWindowCoveringTypeWithMinInterval:maxInterval:responseHandler:")]
 		void ConfigureAttributeWindowCoveringType (ushort minInterval, ushort maxInterval, ChipResponseHandler responseHandler);
 
+		[NoMac] // fails on macOS 12 beta 6
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("reportAttributeWindowCoveringTypeWithResponseHandler:")]
 		void ReportAttributeWindowCoveringType (ChipResponseHandler responseHandler);
@@ -2435,10 +2451,12 @@ namespace Chip {
 		[Export ("readAttributeCurrentPositionLiftWithResponseHandler:")]
 		void ReadAttributeCurrentPositionLift (ChipResponseHandler responseHandler);
 
+		[NoMac] // fails on macOS 12 beta 6
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("configureAttributeCurrentPositionLiftWithMinInterval:maxInterval:change:responseHandler:")]
 		void ConfigureAttributeCurrentPositionLift (ushort minInterval, ushort maxInterval, ushort change, ChipResponseHandler responseHandler);
 
+		[NoMac] // fails on macOS 12 beta 6
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("reportAttributeCurrentPositionLiftWithResponseHandler:")]
 		void ReportAttributeCurrentPositionLift (ChipResponseHandler responseHandler);
@@ -2447,10 +2465,12 @@ namespace Chip {
 		[Export ("readAttributeCurrentPositionTiltWithResponseHandler:")]
 		void ReadAttributeCurrentPositionTilt (ChipResponseHandler responseHandler);
 
+		[NoMac] // fails on macOS 12 beta 6
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("configureAttributeCurrentPositionTiltWithMinInterval:maxInterval:change:responseHandler:")]
 		void ConfigureAttributeCurrentPositionTilt (ushort minInterval, ushort maxInterval, ushort change, ChipResponseHandler responseHandler);
 
+		[NoMac] // fails on macOS 12 beta 6
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("reportAttributeCurrentPositionTiltWithResponseHandler:")]
 		void ReportAttributeCurrentPositionTilt (ChipResponseHandler responseHandler);
@@ -2459,10 +2479,12 @@ namespace Chip {
 		[Export ("readAttributeConfigStatusWithResponseHandler:")]
 		void ReadAttributeConfigStatus (ChipResponseHandler responseHandler);
 
+		[NoMac] // fails on macOS 12 beta 6
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("configureAttributeConfigStatusWithMinInterval:maxInterval:responseHandler:")]
 		void ConfigureAttributeConfigStatus (ushort minInterval, ushort maxInterval, ChipResponseHandler responseHandler);
 
+		[NoMac] // fails on macOS 12 beta 6
 		[Async (ResultTypeName = "ChipReadAttributeResult")]
 		[Export ("reportAttributeConfigStatusWithResponseHandler:")]
 		void ReportAttributeConfigStatus (ChipResponseHandler responseHandler);
