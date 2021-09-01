@@ -33,7 +33,6 @@ stages:
   - job: push_signed_nugets
     displayName: Push NuGets
     dependsOn: nuget_convert
-    condition: false
     variables:
       skipNugetSecurityAnalysis: true
     pool:
@@ -76,5 +75,4 @@ stages:
     dependsOn: prepare_release
     symbolArtifactName: nuget-signed
     symbolConversionFilters: '*mlaunch.app*'
-    createVSPR: false
     condition: eq(variables.IsPRBuild, 'False')
