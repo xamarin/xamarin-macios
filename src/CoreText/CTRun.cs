@@ -28,6 +28,7 @@
 //
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
@@ -246,11 +247,23 @@ namespace CoreText {
 			return CTRunGetTypographicBounds (handle, range, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero);
 		}
 
+#if !NET
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+#else
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+#endif
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern void CTRunGetBaseAdvancesAndOrigins (/* CTRunRef */ IntPtr runRef, /* CFRange */ NSRange range, CGSize[] advancesBuffer, CGPoint[] originsBuffer);
 
+#if !NET
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+#else
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+#endif
 		public void GetBaseAdvancesAndOrigins (NSRange range, out CGSize[] advancesBuffer, out CGPoint[] originsBuffer)
 		{
 			advancesBuffer = GetBuffer<CGSize> (range, null);
