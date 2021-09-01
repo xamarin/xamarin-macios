@@ -12,21 +12,6 @@ namespace MonoTouchFixtures.CoreVideo {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class CVDisplayLinkTest {
-		int? mainDisplayId = null;
-
-		[SetUp]
-		public void SetUp ()
-		{
-			// we need to have access to the media display to be able to perform
-			// the displaylink tests
-			mainDisplayId = CGDisplay.MainDisplayID;
-		}
-
-		[TearDown]
-		public void TearDown ()
-		{
-			mainDisplayId = null;
-		}
 
 		[Test]
 		public void CreateFromDisplayIdValidIdTest ()
@@ -57,7 +42,7 @@ namespace MonoTouchFixtures.CoreVideo {
 			// with a single one, there is nothing in the docs that say that we cannot do that
 			Assert.DoesNotThrow (() => {
 				using var displayLink = CVDisplayLink.CreateFromDisplayIds (new []{ (uint) CGDisplay.MainDisplayID});
-				Assert.Null (displayLink, "null");
+				Assert.NotNull (displayLink, "Not null");
 			}, "Throws");
 		}
 
@@ -73,7 +58,7 @@ namespace MonoTouchFixtures.CoreVideo {
 		}
 
 		[Test]
-		public void DefaultconstructorTest () => Assert.DoesNotThrow (() => {
+		public void DefaultConstructorTest () => Assert.DoesNotThrow (() => {
 			using var displayLink = new CVDisplayLink ();
 		});
 
@@ -102,9 +87,17 @@ namespace MonoTouchFixtures.CoreVideo {
 		public void TryTranslateTimeValidTest ()
 		{
 			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 12, 0);
+			var outTime = new CVTimeStamp {
+				Version = 0,
+				Flags = (1L << 0) | (1L << 1), // kCVTimeStampVideoTimeValid | kCVTimeStampHostTimeValid
+			}; 
 			using var displayLink = new CVDisplayLink ();
-			displayLink.GetCurrentTime (out var timeStamp);
-			Assert.True (displayLink.TryTranslateTime (timeStamp, out var _));
+			// it has to be running else you will get a crash
+			if (displayLink.Start () == 0) {
+				displayLink.GetCurrentTime (out var timeStamp);
+				Assert.True (displayLink.TryTranslateTime (timeStamp, ref outTime));
+				displayLink.Stop ();
+			}
 		}
 	}
 }

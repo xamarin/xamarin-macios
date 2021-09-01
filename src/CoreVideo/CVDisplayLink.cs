@@ -279,9 +279,8 @@ namespace CoreVideo {
 		static extern int CVDisplayLinkTranslateTime (IntPtr displayLink, CVTimeStamp inTime, ref CVTimeStamp outTime);
 
 		[Mac (12,0), NoiOS, NoTV, NoMacCatalyst]
-		public bool TryTranslateTime (CVTimeStamp inTime, [NotNullWhen (true)] out CVTimeStamp outTime)
+		public bool TryTranslateTime (CVTimeStamp inTime, ref CVTimeStamp outTime)
 		{
-			outTime = default (CVTimeStamp);
 			if (CVDisplayLinkTranslateTime (this.Handle, inTime, ref outTime) == 0) {
 				return true;
 			}
