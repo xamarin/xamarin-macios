@@ -169,12 +169,18 @@ namespace Foundation {
 			}
 		}
 
+#if !NET
+		[iOS (7,0)][Mac (10,9)]
+#endif
 		public NSError UbiquitousItemDownloadingError {
 			get {
 				return Runtime.GetNSObject<NSError> (GetHandle (NSMetadataQuery.UbiquitousItemDownloadingErrorKey));
 			}
 		}
 
+#if !NET
+		[iOS (7,0)][Mac (10,9)]
+#endif
 		public NSError UbiquitousItemUploadingError {
 			get {
 				return Runtime.GetNSObject<NSError> (GetHandle (NSMetadataQuery.UbiquitousItemUploadingErrorKey));
