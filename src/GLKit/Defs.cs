@@ -28,6 +28,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using Foundation;
 using ModelIO;
 using ObjCRuntime;
@@ -125,10 +126,23 @@ namespace GLKit {
 	}
 
 	// glVertexAttribPointer structure values, again, problems with definitions being in different namespaces
+#if !NET
 	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
 	[iOS (9,0)][Mac (10,11)]
+#else
+	[UnsupportedOSPlatform ("ios12.0")]
+	[UnsupportedOSPlatform ("tvos12.0")]
+	[UnsupportedOSPlatform ("macos10.14")]
+#if IOS
+	[Obsolete ("Starting with ios12.0 use 'Metal' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+	[Obsolete ("Starting with tvos12.0 use 'Metal' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+	[Obsolete ("Starting with macos10.14 use 'Metal' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 	[StructLayout(LayoutKind.Sequential)]
 	public struct GLKVertexAttributeParameters {
 		public uint Type;

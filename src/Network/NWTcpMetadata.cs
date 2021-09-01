@@ -13,10 +13,16 @@ using System;
 using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
+using System.Runtime.Versioning;
 
 namespace Network {
 
+#if !NET
 	[TV (12,0), Mac (10,14), iOS (12,0), Watch (6,0)]
+#else
+	[SupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("tvos12.0")]
+#endif
 	public class NWTcpMetadata : NWProtocolMetadata {
 
 		internal NWTcpMetadata (IntPtr handle, bool owns) : base (handle, owns) {}

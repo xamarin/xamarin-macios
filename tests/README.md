@@ -1,5 +1,11 @@
 # Various tests to be executed prior to releases
 
+## Test permissions
+
+There are a number of tests that acccess the file system and the bluetooh. For these tests to correctly execute you have to ensure that
+the terminal application that you are using to execute the tests has access to the full filesystem and the bluetooth. If you do not do this
+step the macOS tests will crash.
+
 ## Test solutions
 
 Many of the test solutions and test projects are generated, and will

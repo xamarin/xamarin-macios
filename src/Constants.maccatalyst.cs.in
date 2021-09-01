@@ -9,5 +9,8 @@ namespace ObjCRuntime {
 
 		// iOS 9.0
 		public const string libcompressionLibrary = "/usr/lib/libcompression.dylib";
+
+		// xcode 13
+		public const string ApplicationServicesCoreGraphicsLibrary = "/System/Library/Frameworks/ApplicationServices.framework/Frameworks/CoreGraphics.framework/CoreGraphics";
 	}
 }

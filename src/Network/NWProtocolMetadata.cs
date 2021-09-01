@@ -12,6 +12,7 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
+using System.Runtime.Versioning;
 using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
@@ -22,8 +23,13 @@ using nw_service_class_t=System.IntPtr;
 
 namespace Network {
 
+#if !NET
 	[TV (12,0), Mac (10,14), iOS (12,0)]
 	[Watch (6,0)]
+#else
+	[SupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("tvos12.0")]
+#endif
 	public class NWProtocolMetadata : NativeObject {
 
 		[DllImport (Constants.NetworkLibrary)]
@@ -196,20 +202,44 @@ namespace Network {
 		}
 #endif
 
+#if !NET
 		[TV (13,0), Mac (10,15), iOS (13,0)]
+#else
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+#endif
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		internal static extern bool nw_protocol_metadata_is_framer_message (OS_nw_protocol_metadata metadata);
 
+#if !NET
 		[TV (13,0), Mac (10,15), iOS (13,0)]
+#else
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+#endif
 		public bool IsFramerMessage => nw_protocol_metadata_is_framer_message (GetCheckedHandle ());
 
+#if !NET
 		[TV (13,0), Mac (10,15), iOS (13,0)]
+#else
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+#endif
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		internal static extern bool nw_protocol_metadata_is_ws (OS_nw_protocol_metadata metadata);
 
+#if !NET
 		[TV (13,0), Mac (10,15), iOS (13,0)]
+#else
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+#endif
 		public bool IsWebSocket => nw_protocol_metadata_is_ws (GetCheckedHandle ());
 	}
 }

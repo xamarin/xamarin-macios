@@ -713,6 +713,9 @@
   <data name="E0187" xml:space="preserve">
         <value>Non è stato possibile eseguire il mapping della versione macOS {0} a una versione di iOS corrispondente</value>
     </data>
+  <data name="E0188" xml:space="preserve">
+        <value>Could not map the iOS version {0} to a corresponding macOS version</value>
+    </data>
   <data name="E7001" xml:space="preserve">
         <value>Non è stato possibile risolvere gli indirizzi IP host per le impostazioni del debugger Wi-Fi.
         </value>
