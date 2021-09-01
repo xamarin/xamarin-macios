@@ -842,15 +842,18 @@ namespace AVKit {
 
 		// interface AVPictureInPictureControllerContentSource_VideoCallSupport
 		[NoWatch, NoTV, NoMac]
+		[NoMacCatalyst] // doc as available, intro fails on macOS 12 beta 6
 		[Export ("initWithActiveVideoCallSourceView:contentViewController:")]
 		IntPtr Constructor (UIView sourceView, AVPictureInPictureVideoCallViewController contentViewController);
 
 		[NullAllowed]
 		[NoWatch, NoTV, NoMac]
+		[NoMacCatalyst] // doc as available, intro fails on macOS 12 beta 6
 		[Export ("activeVideoCallSourceView", ArgumentSemantic.Weak)]
 		UIView ActiveVideoCallSourceView { get; }
 
 		[NoWatch, NoTV, NoMac]
+		[NoMacCatalyst] // doc as available, intro fails on macOS 12 beta 6
 		[Export ("activeVideoCallContentViewController")]
 		AVPictureInPictureVideoCallViewController ActiveVideoCallContentViewController { get; }
 
