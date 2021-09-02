@@ -101,7 +101,7 @@ namespace QuickLookThumbnailing {
 		UTType ContentType { get; set; }
 	}
 
-	[Mac (10,15), iOS (13,0)]
+	[Mac (10,15), iOS (13,0), MacCatalyst (13,0)]
 	[BaseType (typeof (NSObject))]
 	interface QLThumbnailRepresentation {
 
