@@ -260,6 +260,8 @@ namespace Introspection {
 				case "PKRecurringPaymentSummaryItem":
 				case "PKStoredValuePassBalance":
 				case "PKStoredValuePassProperties":
+				case "QLPreviewReply": // conformance not in headers
+				case "QLPreviewReplyAttachment": // conformance not in headers
 				case "SNTimeDurationConstraint": // Conformance not in headers
 					return true;
 				}
@@ -384,6 +386,8 @@ namespace Introspection {
 				case "PKRecurringPaymentSummaryItem":
 				case "PKStoredValuePassBalance":
 				case "PKStoredValuePassProperties":
+				case "QLPreviewReply": // conformance not in headers
+				case "QLPreviewReplyAttachment": // conformance not in headers
 				case "SNTimeDurationConstraint": // Conformance not in headers
 					return true;
 				}

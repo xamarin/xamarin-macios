@@ -713,6 +713,9 @@
   <data name="E0187" xml:space="preserve">
         <value>Die macOS-Version {0} konnte keiner entsprechenden macOS-Version zugeordnet werden.</value>
     </data>
+  <data name="E0188" xml:space="preserve">
+        <value>Could not map the iOS version {0} to a corresponding macOS version</value>
+    </data>
   <data name="E7001" xml:space="preserve">
         <value>Die Host-IP-Adressen für die WLAN-Debuggereinstellungen konnten nicht aufgelöst werden.
         </value>

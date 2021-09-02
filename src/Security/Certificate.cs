@@ -236,7 +236,14 @@ namespace Security {
 		[DllImport (Constants.SecurityLibrary)]
 		extern static /* CFDictionaryRef */ IntPtr SecCertificateCopyValues (/* SecCertificateRef */ IntPtr certificate, /* CFArrayRef */ IntPtr keys, /* CFErrorRef _Nullable * */ IntPtr error);
 
+#if !NET
 		[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'GetKey' instead.")]
+#else
+		[UnsupportedOSPlatform ("macos10.14")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.14 use 'GetKey' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		public NSData GetPublicKey ()
 		{
 			if (handle == IntPtr.Zero)
@@ -263,19 +270,49 @@ namespace Security {
 			}
 		}
 #else
+#if !NET
 		[iOS (10,3)]
 		[TV (10,3)]
+#else
+		[SupportedOSPlatform ("ios10.3")]
+		[SupportedOSPlatform ("tvos10.3")]
+#endif
+#if !NET
 		[Deprecated (PlatformName.iOS, 12,0)]
 		[Deprecated (PlatformName.TvOS, 12,0)]
 		[Deprecated (PlatformName.WatchOS, 5,0)]
+#else
+		[UnsupportedOSPlatform ("ios12.0")]
+		[UnsupportedOSPlatform ("tvos12.0")]
+#if IOS
+		[Obsolete ("Starting with ios12.0 use 'SecCertificateCopyKey' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos12.0 use 'SecCertificateCopyKey' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* __nullable SecKeyRef */ IntPtr SecCertificateCopyPublicKey (IntPtr /* SecCertificateRef */ certificate);
 
+#if !NET
 		[iOS (10,3)]
 		[TV (10,3)]
+#else
+		[SupportedOSPlatform ("ios10.3")]
+		[SupportedOSPlatform ("tvos10.3")]
+#endif
+#if !NET
 		[Deprecated (PlatformName.iOS, 12,0, message: "Use 'GetKey' instead.")]
 		[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'GetKey' instead.")]
 		[Deprecated (PlatformName.WatchOS, 5,0, message: "Use 'GetKey' instead.")]
+#else
+		[UnsupportedOSPlatform ("ios12.0")]
+		[UnsupportedOSPlatform ("tvos12.0")]
+#if IOS
+		[Obsolete ("Starting with ios12.0 use 'GetKey' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos12.0 use 'GetKey' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		public SecKey GetPublicKey ()
 		{
 			IntPtr data = SecCertificateCopyPublicKey (handle);
@@ -284,26 +321,48 @@ namespace Security {
 #endif
 #endif // !__MACCATALYST__
 
+#if !NET
 		[TV (12,0)][Mac (10,14)][iOS (12,0)][Watch (5,0)]
+#else
+		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("macos10.14")]
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern IntPtr /* SecKeyRef* */ SecCertificateCopyKey (IntPtr /* SecKeyRef* */ key);
 
+#if !NET
 		[TV (12,0)][Mac (10,14)][iOS (12,0)][Watch (5,0)]
+#else
+		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("macos10.14")]
+#endif
 		public SecKey GetKey ()
 		{
 			var key = SecCertificateCopyKey (handle);
 			return key == IntPtr.Zero ? null : new SecKey (key, true);
 		}
 
+#if !NET
 		[iOS (10,3)] // [Mac (10,5)]
 		[TV (10,3)]
 		[Watch (3,3)]
+#else
+		[SupportedOSPlatform ("ios10.3")]
+		[SupportedOSPlatform ("tvos10.3")]
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* OSStatus */ int SecCertificateCopyCommonName (IntPtr /* SecCertificateRef */ certificate, out IntPtr /* CFStringRef * __nonnull CF_RETURNS_RETAINED */ commonName);
 
+#if !NET
 		[iOS (10,3)]
 		[TV (10,3)]
 		[Watch (3,3)]
+#else
+		[SupportedOSPlatform ("ios10.3")]
+		[SupportedOSPlatform ("tvos10.3")]
+#endif
 		public string GetCommonName ()
 		{
 			IntPtr cn;
@@ -312,15 +371,25 @@ namespace Security {
 			return null;
 		}
 
+#if !NET
 		[iOS (10,3)] // [Mac (10,5)]
 		[TV (10,3)]
 		[Watch (3,3)]
+#else
+		[SupportedOSPlatform ("ios10.3")]
+		[SupportedOSPlatform ("tvos10.3")]
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* OSStatus */ int SecCertificateCopyEmailAddresses (IntPtr /* SecCertificateRef */ certificate, out IntPtr /* CFArrayRef * __nonnull CF_RETURNS_RETAINED */ emailAddresses);
 
+#if !NET
 		[iOS (10,3)]
 		[TV (10,3)]
 		[Watch (3,3)]
+#else
+		[SupportedOSPlatform ("ios10.3")]
+		[SupportedOSPlatform ("tvos10.3")]
+#endif
 		public string[] GetEmailAddresses ()
 		{
 			string[] results = null;
@@ -333,34 +402,54 @@ namespace Security {
 			return results;
 		}
 
+#if !NET
 		[iOS (10,3)]
 		[Mac (10,12,4)]
 		[TV (10,3)]
 		[Watch (3,3)]
+#else
+		[SupportedOSPlatform ("ios10.3")]
+		[SupportedOSPlatform ("tvos10.3")]
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* __nullable CFDataRef */ IntPtr SecCertificateCopyNormalizedIssuerSequence (IntPtr /* SecCertificateRef */ certificate);
 
+#if !NET
 		[iOS (10,3)]
 		[Mac (10,12,4)]
 		[TV (10,3)]
 		[Watch (3,3)]
+#else
+		[SupportedOSPlatform ("ios10.3")]
+		[SupportedOSPlatform ("tvos10.3")]
+#endif
 		public NSData GetNormalizedIssuerSequence ()
 		{
 			IntPtr data = SecCertificateCopyNormalizedIssuerSequence (handle);
 			return (data == IntPtr.Zero) ? null : new NSData (data, true);
 		}
 
+#if !NET
 		[iOS (10,3)]
 		[Mac (10,12,4)]
 		[TV (10,3)]
 		[Watch (3,3)]
+#else
+		[SupportedOSPlatform ("ios10.3")]
+		[SupportedOSPlatform ("tvos10.3")]
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* __nullable CFDataRef */ IntPtr SecCertificateCopyNormalizedSubjectSequence (IntPtr /* SecCertificateRef */ certificate);
 
+#if !NET
 		[iOS (10,3)]
 		[Mac (10,12,4)]
 		[TV (10,3)]
 		[Watch (3,3)]
+#else
+		[SupportedOSPlatform ("ios10.3")]
+		[SupportedOSPlatform ("tvos10.3")]
+#endif
 		public NSData GetNormalizedSubjectSequence ()
 		{
 			IntPtr data = SecCertificateCopyNormalizedSubjectSequence (handle);
@@ -369,22 +458,63 @@ namespace Security {
 
 #if MONOMAC
 		[DllImport (Constants.SecurityLibrary)]
-		[Deprecated (PlatformName.MacOSX, 10,13)]
-		static extern /* __nullable CFDataRef */ IntPtr SecCertificateCopySerialNumber (IntPtr /* SecCertificateRef */ certificate, IntPtr /* CFErrorRef * */ error);
+#if !NET
+		[Deprecated (PlatformName.MacOSX, 10,13, message: "Use 'GetSerialNumber' instead.")]
 #else
+		[UnsupportedOSPlatform ("macos.10.13")]
+#if MONOMAC
+		[Obsolete ("Starting with macos.10.13 use 'GetSerialNumber' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
+		static extern /* __nullable CFDataRef */ IntPtr SecCertificateCopySerialNumber (IntPtr /* SecCertificateRef */ certificate, IntPtr /* CFErrorRef * */ error);
+#else // !MONOMAC
+#if !NET
 		[iOS (10,3)]
-		[Deprecated (PlatformName.iOS, 11,0)]
-		[Deprecated (PlatformName.MacOSX, 10,13)]
-		[Deprecated (PlatformName.WatchOS, 4,0)]
-		[Deprecated (PlatformName.TvOS, 11,0)]
+#else
+		[SupportedOSPlatform ("ios10.3")]
+#endif
+#if !NET
+		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'GetSerialNumber' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10,13, message: "Use 'GetSerialNumber' instead.")]
+		[Deprecated (PlatformName.WatchOS, 4,0, message: "Use 'GetSerialNumber' instead.")]
+		[Deprecated (PlatformName.TvOS, 11,0, message: "Use 'GetSerialNumber' instead.")]
+#else
+		[UnsupportedOSPlatform ("ios11.0")]
+		[UnsupportedOSPlatform ("tvos11.0")]
+		[UnsupportedOSPlatform ("macos10.13")]
+#if IOS
+		[Obsolete ("Starting with ios11.0 use 'GetSerialNumber' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos11.0 use 'GetSerialNumber' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+		[Obsolete ("Starting with macos10.13 use 'GetSerialNumber' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* __nullable CFDataRef */ IntPtr SecCertificateCopySerialNumber (IntPtr /* SecCertificateRef */ certificate);
 #endif
+#if !NET
 		[iOS (10,3)]
+#else
+		[SupportedOSPlatform ("ios10.3")]
+#endif
+#if !NET
 		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'GetSerialNumber(out NSError)' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10,13, message: "Use 'GetSerialNumber(out NSError)' instead.")]
 		[Deprecated (PlatformName.WatchOS, 4,0, message: "Use 'GetSerialNumber(out NSError)' instead.")]
 		[Deprecated (PlatformName.TvOS, 11,0, message: "Use 'GetSerialNumber(out NSError)' instead.")]
+#else
+		[UnsupportedOSPlatform ("ios11.0")]
+		[UnsupportedOSPlatform ("tvos11.0")]
+		[UnsupportedOSPlatform ("macos10.13")]
+#if IOS
+		[Obsolete ("Starting with ios11.0 use 'GetSerialNumber(out NSError)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos11.0 use 'GetSerialNumber(out NSError)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+		[Obsolete ("Starting with macos10.13 use 'GetSerialNumber(out NSError)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		public NSData GetSerialNumber ()
 		{
 #if MONOMAC
@@ -395,11 +525,21 @@ namespace Security {
 			return (data == IntPtr.Zero) ? null : new NSData (data, true);
 		}
 
+#if !NET
 		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+#else
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* __nullable CFDataRef */ IntPtr SecCertificateCopySerialNumberData (IntPtr /* SecCertificateRef */ certificate, ref IntPtr /* CFErrorRef * */ error);
 
+#if !NET
 		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+#else
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+#endif
 		public NSData GetSerialNumber (out NSError error)
 		{
 			IntPtr err = IntPtr.Zero;

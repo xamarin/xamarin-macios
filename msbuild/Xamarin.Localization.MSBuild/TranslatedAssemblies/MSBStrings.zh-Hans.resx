@@ -713,6 +713,9 @@
   <data name="E0187" xml:space="preserve">
         <value>无法将 macOS 版本 {0} 映射到相应 iOS 版本</value>
     </data>
+  <data name="E0188" xml:space="preserve">
+        <value>Could not map the iOS version {0} to a corresponding macOS version</value>
+    </data>
   <data name="E7001" xml:space="preserve">
         <value>无法解析 WiFi 调试程序设置的主机 IP。
 </value>

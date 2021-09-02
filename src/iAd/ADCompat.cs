@@ -294,7 +294,7 @@ namespace iAd {
 #else
 		[UnsupportedOSPlatform ("ios15.0")]
 #if IOS
-		[Obsolete ("Starting with ios15.0 The iAd framework has been removed from iOS", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with ios15.0 The iAd framework has been removed from iOS.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 		public static NSString? ErrorDomain {
@@ -306,7 +306,7 @@ namespace iAd {
 #else
 		[UnsupportedOSPlatform ("ios15.0")]
 #if IOS
-		[Obsolete ("Starting with ios15.0 The iAd framework has been removed from iOS", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with ios15.0 The iAd framework has been removed from iOS.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 		public virtual void DetermineAppInstallationAttribution (AttributedToiAdCompletionHandler completionHandler)
@@ -318,7 +318,7 @@ namespace iAd {
 #else
 		[UnsupportedOSPlatform ("ios15.0")]
 #if IOS
-		[Obsolete ("Starting with ios15.0 The iAd framework has been removed from iOS", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with ios15.0 The iAd framework has been removed from iOS.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 		public virtual void LookupAdConversionDetails (ADConversionDetails onCompleted)
@@ -330,7 +330,7 @@ namespace iAd {
 #else
 		[UnsupportedOSPlatform ("ios15.0")]
 #if IOS
-		[Obsolete ("Starting with ios15.0 The iAd framework has been removed from iOS", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with ios15.0 The iAd framework has been removed from iOS.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 		public virtual Task<ADClientConversionDetailsResult>? LookupAdConversionDetailsAsync()
