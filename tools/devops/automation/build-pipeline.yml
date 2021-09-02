@@ -44,17 +44,6 @@ parameters:
   type: object
   default: [
     {
-      devicePrefix: 'iOS32b',
-      execute: 'runDevice32b',
-      stageName: 'ios32b_device',
-      displayName: 'iOS32b Device Tests',
-      iOSDevicePool: 'VSEng-Xamarin-QA',
-      useXamarinStorage: False,
-      testsLabels: '--label=run-ios-32-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests',
-      statusContext: 'VSTS: device tests iOS32b',
-      iOSDeviceDemand: 'xismoke-32'
-    },
-    {
       devicePrefix: 'iOS64',
       execute: 'runDevice64b',
       stageName: 'ios64b_device',
@@ -297,6 +286,26 @@ stages:
         displayName: 'Windows Integration Tests'
         pool: 'VSEng-Xamarin-Mac-Devices' # currently ignored until the VS team provides a real one
         statusContext: 'Windows Integration Tests'
+
+# iOS 32b tests are slow and do not have many machines, for that reason we are going just to run them in the Schedule builds.
+# This means we are going to get the translations AND the iOS 32b on those builds.
+#
+- ${{ if and(eq(variables['Build.Reason'], 'Schedule') }}: 
+  - template: templates/devices/stage.yml
+    parameters:
+      devicePrefix: 'iOS32b',
+      execute: 'runDevice32b',
+      stageName: 'ios32b_device',
+      displayName: 'iOS32b Device Tests',
+      iOSDevicePool: 'VSEng-Xamarin-QA',
+      useXamarinStorage: False,
+      testsLabels: '--label=run-ios-32-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests',
+      statusContext: 'VSTS: device tests iOS32b',
+      iOSDeviceDemand: 'xismoke-32'
+      vsdropsPrefix: ${{ variables.vsdropsPrefix }}
+      keyringPass: $(pass--lab--mac--builder--keychain)
+      gitHubToken: ${{ variables['GitHub.Token'] }}
+      xqaCertPass: $(xqa--certificates--password)
 
 - ${{ if eq(parameters.runSamples, true) }}:
   # TODO: Not the real step
