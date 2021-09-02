@@ -1008,7 +1008,7 @@ namespace LinkSdk {
 			}
 #endif // __MACOS__
 
-#if !__WATCHOS__
+#if !__WATCHOS__ && !__MACOS__
 			// tvOS (device sandbox) is more restrictive than iOS as it limit access to more
 			// directories, mostly because they are not guaranteed to be preserved between executions
 			bool tvos = UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.TV;
