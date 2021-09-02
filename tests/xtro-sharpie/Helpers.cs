@@ -176,9 +176,9 @@ namespace Extrospection {
 				}
 			}
 				
-			// but right now most frameworks consider tvOS and watchOS like iOS unless 
+			// but right now most frameworks consider tvOS, watchOS, and catalyst like iOS unless 
 			// decorated otherwise so we must check again if we do not get a definitve answer
-			if ((result == null) && ((Platform == Platforms.tvOS) || (Platform == Platforms.watchOS)))
+			if ((result == null) && ((Platform == Platforms.tvOS) || (Platform == Platforms.watchOS) || (Platform == Platforms.MacCatalyst)))
 				result = decl.IsAvailable (Platforms.iOS);
 			return !result.HasValue ? true : result.Value;
 		}
