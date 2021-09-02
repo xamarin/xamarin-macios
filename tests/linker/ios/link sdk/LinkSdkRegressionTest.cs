@@ -956,10 +956,16 @@ namespace LinkSdk {
 
 			path = TestFolder (Environment.SpecialFolder.DesktopDirectory, exists: myExists);
 
+#if __TVOS__
+			path = TestFolder (Environment.SpecialFolder.Fonts, exists: true);
+#else
 			path = TestFolder (Environment.SpecialFolder.Fonts, exists: myExists);
+#endif
 
 #if __MACOS__
 			path = TestFolder (Environment.SpecialFolder.Templates, supported: false);
+#elif __TVOS__
+			path = TestFolder (Environment.SpecialFolder.Templates, exists: true);
 #else
 			path = TestFolder (Environment.SpecialFolder.Templates, exists: false);
 #endif
@@ -1010,7 +1016,7 @@ namespace LinkSdk {
 			}
 #endif // __MACOS__
 
-#if !__WATCHOS__ && !NET
+#if !__WATCHOS__
 			// tvOS (device sandbox) is more restrictive than iOS as it limit access to more
 			// directories, mostly because they are not guaranteed to be preserved between executions
 			bool tvos = UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.TV;
