@@ -1,5 +1,4 @@
 # deprecated
-!missing-pinvoke! SecCertificateCopyPublicKey is not bound
 
 # follow the macOS pattern that ignores all of the following ones
 !missing-enum! AuthorizationContextFlags not bound
@@ -160,8 +159,6 @@
 !missing-field! kSecMatchSubjectStartsWith not bound
 !missing-field! kSecMatchSubjectWholeString not bound
 !missing-field! kSecMatchWidthInsensitive not bound
-!missing-field! kSecPolicyApplePKINITClient not bound
-!missing-field! kSecPolicyApplePKINITServer not bound
 !missing-field! kSecUseKeychain not bound
 !missing-pinvoke! AuthorizationCopyInfo is not bound
 !missing-pinvoke! AuthorizationCopyPrivilegedReference is not bound
@@ -202,15 +199,6 @@
 !missing-pinvoke! SecStaticCodeCreateWithPath is not bound
 !missing-pinvoke! SecStaticCodeCreateWithPathAndAttributes is not bound
 !missing-pinvoke! SecStaticCodeGetTypeID is not bound
-!missing-pinvoke! SecureDownloadCopyCreationDate is not bound
-!missing-pinvoke! SecureDownloadCopyName is not bound
-!missing-pinvoke! SecureDownloadCopyTicketLocation is not bound
-!missing-pinvoke! SecureDownloadCopyURLs is not bound
-!missing-pinvoke! SecureDownloadCreateWithTicket is not bound
-!missing-pinvoke! SecureDownloadFinished is not bound
-!missing-pinvoke! SecureDownloadGetDownloadSize is not bound
-!missing-pinvoke! SecureDownloadRelease is not bound
-!missing-pinvoke! SecureDownloadUpdateWithData is not bound
 !missing-pinvoke! SessionCreate is not bound
 !missing-pinvoke! SessionGetInfo is not bound
 
