@@ -194,14 +194,15 @@ namespace Extrospection {
 				var avail = (attr as AvailabilityAttr);
 				if (avail == null)
 					continue;
+				var availName = avail.Platform.Name.ToLowerInvariant ();
 				// if the headers says it's not available then we won't report it as missing
-				if (avail.Unavailable && (avail.Platform.Name == platform))
+				if (avail.Unavailable && (availName == platform))
 					return false;
 				// for iOS we won't report missing members that were deprecated before 5.0
-				if (!avail.Deprecated.IsEmpty && avail.Platform.Name == "ios" && avail.Deprecated.Major < 5)
+				if (!avail.Deprecated.IsEmpty && availName == "ios" && avail.Deprecated.Major < 5)
 					return false;
 				// can't return true right away as it can be deprecated too
-				if (!avail.Introduced.IsEmpty && (avail.Platform.Name == platform))
+				if (!avail.Introduced.IsEmpty && (availName == platform))
 					result = true;
 			}
 			return result;
