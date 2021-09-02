@@ -28,6 +28,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using ObjCRuntime;
 
 namespace Foundation {
@@ -177,7 +178,9 @@ namespace Foundation {
 			return false;
 		}
 
+#if !NET
 		[iOS (9,0), Mac (10,11)]
+#endif
 		public NSObject DecodeTopLevelObject (Type type, string key, out NSError error)
 		{
 			if (type == null)
@@ -185,7 +188,9 @@ namespace Foundation {
 			return DecodeTopLevelObject (new Class (type), key, out error);
 		}
 
+#if !NET
 		[iOS (9,0), Mac (10,11)]
+#endif
 		public NSObject DecodeTopLevelObject (Type[] types, string key, out NSError error)
 		{
 			NSSet<Class> typeSet = null;

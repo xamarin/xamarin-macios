@@ -28,6 +28,7 @@
 //
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
@@ -170,11 +171,21 @@ namespace CoreText {
 			return matches;
 		}
 
+#if !NET
 		[iOS (12,0), TV (12,0), Watch (5,0)]
+#else
+		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("tvos12.0")]
+#endif
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontCollectionCreateMatchingFontDescriptorsWithOptions (IntPtr collection, IntPtr options);
 
+#if !NET
 		[iOS (12,0), TV (12,0), Watch (5,0)]
+#else
+		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("tvos12.0")]
+#endif
 		public CTFontDescriptor [] GetMatchingFontDescriptors (CTFontCollectionOptions options)
 		{
 			var cfArrayRef = CTFontCollectionCreateMatchingFontDescriptorsWithOptions (handle, options == null ? IntPtr.Zero : options.Dictionary.Handle);

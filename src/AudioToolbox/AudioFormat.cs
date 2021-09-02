@@ -30,6 +30,7 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
@@ -40,7 +41,9 @@ using AudioFileID = System.IntPtr;
 namespace AudioToolbox {
 
 	// AudioFormatListItem
+#if !NET
 	[Watch (6,0)]
+#endif
 	[StructLayout(LayoutKind.Sequential)]
 	public struct AudioFormat
 	{
@@ -385,7 +388,11 @@ namespace AudioToolbox {
 		ID3TagToDictionary			= 0x69643364,	// 'id3d' // TODO:
 
 #if !MONOMAC
+#if !NET
 		[Deprecated (PlatformName.iOS, 8, 0)]
+#else
+		[UnsupportedOSPlatform ("ios8.0")]
+#endif // !NET
 		HardwareCodecCapabilities	= 0x68776363,	// 'hwcc'
 #endif
 	}

@@ -713,6 +713,9 @@
   <data name="E0187" xml:space="preserve">
         <value>Nie można zmapować wersji systemu MacOS {0} na odpowiadającą jej wersję systemu iOS</value>
     </data>
+  <data name="E0188" xml:space="preserve">
+        <value>Could not map the iOS version {0} to a corresponding macOS version</value>
+    </data>
   <data name="E7001" xml:space="preserve">
         <value>Nie można rozpoznać adresów IP hosta dla ustawień debugera WiFi.
         </value>

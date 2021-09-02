@@ -3,6 +3,7 @@
 //       tests for those was not possible. The properties for these two types have been deduced from the other types yet bugs are possible and an objc exception will be thrown.
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using ObjCRuntime;
 
 namespace Foundation {
@@ -92,7 +93,9 @@ namespace Foundation {
 			}
 		}
 		
+#if !NET
 		[Mac(10,11),iOS(9,0)]
+#endif
 		[Export ("trueExpression")]
 		public virtual NSExpression TrueExpression {
 			get {
@@ -105,7 +108,9 @@ namespace Foundation {
 			}
 		}
 
+#if !NET
 		[Mac(10,11),iOS(9,0)]
+#endif
 		[Export ("falseExpression")]
 		public virtual NSExpression FalseExpression {
 			get {
