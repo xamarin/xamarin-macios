@@ -52,6 +52,7 @@ namespace CoreGraphics {
 #elif TVOS
 	[Obsolete ("Starting with tvos10.0 replaced by 'CGColorConversionInfo'.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
+#endif
 
 	public class CGColorConverter : INativeObject, IDisposable
 	{
