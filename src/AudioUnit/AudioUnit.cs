@@ -39,7 +39,6 @@ using AudioToolbox;
 using ObjCRuntime;
 using CoreFoundation;
 using Foundation;
-using System.Runtime.Versioning;
 
 namespace AudioUnit
 {
