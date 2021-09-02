@@ -439,6 +439,8 @@ namespace CoreGraphics {
 
 #if !NET
 		[Mac (11,0)]
+#else
+		[SupportedOSPlatform ("macos11.0")]
 #endif
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary, EntryPoint="CGPreflightListenEventAccess")]
 		[return: MarshalAs (UnmanagedType.I1)]
@@ -446,6 +448,8 @@ namespace CoreGraphics {
 
 #if !NET
 		[Mac (11,0)]
+#else
+		[SupportedOSPlatform ("macos11.0")]
 #endif
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary, EntryPoint="CGRequestListenEventAccess")]
 		[return: MarshalAs (UnmanagedType.I1)]
@@ -453,6 +457,8 @@ namespace CoreGraphics {
 
 #if !NET
 		[Mac (11,0)]
+#else
+		[SupportedOSPlatform ("macos11.0")]
 #endif
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary, EntryPoint="CGPreflightPostEventAccess")]
 		[return: MarshalAs (UnmanagedType.I1)]
@@ -460,6 +466,8 @@ namespace CoreGraphics {
 
 #if !NET
 		[Mac (11,0)]
+#else
+		[SupportedOSPlatform ("macos11.0")]
 #endif
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary, EntryPoint="CGRequestPostEventAccess")]
 		[return: MarshalAs (UnmanagedType.I1)]

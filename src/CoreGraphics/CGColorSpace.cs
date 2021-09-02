@@ -425,10 +425,6 @@ namespace CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 #if !NET
 		[iOS (10,0)][Mac (10,12)][Watch (3,0)][TV (10,0)]
-#else
-		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("tvos10.0")]
-		[SupportedOSPlatform ("macos10.12")]
 #endif
 		extern static /* CGColorSpaceRef */ IntPtr CGColorSpaceCreateWithICCData (/* CFTypeRef cg_nullable */ IntPtr data);
 
