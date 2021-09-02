@@ -17,6 +17,7 @@ using UIKit;
 namespace IntentsUI {
 
 	[iOS (10, 0)]
+	[MacCatalyst (13, 0)]
 	[Native]
 	public enum INUIHostedViewContext : ulong {
 		SiriSnippet,
@@ -24,6 +25,7 @@ namespace IntentsUI {
 	}
 
 	[iOS (11,0)]
+	[MacCatalyst (13, 0)]
 	[Native]
 	public enum INUIInteractiveBehavior : ulong {
 		None,
@@ -49,6 +51,7 @@ namespace IntentsUI {
 	delegate void INUIHostedViewControllingConfigureViewHandler (bool success, NSSet<INParameter> configuredParameters, CGSize desiredSize);
 
 	[iOS (10, 0)]
+	[MacCatalyst (13, 0)]
 	[Protocol]
 	interface INUIHostedViewControlling {
 
@@ -64,6 +67,7 @@ namespace IntentsUI {
 	}
 
 	[iOS (10, 0)]
+	[MacCatalyst (13, 0)]
 	[Category]
 	[BaseType (typeof (NSExtensionContext))]
 	interface NSExtensionContext_INUIHostedViewControlling {
@@ -80,6 +84,7 @@ namespace IntentsUI {
 	}
 
 	[iOS (10, 0)]
+	[MacCatalyst (13, 0)]
 	[Protocol]
 	interface INUIHostedViewSiriProviding {
 

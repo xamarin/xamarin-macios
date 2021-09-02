@@ -4639,6 +4639,7 @@ namespace AVFoundation {
 	}
 
 	[Mac (10,10), NoiOS, NoTV, NoWatch]
+	[MacCatalyst (14,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface AVSampleCursor : NSCopying {
@@ -8627,6 +8628,7 @@ namespace AVFoundation {
 		NSString InterruptionReasonKey { get; }
 
 		[iOS (7,0)]
+		[MacCatalyst (14,0)]
 		[Export ("usesApplicationAudioSession")]
 		bool UsesApplicationAudioSession { get; set; }
 
@@ -10546,6 +10548,7 @@ namespace AVFoundation {
 		bool HasTorch { get; }
 
 		[NoiOS, NoWatch]
+		[MacCatalyst (14,0)]
 		[Export ("inUseByAnotherApplication")]
 		bool InUseByAnotherApplication { [Bind ("isInUseByAnotherApplication")] get; }
 

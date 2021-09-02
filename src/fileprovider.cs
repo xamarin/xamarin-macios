@@ -536,7 +536,7 @@ namespace FileProvider {
 		[Export ("userInfo")]
 		NSDictionary GetUserInfo ();
 
-		[NoiOS]
+		[NoiOS, NoMacCatalyst]
 		[Export ("fileSystemFlags")]
 		NSFileProviderFileSystemFlags FileSystemFlags { get; }
 

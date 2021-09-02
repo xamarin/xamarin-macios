@@ -3732,25 +3732,25 @@ namespace Intents {
 		// INImage_IntentsUI (IntentsUI)
 
 		[NoMac, NoWatch, NoTV]
-		[NoMacCatalyst]
+		[MacCatalyst (13, 0)]
 		[Static]
 		[Export ("imageWithCGImage:")]
 		INImage FromImage (CGImage image);
 
 		[NoMac, NoWatch, NoTV]
-		[NoMacCatalyst]
+		[MacCatalyst (13, 0)]
 		[Static]
 		[Export ("imageWithUIImage:")]
 		INImage FromImage (UIImage image);
 
 		[NoMac, NoWatch, NoTV]
-		[NoMacCatalyst]
+		[MacCatalyst (13, 0)]
 		[Static]
 		[Export ("imageSizeForIntentResponse:")]
 		CGSize GetImageSize (INIntentResponse response);
 
 		[NoMac, NoWatch, iOS (11,0), NoTV]
-		[NoMacCatalyst]
+		[MacCatalyst (13, 0)]
 		[Async]
 		[Export ("fetchUIImageWithCompletion:")]
 		void FetchImage (Action<UIImage> completion);
