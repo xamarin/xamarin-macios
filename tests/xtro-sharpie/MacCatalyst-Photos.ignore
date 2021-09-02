@@ -1,5 +1,4 @@
 # deprecated and not used by catalyst
 !missing-selector! +PHAsset::fetchAssetsWithALAssetURLs:options: not bound
-!missing-selector! PHAsset::isSyncFailureHidden not bound
 
 # apis not available on catalyst

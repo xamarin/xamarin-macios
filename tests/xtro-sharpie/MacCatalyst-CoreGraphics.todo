@@ -66,7 +66,6 @@
 !missing-pinvoke! CGConfigureDisplayOrigin is not bound
 !missing-pinvoke! CGConfigureDisplayStereoOperation is not bound
 !missing-pinvoke! CGConfigureDisplayWithDisplayMode is not bound
-!missing-pinvoke! CGContextDrawPDFDocument is not bound
 !missing-pinvoke! CGConvertColorDataWithFormat is not bound
 !missing-pinvoke! CGCursorIsDrawnInFramebuffer is not bound
 !missing-pinvoke! CGCursorIsVisible is not bound
@@ -198,7 +197,6 @@
 !missing-pinvoke! CGEventTapEnable is not bound
 !missing-pinvoke! CGEventTapIsEnabled is not bound
 !missing-pinvoke! CGEventTapPostEvent is not bound
-!missing-pinvoke! CGFontCreateWithPlatformFont is not bound
 !missing-pinvoke! CGGetActiveDisplayList is not bound
 !missing-pinvoke! CGGetDisplayTransferByFormula is not bound
 !missing-pinvoke! CGGetDisplayTransferByTable is not bound
@@ -211,12 +209,6 @@
 !missing-pinvoke! CGInhibitLocalEvents is not bound
 !missing-pinvoke! CGMainDisplayID is not bound
 !missing-pinvoke! CGOpenGLDisplayMaskToDisplayID is not bound
-!missing-pinvoke! CGPDFDocumentGetArtBox is not bound
-!missing-pinvoke! CGPDFDocumentGetBleedBox is not bound
-!missing-pinvoke! CGPDFDocumentGetCropBox is not bound
-!missing-pinvoke! CGPDFDocumentGetMediaBox is not bound
-!missing-pinvoke! CGPDFDocumentGetRotationAngle is not bound
-!missing-pinvoke! CGPDFDocumentGetTrimBox is not bound
 !missing-pinvoke! CGPSConverterAbort is not bound
 !missing-pinvoke! CGPSConverterConvert is not bound
 !missing-pinvoke! CGPSConverterCreate is not bound

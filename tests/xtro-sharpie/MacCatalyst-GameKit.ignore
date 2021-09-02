@@ -31,8 +31,6 @@
 !incorrect-protocol-member! GKTurnBasedMatchmakerViewControllerDelegate::turnBasedMatchmakerViewController:playerQuitForMatch: is OPTIONAL and should NOT be abstract
 
 # Are only available for TvOS
-!missing-selector! GKAccessPoint::isFocused not bound
-!missing-selector! GKAccessPoint::setFocused: not bound
 
 ## not annotated by itself but it maps to presentFriendRequestCreatorFromViewController which is not available on Catalyst
 !missing-selector! GKLocalPlayer::isPresentingFriendRequestViewController not bound

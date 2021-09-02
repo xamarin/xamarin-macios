@@ -1,7 +1,3 @@
-!missing-enum! AVRoutePickerViewButtonStyle not bound
-!missing-selector! AVPictureInPictureController::canStopPictureInPicture not bound
-!missing-selector! AVRoutePickerView::routePickerButtonStyle not bound
-!missing-selector! AVRoutePickerView::setRoutePickerButtonStyle: not bound
 ## appended from unclassified file
 !extra-designated-initializer! AVPictureInPictureController::initWithPlayerLayer: is incorrectly decorated with an [DesignatedInitializer] attribute
 !missing-protocol! AVPictureInPictureSampleBufferPlaybackDelegate not bound

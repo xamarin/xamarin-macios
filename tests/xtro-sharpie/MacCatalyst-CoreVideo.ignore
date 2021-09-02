@@ -2,8 +2,4 @@
 ## deprecated in favor of metal
 
 # ignored as with macOS
-!missing-field! kCVImageBufferTransferFunction_EBU_3213 not bound
-!missing-field! kCVImageBufferTransferFunction_SMPTE_C not bound
-!missing-field! kCVPixelBufferIOSurfaceOpenGLFBOCompatibilityKey not bound
-!missing-field! kCVPixelBufferIOSurfaceOpenGLTextureCompatibilityKey not bound
 
