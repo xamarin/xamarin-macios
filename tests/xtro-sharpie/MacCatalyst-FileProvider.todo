@@ -1,6 +1,1 @@
-!missing-enum! NSFileProviderFileSystemFlags not bound
 !missing-enum-value! NSFileProviderItemCapabilities native value NSFileProviderItemCapabilitiesAllowsAll = 63 not bound
-
-# MacCatalyst 14.5 only, Maybe? They are unavailable in iOS
-!missing-enum! NSFileProviderDomainTestingModes not bound
-## appended from unclassified file
