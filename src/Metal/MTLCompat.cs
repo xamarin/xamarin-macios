@@ -28,8 +28,6 @@ namespace Metal {
 		[Unavailable (PlatformName.TvOS, PlatformArchitecture.All)]
 		[Introduced (PlatformName.MacOSX, 10,15, PlatformArchitecture.All)]
 #else
-		[UnsupportedOSPlatform ("ios")]
-		[UnsupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos10.15")]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
@@ -52,8 +50,6 @@ namespace Metal {
 		[Unavailable (PlatformName.TvOS, PlatformArchitecture.All)]
 		[Introduced (PlatformName.MacOSX, 10,15, PlatformArchitecture.All)]
 #else
-		[UnsupportedOSPlatform ("ios")]
-		[UnsupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos10.15")]
 #endif
 

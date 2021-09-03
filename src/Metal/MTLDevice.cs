@@ -52,9 +52,6 @@ namespace Metal {
 		}
 
 #if MONOMAC
-#if !NET
-		[NoiOS, NoWatch, NoTV]
-#endif
 		[DllImport (Constants.MetalLibrary)]
 		unsafe static extern IntPtr MTLCopyAllDevices ();
 
@@ -68,17 +65,13 @@ namespace Metal {
 		}
 
 #if !NET
-		[Mac (10, 13), NoiOS, NoWatch, NoTV]
-#else
-		[SupportedOSPlatform ("macos10.13")]
+		[Mac (10, 13)]
 #endif
 		[DllImport (Constants.MetalLibrary)]
 		unsafe static extern IntPtr MTLCopyAllDevicesWithObserver (ref IntPtr observer, void* handler);
 
 #if !NET
-		[Mac (10, 13), NoiOS, NoWatch, NoTV]
-#else
-		[SupportedOSPlatform ("macos10.13")]
+		[Mac (10, 13)]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static IMTLDevice [] GetAllDevices (ref NSObject observer, MTLDeviceNotificationHandler handler)
@@ -118,17 +111,13 @@ namespace Metal {
 		}
 
 #if !NET
-		[Mac (10, 13), NoiOS, NoWatch, NoTV]
-#else
-		[SupportedOSPlatform ("macos10.13")]
+		[Mac (10, 13)]
 #endif
 		[DllImport (Constants.MetalLibrary)]
 		static extern void MTLRemoveDeviceObserver (IntPtr observer);
 
 #if !NET
 		[Mac (10, 13), NoiOS, NoWatch, NoTV]
-#else
-		[SupportedOSPlatform ("macos10.13")]
 #endif
 		public static void RemoveObserver (NSObject observer)
 		{
