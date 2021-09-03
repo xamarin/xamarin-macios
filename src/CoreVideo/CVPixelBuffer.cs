@@ -22,7 +22,9 @@ using CVPixelBufferRef=System.IntPtr;
 
 namespace CoreVideo {
 
+#if !NET
 	[Watch (4,0)]
+#endif
 	public partial class CVPixelBuffer : CVImageBuffer {
 #if !COREBUILD
 		[DllImport (Constants.CoreVideoLibrary, EntryPoint = "CVPixelBufferGetTypeID")]

@@ -12,6 +12,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using CoreFoundation;
@@ -22,7 +23,9 @@ using Metal;
 
 namespace CoreVideo {
 
+#if !NET
 	[iOS (8,0)]
+#endif
 	public class CVMetalTexture : INativeObject, IDisposable {
 
 		internal IntPtr handle;

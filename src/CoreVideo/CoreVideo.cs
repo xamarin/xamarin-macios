@@ -27,6 +27,7 @@
 //
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
@@ -36,33 +37,43 @@ using ObjCRuntime;
 namespace CoreVideo {
 
 	// CVPixelBuffer.h
+#if !NET
 	[Watch (4,0)]
+#endif
 	public struct CVPlanarComponentInfo {
 		public /* int32_t */ int Offset;
 		public /* uint32_t */ uint RowBytes;
 	}
 
 	// CVPixelBuffer.h
+#if !NET
 	[Watch (4,0)]
+#endif
 	public struct CVPlanarPixelBufferInfo {
 		public CVPlanarComponentInfo[] ComponentInfo;
 	}
 
 	// CVPixelBuffer.h
+#if !NET
 	[Watch (4,0)]
+#endif
 	public struct CVPlanarPixelBufferInfo_YCbCrPlanar {
 		public CVPlanarComponentInfo ComponentInfoY;
 		public CVPlanarComponentInfo ComponentInfoCb;
 		public CVPlanarComponentInfo ComponentInfoCr;
 	}
 
+#if !NET
 	[Watch (4,0)]
+#endif
 	public struct CVPlanarPixelBufferInfo_YCbCrBiPlanar {
 		public CVPlanarComponentInfo ComponentInfoY;
 		public CVPlanarComponentInfo ComponentInfoCbCr;
 	}
 
+#if !NET
 	[Watch (4,0)]
+#endif
 	public struct CVTimeStamp {
 		public UInt32		Version;
 		public Int32 		VideoTimeScale;
@@ -75,7 +86,9 @@ namespace CoreVideo {
 		public UInt64 		Reserved;
 	}
         
+#if !NET
 	[Watch (4,0)]
+#endif
 	public struct CVSMPTETime {
 		public Int16	Subframes;
 		public Int16	SubframeDivisor;
@@ -88,13 +101,17 @@ namespace CoreVideo {
 		public Int16	Frames;
 	}
 
+#if !NET
 	[Watch (4,0)]
+#endif
 	public struct CVFillExtendedPixelsCallBackData {
 		public nint /* CFIndex */ Version;
 		public CVFillExtendedPixelsCallBack FillCallBack;
 		public IntPtr UserInfo;
 	} 
 
+#if !NET
 	[Watch (4,0)]
+#endif
 	public delegate bool CVFillExtendedPixelsCallBack (IntPtr pixelBuffer, IntPtr refCon);
 }

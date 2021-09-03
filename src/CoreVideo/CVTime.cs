@@ -27,6 +27,7 @@
 //
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using CoreFoundation;
 using ObjCRuntime;
 
@@ -35,7 +36,9 @@ using ObjCRuntime;
 namespace CoreVideo {
 
 	// CVBase.h
+#if !NET
 	[Watch (4,0)]
+#endif
 	public struct CVTime {
 
 		public /* int64_t */ long TimeValue;

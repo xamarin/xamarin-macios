@@ -9,6 +9,7 @@
 //
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
@@ -18,7 +19,9 @@ using Foundation;
 namespace CoreVideo {
 
 	// CVPixelBufferPool.h
+#if !NET
 	[Watch (4,0)]
+#endif
 	public partial class CVPixelBufferPool : INativeObject
 #if !COREBUILD
 		, IDisposable
@@ -165,13 +168,16 @@ namespace CoreVideo {
 		{
 		}
 
-
+#if !NET
 		[iOS (9,0)][Mac (10,11)]
+#endif
 		[DllImport (Constants.CoreVideoLibrary)]
 		static extern void CVPixelBufferPoolFlush (/* CVPixelBufferPoolRef __nonnull */ IntPtr pool,
 			CVPixelBufferPoolFlushFlags options);
 
+#if !NET
 		[iOS (9,0)][Mac (10,11)]
+#endif
 		public void Flush (CVPixelBufferPoolFlushFlags options)
 		{
 			CVPixelBufferPoolFlush (handle, options);
