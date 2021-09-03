@@ -5,15 +5,5 @@
 !missing-enum! EKAlarmType not bound
 
 # These say the class supports MacCatalyst, but the selectors individually do not
-!missing-selector! EKEventStore::initWithSources: not bound
-!missing-selector! EKAlarm::emailAddress not bound
-!missing-selector! EKAlarm::setEmailAddress: not bound
-!missing-selector! EKAlarm::setSoundName: not bound
-!missing-selector! EKAlarm::setUrl: not bound
-!missing-selector! EKAlarm::soundName not bound
-!missing-selector! EKAlarm::type not bound
-!missing-selector! EKAlarm::url not bound
 
 # These two are deprecated
-!missing-selector! EKEvent::birthdayPersonUniqueID not bound
-!missing-selector! EKEventStore::initWithAccessToEntityTypes: not bound
