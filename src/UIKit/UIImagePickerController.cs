@@ -16,6 +16,7 @@ using CoreGraphics;
 using Photos;
 using System;
 using System.Drawing;
+using System.Runtime.Versioning;
 
 namespace UIKit {
 	public partial class UIImagePickerController {
@@ -100,7 +101,9 @@ namespace UIKit {
 			}
 		}
 
+#if !NET
 		[iOS (9,1)]
+#endif
 		public PHLivePhoto LivePhoto {
 			get {
 				return (PHLivePhoto) Info [UIImagePickerController.LivePhoto];
@@ -119,14 +122,22 @@ namespace UIKit {
 			}
 		}
 
+#if !NET
 		[iOS (11,0)]
+#else
+		[SupportedOSPlatform ("ios11.0")]
+#endif
 		public PHAsset PHAsset {
 			get {
 				return (PHAsset) Info [UIImagePickerController.PHAsset];
 			}
 		}
 
+#if !NET
 		[iOS (11,0)]
+#else
+		[SupportedOSPlatform ("ios11.0")]
+#endif
 		public NSUrl ImageUrl {
 			get {
 				return (NSUrl) Info [UIImagePickerController.ImageUrl];

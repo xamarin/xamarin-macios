@@ -2,6 +2,7 @@
 using System;
 using Foundation;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 #if MONOMAC
 using AppKit;
@@ -19,7 +20,9 @@ namespace UIKit {
 
 #if !COREBUILD
 
+#if !NET
 	[iOS (7,0)]
+#endif
 	public partial class NSLayoutManager {
 		[Obsolete ("Always throws 'NotSupportedException' (not a public API).")]
 		public virtual void ReplaceTextStorage (NSTextStorage newTextStorage)

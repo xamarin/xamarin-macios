@@ -10,6 +10,7 @@
 //
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
@@ -103,7 +104,9 @@ namespace UIKit {
 	}
 
 #if !WATCH
+#if !NET
 	[iOS (9,0)]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct UIFloatRange : IEquatable<UIFloatRange> {
 
