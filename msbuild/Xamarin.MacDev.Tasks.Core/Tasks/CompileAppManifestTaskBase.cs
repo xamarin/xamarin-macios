@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 using Microsoft.Build.Framework;
@@ -13,6 +14,9 @@ namespace Xamarin.MacDev.Tasks
 	{
 		#region Inputs
 
+		// Single-project property that maps to CFBundleIdentifier for Apple platforms
+		public string ApplicationId { get; set; }
+
 		// Single-project property that maps to CFBundleShortVersionString for Apple platforms
 		public string AppleShortVersion { get; set; }
 
@@ -25,14 +29,10 @@ namespace Xamarin.MacDev.Tasks
 		[Required]
 		public string AppBundleName { get; set; }
 
-		[Required]
 		public string AppManifest { get; set; }
 
 		[Required]
 		public string AssemblyName { get; set; }
-
-		[Required]
-		public string BundleIdentifier { get; set; }
 
 		[Required]
 		[Output] // This is required to create an empty file on Windows for the Input/Outputs check.
@@ -58,9 +58,6 @@ namespace Xamarin.MacDev.Tasks
 
 		public bool IsWatchExtension { get; set; }
 
-		[Required]
-		public string MinimumOSVersion { get; set; }
-
 		public ITaskItem[] PartialAppManifests { get; set; }
 
 		public string ResourceRules { get; set; }
@@ -71,30 +68,38 @@ namespace Xamarin.MacDev.Tasks
 		[Required]
 		public bool SdkIsSimulator { get; set; }
 
+		[Required]
+		public string SdkVersion { get; set; }
+
 		public string TargetArchitectures { get; set; }
+
+		public bool Validate { get; set; }
 		#endregion
 
 		protected TargetArchitecture architectures;
 
 		public override bool Execute ()
 		{
-			PDictionary plist;
+			PDictionary plist = null;
 
-			try {
-				plist = PDictionary.FromFile (AppManifest);
-			} catch (Exception ex) {
-				LogAppManifestError (MSBStrings.E0010, AppManifest, ex.Message);
-				return false;
+			if (File.Exists (AppManifest)) {
+				try {
+					plist = PDictionary.FromFile (AppManifest);
+				} catch (Exception ex) {
+					LogAppManifestError (MSBStrings.E0010, AppManifest, ex.Message);
+					return false;
+				}
+			} else {
+				plist = new PDictionary ();
 			}
-
-			plist.SetIfNotPresent (PlatformFrameworkHelper.GetMinimumOSVersionKey (Platform), MinimumOSVersion);
 
 			if (!string.IsNullOrEmpty (TargetArchitectures) && !Enum.TryParse (TargetArchitectures, out architectures)) {
 				LogAppManifestError (MSBStrings.E0012, TargetArchitectures);
 				return false;
 			}
 
-			plist.SetCFBundleIdentifier (BundleIdentifier); // no ifs and buts, we've computed the final bundle identifier (BundleIdentifier) in DetectSigningIdentityTask.
+			if (GenerateApplicationManifest && !string.IsNullOrEmpty (ApplicationId))
+				plist.SetIfNotPresent (ManifestKeys.CFBundleIdentifier, ApplicationId);
 			plist.SetIfNotPresent (ManifestKeys.CFBundleInfoDictionaryVersion, "6.0");
 			plist.SetIfNotPresent (ManifestKeys.CFBundlePackageType, IsAppExtension ? "XPC!" : "APPL");
 			plist.SetIfNotPresent (ManifestKeys.CFBundleSignature, "????");
@@ -119,16 +124,52 @@ namespace Xamarin.MacDev.Tasks
 			if (string.IsNullOrEmpty (defaultBundleShortVersion))
 				defaultBundleShortVersion = plist.GetCFBundleVersion ();
 			plist.SetIfNotPresent (ManifestKeys.CFBundleShortVersionString, defaultBundleShortVersion);
-			
+
+			if (!SetMinimumOSVersion (plist))
+				return false;
+
 			if (!Compile (plist))
 				return false;
 
 			// Merge with any partial plists...
 			MergePartialPlistTemplates (plist);
 
-			plist.Save (CompiledAppManifest.ItemSpec, true, true);
+			// write the resulting app manifest
+			if (FileUtils.UpdateFile (CompiledAppManifest.ItemSpec, (tmpfile) => plist.Save (tmpfile, true, true)))
+				Log.LogMessage (MessageImportance.Low, "The file {0} is up-to-date.", CompiledAppManifest.ItemSpec);
 
 			return !Log.HasLoggedErrors;
+		}
+
+		bool SetMinimumOSVersion (PDictionary plist)
+		{
+			var minimumOSVersionInManifest = plist?.Get<PString> (PlatformFrameworkHelper.GetMinimumOSVersionKey (Platform))?.Value;
+			string minimumOSVersion;
+
+			if (Platform == ApplePlatform.MacCatalyst && string.IsNullOrEmpty (minimumOSVersionInManifest)) {
+				// If there was no value for the macOS min version key, then check the iOS min version key.
+				var minimumiOSVersionInManifest = plist?.Get<PString> (ManifestKeys.MinimumOSVersion)?.Value;
+				if (!string.IsNullOrEmpty (minimumiOSVersionInManifest)) {
+					// Convert to the macOS version
+					if (!MacCatalystSupport.TryGetMacOSVersion (Sdks.GetAppleSdk (Platform).GetSdkPath (SdkVersion, false), minimumiOSVersionInManifest, out var convertedVersion))
+						Log.LogError (MSBStrings.E0188, minimumiOSVersionInManifest);
+					minimumOSVersionInManifest = convertedVersion;
+				}
+			}
+
+			if (string.IsNullOrEmpty (minimumOSVersionInManifest)) {
+				minimumOSVersion = SdkVersion;
+			} else if (!IAppleSdkVersion_Extensions.TryParse (minimumOSVersionInManifest, out var _)) {
+				Log.LogError (null, null, null, AppManifest, 0, 0, 0, 0, MSBStrings.E0011, minimumOSVersionInManifest);
+				return false;
+			} else {
+				minimumOSVersion = minimumOSVersionInManifest;
+			}
+
+			// Write out our value
+			plist [PlatformFrameworkHelper.GetMinimumOSVersionKey (Platform)] = minimumOSVersion;
+
+			return true;
 		}
 
 		protected abstract bool Compile (PDictionary plist);
@@ -156,7 +197,7 @@ namespace Xamarin.MacDev.Tasks
 				dict[key] = value;
 		}
 
-		protected void MergePartialPlistDictionary (PDictionary plist, PDictionary partial)
+		public static void MergePartialPlistDictionary (PDictionary plist, PDictionary partial)
 		{
 			foreach (var property in partial) {
 				if (plist.ContainsKey (property.Key)) {
@@ -173,23 +214,28 @@ namespace Xamarin.MacDev.Tasks
 			}
 		}
 
-		protected void MergePartialPlistTemplates (PDictionary plist)
+		public static void MergePartialPLists (Task task, PDictionary plist, IEnumerable<ITaskItem> partialLists)
 		{
-			if (PartialAppManifests == null)
+			if (partialLists == null)
 				return;
 
-			foreach (var template in PartialAppManifests) {
+			foreach (var template in partialLists) {
 				PDictionary partial;
 
 				try {
 					partial = PDictionary.FromFile (template.ItemSpec);
 				} catch (Exception ex) {
-					Log.LogError (MSBStrings.E0107, template.ItemSpec, ex.Message);
+					task.Log.LogError (MSBStrings.E0107, template.ItemSpec, ex.Message);
 					continue;
 				}
 
 				MergePartialPlistDictionary (plist, partial);
 			}
+		}
+
+		protected void MergePartialPlistTemplates (PDictionary plist)
+		{
+			MergePartialPLists (this, plist, PartialAppManifests);
 		}
 	}
 }

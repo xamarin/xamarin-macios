@@ -228,6 +228,8 @@ namespace Introspection {
 				return TestRuntime.CheckXcodeVersion (11, 2);
 			case "UIMenuController": // Stopped working with Xcode 11.3 beta 1
 				return TestRuntime.CheckXcodeVersion (11, 3);
+			case "THClient":
+				return Runtime.Arch == Arch.SIMULATOR;
 #if __TVOS__
 			case "MPSPredicate":
 				// the device .ctor ends up calling `initWithBuffer:offset:` and crash on older (non 4k AppleTV devices)

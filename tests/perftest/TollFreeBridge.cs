@@ -92,9 +92,15 @@ namespace PerfTest {
 
 		public IEnumerable<object []> ArraysOfStrings ()
 		{
+			yield return new object [] { "null", null };
 			yield return new object [] { "empty", new NSArray () };
+			yield return new object [] { "one",  NSArray.FromStrings ("1") };
 			yield return new object [] { "few", NSArray.FromStrings ("Bonjour", "Québec", "汉语 漢語", "I'm feeling 🤪 tonight.") };
-			yield return new object [] { "mutable", new NSMutableArray<NSString> (new NSString ("Québec"), new NSString ("汉语 漢語")) };
+			yield return new object [] { "small_mutable", new NSMutableArray<NSString> (new NSString ("Québec"), new NSString ("汉语 漢語")) };
+			var lot = new NSMutableArray ();
+			for (int i = 0; i < 255; i++) // used to fit under the stackalloc limit of the new implementation
+				lot.Add (new NSString (new string ('!', i) ));
+			yield return new object [] { "lot_mutable", lot };
 			var large = new NSMutableArray ();
 			for (int i = 0; i < 4096; i++)
 				large.Add (new NSString (new string ('#', i) ));
@@ -108,7 +114,7 @@ namespace PerfTest {
 		[ArgumentsSource (nameof (ArraysOfStrings))]
 		public void CFArray_StringArrayFromHandle (string name, NSArray value)
 		{
-			CFArray.StringArrayFromHandle (value.Handle);
+			CFArray.StringArrayFromHandle (value.GetHandle ());
 		}
 
 		/*
@@ -118,7 +124,7 @@ namespace PerfTest {
 		[ArgumentsSource (nameof (ArraysOfStrings))]
 		public void NSArray_StringArrayFromHandle (string name, NSArray value)
 		{
-			NSArray.StringArrayFromHandle (value.Handle);
+			NSArray.StringArrayFromHandle (value.GetHandle ());
 		}
 
 		/*
@@ -128,7 +134,7 @@ namespace PerfTest {
 		[ArgumentsSource (nameof (ArraysOfStrings))]
 		public void CFArray_ArrayFromHandle (string name, NSArray value)
 		{
-			CFArray.ArrayFromHandle<NSString> (value.Handle);
+			CFArray.ArrayFromHandle<NSString> (value.GetHandle ());
 		}
 
 		/*
@@ -138,7 +144,7 @@ namespace PerfTest {
 		[ArgumentsSource (nameof (ArraysOfStrings))]
 		public void NSArray_ArrayFromHandle (string name, NSArray value)
 		{
-			NSArray.ArrayFromHandle<NSString> (value.Handle);
+			NSArray.ArrayFromHandle<NSString> (value.GetHandle ());
 		}
 	}
 }

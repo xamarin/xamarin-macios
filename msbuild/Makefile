@@ -479,6 +479,7 @@ MSBUILD_PRODUCTS += $(DOTNET_TARGETS)
 DOTNET_IOS_WINDOWS_OUTPUT_FILES =                                \
 	$(foreach dll,$(IOS_WINDOWS_TASK_ASSEMBLIES),$(dll).*)       \
 	$(foreach dll,$(IOS_WINDOWS_DEPENDENCIES),$(dll).*)          \
+	System.Diagnostics.Tracer.pdb                                \
 	Broker.zip                                                   \
 	Build.zip                                                    \
 	Xamarin.PreBuilt.iOS.app.zip

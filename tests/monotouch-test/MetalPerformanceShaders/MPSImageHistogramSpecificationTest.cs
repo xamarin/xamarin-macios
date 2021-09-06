@@ -30,6 +30,7 @@ namespace MonoTouchFixtures.MetalPerformanceShaders
 				Assert.Inconclusive ("Metal Performance Shaders is not supported in the simulator");
 #else
 			TestRuntime.AssertXcodeVersion (9, 0);
+			TestRuntime.AssertNotVirtualMachine ();
 #endif
 
 			device = MTLDevice.SystemDefault;

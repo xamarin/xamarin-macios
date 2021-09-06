@@ -16,6 +16,7 @@ using System.Collections;
 using Foundation; 
 using ObjCRuntime;
 using CoreGraphics;
+using System.Runtime.Versioning;
 
 #nullable enable
 
@@ -265,35 +266,51 @@ namespace MediaPlayer {
 			}
 		}
 		
+#if !NET
 		[iOS (9,2)]
+#endif
 		public bool HasProtectedAsset {
 			get {
 				return Int32ForProperty (HasProtectedAssetProperty) != 0;
 			}
 		}
 
+#if !NET
 		[iOS (10,0)]
+#endif
 		public bool IsExplicitItem {
 			get {
 				return Int32ForProperty (IsExplicitProperty) != 0;
 			}
 		}
 
+#if !NET
 		[iOS (10,0)]
+#endif
 		public NSDate? DateAdded {
 			get {
 				return (ValueForProperty (DateAddedProperty) as NSDate);
 			}
 		}
 
+#if !NET
 		[iOS (10,3)]
+#else
+		[SupportedOSPlatform ("ios10.3")]
+#endif
 		public NSString? PlaybackStoreID {
 			get {
 				return (ValueForProperty (PlaybackStoreIDProperty) as NSString);
 			}
 		}
 
+#if !NET
 		[Watch (7,4), TV (14,5), Mac (11,3), iOS (14,5)]
+#else
+		[SupportedOSPlatform ("ios14.5")]
+		[SupportedOSPlatform ("tvos14.5")]
+		[SupportedOSPlatform ("macos11.3")]
+#endif
 		public bool IsPreorder {
 			get {
 				return BoolForProperty (IsPreorderProperty);

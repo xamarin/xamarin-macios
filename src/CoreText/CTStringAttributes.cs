@@ -31,6 +31,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
@@ -232,7 +233,13 @@ namespace CoreText {
 			set {Adapter.SetNativeValue (Dictionary, CTStringAttributeKey.StrokeColor, value);}
 		}
 
+#if !NET
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+#else
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+#endif
 		public float? TrackingAdjustment {
 			get {return Adapter.GetSingleValue (Dictionary, CTStringAttributeKey.TrackingAttributeName);}
 			set {Adapter.SetValue (Dictionary, CTStringAttributeKey.TrackingAttributeName, value);}
@@ -319,7 +326,12 @@ namespace CoreText {
 			}
 		}
 
+#if !NET
 		[iOS (11,0), Mac (10,13), TV (11,0), Watch (4,0)]
+#else
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+#endif
 		public float? BaselineOffset {
 			get { return Adapter.GetSingleValue (Dictionary, CTStringAttributeKey.BaselineOffset); }
 			set { Adapter.SetValue (Dictionary, CTStringAttributeKey.BaselineOffset, value); }
