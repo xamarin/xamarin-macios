@@ -1,4 +1,4 @@
-﻿//
+//
 // WatchConnectivity bindings
 //
 // Authors:
@@ -233,4 +233,3 @@ namespace WatchConnectivity {
 	}
 
 }
-

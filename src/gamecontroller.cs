@@ -973,6 +973,18 @@ namespace GameController {
 		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("touchpads", ArgumentSemantic.Strong)]
 		NSDictionary<NSString, GCControllerTouchpad> Touchpads { get; }
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("hasRemappedElements")]
+		bool HasRemappedElements { get; }
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("mappedElementAliasForPhysicalInputName:")]
+		string GetMappedElementAlias (string physicalInputName);
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("mappedPhysicalInputNamesForElementAlias:")]
+		NSSet<NSString> GetMappedPhysicalInputNames (string elementAlias);
 	}
 
 	[TV (14, 0), Mac (11, 0), iOS (14, 0)]
@@ -1054,6 +1066,10 @@ namespace GameController {
 
 		[Field ("GCInputDualShockTouchpadButton")]
 		NSString DualShockTouchpadButton { get; }
+
+		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
+		[Field ("GCInputButtonShare")]
+		NSString ButtonShare { get; }
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
@@ -1072,6 +1088,10 @@ namespace GameController {
 
 		[NullAllowed, Export ("paddleButton4")]
 		GCControllerButtonInput PaddleButton4 { get; }
+
+		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
+		[NullAllowed, Export ("buttonShare")]
+		GCControllerButtonInput ButtonShare { get; }
 	}
 
 	[Static]
@@ -1995,6 +2015,29 @@ namespace GameController {
 
 		[Field ("GCInputDirectionalCardinalDpad")]
 		CardinalDpad,
+
+		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
+		[Field ("GCInputDirectionalCenterButton")]
+		CenterButton,
+
+		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
+		[Field ("GCInputDirectionalTouchSurfaceButton")]
+		TouchSurfaceButton,
+	}
+
+	[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
+	enum GCInputMicroGamepad {
+		[Field ("GCInputMicroGamepadDpad")]
+		Dpad,
+
+		[Field ("GCInputMicroGamepadButtonA")]
+		ButtonA,
+
+		[Field ("GCInputMicroGamepadButtonX")]
+		ButtonX,
+
+		[Field ("GCInputMicroGamepadButtonMenu")]
+		ButtonMenu,
 	}
 
 	delegate GCVirtualControllerElementConfiguration GCVirtualControllerElementUpdateBlock (GCVirtualControllerElementConfiguration configuration);
@@ -2008,8 +2051,12 @@ namespace GameController {
 		[Export ("virtualControllerWithConfiguration:")]
 		GCVirtualController Create (GCVirtualControllerConfiguration configuration);
 
+		[Export ("initWithConfiguration:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (GCVirtualControllerConfiguration configuration);
+
 		[Async]
-		[Export ("connectWithReply:")]
+		[Export ("connectWithReplyHandler:")]
 		void Connect ([NullAllowed] Action<NSError> reply);
 
 		[Export ("disconnect")]
@@ -2018,8 +2065,8 @@ namespace GameController {
 		[NullAllowed, Export ("controller", ArgumentSemantic.Weak)]
 		GCController Controller { get; }
 
-		[Export ("changeElement:configuration:")]
-		void Change (string element, GCVirtualControllerElementUpdateBlock configuration);
+		[Export ("updateConfigurationForElement:configuration:")]
+		void UpdateConfiguration (string element, GCVirtualControllerElementUpdateBlock configuration);
 	}
 
 	[NoTV, NoMac, NoWatch, iOS (15,0), MacCatalyst (15,0)]
@@ -2035,12 +2082,12 @@ namespace GameController {
 	interface GCVirtualControllerElementConfiguration
 	{
 		[Export ("hidden")]
-		bool Hidden { get; set; }
+		bool Hidden { [Bind ("isHidden")] get; set; }
 
 		[NullAllowed, Export ("path", ArgumentSemantic.Strong)]
 		BezierPath Path { get; set; }
 
-		[Export ("touchpad")]
-		bool Touchpad { get; set; }
+		[Export ("actsAsTouchpad")]
+		bool ActsAsTouchpad { get; set; }
 	}
 }

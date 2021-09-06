@@ -1,4 +1,4 @@
-﻿//
+//
 // INRadioTypeResolutionResult.cs
 //
 // Authors:

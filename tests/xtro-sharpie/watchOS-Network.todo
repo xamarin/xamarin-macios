@@ -72,3 +72,4 @@
 !missing-pinvoke! nw_quic_set_stream_application_error is not bound
 !missing-pinvoke! nw_quic_set_stream_is_unidirectional is not bound
 !missing-pinvoke! nw_tcp_options_set_multipath_force_version is not bound
+!missing-pinvoke! nw_group_descriptor_create_multiplex is not bound

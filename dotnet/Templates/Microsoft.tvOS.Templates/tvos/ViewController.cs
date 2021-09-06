@@ -1,10 +1,7 @@
-﻿using System;
-using UIKit;
+namespace tvOSApp1;
 
-namespace tvOSApp1 {
-	public partial class ViewController : UIViewController {
-		public ViewController (IntPtr handle) : base (handle)
-		{
-		}
+public partial class ViewController : UIViewController {
+	public ViewController (IntPtr handle) : base (handle)
+	{
 	}
 }

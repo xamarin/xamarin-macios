@@ -25,8 +25,9 @@ XIOS_ARCH = arm64
 XIOS_PCH = iphoneos$(IOS_SDK_VERSION)-$(XIOS_ARCH).pch
 
 $(XIOS_PCH): .stamp-check-sharpie
-	$(SHARPIE) sdk-db --xcode $(XCODE) -s iphoneos$(IOS_SDK_VERSION) -a $(XIOS_ARCH) -exclude RealityKit
-
+	$(SHARPIE) sdk-db --xcode $(XCODE) -s iphoneos$(IOS_SDK_VERSION) -a $(XIOS_ARCH) \
+	-exclude RealityKit \
+	-i ThreadNetwork/THClient.h \
 
 XWATCHOS ?= $(TOP)/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/32bits/watchOS/Xamarin.WatchOS.dll
 XWATCHOS_ARCH = armv7
@@ -77,6 +78,7 @@ $(XCAT_PCH): .stamp-check-sharpie
 	-exclude RealityKit \
 	-exclude SecurityInterface \
 	-exclude Virtualization \
+	-i HomeKit/HomeKit.h \
 
 
 ios-$(IOS_SDK_VERSION).g.cs: $(XIOS_PCH)
@@ -194,3 +196,6 @@ remove-empty-files:
 unclassified2todo:
 	$(SYSTEM_CSC) -features:strict Filter.cs u2todo/u2todo.cs
 	$(MONO) u2todo.exe
+	@for filename in $(git status -s | cut -c4- | grep .todo); do \
+		sort -o "$filename" "$filename"; \
+	done

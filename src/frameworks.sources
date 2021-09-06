@@ -76,10 +76,12 @@ ADSUPPORT_SOURCES = \
 
 # AppKit
 
-APPKIT_CORE_SOURCES = \
-	AppKit/Defs.cs \
+APPKIT_API_SOURCES = \
 	AppKit/Enums.cs \
 	AppKit/XEnums.cs \
+
+APPKIT_CORE_SOURCES = \
+	AppKit/Defs.cs \
 	AppKit/NSAccessibility.cs \
 	XKit/Types.cs \
 	XKit/XKitCompat.cs \
@@ -111,6 +113,7 @@ APPKIT_SOURCES = \
 	AppKit/NSPasteboard.cs \
 	AppKit/NSSharingServiceDelegate.cs \
 	AppKit/NSDocument.cs \
+	AppKit/NSEnumsExtensions.cs \
 	AppKit/NSEvent.cs \
 	AppKit/NSFont.cs \
 	AppKit/NSGestureRecognizer.cs \
@@ -230,6 +233,7 @@ AUDIOUNIT_SOURCES = \
 AUTHENTICATIONSERVICES_SOURCES = \
 	AuthenticationServices/ASAuthorization.cs \
 	AuthenticationServices/ASAuthorizationRequest.cs \
+	AuthenticationServices/PublicPrivateKeyAuthentication.cs \
 
 # AVFoundation
 
@@ -689,6 +693,7 @@ COREWLAN_API_SOURCES = \
 COREWLAN_SOURCES = \
 	CoreWlan/CWConfiguration.cs \
 	CoreWlan/CWInterface.cs \
+	CoreWlan/CWKeychain.cs \
 
 # EventKit
 
@@ -713,6 +718,9 @@ EXTERNALACCESSORY_API_SOURCES = \
 
 # FileProvider
 
+FILEPROVIDER_CORE_SOURCES = \
+	FileProvider/Structs.cs \
+
 FILEPROVIDER_SOURCES = \
 	FileProvider/Compat.cs \
 
@@ -726,6 +734,7 @@ FINDERSYNC_CORE_SOURCES = \
 FOUNDATION_API_SOURCES = \
 	Foundation/Enum.cs \
 	Foundation/Enums.cs \
+	Foundation/EnumDesktop.cs \
 
 FOUNDATION_CORE_SOURCES = \
 	Foundation/AdviceAttribute.cs \
@@ -756,7 +765,6 @@ FOUNDATION_CORE_SOURCES = \
 	Foundation/RegisterAttribute.cs \
 	Foundation/NSObject.iOS.cs \
 	Foundation/NSAttributedString.iOS.cs \
-	Foundation/EnumDesktop.cs \
 	Foundation/NSObject.mac.cs \
 	Foundation/NSDateComponents.cs \
 	Foundation/XpcInterfaceAttribute.cs \
@@ -916,6 +924,7 @@ HEALTHKIT_API_SOURCES = \
 
 HEALTHKIT_SOURCES = \
 	HealthKit/EnumsCompat.cs \
+	HealthKit/HKAppleWalkingSteadiness.cs \
 	HealthKit/HKAnchoredObjectQuery.cs \
 	HealthKit/HKObjectType.cs \
 	HealthKit/HKObsolete.cs \
@@ -1370,6 +1379,7 @@ PASSKIT_API_SOURCES = \
 	PassKit/PKEnums.cs \
 	
 PASSKIT_SOURCES = \
+	PassKit/PKCompat.cs	\
 	PassKit/PKPaymentRequest.cs	\
 
 # PencilKit
@@ -1908,7 +1918,9 @@ COMMON_FRAMEWORKS =         \
 	GameKit                 \
 	NaturalLanguage         \
 	Network                 \
+	OSLog                   \
 	SceneKit                \
+	ShazamKit               \
 	SoundAnalysis 			\
 	SpriteKit               \
 	StoreKit				\
@@ -1963,6 +1975,8 @@ MAC_FRAMEWORKS =            \
 	JavaScriptCore          \
 	LinkPresentation        \
 	LocalAuthentication     \
+	LocalAuthenticationEmbeddedUI	\
+	MailKit                 \
 	MapKit                  \
 	MediaAccessibility      \
 	MediaLibrary 		\
@@ -1971,6 +1985,7 @@ MAC_FRAMEWORKS =            \
 	Metal                   \
 	MetalKit                \
 	MetalPerformanceShaders \
+	MetricKit               \
 	MLCompute               \
 	MobileCoreServices      \
 	ModelIO                 \
@@ -1979,10 +1994,10 @@ MAC_FRAMEWORKS =            \
 	NetworkExtension        \
 	NotificationCenter 	\
 	OpenGL                  \
-	OSLog                   \
 	PassKit                 \
 	PdfKit                  \
 	PencilKit               \
+	Phase                   \
 	Photos                  \
 	PhotosUI				\
 	PrintCore		\
@@ -2091,6 +2106,7 @@ IOS_FRAMEWORKS =         \
 	PassKit \
 	PdfKit \
 	PencilKit \
+	Phase \
 	Photos \
 	PhotosUI \
 	PushKit \
@@ -2104,6 +2120,7 @@ IOS_FRAMEWORKS =         \
 	Social \
 	Speech \
 	SystemConfiguration \
+	ThreadNetwork \
 	Twitter \
 	UIKit XKit \
 	UserNotifications \
@@ -2135,6 +2152,7 @@ WATCHOS_FRAMEWORKS =        \
 	MapKit                  \
 	MediaPlayer             \
 	MobileCoreServices      \
+	NearbyInteraction       \
 	PassKit                 \
 	PushKit			\
 	Security                \
@@ -2200,6 +2218,7 @@ TVOS_FRAMEWORKS =           \
 
 MACCATALYST_FRAMEWORKS = \
 	$(COMMON_FRAMEWORKS) \
+	AppKit \
 	AVKit \
 	Accounts \
 	AdServices \
@@ -2227,12 +2246,14 @@ MACCATALYST_FRAMEWORKS = \
 	CoreMotion \
 	CoreSpotlight \
 	CoreText \
+	CoreWlan \
 	DeviceCheck \
 	EventKit \
 	ExternalAccessory \
 	FileProvider \
 	GameController \
 	GameplayKit \
+	HomeKit \
 	IdentityLookup \
 	ImageIO \
 	Intents \
@@ -2257,6 +2278,7 @@ MACCATALYST_FRAMEWORKS = \
 	PassKit \
 	PdfKit \
 	PencilKit \
+	Phase \
 	Photos \
 	PhotosUI \
 	PushKit \

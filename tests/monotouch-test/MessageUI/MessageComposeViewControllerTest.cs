@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for MFMessageComposeViewController
 //
 // Authors:
@@ -39,4 +39,3 @@ namespace MonoTouchFixtures.MessageUI {
 }
 
 #endif // HAS_MESSAGE
-

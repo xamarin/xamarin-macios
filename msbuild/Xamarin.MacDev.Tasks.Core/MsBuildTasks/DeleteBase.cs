@@ -5,4 +5,3 @@ namespace Microsoft.Build.Tasks
 		public string SessionId { get; set; }
 	}
 }
-

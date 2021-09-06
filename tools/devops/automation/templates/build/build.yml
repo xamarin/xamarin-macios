@@ -7,10 +7,6 @@ parameters:
   type: boolean
   default: true
 
-- name: isPR
-  type: boolean
-  default: false
-
 - name: vsdropsPrefix
   type: string
 
@@ -107,6 +103,8 @@ steps:
     MacDeveloper: $(mac-developer)
     HostedMacKeychainPassword: ${{ parameters.keyringPass }}
 
+- template: agent-cleanser/v1.yml@templates   # Uninstalls mono, Xamarin.Mac (if installed) plus cleanses the Provisionator Xcode cache
+
 - task: xamops.azdevex.provisionator-task.provisionator@2
   displayName: 'Provision Brew components'
   inputs:
@@ -114,6 +112,18 @@ steps:
     provisioning_extra_args: '-vvvv'
   timeoutInMinutes: 30
   enabled: true
+
+# was the current xcode deleted (has happened due to a bug in the clean step)? then set the default so 
+# that we can call make and generated the provisionator config files.
+- bash: |
+    XCODE_SELECT=$(xcode-select -p)
+    if [[ -d $XCODE_SELECT ]]; then
+      echo "Using Xcode in path $XCODE_SELECT"
+    else
+      echo "Setting Xcode to point to the default location."
+      xcode-select -s "/Applications/Xcode.app/Contents/Developer"
+    fi
+  displayName: 'Ensure Xcode is selected.'
 
 - bash: |
     make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops build-provisioning.csx
@@ -328,11 +338,10 @@ steps:
   - template: build-nugets.yml
 
 # only sign an notarize in no PR executions
-- ${{ if ne(parameters.isPR, 'True') }}:
-  - template: sign-and-notarized.yml
-    parameters:
-      enableDotnet: ${{ parameters.enableDotnet }}
-      keyringPass: ${{ parameters.keyringPass }}
+- template: sign-and-notarized.yml
+  parameters:
+    enableDotnet: ${{ parameters.enableDotnet }}
+    keyringPass: ${{ parameters.keyringPass }}
 
 # publish nugets (must be done after signing)
 - ${{ if eq(parameters.enableDotnet, true) }}:

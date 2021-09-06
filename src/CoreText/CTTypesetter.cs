@@ -28,6 +28,7 @@
 //
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
@@ -53,7 +54,11 @@ namespace CoreText {
 
 		public NSDictionary Dictionary {get; private set;}
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 6, 0)]
+#else
+		[UnsupportedOSPlatform ("ios6.0")]
+#endif
 		public bool DisableBidiProcessing {
 			get {
 				return CFDictionary.GetBooleanValue (Dictionary.Handle, 
@@ -72,7 +77,12 @@ namespace CoreText {
 			set {Adapter.SetValue (Dictionary, CTTypesetterOptionKey.ForceEmbeddingLevel, value);}
 		}
 
+#if !NET
 		[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
+#else
+		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("tvos12.0")]
+#endif
 		public bool AllowUnboundedLayout {
 			get => CFDictionary.GetBooleanValue (Dictionary.Handle, CTTypesetterOptionKey.AllowUnboundedLayout.Handle);
 			set {
@@ -205,4 +215,3 @@ namespace CoreText {
 #endregion
 	}
 }
-

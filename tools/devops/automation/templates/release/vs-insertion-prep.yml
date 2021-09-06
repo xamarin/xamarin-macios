@@ -1,0 +1,78 @@
+parameters:
+- name: enableDotnet
+  type: boolean
+  default: true
+
+- name: dependsOn
+  type: string
+  default: build_packages
+
+stages:
+- stage: prepare_release
+  displayName: Prepare Release
+  dependsOn: ${{ parameters.dependsOn }}
+  condition: and(or(eq(dependencies.${{ parameters.dependsOn }}.result, 'Succeeded'), eq(dependencies.${{ parameters.dependsOn }}.result, 'SucceededWithIssues')), eq(variables.IsPRBuild, 'False'), eq(${{ parameters.enableDotnet }}, true))
+  jobs:
+  # Check - "xamarin-macios (Prepare Release Sign NuGets)"
+  - template: sign-artifacts/jobs/v2.yml@templates
+    parameters:
+      artifactName: package
+      signType: Real
+      usePipelineArtifactTasks: true
+
+  # Check - "xamarin-macios (Prepare Release Convert NuGet to MSI)"
+  - template: nuget-msi-convert/job/v2.yml@templates
+    parameters:
+      yamlResourceName: templates
+      dependsOn: signing
+      artifactName: nuget-signed
+      propsArtifactName: package
+      signType: Real
+
+  # Check - "xamarin-macios (Prepare Release Push NuGets)"
+  - job: push_signed_nugets
+    displayName: Push NuGets
+    dependsOn: nuget_convert
+    variables:
+      skipNugetSecurityAnalysis: true
+    pool:
+      vmImage: macOS-10.15
+    steps:
+    - task: DownloadPipelineArtifact@2
+      inputs:
+        artifactName: nuget-signed
+        downloadPath: $(Build.SourcesDirectory)/package
+        patterns: |
+          *.nupkg
+
+    - task: NuGetCommand@2
+      displayName: Publish Nugets to dotnet6
+      inputs:
+        command: push
+        packagesToPush: $(Build.SourcesDirectory)/package/*.nupkg
+        nuGetFeedType: external
+        publishFeedCredentials: dnceng-dotnet6
+
+    - task: DownloadPipelineArtifact@2
+      inputs:
+        artifactName: vs-msi-nugets
+        downloadPath: $(Build.SourcesDirectory)/vs-msi-nugets
+        patterns: |
+          *.nupkg
+
+    - task: NuGetCommand@2
+      displayName: Publish Nugets to dotnet6
+      inputs:
+        command: push
+        packagesToPush: $(Build.SourcesDirectory)/vs-msi-nugets/*.nupkg
+        nuGetFeedType: external
+        publishFeedCredentials: dnceng-dotnet6
+
+# Check - "xamarin-macios (VS Insertion Wait For Approval)"
+# Check - "xamarin-macios (VS Insertion Create VS Drop and Open PR)"
+- template: vs-insertion/stage/v1.yml@templates
+  parameters:
+    dependsOn: prepare_release
+    symbolArtifactName: nuget-signed
+    symbolConversionFilters: '*mlaunch.app*'
+    condition: eq(variables.IsPRBuild, 'False')

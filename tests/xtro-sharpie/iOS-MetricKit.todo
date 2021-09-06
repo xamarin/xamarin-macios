@@ -1,2 +1,0 @@
-!incorrect-protocol-member! MXMetricManagerSubscriber::didReceiveMetricPayloads: is OPTIONAL and should NOT be abstract
-!missing-selector! MXSignpostIntervalData::cumulativeHitchTimeRatio not bound

@@ -3,14 +3,25 @@ using ObjCRuntime;
 namespace Foundation {
 
 	// Utility enum, ObjC uses NSString
-	[NoMac]
 	[iOS (7,0)]
 	public enum NSDocumentType {
 		Unknown = -1,
 		PlainText,
 		RTF,
 		RTFD,
-		HTML
+		HTML,
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		MacSimpleText,
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		DocFormat,
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		WordML,
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		OfficeOpenXml,
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		WebArchive,
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		OpenDocument,
 	}
 
 	// Utility enum, ObjC uses NSString

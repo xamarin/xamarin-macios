@@ -1,9 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
+
 using Microsoft.DotNet.XHarness.Common.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
@@ -234,34 +236,37 @@ namespace Xharness.Jenkins.Reports {
 </li>
 ");
 					if (previous_test_runs == null) {
-						var sb = new StringBuilder ();
-						var previous = Directory.GetDirectories (Path.GetDirectoryName (jenkins.LogDirectory)).
-								Select ((v) => Path.Combine (v, "index.html")).
-									Where (File.Exists);
-						if (previous.Any ()) {
-							sb.AppendLine ("\t<li>Previous test runs");
-							sb.AppendLine ("\t\t<ul>");
-							foreach (var prev in previous.OrderBy ((v) => v).Reverse ()) {
-								var dir = Path.GetFileName (Path.GetDirectoryName (prev));
-								var ts = dir;
-								var description = File.ReadAllLines (prev).Where ((v) => v.StartsWith ("<h2", StringComparison.Ordinal)).FirstOrDefault ();
-								if (description != null) {
-									description = description.Substring (description.IndexOf ('>') + 1); // <h2 ...>
-									description = description.Substring (description.IndexOf ('>') + 1); // <span id= ...>
+						previous_test_runs = "\t<li>Previous test runs\t\t<ul>Loading ...</ul></li>";
+						ThreadPool.QueueUserWorkItem ((v) => {
+							var sb = new StringBuilder ();
+							var previous = Directory.GetDirectories (Path.GetDirectoryName (jenkins.LogDirectory)).
+									Select ((v) => Path.Combine (v, "index.html")).
+										Where (File.Exists);
+							if (previous.Any ()) {
+								sb.AppendLine ("\t<li>Previous test runs");
+								sb.AppendLine ("\t\t<ul>");
+								foreach (var prev in previous.OrderBy ((v) => v).Reverse ()) {
+									var dir = Path.GetFileName (Path.GetDirectoryName (prev));
+									var ts = dir;
+									var description = File.ReadAllLines (prev).Where ((v) => v.StartsWith ("<h2", StringComparison.Ordinal)).FirstOrDefault ();
+									if (description != null) {
+										description = description.Substring (description.IndexOf ('>') + 1); // <h2 ...>
+										description = description.Substring (description.IndexOf ('>') + 1); // <span id= ...>
 
-									var h2end = description.LastIndexOf ("</h2>", StringComparison.Ordinal);
-									if (h2end > -1)
-										description = description.Substring (0, h2end);
-									description = description.Substring (0, description.LastIndexOf ('<'));
-								} else {
-									description = "<unknown state>";
+										var h2end = description.LastIndexOf ("</h2>", StringComparison.Ordinal);
+										if (h2end > -1)
+											description = description.Substring (0, h2end);
+										description = description.Substring (0, description.LastIndexOf ('<'));
+									} else {
+										description = "<unknown state>";
+									}
+									sb.AppendLine ($"\t\t\t<li class=\"adminitem\"><a href='/{dir}/index.html'>{ts}: {description}</a></li>");
 								}
-								sb.AppendLine ($"\t\t\t<li class=\"adminitem\"><a href='/{dir}/index.html'>{ts}: {description}</a></li>");
+								sb.AppendLine ("\t\t</ul>");
+								sb.AppendLine ("\t</li>");
 							}
-							sb.AppendLine ("\t\t</ul>");
-							sb.AppendLine ("\t</li>");
-						}
-						previous_test_runs = sb.ToString ();
+							previous_test_runs = sb.ToString ();
+						});
 					}
 					if (!string.IsNullOrEmpty (previous_test_runs))
 						writer.Write (previous_test_runs);
@@ -405,8 +410,12 @@ namespace Xharness.Jenkins.Reports {
 									candidates = (runTest as RunSimulatorTask)?.Candidates;
 								if (candidates != null) {
 									writer.WriteLine ($"Candidate devices:<br />");
-									foreach (var candidate in candidates)
-										writer.WriteLine ($"&nbsp;&nbsp;&nbsp;&nbsp;{candidate.Name} (Version: {candidate.OSVersion})<br />");
+									try {
+										foreach (var candidate in candidates)
+											writer.WriteLine ($"&nbsp;&nbsp;&nbsp;&nbsp;{candidate.Name} (Version: {candidate.OSVersion})<br />");
+									} catch (Exception e) {
+										writer.WriteLine ($"&nbsp;&nbsp;&nbsp;&nbsp;Failed to list candidates: {e}");
+									}
 								}
 								writer.WriteLine ($"Build duration: {runTest.BuildTask.Duration} <br />");
 							}
@@ -462,7 +471,7 @@ namespace Xharness.Jenkins.Reports {
 								}
 								if (!exists) {
 									// Don't try to parse files that don't exist
-								} else if (log.Description == LogType.TestLog.ToString () || log.Description == LogType.ExecutionLog.ToString () || log.Description == LogType.ExecutionLog.ToString ()) {
+								} else if (log.Description == LogType.TestLog.ToString () || log.Description == LogType.ExecutionLog.ToString ()) {
 									string summary;
 									List<string> fails;
 									try {
@@ -475,6 +484,12 @@ namespace Xharness.Jenkins.Reports {
 													string? line = reader.ReadLine ()?.Trim ();
 													if (line == null)
 														continue;
+													// Skip any timestamps if the file is timestamped
+													if (log.Timestamp)
+														if (line.Length > "HH:mm:ss.fffffff".Length)
+															line = line.Substring ("HH:mm:ss.fffffff".Length).Trim ();
+														else if (line.Length == "HH:mm:ss.fffffff".Length)
+															line = "";
 													if (line.StartsWith ("Tests run:", StringComparison.Ordinal)) {
 														summary = line;
 													} else if (line.StartsWith ("[FAIL]", StringComparison.Ordinal)) {
@@ -500,7 +515,7 @@ namespace Xharness.Jenkins.Reports {
 										if (!string.IsNullOrEmpty (summary))
 											writer.WriteLine ("<span style='padding-left: 15px;'>{0}</span><br />", summary);
 									} catch (Exception ex) {
-										writer.WriteLine ("<span style='padding-left: 15px;'>Could not parse log file: {0}</span><br />", ex.Message.AsHtml ());
+										writer.WriteLine ("<span style='padding-left: 15px;'>Could not parse log file: {0}: {1}</span><br />", ex.Message.AsHtml (), ex.StackTrace.AsHtml ());
 									}
 								} else if (log.Description == LogType.BuildLog.ToString ()) {
 									HashSet<string> errors;
@@ -536,7 +551,7 @@ namespace Xharness.Jenkins.Reports {
 											writer.WriteLine ("</div>");
 										}
 									} catch (Exception ex) {
-										writer.WriteLine ("<span style='padding-left: 15px;'>Could not parse log file: {0}</span><br />", ex.Message.AsHtml ());
+										writer.WriteLine ("<span style='padding-left: 15px;'>Could not parse log file: {0}: {1}</span><br />", ex.Message.AsHtml (), ex.StackTrace.AsHtml ());
 									}
 								} else if (log.Description == LogType.NUnitResult.ToString () || log.Description == LogType.XmlLog.ToString ()) {
 									try {
@@ -546,7 +561,7 @@ namespace Xharness.Jenkins.Reports {
 											}
 										}
 									} catch (Exception ex) {
-										writer.WriteLine ($"<span style='padding-left: 15px;'>Could not parse {log.Description}: {ex.Message.AsHtml ()}</span><br />");
+										writer.WriteLine ($"<span style='padding-left: 15px;'>Could not parse {log.Description}: {ex.Message.AsHtml ()} : {ex.StackTrace.AsHtml ()}</span><br />");
 									}
 								} else if (log.Description == LogType.TrxLog.ToString ()) {
 									try {

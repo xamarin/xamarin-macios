@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -83,6 +83,8 @@ namespace Xharness.Jenkins {
 						}
 						yield return new TestData { Variation = "Release (interpreter -mscorlib)", MTouchExtraArgs = "--interpreter=-mscorlib", Debug = false, Profiling = false, Undefines = "FULL_AOT_RUNTIME", Ignored = ignore };
 					}
+					if (test.TestProject.IsDotNetProject)
+						yield return new TestData { Variation = "Release (LLVM)", Debug = false, UseLlvm = true, Ignored = ignore };
 					break;
 				case  string name when name.StartsWith ("mscorlib", StringComparison.Ordinal):
 					if (supports_debug)
@@ -125,14 +127,13 @@ namespace Xharness.Jenkins {
 				switch (test.TestName) {
 				case "monotouch-test":
 					if (test.TestProject.IsDotNetProject) {
-						if (test.Platform != TestPlatform.MacCatalyst)
-							yield return new TestData { Variation = "Debug (CoreCLR)", Debug = true, UseMonoRuntime = false, Ignored = !jenkins.IncludeMac, };
 						yield return new TestData { Variation = "Debug (ARM64)", Debug = true, Profiling = false, Ignored = !jenkins.IncludeMac || !mac_supports_arm64, RuntimeIdentifier = arm64_runtime_identifier, };
 						if (test.Platform != TestPlatform.MacCatalyst) {
-							yield return new TestData { Variation = "Debug (CoreCLR, ARM64)", Debug = true, UseMonoRuntime = false, Profiling = false, Ignored = !jenkins.IncludeMac || !mac_supports_arm64, RuntimeIdentifier = arm64_runtime_identifier, };
-							yield return new TestData { Variation = "Debug (CoreCLR, static registrar)", MonoBundlingExtraArgs = "--registrar:static", Debug = true, UseMonoRuntime = false, Undefines = "DYNAMIC_REGISTRAR", Ignored = !jenkins.IncludeMac, };
-							yield return new TestData { Variation = "Debug (CoreCLR, static registrar, ARM64)", MonoBundlingExtraArgs = "--registrar:static", Debug = true, UseMonoRuntime = false, Undefines = "DYNAMIC_REGISTRAR", Profiling = false, Ignored = !jenkins.IncludeMac || !mac_supports_arm64, RuntimeIdentifier = arm64_runtime_identifier, };
+							yield return new TestData { Variation = "Debug (static registrar)", MonoBundlingExtraArgs = "--registrar:static", Debug = true, Undefines = "DYNAMIC_REGISTRAR", Ignored = !jenkins.IncludeMac, };
+							yield return new TestData { Variation = "Debug (static registrar, ARM64)", MonoBundlingExtraArgs = "--registrar:static", Debug = true, Undefines = "DYNAMIC_REGISTRAR", Profiling = false, Ignored = !jenkins.IncludeMac || !mac_supports_arm64, RuntimeIdentifier = arm64_runtime_identifier, };
 						}
+						if (test.Platform == TestPlatform.MacCatalyst)
+							yield return new TestData { Variation = "Release (ARM64, LLVM)", Debug = false, UseLlvm = true, Ignored = !jenkins.IncludeMacCatalyst || !mac_supports_arm64, RuntimeIdentifier = arm64_runtime_identifier };
 					}
 					break;
 				case "xammac tests":
@@ -182,6 +183,7 @@ namespace Xharness.Jenkins {
 					var use_mono_runtime = test_data.UseMonoRuntime;
 					var xammac_arch = test_data.XamMacArch;
 					var runtime_identifer = test_data.RuntimeIdentifier;
+					var use_llvm = test_data.UseLlvm;
 
 					if (task.TestProject.IsDotNetProject)
 						variation += " [dotnet]";
@@ -232,6 +234,8 @@ namespace Xharness.Jenkins {
 							clone.Xml.SetNode ("MtouchEnableSGenConc", "true", task.ProjectPlatform, configuration);
 						if (test_data.UseThumb) // no need to check the platform, already done at the data iterator
 							clone.Xml.SetNode ("MtouchUseThumb", "true", task.ProjectPlatform, configuration);
+						if (use_llvm)
+							clone.Xml.SetTopLevelPropertyGroupValue ("MtouchUseLlvm", "true");
 
 						if (!debug && !isMac)
 							clone.Xml.SetMtouchUseLlvm (true, task.ProjectPlatform, configuration);

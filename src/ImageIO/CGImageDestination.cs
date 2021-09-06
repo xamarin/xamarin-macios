@@ -27,6 +27,7 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
@@ -54,23 +55,35 @@ namespace ImageIO {
 
 	public partial class CGCopyImageSourceOptions
 	{
+#if !NET
 		[iOS (7,0)]
+#endif
 		public CGImageMetadata Metadata { get; set; }
 
+#if !NET
 		[iOS (7,0)]
+#endif
 		public bool MergeMetadata { get; set; }
 
+#if !NET
 		[iOS (7,0)]
+#endif
 		public bool ShouldExcludeXMP { get; set; }
 
+#if !NET
 		[Mac (10, 10)]
 		[iOS (8, 0)]
+#endif
 		public bool ShouldExcludeGPS { get; set; }
 
+#if !NET
 		[iOS (7,0)]
+#endif
 		public DateTime? DateTime { get; set; }
 
+#if !NET
 		[iOS (7,0)]
+#endif
 		public int? Orientation { get; set; }
 
 		internal NSMutableDictionary ToDictionary ()
@@ -165,7 +178,7 @@ namespace ImageIO {
 		public static string [] TypeIdentifiers {
 			get {
 				var handle = CGImageDestinationCopyTypeIdentifiers ();
-				var array = NSArray.StringArrayFromHandle (handle);
+				var array = CFArray.StringArrayFromHandle (handle);
 				CFObject.CFRelease (handle);
 				return array;
 			}
@@ -302,14 +315,18 @@ namespace ImageIO {
 			return success;
 		}
 
+#if !NET
 		[iOS (7,0)]
+#endif
 		[DllImport (Constants.ImageIOLibrary)]
 		extern static void CGImageDestinationAddImageAndMetadata (/* CGImageDestinationRef __nonnull */ IntPtr idst,
 			/* CGImageRef __nonnull */ IntPtr image, /* CGImageMetadataRef __nullable */ IntPtr metadata,
 			/* CFDictionaryRef __nullable */ IntPtr options);
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
+#if !NET
 		[iOS (7,0)]
+#endif
 		public void AddImageAndMetadata (CGImage image, CGImageMetadata meta, NSDictionary options)
 		{
 			if (image == null)
@@ -319,7 +336,9 @@ namespace ImageIO {
 			CGImageDestinationAddImageAndMetadata (handle, image.Handle, m, o);
 		}
 
+#if !NET
 		[iOS (7,0)]
+#endif
 		public void AddImageAndMetadata (CGImage image, CGImageMetadata meta, CGImageDestinationOptions options)
 		{
 			NSDictionary o = null;
@@ -334,7 +353,9 @@ namespace ImageIO {
 			}
 		}
 
+#if !NET
 		[iOS (7,0)]
+#endif
 		[DllImport (Constants.ImageIOLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGImageDestinationCopyImageSource (/* CGImageDestinationRef __nonnull */ IntPtr idst,
@@ -342,7 +363,9 @@ namespace ImageIO {
 			/* CFErrorRef* */ out IntPtr err);
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
+#if !NET
 		[iOS (7,0)]
+#endif
 		public bool CopyImageSource (CGImageSource image, NSDictionary options, out NSError error)
 		{
 			if (image == null)
@@ -354,7 +377,9 @@ namespace ImageIO {
 			return result;
 		}
 
+#if !NET
 		[iOS (7,0)]
+#endif
 		public bool CopyImageSource (CGImageSource image, CGCopyImageSourceOptions options, out NSError error)
 		{
 			NSDictionary o = null;
@@ -369,11 +394,21 @@ namespace ImageIO {
 			}
 		}
 
+#if !NET
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+#else
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+#endif
 		[DllImport (Constants.ImageIOLibrary)]
 		static extern void CGImageDestinationAddAuxiliaryDataInfo (IntPtr /* CGImageDestinationRef* */ idst, IntPtr /* CFStringRef* */ auxiliaryImageDataType, IntPtr /* CFDictionaryRef* */ auxiliaryDataInfoDictionary);
 
+#if !NET
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
+#else
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+#endif
 		public void AddAuxiliaryDataInfo (CGImageAuxiliaryDataType auxiliaryImageDataType, CGImageAuxiliaryDataInfo auxiliaryDataInfo)
 		{
 			using (var dict = auxiliaryDataInfo?.Dictionary) {

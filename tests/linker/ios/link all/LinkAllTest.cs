@@ -26,7 +26,9 @@ using ObjCRuntime;
 #if !__WATCHOS__
 using StoreKit;
 #endif
+#if !__MACOS__
 using UIKit;
+#endif
 using NUnit.Framework;
 using MonoTests.System.Net.Http;
 
@@ -60,7 +62,10 @@ namespace LinkAll {
 	// we want the tests to be available because we use the linker
 	[Preserve (AllMembers = true)]
 	public class LinkAllRegressionTest {
-#if __IOS__
+#if __MACCATALYST__
+		public const string NamespacePrefix = "";
+		public const string AssemblyName = "Xamarin.MacCatalyst";
+#elif __IOS__
 		public const string NamespacePrefix = "";
 		public const string AssemblyName = "Xamarin.iOS";
 #elif __TVOS__
@@ -69,6 +74,9 @@ namespace LinkAll {
 #elif __WATCHOS__
 		public const string NamespacePrefix = "";
 		public const string AssemblyName = "Xamarin.WatchOS";
+#elif __MACOS__
+		public const string NamespacePrefix = "";
+		public const string AssemblyName = "Xamarin.Mac";
 #else
 	#error Unknown platform
 #endif
@@ -206,12 +214,14 @@ namespace LinkAll {
 		}
 #endif
 		
+#if !__MACOS__
 		[Test]
 		public void DetectPlatform ()
 		{
 #if !__WATCHOS__
 			// for (future) nunit[lite] platform detection - if this test fails then platform detection won't work
-			Assert.NotNull (Helper.GetType (NamespacePrefix + "UIKit.UIApplicationDelegate, " + AssemblyName), "UIApplicationDelegate");
+			var typename = NamespacePrefix + "UIKit.UIApplicationDelegate, " + AssemblyName;
+			Assert.NotNull (Helper.GetType (typename), typename);
 #endif
 #if NET
 			Assert.Null (Helper.GetType ("Mono.Runtime"), "Mono.Runtime");
@@ -220,6 +230,7 @@ namespace LinkAll {
 			Assert.NotNull (Helper.GetType ("Mono.Runtime"), "Mono.Runtime");
 #endif
 		}
+#endif // !__MACOS__
 
 		[Test]
 #if !XAMCORE_3_0
@@ -328,7 +339,7 @@ namespace LinkAll {
 		}
 #endif
 		
-#if !__TVOS__ && !__WATCHOS__
+#if !__TVOS__ && !__WATCHOS__ && !__MACOS__
 		[Test]
 		public void Pasteboard_ImagesTest ()
 		{
@@ -390,8 +401,10 @@ namespace LinkAll {
 		[Test]
 		public void SingleEpsilon_Compare ()
 		{
+#if !__MACOS__
 			if (Runtime.Arch == Arch.DEVICE)
 				Assert.Ignore ("Known to fail on devices, see bug #15802");
+#endif
 			// works on some ARM CPU (e.g. iPhone5S) but not others (iPad4 or iPodTouch5)
 			Assert.That (Single.Epsilon, Is.Not.EqualTo (0f), "Epsilon");
 			Assert.That (-Single.Epsilon, Is.Not.EqualTo (0f), "-Epsilon");
@@ -400,8 +413,10 @@ namespace LinkAll {
 		[Test]
 		public void SingleEpsilon_ToString ()
 		{
+#if !__MACOS__
 			if (Runtime.Arch == Arch.DEVICE)
 				Assert.Ignore ("Known to fail on devices, see bug #15802");
+#endif
 			var ci = CultureInfo.InvariantCulture;
 #if NET
 			Assert.That (Single.Epsilon.ToString (ci), Is.EqualTo ("1E-45"), "Epsilon.ToString()");
@@ -415,8 +430,10 @@ namespace LinkAll {
 		[Test]
 		public void DoubleEpsilon_Compare ()
 		{
+#if !__MACOS__
 			if (Runtime.Arch == Arch.DEVICE)
 				Assert.Ignore ("Known to fail on devices, see bug #15802");
+#endif
 			// works on some ARM CPU (e.g. iPhone5S) but not others (iPad4 or iPodTouch5)
 			Assert.That (Double.Epsilon, Is.Not.EqualTo (0f), "Epsilon");
 			Assert.That (-Double.Epsilon, Is.Not.EqualTo (0f), "-Epsilon");
@@ -425,8 +442,10 @@ namespace LinkAll {
 		[Test]
 		public void DoubleEpsilon_ToString ()
 		{
+#if !__MACOS__
 			if (Runtime.Arch == Arch.DEVICE)
 				Assert.Ignore ("Known to fail on devices, see bug #15802");
+#endif
 			var ci = CultureInfo.InvariantCulture;
 			// note: unlike Single this works on both my iPhone5S and iPodTouch5
 #if NET
@@ -559,10 +578,6 @@ namespace LinkAll {
 		[Test]
 		public void Aot_27116 ()
 		{
-#if NET
-			if (Runtime.Arch == Arch.DEVICE)
-				Assert.Ignore ("https://github.com/dotnet/runtime/issues/47120");
-#endif
 			var nix = (from nic in System.Net.NetworkInformation.NetworkInterface.GetAllNetworkInterfaces ()
 				where nic.Id.StartsWith ("en") || nic.Id.StartsWith ("pdp_ip") select nic);
 			Assert.NotNull (nix);
@@ -643,7 +658,7 @@ namespace LinkAll {
 			if (corlib.EndsWith ("/Frameworks/Xamarin.Sdk.framework/MonoBundle/mscorlib.dll", StringComparison.Ordinal))
 				Assert.Pass (corlib);
 
-#if __MACCATALYST__
+#if __MACCATALYST__ || __MACOS__
 			var bundleLocation = Path.Combine ("Contents", "MonoBundle");
 #else
 			var bundleLocation = string.Empty;

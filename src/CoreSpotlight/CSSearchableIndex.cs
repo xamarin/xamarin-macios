@@ -1,4 +1,4 @@
-﻿//
+//
 // CSSearchableIndex.cs: Implements some nicer methods for CSSearchableIndex
 //
 // Authors:

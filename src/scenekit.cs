@@ -160,6 +160,13 @@ namespace SceneKit {
 		[Export ("removeAllAnimations")]
 		void RemoveAllAnimations ();
 
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("removeAllAnimationsWithBlendOutDuration:")]
+		void RemoveAllAnimationsWithBlendOutDuration (nfloat duration);
+
 		[Abstract]
 		[Export ("removeAnimationForKey:")]
 		void RemoveAnimation (NSString key);
@@ -1203,7 +1210,7 @@ namespace SceneKit {
 #if MONOMAC
 	[iOS (8,0)]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Please use Metal instead of OpenGL API.")]
-	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
+	[NoMacCatalyst]
 	[BaseType (typeof (CAOpenGLLayer))]
 	interface SCNLayer : SCNSceneRenderer, SCNTechniqueSupport {
 //		We already pull in the Scene property from the SCNSceneRenderer protocol, no need to redefine it here.
@@ -1673,7 +1680,7 @@ namespace SceneKit {
 
 		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
-		[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
+		[NoMacCatalyst]
 		[NoWatch, NoTV]
 		[NullAllowed, Export ("borderColor", ArgumentSemantic.Retain)]
 		NSObject BorderColor { get; set; }
@@ -2504,7 +2511,7 @@ namespace SceneKit {
 		[NoTV, NoWatch]
 	#endif
 		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use the SCNProgram's Opaque property instead.")]
-		[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
+		[NoMacCatalyst]
 		[Export ("programIsOpaque:")]
 		bool IsProgramOpaque (SCNProgram program);
 #endif
@@ -2561,7 +2568,7 @@ namespace SceneKit {
 		[Export ("render")]
 		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		[Deprecated (PlatformName.iOS, 9, 0)]
-		[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
+		[NoMacCatalyst]
 		void Render ();
 
 		[Mac (10,10)]
@@ -3435,7 +3442,7 @@ namespace SceneKit {
 	[Internal] // we'll make it public if there's a need for them (beside the strong dictionary we provide)
 	interface SCNRenderingOptionsKeys {
 
-		[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
+		[NoMacCatalyst]
 		[Field ("SCNPreferredRenderingAPIKey")]
 		NSString RenderingApiKey { get; }
 
@@ -3990,6 +3997,11 @@ namespace SceneKit {
 		[NullAllowed] // by default this property is null
 		[Wrap ("WeakShaderModifiers")]
 		SCNShaderModifiers ShaderModifiers { get; set; }
+
+		[Mac (12,0), iOS (15,0), TV (15,0), Watch (8,0)]
+		[NullAllowed] // by default this property is null
+		[Export ("minimumLanguageVersion", ArgumentSemantic.Retain)]
+		NSNumber MinimumLanguageVersion { get; set; }
 
 		[NoWatch]
 		[NullAllowed] // by default this property is null
@@ -4864,6 +4876,11 @@ namespace SceneKit {
 
 		[Export ("fresnelExponent")]
 		nfloat FresnelExponent { get; set; }
+
+		[Introduced (PlatformName.MacCatalyst, 15, 0)]
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0)]
+		[Export ("writesToDepthBuffer")]
+		bool WritesToDepthBuffer { get; set; }
 
 		[Export ("propertyControllers", ArgumentSemantic.Copy), NullAllowed]
 		NSDictionary WeakPropertyControllers { get; set; }

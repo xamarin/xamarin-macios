@@ -28,3 +28,6 @@
 !missing-null-allowed! 'System.Void PassKit.PKPaymentAuthorizationResult::set_Errors(Foundation.NSError[])' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void PassKit.PKPaymentRequestPaymentMethodUpdate::set_Errors(Foundation.NSError[])' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void PassKit.PKPaymentRequestShippingContactUpdate::set_Errors(Foundation.NSError[])' is missing an [NullAllowed] on parameter #0
+
+# deprecated and not used in any version of any OS
+!missing-selector! PKStoredValuePassProperties::isBlacklisted not bound

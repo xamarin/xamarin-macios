@@ -27,14 +27,20 @@
 //
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
 
 namespace CoreGraphics {
 
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 	// uint32_t -> CGWindow.h (OSX SDK only)
+#if !NET
+	[MacCatalyst (15,0)]
+#else
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#endif
 	[Flags]	
 	public enum CGWindowImageOption : uint {
 		Default             = 0,
@@ -46,6 +52,11 @@ namespace CoreGraphics {
 	}
 
 	// uint32_t -> CGWindow.h (OSX SDK only)
+#if !NET
+	[MacCatalyst (15,0)]
+#else
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#endif
 	[Flags]
 	public enum CGWindowListOption : uint {
 		All                 = 0,
@@ -213,15 +224,30 @@ namespace CoreGraphics {
 						shouldInterpolate, intent);
 		}
 
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
+#if !NET
+		[MacCatalyst (15,0)]
+#else
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern IntPtr CGWindowListCreateImage(CGRect screenBounds, CGWindowListOption windowOption, uint windowID, CGWindowImageOption imageOption);
         
+#if !NET
+		[MacCatalyst (15,0)]
+#else
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#endif
 		public static CGImage ScreenImage (int windownumber, CGRect bounds)
 		{
 			return ScreenImage (windownumber, bounds, CGWindowListOption.IncludingWindow, CGWindowImageOption.Default);
 		}
 
+#if !NET
+		[MacCatalyst (15,0)]
+#else
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#endif
 		public static CGImage ScreenImage (int windownumber, CGRect bounds, CGWindowListOption windowOption,
 			CGWindowImageOption imageOption)
 		{

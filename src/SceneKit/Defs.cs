@@ -283,7 +283,7 @@ namespace SceneKit {
 		None,
 		Multisampling2X,
 		Multisampling4X,
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 		Multisampling8X,
 		Multisampling16X,
 #endif
@@ -363,7 +363,7 @@ namespace SceneKit {
 	{
 		Metal,
 #if !MONOMAC
-		[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
+		[Unavailable (PlatformName.MacCatalyst)]
 		OpenGLES2,
 #else
 		OpenGLLegacy,

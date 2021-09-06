@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace Xamarin
 {
@@ -18,8 +19,25 @@ namespace Xamarin
 		static Cache ()
 		{
 			root = Path.Combine (Path.GetDirectoryName (System.Reflection.Assembly.GetExecutingAssembly ().Location), "tmp-test-dir");
-			if (Directory.Exists (root))
-				Directory.Delete (root, true);
+			if (Directory.Exists (root)) {
+				var movedRoot = root + DateTime.UtcNow.Ticks.ToString () + "-deletion-in-progress";
+				// The temporary directory can be big, and it can take a while to clean it out.
+				// So move it to a different name (which should be fast), and then do the deletion on a different thread.
+				// This should speed up startup in some cases.
+				if (!Directory.Exists (movedRoot)) {
+					try {
+						Directory.Move (root, movedRoot);
+						ThreadPool.QueueUserWorkItem ((v) => {
+							Directory.Delete (movedRoot, true);
+						});
+					} catch (Exception e) {
+						// Just delete the root if we can't move the temporary directory.
+						Directory.Delete (root, true);
+					}
+				} else {
+					Directory.Delete (root, true);
+				}
+			}
 			Directory.CreateDirectory (root);
 		}
 

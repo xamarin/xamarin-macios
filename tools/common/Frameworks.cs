@@ -262,6 +262,11 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "AdServices", "AdServices", 11,1 },
 
 					{ "Chip", "CHIP", 12, 0 },
+					{ "LocalAuthenticationEmbeddedUI", "LocalAuthenticationEmbeddedUI", 12, 0 },
+					{ "MailKit", "MailKit", 12, 0 },
+					{ "MetricKit", 12, 0 },
+					{ "Phase", "PHASE", 12, 0 },
+					{ "ShazamKit", "ShazamKit", 12,0 },
 				};
 			}
 			return mac_frameworks;
@@ -422,7 +427,11 @@ public class Frameworks : Dictionary <string, Framework>
 
 				{ "CoreLocationUI", "CoreLocationUI", 15,0 },
 
-				{ "Chip", "CHIP", new Version (15, 0), NotAvailableInSimulator /* no headers in beta 2 */ }
+				{ "Chip", "CHIP", new Version (15, 0), NotAvailableInSimulator /* no headers in beta 2 */ },
+				{ "Phase", "PHASE", new Version (15,0), NotAvailableInSimulator /* no headers in beta 2 */ },
+				{ "OSLog", "OSLog", 15,0 },
+				{ "ShazamKit", "ShazamKit", new Version (15,0), NotAvailableInSimulator},
+				{ "ThreadNetwork", "ThreadNetwork", new Version (15,0), NotAvailableInSimulator},
 
 				// the above MUST be kept in sync with simlauncher
 				// see tools/mtouch/Makefile
@@ -492,7 +501,9 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 7,0 },
 
 				{ "Chip", "CHIP", new Version (8, 0), NotAvailableInSimulator /* no headers in beta 2 */ },
-
+				{ "NearbyInteraction", "NearbyInteraction", 8,0 },
+				{ "OSLog", "OSLog", 8,0 },
+				{ "ShazamKit", "ShazamKit", new Version (8, 0), NotAvailableInSimulator},
 			};
 		}
 		return watch_frameworks;
@@ -583,6 +594,8 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "Intents", "Intents", 14,0 },
 
 					{ "Chip", "CHIP", new Version (15, 0), NotAvailableInSimulator /* no headers in beta 2 */ },
+					{ "OSLog", "OSLog", 15,0 },
+					{ "ShazamKit", "ShazamKit", new Version (15, 0), NotAvailableInSimulator},
 				};
 			}
 			return tvos_frameworks;
@@ -594,6 +607,8 @@ public class Frameworks : Dictionary <string, Framework>
 	{
 		if (catalyst_frameworks == null) {
 			catalyst_frameworks = CreateiOSFrameworks (false);
+			// not present in iOS but present in catalyst
+			catalyst_frameworks.Add ("CoreWlan", "CoreWLAN", 15, 0);
 
 			var min = new Version (13, 0);
 			var v14_2 = new Version (14, 2);
@@ -629,7 +644,6 @@ public class Frameworks : Dictionary <string, Framework>
 				case "HealthKitUI":
 				case "iAd":
 				case "IdentityLookupUI":
-				case "HomeKit":
 				case "Messages":
 				case "MessageUI":
 				case "VisionKit":
@@ -645,6 +659,9 @@ public class Frameworks : Dictionary <string, Framework>
 					break;
 				}
 			}
+
+			// Add frameworks that are not in iOS
+			catalyst_frameworks.Add ("AppKit", 13, 0);
 		}
 		return catalyst_frameworks;
 	}

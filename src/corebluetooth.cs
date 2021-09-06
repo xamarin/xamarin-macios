@@ -412,6 +412,7 @@ namespace CoreBluetooth {
 		[Export ("isNotifying")]
 		bool IsNotifying { get;  }
 
+		[NullAllowed]
 		[Export ("service", ArgumentSemantic.Weak)]
 		CBService Service { get; }
 	}
@@ -461,6 +462,7 @@ namespace CoreBluetooth {
 		[NullAllowed]
 		NSObject Value { get;  }
 
+		[NullAllowed]
 		[Export ("characteristic", ArgumentSemantic.Weak)]
 		CBCharacteristic Characteristic { get; }
 	}
@@ -654,6 +656,7 @@ namespace CoreBluetooth {
 		[NullAllowed]
 		CBCharacteristic [] Characteristics { get; [NotImplemented ("Not available on 'CBService', only available on CBMutableService.")] set;  }
 
+		[NullAllowed]
 		[Export ("peripheral", ArgumentSemantic.Weak)]
 		CBPeripheral Peripheral { get; }
 

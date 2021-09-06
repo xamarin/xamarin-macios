@@ -1,6 +1,7 @@
-﻿#if !__WATCHOS__
+#if !__WATCHOS__
 using System;
 using System.Net.Http;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -99,7 +100,16 @@ namespace MonoTouchFixtures.HttpClientTests
 			using (var request = new HttpRequestMessage (HttpMethod.Get, "http://xamarin.com")) {
 				var token = new CancellationTokenSource ();
 				client.SendAsync (request, token.Token);
-				Assert.Throws<InvalidOperationException> (() => wrapper.AllowAutoRedirect = !wrapper.AllowAutoRedirect);
+				Exception e = null;
+				try {
+					wrapper.AllowAutoRedirect = !wrapper.AllowAutoRedirect;
+					Assert.Fail ("Unexpectedly able to change AllowAutoRedirect");
+				} catch (InvalidOperationException ioe) {
+					e = ioe;
+				} catch (TargetInvocationException tie) {
+					e = tie.InnerException;
+				}
+				Assert.That (e, Is.InstanceOf<InvalidOperationException> (), "AllowAutoRedirect");
 				// cancel to ensure that we do not have side effects
 				token.Cancel ();
 			}
@@ -107,4 +117,3 @@ namespace MonoTouchFixtures.HttpClientTests
 	}
 }
 #endif
-

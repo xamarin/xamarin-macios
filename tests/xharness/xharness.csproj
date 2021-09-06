@@ -73,9 +73,7 @@
     <PackageReference Include="Microsoft.DotNet.XHarness.iOS.Shared">
       <Version>1.0.0-branch-xamarin-xcode-12.5.21168.1</Version>
     </PackageReference>
-    <PackageReference Include="Mono.Cecil">
-      <Version>0.11.2</Version>
-    </PackageReference>
+    <PackageReference Include="Mono.Cecil" Version="0.11.4" />
     <PackageReference Include="Mono.Options" Version="6.6.0.161" />
   </ItemGroup>
   <ItemGroup>
@@ -178,6 +176,13 @@
     <Compile Include="TestTargetExtensions.cs" />
     <Compile Include="XmlDocumentExtensions.cs" />
     <Compile Include="Targets\MacCatalystTarget.cs" />
+    <Compile Include="ProjectFileExtensions.cs" />
+    <Compile Include="..\..\tools\common\StringUtils.cs">
+      <Link>StringUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\mtouch\Cache.cs">
+      <Link>Cache.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\tools\common\SdkVersions.cs">

@@ -3,6 +3,7 @@
 //
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using CoreFoundation;
@@ -565,15 +566,6 @@ namespace CoreFoundation {
 		
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static void CFBundleGetPackageInfo (IntPtr bundle, out uint packageType, out uint packageCreator);
-		
-		static string FourCCToString (uint code)
-		{
-			return new string (new char [] { 
-				(char) (byte) (code >> 24), 
-				(char) (byte) (code >> 16), 
-				(char) (byte) (code >> 8), 
-				(char) (byte) code});
-		}
 
 		public PackageInfo Info {
 			get {
@@ -581,7 +573,7 @@ namespace CoreFoundation {
 				uint creator = 0;
 				
 				CFBundleGetPackageInfo (handle, out type, out creator);
-				var creatorStr = FourCCToString (creator);
+				var creatorStr = Runtime.ToFourCCString (creator);
 				switch (type) {
 				case 1095782476: // ""APPL
 					return new PackageInfo (CFBundle.PackageType.Application, creatorStr);
@@ -612,13 +604,23 @@ namespace CoreFoundation {
 			}
 		}
 
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
+#if !NET
 		[Introduced (PlatformName.MacOSX, 11, 0)]
+		[MacCatalyst (15,0)]
+#else
+		[SupportedOSPlatform ("macos11.0"), SupportedOSPlatform ("maccatalyst15.0")]
+#endif
 		[DllImport (Constants.CoreFoundationLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CFBundleIsExecutableLoadable (IntPtr bundle);
 
+#if !NET
 		[Introduced (PlatformName.MacOSX, 11, 0)]
+		[MacCatalyst (15,0)]
+#else
+		[UnsupportedOSPlatform ("ios"), UnsupportedOSPlatform ("tvos"), SupportedOSPlatform ("macos11.0"), SupportedOSPlatform ("maccatalyst15.0")]
+#endif
 		public static bool IsExecutableLoadable (CFBundle bundle)
 		{
 			if (bundle == null)
@@ -629,12 +631,22 @@ namespace CoreFoundation {
 			return CFBundleIsExecutableLoadable (bundle.Handle);
 		}
 
+#if !NET
 		[Introduced (PlatformName.MacOSX, 11, 0)]
+		[MacCatalyst (15,0)]
+#else
+		[SupportedOSPlatform ("macos11.0"), SupportedOSPlatform ("maccatalyst15.0")]
+#endif
 		[DllImport (Constants.CoreFoundationLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CFBundleIsExecutableLoadableForURL (IntPtr bundle);
 
+#if !NET
 		[Introduced (PlatformName.MacOSX, 11, 0)]
+		[MacCatalyst (15,0)]
+#else
+		[UnsupportedOSPlatform ("ios"), UnsupportedOSPlatform ("tvos"), SupportedOSPlatform ("macos11.0"), SupportedOSPlatform ("maccatalyst15.0")]
+#endif
 		public static bool IsExecutableLoadable (NSUrl url)
 		{
 			if (url == null)
@@ -643,12 +655,22 @@ namespace CoreFoundation {
 			return CFBundleIsExecutableLoadableForURL (url.Handle);
 		}
 
+#if !NET
 		[Introduced (PlatformName.MacOSX, 11, 0)]
+		[MacCatalyst (15,0)]
+#else
+		[SupportedOSPlatform ("macos11.0"), SupportedOSPlatform ("maccatalyst15.0")]
+#endif
 		[DllImport (Constants.CoreFoundationLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CFBundleIsArchitectureLoadable (/*cpu_type_t => integer_t => int*/ Architecture architecture);
 
+#if !NET
 		[Introduced (PlatformName.MacOSX, 11, 0)]
+		[MacCatalyst (15,0)]
+#else
+		[UnsupportedOSPlatform ("ios"), UnsupportedOSPlatform ("tvos"), SupportedOSPlatform ("macos11.0"), SupportedOSPlatform ("maccatalyst15.0")]
+#endif
 		public static bool IsArchitectureLoadable (Architecture architecture) => CFBundleIsArchitectureLoadable (architecture);
 
 #endif

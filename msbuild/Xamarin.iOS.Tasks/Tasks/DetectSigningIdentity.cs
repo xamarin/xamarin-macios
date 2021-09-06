@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Xamarin.MacDev.Tasks;
@@ -20,7 +21,7 @@ namespace Xamarin.iOS.Tasks
 
 		public bool ShouldCreateOutputFile (ITaskItem item) => true;
 
-		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied () => new ITaskItem [] { new TaskItem (AppManifest) };
+		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied () => Enumerable.Empty<ITaskItem> ();
 
 		public void Cancel ()
 		{

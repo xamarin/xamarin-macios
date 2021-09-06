@@ -2165,6 +2165,9 @@ namespace Registrar {
 			case "QuickLookUI":
 				h = "<Quartz/Quartz.h>";
 				break;
+			case "Phase":
+				h = "<PHASE/PHASE.h>";
+				break;
 			case "PdfKit":
 				h = App.Platform == ApplePlatform.MacOSX ? "<Quartz/Quartz.h>" : "<PDFKit/PDFKit.h>";
 				break;
@@ -2227,6 +2230,9 @@ namespace Registrar {
 					return;
 				}
 				goto default;
+			case "ThreadNetwork":
+				h = "<ThreadNetwork/THClient.h>";
+				break;
 			default:
 				h = string.Format ("<{0}/{0}.h>", ns);
 				break;

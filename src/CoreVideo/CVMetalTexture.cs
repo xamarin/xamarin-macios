@@ -98,4 +98,3 @@ namespace CoreVideo {
 }
 
 #endif // IOS || TVOS
-

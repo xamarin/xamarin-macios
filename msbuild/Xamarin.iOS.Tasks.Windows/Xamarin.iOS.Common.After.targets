@@ -314,23 +314,14 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 
 		<PropertyGroup>
 			<!-- We need to use net5.0 because when building from VS it sets MSBuildRuntimeType to Core and will pick net472 (which doesn't contain the illink assembly) -->
-			<_RemoteILLinkPath>$(ILLinkTasksAssembly.Replace('$(NetCoreRoot)', '$(_DotNetRootRemoteDirectory)').Replace('net472', 'net5.0').Replace('$([System.IO.Path]::GetFileName('$(ILLinkTasksAssembly)'))', 'illink.dll'))</_RemoteILLinkPath>
+			<_RemoteILLinkPath>$(ILLinkTasksAssembly.Replace('$(NetCoreRoot)', '$(_DotNetRootRemoteDirectory)').Replace('net472', 'net6.0').Replace('$([System.IO.Path]::GetFileName('$(ILLinkTasksAssembly)'))', 'illink.dll'))</_RemoteILLinkPath>
 		</PropertyGroup>
 
 		<ItemGroup>
 			<!-- Include Debug symbols as input so those are copied to the server -->
 			<_ILLinkDebugSymbols Include="@(_DebugSymbolsIntermediatePath)" Condition="'$(_DebugSymbolsProduced)'=='true'" />
 		</ItemGroup>
-
-		<ItemGroup>
-			<!-- Replace the custom steps using the remote file paths for those -->
-			<_TrimmerCustomSteps Remove="$(_AdditionalTaskAssembly)" />
-			<_TrimmerCustomSteps Include="$([System.String]::Copy('$(_AdditionalTaskAssembly)').Replace('$(NetCoreRoot)', '$(_DotNetRootRemoteDirectory)'))">
-				<BeforeStep>MarkStep</BeforeStep>
-				<Type>Xamarin.SetupStep</Type>
-			</_TrimmerCustomSteps>
-		</ItemGroup>
-
+		
 		<Delete SessionId="$(BuildSessionId)" Files="@(_LinkedResolvedFileToPublishCandidate)" />
 		<Xamarin.iOS.Tasks.ILLink 
 				SessionId="$(BuildSessionId)"

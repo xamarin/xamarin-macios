@@ -23,7 +23,7 @@ namespace NaturalLanguage {
 					throw new ArgumentNullException (nameof (key));
 
 				var value = CFDictionary.GetValue (Dictionary.Handle, key.Handle);
-				return NSArray.StringArrayFromHandle (value);
+				return CFArray.StringArrayFromHandle (value);
 			}
 			set {
 				SetArrayValue (key, value);

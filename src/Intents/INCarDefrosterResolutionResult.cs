@@ -1,4 +1,4 @@
-﻿//
+//
 // INCarDefrosterResolutionResult.cs
 //
 // Authors:

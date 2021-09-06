@@ -26,6 +26,8 @@ using System;
 using System.Runtime.InteropServices;
 using Foundation;
 
+#nullable enable
+
 namespace ObjCRuntime {
 	public partial class Selector : IEquatable<Selector>, INativeObject {
 		internal const string Alloc = "alloc";
@@ -40,7 +42,7 @@ namespace ObjCRuntime {
 #endif
 
 		IntPtr handle;
-		string name;
+		string? name;
 
 		public Selector (IntPtr sel)
 		{
@@ -48,7 +50,6 @@ namespace ObjCRuntime {
 				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (sel), "Not a selector handle.");
 
 			this.handle = sel;
-			name = GetName (sel);
 		}
 
 		// this .ctor is required, like for any INativeObject implementation
@@ -57,7 +58,6 @@ namespace ObjCRuntime {
 		internal Selector (IntPtr handle, bool /* unused */ owns)
 		{
 			this.handle = handle;
-			name = GetName (handle);
 		}
 
 		public Selector (string name)
@@ -71,7 +71,11 @@ namespace ObjCRuntime {
 		}
 
 		public string Name {
-			get { return name; }
+			get {
+				if (name == null)
+					name = GetName (handle);
+				return name;
+			}
 		}
 
 		public static bool operator!= (Selector left, Selector right) {
@@ -89,12 +93,14 @@ namespace ObjCRuntime {
 			return left.handle == right.handle;
 		}
 
-		public override bool Equals (object right) {
+		public override bool Equals (object? right)
+		{
 			return Equals (right as Selector);
 		}
 
-		public bool Equals (Selector right) {
-			if (right == null)
+		public bool Equals (Selector? right)
+		{
+			if (right is null)
 				return false;
 
 			return handle == right.handle;
@@ -107,12 +113,12 @@ namespace ObjCRuntime {
 
 		internal static string GetName (IntPtr handle)
 		{
-			return Marshal.PtrToStringAuto (sel_getName (handle));
+			return Marshal.PtrToStringAuto (sel_getName (handle))!;
 		}
 
 		// return null, instead of throwing, if an invalid pointer is used (e.g. IntPtr.Zero)
 		// so this looks better in the debugger watch when no selector is assigned (ref: #10876)
-		public static Selector FromHandle (IntPtr sel)
+		public static Selector? FromHandle (IntPtr sel)
 		{
 			if (!sel_isMapped (sel))
 				return null;

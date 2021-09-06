@@ -5,6 +5,8 @@
 !missing-field! kCFURLFileProtectionKey not bound
 !missing-field! kCFURLFileProtectionNone not bound
 !missing-field! kCFURLVolumeSupportsFileProtectionKey not bound
+!missing-field! kCFURLVolumeAvailableCapacityForImportantUsageKey not bound
+!missing-field! kCFURLVolumeAvailableCapacityForOpportunisticUsageKey not bound
 
 
 
@@ -127,7 +129,6 @@
 !missing-field! kCFLocaleScriptCode not bound
 !missing-field! kCFLocaleUsesMetricSystem not bound
 !missing-field! kCFLocaleVariantCode not bound
-!missing-field! kCFNull not bound
 !missing-field! kCFNumberFormatterAlwaysShowDecimalSeparator not bound
 !missing-field! kCFNumberFormatterCurrencyCode not bound
 !missing-field! kCFNumberFormatterCurrencyDecimalSeparator not bound
@@ -348,7 +349,6 @@
 !missing-pinvoke! CFArrayGetCountOfValue is not bound
 !missing-pinvoke! CFArrayGetFirstIndexOfValue is not bound
 !missing-pinvoke! CFArrayGetLastIndexOfValue is not bound
-!missing-pinvoke! CFArrayGetValues is not bound
 !missing-pinvoke! CFArrayInsertValueAtIndex is not bound
 !missing-pinvoke! CFArrayRemoveAllValues is not bound
 !missing-pinvoke! CFArrayRemoveValueAtIndex is not bound
@@ -982,6 +982,7 @@
 !unknown-pinvoke! dispatch_write bound
 !unknown-pinvoke! open bound
 !unknown-pinvoke! write bound
+!unknown-pinvoke! uname bound
 !missing-field! kCFStreamErrorDomainSOCKS not bound
 !missing-field! kCFStreamErrorDomainSSL not bound
 !missing-field! kCFStreamPropertyShouldCloseNativeSocket not bound

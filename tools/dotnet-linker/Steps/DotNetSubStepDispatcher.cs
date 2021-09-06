@@ -14,4 +14,3 @@ namespace Xamarin.Linker.Steps {
 		}
 	}
 }
-

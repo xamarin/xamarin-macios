@@ -258,6 +258,9 @@ MonoException *	xamarin_create_system_exception (const char *message);
 MonoException *	xamarin_create_system_invalid_cast_exception (const char *message);
 MonoException *	xamarin_create_system_entry_point_not_found_exception (const char *entrypoint);
 NSString *		xamarin_print_all_exceptions (GCHandle handle);
+bool			xamarin_log_marshalled_exceptions ();
+void			xamarin_log_managed_exception (GCHandle handle, MarshalManagedExceptionMode mode);
+void			xamarin_log_objectivec_exception (NSException *exception, MarshalObjectiveCExceptionMode mode);
 
 id				xamarin_invoke_objc_method_implementation (id self, SEL sel, IMP xamarin_impl);
 MonoType *		xamarin_get_nsnumber_type ();
@@ -328,9 +331,7 @@ void			xamarin_mono_object_release_at_process_exit (MonoObject *mobj);
  */
 MonoAssembly * xamarin_open_assembly (const char *name);
 
-#if defined(__arm__) || defined(__aarch64__)
 void mono_aot_register_module (void *aot_info);
-#endif
 
 typedef void (*xamarin_register_module_callback) ();
 typedef void (*xamarin_register_assemblies_callback) ();

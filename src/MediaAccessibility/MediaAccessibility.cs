@@ -282,7 +282,7 @@ namespace MediaAccessibility {
 			var handle = MAAudibleMediaCopyPreferredCharacteristics ();
 			if (handle == IntPtr.Zero)
 				return null;
-			var result = NSArray.StringArrayFromHandle (handle);
+			var result = CFArray.StringArrayFromHandle (handle);
 			CFObject.CFRelease (handle); // *Copy* API
 			return result;
 		}

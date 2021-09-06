@@ -615,7 +615,11 @@ namespace UIKit {
 	// note: __TVOS_PROHIBITED -> because it uses NSLineBreakMode (but we need this because we don't expose the later)
 	//
 	// NSInteger -> UIStringDrawing.h
+#if __MACCATALYST__
+	[Native (ConvertToNative = "UITextAlignmentExtensions.ToNative", ConvertToManaged = "UITextAlignmentExtensions.ToManaged")]
+#else
 	[Native]
+#endif
 	public enum UITextAlignment : long {
 		Left,
 		Center,
@@ -1155,7 +1159,7 @@ namespace UIKit {
 	// Not hard deprecating now but until XAMCORE_4_0 happens or we can
 	// properly fix all the API using this.
 	// see: https://github.com/xamarin/xamarin-macios/issues/6573
-	// Use Foundation.NSWritingDirection instead.
+	// [Obsolete ("Use NSWritingDirection in Foundation instead.")]
 	[Native]
 	[NoWatch]
 	public enum UITextWritingDirection : long {
@@ -1175,84 +1179,6 @@ namespace UIKit {
 		Paragraph,
 		Line,
 		Document
-	}
-
-	// NSInteger -> UITextInput.h
-	[Native]
-	[NoWatch]
-	public enum NSLayoutRelation : long {
-		LessThanOrEqual = -1,
-		Equal = 0,
-		GreaterThanOrEqual = 1
-	}
-
-	// NSInteger -> NSLayoutConstraint.h
-	[Native]
-	[NoWatch]
-	public enum NSLayoutAttribute : long {
-		NoAttribute = 0,
-		Left = 1,
-		Right,
-		Top,
-		Bottom,
-		Leading,
-		Trailing,
-		Width,
-		Height,
-		CenterX,
-		CenterY,
-		Baseline,
-		LastBaseline = Baseline,
-		FirstBaseline,
-   
-		[iOS (8,0)]
-		LeftMargin,
-		[iOS (8,0)]
-		RightMargin,
-		[iOS (8,0)]
-		TopMargin,
-		[iOS (8,0)]
-		BottomMargin,
-		[iOS (8,0)]
-		LeadingMargin,
-		[iOS (8,0)]
-		TrailingMargin,
-		[iOS (8,0)]
-		CenterXWithinMargins,
-		[iOS (8,0)]
-		CenterYWithinMargins,
-	}
-
-	// NSUInteger -> NSLayoutConstraint.h
-	[Native]
-	[Flags]
-	[NoWatch]
-	public enum NSLayoutFormatOptions : ulong {
-		AlignAllLeft = (1 << (int) NSLayoutAttribute.Left),
-		AlignAllRight = (1 << (int) NSLayoutAttribute.Right),
-		AlignAllTop = (1 << (int) NSLayoutAttribute.Top),
-		AlignAllBottom = (1 << (int) NSLayoutAttribute.Bottom),
-		AlignAllLeading = (1 << (int) NSLayoutAttribute.Leading),
-		AlignAllTrailing = (1 << (int) NSLayoutAttribute.Trailing),
-		AlignAllCenterX = (1 << (int) NSLayoutAttribute.CenterX),
-		AlignAllCenterY = (1 << (int) NSLayoutAttribute.CenterY),
-		AlignAllBaseline = (1 << (int) NSLayoutAttribute.Baseline),
-		AlignAllLastBaseline = (1 << (int) NSLayoutAttribute.LastBaseline),
-		AlignAllFirstBaseline = (1 << (int) NSLayoutAttribute.FirstBaseline),
-		
-		AlignmentMask = 0xFFFF,
-		
-		/* choose only one of these three
-		 */
-		DirectionLeadingToTrailing = 0 << 16, // default
-		DirectionLeftToRight = 1 << 16,
-		DirectionRightToLeft = 2 << 16,
-
-		SpacingEdgeToEdge = 0 << 19,
-		SpacingBaselineToBaseline = 1 << 19,
-		SpacingMask = 1 << 19,
-		
-		DirectionMask = 0x3 << 16,
 	}
 
 	// float (and not even a CGFloat) -> NSLayoutConstraint.h
@@ -1308,7 +1234,11 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UIImage.h
+#if __MACCATALYST__
+	[Native (ConvertToNative = "UIImageResizingModeExtensions.ToNative", ConvertToManaged = "UIImageResizingModeExtensions.ToManaged")]
+#else
 	[Native]
+#endif
 	public enum UIImageResizingMode : long {
 		Tile, Stretch
 	}
@@ -1373,22 +1303,6 @@ namespace UIKit {
 	[NoWatch]
 	public enum UINavigationControllerOperation : long {
 		None, Push, Pop
-	}
-
-	// NSInteger -> NSLayoutManager.h
-	[Native]
-	[NoWatch]
-	public enum NSTextLayoutOrientation : long {
-		Horizontal, Vertical
-	}
-
-	// NSUInteger -> NSTextStorage.h
-	[Native]
-	[Flags]
-	[NoWatch]
-	public enum NSTextStorageEditActions : ulong {
-		Attributes = 1,
-		Characters = 2
 	}
 
 	// NSInteger -> UIActivity.h
@@ -1494,28 +1408,6 @@ namespace UIKit {
 	public enum UIPushBehaviorMode : long {
 		Continuous,
 		Instantaneous
-	}
-
-	// NSInteger -> NSLayoutManager.h
-	[Native]
-	[NoWatch]
-	public enum NSGlyphProperty : long {
-		Null = (1 << 0),
-		ControlCharacter = (1 << 1),
-		Elastic = (1 << 2),
-		NonBaseCharacter = (1 << 3)
-	}
-	
-	// NSInteger -> NSLayoutManager.h
-	[Native]
-	[NoWatch]
-	public enum NSControlCharacterAction : long {
-		ZeroAdvancementAction = (1 << 0),
-		WhitespaceAction = (1 << 1),
-		HorizontalTabAction = (1 << 2),
-		LineBreakAction = (1 << 3),
-		ParagraphBreakAction = (1 << 4),
-		ContainerBreakAction = (1 << 5)
 	}
 
 	// NSInteger -> UITabBar.h
@@ -2413,13 +2305,6 @@ namespace UIKit {
 		Black,
 	}
 
-	[Mac (10,15), iOS (13,0), TV (13,0)]
-	[Native]
-	public enum NSTextScalingType : long {
-		Standard = 0,
-		iOS,
-	}
-
 	[iOS (13,0), TV (13,0), NoWatch]
 	[Native]
 	public enum UISceneActivationState : long {
@@ -2600,31 +2485,6 @@ namespace UIKit {
 		Paging,
 		GroupPaging,
 		GroupPagingCentered,
-	}
-
-	[Flags, Watch (6,0), TV (13,0), iOS (13,0)]
-	[Native]
-	public enum NSDirectionalRectEdge : ulong {
-		None = 0x0,
-		Top = 1uL << 0,
-		Leading = 1uL << 1,
-		Bottom = 1uL << 2,
-		Trailing = 1uL << 3,
-		All = Top | Leading | Bottom | Trailing,
-	}
-
-	[Watch (6,0), TV (13,0), iOS (13,0)]
-	[Native]
-	public enum NSRectAlignment : long {
-		None = 0,
-		Top,
-		TopLeading,
-		Leading,
-		BottomLeading,
-		Bottom,
-		BottomTrailing,
-		Trailing,
-		TopTrailing,
 	}
 
 	[TV (13,0), NoWatch, iOS (13,0)]
@@ -3156,16 +3016,6 @@ namespace UIKit {
 		Default = 0,
 		Generic = 1,
 		Minimal = 2,
-	}
-
-	[Watch (7,0), TV (14,0), iOS (14,0)]
-	[Flags]
-	[Native]
-	public enum NSLineBreakStrategy : ulong {
-		None = 0x0,
-		PushOut = 1uL << 0,
-		HangulWordPriority = 1uL << 1,
-		Standard = 0xffff,
 	}
 
 	// NSInteger -> UIGuidedAccessRestrictions.h

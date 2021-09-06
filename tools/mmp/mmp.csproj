@@ -7,8 +7,8 @@
     <OutputType>Exe</OutputType>
     <AssemblyName>mmp</AssemblyName>
     <RootNamespace>mmp</RootNamespace>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
-    <LangVersion>8.0</LangVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>True</DebugSymbols>

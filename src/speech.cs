@@ -1,4 +1,4 @@
-﻿//
+//
 // Speech bindings
 //
 // Authors:

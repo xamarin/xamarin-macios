@@ -127,6 +127,13 @@ namespace Introspection {
 				case "HMCharacteristicMetadata":
 				case "HMAccessoryCategory":
 					return true;
+				// Xcode 13
+				case "HKVerifiableClinicalRecord":
+				case "PKDeferredPaymentSummaryItem":
+				case "PKRecurringPaymentSummaryItem":
+				case "PKStoredValuePassProperties":
+				case "SNTimeDurationConstraint": // Conformance not in headers
+					return true;
 				}
 				break;
 			case "NSMutableCopying":
@@ -247,6 +254,15 @@ namespace Introspection {
 					return true;
 				// Xcode 12.5
 				case "GCDualSenseGamepad":
+				// Xcode 13
+				case "PKDeferredPaymentSummaryItem":
+				case "PKPaymentRequestCouponCodeUpdate":
+				case "PKRecurringPaymentSummaryItem":
+				case "PKStoredValuePassBalance":
+				case "PKStoredValuePassProperties":
+				case "QLPreviewReply": // conformance not in headers
+				case "QLPreviewReplyAttachment": // conformance not in headers
+				case "SNTimeDurationConstraint": // Conformance not in headers
 					return true;
 				}
 				break;
@@ -364,6 +380,15 @@ namespace Introspection {
 					return true;
 				// Xcode 12.5
 				case "GCDualSenseGamepad":
+				// xcode 13
+				case "PKDeferredPaymentSummaryItem":
+				case "PKPaymentRequestCouponCodeUpdate":
+				case "PKRecurringPaymentSummaryItem":
+				case "PKStoredValuePassBalance":
+				case "PKStoredValuePassProperties":
+				case "QLPreviewReply": // conformance not in headers
+				case "QLPreviewReplyAttachment": // conformance not in headers
+				case "SNTimeDurationConstraint": // Conformance not in headers
 					return true;
 				}
 				break;

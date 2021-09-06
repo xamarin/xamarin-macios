@@ -134,6 +134,10 @@ namespace CoreLocation {
 		[Export ("initWithCoordinate:altitude:horizontalAccuracy:verticalAccuracy:course:courseAccuracy:speed:speedAccuracy:timestamp:")]
 		IntPtr Constructor (CLLocationCoordinate2D coordinate, double altitude, double hAccuracy, double vAccuracy, double course, double courseAccuracy, double speed, double speedAccuracy, NSDate timestamp);
 
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("initWithCoordinate:altitude:horizontalAccuracy:verticalAccuracy:course:courseAccuracy:speed:speedAccuracy:timestamp:sourceInfo:")]
+		IntPtr Constructor (CLLocationCoordinate2D coordinate, double altitude, double horizontalAccuracy, double verticalAccuracy, double course, double courseAccuracy, double speed, double speedAccuracy, NSDate timestamp, CLLocationSourceInformation sourceInfo);
+
 		// Apple keep changing the 'introduction' of this field (5.0->8.0->5.0) but it was not available in 6.1
 		// nor in 7.0 - but it works on my iPad3 running iOS 7.1
 		[NoTV][NoWatch]
@@ -168,6 +172,14 @@ namespace CoreLocation {
 		[iOS (8,0)]
 		[NullAllowed, Export ("floor", ArgumentSemantic.Copy)]
 		CLFloor Floor { get; }
+
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("ellipsoidalAltitude")]
+		double EllipsoidalAltitude { get; }
+
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[NullAllowed, Export ("sourceInformation")]
+		CLLocationSourceInformation SourceInformation { get; }
 	}
 
 	[Mac (10,15)]
@@ -319,13 +331,13 @@ namespace CoreLocation {
 
 		[NoWatch][NoTV][NoMac]
 		[Deprecated (PlatformName.iOS, 13,0, message: "Not used anymore. Call will not have any effect.")]
-		[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
+		[NoMacCatalyst]
 		[Export ("allowDeferredLocationUpdatesUntilTraveled:timeout:")]
 		void AllowDeferredLocationUpdatesUntil (double distance, double timeout);
 
 		[NoWatch][NoTV][NoMac]
 		[Deprecated (PlatformName.iOS, 13,0, message: "Not used anymore. Call will not have any effect.")]
-		[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
+		[NoMacCatalyst]
 		[Export ("disallowDeferredLocationUpdates")]
 		void DisallowDeferredLocationUpdates ();
 
@@ -361,7 +373,7 @@ namespace CoreLocation {
 		void RequestState (CLRegion region);
 
 		[NoWatch][NoTV][NoMac]
-		[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
+		[NoMacCatalyst]
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'StartRangingBeacons(CLBeaconIdentityConstraint)' instead.")]
 		[iOS (7,0), Export ("startRangingBeaconsInRegion:")]
 		void StartRangingBeacons (CLBeaconRegion region);
@@ -371,7 +383,7 @@ namespace CoreLocation {
 		void StartRangingBeacons (CLBeaconIdentityConstraint constraint);
 
 		[NoWatch][NoTV][NoMac]
-		[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using UIKit on macOS.")]
+		[NoMacCatalyst]
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'StopRangingBeacons(CLBeaconIdentityConstraint)' instead.")]
 		[iOS (7,0), Export ("stopRangingBeaconsInRegion:")]
 		void StopRangingBeacons (CLBeaconRegion region);
@@ -442,11 +454,13 @@ namespace CoreLocation {
 		bool IsAuthorizedForWidgetUpdates { [Bind ("isAuthorizedForWidgetUpdates")] get; }
 
 		[Async]
-		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15, 0), MacCatalyst (15,0)]
+		[NoWatch, NoTV, NoMac, NoMacCatalyst]
+		[iOS (15,0)]
 		[Export ("startMonitoringLocationPushesWithCompletion:")]
 		void StartMonitoringLocationPushes ([NullAllowed] Action<NSData, NSError> completion);
 
-		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15, 0), MacCatalyst (15,0)]
+		[NoWatch, NoTV, NoMac, NoMacCatalyst]
+		[iOS (15,0)]
 		[Export ("stopMonitoringLocationPushes")]
 		void StopMonitoringLocationPushes ();
 
@@ -901,6 +915,20 @@ namespace CoreLocation {
 
 		[Export ("serviceExtensionWillTerminate")]
 		void ServiceExtensionWillTerminate ();
+	}
+
+	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof(NSObject))]
+	interface CLLocationSourceInformation : NSCopying, NSSecureCoding
+	{
+		[Export ("initWithSoftwareSimulationState:andExternalAccessoryState:")]
+		IntPtr Constructor (bool isSoftware, bool isAccessory);
+
+		[Export ("isSimulatedBySoftware")]
+		bool IsSimulatedBySoftware { get; }
+
+		[Export ("isProducedByAccessory")]
+		bool IsProducedByAccessory { get; }
 	}
 
 }

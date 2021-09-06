@@ -215,10 +215,6 @@ namespace Introspection
 						// load from executable (like __Internal above since it's part of the static library)
 						path = null;
 						break;
-					case "libhostpolicy":
-						// There's no libhostpolicy library.
-						// https://github.com/dotnet/runtime/issues/38543
-						continue;
 					case "libSystem.Native":
 						path += ".dylib";
 						break;
@@ -271,7 +267,7 @@ namespace Introspection
 		// it's not complete (there's many more SDK assemblies) but we cannot add all of them into a single project anyway
 
 		[Test]
-#if __MACCATALYST__
+#if __MACCATALYST__ && !NET
 		[Ignore ("https://github.com/xamarin/xamarin-macios/issues/10883")]
 #endif
 		public void Corlib ()
@@ -282,7 +278,7 @@ namespace Introspection
 		}
 
 		[Test]
-#if __MACCATALYST__
+#if __MACCATALYST__ && !NET
 		[Ignore ("https://github.com/xamarin/xamarin-macios/issues/10883")]
 #endif
 		public void System ()
@@ -293,7 +289,7 @@ namespace Introspection
 		}
 
 		[Test]
-#if __MACCATALYST__
+#if __MACCATALYST__ && !NET
 		[Ignore ("https://github.com/xamarin/xamarin-macios/issues/10883")]
 #endif
 		public void SystemCore ()

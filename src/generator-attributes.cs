@@ -583,10 +583,13 @@ public class SnippetAttribute : Attribute {
 		Code = s;
 	}
 	public string Code { get; set; }
+
+	public bool Optimizable { get; set; }
 }
 
 //
 // PreSnippet code is inserted after the parameters have been validated/marshalled
+// Adding this attribute will, by default, make the method non-optimizable by the SDK tools
 // 
 public class PreSnippetAttribute : SnippetAttribute {
 	public PreSnippetAttribute (string s) : base (s) {}
@@ -594,6 +597,7 @@ public class PreSnippetAttribute : SnippetAttribute {
 
 //
 // PrologueSnippet code is inserted before any code is generated
+// Adding this attribute will, by default, make the method non-optimizable by the SDK tools
 // 
 public class PrologueSnippetAttribute : SnippetAttribute {
 	public PrologueSnippetAttribute (string s) : base (s) {}
@@ -601,13 +605,15 @@ public class PrologueSnippetAttribute : SnippetAttribute {
 
 //
 // PostSnippet code is inserted before returning, before paramters are disposed/released
+// Adding this attribute will, by default, make the method non-optimizable by the SDK tools
 // 
 public class PostSnippetAttribute : SnippetAttribute {
 	public PostSnippetAttribute (string s) : base (s) {}
 }
 
 //
-// Code to run from a generated Dispose method
+// Code to run from a generated Dispose method, before any generated code is executed
+// Adding this attribute will, by default, make the method non-optimizable by the SDK tools
 //
 [AttributeUsage(AttributeTargets.Interface, AllowMultiple=true)]
 public class DisposeAttribute : SnippetAttribute {

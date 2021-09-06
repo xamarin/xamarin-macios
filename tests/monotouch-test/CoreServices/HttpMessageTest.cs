@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests CFHTTPMessage
 //
 // Authors:
@@ -98,6 +98,9 @@ namespace MonoTouchFixtures.CoreServices {
 					}
 				}
 			}, () => done);
+			if (!done)
+				TestRuntime.IgnoreInCI ("Transient network failure - ignore in CI");
+			Assert.IsTrue (done, "Network request completed");
 			using (var auth = CFHTTPAuthentication.CreateFromResponse (response)) {
 				Assert.NotNull (auth, "Null Auth");
 				Assert.IsTrue (auth.IsValid, "Auth is valid");

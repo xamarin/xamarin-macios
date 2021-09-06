@@ -1,3 +1,4 @@
+#if !__MACCATALYST__
 using System;
 using System.Diagnostics;
 using Foundation;
@@ -562,4 +563,4 @@ namespace AppKit {
 		
 	}
 }
-
+#endif // !__MACCATALYST__
