@@ -9,7 +9,7 @@
         <key>CFBundleInfoDictionaryVersion</key>
         <string>6.0</string>
         <key>CFBundleName</key>
-        <string>Mono</string>
+        <string>XTest</string>
         <key>CFBundlePackageType</key>
         <string>FMWK</string>
         <key>CFBundleShortVersionString</key>
@@ -22,7 +22,6 @@
         <string></string>
         <key>CFBundleExecutable</key>
         <string>XTest</string>
-
         <key>BuildMachineOSBuild</key>
         <string>13F34</string>
         <key>CFBundleDevelopmentRegion</key>
