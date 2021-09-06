@@ -232,6 +232,7 @@
 			_LinkNativeExecutable;
 			_ComputePublishLocation;
 			CopyFilesToPublishDirectory;
+			_CopyFrameworksToBundle;
 			_CopyAppExtensionsToBundle;
 		</CreateAppBundleDependsOn>
 
@@ -560,28 +561,37 @@
 		<WriteLinesToFile SessionId="$(BuildSessionId)" File="$(_CustomLinkerOptionsFile)" Lines="$(_CustomLinkerOptions)" Overwrite="true" />
 	</Target>
 
-	<!-- Look in the NativeReference items for frameworks that need to be added to the app bundle, and add all those frameworks to ResolvedFileToPublish (as separate files) -->
+	<!-- Look in the _FrameworkNativeReference items for frameworks that need to be added to the app bundle, and add all those frameworks to _FrameworkToPublish -->
 	<Target Name="_ComputeFrameworkFilesToPublish" DependsOnTargets="_ExpandNativeReferences;_ComputeVariables;_LoadLinkerOutput">
 		<ItemGroup>
-			<!-- Expand each framework (which are directories) into all the files in the framework -->
-			<!-- Support a 'CopyToAppBundle' metadata that can be set to 'false' to avoid copying a framework to the app bundle -->
-			<_FrameworkFilesToPublish Include="%(_FrameworkNativeReference.RootDir)%(_FrameworkNativeReference.Directory)/**/*" Condition="'%(_FrameworkNativeReference.Kind)' == 'Framework' And '%(_FrameworkNativeReference.CopyToAppBundle)' != 'false'">
-				<_FrameworkIdentity>%(RootDir)%(Directory)</_FrameworkIdentity>
-				<_FrameworkPath>$(_AppBundleFrameworksDir)\%(Filename).framework</_FrameworkPath>
-				<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-			</_FrameworkFilesToPublish>
+			<!-- Collect the list of frameworks to publish from _FrameworkNativeReference. The ExtractBindingLibrariesStep in the linker might also add frameworks to _FrameworkToPublish -->
+			<_FrameworkToPublish Include="@(_FrameworkNativeReference)" Condition="'%(_FrameworkNativeReference.Kind)' == 'Framework' And '%(_FrameworkNativeReference.CopyToAppBundle)' != 'false'" />
 
-			<!-- Compute the relative path of each file in the framework relative to the framework directory -->
-			<_FrameworkFilesToPublish Update="@(_FrameworkFilesToPublish)">
-				<_FrameworkRelativePath>$([System.String]::Copy('%(Identity)').Substring($([System.String]::Copy('%(_FrameworkIdentity)').Length)))</_FrameworkRelativePath>
-			</_FrameworkFilesToPublish>
-
-			<!-- Add all the framework files to ResolvedFileToPublish -->
-			<ResolvedFileToPublish Include="@(_FrameworkFilesToPublish)">
-				<RelativePath>%(_FrameworkFilesToPublish._FrameworkPath)\%(_FrameworkFilesToPublish._FrameworkRelativePath)</RelativePath>
-				<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-			</ResolvedFileToPublish>
+			<!-- Set TargetDirectory and SourceDirectory for all frameworks we have to publish -->
+			<_FrameworkToPublish Update="@(_FrameworkToPublish)">
+				<TargetDirectory>$(PublishDir)$(_AppBundleFrameworksDir)\%(Filename).framework</TargetDirectory>
+				<SourceDirectory>%(RootDir)%(Directory)</SourceDirectory>
+			</_FrameworkToPublish>
 		</ItemGroup>
+	</Target>
+
+	<Target Name="_CopyFrameworksToBundle"
+		DependsOnTargets="_ComputeFrameworkFilesToPublish"
+		Inputs="@(_FrameworkToPublish)"
+		Outputs="@(_FrameworkToPublish -> '%(TargetDirectory)%(Filename)')"
+		>
+		<!-- We specifically do *not* use the publishing logic in .NET to (ResolvedFileToPublish) copy frameworks to the app bundle, because symlinks aren't handled correctly.
+			 In particular, MSBuild can't handle symlinks to directories: https://github.com/dotnet/msbuild/issues/6821.
+			 So we have a custom item group (_FrameworkToPublish), which we copy ourselves.
+		-->
+		<Ditto
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			ToolExe="$(DittoExe)"
+			ToolPath="$(DittoPath)"
+			Source="%(_FrameworkToPublish.SourceDirectory)"
+			Destination="%(_FrameworkToPublish.TargetDirectory)"
+		/>
 	</Target>
 
 	<!-- Look in the NativeReference items for dylibs that need to be added to the app bundle, and add all those frameworks to ResolvedFileToPublish (as separate files) -->
@@ -641,9 +651,9 @@
 		<ReadItemsFromFile SessionId="$(BuildSessionId)" File="$(_LinkerItemsDirectory)/_AssembliesToAOT.items" Condition="Exists('$(_LinkerItemsDirectory)/_AssembliesToAOT.items')">
 			<Output TaskParameter="Items" ItemName="_AssembliesToAOT" />
 		</ReadItemsFromFile>
-		<!-- Load _FrameworkFilesToPublish -->
-		<ReadItemsFromFile SessionId="$(BuildSessionId)" File="$(_LinkerItemsDirectory)/_FrameworkFilesToPublish.items" Condition="Exists('$(_LinkerItemsDirectory)/_FrameworkFilesToPublish.items')">
-			<Output TaskParameter="Items" ItemName="_FrameworkFilesToPublish" />
+		<!-- Load _FrameworkToPublish -->
+		<ReadItemsFromFile SessionId="$(BuildSessionId)" File="$(_LinkerItemsDirectory)/_FrameworkToPublish.items" Condition="Exists('$(_LinkerItemsDirectory)/_FrameworkToPublish.items')">
+			<Output TaskParameter="Items" ItemName="_FrameworkToPublish" />
 		</ReadItemsFromFile>
 		<!-- Load _DynamicLibraryToPublish -->
 		<ReadItemsFromFile SessionId="$(BuildSessionId)" File="$(_LinkerItemsDirectory)/_DynamicLibraryToPublish.items" Condition="Exists('$(_LinkerItemsDirectory)/_DynamicLibraryToPublish.items')">

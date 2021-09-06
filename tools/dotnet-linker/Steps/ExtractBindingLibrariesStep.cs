@@ -57,7 +57,7 @@ namespace Xamarin.Linker {
 			}
 			Configuration.WriteOutputForMSBuild ("_BindingLibraryFrameworks", frameworks);
 
-			var frameworkFilesToPublish = new List<MSBuildItem> ();
+			var frameworksToPublish = new List<MSBuildItem> ();
 			foreach (var asm in Configuration.Target.Assemblies) {
 				var fwks = new HashSet<string> ();
 				fwks.UnionWith (asm.Frameworks);
@@ -70,19 +70,15 @@ namespace Xamarin.Linker {
 					if (!Configuration.Application.VerifyDynamicFramework (fwk))
 						continue;
 
-					foreach (var file in Directory.GetFiles (fwk, "*", SearchOption.AllDirectories)) {
-						var item = new MSBuildItem {
-							Include = file,
-							Metadata = new Dictionary<string, string> {
-								{ "_FrameworkIdentity", fwk },
-								{ "_FrameworkPath", Path.Combine (Configuration.RelativeAppBundlePath, Configuration.Application.RelativeFrameworksPath, Path.GetFileName (fwk)) },
-							},
-						};
-						frameworkFilesToPublish.Add (item);
-					}
+					var executable = Path.Combine (fwk, Path.GetFileNameWithoutExtension (fwk));
+
+					var item = new MSBuildItem {
+						Include = executable,
+					};
+					frameworksToPublish.Add (item);
 				}
 			}
-			Configuration.WriteOutputForMSBuild ("_FrameworkFilesToPublish", frameworkFilesToPublish);
+			Configuration.WriteOutputForMSBuild ("_FrameworkToPublish", frameworksToPublish);
 
 			var dynamicLibraryToPublish = new List<MSBuildItem> ();
 			foreach (var asm in Configuration.Target.Assemblies) {
