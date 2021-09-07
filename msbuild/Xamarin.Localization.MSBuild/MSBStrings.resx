@@ -1308,4 +1308,13 @@
             {0}: the path to the compiler
         </comment>
     </data>
+
+    <data name="E7082" xml:space="preserve">
+        <value>The {0} value in the Info.plist ({1}) does not match the SupportedOSPlatformVersion value in the project file ({2}).</value>
+        <comment>
+            {0}: the name of a value from the Info.plist file the message talks about (either 'MinimumOSVersion' or 'LSMinimumSystemVersion').
+            {1}: the value from the Info.plist.
+            {2}: the value from the project file.
+        </comment>
+    </data>
 </root>

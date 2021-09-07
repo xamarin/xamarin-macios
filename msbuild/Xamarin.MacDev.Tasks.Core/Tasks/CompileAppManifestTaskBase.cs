@@ -183,7 +183,7 @@ namespace Xamarin.MacDev.Tasks
 				return false;
 			} else if (!string.IsNullOrEmpty (convertedSupportedOSPlatformVersion) && convertedSupportedOSPlatformVersion != minimumOSVersionInManifest) {
 				// SupportedOSPlatformVersion and the value in the Info.plist are not the same. This is an error.
-				Log.LogError (null, null, null, AppManifest, 0, 0, 0, 0, "The {0} value in the Info.plist ({1}) does not match the SupportedOSPlatformVersion value in the project file ({2}).", minimumVersionKey, minimumOSVersionInManifest, SupportedOSPlatformVersion); // FIXME: add tests + translated string.
+				Log.LogError (null, null, null, AppManifest, 0, 0, 0, 0, MSBStrings.E7082, minimumVersionKey, minimumOSVersionInManifest, SupportedOSPlatformVersion);
 				return false;
 			} else {
 				minimumOSVersion = minimumOSVersionInManifest;
