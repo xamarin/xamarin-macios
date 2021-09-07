@@ -15,11 +15,11 @@ namespace MetalPerformanceShaders {
 		[UnsupportedOSPlatform ("tvos12.0")]
 		[UnsupportedOSPlatform ("macos10.14")]
 #if IOS
-		[Obsolete ("Starting with ios12.0 please use '.ctor (IMTLDevice, MPSNNNeuronDescriptor)' overload instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with ios12.0 please use the '.ctor (IMTLDevice, MPSNNNeuronDescriptor)' overload instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif TVOS
-		[Obsolete ("Starting with tvos12.0 please use '.ctor (IMTLDevice, MPSNNNeuronDescriptor)' overload instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with tvos12.0 please use the '.ctor (IMTLDevice, MPSNNNeuronDescriptor)' overload instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif MONOMAC
-		[Obsolete ("Starting with macos10.14 please use '.ctor (IMTLDevice, MPSNNNeuronDescriptor)' overload instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Starting with macos10.14 please use the '.ctor (IMTLDevice, MPSNNNeuronDescriptor)' overload instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 		public unsafe MPSCnnNeuronPReLU (IMTLDevice device, float [] a) : this (NSObjectFlag.Empty)

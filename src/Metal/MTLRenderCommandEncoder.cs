@@ -13,8 +13,6 @@ namespace Metal {
 	public static class IMTLRenderCommandEncoder_Extensions {
 #if !NET
 		[Mac (10,13), NoiOS, NoTV, NoWatch]
-#else
-		[SupportedOSPlatform ("macos10.13")]
 #endif
 		public unsafe static void SetViewports (this IMTLRenderCommandEncoder This, MTLViewport [] viewports)
 		{
@@ -24,8 +22,6 @@ namespace Metal {
 
 #if !NET
 		[Mac (10,13), NoiOS, NoTV, NoWatch]
-#else
-		[SupportedOSPlatform ("macos10.13")]
 #endif
 		public unsafe static void SetScissorRects (this IMTLRenderCommandEncoder This, MTLScissorRect [] scissorRects)
 		{
