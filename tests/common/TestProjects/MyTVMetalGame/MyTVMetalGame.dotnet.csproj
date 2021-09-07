@@ -4,5 +4,6 @@
     <TargetFramework>net6.0-tvos</TargetFramework>
     <OutputType>Exe</OutputType>
     <RuntimeIdentifier>tvossimulator-x64</RuntimeIdentifier>
+    <SupportedOSPlatformVersion>13.0</SupportedOSPlatformVersion>
   </PropertyGroup>
 </Project>

@@ -7,6 +7,7 @@
     <OutputType>Exe</OutputType>
     <AssemblyName>MySpacedApp</AssemblyName>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
+    <SupportedOSPlatformVersion>10.0</SupportedOSPlatformVersion>
   </PropertyGroup>
 
   <ItemGroup>
