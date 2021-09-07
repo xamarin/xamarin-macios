@@ -291,7 +291,6 @@ namespace Xharness {
 					SkipTodayExtensionVariation = true,
 					SkipDeviceVariations = false,
 					SkipiOS32Variation = true,
-					SkipMacCatalystVariation = true,
 					TestPlatform = TestPlatform.iOS_Unified,
 					Ignore = dotnetIgnored,
 					Configurations = projectInfo.Configurations,
@@ -458,7 +457,6 @@ namespace Xharness {
 
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "monotouch-test", "monotouch-test.csproj"))) {
 				Name = "monotouch-test",
-				IgnoreMacCatalystVariation = true,
 			});
 
 			foreach (var p in fsharp_test_suites)
@@ -470,28 +468,23 @@ namespace Xharness {
 
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "framework-test", "iOS", "framework-test-ios.csproj"))) {
 				Name = "framework-test",
-				IgnoreMacCatalystVariation = false,
 			});
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "xcframework-test", "iOS", "xcframework-test-ios.csproj"))) {
 				Name = "xcframework-test",
-				IgnoreMacCatalystVariation = false,
 			});
 
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "bindings-test", "iOS", "bindings-test.csproj")), false) { Name = "bindings-test" });
 
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "interdependent-binding-projects", "interdependent-binding-projects.csproj"))) { Name = "interdependent-binding-projects" });
-			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "iOS", "introspection-ios.csproj"))) { Name = "introspection", IgnoreMacCatalystVariation = false });
+			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "iOS", "introspection-ios.csproj"))) { Name = "introspection" });
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "dont link", "dont link.csproj"))) {
 				Configurations = new string [] { "Debug", "Release" },
-				IgnoreMacCatalystVariation = false,
 			});
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "link all", "link all.csproj"))) {
 				Configurations = new string [] { "Debug", "Release" },
-				IgnoreMacCatalystVariation = false,
 			});
 			IOSTestProjects.Add (new iOSTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "link sdk", "link sdk.csproj"))) {
 				Configurations = new string [] { "Debug", "Release" },
-				IgnoreMacCatalystVariation = false,
 			});
 
 			foreach (var flavor in new MonoNativeFlavor [] { MonoNativeFlavor.Compat, MonoNativeFlavor.Unified }) {
@@ -643,16 +636,6 @@ namespace Xharness {
 						today.Execute ();
 						today_targets.Add (today);
 					}
-				}
-
-				if (!proj.SkipMacCatalystVariation) {
-					var macCatalyst = new MacCatalystTarget {
-						TemplateProjectPath = file,
-						Harness = this,
-						TestProject = proj,
-						ShouldSkipProjectGeneration = proj.IsDotNetProject,
-					};
-					macCatalyst.Execute ();
 				}
 			}
 
