@@ -286,3 +286,5 @@
 !missing-type! MTLRenderPipelineFunctionsDescriptor not bound
 !missing-type! MTLStitchedLibraryDescriptor not bound
 ## appended from unclassified file
+!extra-protocol-member! unexpected selector MTLDevice::areBarycentricCoordsSupported found
+!extra-protocol-member! unexpected selector MTLDevice::supportsShaderBarycentricCoordinates found

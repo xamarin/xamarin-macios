@@ -4,3 +4,11 @@
 # MacCatalyst 14.5 only, Maybe? They are unavailable in iOS
 !missing-enum! NSFileProviderDomainTestingModes not bound
 ## appended from unclassified file
+!unknown-field! NSFileProviderInitialPageSortedByDate bound
+!unknown-field! NSFileProviderInitialPageSortedByName bound
+!unknown-field! NSFileProviderRootContainerItemIdentifier bound
+!unknown-field! NSFileProviderWorkingSetContainerItemIdentifier bound
+!unknown-protocol! NSFileProviderChangeObserver bound
+!unknown-protocol! NSFileProviderEnumerationObserver bound
+!unknown-protocol! NSFileProviderEnumerator bound
+!unknown-protocol! NSFileProviderItem bound
