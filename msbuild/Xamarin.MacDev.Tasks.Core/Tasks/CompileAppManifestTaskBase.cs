@@ -18,7 +18,7 @@ namespace Xamarin.MacDev.Tasks
 		public string ApplicationId { get; set; }
 
 		// Single-project property that maps to CFBundleShortVersionString for Apple platforms
-		public string AppleShortVersion { get; set; }
+		public string ApplicationDisplayVersion { get; set; }
 
 		// Single-project property that maps to CFBundleDisplayName for Apple platforms
 		public string ApplicationTitle { get; set; }
@@ -116,8 +116,8 @@ namespace Xamarin.MacDev.Tasks
 
 			string defaultBundleShortVersion = null;
 			if (GenerateApplicationManifest) {
-				if (!string.IsNullOrEmpty (AppleShortVersion))
-					defaultBundleShortVersion = AppleShortVersion;
+				if (!string.IsNullOrEmpty (ApplicationDisplayVersion))
+					defaultBundleShortVersion = ApplicationDisplayVersion;
 				else if (!string.IsNullOrEmpty (ApplicationVersion))
 					defaultBundleShortVersion = ApplicationVersion;
 			}
