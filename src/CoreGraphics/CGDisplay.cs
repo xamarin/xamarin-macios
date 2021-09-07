@@ -82,7 +82,11 @@ namespace CoreGraphics
 		[DllImport (Constants.CoreGraphicsLibrary, EntryPoint = "CGDisplayRestoreColorSyncSettings")]
 		public static extern void RestoreColorSyncSettings ();
 
+#if !NET
 		[Deprecated (PlatformName.MacOSX, 10, 9)]
+#else
+		[UnsupportedOSPlatform ("macos10.9")]
+#endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool CGDisplayIsCaptured (uint display);

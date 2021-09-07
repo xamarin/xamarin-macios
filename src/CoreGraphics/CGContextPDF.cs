@@ -28,6 +28,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
@@ -82,9 +83,21 @@ namespace CoreGraphics {
 		public bool? AllowsCopying { get; set; }
 		public CGPDFAccessPermissions? AccessPermissions { get; set; }
 		//public NSDictionary OutputIntent { get; set; }
+#if !NET
 		[Mac (11,0)][iOS (14,0)][TV (14,0)][Watch (7,0)]
+#else
+		[SupportedOSPlatform ("ios14.0")]
+		[SupportedOSPlatform ("tvos14.0")]
+		[SupportedOSPlatform ("macos11.0")]
+#endif
 		public bool? CreateLinearizedPdf { get; set; }
+#if !NET
 		[Mac (11,0)][iOS (14,0)][TV (14,0)][Watch (7,0)]
+#else
+		[SupportedOSPlatform ("ios14.0")]
+		[SupportedOSPlatform ("tvos14.0")]
+		[SupportedOSPlatform ("macos11.0")]
+#endif
 		public bool? CreatePdfA2u { get; set; }
 
 		internal override NSMutableDictionary ToDictionary ()
@@ -260,43 +273,73 @@ namespace CoreGraphics {
 				CGPDFContextSetDestinationForRect (Handle, s.Handle, rect);
 		}
 
+#if !NET
 		[Mac (10,15)]
 		[iOS (13,0)]
 		[TV (13,0)]
 		[Watch (6,0)]
+#else
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+#endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern void CGPDFContextBeginTag (/* CGContextRef* */ IntPtr context, CGPdfTagType tagType, /* CFDictionaryRef* _Nullable */ IntPtr tagProperties);
 
+#if !NET
 		[Mac (10,15)]
 		[iOS (13,0)]
 		[TV (13,0)]
 		[Watch (6,0)]
+#else
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+#endif
 		public void BeginTag (CGPdfTagType tagType, NSDictionary tagProperties)
 		{
 			CGPDFContextBeginTag (Handle, tagType, tagProperties.GetHandle ());
 		}
 
+#if !NET
 		[Mac (10,15)]
 		[iOS (13,0)]
 		[TV (13,0)]
 		[Watch (6,0)]
+#else
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+#endif
 		public void BeginTag (CGPdfTagType tagType, CGPdfTagProperties tagProperties)
 		{
 			var d = tagProperties?.Dictionary;
 			CGPDFContextBeginTag (Handle, tagType, d.GetHandle ());
 		}
 
+#if !NET
 		[Mac (10,15)]
 		[iOS (13,0)]
 		[TV (13,0)]
 		[Watch (6,0)]
+#else
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+#endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern void CGPDFContextEndTag (/* CGContextRef* */ IntPtr context);
 
+#if !NET
 		[Mac (10,15)]
 		[iOS (13,0)]
 		[TV (13,0)]
 		[Watch (6,0)]
+#else
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+#endif
 		public void EndTag ()
 		{
 			CGPDFContextEndTag (Handle);
