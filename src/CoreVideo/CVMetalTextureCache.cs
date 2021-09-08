@@ -21,7 +21,7 @@ using Metal;
 
 namespace CoreVideo {
 
-	[iOS (8,0), Mac (10,15), MacCatalyst (13,0)]
+	[iOS (8,0), Mac (10,15), MacCatalyst (15,0)]
 	public partial class CVMetalTextureCache : INativeObject, IDisposable {
 		internal IntPtr handle;
 
