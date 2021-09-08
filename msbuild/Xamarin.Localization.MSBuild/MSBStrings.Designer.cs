@@ -1904,6 +1904,15 @@ namespace Xamarin.Localization.MSBuild {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The {0} value in the Info.plist ({1}) does not match the SupportedOSPlatformVersion value in the project file ({2})..
+        /// </summary>
+        public static string E7082 {
+            get {
+                return ResourceManager.GetString("E7082", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid framework: {0}.
         /// </summary>
         public static string InvalidFramework {

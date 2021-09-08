@@ -4,5 +4,6 @@
     <TargetFramework>net6.0-ios</TargetFramework>
     <OutputType>Exe</OutputType>
     <RuntimeIdentifier>iossimulator-x64</RuntimeIdentifier>
+    <SupportedOSPlatformVersion>10.0</SupportedOSPlatformVersion>
   </PropertyGroup>
 </Project>

@@ -6,6 +6,7 @@
     <RuntimeIdentifier>iossimulator-x64</RuntimeIdentifier>
     <DefaultItemExcludes>$(DefaultItemExcludes);MyLibrary\**</DefaultItemExcludes>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
+    <SupportedOSPlatformVersion>10.0</SupportedOSPlatformVersion>
   </PropertyGroup>
 
   <ItemGroup>
