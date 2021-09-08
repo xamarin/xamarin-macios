@@ -1,0 +1,13 @@
+!unknown-native-enum! NEFilterDataAttribute bound
+!unknown-native-enum! NEFilterManagerGrade bound
+!unknown-native-enum! NEFilterPacketProviderVerdict bound
+!unknown-native-enum! NEFilterReportFrequency bound
+!unknown-native-enum! NENetworkRuleProtocol bound
+!unknown-type! NEFilterPacketContext bound
+!unknown-type! NEFilterPacketProvider bound
+!unknown-type! NEFilterRule bound
+!unknown-type! NEFilterSettings bound
+!unknown-type! NENetworkRule bound
+!unknown-type! NETransparentProxyManager bound
+!unknown-type! NETransparentProxyNetworkSettings bound
+!unknown-type! NETransparentProxyProvider bound

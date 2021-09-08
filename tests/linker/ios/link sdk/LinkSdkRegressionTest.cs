@@ -949,7 +949,7 @@ namespace LinkSdk {
 			path = TestFolder (Environment.SpecialFolder.DesktopDirectory, exists: myExists);
 
 #if __TVOS__
-			path = TestFolder (Environment.SpecialFolder.Fonts, exists: true);
+			path = TestFolder (Environment.SpecialFolder.Fonts, supported: true);
 #else
 			path = TestFolder (Environment.SpecialFolder.Fonts, exists: myExists);
 #endif
@@ -957,7 +957,7 @@ namespace LinkSdk {
 #if __MACOS__
 			path = TestFolder (Environment.SpecialFolder.Templates, supported: false);
 #elif __TVOS__
-			path = TestFolder (Environment.SpecialFolder.Templates, exists: true);
+			path = TestFolder (Environment.SpecialFolder.Templates, supported: true);
 #else
 			path = TestFolder (Environment.SpecialFolder.Templates, exists: false);
 #endif

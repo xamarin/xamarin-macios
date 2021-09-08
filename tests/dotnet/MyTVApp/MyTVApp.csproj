@@ -3,5 +3,6 @@
   <PropertyGroup>
     <TargetFramework>net6.0-tvos</TargetFramework>
     <OutputType>Exe</OutputType>
+    <SupportedOSPlatformVersion>10.0</SupportedOSPlatformVersion>
   </PropertyGroup>
 </Project>
