@@ -371,8 +371,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 			bool loadable_arm64 = CFBundle.IsArchitectureLoadable (CFBundle.Architecture.ARM64);
 			if (isArm64Executable)
 				Assert.IsTrue (loadable_arm64, "arm64 Expected => true");
-			else
-				Assert.IsFalse (loadable_arm64, "arm64 Expected => false");
+			// Due to Rosetta, we can't determine whether ARM64 is loadable or not if we're an X64 executable ourselves.
 		}
 
 		[Test]
