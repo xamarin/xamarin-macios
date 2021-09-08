@@ -39,6 +39,37 @@ MACOS_BINARY_INFIX=/Versions/A
 MACCATALYST_INFO_PLIST_INFIX=/Versions/A/Resources
 MACCATALYST_BINARY_INFIX=/Versions/A
 
+define SymlinksTemplate
+
+$(1)_XTEST_TARGETS += \
+	.libs/$(1)/XTest.framework/XTest \
+	.libs/$(1)/XTest.framework/Resources \
+	.libs/$(1)/XTest.framework/Versions/Current \
+	.libs/$(1)/XTest.framework/Versions/A/Resources/Info.plist \
+
+.libs/$(1)/XTest.framework$($(2)_BINARY_INFIX) .libs/$(1)/XTest.framework$($(2)_INFO_PLIST_INFIX):
+	$$(Q) mkdir -p $$@
+
+.libs/$(1)/XTest.framework/XTest: | .libs/$(1)/XTest.framework
+	$$(Q) ln -fs Versions/A/XTest $$@
+
+.libs/$(1)/XTest.framework/Resources: | .libs/$(1)/XTest.framework
+	$$(Q) ln -fs Versions/Current/Resources $$@
+
+.libs/$(1)/XTest.framework/Versions/Current: | .libs/$(1)/XTest.framework/Versions
+	$$(Q) ln -fs A $$@
+
+x::
+	@echo $(1)_XTEST_TARGETS=$$($(1)_XTEST_TARGETS)
+
+endef
+ifdef INCLUDE_MAC
+$(eval $(call SymlinksTemplate,macos,MACOS))
+endif
+ifdef INCLUDE_MACCATALYST
+$(eval $(call SymlinksTemplate,maccatalyst,MACCATALYST))
+endif
+
 define Template
 
 $(1)_XTEST_TARGETS += \
@@ -160,34 +191,6 @@ $(eval $(call Template,macos,MACOS,x86_64 arm64,MacOSX,-mmacosx-version-min=$(MI
 endif
 ifdef INCLUDE_MACCATALYST
 $(eval $(call Template,maccatalyst,MACCATALYST,x86_64 arm64,MacCatalyst,$(MACCATALYST_COMMON_CFLAGS)))
-endif
-
-define SymlinksTemplate
-
-$(1)_XTEST_TARGETS += \
-	.libs/$(1)/XTest.framework/XTest \
-	.libs/$(1)/XTest.framework/Resources \
-	.libs/$(1)/XTest.framework/Versions/Current \
-	.libs/$(1)/XTest.framework/Versions/A/Resources/Info.plist \
-
-.libs/$(1)/XTest.framework$($(2)_BINARY_INFIX) .libs/$(1)/XTest.framework$($(2)_INFO_PLIST_INFIX):
-	$$(Q) mkdir -p $$@
-
-.libs/$(1)/XTest.framework/XTest:
-	$$(Q) ln -fs Versions/A/XTest $$@
-
-.libs/$(1)/XTest.framework/Resources:
-	$$(Q) ln -fs Versions/Current/Resources $$@
-
-.libs/$(1)/XTest.framework/Versions/Current:
-	$$(Q) ln -fs A $$@
-
-endef
-ifdef INCLUDE_MAC
-$(eval $(call SymlinksTemplate,macos,MACOS))
-endif
-ifdef INCLUDE_MACCATALYST
-$(eval $(call SymlinksTemplate,maccatalyst,MACCATALYST))
 endif
 
 .libs/ios-fat .libs/tvos-fat .libs/watchos-fat .libs/maccatalyst-fat .libs/macos-fat:
