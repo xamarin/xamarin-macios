@@ -2,15 +2,3 @@
 !missing-selector! NSBatchInsertRequest::init not bound
 
 # ignored as well in macOS
-!missing-field! NSBinaryExternalRecordType not bound
-!missing-field! NSEntityNameInPathKey not bound
-!missing-field! NSExternalRecordExtensionOption not bound
-!missing-field! NSExternalRecordsDirectoryOption not bound
-!missing-field! NSExternalRecordsFileFormatOption not bound
-!missing-field! NSModelPathKey not bound
-!missing-field! NSObjectURIKey not bound
-!missing-field! NSStorePathKey not bound
-!missing-field! NSStoreUUIDInPathKey not bound
-!missing-field! NSValidateXMLStoreOption not bound
-!missing-field! NSXMLExternalRecordType not bound
-!missing-field! NSXMLStoreType not bound
