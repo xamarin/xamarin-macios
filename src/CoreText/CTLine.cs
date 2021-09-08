@@ -28,6 +28,7 @@
 //
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
@@ -233,7 +234,9 @@ namespace CoreText {
 		public delegate void CaretEdgeEnumerator (double offset, nint charIndex, bool leadingEdge, ref bool stop);
 		unsafe delegate void CaretEdgeEnumeratorProxy (IntPtr block, double offset, nint charIndex, [MarshalAs (UnmanagedType.I1)] bool leadingEdge, [MarshalAs (UnmanagedType.I1)] ref bool stop);
 		
+#if !NET
 		[iOS (9,0)][Mac (10,11)]
+#endif
 		[DllImport (Constants.CoreTextLibrary)]
 		static unsafe extern void CTLineEnumerateCaretOffsets (IntPtr line, BlockLiteral *blockEnumerator);
 
@@ -248,7 +251,9 @@ namespace CoreText {
                                 del (offset, charIndex, leadingEdge, ref stop);
  		}
 		
+#if !NET
 		[iOS (9,0)][Mac (10,11)]
+#endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void EnumerateCaretOffsets (CaretEdgeEnumerator enumerator)
 		{

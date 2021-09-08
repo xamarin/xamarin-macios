@@ -713,6 +713,9 @@
   <data name="E0187" xml:space="preserve">
         <value>Не удалось сопоставить версию macOS {0} с соответствующей версией iOS</value>
     </data>
+  <data name="E0188" xml:space="preserve">
+        <value>Could not map the iOS version {0} to a corresponding macOS version</value>
+    </data>
   <data name="E7001" xml:space="preserve">
         <value>Не удалось разрешить IP-адреса узлов для параметров отладчика Wi-Fi.
         </value>

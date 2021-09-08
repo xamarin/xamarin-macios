@@ -713,6 +713,9 @@
   <data name="E0187" xml:space="preserve">
         <value>macOS 버전 {0}을(를) 해당 iOS 버전에 매핑할 수 없습니다.</value>
     </data>
+  <data name="E0188" xml:space="preserve">
+        <value>Could not map the iOS version {0} to a corresponding macOS version</value>
+    </data>
   <data name="E7001" xml:space="preserve">
         <value>WiFi 디버거 설정의 호스트 IP를 확인할 수 없습니다.
         </value>

@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using ObjCRuntime;
 using Foundation;
 using HKQuantityRef = System.IntPtr;
@@ -9,7 +10,11 @@ using NSErrorRef = System.IntPtr;
 
 namespace HealthKit {
 
+#if !NET
 	[Watch (8,0), iOS (15,0)]
+#else
+	[SupportedOSPlatform ("ios15.0")]
+#endif
 	public static class HKAppleWalkingSteadiness
 	{
 

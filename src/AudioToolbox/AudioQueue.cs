@@ -33,6 +33,7 @@ using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
@@ -70,7 +71,9 @@ namespace AudioToolbox {
 		EnqueueDuringReset   = -66632,
 		InvalidOfflineMode   = -66626,
 		BufferEnqueuedTwice  = -66666,
+#if !NET
 		[iOS (10,0), Mac (10,12)]
+#endif
 		CannotStartYet       = -66665,
 		
 		// There is countless of not well documented error codes returned

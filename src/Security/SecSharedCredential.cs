@@ -3,6 +3,7 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using CoreFoundation;
@@ -63,9 +64,14 @@ namespace Security {
 			}
 		}
 
+		[DllImport (Constants.SecurityLibrary)]
+#if !NET
 		[Deprecated (PlatformName.iOS, 14,0)]
 		[Deprecated (PlatformName.MacOSX, 11,0)]
-		[DllImport (Constants.SecurityLibrary)]
+#else
+		[UnsupportedOSPlatform ("ios14.0")]
+		[UnsupportedOSPlatform ("macos11.0")]
+#endif
 		extern static void SecRequestSharedWebCredential ( IntPtr /* CFStringRef */ fqdn, IntPtr /* CFStringRef */ account,
 			IntPtr /* void (^completionHandler)( CFArrayRef credentials, CFErrorRef error) */ completionHandler);
 
@@ -96,8 +102,18 @@ namespace Security {
 		}
 #endif
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 14,0, message: "Use 'ASAuthorizationPasswordRequest' instead.")]
 		[Deprecated (PlatformName.MacOSX, 11,0, message: "Use 'ASAuthorizationPasswordRequest' instead.")]
+#else
+		[UnsupportedOSPlatform ("ios14.0")]
+		[UnsupportedOSPlatform ("macos11.0")]
+#if IOS
+		[Obsolete ("Starting with ios14.0 use 'ASAuthorizationPasswordRequest' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+		[Obsolete ("Starting with macos11.0 use 'ASAuthorizationPasswordRequest' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static void RequestSharedWebCredential (string domainName, string account, Action<SecSharedCredentialInfo[], NSError> handler)
 		{

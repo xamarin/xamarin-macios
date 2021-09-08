@@ -486,7 +486,10 @@ namespace Xharness.Jenkins.Reports {
 														continue;
 													// Skip any timestamps if the file is timestamped
 													if (log.Timestamp)
-														line = line.Substring ("HH:mm:ss.fffffff".Length).Trim ();
+														if (line.Length > "HH:mm:ss.fffffff".Length)
+															line = line.Substring ("HH:mm:ss.fffffff".Length).Trim ();
+														else if (line.Length == "HH:mm:ss.fffffff".Length)
+															line = "";
 													if (line.StartsWith ("Tests run:", StringComparison.Ordinal)) {
 														summary = line;
 													} else if (line.StartsWith ("[FAIL]", StringComparison.Ordinal)) {
@@ -512,7 +515,7 @@ namespace Xharness.Jenkins.Reports {
 										if (!string.IsNullOrEmpty (summary))
 											writer.WriteLine ("<span style='padding-left: 15px;'>{0}</span><br />", summary);
 									} catch (Exception ex) {
-										writer.WriteLine ("<span style='padding-left: 15px;'>Could not parse log file: {0}</span><br />", ex.Message.AsHtml ());
+										writer.WriteLine ("<span style='padding-left: 15px;'>Could not parse log file: {0}: {1}</span><br />", ex.Message.AsHtml (), ex.StackTrace.AsHtml ());
 									}
 								} else if (log.Description == LogType.BuildLog.ToString ()) {
 									HashSet<string> errors;
@@ -548,7 +551,7 @@ namespace Xharness.Jenkins.Reports {
 											writer.WriteLine ("</div>");
 										}
 									} catch (Exception ex) {
-										writer.WriteLine ("<span style='padding-left: 15px;'>Could not parse log file: {0}</span><br />", ex.Message.AsHtml ());
+										writer.WriteLine ("<span style='padding-left: 15px;'>Could not parse log file: {0}: {1}</span><br />", ex.Message.AsHtml (), ex.StackTrace.AsHtml ());
 									}
 								} else if (log.Description == LogType.NUnitResult.ToString () || log.Description == LogType.XmlLog.ToString ()) {
 									try {
@@ -558,7 +561,7 @@ namespace Xharness.Jenkins.Reports {
 											}
 										}
 									} catch (Exception ex) {
-										writer.WriteLine ($"<span style='padding-left: 15px;'>Could not parse {log.Description}: {ex.Message.AsHtml ()}</span><br />");
+										writer.WriteLine ($"<span style='padding-left: 15px;'>Could not parse {log.Description}: {ex.Message.AsHtml ()} : {ex.StackTrace.AsHtml ()}</span><br />");
 									}
 								} else if (log.Description == LogType.TrxLog.ToString ()) {
 									try {
