@@ -31,10 +31,10 @@
     },
     "minOSVersion": {
       "type": "parameter",
-      "description": "Overrides LSMinimumSystemVersion in the Info.plist",
+      "description": "Overrides SupportedOSPlatformVersion in the project file",
       "replaces": "minOSVersion",
       "datatype": "string",
-      "defaultValue": "10.15.1"
+      "defaultValue": "14.2"
     }
   },
   "defaultName": "MacCatalystApp1"
