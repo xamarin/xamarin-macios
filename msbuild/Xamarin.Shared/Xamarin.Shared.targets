@@ -277,7 +277,8 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		1. The user can specify values in multiple ways:
 
 		    * An Info.plist in their project file (by using a `None` item with filename "Info.plist" or with a `Link` metadata with filename "Info.plist"). We figure this out in the DetectAppManifest target.
-		    * A partial plist in their project (using the `PartialAppManifest` item group)
+		    * A partial plist in their project (using the `PartialAppManifest` item group). Developers can add targets to the public CollectAppManifestsDependsOn
+		      property to run targets that add to the `PartialAppManifest` item group before we process them.
 		    * Some MSBuild properties can also add values.
 
 		    The precedence is: MSBuild properties can be overridden by the Info.plist, which can be overridden by a partial plist.
@@ -296,6 +297,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 	<PropertyGroup>
 		<_CompileAppManifestDependsOn>
+			CollectAppManifests;
 			$(_CompileAppManifestDependsOn);
 			_DetectAppManifest;
 			_DetectSdkLocations;
@@ -304,6 +306,11 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			_ComputeTargetArchitectures;
 		</_CompileAppManifestDependsOn>
 	</PropertyGroup>
+
+	<!-- This is a public target that collects all the (partial) app manifests. The recommended way to make sure all
+		 the desired entries are added to PartialAppManifest is to add the target that adds to PartialAppManifest
+		 to the CollectAppManifestsDependsOn property. -->
+	<Target Name="CollectAppManifests" DependsOnTargets="$(CollectAppManifestsDependsOn)" />
 
 	<!-- This target has no inputs, because it must still be run if there are no input app manifests, to set default values -->
 	<Target Name="_CompileAppManifest"
