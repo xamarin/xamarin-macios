@@ -112,7 +112,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			_CopyResourcesToBundle;
 			_CreateAssetPackManifest;
 			_SmeltMetal;
-			_ForgeMetal;
 			_TemperMetal;
 			_CompileCoreMLModels;
 			_PrepareResourceRules;

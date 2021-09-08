@@ -51,7 +51,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			_DetectSigningIdentity;
 			_CopyResourcesToBundle;
 			_SmeltMetal;
-			_ForgeMetal;
 			_TemperMetal;
 			_CompileEntitlements;
 			_WriteAppManifest;
