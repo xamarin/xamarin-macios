@@ -11,10 +11,6 @@
 
 
 
-!missing-type! MEEmailAddress not bound
-!missing-selector! MEEmailAddress::addressString not bound
-!missing-selector! MEEmailAddress::initWithRawString: not bound
-!missing-selector! MEEmailAddress::rawString not bound
 
 
 
