@@ -24,8 +24,6 @@ namespace Metal {
 		}
 
 #if !NET
-		[Unavailable (PlatformName.iOS, PlatformArchitecture.All)]
-		[Unavailable (PlatformName.TvOS, PlatformArchitecture.All)]
 		[Introduced (PlatformName.MacOSX, 10,15, PlatformArchitecture.All)]
 #else
 		[SupportedOSPlatform ("macos10.15")]
@@ -46,8 +44,6 @@ namespace Metal {
 
 	public static partial class MTLComputeCommandEncoder_Extensions {
 #if !NET
-		[Unavailable (PlatformName.iOS, PlatformArchitecture.All)]
-		[Unavailable (PlatformName.TvOS, PlatformArchitecture.All)]
 		[Introduced (PlatformName.MacOSX, 10,15, PlatformArchitecture.All)]
 #else
 		[SupportedOSPlatform ("macos10.15")]
