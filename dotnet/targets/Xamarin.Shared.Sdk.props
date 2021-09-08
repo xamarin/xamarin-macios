@@ -51,4 +51,15 @@
 		<_RuntimeIdentifierUsesAppHost>false</_RuntimeIdentifierUsesAppHost>
 		<UseAppHost>false</UseAppHost>
 	</PropertyGroup>
+
+	<!--
+		Enable LLVM by default for mobile release builds.
+
+		At this point we don't necessarily know yet whether we're building for device or simulator,
+		but the MtouchUseLlvm value is ignored when using the simulator, so it doesn't matter
+		if we set it in all cases.
+	-->
+	<PropertyGroup Condition="'$(MtouchUseLlvm)' == '' And '$(Configuration)' == 'Release' And ('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS')">
+		<MtouchUseLlvm>true</MtouchUseLlvm>
+	</PropertyGroup>
 </Project>
