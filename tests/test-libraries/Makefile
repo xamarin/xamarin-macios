@@ -128,7 +128,13 @@ COMMON_DYLIB_ARGS=-g -dynamiclib -gdwarf-2 -fms-extensions libframework.m -o $$@
 	$(Q) rm -f $$@
 	$$(call Q_2,LIPO   [$(1)]) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo $$^ -create -output $$@
 
-.libs/$(1)/XTest.framework .libs/$(1)/XStaticObjectTest.framework .libs/$(1)/XStaticArTest.framework:
+$(1)_DIRECTORIES = \
+	.libs/$(1)/XTest.framework \
+	.libs/$(1)/XTest.framework/Versions \
+	.libs/$(1)/XStaticObjectTest.framework \
+	.libs/$(1)/XStaticArTest.framework \
+
+$$($(1)_DIRECTORIES):
 	$$(Q) mkdir -p $$@
 
 endef
