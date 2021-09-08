@@ -22,13 +22,4 @@
 !missing-field! kAudioSessionOutputRoute_Headphones not bound
 !missing-field! kAudioSessionOutputRoute_LineOut not bound
 !missing-field! kAudioSessionOutputRoute_USBAudio not bound
-!missing-pinvoke! AudioComponentCopyConfigurationInfo is not bound
-!missing-pinvoke! AudioComponentValidate is not bound
 !missing-pinvoke! AudioSessionRemovePropertyListenerWithUserData is not bound
-!missing-pinvoke! MusicDevicePrepareInstrument is not bound
-!missing-pinvoke! MusicDeviceReleaseInstrument is not bound
-!missing-pinvoke! MusicSequenceLoadSMFDataWithFlags is not bound
-!missing-pinvoke! MusicSequenceLoadSMFWithFlags is not bound
-!missing-pinvoke! MusicSequenceSaveMIDIFile is not bound
-!missing-pinvoke! MusicSequenceSaveSMFData is not bound
-!missing-pinvoke! NewMusicTrackFrom is not bound

@@ -9,11 +9,16 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using Foundation;
 using ObjCRuntime;
 
 namespace EventKitUI {
+#if !NET
 	[iOS (11,0)]
+#else
+	[SupportedOSPlatform ("ios11.0")]
+#endif
 	public static class EKUIBundle {
 
 		[DllImport (Constants.EventKitUILibrary)]

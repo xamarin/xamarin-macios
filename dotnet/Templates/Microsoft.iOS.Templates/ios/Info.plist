@@ -12,8 +12,6 @@
     <string>1.0</string>
     <key>LSRequiresIPhoneOS</key>
     <true/>
-    <key>MinimumOSVersion</key>
-        <string>minOSVersion</string>
     <key>UIDeviceFamily</key>
     <array>
         <!--#if((deviceFamily == "iphone") || (deviceFamily == "universal"))
