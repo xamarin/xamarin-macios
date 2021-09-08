@@ -483,12 +483,16 @@ namespace CoreGraphics {
 			}
 		}
 
+#if !NET
 		[iOS (9,0)][Mac (10,11)]
+#endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern IntPtr /* CFStringRef */ CGImageGetUTType (/* __nullable CGImageRef* */ IntPtr image);
 
 		// we return an NSString, instead of a string, as all our UTType constants are NSString (see mobilecoreservices.cs)
+#if !NET
 		[iOS (9,0)][Mac (10,11)]
+#endif
 		public NSString UTType {
 			get {
 				var h = CGImageGetUTType (handle);
@@ -496,18 +500,38 @@ namespace CoreGraphics {
 			}
 		}
 
+#if !NET
 		[iOS (12,0), Mac(10,14)][TV(12,0)][Watch(5,0)]
+#else
+		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("tvos12.0")]
+#endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern CGImagePixelFormatInfo CGImageGetPixelFormatInfo (/* __nullable CGImageRef */ IntPtr handle);
 		
+#if !NET
 		[iOS (12,0), Mac(10,14)][TV(12,0)][Watch(5,0)]
+#else
+		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("tvos12.0")]
+#endif
 		public CGImagePixelFormatInfo PixelFormatInfo => CGImageGetPixelFormatInfo (handle);
 			
+#if !NET
 		[iOS (12,0), Mac(10,14)][TV(12,0)][Watch(5,0)]
+#else
+		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("tvos12.0")]
+#endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern CGImageByteOrderInfo CGImageGetByteOrderInfo (/* __nullable CGImageRef */ IntPtr handle);
 
+#if !NET
 		[iOS (12,0), Mac(10,14)][TV(12,0)][Watch(5,0)]
+#else
+		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("tvos12.0")]
+#endif
 		public CGImageByteOrderInfo ByteOrderInfo => CGImageGetByteOrderInfo (handle);
 		
 #endif // !COREBUILD
