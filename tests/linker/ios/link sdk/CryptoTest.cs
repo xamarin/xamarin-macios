@@ -183,7 +183,7 @@ namespace LinkSdk {
 
 			chain.ChainPolicy.RevocationMode = X509RevocationMode.NoCheck;
 			Assert.True (chain.Build (cert), "NoCheck");
-			Assert.True (chain.ChainStatus.Length == 0, "NoCheck");
+			Assert.AreEqual (0, chain.ChainStatus.Length, "NoCheck");
 		}
 
 		byte[] sha256_data = {
