@@ -30,7 +30,7 @@ namespace CloudKit {
 		[Obsoleted (PlatformName.iOS, 9,3, message: "Do not use; this API was removed and will always return 0.")]
 #else
 #if IOS
-		[Obsolete ("Starting with ios9.3 do not use; this API was removed and will always return 0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Do not use; this API was removed and will always return 0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 		public virtual ulong ActivityStart ()
@@ -45,9 +45,9 @@ namespace CloudKit {
 		[UnsupportedOSPlatform ("ios9.0")]
 		[UnsupportedOSPlatform ("macos10.11")]
 #if IOS
-		[Obsolete ("Starting with ios9.0 empty stub (rejected by Apple). Use 'QualityOfService' property.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Empty stub (rejected by Apple). Use 'QualityOfService' property.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif MONOMAC
-		[Obsolete ("Starting with macos10.11 empty stub (rejected by Apple). Use 'QualityOfService' property.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[Obsolete ("Empty stub (rejected by Apple). Use 'QualityOfService' property.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
 		public virtual bool UsesBackgroundSession { get; set; }
@@ -106,7 +106,9 @@ namespace CloudKit {
 #if !NET
 	[Obsoleted (PlatformName.iOS, 14, 0, message : "Use 'CKDiscoverUserIdentitiesOperation' instead.")]
 #else
-	[Obsolete ("Starting with ios14.0 use 'CKDiscoverUserIdentitiesOperation' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#if IOS
+	[Obsolete ("Use 'CKDiscoverUserIdentitiesOperation' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
 #endif
 	public partial class CKDiscoverUserInfosOperation : CKOperation { 
 
