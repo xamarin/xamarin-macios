@@ -62,7 +62,7 @@ $(2)_TARGETS = \
 
 all-local:: $$($(2)_TARGETS) $(GENERATED_FILES)
 
-.libs/$(1)/XTest.framework.stamp: $($(1)_XTEST_TARGETS)
+.libs/$(1)/XTest.framework.stamp: $$($(1)_XTEST_TARGETS)
 	$$(Q) touch $$@
 
 clean-$(1):
