@@ -6,7 +6,5 @@
     <string>DontLinkTest</string>
     <key>CFBundleIdentifier</key>
     <string>com.xamarin.dontlink</string>
-    <key>LSMinimumSystemVersion</key>
-    <string>10.15</string>
   </dict>
 </plist>
