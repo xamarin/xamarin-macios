@@ -8,6 +8,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using Foundation;
 using CoreFoundation;
@@ -457,19 +458,103 @@ namespace CoreMedia {
 			return new CMClock (ptr, deprecated);
 		}
 
+#if !NET
 		[iOS (9,0)][Mac (10,11)]
+		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'CMTimebaseGetMasterTimebase' instead.")]
+		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'CMTimebaseGetMasterTimebase' instead.")] 
+		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use 'CMTimebaseGetMaster' instead.")]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'CMTimebaseGetMasterTimebase' instead.")]
+		[Deprecated (PlatformName.WatchOS, 8, 0, message:  "Use 'CMTimebaseGetMasterTimebase' instead.")]
+#else
+		[UnsupportedOSPlatform ("ios15.0")]
+		[UnsupportedOSPlatform ("tvos15.0")]
+		[UnsupportedOSPlatform ("maccatalyst15.0")]
+		[UnsupportedOSPlatform ("macos12.0")]
+#if __MACCATALYST__
+		[Obsolete ("Starting with maccatalyst15.0 Use 'CMTimebaseGetMasterTimebase' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios9.0 Use 'CMTimebaseGetMasterTimebase' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos9.0 Use 'CMTimebaseGetMasterTimebase' instead.' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+		[Obsolete ("Starting with macos12.0 Use 'CMTimebaseGetMasterTimebase' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		[DllImport(Constants.CoreMediaLibrary)]
 		static extern unsafe /* CMTimebaseRef */ IntPtr  CMTimebaseCopyMasterTimebase (/* CMTimebaseRef */ IntPtr timebase);
 
+#if !NET
 		[iOS (9,0)][Mac (10,11)]
+		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'CMTimebaseGetMasterClock' instead.")]
+		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'CMTimebaseGetMasterClock' instead.")] 
+		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use 'CMTimebaseGetMasterClock' instead.")]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'CMTimebaseGetMasterClock' instead.")]
+		[Deprecated (PlatformName.WatchOS, 8, 0, message:  "Use 'CMTimebaseGetMasterClock' instead.")]
+#else
+		[UnsupportedOSPlatform ("ios15.0")]
+		[UnsupportedOSPlatform ("tvos15.0")]
+		[UnsupportedOSPlatform ("maccatalyst15.0")]
+		[UnsupportedOSPlatform ("macos12.0")]
+#if __MACCATALYST__
+		[Obsolete ("Starting with maccatalyst15.0 Use 'CMTimebaseGetMasterClock' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios15.0 Use 'CMTimebaseGetMasterClock' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos15.0 Use 'CMTimebaseGetMasterClock' instead.' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+		[Obsolete ("Starting with macos12.0 Use 'CMTimebaseGetMasterClock' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		[DllImport(Constants.CoreMediaLibrary)]
 		static extern unsafe /* CMClockRef */ IntPtr  CMTimebaseCopyMasterClock (/* CMTimebaseRef */ IntPtr timebase);
 
+#if !NET
 		[iOS (9,0)][Mac (10,11)]
+		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'CMTimebaseGetMaster' instead.")]
+		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'CMTimebaseGetMaster' instead.")] 
+		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use 'CMTimebaseGetMaster' instead.")]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'CMTimebaseGetMaster' instead.")]
+		[Deprecated (PlatformName.WatchOS, 8, 0, message:  "Use 'CMTimebaseGetMaster' instead.")]
+#else
+		[UnsupportedOSPlatform ("ios15.0")]
+		[UnsupportedOSPlatform ("tvos15.0")]
+		[UnsupportedOSPlatform ("maccatalyst15.0")]
+		[UnsupportedOSPlatform ("macos12.0")]
+#if __MACCATALYST__
+		[Obsolete ("Starting with maccatalyst15.0 Use 'CMTimebaseGetMaster' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios15.0 Use 'CMTimebaseGetMaster' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos15.0 Use 'CMTimebaseGetMaster' instead.' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+		[Obsolete ("Starting with macos12.0 Use 'CMTimebaseGetMaster' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		[DllImport(Constants.CoreMediaLibrary)]
 		static extern unsafe IntPtr /* void* */ CMTimebaseCopyMaster (/* CMTimebaseRef */ IntPtr timebase);
 
+#if !NET
 		[iOS (9,0)][Mac (10,11)]
+		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'CMTimebaseGetUltimateMasterClock' instead.")]
+		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'CMTimebaseGetUltimateMasterClock' instead.")] 
+		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use 'CMTimebaseGetUltimateMasterClock' instead.")]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'CMTimebaseGetUltimateMasterClock' instead.")]
+		[Deprecated (PlatformName.WatchOS, 8, 0, message:  "Use 'CMTimebaseGetUltimateMasterClock' instead.")]
+#else
+		[UnsupportedOSPlatform ("ios15.0")]
+		[UnsupportedOSPlatform ("tvos15.0")]
+		[UnsupportedOSPlatform ("maccatalyst15.0")]
+		[UnsupportedOSPlatform ("macos12.0")]
+#if __MACCATALYST__
+		[Obsolete ("Starting with maccatalyst15.0 Use 'CMTimebaseGetUltimateMasterClock' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios15.0 Use 'CMTimebaseGetUltimateMasterClock' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos15.0 Use 'CMTimebaseGetUltimateMasterClock' instead.' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+		[Obsolete ("Starting with macos12.0 Use 'CMTimebaseGetUltimateMasterClock' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		[DllImport(Constants.CoreMediaLibrary)]
 		static extern unsafe /* CMClockRef */ IntPtr CMTimebaseCopyUltimateMasterClock (/* CMTimebaseRef */ IntPtr timebase);
 #endif
