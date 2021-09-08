@@ -151,9 +151,9 @@ namespace CoreVideo {
 			if (key == null)
 				throw new ArgumentNullException ("key");
 			if (PlatformHelper.CheckSystemVersion (12, 0))
-				return Runtime.GetINativeObject<NSObject> (CVBufferCopyAttachment (handle, key.Handle, out attachmentMode), true);
+				return Runtime.GetNSObject<NSObject> (CVBufferCopyAttachment (handle, key.Handle, out attachmentMode), true);
 			else
-				return Runtime.GetINativeObject<NSObject> (CVBufferGetAttachment (handle, key.Handle, out attachmentMode), false);
+				return Runtime.GetNSObject<NSObject> (CVBufferGetAttachment (handle, key.Handle, out attachmentMode), false);
 		}
 #endif
 
@@ -179,7 +179,7 @@ namespace CoreVideo {
 			if (PlatformHelper.CheckSystemVersion (12, 0))
 #endif
 				return Runtime.GetINativeObject<NSDictionary> (CVBufferCopyAttachments (handle, attachmentMode), true);
-			return Runtime.GetINativeObject<NSDictionary> (CVBufferGetAttachments (handle, attachmentMode), false);
+			return Runtime.GetNSObject<NSDictionary> (CVBufferGetAttachments (handle, attachmentMode), false);
 		}
 
 		// There is some API that needs a more strongly typed version of a NSDictionary
@@ -246,7 +246,7 @@ namespace CoreVideo {
 #endif
 		public bool HasAttachment (NSString key)
 		{
-			if (key == null)
+			if (key is null)
 				throw new ArgumentNullException (nameof (key));
 			return CVBufferHasAttachment (handle, key.Handle);
 		}
