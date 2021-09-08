@@ -108,7 +108,6 @@ namespace CloudKit {
 #else
 	[Obsolete ("Starting with ios14.0 use 'CKDiscoverUserIdentitiesOperation' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
-#endif
 	public partial class CKDiscoverUserInfosOperation : CKOperation { 
 
 		public CKDiscoverUserInfosOperation () : base () { }
