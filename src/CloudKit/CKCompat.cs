@@ -26,14 +26,30 @@ namespace CloudKit {
 #if !XAMCORE_4_0 && !WATCH
 	public partial class CKOperation {
 
+#if !NET
 		[Obsoleted (PlatformName.iOS, 9,3, message: "Do not use; this API was removed and will always return 0.")]
+#else
+#if IOS
+		[Obsolete ("Starting with ios9.3 do not use; this API was removed and will always return 0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		public virtual ulong ActivityStart ()
 		{
 			return 0;
 		}
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 9,0, message: "Empty stub (rejected by Apple). Use 'QualityOfService' property.")]
 		[Deprecated (PlatformName.MacOSX, 10,11, message: "Empty stub (rejected by Apple). Use 'QualityOfService' property.")]
+#else
+		[UnsupportedOSPlatform ("ios9.0")]
+		[UnsupportedOSPlatform ("macos10.11")]
+#if IOS
+		[Obsolete ("Starting with ios9.0 empty stub (rejected by Apple). Use 'QualityOfService' property.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+		[Obsolete ("Starting with macos10.11 empty stub (rejected by Apple). Use 'QualityOfService' property.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		public virtual bool UsesBackgroundSession { get; set; }
 	}
 
@@ -81,11 +97,18 @@ namespace CloudKit {
 	}
 #endif
 
+#if !NET
 	[iOS (8,0), Mac (10,10)]
+#endif
 	public delegate void CKDiscoverUserInfosCompletionHandler (NSDictionary emailsToUserInfos, NSDictionary userRecordIdsToUserInfos, NSError operationError);
 
 #if !WATCH	
+#if !NET
 	[Obsoleted (PlatformName.iOS, 14, 0, message : "Use 'CKDiscoverUserIdentitiesOperation' instead.")]
+#else
+	[Obsolete ("Starting with ios14.0 use 'CKDiscoverUserIdentitiesOperation' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 	public partial class CKDiscoverUserInfosOperation : CKOperation { 
 
 		public CKDiscoverUserInfosOperation () : base () { }
@@ -98,7 +121,9 @@ namespace CloudKit {
 		protected CKDiscoverUserInfosOperation (IntPtr handle)
 			=> throw new NotSupportedException ();
 
+#if !NET
 		[iOS (8,0), Mac (10,10)]
+#endif
 		[Obsolete ("Empty stub (not a public API).")]
 		public virtual CKDiscoverUserInfosCompletionHandler Completed { get; set; }
 
@@ -135,8 +160,12 @@ namespace CloudKit {
 
 #if MONOMAC || IOS
 	public partial class CKDiscoveredUserInfo {
+#if !NET
 		[iOS (9,0)][Mac (10,11)]
 		[Obsolete ("Empty stub (not public API).")]
+#else
+		[Obsolete ("Empty stub (not public API).", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
 		public virtual CNContact DisplayContact { get; }
 
 #if NET
