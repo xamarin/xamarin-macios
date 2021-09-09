@@ -9309,7 +9309,7 @@ namespace AVFoundation {
 		AVMetadataObject GetTransformedMetadataObject (AVMetadataObject metadataObject, AVCaptureConnection connection);
 	}
 
-	[NoiOS, NoTV, NoWatch, MacCatalyst (15,0)]
+	[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 	[BaseType (typeof (AVCaptureInput))]
 	interface AVCaptureScreenInput {
 		[Export ("initWithDisplayID:")]
@@ -10823,11 +10823,11 @@ namespace AVFoundation {
 		[Export ("manufacturer")]
 		string Manufacturer { get; }
 
-		[NoiOS, NoWatch, MacCatalyst (15,0)]
+		[NoiOS, NoWatch, NoMacCatalyst]
 		[Export ("transportControlsSpeed")]
 		float TransportControlsSpeed { get; } // float intended
 
-		[NoiOS, NoWatch, MacCatalyst (15,0)]
+		[NoiOS, NoWatch, NoMacCatalyst]
 		[Export ("transportControlsSupported")]
 		bool TransportControlsSupported { get; }
 
@@ -10837,20 +10837,16 @@ namespace AVFoundation {
 		[Export ("transportType")]
 		int WeakTransportType { get; } // int intended
 
-#if MONOMAC || __MACCATALYST__ // Can't use [NoiOS] since types are also inside a block
-		[MacCatalyst (15,0)]
+#if MONOMAC // Can't use [NoiOS] since types are also inside a block
 		[NullAllowed, Export ("activeInputSource", ArgumentSemantic.Retain)]
 		AVCaptureDeviceInputSource ActiveInputSource { get; set; }
 
-		[MacCatalyst (15,0)]
 		[Export ("inputSources")]
 		AVCaptureDeviceInputSource [] InputSources { get; }
 
-		[MacCatalyst (15,0)]
 		[Export ("setTransportControlsPlaybackMode:speed:")]
 		void SetTransportControlsPlaybackMode (AVCaptureDeviceTransportControlsPlaybackMode mode, float speed); // Float intended
 
-		[MacCatalyst (15,0)]
 		[Export ("transportControlsPlaybackMode")]
 		AVCaptureDeviceTransportControlsPlaybackMode TransportControlsPlaybackMode { get; }
 #endif
@@ -13521,17 +13517,20 @@ namespace AVFoundation {
 	[DisableDefaultCtor] // not meant to be user createable
 	interface AVAssetDownloadTask {
 		
+		[NoMac]
 		[Export ("URLAsset")]
 		AVUrlAsset UrlAsset { get; }
 
 		[Availability (Deprecated = Platform.iOS_10_0)]
-		[NoMacCatalyst]
+		[NoMacCatalyst, NoMac]
 		[Export ("destinationURL")]
 		NSUrl DestinationUrl { get; }
 
+		[NoMac]
 		[NullAllowed, Export ("options")]
 		NSDictionary<NSString, NSObject> Options { get; }
 
+		[NoMac]
 		[Export ("loadedTimeRanges")]
 		NSValue[] LoadedTimeRanges { get; }
 
@@ -15192,7 +15191,6 @@ namespace AVFoundation {
 
 	[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
 	[Protocol]
-	[BaseType (typeof(NSObject))]
 	interface AVAssetReaderCaptionValidationHandling
 	{
 		[Export ("captionAdaptor:didVendCaption:skippingUnsupportedSourceSyntaxElements:")]
@@ -15328,6 +15326,7 @@ namespace AVFoundation {
 	}
 
 	[NoWatch, NoTV, NoiOS, Mac (12,0)]
+	[DisableDefaultCtor]
 	[BaseType (typeof(AVCaption))]
 	interface AVMutableCaption
 	{
