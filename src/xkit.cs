@@ -3029,14 +3029,16 @@ namespace UIKit {
 	interface INSTextLayoutManagerDelegate {}
 
 	[TV (15,0), NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[DisableDefaultCtor]
+	delegate bool NSTextLayoutManagerEnumerateRenderingAttributesDelegate (NSTextLayoutManager textLayoutManager, NSDictionary<NSString, NSObject> attributes, NSTextRange textRange);
+
+	[TV (15,0), NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	delegate bool NSTextLayoutManagerEnumerateTextSegmentsDelegate (NSTextRange textSegmentRange, CGRect textSegmentFrame, nfloat baselinePosition, NSTextContainer textContainer);
+
+	[TV (15,0), NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[DesignatedDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface NSTextLayoutManager : NSSecureCoding, NSTextSelectionDataSource
 	{
-		[DesignatedInitializer]
-		[Export ("init")]
-		IntPtr Constructor ();
-
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
 		INSTextLayoutManagerDelegate Delegate { get; set; }
@@ -3099,7 +3101,7 @@ namespace UIKit {
 		NSTextSelectionNavigation TextSelectionNavigation { get; set; }
 
 		[Export ("enumerateRenderingAttributesFromLocation:reverse:usingBlock:")]
-		void EnumerateRenderingAttributes (INSTextLocation location, bool reverse, Func<NSTextLayoutManager, NSDictionary<NSString, NSObject>, NSTextRange, bool> handler);
+		void EnumerateRenderingAttributes (INSTextLocation location, bool reverse, NSTextLayoutManagerEnumerateRenderingAttributesDelegate handler);
 
 		[Export ("setRenderingAttributes:forTextRange:")]
 		void SetRenderingAttributes (NSDictionary<NSString, NSObject> renderingAttributes, NSTextRange textRange);
@@ -3124,7 +3126,7 @@ namespace UIKit {
 		NSDictionary<NSString, NSObject> GetRenderingAttributes (NSObject link, INSTextLocation location);
 
 		[Export ("enumerateTextSegmentsInRange:type:options:usingBlock:")]
-		void EnumerateTextSegments (NSTextRange textRange, NSTextLayoutManagerSegmentType type, NSTextLayoutManagerSegmentOptions options, Func<NSTextRange, CGRect, nfloat, NSTextContainer, bool> handler);
+		void EnumerateTextSegments (NSTextRange textRange, NSTextLayoutManagerSegmentType type, NSTextLayoutManagerSegmentOptions options, NSTextLayoutManagerEnumerateTextSegmentsDelegate  handler);
 
 		[Export ("replaceContentsInRange:withTextElements:")]
 		void ReplaceContents (NSTextRange range, NSTextElement[] textElements);
@@ -3223,7 +3225,7 @@ namespace UIKit {
 		void SynchronizeTextLayoutManagers ([NullAllowed] Action<NSError> completionHandler);
 
 		[Export ("textElementsForRange:")]
-		NSTextElement[] TextElementsForRange (NSTextRange range);
+		NSTextElement[] GetTextElements (NSTextRange range);
 
 		[Export ("hasEditingTransaction")]
 		bool HasEditingTransaction { get; }
@@ -3248,7 +3250,6 @@ namespace UIKit {
 	[Protocol]
 	interface NSTextLocation
 	{
-		[TV (15,0), NoWatch, Mac (12,0), iOS (15,0)]
 		[Abstract]
 		[Export ("compare:")]
 		NSComparisonResult Compare (INSTextLocation location);
