@@ -223,7 +223,8 @@ stages:
 
 - stage: governance_checks
   displayName: 'Governance Checks'
-  dependsOn: []
+  dependsOn:
+  - build_packages
   jobs:
     - job: governance
       displayName: 'Governance Checks'
@@ -234,8 +235,7 @@ stages:
 
 - stage: build_packages
   displayName: 'Build'
-  dependsOn:
-  - build_packages
+  dependsOn: []
   jobs:
     - template: templates/build/stage.yml
       parameters:
