@@ -294,14 +294,14 @@ stages:
 - ${{ if eq(variables['Build.Reason'], 'Schedule') }}: 
   - template: templates/devices/stage.yml
     parameters:
-      devicePrefix: 'iOS32b',
-      execute: 'runDevice32b',
-      stageName: 'ios32b_device',
-      displayName: 'iOS32b Device Tests',
-      iOSDevicePool: 'VSEng-Xamarin-QA',
-      useXamarinStorage: False,
-      testsLabels: '--label=run-ios-32-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests',
-      statusContext: 'VSTS: device tests iOS32b',
+      devicePrefix: 'iOS32b'
+      execute: 'runDevice32b'
+      stageName: 'ios32b_device'
+      displayName: 'iOS32b Device Tests'
+      iOSDevicePool: 'VSEng-Xamarin-QA'
+      useXamarinStorage: False
+      testsLabels: '--label=run-ios-32-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests'
+      statusContext: 'VSTS: device tests iOS32b'
       iOSDeviceDemand: 'xismoke-32'
       vsdropsPrefix: ${{ variables.vsdropsPrefix }}
       keyringPass: $(pass--lab--mac--builder--keychain)
