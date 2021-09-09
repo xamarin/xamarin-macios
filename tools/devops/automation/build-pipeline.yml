@@ -290,7 +290,7 @@ stages:
 # iOS 32b tests are slow and do not have many machines, for that reason we are going just to run them in the Schedule builds.
 # This means we are going to get the translations AND the iOS 32b on those builds.
 #
-- ${{ if and(eq(variables['Build.Reason'], 'Schedule') }}: 
+- ${{ if eq(variables['Build.Reason'], 'Schedule') }}: 
   - template: templates/devices/stage.yml
     parameters:
       devicePrefix: 'iOS32b',
