@@ -85,5 +85,57 @@ namespace Xamarin.iOS.Tasks {
 			var plist = PDictionary.FromFile (task.CompiledAppManifest.ItemSpec);
 			Assert.AreEqual ("13.0", plist.GetMinimumOSVersion (), "MinimumOSVersion");
 		}
+
+		[Test]
+		public void ErrorWithMismatchedInfoPlistMinimumOSVersion ()
+		{
+			var dir = Cache.CreateTemporaryDirectory ();
+			var task = CreateTask (dir);
+
+			var plist = new PDictionary ();
+			plist.SetMinimumOSVersion ("10.0");
+			var manifest = Path.Combine (dir, "Info.plist");
+			plist.Save (manifest);
+			task.AppManifest = manifest;
+			task.SupportedOSPlatformVersion = "11.0";
+
+			ExecuteTask (task, expectedErrorCount: 1);
+			Assert.AreEqual ("The MinimumOSVersion value in the Info.plist (10.0) does not match the SupportedOSPlatformVersion value in the project file (11.0).", Engine.Logger.ErrorEvents [0].Message);
+		}
+
+		[Test]
+		public void SupportedOSPlatformVersion ()
+		{
+			var dir = Cache.CreateTemporaryDirectory ();
+			var task = CreateTask (dir);
+
+			task.SupportedOSPlatformVersion = "11.0";
+
+			ExecuteTask (task);
+
+			var plist = PDictionary.FromFile (task.CompiledAppManifest.ItemSpec);
+			Assert.AreEqual ("11.0", plist.GetMinimumOSVersion (), "MinimumOSVersion");
+		}
+
+		[Test]
+		public void MacCatalystVersionCheck ()
+		{
+			var task = CreateTask (platform: ApplePlatform.MacCatalyst);
+			task.SupportedOSPlatformVersion = "14.2";
+			ExecuteTask (task);
+
+			var plist = PDictionary.FromFile (task.CompiledAppManifest.ItemSpec);
+			Assert.AreEqual ("11.0", plist.GetMinimumSystemVersion (), "MinimumOSVersion");
+		}
+
+		[Test]
+		public void MacCatalystVersionCheckUnmappedError ()
+		{
+			var task = CreateTask (platform: ApplePlatform.MacCatalyst);
+			task.SupportedOSPlatformVersion = "10.0";
+
+			ExecuteTask (task, expectedErrorCount: 1);
+			Assert.AreEqual ("Could not map the iOS version 10.0 to a corresponding macOS version", Engine.Logger.ErrorEvents [0].Message);
+		}
 	}
 }

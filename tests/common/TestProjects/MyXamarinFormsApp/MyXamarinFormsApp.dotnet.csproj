@@ -5,6 +5,7 @@
     <RuntimeIdentifier>iossimulator-x64</RuntimeIdentifier>
     <OutputType>Exe</OutputType>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <SupportedOSPlatformVersion>10.0</SupportedOSPlatformVersion>
   </PropertyGroup>
 
   <PropertyGroup>

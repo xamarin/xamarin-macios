@@ -11,6 +11,7 @@ using System;
 using System.Reflection;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 
@@ -71,7 +72,9 @@ namespace Foundation {
 			return ret;
 		}
 
+#if !NET
 		[iOS (9,0), Mac(10,11)]
+#endif
 		public unsafe nuint [] GetIndexes (NSRange range)
 		{
 			var ret = new nuint [range.Length];

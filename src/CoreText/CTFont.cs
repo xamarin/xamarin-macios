@@ -30,6 +30,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using CoreFoundation;
@@ -175,8 +176,13 @@ namespace CoreText {
 		AllTypographicFeatures   = 0,
 		Ligatures                = 1,
 		CursiveConnection        = 2,
+#if !NET
 		[Deprecated (PlatformName.iOS, 6, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 7)]
+#else
+		[UnsupportedOSPlatform ("ios6.0")]
+		[UnsupportedOSPlatform ("macos10.7")]
+#endif
 		LetterCase               = 3,
 		VerticalSubstitution     = 4,
 		LinguisticRearrangement  = 5,
@@ -468,8 +474,13 @@ namespace CoreText {
 		}
 	}
 
+#if !NET
 	[Deprecated (PlatformName.iOS, 6, 0)]
 	[Deprecated (PlatformName.MacOSX, 10, 7)]
+#else
+	[UnsupportedOSPlatform ("ios6.0")]
+	[UnsupportedOSPlatform ("macos10.7")]
+#endif
 	public class CTFontFeatureLetterCase : CTFontFeatureSelectors
 	{
 		public enum Selector
@@ -1045,11 +1056,21 @@ namespace CoreText {
 	{
 		public enum Selector
 		{
+#if !NET
 			[Deprecated (PlatformName.iOS, 5, 1)]
 			[Deprecated (PlatformName.MacOSX, 10, 8)]
+#else
+			[UnsupportedOSPlatform ("ios5.1")]
+			[UnsupportedOSPlatform ("macos10.8")]
+#endif
 			NoRubyKana           = 0,
+#if !NET
 			[Deprecated (PlatformName.iOS, 5, 1)]
 			[Deprecated (PlatformName.MacOSX, 10, 8)]
+#else
+			[UnsupportedOSPlatform ("ios5.1")]
+			[UnsupportedOSPlatform ("macos10.8")]
+#endif
 			RubyKana             = 1,
 			RubyKanaOn           = 2,
 			RubyKanaOff          = 3
@@ -1139,11 +1160,21 @@ namespace CoreText {
 	{
 		public enum Selector
 		{
+#if !NET
 			[Deprecated (PlatformName.iOS, 5, 1)]
 			[Deprecated (PlatformName.MacOSX, 10, 8)]
+#else
+			[UnsupportedOSPlatform ("ios5.1")]
+			[UnsupportedOSPlatform ("macos10.8")]
+#endif
 			NoCJKItalicRoman     = 0,
+#if !NET
 			[Deprecated (PlatformName.iOS, 5, 1)]
 			[Deprecated (PlatformName.MacOSX, 10, 8)]
+#else
+			[UnsupportedOSPlatform ("ios5.1")]
+			[UnsupportedOSPlatform ("macos10.8")]
+#endif
 			CJKItalicRoman       = 1,
 			CJKItalicRomanOn     = 2,
 			CJKItalicRomanOff    = 3
@@ -1417,7 +1448,12 @@ namespace CoreText {
 			set {Adapter.SetValue (Dictionary, CTFontVariationAxisKey.Name, value);}
 		}
 
+#if !NET
 		[iOS (11,0), Mac (10,13), Watch (4,0), TV (11,0)]
+#else
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+#endif
 		public bool? Hidden {
 			get { return Adapter.GetBoolValue (Dictionary, CTFontVariationAxisKey.Hidden); }
 			set { Adapter.SetValue (Dictionary, CTFontVariationAxisKey.Hidden, value); }
@@ -1486,11 +1522,15 @@ namespace CoreText {
 				throw ConstructorError.Unknown (this);
 		}
 
+#if !NET
 		[iOS (7,0)] // documented as 3.2 but it's wrong (see unit tests)
+#endif
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontCreateWithNameAndOptions (IntPtr name, nfloat size, IntPtr matrix, nuint options);
 
+#if !NET
 		[iOS (7,0)] // documented as 3.2 but it's wrong (see unit tests)
+#endif
 		public CTFont (string name, nfloat size, CTFontOptions options)
 		{
 			if (name == null)
@@ -1501,11 +1541,15 @@ namespace CoreText {
 				throw ConstructorError.Unknown (this);
 		}
 
+#if !NET
 		[iOS (7,0)] // documented as 3.2 but it's wrong (see unit tests)
+#endif
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontCreateWithNameAndOptions (IntPtr name, nfloat size, ref CGAffineTransform matrix, nuint options);
 
+#if !NET
 		[iOS (7,0)] // documented as 3.2 but it's wrong (see unit tests)
+#endif
 		public CTFont (string name, nfloat size, ref CGAffineTransform matrix, CTFontOptions options)
 		{
 			if (name == null)
@@ -1516,11 +1560,15 @@ namespace CoreText {
 				throw ConstructorError.Unknown (this);
 		}
 
+#if !NET
 		[iOS (7,0)] // documented as 3.2 but it's wrong (see unit tests)
+#endif
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontCreateWithFontDescriptorAndOptions (IntPtr descriptor, nfloat size, IntPtr matrix, nuint options);
 
+#if !NET
 		[iOS (7,0)] // documented as 3.2 but it's wrong (see unit tests)
+#endif
 		public CTFont (CTFontDescriptor descriptor, nfloat size, CTFontOptions options)
 		{
 			if (descriptor == null)
@@ -1531,11 +1579,15 @@ namespace CoreText {
 				throw ConstructorError.Unknown (this);
 		}
 
+#if !NET
 		[iOS (7,0)] // documented as 3.2 but it's wrong (see unit tests)
+#endif
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontCreateWithFontDescriptorAndOptions (IntPtr descriptor, nfloat size, ref CGAffineTransform matrix, nuint options);
 
+#if !NET
 		[iOS (7,0)] // documented as 3.2 but it's wrong (see unit tests)
+#endif
 		public CTFont (CTFontDescriptor descriptor, nfloat size, CTFontOptions options, ref CGAffineTransform matrix)
 		{
 			if (descriptor == null)
@@ -1677,7 +1729,13 @@ namespace CoreText {
 				return CreateFont (CTFontCreateForString (handle, v.Handle, range));
 		}
 
+#if !NET
 		[iOS (13,0), Mac (10,15), TV (13,0), Watch (6,0)]
+#else
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+#endif
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern /* CTFontRef */ IntPtr CTFontCreateForStringWithLanguage (
 			/* CTFontRef */ IntPtr currentFont,
@@ -1685,7 +1743,13 @@ namespace CoreText {
 			NSRange range,
 			/* CFStringRef _Nullable */ IntPtr language);
 
+#if !NET
 		[iOS (13,0), Mac (10,15), TV (13,0), Watch (6,0)]
+#else
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+#endif
 		public CTFont ForString (string value, NSRange range, string language)
 		{
 			if (value == null)
@@ -1864,11 +1928,23 @@ namespace CoreText {
 			return GetGlyphsForCharacters (characters, glyphs, Math.Min (characters.Length, glyphs.Length));
 		}
 
+#if !NET
 		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+#else
+		[SupportedOSPlatform ("ios14.0")]
+		[SupportedOSPlatform ("tvos14.0")]
+		[SupportedOSPlatform ("macos11.0")]
+#endif
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern unsafe /* CFStringRef _Nullable */ IntPtr CTFontCopyNameForGlyph (/* CTFontRef */ IntPtr font, CGGlyph glyph);
 
+#if !NET
 		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+#else
+		[SupportedOSPlatform ("ios14.0")]
+		[SupportedOSPlatform ("tvos14.0")]
+		[SupportedOSPlatform ("macos11.0")]
+#endif
 		public string GetGlyphName (CGGlyph glyph)
 		{
 			return CFString.FromHandle (CTFontCopyNameForGlyph (handle, glyph), releaseHandle: true);

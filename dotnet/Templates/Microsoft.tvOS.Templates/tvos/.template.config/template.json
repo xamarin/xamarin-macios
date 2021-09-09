@@ -31,7 +31,7 @@
     },
     "minOSVersion": {
       "type": "parameter",
-      "description": "Overrides MinimumOSVersion in the Info.plist",
+      "description": "Overrides SupportedOSPlatformVersion in the project file",
       "replaces": "minOSVersion",
       "datatype": "string",
       "defaultValue": "11.2"
