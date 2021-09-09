@@ -234,7 +234,8 @@ stages:
 
 - stage: build_packages
   displayName: 'Build'
-  dependsOn: []
+  dependsOn:
+  - build_packages
   jobs:
     - template: templates/build/stage.yml
       parameters:
