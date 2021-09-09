@@ -956,14 +956,11 @@
 			_ReadAppManifest;
 			_WriteAppManifest;
 			_CompileNativeExecutable;
+			_ComputeLinkNativeExecutableInputs;
 		</_LinkNativeExecutableDependsOn>
 	</PropertyGroup>
 
-	<Target Name="_LinkNativeExecutable"
-			DependsOnTargets="$(_LinkNativeExecutableDependsOn)"
-			Inputs="@(_NativeExecutableObjectFiles)"
-			Outputs="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName)"
-		>
+	<Target Name="_ComputeLinkNativeExecutableInputs">
 		<ItemGroup>
 			<_XamarinMainLibraries Include="$(_XamarinNativeLibraryDirectory)/$(_LibXamarinName)" />
 			<!-- Link with the libraries shipped with the mono runtime pack -->
@@ -980,7 +977,18 @@
 			<!-- Mono requires zlib and iconv -->
 			<_MainLinkerFlags Include="-lz" />
 			<_MainLinkerFlags Include="-liconv" />
+
+			<!-- Here we must add all the files that should make us (re-)link the executable -->
+			<_LinkNativeExecutableInputs Include="@(_NativeExecutableObjectFiles)" />
+			<_LinkNativeExecutableInputs Include="@(_XamarinMainLibraries)" />
 		</ItemGroup>
+	</Target>
+
+	<Target Name="_LinkNativeExecutable"
+			DependsOnTargets="$(_LinkNativeExecutableDependsOn)"
+			Inputs="@(_LinkNativeExecutableInputs)"
+			Outputs="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName)"
+		>
 
 		<LinkNativeCode
 			SessionId="$(BuildSessionId)"
