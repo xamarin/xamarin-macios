@@ -3319,7 +3319,7 @@ namespace UIKit {
 		void Draw (CGPoint point, CGContext context);
 
 		[Export ("locationForCharacterAtIndex:")]
-		CGPoint GetLocationForCharacter (nint index);
+		CGPoint GetLocation (nint characterIndex);
 
 		[Export ("characterIndexForPoint:")]
 		nint GetCharacterIndex (CGPoint point);
