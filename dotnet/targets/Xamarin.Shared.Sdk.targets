@@ -216,7 +216,6 @@
 			_CompileCoreMLModels;
 			_CreatePkgInfo;
 			_SmeltMetal;
-			_ForgeMetal;
 			_TemperMetal;
 			_CompileEntitlements;
 			_DetectAppManifest;

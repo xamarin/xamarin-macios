@@ -901,27 +901,12 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</Metal>
 	</Target>
 
-	<Target Name="_ForgeMetal" Condition="'$(_CanOutputAppBundle)' == 'true' And '@(_SmeltedMetal)' != ''" DependsOnTargets="_SmeltMetal"
-		Inputs="@(_SmeltedMetal)" Outputs="$(DeviceSpeficicIntermediateOutputPath)metal\default.metal-ar">
-		<ArTool
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' and '$(_IsXcode8)' == 'false'"
-			Items="@(_SmeltedMetal)"
-			Archive="$(DeviceSpecificIntermediateOutputPath)metal\default.metal-ar">
-		</ArTool>
-
-		<ItemGroup>
-			<_ForgedMetal Condition="'$(_IsXcode8)' == 'false'" Include="$(DeviceSpecificIntermediateOutputPath)metal\default.metal-ar" />
-			<_ForgedMetal Condition="'$(_IsXcode8)' == 'true'" Include="@(_SmeltedMetal)" />
-		</ItemGroup>
-	</Target>
-
-	<Target Name="_TemperMetal" Condition="'$(_CanOutputAppBundle)' == 'true' And '@(_ForgedMetal)' != ''" DependsOnTargets="_ForgeMetal;_GenerateBundleName"
-		Inputs="@(_ForgedMetal)" Outputs="$(_AppResourcesPath)default.metallib">
+	<Target Name="_TemperMetal" Condition="'$(_CanOutputAppBundle)' == 'true' And '@(_SmeltedMetal)' != ''" DependsOnTargets="_GenerateBundleName"
+		Inputs="@(_SmeltedMetal)" Outputs="$(_AppResourcesPath)default.metallib">
 		<MetalLib
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
-			Items="@(_ForgedMetal)"
+			Items="@(_SmeltedMetal)"
 			SdkDevPath="$(_SdkDevPath)"
 			SdkRoot="$(_SdkRoot)"
 			OutputLibrary="$(_AppResourcesPath)default.metallib">
@@ -1107,7 +1092,6 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<Output TaskParameter="SdkUsrPath" PropertyName="_SdkUsrPath" />
 			<Output TaskParameter="SdkPlatform" PropertyName="_SdkPlatform" />
 			<Output TaskParameter="SdkIsSimulator" PropertyName="_SdkIsSimulator" />
-			<Output TaskParameter="IsXcode8" PropertyName="_IsXcode8" />
 			<Output TaskParameter="XamarinSdkRoot" PropertyName="_XamarinSdkRoot" />
 		</DetectSdkLocations>
 	</Target>
