@@ -1,3 +1,5 @@
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -148,5 +150,29 @@ namespace Xamarin.Tests {
 			}
 		}
 
+		protected string GenerateProject (ApplePlatform platform, string name, string runtimeIdentifiers, out string? appPath)
+		{
+			var dir = Cache.CreateTemporaryDirectory (name);
+			var csproj = Path.Combine (dir, $"{name}.csproj");
+			var sb = new StringBuilder ();
+			sb.AppendLine ($"<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+			sb.AppendLine ($"<Project Sdk=\"Microsoft.NET.Sdk\">");
+			sb.AppendLine ($"	<PropertyGroup>");
+			sb.AppendLine ($"		<TargetFramework>{platform.ToFramework ()}</TargetFramework>");
+			sb.AppendLine ($"		<OutputType>Exe</OutputType>");
+			sb.AppendLine ($"		<ApplicationTitle>{name}</ApplicationTitle>");
+			sb.AppendLine ($"		<ApplicationId>com.xamarin.testproject.{name}</ApplicationId>");
+			sb.AppendLine ($"	</PropertyGroup>");
+			sb.AppendLine ($"</Project>");
+
+			File.WriteAllText (csproj, sb.ToString ());
+
+			Configuration.CopyDotNetSupportingFiles (dir);
+
+			var appPathRuntimeIdentifier = runtimeIdentifiers.IndexOf (';') >= 0 ? "" : runtimeIdentifiers;
+			appPath = Path.Combine (dir, "bin", "Debug", platform.ToFramework (), appPathRuntimeIdentifier, name + ".app");
+
+			return csproj;
+		}
 	}
 }
