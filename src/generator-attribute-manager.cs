@@ -472,17 +472,13 @@ public class AttributeManager
 	{
 		if (provider == null)
 			return null;
-		var member = provider as MemberInfo;
-		if (member != null)
+		if (provider is MemberInfo member)
 			return member.GetCustomAttributesData ();
-		var assembly = provider as Assembly;
-		if (assembly != null)
+		if (provider is Assembly assembly)
 			return assembly.GetCustomAttributesData ();
-		var pinfo = provider as ParameterInfo;
-		if (pinfo != null)
+		if (provider is ParameterInfo pinfo)
 			return pinfo.GetCustomAttributesData ();
-		var module = provider as Module;
-		if (module != null)
+		if (provider is Module module)
 			return module.GetCustomAttributesData ();
 		throw new BindingException (1051, true, provider.GetType ().FullName);
 	}

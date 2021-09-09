@@ -4,7 +4,5 @@
 <dict>
 	<key>CFBundleIdentifier</key>
 	<string>com.xamarin.fsharp</string>
-	<key>LSMinimumSystemVersion</key>
-	<string>10.15</string>
 </dict>
 </plist>

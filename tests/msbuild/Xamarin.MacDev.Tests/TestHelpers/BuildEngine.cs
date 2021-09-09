@@ -55,7 +55,8 @@ namespace Xamarin.Tests {
 
 			Console.WriteLine ($"Binlog: {rv.BinLogPath}");
 
-			ParseBinLog (rv.BinLogPath);
+			if (File.Exists (rv.BinLogPath))
+				ParseBinLog (rv.BinLogPath);
 
 			return rv;
 		}
@@ -236,7 +237,7 @@ namespace Xamarin.Tests {
 
 		static ExecutionResult Dotnet (string project, string command, string target, Dictionary<string, string> properties)
 		{
-			return DotNet.Execute (command, project, properties, assert_success: false);
+			return DotNet.Execute (command, project, properties, assert_success: false, target: target);
 		}
 
 		static ExecutionResult MSBuild (ApplePlatform platform, string project, string target, Dictionary<string, string> properties)

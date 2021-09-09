@@ -34,6 +34,7 @@ namespace Xamarin.MacDev.Tasks {
 		[Output]
 		public string Registrar { get; set; }
 
+		// This is input too
 		[Output]
 		public int Verbosity { get; set; }
 
