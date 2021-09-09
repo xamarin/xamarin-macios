@@ -511,7 +511,7 @@ namespace CoreFoundation {
 		[TV (10,0)]
 		[Watch (3,0)]
 #endif
-		[DllImport (Constants.libcLibrary)]
+		[DllImport (Constants.libcLibrary, EntryPoint = "dispatch_queue_create_with_target$V2")]
 		extern static IntPtr dispatch_queue_create_with_target (string label, IntPtr attr, IntPtr target);
 
 		[DllImport (Constants.libcLibrary)]

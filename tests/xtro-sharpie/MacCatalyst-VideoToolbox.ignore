@@ -3,4 +3,3 @@
 !missing-field! kVTVideoDecoderSpecification_RequiredDecoderGPURegistryID not bound
 
 ## marked not available on iOS/tvOS/watchOS - no mention of newComputePipelineStateWithAdditionalBinaryFunctions
-!missing-pinvoke! VTRegisterSupplementalVideoDecoderIfAvailable is not bound
