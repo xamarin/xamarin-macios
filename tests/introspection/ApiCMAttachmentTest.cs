@@ -231,6 +231,16 @@ namespace Introspection {
 			case "SecIdentity2": // same (dupe logic)
 			case "Authorization":
 				return true;
+			case "VTCompressionSession":
+			case "VTSession":
+			case "VTFrameSilo":
+			case "VTMultiPassStorage":
+#if __TVOS__
+				// Causes a crash in a background thread.
+				return true;
+#else
+				return false;
+#endif
 			default:
  				return false;
 			}
