@@ -296,7 +296,7 @@ namespace CallKit {
 		[Export ("getEnabledStatusForExtensionWithIdentifier:completionHandler:")]
 		void GetEnabledStatusForExtension (string identifier, Action<CXCallDirectoryEnabledStatus, NSError> completion);
 
-		[NoWatch, NoTV, NoMac, iOS (13,4), MacCatalyst (10,14)]
+		[NoWatch, NoTV, NoMac, iOS (13,4), MacCatalyst (14,0)]
 		[Async]
 		[Export ("openSettingsWithCompletionHandler:")]
 		void OpenSettings ([NullAllowed] Action<NSError> completion);
