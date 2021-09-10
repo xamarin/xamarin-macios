@@ -37,7 +37,9 @@ using Foundation;
 namespace CoreVideo {
 
 	// CVBuffer.h
+#if !NET
 	[Watch (4,0)]
+#endif
 	public partial class CVBuffer : INativeObject
 #if !COREBUILD
 		, IDisposable

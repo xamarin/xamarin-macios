@@ -436,7 +436,7 @@ namespace CoreVideo {
 		[Field ("kCVPixelBufferMetalCompatibilityKey")]
 		NSString MetalCompatibilityKey { get; }
 
-		[NoiOS, NoTV, NoWatch, Mac (10,11), MacCatalyst (15,0)]
+		[NoiOS, NoTV, NoWatch, Mac (10,11), NoMacCatalyst]
 		[Field ("kCVPixelBufferOpenGLTextureCacheCompatibilityKey")]
 		NSString OpenGLTextureCacheCompatibilityKey { get; }
 
