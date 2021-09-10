@@ -3,6 +3,7 @@ using System;
 using System.Drawing;
 #endif
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 #if !COREBUILD
 using OpenTK;
@@ -258,10 +259,16 @@ namespace AVFoundation {
 
 #if MONOMAC || !XAMCORE_4_0
 
+#if !NET
 	[Mac (10, 10), NoiOS, NoWatch, NoTV]
 #if !MONOMAC
 	[Obsolete ("This API is not available on this platform.")]
 #endif
+#else
+#if !MONOMAC
+	[Obsolete ("This API is not available on this platform.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif // !NET
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVSampleCursorSyncInfo {
 		[MarshalAs (UnmanagedType.I1)]
@@ -274,10 +281,16 @@ namespace AVFoundation {
 		public bool IsDroppable;
 	}
 
+#if !NET
 	[Mac (10, 10), NoiOS, NoWatch, NoTV]
 #if !MONOMAC
 	[Obsolete ("This API is not available on this platform.")]
 #endif
+#else
+#if !MONOMAC
+	[Obsolete ("This API is not available on this platform.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif // !NET
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVSampleCursorDependencyInfo {
 		[MarshalAs (UnmanagedType.I1)]
@@ -299,20 +312,32 @@ namespace AVFoundation {
 		public bool HasRedundantCoding;
 	}
 
+#if !NET
 	[Mac (10, 10), NoiOS, NoWatch, NoTV]
 #if !MONOMAC
 	[Obsolete ("This API is not available on this platform.")]
 #endif
+#else
+#if !MONOMAC
+	[Obsolete ("This API is not available on this platform.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif // !NET
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVSampleCursorStorageRange {
 		public long Offset;
 		public long Length;
 	}
 
+#if !NET
 	[Mac (10, 10), NoiOS, NoWatch, NoTV]
 #if !MONOMAC
 	[Obsolete ("This API is not available on this platform.")]
 #endif
+#else
+#if !MONOMAC
+	[Obsolete ("This API is not available on this platform.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif // !NET
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVSampleCursorChunkInfo {
 		public long SampleCount;
@@ -330,7 +355,11 @@ namespace AVFoundation {
 
 #if MONOMAC
 
+#if !NET
 	[Mac (10,15)]
+#else
+	[SupportedOSPlatform ("macos10.15")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVSampleCursorAudioDependencyInfo {
 		[MarshalAs (UnmanagedType.I1)]
