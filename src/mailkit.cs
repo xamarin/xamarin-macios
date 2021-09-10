@@ -108,6 +108,7 @@ namespace MailKit {
 		[Export ("markAsUnreadAction")]
 		MEMessageAction MarkAsUnread { get; }
 
+#if false // does not respond (nor work in ObjC) with macOS 12 beta 6
 		[Static]
 		[Export ("flagAction")]
 		MEMessageAction Flag { get; }
@@ -119,6 +120,7 @@ namespace MailKit {
 		[Static]
 		[Export ("setColorActionWithColor:")]
 		MEMessageAction SetColor (MEMessageActionMessageColor color);
+#endif
 	}
 
 	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (12,0)]

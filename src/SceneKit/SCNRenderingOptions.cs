@@ -2,12 +2,15 @@
 
 using System;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 #nullable enable
 
 namespace SceneKit
 {
+#if !NET
 	[iOS (9,0)][Mac (10,11)]
+#endif
 	public partial class SCNRenderingOptions {
 		public SCNRenderingApi? RenderingApi {
 			get {

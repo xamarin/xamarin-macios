@@ -1,14 +1,6 @@
 !missing-field! _nw_privacy_context_default_context not bound
 !missing-pinvoke! nw_establishment_report_enumerate_resolution_reports is not bound
-!missing-pinvoke! nw_ethernet_channel_cancel is not bound
-!missing-pinvoke! nw_ethernet_channel_create is not bound
-!missing-pinvoke! nw_ethernet_channel_send is not bound
-!missing-pinvoke! nw_ethernet_channel_set_queue is not bound
-!missing-pinvoke! nw_ethernet_channel_set_receive_handler is not bound
-!missing-pinvoke! nw_ethernet_channel_set_state_changed_handler is not bound
-!missing-pinvoke! nw_ethernet_channel_start is not bound
 !missing-pinvoke! nw_ip_options_set_disable_multicast_loopback is not bound
-!missing-pinvoke! nw_parameters_create_custom_ip is not bound
 !missing-pinvoke! nw_parameters_set_privacy_context is not bound
 !missing-pinvoke! nw_path_monitor_prohibit_interface_type is not bound
 !missing-pinvoke! nw_privacy_context_create is not bound
@@ -65,7 +57,6 @@
 !missing-pinvoke! nw_quic_get_stream_application_error is not bound
 !missing-pinvoke! nw_quic_get_stream_id is not bound
 !missing-pinvoke! nw_quic_get_stream_is_unidirectional is not bound
-!missing-pinvoke! nw_quic_get_stream_type is not bound
 !missing-pinvoke! nw_quic_set_application_error is not bound
 !missing-pinvoke! nw_quic_set_idle_timeout is not bound
 !missing-pinvoke! nw_quic_set_initial_max_data is not bound

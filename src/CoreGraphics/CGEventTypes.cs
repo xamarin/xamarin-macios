@@ -8,10 +8,11 @@
  *    Miguel de Icaza
  */
 
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 #if !NO_SYSTEM_DRAWING
 using System.Drawing;
 #endif
@@ -22,6 +23,11 @@ using Foundation;
 namespace CoreGraphics {
 
 	// CGEventTypes.h:typedef uint32_t CGEventTapLocation;
+#if !NET
+	[MacCatalyst (15,0)]
+#else
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#endif
 	public enum CGEventTapLocation : int {
 		HID,
 		Session,
@@ -29,28 +35,53 @@ namespace CoreGraphics {
 	}
 
 	// CGEventTypes.h:typedef uint32_t CGEventTapPlacement;
+#if !NET
+	[MacCatalyst (15,0)]
+#else
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#endif
 	public enum CGEventTapPlacement : uint {
 		HeadInsert,
 		TailAppend
 	}
 
 	// CGEventTypes.h:typedef uint32_t CGEventTapOptions;
+#if !NET
+	[MacCatalyst (15,0)]
+#else
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#endif
 	public enum CGEventTapOptions : uint {
 		Default, 
 		ListenOnly
 	}
 
 	// CGEventTypes.h:typedef uint32_t CGMouseButton;
+#if !NET
+	[MacCatalyst (15,0)]
+#else
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#endif
 	public enum CGMouseButton : uint {
 		Left, Right, Center
 	}
 
 	// CGEventTypes.h:typedef uint32_t CGScrollEventUnit;
+#if !NET
+	[MacCatalyst (15,0)]
+#else
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#endif
 	public enum CGScrollEventUnit : uint {
 		Pixel, Line
 	}
 
 	// CGEventTypes.h:typedef uint64_t CGEventMask;
+#if !NET
+	[MacCatalyst (15,0)]
+#else
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#endif
 	[Flags]
 	public enum CGEventMask : ulong {
 		Null              = 0x00000001,
@@ -73,6 +104,11 @@ namespace CoreGraphics {
 	}
 
 	// CGEventTypes.h:typedef uint64_t CGEventFlags;
+#if !NET
+	[MacCatalyst (15,0)]
+#else
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#endif
 	[Flags]
 	public enum CGEventFlags : ulong {
 		NonCoalesced = 0x00000100,
@@ -87,6 +123,11 @@ namespace CoreGraphics {
 	}
 
 	// CGEventTypes.h:typedef uint32_t CGEventField;
+#if !NET
+	[MacCatalyst (15,0)]
+#else
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#endif
 	internal enum CGEventField : int {
 		MouseEventNumber = 0,
 		MouseEventClickState = 1,
@@ -151,6 +192,11 @@ namespace CoreGraphics {
 	}
 
 	// CGEventTypes.h:typedef uint32_t CGEventType;
+#if !NET
+	[MacCatalyst (15,0)]
+#else
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#endif
 	public enum CGEventType : uint {
 		Null = 0x0,
 		LeftMouseDown = 0x1,
@@ -174,16 +220,31 @@ namespace CoreGraphics {
 	}
 
 	// CGEventTypes.h:typedef uint32_t CGEventMouseSubtype;
+#if !NET
+	[MacCatalyst (15,0)]
+#else
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#endif
 	public enum CGEventMouseSubtype : uint {
 		Default, TabletPoint, TabletProximity
 	}
 
 	// CGEventTypes.h:typedef uint32_t CGEventSourceStateID;
+#if !NET
+	[MacCatalyst (15,0)]
+#else
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#endif
 	public enum CGEventSourceStateID : int {
 		Private = -1, CombinedSession = 0, HidSystem = 1
 	}
 
 	// CGRemoteOperation.h:typedef uint32_t CGEventFilterMask;
+#if !NET
+	[MacCatalyst (15,0)]
+#else
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#endif
 	[Flags]
 	public enum CGEventFilterMask : uint {
 		PermitLocalMouseEvents = 1,
@@ -192,6 +253,11 @@ namespace CoreGraphics {
 	}
 
 	// CGRemoteOperation.h:typedef uint32_t CGEventSuppressionState;
+#if !NET
+	[MacCatalyst (15,0)]
+#else
+	[SupportedOSPlatform ("maccatalyst15.0")]
+#endif
 	public enum CGEventSuppressionState : int {
 		SuppressionInterval,
 		RemoteMouseDrag,
