@@ -9,6 +9,7 @@
 #if !WATCH
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
@@ -18,13 +19,23 @@ using ObjCRuntime;
 namespace CoreVideo {
 	public partial class CVPixelBuffer : CVImageBuffer {
 
+#if !NET
 		[iOS (11,0), Mac (10,13), TV (11,0), NoWatch]
+#else
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+#endif
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static IntPtr /* IOSurfaceRef */ CVPixelBufferGetIOSurface (
 			/* CVPixelBufferRef CV_NULLABLE */ IntPtr pixelBuffer
 		);
 
+#if !NET
 		[iOS (11,0), Mac (10,13), TV (11,0), NoWatch]
+#else
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+#endif
 		public IOSurface.IOSurface? GetIOSurface ()
 		{
 			if (Handle == IntPtr.Zero)
@@ -37,7 +48,12 @@ namespace CoreVideo {
 			return Runtime.GetINativeObject <IOSurface.IOSurface> (ret, false);
 		}
 
+#if !NET
 		[iOS (11,0), Mac (10,13), TV (11,0), NoWatch]
+#else
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+#endif
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static CVReturn /* IOSurfaceRef */ CVPixelBufferCreateWithIOSurface (
 			/* CFAllocatorRef CV_NULLABLE */ IntPtr allocator,
@@ -46,7 +62,12 @@ namespace CoreVideo {
 			/* CVPixelBufferRef CV_NULLABLE * CV_NONNULL */ out IntPtr pixelBufferOut
 		);
 
+#if !NET
 		[iOS (11,0), Mac (10,13), TV (11,0), NoWatch]
+#else
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+#endif
 		public static CVPixelBuffer? Create (IOSurface.IOSurface surface, out CVReturn result, CVPixelBufferAttributes? pixelBufferAttributes = null)
 		{
 			if (surface == null)
@@ -66,7 +87,12 @@ namespace CoreVideo {
 			return new CVPixelBuffer (pixelBufferPtr, true);
 		}
 
+#if !NET
 		[iOS (11,0), Mac (10,13), TV (11,0), NoWatch]
+#else
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("tvos11.0")]
+#endif
 		public static CVPixelBuffer? Create (IOSurface.IOSurface surface, CVPixelBufferAttributes? pixelBufferAttributes = null)
 		{
 			CVReturn result;

@@ -9,6 +9,7 @@
 //
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using System.Threading;
 using ObjCRuntime;
 using Foundation;
@@ -16,8 +17,10 @@ using Foundation;
 namespace CoreFoundation {
 #if !COREBUILD
 
+#if !NET
 	[iOS (8, 0)]
 	[Mac (10, 10)]
+#endif
 	public sealed class DispatchBlock : NativeObject {
 		internal DispatchBlock (IntPtr handle, bool owns)
 			: base (handle, owns)

@@ -33,6 +33,7 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using System.Threading;
 using ObjCRuntime;
 using Foundation;
@@ -266,8 +267,10 @@ namespace CoreFoundation {
 			}
 		}
 	
+#if !NET
 		[Deprecated (PlatformName.iOS, 6, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 9)]
+#endif
 		public static DispatchQueue CurrentQueue {
 			get {
 				return new DispatchQueue (dispatch_get_current_queue (), false);
@@ -511,7 +514,7 @@ namespace CoreFoundation {
 		[TV (10,0)]
 		[Watch (3,0)]
 #endif
-		[DllImport (Constants.libcLibrary)]
+		[DllImport (Constants.libcLibrary, EntryPoint = "dispatch_queue_create_with_target$V2")]
 		extern static IntPtr dispatch_queue_create_with_target (string label, IntPtr attr, IntPtr target);
 
 		[DllImport (Constants.libcLibrary)]
@@ -544,8 +547,10 @@ namespace CoreFoundation {
 		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_after (/* dispath_time_t */ ulong time, IntPtr queue, IntPtr block);
 
+#if !NET
 		[Deprecated (PlatformName.iOS, 6,0)]
 		[Deprecated (PlatformName.MacOSX, 10,9)]
+#endif
 		[DllImport (Constants.libcLibrary)]
 		extern static IntPtr dispatch_get_current_queue ();
 

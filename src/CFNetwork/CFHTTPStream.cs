@@ -11,6 +11,7 @@ using System;
 using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 // CFHttpStream is in CFNetwork.framework, no idea why it ended up in CoreServices when it was bound.
 #if XAMCORE_4_0
@@ -20,8 +21,11 @@ namespace CoreServices {
 #endif
 
 	// all fields constants that this is using are deprecated in Xcode 7
+#if !NET
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'NSUrlSession'.")]
 	[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'NSUrlSession'.")]
+	// Dotnet attributes are included in partial class inside cfnetwork.cs
+#endif
 	public partial class CFHTTPStream : CFReadStream {
 
 		internal CFHTTPStream (IntPtr handle)
