@@ -951,7 +951,7 @@
 !unknown-pinvoke! dispatch_queue_attr_make_with_autorelease_frequency bound
 !unknown-pinvoke! dispatch_queue_attr_make_with_qos_class bound
 !unknown-pinvoke! dispatch_queue_create bound
-!unknown-pinvoke! dispatch_queue_create_with_target bound
+!unknown-pinvoke! dispatch_queue_create_with_target$V2 bound
 !unknown-pinvoke! dispatch_queue_get_label bound
 !unknown-pinvoke! dispatch_queue_get_qos_class bound
 !unknown-pinvoke! dispatch_queue_get_specific bound

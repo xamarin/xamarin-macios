@@ -202,7 +202,6 @@
 !missing-enum! NSPointerFunctionsOptions not bound
 !missing-enum! NSSearchPathDomainMask not bound
 !missing-enum! NSStringEncodingConversionOptions not bound
-!missing-enum! NSStringEnumerationOptions not bound
 !missing-field! NSAverageKeyValueOperator not bound
 !missing-field! NSBuddhistCalendar not bound
 !missing-field! NSBundleDidLoadNotification not bound
