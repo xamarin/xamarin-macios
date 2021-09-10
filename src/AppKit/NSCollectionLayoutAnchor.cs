@@ -1,6 +1,7 @@
 #if !__MACCATALYST__
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
@@ -8,7 +9,11 @@ using CoreGraphics;
 
 namespace AppKit {
 
+#if !NET
 	[Mac (10, 15)]
+#else
+		[SupportedOSPlatform ("macos10.15")]
+#endif
 	public enum NSCollectionLayoutAnchorOffsetType {
 		Absolute,
 		Fractional,
