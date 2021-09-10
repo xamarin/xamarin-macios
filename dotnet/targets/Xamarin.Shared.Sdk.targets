@@ -96,9 +96,6 @@
 	</ItemGroup>
 	
 	<PropertyGroup>
-		<!-- App extensions are self-contained, even though their OutputType=Library -->
-		<SelfContained Condition="'$(SelfContained)' == '' And $(_ProjectType.EndsWith('AppExtensionProject'))">true</SelfContained>
-
 		<!-- Add a property that specifies the name of the platform assembly for each platform -->
 		<_PlatformAssemblyName Condition=" '$(_PlatformName)' == 'iOS' ">Xamarin.iOS</_PlatformAssemblyName>
 		<_PlatformAssemblyName Condition=" '$(_PlatformName)' == 'tvOS' ">Xamarin.TVOS</_PlatformAssemblyName>
