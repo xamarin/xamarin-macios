@@ -185,6 +185,12 @@ namespace CoreImage {
 				SetValueForKey (new NSNumber (value), nskey);
 		}
 
+		internal void SetNUInt (string key, nuint value)
+		{
+			using (var nskey = new NSString (key))
+				SetValueForKey (new NSNumber (value), nskey);
+		}
+
 		internal void SetBool (string key, bool value)
 		{
 			using (var nskey = new NSString (key))
@@ -227,6 +233,11 @@ namespace CoreImage {
 		internal nint GetNInt (string key)
 		{
 			return Get<NSNumber> (key)?.NIntValue ?? default (nint);
+		}
+
+		internal nuint GetNUInt (string key)
+		{
+			return Get<NSNumber> (key)?.NUIntValue ?? default (nuint);
 		}
 
 		internal bool GetBool (string key)
@@ -454,6 +465,8 @@ namespace CoreImage {
 				return new CIMaximumComponent (handle);
 			case "CIMinimumComponent":
 				return new CIMinimumComponent (handle);
+			case "CIPersonSegmentation":
+				return new CIPersonSegmentation (handle);
 			case "CIPerspectiveTile":
 				return new CIPerspectiveTile (handle);
 			case "CIPerspectiveTransform":
@@ -506,6 +519,16 @@ namespace CoreImage {
 				return new CIConvolution9Horizontal (handle);
 			case "CIConvolution9Vertical":
 				return new CIConvolution9Vertical (handle);
+			case "CIConvolutionRGB3X3":
+				return new CIConvolutionRGB3X3 (handle);
+			case "CIConvolutionRGB5X5":
+				return new CIConvolutionRGB5X5 (handle);
+			case "CIConvolutionRGB7X7":
+				return new CIConvolutionRGB7X7 (handle);
+			case "CIConvolutionRGB9Horizontal":
+				return new CIConvolutionRGB9Horizontal (handle);
+			case "CIConvolutionRGB9Vertical":
+				return new CIConvolutionRGB9Vertical (handle);
 			case "CILinearToSRGBToneCurve":
 				return new CILinearToSRGBToneCurve (handle);
 			case "CIPerspectiveTransformWithExtent":
@@ -552,12 +575,16 @@ namespace CoreImage {
 				return new CILinearBurnBlendMode (handle);
 			case "CILinearDodgeBlendMode":
 				return new CILinearDodgeBlendMode (handle);
+			case "CILinearLightBlendMode":
+				return new CILinearLightBlendMode (handle);
 			case "CIPerspectiveCorrection":
 				return new CIPerspectiveCorrection (handle);
 			case "CIPinLightBlendMode":
 				return new CIPinLightBlendMode (handle);
 			case "CISubtractBlendMode":
 				return new CISubtractBlendMode (handle);
+			case "CIVividLightBlendMode":
+				return new CIVividLightBlendMode (handle);
 			case "CIAccordionFoldTransition":
 				return new CIAccordionFoldTransition (handle);
 			case "CIAreaAverage":
