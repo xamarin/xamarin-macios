@@ -75,4 +75,7 @@ stages:
     dependsOn: prepare_release
     symbolArtifactName: nuget-signed
     symbolConversionFilters: '*mlaunch.app*'
+    pushToShippingFeed: true
+    nupkgArtifactName: nuget-signed
+    msiNupkgArtifactName: vs-msi-nugets
     condition: eq(variables.IsPRBuild, 'False')
