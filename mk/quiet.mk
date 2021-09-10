@@ -65,8 +65,8 @@ SIMULATOR_ASCOMPILE = $(Q_AS) $(SIMULATOR_CC)
 ifeq ($(V),)
 ifeq ($(BUILD_REVISION)$(JENKINS_HOME),)
 # non-verbose local build
-XBUILD_VERBOSITY=/nologo /verbosity:quiet
-XBUILD_VERBOSITY_QUIET=/nologo /verbosity:quiet
+XBUILD_VERBOSITY=/nologo /verbosity:quiet /p:RunCodeAnalysis=true /p:CodeAnalysisRuleSet="$(TOP)/editorconfig.ruleset"
+XBUILD_VERBOSITY_QUIET=/nologo /verbosity:quiet /p:RunCodeAnalysis=true /p:CodeAnalysisRuleSet="$(TOP)/editorconfig.rulesett
 MMP_VERBOSITY=-q
 MTOUCH_VERBOSITY=-q
 MDTOOL_VERBOSITY=
