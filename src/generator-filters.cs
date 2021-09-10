@@ -295,6 +295,9 @@ public partial class Generator {
 		case "nint":
 			print ("return GetNInt (\"{0}\");", propertyName);
 			break;
+		case "nuint":
+			print ("return GetNUInt (\"{0}\");", propertyName);
+			break;
 		case "string":
 			// NSString should not be added - it should be bound as a string
 			print ("return (string) (ValueForKey (\"{0}\") as NSString);", propertyName);
@@ -331,6 +334,9 @@ public partial class Generator {
 			break;
 		case "nint":
 			print ("SetNInt (\"{0}\", value);", propertyName);
+			break;
+		case "nuint":
+			print ("SetNUInt (\"{0}\", value);", propertyName);
 			break;
 		// NSObject should not be added
 		case "AVCameraCalibrationData":

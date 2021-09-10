@@ -23,6 +23,7 @@ namespace Extrospection {
 		// the original name can be lost and, if not registered (e.g. enums), might not be available
 		static Dictionary<string,string> map = new Dictionary<string, string> () {
 			{ "AudioChannelBitmap", "AudioChannelBit" },
+			{ "CIRAWDecoderVersion", "CIRawDecoderVersion" },
 			{ "EABluetoothAccessoryPickerErrorCode", "EABluetoothAccessoryPickerError" },
 			{ "EKCalendarEventAvailabilityMask", "EKCalendarEventAvailability" },
 			{ "GKErrorCode", "GKError" },
