@@ -31,3 +31,6 @@
 !missing-selector! UISearchDisplayController::setSearchResultsTitle: not bound
 !missing-selector! UIViewController::searchDisplayController not bound
 !missing-type! UISearchDisplayController not bound
+
+## Grouped nint constants
+!unknown-native-enum! UIFocusGroupPriority bound
