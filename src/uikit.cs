@@ -10607,7 +10607,7 @@ namespace UIKit {
 		IUIActivityItemsConfigurationReading ActivityItemsConfiguration { get; set; }
 
 		// from UIResponder (UICaptureTextFromCameraSupporting)
-		[iOS (15,0), MacCatalyst (15,0)]
+		[TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("captureTextFromCamera:")]
 		void CaptureTextFromCamera ([NullAllowed] NSObject sender);
 	}
