@@ -17,6 +17,7 @@
   </PropertyGroup>
 
   <Import Project="$(RootTestsDirectory)/common/shared-dotnet.csproj" />
+  <Import Project="$(RootTestsDirectory)\nunit.framework.targets" />
 
   <ItemGroup>
     <Reference Include="support">
