@@ -83,6 +83,10 @@ using UINib = Foundation.NSObject;
 using UIFocusSystem = Foundation.NSObject;
 #endif // WATCH
 
+#if !IOS
+using UIPointerAccessoryPosition = Foundation.NSObject;
+#endif // !IOS
+
 using System;
 using System.ComponentModel;
 
@@ -3186,7 +3190,7 @@ namespace UIKit {
 
 		[iOS (15,0), TV (15,0), Watch (8,0), MacCatalyst (15,0)]
 		[Export ("applicationShouldAutomaticallyLocalizeKeyCommands:")]
-		bool GetShouldAutomaticallyLocalizeKeyCommands (UIApplication application);
+		bool ShouldAutomaticallyLocalizeKeyCommands (UIApplication application);
 	}
 
 	[Static]
@@ -8274,11 +8278,11 @@ namespace UIKit {
 		[Export ("buttonType")]
 		UIButtonType ButtonType { get; }
 
-		[TV (15,0), Watch (8,0), iOS (15,0), MacCatalyst (15,0)]
+		[TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("hovered")]
 		bool Hovered { [Bind ("isHovered")] get; }
 
-		[TV (15,0), Watch (8,0), iOS (15,0), MacCatalyst (15,0)]
+		[TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("held")]
 		bool Held { [Bind ("isHeld")] get; }
 
@@ -9259,7 +9263,7 @@ namespace UIKit {
 		[Appearance]
 		[TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 		[NullAllowed, Export ("compactScrollEdgeAppearance", ArgumentSemantic.Copy)]
-		UINavigationBarAppearance compactScrollEdgeAppearance { get; set; }
+		UINavigationBarAppearance CompactScrollEdgeAppearance { get; set; }
 
 		[iOS (7,0)]
 		[Appearance]
@@ -9417,7 +9421,7 @@ namespace UIKit {
 
 		[TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 		[NullAllowed, Export ("compactScrollEdgeAppearance", ArgumentSemantic.Copy)]
-		UINavigationBarAppearance compactScrollEdgeAppearance { get; set; }
+		UINavigationBarAppearance CompactScrollEdgeAppearance { get; set; }
 	}
 	
 	[BaseType (typeof (UIViewController))]
@@ -21414,10 +21418,9 @@ namespace UIKit {
 	[DisableDefaultCtor]
 	interface UIPointerStyle : NSCopying {
 
-		// TODO: Enable with the UIPointerAccessory bindings
-		// [iOS (15,0), MacCatalyst (15,0)]
-		// [Export ("accessories", ArgumentSemantic.Copy)]
-		// UIPointerAccessory [] Accessories { get; set; }
+		[iOS (15,0), MacCatalyst (15,0)]
+		[Export ("accessories", ArgumentSemantic.Copy)]
+		UIPointerAccessory [] Accessories { get; set; }
 
 		[Static]
 		[Export ("styleWithEffect:shape:")]
@@ -22941,6 +22944,7 @@ namespace UIKit {
 
 	[NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof (UIFocusEffect))]
+	[DisableDefaultCtor]
 	interface UIFocusHaloEffect {
 
 		[Static]
@@ -23117,6 +23121,29 @@ namespace UIKit {
 
 		[Export ("preferredPresentationStyle", ArgumentSemantic.Assign)]
 		UIWindowScenePresentationStyle PreferredPresentationStyle { get; set; }
+	}
+
+	[NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface UIPointerAccessory : NSCopying {
+
+		[Export ("shape", ArgumentSemantic.Copy)]
+		UIPointerShape Shape { get; }
+
+		[Export ("position")]
+		UIPointerAccessoryPosition Position { get; }
+
+		[Export ("orientationMatchesAngle")]
+		bool OrientationMatchesAngle { get; set; }
+
+		[Static]
+		[Export ("accessoryWithShape:position:")]
+		UIPointerAccessory Create (UIPointerShape shape, UIPointerAccessoryPosition position);
+
+		[Static]
+		[Export ("arrowAccessoryWithPosition:")]
+		UIPointerAccessory CreateArrow (UIPointerAccessoryPosition position);
 	}
 
 }

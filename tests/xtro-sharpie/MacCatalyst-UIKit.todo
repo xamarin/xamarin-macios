@@ -55,14 +55,6 @@
 !missing-field! NSToolbarSupplementarySidebarTrackingSeparatorItemIdentifier not bound
 !missing-field! UIApplicationInvalidInterfaceOrientationException not bound
 !missing-field! UIKeyInputF1 not bound
-!missing-field! UIPointerAccessoryPositionBottom not bound
-!missing-field! UIPointerAccessoryPositionBottomLeft not bound
-!missing-field! UIPointerAccessoryPositionBottomRight not bound
-!missing-field! UIPointerAccessoryPositionLeft not bound
-!missing-field! UIPointerAccessoryPositionRight not bound
-!missing-field! UIPointerAccessoryPositionTop not bound
-!missing-field! UIPointerAccessoryPositionTopLeft not bound
-!missing-field! UIPointerAccessoryPositionTopRight not bound
 !missing-null-allowed! 'CoreAnimation.CADisplayLink UIKit.UIScreen::CreateDisplayLink(Foundation.NSObject,ObjCRuntime.Selector)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSArray Foundation.NSBundle::LoadNib(System.String,Foundation.NSObject,Foundation.NSDictionary)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSArray[] UIKit.UIPasteboard::PasteBoardTypesForSet(Foundation.NSIndexSet)' is missing an [NullAllowed] on parameter #0
@@ -444,8 +436,6 @@
 !missing-requires-super! UIControl::contextMenuInteraction:willDisplayMenuForConfiguration:animator: is missing an [RequiresSuper] attribute
 !missing-requires-super! UIControl::contextMenuInteraction:willEndForConfiguration:animator: is missing an [RequiresSuper] attribute
 !missing-selector! +NSToolbarItem::itemWithItemIdentifier:barButtonItem: not bound
-!missing-selector! +UIPointerAccessory::accessoryWithShape:position: not bound
-!missing-selector! +UIPointerAccessory::arrowAccessoryWithPosition: not bound
 !missing-selector! NSDiffableDataSourceSectionTransaction::difference not bound
 !missing-selector! NSDiffableDataSourceTransaction::difference not bound
 !missing-selector! NSMenuToolbarItem::itemMenu not bound
@@ -481,12 +471,6 @@
 !missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::willExpandItemHandler not bound
 !missing-selector! UIGestureRecognizer::initWithCoder: not bound
 !missing-selector! UIKeyCommand::action not bound
-!missing-selector! UIPointerAccessory::orientationMatchesAngle not bound
-!missing-selector! UIPointerAccessory::position not bound
-!missing-selector! UIPointerAccessory::setOrientationMatchesAngle: not bound
-!missing-selector! UIPointerAccessory::shape not bound
-!missing-selector! UIPointerStyle::accessories not bound
-!missing-selector! UIPointerStyle::setAccessories: not bound
 !missing-selector! UIPrintPaper::printRect not bound
 !missing-selector! UIRefreshControl::setTintColor: not bound
 !missing-selector! UIRefreshControl::tintColor not bound
@@ -511,6 +495,5 @@
 !missing-selector! UIViewController::childViewControllerForTouchBar not bound
 !missing-selector! UIViewController::setNeedsTouchBarUpdate not bound
 !missing-selector! UIWindowScene::titlebar not bound
-!missing-type! UIPointerAccessory not bound
 !missing-type! UITitlebar not bound
 ## appended from unclassified file
