@@ -3320,9 +3320,9 @@ namespace AVFoundation {
 	interface AVFragmentedAssetTrack {
 	}
 
-#if MONOMAC || __MACCATALYST__
-
 	interface IAVCaptureFileOutputDelegate {}
+
+#if MONOMAC 
 
 	[Unavailable (PlatformName.MacCatalyst)]
 	[Protocol, Model]
@@ -4867,13 +4867,13 @@ namespace AVFoundation {
 		[Export ("currentSampleStorageRange")]
 		AVSampleCursorStorageRange CurrentSampleStorageRange { get; }
 
-#if MONOMAC || __MACCATALYST__
-		[NoTV, NoWatch, NoiOS, Mac (10,15), MacCatalyst (15,0)]
+#if MONOMAC 
+		[Mac (10,15)]
 		[Export ("currentSampleAudioDependencyInfo")]
 		AVSampleCursorAudioDependencyInfo CurrentSampleAudioDependencyInfo { get; }
 
 		[NullAllowed]
-		[NoWatch, NoTV, NoiOS, Mac (12, 0), MacCatalyst (15,0)]
+		[Mac (12,0)]
 		[Export ("currentSampleDependencyAttachments")]
 		NSDictionary CurrentSampleDependencyAttachments { get; }
 #endif
@@ -11378,7 +11378,7 @@ namespace AVFoundation {
 		NSString RateDidChangeOriginatingParticipant { get; }
 	}
 
-	[iOS (10, 0), TV (10,0), Mac (10,12), MacCatalyst (14,0)]
+	[iOS (10, 0), TV (10,0), Mac (10,12), MacCatalyst (14,5)]
 	enum AVPlayerWaitingReason {
 		[MacCatalyst (15,0)]
 		[Field ("AVPlayerWaitingToMinimizeStallsReason")]
@@ -14904,7 +14904,7 @@ namespace AVFoundation {
 
 		[Export ("renditionSpecificAttributesForMediaOption:")]
 		[return: NullAllowed]
-		AVAssetVariantAudioRenditionSpecificAttributes GetRenditionSpecificAttributesForMediaOption (AVMediaSelectionOption mediaSelectionOption);
+		AVAssetVariantAudioRenditionSpecificAttributes GetRenditionSpecificAttributes (AVMediaSelectionOption mediaSelectionOption);
 	}
 
 	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
@@ -15400,19 +15400,19 @@ namespace AVFoundation {
 	{
 		[Static]
 		[Export ("appleITTTopRegion")]
-		AVCaptionRegion AppleITTTopRegion { get; }
+		AVCaptionRegion AppleIttTopRegion { get; }
 
 		[Static]
 		[Export ("appleITTBottomRegion")]
-		AVCaptionRegion AppleITTBottomRegion { get; }
+		AVCaptionRegion AppleIttBottomRegion { get; }
 
 		[Static]
 		[Export ("appleITTLeftRegion")]
-		AVCaptionRegion AppleITTLeftRegion { get; }
+		AVCaptionRegion AppleIttLeftRegion { get; }
 
 		[Static]
 		[Export ("appleITTRightRegion")]
-		AVCaptionRegion AppleITTRightRegion { get; }
+		AVCaptionRegion AppleIttRightRegion { get; }
 
 		[Static]
 		[Export ("subRipTextBottomRegion")]
