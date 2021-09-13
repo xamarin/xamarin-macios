@@ -9660,15 +9660,15 @@ namespace AVFoundation {
 		[Export ("resumeRecording")]
 		void ResumeRecording ();
 
-#if MONOMAC || __MACCATALYST__
+#if MONOMAC
 		[NoMacCatalyst]
 		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
 		IAVCaptureFileOutputDelegate Delegate { get; set; }
+#endif
 
-		[MacCatalyst (15,0)]
+		[NoiOS, MacCatalyst (15,0)]
 		[Export ("recordingPaused")]
 		bool RecordingPaused { [Bind ("isRecordingPaused")] get; }
-#endif
 	}
 
 	[BaseType (typeof (NSObject))]
