@@ -27,6 +27,7 @@ namespace AuthenticationServices {
 	[SupportedOSPlatform ("ios15.0")]
 	[SupportedOSPlatform ("macos12.0")]
 	[SupportedOSPlatform ("maccatalyst15.0")]
+	[UnsupportedOSPlatform ("tvos")]
 #endif
 	public static class PublicPrivateKeyAuthentication {
 		[DllImport (Constants.AuthenticationServicesLibrary)]
