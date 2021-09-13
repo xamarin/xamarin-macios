@@ -103,7 +103,7 @@ namespace UIKit {
 		[iOS (15,0), TV (15,0), MacCatalyst (15,0)]
 		First = 1uL << 8,
 		[iOS (15,0), TV (15,0), MacCatalyst (15,0)]
-		Last = 1uL << 9
+		Last = 1uL << 9,
 	}
 
 	[Native] // NSInteger -> UIApplication.h
@@ -2120,7 +2120,7 @@ namespace UIKit {
 		[Transient]
 		UIWindow KeyWindow { get; }
 
-		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'UIWindowScene.Windows' the desired window scene instead.")]
+		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'UIWindowScene.Windows' in the desired window scene object instead.")]
 		[Export ("windows")]
 		[Transient]
 		UIWindow [] Windows { get; } 
@@ -3900,7 +3900,7 @@ namespace UIKit {
 
 		[NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
 		[Export ("collectionView:selectionFollowsFocusForItemAtIndexPath:")]
-		bool GetSelectionFollowsFocusForItemAtIndexPath (UICollectionView collectionView, NSIndexPath indexPath);
+		bool GetSelectionFollowsFocusForItem (UICollectionView collectionView, NSIndexPath indexPath);
 
 		[Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("collectionView:targetIndexPathForMoveOfItemFromOriginalIndexPath:atCurrentIndexPath:toProposedIndexPath:")]

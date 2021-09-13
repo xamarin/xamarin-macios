@@ -1492,15 +1492,15 @@ namespace UIKit {
 		[Export ("sectionIdentifiers")]
 		SectionIdentifierType [] SectionIdentifiers { get; }
 
-		[TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+		[TV (15,0), iOS (15,0), MacCatalyst (15,0), Mac (12,0)]
 		[Export ("reloadedSectionIdentifiers")]
 		SectionIdentifierType [] ReloadedSectionIdentifiers { get; }
 
-		[TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+		[TV (15,0), iOS (15,0), MacCatalyst (15,0), Mac (12,0)]
 		[Export ("reloadedItemIdentifiers")]
 		ItemIdentifierType [] ReloadedItemIdentifiers { get; }
 
-		[TV (15,0), iOS (15,0), MacCatalyst (15,0)]
+		[TV (15,0), iOS (15,0), MacCatalyst (15,0), Mac (12,0)]
 		[Export ("reconfiguredItemIdentifiers")]
 		ItemIdentifierType [] ReconfiguredItemIdentifiers { get; }
 
@@ -2423,7 +2423,7 @@ namespace UIKit {
 		[TV (15,0), NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Static]
 		[Export ("registerTextAttachmentViewProviderClass:forFileType:")]
-		void RegisterTextAttachmentViewProviderClass (Class textAttachmentViewProviderClass, string fileType);
+		void RegisterViewProviderClass (Class textAttachmentViewProviderClass, string fileType);
 
 		[TV (15,0), NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("allowsTextAttachmentView")]
