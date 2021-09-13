@@ -8,7 +8,7 @@
 //
 //
 
-#if IOS || TVOS
+#if !__WATCHOS__
 
 using System;
 using System.Runtime.InteropServices;
@@ -24,7 +24,7 @@ using Metal;
 namespace CoreVideo {
 
 #if !NET
-	[iOS (8,0)]
+	[iOS (8,0), Mac (12,0), MacCatalyst (15,0)]
 #endif
 	public class CVMetalTexture : INativeObject, IDisposable {
 

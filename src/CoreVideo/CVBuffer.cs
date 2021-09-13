@@ -118,8 +118,19 @@ namespace CoreVideo {
 			CVBufferRemoveAttachment (handle, key.Handle);
 		}
 
+		[Deprecated (PlatformName.MacOSX, 12, 0)]
+		[Deprecated (PlatformName.iOS, 15, 0)]
+		[Deprecated (PlatformName.TvOS, 15, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 15, 0)]
+		[Deprecated (PlatformName.WatchOS, 8, 0)]
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static /* CFTypeRef */ IntPtr CVBufferGetAttachment (/* CVBufferRef */ IntPtr buffer, /* CFStringRef */ IntPtr key, out CVAttachmentMode attachmentMode);
+
+		// The new method is the same as the old one but changing the ownership from Get to Copy, so we will use the new version if possible since the
+		// older method has been deprecatd.
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[DllImport (Constants.CoreVideoLibrary)]
+		extern static /* CFTypeRef */ IntPtr CVBufferCopyAttachment (/* CVBufferRef */ IntPtr buffer, /* CFStringRef */ IntPtr key, out CVAttachmentMode attachmentMode);
 
 // FIXME: we need to bring the new API to xamcore
 #if !MONOMAC
@@ -128,6 +139,12 @@ namespace CoreVideo {
 		{
 			if (key == null)
 				throw new ArgumentNullException ("key");
+#if IOS || __MACCATALYST__ || TVOS
+			if (UIKit.UIDevice.CurrentDevice.CheckSystemVersion (15, 0))
+#elif WATCH
+			if (WatchKit.WKInterfaceDevice.CurrentDevice.CheckSystemVersion (8, 0))
+#endif
+				return Runtime.GetINativeObject<T> (CVBufferCopyAttachment (handle, key.Handle, out attachmentMode), true);
 			return Runtime.GetINativeObject<T> (CVBufferGetAttachment (handle, key.Handle, out attachmentMode), false);
 		}
 #else
@@ -135,16 +152,36 @@ namespace CoreVideo {
 		{
 			if (key == null)
 				throw new ArgumentNullException ("key");
-			return Runtime.GetNSObject (CVBufferGetAttachment (handle, key.Handle, out attachmentMode));
+			if (PlatformHelper.CheckSystemVersion (12, 0))
+				return Runtime.GetNSObject<NSObject> (CVBufferCopyAttachment (handle, key.Handle, out attachmentMode), true);
+			else
+				return Runtime.GetNSObject<NSObject> (CVBufferGetAttachment (handle, key.Handle, out attachmentMode), false);
 		}
 #endif
 
+		[Deprecated (PlatformName.MacOSX, 12, 0)]
+		[Deprecated (PlatformName.iOS, 15, 0)]
+		[Deprecated (PlatformName.TvOS, 15, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 15, 0)]
+		[Deprecated (PlatformName.WatchOS, 8, 0)]
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static /* CFDictionaryRef */ IntPtr CVBufferGetAttachments (/* CVBufferRef */ IntPtr buffer, CVAttachmentMode attachmentMode);
 
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[DllImport (Constants.CoreVideoLibrary)]
+		extern static /* CFDictionaryRef */ IntPtr CVBufferCopyAttachments (/* CVBufferRef */ IntPtr buffer, CVAttachmentMode attachmentMode);
+
 		public NSDictionary GetAttachments (CVAttachmentMode attachmentMode)
 		{
-			return (NSDictionary) Runtime.GetNSObject (CVBufferGetAttachments (handle, attachmentMode));
+#if IOS || __MACCATALYST__ || TVOS
+			if (UIKit.UIDevice.CurrentDevice.CheckSystemVersion (15, 0))
+#elif WATCH
+			if (WatchKit.WKInterfaceDevice.CurrentDevice.CheckSystemVersion (8, 0))
+#elif MONOMAC
+			if (PlatformHelper.CheckSystemVersion (12, 0))
+#endif
+				return Runtime.GetINativeObject<NSDictionary> (CVBufferCopyAttachments (handle, attachmentMode), true);
+			return Runtime.GetNSObject<NSDictionary> (CVBufferGetAttachments (handle, attachmentMode), false);
 		}
 
 		// There is some API that needs a more strongly typed version of a NSDictionary
@@ -188,6 +225,34 @@ namespace CoreVideo {
 				throw new ArgumentNullException ("theAttachments");
 			CVBufferSetAttachments (handle, theAttachments.Handle, attachmentMode);
 		}
+
+#if !NET
+		[iOS (15,0), TV (15,0), MacCatalyst (15,0), Mac (12,0), Watch (8,0)]
+#else
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+#endif
+		[DllImport (Constants.CoreVideoLibrary)]
+		[return: MarshalAs (UnmanagedType.U1)]
+		static extern bool CVBufferHasAttachment (/* CVBufferRef */ IntPtr buffer, /* CFStringRef */ IntPtr key);
+
+#if !NET
+		[iOS (15,0), TV (15,0), MacCatalyst (15,0), Mac (12,0), Watch (8,0)]
+#else
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+#endif
+		public bool HasAttachment (NSString key)
+		{
+			if (key is null)
+				throw new ArgumentNullException (nameof (key));
+			return CVBufferHasAttachment (handle, key.Handle);
+		}
+
 #endif // !COREBUILD
 	}
 }
