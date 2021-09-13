@@ -356,9 +356,7 @@ public partial class Generator {
 			break;
 		case "string":
 			// NSString should not be added - it should be bound as a string
-			print ("var ptr = CFString.CreateNative (value);");
-			print ($"SetHandle (\"{propertyName}\", ptr);");
-			print ($"CFObject.CFRelease (ptr);");
+			print ($"SetString (\"{propertyName}\", value);");
 			break;
 		case "CIVector[]":
 			print ("if (value is null) {");
