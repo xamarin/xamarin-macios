@@ -232,7 +232,7 @@ namespace Xharness.Jenkins {
 							MonoNativeHelper.AddProjectDefines (clone.Xml, mono_native_link);
 						}
 						if (test_data.EnableSGenConc)
-							clone.Xml.SetNode ("MtouchEnableSGenConc", "true", task.ProjectPlatform, configuration);
+							clone.Xml.SetTopLevelPropertyGroupValue ("EnableSGenConc", "true");
 						if (test_data.UseThumb) // no need to check the platform, already done at the data iterator
 							clone.Xml.SetNode ("MtouchUseThumb", "true", task.ProjectPlatform, configuration);
 						if (use_llvm)
