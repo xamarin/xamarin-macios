@@ -18,6 +18,15 @@ namespace TVUIKit {
 		All,
 	}
 
+	[TV (15,0)]
+	[Native]
+	public enum TVMediaItemContentTextTransform : long {
+		None,
+		Uppercase,
+		Lowercase,
+		Capitalized,
+	}
+
 	[TV (12,0)]
 	[BaseType (typeof (UIControl))]
 	[DisableDefaultCtor] // initWithFrame is the designated initializer
@@ -133,6 +142,7 @@ namespace TVUIKit {
 		bool ShowsOnlyWhenAncestorFocused { get; set; }
 	}
 
+	[Deprecated (PlatformName.TvOS, 15, 0, message:"Use 'TVMonogramContentConfiguration' APIs instead.")]
 	[TV (12,0)]
 	[BaseType (typeof (TVLockupView))]
 	interface TVMonogramView {
@@ -289,5 +299,167 @@ namespace TVUIKit {
 
 		[Export ("transitioningToCenterIndexPath")]
 		bool TransitioningToCenterIndexPath { [Bind ("isTransitioningToCenterIndexPath")] get; }
+	}
+
+	[TV (15,0), NoWatch, NoMac, NoiOS]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface TVMediaItemContentConfiguration : UIContentConfiguration, NSSecureCoding {
+
+		[Static]
+		[Export ("wideCellConfiguration")]
+		TVMediaItemContentConfiguration CreateWideCell ();
+
+		[NullAllowed, Export ("image", ArgumentSemantic.Strong)]
+		UIImage Image { get; set; }
+
+		[NullAllowed, Export ("text")]
+		string Text { get; set; }
+
+		[Export ("textProperties")]
+		TVMediaItemContentTextProperties TextProperties { get; }
+
+		[NullAllowed, Export ("secondaryText")]
+		string SecondaryText { get; set; }
+
+		[Export ("secondaryTextProperties")]
+		TVMediaItemContentTextProperties SecondaryTextProperties { get; }
+
+		[Export ("playbackProgress")]
+		float PlaybackProgress { get; set; }
+
+		[NullAllowed, Export ("badgeText")]
+		string BadgeText { get; set; }
+
+		[Export ("badgeProperties", ArgumentSemantic.Copy)]
+		TVMediaItemContentBadgeProperties BadgeProperties { get; set; }
+
+		[NullAllowed, Export ("overlayView", ArgumentSemantic.Strong)]
+		UIView OverlayView { get; set; }
+	}
+
+	[TV (15,0), NoWatch, NoMac, NoiOS]
+	[BaseType (typeof (UIView))]
+	[DisableDefaultCtor]
+	interface TVMediaItemContentView : UIContentView {
+
+		[Export ("initWithConfiguration:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (TVMediaItemContentConfiguration configuration);
+
+		// Conflicts with IUIContentView.Configuration property unfortunately
+		[Sealed]
+		[Export ("configuration")]
+		TVMediaItemContentConfiguration GetConfiguration ();
+
+		[Sealed]
+		[Export ("setConfiguration:")]
+		void SetConfiguration (TVMediaItemContentConfiguration configuration);
+
+		[Export ("focusedFrameGuide", ArgumentSemantic.Strong)]
+		UILayoutGuide FocusedFrameGuide { get; }
+	}
+
+	[TV (15,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface TVMediaItemContentTextProperties : NSCopying, NSSecureCoding {
+
+		[Export ("font", ArgumentSemantic.Copy)]
+		UIFont Font { get; set; }
+
+		[Export ("color", ArgumentSemantic.Copy)]
+		UIColor Color { get; set; }
+
+		[Export ("transform", ArgumentSemantic.Assign)]
+		TVMediaItemContentTextTransform Transform { get; set; }
+	}
+
+	[TV (15,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface TVMediaItemContentBadgeProperties : NSCopying, NSSecureCoding {
+
+		[Static]
+		[Export ("defaultBadgeProperties")]
+		TVMediaItemContentBadgeProperties CreateDefaultBadge ();
+
+		[Static]
+		[Export ("liveContentBadgeProperties")]
+		TVMediaItemContentBadgeProperties CreateLiveContentBadge ();
+
+		[Export ("backgroundColor", ArgumentSemantic.Copy)]
+		UIColor BackgroundColor { get; set; }
+
+		[Export ("font", ArgumentSemantic.Copy)]
+		UIFont Font { get; set; }
+
+		[Export ("color", ArgumentSemantic.Copy)]
+		UIColor Color { get; set; }
+
+		[Export ("transform", ArgumentSemantic.Assign)]
+		TVMediaItemContentTextTransform Transform { get; set; }
+	}
+
+	[TV (15,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface TVMonogramContentConfiguration : UIContentConfiguration, NSSecureCoding {
+
+		[Static]
+		[Export ("cellConfiguration")]
+		TVMonogramContentConfiguration CreateCell ();
+
+		[NullAllowed, Export ("image", ArgumentSemantic.Strong)]
+		UIImage Image { get; set; }
+
+		[NullAllowed, Export ("text")]
+		string Text { get; set; }
+
+		[Export ("textProperties")]
+		TVMonogramContentTextProperties TextProperties { get; }
+
+		[NullAllowed, Export ("secondaryText")]
+		string SecondaryText { get; set; }
+
+		[Export ("secondaryTextProperties")]
+		TVMonogramContentTextProperties SecondaryTextProperties { get; }
+
+		[NullAllowed, Export ("personNameComponents", ArgumentSemantic.Copy)]
+		NSPersonNameComponents PersonNameComponents { get; set; }
+	}
+
+	[TV (15,0)]
+	[BaseType (typeof (UIView))]
+	[DisableDefaultCtor]
+	interface TVMonogramContentView : UIContentView {
+
+		[Export ("initWithConfiguration:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (TVMonogramContentConfiguration configuration);
+
+		// Conflicts with IUIContentView.Configuration property unfortunately
+		[Sealed]
+		[Export ("configuration")]
+		TVMonogramContentConfiguration GetConfiguration ();
+
+		[Sealed]
+		[Export ("setConfiguration:")]
+		void SetConfiguration (TVMonogramContentConfiguration configuration);
+
+		[Export ("focusedFrameGuide", ArgumentSemantic.Strong)]
+		UILayoutGuide FocusedFrameGuide { get; }
+	}
+
+	[TV (15,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface TVMonogramContentTextProperties : NSCopying, NSSecureCoding {
+
+		[Export ("font", ArgumentSemantic.Copy)]
+		UIFont Font { get; set; }
+
+		[Export ("color", ArgumentSemantic.Copy)]
+		UIColor Color { get; set; }
 	}
 }
