@@ -713,6 +713,9 @@
   <data name="E0187" xml:space="preserve">
         <value>{0} macOS sürümü karşılık gelen bir iOS sürümüne eşlenemedi</value>
     </data>
+  <data name="E0188" xml:space="preserve">
+        <value>Could not map the iOS version {0} to a corresponding macOS version</value>
+    </data>
   <data name="E7001" xml:space="preserve">
         <value>Wi-Fi hata ayıklayıcısı ayarları için konak IP'leri çözümlenemedi.
         </value>

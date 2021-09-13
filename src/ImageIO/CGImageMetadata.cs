@@ -9,6 +9,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
@@ -16,7 +17,9 @@ using CoreFoundation;
 
 namespace ImageIO {
 
+#if !NET
 	[iOS (7,0)]
+#endif
 	public partial class CGImageMetadataEnumerateOptions {
 
 		public bool Recursive { get; set; }
@@ -36,7 +39,9 @@ namespace ImageIO {
 	public delegate bool CGImageMetadataTagBlock (NSString path, CGImageMetadataTag tag);
 
 	// CGImageMetadata.h
+#if !NET
 	[iOS (7,0)]
+#endif
 	public partial class CGImageMetadata : INativeObject, IDisposable {
 
 		public CGImageMetadata (IntPtr handle)

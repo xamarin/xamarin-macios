@@ -278,6 +278,18 @@ namespace CoreGraphics {
 		[MacCatalyst (14,0)]
 		[Field ("kCGColorSpaceITUR_2100_PQ")]
 		NSString Itur_2100_PQ { get; }
+
+		[Mac (12,0), iOS (15,0), TV (15,0), Watch (8,0), MacCatalyst (15,0)]
+		[Field ("kCGColorSpaceExtendedRange")]
+		NSString ExtendedRange { get; }
+
+		[Mac (12, 0), iOS (15, 0), TV (15,0), Watch (8,0), MacCatalyst (15,0)]
+		[Field ("kCGColorSpaceLinearDisplayP3")]
+		NSString LinearDisplayP3 { get; }
+
+		[Mac (12, 0), iOS (15, 0), TV (15,0), Watch (8,0), MacCatalyst (15,0)]
+		[Field ("kCGColorSpaceLinearITUR_2020")]
+		NSString LinearItur_2020 { get; }
 	}
 
 	[Partial]

@@ -713,6 +713,9 @@
   <data name="E0187" xml:space="preserve">
         <value>No se pudo asignar la versión de macOS {0} a una versión de iOS correspondiente</value>
     </data>
+  <data name="E0188" xml:space="preserve">
+        <value>Could not map the iOS version {0} to a corresponding macOS version</value>
+    </data>
   <data name="E7001" xml:space="preserve">
         <value>No se pudieron resolver las direcciones IP del host para la configuración del depurador Wi-Fi.
         </value>

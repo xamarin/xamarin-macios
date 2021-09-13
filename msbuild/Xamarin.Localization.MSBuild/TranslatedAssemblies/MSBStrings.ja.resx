@@ -713,6 +713,9 @@
   <data name="E0187" xml:space="preserve">
         <value>macOS バージョン {0} を対応する iOS バージョンにマップできません</value>
     </data>
+  <data name="E0188" xml:space="preserve">
+        <value>Could not map the iOS version {0} to a corresponding macOS version</value>
+    </data>
   <data name="E7001" xml:space="preserve">
         <value>WiFi デバッガー設定のホスト IP を解決できませんでした。
         </value>

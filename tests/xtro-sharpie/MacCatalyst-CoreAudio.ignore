@@ -21,7 +21,6 @@
 !missing-pinvoke! AudioHardwareUnload is not bound
 !missing-pinvoke! AudioObjectAddPropertyListener is not bound
 !missing-pinvoke! AudioObjectAddPropertyListenerBlock is not bound
-!missing-pinvoke! AudioObjectGetPropertyData is not bound
 !missing-pinvoke! AudioObjectGetPropertyDataSize is not bound
 !missing-pinvoke! AudioObjectHasProperty is not bound
 !missing-pinvoke! AudioObjectIsPropertySettable is not bound

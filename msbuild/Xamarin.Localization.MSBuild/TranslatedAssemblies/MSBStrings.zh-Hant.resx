@@ -713,6 +713,9 @@
   <data name="E0187" xml:space="preserve">
         <value>無法將 macOS 版本 {0}　對應至相應的 iOS 版本</value>
     </data>
+  <data name="E0188" xml:space="preserve">
+        <value>Could not map the iOS version {0} to a corresponding macOS version</value>
+    </data>
   <data name="E7001" xml:space="preserve">
         <value>無法解析 WiFi 偵錯工具設定的主機 IP。
         </value>

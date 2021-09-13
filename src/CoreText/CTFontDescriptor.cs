@@ -30,6 +30,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using CoreFoundation;
@@ -734,13 +735,17 @@ namespace CoreText {
 			return o;
 		}
 #endregion
+#if !NET
 		[Mac (10,9)]
+#endif
 		[DllImport (Constants.CoreTextLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool CTFontDescriptorMatchFontDescriptorsWithProgressHandler (IntPtr descriptors, IntPtr mandatoryAttributes,
 			Func<CTFontDescriptorMatchingState, IntPtr, bool> progressHandler);
 
+#if !NET
 		[Mac (10,9)]
+#endif
 		public static bool MatchFontDescriptors (CTFontDescriptor[] descriptors, NSSet mandatoryAttributes, Func<CTFontDescriptorMatchingState, IntPtr, bool> progressHandler)
 		{
 			// FIXME: the P/Invoke used below is wrong, it expects a block, not a function pointer.

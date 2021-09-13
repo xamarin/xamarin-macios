@@ -10,6 +10,7 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
@@ -27,7 +28,9 @@ namespace ImageIO {
 			/* CFDictionaryRef __nullable */ IntPtr options);
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
+#if !NET
 		[iOS (7,0)]
+#endif
 		public CGImageMetadata CopyMetadata (nint index, NSDictionary options)
 		{
 			IntPtr o = options == null ? IntPtr.Zero : options.Handle;
@@ -35,7 +38,9 @@ namespace ImageIO {
 			return (result == IntPtr.Zero) ? null : new CGImageMetadata (result);
 		}
 
+#if !NET
 		[iOS (7,0)]
+#endif
 		public CGImageMetadata CopyMetadata (nint index, CGImageOptions options)
 		{
 			NSDictionary o = null;
@@ -48,12 +53,16 @@ namespace ImageIO {
 		}
 
 		// CGImageSource.h
+#if !NET
 		[iOS (7,0)]
+#endif
 		[DllImport (Constants.ImageIOLibrary)]
 		extern static void CGImageSourceRemoveCacheAtIndex (/* CGImageSourceRef __nonnull */ IntPtr isrc,
 			/* size_t */ nint index);
 
+#if !NET
 		[iOS (7,0)]
+#endif
 		public void RemoveCache (nint index)
 		{
 			CGImageSourceRemoveCacheAtIndex (Handle, index);

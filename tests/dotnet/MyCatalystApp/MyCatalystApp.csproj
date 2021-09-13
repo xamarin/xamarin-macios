@@ -8,5 +8,6 @@
     <ApplicationTitle>MyCatalystApp</ApplicationTitle>
     <ApplicationId>com.xamarin.mycatalystapp</ApplicationId>
     <ApplicationVersion>3.14</ApplicationVersion>
+    <SupportedOSPlatformVersion>13.1</SupportedOSPlatformVersion>
   </PropertyGroup>
 </Project>

@@ -9,6 +9,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using CoreFoundation;
 using ObjCRuntime;
@@ -17,7 +18,9 @@ using Foundation;
 namespace ImageIO {
 
 	// CGImageMetadata.h
+#if !NET
 	[iOS (7,0)]
+#endif
 	public class CGImageMetadataTag : INativeObject, IDisposable {
 
 		// note: CGImageMetadataType is always an int (4 bytes) so it's ok to use in the pinvoke declaration
