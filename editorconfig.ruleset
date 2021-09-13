@@ -1,7 +1,0 @@
-<RuleSet Name="xamarin-macios Rules"
-         ToolsVersion="12.0">
-  <Rules AnalyzerId="System.Runtime.Analyzers"
-         RuleNamespace="System.Runtime.Analyzers">
-    <Rule Id="BI1234" Action="Hidden" />
-  </Rules>
-</RuleSet>
