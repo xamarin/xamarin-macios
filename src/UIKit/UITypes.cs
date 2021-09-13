@@ -10,6 +10,7 @@
 //
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
@@ -152,6 +153,11 @@ namespace UIKit {
 #endif
 
 #if IOS
+#if !NET
+	[Introduced (PlatformName.iOS, 15,0)]
+#else
+	[SupportedOSPlatform ("ios15.0")]
+#endif //!NET
 	[StructLayout (LayoutKind.Sequential)]
 	public struct UIPointerAccessoryPosition {
 		public nfloat Offset, Angle;
