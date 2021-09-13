@@ -546,11 +546,11 @@ namespace AVFoundation {
 		[Field ("AVFileTypeTIFF")]
 		Tiff = 20,
 
-		[NoWatch, NoTV, NoiOS, Mac (12, 0), MacCatalyst (15,0)]
+		[NoWatch, NoTV, NoiOS, Mac (12, 0), NoMacCatalyst]
 		[Field ("AVFileTypeAppleiTT")]
 		AppleiTT = 21,
 
-		[NoWatch, NoTV, NoiOS, Mac (12, 0), MacCatalyst (15,0)]
+		[NoWatch, NoTV, NoiOS, Mac (12, 0), NoMacCatalyst]
 		[Field ("AVFileTypeSCC")]
 		Scc = 22,
 	}
@@ -669,7 +669,7 @@ namespace AVFoundation {
 		NSString AverageNonDroppableFrameRateKey { get; }
 
 		[NoiOS, NoTV]
-		[Mac (10,10), MacCatalyst (15,0)]
+		[Mac (10,10), NoMacCatalyst]
 		[Field ("AVVideoEncoderSpecificationKey")]
 		NSString EncoderSpecificationKey { get; }
 
@@ -3612,7 +3612,7 @@ namespace AVFoundation {
 		void RemoveTimeObserver (NSObject observer);
 	}
 
-	[Mac (10,10), NoTV, NoiOS, NoWatch, MacCatalyst (15,0)]
+	[Mac (10,10), NoTV, NoiOS, NoWatch, NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface AVSampleBufferGenerator {
@@ -3632,7 +3632,7 @@ namespace AVFoundation {
 		void NotifyOfDataReady (CMSampleBuffer sbuf, Action<bool, NSError> completionHandler);
 	}
 
-	[Mac (10,10), NoTV, NoiOS, NoWatch, MacCatalyst (15,0)]
+	[Mac (10,10), NoTV, NoiOS, NoWatch, NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface AVSampleBufferRequest {
@@ -4618,7 +4618,7 @@ namespace AVFoundation {
 		[Field ("AVURLAssetAllowsConstrainedNetworkAccessKey")]
 		NSString AllowsConstrainedNetworkAccessKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (12,0), MacCatalyst (15,0)]
+		[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
 		[Field ("AVURLAssetShouldSupportAliasDataReferencesKey")]
 		NSString ShouldSupportAliasDataReferencesKey { get; }
 
@@ -4762,17 +4762,17 @@ namespace AVFoundation {
 		[Export ("canProvideSampleCursors")]
 		bool CanProvideSampleCursors { get; }
 
-		[Mac (10,10), NoiOS, NoTV, NoWatch, MacCatalyst (15,0)]
+		[Mac (10,10), NoiOS, NoTV, NoWatch, NoMacCatalyst]
 		[return: NullAllowed]
 		[Export ("makeSampleCursorWithPresentationTimeStamp:")]
 		AVSampleCursor MakeSampleCursor (CMTime presentationTimeStamp);
 
-		[Mac (10,10), NoiOS, NoTV, NoWatch, MacCatalyst (15,0)]
+		[Mac (10,10), NoiOS, NoTV, NoWatch, NoMacCatalyst]
 		[return: NullAllowed]
 		[Export ("makeSampleCursorAtFirstSampleInDecodeOrder")]
 		AVSampleCursor MakeSampleCursorAtFirstSampleInDecodeOrder ();
 
-		[Mac (10,10), NoiOS, NoTV, NoWatch, MacCatalyst (15,0)]
+		[Mac (10,10), NoiOS, NoTV, NoWatch, NoMacCatalyst]
 		[return: NullAllowed]
 		[Export ("makeSampleCursorAtLastSampleInDecodeOrder")]
 		AVSampleCursor MakeSampleCursorAtLastSampleInDecodeOrder ();
@@ -4802,7 +4802,7 @@ namespace AVFoundation {
 		void LoadSegment (CMTime trackTime, Action<AVAssetTrackSegment, NSError> completionHandler);
 	}
 
-	[Mac (10,10), NoiOS, NoTV, NoWatch, MacCatalyst (15,0)]
+	[Mac (10,10), NoiOS, NoTV, NoWatch, NoMacCatalyst]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface AVSampleCursor : NSCopying {
@@ -8866,11 +8866,11 @@ namespace AVFoundation {
 		[Field ("AVCaptureSessionPresetInputPriority")]
 		NSString PresetInputPriority { get; }
 #endif
-		[NoiOS, MacCatalyst (15,0)]
+		[NoiOS, NoMacCatalyst]
 		[Field ("AVCaptureSessionPreset320x240")]
 		NSString Preset320x240 { get; }
 
-		[NoiOS, MacCatalyst (15,0)]
+		[NoiOS, NoMacCatalyst]
 		[Field ("AVCaptureSessionPreset960x540")]
 		NSString Preset960x540 { get; }
 
@@ -9051,12 +9051,13 @@ namespace AVFoundation {
 		[Export ("activeVideoStabilizationMode")]
 		AVCaptureVideoStabilizationMode ActiveVideoStabilizationMode { get; }
 #endif
-		[NoiOS, MacCatalyst (15,0)]
+		[Unavailable (PlatformName.MacCatalyst)]
+		[NoiOS]
 		[Export ("supportsVideoFieldMode")]
 		bool SupportsVideoFieldMode { [Bind ("isVideoFieldModeSupported")] get; }
 
-#if MONOMAC || __MACCATALYST__
-		[MacCatalyst (15,0)]
+#if MONOMAC
+		[Unavailable (PlatformName.MacCatalyst)]
 		[Export ("videoFieldMode")]
 		AVVideoFieldMode VideoFieldMode { get; set; }
 #endif
@@ -9207,7 +9208,7 @@ namespace AVFoundation {
 		CMTime VideoMinFrameDurationOverride { get; set; }
 	}
 
-	[NoiOS, NoTV, NoWatch, MacCatalyst (15,0)]
+	[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface AVCaptureDeviceInputSource {
 		[Export ("inputSourceID")]
@@ -9217,7 +9218,7 @@ namespace AVFoundation {
 		string LocalizedName { get; }
 	}
 
-	[NoiOS, NoWatch, NoTV, MacCatalyst (15,0)]
+	[NoiOS, NoWatch, NoTV, NoMacCatalyst]
 	[BaseType (typeof (AVCaptureFileOutput))]
 	interface AVCaptureAudioFileOutput {
 		[Export ("metadata", ArgumentSemantic.Copy)]
@@ -9237,7 +9238,7 @@ namespace AVFoundation {
 		void StartRecording (NSUrl outputFileUrl, string fileType, [Protocolize] AVCaptureFileOutputRecordingDelegate recordingDelegate);
 	}
 
-	[NoiOS, NoWatch, NoTV, MacCatalyst (15,0)]
+	[NoiOS, NoWatch, NoTV, NoMacCatalyst]
 	[BaseType (typeof (AVCaptureOutput))]
 	interface AVCaptureAudioPreviewOutput {
 		[Export ("outputDeviceUniqueID", ArgumentSemantic.Copy), NullAllowed]
@@ -9683,15 +9684,15 @@ namespace AVFoundation {
 		[Export ("captureOutput:didFinishRecordingToOutputFileAtURL:fromConnections:error:"), CheckDisposed]
 		void FinishedRecording (AVCaptureFileOutput captureOutput, NSUrl outputFileUrl, NSObject [] connections, [NullAllowed] NSError error);
 
-		[MacCatalyst (15,0), NoiOS]
+		[NoMacCatalyst, NoiOS]
 		[Export ("captureOutput:didPauseRecordingToOutputFileAtURL:fromConnections:")]
 		void DidPauseRecording (AVCaptureFileOutput captureOutput, NSUrl outputFileUrl, AVCaptureConnection [] connections);
 
-		[MacCatalyst (15,0), NoiOS]
+		[NoMacCatalyst, NoiOS]
 		[Export ("captureOutput:didResumeRecordingToOutputFileAtURL:fromConnections:")]
 		void DidResumeRecording (AVCaptureFileOutput captureOutput, NSUrl outputFileUrl, AVCaptureConnection [] connections);
 
-		[MacCatalyst (15,0), NoiOS]
+		[NoMacCatalyst, NoiOS]
 		[Export ("captureOutput:willFinishRecordingToOutputFileAtURL:fromConnections:error:")]
 		void WillFinishRecording (AVCaptureFileOutput captureOutput, NSUrl outputFileUrl, AVCaptureConnection [] connections, [NullAllowed] NSError error);
 	}
@@ -10500,7 +10501,7 @@ namespace AVFoundation {
 		[Field ("AVCaptureDeviceTypeBuiltInDualWideCamera")]
 		BuiltInDualWideCamera,
 
-		[NoWatch, NoTV, NoiOS, MacCatalyst (15,0)]
+		[NoWatch, NoTV, NoiOS, NoMacCatalyst]
 		[Field ("AVCaptureDeviceTypeExternalUnknown")]
 		ExternalUnknown,
 	}
@@ -12305,7 +12306,7 @@ namespace AVFoundation {
 		[Field ("AVVideoColorPrimaries_ITU_R_709_2")]
 		NSString Itu_R_709_2 { get; }
 
-		[NoiOS, NoTV, MacCatalyst (15,0)]
+		[NoiOS, NoTV, NoMacCatalyst]
 		[Field ("AVVideoColorPrimaries_EBU_3213")]
 		NSString Ebu_3213 { get; }
 
@@ -12327,7 +12328,7 @@ namespace AVFoundation {
 		[Field ("AVVideoTransferFunction_ITU_R_709_2")]
 		NSString AVVideoTransferFunction_Itu_R_709_2 { get; }
 
-		[NoiOS, NoTV, Mac (10,12), MacCatalyst (15,0)]
+		[NoiOS, NoTV, Mac (10,12), NoMacCatalyst]
 		[Field ("AVVideoTransferFunction_SMPTE_240M_1995")]
 		NSString AVVideoTransferFunction_Smpte_240M_1995 { get; }
 	}
@@ -12344,7 +12345,7 @@ namespace AVFoundation {
 		[Field ("AVVideoYCbCrMatrix_ITU_R_601_4")]
 		NSString Itu_R_601_4 { get; }
 
-		[NoiOS, NoTV, Mac (10,12), MacCatalyst (15,0)]
+		[NoiOS, NoTV, Mac (10,12), NoMacCatalyst]
 		[Field ("AVVideoYCbCrMatrix_SMPTE_240M_1995")]
 		NSString Smpte_240M_1995 { get; }
 
@@ -13517,7 +13518,6 @@ namespace AVFoundation {
 	[DisableDefaultCtor] // not meant to be user createable
 	interface AVAssetDownloadTask {
 		
-		[NoMac]
 		[Export ("URLAsset")]
 		AVUrlAsset UrlAsset { get; }
 
@@ -13526,11 +13526,9 @@ namespace AVFoundation {
 		[Export ("destinationURL")]
 		NSUrl DestinationUrl { get; }
 
-		[NoMac]
 		[NullAllowed, Export ("options")]
 		NSDictionary<NSString, NSObject> Options { get; }
 
-		[NoMac]
 		[Export ("loadedTimeRanges")]
 		NSValue[] LoadedTimeRanges { get; }
 
@@ -14818,7 +14816,7 @@ namespace AVFoundation {
 		AVAssetSegmentReportSampleInformation FirstVideoSampleInformation { get; }
 	}
 
-	[NoWatch, NoTV, NoiOS, Mac (11,0), MacCatalyst (15,0)]
+	[NoWatch, NoTV, NoiOS, Mac (11,0), NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface AVAudioRoutingArbiter
@@ -15230,7 +15228,7 @@ namespace AVFoundation {
 		NSObject WeakValidationDelegate { get; set; }
 	}
 
-	[NoWatch, NoTV, NoiOS, Mac (12,0), MacCatalyst (15,0)]
+	[NoWatch, NoTV, NoiOS, Mac (12,0), NoMacCatalyst]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface AVAssetWriterInputCaptionAdaptor

@@ -2,33 +2,31 @@
 !missing-selector! AVAssetDownloadTask::destinationURL not bound
 ## Unavailable
 !missing-field! AVCaptureSessionPresetiFrame960x540 not bound
-!missing-selector! AVAssetReaderOutputCaptionAdaptor::captionsNotPresentInPreviousGroupsInCaptionGroup: not bound
-!missing-selector! AVAssetReaderOutputCaptionAdaptor::nextCaptionGroup not bound
-!missing-selector! AVAssetWriterInputCaptionAdaptor::appendCaption: not bound
-!missing-selector! AVAssetWriterInputCaptionAdaptor::appendCaptionGroup: not bound
-!missing-selector! AVAsset::preferredDisplayCriteria not bound
-!missing-selector! +AVAssetReaderOutputCaptionAdaptor::assetReaderOutputCaptionAdaptorWithAssetReaderTrackOutput: not bound
-!missing-selector! AVAssetReaderOutputCaptionAdaptor::assetReaderTrackOutput not bound
-!missing-selector! AVAssetReaderOutputCaptionAdaptor::initWithAssetReaderTrackOutput: not bound
 !missing-selector! AVAssetReaderOutputCaptionAdaptor::setValidationDelegate: not bound
-!missing-type! AVAssetReaderOutputCaptionAdaptor not bound
 
 # delegate is not present and will result in a compilation error
-!missing-protocol! AVCaptureFileOutputDelegate not bound
-!missing-selector! AVCaptureFileOutput::delegate not bound
-!missing-selector! AVCaptureFileOutput::setDelegate: not bound
 !missing-selector! AVAssetReaderOutputCaptionAdaptor::validationDelegate not bound
-!missing-protocol! AVAssetReaderCaptionValidationHandling not bound
 
 # added and deprecated 
-!missing-field! AVFragmentedMovieTrackTotalSampleDataLengthDidChangeNotification not bound
-!missing-selector! AVAudioUnitComponent::componentURL not bound
-!missing-field! AVVideoCodecAppleProRes4444 not bound
-!missing-field! AVVideoCodecAppleProRes422 not bound
 
 # not possible with the generator but added INSFastEnumeration for whenever is supported.
 !missing-protocol-conformance! AVCaptureSynchronizedDataCollection should conform to NSFastEnumeration
 
 # ignored in mac os too
-!missing-field! AVVideoDecompressionPropertiesKey not bound
 !missing-protocol-conformance! AVSampleBufferDisplayLayer should conform to AVQueuedSampleBufferRendering (defined in 'AVSampleBufferDisplayLayerQueueManagement' category)
+
+# not present in catalyst
+!missing-selector! AVSampleCursor::comparePositionInDecodeOrderWithPositionOfCursor: not bound
+!missing-selector! AVSampleCursor::copyCurrentSampleFormatDescription not bound
+!missing-selector! AVSampleCursor::currentChunkInfo not bound
+!missing-selector! AVSampleCursor::currentChunkStorageRange not bound
+!missing-selector! AVSampleCursor::currentChunkStorageURL not bound
+!missing-selector! AVSampleCursor::currentSampleDependencyInfo not bound
+!missing-selector! AVSampleCursor::currentSampleDuration not bound
+!missing-selector! AVSampleCursor::currentSampleIndexInChunk not bound
+!missing-selector! AVSampleCursor::currentSampleStorageRange not bound
+!missing-selector! AVSampleCursor::currentSampleSyncInfo not bound
+!missing-selector! AVSampleCursor::decodeTimeStamp not bound
+!missing-selector! AVSampleCursor::presentationTimeStamp not bound
+!missing-selector! AVSampleCursor::samplesWithEarlierDecodeTimeStampsMayHaveLaterPresentationTimeStampsThanCursor: not bound
+!missing-selector! AVSampleCursor::samplesWithLaterDecodeTimeStampsMayHaveEarlierPresentationTimeStampsThanCursor: not bound

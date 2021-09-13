@@ -306,11 +306,10 @@ namespace AVFoundation {
 		Succeeded, Failed, Cancelled
 	}
 
-#if !XAMCORE_3_0 || MONOMAC || __MACCATALYST__
+#if !XAMCORE_3_0 || MONOMAC
 #if !NET
-	[NoTV, MacCatalyst (15,0)]
-#else
-	[UnsupportedOSPlatform ("tvos"), SupportedOSPlatform ("maccatalyst15.0")]
+	[Unavailable (PlatformName.MacCatalyst)]
+	[NoTV]
 #endif
 	[Native]
 	// NSInteger - AVCaptureDevice.h
@@ -319,16 +318,15 @@ namespace AVFoundation {
 	}
 
 #if !NET
-	[NoTV, NoWatch, MacCatalyst (15,0)]
-#else
-	[UnsupportedOSPlatform ("tvos"), SupportedOSPlatform ("maccatalyst15.0")]
+	[Unavailable (PlatformName.MacCatalyst)]
+	[NoTV, NoWatch]
 #endif
 	[Native]
 	// NSInteger - AVCaptureSession.h
 	public enum AVVideoFieldMode : long {
 		Both, TopOnly, BottomOnly, Deinterlace
 	}
-#endif
+#endif // !XAMCORE_3_0 || MONOMAC 
 
 #if !MONOMAC || !XAMCORE_4_0
 	[Flags]
