@@ -27,6 +27,7 @@
 //
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
@@ -35,7 +36,9 @@ using Foundation;
 
 namespace CoreVideo {
 
+#if !NET
 	[Watch (4,0)]
+#endif
 	public static class CVPixelFormatDescription {
 #if !COREBUILD
 		public static readonly NSString NameKey;
@@ -65,21 +68,38 @@ namespace CoreVideo {
    
 		public static readonly NSString FillExtendedPixelsCallbackKey;
 
+#if !NET
 		[iOS (8,0)][Mac (10,10)]
+#endif
 		public static readonly NSString ContainsRgb;
+#if !NET
 		[iOS (8,0)][Mac (10,10)]
+#endif
 		public static readonly NSString ContainsYCbCr;
 
+#if !NET
 		[iOS (9,0)][Mac (10,10)]
+#endif
 		public static readonly NSString ComponentRangeKey;
+#if !NET
 		[iOS (9,0)][Mac (10,10)]
+#endif
 		public static readonly NSString ComponentRangeFullRangeKey;
+#if !NET
 		[iOS (9,0)][Mac (10,10)]
+#endif
 		public static readonly NSString ComponentRangeVideoRangeKey;
+#if !NET
 		[iOS (9,0)][Mac (10,10)]
+#endif
 		public static readonly NSString ComponentRangeWideRangeKey;
 
+#if !NET
 		[iOS (12,0)][TV (12,0)][Watch (5,0)][Mac (10,14)]
+#else
+		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("tvos12.0")]
+#endif
 		public static readonly NSString ContainsGrayscaleKey;
 
 		static CVPixelFormatDescription ()

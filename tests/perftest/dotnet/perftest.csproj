@@ -7,6 +7,7 @@
     <MonoBundlingExtraArgs>--marshal-objectivec-exceptions:disable --registrar:static</MonoBundlingExtraArgs>
     <LinkMode>None</LinkMode> <!-- never link -->
     <Optimize>true</Optimize> <!-- always optimize -->
+    <SupportedOSPlatformVersion>10.15</SupportedOSPlatformVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" Version="0.12.1" />

@@ -223,7 +223,8 @@ stages:
 
 - stage: governance_checks
   displayName: 'Governance Checks'
-  dependsOn: []
+  dependsOn:
+  - build_packages
   jobs:
     - job: governance
       displayName: 'Governance Checks'

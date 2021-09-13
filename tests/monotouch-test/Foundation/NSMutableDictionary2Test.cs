@@ -683,7 +683,8 @@ namespace MonoTouchFixtures.Foundation {
 
 				// Be nasty, and put something of the wrong type in the dictionary
 				dic1.Clear ();
-				using (var dic2 = NSDictionary.FromObjectAndKey ((NSString) "value", (NSString) "key")) {
+				var value = (NSString) "value";
+				using (var dic2 = NSDictionary.FromObjectAndKey (value, (NSString) "key")) {
 					Assert.AreEqual ((nuint) 0, dic1.Count, "X Count 0");
 
 					dic1.AddEntries (dic2);
@@ -692,6 +693,8 @@ namespace MonoTouchFixtures.Foundation {
 					Assert.Throws<InvalidCastException> (() =>
 					{
 						var obj = dic1 [(NSString) "key"];
+						// We shouldn't get this far
+						Assert.Fail ($"ICE 1: Expected InvalidCastException, got back object '{obj}' of type '{obj?.GetType ()}' and handle '0x{obj?.Handle.ToString ("x")}'. Original object: '{value}' of type '{value?.GetType ()}' and handle '0x{value?.Handle.ToString ("x")}");
 					}, "ICE 1");
 				}
 
