@@ -749,9 +749,9 @@ namespace Xamarin.Tests {
 		}
 
 
-		[TestCase (ApplePlatform.iOS, "MyShareExtension.csproj", "bin/Debug/net6.0-ios/iossimulator-x64/MySimpleApp.app")]
-		[TestCase (ApplePlatform.TVOS, "MyTVServicesExtension.csproj", "bin/Debug/net6.0-tvos/tvossimulator-x64/MySimpleApp.app")]		
-		[TestCase (ApplePlatform.MacOSX, "ShareExtensionTest.csproj", "macOS/bin/Debug/net6.0-macos/osx-x64/MySimpleApp.app")]
+		[TestCase (ApplePlatform.iOS, "MyShareExtension.csproj", "bin/Debug/net6.0-ios/iossimulator-x64/MySimpleApp.app/PlugIns/MyShareExtension.appex")]
+		[TestCase (ApplePlatform.TVOS, "MyTVServicesExtension.csproj", "bin/Debug/net6.0-tvos/tvossimulator-x64/MySimpleApp.app/PlugIns/MyTVServicesExtension.appex")]		
+		[TestCase (ApplePlatform.MacOSX, "ShareExtensionTest.csproj", "bin/Debug/net6.0-macos/osx-x64/MySimpleApp.app/Contents/PlugIns/ShareExtensionTest.appex")]
 		// [TestCase ("MacCatalyst", "")] - No extension support yet
 		public void BuildProjectsWithExtensions (ApplePlatform platform, string extensionProjectName, string appPath)
 		{
@@ -759,16 +759,17 @@ namespace Xamarin.Tests {
 			var consumingProjectDir = GetProjectPath ("ExtensionConsumer", platform: platform);
 			var extensionProjectDir = GetProjectPath ("ExtensionProject", platform: platform);
 
-			Clean (consumingProjectDir);
 			Clean (extensionProjectDir);
+			Clean (consumingProjectDir);
 
-			Configuration.CopyDotNetSupportingFiles (Path.GetDirectoryName(consumingProjectDir));
 			Configuration.CopyDotNetSupportingFiles (Path.GetDirectoryName(extensionProjectDir));
-			
+			Configuration.CopyDotNetSupportingFiles (Path.GetDirectoryName(consumingProjectDir));
+
+			DotNet.AssertBuild (extensionProjectDir, verbosity);
 			DotNet.AssertBuild (consumingProjectDir, verbosity);
 			
-			var extensionName = extensionProjectName.Replace(".csproj", ".appex");
-			Assert.That (Directory.Exists(Path.Combine (consumingProjectDir, appPath, extensionName)), "App extension directory does not exist");
+			var extensionPath = Path.Combine (Path.GetDirectoryName(consumingProjectDir), appPath);
+			Assert.That (Directory.Exists(extensionPath), $"App extension directory does not exist: {extensionPath}");
 		}
 	}
 }
