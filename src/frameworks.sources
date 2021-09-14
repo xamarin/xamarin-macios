@@ -2232,7 +2232,6 @@ MACCATALYST_FRAMEWORKS = \
 	BusinessChat \
 	CallKit \
 	CFNetwork \
-	Chip \
 	ClassKit \
 	CloudKit \
 	Contacts \
