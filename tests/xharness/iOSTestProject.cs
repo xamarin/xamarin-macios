@@ -10,8 +10,6 @@ namespace Xharness {
 		public bool SkipwatchOSARM64_32Variation;
 		public bool SkipwatchOS32Variation;
 		public bool SkiptvOSVariation;
-		public bool SkipMacCatalystVariation;
-		public bool IgnoreMacCatalystVariation = true;
 		public bool SkipTodayExtensionVariation;
 		public bool SkipDeviceVariations;
 		public bool BuildOnly;
@@ -46,8 +44,6 @@ namespace Xharness {
 			rv.SkiptvOSVariation = SkiptvOSVariation;
 			rv.SkipTodayExtensionVariation = SkipTodayExtensionVariation;
 			rv.SkipDeviceVariations = SkipDeviceVariations;
-			rv.SkipMacCatalystVariation = SkipMacCatalystVariation;
-			rv.IgnoreMacCatalystVariation = IgnoreMacCatalystVariation;
 			rv.BuildOnly = BuildOnly;
 			return rv;
 		}

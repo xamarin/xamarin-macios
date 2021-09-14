@@ -9,12 +9,18 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using ObjCRuntime;
 using Foundation;
 using Metal;
 
 namespace MetalPerformanceShaders {
+#if !NET
 	[iOS (11,3), TV (11,3), Mac (10,13,4)]
+#else
+	[SupportedOSPlatform ("ios11.3")]
+	[SupportedOSPlatform ("tvos11.3")]
+#endif
 	public static partial class MPSImageBatch {
 
 		[DllImport (Constants.MetalPerformanceShadersLibrary)]
@@ -43,12 +49,22 @@ namespace MetalPerformanceShaders {
 			MPSImageBatchSynchronize (imageBatch.Handle, commandBuffer.Handle);
 		}
 
+#if !NET
 		[iOS (12,0), TV (12,0), Mac (10,14)]
+#else
+		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("tvos12.0")]
+#endif
 		[DllImport (Constants.MetalPerformanceShadersLibrary)]
 		static extern nuint MPSImageBatchResourceSize (IntPtr batch);
 
 		// Using 'NSArray<MPSImage>' instead of `MPSImage[]` because image array 'Handle' matters.
+#if !NET
 		[iOS (12,0), TV (12,0), Mac (10,14)]
+#else
+		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("tvos12.0")]
+#endif
 		public static nuint GetResourceSize (NSArray<MPSImage> imageBatch)
 		{
 			if (imageBatch == null)

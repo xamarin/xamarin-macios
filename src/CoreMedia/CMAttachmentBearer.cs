@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using Foundation;
 using CoreFoundation;
@@ -7,7 +8,9 @@ using ObjCRuntime;
 
 namespace CoreMedia {
 
+#if !NET
 	[Watch (6,0)]
+#endif
 	public static class CMAttachmentBearer {
 
 		[DllImport(Constants.CoreMediaLibrary)]
