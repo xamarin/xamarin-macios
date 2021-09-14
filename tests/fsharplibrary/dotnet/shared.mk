@@ -20,10 +20,10 @@ reload-and-run:
 	$(Q) $(MAKE) run
 
 build: prepare
-	$(Q) $(DOTNET6) build /bl *.csproj $(MSBUILD_VERBOSITY) $(BUILD_ARGUMENTS)
+	$(Q) $(DOTNET6) build /bl *.?sproj $(MSBUILD_VERBOSITY) $(BUILD_ARGUMENTS)
 
 run: prepare
-	$(Q) $(DOTNET6) build /bl *.csproj $(MSBUILD_VERBOSITY) $(BUILD_ARGUMENTS) -t:Run
+	$(Q) $(DOTNET6) build /bl *.?sproj $(MSBUILD_VERBOSITY) $(BUILD_ARGUMENTS) -t:Run
 
 diag: prepare
 	$(Q) $(DOTNET6) build /v:diag msbuild.binlog
