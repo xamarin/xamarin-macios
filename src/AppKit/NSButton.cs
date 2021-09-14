@@ -31,6 +31,7 @@
 using System;
 using ObjCRuntime;
 using Foundation;
+using System.Runtime.Versioning;
 
 namespace AppKit {
 
@@ -42,7 +43,9 @@ namespace AppKit {
 			set { base.Cell = value; }
 		}
 
+#if !NET
 		[Mac (10,12)]
+#endif
 		public static NSButton CreateButton (string title, NSImage image, Action action)
 		{
 			var dispatcher = new NSActionDispatcher (action);
@@ -51,7 +54,9 @@ namespace AppKit {
 			return control;
 		}
 
+#if !NET
 		[Mac (10,12)]
+#endif
 		public static NSButton CreateButton (string title, Action action)
 		{
 			var dispatcher = new NSActionDispatcher (action);
@@ -60,7 +65,9 @@ namespace AppKit {
 			return control;
 		}
 
+#if !NET
 		[Mac (10,12)]
+#endif
 		public static NSButton CreateButton (NSImage image, Action action)
 		{
 			var dispatcher = new NSActionDispatcher (action);
@@ -69,7 +76,9 @@ namespace AppKit {
 			return control;
 		}
 
+#if !NET
 		[Mac (10,12)]
+#endif
 		public static NSButton CreateCheckbox (string title, Action action)
 		{
 			var dispatcher = new NSActionDispatcher (action);
@@ -78,7 +87,9 @@ namespace AppKit {
 			return control;
 		}
 
+#if !NET
 		[Mac (10,12)]
+#endif
 		public static NSButton CreateRadioButton (string title, Action action)
 		{
 			var dispatcher = new NSActionDispatcher (action);
