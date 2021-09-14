@@ -169,28 +169,28 @@ namespace UIKit {
 		}
 
 #if !COREBUILD
-		[Field ("UIPointerAccessoryPositionTop")]
+		[Field ("UIPointerAccessoryPositionTop", "UIKit")]
 		public static UIPointerAccessoryPosition Top => (UIPointerAccessoryPosition) Marshal.PtrToStructure (Dlfcn.GetIndirect (Libraries.UIKit.Handle, "UIPointerAccessoryPositionTop"), typeof (UIPointerAccessoryPosition))!;
 
-		[Field ("UIPointerAccessoryPositionTopRight")]
+		[Field ("UIPointerAccessoryPositionTopRight", "UIKit")]
 		public static UIPointerAccessoryPosition TopRight => (UIPointerAccessoryPosition) Marshal.PtrToStructure (Dlfcn.GetIndirect (Libraries.UIKit.Handle, "UIPointerAccessoryPositionTopRight"), typeof (UIPointerAccessoryPosition))!;
 
-		[Field ("UIPointerAccessoryPositionRight")]
+		[Field ("UIPointerAccessoryPositionRight", "UIKit")]
 		public static UIPointerAccessoryPosition Right => (UIPointerAccessoryPosition) Marshal.PtrToStructure (Dlfcn.GetIndirect (Libraries.UIKit.Handle, "UIPointerAccessoryPositionRight"), typeof (UIPointerAccessoryPosition))!;
 
-		[Field ("UIPointerAccessoryPositionBottomRight")]
+		[Field ("UIPointerAccessoryPositionBottomRight", "UIKit")]
 		public static UIPointerAccessoryPosition BottomRight => (UIPointerAccessoryPosition) Marshal.PtrToStructure (Dlfcn.GetIndirect (Libraries.UIKit.Handle, "UIPointerAccessoryPositionBottomRight"), typeof (UIPointerAccessoryPosition))!;
 
-		[Field ("UIPointerAccessoryPositionBottom")]
+		[Field ("UIPointerAccessoryPositionBottom", "UIKit")]
 		public static UIPointerAccessoryPosition Bottom => (UIPointerAccessoryPosition) Marshal.PtrToStructure (Dlfcn.GetIndirect (Libraries.UIKit.Handle, "UIPointerAccessoryPositionBottom"), typeof (UIPointerAccessoryPosition))!;
 
-		[Field ("UIPointerAccessoryPositionBottomLeft")]
+		[Field ("UIPointerAccessoryPositionBottomLeft", "UIKit")]
 		public static UIPointerAccessoryPosition BottomLeft => (UIPointerAccessoryPosition) Marshal.PtrToStructure (Dlfcn.GetIndirect (Libraries.UIKit.Handle, "UIPointerAccessoryPositionBottomLeft"), typeof (UIPointerAccessoryPosition))!;
 
-		[Field ("UIPointerAccessoryPositionLeft")]
+		[Field ("UIPointerAccessoryPositionLeft", "UIKit")]
 		public static UIPointerAccessoryPosition Left => (UIPointerAccessoryPosition) Marshal.PtrToStructure (Dlfcn.GetIndirect (Libraries.UIKit.Handle, "UIPointerAccessoryPositionLeft"), typeof (UIPointerAccessoryPosition))!;
 
-		[Field ("UIPointerAccessoryPositionTopLeft")]
+		[Field ("UIPointerAccessoryPositionTopLeft", "UIKit")]
 		public static UIPointerAccessoryPosition TopLeft => (UIPointerAccessoryPosition) Marshal.PtrToStructure (Dlfcn.GetIndirect (Libraries.UIKit.Handle, "UIPointerAccessoryPositionTopLeft"), typeof (UIPointerAccessoryPosition))!;
 #endif
 	}

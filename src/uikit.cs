@@ -8211,28 +8211,28 @@ namespace UIKit {
 		[Export ("buttonWithType:primaryAction:")]
 		UIButton FromType (UIButtonType buttonType, [NullAllowed] UIAction primaryAction);
 
-		[TV (15,0), NoWatch, iOS (15,0), MacCatalyst (15,0)]
+		[TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 		[Static]
 		[Export ("buttonWithConfiguration:primaryAction:")]
 		UIButton GetButton (UIButtonConfiguration configuration, [NullAllowed] UIAction primaryAction);
 
-		[TV (15,0), NoWatch, iOS (15,0), MacCatalyst (15,0)]
+		[TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 		[NullAllowed, Export ("configuration", ArgumentSemantic.Copy)]
 		UIButtonConfiguration Configuration { get; set; }
 
-		[TV (15,0), NoWatch, iOS (15,0), MacCatalyst (15,0)]
+		[TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("setNeedsUpdateConfiguration")]
 		void SetNeedsUpdateConfiguration ();
 
-		[TV (15,0), NoWatch, iOS (15,0), MacCatalyst (15,0)]
+		[TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("updateConfiguration")]
 		void UpdateConfiguration ();
 
-		[TV (15,0), NoWatch, iOS (15,0), MacCatalyst (15,0)]
+		[TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 		[NullAllowed, Export ("configurationUpdateHandler", ArgumentSemantic.Copy)]
 		UIButtonConfigurationUpdateHandler ConfigurationUpdateHandler { get; set; }
 
-		[TV (15,0), NoWatch, iOS (15,0), MacCatalyst (15,0)]
+		[TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("automaticallyUpdatesConfiguration")]
 		bool AutomaticallyUpdatesConfiguration { get; set; }
 
