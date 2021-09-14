@@ -308,7 +308,7 @@ namespace TVUIKit {
 
 		[Static]
 		[Export ("wideCellConfiguration")]
-		TVMediaItemContentConfiguration CreateWideCell ();
+		TVMediaItemContentConfiguration CreateWideCellConfiguration ();
 
 		[NullAllowed, Export ("image", ArgumentSemantic.Strong)]
 		UIImage Image { get; set; }
@@ -351,10 +351,6 @@ namespace TVUIKit {
 		[Sealed]
 		[Export ("configuration")]
 		TVMediaItemContentConfiguration GetConfiguration ();
-
-		[Sealed]
-		[Export ("setConfiguration:")]
-		void SetConfiguration (TVMediaItemContentConfiguration configuration);
 
 		[Export ("focusedFrameGuide", ArgumentSemantic.Strong)]
 		UILayoutGuide FocusedFrameGuide { get; }
@@ -408,7 +404,7 @@ namespace TVUIKit {
 
 		[Static]
 		[Export ("cellConfiguration")]
-		TVMonogramContentConfiguration CreateCell ();
+		TVMonogramContentConfiguration CreateCellConfiguration ();
 
 		[NullAllowed, Export ("image", ArgumentSemantic.Strong)]
 		UIImage Image { get; set; }
@@ -442,10 +438,6 @@ namespace TVUIKit {
 		[Sealed]
 		[Export ("configuration")]
 		TVMonogramContentConfiguration GetConfiguration ();
-
-		[Sealed]
-		[Export ("setConfiguration:")]
-		void SetConfiguration (TVMonogramContentConfiguration configuration);
 
 		[Export ("focusedFrameGuide", ArgumentSemantic.Strong)]
 		UILayoutGuide FocusedFrameGuide { get; }
