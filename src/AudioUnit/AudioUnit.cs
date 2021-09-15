@@ -906,7 +906,7 @@ namespace AudioUnit
 #else
 		[SupportedOSPlatform ("maccatalyst15.0")]
 #endif
-		[DllImport (Constants.AudioUnitLibrary)]
+		[DllImport (Constants.CoreAudioLibrary)]
 		static extern int AudioObjectGetPropertyData (
 			uint inObjectID,
 			ref AudioObjectPropertyAddress inAddress,
