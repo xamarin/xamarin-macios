@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+
+		<ApplicationTitle>AppWithResources</ApplicationTitle>
+		<ApplicationId>com.xamarin.appwithresources</ApplicationId>
+	</PropertyGroup>
+
+	<Import Project="../../common/shared-dotnet.csproj" />
+
+	<ItemGroup>
+		<Compile Include="../*.cs" />
+
+		<BundleResource Update="$(_ResourcePrefix)/B.otf" RegisterFont="true" />
+	</ItemGroup>
+</Project>

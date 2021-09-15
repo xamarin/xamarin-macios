@@ -1913,6 +1913,24 @@ namespace Xamarin.Localization.MSBuild {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to All font files must be located in the same directory in the app bundle. The following font files have different target directories in the app bundle:.
+        /// </summary>
+        public static string E7083 {
+            get {
+                return ResourceManager.GetString("E7083", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The target directory is {0}.
+        /// </summary>
+        public static string E7084 {
+            get {
+                return ResourceManager.GetString("E7084", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid framework: {0}.
         /// </summary>
         public static string InvalidFramework {
