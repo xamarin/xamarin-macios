@@ -172,7 +172,7 @@ else
 classify-maccatalyst: ; @true
 endif
 
-classify: build $(XIOS_PCH) $(XWATCHOS_PCH) $(XTVOS_PCH) $(XMAC_PCH) $(XCAT_PCH)
+classify: build $(if $(INCLUDE_IOS), $(XIOS_PCH)) $(if $(INCLUDE_TVOS), $(XTVOS_PCH)) $(if $(INCLUDE_WATCH), $(XWATCHOS_PCH)) $(if $(INCLUDE_MAC), $(XMAC_PCH)) $(if $(INCLUDE_MACCATALYST), $(XCAT_PCH))
 	rm -f *.unclassified
 	$(MAKE) -j8 classify-ios classify-tvos classify-watchos classify-macos classify-maccatalyst
 	$(MONO) xtro-sanity/bin/Debug/xtro-sanity.exe .
