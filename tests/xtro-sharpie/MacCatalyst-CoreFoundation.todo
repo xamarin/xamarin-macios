@@ -1,0 +1,3 @@
+!unknown-pinvoke! CFBundleIsArchitectureLoadable bound
+!unknown-pinvoke! CFBundleIsExecutableLoadable bound
+!unknown-pinvoke! CFBundleIsExecutableLoadableForURL bound

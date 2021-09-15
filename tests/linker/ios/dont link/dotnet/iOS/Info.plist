@@ -6,8 +6,6 @@
     <string>DontLinkTest</string>
     <key>CFBundleIdentifier</key>
     <string>com.xamarin.dontlink</string>
-    <key>MinimumOSVersion</key>
-    <string>10.0</string>
     <key>UIDeviceFamily</key>
     <array>
       <integer>1</integer>

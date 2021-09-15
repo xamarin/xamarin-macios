@@ -9,13 +9,16 @@
 //
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using Foundation;
 using ObjCRuntime;
 
 namespace CoreMedia {
 
 	// CMSampleBuffer.h
+#if !NET
 	[Watch (6,0)]
+#endif
 	[StructLayout(LayoutKind.Sequential)]
 	public struct CMSampleTimingInfo
 	{
@@ -25,7 +28,9 @@ namespace CoreMedia {
 	}
 
 	// CMTimeRange.h
+#if !NET
 	[Watch (6,0)]
+#endif
 	[StructLayout(LayoutKind.Sequential)]
 	public struct CMTimeRange {
 		public CMTime Start;
@@ -41,13 +46,19 @@ namespace CoreMedia {
 #endif // !XAMCORE_3_0
 		public static readonly CMTimeRange InvalidRange;
 
+#if !NET
 		[iOS (9,0)][Mac (10,11)]
+#endif
 		public static readonly CMTimeRange InvalidMapping;
 
+#if !NET
 		[iOS (9,0)][Mac (10,11)]
+#endif
 		public static NSString TimeMappingSourceKey { get; private set; }
 
+#if !NET
 		[iOS (9,0)][Mac (10,11)]
+#endif
 		public static NSString TimeMappingTargetKey { get; private set; }
 
 		static CMTimeRange () {
@@ -72,38 +83,50 @@ namespace CoreMedia {
 	}
 
 	// CMTimeRange.h
+#if !NET
 	[Watch (6,0)]
+#endif
 	[StructLayout(LayoutKind.Sequential)]
 	public struct CMTimeMapping {
 		public CMTimeRange Source;
 		public CMTimeRange Target;
 
 #if !COREBUILD
+#if !NET
 		[iOS (9,0)][Mac (10,11)]
+#endif
 		public static CMTimeMapping Create (CMTimeRange source, CMTimeRange target)
 		{
 			return CMTimeMappingMake (source, target);
 		}
 
+#if !NET
 		[iOS (9,0)][Mac (10,11)]
+#endif
 		public static CMTimeMapping CreateEmpty (CMTimeRange target)
 		{
 			return CMTimeMappingMakeEmpty (target);
 		}
 
+#if !NET
 		[iOS (9,0)][Mac (10,11)]
+#endif
 		public static CMTimeMapping CreateFromDictionary (NSDictionary dict)
 		{
 			return CMTimeMappingMakeFromDictionary (dict.Handle);
 		}
 
+#if !NET
 		[iOS (9,0)][Mac (10,11)]
+#endif
 		public NSDictionary AsDictionary ()
 		{
 			return new NSDictionary (CMTimeMappingCopyAsDictionary (this, IntPtr.Zero), true);
 		}
 
+#if !NET
 		[iOS (9,0)][Mac (10,11)]
+#endif
 		public string Description
 		{
 			get
@@ -112,29 +135,41 @@ namespace CoreMedia {
 			}
 		}
 
+#if !NET
 		[iOS (9,0)][Mac (10,11)]
+#endif
 		[DllImport (Constants.CoreMediaLibrary)]
 		static extern CMTimeMapping CMTimeMappingMake (CMTimeRange source, CMTimeRange target);
 
+#if !NET
 		[iOS (9,0)][Mac (10,11)]
+#endif
 		[DllImport (Constants.CoreMediaLibrary)]
 		static extern CMTimeMapping CMTimeMappingMakeEmpty (CMTimeRange target);
 
+#if !NET
 		[iOS (9,0)][Mac (10,11)]
+#endif
 		[DllImport (Constants.CoreMediaLibrary)]
 		static extern IntPtr /* CFDictionaryRef* */ CMTimeMappingCopyAsDictionary (CMTimeMapping mapping, IntPtr allocator);
 
+#if !NET
 		[iOS (9,0)][Mac (10,11)]
+#endif
 		[DllImport (Constants.CoreMediaLibrary)]
 		static extern CMTimeMapping CMTimeMappingMakeFromDictionary (/* CFDictionaryRef* */ IntPtr dict);
 
+#if !NET
 		[iOS (9,0)][Mac (10,11)]
+#endif
 		[DllImport (Constants.CoreMediaLibrary)]
 		static extern IntPtr /* CFStringRef* */ CMTimeMappingCopyDescription (IntPtr allocator, CMTimeMapping mapping);
 #endif // !COREBUILD
 	}
 
+#if !NET
 	[Watch (6,0)]
+#endif
 	[StructLayout(LayoutKind.Sequential)]
 	public struct CMTimeScale
 	{
@@ -154,7 +189,9 @@ namespace CoreMedia {
 	}
 
 	// CMVideoDimensions => int32_t width + int32_t height
+#if !NET
 	[Watch (6,0)]
+#endif
 	public struct CMVideoDimensions {
 		public int Width;
 		public int Height;

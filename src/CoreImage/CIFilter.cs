@@ -191,6 +191,13 @@ namespace CoreImage {
 				SetValueForKey (new NSNumber (value ? 1 : 0), nskey);
 		}
 
+		internal void SetString (string key, string value)
+		{
+			var ptr = CFString.CreateNative (value);
+			SetHandle (key, ptr);
+			CFString.ReleaseNative (ptr);
+		}
+
 		internal void SetValue (string key, CGPoint value)
 		{
 			using (var nskey = new NSString (key))
@@ -236,7 +243,7 @@ namespace CoreImage {
 
 		internal void SetHandle (string key, IntPtr handle)
 		{
-			var nsname = NSString.CreateNative (key);
+			var nsname = CFString.CreateNative (key);
 			
 			if (IsDirectBinding) {
 				Messaging.void_objc_msgSend_IntPtr_IntPtr (
@@ -245,7 +252,7 @@ namespace CoreImage {
 				Messaging.void_objc_msgSendSuper_IntPtr_IntPtr (
 					this.SuperHandle, Selector.GetHandle ("setValue:forKey:"), handle, nsname);
 			}
-			NSString.ReleaseNative (nsname);
+			CFString.ReleaseNative (nsname);
 		}
 
 		internal IntPtr GetHandle (string key)
