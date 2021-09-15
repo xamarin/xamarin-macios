@@ -6,7 +6,6 @@ prepare:
 	$(Q) $(MAKE) -C $(TOP)/tests/dotnet copy-dotnet-config
 
 reload:
-	$(Q) rm -Rf $(TOP)/tests/dotnet/packages
 	$(Q) $(MAKE) -C $(TOP) -j8 all
 	$(Q) $(MAKE) -C $(TOP) -j8 install
 	$(Q) git clean -xfdq
