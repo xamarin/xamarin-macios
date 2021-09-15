@@ -237,10 +237,10 @@ namespace Introspection {
 			case "VTMultiPassStorage":
 #if __TVOS__
 				// Causes a crash in a background thread.
-				return true;
-#else
-				return false;
+				if (Runtime.Arch == Arch.DEVICE)
+					return true;
 #endif
+				return false;
 			default:
  				return false;
 			}
