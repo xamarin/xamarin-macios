@@ -1286,7 +1286,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 						void_objc_msgSend_out_IntPtr (obj.Handle, Selector.GetHandle ("m2:"), out value);
 						Assert.AreEqual (IntPtr.Zero, value);
 
-						value = new IntPtr (0xdeadbeef);
+						value = new IntPtr ((unchecked ((int) 0xdeadbeef)));
 						void_objc_msgSend_out_IntPtr (obj.Handle, Selector.GetHandle ("m2:"), out value);
 						Assert.AreEqual (IntPtr.Zero, value);
 
