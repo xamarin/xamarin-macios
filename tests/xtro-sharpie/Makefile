@@ -138,6 +138,8 @@ report-short:
 	JENKINS_SERVER_COOKIE=1 make report
 
 ifdef INCLUDE_IOS
+PCH_FILES+=$(XIOS_PCH)
+
 classify-ios:
 	$(MONO) bin/Debug/xtro-sharpie.exe $(XIOS_PCH) $(XIOS) $(XIOS_GL)
 else
@@ -145,6 +147,8 @@ classify-ios: ; @true
 endif
 
 ifdef INCLUDE_TVOS
+PCH_FILES+=$(XTVOS_PCH)
+
 classify-tvos:
 	$(MONO) bin/Debug/xtro-sharpie.exe $(XTVOS_PCH) $(XTVOS) $(XTVOS_GL)
 else
@@ -152,6 +156,8 @@ classify-tvos: ; @true
 endif
 
 ifdef INCLUDE_WATCH
+PCH_FILES+=$(XWATCHOS_PCH)
+
 classify-watchos:
 	$(MONO) bin/Debug/xtro-sharpie.exe $(XWATCHOS_PCH) $(XWATCHOS)
 else
@@ -159,6 +165,7 @@ classify-watchos: ; @true
 endif
 
 ifdef INCLUDE_MAC
+PCH_FILES+=$(XMAC_PCH)
 classify-macos:
 	$(MONO) bin/Debug/xtro-sharpie.exe $(XMAC_PCH) $(XMAC)
 else
@@ -166,13 +173,14 @@ classify-macos: ; @true
 endif
 
 ifdef INCLUDE_MACCATALYST
+PCH_FILES+=$(XCAT_PCH)
 classify-maccatalyst: bin/Debug/xtro-sharpie.exe $(XCAT_PCH)
 	$(MONO) bin/Debug/xtro-sharpie.exe $(XCAT_PCH) $(XCAT)
 else
 classify-maccatalyst: ; @true
 endif
 
-classify: build $(if $(INCLUDE_IOS), $(XIOS_PCH)) $(if $(INCLUDE_TVOS), $(XTVOS_PCH)) $(if $(INCLUDE_WATCH), $(XWATCHOS_PCH)) $(if $(INCLUDE_MAC), $(XMAC_PCH)) $(if $(INCLUDE_MACCATALYST), $(XCAT_PCH))
+classify: build $(PCH_FILES)
 	rm -f *.unclassified
 	$(MAKE) -j8 classify-ios classify-tvos classify-watchos classify-macos classify-maccatalyst
 	$(MONO) xtro-sanity/bin/Debug/xtro-sanity.exe .
