@@ -288,11 +288,6 @@ steps:
       CONFIGURE_FLAGS="--enable-xamarin"
     fi
 
-    if [[ "$EnableDotNet" == "True" ]]; then
-      echo "Enabling dotnet builds."
-      CONFIGURE_FLAGS="$CONFIGURE_FLAGS --enable-dotnet"
-    fi
-
     CONFIGURE_FLAGS="$CONFIGURE_FLAGS --enable-install-source"
     echo "Configuration falgs are '$CONFIGURE_FLAGS'"
 
