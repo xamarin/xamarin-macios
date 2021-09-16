@@ -40,7 +40,6 @@ namespace Xharness {
 				{ "v|verbose", "Show verbose output", (v) => configuration.Verbosity++ },
 				{ "use-system:", "Use the system version of Xamarin.iOS/Xamarin.Mac or the locally build version. Default: the locally build version.", (v) => configuration.UseSystemXamarinIOSMac = v == "1" || v == "true" || string.IsNullOrEmpty (v) },
 				// Configure
-				{ "mac", "Configure for Xamarin.Mac instead of iOS.", (v) => configuration.Mac = true },
 				{ "configure", "Creates project files and makefiles.", (v) => action = HarnessAction.Configure },
 				{ "autoconf", "Automatically decide what to configure.", (v) => configuration.AutoConf = true },
 				{ "rootdir=", "The root directory for the tests.", (v) => HarnessConfiguration.RootDirectory = v },

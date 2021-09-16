@@ -117,7 +117,7 @@ namespace UIKit {
 #elif MONOMAC
 		[Obsolete ("Starting with macos10.15 use the 'ShowGlyphs' overload that takes 'nint glyphCount' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
-#endif
+#endif // !NET
 		public unsafe void ShowCGGlyphs (
 #endif // MONOMAC
 			short[] /* const CGGlyph* = CGFontIndex* = unsigned short* */ glyphs,
