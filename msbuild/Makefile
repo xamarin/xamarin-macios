@@ -483,13 +483,25 @@ DOTNET_IOS_WINDOWS_OUTPUT_FILES =                                \
 	System.Diagnostics.Tracer.pdb                                \
 	Xamarin.iOS.Windows.Client.pdb                               \
 	Broker.zip                                                   \
-	Build.zip                                                    \
-	Xamarin.PreBuilt.iOS.app.zip
+	Build.zip
+	
 DOTNET_IOS_WINDOWS_FILES = $(IOS_WINDOWS_TARGETS) $(foreach file,$(DOTNET_IOS_WINDOWS_OUTPUT_FILES),Xamarin.iOS.Tasks.Windows/bin/$(CONFIG)/$(TARGETFRAMEWORK)/$(WINDOWSRUNTIMEIDENTIFIER)/$(file))
+DOTNET_IOS_WINDOWS_FILES += Xamarin.HotRestart.PreBuilt/Xamarin.PreBuilt.iOS/bin/Debug/net6.0-ios/ios-arm64/Xamarin.PreBuilt.iOS.app.zip
+
 DOTNET_IOS_WINDOWS_MOBILEDEVICE_TOOLS_X86 = $(foreach file,$(IOS_WINDOWS_MOBILEDEVICE_TOOLS),Xamarin.iOS.Tasks.Windows/bin/$(CONFIG)/$(TARGETFRAMEWORK)/$(WINDOWSRUNTIMEIDENTIFIER)/imobiledevice-x86/$(file).*)
 DOTNET_IOS_WINDOWS_MOBILEDEVICE_TOOLS_X64 = $(foreach file,$(IOS_WINDOWS_MOBILEDEVICE_TOOLS),Xamarin.iOS.Tasks.Windows/bin/$(CONFIG)/$(TARGETFRAMEWORK)/$(WINDOWSRUNTIMEIDENTIFIER)/imobiledevice-x64/$(file).*)
 
-.copy-windows-files: .build-stamp
+#We set the default global dotnet location
+CURRENT_DOTNET_PATH = /usr/local/share/dotnet
+
+#Here we need Manuel's magic to obtain the dotnet used by the current macios build
+.set-dotnet-location: $(eval CURRENT_DOTNET_PATH=/Users/mag/Library/Caches/Xamarin/XMA/SDKs/dotnet)
+
+.build-hotrestart-app: .set-dotnet-location
+	$(Q) $(CURRENT_DOTNET_PATH)/dotnet build Xamarin.HotRestart.PreBuilt/Xamarin.PreBuilt.iOS/Xamarin.PreBuilt.iOS.csproj  -p:RuntimeIdentifier=ios-arm64
+	$(Q) zip -r Xamarin.HotRestart.PreBuilt/Xamarin.PreBuilt.iOS/bin/Debug/net6.0-ios/ios-arm64/Xamarin.PreBuilt.iOS.app.zip Xamarin.HotRestart.PreBuilt/Xamarin.PreBuilt.iOS/bin/Debug/net6.0-ios/ios-arm64/Xamarin.PreBuilt.iOS.app/*
+
+.copy-windows-files: .build-stamp .build-hotrestart-app
 	$(Q) mkdir -p $(DOTNET_DESTDIR)/$(IOS_WINDOWS_NUGET).Sdk/tools/msbuild/iOS
 	$(Q) $(CP) $(DOTNET_IOS_WINDOWS_FILES) $(DOTNET_DESTDIR)/$(IOS_WINDOWS_NUGET).Sdk/tools/msbuild/iOS/
 	$(Q) mkdir -p $(DOTNET_DESTDIR)/$(IOS_WINDOWS_NUGET).Sdk/tools/msbuild/iOS/imobiledevice-x86
@@ -497,7 +509,7 @@ DOTNET_IOS_WINDOWS_MOBILEDEVICE_TOOLS_X64 = $(foreach file,$(IOS_WINDOWS_MOBILED
 	$(Q) mkdir -p $(DOTNET_DESTDIR)/$(IOS_WINDOWS_NUGET).Sdk/tools/msbuild/iOS/imobiledevice-x64
 	$(Q) $(CP) $(DOTNET_IOS_WINDOWS_MOBILEDEVICE_TOOLS_X64) $(DOTNET_DESTDIR)/$(IOS_WINDOWS_NUGET).Sdk/tools/msbuild/iOS/imobiledevice-x64/
 
-.dotnet-windows: .build-stamp .copy-windows-files
+.dotnet-windows: .build-stamp .build-hotrestart-app .copy-windows-files
 
 all-local:: .dotnet-windows
 dotnet:: .dotnet-windows
