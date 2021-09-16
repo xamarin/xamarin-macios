@@ -239,7 +239,7 @@ namespace CoreFoundation {
 		[Obsolete ("Starting with macos12.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
-		[DllImport (Constants.CFNetworkLibrary)]
+		[DllImport (Constants.CoreFoundationLibrary)]
 		internal extern static void CFStreamCreatePairWithPeerSocketSignature (/* CFAllocatorRef */ IntPtr allocator, 
 			/* CFSocketSignature* */ ref CFSocketSignature sig, 
 			/* CFReadStreamRef* */ out IntPtr readStream, /* CFWriteStreamRef* */ out IntPtr writeStream);
@@ -365,7 +365,7 @@ namespace CoreFoundation {
 		[Obsolete ("Starting with macos12.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
-		[DllImport (Constants.CFNetworkLibrary)]
+		[DllImport (Constants.CoreFoundationLibrary)]
 		internal extern static void CFStreamCreatePairWithSocketToHost (/* CFAllocatorRef */ IntPtr allocator, 
 			/* CFStringRef */ IntPtr host, /* UInt32 */ int port,
 			/* CFReadStreamRef* */ out IntPtr readStream, /* CFWriteStreamRef* */ out IntPtr writeStream);
@@ -486,7 +486,7 @@ namespace CoreFoundation {
 		}
 #endif
 
-		[DllImport (Constants.CFNetworkLibrary)]
+		[DllImport (Constants.CoreFoundationLibrary)]
 		internal extern static void CFStreamCreateBoundPair (/* CFAllocatorRef */ IntPtr alloc, 
 			/* CFReadStreamRef* */ out IntPtr readStream, /* CFWriteStreamRef* */ out IntPtr writeStream,
 			/* CFIndex */ nint transferBufferSize);

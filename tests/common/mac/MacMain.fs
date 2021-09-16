@@ -17,26 +17,22 @@ type MainClass =
         Console.WriteLine ($"The process didn't exit within 3s of returning from Main. Assuming something is deadlocked, and will now exit immediately and forcefully (with exit code {exit_code}).")
         PInvokes._exit (exit_code)
 
-    static member asyncMainTask (args: string[]) : Async<int> =
-        async {
-            // Skip arguments added by VSfM/macOS when running from the IDE
-            let mutable arguments = new List<string> (args)
-            arguments.RemoveAll (fun (arg) -> arg.StartsWith ("-psn_", StringComparison.Ordinal)) |> ignore
+    static member asyncMainTask (args: string[]) : int =
+        // Skip arguments added by VSfM/macOS when running from the IDE
+        let mutable arguments = new List<string> (args)
+        arguments.RemoveAll (fun (arg) -> arg.StartsWith ("-psn_", StringComparison.Ordinal)) |> ignore
 
-            let! exit_code = MonoTouch.NUnit.UI.MacRunner.MainAsync (arguments, true, PInvokes._exit, typedefof<MainClass>.Assembly) |> Async.AwaitTask
+        let exit_code = MonoTouch.NUnit.UI.MacRunner.MainAsync(arguments, true, PInvokes._exit, typedefof<MainClass>.Assembly).Result
 
-            let del = ParameterizedThreadStart(MainClass.ThreadMonitor)
-            let exit_monitor = new Thread (del)
-            exit_monitor.Name <- "Exit monitor"
-            exit_monitor.IsBackground <- true
-            exit_monitor.Start (exit_code)
+        let del = ParameterizedThreadStart(MainClass.ThreadMonitor)
+        let exit_monitor = new Thread (del)
+        exit_monitor.Name <- "Exit monitor"
+        exit_monitor.IsBackground <- true
+        exit_monitor.Start (exit_code)
 
-            return exit_code
-        }
+        exit_code
 
 module Program =
     [<EntryPoint>]
     let main args =
-        async {
-            return! MainClass.asyncMainTask (args)
-        } |> Async.RunSynchronously
+        MainClass.asyncMainTask (args)

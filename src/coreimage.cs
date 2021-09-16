@@ -441,6 +441,16 @@ namespace CoreImage {
 		[return: NullAllowed]
 		NSData GetHeifRepresentation (CIImage image, CIFormat format, CGColorSpace colorSpace, CIImageRepresentationOptions options);
 
+		[iOS (15,0), Mac (12,0), MacCatalyst (15,0), TV (15,0)]
+		[Export ("HEIF10RepresentationOfImage:colorSpace:options:error:")]
+		[return: NullAllowed]
+		NSData GetHeif10Representation (CIImage image, CGColorSpace colorSpace, NSDictionary options, [NullAllowed] out NSError error);
+
+		[iOS (15,0), Mac (12,0), MacCatalyst (15,0), TV (15,0)]
+		[Wrap ("GetHeif10Representation (This, image, colorSpace, options.GetDictionary ()!, out error)")]
+		[return: NullAllowed]
+		NSData GetHeif10Representation (CIImage image, CGColorSpace colorSpace, CIImageRepresentationOptions options, [NullAllowed] out NSError error);
+
 		[iOS (11,0)][TV (11,0)][Mac (10,13)]
 		[Export ("PNGRepresentationOfImage:format:colorSpace:options:")]
 		[return: NullAllowed]
@@ -474,6 +484,14 @@ namespace CoreImage {
 		[iOS (11,0)][TV (11,0)][Mac (10,13)]
 		[Wrap ("WriteHeifRepresentation (This, image, url, format, colorSpace, options.GetDictionary ()!, out error)")]
 		bool WriteHeifRepresentation (CIImage image, NSUrl url, CIFormat format, CGColorSpace colorSpace, CIImageRepresentationOptions options, [NullAllowed] out NSError error);
+
+		[iOS (15,0), Mac (12,0), MacCatalyst (15,0), TV (15,0)]
+		[Export ("writeHEIF10RepresentationOfImage:toURL:colorSpace:options:error:")]
+		bool WriteHeif10Representation (CIImage image, NSUrl url, CGColorSpace colorSpace, NSDictionary options, [NullAllowed] out NSError error);
+
+		[iOS (15,0), Mac (12,0), MacCatalyst (15,0), TV (15,0)]
+		[Wrap ("WriteHeif10Representation (This, image, url, colorSpace, options.GetDictionary ()!, out error)")]
+		bool WriteHeif10Representation (CIImage image, NSUrl url, CGColorSpace colorSpace, CIImageRepresentationOptions options, [NullAllowed] out NSError error);
 
 		[iOS (11,0)][TV (11,0)][Mac (10,13)]
 		[Export ("writePNGRepresentationOfImage:toURL:format:colorSpace:options:error:")]
@@ -629,36 +647,54 @@ namespace CoreImage {
 
 		// CIRAWFilter (CIFilter)
 
+		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'CIRawFilter' instead.")]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'CIRawFilter' instead.")]
+		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'CIRawFilter' instead.")]
 		[iOS (10,0)]
 		[TV (10,0)]
 		[Static]
 		[Export ("filterWithImageURL:options:")]
 		CIFilter CreateRawFilter (NSUrl url, NSDictionary options);
 
+		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'CIRawFilter' instead.")]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'CIRawFilter' instead.")]
+		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'CIRawFilter' instead.")]
 		[iOS (10,0)]
 		[TV (10,0)]
 		[Static]
 		[Wrap ("CreateRawFilter (url, options.GetDictionary ()!)")]
 		CIFilter CreateRawFilter (NSUrl url, CIRawFilterOptions options);
 
+		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'CIRawFilter' instead.")]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'CIRawFilter' instead.")]
+		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'CIRawFilter' instead.")]
 		[iOS (10,0)]
 		[TV (10,0)]
 		[Static]
 		[Export ("filterWithImageData:options:")]
 		CIFilter CreateRawFilter (NSData data, NSDictionary options);
 
+		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'CIRawFilter' instead.")]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'CIRawFilter' instead.")]
+		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'CIRawFilter' instead.")]
 		[iOS (10,0)]
 		[TV (10,0)]
 		[Static]
 		[Wrap ("CreateRawFilter (data, options.GetDictionary ()!)")]
 		CIFilter CreateRawFilter (NSData data, CIRawFilterOptions options);
 
+		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'CIRawFilter' instead.")]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'CIRawFilter' instead.")]
+		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'CIRawFilter' instead.")]
 		[iOS (10,0)][Mac (10,12)]
 		[TV (10,0)]
 		[Static]
 		[Export ("filterWithCVPixelBuffer:properties:options:")]
 		CIFilter CreateRawFilter (CVPixelBuffer pixelBuffer, NSDictionary properties, NSDictionary options);
 
+		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'CIRawFilter' instead.")]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'CIRawFilter' instead.")]
+		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'CIRawFilter' instead.")]
 		[iOS (10,0)][Mac (10,12)]
 		[TV (10,0)]
 		[Static]
@@ -666,6 +702,184 @@ namespace CoreImage {
 		CIFilter CreateRawFilter (CVPixelBuffer pixelBuffer, NSDictionary properties, CIRawFilterOptions options);
 	}
 
+	[iOS (15,0), Mac (12,0), MacCatalyst (15,0), TV (15,0)]
+	public enum CIRawDecoderVersion : long {
+		
+		[Field ("CIRAWDecoderVersionNone")]
+		VersionNone,
+
+		[Field ("CIRAWDecoderVersion8")]
+		Version8,
+
+		[Field ("CIRAWDecoderVersion8DNG")]
+		Version8Dng,
+
+		[Field ("CIRAWDecoderVersion7")]
+		Version7,
+
+		[Field ("CIRAWDecoderVersion7DNG")]
+		Version7Dng,
+
+		[Field ("CIRAWDecoderVersion6")]
+		Version6,
+
+		[Field ("CIRAWDecoderVersion6DNG")]
+		Version6Dng,
+	}
+
+	[iOS (15,0), Mac (12,0), MacCatalyst (15,0), TV (15,0)]
+	[BaseType (typeof(CIFilter), Name="CIRAWFilter")]
+	interface CIRawFilter : CIFilterProtocol
+	{
+		[Static]
+		[Export ("supportedCameraModels")]
+		string[] SupportedCameraModels { get; }
+
+		[Export ("supportedDecoderVersions")]
+		string[] SupportedDecoderVersions { get; }
+
+		[Export ("nativeSize")]
+		CGSize NativeSize { get; }
+
+		[Export ("properties")]
+		NSDictionary Properties { get; }
+
+		[Export ("orientation", ArgumentSemantic.Assign)]
+		CGImagePropertyOrientation Orientation { get; set; }
+
+		[Export ("draftModeEnabled")]
+		bool DraftModeEnabled { [Bind ("isDraftModeEnabled")] get; set; }
+
+		[Export ("decoderVersion", ArgumentSemantic.Retain)]
+		string DecoderVersion { get; set; }
+
+		[Export ("scaleFactor")]
+		float ScaleFactor { get; set; }
+
+		[Export ("exposure")]
+		float Exposure { get; set; }
+
+		[Export ("baselineExposure")]
+		float BaselineExposure { get; set; }
+
+		[Export ("shadowBias")]
+		float ShadowBias { get; set; }
+
+		[Export ("boostAmount")]
+		float BoostAmount { get; set; }
+
+		[Export ("boostShadowAmount")]
+		float BoostShadowAmount { get; set; }
+
+		[Export ("gamutMappingEnabled")]
+		bool GamutMappingEnabled { [Bind ("isGamutMappingEnabled")] get; set; }
+
+		[Export ("lensCorrectionSupported")]
+		bool LensCorrectionSupported { [Bind ("isLensCorrectionSupported")] get; }
+
+		[Export ("lensCorrectionEnabled")]
+		bool LensCorrectionEnabled { [Bind ("isLensCorrectionEnabled")] get; set; }
+
+		[Export ("luminanceNoiseReductionSupported")]
+		bool LuminanceNoiseReductionSupported { [Bind ("isLuminanceNoiseReductionSupported")] get; }
+
+		[Export ("luminanceNoiseReductionAmount")]
+		float LuminanceNoiseReductionAmount { get; set; }
+
+		[Export ("colorNoiseReductionSupported")]
+		bool ColorNoiseReductionSupported { [Bind ("isColorNoiseReductionSupported")] get; }
+
+		[Export ("colorNoiseReductionAmount")]
+		float ColorNoiseReductionAmount { get; set; }
+
+		[Export ("sharpnessSupported")]
+		bool SharpnessSupported { [Bind ("isSharpnessSupported")] get; }
+
+		[Export ("sharpnessAmount")]
+		float SharpnessAmount { get; set; }
+
+		[Export ("contrastSupported")]
+		bool ContrastSupported { [Bind ("isContrastSupported")] get; }
+
+		[Export ("contrastAmount")]
+		float ContrastAmount { get; set; }
+
+		[Export ("detailSupported")]
+		bool DetailSupported { [Bind ("isDetailSupported")] get; }
+
+		[Export ("detailAmount")]
+		float DetailAmount { get; set; }
+
+		[Export ("moireReductionSupported")]
+		bool MoireReductionSupported { [Bind ("isMoireReductionSupported")] get; }
+
+		[Export ("moireReductionAmount")]
+		float MoireReductionAmount { get; set; }
+
+		[Export ("localToneMapSupported")]
+		bool LocalToneMapSupported { [Bind ("isLocalToneMapSupported")] get; }
+
+		[Export ("localToneMapAmount")]
+		float LocalToneMapAmount { get; set; }
+
+		[Export ("extendedDynamicRangeAmount")]
+		float ExtendedDynamicRangeAmount { get; set; }
+
+		[Export ("neutralChromaticity", ArgumentSemantic.Assign)]
+		CGPoint NeutralChromaticity { get; set; }
+
+		[Export ("neutralLocation", ArgumentSemantic.Assign)]
+		CGPoint NeutralLocation { get; set; }
+
+		[Export ("neutralTemperature")]
+		float NeutralTemperature { get; set; }
+
+		[Export ("neutralTint")]
+		float NeutralTint { get; set; }
+
+		[NullAllowed, Export ("linearSpaceFilter", ArgumentSemantic.Retain)]
+		CIFilter LinearSpaceFilter { get; set; }
+
+		[NullAllowed, Export ("previewImage")]
+		CIImage PreviewImage { get; }
+
+		[NullAllowed, Export ("portraitEffectsMatte")]
+		CIImage PortraitEffectsMatte { get; }
+
+		[NullAllowed, Export ("semanticSegmentationSkinMatte")]
+		CIImage SemanticSegmentationSkinMatte { get; }
+
+		[NullAllowed, Export ("semanticSegmentationHairMatte")]
+		CIImage SemanticSegmentationHairMatte { get; }
+
+		[NullAllowed, Export ("semanticSegmentationGlassesMatte")]
+		CIImage SemanticSegmentationGlassesMatte { get; }
+
+		[NullAllowed, Export ("semanticSegmentationSkyMatte")]
+		CIImage SemanticSegmentationSkyMatte { get; }
+
+		[NullAllowed, Export ("semanticSegmentationTeethMatte")]
+		CIImage SemanticSegmentationTeethMatte { get; }
+
+		[Static]
+		[Export ("filterWithImageURL:")]
+		[return: NullAllowed]
+		CIRawFilter Create (NSUrl url);
+
+		[Static]
+		[Export ("filterWithImageData:identifierHint:")]
+		[return: NullAllowed]
+		CIRawFilter Create (NSData data, [NullAllowed] string identifierHint);
+
+		[Static]
+		[Export ("filterWithCVPixelBuffer:properties:")]
+		[return: NullAllowed]
+		CIRawFilter Create (CVPixelBuffer buffer, NSDictionary properties);
+	}
+
+	[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'CIRawFilter' instead.")]
+	[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'CIRawFilter' instead.")]
+	[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'CIRawFilter' instead.")]
 	[TV (10,0)]
 	[Static]
 	[Internal]
@@ -792,6 +1006,9 @@ namespace CoreImage {
 		NSString ActiveKeysKey { get; }
 	}
 
+	[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'CIRawFilter' instead.")]
+	[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'CIRawFilter' instead.")]
+	[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'CIRawFilter' instead.")]
 	[TV (10,0)]
 	[StrongDictionary ("CIRawFilterKeys")]
 	interface CIRawFilterOptions {
@@ -2252,6 +2469,13 @@ namespace CoreImage {
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // avoid crashes
 	interface CIKernel {
+
+		[iOS (15,0), Mac (12,0), MacCatalyst (15,0), TV (15,0)]
+		[Static]
+		[Export ("kernelsWithMetalString:error:")]
+		[return: NullAllowed]
+		CIKernel[] FromMetalSource (string source, [NullAllowed] out NSError error);
+
 		[Deprecated (PlatformName.iOS, 12, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[Static, Export ("kernelsWithString:")]
@@ -2291,7 +2515,7 @@ namespace CoreImage {
 		[Export ("name")]
 		string Name { get; }
 
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 		[Export ("setROISelector:")]
 		void SetRegionOfInterestSelector (Selector aMethod);
 #endif
@@ -9353,11 +9577,20 @@ namespace CoreImage {
 	[Mac (12,0)]
 	[MacCatalyst (15,0)]
 	[BaseType (typeof (CIFilter))]
-	interface CIPersonSegmentation : CIFilterProtocol {
+	interface CIPersonSegmentation : CIPersonSegmentationProtocol {
+	}
 
-		[CoreImageFilterProperty ("inputQualityLevel")]
-		// 0 == accurate, 1 == balanced, 2 == fast
-		int QualityLevel { get; set; }
+	[iOS (15,0), Mac (12,0), MacCatalyst (15,0), TV (15,0)]
+	[Protocol (Name="CIPersonSegmentation")]
+	interface CIPersonSegmentationProtocol : CIFilterProtocol {
+		
+		[Abstract]
+		[NullAllowed, Export ("inputImage", ArgumentSemantic.Retain)]
+		CIImage InputImage { get; set; }
+
+		[Abstract]
+		[Export ("qualityLevel")]
+		nuint QualityLevel { get; set; }
 	}
 
 	[CoreImageFilter]
