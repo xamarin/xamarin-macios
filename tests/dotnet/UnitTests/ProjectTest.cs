@@ -634,6 +634,35 @@ namespace Xamarin.Tests {
 			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
 		}
 
+		[Test]
+		[TestCase (ApplePlatform.iOS)]
+		[TestCase (ApplePlatform.TVOS)]
+		[TestCase (ApplePlatform.MacCatalyst)]
+		[TestCase (ApplePlatform.MacOSX)]
+		public void BindingWithDefaultCompileInclude (ApplePlatform platform)
+		{
+			var project = "BindingWithDefaultCompileInclude";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var project_path = GetProjectPath (project, platform: platform);
+			Clean (project_path);
+
+			var rv = DotNet.AssertBuild (project_path, GetDefaultProperties ());
+
+			var dllPath = Path.Combine (Path.GetDirectoryName (project_path), "bin", "Debug", platform.ToFramework (), $"{project}.dll");
+			Assert.That (dllPath, Does.Exist, "Binding assembly");
+
+			// Verify that the MyNativeClass class exists in the assembly, and that it's actually a class.
+			var ad = AssemblyDefinition.ReadAssembly (dllPath, new ReaderParameters { ReadingMode = ReadingMode.Deferred });
+			var myNativeClass = ad.MainModule.Types.FirstOrDefault (v => v.FullName == "MyApiDefinition.MyNativeClass");
+			Assert.IsFalse (myNativeClass.IsInterface, "IsInterface");
+			var myStruct = ad.MainModule.Types.FirstOrDefault (v => v.FullName == "MyClassLibrary.MyStruct");
+			Assert.IsTrue (myStruct.IsValueType, "MyStruct");
+
+			var warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).Select (v => v.Message);
+			Assert.That (warnings, Is.Empty, $"Build warnings:\n\t{string.Join ("\n\t", warnings)}");
+		}
+
 		void ExecuteWithMagicWordAndAssert (ApplePlatform platform, string runtimeIdentifiers, string executable)
 		{
 			if (!CanExecute (platform, runtimeIdentifiers))

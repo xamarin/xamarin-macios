@@ -20,7 +20,7 @@ namespace Xamarin.Tests {
 			{ "_BundlerVerbosity", "1" },
 		};
 
-		protected Dictionary<string, string> GetDefaultProperties (string? runtimeIdentifiers)
+		protected Dictionary<string, string> GetDefaultProperties (string? runtimeIdentifiers = null)
 		{
 			var rv = new Dictionary<string, string> (verbosity);
 			if (!string.IsNullOrEmpty (runtimeIdentifiers))
