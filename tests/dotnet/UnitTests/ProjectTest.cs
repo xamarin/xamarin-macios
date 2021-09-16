@@ -762,14 +762,14 @@ namespace Xamarin.Tests {
 			Clean (extensionProjectDir);
 			Clean (consumingProjectDir);
 
-			Configuration.CopyDotNetSupportingFiles (Path.GetDirectoryName(extensionProjectDir));
-			Configuration.CopyDotNetSupportingFiles (Path.GetDirectoryName(consumingProjectDir));
+			Configuration.CopyDotNetSupportingFiles (Path.GetDirectoryName (extensionProjectDir));
+			Configuration.CopyDotNetSupportingFiles (Path.GetDirectoryName (consumingProjectDir));
 
 			DotNet.AssertBuild (extensionProjectDir, verbosity);
 			DotNet.AssertBuild (consumingProjectDir, verbosity);
 			
-			var extensionPath = Path.Combine (Path.GetDirectoryName(consumingProjectDir), appPath);
-			Assert.That (Directory.Exists(extensionPath), $"App extension directory does not exist: {extensionPath}");
+			var extensionPath = Path.Combine (Path.GetDirectoryName (consumingProjectDir), appPath);
+			Assert.That (Directory.Exists (extensionPath), $"App extension directory does not exist: {extensionPath}");
 		}
 	}
 }

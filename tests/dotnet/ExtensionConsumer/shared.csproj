@@ -3,8 +3,8 @@
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
 
-		<ApplicationTitle>MySimpleApp</ApplicationTitle>
-		<ApplicationId>com.xamarin.mysimpleapp</ApplicationId>
+		<ApplicationTitle>ExtensionConsumer</ApplicationTitle>
+		<ApplicationId>com.xamarin.extensionconsumer</ApplicationId>
 		<ApplicationVersion>3.14</ApplicationVersion>
 	</PropertyGroup>
 
