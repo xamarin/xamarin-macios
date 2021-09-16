@@ -191,15 +191,11 @@ $(UNIT_SERVER): $(wildcard $(UNIT_SERVER_DIR)/*.cs)
 build-test-libraries:
 	@$(MAKE) -C $(TOP)/tests/test-libraries
 
-Makefile.inc: xharness/xharness.exe
+.stamp-xharness-configure: xharness/xharness.exe
 	$(Q_GEN) $(SYSTEM_MONO) --debug $(CURDIR)/$< $(XHARNESS_VERBOSITY) --configure --autoconf --rootdir $(CURDIR)
+	$(Q) touch $@
 
--include Makefile.inc
-
-Makefile-mac.inc: xharness/xharness.exe
-	$(Q_GEN) $(SYSTEM_MONO) --debug $(CURDIR)/$< $(XHARNESS_VERBOSITY) --configure  --autoconf --mac --rootdir $(CURDIR)
-
--include Makefile-mac.inc
+all-local:: .stamp-xharness-configure
 
 $(TOP)/tools/common/SdkVersions.cs: $(TOP)/tools/common/SdkVersions.cs.in
 	@$(MAKE) -C $(TOP)/tools/mtouch ../common/SdkVersions.cs

@@ -34,7 +34,6 @@ namespace Xharness {
 		public string JenkinsConfiguration { get; set; }
 		public HashSet<string> Labels { get; set; } = new HashSet<string> ();
 		public string LogDirectory { get; set; } = Environment.CurrentDirectory;
-		public bool Mac { get; set; }
 		public string MarkdownSummaryPath { get; set; }
 		public string PeriodicCommand { get; set; }
 		public string PeriodicCommandArguments { get; set; }
@@ -112,7 +111,6 @@ namespace Xharness {
 		// Configure
 		readonly bool useSystemXamarinIOSMac; // if the system XI/XM should be used, or the locally build XI/XM.
 		readonly bool autoConf;
-		readonly bool mac;
 
 		public string WatchOSContainerTemplate { get; private set; }
 		public string WatchOSAppTemplate { get; private set; }
@@ -167,7 +165,6 @@ namespace Xharness {
 			IOSTestProjects = configuration.IOSTestProjects;
 			JenkinsConfiguration = configuration.JenkinsConfiguration;
 			LogDirectory = configuration.LogDirectory ?? throw new ArgumentNullException (nameof (configuration.LogDirectory));
-			mac = configuration.Mac;
 			MarkdownSummaryPath = configuration.MarkdownSummaryPath;
 			PeriodicCommand = configuration.PeriodicCommand;
 			PeriodicCommandArguments = configuration.PeriodicCommandArguments;
@@ -443,9 +440,6 @@ namespace Xharness {
 				proj.TargetFrameworkFlavors = MacFlavors.Modern; // the default/template flavor is 'Modern'
 			}
 
-			if (generate_projects)
-				MakefileGenerator.CreateMacMakefile (this, unified_targets);
-
 			return rv;
 		}
 
@@ -558,7 +552,10 @@ namespace Xharness {
 
 		int Configure ()
 		{
-			return mac ? AutoConfigureMac (true) : ConfigureIOS ();
+			var rv = AutoConfigureMac (true);
+			if (rv != 0)
+				return rv;
+			return ConfigureIOS ();
 		}
 
 		// At startup we:
@@ -642,7 +639,6 @@ namespace Xharness {
 			SolutionGenerator.CreateSolution (this, watchos_targets, "watchos", DevicePlatform.watchOS);
 			SolutionGenerator.CreateSolution (this, tvos_targets, "tvos", DevicePlatform.tvOS);
 			SolutionGenerator.CreateSolution (this, today_targets, "today", DevicePlatform.iOS);
-			MakefileGenerator.CreateMakefile (this, unified_targets, tvos_targets, watchos_targets, today_targets);
 
 			return rv;
 		}
