@@ -246,5 +246,23 @@ namespace Xamarin.Utils
 				}
 			}
 		}
+
+		public static TargetFramework GetTargetFramework (ApplePlatform platform, bool isDotNet)
+		{
+			switch (platform) {
+			case ApplePlatform.iOS:
+				return isDotNet ? DotNet_5_0_iOS : Xamarin_iOS_1_0;
+			case ApplePlatform.TVOS:
+				return isDotNet ? DotNet_5_0_tvOS : Xamarin_TVOS_1_0;
+			case ApplePlatform.MacCatalyst:
+				return DotNet_5_0_MacCatalyst;
+			case ApplePlatform.WatchOS:
+				return Xamarin_WatchOS_1_0;
+			case ApplePlatform.MacOSX:
+				return isDotNet ? DotNet_5_0_macOS : Xamarin_Mac_2_0;
+			default:
+				throw new ArgumentOutOfRangeException (nameof (platform), string.Format ("Unknown platform: {0}", platform.ToString ()));
+			}
+		}
 	}
 }

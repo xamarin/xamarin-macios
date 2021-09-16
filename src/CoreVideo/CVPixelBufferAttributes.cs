@@ -29,12 +29,15 @@ using System;
 using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 #nullable enable
 
 namespace CoreVideo {
 
+#if !NET
 	[Watch (4,0)]
+#endif
 	public class CVPixelBufferAttributes : DictionaryContainer
 	{
 #if !COREBUILD
@@ -200,7 +203,9 @@ namespace CoreVideo {
 		}
 #endif
 
+#if !NET
 		[iOS (8,0)]
+#endif
 		public bool? MetalCompatibility {
 			set {
 				SetBooleanValue (CVPixelBuffer.MetalCompatibilityKey, value);

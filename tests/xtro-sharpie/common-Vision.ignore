@@ -41,6 +41,8 @@
 !unknown-native-enum! VNDetectTrajectoriesRequestRevision bound
 !unknown-native-enum! VNGenerateOpticalFlowRequestRevision bound
 !unknown-native-enum! VNStatefulRequestRevision bound
+!unknown-native-enum! VNDetectDocumentSegmentationRequestRevision bound
+!unknown-native-enum! VNGeneratePersonSegmentationRequestRevision bound
 
 ## VNRequest is an abstract class so this will be bound in subclasses
 ## matching the return type to the above defined custom enums 
@@ -92,3 +94,22 @@
 !missing-selector! VNStatefulRequest::requestFrameAnalysisSpacing not bound
 !missing-selector! VNVideoProcessor::addRequest:withProcessingOptions:error: not bound
 !missing-selector! VNVideoProcessor::analyzeWithTimeRange:error: not bound
+
+# Existing enums with name changes relevant only to Swift
+!missing-field! VNBarcodeSymbologyAztec_SwiftDeprecated not bound
+!missing-field! VNBarcodeSymbologyCode128_SwiftDeprecated not bound
+!missing-field! VNBarcodeSymbologyCode39_SwiftDeprecated not bound
+!missing-field! VNBarcodeSymbologyCode39Checksum_SwiftDeprecated not bound
+!missing-field! VNBarcodeSymbologyCode39FullASCII_SwiftDeprecated not bound
+!missing-field! VNBarcodeSymbologyCode39FullASCIIChecksum_SwiftDeprecated not bound
+!missing-field! VNBarcodeSymbologyCode93_SwiftDeprecated not bound
+!missing-field! VNBarcodeSymbologyCode93i_SwiftDeprecated not bound
+!missing-field! VNBarcodeSymbologyDataMatrix_SwiftDeprecated not bound
+!missing-field! VNBarcodeSymbologyEAN13_SwiftDeprecated not bound
+!missing-field! VNBarcodeSymbologyEAN8_SwiftDeprecated not bound
+!missing-field! VNBarcodeSymbologyI2of5_SwiftDeprecated not bound
+!missing-field! VNBarcodeSymbologyI2of5Checksum_SwiftDeprecated not bound
+!missing-field! VNBarcodeSymbologyITF14_SwiftDeprecated not bound
+!missing-field! VNBarcodeSymbologyPDF417_SwiftDeprecated not bound
+!missing-field! VNBarcodeSymbologyQR_SwiftDeprecated not bound
+!missing-field! VNBarcodeSymbologyUPCE_SwiftDeprecated not bound

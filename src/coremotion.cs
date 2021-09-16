@@ -683,7 +683,7 @@ namespace CoreMotion {
 
 	[iOS (14,0)][Watch (7,0)]
 	[MacCatalyst (14,0)]
-	[Mac (12,0)]
+	[NoMac]
 	[BaseType (typeof(NSObject))]
 	interface CMHeadphoneMotionManager {
 
@@ -691,12 +691,10 @@ namespace CoreMotion {
 		[Export ("authorizationStatus")]
 		CMAuthorizationStatus AuthorizationStatus { get; }
 
-		[NoMac]
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
 		ICMHeadphoneMotionManagerDelegate Delegate { get; set; }
 
-		[NoMac]
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		NSObject WeakDelegate { get; set; }
 

@@ -42,7 +42,7 @@ namespace ObjCRuntime {
 #endif
 
 		IntPtr handle;
-		string name;
+		string? name;
 
 		public Selector (IntPtr sel)
 		{
@@ -50,7 +50,6 @@ namespace ObjCRuntime {
 				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (sel), "Not a selector handle.");
 
 			this.handle = sel;
-			name = GetName (sel);
 		}
 
 		// this .ctor is required, like for any INativeObject implementation
@@ -59,7 +58,6 @@ namespace ObjCRuntime {
 		internal Selector (IntPtr handle, bool /* unused */ owns)
 		{
 			this.handle = handle;
-			name = GetName (handle);
 		}
 
 		public Selector (string name)
@@ -73,7 +71,11 @@ namespace ObjCRuntime {
 		}
 
 		public string Name {
-			get { return name; }
+			get {
+				if (name == null)
+					name = GetName (handle);
+				return name;
+			}
 		}
 
 		public static bool operator!= (Selector left, Selector right) {

@@ -18,10 +18,13 @@
 -->
 
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<!-- There's a master switch, DisableImplicitNamespaceImports, which, if set, will prevent all implicit namespace imports - this is done automatically, we don't have to check DisableImplicitNamespaceImports here -->
-	<ItemGroup Condition="'$(TargetPlatformIdentifier)' == 'iOS' And '$(DisableImplicitNamespaceImports_iOS)' != 'true'">
-		<Import Include="CoreGraphics" />
-		<Import Include="Foundation" />
-		<Import Include="UIKit" />
+	<!--
+		These implicit usings are C#-specific, and governed by a single global property: ImplicitUsings, which can be either 'true' or 'enable'.
+		Ref: https://github.com/dotnet/sdk/issues/19793#issuecomment-900620060
+	-->
+	<ItemGroup Condition="'$(TargetPlatformIdentifier)' == 'iOS' And '$(Language)' == 'C#' And ('$(ImplicitUsings)' == 'true' or '$(ImplicitUsings)' == 'enable')">
+		<Using Include="CoreGraphics" />
+		<Using Include="Foundation" />
+		<Using Include="UIKit" />
 	</ItemGroup>
 </Project>

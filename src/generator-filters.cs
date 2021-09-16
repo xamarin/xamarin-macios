@@ -264,15 +264,17 @@ public partial class Generator {
 			break;
 		// NSObject should not be added
 		// NSNumber should not be added - it should be bound as a float (common), int32 or bool
-		case "AVCameraCalibrationData":
 		case "CGColorSpace":
 		case "CGImage":
 		case "ImageIO.CGImageMetadata":
 		case "CIBarcodeDescriptor":
+			print ("return Runtime.GetINativeObject <{0}> (GetHandle (\"{1}\"), false);", propertyType, propertyName);
+			break;
+		case "AVCameraCalibrationData":
 		case "MLModel":
 		case "NSAttributedString":
 		case "NSData":
-			print ("return Runtime.GetINativeObject <{0}> (GetHandle (\"{1}\"), false);", propertyType, propertyName);
+			print ("return Runtime.GetNSObject <{0}> (GetHandle (\"{1}\"), false);", propertyType, propertyName);
 			break;
 		case "CIColor":
 		case "CIImage":
@@ -295,13 +297,17 @@ public partial class Generator {
 		case "nint":
 			print ("return GetNInt (\"{0}\");", propertyName);
 			break;
+		case "nuint":
+			print ("return GetNUInt (\"{0}\");", propertyName);
+			break;
 		case "string":
 			// NSString should not be added - it should be bound as a string
-			print ("return (string) (ValueForKey (\"{0}\") as NSString);", propertyName);
+			print ($"var handle = GetHandle (\"{propertyName}\");");
+			print ("return CFString.FromHandle (handle)!;");
 			break;
 		case "CIVector[]":
 			print ($"var handle = GetHandle (\"{propertyName}\");");
-			print ("return NSArray.ArrayFromHandle<CIVector> (handle);");
+			print ("return CFArray.ArrayFromHandle<CIVector> (handle)!;");
 			break;
 		default:
 			throw new BindingException (1075, true, propertyType);
@@ -332,6 +338,9 @@ public partial class Generator {
 		case "nint":
 			print ("SetNInt (\"{0}\", value);", propertyName);
 			break;
+		case "nuint":
+			print ("SetNUInt (\"{0}\", value);", propertyName);
+			break;
 		// NSObject should not be added
 		case "AVCameraCalibrationData":
 		case "CGColorSpace":
@@ -353,10 +362,7 @@ public partial class Generator {
 			break;
 		case "string":
 			// NSString should not be added - it should be bound as a string
-			print ("using (var ns = new NSString (value))");
-			indent++;
-			print ("SetValue (\"{0}\", ns);", propertyName);
-			indent--;
+			print ($"SetString (\"{propertyName}\", value);");
 			break;
 		case "CIVector[]":
 			print ("if (value is null) {");
@@ -365,10 +371,9 @@ public partial class Generator {
 			indent--;
 			print ("} else {");
 			indent++;
-			print ("using (var array = NSArray.FromNSObjects (value))");
-			indent++;
-			print ($"SetHandle (\"{propertyName}\", array.GetHandle ());");
-			indent--;
+			print ("var ptr = CFArray.Create (value);");
+			print ($"SetHandle (\"{propertyName}\", ptr);");
+			print ($"CFObject.CFRelease (ptr);");
 			indent--;
 			print ("}");
 			break;

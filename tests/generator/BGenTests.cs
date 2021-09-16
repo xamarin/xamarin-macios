@@ -738,6 +738,19 @@ namespace GeneratorTests
 			Assert.That (IsOptimizable (nothing), Is.True, "Nothing/Optimizable");
 		}
 
+		[Test]
+		public void NativeEnum ()
+		{
+			var bgen = new BGenTool ();
+			bgen.Profile = Profile.iOS;
+			bgen.ProcessEnums = true;
+			bgen.Defines = BGenTool.GetDefaultDefines (bgen.Profile);
+			bgen.Sources = new string [] { Path.Combine (Configuration.SourceRoot, "tests", "generator", "tests", "nativeenum-extensions.cs") }.ToList ();
+			bgen.ApiDefinitions = new string [] { Path.Combine (Configuration.SourceRoot, "tests", "generator", "tests", "nativeenum.cs") }.ToList ();
+			bgen.CreateTemporaryBinding ();
+			bgen.AssertExecute ("build");
+		}
+
 		BGenTool BuildFile (Profile profile, params string [] filenames)
 		{
 			return BuildFile (profile, true, false, filenames);

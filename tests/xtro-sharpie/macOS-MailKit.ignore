@@ -1,0 +1,4 @@
+# does not respond on macOS 12 beta 6 (same when using Xcode / ObjC)
+!missing-selector! +MEMessageAction::flagAction not bound
+!missing-selector! +MEMessageAction::setColorActionWithColor: not bound
+!missing-selector! +MEMessageAction::unflagAction not bound

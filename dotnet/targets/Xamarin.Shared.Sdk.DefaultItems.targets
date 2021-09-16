@@ -14,7 +14,8 @@
     <!-- Don't include default Compile items for binding projects, because that would pick up ApiDefinition.cs and StructsAndEnums.cs -->
     <EnableDefaultCompileItems Condition=" '$(IsBindingProject)' == 'true' ">false</EnableDefaultCompileItems>
 
-    <UseMonoRuntime Condition=" '$(UseMonoRuntime)' == ''">true</UseMonoRuntime>
+    <UseMonoRuntime Condition=" '$(UseMonoRuntime)' == '' And '$(_PlatformName)' != 'macOS'">true</UseMonoRuntime>
+    <UseMonoRuntime Condition=" '$(UseMonoRuntime)' == '' And '$(_PlatformName)' == 'macOS'">false</UseMonoRuntime>
   </PropertyGroup>
 
   <!-- Architecture -->
@@ -85,10 +86,10 @@
     <KnownFrameworkReference Include="Microsoft.$(_PlatformName)"
                             TargetFramework="net6.0"
                             RuntimeFrameworkName="Microsoft.$(_PlatformName)"
-                            DefaultRuntimeFrameworkVersion="$(_ShortPackageVersion)"
-                            LatestRuntimeFrameworkVersion="$(_ShortPackageVersion)"
+                            DefaultRuntimeFrameworkVersion="**FromWorkload**"
+                            LatestRuntimeFrameworkVersion="**FromWorkload**"
                             TargetingPackName="Microsoft.$(_PlatformName).Ref"
-                            TargetingPackVersion="$(_ShortPackageVersion)"
+                            TargetingPackVersion="**FromWorkload**"
                             RuntimePackNamePatterns="Microsoft.$(_PlatformName).Runtime.**RID**"
                             RuntimePackRuntimeIdentifiers="$(_RuntimePackRuntimeIdentifiers)"
                             Profile="$(_PlatformName)"

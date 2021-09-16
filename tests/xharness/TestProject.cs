@@ -8,6 +8,7 @@ using System.Xml;
 using Microsoft.DotNet.XHarness.Common.Execution;
 using Microsoft.DotNet.XHarness.Common.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
+using Xamarin;
 using Xharness.Jenkins.TestTasks;
 
 namespace Xharness {
@@ -87,7 +88,7 @@ namespace Xharness {
 
 		async Task CreateCopyAsync (ILog log, IProcessManager processManager, ITestTask test, string rootDirectory, Dictionary<string, TestProject> allProjectReferences)
 		{
-			var directory = DirectoryUtilities.CreateTemporaryDirectory (test?.TestName ?? System.IO.Path.GetFileNameWithoutExtension (Path));
+			var directory = Cache.CreateTemporaryDirectory (test?.TestName ?? System.IO.Path.GetFileNameWithoutExtension (Path));
 			Directory.CreateDirectory (directory);
 			var original_path = Path;
 			Path = System.IO.Path.Combine (directory, System.IO.Path.GetFileName (Path));
@@ -135,8 +136,7 @@ namespace Xharness {
 				variableSubstitution = doc.CollectAndEvaluateTopLevelProperties (variableSubstitution);
 			}
 
-			lock (typeof (TestProject))
-				doc.ResolveAllPaths (original_path, variableSubstitution);
+			doc.ResolveAllPaths (original_path, variableSubstitution);
 
 			// Replace RootTestsDirectory with a constant value, so that any relative paths don't end up wrong.
 			var rootTestsDirectoryNode = doc.SelectSingleNode ("/Project/PropertyGroup/RootTestsDirectory");
@@ -178,7 +178,7 @@ namespace Xharness {
 					process.StartInfo.Arguments = "ls-files";
 					process.StartInfo.WorkingDirectory = test_dir;
 					var stdout = new MemoryLog () { Timestamp = false };
-					var result = await processManager.RunAsync (process, log, stdout, stdout, timeout: TimeSpan.FromSeconds (15));
+					var result = await processManager.RunAsync (process, stdout, stdout, stdout, timeout: TimeSpan.FromSeconds (15));
 					if (!result.Succeeded)
 						throw new Exception ($"Failed to list the files in the directory {test_dir} (TimedOut: {result.TimedOut} ExitCode: {result.ExitCode}):\n{stdout}");
 
@@ -222,9 +222,7 @@ namespace Xharness {
 				var nuget_config = System.IO.Path.Combine (dotnet_test_dir, "NuGet.config");
 				var target_directory = directory;
 				File.Copy (global_json, System.IO.Path.Combine (target_directory, System.IO.Path.GetFileName (global_json)), true);
-				log.WriteLine ($"Copied {global_json} to {target_directory}");
 				File.Copy (nuget_config, System.IO.Path.Combine (target_directory, System.IO.Path.GetFileName (nuget_config)), true);
-				log.WriteLine ($"Copied {nuget_config} to {target_directory}");
 			}
 
 			var projectReferences = new List<TestProject> ();

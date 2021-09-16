@@ -5,6 +5,7 @@
     <RuntimeIdentifier>iossimulator-x64</RuntimeIdentifier>
     <OutputType>Exe</OutputType>
     <MtouchLink>None</MtouchLink>
+    <SupportedOSPlatformVersion>11.4</SupportedOSPlatformVersion>
   </PropertyGroup>
 
   <PropertyGroup>

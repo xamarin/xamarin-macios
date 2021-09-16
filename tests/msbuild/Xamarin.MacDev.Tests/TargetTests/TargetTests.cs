@@ -565,7 +565,7 @@ namespace Xamarin.iOS.Tasks
 		public void DetectAppManifest_ExecutableProject ()
 		{
 			RunTarget (MonoTouchProject, TargetName.DetectAppManifest);
-			Assert.IsFalse (string.IsNullOrEmpty(MonoTouchProjectInstance.GetPropertyValue ("_AppManifest")), "#1");
+			Assert.That (MonoTouchProjectInstance.GetPropertyValue ("_AppManifest"), Is.Not.Null.And.Not.Empty, "#1");
 		}
 
 		[Test]

@@ -87,6 +87,9 @@ MAC_GENERATOR_WARNASERROR=$(GENERATOR_WARNASERROR)
 #
 IOS_WARNINGS_THAT_YOU_SHOULD_FIX=108
 
+# this is due to deprecated APIs used in the generated code.
+WARNINGS_TO_IGNORE=BI1234
+
 include ./OpenGLES/Makefile-1.0.include
 include ./Makefile.generator
 
@@ -134,7 +137,7 @@ IOS_DEFINES = -define:IPHONE -define:IOS -define:MONOTOUCH -d:__IOS__ $(APPLETLS
 IOS_GENERATOR=$(BUILD_DIR)/common/bgen.exe
 IOS_GENERATE=$(SYSTEM_MONO) --debug $(IOS_GENERATOR)
 
-IOS_CORE_WARNINGS_TO_FIX=-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX)
+IOS_CORE_WARNINGS_TO_FIX=-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX),$(WARNINGS_TO_IGNORE)
 IOS_CORE_DEFINES=-define:COREBUILD $(IOS_DEFINES)
 
 $(IOS_BUILD_DIR)/Constants.cs: Constants.iOS.cs.in Makefile $(TOP)/Make.config.inc | $(IOS_BUILD_DIR)
@@ -159,7 +162,7 @@ $(IOS_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml: $(TOP)/src/ILLink.Substitution
 $(IOS_BUILD_DIR)/native/core.dll: $(IOS_CORE_SOURCES) frameworks.sources $(BUILD_DIR)/ios-defines.rsp
 	$(Q) mkdir -p $(IOS_BUILD_DIR)native
 	$(call Q_PROF_CSC,ios) $(IOS_CSC) -nologo -out:$@ -target:library -debug -unsafe \
-		-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
+		-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX),$(WARNINGS_TO_IGNORE) \
 		@$(BUILD_DIR)/ios-defines.rsp \
 		$(IOS_CORE_DEFINES) \
 		$(IOS_CORE_SOURCES)
@@ -220,7 +223,7 @@ $(IOS_BUILD_DIR)/native-$(1)%Xamarin.iOS.dll $(IOS_BUILD_DIR)/native-$(1)%Xamari
 		-deterministic \
 		$$(ARGS_$(1)) \
 		-publicsign -keyfile:$(PRODUCT_KEY_PATH) $$(IOS_DEFINES) \
-		-nowarn:219,618,114,414,1635,3021,$$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
+		-nowarn:219,618,114,414,1635,3021,$$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX),$$(WARNINGS_TO_IGNORE) \
 		-warnaserror:$(NULLABILITY_WARNINGS) \
 		$$(IOS_CSC_FLAGS_XI) \
 		@$(BUILD_DIR)/ios-defines.rsp \
@@ -497,6 +500,9 @@ $(MACOS_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml: $(TOP)/src/ILLink.LinkAttri
 	$(Q) mkdir -p $(MACOS_DOTNET_BUILD_DIR)
 	$(call Q_PROF_GEN,mac) sed < $< > $@ 's|@PRODUCT_NAME@|$(MAC_PRODUCT)|g;'
 
+$(MACOS_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml: $(TOP)/src/ILLink.Substitutions.macOS.xml | $(MACOS_DOTNET_BUILD_DIR)
+	$(Q) $(CP) $< $@
+
 # We can't pass the --target-framework values as parameters to the templates, because the commas interfere with Make's parameter parsing.
 xm_full_profile=--target-framework=Xamarin.Mac,Version=v4.5,Profile=Full
 xm_mobile_profile=--target-framework=Xamarin.Mac,Version=v2.0,Profile=Mobile
@@ -552,7 +558,7 @@ $(MAC_BUILD_DIR)/$(1)-64/Xamarin.Mac%dll $(MAC_BUILD_DIR)/$(1)-64/Xamarin.Mac%pd
 		$$(MAC_$(1)_ARGS) \
 		$$(ARGS_64) \
 		-publicsign -keyfile:$(SN_KEY) \
-		-nowarn:3021,1635,612,618,0219,0414,$(MAC_WARNINGS_TO_FIX) \
+		-nowarn:3021,1635,612,618,0219,0414,$(MAC_WARNINGS_TO_FIX),$(WARNINGS_TO_IGNORE) \
 		-warnaserror:$(NULLABILITY_WARNINGS) \
 		$$(MAC_CSC_FLAGS_XM) \
 		$(MAC_CFNETWORK_SOURCES) $(MAC_HTTP_SOURCES) \
@@ -604,19 +610,20 @@ $(MACOS_DOTNET_BUILD_DIR)/macos.rsp: Makefile Makefile.generator frameworks.sour
 		@$(BUILD_DIR)/mac-defines.rsp \
 		> $@
 
-$(MACOS_DOTNET_BUILD_DIR)/64/Xamarin.Mac%dll $(MACOS_DOTNET_BUILD_DIR)/64/Xamarin.Mac%pdb $(MACOS_DOTNET_BUILD_DIR)/ref/Xamarin.Mac%dll: $(MACOS_DOTNET_BUILD_DIR)/macos-generated-sources $(MAC_SOURCES) $(MAC_CFNETWORK_SOURCES) $(SN_KEY) $(MACOS_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml | $(MACOS_DOTNET_BUILD_DIR)/64 $(MACOS_DOTNET_BUILD_DIR)/ref
+$(MACOS_DOTNET_BUILD_DIR)/64/Xamarin.Mac%dll $(MACOS_DOTNET_BUILD_DIR)/64/Xamarin.Mac%pdb $(MACOS_DOTNET_BUILD_DIR)/ref/Xamarin.Mac%dll: $(MACOS_DOTNET_BUILD_DIR)/macos-generated-sources $(MAC_SOURCES) $(MAC_CFNETWORK_SOURCES) $(SN_KEY) $(MACOS_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml $(MACOS_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml | $(MACOS_DOTNET_BUILD_DIR)/64 $(MACOS_DOTNET_BUILD_DIR)/ref
 	$(Q_DOTNET_BUILD) \
 		$(DOTNET6_CSC) $(DOTNET_FLAGS) -out:$(MACOS_DOTNET_BUILD_DIR)/64/Xamarin.Mac.dll -optimize \
 		-publicsign -keyfile:$(SN_KEY) \
 		-refout:$(MACOS_DOTNET_BUILD_DIR)/ref/Xamarin.Mac.dll \
 		$(MAC_COMMON_DEFINES) \
 		$(ARGS_64) \
-		-nowarn:3021,1635,612,618,0219,0414,$(MAC_WARNINGS_TO_FIX) \
+		-nowarn:3021,1635,612,618,0219,0414,$(MAC_WARNINGS_TO_FIX),$(WARNINGS_TO_IGNORE) \
 		$(MAC_CSC_FLAGS_XM) \
 		$(MAC_CFNETWORK_SOURCES) $(MAC_HTTP_SOURCES) $(SHARED_SYSTEM_DRAWING_SOURCES) $(APPLETLS_DEFINES) -D:XAMARIN_MODERN \
 		$(MAC_SOURCES) \
 		@$(BUILD_DIR)/mac-defines.rsp \
 		-res:$(MACOS_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml \
+		-res:$(MACOS_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml \
 		@$<
 
 DOTNET_TARGETS += \
@@ -740,9 +747,9 @@ WATCH_GENERATE=$(SYSTEM_MONO) --debug $(WATCH_GENERATOR)
 WATCH_GENERATED_DEFINES= -d:WATCH -d:XAMCORE_3_0
 
 WATCHOS_CORE_DEFINES = $(WATCH_DEFINES) -define:COREBUILD
-WATCHOS_CORE_WARNINGS_TO_FIX = -nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX)
+WATCHOS_CORE_WARNINGS_TO_FIX = -nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX),$(WARNINGS_TO_IGNORE)
 
-WATCHOS_WARNINGS_TO_FIX = -nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX)
+WATCHOS_WARNINGS_TO_FIX = -nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX),$(WARNINGS_TO_IGNORE)
 
 WATCHOS_EXTRA_CORE_SOURCES = \
     $(WATCH_BUILD_DIR)/Constants.cs    \
@@ -794,7 +801,7 @@ $(WATCH_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml: $(TOP)/src/ILLink.LinkAttri
 $(WATCH_BUILD_DIR)/watch/core.dll: $(WATCHOS_CORE_SOURCES) frameworks.sources $(BUILD_DIR)/watchos-defines.rsp | $(WATCH_BUILD_DIR)/watch
 	@mkdir -p $(WATCH_BUILD_DIR)/watch
 	$(call Q_PROF_CSC,watch) $(WATCH_CSC) -nologo -out:$@ -target:library -debug -unsafe \
-		-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
+		-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX),$(WARNINGS_TO_IGNORE) \
 		@$(BUILD_DIR)/watchos-defines.rsp \
 		$(WATCHOS_CORE_DEFINES)     \
 		$(WATCHOS_CORE_SOURCES)
@@ -884,7 +891,7 @@ $(WATCH_BUILD_DIR)/watch-32/Xamarin.WatchOS%dll $(WATCH_BUILD_DIR)/watch-32/Xama
 		-publicsign -keyfile:$(PRODUCT_KEY_PATH) $(WATCH_DEFINES) \
 		-deterministic \
 		$(ARGS_32) \
-		-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
+		-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX),$(WARNINGS_TO_IGNORE) \
 		@$(BUILD_DIR)/watchos-defines.rsp \
 		$(WATCHOS_SOURCES) @$(WATCH_BUILD_DIR)/watch/generated_sources
 
@@ -893,7 +900,7 @@ $(WATCH_BUILD_DIR)/watch-64/Xamarin.WatchOS%dll $(WATCH_BUILD_DIR)/watch-64/Xama
 		-publicsign -keyfile:$(PRODUCT_KEY_PATH) $(WATCH_DEFINES) \
 		-deterministic \
 		$(ARGS_64) \
-		-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
+		-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX),$(WARNINGS_TO_IGNORE) \
 		@$(BUILD_DIR)/watchos-defines.rsp \
 		$(WATCHOS_SOURCES) @$(WATCH_BUILD_DIR)/watch/generated_sources
 
@@ -1030,10 +1037,10 @@ TVOS_GENERATOR=$(BUILD_DIR)/common/bgen.exe
 TVOS_GENERATE=$(SYSTEM_MONO) --debug $(TVOS_GENERATOR)
 TVOS_GENERATED_DEFINES= -d:TVOS -d:XAMCORE_3_0
 
-TVOS_CORE_WARNINGS_TO_FIX=-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX)
+TVOS_CORE_WARNINGS_TO_FIX=-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX),$(WARNINGS_TO_IGNORE)
 TVOS_CORE_DEFINES=$(TVOS_DEFINES) -d:COREBUILD
 TVOS_GENERATOR_DEFINES = $(TVOS_GENERATED_DEFINES)
-TVOS_WARNINGS_TO_FIX=-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX)
+TVOS_WARNINGS_TO_FIX=-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX),$(WARNINGS_TO_IGNORE)
 
 TVOS_EXTRA_CORE_SOURCES = \
 	$(TVOS_BUILD_DIR)/Constants.cs    \
@@ -1086,7 +1093,7 @@ $(TVOS_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml: $(TOP)/src/ILLink.Substitutio
 $(TVOS_BUILD_DIR)/tvos/core.dll: $(TVOS_CORE_SOURCES) frameworks.sources Makefile $(BUILD_DIR)/tvos-defines.rsp | $(TVOS_BUILD_DIR)/tvos
 	@mkdir -p $(TVOS_BUILD_DIR)/tvos
 	$(call Q_PROF_CSC,tvos) $(TV_CSC) -nologo -out:$@ -target:library -debug -unsafe \
-		-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
+		-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX),$(WARNINGS_TO_IGNORE) \
 		@$(BUILD_DIR)/tvos-defines.rsp \
 		$(TVOS_CORE_DEFINES)     \
 		$(TVOS_CORE_SOURCES)
@@ -1163,7 +1170,7 @@ $(TVOS_BUILD_DIR)/tvos-64/Xamarin.TVOS%dll $(TVOS_BUILD_DIR)/tvos-64/Xamarin.TVO
 		-publicsign -keyfile:$(PRODUCT_KEY_PATH) $(TVOS_DEFINES) \
 		-deterministic \
 		$(ARGS_64) \
-		-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
+		-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX),$(WARNINGS_TO_IGNORE) \
 		@$(BUILD_DIR)/tvos-defines.rsp \
 		$(TVOS_SOURCES) @$(TVOS_BUILD_DIR)/tvos/generated_sources
 
@@ -1240,10 +1247,10 @@ MACCATALYST_GENERATOR=$(BUILD_DIR)/common/bgen.exe
 MACCATALYST_GENERATE=$(SYSTEM_MONO) --debug $(MACCATALYST_GENERATOR)
 MACCATALYST_GENERATED_DEFINES= -d:__MACCATALYST__ -d:IOS
 
-MACCATALYST_CORE_WARNINGS_TO_FIX=-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX)
+MACCATALYST_CORE_WARNINGS_TO_FIX=-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX),$(WARNINGS_TO_IGNORE)
 MACCATALYST_CORE_DEFINES=$(MACCATALYST_DEFINES) -d:COREBUILD
 MACCATALYST_GENERATOR_DEFINES = $(MACCATALYST_GENERATED_DEFINES)
-MACCATALYST_WARNINGS_TO_FIX=-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX)
+MACCATALYST_WARNINGS_TO_FIX=-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX),$(WARNINGS_TO_IGNORE)
 
 MACCATALYST_EXTRA_CORE_SOURCES = \
 	$(MACCATALYST_BUILD_DIR)/Constants.cs    \
@@ -1290,10 +1297,13 @@ $(MACCATALYST_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml: $(TOP)/src/ILLink.Lin
 	$(Q) mkdir -p $(MACCATALYST_DOTNET_BUILD_DIR)
 	$(call Q_PROF_GEN,maccatalyst) sed < $< > $@ 's|@PRODUCT_NAME@|Xamarin.MacCatalyst|g;'
 
+$(MACCATALYST_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml: $(TOP)/src/ILLink.Substitutions.MacCatalyst.xml | $(MACCATALYST_DOTNET_BUILD_DIR)
+	$(Q) $(CP) $< $@
+
 $(MACCATALYST_BUILD_DIR)/maccatalyst/core.dll: $(MACCATALYST_CORE_SOURCES) frameworks.sources Makefile $(BUILD_DIR)/maccatalyst-defines.rsp | $(MACCATALYST_BUILD_DIR)/maccatalyst
 	@mkdir -p $(MACCATALYST_BUILD_DIR)/maccatalyst
 	$(call Q_PROF_CSC,maccatalyst) $(TV_CSC) -nologo -out:$@ -target:library -debug -unsafe \
-		-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
+		-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX),$(WARNINGS_TO_IGNORE) \
 		-define:COREBUILD    \
 		@$(BUILD_DIR)/maccatalyst-defines.rsp \
 		$(MACCATALYST_DEFINES)     \
@@ -1351,7 +1361,7 @@ $(MACCATALYST_DOTNET_BUILD_DIR)/maccatalyst.rsp: Makefile Makefile.generator fra
 		@$(BUILD_DIR)/maccatalyst-defines.rsp \
 		> $@
 
-$(MACCATALYST_DOTNET_BUILD_DIR)/64/Xamarin.MacCatalyst%dll $(MACCATALYST_DOTNET_BUILD_DIR)/64/Xamarin.MacCatalyst%pdb $(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.MacCatalyst%dll: $(MACCATALYST_DOTNET_BUILD_DIR)/maccatalyst-generated-sources $(MACCATALYST_SOURCES) $(PRODUCT_KEY_PATH) $(MACCATALYST_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml | $(MACCATALYST_DOTNET_BUILD_DIR)/64 $(MACCATALYST_DOTNET_BUILD_DIR)/ref
+$(MACCATALYST_DOTNET_BUILD_DIR)/64/Xamarin.MacCatalyst%dll $(MACCATALYST_DOTNET_BUILD_DIR)/64/Xamarin.MacCatalyst%pdb $(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.MacCatalyst%dll: $(MACCATALYST_DOTNET_BUILD_DIR)/maccatalyst-generated-sources $(MACCATALYST_SOURCES) $(PRODUCT_KEY_PATH) $(MACCATALYST_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml $(MACCATALYST_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml | $(MACCATALYST_DOTNET_BUILD_DIR)/64 $(MACCATALYST_DOTNET_BUILD_DIR)/ref
 	$(Q_DOTNET_GEN) \
 		$(DOTNET6_CSC) $(DOTNET_FLAGS) -out:$(MACCATALYST_DOTNET_BUILD_DIR)/64/Xamarin.MacCatalyst.dll -optimize \
 		-publicsign -keyfile:$(PRODUCT_KEY_PATH) \
@@ -1364,6 +1374,7 @@ $(MACCATALYST_DOTNET_BUILD_DIR)/64/Xamarin.MacCatalyst%dll $(MACCATALYST_DOTNET_
 		$(MACCATALYST_SOURCES) \
 		@$(BUILD_DIR)/maccatalyst-defines.rsp \
 		-res:$(MACCATALYST_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml \
+		-res:$(MACCATALYST_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml \
 		@$<
 
 $(MACCATALYST_BUILD_DIR)/maccatalyst-64/Xamarin.MacCatalyst%dll $(MACCATALYST_BUILD_DIR)/maccatalyst-64/Xamarin.MacCatalyst%pdb: $(MACCATALYST_SOURCES) $(MACCATALYST_BUILD_DIR)/maccatalyst/generated_sources $(PRODUCT_KEY_PATH) | $(MACCATALYST_BUILD_DIR)/maccatalyst-64
@@ -1371,7 +1382,7 @@ $(MACCATALYST_BUILD_DIR)/maccatalyst-64/Xamarin.MacCatalyst%dll $(MACCATALYST_BU
 		-publicsign -keyfile:$(PRODUCT_KEY_PATH) $(MACCATALYST_DEFINES) \
 		-deterministic \
 		$(ARGS_64) \
-		-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
+		-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX),$(WARNINGS_TO_IGNORE) \
 		@$(BUILD_DIR)/maccatalyst-defines.rsp \
 		$(MACCATALYST_SOURCES) @$(MACCATALYST_BUILD_DIR)/maccatalyst/generated_sources
 
@@ -1410,14 +1421,14 @@ $(MACCATALYST_BUILD_DIR)/reference/Xamarin.iOS.cs: $(MACCATALYST_BUILD_DIR)/refe
 	$(Q) mv $@.tmp $@
 
 $(MACCATALYST_BUILD_DIR)/reference/Xamarin.iOS.dll: $(MACCATALYST_BUILD_DIR)/reference/Xamarin.iOS.cs
-	$(Q) $(MACCATALYST_CSC) $< -out:$@ -r:$(MACCATALYST_BUILD_DIR)/reference/Xamarin.MacCatalyst.dll -target:library -deterministic -publicsign -keyfile:$(PRODUCT_KEY_PATH) -nologo -nowarn:108,114,618 -unsafe
+	$(Q) $(MACCATALYST_CSC) $< -out:$@ -r:$(MACCATALYST_BUILD_DIR)/reference/Xamarin.MacCatalyst.dll -target:library -deterministic -publicsign -keyfile:$(PRODUCT_KEY_PATH) -nologo -nowarn:108,114,618,$(WARNINGS_TO_IGNORE) -unsafe
 
 $(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.iOS.cs: $(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.MacCatalyst.dll $(IOS_DOTNET_BUILD_DIR)/ref/Xamarin.iOS.dll Makefile $(GENERATE_TYPE_FORWARDERS)
 	$(Q) mono $(GENERATE_TYPE_FORWARDERS) $(IOS_DOTNET_BUILD_DIR)/ref/Xamarin.iOS.dll $(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.MacCatalyst.dll $@.tmp $(DOTNET_MIN_MACCATALYST_SDK_VERSION)
 	$(Q) mv $@.tmp $@
 
 $(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.iOS.dll: $(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.iOS.cs
-	$(Q) $(DOTNET6_CSC) $(DOTNET_FLAGS) $< -out:$@ -r:$(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.MacCatalyst.dll -target:library -deterministic -publicsign -keyfile:$(PRODUCT_KEY_PATH) -nologo -nowarn:108,114,618 -unsafe
+	$(Q) $(DOTNET6_CSC) $(DOTNET_FLAGS) $< -out:$@ -r:$(MACCATALYST_DOTNET_BUILD_DIR)/ref/Xamarin.MacCatalyst.dll -target:library -deterministic -publicsign -keyfile:$(PRODUCT_KEY_PATH) -nologo -nowarn:108,114,618,$(WARNINGS_TO_IGNORE) -unsafe
 
 $(MACCATALYST_BUILD_DIR)/reference/OpenTK-1.0.cs: $(MACCATALYST_BUILD_DIR)/reference/Xamarin.MacCatalyst.dll $(IOS_BUILD_DIR)/reference/OpenTK-1.0.dll Makefile $(GENERATE_TYPE_FORWARDERS)
 	$(Q) mono $(GENERATE_TYPE_FORWARDERS) $(IOS_BUILD_DIR)/reference/OpenTK-1.0.dll $(MACCATALYST_BUILD_DIR)/reference/Xamarin.MacCatalyst.dll $@.tmp $(MIN_MACCATALYST_SDK_VERSION)

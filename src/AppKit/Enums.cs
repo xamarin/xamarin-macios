@@ -405,7 +405,7 @@ namespace AppKit {
 
 	[NoMacCatalyst]
 	[Mac (10,10)]
-	[Native]
+	[Native (ConvertToNative = "NSImageResizingModeExtensions.ToNative", ConvertToManaged = "NSImageResizingModeExtensions.ToManaged")]
 	public enum NSImageResizingMode : long {
 		Stretch,
 		Tile
@@ -1304,7 +1304,7 @@ namespace AppKit {
 	}
 
 	[NoMacCatalyst]
-	[Native]
+	[Native (ConvertToNative = "NSTextAlignmentExtensions.ToNative", ConvertToManaged = "NSTextAlignmentExtensions.ToManaged")]
 	public enum NSTextAlignment : ulong {
 		Left = 0,
 		Right = 1, 

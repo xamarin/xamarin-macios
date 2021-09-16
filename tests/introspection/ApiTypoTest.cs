@@ -1064,6 +1064,7 @@ namespace Introspection
 #endif
 #if !__MACOS__
 				case "ChipLibrary":
+				case "ThreadNetworkLibrary":
 				case "MediaSetupLibrary":
 				case "MLComputeLibrary":
 					// Xcode 12 beta 2 does not ship these framework/headers for the simulators

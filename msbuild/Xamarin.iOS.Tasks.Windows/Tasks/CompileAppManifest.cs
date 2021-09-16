@@ -31,6 +31,8 @@ namespace Xamarin.iOS.HotRestart.Tasks
 		[Required]
 		public string AppManifestPath { get; set; }
 
+		public string ApplicationTitle { get; set; }
+
 		#endregion
 
 		public override bool Execute()
@@ -58,6 +60,10 @@ namespace Xamarin.iOS.HotRestart.Tasks
 
 						preBuiltInfoPlist.Add(item.Key, item.Value.Clone());
 					}
+				}
+
+				if (!string.IsNullOrEmpty (ApplicationTitle)) {
+					preBuiltInfoPlist[ManifestKeys.CFBundleDisplayName] = ApplicationTitle;
 				}
 
 				preBuiltInfoPlist.Save(preBuiltInfoPlistPath, binary: true);

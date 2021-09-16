@@ -46,6 +46,8 @@ namespace AudioUnit {
 	delegate float AUImplementorValueProvider (AUParameter param);
 
 	delegate void AUParameterObserver (ulong address, float value);
+	
+	delegate void AUVoiceIOMutedSpeechActivityEventListener (AUVoiceIOSpeechActivityEvent activityEvent);
 
 // 	AUAudioTODO - We need testing for these bindings
 // 	delegate void AUScheduleMidiEventBlock (AUEventSampleTime eventSampleTime, byte cable, nint length, ref byte midiBytes);
@@ -139,6 +141,12 @@ namespace AudioUnit {
 		[Export ("scheduleParameterBlock")]
 		AUScheduleParameterBlock ScheduleParameterBlock { get; }
 
+		// TODO: https://github.com/xamarin/xamarin-macios/issues/12489
+		// [TV (15,0), NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		// [NullAllowed]
+		// [Export ("scheduleMIDIEventListBlock")]
+		// AUMidiEventListBlock ScheduleMidiEventListBlock { get; }
+
 // 		[Export ("tokenByAddingRenderObserver:")]
 // 		nint GetToken (AURenderObserver observer);
 
@@ -151,6 +159,22 @@ namespace AudioUnit {
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[Export ("MIDIOutputNames", ArgumentSemantic.Copy)]
 		string[] MidiOutputNames { get; }
+
+		// TODO: https://github.com/xamarin/xamarin-macios/issues/12489
+		// [TV (15,0), NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		// [NullAllowed]
+		// [Export ("MIDIOutputEventListBlock", ArgumentSemantic.Copy)]
+		// AUMidiEventListBlock MidiOutputEventListBlock { get; set; }
+
+		// TODO: https://github.com/xamarin/xamarin-macios/issues/12489
+		// [TV (15,0), NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		// [Export ("AudioUnitMIDIProtocol")]
+		// MIDIProtocolID AudioUnitMidiProtocol { get; }
+
+		// TODO: https://github.com/xamarin/xamarin-macios/issues/12489
+		// [TV (15,0), NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		// [Export ("hostMIDIProtocol", ArgumentSemantic.Assign)]
+		// MIDIProtocolID HostMIDIProtocol { get; set; }
 
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[Export ("providesUserInterface")]
@@ -263,7 +287,7 @@ namespace AudioUnit {
 		[Export ("profileStateForCable:channel:")]
 		MidiCIProfileState GetProfileState (byte cable, byte channel);
 
-		[Mac (10,14), iOS (12, 0)]
+		[Mac (10,14), iOS (12, 0), NoWatch, NoTV]
 		[NullAllowed, Export ("profileChangedBlock", ArgumentSemantic.Assign)]
 		AUMidiCIProfileChangedCallback ProfileChangedCallback { get; set; }
 

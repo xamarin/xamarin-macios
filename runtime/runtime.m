@@ -2539,18 +2539,22 @@ xamarin_vm_initialize ()
 	// All the properties we pass here must also be listed in the _RuntimeConfigReservedProperties item group
 	// for the _CreateRuntimeConfiguration target in dotnet/targets/Xamarin.Shared.Sdk.targets.
 	const char *propertyKeys[] = {
+		"APP_CONTEXT_BASE_DIRECTORY", // path to where the managed assemblies are (usually at least - RID-specific assemblies will be in subfolders)
 		"APP_PATHS",
 		"PINVOKE_OVERRIDE",
 		"ICU_DAT_FILE_PATH",
 		"TRUSTED_PLATFORM_ASSEMBLIES",
 		"NATIVE_DLL_SEARCH_DIRECTORIES",
+		"RUNTIME_IDENTIFIER",
 	};
 	const char *propertyValues[] = {
+		xamarin_get_bundle_path (),
 		xamarin_get_bundle_path (),
 		pinvokeOverride,
 		icu_dat_file_path,
 		trusted_platform_assemblies,
 		native_dll_search_directories,
+		RUNTIMEIDENTIFIER,
 	};
 	static_assert (sizeof (propertyKeys) == sizeof (propertyValues), "The number of keys and values must be the same.");
 
@@ -2604,6 +2608,8 @@ xamarin_pinvoke_override (const char *libraryName, const char *entrypointName)
 			} else {
 				return NULL;
 			}
+		} else {
+			return NULL;
 		}
 #endif // defined (__i386__) || defined (__x86_64__) || defined (__arm64__)
 #endif // !defined (CORECLR_RUNTIME)

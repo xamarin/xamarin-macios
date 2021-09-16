@@ -371,7 +371,7 @@ namespace Xamarin.BindingMethods.Generator
 
 			data.Add (
 				new FunctionData {
-					Comment = " // IntPtr func (IntPtr, bool, IntPtr, Vector2i, nint, nuint, int, bool)",
+					Comment = " // IntPtr func (IntPtr, bool, IntPtr, Vector2i, nint, nuint, nint, bool)",
 					Prefix = "simd__",
 					Variants = Variants.NonStret,
 					ReturnType = Types.IntPtr,
@@ -382,30 +382,12 @@ namespace Xamarin.BindingMethods.Generator
 						new ParameterData { TypeData = Types.Vector2i },
 						new ParameterData { TypeData = Types.NInt },
 						new ParameterData { TypeData = Types.NUInt },
-						new ParameterData { TypeData = Types.Int32 },
+						new ParameterData { TypeData = Types.NInt },
 						new ParameterData { TypeData = Types.Bool },
 					},
 				}
 			);
 
-			data.Add (
-				new FunctionData {
-					Comment = " // IntPtr func (IntPtr, bool, IntPtr, Vector2i, nint, nuint, Int64, bool)",
-					Prefix = "simd__",
-					Variants = Variants.NonStret,
-					ReturnType = Types.IntPtr,
-					Parameters = new ParameterData[] {
-						new ParameterData { TypeData = Types.IntPtr },
-						new ParameterData { TypeData = Types.Bool },
-						new ParameterData { TypeData = Types.IntPtr },
-						new ParameterData { TypeData = Types.Vector2i },
-						new ParameterData { TypeData = Types.NInt },
-						new ParameterData { TypeData = Types.NUInt },
-						new ParameterData { TypeData = Types.Int64 },
-						new ParameterData { TypeData = Types.Bool },
-					},
-				}
-			);
 			data.Add (
 				new FunctionData {
 					Comment = " // IntPtr func (Vector2, Vector2i, nint, IntPtr)",
@@ -435,7 +417,7 @@ namespace Xamarin.BindingMethods.Generator
 
 			data.Add (
 				new FunctionData {
-					Comment = " // IntPtr func (Vector3, nuint, nuint, int, bool, bool, IntPtr)",
+					Comment = " // IntPtr func (Vector3, nuint, nuint, nint, bool, bool, IntPtr)",
 					Prefix = "simd__",
 					Variants = Variants.NonStret,
 					ReturnType = Types.IntPtr,
@@ -443,25 +425,7 @@ namespace Xamarin.BindingMethods.Generator
 						new ParameterData { TypeData = Types.Vector3 },
 						new ParameterData { TypeData = Types.NUInt },
 						new ParameterData { TypeData = Types.NUInt },
-						new ParameterData { TypeData = Types.Int32 },
-						new ParameterData { TypeData = Types.Bool },
-						new ParameterData { TypeData = Types.Bool },
-						new ParameterData { TypeData = Types.IntPtr },
-					},
-				}
-			);
-
-			data.Add (
-				new FunctionData {
-					Comment = " // IntPtr func (Vector3, nuint, nuint, Int64, bool, bool, IntPtr)",
-					Prefix = "simd__",
-					Variants = Variants.NonStret,
-					ReturnType = Types.IntPtr,
-					Parameters = new ParameterData[] {
-						new ParameterData { TypeData = Types.Vector3 },
-						new ParameterData { TypeData = Types.NUInt },
-						new ParameterData { TypeData = Types.NUInt },
-						new ParameterData { TypeData = Types.Int64 },
+						new ParameterData { TypeData = Types.NInt },
 						new ParameterData { TypeData = Types.Bool },
 						new ParameterData { TypeData = Types.Bool },
 						new ParameterData { TypeData = Types.IntPtr },
@@ -515,7 +479,7 @@ namespace Xamarin.BindingMethods.Generator
 
 			data.Add (
 				new FunctionData {
-					Comment = " // IntPtr func (float, Vector2, nuint, nuint, int, bool, IntPtr)",
+					Comment = " // IntPtr func (float, Vector2, nuint, nuint, nint, bool, IntPtr)",
 					Prefix = "simd__",
 					Variants = Variants.NonStret,
 					ReturnType = Types.IntPtr,
@@ -524,7 +488,7 @@ namespace Xamarin.BindingMethods.Generator
 						new ParameterData { TypeData = Types.Vector2 },
 						new ParameterData { TypeData = Types.NUInt },
 						new ParameterData { TypeData = Types.NUInt },
-						new ParameterData { TypeData = Types.Int32 },
+						new ParameterData { TypeData = Types.NInt },
 						new ParameterData { TypeData = Types.Bool },
 						new ParameterData { TypeData = Types.IntPtr },
 					},
@@ -533,25 +497,7 @@ namespace Xamarin.BindingMethods.Generator
 
 			data.Add (
 				new FunctionData {
-					Comment = " // IntPtr func (float, Vector2, nuint, nuint, Int64, bool, IntPtr)",
-					Prefix = "simd__",
-					Variants = Variants.NonStret,
-					ReturnType = Types.IntPtr,
-					Parameters = new ParameterData[] {
-						new ParameterData { TypeData = Types.Float },
-						new ParameterData { TypeData = Types.Vector2 },
-						new ParameterData { TypeData = Types.NUInt },
-						new ParameterData { TypeData = Types.NUInt },
-						new ParameterData { TypeData = Types.Int64 },
-						new ParameterData { TypeData = Types.Bool },
-						new ParameterData { TypeData = Types.IntPtr },
-					},
-				}
-			);
-
-			data.Add (
-				new FunctionData {
-					Comment = " // IntPtr func (float, Vector2, nuint, nuint, nuint, int, bool, IntPtr)",
+					Comment = " // IntPtr func (float, Vector2, nuint, nuint, nuint, nint, bool, IntPtr)",
 					Prefix = "simd__",
 					Variants = Variants.NonStret,
 					ReturnType = Types.IntPtr,
@@ -561,26 +507,7 @@ namespace Xamarin.BindingMethods.Generator
 						new ParameterData { TypeData = Types.NUInt },
 						new ParameterData { TypeData = Types.NUInt },
 						new ParameterData { TypeData = Types.NUInt },
-						new ParameterData { TypeData = Types.Int32 },
-						new ParameterData { TypeData = Types.Bool },
-						new ParameterData { TypeData = Types.IntPtr },
-					},
-				}
-			);
-
-			data.Add (
-				new FunctionData {
-					Comment = " // IntPtr func (float, Vector2, nuint, nuint, nuint, Int64, bool, IntPtr)",
-					Prefix = "simd__",
-					Variants = Variants.NonStret,
-					ReturnType = Types.IntPtr,
-					Parameters = new ParameterData[] {
-						new ParameterData { TypeData = Types.Float },
-						new ParameterData { TypeData = Types.Vector2 },
-						new ParameterData { TypeData = Types.NUInt },
-						new ParameterData { TypeData = Types.NUInt },
-						new ParameterData { TypeData = Types.NUInt },
-						new ParameterData { TypeData = Types.Int64 },
+						new ParameterData { TypeData = Types.NInt },
 						new ParameterData { TypeData = Types.Bool },
 						new ParameterData { TypeData = Types.IntPtr },
 					},
@@ -753,7 +680,7 @@ namespace Xamarin.BindingMethods.Generator
 
 			data.Add (
 				new FunctionData {
-					Comment = " // IntPtr func (float, IntPtr, Vector2i, Int64)",
+					Comment = " // IntPtr func (float, IntPtr, Vector2i, nint)",
 					Prefix = "simd__",
 					Variants = Variants.NonStret,
 					ReturnType = Types.IntPtr,
@@ -761,21 +688,21 @@ namespace Xamarin.BindingMethods.Generator
 						new ParameterData { TypeData = Types.Float },
 						new ParameterData { TypeData = Types.IntPtr },
 						new ParameterData { TypeData = Types.Vector2i },
-						new ParameterData { TypeData = Types.Int64 },
+						new ParameterData { TypeData = Types.NInt },
 					},
 				}
 			);
 
 			data.Add (
 				new FunctionData {
-					Comment = " // IntPtr func (bool, IntPtr, Int64, Vector2i, float, float, float, float)",
+					Comment = " // IntPtr func (bool, IntPtr, nint, Vector2i, float, float, float, float)",
 					Prefix = "simd__",
 					Variants = Variants.NonStret,
 					ReturnType = Types.IntPtr,
 					Parameters = new ParameterData[] {
 						new ParameterData { TypeData = Types.Bool },
 						new ParameterData { TypeData = Types.IntPtr },
-						new ParameterData { TypeData = Types.Int64 },
+						new ParameterData { TypeData = Types.NInt },
 						new ParameterData { TypeData = Types.Vector2i },
 						new ParameterData { TypeData = Types.Float },
 						new ParameterData { TypeData = Types.Float },
@@ -836,7 +763,7 @@ namespace Xamarin.BindingMethods.Generator
 
 			data.Add (
 				new FunctionData {
-					Comment = " // IntPtr func (float, IntPtr, Vector2i, int)",
+					Comment = " // IntPtr func (float, IntPtr, Vector2i, int, nint, bool)",
 					Prefix = "simd__",
 					Variants = Variants.NonStret,
 					ReturnType = Types.IntPtr,
@@ -845,22 +772,7 @@ namespace Xamarin.BindingMethods.Generator
 						new ParameterData { TypeData = Types.IntPtr },
 						new ParameterData { TypeData = Types.Vector2i },
 						new ParameterData { TypeData = Types.Int32 },
-					},
-				}
-			);
-
-			data.Add (
-				new FunctionData {
-					Comment = " // IntPtr func (float, IntPtr, Vector2i, int, Int64, bool)",
-					Prefix = "simd__",
-					Variants = Variants.NonStret,
-					ReturnType = Types.IntPtr,
-					Parameters = new ParameterData[] {
-						new ParameterData { TypeData = Types.Float },
-						new ParameterData { TypeData = Types.IntPtr },
-						new ParameterData { TypeData = Types.Vector2i },
-						new ParameterData { TypeData = Types.Int32 },
-						new ParameterData { TypeData = Types.Int64 },
+						new ParameterData { TypeData = Types.NInt },
 						new ParameterData { TypeData = Types.Bool },
 					},
 				}
@@ -868,7 +780,7 @@ namespace Xamarin.BindingMethods.Generator
 
 			data.Add (
 				new FunctionData {
-					Comment = " // IntPtr func (float, IntPtr, Vector2i, int, Int64, IntPtr, IntPtr)",
+					Comment = " // IntPtr func (float, IntPtr, Vector2i, int, nint, IntPtr, IntPtr)",
 					Prefix = "simd__",
 					Variants = Variants.NonStret,
 					ReturnType = Types.IntPtr,
@@ -877,42 +789,7 @@ namespace Xamarin.BindingMethods.Generator
 						new ParameterData { TypeData = Types.IntPtr },
 						new ParameterData { TypeData = Types.Vector2i },
 						new ParameterData { TypeData = Types.Int32 },
-						new ParameterData { TypeData = Types.Int64 },
-						new ParameterData { TypeData = Types.IntPtr },
-						new ParameterData { TypeData = Types.IntPtr },
-					},
-				}
-			);
-
-			data.Add (
-				new FunctionData {
-					Comment = " // IntPtr func (float, IntPtr, Vector2i, int, int, bool)",
-					Prefix = "simd__",
-					Variants = Variants.NonStret,
-					ReturnType = Types.IntPtr,
-					Parameters = new ParameterData[] {
-						new ParameterData { TypeData = Types.Float },
-						new ParameterData { TypeData = Types.IntPtr },
-						new ParameterData { TypeData = Types.Vector2i },
-						new ParameterData { TypeData = Types.Int32 },
-						new ParameterData { TypeData = Types.Int32 },
-						new ParameterData { TypeData = Types.Bool },
-					},
-				}
-			);
-
-			data.Add (
-				new FunctionData {
-					Comment = " // IntPtr func (float, IntPtr, Vector2i, int, int, IntPtr, IntPtr)",
-					Prefix = "simd__",
-					Variants = Variants.NonStret,
-					ReturnType = Types.IntPtr,
-					Parameters = new ParameterData[] {
-						new ParameterData { TypeData = Types.Float },
-						new ParameterData { TypeData = Types.IntPtr },
-						new ParameterData { TypeData = Types.Vector2i },
-						new ParameterData { TypeData = Types.Int32 },
-						new ParameterData { TypeData = Types.Int32 },
+						new ParameterData { TypeData = Types.NInt },
 						new ParameterData { TypeData = Types.IntPtr },
 						new ParameterData { TypeData = Types.IntPtr },
 					},
@@ -1109,73 +986,13 @@ namespace Xamarin.BindingMethods.Generator
 
 			data.Add (
 				new FunctionData {
-					Comment = " // IntPtr func (IntPtr, IntPtr, uint); @try",
+					Comment = " // IntPtr func (IntPtr, IntPtr, nuint); @try",
 					Variants = Variants.msgSend | Variants.msgSendSuper,
 					ReturnType = Types.IntPtr,
 					Parameters = new ParameterData[] {
 						new ParameterData { TypeData = Types.IntPtr },
 						new ParameterData { TypeData = Types.IntPtr },
-						new ParameterData { TypeData = Types.UInt32 },
-					},
-					MarshalExceptions = true,
-				}
-			);
-
-			data.Add (
-				new FunctionData {
-					Comment = " // IntPtr func (IntPtr, IntPtr, UInt64); @try",
-					Variants = Variants.msgSend | Variants.msgSendSuper,
-					ReturnType = Types.IntPtr,
-					Parameters = new ParameterData[] {
-						new ParameterData { TypeData = Types.IntPtr },
-						new ParameterData { TypeData = Types.IntPtr },
-						new ParameterData { TypeData = Types.UInt64 },
-					},
-					MarshalExceptions = true,
-				}
-			);
-
-			data.Add (
-				new FunctionData {
-					Comment = " // IntPtr func (int, int, int, int); @try",
-					Variants = Variants.msgSend | Variants.msgSendSuper,
-					ReturnType = Types.IntPtr,
-					Parameters = new ParameterData[] {
-						new ParameterData { TypeData = Types.Int32 },
-						new ParameterData { TypeData = Types.Int32 },
-						new ParameterData { TypeData = Types.Int32 },
-						new ParameterData { TypeData = Types.Int32 },
-					},
-					MarshalExceptions = true,
-				}
-			);
-
-			data.Add (
-				new FunctionData {
-					Comment = " // IntPtr func (IntPtr, int, int, int); @try",
-					Variants = Variants.msgSend | Variants.msgSendSuper,
-					ReturnType = Types.IntPtr,
-					Parameters = new ParameterData[] {
-						new ParameterData { TypeData = Types.IntPtr },
-						new ParameterData { TypeData = Types.Int32 },
-						new ParameterData { TypeData = Types.Int32 },
-						new ParameterData { TypeData = Types.Int32 },
-					},
-					MarshalExceptions = true,
-				}
-			);
-
-			data.Add (
-				new FunctionData {
-					Comment = " // IntPtr func (IntPtr, int, int, int, int); @try",
-					Variants = Variants.msgSend | Variants.msgSendSuper,
-					ReturnType = Types.IntPtr,
-					Parameters = new ParameterData[] {
-						new ParameterData { TypeData = Types.IntPtr },
-						new ParameterData { TypeData = Types.Int32 },
-						new ParameterData { TypeData = Types.Int32 },
-						new ParameterData { TypeData = Types.Int32 },
-						new ParameterData { TypeData = Types.Int32 },
+						new ParameterData { TypeData = Types.NUInt },
 					},
 					MarshalExceptions = true,
 				}
@@ -1197,14 +1014,14 @@ namespace Xamarin.BindingMethods.Generator
 
 			data.Add (
 				new FunctionData {
-					Comment = " // IntPtr func (nint, nint, nint, uint32); @try",
+					Comment = " // IntPtr func (nint, nint, nint, nint); @try",
 					Variants = Variants.msgSend | Variants.msgSendSuper,
 					ReturnType = Types.IntPtr,
 					Parameters = new ParameterData[] {
 						new ParameterData { TypeData = Types.NInt },
 						new ParameterData { TypeData = Types.NInt },
 						new ParameterData { TypeData = Types.NInt },
-						new ParameterData { TypeData = Types.UInt32 },
+						new ParameterData { TypeData = Types.NInt },
 					},
 					MarshalExceptions = true,
 				}
@@ -1212,22 +1029,21 @@ namespace Xamarin.BindingMethods.Generator
 
 			data.Add (
 				new FunctionData {
-					Comment = " // IntPtr func (nint, nint, nint, uint64); @try",
+					Comment = " // IntPtr func (IntPtr, nuint, nint, nuint); @try",
 					Variants = Variants.msgSend | Variants.msgSendSuper,
 					ReturnType = Types.IntPtr,
 					Parameters = new ParameterData[] {
+						new ParameterData { TypeData = Types.IntPtr	 },
+						new ParameterData { TypeData = Types.NUInt },
 						new ParameterData { TypeData = Types.NInt },
-						new ParameterData { TypeData = Types.NInt },
-						new ParameterData { TypeData = Types.NInt },
-						new ParameterData { TypeData = Types.UInt64 },
+						new ParameterData { TypeData = Types.NUInt },
 					},
 					MarshalExceptions = true,
 				}
 			);
-
 			data.Add (
 				new FunctionData {
-					Comment = " // IntPtr func (IntPtr, nint, nint, nint, uint64); @try",
+					Comment = " // IntPtr func (IntPtr, nint, nint, nint, nint); @try",
 					Variants = Variants.msgSend | Variants.msgSendSuper,
 					ReturnType = Types.IntPtr,
 					Parameters = new ParameterData[] {
@@ -1235,7 +1051,7 @@ namespace Xamarin.BindingMethods.Generator
 						new ParameterData { TypeData = Types.NInt },
 						new ParameterData { TypeData = Types.NInt },
 						new ParameterData { TypeData = Types.NInt },
-						new ParameterData { TypeData = Types.UInt64 },
+						new ParameterData { TypeData = Types.NInt },
 					},
 					MarshalExceptions = true,
 				}
@@ -1243,7 +1059,7 @@ namespace Xamarin.BindingMethods.Generator
 
 			data.Add (
 				new FunctionData {
-					Comment = " // IntPtr func (IntPtr, nint, nint, nint, uint32); @try",
+					Comment = " // IntPtr func (IntPtr, nint, nint, nint, nuint); @try",
 					Variants = Variants.msgSend | Variants.msgSendSuper,
 					ReturnType = Types.IntPtr,
 					Parameters = new ParameterData[] {
@@ -1251,7 +1067,7 @@ namespace Xamarin.BindingMethods.Generator
 						new ParameterData { TypeData = Types.NInt },
 						new ParameterData { TypeData = Types.NInt },
 						new ParameterData { TypeData = Types.NInt },
-						new ParameterData { TypeData = Types.UInt32 },
+						new ParameterData { TypeData = Types.NUInt },
 					},
 					MarshalExceptions = true,
 				}
@@ -1259,14 +1075,14 @@ namespace Xamarin.BindingMethods.Generator
 
 			data.Add (
 				new FunctionData {
-					Comment = " // IntPtr func (IntPtr, uint32, nint, uint32); @try",
+					Comment = " // IntPtr func (IntPtr, nuint, nint, nint); @try",
 					Variants = Variants.msgSend | Variants.msgSendSuper,
 					ReturnType = Types.IntPtr,
 					Parameters = new ParameterData[] {
 						new ParameterData { TypeData = Types.IntPtr },
-						new ParameterData { TypeData = Types.UInt32 },
+						new ParameterData { TypeData = Types.NUInt },
 						new ParameterData { TypeData = Types.NInt },
-						new ParameterData { TypeData = Types.UInt32 },
+						new ParameterData { TypeData = Types.NInt },
 					},
 					MarshalExceptions = true,
 				}
@@ -1274,14 +1090,14 @@ namespace Xamarin.BindingMethods.Generator
 
 			data.Add (
 				new FunctionData {
-					Comment = " // IntPtr func (IntPtr, uint64, nint, uint64); @try",
+					Comment = " // IntPtr func (IntPtr, nint, nint, nint); @try",
 					Variants = Variants.msgSend | Variants.msgSendSuper,
 					ReturnType = Types.IntPtr,
 					Parameters = new ParameterData[] {
 						new ParameterData { TypeData = Types.IntPtr },
-						new ParameterData { TypeData = Types.UInt64 },
 						new ParameterData { TypeData = Types.NInt },
-						new ParameterData { TypeData = Types.UInt64 },
+						new ParameterData { TypeData = Types.NInt },
+						new ParameterData { TypeData = Types.NInt },
 					},
 					MarshalExceptions = true,
 				}
@@ -1809,28 +1625,14 @@ namespace Xamarin.BindingMethods.Generator
 
 			data.Add (
 				new FunctionData {
-					Comment = " // void func (IntPtr, Vector2, Vector2, Int64)",
+					Comment = " // void func (IntPtr, Vector2, Vector2, nint)",
 					Prefix = "simd__",
 					Variants = Variants.NonStret,
 					Parameters = new ParameterData [] {
 						new ParameterData { TypeData = Types.IntPtr },
 						new ParameterData { TypeData = Types.Vector2 },
 						new ParameterData { TypeData = Types.Vector2 },
-						new ParameterData { TypeData = Types.Int64 },
-					},
-				}
-			);
-
-			data.Add (
-				new FunctionData {
-					Comment = " // void func (IntPtr, Vector2, Vector2, Int)",
-					Prefix = "simd__",
-					Variants = Variants.NonStret,
-					Parameters = new ParameterData [] {
-						new ParameterData { TypeData = Types.IntPtr },
-						new ParameterData { TypeData = Types.Vector2 },
-						new ParameterData { TypeData = Types.Vector2 },
-						new ParameterData { TypeData = Types.Int32 },
+						new ParameterData { TypeData = Types.NInt },
 					},
 				}
 			);
@@ -1981,12 +1783,12 @@ namespace Xamarin.BindingMethods.Generator
 
 			data.Add (
 				new FunctionData {
-					Comment = " // Matrix4 func (/* UIInterfaceOrientation */ Int32, CGSize, nfloat, nfloat)",
+					Comment = " // Matrix4 func (/* UIInterfaceOrientation */ nint, CGSize, nfloat, nfloat)",
 					Prefix = "simd__",
 					Variants = Variants.All,
 					ReturnType = Types.Matrix4f,
 					Parameters = new ParameterData[] {
-						new ParameterData { TypeData = Types.Int32 },
+						new ParameterData { TypeData = Types.NInt },
 						new ParameterData { TypeData = Types.CGSize },
 						new ParameterData { TypeData = Types.NFloat },
 						new ParameterData { TypeData = Types.NFloat },
@@ -1996,42 +1798,13 @@ namespace Xamarin.BindingMethods.Generator
 
 			data.Add (
 				new FunctionData {
-					Comment = " // Matrix4 func (/* UIInterfaceOrientation */ Int64, CGSize, nfloat, nfloat)",
-					Prefix = "simd__",
-					Variants = Variants.All,
-					ReturnType = Types.Matrix4f,
-					Parameters = new ParameterData[] {
-						new ParameterData { TypeData = Types.Int64 },
-						new ParameterData { TypeData = Types.CGSize },
-						new ParameterData { TypeData = Types.NFloat },
-						new ParameterData { TypeData = Types.NFloat },
-					},
-				}
-			);
-
-			data.Add (
-				new FunctionData {
-					Comment = " // CGPoint func (Vector3, /* UIInterfaceOrientation */ Int32, CGSize)",
+					Comment = " // CGPoint func (Vector3, /* UIInterfaceOrientation */ nint, CGSize)",
 					Prefix = "simd__",
 					Variants = Variants.All,
 					ReturnType = Types.CGPoint,
 					Parameters = new ParameterData[] {
 						new ParameterData { TypeData = Types.NVector3 },
-						new ParameterData { TypeData = Types.Int32 },
-						new ParameterData { TypeData = Types.CGSize },
-					},
-				}
-			);
-
-			data.Add (
-				new FunctionData {
-					Comment = " // CGPoint func (Vector3, /* UIInterfaceOrientation */ Int64, CGSize)",
-					Prefix = "simd__",
-					Variants = Variants.All,
-					ReturnType = Types.CGPoint,
-					Parameters = new ParameterData[] {
-						new ParameterData { TypeData = Types.NVector3 },
-						new ParameterData { TypeData = Types.Int64 },
+						new ParameterData { TypeData = Types.NInt },
 						new ParameterData { TypeData = Types.CGSize },
 					},
 				}
@@ -2296,27 +2069,12 @@ namespace Xamarin.BindingMethods.Generator
 
 			data.Add (
 				new FunctionData {
-					Comment = " // NMatrix4 func (int, CGSize, nfloat, nfloat)",
+					Comment = " // NMatrix4 func (nint, CGSize, nfloat, nfloat)",
 					Prefix = "simd__",
 					Variants = Variants.All,
 					ReturnType = Types.NMatrix4,
 					Parameters = new ParameterData [] {
-						new ParameterData { TypeData = Types.Int32 },
-						new ParameterData { TypeData = Types.CGSize },
-						new ParameterData { TypeData = Types.NFloat },
-						new ParameterData { TypeData = Types.NFloat },
-					},
-				}
-			);
-
-			data.Add (
-				new FunctionData {
-					Comment = " // NMatrix4 func (Int64, CGSize, nfloat, nfloat)",
-					Prefix = "simd__",
-					Variants = Variants.All,
-					ReturnType = Types.NMatrix4,
-					Parameters = new ParameterData [] {
-						new ParameterData { TypeData = Types.Int64 },
+						new ParameterData { TypeData = Types.NInt },
 						new ParameterData { TypeData = Types.CGSize },
 						new ParameterData { TypeData = Types.NFloat },
 						new ParameterData { TypeData = Types.NFloat },
@@ -2642,30 +2400,15 @@ namespace Xamarin.BindingMethods.Generator
 
 			data.Add (
 				new FunctionData {
-					Comment = " // IntPtr func (NVector3, NVector3, Int64, Int64)",
+					Comment = " // IntPtr func (NVector3, NVector3, nint, nint)",
 					Prefix = "simd__",
 					Variants = Variants.All,
 					ReturnType = Types.IntPtr,
 					Parameters = new ParameterData [] {
 						new ParameterData { TypeData = Types.NVector3 },
 						new ParameterData { TypeData = Types.NVector3 },
-						new ParameterData { TypeData = Types.Int64 },
-						new ParameterData { TypeData = Types.Int64 },
-					},
-				}
-			);
-
-			data.Add (
-				new FunctionData {
-					Comment = " // IntPtr func (NVector3, NVector3, int, int)",
-					Prefix = "simd__",
-					Variants = Variants.All,
-					ReturnType = Types.IntPtr,
-					Parameters = new ParameterData [] {
-						new ParameterData { TypeData = Types.NVector3 },
-						new ParameterData { TypeData = Types.NVector3 },
-						new ParameterData { TypeData = Types.Int32 },
-						new ParameterData { TypeData = Types.Int32 },
+						new ParameterData { TypeData = Types.NInt },
+						new ParameterData { TypeData = Types.NInt },
 					},
 				}
 			);

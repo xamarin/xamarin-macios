@@ -180,7 +180,7 @@ namespace QuickLook {
 	interface QLPreviewReply
 	{
 		[Export ("stringEncoding")]
-		nuint StringEncoding { get; set; }
+		NSStringEncoding StringEncoding { get; set; }
 
 		[Export ("attachments", ArgumentSemantic.Copy)]
 		NSDictionary<NSString, QLPreviewReplyAttachment> Attachments { get; set; }
@@ -204,6 +204,7 @@ namespace QuickLook {
 
 	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
 	interface QLPreviewReplyAttachment
 	{
 		[Export ("data")]
@@ -218,6 +219,7 @@ namespace QuickLook {
 
 	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
 	interface QLFilePreviewRequest
 	{
 		[Export ("fileURL")]

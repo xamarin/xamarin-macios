@@ -32,7 +32,10 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Net.Security;
 using System.Runtime.InteropServices;
+using System.Security.Authentication;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Text;
@@ -526,6 +529,89 @@ namespace Foundation {
 
 			return await tcs.Task.ConfigureAwait (false);
 		}
+
+#if NET
+		// Properties that will be called by the default HttpClientHandler
+		public bool AutomaticDecompression {
+			get => throw new PlatformNotSupportedException ();
+			set => throw new PlatformNotSupportedException ();
+		}
+
+		public bool CheckCertificateRevocationList {
+			get => throw new PlatformNotSupportedException ();
+			set => throw new PlatformNotSupportedException ();
+		}
+
+		public X509CertificateCollection ClientCertificates {
+			get => throw new PlatformNotSupportedException ();
+		}
+
+		public ClientCertificateOption ClientCertificateOptions {
+			get => throw new PlatformNotSupportedException ();
+			set => throw new PlatformNotSupportedException ();
+		}
+
+		public ICredentials DefaultProxyCredentials {
+			get => throw new PlatformNotSupportedException ();
+			set => throw new PlatformNotSupportedException ();
+		}
+
+		public int MaxAutomaticRedirections {
+			get => throw new PlatformNotSupportedException ();
+			set => throw new PlatformNotSupportedException ();
+		}
+
+		public int MaxConnectionsPerServer {
+			get => throw new PlatformNotSupportedException ();
+			set => throw new PlatformNotSupportedException ();
+		}
+
+		public int MaxResponseHeadersLength {
+			get => throw new PlatformNotSupportedException ();
+			set => throw new PlatformNotSupportedException ();
+		}
+
+		public bool PreAuthenticate {
+			get => throw new PlatformNotSupportedException ();
+			set => throw new PlatformNotSupportedException ();
+		}
+
+		public IDictionary<string, object> Properties {
+			get => throw new PlatformNotSupportedException ();
+		}
+
+		public IWebProxy Proxy {
+			get => throw new PlatformNotSupportedException ();
+			set => throw new PlatformNotSupportedException ();
+		}
+
+		public SslProtocols SslProtocols {
+			get => throw new PlatformNotSupportedException ();
+			set => throw new PlatformNotSupportedException ();
+		}
+
+		public Func<HttpRequestMessage, X509Certificate2, X509Chain, SslPolicyErrors, bool> ServerCertificateCustomValidationCallback {
+			get => throw new PlatformNotSupportedException ();
+			set => throw new PlatformNotSupportedException ();
+		}
+
+		public bool SupportsAutomaticDecompression {
+			get => throw new PlatformNotSupportedException ();
+		}
+
+		public bool SupportsProxy {
+			get => throw new PlatformNotSupportedException ();
+		}
+
+		public bool SupportsRedirectConfiguration {
+			get => throw new PlatformNotSupportedException ();
+		}
+
+		public bool UseProxy {
+			get => throw new PlatformNotSupportedException ();
+			set => throw new PlatformNotSupportedException ();
+		}
+#endif // NET
 
 		partial class NSUrlSessionHandlerDelegate : NSUrlSessionDataDelegate
 		{

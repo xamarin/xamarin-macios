@@ -7,6 +7,7 @@ using System.Xml.Serialization;
 
 using AppKit;
 using Foundation;
+using ObjCRuntime;
 
 using NUnit.Framework;
 
@@ -28,9 +29,15 @@ namespace LinkAllTests
 		public void Calendars ()
 		{
 			Check ("GregorianCalendar", true);
+#if NET && __MACOS__ // I'm not sure if this is the expected behavior for macOS, or if it's a bug somewhere.
+			Check ("UmAlQuraCalendar", true);
+			Check ("HijriCalendar", true);
+			Check ("ThaiBuddhistCalendar", true);
+#else
 			Check ("UmAlQuraCalendar", false);
 			Check ("HijriCalendar", false);
 			Check ("ThaiBuddhistCalendar", false);
+#endif
 		}
 
 		[Test]
@@ -57,6 +64,7 @@ namespace LinkAllTests
 
 			[CompilerGenerated]
 			[Export ("foo")]
+			[BindingImpl (BindingImplOptions.Optimizable)]
 			public static void Test ()
 			{
 				try {

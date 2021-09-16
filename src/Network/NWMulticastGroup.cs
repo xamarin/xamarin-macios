@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
@@ -10,8 +11,15 @@ using OS_nw_endpoint=System.IntPtr;
 
 namespace Network {
 
+#if !NET
 	[TV (14,0), Mac (11,0), iOS (14,0), Watch (7,0)]
 	[MacCatalyst (14,0)]
+#else
+	[SupportedOSPlatform ("ios14.0")]
+	[SupportedOSPlatform ("tvos14.0")]
+	[SupportedOSPlatform ("macos11.0")]
+	[SupportedOSPlatform ("maccatalyst14.0")]
+#endif
 	public class NWMulticastGroup : NativeObject {
 		internal NWMulticastGroup (IntPtr handle, bool owns) : base (handle, owns) {}
 

@@ -1,7 +1,6 @@
 <Project>
   <!-- Do not sign files that already have a signature -->
   <ItemGroup>
-    <Skip Include="Mono.Options.dll" />
     <Skip Include="System.Reflection.MetadataLoadContext.dll" />
     <!-- Microsoft.iOS.Windows.Sdk content -->
     <Skip Include="tools\msbuild\iOS\Microsoft.Win32.Registry.dll" />
@@ -49,6 +48,7 @@
   <ItemGroup>
     <FirstParty Include="bgen.dll" />
     <FirstParty Include="dotnet-linker.dll" />
+    <FirstParty Include="Mono.Options.dll" />
     <FirstParty Include="Xamarin.*.dll" />
     <!-- mlaunch.app MonoBundle content-->
     <FirstParty Include="mlaunch.exe" />

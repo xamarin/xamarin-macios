@@ -66,7 +66,7 @@ namespace Xamarin.Tests {
 			};
 		}
 
-		public static ExecutionResult Execute (string verb, string project, Dictionary<string, string> properties, bool assert_success = true)
+		public static ExecutionResult Execute (string verb, string project, Dictionary<string, string> properties, bool assert_success = true, string target = null)
 		{
 			if (!File.Exists (project))
 				throw new FileNotFoundException ($"The project file '{project}' does not exist.");
@@ -94,6 +94,8 @@ namespace Xamarin.Tests {
 						}
 					}
 				}
+				if (!string.IsNullOrEmpty (target))
+					args.Add ("/t:" + target);
 				var binlogPath = Path.Combine (Path.GetDirectoryName (project), $"log-{verb}-{DateTime.Now:yyyyMMdd_HHmmss}.binlog");
 				args.Add ($"/bl:{binlogPath}");
 				var env = new Dictionary<string, string> ();

@@ -51,10 +51,9 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			_DetectSigningIdentity;
 			_CopyResourcesToBundle;
 			_SmeltMetal;
-			_ForgeMetal;
 			_TemperMetal;
 			_CompileEntitlements;
-			_CompileAppManifest;
+			_WriteAppManifest;
 			_ParseBundlerArguments;
 			_CompileToNative;
 			_CreatePkgInfo;
@@ -95,7 +94,15 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		</Codesign>
 	</Target>
 
-	<Target Name="_CompileTextureAtlases" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_CoreCompileTextureAtlases" />
+	<PropertyGroup>
+		<_CompileTextureAtlasesDependsOn>
+			$(_CompileTextureAtlasesDependsOn);
+			_DetectSdkLocations;
+			_CoreCompileTextureAtlases;
+		</_CompileTextureAtlasesDependsOn>
+	</PropertyGroup>
+
+	<Target Name="_CompileTextureAtlases" DependsOnTargets="$(_CompileTextureAtlasesDependsOn)" />
 
 	<Target Name="_CoreCompileTextureAtlases">
 		<TextureAtlas
@@ -119,12 +126,11 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		<CompileToNativeDependsOn>
 			_ComputeLinkMode;
 			_ComputeTargetFrameworkMoniker;
-			_DetectAppManifest;
 			_DetectSdkLocations;
 			_GenerateBundleName;
 			ResolveReferences;
 			_CompileEntitlements;
-			_CompileAppManifest;
+			_WriteAppManifest;
 			_GetNativeExecutableName;
 			_GetCompileToNativeInputs;
 			_ExpandNativeReferences;

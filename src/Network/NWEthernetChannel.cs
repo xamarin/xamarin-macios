@@ -14,6 +14,7 @@ using System;
 using System.Text;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
+using System.Runtime.Versioning;
 using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
@@ -24,10 +25,16 @@ using OS_dispatch_data=System.IntPtr;
 
 namespace Network {
 
+#if !NET
 	[NoWatch, NoTV, NoiOS, Mac (10,15)]
+#endif
 	public delegate void NWEthernetChannelReceiveDelegate (DispatchData? content, ushort vlanTag, string? localAddress, string? remoteAddress);
 
+#if !NET
 	[NoWatch, NoTV, NoiOS, Mac (10,15)]
+#else
+	[SupportedOSPlatform ("macos10.15")]
+#endif
 	public class NWEthernetChannel : NativeObject {
 
 		internal NWEthernetChannel (IntPtr handle, bool owns) : base (handle, owns) {}

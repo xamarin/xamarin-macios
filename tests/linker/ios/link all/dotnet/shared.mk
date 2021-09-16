@@ -3,6 +3,8 @@ TOP=../../../../../..
 include $(TOP)/Make.config
 include $(TOP)/mk/colors.mk
 
+TESTNAME:=$(shell basename "$(shell dirname "$(shell dirname "$(CURDIR)")")")
+
 reload:
 	$(Q) rm -Rf $(TOP)/tests/dotnet/packages
 	$(Q) $(MAKE) -C $(TOP) -j8 all
@@ -21,10 +23,16 @@ reload-and-run:
 	$(Q) $(MAKE) run
 
 build: prepare
-	$(DOTNET6) build /bl:$@.binlog *.csproj $(MSBUILD_VERBOSITY)
+	$(Q) $(DOTNET6) build /bl *.csproj $(MSBUILD_VERBOSITY) $(BUILD_ARGUMENTS)
 
 run: prepare
-	$(DOTNET6) build /bl:$@.binlog *.csproj /v:diag -t:Run
+	$(Q) $(DOTNET6) build /bl *.csproj $(MSBUILD_VERBOSITY) $(BUILD_ARGUMENTS) -t:Run
 
-diag:
-	$(DOTNET6) build /v:diag msbuild.binlog
+run-bare:
+	$(Q) ./bin/Debug/net6.0-*/*/"$(TESTNAME)".app/Contents/MacOS/"$(TESTNAME)"
+
+diag: prepare
+	$(Q) $(DOTNET6) build /v:diag msbuild.binlog
+
+clean:
+	rm -Rf bin obj *.binlog

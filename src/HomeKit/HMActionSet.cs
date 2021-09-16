@@ -1,12 +1,15 @@
 using System;
 using ObjCRuntime;
 using Foundation;
+using System.Runtime.Versioning;
 
 namespace HomeKit {
 
 	partial class HMActionSet {
 
+#if !NET
 		[iOS (9,0)]
+#endif
 		public HMActionSetType ActionSetType {
 			get {
 				var s = _ActionSetType;
