@@ -42,6 +42,7 @@ using CFAllocatorRef = System.IntPtr;
 
 namespace CoreFoundation {
 	
+	// interesting bits: https://github.com/opensource-apple/CF/blob/master/CFArray.c
 	public partial class CFArray : NativeObject {
 
 		internal CFArray (IntPtr handle)
@@ -80,7 +81,7 @@ namespace CoreFoundation {
 		}
 
 		public nint Count {
-			get { return CFArrayGetCount (GetCheckedHandle ()); }
+			get { return GetCount (GetCheckedHandle ()); }
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
@@ -106,23 +107,20 @@ namespace CoreFoundation {
 			}
 		}
 
-		internal static IntPtr Create (params INativeObject[] values)
+		public static unsafe IntPtr Create (params INativeObject[] values)
 		{
 			if (values is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (values));
-			IntPtr[] _values = new IntPtr [values.Length];
-			for (int i = 0; i < _values.Length; ++i)
+			int c = values.Length;
+			var _values = c <= 256 ? stackalloc IntPtr [c] : new IntPtr [c];
+			for (int i = 0; i < c; ++i)
 				_values [i] = values [i].Handle;
-			return Create (_values);
+			fixed (IntPtr* pv = _values)
+				return CFArrayCreate (IntPtr.Zero, (IntPtr) pv, c, kCFTypeArrayCallbacks_ptr);
 		}
 
-		[DllImport (Constants.CoreFoundationLibrary)]
-		extern static /* CFIndex */ nint CFArrayGetCount (/* CFArrayRef */ IntPtr theArray);
-
-		internal static nint GetCount (IntPtr array)
-		{
-			return CFArrayGetCount (array);
-		}
+		[DllImport (Constants.CoreFoundationLibrary, EntryPoint="CFArrayGetCount")]
+		internal extern static /* CFIndex */ nint GetCount (/* CFArrayRef */ IntPtr theArray);
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static CFArrayRef CFArrayCreateCopy (CFAllocatorRef allocator, CFArrayRef theArray);
@@ -138,7 +136,7 @@ namespace CoreFoundation {
 			if (handle == IntPtr.Zero)
 				return null;
 
-			var c = (int) CFArrayGetCount (handle);
+			var c = (int) GetCount (handle);
 			if (c == 0)
 				return Array.Empty<string> ();
 
@@ -158,7 +156,7 @@ namespace CoreFoundation {
 			if (handle == IntPtr.Zero)
 				return null;
 
-			var c = (int) CFArrayGetCount (handle);
+			var c = (int) GetCount (handle);
 			if (c == 0)
 				return Array.Empty<T> ();
 

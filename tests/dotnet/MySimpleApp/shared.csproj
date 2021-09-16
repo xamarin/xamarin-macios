@@ -12,6 +12,5 @@
 
 	<ItemGroup>
 		<Compile Include="../*.cs" />
-		<None Include="Info.plist" />
 	</ItemGroup>
 </Project>

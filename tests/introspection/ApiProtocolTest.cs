@@ -45,6 +45,14 @@ namespace Introspection {
 			case "MTLCounterSet":
 				return true; // Incorrectly bound, will be fixed for XAMCORE_4_0.
 #endif
+			case "MPSImageLaplacianPyramid":
+			case "MPSImageLaplacianPyramidSubtract":
+			case "MPSImageLaplacianPyramidAdd":
+			case "MPSCnnYoloLossNode":
+				// The presence of these seem to depend on hardware capabilities, and not only OS version.
+				// Unfortunately I couldn't find any documentation related to determining exactly which
+				// hardware capability these need (or how to detect them), so just ignore them.
+				return true;
 			default:
 				return SkipDueToAttribute (type);
 			}
@@ -255,6 +263,10 @@ namespace Introspection {
 				// Xcode 12.5
 				case "GCDualSenseGamepad":
 				// Xcode 13
+				case "AVAssetDownloadConfiguration":
+				case "AVAssetDownloadContentConfiguration":
+				case "AVAssetVariant":
+				case "AVAssetVariantQualifier":
 				case "PKDeferredPaymentSummaryItem":
 				case "PKPaymentRequestCouponCodeUpdate":
 				case "PKRecurringPaymentSummaryItem":
@@ -381,6 +393,10 @@ namespace Introspection {
 				// Xcode 12.5
 				case "GCDualSenseGamepad":
 				// xcode 13
+				case "AVAssetDownloadConfiguration":
+				case "AVAssetDownloadContentConfiguration":
+				case "AVAssetVariant":
+				case "AVAssetVariantQualifier":
 				case "PKDeferredPaymentSummaryItem":
 				case "PKPaymentRequestCouponCodeUpdate":
 				case "PKRecurringPaymentSummaryItem":

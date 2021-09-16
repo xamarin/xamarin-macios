@@ -205,7 +205,9 @@ namespace AVFoundation {
 			}
 		}
 
+#if !NET
 		[iOS (7,0)]
+#endif
 		public double? MaxKeyFrameIntervalDuration {
 			get {
 				return GetDoubleValue (AVVideo.MaxKeyFrameIntervalDurationKey);
@@ -216,7 +218,9 @@ namespace AVFoundation {
 		}
 
 #if !MONOMAC
+#if !NET
 		[iOS (7,0)]
+#endif
 		public bool? AllowFrameReordering {
 			get {
 				return GetBoolValue (AVVideo.AllowFrameReorderingKey);
@@ -226,7 +230,9 @@ namespace AVFoundation {
 			}
 		}
 
+#if !NET
 		[iOS (7,0)]
+#endif
 		public AVVideoH264EntropyMode? EntropyEncoding {
 			get {
 				var k = GetNSStringValue (AVVideo.H264EntropyModeKey);
@@ -262,7 +268,9 @@ namespace AVFoundation {
 		}
 			
 		// frame rate can be floating point (29.97 is common for instance)
+#if !NET
 		[iOS (7,0)]
+#endif
 		public float? ExpectedSourceFrameRate {
 			get {
 				return GetFloatValue (AVVideo.ExpectedSourceFrameRateKey);
@@ -273,7 +281,9 @@ namespace AVFoundation {
 		}
 
 		// frame rate can be floating point (29.97 is common for instance)
+#if !NET
 		[iOS (7,0)]
+#endif
 		public float? AverageNonDroppableFrameRate {
 			get {
 				return GetFloatValue (AVVideo.AverageNonDroppableFrameRateKey);

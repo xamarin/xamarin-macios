@@ -34,10 +34,6 @@ namespace Introspection {
 				return true;
 			case "AVCaptureSynchronizedDataCollection":
 			case "AVCaptureSynchronizedData":
-			case "MPSImageLaplacianPyramid":
-			case "MPSImageLaplacianPyramidSubtract":
-			case "MPSImageLaplacianPyramidAdd":
-			case "MPSCnnYoloLossNode":
 			case "CXProvider":
 				return TestRuntime.IsVM; // skip only on vms
 			case "NSMenuView": // not longer supported

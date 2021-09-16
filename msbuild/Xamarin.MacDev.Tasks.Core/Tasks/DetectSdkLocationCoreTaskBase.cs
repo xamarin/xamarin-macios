@@ -55,11 +55,6 @@ namespace Xamarin.MacDev.Tasks {
 			get; set;
 		}
 
-		[Output]
-		public bool IsXcode8 {
-			get; set;
-		}
-
 		// This is also an input
 		[Output]
 		public string XamarinSdkRoot {
@@ -156,8 +151,6 @@ namespace Xamarin.MacDev.Tasks {
 			if (EnsureAppleSdkRoot ())
 				EnsureSdkPath ();
 			EnsureXamarinSdkRoot ();
-
-			IsXcode8 = AppleSdkSettings.XcodeVersion.Major >= 8;
 
 			return !Log.HasLoggedErrors;
 		}
